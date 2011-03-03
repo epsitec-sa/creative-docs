@@ -13,7 +13,8 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public class Forms : Abstract
 	{
-		public Forms(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base(module, context, access, designerApplication)
+		public Forms(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication)
+			: base (module, context, access, designerApplication)
 		{
 			bool isWindow = (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Window);
 

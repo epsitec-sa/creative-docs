@@ -12,7 +12,8 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public class Types : AbstractCaptions
 	{
-		public Types(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base (module, context, access, designerApplication)
+		public Types(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication)
+			: base (module, context, access, designerApplication)
 		{
 			MyWidgets.StackedPanel leftContainer;
 

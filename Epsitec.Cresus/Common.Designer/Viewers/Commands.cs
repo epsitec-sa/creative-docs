@@ -15,7 +15,8 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public class Commands : AbstractCaptions
 	{
-		public Commands(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base(module, context, access, designerApplication)
+		public Commands(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication)
+			: base (module, context, access, designerApplication)
 		{
 			MyWidgets.StackedPanel leftContainer, rightContainer;
 			MyWidgets.ResetBox leftResetBox, rightResetBox;

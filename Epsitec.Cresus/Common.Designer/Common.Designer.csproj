@@ -90,6 +90,7 @@
     <Compile Include="Comparers\ResourceModuleInfoToOpen.cs" />
     <Compile Include="Comparers\ProxyRank.cs" />
     <Compile Include="Comparers\WidgetDisposition.cs" />
+    <Compile Include="Dialogs\SaveAllImages.cs" />
     <Compile Include="Dialogs\ModuleInfo.cs" />
     <Compile Include="Dialogs\EntityCreation.cs" />
     <Compile Include="Dialogs\EntityParameters.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="Dialogs\EntityField.cs" />
     <Compile Include="Dialogs\InitialMessage.cs" />
     <Compile Include="Dialogs\New.cs" />
+    <Compile Include="EntitiesEditor\BitmapParameters.cs" />
     <Compile Include="FormEditor\ObjectModifier.cs" />
     <Compile Include="ModuleSupport\ModuleStore.cs" />
     <Compile Include="ModuleSupport\ResGenerator.cs" />

@@ -12,7 +12,8 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public class Fields : AbstractCaptions
 	{
-		public Fields(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base(module, context, access, designerApplication)
+		public Fields(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication)
+			: base (module, context, access, designerApplication)
 		{
 			this.UpdateAll();
 		}

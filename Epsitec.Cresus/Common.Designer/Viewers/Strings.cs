@@ -12,7 +12,8 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public class Strings : Abstract
 	{
-		public Strings(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base(module, context, access, designerApplication)
+		public Strings(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication)
+			: base (module, context, access, designerApplication)
 		{
 			//	Résumé des captions.
 			MyWidgets.StackedPanel leftContainer, rightContainer;

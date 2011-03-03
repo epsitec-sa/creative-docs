@@ -107,6 +107,7 @@ namespace Epsitec.Common.Designer
 				this.dlgEntityExpression = new Dialogs.EntityExpression(this);
 				this.dlgInitialMessage   = new Dialogs.InitialMessage (this);
 				this.dlgModuleInfo       = new Dialogs.ModuleInfo (this);
+				this.dlgSaveAllImages    = new Dialogs.SaveAllImages (this);
 
 				this.dlgGlyphs.Closed         += this.HandleDlgClosed;
 				this.dlgFilter.Closed         += this.HandleDlgClosed;
@@ -232,7 +233,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected void CreateLayout()
+		private void CreateLayout()
 		{
 			this.ribbonBook = new RibbonBook(this.Window.Root);
 			this.ribbonBook.Dock = DockStyle.Top;
@@ -315,7 +316,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected void StyleButton(string command, string style)
+		private void StyleButton(string command, string style)
 		{
 			//	Modifie le style d'un bouton dans un ruban. L'icône affichée change en fonction des noms
 			//	de style dans les "pages" définis depuis CrPicto.
@@ -326,7 +327,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected IconButton SearchIconButton(string command)
+		private IconButton SearchIconButton(string command)
 		{
 			//	Cherche le bouton utilisé pour une commande, dans tous les rubans.
 			IconButton button;
@@ -346,7 +347,7 @@ namespace Epsitec.Common.Designer
 			return null;
 		}
 
-		protected IconButton SearchIconButton(RibbonPage page, string command)
+		private IconButton SearchIconButton(RibbonPage page, string command)
 		{
 			//	Cherche le bouton utilisé pour une commande, dans un ruban.
 			foreach (Widget widget in page.Items)
@@ -379,7 +380,7 @@ namespace Epsitec.Common.Designer
 
 
 		#region Info manager
-		protected StatusField InfoAdd(string name, double width)
+		private StatusField InfoAdd(string name, double width)
 		{
 			StatusField field = new StatusField();
 			field.PreferredWidth = width;
@@ -1101,7 +1102,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected void InitCommands()
+		private void InitCommands()
 		{
 			this.newState = this.CreateCommandState("New", KeyCode.ModifierControl|KeyCode.AlphaN);
 			this.recycleState = this.CreateCommandState("Recycle");
@@ -1222,7 +1223,7 @@ namespace Epsitec.Common.Designer
 			this.displayHorizontalState.ActiveState = ActiveState.Yes;
 		}
 
-		protected CommandState CreateCommandState(string commandName, params Widgets.Shortcut[] shortcuts)
+		private CommandState CreateCommandState(string commandName, params Widgets.Shortcut[] shortcuts)
 		{
 			//	Crée une nouvelle commande et son command state associé.
 			Command command = Command.Get(commandName);
@@ -1352,7 +1353,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected void ViewersWindowClear()
+		private void ViewersWindowClear()
 		{
 			//	Supprime tous les widgets contenus dans la fenêtre supplémentaire.
 			if (this.viewersWindow != null)
@@ -1365,13 +1366,13 @@ namespace Epsitec.Common.Designer
 
 
 		#region InitialMessage
-		protected void UpdateInitialMessage()
+		private void UpdateInitialMessage()
 		{
 			//	Met à jour la commande du message initial pour l'ensemble des modules ouverts.
 			this.initialMessageState.Enable = this.IsInitialMessageExisting;
 		}
 
-		protected void ShowInitialMessage()
+		private void ShowInitialMessage()
 		{
 			//	Affiche le message initial pour l'ensemble des modules ouverts.
 			if (this.initialMessageState.ActiveState == ActiveState.No)
@@ -1409,7 +1410,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected void CloseInitialMessage()
+		private void CloseInitialMessage()
 		{
 			//	Ferme le dialogue du message initial, si nécessaire.
 			if (this.initialMessageState.ActiveState == ActiveState.Yes)
@@ -1419,7 +1420,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected bool IsInitialMessageExisting
+		private bool IsInitialMessageExisting
 		{
 			//	Indique s'il existe un message initial pour l'ensemble des modules ouverts.
 			get
@@ -1498,12 +1499,12 @@ namespace Epsitec.Common.Designer
 
 
 		#region UndoRedo
-		protected void Undo()
+		private void Undo()
 		{
 			this.CurrentModuleInfo.Module.Modifier.ActiveViewer.Undo();
 		}
 
-		protected void Redo()
+		private void Redo()
 		{
 			this.CurrentModuleInfo.Module.Modifier.ActiveViewer.Redo();
 		}
@@ -1513,7 +1514,7 @@ namespace Epsitec.Common.Designer
 			return this.CurrentModuleInfo.Module.Modifier.ActiveViewer.UndoRedoCreateMenu(message);
 		}
 
-		protected void UndoRedoMenuGoto(int index)
+		private void UndoRedoMenuGoto(int index)
 		{
 			this.CurrentModuleInfo.Module.Modifier.ActiveViewer.UndoRedoGoto(index);
 		}
@@ -1521,7 +1522,7 @@ namespace Epsitec.Common.Designer
 
 
 		#region Locator
-		protected void LocatorInit()
+		private void LocatorInit()
 		{
 			//	Initialise la liste des localisations.
 			this.locators = new List<Viewers.Locator>();
@@ -1662,7 +1663,7 @@ namespace Epsitec.Common.Designer
 			return menu;
 		}
 
-		protected void LocatorCreateMenu(List<MenuItem> list, Support.EventHandler<MessageEventArgs> message, string icon, int rank, string action)
+		private void LocatorCreateMenu(List<MenuItem> list, Support.EventHandler<MessageEventArgs> message, string icon, int rank, string action)
 		{
 			//	Crée une case du menu des localisations.
 			if (icon != "")
@@ -1684,7 +1685,7 @@ namespace Epsitec.Common.Designer
 			list.Add(item);
 		}
 
-		protected string LocatorGetNiceText(int index)
+		private string LocatorGetNiceText(int index)
 		{
 			//	Retourne le joli texte correspondant à une localisations.
 			string moduleName              = this.locators[index].ModuleName;
@@ -1715,7 +1716,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected void LocatorClose(string moduleName)
+		private void LocatorClose(string moduleName)
 		{
 			//	Suite à la fermeture d'un module, supprime toutes les localisations en rapport avec ce module.
 			int i = 0;
@@ -1735,7 +1736,7 @@ namespace Epsitec.Common.Designer
 			this.LocatorUpdateCommand();
 		}
 
-		protected bool LocatorPrevIsEnable
+		private bool LocatorPrevIsEnable
 		{
 			//	Donne l'état de la commande "LocatorPrev".
 			get
@@ -1745,7 +1746,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected bool LocatorNextIsEnable
+		private bool LocatorNextIsEnable
 		{
 			//	Donne l'état de la commande "LocatorNext".
 			get
@@ -1755,7 +1756,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected void LocatorPrev()
+		private void LocatorPrev()
 		{
 			//	Action de la commande "LocatorPrev".
 			System.Diagnostics.Debug.Assert(this.LocatorPrevIsEnable);
@@ -1768,7 +1769,7 @@ namespace Epsitec.Common.Designer
 			this.LocatorGoto(locator);
 		}
 
-		protected void LocatorNext()
+		private void LocatorNext()
 		{
 			//	Action de la commande "LocatorNext".
 			System.Diagnostics.Debug.Assert(this.LocatorNextIsEnable);
@@ -1781,7 +1782,7 @@ namespace Epsitec.Common.Designer
 			this.LocatorGoto(locator);
 		}
 
-		protected void LocatorMenuGoto(int index)
+		private void LocatorMenuGoto(int index)
 		{
 			//	Revient à une location choisie dans le menu.
 			if (!this.Terminate())
@@ -1808,7 +1809,7 @@ namespace Epsitec.Common.Designer
 			this.LocatorGoto(locator);
 		}
 
-		protected void LocatorGoto(Viewers.Locator locator)
+		private void LocatorGoto(Viewers.Locator locator)
 		{
 			//	Va sur une ressource définie par une localisation.
 			ModuleInfo mi = this.CurrentModuleInfo;
@@ -1888,7 +1889,7 @@ namespace Epsitec.Common.Designer
 			this.LocatorUpdateCommand();
 		}
 
-		protected void LocatorAdjustWidgetFocused(ref Widget widgetFocused, ref int lineSelected)
+		private void LocatorAdjustWidgetFocused(ref Widget widgetFocused, ref int lineSelected)
 		{
 			//	Si le focus est dans une StringList, cherche la sélection dans le StringArray parent.
 			if (widgetFocused != null && widgetFocused.Parent is MyWidgets.StringArray)
@@ -1898,7 +1899,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected void LocatorUpdateCommand()
+		private void LocatorUpdateCommand()
 		{
 			//	Met à jour les commandes du navigateur.
 			this.locatorPrevState.Enable = this.LocatorPrevIsEnable;
@@ -1908,7 +1909,7 @@ namespace Epsitec.Common.Designer
 
 
 		#region Modules manager
-		protected void CreateModuleLayout()
+		private void CreateModuleLayout()
 		{
 			ModuleInfo mi = this.CurrentModuleInfo;
 
@@ -1923,7 +1924,7 @@ namespace Epsitec.Common.Designer
 			this.CreateViewerLayout();
 		}
 
-		protected void CreateViewerLayout()
+		private void CreateViewerLayout()
 		{
 			ModuleInfo mi = this.CurrentModuleInfo;
 
@@ -1972,7 +1973,7 @@ namespace Epsitec.Common.Designer
 			return true;
 		}
 
-		protected void UpdateAfterTypeChanged()
+		private void UpdateAfterTypeChanged()
 		{
 			//	Mise à jour après avoir changé le type de ressource.
 			this.ViewersWindowClear();
@@ -2034,7 +2035,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected ModuleInfo CurrentModuleInfo
+		private ModuleInfo CurrentModuleInfo
 		{
 			//	Retourne le ModuleInfo courant.
 			get
@@ -2070,7 +2071,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected Module LastModule
+		private Module LastModule
 		{
 			//	Retourne le module précédemment sélectionné.
 			get
@@ -2106,7 +2107,7 @@ namespace Epsitec.Common.Designer
 			return this.SearchModuleId(druid.Module);
 		}
 
-		protected Module SearchModuleId(int id)
+		private Module SearchModuleId(int id)
 		{
 			//	Cherche un module d'après son identificateur.
 			foreach (ModuleInfo info in this.moduleInfoList)
@@ -2146,7 +2147,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected int SearchModuleRank(string moduleName)
+		private int SearchModuleRank(string moduleName)
 		{
 			//	Cherche le rang d'un module d'après son nom.
 			for (int i=0; i<this.moduleInfoList.Count; i++)
@@ -2161,7 +2162,7 @@ namespace Epsitec.Common.Designer
 			return -1;
 		}
 
-		protected void UseModule(int rank)
+		private void UseModule(int rank)
 		{
 			//	Utilise un module ouvert.
 			if ( this.ignoreChange )  return;
@@ -2238,7 +2239,7 @@ namespace Epsitec.Common.Designer
 			this.LocatorUpdateCommand();
 		}
 
-		protected void CloseModule()
+		private void CloseModule()
 		{
 			//	Ferme le module courant.
 			int rank = this.currentModule;
@@ -2277,7 +2278,7 @@ namespace Epsitec.Common.Designer
 			this.StyleButton("EditLocked", this.IsReadonly ? null : "Unlock");  // ouvre ou ferme le cadenas
 		}
 
-		protected bool AutoSave(CommandDispatcher dispatcher)
+		private bool AutoSave(CommandDispatcher dispatcher)
 		{
 			//	Fait tout ce qu'il faut pour éventuellement sauvegarder les ressources
 			//	avant de passer à autre chose.
@@ -2295,7 +2296,7 @@ namespace Epsitec.Common.Designer
 			return true;
 		}
 
-		protected bool AutoSaveAll(CommandDispatcher dispatcher)
+		private bool AutoSaveAll(CommandDispatcher dispatcher)
 		{
 			//	Fait tout ce qu'il faut pour éventuellement sauvegarder toutes les
 			//	ressources avant de passer à autre chose.
@@ -2317,7 +2318,7 @@ namespace Epsitec.Common.Designer
 			return true;
 		}
 
-		protected void ReadSettings()
+		private void ReadSettings()
 		{
 			//	Reprend tous les réglages globaux.
 			if (!this.settings.Read() || this.settings.Modules.Count == 0)
@@ -2340,7 +2341,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected bool WriteSettings()
+		private bool WriteSettings()
 		{
 			//	Sauve tous les réglages globaux.
 			this.settings.Modules.Clear();
@@ -2364,7 +2365,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected bool IsEditLocked
+		private bool IsEditLocked
 		{
 			get
 			{
@@ -2567,8 +2568,11 @@ namespace Epsitec.Common.Designer
 		{
 			//	Ouvre le dialogue pour éditer une expression.
 			this.dlgEntityExpression.Initialise(this.IsReadonly, isInterface, isPatchModule, deepExpression, expression);
+			
 			this.dlgEntityExpression.Show();  // choix dans le dialogue...
+			
 			expression = this.dlgEntityExpression.Expression;
+			
 			return this.dlgEntityExpression.IsEditOk;
 		}
 
@@ -2576,8 +2580,32 @@ namespace Epsitec.Common.Designer
 		{
 			//	Ouvre le dialogue pour éditer les informations d'un module.
 			this.dlgModuleInfo.Module = module;
+			
 			this.dlgModuleInfo.Show ();
+			
 			return this.dlgModuleInfo.IsEditOk;
+		}
+
+		public bool DlgSaveAllImages(List<string> allEntityNames, List<string> selectedEntityNames, ref string folder, ref string extension, ref EntitiesEditor.BitmapParameters bitmapParameters)
+		{
+			//	Ouvre le dialogue pour éditer les informations d'un module.
+			this.dlgSaveAllImages.AllEntityNames.Clear ();
+			this.dlgSaveAllImages.AllEntityNames.AddRange (allEntityNames);
+
+			this.dlgSaveAllImages.SelectedEntityNames.Clear ();
+			this.dlgSaveAllImages.SelectedEntityNames.AddRange (selectedEntityNames);
+
+			this.dlgSaveAllImages.Folder = folder;
+			this.dlgSaveAllImages.Extension = extension;
+			this.dlgSaveAllImages.BitmapParameters = bitmapParameters;
+
+			this.dlgSaveAllImages.Show ();
+
+			folder = this.dlgSaveAllImages.Folder;
+			extension = this.dlgSaveAllImages.Extension;
+			bitmapParameters = this.dlgSaveAllImages.BitmapParameters;
+			
+			return this.dlgSaveAllImages.IsEditOk;
 		}
 
 		public Dialogs.Search DialogSearch
@@ -2588,7 +2616,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected void DialogSearchAdapt()
+		private void DialogSearchAdapt()
 		{
 			//	Adapte le dialogue de recherche en fonction du type du viewer actif.
 			ModuleInfo mi = this.CurrentModuleInfo;
@@ -2602,7 +2630,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected Common.Dialogs.DialogResult DialogSave(CommandDispatcher dispatcher)
+		private Common.Dialogs.DialogResult DialogSave(CommandDispatcher dispatcher)
 		{
 			//	Affiche le dialogue pour demander s'il faut enregistrer les
 			//	ressources modifiées, avant de passer à d'autres ressources.
@@ -2737,7 +2765,7 @@ namespace Epsitec.Common.Designer
 
 
 		#region ModuleInfo class
-		protected class ModuleInfo : System.IDisposable
+		private class ModuleInfo : System.IDisposable
 		{
 			public Module						Module;
 			public TabPage						TabPage;
@@ -2766,155 +2794,155 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
-		protected DesignerMode					mode;
-		protected bool							standalone;
-//-		protected Window						window;
-//-		protected CommandDispatcher				commandDispatcher;
-//-		protected CommandContext				commandContext;
-		protected RibbonBook					ribbonBook;
-		protected RibbonPage					ribbonMain;
-		protected RibbonPage					ribbonOper;
-		protected RibbonPage					ribbonActive;
-		protected TabBook						bookModules;
-		protected StatusBar						info;
-		protected ResizeKnob					resize;
-		protected Dialogs.New					dlgNew;
-		protected Dialogs.Open					dlgOpen;
-		protected Dialogs.Glyphs				dlgGlyphs;
-		protected Dialogs.Icon					dlgIcon;
-		protected Dialogs.Filter				dlgFilter;
-		protected Dialogs.Search				dlgSearch;
-		protected Dialogs.NewCulture			dlgNewCulture;
-		protected Dialogs.ResourceTypeCode		dlgResourceTypeCode;
-		protected Dialogs.ResourceSelector		dlgResourceSelector;
-		protected Dialogs.BindingSelector		dlgBindingSelector;
-		protected Dialogs.ResourceName			dlgFieldName;
-		protected Dialogs.EntityField			dlgEntityField;
-		protected Dialogs.LabelReplacement		dlgLabelReplacement;
-		protected Dialogs.EntityComment			dlgEntityComment;
-		protected Dialogs.EntityParameters		dlgEntityParameters;
-		protected Dialogs.EntityCreation		dlgEntityCreation;
-		protected Dialogs.EntityExpression		dlgEntityExpression;
-		protected Dialogs.InitialMessage		dlgInitialMessage;
-		protected Dialogs.ModuleInfo			dlgModuleInfo;
-		protected PanelsContext					context;
-		protected DisplayMode					displayMode;
-		protected Window						viewersWindow;
-		protected Image							icon;
+		private DesignerMode					mode;
+		private bool							standalone;
+//-		private Window							window;
+//-		private CommandDispatcher				commandDispatcher;
+//-		private CommandContext					commandContext;
+		private RibbonBook						ribbonBook;
+		private RibbonPage						ribbonMain;
+		private RibbonPage						ribbonOper;
+		private RibbonPage						ribbonActive;
+		private TabBook							bookModules;
+		private StatusBar						info;
+		private ResizeKnob						resize;
+		private Dialogs.New						dlgNew;
+		private Dialogs.Open					dlgOpen;
+		private Dialogs.Glyphs					dlgGlyphs;
+		private Dialogs.Icon					dlgIcon;
+		private Dialogs.Filter					dlgFilter;
+		private Dialogs.Search					dlgSearch;
+		private Dialogs.NewCulture				dlgNewCulture;
+		private Dialogs.ResourceTypeCode		dlgResourceTypeCode;
+		private Dialogs.ResourceSelector		dlgResourceSelector;
+		private Dialogs.BindingSelector			dlgBindingSelector;
+		private Dialogs.ResourceName			dlgFieldName;
+		private Dialogs.EntityField				dlgEntityField;
+		private Dialogs.LabelReplacement		dlgLabelReplacement;
+		private Dialogs.EntityComment			dlgEntityComment;
+		private Dialogs.EntityParameters		dlgEntityParameters;
+		private Dialogs.EntityCreation			dlgEntityCreation;
+		private Dialogs.EntityExpression		dlgEntityExpression;
+		private Dialogs.InitialMessage			dlgInitialMessage;
+		private Dialogs.ModuleInfo				dlgModuleInfo;
+		private Dialogs.SaveAllImages			dlgSaveAllImages;
+		private PanelsContext					context;
+		private DisplayMode						displayMode;
+		private Window							viewersWindow;
+		private Image							icon;
 
-		protected Support.ResourceManagerPool	resourceManagerPool;
-		protected List<ModuleInfo>				moduleInfoList;
-		protected Settings						settings;
-		protected int							lastModule = -1;
-		protected int							currentModule = -1;
-		protected double						ribbonHeight = 71;
-		protected bool							ignoreChange = false;
-		protected double						moveHorizontal = 5;
-		protected double						moveVertical = 5;
+		private Support.ResourceManagerPool		resourceManagerPool;
+		private List<ModuleInfo>				moduleInfoList;
+		private Settings						settings;
+		private int								lastModule = -1;
+		private int								currentModule = -1;
+		private bool							ignoreChange = false;
+		private double							moveHorizontal = 5;
+		private double							moveVertical = 5;
 
-		protected List<Viewers.Locator>			locators;
-		protected int							locatorIndex;
-		protected bool							locatorIgnore;
+		private List<Viewers.Locator>			locators;
+		private int								locatorIndex;
+		private bool							locatorIgnore;
 
-		protected CommandState					newState;
-		protected CommandState					recycleState;
-		protected CommandState					openState;
-		protected CommandState					saveState;
-		protected CommandState					saveAsState;
-		protected CommandState					initialMessageState;
-		protected CommandState					checkState;
-		protected CommandState					infoState;
-		protected CommandState					closeState;
-		protected CommandState					cutState;
-		protected CommandState					copyState;
-		protected CommandState					pasteState;
-		protected CommandState					editLockedState;
-		protected CommandState					editOkState;
-		protected CommandState					editCancelState;
-		protected CommandState					deleteState;
-		protected CommandState					createState;
-		protected CommandState					duplicateState;
-		protected CommandState					copyToModuleState;
-		protected CommandState					fontBoldState;
-		protected CommandState					fontItalicState;
-		protected CommandState					fontUnderlineState;
-		protected CommandState					glyphsState;
-		protected CommandState					filterState;
-		protected CommandState					searchState;
-		protected CommandState					searchPrevState;
-		protected CommandState					searchNextState;
-		protected CommandState					accessFirstState;
-		protected CommandState					accessPrevState;
-		protected CommandState					accessNextState;
-		protected CommandState					accessLastState;
-		protected CommandState					modificationAllState;
-		protected CommandState					modificationClearState;
-		protected CommandState					modificationPrevState;
-		protected CommandState					modificationNextState;
-		protected CommandState					newCultureState;
-		protected CommandState					deleteCultureState;
-		protected CommandState					toolSelectState;
-		protected CommandState					toolGlobalState;
-		protected CommandState					toolGridState;
-		protected CommandState					toolEditState;
-		protected CommandState					toolZoomState;
-		protected CommandState					toolHandState;
-		protected CommandState					objectHLineState;
-		protected CommandState					objectVLineState;
-		protected CommandState					objectSquareButtonState;
-		protected CommandState					objectRectButtonState;
-		protected CommandState					objectTableState;
-		protected CommandState					objectTextState;
-		protected CommandState					objectStaticState;
-		protected CommandState					objectGroupState;
-		protected CommandState					objectGroupFrameState;
-		protected CommandState					objectGroupBoxState;
-		protected CommandState					objectPanelState;
-		protected CommandState					panelDeselectAllState;
-		protected CommandState					panelSelectAllState;
-		protected CommandState					panelSelectInvertState;
-		protected CommandState					panelSelectRootState;
-		protected CommandState					panelSelectParentState;
-		protected CommandState					panelShowGridState;
-		protected CommandState					panelShowZOrderState;
-		protected CommandState					panelShowTabIndexState;
-		protected CommandState					panelShowExpandState;
-		protected CommandState					panelShowConstrainState;
-		protected CommandState					panelShowAttachmentState;
-		protected CommandState					panelRunState;
-		protected CommandState					alignLeftState;
-		protected CommandState					alignCenterXState;
-		protected CommandState					alignRightState;
-		protected CommandState					alignTopState;
-		protected CommandState					alignCenterYState;
-		protected CommandState					alignBottomState;
-		protected CommandState					alignBaseLineState;
-		protected CommandState					adjustWidthState;
-		protected CommandState					adjustHeightState;
-		protected CommandState					alignGridState;
-		protected CommandState					moveLeftState;
-		protected CommandState					moveRightState;
-		protected CommandState					moveDownState;
-		protected CommandState					moveUpState;
-		protected CommandState					panelOrderUpAllState;
-		protected CommandState					panelOrderDownAllState;
-		protected CommandState					panelOrderUpOneState;
-		protected CommandState					panelOrderDownOneState;
-		protected CommandState					tabIndexClearState;
-		protected CommandState					tabIndexFirstState;
-		protected CommandState					tabIndexPrevState;
-		protected CommandState					tabIndexNextState;
-		protected CommandState					tabIndexLastState;
-		protected CommandState					tabIndexRenumState;
-		protected CommandState					undoState;
-		protected CommandState					redoState;
-		protected CommandState					undoRedoListState;
-		protected CommandState					locatorPrevState;
-		protected CommandState					locatorNextState;
-		protected CommandState					displayHorizontalState;
-		protected CommandState					displayVerticalState;
-		protected CommandState					displayFullScreenState;
-		protected CommandState					displayWindowState;
+		private CommandState					newState;
+		private CommandState					recycleState;
+		private CommandState					openState;
+		private CommandState					saveState;
+		private CommandState					saveAsState;
+		private CommandState					initialMessageState;
+		private CommandState					checkState;
+		private CommandState					infoState;
+		private CommandState					closeState;
+		private CommandState					cutState;
+		private CommandState					copyState;
+		private CommandState					pasteState;
+		private CommandState					editLockedState;
+		private CommandState					editOkState;
+		private CommandState					editCancelState;
+		private CommandState					deleteState;
+		private CommandState					createState;
+		private CommandState					duplicateState;
+		private CommandState					copyToModuleState;
+		private CommandState					fontBoldState;
+		private CommandState					fontItalicState;
+		private CommandState					fontUnderlineState;
+		private CommandState					glyphsState;
+		private CommandState					filterState;
+		private CommandState					searchState;
+		private CommandState					searchPrevState;
+		private CommandState					searchNextState;
+		private CommandState					accessFirstState;
+		private CommandState					accessPrevState;
+		private CommandState					accessNextState;
+		private CommandState					accessLastState;
+		private CommandState					modificationAllState;
+		private CommandState					modificationClearState;
+		private CommandState					modificationPrevState;
+		private CommandState					modificationNextState;
+		private CommandState					newCultureState;
+		private CommandState					deleteCultureState;
+		private CommandState					toolSelectState;
+		private CommandState					toolGlobalState;
+		private CommandState					toolGridState;
+		private CommandState					toolEditState;
+		private CommandState					toolZoomState;
+		private CommandState					toolHandState;
+		private CommandState					objectHLineState;
+		private CommandState					objectVLineState;
+		private CommandState					objectSquareButtonState;
+		private CommandState					objectRectButtonState;
+		private CommandState					objectTableState;
+		private CommandState					objectTextState;
+		private CommandState					objectStaticState;
+		private CommandState					objectGroupState;
+		private CommandState					objectGroupFrameState;
+		private CommandState					objectGroupBoxState;
+		private CommandState					objectPanelState;
+		private CommandState					panelDeselectAllState;
+		private CommandState					panelSelectAllState;
+		private CommandState					panelSelectInvertState;
+		private CommandState					panelSelectRootState;
+		private CommandState					panelSelectParentState;
+		private CommandState					panelShowGridState;
+		private CommandState					panelShowZOrderState;
+		private CommandState					panelShowTabIndexState;
+		private CommandState					panelShowExpandState;
+		private CommandState					panelShowConstrainState;
+		private CommandState					panelShowAttachmentState;
+		private CommandState					panelRunState;
+		private CommandState					alignLeftState;
+		private CommandState					alignCenterXState;
+		private CommandState					alignRightState;
+		private CommandState					alignTopState;
+		private CommandState					alignCenterYState;
+		private CommandState					alignBottomState;
+		private CommandState					alignBaseLineState;
+		private CommandState					adjustWidthState;
+		private CommandState					adjustHeightState;
+		private CommandState					alignGridState;
+		private CommandState					moveLeftState;
+		private CommandState					moveRightState;
+		private CommandState					moveDownState;
+		private CommandState					moveUpState;
+		private CommandState					panelOrderUpAllState;
+		private CommandState					panelOrderDownAllState;
+		private CommandState					panelOrderUpOneState;
+		private CommandState					panelOrderDownOneState;
+		private CommandState					tabIndexClearState;
+		private CommandState					tabIndexFirstState;
+		private CommandState					tabIndexPrevState;
+		private CommandState					tabIndexNextState;
+		private CommandState					tabIndexLastState;
+		private CommandState					tabIndexRenumState;
+		private CommandState					undoState;
+		private CommandState					redoState;
+		private CommandState					undoRedoListState;
+		private CommandState					locatorPrevState;
+		private CommandState					locatorNextState;
+		private CommandState					displayHorizontalState;
+		private CommandState					displayVerticalState;
+		private CommandState					displayFullScreenState;
+		private CommandState					displayWindowState;
 
 		public static readonly DependencyProperty InstanceProperty = DependencyProperty.RegisterAttached("Instance", typeof(DesignerApplication), typeof(DesignerApplication));
 	}

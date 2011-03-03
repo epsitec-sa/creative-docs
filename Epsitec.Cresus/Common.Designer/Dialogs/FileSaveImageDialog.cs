@@ -33,67 +33,16 @@ namespace Epsitec.Common.Designer.Dialogs
 			set;
 		}
 
-		public double Zoom
+		public EntitiesEditor.BitmapParameters BitmapParameters
 		{
 			get
 			{
-				return FileSaveImageDialog.zoom;
+				return FileSaveImageDialog.bitmapParameters;
 			}
 			set
 			{
-				if (FileSaveImageDialog.zoom != value)
-				{
-					FileSaveImageDialog.zoom = value;
-					this.UpdateZoom ();
-				}
-			}
-		}
-
-		public bool GenerateUserCartridge
-		{
-			get
-			{
-				return FileSaveImageDialog.generateUserCartridge;
-			}
-			set
-			{
-				if (FileSaveImageDialog.generateUserCartridge != value)
-				{
-					FileSaveImageDialog.generateUserCartridge = value;
-					this.UpdateZoom ();
-				}
-			}
-		}
-
-		public bool GenerateDateCartridge
-		{
-			get
-			{
-				return FileSaveImageDialog.generateDateCartridge;
-			}
-			set
-			{
-				if (FileSaveImageDialog.generateDateCartridge != value)
-				{
-					FileSaveImageDialog.generateDateCartridge = value;
-					this.UpdateZoom ();
-				}
-			}
-		}
-
-		public bool GenerateSamplesCartridge
-		{
-			get
-			{
-				return FileSaveImageDialog.generateSamplesCartridge;
-			}
-			set
-			{
-				if (FileSaveImageDialog.generateSamplesCartridge != value)
-				{
-					FileSaveImageDialog.generateSamplesCartridge = value;
-					this.UpdateZoom ();
-				}
+				FileSaveImageDialog.bitmapParameters = value;
+				this.UpdateZoom ();
 			}
 		}
 
@@ -257,14 +206,14 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Met à jour le mode d'inclusion des polices.
 			if (this.optionsZoom1 != null)
 			{
-				this.optionsZoom1.ActiveState = (FileSaveImageDialog.zoom == 1) ? ActiveState.Yes : ActiveState.No;
-				this.optionsZoom2.ActiveState = (FileSaveImageDialog.zoom == 2) ? ActiveState.Yes : ActiveState.No;
-				this.optionsZoom3.ActiveState = (FileSaveImageDialog.zoom == 3) ? ActiveState.Yes : ActiveState.No;
-				this.optionsZoom4.ActiveState = (FileSaveImageDialog.zoom == 4) ? ActiveState.Yes : ActiveState.No;
+				this.optionsZoom1.ActiveState = (this.BitmapParameters.Zoom == 1) ? ActiveState.Yes : ActiveState.No;
+				this.optionsZoom2.ActiveState = (this.BitmapParameters.Zoom == 2) ? ActiveState.Yes : ActiveState.No;
+				this.optionsZoom3.ActiveState = (this.BitmapParameters.Zoom == 3) ? ActiveState.Yes : ActiveState.No;
+				this.optionsZoom4.ActiveState = (this.BitmapParameters.Zoom == 4) ? ActiveState.Yes : ActiveState.No;
 
-				this.cartridgeUserButton.ActiveState    = (FileSaveImageDialog.generateUserCartridge   ) ? ActiveState.Yes : ActiveState.No;
-				this.cartridgeDateButton.ActiveState    = (FileSaveImageDialog.generateDateCartridge   ) ? ActiveState.Yes : ActiveState.No;
-				this.cartridgeSamplesButton.ActiveState = (FileSaveImageDialog.generateSamplesCartridge) ? ActiveState.Yes : ActiveState.No;
+				this.cartridgeUserButton.ActiveState    = (this.BitmapParameters.GenerateUserCartridge) ? ActiveState.Yes : ActiveState.No;
+				this.cartridgeDateButton.ActiveState    = (this.BitmapParameters.GenerateDateCartridge) ? ActiveState.Yes : ActiveState.No;
+				this.cartridgeSamplesButton.ActiveState = (this.BitmapParameters.GenerateSamplesCartridge) ? ActiveState.Yes : ActiveState.No;
 			}
 		}
 
@@ -281,37 +230,37 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Un bouton radio pour le mode d'inclusion des polices a été cliqué.
 			if (sender == this.optionsZoom1)
 			{
-				this.Zoom = 1;
+				this.BitmapParameters.Zoom = 1;
 			}
 
 			if (sender == this.optionsZoom2)
 			{
-				this.Zoom = 2;
+				this.BitmapParameters.Zoom = 2;
 			}
 
 			if (sender == this.optionsZoom3)
 			{
-				this.Zoom = 3;
+				this.BitmapParameters.Zoom = 3;
 			}
 
 			if (sender == this.optionsZoom4)
 			{
-				this.Zoom = 4;
+				this.BitmapParameters.Zoom = 4;
 			}
 
 			if (sender == this.cartridgeUserButton)
 			{
-				this.GenerateUserCartridge = !this.GenerateUserCartridge;
+				this.BitmapParameters.GenerateUserCartridge = !this.BitmapParameters.GenerateUserCartridge;
 			}
 
 			if (sender == this.cartridgeDateButton)
 			{
-				this.GenerateDateCartridge = !this.GenerateDateCartridge;
+				this.BitmapParameters.GenerateDateCartridge = !this.BitmapParameters.GenerateDateCartridge;
 			}
 
 			if (sender == this.cartridgeSamplesButton)
 			{
-				this.GenerateSamplesCartridge = !this.GenerateSamplesCartridge;
+				this.BitmapParameters.GenerateSamplesCartridge = !this.BitmapParameters.GenerateSamplesCartridge;
 			}
 		}
 
@@ -361,10 +310,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		private static Settings settings = new Settings ();
 		private static string initialDirectory = null;
 		private static string initialFilename = null;
-		private static double zoom = 1;
-		private static bool generateUserCartridge = true;
-		private static bool generateDateCartridge = true;
-		private static bool generateSamplesCartridge = true;
+		private static EntitiesEditor.BitmapParameters bitmapParameters = new EntitiesEditor.BitmapParameters();
 		private static bool showOptions = true;
 
 		private readonly DesignerApplication designerApplication;

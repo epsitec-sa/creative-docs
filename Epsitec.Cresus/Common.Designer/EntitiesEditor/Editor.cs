@@ -1799,22 +1799,22 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Interface         = 0x1000,
 		}
 
-		public Size CartridgeSize(bool generateUserCartridge, bool generateDateCartridge, bool generateSamplesCartridge)
+		public Size CartridgeSize(BitmapParameters bitmapParameters)
 		{
 			//	Retourne la taille nécessaire pour le cartouche.
 			//	Le cartouche est entièrement dynamique; seuls les exemples utilisés dans le dessin sont comptés.
 			double width  = 0;
 			double height = 0;
 
-			if (generateUserCartridge || generateDateCartridge)
+			if (bitmapParameters.GenerateUserCartridge || bitmapParameters.GenerateDateCartridge)
 			{
-				width += generateUserCartridge ? Editor.CartridgeHeaderUserWidth : 0;
-				width += generateDateCartridge ? Editor.CartridgeHeaderDateWidth : 0;
+				width += bitmapParameters.GenerateUserCartridge ? Editor.CartridgeHeaderUserWidth : 0;
+				width += bitmapParameters.GenerateDateCartridge ? Editor.CartridgeHeaderDateWidth : 0;
 				width--;
 				height = Editor.CartridgeHeaderHeight;
 			}
 
-			if (generateSamplesCartridge)
+			if (bitmapParameters.GenerateSamplesCartridge)
 			{
 				var samples = this.GetCartridgeSamplesUsed ();
 				var count = 0;
@@ -1840,7 +1840,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return new Size (width*Editor.CartridgeZoom, height*Editor.CartridgeZoom);
 		}
 
-		public void PaintCartridge(Graphics graphics, bool generateUserCartridge, bool generateDateCartridge, bool generateSamplesCartridge)
+		public void PaintCartridge(Graphics graphics, BitmapParameters bitmapParameters)
 		{
 			//	Dessine le cartouche avec les légendes explicatives.
 			//	Le cartouche est entièrement dynamique; seuls les exemples utilisés dans le dessin y figurent.
@@ -1849,7 +1849,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			Rectangle bounds, rect;
 
-			var size = this.CartridgeSize (generateUserCartridge, generateDateCartridge, generateSamplesCartridge);
+			var size = this.CartridgeSize (bitmapParameters);
 			bounds = new Rectangle (1, 1, size.Width/Editor.CartridgeZoom, size.Height/Editor.CartridgeZoom);
 			bounds.Inflate (0.5);
 			graphics.AddFilledRectangle (bounds);
@@ -1857,13 +1857,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.AddRectangle (bounds);
 			graphics.RenderSolid (Color.FromBrightness (0));
 
-			if ((generateUserCartridge || generateDateCartridge) && generateSamplesCartridge)
+			if ((bitmapParameters.GenerateUserCartridge || bitmapParameters.GenerateDateCartridge) && bitmapParameters.GenerateSamplesCartridge)
 			{
 				graphics.AddLine (bounds.Left, bounds.Top-Editor.CartridgeHeaderHeight-1, bounds.Right, bounds.Top-Editor.CartridgeHeaderHeight-1);
 				graphics.RenderSolid (Color.FromBrightness (0));
 			}
 
-			if (generateUserCartridge)
+			if (bitmapParameters.GenerateUserCartridge)
 			{
 				rect = new Rectangle (bounds.Left, bounds.Top-Editor.CartridgeHeaderHeight-1, Editor.CartridgeHeaderUserWidth, Editor.CartridgeHeaderHeight+1);
 
@@ -1879,9 +1879,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				graphics.PaintText (rect.Left, rect.Bottom+1, rect.Width, rect.Height-1, name, Font.DefaultFont, 14, ContentAlignment.MiddleCenter);
 			}
 
-			if (generateDateCartridge)
+			if (bitmapParameters.GenerateDateCartridge)
 			{
-				var offset = generateUserCartridge ? Editor.CartridgeHeaderUserWidth : 0;
+				var offset = bitmapParameters.GenerateUserCartridge ? Editor.CartridgeHeaderUserWidth : 0;
 				rect = new Rectangle (bounds.Left+offset, bounds.Top-Editor.CartridgeHeaderHeight-1, Editor.CartridgeHeaderDateWidth, Editor.CartridgeHeaderHeight+1);
 
 				graphics.AddRectangle (rect);
@@ -1892,7 +1892,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				graphics.PaintText (rect.Left, rect.Bottom+1, rect.Width, rect.Height-1, text, Font.DefaultFont, 14, ContentAlignment.MiddleCenter);
 			}
 
-			if (generateSamplesCartridge)
+			if (bitmapParameters.GenerateSamplesCartridge)
 			{
 				rect = new Rectangle (bounds.Left+Editor.CartridgeSampleMargin+0.5, bounds.Bottom+Editor.CartridgeSampleMargin+0.5, Editor.CartridgeSampleWidth, Editor.CartridgeSampleHeight);
 				var samples = this.GetCartridgeSamplesUsed ();

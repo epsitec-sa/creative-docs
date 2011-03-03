@@ -1,0 +1,430 @@
+using System.Collections.Generic;
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Support;
+using Epsitec.Common.Drawing;
+
+namespace Epsitec.Common.Designer.Dialogs
+{
+	/// <summary>
+	/// Dialogue permettant d'éditer les informations d'un module.
+	/// </summary>
+	public class SaveAllImages : Abstract
+	{
+		public SaveAllImages(DesignerApplication designerApplication)
+			: base (designerApplication)
+		{
+			this.allEntityNames = new List<string> ();
+			this.selectedEntityNames = new List<string> ();
+		}
+
+		public override void Show()
+		{
+			//	Crée et montre la fenêtre du dialogue.
+			if ( this.window == null )
+			{
+				this.window = new Window();
+				this.window.Icon = this.designerApplication.Icon;
+				this.window.MakeSecondaryWindow ();
+				this.window.PreventAutoClose = true;
+				this.WindowInit ("SaveAllImages", 600, 400, true);
+				this.window.Text = "Génère plusieurs images bitmap";  // Res.Strings.Dialog.SaveAllImages.Title;
+				this.window.Owner = this.parentWindow;
+				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
+				this.window.Root.Padding = new Margins(8, 8, 8, 8);
+
+				ResizeKnob resize = new ResizeKnob (this.window.Root);
+				resize.Anchor = AnchorStyles.BottomRight;
+				resize.Margins = new Margins (0, -8, 0, -8);
+				ToolTip.Default.SetToolTip (resize, Res.Strings.Dialog.Tooltip.Resize);
+
+				this.CreateUI (this.window.Root);
+
+				//	Boutons de fermeture.
+				Widget footer = new Widget (this.window.Root);
+				footer.PreferredHeight = 22;
+				footer.Margins = new Margins (0, 0, 8, 0);
+				footer.Dock = DockStyle.Bottom;
+
+				this.buttonCancel = new Button (footer);
+				this.buttonCancel.PreferredWidth = 75;
+				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
+				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
+				this.buttonCancel.Dock = DockStyle.Right;
+				this.buttonCancel.Clicked += this.HandleButtonCloseClicked;
+				this.buttonCancel.TabIndex = 11;
+				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
+				this.buttonOk = new Button (footer);
+				this.buttonOk.PreferredWidth = 75;
+				this.buttonOk.Text = "Génère";
+				this.buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
+				this.buttonOk.Dock = DockStyle.Right;
+				this.buttonOk.Margins = new Margins (0, 6, 0, 0);
+				this.buttonOk.Clicked += this.HandleButtonOkClicked;
+				this.buttonOk.TabIndex = 10;
+				this.buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+			}
+
+			this.Update ();
+
+			this.window.Show ();
+		}
+
+
+		public List<string> AllEntityNames
+		{
+			get
+			{
+				return this.allEntityNames;
+			}
+		}
+
+		public List<string> SelectedEntityNames
+		{
+			get
+			{
+				return this.selectedEntityNames;
+			}
+		}
+
+		public string Folder
+		{
+			get;
+			set;
+		}
+
+		public string Extension
+		{
+			get;
+			set;
+		}
+
+		public EntitiesEditor.BitmapParameters BitmapParameters
+		{
+			get;
+			set;
+		}
+
+		public bool IsEditOk
+		{
+			get
+			{
+				return this.isEditOk;
+			}
+		}
+
+
+		private void CreateUI(Widget parent)
+		{
+			var box = new FrameBox
+			{
+				Parent = parent,
+				Dock = DockStyle.Fill,
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+			};
+
+			var leftPane = new FrameBox
+			{
+				Parent = box,
+				Dock = DockStyle.Fill,
+				Margins = new Margins (0, 4, 0, 0),
+			};
+
+			var rightPane = new FrameBox
+			{
+				Parent = box,
+				Dock = DockStyle.Fill,
+				Margins = new Margins (4, 0, 0, 0),
+			};
+
+			//	Rempli la colonne de gauche.
+			this.CreateTableUI (leftPane);
+
+			//	Rempli la colonne de droite.
+			this.CreateGenerateUI (rightPane);
+			this.CreateZoomUI (rightPane);
+			this.CreateExtensionUI (rightPane);
+			this.CreateBrowseUI (rightPane);
+		}
+
+		private void CreateTableUI(Widget parent)
+		{
+			this.table = new CellTable
+			{
+				Parent = parent,
+				Dock = DockStyle.Fill,
+			};
+		}
+
+		private void CreateGenerateUI(Widget parent)
+		{
+			var group = new GroupBox
+			{
+				Parent = parent,
+				Text = "Options pour les cartouches en bas à gauche",
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, 8),
+				Padding = new Margins (8),
+			};
+
+			this.checkUser    = this.CreateCheckButton (group, "user",    "Met le nom de l'utilisateur");
+			this.checkDate    = this.CreateCheckButton (group, "date",    "Met la date");
+			this.checkSamples = this.CreateCheckButton (group, "samples", "Met les exemples");
+		}
+
+		private void CreateZoomUI(Widget parent)
+		{
+			var group = new GroupBox
+			{
+				Parent = parent,
+				Text = "Zoom des images à générer",
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, 8),
+				Padding = new Margins (8),
+			};
+
+			this.radioZoom1 = this.CreateRadioButton (group, "zoom1", "100%");
+			this.radioZoom2 = this.CreateRadioButton (group, "zoom2", "200%");
+			this.radioZoom3 = this.CreateRadioButton (group, "zoom3", "300%");
+			this.radioZoom4 = this.CreateRadioButton (group, "zoom4", "400%");
+		}
+
+		private void CreateExtensionUI(Widget parent)
+		{
+			var group = new GroupBox
+			{
+				Parent = parent,
+				Text = "Type des images à générer",
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, 8),
+				Padding = new Margins (8),
+			};
+
+			this.radioPng = this.CreateRadioButton (group, "png", "Images PNG");
+			this.radioTif = this.CreateRadioButton (group, "tif", "Images ITFF");
+			this.radioBmp = this.CreateRadioButton (group, "bmp", "Images BMP");
+			this.radioJpg = this.CreateRadioButton (group, "jpg", "Images JPEG");
+		}
+
+		private void CreateBrowseUI(Widget parent)
+		{
+			var group = new FrameBox
+			{
+				Parent = parent,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, 8),
+			};
+
+			this.fieldFolder = new TextField
+			{
+				Parent = group,
+				Dock = DockStyle.Fill,
+			};
+
+			var browseButton = new Button
+			{
+				Parent = group,
+				Text = "Parcourir...",
+				Dock = DockStyle.Right,
+				Margins = new Margins (2, 0, 0, 0),
+			};
+
+			browseButton.Clicked += delegate
+			{
+			};
+		}
+
+		private CheckButton CreateCheckButton(Widget parent, string name, string text)
+		{
+			var button = new CheckButton
+			{
+				Parent = parent,
+				Name = name,
+				Text = text,
+				AutoToggle = false,
+				Dock = DockStyle.Top,
+			};
+
+			button.Clicked += delegate
+			{
+				this.ButtonClicked (button.Name);
+			};
+
+			return button;
+		}
+
+		private RadioButton CreateRadioButton(Widget parent, string name, string text)
+		{
+			var button = new RadioButton
+			{
+				Parent = parent,
+				Name = name,
+				Text = text,
+				AutoToggle = false,
+				Dock = DockStyle.Top,
+			};
+
+			button.Clicked += delegate
+			{
+				this.ButtonClicked (button.Name);
+			};
+
+			return button;
+		}
+
+		private void ButtonClicked(string name)
+		{
+			switch (name)
+			{
+				case "user":
+					this.BitmapParameters.GenerateUserCartridge = !this.BitmapParameters.GenerateUserCartridge;
+					break;
+
+				case "date":
+					this.BitmapParameters.GenerateDateCartridge = !this.BitmapParameters.GenerateDateCartridge;
+					break;
+
+				case "samples":
+					this.BitmapParameters.GenerateSamplesCartridge = !this.BitmapParameters.GenerateSamplesCartridge;
+					break;
+
+
+				case "zoom1":
+					this.BitmapParameters.Zoom = 1;
+					break;
+
+				case "zoom2":
+					this.BitmapParameters.Zoom = 2;
+					break;
+
+				case "zoom3":
+					this.BitmapParameters.Zoom = 3;
+					break;
+
+				case "zoom4":
+					this.BitmapParameters.Zoom = 4;
+					break;
+
+
+				case "png":
+					this.Extension = ".png";
+					break;
+
+				case "tif":
+					this.Extension = ".tif";
+					break;
+
+				case "bmp":
+					this.Extension = ".bmp";
+					break;
+
+				case "jpg":
+					this.Extension = ".jpg";
+					break;
+			}
+
+			this.UpdateButtons ();
+		}
+
+
+		private void Update()
+		{
+			this.isEditOk = false;
+			this.closed = false;
+
+			this.UpdateTable ();
+			this.UpdateButtons ();
+		}
+
+		private void UpdateTable()
+		{
+		}
+
+		private void UpdateButtons()
+		{
+			this.checkUser.ActiveState    = (this.BitmapParameters.GenerateUserCartridge   ) ? ActiveState.Yes : ActiveState.No;
+			this.checkDate.ActiveState    = (this.BitmapParameters.GenerateDateCartridge   ) ? ActiveState.Yes : ActiveState.No;
+			this.checkSamples.ActiveState = (this.BitmapParameters.GenerateSamplesCartridge) ? ActiveState.Yes : ActiveState.No;
+
+			this.radioZoom1.ActiveState = (this.BitmapParameters.Zoom == 1) ? ActiveState.Yes : ActiveState.No;
+			this.radioZoom2.ActiveState = (this.BitmapParameters.Zoom == 2) ? ActiveState.Yes : ActiveState.No;
+			this.radioZoom3.ActiveState = (this.BitmapParameters.Zoom == 3) ? ActiveState.Yes : ActiveState.No;
+			this.radioZoom4.ActiveState = (this.BitmapParameters.Zoom == 4) ? ActiveState.Yes : ActiveState.No;
+
+			this.radioPng.ActiveState = (this.Extension == ".png") ? ActiveState.Yes : ActiveState.No;
+			this.radioTif.ActiveState = (this.Extension == ".tif") ? ActiveState.Yes : ActiveState.No;
+			this.radioBmp.ActiveState = (this.Extension == ".bmp") ? ActiveState.Yes : ActiveState.No;
+			this.radioJpg.ActiveState = (this.Extension == ".jpg") ? ActiveState.Yes : ActiveState.No;
+
+			this.fieldFolder.Text = this.Folder;
+		}
+
+		private void Accept()
+		{
+		}
+
+
+		public void Close()
+		{
+			if (this.closed)
+			{
+				return;
+			}
+
+			if (this.buttonOk != null)  // mode "dialogue" (par opposition au mode "volet") ?
+			{
+				this.parentWindow.MakeActive ();
+				this.window.Hide ();
+				this.OnClosed ();
+			}
+
+			this.closed = true;
+		}
+
+
+		private void HandleWindowCloseClicked(object sender)
+		{
+			this.Close ();
+		}
+
+		private void HandleButtonCloseClicked(object sender, MessageEventArgs e)
+		{
+			this.Close ();
+		}
+
+		private void HandleButtonOkClicked(object sender, MessageEventArgs e)
+		{
+			this.Accept ();
+			this.Close ();
+			this.isEditOk = true;
+		}
+
+
+		private bool							isEditOk;
+		private bool							closed;
+		private int								tabIndex;
+		private List<string>					allEntityNames;
+		private List<string>					selectedEntityNames;
+
+		private CellTable						table;
+
+		private CheckButton						checkUser;
+		private CheckButton						checkDate;
+		private CheckButton						checkSamples;
+
+		private RadioButton						radioZoom1;
+		private RadioButton						radioZoom2;
+		private RadioButton						radioZoom3;
+		private RadioButton						radioZoom4;
+
+		private RadioButton						radioPng;
+		private RadioButton						radioTif;
+		private RadioButton						radioBmp;
+		private RadioButton						radioJpg;
+
+		private TextField						fieldFolder;
+
+		private Button							buttonOk;
+		private Button							buttonCancel;
+	}
+}
