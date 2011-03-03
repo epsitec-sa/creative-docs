@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Controllers.DataAccessors
+namespace Epsitec.Common.Types
 {
 	/// <summary>
 	/// The <c>Accessor</c> class wraps a getter function.

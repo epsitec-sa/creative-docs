@@ -698,6 +698,10 @@
     <Compile Include="Types\AbstractNumericType.cs" />
     <Compile Include="Types\AbstractStringConverter.cs" />
     <Compile Include="Types\AbstractType.cs" />
+    <Compile Include="Types\Accessor.cs" />
+    <Compile Include="Types\AccessorBinding.cs" />
+    <Compile Include="Types\AccessorWithDefaultValue.cs" />
+    <Compile Include="Types\Accessor`1.cs" />
     <Compile Include="Types\BinaryType.cs" />
     <Compile Include="Types\Binding.cs" />
     <Compile Include="Types\BindingAsyncOperation.cs" />

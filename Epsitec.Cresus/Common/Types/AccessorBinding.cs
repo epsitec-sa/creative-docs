@@ -1,13 +1,11 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
-
-using Epsitec.Common.Types;
 
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Epsitec.Cresus.Core.Controllers.DataAccessors
+namespace Epsitec.Common.Types
 {
 	/// <summary>
 	/// The <c>AccessorBinding</c> class encapsulates a property setter for a given
@@ -30,16 +28,21 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		/// <summary>
 		/// Creates an accessor binding for the specified property.
 		/// </summary>
-		/// <typeparam name="T">The return type of the accessor.</typeparam>
-		/// <param name="accessor">The accessor.</param>
-		/// <param name="getterExpression">The property getter.</param>
-		/// <param name="setter">The property setter.</param>
+		/// <typeparam name="TResult">The return type of the accessor.</typeparam>
+		/// <param name="accessor">The accessor (used to provide the source data).</param>
+		/// <param name="getterExpression">The property getter expression (used to retrieve the name of the property which will be set).</param>
+		/// <param name="setter">The property setter action.</param>
 		/// <returns>The accessor binding.</returns>
-		public static AccessorBinding Create<T>(Accessor<T> accessor, Expression<System.Func<FormattedText>> getterExpression, System.Action<T> setter)
+		public static AccessorBinding Create<TResult>(Accessor<TResult> accessor, Expression<System.Func<FormattedText>> getterExpression, System.Action<TResult> setter)
 		{
-			string name = ExpressionAnalyzer.GetLambdaPropertyInfo (getterExpression).Name;
+			var propertyInfo = ExpressionAnalyzer.GetLambdaPropertyInfo (getterExpression);
 
-			return new AccessorBinding (name, () => setter (accessor.ExecuteGetter ()));
+			if (propertyInfo == null)
+			{
+				throw new System.ArgumentException (string.Format ("The expression {0} does not map to a property getter", getterExpression), "getterExpression");
+			}
+
+			return new AccessorBinding (propertyInfo.Name, () => setter (accessor.ExecuteGetter ()));
 		}
 
 		#region IEquatable<AccessorBinding> Members
