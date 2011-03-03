@@ -6,7 +6,12 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Library
 {
-	public class CoreComponentHostImplementation<TComponent> : ICoreComponentHost<TComponent>
+	/// <summary>
+	/// The <c>CoreComponentHostImplementation</c> class provides a standard implementation
+	/// of <see cref="ICoreComponentHost"/>.
+	/// </summary>
+	/// <typeparam name="TComponent">The base type of all the <see cref="ICoreComponent"/> derived components.</typeparam>
+	public sealed class CoreComponentHostImplementation<TComponent> : ICoreComponentHost<TComponent>
 		where TComponent : class, ICoreComponent
 	{
 		public CoreComponentHostImplementation()
@@ -19,7 +24,14 @@ namespace Epsitec.Cresus.Core.Library
 		public T GetComponent<T>()
 			where T : TComponent
 		{
-			return (T) this.components[typeof (T).FullName];
+			TComponent component;
+
+			if (this.components.TryGetValue (typeof (T).FullName, out component))
+			{
+				return (T) component;
+			}
+
+			throw new System.ArgumentException (string.Format ("The specified component {0} does not exist", typeof (T).FullName));
 		}
 
 		public IEnumerable<TComponent> GetComponents()
@@ -27,14 +39,16 @@ namespace Epsitec.Cresus.Core.Library
 			return this.components.Select (x => x.Value);
 		}
 
-		public bool ContainsComponent<T>() where T : TComponent
+		public bool ContainsComponent<T>()
+			where T : TComponent
 		{
 			return this.components.ContainsKey (typeof (T).FullName);
 		}
 
-		public void RegisterComponent<T>(T component) where T : TComponent
+		public void RegisterComponent<T>(T component)
+			where T : TComponent
 		{
-			this.components[component.GetType ().FullName] = component;
+			this.components[typeof (T).FullName] = component;
 		}
 
 		#endregion
