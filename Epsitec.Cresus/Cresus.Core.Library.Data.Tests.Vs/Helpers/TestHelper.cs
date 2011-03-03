@@ -6,7 +6,7 @@ using Epsitec.Cresus.Database;
 using Epsitec.Cresus.Database.Implementation;
 using Epsitec.Common.IO;
 
-namespace Epsitec.Cresus.Core.UnitTests.Helpers
+namespace Epsitec.Cresus.Core.Library.Data.Tests.Vs.Helpers
 {
 
 

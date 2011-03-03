@@ -16,7 +16,7 @@ using System.Linq;
 using System.Xml.Linq;
 
 
-namespace Epsitec.Cresus.Core.UnitTests.Business.Finance.PriceCalculators
+namespace Epsitec.Cresus.Core.Library.Finance.Tests.Vs.Business.Finance.PriceCalculators
 {
 
 

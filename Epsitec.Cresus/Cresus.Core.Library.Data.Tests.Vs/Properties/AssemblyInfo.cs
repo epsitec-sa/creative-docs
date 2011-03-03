@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle ("Cresus.Core.Tests")]
+[assembly: AssemblyTitle ("Cresus.Core.Library.Data.Tests.Vs")]
 [assembly: AssemblyDescription ("")]
 [assembly: AssemblyConfiguration ("")]
 [assembly: AssemblyCompany ("Microsoft")]
-[assembly: AssemblyProduct ("Cresus.Core.Tests")]
-[assembly: AssemblyCopyright ("Copyright © Microsoft 2010")]
+[assembly: AssemblyProduct ("Cresus.Core.Library.Data.Tests.Vs")]
+[assembly: AssemblyCopyright ("Copyright © Microsoft 2011")]
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible (false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid ("ffe05172-a01b-429d-90bf-a37c7c77ea9c")]
+[assembly: Guid ("c179edb6-0d95-4d06-acc9-9c06f79cda43")]
 
 // Version information for an assembly consists of the following four values:
 //

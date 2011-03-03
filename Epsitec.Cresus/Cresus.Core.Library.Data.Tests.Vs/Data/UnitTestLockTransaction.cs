@@ -1,7 +1,7 @@
 ﻿using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Data;
-using Epsitec.Cresus.Core.UnitTests.Helpers;
+using Epsitec.Cresus.Core.Library.Data.Tests.Vs.Helpers;
 
 using Epsitec.Cresus.Database;
 
@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-namespace Epsitec.Cresus.Core.UnitTests.Data
+namespace Epsitec.Cresus.Core.Library.Data.Tests.Vs.Data
 {
 
 
