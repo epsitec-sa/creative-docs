@@ -1,7 +1,10 @@
 //	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.Extensions;
+
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.Support
 {
@@ -24,16 +27,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				foreach (CultureMap item in this)
-				{
-					if (item.Name == name)
-					{
-						this.RefreshItemIfNeeded (item);
-						return item;
-					}
-				}
-
-				return null;
+				return this.RefreshItemIfNeeded (this.list.FirstOrDefault (x => x.Name == name));
 			}
 		}
 
@@ -45,16 +39,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				foreach (CultureMap item in this)
-				{
-					if (item.Id == id)
-					{
-						this.RefreshItemIfNeeded (item);
-						return item;
-					}
-				}
-
-				return null;
+				return this.RefreshItemIfNeeded (this.Peek (id));
 			}
 		}
 
@@ -67,28 +52,25 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				CultureMap item = base[index];
-
-				this.RefreshItemIfNeeded (item);
-
-				return item;
+				return this.RefreshItemIfNeeded (base[index]);
 			}
 		}
 
 
-		internal CultureMap Peek(Druid id)
+		/// <summary>
+		/// Refreshes all <see cref="CultureMap"/> items, if needed.
+		/// </summary>
+		public void RefreshItemsIfNeeded()
+		{
+			this.list.ToArray ().ForEach (x => this.RefreshItemIfNeeded (x));
+		}
+
+		
+		public CultureMap Peek(Druid id)
 		{
 			//	Same as [] indexer, but without automatic refresh.
 
-			foreach (CultureMap item in this)
-			{
-				if (item.Id == id)
-				{
-					return item;
-				}
-			}
-
-			return null;
+			return this.list.FirstOrDefault (x => x.Id == id);
 		}
 
 		protected override void NotifyBeforeSet(int index, CultureMap oldValue, CultureMap newValue)
@@ -100,13 +82,16 @@ namespace Epsitec.Common.Support
 			throw new System.InvalidOperationException (string.Format ("Class {0} Item operator is read-only", this.GetType ().Name));
 		}
 
-		private void RefreshItemIfNeeded(CultureMap item)
+		private CultureMap RefreshItemIfNeeded(CultureMap item)
 		{
-			if ((item.IsRefreshNeeded) &&
+			if ((item != null) &&
+				(item.IsRefreshNeeded) &&
 				(this.accessor != null))
 			{
 				this.accessor.InternalRefreshItem (item);
 			}
+
+			return item;
 		}
 
 		private ResourceAccessors.AbstractResourceAccessor accessor;

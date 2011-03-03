@@ -1,11 +1,15 @@
-using System.Collections.Generic;
-using System.Xml;
-using System.Xml.Serialization;
-using Epsitec.Common.Widgets;
+//	Copyright © 2006-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
-using Epsitec.Common.Drawing;
+using Epsitec.Common.Widgets;
+
+using System.Collections.Generic;
+using System.Linq;
+using System.Xml;
 
 namespace Epsitec.Common.Designer.EntitiesEditor
 {
@@ -1474,7 +1478,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
 			StructuredData dataField = dataFields[fieldRank];
-			Druid typeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
+			Druid typeId = dataField.GetValueOrDefault<Druid> (Support.Res.Fields.Field.TypeId);
 			FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
 
 			Module module = this.SearchModule(typeId);
@@ -1933,7 +1937,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
 			StructuredData dataField = dataFields[fieldRank];
-			Druid druid = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
+			Druid druid = dataField.GetValueOrDefault<Druid> (Support.Res.Fields.Field.TypeId);
 			Druid initialDruid = druid;
 			FieldOptions options = (FieldOptions) dataField.GetValue(Support.Res.Fields.Field.Options);
 			FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
@@ -2509,39 +2513,38 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		private void UpdateSources()
 		{
 			//	Met à jour la liste de toutes les sources potentielles de l'entité courante.
-			this.sourcesList = new List<SourceInfo>();
+			this.sourcesList = new List<SourceInfo> ();
 
 			List<Module> modules = this.Application.Modules;
 			foreach (Module module in modules)
 			{
 				foreach (CultureMap cultureMap in module.AccessEntities.Accessor.Collection)
 				{
-					StructuredData data = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-					IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+					StructuredData data = cultureMap.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+					IList<StructuredData> dataFields = data.GetValue (Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
 					if (dataFields != null)
 					{
-						int i = 0;
-						foreach (StructuredData dataField in dataFields)
-						{
-							Druid typeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
-							Module dstModule = this.SearchModule(typeId);
-							CultureMap fieldCultureMap = (dstModule == null) ? null : dstModule.AccessEntities.Accessor.Collection[typeId];
-							
-							if (fieldCultureMap == this.cultureMap && !this.IsExistingSourceInfo(cultureMap))
-							{
-								SourceInfo info = new SourceInfo();
-								
-								info.CultureMap = cultureMap;
-								info.ModuleName = module.ModuleId.Name;
-								info.FieldName = cultureMap.Name;
-								info.Rank = i;
-								info.Opened = false;
+						List<CultureMap> maps = this.GetUpdatedCultureMaps (dataFields);
+						int rank = 0;
 
-								this.sourcesList.Add(info);
+						foreach (CultureMap fieldCultureMap in maps)
+						{
+							if (fieldCultureMap == this.cultureMap && !this.IsExistingSourceInfo (cultureMap))
+							{
+								SourceInfo info = new SourceInfo ()
+								{
+									CultureMap = cultureMap,
+									ModuleName = module.ModuleId.Name,
+									FieldName = cultureMap.Name,
+									Rank = rank,
+									Opened = false
+								};
+
+								this.sourcesList.Add (info);
 							}
 
-							i++;
+							rank++;
 						}
 					}
 				}
@@ -2550,6 +2553,39 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.sourcesClosedCount = this.sourcesList.Count;
 		}
 
+		private List<CultureMap> GetUpdatedCultureMaps(IList<StructuredData> dataFields)
+		{
+			while (true)
+			{
+				//	Il faut peut-être faire plusieurs passes, parce que le fait de rafraîchir
+				//	un CultureMap peut éventuellement -- indirectement -- modifier la liste
+				//	des data fields...
+
+				var copy = dataFields.ToArray ();
+				var maps = new List<CultureMap> ();
+
+				foreach (StructuredData dataField in copy)
+				{
+					Druid  typeId    = dataField.GetValueOrDefault<Druid> (Support.Res.Fields.Field.TypeId);
+					Module dstModule = this.SearchModule (typeId);
+
+					if (dstModule != null)
+					{
+						dstModule.AccessEntities.Accessor.Collection.RefreshItemsIfNeeded ();
+						maps.Add (dstModule.AccessEntities.Accessor.Collection.Peek (typeId));
+					}
+				}
+
+				if (copy.Length == dataFields.Count)
+				{
+					//	Aucune modification dans le nombre de champs : on part du principe que
+					//	c'est OK ainsi.
+
+					return maps;
+				}
+			}
+		}
+		
 		private bool IsExistingSourceInfo(CultureMap cultureMap)
 		{
 			foreach (SourceInfo info in this.sourcesList)
