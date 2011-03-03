@@ -4898,6 +4898,14 @@ namespace Epsitec.Common.Designer
 							return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (33554509));
 						}
 					}
+					//	designer:str/30K93
+					public static global::System.String SaveAllBitmaps
+					{
+						get
+						{
+							return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544425));
+						}
+					}
 					//	designer:str/30K03
 					public static global::System.String SaveBitmap
 					{

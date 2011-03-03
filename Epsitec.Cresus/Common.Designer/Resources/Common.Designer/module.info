@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ModuleInfo id="3" name="Common.Designer" layer="s" textMode="String" assemblies="" namespace="Epsitec.Common.Designer">
+<ModuleInfo id="3" name="Common.Designer" layer="s" textMode="String" namespace="Epsitec.Common.Designer">
   <Versions>
     <Version id="1" build="4" date="2011-02-28T14:50:17.4617638Z" />
-    <Version id="2" build="179" date="2011-02-28T14:55:19.0963465Z" />
+    <Version id="2" build="180" date="2011-03-03T16:18:57.1194807Z" />
   </Versions>
 </ModuleInfo>
