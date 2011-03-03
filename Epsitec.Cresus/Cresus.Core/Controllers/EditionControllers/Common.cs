@@ -17,55 +17,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	internal static class Common
 	{
-		public static string EnumInternalToSingleLine(string value)
-		{
-			if (string.IsNullOrEmpty (value))
-			{
-				return null;
-			}
-			else
-			{
-				return value.Replace (AbstractArticleParameterDefinitionEntity.Separator, ", ");
-			}
-		}
-
-		public static string EnumInternalToMultiLine(string value)
-		{
-			if (string.IsNullOrEmpty (value))
-			{
-				return null;
-			}
-			else
-			{
-				return value.Replace (AbstractArticleParameterDefinitionEntity.Separator, FormattedText.HtmlBreak);
-			}
-		}
-
-		public static string EnumSingleLineToInternal(string value)
-		{
-			if (string.IsNullOrEmpty (value))
-			{
-				return null;
-			}
-			else
-			{
-				return value.Replace (", ", AbstractArticleParameterDefinitionEntity.Separator);
-			}
-		}
-
-		public static string EnumMultiLineToInternal(string value)
-		{
-			if (string.IsNullOrEmpty (value))
-			{
-				return null;
-			}
-			else
-			{
-				return value.Replace (FormattedText.HtmlBreak, AbstractArticleParameterDefinitionEntity.Separator);
-			}
-		}
-
-
 		public static void CreateDocumentItemTabBook<T>(UIBuilder builder, EntityViewController<T> controller, DocumentItemTabId defaultId)
 			where T : AbstractDocumentItemEntity, new ()
 		{

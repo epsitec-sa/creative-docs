@@ -19,7 +19,7 @@ namespace Epsitec.Common.Support.Extensions
 			{
 				return false;
 			}
-			if (endDate.HasValue && endDate.Value < date)
+			if (endDate.HasValue && endDate.Value <= date)
 			{
 				return false;
 			}
@@ -33,7 +33,7 @@ namespace Epsitec.Common.Support.Extensions
 			{
 				return false;
 			}
-			if (endDate.HasValue && endDate.Value < date)
+			if (endDate.HasValue && endDate.Value <= date)
 			{
 				return false;
 			}

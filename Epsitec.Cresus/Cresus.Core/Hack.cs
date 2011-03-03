@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Core
 		private static SoftwareUserGroupEntity CreateUserGroup(DataContext context, SoftwareUserRoleEntity role, string name, Business.UserManagement.UserPowerLevel level)
 		{
 			var group = context.CreateEntity<SoftwareUserGroupEntity> ();
-			var logic = new Logic (group, null);
+			var logic = new Logic (group);
 
 			logic.ApplyRules (RuleType.Setup, group);
 
@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Core
 		private static SoftwareUserEntity CreateUser(DataContext context, SoftwareUserGroupEntity group, FormattedText displayName, string userLogin, string userPassword, Business.UserManagement.UserAuthenticationMethod am)
 		{
 			var user = context.CreateEntity<SoftwareUserEntity> ();
-			var logic = new Logic (user, null);
+			var logic = new Logic (user);
 
 			logic.ApplyRules (RuleType.Setup, user);
 

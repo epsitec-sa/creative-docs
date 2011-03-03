@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Entities
 		public override FormattedText GetSummary()
 		{
 			string date = Misc.GetDateShortDescription (this.BillingDate);
-			string total = Misc.PriceToString (Helpers.InvoiceDocumentHelper.GetTotalPriceTTC (this));
+			string total = Misc.PriceToString (InvoiceDocumentHelper.GetTotalPriceTTC (this));
 
 			FormattedText billing  = BusinessDocumentEntity.GetShortMailContactSummary (this.BillToMailContact);
 			FormattedText shipping = BusinessDocumentEntity.GetShortMailContactSummary (this.ShipToMailContact);

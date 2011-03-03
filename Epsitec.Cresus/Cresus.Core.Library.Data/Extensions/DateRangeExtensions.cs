@@ -18,6 +18,12 @@ namespace Epsitec.Cresus.Core.Extensions
 			return date.InRange (range.BeginDate, range.EndDate);
 		}
 
+		public static bool InRange(this System.DateTime dateTime, IDateRange range)
+		{
+			Date date = new Date (dateTime);
+			return date.InRange (range.BeginDate, range.EndDate);
+		}
+
 		public static bool Overlaps(this IDateRange range, IDateRange other)
 		{
 			if ((range.EndDate.HasValue) &&

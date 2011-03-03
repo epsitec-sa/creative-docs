@@ -4,12 +4,11 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core.Helpers;
+using Epsitec.Cresus.Core.Business.Finance;
+using Epsitec.Cresus.Core.Library;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Core.Business.Finance;
-using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Cresus.Core.Entities
 {

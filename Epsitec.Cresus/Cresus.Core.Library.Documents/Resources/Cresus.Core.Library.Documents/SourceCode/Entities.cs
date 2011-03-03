@@ -824,8 +824,26 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>AbstractDocument</c> entity.
 	///	designer:cap/HVA4
 	///	</summary>
-	public partial class AbstractDocumentEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	public partial class AbstractDocumentEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemCode
 	{
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/HVA4/8VA5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA5]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+			}
+		}
+		#endregion
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

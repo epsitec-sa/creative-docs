@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Core.Entities
 			if ((this.OutputVatCode.HasValue == false) &&
 				(this.ArticleCategory.IsNotNull ()))
 			{
-				return this.ArticleCategory.DefaultOutputVatCode;
+				return this.ArticleCategory.DefaultOutputVatCode.GetValueOrDefault (VatCode.None);
 			}
 			else
 			{
@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Core.Entities
 			if ((this.InputVatCode.HasValue == false) &&
 				(this.ArticleCategory.IsNotNull ()))
 			{
-				return this.ArticleCategory.DefaultInputVatCode;
+				return this.ArticleCategory.DefaultInputVatCode.GetValueOrDefault (VatCode.None);
 			}
 			else
 			{

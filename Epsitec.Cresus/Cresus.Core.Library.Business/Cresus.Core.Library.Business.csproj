@@ -52,9 +52,23 @@
     <Compile Include="Business\BusinessContextPool.cs" />
     <Compile Include="Business\EntitySaveMode.cs" />
     <Compile Include="Business\Enumerations.cs" />
+    <Compile Include="Business\Finance\PriceCalculator.cs" />
+    <Compile Include="Business\Finance\PriceCalculators\AbstractPriceCalculator.cs" />
+    <Compile Include="Business\Finance\PriceCalculators\ArticlePriceCalculator.cs" />
+    <Compile Include="Business\Finance\PriceCalculators\DocumentPriceCalculator.cs" />
+    <Compile Include="Business\Finance\PriceCalculators\GroupPriceCalculator.cs" />
+    <Compile Include="Business\Finance\PriceCalculators\IDocumentPriceCalculator.cs" />
+    <Compile Include="Business\Finance\PriceCalculators\SubTotalPriceCalculator.cs" />
     <Compile Include="Business\PrintableEntities.cs" />
-    <Compile Include="Business\UnitOfMeasureCategory.cs" />
     <Compile Include="Controllers\ActionViewController.cs" />
+    <Compile Include="Controllers\ArticleParameterControllers\AbstractArticleParameterController.cs" />
+    <Compile Include="Controllers\ArticleParameterControllers\ArticleParameterListPreferredValuesController.cs" />
+    <Compile Include="Controllers\ArticleParameterControllers\ArticleParameterToolbarController.cs" />
+    <Compile Include="Controllers\ArticleParameterControllers\EnumValueArticleParameterController.cs" />
+    <Compile Include="Controllers\ArticleParameterControllers\FreeTextValueArticleParameterController.cs" />
+    <Compile Include="Controllers\ArticleParameterControllers\NumericValueArticleParameterController.cs" />
+    <Compile Include="Controllers\ArticleParameterControllers\OptionValueArticleParameterController.cs" />
+    <Compile Include="Controllers\ArticleParameterControllers\ValuesArticleParameterController.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserList.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserListItem.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserSettingsController.cs" />
@@ -100,15 +114,43 @@
     <Compile Include="Controllers\ReferenceController.cs" />
     <Compile Include="Controllers\SelectionController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryViewController.cs" />
+    <Compile Include="Controllers\TabIds\ArticleParameterTabId.cs" />
+    <Compile Include="Controllers\TabIds\DocumentItemTabId.cs" />
     <Compile Include="Controllers\TextValueController.cs" />
     <Compile Include="Controllers\TileContainerController.cs" />
     <Compile Include="Controllers\TileContainerController.Initializer.cs" />
     <Compile Include="Controllers\ViewControllerMode.cs" />
     <Compile Include="Controllers\ViewLayoutController.cs" />
     <Compile Include="Controllers\WorkflowController.cs" />
+    <Compile Include="Entities\AbstractArticleParameterDefinitionEntity.cs" />
+    <Compile Include="Entities\AbstractDocumentItemEntity.cs" />
+    <Compile Include="Entities\AffairEntity.cs" />
+    <Compile Include="Entities\ArticleAccountingDefinitionEntity.cs" />
+    <Compile Include="Entities\ArticleCategoryEntity.cs" />
+    <Compile Include="Entities\ArticleDefinitionEntity.cs" />
+    <Compile Include="Entities\ArticleDocumentItemEntity.cs" />
+    <Compile Include="Entities\ArticleGroupEntity.cs" />
+    <Compile Include="Entities\ArticlePriceEntity.cs" />
+    <Compile Include="Entities\ArticleQuantityEntity.cs" />
+    <Compile Include="Entities\BusinessDocumentEntity.cs" />
+    <Compile Include="Entities\BusinessSettingsEntity.cs" />
+    <Compile Include="Entities\EndTotalDocumentItemEntity.cs" />
+    <Compile Include="Entities\EnumValueArticleParameterDefinitionEntity.cs" />
+    <Compile Include="Entities\FreeTextValueArticleParameterDefinitionEntity.cs" />
+    <Compile Include="Entities\NumericValueArticleParameterDefinitionEntity.cs" />
+    <Compile Include="Entities\OptionValueArticleParameterDefinitionEntity.cs" />
+    <Compile Include="Entities\OptionValueEntity.cs" />
+    <Compile Include="Entities\RelationEntity.cs" />
+    <Compile Include="Entities\SubTotalDocumentItemEntity.cs" />
+    <Compile Include="Entities\TaxDocumentItemEntity.cs" />
+    <Compile Include="Entities\TextDocumentItemEntity.cs" />
     <Compile Include="Factories\BusinessContextPoolFactory.cs" />
     <Compile Include="Factories\EntityViewControllerFactory.cs" />
     <Compile Include="Factories\RefIdGeneratorPoolFactory.cs" />
+    <Compile Include="Helpers\AbstractDocumentItemHelper.cs" />
+    <Compile Include="Helpers\ArticleDocumentItemHelper.cs" />
+    <Compile Include="Helpers\ArticleParameterHelper.cs" />
+    <Compile Include="Helpers\InvoiceDocumentHelper.cs" />
     <Compile Include="Orchestrators\ActiveEntityCancelEventArgs.cs" />
     <Compile Include="Orchestrators\DataViewOrchestrator.cs" />
     <Compile Include="Orchestrators\INavigationPathElementProvider.cs" />
@@ -190,6 +232,10 @@
     <ProjectReference Include="..\Cresus.Core.Library.Images\Cresus.Core.Library.Images.csproj">
       <Project>{539FF5AF-51A0-44DB-8771-910482BCF2E2}</Project>
       <Name>Cresus.Core.Library.Images</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Measures\Cresus.Core.Library.Measures.csproj">
+      <Project>{01B39E29-EDB1-4330-8E03-689DA987B6A5}</Project>
+      <Name>Cresus.Core.Library.Measures</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library.UserManagement\Cresus.Core.Library.UserManagement.csproj">
       <Project>{F5EA8D13-3119-4563-BC77-9E9D6CE94148}</Project>

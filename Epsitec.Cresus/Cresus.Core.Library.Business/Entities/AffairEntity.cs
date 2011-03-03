@@ -5,8 +5,6 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Collections;
 
-using Epsitec.Cresus.Core.Helpers;
-
 using System.Collections.Generic;
 using System.Linq;
 
@@ -72,7 +70,7 @@ namespace Epsitec.Cresus.Core.Entities
 //HACK:			a.Accumulate (this.Relation.GetEntityStatus ());
 				a.Accumulate (this.DefaultDebtorBookAccount.GetEntityStatus ().TreatAsOptional ());
 				a.Accumulate (this.ActiveSalesRepresentative.GetEntityStatus ().TreatAsOptional ());
-				a.Accumulate (this.ActiveOwner.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.ActiveAffairOwner.GetEntityStatus ().TreatAsOptional ());
 				a.Accumulate (this.SubAffairs.Select (x => x.GetEntityStatus ()));
 				a.Accumulate (this.Comments.Select (x => x.GetEntityStatus ()));
 

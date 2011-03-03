@@ -4,12 +4,11 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core.Helpers;
+using Epsitec.Cresus.Core.Business.Finance;
+using Epsitec.Cresus.Core.Library;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Core.Business.Finance;
-using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -29,13 +28,13 @@ namespace Epsitec.Cresus.Core.Entities
 				if (this.BeginDate.HasValue)
 				{
 					builder.Append ("Du");
-					builder.Append (Misc.GetDateTimeShortDescription (this.BeginDate));
+					builder.Append (Misc.GetDateShortDescription (this.BeginDate));
 				}
 
 				if (this.EndDate.HasValue)
 				{
 					builder.Append ("au");
-					builder.Append (Misc.GetDateTimeShortDescription (this.EndDate));
+					builder.Append (Misc.GetDateShortDescription (this.EndDate));
 				}
 			}
 
