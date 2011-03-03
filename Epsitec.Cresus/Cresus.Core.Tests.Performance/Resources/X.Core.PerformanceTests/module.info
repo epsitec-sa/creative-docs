@@ -1,7 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<ModuleInfo id="21" name="Cresus.PerformanceTests" layer="s" namespace="Epsitec.Cresus.PerformanceTests" textMode="FormattedText">
-  <Versions>
-    <Version id="2" build="3" date="2010-07-06T19:00:23.8349792Z" />
-    <Version id="1" build="271" date="2010-07-07T09:51:06.1200000Z" />
-  </Versions>
-</ModuleInfo>
