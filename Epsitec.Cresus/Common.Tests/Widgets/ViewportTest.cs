@@ -1,6 +1,8 @@
 using NUnit.Framework;
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Widgets
+namespace Epsitec.Common.Tests.Widgets
 {
 	[TestFixture] public class ViewportTest
 	{
@@ -16,7 +18,7 @@ namespace Epsitec.Common.Widgets
 			Window window = new Window ();
 
 			window.Text = "ViewportTest.CheckScrollableViewport";
-			window.ClientSize = new Drawing.Size (400, 300);
+			window.ClientSize = new Size (400, 300);
 			
 			Scrollable surface = new Scrollable ();
 			
@@ -24,8 +26,8 @@ namespace Epsitec.Common.Widgets
 			surface.SetManualBounds(window.Root.Client.Bounds);
 			surface.Dock   = DockStyle.Fill;
 			
-			surface.Viewport.SurfaceSize = new Drawing.Size (400, 300);
-			surface.Viewport.MinSize     = new Drawing.Size (200, 150);
+			surface.Viewport.SurfaceSize = new Size (400, 300);
+			surface.Viewport.MinSize     = new Size (200, 150);
 			
 			Button b1 = new Button ("Button 1");
 			Button b2 = new Button ("Button 2");
@@ -40,12 +42,12 @@ namespace Epsitec.Common.Widgets
 			StaticText  text;
 			RadioButton radio;
 			
-			surface.Viewport.Padding = new Drawing.Margins (8, 8, 16, 16);
+			surface.Viewport.Padding = new Margins (8, 8, 16, 16);
 			
 			text  = new StaticText (surface.Viewport);
 			text.Dock = DockStyle.Top;
 			text.Text = "Horizontal scroller mode :";
-			text.Margins = new Drawing.Margins (0, 0, 0, 4);
+			text.Margins = new Margins (0, 0, 0, 4);
 			
 			radio = new RadioButton (surface.Viewport);
 			radio.Dock = DockStyle.Top;
@@ -72,7 +74,7 @@ namespace Epsitec.Common.Widgets
 			text  = new StaticText (surface.Viewport);
 			text.Dock = DockStyle.Top;
 			text.Text = "Vertical scroller mode :";
-			text.Margins = new Drawing.Margins (0, 0, 16, 4);
+			text.Margins = new Margins (0, 0, 16, 4);
 			
 			radio = new RadioButton (surface.Viewport);
 			radio.Dock = DockStyle.Top;

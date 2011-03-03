@@ -152,6 +152,27 @@
     <Compile Include="UI\PanelTest.cs" />
     <Compile Include="UI\PlaceholderTest.cs" />
     <Compile Include="Resources\Cresus.Tests\SourceCode\Res.cs" />
+    <Compile Include="Widgets\AdornerFactoryTest.cs" />
+    <Compile Include="Widgets\AdornerTest.cs" />
+    <Compile Include="Widgets\ArrayTest.cs" />
+    <Compile Include="Widgets\CommandTest.cs" />
+    <Compile Include="Widgets\CustomWidgetTest.cs" />
+    <Compile Include="Widgets\FeelTest.cs" />
+    <Compile Include="Widgets\FicheTest.cs" />
+    <Compile Include="Widgets\GridTest.cs" />
+    <Compile Include="Widgets\LayoutTest.cs" />
+    <Compile Include="Widgets\MessageTest.cs" />
+    <Compile Include="Widgets\RibbonTest.cs" />
+    <Compile Include="Widgets\ScreenInfoTest.cs" />
+    <Compile Include="Widgets\SystemInformationTest.cs" />
+    <Compile Include="Widgets\TextLayoutTest.cs" />
+    <Compile Include="Widgets\TinyDataBase.cs" />
+    <Compile Include="Widgets\ViewportTest.cs" />
+    <Compile Include="Widgets\VisualTest.cs" />
+    <Compile Include="Widgets\VisualTreeTest.cs" />
+    <Compile Include="Widgets\WidgetTest.cs" />
+    <Compile Include="Widgets\WidgetTransformTest.cs" />
+    <Compile Include="Widgets\WindowTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Document\Common.Document.csproj">
@@ -164,6 +185,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Images\cursor.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\LineBreak-4.1.0.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

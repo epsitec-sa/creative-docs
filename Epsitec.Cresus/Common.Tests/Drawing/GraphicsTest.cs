@@ -2,6 +2,7 @@ using NUnit.Framework;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
+using Epsitec.Common.Widgets.Helpers;
 
 
 namespace Epsitec.Common.Tests.Drawing
@@ -168,7 +169,7 @@ namespace Epsitec.Common.Tests.Drawing
 
 		[Test] public void CheckFontPreviewer()
 		{
-			Widgets.Helpers.FontPreviewer.Initialize ();
+			FontPreviewer.Initialize ();
 			
 			Window window = new Window ();
 			window.WindowSize = new Size (800, 1500);
@@ -940,14 +941,14 @@ namespace Epsitec.Common.Tests.Drawing
 				
 				if (fid != null)
 				{
-					Path path = Widgets.Helpers.FontPreviewer.GetPath (fid, ox, oy, size);
+					Path path = FontPreviewer.GetPath (fid, ox, oy, size);
 					
 					e.Graphics.Color = Color.FromName ("Black");
 					e.Graphics.PaintSurface (path);
 					
 					path.Dispose ();
 					
-					path = Widgets.Helpers.FontPreviewer.GetPathAbc (fid, ox, oy + size*fonts.Length, size);
+					path = FontPreviewer.GetPathAbc (fid, ox, oy + size*fonts.Length, size);
 					
 					e.Graphics.Color = Color.FromName ("Black");
 					e.Graphics.PaintSurface (path);

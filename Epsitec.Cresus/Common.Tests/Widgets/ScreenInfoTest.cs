@@ -1,7 +1,9 @@
 using NUnit.Framework;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Support;
 
-namespace Epsitec.Common.Widgets
+namespace Epsitec.Common.Tests.Widgets
 {
 	[TestFixture]
 	public class ScreenInfoTest
@@ -72,8 +74,8 @@ namespace Epsitec.Common.Widgets
 			window.MakeFramelessWindow ();
 			window.MakeLayeredWindow ();
 			
-			window.ClientSize = new Drawing.Size (110, 110);
-			window.Root.BackColor = Drawing.Color.Transparent;
+			window.ClientSize = new Size (110, 110);
+			window.Root.BackColor = Color.Transparent;
 			
 			Magnifier glass = new Magnifier ();
 			
@@ -91,7 +93,7 @@ namespace Epsitec.Common.Widgets
 		[Ignore ("Broken under Vista")]
 		public void CheckMagnifier()
 		{
-			Tools.Magnifier magnifier = new Tools.Magnifier ();
+			Epsitec.Common.Widgets.Tools.Magnifier magnifier = new Epsitec.Common.Widgets.Tools.Magnifier ();
 			
 			magnifier.Show ();
 			Window.RunInTestEnvironment (magnifier.ZoomWindow);
@@ -101,7 +103,7 @@ namespace Epsitec.Common.Widgets
 		[Ignore ("Broken under Vista")]
 		public void CheckColorPicker()
 		{
-			Tools.Magnifier magnifier = new Tools.Magnifier ();
+			Epsitec.Common.Widgets.Tools.Magnifier magnifier = new Epsitec.Common.Widgets.Tools.Magnifier ();
 			
 			magnifier.DisplayRadius = 110;
 			magnifier.IsColorPicker = true;
@@ -114,12 +116,12 @@ namespace Epsitec.Common.Widgets
 		{
 			public Magnifier()
 			{
-				this.bitmap = Drawing.Bitmap.FromNativeBitmap (11, 11);
+				this.bitmap = Bitmap.FromNativeBitmap (11, 11);
 				this.scale  = 11;
 			}
 			
 			
-			public Drawing.Color				HotColor
+			public Color				HotColor
 			{
 				get
 				{
@@ -178,7 +180,7 @@ namespace Epsitec.Common.Widgets
 						double dx = this.Client.Size.Width;
 						double dy = this.Client.Size.Height;
 						
-						this.bitmap = Drawing.Bitmap.FromNativeBitmap (scale, scale);
+						this.bitmap = Bitmap.FromNativeBitmap (scale, scale);
 						this.scale  = scale;
 						this.Invalidate ();
 						break;
@@ -187,22 +189,22 @@ namespace Epsitec.Common.Widgets
 						switch (message.KeyCode)
 						{
 							case KeyCode.ArrowUp:
-								this.Window.WindowLocation += new Drawing.Point (0, 1);
+								this.Window.WindowLocation += new Point (0, 1);
 								this.Invalidate ();
 								break;
 							
 							case KeyCode.ArrowDown:
-								this.Window.WindowLocation += new Drawing.Point (0, -1);
+								this.Window.WindowLocation += new Point (0, -1);
 								this.Invalidate ();
 								break;
 							
 							case KeyCode.ArrowLeft:
-								this.Window.WindowLocation += new Drawing.Point (-1, 0);
+								this.Window.WindowLocation += new Point (-1, 0);
 								this.Invalidate ();
 								break;
 							
 							case KeyCode.ArrowRight:
-								this.Window.WindowLocation += new Drawing.Point (1, 0);
+								this.Window.WindowLocation += new Point (1, 0);
 								this.Invalidate ();
 								break;
 						}
@@ -252,7 +254,7 @@ namespace Epsitec.Common.Widgets
 				double dx = this.Client.Size.Width;
 				double dy = this.Client.Size.Height;
 				
-				Drawing.Path path;
+				Path path;
 				
 				if ((this.mask == null) ||
 					(this.mask_dx != dx) ||
@@ -268,15 +270,15 @@ namespace Epsitec.Common.Widgets
 					this.mask_dx = dx;
 					this.mask_dy = dy;
 					
-					path = Drawing.Path.FromCircle (dx/2, dy/2, dx/2, dy/2);
+					path = Path.FromCircle (dx/2, dy/2, dx/2, dy/2);
 					
-					this.mask.Color = Drawing.Color.FromRgb (1, 0, 0);
+					this.mask.Color = Color.FromRgb (1, 0, 0);
 					this.mask.PaintSurface (path);
 					
 					path.Dispose ();
 				}
 				
-				Drawing.Point pos = this.MapClientToScreen (new Drawing.Point (dx/2, dy/2));
+				Point pos = this.MapClientToScreen (new Point (dx/2, dy/2));
 				
 				int pix_x = (int) (pos.X - this.bitmap.Width /2);
 				int pix_y = (int) (pos.Y - this.bitmap.Height/2);
@@ -288,7 +290,7 @@ namespace Epsitec.Common.Widgets
 				
 				graphics.SolidRenderer.SetAlphaMask (this.mask.Pixmap, MaskComponent.R);
 				
-				using (Drawing.Pixmap.RawData raw = new Drawing.Pixmap.RawData (this.bitmap))
+				using (Pixmap.RawData raw = new Pixmap.RawData (this.bitmap))
 				{
 					int nx = (int) this.bitmap.Width;
 					int ny = (int) this.bitmap.Height;
@@ -302,7 +304,7 @@ namespace Epsitec.Common.Widgets
 						
 						for (int ix = 0; ix < nx; ix++)
 						{
-							path = Drawing.Path.FromRectangle (x, dy-y-sy, sx+1, sy+1);
+							path = Path.FromRectangle (x, dy-y-sy, sx+1, sy+1);
 							graphics.Color = raw[ix, iy];
 							graphics.PaintSurface (path);
 							path.Dispose ();
@@ -317,7 +319,7 @@ namespace Epsitec.Common.Widgets
 				double ox = System.Math.Floor (this.bitmap.Width / 2)  * sx - 0.5;
 				double oy = System.Math.Floor (this.bitmap.Height / 2) * sy + 0.5;
 				
-				path = new Drawing.Path ();
+				path = new Path ();
 				
 				path.MoveTo (ox+2, oy+0);
 				path.LineTo (ox+0, oy+0);
@@ -334,7 +336,7 @@ namespace Epsitec.Common.Widgets
 				path.AppendCircle (dx/2, dy/2, dx/2-0.5, dy/2-0.5);
 				path.AppendCircle (dx/2, dy/2, dx/2, dy/2);
 				
-				graphics.Color = Drawing.Color.FromAlphaRgb (0.5, 0, 0, 0.8);
+				graphics.Color = Color.FromAlphaRgb (0.5, 0, 0, 0.8);
 				graphics.LineWidth = 1.0;
 				graphics.PaintOutline (path);
 				
@@ -353,10 +355,10 @@ namespace Epsitec.Common.Widgets
 				this.PaintText (graphics, buffer.ToString ());
 			}
 			
-			protected virtual void PaintText(Drawing.Graphics graphics, string text)
+			protected virtual void PaintText(Graphics graphics, string text)
 			{
-				Drawing.Path path = new Drawing.Path ();
-				Drawing.Font font = Drawing.Font.GetFont ("Tahoma", "Regular");
+				Path path = new Path ();
+				Font font = Font.GetFont ("Tahoma", "Regular");
 				double       size = 10;
 				
 				double dx = font.GetTextAdvance (text) * size;
@@ -366,10 +368,10 @@ namespace Epsitec.Common.Widgets
 				
 				graphics.AddFilledRectangle (ox - 1, oy - 2, dx + 2, font.LineHeight * size - 0);
 				graphics.AddFilledRectangle (ox - 2, oy - 1, dx + 4, font.LineHeight * size - 2);
-				graphics.RenderSolid (Drawing.Color.FromAlphaRgb (0.8, 1, 1, 1));
+				graphics.RenderSolid (Color.FromAlphaRgb (0.8, 1, 1, 1));
 				
 				graphics.AddText (ox, oy, text, font, size);
-				graphics.RenderSolid (Drawing.Color.FromBrightness (0));
+				graphics.RenderSolid (Color.FromBrightness (0));
 			}
 			
 			
@@ -396,18 +398,18 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			
-			public event Support.EventHandler	HotColorChanged;
+			public event EventHandler	HotColorChanged;
 			
 			
-			private Drawing.Color				hot_color;
+			private Color				hot_color;
 			private int							scale;
 			
 			private bool						is_dragging;
 			
 			private double						mask_dx, mask_dy;
-			private Drawing.Point				origin;
-			private Drawing.Image				bitmap;
-			private Drawing.Graphics			mask;
+			private Point				origin;
+			private Image				bitmap;
+			private Graphics			mask;
 			
 			private Timer						timer;
 		}

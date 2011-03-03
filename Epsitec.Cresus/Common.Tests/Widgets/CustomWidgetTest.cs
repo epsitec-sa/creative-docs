@@ -1,8 +1,9 @@
 using NUnit.Framework;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
+using Epsitec.Common.Widgets;
 
-namespace Epsitec.Common.Widgets
+namespace Epsitec.Common.Tests.Widgets
 {
 	[TestFixture]
 	public class CustomWidgetTest
@@ -178,7 +179,7 @@ namespace Epsitec.Common.Widgets
 			double growth = System.Math.Max (this.Client.Size.Width, this.Client.Size.Height) * 0.03;
 			double margin = 0.3 + (this.highlight ? growth : 0);
 
-			return new Drawing.Margins (margin, margin, margin, margin);
+			return new Margins (margin, margin, margin, margin);
 		}
 
 		

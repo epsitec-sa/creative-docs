@@ -287,18 +287,18 @@ namespace Epsitec.Common.Tests.Drawing
 			stack[2].Size = new System.Drawing.Size (400, 400);
 			stack[2].Copy (0, 0, cache.Pixmap, 0, 0, 400, 400);
 			
-			Widgets.Window window = new Widgets.Window ();
+			Window window = new Window ();
 			window.ClientSize = new Size (400, 400);
-			Widgets.Widget widget = new TestWidget (stack);
+			Widget widget = new TestWidget (stack);
 			
-			widget.Dock   = Widgets.DockStyle.Fill;
+			widget.Dock   = DockStyle.Fill;
 			widget.SetParent (window.Root);
 			
 			window.Show ();
 			Window.RunInTestEnvironment (window);
 		}
 		
-		protected class TestWidget : Widgets.Widget
+		protected class TestWidget : Widget
 		{
 			public TestWidget(Pixmap[] stack)
 			{

@@ -9,6 +9,7 @@ using Epsitec.Common.UI;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types.Collections;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Tests.UI
 {
@@ -54,7 +55,7 @@ namespace Epsitec.Common.Tests.UI
 
 			Assert.AreEqual (new Size (100-17-2*1, 80-26-17-2*1), panel.Aperture.Size);
 			
-			Widgets.Application.ExecuteAsyncCallbacks ();
+			Application.ExecuteAsyncCallbacks ();
 
 			Assert.AreEqual (2, panel.GetItemViewCount ());
 			Assert.AreEqual (new Size (200, 20*2), panel.GetContentsSize ());
@@ -74,7 +75,7 @@ namespace Epsitec.Common.Tests.UI
 			Assert.AreEqual (3, (panel.GetItemView (0).Group).ChildPanel.GetItemViewCount ());
 
 			Assert.AreEqual (new Size (200, 20*2), panel.GetContentsSize ());
-			Widgets.Application.ExecuteAsyncCallbacks ();
+			Application.ExecuteAsyncCallbacks ();
 			Assert.AreEqual (new Size (200, 20+20*3+20), panel.GetContentsSize ());
 			Assert.AreEqual (new Rectangle (0, 20, 200, 20+20*3), panel.GetItemView (0).Bounds);
 			Assert.AreEqual (new Rectangle (0, 0, 200, 20), panel.GetItemView (1).Bounds);
@@ -96,7 +97,7 @@ namespace Epsitec.Common.Tests.UI
 			Assert.AreEqual (3, (panel.GetItemView (0).Group.ChildPanel.GetItemViewCount ()));
 
 			Assert.AreEqual (new Size (200, 20+20*3+20), panel.GetContentsSize ());
-			Widgets.Application.ExecuteAsyncCallbacks ();
+			Application.ExecuteAsyncCallbacks ();
 			Assert.AreEqual (new Size (200, 20*2), panel.GetContentsSize ());
 
 			//	Expanded subpanel
@@ -110,7 +111,7 @@ namespace Epsitec.Common.Tests.UI
 			Assert.AreEqual (new Size (200, 20+80), panel.GetContentsSize ());
 			
 			panel.ExpandItemView (panel.GetItemView (1), true);
-			Widgets.Application.ExecuteAsyncCallbacks ();
+			Application.ExecuteAsyncCallbacks ();
 
 			Assert.AreEqual (new Rectangle (0, 0, 200, 20+20*3), panel.GetItemView (1).Bounds);
 			Assert.AreEqual (new Rectangle (0, 20+20*3, 200, 20+20*3), panel.GetItemView (0).Bounds);
@@ -154,7 +155,7 @@ namespace Epsitec.Common.Tests.UI
 
 			Assert.AreEqual (new Size (99-17-2*1, 105-26-17-2*1), panel.Aperture.Size);
 			
-			Widgets.Application.ExecuteAsyncCallbacks ();
+			Application.ExecuteAsyncCallbacks ();
 			
 			Assert.AreEqual (2, panel.GetItemViewCount ());
 			Assert.AreEqual (new Size (300, 20*2), panel.GetContentsSize ());
@@ -166,7 +167,7 @@ namespace Epsitec.Common.Tests.UI
 			Assert.AreEqual (3, (panel.GetItemView (1).Item as CollectionViewGroup).ItemCount);
 
 			panel.ExpandItemView (panel.GetItemView (0), true);
-			Widgets.Application.ExecuteAsyncCallbacks ();
+			Application.ExecuteAsyncCallbacks ();
 			panel.Show (panel.GetItemView (0));
 			
 			ItemPanelGroup group = panel.GetItemView (0).Group;
@@ -192,15 +193,15 @@ namespace Epsitec.Common.Tests.UI
 			Assert.AreEqual (3, group.ChildPanel.GetItemView (1).Widget.Children.Count);
 			Assert.IsNull (group.ChildPanel.GetItemView (2).Widget);
 			
-			Assert.AreEqual ("41", ((Widgets.Widget)group.ChildPanel.GetItemView (1).Widget.Children[0]).Text);
-			Assert.AreEqual ("Rondelle", ((Widgets.Widget) group.ChildPanel.GetItemView (1).Widget.Children[1]).Text);
-			Assert.AreEqual ("0.05", ((Widgets.Widget) group.ChildPanel.GetItemView (1).Widget.Children[2]).Text);
+			Assert.AreEqual ("41", ((Widget)group.ChildPanel.GetItemView (1).Widget.Children[0]).Text);
+			Assert.AreEqual ("Rondelle", ((Widget) group.ChildPanel.GetItemView (1).Widget.Children[1]).Text);
+			Assert.AreEqual ("0.05", ((Widget) group.ChildPanel.GetItemView (1).Widget.Children[2]).Text);
 		}
 
 		[Test]
 		public void CheckInteractiveTable()
 		{
-			Widgets.Window window = new Widgets.Window ();
+			Window window = new Window ();
 
 			double dx = 400;
 			double dy = 420;
@@ -213,7 +214,7 @@ namespace Epsitec.Common.Tests.UI
 			dy -= 8;
 
 			ItemTable table = new ItemTable (window.Root);
-			table.Dock = Widgets.DockStyle.Fill;
+			table.Dock = DockStyle.Fill;
 
 			table.SourceType = ItemPanelTest.GetStructuredType ();
 
@@ -242,13 +243,13 @@ namespace Epsitec.Common.Tests.UI
 			window.Show ();
 			panel.Focus ();
 
-			Widgets.Window.RunInTestEnvironment (window);
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test]
 		public void CheckInteractiveTableWithGroups_1_Level()
 		{
-			Widgets.Window window = new Widgets.Window ();
+			Window window = new Window ();
 
 			double dx = 400;
 			double dy = 420;
@@ -261,7 +262,7 @@ namespace Epsitec.Common.Tests.UI
 			dy -= 8;
 
 			ItemTable table = new ItemTable (window.Root);
-			table.Dock = Widgets.DockStyle.Fill;
+			table.Dock = DockStyle.Fill;
 
 			table.SourceType = ItemPanelTest.GetStructuredType ();
 			
@@ -288,13 +289,13 @@ namespace Epsitec.Common.Tests.UI
 			window.Show ();
 			panel.Focus ();
 
-			Widgets.Window.RunInTestEnvironment (window);
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test]
 		public void CheckInteractiveTableWithGroups_2_Levels()
 		{
-			Widgets.Window window = new Widgets.Window ();
+			Window window = new Window ();
 
 			double dx = 400;
 			double dy = 420;
@@ -307,7 +308,7 @@ namespace Epsitec.Common.Tests.UI
 			dy -= 8;
 
 			ItemTable table = new ItemTable (window.Root);
-			table.Dock = Widgets.DockStyle.Fill;
+			table.Dock = DockStyle.Fill;
 
 			table.SourceType = ItemPanelTest.GetStructuredType ();
 
@@ -335,7 +336,7 @@ namespace Epsitec.Common.Tests.UI
 			window.Show ();
 			panel.Focus ();
 
-			Widgets.Window.RunInTestEnvironment (window);
+			Window.RunInTestEnvironment (window);
 		}
 
 		private static System.Random random = new System.Random (0);
@@ -350,37 +351,37 @@ namespace Epsitec.Common.Tests.UI
 			return ItemPanelTest.NewStructuredData (article, quantity, price, cat);
 		}
 
-		private static void CreateTableButtons(Widgets.Window window, ItemTable table, ItemPanel panel)
+		private static void CreateTableButtons(Window window, ItemTable table, ItemPanel panel)
 		{
 			table.TabIndex = 1;
 			table.TabNavigationMode = Epsitec.Common.Widgets.TabNavigationMode.ActivateOnTab;
 
-			Widgets.FrameBox box;
+			FrameBox box;
 
-			box = new Widgets.FrameBox (window.Root);
+			box = new FrameBox (window.Root);
 
-			box.Dock = Widgets.DockStyle.Bottom;
+			box.Dock = DockStyle.Bottom;
 			box.PreferredHeight = 36;
 			box.Padding = new Margins (4, 4, 8, 8);
-			box.ContainerLayoutMode = Widgets.ContainerLayoutMode.HorizontalFlow;
+			box.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 
-			Widgets.Button button0 = ItemPanelTest.CreateButton (box, "0");
-			Widgets.Button button1 = ItemPanelTest.CreateButton (box, "1");
-			Widgets.Button buttonN = ItemPanelTest.CreateButton (box, "n");
+			Button button0 = ItemPanelTest.CreateButton (box, "0");
+			Button button1 = ItemPanelTest.CreateButton (box, "1");
+			Button buttonN = ItemPanelTest.CreateButton (box, "n");
 
-			Widgets.Button buttonSA = ItemPanelTest.CreateButton (box, "A");
-			Widgets.Button buttonSM = ItemPanelTest.CreateButton (box, "M");
-			Widgets.Button buttonSO = ItemPanelTest.CreateButton (box, "1");
+			Button buttonSA = ItemPanelTest.CreateButton (box, "A");
+			Button buttonSM = ItemPanelTest.CreateButton (box, "M");
+			Button buttonSO = ItemPanelTest.CreateButton (box, "1");
 
-			Widgets.Button buttonA = ItemPanelTest.CreateButton (box, "Item");
-			Widgets.Button buttonB = ItemPanelTest.CreateButton (box, "Linear");
+			Button buttonA = ItemPanelTest.CreateButton (box, "Item");
+			Button buttonB = ItemPanelTest.CreateButton (box, "Linear");
 
-			Widgets.TextField text = new Widgets.TextField (box);
+			TextField text = new TextField (box);
 
 			text.Margins = new Margins (16, 0, 0, 0);
-			text.Dock = Widgets.DockStyle.Stacked;
+			text.Dock = DockStyle.Stacked;
 			text.PreferredWidth = 40;
-			text.VerticalAlignment = Widgets.VerticalAlignment.Center;
+			text.VerticalAlignment = VerticalAlignment.Center;
 
 			text.TabIndex = 2;
 			text.TabNavigationMode = Epsitec.Common.Widgets.TabNavigationMode.ActivateOnTab;
@@ -433,20 +434,20 @@ namespace Epsitec.Common.Tests.UI
 
 			IList<StructuredData> source = panel.Items.SourceCollection as IList<StructuredData>;
 
-			box = new Widgets.FrameBox (window.Root);
+			box = new FrameBox (window.Root);
 
-			box.Dock = Widgets.DockStyle.Bottom;
+			box.Dock = DockStyle.Bottom;
 			box.PreferredHeight = 36;
 			box.Padding = new Margins (4, 4, 8, 8);
-			box.ContainerLayoutMode = Widgets.ContainerLayoutMode.HorizontalFlow;
+			box.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 
-			Widgets.Button buttonClear  = ItemPanelTest.CreateButton (box, "*");
-			Widgets.Button buttonTop    = ItemPanelTest.CreateButton (box, "^");
-			Widgets.Button buttonBottom = ItemPanelTest.CreateButton (box, "v");
-			Widgets.Button buttonPrev   = ItemPanelTest.CreateButton (box, "&lt;");
-			Widgets.Button buttonNext   = ItemPanelTest.CreateButton (box, "&gt;");
-			Widgets.Button buttonCreate = ItemPanelTest.CreateButton (box, "+");
-			Widgets.Button buttonRefresh= ItemPanelTest.CreateButton (box, "R");
+			Button buttonClear  = ItemPanelTest.CreateButton (box, "*");
+			Button buttonTop    = ItemPanelTest.CreateButton (box, "^");
+			Button buttonBottom = ItemPanelTest.CreateButton (box, "v");
+			Button buttonPrev   = ItemPanelTest.CreateButton (box, "&lt;");
+			Button buttonNext   = ItemPanelTest.CreateButton (box, "&gt;");
+			Button buttonCreate = ItemPanelTest.CreateButton (box, "+");
+			Button buttonRefresh= ItemPanelTest.CreateButton (box, "R");
 
 			buttonClear.Clicked += delegate
 			{
@@ -486,11 +487,11 @@ namespace Epsitec.Common.Tests.UI
 			buttonCreate.Margins = new Margins (8, 0, 0, 0);
 		}
 
-		private static Widgets.Button CreateButton(Epsitec.Common.Widgets.FrameBox box, string text)
+		private static Button CreateButton(Epsitec.Common.Widgets.FrameBox box, string text)
 		{
-			Widgets.Button button = new Widgets.Button (text);
+			Button button = new Button (text);
 			
-			button.Dock = Widgets.DockStyle.Stacked;
+			button.Dock = DockStyle.Stacked;
 			button.PreferredWidth = 20;
 			button.AutoFocus = false;
 			
@@ -508,7 +509,7 @@ namespace Epsitec.Common.Tests.UI
 			panel.Layout = ItemPanelLayout.VerticalList;
 			panel.ItemSelectionMode = ItemPanelSelectionMode.None;
 
-			Widgets.Application.ExecuteAsyncCallbacks ();
+			Application.ExecuteAsyncCallbacks ();
 
 			panel.SelectItemView (panel.GetItemView (0));
 			Assert.AreEqual (0, panel.GetSelectedItemViews ().Count);
@@ -579,7 +580,7 @@ namespace Epsitec.Common.Tests.UI
 			panel.Items = ItemPanelTest.GetStringItems ();
 			panel.Layout = ItemPanelLayout.VerticalList;
 
-			Widgets.Application.ExecuteAsyncCallbacks ();
+			Application.ExecuteAsyncCallbacks ();
 
 			Assert.AreEqual (7, panel.GetItemViewCount ());
 			Assert.AreEqual ("Monday", panel.GetItemView (0).Item);
@@ -627,7 +628,7 @@ namespace Epsitec.Common.Tests.UI
 			items.Add ("--any--");
 
 			panel.Items.Refresh ();
-			Widgets.Application.ExecuteAsyncCallbacks ();
+			Application.ExecuteAsyncCallbacks ();
 
 			Assert.AreEqual (8, panel.GetItemViewCount ());
 			Assert.AreEqual (new Size (80, 20*8), panel.GetContentsSize ());

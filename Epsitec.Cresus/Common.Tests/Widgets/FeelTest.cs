@@ -1,6 +1,8 @@
 using NUnit.Framework;
+using Epsitec.Common.Widgets.Feel;
+using Epsitec.Common.Widgets;
 
-namespace Epsitec.Common.Widgets
+namespace Epsitec.Common.Tests.Widgets
 {
 	[TestFixture] public class FeelTest
 	{
@@ -34,9 +36,9 @@ namespace Epsitec.Common.Widgets
 		
 		[Test] public void CheckFeelShortcuts()
 		{
-			Feel.Factory.SetActive ("Default");
+			Factory.SetActive ("Default");
 			
-			IFeel feel = Feel.Factory.Active;
+			IFeel feel = Factory.Active;
 			
 			Assert.IsNotNull (feel);
 			

@@ -2,10 +2,13 @@ using NUnit.Framework;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Types.Serialization;
+using Epsitec.Common.Widgets.Collections;
 
-[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.CommandTest.MyCommandTest))]
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Tests.Widgets.CommandTest.MyCommandTest))]
 
-namespace Epsitec.Common.Widgets
+namespace Epsitec.Common.Tests.Widgets
 {
 	[TestFixture] public class CommandTest
 	{
@@ -15,20 +18,20 @@ namespace Epsitec.Common.Widgets
 			Epsitec.Common.Document.Engine.Initialize ();
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
 
-			Resources.DefaultManager.ActiveCulture = Resources.FindSpecificCultureInfo ("fr");
+			Epsitec.Common.Support.Resources.DefaultManager.ActiveCulture = Epsitec.Common.Support.Resources.FindSpecificCultureInfo ("fr");
 		}
 
 		[Test]
 		public void Check0TemporaryCommand()
 		{
-			Caption caption1 = Resources.DefaultManager.GetCaption (Druid.Parse ("[0005]"));
-			Caption caption2 = Resources.DefaultManager.GetCaption (Druid.Parse ("[0004]"));
-			Caption caption3 = Resources.DefaultManager.GetCaption (Druid.Parse ("[0004]"));
+			Caption caption1 = Epsitec.Common.Support.Resources.DefaultManager.GetCaption (Druid.Parse ("[0005]"));
+			Caption caption2 = Epsitec.Common.Support.Resources.DefaultManager.GetCaption (Druid.Parse ("[0004]"));
+			Caption caption3 = Epsitec.Common.Support.Resources.DefaultManager.GetCaption (Druid.Parse ("[0004]"));
 
 			Command command = Command.Get (Druid.Parse ("[0005]"));
 
-			Command tempCmd1 = Command.CreateTemporary (caption1, Support.Resources.DefaultManager);
-			Command tempCmd2 = Command.CreateTemporary (caption2, Support.Resources.DefaultManager);
+			Command tempCmd1 = Command.CreateTemporary (caption1, Epsitec.Common.Support.Resources.DefaultManager);
+			Command tempCmd2 = Command.CreateTemporary (caption2, Epsitec.Common.Support.Resources.DefaultManager);
 
 			Assert.AreEqual (caption1, command.Caption);
 			Assert.AreEqual (caption2, caption3);
@@ -75,11 +78,11 @@ namespace Epsitec.Common.Widgets
 
 			t1.Command = command;
 
-			string xml = Types.Serialization.SimpleSerialization.SerializeToString (t1);
+			string xml = SimpleSerialization.SerializeToString (t1);
 
 			System.Console.Out.WriteLine (xml);
 
-			t2 = Types.Serialization.SimpleSerialization.DeserializeFromString (xml) as MyCommandTest;
+			t2 = SimpleSerialization.DeserializeFromString (xml) as MyCommandTest;
 
 			Command restored = t2.Command;
 
@@ -93,7 +96,7 @@ namespace Epsitec.Common.Widgets
 		[Test]
 		public void CheckCommandSerialization2()
 		{
-			Collections.ShortcutCollection shortcuts;
+			ShortcutCollection shortcuts;
 			
 			Command command = Command.Get ("Test.CheckCommandSerialization2");
 			command.Shortcuts.Add (new Shortcut ('O', ModifierKeys.Alt));
@@ -114,12 +117,12 @@ namespace Epsitec.Common.Widgets
 			Assert.AreEqual (command.Shortcuts[0], shortcuts[0]);
 			Assert.AreEqual (command.Shortcuts[1], shortcuts[1]);
 
-			string xml = Types.Serialization.SimpleSerialization.SerializeToString (command.Caption);
+			string xml = SimpleSerialization.SerializeToString (command.Caption);
 
 			System.Console.Out.WriteLine (xml);
 			Assert.AreEqual (Caption.CompressXml (xml), command.Caption.SerializeToString ());
 
-			Caption caption1 = Types.Serialization.SimpleSerialization.DeserializeFromString (xml) as Caption;
+			Caption caption1 = SimpleSerialization.DeserializeFromString (xml) as Caption;
 			Caption caption2 = new Caption ();
 
 			caption2.DeserializeFromString (xml);

@@ -32,7 +32,7 @@ namespace Epsitec.Common.Tests.UI
 		[Test]
 		public void Check01Variations()
 		{
-			Widgets.Window window = new Widgets.Window ();
+			Window window = new Window ();
 
 			window.Text = "MetaButtonTest.Check01Variations";
 			window.ClientSize = new Size (300, 600);
@@ -131,13 +131,13 @@ namespace Epsitec.Common.Tests.UI
 
 			window.Show ();
 			
-			Widgets.Window.RunInTestEnvironment (window);
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test]
 		public void Check02CreateFromCommandId()
 		{
-			Widgets.Window window = new Widgets.Window ();
+			Window window = new Window ();
 
 			window.Text = "MetaButtonTest.Check02CreateFromCommandId";
 			window.ClientSize = new Size (400, 300);
@@ -200,7 +200,7 @@ namespace Epsitec.Common.Tests.UI
 
 			window.Show ();
 
-			Widgets.Window.RunInTestEnvironment (window);
+			Window.RunInTestEnvironment (window);
 		}
 	}
 }

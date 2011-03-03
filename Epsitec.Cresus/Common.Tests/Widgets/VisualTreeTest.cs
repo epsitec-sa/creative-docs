@@ -1,8 +1,11 @@
 using NUnit.Framework;
 
-namespace Epsitec.Common.Widgets
+namespace Epsitec.Common.Tests.Widgets
 {
 	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
+	using Epsitec.Common.Widgets;
+	using Epsitec.Common.Widgets.Helpers;
+	using Epsitec.Common.Widgets.Layouts;
 	
 	[TestFixture] public class VisualTreeTest
 	{
@@ -18,10 +21,10 @@ namespace Epsitec.Common.Widgets
 			b.Children.Add (c1);
 			b.Children.Add (c2);
 
-			Assert.AreEqual (a, Helpers.VisualTree.GetRoot (a));
-			Assert.AreEqual (a, Helpers.VisualTree.GetRoot (b));
-			Assert.AreEqual (a, Helpers.VisualTree.GetRoot (c1));
-			Assert.AreEqual (a, Helpers.VisualTree.GetRoot (c2));
+			Assert.AreEqual (a, VisualTree.GetRoot (a));
+			Assert.AreEqual (a, VisualTree.GetRoot (b));
+			Assert.AreEqual (a, VisualTree.GetRoot (c1));
+			Assert.AreEqual (a, VisualTree.GetRoot (c2));
 		}
 		
 		[Test]
@@ -37,25 +40,25 @@ namespace Epsitec.Common.Widgets
 			b.Children.Add (c2);
 
 			int depth;
-			Layouts.LayoutContext context;
+			LayoutContext context;
 
-			context = Helpers.VisualTree.GetLayoutContext (null, out depth);
+			context = VisualTree.GetLayoutContext (null, out depth);
 
 			Assert.IsNull (context);
 			Assert.AreEqual (0, depth);
 
-			context = Helpers.VisualTree.GetLayoutContext (a, out depth);
+			context = VisualTree.GetLayoutContext (a, out depth);
 
 			Assert.IsNotNull (context);
 			Assert.AreEqual (1, depth);
 
-			Assert.AreEqual (context, Helpers.VisualTree.GetLayoutContext (b, out depth));
+			Assert.AreEqual (context, VisualTree.GetLayoutContext (b, out depth));
 			Assert.AreEqual (2, depth);
 
-			Assert.AreEqual (context, Helpers.VisualTree.GetLayoutContext (c1, out depth));
+			Assert.AreEqual (context, VisualTree.GetLayoutContext (c1, out depth));
 			Assert.AreEqual (3, depth);
 
-			Assert.AreEqual (context, Helpers.VisualTree.GetLayoutContext (c2, out depth));
+			Assert.AreEqual (context, VisualTree.GetLayoutContext (c2, out depth));
 			Assert.AreEqual (3, depth);
 		}
 	}

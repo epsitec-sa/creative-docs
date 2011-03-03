@@ -8,6 +8,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.UI;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Tests.UI
 {
@@ -38,8 +39,8 @@ namespace Epsitec.Common.Tests.UI
 
 			panel.DataSource = source1;
 
-			Widgets.Widget    root  = new Widgets.Widget ();
-			Widgets.TextField field = new Widgets.TextField (panel);
+			Widget    root  = new Widget ();
+			TextField field = new TextField (panel);
 
 			Binding binding;
 
@@ -85,31 +86,31 @@ namespace Epsitec.Common.Tests.UI
 		[Test]
 		public void CheckInteractive()
 		{
-			Widgets.Window window = new Widgets.Window ();
+			Window window = new Window ();
 			
 			window.Text = "PanelTest.CheckInteractive";
 			window.ClientSize = new Size (400, 300);
 
 			PanelStack panelStack = new PanelStack ();
 			
-			panelStack.Dock = Widgets.DockStyle.Fill;
+			panelStack.Dock = DockStyle.Fill;
 			panelStack.Margins = new Margins (8, 8, 4, 4);
 			panelStack.BackColor = Color.FromRgb (1, 0.8, 0.8);
 
 			Panel panel = new Panel ();
 
-			Widgets.StaticText static1 = new Widgets.StaticText (panel);
-			Widgets.StaticText static2 = new Widgets.StaticText (panel);
+			StaticText static1 = new StaticText (panel);
+			StaticText static2 = new StaticText (panel);
 
-			static1.Dock = Widgets.DockStyle.Top;
-			static2.Dock = Widgets.DockStyle.Top;
+			static1.Dock = DockStyle.Top;
+			static2.Dock = DockStyle.Top;
 			static1.Text = "Arnaud";
 			static2.Text = "Pierre";
 			static1.Name = "LastName";
 			static2.Name = "FirstName";
 			
 			panel.PreferredSize = new Size (80, 40);
-			panel.Anchor = Widgets.AnchorStyles.TopRight;
+			panel.Anchor = AnchorStyles.TopRight;
 			panel.Margins = new Margins (4, 4, 4, 4);
 			panel.Padding = new Margins (8, 8, 4, 4);
 			panel.BackColor = Color.FromRgb (0.8, 1, 0.8);
@@ -117,10 +118,10 @@ namespace Epsitec.Common.Tests.UI
 
 			panel.EditionPanel.PreferredSize = new Size (180, 68);
 			
-			Widgets.StaticText text1 = new Widgets.StaticText ();
-			Widgets.StaticText text2 = new Widgets.StaticText ();
-			Widgets.FormTextField field1 = new Widgets.FormTextField ();
-			Widgets.FormTextField field2 = new Widgets.FormTextField ();
+			StaticText text1 = new StaticText ();
+			StaticText text2 = new StaticText ();
+			FormTextField field1 = new FormTextField ();
+			FormTextField field2 = new FormTextField ();
 			
 			text1.Text = "Nom :";
 			text1.ContentAlignment = Epsitec.Common.Drawing.ContentAlignment.MiddleRight;
@@ -136,7 +137,7 @@ namespace Epsitec.Common.Tests.UI
 
 			field1.Text = "Arnaud";
 			field1.TabIndex = 1;
-			field1.TabNavigationMode = Widgets.TabNavigationMode.ActivateOnTab;
+			field1.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			field1.Anchor = Epsitec.Common.Widgets.AnchorStyles.TopLeft | Epsitec.Common.Widgets.AnchorStyles.Right;
 			field1.Margins = new Epsitec.Common.Drawing.Margins (68, 4, 4+4, 0);
 			field1.PreferredSize = new Epsitec.Common.Drawing.Size (100, 24);
@@ -144,7 +145,7 @@ namespace Epsitec.Common.Tests.UI
 			
 			field2.Text = "Pierre";
 			field2.TabIndex = 2;
-			field2.TabNavigationMode = Widgets.TabNavigationMode.ActivateOnTab;
+			field2.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			field2.Anchor = Epsitec.Common.Widgets.AnchorStyles.TopLeft | Epsitec.Common.Widgets.AnchorStyles.Right;
 			field2.Margins = new Epsitec.Common.Drawing.Margins (68, 4, 28+4, 0);
 			field2.PreferredSize = new Epsitec.Common.Drawing.Size (100, 24);
@@ -162,7 +163,7 @@ namespace Epsitec.Common.Tests.UI
 
 			window.Show ();
 			
-			Widgets.Window.RunInTestEnvironment (window);
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test]
@@ -332,9 +333,9 @@ namespace Epsitec.Common.Tests.UI
 			Panel panel = new Panel ();
 			panel.ResourceManager = manager;
 
-			Widgets.Widget a = new Widgets.Widget ();
-			Widgets.Widget b = new Widgets.Widget ();
-			Widgets.Widget c = new Widgets.Widget ();
+			Widget a = new Widget ();
+			Widget b = new Widget ();
+			Widget c = new Widget ();
 
 			a.Name = "a";
 			b.Name = "b";
@@ -360,8 +361,8 @@ namespace Epsitec.Common.Tests.UI
 			copy = Panel.DeserializePanel (xml, null, manager);
 
 			Assert.AreEqual (PanelMode.Default, copy.PanelMode);
-			Assert.AreEqual (2, Collection.Count<Widgets.Visual> (copy.Children));
-			Assert.AreEqual (1, Collection.Count<Widgets.Visual> (copy.EditionPanel.Children));
+			Assert.AreEqual (2, Collection.Count<Visual> (copy.Children));
+			Assert.AreEqual (1, Collection.Count<Visual> (copy.EditionPanel.Children));
 			Assert.AreEqual (new Size (100, 80), copy.PreferredSize);
 			Assert.AreEqual (new Size (200, 96), copy.EditionPanel.PreferredSize);
 		}

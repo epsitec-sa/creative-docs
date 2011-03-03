@@ -8,6 +8,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.UI;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types.Serialization;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Tests.UI
 {
@@ -17,7 +18,7 @@ namespace Epsitec.Common.Tests.UI
 		[SetUp]
 		public void Initialize()
 		{
-			Epsitec.Common.Widgets.Widget.Initialize ();
+			Widget.Initialize ();
 		}
 
 		[Test]
@@ -25,7 +26,7 @@ namespace Epsitec.Common.Tests.UI
 		{
 			DataSource collection = new DataSource ();
 
-			Widgets.Visual source1 = new Widgets.Visual ();
+			Visual source1 = new Visual ();
 			MySimpleDataSource source2 = new MySimpleDataSource ();
 
 			collection.AddDataSource ("A", source1);
@@ -131,8 +132,8 @@ namespace Epsitec.Common.Tests.UI
 
 			panel.DataSource = collection;
 
-			Widgets.Visual source1 = new Widgets.Visual ();
-			Widgets.Visual source2 = new Widgets.Visual ();
+			Visual source1 = new Visual ();
+			Visual source2 = new Visual ();
 
 			source1.Name = "Source1";
 			source2.Name = "Source2";
@@ -153,17 +154,17 @@ namespace Epsitec.Common.Tests.UI
 			Assert.AreEqual (collection, context.ExternalMap.GetValue ("_DataSource"));
 			Assert.AreEqual (manager, context.ExternalMap.GetValue ("_ResourceManager"));
 
-			Widgets.Button b1 = new Epsitec.Common.Widgets.Button ();
+			Button b1 = new Button ();
 			Binding binding = new Binding (BindingMode.OneWay, null, "A.Name");
 
-			b1.Dock = Widgets.DockStyle.Top;
-			b1.SetBinding (Widgets.Visual.NameProperty, binding);
+			b1.Dock = DockStyle.Top;
+			b1.SetBinding (Visual.NameProperty, binding);
 
-			Assert.AreEqual (DataSourceType.None, b1.GetBindingExpression (Widgets.Visual.NameProperty).DataSourceType);
+			Assert.AreEqual (DataSourceType.None, b1.GetBindingExpression (Visual.NameProperty).DataSourceType);
 
 			panel.Children.Add (b1);
 
-			Assert.AreEqual (DataSourceType.PropertyObject, b1.GetBindingExpression (Widgets.Visual.NameProperty).DataSourceType);
+			Assert.AreEqual (DataSourceType.PropertyObject, b1.GetBindingExpression (Visual.NameProperty).DataSourceType);
 			Assert.AreEqual (source1.Name, b1.Name);
 
 			source1.Name = "X";
@@ -192,14 +193,14 @@ namespace Epsitec.Common.Tests.UI
 
 			collection.AddDataSource ("A", data);
 
-			Widgets.Button b1 = new Epsitec.Common.Widgets.Button ();
+			Button b1 = new Button ();
 
 			panel.Children.Add (b1);
 
-			b1.SetBinding (Widgets.Visual.NameProperty, new Binding (BindingMode.OneWay, null, "A.Label"));
+			b1.SetBinding (Visual.NameProperty, new Binding (BindingMode.OneWay, null, "A.Label"));
 
-			Assert.AreEqual (DataSourceType.StructuredData, b1.GetBindingExpression (Widgets.Visual.NameProperty).DataSourceType);
-			Assert.AreEqual (typeof (StringType), b1.GetBindingExpression (Widgets.Visual.NameProperty).GetSourceTypeObject ().GetType ());
+			Assert.AreEqual (DataSourceType.StructuredData, b1.GetBindingExpression (Visual.NameProperty).DataSourceType);
+			Assert.AreEqual (typeof (StringType), b1.GetBindingExpression (Visual.NameProperty).GetSourceTypeObject ().GetType ());
 			Assert.AreEqual ("Hello", b1.Name);
 
 			data.SetValue ("Label", "Good bye");
@@ -233,13 +234,13 @@ namespace Epsitec.Common.Tests.UI
 
 			source.AddDataSource ("*", data1);
 
-			Widgets.Button b1 = new Epsitec.Common.Widgets.Button ();
-			Widgets.Button b2 = new Epsitec.Common.Widgets.Button ();
+			Button b1 = new Button ();
+			Button b2 = new Button ();
 
 			panel.Children.Add (b1);
 
-			b1.SetBinding (Widgets.Visual.NameProperty, new Binding (BindingMode.OneWay, null, "*.A"));
-			b2.SetBinding (Widgets.Visual.NameProperty, new Binding (BindingMode.OneWay, null, "*.B"));
+			b1.SetBinding (Visual.NameProperty, new Binding (BindingMode.OneWay, null, "*.A"));
+			b2.SetBinding (Visual.NameProperty, new Binding (BindingMode.OneWay, null, "*.B"));
 
 			Assert.AreEqual ("a", b1.Name);
 			Assert.AreEqual (null, b2.Name);
@@ -264,7 +265,7 @@ namespace Epsitec.Common.Tests.UI
 		{
 			DataSource collection = new DataSource ();
 
-			Widgets.Visual source1 = new Widgets.Visual ();
+			Visual source1 = new Visual ();
 			MySimpleDataSource source2 = new MySimpleDataSource ();
 
 			source2.SetValue ("Name", "Petrus");
@@ -277,13 +278,13 @@ namespace Epsitec.Common.Tests.UI
 
 			Assert.IsNotNull (type);
 
-			Assert.AreEqual (typeof (Widgets.Visual), StructuredTree.GetField (type, "A").Type.SystemType);
+			Assert.AreEqual (typeof (Visual), StructuredTree.GetField (type, "A").Type.SystemType);
 			Assert.AreEqual (typeof (DynamicStructuredType), StructuredTree.GetField (type, "B").Type.GetType ());
 			Assert.AreEqual (typeof (StringType), StructuredTree.GetField (type, "A.Name").Type.GetType ());
 			Assert.AreEqual (typeof (StringType), StructuredTree.GetField (type, "B.Name").Type.GetType ());
 			Assert.AreEqual (typeof (IntegerType), StructuredTree.GetField (type, "B.BirthDateYear").Type.GetType ());
 
-			Assert.AreEqual (typeof (Widgets.Visual), TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetField (type, "A").Type));
+			Assert.AreEqual (typeof (Visual), TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetField (type, "A").Type));
 			Assert.AreEqual (null, TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetField (type, "B").Type));
 			Assert.AreEqual (typeof (string), TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetField (type, "A.Name").Type));
 			Assert.AreEqual (typeof (string), TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetField (type, "B.Name").Type));
@@ -296,7 +297,7 @@ namespace Epsitec.Common.Tests.UI
 		{
 			DataSource collection = new DataSource ();
 
-			Widgets.Visual source1 = new Widgets.Visual ();
+			Visual source1 = new Visual ();
 
 			collection.AddDataSource ("A", source1);
 			StructuredTree.SetValue (collection, "A", source1);
@@ -308,7 +309,7 @@ namespace Epsitec.Common.Tests.UI
 		{
 			DataSource collection = new DataSource ();
 
-			Widgets.Visual source1 = new Widgets.Visual ();
+			Visual source1 = new Visual ();
 
 			StructuredTree.SetValue (collection, "A", source1);
 		}

@@ -1,6 +1,7 @@
 using Epsitec.Common.Dialogs;
 using NUnit.Framework;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Tests.Dialogs
 {
@@ -11,7 +12,7 @@ namespace Epsitec.Common.Tests.Dialogs
 	{
 		public PrintDialogTest()
 		{
-			Widgets.Widget.Initialize ();
+			Widget.Initialize ();
 		}
 
 		[Test]
@@ -173,12 +174,12 @@ namespace Epsitec.Common.Tests.Dialogs
 			
 			PrintDialogTest.Helper.TestDocument (preview);
 			
-			Widgets.Window window = new Widgets.Window ();
+			Window window = new Window ();
 			AggPreview     widget = new AggPreview (preview);
 			
 			window.Text = "CheckPort - AGG";
 			window.ClientSize = new Size (250, 120);
-			widget.Dock       = Widgets.DockStyle.Fill;
+			widget.Dock       = DockStyle.Fill;
 			widget.SetParent (window.Root);
 			
 			window.Show ();
@@ -279,7 +280,7 @@ namespace Epsitec.Common.Tests.Dialogs
 			
 		
 		
-		protected class AggPreview : Widgets.Widget
+		protected class AggPreview : Widget
 		{
 			public AggPreview(Graphics port)
 			{

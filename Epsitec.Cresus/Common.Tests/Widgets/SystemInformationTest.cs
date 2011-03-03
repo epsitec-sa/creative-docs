@@ -1,7 +1,8 @@
 using NUnit.Framework;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Widgets;
 
-namespace Epsitec.Common.Widgets
+namespace Epsitec.Common.Tests.Widgets
 {
 	[TestFixture]
 	public class SystemInformationTest

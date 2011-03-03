@@ -1,8 +1,10 @@
 using NUnit.Framework;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Adorners;
 
-namespace Epsitec.Common.Widgets
+namespace Epsitec.Common.Tests.Widgets
 {
 	[TestFixture]
 	public class FicheTest
@@ -16,7 +18,7 @@ namespace Epsitec.Common.Widgets
 		[Test]
 		public void CheckFicheApplication()
 		{
-			Widgets.Adorners.Factory.SetActive("LookRoyale");
+			Factory.SetActive("LookRoyale");
 			
 			this.window = new Window();
 //@			this.window.Root.LayoutChanged += this.Root_LayoutChanged;
@@ -555,13 +557,13 @@ namespace Epsitec.Common.Widgets
 			
 			this.listLook = new ScrollList();
 
-			string[] list = Widgets.Adorners.Factory.AdornerNames;
+			string[] list = Factory.AdornerNames;
 			int i = 0;
 			int sel = 0;
 			foreach ( string name in list )
 			{
 				this.listLook.Items.Add(name);
-				if ( name == Widgets.Adorners.Factory.ActiveName )  sel = i;
+				if ( name == Factory.ActiveName )  sel = i;
 				i ++;
 			}
 
@@ -676,7 +678,7 @@ namespace Epsitec.Common.Widgets
 		{
 			ScrollList sl = sender as ScrollList;
 			int sel = sl.SelectedItemIndex;
-			Widgets.Adorners.Factory.SetActive(sl.Items[sel]);
+			Factory.SetActive(sl.Items[sel]);
 		}
 
 		protected void ResizeLayout()

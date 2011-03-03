@@ -1,8 +1,12 @@
 using NUnit.Framework;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Validators;
+using Epsitec.Common.Widgets.Helpers;
+using Epsitec.Common.Widgets.Adorners;
 
-namespace Epsitec.Common.Widgets
+namespace Epsitec.Common.Tests.Widgets
 {
 	[TestFixture]
 	public class AdornerTest
@@ -12,14 +16,14 @@ namespace Epsitec.Common.Widgets
 			Epsitec.Common.Document.Engine.Initialize ();
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
 			
-			Drawing.DynamicImage image = new Drawing.DynamicImage (new Drawing.Size (30, 18), new Drawing.DynamicImagePaintCallback (this.DynamicImageXyz));
+			DynamicImage image = new DynamicImage (new Size (30, 18), new DynamicImagePaintCallback (this.DynamicImageXyz));
 			
 			image.IsCacheEnabled = false;
 			
 			Epsitec.Common.Support.ImageProvider.Default.AddDynamicImage ("Xyz", image);
 		}
 
-		private bool DynamicImageXyz(Drawing.Graphics graphics, Drawing.Size size, string argument, Drawing.GlyphPaintStyle style, Drawing.Color color, object adorner)
+		private bool DynamicImageXyz(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object adorner)
 		{
 			//	Méthode de test pour peindre une image dynamique selon un
 			//	modèle nommé "Xyz"; l'argument reçu en entrée permet de
@@ -37,8 +41,8 @@ namespace Epsitec.Common.Widgets
 			if (graphics != null)
 			{
 				int hue;
-				double saturation = (style == Drawing.GlyphPaintStyle.Disabled) ? 0.2 : 1.0;
-				double value      = (style == Drawing.GlyphPaintStyle.Disabled) ? 0.7 : 1.0;
+				double saturation = (style == GlyphPaintStyle.Disabled) ? 0.2 : 1.0;
+				double value      = (style == GlyphPaintStyle.Disabled) ? 0.7 : 1.0;
 
 				if (argument == "random")
 				{
@@ -51,10 +55,10 @@ namespace Epsitec.Common.Widgets
 				}
 
 				graphics.AddFilledRectangle (0, 0, size.Width, size.Height);
-				graphics.RenderSolid (Drawing.Color.FromHsv (hue, saturation, value));
+				graphics.RenderSolid (Color.FromHsv (hue, saturation, value));
 				graphics.LineWidth = 2.0;
 				graphics.AddRectangle (1, 1, size.Width-2, size.Height-2);
-				graphics.RenderSolid (Drawing.Color.FromBrightness (0));
+				graphics.RenderSolid (Color.FromBrightness (0));
 			}
 			
 			return true;
@@ -337,14 +341,14 @@ namespace Epsitec.Common.Widgets
 			
 			tip_check1.Text    = "premier secours";
 			tip_check1.Dock    = DockStyle.Top;
-			tip_check1.Margins = new Drawing.Margins (4, 4, 4, 0);
+			tip_check1.Margins = new Margins (4, 4, 4, 0);
 			
 			tip_check2.Text    = "aide détaillée";
 			tip_check2.Dock    = DockStyle.Top;
-			tip_check2.Margins = new Drawing.Margins (4, 4, 1, 0);
+			tip_check2.Margins = new Margins (4, 4, 1, 0);
 			
-			tip_widget.BackColor     = Drawing.Color.FromRgb (1.0, 0.5, 0.5);
-			tip_widget.PreferredSize = new Drawing.Size(120, 4+tip_check1.PreferredHeight+1+tip_check2.PreferredHeight+4);
+			tip_widget.BackColor     = Color.FromRgb (1.0, 0.5, 0.5);
+			tip_widget.PreferredSize = new Size(120, 4+tip_check1.PreferredHeight+1+tip_check2.PreferredHeight+4);
 			
 			tip.SetToolTip(c, tip_widget);
 
@@ -359,31 +363,31 @@ namespace Epsitec.Common.Widgets
 			AdornerTest.CreateListLook(window.Root, 10, 80, tip, 1);
 			
 			Tag tag1 = new Tag("ExecuteTag", "TestTag");
-			tag1.SetManualBounds(new Drawing.Rectangle(115, 246, 18, 18));
+			tag1.SetManualBounds(new Rectangle(115, 246, 18, 18));
 			tag1.SetParent (window.Root);
 			tip.SetToolTip(tag1, "Je suis un <i>smart tag</i> maison.");
 
 			Tag tag2 = new Tag("ExecuteTag", "TestTag");
-			tag2.SetManualBounds(new Drawing.Rectangle(115, 226, 18, 18));
+			tag2.SetManualBounds(new Rectangle(115, 226, 18, 18));
 			tag2.SetParent (window.Root);
-			tag2.Color = Drawing.Color.FromRgb(1,0,0);
+			tag2.Color = Color.FromRgb(1,0,0);
 			tip.SetToolTip(tag2, "Je suis un <i>smart tag</i> maison rouge.");
 
 			Tag tag3 = new Tag("ExecuteTag", "TestTag");
-			tag3.SetManualBounds(new Drawing.Rectangle(115, 206, 18, 18));
+			tag3.SetManualBounds(new Rectangle(115, 206, 18, 18));
 			tag3.SetParent (window.Root);
-			tag3.Color = Drawing.Color.FromRgb(0,1,0);
+			tag3.Color = Color.FromRgb(0,1,0);
 			tip.SetToolTip(tag3, "Je suis un <i>smart tag</i> maison vert.");
 
 			Tag tag4 = new Tag("ExecuteTag", "TestTag");
-			tag4.SetManualBounds(new Drawing.Rectangle(140, 246, 12, 12));
+			tag4.SetManualBounds(new Rectangle(140, 246, 12, 12));
 			tag4.SetParent (window.Root);
 			tip.SetToolTip(tag4, "Je suis un petit <i>smart tag</i> maison.");
 
 			Tag tag5 = new Tag("ExecuteTag", "TestTag");
-			tag5.SetManualBounds(new Drawing.Rectangle(140, 226, 12, 12));
+			tag5.SetManualBounds(new Rectangle(140, 226, 12, 12));
 			tag5.SetParent (window.Root);
-			tag5.Color = Drawing.Color.FromRgb(0,0,1);
+			tag5.Color = Color.FromRgb(0,0,1);
 			tip.SetToolTip(tag5, "Je suis un petit <i>smart tag</i> maison bleu.");
 
 			StaticText link = new StaticText();
@@ -408,18 +412,18 @@ namespace Epsitec.Common.Widgets
 			
 			image1.SetManualBounds(new Rectangle (590, 15, 20, 20));
 			image1.ImageName = @"file:images/cut.png";
-			image1.ContentAlignment = Drawing.ContentAlignment.BottomCenter;
+			image1.ContentAlignment = ContentAlignment.BottomCenter;
 			image1.VerticalOffset = 0;
 
 			image2.SetManualBounds(new Rectangle (600, 15, 20, 20));
 			image2.ImageName = @"file:images/cut.png";
 			image2.VerticalOffset = 4;
-			image2.ContentAlignment = Drawing.ContentAlignment.BottomCenter;
+			image2.ContentAlignment = ContentAlignment.BottomCenter;
 
 			image3.SetManualBounds(new Rectangle (610, 15, 20, 20));
 			image3.ImageName = @"file:images/cut.png";
 			image3.VerticalOffset = 8;
-			image3.ContentAlignment = Drawing.ContentAlignment.BottomCenter;
+			image3.ContentAlignment = ContentAlignment.BottomCenter;
 			
 			Widget.ObsoleteBaseLineAlign (image1, image2);
 			Widget.ObsoleteBaseLineAlign (image1, image3);
@@ -429,16 +433,16 @@ namespace Epsitec.Common.Widgets
 
 			image4.SetManualBounds(new Rectangle (630, 15, 40, 20));
 			image4.ImageName = @"dyn:Xyz/random";
-			image4.ContentAlignment = Drawing.ContentAlignment.BottomCenter;
+			image4.ContentAlignment = ContentAlignment.BottomCenter;
 
 			image5.SetManualBounds(new Rectangle (630, 35, 40, 20));
 			image5.ImageName = @"dyn:Xyz/80";
-			image5.ContentAlignment = Drawing.ContentAlignment.BottomCenter;
+			image5.ContentAlignment = ContentAlignment.BottomCenter;
 
 			image6.SetManualBounds(new Rectangle (630, 55, 40, 20));
 			image6.ImageName = @"dyn:Xyz/60";
-			image6.ImageSize = new Drawing.Size (20, 12);
-			image6.ContentAlignment = Drawing.ContentAlignment.BottomCenter;
+			image6.ImageSize = new Size (20, 12);
+			image6.ContentAlignment = ContentAlignment.BottomCenter;
 			
 			window.Root.Children.Add(image1);
 			window.Root.Children.Add(image2);
@@ -768,7 +772,7 @@ namespace Epsitec.Common.Widgets
 					tx.PaintTextStyle = PaintTextStyle.Array;
 					tx.Text = string.Format("L{0} C{1}", x+1, y+1);
 					tx.ContentAlignment = ContentAlignment.MiddleLeft;
-					tx.Dock = Widgets.DockStyle.Fill;
+					tx.Dock = DockStyle.Fill;
 					table[x,y].Insert(tx);
 				}
 			}
@@ -785,59 +789,59 @@ namespace Epsitec.Common.Widgets
 			
 			TextFieldEx text_ex_1 = new TextFieldEx();
 			text_ex_1.SetParent (page3);
-			text_ex_1.SetManualBounds(new Drawing.Rectangle(10, page3.ActualHeight-30, 120, text_ex_1.PreferredHeight));
+			text_ex_1.SetManualBounds(new Rectangle(10, page3.ActualHeight-30, 120, text_ex_1.PreferredHeight));
 			text_ex_1.TabIndex = 1;
 			text_ex_1.EditionAccepted += AdornerTest.HandleTextExEditionAccepted;
 			text_ex_1.EditionRejected += AdornerTest.HandleTextExEditionRejected;
 			
 			TextFieldEx text_ex_2 = new TextFieldEx();
 			text_ex_2.SetParent (page3);
-			text_ex_2.SetManualBounds(new Drawing.Rectangle(10, page3.ActualHeight-30-28, 120, text_ex_2.PreferredHeight));
+			text_ex_2.SetManualBounds(new Rectangle(10, page3.ActualHeight-30-28, 120, text_ex_2.PreferredHeight));
 			text_ex_2.TabIndex = 2;
 			
 			TextFieldEx text_ex_3 = new TextFieldEx();
 			text_ex_3.SetParent (page3);
-			text_ex_3.SetManualBounds(new Drawing.Rectangle(10, page3.ActualHeight-30-28-28, 120, text_ex_3.PreferredHeight));
+			text_ex_3.SetManualBounds(new Rectangle(10, page3.ActualHeight-30-28-28, 120, text_ex_3.PreferredHeight));
 			text_ex_3.Enable = false;
 			text_ex_3.TabIndex = 3;
 			
 			TextFieldEx text_ex_4 = new TextFieldEx();
 			text_ex_4.SetParent (page3);
-			text_ex_4.SetManualBounds(new Drawing.Rectangle(10, page3.ActualHeight-30-28-28-28, 120, text_ex_4.PreferredHeight));
+			text_ex_4.SetManualBounds(new Rectangle(10, page3.ActualHeight-30-28-28-28, 120, text_ex_4.PreferredHeight));
 			text_ex_4.TabIndex = 4;
 			text_ex_4.ButtonShowCondition = ButtonShowCondition.WhenModified;
 			
 			TextFieldEx text_ex_5 = new TextFieldEx();
 			text_ex_5.SetParent (page3);
-			text_ex_5.SetManualBounds(new Drawing.Rectangle(10, page3.ActualHeight-30-28-28-28-28, 120, text_ex_5.PreferredHeight));
+			text_ex_5.SetManualBounds(new Rectangle(10, page3.ActualHeight-30-28-28-28-28, 120, text_ex_5.PreferredHeight));
 			text_ex_5.TabIndex = 5;
 			text_ex_5.ButtonShowCondition = ButtonShowCondition.WhenFocused;
 			text_ex_5.DefocusAction       = DefocusAction.AcceptEdition;
 			
 			TextFieldEx text_ex_6 = new TextFieldEx();
 			text_ex_6.SetParent (page3);
-			text_ex_6.SetManualBounds(new Drawing.Rectangle(10+120+5, page3.ActualHeight-30, 120, text_ex_6.PreferredHeight));
+			text_ex_6.SetManualBounds(new Rectangle(10+120+5, page3.ActualHeight-30, 120, text_ex_6.PreferredHeight));
 			text_ex_6.TabIndex = 6;
 			text_ex_6.ButtonShowCondition = ButtonShowCondition.WhenModified;
 			text_ex_6.DefocusAction       = DefocusAction.Modal;
 			
 			TextFieldEx text_ex_7 = new TextFieldEx();
 			text_ex_7.SetParent (page3);
-			text_ex_7.SetManualBounds(new Drawing.Rectangle(10+120+5, page3.ActualHeight-30-28, 120, text_ex_7.PreferredHeight));
+			text_ex_7.SetManualBounds(new Rectangle(10+120+5, page3.ActualHeight-30-28, 120, text_ex_7.PreferredHeight));
 			text_ex_7.TabIndex = 7;
 			text_ex_7.ButtonShowCondition = ButtonShowCondition.Never;
 			text_ex_7.DefocusAction       = DefocusAction.AcceptEdition;
 			
 			TextFieldEx text_ex_8 = new TextFieldEx();
 			text_ex_8.SetParent (page3);
-			text_ex_8.SetManualBounds(new Drawing.Rectangle(10+120+5, page3.ActualHeight-30-28-28, 120, text_ex_8.PreferredHeight));
+			text_ex_8.SetManualBounds(new Rectangle(10+120+5, page3.ActualHeight-30-28-28, 120, text_ex_8.PreferredHeight));
 			text_ex_8.TabIndex = 8;
 			text_ex_8.ButtonShowCondition = ButtonShowCondition.WhenModified;
 			text_ex_8.DefocusAction       = DefocusAction.AutoAcceptOrRejectEdition;
 			
-			new Validators.RegexValidator (text_ex_6, Support.RegexFactory.AlphaName);
-			new Validators.RegexValidator (text_ex_7, Support.RegexFactory.AlphaName);
-			new Validators.RegexValidator (text_ex_8, Support.RegexFactory.AlphaName);
+			new RegexValidator (text_ex_6, RegexFactory.AlphaName);
+			new RegexValidator (text_ex_7, RegexFactory.AlphaName);
+			new RegexValidator (text_ex_8, RegexFactory.AlphaName);
 			
 			page3.TabIndex = 3;
 			page3.TabNavigationMode = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
@@ -855,7 +859,7 @@ namespace Epsitec.Common.Widgets
 			text_up_down.MinValue   = -1000M;
 			text_up_down.MaxValue   =  1000000000000000M;
 			text_up_down.Resolution = 0.0000000000000001M;
-			text_up_down.SetManualBounds(new Drawing.Rectangle(10, 10, 200, text_up_down.PreferredHeight));
+			text_up_down.SetManualBounds(new Rectangle(10, 10, 200, text_up_down.PreferredHeight));
 			text_up_down.TextChanged += AdornerTest.HandleTextUpDownTextChanged;
 			
 
@@ -869,22 +873,22 @@ namespace Epsitec.Common.Widgets
 
 			TextField text_1 = new TextField();
 			text_1.SetParent(page5);
-			text_1.SetManualBounds(new Drawing.Rectangle(10, page5.ActualHeight-30, 120, text_1.PreferredHeight-4));
+			text_1.SetManualBounds(new Rectangle(10, page5.ActualHeight-30, 120, text_1.PreferredHeight-4));
 			text_1.TabIndex = 1;
 
 			TextField text_2 = new TextField();
 			text_2.SetParent(page5);
-			text_2.SetManualBounds(new Drawing.Rectangle(10, page5.ActualHeight-30-28, 120, text_2.PreferredHeight-2));
+			text_2.SetManualBounds(new Rectangle(10, page5.ActualHeight-30-28, 120, text_2.PreferredHeight-2));
 			text_2.TabIndex = 2;
 
 			TextField text_3 = new TextField();
 			text_3.SetParent(page5);
-			text_3.SetManualBounds(new Drawing.Rectangle(10, page5.ActualHeight-30-28-28, 120, text_3.PreferredHeight));
+			text_3.SetManualBounds(new Rectangle(10, page5.ActualHeight-30-28-28, 120, text_3.PreferredHeight));
 			text_3.TabIndex = 3;
 
 			TextField text_4 = new TextField();
 			text_4.SetParent(page5);
-			text_4.SetManualBounds(new Drawing.Rectangle(10, page5.ActualHeight-30-28-28-28, 120, text_4.PreferredHeight+2));
+			text_4.SetManualBounds(new Rectangle(10, page5.ActualHeight-30-28-28-28, 120, text_4.PreferredHeight+2));
 			text_4.TabIndex = 4;
 
 			//	Crée l'onglet 6.
@@ -962,7 +966,7 @@ namespace Epsitec.Common.Widgets
 #endif
 			multi.Text = s;
 
-			multi.ContentAlignment = Drawing.ContentAlignment.TopLeft;
+			multi.ContentAlignment = ContentAlignment.TopLeft;
 			multi.TextLayout.JustifMode = TextJustifMode.AllButLast;
 			//?multi.ContentAlignment = Drawing.ContentAlignment.TopRight;
 			//?multi.TextLayout.JustifMode = TextJustifMode.NoLine;
@@ -1159,12 +1163,12 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleMultiColor1(object sender, MessageEventArgs e)
 		{
-			this.bigText.TextNavigator.SelectionFontColor = Drawing.Color.FromBrightness(0);
+			this.bigText.TextNavigator.SelectionFontColor = Color.FromBrightness(0);
 		}
 
 		private void HandleMultiColor2(object sender, MessageEventArgs e)
 		{
-			this.bigText.TextNavigator.SelectionFontColor = Drawing.Color.FromRgb(1,0,0);
+			this.bigText.TextNavigator.SelectionFontColor = Color.FromRgb(1,0,0);
 		}
 
 		private void HandleMultiUndo(object sender, MessageEventArgs e)
@@ -1178,7 +1182,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		private class SpecialWidget : Widget, Helpers.IToolTipHost
+		private class SpecialWidget : Widget, IToolTipHost
 		{
 			public SpecialWidget()
 			{
@@ -1197,7 +1201,7 @@ namespace Epsitec.Common.Widgets
 			protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clip_rect)
 			{
 				graphics.AddRectangle (0, 0, this.ActualWidth, this.ActualHeight);
-				graphics.RenderSolid (Drawing.Color.FromName ("Black"));
+				graphics.RenderSolid (Color.FromName ("Black"));
 			}
 		}
 		
@@ -1380,34 +1384,34 @@ namespace Epsitec.Common.Widgets
 					text.PaintTextStyle = PaintTextStyle.Array;
 					if ( x != 0 || y != 0 )  text.Text = string.Format("{0}.{1}", y+1, x+1);
 					text.ContentAlignment = ContentAlignment.MiddleCenter;
-					text.Dock = Widgets.DockStyle.Fill;
+					text.Dock = DockStyle.Fill;
 					
 					if ( x == 2 && y == 2 )
 					{
 						CheckButton widget = new CheckButton();
 						widget.Text = "surprise";
-						widget.Dock = Widgets.DockStyle.Fill;
+						widget.Dock = DockStyle.Fill;
 						table[x,y].Insert(widget);
 					}
 					else if ( x == 3 && y == 3 )
 					{
 						Button widget = new Button();
 						widget.Text = "OK";
-						widget.Dock = Widgets.DockStyle.Fill;
+						widget.Dock = DockStyle.Fill;
 						table[x,y].Insert(widget);
 					}
 					else if ( x == 1 && y == 4 )
 					{
 						TextField widget = new TextField();
 						widget.Text = "Standard";
-						widget.Dock = Widgets.DockStyle.Fill;
+						widget.Dock = DockStyle.Fill;
 						table[x,y].Insert(widget);
 					}
 					else if ( x == 2 && y == 5 )
 					{
 						TextField widget = new FormTextField();
 						widget.Text = "Flat";
-						widget.Dock = Widgets.DockStyle.Fill;
+						widget.Dock = DockStyle.Fill;
 						table[x,y].Insert(widget);
 					}
 					else if ( x == 1 && y == 6 )
@@ -1415,7 +1419,7 @@ namespace Epsitec.Common.Widgets
 						TextField widget = new FormTextField();
 						widget.BackColor = Color.Transparent;
 						widget.Text = "Flat/Transparent";
-						widget.Dock = Widgets.DockStyle.Fill;
+						widget.Dock = DockStyle.Fill;
 						table[x,y].Insert(widget);
 					}
 					else if ( x != 1 || y != 1 )
@@ -1580,7 +1584,7 @@ namespace Epsitec.Common.Widgets
 					text.ContentAlignment = ContentAlignment.MiddleLeft;
 					//text.ContentAlignment = ContentAlignment.BottomLeft;
 					//text.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
-					text.Dock = Widgets.DockStyle.Fill;
+					text.Dock = DockStyle.Fill;
 					table[x,y].Insert(text);
 #endif
 				}
@@ -1655,13 +1659,13 @@ namespace Epsitec.Common.Widgets
 				sl.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
 
-			string[] list = Widgets.Adorners.Factory.AdornerNames;
+			string[] list = Factory.AdornerNames;
 			int i = 0;
 			int sel = 0;
 			foreach ( string name in list )
 			{
 				sl.Items.Add(name);
-				if ( name == Widgets.Adorners.Factory.ActiveName )  sel = i;
+				if ( name == Factory.ActiveName )  sel = i;
 				i ++;
 			}
 
@@ -1684,7 +1688,7 @@ namespace Epsitec.Common.Widgets
 		{
 			ScrollList sl = sender as ScrollList;
 			int sel = sl.SelectedItemIndex;
-			Widgets.Adorners.Factory.SetActive(sl.Items[sel]);
+			Factory.SetActive(sl.Items[sel]);
 		}
 
 		private static void HandleTextExEditionAccepted(object sender)

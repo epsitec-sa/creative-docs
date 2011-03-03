@@ -8,6 +8,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types.Serialization;
 using Epsitec.Common.Types.Serialization.IO;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Tests.Support
 {
@@ -297,7 +298,7 @@ namespace Epsitec.Common.Tests.Support
 		public void CheckBinding()
 		{
 			ResourceManager manager = this.manager;
-			Widgets.Visual visual = new Epsitec.Common.Widgets.Visual ();
+			Visual visual = new Visual ();
 			System.Globalization.CultureInfo culture = manager.ActiveCulture;
 
 			manager.ActiveCulture = Epsitec.Common.Support.Resources.FindCultureInfo ("fr");
@@ -305,10 +306,10 @@ namespace Epsitec.Common.Tests.Support
 			Assert.AreEqual ("Druid - Bonjour", manager.GetData ("file/Test:strings#$0", ResourceLevel.Localized, null));
 			Assert.AreEqual ("Druid - Bonjour", manager.GetData ("[4]", ResourceLevel.Localized, null));
 
-			manager.Bind (visual, Widgets.Visual.NameProperty, "[4]");
+			manager.Bind (visual, Visual.NameProperty, "[4]");
 
-			Assert.IsTrue (visual.IsBound (Widgets.Visual.NameProperty));
-			Assert.AreEqual (DataSourceType.Resource, visual.GetBindingExpression (Widgets.Visual.NameProperty).DataSourceType);
+			Assert.IsTrue (visual.IsBound (Visual.NameProperty));
+			Assert.AreEqual (DataSourceType.Resource, visual.GetBindingExpression (Visual.NameProperty).DataSourceType);
 
 			Assert.AreEqual ("Druid - Bonjour", visual.Name);
 
@@ -324,7 +325,7 @@ namespace Epsitec.Common.Tests.Support
 		{
 			System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch ();
 			ResourceManager manager = new ResourceManager (this.GetType ());
-			Widgets.Visual visual = new Epsitec.Common.Widgets.Visual ();
+			Visual visual = new Visual ();
 
 			manager.DefineDefaultModuleName ("LowLevelTest");
 			manager.ActiveCulture = Epsitec.Common.Support.Resources.FindCultureInfo ("en");
@@ -341,14 +342,14 @@ namespace Epsitec.Common.Tests.Support
 
 			int max = 100*1000;
 
-			List<Widgets.Visual> list = new List<Epsitec.Common.Widgets.Visual> ();
+			List<Visual> list = new List<Visual> ();
 
 			stopwatch.Reset ();
 			stopwatch.Start ();
 
 			for (int i = 0; i < max; i++)
 			{
-				visual = new Epsitec.Common.Widgets.Visual ();
+				visual = new Visual ();
 				list.Add (visual);
 			}
 
@@ -359,7 +360,7 @@ namespace Epsitec.Common.Tests.Support
 			for (int i = 0; i < max; i++)
 			{
 				visual = list[i];
-				manager.Bind (visual, Widgets.Visual.NameProperty, "file:strings#title.SettingsWindow");
+				manager.Bind (visual, Visual.NameProperty, "file:strings#title.SettingsWindow");
 			}
 
 			stopwatch.Stop ();
@@ -465,17 +466,17 @@ namespace Epsitec.Common.Tests.Support
 			
 			context.ExternalMap.Record (Context.WellKnownTagResourceManager, this.manager);
 
-			Widgets.Widget root = Storage.Deserialize (context) as Widgets.Widget;
+			Widget root = Storage.Deserialize (context) as Widget;
 
 			Assert.IsNotNull (root);
 			Assert.AreEqual ("RootWidget", root.Name);
 			Assert.AreEqual ("Druid - Hello, world", root.Text);
 			Assert.AreEqual (1, root.TabIndex);
 			Assert.AreEqual (2, root.Children.Count);
-			Assert.AreEqual (typeof (Widgets.Button), root.Children[0].GetType ());
+			Assert.AreEqual (typeof (Button), root.Children[0].GetType ());
 			Assert.AreEqual (root, root.Children[0].Parent);
-			Assert.AreEqual ("Druid - Good bye...", (root.Children[0] as Widgets.Button).Text);
-			Assert.AreEqual (typeof (Widgets.VScroller), root.Children[1].GetType ());
+			Assert.AreEqual ("Druid - Good bye...", (root.Children[0] as Button).Text);
+			Assert.AreEqual (typeof (VScroller), root.Children[1].GetType ());
 			Assert.AreEqual (root, root.Children[1].Parent);
 		}
 
@@ -496,12 +497,12 @@ namespace Epsitec.Common.Tests.Support
 
 			context.ExternalMap.Record (Context.WellKnownTagResourceManager, this.manager);
 
-			Widgets.Widget root = new Widgets.Widget ();
-			Widgets.Button button = new Widgets.Button ();
-			Widgets.VScroller scroller = new Widgets.VScroller ();
+			Widget root = new Widget ();
+			Button button = new Button ();
+			VScroller scroller = new VScroller ();
 
-			this.manager.Bind (root, Widgets.Widget.TextProperty, "[4]");
-			this.manager.Bind (button, Widgets.Widget.TextProperty, "[4001]");
+			this.manager.Bind (root, Widget.TextProperty, "[4]");
+			this.manager.Bind (button, Widget.TextProperty, "[4001]");
 
 			root.Name = "RootWidget";
 			root.TabIndex = 1;

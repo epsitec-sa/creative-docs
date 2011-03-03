@@ -1,8 +1,10 @@
 using NUnit.Framework;
 using Epsitec.Common.Drawing;
 using System.Collections.Generic;
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Types.Converters;
 
-namespace Epsitec.Common.Widgets
+namespace Epsitec.Common.Tests.Widgets
 {
 	[TestFixture]
 	public class TextLayoutTest
@@ -239,13 +241,13 @@ namespace Epsitec.Common.Widgets
 			int index = 0;
 			string text = "A&lt;&amp;&gt;.&quot;&#160;";
 
-			Assert.AreEqual ('A', Types.Converters.TextConverter.AnalyzeEntityChar (text, ref index));
-			Assert.AreEqual ('<', Types.Converters.TextConverter.AnalyzeEntityChar (text, ref index));
-			Assert.AreEqual ('&', Types.Converters.TextConverter.AnalyzeEntityChar (text, ref index));
-			Assert.AreEqual ('>', Types.Converters.TextConverter.AnalyzeEntityChar (text, ref index));
-			Assert.AreEqual ('.', Types.Converters.TextConverter.AnalyzeEntityChar (text, ref index));
-			Assert.AreEqual ('"', Types.Converters.TextConverter.AnalyzeEntityChar (text, ref index));
-			Assert.AreEqual (160, Types.Converters.TextConverter.AnalyzeEntityChar (text, ref index));
+			Assert.AreEqual ('A', TextConverter.AnalyzeEntityChar (text, ref index));
+			Assert.AreEqual ('<', TextConverter.AnalyzeEntityChar (text, ref index));
+			Assert.AreEqual ('&', TextConverter.AnalyzeEntityChar (text, ref index));
+			Assert.AreEqual ('>', TextConverter.AnalyzeEntityChar (text, ref index));
+			Assert.AreEqual ('.', TextConverter.AnalyzeEntityChar (text, ref index));
+			Assert.AreEqual ('"', TextConverter.AnalyzeEntityChar (text, ref index));
+			Assert.AreEqual (160, TextConverter.AnalyzeEntityChar (text, ref index));
 			Assert.AreEqual (text.Length, index);
 		}
 		
@@ -253,7 +255,7 @@ namespace Epsitec.Common.Widgets
 		{
 			TextLayout layout = this.NewTextLayout();
 			layout.Text = "<a href=\"x\">Link</a>";
-			TextLayout.SelectedArea[] areas = layout.FindTextRange(new Drawing.Point (), 0, 20);
+			TextLayout.SelectedArea[] areas = layout.FindTextRange(new Point (), 0, 20);
 			Assert.IsNotNull(areas);
 			Assert.AreEqual(1, areas.Length);
 			
@@ -486,7 +488,7 @@ namespace Epsitec.Common.Widgets
 			TextLayout.SelectedArea[] areas = layout.FindTextRange(pos, 0, layout.Text.Length);
 			for ( int i=0 ; i<areas.Length ; i++ )
 			{
-				Drawing.Rectangle box = e.Graphics.Align(areas[i].Rect);
+				Rectangle box = e.Graphics.Align(areas[i].Rect);
 				e.Graphics.AddFilledRectangle(box);
 				e.Graphics.RenderSolid(Color.FromRgb(0,1,0));
 			}
@@ -512,7 +514,7 @@ namespace Epsitec.Common.Widgets
 			TextLayout.SelectedArea[] areas = layout.FindTextRange(pos, 0, layout.Text.Length);
 			for ( int i=0 ; i<areas.Length ; i++ )
 			{
-				Drawing.Rectangle box = e.Graphics.Align (areas[i].Rect);
+				Rectangle box = e.Graphics.Align (areas[i].Rect);
 				e.Graphics.AddFilledRectangle (box);
 				e.Graphics.RenderSolid (Color.FromRgb (0, 1, 0));
 			}
@@ -538,7 +540,7 @@ namespace Epsitec.Common.Widgets
 			TextLayout.SelectedArea[] areas = layout.FindTextRange(pos, 0, layout.Text.Length);
 			for ( int i=0 ; i<areas.Length ; i++ )
 			{
-				Drawing.Rectangle box = e.Graphics.Align (areas[i].Rect);
+				Rectangle box = e.Graphics.Align (areas[i].Rect);
 				e.Graphics.AddFilledRectangle (box);
 				e.Graphics.RenderSolid(Color.FromRgb(0,1,0));
 			}
@@ -564,7 +566,7 @@ namespace Epsitec.Common.Widgets
 			TextLayout.SelectedArea[] areas = layout.FindTextRange(pos, 0, layout.Text.Length);
 			for ( int i=0 ; i<areas.Length ; i++ )
 			{
-				Drawing.Rectangle box = e.Graphics.Align (areas[i].Rect);
+				Rectangle box = e.Graphics.Align (areas[i].Rect);
 				e.Graphics.AddFilledRectangle (box);
 				e.Graphics.RenderSolid(Color.FromRgb(0,1,0));
 			}

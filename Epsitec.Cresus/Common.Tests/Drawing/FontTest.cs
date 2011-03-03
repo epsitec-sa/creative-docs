@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Tests.Drawing
 {
@@ -9,7 +10,7 @@ namespace Epsitec.Common.Tests.Drawing
 		[SetUp]
 		public void Initialize()
 		{
-			Widgets.Widget.Initialize ();
+			Widget.Initialize ();
 		}
 
 		[Test]
@@ -106,15 +107,15 @@ namespace Epsitec.Common.Tests.Drawing
 				}
 				if (buffer.Length > 0)
 				{
-					Widgets.Window         window = new Widgets.Window ();
-					Widgets.TextFieldMulti text   = new Widgets.TextFieldMulti ();
+					Window         window = new Window ();
+					TextFieldMulti text   = new TextFieldMulti ();
 					
 					window.Text       = font.FullName;
 					window.ClientSize = new Size (1000, 100);
 					
-					text.Dock   = Widgets.DockStyle.Fill;
+					text.Dock   = DockStyle.Fill;
 					text.SetParent (window.Root);
-					text.Text   = Widgets.TextLayout.ConvertToTaggedText (buffer.ToString ());
+					text.Text   = TextLayout.ConvertToTaggedText (buffer.ToString ());
 					text.TextLayout.DefaultFont = font;
 					text.TextLayout.DefaultFontSize = 60;
 					
@@ -386,23 +387,23 @@ namespace Epsitec.Common.Tests.Drawing
 			rasterizer.Render (renderer);
 			
 			form.Show ();
-			Widgets.Window.RunInTestEnvironment (form);
+			Window.RunInTestEnvironment (form);
 		}
 
 		[Test]
 		public void CheckFontPaintingByWidgets()
 		{
-			Widgets.Window window = new Widgets.Window ();
+			Window window = new Window ();
 
-			Widgets.Button text1 = new Epsitec.Common.Widgets.Button ();
-			Widgets.Button text2 = new Epsitec.Common.Widgets.Button ();
+			Button text1 = new Button ();
+			Button text2 = new Button ();
 
-			Widgets.TextFieldMulti multi = new Widgets.TextFieldMulti ();
+			TextFieldMulti multi = new TextFieldMulti ();
 			
 			multi.Name = "Infos";
 			multi.IsReadOnly = true;
 			multi.MaxLength = 10000;
-			multi.Dock = Widgets.DockStyle.Fill;
+			multi.Dock = DockStyle.Fill;
 			multi.Margins = new Margins (6, 6, 6, 34);
 			
 			window.Root.Children.Add (text1);
@@ -417,7 +418,7 @@ namespace Epsitec.Common.Tests.Drawing
 			multi.Text = "Simple text<br/>Other text<br/>More <i>italic</i> text.<br/>And some <b>bold</b> text.";
 			
 			window.Show ();
-			Widgets.Window.RunInTestEnvironment (window);
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test]
@@ -504,7 +505,7 @@ namespace Epsitec.Common.Tests.Drawing
 			rasterizer.Render (renderer);
 			
 			form.Show ();
-			Widgets.Window.RunInTestEnvironment (form);
+			Window.RunInTestEnvironment (form);
 		}
 
 		[Test]
@@ -571,7 +572,7 @@ namespace Epsitec.Common.Tests.Drawing
 			}
 			
 			form.Show ();
-			Widgets.Window.RunInTestEnvironment (form);
+			Window.RunInTestEnvironment (form);
 		}
 
 		[Test]
@@ -843,7 +844,7 @@ namespace Epsitec.Common.Tests.Drawing
 			this.global_pixmap_4 = gra.Pixmap;
 			
 			form.Show ();
-			Widgets.Window.RunInTestEnvironment (form);
+			Window.RunInTestEnvironment (form);
 		}
 		
 #if false
@@ -917,10 +918,10 @@ namespace Epsitec.Common.Tests.Drawing
 			double scale3x = size * System.Math.Round (xh) / xh;
 			double scale3c = size * System.Math.Round (ch) / ch;
 
-			Widgets.Window window = new Epsitec.Common.Widgets.Window ();
+			Window window = new Epsitec.Common.Widgets.Window ();
 
-			Widgets.Widget widget = new Epsitec.Common.Widgets.Widget (window.Root);
-			widget.Dock = Widgets.DockStyle.Fill;
+			Widget widget = new Epsitec.Common.Widgets.Widget (window.Root);
+			widget.Dock = DockStyle.Fill;
 
 			widget.PaintBackground +=
 				delegate (object sender, Epsitec.Common.Widgets.PaintEventArgs e)
@@ -946,7 +947,7 @@ namespace Epsitec.Common.Tests.Drawing
 				};
 
 			window.Show ();
-			Widgets.Window.RunInTestEnvironment (window);
+			Window.RunInTestEnvironment (window);
 		}
 
 

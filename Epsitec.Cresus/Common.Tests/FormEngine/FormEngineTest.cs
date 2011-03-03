@@ -6,6 +6,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets.Adorners;
 
 namespace Epsitec.Common.Tests.FormEngine
 {
@@ -19,7 +20,7 @@ namespace Epsitec.Common.Tests.FormEngine
 		public void Initialize()
 		{
 			Document.Engine.Initialize();
-			Widgets.Adorners.Factory.SetActive("LookMetal");
+			Factory.SetActive("LookMetal");
 			Widget.Initialize();
 
 			this.LoadResource();

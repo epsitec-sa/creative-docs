@@ -2,9 +2,12 @@ using NUnit.Framework;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 
-namespace Epsitec.Common.Widgets
+namespace Epsitec.Common.Tests.Widgets
 {
 	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
+	using Epsitec.Common.Types;
+	using Epsitec.Common.Widgets;
+	using Epsitec.Common.Widgets.Collections;
 	
 	[TestFixture] public class VisualTest
 	{
@@ -61,9 +64,9 @@ namespace Epsitec.Common.Widgets
 		{
 			Visual visual = new Visual ();
 
-			ResourceManager manager = Resources.DefaultManager;
-			
-			manager.ActiveCulture = Resources.FindCultureInfo ("fr");
+			ResourceManager manager = Epsitec.Common.Support.Resources.DefaultManager;
+
+			manager.ActiveCulture = Epsitec.Common.Support.Resources.FindCultureInfo ("fr");
 			
 			visual.CommandObject = ApplicationCommands.Cut;
 
@@ -74,15 +77,15 @@ namespace Epsitec.Common.Widgets
 			int count = 0;
 			
 			visual.DisplayCaptionChanged += delegate (object sender) { count++; };
-			
-			manager.ActiveCulture = Resources.FindCultureInfo ("en");
+
+			manager.ActiveCulture = Epsitec.Common.Support.Resources.FindCultureInfo ("en");
 
 			Assert.AreEqual ("Cut", ApplicationCommands.Cut.Caption.Description);
 			Assert.AreEqual ("Cut", visual.GetDisplayCaption ().Description);
 			Assert.AreEqual (1, count);
 
 			visual.CommandObject = ApplicationCommands.Copy;
-			manager.ActiveCulture = Resources.FindCultureInfo ("fr");
+			manager.ActiveCulture = Epsitec.Common.Support.Resources.FindCultureInfo ("fr");
 
 			Assert.AreEqual ("Copier", visual.GetDisplayCaption ().Description);
 			Assert.AreEqual (3, count);
@@ -90,9 +93,9 @@ namespace Epsitec.Common.Widgets
 			visual.CommandObject = ApplicationCommands.SelectAll;
 
 			Assert.AreEqual ("Sélectionner tout", visual.GetDisplayCaption ().Description);
-			Assert.AreEqual ("Tout", Types.Collection.Extract (visual.GetDisplayCaption ().SortedLabels, 0));
-			Assert.AreEqual ("Sél. tout", Types.Collection.Extract (visual.GetDisplayCaption ().SortedLabels, 1));
-			Assert.AreEqual ("Sélectionner tout", Types.Collection.Extract (visual.GetDisplayCaption ().SortedLabels, 2));
+			Assert.AreEqual ("Tout", Collection.Extract (visual.GetDisplayCaption ().SortedLabels, 0));
+			Assert.AreEqual ("Sél. tout", Collection.Extract (visual.GetDisplayCaption ().SortedLabels, 1));
+			Assert.AreEqual ("Sélectionner tout", Collection.Extract (visual.GetDisplayCaption ().SortedLabels, 2));
 		}
 
 		[Test]
@@ -343,7 +346,7 @@ namespace Epsitec.Common.Widgets
 			Assert.AreEqual (0, a.Children.Count);
 			Assert.IsFalse (a.HasChildren);
 
-			Collections.FlatChildrenCollection colA = a.Children;
+			FlatChildrenCollection colA = a.Children;
 
 			Assert.AreEqual (colA, a.Children);
 
@@ -545,9 +548,9 @@ namespace Epsitec.Common.Widgets
 			handler.Clear ();
 		}
 
-		class Dummy : Types.DependencyObject
+		class Dummy : DependencyObject
 		{
-			public static Types.DependencyProperty InheritedProperty = Types.DependencyProperty.RegisterAttached ("Inherited", typeof (string), typeof (Dummy), new Types.DependencyPropertyMetadataWithInheritance (null));
+			public static DependencyProperty InheritedProperty = DependencyProperty.RegisterAttached ("Inherited", typeof (string), typeof (Dummy), new DependencyPropertyMetadataWithInheritance (null));
 		}
 
 		[Test]
@@ -673,7 +676,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			public void RecordEvent(object sender, Types.DependencyPropertyChangedEventArgs e)
+			public void RecordEvent(object sender, DependencyPropertyChangedEventArgs e)
 			{
 				this.buffer.Append (e.PropertyName);
 				this.buffer.Append (":");
@@ -682,9 +685,9 @@ namespace Epsitec.Common.Widgets
 				this.buffer.Append (e.NewValue == null ? "<null>" : e.NewValue);
 				this.buffer.Append (".");
 			}
-			public void RecordEventAndName(object sender, Types.DependencyPropertyChangedEventArgs e)
+			public void RecordEventAndName(object sender, DependencyPropertyChangedEventArgs e)
 			{
-				this.buffer.Append (Types.DependencyObjectTree.GetName (sender as Types.DependencyObject));
+				this.buffer.Append (DependencyObjectTree.GetName (sender as DependencyObject));
 				this.buffer.Append ("-");
 				this.buffer.Append (e.PropertyName);
 				this.buffer.Append (":");
@@ -704,7 +707,7 @@ namespace Epsitec.Common.Widgets
 		
 		private static System.Text.StringBuilder buffer;
 		
-		private static void A_IsEnabledChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
+		private static void A_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			buffer.Append (" A:");
 			buffer.Append ((bool) e.OldValue == true ? "1" : "0");
@@ -712,7 +715,7 @@ namespace Epsitec.Common.Widgets
 			buffer.Append ((bool) e.NewValue == true ? "1" : "0");
 		}
 		
-		private static void B_IsEnabledChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
+		private static void B_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			buffer.Append (" B:");
 			buffer.Append ((bool) e.OldValue == true ? "1" : "0");
@@ -720,7 +723,7 @@ namespace Epsitec.Common.Widgets
 			buffer.Append ((bool) e.NewValue == true ? "1" : "0");
 		}
 		
-		private static void C1_IsEnabledChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
+		private static void C1_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			buffer.Append (" C1:");
 			buffer.Append ((bool) e.OldValue == true ? "1" : "0");
@@ -728,7 +731,7 @@ namespace Epsitec.Common.Widgets
 			buffer.Append ((bool) e.NewValue == true ? "1" : "0");
 		}
 		
-		private static void C2_IsEnabledChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
+		private static void C2_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			buffer.Append (" C2:");
 			buffer.Append ((bool) e.OldValue == true ? "1" : "0");

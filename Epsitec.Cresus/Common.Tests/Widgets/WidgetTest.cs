@@ -2,9 +2,14 @@ using NUnit.Framework;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 
-namespace Epsitec.Common.Widgets
+namespace Epsitec.Common.Tests.Widgets
 {
 	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
+	using Epsitec.Common.Types;
+	using Epsitec.Common.Widgets;
+	using Epsitec.Common.Text;
+	using Epsitec.Common.Text.Properties;
+	using Epsitec.Common.Widgets.Layouts;
 	
 	[TestFixture] public class WidgetTest
 	{
@@ -88,9 +93,9 @@ namespace Epsitec.Common.Widgets
 		[Test]
 		public void CheckDisplayCaption()
 		{
-			ResourceManager manager = Resources.DefaultManager;
+			ResourceManager manager = Epsitec.Common.Support.Resources.DefaultManager;
 
-			manager.ActiveCulture = Resources.FindCultureInfo ("fr");
+			manager.ActiveCulture = Epsitec.Common.Support.Resources.FindCultureInfo ("fr");
 
 			StaticText label = new StaticText ();
 
@@ -119,9 +124,9 @@ namespace Epsitec.Common.Widgets
 		[Test]
 		public void CheckDisplayCaptionInteractive()
 		{
-			ResourceManager manager = Resources.DefaultManager;
+			ResourceManager manager = Epsitec.Common.Support.Resources.DefaultManager;
 
-			manager.ActiveCulture = Resources.FindCultureInfo ("fr");
+			manager.ActiveCulture = Epsitec.Common.Support.Resources.FindCultureInfo ("fr");
 
 			Window window = new Window ();
 
@@ -165,8 +170,14 @@ namespace Epsitec.Common.Widgets
 			w1.Children.Add (buttonFr);
 			w1.Children.Add (buttonEn);
 
-			buttonFr.Clicked += delegate (object sender, MessageEventArgs e) { manager.ActiveCulture = Resources.FindCultureInfo ("fr"); };
-			buttonEn.Clicked += delegate (object sender, MessageEventArgs e) { manager.ActiveCulture = Resources.FindCultureInfo ("en"); };
+			buttonFr.Clicked += delegate (object sender, MessageEventArgs e)
+			{
+				manager.ActiveCulture = Epsitec.Common.Support.Resources.FindCultureInfo ("fr");
+			};
+			buttonEn.Clicked += delegate (object sender, MessageEventArgs e)
+			{
+				manager.ActiveCulture = Epsitec.Common.Support.Resources.FindCultureInfo ("en");
+			};
 
 			b1.CommandObject = ApplicationCommands.Copy;
 			b2.CommandObject = ApplicationCommands.Delete;
@@ -393,8 +404,8 @@ namespace Epsitec.Common.Widgets
 
 			Assert.IsNotNull (frame.OpletQueue);
 			
-			Text.TextStory   story     = frame.TextStory;
-			Text.TextStyle[] no_styles = new Text.TextStyle[0];
+			TextStory   story     = frame.TextStory;
+			TextStyle[] no_styles = new TextStyle[0];
 			
 			foreach (string face in Common.Text.TextContext.GetAvailableFontFaces ())
 			{
@@ -408,16 +419,16 @@ namespace Epsitec.Common.Widgets
 			
 			System.Collections.ArrayList properties = new System.Collections.ArrayList ();
 			
-			Text.Properties.FontProperty fp = new Text.Properties.FontProperty ("Palatino Linotype", "Italic", "liga", "dlig", "kern");
+			FontProperty fp = new FontProperty ("Palatino Linotype", "Italic", "liga", "dlig", "kern");
 			
 			properties.Add (fp);
-			properties.Add (new Text.Properties.FontSizeProperty (14.0, Text.Properties.SizeUnits.Points));
-			properties.Add (new Text.Properties.MarginsProperty (60, 10, 10, 10, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
-			properties.Add (new Text.Properties.FontColorProperty ("Black"));
-			properties.Add (new Text.Properties.LanguageProperty ("fr-ch", 1.0));
-			properties.Add (new Text.Properties.LeadingProperty (16.0, Text.Properties.SizeUnits.Points, 15.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
+			properties.Add (new FontSizeProperty (14.0, SizeUnits.Points));
+			properties.Add (new MarginsProperty (60, 10, 10, 10, SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, ThreeState.True));
+			properties.Add (new FontColorProperty ("Black"));
+			properties.Add (new LanguageProperty ("fr-ch", 1.0));
+			properties.Add (new LeadingProperty (16.0, SizeUnits.Points, 15.0, SizeUnits.Points, 5.0, SizeUnits.Points, AlignMode.None));
 			
-			Text.TextStyle style = story.TextContext.StyleList.NewTextStyle (null, "Default", Text.TextStyleClass.Paragraph, properties);
+			TextStyle style = story.TextContext.StyleList.NewTextStyle (null, "Default", TextStyleClass.Paragraph, properties);
 			
 			story.TextContext.DefaultParagraphStyle = style;
 			story.TextContext.ShowControlCharacters = true;
@@ -425,8 +436,8 @@ namespace Epsitec.Common.Widgets
 			
 			string words = "Bonjour, ceci est un texte d'exemple permettant de vérifier le bon fonctionnement des divers algorithmes de découpe et d'affichage. Le nombre de mots moyen s'élève à environ 40 mots par paragraphe, ce qui correspond à des paragraphes de taille réduite. Quelle idée, un fjord finlandais ! Avocat.\nAWAY.\n______\n";
 			
-			navigator.Insert (Text.Unicode.Code.EndOfText);
-			navigator.TextNavigator.MoveTo (Text.TextNavigator.Target.TextStart, 0);
+			navigator.Insert (Epsitec.Common.Text.Unicode.Code.EndOfText);
+			navigator.TextNavigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.TextStart, 0);
 			navigator.Insert (words);
 			
 			frame.OpletQueue.PurgeUndo ();
@@ -515,7 +526,7 @@ namespace Epsitec.Common.Widgets
 				{
 					case "default":
 						this.frame.TextNavigator.SetParagraphStyles (this.frame.TextStory.TextContext.DefaultParagraphStyle);
-						this.frame.TextNavigator.SetParagraphProperties (Common.Text.Properties.ApplyMode.Overwrite, new Text.Property[0]);
+						this.frame.TextNavigator.SetParagraphProperties (Common.Text.Properties.ApplyMode.Overwrite, new Property[0]);
 						break;
 					
 					case "style:regular":
@@ -669,7 +680,7 @@ namespace Epsitec.Common.Widgets
 		private object		check_parent_changed_new_value;
 		private int			check_parent_changed_count;
 		
-		private void HandleCheckParentChangedParentChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
+		private void HandleCheckParentChangedParentChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			this.check_parent_changed_sender = sender;
 			this.check_parent_changed_old_value = e.OldValue;
@@ -701,9 +712,9 @@ namespace Epsitec.Common.Widgets
 			
 //-			text.SetClientZoom (3);
 
-			text.PreferredSize = new Drawing.Size(text.PreferredSize.Width / 2, text.PreferredSize.Height * 2) * 3;
+			text.PreferredSize = new Size(text.PreferredSize.Width / 2, text.PreferredSize.Height * 2) * 3;
 			text.Anchor = AnchorStyles.TopLeft;
-			text.Margins = new Drawing.Margins (10, 0, 10, 0);
+			text.Margins = new Margins (10, 0, 10, 0);
 			text.SetParent (window.Root);
 			text.PaintForeground += this.CheckTextLayoutInfoPaintForeground;
 			
@@ -754,7 +765,7 @@ namespace Epsitec.Common.Widgets
 			
 			root.Children.Add (widget);
 
-			Drawing.Transform transform = Drawing.Transform.Identity;
+			Transform transform = Transform.Identity;
 			
 //			double ox = 1.0;
 //			double oy = 2.0;
@@ -969,7 +980,7 @@ namespace Epsitec.Common.Widgets
 			
 			root.Children.Add (widget);
 
-			Drawing.Transform transform = Drawing.Transform.Identity;
+			Transform transform = Transform.Identity;
 			
 //			double ox = 1.0;
 //			double oy = 2.0;
@@ -1021,8 +1032,8 @@ namespace Epsitec.Common.Widgets
 			
 			root.Children.Add (widget);
 
-			Drawing.Transform identity  = Drawing.Transform.Identity;
-			Drawing.Transform transform = Drawing.Transform.Identity;
+			Transform identity  = Transform.Identity;
+			Transform transform = Transform.Identity;
 			
 //			widget.SetClientZoom (3);
 //			widget.SetClientAngle (90);
@@ -1086,7 +1097,7 @@ namespace Epsitec.Common.Widgets
 
 			Button button = new Button ();
 
-			Assert.AreEqual (Drawing.ContentAlignment.MiddleCenter, button.ContentAlignment);
+			Assert.AreEqual (ContentAlignment.MiddleCenter, button.ContentAlignment);
 
 			button.Text = "X";
 			button.PreferredWidth = 40;
@@ -1675,12 +1686,12 @@ namespace Epsitec.Common.Widgets
 
 			public override Margins GetInternalPadding()
 			{
-				return new Drawing.Margins (1, 1, 1, 1);
+				return new Margins (1, 1, 1, 1);
 			}
 			
 			protected override void MeasureMinMax(ref Size min, ref Size max)
 			{
-				Layouts.LayoutMeasure measureHeight = Layouts.LayoutMeasure.GetHeight (this);
+				LayoutMeasure measureHeight = LayoutMeasure.GetHeight (this);
 
 				if (!measureHeight.SamePassIdAsLayoutContext (this))
 				{
@@ -1719,7 +1730,7 @@ namespace Epsitec.Common.Widgets
 			{
 				base.ManualArrange ();
 
-				Drawing.Rectangle rect = this.Client.Bounds;
+				Rectangle rect = this.Client.Bounds;
 				
 				rect.Deflate (this.Padding);
 				rect.Deflate (this.GetInternalPadding ());
@@ -1748,7 +1759,7 @@ namespace Epsitec.Common.Widgets
 							this.columns = column;
 							this.lines = (this.Children.Count + this.columns - 1) / this.columns;
 							
-							Layouts.LayoutContext.AddToMeasureQueue (this);
+							LayoutContext.AddToMeasureQueue (this);
 							return;
 						}
 					}
@@ -1762,7 +1773,7 @@ namespace Epsitec.Common.Widgets
 					
 					this.lastWidth = this.ActualWidth;
 					
-					Layouts.LayoutContext.AddToMeasureQueue (this);
+					LayoutContext.AddToMeasureQueue (this);
 					return;
 				}
 
@@ -1782,7 +1793,7 @@ namespace Epsitec.Common.Widgets
 						dy = 0;
 					}
 
-					child.SetManualBounds(new Drawing.Rectangle (rect.Left + x, rect.Top - y - child.PreferredHeight, child.PreferredWidth, child.PreferredHeight));
+					child.SetManualBounds(new Rectangle (rect.Left + x, rect.Top - y - child.PreferredHeight, child.PreferredWidth, child.PreferredHeight));
 
 					dy = System.Math.Max (dy, child.PreferredHeight);
 					x += child.PreferredWidth;
@@ -1795,7 +1806,7 @@ namespace Epsitec.Common.Widgets
 			protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clip_rect)
 			{
 				graphics.AddRectangle (this.Client.Bounds);
-				graphics.RenderSolid (Drawing.Color.FromName ("Black"));
+				graphics.RenderSolid (Color.FromName ("Black"));
 			}
 			
 			protected override void OnChildrenChanged()
@@ -1860,7 +1871,7 @@ namespace Epsitec.Common.Widgets
 			button.PreferredHeight = 24;
 			button.Text = "Below flow panel";
 			button.Dock = DockStyle.Top;
-			button.Margins = new Drawing.Margins (0, 0, 2, 0);
+			button.Margins = new Margins (0, 0, 2, 0);
 			window.Root.Children.Add (button);
 
 			window.Show ();
@@ -1912,7 +1923,7 @@ namespace Epsitec.Common.Widgets
 			button.PreferredHeight = 24;
 			button.Text = "Below flow panel";
 			button.Dock = DockStyle.Top;
-			button.Margins = new Drawing.Margins (0, 0, 2, 0);
+			button.Margins = new Margins (0, 0, 2, 0);
 			window.Root.Children.Add (button);
 
 			window.Show ();
@@ -1964,7 +1975,7 @@ namespace Epsitec.Common.Widgets
 			button.PreferredHeight = 24;
 			button.Text = "Below flow panel";
 			button.Dock = DockStyle.Top;
-			button.Margins = new Drawing.Margins (0, 0, 2, 0);
+			button.Margins = new Margins (0, 0, 2, 0);
 			window.Root.Children.Add (button);
 
 			window.Show ();
@@ -2018,7 +2029,7 @@ namespace Epsitec.Common.Widgets
 			Assert.AreEqual (w2, w1.FindChildByPath ("XA.XB"));
 			Assert.AreEqual (w3, w1.FindChildByPath ("XA.XB.XC"));
 			
-			Widget[] find = Widget.FindAllFullPathWidgets (Support.RegexFactory.FromSimpleJoker ("*XB*"));
+			Widget[] find = Widget.FindAllFullPathWidgets (RegexFactory.FromSimpleJoker ("*XB*"));
 			
 			Assert.AreEqual (2, find.Length);
 			Assert.AreEqual (w2, find[0]);
@@ -2049,7 +2060,7 @@ namespace Epsitec.Common.Widgets
 		{
 			Window window = new Window ();
 			window.Text = "CheckColorPalette";
-			window.ClientSize = new Drawing.Size (250, 250);
+			window.ClientSize = new Size (250, 250);
 
 			ColorPalette palette = new ColorPalette ();
 
@@ -2065,7 +2076,7 @@ namespace Epsitec.Common.Widgets
 		{
 			Window window = new Window ();
 			window.Text = "CheckColorSelector";
-			window.ClientSize = new Drawing.Size (250, 250);
+			window.ClientSize = new Size (250, 250);
 
 			ColorSelector selector = new ColorSelector ();
 
@@ -2078,7 +2089,7 @@ namespace Epsitec.Common.Widgets
 			{
 				System.Console.WriteLine ("Widget {0} :", w.ToString ());
 
-				foreach (Types.PropertyValuePair entry in w.DefinedEntries)
+				foreach (PropertyValuePair entry in w.DefinedEntries)
 				{
 					System.Console.WriteLine ("  {0} --> {1}", entry.Property.Name, entry.Value);
 				}
@@ -2096,37 +2107,37 @@ namespace Epsitec.Common.Widgets
 		{
 			Window window = new Window ();
 			window.Text = "CheckSmartTagColor";
-			window.ClientSize = new Drawing.Size (510, 220);
+			window.ClientSize = new Size (510, 220);
 			window.MakeFixedSizeWindow ();
 			
 			ColorSelector selector1, selector2;
 			
 			selector1 = new ColorSelector ();
-			selector1.SetManualBounds(new Drawing.Rectangle (100, 10, 200, 200));
+			selector1.SetManualBounds(new Rectangle (100, 10, 200, 200));
 			selector1.SetParent (window.Root);
 			selector1.ColorChanged += this.HandleSelectorChangedForeground;
 			
 			selector2 = new ColorSelector ();
-			selector2.SetManualBounds(new Drawing.Rectangle (300, 10, 200, 200));
+			selector2.SetManualBounds(new Rectangle (300, 10, 200, 200));
 			selector2.SetParent (window.Root);
 			selector2.ColorChanged += this.HandleSelectorChangedBackground;
 			
 			Tag tag;
 			
 			tag = new Tag ("", "tag1");
-			tag.SetManualBounds(new Drawing.Rectangle (10, 10, 10, 10));
+			tag.SetManualBounds(new Rectangle (10, 10, 10, 10));
 			tag.SetParent (window.Root);
 			
 			tag = new Tag ("", "tag2");
-			tag.SetManualBounds(new Drawing.Rectangle (10, 25, 15, 15));
+			tag.SetManualBounds(new Rectangle (10, 25, 15, 15));
 			tag.SetParent (window.Root);
 			
 			tag = new Tag ("", "tag3");
-			tag.SetManualBounds(new Drawing.Rectangle (10, 45, 20, 20));
+			tag.SetManualBounds(new Rectangle (10, 45, 20, 20));
 			tag.SetParent (window.Root);
 			
 			tag = new Tag ("", "tag4");
-			tag.SetManualBounds(new Drawing.Rectangle (10, 70, 25, 25));
+			tag.SetManualBounds(new Rectangle (10, 70, 25, 25));
 			tag.SetParent (window.Root);
 			
 			selector1.Color = new RichColor(tag.Color);
@@ -2141,7 +2152,7 @@ namespace Epsitec.Common.Widgets
 		{
 			Widget widget = sender as Widget;
 			
-			Drawing.Point pos;
+			Point pos;
 			
 			double ascender;
 			double descender;
@@ -2149,7 +2160,7 @@ namespace Epsitec.Common.Widgets
 			
 			widget.TextLayout.GetLineGeometry (0, out pos, out ascender, out descender, out width);
 			
-			Drawing.Path path = new Drawing.Path ();
+			Path path = new Path ();
 			
 			path.MoveTo (pos.X, pos.Y);
 			path.LineTo (pos.X + width, pos.Y);
@@ -2159,13 +2170,13 @@ namespace Epsitec.Common.Widgets
 			path.LineTo (pos.X + width, pos.Y + descender);
 			
 			e.Graphics.Rasterizer.AddOutline (path, 0.2);
-			e.Graphics.RenderSolid (Drawing.Color.FromRgb (1, 0, 0));
+			e.Graphics.RenderSolid (Color.FromRgb (1, 0, 0));
 		}
 		
-		private void HandleSelectorChangedForeground(object sender, Types.DependencyPropertyChangedEventArgs e)
+		private void HandleSelectorChangedForeground(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			ColorSelector selector = sender as ColorSelector;
-			Drawing.Color color    = selector.Color.Basic;
+			Color color    = selector.Color.Basic;
 			Widget        parent   = selector.Parent;
 			
 			Tag tag;
@@ -2183,10 +2194,10 @@ namespace Epsitec.Common.Widgets
 			tag.Color = color;
 		}
 
-		private void HandleSelectorChangedBackground(object sender, Types.DependencyPropertyChangedEventArgs e)
+		private void HandleSelectorChangedBackground(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			ColorSelector selector = sender as ColorSelector;
-			Drawing.Color color    = selector.Color.Basic;
+			Color color    = selector.Color.Basic;
 			Widget        parent   = selector.Parent;
 			
 			Tag tag;
@@ -2210,7 +2221,7 @@ namespace Epsitec.Common.Widgets
 			//	nothing
 		}
 
-		private void HandleManagedAnchorChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
+		private void HandleManagedAnchorChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			//	nothing
 		}

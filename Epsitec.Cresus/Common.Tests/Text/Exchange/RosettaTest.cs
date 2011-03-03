@@ -7,6 +7,7 @@ using Epsitec.Common.Text.Properties;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Text.Exchange;
 using Epsitec.Common.Text.Wrappers;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Tests.Text.Exchange
 {
@@ -15,7 +16,7 @@ namespace Epsitec.Common.Tests.Text.Exchange
 	{
 		[SetUp] public void Intialize()
 		{
-			Widgets.Widget.Initialize ();
+			Widget.Initialize ();
 		}
 			
 		
@@ -47,17 +48,17 @@ namespace Epsitec.Common.Tests.Text.Exchange
 			context.StyleList.StyleMap.SetCaption (null, charStyle, "Caractères par défaut");
 		}
 		
-		private static void CreateEmptyTextStoryAndNavigator(TextContext context, out TextStory story, out TextNavigator navigator)
+		private static void CreateEmptyTextStoryAndNavigator(TextContext context, out TextStory story, out Epsitec.Common.Text.TextNavigator navigator)
 		{
 			System.Diagnostics.Debug.Assert (context != null);
 			
 			story = new TextStory (context);
-			navigator = new TextNavigator (story);
+			navigator = new Epsitec.Common.Text.TextNavigator (story);
 			
 			story.DisableOpletQueue();
 			
 			navigator.Insert (Unicode.Code.EndOfText);
-			navigator.MoveTo (TextNavigator.Target.TextStart, 0);
+			navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.TextStart, 0);
 			
 			story.EnableOpletQueue();
 		}
@@ -69,7 +70,7 @@ namespace Epsitec.Common.Tests.Text.Exchange
 			
 			TextContext     context;
 			TextStory       story;
-			TextNavigator   navigator;
+			Epsitec.Common.Text.TextNavigator   navigator;
 			
 			TextWrapper      textWrapper = new TextWrapper ();
 			ParagraphWrapper paraWrapper = new ParagraphWrapper ();
@@ -90,9 +91,9 @@ namespace Epsitec.Common.Tests.Text.Exchange
 			navigator.Insert ("Hello you world !");
 			navigator.Insert (Unicode.Code.ParagraphSeparator);
 			navigator.Insert ("The End.");
-			navigator.MoveTo (TextNavigator.Target.LineStart, 0);
-			navigator.MoveTo (TextNavigator.Target.CharacterPrevious, 1);
-			navigator.MoveTo (TextNavigator.Target.WordStart, 2);
+			navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.LineStart, 0);
+			navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterPrevious, 1);
+			navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.WordStart, 2);
 			
 			textWrapper.SuspendSynchronizations ();
 			textWrapper.Defined.InvertItalic = true;
@@ -118,8 +119,8 @@ namespace Epsitec.Common.Tests.Text.Exchange
 				}
 				
 				string      runText       = navigator.ReadText (runLength);
-				
-				navigator.MoveTo (TextNavigator.Target.CharacterNext, runLength);
+
+				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext, runLength);
 				
 				Property[]  runProperties = navigator.AccumulatedTextProperties;
 				Epsitec.Common.Text.TextStyle[] runStyles     = navigator.TextStyles;

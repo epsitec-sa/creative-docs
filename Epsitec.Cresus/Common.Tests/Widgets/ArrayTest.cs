@@ -1,13 +1,15 @@
 using NUnit.Framework;
 using Epsitec.Common.Support;
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Widgets
+namespace Epsitec.Common.Tests.Widgets
 {
 	[TestFixture] public class ArrayTest
 	{
 		[SetUp] public void SetUp()
 		{
-			Widgets.Widget.Initialize ();
+			Widget.Initialize ();
 			Document.Engine.Initialize ();
 			Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
 		}
@@ -21,9 +23,9 @@ namespace Epsitec.Common.Widgets
 		{
 			Window window = new Window();
 			
-			window.ClientSize = new Drawing.Size(400, 300);
+			window.ClientSize = new Size(400, 300);
 			window.Text = "CheckInteractive / ScrollArray";
-			window.Root.Padding = new Drawing.Margins (5, 5, 5, 5);
+			window.Root.Padding = new Margins (5, 5, 5, 5);
 			
 			ScrollArray table = new ScrollArray();
 			
@@ -367,12 +369,12 @@ namespace Epsitec.Common.Widgets
 		private void HandlePaintForeground(object sender, PaintEventArgs e)
 		{
 			ScrollArray table = sender as ScrollArray;
-			Drawing.Rectangle hilite = table.GetCellBounds (this.hilite_row, this.hilite_column);
+			Rectangle hilite = table.GetCellBounds (this.hilite_row, this.hilite_column);
 			
 			if (hilite.IsValid)
 			{
 				e.Graphics.AddFilledRectangle (hilite);
-				e.Graphics.RenderSolid (Drawing.Color.FromAlphaRgb (0.25, 0, 0, 1));
+				e.Graphics.RenderSolid (Color.FromAlphaRgb (0.25, 0, 0, 1));
 			}
 		}
 		
