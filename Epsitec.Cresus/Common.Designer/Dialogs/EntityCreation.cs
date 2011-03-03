@@ -49,6 +49,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Crée et montre la fenêtre du dialogue.
 			this.isEditOk = false;
+			this.closed = false;
 
 			if (this.window == null)
 			{

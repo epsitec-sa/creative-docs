@@ -194,6 +194,9 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public void Update()
 		{
+			this.result = Common.Dialogs.DialogResult.Cancel;
+			this.closed = false;
+
 			this.UpdateTitle ();
 			this.UpdateArray ();
 			this.UpdateButtons ();
@@ -767,8 +770,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	La liste des ressources a été double-cliquée.
 			if (this.buttonUse != null)  // mode "dialogue" (par opposition au mode "volet") ?
 			{
-				this.result = Common.Dialogs.DialogResult.Yes;
 				this.Close ();
+				this.result = Common.Dialogs.DialogResult.Yes;
 			}
 		}
 
@@ -779,14 +782,13 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleButtonCloseClicked(object sender, MessageEventArgs e)
 		{
-			this.result = Common.Dialogs.DialogResult.Cancel;
 			this.Close();
 		}
 
 		private void HandleButtonUseClicked(object sender, MessageEventArgs e)
 		{
-			this.result = Common.Dialogs.DialogResult.Yes;
 			this.Close();
+			this.result = Common.Dialogs.DialogResult.Yes;
 		}
 
 

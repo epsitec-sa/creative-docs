@@ -20,8 +20,6 @@ namespace Epsitec.Common.Designer.Dialogs
 		public override void Show()
 		{
 			//	Crée et montre la fenêtre du dialogue.
-			this.isEditOk = false;
-
 			if (this.window == null)
 			{
 				this.window = new Window();
@@ -218,6 +216,9 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public void Update()
 		{
+			this.isEditOk = false;
+			this.closed = false;
+
 			this.UpdateWidgets ();
 		}
 
