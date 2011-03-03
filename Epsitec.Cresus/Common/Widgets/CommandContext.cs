@@ -279,6 +279,19 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		/// <summary>
+		/// Updates the command states for all known command handlers.
+		/// </summary>
+		/// <param name="sender">The sender.</param>
+		public void UpdateCommandStates(object sender)
+		{
+			foreach (var handler in this.commandHandlers)
+			{
+				handler.UpdateCommandStates (sender);
+			}
+		}
+
+
 		
 		#region Internal Methods
 		

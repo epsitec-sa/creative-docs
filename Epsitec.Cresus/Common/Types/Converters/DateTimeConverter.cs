@@ -12,9 +12,14 @@ namespace Epsitec.Common.Types.Converters
 	/// The <c>DateTimeConverter</c> is used to convert <see cref="DateTimeType"/> to/from
 	/// <c>string</c>.
 	/// </summary>
-	public class DateTimeConverter : GenericConverter<System.DateTime>
+	public class DateTimeConverter : GenericConverter<System.DateTime, DateTimeConverter>
 	{
-		public DateTimeConverter(System.Globalization.CultureInfo culture = null)
+		public DateTimeConverter()
+			: this (null)
+		{
+		}
+
+		public DateTimeConverter(System.Globalization.CultureInfo culture)
 			: base (culture)
 		{
 		}

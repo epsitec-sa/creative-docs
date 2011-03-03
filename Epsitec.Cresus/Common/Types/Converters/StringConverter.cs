@@ -11,7 +11,7 @@ namespace Epsitec.Common.Types.Converters
 	/// it is required so that the <see cref="Marshaler"/> can work with
 	/// <c>string</c> values.
 	/// </summary>
-	public class StringConverter : GenericConverter<string>
+	public class StringConverter : GenericConverter<string, StringConverter>
 	{
 		public StringConverter()
 			: base (System.Globalization.CultureInfo.InvariantCulture)

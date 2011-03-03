@@ -11,7 +11,7 @@ namespace Epsitec.Common.Types.Converters
 	/// it is required so that the <see cref="Marshaler"/> can work with
 	/// <c>FormattedText</c> values.
 	/// </summary>
-	public class FormattedTextConverter : GenericConverter<FormattedText>
+	public class FormattedTextConverter : GenericConverter<FormattedText, FormattedTextConverter>
 	{
 		public FormattedTextConverter()
 			: base (System.Globalization.CultureInfo.InvariantCulture)

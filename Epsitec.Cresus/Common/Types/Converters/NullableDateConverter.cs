@@ -12,9 +12,14 @@ namespace Epsitec.Common.Types.Converters
 	/// The <c>NullableDateConverter</c> is used to convert <see cref="Date"/> to/from
 	/// <c>string</c> using the current culture.
 	/// </summary>
-	public class NullableDateConverter : GenericConverter<Date?>
+	public class NullableDateConverter : GenericConverter<Date?, NullableDateConverter>
 	{
-		public NullableDateConverter(System.Globalization.CultureInfo culture = null)
+		public NullableDateConverter()
+			: this (null)
+		{
+		}
+
+		public NullableDateConverter(System.Globalization.CultureInfo culture)
 			: base (culture)
 		{
 		}

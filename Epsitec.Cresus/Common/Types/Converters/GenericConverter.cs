@@ -40,7 +40,7 @@ namespace Epsitec.Common.Types.Converters
 			var assembly = System.Reflection.Assembly.GetAssembly (typeof (GenericConverter));
 
 			var types = from type in assembly.GetTypes ()
-						where type.IsClass && !type.IsAbstract && type.IsSubclassOf (typeof (GenericConverter)) && type.BaseType == typeof (GenericConverter<T>)
+						where type.IsClass && !type.IsAbstract && type.IsSubclassOf (typeof (GenericConverter)) && type.BaseType.BaseType == typeof (GenericConverter<T>)
 						select type;
 
 			return types.FirstOrDefault ();

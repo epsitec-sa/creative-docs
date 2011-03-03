@@ -12,5 +12,6 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public interface ICommandHandler
 	{
+		void UpdateCommandStates(object sender);
 	}
 }

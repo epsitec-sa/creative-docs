@@ -748,6 +748,7 @@
     <Compile Include="Types\Converters\FormattedTextConverter.cs" />
     <Compile Include="Types\Converters\GenericConversionResult.cs" />
     <Compile Include="Types\Converters\GenericConverter.cs" />
+    <Compile Include="Types\Converters\GenericConverter`2.cs" />
     <Compile Include="Types\Converters\GenericConverter`1.cs" />
     <Compile Include="Types\Converters\IntConverter.cs" />
     <Compile Include="Types\Converters\Marshaler.cs" />

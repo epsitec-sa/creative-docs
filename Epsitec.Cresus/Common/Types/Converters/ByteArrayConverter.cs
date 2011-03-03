@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Common.Types.Converters
 {
-	internal class ByteArrayConverter : GenericConverter<byte[]>
+	internal class ByteArrayConverter : GenericConverter<byte[], ByteArrayConverter>
 	{
 		public ByteArrayConverter()
 			: base (System.Globalization.CultureInfo.InvariantCulture)

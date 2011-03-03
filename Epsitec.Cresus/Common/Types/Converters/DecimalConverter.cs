@@ -13,9 +13,14 @@ namespace Epsitec.Common.Types.Converters
 	/// it is required so that the <see cref="Marshaler"/> can work with
 	/// <c>decimal</c> values.
 	/// </summary>
-	public class DecimalConverter : GenericConverter<decimal>
+	public class DecimalConverter : GenericConverter<decimal, DecimalConverter>
 	{
-		public DecimalConverter(System.Globalization.CultureInfo culture = null)
+		public DecimalConverter()
+			: this (null)
+		{
+		}
+
+		public DecimalConverter(System.Globalization.CultureInfo culture)
 			: base (culture)
 		{
 		}

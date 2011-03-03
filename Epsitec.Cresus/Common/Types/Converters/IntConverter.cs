@@ -13,9 +13,14 @@ namespace Epsitec.Common.Types.Converters
 	/// it is required so that the <see cref="Marshaler"/> can work with
 	/// <c>int</c> values.
 	/// </summary>
-	public class IntConverter : GenericConverter<int>
+	public class IntConverter : GenericConverter<int, IntConverter>
 	{
-		public IntConverter(System.Globalization.CultureInfo culture = null)
+		public IntConverter()
+			: this (null)
+		{
+		}
+
+		public IntConverter(System.Globalization.CultureInfo culture)
 			: base (culture)
 		{
 		}

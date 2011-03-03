@@ -12,9 +12,14 @@ namespace Epsitec.Common.Types.Converters
 	/// The <c>DateConverter</c> is used to convert <see cref="Date"/> to/from
 	/// <c>string</c> using the current culture.
 	/// </summary>
-	public class DateConverter : GenericConverter<Date>
+	public class DateConverter : GenericConverter<Date, DateConverter>
 	{
-		public DateConverter(System.Globalization.CultureInfo culture = null)
+		public DateConverter()
+			: this (null)
+		{
+		}
+
+		public DateConverter(System.Globalization.CultureInfo culture)
 			: base (culture)
 		{
 		}
