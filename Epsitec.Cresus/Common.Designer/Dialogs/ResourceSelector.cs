@@ -435,7 +435,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			string name = ResourceAccess.TypeDisplayName(this.resourceType);
 			if (this.operation == Operation.InterfaceEntities)
 			{
-				name = Res.Strings.BundleType.Panels;
+				name = "Interfaces";
 			}
 			string text = string.Concat("<font size=\"200%\"><b>", name, "</b></font>");
 			this.title.Text = text;

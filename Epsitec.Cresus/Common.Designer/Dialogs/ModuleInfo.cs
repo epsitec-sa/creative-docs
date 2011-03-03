@@ -22,13 +22,17 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window = new Window();
 				this.window.Icon = this.designerApplication.Icon;
 				this.window.MakeSecondaryWindow ();
-				this.window.MakeFixedSizeWindow ();
 				this.window.PreventAutoClose = true;
-				this.WindowInit ("ModuleInfo", 500, 280, true);
+				this.WindowInit ("ModuleInfo", 540, 340, true);
 				this.window.Text = "Informations du module";  // Res.Strings.Dialog.ModuleInfo.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
+
+				ResizeKnob resize = new ResizeKnob (this.window.Root);
+				resize.Anchor = AnchorStyles.BottomRight;
+				resize.Margins = new Margins (0, -8, 0, -8);
+				ToolTip.Default.SetToolTip (resize, Res.Strings.Dialog.Tooltip.Resize);
 
 				this.CreateUI (this.window.Root);
 
@@ -100,14 +104,27 @@ namespace Epsitec.Common.Designer.Dialogs
 				Parent = box,
 				PreferredHeight = 1,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 20),
+				Margins = new Margins (0, 0, 0, 10),
+			};
+
+			this.fieldPath       = this.CreateField (box, "Chemin");
+			this.fieldName       = this.CreateField (box, "Nom");
+			this.fieldId         = this.CreateField (box, "Numéro");
+
+			new Separator
+			{
+				Parent = box,
+				PreferredHeight = 1,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 10, 10),
 			};
 
 			this.fieldAssemblies = this.CreateField (box, "Assemblies", true);
-			this.fieldDefault    = this.CreateField (box, "Espace par défaut");
-			this.fieldEntities   = this.CreateField (box, "Espace pour les entités");
-			this.fieldForms      = this.CreateField (box, "Espace pour les panneaux");
-			this.fieldRes        = this.CreateField (box, "Espace pour les ressources");
+			
+			this.fieldDefault    = this.CreateField (box, "Namespace par défaut");
+			this.fieldEntities   = this.CreateField (box, "Namespace pour les entités");
+			this.fieldForms      = this.CreateField (box, "Namespace pour les panneaux");
+			this.fieldRes        = this.CreateField (box, "Namespace pour les ressources");
 
 			this.radioString = new RadioButton
 			{
@@ -133,12 +150,13 @@ namespace Epsitec.Common.Designer.Dialogs
 				Parent = parent,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, bottomSpace ? 10 : 1),
+				TabIndex = ++this.tabIndex,
 			};
 
 			new StaticText
 			{
 				Parent = box,
-				PreferredWidth = 150,
+				PreferredWidth = 160,
 				Text = label,
 				Dock = DockStyle.Left,
 			};
@@ -147,6 +165,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				Parent = box,
 				Dock = DockStyle.Fill,
+				TabIndex = ++this.tabIndex,
 			};
 
 			return field;
@@ -161,15 +180,21 @@ namespace Epsitec.Common.Designer.Dialogs
 			string name = Misc.ExtractName (this.Module.ModuleId.Name);
 			this.title.Text = string.Concat("<font size=\"200%\"><b>", name, "</b></font>");
 
+			this.fieldPath.Text       = this.Module.ModuleInfo.FullId.Path;
+			this.fieldName.Text       = this.Module.ModuleInfo.FullId.Name;
+			this.fieldId.Text         = this.Module.ModuleInfo.FullId.Id.ToString ();
 			this.fieldAssemblies.Text = this.Module.ModuleInfo.Assemblies;
 			this.fieldDefault.Text 	  = this.Module.ModuleInfo.SourceNamespaceDefault;
 			this.fieldEntities.Text   = this.Module.ModuleInfo.SourceNamespaceEntities;
 			this.fieldForms.Text 	  = this.Module.ModuleInfo.SourceNamespaceForms;
 			this.fieldRes.Text 		  = this.Module.ModuleInfo.SourceNamespaceRes;
 
-			this.radioString.ActiveState     = this.Module.ModuleInfo.TextMode == ResourceTextMode.String        ? ActiveState.Yes : ActiveState.No;
+			this.radioString.ActiveState    = this.Module.ModuleInfo.TextMode == ResourceTextMode.String        ? ActiveState.Yes : ActiveState.No;
 			this.radioFormatted.ActiveState = this.Module.ModuleInfo.TextMode == ResourceTextMode.FormattedText ? ActiveState.Yes : ActiveState.No;
 
+			this.fieldPath.IsReadOnly       = true;
+			this.fieldName.IsReadOnly       = true;
+			this.fieldId.IsReadOnly         = true;
 			this.fieldAssemblies.IsReadOnly = this.designerApplication.IsReadonly;
 			this.fieldDefault.IsReadOnly    = this.designerApplication.IsReadonly;
 			this.fieldEntities.IsReadOnly   = this.designerApplication.IsReadonly;
@@ -178,6 +203,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.radioString.Enable    = !this.designerApplication.IsReadonly;
 			this.radioFormatted.Enable = !this.designerApplication.IsReadonly;
+
+			this.buttonOk.Enable = !this.designerApplication.IsReadonly;
 		}
 
 		private void Accept()
@@ -235,8 +262,12 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private bool							isEditOk;
 		private bool							closed;
+		private int								tabIndex;
 
 		private StaticText						title;
+		private TextField						fieldPath;
+		private TextField						fieldName;
+		private TextField						fieldId;
 		private TextField						fieldAssemblies;
 		private TextField						fieldDefault;
 		private TextField						fieldEntities;
