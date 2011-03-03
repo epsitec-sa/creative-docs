@@ -176,6 +176,11 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void Close()
 		{
+			if (this.closed)
+			{
+				return;
+			}
+
 			this.resourceName.Close ();
 			this.resourceSelector.Close ();
 			this.entityParameters.Close ();
@@ -183,6 +188,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.parentWindow.MakeActive ();
 			this.window.Hide ();
 			this.OnClosed ();
+
+			this.closed = true;
 		}
 
 
@@ -217,18 +224,19 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		private readonly ResourceName		resourceName;
-		private readonly ResourceSelector	resourceSelector;
-		private readonly EntityParameters	entityParameters;
+		private readonly ResourceName			resourceName;
+		private readonly ResourceSelector		resourceSelector;
+		private readonly EntityParameters		entityParameters;
 
-		private bool						isEditOk;
+		private bool							isEditOk;
+		private bool							closed;
 
-		private int							selectedFrameBox;
-		private List<FrameBox>				frameBoxes;
+		private int								selectedFrameBox;
+		private List<FrameBox>					frameBoxes;
 
-		private StaticText					levelLabel;
-		private Button						buttonPrev;
-		private Button						buttonNext;
-		private Button						buttonCancel;
+		private StaticText						levelLabel;
+		private Button							buttonPrev;
+		private Button							buttonNext;
+		private Button							buttonCancel;
 	}
 }
