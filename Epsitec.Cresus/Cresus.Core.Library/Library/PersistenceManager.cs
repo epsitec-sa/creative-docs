@@ -20,6 +20,7 @@ namespace Epsitec.Cresus.Core.Library
 			: base (app)
 		{
 			this.bindings = new Dictionary<string, PersistenceManagerBinding> ();
+			this.pendingRestores = new List<XElement> ();
 			
 			this.timer = new Timer ()
 			{
@@ -45,11 +46,20 @@ namespace Epsitec.Cresus.Core.Library
 			//	  <w id="path2" ... />
 			//	</node>
 
-			return new XElement (xmlNodeName,
-				from path in this.bindings.Keys
-				orderby path ascending
-				let binding = this.bindings[path]
-				select binding.ExecuteSave (new XElement ("w", new XAttribute ("id", path))));
+			var pending = new HashSet<string> (this.pendingRestores.Select (x => (string) x.Attribute ("id")));
+
+			pending.ExceptWith (this.bindings.Keys);
+
+			var newNodes = from path in this.bindings.Keys
+						   orderby path ascending
+						   let binding = this.bindings[path]
+						   select binding.ExecuteSave (new XElement ("w", new XAttribute ("id", path)));
+
+			var oldNodes = from node in this.pendingRestores
+						   where pending.Contains ((string) node.Attribute ("id"))
+						   select node;
+			
+			return new XElement (xmlNodeName, newNodes, oldNodes);
 		}
 
 		/// <summary>
@@ -73,6 +83,10 @@ namespace Epsitec.Cresus.Core.Library
 				if (this.bindings.TryGetValue (path, out binding))
 				{
 					binding.ExecuteRestore (node);
+				}
+				else
+				{
+					this.pendingRestores.Add (node);
 				}
 			}
 		}
@@ -99,6 +113,18 @@ namespace Epsitec.Cresus.Core.Library
 					RegisterChangeHandler   = w => w.ActivePageChanged += this.NotifyChange,
 					UnregisterChangeHandler = w => w.ActivePageChanged -= this.NotifyChange,
 					SaveXml    = (w, xml) => xml.Add (new XAttribute ("book", InvariantConverter.ToString (w.ActivePageIndex))),
+					RestoreXml = (w, xml) => w.ActivePageIndex = InvariantConverter.ToInt (xml.Attribute ("book").Value),
+				});
+		}
+
+		public void Register(TabBook tabBook)
+		{
+			this.AddBinding (
+				new PersistenceManagerBinding<TabBook> (tabBook)
+				{
+					RegisterChangeHandler   = w => w.ActivePageChanged += this.NotifyChange,
+					UnregisterChangeHandler = w => w.ActivePageChanged -= this.NotifyChange,
+					SaveXml    = (w, xml) => xml.Add (new XAttribute ("book", InvariantConverter.ToShort (w.ActivePageIndex))),
 					RestoreXml = (w, xml) => w.ActivePageIndex = InvariantConverter.ToInt (xml.Attribute ("book").Value),
 				});
 		}
@@ -165,11 +191,22 @@ namespace Epsitec.Cresus.Core.Library
 			string path = binding.GetId ();
 			PersistenceManagerBinding oldBinding;
 
+			var pending = this.pendingRestores.Find (x => (string) x.Attribute ("id") == path);
+
 			if (this.bindings.TryGetValue (path, out oldBinding))
 			{
+				pending = new XElement ("w");
 				oldBinding.ExecuteUnregister ();
+				oldBinding.ExecuteSave (pending);
+				this.pendingRestores.Add (pending);
 			}
-				
+
+			if (pending != null)
+			{
+				this.pendingRestores.Remove (pending);
+				binding.ExecuteRestore (pending);
+			}
+			
 			this.bindings[path] = binding;
 		}
 
@@ -183,7 +220,10 @@ namespace Epsitec.Cresus.Core.Library
 			this.changeCount++;
 		}
 
-
+		private void NotifyChange(object sender, CancelEventArgs e)
+		{
+			this.NotifyChange (sender);
+		}
 
 		private void HandleTimerTimeElapsed(object sender)
 		{
@@ -205,6 +245,7 @@ namespace Epsitec.Cresus.Core.Library
 		public event EventHandler SettingsChanged;
 
 		private readonly Dictionary<string, PersistenceManagerBinding> bindings;
+		private readonly List<XElement> pendingRestores;
 		private readonly Timer timer;
 		private int changeCount;
 	}

@@ -20,9 +20,20 @@ namespace Epsitec.Cresus.Core.Library
 	internal class PersistenceManagerBinding<T> : PersistenceManagerBinding
 		where T : class
 	{
-		public PersistenceManagerBinding(T widget, string id = null)
+		public PersistenceManagerBinding(T element, string id = null)
 		{
-			this.item = new Weak<T> (widget);
+			System.Diagnostics.Debug.Assert (element != null);
+
+			Widget widget = element as Widget;
+
+			if (widget != null)
+			{
+				System.Diagnostics.Debug.Assert (widget.Window != null, "Widget must have a valid Window");
+				System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (widget.Window.Name), "Widget must have a valid Window, with a name");
+				System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (widget.Name), "Widget must have a name");
+			}
+
+			this.item = new Weak<T> (element);
 			this.id = id;
 		}
 
@@ -91,7 +102,17 @@ namespace Epsitec.Cresus.Core.Library
 
 				if (widget != null)
 				{
-					return widget.FullPathName;
+					Window window = widget.Window;
+
+					if ((window != null) &&
+						(!string.IsNullOrEmpty (window.Name)))
+					{
+						return string.Concat (window.Name, ":", widget.FullPathName);
+					}
+					else
+					{
+						return widget.FullPathName;
+					}
 				}
 			}
 

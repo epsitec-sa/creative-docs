@@ -32,15 +32,18 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		protected override Window CreateWindow()
 		{
-			this.window = new Window ();
+			Window window = new Window ()
+			{
+				Name = "DebugDialog",
+			};
 
-			this.SetupWindow ();
-			this.SetupWidgets ();
+			this.SetupWindow (window);
+			this.SetupWidgets (window);
 			this.UpdateWidgets ();
 
-			this.window.AdjustWindowSize ();
+			window.AdjustWindowSize ();
 
-			return this.window;
+			return window;
 		}
 
 		#region ISettingsTabBook Members
@@ -55,33 +58,33 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		#endregion
 
-		private void SetupWindow()
+		private void SetupWindow(Window window)
 		{
 			this.OwnerWindow = this.application.Window;
-			this.window.Icon = this.application.Window.Icon;
-			this.window.Text = "Dépannage";
-			this.window.ClientSize = new Size (850, 600);
+			window.Icon = this.application.Window.Icon;
+			window.Text = "Dépannage";
+			window.ClientSize = new Size (850, 600);
 
-			this.window.WindowCloseClicked += delegate
+			window.WindowCloseClicked += delegate
 			{
 				this.CloseAndRejectChanges ();
 			};
 		}
 
-		private void SetupWidgets()
+		private void SetupWidgets(Window window)
 		{
 			bool devel = CoreProgram.Application.UserManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.Developer);
 
 			var frame = new FrameBox
 			{
-				Parent = this.window.Root,
+				Parent = window.Root,
 				Dock = DockStyle.Fill,
 				Margins = new Margins (10, 10, 10, 0),
 			};
 
 			var footer = new FrameBox
 			{
-				Parent = this.window.Root,
+				Parent = window.Root,
 				PreferredHeight = 20,
 				Dock = DockStyle.Bottom,
 				Margins = new Margins (10, 10, 10, 10),
@@ -92,6 +95,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				Parent = frame,
 				Dock = DockStyle.Fill,
+				Name = "DialogTabBook",
 			};
 
 			//	Crée l'onglet 'trace'.
@@ -122,7 +126,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.tabBook.Items.Add (maintenancePage);
 			}
 
-			this.ActivateLastPage ();
+			this.application.PersistenceManager.Register (this.tabBook);
 
 			//	Crée le pied de page.
 			this.errorInfo = new StaticText
@@ -171,8 +175,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void CloseAndAcceptChanges()
 		{
-			this.UpdateLastActivedPageName ();
-
 			foreach (var tab in this.settingsTabPages)
 			{
 				tab.AcceptChanges ();
@@ -182,10 +184,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.CloseDialog ();
 		}
 
+		protected override void OnDialogClosed()
+		{
+			base.OnDialogClosed ();
+			this.application.PersistenceManager.Unregister (this.DialogWindow);
+		}
+
 		private void CloseAndRejectChanges()
 		{
-			this.UpdateLastActivedPageName ();
-
 			foreach (var tab in this.settingsTabPages)
 			{
 				tab.RejectChanges ();
@@ -194,6 +200,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.Result = DialogResult.Cancel;
 			this.CloseDialog ();
 		}
+
 
 		private void HandlerSettingsAcceptStateChanging(object sender)
 		{
@@ -229,31 +236,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 		}
 
-		private void ActivateLastPage()
-		{
-			string name = DebugDialog.lastActivatedPageName;
-
-			if (string.IsNullOrEmpty (name))
-			{
-				name = "logging";  // page par défaut
-			}
-
-			var page = this.tabBook.Items.Where (x => x.Name == name).FirstOrDefault ();
-			this.tabBook.ActivePage = page;
-		}
-
-		private void UpdateLastActivedPageName()
-		{
-			DebugDialog.lastActivatedPageName = this.tabBook.ActivePage.Name;
-		}
-
-
-		private static string									lastActivatedPageName;
 
 		private readonly CoreApplication						application;
 		private readonly List<AbstractSettingsTabPage>			settingsTabPages;
 
-		private Window											window;
 		private TabBook											tabBook;
 		private StaticText										errorInfo;
 		private Button											closeButton;
