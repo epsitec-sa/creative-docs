@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Core
 			UI.SetApplication (this);
 			
 			this.plugIns = new List<PlugIns.ICorePlugIn> ();
-			this.components = new CoreComponentHostImplementation<ICoreComponent> ();
+			this.manualComponents = new CoreComponentHostImplementation<ICoreComponent> ();
 			
 			this.persistenceManager = new PersistenceManager ();
 
@@ -42,7 +42,6 @@ namespace Epsitec.Cresus.Core
 
 			this.exceptionManager = new ExceptionManager ();
 			this.commands = new CoreCommandDispatcher (this);
-			this.userManager = new Business.UserManagement.UserManager (this.data);
 
 			this.mainWindowOrchestrator = new DataViewOrchestrator (this, this.data, this.CommandContext);
 			
@@ -50,7 +49,7 @@ namespace Epsitec.Cresus.Core
 			
 			this.mainWindowController = new MainWindowController (this.data, this.CommandContext, this.mainWindowOrchestrator, ribbonController);
 
-			this.userManager.AuthenticatedUserChanged += this.HandleAuthenticatedUserChanged;
+			this.UserManager.AuthenticatedUserChanged += this.HandleAuthenticatedUserChanged;
 		}
 
 
@@ -141,7 +140,7 @@ namespace Epsitec.Cresus.Core
 		{
 			get
 			{
-				return this.userManager;
+				return this.Data.GetComponent<UserManager> ();
 			}
 		}
 
@@ -294,38 +293,38 @@ namespace Epsitec.Cresus.Core
 		public T GetComponent<T>()
 			where T : ICoreComponent
 		{
-			return this.components.GetComponent<T> ();
+			return this.manualComponents.GetComponent<T> ();
 		}
 
 		public IEnumerable<ICoreComponent> GetComponents()
 		{
-			return this.components.GetComponents ();
+			return this.manualComponents.GetComponents ();
 		}
 
 		public bool ContainsComponent<T>()
 			where T : ICoreComponent
 		{
-			return this.components.ContainsComponent<T> ();
+			return this.manualComponents.ContainsComponent<T> ();
 		}
 
 		bool ICoreComponentHost<ICoreComponent>.ContainsComponent(System.Type type)
 		{
-			return this.components.ContainsComponent (type);
+			return this.manualComponents.ContainsComponent (type);
 		}
 
 		void ICoreComponentHost<ICoreComponent>.RegisterComponent(System.Type type, ICoreComponent component)
 		{
-			this.components.RegisterComponent (type, component);
+			this.manualComponents.RegisterComponent (type, component);
 		}
 
 		void ICoreComponentHost<ICoreComponent>.RegisterComponent<T>(T component)
 		{
-			this.components.RegisterComponent<T> (component);
+			this.manualComponents.RegisterComponent<T> (component);
 		}
 
 		void ICoreComponentHost<ICoreComponent>.RegisterComponentAsDisposable(System.IDisposable disposable)
 		{
-			this.components.RegisterComponentAsDisposable (disposable);
+			this.manualComponents.RegisterComponentAsDisposable (disposable);
 		}
 
 
@@ -536,11 +535,10 @@ namespace Epsitec.Cresus.Core
 		private static Dictionary<string, string>		settings = new Dictionary<string, string> ();
 
 		private readonly List<PlugIns.ICorePlugIn>		plugIns;
-		private readonly CoreComponentHostImplementation<ICoreComponent> components;
+		private readonly CoreComponentHostImplementation<ICoreComponent> manualComponents;
 
 		private PersistenceManager						persistenceManager;
 		private CoreData								data;
-		private Business.UserManagement.UserManager		userManager;
 		private ExceptionManager						exceptionManager;
 		private CoreCommandDispatcher					commands;
 		private DataViewOrchestrator					mainWindowOrchestrator;
