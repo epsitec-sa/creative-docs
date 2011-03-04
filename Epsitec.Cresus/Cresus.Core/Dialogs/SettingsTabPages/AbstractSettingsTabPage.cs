@@ -4,7 +4,6 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 
-
 using System.Collections.Generic;
 using System.Linq;
 
@@ -55,19 +54,20 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
-		public event EventHandler AcceptStateChanging;
-
 		protected void OnAcceptStateChanging()
 		{
-			if (this.AcceptStateChanging != null)
+			var handler = this.AcceptStateChanging;
+
+			if (handler != null)
 			{
-				this.AcceptStateChanging (this);
+				handler (this);
 			}
 		}
 
-
+		
+		public event EventHandler						AcceptStateChanging;
+		
 		private readonly ISettingsDialog				container;
-
 		private string									errorMessage;
 	}
 }

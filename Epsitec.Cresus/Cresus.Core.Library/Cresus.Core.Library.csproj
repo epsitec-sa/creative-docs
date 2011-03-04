@@ -61,8 +61,10 @@
     <Compile Include="Library\CoreApp.cs" />
     <Compile Include="Library\CoreAppComponent.cs" />
     <Compile Include="Library\CoreComponent.cs" />
+    <Compile Include="Library\SettingsCollection.cs" />
     <Compile Include="Library\SettingsManager.cs" />
     <Compile Include="Library\ICoreManualComponent.cs" />
+    <Compile Include="Library\SettingsTuple.cs" />
     <Compile Include="Resolvers\CoreComponentFactoryResolver.cs" />
     <Compile Include="Library\CoreComponentHostImplementation.cs" />
     <Compile Include="Library\DialogCentral.cs" />
