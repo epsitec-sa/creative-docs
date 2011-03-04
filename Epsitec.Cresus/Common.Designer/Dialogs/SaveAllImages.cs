@@ -54,6 +54,15 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.TabIndex = 11;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
+				this.buttonApply = new Button (footer);
+				this.buttonApply.PreferredWidth = 75;
+				this.buttonApply.Text = "Appliquer";
+				this.buttonApply.Dock = DockStyle.Right;
+				this.buttonApply.Margins = new Margins (0, 16, 0, 0);
+				this.buttonApply.Clicked += this.HandleButtonApplyClicked;
+				this.buttonApply.TabIndex = 10;
+				this.buttonApply.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
 				this.buttonOk = new Button (footer);
 				this.buttonOk.PreferredWidth = 75;
 				this.buttonOk.Text = "Générer";
@@ -105,11 +114,11 @@ namespace Epsitec.Common.Designer.Dialogs
 			set;
 		}
 
-		public bool IsEditOk
+		public System.Windows.Forms.DialogResult Result
 		{
 			get
 			{
-				return this.isEditOk;
+				return this.result;
 			}
 		}
 
@@ -165,7 +174,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				Margins = new Margins (0, 0, 5, 0),
 			};
 
-			var clearButton = new Button
+			this.buttonClear = new Button
 			{
 				Parent = group,
 				Text = "Aucune entité",
@@ -173,7 +182,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				Margins = new Margins (0, 1, 0, 0),
 			};
 
-			var setButton = new Button
+			this.buttonAll = new Button
 			{
 				Parent = group,
 				Text = "Toutes les entités",
@@ -181,7 +190,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				Margins = new Margins (1, 0, 0, 0),
 			};
 
-			clearButton.Clicked += delegate
+			this.buttonClear.Clicked += delegate
 			{
 				this.selectedEntityNames.Clear ();
 
@@ -189,7 +198,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.UpdateTable ();
 			};
 
-			setButton.Clicked += delegate
+			this.buttonAll.Clicked += delegate
 			{
 				this.selectedEntityNames.Clear ();
 				this.selectedEntityNames.AddRange (this.allEntityNames);
@@ -369,7 +378,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void Update()
 		{
-			this.isEditOk = false;
+			this.result = System.Windows.Forms.DialogResult.Cancel;
 			this.closed = false;
 
 			this.UpdateTable ();
@@ -477,11 +486,10 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.fieldFolder.Text = this.Folder;
 
-			this.buttonOk.Enable = (!string.IsNullOrEmpty (this.Folder) && this.selectedEntityNames.Count != 0);
-		}
+			this.buttonClear.Enable = (this.selectedEntityNames.Count != 0);
+			this.buttonAll.Enable = (this.selectedEntityNames.Count != this.allEntityNames.Count);
 
-		private void Accept()
-		{
+			this.buttonOk.Enable = (!string.IsNullOrEmpty (this.Folder) && this.selectedEntityNames.Count != 0);
 		}
 
 
@@ -513,11 +521,16 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.Close ();
 		}
 
+		private void HandleButtonApplyClicked(object sender, MessageEventArgs e)
+		{
+			this.Close ();
+			this.result = System.Windows.Forms.DialogResult.Yes;
+		}
+
 		private void HandleButtonOkClicked(object sender, MessageEventArgs e)
 		{
-			this.Accept ();
 			this.Close ();
-			this.isEditOk = true;
+			this.result = System.Windows.Forms.DialogResult.OK;
 		}
 
 
@@ -541,31 +554,35 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		private bool							isEditOk;
-		private bool							closed;
-		private int								tabIndex;
-		private List<string>					allEntityNames;
-		private List<string>					selectedEntityNames;
+		private System.Windows.Forms.DialogResult	result;
+		private bool								closed;
+		private int									tabIndex;
+		private List<string>						allEntityNames;
+		private List<string>						selectedEntityNames;
 
-		private CellTable						table;
+		private CellTable							table;
 
-		private CheckButton						checkUser;
-		private CheckButton						checkDate;
-		private CheckButton						checkSamples;
+		private CheckButton							checkUser;
+		private CheckButton							checkDate;
+		private CheckButton							checkSamples;
 
-		private RadioButton						radioZoom1;
-		private RadioButton						radioZoom2;
-		private RadioButton						radioZoom3;
-		private RadioButton						radioZoom4;
+		private RadioButton							radioZoom1;
+		private RadioButton							radioZoom2;
+		private RadioButton							radioZoom3;
+		private RadioButton							radioZoom4;
 
-		private RadioButton						radioPng;
-		private RadioButton						radioTif;
-		private RadioButton						radioJpg;
-		private RadioButton						radioBmp;
+		private RadioButton							radioPng;
+		private RadioButton							radioTif;
+		private RadioButton							radioJpg;
+		private RadioButton							radioBmp;
 
-		private TextField						fieldFolder;
+		private TextField							fieldFolder;
 
-		private Button							buttonOk;
-		private Button							buttonCancel;
+		private Button								buttonClear;
+		private Button								buttonAll;
+
+		private Button								buttonOk;
+		private Button								buttonApply;
+		private Button								buttonCancel;
 	}
 }
