@@ -26,8 +26,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.Icon = this.designerApplication.Icon;
 				this.window.MakeSecondaryWindow ();
 				this.window.PreventAutoClose = true;
-				this.WindowInit ("SaveAllImages", 600, 390, true);
-				this.window.Text = "Génère plusieurs images bitmap";  // Res.Strings.Dialog.SaveAllImages.Title;
+				this.WindowInit ("SaveAllImages", 640, 420, true);
+				this.window.Text = "Génération en série d'images bitmap";  // Res.Strings.Dialog.SaveAllImages.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
@@ -56,7 +56,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.buttonOk = new Button (footer);
 				this.buttonOk.PreferredWidth = 75;
-				this.buttonOk.Text = "Génère";
+				this.buttonOk.Text = "Générer";
 				this.buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonOk.Dock = DockStyle.Right;
 				this.buttonOk.Margins = new Margins (0, 6, 0, 0);
@@ -201,14 +201,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void CreateGenerateUI(Widget parent)
 		{
-			var group = new GroupBox
-			{
-				Parent = parent,
-				Text = "Options pour les cartouches en bas à gauche",
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 8),
-				Padding = new Margins (8),
-			};
+			var group = this.CreateGroupBox (parent, "Options pour les cartouches en bas à gauche");
 
 			this.checkUser    = this.CreateCheckButton (group, "user",    "Met le nom de l'utilisateur");
 			this.checkDate    = this.CreateCheckButton (group, "date",    "Met la date");
@@ -217,14 +210,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void CreateZoomUI(Widget parent)
 		{
-			var group = new GroupBox
-			{
-				Parent = parent,
-				Text = "Zoom des images à générer",
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 8),
-				Padding = new Margins (8),
-			};
+			var group = this.CreateGroupBox (parent, "Zoom des images à générer");
 
 			this.radioZoom1 = this.CreateRadioButton (group, "zoom1", "100%");
 			this.radioZoom2 = this.CreateRadioButton (group, "zoom2", "200%");
@@ -234,14 +220,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void CreateExtensionUI(Widget parent)
 		{
-			var group = new GroupBox
-			{
-				Parent = parent,
-				Text = "Type des images à générer",
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 8),
-				Padding = new Margins (8),
-			};
+			var group = this.CreateGroupBox (parent, "Type des images à générer");
 
 			this.radioPng = this.CreateRadioButton (group, "png", "Images PNG (comprimées sans pertes)");
 			this.radioTif = this.CreateRadioButton (group, "tif", "Images TIFF (comprimées sans pertes)");
@@ -251,12 +230,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void CreateBrowseUI(Widget parent)
 		{
-			var group = new FrameBox
-			{
-				Parent = parent,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 8),
-			};
+			var group = this.CreateGroupBox (parent, "Dossier où mettre les images");
 
 			this.fieldFolder = new TextField
 			{
@@ -284,6 +258,20 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.Folder = this.FolderBrowse (this.Folder);
 				this.UpdateButtons ();
 			};
+		}
+
+		private GroupBox CreateGroupBox(Widget parent, string text)
+		{
+			var group = new GroupBox
+			{
+				Parent = parent,
+				Text = text,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, 8),
+				Padding = new Margins (8),
+			};
+
+			return group;
 		}
 
 		private CheckButton CreateCheckButton(Widget parent, string name, string text)

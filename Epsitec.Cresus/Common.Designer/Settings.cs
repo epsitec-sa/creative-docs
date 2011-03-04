@@ -15,9 +15,10 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class Settings
 	{
-		protected Settings()
+		private Settings()
 		{
 			this.modules = new List<ResourceModuleId>();
+			this.saveAllImageParameters = new Dictionary<string, string> ();
 		}
 
 
@@ -62,6 +63,23 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public string GetSaveAllImagesData(string moduleName)
+		{
+			if (this.saveAllImageParameters.ContainsKey (moduleName))
+			{
+				return this.saveAllImageParameters[moduleName];
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public void SetSaveAllImagesData(string moduleName, string data)
+		{
+			this.saveAllImageParameters[moduleName] = data;
+		}
+
 		public static readonly Settings Default = new Settings ();
 
 
@@ -93,7 +111,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected byte[] Serialize()
+		private byte[] Serialize()
 		{
 			//	Retourne les données à sérialiser (texte xml).
 			MemoryStream buffer = new MemoryStream();
@@ -107,7 +125,7 @@ namespace Epsitec.Common.Designer
 			return buffer.ToArray();
 		}
 
-		protected void Deserialize(byte[] data)
+		private void Deserialize(byte[] data)
 		{
 			//	Désérialise le texte xml.
 			MemoryStream buffer = new MemoryStream(data);
@@ -119,7 +137,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		protected void WriteXml(XmlWriter writer)
+		private void WriteXml(XmlWriter writer)
 		{
 			//	Génère les données xml.
 			writer.WriteStartDocument();
@@ -138,6 +156,19 @@ namespace Epsitec.Common.Designer
 				writer.WriteEndElement();
 			}
 
+			if (this.saveAllImageParameters.Count > 0)
+			{
+				writer.WriteStartElement ("SaveAllImageParameters");
+				foreach (var pair in this.saveAllImageParameters)
+				{
+					writer.WriteStartElement ("SaveAllImageParameter");
+					writer.WriteElementString ("ModuleName", pair.Key);
+					writer.WriteElementString ("Parameters", pair.Value);
+					writer.WriteEndElement ();
+				}
+				writer.WriteEndElement ();
+			}
+
 			writer.WriteStartElement("Identity");
 			writer.WriteElementString("UserName", this.identityCard == null ? "" : this.identityCard.UserName);
 			writer.WriteEndElement();
@@ -147,10 +178,11 @@ namespace Epsitec.Common.Designer
 			writer.WriteEndDocument();
 		}
 
-		protected void ReadXml(XmlReader reader)
+		private void ReadXml(XmlReader reader)
 		{
 			//	Analyse les données xml.
 			this.modules.Clear();
+			this.saveAllImageParameters.Clear ();
 
 			while (reader.ReadToFollowing("Settings"))
 			{
@@ -165,7 +197,11 @@ namespace Epsitec.Common.Designer
 						switch (name)
 						{
 							case "Modules":
-								this.ReadXmlModules(reader);
+								this.ReadXmlModules (reader);
+								break;
+
+							case "SaveAllImageParameters":
+								this.ReadXmlSaveAllImageParameters (reader);
 								break;
 
 							case "Identity":
@@ -190,9 +226,9 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected void ReadXmlModules(XmlReader reader)
+		private void ReadXmlModules(XmlReader reader)
 		{
-			reader.Read();
+			reader.Read ();
 
 			while (true)
 			{
@@ -202,23 +238,51 @@ namespace Epsitec.Common.Designer
 
 					if (name == "Module")
 					{
-						this.ReadXmlModule(reader);
+						this.ReadXmlModule (reader);
 					}
 				}
 				else if (reader.NodeType == XmlNodeType.EndElement)
 				{
-					System.Diagnostics.Debug.Assert(reader.Name == "Modules");
-					reader.Read();
+					System.Diagnostics.Debug.Assert (reader.Name == "Modules");
+					reader.Read ();
 					break;
 				}
 				else
 				{
-					reader.Read();
+					reader.Read ();
 				}
 			}
 		}
 
-		protected void ReadXmlIdentity(XmlReader reader)
+		private void ReadXmlSaveAllImageParameters(XmlReader reader)
+		{
+			reader.Read ();
+
+			while (true)
+			{
+				if (reader.NodeType == XmlNodeType.Element)
+				{
+					string name = reader.LocalName;
+
+					if (name == "SaveAllImageParameter")
+					{
+						this.ReadXmlSaveAllImageParameter (reader);
+					}
+				}
+				else if (reader.NodeType == XmlNodeType.EndElement)
+				{
+					System.Diagnostics.Debug.Assert (reader.Name == "SaveAllImageParameters");
+					reader.Read ();
+					break;
+				}
+				else
+				{
+					reader.Read ();
+				}
+			}
+		}
+
+		private void ReadXmlIdentity(XmlReader reader)
 		{
 			reader.Read();
 
@@ -247,21 +311,20 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-
-		protected void ReadXmlModule(XmlReader reader)
+		private void ReadXmlModule(XmlReader reader)
 		{
-			reader.Read();
+			reader.Read ();
 
 			while (true)
 			{
 				if (reader.NodeType == XmlNodeType.Element)
 				{
 					string name = reader.LocalName;
-					string element = reader.ReadElementString();
+					string element = reader.ReadElementString ();
 
 					if (name == "ResourceModuleId")
 					{
-						ResourceModuleId module = Types.InvariantConverter.ConvertFromString<ResourceModuleId>(element);
+						ResourceModuleId module = Types.InvariantConverter.ConvertFromString<ResourceModuleId> (element);
 
 						if (System.IO.Directory.Exists (module.Path))
 						{
@@ -271,18 +334,60 @@ namespace Epsitec.Common.Designer
 				}
 				else if (reader.NodeType == XmlNodeType.EndElement)
 				{
-					System.Diagnostics.Debug.Assert(reader.Name == "Module");
-					reader.Read();
+					System.Diagnostics.Debug.Assert (reader.Name == "Module");
+					reader.Read ();
 					break;
 				}
 				else
 				{
-					reader.Read();
+					reader.Read ();
 				}
 			}
 		}
 
-		protected string GlobalSettingsFilename
+		private void ReadXmlSaveAllImageParameter(XmlReader reader)
+		{
+			reader.Read ();
+
+			string moduleName = null;
+			string parameters = null;
+
+			while (true)
+			{
+				if (reader.NodeType == XmlNodeType.Element)
+				{
+					string name = reader.LocalName;
+					string element = reader.ReadElementString ();
+
+					if (name == "ModuleName")
+					{
+						moduleName = element;
+					}
+
+					if (name == "Parameters")
+					{
+						parameters = element;
+					}
+				}
+				else if (reader.NodeType == XmlNodeType.EndElement)
+				{
+					System.Diagnostics.Debug.Assert (reader.Name == "SaveAllImageParameter");
+					reader.Read ();
+					break;
+				}
+				else
+				{
+					reader.Read ();
+				}
+			}
+
+			if (moduleName != null && parameters != null)
+			{
+				this.saveAllImageParameters.Add (moduleName, parameters);
+			}
+		}
+
+		private string GlobalSettingsFilename
 		{
 			//	Retourne le nom du fichier des réglages de l'application.
 			//	Le dossier est qq chose du genre:
@@ -295,7 +400,8 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		protected List<ResourceModuleId> modules;
-		protected IdentityCard identityCard;
+		private List<ResourceModuleId> modules;
+		private IdentityCard identityCard;
+		private Dictionary<string, string> saveAllImageParameters;
 	}
 }
