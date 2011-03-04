@@ -26,7 +26,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.Icon = this.designerApplication.Icon;
 				this.window.MakeSecondaryWindow ();
 				this.window.PreventAutoClose = true;
-				this.WindowInit ("SaveAllImages", 640, 420, true);
+				this.WindowInit ("SaveAllImages", 600, 402, true);
 				this.window.Text = "Génération en série d'images bitmap";  // Res.Strings.Dialog.SaveAllImages.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
@@ -147,7 +147,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			};
 
 			//	Rempli la colonne de gauche.
-			this.CreateTableUI (leftPane);
+			this.CreateEntitiesUI (leftPane);
 
 			//	Rempli la colonne de droite.
 			this.CreateGenerateUI (rightPane);
@@ -156,27 +156,38 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.CreateBrowseUI (rightPane);
 		}
 
-		private void CreateTableUI(Widget parent)
+		private void CreateEntitiesUI(Widget parent)
 		{
-			this.table = new CellTable
+			var group = new GroupBox
 			{
 				Parent = parent,
+				Text = "Entités pour lesquels il faut générer une image",
 				Dock = DockStyle.Fill,
-				StyleH = CellArrayStyles.Separator,
-				StyleV = CellArrayStyles.Separator | CellArrayStyles.ScrollNorm,
+				Padding = new Margins (8),
 			};
 
-			var group = new FrameBox
+			this.scrollableEntities = new Scrollable
 			{
-				Parent = parent,
+				Parent = group,
+				HorizontalScrollerMode = ScrollableScrollerMode.HideAlways,
+				VerticalScrollerMode = ScrollableScrollerMode.Auto,
+				PaintViewportFrame = false,
+				Dock = DockStyle.Fill,
+			};
+
+			this.scrollableEntities.Viewport.IsAutoFitting = true;
+			
+			var footer = new FrameBox
+			{
+				Parent = group,
 				ContainerLayoutMode = Widgets.ContainerLayoutMode.HorizontalFlow,
 				Dock = DockStyle.Bottom,
-				Margins = new Margins (0, 0, 5, 0),
+				Margins = new Margins (0, 0, 8, 0),
 			};
 
 			this.buttonClear = new Button
 			{
-				Parent = group,
+				Parent = footer,
 				Text = "Aucune entité",
 				Dock = DockStyle.Fill,
 				Margins = new Margins (0, 1, 0, 0),
@@ -184,7 +195,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.buttonAll = new Button
 			{
-				Parent = group,
+				Parent = footer,
 				Text = "Toutes les entités",
 				Dock = DockStyle.Fill,
 				Margins = new Margins (1, 0, 0, 0),
@@ -195,7 +206,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.selectedEntityNames.Clear ();
 
 				this.UpdateButtons ();
-				this.UpdateTable ();
+				this.UpdateEntities ();
 			};
 
 			this.buttonAll.Clicked += delegate
@@ -204,7 +215,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.selectedEntityNames.AddRange (this.allEntityNames);
 				
 				this.UpdateButtons ();
-				this.UpdateTable ();
+				this.UpdateEntities ();
 			};
 		}
 
@@ -240,6 +251,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		private void CreateBrowseUI(Widget parent)
 		{
 			var group = this.CreateGroupBox (parent, "Dossier où mettre les images");
+			group.Margins = new Margins (0);
 
 			this.fieldFolder = new TextField
 			{
@@ -381,91 +393,39 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.result = System.Windows.Forms.DialogResult.Cancel;
 			this.closed = false;
 
-			this.UpdateTable ();
+			this.UpdateEntities ();
 			this.UpdateButtons ();
 		}
 
-		private void UpdateTable()
+		private void UpdateEntities()
 		{
-			this.table.SetArraySize (2, this.allEntityNames.Count);
+			this.scrollableEntities.Viewport.Children.Clear ();
 
-			this.table.SetWidthColumn (0, 24);
-			this.table.SetWidthColumn (1, 300);
-
-			this.table.SetHeaderTextH (1, "Entité");
-
-			for (int row = 0; row < this.allEntityNames.Count; row++)
+			for (int i = 0; i < this.allEntityNames.Count; i++)
 			{
-				this.UpdateTableFillRow (row);
-				this.UpdateTableContentRow (row);
-			}
-		}
-
-		private void UpdateTableFillRow(int row)
-		{
-			for (int column=0; column<this.table.Columns; column++)
-			{
-				if (this.table[column, row].IsEmpty)
+				var button = new CheckButton
 				{
-					if (column == 0)
+					Parent = this.scrollableEntities.Viewport,
+					Name = this.allEntityNames[i],
+					Text = this.allEntityNames[i],
+					ActiveState = (this.selectedEntityNames.Contains (this.allEntityNames[i])) ? ActiveState.Yes : ActiveState.No,
+					Dock = DockStyle.Top,
+				};
+
+				button.Clicked += delegate
+				{
+					if (this.selectedEntityNames.Contains (button.Name))
 					{
-						var button = new CheckButton
-						{
-							Name = this.allEntityNames[row],
-							Dock = DockStyle.Fill,
-							Margins = new Margins (4, 4, 0, 0),
-						};
-
-						button.Clicked += delegate
-						{
-							if (this.selectedEntityNames.Contains (button.Name))
-							{
-								this.selectedEntityNames.Remove (button.Name);
-							}
-							else
-							{
-								this.selectedEntityNames.Add (button.Name);
-							}
-
-							this.UpdateButtons ();
-						};
-
-						this.table[column, row].Insert (button);
+						this.selectedEntityNames.Remove (button.Name);
 					}
 					else
 					{
-						var st = new StaticText
-						{
-							ContentAlignment = ContentAlignment.MiddleLeft,
-							Dock = DockStyle.Fill,
-							Margins = new Margins (4, 4, 0, 0),
-						};
-
-						this.table[column, row].Insert (st);
+						this.selectedEntityNames.Add (button.Name);
 					}
-				}
+
+					this.UpdateButtons ();
+				};
 			}
-		}
-
-		private void UpdateTableContentRow(int row)
-		{
-			//	Met à jour le contenu d'une ligne de la table.
-			this.UpdateTableContentCell (row, 0, this.selectedEntityNames.Contains (this.allEntityNames[row]));
-			this.UpdateTableContentCell (row, 1, this.allEntityNames[row]);
-
-			this.table.SelectRow (row, false);
-		}
-
-		private void UpdateTableContentCell(int row, int column, bool state)
-		{
-			var button = this.table[column, row].Children[0] as CheckButton;
-			button.ActiveState = state ? ActiveState.Yes : ActiveState.No;
-		}
-
-		private void UpdateTableContentCell(int row, int column, string text)
-		{
-			var st = this.table[column, row].Children[0] as StaticText;
-			st.Text = text;
 		}
 
 		private void UpdateButtons()
@@ -560,7 +520,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		private List<string>						allEntityNames;
 		private List<string>						selectedEntityNames;
 
-		private CellTable							table;
+		private Scrollable							scrollableEntities;
 
 		private CheckButton							checkUser;
 		private CheckButton							checkDate;
