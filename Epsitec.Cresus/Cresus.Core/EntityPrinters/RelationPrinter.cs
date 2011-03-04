@@ -1,5 +1,4 @@
-﻿#if false
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Debug;
@@ -20,13 +19,15 @@ using Epsitec.Cresus.Core.Print.Containers;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Epsitec.Cresus.Core.Resolvers;
+using Epsitec.Cresus.Core.Documents;
+using Epsitec.Cresus.Core.Print.EntityPrinters;
 
-namespace Epsitec.Cresus.Core.Print.EntityPrinters
+namespace Epsitec.Cresus.Core.EntityPrinters
 {
-
 	public class RelationPrinter : AbstractPrinter
 	{
-		public RelationPrinter(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
+		private RelationPrinter(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
 			: base (coreData, entities, options, printingUnits)
 		{
 		}
@@ -135,7 +136,7 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 			if (this.Entity.Person is NaturalPersonEntity)
 			{
 				var x = this.Entity.Person as NaturalPersonEntity;
-				text = TextFormatter.FormatText (x.Title.Name, "\n", x.Firstname, x.Lastname, "\n", x.Gender.Name, "\n", x.BirthDate);
+				text = TextFormatter.FormatText (x.Title.Name, "\n", x.Firstname, x.Lastname, "\n", x.Gender.Name, "\n", x.DateOfBirth);
 			}
 
 			if (this.Entity.Person is LegalPersonEntity)
@@ -176,7 +177,7 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 			}
 
 			var title = new TextBand ();
-			title.Text = Misc.Bold ("Adresses");
+			title.Text = TextFormatter.FormatText ("Adresses").ApplyBold ();
 			title.FontSize = 4.5;
 			this.documentContainer.AddFromTop (title, 1.0);
 
@@ -191,11 +192,11 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 			table.SetRelativeColumWidth (4, 0.8);
 
 			int index = 0;
-			table.SetText (0, index, Misc.Bold ("Rôles"));
-			table.SetText (1, index, Misc.Bold ("Adresse"));
-			table.SetText (2, index, Misc.Bold ("NPA"));
-			table.SetText (3, index, Misc.Bold ("Ville"));
-			table.SetText (4, index, Misc.Bold ("Pays"));
+			table.SetText (0, index, TextFormatter.FormatText ("Rôles").ApplyBold ());
+			table.SetText (1, index, TextFormatter.FormatText ("Adresse").ApplyBold ());
+			table.SetText (2, index, TextFormatter.FormatText ("NPA").ApplyBold ());
+			table.SetText (3, index, TextFormatter.FormatText ("Ville").ApplyBold ());
+			table.SetText (4, index, TextFormatter.FormatText ("Pays").ApplyBold ());
 			index++;
 
 			foreach (var contact in this.Entity.Person.Contacts)
@@ -205,7 +206,7 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 					var x = contact as MailContactEntity;
 
 					table.SetText (0, index, TextFormatter.FormatText (string.Join (", ", x.ContactGroups.Select (role => role.Name))));
-					table.SetText (1, index, TextFormatter.FormatText (x.LegalPerson.Name, "\n", x.LegalPerson.Complement, "\n", x.Complement, "\n", x.Address.Street.StreetName, "\n", x.Address.Street.Complement, "\n", x.Address.PostBox.Number, "\n", x.Address.Location.Country.Code, "~-", x.Address.Location.PostalCode, x.Address.Location.Name));
+					table.SetText (1, index, TextFormatter.FormatText (x.LegalPerson.Name, "\n", x.LegalPerson.Complement, "\n", x.Complement, "\n", x.Address.Street.StreetName, "\n", x.Address.Street.Complement, "\n", x.Address.PostBox.Number, "\n", x.Address.Location.Country.CountryCode, "~-", x.Address.Location.PostalCode, x.Address.Location.Name));
 					table.SetText (2, index, x.Address.Location.PostalCode);
 					table.SetText (3, index, x.Address.Location.Name);
 					table.SetText (4, index, x.Address.Location.Country.Name);
@@ -235,7 +236,7 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 			}
 
 			var title = new TextBand ();
-			title.Text = Misc.Bold ("Téléphones");
+			title.Text = TextFormatter.FormatText ("Téléphones").ApplyBold ();
 			title.FontSize = 4.5;
 			this.documentContainer.AddFromTop (title, 1.0);
 
@@ -248,9 +249,9 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 			table.SetRelativeColumWidth (2, 2.0+0.3+1.0+0.8-1.5);
 
 			int index = 0;
-			table.SetText (0, index, Misc.Bold ("Rôles"));
-			table.SetText (1, index, Misc.Bold ("Type"));
-			table.SetText (2, index, Misc.Bold ("Numéro"));
+			table.SetText (0, index, TextFormatter.FormatText ("Rôles").ApplyBold ());
+			table.SetText (1, index, TextFormatter.FormatText ("Type").ApplyBold ());
+			table.SetText (2, index, TextFormatter.FormatText ("Numéro").ApplyBold ());
 			index++;
 
 			foreach (var contact in this.Entity.Person.Contacts)
@@ -288,7 +289,7 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 			}
 
 			var title = new TextBand ();
-			title.Text = Misc.Bold ("Emails");
+			title.Text = TextFormatter.FormatText ("Emails").ApplyBold ();
 			title.FontSize = 4.5;
 			this.documentContainer.AddFromTop (title, 1.0);
 
@@ -300,8 +301,8 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 			table.SetRelativeColumWidth (1, 2.0+0.3+1.0+0.8);
 
 			int index = 0;
-			table.SetText (0, index, Misc.Bold ("Rôles"));
-			table.SetText (1, index, Misc.Bold ("Adresses électroniques"));
+			table.SetText (0, index, TextFormatter.FormatText ("Rôles").ApplyBold ());
+			table.SetText (1, index, TextFormatter.FormatText ("Adresses électroniques").ApplyBold ());
 			index++;
 
 			foreach (var contact in this.Entity.Person.Contacts)
@@ -329,8 +330,23 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 			}
 		}
 
+		private class Factory : IEntityPrinterFactory
+		{
+			#region IEntityPrinterFactory Members
+
+			bool IEntityPrinterFactory.CanPrint(AbstractEntity entity, OptionsDictionary options)
+			{
+				return entity is RelationEntity;
+			}
+
+			AbstractPrinter IEntityPrinterFactory.CreatePrinter(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
+			{
+				return new RelationPrinter (coreData, entities, options, printingUnits);
+			}
+
+			#endregion
+		}
 
 		private static readonly double fontSize = 4;
 	}
 }
-#endif

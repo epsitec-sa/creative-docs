@@ -69,9 +69,6 @@
     <Compile Include="Print\Controllers\ContinuousController.cs" />
     <Compile Include="Print\Controllers\XmlPreviewerController.cs" />
     <Compile Include="Print\EntityPrinters\AbstractPrinter.cs" />
-    <Compile Include="Print\EntityPrinters\DocumentMetadataMailContactPrinter.cs" />
-    <Compile Include="Print\EntityPrinters\DocumentMetadataPrinter.cs" />
-    <Compile Include="Print\EntityPrinters\RelationPrinter.cs" />
     <Compile Include="Print\JobToPrint.cs" />
     <Compile Include="Print\PreviewMode.cs" />
     <Compile Include="Print\PrintEngine.cs" />
@@ -83,6 +80,8 @@
     <Compile Include="Print\Serialization\SerializationEngine.cs" />
     <Compile Include="Print\XmlJobPrintEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resolvers\EntityPrinterFactoryResolver.cs" />
+    <Compile Include="Resolvers\IEntityPrinterFactory.cs" />
     <Compile Include="Widgets\ContinuousPagePreviewer.cs" />
     <Compile Include="Widgets\XmlPrintedPagePreviewer.cs" />
   </ItemGroup>

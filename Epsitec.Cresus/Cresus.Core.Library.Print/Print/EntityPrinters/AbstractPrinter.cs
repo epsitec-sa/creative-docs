@@ -19,6 +19,7 @@ using Epsitec.Cresus.Core.Print.Containers;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Epsitec.Cresus.Core.Resolvers;
 
 namespace Epsitec.Cresus.Core.Print.EntityPrinters
 {
@@ -276,8 +277,13 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 			if (entities != null && entities.Count () != 0)
 			{
 				var first = entities.FirstOrDefault ();
+				var factory = AbstractPrinter.FindPrinterFactory (first, options);
 
-				throw new System.NotImplementedException ();
+				if (factory != null)
+				{
+					var printer = factory.CreatePrinter (coreData, entities, options, printingUnits);
+					list.Add (printer);
+				}
 #if false
 				if (first is DocumentMetadataEntity)
 				{
@@ -304,6 +310,10 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 			return list;
 		}
 
+		private static IEntityPrinterFactory FindPrinterFactory(AbstractEntity entity, OptionsDictionary options)
+		{
+			return EntityPrinterFactoryResolver.Resolve ().FirstOrDefault (x => x.CanPrint (entity, options));
+		}
 
 		protected bool HasOption(DocumentOption option)
 		{

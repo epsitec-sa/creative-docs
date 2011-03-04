@@ -1,5 +1,4 @@
-﻿#if false
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Debug;
@@ -14,20 +13,23 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Helpers;
+using Epsitec.Cresus.Core.Print;
 using Epsitec.Cresus.Core.Print.Bands;
 using Epsitec.Cresus.Core.Print.Containers;
+using Epsitec.Cresus.Core.Print.EntityPrinters;
 
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Documents;
+using Epsitec.Cresus.Core.Resolvers;
 
-namespace Epsitec.Cresus.Core.Print.EntityPrinters
+namespace Epsitec.Cresus.Core.EntityPrinters
 {
-
 	public class DocumentMetadataPrinter : AbstractPrinter
 	{
-		public DocumentMetadataPrinter(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
+		private DocumentMetadataPrinter(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
 			: base (coreData, entities, options, printingUnits)
 		{
 			System.Diagnostics.Debug.Assert (entities.Count () == 1);
@@ -246,6 +248,8 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 			//	Ajoute l'en-tête de la facture dans le document.
 			if (this.HasOption (DocumentOption.HeaderLogo))
 			{
+				throw new System.NotImplementedException ();
+#if false
 				var settings = CoreProgram.Application.BusinessSettings;
 
 				if (settings.CompanyLogo.IsNotNull ())
@@ -274,6 +278,7 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 						}
 					}
 				}
+#endif
 			}
 
 			var mailContactBand = new TextBand ();
@@ -769,11 +774,11 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 
 				if (quantity.QuantityType == Business.ArticleQuantityType.Delayed)
 				{
-					q2 = Misc.AppendLine (q2, Misc.FormatUnit (quantity.Quantity, quantity.Unit.Code));
+					q2 = q2.AppendLine (Misc.FormatUnit (quantity.Quantity, quantity.Unit.Code));
 
 					if (quantity.ExpectedDate.HasValue)
 					{
-						date = Misc.AppendLine(date, quantity.ExpectedDate.Value.ToString ());
+						date = date.AppendLine(quantity.ExpectedDate.Value.ToString ());
 					}
 				}
 			}
@@ -1511,7 +1516,7 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 				}
 				else
 				{
-					return metadata.BusinessDocument;
+					return metadata.BusinessDocument as BusinessDocumentEntity;
 				}
 			}
 		}
@@ -1522,6 +1527,23 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 			{
 				return this.entities.FirstOrDefault () as DocumentMetadataEntity;
 			}
+		}
+
+		private class Factory : IEntityPrinterFactory
+		{
+			#region IEntityPrinterFactory Members
+
+			bool IEntityPrinterFactory.CanPrint(AbstractEntity entity, OptionsDictionary options)
+			{
+				return entity is DocumentMetadataEntity;
+			}
+
+			AbstractPrinter IEntityPrinterFactory.CreatePrinter(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
+			{
+				return new DocumentMetadataPrinter (coreData, entities, options, printingUnits);
+			}
+
+			#endregion
 		}
 
 
@@ -1536,4 +1558,3 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 		private List<Rectangle>				tableBounds;
 	}
 }
-#endif

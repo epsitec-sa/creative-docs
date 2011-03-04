@@ -1,5 +1,4 @@
-﻿#if false
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Debug;
@@ -8,25 +7,28 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.IO;
 using Epsitec.Common.Printing;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
-using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Cresus.Core.Documents;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Helpers;
 using Epsitec.Cresus.Core.Print.Bands;
 using Epsitec.Cresus.Core.Print.Containers;
+using Epsitec.Cresus.Core.Resolvers;
 
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Epsitec.Cresus.Core.Print.EntityPrinters;
 
-namespace Epsitec.Cresus.Core.Print.EntityPrinters
+namespace Epsitec.Cresus.Core.EntityPrinters
 {
 
 	public class DocumentMetadataMailContactPrinter : AbstractPrinter
 	{
-		public DocumentMetadataMailContactPrinter(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
+		private DocumentMetadataMailContactPrinter(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
 			: base (coreData, entities, options, printingUnits)
 		{
 		}
@@ -106,7 +108,7 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 				size = new Size (size.Height, size.Width);
 			}
 
-			if (!Common.InsidePageSize (size, this.MinimalPageSize, this.MaximalPageSize))
+			if (!Print.Common.InsidePageSize (size, this.MinimalPageSize, this.MaximalPageSize))
 			{
 				size = this.PreferredPageSize;
 			}
@@ -154,9 +156,14 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 			{
 				var metadata = this.Metadata;
 
-				if (metadata != null && metadata.BusinessDocument != null && metadata.BusinessDocument.BillToMailContact != null)
+				if (metadata != null)
 				{
-					return metadata.BusinessDocument.BillToMailContact;
+					var document = metadata.BusinessDocument as BusinessDocumentEntity;
+
+					if (document != null && document.BillToMailContact != null)
+					{
+						return document.BillToMailContact;
+					}
 				}
 
 				throw new System.ArgumentException ("DocumentMetadata.BusinessDocument.BillToMailContact not found.");
@@ -170,6 +177,22 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 				return this.entities.FirstOrDefault () as DocumentMetadataEntity;
 			}
 		}
+
+		class Factory : IEntityPrinterFactory
+		{
+			#region IEntityPrinterFactory Members
+
+			bool IEntityPrinterFactory.CanPrint(AbstractEntity entity, OptionsDictionary options)
+			{
+				return entity is DocumentMetadataEntity;
+			}
+
+			AbstractPrinter IEntityPrinterFactory.CreatePrinter(CoreData coreData, IEnumerable<AbstractEntity> entities, Documents.OptionsDictionary options, Documents.PrintingUnitsDictionary printingUnits)
+			{
+				return new DocumentMetadataMailContactPrinter (coreData, entities, options, printingUnits);
+			}
+
+			#endregion
+		}
 	}
 }
-#endif
