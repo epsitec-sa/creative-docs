@@ -24,6 +24,14 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
+		public SettingsManager SettingsManager
+		{
+			get
+			{
+				return this.FindComponent<SettingsManager> ();
+			}
+		}
+
 
 		public virtual void SetupApplication()
 		{

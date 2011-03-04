@@ -13,6 +13,7 @@ using Epsitec.Cresus.Core.Print.Serialization;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Cresus.Core.Print
 {
@@ -98,10 +99,10 @@ namespace Epsitec.Cresus.Core.Print
 			}
 		}
 
-		public static PrintingUnit GetPrintingUnit(string logicalPrinterName)
+		public static PrintingUnit GetPrintingUnit(CoreApp app, string logicalPrinterName)
 		{
 			//	Cherche une unité d'impression d'après son nom.
-			List<PrintingUnit> printerUnitList = PrinterApplicationSettings.GetPrintingUnitList ();
+			List<PrintingUnit> printerUnitList = PrinterApplicationSettings.GetPrintingUnitList (app);
 			return printerUnitList.Where (p => p.LogicalName == logicalPrinterName).FirstOrDefault ();
 		}
 	}

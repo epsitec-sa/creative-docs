@@ -8,6 +8,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Documents;
+using Epsitec.Cresus.Core.Library;
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -17,21 +18,20 @@ namespace Epsitec.Cresus.Core.Print
 {
 	public static class PrinterApplicationSettings
 	{
-		public static List<PrintingUnit> GetPrintingUnitList()
+		public static List<PrintingUnit> GetPrintingUnitList(CoreApp app)
 		{
 			var list = new List<PrintingUnit> ();
 
-			throw new System.NotImplementedException ();
-			Dictionary<string, string> settings = null;
-//-			settings = CoreApplication.ExtractSettings ("PrintingUnit");
+			var settings = app.SettingsManager.ExtractSettings (PrinterApplicationSettings.PrintingUnit);
 
 			for (int i = 0; i < settings.Count; i++)
 			{
-				string key = PrinterApplicationSettings.GetKey (i);
-				string setting = settings[key];
+				string key = PrinterApplicationSettings.GetKey (i++);
+				string value = settings[key];
 
 				var printingUnit = new PrintingUnit ();
-				printingUnit.SetSerializableContent (setting);
+				
+				printingUnit.SetSerializableContent (value);
 
 				list.Add (printingUnit);
 			}
@@ -39,28 +39,29 @@ namespace Epsitec.Cresus.Core.Print
 			return list;
 		}
 
-		public static void SetPrintingUnitList(List<PrintingUnit> list)
+		public static void SetPrintingUnitList(CoreApp app, IEnumerable<PrintingUnit> list)
 		{
-			var settings = new Dictionary<string, string> ();
+			var settings = new SettingsCollection ();
 			int index = 0;
 
 			foreach (var printingUnit in list)
 			{
-				if (!string.IsNullOrWhiteSpace (printingUnit.LogicalName) &&
-					!string.IsNullOrWhiteSpace (printingUnit.PhysicalPrinterName))
+				if ((!string.IsNullOrWhiteSpace (printingUnit.LogicalName)) &&
+					(!string.IsNullOrWhiteSpace (printingUnit.PhysicalPrinterName)))
 				{
 					string key = PrinterApplicationSettings.GetKey (index++);
-					settings.Add (key, printingUnit.GetSerializableContent ());
+					settings[key] = printingUnit.GetSerializableContent ();
 				}
 			}
 
-			throw new System.NotImplementedException ();
-//-			CoreApplication.MergeSettings ("PrintingUnit", settings);
+			app.SettingsManager.MergeSettings (PrinterApplicationSettings.PrintingUnit, settings);
 		}
 
 		private static string GetKey(int index)
 		{
-			return string.Concat ("PrintingUnit", (index++).ToString (CultureInfo.InvariantCulture));
+			return string.Concat (PrinterApplicationSettings.PrintingUnit, InvariantConverter.ToString (index));
 		}
+		
+		private const string PrintingUnit = "PrintingUnit";
 	}
 }

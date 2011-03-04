@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Core.Print
 		public void PrepareNewPage(PageSettings pageSettings)
 		{
 			var section = this.sections[this.sectionIndex];  // section <- section en cours d'impression
-			this.printingUnit = Common.GetPrintingUnit (section.PrinterLogicalName);
+			this.printingUnit = Common.GetPrintingUnit (this.coreData.Host, section.PrinterLogicalName);
 
 			if (!string.IsNullOrWhiteSpace (section.PrinterPhysicalTray))
 			{

@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.Core.Print
 			//	Prépare toutes les pages à imprimer, pour toutes les entités.
 			//	On crée autant de sections que de pages, soit une section par page.
 			var sections = new List<SectionToPrint> ();
-			var printingUnitList = PrinterApplicationSettings.GetPrintingUnitList ();
+			var printingUnitList = PrinterApplicationSettings.GetPrintingUnitList (coreData.Host);
 			var pageTypes = VerbosePageType.GetAll ();
 
 			for (int entityRank = 0; entityRank < entities.Count (); entityRank++)

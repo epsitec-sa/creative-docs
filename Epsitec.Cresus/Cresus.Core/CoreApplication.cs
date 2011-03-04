@@ -145,132 +145,11 @@ namespace Epsitec.Cresus.Core
 			this.CreateUI ();
 		}
 
-
-		#region Settings
-		public static string GetSettings(string key)
-		{
-			//	Donne le contenu d'un réglage global.
-			if (CoreApplication.settings.ContainsKey (key))
-			{
-				return CoreApplication.settings[key];
-			}
-
-			return null;
-		}
-
-		public static void SetSettings(string key, string value)
-		{
-			//	Modifie un réglage global.
-			CoreApplication.settings[key] = value;
-		}
-
-		public static Dictionary<string, string> ExtractSettings(string startKey)
-		{
-			//	Extrait tous les réaglages d'une catégorie donnée.
-			Dictionary<string, string> dict = new Dictionary<string, string> ();
-
-			foreach (var pair in CoreApplication.settings)
-			{
-				if (pair.Key.StartsWith (startKey))
-				{
-					dict.Add (pair.Key, pair.Value);
-				}
-			}
-
-			return dict;
-		}
-
-		public static void MergeSettings(string startKey, Dictionary<string, string> dict)
-		{
-			//	Met à jour tous les réaglages d'une catégorie donnée.
-			var keys = new List<string> ();
-			foreach (var key in CoreApplication.settings.Keys)
-			{
-				keys.Add (key);
-			}
-
-			foreach (var key in keys)
-			{
-				if (key.StartsWith (startKey))
-				{
-					CoreApplication.settings.Remove (key);
-				}
-			}
-
-			foreach (var pair in dict)
-			{
-				CoreApplication.settings.Add (pair.Key, pair.Value);
-			}
-		}
-
-		public static void SaveSettings()
-		{
-			try
-			{
-				string[] lines = CoreApplication.GetDataToSerialize ();
-				System.IO.File.WriteAllLines (CoreApplication.GetSettingsPath (), lines);
-			}
-			catch
-			{
-			}
-
-		}
-
-		public static void LoadSettings()
-		{
-			try
-			{
-				string path = CoreApplication.GetSettingsPath ();
-				
-				if (System.IO.File.Exists (path))
-				{
-					string[] lines = System.IO.File.ReadAllLines (path);
-					CoreApplication.SetDeserializedData (lines);
-				}
-			}
-			catch
-			{
-			}
-		}
-
 		private void HandleAuthenticatedUserChanged(object sender)
 		{
 			this.data.SetActiveUser (this.UserManager.AuthenticatedUser);
 			this.data.ConnectionManager.ReopenConnection ();
 		}
-
-        private static string GetSettingsPath()
-		{
-			return System.IO.Path.Combine (Globals.Directories.UserAppData, "Cresus.Core.settings.data");
-		}
-
-		private static string[] GetDataToSerialize()
-		{
-			var lines = new List<string> ();
-
-			foreach (var pair in CoreApplication.settings)
-			{
-				lines.Add (string.Concat (pair.Key, "=", pair.Value));
-			}
-
-			return lines.ToArray ();
-		}
-
-		private static void SetDeserializedData(string[] lines)
-		{
-			foreach (var line in lines)
-			{
-				int i = line.IndexOf ("=");
-				if (i != -1)
-				{
-					string key   = line.Substring (0, i);
-					string value = line.Substring (i+1);
-
-					CoreApplication.settings.Add (key, value);
-				}
-			}
-		}
-		#endregion
 
 		internal void CreateUI()
 		{
@@ -389,7 +268,7 @@ namespace Epsitec.Cresus.Core
 		private void RestoreApplicationState()
 		{
 			var persistenceManager = this.PersistenceManager;
-
+			
 			if (System.IO.File.Exists (CoreApplication.Paths.SettingsPath))
 			{
 				XDocument doc = XDocument.Load (CoreApplication.Paths.SettingsPath);
@@ -398,6 +277,7 @@ namespace Epsitec.Cresus.Core
 //-				this.stateManager.RestoreStates (store.Element ("stateManager"));
 				UI.RestoreWindowPositions (store.Element ("windowPositions"));
 				persistenceManager.Restore (store.Element ("uiSettings"));
+				this.SettingsManager.Restore (store.Element ("appSettings"));
 			}
 			
 			persistenceManager.DiscardChanges ();
@@ -420,7 +300,8 @@ namespace Epsitec.Cresus.Core
 					new XElement ("store",
 //-						this.StateManager.SaveStates ("stateManager"),
 						UI.SaveWindowPositions ("windowPositions"),
-						this.PersistenceManager.Save ("uiSettings")));
+						this.PersistenceManager.Save ("uiSettings"),
+						this.SettingsManager.Save ("appSettings")));
 
 				doc.Save (CoreApplication.Paths.SettingsPath);
 				System.Diagnostics.Debug.WriteLine ("Save done.");

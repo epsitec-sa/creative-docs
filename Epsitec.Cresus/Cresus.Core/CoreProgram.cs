@@ -153,8 +153,6 @@ namespace Epsitec.Cresus.Core
 			System.Diagnostics.Debug.Assert (app == CoreProgram.application);
 			System.Diagnostics.Debug.Assert (app.ResourceManagerPool.PoolName == "Core");
 
-			CoreApplication.LoadSettings ();
-
 			app.SetupApplication ();
 
 			var user = app.UserManager.FindActiveUser ();
@@ -163,8 +161,6 @@ namespace Epsitec.Cresus.Core
 			{
 				app.Window.Show ();
 				app.Window.Run ();
-
-				CoreApplication.SaveSettings ();
 			}
 
 			UI.ShutDown ();

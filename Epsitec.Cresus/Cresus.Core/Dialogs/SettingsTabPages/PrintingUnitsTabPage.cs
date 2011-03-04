@@ -27,13 +27,13 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			: base (container)
 		{
 			this.optionButtons = new List<CheckButton> ();
-			this.printingUnitList = PrinterApplicationSettings.GetPrintingUnitList ();
+			this.printingUnitList = PrinterApplicationSettings.GetPrintingUnitList (this.Container.Data.Host);
 		}
 
 
 		public override void AcceptChanges()
 		{
-			PrinterApplicationSettings.SetPrintingUnitList (this.printingUnitList);
+			PrinterApplicationSettings.SetPrintingUnitList (this.Container.Data.Host, this.printingUnitList);
 		}
 
 		public override void RejectChanges()
