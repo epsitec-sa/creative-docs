@@ -101,6 +101,7 @@
     <Compile Include="Dialogs\InitialMessage.cs" />
     <Compile Include="Dialogs\New.cs" />
     <Compile Include="EntitiesEditor\BitmapParameters.cs" />
+    <Compile Include="EntitiesEditor\EntitySample.cs" />
     <Compile Include="FormEditor\ObjectModifier.cs" />
     <Compile Include="ModuleSupport\ModuleStore.cs" />
     <Compile Include="ModuleSupport\ResGenerator.cs" />

@@ -13,7 +13,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		public SaveAllImages(DesignerApplication designerApplication)
 			: base (designerApplication)
 		{
-			this.allEntityNames = new List<string> ();
+			this.entitySamples = new List<EntitiesEditor.EntitySample> ();
 			this.selectedEntityNames = new List<string> ();
 		}
 
@@ -26,7 +26,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.Icon = this.designerApplication.Icon;
 				this.window.MakeSecondaryWindow ();
 				this.window.PreventAutoClose = true;
-				this.WindowInit ("SaveAllImages", 600, 402, true);
+				this.WindowInit ("SaveAllImages", 640, 402, true);
 				this.window.Text = "Génération en série d'images bitmap";  // Res.Strings.Dialog.SaveAllImages.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
@@ -80,11 +80,11 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		public List<string> AllEntityNames
+		public List<EntitiesEditor.EntitySample> EntitySamples
 		{
 			get
 			{
-				return this.allEntityNames;
+				return this.entitySamples;
 			}
 		}
 
@@ -188,15 +188,23 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.buttonClear = new Button
 			{
 				Parent = footer,
-				Text = "Aucune entité",
+				Text = "Aucune",
 				Dock = DockStyle.Fill,
 				Margins = new Margins (0, 1, 0, 0),
+			};
+
+			this.buttonMajor = new Button
+			{
+				Parent = footer,
+				Text = "Importantes",
+				Dock = DockStyle.Fill,
+				Margins = new Margins (1, 1, 0, 0),
 			};
 
 			this.buttonAll = new Button
 			{
 				Parent = footer,
-				Text = "Toutes les entités",
+				Text = "Toutes",
 				Dock = DockStyle.Fill,
 				Margins = new Margins (1, 0, 0, 0),
 			};
@@ -209,11 +217,29 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.UpdateEntities ();
 			};
 
+			this.buttonMajor.Clicked += delegate
+			{
+				this.selectedEntityNames.Clear ();
+				foreach (var sample in this.entitySamples)
+				{
+					if (sample.IsMajor)
+					{
+						this.selectedEntityNames.Add (sample.Name);
+					}
+				}
+
+				this.UpdateButtons ();
+				this.UpdateEntities ();
+			};
+
 			this.buttonAll.Clicked += delegate
 			{
 				this.selectedEntityNames.Clear ();
-				this.selectedEntityNames.AddRange (this.allEntityNames);
-				
+				foreach (var sample in this.entitySamples)
+				{
+					this.selectedEntityNames.Add (sample.Name);
+				}
+
 				this.UpdateButtons ();
 				this.UpdateEntities ();
 			};
@@ -401,15 +427,39 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			this.scrollableEntities.Viewport.Children.Clear ();
 
-			for (int i = 0; i < this.allEntityNames.Count; i++)
+			for (int i = 0; i < this.entitySamples.Count; i++)
 			{
-				var button = new CheckButton
+				var name = this.entitySamples[i].Name;
+
+				var line = new FrameBox
 				{
 					Parent = this.scrollableEntities.Viewport,
-					Name = this.allEntityNames[i],
-					Text = this.allEntityNames[i],
-					ActiveState = (this.selectedEntityNames.Contains (this.allEntityNames[i])) ? ActiveState.Yes : ActiveState.No,
 					Dock = DockStyle.Top,
+				};
+
+				var button = new CheckButton
+				{
+					Parent = line,
+					Name = name,
+					Text = this.entitySamples[i].NameDescription,
+					ActiveState = (this.selectedEntityNames.Contains (name)) ? ActiveState.Yes : ActiveState.No,
+					Dock = DockStyle.Fill,
+				};
+
+				new StaticText
+				{
+					Parent = line,
+					Text = this.entitySamples[i].BoxCountDescription,
+					PreferredWidth = 50,
+					Dock = DockStyle.Right,
+				};
+
+				new StaticText
+				{
+					Parent = line,
+					Text = this.entitySamples[i].FlagsDescription,
+					PreferredWidth = 50,
+					Dock = DockStyle.Right,
 				};
 
 				button.Clicked += delegate
@@ -447,7 +497,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.fieldFolder.Text = this.Folder;
 
 			this.buttonClear.Enable = (this.selectedEntityNames.Count != 0);
-			this.buttonAll.Enable = (this.selectedEntityNames.Count != this.allEntityNames.Count);
+			this.buttonMajor.Enable = !this.IsMajor;
+			this.buttonAll.Enable = (this.selectedEntityNames.Count != this.entitySamples.Count);
 
 			this.buttonOk.Enable = (!string.IsNullOrEmpty (this.Folder) && this.selectedEntityNames.Count != 0);
 		}
@@ -494,6 +545,29 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
+		private bool IsMajor
+		{
+			get
+			{
+				int count = 0;
+
+				foreach (var sample in this.entitySamples)
+				{
+					if (sample.IsMajor)
+					{
+						if (!this.selectedEntityNames.Contains (sample.Name))
+						{
+							return false;
+						}
+
+						count++;
+					}
+				}
+
+				return this.selectedEntityNames.Count == count;
+			}
+		}
+
 		private string FolderBrowse(string folder)
 		{
 			//	Choix d'un dossier.
@@ -517,7 +591,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		private System.Windows.Forms.DialogResult	result;
 		private bool								closed;
 		private int									tabIndex;
-		private List<string>						allEntityNames;
+		private List<EntitiesEditor.EntitySample>	entitySamples;
 		private List<string>						selectedEntityNames;
 
 		private Scrollable							scrollableEntities;
@@ -539,6 +613,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		private TextField							fieldFolder;
 
 		private Button								buttonClear;
+		private Button								buttonMajor;
 		private Button								buttonAll;
 
 		private Button								buttonOk;

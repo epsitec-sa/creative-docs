@@ -2586,11 +2586,11 @@ namespace Epsitec.Common.Designer
 			return this.dlgModuleInfo.IsEditOk;
 		}
 
-		public System.Windows.Forms.DialogResult DlgSaveAllImages(List<string> allEntityNames, List<string> selectedEntityNames, ref string folder, ref string extension, ref EntitiesEditor.BitmapParameters bitmapParameters)
+		public System.Windows.Forms.DialogResult DlgSaveAllImages(List<EntitiesEditor.EntitySample> entitySamples, List<string> selectedEntityNames, ref string folder, ref string extension, ref EntitiesEditor.BitmapParameters bitmapParameters)
 		{
 			//	Ouvre le dialogue pour éditer les informations d'un module.
-			this.dlgSaveAllImages.AllEntityNames.Clear ();
-			this.dlgSaveAllImages.AllEntityNames.AddRange (allEntityNames);
+			this.dlgSaveAllImages.EntitySamples.Clear ();
+			this.dlgSaveAllImages.EntitySamples.AddRange (entitySamples);
 
 			this.dlgSaveAllImages.SelectedEntityNames.Clear ();
 			this.dlgSaveAllImages.SelectedEntityNames.AddRange (selectedEntityNames);
