@@ -5,6 +5,7 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Extensions;
 

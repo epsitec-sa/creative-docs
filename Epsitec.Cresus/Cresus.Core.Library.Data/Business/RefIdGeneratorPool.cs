@@ -4,6 +4,8 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Core.Data;
+
 using System.Collections.Generic;
 using System.Linq;
 

@@ -3,6 +3,8 @@
 
 using Epsitec.Cresus.DataLayer.Context;
 
+using Epsitec.Cresus.Core.Data;
+
 using System.Collections.Generic;
 using System.Linq;
 

@@ -6,7 +6,7 @@ using Epsitec.Cresus.Core.Library;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core
+namespace Epsitec.Cresus.Core.Data
 {
 	/// <summary>
 	/// The <c>CoreDataComponent</c> class is the base class used by all components, which are

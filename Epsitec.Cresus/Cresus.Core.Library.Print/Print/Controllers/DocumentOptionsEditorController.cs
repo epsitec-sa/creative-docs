@@ -6,6 +6,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
