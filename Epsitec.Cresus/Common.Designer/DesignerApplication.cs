@@ -1120,7 +1120,7 @@ namespace Epsitec.Common.Designer
 			this.editOkState = this.CreateCommandState("EditOk", KeyCode.FuncF12);
 			this.editCancelState = this.CreateCommandState("EditCancel");
 			this.deleteState = this.CreateCommandState("Delete", KeyCode.ModifierControl|KeyCode.Delete);
-			this.createState = this.CreateCommandState("Create", KeyCode.ModifierControl|KeyCode.ModifierShift|KeyCode.AlphaN);
+			this.createState = this.CreateCommandState("Create", KeyCode.ModifierAlt|KeyCode.AlphaN);
 			this.duplicateState = this.CreateCommandState("Duplicate");
 			this.copyToModuleState = this.CreateCommandState("CopyToModule", KeyCode.ModifierControl|KeyCode.AlphaM);
 
