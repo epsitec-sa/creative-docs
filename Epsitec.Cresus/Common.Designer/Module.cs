@@ -403,6 +403,13 @@ namespace Epsitec.Common.Designer
 		{
 			//	Enregistre toutes les ressources et met à jour le fichier module.info.
 			this.SaveResources();
+
+			var entitiesViewer = this.modifier.EntitiesViewer;
+			if (entitiesViewer != null)
+			{
+				entitiesViewer.SaveAllImages ();
+			}
+
 			this.UpdateManifest();
 		}
 

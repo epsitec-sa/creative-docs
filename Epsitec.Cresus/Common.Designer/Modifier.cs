@@ -60,6 +60,22 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public Viewers.Entities EntitiesViewer
+		{
+			get
+			{
+				foreach (var viewer in this.attachViewers)
+				{
+					if (viewer is Viewers.Entities)
+					{
+						return viewer as Viewers.Entities;
+					}
+				}
+
+				return null;
+			}
+		}
+
 		public void AttachViewer(Viewers.Abstract viewer)
 		{
 			//	Attache un nouveau visualisateur à ce module.
