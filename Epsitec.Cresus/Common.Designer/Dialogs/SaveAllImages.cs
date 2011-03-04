@@ -26,7 +26,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.Icon = this.designerApplication.Icon;
 				this.window.MakeSecondaryWindow ();
 				this.window.PreventAutoClose = true;
-				this.WindowInit ("SaveAllImages", 600, 400, true);
+				this.WindowInit ("SaveAllImages", 600, 390, true);
 				this.window.Text = "Génère plusieurs images bitmap";  // Res.Strings.Dialog.SaveAllImages.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
@@ -184,6 +184,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			clearButton.Clicked += delegate
 			{
 				this.selectedEntityNames.Clear ();
+
+				this.UpdateButtons ();
 				this.UpdateTable ();
 			};
 
@@ -191,6 +193,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				this.selectedEntityNames.Clear ();
 				this.selectedEntityNames.AddRange (this.allEntityNames);
+				
+				this.UpdateButtons ();
 				this.UpdateTable ();
 			};
 		}
@@ -264,13 +268,21 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				Parent = group,
 				Text = "Parcourir...",
+				PreferredWidth = 75,
 				Dock = DockStyle.Right,
 				Margins = new Margins (2, 0, 0, 0),
 			};
 
+			this.fieldFolder.TextChanged += delegate
+			{
+				this.Folder = this.fieldFolder.Text;
+				this.UpdateButtons ();
+			};
+
 			browseButton.Clicked += delegate
 			{
-				this.fieldFolder.Text = this.FolderBrowse (this.fieldFolder.Text);
+				this.Folder = this.FolderBrowse (this.Folder);
+				this.UpdateButtons ();
 			};
 		}
 
@@ -354,12 +366,12 @@ namespace Epsitec.Common.Designer.Dialogs
 					this.Extension = ".tif";
 					break;
 
-				case "bmp":
-					this.Extension = ".bmp";
-					break;
-
 				case "jpg":
 					this.Extension = ".jpg";
+					break;
+
+				case "bmp":
+					this.Extension = ".bmp";
 					break;
 			}
 
@@ -417,6 +429,8 @@ namespace Epsitec.Common.Designer.Dialogs
 							{
 								this.selectedEntityNames.Add (button.Name);
 							}
+
+							this.UpdateButtons ();
 						};
 
 						this.table[column, row].Insert (button);
@@ -470,15 +484,16 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.radioPng.ActiveState = (this.Extension == ".png") ? ActiveState.Yes : ActiveState.No;
 			this.radioTif.ActiveState = (this.Extension == ".tif") ? ActiveState.Yes : ActiveState.No;
-			this.radioBmp.ActiveState = (this.Extension == ".bmp") ? ActiveState.Yes : ActiveState.No;
 			this.radioJpg.ActiveState = (this.Extension == ".jpg") ? ActiveState.Yes : ActiveState.No;
+			this.radioBmp.ActiveState = (this.Extension == ".bmp") ? ActiveState.Yes : ActiveState.No;
 
 			this.fieldFolder.Text = this.Folder;
+
+			this.buttonOk.Enable = (!string.IsNullOrEmpty (this.Folder) && this.selectedEntityNames.Count != 0);
 		}
 
 		private void Accept()
 		{
-			this.Folder = this.fieldFolder.Text;
 		}
 
 
@@ -557,8 +572,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private RadioButton						radioPng;
 		private RadioButton						radioTif;
-		private RadioButton						radioBmp;
 		private RadioButton						radioJpg;
+		private RadioButton						radioBmp;
 
 		private TextField						fieldFolder;
 
