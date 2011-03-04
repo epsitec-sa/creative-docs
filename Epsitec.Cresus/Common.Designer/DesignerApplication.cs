@@ -2604,6 +2604,9 @@ namespace Epsitec.Common.Designer
 			folder = this.dlgSaveAllImages.Folder;
 			extension = this.dlgSaveAllImages.Extension;
 			bitmapParameters = this.dlgSaveAllImages.BitmapParameters;
+
+			selectedEntityNames.Clear ();
+			selectedEntityNames.AddRange (this.dlgSaveAllImages.SelectedEntityNames);
 			
 			return this.dlgSaveAllImages.IsEditOk;
 		}

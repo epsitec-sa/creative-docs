@@ -67,7 +67,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.Update ();
 
-			this.window.Show ();
+			this.window.ShowDialog ();
 		}
 
 
@@ -153,6 +153,45 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				Parent = parent,
 				Dock = DockStyle.Fill,
+				StyleH = CellArrayStyles.Separator,
+				StyleV = CellArrayStyles.Separator | CellArrayStyles.ScrollNorm,
+			};
+
+			var group = new FrameBox
+			{
+				Parent = parent,
+				ContainerLayoutMode = Widgets.ContainerLayoutMode.HorizontalFlow,
+				Dock = DockStyle.Bottom,
+				Margins = new Margins (0, 0, 5, 0),
+			};
+
+			var clearButton = new Button
+			{
+				Parent = group,
+				Text = "Aucune entité",
+				Dock = DockStyle.Fill,
+				Margins = new Margins (0, 1, 0, 0),
+			};
+
+			var setButton = new Button
+			{
+				Parent = group,
+				Text = "Toutes les entités",
+				Dock = DockStyle.Fill,
+				Margins = new Margins (1, 0, 0, 0),
+			};
+
+			clearButton.Clicked += delegate
+			{
+				this.selectedEntityNames.Clear ();
+				this.UpdateTable ();
+			};
+
+			setButton.Clicked += delegate
+			{
+				this.selectedEntityNames.Clear ();
+				this.selectedEntityNames.AddRange (this.allEntityNames);
+				this.UpdateTable ();
 			};
 		}
 
@@ -200,10 +239,10 @@ namespace Epsitec.Common.Designer.Dialogs
 				Padding = new Margins (8),
 			};
 
-			this.radioPng = this.CreateRadioButton (group, "png", "Images PNG");
-			this.radioTif = this.CreateRadioButton (group, "tif", "Images ITFF");
-			this.radioBmp = this.CreateRadioButton (group, "bmp", "Images BMP");
-			this.radioJpg = this.CreateRadioButton (group, "jpg", "Images JPEG");
+			this.radioPng = this.CreateRadioButton (group, "png", "Images PNG (comprimées sans pertes)");
+			this.radioTif = this.CreateRadioButton (group, "tif", "Images TIFF (comprimées sans pertes)");
+			this.radioJpg = this.CreateRadioButton (group, "jpg", "Images JPEG (comprimées avec pertes)");
+			this.radioBmp = this.CreateRadioButton (group, "bmp", "Images BMP (non comprimées)");
 		}
 
 		private void CreateBrowseUI(Widget parent)
@@ -231,6 +270,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			browseButton.Clicked += delegate
 			{
+				this.fieldFolder.Text = this.FolderBrowse (this.fieldFolder.Text);
 			};
 		}
 
@@ -338,6 +378,83 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void UpdateTable()
 		{
+			this.table.SetArraySize (2, this.allEntityNames.Count);
+
+			this.table.SetWidthColumn (0, 24);
+			this.table.SetWidthColumn (1, 300);
+
+			this.table.SetHeaderTextH (1, "Entité");
+
+			for (int row = 0; row < this.allEntityNames.Count; row++)
+			{
+				this.UpdateTableFillRow (row);
+				this.UpdateTableContentRow (row);
+			}
+		}
+
+		private void UpdateTableFillRow(int row)
+		{
+			for (int column=0; column<this.table.Columns; column++)
+			{
+				if (this.table[column, row].IsEmpty)
+				{
+					if (column == 0)
+					{
+						var button = new CheckButton
+						{
+							Name = this.allEntityNames[row],
+							Dock = DockStyle.Fill,
+							Margins = new Margins (4, 4, 0, 0),
+						};
+
+						button.Clicked += delegate
+						{
+							if (this.selectedEntityNames.Contains (button.Name))
+							{
+								this.selectedEntityNames.Remove (button.Name);
+							}
+							else
+							{
+								this.selectedEntityNames.Add (button.Name);
+							}
+						};
+
+						this.table[column, row].Insert (button);
+					}
+					else
+					{
+						var st = new StaticText
+						{
+							ContentAlignment = ContentAlignment.MiddleLeft,
+							Dock = DockStyle.Fill,
+							Margins = new Margins (4, 4, 0, 0),
+						};
+
+						this.table[column, row].Insert (st);
+					}
+				}
+			}
+		}
+
+		private void UpdateTableContentRow(int row)
+		{
+			//	Met à jour le contenu d'une ligne de la table.
+			this.UpdateTableContentCell (row, 0, this.selectedEntityNames.Contains (this.allEntityNames[row]));
+			this.UpdateTableContentCell (row, 1, this.allEntityNames[row]);
+
+			this.table.SelectRow (row, false);
+		}
+
+		private void UpdateTableContentCell(int row, int column, bool state)
+		{
+			var button = this.table[column, row].Children[0] as CheckButton;
+			button.ActiveState = state ? ActiveState.Yes : ActiveState.No;
+		}
+
+		private void UpdateTableContentCell(int row, int column, string text)
+		{
+			var st = this.table[column, row].Children[0] as StaticText;
+			st.Text = text;
 		}
 
 		private void UpdateButtons()
@@ -361,6 +478,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void Accept()
 		{
+			this.Folder = this.fieldFolder.Text;
 		}
 
 
@@ -397,6 +515,26 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.Accept ();
 			this.Close ();
 			this.isEditOk = true;
+		}
+
+
+		private string FolderBrowse(string folder)
+		{
+			//	Choix d'un dossier.
+			var dialog = new System.Windows.Forms.FolderBrowserDialog ();
+
+			dialog.Description = "Choisisser le dossier où mettre les images bitmap générées automatiquement.\nAttention: Les images présentes dans ce dossier seront détruites !";
+			dialog.ShowNewFolderButton = true;
+			dialog.SelectedPath = folder;
+			
+			var result = dialog.ShowDialog ();
+
+			if (result == System.Windows.Forms.DialogResult.OK)
+			{
+				folder = dialog.SelectedPath;
+			}
+
+			return folder;
 		}
 
 
