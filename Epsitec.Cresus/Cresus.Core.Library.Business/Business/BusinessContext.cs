@@ -20,7 +20,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business
 {
-	public sealed class BusinessContext : IIsDisposed, IBusinessContext, ICoreComponent
+	public sealed class BusinessContext : IIsDisposed, IBusinessContext, ICoreManualComponent
 	{
 		public BusinessContext(CoreData data)
 			: this (data.GetComponent<BusinessContextPool> ())

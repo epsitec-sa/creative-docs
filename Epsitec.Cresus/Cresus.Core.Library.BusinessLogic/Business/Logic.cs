@@ -11,14 +11,14 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business
 {
-	public sealed class Logic : ICoreComponentHost<ICoreComponent>
+	public sealed class Logic : ICoreComponentHost<ICoreManualComponent>
 	{
-		public Logic(AbstractEntity entity, params ICoreComponent[] components)
+		public Logic(AbstractEntity entity, params ICoreManualComponent[] components)
 		{
 			this.entity = entity;
 			this.entityType = entity.GetType ();
 			this.rules = new Dictionary<RuleType, GenericBusinessRule> ();
-			this.components = new CoreComponentHostImplementation<ICoreComponent> ();
+			this.components = new CoreComponentHostImplementation<ICoreManualComponent> ();
 			this.components.RegisterComponents (components);
 		}
 
@@ -61,37 +61,42 @@ namespace Epsitec.Cresus.Core.Business
 
 		#region ICoreComponentHost<ICoreComponent> Members
 
-		public bool ContainsComponent<T>() where T : ICoreComponent
+		public bool ContainsComponent<T>() where T : ICoreManualComponent
 		{
 			return this.components.ContainsComponent<T> ();
 		}
 
-		public T GetComponent<T>() where T : ICoreComponent
+		public T GetComponent<T>() where T : ICoreManualComponent
 		{
 			return this.components.GetComponent<T> ();
 		}
 
-		IEnumerable<ICoreComponent> ICoreComponentHost<ICoreComponent>.GetComponents()
+		ICoreManualComponent ICoreComponentHost<ICoreManualComponent>.GetComponent(System.Type type)
+		{
+			return this.components.GetComponent (type);
+		}
+
+		IEnumerable<ICoreManualComponent> ICoreComponentHost<ICoreManualComponent>.GetComponents()
 		{
 			return this.components.GetComponents ();
 		}
 
-		void ICoreComponentHost<ICoreComponent>.RegisterComponent<T>(T component)
+		void ICoreComponentHost<ICoreManualComponent>.RegisterComponent<T>(T component)
 		{
 			this.components.RegisterComponent<T> (component);
 		}
 
-		bool ICoreComponentHost<ICoreComponent>.ContainsComponent(System.Type type)
+		bool ICoreComponentHost<ICoreManualComponent>.ContainsComponent(System.Type type)
 		{
 			return this.components.ContainsComponent (type);
 		}
 
-		void ICoreComponentHost<ICoreComponent>.RegisterComponent(System.Type type, ICoreComponent component)
+		void ICoreComponentHost<ICoreManualComponent>.RegisterComponent(System.Type type, ICoreManualComponent component)
 		{
 			this.components.RegisterComponent (type, component);
 		}
 
-		void ICoreComponentHost<ICoreComponent>.RegisterComponentAsDisposable(System.IDisposable disposable)
+		void ICoreComponentHost<ICoreManualComponent>.RegisterComponentAsDisposable(System.IDisposable disposable)
 		{
 			this.components.RegisterComponentAsDisposable (disposable);
 		}
@@ -129,7 +134,7 @@ namespace Epsitec.Cresus.Core.Business
 		private readonly AbstractEntity entity;
 		private readonly System.Type entityType;
 		private readonly Dictionary<RuleType, GenericBusinessRule> rules;
-		private readonly CoreComponentHostImplementation<ICoreComponent> components;
+		private readonly CoreComponentHostImplementation<ICoreManualComponent> components;
 		private Logic link;
 	}
 }

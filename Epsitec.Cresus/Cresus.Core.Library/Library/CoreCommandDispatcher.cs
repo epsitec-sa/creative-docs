@@ -9,29 +9,35 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Core.Library;
 
 using System.Collections.Generic;
+using Epsitec.Cresus.Core.Factories;
 
 namespace Epsitec.Cresus.Core.Library
 {
 	/// <summary>
 	/// The <c>CoreCommands</c> class implements the application wide commands.
 	/// </summary>
-	public sealed class CoreCommandDispatcher
+	public sealed class CoreCommandDispatcher : CoreAppComponent
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CoreCommandDispatcher"/> class.
 		/// </summary>
-		/// <param name="application">The application.</param>
-		public CoreCommandDispatcher(CoreApp application)
+		/// <param name="app">The application.</param>
+		private CoreCommandDispatcher(CoreApp app)
+			: base (app)
 		{
-			this.application     = application;
-			this.dispatcher      = application.CommandDispatcher;
-			this.commandContext  = application.CommandContext;
+			this.dispatcher      = app.CommandDispatcher;
+			this.commandContext  = app.CommandContext;
 			this.commandHandlers = new List<ICommandHandler> ();
 			this.commandHandlerStack = new Dictionary<Command, CommandHandlerStack> ();
+		}
 
+		public override void ExecuteSetupPhase()
+		{
 			this.CreateCommandHandlers ();
 			this.RegisterCommandHandlers ();
 			this.SetupDefaultCommandStates ();
+			
+			base.ExecuteSetupPhase ();
 		}
 
 		public List<ICommandHandler> CommandHandlers
@@ -43,40 +49,23 @@ namespace Epsitec.Cresus.Core.Library
 		}
 
 
-		public CoreApp Application
-		{
-			get
-			{
-				return this.application;
-			}
-		}
-
 		public T GetApplicationComponent<T>()
 			where T : class, ICoreComponent
 		{
-			var host = this.application as ICoreComponentHost<ICoreComponent>;
-			
-			if (host.ContainsComponent<T> ())
-			{
-				return host.GetComponent<T> ();
-			}
-			else
-			{
-				return null;
-			}
+			return this.Host.FindComponent<T> ();
 		}
 
 		private void SetupDefaultCommandStates()
 		{
-			this.application.SetEnable (ApplicationCommands.Cut, false);
-			this.application.SetEnable (ApplicationCommands.Copy, false);
-			this.application.SetEnable (ApplicationCommands.Paste, false);
-			this.application.SetEnable (ApplicationCommands.Bold, false);
-			this.application.SetEnable (ApplicationCommands.Italic, false);
-			this.application.SetEnable (ApplicationCommands.Underlined, false);
-			this.application.SetEnable (ApplicationCommands.Subscript, false);
-			this.application.SetEnable (ApplicationCommands.Superscript, false);
-			this.application.SetEnable (ApplicationCommands.MultilingualEdition, false);
+			this.Host.SetEnable (ApplicationCommands.Cut, false);
+			this.Host.SetEnable (ApplicationCommands.Copy, false);
+			this.Host.SetEnable (ApplicationCommands.Paste, false);
+			this.Host.SetEnable (ApplicationCommands.Bold, false);
+			this.Host.SetEnable (ApplicationCommands.Italic, false);
+			this.Host.SetEnable (ApplicationCommands.Underlined, false);
+			this.Host.SetEnable (ApplicationCommands.Subscript, false);
+			this.Host.SetEnable (ApplicationCommands.Superscript, false);
+			this.Host.SetEnable (ApplicationCommands.MultilingualEdition, false);
 		}
 
 
@@ -172,6 +161,27 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
+		private sealed class CoreCommandDispatcherFactory : ICoreAppComponentFactory
+		{
+			#region ICoreDataComponentFactory Members
+
+			public bool CanCreate(CoreApp data)
+			{
+				return true;
+			}
+
+			public CoreAppComponent Create(CoreApp app)
+			{
+				return new CoreCommandDispatcher (app);
+			}
+
+			public System.Type GetComponentType()
+			{
+				return typeof (CoreCommandDispatcher);
+			}
+
+			#endregion
+		}
 
 		private CommandHandlerStack GetCommandHandlerStack(Command command)
 		{
@@ -186,7 +196,6 @@ namespace Epsitec.Cresus.Core.Library
 			return stack;
 		}
 
-		private readonly CoreApp application;
 		private readonly CommandDispatcher dispatcher;
 		private readonly CommandContext commandContext;
 		private readonly Dictionary<Command, CommandHandlerStack> commandHandlerStack;

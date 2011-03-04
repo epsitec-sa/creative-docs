@@ -155,13 +155,7 @@ namespace Epsitec.Cresus.Core
 
 			CoreApplication.LoadSettings ();
 
-			app.DiscoverPlugIns ();
-			app.CreatePlugIns ();
-
-			var billingModeType = Epsitec.Common.Types.TypeRosetta.GetTypeObject (typeof (Epsitec.Cresus.Core.Business.Finance.BillingMode));
-
-			app.SetupData ();
-			app.CreateUI ();
+			app.SetupApplication ();
 
 			var user = app.UserManager.FindActiveUser ();
 

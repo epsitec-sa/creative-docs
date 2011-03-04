@@ -5,6 +5,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Data;
+using Epsitec.Cresus.Core.Library;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace Epsitec.Cresus.Core.Business
 	/// The <c>RefIdGeneratorPool</c> maintains a collection of <see cref="RefIdGenerator"/>
 	/// instances.
 	/// </summary>
-	public class RefIdGeneratorPool : CoreDataComponent
+	public class RefIdGeneratorPool : CoreDataComponent, ICoreManualComponent
 	{
 		public RefIdGeneratorPool(CoreData data)
 			: base (data)

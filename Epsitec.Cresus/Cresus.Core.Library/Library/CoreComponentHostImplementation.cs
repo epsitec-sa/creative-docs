@@ -35,14 +35,19 @@ namespace Epsitec.Cresus.Core.Library
 		public T GetComponent<T>()
 			where T : TComponent
 		{
+			return (T) this.GetComponent (typeof (T));
+		}
+
+		public TComponent GetComponent(System.Type type)
+		{
 			TComponent component;
 
-			if (this.components.TryGetValue (typeof (T).FullName, out component))
+			if (this.components.TryGetValue (type.FullName, out component))
 			{
-				return (T) component;
+				return component;
 			}
 
-			throw new System.ArgumentException (string.Format ("The specified component {0} does not exist", typeof (T).FullName));
+			throw new System.ArgumentException (string.Format ("The specified component {0} does not exist", type.FullName));
 		}
 
 		public IEnumerable<TComponent> GetComponents()

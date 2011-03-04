@@ -26,11 +26,6 @@ namespace Epsitec.Cresus.Core.Library
 //-			CoreApplication.QueueTasklets (name, jobs);
 		}
 
-		public static void SetCommandEnable(Command command, bool enable)
-		{
-//-			CoreProgram.Application.SetEnable (command, enable);
-		}
-
 		public static void ExecutePending()
 		{
 //-			CoreApplication.ExecuteAsyncCallbacks ();

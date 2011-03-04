@@ -23,6 +23,8 @@ namespace Epsitec.Cresus.Core.Library
 		T GetComponent<T>()
 			where T : TComponent;
 
+		TComponent GetComponent(System.Type type);
+
 		/// <summary>
 		/// Gets a collection of all components.
 		/// </summary>

@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.PlugIns
 	/// </summary>
 	public class PlugInFactory
 	{
-		public PlugInFactory(ICoreComponentHost<ICoreComponent> application)
+		public PlugInFactory(CoreApp application)
 		{
 			this.records = new List<PlugInRecord> ();
 			this.application = application;
@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.PlugIns
 		}
 
 
-		public ICoreComponentHost<ICoreComponent> Application
+		public CoreApp Application
 		{
 			get
 			{
@@ -104,6 +104,6 @@ namespace Epsitec.Cresus.Core.PlugIns
 		#endregion
 
 		private readonly List<PlugInRecord>		records;
-		private readonly ICoreComponentHost<ICoreComponent>	application;
+		private readonly CoreApp				application;
 	}
 }

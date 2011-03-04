@@ -101,6 +101,11 @@ namespace Epsitec.Cresus.Core
 			return this.components.ContainsComponent<T> ();
 		}
 
+		CoreDataComponent ICoreComponentHost<CoreDataComponent>.GetComponent(System.Type type)
+		{
+			return this.components.GetComponent (type);
+		}
+
 		IEnumerable<CoreDataComponent> ICoreComponentHost<CoreDataComponent>.GetComponents()
 		{
 			return this.components.GetComponents ();

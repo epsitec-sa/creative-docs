@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		/// <param name="host">The host.</param>
 		/// <param name="data">The core data.</param>
 		/// <param name="commandContext">The command context.</param>
-		public DataViewOrchestrator(ICoreComponentHost<ICoreComponent> host, CoreData data, CommandContext commandContext)
+		public DataViewOrchestrator(CoreApp host, CoreData data, CommandContext commandContext)
 		{
 			this.host               = host;
 			this.data               = data;
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		}
 
 
-		public ICoreComponentHost<ICoreComponent> Host
+		public CoreApp							Host
 		{
 			get
 			{
@@ -323,13 +323,13 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			if ((this.businessContext != null) &&
 				(this.businessContext.ContainsChanges ()))
 			{
-				Dispatcher.SetCommandEnable (Library.Res.Commands.Edition.SaveRecord, true);
-				Dispatcher.SetCommandEnable (Library.Res.Commands.Edition.DiscardRecord, true);
+				this.host.SetEnable (Library.Res.Commands.Edition.SaveRecord, true);
+				this.host.SetEnable (Library.Res.Commands.Edition.DiscardRecord, true);
 			}
 			else
 			{
-				Dispatcher.SetCommandEnable (Library.Res.Commands.Edition.SaveRecord, false);
-				Dispatcher.SetCommandEnable (Library.Res.Commands.Edition.DiscardRecord, false);
+				this.host.SetEnable (Library.Res.Commands.Edition.SaveRecord, false);
+				this.host.SetEnable (Library.Res.Commands.Edition.DiscardRecord, false);
 			}
 		}
 
@@ -347,7 +347,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 		public event EventHandler<ActiveEntityCancelEventArgs> SettingActiveEntity;
 
-		private readonly ICoreComponentHost<ICoreComponent> host;		
+		private readonly CoreApp				host;
 		private readonly CoreData				data;
 		private readonly CommandContext			commandContext;
 		private readonly WorkflowController		workflowController;
