@@ -323,10 +323,18 @@
     <EmbeddedResource Include="Images\AlignBaseLine.icon" />
     <EmbeddedResource Include="Images\CursorFinger.icon" />
     <EmbeddedResource Include="Images\ObjectVLine.icon" />
-    <Content Include="Resources\Common.Designer\module.info" />
-    <Content Include="Resources\Common.Designer\Captions.00.resource" />
-    <Content Include="Resources\Common.Designer\Strings.00.resource" />
-    <Content Include="Resources\Common.Designer\Strings.en.resource" />
+    <Content Include="Resources\Common.Designer\module.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Designer\Captions.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Designer\Strings.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Common.Designer\Strings.en.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Images\MoveRight.icon" />
