@@ -489,7 +489,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 				foreach (var button in this.optionButtons)
 				{
-					var option = OptionsDictionary.StringToDocumentOption (button.Name);
+					var option = DocumentOptions.Parse (button.Name);
 
 					if (printingUnit.OptionsDictionary.ContainsOption (option))
 					{
@@ -604,7 +604,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					var check = new CheckButton
 					{
 						Parent = parent,
-						Name = OptionsDictionary.DocumentOptionToString (documentOption.Option),
+						Name = DocumentOptions.ToString (documentOption.Option),
 						Text = documentOption.Description,
 						AcceptThreeState = true,
 						ActiveState = ActiveState.Maybe,
@@ -616,7 +616,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					check.Clicked += delegate
 					{
 						PrintingUnit printingUnit = this.SelectedPrinter;
-						var option = OptionsDictionary.StringToDocumentOption (check.Name);
+						var option = DocumentOptions.Parse (check.Name);
 
 						if (check.ActiveState == ActiveState.Maybe)
 						{

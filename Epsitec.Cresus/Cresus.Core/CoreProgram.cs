@@ -13,13 +13,13 @@ using System.IO;
 
 namespace Epsitec.Cresus.Core
 {
-	static class CoreProgram
+	public static class CoreProgram
 	{
 		/// <summary>
 		/// The main entry point for the application.
 		/// </summary>
 		[System.STAThread]
-		static void Main(string[] args)
+		public static void Main(string[] args)
 		{		
 			if (args.Length == 2 && args[0].Equals ("-db-create-epsitec"))
 			{

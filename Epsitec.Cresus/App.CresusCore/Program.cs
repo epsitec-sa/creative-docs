@@ -24,6 +24,7 @@ namespace Epsitec.Cresus.Core
 
 		static void ExecuteCoreProgram(SplashScreen splash)
 		{
+			Epsitec.Cresus.Core.CoreProgram.Main (System.Environment.GetCommandLineArgs ());
 		}
 	}
 }

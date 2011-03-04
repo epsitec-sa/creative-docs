@@ -50,9 +50,85 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Epsitec\dot.net\Epsitec.ShellPE\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj">
+      <Project>{BC0605F1-C986-4B52-AE21-AAE545FCB970}</Project>
+      <Name>Epsitec.CresusToolkit</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.Document\Common.Document.csproj">
+      <Project>{B324896E-2CDE-45B8-91CE-B476687EA384}</Project>
+      <Name>Common.Document</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Splash\Common.Splash.csproj">
       <Project>{28FBE9C0-881E-4BF0-BDFA-4F8BB9E31083}</Project>
       <Name>Common.Splash</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Address\Cresus.Core.Library.Address.csproj">
+      <Project>{5D9704AF-69C1-4E71-8DF3-4455DC41D731}</Project>
+      <Name>Cresus.Core.Library.Address</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.BusinessLogic\Cresus.Core.Library.BusinessLogic.csproj">
+      <Project>{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}</Project>
+      <Name>Cresus.Core.Library.BusinessLogic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Business\Cresus.Core.Library.Business.csproj">
+      <Project>{E70C6F16-A0BF-439B-845D-87B164510AA0}</Project>
+      <Name>Cresus.Core.Library.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Data\Cresus.Core.Library.Data.csproj">
+      <Project>{AA11E634-2A75-45C1-868D-7B7C045C80C3}</Project>
+      <Name>Cresus.Core.Library.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Documents\Cresus.Core.Library.Documents.csproj">
+      <Project>{F2955C92-B208-498B-8ED4-E7B033AD284B}</Project>
+      <Name>Cresus.Core.Library.Documents</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Finance\Cresus.Core.Library.Finance.csproj">
+      <Project>{608DCEB5-9004-44C6-B221-755E9D95FBB2}</Project>
+      <Name>Cresus.Core.Library.Finance</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Images\Cresus.Core.Library.Images.csproj">
+      <Project>{539FF5AF-51A0-44DB-8771-910482BCF2E2}</Project>
+      <Name>Cresus.Core.Library.Images</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Measures\Cresus.Core.Library.Measures.csproj">
+      <Project>{01B39E29-EDB1-4330-8E03-689DA987B6A5}</Project>
+      <Name>Cresus.Core.Library.Measures</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Print\Cresus.Core.Library.Print.csproj">
+      <Project>{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}</Project>
+      <Name>Cresus.Core.Library.Print</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.UserManagement\Cresus.Core.Library.UserManagement.csproj">
+      <Project>{F5EA8D13-3119-4563-BC77-9E9D6CE94148}</Project>
+      <Name>Cresus.Core.Library.UserManagement</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Workflows\Cresus.Core.Library.Workflows.csproj">
+      <Project>{97CAFD8C-770C-4ABC-BF65-86D87354FFD1}</Project>
+      <Name>Cresus.Core.Library.Workflows</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library\Cresus.Core.Library.csproj">
+      <Project>{91DA0241-F084-40C5-B76E-0240884D1841}</Project>
+      <Name>Cresus.Core.Library</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core\Cresus.Core.csproj">
+      <Project>{543293D0-CAFB-4431-8202-6C6D5FF5403A}</Project>
+      <Name>Cresus.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Database.Implementation\Cresus.Database.Implementation.csproj">
+      <Project>{C757AD58-605D-4480-BC2E-03E8076368B2}</Project>
+      <Name>Cresus.Database.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Database\Cresus.Database.csproj">
+      <Project>{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}</Project>
+      <Name>Cresus.Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.DataLayer\Cresus.DataLayer.csproj">
+      <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>
+      <Name>Cresus.DataLayer</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
