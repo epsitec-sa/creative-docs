@@ -67,20 +67,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public BusinessSettingsEntity BusinessSettings
-		{
-			get
-			{
-				if (this.businessSettings == null)
-				{
-					this.businessSettings = this.data.GetAllEntities<BusinessSettingsEntity> ().FirstOrDefault ();
-				}
-
-				return this.businessSettings;
-			}
-		}
-
-		public IExceptionManager ExceptionManager
+		public IExceptionManager				ExceptionManager
 		{
 			get
 			{
@@ -543,7 +530,6 @@ namespace Epsitec.Cresus.Core
 		private CoreCommandDispatcher					commands;
 		private DataViewOrchestrator					mainWindowOrchestrator;
 		private MainWindowController					mainWindowController;
-		private BusinessSettingsEntity					businessSettings;
 		private FinanceSettingsEntity					financeSettings;
 		private PlugIns.PlugInFactory					plugInFactory;
 	}

@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Resolvers;
 
 using System.Collections.Generic;

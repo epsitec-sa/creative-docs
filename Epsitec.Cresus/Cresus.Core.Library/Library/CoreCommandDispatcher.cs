@@ -10,7 +10,7 @@ using Epsitec.Cresus.Core.Library;
 
 using System.Collections.Generic;
 
-namespace Epsitec.Cresus.Core
+namespace Epsitec.Cresus.Core.Library
 {
 	/// <summary>
 	/// The <c>CoreCommands</c> class implements the application wide commands.
@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core
 		/// Initializes a new instance of the <see cref="CoreCommandDispatcher"/> class.
 		/// </summary>
 		/// <param name="application">The application.</param>
-		public CoreCommandDispatcher(Application application)
+		public CoreCommandDispatcher(CoreApp application)
 		{
 			this.application     = application;
 			this.dispatcher      = application.CommandDispatcher;
@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public Application Application
+		public CoreApp Application
 		{
 			get
 			{
@@ -186,7 +186,7 @@ namespace Epsitec.Cresus.Core
 			return stack;
 		}
 
-		private readonly Application application;
+		private readonly CoreApp application;
 		private readonly CommandDispatcher dispatcher;
 		private readonly CommandContext commandContext;
 		private readonly Dictionary<Command, CommandHandlerStack> commandHandlerStack;

@@ -65,7 +65,7 @@
     <Compile Include="Library\CoreComponentHostImplementation.cs" />
     <Compile Include="Library\DialogCentral.cs" />
     <Compile Include="Library\EnumKeyValues`1.cs" />
-    <Compile Include="CoreCommandDispatcher.cs" />
+    <Compile Include="Library\CoreCommandDispatcher.cs" />
     <Compile Include="Dialogs\MultilingualEditionDialog.cs" />
     <Compile Include="Library\Dispatcher.cs" />
     <Compile Include="Library\EnumKeyValues.cs" />
