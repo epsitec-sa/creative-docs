@@ -8,7 +8,7 @@ namespace Epsitec.Cresus.Core.Library
 {
 	public sealed class DialogCentral : CoreAppComponent
 	{
-		public DialogCentral(CoreApp app)
+		private DialogCentral(CoreApp app)
 			: base (app)
 		{
 			this.attachedDialogs = new List<Dialogs.IAttachedDialog> ();
@@ -39,5 +39,13 @@ namespace Epsitec.Cresus.Core.Library
 		}
 
 		private readonly List<Dialogs.IAttachedDialog>	attachedDialogs;
+
+		#region Factory Class
+
+		private sealed class Factory : Epsitec.Cresus.Core.Factories.DefaultCoreAppComponentFactory<DialogCentral>
+		{
+		}
+
+		#endregion
 	}
 }

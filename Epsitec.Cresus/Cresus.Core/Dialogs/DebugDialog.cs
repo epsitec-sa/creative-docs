@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.window.WindowCloseClicked += delegate
 			{
-				this.RejectChangingsAndClose ();
+				this.CloseAndRejectChanges ();
 			};
 		}
 
@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.tabBook.Items.Add (maintenancePage);
 			}
 
-			this.ActiveLastPage ();
+			this.ActivateLastPage ();
 
 			//	Crée le pied de page.
 			this.errorInfo = new StaticText
@@ -165,11 +165,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 			//	Connection des événements.
 			this.closeButton.Clicked += delegate
 			{
-				this.AcceptChangingsAndClose ();
+				this.CloseAndAcceptChanges ();
 			};
 		}
 
-		private void AcceptChangingsAndClose()
+		private void CloseAndAcceptChanges()
 		{
 			this.UpdateLastActivedPageName ();
 
@@ -179,11 +179,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 
 			this.Result = DialogResult.Accept;
-			this.OnDialogClosed ();
 			this.CloseDialog ();
 		}
 
-		private void RejectChangingsAndClose()
+		private void CloseAndRejectChanges()
 		{
 			this.UpdateLastActivedPageName ();
 
@@ -193,7 +192,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 
 			this.Result = DialogResult.Cancel;
-			this.OnDialogClosed ();
 			this.CloseDialog ();
 		}
 
@@ -231,9 +229,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 		}
 
-		private void ActiveLastPage()
+		private void ActivateLastPage()
 		{
-			string name = DebugDialog.lastActivedPageName;
+			string name = DebugDialog.lastActivatedPageName;
 
 			if (string.IsNullOrEmpty (name))
 			{
@@ -246,11 +244,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void UpdateLastActivedPageName()
 		{
-			DebugDialog.lastActivedPageName = this.tabBook.ActivePage.Name;
+			DebugDialog.lastActivatedPageName = this.tabBook.ActivePage.Name;
 		}
 
 
-		private static string									lastActivedPageName;
+		private static string									lastActivatedPageName;
 
 		private readonly CoreApplication						application;
 		private readonly List<AbstractSettingsTabPage>			settingsTabPages;

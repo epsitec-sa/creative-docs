@@ -5,26 +5,30 @@ using Epsitec.Cresus.Core.Library;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Epsitec.Cresus.Core.Factories
 {
-	public sealed class DialogCentralFactory : ICoreAppComponentFactory
+	public abstract class DefaultCoreAppComponentFactory<T> : ICoreAppComponentFactory
+		where T : CoreAppComponent
 	{
 		#region ICoreComponentFactory<CoreApp,CoreAppComponent> Members
 
-		bool ICoreComponentFactory<CoreApp, CoreAppComponent>.CanCreate(CoreApp host)
+		public virtual bool CanCreate(CoreApp host)
 		{
 			return true;
 		}
 
-		CoreAppComponent ICoreComponentFactory<CoreApp, CoreAppComponent>.Create(CoreApp host)
+		public virtual CoreAppComponent Create(CoreApp host)
 		{
-			return new DialogCentral (host);
+			var args = new object[] { host };
+			var binding = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
+			return System.Activator.CreateInstance (typeof (T), binding, null, args, null) as CoreAppComponent;
 		}
 
 		System.Type ICoreComponentFactory<CoreApp, CoreAppComponent>.GetComponentType()
 		{
-			return typeof (DialogCentral);
+			return typeof (T);
 		}
 
 		#endregion

@@ -14,15 +14,18 @@ namespace Epsitec.Cresus.Core.Library
 	/// <summary>
 	/// The <c>PersistenceManager</c> class handles UI persistence.
 	/// </summary>
-	public sealed partial class PersistenceManager : System.IDisposable
+	public sealed partial class PersistenceManager : CoreAppComponent, System.IDisposable
 	{
-		public PersistenceManager()
+		public PersistenceManager(CoreApp app = null)
+			: base (app)
 		{
 			this.bindings = new Dictionary<string, PersistenceManagerBinding> ();
+			
 			this.timer = new Timer ()
 			{
 				Delay = 2.0,
 			};
+			
 			this.timer.TimeElapsed += this.HandleTimerTimeElapsed;
 		}
 
@@ -189,6 +192,14 @@ namespace Epsitec.Cresus.Core.Library
 				this.SettingsChanged (this);
 			}
 		}
+
+		#region Factory Class
+
+		private sealed class Factory : Epsitec.Cresus.Core.Factories.DefaultCoreAppComponentFactory<PersistenceManager>
+		{
+		}
+
+		#endregion
 			
 
 		public event EventHandler SettingsChanged;

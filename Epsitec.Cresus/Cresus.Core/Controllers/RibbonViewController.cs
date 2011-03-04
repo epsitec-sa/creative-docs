@@ -102,8 +102,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				Name = "Ribbon"
 			};
 
-			CoreProgram.Application.PersistanceManager.Register (this.ribbonBook);
-			CoreProgram.Application.PersistanceManager.Register (this, this.ribbonBook.FullPathName + ".DatabaseMenu.DefaultCommand",
+			CoreProgram.Application.PersistenceManager.Register (this.ribbonBook);
+			CoreProgram.Application.PersistenceManager.Register (this, this.ribbonBook.FullPathName + ".DatabaseMenu.DefaultCommand",
 				x => this.DatabaseMenuDefaultCommandNameChanged += x,
 				x => this.DatabaseMenuDefaultCommandNameChanged -= x,
 				xml => xml.Add (new XAttribute ("name", this.DatabaseMenuDefaultCommandName)),

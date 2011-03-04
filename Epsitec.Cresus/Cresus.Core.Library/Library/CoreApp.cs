@@ -16,6 +16,15 @@ namespace Epsitec.Cresus.Core.Library
 		}
 
 
+		public PersistenceManager PersistenceManager
+		{
+			get
+			{
+				return this.FindComponent<PersistenceManager> ();
+			}
+		}
+
+
 		public virtual void SetupApplication()
 		{
 			Factories.CoreAppComponentFactory.SetupComponents (this.components.GetComponents ());

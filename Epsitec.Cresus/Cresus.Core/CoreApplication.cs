@@ -35,8 +35,6 @@ namespace Epsitec.Cresus.Core
 			
 			this.plugIns = new List<PlugIns.ICorePlugIn> ();
 			
-			this.persistenceManager = new PersistenceManager ();
-
 			this.data = new CoreData (this, forceDatabaseCreation: false, allowDatabaseUpdate: true);
 
 			this.exceptionManager = new ExceptionManager ();
@@ -73,14 +71,6 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public PersistenceManager				PersistanceManager
-		{
-			get
-			{
-				return this.persistenceManager;
-			}
-		}
-		
 		public override string					ShortWindowTitle
 		{
 			get
@@ -388,7 +378,7 @@ namespace Epsitec.Cresus.Core
 					this.Window.Text = string.Format ("{0} Alpha {1}x{2}", this.ShortWindowTitle, this.Window.ClientSize.Width, this.Window.ClientSize.Height);
 				};
 
-			CoreProgram.Application.PersistanceManager.Register (this.Window);
+			this.PersistenceManager.Register (this.Window);
 		}
 
 		private void CreateUIControllers()
@@ -398,6 +388,8 @@ namespace Epsitec.Cresus.Core
 
 		private void RestoreApplicationState()
 		{
+			var persistenceManager = this.PersistenceManager;
+
 			if (System.IO.File.Exists (CoreApplication.Paths.SettingsPath))
 			{
 				XDocument doc = XDocument.Load (CoreApplication.Paths.SettingsPath);
@@ -405,11 +397,11 @@ namespace Epsitec.Cresus.Core
 
 //-				this.stateManager.RestoreStates (store.Element ("stateManager"));
 				UI.RestoreWindowPositions (store.Element ("windowPositions"));
-				this.persistenceManager.Restore (store.Element ("uiSettings"));
+				persistenceManager.Restore (store.Element ("uiSettings"));
 			}
 			
-			this.persistenceManager.DiscardChanges ();
-			this.persistenceManager.SettingsChanged += (sender) => this.AsyncSaveApplicationState ();
+			persistenceManager.DiscardChanges ();
+			persistenceManager.SettingsChanged += (sender) => this.AsyncSaveApplicationState ();
 
 //-			this.UpdateCommandsAfterStateChange ();
 		}
@@ -428,7 +420,7 @@ namespace Epsitec.Cresus.Core
 					new XElement ("store",
 //-						this.StateManager.SaveStates ("stateManager"),
 						UI.SaveWindowPositions ("windowPositions"),
-						this.persistenceManager.Save ("uiSettings")));
+						this.PersistenceManager.Save ("uiSettings")));
 
 				doc.Save (CoreApplication.Paths.SettingsPath);
 				System.Diagnostics.Debug.WriteLine ("Save done.");
@@ -488,7 +480,6 @@ namespace Epsitec.Cresus.Core
 
 		private readonly List<PlugIns.ICorePlugIn>		plugIns;
 
-		private PersistenceManager						persistenceManager;
 		private CoreData								data;
 		private ExceptionManager						exceptionManager;
 		private DataViewOrchestrator					mainWindowOrchestrator;
