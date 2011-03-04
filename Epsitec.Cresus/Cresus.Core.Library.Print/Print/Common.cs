@@ -18,26 +18,6 @@ namespace Epsitec.Cresus.Core.Print
 {
 	public static class Common
 	{
-		public static string PageTypeToString(PageType type)
-		{
-			return type.ToString ();
-		}
-
-		public static PageType StringToPageType(string name)
-		{
-			PageType type;
-
-			if (System.Enum.TryParse (name, out type))
-			{
-				return type;
-			}
-			else
-			{
-				return PageType.Unknown;
-			}
-		}
-
-	
 		public static bool IsPrinterAndPageMatching(PageType printerUnitFunction, PageType pageType)
 		{
 			//	Retourne true si la fonction d'une unité d'impression est compatible avec le type d'une page.

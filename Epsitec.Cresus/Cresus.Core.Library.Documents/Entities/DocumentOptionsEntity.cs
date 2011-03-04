@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 					for (int i = 0; i < split.Length-1; i+=2)
 					{
-						var option = OptionsDictionary.StringToDocumentOption (split[i]);
+						var option = DocumentOptions.Parse (split[i]);
 						dict.Add (option, split[i+1]);
 					}
 				}

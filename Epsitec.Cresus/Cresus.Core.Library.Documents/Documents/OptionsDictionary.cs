@@ -1,6 +1,8 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
+using Epsitec.Common.Types;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,25 +18,6 @@ namespace Epsitec.Cresus.Core.Documents
 		public OptionsDictionary()
 		{
 			this.dictionary = new Dictionary<DocumentOption, string> ();
-		}
-
-		public static string DocumentOptionToString(DocumentOption option)
-		{
-			return option.ToString ();
-		}
-
-		public static DocumentOption StringToDocumentOption(string name)
-		{
-			DocumentOption option;
-
-			if (System.Enum.TryParse (name, out option))
-			{
-				return option;
-			}
-			else
-			{
-				return DocumentOption.None;
-			}
 		}
 
 		public void Clear()
@@ -117,7 +100,7 @@ namespace Epsitec.Cresus.Core.Documents
 
 			foreach (var pair in this.dictionary)
 			{
-				list.Add (OptionsDictionary.DocumentOptionToString (pair.Key));
+				list.Add (DocumentOptions.ToString (pair.Key));
 				list.Add (pair.Value);
 			}
 
@@ -135,7 +118,7 @@ namespace Epsitec.Cresus.Core.Documents
 
 				for (int i = 0; i < list.Length-1; i+=2)
 				{
-					var option = OptionsDictionary.StringToDocumentOption (list[i]);
+					var option = DocumentOptions.Parse (list[i]);
 					var value = list[i+1];
 
 					this.dictionary.Add (option, value);

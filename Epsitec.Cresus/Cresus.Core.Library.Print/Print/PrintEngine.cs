@@ -315,8 +315,6 @@ namespace Epsitec.Cresus.Core.Print
 			//	Retourne les options à utiliser pour l'entité.
 			var result = new OptionsDictionary ();
 
-			throw new System.NotImplementedException ();
-#if false
 			if (entity is DocumentMetadataEntity)
 			{
 				var metadata = entity as DocumentMetadataEntity;
@@ -327,7 +325,6 @@ namespace Epsitec.Cresus.Core.Print
 					result.Merge (option);
 				}
 			}
-#endif
 
 #if true
 			if (result.Count == 0)  // TODO: Hack à supprimer dès que possible !
@@ -344,8 +341,7 @@ namespace Epsitec.Cresus.Core.Print
 		{
 			//	Retourne les unités d'impression à utiliser pour l'entité.
 			var result = new PrintingUnitsDictionary ();
-			throw new System.NotImplementedException ();
-#if false
+
 			if (entity is DocumentMetadataEntity)
 			{
 				var metadata = entity as DocumentMetadataEntity;
@@ -356,7 +352,6 @@ namespace Epsitec.Cresus.Core.Print
 					result.Merge (printingUnit);
 				}
 			}
-#endif
 
 #if true
 			if (result.Count == 0)  // TODO: Hack à supprimer dès que possible !

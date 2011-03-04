@@ -4,6 +4,8 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Core.Documents;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -61,6 +63,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 			return builder.ToString ();
 		}
+#endif
 
 		public PrintingUnitsDictionary GetPrintingUnits()
 		{
@@ -79,7 +82,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 					for (int i = 0; i < split.Length-1; i+=2)
 					{
-						var type = Print.Common.StringToPageType (split[i]);
+						var type = PageTypes.Parse (split[i]);
 						dict.Add (type, split[i+1]);
 					}
 				}
@@ -88,6 +91,7 @@ namespace Epsitec.Cresus.Core.Entities
 			return dict;
 		}
 
+#if false
 		public void SetPrintingUnits(PrintingUnitsDictionary options)
 		{
 			//	Spécifie le dictionnaire "type de pages" / "unité d'impression".

@@ -774,12 +774,31 @@ namespace Epsitec.Common.Types
 		}
 
 
+		/// <summary>
+		/// Converts the text to an enum value. If the conversion is not possible, this will
+		/// throw an exception.
+		/// </summary>
+		/// <typeparam name="T">The enum type.</typeparam>
+		/// <param name="text">The text.</param>
+		/// <returns>The enum value.</returns>
 		public static T ToEnum<T>(this string text)
 		{
+			//	We do not want to enforce T to be struct here, since some users of this
+			//	method must operate on unconstrained generic types.
+
 			return (T) System.Enum.Parse (typeof (T), text);
 		}
 
-		public static T ToEnum<T>(this string text, T defaultValue)
+		/// <summary>
+		/// Converts the text to an enum value. If the conversion is not possible, fall back
+		/// to the default value.
+		/// </summary>
+		/// <typeparam name="TEnum">The type of the enum.</typeparam>
+		/// <param name="text">The text.</param>
+		/// <param name="defaultValue">The default enum value.</param>
+		/// <returns>The enum value.</returns>
+		public static TEnum ToEnum<TEnum>(this string text, TEnum defaultValue)
+			where TEnum : struct
 		{
 			if (string.IsNullOrEmpty (text))
 			{
@@ -787,7 +806,14 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				return (T) System.Enum.Parse (typeof (T), text);
+				TEnum value;
+				
+				if (System.Enum.TryParse<TEnum> (text, out value))
+				{
+					return value;
+				}
+
+				return defaultValue;
 			}
 		}
 
