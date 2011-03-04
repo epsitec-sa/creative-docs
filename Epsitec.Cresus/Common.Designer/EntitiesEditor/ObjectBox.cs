@@ -362,7 +362,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Retourne la position verticale pour un trait de liaison.
 			//	Il s'agit toujours de la position de départ d'une liaison.
-			if (this.isExtended && rank < this.fields.Count)
+			if (this.isExtended && rank < this.fields.Count && rank != -1)
 			{
 				Rectangle rect = this.GetFieldBounds(rank);
 				return rect.Center.Y;
@@ -731,7 +731,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					SourceInfo info = this.sourcesList[this.sourcesMenuSelected];
 					if (!info.Opened)
 					{
-						this.OpenSource(info.CultureMap, info.Rank);
+						this.OpenSource(info.CultureMap);
 					}
 
 					this.isSourcesMenu = false;  // ferme le menu
@@ -1687,7 +1687,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			bool isNullable = false;
 			Module module = this.editor.Module;
 			StructuredTypeClass typeClass = StructuredTypeClass.Interface;
+			
 			var result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InterfaceEntities, module, ResourceAccess.Type.Entities, ref typeClass, ref druid, ref isNullable, exclude, Druid.Empty);
+			
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;
@@ -2515,7 +2517,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			public string ModuleName;
 			public string FieldName;
 			public CultureMap CultureMap;
-			public int Rank;
 			public bool Opened;
 		}
 
@@ -2560,7 +2561,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					if (dataFields != null)
 					{
 						List<CultureMap> maps = this.GetUpdatedCultureMaps (dataFields);
-						int rank = 0;
 
 						foreach (CultureMap fieldCultureMap in maps)
 						{
@@ -2571,14 +2571,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 									CultureMap = cultureMap,
 									ModuleName = module.ModuleId.Name,
 									FieldName = cultureMap.Name,
-									Rank = rank,
 									Opened = false
 								};
 
 								this.sourcesList.Add (info);
 							}
-
-							rank++;
 						}
 					}
 				}
@@ -2632,7 +2629,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return false;
 		}
 
-		private void OpenSource(CultureMap cultureMap, int rank)
+		public void OpenSource(CultureMap cultureMap)
 		{
 			//	Ouvre une entité source.
 			ObjectBox box = this.editor.SearchBox(cultureMap.Name);
@@ -2643,10 +2640,26 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				box.BackgroundMainColor = this.boxColor;
 				box.SetContent(cultureMap);
 
-				Field field = box.Fields[rank];
-				field.DstBox = this;
-				field.IsAttachToRight = true;
-				field.IsExplored = true;
+				//	Cherche quel champ permet de faire une connexion avec l'entité courante.
+				int rank = -1;
+				var currentDruid = this.editor.Entities.CurrentDruid;
+
+				for (int i = 0; i < box.Fields.Count; i++)
+				{
+					if (box.Fields[i].Destination == currentDruid)
+					{
+						rank = i;
+						break;
+					}
+				}
+
+				if (rank != -1)
+				{
+					Field field = box.Fields[rank];
+					field.DstBox = this;
+					field.IsAttachToRight = true;
+					field.IsExplored = true;
+				}
 
 				this.editor.AddBox(box);
 				this.editor.UpdateGeometry();

@@ -45,6 +45,14 @@ namespace Epsitec.Common.Designer.Dialogs
 				footer.Margins = new Margins (0, 0, 8, 0);
 				footer.Dock = DockStyle.Bottom;
 
+				this.statistics = new StaticText
+				{
+					Parent = footer,
+					ContentAlignment = Drawing.ContentAlignment.MiddleRight,
+					Dock = DockStyle.Fill,
+					Margins = new Margins (0, 20, 0, 0),
+				};
+
 				this.buttonCancel = new Button (footer);
 				this.buttonCancel.PreferredWidth = 75;
 				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
@@ -161,7 +169,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			var group = new GroupBox
 			{
 				Parent = parent,
-				Text = "Entités pour lesquels il faut générer une image",
+				Text = "Entités pour lesquelles il faut générer une image",
 				Dock = DockStyle.Fill,
 				Padding = new Margins (8),
 			};
@@ -437,6 +445,11 @@ namespace Epsitec.Common.Designer.Dialogs
 					Dock = DockStyle.Top,
 				};
 
+				if (i%2 == 0)
+				{
+					line.BackColor = Color.FromHexa ("f5f2f7");  // une ligne sur deux plus claire
+				}
+
 				var button = new CheckButton
 				{
 					Parent = line,
@@ -450,16 +463,20 @@ namespace Epsitec.Common.Designer.Dialogs
 				{
 					Parent = line,
 					Text = this.entitySamples[i].BoxCountDescription,
-					PreferredWidth = 50,
+					ContentAlignment = Drawing.ContentAlignment.MiddleRight,
+					PreferredWidth = 55,
 					Dock = DockStyle.Right,
+					Margins = new Margins (0, 5, 0, 0),
 				};
 
 				new StaticText
 				{
 					Parent = line,
 					Text = this.entitySamples[i].FlagsDescription,
+					ContentAlignment = Drawing.ContentAlignment.MiddleLeft,
 					PreferredWidth = 50,
 					Dock = DockStyle.Right,
+					Margins = new Margins (5, 0, 0, 0),
 				};
 
 				button.Clicked += delegate
@@ -501,6 +518,19 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.buttonAll.Enable = (this.selectedEntityNames.Count != this.entitySamples.Count);
 
 			this.buttonOk.Enable = (!string.IsNullOrEmpty (this.Folder) && this.selectedEntityNames.Count != 0);
+
+			if (this.selectedEntityNames.Count == 0)
+			{
+				this.statistics.Text = "Aucune image à générer.";
+			}
+			else if (this.selectedEntityNames.Count == 1)
+			{
+				this.statistics.Text = "Une image à générer.";
+			}
+			else
+			{
+				this.statistics.Text = string.Format ("{0} images à générer.", this.selectedEntityNames.Count.ToString ());
+			}
 		}
 
 
@@ -616,6 +646,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		private Button								buttonMajor;
 		private Button								buttonAll;
 
+		private StaticText							statistics;
 		private Button								buttonOk;
 		private Button								buttonApply;
 		private Button								buttonCancel;
