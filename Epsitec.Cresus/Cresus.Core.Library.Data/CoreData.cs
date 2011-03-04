@@ -23,11 +23,13 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core
 {
-	public sealed partial class CoreData : System.IDisposable, ICoreComponentHost<CoreDataComponent>
+	public sealed partial class CoreData : System.IDisposable, ICoreComponentHost<CoreDataComponent>, ICoreManualComponent
 	{
 		public CoreData(CoreApp app, bool forceDatabaseCreation, bool allowDatabaseUpdate)
 		{
 			this.app = app;
+			this.app.RegisterComponent (this);
+
 			this.ForceDatabaseCreation = forceDatabaseCreation;
 			this.AllowDatabaseUpdate   = allowDatabaseUpdate;
 

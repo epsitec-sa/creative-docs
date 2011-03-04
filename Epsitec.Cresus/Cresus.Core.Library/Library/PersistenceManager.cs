@@ -51,12 +51,15 @@ namespace Epsitec.Cresus.Core.Library
 			pending.ExceptWith (this.bindings.Keys);
 
 			var newNodes = from path in this.bindings.Keys
+						   where string.IsNullOrEmpty (path) == false
 						   orderby path ascending
 						   let binding = this.bindings[path]
 						   select binding.ExecuteSave (new XElement ("w", new XAttribute ("id", path)));
 
 			var oldNodes = from node in this.pendingRestores
-						   where pending.Contains ((string) node.Attribute ("id"))
+						   let id = (string) node.Attribute ("id")
+						   where string.IsNullOrEmpty (id) == false
+						   where pending.Contains (id)
 						   select node;
 			
 			return new XElement (xmlNodeName, newNodes, oldNodes);
@@ -78,6 +81,12 @@ namespace Epsitec.Cresus.Core.Library
 				System.Diagnostics.Debug.Assert (node.Name == "w");
 
 				string path = (string) node.Attribute ("id");
+
+				if (string.IsNullOrEmpty (path))
+				{
+					continue;
+				}
+
 				PersistenceManagerBinding binding;
 
 				if (this.bindings.TryGetValue (path, out binding))
@@ -152,9 +161,13 @@ namespace Epsitec.Cresus.Core.Library
 		/// events.
 		/// </summary>
 		/// <param name="window">The window.</param>
-		public void Register(Window window)
+		/// <returns><c>true</c> if the position of the window was restored successfully; otherwise, <c>false</c>.</returns>
+		public bool Register(Window window)
 		{
 			window.WindowPlacementChanged += this.NotifyChange;
+			
+			UI.RegisterWindowPositionSaver (window);
+			return UI.RestoreWindowPosition (window);
 		}
 
 		/// <summary>
@@ -164,9 +177,27 @@ namespace Epsitec.Cresus.Core.Library
 		public void Unregister(Window window)
 		{
 			window.WindowPlacementChanged -= this.NotifyChange;
+			UI.SaveWindowPosition (window);
 		}
 
+		public void Unregister(DependencyObject element)
+		{
+			var binding = PersistenceManagerBinding.GetValue (element);
+			
+			if (binding != null)
+			{
+				string path = binding.GetId ();
+				PersistenceManagerBinding oldBinding;
 
+				if (this.bindings.TryGetValue (path, out oldBinding))
+				{
+					var pending = new XElement ("w");
+					oldBinding.ExecuteUnregister ();
+					oldBinding.ExecuteSave (pending);
+					this.pendingRestores.Add (pending);
+				}
+			}
+		}
 
 
 		#region IDisposable Members

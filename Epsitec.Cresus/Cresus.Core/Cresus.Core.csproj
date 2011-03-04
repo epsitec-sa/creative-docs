@@ -76,6 +76,7 @@
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -129,6 +130,7 @@
     <Compile Include="Controllers\EditionControllers\EditionBusinessSettingsViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryBusinessSettingsViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAffairViewController.cs" />
+    <Compile Include="Dialogs\CoreDialog.cs" />
     <Compile Include="Dialogs\DebugDialog.cs" />
     <Compile Include="Dialogs\SettingsDialog.cs" />
     <Compile Include="Dialogs\SettingsTabPages\AbstractSettingsTabPage.cs" />

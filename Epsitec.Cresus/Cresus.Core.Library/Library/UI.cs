@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Core.Library
 		{
 			var hint = UI.FindBestPlacement (window);
 
-			if (!hint.IsEmpty)
+			if (hint.IsEmpty == false)
             {
 				UI.windowPlacementHints.Remove (hint);
             }
@@ -125,7 +125,14 @@ namespace Epsitec.Cresus.Core.Library
 			}
 			else
 			{
-				window.WindowPlacement = hint.Placement;
+				var placement = hint.Placement;
+
+				if (window.IsVisible == false)
+				{
+					placement = new WindowPlacement (placement.Bounds, placement.IsFullScreen, placement.IsMinimized, isHidden: true);
+				}
+
+				window.WindowPlacement = placement;
 				return true;
 			}
 		}

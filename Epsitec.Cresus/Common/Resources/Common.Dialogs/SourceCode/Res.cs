@@ -12,6 +12,10 @@ namespace Epsitec.Common.Dialogs
 		
 		public static class Commands
 		{
+			internal static void _Initialize()
+			{
+			}
+			
 			public static class Dialog
 			{
 				internal static void _Initialize()
@@ -71,6 +75,8 @@ namespace Epsitec.Common.Dialogs
 					public static readonly global::Epsitec.Common.Widgets.Command Apply = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 1, 4));
 					//	designer:cap/6012
 					public static readonly global::Epsitec.Common.Widgets.Command Cancel = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 1, 2));
+					//	designer:cap/60A
+					public static readonly global::Epsitec.Common.Widgets.Command Close = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
 					//	designer:cap/6013
 					public static readonly global::Epsitec.Common.Widgets.Command No = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 1, 3));
 					//	designer:cap/601
@@ -95,22 +101,26 @@ namespace Epsitec.Common.Dialogs
 				//	designer:cap/6018
 				public static readonly global::Epsitec.Common.Widgets.Command ValidateSearch = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 1, 8));
 			}
-			
-			internal static void _Initialize()
-			{
-				Dialog.File._Initialize ();
-				Dialog.File.Favorites._Initialize ();
-				Dialog.Generic._Initialize ();
-				HintList._Initialize ();
-			}
 		}
 		
 		public static class CommandIds
 		{
+			internal static void _Initialize()
+			{
+			}
+			
 			public static class Dialog
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				public static class File
 				{
+					internal static void _Initialize()
+					{
+					}
+					
 					//	designer:cap/6005
 					public const long Delete = 0x600000000005L;
 					//	designer:cap/6007
@@ -131,6 +141,10 @@ namespace Epsitec.Common.Dialogs
 					public const long ViewSize = 0x600000000013L;
 					public static class Favorites
 					{
+						internal static void _Initialize()
+						{
+						}
+						
 						//	designer:cap/6008
 						public const long Add = 0x600000000008L;
 						//	designer:cap/600B
@@ -146,10 +160,16 @@ namespace Epsitec.Common.Dialogs
 				
 				public static class Generic
 				{
+					internal static void _Initialize()
+					{
+					}
+					
 					//	designer:cap/6014
 					public const long Apply = 0x600001000004L;
 					//	designer:cap/6012
 					public const long Cancel = 0x600001000002L;
+					//	designer:cap/60A
+					public const long Close = 0x60000A000000L;
 					//	designer:cap/6013
 					public const long No = 0x600001000003L;
 					//	designer:cap/601
@@ -161,6 +181,10 @@ namespace Epsitec.Common.Dialogs
 			
 			public static class HintList
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				//	designer:cap/6017
 				public const long ClearSearch = 0x600001000007L;
 				//	designer:cap/6019
@@ -175,10 +199,22 @@ namespace Epsitec.Common.Dialogs
 		
 		public static class Captions
 		{
+			internal static void _Initialize()
+			{
+			}
+			
 			public static class File
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				public static class Column
 				{
+					internal static void _Initialize()
+					{
+					}
+					
 					//	designer:cap/600F
 					public static global::Epsitec.Common.Types.Caption Date
 					{
@@ -226,10 +262,22 @@ namespace Epsitec.Common.Dialogs
 		
 		public static class CaptionIds
 		{
+			internal static void _Initialize()
+			{
+			}
+			
 			public static class File
 			{
+				internal static void _Initialize()
+				{
+				}
+				
 				public static class Column
 				{
+					internal static void _Initialize()
+					{
+					}
+					
 					//	designer:cap/600F
 					public static readonly global::Epsitec.Common.Support.Druid Date = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 15);
 					//	designer:cap/6
@@ -245,7 +293,28 @@ namespace Epsitec.Common.Dialogs
 			
 		}
 		
+		public static class Types
+		{
+			internal static void _Initialize()
+			{
+			}
+			
+			//	designer:cap/6015
+			public static readonly Epsitec.Common.Types.StructuredType ISearchable = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 1, 5));
+		}
 		
+		public static class Fields
+		{
+			public static class ISearchable
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/6016
+				public static readonly global::Epsitec.Common.Support.Druid SearchValue = new global::Epsitec.Common.Support.Druid (_moduleId, 1, 6);
+			}
+		}
 		
 		//	Code mapping for 'String' resources
 		
@@ -621,17 +690,33 @@ namespace Epsitec.Common.Dialogs
 				return new global::Epsitec.Common.Types.FormattedText (_stringsBundle[field].AsString);
 			}
 			
+			public static global::System.String GetString(params string[] path)
+			{
+				string field = string.Join (".", path);
+				return _stringsBundle[field].AsString;
+			}
+			
 			#region Internal Support Code
 			
 			private static global::Epsitec.Common.Types.FormattedText GetText(string bundle, params string[] path)
 			{
-				string field = string.Join (".", path);
-				return new global::Epsitec.Common.Types.FormattedText (_stringsBundle[field].AsString);
+				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Common.Dialogs.Res.Strings.GetString (bundle, path));
 			}
 			
 			private static global::Epsitec.Common.Types.FormattedText GetText(global::Epsitec.Common.Support.Druid druid)
 			{
-				return new global::Epsitec.Common.Types.FormattedText (_stringsBundle[druid].AsString);
+				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Common.Dialogs.Res.Strings.GetString (druid));
+			}
+			
+			private static global::System.String GetString(string bundle, params string[] path)
+			{
+				string field = string.Join (".", path);
+				return _stringsBundle[field].AsString;
+			}
+			
+			private static global::System.String GetString(global::Epsitec.Common.Support.Druid druid)
+			{
+				return _stringsBundle[druid].AsString;
 			}
 			
 			private static readonly global::Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle ("Strings");
@@ -639,13 +724,26 @@ namespace Epsitec.Common.Dialogs
 			#endregion
 		}
 		
-		//	Code mapping for 'Form' resources
-		
 		static Res()
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Common.Dialogs");
 			Commands._Initialize ();
+			Commands.Dialog.File._Initialize ();
+			Commands.Dialog.File.Favorites._Initialize ();
+			Commands.Dialog.Generic._Initialize ();
+			Commands.HintList._Initialize ();
+			CommandIds._Initialize ();
+			CommandIds.Dialog.File._Initialize ();
+			CommandIds.Dialog.File.Favorites._Initialize ();
+			CommandIds.Dialog.Generic._Initialize ();
+			CommandIds.HintList._Initialize ();
+			Captions._Initialize ();
+			Captions.File.Column._Initialize ();
+			CaptionIds._Initialize ();
+			CaptionIds.File.Column._Initialize ();
+			Types._Initialize ();
+			Fields.ISearchable._Initialize ();
 		}
 		
 		public static void Initialize()

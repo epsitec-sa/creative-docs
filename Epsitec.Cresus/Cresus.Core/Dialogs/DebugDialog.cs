@@ -4,10 +4,12 @@
 using Epsitec.Common.Dialogs;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Business.UserManagement;
 using Epsitec.Cresus.Core.Dialogs.SettingsTabPages;
+using Epsitec.Cresus.Core.Library;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -17,63 +19,37 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// <summary>
 	/// Dialogue pour l'ensemble du debug.
 	/// </summary>
-	public class DebugDialog : AbstractDialog, ISettingsDialog
+	public class DebugDialog : CoreDialog, ISettingsDialog
 	{
-		public DebugDialog(CoreApplication application)
+		public DebugDialog(CoreApp application)
+			: base (application)
 		{
-			this.application = application;
-
 			this.IsModal = false;
-
 			this.settingsTabPages = new List<SettingsTabPages.AbstractSettingsTabPage> ();
-		}
-
-		
-
-		protected override Window CreateWindow()
-		{
-			Window window = new Window ()
-			{
-				Name = "DebugDialog",
-			};
-
-			this.SetupWindow (window);
-			this.SetupWidgets (window);
-			this.UpdateWidgets ();
-
-			window.AdjustWindowSize ();
-
-			return window;
 		}
 
 		#region ISettingsTabBook Members
 
-		CoreData ISettingsDialog.Data
+		public CoreData Data
 		{
 			get
 			{
-				return this.application.Data;
+				return this.application.FindComponent<CoreData> ();
 			}
 		}
 
 		#endregion
 
-		private void SetupWindow(Window window)
+		protected override void SetupWindow(Window window)
 		{
-			this.OwnerWindow = this.application.Window;
-			window.Icon = this.application.Window.Icon;
 			window.Text = "Dépannage";
 			window.ClientSize = new Size (850, 600);
-
-			window.WindowCloseClicked += delegate
-			{
-				this.CloseAndRejectChanges ();
-			};
 		}
 
-		private void SetupWidgets(Window window)
+		protected override void SetupWidgets(Window window)
 		{
-			bool devel = CoreProgram.Application.UserManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.Developer);
+			var userManager = this.Data.GetComponent<UserManager> ();
+			bool devel = userManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.Developer);
 
 			var frame = new FrameBox
 			{
@@ -126,7 +102,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.tabBook.Items.Add (maintenancePage);
 			}
 
-			this.application.PersistenceManager.Register (this.tabBook);
+			this.tabBook.ActivePageIndex = 0;
 
 			//	Crée le pied de page.
 			this.errorInfo = new StaticText
@@ -139,14 +115,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.closeButton = new Button ()
 			{
+				CommandObject = Epsitec.Common.Dialogs.Res.Commands.Dialog.Generic.Close,
 				Parent = footer,
-				Text = "Fermer",
 				ButtonStyle = Common.Widgets.ButtonStyle.DefaultAccept,
 				Dock = DockStyle.Right,
 				TabIndex = 100,
 			};
 
-			//	Rempli les onglets.
+			//	Remplit les onglets.
 			if (devel)
 			{
 				var loggingSettings = new SettingsTabPages.LoggingTabPage (this);
@@ -166,11 +142,16 @@ namespace Epsitec.Cresus.Core.Dialogs
 				tab.AcceptStateChanging += new EventHandler (this.HandlerSettingsAcceptStateChanging);
 			}
 
-			//	Connection des événements.
-			this.closeButton.Clicked += delegate
+			this.RegisterWithPersistenceManager (this.tabBook);
+		}
+
+		[Command (Epsitec.Common.Dialogs.Res.CommandIds.Dialog.Generic.Close)]
+		private void ExecuteCloseCommand()
+		{
+			if (this.closeButton.Enable)
 			{
 				this.CloseAndAcceptChanges ();
-			};
+			}
 		}
 
 		private void CloseAndAcceptChanges()
@@ -184,12 +165,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.CloseDialog ();
 		}
 
-		protected override void OnDialogClosed()
-		{
-			base.OnDialogClosed ();
-			this.application.PersistenceManager.Unregister (this.DialogWindow);
-		}
-
 		private void CloseAndRejectChanges()
 		{
 			foreach (var tab in this.settingsTabPages)
@@ -200,7 +175,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.Result = DialogResult.Cancel;
 			this.CloseDialog ();
 		}
-
 
 		private void HandlerSettingsAcceptStateChanging(object sender)
 		{
@@ -232,12 +206,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 		}
 
-		private void UpdateWidgets()
+		protected override void UpdateWidgets()
 		{
 		}
 
 
-		private readonly CoreApplication						application;
 		private readonly List<AbstractSettingsTabPage>			settingsTabPages;
 
 		private TabBook											tabBook;

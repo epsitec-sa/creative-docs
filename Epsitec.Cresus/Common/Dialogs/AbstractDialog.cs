@@ -16,6 +16,7 @@ namespace Epsitec.Common.Dialogs
 		protected AbstractDialog()
 		{
 			this.isModalDialog = true;
+			this.AutoCenterDialog = true;
 			
 			this.commandDispatcher = new CommandDispatcher ("Dialog", CommandDispatcherLevel.Secondary);
 			this.commandContext    = new CommandContext ();
@@ -206,6 +207,11 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		public bool								AutoCenterDialog
+		{
+			get;
+			set;
+		}
 
 		/// <summary>
 		/// Registers a controller with the dialog's local command dispatcher.
@@ -262,14 +268,17 @@ namespace Epsitec.Common.Dialogs
 				dispatchMessage.Retired = true;
 			}
 
-			Drawing.Rectangle dialogBounds = window.WindowBounds;
+			if (this.AutoCenterDialog)
+			{
+				Drawing.Rectangle dialogBounds = window.WindowBounds;
 
-			double ox = System.Math.Floor (ownerBounds.Left + (ownerBounds.Width - dialogBounds.Width) / 2);
-			double oy = System.Math.Floor (ownerBounds.Top  - (ownerBounds.Height - dialogBounds.Height) / 3 - dialogBounds.Height);
+				double ox = System.Math.Floor (ownerBounds.Left + (ownerBounds.Width - dialogBounds.Width) / 2);
+				double oy = System.Math.Floor (ownerBounds.Top  - (ownerBounds.Height - dialogBounds.Height) / 3 - dialogBounds.Height);
 
-			dialogBounds.Location = new Drawing.Point (ox, oy);
+				dialogBounds.Location = new Drawing.Point (ox, oy);
 
-			window.WindowBounds = dialogBounds;
+				window.WindowBounds = dialogBounds;
+			}
 
 			this.OnDialogOpening ();
 
@@ -415,7 +424,8 @@ namespace Epsitec.Common.Dialogs
 					this.dialogWindow.MakeSecondaryWindow ();
 					this.dialogWindow.Root.WindowType = WindowType.Dialog;
 
-					if (this.ContainsCommand (Res.Commands.Dialog.Generic.Cancel))
+					if ((this.ContainsCommand (Res.Commands.Dialog.Generic.Cancel)) ||
+						(this.ContainsCommand (Res.Commands.Dialog.Generic.Close)))
 					{
 						this.dialogWindow.WindowCloseClicked += this.HandleWindowCloseClicked;
 					}
@@ -451,7 +461,14 @@ namespace Epsitec.Common.Dialogs
 
 		private void HandleWindowCloseClicked(object sender)
 		{
-			this.DialogWindow.Root.ExecuteCommand (Res.Commands.Dialog.Generic.Cancel);
+			if (this.ContainsCommand (Res.Commands.Dialog.Generic.Cancel))
+			{
+				this.DialogWindow.Root.ExecuteCommand (Res.Commands.Dialog.Generic.Cancel);
+			}
+			else if (this.ContainsCommand (Res.Commands.Dialog.Generic.Close))
+			{
+				this.DialogWindow.Root.ExecuteCommand (Res.Commands.Dialog.Generic.Close);
+			}
 		}
 
 		private void HandleWindowShown(object sender)

@@ -35,7 +35,7 @@ namespace Epsitec.Common.Dialogs.Entities
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			string oldValue = obj.SearchValue;
-			if (oldValue != value)
+			if (oldValue != value || !entity.IsFieldDefined("[6016]"))
 			{
 				ISearchableInterfaceImplementation.OnSearchValueChanging (obj, oldValue, value);
 				entity.SetField<string> ("[6016]", oldValue, value);

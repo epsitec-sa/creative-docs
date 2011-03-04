@@ -35,6 +35,7 @@ namespace Epsitec.Cresus.Core.Library
 
 			this.item = new Weak<T> (element);
 			this.id = id;
+			this.Bind (element);
 		}
 
 		private T								Item

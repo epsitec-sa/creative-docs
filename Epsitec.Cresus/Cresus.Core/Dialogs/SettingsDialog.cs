@@ -6,6 +6,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Dialogs.SettingsTabPages;
 
 using System.Collections.Generic;
@@ -16,28 +17,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// <summary>
 	/// Dialogue pour l'ensemble des réglages globaux.
 	/// </summary>
-	public class SettingsDialog : AbstractDialog, ISettingsDialog
+	public class SettingsDialog : CoreDialog, ISettingsDialog
 	{
-		public SettingsDialog(CoreApplication application)
+		public SettingsDialog(CoreApp application)
+			: base (application)
 		{
-			this.application = application;
-
 			this.settingsTabPages = new List<SettingsTabPages.AbstractSettingsTabPage> ();
 		}
 
-
-		protected override Window CreateWindow()
-		{
-			this.window = new Window ();
-
-			this.SetupWindow ();
-			this.SetupWidgets ();
-			this.UpdateWidgets ();
-
-			this.window.AdjustWindowSize ();
-
-			return this.window;
-		}
 
 
 		#region ISettingsTabBook Members
@@ -46,38 +33,31 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			get
 			{
-				return this.application.Data;
+				return this.application.FindComponent<CoreData> ();
 			}
 		}
 
 		#endregion
 		
-		private void SetupWindow()
+		protected override void SetupWindow(Window window)
 		{
-			this.OwnerWindow = this.application.Window;
-			this.window.Icon = this.application.Window.Icon;
-			this.window.Text = "Réglages globaux";
-			this.window.MakeFixedSizeWindow ();
-			this.window.ClientSize = new Size (850, 600);
-
-			this.window.WindowCloseClicked += delegate
-			{
-				this.RejectChangingsAndClose ();
-			};
+			window.Text = "Réglages globaux";
+			window.MakeFixedSizeWindow ();
+			window.ClientSize = new Size (850, 600);
 		}
 
-		private void SetupWidgets()
+		protected override void SetupWidgets(Window window)
 		{
 			var frame = new FrameBox
 			{
-				Parent = this.window.Root,
+				Parent = window.Root,
 				Dock = DockStyle.Fill,
 				Margins = new Margins (10, 10, 10, 0),
 			};
 
 			var footer = new FrameBox
 			{
-				Parent = this.window.Root,
+				Parent = window.Root,
 				PreferredHeight = 20,
 				Dock = DockStyle.Bottom,
 				Margins = new Margins (10, 10, 10, 10),
@@ -86,6 +66,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			//	Crée les onglets.
 			this.tabBook = new TabBook
 			{
+				Name = "TabBook",
 				Parent = frame,
 				Dock = DockStyle.Fill,
 			};
@@ -107,8 +88,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			};
 
 			this.tabBook.Items.Add (printerOptionsPage);
-
-			this.ActiveLastPage ();
+			this.tabBook.ActivePageIndex = 0;
 
 			//	Crée le pied de page.
 			this.errorInfo = new StaticText
@@ -121,8 +101,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.cancelButton = new Button ()
 			{
+				CommandObject = Epsitec.Common.Dialogs.Res.Commands.Dialog.Generic.Cancel,
 				Parent = footer,
-				Text = "Annuler",
 				ButtonStyle = Common.Widgets.ButtonStyle.DefaultCancel,
 				Dock = DockStyle.Right,
 				Margins = new Margins (10, 0, 0, 0),
@@ -131,8 +111,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.acceptButton = new Button ()
 			{
+				CommandObject = Epsitec.Common.Dialogs.Res.Commands.Dialog.Generic.Ok,
 				Parent = footer,
-				Text = "D'accord",
 				ButtonStyle = Common.Widgets.ButtonStyle.DefaultAccept,
 				Dock = DockStyle.Right,
 				TabIndex = 100,
@@ -152,43 +132,50 @@ namespace Epsitec.Cresus.Core.Dialogs
 				tab.AcceptStateChanging += new EventHandler (this.HandlerSettingsAcceptStateChanging);
 			}
 
-			//	Connection des événements.
-			this.acceptButton.Clicked += delegate
-			{
-				this.AcceptChangingsAndClose ();
-			};
-
-			this.cancelButton.Clicked += delegate
-			{
-				this.RejectChangingsAndClose ();
-			};
+			this.RegisterWithPersistenceManager (this.tabBook);
 		}
 
-		private void AcceptChangingsAndClose()
+		protected override void UpdateWidgets()
 		{
-			this.UpdateLastActivedPageName ();
+		}
 
+		[Command (Epsitec.Common.Dialogs.Res.CommandIds.Dialog.Generic.Cancel)]
+		private void ExecuteCancelCommand()
+		{
+			if (this.cancelButton.Enable)
+			{
+				this.CloseAndRejectChanges ();
+			}
+		}
+
+		[Command (Epsitec.Common.Dialogs.Res.CommandIds.Dialog.Generic.Ok)]
+		private void ExecuteOkCommand()
+		{
+			if (this.acceptButton.Enable)
+			{
+				this.CloseAndAcceptChanges ();
+			}
+		}
+
+		private void CloseAndAcceptChanges()
+		{
 			foreach (var tab in this.settingsTabPages)
 			{
 				tab.AcceptChanges ();
 			}
 
 			this.Result = DialogResult.Accept;
-			this.OnDialogClosed ();
 			this.CloseDialog ();
 		}
 
-		private void RejectChangingsAndClose()
+		private void CloseAndRejectChanges()
 		{
-			this.UpdateLastActivedPageName ();
-
 			foreach (var tab in this.settingsTabPages)
 			{
 				tab.RejectChanges ();
 			}
 
 			this.Result = DialogResult.Cancel;
-			this.OnDialogClosed ();
 			this.CloseDialog ();
 		}
 
@@ -222,36 +209,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 		}
 
-		private void UpdateWidgets()
-		{
-		}
-
-
-		private void ActiveLastPage()
-		{
-			string name = SettingsDialog.lastActivedPageName;
-
-			if (string.IsNullOrEmpty (name))
-			{
-				name = "printerUnits";  // page par défaut
-			}
-
-			var page = this.tabBook.Items.Where (x => x.Name == name).FirstOrDefault ();
-			this.tabBook.ActivePage = page;
-		}
-
-		private void UpdateLastActivedPageName()
-		{
-			SettingsDialog.lastActivedPageName = this.tabBook.ActivePage.Name;
-		}
-
-
-		private static string									lastActivedPageName;
-
-		private readonly CoreApplication						application;
 		private readonly List<AbstractSettingsTabPage>			settingsTabPages;
 
-		private Window											window;
 		private TabBook											tabBook;
 		private StaticText										errorInfo;
 		private Button											acceptButton;
