@@ -319,12 +319,17 @@ namespace Epsitec.Common.Dialogs
 					window.Close ();
 				}
 
-				window.AsyncDispose ();
-
 				this.dialogWindow = null;
+
+				window.WindowDisposing += sender => this.Dispose ();
+				window.AsyncDispose ();
 			}
 		}
 
+		protected override void Dispose(bool disposing)
+		{
+			base.Dispose (disposing);
+		}
 
 		/// <summary>
 		/// Creates a window for the current dialog.
