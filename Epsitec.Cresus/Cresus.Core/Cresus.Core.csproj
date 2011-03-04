@@ -93,7 +93,6 @@
     <Compile Include="Business\Actions\AffairActions.cs" />
     <Compile Include="Business\Actions\DocumentActions.cs" />
     <Compile Include="Business\Actions\RelationActions.cs" />
-    <Compile Include="CommandHandlers\ArticleParameterListEnumValuesController.cs" />
     <Compile Include="CommandHandlers\CoreCommandHandler.cs" />
     <Compile Include="CommandHandlers\DatabaseCommandHandler.cs" />
     <Compile Include="CommandHandlers\NavigationCommandHandler.cs" />
@@ -218,7 +217,6 @@
     <Compile Include="Repositories\PaymentModeRepository.cs" />
     <Compile Include="Repositories\UnitOfMeasureRepository.cs" />
     <Compile Include="Repositories\BusinessDocumentRepository.cs" />
-    <Compile Include="Dialogs\IAttachedDialog.cs" />
     <Compile Include="Repositories\RelationRepository.cs" />
     <Compile Include="Repositories\AddressRepository.cs" />
     <Compile Include="Repositories\CommentRepository.cs" />

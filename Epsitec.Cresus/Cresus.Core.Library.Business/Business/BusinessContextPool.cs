@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core.Business
 		internal DataContext CreateDataContext(BusinessContext context)
 		{
 			string name = string.Format ("BusinessContext #{0}", context.UniqueId);
-			return this.Data.CreateDataContext (name);
+			return this.Host.CreateDataContext (name);
 		}
 
 		internal void DisposeDataContext(BusinessContext context, DataContext dataContext)
@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Core.Business
 				context.SaveChanges ();
 			}
 
-			this.Data.DisposeDataContext (dataContext);
+			this.Host.DisposeDataContext (dataContext);
 		}
 
 		internal void Add(BusinessContext context)

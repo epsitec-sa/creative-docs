@@ -8,50 +8,15 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core
 {
-	public abstract class CoreDataComponent : ICoreComponent
+	/// <summary>
+	/// The <c>CoreDataComponent</c> class is the base class used by all components, which are
+	/// dynamically instanciated and attached to the <see cref="CoreData"/> host.
+	/// </summary>
+	public abstract class CoreDataComponent : CoreComponent<CoreData, CoreDataComponent>
 	{
 		protected CoreDataComponent(CoreData data)
+			: base (data)
 		{
-			this.data = data;
 		}
-
-
-		public CoreData Data
-		{
-			get
-			{
-				return this.data;
-			}
-		}
-
-		public bool IsSetupPending
-		{
-			get
-			{
-				return this.wasSetupExecuted == false;
-			}
-		}
-
-
-		public virtual bool CanExecuteSetupPhase()
-		{
-			System.Diagnostics.Debug.Assert (this.IsSetupPending);
-
-			return true;
-		}
-
-		public virtual void ExecuteSetupPhase()
-		{
-			this.wasSetupExecuted = true;
-		}
-
-		public virtual System.IDisposable GetDisposable()
-		{
-			return this as System.IDisposable;
-		}
-
-
-		private readonly CoreData data;
-		private bool wasSetupExecuted;
 	}
 }

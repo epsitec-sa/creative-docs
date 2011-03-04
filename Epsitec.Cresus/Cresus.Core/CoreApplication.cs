@@ -9,6 +9,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Business.UserManagement;
 using Epsitec.Cresus.Core.Controllers;
@@ -33,7 +34,6 @@ namespace Epsitec.Cresus.Core
 			UI.SetApplication (this);
 			
 			this.plugIns = new List<PlugIns.ICorePlugIn> ();
-			this.attachedDialogs = new List<Dialogs.IAttachedDialog> ();
 			this.components = new CoreComponentHostImplementation<ICoreComponent> ();
 			
 			this.persistenceManager = new PersistenceManager ();
@@ -137,14 +137,6 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public IList<Dialogs.IAttachedDialog>	AttachedDialogs
-		{
-			get
-			{
-				return this.attachedDialogs.AsReadOnly ();
-			}
-		}
-
 		public UserManager						UserManager
 		{
 			get
@@ -154,22 +146,6 @@ namespace Epsitec.Cresus.Core
 		}
 
 		
-		public void AttachDialog(Dialogs.IAttachedDialog dialog)
-		{
-			if (!this.attachedDialogs.Contains (dialog))
-			{
-				this.attachedDialogs.Add (dialog);
-			}
-		}
-
-		public void DetachDialog(Dialogs.IAttachedDialog dialog)
-		{
-			if (this.attachedDialogs.Contains (dialog))
-			{
-				this.attachedDialogs.Remove (dialog);
-			}
-		}
-
 #if false
 		public static T GetController<T>(CommandContext context)
 			where T : CoreController
@@ -332,9 +308,24 @@ namespace Epsitec.Cresus.Core
 			return this.components.ContainsComponent<T> ();
 		}
 
+		bool ICoreComponentHost<ICoreComponent>.ContainsComponent(System.Type type)
+		{
+			return this.components.ContainsComponent (type);
+		}
+
+		void ICoreComponentHost<ICoreComponent>.RegisterComponent(System.Type type, ICoreComponent component)
+		{
+			this.components.RegisterComponent (type, component);
+		}
+
 		void ICoreComponentHost<ICoreComponent>.RegisterComponent<T>(T component)
 		{
 			this.components.RegisterComponent<T> (component);
+		}
+
+		void ICoreComponentHost<ICoreComponent>.RegisterComponentAsDisposable(System.IDisposable disposable)
+		{
+			this.components.RegisterComponentAsDisposable (disposable);
 		}
 
 
@@ -545,7 +536,6 @@ namespace Epsitec.Cresus.Core
 		private static Dictionary<string, string>		settings = new Dictionary<string, string> ();
 
 		private readonly List<PlugIns.ICorePlugIn>		plugIns;
-		private readonly List<Dialogs.IAttachedDialog>	attachedDialogs;
 		private readonly CoreComponentHostImplementation<ICoreComponent> components;
 
 		private PersistenceManager						persistenceManager;

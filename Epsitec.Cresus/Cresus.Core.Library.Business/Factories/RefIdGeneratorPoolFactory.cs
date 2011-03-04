@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Data;
 
 namespace Epsitec.Cresus.Core.Factories
 {

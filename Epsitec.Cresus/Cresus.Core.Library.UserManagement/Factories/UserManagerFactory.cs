@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Core.Business.UserManagement;
+using Epsitec.Cresus.Core.Data;
 
 using System.Collections.Generic;
 using System.Linq;

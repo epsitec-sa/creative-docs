@@ -26,14 +26,14 @@ namespace Epsitec.Cresus.Core.Business.Finance
 
 		public override bool CanExecuteSetupPhase()
 		{
-			return this.Data.IsReady;
+			return this.Host.IsReady;
 		}
 
 		public override void ExecuteSetupPhase()
 		{
 			base.ExecuteSetupPhase ();
 
-			this.vatDefs = this.Data.GetAllEntities<VatDefinitionEntity> ().ToArray ();			
+			this.vatDefs = this.Host.GetAllEntities<VatDefinitionEntity> ().ToArray ();			
 		}
 
 

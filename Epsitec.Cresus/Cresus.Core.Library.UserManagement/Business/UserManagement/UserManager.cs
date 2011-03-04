@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			{
 				if (this.businessContext == null)
                 {
-					this.businessContext = Resolvers.InterfaceImplementationResolver<IBusinessContext>.CreateInstance (this.Data);
+					this.businessContext = Resolvers.InterfaceImplementationResolver<IBusinessContext>.CreateInstance (this.Host);
 					this.businessContext.GlobalLock = GlobalLocks.UserManagement;
                 }
 
@@ -157,7 +157,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		/// <returns>The complete collection of users.</returns>
 		public IEnumerable<SoftwareUserEntity> GetAllUsers()
 		{
-			return this.Data.GetAllEntities<SoftwareUserEntity> (dataContext: this.BusinessContext.DataContext).Where (user => user.IsArchive == false);
+			return this.Host.GetAllEntities<SoftwareUserEntity> (dataContext: this.BusinessContext.DataContext).Where (user => user.IsArchive == false);
 		}
 
 		/// <summary>
@@ -166,12 +166,12 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		/// <returns>The collection of active users.</returns>
 		public IEnumerable<SoftwareUserEntity> GetActiveUsers()
 		{
-			return this.Data.GetAllEntities<SoftwareUserEntity> (dataContext: this.BusinessContext.DataContext).Where (user => user.IsActive);
+			return this.Host.GetAllEntities<SoftwareUserEntity> (dataContext: this.BusinessContext.DataContext).Where (user => user.IsActive);
 		}
 
 		public IEnumerable<SoftwareUserGroupEntity> GetAllUserGroups()
 		{
-			return this.Data.GetAllEntities<SoftwareUserGroupEntity> (dataContext: this.BusinessContext.DataContext).Where (group => group.IsArchive == false);
+			return this.Host.GetAllEntities<SoftwareUserGroupEntity> (dataContext: this.BusinessContext.DataContext).Where (group => group.IsArchive == false);
 		}
 
 		/// <summary>

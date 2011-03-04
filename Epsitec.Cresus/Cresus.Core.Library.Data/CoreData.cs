@@ -30,9 +30,7 @@ namespace Epsitec.Cresus.Core
 			this.ForceDatabaseCreation = forceDatabaseCreation;
 			this.AllowDatabaseUpdate   = allowDatabaseUpdate;
 
-			this.components               = new Dictionary<string, CoreDataComponent> ();
-			this.registeredComponents     = new List<CoreDataComponent> ();
-			this.disposableComponents     = new Stack<System.IDisposable> ();
+			this.components = new CoreComponentHostImplementation<CoreDataComponent> ();
 			this.independentEntityContext = new EntityContext (Resources.DefaultManager, EntityLoopHandlingMode.Throw, "Independent Entities");
 
 			Factories.CoreDataComponentFactory.RegisterComponents (this);
@@ -89,41 +87,43 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		#region ICoreComponentHost Interface#endif
+		#region ICoreComponentHost Interface
 
 		public T GetComponent<T>()
 			where T : CoreDataComponent
 		{
-			CoreDataComponent component;
-			string componentName = typeof (T).FullName;
-
-			if (this.components.TryGetValue (componentName, out component))
-			{
-				T result = component as T;
-
-				System.Diagnostics.Debug.Assert (result != null);
-
-				return result;
-			}
-
-			throw new System.InvalidOperationException (string.Format ("The component {0} cannot be found", componentName));
-		}
-
-		public IEnumerable<CoreDataComponent> GetComponents()
-		{
-			return this.registeredComponents;
+			return this.components.GetComponent<T> ();
 		}
 
 		public bool ContainsComponent<T>()
 			where T : CoreDataComponent
 		{
-			string componentName = typeof (T).FullName;
-			return this.components.ContainsKey (componentName);
+			return this.components.ContainsComponent<T> ();
+		}
+
+		IEnumerable<CoreDataComponent> ICoreComponentHost<CoreDataComponent>.GetComponents()
+		{
+			return this.components.GetComponents ();
+		}
+
+		bool ICoreComponentHost<CoreDataComponent>.ContainsComponent(System.Type type)
+		{
+			return this.components.ContainsComponent (type);
 		}
 
 		void ICoreComponentHost<CoreDataComponent>.RegisterComponent<T>(T component)
 		{
-			this.RegisterComponent (typeof (T).FullName, component);
+			this.components.RegisterComponent<T> (component);
+		}
+
+		void ICoreComponentHost<CoreDataComponent>.RegisterComponent(System.Type type, CoreDataComponent component)
+		{
+			this.components.RegisterComponent (type, component);
+		}
+
+		void ICoreComponentHost<CoreDataComponent>.RegisterComponentAsDisposable(System.IDisposable disposable)
+		{
+			this.components.RegisterComponentAsDisposable (disposable);
 		}
 
 		#endregion
@@ -144,22 +144,6 @@ namespace Epsitec.Cresus.Core
 //-			return this.activeDataContext;
 		}
 
-		internal bool ContainsComponent(string name)
-		{
-			return this.components.ContainsKey (name);
-		}
-
-		internal void RegisterComponent(string name, CoreDataComponent component)
-		{
-			this.components[name] = component;
-			this.registeredComponents.Add (component);
-		}
-
-		internal void RegisterComponentAsDisposable(System.IDisposable component)
-		{
-			this.disposableComponents.Push (component);
-		}
-
 		private DataContext EnsureDataContext(ref DataContext dataContext, string name)
 		{
 			if (dataContext == null)
@@ -174,7 +158,7 @@ namespace Epsitec.Cresus.Core
 
 		public void SetupBusiness()
 		{
-			Factories.CoreDataComponentFactory.SetupComponents (this.registeredComponents);
+			Factories.CoreDataComponentFactory.SetupComponents (this.components.GetComponents ());
 		}
 
 #if false
@@ -409,11 +393,7 @@ namespace Epsitec.Cresus.Core
 				this.activeDataContext = null;
 			}
 
-			while (this.disposableComponents.Count > 0)
-			{
-				var disposable = this.disposableComponents.Pop ();
-				disposable.Dispose ();
-			}
+			this.components.Dispose ();
 		}
 
 
@@ -565,11 +545,9 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		private readonly CoreComponentHostImplementation<CoreDataComponent>	components;
 
 		private readonly EntityContext independentEntityContext;
-		private readonly Dictionary<string, CoreDataComponent> components;
-		private readonly List<CoreDataComponent> registeredComponents;
-		private readonly Stack<System.IDisposable> disposableComponents;
 
 		private DataContext immutableDataContext;
 		private DataContext stableDataContext;

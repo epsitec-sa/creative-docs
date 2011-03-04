@@ -61,24 +61,39 @@ namespace Epsitec.Cresus.Core.Business
 
 		#region ICoreComponentHost<ICoreComponent> Members
 
-		public T GetComponent<T>() where T : ICoreComponent
-		{
-			return this.components.GetComponent<T> ();
-		}
-
-		public IEnumerable<ICoreComponent> GetComponents()
-		{
-			return this.components.GetComponents ();
-		}
-
 		public bool ContainsComponent<T>() where T : ICoreComponent
 		{
 			return this.components.ContainsComponent<T> ();
 		}
 
+		public T GetComponent<T>() where T : ICoreComponent
+		{
+			return this.components.GetComponent<T> ();
+		}
+
+		IEnumerable<ICoreComponent> ICoreComponentHost<ICoreComponent>.GetComponents()
+		{
+			return this.components.GetComponents ();
+		}
+
 		void ICoreComponentHost<ICoreComponent>.RegisterComponent<T>(T component)
 		{
 			this.components.RegisterComponent<T> (component);
+		}
+
+		bool ICoreComponentHost<ICoreComponent>.ContainsComponent(System.Type type)
+		{
+			return this.components.ContainsComponent (type);
+		}
+
+		void ICoreComponentHost<ICoreComponent>.RegisterComponent(System.Type type, ICoreComponent component)
+		{
+			this.components.RegisterComponent (type, component);
+		}
+
+		void ICoreComponentHost<ICoreComponent>.RegisterComponentAsDisposable(System.IDisposable disposable)
+		{
+			this.components.RegisterComponentAsDisposable (disposable);
 		}
 
 		#endregion

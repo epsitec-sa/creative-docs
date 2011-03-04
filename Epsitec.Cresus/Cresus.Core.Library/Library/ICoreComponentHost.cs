@@ -39,6 +39,8 @@ namespace Epsitec.Cresus.Core.Library
 		bool ContainsComponent<T>()
 			where T : TComponent;
 
+		bool ContainsComponent(System.Type type);
+
 		/// <summary>
 		/// Registers the specified component with the host.
 		/// </summary>
@@ -46,5 +48,13 @@ namespace Epsitec.Cresus.Core.Library
 		/// <param name="component">The component.</param>
 		void RegisterComponent<T>(T component)
 			where T : TComponent;
+
+		void RegisterComponent(System.Type type, TComponent component);
+		
+		/// <summary>
+		/// Registers the component as a disposable component.
+		/// </summary>
+		/// <param name="component">The component.</param>
+		void RegisterComponentAsDisposable(System.IDisposable component);
 	}
 }

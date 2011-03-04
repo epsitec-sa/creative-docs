@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Core.Data
 
 		public override bool CanExecuteSetupPhase()
 		{
-			return this.Data.IsReady;
+			return this.Host.IsReady;
 		}
 
 		public override void ExecuteSetupPhase()
@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Core.Data
 		/// <returns><c>true</c> if the database contains an up-to-date image; otherwise, <c>false</c>.</returns>
 		public bool CheckEqual(string code, ImageData imageData)
 		{
-			var repository = new ImageBlobRepository (this.Data, this.DataContext);
+			var repository = new ImageBlobRepository (this.Host, this.DataContext);
 			var example    = new ImageBlobEntity ()
 			{
 				Code = code,
@@ -153,7 +153,7 @@ namespace Epsitec.Cresus.Core.Data
 		/// </returns>
 		private ImageBlobEntity GetImageBlob(string code, int thumbnailSize = 0)
 		{
-			var repository = new ImageBlobRepository (this.Data, this.DataContext);
+			var repository = new ImageBlobRepository (this.Host, this.DataContext);
 			var example    = new ImageBlobEntity ()
 			{
 				Code = code,
@@ -213,7 +213,7 @@ namespace Epsitec.Cresus.Core.Data
 		{
 			var nativeImage = NativeBitmap.Load (imageBlob.Data);
 			
-			var repository = new ImageBlobRepository (this.Data, this.DataContext);
+			var repository = new ImageBlobRepository (this.Host, this.DataContext);
 			var example    = new ImageBlobEntity ()
 			{
 				Code = imageBlob.Code,
@@ -298,7 +298,7 @@ namespace Epsitec.Cresus.Core.Data
 
 		private ImageBlobEntity FindSimilarImageBlob(ImageBlobEntity imageBlob)
 		{
-			var repository = new ImageBlobRepository (this.Data, this.DataContext);
+			var repository = new ImageBlobRepository (this.Host, this.DataContext);
 			var example    = new ImageBlobEntity ()
 			{
 				WeakHash = imageBlob.WeakHash,
@@ -315,14 +315,14 @@ namespace Epsitec.Cresus.Core.Data
 			int contextId   = ImageDataStore.GetNextContextId ();
 			var contextName = string.Format (System.Globalization.CultureInfo.InvariantCulture, "ImageDataStore #{0}", contextId);
 			
-			this.context = this.Data.CreateDataContext (contextName);
+			this.context = this.Host.CreateDataContext (contextName);
 		}
 
 		private void DisposeDataContext()
 		{
 			if (this.context != null)
 			{
-				this.Data.DisposeDataContext (this.context);
+				this.Host.DisposeDataContext (this.context);
 				this.context = null;
 			}
 		}

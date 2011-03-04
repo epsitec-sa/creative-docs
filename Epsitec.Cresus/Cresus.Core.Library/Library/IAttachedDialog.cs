@@ -2,7 +2,6 @@
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;

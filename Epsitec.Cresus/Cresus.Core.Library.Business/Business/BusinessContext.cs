@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Business
 			this.entityRecords = new List<EntityRecord> ();
 			this.masterEntities = new List<AbstractEntity> ();
 
-			this.data = this.pool.Data;
+			this.data = this.pool.Host;
 			this.dataContext = this.pool.CreateDataContext (this);
 			this.dataContext.EntityChanged += this.HandleDataContextEntityChanged;
 			

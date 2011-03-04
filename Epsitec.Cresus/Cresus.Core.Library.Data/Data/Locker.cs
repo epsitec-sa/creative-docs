@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Data
 		public Locker(CoreData data)
 			: base (data)
 		{
-			this.dataInfrastructure = this.Data.DataInfrastructure;
+			this.dataInfrastructure = this.Host.DataInfrastructure;
 			this.lockMonitors = new WeakList<LockMonitor> ();
 			this.lockMonitorTimer = new Timer ();
 			this.lockMonitorTimer.TimeElapsed += this.HandleLockMonitorTimerTimeElapsed;
@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.Core.Data
 
 		public LockMonitor CreateLockMonitor(IEnumerable<string> lockNames)
 		{
-			return new LockMonitor (this.Data, lockNames);
+			return new LockMonitor (this.Host, lockNames);
 		}
 
 

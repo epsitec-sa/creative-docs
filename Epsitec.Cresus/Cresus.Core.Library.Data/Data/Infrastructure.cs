@@ -35,18 +35,18 @@ namespace Epsitec.Cresus.Core.Data
 
 		public override bool CanExecuteSetupPhase()
 		{
-			return this.Data.ConnectionManager != null
-				&& this.Data.DataLocker != null;
+			return this.Host.ConnectionManager != null
+				&& this.Host.DataLocker != null;
 		}
 
 		public override void ExecuteSetupPhase()
 		{
 			base.ExecuteSetupPhase ();
 
-			this.connectionManager = this.Data.ConnectionManager;
+			this.connectionManager = this.Host.ConnectionManager;
 
 			this.SetupDatabase ();
-			this.Data.IsReady = true;
+			this.Host.IsReady = true;
 		}
 
 		#region IDisposable Members
@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Core.Data
 
 		public void SetupDatabase(bool createNewDatabase)
 		{
-			createNewDatabase |= this.Data.ForceDatabaseCreation;
+			createNewDatabase |= this.Host.ForceDatabaseCreation;
 
 			if (createNewDatabase)
 			{
@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.Core.Data
 
 				System.Diagnostics.Trace.WriteLine ("Failed to connect to database: " + ex.Message + "\n\n" + ex.StackTrace);
 
-				if (this.Data.AllowDatabaseUpdate)
+				if (this.Host.AllowDatabaseUpdate)
 				{
 					IDialog d = MessageDialog.CreateYesNo ("Base de donnée incompatible", DialogIcon.Warning, "La base de donnée est incompatible. Voulez vous la modifier pour la mettre à jour?");
 
@@ -155,7 +155,7 @@ namespace Epsitec.Cresus.Core.Data
 		
 		internal bool ConnectToDatabase(DbAccess access)
 		{
-			bool forceCreation = this.Data.ForceDatabaseCreation;
+			bool forceCreation = this.Host.ForceDatabaseCreation;
 
 			if (forceCreation && Infrastructure.CheckDatabaseEsistence (access))
 			{

@@ -11,12 +11,23 @@ namespace Epsitec.Cresus.Core.Library
 	/// of <see cref="ICoreComponentHost"/>.
 	/// </summary>
 	/// <typeparam name="TComponent">The base type of all the <see cref="ICoreComponent"/> derived components.</typeparam>
-	public sealed class CoreComponentHostImplementation<TComponent> : ICoreComponentHost<TComponent>
+	public sealed class CoreComponentHostImplementation<TComponent> : ICoreComponentHost<TComponent>, System.IDisposable
 		where TComponent : class, ICoreComponent
 	{
 		public CoreComponentHostImplementation()
 		{
 			this.components = new Dictionary<string, TComponent> ();
+			this.registeredComponents = new List<TComponent> ();
+			this.disposableComponents = new Stack<System.IDisposable> ();
+		}
+
+		
+		public void RegisterComponents(IEnumerable<TComponent> components)
+		{
+			foreach (var component in components)
+			{
+				this.RegisterComponent (component.GetType (), component);
+			}
 		}
 
 		#region ICoreComponentHost<TComponent> Members
@@ -36,32 +47,54 @@ namespace Epsitec.Cresus.Core.Library
 
 		public IEnumerable<TComponent> GetComponents()
 		{
-			return this.components.Select (x => x.Value);
+			return this.registeredComponents;
 		}
 
 		public bool ContainsComponent<T>()
 			where T : TComponent
 		{
-			return this.components.ContainsKey (typeof (T).FullName);
+			return this.ContainsComponent (typeof (T));
 		}
 
 		public void RegisterComponent<T>(T component)
 			where T : TComponent
 		{
-			this.components[typeof (T).FullName] = component;
+			this.RegisterComponent (typeof (T), component);
+		}
+
+		public bool ContainsComponent(System.Type type)
+		{
+			return this.components.ContainsKey (type.FullName);
+		}
+
+		public void RegisterComponent(System.Type type, TComponent component)
+		{
+			this.registeredComponents.Add (component);
+			this.components[type.FullName] = component;
+		}
+
+		public void RegisterComponentAsDisposable(System.IDisposable component)
+		{
+			this.disposableComponents.Push (component);
 		}
 
 		#endregion
 
-		public void RegisterComponents(IEnumerable<TComponent> components)
+		#region IDisposable Members
+
+		public void Dispose()
 		{
-			foreach (var component in components)
+			while (this.disposableComponents.Count > 0)
 			{
-				this.components[component.GetType ().FullName] = component;
+				this.disposableComponents.Pop ().Dispose ();
 			}
 		}
+
+		#endregion
 		
 		
-		private readonly Dictionary<string, TComponent> components;
+		private readonly Dictionary<string, TComponent>	components;
+		private readonly List<TComponent>				registeredComponents;
+		private readonly Stack<System.IDisposable>		disposableComponents;
 	}
 }

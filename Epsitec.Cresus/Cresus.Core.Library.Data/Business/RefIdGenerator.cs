@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Core.Business
 			this.name = name;
 			this.pool = pool;
 
-			var infrastructure = this.pool.Data.DataInfrastructure;
+			var infrastructure = this.pool.Host.DataInfrastructure;
 
 			this.uidGenerator = infrastructure.GetUidGenerator (this.name);
 

@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Core.Data
 
 		private ConnectionUserIdentity GetIdentity()
 		{
-			return new ConnectionUserIdentity (this.Data.GetActiveUserItemCode ());
+			return new ConnectionUserIdentity (this.Host.GetActiveUserItemCode ());
 		}
 
 		#region IDisposable Members
