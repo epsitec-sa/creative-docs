@@ -6,9 +6,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Library
 {
-	public sealed class DialogCentral : ICoreComponent
+	public sealed class DialogCentral : CoreAppComponent
 	{
-		public DialogCentral()
+		public DialogCentral(CoreApp app)
+			: base (app)
 		{
 			this.attachedDialogs = new List<Dialogs.IAttachedDialog> ();
 		}

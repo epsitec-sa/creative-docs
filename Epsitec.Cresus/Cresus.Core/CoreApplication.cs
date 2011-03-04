@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Core
 	/// The <c>CoreApplication</c> class implements the central application
 	/// logic.
 	/// </summary>
-	public partial class CoreApplication : Application, ICoreComponentHost<ICoreComponent>
+	public partial class CoreApplication : CoreApp, ICoreComponentHost<ICoreComponent>
 	{
 		public CoreApplication()
 		{

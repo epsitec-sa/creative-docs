@@ -53,7 +53,13 @@
     <Compile Include="CommandHandlerStack.cs" />
     <Compile Include="Controllers\EnumController.cs" />
     <Compile Include="Controllers\EnumValueController.cs" />
+    <Compile Include="Factories\CoreAppComponentFactory.cs" />
     <Compile Include="Factories\CoreComponentFactory.cs" />
+    <Compile Include="Factories\DialogCentralFactory.cs" />
+    <Compile Include="Factories\ICoreAppComponentFactory.cs" />
+    <Compile Include="Factories\ICoreDataComponentFactory.cs" />
+    <Compile Include="Library\CoreApp.cs" />
+    <Compile Include="Library\CoreAppComponent.cs" />
     <Compile Include="Library\CoreComponent.cs" />
     <Compile Include="Resolvers\CoreComponentFactoryResolver.cs" />
     <Compile Include="Library\CoreComponentHostImplementation.cs" />
@@ -66,7 +72,7 @@
     <Compile Include="Library\EnumValueCardinality.cs" />
     <Compile Include="Library\IAttachedDialog.cs" />
     <Compile Include="Library\ICoreComponent.cs" />
-    <Compile Include="Library\ICoreComponentFactory.cs" />
+    <Compile Include="Factories\ICoreComponentFactory.cs" />
     <Compile Include="Library\ICoreComponentHost.cs" />
     <Compile Include="Misc.cs" />
     <Compile Include="Library\PersistenceManagerBinding`1.cs" />
