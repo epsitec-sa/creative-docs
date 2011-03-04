@@ -38,9 +38,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 			Window window = new Window ()
 			{
 				Name = this.GetType ().FullName,
-				Owner = this.application.Window,
 				Icon = this.application.Window.Icon,
 			};
+
+			this.OwnerWindow = this.application.Window;
 
 			this.SetupWindow (window);
 			this.SetupWidgets (window);
