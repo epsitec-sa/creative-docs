@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 	/// The <c>DataViewOrchestrator</c> class is used by the various view controllers
 	/// to change what is visible in the data view.
 	/// </summary>
-	public class DataViewOrchestrator : System.IDisposable
+	public class DataViewOrchestrator : System.IDisposable, ICoreManualComponent
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DataViewOrchestrator"/> class.
@@ -38,6 +38,9 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			this.host               = host;
 			this.data               = data;
 			this.commandContext     = commandContext;
+
+			this.host.RegisterComponent (this);
+			this.host.ActivateComponent (this);
 
 			this.CreateNewBusinessContext ();
 

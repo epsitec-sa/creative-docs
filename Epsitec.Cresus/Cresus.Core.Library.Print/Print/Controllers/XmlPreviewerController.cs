@@ -70,13 +70,13 @@ namespace Epsitec.Cresus.Core.Print.Controllers
 			this.pagesToolbarBox.PreferredHeight = 24;
 
 			{
-				this.groupsToolbarBox = UIBuilder.CreateMiniToolbar (this.pagesToolbarBox, 24);
+				this.groupsToolbarBox = Library.UI.Toolkit.CreateMiniToolbar (this.pagesToolbarBox, 24);
 				this.groupsToolbarBox.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 				this.groupsToolbarBox.Dock = DockStyle.Fill;
 			}
 
 			{
-				var frame = UIBuilder.CreateMiniToolbar (this.pagesToolbarBox, 24);
+				var frame = Library.UI.Toolkit.CreateMiniToolbar (this.pagesToolbarBox, 24);
 				frame.Margins = new Margins (2, 0, 0, 0);
 				frame.Dock = DockStyle.Right;
 

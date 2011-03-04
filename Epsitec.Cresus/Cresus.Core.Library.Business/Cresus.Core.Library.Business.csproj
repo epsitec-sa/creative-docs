@@ -259,6 +259,10 @@
       <Project>{01B39E29-EDB1-4330-8E03-689DA987B6A5}</Project>
       <Name>Cresus.Core.Library.Measures</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Print\Cresus.Core.Library.Print.csproj">
+      <Project>{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}</Project>
+      <Name>Cresus.Core.Library.Print</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library.UserManagement\Cresus.Core.Library.UserManagement.csproj">
       <Project>{F5EA8D13-3119-4563-BC77-9E9D6CE94148}</Project>
       <Name>Cresus.Core.Library.UserManagement</Name>

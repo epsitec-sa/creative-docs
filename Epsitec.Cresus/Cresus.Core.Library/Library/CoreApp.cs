@@ -39,6 +39,17 @@ namespace Epsitec.Cresus.Core.Library
 			return null;
 		}
 
+		public virtual T FindActiveComponent<T>()
+			where T : class, ICoreManualComponent
+		{
+			return this.manualComponents.FindActiveComponent<T> ();
+		}
+
+		public void ActivateComponent(ICoreManualComponent component)
+		{
+			this.manualComponents.ActivateComponent (component);
+		}
+
 		#region ICoreComponentHost<CoreAppComponent> Members
 
 		public bool ContainsComponent<T>() where T : CoreAppComponent

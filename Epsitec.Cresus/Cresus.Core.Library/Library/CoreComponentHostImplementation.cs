@@ -19,8 +19,22 @@ namespace Epsitec.Cresus.Core.Library
 			this.components = new Dictionary<string, TComponent> ();
 			this.registeredComponents = new List<TComponent> ();
 			this.disposableComponents = new Stack<System.IDisposable> ();
+			this.activeComponents = new List<TComponent> ();
 		}
 
+		public void ActivateComponent(TComponent component)
+		{
+			System.Diagnostics.Debug.Assert (this.registeredComponents.Contains (component));
+
+			this.activeComponents.Remove (component);
+			this.activeComponents.Insert (0, component);
+		}
+
+		public T FindActiveComponent<T>()
+			where T : TComponent
+		{
+			return this.activeComponents.OfType<T> ().FirstOrDefault ();
+		}
 		
 		public void RegisterComponents(IEnumerable<TComponent> components)
 		{
@@ -101,5 +115,6 @@ namespace Epsitec.Cresus.Core.Library
 		private readonly Dictionary<string, TComponent>	components;
 		private readonly List<TComponent>				registeredComponents;
 		private readonly Stack<System.IDisposable>		disposableComponents;
+		private readonly List<TComponent>				activeComponents;
 	}
 }

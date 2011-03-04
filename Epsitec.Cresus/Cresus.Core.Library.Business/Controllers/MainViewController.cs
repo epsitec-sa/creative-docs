@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.DataLayer.Context;
 using System.Collections;
+using Epsitec.Cresus.Core.Print;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -299,11 +300,11 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-#if false
+#if true
 		
 		public void Print()
 		{
-			var entityKey = this.GetVisiblePersistedEntities ().Select (x => CoreData.FindEntityKey (x)).FirstOrDefault ();
+			var entityKey = this.GetVisiblePersistedEntities ().Select (x => this.Data.FindEntityKey (x)).FirstOrDefault ();
 			var context   = this.Data.CreateDataContext ("PrintEngine:Print");
 			var entity    = context.ResolveEntity (entityKey);
 
@@ -314,7 +315,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public void Preview()
 		{
-			var entityKey = this.GetVisiblePersistedEntities ().Select (x => CoreData.FindEntityKey (x)).FirstOrDefault ();
+			var entityKey = this.GetVisiblePersistedEntities ().Select (x => this.Data.FindEntityKey (x)).FirstOrDefault ();
 			var context   = this.Data.CreateDataContext ("PrintEngine:Preview");
 			var entity    = context.ResolveEntity (entityKey);
 
@@ -334,7 +335,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					if (node != null)
 					{
 						var entity = node.GetEntity ();
-						var context = CoreProgram.Application.Data.DataContextPool.FindDataContext (entity);
+						var context = this.Data.DataContextPool.FindDataContext (entity);
 
 						if (context.IsPersistent (entity))
 						{

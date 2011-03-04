@@ -5,6 +5,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Orchestrators;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,14 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		}
 
 
+		public DataViewOrchestrator Orchestrator
+		{
+			get
+			{
+				return this.commandDispatcher.Host.FindActiveComponent<DataViewOrchestrator> ();
+			}
+		}
+
 		[Command (ApplicationCommands.Id.Quit)]
 		public void ProcessQuit(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -29,7 +38,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		[Command (Library.Res.CommandIds.Edition.SaveRecord)]
 		public void ProcessEditionSaveRecord(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var orchestrator = CoreProgram.Application.MainWindowOrchestrator;
+			var orchestrator = this.Orchestrator;
 			var navigator    = orchestrator.Navigator;
 
 			navigator.PreserveNavigation (
@@ -44,7 +53,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		[Command (Library.Res.CommandIds.Edition.DiscardRecord)]
 		public void ProcessEditionDiscardRecord(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var orchestrator = CoreProgram.Application.MainWindowOrchestrator;
+			var orchestrator = this.Orchestrator;
 			var navigator    = orchestrator.Navigator;
 
 			navigator.PreserveNavigation (
@@ -58,25 +67,19 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		[Command (Res.CommandIds.Edition.Print)]
 		public void ProcessEditionPrint(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			throw new System.NotImplementedException ();
-#if false
-			var orchestrator = CoreCommandDispatcher.GetOrchestrator (e);
+			var orchestrator = this.Orchestrator;
 			var mainViewController = orchestrator.MainViewController;
 
 			mainViewController.Print ();
-#endif
 		}
 
 		[Command (Res.CommandIds.Edition.Preview)]
 		public void ProcessEditionPreview(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			throw new System.NotImplementedException ();
-#if false
-			var orchestrator = CoreCommandDispatcher.GetOrchestrator (e);
+			var orchestrator = this.Orchestrator;
 			var mainViewController = orchestrator.MainViewController;
 
 			mainViewController.Preview ();
-#endif
 		}
 
 		[Command (Res.CommandIds.File.ImportV11)]

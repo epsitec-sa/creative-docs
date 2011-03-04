@@ -29,11 +29,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// </summary>
 	class PrintPreviewDialog : AbstractDialog
 	{
-		public PrintPreviewDialog(Application application, CoreData coreData, List<DeserializedJob> jobs)
+		public PrintPreviewDialog(CoreData coreData, List<DeserializedJob> jobs)
 		{
 			this.IsApplicationWindow = true;  // pour avoir les boutons Minimize/Maximize/Close !
 
-			this.application = application;
+			this.application = coreData.Host;
 			this.coreData = coreData;
 			this.jobs = jobs;
 			this.pages = Print.Common.GetDeserializedPages (this.jobs).ToList ();

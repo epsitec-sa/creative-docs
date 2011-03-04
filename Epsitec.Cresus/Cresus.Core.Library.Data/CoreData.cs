@@ -25,8 +25,9 @@ namespace Epsitec.Cresus.Core
 {
 	public sealed partial class CoreData : System.IDisposable, ICoreComponentHost<CoreDataComponent>
 	{
-		public CoreData(bool forceDatabaseCreation, bool allowDatabaseUpdate)
+		public CoreData(CoreApp app, bool forceDatabaseCreation, bool allowDatabaseUpdate)
 		{
+			this.app = app;
 			this.ForceDatabaseCreation = forceDatabaseCreation;
 			this.AllowDatabaseUpdate   = allowDatabaseUpdate;
 
@@ -34,6 +35,14 @@ namespace Epsitec.Cresus.Core
 			this.independentEntityContext = new EntityContext (Resources.DefaultManager, EntityLoopHandlingMode.Throw, "Independent Entities");
 
 			Factories.CoreDataComponentFactory.RegisterComponents (this);
+		}
+
+		public CoreApp							Host
+		{
+			get
+			{
+				return this.app;
+			}
 		}
 
 		public DataInfrastructure				DataInfrastructure
@@ -550,6 +559,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		private readonly CoreApp app;
 		private readonly CoreComponentHostImplementation<CoreDataComponent>	components;
 
 		private readonly EntityContext independentEntityContext;

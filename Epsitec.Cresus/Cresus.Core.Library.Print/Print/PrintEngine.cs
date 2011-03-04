@@ -8,17 +8,18 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Documents;
 using Epsitec.Cresus.Core.Documents.Verbose;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Print.Serialization;
 
 using System.Collections.Generic;
 using System.Xml.Linq;
 using System.Linq;
 using System.Linq.Expressions;
-using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Print
 {
@@ -58,7 +59,7 @@ namespace Epsitec.Cresus.Core.Print
 			PrintEngine.SendDataToPrinter (coreData, xml);
 		}
 
-		public static void PreviewCommand(Application application, CoreData coreData, AbstractEntity entity)
+		public static void PreviewCommand(CoreData coreData, AbstractEntity entity)
 		{
 			//	La commande 'Preview' du ruban a été activée.
 			if (entity == null)
@@ -79,7 +80,7 @@ namespace Epsitec.Cresus.Core.Print
 
 			var deserializeJobs = SerializationEngine.DeserializeJobs (coreData, xml);
 
-			var dialog = new Dialogs.PrintPreviewDialog (application, coreData, deserializeJobs);
+			var dialog = new Dialogs.PrintPreviewDialog (coreData, deserializeJobs);
 			dialog.IsModal = true;
 			dialog.OpenDialog ();
 
