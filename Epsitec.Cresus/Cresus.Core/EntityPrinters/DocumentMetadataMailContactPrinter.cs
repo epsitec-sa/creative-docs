@@ -1,15 +1,8 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Common.Debug;
-using Epsitec.Common.Dialogs;
 using Epsitec.Common.Drawing;
-using Epsitec.Common.IO;
-using Epsitec.Common.Printing;
-using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Types;
-using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Documents;
 using Epsitec.Cresus.Core.Entities;
@@ -25,7 +18,6 @@ using Epsitec.Cresus.Core.Print.EntityPrinters;
 
 namespace Epsitec.Cresus.Core.EntityPrinters
 {
-
 	public class DocumentMetadataMailContactPrinter : AbstractPrinter
 	{
 		private DocumentMetadataMailContactPrinter(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
@@ -184,7 +176,9 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			bool IEntityPrinterFactory.CanPrint(AbstractEntity entity, OptionsDictionary options)
 			{
-				return entity is DocumentMetadataEntity;
+				//	Pour le moment, on ne veut pas d'étiquettes, mais des factures...
+				return false;
+//				return entity is DocumentMetadataEntity;
 			}
 
 			AbstractPrinter IEntityPrinterFactory.CreatePrinter(CoreData coreData, IEnumerable<AbstractEntity> entities, Documents.OptionsDictionary options, Documents.PrintingUnitsDictionary printingUnits)
