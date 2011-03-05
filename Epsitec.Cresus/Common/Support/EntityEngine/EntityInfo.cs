@@ -54,9 +54,9 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
-		public static StructuredTypeField GetStructuredTypeField(Expression properyLambdaExpression)
+		public static StructuredTypeField GetStructuredTypeField(Expression propertyLambdaExpression)
 		{
-			return EntityInfo.GetStructuredTypeField (ExpressionAnalyzer.GetLambdaPropertyInfo (properyLambdaExpression));
+			return EntityInfo.GetStructuredTypeField (ExpressionAnalyzer.GetLambdaPropertyInfo (propertyLambdaExpression));
 		}
 
 		public static StructuredTypeField GetStructuredTypeField(PropertyInfo propertyInfo)
@@ -77,6 +77,31 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 
 			return structuredType.GetField (fieldAttribute.FieldId);
+		}
+
+		public static Caption GetFieldCaption(Expression propertyLambdaExpression)
+		{
+			return EntityInfo.GetFieldCaption (ExpressionAnalyzer.GetLambdaPropertyInfo (propertyLambdaExpression));
+		}
+
+		public static Caption GetFieldCaption(PropertyInfo propertyInfo)
+		{
+			if (propertyInfo == null)
+			{
+				return null;
+			}
+
+			var fieldAttribute = propertyInfo.GetCustomAttributes (true).OfType<EntityFieldAttribute> ().FirstOrDefault ();
+
+			if ((fieldAttribute == null) ||
+				(fieldAttribute.FieldId == null))
+			{
+				return null;
+			}
+
+			Druid id = Druid.Parse (fieldAttribute.FieldId);
+
+			return Resources.DefaultManager.GetCaption (id);
 		}
 
 

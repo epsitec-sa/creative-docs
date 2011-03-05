@@ -145,13 +145,36 @@ namespace Epsitec.Cresus.Bricks
 			this.index = -1;
 		}
 
-		public BrickProperty? Peek(BrickPropertyKey adjacentPropertyKey)
+		public BrickProperty? PeekAfter(BrickPropertyKey adjacentPropertyKey)
+		{
+			int index = this.index + 1;
+
+			while ((index > 0) && (index < this.properties.Count))
+			{
+				var property = this.properties[index++];
+
+				if (property.Key == adjacentPropertyKey)
+				{
+					return property;
+				}
+
+				if (this.filter.Contains (property.Key))
+				{
+					break;
+				}
+			}
+
+			return null;
+		}
+
+
+		public BrickProperty? PeekBefore(BrickPropertyKey adjacentPropertyKey)
 		{
 			int index = this.index;
 
-			while ((index >= 0) && (index < this.properties.Count))
+			while ((index > 0) && (index <= this.properties.Count))
 			{
-				var property = this.properties[index++];
+				var property = this.properties[--index];
 
 				if (property.Key == adjacentPropertyKey)
 				{

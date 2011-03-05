@@ -4,6 +4,7 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Types.Converters.Marshalers;
+using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Widgets.Tiles;
@@ -17,7 +18,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 {
 	internal abstract class AutoCompleteTextFieldDynamicFactory : DynamicFactory
 	{
-		public static DynamicFactory Create<T>(LambdaExpression lambda, BusinessContext business, System.Func<T> entityGetter)
+		public static DynamicFactory Create<T>(LambdaExpression lambda, BusinessContext business, System.Func<T> entityGetter, string title)
 		{
 			var fieldType    = lambda.ReturnType;
 			var sourceType   = lambda.Parameters[0].Type;
@@ -39,7 +40,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 			var setterFunc   = setterLambda.Compile ();
 
 			var factoryType = typeof (Factory<,>).MakeGenericType (sourceType, fieldType);
-			var instance    = System.Activator.CreateInstance (factoryType, business, entityGetter, getterFunc, setterFunc);
+			var instance    = System.Activator.CreateInstance (factoryType, business, lambda, entityGetter, getterFunc, setterFunc, title);
 
 			return (DynamicFactory) instance;
 		}
@@ -47,12 +48,14 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 		class Factory<TSource, TField> : DynamicFactory
 			where TField : AbstractEntity, new ()
 		{
-			public Factory(BusinessContext business, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter)
+			public Factory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title)
 			{
 				this.business = business;
+				this.lambda = lambda;
 				this.sourceGetter = sourceGetter;
 				this.getter = getter;
 				this.setter = setter;
+				this.title  = title;
 			}
 
 			private System.Func<TField> CreateGetter()
@@ -89,14 +92,26 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 					ReferenceController = this.CreateReferenceController (),
 				};
 
-				return builder.CreateAutoCompleteTextField<TField> (tile, "Titre", sel);
+				var caption= DynamicFactory.GetInputCaption (this.lambda);
+				var title  = this.title ?? DynamicFactory.GetInputTitle (caption);
+				var widget = builder.CreateAutoCompleteTextField<TField> (tile, title, sel);
+
+				if ((caption != null) &&
+					(caption.HasDescription))
+				{
+					ToolTip.SetToolTipCaption (widget, caption);
+				}
+
+				return widget;
 			}
 
 
 			private readonly BusinessContext business;
+			private readonly LambdaExpression lambda;
 			private readonly System.Func<TSource> sourceGetter;
 			private readonly System.Delegate getter;
 			private readonly System.Delegate setter;
+			private readonly string title;
 		}
 	}
 }

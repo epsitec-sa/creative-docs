@@ -324,7 +324,7 @@ namespace Epsitec.Cresus.Core.Entities
 	public partial class NaturalPersonEntity : global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity
 	{
 		///	<summary>
-		///	The <c>Title</c> field.
+		///	Titre utilisé dans des formules de politesse (par ex. <i>Monsieur</i> ou <i>Madame</i>)
 		///	designer:fld/FVA5/FVAF
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[FVAF]")]

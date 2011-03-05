@@ -1,15 +1,21 @@
+//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Types.Converters.Marshalers;
+using Epsitec.Common.Widgets;
+
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Widgets.Tiles;
+
 using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 {
 	internal abstract class TextFieldDynamicFactory : DynamicFactory
 	{
-		public static DynamicFactory Create<T>(LambdaExpression lambda, BusinessContext business, System.Func<T> entityGetter, int width)
+		public static DynamicFactory Create<T>(LambdaExpression lambda, BusinessContext business, System.Func<T> entityGetter, string title, int width)
 		{
 			var fieldType    = lambda.ReturnType;
 			var sourceType   = lambda.Parameters[0].Type;
@@ -31,20 +37,21 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 			var setterFunc   = setterLambda.Compile ();
 
 			var factoryType = typeof (Factory<,>).MakeGenericType (sourceType, fieldType);
-			var instance    = System.Activator.CreateInstance (factoryType, business, lambda, entityGetter, getterFunc, setterFunc, width);
+			var instance    = System.Activator.CreateInstance (factoryType, business, lambda, entityGetter, getterFunc, setterFunc, title, width);
 
 			return (DynamicFactory) instance;
 		}
 
 		class Factory<TSource, TField> : DynamicFactory
 		{
-			public Factory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, int width)
+			public Factory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title, int width)
 			{
 				this.business = business;
 				this.lambda   = lambda;
 				this.sourceGetter = sourceGetter;
 				this.getter = getter;
 				this.setter = setter;
+				this.title  = title;
 				this.width  = width;
 			}
 
@@ -65,8 +72,18 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 
 			public override object CreateUI(EditionTile tile, UIBuilder builder)
 			{
-				Marshaler marshaler = this.CreateMarshaler ();
-				return builder.CreateTextField (tile, width, "Prénom", marshaler);
+				var marshaler = this.CreateMarshaler ();
+				var caption   = DynamicFactory.GetInputCaption (this.lambda);
+				var title     = this.title ?? DynamicFactory.GetInputTitle (caption);
+				var widget    = builder.CreateTextField (tile, width, title, marshaler);
+
+				if ((caption != null) &&
+					(caption.HasDescription))
+				{
+					ToolTip.SetToolTipCaption (widget, caption);
+				}
+
+				return widget;
 			}
 
 
@@ -75,6 +92,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 			private readonly System.Func<TSource>	sourceGetter;
 			private readonly System.Delegate		getter;
 			private readonly System.Delegate		setter;
+			private readonly string					title;
 			private readonly int					width;
 		}
 	}

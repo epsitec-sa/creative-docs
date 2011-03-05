@@ -158,7 +158,6 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		private System.Action<EditionTile, UIBuilder> CreateActionForInputField(TileDataItems data, TileDataItem item, Brick root, Brick brick, Expression expression, BrickPropertyCollection properties)
 		{
-			var controller = this.controller;
 			var business   = this.controller.BusinessContext;
 
 			LambdaExpression lambda = expression as LambdaExpression;
@@ -171,30 +170,31 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			var fieldType  = lambda.ReturnType;
 			var entityType = typeof (AbstractEntity);
 
-			int width = Bridge<T>.GetWidth (properties);
+			int    width = Bridge<T>.GetInputWidth (properties);
+			string title = Bridge<T>.GetInputTitle (properties);
 
 			if ((fieldType.IsClass) &&
 				(entityType.IsAssignableFrom (fieldType)))
 			{
 				//	The field is an entity : use an AutoCompleteTextField for it.
 
-				var factory = DynamicFactories.AutoCompleteTextFieldDynamicFactory.Create<T> (lambda, business, this.controller.EntityGetter);
+				var factory = DynamicFactories.AutoCompleteTextFieldDynamicFactory.Create<T> (lambda, business, this.controller.EntityGetter, title);
 				return (tile, builder) => factory.CreateUI (tile, builder);
 			}
 
 			if ((fieldType == typeof (string)) ||
 				(fieldType == typeof (Date)))
 			{
-				var factory = DynamicFactories.TextFieldDynamicFactory.Create<T> (lambda, business, this.controller.EntityGetter, width);
+				var factory = DynamicFactories.TextFieldDynamicFactory.Create<T> (lambda, business, this.controller.EntityGetter, title, width);
 				return (tile, builder) => factory.CreateUI (tile, builder);
 			}
 
 			return null;
 		}
 
-		private static int GetWidth(BrickPropertyCollection properties)
+		private static int GetInputWidth(BrickPropertyCollection properties)
 		{
-			var widthProperty = properties.Peek (BrickPropertyKey.Width);
+			var widthProperty = properties.PeekAfter (BrickPropertyKey.Width);
 
 			if (widthProperty.HasValue)
 			{
@@ -203,6 +203,20 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			else
 			{
 				return 0;
+			}
+		}
+
+		private static string GetInputTitle(BrickPropertyCollection properties)
+		{
+			var titleProperty = properties.PeekBefore (BrickPropertyKey.Title);
+
+			if (titleProperty.HasValue)
+			{
+				return titleProperty.Value.StringValue;
+			}
+			else
+			{
+				return null;
 			}
 		}
 
