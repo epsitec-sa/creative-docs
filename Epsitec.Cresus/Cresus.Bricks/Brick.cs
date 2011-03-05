@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Bricks
 			}
 		}
 #endif
-		
+
 		internal void AddProperty(BrickProperty property, bool notify = true)
 		{
 			this.properties.Add (property);
@@ -124,24 +124,86 @@ namespace Epsitec.Cresus.Bricks
 			return brick.properties.FindAll (x => x.Key == key).LastOrDefault ();
 		}
 
-		public static IEnumerable<BrickProperty> GetProperties(Brick brick, params BrickPropertyKey[] keys)
+		public static BrickPropertyCollection GetProperties(Brick brick, params BrickPropertyKey[] keys)
 		{
-			if ((keys == null) ||
-				(keys.Length == 0))
-			{
-				return brick.properties;
-			}
-			else
-			{
-				var hash = new HashSet<BrickPropertyKey> (keys);
-				return brick.properties.Where (x => hash.Contains (x.Key));
-			}
+			return new BrickPropertyCollection (brick.properties, keys ?? new BrickPropertyKey[0]);
 		}
 
-		
+
 
 		private readonly List<BrickProperty> properties;
 		private BrickWall brickWall;
 		private Expression resolver;
+	}
+
+	public sealed class BrickPropertyCollection : IEnumerable<BrickProperty>
+	{
+		internal BrickPropertyCollection(IList<BrickProperty> properties, BrickPropertyKey[] filter)
+		{
+			this.properties = properties;
+			this.filter = new HashSet<BrickPropertyKey> (filter);
+			this.index = -1;
+		}
+
+		public BrickProperty? Peek(BrickPropertyKey adjacentPropertyKey)
+		{
+			int index = this.index;
+
+			while ((index >= 0) && (index < this.properties.Count))
+			{
+				var property = this.properties[index++];
+
+				if (property.Key == adjacentPropertyKey)
+				{
+					return property;
+				}
+				
+				if (this.filter.Contains (property.Key))
+				{
+					break;
+				}
+			}
+
+			return null;
+		}
+
+		private IEnumerable<BrickProperty> GetProperties()
+		{
+			while (this.index < this.properties.Count)
+			{
+				var property = this.properties[this.index++];
+				
+				if ((this.filter.Count == 0) ||
+					(this.filter.Contains (property.Key)))
+				{
+					yield return property;
+				}
+			}
+			
+			this.index = -1;
+		}
+
+		#region IEnumerable<BrickProperty> Members
+
+		public IEnumerator<BrickProperty> GetEnumerator()
+		{
+			this.index = 0;
+			return this.GetProperties ().GetEnumerator ();
+		}
+
+		#endregion
+
+		#region IEnumerable Members
+
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+		{
+			return this.GetEnumerator ();
+		}
+
+		#endregion
+
+		private readonly IList<BrickProperty> properties;
+		private readonly HashSet<BrickPropertyKey> filter;
+		private int index;
 	}
 }

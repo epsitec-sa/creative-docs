@@ -88,6 +88,21 @@ namespace Epsitec.Cresus.Bricks
 			}
 		}
 
+		public int?								IntValue
+		{
+			get
+			{
+				if (this.value is int)
+				{
+					return (int) this.value;
+				}
+				else
+				{
+					return null;
+				}
+			}
+		}
+
 		public Expression						ExpressionValue
 		{
 			get

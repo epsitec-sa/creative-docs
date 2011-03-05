@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.End ()
 				.Separator ()
 				.Input ()
-				 .Field (x => x.DateOfBirth)
+				 .Field (x => x.DateOfBirth).Width (90)
 				.End ();
 
 

@@ -143,20 +143,20 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		private IEnumerable<System.Action<EditionTile, UIBuilder>> CreateActionsForInput(TileDataItems data, TileDataItem item, Brick root, Brick brick)
 		{
-			var properties = Brick.GetProperties (brick, BrickPropertyKey.Field, BrickPropertyKey.Width).ToArray ();
+			var properties = Brick.GetProperties (brick, BrickPropertyKey.Field);
 			
 			foreach (var property in properties)
 			{
 				switch (property.Key)
 				{
 					case BrickPropertyKey.Field:
-						yield return this.CreateActionForInputField (data, item, root, brick, property.ExpressionValue);
+						yield return this.CreateActionForInputField (data, item, root, brick, property.ExpressionValue, properties);
 						break;
 				}
 			}
 		}
 
-		private System.Action<EditionTile, UIBuilder> CreateActionForInputField(TileDataItems data, TileDataItem item, Brick root, Brick brick, Expression expression)
+		private System.Action<EditionTile, UIBuilder> CreateActionForInputField(TileDataItems data, TileDataItem item, Brick root, Brick brick, Expression expression, BrickPropertyCollection properties)
 		{
 			var controller = this.controller;
 			var business   = this.controller.BusinessContext;
@@ -171,22 +171,39 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			var fieldType  = lambda.ReturnType;
 			var entityType = typeof (AbstractEntity);
 
+			int width = Bridge<T>.GetWidth (properties);
+
 			if ((fieldType.IsClass) &&
 				(entityType.IsAssignableFrom (fieldType)))
 			{
-				//	The field is an entity : user an AutoCompleteTextField for it.
+				//	The field is an entity : use an AutoCompleteTextField for it.
 
 				var factory = DynamicFactories.AutoCompleteTextFieldDynamicFactory.Create<T> (lambda, business, this.controller.EntityGetter);
 				return (tile, builder) => factory.CreateUI (tile, builder);
 			}
 
-			if (fieldType == typeof (string))
+			if ((fieldType == typeof (string)) ||
+				(fieldType == typeof (Date)))
 			{
-				var factory = DynamicFactories.TextFieldDynamicFactory.Create<T> (lambda, business, this.controller.EntityGetter);
+				var factory = DynamicFactories.TextFieldDynamicFactory.Create<T> (lambda, business, this.controller.EntityGetter, width);
 				return (tile, builder) => factory.CreateUI (tile, builder);
 			}
 
 			return null;
+		}
+
+		private static int GetWidth(BrickPropertyCollection properties)
+		{
+			var widthProperty = properties.Peek (BrickPropertyKey.Width);
+
+			if (widthProperty.HasValue)
+			{
+				return widthProperty.Value.IntValue.GetValueOrDefault (0);
+			}
+			else
+			{
+				return 0;
+			}
 		}
 
 		private static object DynamicCreateSelectionController(System.Type type, BusinessContext context)
