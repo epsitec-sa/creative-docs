@@ -39,7 +39,7 @@ namespace Epsitec.Common.Types.Converters
 		public Expression						ValueGetterExpression
 		{
 			get;
-			private set;
+			protected set;
 		}
 
 

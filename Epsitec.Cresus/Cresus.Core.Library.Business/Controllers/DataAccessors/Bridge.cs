@@ -174,45 +174,16 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			if ((fieldType.IsClass) &&
 				(entityType.IsAssignableFrom (fieldType)))
 			{
-				//	The field is an entity.
+				//	The field is an entity : user an AutoCompleteTextField for it.
 
-				var lambdaMember  = (MemberExpression) lambda.Body;
-				var sourceType    = lambda.Parameters[0].Type;
-				
-				ParameterExpression objectParameterExpression = Expression.Parameter (sourceType);
-				ParameterExpression valueParameterExpression  = Expression.Parameter (fieldType);
+				var factory = DynamicFactories.AutoCompleteTextFieldDynamicFactory.Create<T> (lambda, business, this.controller.EntityGetter);
+				return (tile, builder) => factory.CreateUI (tile, builder);
+			}
 
-				var expressionBlock =
-					Expression.Block (
-						Expression.Assign (
-							Expression.Property (objectParameterExpression, (lambdaMember).Member.Name),
-							valueParameterExpression));
-
-				var getterLambda = lambda;
-				var setterLambda = Expression.Lambda (expressionBlock, objectParameterExpression, valueParameterExpression);
-
-				var getterFunc   = getterLambda.Compile ();
-				var setterFunc   = setterLambda.Compile ();
-
-				var dynAccess = (DynamicAccessorBridge) System.Activator.CreateInstance (
-					typeof (DynamicAccessorBridge<,>).MakeGenericType (sourceType, fieldType),
-					business,
-					(System.Func<T>)(() => controller.Entity), getterFunc, setterFunc);
-
-				return (tile, builder) =>
-				{
-					dynAccess.CreateTextField (builder, tile);
-					/*
-										var sel = new SelectionController<PersonTitleEntity> (this.BusinessContext)
-										{
-											ValueGetter         = () => this.Entity.Title,
-											ValueSetter         = x => this.Entity.Title = x,
-											ReferenceController = new ReferenceController (() => this.Entity.Title, creator: this.CreateNewTitle),
-										};
-
-										builder.CreateAutoCompleteTextField (tile, "Titre", controller);
-										*/
-				};
+			if (fieldType == typeof (string))
+			{
+				var factory = DynamicFactories.TextFieldDynamicFactory.Create<T> (lambda, business, this.controller.EntityGetter);
+				return (tile, builder) => factory.CreateUI (tile, builder);
 			}
 
 			return null;
@@ -402,63 +373,4 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 	}
 
 
-	abstract class DynamicAccessorBridge
-	{
-		public abstract object CreateTextField(UIBuilder builder, EditionTile tile);
-	}
-
-	class DynamicAccessorBridge<TSource, TField> : DynamicAccessorBridge
-		where TField : AbstractEntity, new ()
-	{
-		public DynamicAccessorBridge(BusinessContext business, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter)
-		{
-			this.business = business;
-			this.sourceGetter = sourceGetter;
-			this.getter = getter;
-			this.setter = setter;
-		}
-
-		private System.Func<TField> CreateGetter()
-		{
-			return () => (TField) this.getter.DynamicInvoke (this.sourceGetter ());
-		}
-
-		private System.Action<TField> CreateSetter()
-		{
-			return x => this.setter.DynamicInvoke (this.sourceGetter (), x);
-		}
-
-		private System.Func<AbstractEntity> CreateGenericGetter()
-		{
-			return () => (AbstractEntity) this.getter.DynamicInvoke (this.sourceGetter ());
-		}
-
-		private ReferenceController CreateReferenceController()
-		{
-			return new ReferenceController ("x", this.CreateGenericGetter (), creator: this.CreateNewEntity);
-		}
-
-		private NewEntityReference CreateNewEntity(DataContext context)
-		{
-			return context.CreateEntityAndRegisterAsEmpty<TField> ();
-		}
-
-		public override object CreateTextField(UIBuilder builder, EditionTile tile)
-		{
-			var sel = new SelectionController<TField> (this.business)
-			{
-				ValueGetter = this.CreateGetter (),
-				ValueSetter = this.CreateSetter (),
-				ReferenceController = this.CreateReferenceController (),
-			};
-
-			return builder.CreateAutoCompleteTextField<TField> (tile, "Titre", sel);
-		}
-
-
-		private readonly BusinessContext business;
-		private readonly System.Func<TSource> sourceGetter;
-		private readonly System.Delegate getter;
-		private readonly System.Delegate setter;
-	}
 }

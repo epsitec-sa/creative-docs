@@ -110,7 +110,20 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.TitleCompact (TextFormatter.FormatText ("Personne physique"))
 				.Input ()
 				 .Field (x => x.Title)
+				.End ()
+				.Input ()
+				 .Field (x => x.Firstname)
+				 .Field (x => x.Lastname)
+				.End ()
+				.Separator ()
+				.Input ()
+				 .Field (x => x.Gender)
+				.End ()
+				.Separator ()
+				.Input ()
+				 .Field (x => x.DateOfBirth)
 				.End ();
+
 
 			using (var data = TileContainerController.Setup (this))
 			{
