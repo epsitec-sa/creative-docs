@@ -25,17 +25,6 @@ namespace Epsitec.Cresus.Core.Entities
 			return this.chartsOfAccounts.AsReadOnly ();
 		}
 
-#if false
-		public CresusChartOfAccounts GetRecentChartOfAccounts(BusinessContext businessContext)
-		{
-			//	Retourne le plan comptable correspondant à la date de référence de la transaction 'business'
-			//	en cours, ou le plan comptable le plus récent.
-			//	Retourne null s'il n'existe aucun plan comptable.
-			var date = businessContext.GetReferenceDate ();
-			return this.GetRecentChartOfAccounts (date);
-		}
-#endif
-
 		public CresusChartOfAccounts GetRecentChartOfAccounts(Date date)
 		{
 			//	Retourne le plan comptable correspondant à une date, ou le plan comptable le plus récent.

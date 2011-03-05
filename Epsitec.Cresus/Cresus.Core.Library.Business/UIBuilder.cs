@@ -24,6 +24,7 @@ using Epsitec.Cresus.DataLayer.Context;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Epsitec.Cresus.Core.Entities;
 
 namespace Epsitec.Cresus.Core
 {
@@ -674,16 +675,15 @@ namespace Epsitec.Cresus.Core
 		#region Account editor
 		public Widget CreateAccountEditor(EditionTile tile, string label, Marshaler marshaler)
 		{
-			throw new System.NotImplementedException ();
-#if false
+#if true
 			//	Crée un widget AutoCompleteTextField permettant d'éditer un numéro de compte,
 			//	selon le plan comptable en cours. Si le plan comptable n'existe pas, on crée
 			//	une ligne éditable toute simple.
 
 			//	Cherche le plan comptable en cours.
-			var financeSettings = CoreProgram.Application.BusinessSettings.Finance;
+			var financeSettings = new FinanceSettingsEntity ();
 			System.Diagnostics.Debug.Assert (financeSettings != null);
-			var chart = financeSettings.GetRecentChartOfAccounts (this.businessContext);
+			var chart = financeSettings.GetRecentChartOfAccounts (this.businessContext.GetReferenceDate ());
 
 			if (chart == null)  // aucun plan comptable trouvé ?
 			{
