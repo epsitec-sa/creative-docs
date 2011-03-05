@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs
 		/// <param name="fieldId">The <see cref="Druid"/> of the field targeted by the <c>AbstractFieldSynchronizationJob</c>.</param>
 		/// <exception cref="System.ArgumentException">If <paramref name="entityKey"/> is empty.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="fieldId"/> is empty.</exception>
-		protected AbstractFieldSynchronizationJob(int dataContextId, EntityKey entityKey, Druid fieldId)
+		protected AbstractFieldSynchronizationJob(long dataContextId, EntityKey entityKey, Druid fieldId)
 			: base (dataContextId, entityKey)
 		{
 			fieldId.ThrowIf (f => f.IsEmpty, "fieldId cannot be empty");

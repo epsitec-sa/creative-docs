@@ -23,6 +23,11 @@ namespace Epsitec.Cresus.Core.Entities
 			return entity.UnwrapNullEntity () != null;
 		}
 
+		public static DataContext GetDataContext(this AbstractEntity entity)
+		{
+			return DataContext.GetDataContext (entity);
+		}
+
 		/// <summary>
 		/// Compares two entities and returns <c>true</c> if they refer to the same database key
 		/// or if they are the same memory instance.

@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs
 		/// <param name="newValue">The new value of the field targeted by the <c>ValueSynchronizationJob</c>.</param>
 		/// <exception cref="System.ArgumentException">If <paramref name="entityKey"/> is empty.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="fieldId"/> is empty.</exception>
-		public ValueSynchronizationJob(int dataContextId, EntityKey entityKey, Druid fieldId, object newValue)
+		public ValueSynchronizationJob(long dataContextId, EntityKey entityKey, Druid fieldId, object newValue)
 			: base (dataContextId, entityKey, fieldId)
 		{
 			this.NewValue = newValue;

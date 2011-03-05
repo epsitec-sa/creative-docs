@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs
 		/// <exception cref="System.ArgumentException">If <paramref name="sourceKey"/> is empty.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="fieldId"/> is empty.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="newTargetKeys"/> is <c>null</c>.</exception>
-		public CollectionSynchronizationJob(int dataContextId, EntityKey sourceKey, Druid fieldId, IEnumerable<EntityKey> newTargetKeys)
+		public CollectionSynchronizationJob(long dataContextId, EntityKey sourceKey, Druid fieldId, IEnumerable<EntityKey> newTargetKeys)
 			: base (dataContextId, sourceKey, fieldId)
 		{
 			newTargetKeys.ThrowIfNull ("newTargetKeys");

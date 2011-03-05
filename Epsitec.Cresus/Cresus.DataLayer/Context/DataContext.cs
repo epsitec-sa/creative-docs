@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="enableNullVirtualization">Tells whether to enable the virtualization of null <see cref="AbstractEntity"/> or not.</param>
 		internal DataContext(DataInfrastructure infrastructure, bool enableNullVirtualization = false)
 		{
-			this.UniqueId = System.Threading.Interlocked.Increment (ref DataContext.nextUniqueId);
+			this.uniqueId = System.Threading.Interlocked.Increment (ref DataContext.nextUniqueId);
 			this.DataInfrastructure = infrastructure;
 			this.EntityContext = new EntityContext ();
 			this.DataLoader = new DataLoader (this);
@@ -75,10 +75,12 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <summary>
 		/// Gets the unique id of the current instance.
 		/// </summary>
-		public int UniqueId
+		public long UniqueId
 		{
-			get;
-			private set;
+			get
+			{
+				return this.uniqueId;
+			}
 		}
 
 		/// <summary>
@@ -1444,6 +1446,25 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
+		public static long GetDataContextId(AbstractEntity entity)
+		{
+			if ((entity == null) ||
+				(entity.DataContextId.HasValue == false))
+			{
+				return -1;
+			}
+			else
+			{
+				return entity.DataContextId.Value;
+			}
+		}
+
+		public static DataContext GetDataContext(AbstractEntity entity)
+		{
+			return DataContextPool.GetDataContext (DataContext.GetDataContextId (entity));
+		}
+
+
 		/// <summary>
 		/// Handles the creation of an <see cref="AbstractEntity"/> by the <see cref="EntityContext"/>
 		/// associated with this instance.
@@ -1480,7 +1501,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			if (entity.DataContextId.HasValue)
 			{
-				throw new System.InvalidOperationException ("entity is already assigned to a DataContext");
+				throw new System.InvalidOperationException (string.Format ("The entity of type {0} is already assigned to a DataContext #{1}", entity.GetType ().FullName, entity.DataContextId.Value));
 			}
 
 			entity.DataContextId = this.UniqueId;
@@ -1663,8 +1684,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 			return localEntity as TEntity;
 		}
 
-		private static int							nextUniqueId;			//	next unique ID
+		private static long							nextUniqueId;			//	next unique ID
 
+		private readonly long						uniqueId;				//	uniue ID associated with this instance
 		private readonly object						eventExclusion;			//	exclusion lock used to access the entityChanged event
 		private readonly EntityCache				entitiesCache;			//	entities managed by this instance
 		private readonly HashSet<AbstractEntity>	emptyEntities;			//	entities registered as empty

@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (string.IsNullOrEmpty (workflowName))
 			{
-				string nakedEntityName = AbstractEntity.GetNakedEntityName<T> ();
+				string nakedEntityName = EntityInfo<T>.GetNakedName ();
 				workflowName = string.Concat (WorkflowFactory.DefaultWorkflowPrefix, nakedEntityName);
 			}
 			

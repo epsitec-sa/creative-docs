@@ -36,6 +36,23 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 		/// <summary>
+		/// Gets the name of the entity class, without the <c>Entity</c> suffix.
+		/// </summary>
+		/// <returns>The naked name of the entity.</returns>
+		public static string GetNakedName()
+		{
+			string name = typeof (T).Name;
+			const string suffix = "Entity";
+
+			if (name.EndsWith (suffix))
+			{
+				return name.Substring (0, name.Length - suffix.Length);
+			}
+
+			throw new System.ArgumentException (string.Format ("The type {0} does not follow the entity naming conventions", typeof (T).FullName));
+		}
+
+		/// <summary>
 		/// Checks whether the entity implements the specified interface.
 		/// </summary>
 		/// <typeparam name="TInterface">The type of the interface.</typeparam>

@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs
 		/// <param name="dataContextId">The unique id of the <see cref="DataContext"/> that is creating the <c>AbstractSynchronizationJob</c>.</param>
 		/// <param name="entityKey">The <see cref="EntityKey"/> that identifies the <see cref="AbstractEntity"/> targeted by the <c>AbstractSynchronizationJob</c>.</param>
 		/// <exception cref="System.ArgumentException">If <paramref name="entityKey"/> is empty.</exception>
-		protected AbstractSynchronizationJob(int dataContextId, EntityKey entityKey)
+		protected AbstractSynchronizationJob(long dataContextId, EntityKey entityKey)
 		{
 			entityKey.ThrowIf (k => k.IsEmpty, "entityKey cannot be empty");
 			
@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs
 		/// <summary>
 		/// Gets the unique id of the <see cref="DataContext"/> that created this instance.
 		/// </summary>
-		public int DataContextId
+		public long DataContextId
 		{
 			get;
 			private set;

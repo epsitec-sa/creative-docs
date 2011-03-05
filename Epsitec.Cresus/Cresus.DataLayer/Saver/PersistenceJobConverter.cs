@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <returns>The converted sequence of <see cref="AbstractSynchronizationJob"/>.</returns>
 		private IEnumerable<AbstractSynchronizationJob> ConvertHelper(DeletePersistenceJob job)
 		{
-			int dataContextId = this.DataContext.UniqueId;
+			long dataContextId = this.DataContext.UniqueId;
 			EntityKey entityKey = this.DataContext.GetNormalizedEntityKey (job.Entity).Value;
 
 			yield return new DeleteSynchronizationJob (dataContextId, entityKey);
@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			if (job.JobType == PersistenceJobType.Update)
 			{
-				int dataContextId = this.DataContext.UniqueId;
+				long dataContextId = this.DataContext.UniqueId;
 				EntityKey entityKey = this.DataContext.GetNormalizedEntityKey (job.Entity).Value;
 
 				foreach (var update in job.GetFieldIdsWithValues ())
@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			if (job.JobType == PersistenceJobType.Update)
 			{
-				int dataContextId = this.DataContext.UniqueId;
+				long dataContextId = this.DataContext.UniqueId;
 				EntityKey sourceKey = this.DataContext.GetNormalizedEntityKey (job.Entity).Value;
 				Druid fieldId = job.FieldId;
 
@@ -200,7 +200,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			if (job.JobType == PersistenceJobType.Update)
 			{
-				int dataContextId = this.DataContext.UniqueId;
+				long dataContextId = this.DataContext.UniqueId;
 				EntityKey sourceKey = this.DataContext.GetNormalizedEntityKey (job.Entity).Value;
 				Druid fieldId = job.FieldId;
 

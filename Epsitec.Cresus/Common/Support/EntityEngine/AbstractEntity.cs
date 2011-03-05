@@ -170,7 +170,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <summary>
 		/// The id of the DataContext that manages this instance.
 		/// </summary>
-		internal int? DataContextId
+		internal long? DataContextId
 		{
 			get;
 			set;
@@ -485,19 +485,6 @@ namespace Epsitec.Common.Support.EntityEngine
 					that.DisableCalculations ();
 				}
 			}
-		}
-
-		public static string GetNakedEntityName<T>()
-		{
-			string name = typeof (T).Name;
-			const string suffix = "Entity";
-
-			if (name.EndsWith (suffix))
-			{
-				return name.Substring (0, name.Length - suffix.Length);
-			}
-
-			throw new System.ArgumentException (string.Format ("The type {0} does not follow the entity naming conventions", name));
 		}
 
 

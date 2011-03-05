@@ -3,35 +3,35 @@
 
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types.Collections;
 
 using Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs;
 
 using System.Collections;
 using System.Collections.Generic;
-
 using System.Linq;
 
+/************************* This class is thread safe *************************/
 
 namespace Epsitec.Cresus.DataLayer.Context
 {
-
-
 	/// <summary>
-	/// The <c>DataContextPool</c> is a singleton that is used to manage several
-	/// <see cref="DataContext"/>.
+	/// The <c>DataContextPool</c> class manages a collection of logically associated contexts.
+	/// Usually, all contexts belong to a same higher level context (such as an application
+	/// instance). This class is thread safe.
+	/// See also <see cref="DataContext"/>.
 	/// </summary>
-	public sealed class DataContextPool : IEnumerable<DataContext>
+	public sealed class DataContextPool : IEnumerable<DataContext>, System.IDisposable
 	{
-
-
 		/// <summary>
 		/// Builds a new empty <c>DataContext</c>.
 		/// </summary>
 		internal DataContextPool()
 		{
-			this.dataContexts = new HashSet<DataContext> ();
-		}
+			this.dataContexts = new Dictionary<long, DataContext> ();
 
+			DataContextPool.Register (this);
+		}
 
 		/// <summary>
 		/// Adds a <see cref="DataContext"/> to the pool.
@@ -39,16 +39,18 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="dataContext">The <see cref="DataContext"/> to add.</param>
 		/// <returns><c>true</c> if the <see cref="DataContext"/> was not present in the pool, <c>false</c> if it was.</returns>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="dataContext"/> is null.</exception>
-		internal bool Add(DataContext dataContext)
+		internal void Add(DataContext dataContext)
 		{
 			dataContext.ThrowIfNull ("dataContext");
 
 			string name = dataContext.Name ?? "";
 			System.Diagnostics.Debug.WriteLine ("Added context #" + dataContext.UniqueId + ", " + name);
 
-			return this.dataContexts.Add (dataContext);
+			lock (this.dataContexts)
+			{
+				this.dataContexts.Add (dataContext.UniqueId, dataContext);
+			}
 		}
-
 
 		/// <summary>
 		/// Removes a <see cref="DataContext"/> from the pool.
@@ -63,9 +65,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 			string name = dataContext.Name ?? "";
 			System.Diagnostics.Debug.WriteLine ("Removed context #" + dataContext.UniqueId + ", " + name);
 
-			return this.dataContexts.Remove (dataContext);
+			lock (this.dataContexts)
+			{
+				return this.dataContexts.Remove (dataContext.UniqueId);
+			}
 		}
-
 
 		/// <summary>
 		/// Tells whether the pool contains a given <see cref="DataContext"/>.
@@ -76,9 +80,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			dataContext.ThrowIfNull ("dataContext");
 
-			return this.dataContexts.Contains (dataContext);
+			lock (this.dataContexts)
+			{
+				return this.dataContexts.ContainsKey (dataContext.UniqueId);
+			}
 		}
-
 
 		/// <summary>
 		/// Finds the <see cref="DataContext"/> which is responsible for <paramref name="entity"/> or
@@ -93,9 +99,31 @@ namespace Epsitec.Cresus.DataLayer.Context
 				return null;
 			}
 
-			return this.FirstOrDefault (context => context.Contains (entity));
+			return this.FindDataContext (DataContext.GetDataContextId (entity));
 		}
 
+		/// <summary>
+		/// Finds the data context with the specified ID. The search is done only in the
+		/// current pool. To search across all pools, use the static version, <see cref="DataContextPool.GetDataContext"/>.
+		/// </summary>
+		/// <param name="contextId">The context id.</param>
+		/// <returns></returns>
+		public DataContext FindDataContext(long contextId)
+		{
+			if (contextId < 0)
+			{
+				return null;
+			}
+
+			DataContext context = null;
+
+			lock (this.dataContexts)
+			{
+				this.dataContexts.TryGetValue (contextId, out context);
+			}
+
+			return context;
+		}
 
 		/// <summary>
 		/// Finds the <see cref="EntityKey"/> which represents the storage location of
@@ -113,9 +141,10 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			DataContext context = this.FindDataContext (entity);
 
+			//	TODO: make implementation of DataContext.GetNormalizedEntityKey thread safe
+
 			return (context == null) ? null : context.GetNormalizedEntityKey (entity);
 		}
-
 
 		/// <summary>
 		/// Applies a sequence of <see cref="AbstractSynchronizationJob"/> provided by a
@@ -142,7 +171,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Compares two entities and returns <c>true</c> if they refer to the same database key
@@ -174,22 +202,24 @@ namespace Epsitec.Cresus.DataLayer.Context
 			return keyA == keyB;
 		}
 
-
 		#region IEnumerable<DataContext> Members
 
 
 		/// <summary>
-		///Iterates over all the <see cref="DataContext"/> managed by this pool.
+		/// Iterates over all the <see cref="DataContext"/> managed by this pool. The iteration
+		/// itself is thread safe, as it happens on a copy of the pool's collection.
 		/// </summary>
 		/// <returns>The <see cref="DataContext"/> managed by this pool.</returns>
 		public IEnumerator<DataContext> GetEnumerator()
 		{
-			return this.dataContexts.GetEnumerator ();
+			lock (this.dataContexts)
+			{
+				return this.dataContexts.Values.ToList ().GetEnumerator ();
+			}
 		}
 
 
 		#endregion
-
 
 		#region IEnumerable Members
 
@@ -206,14 +236,70 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 		#endregion
 
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			DataContextPool.Unregister (this);
+		}
+
+		#endregion
 
 		/// <summary>
-		/// Stores the references to the managed <see cref="DataContext"/>.
+		/// Gets the data context with the specified ID. The search is done in a thread safe
+		/// manner, across all known pools.
 		/// </summary>
-		private readonly HashSet<DataContext> dataContexts;
+		/// <param name="contextId">The context id.</param>
+		/// <returns>The data context instance, if found; otherwise, <c>null</c>.</returns>
+		internal static DataContext GetDataContext(long contextId)
+		{
+			foreach (var pool in DataContextPool.GetPools ())
+			{
+				var context = pool.FindDataContext (contextId);
+				
+				if (context != null)
+				{
+					return context;
+				}
+			}
 
+			return null;
+		}
 
+		private static void Register(DataContextPool pool)
+		{
+			lock (DataContextPool.pools)
+			{
+				DataContextPool.pools.Add (pool);
+			}
+		}
+
+		private static void Unregister(DataContextPool pool)
+		{
+			lock (DataContextPool.pools)
+			{
+				DataContextPool.pools.Remove (pool);
+			}
+		}
+
+		private static IEnumerable<DataContextPool> GetPools()
+		{
+			IEnumerable<DataContextPool> pools;
+
+			lock (DataContextPool.pools)
+			{
+				pools = DataContextPool.pools.GetCopyOfList ();
+			}
+
+			//	The return list is a copy which can be accessed without having other threads
+			//	interfere with its contents:
+
+			return pools;
+		}
+
+		private static WeakList<DataContextPool> pools = new WeakList<DataContextPool> ();
+
+		
+		private readonly Dictionary<long, DataContext> dataContexts;		//	collection of associted DataContext instances
 	}
-
-
 }

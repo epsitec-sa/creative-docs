@@ -28,7 +28,7 @@ namespace Epsitec.Common.Types.Collections
 		/// <returns>An array of <c>T</c>.</returns>
 		public T[] ToArray()
 		{
-			return this.GetList ().ToArray ();
+			return this.GetCopyOfList ().ToArray ();
 		}
 
 		/// <summary>
@@ -37,7 +37,7 @@ namespace Epsitec.Common.Types.Collections
 		/// <returns>A list of <c>T</c>.</returns>
 		public List<T> ToList()
 		{
-			return this.GetList ();
+			return this.GetCopyOfList ();
 		}
 
 		/// <summary>
@@ -45,7 +45,7 @@ namespace Epsitec.Common.Types.Collections
 		/// </summary>
 		public void TrimList()
 		{
-			this.GetList ();
+			this.GetCopyOfList ();
 		}
 
 		/// <summary>
@@ -86,7 +86,7 @@ namespace Epsitec.Common.Types.Collections
 
 		public void Add(T item)
 		{
-			List<T> real = this.GetList ();
+			List<T> real = this.GetCopyOfList ();
 			real.Add (item);
 			this.UpdateWeakList (real);
 		}
@@ -125,7 +125,7 @@ namespace Epsitec.Common.Types.Collections
 
 		public void CopyTo(T[] array, int arrayIndex)
 		{
-			List<T> real = this.GetList ();
+			List<T> real = this.GetCopyOfList ();
 			real.CopyTo (array, arrayIndex);
 		}
 
@@ -133,7 +133,7 @@ namespace Epsitec.Common.Types.Collections
 		{
 			get
 			{
-				return this.GetList ().Count;
+				return this.GetCopyOfList ().Count;
 			}
 		}
 
@@ -147,7 +147,7 @@ namespace Epsitec.Common.Types.Collections
 
 		public bool Remove(T item)
 		{
-			List<T> real = this.GetList ();
+			List<T> real = this.GetCopyOfList ();
 
 			if (real.Remove (item))
 			{
@@ -166,7 +166,7 @@ namespace Epsitec.Common.Types.Collections
 
 		public IEnumerator<T> GetEnumerator()
 		{
-			return this.GetList ().GetEnumerator ();
+			return this.GetCopyOfList ().GetEnumerator ();
 		}
 
 		#endregion
@@ -175,7 +175,7 @@ namespace Epsitec.Common.Types.Collections
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
-			return this.GetList ().GetEnumerator ();
+			return this.GetCopyOfList ().GetEnumerator ();
 		}
 
 		#endregion
@@ -184,7 +184,7 @@ namespace Epsitec.Common.Types.Collections
 
 		void System.Collections.ICollection.CopyTo(System.Array array, int index)
 		{
-			System.Collections.ICollection collection = this.GetList ();
+			System.Collections.ICollection collection = this.GetCopyOfList ();
 
 			collection.CopyTo (array, index);
 		}
@@ -283,7 +283,11 @@ namespace Epsitec.Common.Types.Collections
 
 		#endregion
 
-		private List<T> GetList()
+		/// <summary>
+		/// Gets a copy of the internal list.
+		/// </summary>
+		/// <returns>The copy of the internal list.</returns>
+		public List<T> GetCopyOfList()
 		{
 			List<T> real = this.list.Select (x => x.Target).Where (x => x != null).ToList ();
 

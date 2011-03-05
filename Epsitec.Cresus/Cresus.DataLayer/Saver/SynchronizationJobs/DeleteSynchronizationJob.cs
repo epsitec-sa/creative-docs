@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs
 		/// </summary>
 		/// <param name="dataContextId">The unique id of the <see cref="DataContext"/> that is creating the <c>AbstractSynchronizationJob</c>.</param>
 		/// <param name="entityKey">The <see cref="EntityKey"/> that identifies the deleted <see cref="AbstractEntity"/> targeted by the <c>AbstractSynchronizationJob.</c></param>
-		public DeleteSynchronizationJob(int dataContextId, EntityKey entityKey)
+		public DeleteSynchronizationJob(long dataContextId, EntityKey entityKey)
 			: base (dataContextId, entityKey)
 		{
 		}
