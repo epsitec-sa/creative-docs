@@ -25,6 +25,7 @@ namespace Epsitec.Cresus.Bricks
 		AsType,
 
 		Input,
+		Field,
 		Width,
 		Separator,
 

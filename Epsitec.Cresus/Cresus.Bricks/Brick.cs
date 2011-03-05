@@ -124,6 +124,20 @@ namespace Epsitec.Cresus.Bricks
 			return brick.properties.FindAll (x => x.Key == key).LastOrDefault ();
 		}
 
+		public static IEnumerable<BrickProperty> GetProperties(Brick brick, params BrickPropertyKey[] keys)
+		{
+			if ((keys == null) ||
+				(keys.Length == 0))
+			{
+				return brick.properties;
+			}
+			else
+			{
+				var hash = new HashSet<BrickPropertyKey> (keys);
+				return brick.properties.Where (x => hash.Contains (x.Key));
+			}
+		}
+
 		
 
 		private readonly List<BrickProperty> properties;

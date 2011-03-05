@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// <param name="creator">The entity creator.</param>
 		/// <param name="mode">The view controller mode.</param>
 		/// <param name="viewControllerSubTypeId">The sub-type ID of the view controller.</param>
-		private ReferenceController(
+		public ReferenceController(
 			string id,
 			System.Func<AbstractEntity> entityGetter,
 			System.Func<AbstractEntity, AbstractEntity> entityMapper = null,

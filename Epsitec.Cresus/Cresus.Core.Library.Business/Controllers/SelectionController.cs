@@ -47,12 +47,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			set;
 		}
 
-		public Expression<System.Func<T>>		ValueGetter
+		public System.Func<T>					ValueGetter
 		{
 			set
 			{
-				this.valueGetterExpression = value;
-				this.valueGetter = null;
+				this.valueGetter = value;
 			}
 		}
 
@@ -107,7 +106,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				this.AttachMultipleValueSelector ();
 			}
-			else if ((this.valueGetterExpression != null) &&
+			else if ((this.valueGetter != null) &&
 					 (this.ValueSetter != null))
 			{
 				this.AttachSingleValueSelector ();
@@ -130,15 +129,10 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public T GetValue()
 		{
-			if (this.valueGetterExpression == null)
+			if (this.valueGetter == null)
 			{
 				return null;
 			}
-			if (this.valueGetter == null)
-			{
-				this.valueGetter = this.valueGetterExpression.Compile ();
-			}
-
 
 			return this.valueGetter ();
 		}
@@ -153,11 +147,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				return this.PossibleItemsGetter ();
 			}
-		}
-
-		public Expression<System.Func<T>> GetValueExpression()
-		{
-			return this.valueGetterExpression;
 		}
 
 		private T GetBusinessContextCompatibleEntity(T value)
@@ -339,7 +328,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private readonly BusinessContext		businessContext;
 
-		private Expression<System.Func<T>>		valueGetterExpression;
 		private System.Func<T>					valueGetter;
 
 		private Widgets.AutoCompleteTextField	attachedWidget;

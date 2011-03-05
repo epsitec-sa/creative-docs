@@ -99,6 +99,29 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 #else
 		protected override void CreateUI()
 		{
+			var bridge = new Bridge<NaturalPersonEntity> (this);
+
+			var wall = bridge.CreateBrickWall ();
+
+			wall.AddBrick ()
+				.Name ("NaturalPerson")
+				.Icon ("Data.NaturalPerson")
+				.Title (TextFormatter.FormatText ("Personne physique"))
+				.TitleCompact (TextFormatter.FormatText ("Personne physique"))
+				.Input ()
+				 .Field (x => x.Title)
+				.End ();
+
+			using (var data = TileContainerController.Setup (this))
+			{
+				foreach (var brick in wall.Bricks)
+				{
+					bridge.CreateTileDataItem (data, brick);
+				}
+			}
+		}
+		protected void CreateOldUI()
+		{
 			using (var data = TileContainerController.Setup (this))
 			{
 				this.CreateUITitle (data);

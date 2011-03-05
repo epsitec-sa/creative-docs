@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Bricks
 
 		public TSelf Field<TResult>(Expression<System.Func<TField, TResult>> expression)
 		{
+			this.AddProperty (new BrickProperty (BrickPropertyKey.Field, expression));
 			return this as TSelf;
 		}
 

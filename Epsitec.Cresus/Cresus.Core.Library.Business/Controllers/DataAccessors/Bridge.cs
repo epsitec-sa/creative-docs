@@ -5,11 +5,13 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Bricks;
+using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
 using System.Linq.Expressions;
+using Epsitec.Cresus.Core.Business;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
@@ -93,6 +95,11 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				data.Add (item);
 				this.ProcessTemplate (data, item, root, templateBrick);
 			}
+			else if (Brick.ContainsProperty (brick, BrickPropertyKey.Input))
+			{
+				this.ProcessInputs (data, item, root, brick);
+				data.Add (item);
+			}
 			else
 			{
 				item.EntityMarshaler = this.controller.CreateEntityMarshaler ();
@@ -100,6 +107,119 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 
 			return item;
+		}
+
+		private void ProcessInputs(TileDataItems data, TileDataItem item, Brick root, Brick brick)
+		{
+			var properties = Brick.GetProperties (brick, BrickPropertyKey.Input, BrickPropertyKey.Separator);
+			var actions    = new List<System.Action<EditionTile, UIBuilder>> ();
+
+			foreach (var property in properties)
+			{
+				switch (property.Key)
+				{
+					case BrickPropertyKey.Input:
+						actions.AddRange (this.CreateActionsForInput (data, item, root, property.Brick).Where (x => x != null));
+						break;
+					case BrickPropertyKey.Separator:
+						actions.Add (this.CreateActionForProcessSeparator (data, item, root));
+						break;
+				}
+			}
+
+			item.CreateEditionUI =
+				(tile, builder)
+				=>
+				{
+					actions.ForEach (x => x (tile, builder));
+				};
+		}
+
+		private System.Action<EditionTile, UIBuilder> CreateActionForProcessSeparator(TileDataItems data, TileDataItem item, Brick root)
+		{
+			return (tile, builder) => builder.CreateMargin (tile, horizontalSeparator: true);
+		}
+
+		private IEnumerable<System.Action<EditionTile, UIBuilder>> CreateActionsForInput(TileDataItems data, TileDataItem item, Brick root, Brick brick)
+		{
+			var properties = Brick.GetProperties (brick, BrickPropertyKey.Field, BrickPropertyKey.Width).ToArray ();
+			
+			foreach (var property in properties)
+			{
+				switch (property.Key)
+				{
+					case BrickPropertyKey.Field:
+						yield return this.CreateActionForInputField (data, item, root, brick, property.ExpressionValue);
+						break;
+				}
+			}
+		}
+
+		private System.Action<EditionTile, UIBuilder> CreateActionForInputField(TileDataItems data, TileDataItem item, Brick root, Brick brick, Expression expression)
+		{
+			var controller = this.controller;
+			var business   = this.controller.BusinessContext;
+
+			LambdaExpression lambda = expression as LambdaExpression;
+
+			if (lambda == null)
+			{
+				throw new System.ArgumentException (string.Format ("Expression {0} for input must be a lambda", expression.ToString ()));
+			}
+
+			var fieldType  = lambda.ReturnType;
+			var entityType = typeof (AbstractEntity);
+
+			if ((fieldType.IsClass) &&
+				(entityType.IsAssignableFrom (fieldType)))
+			{
+				//	The field is an entity.
+
+				var lambdaMember  = (MemberExpression) lambda.Body;
+				var sourceType    = lambda.Parameters[0].Type;
+				
+				ParameterExpression objectParameterExpression = Expression.Parameter (sourceType);
+				ParameterExpression valueParameterExpression  = Expression.Parameter (fieldType);
+
+				var expressionBlock =
+					Expression.Block (
+						Expression.Assign (
+							Expression.Property (objectParameterExpression, (lambdaMember).Member.Name),
+							valueParameterExpression));
+
+				var getterLambda = lambda;
+				var setterLambda = Expression.Lambda (expressionBlock, objectParameterExpression, valueParameterExpression);
+
+				var getterFunc   = getterLambda.Compile ();
+				var setterFunc   = setterLambda.Compile ();
+
+				var dynAccess = (DynamicAccessorBridge) System.Activator.CreateInstance (
+					typeof (DynamicAccessorBridge<,>).MakeGenericType (sourceType, fieldType),
+					(System.Func<T>)(() => controller.Entity), getterFunc, setterFunc);
+
+				return (tile, builder) =>
+				{
+					dynAccess.CreateTextField (business, builder, tile);
+					/*
+										var sel = new SelectionController<PersonTitleEntity> (this.BusinessContext)
+										{
+											ValueGetter         = () => this.Entity.Title,
+											ValueSetter         = x => this.Entity.Title = x,
+											ReferenceController = new ReferenceController (() => this.Entity.Title, creator: this.CreateNewTitle),
+										};
+
+										builder.CreateAutoCompleteTextField (tile, "Titre", controller);
+										*/
+				};
+			}
+
+			return null;
+		}
+
+		private static object DynamicCreateSelectionController(System.Type type, BusinessContext context)
+		{
+			var controllerType = typeof (SelectionController<>).MakeGenericType (type);
+			return System.Activator.CreateInstance (controllerType, context);
 		}
 
 		private void HandleBrickWallBrickAdded(object sender, BrickAddedEventArgs e)
@@ -277,5 +397,56 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 
 		private readonly EntityViewController<T> controller;
+	}
+
+
+	abstract class DynamicAccessorBridge
+	{
+		public abstract System.Delegate CreateGetter();
+		public abstract System.Delegate CreateSetter();
+		public abstract object CreateTextField(BusinessContext context, UIBuilder builder, EditionTile tile);
+	}
+
+	class DynamicAccessorBridge<TSource, TField> : DynamicAccessorBridge
+		where TField : AbstractEntity, new ()
+	{
+		public DynamicAccessorBridge(System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter)
+		{
+			this.sourceGetter = sourceGetter;
+			this.getter = getter;
+			this.setter = setter;
+		}
+
+		public override System.Delegate CreateGetter()
+		{
+			return (System.Func<TField>)(() => (TField) this.getter.DynamicInvoke (this.sourceGetter ()));
+		}
+
+		public override System.Delegate CreateSetter()
+		{
+			return (System.Action<TField>)(x => this.setter.DynamicInvoke (this.sourceGetter (), x));
+		}
+
+		public System.Func<AbstractEntity> CreateGenericGetter()
+		{
+			return () => (AbstractEntity) this.getter.DynamicInvoke (this.sourceGetter ());
+		}
+
+		public override object CreateTextField(BusinessContext context, UIBuilder builder, EditionTile tile)
+		{
+			var sel = new SelectionController<TField> (context)
+			{
+				ValueGetter = (System.Func<TField>)(() => (TField) this.getter.DynamicInvoke (this.sourceGetter ())),
+				ValueSetter = (System.Action<TField>)(x => this.setter.DynamicInvoke (this.sourceGetter (), x)),
+				ReferenceController = new ReferenceController ("x", this.CreateGenericGetter (), creator: null)
+			};
+
+			return builder.CreateAutoCompleteTextField<TField> (tile, "Titre", sel);
+		}
+
+
+		private readonly System.Func<TSource> sourceGetter;
+		private readonly System.Delegate getter;
+		private readonly System.Delegate setter;
 	}
 }
