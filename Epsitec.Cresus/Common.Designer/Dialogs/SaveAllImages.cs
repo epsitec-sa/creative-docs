@@ -150,7 +150,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			var rightPane = new FrameBox
 			{
 				Parent = box,
-				Dock = DockStyle.Fill,
+				PreferredWidth = 250,
+				Dock = DockStyle.Right,
 				Margins = new Margins (4, 0, 0, 0),
 			};
 
@@ -178,13 +179,29 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				Parent = group,
 				HorizontalScrollerMode = ScrollableScrollerMode.HideAlways,
-				VerticalScrollerMode = ScrollableScrollerMode.Auto,
+				VerticalScrollerMode = ScrollableScrollerMode.ShowAlways,
 				PaintViewportFrame = false,
 				Dock = DockStyle.Fill,
 			};
 
 			this.scrollableEntities.Viewport.IsAutoFitting = true;
-			
+
+			new Separator
+			{
+				Parent = this.scrollableEntities,
+				PreferredWidth = 1,
+				Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Right,
+				Margins = new Margins (0, 50+24, 0, 0),
+			};
+
+			new Separator
+			{
+				Parent = this.scrollableEntities,
+				PreferredWidth = 1,
+				Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Right,
+				Margins = new Margins (0, 50+55+24, 0, 0),
+			};
+
 			var footer = new FrameBox
 			{
 				Parent = group,
@@ -447,7 +464,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				if (i%2 == 0)
 				{
-					line.BackColor = Color.FromHexa ("f5f2f7");  // une ligne sur deux plus claire
+					line.BackColor = Color.FromHexa ("f8f5fa");  // une ligne sur deux plus claire
 				}
 
 				var button = new CheckButton
@@ -462,9 +479,9 @@ namespace Epsitec.Common.Designer.Dialogs
 				new StaticText
 				{
 					Parent = line,
-					Text = this.entitySamples[i].BoxCountDescription,
+					Text = this.entitySamples[i].BoxCountDescription,  // par exemple "2 boîtes"
 					ContentAlignment = Drawing.ContentAlignment.MiddleRight,
-					PreferredWidth = 55,
+					PreferredWidth = 50,
 					Dock = DockStyle.Right,
 					Margins = new Margins (0, 5, 0, 0),
 				};
@@ -472,7 +489,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				new StaticText
 				{
 					Parent = line,
-					Text = this.entitySamples[i].FlagsDescription,
+					Text = this.entitySamples[i].FlagsDescription,  // par exemple "Schéma"
 					ContentAlignment = Drawing.ContentAlignment.MiddleLeft,
 					PreferredWidth = 50,
 					Dock = DockStyle.Right,

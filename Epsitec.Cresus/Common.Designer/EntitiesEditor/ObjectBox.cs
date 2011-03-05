@@ -731,7 +731,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					SourceInfo info = this.sourcesList[this.sourcesMenuSelected];
 					if (!info.Opened)
 					{
-						this.OpenSource(info.CultureMap);
+						this.OpenBox(info.CultureMap);
 					}
 
 					this.isSourcesMenu = false;  // ferme le menu
@@ -2629,7 +2629,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return false;
 		}
 
-		public void OpenSource(CultureMap cultureMap)
+		public void OpenBox(CultureMap cultureMap)
 		{
 			//	Ouvre une entité source.
 			ObjectBox box = this.editor.SearchBox(cultureMap.Name);

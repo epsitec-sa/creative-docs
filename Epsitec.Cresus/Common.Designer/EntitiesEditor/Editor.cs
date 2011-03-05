@@ -874,6 +874,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				dirty = true;
 			}
 
+#if false
 			foreach (ObjectBox abox in this.boxes)
 			{
 				abox.IsConnectedToRoot = false;
@@ -945,6 +946,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				abox.IsConnectedToRoot = false;
 				abox.Parents.Clear();
 			}
+#endif
 
 			this.UpdateAfterOpenOrCloseBox();
 
