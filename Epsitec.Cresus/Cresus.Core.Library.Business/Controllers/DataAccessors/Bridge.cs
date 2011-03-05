@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Linq;
 using System.Linq.Expressions;
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.DataLayer.Context;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
@@ -195,11 +196,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 				var dynAccess = (DynamicAccessorBridge) System.Activator.CreateInstance (
 					typeof (DynamicAccessorBridge<,>).MakeGenericType (sourceType, fieldType),
+					business,
 					(System.Func<T>)(() => controller.Entity), getterFunc, setterFunc);
 
 				return (tile, builder) =>
 				{
-					dynAccess.CreateTextField (business, builder, tile);
+					dynAccess.CreateTextField (builder, tile);
 					/*
 										var sel = new SelectionController<PersonTitleEntity> (this.BusinessContext)
 										{
@@ -402,49 +404,59 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 	abstract class DynamicAccessorBridge
 	{
-		public abstract System.Delegate CreateGetter();
-		public abstract System.Delegate CreateSetter();
-		public abstract object CreateTextField(BusinessContext context, UIBuilder builder, EditionTile tile);
+		public abstract object CreateTextField(UIBuilder builder, EditionTile tile);
 	}
 
 	class DynamicAccessorBridge<TSource, TField> : DynamicAccessorBridge
 		where TField : AbstractEntity, new ()
 	{
-		public DynamicAccessorBridge(System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter)
+		public DynamicAccessorBridge(BusinessContext business, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter)
 		{
+			this.business = business;
 			this.sourceGetter = sourceGetter;
 			this.getter = getter;
 			this.setter = setter;
 		}
 
-		public override System.Delegate CreateGetter()
+		private System.Func<TField> CreateGetter()
 		{
-			return (System.Func<TField>)(() => (TField) this.getter.DynamicInvoke (this.sourceGetter ()));
+			return () => (TField) this.getter.DynamicInvoke (this.sourceGetter ());
 		}
 
-		public override System.Delegate CreateSetter()
+		private System.Action<TField> CreateSetter()
 		{
-			return (System.Action<TField>)(x => this.setter.DynamicInvoke (this.sourceGetter (), x));
+			return x => this.setter.DynamicInvoke (this.sourceGetter (), x);
 		}
 
-		public System.Func<AbstractEntity> CreateGenericGetter()
+		private System.Func<AbstractEntity> CreateGenericGetter()
 		{
 			return () => (AbstractEntity) this.getter.DynamicInvoke (this.sourceGetter ());
 		}
 
-		public override object CreateTextField(BusinessContext context, UIBuilder builder, EditionTile tile)
+		private ReferenceController CreateReferenceController()
 		{
-			var sel = new SelectionController<TField> (context)
+			return new ReferenceController ("x", this.CreateGenericGetter (), creator: this.CreateNewEntity);
+		}
+
+		private NewEntityReference CreateNewEntity(DataContext context)
+		{
+			return context.CreateEntityAndRegisterAsEmpty<TField> ();
+		}
+
+		public override object CreateTextField(UIBuilder builder, EditionTile tile)
+		{
+			var sel = new SelectionController<TField> (this.business)
 			{
-				ValueGetter = (System.Func<TField>)(() => (TField) this.getter.DynamicInvoke (this.sourceGetter ())),
-				ValueSetter = (System.Action<TField>)(x => this.setter.DynamicInvoke (this.sourceGetter (), x)),
-				ReferenceController = new ReferenceController ("x", this.CreateGenericGetter (), creator: null)
+				ValueGetter = this.CreateGetter (),
+				ValueSetter = this.CreateSetter (),
+				ReferenceController = this.CreateReferenceController (),
 			};
 
 			return builder.CreateAutoCompleteTextField<TField> (tile, "Titre", sel);
 		}
 
 
+		private readonly BusinessContext business;
 		private readonly System.Func<TSource> sourceGetter;
 		private readonly System.Delegate getter;
 		private readonly System.Delegate setter;

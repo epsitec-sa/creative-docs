@@ -21,19 +21,29 @@ namespace Epsitec.Cresus.Core.Resolvers
 		public static EntityViewController Resolve(string name, AbstractEntity entity, ViewControllerMode mode, int controllerSubTypeId, ResolutionMode resolutionMode)
 		{
 			var entityType = entity.GetType ();
-			var type = EntityViewControllerResolver.ResolveEntityViewController(entityType, mode, controllerSubTypeId);
+			var type = EntityViewControllerResolver.ResolveEntityViewController (entityType, mode, controllerSubTypeId);
 
 			if (type == null)
 			{
-				if ((mode == ViewControllerMode.Creation) ||
-					(resolutionMode == ResolutionMode.NullOnError))
+				if (mode == ViewControllerMode.Creation)
+				{
+					type = EntityViewControllerResolver.ResolveEntityViewController (entityType, ViewControllerMode.Summary, controllerSubTypeId)
+						?? EntityViewControllerResolver.ResolveEntityViewController (entityType, ViewControllerMode.Edition, controllerSubTypeId);
+				}
+			}
+
+			if (type == null)
+			{
+				if (resolutionMode == ResolutionMode.NullOnError)
 				{
 					return null;
 				}
+				else
+				{
+					System.Diagnostics.Debug.Assert (resolutionMode == ResolutionMode.ThrowOnError);
 
-				System.Diagnostics.Debug.Assert (resolutionMode == ResolutionMode.ThrowOnError);
-
-				throw new System.InvalidOperationException (string.Format ("Cannot create controller {0} for entity of type {1} using ViewControllerMode.{2}", name, entity.GetType (), mode));
+					throw new System.InvalidOperationException (string.Format ("Cannot create controller {0} for entity of type {1} using ViewControllerMode.{2}", name, entity.GetType (), mode));
+				}
 			}
 
 			object[] constructorArguments = new object[] { name, entity };
