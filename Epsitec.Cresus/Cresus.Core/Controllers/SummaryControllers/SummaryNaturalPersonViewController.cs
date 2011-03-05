@@ -22,13 +22,9 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
-		protected override void CreateUI()
+		protected override void CreateBricks()
 		{
-			var bridge = new Bridge<NaturalPersonEntity> (this);
-
-			var wall = bridge.CreateBrickWall ();
-
-			wall.AddBrick ()
+			this.AddBrick ()
 //				.Name ("NaturalPerson")
 //				.Icon ("Data.NaturalPerson")
 //				.Title (TextFormatter.FormatText ("Personne physique"))
@@ -37,7 +33,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 //				.TextCompact (x => x.GetCompactSummary ())
 			;
 
-			wall.AddBrick (x => x.Contacts)
+			this.AddBrick (x => x.Contacts)
 				.AsType<MailContactEntity> ()
 //				.Name ("MailContact")
 //				.Icon ("Data.MailContact")
@@ -52,7 +48,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				 .TextCompact (x => x.GetCompactSummary ())
 				.End ();
 
-			wall.AddBrick (x => x.Contacts)
+			this.AddBrick (x => x.Contacts)
 				.AsType<TelecomContactEntity> ()
 				.AutoGroup ()
 //				.Name ("TelecomContact")
@@ -66,7 +62,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				 .TextCompact (x => x.GetCompactSummary ())
 				.End ();
 
-			wall.AddBrick (x => x.Contacts)
+			this.AddBrick (x => x.Contacts)
 				.AsType<UriContactEntity> ()
 				.AutoGroup ()
 //				.Name ("UriContact")
@@ -80,13 +76,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				 .TextCompact (x => x.GetCompactSummary ())
 				.End ();
 
-			using (var data = TileContainerController.Setup (this))
-			{
-				foreach (var brick in wall.Bricks)
-				{
-					bridge.CreateTileDataItem (data, brick);
-				}
-			}
 		}
 	}
 }

@@ -93,6 +93,7 @@
     <Compile Include="Controllers\CoreViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationViewController.cs" />
     <Compile Include="Controllers\CreationControllers\ICreationController.cs" />
+    <Compile Include="Controllers\DataAccessors\Bridge.cs" />
     <Compile Include="Controllers\DataAccessors\Bridge`1.cs" />
     <Compile Include="Controllers\DataAccessors\CollectionAccessor.cs" />
     <Compile Include="Controllers\DataAccessors\CollectionAccessor`3.cs" />

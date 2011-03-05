@@ -15,6 +15,7 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -62,6 +63,49 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.TileContainer = tileContainer;
 			this.CreateUI ();
 		}
+
+		protected override void CreateUI()
+		{
+			var bridge = new Bridge<T> (this);
+			
+			this.wall = bridge.CreateBrickWall ();
+				
+			this.CreateBricks ();
+
+			if (this.wall.Bricks.Any ())
+			{
+				using (var data = TileContainerController.Setup (this))
+				{
+					foreach (var brick in wall.Bricks)
+					{
+						bridge.CreateTileDataItem (data, brick);
+					}
+				}
+			}
+			this.wall = null;
+		}
+
+		protected virtual void CreateBricks()
+		{
+		}
+
+		protected Bricks.SimpleBrick<T, T> AddBrick()
+		{
+			return this.wall.AddBrick ();
+		}
+
+		protected Bricks.SimpleBrick<T, TField> AddBrick<TField>(Expression<System.Func<T, TField>> expression)
+		{
+			return this.wall.AddBrick (expression);
+		}
+
+		protected Bricks.SimpleBrick<T, TField> AddBrick<TField>(Expression<System.Func<T, IList<TField>>> expression)
+		{
+			return this.wall.AddBrick (expression);
+		}
+
+
+		protected Bricks.BrickWall<T> wall;
 
 		public sealed override AbstractEntity GetEntity()
 		{
