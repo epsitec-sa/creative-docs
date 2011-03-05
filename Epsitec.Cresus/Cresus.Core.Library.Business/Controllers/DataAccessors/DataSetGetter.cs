@@ -19,12 +19,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 	{
 		public static DataSetCollectionGetter ResolveDataSet(CoreData data, string dataSetName)
 		{
-			return context => data.GetAllEntities<NaturalPersonEntity> (dataContext: context);
-			throw new System.NotImplementedException ();
+//			return context => data.GetAllEntities<NaturalPersonEntity> (dataContext: context);
+//			throw new System.NotImplementedException ();
 
 			switch (dataSetName)
 			{
-#if false
+#if true
 				case "Customers":
 					return context => data.GetAllEntities<RelationEntity> (dataContext: context);
 
@@ -71,10 +71,10 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		
 		public static Druid GetRootEntityId(string dataSetName)
 		{
-			return EntityInfo<NaturalPersonEntity>.GetTypeId ();
+//			return EntityInfo<NaturalPersonEntity>.GetTypeId ();
 			switch (dataSetName)
 			{
-#if false
+#if true
 				case "Customers":
 					return EntityInfo<RelationEntity>.GetTypeId ();
 

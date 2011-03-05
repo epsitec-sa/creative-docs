@@ -21,70 +21,42 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 		}
 
-
-		protected override void CreateUI()
+		protected override void CreateBricks()
 		{
-			using (var data = TileContainerController.Setup (this))
-			{
-				this.CreateUIRelation (data);
-				this.CreateUIMailContacts (data);
-				this.CreateUITelecomContacts (data);
-				this.CreateUIUriContacts (data);
-				this.CreateUIAffairs (data);
-			}
-		}
+			this.AddBrick ()
+				.Name ("Customer")
+				.Icon ("Data.Customer")
+				.Title (TextFormatter.FormatText ("Client"));
 
-		private void CreateUIRelation(TileDataItems data)
-		{
-			data.Add (
-				new TileDataItem
-				{
-					Name				= "Customer",
-					IconUri				= "Data.Customer",
-					Title				= TextFormatter.FormatText ("Client"),
-					CompactTitle		= TextFormatter.FormatText ("Client"),
-					TextAccessor		= this.CreateAccessor (x => x.GetSummary ()),
-					CompactTextAccessor = this.CreateAccessor (x => x.GetCompactSummary ()),
-					EntityMarshaler		= this.CreateEntityMarshaler (),
-				});
-		}
+			this.AddBrick (x => x.Person.Contacts)
+				.AsType<MailContactEntity> ()
+				.Template ()
+				 .Title (x => x.GetTitle ())
+				 .Text (x => x.GetSummary ())
+				 .TextCompact (x => x.GetCompactSummary ())
+				.End ();
 
-		private void CreateUIMailContacts(TileDataItems data)
-		{
-			Common.CreateUIMailContacts (this.BusinessContext, data, this.EntityGetter, x => x.Person.Contacts);
-		}
+			this.AddBrick (x => x.Person.Contacts)
+				.AsType<TelecomContactEntity> ()
+				.AutoGroup ()
+				.Template ()
+				 .Text (x => x.GetSummary ())
+				 .TextCompact (x => x.GetCompactSummary ())
+				.End ();
 
-		private void CreateUITelecomContacts(TileDataItems data)
-		{
-			Common.CreateUITelecomContacts (this.BusinessContext, data, this.EntityGetter, x => x.Person.Contacts);
-		}
+			this.AddBrick (x => x.Person.Contacts)
+				.AsType<UriContactEntity> ()
+				.AutoGroup ()
+				.Template ()
+				 .Text (x => x.GetSummary ())
+				 .TextCompact (x => x.GetCompactSummary ())
+				.End ();
 
-		private void CreateUIUriContacts(TileDataItems data)
-		{
-			Common.CreateUIUriContacts (this.BusinessContext, data, this.EntityGetter, x => x.Person.Contacts);
-		}
-
-
-		private void CreateUIAffairs(TileDataItems data)
-		{
-			data.Add (
-				new TileDataItem
-				{
-					AutoGroup    = true,
-					Name		 = "Affair",
-					IconUri		 = "Data.Affair",
-					Title		 = TextFormatter.FormatText ("Affaires"),
-					CompactTitle = TextFormatter.FormatText ("Affaires"),
-					Text		 = CollectionTemplate.DefaultEmptyText,
-					DefaultMode  = ViewControllerMode.Summary,
-				});
-
-			var template = new CollectionTemplate<AffairEntity> ("Affair", this.BusinessContext);
-
-			template.DefineText (x => x.GetSummary ());
-			template.DefineCompactText (x => TextFormatter.FormatText (x.IdA));
-
-			data.Add (this.CreateCollectionAccessor (template, x => x.Affairs));
+			this.AddBrick (x => x.Affairs)
+				.Template ()
+				 .Text (x => x.GetSummary ())
+				 .TextCompact (x => TextFormatter.FormatText (x.IdA))
+				.End ();
 		}
 	}
 }
