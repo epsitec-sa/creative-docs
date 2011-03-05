@@ -1446,6 +1446,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
+		/// <summary>
+		/// Gets the ID of the <see cref="DataContext"/> associated with the entity, if any.
+		/// </summary>
+		/// <param name="entity">The entity.</param>
+		/// <returns>The ID of the associated <see cref="DataContext"/> if there is one; otherwise, <c>-1</c>.</returns>
 		public static long GetDataContextId(AbstractEntity entity)
 		{
 			if ((entity == null) ||
@@ -1459,6 +1464,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}
 
+		/// <summary>
+		/// Gets the <see cref="DataContext"/> associated with the entity, if any.
+		/// </summary>
+		/// <param name="entity">The entity.</param>
+		/// <returns>The <see cref="DataContext"/> if there is one; otherwise, <c>null</c>.</returns>
 		public static DataContext GetDataContext(AbstractEntity entity)
 		{
 			return DataContextPool.GetDataContext (DataContext.GetDataContextId (entity));

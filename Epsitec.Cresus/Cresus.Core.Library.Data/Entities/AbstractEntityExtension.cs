@@ -32,23 +32,41 @@ namespace Epsitec.Cresus.Core.Entities
 		/// Compares two entities and returns <c>true</c> if they refer to the same database key
 		/// or if they are the same memory instance.
 		/// </summary>
-		/// <param name="that">The reference entity.</param>
-		/// <param name="other">The other entity.</param>
+		/// <param name="entityA">The first entity.</param>
+		/// <param name="entityB">The second entity.</param>
 		/// <returns><c>true</c> if both entities refer to the same database key; otherwise, <c>false</c>.</returns>
-		public static bool DbKeyEquals(this AbstractEntity that, AbstractEntity other)
+		public static bool DbKeyEquals(this AbstractEntity entityA, AbstractEntity entityB)
 		{
-			if (that.RefEquals (other))
+			if (entityA.RefEquals (entityB))
 			{
 				return true;
 			}
-			else
+			
+			if ((entityA == null) ||
+				(entityB == null))
 			{
-				//	TODO: fix this
-				throw new System.NotImplementedException ();
-#if false
-				return CoreProgram.Application.Data.DataContextPool.AreEqualDatabaseInstances (that, other);
-#endif
+				return false;
 			}
+
+			DataContext contextA = entityA.GetDataContext ();
+			DataContext contextB = entityB.GetDataContext ();
+
+			if ((contextA == null) ||
+				(contextB == null))
+			{
+				return false;
+			}
+
+			var keyA = contextA.GetNormalizedEntityKey (entityA);
+			var keyB = contextB.GetNormalizedEntityKey (entityB);
+
+			if ((keyA.HasValue) &&
+				(keyB.HasValue))
+			{
+				return keyA.Value == keyB.Value;
+			}
+
+			return false;
 		}
 
 		public static bool RefEquals(this AbstractEntity that, AbstractEntity other)
