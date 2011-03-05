@@ -98,6 +98,11 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
+				if (string.IsNullOrEmpty (this.text))
+				{
+					yield break;
+				}
+
 				int pos = 0;
 				
 				while (pos < this.text.Length)

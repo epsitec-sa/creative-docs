@@ -727,7 +727,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			foreach (var titleTile in titleTiles)
 			{
 				titleTile.Parent  = parent;
-				titleTile.Dock    = DockStyle.Top;
+				titleTile.Dock    = DockStyle.Stacked;
 				titleTile.Margins = new Margins (0, 0, 0, -1);
 			}
 

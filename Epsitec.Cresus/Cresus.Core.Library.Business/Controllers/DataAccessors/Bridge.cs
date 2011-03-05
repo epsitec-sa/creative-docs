@@ -13,6 +13,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
@@ -98,8 +99,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 			else if (Brick.ContainsProperty (brick, BrickPropertyKey.Input))
 			{
-				this.ProcessInputs (data, item, root, brick);
-				data.Add (item);
+				var processor = new InputProcessor (this.controller, data, item, brick);
+				
+				processor.ProcessInputs ();
 			}
 			else
 			{
@@ -110,121 +112,188 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			return item;
 		}
 
-		private void ProcessInputs(TileDataItems data, TileDataItem item, Brick root, Brick brick)
+		class InputProcessor
 		{
-			var properties = Brick.GetProperties (brick, BrickPropertyKey.Input, BrickPropertyKey.Separator);
-			var actions    = new List<System.Action<EditionTile, UIBuilder>> ();
-
-			foreach (var property in properties)
+			public InputProcessor(EntityViewController<T> controller, TileDataItems data, TileDataItem item, Brick root)
 			{
-				switch (property.Key)
-				{
-					case BrickPropertyKey.Input:
-						actions.AddRange (this.CreateActionsForInput (data, item, root, property.Brick).Where (x => x != null));
-						break;
-					case BrickPropertyKey.Separator:
-						actions.Add (this.CreateActionForProcessSeparator (data, item, root));
-						break;
-				}
+				this.controller = controller;
+				this.business = this.controller.BusinessContext;
+				this.data  = data;
+				this.item  = item;
+				this.root  = root;
+				this.actions = new List<System.Action<EditionTile, UIBuilder>> ();
+				this.inputProperties = Brick.GetProperties (this.root, BrickPropertyKey.Input);
 			}
-
-			item.CreateEditionUI =
-				(tile, builder)
-				=>
-				{
-					actions.ForEach (x => x (tile, builder));
-				};
-		}
-
-		private System.Action<EditionTile, UIBuilder> CreateActionForProcessSeparator(TileDataItems data, TileDataItem item, Brick root)
-		{
-			return (tile, builder) => builder.CreateMargin (tile, horizontalSeparator: true);
-		}
-
-		private IEnumerable<System.Action<EditionTile, UIBuilder>> CreateActionsForInput(TileDataItems data, TileDataItem item, Brick root, Brick brick)
-		{
-			var properties = Brick.GetProperties (brick, BrickPropertyKey.Field);
 			
-			foreach (var property in properties)
+			public void ProcessInputs()
 			{
-				switch (property.Key)
+				foreach (var property in this.inputProperties)
 				{
-					case BrickPropertyKey.Field:
-						yield return this.CreateActionForInputField (data, item, root, brick, property.ExpressionValue, properties);
-						break;
+					switch (property.Key)
+					{
+						case BrickPropertyKey.Input:
+							this.CreateActionsForInput (property.Brick);
+							break;
+					}
+				}
+
+				this.RecordActions ();
+			}
+
+			private void CreateActionsForInput(Brick brick)
+			{
+				var fieldProperties = Brick.GetProperties (brick, BrickPropertyKey.Field);
+
+				foreach (var property in fieldProperties)
+				{
+					switch (property.Key)
+					{
+						case BrickPropertyKey.Field:
+							this.CreateActionForInputField (property.ExpressionValue, fieldProperties);
+							break;
+					}
+				}
+
+				if (this.inputProperties.PeekAfter (BrickPropertyKey.Separator).HasValue)
+				{
+					this.CreateActionForSeparator ();
 				}
 			}
+
+			private void CreateActionForInputField(Expression expression, BrickPropertyCollection fieldProperties)
+			{
+				LambdaExpression lambda = expression as LambdaExpression;
+
+				if (lambda == null)
+				{
+					throw new System.ArgumentException (string.Format ("Expression {0} for input must be a lambda", expression.ToString ()));
+				}
+
+				var fieldType  = lambda.ReturnType;
+				var entityType = typeof (AbstractEntity);
+
+				int    width = InputProcessor.GetInputWidth (fieldProperties);
+				string title = InputProcessor.GetInputTitle (fieldProperties);
+
+				if ((fieldType.IsClass) &&
+					(entityType.IsAssignableFrom (fieldType)))
+				{
+					//	The field is an entity : use an AutoCompleteTextField for it.
+
+					var factory = DynamicFactories.AutoCompleteTextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title);
+					this.actions.Add ((tile, builder) => factory.CreateUI (tile, builder));
+
+					return;
+				}
+
+				if ((fieldType == typeof (string)) ||
+					(fieldType == typeof (Date)))
+				{
+					var factory = DynamicFactories.TextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, width);
+					this.actions.Add ((tile, builder) => factory.CreateUI (tile, builder));
+
+					return;
+				}
+
+				if ((fieldType.IsGenericType) &&
+					(fieldType.GetGenericTypeDefinition () == typeof (System.Collections.Generic.IList<>)))
+				{
+					var itemType = fieldType.GetGenericArguments ()[0];
+
+					if ((itemType.IsClass) &&
+						(entityType.IsAssignableFrom (itemType)))
+					{
+						var factory = DynamicFactories.ItemPickerDynamicFactory.Create<T> (business, lambda, itemType, this.controller.EntityGetter, title);
+						this.actions.Add ((tile, builder) => factory.CreateUI (tile, builder));
+					}
+				}
+			}
+			
+			private void CreateActionForSeparator()
+			{
+				this.actions.Add ((tile, builder) => builder.CreateMargin (tile, horizontalSeparator: true));
+			}
+
+			private void RecordActions()
+			{
+				if ((this.actions != null) &&
+					(this.actions.Count > 0))
+				{
+					if (this.item == null)
+					{
+						this.item = new TileDataItem ();
+					}
+
+					if (this.actions.Count == 1)
+					{
+						var singleAction = this.actions[0];
+						this.item.CreateEditionUI = (tile, builder) => singleAction (tile, builder);
+					}
+					else
+					{
+						var multiActions = this.actions.ToArray ();
+						
+						this.item.CreateEditionUI = (tile, builder) =>
+							{
+								foreach (var action in multiActions)
+								{
+									var subTile = builder.CreateEditionTile (tile);
+//.									subTile.PreferredHeight = 1;
+									action (subTile, builder);
+								}
+							};
+					}
+				}
+
+				if (this.item != null)
+				{
+					this.data.Add (this.item);
+					this.actions.Clear ();
+					this.item = null;
+				}
+			}
+
+			private static int GetInputWidth(BrickPropertyCollection properties)
+			{
+				var widthProperty = properties.PeekAfter (BrickPropertyKey.Width);
+
+				if (widthProperty.HasValue)
+				{
+					return widthProperty.Value.IntValue.GetValueOrDefault (0);
+				}
+				else
+				{
+					return 0;
+				}
+			}
+
+			private static string GetInputTitle(BrickPropertyCollection properties)
+			{
+				var titleProperty = properties.PeekBefore (BrickPropertyKey.Title);
+
+				if (titleProperty.HasValue)
+				{
+					return titleProperty.Value.StringValue;
+				}
+				else
+				{
+					return null;
+				}
+			}
+
+			private readonly EntityViewController<T> controller;
+			private readonly BusinessContext business;
+			private readonly TileDataItems data;
+			private readonly Brick root;
+			private readonly List<System.Action<EditionTile, UIBuilder>> actions;
+			private readonly BrickPropertyCollection inputProperties;
+			
+			private TileDataItem item;
 		}
 
-		private System.Action<EditionTile, UIBuilder> CreateActionForInputField(TileDataItems data, TileDataItem item, Brick root, Brick brick, Expression expression, BrickPropertyCollection properties)
-		{
-			var business   = this.controller.BusinessContext;
 
-			LambdaExpression lambda = expression as LambdaExpression;
 
-			if (lambda == null)
-			{
-				throw new System.ArgumentException (string.Format ("Expression {0} for input must be a lambda", expression.ToString ()));
-			}
 
-			var fieldType  = lambda.ReturnType;
-			var entityType = typeof (AbstractEntity);
-
-			int    width = Bridge<T>.GetInputWidth (properties);
-			string title = Bridge<T>.GetInputTitle (properties);
-
-			if ((fieldType.IsClass) &&
-				(entityType.IsAssignableFrom (fieldType)))
-			{
-				//	The field is an entity : use an AutoCompleteTextField for it.
-
-				var factory = DynamicFactories.AutoCompleteTextFieldDynamicFactory.Create<T> (lambda, business, this.controller.EntityGetter, title);
-				return (tile, builder) => factory.CreateUI (tile, builder);
-			}
-
-			if ((fieldType == typeof (string)) ||
-				(fieldType == typeof (Date)))
-			{
-				var factory = DynamicFactories.TextFieldDynamicFactory.Create<T> (lambda, business, this.controller.EntityGetter, title, width);
-				return (tile, builder) => factory.CreateUI (tile, builder);
-			}
-
-			return null;
-		}
-
-		private static int GetInputWidth(BrickPropertyCollection properties)
-		{
-			var widthProperty = properties.PeekAfter (BrickPropertyKey.Width);
-
-			if (widthProperty.HasValue)
-			{
-				return widthProperty.Value.IntValue.GetValueOrDefault (0);
-			}
-			else
-			{
-				return 0;
-			}
-		}
-
-		private static string GetInputTitle(BrickPropertyCollection properties)
-		{
-			var titleProperty = properties.PeekBefore (BrickPropertyKey.Title);
-
-			if (titleProperty.HasValue)
-			{
-				return titleProperty.Value.StringValue;
-			}
-			else
-			{
-				return null;
-			}
-		}
-
-		private static object DynamicCreateSelectionController(System.Type type, BusinessContext context)
-		{
-			var controllerType = typeof (SelectionController<>).MakeGenericType (type);
-			return System.Activator.CreateInstance (controllerType, context);
-		}
 
 		private void HandleBrickWallBrickAdded(object sender, BrickAddedEventArgs e)
 		{

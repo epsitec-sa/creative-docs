@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 {
 	internal abstract class TextFieldDynamicFactory : DynamicFactory
 	{
-		public static DynamicFactory Create<T>(LambdaExpression lambda, BusinessContext business, System.Func<T> entityGetter, string title, int width)
+		public static DynamicFactory Create<T>(BusinessContext business, LambdaExpression lambda, System.Func<T> entityGetter, string title, int width)
 		{
 			var fieldType    = lambda.ReturnType;
 			var sourceType   = lambda.Parameters[0].Type;

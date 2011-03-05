@@ -105,6 +105,7 @@
     <Compile Include="Controllers\DataAccessors\DynamicAccessorFactory`3.cs" />
     <Compile Include="Controllers\DataAccessors\DynamicFactories\AutoCompleteTextFieldDynamicFactory.cs" />
     <Compile Include="Controllers\DataAccessors\DynamicFactories\DynamicFactory.cs" />
+    <Compile Include="Controllers\DataAccessors\DynamicFactories\ItemPickerDynamicFactory.cs" />
     <Compile Include="Controllers\DataAccessors\DynamicFactories\TextFieldDynamicFactory.cs" />
     <Compile Include="Controllers\DataAccessors\GroupedItemController.cs" />
     <Compile Include="Controllers\DataAccessors\ICollectionAccessor.cs" />

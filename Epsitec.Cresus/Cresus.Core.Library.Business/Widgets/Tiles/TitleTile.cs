@@ -54,10 +54,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		public TileCollection Items
 		{
-			// TODO: Dans la nouvelle façon de créer les tuiles (réunification des tuiles Summary et Edition), une
-			//		 tuile TitleTile n'a toujours qu'une seule tuile GenericTile "fille". Cette collection pourrait
-			//		 donc être remplacée une une instance unique !
-			//		 SetTileVisibility ci-dessous fonctionne selon cette idée.
 			get
 			{
 				return this.items;
@@ -405,7 +401,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		void Common.Widgets.Collections.IWidgetCollectionHost<GenericTile>.NotifyInsertion(GenericTile widget)
 		{
-			widget.Dock   = DockStyle.Top;
+			widget.Dock   = DockStyle.Stacked;
 			widget.Parent = this.mainPanel;
 
 			this.AttachEventHandlers (widget);

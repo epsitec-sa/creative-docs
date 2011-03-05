@@ -157,7 +157,7 @@ namespace Epsitec.Cresus.Core
 		{
 			widget.Parent = this.Container;
 			widget.TabIndex = ++this.tabIndex;
-			widget.Dock = DockStyle.Top;
+			widget.Dock = DockStyle.Stacked;
 
 			this.ContentListAdd (widget);
 		}
@@ -206,7 +206,7 @@ namespace Epsitec.Cresus.Core
 			this.panelTitleTile = new PanelTitleTile
 			{
 				Parent = this.Container,
-				Dock = DockStyle.Top,
+				Dock = DockStyle.Stacked,
 				Margins = new Margins (0, 0, 0, bottomMargin),
 				TitleIconUri = iconUri,
 				Title = title,
@@ -230,7 +230,7 @@ namespace Epsitec.Cresus.Core
 			this.titleTile = new TitleTile
 			{
 				Parent = this.Container,
-				Dock = DockStyle.Top,
+				Dock = DockStyle.Stacked,
 				Margins = new Margins (0, 0, 0, bottomMargin),
 				TitleIconUri = iconUri,
 				Title = title,
@@ -254,6 +254,22 @@ namespace Epsitec.Cresus.Core
 
 			this.ContentListAdd (tile);
 			this.titleTile.Items.Add (tile);
+
+			return tile;
+		}
+
+		public EditionTile CreateEditionTile(EditionTile parent)
+		{
+			var tile = new EditionTile
+			{
+				AutoHilite = false,
+				IsReadOnly = false,
+				TabIndex   = ++this.tabIndex,
+				Parent     = parent,
+				Dock       = DockStyle.Stacked,
+			};
+
+			this.ContentListAdd (tile);
 
 			return tile;
 		}
@@ -320,7 +336,7 @@ namespace Epsitec.Cresus.Core
 			var tileTabBook = new TileTabBook<T> (pageDescriptions)
 			{
 				Parent = tile.Container,
-				Dock = DockStyle.Top,
+				Dock = DockStyle.Stacked,
 				Margins = new Margins (0, UIBuilder.RightMargin, 0, 5),
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				TabIndex = ++this.tabIndex,
@@ -336,7 +352,7 @@ namespace Epsitec.Cresus.Core
 			var tileTabBook = new TileTabBook<T> (pageDescriptions)
 			{
 				Parent = tile.Container,
-				Dock = DockStyle.Top,
+				Dock = DockStyle.Stacked,
 				Margins = new Margins (0, UIBuilder.RightMargin, 0, 5),
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				TabIndex = ++this.tabIndex,
@@ -421,7 +437,7 @@ namespace Epsitec.Cresus.Core
 				DrawFullFrame = true,
 				BackColor = ArrowedFrame.SurfaceColors.First (),
 				Padding = new Margins (2),
-				Dock = DockStyle.Top,
+				Dock = DockStyle.Stacked,
 			};
 
 			if (height != 0)
@@ -525,7 +541,7 @@ namespace Epsitec.Cresus.Core
 				Text = text,
 				TextBreakMode = Common.Drawing.TextBreakMode.Hyphenate,
 				PreferredHeight = height,
-				Dock = DockStyle.Top,
+				Dock = DockStyle.Stacked,
 				Margins = new Margins (0, UIBuilder.RightMargin, 5, 5),
 			};
 
@@ -543,7 +559,7 @@ namespace Epsitec.Cresus.Core
 				ContentAlignment = ContentAlignment.TopLeft,
 				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split,
 				PreferredHeight =  Misc.GetEstimatedHeight (text),
-				Dock = DockStyle.Top,
+				Dock = DockStyle.Stacked,
 				Margins = new Margins (0, UIBuilder.RightMargin, 0, 0),
 			};
 
@@ -562,7 +578,7 @@ namespace Epsitec.Cresus.Core
 					Parent = tile.Container,
 					Text = string.Concat (label, " :"),
 					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-					Dock = DockStyle.Top,
+					Dock = DockStyle.Stacked,
 					Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
 				};
 
@@ -573,7 +589,7 @@ namespace Epsitec.Cresus.Core
 			{
 				Parent = tile.Container,
 				PreferredHeight = 20,
-				Dock = DockStyle.Top,
+				Dock = DockStyle.Stacked,
 				Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderTextField),
 				TabIndex = ++this.tabIndex,
 			};
@@ -593,14 +609,14 @@ namespace Epsitec.Cresus.Core
 					Parent = tile.Container,
 					Text = string.Concat (label, " :"),
 					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-					Dock = DockStyle.Top,
+					Dock = DockStyle.Stacked,
 					Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
 				};
 
 				this.ContentListAdd (staticText);
 			}
 
-			return this.CreateButton (tile.Container, DockStyle.Top, width, buttonText);
+			return this.CreateButton (tile.Container, DockStyle.Stacked, width, buttonText);
 		}
 
 		public Button CreateButton(FrameBox parent, DockStyle dockStyle, double width, string buttonText)
@@ -682,7 +698,7 @@ namespace Epsitec.Cresus.Core
 					Parent = tile.Container,
 					Text = string.Concat (label, " :"),
 					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-					Dock = DockStyle.Top,
+					Dock = DockStyle.Stacked,
 					Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
 				};
 
@@ -692,7 +708,7 @@ namespace Epsitec.Cresus.Core
 			var container = new FrameBox
 			{
 				Parent = tile.Container,
-				Dock = DockStyle.Top,
+				Dock = DockStyle.Stacked,
 				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
 				TabIndex = ++this.tabIndex,
 			};
@@ -819,14 +835,14 @@ namespace Epsitec.Cresus.Core
 					Parent = tile.Container,
 					Text = string.Concat (label, " :"),
 					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-					Dock = DockStyle.Top,
+					Dock = DockStyle.Stacked,
 					Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
 				};
 
 				this.ContentListAdd (staticText);
 			}
 
-			return this.CreateTextField (tile.Container, DockStyle.Top, width, marshaler);
+			return this.CreateTextField (tile.Container, DockStyle.Stacked, width, marshaler);
 		}
 
 		public TextFieldEx CreateTextField(FrameBox parent, DockStyle dockStyle, double width, Marshaler marshaler)
@@ -869,7 +885,7 @@ namespace Epsitec.Cresus.Core
 					Parent = tile.Container,
 					Text = string.Concat (label, " :"),
 					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-					Dock = DockStyle.Top,
+					Dock = DockStyle.Stacked,
 					Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
 				};
 
@@ -881,7 +897,7 @@ namespace Epsitec.Cresus.Core
 				Parent = tile.Container,
 				IsReadOnly = this.ReadOnly,
 				PreferredHeight = height,
-				Dock = DockStyle.Top,
+				Dock = DockStyle.Stacked,
 				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
 				TabIndex = ++this.tabIndex,
 				DefocusAction = DefocusAction.AutoAcceptOrRejectEdition,
@@ -926,7 +942,7 @@ namespace Epsitec.Cresus.Core
 					Parent = tile.Container,
 					Text = string.Concat (label, " :"),
 					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-					Dock = DockStyle.Top,
+					Dock = DockStyle.Stacked,
 					Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
 				};
 
@@ -937,7 +953,7 @@ namespace Epsitec.Cresus.Core
 			{
 				Parent = tile.Container,
 				PreferredHeight = 20,
-				Dock = DockStyle.Top,
+				Dock = DockStyle.Stacked,
 				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
 				TabIndex = ++this.tabIndex,
 			};
@@ -1033,7 +1049,7 @@ namespace Epsitec.Cresus.Core
 					Parent = tile.Container,
 					Text = string.Concat (label, " :"),
 					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-					Dock = DockStyle.Top,
+					Dock = DockStyle.Stacked,
 					Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
 				};
 
@@ -1043,7 +1059,7 @@ namespace Epsitec.Cresus.Core
 			var container = new FrameBox
 			{
 				Parent = tile.Container,
-				Dock = DockStyle.Top,
+				Dock = DockStyle.Stacked,
 				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
 				TabIndex = ++this.tabIndex,
 			};
@@ -1160,7 +1176,7 @@ namespace Epsitec.Cresus.Core
 					Parent = tile.Container,
 					Text = string.Concat (label, " :"),
 					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-					Dock = DockStyle.Top,
+					Dock = DockStyle.Stacked,
 					Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
 				};
 
@@ -1171,7 +1187,7 @@ namespace Epsitec.Cresus.Core
 			{
 				Parent = tile.Container,
 				Enable = !this.ReadOnly,
-				Dock = DockStyle.Top,
+				Dock = DockStyle.Stacked,
 				Margins = new Margins (0, 0, 0, 3),
 				TabIndex = ++this.tabIndex,
 			};
@@ -1326,7 +1342,7 @@ namespace Epsitec.Cresus.Core
 				var separator = new Separator
 				{
 					Parent = tile.Container,
-					Dock = DockStyle.Top,
+					Dock = DockStyle.Stacked,
 					Margins = new Margins (0, UIBuilder.RightMargin, 5, 5),
 					PreferredHeight = 1,
 				};
@@ -1338,7 +1354,7 @@ namespace Epsitec.Cresus.Core
 				var frame = new FrameBox
 				{
 					Parent = tile.Container,
-					Dock = DockStyle.Top,
+					Dock = DockStyle.Stacked,
 					PreferredHeight = 10,
 				};
 
@@ -1359,7 +1375,7 @@ namespace Epsitec.Cresus.Core
 					Parent = tile.Container,
 					Text = string.Concat (label, " :"),
 					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-					Dock = DockStyle.Top,
+					Dock = DockStyle.Stacked,
 					Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
 				};
 
@@ -1369,7 +1385,7 @@ namespace Epsitec.Cresus.Core
 			var container = new FrameBox
 			{
 				Parent = tile.Container,
-				Dock = DockStyle.Top,
+				Dock = DockStyle.Stacked,
 				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
 				TabIndex = ++this.tabIndex,
 			};
@@ -1539,7 +1555,7 @@ namespace Epsitec.Cresus.Core
 					Text = string.Concat (label, " :"),
 					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 					Margins = new Margins (0, UIBuilder.RightMargin, 2, UIBuilder.MarginUnderTextField),
-					Dock = DockStyle.Top,
+					Dock = DockStyle.Stacked,
 				};
 
 				this.ContentListAdd (staticText);
@@ -1568,7 +1584,7 @@ namespace Epsitec.Cresus.Core
 			{
 				Parent = tile.Container,
 				Enable = !this.ReadOnly,
-				Dock = DockStyle.Top,
+				Dock = DockStyle.Stacked,
 				Margins = new Margins (0, 0, 0, 3),
 				Cardinality = cardinality,
 				TabIndex = ++this.tabIndex,

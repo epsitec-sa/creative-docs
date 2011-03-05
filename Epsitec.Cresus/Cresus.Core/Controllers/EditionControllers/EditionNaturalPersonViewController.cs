@@ -122,6 +122,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Separator ()
 				.Input ()
 				 .Field (x => x.DateOfBirth).Width (90)
+				.End ()
+				.Input ()
+				 .Field (x => x.Pictures)
 				.End ();
 
 
@@ -133,18 +136,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				}
 			}
 		}
-		protected void CreateOldUI()
-		{
-			using (var data = TileContainerController.Setup (this))
-			{
-				this.CreateUITitle (data);
-				this.CreateUIFirstNameAndLastname (data);
-				this.CreateUIGender (data);
-				this.CreateUIBirthDate (data);
-				this.CreateUIPictures (data);
-			}
-		}
-
 
 		private void CreateUITitle(TileDataItems data)
 		{
@@ -245,11 +236,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			data.Add (tileData);
 		}
+#endif
 		private NewEntityReference CreateNewTitle(DataContext context)
 		{
 			var title = context.CreateEntityAndRegisterAsEmpty<PersonTitleEntity> ();
 			return title;
 		}
-#endif
 	}
 }
