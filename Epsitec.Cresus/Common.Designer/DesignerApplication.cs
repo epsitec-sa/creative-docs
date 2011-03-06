@@ -2190,6 +2190,8 @@ namespace Epsitec.Common.Designer
 				this.CurrentModule.Modifier.ActiveViewer.UpdateWhenModuleUsed();
 
 				this.recycleState.Enable = true;
+				this.checkState.Enable = true;
+				this.infoState.Enable = true;
 			}
 			else
 			{
