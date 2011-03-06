@@ -1948,7 +1948,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
 	
 			Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
-			IResourceAccessor fieldAccessor = this.editor.Module.AccessFields.Accessor;
+			var module = this.SearchModule (fieldCaptionId);
+			if (module == null)
+			{
+				return;
+			}
+
+			IResourceAccessor fieldAccessor = module.AccessFields.Accessor;
 			CultureMap fieldCultureMap = fieldAccessor.Collection[fieldCaptionId];
 			System.Diagnostics.Debug.Assert(fieldCultureMap != null);
 			string fieldName = fieldCultureMap.Name;
@@ -1958,7 +1964,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			bool isCollection = (rel == FieldRelation.Collection);
 			bool isIndexAscending = (options & FieldOptions.IndexAscending) != 0;
 			bool isIndexDescending = (options & FieldOptions.IndexDescending) != 0;
-			Module module = this.editor.Module;
 
 			var result = module.DesignerApplication.DlgEntityField (module, ResourceAccess.Type.Types, fieldCultureMap.Prefix, ref fieldName, ref druid, ref isNullable, ref isCollection, ref isPrivate, ref isIndexAscending, ref isIndexDescending);
 			if (result != Common.Dialogs.DialogResult.Yes)

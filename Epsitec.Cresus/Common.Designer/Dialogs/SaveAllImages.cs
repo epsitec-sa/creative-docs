@@ -26,7 +26,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.Icon = this.designerApplication.Icon;
 				this.window.MakeSecondaryWindow ();
 				this.window.PreventAutoClose = true;
-				this.WindowInit ("SaveAllImages", 640, 402, true);
+				this.WindowInit ("SaveAllImages", 700, 402, true);
 				this.window.Text = "Génération en série d'images bitmap";  // Res.Strings.Dialog.SaveAllImages.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
