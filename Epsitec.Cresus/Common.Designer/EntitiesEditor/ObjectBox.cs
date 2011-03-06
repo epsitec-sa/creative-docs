@@ -2631,7 +2631,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void OpenBox(CultureMap cultureMap)
 		{
-			//	Ouvre une entité source.
+			//	Ouvre une entité quelconque.
 			ObjectBox box = this.editor.SearchBox(cultureMap.Name);
 			if (box == null)
 			{

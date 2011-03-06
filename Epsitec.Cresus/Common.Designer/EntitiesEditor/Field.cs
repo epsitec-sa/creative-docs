@@ -1146,21 +1146,29 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (typeId.IsValid)
 			{
 				Module module = app.SearchModule (typeId);	// TODO: gérer module == null
-				CultureMap entity = module.AccessEntities.Accessor.Collection[typeId];
-
-				if (module != objModule)
+				if (module == null)
 				{
-					//	Si l'entité est définie dans un autre module, on ajoute le nom
-					//	du module au nom de l'entité :
-					name = string.Concat (module.ModuleId.Name, ".", entity.Name);
+					typeClass = StructuredTypeClass.None;
+					return "";
 				}
 				else
 				{
-					name = entity.Name;
-				}
+					CultureMap entity = module.AccessEntities.Accessor.Collection[typeId];
 
-				StructuredData data = entity.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
-				typeClass = (StructuredTypeClass) data.GetValue (Support.Res.Fields.ResourceStructuredType.Class);
+					if (module != objModule)
+					{
+						//	Si l'entité est définie dans un autre module, on ajoute le nom
+						//	du module au nom de l'entité :
+						name = string.Concat (module.ModuleId.Name, ".", entity.Name);
+					}
+					else
+					{
+						name = entity.Name;
+					}
+
+					StructuredData data = entity.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+					typeClass = (StructuredTypeClass) data.GetValue (Support.Res.Fields.ResourceStructuredType.Class);
+				}
 			}
 			else
 			{
@@ -1174,8 +1182,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Retourne le nom du champ spécifié par fieldId.
 			Module module = app.SearchModule (fieldId);  // TODO: gérer module == null
-			CultureMap field = module.AccessFields.Accessor.Collection[fieldId];
-			return (field == null) ? "" : field.Name;
+			if (module == null)
+			{
+				return "";
+			}
+			else
+			{
+				CultureMap field = module.AccessFields.Accessor.Collection[fieldId];
+				return (field == null) ? "" : field.Name;
+			}
 		}
 
 		private static string GetFieldTypeName(DesignerApplication app, Druid typeId, FieldRelation rel)
@@ -1187,23 +1202,30 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			Module module = app.SearchModule (typeId);  // TODO: gérer module == null
-			CultureMap type = module.AccessTypes.Accessor.Collection[typeId];
-			if (type == null)
+			if (module == null)
 			{
-				//	Ce n'est pas un type simple, c'est donc (forcément) une
-				//	entité.
-				type = module.AccessEntities.Accessor.Collection[typeId];
+				return "";
 			}
 			else
 			{
-				//	Le type est un type simple, pas une entité. Cela ne peut donc
-				//	pas être une relation !
-				//	TODO: vérifier les implications; l'assertion est fausse, car dans les
-				//	ressources de Common.Support, il y a effectivement des collections de
-				//	types simples !
-//-				System.Diagnostics.Debug.Assert (rel == FieldRelation.None);
+				CultureMap type = module.AccessTypes.Accessor.Collection[typeId];
+				if (type == null)
+				{
+					//	Ce n'est pas un type simple, c'est donc (forcément) une
+					//	entité.
+					type = module.AccessEntities.Accessor.Collection[typeId];
+				}
+				else
+				{
+					//	Le type est un type simple, pas une entité. Cela ne peut donc
+					//	pas être une relation !
+					//	TODO: vérifier les implications; l'assertion est fausse, car dans les
+					//	ressources de Common.Support, il y a effectivement des collections de
+					//	types simples !
+					//-				System.Diagnostics.Debug.Assert (rel == FieldRelation.None);
+				}
+				return (type == null) ? "" : type.Name;
 			}
-			return (type == null) ? "" : type.Name;
 		}
 
 		private static string GetLocalExpression(StructuredData dataField, bool isPatch, CultureMapSource itemSource)
@@ -1278,28 +1300,31 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			Module module = app.SearchModule (definingEntityId);
-			CultureMap entity = module.AccessEntities.Accessor.Collection[definingEntityId];
-			StructuredData entityData = entity.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
-			IList<StructuredData> fields = entityData.GetValue (Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-
-			StructuredData fieldData = Field.FindField (fields, fieldId);
-			if (fieldData != null)
+			if (module != null)
 			{
-				string encoded = fieldData.GetValue (Support.Res.Fields.Field.Expression) as string;
+				CultureMap entity = module.AccessEntities.Accessor.Collection[definingEntityId];
+				StructuredData entityData = entity.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+				IList<StructuredData> fields = entityData.GetValue (Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
-				if (!string.IsNullOrEmpty (encoded))
+				StructuredData fieldData = Field.FindField (fields, fieldId);
+				if (fieldData != null)
 				{
-					Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression (encoded);
-					return expression.SourceCode;
+					string encoded = fieldData.GetValue (Support.Res.Fields.Field.Expression) as string;
+
+					if (!string.IsNullOrEmpty (encoded))
+					{
+						Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression (encoded);
+						return expression.SourceCode;
+					}
 				}
-			}
 
-			Druid ancestorEntityId = (Druid) fieldData.GetValue (Support.Res.Fields.Field.DefiningTypeId);
+				Druid ancestorEntityId = (Druid) fieldData.GetValue (Support.Res.Fields.Field.DefiningTypeId);
 
-			if (definingEntityId != ancestorEntityId)
-			{
-				definingEntityId = ancestorEntityId;
-				goto again;
+				if (definingEntityId != ancestorEntityId)
+				{
+					definingEntityId = ancestorEntityId;
+					goto again;
+				}
 			}
 
 			return null;

@@ -150,7 +150,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			var rightPane = new FrameBox
 			{
 				Parent = box,
-				PreferredWidth = 250,
+				PreferredWidth = 300,
 				Dock = DockStyle.Right,
 				Margins = new Margins (4, 0, 0, 0),
 			};
@@ -180,7 +180,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				Parent = group,
 				HorizontalScrollerMode = ScrollableScrollerMode.HideAlways,
 				VerticalScrollerMode = ScrollableScrollerMode.ShowAlways,
-				PaintViewportFrame = false,
+				PaintViewportFrame = true,
 				Dock = DockStyle.Fill,
 			};
 
@@ -474,6 +474,7 @@ namespace Epsitec.Common.Designer.Dialogs
 					Text = this.entitySamples[i].NameDescription,
 					ActiveState = (this.selectedEntityNames.Contains (name)) ? ActiveState.Yes : ActiveState.No,
 					Dock = DockStyle.Fill,
+					Margins = new Margins (5, 0, 0, 0),
 				};
 
 				new StaticText
@@ -509,6 +510,16 @@ namespace Epsitec.Common.Designer.Dialogs
 
 					this.UpdateButtons ();
 				};
+
+				if (i == this.entitySamples.Count-1)
+				{
+					new Separator
+					{
+						PreferredHeight = 1,
+						Parent = this.scrollableEntities.Viewport,
+						Dock = DockStyle.Top,
+					};
+				}
 			}
 		}
 
