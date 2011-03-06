@@ -2016,8 +2016,8 @@ namespace Epsitec.Common.Designer
 			int total = this.bookModules.PageCount;
 			for (int i=0; i<total; i++)
 			{
-				ModuleInfo di = this.moduleInfoList[i];
-				if (di.TabPage == this.bookModules.ActivePage)
+				ModuleInfo mi = this.moduleInfoList[i];
+				if (mi.TabPage == this.bookModules.ActivePage)
 				{
 					this.UseModule(i);
 					this.UpdateAfterTypeChanged();
@@ -2401,20 +2401,26 @@ namespace Epsitec.Common.Designer
 
 		public void UpdateBookModules()
 		{
-			//	Met à jour les noms des l'onglet des modules.
-			int total = this.bookModules.PageCount;
-			for (int i=0; i<total; i++)
-			{
-				ModuleInfo di = this.moduleInfoList[i];
-				TabPage tab = this.bookModules.Items[i] as TabPage;
+			//	Met à jour les noms des l'onglets des modules.
+			//	Il faut passer en revue tous les modules, car on peut très bien avoir rendu 'dirty' un autre
+			//	module que le module courant.
+			bool changed = false;
 
-				string name = Misc.ExtractName (di.Module.ModuleId.Name, di.Module.IsGlobalDirty, di.Module.IsPatch);
+			foreach (var mi in this.moduleInfoList)
+			{
+				TabPage tab = mi.TabPage;
+				string name = Misc.ExtractName (mi.Module.ModuleId.Name, mi.Module.IsGlobalDirty, mi.Module.IsPatch);
 
 				if (tab.TabTitle != name)
 				{
 					tab.TabTitle = name;
-					this.bookModules.UpdateAfterChanges ();
+					changed = true;
 				}
+			}
+
+			if (changed)
+			{
+				this.bookModules.UpdateAfterChanges ();
 			}
 		}
 		#endregion
