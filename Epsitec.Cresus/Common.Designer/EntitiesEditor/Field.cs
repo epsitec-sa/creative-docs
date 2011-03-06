@@ -939,7 +939,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		protected void UpdateTypeName()
+		private void UpdateTypeName()
 		{
 			//	Met à jour le nom du type.
 			if (this.isNullable)
@@ -1145,11 +1145,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (typeId.IsValid)
 			{
-				Module module = app.SearchModule (typeId);	// TODO: gérer module == null
+				Module module = app.SearchModule (typeId);
 				if (module == null)
 				{
 					typeClass = StructuredTypeClass.None;
-					return "";
+					return Field.otherModule;
 				}
 				else
 				{
@@ -1181,10 +1181,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		private static string GetFieldName(DesignerApplication app, Druid fieldId)
 		{
 			//	Retourne le nom du champ spécifié par fieldId.
-			Module module = app.SearchModule (fieldId);  // TODO: gérer module == null
+			Module module = app.SearchModule (fieldId);
 			if (module == null)
 			{
-				return "";
+				return Field.otherModule;
 			}
 			else
 			{
@@ -1201,10 +1201,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return "";
 			}
 
-			Module module = app.SearchModule (typeId);  // TODO: gérer module == null
+			Module module = app.SearchModule (typeId);
 			if (module == null)
 			{
-				return "";
+				return Field.otherModule;
 			}
 			else
 			{
@@ -1346,52 +1346,54 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		protected Editor editor;
-		protected bool isTitle;
-		protected bool isSubtitle;
-		protected bool isInherited;
-		protected bool isInterfaceTitle;
-		protected bool isUnchangedInterfaceField;
-		protected string definingEntityName;
-		protected StructuredTypeClass definingEntityClass;
-		protected int level;
-		protected bool isGroupTop;
-		protected bool isGroupBottom;
-		protected TextLayout textLayoutField;
-		protected TextLayout textLayoutType;
-		protected string fieldTypeName;
-		protected string inheritedExpression;
-		protected string localExpression;
-		protected FieldRelation relation;
-		protected FieldMembership membership;
-		protected Druid captionId;
-		protected Druid definingEntityId;
-		protected Druid definingRootEntityId;
-		protected Druid destination;
-		protected bool isNullable;
-		protected bool isPrivateRelation;
-		protected CultureMapSource cultureMapSource;
-		protected int rank;
-		protected int index;
-		protected ObjectBox srcBox;
-		protected ObjectBox dstBox;
-		protected ObjectConnection connection;
-		protected bool isExplored;
-		protected bool isSourceExpanded;
-		protected bool isAttachToRight;
-		protected RouteType routeType;
-		protected double routeRelativeAX1;
-		protected double routeRelativeAX2;
-		protected double routeAbsoluteAY;
-		protected double routeRelativeBX;
-		protected double routeRelativeBY;
-		protected double routeRelativeCX;
-		protected double routeAbsoluteDX;
-		protected bool hasComment;
-		protected Point commentPosition;
-		protected Rectangle commentBounds;
-		protected string commentText;
-		protected double commentAttach;
-		protected AbstractObject.MainColor commentMainColor;
+		private static readonly string otherModule = Misc.Italic ("(autre module)");
+
+		private Editor editor;
+		private bool isTitle;
+		private bool isSubtitle;
+		private bool isInherited;
+		private bool isInterfaceTitle;
+		private bool isUnchangedInterfaceField;
+		private string definingEntityName;
+		private StructuredTypeClass definingEntityClass;
+		private int level;
+		private bool isGroupTop;
+		private bool isGroupBottom;
+		private TextLayout textLayoutField;
+		private TextLayout textLayoutType;
+		private string fieldTypeName;
+		private string inheritedExpression;
+		private string localExpression;
+		private FieldRelation relation;
+		private FieldMembership membership;
+		private Druid captionId;
+		private Druid definingEntityId;
+		private Druid definingRootEntityId;
+		private Druid destination;
+		private bool isNullable;
+		private bool isPrivateRelation;
+		private CultureMapSource cultureMapSource;
+		private int rank;
+		private int index;
+		private ObjectBox srcBox;
+		private ObjectBox dstBox;
+		private ObjectConnection connection;
+		private bool isExplored;
+		private bool isSourceExpanded;
+		private bool isAttachToRight;
+		private RouteType routeType;
+		private double routeRelativeAX1;
+		private double routeRelativeAX2;
+		private double routeAbsoluteAY;
+		private double routeRelativeBX;
+		private double routeRelativeBY;
+		private double routeRelativeCX;
+		private double routeAbsoluteDX;
+		private bool hasComment;
+		private Point commentPosition;
+		private Rectangle commentBounds;
+		private string commentText;
+		private double commentAttach;
+		private AbstractObject.MainColor commentMainColor;
 	}
 }
