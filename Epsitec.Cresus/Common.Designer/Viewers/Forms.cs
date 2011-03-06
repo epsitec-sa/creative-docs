@@ -1715,6 +1715,10 @@ namespace Epsitec.Common.Designer.Viewers
 			Druid typeId = this.access.FormRelationEntity(this.entityId, field.GetPath(null));
 			bool isNullable = false;
 			Module module = this.designerApplication.SearchModule(this.druidToSerialize);
+			if (module == null)
+			{
+				return;
+			}
 			StructuredTypeClass typeClass = StructuredTypeClass.None;
 			var result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Form, module, ResourceAccess.Type.Forms, ref typeClass, ref druid, ref isNullable, null, typeId);
 			if (result != Common.Dialogs.DialogResult.Yes)

@@ -1602,8 +1602,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			Druid typeId = druid;
 			Module typeModule = this.SearchModule(typeId);
+			if (typeModule == null)
+			{
+				return;
+			}
 			System.Diagnostics.Debug.Assert(typeId.IsValid);
-			System.Diagnostics.Debug.Assert(typeModule != null);
 
 			if (typeModule.AccessEntities.Accessor.Collection[typeId] != null)
 			{
@@ -1977,8 +1980,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			Druid typeId = druid;
 			Module typeModule = this.SearchModule(typeId);
-			System.Diagnostics.Debug.Assert(typeId.IsValid);
-			System.Diagnostics.Debug.Assert(typeModule != null);
+			if (typeModule == null)
+			{
+				return;
+			}
+			System.Diagnostics.Debug.Assert (typeId.IsValid);
 			
 			if (typeModule.AccessEntities.Accessor.Collection[typeId] != null)
 			{
@@ -2065,10 +2071,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				field.CaptionId = title;
 
 				Module module = this.SearchModule(title);
-				CultureMap cultureMap = module.AccessEntities.Accessor.Collection[title];
-				if (cultureMap != null)
+				if (module != null)
 				{
-					field.FieldName = Misc.Bold(cultureMap.Name);
+					CultureMap cultureMap = module.AccessEntities.Accessor.Collection[title];
+					if (cultureMap != null)
+					{
+						field.FieldName = Misc.Bold (cultureMap.Name);
+					}
 				}
 
 				this.fields.Insert(0, field);
@@ -2096,22 +2105,25 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							last = this.fields[i].DefiningEntityId;
 
 							Module module = this.SearchModule (last);
-							CultureMap entity = module.AccessEntities.Accessor.Collection[last];
-
-							StructuredData entityData = entity.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
-							StructuredTypeClass entityTypeClass = (StructuredTypeClass) entityData.GetValue (Support.Res.Fields.ResourceStructuredType.Class);
-
-							if (entityTypeClass == StructuredTypeClass.Interface)
+							if (module != null)
 							{
-								Field field = new Field (this.editor);
-								field.IsTitle = true;  // interface ajoutée à cette entitié
-								field.IsInterfaceOrInterfaceTitle = true;
-								field.CaptionId = last;
-								field.FieldName = Misc.Bold (entity.Name);
+								CultureMap entity = module.AccessEntities.Accessor.Collection[last];
 
-								this.fields.Insert (i, field);
-								this.skippedField++;  // compte le titre lui-même
-								i++;
+								StructuredData entityData = entity.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+								StructuredTypeClass entityTypeClass = (StructuredTypeClass) entityData.GetValue (Support.Res.Fields.ResourceStructuredType.Class);
+
+								if (entityTypeClass == StructuredTypeClass.Interface)
+								{
+									Field field = new Field (this.editor);
+									field.IsTitle = true;  // interface ajoutée à cette entitié
+									field.IsInterfaceOrInterfaceTitle = true;
+									field.CaptionId = last;
+									field.FieldName = Misc.Bold (entity.Name);
+
+									this.fields.Insert (i, field);
+									this.skippedField++;  // compte le titre lui-même
+									i++;
+								}
 							}
 						}
 					}
@@ -2126,29 +2138,32 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						lastRoot = this.fields[i].DefiningRootEntityId;
 
 						Module module = this.SearchModule(lastRoot);
-						CultureMap entity = module.AccessEntities.Accessor.Collection[lastRoot];
-
-						StructuredData entityData = entity.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-						StructuredTypeClass entityTypeClass = (StructuredTypeClass) entityData.GetValue(Support.Res.Fields.ResourceStructuredType.Class);
-
-						if (entityTypeClass == StructuredTypeClass.Interface)
+						if (module != null)
 						{
-							Field field = new Field(this.editor);
-							if (this.fields[i].Membership == FieldMembership.Local && !last.IsValid)
-							{
-								field.IsTitle = true;  // interface ajoutée à cette entitié
-							}
-							else
-							{
-								field.IsSubtitle = true;  // interface héritée ou interface dans une interface
-							}
-							field.IsInterfaceOrInterfaceTitle = true;
-							field.CaptionId = lastRoot;
-							field.FieldName = Misc.Bold(entity.Name);
+							CultureMap entity = module.AccessEntities.Accessor.Collection[lastRoot];
 
-							this.fields.Insert(i, field);
-							this.skippedField++;  // compte le titre lui-même
-							i++;
+							StructuredData entityData = entity.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+							StructuredTypeClass entityTypeClass = (StructuredTypeClass) entityData.GetValue (Support.Res.Fields.ResourceStructuredType.Class);
+
+							if (entityTypeClass == StructuredTypeClass.Interface)
+							{
+								Field field = new Field (this.editor);
+								if (this.fields[i].Membership == FieldMembership.Local && !last.IsValid)
+								{
+									field.IsTitle = true;  // interface ajoutée à cette entitié
+								}
+								else
+								{
+									field.IsSubtitle = true;  // interface héritée ou interface dans une interface
+								}
+								field.IsInterfaceOrInterfaceTitle = true;
+								field.CaptionId = lastRoot;
+								field.FieldName = Misc.Bold (entity.Name);
+
+								this.fields.Insert (i, field);
+								this.skippedField++;  // compte le titre lui-même
+								i++;
+							}
 						}
 					}
 				}
@@ -2220,23 +2235,26 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (druid.IsValid)
 				{
 					Module module = this.SearchModule(druid);
-					cultureMap = module.AccessEntities.Accessor.Collection[druid];
-					if (cultureMap != null)
+					if (module != null)
 					{
-						string name;
+						cultureMap = module.AccessEntities.Accessor.Collection[druid];
+						if (cultureMap != null)
+						{
+							string name;
 
-						if (module == this.editor.Module)  // dans le même module ?
-						{
-							name = cultureMap.Name;
-						}
-						else  // dans un autre module ?
-						{
-							name = string.Concat(module.ModuleId.Name, ".", cultureMap.Name);
-						}
+							if (module == this.editor.Module)  // dans le même module ?
+							{
+								name = cultureMap.Name;
+							}
+							else  // dans un autre module ?
+							{
+								name = string.Concat (module.ModuleId.Name, ".", cultureMap.Name);
+							}
 
-						if (!listInherited.Contains(name))
-						{
-							listInherited.Add(name);
+							if (!listInherited.Contains (name))
+							{
+								listInherited.Add (name);
+							}
 						}
 					}
 				}
@@ -3846,7 +3864,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Met à jour le sous-titre de l'entité (nom du module).
 			Module module = this.SearchModule(this.cultureMap.Id);
-			if (module == this.Application.CurrentModule)
+			if (module == null || module == this.Application.CurrentModule)
 			{
 				this.Subtitle = null;
 				this.isDimmed = false;
@@ -3941,7 +3959,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							if (druid.IsValid)
 							{
 								Module module = this.SearchModule(druid);
-								this.cultureMap = module.AccessEntities.Accessor.Collection[druid];
+								if (module != null)
+								{
+									this.cultureMap = module.AccessEntities.Accessor.Collection[druid];
+								}
 							}
 						}
 						else if (name == Xml.Bounds)

@@ -181,26 +181,28 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.hilitedElement == ActiveElement.ConnectionOpenRight)
 			{
 				Module module = this.editor.Module.DesignerApplication.SearchModule(this.field.Destination);
-				CultureMap item = module.AccessEntities.Accessor.Collection[this.field.Destination];
-				if (item != null)
+				if (module != null)
 				{
-					this.field.IsExplored = true;
-
-					ObjectBox box = this.editor.SearchBox(item.Name);
-					if (box == null)
+					CultureMap item = module.AccessEntities.Accessor.Collection[this.field.Destination];
+					if (item != null)
 					{
-						//	Ouvre la connection sur une nouvelle boîte.
-						box = new ObjectBox(this.editor);
-						box.BackgroundMainColor = this.boxColor;
-						box.SetContent(item);
+						this.field.IsExplored = true;
 
-						this.field.DstBox = box;
-						this.field.IsAttachToRight = (this.hilitedElement == ActiveElement.ConnectionOpenRight);
+						ObjectBox box = this.editor.SearchBox (item.Name);
+						if (box == null)
+						{
+							//	Ouvre la connection sur une nouvelle boîte.
+							box = new ObjectBox (this.editor);
+							box.BackgroundMainColor = this.boxColor;
+							box.SetContent (item);
 
-						this.editor.AddBox(box);
-						this.editor.UpdateGeometry();
+							this.field.DstBox = box;
+							this.field.IsAttachToRight = (this.hilitedElement == ActiveElement.ConnectionOpenRight);
 
-						ObjectBox src = this.field.SrcBox;
+							this.editor.AddBox (box);
+							this.editor.UpdateGeometry ();
+
+							ObjectBox src = this.field.SrcBox;
 #if false
 						Rectangle bounds = box.Bounds;
 						double ox = 50+20*src.ConnectionExploredCount;
@@ -213,55 +215,56 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							bounds.Location = new Point(src.Bounds.Right+ox, src.Bounds.Top-box.Bounds.Height);
 						}
 #else
-						//	Essaie de trouver une place libre, pour déplacer le moins possible d'éléments.
-						Rectangle bounds;
-						double posv = src.GetConnectionSrcVerticalPosition(this.field.Index) - (Editor.connectionDetour+12);
+							//	Essaie de trouver une place libre, pour déplacer le moins possible d'éléments.
+							Rectangle bounds;
+							double posv = src.GetConnectionSrcVerticalPosition (this.field.Index) - (Editor.connectionDetour+12);
 
-						if (this.hilitedElement == ActiveElement.ConnectionOpenLeft)
-						{
-							bounds = new Rectangle(src.Bounds.Left-50-box.Bounds.Width, posv-box.Bounds.Height, box.Bounds.Width, box.Bounds.Height);
-							bounds.Inflate(50, Editor.pushMargin);
-
-							for (int i=0; i<1000; i++)
+							if (this.hilitedElement == ActiveElement.ConnectionOpenLeft)
 							{
-								if (this.editor.IsEmptyArea(bounds))
-								{
-									break;
-								}
-								bounds.Offset(-1, 0);
-							}
+								bounds = new Rectangle (src.Bounds.Left-50-box.Bounds.Width, posv-box.Bounds.Height, box.Bounds.Width, box.Bounds.Height);
+								bounds.Inflate (50, Editor.pushMargin);
 
-							bounds.Deflate(50, Editor.pushMargin);
+								for (int i=0; i<1000; i++)
+								{
+									if (this.editor.IsEmptyArea (bounds))
+									{
+										break;
+									}
+									bounds.Offset (-1, 0);
+								}
+
+								bounds.Deflate (50, Editor.pushMargin);
+							}
+							else
+							{
+								bounds = new Rectangle (src.Bounds.Right+50, posv-box.Bounds.Height, box.Bounds.Width, box.Bounds.Height);
+								bounds.Inflate (50, Editor.pushMargin);
+
+								for (int i=0; i<1000; i++)
+								{
+									if (this.editor.IsEmptyArea (bounds))
+									{
+										break;
+									}
+									bounds.Offset (1, 0);
+								}
+
+								bounds.Deflate (50, Editor.pushMargin);
+							}
+#endif
+							bounds = this.editor.BoxGridAlign (bounds);
+							box.SetBounds (bounds);
 						}
 						else
 						{
-							bounds = new Rectangle(src.Bounds.Right+50, posv-box.Bounds.Height, box.Bounds.Width, box.Bounds.Height);
-							bounds.Inflate(50, Editor.pushMargin);
-
-							for (int i=0; i<1000; i++)
-							{
-								if (this.editor.IsEmptyArea(bounds))
-								{
-									break;
-								}
-								bounds.Offset(1, 0);
-							}
-
-							bounds.Deflate(50, Editor.pushMargin);
+							//	Ouvre la connection sur une boîte existante.
+							this.field.DstBox = box;
+							this.field.IsAttachToRight = (this.hilitedElement == ActiveElement.ConnectionOpenRight);
 						}
-#endif
-						bounds = this.editor.BoxGridAlign (bounds);
-						box.SetBounds(bounds);
-					}
-					else
-					{
-						//	Ouvre la connection sur une boîte existante.
-						this.field.DstBox = box;
-						this.field.IsAttachToRight = (this.hilitedElement == ActiveElement.ConnectionOpenRight);
-					}
 
-					this.editor.UpdateAfterAddOrRemoveConnection(box);
-					this.editor.Module.AccessEntities.SetLocalDirty();
+						this.editor.UpdateAfterAddOrRemoveConnection (box);
+						this.editor.Module.AccessEntities.SetLocalDirty ();
+					}
 				}
 			}
 
