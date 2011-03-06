@@ -2048,7 +2048,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			dataField.SetValue (Support.Res.Fields.Field.Options, fieldOptions);
 
 			this.fields[rank].Initialize(this, dataField);
-			this.editor.Module.AccessEntities.SetLocalDirty();
+			module.AccessEntities.SetLocalDirty ();
 			this.editor.UpdateAfterAddOrRemoveConnection(this);
 		}
 
