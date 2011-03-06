@@ -1,4 +1,4 @@
-//	Copyright © 2007-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2007-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -133,6 +133,15 @@ namespace Epsitec.Common.Support.EntityEngine
 		public virtual EntityStatus GetEntityStatus()
 		{
 			return EntityStatus.None;
+		}
+
+		/// <summary>
+		/// Freezes this instance and makes it read-only. A read-only instance may not be thawed
+		/// (it stays frozen forever).
+		/// </summary>
+		public virtual void Freeze()
+		{
+			//	TODO: make the entity read-only
 		}
 
 

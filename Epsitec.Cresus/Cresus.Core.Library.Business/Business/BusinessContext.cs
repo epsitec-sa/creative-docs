@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -164,6 +164,17 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
+
+		/// <summary>
+		/// Gets the cached business settings (<see cref="BusinessSettingsEntity"/>).
+		/// Warning: the entity does not belong to this context and will be read-only.
+		/// </summary>
+		/// <returns></returns>
+		public BusinessSettingsEntity GetCachedBusinessSettings()
+		{
+			return this.data.GetAllEntities<BusinessSettingsEntity> ().FirstOrDefault ()
+				?? EntityNullReferenceVirtualizer.CreateFrozenEntity<BusinessSettingsEntity> ();
+		}
 
 
 		public static BusinessContext Create(CoreData data)

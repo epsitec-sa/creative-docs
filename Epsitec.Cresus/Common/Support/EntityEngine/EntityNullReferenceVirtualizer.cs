@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -198,6 +198,19 @@ namespace Epsitec.Common.Support.EntityEngine
 			return entity;
 		}
 
+		/// <summary>
+		/// Creates an empty, frozen (i.e. read-only), entity which will be considered
+		/// equal to a null reference when calling <see cref="IsNullEntity"/>.
+		/// </summary>
+		/// <typeparam name="T">The entity type.</typeparam>
+		/// <returns>The empty read-only entity created the same way as the automatically generated entity produced by the virtualizer.</returns>
+		public static T CreateFrozenEntity<T>()
+			where T : AbstractEntity, new ()
+		{
+			T entity = EntityNullReferenceVirtualizer.CreateEmptyEntity<T> ();
+			entity.Freeze ();
+			return entity;
+		}
 
 		/// <summary>
 		/// Creates an empty entity attached to a dedicated context.
