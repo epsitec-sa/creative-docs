@@ -2401,11 +2401,21 @@ namespace Epsitec.Common.Designer
 
 		public void UpdateBookModules()
 		{
-			//	Met à jour le nom de l'onglet des modules.
-			if ( !this.IsCurrentModule )  return;
-			TabPage tab = this.bookModules.Items[this.currentModule] as TabPage;
-			tab.TabTitle = Misc.ExtractName(this.CurrentModule.ModuleId.Name, this.CurrentModule.IsGlobalDirty, this.CurrentModule.IsPatch);
-			this.bookModules.UpdateAfterChanges();
+			//	Met à jour les noms des l'onglet des modules.
+			int total = this.bookModules.PageCount;
+			for (int i=0; i<total; i++)
+			{
+				ModuleInfo di = this.moduleInfoList[i];
+				TabPage tab = this.bookModules.Items[i] as TabPage;
+
+				string name = Misc.ExtractName (di.Module.ModuleId.Name, di.Module.IsGlobalDirty, di.Module.IsPatch);
+
+				if (tab.TabTitle != name)
+				{
+					tab.TabTitle = name;
+					this.bookModules.UpdateAfterChanges ();
+				}
+			}
 		}
 		#endregion
 

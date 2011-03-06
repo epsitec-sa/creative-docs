@@ -109,7 +109,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.fieldPath       = this.CreateField (box, "Chemin");
 			this.fieldName       = this.CreateField (box, "Nom");
-			this.fieldId         = this.CreateField (box, "Numéro");
+			this.fieldId         = this.CreateField (box, "Numéro", fieldWidth: 60);
 
 			new Separator
 			{
@@ -119,7 +119,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				Margins = new Margins (0, 0, 10, 10),
 			};
 
-			this.fieldAssemblies = this.CreateField (box, "Assemblies", true);
+			this.fieldAssemblies = this.CreateField (box, "Assemblies", bottomSpace: true);
 			
 			this.fieldDefault    = this.CreateField (box, "Namespace par défaut");
 			this.fieldEntities   = this.CreateField (box, "Namespace pour les entités");
@@ -143,7 +143,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			};
 		}
 
-		private TextField CreateField(Widget parent, string label, bool bottomSpace = false)
+		private TextField CreateField(Widget parent, string label, double fieldWidth = 0, bool bottomSpace = false)
 		{
 			var box = new FrameBox
 			{
@@ -167,6 +167,13 @@ namespace Epsitec.Common.Designer.Dialogs
 				Dock = DockStyle.Fill,
 				TabIndex = ++this.tabIndex,
 			};
+
+			if (fieldWidth != 0)
+			{
+				field.Dock = DockStyle.Left;
+				field.PreferredWidth = fieldWidth;
+				field.PreferredHeight = 20;
+			}
 
 			return field;
 		}
