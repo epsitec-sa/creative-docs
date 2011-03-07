@@ -15,6 +15,6 @@ namespace Epsitec.Common.Types
 		AbstractClass		= 0x00000100,
 
 		StandaloneDisplay	= 0x00001000,
-		StandaloneCreate	= 0x00002000,
+		StandaloneCreation	= 0x00002000,
 	}
 }
