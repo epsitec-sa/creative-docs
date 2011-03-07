@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Database.Logging
 	// Marc
 
 
-	internal sealed class MemoryLog : AbstractLog
+	public class MemoryLog : AbstractLog
 	{
 
 

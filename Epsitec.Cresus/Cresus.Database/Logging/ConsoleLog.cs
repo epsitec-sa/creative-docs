@@ -5,8 +5,13 @@ namespace Epsitec.Cresus.Database.Logging
 {
 
 
-	internal sealed class ConsoleLog : AbstractLog
+	public class ConsoleLog : AbstractLog
 	{
+
+
+		public ConsoleLog() : base ()
+		{
+		}
 
 
 		public override void Clear()
@@ -51,8 +56,8 @@ namespace Epsitec.Cresus.Database.Logging
 
 			string log = sb.ToString ();
 
-			System.Diagnostics.Debug.WriteLine (log);
-			System.Console.WriteLine (log);
+			//System.Diagnostics.Debug.WriteLine (log);
+			//System.Console.WriteLine (log);
 		}
 
 

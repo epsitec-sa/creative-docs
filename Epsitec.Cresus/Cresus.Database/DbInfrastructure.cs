@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Database
 		
 		public DbInfrastructure()
 		{
-			this.queryLog = null;
+			this.QueryLogs = new HashSet<AbstractLog> ();
 
 			this.liveTransactions = new List<DbTransaction> ();
 			this.releaseRequested = new List<IDbAbstraction> ();
@@ -144,12 +144,10 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public AbstractLog QueryLog
+		public ISet<AbstractLog> QueryLogs
 		{
-			get
-			{
-				return this.queryLog;
-			}
+			get;
+			private set;
 		}
 		
 		/// <summary>
@@ -2073,7 +2071,7 @@ namespace Epsitec.Cresus.Database
 			{
 				int data;
 
-				if (this.queryLog == null)
+				if (!this.IsLogEnabled ())
 				{
 					data = this.ExecuteSilent (count, command);
 				}
@@ -2085,7 +2083,7 @@ namespace Epsitec.Cresus.Database
 					data = this.ExecuteSilent (count, command);
 					watch.Stop ();
 
-					this.queryLog.AddEntry (command, startTime, watch.Elapsed, data);
+					this.Log (l => l.AddEntry (command, startTime, watch.Elapsed, data));
 				}
 
 				return data;
@@ -2133,7 +2131,7 @@ namespace Epsitec.Cresus.Database
 			{
 				object data;
 
-				if (this.queryLog == null)
+				if (!this.IsLogEnabled ())
 				{
 					data = this.ExecuteScalar (count, command);
 				}
@@ -2145,7 +2143,7 @@ namespace Epsitec.Cresus.Database
 					data = this.ExecuteScalar (count, command);
 					watch.Stop ();
 
-					this.queryLog.AddEntry (command, startTime, watch.Elapsed, data);
+					this.Log (l => l.AddEntry (command, startTime, watch.Elapsed, data));
 				}
 
 				return data;
@@ -2193,7 +2191,7 @@ namespace Epsitec.Cresus.Database
 			{
 				object data;
 
-				if (this.queryLog == null)
+				if (!this.IsLogEnabled ())
 				{
 					data = ExecuteNonQuery (count, command);
 				}
@@ -2206,7 +2204,7 @@ namespace Epsitec.Cresus.Database
 					data = ExecuteNonQuery (count, command);
 					watch.Stop ();
 
-					this.queryLog.AddEntry (command, startTime, watch.Elapsed, data);
+					this.Log (l => l.AddEntry (command, startTime, watch.Elapsed, data));
 				}
 
 				return data;
@@ -2254,7 +2252,7 @@ namespace Epsitec.Cresus.Database
 			{
 				IList<object> data;
 
-				if (this.queryLog == null)
+				if (!this.IsLogEnabled ())
 				{
 					data = this.ExecuteOutputParameters (count, command);
 				}
@@ -2266,7 +2264,7 @@ namespace Epsitec.Cresus.Database
 					data = this.ExecuteOutputParameters (count, command);
 					watch.Stop ();
 
-					this.queryLog.AddEntry (command, startTime, watch.Elapsed, data);
+					this.Log (l => l.AddEntry (command, startTime, watch.Elapsed, data));
 				}
 
 				return data;
@@ -2314,7 +2312,7 @@ namespace Epsitec.Cresus.Database
 			{
 				System.Data.DataSet data;
 
-				if (this.queryLog == null)
+				if (!this.IsLogEnabled ())
 				{
 					data = this.ExecuteRetData (count, command);
 				}
@@ -2326,7 +2324,7 @@ namespace Epsitec.Cresus.Database
 					data = this.ExecuteRetData (count, command);
 					watch.Stop ();
 
-					this.queryLog.AddEntry (command, startTime, watch.Elapsed, data);
+					this.Log (l => l.AddEntry (command, startTime, watch.Elapsed, data));
 				}
 
 				return data;
@@ -2404,19 +2402,22 @@ namespace Epsitec.Cresus.Database
 				return (System.DateTime) databaseTime;
 			}
 		}
-		
-		public void DisableLogging()
+
+
+		private bool IsLogEnabled()
 		{
-			this.queryLog = null;
+			return this.QueryLogs.Any ();
 		}
 
-		public void EnableLogging()
+
+		private void Log(System.Action<AbstractLog> log)
 		{
-			if (this.queryLog == null)
+			foreach (AbstractLog queryLog in this.QueryLogs)
 			{
-				this.queryLog = new MemoryLog (500);
+				log (queryLog);
 			}
 		}
+
 		
 		/// <summary>
 		/// Finds the key for the specified table.
@@ -3563,8 +3564,6 @@ namespace Epsitec.Cresus.Database
 		
 		private TypeHelper						types;
 		private DbServiceManager				serviceManager;
-
-		private AbstractLog						queryLog;
 
 		private DbTableList						internalTables = new DbTableList ();
 		private DbTypeDefList					internalTypes = new DbTypeDefList ();

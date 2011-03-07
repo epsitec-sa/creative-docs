@@ -1261,10 +1261,14 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 					transaction.SqlBuilder.UpdateData (tableName, fieldsToUpdate, conditions);
 
-					infrastructure.EnableLogging ();
-					infrastructure.QueryLog.LogResult = true;
-					infrastructure.QueryLog.LogThreadName = true;
-					infrastructure.QueryLog.LogStackTrace = true;
+					MemoryLog log = new MemoryLog (50)
+					{
+						LogResult = true,
+						LogThreadName = true,
+						LogStackTrace = true
+					};
+
+					infrastructure.QueryLogs.Add (log);
 
 					System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
 					System.DateTime startTime = System.DateTime.Now;
@@ -1272,8 +1276,6 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 					watch.Start ();
 					infrastructure.ExecuteSilent (transaction);
 					watch.Stop ();
-
-					AbstractLog log = infrastructure.QueryLog;
 
 					Assert.IsNotNull (log);
 					Assert.AreEqual (1, log.GetNbEntries ());
@@ -1303,8 +1305,8 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 					System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace (0, true);
 
-					Assert.AreEqual (stackTrace.GetFrame (0).GetMethod (), entry.StackTrace.GetFrame (2).GetMethod ());
-					CollectionAssert.AreEqual (stackTrace.GetFrames ().Skip (1).Select (f => f.ToString ()).ToList (), entry.StackTrace.GetFrames ().Skip (3).Select (sf => sf.ToString ()).ToList ());
+					Assert.AreEqual (stackTrace.GetFrame (0).GetMethod (), entry.StackTrace.GetFrame (4).GetMethod ());
+					CollectionAssert.AreEqual (stackTrace.GetFrames ().Skip (1).Select (f => f.ToString ()).ToList (), entry.StackTrace.GetFrames ().Skip (5).Select (sf => sf.ToString ()).ToList ());
 				}
 			}
 		}
@@ -1335,10 +1337,14 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 					transaction.SqlBuilder.SelectData (query);
 
-					infrastructure.EnableLogging ();
-					infrastructure.QueryLog.LogResult = true;
-					infrastructure.QueryLog.LogThreadName = true;
-					infrastructure.QueryLog.LogStackTrace = true;
+					MemoryLog log = new MemoryLog (50)
+					{
+						LogResult = true,
+						LogThreadName = true,
+						LogStackTrace = true
+					};
+
+					infrastructure.QueryLogs.Add (log);
 
 					System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
 					System.DateTime startTime = System.DateTime.Now;
@@ -1346,8 +1352,6 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 					watch.Start ();
 					infrastructure.ExecuteScalar (transaction);
 					watch.Stop ();
-
-					AbstractLog log = infrastructure.QueryLog;
 
 					Assert.IsNotNull (log);
 					Assert.AreEqual (1, log.GetNbEntries ());
@@ -1371,8 +1375,8 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 					System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace (0, true);
 
-					Assert.AreEqual (stackTrace.GetFrame (0).GetMethod (), entry.StackTrace.GetFrame (2).GetMethod ());
-					CollectionAssert.AreEqual (stackTrace.GetFrames ().Skip (1).Select (f => f.ToString ()).ToList (), entry.StackTrace.GetFrames ().Skip (3).Select (sf => sf.ToString ()).ToList ());
+					Assert.AreEqual (stackTrace.GetFrame (0).GetMethod (), entry.StackTrace.GetFrame (4).GetMethod ());
+					CollectionAssert.AreEqual (stackTrace.GetFrames ().Skip (1).Select (f => f.ToString ()).ToList (), entry.StackTrace.GetFrames ().Skip (5).Select (sf => sf.ToString ()).ToList ());
 				}
 			}
 		}
@@ -1407,10 +1411,14 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 					transaction.SqlBuilder.UpdateData (tableName, fieldsToUpdate, conditions);
 
-					infrastructure.EnableLogging ();
-					infrastructure.QueryLog.LogResult = true;
-					infrastructure.QueryLog.LogThreadName = true;
-					infrastructure.QueryLog.LogStackTrace = true;
+					MemoryLog log = new MemoryLog (50)
+					{
+						LogResult = true,
+						LogThreadName = true,
+						LogStackTrace = true
+					};
+
+					infrastructure.QueryLogs.Add (log);
 
 					System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
 					System.DateTime startTime = System.DateTime.Now;
@@ -1418,8 +1426,6 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 					watch.Start ();
 					infrastructure.ExecuteNonQuery (transaction);
 					watch.Stop ();
-
-					AbstractLog log = infrastructure.QueryLog;
 
 					Assert.IsNotNull (log);
 					Assert.AreEqual (1, log.GetNbEntries ());
@@ -1447,8 +1453,8 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 					System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace (0, true);
 
-					Assert.AreEqual (stackTrace.GetFrame (0).GetMethod (), entry.StackTrace.GetFrame (2).GetMethod ());
-					CollectionAssert.AreEqual (stackTrace.GetFrames ().Skip (1).Select (f => f.ToString ()).ToList (), entry.StackTrace.GetFrames ().Skip (3).Select (sf => sf.ToString ()).ToList ());
+					Assert.AreEqual (stackTrace.GetFrame (0).GetMethod (), entry.StackTrace.GetFrame (4).GetMethod ());
+					CollectionAssert.AreEqual (stackTrace.GetFrames ().Skip (1).Select (f => f.ToString ()).ToList (), entry.StackTrace.GetFrames ().Skip (5).Select (sf => sf.ToString ()).ToList ());
 				}
 			}
 		}
@@ -1481,10 +1487,14 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 					transaction.SqlBuilder.InsertData (tableName, fieldsToInsert, fieldsToReturn);
 
-					infrastructure.EnableLogging ();
-					infrastructure.QueryLog.LogResult = true;
-					infrastructure.QueryLog.LogThreadName = true;
-					infrastructure.QueryLog.LogStackTrace = true;
+					MemoryLog log = new MemoryLog (50)
+					{
+						LogResult = true,
+						LogThreadName = true,
+						LogStackTrace = true
+					};
+
+					infrastructure.QueryLogs.Add (log);
 
 					System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
 					System.DateTime startTime = System.DateTime.Now;
@@ -1492,8 +1502,6 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 					watch.Start ();
 					infrastructure.ExecuteOutputParameters (transaction);
 					watch.Stop ();
-
-					AbstractLog log = infrastructure.QueryLog;
 
 					Assert.IsNotNull (log);
 					Assert.AreEqual (1, log.GetNbEntries ());
@@ -1525,8 +1533,8 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 					System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace (0, true);
 
-					Assert.AreEqual (stackTrace.GetFrame (0).GetMethod (), entry.StackTrace.GetFrame (2).GetMethod ());
-					CollectionAssert.AreEqual (stackTrace.GetFrames ().Skip (1).Select (f => f.ToString ()).ToList (), entry.StackTrace.GetFrames ().Skip (3).Select (sf => sf.ToString ()).ToList ());
+					Assert.AreEqual (stackTrace.GetFrame (0).GetMethod (), entry.StackTrace.GetFrame (4).GetMethod ());
+					CollectionAssert.AreEqual (stackTrace.GetFrames ().Skip (1).Select (f => f.ToString ()).ToList (), entry.StackTrace.GetFrames ().Skip (5).Select (sf => sf.ToString ()).ToList ());
 				}
 			}
 		}
@@ -1557,10 +1565,14 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 					transaction.SqlBuilder.SelectData (query);
 
-					infrastructure.EnableLogging ();
-					infrastructure.QueryLog.LogResult = true;
-					infrastructure.QueryLog.LogThreadName = true;
-					infrastructure.QueryLog.LogStackTrace = true;
+					MemoryLog log = new MemoryLog (50)
+					{
+						LogResult = true,
+						LogThreadName = true,
+						LogStackTrace = true
+					};
+
+					infrastructure.QueryLogs.Add (log);
 
 					System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
 					System.DateTime startTime = System.DateTime.Now;
@@ -1568,8 +1580,6 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 					watch.Start ();
 					infrastructure.ExecuteRetData (transaction);
 					watch.Stop ();
-
-					AbstractLog log = infrastructure.QueryLog;
 
 					Assert.IsNotNull (log);
 					Assert.AreEqual (1, log.GetNbEntries ());
@@ -1602,8 +1612,8 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 					System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace (0, true);
 
-					Assert.AreEqual (stackTrace.GetFrame (0).GetMethod (), entry.StackTrace.GetFrame (2).GetMethod ());
-					CollectionAssert.AreEqual (stackTrace.GetFrames ().Skip (1).Select (f => f.ToString ()).ToList (), entry.StackTrace.GetFrames ().Skip (3).Select (sf => sf.ToString ()).ToList ());
+					Assert.AreEqual (stackTrace.GetFrame (0).GetMethod (), entry.StackTrace.GetFrame (4).GetMethod ());
+					CollectionAssert.AreEqual (stackTrace.GetFrames ().Skip (1).Select (f => f.ToString ()).ToList (), entry.StackTrace.GetFrames ().Skip (5).Select (sf => sf.ToString ()).ToList ());
 				}
 			}
 		}

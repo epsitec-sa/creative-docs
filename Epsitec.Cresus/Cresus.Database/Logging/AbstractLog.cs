@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Database.Logging
 	{
 
 
-		internal AbstractLog()
+		protected AbstractLog()
 		{
 			this.LogResult = false;
 			this.LogStackTrace = false;

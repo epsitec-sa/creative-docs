@@ -1099,9 +1099,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		{
 			get
 			{
-				var db = this.Container.Data.DataInfrastructure.DbInfrastructure;
-
-				return db.QueryLog != null;
+				return this.logEnabled;
 			}
 			set
 			{
@@ -1109,19 +1107,34 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 				if (value)  // démarre l'enregistrement ?
 				{
-					db.EnableLogging ();
+					if (this.logEnabled)
+					{
+						throw new System.InvalidOperationException ("Logging is alraedy enabled.");
+					}
 
-					db.QueryLog.LogResult     = LoggingTabPage.globalLogResult;
-					db.QueryLog.LogStackTrace = LoggingTabPage.globalLogStackTrace;
-					db.QueryLog.LogThreadName = LoggingTabPage.globalLogThreadName;
+					this.queryLog = new MemoryLog (500)
+					{
+						LogResult = LoggingTabPage.globalLogResult,
+						LogStackTrace = LoggingTabPage.globalLogStackTrace,
+						LogThreadName = LoggingTabPage.globalLogThreadName
+					};
+
+					db.QueryLogs.Add (this.queryLog);
+
+					this.logEnabled = true;
 
 					this.UpdateWidgets ();
 				}
 				else  // stoppe l'enregistrement ?
 				{
-					this.queryLog = db.QueryLog;
+					if (!this.logEnabled)
+					{
+						throw new System.InvalidOperationException ("Logging is already disabled.");
+					}
 
-					db.DisableLogging ();
+					db.QueryLogs.Remove (this.queryLog);
+
+					this.logEnabled = false;
 
 					this.UpdateSlider ();
 					this.UpdateTable ();
@@ -1217,6 +1230,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private readonly TaggedText			taggedText;
 
+		private bool						logEnabled;
 		private AbstractLog					queryLog;
 		private int							firstQueryShowed;
 
