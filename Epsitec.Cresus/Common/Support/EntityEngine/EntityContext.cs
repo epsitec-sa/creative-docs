@@ -33,7 +33,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			
 			this.resourceManager     = resourceManager;
 			this.associatedThread    = System.Threading.Thread.CurrentThread;
-			this.structuredTypeMap   = new Dictionary<Druid, IStructuredType> ();
+			this.structuredTypeMap   = new Dictionary<Druid, StructuredType> ();
 			this.loopHandlingMode    = loopHandlingMode;
 			this.persistenceManagers = new List<IEntityPersistenceManager> ();
 
@@ -273,7 +273,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		internal IValueStore CreateValueStore(AbstractEntity entity)
 		{
 			Druid typeId = entity.GetEntityStructuredTypeId ();
-			IStructuredType type = this.GetStructuredType (typeId);
+			StructuredType type = this.GetStructuredType (typeId);
 
 			if (type == null)
 			{
@@ -309,11 +309,11 @@ namespace Epsitec.Common.Support.EntityEngine
 				throw new System.ArgumentNullException ("entity");
 			}
 
-			IStructuredType entityType = this.GetStructuredType (entity);
+			StructuredType entityType = this.GetStructuredType (entity);
 
 			if (entityType == null)
 			{
-				throw new System.ArgumentException ("Invalid entity; no associated IStructuredType");
+				throw new System.ArgumentException ("Invalid entity; no associated StructuredType");
 			}
 
 			return entityType.GetFieldIds ();
@@ -333,7 +333,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		public StructuredTypeField GetEntityFieldDefinition(Druid entityId, string fieldId)
 		{
-			IStructuredType entityType = this.GetStructuredType (entityId);
+			StructuredType entityType = this.GetStructuredType (entityId);
 			StructuredTypeField field = entityType.GetField (fieldId);
 
 			return field;
@@ -343,11 +343,11 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		public IEnumerable<StructuredTypeField> ComputeEntityFieldDefinitions(Druid entityId)
 		{
-			IStructuredType entityType = this.GetStructuredType (entityId);
+			StructuredType entityType = this.GetStructuredType (entityId);
 
 			if (entityType == null)
 			{
-				throw new System.ArgumentException ("Invalid entity; no associated IStructuredType");
+				throw new System.ArgumentException ("Invalid entity; no associated StructuredType");
 			}
 
 			foreach (string fieldId in entityType.GetFieldIds ())
@@ -364,11 +364,11 @@ namespace Epsitec.Common.Support.EntityEngine
 				.Where (field => field.Source == FieldSource.Value);
 		}
 
-		public IStructuredType GetStructuredType(Druid entityId)
+		public StructuredType GetStructuredType(Druid entityId)
 		{
 			this.EnsureCorrectThread ();
 
-			IStructuredType type;
+			StructuredType type;
 
 			if (!this.structuredTypeMap.TryGetValue (entityId, out type))
 			{
@@ -384,12 +384,12 @@ namespace Epsitec.Common.Support.EntityEngine
 			return type;
 		}
 
-		public IStructuredType GetStructuredType(AbstractEntity entity)
+		public StructuredType GetStructuredType(AbstractEntity entity)
 		{
 			this.EnsureCorrectThread ();
 
 			IStructuredTypeProvider provider = entity.GetStructuredTypeProvider ();
-			IStructuredType type;
+			StructuredType type;
 
 			if (provider == null)
 			{
@@ -397,7 +397,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 			else
 			{
-				type = provider.GetStructuredType ();
+				type = provider.GetStructuredType () as StructuredType;
 			}
 
 			if (type == null)
@@ -410,7 +410,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		internal StructuredTypeField GetStructuredTypeField(AbstractEntity entity, string fieldId)
 		{
-			IStructuredType     type  = this.GetStructuredType (entity);
+			StructuredType      type  = this.GetStructuredType (entity);
 			StructuredTypeField field = type == null ? null : type.GetField (fieldId);
 
 			return field;
@@ -421,7 +421,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </summary>
 		/// <param name="id">The id.</param>
 		/// <param name="type">The type.</param>
-		internal void DefineStructuredType(Druid id, IStructuredType type)
+		internal void DefineStructuredType(Druid id, StructuredType type)
 		{
 			this.EnsureCorrectThread ();
 
@@ -616,8 +616,8 @@ namespace Epsitec.Common.Support.EntityEngine
 		public bool IsFieldDefined(string fieldId, AbstractEntity entity)
 		{
 			bool isDefined;
-			
-			IStructuredType entityType = this.GetStructuredType (entity.GetEntityStructuredTypeId ());
+
+			StructuredType entityType = this.GetStructuredType (entity.GetEntityStructuredTypeId ());
 			StructuredTypeField field = entityType.GetField (fieldId);
 
 			object value = entity.InternalGetValueOrFieldCollection (fieldId);
@@ -670,7 +670,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		public bool IsNullable(Druid entityId, string fieldId)
 		{
-			IStructuredType type = this.GetStructuredType (entityId);
+			StructuredType type = this.GetStructuredType (entityId);
 
 			if (type == null)
 			{
@@ -807,7 +807,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			parents.Push (entity.GetEntityStructuredTypeId ());
 
-			IStructuredType type = this.GetStructuredType (entity);
+			StructuredType type = this.GetStructuredType (entity);
 			
 			foreach (string id in type.GetFieldIds ())
 			{
@@ -977,7 +977,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </summary>
 		private class Data : IValueStore, IStructuredTypeProvider
 		{
-			public Data(IStructuredType type)
+			public Data(StructuredType type)
 			{
 				this.type  = type;
 				this.store = new Dictionary<string, object> ();
@@ -1099,7 +1099,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 
 
-			private IStructuredType type;
+			private StructuredType type;
 			private Dictionary<string, object> store;
 
 		}
@@ -1203,7 +1203,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		private readonly IStructuredTypeResolver resourceManager;
 		private readonly System.Threading.Thread associatedThread;
-		private readonly Dictionary<Druid, IStructuredType> structuredTypeMap;
+		private readonly Dictionary<Druid, StructuredType> structuredTypeMap;
 		private readonly EntityLoopHandlingMode loopHandlingMode;
 		private readonly List<IEntityPersistenceManager> persistenceManagers;
 		private readonly Dictionary<string, PropertyGetter> propertyGetters;

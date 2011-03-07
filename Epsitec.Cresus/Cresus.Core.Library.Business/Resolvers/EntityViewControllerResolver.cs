@@ -58,11 +58,9 @@ namespace Epsitec.Cresus.Core.Resolvers
 			switch (mode)
 			{
 				case ViewControllerMode.Summary:
-					return "Summary";
 				case ViewControllerMode.Edition:
-					return "Edition";
 				case ViewControllerMode.Creation:
-					return "Creation";
+					return mode.ToString ();
 
 				case ViewControllerMode.None:
 					throw new System.NotSupportedException (string.Format ("ViewControllerMode.{0} cannot be specified here", mode));

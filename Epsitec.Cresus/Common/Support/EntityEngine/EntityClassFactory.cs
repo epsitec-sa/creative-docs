@@ -13,7 +13,7 @@ namespace Epsitec.Common.Support.EntityEngine
 	using Assembly=System.Reflection.Assembly;
 
 	/// <summary>
-	/// The <c>EntityClassResolver</c> class is used to allocate entity instances
+	/// The <c>EntityClassFactory</c> class is used to allocate entity instances
 	/// based on entity ids. The mapping between entity id and entity class
 	/// must be marked with the <see cref="EntityAttribute"/> attribute, at
 	/// the <c>assembly</c> level.

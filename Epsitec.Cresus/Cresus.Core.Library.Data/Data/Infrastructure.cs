@@ -221,19 +221,29 @@ namespace Epsitec.Cresus.Core.Data
 			}
 		}
 
-		internal static IEnumerable<Druid> GetManagedEntityIds()
+		public static IEnumerable<Druid> GetManagedEntityIds()
 		{
-			return EntityClassFactory.GetAllEntityIds ().Where (x => x.Module >= 1000);
+			return Infrastructure.GetManagedEntityStructuredTypes ().Select (x => x.CaptionId);
+		}
+
+		public static IEnumerable<StructuredType> GetManagedEntityStructuredTypes()
+		{
+			var allEntityIds = EntityClassFactory.GetAllEntityIds ();
+
+			foreach (var type in allEntityIds.Select (x => EntityInfo.GetStructuredType (x)))
+			{
+				if ((type.Flags & StructuredTypeFlags.GenerateSchema) != 0)
+				{
+					yield return type;
+				}
+			}
 		}
 
 
 		private void CreateDatabaseSchemas()
 		{
 			this.connectionManager.Validate ();
-
-			var entityIds = Infrastructure.GetManagedEntityIds ().ToArray ();
-
-			this.dataInfrastructure.CreateSchema (entityIds);
+			this.dataInfrastructure.CreateSchema (Infrastructure.GetManagedEntityIds ());
 		}
 
 		private void PopulateDatabase()

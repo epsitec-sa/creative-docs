@@ -884,7 +884,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			return (this.OriginalValues ?? this.ModifiedValues) as IStructuredTypeProvider;
 		}
 
-		internal IStructuredType GetSyntheticStructuredType(EntityContext context)
+		internal StructuredType GetSyntheticStructuredType(EntityContext context)
 		{
 			HashSet<string> ids = new HashSet<string> ();
 

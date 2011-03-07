@@ -22,7 +22,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			return EntityClassFactory.GetEntityId (type);
 		}
 
-		public static IStructuredType GetStructuredType(Druid entityId)
+		public static StructuredType GetStructuredType(Druid entityId)
 		{
 			if (entityId.IsEmpty)
 			{
@@ -34,7 +34,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		public static IStructuredType GetStructuredType(System.Type systemType)
+		public static StructuredType GetStructuredType(System.Type systemType)
 		{
 			return EntityInfo.GetStructuredType (EntityClassFactory.GetEntityId (systemType));
 		}
@@ -118,7 +118,22 @@ namespace Epsitec.Common.Support.EntityEngine
 			{
 			}
 
-			public static EmptyEntityContext Instance = new EmptyEntityContext ();
+
+			public static EmptyEntityContext Instance
+			{
+				get
+				{
+					if (EmptyEntityContext.instance == null)
+					{
+						EmptyEntityContext.instance = new EmptyEntityContext ();
+					}
+
+					return EmptyEntityContext.instance;
+				}
+			}
+
+			[System.ThreadStatic]
+			public static EmptyEntityContext instance;
 		}
 
 		#endregion

@@ -22,6 +22,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 //			return context => data.GetAllEntities<NaturalPersonEntity> (dataContext: context);
 //			throw new System.NotImplementedException ();
 
+			System.Diagnostics.Debug.WriteLine (string.Join ("\n", Data.Infrastructure.GetManagedEntityStructuredTypes ().Select (x => x.Caption.Name).OrderBy (x => x).ToArray ()));
+
 			switch (dataSetName)
 			{
 #if true
