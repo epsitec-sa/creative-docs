@@ -30,6 +30,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[GVAM5]", typeof (Epsitec.Cresus.Core.Entities.OptionValueEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[GVAP5]", typeof (Epsitec.Cresus.Core.Entities.FreeTextValueArticleParameterDefinitionEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[GVAS5]", typeof (Epsitec.Cresus.Core.Entities.TextDocumentItemEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[GVAV5]", typeof (Epsitec.Cresus.Core.Entities.CustomerEntity))]
 #region Epsitec.Cresus.Core.Relation Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -37,26 +38,8 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>Relation</c> entity.
 	///	designer:cap/GVA
 	///	</summary>
-	public partial class RelationEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IReferenceNumber, global::Epsitec.Cresus.Core.Entities.IWorkflowHost, global::Epsitec.Cresus.Core.Entities.IBusinessLink, global::Epsitec.Cresus.Core.Entities.IComments
+	public partial class RelationEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IWorkflowHost, global::Epsitec.Cresus.Core.Entities.IComments
 	{
-		#region IReferenceNumber Members
-		///	<summary>
-		///	The <c>IdA</c> field.
-		///	designer:fld/GVA/8VA11
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VA11]")]
-		public string IdA
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetIdA (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdA (this, value);
-			}
-		}
-		#endregion
 		#region ILifetime Members
 		///	<summary>
 		///	The <c>IsArchive</c> field.
@@ -104,58 +87,6 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.IWorkflowHostInterfaceImplementation.SetWorkflow (this, value);
-			}
-		}
-		#endregion
-		#region IBusinessLink Members
-		///	<summary>
-		///	The <c>BusinessCodeVector</c> field.
-		///	designer:fld/GVA/GVA5
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVA5]")]
-		public string BusinessCodeVector
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.IBusinessLinkInterfaceImplementation.GetBusinessCodeVector (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.IBusinessLinkInterfaceImplementation.SetBusinessCodeVector (this, value);
-			}
-		}
-		#endregion
-		#region IReferenceNumber Members
-		///	<summary>
-		///	The <c>IdB</c> field.
-		///	designer:fld/GVA/8VA21
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VA21]")]
-		public string IdB
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetIdB (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdB (this, value);
-			}
-		}
-		///	<summary>
-		///	The <c>IdC</c> field.
-		///	designer:fld/GVA/8VA31
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VA31]")]
-		public string IdC
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetIdC (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdC (this, value);
 			}
 		}
 		#endregion
@@ -5166,6 +5097,143 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1008, 10, 188);	// [GVAS5]
 		public static readonly new string EntityStructuredTypeKey = "[GVAS5]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.Customer Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>Customer</c> entity.
+	///	designer:cap/GVAV5
+	///	</summary>
+	public partial class CustomerEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IReferenceNumber, global::Epsitec.Cresus.Core.Entities.IBusinessLink
+	{
+		#region IReferenceNumber Members
+		///	<summary>
+		///	The <c>IdA</c> field.
+		///	designer:fld/GVAV5/8VA11
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA11]")]
+		public string IdA
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetIdA (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdA (this, value);
+			}
+		}
+		#endregion
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/GVAV5/8VA3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region IBusinessLink Members
+		///	<summary>
+		///	The <c>BusinessCodeVector</c> field.
+		///	designer:fld/GVAV5/GVA5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVA5]")]
+		public string BusinessCodeVector
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IBusinessLinkInterfaceImplementation.GetBusinessCodeVector (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IBusinessLinkInterfaceImplementation.SetBusinessCodeVector (this, value);
+			}
+		}
+		#endregion
+		#region IReferenceNumber Members
+		///	<summary>
+		///	The <c>IdB</c> field.
+		///	designer:fld/GVAV5/8VA21
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA21]")]
+		public string IdB
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetIdB (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdB (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>IdC</c> field.
+		///	designer:fld/GVAV5/8VA31
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA31]")]
+		public string IdC
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetIdC (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdC (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>Relation</c> field.
+		///	designer:fld/GVAV5/GVA06
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVA06]")]
+		public global::Epsitec.Cresus.Core.Entities.RelationEntity Relation
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.RelationEntity> ("[GVA06]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue = this.Relation;
+				if (oldValue != value || !this.IsFieldDefined("[GVA06]"))
+				{
+					this.OnRelationChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.RelationEntity> ("[GVA06]", oldValue, value);
+					this.OnRelationChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnRelationChanging(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
+		partial void OnRelationChanged(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.CustomerEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.CustomerEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1008, 10, 191);	// [GVAV5]
+		public static readonly new string EntityStructuredTypeKey = "[GVAV5]";
 	}
 }
 #endregion

@@ -28,6 +28,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			{
 #if true
 				case "Customers":
+					return context => data.GetAllEntities<CustomerEntity> (dataContext: context);
+
+				case "Relations":
 					return context => data.GetAllEntities<RelationEntity> (dataContext: context);
 
 				case "ArticleDefinitions":
@@ -78,6 +81,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			{
 #if true
 				case "Customers":
+					return EntityInfo<CustomerEntity>.GetTypeId ();
+				
+				case "Relations":
 					return EntityInfo<RelationEntity>.GetTypeId ();
 
 				case "ArticleDefinitions":

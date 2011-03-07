@@ -110,6 +110,7 @@
     <Compile Include="Controllers\EditionControllers\EditionPriceCalculatorViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPriceCalculatorViewControllerTableDesigner.cs" />
     <Compile Include="Controllers\RibbonViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryCustomerViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryDocumentCategoryMappingViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryDocumentPrintingUnitsViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryDocumentOptionsViewController.cs" />

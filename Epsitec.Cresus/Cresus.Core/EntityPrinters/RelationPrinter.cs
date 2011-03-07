@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 			get
 			{
-				return TextFormatter.FormatText ("Client", this.Entity.IdA).ToSimpleText ();
+				return TextFormatter.FormatText ("Contact").ToSimpleText ();
 			}
 		}
 
@@ -110,13 +110,13 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			if (this.Entity.Person is NaturalPersonEntity)
 			{
 				var x = this.Entity.Person as NaturalPersonEntity;
-				text = TextFormatter.FormatText ("N°", this.Entity.IdA, "-", x.Firstname, x.Lastname).ToString ();
+				text = TextFormatter.FormatText (/*"N°", this.Entity.IdA, "-", */x.Firstname, x.Lastname).ToString ();
 			}
 
 			if (this.Entity.Person is LegalPersonEntity)
 			{
 				var x = this.Entity.Person as LegalPersonEntity;
-				text = TextFormatter.FormatText ("N°", this.Entity.IdA, "-", x.Name).ToString ();
+				text = TextFormatter.FormatText (/*"N°", this.Entity.IdA, "-", */x.Name).ToString ();
 			}
 
 			var band = new TextBand ();

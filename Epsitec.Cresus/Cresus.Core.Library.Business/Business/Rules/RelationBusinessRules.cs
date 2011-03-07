@@ -22,14 +22,6 @@ namespace Epsitec.Cresus.Core.Business.Rules
 		
 		public override void ApplySetupRule(RelationEntity relation)
 		{
-			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
-			var generatorPool   = Logic.Current.GetComponent<RefIdGeneratorPool> ();
-			
-			var generator = generatorPool.GetGenerator<RelationEntity> ();
-			var nextId    = generator.GetNextId ();
-
-			relation.IdA = string.Format ("{0:000000}", nextId);
-
 			relation.FirstContactDate = Date.Today;
 			relation.TaxMode = Business.Finance.TaxMode.LiableForVat;
 			relation.DefaultBillingMode =	Business.Finance.BillingMode.IncludingTax;

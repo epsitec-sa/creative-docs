@@ -50,6 +50,8 @@ namespace Epsitec.Cresus.Core.Business
 			public static readonly Epsitec.Common.Types.StructuredType BusinessDocument = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 29));
 			//	designer:cap/GVAO
 			public static readonly Epsitec.Common.Types.StructuredType BusinessSettings = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 24));
+			//	designer:cap/GVAV5
+			public static readonly Epsitec.Common.Types.StructuredType Customer = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 191));
 			//	designer:cap/GVA94
 			public static readonly Epsitec.Common.Types.StructuredType EndTotalDocumentItem = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 137));
 			//	designer:cap/GVA85
@@ -492,6 +494,16 @@ namespace Epsitec.Cresus.Core.Business
 				public static readonly global::Epsitec.Common.Support.Druid Tax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 27);
 			}
 			
+			public static class Customer
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/GVA06
+				public static readonly global::Epsitec.Common.Support.Druid Relation = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 192);
+			}
+			
 			public static class EndTotalDocumentItem
 			{
 				internal static void _Initialize()
@@ -770,6 +782,7 @@ namespace Epsitec.Cresus.Core.Business
 			Fields.ArticleTraceabilityDetail._Initialize ();
 			Fields.BusinessDocument._Initialize ();
 			Fields.BusinessSettings._Initialize ();
+			Fields.Customer._Initialize ();
 			Fields.EndTotalDocumentItem._Initialize ();
 			Fields.EnumValueArticleParameterDefinition._Initialize ();
 			Fields.FreeTextValueArticleParameterDefinition._Initialize ();

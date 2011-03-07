@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.Repositories
 	public class RelationRepository : Repository<RelationEntity>
 	{
 		public RelationRepository(CoreData data, DataContext context = null)
-			: base (data, context)
+			: base (data, context, Common.Types.DataLifetimeExpectancy.Volatile)
 		{
 		}
 	}

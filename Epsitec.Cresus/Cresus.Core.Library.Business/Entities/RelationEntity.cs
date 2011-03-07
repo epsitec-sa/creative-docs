@@ -15,7 +15,6 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return TextFormatter.FormatText
 				(
-					"N°", this.IdA, "\n",
 					this.Person.GetSummary (), "\n",
 					"Représentant: ~", this.SalesRepresentative.GetCompactSummary ()
 				);
@@ -35,10 +34,6 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			using (var a = new EntityStatusAccumulator ())
 			{
-				a.Accumulate (this.IdA.GetEntityStatus ());
-				a.Accumulate (this.IdB.GetEntityStatus ().TreatAsOptional ());
-				a.Accumulate (this.IdC.GetEntityStatus ().TreatAsOptional ());
-
 				a.Accumulate (this.Person.GetEntityStatus ());
 				a.Accumulate (this.Affairs.Select (x => x.GetEntityStatus ()));
 				a.Accumulate (this.Comments.Select (x => x.GetEntityStatus ()));

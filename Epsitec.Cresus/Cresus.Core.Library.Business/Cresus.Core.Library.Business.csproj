@@ -65,6 +65,7 @@
     <Compile Include="Business\Rules\ArticlePriceBusinessRules.cs" />
     <Compile Include="Business\Rules\BusinessBillingDetailBusinessRules.cs" />
     <Compile Include="Business\Rules\BusinessDocumentBusinessRules.cs" />
+    <Compile Include="Business\Rules\CustomerBusinessRules.cs" />
     <Compile Include="Business\Rules\EnumValueArticleParameterDefinitionBusinessRules.cs" />
     <Compile Include="Business\Rules\FreeTextValueArticleParameterDefinitionBusinessRules.cs" />
     <Compile Include="Business\Rules\NumericValueArticleParameterDefinitionBusinessRules.cs" />
@@ -153,6 +154,7 @@
     <Compile Include="Entities\ArticleQuantityEntity.cs" />
     <Compile Include="Entities\BusinessDocumentEntity.cs" />
     <Compile Include="Entities\BusinessSettingsEntity.cs" />
+    <Compile Include="Entities\CustomerEntity.cs" />
     <Compile Include="Entities\EndTotalDocumentItemEntity.cs" />
     <Compile Include="Entities\EnumValueArticleParameterDefinitionEntity.cs" />
     <Compile Include="Entities\FreeTextValueArticleParameterDefinitionEntity.cs" />
