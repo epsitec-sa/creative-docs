@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// </summary>
 	public class Open : Abstract
 	{
-		protected enum ModuleState
+		private enum ModuleState
 		{
 			Openable,
 			Opening,
@@ -59,7 +59,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				{
 					Parent = topFrame,
 					Dock = DockStyle.Left,
-					PreferredWidth = 240,
+					PreferredWidth = 160,
 					Text = Res.Strings.Dialog.Open.Label,
 					ContentAlignment = ContentAlignment.MiddleLeft,
 				};
@@ -129,17 +129,27 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkOpened.TabIndex = 8;
 				this.checkOpened.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-				this.checkLocked = new CheckButton(footer);
+				this.checkLocked = new CheckButton (footer);
 				this.checkLocked.AutoToggle = false;
 				this.checkLocked.Text = "Modules bloqués";
-				this.checkLocked.PreferredWidth = 110;
+				this.checkLocked.PreferredWidth = 115;
 				this.checkLocked.Dock = DockStyle.Left;
-				this.checkLocked.Margins = new Margins(0, 0, 0, 0);
+				this.checkLocked.Margins = new Margins (0, 0, 0, 0);
 				this.checkLocked.Clicked += this.HandleCheckClicked;
 				this.checkLocked.TabIndex = 9;
 				this.checkLocked.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-				this.buttonCancel = new Button(footer);
+				this.checkSecondary = new CheckButton (footer);
+				this.checkSecondary.AutoToggle = false;
+				this.checkSecondary.Text = "Modules secondaires";
+				this.checkSecondary.PreferredWidth = 130;
+				this.checkSecondary.Dock = DockStyle.Left;
+				this.checkSecondary.Margins = new Margins (0, 0, 0, 0);
+				this.checkSecondary.Clicked += this.HandleCheckClicked;
+				this.checkSecondary.TabIndex = 9;
+				this.checkSecondary.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
+				this.buttonCancel = new Button (footer);
 				this.buttonCancel.PreferredWidth = 75;
 				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
 				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
@@ -207,7 +217,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		protected void UpdateModules(bool scan)
+		private void UpdateModules(bool scan)
 		{
 			//	Met à jour la liste des modules ouvrables/ouverts/bloqués.
 			if (scan)
@@ -231,9 +241,19 @@ namespace Epsitec.Common.Designer.Dialogs
 						continue;
 					}
 
-					if (Open.GetComparableText (this.GetModulePath (moduleInfo)).Contains ("/bin/"))
+					int result = DesignerApplication.IsOriginalModule (moduleInfo.FullId);
+
+					if (result == -1)
 					{
 						continue;
+					}
+
+					if (this.showSecondary == false)
+					{
+						if (result != 1)
+						{
+							continue;
+						}
 					}
 
 					if (state == ModuleState.Openable)
@@ -255,7 +275,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-		protected void UpdateButtons()
+		private void UpdateButtons()
 		{
 			//	Met à jour tous les boutons.
 			ResourceModuleInfo info = this.moduleInfosShowed.CurrentItem as ResourceModuleInfo;
@@ -270,11 +290,12 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonOpen.Enable = (state == ModuleState.Openable);
 			}
 
-			this.checkOpened.ActiveState = this.showOpened ? ActiveState.Yes : ActiveState.No;
-			this.checkLocked.ActiveState = this.showLocked ? ActiveState.Yes : ActiveState.No;
+			this.checkOpened.ActiveState    = this.showOpened    ? ActiveState.Yes : ActiveState.No;
+			this.checkLocked.ActiveState    = this.showLocked    ? ActiveState.Yes : ActiveState.No;
+			this.checkSecondary.ActiveState = this.showSecondary ? ActiveState.Yes : ActiveState.No;
 		}
 
-		protected int CompareName(object a, object b)
+		private int CompareName(object a, object b)
 		{
 			ResourceModuleInfo itemA = a as ResourceModuleInfo;
 			ResourceModuleInfo itemB = b as ResourceModuleInfo;
@@ -285,7 +306,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			return sA.CompareTo(sB);
 		}
 
-		protected int CompareState(object a, object b)
+		private int CompareState(object a, object b)
 		{
 			ResourceModuleInfo itemA = a as ResourceModuleInfo;
 			ResourceModuleInfo itemB = b as ResourceModuleInfo;
@@ -296,7 +317,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			return sA.CompareTo(sB);
 		}
 
-		protected int CompareId(object a, object b)
+		private int CompareId(object a, object b)
 		{
 			ResourceModuleInfo itemA = a as ResourceModuleInfo;
 			ResourceModuleInfo itemB = b as ResourceModuleInfo;
@@ -307,7 +328,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			return idA.CompareTo(idB);
 		}
 
-		protected int CompareIcon(object a, object b)
+		private int CompareIcon(object a, object b)
 		{
 			ResourceModuleInfo itemA = a as ResourceModuleInfo;
 			ResourceModuleInfo itemB = b as ResourceModuleInfo;
@@ -318,7 +339,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			return sA.CompareTo(sB);
 		}
 
-		protected int ComparePatch(object a, object b)
+		private int ComparePatch(object a, object b)
 		{
 			ResourceModuleInfo itemA = a as ResourceModuleInfo;
 			ResourceModuleInfo itemB = b as ResourceModuleInfo;
@@ -329,7 +350,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			return sA.CompareTo(sB);
 		}
 
-		protected string GetColumnText(ResourceModuleInfo item, string columnName)
+		private string GetColumnText(ResourceModuleInfo item, string columnName)
 		{
 			//	Retourne le texte contenu dans une colonne.
 			ModuleState state = this.GetModuleState(item);
@@ -368,6 +389,12 @@ namespace Epsitec.Common.Designer.Dialogs
 			if (columnName == "Id")
 			{
 				text = item.FullId.Id.ToString();
+
+				var result = DesignerApplication.IsOriginalModule(item.FullId);
+				if (result == 1)
+				{
+					text = Misc.Bold (text);
+				}
 			}
 
 			if (columnName == "Icon")
@@ -425,17 +452,18 @@ namespace Epsitec.Common.Designer.Dialogs
 			return text;
 		}
 
-		protected string GetModulePath(ResourceModuleInfo info)
+		private string GetModulePath(ResourceModuleInfo info)
 		{
 			//	Retourne le nom du chemin d'un module.
 			ResourceManagerPool pool = this.designerApplication.ResourceManagerPool;
 			return pool.GetRootRelativePath(info.FullId.Path);
 		}
 
-		protected ModuleState GetModuleState(ResourceModuleInfo info)
+		private ModuleState GetModuleState(ResourceModuleInfo info)
 		{
 			//	Retourne l'état d'un module.
 			Module module = this.designerApplication.SearchModuleId(info.FullId);
+
 			if (module == null)
 			{
 				return this.IsModuleAlreadyOpened(info.FullId.Id) ? ModuleState.Locked : ModuleState.Openable;
@@ -446,9 +474,10 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-		protected bool IsModuleAlreadyOpened(int id)
+		private bool IsModuleAlreadyOpened(int id)
 		{
 			List<Module> modules = this.designerApplication.Modules;
+
 			foreach (Module module in modules)
 			{
 				if (module.ModuleId.Id == id)
@@ -456,6 +485,7 @@ namespace Epsitec.Common.Designer.Dialogs
 					return true;
 				}
 			}
+			
 			return false;
 		}
 
@@ -463,11 +493,6 @@ namespace Epsitec.Common.Designer.Dialogs
 		private void HandleTableSelectionChanged(object sender, UI.ItemPanelSelectionChangedEventArgs e)
 		{
 			//	La ligne sélectionnée dans le tableau a changé.
-			if (this.ignoreChange)
-			{
-				return;
-			}
-
 			this.UpdateButtons();
 		}
 
@@ -490,7 +515,12 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.showLocked = !this.showLocked;
 			}
 
-			this.UpdateModules(false);
+			if (sender == this.checkSecondary)
+			{
+				this.showSecondary = !this.showSecondary;
+			}
+
+			this.UpdateModules (false);
 			this.UpdateButtons();
 		}
 
@@ -511,7 +541,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		protected UI.IItemViewFactory ItemViewFactoryGetter(UI.ItemView itemView)
+		private UI.IItemViewFactory ItemViewFactoryGetter(UI.ItemView itemView)
 		{
 			if (itemView == null)
 			{
@@ -581,20 +611,21 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		protected string						resourcePrefix;
-		protected IList<ResourceModuleInfo>		moduleInfosAll;
-		protected CollectionView				moduleInfosShowed;
-		protected Types.Collections.ObservableList<ResourceModuleInfo> moduleInfosLive;
-		protected UI.ItemTable					table;
-		protected Button						buttonOpen;
-		protected Button						buttonCancel;
-		protected CheckButton					checkOpened;
-		protected CheckButton					checkLocked;
-		protected bool							showOpened;
-		protected bool							showLocked;
-		protected bool							ignoreChange;
+		private string									resourcePrefix;
+		private IList<ResourceModuleInfo>				moduleInfosAll;
+		private CollectionView							moduleInfosShowed;
+		private Types.Collections.ObservableList<ResourceModuleInfo> moduleInfosLive;
+		private UI.ItemTable							table;
+		private Button									buttonOpen;
+		private Button									buttonCancel;
+		private CheckButton								checkOpened;
+		private CheckButton								checkLocked;
+		private CheckButton								checkSecondary;
+		private bool									showOpened;
+		private bool									showLocked;
+		private bool									showSecondary;
 
-		private TextField						filterTextField;
-		private System.Predicate<ResourceModuleInfo> filterPredicate;
+		private TextField								filterTextField;
+		private System.Predicate<ResourceModuleInfo>	filterPredicate;
 	}
 }

@@ -964,13 +964,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					return true;
 				}
 
-				//	Souris dans le bouton des paramètres ?
-				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton (this.PositionParametersButton, pos))
-				{
-					element = ActiveElement.BoxParameters;
-					return true;
-				}
-
 				//	Souris dans le bouton des couleurs ?
 				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton(this.PositionColorButton(0), pos))
 				{
@@ -1022,6 +1015,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.isExtended)
 				{
+					//	Souris dans le bouton des paramètres ?
+					if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton (this.PositionParametersButton, pos))
+					{
+						element = ActiveElement.BoxParameters;
+						return true;
+					}
+
 					//	Souris dans le bouton pour changer la largeur ?
 					//	Souris dans le bouton pour déplacer le séparateur des colonnes ?
 					double d1 = Point.Distance(this.PositionChangeWidthButton, pos);
@@ -3225,18 +3225,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.DrawSquareButton(graphics, this.PositionColorButton(7), MainColor.Grey, this.boxColor == MainColor.Grey, false);
 			}
 
-			//	Dessine le bouton des paramètres.
-			if (this.hilitedElement == ActiveElement.BoxParameters)
-			{
-				this.DrawRoundButton (graphics, this.PositionParametersButton, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxParameters, true, false);
-			}
-			else if (this.IsHeaderHilite && !this.isDragging)
-			{
-				this.DrawRoundButton (graphics, this.PositionParametersButton, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxParameters, false, false);
-			}
-
 			if (this.isExtended)
 			{
+				//	Dessine le bouton des paramètres.
+				if (this.hilitedElement == ActiveElement.BoxParameters)
+				{
+					this.DrawRoundButton (graphics, this.PositionParametersButton, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxParameters, true, false);
+				}
+				else if (this.IsHeaderHilite && !this.isDragging)
+				{
+					this.DrawRoundButton (graphics, this.PositionParametersButton, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxParameters, false, false);
+				}
+
 				//	Dessine le bouton pour déplacer le séparateur des colonnes.
 				if (this.hilitedElement == ActiveElement.BoxMoveColumnsSeparator1)
 				{
@@ -3444,15 +3444,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			//	Dessine les paramètres en bas à droite.
 			var center = new Point (bounds.Right-AbstractObject.buttonRadius*2-1, bounds.Bottom+AbstractObject.footerHeight/2+1);
-			ObjectBox.DrawParameters (graphics, center, frameColor, isDimmed, lifetime, flags);
+			ObjectBox.DrawParameters (graphics, center, frameColor, isExtended, isDimmed, lifetime, flags);
 		}
 
-		private static void DrawParameters(Graphics graphics, Point center, Color frameColor, bool isDimmed, DataLifetimeExpectancy lifetime, StructuredTypeFlags flags)
+		private static void DrawParameters(Graphics graphics, Point center, Color frameColor, bool isExtended, bool isDimmed, DataLifetimeExpectancy lifetime, StructuredTypeFlags flags)
 		{
 			//	Dessine les paramètres (espérance de vie de l'entité et fanions).
 			var whiteColor = AbstractObject.GetColor (1, isDimmed, false);
 
-			if (lifetime != Types.DataLifetimeExpectancy.Unknown)
+			if (isExtended && lifetime != Types.DataLifetimeExpectancy.Unknown)
 			{
 				double radius = 5.5;
 				double angle = 0;
@@ -3869,6 +3869,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Met à jour le sous-titre de l'entité (nom du module).
 			Module module = this.SearchModule(this.cultureMap.Id);
+
 			if (module == null || module == this.Application.CurrentModule)
 			{
 				this.Subtitle = null;

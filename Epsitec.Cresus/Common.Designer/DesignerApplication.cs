@@ -462,13 +462,8 @@ namespace Epsitec.Common.Designer
 			ResourceModuleId item = this.dlgOpen.SelectedModule;
 			if (item.Name != null)
 			{
-				Module module = new Module(this, this.mode, item);
 
-				ModuleInfo mi = new ModuleInfo();
-				mi.Module = module;
-				this.moduleInfoList.Insert(++this.currentModule, mi);
-				this.CreateModuleLayout();
-
+				var mi = this.OpenModule (item);
 				this.bookModules.ActivePage = mi.TabPage;
 
 				//	Affiche l'éventuel message initial.
@@ -2040,7 +2035,11 @@ namespace Epsitec.Common.Designer
 			//	Retourne le ModuleInfo courant.
 			get
 			{
-				if ( this.currentModule < 0 )  return null;
+				if (this.currentModule < 0)
+				{
+					return null;
+				}
+
 				return this.moduleInfoList[this.currentModule];
 			}
 		}
@@ -2066,7 +2065,11 @@ namespace Epsitec.Common.Designer
 			//	Retourne le module courant.
 			get
 			{
-				if ( this.currentModule < 0 )  return null;
+				if (this.currentModule < 0)
+				{
+					return null;
+				}
+
 				return this.CurrentModuleInfo.Module;
 			}
 		}
@@ -2076,8 +2079,16 @@ namespace Epsitec.Common.Designer
 			//	Retourne le module précédemment sélectionné.
 			get
 			{
-				if ( this.lastModule < 0 || this.lastModule >= this.moduleInfoList.Count )  return null;
-				if ( this.lastModule == this.currentModule )  return null;
+				if (this.lastModule < 0 || this.lastModule >= this.moduleInfoList.Count)
+				{
+					return null;
+				}
+
+				if (this.lastModule == this.currentModule)
+				{
+					return null;
+				}
+
 				return this.moduleInfoList[this.lastModule].Module;
 			}
 		}
@@ -2117,7 +2128,8 @@ namespace Epsitec.Common.Designer
 					return info.Module;
 				}
 			}
-			return null;
+
+			return this.OpenModule (id);
 		}
 
 		public Module SearchModuleId(ResourceModuleId id)
@@ -2130,6 +2142,7 @@ namespace Epsitec.Common.Designer
 					return info.Module;
 				}
 			}
+			
 			return null;
 		}
 
@@ -2139,10 +2152,12 @@ namespace Epsitec.Common.Designer
 			get
 			{
 				List<Module> list = new List<Module>();
+				
 				foreach (ModuleInfo info in this.moduleInfoList)
 				{
 					list.Add(info.Module);
 				}
+				
 				return list;
 			}
 		}
@@ -2272,6 +2287,91 @@ namespace Epsitec.Common.Designer
 
 			this.UpdateInitialMessage();
 		}
+
+
+		private Module OpenModule(int id)
+		{
+			//	Ouvre automatiquement un module.
+#if false
+			List<ResourceModuleInfo> list = Collection.ToList (this.ResourceManagerPool.Modules);
+
+			foreach (var moduleInfo in list)
+			{
+				if (moduleInfo.FullId.Id == id)
+				{
+					var result = DesignerApplication.IsOriginalModule (moduleInfo.FullId);
+
+					if (result == -1)
+					{
+						continue;
+					}
+
+					if (result == 1)
+					{
+						int c = this.currentModule;
+						var mi = this.OpenModule (moduleInfo.FullId);
+						this.currentModule = c;
+
+						return mi.Module;
+					}
+				}
+			}
+#endif
+
+			return null;
+		}
+
+		public static int IsOriginalModule(ResourceModuleId moduleInfo)
+		{
+			//	Méthode "magique" pour déterminer si un module est l'original !
+			//	Retourne -1 -> module à rejeter toujours
+			//	Retourne  0 -> module secondaire
+			//	Retourne  1 -> module original
+			var path = moduleInfo.Path.Replace ('\\', '/');
+			var name = moduleInfo.Name;
+
+			if (path.Contains ("/bin/"))
+			{
+				return -1;  // module rejeté
+			}
+
+			var paths = path.Split ('/');
+			var names = name.Split ('.');
+
+			for (int i=0; i<paths.Length-1; i++)
+			{
+				if (paths[i] == name)
+				{
+					return 1;  // module original
+				}
+			}
+
+			for (int i=0; i<paths.Length-1; i++)
+			{
+				foreach (var n in names)
+				{
+					if (paths[i] == n)
+					{
+						return 1;  // module original
+					}
+				}
+			}
+
+			return 0;  // module secondaire
+		}
+
+		private ModuleInfo OpenModule(ResourceModuleId item)
+		{
+			Module module = new Module (this, this.mode, item);
+
+			ModuleInfo mi = new ModuleInfo ();
+			mi.Module = module;
+			this.moduleInfoList.Insert (++this.currentModule, mi);
+			this.CreateModuleLayout ();
+
+			return mi;
+		}
+
 
 		public void UpdateCommandEditLocked()
 		{
@@ -2655,7 +2755,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Affiche le dialogue pour demander s'il faut enregistrer les
 			//	ressources modifiées, avant de passer à d'autres ressources.
-			if (!this.CurrentModule.IsGlobalDirty)
+			if (this.CurrentModule == null || !this.CurrentModule.IsGlobalDirty)
 			{
 				return Common.Dialogs.DialogResult.None;
 			}

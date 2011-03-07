@@ -579,7 +579,10 @@ namespace Epsitec.Common.Types
 							delegate ()
 							{
 								Caption caption = (manager ?? Support.Resources.DefaultManager).GetCaption (typeId);
-								field.DefineType (TypeRosetta.GetTypeObject (caption));
+								if (caption != null)  // ajouté par DR, sans savoir si c'est juste !
+								{
+									field.DefineType (TypeRosetta.GetTypeObject (caption));
+								}
 							});
 					}
 					else
