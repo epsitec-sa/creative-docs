@@ -88,7 +88,11 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 					//	No creation controller could be found: dispose the dummy entity immediately,
 					//	since it is no longer of any use.
 
-					System.Diagnostics.Debug.Assert (controller == null);
+					if (controller != null)
+					{
+						controller.Dispose ();
+						controller = null;
+					}
 
 					this.DisposeDummyEntity (dummyEntity);
 				}

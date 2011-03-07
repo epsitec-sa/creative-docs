@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Core.Repositories
 	public class BusinessSettingsRepository : Repository<BusinessSettingsEntity>
 	{
 		public BusinessSettingsRepository(CoreData data, DataContext context = null)
-			: base (data, context)
+			: base (data, context, Common.Types.DataLifetimeExpectancy.Stable)
 		{
 		}
 	}
