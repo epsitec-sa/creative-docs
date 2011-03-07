@@ -13,5 +13,8 @@ namespace Epsitec.Common.Types
 		GenerateRepository	= 0x00000002,
 
 		AbstractClass		= 0x00000100,
+
+		StandaloneDisplay	= 0x00001000,
+		StandaloneCreate	= 0x00002000,
 	}
 }

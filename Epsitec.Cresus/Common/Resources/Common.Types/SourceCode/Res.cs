@@ -529,6 +529,22 @@ namespace Epsitec.Common.Types
 						return global::Epsitec.Common.Types.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 6));
 					}
 				}
+				//	designer:cap/10AN
+				public static global::Epsitec.Common.Types.Caption StandaloneCreate
+				{
+					get
+					{
+						return global::Epsitec.Common.Types.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 23));
+					}
+				}
+				//	designer:cap/10AM
+				public static global::Epsitec.Common.Types.Caption StandaloneDisplay
+				{
+					get
+					{
+						return global::Epsitec.Common.Types.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 22));
+					}
+				}
 			}
 			
 			public static class TimeResolution
