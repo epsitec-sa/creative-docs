@@ -131,6 +131,12 @@ namespace Epsitec.Common.Widgets
 			
 			adorner.PaintCellBackground(graphics, rect, state);
 
+			if (!this.BackColor.IsEmpty)
+			{
+				graphics.AddFilledRectangle (rect);
+				graphics.RenderSolid (this.BackColor);
+			}
+
 			if ( this.isHilite )
 			{
 				graphics.AddFilledRectangle(rect);
