@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Core.Library
 	/// and associated texts which represent its value. See the generic
 	/// type <c>EnumKeyValues{T}</c> for a concrete implementation.
 	/// </summary>
-	public abstract class EnumKeyValues
+	public abstract class EnumKeyValues : ITextFormatter
 	{
 		public static EnumKeyValues<T> Create<T>(T key, params string[] values)
 		{
@@ -44,5 +44,14 @@ namespace Epsitec.Cresus.Core.Library
 		{
 			get;
 		}
+
+		#region ITextFormatter Members
+
+		public FormattedText ToFormattedText(System.Globalization.CultureInfo culture, TextFormatterDetailLevel detailLevel)
+		{
+			return FormattedText.Join (" - ", this.Values);
+		}
+
+		#endregion
 	}
 }

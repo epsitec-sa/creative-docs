@@ -184,6 +184,14 @@ namespace Epsitec.Cresus.Core
 				return culture.LanguageId;
 			}
 		}
+
+		public static System.Globalization.CultureInfo CurrentCulture
+		{
+			get
+			{
+				return UI.Settings.CultureForData.CultureInfo;
+			}
+		}
 		
 		public static string ConvertToText(object value)
 		{
@@ -199,9 +207,11 @@ namespace Epsitec.Cresus.Core
 				return text;
 			}
 
-			if (value is Date)
+			ITextFormatter formatter = value as ITextFormatter;
+
+			if (formatter != null)
 			{
-				return ((Date) value).ToDateTime ().ToShortDateString ();
+				value = formatter.ToFormattedText (TextFormatter.CurrentCulture, TextFormatterDetailLevel.Default);
 			}
 
 			if (value is FormattedText)
@@ -216,6 +226,11 @@ namespace Epsitec.Cresus.Core
 					MultilingualText multilingualText = new MultilingualText (formattedText);
 					return multilingualText.GetTextOrDefault (TextFormatter.CurrentLanguageId).ToString ();
                 }
+			}
+
+			if (value is Date)
+			{
+				return ((Date) value).ToDateTime ().ToShortDateString ();
 			}
 
 			return value.ToString ();

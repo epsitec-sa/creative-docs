@@ -850,6 +850,7 @@
     <Compile Include="Types\IStructuredTypeResolver.cs" />
     <Compile Include="Types\ISuspendCollectionChanged.cs" />
     <Compile Include="Types\ISytemType.cs" />
+    <Compile Include="Types\ITextFormatter.cs" />
     <Compile Include="Types\IValidationResult.cs" />
     <Compile Include="Types\IValueConverter.cs" />
     <Compile Include="Types\IValueStore.cs" />
@@ -904,6 +905,7 @@
     <Compile Include="Types\StructuredTypeField.cs" />
     <Compile Include="Types\SystemTypeFamily.cs" />
     <Compile Include="Types\TextComparison.cs" />
+    <Compile Include="Types\TextFormatterDetailLevel.cs" />
     <Compile Include="Types\Time.cs" />
     <Compile Include="Types\TimeResolution.cs" />
     <Compile Include="Types\TimeType.cs" />
