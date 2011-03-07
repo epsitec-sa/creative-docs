@@ -250,6 +250,12 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		public System.Func<int, ResourceManager> MissingModuleResolver
+		{
+			get;
+			set;
+		}
+
 		public ResourceManagerPool				Pool
 		{
 			get
@@ -761,6 +767,16 @@ namespace Epsitec.Common.Support
 				foreach (ResourceManager manager in this.pool.Managers)
 				{
 					if (manager.DefaultModuleId == module.Id)
+					{
+						return manager.GetBundle (id, level, culture, recursion+1);
+					}
+				}
+
+				if (this.MissingModuleResolver != null)
+				{
+					var manager = this.MissingModuleResolver (module.Id);
+
+					if (manager != null)
 					{
 						return manager.GetBundle (id, level, culture, recursion+1);
 					}
