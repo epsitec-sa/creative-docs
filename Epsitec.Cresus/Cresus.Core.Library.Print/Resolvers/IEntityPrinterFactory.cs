@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Documents;
 using Epsitec.Cresus.Core.Print.EntityPrinters;
 
@@ -14,6 +15,6 @@ namespace Epsitec.Cresus.Core.Resolvers
 	public interface IEntityPrinterFactory
 	{
 		bool CanPrint(AbstractEntity entity, OptionsDictionary options);
-		AbstractPrinter CreatePrinter(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits);
+		AbstractPrinter CreatePrinter(IBusinessContext businessContext, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits);
 	}
 }

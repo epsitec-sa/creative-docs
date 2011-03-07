@@ -11,26 +11,26 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Documents;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Helpers;
 using Epsitec.Cresus.Core.Print;
 using Epsitec.Cresus.Core.Print.Bands;
 using Epsitec.Cresus.Core.Print.Containers;
 using Epsitec.Cresus.Core.Print.EntityPrinters;
+using Epsitec.Cresus.Core.Resolvers;
 
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Epsitec.Cresus.Core.Business;
-using Epsitec.Cresus.Core.Documents;
-using Epsitec.Cresus.Core.Resolvers;
 
 namespace Epsitec.Cresus.Core.EntityPrinters
 {
 	public class DocumentMetadataPrinter : AbstractPrinter
 	{
-		private DocumentMetadataPrinter(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
-			: base (coreData, entities, options, printingUnits)
+		private DocumentMetadataPrinter(IBusinessContext businessContext, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
+			: base (businessContext, entities, options, printingUnits)
 		{
 			System.Diagnostics.Debug.Assert (entities.Count () == 1);
 		}
@@ -1538,9 +1538,9 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				return entity is DocumentMetadataEntity;
 			}
 
-			AbstractPrinter IEntityPrinterFactory.CreatePrinter(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
+			AbstractPrinter IEntityPrinterFactory.CreatePrinter(IBusinessContext businessContext, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
 			{
-				return new DocumentMetadataPrinter (coreData, entities, options, printingUnits);
+				return new DocumentMetadataPrinter (businessContext, entities, options, printingUnits);
 			}
 
 			#endregion

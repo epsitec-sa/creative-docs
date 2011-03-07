@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using System.Linq;
 using System.Linq.Expressions;
+using Epsitec.Cresus.Core.Business;
 
 namespace Epsitec.Cresus.Core.Print.Serialization
 {
@@ -77,7 +78,7 @@ namespace Epsitec.Cresus.Core.Print.Serialization
 			return xDocument.ToString (SaveOptions.None);
 		}
 
-		public static List<DeserializedJob> DeserializeJobs(CoreData coreData, string xmlSource, double zoom=0)
+		public static List<DeserializedJob> DeserializeJobs(IBusinessContext businessContext, string xmlSource, double zoom=0)
 		{
 			//	Désérialise une liste de jobs d'impression.
 			//	Si le zoom est différent de zéro, on génère des bitmaps miniatures des pages.
@@ -113,7 +114,7 @@ namespace Epsitec.Cresus.Core.Print.Serialization
 							if (zoom > 0)  // génère une miniature de la page ?
 							{
 								var port = new XmlPort (xPage);
-								page.Miniature = port.Deserialize (id => PrintEngine.GetImage (coreData, id), new Size (width, height), zoom);
+								page.Miniature = port.Deserialize (id => PrintEngine.GetImage (businessContext, id), new Size (width, height), zoom);
 							}
 
 							section.Pages.Add (page);

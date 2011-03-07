@@ -20,6 +20,8 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using System.Linq;
 using System.Linq.Expressions;
+using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Data;
 
 namespace Epsitec.Cresus.Core.Print
 {
@@ -37,7 +39,7 @@ namespace Epsitec.Cresus.Core.Print
 
 
 		#region Command handlers
-		public static void PrintCommand(CoreData coreData, AbstractEntity entity)
+		public static void PrintCommand(IBusinessContext businessContext, AbstractEntity entity)
 		{
 			//	La commande 'Print' du ruban a été activée.
 			if (entity == null)
@@ -47,7 +49,7 @@ namespace Epsitec.Cresus.Core.Print
 				return;
 			}
 
-			var xml = PrintEngine.MakePrintingData (coreData, entity);
+			var xml = PrintEngine.MakePrintingData (businessContext, entity);
 
 			if (string.IsNullOrEmpty (xml))
 			{
@@ -56,10 +58,10 @@ namespace Epsitec.Cresus.Core.Print
 				return;
 			}
 
-			PrintEngine.SendDataToPrinter (coreData, xml);
+			PrintEngine.SendDataToPrinter (businessContext, xml);
 		}
 
-		public static void PreviewCommand(CoreData coreData, AbstractEntity entity)
+		public static void PreviewCommand(IBusinessContext businessContext, AbstractEntity entity)
 		{
 			//	La commande 'Preview' du ruban a été activée.
 			if (entity == null)
@@ -69,7 +71,7 @@ namespace Epsitec.Cresus.Core.Print
 				return;
 			}
 
-			var xml = PrintEngine.MakePrintingData (coreData, entity);
+			var xml = PrintEngine.MakePrintingData (businessContext, entity);
 
 			if (string.IsNullOrEmpty (xml))
 			{
@@ -78,28 +80,28 @@ namespace Epsitec.Cresus.Core.Print
 				return;
 			}
 
-			var deserializeJobs = SerializationEngine.DeserializeJobs (coreData, xml);
+			var deserializeJobs = SerializationEngine.DeserializeJobs (businessContext, xml);
 
-			var dialog = new Dialogs.PrintPreviewDialog (coreData, deserializeJobs);
+			var dialog = new Dialogs.PrintPreviewDialog (businessContext, deserializeJobs);
 			dialog.IsModal = true;
 			dialog.OpenDialog ();
 
 			if (dialog.Result == DialogResult.Accept)  // imprimer ?
 			{
-				PrintEngine.PrintJobs (coreData, deserializeJobs);
+				PrintEngine.PrintJobs (businessContext, deserializeJobs);
 			}
 		}
 		#endregion
 
 
-		public static void SendDataToPrinter(CoreData coreData, string xml)
+		public static void SendDataToPrinter(IBusinessContext businessContext, string xml)
 		{
 			//	Imprime effectivement le source xml d'un document.
-			var deserializeJobs = SerializationEngine.DeserializeJobs (coreData, xml);
-			PrintEngine.PrintJobs (coreData, deserializeJobs);
+			var deserializeJobs = SerializationEngine.DeserializeJobs (businessContext, xml);
+			PrintEngine.PrintJobs (businessContext, deserializeJobs);
 		}
 
-		private static void PrintJobs(CoreData coreData, List<DeserializedJob> jobs)
+		private static void PrintJobs(IBusinessContext businessContext, List<DeserializedJob> jobs)
 		{
 			//	Imprime effectivement une liste de jobs d'impression.
 			foreach (var job in jobs)
@@ -111,13 +113,13 @@ namespace Epsitec.Cresus.Core.Print
 				printDocument.PrinterSettings.Copies = 1;
 				printDocument.DefaultPageSettings.Margins = new Margins (0, 0, 0, 0);
 
-				var engine = new XmlJobPrintEngine (coreData, printDocument, job.Sections);
+				var engine = new XmlJobPrintEngine (businessContext, printDocument, job.Sections);
 				printDocument.Print (engine);
 			}
 		}
 
 
-		public static string MakePrintingData(CoreData coreData, AbstractEntity entity)
+		public static string MakePrintingData(IBusinessContext businessContext, AbstractEntity entity)
 		{
 			//	Fabrique les données permettant d'imprimer un document, sans aucune interaction.
 			//	Retourne le source xml correspondant.
@@ -126,24 +128,24 @@ namespace Epsitec.Cresus.Core.Print
 			var options       = PrintEngine.GetOptions (entity);
 			var printingUnits = PrintEngine.GetPrintingUnits (entity);
 
-			return PrintEngine.MakePrintingData (coreData, entity, options, printingUnits);
+			return PrintEngine.MakePrintingData (businessContext, entity, options, printingUnits);
 		}
 
-		public static string MakePrintingData(CoreData coreData, AbstractEntity entity, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
+		public static string MakePrintingData(IBusinessContext businessContext, AbstractEntity entity, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
 		{
 			//	Fabrique les données permettant d'imprimer un document, sans aucune interaction.
 			//	Retourne le source xml correspondant.
 			var entities = new List<AbstractEntity> ();
 			entities.Add (entity);
 
-			return PrintEngine.MakePrintingData (coreData, entities, options, printingUnits);
+			return PrintEngine.MakePrintingData (businessContext, entities, options, printingUnits);
 		}
 
-		public static string MakePrintingData(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
+		public static string MakePrintingData(IBusinessContext businessContext, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
 		{
 			//	Fabrique les données permettant d'imprimer un document, sans aucune interaction.
 			//	Retourne le source xml correspondant.
-			System.Diagnostics.Debug.Assert (coreData != null);
+			System.Diagnostics.Debug.Assert (businessContext != null);
 			System.Diagnostics.Debug.Assert (entities != null);
 			System.Diagnostics.Debug.Assert (options != null);
 			System.Diagnostics.Debug.Assert (printingUnits != null);
@@ -154,12 +156,14 @@ namespace Epsitec.Cresus.Core.Print
 			}
 
 			//	Crée les classes qui savent imprimer l'entité qui représente le document (EntityPrinters.AbstrctPrinter).
-			var documentPrinters = EntityPrinters.AbstractPrinter.CreateDocumentPrinters (coreData, entities, options, printingUnits);
+			var documentPrinters = EntityPrinters.AbstractPrinter.CreateDocumentPrinters (businessContext, entities, options, printingUnits);
 
 			if (documentPrinters.Count () == 0 || printingUnits.Count == 0)
 			{
 				return null;
 			}
+
+			var coreData = businessContext.Data;
 
 			//	Prépare toutes les pages à imprimer, pour toutes les entités.
 			//	On crée autant de sections que de pages, soit une section par page.
@@ -368,15 +372,25 @@ namespace Epsitec.Cresus.Core.Print
 		#endregion
 
 
-		public static Image GetImage(CoreData coreData, string id)
+		public static Image GetImage(IBusinessContext businessContext, string id)
 		{
-			throw new System.NotImplementedException ();
-#if false
 			//	Retrouve l'image dans la base de données, à partir de son identificateur (ImageBlobEntity.Code).
-			var store = coreData.ImageDataStore;
+
+			ImageDataStore store = businessContext.Data.GetComponent<ImageDataStore> ();
+
+			if (store == null)
+			{
+				return null;
+			}
+
 			var data = store.GetImageData (id);
+
+			if (data == null)
+			{
+				return null;
+			}
+
 			return data.GetImage ();
-#endif
 		}
 
 	

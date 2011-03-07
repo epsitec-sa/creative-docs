@@ -7,8 +7,9 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Printing;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
-
 using Epsitec.Common.Support.EntityEngine;
+
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Print.Serialization;
 
@@ -31,9 +32,10 @@ namespace Epsitec.Cresus.Core.Print.Controllers
 		}
 
 
-		public XmlPreviewerController(CoreData coreData, List<DeserializedJob> jobs)
+		public XmlPreviewerController(IBusinessContext businessContext, List<DeserializedJob> jobs)
 		{
-			this.coreData = coreData;
+			this.businessContext = businessContext;
+			this.coreData = this.businessContext.Data;
 			this.jobs = jobs;
 			this.pages = Print.Common.GetDeserializedPages (this.jobs).ToList ();
 
@@ -213,7 +215,7 @@ namespace Epsitec.Cresus.Core.Print.Controllers
 					break;
 				}
 
-				var preview = new Widgets.XmlPrintedPagePreviewer (this.coreData)
+				var preview = new Widgets.XmlPrintedPagePreviewer (this.businessContext)
 				{
 					Parent = this.previewFrame.Viewport,
 					Page = this.pages[pageRank],
@@ -381,6 +383,7 @@ namespace Epsitec.Cresus.Core.Print.Controllers
 		}
 
 
+		private readonly IBusinessContext						businessContext;
 		private readonly CoreData								coreData;
 		private readonly List<DeserializedJob>					jobs;
 		private readonly List<Widgets.XmlPrintedPagePreviewer>	pagePreviewers;

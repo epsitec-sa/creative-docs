@@ -22,13 +22,14 @@ using System.Linq;
 using Epsitec.Cresus.Core.Resolvers;
 using Epsitec.Cresus.Core.Documents;
 using Epsitec.Cresus.Core.Print.EntityPrinters;
+using Epsitec.Cresus.Core.Business;
 
 namespace Epsitec.Cresus.Core.EntityPrinters
 {
 	public class RelationPrinter : AbstractPrinter
 	{
-		private RelationPrinter(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
-			: base (coreData, entities, options, printingUnits)
+		private RelationPrinter(IBusinessContext businessContext, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
+			: base (businessContext, entities, options, printingUnits)
 		{
 		}
 
@@ -339,9 +340,9 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				return entity is RelationEntity;
 			}
 
-			AbstractPrinter IEntityPrinterFactory.CreatePrinter(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
+			AbstractPrinter IEntityPrinterFactory.CreatePrinter(IBusinessContext businessContext, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
 			{
-				return new RelationPrinter (coreData, entities, options, printingUnits);
+				return new RelationPrinter (businessContext, entities, options, printingUnits);
 			}
 
 			#endregion

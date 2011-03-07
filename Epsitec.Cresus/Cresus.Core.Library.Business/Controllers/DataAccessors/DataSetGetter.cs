@@ -87,6 +87,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				case "InvoiceDocuments":
 					return EntityInfo<BusinessDocumentEntity>.GetTypeId ();
 
+				case "BusinessSettings":
+					return EntityInfo<BusinessSettingsEntity>.GetTypeId ();
+
 				case "Images":
 					return EntityInfo<ImageEntity>.GetTypeId ();
 

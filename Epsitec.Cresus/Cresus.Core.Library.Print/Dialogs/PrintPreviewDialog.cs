@@ -20,6 +20,7 @@ using Epsitec.Cresus.Core.Widgets;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Epsitec.Cresus.Core.Business;
 
 namespace Epsitec.Cresus.Core.Dialogs
 {
@@ -29,15 +30,16 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// </summary>
 	class PrintPreviewDialog : AbstractDialog
 	{
-		public PrintPreviewDialog(CoreData coreData, List<DeserializedJob> jobs)
+		public PrintPreviewDialog(IBusinessContext businessContext, List<DeserializedJob> jobs)
 		{
 			this.IsApplicationWindow = true;  // pour avoir les boutons Minimize/Maximize/Close !
 
-			this.application = coreData.Host;
-			this.coreData = coreData;
+			this.businessContext = businessContext;
+			this.coreData = this.businessContext.Data;
+			this.application = this.coreData.Host;
 			this.jobs = jobs;
 			this.pages = Print.Common.GetDeserializedPages (this.jobs).ToList ();
-			this.previewerController = new XmlPreviewerController (this.coreData, this.jobs);
+			this.previewerController = new XmlPreviewerController (this.businessContext, this.jobs);
 		}
 
 
@@ -163,6 +165,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private readonly Application							application;
 		private readonly CoreData								coreData;
+		private readonly IBusinessContext						businessContext;
 		private readonly List<DeserializedJob>					jobs;
 		private readonly List<DeserializedPage>					pages;
 		private readonly XmlPreviewerController					previewerController;

@@ -15,13 +15,14 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Epsitec.Cresus.Core.Print.EntityPrinters;
+using Epsitec.Cresus.Core.Business;
 
 namespace Epsitec.Cresus.Core.EntityPrinters
 {
 	public class DocumentMetadataMailContactPrinter : AbstractPrinter
 	{
-		private DocumentMetadataMailContactPrinter(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
-			: base (coreData, entities, options, printingUnits)
+		private DocumentMetadataMailContactPrinter(IBusinessContext businessContext, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
+			: base (businessContext, entities, options, printingUnits)
 		{
 		}
 
@@ -181,9 +182,9 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 //				return entity is DocumentMetadataEntity;
 			}
 
-			AbstractPrinter IEntityPrinterFactory.CreatePrinter(CoreData coreData, IEnumerable<AbstractEntity> entities, Documents.OptionsDictionary options, Documents.PrintingUnitsDictionary printingUnits)
+			AbstractPrinter IEntityPrinterFactory.CreatePrinter(IBusinessContext businessContext, IEnumerable<AbstractEntity> entities, Documents.OptionsDictionary options, Documents.PrintingUnitsDictionary printingUnits)
 			{
-				return new DocumentMetadataMailContactPrinter (coreData, entities, options, printingUnits);
+				return new DocumentMetadataMailContactPrinter (businessContext, entities, options, printingUnits);
 			}
 
 			#endregion

@@ -12,6 +12,7 @@ using Epsitec.Cresus.Core.Print.Serialization;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Business;
 
 namespace Epsitec.Cresus.Core.Widgets
 {
@@ -20,9 +21,10 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// </summary>
 	public class XmlPrintedPagePreviewer : Widget
 	{
-		public XmlPrintedPagePreviewer(CoreData coreData)
+		public XmlPrintedPagePreviewer(IBusinessContext businessContext)
 		{
-			this.coreData = coreData;
+			this.businessContext = businessContext;
+			this.coreData = this.businessContext.Data;
 
 			this.titleLayout = new TextLayout
 			{
@@ -118,13 +120,14 @@ namespace Epsitec.Cresus.Core.Widgets
 				this.lastZoom = zoom;
 
 				var port = new XmlPort (page.XRoot);
-				this.bitmap = port.Deserialize (id => PrintEngine.GetImage (this.coreData, id), new Size (pageWidth, pageHeight), zoom);
+				this.bitmap = port.Deserialize (id => PrintEngine.GetImage (this.businessContext, id), new Size (pageWidth, pageHeight), zoom);
 			}
 		}
 
 
 		public static readonly double		titleHeight = 18;
 
+		private readonly IBusinessContext	businessContext;
 		private readonly CoreData			coreData;
 
 		private DeserializedPage			page;

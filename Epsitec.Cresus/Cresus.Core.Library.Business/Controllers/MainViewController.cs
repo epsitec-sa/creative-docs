@@ -308,7 +308,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			var context   = this.Data.CreateDataContext ("PrintEngine:Print");
 			var entity    = context.ResolveEntity (entityKey);
 
-			PrintEngine.PrintCommand (this.Data, entity);
+			PrintEngine.PrintCommand (this.BusinessContext, entity);
 
 			this.Data.DisposeDataContext (context);
 		}
@@ -319,7 +319,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			var context   = this.Data.CreateDataContext ("PrintEngine:Preview");
 			var entity    = context.ResolveEntity (entityKey);
 
-			PrintEngine.PreviewCommand (this.Data, entity);
+			PrintEngine.PreviewCommand (this.BusinessContext, entity);
 
 			this.Data.DisposeDataContext (context);
 		}

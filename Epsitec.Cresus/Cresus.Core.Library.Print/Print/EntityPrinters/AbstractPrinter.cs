@@ -20,17 +20,19 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Epsitec.Cresus.Core.Resolvers;
+using Epsitec.Cresus.Core.Business;
 
 namespace Epsitec.Cresus.Core.Print.EntityPrinters
 {
 	public abstract class AbstractPrinter
 	{
-		public AbstractPrinter(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
+		protected AbstractPrinter(IBusinessContext businessContext, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
 		{
-			this.coreData      = coreData;
-			this.entities      = entities;
-			this.options       = options;
-			this.printingUnits = printingUnits;
+			this.businessContext   = businessContext;
+			this.coreData          = this.businessContext.Data;
+			this.entities          = entities;
+			this.options           = options;
+			this.printingUnits     = printingUnits;
 
 			this.documentContainer = new DocumentContainer ();
 			this.tableColumns      = new Dictionary<TableColumnKeys, TableColumn> ();
@@ -265,7 +267,7 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 		}
 
 
-		public static IEnumerable<AbstractPrinter> CreateDocumentPrinters(CoreData coreData, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits, bool all = true)
+		public static IEnumerable<AbstractPrinter> CreateDocumentPrinters(IBusinessContext businessContext, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits, bool all = true)
 		{
 			//	Crée les *Printer adaptés à un type d'entité. Le premier est toujours le principal.
 			//	Si all = false, on ne crée que le principal.
@@ -281,7 +283,7 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 
 				if (factory != null)
 				{
-					var printer = factory.CreatePrinter (coreData, entities, options, printingUnits);
+					var printer = factory.CreatePrinter (businessContext, entities, options, printingUnits);
 					list.Add (printer);
 				}
 #if false
@@ -338,13 +340,13 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 		private static readonly Font						specimenFont = Font.GetFont ("Arial", "Bold");
 		public static readonly double						continuousHeight = 100000;  // 100m devrait suffire
 
-		protected readonly IEnumerable<AbstractEntity>		entities;
-		private OptionsDictionary							options;
-		private readonly PrintingUnitsDictionary			printingUnits;
-		protected readonly DocumentContainer				documentContainer;
+		protected readonly IBusinessContext					businessContext;
 		protected readonly CoreData							coreData;
-
-		protected Dictionary<TableColumnKeys, TableColumn>	tableColumns;
+		protected readonly IEnumerable<AbstractEntity>		entities;
+		private readonly PrintingUnitsDictionary			printingUnits;
+		private OptionsDictionary							options;
+		protected readonly DocumentContainer				documentContainer;
+		protected readonly Dictionary<TableColumnKeys, TableColumn>	tableColumns;
 		protected Size										requiredPageSize;
 		private int											currentPage;
 	}

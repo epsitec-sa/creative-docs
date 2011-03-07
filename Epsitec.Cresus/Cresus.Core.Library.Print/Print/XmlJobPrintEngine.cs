@@ -10,6 +10,7 @@ using Epsitec.Cresus.Core.Print.Serialization;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Epsitec.Cresus.Core.Business;
 
 namespace Epsitec.Cresus.Core.Print
 {
@@ -20,13 +21,15 @@ namespace Epsitec.Cresus.Core.Print
 		/// Un job est composé de sections. Une section est composée de pages contigües sur une seule unité d'impression
 		/// Les sections utilisent toutes la même imprimante physique, mais peuvent utiliser plusieurs bacs différents.
 		/// </summary>
-		/// <param name="printDocument"></param>
-		/// <param name="sections"></param>
-		public XmlJobPrintEngine(CoreData coreData, PrintDocument printDocument, List<DeserializedSection> sections)
+		/// <param name="businessContext">The business context.</param>
+		/// <param name="printDocument">The print document.</param>
+		/// <param name="sections">The sections.</param>
+		public XmlJobPrintEngine(IBusinessContext businessContext, PrintDocument printDocument, List<DeserializedSection> sections)
 		{
-			this.coreData      = coreData;
-			this.printDocument = printDocument;
-			this.sections      = sections;
+			this.businessContext = businessContext;
+			this.coreData        = this.businessContext.Data;
+			this.printDocument   = printDocument;
+			this.sections        = sections;
 
 			this.sectionIndex = 0;  // on commence par la première section
 			this.pageIndex    = 0;  // on commence par la première page
@@ -95,7 +98,7 @@ namespace Epsitec.Cresus.Core.Print
 
 			//	Dessine la page à imprimer.
 			var xmlPort = new XmlPort (page.XRoot);
-			xmlPort.Deserialize (id => PrintEngine.GetImage (this.coreData, id), port);
+			xmlPort.Deserialize (id => PrintEngine.GetImage (this.businessContext, id), port);
 
 			//	Cherche la page suivante.
 			this.pageIndex++;
@@ -117,6 +120,7 @@ namespace Epsitec.Cresus.Core.Print
 		#endregion
 
 
+		private readonly IBusinessContext			businessContext;
 		private readonly CoreData					coreData;
 		private readonly PrintDocument				printDocument;
 		private readonly List<DeserializedSection>	sections;

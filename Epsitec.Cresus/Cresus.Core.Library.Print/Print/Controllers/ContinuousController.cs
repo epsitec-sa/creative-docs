@@ -5,8 +5,8 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Documents;
-using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Print.EntityPrinters;
 
 using System.Collections.Generic;
@@ -17,14 +17,14 @@ namespace Epsitec.Cresus.Core.Print.Controllers
 {
 	public class ContinuousController
 	{
-		public ContinuousController(CoreData coreData, AbstractEntity metadoc, Business.DocumentType documentType)
+		public ContinuousController(IBusinessContext businessContext, AbstractEntity metadoc, Business.DocumentType documentType)
 		{
 			var entities = new List<AbstractEntity> ();
 			entities.Add (metadoc);
 
 			var options = OptionsDictionary.GetDefault ();
 
-			var documentPrinters = AbstractPrinter.CreateDocumentPrinters (coreData, entities, options, null, all: false);
+			var documentPrinters = AbstractPrinter.CreateDocumentPrinters (businessContext, entities, options, null, all: false);
 			this.documentPrinter = documentPrinters.FirstOrDefault ();
 			System.Diagnostics.Debug.Assert (this.documentPrinter != null);
 
