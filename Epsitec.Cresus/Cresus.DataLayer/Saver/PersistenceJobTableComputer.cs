@@ -115,36 +115,55 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			Druid leafEntityId = job.Entity.GetEntityStructuredTypeId ();
 			var localEntityIds = this.EntityContext.GetInheritedEntityIds (leafEntityId).ToList ();
 
-			foreach (Druid localEntityId in localEntityIds)
-			{
-				yield return this.SchemaEngine.GetEntityTableDefinition (localEntityId);
-			}
+			IEnumerable<DbTable> localEntityTables =
+				from localEntityId in localEntityIds
+				select this.SchemaEngine.GetEntityTableDefinition (localEntityId);
 
-			var fieldsOut = from localEntityId in localEntityIds
-							from field in this.EntityContext.GetEntityLocalFieldDefinitions (localEntityId)
-							where field.Relation == FieldRelation.Reference
-			                  || field.Relation == FieldRelation.Collection
-							select new
-							{
-								localEntityId = localEntityId,
-								fieldId = field.CaptionId
-							};
+			IEnumerable<DbTable> collectionOutTables = 
+				from localEntityId in localEntityIds
+				from field in this.EntityContext.GetEntityLocalFieldDefinitions (localEntityId)
+				where field.Relation == FieldRelation.Collection
+				let fieldId = field.CaptionId
+				select this.SchemaEngine.GetCollectionTableDefinition (localEntityId, fieldId);
 
 			var fieldsIn = localEntityIds
-				.SelectMany (id => this.DataContext.DataInfrastructure.SchemaEngine.GetSourceReferences (id))
-				.Select (fp => new
-				{
-					localEntityId = fp.EntityId,
-					fieldId = Druid.Parse (fp.Fields.First ())
-				});
+				.SelectMany (id => this.DataContext.DataInfrastructure.SchemaEngine.GetReferencingFields (id))
+				.GroupBy (f => f.Item2.Relation)
+				.ToDictionary (g => g.Key, g => g);
 
-			foreach (var field in fieldsIn.Concat (fieldsOut))
+			IEnumerable<DbTable> collectionInTables;
+
+			if (fieldsIn.ContainsKey (FieldRelation.Collection))
 			{
-				Druid localEntityId = field.localEntityId;
-				Druid fieldId = field.fieldId;
-
-				yield return this.SchemaEngine.GetRelationTableDefinition (localEntityId, fieldId);
+				collectionInTables =
+					from field in fieldsIn[FieldRelation.Collection]
+					let localEntityId = field.Item1.CaptionId
+					let fieldId = field.Item2.CaptionId
+					select this.SchemaEngine.GetCollectionTableDefinition (localEntityId, fieldId);
 			}
+			else
+			{
+				collectionInTables = new List<DbTable> ();
+			}
+
+			IEnumerable<DbTable> referenceInTables;
+
+			if (fieldsIn.ContainsKey (FieldRelation.Reference))
+			{
+				referenceInTables = fieldsIn[FieldRelation.Reference]
+					.Select (f => f.Item1.CaptionId)
+					.Distinct ()
+					.Select (id => this.SchemaEngine.GetEntityTableDefinition (id));
+			}
+			else
+			{
+				referenceInTables = new List<DbTable> ();
+			}
+
+			return localEntityTables
+				.Concat (collectionOutTables)
+				.Concat (collectionInTables)
+				.Concat (referenceInTables);
 		}
 
 
@@ -207,9 +226,8 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		private IEnumerable<DbTable> GetAffectedTablesHelper(ReferencePersistenceJob job)
 		{
 			Druid localEntityId = job.LocalEntityId;
-			Druid fieldId = job.FieldId;
 
-			yield return this.SchemaEngine.GetRelationTableDefinition (localEntityId, fieldId);
+			yield return this.SchemaEngine.GetEntityTableDefinition (localEntityId);
 		}
 
 
@@ -227,7 +245,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			// checked immediately and the execution of the helper is deferred.
 			// Marc.
 
-			return this.GetAffectedTablesHelper (job);	
+			return this.GetAffectedTablesHelper (job);
 		}
 
 
@@ -242,7 +260,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			Druid localEntityId = job.LocalEntityId;
 			Druid fieldId = job.FieldId;
 
-			yield return this.SchemaEngine.GetRelationTableDefinition (localEntityId, fieldId);
+			yield return this.SchemaEngine.GetCollectionTableDefinition (localEntityId, fieldId);
 		}
 
 

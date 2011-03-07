@@ -202,7 +202,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <param name="localEntityId">The <see cref="Druid"/> defining the subtype of the <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
 		/// <param name="fieldIds">The sequence of <see cref="Druid"/> identifying the fields to insert or update.</param>
 		/// <param name="jobType">Tells whether to update or insert the values.</param>
-		/// <returns>The sequence of <see cref="AbstractPersistenceJob"/>.</returns>
+		/// <returns>The <see cref="AbstractPersistenceJob"/>.</returns>
 		private AbstractPersistenceJob CreateValueJob(AbstractEntity entity, Druid localEntityId, IEnumerable<Druid> fieldIds, PersistenceJobType jobType)
 		{
 			Druid rootEntityId = this.EntityContext.GetRootEntityId (localEntityId);
@@ -227,10 +227,10 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		private IEnumerable<AbstractPersistenceJob> CreateInsertionReferenceJobs(AbstractEntity entity)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			var localEntityIds = this.EntityContext.GetInheritedEntityIds (leafEntityId);
 
-			return from field in this.EntityContext.GetEntityFieldDefinitions (leafEntityId)
-				   where field.Relation == FieldRelation.Reference
-				   select this.CreateInsertionReferenceJob (entity, field.CaptionId);
+			return from Druid localEntityId in localEntityIds
+				   select this.CreateInsertionReferenceJob (entity, localEntityId);
 		}
 
 
@@ -239,20 +239,24 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// reference of the given field of the given <see cref="AbstractEntity"/> in the database.
 		/// </summary>
 		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
-		/// <param name="fieldId">The <see cref="Druid"/> defining the field of the <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
+		/// <param name="localEntityId">The <see cref="Druid"/> defining the type of the <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
 		/// <returns>The <see cref="AbstractPersistenceJob"/>.</returns>
-		private AbstractPersistenceJob CreateInsertionReferenceJob(AbstractEntity entity, Druid fieldId)
+		private AbstractPersistenceJob CreateInsertionReferenceJob(AbstractEntity entity, Druid localEntityId)
 		{
-			ReferencePersistenceJob job = null;
+			AbstractPersistenceJob job = null;
 
-			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-			Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
+			var fieldIds = new List<Druid> (
+				from field in this.EntityContext.GetEntityLocalFieldDefinitions (localEntityId)
+				where field.Relation == FieldRelation.Reference
+				let fieldId = field.CaptionId
+				let target = entity.GetField<AbstractEntity> (fieldId.ToResourceId ())
+				where this.DataContext.DataSaver.CheckIfEntityCanBeSaved (target)
+				select fieldId
+			);
 
-			AbstractEntity target = entity.GetField<AbstractEntity> (fieldId.ToResourceId ());
-
-			if (this.DataContext.DataSaver.CheckIfEntityCanBeSaved (target))
+			if (fieldIds.Any ())
 			{
-				job = new ReferencePersistenceJob (entity, localEntityId, fieldId, target, PersistenceJobType.Insert);
+				job = this.CreateReferenceJob (entity, localEntityId, fieldIds, PersistenceJobType.Insert);
 			}
 
 			return job;
@@ -268,13 +272,10 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		private IEnumerable<AbstractPersistenceJob> CreateUpdateReferenceJobs(AbstractEntity entity)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			var localEntityIds = this.EntityContext.GetInheritedEntityIds (leafEntityId);
 
-			return from field in this.EntityContext.GetEntityFieldDefinitions (leafEntityId)
-				   let fieldId = field.CaptionId
-				   where field.Relation == FieldRelation.Reference
-				   where entity.HasReferenceChanged (fieldId)
-					  || this.DataContext.DataSaver.CheckIfFieldMustBeResaved (entity, fieldId)
-				   select this.CreateUpdateReferenceJob (entity, field.CaptionId);
+			return from Druid localEntityId in localEntityIds
+				   select this.CreateUpdateReferenceJob (entity, localEntityId);
 		}
 
 
@@ -283,26 +284,51 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// reference of the given field of the given <see cref="AbstractEntity"/> in the database.
 		/// </summary>
 		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
-		/// <param name="fieldId">The <see cref="Druid"/> defining the field of the <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
+		/// <param name="localEntityId">The <see cref="Druid"/> defining the type of the <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
 		/// <returns>The <see cref="AbstractPersistenceJob"/>.</returns>
-		private AbstractPersistenceJob CreateUpdateReferenceJob(AbstractEntity entity, Druid fieldId)
+		private AbstractPersistenceJob CreateUpdateReferenceJob(AbstractEntity entity, Druid localEntityId)
 		{
-			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-			Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
+			AbstractPersistenceJob job = null;
 
-			AbstractEntity target = entity.GetField<AbstractEntity> (fieldId.ToResourceId ());
-			AbstractEntity targetToSave;
+			List<Druid> fieldIds = new List<Druid> (
+				from field in this.EntityContext.GetEntityLocalFieldDefinitions (localEntityId)
+				let fieldId = field.CaptionId
+				where field.Relation == FieldRelation.Reference
+				where entity.HasReferenceChanged (fieldId)
+				   || this.DataContext.DataSaver.CheckIfFieldMustBeResaved (entity, fieldId)
+				let target = entity.GetField<AbstractEntity> (fieldId.ToResourceId ())
+				where target == null
+				   || this.DataContext.DataSaver.CheckIfEntityCanBeSaved (target)
+				select fieldId
+			);
 
-			if (this.DataContext.DataSaver.CheckIfEntityCanBeSaved (target))
+			if (fieldIds.Any ())
 			{
-				targetToSave = target;
-			}
-			else
-			{
-				target = null;
+				job = this.CreateReferenceJob (entity, localEntityId, fieldIds, PersistenceJobType.Update);
 			}
 
-			return new ReferencePersistenceJob (entity, localEntityId, fieldId, target, PersistenceJobType.Update);
+			return job;
+		}
+
+		
+		/// <summary>
+		/// Creates the appropriate <see cref="AbstractPersistenceJob"/> that must be used to insert
+		/// or update the given fields of the given <see cref="AbstractEntity"/> in the database.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
+		/// <param name="localEntityId">The <see cref="Druid"/> defining the subtype of the <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
+		/// <param name="fieldIds">The sequence of <see cref="Druid"/> identifying the fields to insert or update.</param>
+		/// <param name="jobType">Tells whether to update or insert the values.</param>
+		/// <returns>The <see cref="AbstractPersistenceJob"/>.</returns>
+		private AbstractPersistenceJob CreateReferenceJob(AbstractEntity entity, Druid localEntityId, IEnumerable<Druid> fieldIds, PersistenceJobType jobType)
+		{
+			var fieldIdsWithTargets = fieldIds.ToDictionary
+			(
+				id => id,
+				id => entity.GetField<AbstractEntity> (id.ToResourceId ())
+			);
+
+			return new ReferencePersistenceJob (entity, localEntityId, fieldIdsWithTargets, jobType);
 		}
 
 

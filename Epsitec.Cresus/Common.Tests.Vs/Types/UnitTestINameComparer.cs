@@ -17,7 +17,7 @@ namespace Epsitec.Common.Tests.Vs.Types
 		[TestMethod]
 		public void TestEquals()
 		{
-			INameComparer inc = new INameComparer ();
+			INameComparer inc = INameComparer.Instance;
 
 			List<string> names = new List<string> ()
 			{
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Tests.Vs.Types
 		[TestMethod]
 		public void TestHashCode()
 		{
-			INameComparer inc = new INameComparer ();
+			INameComparer inc = INameComparer.Instance;
 
 			List<string> names = new List<string> ()
 			{

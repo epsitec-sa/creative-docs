@@ -1,10 +1,10 @@
 //	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Types;
-using Epsitec.Common.Support;
-
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
+using System.Linq;
 
 namespace Epsitec.Cresus.Database
 {
@@ -16,12 +16,33 @@ namespace Epsitec.Cresus.Database
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SqlIndex"/> class.
 		/// </summary>
+		/// <param name="name">The name</param>
 		/// <param name="sortOrder">The sort order.</param>
 		/// <param name="columns">The columns.</param>
-		public SqlIndex(SqlSortOrder sortOrder, params SqlColumn[] columns)
+		public SqlIndex(string name, IEnumerable<SqlColumn> columns, SqlSortOrder sortOrder)
 		{
-			this.sortOrder = sortOrder;
-			this.columns = (SqlColumn[]) columns.Clone ();
+			this.Name = name;
+			this.Columns = columns.ToList ().AsReadOnly ();
+			this.SortOrder = sortOrder;
+		}
+
+		/// <summary>
+		/// Gets the name.
+		/// </summary>
+		public string Name
+		{
+			get;
+			private set;
+		}
+
+		/// <summary>
+		/// Gets the columns.
+		/// </summary>
+		/// <value>The columns.</value>
+		public ReadOnlyCollection<SqlColumn> Columns
+		{
+			get;
+			private set;
 		}
 
 		/// <summary>
@@ -30,48 +51,10 @@ namespace Epsitec.Cresus.Database
 		/// <value>The sort order.</value>
 		public SqlSortOrder SortOrder
 		{
-			get
-			{
-				return this.sortOrder;
-			}
+			get;
+			private set;
 		}
 
-		/// <summary>
-		/// Gets the columns.
-		/// </summary>
-		/// <value>The columns.</value>
-		public SqlColumn[] Columns
-		{
-			get
-			{
-				return (SqlColumn[]) this.columns.Clone ();
-			}
-		}
-
-		/// <summary>
-		/// Returns a <see cref="string"/> that represents the current index..
-		/// </summary>
-		/// <returns>
-		/// A string that represents the current index.
-		/// </returns>
-		public override string ToString()
-		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-
-			foreach (SqlColumn column in this.columns)
-			{
-				if (buffer.Length > 0)
-				{
-					buffer.Append ("_");
-				}
-
-				buffer.Append (column.Name);
-			}
-
-			return buffer.ToString ();
-		}
-
-		private readonly SqlSortOrder			sortOrder;
-		private readonly SqlColumn[]			columns;
 	}
+
 }

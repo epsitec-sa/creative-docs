@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			dimensions.ThrowIfNull ("dimensions");
 
 			this.dimensions = new List<AbstractDimension> ();
-			this.values = new Dictionary<string[], decimal> (new ArrayEqualityComparer<string> ());
+			this.values = new Dictionary<string[], decimal> (ArrayEqualityComparer<string>.Instance);
 
 			foreach (AbstractDimension dimension in dimensions)
 			{

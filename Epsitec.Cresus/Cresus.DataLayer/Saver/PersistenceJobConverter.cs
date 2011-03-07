@@ -1,4 +1,5 @@
 ﻿using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.DataLayer.Context;
@@ -20,7 +21,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 	/// </summary>
 	internal sealed class PersistenceJobConverter
 	{
-		
+
 
 		/// <summary>
 		/// Creates a new <c>PersistenceJobConverter</c>.
@@ -57,7 +58,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			// This method does not do the job itself but call an helper method so the arguments are
 			// checked immediately and the execution of the helper is deferred.
 			// Marc.
-			
+
 			job.ThrowIfNull ("job");
 
 			return this.ConvertHelper (job);
@@ -91,7 +92,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			// This method does not do the job itself but call an helper method so the arguments are
 			// checked immediately and the execution of the helper is deferred.
 			// Marc.
-			
+
 			job.ThrowIfNull ("job");
 
 			return this.ConvertHelper (job);
@@ -134,7 +135,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			// This method does not do the job itself but call an helper method so the arguments are
 			// checked immediately and the execution of the helper is deferred.
 			// Marc.
-			
+
 			job.ThrowIfNull ("job");
 
 			return this.ConvertHelper (job);
@@ -153,20 +154,25 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			{
 				long dataContextId = this.DataContext.UniqueId;
 				EntityKey sourceKey = this.DataContext.GetNormalizedEntityKey (job.Entity).Value;
-				Druid fieldId = job.FieldId;
 
-				EntityKey? targetKey;
-
-				if (job.Target == null)
+				foreach (var update in job.GetFieldIdsWithTargets ())
 				{
-					targetKey = null;
-				}
-				else
-				{
-					targetKey = this.DataContext.GetNormalizedEntityKey (job.Target).Value;
-				}
+					Druid fieldId = update.Key;
+					AbstractEntity target = update.Value;
 
-				yield return new ReferenceSynchronizationJob (dataContextId, sourceKey, fieldId, targetKey);
+					EntityKey? targetKey;
+
+					if (target == null)
+					{
+						targetKey = null;
+					}
+					else
+					{
+						targetKey = this.DataContext.GetNormalizedEntityKey (target).Value;
+					}
+
+					yield return new ReferenceSynchronizationJob (dataContextId, sourceKey, fieldId, targetKey);
+				}
 			}
 		}
 
@@ -183,7 +189,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			// This method does not do the job itself but call an helper method so the arguments are
 			// checked immediately and the execution of the helper is deferred.
 			// Marc.
-			
+
 			job.ThrowIfNull ("job");
 
 			return this.ConvertHelper (job);

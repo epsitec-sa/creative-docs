@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.DataLayer.Saver.PersistenceJobs
 	/// <summary>
 	/// The <c>ValuePersistenceJob</c> class describes the modifications that have been made to the
 	/// value fields of an <see cref="AbstractEntity"/>. It contains all the modifications of the
-	/// fields of a given subtype of the <see cref="AbstractEntity"/>.
+	/// value fields of a given subtype of the <see cref="AbstractEntity"/>.
 	/// </summary>
 	internal class ValuePersistenceJob : AbstractFieldPersistenceJob
 	{

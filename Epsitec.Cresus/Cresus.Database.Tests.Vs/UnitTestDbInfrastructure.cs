@@ -289,8 +289,8 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 				DbColumn col5 = DbTable.CreateUserDataColumn ("Guid", dbTypeGuid);
 
 				dbTable1.Columns.AddRange (new DbColumn[] { col1, col2, col3, col4, col5 });
-				dbTable1.AddIndex (col1);
-				dbTable1.AddIndex (col2);
+				dbTable1.AddIndex ("idx1", SqlSortOrder.Ascending, col1);
+				dbTable1.AddIndex ("idx2", SqlSortOrder.Ascending, col2);
 
 				infrastructure.AddTable (dbTable1);
 				infrastructure.ClearCaches ();
@@ -469,6 +469,51 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DbTable dbTable = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
+				infrastructure.AddTable (dbTable);
+			}
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable dbTable = infrastructure.ResolveDbTable ("table");
+				Assert.IsNotNull (dbTable);
+
+				infrastructure.RemoveTable (dbTable);
+				Assert.IsNull (infrastructure.ResolveDbTable ("table"));
+			}
+		}
+
+
+		[TestMethod]
+		public void RemoveTableWithIndexTest()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable dbTable = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
+				
+				DbTypeDef dbTypeName  = new DbTypeDef ("Name", DbSimpleType.String, null, 80, false, DbNullability.No);
+				DbTypeDef dbTypeLevel = new DbTypeDef ("Level", DbSimpleType.String, null, 4, false, DbNullability.No);
+				DbTypeDef dbTypeType  = new DbTypeDef ("Type", DbSimpleType.String, null, 25, false, DbNullability.Yes);
+				DbTypeDef dbTypeData  = new DbTypeDef ("Data", DbSimpleType.ByteArray, null, 0, false, DbNullability.Yes);
+				DbTypeDef dbTypeGuid  = new DbTypeDef ("Guid", DbSimpleType.Guid, null, 0, false, DbNullability.Yes);
+
+				infrastructure.AddType (dbTypeName);
+				infrastructure.AddType (dbTypeLevel);
+				infrastructure.AddType (dbTypeType);
+				infrastructure.AddType (dbTypeData);
+				infrastructure.AddType (dbTypeGuid);
+
+				DbColumn col1 = DbTable.CreateUserDataColumn ("Name", dbTypeName);
+				DbColumn col2 = DbTable.CreateUserDataColumn ("Level", dbTypeLevel);
+				DbColumn col3 = DbTable.CreateUserDataColumn ("Type", dbTypeType);
+				DbColumn col4 = DbTable.CreateUserDataColumn ("Data", dbTypeData);
+				DbColumn col5 = DbTable.CreateUserDataColumn ("Guid", dbTypeGuid);
+
+				dbTable.Columns.AddRange (new DbColumn[] { col1, col2, col3, col4, col5 });
+				dbTable.AddIndex ("idx1", SqlSortOrder.Ascending, col1);
+				dbTable.AddIndex ("idx2", SqlSortOrder.Ascending, col2);
+
 				infrastructure.AddTable (dbTable);
 			}
 
@@ -787,7 +832,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 				DbColumn column = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData);
 
 				table.Columns.Add (column);
-				table.Indexes.Add (new DbIndex (SqlSortOrder.Ascending, column));
+				table.AddIndex ("idx1", SqlSortOrder.Ascending, column);
 
 				infrastructure.AddTable (table);
 
@@ -795,6 +840,105 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 				(
 					() => infrastructure.RemoveColumnFromTable (table, column)
 				);
+			}
+		}
+
+
+		[TestMethod]
+		public void AddIndexToTable()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
+				DbColumn column = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData);
+
+				table.Columns.Add (column);
+
+				infrastructure.AddTable (table);
+			}
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table = infrastructure.ResolveDbTable ("table");
+				DbColumn column = table.Columns["column"];
+
+				DbIndex index = new DbIndex ("idx", new List<DbColumn> () { column }, SqlSortOrder.Descending);
+
+				infrastructure.AddIndexToTable (table, index);
+			}
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table = infrastructure.ResolveDbTable ("table");
+				DbColumn column = table.Columns["column"];
+
+				DbIndex index = table.Indexes.Single (i => i.Name == "idx");
+
+				Assert.AreEqual ("idx", index.Name);
+				Assert.AreEqual (SqlSortOrder.Descending, index.SortOrder);
+				Assert.AreEqual (1, index.Columns.Count);
+				Assert.AreEqual (column, index.Columns[0]);
+			}
+		}
+
+
+		[TestMethod]
+		public void ResetIndex()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
+				DbColumn column = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData);
+
+				table.Columns.Add (column);
+				table.AddIndex ("idx", SqlSortOrder.Ascending, column);
+
+				infrastructure.AddTable (table);
+			}
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table = infrastructure.ResolveDbTable ("table");
+				DbIndex index = table.Indexes.First (i => i.Name == "idx");
+
+				infrastructure.ResetIndex (table, index);
+			}
+		}
+
+
+		[TestMethod]
+		public void RemoveIndexFromTable()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
+				DbColumn column = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData);
+
+				table.Columns.Add (column);
+				table.AddIndex ("idx", SqlSortOrder.Ascending, column);
+				
+				infrastructure.AddTable (table);
+			}
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table = infrastructure.ResolveDbTable ("table");
+				DbIndex index = table.Indexes.First (i => i.Name == "idx");
+
+				infrastructure.RemoveIndexFromTable (table, index);
+			}
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table = infrastructure.ResolveDbTable ("table");
+
+				Assert.IsFalse (table.Indexes.Any (i => i.Name == "idx"));
 			}
 		}
 

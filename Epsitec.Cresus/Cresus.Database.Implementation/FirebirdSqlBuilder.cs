@@ -215,56 +215,9 @@ namespace Epsitec.Cresus.Database.Implementation
 				//	TODO: add the missing foreign key (FK_) constraints
 			}
 
-			int indexNum = 0;
-
-			foreach (SqlIndex index in table.Indexes)
+			if (table.HasForeignKeys)
 			{
-				indexNum++;
-				this.commandCount++;
-				
-				string indexName = string.Concat (table.Name, "_IDX", indexNum.ToString (System.Globalization.CultureInfo.InvariantCulture));
-
-				if (indexName.Length > 30)
-				{
-					indexName = indexName.Substring (indexName.Length-30);
-					while (indexName[0] == '_')
-					{
-						indexName = indexName.Substring (1);
-					}
-				}
-				
-				this.Append ("CREATE ");
-				
-				switch (index.SortOrder)
-				{
-					case SqlSortOrder.Ascending:
-						this.Append ("ASC");
-						break;
-					
-					case SqlSortOrder.Descending:
-						this.Append ("DESC");
-						break;
-				}
-
-				this.Append (" INDEX ");
-				this.Append (indexName);
-				this.Append (" ON ");
-				this.Append (table.Name);
-				this.Append (" (");
-
-				SqlColumn[] columns = index.Columns;
-
-				for (int i = 0; i < columns.Length; i++)
-				{
-					if (i > 0)
-					{
-						this.Append (", ");
-					}
-					
-					this.Append (columns[i].Name);
-				}
-
-				this.Append (");\n");
+				//	TODO: add the missing foreign key (FK_) constraints
 			}
 
 			if (!string.IsNullOrEmpty (table.Comment))
@@ -304,38 +257,38 @@ namespace Epsitec.Cresus.Database.Implementation
 			{
 				throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid table {0}", table.Name));
 			}
-			
+
 			this.PrepareCommand ();
-			
+
 			this.commandType = DbCommandType.Silent;
-			
+
 			this.commandCount++;
-			
+
 			this.Append ("DROP TABLE ");
 			this.Append (table.Name);
 			this.Append (";\n");
 		}
-		
+
 		public void InsertTableColumns(string tableName, SqlColumn[] columns)
 		{
 			if (!this.ValidateName (tableName))
 			{
 				throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid table {0}", tableName));
 			}
-			
+
 			this.PrepareCommand ();
-			
+
 			this.commandType = DbCommandType.Silent;
-			
+
 			foreach (SqlColumn column in columns)
 			{
 				if (!this.ValidateName (column.Name))
 				{
 					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid column {0} in table {1}", column.Name, tableName));
 				}
-				
+
 				this.commandCount++;
-				
+
 				this.Append ("ALTER TABLE ");
 				this.Append (tableName);
 				this.Append (" ADD ");			//	not " ADD COLUMN "
@@ -354,7 +307,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			tableName.ThrowIf (n => !this.ValidateName (n), "invalid table name");
 			oldColumnName.ThrowIf (n => !this.ValidateName (n), "invalid old column name");
 			newColumnName.ThrowIf (n => !this.ValidateName (n), "invalid new column name");
-						
+
 			this.PrepareCommand ();
 			this.commandType = DbCommandType.Silent;
 
@@ -376,11 +329,11 @@ namespace Epsitec.Cresus.Database.Implementation
 			{
 				return;
 			}
-			
+
 			this.PrepareCommand ();
-			
+
 			this.commandType = DbCommandType.Silent;
-			
+
 			foreach (SqlColumn column in columns)
 			{
 				if (!this.ValidateName (column.Name))
@@ -389,7 +342,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				}
 
 				this.commandCount++;
-				
+
 				this.Append ("ALTER TABLE ");
 				this.Append (tableName);
 				this.Append (" DROP ");		// not " DROP COLUMN "
@@ -492,7 +445,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			string triggerName = this.GetAutoTimeStampTriggerName (tableName, columnName);
 
 			this.commandCount++;
-			
+
 			var insert = (onInsert ? "INSERT" : "");
 			var or = (onInsert && onUpdate ? " OR " : "");
 			var update = (onUpdate ? "UPDATE" : "");
@@ -533,8 +486,58 @@ namespace Epsitec.Cresus.Database.Implementation
 			}
 
 			return triggerName;
+		}        
+
+		public void CreateIndex(string tableName, SqlIndex index)
+		{
+			this.PrepareCommand ();
+			this.commandType = DbCommandType.Silent;
+
+			this.commandCount++;
+
+			this.Append ("CREATE ");
+
+			switch (index.SortOrder)
+			{
+				case SqlSortOrder.Ascending:
+					this.Append ("ASC");
+					break;
+
+				case SqlSortOrder.Descending:
+					this.Append ("DESC");
+					break;
+			}
+
+			this.Append (" INDEX " + index.Name + " ON " + tableName + " (");
+			this.Append (string.Join (", ", index.Columns.Select (c => c.Name)));
+			this.Append (");\n");
 		}
-				
+		
+		public void ResetIndex(SqlIndex index)
+		{
+			this.PrepareCommand ();
+			this.commandType = DbCommandType.Silent;
+
+			this.commandCount++;
+			this.Append ("ALTER INDEX " + index.Name + " INACTIVE;\n");
+
+			this.commandCount++;
+			this.Append ("ALTER INDEX " + index.Name + " ACTIVE;\n");
+
+			this.commandCount++;
+			this.Append ("SET STATISTICS INDEX " + index.Name + ";\n");
+		}
+
+		public void DropIndex(SqlIndex index)
+		{
+			this.PrepareCommand ();
+			this.commandType = DbCommandType.Silent;
+
+			this.commandCount++;
+
+			this.Append ("DROP INDEX " + index.Name + ";\n");
+		}
+
 		public void SelectData(SqlSelect sqlQuery)
 		{
 			this.PrepareCommand ();
@@ -1576,7 +1579,7 @@ namespace Epsitec.Cresus.Database.Implementation
 
 			isFirstField = true;
 
-			foreach (SqlField field in sqlQuery.Fields)
+			foreach (SqlField field in sqlQuery.OrderBy)
 			{
 				if (field.SortOrder == SqlSortOrder.None)
 				{

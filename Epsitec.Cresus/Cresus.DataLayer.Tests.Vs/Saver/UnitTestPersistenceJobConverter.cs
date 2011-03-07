@@ -128,10 +128,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 				NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				Druid localEntityId = Druid.Parse ("[J1AJ1]");
 				Dictionary<Druid, object> fieldIdsWithValues = new Dictionary<Druid, object> ()
-					{
-						{ Druid.Parse("[J1AL1]"), "prénom" },
-						{ Druid.Parse("[J1AM1]"), "nom de famille" },
-					};
+                    {
+                        { Druid.Parse("[J1AL1]"), "prénom" },
+                        { Druid.Parse("[J1AM1]"), "nom de famille" },
+                    };
 				bool isRootType = false;
 				PersistenceJobType jobType = PersistenceJobType.Insert;
 
@@ -155,11 +155,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 				NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				Druid localEntityId = Druid.Parse ("[J1AJ1]");
 				Dictionary<Druid, object> fieldIdsWithValues = new Dictionary<Druid, object> ()
-					{
-						{ Druid.Parse("[J1AL1]"), "prénom" },
-						{ Druid.Parse("[J1AM1]"), "nom de famille" },
-						{ Druid.Parse("[J1AO1]"), null }
-					};
+                    {
+                        { Druid.Parse("[J1AL1]"), "prénom" },
+                        { Druid.Parse("[J1AM1]"), "nom de famille" },
+                        { Druid.Parse("[J1AO1]"), null }
+                    };
 				bool isRootType = false;
 				PersistenceJobType jobType = PersistenceJobType.Update;
 
@@ -208,12 +208,16 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 				NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				Druid localEntityId = Druid.Parse ("[J1AJ1]");
-				Druid fieldId = Druid.Parse ("[J1AN1]");
-				PersonGenderEntity target = entity.Gender;
+
+				Dictionary<Druid, AbstractEntity> fieldIdsWithTargets = new Dictionary<Druid, AbstractEntity> ()
+				{
+					{ Druid.Parse ("[J1AN1]"), entity.Gender },
+					{ Druid.Parse ("[J1AK1]"), entity.Title },
+				};
+
 				PersistenceJobType jobType = PersistenceJobType.Insert;
 
-
-				ReferencePersistenceJob job1 = new ReferencePersistenceJob (entity, localEntityId, fieldId, target, jobType);
+				ReferencePersistenceJob job1 = new ReferencePersistenceJob (entity, localEntityId, fieldIdsWithTargets, jobType);
 				var job2 = converter.Convert (job1).ToList ();
 
 				Assert.IsTrue (job2.Count == 0);
@@ -232,49 +236,29 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 				NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				Druid localEntityId = Druid.Parse ("[J1AJ1]");
-				Druid fieldId = Druid.Parse ("[J1AN1]");
-				PersonGenderEntity target = entity.Gender;
+
+				Dictionary<Druid, AbstractEntity> fieldIdsWithTargets = new Dictionary<Druid, AbstractEntity> ()
+				{
+					{ Druid.Parse ("[J1AN1]"), entity.Gender },
+					{ Druid.Parse ("[J1AK1]"), entity.Title },
+				};
+
 				PersistenceJobType jobType = PersistenceJobType.Update;
 
-
-				ReferencePersistenceJob job1 = new ReferencePersistenceJob (entity, localEntityId, fieldId, target, jobType);
+				ReferencePersistenceJob job1 = new ReferencePersistenceJob (entity, localEntityId, fieldIdsWithTargets, jobType);
 				var job2 = converter.Convert (job1).ToList ();
 
-				Assert.IsTrue (job2.Count == 1);
+				Assert.IsTrue (job2.Count == 2);
 				Assert.IsTrue (job2[0] is ReferenceSynchronizationJob);
 				Assert.AreEqual (dataContext.UniqueId, job2[0].DataContextId);
 				Assert.AreEqual (dataContext.GetNormalizedEntityKey (entity), job2[0].EntityKey);
-				Assert.AreEqual (dataContext.GetNormalizedEntityKey (target), ((ReferenceSynchronizationJob) job2[0]).NewTargetKey);
-				Assert.AreEqual (fieldId, ((ReferenceSynchronizationJob) job2[0]).FieldId);
-			}
-		}
-
-
-		[TestMethod]
-		public void ConvertReferenceJobTest3()
-		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
-			{
-				PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
-
-				NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-				Druid localEntityId = Druid.Parse ("[J1AJ1]");
-				Druid fieldId = Druid.Parse ("[J1AN1]");
-				PersonGenderEntity target = null;
-				PersistenceJobType jobType = PersistenceJobType.Update;
-
-
-				ReferencePersistenceJob job1 = new ReferencePersistenceJob (entity, localEntityId, fieldId, target, jobType);
-				var job2 = converter.Convert (job1).ToList ();
-
-				Assert.IsTrue (job2.Count == 1);
-				Assert.IsTrue (job2[0] is ReferenceSynchronizationJob);
-				Assert.AreEqual (dataContext.UniqueId, job2[0].DataContextId);
-				Assert.AreEqual (dataContext.GetNormalizedEntityKey (entity), job2[0].EntityKey);
-				Assert.IsFalse (((ReferenceSynchronizationJob) job2[0]).NewTargetKey.HasValue);
-				Assert.AreEqual (fieldId, ((ReferenceSynchronizationJob) job2[0]).FieldId);
+				Assert.AreEqual (dataContext.GetNormalizedEntityKey (entity.Gender), ((ReferenceSynchronizationJob) job2[0]).NewTargetKey);
+				Assert.AreEqual (Druid.Parse ("[J1AN1]"), ((ReferenceSynchronizationJob) job2[0]).FieldId);
+				Assert.IsTrue (job2[1] is ReferenceSynchronizationJob);
+				Assert.AreEqual (dataContext.UniqueId, job2[1].DataContextId);
+				Assert.AreEqual (dataContext.GetNormalizedEntityKey (entity), job2[1].EntityKey);
+				Assert.IsFalse (((ReferenceSynchronizationJob) job2[1]).NewTargetKey.HasValue);
+				Assert.AreEqual (Druid.Parse ("[J1AK1]"), ((ReferenceSynchronizationJob) job2[1]).FieldId);
 			}
 		}
 
@@ -309,10 +293,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 				Druid localEntityId = Druid.Parse ("[J1AJ1]");
 				Druid fieldId = Druid.Parse ("[J1AC1]");
 				List<AbstractEntity> targets = new List<AbstractEntity> ()
-					{
-						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))),
-						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))),
-					};
+                    {
+                        dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))),
+                        dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))),
+                    };
 				PersistenceJobType jobType = PersistenceJobType.Insert;
 
 				CollectionPersistenceJob job1 = new CollectionPersistenceJob (entity, localEntityId, fieldId, targets, jobType);
@@ -336,10 +320,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 				Druid localEntityId = Druid.Parse ("[J1AJ1]");
 				Druid fieldId = Druid.Parse ("[J1AC1]");
 				List<AbstractEntity> targets = new List<AbstractEntity> ()
-					{
-						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))),
-						dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))),
-					};
+                    {
+                        dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))),
+                        dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))),
+                    };
 				PersistenceJobType jobType = PersistenceJobType.Update;
 
 				CollectionPersistenceJob job1 = new CollectionPersistenceJob (entity, localEntityId, fieldId, targets, jobType);

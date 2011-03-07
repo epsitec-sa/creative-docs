@@ -1,6 +1,8 @@
 ﻿using Epsitec.Cresus.Database;
 using Epsitec.Cresus.Database.Services;
 
+using Epsitec.Cresus.DataLayer.Schema;
+
 using System.Collections.Generic;
 
 using System.IO;
@@ -22,9 +24,9 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 	{
 
 
-		public static void Export(FileInfo file, DbInfrastructure dbInfrastructure, RawExportMode exportMode)
+		public static void Export(FileInfo file, DbInfrastructure dbInfrastructure, SchemaEngine schemaEngine, RawExportMode exportMode)
 		{
-			List<TableDefinition> tableDefinitions = RawEntitySerializer.GetTableDefinitions (dbInfrastructure).ToList ();
+			List<TableDefinition> tableDefinitions = RawEntitySerializer.GetTableDefinitions (schemaEngine).ToList ();
 
 			XmlWriterSettings settings = new XmlWriterSettings ()
 			{
@@ -34,7 +36,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			};
 
 			string version = "1.0.0";
-			long idShift = DbInfrastructure.AutoIncrementStartValue;
+			long idShift = SchemaEngine.AutoIncrementStartValue;
 
 			using (XmlWriter xmlWriter = XmlWriter.Create (file.FullName, settings))
 			{
@@ -47,50 +49,38 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private static IEnumerable<TableDefinition> GetTableDefinitions(DbInfrastructure dbInfrastructure)
+		private static IEnumerable<TableDefinition> GetTableDefinitions(SchemaEngine schemaEngine)
 		{
-			var dataTableDefinitions = RawEntitySerializer.GetValueTableDefinitions (dbInfrastructure);
-			var relationTableDefitions = RawEntitySerializer.GetRelationTableDefinitions (dbInfrastructure);
+			var dataTableDefinitions = RawEntitySerializer.GetValueTableDefinitions (schemaEngine);
+			var relationTableDefitions = RawEntitySerializer.GetCollectionTableDefinitions (schemaEngine);
 
 			return dataTableDefinitions.Concat (relationTableDefitions);
 		}
 
 
-		private static IEnumerable<TableDefinition> GetValueTableDefinitions(DbInfrastructure dbInfrastructure)
+		private static IEnumerable<TableDefinition> GetValueTableDefinitions(SchemaEngine schemaEngine)
 		{
-			return from dbTable in RawEntitySerializer.GetValueTables (dbInfrastructure)
+			return from dbTable in RawEntitySerializer.GetValueTables (schemaEngine)
 				   select RawEntitySerializer.GetValueTableDefinition (dbTable);
 		}
 
 
-		private static IEnumerable<TableDefinition> GetRelationTableDefinitions(DbInfrastructure dbInfrastructure)
+		private static IEnumerable<TableDefinition> GetCollectionTableDefinitions(SchemaEngine schemaEngine)
 		{
-			return from dbTable in RawEntitySerializer.GetRelationTables (dbInfrastructure)
-				   select RawEntitySerializer.GetRelationTableDefinition (dbTable);
+			return from dbTable in RawEntitySerializer.GetCollectionTables (schemaEngine)
+				   select RawEntitySerializer.GetCollectionTableDefinition (dbTable);
 		}
 
 
-		private static IEnumerable<DbTable> GetValueTables(DbInfrastructure dbInfrastructure)
+		private static IEnumerable<DbTable> GetValueTables(SchemaEngine schemaEngine)
 		{
-			// HACK This works now because now this category of tables is used only for the entity
-			// value tables. If in the future this category of tables is also used for something
-			// else, or if something else happen related to those data categories, this implementation
-			// might not work anymore.
-			// Marc
-
-			return dbInfrastructure.FindDbTables (DbElementCat.ManagedUserData);
+			return schemaEngine.GetEntityTableDefinitions ();
 		}
 
 
-		private static IEnumerable<DbTable> GetRelationTables(DbInfrastructure dbInfrastructure)
+		private static IEnumerable<DbTable> GetCollectionTables(SchemaEngine schemaEngine)
 		{
-			// HACK This works now because now this category of tables is used only for the entity
-			// relation tables. If in the future this category of tables is also used for something
-			// else, or if something else happen related to those data categories, this implementation
-			// might not work anymore.
-			// Marc
-
-			return dbInfrastructure.FindDbTables (DbElementCat.Relation);
+			return schemaEngine.GetEntityCollectionTableDefinitions ();
 		}
 
 
@@ -111,7 +101,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private static TableDefinition GetRelationTableDefinition(DbTable dbTable)
+		private static TableDefinition GetCollectionTableDefinition(DbTable dbTable)
 		{
 			IList<DbColumn> idDbColumns = new List<DbColumn> ()
 		    {
@@ -254,7 +244,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 				throw new System.FormatException ("Invalid id shift.");
 			}
 
-			if (idShiftAsLong != DbInfrastructure.AutoIncrementStartValue)
+			if (idShiftAsLong != SchemaEngine.AutoIncrementStartValue)
 			{
 				throw new System.FormatException ("Invalid id shift.");
 			}

@@ -9,12 +9,12 @@ using System.Linq;
 
 namespace Epsitec.Cresus.DataLayer.Loader
 {
-	
-	
+
+
 	/// <summary>
 	/// The <see cref="SqlContainer"/> is used to contain several SQL objects used to build SQL
 	/// queries. It is an immutable object and two of them can be used to be combined together, kind
-	/// of like you would add two 4-dimension vector together.
+	/// of like you would add two 5-dimension vector together.
 	/// </summary>
 	internal sealed class SqlContainer
 	{
@@ -24,24 +24,27 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// Builds a new <see cref="SqlContainer"/> with some given elements.
 		/// </summary>
 		/// <param name="sqlTables">The collection of <see cref="SqlField"/> that represent the tables of the query.</param>
-		/// <param name="sqlFields">The collection of <see cref="SqlField"/> that represent the query fields of the query.</param>
+		/// <param name="sqlFields">The collection of <see cref="SqlField"/> that represent the return fields of the query.</param>
 		/// <param name="sqlJoins">The collection of <see cref="SqlJoin"/> that represent the joins of the query.</param>
 		/// <param name="sqlConditions">The collection of <see cref="SqlFunction"/> that represent the conditions of the query.</param>
+		/// <param name="sqlOrderBys">The collection of <see cref="SqlField"/> that represent the order by clause of the query.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="sqlTables"/> is <c>null</c>.</exception>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="sqlFields"/> is <c>null</c>.</exception>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="sqlJoins"/> is <c>null</c>.</exception>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="sqlConditions"/> is <c>null</c>.</exception>
-		public SqlContainer(IEnumerable<SqlField> sqlTables, IEnumerable<SqlField> sqlFields, IEnumerable<SqlJoin> sqlJoins, IEnumerable<SqlFunction> sqlConditions)
+		public SqlContainer(IEnumerable<SqlField> sqlTables, IEnumerable<SqlField> sqlFields, IEnumerable<SqlJoin> sqlJoins, IEnumerable<SqlFunction> sqlConditions, IEnumerable<SqlField> sqlOrderBys)
 		{
 			sqlTables.ThrowIfNull ("sqlTables");
 			sqlFields.ThrowIfNull ("sqlFields");
 			sqlJoins.ThrowIfNull ("sqlJoins");
 			sqlConditions.ThrowIfNull ("sqlConditions");
+			sqlOrderBys.ThrowIfNull ("sqlOrderBys");
 
 			this.SqlTables = sqlTables.ToList ();
 			this.SqlFields = sqlFields.ToList ();
 			this.SqlJoins = sqlJoins.ToList ();
 			this.SqlConditions = sqlConditions.ToList ();
+			this.SqlOrderBys = sqlOrderBys.ToList ();
 		}
 
 
@@ -56,7 +59,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 
 		/// <summary>
-		/// Gets the collection of <see cref="SqlField"/> that represent the query fields of the query.
+		/// Gets the collection of <see cref="SqlField"/> that represent the query fields of the
+		/// query.
 		/// </summary>
 		public IEnumerable<SqlField> SqlFields
 		{
@@ -76,9 +80,21 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 
 		/// <summary>
-		/// Gets the collection of <see cref="SqlFunction"/> that represent the conditions of the query.
+		/// Gets the collection of <see cref="SqlFunction"/> that represent the conditions of the
+		/// query.
 		/// </summary>
 		public IEnumerable<SqlFunction> SqlConditions
+		{
+			get;
+			private set;
+		}
+
+
+		/// <summary>
+		/// Gets the collection of <see cref="SqlField"/> that represent the order by clause of the
+		/// query.
+		/// </summary>
+		public IEnumerable<SqlField> SqlOrderBys
 		{
 			get;
 			private set;
@@ -97,6 +113,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			sqlSelect.Fields.AddRange (this.SqlFields);
 			sqlSelect.Joins.AddRange (this.SqlJoins.Select (j => SqlField.CreateJoin (j)));
 			sqlSelect.Conditions.AddRange (this.SqlConditions.Select (c => SqlField.CreateFunction (c)));
+			sqlSelect.OrderBy.AddRange (this.SqlOrderBys);
 
 			return sqlSelect;
 		}
@@ -117,8 +134,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			var newSqlFields = this.SqlFields.Concat (that.SqlFields);
 			var newSqlJoins = this.SqlJoins.Concat (that.SqlJoins);
 			var newSqlConditions = this.SqlConditions.Concat (that.SqlConditions);
+			var newSqlOrderBys = this.SqlOrderBys.Concat (that.SqlOrderBys);
 
-			return new SqlContainer (newSqlTables, newSqlFields, newSqlJoins, newSqlConditions);
+			return new SqlContainer (newSqlTables, newSqlFields, newSqlJoins, newSqlConditions, newSqlOrderBys);
 		}
 
 
@@ -137,8 +155,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			var newSqlFields = this.SqlFields;
 			var newSqlJoins = this.SqlJoins;
 			var newSqlConditions = this.SqlConditions;
+			var newSqlOrderBys = this.SqlOrderBys;
 
-			return new SqlContainer (newSqlTables, newSqlFields, newSqlJoins, newSqlConditions);
+			return new SqlContainer (newSqlTables, newSqlFields, newSqlJoins, newSqlConditions, newSqlOrderBys);
 		}
 
 
@@ -157,8 +176,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			var newSqlFields = this.SqlFields.Concat (sqlFields);
 			var newSqlJoins = this.SqlJoins;
 			var newSqlConditions = this.SqlConditions;
+			var newSqlOrderBys = this.SqlOrderBys;
 
-			return new SqlContainer (newSqlTables, newSqlFields, newSqlJoins, newSqlConditions);
+			return new SqlContainer (newSqlTables, newSqlFields, newSqlJoins, newSqlConditions, newSqlOrderBys);
 		}
 
 
@@ -177,8 +197,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			var newSqlFields = this.SqlFields;
 			var newSqlJoins = this.SqlJoins.Concat (sqlJoins);
 			var newSqlConditions = this.SqlConditions;
+			var newSqlOrderBys = this.SqlOrderBys;
 
-			return new SqlContainer (newSqlTables, newSqlFields, newSqlJoins, newSqlConditions);
+			return new SqlContainer (newSqlTables, newSqlFields, newSqlJoins, newSqlConditions, newSqlOrderBys);
 		}
 
 
@@ -197,8 +218,30 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			var newSqlFields = this.SqlFields;
 			var newSqlJoins = this.SqlJoins;
 			var newSqlConditions = this.SqlConditions.Concat (sqlConditions);
+			var newSqlOrderBys = this.SqlOrderBys;
 
-			return new SqlContainer (newSqlTables, newSqlFields, newSqlJoins, newSqlConditions);
+			return new SqlContainer (newSqlTables, newSqlFields, newSqlJoins, newSqlConditions, newSqlOrderBys);
+		}
+
+
+		/// <summary>
+		/// Builds a new <see cref="SqlContainer"/> whose elements are the one of this instance plus
+		/// the given collection <see cref="SqlField"/> for the order by clause.
+		/// </summary>
+		/// <param name="sqlOrderBys">The fields to add in the order by clause.</param>
+		/// <returns>The resulting <see cref="SqlContainer"/>.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="sqlOrderBys"/> is <c>null</c>.</exception>
+		public SqlContainer PlusSqlOrderBys(params SqlField[] sqlOrderBys)
+		{
+			sqlOrderBys.ThrowIfNull ("sqlOrderBys");
+
+			var newSqlTables = this.SqlTables;
+			var newSqlFields = this.SqlFields;
+			var newSqlJoins = this.SqlJoins;
+			var newSqlConditions = this.SqlConditions;
+			var newSqlOrderBys = this.SqlOrderBys.Concat (sqlOrderBys);
+
+			return new SqlContainer (newSqlTables, newSqlFields, newSqlJoins, newSqlConditions, newSqlOrderBys);
 		}
 
 
@@ -212,8 +255,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			var newSqlFields = new List<SqlField> ();
 			var newSqlJoins = new List<SqlJoin> ();
 			var newSqlConditions = new List<SqlFunction> ();
+			var newSqlOrderBys = new List<SqlField> ();
 
-			return new SqlContainer (newSqlTables, newSqlFields, newSqlJoins, newSqlConditions);
+			return new SqlContainer (newSqlTables, newSqlFields, newSqlJoins, newSqlConditions, newSqlOrderBys);
 		}
 
 
@@ -270,6 +314,20 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			sqlConditions.ThrowIfNull ("sqlConditions");
 
 			return SqlContainer.Empty.PlusSqlConditions (sqlConditions);
+		}
+
+
+		/// <summary>
+		/// Builds a new <see cref="SqlContainer"/> which contains only field in the order by clause.
+		/// </summary>
+		/// <param name="sqlOrderBys">The collection of <see cref="SqlField"/> that are in the order by clause.</param>
+		/// <returns>The new <see cref="SqlContainer"/>.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="sqlOrderBys"/> is <c>null</c>.</exception>
+		public static SqlContainer CreateSqlOrderBys(params SqlField[] sqlOrderBys)
+		{
+			sqlOrderBys.ThrowIfNull ("sqlOrderBys)");
+
+			return SqlContainer.Empty.PlusSqlOrderBys (sqlOrderBys);
 		}
 
 

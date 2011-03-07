@@ -37,8 +37,13 @@ namespace Epsitec.Cresus.Database
 				var dbTablesToAdd = DbSchemaUpdater.GetDbTablesToAdd (dbTablesIn, dbTablesOut).ToList ();
 				var dbTablesWithDifference = DbSchemaUpdater.GetDbTablesWithDifference (dbTablesIn, dbTablesOut).ToList ();
 				var dbTablesWithDefititionDifference = DbSchemaUpdater.GetDbTablesWithDefinitionDifference (dbTablesWithDifference).ToList ();
+				var dbTablesWithIndexDifference = DbSchemaUpdater.GetDbTablesWithIndexDifference (dbTablesWithDifference).ToList ();
 				var dbTablesWithColumnDifference = DbSchemaUpdater.GetDbTablesWithColumnDifference (dbTablesWithDifference).ToList ();
 				var dbTablesToRemove = DbSchemaUpdater.GetDbTablesToRemove (dbTablesIn, dbTablesOut).ToList ();
+
+				var dbIndexesToAdd = DbSchemaUpdater.GetDbIndexesToAdd (dbTablesWithIndexDifference).ToList ();
+				var dbIndexesToAlter = DbSchemaUpdater.GetDbIndexesToAlter (dbTablesWithIndexDifference).ToList ();
+				var dbIndexesToRemove = DbSchemaUpdater.GetDbIndexesToRemove (dbTablesWithIndexDifference).ToList ();
 
 				var dbColumnsToAdd = DbSchemaUpdater.GetDbColumnsToAdd (dbTablesWithColumnDifference).ToList ();
 				var dbColumnsToAlter = DbSchemaUpdater.GetDbColumnsToAlter (dbTablesWithColumnDifference).ToList ();
@@ -65,11 +70,17 @@ namespace Epsitec.Cresus.Database
 
 				DbSchemaUpdater.AddNewDbTables (dbInfrastructure, dbTransaction, dbTablesToAdd);
 
-				DbSchemaUpdater.AddNewTableColumn (dbInfrastructure, dbTransaction, dbColumnsToAdd);
+				DbSchemaUpdater.AddNewTableColumns (dbInfrastructure, dbTransaction, dbColumnsToAdd);
 
-				DbSchemaUpdater.RemoveOldTableColumn (dbInfrastructure, dbTransaction, dbColumnsToRemove);
+				DbSchemaUpdater.RemoveOldIndexes (dbInfrastructure, dbTransaction, dbIndexesToRemove);
 
-				DbSchemaUpdater.RemoveOldDbTable (dbInfrastructure, dbTransaction, dbTablesToRemove);
+				DbSchemaUpdater.AlterIndexes (dbInfrastructure, dbTransaction, dbIndexesToAlter);
+
+				DbSchemaUpdater.AddNewIndexes (dbInfrastructure, dbTransaction, dbIndexesToAdd);
+
+				DbSchemaUpdater.RemoveOldTableColumns (dbInfrastructure, dbTransaction, dbColumnsToRemove);
+
+				DbSchemaUpdater.RemoveOldDbTables (dbInfrastructure, dbTransaction, dbTablesToRemove);
 
 				DbSchemaUpdater.RemoveOldDbTypes (dbInfrastructure, dbTransaction, dbTypeDefsToRemove);
 
@@ -112,7 +123,7 @@ namespace Epsitec.Cresus.Database
 				.SelectMany (t => t.Columns)
 				.Select (c => c.Type)
 				.Where (t => t != null)
-				.Distinct<DbTypeDef> (new INameComparer ());
+				.Distinct<DbTypeDef> (INameComparer.Instance);
 		}
 
 		private static IEnumerable<DbTypeDef> GetDbTypeDefsOfSchema(DbInfrastructure dbInfrastructure, IEnumerable<DbTable> dbTables)
@@ -176,12 +187,18 @@ namespace Epsitec.Cresus.Database
 				.Where (t => !DbSchemaChecker.AreDbTableValuesEqual (t.Item1, t.Item2)
 						  || !DbSchemaChecker.AreDbTablePrimaryKeysEqual (t.Item1, t.Item2)
 						  || !DbSchemaChecker.AreDbTableForeignKeysEqual (t.Item1, t.Item2)
-						  || !DbSchemaChecker.AreDbTableIndexesEqual (t.Item1, t.Item2)
 				);
 		}
 
 
-		private static IEnumerable<System.Tuple<DbTable, DbTable>> GetDbTablesWithColumnDifference(IEnumerable<System.Tuple<DbTable, DbTable>> dbTablesToAlter)
+		public static IEnumerable<System.Tuple<DbTable, DbTable>> GetDbTablesWithIndexDifference(IEnumerable<System.Tuple<DbTable, DbTable>> dbTablesToAlter)
+		{
+			return dbTablesToAlter
+				.Where (t => !DbSchemaChecker.AreDbTableIndexesEqual (t.Item1, t.Item2));
+		}
+
+
+        private static IEnumerable<System.Tuple<DbTable, DbTable>> GetDbTablesWithColumnDifference(IEnumerable<System.Tuple<DbTable, DbTable>> dbTablesToAlter)
 		{
 			return dbTablesToAlter
 				.Where (t => !DbSchemaChecker.AreDbTableColumnsEqual (t.Item1, t.Item2));
@@ -191,6 +208,42 @@ namespace Epsitec.Cresus.Database
 		private static IEnumerable<DbTable> GetDbTablesToRemove(IList<DbTable> dbTablesIn, IList<DbTable> dbTablesOut)
 		{
 			return DbSchemaUpdater.ExceptOnName (dbTablesIn, dbTablesOut);
+		}
+
+
+		private static IEnumerable<System.Tuple<DbTable, DbIndex>> GetDbIndexesToAdd(IList<System.Tuple<DbTable, DbTable>> tables)
+		{
+			foreach (var t in tables)
+			{
+				foreach (DbIndex index in DbSchemaUpdater.ExceptOnName (t.Item2.Indexes, t.Item1.Indexes))
+				{
+					yield return System.Tuple.Create (t.Item2, index);
+				}
+			}
+		}
+
+
+		private static IEnumerable<System.Tuple<DbTable, DbIndex>> GetDbIndexesToAlter(IList<System.Tuple<DbTable, DbTable>> tables)
+		{
+			foreach (var t in tables)
+			{
+				foreach (var i in DbSchemaUpdater.JoinOnName (t.Item1.Indexes, t.Item2.Indexes))
+				{
+					yield return System.Tuple.Create (t.Item2, i.Item2);
+				}
+			}
+		}
+
+
+		private static IEnumerable<System.Tuple<DbTable, DbIndex>> GetDbIndexesToRemove(IList<System.Tuple<DbTable, DbTable>> tables)
+		{
+			foreach (var t in tables)
+			{
+				foreach (DbIndex index in DbSchemaUpdater.ExceptOnName (t.Item1.Indexes, t.Item2.Indexes))
+				{
+					yield return System.Tuple.Create (t.Item1, index);
+				}
+			}
 		}
 
 
@@ -258,7 +311,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		private static void RemoveOldDbTable(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, IEnumerable<DbTable> dbTablesToRemove)
+		private static void RemoveOldDbTables(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, IEnumerable<DbTable> dbTablesToRemove)
 		{
 			foreach (DbTable dbTable in dbTablesToRemove)
 			{
@@ -267,7 +320,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		private static void AddNewTableColumn(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, IEnumerable<DbColumn> dbColumnsToAdd)
+		private static void AddNewTableColumns(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, IEnumerable<DbColumn> dbColumnsToAdd)
 		{
 			foreach (DbColumn dbColumn in dbColumnsToAdd)
 			{
@@ -279,7 +332,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		private static void RemoveOldTableColumn(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, IEnumerable<DbColumn> dbColumnsToRemove)
+		private static void RemoveOldTableColumns(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, IEnumerable<DbColumn> dbColumnsToRemove)
 		{
 			foreach (DbColumn dbColumn in dbColumnsToRemove)
 			{
@@ -291,14 +344,45 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		private static IEnumerable<T> ExceptOnName<T>(IEnumerable<T> a, IEnumerable<T> b) where T : IName
+		private static void AddNewIndexes(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, IEnumerable<System.Tuple<DbTable, DbIndex>> dbIndexesToAdd)
+		{
+			foreach (var item in dbIndexesToAdd)
+			{
+				DbTable table = item.Item1;
+				DbIndex index = item.Item2;
+
+				dbInfrastructure.AddIndexToTable (dbTransaction, table, index);
+			}
+		}
+
+
+		private static void AlterIndexes(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, List<System.Tuple<DbTable, DbIndex>> dbIndexesToAlter)
+		{
+			DbSchemaUpdater.RemoveOldIndexes (dbInfrastructure, dbTransaction, dbIndexesToAlter);
+			DbSchemaUpdater.AddNewIndexes (dbInfrastructure, dbTransaction, dbIndexesToAlter);
+		}
+
+
+		private static void RemoveOldIndexes(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, IEnumerable<System.Tuple<DbTable, DbIndex>> dbIndexesToRemove)
+		{
+			foreach (var item in dbIndexesToRemove)
+			{
+				DbTable table = item.Item1;
+				DbIndex index = item.Item2;
+
+				dbInfrastructure.RemoveIndexFromTable (dbTransaction, table, index);
+			}
+		}
+
+
+        private static IEnumerable<T> ExceptOnName<T>(IEnumerable<T> a, IEnumerable<T> b) where T : IName
 		{
 			// All that stuff with the cast of the INameComparer and the check about whether it is null
 			// is here just to make the compiler happy, because the program won't compile if we use
 			// an instance of INameComparer directly.
 			// Marc
 
-			IEqualityComparer<T> comparer = new INameComparer () as IEqualityComparer<T>;
+			IEqualityComparer<T> comparer = INameComparer.Instance as IEqualityComparer<T>;
 
 			if (comparer == null)
 			{
@@ -318,7 +402,7 @@ namespace Epsitec.Cresus.Database
 				e => e,
 				e => e,
 				(e1, e2) => System.Tuple.Create (e1, e2),
-				new INameComparer ()
+				INameComparer.Instance
 			);
 		}
 		

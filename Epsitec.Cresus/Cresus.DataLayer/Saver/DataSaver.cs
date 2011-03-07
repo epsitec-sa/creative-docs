@@ -134,14 +134,12 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			var persistenceJobs = this.GetPersistenceJobs (entitiesToDelete, entitiesToSave).ToList ();
 			var affectedTables = this.GetAffectedTables (persistenceJobs).ToList ();
-			
-			var result = this.ProcessPersistenceJobs (persistenceJobs, affectedTables);
-			var dbLogEntry = result.Item1;
-			var newEntityKeys = result.Item2;
+
+			var newEntityKeys = this.ProcessPersistenceJobs (persistenceJobs, affectedTables);
 
 			this.CleanSavedEntities (entitiesToSave);
 			this.AssignNewEntityKeys (newEntityKeys);
-			
+
 			var synchronizationJobs = this.ConvertPersistenceJobs (persistenceJobs);
 
 			this.CleanDeletedEntities (entitiesToDelete);
@@ -229,20 +227,20 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <param name="jobs">The <see cref="AbstractPersistenceJob"/> to execute.</param>
 		/// <param name="affectedTables">The <see cref="DbTable"/> that will be modified during the execution.</param>
 		/// <returns>The <see cref="DbLogEntry"/> used by the operation and the mapping between the <see cref="AbstractEntity"/> that have been inserted in the database and their newly assigned <see cref="DbKey"/>.</returns>
-		private System.Tuple<DbLogEntry, IEnumerable<KeyValuePair<AbstractEntity, DbKey>>> ProcessPersistenceJobs(IEnumerable<AbstractPersistenceJob> jobs, IEnumerable<DbTable> affectedTables)
+		private IEnumerable<KeyValuePair<AbstractEntity, DbKey>> ProcessPersistenceJobs(IEnumerable<AbstractPersistenceJob> jobs, IEnumerable<DbTable> affectedTables)
 		{
 			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite, affectedTables))
 			{
 				IEnumerable<KeyValuePair<AbstractEntity, DbKey>> newEntityKeys = new List<KeyValuePair<AbstractEntity, DbKey>> ();
-			
+
 				DbId connectionId = new DbId (this.DataContext.DataInfrastructure.ConnectionInformation.ConnectionId);
 				DbLogEntry dbLogEntry = this.DbInfrastructure.ServiceManager.Logger.CreateLogEntry (connectionId);
-				
+
 				newEntityKeys = this.JobProcessor.ProcessJobs (transaction, dbLogEntry, jobs);
 
 				transaction.Commit ();
 
-				return System.Tuple.Create (dbLogEntry, newEntityKeys);
+				return newEntityKeys;
 			}
 		}
 

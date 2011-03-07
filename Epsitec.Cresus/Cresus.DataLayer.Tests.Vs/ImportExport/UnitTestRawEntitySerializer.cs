@@ -4,6 +4,7 @@ using Epsitec.Cresus.Database.Services;
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.ImportExport;
 using Epsitec.Cresus.DataLayer.Infrastructure;
+using Epsitec.Cresus.DataLayer.Schema;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Entities;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Helpers;
 
@@ -73,16 +74,18 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
+				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure);
+
 				FileInfo file = new FileInfo ("test.xml");
 
 				DbLogEntry dbLogEntry = dbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (1));
 
-				RawEntitySerializer.Export (file, dbInfrastructure, exportMode);
+				RawEntitySerializer.Export (file, dbInfrastructure, schemaEngine, exportMode);
 
 				if (exportMode == RawExportMode.EpsitecAndUserData)
 				{
 					RawEntitySerializer.Import (file, dbInfrastructure, dbLogEntry, RawImportMode.DecrementIds);
-					RawEntitySerializer.Export (file, dbInfrastructure, exportMode);
+					RawEntitySerializer.Export (file, dbInfrastructure, schemaEngine, exportMode);
 				}
 
 				RawEntitySerializer.CleanDatabase (file, dbInfrastructure, importMode);
@@ -145,11 +148,13 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
+				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure);
+
 				FileInfo file = new FileInfo ("test.xml");
 
 				DbLogEntry dbLogEntry = dbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (1));
 
-				RawEntitySerializer.Export (file, dbInfrastructure, RawExportMode.UserData);
+				RawEntitySerializer.Export (file, dbInfrastructure, schemaEngine, RawExportMode.UserData);
 				RawEntitySerializer.Import (file, dbInfrastructure, dbLogEntry, RawImportMode.DecrementIds);
 
 				using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
@@ -251,11 +256,13 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
+				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure);
+
 				FileInfo file = new FileInfo ("test.xml");
 
 				DbLogEntry dbLogEntry = dbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (1));
 
-				RawEntitySerializer.Export (file, dbInfrastructure, RawExportMode.UserData);
+				RawEntitySerializer.Export (file, dbInfrastructure, schemaEngine, RawExportMode.UserData);
 
 				RawEntitySerializer.CleanDatabase (file, dbInfrastructure, RawImportMode.DecrementIds);
 
@@ -314,11 +321,14 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
+				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure);
+
+				
 				FileInfo file = new FileInfo ("test.xml");
 
 				DbLogEntry dbLogEntry = dbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (1));
 
-				RawEntitySerializer.Export (file, dbInfrastructure, RawExportMode.UserData);
+				RawEntitySerializer.Export (file, dbInfrastructure, schemaEngine, RawExportMode.UserData);
 
 				RawEntitySerializer.CleanDatabase (file, dbInfrastructure, RawImportMode.DecrementIds);
 
@@ -326,11 +336,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 
 				var xColumnsToRemove = from xTable in xDocument.Descendants ("table")
 									   let id = (string) xTable.Attribute ("id")
-									   where id == "0"
+									   where id == "20"	// Table for natural persons
 									   select xTable into xTable
 									   from xColumn in xTable.Descendants ("column")
 									   let id = (string) xColumn.Attribute ("id")
-									   where id == "3"
+									   where id == "3" || id == "4" || id == "5"
 									   select xColumn;
 
 				foreach (XElement xColumn in xColumnsToRemove.ToList ())

@@ -1237,9 +1237,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			Druid leafTargetEntityId = target.GetEntityStructuredTypeId ();
 
-			var fieldPaths = this.EntityContext.GetInheritedEntityIds (leafTargetEntityId)
-				.SelectMany (id => this.DataInfrastructure.SchemaEngine.GetSourceReferences (id))
-				.GroupBy (fp => fp.EntityId, fp => Druid.Parse (fp.Fields[0]))
+			var fields = this.EntityContext.GetInheritedEntityIds (leafTargetEntityId)
+				.SelectMany (id => this.DataInfrastructure.SchemaEngine.GetReferencingFields (id))
+				.GroupBy (f => f.Item1.CaptionId, f => f.Item2.CaptionId)
 				.ToDictionary (g => g.Key, g => g.ToList ());
 
 			IEnumerable<AbstractEntity> entities = this.GetEntities ();
@@ -1251,9 +1251,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 				foreach (Druid localSourceId in sourceInheritedIds)
 				{
-					if (fieldPaths.ContainsKey (localSourceId))
+					if (fields.ContainsKey (localSourceId))
 					{
-						foreach (Druid fieldId in fieldPaths[localSourceId])
+						foreach (Druid fieldId in fields[localSourceId])
 						{
 							yield return new KeyValuePair<AbstractEntity, Druid> (source, fieldId);
 						}

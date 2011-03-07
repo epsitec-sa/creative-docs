@@ -429,6 +429,7 @@
     <Compile Include="Support\IOplet.cs" />
     <Compile Include="Support\IResourceAccessor.cs" />
     <Compile Include="Support\IResourceProvider.cs" />
+    <Compile Include="Support\LambdaComparer.cs" />
     <Compile Include="Support\LockTimeoutException.cs" />
     <Compile Include="Support\ObjectDictMapper.cs" />
     <Compile Include="Support\OpletEvent.cs" />

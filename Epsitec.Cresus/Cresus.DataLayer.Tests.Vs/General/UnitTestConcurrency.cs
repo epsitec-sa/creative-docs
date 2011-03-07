@@ -375,8 +375,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 			threadFunction (threads);
 
-			this.CheckConflictingReferenceUpdates ();
-
 			this.FinalizeTest ("handledExceptions", this.handledExceptions);
 		}
 
@@ -437,28 +435,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				person.Gender = genders[diceNext];
 
 				dataContext.SaveChanges ();
-			}
-		}
-
-
-		private void CheckConflictingReferenceUpdates()
-		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			{
-				using (DbTransaction transaction = dbInfrastructure.BeginTransaction ())
-				{
-					SqlSelect query = new SqlSelect ();
-
-					query.Fields.Add (new SqlField ("CR_ID", "CR_ID"));
-
-					query.Tables.Add (new SqlField ("X_J1AN1_J1AJ1", "X_J1AN1_J1AJ1"));
-
-					System.Data.DataTable data = dbInfrastructure.ExecuteSqlSelect (transaction, query, 0);
-
-					transaction.Commit ();
-
-					Assert.IsTrue (data.Rows.Count == 1);
-				}
 			}
 		}
 

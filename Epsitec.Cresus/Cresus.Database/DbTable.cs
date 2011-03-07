@@ -170,25 +170,6 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
-		/// Gets a value indicating whether this table has indexed columns.
-		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if this table has indexed columns; otherwise, <c>false</c>.
-		/// </value>
-		public bool								HasIndexes
-		{
-			get
-			{
-				if (this.serializedIndexTuples != null)
-				{
-					this.DeserializeIndexes ();
-				}
-
-				return (this.indexes != null) && (this.indexes.Count > 0);
-			}
-		}
-
-		/// <summary>
 		/// Gets the primary keys. The tuples formed by the columns must
 		/// be unique.
 		/// </summary>
@@ -234,6 +215,11 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
+				if (this.serializedIndexTuples != null)
+				{
+					this.DeserializeIndexes ();
+				}
+				
 				if (this.indexes == null)
 				{
 					this.indexes = new List<DbIndex> ();
@@ -388,26 +374,18 @@ namespace Epsitec.Cresus.Database
 			System.Diagnostics.Debug.Assert (this.primaryKeys.Count == 1);
 			System.Diagnostics.Debug.Assert (this.primaryKeys[0] == column);
 		}
-
-		/// <summary>
-		/// Adds an index for the table.
-		/// </summary>
-		/// <param name="columns">The columns.</param>
-		public void AddIndex(params DbColumn[] columns)
-		{
-			this.AddIndex (SqlSortOrder.Ascending, columns); 
-		}
 		
 		/// <summary>
 		/// Adds an index for the table.
 		/// </summary>
+		/// <param name="name">The name of the index.</param>
 		/// <param name="sortOrder">The sort order.</param>
 		/// <param name="columns">The columns.</param>
-		public void AddIndex(SqlSortOrder sortOrder, params DbColumn[] columns)
+		public void AddIndex(string name, SqlSortOrder sortOrder, params DbColumn[] columns)
 		{
 			if (columns.Length > 0)
 			{
-				this.Indexes.Add (new DbIndex (sortOrder, columns));
+				this.Indexes.Add (new DbIndex (name, columns, sortOrder));
 			}
 		}
 
@@ -474,29 +452,26 @@ namespace Epsitec.Cresus.Database
 				sqlTable.PrimaryKey = primaryKeys;
 			}
 
-			if (this.HasIndexes)
+			foreach (DbIndex index in this.Indexes)
 			{
-				foreach (DbIndex index in this.indexes)
+				int n = index.Columns.Count;
+				SqlColumn[] indexColumns = new SqlColumn[n];
+
+				for (int i = 0; i < n; i++)
 				{
-					int n = index.Columns.Length;
-					SqlColumn[] indexColumns = new SqlColumn[n];
+					DbColumn dbIndexColumn = index.Columns[i];
+					string indexColumnName = dbIndexColumn.GetSqlName ();
 
-					for (int i = 0; i < n; i++)
+					if (sqlTable.Columns.IndexOf (indexColumnName) < 0)
 					{
-						DbColumn dbIndexColumn = index.Columns[i];
-						string indexColumnName = dbIndexColumn.GetSqlName ();
-
-						if (sqlTable.Columns.IndexOf (indexColumnName) < 0)
-						{
-							string message = string.Format ("Index column {0} not found", indexColumnName);
-							throw new Exceptions.SyntaxException (DbAccess.Empty, message);
-						}
-
-						indexColumns[i] = sqlTable.Columns[indexColumnName];
+						string message = string.Format ("Index column {0} not found", indexColumnName);
+						throw new Exceptions.SyntaxException (DbAccess.Empty, message);
 					}
 
-					sqlTable.AddIndex (index.SortOrder, indexColumns);
+					indexColumns[i] = sqlTable.Columns[indexColumnName];
 				}
+
+				sqlTable.AddIndex (index.Name, index.SortOrder, indexColumns);
 			}
 
 			return sqlTable;
@@ -590,7 +565,7 @@ namespace Epsitec.Cresus.Database
 		/// <summary>
 		/// Updates the primary key flags of the table columns.
 		/// </summary>
-		internal void UpdatePrimaryKeyInfo()
+		public void UpdatePrimaryKeyInfo()
 		{
 			if (this.HasPrimaryKeys)
 			{
@@ -672,20 +647,22 @@ namespace Epsitec.Cresus.Database
 					throw new Exceptions.SyntaxException (DbAccess.Empty, "Cannot deserialize index tuple");
 			}
 
-			DbColumn[] columns = new DbColumn[args.Length-1];
+			string name = args[1];
 
-			for (int i = 1; i < args.Length; i++)
+			DbColumn[] columns = new DbColumn[args.Length-2];
+
+			for (int i = 2; i < args.Length; i++)
 			{
-				int columnIndex = int.Parse (args[i], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture);
-				columns[i-1] = this.Columns[columnIndex];
+				string columnName = args[i];
+				columns[i-2] = this.Columns[columnName];
 			}
 
-			this.AddIndex (sortOrder, columns);
+			this.AddIndex (name, sortOrder, columns);
 		}
 
 		private string SerializeIndexes(IEnumerable<DbIndex> indexes)
 		{
-			if (this.indexes == null)
+			if (indexes == null)
 			{
 				return null;
 			}
@@ -725,17 +702,12 @@ namespace Epsitec.Cresus.Database
 					throw new System.NotSupportedException ();
 			}
 
+			buffer.Append ("," + index.Name);
+
 			foreach (DbColumn column in index.Columns)
 			{
-				int i = this.columns.IndexOf (column);
-
-				if (i < 0)
-				{
-					throw new Exceptions.SyntaxException (DbAccess.Empty, string.Format ("Index column '{0}' not in table", column.Name));
-				}
-
 				buffer.Append (",");
-				buffer.Append (i.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (column.Name);
 			}
 		}
 
@@ -760,6 +732,12 @@ namespace Epsitec.Cresus.Database
 				table.serializedIndexTuples   = DbTools.ParseString (xmlReader.GetAttribute ("idx"));
 				table.Comment				  = DbTools.ParseString (xmlReader.GetAttribute ("com"));
 				
+				// NOTE Here we do not deserialize the indexes but keep them in their serialized
+				// form because the columns are not yet deserialized and added to the table.
+				// Therefore we cannot deserialize the indexes because the columns are missing. We
+				// will deserialize it as soon as it is accessed by the property this.Index.
+				// Marc
+
 				if (!isEmptyElement)
 				{
 					xmlReader.ReadEndElement ();
@@ -851,20 +829,22 @@ namespace Epsitec.Cresus.Database
 			relationTable.relationTargetTableName = targetTableName;
 
 			DbTypeDef refIdType  = infrastructure.ResolveLoadedDbType (Tags.TypeKeyId);
-			DbTypeDef statusType = infrastructure.ResolveLoadedDbType (Tags.TypeKeyStatus);
 			DbTypeDef rankType   = infrastructure.ResolveLoadedDbType (Tags.TypeCollectionRank);
 
 			relationTable.Columns.Add (new DbColumn (Tags.ColumnId, refIdType, DbColumnClass.KeyId, DbElementCat.Internal)
 			{
 				IsAutoIncremented = true,
-				AutoIncrementStartValue = DbInfrastructure.AutoIncrementStartValue
+				AutoIncrementStartValue = 0
 			});
-			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefSourceId, refIdType,  DbColumnClass.RefInternal, DbElementCat.Internal));
-			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefTargetId, refIdType,  DbColumnClass.RefInternal, DbElementCat.Internal));
-			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefRank,     rankType,   DbColumnClass.Data,        DbElementCat.Internal));
+			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefSourceId, refIdType, DbColumnClass.RefInternal, DbElementCat.Internal));
+			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefTargetId, refIdType, DbColumnClass.RefInternal, DbElementCat.Internal));
+			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefRank, rankType, DbColumnClass.Data, DbElementCat.Internal));
 
 			relationTable.PrimaryKeys.Add (relationTable.Columns[Tags.ColumnId]);
-			relationTable.AddIndex (relationTable.Columns[Tags.ColumnRefSourceId], relationTable.Columns[Tags.ColumnRefTargetId]);
+
+			string indexName = "IDX_" + relationTable.GetSqlName ();
+
+			relationTable.AddIndex (indexName, SqlSortOrder.Ascending, relationTable.Columns[Tags.ColumnRefSourceId], relationTable.Columns[Tags.ColumnRefTargetId]);
 
 			relationTable.UpdatePrimaryKeyInfo ();
 

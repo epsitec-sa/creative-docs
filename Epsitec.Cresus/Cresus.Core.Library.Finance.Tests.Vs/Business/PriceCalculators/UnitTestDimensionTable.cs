@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.Core.Library.Finance.Tests.Vs.Business.Finance.PriceCal
 
 			foreach (string[] expectedExactKey in expectedExactKeys)
 			{
-				Assert.IsTrue (actualExactKeys.Contains (expectedExactKey, new ArrayEqualityComparer<string> ()));
+				Assert.IsTrue (actualExactKeys.Contains (expectedExactKey, ArrayEqualityComparer<string>.Instance));
 			}
 		}
 
@@ -199,7 +199,7 @@ namespace Epsitec.Cresus.Core.Library.Finance.Tests.Vs.Business.Finance.PriceCal
 
 			DimensionTable dimensionTable = new DimensionTable (dimensions.ToArray ());
 
-			Dictionary<string[], decimal> expectedEntries = new Dictionary<string[], decimal> (new ArrayEqualityComparer<string> ());
+			Dictionary<string[], decimal> expectedEntries = new Dictionary<string[], decimal> (ArrayEqualityComparer<string>.Instance);
 
 			System.Random dice = new System.Random ();
 
@@ -245,7 +245,7 @@ namespace Epsitec.Cresus.Core.Library.Finance.Tests.Vs.Business.Finance.PriceCal
 									return swappedKey;
 								},
 								kvp => kvp.Value,
-								new ArrayEqualityComparer<string> ()
+								ArrayEqualityComparer<string>.Instance
 							);
 
 							dimensionTable.SwapDimensionsAt (index1, index2);
@@ -546,7 +546,7 @@ namespace Epsitec.Cresus.Core.Library.Finance.Tests.Vs.Business.Finance.PriceCal
 			DimensionTable dimensionTable = new DimensionTable (dimensions.ToArray ());
 			this.PopulateDimensionTable (dimensionTable);
 
-			var expectedValues = dimensionTable.Keys.ToDictionary (k => k, k => dimensionTable[k], new ArrayEqualityComparer<string> ());
+			var expectedValues = dimensionTable.Keys.ToDictionary (k => k, k => dimensionTable[k], ArrayEqualityComparer<string>.Instance);
 
 			for (int i = 0; i < 10; i++)
 			{
@@ -575,7 +575,7 @@ namespace Epsitec.Cresus.Core.Library.Finance.Tests.Vs.Business.Finance.PriceCal
 						return key;
 					},
 					kvp => kvp.Value,
-					new ArrayEqualityComparer<string> ()
+					ArrayEqualityComparer<string>.Instance
 				);
 
 				CollectionAssert.AreEqual (expectedDimensions, dimensionTable.Dimensions.ToList ());
@@ -634,7 +634,7 @@ namespace Epsitec.Cresus.Core.Library.Finance.Tests.Vs.Business.Finance.PriceCal
 			DimensionTable dimensionTable = new DimensionTable (dimensions.ToArray ());
 			this.PopulateDimensionTable (dimensionTable);
 
-			var expectedValues = dimensionTable.Keys.ToDictionary (k => k, k => dimensionTable[k], new ArrayEqualityComparer<string> ());
+			var expectedValues = dimensionTable.Keys.ToDictionary (k => k, k => dimensionTable[k], ArrayEqualityComparer<string>.Instance);
 
 			for (int i = 0; i < 10; i++)
 			{
@@ -660,7 +660,7 @@ namespace Epsitec.Cresus.Core.Library.Finance.Tests.Vs.Business.Finance.PriceCal
 						return key;
 					},
 					kvp => kvp.Value,
-					new ArrayEqualityComparer<string> ()
+					ArrayEqualityComparer<string>.Instance
 				);
 
 				CollectionAssert.AreEqual (expectedDimensions, dimensionTable.Dimensions.ToList ());
@@ -1158,7 +1158,7 @@ namespace Epsitec.Cresus.Core.Library.Finance.Tests.Vs.Business.Finance.PriceCal
 				{ new string[] { "2.111", "2", "1", }, new string[] { "2", "2", "1", } },
 			};
 
-			ArrayEqualityComparer<string> aec = new ArrayEqualityComparer<string> ();
+			ArrayEqualityComparer<string> aec = ArrayEqualityComparer<string>.Instance;
 
 			foreach (var item in data)
 			{
@@ -1217,7 +1217,7 @@ namespace Epsitec.Cresus.Core.Library.Finance.Tests.Vs.Business.Finance.PriceCal
 				{ new int[] { 1, 1, 0, }, new string[] { "2", "2", "1", } },
 			};
 
-			ArrayEqualityComparer<string> aec = new ArrayEqualityComparer<string> ();
+			ArrayEqualityComparer<string> aec = ArrayEqualityComparer<string>.Instance;
 
 			foreach (var item in data)
 			{
@@ -1279,7 +1279,7 @@ namespace Epsitec.Cresus.Core.Library.Finance.Tests.Vs.Business.Finance.PriceCal
 				{ new string[] { "2", "2", "1", }, new int[] { 1, 1, 0, } },
 			};
 
-			ArrayEqualityComparer<int> aec = new ArrayEqualityComparer<int> ();
+			ArrayEqualityComparer<int> aec = ArrayEqualityComparer<int>.Instance;
 
 			foreach (var item in data)
 			{
@@ -1432,7 +1432,7 @@ namespace Epsitec.Cresus.Core.Library.Finance.Tests.Vs.Business.Finance.PriceCal
 
 			for (int i = 0; i < possibleKeys1.Count; i++)
 			{
-				Assert.IsTrue (new ArrayEqualityComparer<string> ().Equals (possibleKeys1[i], possibleKeys2[i]));
+				Assert.IsTrue (ArrayEqualityComparer<string>.Instance.Equals (possibleKeys1[i], possibleKeys2[i]));
 			}
 
 			foreach (string[] key in possibleKeys1)

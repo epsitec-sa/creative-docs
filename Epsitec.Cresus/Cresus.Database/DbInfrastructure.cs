@@ -789,6 +789,78 @@ namespace Epsitec.Cresus.Database
 			this.RemoveFromCache (internalTable);
 		}
 
+		public void AddIndexToTable(DbTable table, DbIndex index)
+		{
+			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				this.AddIndexToTable (transaction, table, index);
+
+				transaction.Commit ();
+			}
+		}
+
+		public void AddIndexToTable(DbTransaction transaction, DbTable table, DbIndex index)
+		{
+			DbTable internalTable = this.ResolveDbTable (transaction, table.Name);
+
+			this.CheckUnexistingIndex (internalTable, index);
+			
+			this.AddIndexInternal (transaction, internalTable, index);
+			this.RemoveFromCache (internalTable);
+		}
+
+		public void ResetIndex(DbTable table, DbIndex index)
+		{
+			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				this.ResetIndex (transaction, table, index);
+
+				transaction.Commit ();
+			}
+		}
+
+		public void ResetIndex(DbTransaction transaction, DbTable table, DbIndex index)
+		{
+			DbTable internalTable = this.ResolveDbTable (transaction, table.Name);
+
+			this.CheckExistingIndex (internalTable, index);
+
+			this.ResetIndexInternal (transaction, internalTable, index);
+		}
+
+		public void RemoveIndexFromTable(DbTable table, DbIndex index)
+		{
+			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				this.RemoveIndexFromTable (transaction, table, index);
+
+				transaction.Commit ();
+			}
+		}
+
+		public void RemoveIndexFromTable(DbTransaction transaction, DbTable table, DbIndex index)
+		{
+			DbTable internalTable = this.ResolveDbTable (transaction, table.Name);
+
+			this.CheckExistingIndex (internalTable, index);
+
+			this.RemoveIndexInternal (transaction, internalTable, index);
+			this.RemoveFromCache (internalTable);
+		}
+
+		private void CheckUnexistingIndex(DbTable table, DbIndex index)
+		{
+			// TODO Implement this method.
+			// Marc
+		}
+
+		private void CheckExistingIndex(DbTable table, DbIndex index)
+		{
+			// TODO Implement this method.
+			// Marc
+		}
+
+
 		public void SetColumnAutoIncrementValue(DbTable table, DbColumn column, long value)
 		{
 			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
@@ -935,6 +1007,37 @@ namespace Epsitec.Cresus.Database
 			this.RemoveTableInternal (transaction, relationTable);
 		}
 
+		private void AddIndexInternal(DbTransaction transaction, DbTable table, DbIndex index)
+		{
+			table.Indexes.Add (index);
+
+			SqlTable sqlTable = table.CreateSqlTable (this.converter);
+			SqlIndex sqlIndex = sqlTable.Indexes.Where (i => i.Name == index.Name).Single ();
+
+			this.UpdateTableDefRow (transaction, table);
+			this.InsertIndex (transaction, sqlTable, sqlIndex);
+		}
+
+		private void ResetIndexInternal(DbTransaction transaction, DbTable table, DbIndex index)
+		{
+			SqlTable sqlTable = table.CreateSqlTable (this.converter);
+			SqlIndex sqlIndex = sqlTable.Indexes.Where (i => i.Name == index.Name).Single ();
+
+			this.ResetIndex (transaction, sqlIndex);
+		}
+
+		private void RemoveIndexInternal(DbTransaction transaction, DbTable table, DbIndex index)
+		{
+			SqlTable sqlTable = table.CreateSqlTable (this.converter);
+			SqlIndex sqlIndex = sqlTable.Indexes.Where (i => i.Name == index.Name).Single ();
+
+			int indexOfIndex = table.Indexes.IndexOf (index, INameComparer.Instance);
+			table.Indexes.RemoveAt (indexOfIndex);
+
+			this.UpdateTableDefRow (transaction, table);
+			this.DropIndex (transaction, sqlIndex);
+		}
+
 		private void RegisterTable(DbTransaction transaction, DbTable table)
 		{
 			table.UpdatePrimaryKeyInfo ();
@@ -1009,6 +1112,11 @@ namespace Epsitec.Cresus.Database
 				this.InsertAutoIncrementForColumn (transaction, table, dbColumn);
 				this.InsertAutoTimeStampForColumn (transaction, table, dbColumn);
 			}
+
+			foreach (SqlIndex sqlIndex in sqlTable.Indexes)
+			{
+				this.InsertIndex (transaction, sqlTable, sqlIndex);
+			}
 		}
 
 		private void InsertConcreteColumnToTable(DbTransaction dbTransaction, DbTable dbTable, DbColumn dbColumn)
@@ -1050,16 +1158,28 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		private void InsertIndex(DbTransaction transaction, SqlTable table, SqlIndex index)
+		{
+			transaction.SqlBuilder.CreateIndex (table.Name, index);
+
+			this.ExecuteSilent (transaction);
+		}
+
 		private void DropTable(DbTransaction dbTransaction, DbTable dbTable)
 		{
+			SqlTable sqlTable = dbTable.CreateSqlTable (this.converter);
+
+			foreach (SqlIndex index in sqlTable.Indexes)
+			{
+				this.DropIndex (dbTransaction, index);
+			}
+			
 			foreach (DbColumn dbColumn in dbTable.Columns.Where (c => c.Cardinality == DbCardinality.None))
 			{
 				this.DropAutoIncrementFromColumn (dbTransaction, dbTable, dbColumn);
 				this.DropAutoTimeStampFromColumn (dbTransaction, dbTable, dbColumn);
 			}
-
-			SqlTable sqlTable = dbTable.CreateSqlTable (this.converter);
-
+			
 			dbTransaction.SqlBuilder.RemoveTable (sqlTable);
 			this.ExecuteSilent (dbTransaction);
 		}
@@ -1101,6 +1221,18 @@ namespace Epsitec.Cresus.Database
 				dbTransaction.SqlBuilder.DropAutoTimeStampOnTableColumn (tableName, columnName);
 				this.ExecuteSilent (dbTransaction);
 			}
+		}
+
+		private void DropIndex(DbTransaction transaction, SqlIndex index)
+		{
+			transaction.SqlBuilder.DropIndex (index);
+			this.ExecuteSilent (transaction);
+		}
+
+		private void ResetIndex(DbTransaction transaction, SqlIndex index)
+		{
+			transaction.SqlBuilder.ResetIndex (index);
+			this.ExecuteSilent (transaction);
 		}
 
 		/// <summary>
@@ -1611,7 +1743,7 @@ namespace Epsitec.Cresus.Database
 			DbColumn colId = new DbColumn (Tags.ColumnId, this.internalTypes[Tags.TypeKeyId], DbColumnClass.KeyId, DbElementCat.Internal)
 			{
 				IsAutoIncremented = autoIncrementedId,
-				AutoIncrementStartValue = DbInfrastructure.AutoIncrementStartValue
+				AutoIncrementStartValue = 0,
 			};
 			table.DefineCategory (category);
 
@@ -2418,25 +2550,23 @@ namespace Epsitec.Cresus.Database
 
 			//	Table related informations :
 
-			SqlField sqlFieldForTableId = SqlField.CreateName ("T_TABLE", Tags.ColumnId);
-			sqlFieldForTableId.SortOrder = SqlSortOrder.Ascending;
-
-			query.Fields.Add ("T_ID", sqlFieldForTableId);
+			query.Fields.Add ("T_ID", SqlField.CreateName ("T_TABLE", Tags.ColumnId));
 			query.Fields.Add ("T_NAME", SqlField.CreateName ("T_TABLE", Tags.ColumnName));
 			query.Fields.Add ("T_D_NAME", SqlField.CreateName ("T_TABLE", Tags.ColumnDisplayName));
 			query.Fields.Add ("T_INFO", SqlField.CreateName ("T_TABLE", Tags.ColumnInfoXml));
 
+			query.OrderBy.Add ("T_ID", SqlField.CreateName ("T_TABLE", Tags.ColumnId), SqlSortOrder.Ascending);
+
 			//	Column related informations :
 
-			SqlField sqlFieldForColumnId = SqlField.CreateName ("T_COLUMN", Tags.ColumnId);
-			sqlFieldForColumnId.SortOrder = SqlSortOrder.Ascending;
-
-			query.Fields.Add ("C_ID", sqlFieldForColumnId);
+			query.Fields.Add ("C_ID", SqlField.CreateName ("T_COLUMN", Tags.ColumnId));
 			query.Fields.Add ("C_NAME", SqlField.CreateName ("T_COLUMN", Tags.ColumnName));
 			query.Fields.Add ("C_D_NAME", SqlField.CreateName ("T_COLUMN", Tags.ColumnDisplayName));
 			query.Fields.Add ("C_INFO", SqlField.CreateName ("T_COLUMN", Tags.ColumnInfoXml));
 			query.Fields.Add ("C_TYPE", SqlField.CreateName ("T_COLUMN", Tags.ColumnRefType));
 			query.Fields.Add ("C_TARGET", SqlField.CreateName ("T_COLUMN", Tags.ColumnRefTarget));
+
+			query.OrderBy.Add ("C_ID", SqlField.CreateName ("T_COLUMN", Tags.ColumnId), SqlSortOrder.Ascending);
 
 			//	Tables to query :
 
@@ -2983,66 +3113,6 @@ namespace Epsitec.Cresus.Database
 			this.ExecuteNonQuery (transaction);
 		}
 
-
-		public IEnumerable<System.Tuple<string, string>> GetSourceReferences(string targetName)
-		{
-			// TODO Optimize this request because it fetches everything, where it could fetch only
-			// the rows that interests us. This is mainly because I think the CR_COLUMN_DEF table
-			// is not filled properly and that we do not insert the target table id of the column,
-			// which we should do. So we need to deserialize the xml data of the column in order
-			// to know its target table.
-			// Marc
-
-			foreach (System.Data.DataRow row in this.GetSourceReferenceData ().Rows)
-			{
-				string columnInfo = InvariantConverter.ToString (row["C_INFO"]);
-				DbColumn dbColumn = DbTools.DeserializeFromXml<DbColumn> (columnInfo);
-
-				if (dbColumn.TargetTableName == targetName)
-				{
-					string sourceName = (string) row["T_NAME"];
-					string fieldName = dbColumn.Name;
-
-					yield return System.Tuple.Create (sourceName, fieldName);
-				}
-			}
-		}
-
-		private System.Data.DataTable GetSourceReferenceData()
-		{
-			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
-			{
-				SqlSelect query = this.BuildSourceReferenceResolverQuery ();
-
-				System.Data.DataTable dataTable = this.ExecuteSqlSelect (transaction, query, 0);
-
-				transaction.Commit ();
-
-				return dataTable;
-			}
-		}
-
-		private SqlSelect BuildSourceReferenceResolverQuery()
-		{
-			SqlSelect query = new SqlSelect ();
-
-			query.Fields.Add ("T_NAME", SqlField.CreateName ("T_TABLE", Tags.ColumnName));
-			query.Fields.Add ("C_INFO", SqlField.CreateName ("T_COLUMN", Tags.ColumnInfoXml));
-
-			query.Tables.Add ("T_TABLE", SqlField.CreateName (Tags.TableTableDef));
-			query.Tables.Add ("T_COLUMN", SqlField.CreateName (Tags.TableColumnDef));
-
-			SqlField tableColumnId = SqlField.CreateName ("T_TABLE", Tags.ColumnId);
-			SqlField columnRefTableId = SqlField.CreateName ("T_COLUMN", Tags.ColumnRefTable);
-			query.Joins.Add (new SqlJoin (tableColumnId, columnRefTableId, SqlJoinCode.Inner));
-
-			SqlField typeColumn = SqlField.CreateName ("T_COLUMN", Tags.ColumnRefType);
-			SqlField typeValue = SqlField.CreateConstant (DbKey.Empty.Id, DbKey.RawTypeForId);
-			query.Conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, typeColumn, typeValue));
-
-			return query;
-		}
-
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
@@ -3508,8 +3578,6 @@ namespace Epsitec.Cresus.Database
 
 		private int								lockTimeout = 15000;
 		System.Threading.ReaderWriterLock		globalLock = new System.Threading.ReaderWriterLock ();
-
-		public static readonly int AutoIncrementStartValue = 1000000000;
 
 	}
 }

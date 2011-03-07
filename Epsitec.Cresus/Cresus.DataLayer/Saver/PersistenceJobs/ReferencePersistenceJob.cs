@@ -15,8 +15,9 @@ namespace Epsitec.Cresus.DataLayer.Saver.PersistenceJobs
 
 	/// <summary>
 	/// The <c>ReferencePersistenceJob</c> class describes the modifications that have been made to
-	/// a single reference field of an <see cref="AbstractEntity"/> and that are to be persisted in
-	/// the database.
+	/// the reference fields of an <see cref="AbstractEntity"/> and that are to be persisted in
+	/// the database. It contains all the modifications of the reference fields of a given subtype
+	/// of the <see cref="AbstractEntity"/>.
 	/// </summary>
 	internal class ReferencePersistenceJob : AbstractFieldPersistenceJob
 	{
@@ -27,39 +28,26 @@ namespace Epsitec.Cresus.DataLayer.Saver.PersistenceJobs
 		/// </summary>
 		/// <param name="entity">The <see cref="AbstractEntity"/> concerned by the <c>ReferencePersistenceJob</c>.</param>
 		/// <param name="localEntityId">The <see cref="Druid"/> of the type that holds the fields concerned by the <c>ReferencePersistenceJob</c>.</param>
-		/// <param name="fieldId">The <see cref="Druid"/> of the field concerned by the <c>ReferencePersistenceJob</c>.</param>
-		/// <param name="target">The new target of the field concerned by the <c>ReferencePersistenceJob</c>.</param>
+		/// <param name="fieldIdsWithTargets">The mapping between the modified fields and their values.</param>
 		/// <param name="jobType">The job type of the <c>ReferencePersistenceJob</c>.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="localEntityId"/> is empty.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="fieldId"/> is empty.</exception>
-		public ReferencePersistenceJob(AbstractEntity entity, Druid localEntityId, Druid fieldId, AbstractEntity target, PersistenceJobType jobType)
+		/// <exception cref="System.ArgumentException">If <paramref name="fieldIdsWithTargets"/> is empty.</exception>
+		public ReferencePersistenceJob(AbstractEntity entity, Druid localEntityId, Dictionary<Druid, AbstractEntity> fieldIdsWithTargets, PersistenceJobType jobType)
 			: base (entity, localEntityId, jobType)
 		{
-			fieldId.ThrowIf (f => f.IsEmpty, "fieldId cannot be empty");
-			
-			this.FieldId = fieldId;
-			this.Target = target;
+			fieldIdsWithTargets.ThrowIfNull ("fieldIdsWithTargets");
+
+			this.fieldIdsWithTargets = new Dictionary<Druid, AbstractEntity> (fieldIdsWithTargets);
 		}
 
 
 		/// <summary>
-		/// The <see cref="Druid"/> of the modified field.
+		/// The mapping between the field ids and their values.
 		/// </summary>
-		public Druid FieldId
+		public IEnumerable<KeyValuePair<Druid, AbstractEntity>> GetFieldIdsWithTargets()
 		{
-			get;
-			private set;
-		}
-
-
-		/// <summary>
-		/// The new target of the modified field.
-		/// </summary>
-		public AbstractEntity Target
-		{
-			get;
-			private set;
+			return this.fieldIdsWithTargets;
 		}
 
 
@@ -90,6 +78,12 @@ namespace Epsitec.Cresus.DataLayer.Saver.PersistenceJobs
 
 			return tableComputer.GetAffectedTables (this);
 		}
+
+
+		/// <summary>
+		/// Holds the mapping between the field ids and their values.
+		/// </summary>
+		private readonly Dictionary<Druid, AbstractEntity> fieldIdsWithTargets;
 
 
 	}

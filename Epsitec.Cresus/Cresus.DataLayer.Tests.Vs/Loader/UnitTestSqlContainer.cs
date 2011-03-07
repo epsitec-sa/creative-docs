@@ -20,32 +20,38 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 	{
 
 
-        [TestMethod]
+		[TestMethod]
 		public void ConstructorArgumentCheck()
 		{
 			List<SqlField> tables = new List<SqlField> ();
 			List<SqlField> fields = new List<SqlField> ();
 			List<SqlJoin> joins = new List<SqlJoin> ();
 			List<SqlFunction> conditions = new List<SqlFunction> ();
+			List<SqlField> orderBys = new List<SqlField> ();
 
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
-				() => new SqlContainer (null, fields, joins, conditions)
+				() => new SqlContainer (null, fields, joins, conditions, orderBys)
 			);
 
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
-				() => new SqlContainer (tables, null, joins, conditions)
+				() => new SqlContainer (tables, null, joins, conditions, orderBys)
 			);
 
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
-				() => new SqlContainer (tables, fields, null, conditions)
+				() => new SqlContainer (tables, fields, null, conditions, orderBys)
 			);
 
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
-				() => new SqlContainer (tables, fields, joins, null)
+				() => new SqlContainer (tables, fields, joins, null, orderBys)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new SqlContainer (tables, fields, joins, conditions, null)
 			);
 		}
 
@@ -57,13 +63,15 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 			List<SqlField> fields = this.GetFieldSamples ();
 			List<SqlJoin> joins = this.GetJoinSamples ();
 			List<SqlFunction> conditions = this.GetConditionSamples ();
+			List<SqlField> orderBys = this.GetOrderBySamples ();
 
-			SqlContainer sqlContainer = new SqlContainer (tables, fields, joins, conditions);
+			SqlContainer sqlContainer = new SqlContainer (tables, fields, joins, conditions, orderBys);
 
 			CollectionAssert.AreEqual (tables, sqlContainer.SqlTables.ToList ());
 			CollectionAssert.AreEqual (fields, sqlContainer.SqlFields.ToList ());
 			CollectionAssert.AreEqual (joins, sqlContainer.SqlJoins.ToList ());
 			CollectionAssert.AreEqual (conditions, sqlContainer.SqlConditions.ToList ());
+			CollectionAssert.AreEqual (orderBys, sqlContainer.SqlOrderBys.ToList ());
 		}
 
 
@@ -74,14 +82,16 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 			List<SqlField> fields = this.GetFieldSamples ();
 			List<SqlJoin> joins = this.GetJoinSamples ();
 			List<SqlFunction> conditions = this.GetConditionSamples ();
+			List<SqlField> orderBys = this.GetOrderBySamples ();
 
-			SqlContainer sqlContainer = new SqlContainer (tables, fields, joins, conditions);
+			SqlContainer sqlContainer = new SqlContainer (tables, fields, joins, conditions, orderBys);
 			SqlSelect sqlSelect = sqlContainer.BuildSqlSelect ();
 
 			CollectionAssert.AreEqual (tables, sqlSelect.Tables);
 			CollectionAssert.AreEqual (fields, sqlSelect.Fields);
 			CollectionAssert.AreEqual (joins, sqlSelect.Joins.Select (j => j.AsJoin).ToList ());
 			CollectionAssert.AreEqual (conditions, sqlSelect.Conditions.Select (f => f.AsFunction).ToList ());
+			CollectionAssert.AreEqual (orderBys, sqlSelect.OrderBy);
 		}
 
 
@@ -102,6 +112,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 			List<SqlField> fields = new List<SqlField> ();
 			List<SqlJoin> joins = new List<SqlJoin> ();
 			List<SqlFunction> conditions = new List<SqlFunction> ();
+			List<SqlField> orderBys = new List<SqlField> ();
 
 			SqlContainer sqlContainer = SqlContainer.CreateSqlTables (tables.ToArray ());
 
@@ -109,6 +120,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 			CollectionAssert.AreEqual (fields, sqlContainer.SqlFields.ToList ());
 			CollectionAssert.AreEqual (joins, sqlContainer.SqlJoins.ToList ());
 			CollectionAssert.AreEqual (conditions, sqlContainer.SqlConditions.ToList ());
+			CollectionAssert.AreEqual (orderBys, sqlContainer.SqlOrderBys.ToList ());
 		}
 
 
@@ -129,6 +141,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 			List<SqlField> fields = this.GetFieldSamples ();
 			List<SqlJoin> joins = new List<SqlJoin> ();
 			List<SqlFunction> conditions = new List<SqlFunction> ();
+			List<SqlField> orderBys = new List<SqlField> ();
 
 			SqlContainer sqlContainer = SqlContainer.CreateSqlFields (fields.ToArray ());
 
@@ -136,6 +149,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 			CollectionAssert.AreEqual (fields, sqlContainer.SqlFields.ToList ());
 			CollectionAssert.AreEqual (joins, sqlContainer.SqlJoins.ToList ());
 			CollectionAssert.AreEqual (conditions, sqlContainer.SqlConditions.ToList ());
+			CollectionAssert.AreEqual (orderBys, sqlContainer.SqlOrderBys.ToList ());
 		}
 
 
@@ -156,6 +170,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 			List<SqlField> fields = new List<SqlField> ();
 			List<SqlJoin> joins = this.GetJoinSamples ();
 			List<SqlFunction> conditions = new List<SqlFunction> ();
+			List<SqlField> orderBys = new List<SqlField> ();
 
 			SqlContainer sqlContainer = SqlContainer.CreateSqlJoins (joins.ToArray ());
 
@@ -163,6 +178,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 			CollectionAssert.AreEqual (fields, sqlContainer.SqlFields.ToList ());
 			CollectionAssert.AreEqual (joins, sqlContainer.SqlJoins.ToList ());
 			CollectionAssert.AreEqual (conditions, sqlContainer.SqlConditions.ToList ());
+			CollectionAssert.AreEqual (orderBys, sqlContainer.SqlOrderBys.ToList ());
 		}
 
 
@@ -183,6 +199,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 			List<SqlField> fields = new List<SqlField> ();
 			List<SqlJoin> joins = new List<SqlJoin> ();
 			List<SqlFunction> conditions = this.GetConditionSamples ();
+			List<SqlField> orderBys = new List<SqlField> ();
 
 			SqlContainer sqlContainer = SqlContainer.CreateSqlConditions (conditions.ToArray ());
 
@@ -190,6 +207,36 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 			CollectionAssert.AreEqual (fields, sqlContainer.SqlFields.ToList ());
 			CollectionAssert.AreEqual (joins, sqlContainer.SqlJoins.ToList ());
 			CollectionAssert.AreEqual (conditions, sqlContainer.SqlConditions.ToList ());
+			CollectionAssert.AreEqual (orderBys, sqlContainer.SqlOrderBys.ToList ());
+		}
+
+
+		[TestMethod]
+		public void CreateSqlOrderBysArgumentCheck()
+		{
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => SqlContainer.CreateSqlOrderBys (null)
+			);
+		}
+
+
+		[TestMethod]
+		public void CreateSqlOrderBys()
+		{
+			List<SqlField> tables = new List<SqlField> ();
+			List<SqlField> fields = new List<SqlField> ();
+			List<SqlJoin> joins = new List<SqlJoin> ();
+			List<SqlFunction> conditions = new List<SqlFunction> ();
+			List<SqlField> orderBys = this.GetOrderBySamples ();
+
+			SqlContainer sqlContainer = SqlContainer.CreateSqlOrderBys (orderBys.ToArray ());
+
+			CollectionAssert.AreEqual (tables, sqlContainer.SqlTables.ToList ());
+			CollectionAssert.AreEqual (fields, sqlContainer.SqlFields.ToList ());
+			CollectionAssert.AreEqual (joins, sqlContainer.SqlJoins.ToList ());
+			CollectionAssert.AreEqual (conditions, sqlContainer.SqlConditions.ToList ());
+			CollectionAssert.AreEqual (orderBys, sqlContainer.SqlOrderBys.ToList ());
 		}
 
 
@@ -210,8 +257,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 			List<SqlField> fields = this.GetFieldSamples ();
 			List<SqlJoin> joins = this.GetJoinSamples ();
 			List<SqlFunction> conditions = this.GetConditionSamples ();
+			List<SqlField> orderBys = this.GetOrderBySamples ();
 
-			SqlContainer sqlContainer = new SqlContainer (tables, fields, joins, conditions);
+			SqlContainer sqlContainer = new SqlContainer (tables, fields, joins, conditions, orderBys);
 
 			sqlContainer = sqlContainer.Plus (sqlContainer);
 
@@ -219,6 +267,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 			CollectionAssert.AreEqual (fields.Concat (fields).ToList (), sqlContainer.SqlFields.ToList ());
 			CollectionAssert.AreEqual (joins.Concat (joins).ToList (), sqlContainer.SqlJoins.ToList ());
 			CollectionAssert.AreEqual (conditions.Concat (conditions).ToList (), sqlContainer.SqlConditions.ToList ());
+			CollectionAssert.AreEqual (orderBys.Concat (orderBys).ToList (), sqlContainer.SqlOrderBys.ToList ());
 		}
 
 
@@ -239,6 +288,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 			List<SqlField> fields = new List<SqlField> ();
 			List<SqlJoin> joins = new List<SqlJoin> ();
 			List<SqlFunction> conditions = new List<SqlFunction> ();
+			List<SqlField> orderBys = new List<SqlField> ();
 
 			SqlContainer sqlContainer = SqlContainer.CreateSqlTables (tables.ToArray ()).PlusSqlTables (tables.ToArray ());
 
@@ -246,6 +296,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 			CollectionAssert.AreEqual (fields, sqlContainer.SqlFields.ToList ());
 			CollectionAssert.AreEqual (joins, sqlContainer.SqlJoins.ToList ());
 			CollectionAssert.AreEqual (conditions, sqlContainer.SqlConditions.ToList ());
+			CollectionAssert.AreEqual (orderBys, sqlContainer.SqlOrderBys.ToList ());
 		}
 
 
@@ -266,6 +317,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 			List<SqlField> fields = this.GetFieldSamples ();
 			List<SqlJoin> joins = new List<SqlJoin> ();
 			List<SqlFunction> conditions = new List<SqlFunction> ();
+			List<SqlField> orderBys = new List<SqlField> ();
 
 			SqlContainer sqlContainer = SqlContainer.CreateSqlFields (fields.ToArray ()).PlusSqlFields (fields.ToArray ());
 
@@ -273,6 +325,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 			CollectionAssert.AreEqual (fields.Concat (fields).ToList (), sqlContainer.SqlFields.ToList ());
 			CollectionAssert.AreEqual (joins, sqlContainer.SqlJoins.ToList ());
 			CollectionAssert.AreEqual (conditions, sqlContainer.SqlConditions.ToList ());
+			CollectionAssert.AreEqual (orderBys, sqlContainer.SqlOrderBys.ToList ());
 		}
 
 
@@ -293,6 +346,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 			List<SqlField> fields = new List<SqlField> ();
 			List<SqlJoin> joins = this.GetJoinSamples ();
 			List<SqlFunction> conditions = new List<SqlFunction> ();
+			List<SqlField> orderBys = new List<SqlField> ();
 
 			SqlContainer sqlContainer = SqlContainer.CreateSqlJoins (joins.ToArray ()).PlusSqlJoins (joins.ToArray ());
 
@@ -300,6 +354,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 			CollectionAssert.AreEqual (fields, sqlContainer.SqlFields.ToList ());
 			CollectionAssert.AreEqual (joins.Concat (joins).ToList (), sqlContainer.SqlJoins.ToList ());
 			CollectionAssert.AreEqual (conditions, sqlContainer.SqlConditions.ToList ());
+			CollectionAssert.AreEqual (orderBys, sqlContainer.SqlOrderBys.ToList ());
 		}
 
 
@@ -320,6 +375,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 			List<SqlField> fields = new List<SqlField> ();
 			List<SqlJoin> joins = new List<SqlJoin> ();
 			List<SqlFunction> conditions = this.GetConditionSamples ();
+			List<SqlField> orderBys = new List<SqlField> ();
 
 			SqlContainer sqlContainer = SqlContainer.CreateSqlConditions (conditions.ToArray ()).PlusSqlConditions (conditions.ToArray ());
 
@@ -327,6 +383,36 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 			CollectionAssert.AreEqual (fields, sqlContainer.SqlFields.ToList ());
 			CollectionAssert.AreEqual (joins, sqlContainer.SqlJoins.ToList ());
 			CollectionAssert.AreEqual (conditions.Concat (conditions).ToList (), sqlContainer.SqlConditions.ToList ());
+			CollectionAssert.AreEqual (orderBys, sqlContainer.SqlOrderBys.ToList ());
+		}
+
+
+		[TestMethod]
+		public void PlusSqlOrderBysArgumentCheck()
+		{
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => SqlContainer.Empty.PlusSqlOrderBys (null)
+			);
+		}
+
+
+		[TestMethod]
+		public void PlusSqlOrderBys()
+		{
+			List<SqlField> tables = new List<SqlField> ();
+			List<SqlField> fields = new List<SqlField> ();
+			List<SqlJoin> joins = new List<SqlJoin> ();
+			List<SqlFunction> conditions = new List<SqlFunction> ();
+			List<SqlField> orderBys = this.GetOrderBySamples ();
+
+			SqlContainer sqlContainer = SqlContainer.CreateSqlOrderBys (orderBys.ToArray ()).PlusSqlOrderBys (orderBys.ToArray ());
+
+			CollectionAssert.AreEqual (tables, sqlContainer.SqlTables.ToList ());
+			CollectionAssert.AreEqual (fields, sqlContainer.SqlFields.ToList ());
+			CollectionAssert.AreEqual (joins, sqlContainer.SqlJoins.ToList ());
+			CollectionAssert.AreEqual (conditions, sqlContainer.SqlConditions.ToList ());
+			CollectionAssert.AreEqual (orderBys.Concat (orderBys).ToList (), sqlContainer.SqlOrderBys.ToList ());
 		}
 
 
@@ -337,18 +423,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 			Assert.IsFalse (SqlContainer.Empty.SqlFields.Any ());
 			Assert.IsFalse (SqlContainer.Empty.SqlJoins.Any ());
 			Assert.IsFalse (SqlContainer.Empty.SqlConditions.Any ());
+			Assert.IsFalse (SqlContainer.Empty.SqlOrderBys.Any ());
 		}
-
-
-
-
-
-
-
-
-
-
-
 
 
 		private List<SqlField> GetTableSamples()
@@ -386,6 +462,16 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 			{
 				new SqlFunction (SqlFunctionCode.LogicOr, SqlField.CreateName ("field1"), SqlField.CreateName ("field2")),
 				new SqlFunction (SqlFunctionCode.LogicAnd, SqlField.CreateName ("field3"), SqlField.CreateName ("field4")),
+			};
+		}
+
+
+		private List<SqlField> GetOrderBySamples()
+		{
+			return new List<SqlField> ()
+			{
+				SqlField.CreateName ("orderby1"),
+				SqlField.CreateName ("orderby2"),
 			};
 		}
 

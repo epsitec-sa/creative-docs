@@ -32,7 +32,7 @@ namespace Epsitec.Common.Tests.Vs.Support
 				}
 			}
 
-			ArrayEqualityComparer<double> pcec = new ArrayEqualityComparer<double> ();
+			ArrayEqualityComparer<double> pcec = ArrayEqualityComparer<double>.Instance;
 
 			foreach (double[] array1 in arrays)
 			{
@@ -68,7 +68,7 @@ namespace Epsitec.Common.Tests.Vs.Support
 				}
 			}
 
-			ArrayEqualityComparer<double> pcec = new ArrayEqualityComparer<double> ();
+			ArrayEqualityComparer<double> pcec = ArrayEqualityComparer<double>.Instance;
 
 			foreach (double[] array1 in arrays)
 			{

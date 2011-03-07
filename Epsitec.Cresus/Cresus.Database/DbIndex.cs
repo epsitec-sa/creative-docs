@@ -2,27 +2,46 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
-using Epsitec.Common.Support;
 
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
+using System.Linq;
 
 namespace Epsitec.Cresus.Database
 {
+
+
 	/// <summary>
 	/// The <c>DbIndex</c> class represents an index definition for a <see cref="DbTable"/>.
 	/// </summary>
-	public sealed class DbIndex
+	public sealed class DbIndex : IName
 	{
+
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DbIndex"/> class.
 		/// </summary>
+		/// <param name="name">The name of the index.</param>
 		/// <param name="sortOrder">The sort order.</param>
 		/// <param name="columns">The columns.</param>
-		public DbIndex(SqlSortOrder sortOrder, params DbColumn[] columns)
+		public DbIndex(string name, IEnumerable<DbColumn> columns, SqlSortOrder sortOrder)
 		{
-			this.sortOrder = sortOrder;
-			this.columns = (DbColumn[]) columns.Clone ();
+			this.Name = name;
+			this.Columns = columns.ToList ().AsReadOnly ();
+			this.SortOrder = sortOrder;
 		}
+
+
+		/// <summary>
+		/// Gets the name of the index.
+		/// </summary>
+		public string Name
+		{
+			get;
+			private set;
+		}
+
 
 		/// <summary>
 		/// Gets the sort order.
@@ -30,25 +49,23 @@ namespace Epsitec.Cresus.Database
 		/// <value>The sort order.</value>
 		public SqlSortOrder SortOrder
 		{
-			get
-			{
-				return this.sortOrder;
-			}
+			get;
+			private set;
 		}
+
 
 		/// <summary>
 		/// Gets the columns.
 		/// </summary>
 		/// <value>The columns.</value>
-		public DbColumn[] Columns
+		public ReadOnlyCollection<DbColumn> Columns
 		{
-			get
-			{
-				return (DbColumn[]) this.columns.Clone ();
-			}
+			get;
+			private set;
 		}
 
-		private readonly SqlSortOrder			sortOrder;
-		private readonly DbColumn[]				columns;
+
 	}
+
+
 }

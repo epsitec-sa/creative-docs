@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				new SchemaBuilder (dbInfrastructure);
+				new SchemaBuilder (new SchemaEngine (dbInfrastructure), dbInfrastructure);
 			}
 		}
 
@@ -48,10 +48,13 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void SchemaBuilderConstructorArgumentCheck()
 		{
-			ExceptionAssert.Throw<System.ArgumentNullException>
-			(
-				() => new SchemaBuilder ((DbInfrastructure) null)
-			);
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => new SchemaBuilder (new SchemaEngine (dbInfrastructure), (DbInfrastructure) null)
+				);
+			}
 		}
 
 
@@ -118,7 +121,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 				Druid.Parse ("[J1A9]"),
 				Druid.Parse ("[J1A4]"),
 			};
-			
+
 			this.CheckSchema (entityIdsToCheck, false);
 			this.RegisterSchema (entityIdsToRegister);
 			this.CheckSchema (entityIdsToCheck, true);
@@ -202,7 +205,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 			this.CheckSchema (entityIdsToCheck2, false);
 
 			this.RegisterSchema (entityIdsToRegister2);
-	
+
 			this.CheckSchema (entityIdsToCheck1, true);
 			this.CheckSchema (entityIdsToCheck2, true);
 		}
@@ -319,7 +322,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				var builder = new SchemaBuilder (dbInfrastructure);
+				var builder = new SchemaBuilder (new SchemaEngine (dbInfrastructure), dbInfrastructure);
 
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
@@ -334,7 +337,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				var builder = new SchemaBuilder (dbInfrastructure);
+				var builder = new SchemaBuilder (new SchemaEngine (dbInfrastructure), dbInfrastructure);
 
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
@@ -349,7 +352,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				var builder = new SchemaBuilder (dbInfrastructure);
+				var builder = new SchemaBuilder (new SchemaEngine (dbInfrastructure), dbInfrastructure);
 
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
@@ -363,7 +366,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				SchemaBuilder builder = new SchemaBuilder (dbInfrastructure);
+				SchemaBuilder builder = new SchemaBuilder (new SchemaEngine (dbInfrastructure), dbInfrastructure);
 
 				builder.RegisterSchema (entityIdsToRegister);
 			}
@@ -374,7 +377,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				SchemaBuilder builder = new SchemaBuilder (dbInfrastructure);
+				SchemaBuilder builder = new SchemaBuilder (new SchemaEngine (dbInfrastructure), dbInfrastructure);
 
 				builder.UpdateSchema (entityIdsToRegister);
 			}
@@ -385,12 +388,12 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				SchemaBuilder builder = new SchemaBuilder (dbInfrastructure);
+				SchemaBuilder builder = new SchemaBuilder (new SchemaEngine (dbInfrastructure), dbInfrastructure);
 
 				Assert.AreEqual (isRegistered, builder.CheckSchema (entityIdsToCheck));
 			}
 		}
-            
+
 
 	}
 

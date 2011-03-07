@@ -192,8 +192,7 @@ namespace Epsitec.Cresus.Database
 		/// <returns><c>true</c> if the indexes of both <see cref="DbTable"/> are equal, <c>false</c> if they are not.</returns>
 		public static bool AreDbTableIndexesEqual(DbTable a, DbTable b)
 		{
-			return a.HasIndexes == b.HasIndexes
-				&& DbSchemaChecker.CompareUnOrderedLists (a.Indexes.ToList (), b.Indexes.ToList (), DbSchemaChecker.AreDbIndexEqual);
+			return DbSchemaChecker.CompareUnOrderedLists (a.Indexes.ToList (), b.Indexes.ToList (), DbSchemaChecker.AreDbIndexEqual);
 		}
 
 
@@ -217,7 +216,7 @@ namespace Epsitec.Cresus.Database
 		/// <returns><c>true</c> if both <see cref="DbForeignKey"/> are equal, <c>false</c> if they are not.</returns>
 		public static bool AreDbForeignKeyEqual(DbForeignKey a, DbForeignKey b)
 		{
-			return DbSchemaChecker.CompareOrderedArrays (a.Columns, b.Columns, DbSchemaChecker.AreDbColumnEqual);
+			return DbSchemaChecker.CompareOrderedList (a.Columns, b.Columns, DbSchemaChecker.AreDbColumnEqual);
 		}
 
 
@@ -229,8 +228,9 @@ namespace Epsitec.Cresus.Database
 		/// <returns><c>true</c> if both <see cref="DbIndex"/> are equal, <c>false</c> if they are not.</returns>
 		public static bool AreDbIndexEqual(DbIndex a, DbIndex b)
 		{
-			return a.SortOrder == b.SortOrder
-				&& DbSchemaChecker.CompareOrderedArrays (a.Columns,b.Columns,DbSchemaChecker.AreDbColumnEqual);
+			return a.Name == b.Name
+				&& a.SortOrder == b.SortOrder
+				&& DbSchemaChecker.CompareOrderedList (a.Columns, b.Columns, DbSchemaChecker.AreDbColumnEqual);
 		}
 
 
@@ -291,21 +291,21 @@ namespace Epsitec.Cresus.Database
 
 
 		/// <summary>
-		/// Checks that two arrays are equal, given a method to compare their element. The order is
+		/// Checks that two lists are equal, given a method to compare their element. The order is
 		/// taken in account for the comparison.
 		/// </summary>
 		/// <typeparam name="T">The type of the elements in the array.</typeparam>
-		/// <param name="arrayA">The first array to compare.</param>
-		/// <param name="arrayB">The second array to compare.</param>
+		/// <param name="listA">The first list to compare.</param>
+		/// <param name="listB">The second list to compare.</param>
 		/// <param name="comparer">A method that can compare two elements of the arrays.</param>
 		/// <returns><c>true</c> if both arrays contains the same elements, <c>false</c> if they do not.</returns>
-		private static bool CompareOrderedArrays<T>(T[] arrayA, T[] arrayB, System.Func<T, T, bool> comparer)
+		private static bool CompareOrderedList<T>(IList<T> listA, IList<T> listB, System.Func<T, T, bool> comparer)
 		{
-			bool same = arrayA.Length == arrayB.Length;
+			bool same = listA.Count == listB.Count;
 			
-			for (int i = 0; same && i < arrayA.Length; i++)
+			for (int i = 0; same && i < listA.Count; i++)
 			{
-				same = comparer (arrayA[i], arrayB[i]);
+				same = comparer (listA[i], listB[i]);
 			}
 
 			return same;
@@ -322,7 +322,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="listB">The second set to compare.</param>
 		/// <param name="comparer">A method that can compare two elements of the sets.</param>
 		/// <returns><c>true</c> if both sets contains the same elements, <c>false</c> if they do not.</returns>
-		private static bool CompareUnOrderedLists<T>(List<T> listA, List<T> listB, System.Func<T, T, bool> comparer)
+		private static bool CompareUnOrderedLists<T>(IList<T> listA, IList<T> listB, System.Func<T, T, bool> comparer)
 		{
 			bool same = listA.Count == listB.Count;
 
@@ -332,7 +332,7 @@ namespace Epsitec.Cresus.Database
 				{
 					T a = listA[i];
 
-					int index = listB.FindIndex (b => comparer (a, b));
+					int index = listB.IndexOf(a, comparer);
 
 					if (index == -1)
 					{

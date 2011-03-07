@@ -61,6 +61,7 @@
     <Compile Include="Support\Extensions\UnitTestStringExtensions.cs" />
     <Compile Include="Support\TestHelper.cs" />
     <Compile Include="Support\UnitTestArrayEqualityComparer.cs" />
+    <Compile Include="Support\UnitTestLambdaComparer.cs" />
     <Compile Include="Support\UnitTestStringPacker.cs" />
     <Compile Include="Types\Collections\UnitTestCircularBuffer.cs" />
     <Compile Include="Types\UnitTestINameComparer.cs" />

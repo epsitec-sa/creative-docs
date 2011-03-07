@@ -336,9 +336,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 			EntityCache entityCache = new EntityCache (entityContext);
 
 			foreach (AbstractEntity entity in entities)
-            {
-            	entityCache.Add(entity);
-            }
+			{
+				entityCache.Add (entity);
+			}
 
 			foreach (AbstractEntity entity in entities)
 			{

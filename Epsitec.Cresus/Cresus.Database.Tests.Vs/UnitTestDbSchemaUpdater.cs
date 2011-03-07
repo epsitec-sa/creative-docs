@@ -52,8 +52,8 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 				DbTypeDef[] types1 = dbInfrastructure1.FindDbTypes ().Take (2).Append (type1).ToArray ();
 				DbTypeDef[] types2 = dbInfrastructure1.FindDbTypes ().Take (2).Append (type2).ToArray ();
 
-				DbTable table1 = this.BuildNewTableWithGivenTypes (3, types1);
-				DbTable table2 = this.BuildNewTableWithGivenTypes (3, types2);
+				DbTable table1 = this.BuildNewTableWithGivenTypes (3, types1, DbElementCat.ManagedUserData);
+				DbTable table2 = this.BuildNewTableWithGivenTypes (3, types2, DbElementCat.ManagedUserData);
 
 				dbInfrastructure1.AddType (type1);
 				dbInfrastructure1.AddTable (table1);
@@ -79,9 +79,8 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
 			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTable table1 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 3);
-				DbTable table2 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 3);
-				table2.AddIndex (table2.Columns[0]);
+				DbTable table1 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 3, DbElementCat.ManagedUserData);
+				DbTable table2 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 3, DbElementCat.ExternalUserData);
 
 				dbInfrastructure1.AddTable (table1);
 				dbInfrastructure1.ClearCaches ();
@@ -109,8 +108,8 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 				DbTypeDef[] types1 = dbInfrastructure1.FindDbTypes ().Take (3).ToArray ();
 				DbTypeDef[] types2 = dbInfrastructure1.FindDbTypes ().Skip (1).Take (3).ToArray ();
 
-				DbTable table1 = this.BuildNewTableWithGivenTypes (3, types1);
-				DbTable table2 = this.BuildNewTableWithGivenTypes (3, types2);
+				DbTable table1 = this.BuildNewTableWithGivenTypes (3, types1, DbElementCat.ManagedUserData);
+				DbTable table2 = this.BuildNewTableWithGivenTypes (3, types2, DbElementCat.ManagedUserData);
 
 				dbInfrastructure1.AddTable (table1);
 				dbInfrastructure1.ClearCaches ();
@@ -135,7 +134,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
 			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTable table = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2);
+				DbTable table = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2, DbElementCat.ManagedUserData);
 
 				dbInfrastructure1.AddTable (table);
 
@@ -159,7 +158,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
 			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTable table = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2);
+				DbTable table = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2, DbElementCat.ManagedUserData);
 
 				List<DbTable> tables = new List<DbTable> ()
 				{
@@ -181,7 +180,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
 			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTable table = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2);
+				DbTable table = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2, DbElementCat.ManagedUserData);
 
 				dbInfrastructure1.AddTable (table);
 				dbInfrastructure1.ClearCaches ();
@@ -204,8 +203,8 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
 			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTable table1 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2);
-				DbTable table2 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 3);
+				DbTable table1 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2, DbElementCat.ManagedUserData);
+				DbTable table2 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 3, DbElementCat.ManagedUserData);
 
 				dbInfrastructure1.AddTable (table1);
 				dbInfrastructure1.ClearCaches ();
@@ -231,8 +230,8 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
 			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTable table1 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 3);
-				DbTable table2 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2);
+				DbTable table1 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 3, DbElementCat.ManagedUserData);
+				DbTable table2 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2, DbElementCat.ManagedUserData);
 
 				dbInfrastructure1.AddTable (table1);
 				dbInfrastructure1.ClearCaches ();
@@ -258,8 +257,8 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
 			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTable table1 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2);
-				DbTable table2 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2);
+				DbTable table1 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2, DbElementCat.ManagedUserData);
+				DbTable table2 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2, DbElementCat.ManagedUserData);
 
 				DbColumn relationColumn = new DbColumn ("myRelCol", null, DbColumnClass.Virtual, DbElementCat.ManagedUserData);
 
@@ -292,8 +291,8 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
 			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTable table1 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2);
-				DbTable table2 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2);
+				DbTable table1 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2, DbElementCat.ManagedUserData);
+				DbTable table2 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2, DbElementCat.ManagedUserData);
 
 				DbColumn relationColumn = new DbColumn ("myRelCol", null, DbColumnClass.Virtual, DbElementCat.ManagedUserData);
 
@@ -330,7 +329,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 				DbTypeDef[] types = dbInfrastructure1.FindDbTypes ().Take (2).Append (type).ToArray ();
 
-				DbTable table = this.BuildNewTableWithGivenTypes (3, types);
+				DbTable table = this.BuildNewTableWithGivenTypes (3, types, DbElementCat.ManagedUserData);
 
 				List<DbTable> tables = new List<DbTable> ()
 				{
@@ -356,7 +355,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 				DbTypeDef[] types = dbInfrastructure1.FindDbTypes ().Take (2).Append (type).ToArray ();
 
-				DbTable table = this.BuildNewTableWithGivenTypes (3, types);
+				DbTable table = this.BuildNewTableWithGivenTypes (3, types, DbElementCat.ManagedUserData);
 
 				dbInfrastructure1.AddType (type);
 				dbInfrastructure1.AddTable (table);
@@ -364,6 +363,94 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 				dbInfrastructure2.ClearCaches ();
 
 				List<DbTable> tables = new List<DbTable> ();
+
+				DbSchemaUpdater.UpdateSchema (dbInfrastructure2, tables);
+
+				Assert.IsTrue (DbSchemaChecker.CheckSchema (dbInfrastructure2, tables));
+			}
+
+			this.CheckCoreAndServiceTables ();
+		}
+
+
+		[TestMethod]
+		public void AddIndexTest()
+		{
+			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table1 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2, DbElementCat.ManagedUserData);
+				DbTable table2 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2, DbElementCat.ManagedUserData);
+
+				table2.AddIndex ("idx", SqlSortOrder.Ascending, table2.Columns.Last ());
+
+				dbInfrastructure1.AddTable (table1);
+				dbInfrastructure1.ClearCaches ();
+				dbInfrastructure2.ClearCaches ();
+
+				List<DbTable> tables = new List<DbTable> ()
+				{
+					table2,
+				};
+
+				DbSchemaUpdater.UpdateSchema (dbInfrastructure2, tables);
+
+				Assert.IsTrue (DbSchemaChecker.CheckSchema (dbInfrastructure2, tables));
+			}
+
+			this.CheckCoreAndServiceTables ();
+		}
+
+
+		[TestMethod]
+		public void AlterIndexTest()
+		{
+			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table1 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2, DbElementCat.ManagedUserData);
+				DbTable table2 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2, DbElementCat.ManagedUserData);
+
+				table1.AddIndex ("idx", SqlSortOrder.Ascending, table1.Columns.Last ());
+				table2.AddIndex ("idx", SqlSortOrder.Descending, table2.Columns.First ());
+
+				dbInfrastructure1.AddTable (table1);
+				dbInfrastructure1.ClearCaches ();
+				dbInfrastructure2.ClearCaches ();
+
+				List<DbTable> tables = new List<DbTable> ()
+				{
+					table2,
+				};
+
+				DbSchemaUpdater.UpdateSchema (dbInfrastructure2, tables);
+
+				Assert.IsTrue (DbSchemaChecker.CheckSchema (dbInfrastructure2, tables));
+			}
+
+			this.CheckCoreAndServiceTables ();
+		}
+
+
+		[TestMethod]
+		public void RemoveIndexTest()
+		{
+			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table1 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2, DbElementCat.ManagedUserData);
+				DbTable table2 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2, DbElementCat.ManagedUserData);
+
+				table1.AddIndex ("idx", SqlSortOrder.Ascending, table1.Columns.Last ());
+
+				dbInfrastructure1.AddTable (table1);
+				dbInfrastructure1.ClearCaches ();
+				dbInfrastructure2.ClearCaches ();
+
+				List<DbTable> tables = new List<DbTable> ()
+				{
+					table2,
+				};
 
 				DbSchemaUpdater.UpdateSchema (dbInfrastructure2, tables);
 
@@ -389,11 +476,13 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 				DbTable table3 = dbInfrastructure1.CreateDbTable ("table3", DbElementCat.ManagedUserData, true);
 
 				DbColumn column1 = DbTable.CreateUserDataColumn ("column1", type1);
-				DbColumn column2 = DbTable.CreateUserDataColumn ("column2", type2);
+				DbColumn column2a = DbTable.CreateUserDataColumn ("column2a", type2);
+				DbColumn column2b = DbTable.CreateUserDataColumn ("column2b", type2);
 				DbColumn column3 = DbTable.CreateUserDataColumn ("column3", type3);
 
 				table1.Columns.Add (column1);
-				table2.Columns.Add (column2);
+				table2.Columns.Add (column2a);
+				table2.Columns.Add (column2b);
 				table3.Columns.Add (column3);
 
 				DbColumn columnRelation1 = DbTable.CreateRelationColumn (Druid.FromLong (0), table2, DbCardinality.Reference);
@@ -407,6 +496,9 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 				table1.Columns.Add (columnRelation1);
 				table2.Columns.Add (columnRelation2);
 				table3.Columns.Add (columnRelation3);
+
+				table2.AddIndex ("idx2", SqlSortOrder.Ascending, column2b);
+				table3.AddIndex ("idx3", SqlSortOrder.Descending, column3);
 
 				List<DbTable> tables = new List<DbTable> ()
 				{
@@ -441,6 +533,10 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 				tableA.Columns.Add (columnA);
 				tableB.Columns.Add (columnRelationB);
 				tableC.Columns.Add (columnRelationC);
+
+				tableA.AddIndex ("idx1", SqlSortOrder.Ascending, columnA);
+				tableB.Indexes.Clear ();
+				tableB.AddIndex ("idx2", SqlSortOrder.Descending, tableB.Columns["column2b"]);
 
 				dbInfrastructure1.ClearCaches ();
 				dbInfrastructure2.ClearCaches ();
@@ -492,7 +588,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 					})
 					.ToArray ();
 
-				DbTable table = this.BuildNewTableWithGivenTypes (2, typesCopy);
+				DbTable table = this.BuildNewTableWithGivenTypes (2, typesCopy, DbElementCat.ManagedUserData);
 
 				List<DbTable> tables = new List<DbTable> ()
 				{
@@ -508,19 +604,19 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 		}
 
 
-		private DbTable BuildNewTableWithExistingTypes(DbInfrastructure dbInfrastructure, int nbColumns)
+		private DbTable BuildNewTableWithExistingTypes(DbInfrastructure dbInfrastructure, int nbColumns, DbElementCat category)
 		{
 			DbTypeDef[] types = dbInfrastructure.FindDbTypes ();
 
-			return this.BuildNewTableWithGivenTypes (nbColumns, types);
+			return this.BuildNewTableWithGivenTypes (nbColumns, types, category);
 		}
 
 
-		private DbTable BuildNewTableWithGivenTypes(int nbColumns, DbTypeDef[] types)
+		private DbTable BuildNewTableWithGivenTypes(int nbColumns, DbTypeDef[] types, DbElementCat category)
 		{
 			DbTable table = new DbTable ("myNewTable");
 
-			table.DefineCategory (DbElementCat.ManagedUserData);
+			table.DefineCategory (category);
 
 			for (int i = 0; i < nbColumns; i++)
 			{

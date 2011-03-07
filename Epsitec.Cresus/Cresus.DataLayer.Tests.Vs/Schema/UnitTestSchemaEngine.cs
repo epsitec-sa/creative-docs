@@ -130,16 +130,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 
 				List<System.Tuple<Druid,Druid,string>> data = new List<System.Tuple<Druid, Druid, string>> ()
 				{
-					System.Tuple.Create (Druid.Parse ("[J1AJ1]"), Druid.Parse ("[J1AK1]"), "J1AK1:J1AJ1"),
-					System.Tuple.Create (Druid.Parse ("[J1AJ1]"), Druid.Parse ("[J1AN1]"), "J1AN1:J1AJ1"),
-					System.Tuple.Create (Druid.Parse ("[J1AB1]"), Druid.Parse ("[J1AC1]"), "J1AC1:J1AB1"),
-					System.Tuple.Create (Druid.Parse ("[J1AB1]"), Druid.Parse ("[J1AD1]"), "J1AD1:J1AB1"),
-					System.Tuple.Create (Druid.Parse ("[J1AN]"), Druid.Parse ("[J1AS]"), "J1AS:J1AN"),
-					System.Tuple.Create (Druid.Parse ("[J1AA1]"), Druid.Parse ("[J1AP1]"), "J1AP1:J1AA1"),
-					System.Tuple.Create (Druid.Parse ("[J1AA1]"), Druid.Parse ("[J1AQ1]"), "J1AQ1:J1AA1"),
-					System.Tuple.Create (Druid.Parse ("[J1AA1]"), Druid.Parse ("[J1AS1]"), "J1AS1:J1AA1"),
-					System.Tuple.Create (Druid.Parse ("[J1AA1]"), Druid.Parse ("[J1AR1]"), "J1AR1:J1AA1"),
-					System.Tuple.Create (Druid.Parse ("[J1AE1]"), Druid.Parse ("[J1AF1]"), "J1AF1:J1AE1"),
+					System.Tuple.Create (Druid.Parse ("[J1AB1]"), Druid.Parse ("[J1AC1]"), "J1AB1:J1AC1"),
+					System.Tuple.Create (Druid.Parse ("[J1AN]"), Druid.Parse ("[J1AS]"), "J1AN:J1AS"),
+					System.Tuple.Create (Druid.Parse ("[J1AA1]"), Druid.Parse ("[J1AP1]"), "J1AA1:J1AP1"),
+					System.Tuple.Create (Druid.Parse ("[J1AA1]"), Druid.Parse ("[J1AQ1]"), "J1AA1:J1AQ1"),
 				};
 
 				foreach (var d in data)
@@ -148,7 +142,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 					Druid fieldId = d.Item2;
 					string name = d.Item3;
 
-					Assert.AreEqual (name, engineAccessor.GetRelationTableName (entityId, fieldId));
+					Assert.AreEqual (name, engineAccessor.GetCollectionTableName (entityId, fieldId));
 				}
 			}
 		}
@@ -159,7 +153,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				SchemaBuilder schemaBuilder = new SchemaBuilder (dbInfrastructure);
+				SchemaBuilder schemaBuilder = new SchemaBuilder (new SchemaEngine (dbInfrastructure), dbInfrastructure);
 
 				schemaBuilder.RegisterSchema (new List<Druid> () { Druid.Parse ("[J1AB1]") });
 			}
@@ -180,18 +174,12 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 					Druid.Parse ("[J1A11]"),
 				};
 
-				List<System.Tuple<Druid,Druid>> relationIds = new List<System.Tuple<Druid, Druid>> ()
+				List<System.Tuple<Druid,Druid>> collectionIds = new List<System.Tuple<Druid, Druid>> ()
 				{
-					System.Tuple.Create (Druid.Parse ("[J1AJ1]"), Druid.Parse ("[J1AK1]")),
-					System.Tuple.Create (Druid.Parse ("[J1AJ1]"), Druid.Parse ("[J1AN1]")),
 					System.Tuple.Create (Druid.Parse ("[J1AB1]"), Druid.Parse ("[J1AC1]")),
-					System.Tuple.Create (Druid.Parse ("[J1AB1]"), Druid.Parse ("[J1AD1]")),
 					System.Tuple.Create (Druid.Parse ("[J1AN]"), Druid.Parse ("[J1AS]")),
 					System.Tuple.Create (Druid.Parse ("[J1AA1]"), Druid.Parse ("[J1AP1]")),
 					System.Tuple.Create (Druid.Parse ("[J1AA1]"), Druid.Parse ("[J1AQ1]")),
-					System.Tuple.Create (Druid.Parse ("[J1AA1]"), Druid.Parse ("[J1AS1]")),
-					System.Tuple.Create (Druid.Parse ("[J1AA1]"), Druid.Parse ("[J1AR1]")),
-					System.Tuple.Create (Druid.Parse ("[J1AE1]"), Druid.Parse ("[J1AF1]")),
 				};
 
 				SchemaEngine engine = new SchemaEngine (dbInfrastructure);
@@ -203,9 +191,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 					Assert.IsNotNull (engine.GetEntityTableDefinition (entityId));
 				}
 
-				foreach (var relationId in relationIds)
+				foreach (var relationId in collectionIds)
 				{
-					Assert.IsNotNull (engine.GetRelationTableDefinition (relationId.Item1, relationId.Item2));
+					Assert.IsNotNull (engine.GetCollectionTableDefinition (relationId.Item1, relationId.Item2));
 				}
 			}
 		}

@@ -18,24 +18,25 @@ using System;
 
 namespace Epsitec.Cresus.DataLayer.Schema
 {
-	
-	
+
+
 	/// <summary>
 	/// The <c>SchemaBuilder</c> class is used internally to build <see cref="DbTable"/> and 
 	/// <see cref="DbTypeDef"/> and then register them to the database.
 	/// </summary>
 	internal sealed class SchemaBuilder
 	{
-		
-		
+
+
 		/// <summary>
 		/// Builds a new <c>SchemaBuilder.</c>
 		/// </summary>
-		public SchemaBuilder(DbInfrastructure dbInfrastructure)
+		public SchemaBuilder(SchemaEngine schemaEngine, DbInfrastructure dbInfrastructure)
 		{
 			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
-			
+
 			this.DbInfrastructure = dbInfrastructure;
+			this.SchemaEngine = schemaEngine;
 		}
 
 
@@ -43,6 +44,13 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// The <see cref="DbInfrastructure"/> associated with this instance.
 		/// </summary>
 		private DbInfrastructure DbInfrastructure
+		{
+			get;
+			set;
+		}
+
+
+		private SchemaEngine SchemaEngine
 		{
 			get;
 			set;
@@ -185,7 +193,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			{
 				this.GetStructuredTypesUsedInSchema (types, typeId);
 			}
-			
+
 			return types.Values.ToList ();
 		}
 
@@ -212,7 +220,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 					this.GetStructuredTypesUsedInSchema (types, type.BaseType.CaptionId);
 				}
 
-				foreach (StructuredTypeField field in this.GetRelationFields (type))
+				foreach (StructuredTypeField field in this.GetFields (type, FieldRelation.Reference, FieldRelation.Collection))
 				{
 					this.GetStructuredTypesUsedInSchema (types, field.Type.CaptionId);
 				}
@@ -232,7 +240,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 			foreach (StructuredType structuredType in structuredTypes)
 			{
-				foreach (StructuredTypeField field in this.GetValueFields (structuredType))
+				foreach (StructuredTypeField field in this.GetFields (structuredType, FieldRelation.None))
 				{
 					INamedType namedType = field.Type;
 					Druid namedTypeId = namedType.CaptionId;
@@ -261,7 +269,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 			if (structuredType == null)
 			{
-				throw new System.ArgumentException (string.Format ("The typeId {0} does not map to a structured type.", typeId));
+				throw new System.ArgumentException ("typeId does not defined a structured type.");
 			}
 
 			return structuredType;
@@ -269,29 +277,16 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 
 		/// <summary>
-		/// Gets the sequence of <see cref="StructuredTypeField"/> of the given <see cref="StructuredType"/>
+		/// Gets the sequence of <see cref="StructuredTypeField"></see> of the given <see cref="StructuredType"></see>
 		/// that are value fields.
 		/// </summary>
-		/// <param name="type">The <see cref="StructuredType"/> whose value fields to get.</param>
-		/// <returns>The value fields of the given <see cref="StructuredType"/>.</returns>
-		private IEnumerable<StructuredTypeField> GetValueFields(StructuredType type)
+		/// <param name="fieldRelation"></param>
+		/// <param name="type">The <see cref="StructuredType"></see> whose value fields to get.</param>
+		/// <returns>The value fields of the given <see cref="StructuredType"></see>.</returns>
+		private IEnumerable<StructuredTypeField> GetFields(StructuredType type, params FieldRelation[] fieldRelation)
 		{
 			return from field in this.GetLocalFields (type)
-				   where field.Relation == FieldRelation.None
-				   select field;
-		}
-
-
-		/// <summary>
-		/// Gets the sequence of <see cref="StructuredTypeField"/> of the given <see cref="StructuredType"/>
-		/// that are relation fields.
-		/// </summary>
-		/// <param name="type">The <see cref="StructuredType"/> whose relation fields to get.</param>
-		/// <returns>The relation fields of the given <see cref="StructuredType"/>.</returns>
-		private IEnumerable<StructuredTypeField> GetRelationFields(StructuredType type)
-		{
-			return from field in this.GetLocalFields (type)
-				   where field.Relation == FieldRelation.Reference || field.Relation == FieldRelation.Collection
+				   where fieldRelation.Contains (field.Relation)
 				   select field;
 		}
 
@@ -323,7 +318,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		{
 			List<StructuredType> unregisteredTables = new List<StructuredType> ();
 			List<DbTable> registeredTables = new List<DbTable> ();
-			
+
 			foreach (StructuredType type in types)
 			{
 				Druid typeId = type.CaptionId;
@@ -404,7 +399,8 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			Dictionary<Druid, DbTypeDef> dbTypeDefsDict = dbTypeDefs.ToDictionary (t => t.TypeId, t => t);
 			Dictionary<Druid, StructuredType> unregisteredTablesDict = unregisteredTables.ToDictionary (t => t.CaptionId, t => t);
 
-			List<DbTable> unregisteredDbTables = new List<DbTable> ();
+			List<DbTable> unregisteredEntityDbTables = new List<DbTable> ();
+			List<DbTable> unregisteredCollectionDbTables = new List<DbTable> ();
 
 			// We build the sequence of DbTables in two passes. In the first one, we create a basic
 			// DbTable that contains only the metadata columns. Then we create the data columns in
@@ -416,29 +412,42 @@ namespace Epsitec.Cresus.DataLayer.Schema
 				DbTable unregisteredDbTable = this.BuildBasicTable (unregisteredTable);
 
 				dbTables[unregisteredTable.CaptionId] = unregisteredDbTable;
-				unregisteredDbTables.Add (unregisteredDbTable);
+				unregisteredEntityDbTables.Add (unregisteredDbTable);
 			}
 
-			foreach (DbTable unregisteredDbTable in unregisteredDbTables)
+			foreach (DbTable unregisteredDbTable in unregisteredEntityDbTables)
 			{
 				StructuredType type = unregisteredTablesDict[unregisteredDbTable.CaptionId];
 
-				foreach (var field in this.GetRelationFields (type))
+				foreach (var field in this.GetFields (type, FieldRelation.None))
 				{
-					DbColumn newColumn = this.BuildRelationColumn (dbTables, field);
+					DbColumn valueColumn = this.BuildValueColumn (dbTypeDefsDict, field);
 
-					unregisteredDbTable.Columns.Add (newColumn);
+					unregisteredDbTable.Columns.Add (valueColumn);
 				}
 
-				foreach (var field in this.GetValueFields (type))
+				foreach (var field in this.GetFields (type, FieldRelation.Reference))
 				{
-					DbColumn newColumn = this.BuildValueColumn (dbTypeDefsDict, field);
+					DbColumn referenceColumn = this.BuildReferenceColumn (field);
 
-					unregisteredDbTable.Columns.Add (newColumn);
+					unregisteredDbTable.Columns.Add (referenceColumn);
+
+					string typeName = Druid.ToFullString (type.CaptionId.ToLong ());
+					string fieldName = Druid.ToFullString (field.CaptionId.ToLong ());
+					string indexName = "IDX_" + typeName + "_" + fieldName;
+
+					unregisteredDbTable.AddIndex (indexName, SqlSortOrder.Ascending, referenceColumn);
+				}
+
+				foreach (var field in this.GetFields (type, FieldRelation.Collection))
+				{
+					DbTable collectionTable = this.BuildCollectionTable (type, field);
+
+					unregisteredCollectionDbTables.Add (collectionTable);
 				}
 			}
 
-			return unregisteredDbTables;
+			return unregisteredEntityDbTables.Concat (unregisteredCollectionDbTables).ToList ();
 		}
 
 
@@ -450,8 +459,16 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// <returns>The newly created <see cref="DbTable"/>.</returns>
 		private DbTable BuildBasicTable(StructuredType tableType)
 		{
-			DbTable table = this.DbInfrastructure.CreateDbTable (tableType.CaptionId, DbElementCat.ManagedUserData, (tableType.BaseType == null));
+			DbTypeDef keyTypeDef = this.DbInfrastructure.ResolveDbType (Tags.TypeKeyId);
 
+			DbTable table = new DbTable (tableType.CaptionId);
+
+			DbColumn columnId = new DbColumn (Tags.ColumnId, keyTypeDef, DbColumnClass.KeyId, DbElementCat.Internal);
+
+			table.Columns.Add (columnId);
+			table.PrimaryKeys.Add (columnId);
+			table.UpdatePrimaryKeyInfo ();
+			table.DefineCategory (DbElementCat.ManagedUserData);
 			table.Comment = table.DisplayName;
 
 			if (tableType.BaseType == null)
@@ -459,15 +476,22 @@ namespace Epsitec.Cresus.DataLayer.Schema
 				// If this entity has no parent in the class hierarchy, then we need to add a
 				// special identification column, which can be used to map a row to its proper
 				// derived entity class. We also add a column which in order to log info about
-				// who made the last change to the entity.
-	
-				DbTypeDef keyTypeDef = this.DbInfrastructure.ResolveDbType (Tags.TypeKeyId);
+				// who made the last change to the entity. Finally, we say that the column is auto
+				// incremented.
+				// Marc
+
+				columnId.IsAutoIncremented = true;
+				columnId.AutoIncrementStartValue = SchemaEngine.AutoIncrementStartValue;
 
 				DbColumn typeColumn = new DbColumn (Tags.ColumnInstanceType, keyTypeDef, DbColumnClass.Data, DbElementCat.Internal);
 				DbColumn logColumn = new DbColumn (Tags.ColumnRefLog, keyTypeDef, DbColumnClass.RefInternal, DbElementCat.Internal);
 
 				table.Columns.Add (typeColumn);
 				table.Columns.Add (logColumn);
+			}
+			else
+			{
+				columnId.IsAutoIncremented = false;
 			}
 
 			return table;
@@ -494,23 +518,72 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 
 		/// <summary>
-		/// Builds the <see cref="DbColumn"/> that corresponds to the given relation
+		/// Builds the <see cref="DbColumn"/> that corresponds to the given reference
 		/// <see cref="StructuredTypeField"/>.
 		/// </summary>
-		/// <param name="newTables">The mapping of <see cref="Druid"/>  to<see cref="DbTable"/> that can be referenced by the <see cref="DbColumn"/>.</param>
 		/// <param name="field">The <see cref="StructuredTypeField"/> whose corresponding <see cref="DbColumn"/> to create.</param>
 		/// <returns>The newly created <see cref="DbColumn"/>.</returns>
-		private DbColumn BuildRelationColumn(Dictionary<Druid, DbTable> newTables, StructuredTypeField field)
+		private DbColumn BuildReferenceColumn(StructuredTypeField field)
 		{
-			Druid targetEntityId = field.TypeId;
+			DbTypeDef keyTypeDef = this.DbInfrastructure.ResolveDbType (Tags.TypeKeyId);
+			DbColumn column = new DbColumn (field.CaptionId, keyTypeDef, DbColumnClass.Data, DbElementCat.ManagedUserData);
 
-			DbTable targetTable = newTables[targetEntityId];
-
-			DbCardinality cardinality = this.FieldRelationToDbCardinality (field.Relation);
-
-			DbColumn column = DbTable.CreateRelationColumn (field.CaptionId, targetTable, cardinality);
+			column.Comment = column.DisplayName;
+			column.IsNullable = true;
 
 			return column;
+		}
+
+
+		/// <summary>
+		/// Builds the <see cref="DbTable"/> that corresponds to the given collection
+		/// <see cref="StructuredTypeField"/>.
+		/// </summary>
+		/// <param name="entity">The <see cref="StructuredType"/> of the entity containing the field</param>
+		/// <param name="field">The <see cref="StructuredTypeField"/> whose corresponding <see cref="DbTable"/> to create.</param>
+		/// <returns>The newly created <see cref="DbTable"/>.</returns>
+		private DbTable BuildCollectionTable(StructuredType entity, StructuredTypeField field)
+		{
+			DbTypeDef refIdType = this.DbInfrastructure.ResolveDbType (Tags.TypeKeyId);
+			DbTypeDef rankType = this.DbInfrastructure.ResolveDbType (Tags.TypeCollectionRank);
+
+			string relationTableName = this.SchemaEngine.GetCollectionTableName (entity.CaptionId, field.CaptionId);
+			string entityName = entity.Caption.Name;
+			string fieldName = this.DbInfrastructure.DefaultContext.ResourceManager.GetCaption (field.CaptionId).Name;
+
+			DbTable relationTable = new DbTable (relationTableName);
+
+			DbColumn columnId = new DbColumn (Tags.ColumnId, refIdType, DbColumnClass.KeyId, DbElementCat.Internal)
+			{
+				IsAutoIncremented = true,
+				AutoIncrementStartValue = SchemaEngine.AutoIncrementStartValue
+			};
+			DbColumn columnSourceId = new DbColumn (Tags.ColumnRefSourceId, refIdType, DbColumnClass.RefInternal, DbElementCat.Internal);
+			DbColumn columnTargetId = new DbColumn (Tags.ColumnRefTargetId, refIdType, DbColumnClass.RefInternal, DbElementCat.Internal);
+			DbColumn columnRank = new DbColumn (Tags.ColumnRefRank, rankType, DbColumnClass.Data, DbElementCat.Internal);
+
+			relationTable.Columns.Add (columnId);
+			relationTable.Columns.Add (columnSourceId);
+			relationTable.Columns.Add (columnTargetId);
+			relationTable.Columns.Add (columnRank);
+
+			relationTable.PrimaryKeys.Add (columnId);
+			relationTable.UpdatePrimaryKeyInfo ();
+
+			string entityDruid = Druid.ToFullString (entity.CaptionId.ToLong ());
+			string fieldDruid = Druid.ToFullString (field.CaptionId.ToLong ());
+			string indexPrefix = "IDX_" + entityDruid + "_" + fieldDruid + "_";
+
+			string sourceIndexName = indexPrefix + "SRC";
+			string targetIndexName = indexPrefix + "TGT";
+
+			relationTable.AddIndex (sourceIndexName, SqlSortOrder.Ascending, relationTable.Columns[Tags.ColumnRefSourceId]);
+			relationTable.AddIndex (targetIndexName, SqlSortOrder.Ascending, relationTable.Columns[Tags.ColumnRefTargetId]);
+
+			relationTable.DefineCategory (DbElementCat.ManagedUserData);
+			relationTable.Comment = entityName + "." + fieldName;
+
+			return relationTable;
 		}
 
 

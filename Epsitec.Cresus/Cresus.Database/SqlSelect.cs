@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
-		/// Gets the fields for the columns.
+		/// Gets the fields for the columns that will be returned by the query.
 		/// </summary>
 		/// <value>The fields.</value>
 		public Collections.SqlFieldList			Fields
@@ -79,6 +79,17 @@ namespace Epsitec.Cresus.Database
 				return this.joins;
 			}
 		}
+		
+		/// <summary>
+		/// Gets the field that are part of the ORDER BY clause of the query.
+		/// </summary>
+		public Collections.SqlFieldList OrderBy
+		{
+			get
+			{
+				return this.orderBy;
+			}
+		}
 
 		/// <summary>
 		/// Gets the SELECT set query.
@@ -103,7 +114,6 @@ namespace Epsitec.Cresus.Database
 				return this.setOp;
 			}
 		}
-
 
 		/// <summary>
 		/// Adds the specified set query.
@@ -132,6 +142,7 @@ namespace Epsitec.Cresus.Database
 		private Collections.SqlFieldList			tables	= new Collections.SqlFieldList ();
 		private Collections.SqlFieldList			wheres	= new Collections.SqlFieldList ();
 		private Collections.SqlFieldList			joins	= new Collections.SqlFieldList ();
+		private Collections.SqlFieldList			orderBy = new Collections.SqlFieldList ();
 
 		private SqlSelectPredicate				predicate;
 		private SqlSelectSetOp					setOp;

@@ -19,6 +19,36 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 
 
 		[TestMethod]
+		public void IndexOfArgumentCheck()
+		{
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => ((IEnumerable<object>) null).IndexOf (new object (), object.Equals)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new List<object> ().IndexOf (new object (), (System.Func<object, object, bool>) null)
+			);
+		}
+
+
+		[TestMethod]
+		public void IndexOfTest()
+		{
+			List<int> sequence = Enumerable.Range (0, 100).Shuffle ().ToList ();
+
+			for (int i = 0; i < sequence.Count; i++)
+			{
+				int expected = sequence.IndexOf (i);
+				int actual = sequence.IndexOf (i, (e1, e2) => e1 == e2);
+
+				Assert.AreEqual (expected, actual);
+			}
+		}
+
+
+		[TestMethod]
 		public void AppendArgumentCheck()
 		{
 			ExceptionAssert.Throw<System.ArgumentNullException>

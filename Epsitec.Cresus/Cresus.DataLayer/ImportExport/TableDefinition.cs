@@ -4,6 +4,8 @@ using Epsitec.Cresus.Database;
 using Epsitec.Cresus.Database.Collections;
 using Epsitec.Cresus.Database.Services;
 
+using Epsitec.Cresus.DataLayer.Schema;
+
 using System.Collections.Generic;
 
 using System.Data;
@@ -187,10 +189,10 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 			if (!exportOnlyUserData)
 			{
-				ranges.Add (System.Tuple.Create ((long) 0, (long) DbInfrastructure.AutoIncrementStartValue - 1));
+				ranges.Add (System.Tuple.Create ((long) 0, (long) SchemaEngine.AutoIncrementStartValue - 1));
 			}
 
-			ranges.Add (System.Tuple.Create ((long) DbInfrastructure.AutoIncrementStartValue, long.MaxValue));
+			ranges.Add (System.Tuple.Create ((long) SchemaEngine.AutoIncrementStartValue, long.MaxValue));
 
 			int length = 1000;
 
@@ -523,7 +525,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 				if (isIdColumn[i])
 				{
-					valueAsObject = ((long) valueAsObject) - DbInfrastructure.AutoIncrementStartValue;
+					valueAsObject = ((long) valueAsObject) - SchemaEngine.AutoIncrementStartValue;
 				}
 
 				processedRow.Add (valueAsObject);
@@ -600,7 +602,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 					dbTransaction.SqlBuilder.SelectData (query);
 
 					object value = dbInfrastructure.ExecuteScalar (dbTransaction);
-					long startValue = System.Math.Max ((long) value, DbInfrastructure.AutoIncrementStartValue);
+					long startValue = System.Math.Max ((long) value, SchemaEngine.AutoIncrementStartValue);
 
 
 					dbInfrastructure.SetColumnAutoIncrementValue (dbTransaction, dbTable, dbColumn, startValue);
@@ -659,7 +661,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 				if (cleanOnlyEpsitecData)
 				{
-					conditions.Add (this.CreateConditionForInterval (0, DbInfrastructure.AutoIncrementStartValue));
+					conditions.Add (this.CreateConditionForInterval (0, SchemaEngine.AutoIncrementStartValue));
 				}
 
 				dbTransaction.SqlBuilder.RemoveData (tableName, conditions);

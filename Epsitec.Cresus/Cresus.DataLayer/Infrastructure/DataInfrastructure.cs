@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			this.dbInfrastructure = dbInfrastructure;
 			this.dbInfrastructure.SetValue (DataInfrastructure.DbInfrastructureProperty, this);
 			this.SchemaEngine = new SchemaEngine (this.dbInfrastructure);
-			this.SchemaBuilder = new SchemaBuilder (this.dbInfrastructure);
+			this.SchemaBuilder = new SchemaBuilder (this.SchemaEngine, this.dbInfrastructure);
 			this.DataContextPool = new DataContextPool ();
 		}
 		
@@ -443,7 +443,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			file.ThrowIfNull ("file");
 
-			RawEntitySerializer.Export (file, this.dbInfrastructure, exportMode);
+			RawEntitySerializer.Export (file, this.dbInfrastructure, this.SchemaEngine, exportMode);
 		}
 
 

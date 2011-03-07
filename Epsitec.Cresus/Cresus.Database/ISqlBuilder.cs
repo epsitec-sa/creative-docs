@@ -115,13 +115,56 @@ namespace Epsitec.Cresus.Database
 		/// <param name="columns">The columns.</param>
 		void RemoveTableColumns(string tableName, SqlColumn[] columns);
 
+		/// <summary>
+		/// Adds an auto increment clause on a column.
+		/// </summary>
+		/// <param name="tableName">The name of the table containing the column.</param>
+		/// <param name="columnName">The name of the column</param>
+		/// <param name="initialValue">The initial value of the auto increment.</param>
 		void SetAutoIncrementOnTableColumn(string tableName, string columnName, long initialValue);
 
+		/// <summary>
+		/// Drops an auto increment clause on a column.
+		/// </summary>
+		/// <param name="tableName">The name of the table containing the column.</param>
+		/// <param name="columnName">The name of the column</param>
 		void DropAutoIncrementOnTableColumn(string tableName, string columnName);
 
+		/// <summary>
+		/// Adds an auto timestamp clause on a column.
+		/// </summary>
+		/// <param name="tableName">The name of the table containing the column.</param>
+		/// <param name="columnName">The name of the column</param>
+		/// <param name="onInsert">Tells whether the value of the column must be updated on INSERT queries.</param>
+		/// <param name="onUpdate">Tells whether the value of the column must be updated on UPDATE queries.</param>
 		void SetAutoTimeStampOnTableColumn(string tableName, string columnName, bool onInsert, bool onUpdate);
 
+		/// <summary>
+		/// Drops an auto timestamp clause on a column.
+		/// </summary>
+		/// <param name="tableName">The name of the table containing the column.</param>
+		/// <param name="columnName">The name of the column</param>
 		void DropAutoTimeStampOnTableColumn(string tableName, string columnName);
+
+		/// <summary>
+		/// Create a new index.
+		/// </summary>
+		/// <param name="tableName">The name of the table on which to create the index.</param>
+		/// <param name="index">The index to create.</param>
+		void CreateIndex(string tableName, SqlIndex index);
+
+		/// <summary>
+		/// Resets an index, that is, does whatever it takes to clean it in order to make it more
+		/// efficient.
+		/// </summary>
+		/// <param name="index">The index to reset.</param>
+		void ResetIndex(SqlIndex index);
+
+		/// <summary>
+		/// Drops an index.
+		/// </summary>
+		/// <param name="index">The index to drop.</param>
+		void DropIndex(SqlIndex index);
 		
 		/// <summary>
 		/// Selects data based on a query.
@@ -179,7 +222,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <returns></returns>
 		SqlField GetSqlFieldForCurrentTimeStamp();
-
+		
 		/// <summary>
 		/// Sets the SQL parameters for a stored procedure.
 		/// </summary>

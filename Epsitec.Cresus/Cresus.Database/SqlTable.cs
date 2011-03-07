@@ -17,6 +17,7 @@ namespace Epsitec.Cresus.Database
 		public SqlTable()
 		{
 			this.columns = new Collections.SqlColumnList ();
+			this.indexes = new List<SqlIndex> ();
 		}
 
 		/// <summary>
@@ -169,42 +170,22 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				if (this.indexes == null)
-				{
-					return Epsitec.Common.Types.Collections.EmptyEnumerable<SqlIndex>.Instance;
-				}
-				else
-				{
-					return this.indexes;
-				}
+				return this.indexes;
 			}
 		}
 
 		/// <summary>
 		/// Adds an index for this table.
 		/// </summary>
+		/// <param name="name">The name of the index.</param>
 		/// <param name="sortOrder">The sort order.</param>
 		/// <param name="columns">The columns.</param>
-		public void AddIndex(SqlSortOrder sortOrder, params SqlColumn[] columns)
+		public void AddIndex(string name, SqlSortOrder sortOrder, params SqlColumn[] columns)
 		{
 			System.Diagnostics.Debug.Assert (sortOrder != SqlSortOrder.None);
 			System.Diagnostics.Debug.Assert (columns.Length > 0);
-			
-			if (this.indexes == null)
-			{
-				this.indexes = new List<SqlIndex> ();
-			}
 
-			SqlIndex index = new SqlIndex (sortOrder, columns);
-			string indexName = index.ToString ();
-
-			foreach (SqlIndex item in this.indexes)
-			{
-				if (item.ToString () == indexName)
-				{
-					throw new System.InvalidOperationException (string.Format ("Duplicate index {0}", indexName));
-				}
-			}
+			SqlIndex index = new SqlIndex (name, columns, sortOrder);
 
 			this.indexes.Add (index);
 		}

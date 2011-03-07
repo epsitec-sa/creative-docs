@@ -1,4 +1,5 @@
 ﻿using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Common.UnitTesting;
 
@@ -23,21 +24,21 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver.PersistenceJobs
 		public void ReferencePersistenceJobConstructorTest()
 		{
 			NaturalPersonEntity entity = new NaturalPersonEntity ();
-			NaturalPersonEntity target = new NaturalPersonEntity ();
+			Dictionary<Druid, AbstractEntity> fieldIdsWithTargets = this.GetSampleFieldIdsWithTargets ();
 
 			foreach (Druid localEntityId in this.GetSampleDruids ())
 			{
 				foreach (PersistenceJobType jobType in this.GetSamplePersistenceJobTypes ())
 				{
-					foreach (Druid fieldId in this.GetSampleDruids ())
-					{
-						var job = new ReferencePersistenceJob (entity, localEntityId, fieldId, target, jobType);
+					var job = new ReferencePersistenceJob (entity, localEntityId, fieldIdsWithTargets, jobType);
 
-						Assert.AreSame (entity, job.Entity);
-						Assert.AreEqual (localEntityId, job.LocalEntityId);
-						Assert.AreEqual (fieldId, job.FieldId);
-						Assert.AreSame (target, job.Target);
-						Assert.AreEqual (jobType, job.JobType);
+					Assert.AreSame (entity, job.Entity);
+					Assert.AreEqual (localEntityId, job.LocalEntityId);
+					Assert.AreEqual (jobType, job.JobType);
+
+					foreach (var item in job.GetFieldIdsWithTargets ())
+					{
+						Assert.AreEqual (fieldIdsWithTargets[item.Key], item.Value);
 					}
 				}
 			}
@@ -47,25 +48,24 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver.PersistenceJobs
 		[TestMethod]
 		public void ReferencePersistenceJobConstructorArgumentCheck()
 		{
-			NaturalPersonEntity entity = new NaturalPersonEntity ();;
+			NaturalPersonEntity entity = new NaturalPersonEntity ();
 			Druid localEntityId = Druid.FromLong (1);
-			Druid fieldId = Druid.FromLong (2);
-			NaturalPersonEntity target = new NaturalPersonEntity ();
+			Dictionary<Druid, AbstractEntity> fieldIdsWithTargets = this.GetSampleFieldIdsWithTargets ();
 			PersistenceJobType jobType = PersistenceJobType.Insert;
 
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
-				() => new ReferencePersistenceJob (null, localEntityId, fieldId, target, jobType)
+				() => new ReferencePersistenceJob (null, localEntityId, fieldIdsWithTargets, jobType)
 			);
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
-				() => new ReferencePersistenceJob (entity, Druid.Empty, fieldId, target, jobType)
+				() => new ReferencePersistenceJob (entity, Druid.Empty, fieldIdsWithTargets, jobType)
 			);
 
-			ExceptionAssert.Throw<System.ArgumentException>
+			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
-				() => new ReferencePersistenceJob (entity, localEntityId, Druid.Empty, target, jobType)
+				() => new ReferencePersistenceJob (entity, localEntityId, null, jobType)
 			);
 		}
 
@@ -75,13 +75,12 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver.PersistenceJobs
 		{
 			NaturalPersonEntity entity = new NaturalPersonEntity ();
 			Druid localEntityId = Druid.FromLong (1);
-			Druid fieldId = Druid.FromLong (2);
-			NaturalPersonEntity target = new NaturalPersonEntity ();
+			Dictionary<Druid, AbstractEntity> fieldIdsWithTargets = this.GetSampleFieldIdsWithTargets ();
 			PersistenceJobType jobType = PersistenceJobType.Insert;
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
-				() => new ReferencePersistenceJob (entity, localEntityId, fieldId, target, jobType).Convert (null)
+				() => new ReferencePersistenceJob (entity, localEntityId, fieldIdsWithTargets, jobType).Convert (null)
 			);
 		}
 
@@ -91,13 +90,12 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver.PersistenceJobs
 		{
 			NaturalPersonEntity entity = new NaturalPersonEntity ();
 			Druid localEntityId = Druid.FromLong (1);
-			Druid fieldId = Druid.FromLong (2);
-			NaturalPersonEntity target = new NaturalPersonEntity ();
+			Dictionary<Druid, AbstractEntity> fieldIdsWithTargets = this.GetSampleFieldIdsWithTargets ();
 			PersistenceJobType jobType = PersistenceJobType.Insert;
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
-				() => new ReferencePersistenceJob (entity, localEntityId, fieldId, target, jobType).GetAffectedTables (null)
+				() => new ReferencePersistenceJob (entity, localEntityId, fieldIdsWithTargets, jobType).GetAffectedTables (null)
 			);
 		}
 
@@ -108,6 +106,21 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver.PersistenceJobs
 			{
 				yield return Druid.FromLong (i);
 			}
+		}
+
+
+		private Dictionary<Druid, AbstractEntity> GetSampleFieldIdsWithTargets()
+		{
+			Dictionary<Druid, AbstractEntity> example = new Dictionary<Druid, AbstractEntity> ()
+			{
+				{ Druid.FromLong (1), new NaturalPersonEntity () },
+				{ Druid.FromLong (2), new NaturalPersonEntity () },
+				{ Druid.FromLong (3), new NaturalPersonEntity () },
+				{ Druid.FromLong (4), new NaturalPersonEntity () },
+				{ Druid.FromLong (5), new NaturalPersonEntity () },
+			};
+
+			return example;
 		}
 
 

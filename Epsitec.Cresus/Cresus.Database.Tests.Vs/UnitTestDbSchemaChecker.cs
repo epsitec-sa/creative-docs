@@ -150,9 +150,9 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 			table3.Columns.Add (new DbColumn ("c1", this.GetDbTypeDefs ().ElementAt (0)));
 			table3.Columns.Add (new DbColumn ("c2", this.GetDbTypeDefs ().ElementAt (1)));
 
-			table1.AddIndex (table1.Columns[0], table1.Columns[1]);
-			table2.AddIndex (table2.Columns[0], table2.Columns[1]);
-			table3.AddIndex (table3.Columns[1], table3.Columns[0]);
+			table1.AddIndex ("idx", SqlSortOrder.Ascending, table1.Columns[0], table1.Columns[1]);
+			table2.AddIndex ("idx", SqlSortOrder.Ascending, table2.Columns[0], table2.Columns[1]);
+			table3.AddIndex ("idx", SqlSortOrder.Ascending, table3.Columns[1], table3.Columns[0]);
 
 			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table1, table2));
 			Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (table1, table3));
@@ -170,11 +170,11 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 			table3.Columns.Add (new DbColumn ("c1", this.GetDbTypeDefs ().ElementAt (0)));
 			table3.Columns.Add (new DbColumn ("c2", this.GetDbTypeDefs ().ElementAt (1)));
 
-			table1.AddIndex (table1.Columns[0]);
-			table1.AddIndex (table1.Columns[1]);
-			table2.AddIndex (table2.Columns[0]);
-			table2.AddIndex (table2.Columns[1]);
-			table3.AddIndex (table3.Columns[0]);
+			table1.AddIndex ("idx1", SqlSortOrder.Ascending, table1.Columns[0]);
+			table1.AddIndex ("idx2", SqlSortOrder.Ascending, table1.Columns[1]);
+			table2.AddIndex ("idx1", SqlSortOrder.Ascending, table2.Columns[0]);
+			table2.AddIndex ("idx2", SqlSortOrder.Ascending, table2.Columns[1]);
+			table3.AddIndex ("idx1", SqlSortOrder.Ascending, table3.Columns[0]);
 
 			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table1, table2));
 			Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (table1, table3));
@@ -187,9 +187,9 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 			table2.Columns.Add (new DbColumn ("c1", this.GetDbTypeDefs ().ElementAt (0)));
 			table3.Columns.Add (new DbColumn ("c1", this.GetDbTypeDefs ().ElementAt (0)));
 
-			table1.AddIndex (SqlSortOrder.Ascending, table1.Columns[0]);
-			table2.AddIndex (SqlSortOrder.Ascending, table2.Columns[0]);
-			table3.AddIndex (SqlSortOrder.Descending, table3.Columns[0]);
+			table1.AddIndex ("idx", SqlSortOrder.Ascending, table1.Columns[0]);
+			table2.AddIndex ("idx", SqlSortOrder.Ascending, table2.Columns[0]);
+			table3.AddIndex ("idx", SqlSortOrder.Descending, table3.Columns[0]);
 
 			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table1, table2));
 			Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (table1, table3));

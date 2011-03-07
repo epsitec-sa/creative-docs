@@ -7,10 +7,15 @@ using System.Linq;
 
 using System.Threading;
 
+
 namespace Epsitec.Common.Support.Extensions
 {
+
+
 	public static class EnumerableExtensions
 	{
+
+
 		public static void ForEach<T>(this IEnumerable<T> collection, System.Action<T> action)
 		{
 			foreach (T item in collection)
@@ -18,6 +23,7 @@ namespace Epsitec.Common.Support.Extensions
 				action (item);
 			}
 		}
+
 
 		public static bool IsEmpty<T>(this IEnumerable<T> collection)
 		{
@@ -28,6 +34,7 @@ namespace Epsitec.Common.Support.Extensions
 
 			return true;
 		}
+
 		
 		public static int IndexOf<T>(this IEnumerable<T> collection, T value, IEqualityComparer<T> comparer = null)
 		{
@@ -48,11 +55,43 @@ namespace Epsitec.Common.Support.Extensions
 			return -1;
 		}
 
+
+		/// <summary>
+		/// Gets the index in <paramref name="sequence"/> of the first item which is equal to
+		/// <paramref name="element"/> according to <paramref name="comparer"/>.
+		/// </summary>
+		/// <remarks>
+		/// This linq method executes immediately and will read the whole input sequence
+		/// until it finds the given element in it, or until its end if it does not contain the
+		/// given element. Therefore it has a O(n) complexity where n is the length of the sequence,
+		/// assuming that the comparison function provided is efficient.
+		/// </remarks>
+		/// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+		/// <param name="sequence">The sequence where to search.</param>
+		/// <param name="element">The element whose index to find.</param>
+		/// <param name="comparer">The function used to compare two elements.</param>
+		/// <returns>
+		/// The index of the first item which is equal to <paramref name="element"/> in the sequence
+		/// or <c>-1</c> if there is none.
+		/// </returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="sequence"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="comparer"/> is <c>null</c>.</exception>
+		public static int IndexOf<T>(this IEnumerable<T> sequence, T element, System.Func<T, T, bool> comparer)
+		{
+			sequence.ThrowIfNull ("sequence");
+			comparer.ThrowIfNull ("comparer");
+
+			IEqualityComparer<T> iEqualityComparer = new LambdaComparer<T> (comparer);
+
+			return EnumerableExtensions.IndexOf (sequence, element, iEqualityComparer);
+		}
+
+
 		/// <summary>
 		/// Appends one or more elements at the end of an <see cref="IEnumerable{T}"/>.
 		/// </summary>
 		/// <remarks>This linq method use deferred execution and will stream the given sequence and
-		/// won't keep any copy of it internally.</remarks>
+		/// won't keep any copy of it internally. It has a complexity of O(1).</remarks>
 		/// <typeparam name="T">The type of the elements in the <see cref="IEnumerable{T}"/>.</typeparam>
 		/// <param name="sequence">The sequence to which to append the new elements.</param>
 		/// <param name="elements">The elements to append to the sequence.</param>
@@ -71,6 +110,7 @@ namespace Epsitec.Common.Support.Extensions
 			return EnumerableExtensions.AppendInternal<T> (sequence, elements);
 		}
 
+
 		/// <summary>
 		/// Helper method for <see cref="EnumerableExtensions.Append"/> that will perform the real
 		/// work.
@@ -83,6 +123,7 @@ namespace Epsitec.Common.Support.Extensions
 		{
 			return sequence.Concat (elements);
 		}
+
 
 		/// <summary>
 		/// Shuffles the given <see cref="IEnumerable{T}"/>, that is, enumerates it in a random
@@ -104,6 +145,7 @@ namespace Epsitec.Common.Support.Extensions
 
 			return EnumerableExtensions.ShuffleInternal<T> (sequence);
 		}
+
 
 		/// <summary>
 		/// Helper method for <see cref="EnumerableExtensions.Shuffle"/> that will perform the real
@@ -129,6 +171,7 @@ namespace Epsitec.Common.Support.Extensions
 
 			return elements;
 		}
+
 
 		/// <summary>
 		/// Checks that both <see cref="IEnumerable{T}"/> contain the same set of elements, ignoring
@@ -215,6 +258,7 @@ namespace Epsitec.Common.Support.Extensions
 
 		[System.ThreadStatic]
 		private static System.Random dice;
-        
+      
+  
 	}
 }

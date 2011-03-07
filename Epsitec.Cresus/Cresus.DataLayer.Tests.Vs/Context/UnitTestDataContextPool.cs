@@ -63,17 +63,12 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 
 				foreach (DataContext dataContext in dataContexts)
 				{
-					Assert.IsTrue (dataContextPool.Add (dataContext));
+					dataContextPool.Add (dataContext);
 				}
 
 				foreach (DataContext dataContext in dataContexts)
 				{
 					Assert.IsTrue (dataContextPool.Contains (dataContext));
-				}
-
-				foreach (DataContext dataContext in dataContexts)
-				{
-					Assert.IsFalse (dataContextPool.Add (dataContext));
 				}
 
 				foreach (DataContext dataContext in dataContexts)
