@@ -12,5 +12,6 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 		Boolean,		// valeur "true" ou "false"
 		Enumeration,	// énumération libre
 		Distance,		// type 'double' correspondant à une distance en mm
+		Size,			// type 'double' correspondant à une dimension en mm
 	}
 }

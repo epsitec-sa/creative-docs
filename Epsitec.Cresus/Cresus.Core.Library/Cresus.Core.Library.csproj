@@ -102,7 +102,9 @@
     <Compile Include="Library\UI.WindowPlacementHint.cs" />
     <Compile Include="Widgets\ArrowedFrame.cs" />
     <Compile Include="Widgets\AutoCompleteTextField.cs" />
+    <Compile Include="Widgets\ButtonExtensions.cs" />
     <Compile Include="Widgets\CellTableExtensions.cs" />
+    <Compile Include="Widgets\StaticTextExtensions.cs" />
     <Compile Include="Widgets\DragTargetMarker.cs" />
     <Compile Include="Widgets\ItemPicker.cs" />
     <Compile Include="Widgets\ItemPickerCombo.cs" />

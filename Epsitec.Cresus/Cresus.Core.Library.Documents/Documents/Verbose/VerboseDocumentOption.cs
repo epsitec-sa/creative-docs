@@ -165,23 +165,25 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 			list.Add (new VerboseDocumentOption ("Orientation du papier", "Orientation"));
 			e = new string[] { "Portrait", "Landscape" };
 			d = new string[] { "Portrait", "Paysage" };
-			list.Add (new VerboseDocumentOption (DocumentOption.Orientation, "Orientation", false, e, d, 0));
+			list.Add (new VerboseDocumentOption (DocumentOption.Orientation, "Orientation", true, e, d, 0));
 
 			//	Ajoute les options d'impression générales.
 			list.Add (new VerboseDocumentOption ("Options générales", "Global"));
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLogo, "Global", true, DocumentOptionValueType.Boolean, "Imprime le logo de l'entreprise", "true"));
-			list.Add (new VerboseDocumentOption (DocumentOption.Specimen,   "Global", true, DocumentOptionValueType.Boolean, "Incruste la mention SPECIMEN",    "false"));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLogo, "Global", true, DocumentOptionValueType.Boolean, "Imprime le logo de l'entreprise",    "true"));
+			list.Add (new VerboseDocumentOption (DocumentOption.Specimen,   "Global", true, DocumentOptionValueType.Boolean, "Incruste la mention SPECIMEN",       "false"));
+			list.Add (new VerboseDocumentOption (DocumentOption.Signing,    "Global", true, DocumentOptionValueType.Boolean, "Cartouche pour visa avec signature", "true", Business.DocumentType.OrderBooking, Business.DocumentType.OrderConfirmation, Business.DocumentType.ProductionOrder, Business.DocumentType.ProductionChecklist, Business.DocumentType.ShipmentChecklist, Business.DocumentType.DeliveryNote, Business.DocumentType.Receipt));
 
-			list.Add (new VerboseDocumentOption (DocumentOption.Margins,      "Global", false, DocumentOptionValueType.Distance, "Marges",           "20"));
-			list.Add (new VerboseDocumentOption (DocumentOption.LeftMargin,   "Global", false, DocumentOptionValueType.Distance, "Marge gauche",     "20"));
-			list.Add (new VerboseDocumentOption (DocumentOption.RightMargin,  "Global", false, DocumentOptionValueType.Distance, "Marge droite",     "20"));
-			list.Add (new VerboseDocumentOption (DocumentOption.TopMargin,    "Global", false, DocumentOptionValueType.Distance, "Marge supérieure", "20"));
-			list.Add (new VerboseDocumentOption (DocumentOption.BottomMargin, "Global", false, DocumentOptionValueType.Distance, "Marge inférieure", "20"));
+			list.Add (new VerboseDocumentOption (DocumentOption.FontSize, "Global", true, DocumentOptionValueType.Size, "Taille de la police", "3"));
+
+			list.Add (new VerboseDocumentOption (DocumentOption.LeftMargin,   "Global", true, DocumentOptionValueType.Distance, "Marge gauche",     "20"));
+			list.Add (new VerboseDocumentOption (DocumentOption.RightMargin,  "Global", true, DocumentOptionValueType.Distance, "Marge droite",     "20"));
+			list.Add (new VerboseDocumentOption (DocumentOption.TopMargin,    "Global", true, DocumentOptionValueType.Distance, "Marge supérieure", "20"));
+			list.Add (new VerboseDocumentOption (DocumentOption.BottomMargin, "Global", true, DocumentOptionValueType.Distance, "Marge inférieure", "20"));
 
 			list.Add (new VerboseDocumentOption ("Aspect des listes", "LayoutFrame"));
 			e = new string[] { "Frameless", "WithLine", "WithFrame" };
 			d = new string[] { "Espacé, sans encadrements", "Espacé, avec des lignes de séparation", "Serré, avec des encadrements" };
-			list.Add (new VerboseDocumentOption (DocumentOption.LayoutFrame, "LayoutFrame", false, e, d, 1));
+			list.Add (new VerboseDocumentOption (DocumentOption.LayoutFrame, "LayoutFrame", true, e, d, 1));
 
 			//	Ajoute les options d'impression liées aux factures.
 			list.Add (new VerboseDocumentOption ("Options pour les factures", "InvoiceOption"));
@@ -207,13 +209,11 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 			list.Add (new VerboseDocumentOption ("Mode d'impression du BV", "InvoiceEsrMode"));
 			list.Add (new VerboseDocumentOption (DocumentOption.EsrFacsimile, "InvoiceEsrMode", true, DocumentOptionValueType.Boolean, "Fac-similé complet du BV", "true", Business.DocumentType.Invoice));
 
-			list.Add (new VerboseDocumentOption (DocumentOption.Signing, "Signing", true, DocumentOptionValueType.Boolean, "Cartouche", "true", Business.DocumentType.OrderBooking, Business.DocumentType.OrderConfirmation, Business.DocumentType.ProductionOrder, Business.DocumentType.ProductionChecklist, Business.DocumentType.ShipmentChecklist, Business.DocumentType.DeliveryNote, Business.DocumentType.Receipt));
-
 			//	Ajoute les options pour les clients.
 			list.Add (new VerboseDocumentOption ("Données du client à inclure", "Relation"));
-			list.Add (new VerboseDocumentOption (DocumentOption.RelationMail,    "Relation", false, DocumentOptionValueType.Boolean,  "Adresses",   "true", Business.DocumentType.Summary));
-			list.Add (new VerboseDocumentOption (DocumentOption.RelationTelecom, "Relation", false, DocumentOptionValueType.Boolean,  "Téléphones", "true", Business.DocumentType.Summary));
-			list.Add (new VerboseDocumentOption (DocumentOption.RelationUri,     "Relation", false, DocumentOptionValueType.Boolean,  "Emails",     "true", Business.DocumentType.Summary));
+			list.Add (new VerboseDocumentOption (DocumentOption.RelationMail,    "Relation", false, DocumentOptionValueType.Boolean,  "Adresses",   "true", Business.DocumentType.RelationSummary));
+			list.Add (new VerboseDocumentOption (DocumentOption.RelationTelecom, "Relation", false, DocumentOptionValueType.Boolean,  "Téléphones", "true", Business.DocumentType.RelationSummary));
+			list.Add (new VerboseDocumentOption (DocumentOption.RelationUri,     "Relation", false, DocumentOptionValueType.Boolean,  "Emails",     "true", Business.DocumentType.RelationSummary));
 
 			VerboseDocumentOption.allOptions = list;
 		}

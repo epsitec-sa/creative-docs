@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.application = this.coreData.Host;
 			this.jobs = jobs;
 			this.pages = Print.Common.GetDeserializedPages (this.jobs).ToList ();
-			this.previewerController = new XmlPreviewerController (this.businessContext, this.jobs);
+			this.previewerController = new XmlPreviewerController (this.businessContext, this.jobs, showCheckButtons: true);
 		}
 
 

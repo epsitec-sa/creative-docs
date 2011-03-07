@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			window.Text = "Réglages globaux";
 			window.MakeFixedSizeWindow ();
-			window.ClientSize = new Size (850, 600);
+			window.ClientSize = new Size (940, 600);
 		}
 
 		protected override void SetupWidgets(Window window)
@@ -80,15 +80,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.tabBook.Items.Add (printerUnitsPage);
 
-			//	Crée l'onglet 'printer'.
-			var printerOptionsPage = new TabPage
-			{
-				TabTitle = "Options d'impression",
-				Name = "printerOptions",
-			};
-
-			this.tabBook.Items.Add (printerOptionsPage);
-			this.tabBook.ActivePageIndex = 0;
+			this.ActiveLastPage ();
 
 			//	Crée le pied de page.
 			this.errorInfo = new StaticText
@@ -122,10 +114,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			var printerUnits = new SettingsTabPages.PrintingUnitsTabPage (this);
 			printerUnits.CreateUI (printerUnitsPage);
 			this.settingsTabPages.Add (printerUnits);
-
-			var printerOptions = new SettingsTabPages.PrinterOptionsTabPage (this);
-			printerOptions.CreateUI (printerOptionsPage);
-			this.settingsTabPages.Add (printerOptions);
 
 			foreach (var tab in this.settingsTabPages)
 			{
@@ -208,6 +196,28 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.acceptButton.Enable = false;
 			}
 		}
+
+
+		private void ActiveLastPage()
+		{
+			string name = SettingsDialog.lastActivedPageName;
+
+			if (string.IsNullOrEmpty (name))
+			{
+				name = "printerUnits";  // page par défaut
+			}
+
+			var page = this.tabBook.Items.Where (x => x.Name == name).FirstOrDefault ();
+			this.tabBook.ActivePage = page;
+		}
+
+		private void UpdateLastActivedPageName()
+		{
+			SettingsDialog.lastActivedPageName = this.tabBook.ActivePage.Name;
+		}
+
+
+		private static string									lastActivedPageName;
 
 		private readonly List<AbstractSettingsTabPage>			settingsTabPages;
 

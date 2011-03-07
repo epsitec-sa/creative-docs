@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// </summary>
 	public class XmlPrintedPagePreviewer : Widget
 	{
-		public XmlPrintedPagePreviewer(IBusinessContext businessContext)
+		public XmlPrintedPagePreviewer(IBusinessContext businessContext, bool showCheckButtons)
 		{
 			this.businessContext = businessContext;
 			this.coreData = this.businessContext.Data;
@@ -32,6 +32,25 @@ namespace Epsitec.Cresus.Core.Widgets
 				Alignment = ContentAlignment.MiddleCenter,
 				BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 			};
+
+			if (showCheckButtons)
+			{
+				this.checkButton = new CheckButton
+				{
+					Parent = this,
+					AutoToggle = false,
+					Anchor = AnchorStyles.BottomLeft,
+					Margins = new Margins (0, 0, 0, XmlPrintedPagePreviewer.titleHeight-1),
+				};
+
+				this.checkButton.Clicked += delegate
+				{
+					this.page.IsPrintable = !this.page.IsPrintable;
+					this.checkButton.ActiveState = this.page.IsPrintable ? ActiveState.Yes : ActiveState.No;
+				};
+
+				ToolTip.Default.SetToolTip (this.checkButton, "Une coche indique que cette page sera imprimée");
+			}
 		}
 
 
@@ -47,6 +66,11 @@ namespace Epsitec.Cresus.Core.Widgets
 				if (this.page != value)
 				{
 					this.page = value;
+
+					if (this.checkButton != null)
+					{
+						this.checkButton.ActiveState = this.page.IsPrintable ? ActiveState.Yes : ActiveState.No;
+					}
 
 					this.UpdateTitle ();
 					this.bitmap = null;
@@ -129,6 +153,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private readonly IBusinessContext	businessContext;
 		private readonly CoreData			coreData;
+		private readonly CheckButton		checkButton;
 
 		private DeserializedPage			page;
 		private Bitmap						bitmap;

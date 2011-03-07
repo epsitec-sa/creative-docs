@@ -64,6 +64,31 @@ namespace Epsitec.Cresus.Core.Print.Serialization
 		}
 
 
+		public int PrintablePagesCount
+		{
+			get
+			{
+				return this.pages.Where (x => x.IsPrintable).Count ();
+			}
+		}
+
+		public void RemoveUnprintablePages()
+		{
+			int i = 0;
+			while (i < this.pages.Count)
+			{
+				if (this.pages[i].IsPrintable)
+				{
+					i++;
+				}
+				else
+				{
+					this.pages.RemoveAt (i);
+				}
+			}
+		}
+
+
 		private readonly DeserializedJob		parentJob;
 		private readonly List<DeserializedPage> pages;
 

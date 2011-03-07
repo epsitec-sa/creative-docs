@@ -46,6 +46,7 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="Dialogs\PrintOptionsDialog.cs" />
     <Compile Include="Print\Controllers\DocumentOptionsEditorController.cs" />
     <Compile Include="Print\Controllers\MainController.cs" />
     <Compile Include="Print\Controllers\SelectController.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Print\Controllers\ContinuousController.cs" />
     <Compile Include="Print\Controllers\XmlPreviewerController.cs" />
     <Compile Include="Print\EntityPrinters\AbstractPrinter.cs" />
+    <Compile Include="Print\EntityToPrint.cs" />
     <Compile Include="Print\JobToPrint.cs" />
     <Compile Include="Print\PreviewMode.cs" />
     <Compile Include="Print\PrintEngine.cs" />

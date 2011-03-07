@@ -15,13 +15,13 @@ using Epsitec.Cresus.Core.Documents.Verbose;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Print.Serialization;
+using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Data;
 
 using System.Collections.Generic;
 using System.Xml.Linq;
 using System.Linq;
 using System.Linq.Expressions;
-using Epsitec.Cresus.Core.Business;
-using Epsitec.Cresus.Core.Data;
 
 namespace Epsitec.Cresus.Core.Print
 {
@@ -42,6 +42,18 @@ namespace Epsitec.Cresus.Core.Print
 		public static void PrintCommand(IBusinessContext businessContext, AbstractEntity entity)
 		{
 			//	La commande 'Print' du ruban a été activée.
+			PrintEngine.PrintOrPreviewCommand (businessContext, entity, isPreview: false);
+		}
+
+		public static void PreviewCommand(IBusinessContext businessContext, AbstractEntity entity)
+		{
+			//	La commande 'Preview' du ruban a été activée.
+			PrintEngine.PrintOrPreviewCommand (businessContext, entity, isPreview: true);
+		}
+
+
+		private static void PrintOrPreviewCommand(IBusinessContext businessContext, AbstractEntity entity, bool isPreview)
+		{
 			if (entity == null)
 			{
 				var message = "Il n'y a aucune donnée à imprimer.";
@@ -49,46 +61,82 @@ namespace Epsitec.Cresus.Core.Print
 				return;
 			}
 
-			var xml = PrintEngine.MakePrintingData (businessContext, entity);
+			//	Prépare les entités à imprimer.
+			var entitiesToPrint = PrintEngine.GetEntitiesToPrint (businessContext, entity);
 
-			if (string.IsNullOrEmpty (xml))
+			//	Choix des options et des pages à imprimer.
+			var optionsDialog = new Dialogs.PrintOptionsDialog (businessContext, entitiesToPrint, isPreview);
+			optionsDialog.IsModal = true;
+			optionsDialog.OpenDialog ();
+
+			if (optionsDialog.Result != DialogResult.Accept)
 			{
-				var message = "Ce type de donnée ne peut pas être imprimé.";
-				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, message).OpenDialog ();
 				return;
 			}
 
-			PrintEngine.SendDataToPrinter (businessContext, xml);
+			//	Impression effective, sans aucune interaction.
+			var deserializeJobs = optionsDialog.DeserializeJobs;
+			if (deserializeJobs.Count != 0)
+			{
+				PrintEngine.RemoveUnprintablePages (deserializeJobs);
+				PrintEngine.PrintJobs (businessContext, deserializeJobs);
+			}
 		}
 
-		public static void PreviewCommand(IBusinessContext businessContext, AbstractEntity entity)
+		private static IEnumerable<EntityToPrint> GetEntitiesToPrint(IBusinessContext businessContext, AbstractEntity entity)
 		{
-			//	La commande 'Preview' du ruban a été activée.
-			if (entity == null)
+			//	Prépare les entités à imprimer. Une entité peut déboucher sur plusieurs entités
+			//	filles à imprimer (par exemple sous forme d'étiquettes).
+			var entitiesToPrint = new List<EntityToPrint> ();
+
+			PrintEngine.AddEntityToPrint (businessContext, entitiesToPrint, entity, "Document principal");
+
+			// TODO: DR
+#if false
+			if (entity is DocumentMetadataEntity)
 			{
-				var message = "Il n'y a aucune donnée à visualiser.";
-				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, message).OpenDialog ();
-				return;
+				//	S'il s'agit d'une facture, on cherche l'adresse de livraison pour en imprimer une étiquette.
+				var meta = entity as DocumentMetadataEntity;
+
+				if (meta.BusinessDocument != null && meta.BusinessDocument.BillToMailContact != null)
+				{
+					PrintEngine.AddEntityToPrint (businessContext, entitiesToPrint, meta.BusinessDocument.BillToMailContact, "Etiquette adresse de livraison");
+				}
 			}
 
-			var xml = PrintEngine.MakePrintingData (businessContext, entity);
-
-			if (string.IsNullOrEmpty (xml))
+			if (entity is RelationEntity)
 			{
-				var message = "Ce type de donnée ne peut pas être visualisé.";
-				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, message).OpenDialog ();
-				return;
+				//	S'il s'agit d'une relation (personne physique ou morale), on cherche toutes les adresses liées
+				//	pour en faire des étiquettes.
+				var relation = entity as RelationEntity;
+
+				int rank = 0;
+				foreach (var contact in relation.Person.Contacts)
+				{
+					if (contact is MailContactEntity)
+					{
+						PrintEngine.AddEntityToPrint (businessContext, entitiesToPrint, contact, string.Format ("Etiquette adresse n° {0}", (++rank).ToString ()));
+					}
+				}
 			}
+#endif
 
-			var deserializeJobs = SerializationEngine.DeserializeJobs (businessContext, xml);
+			return entitiesToPrint;
+		}
 
-			var dialog = new Dialogs.PrintPreviewDialog (businessContext, deserializeJobs);
-			dialog.IsModal = true;
-			dialog.OpenDialog ();
+		private static void AddEntityToPrint(IBusinessContext businessContext, List<EntityToPrint> entitiesToPrint, AbstractEntity entity, string title)
+		{
+			var options       = PrintEngine.GetOptions       (businessContext, entity);
+			var printingUnits = PrintEngine.GetPrintingUnits (businessContext, entity);
 
-			if (dialog.Result == DialogResult.Accept)  // imprimer ?
+			entitiesToPrint.Add (new EntityToPrint (entity, options, printingUnits, title));
+		}
+
+		private static void RemoveUnprintablePages(List<DeserializedJob> jobs)
+		{
+			for (int i = 0; i < jobs.Count; i++)
 			{
-				PrintEngine.PrintJobs (businessContext, deserializeJobs);
+				jobs[i].RemoveUnprintablePages ();
 			}
 		}
 		#endregion
@@ -106,122 +154,106 @@ namespace Epsitec.Cresus.Core.Print
 			//	Imprime effectivement une liste de jobs d'impression.
 			foreach (var job in jobs)
 			{
-				PrintDocument printDocument = new PrintDocument ();
+				if (job.PrintablePagesCount != 0)
+				{
+					PrintDocument printDocument = new PrintDocument ();
 
-				printDocument.DocumentName = job.JobFullName;
-				printDocument.SelectPrinter (FormattedText.Unescape (job.PrinterPhysicalName));
-				printDocument.PrinterSettings.Copies = 1;
-				printDocument.DefaultPageSettings.Margins = new Margins (0, 0, 0, 0);
+					printDocument.DocumentName = job.JobFullName;
+					printDocument.SelectPrinter (FormattedText.Unescape (job.PrinterPhysicalName));
+					printDocument.PrinterSettings.Copies = 1;
+					printDocument.DefaultPageSettings.Margins = new Margins (0, 0, 0, 0);
 
-				var engine = new XmlJobPrintEngine (businessContext, printDocument, job.Sections);
-				printDocument.Print (engine);
+					var engine = new XmlJobPrintEngine (businessContext, printDocument, job.Sections);
+					printDocument.Print (engine);
+				}
 			}
 		}
 
 
-		public static string MakePrintingData(IBusinessContext businessContext, AbstractEntity entity)
+		private static string MakePrintingData(IBusinessContext businessContext, IEnumerable<EntityToPrint> entitiesToPrint)
 		{
 			//	Fabrique les données permettant d'imprimer un document, sans aucune interaction.
 			//	Retourne le source xml correspondant.
-			//	Si l'entité est de type DocumentMetadataEntity, on utilise les options et les unités
-			//	d'impression définies dans l'entité DocumentCategory.
-			var options       = PrintEngine.GetOptions (entity);
-			var printingUnits = PrintEngine.GetPrintingUnits (entity);
+			var jobs = new List<JobToPrint> ();
 
-			return PrintEngine.MakePrintingData (businessContext, entity, options, printingUnits);
+			foreach (var entityToPrint in entitiesToPrint)
+			{
+				var job = PrintEngine.MakePrintingJobs (businessContext, entityToPrint.Entity, entityToPrint.Options, entityToPrint.PrintingUnits);
+				jobs.AddRange (job);
+			}
+
+			return SerializationEngine.SerializeJobs (jobs);
 		}
 
 		public static string MakePrintingData(IBusinessContext businessContext, AbstractEntity entity, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
 		{
 			//	Fabrique les données permettant d'imprimer un document, sans aucune interaction.
 			//	Retourne le source xml correspondant.
-			var entities = new List<AbstractEntity> ();
-			entities.Add (entity);
-
-			return PrintEngine.MakePrintingData (businessContext, entities, options, printingUnits);
+			var jobs = PrintEngine.MakePrintingJobs (businessContext, entity, options, printingUnits);
+			return SerializationEngine.SerializeJobs (jobs);
 		}
 
-		public static string MakePrintingData(IBusinessContext businessContext, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
+		private static List<JobToPrint> MakePrintingJobs(IBusinessContext businessContext, AbstractEntity entity, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
 		{
 			//	Fabrique les données permettant d'imprimer un document, sans aucune interaction.
-			//	Retourne le source xml correspondant.
+			//	Retourne les jobs correspondant.
 			System.Diagnostics.Debug.Assert (businessContext != null);
-			System.Diagnostics.Debug.Assert (entities != null);
+			System.Diagnostics.Debug.Assert (entity != null);
 			System.Diagnostics.Debug.Assert (options != null);
 			System.Diagnostics.Debug.Assert (printingUnits != null);
 
-			if (entities.Count () == 0)
-			{
-				return null;
-			}
-
 			//	Crée les classes qui savent imprimer l'entité qui représente le document (EntityPrinters.AbstrctPrinter).
-			var documentPrinters = EntityPrinters.AbstractPrinter.CreateDocumentPrinters (businessContext, entities, options, printingUnits);
+			var documentPrinter = EntityPrinters.AbstractPrinter.CreateDocumentPrinter (businessContext, entity, options, printingUnits);
 
-			if (documentPrinters.Count () == 0 || printingUnits.Count == 0)
+			if (documentPrinter == null || printingUnits.Count == 0)
 			{
 				return null;
 			}
-
-			var coreData = businessContext.Data;
 
 			//	Prépare toutes les pages à imprimer, pour toutes les entités.
 			//	On crée autant de sections que de pages, soit une section par page.
 			var sections = new List<SectionToPrint> ();
-			var printingUnitList = PrinterApplicationSettings.GetPrintingUnitList (coreData.Host);
 			var pageTypes = VerbosePageType.GetAll ();
 
-			for (int entityRank = 0; entityRank < entities.Count (); entityRank++)
+			int documentPrinterRank = 0;
+			foreach (var pair in printingUnits.ContentPair)
 			{
-				var entity = entities.ElementAt (entityRank);
+				var pageType         = pair.Key;
+				var printingUnitName = pair.Value;
 
-				int documentPrinterRank = 0;
-				foreach (var documentPrinter in documentPrinters)
+				var printingUnit = Common.GetPrintingUnit (businessContext.Data.Host, printingUnitName);
+
+				if (printingUnit != null && printingUnit.PageTypes.Contains (pageType))
 				{
-					foreach (var pair in printingUnits.ContentPair)
+					//	Fabrique le dictionnaire des options à partir des options de base et
+					//	des options définies avec l'unité d'impression.
+					var customOptions = new OptionsDictionary ();
+					customOptions.Merge (options);                         // options les moins prioritaires
+					customOptions.Merge (printingUnit.OptionsDictionary);  // options les plus prioritaires
+
+					documentPrinter.SetPrintingUnit (printingUnit, customOptions, PreviewMode.Print);
+					documentPrinter.BuildSections ();
+
+					if (!documentPrinter.IsEmpty (pageType))
 					{
-						var pageType         = pair.Key;
-						var printingUnitName = pair.Value;
+						var jobName = pageTypes.Where (x => x.Type == pageType).Select (x => x.Job).FirstOrDefault ();
 
-						PrintingUnit printingUnit = printingUnitList.Where (p => p.LogicalName == printingUnitName).FirstOrDefault ();
-
-						if (printingUnit != null &&
-							Common.InsidePageSize (printingUnit.PhysicalPaperSize, documentPrinter.MinimalPageSize, documentPrinter.MaximalPageSize))
+						for (int copy = 0; copy < printingUnit.Copies; copy++)
 						{
-							//	Fabrique le dictionnaire des options à partir des options de base et
-							//	des options définies avec l'unité d'impression.
-							var customOptions = new OptionsDictionary ();
-							customOptions.Merge (options);                         // options les moins prioritaires
-							customOptions.Merge (printingUnit.OptionsDictionary);  // options les plus prioritaires
-
-							documentPrinter.SetOptionsDictionary (customOptions);
-							documentPrinter.SetPrintingUnit (printingUnit);
-							documentPrinter.PreviewMode = PreviewMode.Print;
-							documentPrinter.BuildSections ();
-
-							if (!documentPrinter.IsEmpty (pageType))
+							var physicalPages = documentPrinter.GetPhysicalPages (pageType);
+							foreach (var physicalPage in physicalPages)
 							{
-								var jobName = pageTypes.Where (x => x.Type == pageType).Select (x => x.Job).FirstOrDefault ();
+								string p = (documentPrinterRank+1).ToString ();
+								string d = (documentPrinter.GetDocumentRank (physicalPage)+1).ToString ();
+								string c = (copy+1).ToString ();
+								string internalJobName = string.Concat (jobName, ".", p, ".", d, ".", c);
 
-								for (int copy = 0; copy < printingUnit.Copies; copy++)
-								{
-									var physicalPages = documentPrinter.GetPhysicalPages (pageType);
-									foreach (var physicalPage in physicalPages)
-									{
-										string e = (entityRank+1).ToString ();
-										string p = (documentPrinterRank+1).ToString ();
-										string d = (documentPrinter.GetDocumentRank (physicalPage)+1).ToString ();
-										string c = (copy+1).ToString ();
-										string internalJobName = string.Concat (jobName, ".", e, ".", p, ".", d, ".", c);
-
-										sections.Add (new SectionToPrint (printingUnit, internalJobName, physicalPage, entityRank, documentPrinter));
-									}
-								}
+								sections.Add (new SectionToPrint (printingUnit, internalJobName, physicalPage, documentPrinter, documentPrinter.RequiredPageSize, customOptions));
 							}
-
-							documentPrinterRank++;
 						}
 					}
+
+					documentPrinterRank++;
 				}
 			}
 
@@ -259,7 +291,6 @@ namespace Epsitec.Cresus.Core.Print
 
 				if (p1.InternalJobName          == p2.InternalJobName &&
 					p1.PrintingUnit             == p2.PrintingUnit    &&
-					p1.EntityRank               == p2.EntityRank      &&
 					p1.FirstPage + p1.PageCount == p2.FirstPage)
 				{
 					p1.PageCount += p2.PageCount;  // ajoute les pages de p2 à p1
@@ -305,32 +336,37 @@ namespace Epsitec.Cresus.Core.Print
 			index = 0;
 			foreach (var job in jobs)
 			{
-				job.JobFullName = string.Concat (job.Sections[0].EntityPrinter.JobName, ".", (index+1).ToString ());
+				job.JobFullName = string.Concat (job.Sections[0].DocumentPrinter.JobName, ".", (index+1).ToString ());
 				index++;
 			}
 
-			return SerializationEngine.SerializeJobs (jobs);
+			return jobs;
 		}
-
-
+		
+		
 		#region Dictionary getters
-		private static OptionsDictionary GetOptions(AbstractEntity entity)
+		private static OptionsDictionary GetOptions(IBusinessContext businessContext, AbstractEntity entity)
 		{
 			//	Retourne les options à utiliser pour l'entité.
 			var result = new OptionsDictionary ();
 
-			if (entity is DocumentMetadataEntity)
+			var categories = PrintEngine.GetDocumentCategoryEntities(businessContext, entity);
+			if (categories != null)
 			{
-				var metadata = entity as DocumentMetadataEntity;
-
-				foreach (var documentOptions in metadata.DocumentCategory.DocumentOptions)
+				foreach (var category in categories)
 				{
-					var option = documentOptions.GetOptions ();
-					result.Merge (option);
+					if (category.DocumentOptions != null)
+					{
+						foreach (var documentOptions in category.DocumentOptions)
+						{
+							var option = documentOptions.GetOptions ();
+							result.Merge (option);
+						}
+					}
 				}
 			}
 
-#if true
+#if false
 			if (result.Count == 0)  // TODO: Hack à supprimer dès que possible !
 			{
 				result = OptionsDictionary.GetDefault ();
@@ -341,19 +377,24 @@ namespace Epsitec.Cresus.Core.Print
 			return result;
 		}
 
-		private static PrintingUnitsDictionary GetPrintingUnits(AbstractEntity entity)
+		private static PrintingUnitsDictionary GetPrintingUnits(IBusinessContext businessContext, AbstractEntity entity)
 		{
 			//	Retourne les unités d'impression à utiliser pour l'entité.
 			var result = new PrintingUnitsDictionary ();
 
-			if (entity is DocumentMetadataEntity)
+			var categories = PrintEngine.GetDocumentCategoryEntities (businessContext, entity);
+			if (categories != null)
 			{
-				var metadata = entity as DocumentMetadataEntity;
-
-				foreach (var documentOptions in metadata.DocumentCategory.DocumentPrintingUnits)
+				foreach (var category in categories)
 				{
-					var printingUnit = documentOptions.GetPrintingUnits ();
-					result.Merge (printingUnit);
+					if (category.DocumentOptions != null)
+					{
+						foreach (var printingUnits in category.DocumentPrintingUnits)
+						{
+							var printingUnit = printingUnits.GetPrintingUnits ();
+							result.Merge (printingUnit);
+						}
+					}
 				}
 			}
 
@@ -369,14 +410,67 @@ namespace Epsitec.Cresus.Core.Print
 
 			return result;
 		}
+
+		private static IEnumerable<DocumentCategoryEntity> GetDocumentCategoryEntities(IBusinessContext businessContext, AbstractEntity entity)
+		{
+			//	Retourne les entités de catégorie de document pour une entité représentant un document quelconque.
+			if (entity is DocumentMetadataEntity)
+			{
+				var metadata = entity as DocumentMetadataEntity;
+
+				if (metadata.DocumentCategory != null)
+				{
+					var list = new List<DocumentCategoryEntity> ();
+					list.Add (metadata.DocumentCategory);
+					return list;
+				}
+			}
+
+			DocumentType type = DocumentType.Unknown;
+
+#if false
+			if (entity is DocumentMetadataEntity)  // TODO: Hack à supprimer dès que possible !
+			{
+				type = DocumentType.Invoice;
+			}
+#endif
+
+			// TODO: DR
+#if false
+			if (entity is ArticleDefinitionEntity)
+			{
+				type = DocumentType.ArticleDefinitionSummary;
+			}
+
+			if (entity is RelationEntity)
+			{
+				type = DocumentType.RelationSummary;
+			}
+
+			if (entity is MailContactEntity)
+			{
+				type = DocumentType.MailContactLabel;
+			}
+#endif
+
+			if (type != DocumentType.Unknown)
+			{
+
+				DocumentCategoryEntity example = new DocumentCategoryEntity ();
+				example.DocumentType = type;
+
+				businessContext.DataContext.GetByExample<DocumentCategoryEntity> (example);
+			}
+
+			return null;
+		}
 		#endregion
 
 
 		public static Image GetImage(IBusinessContext businessContext, string id)
 		{
 			//	Retrouve l'image dans la base de données, à partir de son identificateur (ImageBlobEntity.Code).
-
-			ImageDataStore store = businessContext.Data.GetComponent<ImageDataStore> ();
+			var store = businessContext.Data.GetComponent<ImageDataStore> ();
 
 			if (store == null)
 			{

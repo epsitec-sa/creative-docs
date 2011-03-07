@@ -26,23 +26,16 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 {
 	public abstract class AbstractPrinter
 	{
-		protected AbstractPrinter(IBusinessContext businessContext, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
+		protected AbstractPrinter(IBusinessContext businessContext, AbstractEntity entity, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
 		{
 			this.businessContext   = businessContext;
 			this.coreData          = this.businessContext.Data;
-			this.entities          = entities;
+			this.entity            = entity;
 			this.options           = options;
 			this.printingUnits     = printingUnits;
 
 			this.documentContainer = new DocumentContainer ();
 			this.tableColumns      = new Dictionary<TableColumnKeys, TableColumn> ();
-		}
-
-
-		public void SetOptionsDictionary(OptionsDictionary options)
-		{
-			//	Impose d'autres options.
-			this.options = options;
 		}
 
 
@@ -54,28 +47,6 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 			}
 		}
 
-
-		/// <summary>
-		/// Taille minimale possible pour ce document.
-		/// </summary>
-		public virtual Size MinimalPageSize
-		{
-			get
-			{
-				return Size.Zero;
-			}
-		}
-
-		/// <summary>
-		/// Taille maximale possible pour ce document.
-		/// </summary>
-		public virtual Size MaximalPageSize
-		{
-			get
-			{
-				return Size.Zero;
-			}
-		}
 
 		/// <summary>
 		/// Taille préférée pour ce document.
@@ -159,49 +130,52 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 		public PreviewMode PreviewMode
 		{
 			//	Permet de savoir si on effectue une impression réelle ou un aperçu avant impression.
-			get;
-			set;
+			get
+			{
+				return this.previewMode;
+			}
 		}
 
 
 		/// <summary>
 		/// Spécifie l'unité d'impression, afin de déterminer la taille des pages à produire.
+		/// Cet appel est nécessaire avant d'appeler BuildSections !
 		/// </summary>
-		public virtual void SetPrintingUnit(PrintingUnit printingUnit)
+		public void SetPrintingUnit(PrintingUnit printingUnit, OptionsDictionary options, PreviewMode mode)
 		{
+			System.Diagnostics.Debug.Assert (options != null);
+			this.options = options;
+			this.previewMode = mode;
+
 			Size size;
 
-			if (printingUnit == null)
+			if (this.previewMode == Print.PreviewMode.ContinuousPreview)
 			{
+				System.Diagnostics.Debug.Assert (printingUnit == null);
 				size = this.PreferredPageSize;
 			}
 			else
 			{
+				System.Diagnostics.Debug.Assert (printingUnit != null);
 				size = printingUnit.PhysicalPaperSize;
-			}
 
-			if (this.HasOption (DocumentOption.Orientation, "Landscape"))
-			{
-				size = new Size (size.Height, size.Width);
-			}
+				if (this.HasOption (DocumentOption.Orientation, "Portrait"))
+				{
+					double w = System.Math.Min (size.Width, size.Height);
+					double h = System.Math.Max (size.Width, size.Height);
+					size = new Size (w, h);
+				}
 
-			if (!Common.InsidePageSize (size, this.MinimalPageSize, this.MaximalPageSize))
-			{
-				size = this.PreferredPageSize;
+				if (this.HasOption (DocumentOption.Orientation, "Landscape"))
+				{
+					double w = System.Math.Max (size.Width, size.Height);
+					double h = System.Math.Min (size.Width, size.Height);
+					size = new Size (w, h);
+				}
 			}
 
 			this.requiredPageSize = size;
 		}
-
-		/// <summary>
-		/// A utiliser à la place de SetPrintingUnit.
-		/// </summary>
-		public void SetContinuousPreviewMode()
-		{
-			this.PreviewMode = PreviewMode.ContinuousPreview;
-			this.requiredPageSize = this.PreferredPageSize;
-		}
-
 
 		public virtual void BuildSections()
 		{
@@ -250,9 +224,10 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 
 		protected static FormattedText GetDefaultLocation()
 		{
-			throw new System.NotImplementedException ();
-#if false
 			//	Retourne la ville de l'entreprise, pour imprimer par exemple "Yverdon-les-Bains, le 30 septembre 2010".
+			// TODO: DR
+			return "tralala";
+#if false
 			var m = CoreProgram.Application.BusinessSettings.Company.Person.Contacts.Where (x => x is MailContactEntity).First () as MailContactEntity;
 
 			if (m == null)
@@ -267,54 +242,69 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 		}
 
 
-		public static IEnumerable<AbstractPrinter> CreateDocumentPrinters(IBusinessContext businessContext, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits, bool all = true)
+		public static AbstractPrinter CreateDocumentPrinter(IBusinessContext businessContext, AbstractEntity entity, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
 		{
-			//	Crée les *Printer adaptés à un type d'entité. Le premier est toujours le principal.
-			//	Si all = false, on ne crée que le principal.
+			//	Crée le XxxPrinter adapté à un type d'entité.
 			//	Quel bonheur de ne pas utiliser la réflexion, c'est tellement plus simple !
 			//	Il ne faut pas perdre de vue qu'il n'y a pas de lien direct entre un type d'entité et
-			//	un *Printer. En particulier, il peut y avoir plusieurs *Printer pour une même entité.
-			var list = new List<AbstractPrinter> ();
-
-			if (entities != null && entities.Count () != 0)
+			//	un XxxPrinter. En particulier, il peut y avoir plusieurs XxxPrinter pour une même entité.
+			var factory = AbstractPrinter.FindPrinterFactory (entity, options);
+	
+			if (entity is DocumentMetadataEntity)
 			{
-				var first = entities.FirstOrDefault ();
-				var factory = AbstractPrinter.FindPrinterFactory (first, options);
-
-				if (factory != null)
-				{
-					var printer = factory.CreatePrinter (businessContext, entities, options, printingUnits);
-					list.Add (printer);
-				}
-#if false
-				if (first is DocumentMetadataEntity)
-				{
-					list.Add (new DocumentMetadataPrinter (coreData, entities, options, printingUnits));
-
-					if (all)
-					{
-						var metadata = first as DocumentMetadataEntity;
-
-						if (metadata.BusinessDocument != null && metadata.BusinessDocument.BillToMailContact != null)
-						{
-							list.Add (new DocumentMetadataMailContactPrinter (coreData, entities, options, printingUnits));
-						}
-					}
-				}
-
-				if (first is RelationEntity)
-				{
-					list.Add (new RelationPrinter (coreData, entities, options, printingUnits));
-				}
-#endif
+				return factory.CreatePrinter (businessContext, entity, options, printingUnits);
+				//?return new DocumentMetadataPrinter (businessContext, entity, options, printingUnits);
 			}
 
-			return list;
+			// TODO: DR
+#if false
+			if (entity is MailContactEntity)
+			{
+				return new MailContactPrinter (businessContext, entity, options, printingUnits);
+			}
+
+			if (entity is RelationEntity)
+			{
+				return new RelationPrinter (businessContext, entity, options, printingUnits);
+			}
+#endif
+
+			return null;
 		}
 
 		private static IEntityPrinterFactory FindPrinterFactory(AbstractEntity entity, OptionsDictionary options)
 		{
 			return EntityPrinterFactoryResolver.Resolve ().FirstOrDefault (x => x.CanPrint (entity, options));
+		}
+
+
+		#region Options reader
+		protected double FontSize
+		{
+			get
+			{
+				return this.GetOptionValue (DocumentOption.FontSize, 3);
+			}
+		}
+
+		protected double GetOptionValue(DocumentOption option, double defautlValue = double.NaN)
+		{
+			//	Retourne la valeur d'une option de type distance.
+			if (this.options != null)
+			{
+				var s = this.options.GetValue (option);
+
+				if (!string.IsNullOrEmpty (s))
+				{
+					double value;
+					if (double.TryParse (s, out value))
+					{
+						return value;
+					}
+				}
+			}
+
+			return defautlValue;
 		}
 
 		protected bool HasOption(DocumentOption option)
@@ -335,6 +325,7 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 				return this.options.GetValue (option) == value;
 			}
 		}
+		#endregion
 
 
 		private static readonly Font						specimenFont = Font.GetFont ("Arial", "Bold");
@@ -342,12 +333,13 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 
 		protected readonly IBusinessContext					businessContext;
 		protected readonly CoreData							coreData;
-		protected readonly IEnumerable<AbstractEntity>		entities;
+		protected readonly AbstractEntity					entity;
 		private readonly PrintingUnitsDictionary			printingUnits;
 		private OptionsDictionary							options;
 		protected readonly DocumentContainer				documentContainer;
 		protected readonly Dictionary<TableColumnKeys, TableColumn>	tableColumns;
 		protected Size										requiredPageSize;
 		private int											currentPage;
+		private PreviewMode									previewMode;
 	}
 }

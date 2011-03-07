@@ -24,11 +24,10 @@ namespace Epsitec.Cresus.Core.Print.Controllers
 
 			var options = OptionsDictionary.GetDefault ();
 
-			var documentPrinters = AbstractPrinter.CreateDocumentPrinters (businessContext, entities, options, null, all: false);
-			this.documentPrinter = documentPrinters.FirstOrDefault ();
+			this.documentPrinter = AbstractPrinter.CreateDocumentPrinter (businessContext, metadoc, options, null);
 			System.Diagnostics.Debug.Assert (this.documentPrinter != null);
 
-			this.documentPrinter.SetContinuousPreviewMode ();
+			this.documentPrinter.SetPrintingUnit (null, options, PreviewMode.ContinuousPreview);
 			this.documentPrinter.BuildSections ();
 
 			this.zoom = 1;
@@ -174,20 +173,20 @@ namespace Epsitec.Cresus.Core.Print.Controllers
 
 		private void UpdateScroller()
 		{
-			if ((this.previewer == null) ||
-				(this.previewer.DocumentPrinter == null))
+			if (this.previewer == null ||
+				this.previewer.DocumentPrinter == null)
 			{
 				return;
 			}
 
 			var min = this.previewer.MinValue;
 			var max = this.previewer.MaxValue;
-			var vrt = this.previewer.VisibleRangeRatio;
+			var vat = this.previewer.VisibleRangeRatio;
 			var val = this.previewer.CurrentValue;
 			var std = this.previewer.ScreenToDocumentScale;
 
 			//	Met à jour l'ascenseur horizontal.
-			if (System.Math.Abs (vrt.Width-1) < 0.00001)
+			if (System.Math.Abs (vat.Width-1) < 0.00001)
 			{
 				this.hScroller.Enable = false;
 
@@ -202,13 +201,13 @@ namespace Epsitec.Cresus.Core.Print.Controllers
 				this.hScroller.MinValue          = (decimal) min.X;
 				this.hScroller.MaxValue          = (decimal) max.X;
 				this.hScroller.Value             = (decimal) val.X;
-				this.hScroller.VisibleRangeRatio = (decimal) vrt.Width;
+				this.hScroller.VisibleRangeRatio = (decimal) vat.Width;
 				this.hScroller.SmallChange       = (decimal) (10.0*std);
 				this.hScroller.LargeChange       = (decimal) (this.previewer.Client.Bounds.Width*0.5*std);
 			}
 
 			//	Met à jour l'ascenseur vertical.
-			if (System.Math.Abs (vrt.Height-1) < 0.00001)
+			if (System.Math.Abs (vat.Height-1) < 0.00001)
 			{
 				this.vScroller.Enable = false;
 
@@ -223,7 +222,7 @@ namespace Epsitec.Cresus.Core.Print.Controllers
 				this.vScroller.MinValue          = (decimal) min.Y;
 				this.vScroller.MaxValue          = (decimal) max.Y;
 				this.vScroller.Value             = (decimal) val.Y;
-				this.vScroller.VisibleRangeRatio = (decimal) vrt.Height;
+				this.vScroller.VisibleRangeRatio = (decimal) vat.Height;
 				this.vScroller.SmallChange       = (decimal) (10.0*std);
 				this.vScroller.LargeChange       = (decimal) (this.previewer.Client.Bounds.Height*0.5*std);
 			}

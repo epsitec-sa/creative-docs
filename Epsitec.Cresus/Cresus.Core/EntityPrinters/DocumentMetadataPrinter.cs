@@ -29,10 +29,9 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 {
 	public class DocumentMetadataPrinter : AbstractPrinter
 	{
-		private DocumentMetadataPrinter(IBusinessContext businessContext, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
-			: base (businessContext, entities, options, printingUnits)
+		private DocumentMetadataPrinter(IBusinessContext businessContext, AbstractEntity entity, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
+			: base (businessContext, entity, options, printingUnits)
 		{
-			System.Diagnostics.Debug.Assert (entities.Count () == 1);
 		}
 
 		public override string JobName
@@ -43,22 +42,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-
-		public override Size MinimalPageSize
-		{
-			get
-			{
-				return new Size (210, 297);  // A4
-			}
-		}
-
-		public override Size MaximalPageSize
-		{
-			get
-			{
-				return new Size (210, 297);  // A4
-			}
-		}
 
 		public override Size PreferredPageSize
 		{
@@ -76,15 +59,20 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 			get
 			{
+				double leftMargin   = this.GetOptionValue (DocumentOption.LeftMargin,   20);
+				double rightMargin  = this.GetOptionValue (DocumentOption.RightMargin,  20);
+				double topMargin    = this.GetOptionValue (DocumentOption.TopMargin,    20);
+				double bottomMargin = this.GetOptionValue (DocumentOption.BottomMargin, 20);
+
 				double h = this.IsDocumentWithoutPrice ? 0 : DocumentMetadataPrinter.reportHeight;
 
 				if (this.HasOption (DocumentOption.EsrPosition, "WithInside"))
 				{
-					return new Margins (20, 10, 20+h*2, h+DocumentMetadataPrinter.marginBeforeEsr+AbstractEsrBand.DefautlSize.Height);
+					return new Margins (leftMargin, rightMargin, topMargin+h*2, h+DocumentMetadataPrinter.marginBeforeEsr+AbstractEsrBand.DefautlSize.Height);
 				}
 				else
 				{
-					return new Margins (20, 10, 20+h*2, h+20);
+					return new Margins (leftMargin, rightMargin, topMargin+h*2, h+bottomMargin);
 				}
 			}
 		}
@@ -162,7 +150,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			if (this.DocumentType == Business.DocumentType.Invoice)
 			{
-				if (this.HasOption (DocumentOption.EsrPosition, "Without"))
+				if (this.HasOption (DocumentOption.EsrPosition, "Without") || this.PreviewMode == Print.PreviewMode.ContinuousPreview)
 				{
 					if (this.Entity.BillingDetails.Count != 0)
 					{
@@ -245,6 +233,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 		private void BuildHeader(BillingDetailEntity billingDetails, ArticleGroupEntity group=null)
 		{
+			double leftMargin = this.GetOptionValue (DocumentOption.LeftMargin, 20);
+
 			//	Ajoute l'en-tête de la facture dans le document.
 			if (this.HasOption (DocumentOption.HeaderLogo))
 			{
@@ -258,7 +248,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					var imageBand = new ImageBand ();
 					imageBand.Load (this.coreData, settings.CompanyLogo);
 					imageBand.BuildSections (80, 40, 40, 40);
-					this.documentContainer.AddAbsolute (imageBand, new Rectangle (20, this.RequiredPageSize.Height-10-40, 80, 40));
+					this.documentContainer.AddAbsolute (imageBand, new Rectangle (leftMargin, this.RequiredPageSize.Height-10-40, 80, 40));
 
 					if (settings.Company.IsNotNull ())
 					{
@@ -272,8 +262,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 								var textBand = new TextBand ();
 								textBand.Text = FormattedText.Concat ("<b>", legalPerson.Complement, "</b>");
 								textBand.Font = font;
-								textBand.FontSize = 5.0;
-								this.documentContainer.AddAbsolute (textBand, new Rectangle (20, this.RequiredPageSize.Height-10-imageBand.GetSectionHeight (0)-10, 80, 10));
+								textBand.FontSize = this.FontSize*1.6;
+								this.documentContainer.AddAbsolute (textBand, new Rectangle (leftMargin, this.RequiredPageSize.Height-10-imageBand.GetSectionHeight (0)-10, 80, 10));
 							}
 						}
 					}
@@ -284,7 +274,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			var mailContactBand = new TextBand ();
 			mailContactBand.Text = this.Entity.BillToMailContact.GetSummary ();
 			mailContactBand.Font = font;
-			mailContactBand.FontSize = fontSize;
+			mailContactBand.FontSize = this.FontSize;
 			this.documentContainer.AddAbsolute (mailContactBand, new Rectangle (120, this.RequiredPageSize.Height-57, 80, 25));
 
 			//	Génère le groupe "concerne".
@@ -320,28 +310,28 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					band.RowsCount = 1;
 					band.CellBorder = cellBorder;
 					band.Font = font;
-					band.FontSize = fontSize;
+					band.FontSize = this.FontSize;
 					band.CellMargins = margins;
 					band.SetRelativeColumWidth (0, 15);
 					band.SetRelativeColumWidth (1, 80);
-					band.SetText (0, 0, title);
-					band.SetText (1, 0, text);
+					band.SetText (0, 0, title, this.FontSize);
+					band.SetText (1, 0, text,  this.FontSize);
 					band.SetBackground (1, 0, color);
-					this.documentContainer.AddAbsolute (band, new Rectangle (20, this.RequiredPageSize.Height-70, 100-5, 12));
+					this.documentContainer.AddAbsolute (band, new Rectangle (leftMargin, this.RequiredPageSize.Height-70, 100-5, 12));
 				}
 			}
 
 			var titleBand = new TextBand ();
 			titleBand.Text = InvoiceDocumentHelper.GetTitle (this.Metadata, this.Entity, billingDetails);
 			titleBand.Font = font;
-			titleBand.FontSize = 5.0;
-			this.documentContainer.AddAbsolute (titleBand, new Rectangle (20, this.RequiredPageSize.Height-82, 90, 10));
+			titleBand.FontSize = this.FontSize*1.6;
+			this.documentContainer.AddAbsolute (titleBand, new Rectangle (leftMargin, this.RequiredPageSize.Height-82, 90, 10));
 
 			string date = Misc.GetDateShortDescription (this.Entity.BillingDate);
 			var dateBand = new TextBand ();
 			dateBand.Text = FormattedText.Concat (DocumentMetadataPrinter.GetDefaultLocation (), ", le ", date);
 			dateBand.Font = font;
-			dateBand.FontSize = fontSize;
+			dateBand.FontSize = this.FontSize;
 			this.documentContainer.AddAbsolute (dateBand, new Rectangle (120, this.RequiredPageSize.Height-82, 80, 10-2));
 		}
 
@@ -489,7 +479,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			{
 				if (column.Visible)
 				{
-					this.table.SetText (column.Rank, row, column.Title);
+					this.table.SetText (column.Rank, row, column.Title, this.FontSize);
 				}
 			}
 
@@ -738,7 +728,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 			//	Retourne le nombre de lignes à utiliser dans le tableau.
 			var text = FormattedText.Concat ("<b>", line.Text, "</b>");
-			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, text);
+			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, text, this.FontSize);
 
 			return 1;
 		}
@@ -774,11 +764,11 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 				if (quantity.QuantityType == Business.ArticleQuantityType.Delayed)
 				{
-					q2 = q2.AppendLine (Misc.FormatUnit (quantity.Quantity, quantity.Unit.Code));
+					q2.AppendLine (Misc.FormatUnit (quantity.Quantity, quantity.Unit.Code));
 
 					if (quantity.ExpectedDate.HasValue)
 					{
-						date = date.AppendLine(quantity.ExpectedDate.Value.ToString ());
+						date.AppendLine (quantity.ExpectedDate.Value.ToString ());
 					}
 				}
 			}
@@ -787,43 +777,43 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			if (q1 != null)
 			{
-				table.SetText (this.tableColumns[TableColumnKeys.Quantity].Rank, row, q1);
+				table.SetText (this.tableColumns[TableColumnKeys.Quantity].Rank, row, q1, this.FontSize);
 			}
 
 			if (q2 != null)
 			{
-				table.SetText (this.tableColumns[TableColumnKeys.DelayedQuantity].Rank, row, q2);
+				table.SetText (this.tableColumns[TableColumnKeys.DelayedQuantity].Rank, row, q2, this.FontSize);
 			}
 
 			if (date != null)
 			{
-				table.SetText (this.tableColumns[TableColumnKeys.DelayedDate].Rank, row, date);
+				table.SetText (this.tableColumns[TableColumnKeys.DelayedDate].Rank, row, date, this.FontSize);
 			}
 
-			table.SetText (this.tableColumns[TableColumnKeys.ArticleId         ].Rank, row, ArticleDocumentItemHelper.GetArticleId (line));
-			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, description);
-			table.SetText (this.tableColumns[TableColumnKeys.UnitPrice         ].Rank, row, Misc.PriceToString (line.PrimaryUnitPriceBeforeTax));
+			table.SetText (this.tableColumns[TableColumnKeys.ArticleId         ].Rank, row, ArticleDocumentItemHelper.GetArticleId (line),       this.FontSize);
+			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, description,                                         this.FontSize);
+			table.SetText (this.tableColumns[TableColumnKeys.UnitPrice         ].Rank, row, Misc.PriceToString (line.PrimaryUnitPriceBeforeTax), this.FontSize);
 
 			if (line.ResultingLinePriceBeforeTax.HasValue && line.ResultingLineTax1.HasValue)
 			{
 				decimal beforeTax = line.ResultingLinePriceBeforeTax.Value;
 				decimal tax =       line.ResultingLineTax1.Value;
 
-				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, row, Misc.PriceToString (beforeTax));
-				table.SetText (this.tableColumns[TableColumnKeys.Vat      ].Rank, row, Misc.PriceToString (tax));
-				table.SetText (this.tableColumns[TableColumnKeys.Total    ].Rank, row, Misc.PriceToString (beforeTax+tax));
+				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, row, Misc.PriceToString (beforeTax),     this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.Vat      ].Rank, row, Misc.PriceToString (tax),           this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.Total    ].Rank, row, Misc.PriceToString (beforeTax+tax), this.FontSize);
 			}
 
 			if (line.Discounts.Count != 0)
 			{
 				if (line.Discounts[0].DiscountRate.HasValue)
 				{
-					table.SetText (this.tableColumns[TableColumnKeys.Discount].Rank, row, Misc.PercentToString (line.Discounts[0].DiscountRate.Value));
+					table.SetText (this.tableColumns[TableColumnKeys.Discount].Rank, row, Misc.PercentToString (line.Discounts[0].DiscountRate.Value), this.FontSize);
 				}
 
 				if (line.Discounts[0].Value.HasValue)
 				{
-					table.SetText (this.tableColumns[TableColumnKeys.Discount].Rank, row, Misc.PriceToString (line.Discounts[0].Value.Value));
+					table.SetText (this.tableColumns[TableColumnKeys.Discount].Rank, row, Misc.PriceToString (line.Discounts[0].Value.Value), this.FontSize);
 				}
 			}
 
@@ -846,7 +836,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			//	Colonne "Désignation":
 			if (discount == null)
 			{
-				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, line.TextForResultingPrice);
+				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, line.TextForResultingPrice, this.FontSize);
 			}
 			else
 			{
@@ -861,8 +851,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				}
 
 				FormattedText text = FormattedText.Concat (line.TextForPrimaryPrice, FormattedText.HtmlBreak, rabais);
-				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row+0, text);
-				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row+1, line.TextForResultingPrice);
+				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row+0, text,                       this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row+1, line.TextForResultingPrice, this.FontSize);
 			}
 
 			//	Colonne "Prix HT":
@@ -871,7 +861,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				decimal v1 = line.ResultingPriceBeforeTax.GetValueOrDefault (0);
 				string p1 = Misc.PriceToString (v1);
 
-				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, row, p1);
+				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, row, p1, this.FontSize);
 			}
 			else
 			{
@@ -882,8 +872,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				string p2 = Misc.PriceToString (v3 - v1);
 				string p3 = Misc.PriceToString (v3);
 
-				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, row+0, FormattedText.Concat (p1, FormattedText.HtmlBreak, p2));
-				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, row+1, p3);
+				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, row+0, FormattedText.Concat (p1, FormattedText.HtmlBreak, p2), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, row+1, p3,                                                     this.FontSize);
 			}
 
 			//	Colonne "TVA":
@@ -892,7 +882,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				decimal v1 = line.ResultingTax.GetValueOrDefault (0);
 				string p1 = Misc.PriceToString (v1);
 
-				table.SetText (this.tableColumns[TableColumnKeys.Vat].Rank, row, p1);
+				table.SetText (this.tableColumns[TableColumnKeys.Vat].Rank, row, p1, this.FontSize);
 			}
 			else
 			{
@@ -903,8 +893,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				string p2 = Misc.PriceToString (v3 - v1);
 				string p3 = Misc.PriceToString (v3);
 
-				table.SetText (this.tableColumns[TableColumnKeys.Vat].Rank, row+0, FormattedText.Concat (p1, FormattedText.HtmlBreak, p2));
-				table.SetText (this.tableColumns[TableColumnKeys.Vat].Rank, row+1, p3);
+				table.SetText (this.tableColumns[TableColumnKeys.Vat].Rank, row+0, FormattedText.Concat (p1, FormattedText.HtmlBreak, p2), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.Vat].Rank, row+1, p3,                                                     this.FontSize);
 			}
 
 			//	Colonne "Prix TTC":
@@ -913,7 +903,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				decimal v1 = line.ResultingPriceBeforeTax.GetValueOrDefault (0) + line.ResultingTax.GetValueOrDefault (0);
 				string p1 = Misc.PriceToString (v1);
 
-				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row, p1);
+				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row, p1, this.FontSize);
 			}
 			else
 			{
@@ -924,8 +914,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				string p2 = Misc.PriceToString (v3 - v1);
 				string p3 = Misc.PriceToString (v3);
 
-				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row+0, FormattedText.Concat (p1, FormattedText.HtmlBreak, p2));
-				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row+1, p3);
+				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row+0, FormattedText.Concat (p1, FormattedText.HtmlBreak, p2), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row+1, p3,                                                     this.FontSize);
 			}
 
 			if (discount == null)
@@ -956,8 +946,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			FormattedText text = FormattedText.Concat (line.Text, " (", Misc.PriceToString (line.BaseAmount), ")");
 
-			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, text);
-			table.SetText (this.tableColumns[TableColumnKeys.LinePrice         ].Rank, row, Misc.PriceToString (line.ResultingTax));
+			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, text,                                   this.FontSize);
+			table.SetText (this.tableColumns[TableColumnKeys.LinePrice         ].Rank, row, Misc.PriceToString (line.ResultingTax), this.FontSize);
 
 			table.SetCellBorder (row, this.GetCellBorder (bottomLess: true, topLess: true));
 
@@ -995,23 +985,23 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			if (line.PriceBeforeTax.HasValue)  // ligne de total HT ?
 			{
-				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, line.TextForPrice);
-				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, row, Misc.PriceToString (line.PriceBeforeTax));
+				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, line.TextForPrice,                        this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.LinePrice         ].Rank, row, Misc.PriceToString (line.PriceBeforeTax), this.FontSize);
 			}
 			else if (line.FixedPriceAfterTax.HasValue)
 			{
 				FormattedText text = FormattedText.Join (FormattedText.HtmlBreak, line.TextForPrice, line.TextForFixedPrice);
-				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, text);
+				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, text, this.FontSize);
 
 				FormattedText total = FormattedText.Concat ("<b>", Misc.PriceToString (line.PriceAfterTax), "</b><br/><b><i>", Misc.PriceToString (line.FixedPriceAfterTax), "</i></b>");
-				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row, total);
+				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row, total, this.FontSize);
 			}
 			else
 			{
-				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, line.TextForPrice);
+				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, line.TextForPrice, this.FontSize);
 
 				FormattedText total = FormattedText.Concat ("<b>", Misc.PriceToString (line.PriceAfterTax), "</b>");
-				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row, total);
+				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row, total, this.FontSize);
 			}
 
 			table.SetUnbreakableRow (row, true);
@@ -1075,6 +1065,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			{
 				var band = new TextBand ();
 				band.Text = conditions;
+				band.FontSize = this.FontSize;
 
 				this.documentContainer.AddFromTop (band, 0);
 			}
@@ -1092,12 +1083,12 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					table.RowsCount = 1;
 					table.CellBorder = CellBorder.Default;
 					table.Font = font;
-					table.FontSize = fontSize;
+					table.FontSize = this.FontSize;
 					table.CellMargins = new Margins (2);
 					table.SetRelativeColumWidth (0, 60);
 					table.SetRelativeColumWidth (1, 100);
-					table.SetText (0, 0, new FormattedText ("Matériel reçu en bonne et due forme"));
-					table.SetText (1, 0, new FormattedText ("Reçu le :<br/><br/>Par :<br/><br/>Signature :<br/><br/><br/>"));
+					table.SetText (0, 0, new FormattedText ("Matériel reçu en bonne et due forme"), this.FontSize);
+					table.SetText (1, 0, new FormattedText ("Reçu le :<br/><br/>Par :<br/><br/>Signature :<br/><br/><br/>"), this.FontSize);
 					table.SetUnbreakableRow (0, true);
 
 					this.documentContainer.AddToBottom (table, this.PageMargins.Bottom);
@@ -1111,12 +1102,12 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					table.RowsCount = 1;
 					table.CellBorder = CellBorder.Default;
 					table.Font = font;
-					table.FontSize = fontSize;
+					table.FontSize = this.FontSize;
 					table.CellMargins = new Margins (2);
 					table.SetRelativeColumWidth (0, 60);
 					table.SetRelativeColumWidth (1, 100);
-					table.SetText (0, 0, new FormattedText ("Matériel produit en totalité"));
-					table.SetText (1, 0, new FormattedText ("Terminé le :<br/><br/>Par :<br/><br/>Signature :<br/><br/><br/>"));
+					table.SetText (0, 0, new FormattedText ("Matériel produit en totalité"), this.FontSize);
+					table.SetText (1, 0, new FormattedText ("Terminé le :<br/><br/>Par :<br/><br/>Signature :<br/><br/><br/>"), this.FontSize);
 					table.SetUnbreakableRow (0, true);
 
 					this.documentContainer.AddToBottom (table, this.PageMargins.Bottom);
@@ -1130,12 +1121,12 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					table.RowsCount = 1;
 					table.CellBorder = CellBorder.Default;
 					table.Font = font;
-					table.FontSize = fontSize;
+					table.FontSize = this.FontSize;
 					table.CellMargins = new Margins (2);
 					table.SetRelativeColumWidth (0, 60);
 					table.SetRelativeColumWidth (1, 100);
-					table.SetText (0, 0, new FormattedText ("Bon pour commande"));
-					table.SetText (1, 0, new FormattedText ("Lieu et date :<br/><br/>Signature :<br/><br/><br/>"));
+					table.SetText (0, 0, new FormattedText ("Bon pour commande"), this.FontSize);
+					table.SetText (1, 0, new FormattedText ("Lieu et date :<br/><br/>Signature :<br/><br/><br/>"), this.FontSize);
 					table.SetUnbreakableRow (0, true);
 
 					this.documentContainer.AddToBottom (table, this.PageMargins.Bottom);
@@ -1159,13 +1150,13 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				leftHeader.Text = InvoiceDocumentHelper.GetTitle (this.Metadata, this.Entity, billingDetails);
 				leftHeader.Alignment = ContentAlignment.BottomLeft;
 				leftHeader.Font = font;
-				leftHeader.FontSize = 4.0;
+				leftHeader.FontSize = this.FontSize*1.3;
 
 				var rightHeader = new TextBand ();
 				rightHeader.Text = FormattedText.Concat ("page ", (page-firstPage+1).ToString ());
 				rightHeader.Alignment = ContentAlignment.BottomRight;
 				rightHeader.Font = font;
-				rightHeader.FontSize = fontSize;
+				rightHeader.FontSize = this.FontSize;
 
 				this.documentContainer.AddAbsolute (leftHeader, leftBounds);
 				this.documentContainer.AddAbsolute (rightHeader, rightBounds);
@@ -1201,18 +1192,18 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					if (column.Visible)
 					{
 						table.SetRelativeColumWidth (column.Rank, this.table.GetRelativeColumnWidth (column.Rank));
-						table.SetText (column.Rank, 0, column.Title);
+						table.SetText (column.Rank, 0, column.Title, this.FontSize);
 					}
 				}
 
 				//	Génère une deuxième ligne avec les montants à reporter.
-				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, 1, "Report");
+				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, 1, "Report", this.FontSize);
 
 				decimal sumPT, sumTva, sumTot;
 				this.ComputeBottomReports (relativePage-1, out sumPT, out sumTva, out sumTot);
-				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, 1, Misc.PriceToString (sumPT));
-				table.SetText (this.tableColumns[TableColumnKeys.Vat      ].Rank, 1, Misc.PriceToString (sumTva));
-				table.SetText (this.tableColumns[TableColumnKeys.Total    ].Rank, 1, Misc.PriceToString (sumTot));
+				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, 1, Misc.PriceToString (sumPT),  this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.Vat      ].Rank, 1, Misc.PriceToString (sumTva), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.Total    ].Rank, 1, Misc.PriceToString (sumTot), this.FontSize);
 
 				this.InitializeRowAlignment (table, 0);
 				this.InitializeRowAlignment (table, 1);
@@ -1257,13 +1248,13 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					}
 				}
 
-				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, 0, "à reporter");
+				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, 0, "à reporter", this.FontSize);
 
 				decimal sumPT, sumTva, sumTot;
 				this.ComputeBottomReports (relativePage, out sumPT, out sumTva, out sumTot);
-				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, 0, Misc.PriceToString (sumPT));
-				table.SetText (this.tableColumns[TableColumnKeys.Vat      ].Rank, 0, Misc.PriceToString (sumTva));
-				table.SetText (this.tableColumns[TableColumnKeys.Total    ].Rank, 0, Misc.PriceToString (sumTot));
+				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, 0, Misc.PriceToString (sumPT),  this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.Vat      ].Rank, 0, Misc.PriceToString (sumTva), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.Total    ].Rank, 0, Misc.PriceToString (sumTot), this.FontSize);
 
 				this.InitializeRowAlignment (table, 0);
 
@@ -1525,30 +1516,12 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 			get
 			{
-				return this.entities.FirstOrDefault () as DocumentMetadataEntity;
+				return this.entity as DocumentMetadataEntity;
 			}
-		}
-
-		private class Factory : IEntityPrinterFactory
-		{
-			#region IEntityPrinterFactory Members
-
-			bool IEntityPrinterFactory.CanPrint(AbstractEntity entity, OptionsDictionary options)
-			{
-				return entity is DocumentMetadataEntity;
-			}
-
-			AbstractPrinter IEntityPrinterFactory.CreatePrinter(IBusinessContext businessContext, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
-			{
-				return new DocumentMetadataPrinter (businessContext, entities, options, printingUnits);
-			}
-
-			#endregion
 		}
 
 
 		private static readonly Font		font = Font.GetFont ("Arial", "Regular");
-		private static readonly double		fontSize = 3.0;
 		private static readonly double		reportHeight = 7.0;
 		private static readonly double		marginBeforeEsr = 10;
 

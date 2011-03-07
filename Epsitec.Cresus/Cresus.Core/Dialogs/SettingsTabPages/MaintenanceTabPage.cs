@@ -44,15 +44,35 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			{
 				Parent = parent,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (50),
+				Margins = new Margins (10),
 			};
+
+			this.CreateButton
+			(
+				frame,
+				"Sauvegarder",
+				"Sauvegarde toute la base de données dans un fichier unique sur le serveur (backup1).",
+				false,
+				this.ActionBackup
+			);
+
+			this.CreateButton
+			(
+				frame,
+				"Restaurer",
+				"Restaure toute la base de données, à partir du fichier de sauvegarde unique sur le serveur (backup1).",
+				true,
+				this.ActionRestore
+			);
+
+			// ---------------
 
 			this.CreateButton
 			(
 				frame,
 				"Exporter tout",
 				"Exporte l'ensemble de la base de données dans un fichier.",
-				2, 
+				false,
 				this.ActionExport
 			);
 
@@ -61,16 +81,18 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				frame,
 				"Importer tout",
 				"Importe l'ensemble de la base de données à partir d'un fichier, en écrasant tout.",
-				12,
+				true,
 				this.ActionImport
 			);
+
+			// ---------------
 
 			this.CreateButton
 			(
 				frame,
 				"Créer",
 				"Crée une nouvelle base de données vide, en important les données modèles.",
-				2,
+				false,
 				this.ActionCreate
 			);
 
@@ -79,35 +101,33 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				frame,
 				"Mettre à jour",
 				"Met à jour toutes les données modèles, en les réimportant.",
-				12,
+				false,
 				this.ActionUpdate
 			);
 		}
 
-		private void CreateButton(FrameBox parent, string buttonText, string description, double bottomMargin, System.Action action)
+		private void CreateButton(FrameBox parent, string title, string description, bool bottomSpace, System.Action action)
 		{
-			var frame = new FrameBox
+			double margin = 10;
+
+			var button = new ConfirmationButton
 			{
 				Parent = parent,
+				Text = ConfirmationButton.FormatContent (title, description),
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, bottomMargin),
+				Margins = new Margins (0, 0, 0, bottomSpace ? margin : 0),
 			};
 
-			var button = new Button
+			if (bottomSpace)
 			{
-				Parent = frame,
-				Text = buttonText,
-				PreferredWidth = 100,
-				Dock = DockStyle.Left,
-			};
-
-			var text = new StaticText
-			{
-				Parent = frame,
-				Text = description,
-				Dock = DockStyle.Fill,
-				Margins = new Margins (20, 0, 0, 0),
-			};
+				new Separator
+				{
+					Parent = parent,
+					Dock = DockStyle.Top,
+					PreferredHeight = 1,
+					Margins = new Margins (0, 0, 0, margin),
+				};
+			}
 
 			button.Clicked += delegate
 			{
@@ -116,6 +136,34 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
+
+		private void ActionBackup()
+		{
+			// TODO: Remplacer "backup1" par un fichier à choix ?
+			try
+			{
+				CoreData.BackupDatabase ("backup1", CoreData.GetDatabaseAccess ());
+			}
+			catch (System.Exception ex)
+			{
+				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, ex.Message).OpenDialog ();
+			}
+		}
+
+		private void ActionRestore()
+		{
+			this.Container.Data.Dispose ();
+
+			// TODO: Remplacer "backup1" par un fichier à choix ?
+			try
+			{
+				CoreData.RestoreDatabase ("backup1", CoreData.GetDatabaseAccess ());
+			}
+			catch (System.Exception ex)
+			{
+				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, ex.Message).OpenDialog ();
+			}
+		}
 
 		private void ActionExport()
 		{

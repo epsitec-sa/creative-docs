@@ -16,6 +16,8 @@ namespace Epsitec.Cresus.Core.Print.Serialization
 			this.parentSection = parentSection;
 			this.pageRank      = pageRank;
 			this.xRoot         = xRoot;
+
+			this.IsPrintable = true;
 		}
 
 
@@ -33,6 +35,12 @@ namespace Epsitec.Cresus.Core.Print.Serialization
 			{
 				return this.pageRank;
 			}
+		}
+
+		public bool IsPrintable
+		{
+			get;
+			set;
 		}
 
 		public XElement XRoot

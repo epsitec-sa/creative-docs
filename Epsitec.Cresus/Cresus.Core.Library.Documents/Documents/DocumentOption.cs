@@ -18,7 +18,8 @@ namespace Epsitec.Cresus.Core.Documents
 		HeaderLogo,			// bool
 		Specimen,			// bool
 
-		Margins,			// distance
+		FontSize,			// dimension: taille de la police
+
 		LeftMargin,			// distance
 		RightMargin,		// distance
 		TopMargin,			// distance

@@ -153,6 +153,23 @@ namespace Epsitec.Cresus.Core.Print.Bands
 		}
 
 
+		public void SetText(int column, int row, string value, double fontSize)
+		{
+			this.SetText (column, row, FormattedText.FromSimpleText (value), fontSize);
+		}
+
+		public void SetText(int column, int row, FormattedText value, double fontSize)
+		{
+			TextBand textBand = this.GetTextBand (column, row);
+
+			if (textBand != null)
+			{
+				textBand.Text = value;
+				textBand.FontSize = fontSize;
+			}
+		}
+
+
 		public Font GetFont(int column, int row)
 		{
 			TextBand textBand = this.GetTextBand (column, row);

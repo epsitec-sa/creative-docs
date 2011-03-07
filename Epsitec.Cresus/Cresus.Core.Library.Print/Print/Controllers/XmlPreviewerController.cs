@@ -32,12 +32,12 @@ namespace Epsitec.Cresus.Core.Print.Controllers
 		}
 
 
-		public XmlPreviewerController(IBusinessContext businessContext, List<DeserializedJob> jobs)
+		public XmlPreviewerController(IBusinessContext businessContext, List<DeserializedJob> jobs, bool showCheckButtons)
 		{
-			this.businessContext = businessContext;
-			this.coreData = this.businessContext.Data;
-			this.jobs = jobs;
-			this.pages = Print.Common.GetDeserializedPages (this.jobs).ToList ();
+			this.businessContext  = businessContext;
+			this.jobs             = jobs;
+			this.pages            = Print.Common.GetDeserializedPages (this.jobs).ToList ();
+			this.showCheckButtons = showCheckButtons;
 
 			this.currentZoom = 1;
 
@@ -70,6 +70,25 @@ namespace Epsitec.Cresus.Core.Print.Controllers
 
 			//	PagesToolbarBox.
 			this.pagesToolbarBox.PreferredHeight = 24;
+
+			if (this.showCheckButtons)
+			{
+				var button = new Button
+				{
+					Parent = this.pagesToolbarBox,
+					FormattedText = TextFormatter.FormatText ("Ø").ApplyFontSize (12),
+					PreferredWidth = 24,
+					Dock = DockStyle.Left,
+					Margins = new Margins (0, 2, 0, 0),
+				};
+
+				button.Clicked += delegate
+				{
+					this.UnprintAll ();
+				};
+
+				ToolTip.Default.SetToolTip (button, "Décoche toutes les pages à imprimer");
+			}
 
 			{
 				this.groupsToolbarBox = Library.UI.Toolkit.CreateMiniToolbar (this.pagesToolbarBox, 24);
@@ -215,7 +234,7 @@ namespace Epsitec.Cresus.Core.Print.Controllers
 					break;
 				}
 
-				var preview = new Widgets.XmlPrintedPagePreviewer (this.businessContext)
+				var preview = new Widgets.XmlPrintedPagePreviewer (this.businessContext, this.showCheckButtons)
 				{
 					Parent = this.previewFrame.Viewport,
 					Page = this.pages[pageRank],
@@ -383,10 +402,21 @@ namespace Epsitec.Cresus.Core.Print.Controllers
 		}
 
 
+		private void UnprintAll()
+		{
+			foreach (var page in this.pages)
+			{
+				page.IsPrintable = false;
+			}
+
+			this.UpdatePreview ();
+		}
+
+
 		private readonly IBusinessContext						businessContext;
-		private readonly CoreData								coreData;
 		private readonly List<DeserializedJob>					jobs;
 		private readonly List<Widgets.XmlPrintedPagePreviewer>	pagePreviewers;
+		private readonly bool									showCheckButtons;
 
 		private List<DeserializedPage>							pages;
 

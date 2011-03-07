@@ -20,6 +20,11 @@ namespace Epsitec.Cresus.Core.Print.Serialization
 		public static string SerializeJobs(List<JobToPrint> jobs)
 		{
 			//	Retourne la chaîne xmlSource qui sérialise une liste de jobs d'impression.
+			if (jobs == null)
+			{
+				return null;
+			}
+
 			System.DateTime now = System.DateTime.Now.ToUniversalTime ();
 			string timeStamp = string.Concat (now.ToShortDateString (), " ", now.ToShortTimeString (), " UTC");
 
@@ -49,8 +54,8 @@ namespace Epsitec.Cresus.Core.Print.Serialization
 						xSection.Add (new XAttribute ("printer-tray",     section.PrintingUnit.PhysicalPrinterTray));
 						xSection.Add (new XAttribute ("printer-x-offset", section.PrintingUnit.XOffset));
 						xSection.Add (new XAttribute ("printer-y-offset", section.PrintingUnit.YOffset));
-						xSection.Add (new XAttribute ("printer-width",    section.EntityPrinter.RequiredPageSize.Width));
-						xSection.Add (new XAttribute ("printer-height",   section.EntityPrinter.RequiredPageSize.Height));
+						xSection.Add (new XAttribute ("printer-width",    section.PageSize.Width));
+						xSection.Add (new XAttribute ("printer-height",   section.PageSize.Height));
 
 						for (int page = section.FirstPage; page < section.FirstPage+section.PageCount; page++)
 						{
@@ -58,12 +63,11 @@ namespace Epsitec.Cresus.Core.Print.Serialization
 							xPage.Add (new XAttribute ("rank", page));
 
 							var port = new XmlPort (xPage);
-							section.EntityPrinter.PreviewMode = PreviewMode.Print;
-							section.EntityPrinter.CurrentPage = page;
-							section.EntityPrinter.SetPrintingUnit (section.PrintingUnit);
-							section.EntityPrinter.BuildSections ();
-							section.EntityPrinter.PrintBackgroundCurrentPage (port);
-							section.EntityPrinter.PrintForegroundCurrentPage (port);
+							section.DocumentPrinter.CurrentPage = page;
+							section.DocumentPrinter.SetPrintingUnit (section.PrintingUnit, section.Options, PreviewMode.Print);
+							section.DocumentPrinter.BuildSections ();
+							section.DocumentPrinter.PrintBackgroundCurrentPage (port);
+							section.DocumentPrinter.PrintForegroundCurrentPage (port);
 
 							xSection.Add (xPage);
 						}

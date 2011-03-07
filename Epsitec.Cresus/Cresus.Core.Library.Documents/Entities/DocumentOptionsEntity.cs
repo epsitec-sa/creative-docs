@@ -78,7 +78,8 @@ namespace Epsitec.Cresus.Core.Entities
 						}
 					}
 
-					if (option.Type == DocumentOptionValueType.Distance)
+					if (option.Type == DocumentOptionValueType.Distance ||
+						option.Type == DocumentOptionValueType.Size)
 					{
 						value = string.Concat (value, " mm");
 					}

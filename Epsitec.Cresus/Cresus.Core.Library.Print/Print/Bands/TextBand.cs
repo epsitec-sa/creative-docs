@@ -202,6 +202,12 @@ namespace Epsitec.Cresus.Core.Print.Bands
 				{
 					int lineCount = i-line;
 					height -= this.heights[i];
+
+					if (height == 0)
+					{
+						return true;  // comme si tout est casé !
+					}
+
 					this.sectionsInfo.Add (new SectionInfo (line, lineCount, height));
 
 					line += lineCount;

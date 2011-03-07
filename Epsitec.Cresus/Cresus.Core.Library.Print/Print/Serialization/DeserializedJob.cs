@@ -46,6 +46,30 @@ namespace Epsitec.Cresus.Core.Print.Serialization
 		}
 
 
+		public int PrintablePagesCount
+		{
+			get
+			{
+				int count = 0;
+
+				foreach (var section in this.sections)
+				{
+					count += section.PrintablePagesCount;
+				}
+
+				return count;
+			}
+		}
+
+		public void RemoveUnprintablePages()
+		{
+			foreach (var section in this.sections)
+			{
+				section.RemoveUnprintablePages ();
+			}
+		}
+
+
 		private readonly List<DeserializedSection>	sections;
 
 		private string								jobFullName;

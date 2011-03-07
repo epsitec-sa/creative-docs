@@ -86,9 +86,23 @@ namespace Epsitec.Cresus.Core.Documents
 
 		public void Merge(OptionsDictionary src)
 		{
-			foreach (var pair in src.ContentPair)
+			if (src != null)
 			{
-				this.Add (pair.Key, pair.Value);
+				foreach (var pair in src.ContentPair)
+				{
+					this.Add (pair.Key, pair.Value);
+				}
+			}
+		}
+
+		public void Extract(OptionsDictionary src)
+		{
+			if (src != null)
+			{
+				foreach (var pair in src.ContentPair)
+				{
+					this.Remove (pair.Key);
+				}
 			}
 		}
 

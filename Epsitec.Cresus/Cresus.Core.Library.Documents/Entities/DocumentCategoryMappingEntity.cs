@@ -13,12 +13,31 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Name);
+			return this.GetPrintableEntityName ();
 		}
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.Name);
+			return this.GetPrintableEntityName ();
+		}
+
+		public FormattedText GetPrintableEntityName()
+		{
+			// TODO: DR
+			return "coucou";
+#if false
+			var printableEntities = Business.Enumerations.GetAllPrintableEntities ();
+
+			var t = printableEntities.Where (x => x.Key == this.PrintableEntity).FirstOrDefault ();
+			if (t == null)
+			{
+				return TextFormatter.FormatText ("(inconnu)").ApplyItalic ();
+			}
+			else
+			{
+				return t.Values[0];
+			}
+#endif
 		}
 
 		public override EntityStatus GetEntityStatus()

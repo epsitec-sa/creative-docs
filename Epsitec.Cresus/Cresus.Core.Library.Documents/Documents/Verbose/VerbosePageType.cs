@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 			list.Add (new VerbosePageType (PageType.Following, "Spec",  "Pages suivantes",    "Pour les pages suivantes"));
 
 			//	Ajoute l'unité d'impression spécifique pour les BV.
-			list.Add (new VerbosePageType (PageType.Esr, "Spec", "BV", "Pour le BV", Business.DocumentType.Invoice));
+			list.Add (new VerbosePageType (PageType.Esr, "Spec", "BV seul", "Pour le BV seul", Business.DocumentType.Invoice));
 
 			//	Ajoute l'unité d'impression spécifique pour les étiquettes.
 			list.Add (new VerbosePageType (PageType.Label, "Label", "Etiquette", "Pour l'étiquette"));

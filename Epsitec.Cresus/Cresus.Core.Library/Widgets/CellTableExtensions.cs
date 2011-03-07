@@ -67,6 +67,15 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+		public static void UpdateRow(this CellTable table, int row, params Color[] backgroundColors)
+		{
+			//	Met à jour la couleur de fond d'une ligne d'une table.
+			for (int column = 0; column < backgroundColors.Count (); column++)
+			{
+				table[column, row].BackColor = backgroundColors[column];
+			}
+		}
+
 		public static StaticText GetStaticText(this CellTable table, int row, int column)
 		{
 			if (row < table.Rows && column < table.Columns)

@@ -29,11 +29,11 @@ namespace Epsitec.Cresus.Core.Print
 				return true;
 			}
 
-			if ((printerUnitFunction == PageType.Single    && pageType == PageType.Single   ) ||
-				(printerUnitFunction == PageType.First     && pageType == PageType.First    ) ||
-				(printerUnitFunction == PageType.Following && pageType == PageType.Following) ||
-				(printerUnitFunction == PageType.Esr       && pageType == PageType.Esr      ) ||
-				(printerUnitFunction == PageType.Label     && pageType == PageType.Label    ))
+			if (printerUnitFunction == PageType.Single    && pageType == PageType.Single    ||
+				printerUnitFunction == PageType.First     && pageType == PageType.First     ||
+				printerUnitFunction == PageType.Following && pageType == PageType.Following ||
+				printerUnitFunction == PageType.Esr       && pageType == PageType.Esr       ||
+				printerUnitFunction == PageType.Label     && pageType == PageType.Label     )
 			{
 				return true;
 			}

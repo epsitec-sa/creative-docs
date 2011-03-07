@@ -28,8 +28,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 {
 	public class RelationPrinter : AbstractPrinter
 	{
-		private RelationPrinter(IBusinessContext businessContext, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
-			: base (businessContext, entities, options, printingUnits)
+		private RelationPrinter(IBusinessContext businessContext, AbstractEntity entity, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
+			: base (businessContext, entity, options, printingUnits)
 		{
 		}
 
@@ -42,27 +42,24 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
-		public override Size MinimalPageSize
-		{
-			get
-			{
-				return new Size (210, 297);  // A4
-			}
-		}
-
-		public override Size MaximalPageSize
-		{
-			get
-			{
-				return new Size (210, 297);  // A4
-			}
-		}
-
 		public override Size PreferredPageSize
 		{
 			get
 			{
 				return new Size (210, 297);  // A4
+			}
+		}
+
+		protected override Margins PageMargins
+		{
+			get
+			{
+				double leftMargin   = this.GetOptionValue (DocumentOption.LeftMargin,   20);
+				double rightMargin  = this.GetOptionValue (DocumentOption.RightMargin,  20);
+				double topMargin    = this.GetOptionValue (DocumentOption.TopMargin,    20);
+				double bottomMargin = this.GetOptionValue (DocumentOption.BottomMargin, 20);
+
+				return new Margins (leftMargin, rightMargin, topMargin, bottomMargin);
 			}
 		}
 
@@ -124,7 +121,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			var band = new TextBand ();
 			band.Text = TextFormatter.FormatText ("<b>", text, "</b>");
-			band.FontSize = 6.0;
+			band.FontSize = this.FontSize*2.0;
 
 			this.documentContainer.AddFromTop (band, 5.0);
 		}
@@ -148,7 +145,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			var band = new TextBand ();
 			band.Text = text;
-			band.FontSize = 4.0;
+			band.FontSize = this.FontSize*1.2;
 
 			this.documentContainer.AddFromTop (band, 5.0);
 		}
@@ -179,25 +176,28 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			var title = new TextBand ();
 			title.Text = TextFormatter.FormatText ("Adresses").ApplyBold ();
-			title.FontSize = 4.5;
+			title.FontSize = this.FontSize*1.5;
 			this.documentContainer.AddFromTop (title, 1.0);
 
 			var table = new TableBand ();
 			table.ColumnsCount = 5;
 			table.RowsCount = 1+count;
+			table.CellBorder = this.GetCellBorder ();
+			table.CellMargins = new Margins (this.CellMargin);
+			table.SetCellBorder (0, this.GetCellBorder (bottomBold: true));
 
 			table.SetRelativeColumWidth (0, 1.5);
 			table.SetRelativeColumWidth (1, 2.0);
-			table.SetRelativeColumWidth (2, 0.3);
+			table.SetRelativeColumWidth (2, 0.4);
 			table.SetRelativeColumWidth (3, 1.0);
 			table.SetRelativeColumWidth (4, 0.8);
 
 			int index = 0;
-			table.SetText (0, index, TextFormatter.FormatText ("Rôles").ApplyBold ());
-			table.SetText (1, index, TextFormatter.FormatText ("Adresse").ApplyBold ());
-			table.SetText (2, index, TextFormatter.FormatText ("NPA").ApplyBold ());
-			table.SetText (3, index, TextFormatter.FormatText ("Ville").ApplyBold ());
-			table.SetText (4, index, TextFormatter.FormatText ("Pays").ApplyBold ());
+			table.SetText (0, index, TextFormatter.FormatText ("Rôles"  ).ApplyBold (), this.FontSize);
+			table.SetText (1, index, TextFormatter.FormatText ("Adresse").ApplyBold (), this.FontSize);
+			table.SetText (2, index, TextFormatter.FormatText ("NPA"    ).ApplyBold (), this.FontSize);
+			table.SetText (3, index, TextFormatter.FormatText ("Ville"  ).ApplyBold (), this.FontSize);
+			table.SetText (4, index, TextFormatter.FormatText ("Pays"   ).ApplyBold (), this.FontSize);
 			index++;
 
 			foreach (var contact in this.Entity.Person.Contacts)
@@ -206,11 +206,11 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				{
 					var x = contact as MailContactEntity;
 
-					table.SetText (0, index, TextFormatter.FormatText (string.Join (", ", x.ContactGroups.Select (role => role.Name))));
-					table.SetText (1, index, TextFormatter.FormatText (x.LegalPerson.Name, "\n", x.LegalPerson.Complement, "\n", x.Complement, "\n", x.Address.Street.StreetName, "\n", x.Address.Street.Complement, "\n", x.Address.PostBox.Number, "\n", x.Address.Location.Country.CountryCode, "~-", x.Address.Location.PostalCode, x.Address.Location.Name));
-					table.SetText (2, index, x.Address.Location.PostalCode);
-					table.SetText (3, index, x.Address.Location.Name);
-					table.SetText (4, index, x.Address.Location.Country.Name);
+					table.SetText (0, index, TextFormatter.FormatText (string.Join (", ", x.ContactGroups.Select (role => role.Name))), this.FontSize);
+					table.SetText (1, index, TextFormatter.FormatText (x.LegalPerson.Name, "\n", x.LegalPerson.Complement, "\n", x.Complement, "\n", x.Address.Street.StreetName, "\n", x.Address.Street.Complement, "\n", x.Address.PostBox.Number, "\n", x.Address.Location.Country.CountryCode, "~-", x.Address.Location.PostalCode, x.Address.Location.Name), this.FontSize);
+					table.SetText (2, index, x.Address.Location.PostalCode, this.FontSize);
+					table.SetText (3, index, x.Address.Location.Name, this.FontSize);
+					table.SetText (4, index, x.Address.Location.Country.Name, this.FontSize);
 					index++;
 				}
 			}
@@ -238,21 +238,24 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			var title = new TextBand ();
 			title.Text = TextFormatter.FormatText ("Téléphones").ApplyBold ();
-			title.FontSize = 4.5;
+			title.FontSize = this.FontSize*1.5;
 			this.documentContainer.AddFromTop (title, 1.0);
 
 			var table = new TableBand ();
 			table.ColumnsCount = 3;
 			table.RowsCount = 1+count;
+			table.CellBorder = this.GetCellBorder ();
+			table.CellMargins = new Margins (this.CellMargin);
+			table.SetCellBorder (0, this.GetCellBorder (bottomBold: true));
 
 			table.SetRelativeColumWidth (0, 1.5);
 			table.SetRelativeColumWidth (1, 1.5);
 			table.SetRelativeColumWidth (2, 2.0+0.3+1.0+0.8-1.5);
 
 			int index = 0;
-			table.SetText (0, index, TextFormatter.FormatText ("Rôles").ApplyBold ());
-			table.SetText (1, index, TextFormatter.FormatText ("Type").ApplyBold ());
-			table.SetText (2, index, TextFormatter.FormatText ("Numéro").ApplyBold ());
+			table.SetText (0, index, TextFormatter.FormatText ("Rôles" ).ApplyBold (), this.FontSize);
+			table.SetText (1, index, TextFormatter.FormatText ("Type"  ).ApplyBold (), this.FontSize);
+			table.SetText (2, index, TextFormatter.FormatText ("Numéro").ApplyBold (), this.FontSize);
 			index++;
 
 			foreach (var contact in this.Entity.Person.Contacts)
@@ -261,9 +264,9 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				{
 					var x = contact as TelecomContactEntity;
 
-					table.SetText (0, index, TextFormatter.FormatText (string.Join (", ", x.ContactGroups.Select (role => role.Name))));
-					table.SetText (1, index, TextFormatter.FormatText (x.TelecomType.Name));
-					table.SetText (2, index, TextFormatter.FormatText (x.Number));
+					table.SetText (0, index, TextFormatter.FormatText (string.Join (", ", x.ContactGroups.Select (role => role.Name))), this.FontSize);
+					table.SetText (1, index, TextFormatter.FormatText (x.TelecomType.Name), this.FontSize);
+					table.SetText (2, index, TextFormatter.FormatText (x.Number), this.FontSize);
 					index++;
 				}
 			}
@@ -291,19 +294,22 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			var title = new TextBand ();
 			title.Text = TextFormatter.FormatText ("Emails").ApplyBold ();
-			title.FontSize = 4.5;
+			title.FontSize = this.FontSize*1.5;
 			this.documentContainer.AddFromTop (title, 1.0);
 
 			var table = new TableBand ();
 			table.ColumnsCount = 2;
 			table.RowsCount = 1+count;
+			table.CellBorder = this.GetCellBorder ();
+			table.CellMargins = new Margins (this.CellMargin);
+			table.SetCellBorder (0, this.GetCellBorder (bottomBold: true));
 
 			table.SetRelativeColumWidth (0, 1.5);
 			table.SetRelativeColumWidth (1, 2.0+0.3+1.0+0.8);
 
 			int index = 0;
-			table.SetText (0, index, TextFormatter.FormatText ("Rôles").ApplyBold ());
-			table.SetText (1, index, TextFormatter.FormatText ("Adresses électroniques").ApplyBold ());
+			table.SetText (0, index, TextFormatter.FormatText ("Rôles"                 ).ApplyBold (), this.FontSize);
+			table.SetText (1, index, TextFormatter.FormatText ("Adresses électroniques").ApplyBold (), this.FontSize);
 			index++;
 
 			foreach (var contact in this.Entity.Person.Contacts)
@@ -312,8 +318,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				{
 					var x = contact as UriContactEntity;
 
-					table.SetText (0, index, TextFormatter.FormatText (string.Join (", ", x.ContactGroups.Select (role => role.Name))));
-					table.SetText (1, index, TextFormatter.FormatText (x.Uri));
+					table.SetText (0, index, TextFormatter.FormatText (string.Join (", ", x.ContactGroups.Select (role => role.Name))), this.FontSize);
+					table.SetText (1, index, TextFormatter.FormatText (x.Uri), this.FontSize);
 					index++;
 				}
 			}
@@ -323,31 +329,82 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
+		private double CellMargin
+		{
+			get
+			{
+				return this.IsWithFrame ? 1 : 2;
+			}
+		}
+
+		private CellBorder GetCellBorder(bool bottomBold = false, bool topBold = false, bool bottomLess = false, bool topLess = false)
+		{
+			//	Retourne les bordures à utiliser pour une ligne entière.
+			double leftWidth   = 0;
+			double rightWidth  = 0;
+			double bottomWidth = 0;
+			double topWidth    = 0;
+
+			//	Initialise pour le style choisi.
+			if (this.IsWithFrame)
+			{
+				leftWidth   = CellBorder.NormalWidth;
+				rightWidth  = CellBorder.NormalWidth;
+				bottomWidth = CellBorder.NormalWidth;
+				topWidth    = CellBorder.NormalWidth;
+			}
+			else if (this.IsWithLine)
+			{
+				bottomWidth = CellBorder.NormalWidth;
+			}
+
+			//	Ajoute ou enlève, selon les exceptions.
+			if (bottomBold)
+			{
+				bottomWidth = CellBorder.BoldWidth;
+			}
+
+			if (topBold)
+			{
+				topWidth = CellBorder.BoldWidth;
+			}
+
+			if (bottomLess)
+			{
+				bottomWidth = 0;
+			}
+
+			if (topLess)  // :-O
+			{
+				topWidth = 0;
+			}
+
+			return new CellBorder (leftWidth, rightWidth, bottomWidth, topWidth);
+		}
+
+		private bool IsWithLine
+		{
+			get
+			{
+				return this.HasOption (DocumentOption.LayoutFrame, "WithLine");
+			}
+		}
+
+		private bool IsWithFrame
+		{
+			get
+			{
+				return this.HasOption (DocumentOption.LayoutFrame, "WithFrame");
+			}
+		}
+
+
 		private RelationEntity Entity
 		{
 			get
 			{
-				return this.entities.FirstOrDefault () as RelationEntity;
+				return this.entity as RelationEntity;
 			}
 		}
-
-		private class Factory : IEntityPrinterFactory
-		{
-			#region IEntityPrinterFactory Members
-
-			bool IEntityPrinterFactory.CanPrint(AbstractEntity entity, OptionsDictionary options)
-			{
-				return entity is RelationEntity;
-			}
-
-			AbstractPrinter IEntityPrinterFactory.CreatePrinter(IBusinessContext businessContext, IEnumerable<AbstractEntity> entities, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
-			{
-				return new RelationPrinter (businessContext, entities, options, printingUnits);
-			}
-
-			#endregion
-		}
-
-		private static readonly double fontSize = 4;
 	}
 }

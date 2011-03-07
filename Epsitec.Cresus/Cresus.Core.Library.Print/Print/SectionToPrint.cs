@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
+using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Core.Documents;
 using Epsitec.Cresus.Core.Print.EntityPrinters;
 
@@ -17,15 +18,16 @@ namespace Epsitec.Cresus.Core.Print
 	/// </summary>
 	public class SectionToPrint
 	{
-		public SectionToPrint(PrintingUnit printingUnit, string job, int firstPage, int entityRank, AbstractPrinter entityPrinter)
+		public SectionToPrint(PrintingUnit printingUnit, string job, int firstPage, AbstractPrinter documentPrinter, Size pageSize, OptionsDictionary options)
 		{
 			//	Crée une section d'une page.
-			this.printingUnit  = printingUnit;
-			this.job           = job;
-			this.firstPage     = firstPage;
-			this.PageCount     = 1;
-			this.entityRank    = entityRank;
-			this.entityPrinter = entityPrinter;
+			this.printingUnit    = printingUnit;
+			this.job             = job;
+			this.firstPage       = firstPage;
+			this.PageCount       = 1;
+			this.documentPrinter = documentPrinter;
+			this.pageSize        = pageSize;
+			this.options         = options;
 
 			this.Enable = true;
 		}
@@ -67,19 +69,27 @@ namespace Epsitec.Cresus.Core.Print
 			set;
 		}
 
-		public int EntityRank
+		public Size PageSize
 		{
 			get
 			{
-				return this.entityRank;
+				return this.pageSize;
 			}
 		}
 
-		public AbstractPrinter EntityPrinter
+		public OptionsDictionary Options
 		{
 			get
 			{
-				return this.entityPrinter;
+				return this.options;
+			}
+		}
+
+		public AbstractPrinter DocumentPrinter
+		{
+			get
+			{
+				return this.documentPrinter;
 			}
 		}
 
@@ -108,7 +118,7 @@ namespace Epsitec.Cresus.Core.Print
 		public override string ToString()
 		{
 			// Pratique pour le debug.
-			return string.Format ("PrinterLogicalName={0}, PrinterPhysicalName={1}, Job={2}, FirstPage={3}, PageCount={4}, EntityRank={5}", this.printingUnit.LogicalName, this.printingUnit.PhysicalPrinterName, this.job, this.firstPage, this.PageCount, this.entityRank);
+			return string.Format ("PrinterLogicalName={0}, PrinterPhysicalName={1}, Job={2}, FirstPage={3}, PageCount={4}", this.printingUnit.LogicalName, this.printingUnit.PhysicalPrinterName, this.job, this.firstPage, this.PageCount);
 		}
 
 
@@ -144,7 +154,8 @@ namespace Epsitec.Cresus.Core.Print
 		private readonly PrintingUnit				printingUnit;
 		private readonly string						job;
 		private readonly int						firstPage;
-		private readonly int						entityRank;
-		private readonly AbstractPrinter			entityPrinter;
+		private readonly AbstractPrinter			documentPrinter;
+		private readonly Size						pageSize;
+		private readonly OptionsDictionary			options;
 	}
 }
