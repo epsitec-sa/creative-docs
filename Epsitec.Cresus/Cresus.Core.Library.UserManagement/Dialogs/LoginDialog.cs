@@ -501,15 +501,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Margins = new Margins (0, 0, 10, 0),
 			};
 
-			new StaticText
-			{
-				Parent = rightPart,
-				FormattedText = TextFormatter.FormatText ("<font size=\"16\">", text, "</font>"),
-				ContentAlignment = Common.Drawing.ContentAlignment.TopLeft,
-				PreferredHeight = 20,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 5),
-			};
+			var columnTitle = new StaticText (rightPart);
+			columnTitle.SetColumnTitle (text);
 
 			return new FrameBox
 			{

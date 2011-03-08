@@ -19,9 +19,21 @@ namespace Epsitec.Cresus.Core.Widgets
 	{
 		public static void SetColumnTitle(this StaticText staticText, string title)
 		{
+			staticText.Text = title;
 			staticText.PreferredHeight = 20;
 			staticText.Dock = DockStyle.Top;
 			staticText.FormattedText = TextFormatter.FormatText (title).ApplyFontSize (16);
+			staticText.ContentAlignment = ContentAlignment.TopLeft;
+			staticText.Margins = new Margins (0, 0, 0, 10);
+		}
+
+		public static void SetColumnTitle(this StaticText staticText, FormattedText title)
+		{
+			staticText.FormattedText = title;
+			staticText.PreferredHeight = 20;
+			staticText.Dock = DockStyle.Top;
+			staticText.FormattedText = TextFormatter.FormatText (title).ApplyFontSize (16);
+			staticText.ContentAlignment = ContentAlignment.TopLeft;
 			staticText.Margins = new Margins (0, 0, 0, 10);
 		}
 	}

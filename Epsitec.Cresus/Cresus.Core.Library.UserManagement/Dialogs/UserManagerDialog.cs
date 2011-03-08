@@ -123,14 +123,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 			};
 
 			//	Crée le panneau de gauche.
-			new StaticText
 			{
-				Parent = leftPane,
-				PreferredHeight = 20,
-				Dock = DockStyle.Top,
-				Text = "<font size=\"16\">Liste des comptes utilisateurs</font>",
-				Margins = new Margins (0, 0, 0, 10),
-			};
+				var columnTitle = new StaticText (leftPane);
+				columnTitle.SetColumnTitle ("Liste des comptes utilisateurs");
+			}
 
 			{
 				//	Crée la toolbar.
@@ -158,7 +154,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Dock = DockStyle.Left,
 				};
 
-				ToolTip.Default.SetToolTip (this.addButton,    "Crée un nouveau compte utilisateur");
+				ToolTip.Default.SetToolTip (this.addButton, "Crée un nouveau compte utilisateur");
 				ToolTip.Default.SetToolTip (this.removeButton, "Supprime le compte utilisateur sélectionné");
 			}
 
@@ -188,14 +184,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 
 			//	Crée le panneau de droite.
-			new StaticText
 			{
-				Parent = rightPane,
-				PreferredHeight = 20,
-				Dock = DockStyle.Top,
-				Text = "<font size=\"16\">Paramètres du compte sélectionné</font>",
-				Margins = new Margins (0, 0, 0, 10),
-			};
+				var columnTitle = new StaticText (rightPane);
+				columnTitle.SetColumnTitle ("Paramètres du compte sélectionné");
+			}
 
 			this.userBox = new FrameBox
 			{
@@ -339,7 +331,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					};
 
 					ToolTip.Default.SetToolTip (this.beginDateField, "Date de début (inclue)");
-					ToolTip.Default.SetToolTip (this.endDateField,   "Date de fin (inclue)");
+					ToolTip.Default.SetToolTip (this.endDateField, "Date de fin (inclue)");
 				}
 
 
