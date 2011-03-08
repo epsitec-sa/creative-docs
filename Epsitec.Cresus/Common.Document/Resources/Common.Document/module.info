@@ -2,6 +2,6 @@
 <ModuleInfo id="2" name="Common.Document" layer="s" textMode="String" namespace="Epsitec.Common.Document">
   <Versions>
     <Version id="2" build="47" date="2011-01-31T18:34:31.6865954Z" />
-    <Version id="1" build="5" date="2011-02-01T14:39:57.3538535Z" />
+    <Version id="1" build="8" date="2011-03-08T09:46:59.3968114Z" />
   </Versions>
 </ModuleInfo>

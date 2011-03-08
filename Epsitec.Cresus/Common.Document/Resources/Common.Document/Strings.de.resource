@@ -1436,107 +1436,56 @@
   <data id="K9">Grösse der Miniaturansichten</data>
   <data id="KB">Seite &lt;b&gt;{0}&lt;/b&gt;</data>
   <data id="K7">Grösse der Miniaturansichten</data>
-  <data id="KC">
-  </data>
-  <data id="KD">
-  </data>
-  <data id="KF">
-  </data>
-  <data id="KH">
-  </data>
-  <data id="KI">
-  </data>
-  <data id="KJ">
-  </data>
-  <data id="KK">
-  </data>
-  <data id="KL">
-  </data>
-  <data id="KM">
-  </data>
-  <data id="KN">
-  </data>
-  <data id="KO">
-  </data>
-  <data id="KP">
-  </data>
-  <data id="KQ">
-  </data>
-  <data id="KR">
-  </data>
-  <data id="KS">
-  </data>
-  <data id="KT">
-  </data>
-  <data id="KU">
-  </data>
-  <data id="KV">
-  </data>
-  <data id="K01">
-  </data>
-  <data id="K11">
-  </data>
-  <data id="K21">
-  </data>
-  <data id="K31">
-  </data>
-  <data id="K41">
-  </data>
-  <data id="K51">
-  </data>
-  <data id="K61">
-  </data>
-  <data id="K71">
-  </data>
-  <data id="K81">
-  </data>
-  <data id="K91">
-  </data>
-  <data id="KA1">
-  </data>
-  <data id="KB1">
-  </data>
-  <data id="KC1">
-  </data>
-  <data id="KD1">
-  </data>
-  <data id="KE1">
-  </data>
-  <data id="KF1">
-  </data>
-  <data id="KG1">
-  </data>
-  <data id="KH1">
-  </data>
-  <data id="KI1">
-  </data>
-  <data id="KJ1">
-  </data>
-  <data id="KL1">
-  </data>
-  <data id="KM1">
-  </data>
+  <data id="KC">Kein Rahmen</data>
+  <data id="KD">Rahmen ohne Schatten</data>
+  <data id="KF">Schatten ohne Rahmen</data>
+  <data id="KH">S</data>
+  <data id="KI">R</data>
+  <data id="KJ">B</data>
+  <data id="KK">Strich</data>
+  <data id="KL">Rand</data>
+  <data id="KM">Schattenbreite</data>
+  <data id="KN">Dicke des Rahmens</data>
+  <data id="KO">Dicke des Randes</data>
+  <data id="KP">Reichweite des Schattens</data>
+  <data id="KQ">Rahmen</data>
+  <data id="KR">Randfarbe</data>
+  <data id="KS">SF</data>
+  <data id="KT">Farbe des Hintergrunds</data>
+  <data id="KU">Hintergrundfarbe</data>
+  <data id="KV">Schattenfarbe</data>
+  <data id="K01">RF</data>
+  <data id="K11">HF</data>
+  <data id="K21">Farbe des Rahmens</data>
+  <data id="K31">Farbe des Hintergrunds</data>
+  <data id="K41">Verschiebung</data>
+  <data id="K51">Verschiebung</data>
+  <data id="K61">X</data>
+  <data id="K71">Y</data>
+  <data id="K81">Horizontale Verschiebung des Schattens (positiv = nach rechts)</data>
+  <data id="K91">Vertikale Verschiebung des Schattens (positiv = nach oben)</data>
+  <data id="KA1">Rahmen und Schatten</data>
+  <data id="KB1">Schattendehnung</data>
+  <data id="KC1">D</data>
+  <data id="KD1">Vergrösserung oder Verkleinerung des Schattens</data>
+  <data id="KE1">Kein Rahmen</data>
+  <data id="KF1">Schmaler Rahmen ohne Rand</data>
+  <data id="KG1">Schmaler Rahmen mit Halo</data>
+  <data id="KH1">Dicker Rahmen ohne Rand</data>
+  <data id="KI1">Rahmen mit Rand und Halo</data>
+  <data id="KJ1">Rahmen mit Rand und Schatten</data>
+  <data id="KL1">Kleiner Schatten</data>
+  <data id="KM1">Grosser Schatten</data>
   <data id="KS1">Angepasst</data>
-  <data id="KU1">
-  </data>
-  <data id="KV1">
-  </data>
-  <data id="K02">
-  </data>
-  <data id="K12">
-  </data>
-  <data id="K22">
-  </data>
-  <data id="K32">
-  </data>
-  <data id="K42">
-  </data>
-  <data id="K52">
-  </data>
-  <data id="K62">
-  </data>
-  <data id="K72">
-  </data>
-  <data id="K82">
-  </data>
+  <data id="KU1">Bild Zoom</data>
+  <data id="KV1">Bild so anpassen, dass die ganze Fläche benutzt wird</data>
+  <data id="K02">Bilddatei importieren</data>
+  <data id="K12">Bild so anpassen, dass es ganz sichtbar wird</data>
+  <data id="K22">Bild 90° nach links drehen</data>
+  <data id="K32">Konvexität</data>
+  <data id="K42">X</data>
+  <data id="K52">Konvexität (Wölbung) des Schattens</data>
+  <data id="K62">Konvexität</data>
+  <data id="K72">X</data>
+  <data id="K82">Konvexität (Wölbung) des Rahmens</data>
 </bundle>

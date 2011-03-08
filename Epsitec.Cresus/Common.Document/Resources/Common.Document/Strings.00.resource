@@ -1461,8 +1461,7 @@
   <data name="Panel.Frame.Tooltip.FrameColor" id="K21">Couleur du trait</data>
   <data name="Panel.Frame.Tooltip.BackgroundColor" id="K31">Couleur du fond</data>
   <data name="Panel.Frame.Long.ShadowOffsetX" id="K41">Décalage</data>
-  <data name="Panel.Frame.Long.ShadowOffsetY" id="K51">
-  </data>
+  <data name="Panel.Frame.Long.ShadowOffsetY" id="K51">Décalage</data>
   <data name="Panel.Frame.Short.ShadowOffsetX" id="K61">X</data>
   <data name="Panel.Frame.Short.ShadowOffsetY" id="K71">Y</data>
   <data name="Panel.Frame.Tooltip.ShadowOffsetX" id="K81">Décalage horizontal de l&amp;apos;ombre (à droite si positif)</data>

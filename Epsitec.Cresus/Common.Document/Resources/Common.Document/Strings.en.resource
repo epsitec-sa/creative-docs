@@ -1436,107 +1436,56 @@
   <data id="K9">Size of layer thumbnails</data>
   <data id="KB">Page &lt;b&gt;{0}&lt;/b&gt;</data>
   <data id="K7">Size of page thumbnails</data>
-  <data id="KC">
-  </data>
-  <data id="KD">
-  </data>
-  <data id="KF">
-  </data>
-  <data id="KH">
-  </data>
-  <data id="KI">
-  </data>
-  <data id="KJ">
-  </data>
-  <data id="KK">
-  </data>
-  <data id="KL">
-  </data>
-  <data id="KM">
-  </data>
-  <data id="KN">
-  </data>
-  <data id="KO">
-  </data>
-  <data id="KP">
-  </data>
-  <data id="KQ">
-  </data>
-  <data id="KR">
-  </data>
-  <data id="KS">
-  </data>
-  <data id="KT">
-  </data>
-  <data id="KU">
-  </data>
-  <data id="KV">
-  </data>
-  <data id="K01">
-  </data>
-  <data id="K11">
-  </data>
-  <data id="K21">
-  </data>
-  <data id="K31">
-  </data>
-  <data id="K41">
-  </data>
-  <data id="K51">
-  </data>
-  <data id="K61">
-  </data>
-  <data id="K71">
-  </data>
-  <data id="K81">
-  </data>
-  <data id="K91">
-  </data>
-  <data id="KA1">
-  </data>
-  <data id="KB1">
-  </data>
-  <data id="KC1">
-  </data>
-  <data id="KD1">
-  </data>
-  <data id="KE1">
-  </data>
-  <data id="KF1">
-  </data>
-  <data id="KG1">
-  </data>
-  <data id="KH1">
-  </data>
-  <data id="KI1">
-  </data>
-  <data id="KJ1">
-  </data>
-  <data id="KL1">
-  </data>
-  <data id="KM1">
-  </data>
+  <data id="KC">No frame</data>
+  <data id="KD">Frame only</data>
+  <data id="KF">Shadow only</data>
+  <data id="KH">FW</data>
+  <data id="KI">MW</data>
+  <data id="KJ">S</data>
+  <data id="KK">Frame width</data>
+  <data id="KL">Margin width</data>
+  <data id="KM">Shadow size</data>
+  <data id="KN">Frame width</data>
+  <data id="KO">Margin width</data>
+  <data id="KP">Shadow size</data>
+  <data id="KQ">Frame</data>
+  <data id="KR">Frame color</data>
+  <data id="KS">SC</data>
+  <data id="KT">Shadow color</data>
+  <data id="KU">Background color</data>
+  <data id="KV">Shadow color</data>
+  <data id="K01">FC</data>
+  <data id="K11">BC</data>
+  <data id="K21">Frame color</data>
+  <data id="K31">Background color</data>
+  <data id="K41">Offset</data>
+  <data id="K51">Offet</data>
+  <data id="K61">X</data>
+  <data id="K71">Y</data>
+  <data id="K81">Horizontal shadow offset (positive = move right)</data>
+  <data id="K91">Vertical shadow offset (positive = move up)</data>
+  <data id="KA1">Frame and shadow</data>
+  <data id="KB1">Inflation</data>
+  <data id="KC1">I</data>
+  <data id="KD1">Shadow inflation or deflation</data>
+  <data id="KE1">No frame</data>
+  <data id="KF1">Borderless frame</data>
+  <data id="KG1">Frame with thin border and halo</data>
+  <data id="KH1">Thick frame without border</data>
+  <data id="KI1">Frame with border and halo</data>
+  <data id="KJ1">Frame with border and shadow</data>
+  <data id="KL1">Small shadow</data>
+  <data id="KM1">Large shadow</data>
   <data id="KS1">Custom</data>
-  <data id="KU1">
-  </data>
-  <data id="KV1">
-  </data>
-  <data id="K02">
-  </data>
-  <data id="K12">
-  </data>
-  <data id="K22">
-  </data>
-  <data id="K32">
-  </data>
-  <data id="K42">
-  </data>
-  <data id="K52">
-  </data>
-  <data id="K62">
-  </data>
-  <data id="K72">
-  </data>
-  <data id="K82">
-  </data>
+  <data id="KU1">Image zoom</data>
+  <data id="KV1">Fit the image to fill the whole surface</data>
+  <data id="K02">Import an image file</data>
+  <data id="K12">Fit the image to make it fully visible</data>
+  <data id="K22">Rotate image 90° to the left (counter clockwise)</data>
+  <data id="K32">Convexity</data>
+  <data id="K42">X</data>
+  <data id="K52">Shadow convexity or concavity</data>
+  <data id="K62">Convexity</data>
+  <data id="K72">X</data>
+  <data id="K82">Margin convexity or concavity</data>
 </bundle>

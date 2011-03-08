@@ -12,6 +12,10 @@ namespace Epsitec.Common.Document
 		
 		public static class Commands
 		{
+			internal static void _Initialize()
+			{
+			}
+			
 			//	designer:cap/2001
 			public static readonly global::Epsitec.Common.Widgets.Command FontBold = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 1));
 			//	designer:cap/2008
@@ -24,14 +28,14 @@ namespace Epsitec.Common.Document
 			public static readonly global::Epsitec.Common.Widgets.Command FontSizePlus = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 6));
 			//	designer:cap/2005
 			public static readonly global::Epsitec.Common.Widgets.Command FontUnderline = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 5));
-			
-			internal static void _Initialize()
-			{
-			}
 		}
 		
 		public static class CommandIds
 		{
+			internal static void _Initialize()
+			{
+			}
+			
 			//	designer:cap/2001
 			public const long FontBold = 0x200000000001L;
 			//	designer:cap/2008
@@ -13053,6 +13057,7 @@ namespace Epsitec.Common.Document
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Common.Document");
 			Commands._Initialize ();
+			CommandIds._Initialize ();
 		}
 		
 		public static void Initialize()

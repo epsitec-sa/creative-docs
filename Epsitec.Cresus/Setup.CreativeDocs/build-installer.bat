@@ -35,10 +35,10 @@ rem -- of the line, using "(" and ")" as separators, and stripping the quotes th
 rem -- Then, tokenize once more by splitting at the "." and create a "3.1.0832" version
 rem -- number, which will be used in the output file name.
 
-for /f "tokens=2 delims=()" %%a in ('type Properties\AssemblyInfo.CrDocVer.cs ^| find "AssemblyVersion"') do set version=%%~a
+for /f "tokens=2 delims=()" %%a in ('type "Solution Items\AssemblyInfo.CrDocVer.cs" ^| find "AssemblyVersion"') do set version=%%~a
 for /f "tokens=1-3 delims=." %%a in ('echo %version%') do set version=%%a.%%b.%%c
 
-for /f "tokens=2 delims==" %%a in ('type X.Setup.CreativeDocs\X.Setup.CreativeDocs.vdproj ^| find """ProductVersion"""') do set setupversion=%%~a
+for /f "tokens=2 delims==" %%a in ('type Setup.CreativeDocs\Setup.CreativeDocs.vdproj ^| find """ProductVersion"""') do set setupversion=%%~a
 for /f "tokens=1-2 delims=:" %%a in ('echo %setupversion%') do set setupversion="%%b
 
 IF %setupversion%=="%version%" (
@@ -51,7 +51,7 @@ IF %setupversion%=="%version%" (
 
 
 set EXE=CrDoc-%version%-installer.exe
-set EXEPATH="%CD%\X.Setup.CreativeDocs\%EXE%"
+set EXEPATH="%CD%\Setup.CreativeDocs\%EXE%"
 set BUILD=Debug .NET 2.0
 set IEXPRESS="%CD%\External\iexpress.exe"
 set SIGNTOOL="%CD%\External\CodeSigning\signtool.exe"
@@ -60,32 +60,31 @@ echo Building version %version% of Creative Docs .NET (%BUILD%)
 %DEVENV% "%CD%\Epsitec.Cresus.sln" /Build "%BUILD%" /Project "App.CreativeDocs"
 
 echo Building version %version% of Creative Docs .NET installer (%BUILD%)
-%DEVENV% "%CD%\Epsitec.Cresus.sln" /Build "%BUILD%" /Project "X.Setup.CreativeDocs"
+%DEVENV% "%CD%\Epsitec.Cresus.sln" /Build "%BUILD%" /Project "Setup.CreativeDocs"
 
-del "%CD%\X.Setup.CreativeDocs\Sleep.exe" 2>NUL
+del "%CD%\Setup.CreativeDocs\Sleep.exe" 2>NUL
 del %EXEPATH% 2>NUL
-del "%CD%\X.Setup.CreativeDocs\CrDoc-2.x.x-installer.exe" 2>NUL
+del "%CD%\Setup.CreativeDocs\CrDoc-2.x.x-installer.exe" 2>NUL
 
-copy "%CD%\External\Sleep.exe" "%CD%\X.Setup.CreativeDocs\Sleep.exe"
-copy "%CD%\X.Setup.CreativeDocs\%BUILD%\Setup.exe" "%CD%\X.Setup.CreativeDocs\Setup.exe"
-copy "%CD%\X.Setup.CreativeDocs\%BUILD%\CreativeDocs.msi" "%CD%\X.Setup.CreativeDocs\CreativeDocs.msi"
+copy "%CD%\External\Sleep.exe" "%CD%\Setup.CreativeDocs\Sleep.exe"
+copy "%CD%\Setup.CreativeDocs\%BUILD%\Setup.exe" "%CD%\Setup.CreativeDocs\Setup.exe"
+copy "%CD%\Setup.CreativeDocs\%BUILD%\CreativeDocs.msi" "%CD%\Setup.CreativeDocs\CreativeDocs.msi"
 
-
-%SIGNTOOL% sign /f S:\Epsitec.Cresus\External\CodeSigning\opac.pfx /p opac /n OPaC /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll "%CD%\X.Setup.CreativeDocs\Sleep.exe"
-%SIGNTOOL% sign /f S:\Epsitec.Cresus\External\CodeSigning\opac.pfx /p opac /n OPaC /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll "%CD%\X.Setup.CreativeDocs\Setup.exe"
-%SIGNTOOL% sign /f S:\Epsitec.Cresus\External\CodeSigning\opac.pfx /p opac /n OPaC /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll "%CD%\X.Setup.CreativeDocs\CreativeDocs.msi"
+%SIGNTOOL% sign /a /n OPaC /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll "%CD%\Setup.CreativeDocs\Sleep.exe"
+%SIGNTOOL% sign /a /n OPaC /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll "%CD%\Setup.CreativeDocs\Setup.exe"
+%SIGNTOOL% sign /a /n OPaC /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll "%CD%\Setup.CreativeDocs\CreativeDocs.msi"
 
 echo Packaging installer into %EXE%
 
-cd X.Setup.CreativeDocs
+cd Setup.CreativeDocs
 
 "%IEXPRESS%" /N Installer.sed
 rename CrDoc-2.x.x-installer.exe %EXE%
 
 cd ..
 
-%SIGNTOOL% sign /f S:\Epsitec.Cresus\External\CodeSigning\opac.pfx /p opac /n OPaC /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll %EXEPATH%
+%SIGNTOOL% sign /a /n OPaC /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll %EXEPATH%
 
-del "%CD%\X.Setup.CreativeDocs\Sleep.exe" 2>NUL
-del "%CD%\X.Setup.CreativeDocs\Setup.exe" 2>NUL
-del "%CD%\X.Setup.CreativeDocs\CreativeDocs.msi" 2>NUL
+del "%CD%\Setup.CreativeDocs\Sleep.exe" 2>NUL
+del "%CD%\Setup.CreativeDocs\Setup.exe" 2>NUL
+del "%CD%\Setup.CreativeDocs\CreativeDocs.msi" 2>NUL
