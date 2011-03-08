@@ -428,7 +428,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 
 
 		[TestMethod]
-		public void AreEqualDatabaseInstancesTest1()
+		public void AreEqualDatabaseInstancesTest()
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
