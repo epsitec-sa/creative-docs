@@ -31,25 +31,25 @@
   <data name="Typ.DocumentState" id="AP">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="DocumentState" f:_1.SystemType="E:Epsitec.Cresus.Core.Business.DocumentState, Cresus.Core.Library.Documents" f:_2.EnumValues="{Collection {Text '0 [HVAQ]'}, {Text '1 [HVAR]'}, {Text '2 [HVAS]'}}" /&gt;</data>
   <data name="Val.DocumentType.Unknown" id="AU">&lt;s:data id="_0" f:Name="Unknown" /&gt;</data>
   <data name="Val.DocumentType.None" id="AV">&lt;s:data id="_0" f:Name="None" /&gt;</data>
-  <data name="Val.DocumentType.SalesQuote" id="A01">&lt;s:data id="_0" f:Name="SalesQuote" /&gt;</data>
-  <data name="Val.DocumentType.OrderConfiguration" id="A11">&lt;s:data id="_0" f:Name="OrderConfiguration" /&gt;</data>
-  <data name="Val.DocumentType.OrderBooking" id="A21">&lt;s:data id="_0" f:Name="OrderBooking" /&gt;</data>
-  <data name="Val.DocumentType.OrderConfirmation" id="A31">&lt;s:data id="_0" f:Name="OrderConfirmation" /&gt;</data>
-  <data name="Val.DocumentType.ProductionOrder" id="A41">&lt;s:data id="_0" f:Name="ProductionOrder" /&gt;</data>
-  <data name="Val.DocumentType.ProductionChecklist" id="A51">&lt;s:data id="_0" f:Name="ProductionChecklist" /&gt;</data>
-  <data name="Val.DocumentType.ShipmentChecklist" id="A61">&lt;s:data id="_0" f:Name="ShipmentChecklist" /&gt;</data>
-  <data name="Val.DocumentType.DeliveryNote" id="A71">&lt;s:data id="_0" f:Name="DeliveryNote" /&gt;</data>
-  <data name="Val.DocumentType.Invoice" id="A81">&lt;s:data id="_0" f:Name="Invoice" /&gt;</data>
-  <data name="Val.DocumentType.InvoiceProForma" id="A91">&lt;s:data id="_0" f:Name="InvoiceProForma" /&gt;</data>
-  <data name="Val.DocumentType.PaymentReminder" id="AA1">&lt;s:data id="_0" f:Name="PaymentReminder" /&gt;</data>
-  <data name="Val.DocumentType.Receipt" id="AB1">&lt;s:data id="_0" f:Name="Receipt" /&gt;</data>
-  <data name="Val.DocumentType.CreditMemo" id="AC1">&lt;s:data id="_0" f:Name="CreditMemo" /&gt;</data>
-  <data name="Val.DocumentType.QuoteRequest" id="AD1">&lt;s:data id="_0" f:Name="QuoteRequest" /&gt;</data>
-  <data name="Val.DocumentType.PurchaseOrder" id="AE1">&lt;s:data id="_0" f:Name="PurchaseOrder" /&gt;</data>
+  <data name="Val.DocumentType.SalesQuote" id="A01">&lt;s:data id="_0" f:Name="SalesQuote" f:Labels="{Collection {Text 'Devis'}}" /&gt;</data>
+  <data name="Val.DocumentType.OrderConfiguration" id="A11">&lt;s:data id="_0" f:Name="OrderConfiguration" f:Labels="{Collection {Text 'Choix des options pour commande'}}" /&gt;</data>
+  <data name="Val.DocumentType.OrderBooking" id="A21">&lt;s:data id="_0" f:Name="OrderBooking" f:Labels="{Collection {Text 'Bon pour commande'}}" /&gt;</data>
+  <data name="Val.DocumentType.OrderConfirmation" id="A31">&lt;s:data id="_0" f:Name="OrderConfirmation" f:Labels="{Collection {Text 'Confirmation de commande'}}" /&gt;</data>
+  <data name="Val.DocumentType.ProductionOrder" id="A41">&lt;s:data id="_0" f:Name="ProductionOrder" f:Labels="{Collection {Text 'Ordre de production'}}" /&gt;</data>
+  <data name="Val.DocumentType.ProductionChecklist" id="A51">&lt;s:data id="_0" f:Name="ProductionChecklist" f:Labels="{Collection {Text 'Check-list de production'}}" /&gt;</data>
+  <data name="Val.DocumentType.ShipmentChecklist" id="A61">&lt;s:data id="_0" f:Name="ShipmentChecklist" f:Labels="{Collection {Text 'Check-list d&amp;amp;apos;expédition'}}" /&gt;</data>
+  <data name="Val.DocumentType.DeliveryNote" id="A71">&lt;s:data id="_0" f:Name="DeliveryNote" f:Labels="{Collection {Text 'Bulletin de livraison'}}" /&gt;</data>
+  <data name="Val.DocumentType.Invoice" id="A81">&lt;s:data id="_0" f:Name="Invoice" f:Labels="{Collection {Text 'Facture'}}" /&gt;</data>
+  <data name="Val.DocumentType.InvoiceProForma" id="A91">&lt;s:data id="_0" f:Name="InvoiceProForma" f:Labels="{Collection {Text 'Facture pro forma'}}" /&gt;</data>
+  <data name="Val.DocumentType.PaymentReminder" id="AA1">&lt;s:data id="_0" f:Name="PaymentReminder" f:Labels="{Collection {Text 'Rappel'}}" /&gt;</data>
+  <data name="Val.DocumentType.Receipt" id="AB1">&lt;s:data id="_0" f:Name="Receipt" f:Labels="{Collection {Text 'Reçu'}}" /&gt;</data>
+  <data name="Val.DocumentType.CreditMemo" id="AC1">&lt;s:data id="_0" f:Name="CreditMemo" f:Labels="{Collection {Text 'Note de crédit'}}" /&gt;</data>
+  <data name="Val.DocumentType.QuoteRequest" id="AD1">&lt;s:data id="_0" f:Name="QuoteRequest" f:Labels="{Collection {Text 'Demande d&amp;amp;apos;offre'}}" /&gt;</data>
+  <data name="Val.DocumentType.PurchaseOrder" id="AE1">&lt;s:data id="_0" f:Name="PurchaseOrder" f:Labels="{Collection {Text 'Confirmation de commande'}}" /&gt;</data>
   <data name="Val.DocumentType.Summary" id="AF1">&lt;s:data id="_0" f:Name="Summary" /&gt;</data>
   <data name="Val.DocumentType.Debug1" id="AG1">&lt;s:data id="_0" f:Name="Debug1" /&gt;</data>
   <data name="Val.DocumentType.Debug2" id="AH1">&lt;s:data id="_0" f:Name="Debug2" /&gt;</data>
-  <data name="Typ.DocumentType" id="AT">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="DocumentType" f:_1.SystemType="E:Epsitec.Cresus.Core.Business.DocumentType, Cresus.Core.Library.Documents" f:_2.EnumValues="{Collection {Text '0 [HVAU]'}, {Text '1 [HVAV]'}, {Text '2 [HVA01]'}, {Text '3 [HVA11]'}, {Text '4 [HVA21]'}, {Text '5 [HVA31]'}, {Text '6 [HVA41]'}, {Text '7 [HVA51]'}, {Text '8 [HVA61]'}, {Text '9 [HVA71]'}, {Text '10 [HVA81]'}, {Text '11 [HVA91]'}, {Text '12 [HVAA1]'}, {Text '13 [HVAB1]'}, {Text '14 [HVAC1]'}, {Text '15 [HVAD1]'}, {Text '16 [HVAE1]'}, {Text '17 [HVAF1]'}, {Text '18 [HVAG1]'}, {Text '19 [HVAH1]'}}" /&gt;</data>
+  <data name="Typ.DocumentType" id="AT">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="DocumentType" f:_1.SystemType="E:Epsitec.Cresus.Core.Business.DocumentType, Cresus.Core.Library.Documents" f:_2.EnumValues="{Collection {Text '0 [HVAU]'}, {Text '1 [HVAV]'}, {Text '2 [HVA01]'}, {Text '3 [HVA11]'}, {Text '4 [HVA21]'}, {Text '5 [HVA31]'}, {Text '6 [HVA41]'}, {Text '7 [HVA51]'}, {Text '8 [HVA61]'}, {Text '9 [HVA71]'}, {Text '10 [HVA81]'}, {Text '11 [HVA91]'}, {Text '12 [HVAA1]'}, {Text '13 [HVAB1]'}, {Text '14 [HVAC1]'}, {Text '15 [HVAD1]'}, {Text '16 [HVAE1]'}, {Text '17 [HVAF1]'}, {Text '18 [HVAG1]'}, {Text '19 [HVAH1]'}, {Text '20 [HVK]'}, {Text '21 [HVK1]'}, {Text '22 [HVK2]'}}" f:_1.DefaultValue="Epsitec.Cresus.Core.Business.DocumentType, Cresus.Core.Library.Documents/None" f:Labels="{Collection {Text 'Type de document'}}" /&gt;</data>
   <data name="Fld.DocumentMetadata.DocumentState" id="AI1">&lt;s:data id="_0" f:Name="DocumentState" /&gt;</data>
   <data name="Fld.DocumentCategory.DocumentFlowDirection" id="AJ1">&lt;s:data id="_0" f:Name="DocumentFlowDirection" /&gt;</data>
   <data name="Fld.DocumentCategory.DocumentSource" id="AK1">&lt;s:data id="_0" f:Name="DocumentSource" /&gt;</data>
@@ -57,4 +57,7 @@
   <data name="Typ.StructuredType.DocumentCategoryMapping" id="AM1">&lt;objects xmlns:s="*1" xmlns:f="*1"&gt;&lt;s:storage s:root="_1" s:n_ext="0" s:n_typ="3" s:n_obj="2"&gt;&lt;s:type id="_1" s:name="*C" /&gt;&lt;s:type id="_2" s:name="*aT" /&gt;&lt;s:type id="_3" s:name="*S" /&gt;&lt;s:object id="_1" s:type="_1" /&gt;&lt;s:object id="_2" s:type="_3" /&gt;&lt;s:data id="_1" f:Name="DocumentCategoryMapping" f:_2.ComplexType="{ObjRef _2}" /&gt;&lt;s:data id="_2" f:Class="Entity" f:SerializedDesignerLayouts="&amp;lt;Layout id=\&amp;quot;0\&amp;quot;&amp;gt;&amp;lt;Boxes&amp;gt;&amp;lt;Box&amp;gt;&amp;lt;ID&amp;gt;[HVAM1]&amp;lt;/ID&amp;gt;&amp;lt;Bds&amp;gt;40;32;268;208&amp;lt;/Bds&amp;gt;&amp;lt;Ext&amp;gt;True&amp;lt;/Ext&amp;gt;&amp;lt;Clr&amp;gt;Blue&amp;lt;/Clr&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[8VA2]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;&amp;amp;lt;invalid&amp;amp;gt;&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[8VA3]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;[1003]&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[8VA6]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;&amp;amp;lt;invalid&amp;amp;gt;&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[8VA7]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;[10AG]&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[8VA8]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;[10AH]&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[HVAN1]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;[1008]&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[HVAO1]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;[HVA1]&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;/Box&amp;gt;&amp;lt;/Boxes&amp;gt;&amp;lt;/Layout&amp;gt;" f:DefaultLifetimeExpectancy="Stable" f:Fields="{Collection {Text '[HVAN1];[1008];0;[HVAN1]'}, {Text '[HVAO1];[HVA1];1;[HVAO1];3'}}" f:InterfaceIds="{Collection {Text '[8VA2]'}, {Text '[8VA6]'}}" /&gt;&lt;/s:storage&gt;&lt;/objects&gt;</data>
   <data name="Fld.DocumentCategoryMapping.PrintableEntityName" id="AN1">&lt;s:data id="_0" f:Name="PrintableEntityName" /&gt;</data>
   <data name="Fld.DocumentCategoryMapping.DocumentCategories" id="AO1">&lt;s:data id="_0" f:Name="DocumentCategories" /&gt;</data>
+  <data name="Val.DocumentType.RelationSummary" id="K">&lt;s:data id="_0" f:Name="RelationSummary" f:Labels="{Collection {Text 'Résumé d&amp;amp;apos;un client'}}" /&gt;</data>
+  <data name="Val.DocumentType.ArticleDefinitionSummary" id="K1">&lt;s:data id="_0" f:Name="ArticleDefinitionSummary" f:Labels="{Collection {Text 'Résumé d&amp;amp;apos;un article'}}" /&gt;</data>
+  <data name="Val.DocumentType.MailContactLabel" id="K2">&lt;s:data id="_0" f:Name="MailContactLabel" f:Labels="{Collection {Text 'Etiquette pour un client'}}" /&gt;</data>
 </bundle>

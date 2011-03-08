@@ -269,8 +269,6 @@ namespace Epsitec.Cresus.Core
 			public static readonly Epsitec.Common.Types.EnumType DocumentSource = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 292));
 			//	designer:cap/L0AQO
 			public static readonly Epsitec.Common.Types.EnumType DocumentState = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 794));
-			//	designer:cap/L0ANH
-			public static readonly Epsitec.Common.Types.EnumType DocumentType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 567));
 			//	designer:cap/L0ATE
 			public static readonly Epsitec.Common.Types.EnumType EnumValueCardinality = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 477));
 			//	designer:cap/L0A2M

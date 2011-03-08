@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Core.Business
 		OrderConfirmation			=  130,				//	confirmation de commande
 
 		ProductionOrder				=  200,				//	ordre de production
-		ProductionChecklist			=  210,				//	check-liste de production
+		ProductionChecklist			=  210,				//	check-list de production
 
 		ShipmentChecklist			=  300,				//	check-list d'expédition
 		DeliveryNote				=  310,				//	bulletin de livraison

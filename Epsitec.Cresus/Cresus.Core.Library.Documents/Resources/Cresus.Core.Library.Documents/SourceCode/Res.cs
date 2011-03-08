@@ -164,6 +164,14 @@ namespace Epsitec.Cresus.Core
 				{
 				}
 				
+				//	designer:cap/HVK1
+				public static global::Epsitec.Common.Types.Caption ArticleDefinitionSummary
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 1));
+					}
+				}
 				//	designer:cap/HVAC1
 				public static global::Epsitec.Common.Types.Caption CreditMemo
 				{
@@ -210,6 +218,14 @@ namespace Epsitec.Cresus.Core
 					get
 					{
 						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 41));
+					}
+				}
+				//	designer:cap/HVK2
+				public static global::Epsitec.Common.Types.Caption MailContactLabel
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 2));
 					}
 				}
 				//	designer:cap/HVAV
@@ -290,6 +306,14 @@ namespace Epsitec.Cresus.Core
 					get
 					{
 						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 43));
+					}
+				}
+				//	designer:cap/HVK
+				public static global::Epsitec.Common.Types.Caption RelationSummary
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 0));
 					}
 				}
 				//	designer:cap/HVA01
