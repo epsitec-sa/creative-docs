@@ -837,6 +837,7 @@
     <Compile Include="Types\EnumType.cs" />
     <Compile Include="Types\EnumValue.cs" />
     <Compile Include="Types\Exceptions\InvalidTypeObjectException.cs" />
+    <Compile Include="Types\Exceptions\ReadOnlyException.cs" />
     <Compile Include="Types\Exceptions\WrongBaseTypeException.cs" />
     <Compile Include="Types\ExpressionAnalyzer.cs" />
     <Compile Include="Types\FieldMembership.cs" />

@@ -65,6 +65,7 @@
     <Compile Include="Support\UnitTestStringPacker.cs" />
     <Compile Include="Types\Collections\UnitTestCircularBuffer.cs" />
     <Compile Include="Types\UnitTestINameComparer.cs" />
+    <Compile Include="Types\UnitTestIReadOnly.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
