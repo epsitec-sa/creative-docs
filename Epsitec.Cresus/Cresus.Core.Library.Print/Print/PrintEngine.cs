@@ -10,6 +10,7 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Documents;
 using Epsitec.Cresus.Core.Documents.Verbose;
 using Epsitec.Cresus.Core.Entities;
@@ -428,7 +429,7 @@ namespace Epsitec.Cresus.Core.Print
 
 			DocumentType type = DocumentType.Unknown;
 
-#if false
+#if true
 			if (entity is DocumentMetadataEntity)  // TODO: Hack à supprimer dès que possible !
 			{
 				type = DocumentType.Invoice;

@@ -554,8 +554,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			private IEnumerable<DocumentCategoryMappingEntity> GetMappingEntities()
 			{
 				var example = new DocumentCategoryMappingEntity ();
-				// TODO: DR
-				//?example.PrintableEntity = this.GetPrintableEntities (this.entityToPrint.Entity);
+				example.PrintableEntity = this.GetPrintableEntities (this.entityToPrint.Entity);
 				return this.businessContext.DataContext.GetByExample (example);
 			}
 
