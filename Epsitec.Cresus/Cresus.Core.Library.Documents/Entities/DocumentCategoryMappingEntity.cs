@@ -4,6 +4,9 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Business;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,10 +26,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public FormattedText GetPrintableEntityName()
 		{
-			// TODO: DR
-			return "coucou";
-#if false
-			var printableEntities = Business.Enumerations.GetAllPrintableEntities ();
+			var printableEntities = EnumKeyValues.FromEnum<PrintableEntities> ();
 
 			var t = printableEntities.Where (x => x.Key == this.PrintableEntity).FirstOrDefault ();
 			if (t == null)
@@ -37,7 +37,6 @@ namespace Epsitec.Cresus.Core.Entities
 			{
 				return t.Values[0];
 			}
-#endif
 		}
 	}
 }

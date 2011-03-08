@@ -45,8 +45,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			// TODO: DR
-			//?builder.CreateAutoCompleteTextField (tile, 0, "Type des données imprimables", Marshaler.Create (() => this.Entity.PrintableEntity, x => this.Entity.PrintableEntity = x), Business.Enumerations.GetAllPrintableEntities (), x => TextFormatter.FormatText (x.Values[0]));
+			builder.CreateAutoCompleteTextField (tile, 0, "Type des données imprimables", Marshaler.Create (() => this.Entity.PrintableEntity, x => this.Entity.PrintableEntity = x), EnumKeyValues.FromEnum<PrintableEntities> (), x => TextFormatter.FormatText (x.Values[0]));
 		}
 
 		private void CreateUICategories(UIBuilder builder)
