@@ -2374,6 +2374,13 @@ namespace Epsitec.Common.Designer
 
 		private ResourceManager MissingModuleResolver(int id)
 		{
+			Module module = this.OpenModule (id);
+
+			if (module != null)
+			{
+				return module.ResourceManager;
+			}
+
 			return null;
 		}
 
