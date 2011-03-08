@@ -24,6 +24,8 @@ namespace Epsitec.Cresus.Core
 			public static readonly Epsitec.Common.Types.EnumType DocumentState = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 25));
 			//	designer:cap/HVAT
 			public static readonly Epsitec.Common.Types.EnumType DocumentType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 29));
+			//	designer:cap/HVK3
+			public static readonly Epsitec.Common.Types.EnumType PrintableEntities = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 3));
 			//	designer:cap/HVA4
 			public static readonly Epsitec.Common.Types.StructuredType AbstractDocument = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 4));
 			//	designer:cap/HVA1
@@ -180,22 +182,6 @@ namespace Epsitec.Cresus.Core
 						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 44));
 					}
 				}
-				//	designer:cap/HVAG1
-				public static global::Epsitec.Common.Types.Caption Debug1
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 48));
-					}
-				}
-				//	designer:cap/HVAH1
-				public static global::Epsitec.Common.Types.Caption Debug2
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 49));
-					}
-				}
 				//	designer:cap/HVA71
 				public static global::Epsitec.Common.Types.Caption DeliveryNote
 				{
@@ -332,20 +318,60 @@ namespace Epsitec.Cresus.Core
 						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 38));
 					}
 				}
-				//	designer:cap/HVAF1
-				public static global::Epsitec.Common.Types.Caption Summary
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 47));
-					}
-				}
 				//	designer:cap/HVAU
 				public static global::Epsitec.Common.Types.Caption Unknown
 				{
 					get
 					{
 						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 30));
+					}
+				}
+			}
+			
+			public static class PrintableEntities
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/HVK8
+				public static global::Epsitec.Common.Types.Caption ArticleDefinition
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 8));
+					}
+				}
+				//	designer:cap/HVK5
+				public static global::Epsitec.Common.Types.Caption DocumentMetadata
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 5));
+					}
+				}
+				//	designer:cap/HVK6
+				public static global::Epsitec.Common.Types.Caption MailContact
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 6));
+					}
+				}
+				//	designer:cap/HVK4
+				public static global::Epsitec.Common.Types.Caption None
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 4));
+					}
+				}
+				//	designer:cap/HVK7
+				public static global::Epsitec.Common.Types.Caption Relation
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 7));
 					}
 				}
 			}
@@ -488,6 +514,7 @@ namespace Epsitec.Cresus.Core
 			Values.DocumentSource._Initialize ();
 			Values.DocumentState._Initialize ();
 			Values.DocumentType._Initialize ();
+			Values.PrintableEntities._Initialize ();
 			Fields.DocumentCategory._Initialize ();
 			Fields.DocumentCategoryMapping._Initialize ();
 			Fields.DocumentMetadata._Initialize ();
