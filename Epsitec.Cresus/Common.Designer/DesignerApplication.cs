@@ -541,7 +541,7 @@ namespace Epsitec.Common.Designer
 						this.CloseModule();  // ferme le module initial de référence
 					}
 
-					Module module = new Module(this, this.mode, info.FullId);
+					Module module = new Module (this, this.mode, info.FullId, this.MissingModuleResolver);
 
 					ModuleInfo mi = new ModuleInfo();
 					mi.Module = module;
@@ -2362,7 +2362,7 @@ namespace Epsitec.Common.Designer
 
 		private ModuleInfo OpenModule(ResourceModuleId item)
 		{
-			Module module = new Module (this, this.mode, item);
+			Module module = new Module (this, this.mode, item, this.MissingModuleResolver);
 
 			ModuleInfo mi = new ModuleInfo ();
 			mi.Module = module;
@@ -2370,6 +2370,11 @@ namespace Epsitec.Common.Designer
 			this.CreateModuleLayout ();
 
 			return mi;
+		}
+
+		private ResourceManager MissingModuleResolver(int id)
+		{
+			return null;
 		}
 
 
@@ -2431,7 +2436,7 @@ namespace Epsitec.Common.Designer
 			{
 				foreach (ResourceModuleId id in this.settings.Modules)
 				{
-					Module module = new Module(this, this.mode, id);
+					Module module = new Module (this, this.mode, id, this.MissingModuleResolver);
 
 					ModuleInfo mi = new ModuleInfo();
 					mi.Module = module;

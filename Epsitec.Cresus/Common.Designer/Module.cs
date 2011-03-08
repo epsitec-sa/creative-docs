@@ -24,17 +24,17 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class Module
 	{
-		public Module(DesignerApplication designerApplication, DesignerMode mode, ResourceModuleId moduleId)
-			: this (designerApplication, mode, designerApplication.ResourceManagerPool, moduleId)
+		public Module(DesignerApplication designerApplication, DesignerMode mode, ResourceModuleId moduleId, System.Func<int, ResourceManager> missingModuleResolver)
+			: this (designerApplication, mode, designerApplication.ResourceManagerPool, moduleId, missingModuleResolver)
 		{
 		}
 
 		public Module(ResourceManagerPool pool, ResourceModuleId moduleId)
-			: this (null, DesignerMode.Build, pool, moduleId)
+			: this (null, DesignerMode.Build, pool, moduleId, null)
 		{
 		}
 
-		private Module(DesignerApplication designerApplication, DesignerMode mode, ResourceManagerPool pool, ResourceModuleId moduleId)
+		private Module(DesignerApplication designerApplication, DesignerMode mode, ResourceManagerPool pool, ResourceModuleId moduleId, System.Func<int, ResourceManager> missingModuleResolver)
 		{
 			System.Diagnostics.Debug.Assert(pool != null);
 			
@@ -47,6 +47,7 @@ namespace Epsitec.Common.Designer
 
 			this.resourceManager = new ResourceManager(pool, moduleId);
 			this.resourceManager.DefineDefaultModuleName(this.moduleId.Name);
+			this.resourceManager.MissingModuleResolver = missingModuleResolver;
 
 			this.moduleInfo = this.resourceManager.DefaultModuleInfo.Clone();
 
