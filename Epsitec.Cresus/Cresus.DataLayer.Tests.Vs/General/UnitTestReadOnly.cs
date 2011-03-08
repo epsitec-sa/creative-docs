@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 		[TestMethod]
-		public void ReadOnlyDataContextEntities()
+		public void ReadOnlyDataContextEntities1()
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
@@ -55,6 +55,23 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Assert.IsTrue (alfred.Contacts[1].IsReadOnly);
 				Assert.IsTrue (((UriContactEntity) alfred.Contacts[0]).UriScheme.IsReadOnly);
 				Assert.IsTrue (((UriContactEntity) alfred.Contacts[1]).UriScheme.IsReadOnly);
+			}
+		}
+
+
+		[TestMethod]
+		public void ReadOnlyDataContextEntities2()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: true))
+			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: true))
+			{
+				NaturalPersonEntity alfred1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+
+				NaturalPersonEntity alfred2 = DataContext.CopyEntity (dataContext1, alfred1, dataContext2);
+
+				Assert.IsTrue (alfred2.IsReadOnly);
 			}
 		}
 
