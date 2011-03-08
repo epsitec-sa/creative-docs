@@ -71,7 +71,8 @@ namespace Epsitec.Common.Types.Converters
 		{
 			System.DateTime result;
 
-			if (string.IsNullOrWhiteSpace (text))
+			if ((string.IsNullOrEmpty (text)) ||
+				(text.Trim ().Length == 0))
 			{
 				return true;
 			}

@@ -54,7 +54,7 @@ namespace Epsitec.Common.Designer
 				(System.IO.Path.GetFileName (moduleId.Path).Equals (moduleId.Name, System.StringComparison.InvariantCultureIgnoreCase)))
 			{
 				string assemblyRootPath = System.IO.Path.GetDirectoryName (System.IO.Path.GetDirectoryName (moduleId.Path));
-				string assemblyBinPath  = System.IO.Path.Combine (assemblyRootPath, "bin", "Debug");
+				string assemblyBinPath  = System.IO.Path.Combine (System.IO.Path.Combine (assemblyRootPath, "bin"), "Debug");
 
 				foreach (var name in this.moduleInfo.Assemblies.Split (';'))
 				{

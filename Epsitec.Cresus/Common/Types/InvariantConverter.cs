@@ -806,11 +806,11 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				TEnum value;
+				System.Enum value;
 				
-				if (System.Enum.TryParse<TEnum> (text, out value))
+				if (InvariantConverter.ParseEnum (typeof (TEnum), text, out value))
 				{
-					return value;
+					return (TEnum) (object) value;
 				}
 
 				return defaultValue;

@@ -46,8 +46,12 @@ namespace Epsitec.Common.Types
 
 		private void AnalyseAssembly(System.Reflection.Assembly assembly)
 		{
+#if DOTNET35
+			if (!assembly.ReflectionOnly)
+#else
 			if ((!assembly.IsDynamic) &&
 				(!assembly.ReflectionOnly))
+#endif
 			{
 				lock (this.assemblies)
 				{

@@ -151,8 +151,8 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}.Debug .NET 2.0|Any CPU.ActiveCfg = Debug|Any CPU
-		{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}.Debug .NET 2.0|Any CPU.Build.0 = Debug|Any CPU
+		{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}.Debug .NET 2.0|Any CPU.ActiveCfg = Debug .NET 2.0|Any CPU
+		{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}.Debug .NET 2.0|Any CPU.Build.0 = Debug .NET 2.0|Any CPU
 		{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}.Debug .NET 2.0|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}.Debug .NET 2.0|Mixed Platforms.Build.0 = Debug|Any CPU
 		{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}.Debug .NET 2.0|Win32.ActiveCfg = Debug|Any CPU
