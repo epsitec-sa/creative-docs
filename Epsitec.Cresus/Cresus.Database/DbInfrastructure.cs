@@ -3138,6 +3138,8 @@ namespace Epsitec.Cresus.Database
 			
 			System.Diagnostics.Debug.Assert (this.sqlEngine == null);
 			System.Diagnostics.Debug.Assert (this.converter == null);
+
+			base.Dispose (disposing);
 		}
 
 		#region Initialisation

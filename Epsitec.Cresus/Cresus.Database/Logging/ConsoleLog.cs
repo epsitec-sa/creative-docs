@@ -9,8 +9,16 @@ namespace Epsitec.Cresus.Database.Logging
 	{
 
 
-		public ConsoleLog() : base ()
+		public ConsoleLog(ConsoleType output) : base ()
 		{
+			this.Output = output;
+		}
+
+
+		public ConsoleType Output
+		{
+			get;
+			private set;
 		}
 
 
@@ -39,6 +47,14 @@ namespace Epsitec.Cresus.Database.Logging
 
 		protected override void AddEntry(Query query)
 		{
+			string text = this.CreateText (query);
+
+			this.LogText (text);			
+		}
+
+
+		private string CreateText(Query query)
+		{
 			System.Text.StringBuilder sb = new System.Text.StringBuilder ();
 
 			sb.Append ("\n=========================================================================");
@@ -54,10 +70,25 @@ namespace Epsitec.Cresus.Database.Logging
 
 			sb.Append ("\n=========================================================================\n");
 
-			string log = sb.ToString ();
+			return sb.ToString ();
+		}
 
-			//System.Diagnostics.Debug.WriteLine (log);
-			//System.Console.WriteLine (log);
+
+		private void LogText(string text)
+		{
+			switch (this.Output)
+			{
+				case ConsoleType.Debug:
+					System.Diagnostics.Debug.WriteLine (text);
+					break;
+
+				case ConsoleType.Console:
+					System.Console.WriteLine (text);
+					break;
+
+				default:
+					throw new System.NotImplementedException ();
+			}
 		}
 
 
@@ -70,6 +101,13 @@ namespace Epsitec.Cresus.Database.Logging
 		private int nextNumber;
 
 
+	}
+
+
+	public enum ConsoleType
+	{
+		Console,
+		Debug,
 	}
 
 

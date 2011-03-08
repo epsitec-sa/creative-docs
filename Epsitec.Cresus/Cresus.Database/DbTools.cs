@@ -539,7 +539,6 @@ namespace Epsitec.Cresus.Database
 		{
 			System.Type type = typeof (T);
 			System.Type xmlType   = typeof (System.Xml.XmlTextReader);
-			System.Type hostType  = type;
 			System.Type[] arguments = new System.Type[] { xmlType };
 			
 			System.Reflection.MethodInfo method = type.GetMethod ("Deserialize", arguments);

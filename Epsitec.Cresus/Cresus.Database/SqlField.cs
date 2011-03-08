@@ -514,8 +514,6 @@ namespace Epsitec.Cresus.Database
 			//	A constant has usually no alias name; if the constant is used for
 			//	an insert, then the alias will be mapped to the column name.
 
-			SqlField field = new SqlField ();
-
 			//	Automatically convert DbId to long and null to DBNull...
 
 			if (value is DbId)
