@@ -55,6 +55,7 @@
     <Compile Include="Resources\Common.Tests.Vs\SourceCode\Entities.cs" />
     <Compile Include="Resources\Common.Tests.Vs\SourceCode\Res.cs" />
     <Compile Include="Support\EntityEngine\UnitTestEntities.cs" />
+    <Compile Include="Support\EntityEngine\UnitTestEntityNullReferenceVirtualizer.cs" />
     <Compile Include="Support\Extensions\UnitTestEntityModifications.cs" />
     <Compile Include="Support\Extensions\UnitTestEnumerableExtensions.cs" />
     <Compile Include="Support\Extensions\UnitTestExceptionThrower.cs" />

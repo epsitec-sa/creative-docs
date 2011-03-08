@@ -18,7 +18,7 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// data represented by entity instances.
 	/// </summary>
 	[System.Diagnostics.DebuggerDisplay ("{DebuggerDisplayValue}")]
-	public abstract class AbstractEntity : IStructuredTypeProvider, IStructuredData, IEntityProxyProvider
+	public abstract class AbstractEntity : IStructuredTypeProvider, IStructuredData, IEntityProxyProvider, IReadOnly
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AbstractEntity"/> class.
@@ -30,8 +30,22 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			this.defineOriginalValuesCount = 0;
 			this.silentUpdateCount = 0;
+			this.disableEventsCount = 0;
+			this.disableReadOnlyCheckCount = 0;
+
+			this.IsReadOnly = false;
 		}
 
+		#region IReadOnly Members
+
+		public bool IsReadOnly
+		{
+			get;
+			private set;
+		}
+
+		#endregion
+	
 		/// <summary>
 		/// Gets a value indicating whether this entity is currently defining
 		/// its original values (see <see cref="DefineOriginalValues"/>).
@@ -63,6 +77,15 @@ namespace Epsitec.Common.Support.EntityEngine
 			get
 			{
 				return this.disableEventsCount == 0;
+			}
+		}
+
+
+		public bool ReadOnlyChecksEnabled
+		{
+			get
+			{
+				return this.disableReadOnlyCheckCount == 0;
 			}
 		}
 
@@ -141,7 +164,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </summary>
 		public virtual void Freeze()
 		{
-			//	TODO: make the entity read-only
+			this.IsReadOnly = true;
 		}
 
 
@@ -480,6 +503,11 @@ namespace Epsitec.Common.Support.EntityEngine
 			return new DisableEventsHelper (this);
 		}
 
+		public System.IDisposable DisableReadOnlyChecks()
+		{
+			return new DisableReadOnlyChecksHelper (this);
+		}
+
 
 		internal void DisableCalculations()
 		{
@@ -602,6 +630,8 @@ namespace Epsitec.Common.Support.EntityEngine
 		
 		public void SetField<T>(string id, T oldValue, T newValue)
 		{
+			this.AssertIsNotReadOnly ();
+
 			this.GenericSetValue (id, oldValue, newValue);
 		}
 
@@ -1177,6 +1207,13 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		internal void AssertIsNotReadOnly()
+		{
+			if (this.ReadOnlyChecksEnabled)
+			{
+				IReadOnlyExtensions.AssertIsNotReadOnly (this);
+			}
+		}
 		
 		/// <summary>
 		/// Asserts that the id identifies a simple field.
@@ -1286,6 +1323,8 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <param name="value">The value.</param>
 		void IStructuredData.SetValue(string id, object value)
 		{
+			this.AssertIsNotReadOnly ();
+
 			this.DynamicSetField (id, value);
 		}
 
@@ -1317,6 +1356,8 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <param name="mode">The set mode.</param>
 		void IValueStore.SetValue(string id, object value, ValueStoreSetMode mode)
 		{
+			this.AssertIsNotReadOnly ();
+
 			this.DynamicSetField (id, value);
 		}
 
@@ -1555,6 +1596,26 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
+		private class DisableReadOnlyChecksHelper : Helper
+		{
+
+
+			public DisableReadOnlyChecksHelper(AbstractEntity entity)
+				: base (entity)
+			{
+				System.Threading.Interlocked.Increment (ref this.Entity.disableReadOnlyCheckCount);
+			}
+
+
+			protected override void Finish()
+			{
+				System.Threading.Interlocked.Decrement (ref this.Entity.disableReadOnlyCheckCount);
+			}
+
+
+		}
+
+
 		#endregion
 
 
@@ -1587,6 +1648,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		private int silentUpdateCount;
 		private int defineOriginalValuesCount;
 		private int disableEventsCount;
+		private int disableReadOnlyCheckCount;
 		private bool calculationsDisabled;
 		private IValueStore originalValues;
 		private IValueStore modifiedValues;
@@ -1599,5 +1661,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		// but only working, so change it if you don't like it.
 		// Marc
 		private EventHandler<EntityFieldChangedEventArgs> entityChangedEvent;
+
+		
 	}
 }

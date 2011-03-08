@@ -312,7 +312,9 @@ namespace Epsitec.Common.Support.EntityEngine
 					}
 					else
 					{
-						return this.CreateEmptyEntityForUndefinedField (id, value);
+						bool freezeChild = this.entity.IsReadOnly;
+
+						return this.CreateEmptyEntityForUndefinedField (id, value, freezeChild);
 					}
 				}
 
@@ -353,17 +355,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			
 			#endregion
 
-			#region IEntityValueStore Members
-
-			public bool IsEmpty
-			{
-				get
-				{
-					throw new System.NotImplementedException ();
-				}
-			}
-
-			#endregion
 
 			public void TranformNullEntityIntoLiveEntity()
 			{
@@ -423,7 +414,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 
 
-			private object CreateEmptyEntityForUndefinedField(string id, object defaultValue)
+			private object CreateEmptyEntityForUndefinedField(string id, object defaultValue, bool freeze)
 			{
 				var info = this.GetStructuredTypeField (id);
 
@@ -435,6 +426,11 @@ namespace Epsitec.Common.Support.EntityEngine
 				if (info.Relation == FieldRelation.Reference)
 				{
 					var entity = EntityNullReferenceVirtualizer.CreateEmptyEntity (info.TypeId);
+
+					if (freeze)
+					{
+						entity.Freeze ();
+					}
 
 					System.Diagnostics.Debug.Assert (entity != null);
 

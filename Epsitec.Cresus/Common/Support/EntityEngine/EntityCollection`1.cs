@@ -102,6 +102,8 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </summary>
 		private void HandleCollectionChanging(object sender)
 		{
+			this.container.AssertIsNotReadOnly ();
+
 			this.container.UpdateDataGeneration ();
 		}
 		
