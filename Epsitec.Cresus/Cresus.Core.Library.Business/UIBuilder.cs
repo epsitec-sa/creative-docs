@@ -438,7 +438,7 @@ namespace Epsitec.Cresus.Core
 				DrawFullFrame = true,
 				BackColor = ArrowedFrame.SurfaceColors.First (),
 				Padding = new Margins (2),
-				Dock = DockStyle.Top,
+				Dock = DockStyle.Stacked,
 			};
 
 			if (height != 0)

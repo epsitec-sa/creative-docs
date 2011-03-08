@@ -56,6 +56,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 
 			this.toolbar = UIBuilder.CreateMiniToolbar (parent, buttonSize.Value);
+			this.toolbar.Dock = DockStyle.Top;
 			this.toolbar.Margins = new Margins (0, arrowDirection == Direction.Right ? Widgets.Tiles.TileArrow.Breadth : 0, 0, -1);
 			this.toolbar.TabIndex = 1;
 
