@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2005-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD, dérivé du code de DD
 
 namespace Epsitec.Common.Support
@@ -205,7 +205,6 @@ namespace Epsitec.Common.Support
 		
 		public static string ReadCrDocSerial()
 		{
-#if true
 			string path = SerialAlgorithm.GetAppDataPath ();
 			string key  = null;
 			
@@ -223,11 +222,8 @@ namespace Epsitec.Common.Support
 					key = reader.ReadLine ();
 				}
 			}
-			
-			return key;
-#else
-			return (string) Microsoft.Win32.Registry.GetValue (SerialAlgorithm.RegistrySerialPath, "ID", "");
-#endif
+
+			return (string) Microsoft.Win32.Registry.GetValue (SerialAlgorithm.RegistrySerialPath, "ID", key);
 		}
 		
 		public static void WriteCrDocSerial(string key)
