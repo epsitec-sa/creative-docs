@@ -209,49 +209,54 @@ namespace Epsitec.Common.Designer.MyWidgets
 				CultureMapSource source;
 				this.GetDruid(first+i, out druid, out source);
 
-				if (druid.IsEmpty)
-				{
-					this.array.SetLineString(0, first+i, "");
-					this.array.SetLineState(0, first+i, StringList.CellState.Disabled);
-					this.array.SetLineColor(0, first+i, Color.Empty);
-
-					this.array.SetLineString(1, first+i, "");
-					this.array.SetLineState(1, first+i, StringList.CellState.Disabled);
-					this.array.SetLineColor(1, first+i, Color.Empty);
-
-					this.array.SetLineString(2, first+i, "");
-					this.array.SetLineState(2, first+i, StringList.CellState.Disabled);
-					this.array.SetLineColor(2, first+i, Color.Empty);
-				}
-				else
+				if (druid.IsValid)
 				{
 					//	La valeur est forcément dans le même module que l'énumération.
 					CultureMap cultureMap = this.module.AccessValues.Accessor.Collection[druid];
-					StructuredData data = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-
-					string name = cultureMap.Name;
-					string text = ResourceAccess.GetCaptionNiceDescription(data, this.array.LineHeight);
-
-					string icon = data.GetValue(Support.Res.Fields.ResourceCaption.Icon) as string;
-					if (!string.IsNullOrEmpty(icon))
+					if (cultureMap != null)
 					{
-						icon = Misc.ImageFull(icon);
+						StructuredData data = cultureMap.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+						if (data != null)
+						{
+							string name = cultureMap.Name;
+							string text = ResourceAccess.GetCaptionNiceDescription (data, this.array.LineHeight);
+
+							string icon = data.GetValue (Support.Res.Fields.ResourceCaption.Icon) as string;
+							if (!string.IsNullOrEmpty (icon))
+							{
+								icon = Misc.ImageFull (icon);
+							}
+
+							Color color = this.module.IsPatch ? Misc.SourceColor (source) : Color.Empty;
+
+							this.array.SetLineString (0, first+i, name);
+							this.array.SetLineState (0, first+i, StringList.CellState.Normal);
+							this.array.SetLineColor (0, first+i, color);
+
+							this.array.SetLineString (1, first+i, text);
+							this.array.SetLineState (1, first+i, StringList.CellState.Normal);
+							this.array.SetLineColor (1, first+i, color);
+
+							this.array.SetLineString (2, first+i, icon);
+							this.array.SetLineState (2, first+i, StringList.CellState.Normal);
+							this.array.SetLineColor (2, first+i, color);
+
+							continue;
+						}
 					}
-
-					Color color = this.module.IsPatch ? Misc.SourceColor(source) : Color.Empty;
-
-					this.array.SetLineString(0, first+i, name);
-					this.array.SetLineState(0, first+i, StringList.CellState.Normal);
-					this.array.SetLineColor(0, first+i, color);
-
-					this.array.SetLineString(1, first+i, text);
-					this.array.SetLineState(1, first+i, StringList.CellState.Normal);
-					this.array.SetLineColor(1, first+i, color);
-
-					this.array.SetLineString(2, first+i, icon);
-					this.array.SetLineState(2, first+i, StringList.CellState.Normal);
-					this.array.SetLineColor(2, first+i, color);
 				}
+
+				this.array.SetLineString (0, first+i, "");
+				this.array.SetLineState (0, first+i, StringList.CellState.Disabled);
+				this.array.SetLineColor (0, first+i, Color.Empty);
+
+				this.array.SetLineString (1, first+i, "");
+				this.array.SetLineState (1, first+i, StringList.CellState.Disabled);
+				this.array.SetLineColor (1, first+i, Color.Empty);
+
+				this.array.SetLineString (2, first+i, "");
+				this.array.SetLineState (2, first+i, StringList.CellState.Disabled);
+				this.array.SetLineColor (2, first+i, Color.Empty);
 			}
 
 			this.array.TotalRows = this.EnumCount;
