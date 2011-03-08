@@ -296,7 +296,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 				ToolTip.Default.SetToolTip (this.showOptionsButton, "Montre ou cache les options d'impression");
 
 				//	Rempli la première colonne (à gauche).
-				Widgets.StaticTextExtensions.CreateColumnTitle (leftFrame, "Catégories de documents");
+				var columnTitle1 = new StaticText (leftFrame);
+				columnTitle1.SetColumnTitle ("Catégories de documents");
 
 				this.categoriesFrame = new Scrollable
 				{
@@ -310,7 +311,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.categoriesFrame.Viewport.IsAutoFitting = true;
 
 				//	Rempli la deuxième colonne (au centre).
-				Widgets.StaticTextExtensions.CreateColumnTitle (this.centerFrame, "Options d'impression");
+				var columnTitle2 = new StaticText (this.centerFrame);
+				columnTitle2.SetColumnTitle ("Options d'impression");
 
 				this.optionsFrame = new Scrollable
 				{

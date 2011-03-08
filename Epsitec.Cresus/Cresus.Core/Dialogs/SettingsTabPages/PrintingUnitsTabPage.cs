@@ -11,6 +11,7 @@ using Epsitec.Cresus.Core.Documents;
 using Epsitec.Cresus.Core.Documents.Verbose;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Print;
+using Epsitec.Cresus.Core.Widgets;
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -83,7 +84,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			};
 
 			//	Rempli la colonne de gauche.
-			Widgets.StaticTextExtensions.CreateColumnTitle (column1, "Liste des unités d'impression");
+			var columnTitle1 = new StaticText (column1);
+			columnTitle1.SetColumnTitle ("Liste des unités d'impression");
 
 			this.listController = new Controllers.ListController<PrintingUnit> (this.printingUnitList, this.ListControllerItemToText, this.ListControllerGetTextInfo, this.ListControllerCreateItem);
 			this.listController.CreateUI (column1, Direction.Right, 23);
@@ -94,7 +96,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			ToolTip.Default.SetToolTip (this.listController.MoveDownButton, "Descend l'unité d'impression dans la liste");
 
 			//	Rempli la deuxième colonne.
-			Widgets.StaticTextExtensions.CreateColumnTitle (column2, "Choix pour l'unité d'impression sélectionnée");
+			var columnTitle2 = new StaticText (column2);
+			columnTitle2.SetColumnTitle ("Choix pour l'unité d'impression sélectionnée");
 
 			this.physicalBox = new FrameBox
 			{
@@ -249,7 +252,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				};
 
 				this.xOffsetField = PrintingUnitsTabPage.CreateTextField (box, "Décalage horizontal :", "mm, vers la droite si positif", ++tabIndex);
-				this.yOffsetField = PrintingUnitsTabPage.CreateTextField (box, "Décalage vertical :", "mm, vers le haut si positif", ++tabIndex);
+				this.yOffsetField = PrintingUnitsTabPage.CreateTextField (box, "Décalage vertical :",   "mm, vers le haut si positif",   ++tabIndex);
 			}
 
 			{
@@ -266,7 +269,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			}
 
 			//	Rempli la troisième colonne.
-			Widgets.StaticTextExtensions.CreateColumnTitle (column3, "Pages imprimées");
+			var columnTitle3 = new StaticText (column3);
+			columnTitle3.SetColumnTitle ("Pages imprimées");
 
 			this.pageTypesBox = new FrameBox
 			{
@@ -338,7 +342,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			}
 
 			//	Rempli la colonne de droite.
-			Widgets.StaticTextExtensions.CreateColumnTitle (column4, "Options imposées");
+			var columnTitle4 = new StaticText (column4);
+			columnTitle4.SetColumnTitle ("Options imposées");
 
 			var optionsHelpBox = new FrameBox
 			{

@@ -17,16 +17,12 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// </summary>
 	public static class StaticTextExtensions
 	{
-		public static StaticText CreateColumnTitle(Widget parent, string title)
+		public static void SetColumnTitle(this StaticText staticText, string title)
 		{
-			return new StaticText
-			{
-				Parent = parent,
-				PreferredHeight = 20,
-				Dock = DockStyle.Top,
-				FormattedText = TextFormatter.FormatText (title).ApplyFontSize (16),
-				Margins = new Margins (0, 0, 0, 10),
-			};
+			staticText.PreferredHeight = 20;
+			staticText.Dock = DockStyle.Top;
+			staticText.FormattedText = TextFormatter.FormatText (title).ApplyFontSize (16);
+			staticText.Margins = new Margins (0, 0, 0, 10);
 		}
 	}
 }
