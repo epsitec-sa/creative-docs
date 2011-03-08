@@ -407,7 +407,7 @@ namespace Epsitec.Cresus.Core
 				//	designer:cap/HVAO1
 				public static readonly global::Epsitec.Common.Support.Druid DocumentCategories = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 56);
 				//	designer:cap/HVAN1
-				public static readonly global::Epsitec.Common.Support.Druid PrintableEntityName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 55);
+				public static readonly global::Epsitec.Common.Support.Druid PrintableEntity = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 55);
 			}
 			
 			public static class DocumentMetadata

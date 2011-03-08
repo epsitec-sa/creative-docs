@@ -39,16 +39,5 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 #endif
 		}
-
-		public override EntityStatus GetEntityStatus()
-		{
-			using (var a = new EntityStatusAccumulator ())
-			{
-				a.Accumulate (this.Name.GetEntityStatus ());
-				a.Accumulate (this.Description.GetEntityStatus ());
-
-				return a.EntityStatus;
-			}
-		}
 	}
 }

@@ -934,7 +934,7 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>DocumentCategoryMapping</c> entity.
 	///	designer:cap/HVAM1
 	///	</summary>
-	public partial class DocumentCategoryMappingEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.INameDescription
+	public partial class DocumentCategoryMappingEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime
 	{
 		#region ILifetime Members
 		///	<summary>
@@ -954,59 +954,25 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		#endregion
-		#region INameDescription Members
 		///	<summary>
-		///	The <c>Name</c> field.
-		///	designer:fld/HVAM1/8VA7
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VA7]")]
-		public global::Epsitec.Common.Types.FormattedText Name
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetName (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
-			}
-		}
-		///	<summary>
-		///	The <c>Description</c> field.
-		///	designer:fld/HVAM1/8VA8
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VA8]")]
-		public global::Epsitec.Common.Types.FormattedText Description
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetDescription (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetDescription (this, value);
-			}
-		}
-		#endregion
-		///	<summary>
-		///	The <c>PrintableEntityName</c> field.
+		///	The <c>PrintableEntity</c> field.
 		///	designer:fld/HVAM1/HVAN1
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[HVAN1]")]
-		public string PrintableEntityName
+		public global::Epsitec.Cresus.Core.Business.PrintableEntities PrintableEntity
 		{
 			get
 			{
-				return this.GetField<string> ("[HVAN1]");
+				return this.GetField<global::Epsitec.Cresus.Core.Business.PrintableEntities> ("[HVAN1]");
 			}
 			set
 			{
-				string oldValue = this.PrintableEntityName;
+				global::Epsitec.Cresus.Core.Business.PrintableEntities oldValue = this.PrintableEntity;
 				if (oldValue != value || !this.IsFieldDefined("[HVAN1]"))
 				{
-					this.OnPrintableEntityNameChanging (oldValue, value);
-					this.SetField<string> ("[HVAN1]", oldValue, value);
-					this.OnPrintableEntityNameChanged (oldValue, value);
+					this.OnPrintableEntityChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.PrintableEntities> ("[HVAN1]", oldValue, value);
+					this.OnPrintableEntityChanged (oldValue, value);
 				}
 			}
 		}
@@ -1023,8 +989,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnPrintableEntityNameChanging(string oldValue, string newValue);
-		partial void OnPrintableEntityNameChanged(string oldValue, string newValue);
+		partial void OnPrintableEntityChanging(global::Epsitec.Cresus.Core.Business.PrintableEntities oldValue, global::Epsitec.Cresus.Core.Business.PrintableEntities newValue);
+		partial void OnPrintableEntityChanged(global::Epsitec.Cresus.Core.Business.PrintableEntities oldValue, global::Epsitec.Cresus.Core.Business.PrintableEntities newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
