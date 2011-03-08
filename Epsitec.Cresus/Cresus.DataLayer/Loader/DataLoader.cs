@@ -344,13 +344,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 				if (!oldEntityLogId.HasValue || oldEntityLogId.Value < newEntityLogId)
 				{
-					using (entity.UseSilentUpdates ())
-					using (entity.DefineOriginalValues ())
-					using (entity.DisableEvents ())
-					{
-						this.DataContext.SerializationManager.Deserialize (entity, entityData);
-					}
-
+					this.DataContext.SerializationManager.Deserialize (entity, entityData);
+					
 					entity.ResetDataGeneration ();
 
 					this.DataContext.NotifyEntityChanged (entity, EntityChangedEventSource.Reload, EntityChangedEventType.Updated);

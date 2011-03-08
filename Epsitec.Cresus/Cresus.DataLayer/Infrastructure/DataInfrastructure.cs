@@ -289,9 +289,9 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			return new LockTransaction (this.dbInfrastructure, this.connectionInformation.ConnectionId, lockNames);
 		}
 
-		public DataContext CreateDataContext(bool enableNullVirtualization = false)
+		public DataContext CreateDataContext(bool enableNullVirtualization = false, bool readOnly = false)
 		{
-			DataContext dataContext = new DataContext (this, enableNullVirtualization);
+			DataContext dataContext = new DataContext (this, enableNullVirtualization, readOnly);
 
 			this.DataContextPool.Add (dataContext);
 

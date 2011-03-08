@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext (true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase(dataInfrastructure, enableNullVirtualization:true))
 				{
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
 
@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext.SaveChanges ();
 				}
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext (true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
 				{
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
 
@@ -96,8 +96,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
-			{		
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext (true))
+			{
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
 				{
 					UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
 
@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext.SaveChanges ();
 				}
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext (true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
 				{
 					UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
 
@@ -171,7 +171,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext (true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
 				{
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
 
@@ -204,7 +204,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext.SaveChanges ();
 				}
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext (true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
 				{
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
 
@@ -234,7 +234,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext (true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
 				{
 					UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
 
@@ -288,7 +288,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext.SaveChanges ();
 				}
 
-				using (DataContext dataContext = dataInfrastructure.CreateDataContext (true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
 				{
 					UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
 

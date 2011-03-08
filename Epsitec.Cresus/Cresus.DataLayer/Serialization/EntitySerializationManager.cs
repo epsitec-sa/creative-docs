@@ -267,21 +267,21 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		/// <param name="entity">The <see cref="AbstractEntity"/> in which to deserialize the data.</param>
 		private void DeserializeEntityFields(EntityData data, AbstractEntity entity)
 		{
+			List<Druid> entityIds = this.EntityContext.GetInheritedEntityIds (entity.GetEntityStructuredTypeId ()).ToList ();
+
+			using (entity.UseSilentUpdates ()) // New. Is that requested?
 			using (entity.DefineOriginalValues ())
+			using (entity.DisableEvents ())
+			using (entity.DisableReadOnlyChecks ())
 			{
-				using (entity.DisableEvents ())
+				foreach (Druid currentId in entityIds.TakeWhile (id => id != data.LoadedEntityId))
 				{
-					List<Druid> entityIds = this.EntityContext.GetInheritedEntityIds (entity.GetEntityStructuredTypeId ()).ToList ();
+					this.DeserializeEntityLocalWithProxies (entity, currentId);
+				}
 
-					foreach (Druid currentId in entityIds.TakeWhile (id => id != data.LoadedEntityId))
-					{
-						this.DeserializeEntityLocalWithProxies (entity, currentId);
-					}
-
-					foreach (Druid currentId in entityIds.SkipWhile (id => id != data.LoadedEntityId))
-					{
-						this.DeserializeEntityLocal (entity, data, currentId);
-					}
+				foreach (Druid currentId in entityIds.SkipWhile (id => id != data.LoadedEntityId))
+				{
+					this.DeserializeEntityLocal (entity, data, currentId);
 				}
 			}
 		}

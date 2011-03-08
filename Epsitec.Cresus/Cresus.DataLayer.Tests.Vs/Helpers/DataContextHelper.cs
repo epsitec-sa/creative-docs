@@ -16,9 +16,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Helpers
 	{
 
 
-		public static DataContext ConnectToTestDatabase(DataInfrastructure dataInfrastructure)
+		public static DataContext ConnectToTestDatabase(DataInfrastructure dataInfrastructure, bool enableNullVirtualization = false, bool readOnly = false)
 		{
-			return dataInfrastructure.CreateDataContext ();
+			return dataInfrastructure.CreateDataContext (enableNullVirtualization, readOnly);
 		}
 
 

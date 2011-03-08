@@ -9,7 +9,7 @@
     <ProjectGuid>{E8493223-9A6E-49C1-81D6-42B0AE7A14D3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Cresus.DataLayer.Tests.Vs</RootNamespace>
+    <RootNamespace>Epsitec.Cresus.DataLayer.Tests.Vs</RootNamespace>
     <AssemblyName>Cresus.DataLayer.Tests.Vs</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -77,6 +77,7 @@
     <Compile Include="General\UnitTestEntityCopy.cs" />
     <Compile Include="General\UnitTestEntityReload.cs" />
     <Compile Include="General\UnitTestForeignEntities.cs" />
+    <Compile Include="General\UnitTestReadOnly.cs" />
     <Compile Include="Helpers\DataContextHelper.cs" />
     <Compile Include="Helpers\DatabaseCreator1.cs" />
     <Compile Include="Helpers\DatabaseCreator2.cs" />

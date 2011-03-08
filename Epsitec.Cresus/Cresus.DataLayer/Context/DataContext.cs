@@ -31,14 +31,15 @@ namespace Epsitec.Cresus.DataLayer.Context
 	/// point for everything which is related to them.
 	/// </summary>
 	[System.Diagnostics.DebuggerDisplay ("DataContext #{UniqueId}")]
-	public sealed class DataContext : IEntityPersistenceManager, IIsDisposed
+	public sealed class DataContext : IEntityPersistenceManager, IIsDisposed, IReadOnly
 	{
 		/// <summary>
 		/// Creates a new <c>DataContext</c>.
 		/// </summary>
 		/// <param name="infrastructure">The <see cref="DbInfrastructure"/> that will be used to talk to the database.</param>
 		/// <param name="enableNullVirtualization">Tells whether to enable the virtualization of null <see cref="AbstractEntity"/> or not.</param>
-		internal DataContext(DataInfrastructure infrastructure, bool enableNullVirtualization = false)
+		/// <param name="isReadOnly">Tells whether the new instance will contain only read only entities.</param>
+		internal DataContext(DataInfrastructure infrastructure, bool enableNullVirtualization = false, bool isReadOnly = false)
 		{
 			this.uniqueId = System.Threading.Interlocked.Increment (ref DataContext.nextUniqueId);
 			this.DataInfrastructure = infrastructure;
@@ -48,6 +49,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.SerializationManager = new EntitySerializationManager (this);
 			this.DataConverter = new DataConverter (this);
 
+			this.IsReadOnly = isReadOnly;
 			this.EnableNullVirtualization = enableNullVirtualization;
 
 			this.entitiesCache = new EntityCache (this.EntityContext);
@@ -71,6 +73,18 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.Dipose (false);
 		}
 
+		#region IReadOnly Members
+
+		/// <summary>
+		/// Tells whether this instance contains only read only entities.
+		/// </summary>
+		public bool IsReadOnly
+		{
+			get;
+			private set;
+		}
+
+		#endregion
 
 		/// <summary>
 		/// Gets the unique id of the current instance.
@@ -209,10 +223,12 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <typeparam name="TEntity">The type of the <see cref="AbstractEntity"/> to create.</typeparam>
 		/// <returns>The new <see cref="AbstractEntity"/>.</returns>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		/// <exception cref="Epsitec.Common.Types.Exceptions.ReadOnlyException">If this instance is in read only mode.</exception>
 		public TEntity CreateEntity<TEntity>()
 			where TEntity : AbstractEntity, new ()
 		{
 			this.AssertDataContextIsNotDisposed ();
+			this.AssertIsNotReadOnly ();
 
 			TEntity entity = this.EntityContext.CreateEmptyEntity<TEntity> ();
 
@@ -230,10 +246,12 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="entityId">The <see cref="Druid"/> of the type of the <see cref="AbstractEntity"/> to create.</param>
 		/// <returns>The new <see cref="AbstractEntity"/>.</returns>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		/// <exception cref="Epsitec.Common.Types.Exceptions.ReadOnlyException">If this instance is in read only mode.</exception>
 		public AbstractEntity CreateEntity(Druid entityId)
 		{
 			this.AssertDataContextIsNotDisposed ();
-			
+			this.AssertIsNotReadOnly ();
+
 			AbstractEntity entity = this.EntityContext.CreateEmptyEntity (entityId);
 
 			this.NotifyEntityChanged (entity, EntityChangedEventSource.External, EntityChangedEventType.Created);
@@ -252,10 +270,12 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <typeparam name="TEntity">The type of the <see cref="AbstractEntity"/> to create.</typeparam>
 		/// <returns>The new <see cref="AbstractEntity"/>.</returns>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		/// <exception cref="Epsitec.Common.Types.Exceptions.ReadOnlyException">If this instance is in read only mode.</exception>
 		public TEntity CreateEntityAndRegisterAsEmpty<TEntity>()
 			where TEntity : AbstractEntity, new ()
 		{
 			this.AssertDataContextIsNotDisposed ();
+			this.AssertIsNotReadOnly ();
 
 			TEntity entity = this.CreateEntity<TEntity> ();
 
@@ -464,16 +484,20 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <param name="entity">The <see cref="AbstractEntity"/> to register as empty.</param>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		/// <exception cref="Epsitec.Common.Types.Exceptions.ReadOnlyException">If this instance is in read only mode.</exception>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
+		/// <exception cref="Epsitec.Common.Types.Exceptions.ReadOnlyException">If <paramref name="entity"/> is in read only mode.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> has already been persisted.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is managed by another <see cref="DataContext"/>.</exception>
 		public void RegisterEmptyEntity(AbstractEntity entity)
 		{
 			this.AssertDataContextIsNotDisposed ();
 			this.AssertEntityIsNotForeign (entity);
+			this.AssertIsNotReadOnly ();
 
 			entity.ThrowIfNull ("entity");
 			entity.ThrowIf (e => this.IsPersistent (e), "entity");
+			entity.AssertIsNotReadOnly ();
 
 			if (this.emptyEntities.Add (entity))
 			{
@@ -491,15 +515,19 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <param name="entity">The <see cref="AbstractEntity"/> to unregister as empty.</param>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		/// <exception cref="Epsitec.Common.Types.Exceptions.ReadOnlyException">If this instance is in read only mode.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
+		/// <exception cref="Epsitec.Common.Types.Exceptions.ReadOnlyException">If <paramref name="entity"/> is in read only mode.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> has already been persisted.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is managed by another <see cref="DataContext"/>.</exception>
 		public void UnregisterEmptyEntity(AbstractEntity entity)
 		{
 			this.AssertDataContextIsNotDisposed ();
 			this.AssertEntityIsNotForeign (entity);
+			this.AssertIsNotReadOnly ();
 
 			entity.ThrowIfNull ("entity");
+			entity.AssertIsNotReadOnly ();
 
 			if (this.emptyEntities.Remove (entity))
 			{
@@ -521,17 +549,17 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="entity">The <see cref="AbstractEntity"/> to register or unregister.</param>
 		/// <param name="isEmpty">A <see cref="bool"/> indicating the future empty status of the <see cref="AbstractEntity"/>.</param>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		/// <exception cref="Epsitec.Common.Types.Exceptions.ReadOnlyException">If this instance is in read only mode.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
+		/// <exception cref="Epsitec.Common.Types.Exceptions.ReadOnlyException">If <paramref name="entity"/> is in read only mode.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is managed by another <see cref="DataContext"/>.</exception>
 		public void UpdateEmptyEntityStatus(AbstractEntity entity, bool isEmpty)
 		{
-			this.AssertDataContextIsNotDisposed ();
-			this.AssertEntityIsNotForeign (entity);
-
 			if (this.IsPersistent (entity))
             {
 				return;
             }
-			
+
 			if (isEmpty)
 			{
 				this.RegisterEmptyEntity (entity);
@@ -574,10 +602,17 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </remarks>
 		/// <param name="entity">The <see cref="AbstractEntity"/> to delete.</param>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		/// <exception cref="Epsitec.Common.Types.Exceptions.ReadOnlyException">If this instance is in read only mode.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
+		/// <exception cref="Epsitec.Common.Types.Exceptions.ReadOnlyException">If <paramref name="entity"/> is in read only mode.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is managed by another <see cref="DataContext"/>.</exception>
 		public void DeleteEntity(AbstractEntity entity)
 		{
 			this.AssertDataContextIsNotDisposed ();
+			this.AssertIsNotReadOnly ();
+			
+			entity.ThrowIfNull ("entity");
+			entity.AssertIsNotReadOnly ();
 			this.AssertEntityIsNotForeign (entity);
 
 			if (!this.entitiesDeleted.Contains (entity))
@@ -990,9 +1025,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// by this instance to the database.
 		/// </summary>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		/// <exception cref="Epsitec.Common.Types.Exceptions.ReadOnlyException">If this instance is in read only mode.</exception>
 		public void SaveChanges()
 		{
 			this.AssertDataContextIsNotDisposed ();
+			this.AssertIsNotReadOnly ();
 
 			IEnumerable<AbstractSynchronizationJob> jobs = this.DataSaver.SaveChanges ();
 			
@@ -1041,17 +1078,14 @@ namespace Epsitec.Cresus.DataLayer.Context
 				AbstractEntity entity = this.GetEntity (job.EntityKey);
 
 				using (entity.UseSilentUpdates ())
+				using (entity.DefineOriginalValues ())
+				using (entity.DisableEvents ())
+				using (entity.DisableReadOnlyChecks ())
 				{
-					using (entity.DefineOriginalValues ())
-					{
-						using (entity.DisableEvents ())
-						{
-							string fieldId = job.FieldId.ToResourceId ();
-							object fieldValue = job.NewValue;
+					string fieldId = job.FieldId.ToResourceId ();
+					object fieldValue = job.NewValue;
 
-							entity.InternalSetValue (fieldId, fieldValue);
-						}
-					}
+					entity.InternalSetValue (fieldId, fieldValue);
 				}
 
 				this.NotifyEntityChanged (entity, EntityChangedEventSource.Synchronization, EntityChangedEventType.Updated);
@@ -1076,28 +1110,25 @@ namespace Epsitec.Cresus.DataLayer.Context
 				AbstractEntity entity = this.GetEntity (job.EntityKey);
 
 				using (entity.UseSilentUpdates ())
+				using (entity.DefineOriginalValues ())
+				using (entity.DisableEvents ())
+				using (entity.DisableReadOnlyChecks ())
 				{
-					using (entity.DefineOriginalValues ())
+					object fieldValue;
+
+					Druid fieldId = job.FieldId;
+					EntityKey? targetKey = job.NewTargetKey;
+
+					if (targetKey.HasValue)
 					{
-						using (entity.DisableEvents ())
-						{
-							object fieldValue;
-
-							Druid fieldId = job.FieldId;
-							EntityKey? targetKey = job.NewTargetKey;
-
-							if (targetKey.HasValue)
-							{
-								fieldValue = new KeyedReferenceFieldProxy (this, entity, fieldId, targetKey.Value);
-							}
-							else
-							{
-								fieldValue = null;
-							}
-
-							entity.InternalSetValue (fieldId.ToResourceId (), fieldValue);
-						}
+						fieldValue = new KeyedReferenceFieldProxy (this, entity, fieldId, targetKey.Value);
 					}
+					else
+					{
+						fieldValue = null;
+					}
+
+					entity.InternalSetValue (fieldId.ToResourceId (), fieldValue);
 				}
 
 				this.NotifyEntityChanged (entity, EntityChangedEventSource.Synchronization, EntityChangedEventType.Updated);
@@ -1122,27 +1153,24 @@ namespace Epsitec.Cresus.DataLayer.Context
 				AbstractEntity entity = this.GetEntity (job.EntityKey);
 
 				using (entity.UseSilentUpdates ())
+				using (entity.DefineOriginalValues ())
+				using (entity.DisableEvents ())
+				using (entity.DisableReadOnlyChecks ())
 				{
-					using (entity.DefineOriginalValues ())
+					Druid fieldId = job.FieldId;
+
+					object collection;
+
+					if (job.NewTargetKeys.Any ())
 					{
-						using (entity.DisableEvents ())
-						{
-							Druid fieldId = job.FieldId;
-
-							object collection;
-
-							if (job.NewTargetKeys.Any ())
-							{
-								collection = new KeyedCollectionFieldProxy (this, entity, fieldId, job.NewTargetKeys);
-							}
-							else
-							{
-								collection = UndefinedValue.Value;
-							}
-
-							entity.InternalSetValue (fieldId.ToResourceId (), collection);
-						}
+						collection = new KeyedCollectionFieldProxy (this, entity, fieldId, job.NewTargetKeys);
 					}
+					else
+					{
+						collection = UndefinedValue.Value;
+					}
+
+					entity.InternalSetValue (fieldId.ToResourceId (), collection);
 				}
 
 				this.NotifyEntityChanged (entity, EntityChangedEventSource.Synchronization, EntityChangedEventType.Updated);
@@ -1183,39 +1211,38 @@ namespace Epsitec.Cresus.DataLayer.Context
 			bool updated = false;
 
 			using (source.UseSilentUpdates ())
+			using (source.DisableEvents ())
+			using (source.DisableReadOnlyChecks ())
 			{
-				using (source.DisableEvents ())
+				switch (field.Relation)
 				{
-					switch (field.Relation)
-					{
-						case FieldRelation.Reference:
+					case FieldRelation.Reference:
 
-							if (source.InternalGetValue (field.Id) == target)
-							{
-								source.InternalSetValue (field.Id, null);
+						if (source.InternalGetValue (field.Id) == target)
+						{
+							source.InternalSetValue (field.Id, null);
 
-								updated = true;
-							}
+							updated = true;
+						}
 
-							break;
+						break;
 
-						case FieldRelation.Collection:
+					case FieldRelation.Collection:
 
-							IList collection = source.InternalGetFieldCollection (field.Id) as IList;
+						IList collection = source.InternalGetFieldCollection (field.Id) as IList;
 
-							while (collection.Contains (target))
-							{
-								collection.Remove (target);
+						while (collection.Contains (target))
+						{
+							collection.Remove (target);
 
-								updated = true;
-							}
+							updated = true;
+						}
 
-							break;
+						break;
 
-						default:
+					default:
 
-							throw new System.InvalidOperationException ();
-					}
+						throw new System.InvalidOperationException ();
 				}
 			}
 
@@ -1336,8 +1363,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			{
 				throw new System.ArgumentException ("entity is managed by another DataContext.");
 			}
-		}
-		
+		}		
 		
 		/// <summary>
 		/// Tells whether an <see cref="AbstractEntity"/> is managed by another
@@ -1488,6 +1514,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.OnCreationAssignToDataContext (entity);
 			this.OnCreationPatchEntity (entity);
 			this.OnCreationRegisterAsEmptyEntity (entity, e);
+			this.OnCreationFreezeEntity (entity);
 			this.OnCreationAddToCache (entity);
 			
 			try
@@ -1548,6 +1575,19 @@ namespace Epsitec.Cresus.DataLayer.Context
 			if (entityWasNullVirtualized && (entityIsNullVirtualized || entityIsStillUnchanged))
 			{
 				this.RegisterEmptyEntity (entity);
+			}
+		}
+
+
+		/// <summary>
+		/// Freezes the given <see cref="AbstractEntity"/> if this instance is in read only mode.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> to freeze.</param>
+		private void OnCreationFreezeEntity(AbstractEntity entity)
+		{
+			if (this.IsReadOnly)
+			{
+				entity.Freeze ();
 			}
 		}
 
@@ -1639,6 +1679,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is not managed by <paramref name="sender"/>.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is not persistent.</exception>
+		/// <exception cref="Epsitec.Common.Types.Exceptions.ReadOnlyException">If <paramref name="sender"/> is not in read only mode but <paramref name="receiver"/> is.</exception>
 		/// <exception cref="System.ObjectDisposedException">If <paramref name="sender"/> has been disposed.</exception>
 		/// <exception cref="System.ObjectDisposedException">If <paramref name="receiver"/> has been disposed.</exception>
 		public static TEntity CopyEntity<TEntity>(DataContext sender, TEntity entity, DataContext receiver) where TEntity : AbstractEntity
@@ -1648,6 +1689,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			sender.AssertDataContextIsNotDisposed ();
 			receiver.AssertDataContextIsNotDisposed ();
+
+			if (!sender.IsReadOnly)
+			{
+				receiver.AssertIsNotReadOnly ();
+			}
 
 			if (sender == receiver)
 			{
@@ -1707,5 +1753,6 @@ namespace Epsitec.Cresus.DataLayer.Context
         private EventHandler<EntityChangedEventArgs> entityChanged;			//	fired when entities managed by this instance change
 
 		private bool								isDisposed;
+
 	}
 }

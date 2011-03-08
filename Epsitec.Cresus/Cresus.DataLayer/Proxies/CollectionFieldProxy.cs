@@ -129,13 +129,12 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 			var entityCollection = new EntityCollection<AbstractEntity> (fieldId.ToResourceId (), this.Entity, copyOnWrite: false);
 
 			using (this.Entity.UseSilentUpdates ())
+			using (this.Entity.DisableEvents ())
+			using (this.Entity.DisableReadOnlyChecks ())
 			{
-				using (this.Entity.DisableEvents ())
+				foreach (AbstractEntity target in targets)
 				{
-					foreach (AbstractEntity target in targets)
-					{
-						entityCollection.Add (target);
-					}
+					entityCollection.Add (target);
 				}
 			}
 
