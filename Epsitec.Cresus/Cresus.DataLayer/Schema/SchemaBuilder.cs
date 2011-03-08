@@ -621,30 +621,6 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		}
 
 
-		/// <summary>
-		/// Converts a given <see cref="FieldRelation"/> to the equivalent <see cref="DbCardinality"/>.
-		/// </summary>
-		/// <param name="fieldRelation">The <see cref="FieldRelation"/> object to convert.</param>
-		/// <returns>The result of the conversion.</returns>
-		private DbCardinality FieldRelationToDbCardinality(FieldRelation fieldRelation)
-		{
-			switch (fieldRelation)
-			{
-				case FieldRelation.None:
-					return DbCardinality.None;
-
-				case FieldRelation.Reference:
-					return DbCardinality.Reference;
-
-				case FieldRelation.Collection:
-					return DbCardinality.Collection;
-
-				default:
-					throw new System.NotImplementedException ();
-			}
-		}
-
-
 	}
 
 

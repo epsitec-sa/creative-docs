@@ -946,84 +946,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		#endregion
 
 
-		#region VALUE QUERY GENERATION
-
-
-		private SqlContainer BuildSqlContainerForValues(AliasNode rootEntityAlias, AbstractEntity entity, bool returnBinaryBlobs)
-		{
-			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-			Druid rootEntityId = this.EntityContext.GetRootEntityId (leafEntityId);
-
-			return this.EntityContext.GetEntityFieldDefinitions (leafEntityId)
-				.Where (field => field.Relation == FieldRelation.None)
-				.Where (field => field.Source == FieldSource.Value)
-				.Where (field => returnBinaryBlobs || field.Type.SystemType != typeof (byte[]))
-				.Select (field => field.CaptionId)
-				.OrderBy (field => field.ToResourceId ())
-				.Select (field => this.BuildSqlFieldForValueField (rootEntityAlias, entity, field))
-				.Append (this.BuildSqlFieldForLogId (rootEntityAlias, rootEntityId))
-				.Append (this.BuildSqlFieldForEntityColumn (rootEntityAlias, rootEntityId, Tags.ColumnInstanceType))
-				.Append (this.BuildSqlFieldForEntityColumn (rootEntityAlias, rootEntityId, Tags.ColumnId))
-				.Aggregate (SqlContainer.Empty, (acc, e) => acc.PlusSqlFields (e));
-		}
-
-
-		private SqlField BuildSqlFieldForValueField(AliasNode rootEntityAlias, AbstractEntity entity, Druid fieldId)
-		{
-			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-			Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
-
-			DbColumn dbColumn = this.SchemaEngine.GetEntityFieldColumnDefinition (localEntityId, fieldId);
-			string fieldName = dbColumn.Name;
-
-			return this.BuildSqlFieldForEntityColumn (rootEntityAlias, localEntityId, fieldName);
-		}
-
-
-		private SqlField BuildSqlFieldForLogId(AliasNode rootEntityAlias, Druid rootEntityId)
-		{
-			DbTable dbTable = this.DbInfrastructure.ResolveDbTable (rootEntityId);
-			DbColumn dbColumn = dbTable.Columns[Tags.ColumnRefLog];
-
-			return SqlField.CreateAliasedName (rootEntityAlias.Alias, dbColumn.GetSqlName (), Tags.ColumnRefLog);
-		}
-
-
-		#endregion
-
-
-		#region REFERENCE QUERY GENERATION
-
-
-		private SqlContainer BuildSqlContainerForReferences(AliasNode rootEntityAlias, AbstractEntity entity)
-		{
-			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-			Druid rootEntityId = this.EntityContext.GetRootEntityId (leafEntityId);
-
-			return this.EntityContext.GetEntityFieldDefinitions (leafEntityId)
-				.Where (field => field.Relation == FieldRelation.Reference)
-				.Where (field => field.Source == FieldSource.Value)
-				.Select (field => field.CaptionId)
-				.OrderBy (field => field.ToResourceId ())
-				.Select (field => this.BuildSqlFieldForReferenceField (rootEntityAlias, entity, field))
-				.Append (this.BuildSqlFieldForEntityColumn (rootEntityAlias, rootEntityId, Tags.ColumnId))
-				.Aggregate (SqlContainer.Empty, (acc, e) => acc.PlusSqlFields (e));
-		}
-
-
-		private SqlField BuildSqlFieldForReferenceField(AliasNode rootEntityAlias, AbstractEntity entity, Druid fieldId)
-		{
-			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-			Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
-
-			DbColumn dbColumn = this.SchemaEngine.GetEntityFieldColumnDefinition (localEntityId, fieldId);
-			string fieldName = dbColumn.Name;
-
-			return this.BuildSqlFieldForEntityColumn (rootEntityAlias, localEntityId, fieldName);
-		}
-
-
-		#endregion
+		#region VALUE AND REFERENCE QUERY GENERATION
 
 
 		private SqlContainer BuildSqlContainerForValuesAndReferences(AliasNode rootEntityAlias, AbstractEntity entity, bool returnBinaryBlobs)
@@ -1057,6 +980,42 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				.Plus (sqlContainerForReferences)
 				.Plus (sqlContainerForMetaData);
 		}
+
+
+		private SqlField BuildSqlFieldForValueField(AliasNode rootEntityAlias, AbstractEntity entity, Druid fieldId)
+		{
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
+
+			DbColumn dbColumn = this.SchemaEngine.GetEntityFieldColumnDefinition (localEntityId, fieldId);
+			string fieldName = dbColumn.Name;
+
+			return this.BuildSqlFieldForEntityColumn (rootEntityAlias, localEntityId, fieldName);
+		}
+
+
+		private SqlField BuildSqlFieldForLogId(AliasNode rootEntityAlias, Druid rootEntityId)
+		{
+			DbTable dbTable = this.DbInfrastructure.ResolveDbTable (rootEntityId);
+			DbColumn dbColumn = dbTable.Columns[Tags.ColumnRefLog];
+
+			return SqlField.CreateAliasedName (rootEntityAlias.Alias, dbColumn.GetSqlName (), Tags.ColumnRefLog);
+		}
+
+
+		private SqlField BuildSqlFieldForReferenceField(AliasNode rootEntityAlias, AbstractEntity entity, Druid fieldId)
+		{
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
+
+			DbColumn dbColumn = this.SchemaEngine.GetEntityFieldColumnDefinition (localEntityId, fieldId);
+			string fieldName = dbColumn.Name;
+
+			return this.BuildSqlFieldForEntityColumn (rootEntityAlias, localEntityId, fieldName);
+		}
+		
+
+		#endregion
 
 
 		#region COLLECTION QUERY GENERATION

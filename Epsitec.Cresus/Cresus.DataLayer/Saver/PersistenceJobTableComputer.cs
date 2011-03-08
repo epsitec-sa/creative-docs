@@ -75,18 +75,6 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 
 		/// <summary>
-		/// The <see cref="DbInfrastructure"/> used by this instance.
-		/// </summary>
-		private DbInfrastructure DbInfrastructure
-		{
-			get
-			{
-				return this.DataContext.DataInfrastructure.DbInfrastructure;
-			}
-		}
-
-
-		/// <summary>
 		/// Gets all the <see cref="DbTable"/> that will be affected by the execution of a given
 		/// <see cref="DeletePersistenceJob"/>.
 		/// </summary>

@@ -162,44 +162,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Serialization
 		}
 
 
-		[TestMethod]
-		public void ReplaceFieldByProxy()
-		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
-			{
-				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
-
-				Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
-
-				alfred.Firstname = "coucou";
-
-				Assert.IsFalse (DatabaseCreator2.CheckAlfred (alfred));
-
-				new EntitySerializationManager (dataContext).ReplaceFieldByProxy (alfred, Druid.Parse ("[J1AL1]"));
-
-				Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
-
-				alfred.Gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000002)));
-
-				Assert.IsFalse (DatabaseCreator2.CheckAlfred (alfred));
-
-				new EntitySerializationManager (dataContext).ReplaceFieldByProxy (alfred, Druid.Parse ("[J1AN1]"));
-
-				Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
-
-				alfred.Contacts.Clear ();
-
-				Assert.IsFalse (DatabaseCreator2.CheckAlfred (alfred));
-
-				new EntitySerializationManager (dataContext).ReplaceFieldByProxy (alfred, Druid.Parse ("[J1AC1]"));
-
-				Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
-			}
-		}
-
-
 		private void CheckEntitiesAreSimilar(DataContext dataContext, AbstractEntity entity1, AbstractEntity entity2)
 		{
 			Assert.AreEqual (entity1.GetEntityStructuredTypeId (), entity2.GetEntityStructuredTypeId ());

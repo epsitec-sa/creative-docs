@@ -1381,15 +1381,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 			// trick that avoid to break everything when these methods are called with null.
 			// Marc
 
-			// HACK If you don't want to be bothered by foreign entity exceptions, comment the real
-			// body of this method and uncomment the fake body. Note that then, the program will
-			// still be incorrect. It's just that the errors will probably go unnoticed.
-			// Marc
-			
-			// Fake body of the method:
-			// return false;
-
-			// Real body of the method:
 			return entity != null
 				&& entity.DataContextId.HasValue
 				&& entity.DataContextId.Value != this.UniqueId;
