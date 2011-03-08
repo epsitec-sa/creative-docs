@@ -106,47 +106,11 @@ namespace Epsitec.Common.Designer.Dialogs
 			};
 
 			//	Rempli la colonne de gauche.
-			this.abstractClassButton = new CheckButton
-			{
-				Parent = topPane,
-				Text = Common.Types.Res.Values.StructuredTypeFlags.AbstractClass.DefaultLabel,
-				AutoToggle = false,
-				Dock = DockStyle.Top,
-			};
-
-			this.abstractClassButton.Clicked += delegate
-			{
-				this.StructuredTypeFlags ^= Types.StructuredTypeFlags.AbstractClass;
-				this.UpdateWidgets ();
-			};
-
-			this.generateSchemaButton = new CheckButton
-			{
-				Parent = topPane,
-				Text = Common.Types.Res.Values.StructuredTypeFlags.GenerateSchema.DefaultLabel,
-				AutoToggle = false,
-				Dock = DockStyle.Top,
-			};
-
-			this.generateSchemaButton.Clicked += delegate
-			{
-				this.StructuredTypeFlags ^= Types.StructuredTypeFlags.GenerateSchema;
-				this.UpdateWidgets ();
-			};
-
-			this.generateRepositoryButton = new CheckButton
-			{
-				Parent = topPane,
-				Text = Common.Types.Res.Values.StructuredTypeFlags.GenerateRepository.DefaultLabel,
-				AutoToggle = false,
-				Dock = DockStyle.Top,
-			};
-
-			this.generateRepositoryButton.Clicked += delegate
-			{
-				this.StructuredTypeFlags ^= Types.StructuredTypeFlags.GenerateRepository;
-				this.UpdateWidgets ();
-			};
+			this.abstractClassButton      = this.CreateCheckButton (topPane, Common.Types.Res.Values.StructuredTypeFlags.AbstractClass.DefaultLabel,      Types.StructuredTypeFlags.AbstractClass);
+			this.generateSchemaButton     = this.CreateCheckButton (topPane, Common.Types.Res.Values.StructuredTypeFlags.GenerateSchema.DefaultLabel,     Types.StructuredTypeFlags.GenerateSchema);
+			this.generateRepositoryButton = this.CreateCheckButton (topPane, Common.Types.Res.Values.StructuredTypeFlags.GenerateRepository.DefaultLabel, Types.StructuredTypeFlags.GenerateRepository);
+			this.standaloneDisplayButton  = this.CreateCheckButton (topPane, Common.Types.Res.Values.StructuredTypeFlags.StandaloneDisplay.DefaultLabel,  Types.StructuredTypeFlags.StandaloneDisplay);
+			this.standaloneCreationButton = this.CreateCheckButton (topPane, Common.Types.Res.Values.StructuredTypeFlags.StandaloneCreate.DefaultLabel,   Types.StructuredTypeFlags.StandaloneCreation);
 
 			//	Rempli la colonne de droite.
 			this.unknownButton = new RadioButton
@@ -214,6 +178,44 @@ namespace Epsitec.Common.Designer.Dialogs
 			};
 		}
 
+		private CheckButton CreateCheckButton(Widget parent, string text, StructuredTypeFlags flag)
+		{
+			var button = new CheckButton
+			{
+				Parent = parent,
+				Text = text,
+				AutoToggle = false,
+				Dock = DockStyle.Top,
+			};
+
+			button.Clicked += delegate
+			{
+				//	Met ou enlève le flag correspondant au bouton.
+				this.StructuredTypeFlags ^= flag;
+
+				//	Gère les contraintes.
+				if (flag == Types.StructuredTypeFlags.StandaloneDisplay)
+				{
+					if ((this.StructuredTypeFlags & Types.StructuredTypeFlags.StandaloneDisplay) == 0)
+					{
+						this.StructuredTypeFlags &= ~Types.StructuredTypeFlags.StandaloneCreation;
+					}
+				}
+
+				if (flag == Types.StructuredTypeFlags.StandaloneCreation)
+				{
+					if ((this.StructuredTypeFlags & Types.StructuredTypeFlags.StandaloneCreation) != 0)
+					{
+						this.StructuredTypeFlags |= Types.StructuredTypeFlags.StandaloneDisplay;
+					}
+				}
+
+				this.UpdateWidgets ();
+			};
+
+			return button;
+		}
+
 		public void Update()
 		{
 			this.isEditOk = false;
@@ -267,6 +269,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.abstractClassButton.ActiveState      = ((this.StructuredTypeFlags & Types.StructuredTypeFlags.AbstractClass     ) != 0) ? ActiveState.Yes : ActiveState.No;
 			this.generateSchemaButton.ActiveState     = ((this.StructuredTypeFlags & Types.StructuredTypeFlags.GenerateSchema    ) != 0) ? ActiveState.Yes : ActiveState.No;
 			this.generateRepositoryButton.ActiveState = ((this.StructuredTypeFlags & Types.StructuredTypeFlags.GenerateRepository) != 0) ? ActiveState.Yes : ActiveState.No;
+			this.standaloneDisplayButton.ActiveState  = ((this.StructuredTypeFlags & Types.StructuredTypeFlags.StandaloneDisplay ) != 0) ? ActiveState.Yes : ActiveState.No;
+			this.standaloneCreationButton.ActiveState = ((this.StructuredTypeFlags & Types.StructuredTypeFlags.StandaloneCreation) != 0) ? ActiveState.Yes : ActiveState.No;
 
 			this.unknownButton.ActiveState   = (this.DataLifetimeExpectancy == Types.DataLifetimeExpectancy.Unknown  ) ? ActiveState.Yes : ActiveState.No;
 			this.volatileButton.ActiveState  = (this.DataLifetimeExpectancy == Types.DataLifetimeExpectancy.Volatile ) ? ActiveState.Yes : ActiveState.No;
@@ -336,6 +340,8 @@ namespace Epsitec.Common.Designer.Dialogs
 		private CheckButton						abstractClassButton;
 		private CheckButton						generateSchemaButton;
 		private CheckButton						generateRepositoryButton;
+		private CheckButton						standaloneDisplayButton;
+		private CheckButton						standaloneCreationButton;
 
 		private RadioButton						unknownButton;
 		private RadioButton						volatileButton;

@@ -1788,17 +1788,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		#region Cartridge
 		private enum CartridgeSamples
 		{
-			Abstract          = 0x0001,
-			Schema            = 0x0002,
-			Repository        = 0x0004,
-			Volatile          = 0x0010,
-			Stable            = 0x0020,
-			Immutable         = 0x0040,
-			PublicRelation    = 0x0100,
-			PublicCollection  = 0x0200,
-			PrivateRelation   = 0x0400,
-			PrivateCollection = 0x0800,
-			Interface         = 0x1000,
+			Abstract          = 0x00000001,
+			Schema            = 0x00000002,
+			Repository        = 0x00000004,
+			Display           = 0x00000008,
+			Creation          = 0x00000010,
+			Volatile          = 0x00000100,
+			Stable            = 0x00000200,
+			Immutable         = 0x00000400,
+			PublicRelation    = 0x00001000,
+			PublicCollection  = 0x00002000,
+			PrivateRelation   = 0x00004000,
+			PrivateCollection = 0x00008000,
+			Interface         = 0x00010000,
 		}
 
 		public Size CartridgeSize(BitmapParameters bitmapParameters)
@@ -1917,6 +1919,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					rect.Offset (Editor.CartridgeSampleMargin+Editor.CartridgeSampleWidth, 0);
 				}
 
+				if ((samples & CartridgeSamples.Display) != 0)
+				{
+					ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, false, "Affichage indiv.", null, DataLifetimeExpectancy.Unknown, StructuredTypeFlags.StandaloneDisplay);
+					rect.Offset (Editor.CartridgeSampleMargin+Editor.CartridgeSampleWidth, 0);
+				}
+
+				if ((samples & CartridgeSamples.Creation) != 0)
+				{
+					ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, false, "Création indiv.", null, DataLifetimeExpectancy.Unknown, StructuredTypeFlags.StandaloneCreation);
+					rect.Offset (Editor.CartridgeSampleMargin+Editor.CartridgeSampleWidth, 0);
+				}
+
 				if ((samples & CartridgeSamples.Volatile) != 0)
 				{
 					ObjectBox.DrawFrame (graphics, rect, AbstractObject.MainColor.Grey, false, true, false, "Volatile", null, DataLifetimeExpectancy.Volatile, StructuredTypeFlags.None);
@@ -2032,6 +2046,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if ((box.StructuredTypeFlags & StructuredTypeFlags.GenerateRepository) != 0)
 			{
 				samples |= CartridgeSamples.Repository;
+			}
+
+			if ((box.StructuredTypeFlags & StructuredTypeFlags.StandaloneDisplay) != 0)
+			{
+				samples |= CartridgeSamples.Display;
+			}
+
+			if ((box.StructuredTypeFlags & StructuredTypeFlags.StandaloneCreation) != 0)
+			{
+				samples |= CartridgeSamples.Creation;
 			}
 
 			switch (box.DataLifetimeExpectancy)
