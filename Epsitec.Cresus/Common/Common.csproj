@@ -12,7 +12,6 @@
     <AssemblyName>Common</AssemblyName>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -25,7 +24,6 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
-  
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
@@ -34,8 +32,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug .NET 2.0|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -49,16 +47,13 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
-  
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
-  
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  
-  <ItemGroup Condition=" '$(Configuration)' == 'Release' " >
+  <ItemGroup Condition=" '$(Configuration)' == 'Release' ">
     <Reference Include="AntiGrain.NET">
       <HintPath>..\External\AntiGrain.NET.dll</HintPath>
     </Reference>
@@ -66,8 +61,7 @@
       <HintPath>..\External\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
   </ItemGroup>
-
-  <ItemGroup Condition=" '$(Configuration)' == 'Debug' " >
+  <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Reference Include="AntiGrain.NET">
       <HintPath>..\External\AntiGrain.NET.dll</HintPath>
     </Reference>
@@ -75,8 +69,7 @@
       <HintPath>..\External\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
   </ItemGroup>
-
-  <ItemGroup Condition=" '$(Configuration)' == 'Debug .NET 2.0' " >
+  <ItemGroup Condition=" '$(Configuration)' == 'Debug .NET 2.0' ">
     <Reference Include="AntiGrain.NET">
       <HintPath>..\External\DotNet35\AntiGrain.NET.dll</HintPath>
     </Reference>
@@ -84,7 +77,6 @@
       <HintPath>..\External\DotNet35\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
   </ItemGroup>
-
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
