@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Proxies
 
 
 		[TestMethod]
-		public void GetValueTest()
+		public void GetValueTest1()
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
@@ -117,6 +117,53 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Proxies
 				Assert.AreEqual ("Alfred", value1);
 				Assert.AreEqual ("Dupond", value2);
 				Assert.AreEqual (new Date (1950, 12, 31), value3);
+			}
+		}
+
+
+		[TestMethod]
+		public void GetValueTest2()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+
+				person.Lastname = null;
+
+				dataContext.SaveChanges ();
+
+				var proxy = new ValueFieldProxy (dataContext, person, Druid.Parse ("[J1AM1]"));
+
+				object value = proxy.GetValue ();
+
+				Assert.AreEqual (UndefinedValue.Value, value);
+			}
+		}
+
+
+		[TestMethod]
+		public void GetValueTest3()
+		{
+			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure1 = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure1))
+			using (DataInfrastructure dataInfrastructure2 = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure2))
+			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure1))
+			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure2))
+			{
+				NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+
+				dataContext1.DeleteEntity (person1);
+				dataContext1.SaveChanges ();
+
+				var proxy = new ValueFieldProxy (dataContext2, person2, Druid.Parse ("[J1AM1]"));
+
+				object value = proxy.GetValue ();
+
+				Assert.AreEqual (UndefinedValue.Value, value);
 			}
 		}
 

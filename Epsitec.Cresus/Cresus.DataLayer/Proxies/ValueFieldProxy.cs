@@ -60,7 +60,9 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// <returns></returns>
 		public object GetValue()
 		{
-			return this.DataContext.DataLoader.ResolveValueField (Entity, FieldId);
+			object result = this.DataContext.DataLoader.ResolveValueField (Entity, FieldId);
+
+			return result ?? UndefinedValue.Value;
 		}
 
 

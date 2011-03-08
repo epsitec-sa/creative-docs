@@ -213,10 +213,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Proxies
 				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				Druid fieldId = Druid.Parse ("[J1AC1]");
 				List<EntityKey> targetKeys = new List<EntityKey> ()
-					{
-						new EntityKey (Druid.Parse("[J1AA1]"), new DbKey (new DbId(1))),
-						new EntityKey (Druid.Parse("[J1AA1]"), new DbKey (new DbId(2))),
-					};
+				{
+					new EntityKey (Druid.Parse("[J1AA1]"), new DbKey (new DbId(1))),
+					new EntityKey (Druid.Parse("[J1AA1]"), new DbKey (new DbId(2))),
+				};
 
 				var proxy = new KeyedCollectionFieldProxy (dataContext, person, fieldId, targetKeys);
 
@@ -235,15 +235,72 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Proxies
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
+				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				Druid fieldId = Druid.Parse ("[J1AC1]");
+				List<EntityKey> targetKeys = new List<EntityKey> ()
+				{
+					new EntityKey (Druid.Parse("[J1AA1]"), new DbKey (new DbId(5))),
+					new EntityKey (Druid.Parse("[J1AA1]"), new DbKey (new DbId(6))),
+				};
+
+				var proxy = new KeyedCollectionFieldProxy (dataContext, person, fieldId, targetKeys);
+
+				IList contacts2 = proxy.PromoteToRealInstance () as IList;
+				IList contacts1 = person.Contacts as IList;
+
+				CollectionAssert.AreEqual (contacts1, contacts2);
+			}
+		}
+
+
+		[TestMethod]
+		public void PromoteToRealInstanceTest4()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
 				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000003)));
 				Druid fieldId = Druid.Parse ("[J1AC1]");
 				List<EntityKey> targetKeys = new List<EntityKey> ()
-					{
-						new EntityKey (Druid.Parse("[J1AA1]"), new DbKey (new DbId(5))),
-						new EntityKey (Druid.Parse("[J1AA1]"), new DbKey (new DbId(6))),
-					};
+				{
+					new EntityKey (Druid.Parse("[J1AA1]"), new DbKey (new DbId(5))),
+					new EntityKey (Druid.Parse("[J1AA1]"), new DbKey (new DbId(6))),
+				};
 
 				var proxy = new KeyedCollectionFieldProxy (dataContext, person, fieldId, targetKeys);
+
+				object contacts = proxy.PromoteToRealInstance ();
+
+				Assert.AreSame (UndefinedValue.Value, contacts);
+			}
+		}
+
+
+		[TestMethod]
+		public void PromoteToRealInstanceTest5()
+		{
+			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure1 = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure1))
+			using (DataInfrastructure dataInfrastructure2 = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure2))
+			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure1))
+			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure2))
+			{
+				NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+
+				dataContext1.DeleteEntity (person1);
+				dataContext1.SaveChanges ();
+
+				Druid fieldId = Druid.Parse ("[J1AC1]");
+				List<EntityKey> targetKeys = new List<EntityKey> ()
+				{
+					new EntityKey (Druid.Parse("[J1AA1]"), new DbKey (new DbId(1))),
+					new EntityKey (Druid.Parse("[J1AA1]"), new DbKey (new DbId(2))),
+				};
+
+				var proxy = new KeyedCollectionFieldProxy (dataContext2, person2, fieldId, targetKeys);
 
 				object contacts = proxy.PromoteToRealInstance ();
 

@@ -200,6 +200,33 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Proxies
 		}
 
 
+		[TestMethod]
+		public void PromoteToRealInstanceTest3()
+		{
+			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure1 = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure1))
+			using (DataInfrastructure dataInfrastructure2 = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure2))
+			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure1))
+			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure2))
+			{
+				NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+
+				dataContext1.DeleteEntity (person1);
+				dataContext1.SaveChanges ();
+
+				Druid fieldId = Druid.Parse ("[J1AN1]");
+
+				var proxy = new ReferenceFieldProxy (dataContext2, person2, fieldId);
+
+				object gender = proxy.PromoteToRealInstance ();
+
+				Assert.AreSame (UndefinedValue.Value, gender);
+			}
+		}
+
+
 	}
 
 

@@ -222,12 +222,62 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Proxies
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
+				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+
+				Druid fieldId = Druid.Parse ("[J1AN1]");
+				EntityKey targetKey = new EntityKey (Druid.Parse ("[J1AQ]"), new DbKey (new DbId (1000000003)));
+
+				var proxy = new KeyedReferenceFieldProxy (dataContext, person, fieldId, targetKey);
+
+				object gender2 = proxy.PromoteToRealInstance ();
+				PersonGenderEntity gender1 = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000001)));
+
+				Assert.AreSame (gender1, gender2);
+			}
+		}
+
+
+		[TestMethod]
+		public void PromoteToRealInstanceTest4()
+		{
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
 				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000003)));
 
 				Druid fieldId = Druid.Parse ("[J1AN1]");
 				EntityKey targetKey = new EntityKey (Druid.Parse ("[J1AQ]"), new DbKey (new DbId (1000000003)));
 
 				var proxy = new KeyedReferenceFieldProxy (dataContext, person, fieldId, targetKey);
+
+				object gender = proxy.PromoteToRealInstance ();
+
+				Assert.AreSame (UndefinedValue.Value, gender);
+			}
+		}
+
+
+		[TestMethod]
+		public void PromoteToRealInstanceTest5()
+		{
+			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataInfrastructure dataInfrastructure1 = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure1))
+			using (DataInfrastructure dataInfrastructure2 = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure2))
+			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure1))
+			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure2))
+			{
+				NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+				NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+
+				dataContext1.DeleteEntity (person1);
+				dataContext1.SaveChanges ();
+
+				Druid fieldId = Druid.Parse ("[J1AN1]");
+				EntityKey targetKey = new EntityKey (Druid.Parse ("[J1AQ]"), new DbKey (new DbId (1000000001)));
+
+				var proxy = new KeyedReferenceFieldProxy (dataContext2, person2, fieldId, targetKey);
 
 				object gender = proxy.PromoteToRealInstance ();
 

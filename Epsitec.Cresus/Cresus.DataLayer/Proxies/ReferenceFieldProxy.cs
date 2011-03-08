@@ -109,12 +109,7 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		{
 			object result = this.DataContext.DataLoader.ResolveReferenceField (this.Entity, this.FieldId);
 
-			if (result == null)
-			{
-				result = UndefinedValue.Value;
-			}
-
-			return result;
+			return result ?? UndefinedValue.Value;
 		}
 
 
