@@ -4,6 +4,8 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Core.Business;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -30,6 +32,19 @@ namespace Epsitec.Cresus.Core.Entities
 				a.Accumulate (this.Description.GetEntityStatus ().TreatAsOptional ());
 
 				return a.EntityStatus;
+			}
+		}
+
+		public partial class Repository
+		{
+			public IEnumerable<DocumentCategoryEntity> Find(DocumentType type)
+			{
+				var example = this.CreateExample ();
+
+				example.IsArchive    = false;
+				example.DocumentType = type;
+
+				return this.GetByExample (example).OrderBy (x => x.Rank);
 			}
 		}
 	}

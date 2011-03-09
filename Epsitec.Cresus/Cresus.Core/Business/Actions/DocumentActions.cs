@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Business.Actions
 		{
 			var workflowEngine  = WorkflowExecutionEngine.Current;
 			var businessContext = workflowEngine.Transition.BusinessContext as BusinessContext;
-			var categoryRepo    = businessContext.GetSpecificRepository<DocumentCategoryRepository> ();
+			var categoryRepo    = businessContext.GetSpecificRepository<DocumentCategoryEntity.Repository> ();
 			var currentAffair   = businessContext.GetMasterEntity<AffairEntity> ();
 			var currentDocument = businessContext.GetMasterEntity<DocumentMetadataEntity> ();
 
@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Business.Actions
 		{
 			var workflowEngine  = WorkflowExecutionEngine.Current;
 			var businessContext = workflowEngine.Transition.BusinessContext as BusinessContext;
-			var categoryRepo    = businessContext.GetSpecificRepository<DocumentCategoryRepository> ();
+			var categoryRepo    = businessContext.GetSpecificRepository<DocumentCategoryEntity.Repository> ();
 			var currentAffair   = businessContext.GetMasterEntity<AffairEntity> ();
 			var currentDocument = businessContext.GetMasterEntity<DocumentMetadataEntity> ();
 

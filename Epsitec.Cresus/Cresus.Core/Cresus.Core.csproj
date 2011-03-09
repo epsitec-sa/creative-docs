@@ -144,25 +144,9 @@
     <Compile Include="EntityPrinters\IBusinessSettings.cs" />
     <Compile Include="EntityPrinters\RelationPrinter.cs" />
     <Compile Include="Hack.cs" />
-    <Compile Include="Repositories\DocumentCategoryMappingRepository.cs" />
-    <Compile Include="Repositories\DocumentPrintingUnitsRepository.cs" />
-    <Compile Include="Repositories\DocumentOptionsRepository.cs" />
     <Compile Include="Dialogs\SettingsTabPages\LoggingTabPage.cs" />
     <Compile Include="Dialogs\SettingsTabPages\MaintenanceTabPage.cs" />
     <Compile Include="Helpers\StatusHelperCardinality.cs" />
-    <Compile Include="Repositories\BusinessSettingsRepository.cs" />
-    <Compile Include="Repositories\ArticleAccountingDefinitionRepository.cs" />
-    <Compile Include="Repositories\DocumentCategoryRepository.cs" />
-    <Compile Include="Repositories\FinanceSettingsRepository.cs" />
-    <Compile Include="Repositories\XmlBlobRepository.cs" />
-    <Compile Include="Repositories\PriceCalculatorRepository.cs" />
-    <Compile Include="Repositories\ImageCategoryRepository.cs" />
-    <Compile Include="Repositories\ImageGroupRepository.cs" />
-    <Compile Include="Repositories\ImageBlobRepository.cs" />
-    <Compile Include="Repositories\ImageRepository.cs" />
-    <Compile Include="Repositories\SoftwareUserGroupRepository.cs" />
-    <Compile Include="Repositories\SoftwareUserRepository.cs" />
-    <Compile Include="Repositories\VatDefinitionRepository.cs" />
     <Compile Include="Controllers\EditionControllers\EditionUnitOfMeasureGroupViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionContactRoleViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticlePriceViewController.cs" />
@@ -170,9 +154,6 @@
     <Compile Include="Controllers\SummaryControllers\SummaryUnitOfMeasureGroupViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryContactRoleListViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleGroupListViewController.cs" />
-    <Compile Include="Repositories\UnitOfMeasureGroupRepository.cs" />
-    <Compile Include="Repositories\AffairRepository.cs" />
-    <Compile Include="Repositories\DocumentMetadataRepository.cs" />
     <Compile Include="Dialogs\SettingsTabPages\PrintingUnitsTabPage.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticleQuantityViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionEnumValueArticleParameterDefinitionViewController.cs" />
@@ -184,8 +165,6 @@
     <Compile Include="Controllers\SummaryControllers\SummaryArticleGroupViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleCategoryViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryMailContactViewController.cs" />
-    <Compile Include="Repositories\ArticleGroupRepository.cs" />
-    <Compile Include="Repositories\ArticleCategoryRepository.cs" />
     <Compile Include="Controllers\EditionControllers\Common.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPaymentModeViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionBillingDetailViewController.cs" />
@@ -219,32 +198,6 @@
     <Compile Include="Controllers\SummaryControllers\SummaryCountryViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryLegalPersonViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryNaturalPersonViewController.cs" />
-    <Compile Include="Repositories\ArticleDefinitionRepository.cs" />
-    <Compile Include="Repositories\CurrencyRepository.cs" />
-    <Compile Include="Repositories\PaymentModeRepository.cs" />
-    <Compile Include="Repositories\UnitOfMeasureRepository.cs" />
-    <Compile Include="Repositories\BusinessDocumentRepository.cs" />
-    <Compile Include="Repositories\RelationRepository.cs" />
-    <Compile Include="Repositories\AddressRepository.cs" />
-    <Compile Include="Repositories\CommentRepository.cs" />
-    <Compile Include="Repositories\ContactRoleRepository.cs" />
-    <Compile Include="Repositories\LanguageRepository.cs" />
-    <Compile Include="Repositories\LegalPersonRepository.cs" />
-    <Compile Include="Repositories\LegalPersonTypeRepository.cs" />
-    <Compile Include="Repositories\LocationRepository.cs" />
-    <Compile Include="Repositories\MailContactRepository.cs" />
-    <Compile Include="Repositories\NaturalPersonRepository.cs" />
-    <Compile Include="Repositories\PersonGenderRepository.cs" />
-    <Compile Include="Repositories\PersonTitleRepository.cs" />
-    <Compile Include="Repositories\PostBoxRepository.cs" />
-    <Compile Include="Repositories\RegionRepository.cs" />
-    <Compile Include="Repositories\StreetRepository.cs" />
-    <Compile Include="Repositories\TelecomContactRepository.cs" />
-    <Compile Include="Repositories\TelecomTypeRepository.cs" />
-    <Compile Include="Repositories\UriContactRepository.cs" />
-    <Compile Include="Repositories\UriTypeRepository.cs" />
-    <Compile Include="Repositories\CountryRepository.cs" />
-    <Compile Include="Repositories\AbstractPersonRepository.cs" />
     <Compile Include="CoreApplication.Paths.cs" />
     <Compile Include="Resources\Cresus.Core\SourceCode\Res.cs" />
     <Compile Include="CoreProgram.cs" />
@@ -474,7 +427,9 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Repositories\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
