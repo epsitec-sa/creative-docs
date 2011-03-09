@@ -421,22 +421,20 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 				foreach (var field in this.GetFields (type, FieldRelation.None))
 				{
-					DbColumn valueColumn = this.BuildValueColumn (dbTypeDefsDict, field);
+					DbColumn column = this.BuildValueColumn (dbTypeDefsDict, field);
 
-					unregisteredDbTable.Columns.Add (valueColumn);
+					unregisteredDbTable.Columns.Add (column);
+
+					this.AddIndexes (unregisteredDbTable, column, type, field);
 				}
 
 				foreach (var field in this.GetFields (type, FieldRelation.Reference))
 				{
-					DbColumn referenceColumn = this.BuildReferenceColumn (field);
+					DbColumn column = this.BuildReferenceColumn (field);
 
-					unregisteredDbTable.Columns.Add (referenceColumn);
+					unregisteredDbTable.Columns.Add (column);
 
-					string typeName = Druid.ToFullString (type.CaptionId.ToLong ());
-					string fieldName = Druid.ToFullString (field.CaptionId.ToLong ());
-					string indexName = "IDX_" + typeName + "_" + fieldName;
-
-					unregisteredDbTable.AddIndex (indexName, SqlSortOrder.Ascending, referenceColumn);
+					this.AddIndexes (unregisteredDbTable, column, type, field);
 				}
 
 				foreach (var field in this.GetFields (type, FieldRelation.Collection))
@@ -539,16 +537,16 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// Builds the <see cref="DbTable"/> that corresponds to the given collection
 		/// <see cref="StructuredTypeField"/>.
 		/// </summary>
-		/// <param name="entity">The <see cref="StructuredType"/> of the entity containing the field</param>
+		/// <param name="type">The <see cref="StructuredType"/> of the entity containing the field</param>
 		/// <param name="field">The <see cref="StructuredTypeField"/> whose corresponding <see cref="DbTable"/> to create.</param>
 		/// <returns>The newly created <see cref="DbTable"/>.</returns>
-		private DbTable BuildCollectionTable(StructuredType entity, StructuredTypeField field)
+		private DbTable BuildCollectionTable(StructuredType type, StructuredTypeField field)
 		{
 			DbTypeDef refIdType = this.DbInfrastructure.ResolveDbType (Tags.TypeKeyId);
 			DbTypeDef rankType = this.DbInfrastructure.ResolveDbType (Tags.TypeCollectionRank);
 
-			string relationTableName = this.SchemaEngine.GetCollectionTableName (entity.CaptionId, field.CaptionId);
-			string entityName = entity.Caption.Name;
+			string relationTableName = this.SchemaEngine.GetCollectionTableName (type.CaptionId, field.CaptionId);
+			string entityName = type.Caption.Name;
 			string fieldName = this.DbInfrastructure.DefaultContext.ResourceManager.GetCaption (field.CaptionId).Name;
 
 			DbTable relationTable = new DbTable (relationTableName);
@@ -570,22 +568,83 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			relationTable.PrimaryKeys.Add (columnId);
 			relationTable.UpdatePrimaryKeyInfo ();
 
-			string entityDruid = Druid.ToFullString (entity.CaptionId.ToLong ());
-			string fieldDruid = Druid.ToFullString (field.CaptionId.ToLong ());
-			string indexPrefix = "IDX_" + entityDruid + "_" + fieldDruid + "_";
-
-			string sourceIndexName = indexPrefix + "SRC";
-			string targetIndexName = indexPrefix + "TGT";
-
-			relationTable.AddIndex (sourceIndexName, SqlSortOrder.Ascending, relationTable.Columns[Tags.ColumnRefSourceId]);
-			relationTable.AddIndex (targetIndexName, SqlSortOrder.Ascending, relationTable.Columns[Tags.ColumnRefTargetId]);
-
 			relationTable.DefineCategory (DbElementCat.ManagedUserData);
 			relationTable.Comment = entityName + "." + fieldName;
+
+			this.AddCollectionIndexes (relationTable, type, field);
 
 			return relationTable;
 		}
 
+
+		/// <summary>
+		/// Adds the appropriate indexes on the given collection table.
+		/// </summary>
+		/// <param name="table">The table to index.</param>
+		/// <param name="type">The type definition that defines the entity which corresponds to the table.</param>
+		/// <param name="field">The field definition that corresponds to the table.</param>
+		private void AddCollectionIndexes(DbTable table, StructuredType type, StructuredTypeField field)
+		{
+			string typeName = Druid.ToFullString (type.CaptionId.ToLong ());
+			string fieldName = Druid.ToFullString (field.CaptionId.ToLong ());
+			const string separator = "_";
+			const string sourceName = "SRC";
+			const string targetName = "TGT";
+			const string prefix = "IDX";
+
+			DbColumn sourceColumn = table.Columns[Tags.ColumnRefSourceId];
+			DbColumn targetColumn = table.Columns[Tags.ColumnRefTargetId];
+
+			if (field.Options.HasFlag (FieldOptions.IndexAscending))
+			{
+				string indexSourceName = string.Join (separator, prefix, "ASC", typeName, fieldName, sourceName);
+				string indexTargetName = string.Join (separator, prefix, "ASC", typeName, fieldName, targetName);
+
+				table.AddIndex (indexSourceName, SqlSortOrder.Ascending, sourceColumn);
+				table.AddIndex (indexTargetName, SqlSortOrder.Ascending, targetColumn);
+			}
+
+			if (field.Options.HasFlag (FieldOptions.IndexDescending))
+			{
+				string indexSourceName = string.Join (separator, prefix, "DESC", typeName, fieldName, sourceName);
+				string indexTargetName = string.Join (separator, prefix, "DESC", typeName, fieldName, targetName);
+
+				table.AddIndex (indexSourceName, SqlSortOrder.Ascending, sourceColumn);
+				table.AddIndex (indexTargetName, SqlSortOrder.Ascending, targetColumn);
+			}
+		}
+
+
+		/// <summary>
+		/// Adds the appropriate indexes to the given column in the given table, which correspond to
+		/// the given type and field.
+		/// </summary>
+		/// <param name="table">The table to which to add the index.</param>
+		/// <param name="column">The column to index.</param>
+		/// <param name="type">The type definition that defines the entity which corresponds to the table.</param>
+		/// <param name="field">The field definition that corresponds to the column.</param>
+		private void AddIndexes(DbTable table, DbColumn column, StructuredType type, StructuredTypeField field)
+		{
+			string typeName = Druid.ToFullString (type.CaptionId.ToLong ());
+			string fieldName = Druid.ToFullString (field.CaptionId.ToLong ());
+			const string prefix = "IDX";
+			const string separator = "_";
+
+			if (field.Options.HasFlag (FieldOptions.IndexAscending))
+			{
+				string indexName = string.Join (separator, prefix, "ASC", typeName, fieldName);
+
+				table.AddIndex (indexName, SqlSortOrder.Ascending, column);
+			}
+
+			if (field.Options.HasFlag (FieldOptions.IndexDescending))
+			{
+				string indexName = string.Join (separator, prefix, "DESC", typeName, fieldName);
+
+				table.AddIndex (indexName, SqlSortOrder.Descending, column);
+			}
+		}
+		
 
 		/// <summary>
 		/// Registers all the given <see cref="DbTypeDef"/> to the database.
