@@ -230,7 +230,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 
 					this.editor.Invalidate();
-					this.editor.Module.AccessEntities.SetLocalDirty();
+					this.editor.Module.AccessEntities.SetLocalDirty ();
 				}
 			}
 		}
@@ -1517,7 +1517,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				this.UpdateFieldsLink();
 				this.editor.UpdateAfterAddOrRemoveConnection(this);
-				this.editor.Module.AccessEntities.SetLocalDirty();
+				this.SetDirty ();
 			}
 
 			this.hilitedElement = ActiveElement.None;
@@ -1549,7 +1549,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.UpdateFieldsLink();
 				this.editor.Entities.UpdateReset();
 				this.editor.UpdateAfterAddOrRemoveConnection(this);
-				this.editor.Module.AccessEntities.SetLocalDirty();
+				this.SetDirty ();
 			}
 
 			this.hilitedElement = ActiveElement.None;
@@ -1669,7 +1669,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.UpdateFieldsLink();
 			this.editor.Entities.UpdateReset();
 			this.editor.UpdateAfterAddOrRemoveConnection(this);
-			this.editor.Module.AccessEntities.SetLocalDirty();
+			this.SetDirty ();
 			this.hilitedElement = ActiveElement.None;
 		}
 
@@ -1706,7 +1706,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			this.SetContent(this.cultureMap);
 			this.editor.UpdateAfterAddOrRemoveConnection(this);
-			this.editor.Module.AccessEntities.SetLocalDirty();
+			this.SetDirty ();
 			this.hilitedElement = ActiveElement.None;
 		}
 
@@ -1744,7 +1744,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				this.SetContent(this.cultureMap);
 				this.editor.UpdateAfterAddOrRemoveConnection(this);
-				this.editor.Module.AccessEntities.SetLocalDirty();
+				this.SetDirty ();
 			}
 
 			this.hilitedElement = ActiveElement.None;
@@ -1926,7 +1926,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			accessor.RefreshFields(this.cultureMap);
 
 			this.SetContent(this.cultureMap);
-			this.editor.Module.AccessEntities.SetLocalDirty();
+			this.SetDirty ();
 		}
 
 		private void ChangeFieldType(int rank)
@@ -2048,8 +2048,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			dataField.SetValue (Support.Res.Fields.Field.Options, fieldOptions);
 
 			this.fields[rank].Initialize(this, dataField);
-			module.AccessEntities.SetLocalDirty ();
-			this.editor.UpdateAfterAddOrRemoveConnection(this);
+			this.SetDirty ();
+			this.editor.UpdateAfterAddOrRemoveConnection (this);
 		}
 
 		private void UpdateFieldsContent()
@@ -2477,7 +2477,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.StructuredTypeFlags    = flags;
 
 				this.UpdateInformations ();
-				this.editor.Module.AccessEntities.SetLocalDirty ();
+				this.SetDirty ();
 			}
 		}
 
@@ -2708,6 +2708,21 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			this.editor.UpdateAfterAddOrRemoveConnection(box);
 			this.editor.Module.AccessEntities.SetLocalDirty();
+		}
+
+
+		private void SetDirty()
+		{
+			Module module = this.SearchModule (this.cultureMap.Id);
+
+			if (module == null)
+			{
+				this.editor.Module.AccessEntities.SetLocalDirty ();
+			}
+			else
+			{
+				module.AccessEntities.SetLocalDirty ();
+			}
 		}
 
 
