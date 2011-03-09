@@ -355,8 +355,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			return from id in EntityClassFactory.GetAllEntityIds ()
 				   let type = (StructuredType) EntityInfo.GetStructuredType (id)
 				   where type.Class == StructuredTypeClass.Entity
-				   where (type.Flags & StructuredTypeFlags.AbstractClass) != 0
-				      && (type.Flags & StructuredTypeFlags.GenerateSchema) != 0
+				   where type.Flags.HasFlag (StructuredTypeFlags.GenerateSchema)
 				   select type;
 		}
 
