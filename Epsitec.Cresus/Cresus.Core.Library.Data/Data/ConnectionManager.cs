@@ -8,6 +8,7 @@ using Epsitec.Cresus.DataLayer.Infrastructure;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Factories;
 
 namespace Epsitec.Cresus.Core.Data
 {
@@ -149,6 +150,28 @@ namespace Epsitec.Cresus.Core.Data
 			this.KeepAliveConnection ();
 		}
 
+
+		public sealed class Factory : ICoreDataComponentFactory
+		{
+			#region ICoreDataComponentFactory Members
+
+			public bool CanCreate(CoreData data)
+			{
+				return data.DataInfrastructure != null;
+			}
+
+			public CoreDataComponent Create(CoreData data)
+			{
+				return new ConnectionManager (data);
+			}
+
+			public System.Type GetComponentType()
+			{
+				return typeof (ConnectionManager);
+			}
+
+			#endregion
+		}
 
 		private static readonly double KeepAlivePeriodInSeconds = 10.0;
 

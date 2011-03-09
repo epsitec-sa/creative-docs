@@ -32,6 +32,16 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 		/// <summary>
+		/// Finds the system type of an entity based on its entity id.
+		/// </summary>
+		/// <param name="id">The entity id.</param>
+		/// <returns>The entity type if it is known; otherwise, <c>null</c>.</returns>
+		public static System.Type FindEntityType(Druid id)
+		{
+			return EntityClassFactory.FindType (id);
+		}
+
+		/// <summary>
 		/// Gets the entity id for the specified entity type.
 		/// </summary>
 		/// <param name="type">The entity type.</param>

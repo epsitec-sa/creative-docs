@@ -533,6 +533,7 @@
     <Compile Include="Support\Serialization\Helper.cs" />
     <Compile Include="Support\Settings.cs" />
     <Compile Include="Support\StringPacker.cs" />
+    <Compile Include="Support\StringPluralizer.cs" />
     <Compile Include="Support\Sync.cs" />
     <Compile Include="Support\Tasklet.cs" />
     <Compile Include="Support\TaskletJob.cs" />

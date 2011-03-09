@@ -50,6 +50,8 @@
     <Compile Include="Business\RefIdGeneratorPool.cs" />
     <Compile Include="Business\Rules\IItemCodeBusinessRules.cs" />
     <Compile Include="CoreData.cs" />
+    <Compile Include="Data\DataSetCollectionGetter.cs" />
+    <Compile Include="Data\DataSetGetter.cs" />
     <Compile Include="Data\Infrastructure.cs" />
     <Compile Include="DataExtractionMode.cs" />
     <Compile Include="Data\ConnectionManager.cs" />
@@ -72,10 +74,7 @@
     <Compile Include="Data\CoreDataComponent.cs" />
     <Compile Include="Entities\XmlBlobEntity.cs" />
     <Compile Include="Extensions\DateRangeExtensions.cs" />
-    <Compile Include="Factories\ConnectionManagerFactory.cs" />
     <Compile Include="Factories\CoreDataComponentFactory.cs" />
-    <Compile Include="Factories\InfrastructureFactory.cs" />
-    <Compile Include="Factories\LockerFactory.cs" />
     <Compile Include="Business\IBusinessContext.cs" />
     <Compile Include="Factories\ICoreDataComponentFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

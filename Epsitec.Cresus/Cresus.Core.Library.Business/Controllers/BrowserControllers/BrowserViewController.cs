@@ -18,6 +18,7 @@ using Epsitec.Cresus.DataLayer.Context;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Core.Orchestrators;
+using Epsitec.Cresus.Core.Data;
 
 namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
@@ -184,7 +185,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private void SelectContentsBasedOnDataSet()
 		{
-			var getter = DataSetGetter.ResolveDataSet (this.data, this.dataSetName);
+			var component = this.data.GetComponent<DataSetGetter> ();
+			var getter = component.ResolveDataSet (this.dataSetName);
 			this.SetContents (getter);
 		}
 

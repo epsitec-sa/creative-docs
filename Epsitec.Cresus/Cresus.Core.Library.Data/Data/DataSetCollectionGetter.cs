@@ -8,7 +8,7 @@ using Epsitec.Cresus.DataLayer.Context;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Controllers.DataAccessors
+namespace Epsitec.Cresus.Core.Data
 {
 	public delegate IEnumerable<AbstractEntity> DataSetCollectionGetter(DataContext dataContext);
 }

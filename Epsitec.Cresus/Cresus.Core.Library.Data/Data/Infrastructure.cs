@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Dialogs;
 using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Factories;
 
 namespace Epsitec.Cresus.Core.Data
 {
@@ -259,6 +260,28 @@ namespace Epsitec.Cresus.Core.Data
 			// TODO
 		}
 
+		public sealed class Factory : ICoreDataComponentFactory
+		{
+			#region ICoreDataComponentFactory Members
+
+			public bool CanCreate(CoreData data)
+			{
+				return true;
+			}
+
+			public CoreDataComponent Create(CoreData data)
+			{
+				return new Infrastructure (data);
+			}
+
+			public System.Type GetComponentType()
+			{
+				return typeof (Infrastructure);
+			}
+
+			#endregion
+		}
+		
 		private readonly DbInfrastructure dbInfrastructure;
 		private readonly DataLayer.Infrastructure.DataInfrastructure dataInfrastructure;
 		private ConnectionManager connectionManager;

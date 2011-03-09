@@ -3,30 +3,75 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Controllers.DataAccessors
+namespace Epsitec.Cresus.Core.Data
 {
 	/// <summary>
 	/// The <c>DataSetGetter</c> class resolves a data set name to the data
 	///	set itself.
 	/// </summary>
-	public static class DataSetGetter
+	public class DataSetGetter : CoreDataComponent
 	{
-		public static DataSetCollectionGetter ResolveDataSet(CoreData data, string dataSetName)
+		public DataSetGetter(CoreData data)
+			: base (data)
 		{
-//			return context => data.GetAllEntities<NaturalPersonEntity> (dataContext: context);
-//			throw new System.NotImplementedException ();
+		}
 
-			System.Diagnostics.Debug.WriteLine (string.Join ("\n", Data.Infrastructure.GetManagedEntityStructuredTypes ().Select (x => x.Caption.Name).OrderBy (x => x).ToArray ()));
+		abstract class DynamicResolver
+		{
+			public abstract DataSetCollectionGetter Resolve(CoreData data);
+		}
+		sealed class DynamicResolver<T> : DynamicResolver
+			where T : AbstractEntity, new ()
+		{
+			public override DataSetCollectionGetter Resolve(CoreData data)
+			{
+				return context => data.GetAllEntities<T> (dataContext: context);
+			}
+		}
 
+		public DataSetCollectionGetter ResolveDataSet(string dataSetName)
+		{
+			var types = from type in Infrastructure.GetManagedEntityStructuredTypes ()
+						where type.Flags.HasFlag (StructuredTypeFlags.StandaloneDisplay)
+						select new
+						{ 
+							Name = type.Caption.Name.StripSuffix ("Entity"),
+							Type = type
+						};
+
+
+			System.Diagnostics.Debug.WriteLine (string.Join ("\n", types.OrderBy (x => x.Name).Select (x => x.Name).ToArray ()));
+
+			foreach (var type in types)
+			{
+				if ((type.Name == dataSetName) ||
+					(StringPluralizer.GuessPluralForms (type.Name).Contains (dataSetName)))
+				{
+					//	Found the entity type...
+
+					System.Type entityType = EntityClassFactory.FindEntityType (type.Type.CaptionId);
+					
+					var resolver = System.Activator.CreateInstance (typeof (DynamicResolver<>).MakeGenericType (entityType)) as DynamicResolver;
+
+					return resolver.Resolve (this.Host);
+				}
+			}
+
+			return null;
+
+
+#if false
 			switch (dataSetName)
 			{
-#if true
 				case "Customers":
 					return context => data.GetAllEntities<CustomerEntity> (dataContext: context);
 
@@ -68,18 +113,40 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 				case "DocumentPrintingUnits":
 					return context => data.GetAllEntities<DocumentPrintingUnitsEntity> (dataContext: context);
-#endif
 				default:
 					return null;
 			}
+#endif
 		}
 		
-		public static Druid GetRootEntityId(string dataSetName)
+		public Druid GetRootEntityId(string dataSetName)
 		{
+			var types = from type in Infrastructure.GetManagedEntityStructuredTypes ()
+						where type.Flags.HasFlag (StructuredTypeFlags.StandaloneDisplay)
+						select new
+						{
+							Name = type.Caption.Name.StripSuffix ("Entity"),
+							Type = type
+						};
+
+
+			foreach (var type in types)
+			{
+				if ((type.Name == dataSetName) ||
+					(StringPluralizer.GuessPluralForms (type.Name).Contains (dataSetName)))
+				{
+					//	Found the entity type...
+
+					return type.Type.CaptionId;
+				}
+			}
+
+			return Druid.Empty;
+
+#if false
 //			return EntityInfo<NaturalPersonEntity>.GetTypeId ();
 			switch (dataSetName)
 			{
-#if true
 				case "Customers":
 					return EntityInfo<CustomerEntity>.GetTypeId ();
 				
@@ -121,10 +188,10 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 				case "DocumentPrintingUnits":
 					return EntityInfo<DocumentPrintingUnitsEntity>.GetTypeId ();
-#endif
 				default:
 					return Druid.Empty;
 			}
+#endif
 		}
 	}
 }

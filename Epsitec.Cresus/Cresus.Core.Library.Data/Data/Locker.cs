@@ -16,6 +16,7 @@ namespace Epsitec.Cresus.Core.Data
 {
 	using DataInfrastructure=Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure;
 	using Timer=Epsitec.Common.Widgets.Timer;
+	using Epsitec.Cresus.Core.Factories;
 	
 	/// <summary>
 	/// The <c>Locker</c> class is used to request a lock on one or several
@@ -169,6 +170,28 @@ namespace Epsitec.Cresus.Core.Data
 			}
 
 			monitors.ForEach (x => x.UpdateLockState (owners));
+		}
+
+		public sealed class Factory : ICoreDataComponentFactory
+		{
+			#region ICoreDataComponentFactory Members
+
+			public bool CanCreate(CoreData data)
+			{
+				return data.DataInfrastructure != null;
+			}
+
+			public CoreDataComponent Create(CoreData data)
+			{
+				return new Locker (data);
+			}
+
+			public System.Type GetComponentType()
+			{
+				return typeof (Locker);
+			}
+
+			#endregion
 		}
 
 

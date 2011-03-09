@@ -19,6 +19,7 @@ using Epsitec.Cresus.DataLayer.Context;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Data;
 
 namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
@@ -165,7 +166,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			private Druid GetRootEntityId()
 			{
-				Druid druid = DataSetGetter.GetRootEntityId (this.dataSetName);
+				var data    = this.orchestrator.Data;
+				var component = data.GetComponent<DataSetGetter> ();
+				Druid druid = component.GetRootEntityId (this.dataSetName);
 
 				if (druid.IsEmpty)
 				{

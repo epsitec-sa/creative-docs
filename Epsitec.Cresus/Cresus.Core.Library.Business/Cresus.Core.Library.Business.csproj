@@ -100,8 +100,6 @@
     <Compile Include="Controllers\DataAccessors\CollectionTemplate.cs" />
     <Compile Include="Controllers\DataAccessors\CollectionTemplateProperty.cs" />
     <Compile Include="Controllers\DataAccessors\CollectionTemplate`1.cs" />
-    <Compile Include="Controllers\DataAccessors\DataSetCollectionGetter.cs" />
-    <Compile Include="Controllers\DataAccessors\DataSetGetter.cs" />
     <Compile Include="Controllers\DataAccessors\DynamicAccessorFactory.cs" />
     <Compile Include="Controllers\DataAccessors\DynamicAccessorFactory`3.cs" />
     <Compile Include="Controllers\DataAccessors\DynamicFactories\AutoCompleteTextFieldDynamicFactory.cs" />

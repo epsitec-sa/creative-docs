@@ -24,7 +24,23 @@ namespace Epsitec.Common.Support.Extensions
 			return string.IsNullOrWhiteSpace (text);
 #endif
 		}
-		
+
+		public static string StripSuffix(this string text, string suffix)
+		{
+			if (string.IsNullOrEmpty (suffix))
+			{
+				return text;
+			}
+
+			if ((string.IsNullOrEmpty (text)) ||
+				(text.EndsWith (suffix) == false))
+			{
+				throw new System.ArgumentException (string.Format ("Suffix {0} not found in {1}", suffix, text), "suffix");
+			}
+
+			return text.Substring (0, text.Length - suffix.Length);
+		}
+
 		/// <summary>
 		/// Checks that <paramref name="value"/> is an alpha numeric <see cref="System.String"/>,
 		/// i.e. that it is empty or that it contains only lower case letters, upper case letters
