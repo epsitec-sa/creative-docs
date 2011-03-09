@@ -47,20 +47,33 @@ namespace Epsitec.Cresus.Database.Services
 
 			DbTable table = new DbTable (Tags.TableLock);
 
-			DbColumn[] columns = new DbColumn[]
-		    {
-		        new DbColumn(Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal) { IsAutoIncremented = true },
-		        new DbColumn(Tags.ColumnName, types.Name, DbColumnClass.Data, DbElementCat.Internal),
-		        new DbColumn(Tags.ColumnConnectionId, types.KeyId, DbColumnClass.Data, DbElementCat.Internal),
-		        new DbColumn(Tags.ColumnCounter, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal),
-		        new DbColumn(Tags.ColumnDateTime, types.DateTime, DbColumnClass.Data, DbElementCat.Internal) { IsAutoTimeStampOnInsert = true },
-		    };
+			DbColumn columnId = new DbColumn (Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal)
+			{
+				IsAutoIncremented = true
+			};
+			
+			DbColumn columnName = new DbColumn (Tags.ColumnName, types.Name, DbColumnClass.Data, DbElementCat.Internal);
+			DbColumn columnConnectionId = new DbColumn (Tags.ColumnConnectionId, types.KeyId, DbColumnClass.Data, DbElementCat.Internal);
+			DbColumn columnCounter = new DbColumn (Tags.ColumnCounter, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal);
+			
+			DbColumn columnDateTime = new DbColumn (Tags.ColumnDateTime, types.DateTime, DbColumnClass.Data, DbElementCat.Internal)
+			{
+				IsAutoTimeStampOnInsert = true
+			};
+
+			table.Columns.Add (columnId);
+			table.Columns.Add (columnName);
+			table.Columns.Add (columnConnectionId);
+			table.Columns.Add (columnCounter);
+			table.Columns.Add (columnDateTime);
 
 			table.DefineCategory (DbElementCat.Internal);
-			table.Columns.AddRange (columns);
-			table.DefinePrimaryKey (columns[0]);
-
+			
+			table.DefinePrimaryKey (columnId);
 			table.UpdatePrimaryKeyInfo ();
+
+			table.AddIndex ("IDX_LOCK_NAME", SqlSortOrder.Ascending, columnName);
+			table.AddIndex ("IDX_LOCK_CONNECTION", SqlSortOrder.Ascending, columnConnectionId);
 
 			return table;
 		}

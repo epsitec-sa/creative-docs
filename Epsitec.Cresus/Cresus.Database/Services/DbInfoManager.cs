@@ -42,18 +42,24 @@ namespace Epsitec.Cresus.Database.Services
 
 			DbTable table = new DbTable (Tags.TableInfo);
 
-			DbColumn[] columns = new DbColumn[]
-		    {
-		        new DbColumn(Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal) { IsAutoIncremented = true },
-		        new DbColumn(Tags.ColumnKey, types.DefaultString, DbColumnClass.Data, DbElementCat.Internal),
-		        new DbColumn(Tags.ColumnValue, types.DefaultString, DbColumnClass.Data, DbElementCat.Internal),
-		    };
+			DbColumn columnId = new DbColumn (Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal)
+			{
+				IsAutoIncremented = true
+			};
+
+			DbColumn columnKey = new DbColumn (Tags.ColumnKey, types.DefaultString, DbColumnClass.Data, DbElementCat.Internal);
+			DbColumn columnValue = new DbColumn (Tags.ColumnValue, types.DefaultString, DbColumnClass.Data, DbElementCat.Internal);
+
+			table.Columns.Add (columnId);
+			table.Columns.Add (columnKey);
+			table.Columns.Add (columnValue);
 
 			table.DefineCategory (DbElementCat.Internal);
-			table.Columns.AddRange (columns);
-			table.DefinePrimaryKey (columns[0]);
 
+			table.DefinePrimaryKey (columnId);
 			table.UpdatePrimaryKeyInfo ();
+
+			table.AddIndex ("IDX_INFO_KEY", SqlSortOrder.Ascending, columnKey);
 
 			return table;
 		}

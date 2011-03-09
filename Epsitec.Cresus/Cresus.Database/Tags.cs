@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Database
 		public const string ColumnUidNext				= "CR_UID_NEXT";
 		public const string ColumnCounter				= "CR_COUNTER";
 		public const string ColumnConnectionIdentity	= "CR_IDENTITY";
-		public const string ColumnEstablismentTime		= "CR_ESTB_TIME";
+		public const string ColumnEstablishmentTime		= "CR_ESTB_TIME";
 		public const string ColumnRefreshTime			= "CR_RFR_TIME";
 		public const string ColumnConnectionStatus		= "CR_CONN_STATUS";
 		public const string ColumnKey					= "CR_KEY";

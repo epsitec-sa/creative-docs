@@ -51,19 +51,34 @@ namespace Epsitec.Cresus.Database.Services
 
 			DbTable table = new DbTable (Tags.TableConnection);
 
-			DbColumn[] columns = new DbColumn[]
-		    {
-		        new DbColumn(Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal) { IsAutoIncremented = true },
-		        new DbColumn(Tags.ColumnConnectionIdentity, types.DefaultString, DbColumnClass.Data, DbElementCat.Internal),
-		        new DbColumn(Tags.ColumnEstablismentTime, types.DateTime, DbColumnClass.Data, DbElementCat.Internal) { IsAutoTimeStampOnInsert = true },
-		        new DbColumn(Tags.ColumnRefreshTime, types.DateTime, DbColumnClass.Data, DbElementCat.Internal) { IsAutoTimeStampOnInsert = true, IsAutoTimeStampOnUpdate = true },
-		        new DbColumn(Tags.ColumnConnectionStatus, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal),
-		    };
+			DbColumn columnId = new DbColumn (Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal)
+			{
+				IsAutoIncremented = true
+			};
+
+			DbColumn columnConnectionIdentity = new DbColumn (Tags.ColumnConnectionIdentity, types.DefaultString, DbColumnClass.Data, DbElementCat.Internal);
+
+			DbColumn columnEstablishmentTime = new DbColumn (Tags.ColumnEstablishmentTime, types.DateTime, DbColumnClass.Data, DbElementCat.Internal)
+			{
+				IsAutoTimeStampOnInsert = true
+			};
+
+			DbColumn columnRefreshTime = new DbColumn (Tags.ColumnRefreshTime, types.DateTime, DbColumnClass.Data, DbElementCat.Internal)
+			{
+				IsAutoTimeStampOnInsert = true,
+				IsAutoTimeStampOnUpdate = true
+			};
+
+			DbColumn columnConnectionStatus = new DbColumn (Tags.ColumnConnectionStatus, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal);
+			table.Columns.Add (columnId);
+			table.Columns.Add (columnConnectionIdentity);
+			table.Columns.Add (columnEstablishmentTime);
+			table.Columns.Add (columnRefreshTime);
+			table.Columns.Add (columnConnectionStatus);
 
 			table.DefineCategory (DbElementCat.Internal);
-			table.Columns.AddRange (columns);
-			table.DefinePrimaryKey (columns[0]);
-
+			
+			table.DefinePrimaryKey (columnId);
 			table.UpdatePrimaryKeyInfo ();
 
 			return table;
@@ -282,7 +297,7 @@ namespace Epsitec.Cresus.Database.Services
 			DbTable connectionTable = this.DbTable;
 			DbColumn cIdColumn = connectionTable.Columns[Tags.ColumnId];
 			DbColumn cIdentityColumn = connectionTable.Columns[Tags.ColumnConnectionIdentity];
-			DbColumn cEstablishementTimeColumn = connectionTable.Columns[Tags.ColumnEstablismentTime];
+			DbColumn cEstablishementTimeColumn = connectionTable.Columns[Tags.ColumnEstablishmentTime];
 			DbColumn cRefreshTimeColumn = connectionTable.Columns[Tags.ColumnRefreshTime];
 			DbColumn cStatusColumn = connectionTable.Columns[Tags.ColumnConnectionStatus];
 

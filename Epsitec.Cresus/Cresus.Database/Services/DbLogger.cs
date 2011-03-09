@@ -42,18 +42,28 @@ namespace Epsitec.Cresus.Database.Services
 
 			DbTable table = new DbTable (Tags.TableLog);
 
-			DbColumn[] columns = new DbColumn[]
-		    {
-		        new DbColumn(Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal) { IsAutoIncremented = true },
-		        new DbColumn(Tags.ColumnConnectionId, types.KeyId, DbColumnClass.Data, DbElementCat.Internal),
-		        new DbColumn(Tags.ColumnDateTime, types.DateTime, DbColumnClass.Data, DbElementCat.Internal) { IsAutoTimeStampOnInsert = true },
-		    };
+			DbColumn columnId = new DbColumn (Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal)
+			{
+				IsAutoIncremented = true
+			};
+			
+			DbColumn columnConnectionId = new DbColumn (Tags.ColumnConnectionId, types.KeyId, DbColumnClass.Data, DbElementCat.Internal);
+			
+			DbColumn columnDateTime = new DbColumn (Tags.ColumnDateTime, types.DateTime, DbColumnClass.Data, DbElementCat.Internal)
+			{
+				IsAutoTimeStampOnInsert = true
+			};
+
+			table.Columns.Add (columnId);
+			table.Columns.Add (columnConnectionId);
+			table.Columns.Add (columnDateTime);
 
 			table.DefineCategory (DbElementCat.Internal);
-			table.Columns.AddRange (columns);
-			table.DefinePrimaryKey (columns[0]);
-
+			
+			table.DefinePrimaryKey (columnId);
 			table.UpdatePrimaryKeyInfo ();
+
+			table.AddIndex ("IDX_LOG_ID", SqlSortOrder.Descending, columnId);
 
 			return table;
 		}

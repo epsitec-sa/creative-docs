@@ -43,21 +43,30 @@ namespace Epsitec.Cresus.Database.Services
 
 			DbTable table = new DbTable (Tags.TableUid);
 
-			DbColumn[] columns = new DbColumn[]
-		    {
-		        new DbColumn(Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal) { IsAutoIncremented = true },
-		        new DbColumn(Tags.ColumnName, types.Name, DbColumnClass.Data, DbElementCat.Internal),
-		        new DbColumn(Tags.ColumnUidSlot, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal),
-		        new DbColumn(Tags.ColumnUidMin, types.DefaultLongInteger, DbColumnClass.Data, DbElementCat.Internal),
-		        new DbColumn(Tags.ColumnUidMax, types.DefaultLongInteger, DbColumnClass.Data, DbElementCat.Internal),
-		        new DbColumn(Tags.ColumnUidNext, types.DefaultLongInteger, DbColumnClass.Data, DbElementCat.Internal),
-		    };
+			DbColumn columnId =    new DbColumn (Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal)
+			{
+				IsAutoIncremented = true
+			};
+			
+			DbColumn columnName = new DbColumn (Tags.ColumnName, types.Name, DbColumnClass.Data, DbElementCat.Internal);
+			DbColumn columnUidSlot = new DbColumn (Tags.ColumnUidSlot, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal);
+			DbColumn columnUidMin = new DbColumn (Tags.ColumnUidMin, types.DefaultLongInteger, DbColumnClass.Data, DbElementCat.Internal);
+			DbColumn columnUidMax = new DbColumn (Tags.ColumnUidMax, types.DefaultLongInteger, DbColumnClass.Data, DbElementCat.Internal);
+			DbColumn columnUidNext = new DbColumn (Tags.ColumnUidNext, types.DefaultLongInteger, DbColumnClass.Data, DbElementCat.Internal);
+
+			table.Columns.Add (columnId);
+			table.Columns.Add (columnName);
+			table.Columns.Add (columnUidSlot);
+			table.Columns.Add (columnUidMin);
+			table.Columns.Add (columnUidMax);
+			table.Columns.Add (columnUidNext);
 
 			table.DefineCategory (DbElementCat.Internal);
-			table.Columns.AddRange (columns);
-			table.DefinePrimaryKey (columns[0]);
-
+			
+			table.DefinePrimaryKey (columnId);
 			table.UpdatePrimaryKeyInfo ();
+
+			table.AddIndex ("IDX_UID_NAME", SqlSortOrder.Ascending, columnName);
 
 			return table;
 		}

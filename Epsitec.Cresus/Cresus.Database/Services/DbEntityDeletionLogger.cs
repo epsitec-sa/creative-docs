@@ -37,19 +37,27 @@ namespace Epsitec.Cresus.Database.Services
 
 			DbTable table = new DbTable (Tags.TableEntityDeletionLog);
 
-			DbColumn[] columns = new DbColumn[]
-		    {
-		        new DbColumn (Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal) { IsAutoIncremented = true },
-				new DbColumn (Tags.ColumnRefLog, types.KeyId, DbColumnClass.RefInternal, DbElementCat.Internal),
-				new DbColumn (Tags.ColumnInstanceType, types.KeyId, DbColumnClass.Data, DbElementCat.Internal),
-				new DbColumn (Tags.ColumnRefId, types.KeyId, DbColumnClass.Data, DbElementCat.Internal),
-		    };
 
+			DbColumn columnId = new DbColumn (Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal)
+			{
+				IsAutoIncremented = true
+			};
+
+			DbColumn columnRefLog = new DbColumn (Tags.ColumnRefLog, types.KeyId, DbColumnClass.RefInternal, DbElementCat.Internal);
+			DbColumn columnInstanceType = new DbColumn (Tags.ColumnInstanceType, types.KeyId, DbColumnClass.Data, DbElementCat.Internal);
+			DbColumn columnRefId = new DbColumn (Tags.ColumnRefId, types.KeyId, DbColumnClass.Data, DbElementCat.Internal);
+
+			table.Columns.Add (columnId);
+			table.Columns.Add (columnRefLog);
+			table.Columns.Add (columnInstanceType);
+			table.Columns.Add (columnRefId);
+			
 			table.DefineCategory (DbElementCat.Internal);
-			table.Columns.AddRange (columns);
-			table.DefinePrimaryKey (columns[0]);
-
+			
+			table.DefinePrimaryKey (columnId);
 			table.UpdatePrimaryKeyInfo ();
+
+			table.AddIndex ("IDX_EDL_REF_LOG", SqlSortOrder.Descending, columnRefLog);
 
 			return table;
 		}
