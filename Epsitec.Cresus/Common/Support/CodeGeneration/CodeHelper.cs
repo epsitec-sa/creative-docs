@@ -50,6 +50,7 @@ namespace Epsitec.Common.Support.CodeGeneration
 
 		public static readonly CodeAttributes PublicStaticClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static);
 		public static readonly CodeAttributes EntityClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Default, CodeAttributes.PartialAttribute);
+		public static readonly CodeAttributes AbstractEntityClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Abstract, CodeAttributes.PartialAttribute);
 		public static readonly CodeAttributes RepositoryClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Default, CodeAttributes.PartialAttribute);
 		public static readonly CodeAttributes FormIdsClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static);
 
