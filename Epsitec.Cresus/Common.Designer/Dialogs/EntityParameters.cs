@@ -245,6 +245,12 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
+		public bool IsInterface
+		{
+			get;
+			set;
+		}
+
 		public EntitiesEditor.ObjectBox ObjectBox
 		{
 			get;
@@ -266,6 +272,16 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void UpdateWidgets()
 		{
+			bool isInterface = this.IsInterface;
+
+			if (this.ObjectBox != null)
+			{
+				isInterface = this.ObjectBox.IsInterface;
+			}
+
+			this.abstractClassButton.Visibility  = !this.IsInterface;
+			this.generateSchemaButton.Visibility = !this.IsInterface;
+
 			this.abstractClassButton.ActiveState      = ((this.StructuredTypeFlags & Types.StructuredTypeFlags.AbstractClass     ) != 0) ? ActiveState.Yes : ActiveState.No;
 			this.generateSchemaButton.ActiveState     = ((this.StructuredTypeFlags & Types.StructuredTypeFlags.GenerateSchema    ) != 0) ? ActiveState.Yes : ActiveState.No;
 			this.generateRepositoryButton.ActiveState = ((this.StructuredTypeFlags & Types.StructuredTypeFlags.GenerateRepository) != 0) ? ActiveState.Yes : ActiveState.No;
