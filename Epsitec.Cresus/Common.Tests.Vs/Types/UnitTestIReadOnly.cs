@@ -20,10 +20,10 @@ namespace Epsitec.Common.Tests.Vs.Types
 		{
 			ExceptionAssert.Throw<ReadOnlyException>
 			(
-				() => new TestObject () { IsReadOnly = false }.AssertIsReadOnly ()
+				() => new TestObject () { IsReadOnly = false }.ThrowIfReadWrite ()
 			);
 
-			new TestObject () { IsReadOnly = true }.AssertIsReadOnly ();
+			new TestObject () { IsReadOnly = true }.ThrowIfReadWrite ();
 		}
 
 
@@ -32,10 +32,10 @@ namespace Epsitec.Common.Tests.Vs.Types
 		{
 			ExceptionAssert.Throw<ReadOnlyException>
 			(
-				() => new TestObject () { IsReadOnly = true }.AssertIsNotReadOnly ()
+				() => new TestObject () { IsReadOnly = true }.ThrowIfReadOnly ()
 			);
 			
-			new TestObject () { IsReadOnly = false }.AssertIsNotReadOnly ();
+			new TestObject () { IsReadOnly = false }.ThrowIfReadOnly ();
 		}
 
 

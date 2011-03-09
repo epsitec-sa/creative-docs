@@ -874,6 +874,7 @@
     <Compile Include="Types\InvalidValue.cs" />
     <Compile Include="Types\InvariantConverter.cs" />
     <Compile Include="Types\IReadOnly.cs" />
+    <Compile Include="Types\IReadOnlyExtensions.cs" />
     <Compile Include="Types\IReadOnlyLock.cs" />
     <Compile Include="Types\IResourceBoundSource.cs" />
     <Compile Include="Types\ISerializationConverter.cs" />

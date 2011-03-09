@@ -1211,7 +1211,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			if (this.ReadOnlyChecksEnabled)
 			{
-				IReadOnlyExtensions.AssertIsNotReadOnly (this);
+				IReadOnlyExtensions.ThrowIfReadOnly (this);
 			}
 		}
 		

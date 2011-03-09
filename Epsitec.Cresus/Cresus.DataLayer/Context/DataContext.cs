@@ -228,7 +228,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			where TEntity : AbstractEntity, new ()
 		{
 			this.AssertDataContextIsNotDisposed ();
-			this.AssertIsNotReadOnly ();
+			this.ThrowIfReadOnly ();
 
 			TEntity entity = this.EntityContext.CreateEmptyEntity<TEntity> ();
 
@@ -250,7 +250,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		public AbstractEntity CreateEntity(Druid entityId)
 		{
 			this.AssertDataContextIsNotDisposed ();
-			this.AssertIsNotReadOnly ();
+			this.ThrowIfReadOnly ();
 
 			AbstractEntity entity = this.EntityContext.CreateEmptyEntity (entityId);
 
@@ -275,7 +275,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			where TEntity : AbstractEntity, new ()
 		{
 			this.AssertDataContextIsNotDisposed ();
-			this.AssertIsNotReadOnly ();
+			this.ThrowIfReadOnly ();
 
 			TEntity entity = this.CreateEntity<TEntity> ();
 
@@ -493,7 +493,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			this.AssertDataContextIsNotDisposed ();
 			this.AssertEntityIsNotForeign (entity);
-			this.AssertIsNotReadOnly ();
+			this.ThrowIfReadOnly ();
 
 			entity.ThrowIfNull ("entity");
 			entity.ThrowIf (e => this.IsPersistent (e), "entity");
@@ -524,7 +524,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			this.AssertDataContextIsNotDisposed ();
 			this.AssertEntityIsNotForeign (entity);
-			this.AssertIsNotReadOnly ();
+			this.ThrowIfReadOnly ();
 
 			entity.ThrowIfNull ("entity");
 			entity.AssertIsNotReadOnly ();
@@ -609,7 +609,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		public void DeleteEntity(AbstractEntity entity)
 		{
 			this.AssertDataContextIsNotDisposed ();
-			this.AssertIsNotReadOnly ();
+			this.ThrowIfReadOnly ();
 			
 			entity.ThrowIfNull ("entity");
 			entity.AssertIsNotReadOnly ();
@@ -1029,7 +1029,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		public void SaveChanges()
 		{
 			this.AssertDataContextIsNotDisposed ();
-			this.AssertIsNotReadOnly ();
+			this.ThrowIfReadOnly ();
 
 			IEnumerable<AbstractSynchronizationJob> jobs = this.DataSaver.SaveChanges ();
 			
@@ -1683,7 +1683,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			if (!sender.IsReadOnly)
 			{
-				receiver.AssertIsNotReadOnly ();
+				receiver.ThrowIfReadOnly ();
 			}
 
 			if (sender == receiver)
