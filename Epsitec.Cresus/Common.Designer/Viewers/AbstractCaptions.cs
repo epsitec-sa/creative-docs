@@ -275,7 +275,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.ignoreChange = iic;
 		}
 
-		protected void UpdateIcon()
+		private void UpdateIcon()
 		{
 			this.groupPrimaryIcon.Enable = !this.designerApplication.IsReadonly;
 
@@ -775,22 +775,22 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected IconButton					primarySummaryIcon;
-		protected IconButton					secondarySummaryIcon;
-		protected MyWidgets.ResetBox			groupPrimaryLabels;
-		protected MyWidgets.StringCollection	primaryLabels;
-		protected MyWidgets.ResetBox			groupSecondaryLabels;
-		protected MyWidgets.StringCollection	secondaryLabels;
-		protected MyWidgets.ResetBox			groupPrimaryDescription;
-		protected TextFieldMulti				primaryDescription;
-		protected MyWidgets.ResetBox			groupSecondaryDescription;
-		protected TextFieldMulti				secondaryDescription;
-		protected MyWidgets.ResetBox			groupPrimaryIcon;
-		protected IconButton					primaryIcon;
-		protected StaticText					primaryIconInfo;
-		protected MyWidgets.ResetBox			groupPrimaryComment;
-		protected TextFieldMulti				primaryComment;
-		protected MyWidgets.ResetBox			groupSecondaryComment;
-		protected TextFieldMulti				secondaryComment;
+		private IconButton						primarySummaryIcon;
+		private IconButton						secondarySummaryIcon;
+		private MyWidgets.ResetBox				groupPrimaryLabels;
+		private MyWidgets.StringCollection		primaryLabels;
+		private MyWidgets.ResetBox				groupSecondaryLabels;
+		private MyWidgets.StringCollection		secondaryLabels;
+		private MyWidgets.ResetBox				groupPrimaryDescription;
+		private TextFieldMulti					primaryDescription;
+		private MyWidgets.ResetBox				groupSecondaryDescription;
+		private TextFieldMulti					secondaryDescription;
+		private MyWidgets.ResetBox				groupPrimaryIcon;
+		private IconButton						primaryIcon;
+		private StaticText						primaryIconInfo;
+		private MyWidgets.ResetBox				groupPrimaryComment;
+		private TextFieldMulti					primaryComment;
+		private MyWidgets.ResetBox				groupSecondaryComment;
+		private TextFieldMulti					secondaryComment;
 	}
 }
