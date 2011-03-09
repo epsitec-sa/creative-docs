@@ -50,6 +50,7 @@ namespace Epsitec.Common.Support.CodeGeneration
 
 		public static readonly CodeAttributes PublicStaticClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static);
 		public static readonly CodeAttributes EntityClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Default, CodeAttributes.PartialAttribute);
+		public static readonly CodeAttributes RepositoryClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Default, CodeAttributes.PartialAttribute);
 		public static readonly CodeAttributes FormIdsClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static);
 
 		public static readonly CodeAttributes PrivateStaticReadOnlyFieldAttributes = new CodeAttributes (CodeVisibility.Private, CodeAccessibility.Static, CodeAttributes.ReadOnlyAttribute);
@@ -77,6 +78,7 @@ namespace Epsitec.Common.Support.CodeGeneration
 			public const string As     = "as";
 			public const string Quote  = "\"";
 			public const string Override = "override";
+			public const string Base   = "base";
 
 			public const string Void   = "void";
 			public const string String = "string";
@@ -84,6 +86,10 @@ namespace Epsitec.Common.Support.CodeGeneration
 			public const string Func   = "global::System.Func";
 			public const string LinqExpression = "global::System.Linq.Expressions.Expression";
 			public const string NotSupportedException = "global::System.NotSupportedException";
+			public const string QualifiedGenericRepositoryBase = "global::Epsitec.Cresus.Core.Repositories.Repository";
+			public const string QualifiedCoreData = "global::Epsitec.Cresus.Core.CoreData";
+			public const string QualifiedDataContext = "global::Epsitec.Cresus.DataLayer.Context.DataContext";
+			public const string QualifiedDataLifetime = "global::Epsitec.Common.Types.DataLifetimeExpectancy";
 
 			public const string EntityFieldAttribute = "global::Epsitec.Common.Support.EntityField";
 			public const string EntityClassAttribute = "global::Epsitec.Common.Support.EntityClass";
@@ -106,6 +112,8 @@ namespace Epsitec.Common.Support.CodeGeneration
 			public const string FieldNameVariable = "fieldName";
 			public const string ObjVariable = "obj";
 			public const string EntityVariable = "entity";
+			public const string DataVariable = "data";
+			public const string DataContextVariable = "dataContext";
 
 			public const string GenericIList = "System.Collections.Generic.IList";
 			public const string Entities = "Entities";
@@ -117,6 +125,7 @@ namespace Epsitec.Common.Support.CodeGeneration
 			public const string InterfaceImplementationGetterMethodPrefix = "Get";
 			public const string InterfaceImplementationSetterMethodPrefix = "Set";
 			public const string AbstractEntity = "Epsitec.Common.Support.EntityEngine.AbstractEntity";
+			public const string Repository = "Repository";
 
 			public const string IsFieldDefinedMethod = "IsFieldDefined";
 			public const string SetFieldMethod = "SetField";
