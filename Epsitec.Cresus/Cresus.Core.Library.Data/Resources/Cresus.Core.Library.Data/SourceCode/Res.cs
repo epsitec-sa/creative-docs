@@ -10,6 +10,41 @@ namespace Epsitec.Cresus.Core
 	{
 		//	Code mapping for 'Caption' resources
 		
+		public static class Commands
+		{
+			internal static void _Initialize()
+			{
+			}
+			
+			public static class Base
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/8VA71
+				public static readonly global::Epsitec.Common.Widgets.Command ShowGeneric = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 39));
+			}
+		}
+		
+		public static class CommandIds
+		{
+			internal static void _Initialize()
+			{
+			}
+			
+			public static class Base
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/8VA71
+				public const long ShowGeneric = 0x3E80000A000027L;
+			}
+			
+		}
+		
 		public static class Types
 		{
 			internal static void _Initialize()
@@ -302,6 +337,10 @@ namespace Epsitec.Cresus.Core
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Cresus.Core.Library.Data");
+			Commands._Initialize ();
+			Commands.Base._Initialize ();
+			CommandIds._Initialize ();
+			CommandIds.Base._Initialize ();
 			Types._Initialize ();
 			Fields.Comment._Initialize ();
 			Fields.IComments._Initialize ();
