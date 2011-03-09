@@ -31,6 +31,23 @@ namespace Epsitec.Cresus.Core.Library
 			this.commandHandlerStack = new Dictionary<Command, CommandHandlerStack> ();
 		}
 
+
+		public CommandDispatcher CommandDispatcher
+		{
+			get
+			{
+				return this.dispatcher;
+			}
+		}
+
+		public CommandContext CommandContext
+		{
+			get
+			{
+				return this.commandContext;
+			}
+		}
+
 		public override void ExecuteSetupPhase()
 		{
 			this.CreateCommandHandlers ();

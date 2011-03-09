@@ -1,8 +1,9 @@
-//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
+using Epsitec.Common.Types.Collections;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Collections;
 
@@ -22,6 +23,7 @@ namespace Epsitec.Common.Widgets
 	{
 		private Command()
 		{
+			CommandPool.RegisterCommand (this);
 		}
 
 		private Command(string id)
@@ -316,22 +318,7 @@ namespace Epsitec.Common.Widgets
 
 		public static Command Get(string id, ICaptionResolver manager)
 		{
-			if (string.IsNullOrEmpty (id))
-			{
-				return null;
-			}
-			
-			lock (Command.commands)
-			{
-				Command command = Command.Find (id);
-
-				if (command == null)
-				{
-					command = new Command (id, manager);
-				}
-				
-				return command;
-			}
+			return CommandPool.FindCommand (id, () => new Command (id, manager));
 		}
 
 		/// <summary>
@@ -341,12 +328,7 @@ namespace Epsitec.Common.Widgets
 		/// <returns>The command, or <c>null</c> if none could be found.</returns>
 		public static Command Find(Druid druid)
 		{
-			if (druid.IsEmpty)
-			{
-				return null;
-			}
-
-			return Command.Find (druid.ToResourceId ());
+			return druid.IsEmpty ? null : Command.Find (druid.ToResourceId ());
 		}
 
 		/// <summary>
@@ -356,22 +338,7 @@ namespace Epsitec.Common.Widgets
 		/// <returns>The command, or <c>null</c> if none could be found.</returns>
 		public static Command Find(string id)
 		{
-			if (string.IsNullOrEmpty (id))
-			{
-				return null;
-			}
-			
-			Command state;
-
-			lock (Command.commands)
-			{
-				if (Command.commands.TryGetValue (id, out state))
-				{
-					return state;
-				}
-			}
-			
-			return null;
+			return CommandPool.FindCommand (id, () => null);
 		}
 
 		/// <summary>
@@ -406,10 +373,7 @@ namespace Epsitec.Common.Widgets
 		/// <returns>The collection of matching commands.</returns>
 		public static IEnumerable<Command> FindAll(System.Predicate<Command> predicate)
 		{
-			lock (Command.commands)
-			{
-				return Command.commands.Values.Where (command => predicate (command)).ToList ();
-			}
+			return CommandPool.GetAllCommands ().Where (command => predicate (command));
 		}
 
 
@@ -562,18 +526,10 @@ namespace Epsitec.Common.Widgets
 
 			if (this.uniqueId == 0)
 			{
-				lock (Command.commands)
-				{
-					if (Command.commands.ContainsKey (commandId))
-					{
-						throw new System.ArgumentException (string.Format ("Command {0} already registered", commandId));
-					}
-
-					this.commandId = commandId;
-					this.uniqueId = Command.nextUniqueId++;
-
-					Command.commands[commandId] = this;
-				}
+				this.commandId = commandId;
+				this.uniqueId  = System.Threading.Interlocked.Increment (ref Command.nextUniqueId);
+				
+				CommandPool.RegisterCommand (commandId, this);
 			}
 			
 			Druid druid;
@@ -751,7 +707,6 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty HideWhenDisabledProperty = DependencyProperty<Command>.RegisterAttached ("HideWhenDisabled", typeof (bool), new DependencyPropertyMetadata (false));
 		public static readonly DependencyProperty DefaultParameterProperty = DependencyProperty<Command>.RegisterAttached ("DefaultParameter", typeof (string));
 		
-		private static readonly Dictionary<string, Command> commands = new Dictionary<string, Command> ();
 		private static int nextUniqueId;
 
 		private int								uniqueId;

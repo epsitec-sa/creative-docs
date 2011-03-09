@@ -1100,6 +1100,7 @@
     <Compile Include="Widgets\CommandEventArgs.cs" />
     <Compile Include="Widgets\CommandHandlerPair.cs" />
     <Compile Include="Widgets\CommandParameters.cs" />
+    <Compile Include="Widgets\CommandPool.cs" />
     <Compile Include="Widgets\CommandState.cs" />
     <Compile Include="Widgets\ConfirmationButton.cs" />
     <Compile Include="Widgets\ConfirmationStaticText.cs" />

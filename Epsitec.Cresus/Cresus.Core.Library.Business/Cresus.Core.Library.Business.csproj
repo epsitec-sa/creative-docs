@@ -180,7 +180,6 @@
     <Compile Include="Orchestrators\Navigation\NavigationPathElement.cs" />
     <Compile Include="Orchestrators\Navigation\TileNavigationPathElement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Res.cs" />
     <Compile Include="Resolvers\EntityViewControllerResolver.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Business\SourceCode\Entities.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Business\SourceCode\Res.cs" />
