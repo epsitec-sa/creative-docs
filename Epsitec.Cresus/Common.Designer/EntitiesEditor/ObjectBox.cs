@@ -1016,7 +1016,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.isExtended)
 				{
 					//	Souris dans le bouton des paramètres ?
-					if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton (this.PositionParametersButton, pos))
+					if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton (this.PositionParametersButton, pos) && !this.IsInterface)
 					{
 						element = ActiveElement.BoxParameters;
 						return true;
@@ -3243,13 +3243,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (this.isExtended)
 			{
 				//	Dessine le bouton des paramètres.
-				if (this.hilitedElement == ActiveElement.BoxParameters)
+				if (!this.IsInterface)
 				{
-					this.DrawRoundButton (graphics, this.PositionParametersButton, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxParameters, true, false);
-				}
-				else if (this.IsHeaderHilite && !this.isDragging)
-				{
-					this.DrawRoundButton (graphics, this.PositionParametersButton, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxParameters, false, false);
+					if (this.hilitedElement == ActiveElement.BoxParameters)
+					{
+						this.DrawRoundButton (graphics, this.PositionParametersButton, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxParameters, true, false);
+					}
+					else if (this.IsHeaderHilite && !this.isDragging)
+					{
+						this.DrawRoundButton (graphics, this.PositionParametersButton, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxParameters, false, false);
+					}
 				}
 
 				//	Dessine le bouton pour déplacer le séparateur des colonnes.

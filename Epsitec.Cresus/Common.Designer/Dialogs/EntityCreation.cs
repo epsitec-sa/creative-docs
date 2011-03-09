@@ -182,9 +182,6 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				//	Récupère le nom de l'entité à créer, choisi dans le premier volet.
 				this.entityParameters.TitleEntity = this.resourceName.SelectedName;
-
-				//	Récupère une information choisie dans le deuxième volet.
-				this.entityParameters.IsInterface = (this.resourceSelector.StructuredTypeClass == StructuredTypeClass.Interface);
 			}
 		}
 
