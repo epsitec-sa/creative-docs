@@ -13,6 +13,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.CommandHandlers
 {
+	/// <summary>
+	/// The <c>DatabaseCommandHandler</c> handles the database related commands.
+	/// </summary>
 	public class DatabaseCommandHandler : ICommandHandler
 	{
 		public DatabaseCommandHandler(CoreCommandDispatcher commandDispatcher)
@@ -20,7 +23,6 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			this.commandDispatcher = commandDispatcher;
 			this.databaseCommandStates = new HashSet<CommandState> ();
 
-			this.SetupDatabaseCommands ();
 			this.SetupDatabaseCommandStates ();
 		}
 
@@ -32,43 +34,21 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 				return this.databaseCommandStates
 						.Where (x => x.ActiveState == ActiveState.Yes)
 						.Select (x => x.Command.Name)
-						.FirstOrDefault () as string;
+						.FirstOrDefault ();
 			}
 		}
 
-		/*
-		[Command (Core.Res.CommandIds.Base.ShowCustomers)]
-		[Command (Core.Res.CommandIds.Base.ShowArticleDefinitions)]
-		[Command (Core.Res.CommandIds.Base.ShowDocuments)]
-		[Command (Core.Res.CommandIds.Base.ShowInvoiceDocuments)]
-		[Command (Core.Res.CommandIds.Base.ShowBusinessSettings)]
-		[Command (Core.Res.CommandIds.Base.ShowImages)]
-		[Command (Core.Res.CommandIds.Base.ShowImageBlobs)]
-		[Command (Core.Res.CommandIds.Base.ShowWorkflowDefinitions)]
-		[Command (Core.Res.CommandIds.Base.ShowDocumentCategoryMapping)]
-		[Command (Core.Res.CommandIds.Base.ShowDocumentCategory)]
-		[Command (Core.Res.CommandIds.Base.ShowDocumentOptions)]
-		[Command (Core.Res.CommandIds.Base.ShowDocumentPrintingUnits)]
-		 * */
-		public void ProcessBaseGenericShow(CommandDispatcher dispatcher, CommandEventArgs e)
+		
+		private void ProcessBaseGenericShow(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			//	The generic Base.Show command handler uses the name of the command to
 			//	select the matching database (e.g. ShowCustomers => selects "Customers").
 
-			this.SelectDatabase (e);
+			this.SelectDatabase (e.Command);
 		}
 
 		
 
-		private void SetupDatabaseCommands()
-		{
-			//	Make sure all command objects are properly initialized before trying
-			//	to iterate on the available commands in SetupDatabaseCommandStates :
-
-			Res.Initialize ();
-
-
-		}
 		
 		private void SetupDatabaseCommandStates()
 		{
@@ -79,21 +59,23 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			}
 		}
 
-		private void SelectDatabase(CommandEventArgs e)
+		private void SelectDatabase(Command command)
 		{
-			var commandName  = e.Command.Name;
+			var dataSetName = DatabaseCommandHandler.GetDataSetName (command.Name);
+			var controller  = this.commandDispatcher.GetApplicationComponent<BrowserViewController> ();
 
-			System.Diagnostics.Debug.Assert (commandName.StartsWith (DatabaseCommandHandler.ShowDatabaseCommandPrefix));
-
-			var databaseName = commandName.Substring (DatabaseCommandHandler.ShowDatabaseCommandPrefix.Length);
-			var activeState  = e.CommandState;
-			var context      = e.CommandContext;
-			var controller   = this.commandDispatcher.GetApplicationComponent<BrowserViewController> ();
-
-			controller.SelectDataSet (databaseName);
+			controller.SelectDataSet (dataSetName);
+			
 			this.OnChanged ();
 		}
 
+		private static string GetDataSetName(string commandName)
+		{
+			System.Diagnostics.Debug.Assert (commandName.StartsWith (DatabaseCommandHandler.ShowDatabaseCommandPrefix), string.Format ("Command {0} does not start with the expected {1} prefix", commandName, DatabaseCommandHandler.ShowDatabaseCommandPrefix));
+
+			return commandName.Substring (DatabaseCommandHandler.ShowDatabaseCommandPrefix.Length);
+		}
+		
 		private void UpdateActiveCommandState(string dataSetName)
 		{
 			var commandName  = string.Concat (DatabaseCommandHandler.ShowDatabaseCommandPrefix, dataSetName);
@@ -144,13 +126,13 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 
 		#endregion
 
-		public event EventHandler Changed;
+		public event EventHandler				Changed;
 
 
 		private static readonly string DatabaseSelectionGroup = "DatabaseSelection";
 		private static readonly string ShowDatabaseCommandPrefix = "Base.Show";
 
-        private readonly CoreCommandDispatcher commandDispatcher;
-		private readonly HashSet<CommandState> databaseCommandStates;
+        private readonly CoreCommandDispatcher	commandDispatcher;
+		private readonly HashSet<CommandState>	databaseCommandStates;
 	}
 }

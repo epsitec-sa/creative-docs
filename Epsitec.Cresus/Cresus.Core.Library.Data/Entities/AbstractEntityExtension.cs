@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -11,6 +11,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
+	/// <summary>
+	/// The <c>AbstractEntityExtensions</c> class provides extension methods for the <see cref="AbstractEntity"/>
+	/// class.
+	/// </summary>
 	public static class AbstractEntityExtensions
 	{
 		public static bool IsNull(this AbstractEntity entity)

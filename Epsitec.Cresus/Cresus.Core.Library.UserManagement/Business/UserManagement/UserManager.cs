@@ -308,6 +308,8 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			}
 		}
 
+		#region Factory Class
+
 		private sealed class Factory : ICoreDataComponentFactory
 		{
 			#region ICoreDataComponentFactory Members
@@ -329,7 +331,9 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 
 			#endregion
 		}
-		
+
+		#endregion
+
 		public event EventHandler AuthenticatedUserChanging;
         public event EventHandler AuthenticatedUserChanged;
 

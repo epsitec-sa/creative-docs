@@ -1,4 +1,4 @@
-﻿//	Copyright © 2008-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2008-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Core.Library
 		}
 
 
-		public CommandDispatcher CommandDispatcher
+		public CommandDispatcher				CommandDispatcher
 		{
 			get
 			{
@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
-		public CommandContext CommandContext
+		public CommandContext					CommandContext
 		{
 			get
 			{
@@ -48,8 +48,13 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
-		public override void ExecuteSetupPhase()
+		public override void					ExecuteSetupPhase()
 		{
+			//	Make sure all command objects are properly initialized before doing
+			//	any work on the command handlers.
+
+			TypeRosetta.InitializeResources ();
+			
 			this.CreateCommandHandlers ();
 			this.RegisterCommandHandlers ();
 			this.SetupDefaultCommandStates ();
@@ -57,7 +62,7 @@ namespace Epsitec.Cresus.Core.Library
 			base.ExecuteSetupPhase ();
 		}
 
-		public List<ICommandHandler> CommandHandlers
+		public List<ICommandHandler>			CommandHandlers
 		{
 			get
 			{
@@ -70,34 +75,6 @@ namespace Epsitec.Cresus.Core.Library
 			where T : class, ICoreComponent
 		{
 			return this.Host.FindComponent<T> ();
-		}
-
-		private void SetupDefaultCommandStates()
-		{
-			this.Host.SetEnable (ApplicationCommands.Cut, false);
-			this.Host.SetEnable (ApplicationCommands.Copy, false);
-			this.Host.SetEnable (ApplicationCommands.Paste, false);
-			this.Host.SetEnable (ApplicationCommands.Bold, false);
-			this.Host.SetEnable (ApplicationCommands.Italic, false);
-			this.Host.SetEnable (ApplicationCommands.Underlined, false);
-			this.Host.SetEnable (ApplicationCommands.Subscript, false);
-			this.Host.SetEnable (ApplicationCommands.Superscript, false);
-			this.Host.SetEnable (ApplicationCommands.MultilingualEdition, false);
-		}
-
-
-		private void CreateCommandHandlers()
-		{
-			this.commandHandlers.AddRange (Factories.CoreCommandHandlerFactory.CreateCommandHandlers (this));
-		}
-
-		private void RegisterCommandHandlers()
-		{
-			foreach (var handler in this.commandHandlers)
-			{
-				this.dispatcher.RegisterController (handler);
-				this.commandContext.AttachCommandHandler (handler);
-			}
 		}
 
 		public void PushHandler(Command command, System.Action handler)
@@ -134,22 +111,6 @@ namespace Epsitec.Cresus.Core.Library
 			return this.commandContext.GetCommandState (command);
 		}
 
-#if false
-		public static Orchestrators.DataViewOrchestrator GetOrchestrator(CommandEventArgs e)
-		{
-			var controller = MainViewController.Find (e.CommandContextChain);
-
-			if (controller == null)
-			{
-				return null;
-			}
-			else
-			{
-				return controller.Orchestrator;
-			}
-		}
-#endif
-
 		public void Dispatch(CommandDispatcher dispatcher, CommandEventArgs e, System.Action<Command> action = null)
 		{
 			var widget = e.Source as Widget;
@@ -178,7 +139,49 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
-		private sealed class CoreCommandDispatcherFactory : ICoreAppComponentFactory
+		private void SetupDefaultCommandStates()
+		{
+			this.Host.SetEnable (ApplicationCommands.Cut, false);
+			this.Host.SetEnable (ApplicationCommands.Copy, false);
+			this.Host.SetEnable (ApplicationCommands.Paste, false);
+			this.Host.SetEnable (ApplicationCommands.Bold, false);
+			this.Host.SetEnable (ApplicationCommands.Italic, false);
+			this.Host.SetEnable (ApplicationCommands.Underlined, false);
+			this.Host.SetEnable (ApplicationCommands.Subscript, false);
+			this.Host.SetEnable (ApplicationCommands.Superscript, false);
+			this.Host.SetEnable (ApplicationCommands.MultilingualEdition, false);
+		}
+
+		private void CreateCommandHandlers()
+		{
+			this.commandHandlers.AddRange (Factories.CoreCommandHandlerFactory.CreateCommandHandlers (this));
+		}
+
+		private void RegisterCommandHandlers()
+		{
+			foreach (var handler in this.commandHandlers)
+			{
+				this.dispatcher.RegisterController (handler);
+				this.commandContext.AttachCommandHandler (handler);
+			}
+		}
+
+		private CommandHandlerStack GetCommandHandlerStack(Command command)
+		{
+			CommandHandlerStack stack;
+
+			if (this.commandHandlerStack.TryGetValue (command, out stack) == false)
+			{
+				stack = new CommandHandlerStack (command);
+				this.commandHandlerStack[command] = stack;
+			}
+
+			return stack;
+		}
+
+		#region Factory Class
+
+		private sealed class Factory : ICoreAppComponentFactory
 		{
 			#region ICoreDataComponentFactory Members
 
@@ -200,18 +203,7 @@ namespace Epsitec.Cresus.Core.Library
 			#endregion
 		}
 
-		private CommandHandlerStack GetCommandHandlerStack(Command command)
-		{
-			CommandHandlerStack stack;
-
-			if (this.commandHandlerStack.TryGetValue (command, out stack) == false)
-			{
-				stack = new CommandHandlerStack (command);
-				this.commandHandlerStack[command] = stack;
-			}
-
-			return stack;
-		}
+		#endregion
 
 		private readonly CommandDispatcher dispatcher;
 		private readonly CommandContext commandContext;

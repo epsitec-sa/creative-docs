@@ -68,7 +68,9 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			return results.ToArray ();
 		}
 
-		public sealed class Factory : ICoreDataComponentFactory
+		#region Factory Class
+
+		private sealed class Factory : ICoreDataComponentFactory
 		{
 			#region ICoreDataComponentFactory Members
 
@@ -89,8 +91,10 @@ namespace Epsitec.Cresus.Core.Business.Finance
 
 			#endregion
 		}
-		
-		
+
+		#endregion
+
+
 		private VatDefinitionEntity[]	vatDefs;
 	}
 }

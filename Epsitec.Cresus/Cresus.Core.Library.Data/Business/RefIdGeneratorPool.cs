@@ -63,7 +63,9 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
-		public sealed class Factory : ICoreDataComponentFactory
+		#region Factory Class
+
+		private sealed class Factory : ICoreDataComponentFactory
 		{
 			#region ICoreDataComponentFactory Members
 
@@ -84,6 +86,9 @@ namespace Epsitec.Cresus.Core.Business
 
 			#endregion
 		}
+
+		#endregion
+
 		private readonly Dictionary<string, RefIdGenerator> generators;
 	}
 }

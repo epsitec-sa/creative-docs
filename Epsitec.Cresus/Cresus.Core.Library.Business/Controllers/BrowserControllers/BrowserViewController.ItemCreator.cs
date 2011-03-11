@@ -172,7 +172,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 				if (druid.IsEmpty)
 				{
-					throw new System.NotImplementedException ();
+					throw new System.NotImplementedException (string.Format ("Support for entities belonging to data set {0} is not implemented", this.dataSetName));
 				}
 
 				return druid;

@@ -12,6 +12,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Resolvers
 {
+	/// <summary>
+	/// The <c>RepositoryResolver</c> class is used to find the repository for a given
+	/// entity type. Basically, a resolver class must derive from <see cref="Repository&lt;T&gt;"/>.
+	/// </summary>
 	public static class RepositoryResolver
 	{
 		public static Repository Resolve(System.Type entityType, CoreData data, DataContext dataContext)

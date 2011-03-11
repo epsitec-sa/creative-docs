@@ -260,7 +260,9 @@ namespace Epsitec.Cresus.Core.Data
 			// TODO
 		}
 
-		public sealed class Factory : ICoreDataComponentFactory
+		#region Factory Class
+
+		private sealed class Factory : ICoreDataComponentFactory
 		{
 			#region ICoreDataComponentFactory Members
 
@@ -281,7 +283,9 @@ namespace Epsitec.Cresus.Core.Data
 
 			#endregion
 		}
-		
+
+		#endregion
+
 		private readonly DbInfrastructure dbInfrastructure;
 		private readonly DataLayer.Infrastructure.DataInfrastructure dataInfrastructure;
 		private ConnectionManager connectionManager;

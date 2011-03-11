@@ -109,7 +109,9 @@ namespace Epsitec.Cresus.Core.Data
 
 		#endregion
 
-		public sealed class Factory : ICoreDataComponentFactory
+		#region Factory Class
+
+		private sealed class Factory : ICoreDataComponentFactory
 		{
 			#region ICoreDataComponentFactory Members
 
@@ -130,5 +132,7 @@ namespace Epsitec.Cresus.Core.Data
 
 			#endregion
 		}
+
+		#endregion
 	}
 }

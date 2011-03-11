@@ -333,9 +333,9 @@ namespace Epsitec.Cresus.Core.Data
 			return System.Threading.Interlocked.Increment (ref ImageDataStore.nextContextId);
 		}
 
-		#region ICoreDataComponentFactory Members
+		#region Factory Class
 
-		public class Factory : ICoreDataComponentFactory
+		private sealed class Factory : ICoreDataComponentFactory
 		{
 			public bool CanCreate(CoreData data)
 			{

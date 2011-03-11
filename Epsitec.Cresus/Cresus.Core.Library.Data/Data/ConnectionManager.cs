@@ -151,7 +151,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public sealed class Factory : ICoreDataComponentFactory
+		#region Factory Class
+
+		private sealed class Factory : ICoreDataComponentFactory
 		{
 			#region ICoreDataComponentFactory Members
 
@@ -172,6 +174,8 @@ namespace Epsitec.Cresus.Core.Data
 
 			#endregion
 		}
+
+		#endregion
 
 		private static readonly double KeepAlivePeriodInSeconds = 10.0;
 

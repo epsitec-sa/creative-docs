@@ -172,7 +172,9 @@ namespace Epsitec.Cresus.Core.Data
 			monitors.ForEach (x => x.UpdateLockState (owners));
 		}
 
-		public sealed class Factory : ICoreDataComponentFactory
+		#region Factory Class
+
+		private sealed class Factory : ICoreDataComponentFactory
 		{
 			#region ICoreDataComponentFactory Members
 
@@ -193,6 +195,8 @@ namespace Epsitec.Cresus.Core.Data
 
 			#endregion
 		}
+
+		#endregion
 
 
 		private readonly DataInfrastructure		dataInfrastructure;

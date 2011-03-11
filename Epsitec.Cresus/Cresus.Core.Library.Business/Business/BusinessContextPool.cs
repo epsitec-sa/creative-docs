@@ -72,7 +72,9 @@ namespace Epsitec.Cresus.Core.Business
 			this.pool.Remove (context);
 		}
 
-		public sealed class Factory : ICoreDataComponentFactory
+		#region Factory Class
+
+		private sealed class Factory : ICoreDataComponentFactory
 		{
 			#region ICoreDataComponentFactory Members
 
@@ -93,6 +95,8 @@ namespace Epsitec.Cresus.Core.Business
 
 			#endregion
 		}
+
+		#endregion
 
 		private readonly List<BusinessContext> pool;
 	}
