@@ -38,7 +38,14 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <returns>The entity type if it is known; otherwise, <c>null</c>.</returns>
 		public static System.Type FindEntityType(Druid id)
 		{
-			return EntityClassFactory.FindType (id);
+			if (id.IsEmpty)
+			{
+				return null;
+			}
+			else
+			{
+				return EntityClassFactory.FindType (id);
+			}
 		}
 
 		/// <summary>

@@ -12,6 +12,7 @@ using Epsitec.Cresus.DataLayer.Context;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing.Platform;
+using Epsitec.Cresus.Core.Factories;
 
 namespace Epsitec.Cresus.Core.Data
 {
@@ -332,6 +333,27 @@ namespace Epsitec.Cresus.Core.Data
 			return System.Threading.Interlocked.Increment (ref ImageDataStore.nextContextId);
 		}
 
+		#region ICoreDataComponentFactory Members
+
+		public class Factory : ICoreDataComponentFactory
+		{
+			public bool CanCreate(CoreData data)
+			{
+				return data.DataInfrastructure != null;
+			}
+
+			public CoreDataComponent Create(CoreData data)
+			{
+				return new ImageDataStore (data);
+			}
+
+			public System.Type GetComponentType()
+			{
+				return typeof (ImageDataStore);
+			}
+		}
+
+		#endregion
 		
 		private static int						nextContextId;
 

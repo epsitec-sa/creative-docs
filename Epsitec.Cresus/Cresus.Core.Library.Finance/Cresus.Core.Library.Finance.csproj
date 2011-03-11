@@ -79,7 +79,6 @@
     <Compile Include="Entities\PriceCalculatorEntity.cs" />
     <Compile Include="Entities\PriceGroupEntity.cs" />
     <Compile Include="Entities\PriceRoundingModeEntity.cs" />
-    <Compile Include="Factories\TaxContextFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Business\Isr.cs" />
     <Compile Include="Business\IsrSlip.cs" />
@@ -100,7 +99,9 @@
     <Compile Include="V11\V11RecordLine.cs" />
     <Compile Include="V11\V11TotalLine.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Factories\" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
       <Link>Properties\Epsitec.Cresus.snk</Link>

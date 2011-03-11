@@ -11,6 +11,7 @@ using Epsitec.Cresus.Core.Extensions;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Factories;
 
 namespace Epsitec.Cresus.Core.Business.Finance
 {
@@ -66,7 +67,28 @@ namespace Epsitec.Cresus.Core.Business.Finance
 
 			return results.ToArray ();
 		}
-		
+
+		public sealed class Factory : ICoreDataComponentFactory
+		{
+			#region ICoreDataComponentFactory Members
+
+			public bool CanCreate(CoreData data)
+			{
+				return true;
+			}
+
+			public CoreDataComponent Create(CoreData data)
+			{
+				return new TaxContext (data);
+			}
+
+			public System.Type GetComponentType()
+			{
+				return typeof (TaxContext);
+			}
+
+			#endregion
+		}
 		
 		
 		private VatDefinitionEntity[]	vatDefs;

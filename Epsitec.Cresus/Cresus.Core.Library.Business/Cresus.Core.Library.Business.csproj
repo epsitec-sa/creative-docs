@@ -162,9 +162,7 @@
     <Compile Include="Entities\SubTotalDocumentItemEntity.cs" />
     <Compile Include="Entities\TaxDocumentItemEntity.cs" />
     <Compile Include="Entities\TextDocumentItemEntity.cs" />
-    <Compile Include="Factories\BusinessContextPoolFactory.cs" />
     <Compile Include="Factories\EntityViewControllerFactory.cs" />
-    <Compile Include="Factories\RefIdGeneratorPoolFactory.cs" />
     <Compile Include="Helpers\AbstractDocumentItemHelper.cs" />
     <Compile Include="Helpers\ArticleDocumentItemHelper.cs" />
     <Compile Include="Helpers\ArticleParameterHelper.cs" />

@@ -11,6 +11,7 @@ using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Factories;
 
 namespace Epsitec.Cresus.Core.Business.UserManagement
 {
@@ -305,6 +306,28 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			{
 				handler (this);
 			}
+		}
+
+		private sealed class Factory : ICoreDataComponentFactory
+		{
+			#region ICoreDataComponentFactory Members
+
+			public bool CanCreate(CoreData data)
+			{
+				return data.DataInfrastructure != null;
+			}
+
+			public CoreDataComponent Create(CoreData data)
+			{
+				return new UserManager (data);
+			}
+
+			public System.Type GetComponentType()
+			{
+				return typeof (UserManager);
+			}
+
+			#endregion
 		}
 		
 		public event EventHandler AuthenticatedUserChanging;

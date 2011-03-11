@@ -7,6 +7,7 @@ using Epsitec.Cresus.Core.Data;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Factories;
 
 namespace Epsitec.Cresus.Core.Business
 {
@@ -71,6 +72,27 @@ namespace Epsitec.Cresus.Core.Business
 			this.pool.Remove (context);
 		}
 
+		public sealed class Factory : ICoreDataComponentFactory
+		{
+			#region ICoreDataComponentFactory Members
+
+			public bool CanCreate(CoreData data)
+			{
+				return true;
+			}
+
+			public CoreDataComponent Create(CoreData data)
+			{
+				return new BusinessContextPool (data);
+			}
+
+			public System.Type GetComponentType()
+			{
+				return typeof (BusinessContextPool);
+			}
+
+			#endregion
+		}
 
 		private readonly List<BusinessContext> pool;
 	}

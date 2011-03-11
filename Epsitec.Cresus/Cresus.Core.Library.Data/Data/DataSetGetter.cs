@@ -11,6 +11,7 @@ using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Factories;
 
 namespace Epsitec.Cresus.Core.Data
 {
@@ -25,26 +26,40 @@ namespace Epsitec.Cresus.Core.Data
 		{
 		}
 
-		abstract class DynamicResolver
-		{
-			public abstract DataSetCollectionGetter Resolve(CoreData data);
-		}
-		sealed class DynamicResolver<T> : DynamicResolver
-			where T : AbstractEntity, new ()
-		{
-			public override DataSetCollectionGetter Resolve(CoreData data)
-			{
-				return context => data.GetAllEntities<T> (dataContext: context);
-			}
-		}
-
 		public DataSetCollectionGetter ResolveDataSet(string dataSetName)
+		{
+			var entityId   = DataSetGetter.FindEntityId (dataSetName);
+			var entityType = EntityClassFactory.FindEntityType (entityId);
+
+			return Resolver.ResolveGetter (entityType, this.Host);
+		}
+		
+		public Druid GetRootEntityId(string dataSetName)
+		{
+			return DataSetGetter.FindEntityId (dataSetName);
+		}
+		
+		
+		private static Druid FindEntityId(string dataSetName)
+		{
+			var type = DataSetGetter.FindStructuredType (dataSetName);
+			var entityId = type == null ? Druid.Empty : type.CaptionId;
+
+			if (entityId.IsEmpty)
+			{
+				throw new System.ArgumentException (string.Format ("The data set {0} cannot be mapped to any entity", dataSetName));
+			}
+
+			return entityId;
+		}
+		
+		private static StructuredType FindStructuredType(string dataSetName)
 		{
 			var types = from type in Infrastructure.GetManagedEntityStructuredTypes ()
 						where type.Flags.HasFlag (StructuredTypeFlags.StandaloneDisplay)
 						select new
-						{ 
-							Name = type.Caption.Name.StripSuffix ("Entity"),
+						{
+							Name = type.Caption.Name,
 							Type = type
 						};
 
@@ -56,142 +71,64 @@ namespace Epsitec.Cresus.Core.Data
 				if ((type.Name == dataSetName) ||
 					(StringPluralizer.GuessPluralForms (type.Name).Contains (dataSetName)))
 				{
-					//	Found the entity type...
-
-					System.Type entityType = EntityClassFactory.FindEntityType (type.Type.CaptionId);
-					
-					var resolver = System.Activator.CreateInstance (typeof (DynamicResolver<>).MakeGenericType (entityType)) as DynamicResolver;
-
-					return resolver.Resolve (this.Host);
+					return type.Type;
 				}
 			}
 
 			return null;
-
-
-#if false
-			switch (dataSetName)
-			{
-				case "Customers":
-					return context => data.GetAllEntities<CustomerEntity> (dataContext: context);
-
-				case "Relations":
-					return context => data.GetAllEntities<RelationEntity> (dataContext: context);
-
-				case "ArticleDefinitions":
-					return context => data.GetAllEntities<ArticleDefinitionEntity> (dataContext: context);
-
-				case "Documents":
-					return context => data.GetAllEntities<DocumentMetadataEntity> (dataContext: context);
-				
-				case "InvoiceDocuments":
-					return context => data.GetAllEntities<BusinessDocumentEntity> (dataContext: context);
-
-				case "BusinessSettings":
-					return context => data.GetAllEntities<BusinessSettingsEntity> (dataContext: context);
-
-				case "Images":
-					return context => data.GetAllEntities<ImageEntity> (dataContext: context);
-
-				case "ImageBlobs":
-					return context => data.GetAllEntities<ImageBlobEntity> (dataContext: context);
-
-				case "PriceCalculators":
-					return context => data.GetAllEntities<PriceCalculatorEntity> (dataContext: context);
-
-				case "WorkflowDefinitions":
-					return context => data.GetAllEntities<WorkflowDefinitionEntity> (dataContext: context);
-
-				case "DocumentCategoryMapping":
-					return context => data.GetAllEntities<DocumentCategoryMappingEntity> (dataContext: context);
-
-				case "DocumentCategory":
-					return context => data.GetAllEntities<DocumentCategoryEntity> (dataContext: context);
-
-				case "DocumentOptions":
-					return context => data.GetAllEntities<DocumentOptionsEntity> (dataContext: context);
-
-				case "DocumentPrintingUnits":
-					return context => data.GetAllEntities<DocumentPrintingUnitsEntity> (dataContext: context);
-				default:
-					return null;
-			}
-#endif
 		}
-		
-		public Druid GetRootEntityId(string dataSetName)
+
+		#region Resolver Class
+
+		private abstract class Resolver
 		{
-			var types = from type in Infrastructure.GetManagedEntityStructuredTypes ()
-						where type.Flags.HasFlag (StructuredTypeFlags.StandaloneDisplay)
-						select new
-						{
-							Name = type.Caption.Name.StripSuffix ("Entity"),
-							Type = type
-						};
-
-
-			foreach (var type in types)
+			public static DataSetCollectionGetter ResolveGetter(System.Type entityType, CoreData data)
 			{
-				if ((type.Name == dataSetName) ||
-					(StringPluralizer.GuessPluralForms (type.Name).Contains (dataSetName)))
-				{
-					//	Found the entity type...
+				var getter = Resolver.GetResolver (entityType);
+				return getter.Resolve (data);
+			}
 
-					return type.Type.CaptionId;
+			private static Resolver GetResolver(System.Type entityType)
+			{
+				System.Diagnostics.Debug.Assert (entityType != null);
+
+				return System.Activator.CreateInstance (typeof (Implementation<>).MakeGenericType (entityType)) as Resolver;
+			}
+			
+			protected abstract DataSetCollectionGetter Resolve(CoreData data);
+			
+			private sealed class Implementation<T> : Resolver
+				where T : AbstractEntity, new ()
+			{
+				protected override DataSetCollectionGetter Resolve(CoreData data)
+				{
+					return context => data.GetAllEntities<T> (dataContext: context);
 				}
 			}
+		}
 
-			return Druid.Empty;
+		#endregion
 
-#if false
-//			return EntityInfo<NaturalPersonEntity>.GetTypeId ();
-			switch (dataSetName)
+		public sealed class Factory : ICoreDataComponentFactory
+		{
+			#region ICoreDataComponentFactory Members
+
+			public bool CanCreate(CoreData data)
 			{
-				case "Customers":
-					return EntityInfo<CustomerEntity>.GetTypeId ();
-				
-				case "Relations":
-					return EntityInfo<RelationEntity>.GetTypeId ();
-
-				case "ArticleDefinitions":
-					return EntityInfo<ArticleDefinitionEntity>.GetTypeId ();
-
-				case "Documents":
-					return EntityInfo<DocumentMetadataEntity>.GetTypeId ();
-
-				case "InvoiceDocuments":
-					return EntityInfo<BusinessDocumentEntity>.GetTypeId ();
-
-				case "BusinessSettings":
-					return EntityInfo<BusinessSettingsEntity>.GetTypeId ();
-
-				case "Images":
-					return EntityInfo<ImageEntity>.GetTypeId ();
-
-				case "ImageBlobs":
-					return EntityInfo<ImageBlobEntity>.GetTypeId ();
-
-				case "PriceCalculators":
-					return EntityInfo<PriceCalculatorEntity>.GetTypeId ();
-
-				case "WorkflowDefinitions":
-					return EntityInfo<WorkflowDefinitionEntity>.GetTypeId ();
-
-				case "DocumentCategoryMapping":
-					return EntityInfo<DocumentCategoryMappingEntity>.GetTypeId ();
-
-				case "DocumentCategory":
-					return EntityInfo<DocumentCategoryEntity>.GetTypeId ();
-
-				case "DocumentOptions":
-					return EntityInfo<DocumentOptionsEntity>.GetTypeId ();
-
-				case "DocumentPrintingUnits":
-					return EntityInfo<DocumentPrintingUnitsEntity>.GetTypeId ();
-				default:
-					return Druid.Empty;
+				return data.DataInfrastructure != null;
 			}
-#endif
+
+			public CoreDataComponent Create(CoreData data)
+			{
+				return new DataSetGetter (data);
+			}
+
+			public System.Type GetComponentType()
+			{
+				return typeof (DataSetGetter);
+			}
+
+			#endregion
 		}
 	}
 }
