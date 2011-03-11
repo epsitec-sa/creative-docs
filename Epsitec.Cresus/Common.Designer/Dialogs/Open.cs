@@ -72,6 +72,21 @@ namespace Epsitec.Common.Designer.Dialogs
 					TabNavigationMode = TabNavigationMode.ActivateOnTab,
 				};
 
+				var clearButton = new GlyphButton
+				{
+					Parent = topFrame,
+					GlyphShape = GlyphShape.Close,
+					Dock = DockStyle.Right,
+					Margins = new Margins (1, 0, 0, 0),
+				};
+
+				clearButton.Clicked += delegate
+				{
+					this.filterTextField.Text = null;
+					this.filterTextField.SelectAll ();
+					this.filterTextField.Focus ();
+				};
+
 				this.filterTextField.TextChanged += this.HandlerFilterTextChanged;
 
 				//	Tableau principal.

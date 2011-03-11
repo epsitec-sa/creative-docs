@@ -24,6 +24,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public ResourceSelector(DesignerApplication designerApplication) : base(designerApplication)
 		{
+			this.allModules = new List<Module> ();
+			this.allIndexesInModules = new List<int> ();
 		}
 
 		public override void Show()
@@ -35,7 +37,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.Icon = this.designerApplication.Icon;
 				this.window.MakeSecondaryWindow ();
 				this.window.PreventAutoClose = true;
-				this.WindowInit("ResourceSelector", 500, 300, true);
+				this.WindowInit("ResourceSelector", 560, 306, true);
 				this.window.Text = Res.Strings.Dialog.ResourceSelector.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
@@ -60,7 +62,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				this.buttonCancel.Dock = DockStyle.Right;
 				this.buttonCancel.Clicked += this.HandleButtonCloseClicked;
-				this.buttonCancel.TabIndex = 12;
+				this.buttonCancel.TabIndex = 201;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.buttonUse = new Button (footer);
@@ -70,18 +72,24 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonUse.Dock = DockStyle.Right;
 				this.buttonUse.Margins = new Margins (0, 6, 0, 0);
 				this.buttonUse.Clicked += this.HandleButtonUseClicked;
-				this.buttonUse.TabIndex = 11;
+				this.buttonUse.TabIndex = 200;
 				this.buttonUse.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
 
 			this.Update ();
 
 			this.window.ShowDialog();
+
+			this.resourceFilterField.Text = null;
+			this.resourceFilterField.SelectAll ();
+			this.resourceFilterField.Focus ();
 		}
 
 		public void CreateUI(Widget parent)
 		{
 			//	Titre supérieur.
+			int tabIndex = 1;
+
 			var mainPane = new FrameBox
 			{
 				Parent = parent,
@@ -102,6 +110,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.radioEntities.PreferredWidth = 70;
 			this.radioEntities.Dock = DockStyle.Right;
 			this.radioEntities.Clicked += this.HandleRadioClicked;
+			this.radioEntities.TabIndex = tabIndex++;
 
 			this.radioTypes = new RadioButton (header);
 			this.radioTypes.Text = "Types";
@@ -109,6 +118,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.radioTypes.PreferredWidth = 70;
 			this.radioTypes.Dock = DockStyle.Right;
 			this.radioTypes.Clicked += this.HandleRadioClicked;
+			this.radioTypes.TabIndex = tabIndex++;
 
 			this.checkInterface = new CheckButton (header);
 			this.checkInterface.AutoToggle = false;
@@ -117,6 +127,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.checkInterface.PreferredWidth = 110;
 			this.checkInterface.Dock = DockStyle.Left;
 			this.checkInterface.Clicked += this.HandleRadioClicked;
+			this.checkInterface.TabIndex = tabIndex++;
 
 			this.radioAlone = new RadioButton (header);
 			this.radioAlone.Text = "<font size=\"130%\"><b>Pas d'héritage</b></font>";
@@ -124,6 +135,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.radioAlone.PreferredWidth = 130;
 			this.radioAlone.Dock = DockStyle.Left;
 			this.radioAlone.Clicked += this.HandleRadioClicked;
+			this.radioAlone.TabIndex = tabIndex++;
 
 			this.radioInherit = new RadioButton (header);
 			this.radioInherit.Text = "<font size=\"130%\"><b>Hérite de l'entité ci-dessous :</b></font>";
@@ -131,6 +143,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.radioInherit.PreferredWidth = 240;
 			this.radioInherit.Dock = DockStyle.Left;
 			this.radioInherit.Clicked += this.HandleRadioClicked;
+			this.radioInherit.TabIndex = tabIndex++;
 
 			Separator sep = new Separator (mainPane);  // trait horizontal de séparation
 			sep.PreferredHeight = 1;
@@ -139,11 +152,14 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Corps principal.
 			Widget body = new Widget (mainPane);
 			body.Dock = DockStyle.Fill;
+			body.TabIndex = tabIndex++;
 
 			Widget left = new Widget (body);
+			left.PreferredWidth = 200;
 			left.MinWidth = 150;
 			left.MinHeight = 100;
 			left.Dock = DockStyle.Left;
+			left.TabIndex = tabIndex++;
 
 			this.splitter = new VSplitter (body);
 			this.splitter.Dock = DockStyle.Left;
@@ -153,39 +169,79 @@ namespace Epsitec.Common.Designer.Dialogs
 			right.MinWidth = 150;
 			right.MinHeight = 100;
 			right.Dock = DockStyle.Fill;
+			right.TabIndex = tabIndex++;
 
 			//	Partie gauche.
 			this.header1 = new StaticText (left);
-			this.header1.Text = "Modules";
+			this.header1.Text = "<font size=\"150%\"><b>Modules</b></font>";
 			this.header1.Dock = DockStyle.Top;
 			this.header1.Margins = new Margins (0, 0, 5, 5);
+
+			this.allModulesButton = new CheckButton (left);
+			this.allModulesButton.Text = "Tous les modules";
+			this.allModulesButton.AutoToggle = false;
+			this.allModulesButton.Dock = DockStyle.Top;
+			this.allModulesButton.Margins = new Margins (0, 0, 8+3, 8+2);
+			this.allModulesButton.Clicked += new EventHandler<MessageEventArgs> (this.HandleAllModulesButtonClicked);
+			this.allModulesButton.TabIndex = tabIndex++;
 
 			this.listModules = new ScrollList (left);
 			this.listModules.Dock = DockStyle.Fill;
 			this.listModules.Margins = new Margins (0, 0, 0, 8);
-			this.listModules.TabIndex = 1;
+			this.listModules.TabIndex = tabIndex++;
 			this.listModules.SelectedItemChanged += this.HandleListModulesSelected;
+			this.listModules.TabIndex = tabIndex++;
 
 			//	Partie droite.
 			this.header2 = new StaticText (right);
-			this.header2.Text = "Ressources";
+			this.header2.Text = "<font size=\"150%\"><b>Ressources</b></font>";
 			this.header2.Dock = DockStyle.Top;
 			this.header2.Margins = new Margins (0, 0, 5, 5);
+
+			var band = new FrameBox (right);
+			band.Dock = DockStyle.Top;
+			band.Margins = new Margins (0, 0, 8, 8);
+			band.TabIndex = tabIndex++;
+
+			var t = new StaticText (band);
+			t.Text = "Rechercher";
+			t.PreferredWidth = 64;
+			t.Dock = DockStyle.Left;
+
+			this.resourceFilterField = new TextField (band);
+			this.resourceFilterField.Dock = DockStyle.Fill;
+			this.resourceFilterField.TextChanged += new EventHandler (this.HandleResourceFilterFieldTextChanged);
+			this.resourceFilterField.TabIndex = tabIndex++;
+
+			var clearButton = new GlyphButton (band);
+			clearButton.GlyphShape = GlyphShape.Close;
+			clearButton.Dock = DockStyle.Right;
+			clearButton.Margins = new Margins (1, 0, 0, 0);
+			this.radioInherit.TabIndex = tabIndex++;
+
+			clearButton.Clicked += delegate
+			{
+				this.resourceFilterField.Text = null;
+				this.resourceFilterField.SelectAll ();
+				this.resourceFilterField.Focus ();
+			};
 
 			this.listResources = new ScrollList (right);
 			this.listResources.Dock = DockStyle.Fill;
 			this.listResources.Margins = new Margins (0, 0, 0, 8);
-			this.listResources.TabIndex = 2;
+			this.listResources.TabIndex = tabIndex++;
 			this.listResources.SelectedItemChanged += this.HandleListResourcesSelected;
 			this.listResources.DoubleClicked += this.HandleListResourcesDoubleClicked;
+			this.listResources.TabIndex = tabIndex++;
 
 			//	Pied.
 			this.buttonIsNullable = new CheckButton (mainPane);
 			this.buttonIsNullable.Text = "Accepte d'être nul";
 			this.buttonIsNullable.Dock = DockStyle.Bottom;
 			this.buttonIsNullable.Margins = new Margins (0, 0, 5, 0);
-			this.buttonIsNullable.TabIndex = 10;
+			this.buttonIsNullable.TabIndex = tabIndex++;
 			this.buttonIsNullable.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+			this.buttonIsNullable.TabIndex = tabIndex++;
 
 			sep = new Separator (mainPane);  // trait horizontal de séparation
 			sep.PreferredHeight = 1;
@@ -364,7 +420,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private bool CollectionViewFilter(object obj)
 		{
-			//	Méthode passé comme paramètre System.Predicate<object> à CollectionView.Filter.
+			//	Méthode passée comme paramètre System.Predicate<object> à CollectionView.Filter.
 			//	Retourne false si la ressource doit être exclue.
 			CultureMap cultureMap = obj as CultureMap;
 
@@ -472,17 +528,69 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Met à jour tout le contenu du tableau et sélectionne la ressource actuelle.
 			this.listResources.Items.Clear();
+			this.allModules.Clear ();
+			this.allIndexesInModules.Clear ();
 
 			int sel = -1;
-			for (int i=0; i<this.collectionView.Items.Count; i++)
+
+			if (ResourceSelector.showAllModules)
 			{
-				CultureMap cultureMap = this.collectionView.Items[i] as CultureMap;
+				var currentModule = this.module;
 
-				this.listResources.Items.Add(cultureMap.Name);
+				List<Module> list = this.designerApplication.OpeningListModule;
+				int index = 0;
 
-				if (cultureMap.Id == this.resource)
+				foreach (Module module in list)
 				{
-					sel = i;
+					this.AccessChange (module);
+
+					for (int i=0; i<this.collectionView.Items.Count; i++)
+					{
+						CultureMap cultureMap = this.collectionView.Items[i] as CultureMap;
+
+						string name = string.Concat (module.ModuleInfo.FullId.Name, ".", cultureMap.Name );
+						if (this.IsFiltered (name))
+						{
+							continue;
+						}
+
+						name = string.Concat ("<font color=\"#777777\">", module.ModuleInfo.FullId.Name, ".</font>", cultureMap.Name);
+
+						this.listResources.Items.Add (name);
+						this.allModules.Add (module);
+						this.allIndexesInModules.Add (i);
+
+						if (cultureMap.Id == this.resource)
+						{
+							sel = index;
+						}
+
+						index++;
+					}
+				}
+
+				this.AccessChange (currentModule);
+			}
+			else
+			{
+				for (int i=0; i<this.collectionView.Items.Count; i++)
+				{
+					CultureMap cultureMap = this.collectionView.Items[i] as CultureMap;
+
+					string name = cultureMap.Name;
+					if (this.IsFiltered (name))
+					{
+						continue;
+					}
+
+					this.listResources.Items.Add(name);
+					this.allModules.Add (this.module);
+					this.allIndexesInModules.Add (i);
+
+					if (cultureMap.Id == this.resource)
+					{
+						sel = i;
+					}
 				}
 			}
 
@@ -492,8 +600,24 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.ignoreChanged = false;
 		}
 
+		private bool IsFiltered(string name)
+		{
+			if (string.IsNullOrWhiteSpace (this.resourceFilterField.Text))
+			{
+				return false;
+			}
+			else
+			{
+				string filter = this.resourceFilterField.Text.ToLower ();
+				return !name.ToLower ().Contains (filter);
+			}
+		}
+
 		private void UpdateButtons()
 		{
+			//	Met à jour tous les boutons.
+			this.allModulesButton.ActiveState = ResourceSelector.showAllModules ? ActiveState.Yes : ActiveState.No;
+
 			//	Met à jour le bouton "Utiliser".
 			if (this.buttonUse != null)
 			{
@@ -590,14 +714,14 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.header1.Enable = this.IsInherit;
 				this.header2.Enable = this.IsInherit;
-				this.listModules.Enable = this.IsInherit;
+				this.listModules.Enable = this.IsInherit && !ResourceSelector.showAllModules;
 				this.listResources.Enable = this.IsInherit;
 			}
 			else
 			{
 				this.header1.Enable = true;
 				this.header2.Enable = true;
-				this.listModules.Enable = true;
+				this.listModules.Enable = !ResourceSelector.showAllModules;
 				this.listResources.Enable = true;
 			}
 		}
@@ -654,8 +778,21 @@ namespace Epsitec.Common.Designer.Dialogs
 				}
 				else
 				{
-					CultureMap cultureMap = this.collectionView.Items[this.listResources.SelectedItemIndex] as CultureMap;
-					return cultureMap.Id;
+					int sel = this.listResources.SelectedItemIndex;
+
+					if (ResourceSelector.showAllModules)
+					{
+						var module = this.allModules[sel];
+						this.AccessChange (module);
+
+						CultureMap cultureMap = this.collectionView.Items[this.allIndexesInModules[sel]] as CultureMap;
+						return cultureMap.Id;
+					}
+					else
+					{
+						CultureMap cultureMap = this.collectionView.Items[sel] as CultureMap;
+						return cultureMap.Id;
+					}
 				}
 			}
 		}
@@ -724,6 +861,20 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		}
 
+		private void HandleAllModulesButtonClicked(object sender, MessageEventArgs e)
+		{
+			ResourceSelector.showAllModules = !ResourceSelector.showAllModules;
+
+			this.UpdateButtons ();
+			this.UpdateRadios();
+			this.UpdateTitle();
+			this.UpdateArray();
+			this.UpdateInherit ();
+
+			this.resourceFilterField.SelectAll ();
+			this.resourceFilterField.Focus ();
+		}
+
 		private void HandleListModulesSelected(object sender)
 		{
 			//	Choix d'un module dans la liste.
@@ -752,6 +903,11 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.UpdateArray();
 				return;
 			}
+		}
+
+		private void HandleResourceFilterFieldTextChanged(object sender)
+		{
+			this.UpdateArray ();
 		}
 
 		private void HandleListResourcesSelected(object sender)
@@ -792,6 +948,8 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
+		private static bool						showAllModules;
+
 		private Module							baseModule;
 		private Module							lastModule;
 		private Module							module;
@@ -808,6 +966,8 @@ namespace Epsitec.Common.Designer.Dialogs
 		private CollectionView					collectionView;
 		private Common.Dialogs.DialogResult		result;
 		private bool							closed;
+		private List<Module>					allModules;
+		private List<int>						allIndexesInModules;
 
 		private StaticText						title;
 		private RadioButton						radioTypes;
@@ -816,9 +976,11 @@ namespace Epsitec.Common.Designer.Dialogs
 		private RadioButton						radioAlone;
 		private RadioButton						radioInherit;
 		private StaticText						header1;
+		private CheckButton						allModulesButton;
 		private ScrollList						listModules;
 		private VSplitter						splitter;
 		private StaticText						header2;
+		private TextField						resourceFilterField;
 		private ScrollList						listResources;
 		private CheckButton						buttonIsNullable;
 		private Button							buttonUse;

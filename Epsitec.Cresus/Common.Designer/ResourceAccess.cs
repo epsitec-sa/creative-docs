@@ -85,12 +85,12 @@ namespace Epsitec.Common.Designer
 			}
 			if (this.type == Type.Fields)
 			{
-				Support.ResourceAccessors.StructuredTypeResourceAccessor typeAccessor = module.AccessEntities.accessor as Support.ResourceAccessors.StructuredTypeResourceAccessor;
+				var typeAccessor = module.AccessEntities.accessor as Support.ResourceAccessors.StructuredTypeResourceAccessor;
 				this.accessor = typeAccessor.FieldAccessor;
 			}
 			if (this.type == Type.Values)
 			{
-				Support.ResourceAccessors.AnyTypeResourceAccessor typeAccessor = module.AccessTypes.accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;
+				var typeAccessor = module.AccessTypes.accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;
 				this.accessor = typeAccessor.ValueAccessor;
 			}
 			if (this.type == Type.Panels)

@@ -57,7 +57,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.Icon = this.designerApplication.Icon;
 				this.window.MakeSecondaryWindow ();
 				this.window.PreventAutoClose = true;
-				this.WindowInit ("EntityCreation", 500, 300, true);
+				this.WindowInit ("EntityCreation", 500, 306, true);
 				this.window.Text = "Créeation d'une nouvelle entité";  // Res.Strings.Dialog.EntityCreation.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
