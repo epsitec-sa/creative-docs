@@ -217,7 +217,6 @@ namespace Epsitec.Common.Designer.Dialogs
 			clearButton.GlyphShape = GlyphShape.Close;
 			clearButton.Dock = DockStyle.Right;
 			clearButton.Margins = new Margins (1, 0, 0, 0);
-			this.radioInherit.TabIndex = tabIndex++;
 
 			clearButton.Clicked += delegate
 			{

@@ -22,77 +22,106 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Crée et montre la fenêtre du dialogue.
 			if ( this.window == null )
 			{
-				this.window = new Window();
+				this.window = new Window ();
 				this.window.Icon = this.designerApplication.Icon;
 				this.window.MakeSecondaryWindow ();
 				this.window.PreventAutoClose = true;
-				this.WindowInit("TypeCode", ResourceTypeCode.windowWidthExtended, ResourceTypeCode.windowHeight, true);
+				this.WindowInit ("TypeCode", ResourceTypeCode.windowWidthExtended, ResourceTypeCode.windowHeight, true);
 				this.window.Text = Res.Strings.Dialog.TypeCode.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
-				this.window.Root.MinSize = new Size(ResourceTypeCode.windowWidthCompacted, ResourceTypeCode.windowHeight);
-				this.window.Root.Padding = new Margins(8, 8, 8, 8);
+				this.window.Root.MinSize = new Size (ResourceTypeCode.windowWidthCompacted, ResourceTypeCode.windowHeight);
+				this.window.Root.Padding = new Margins (8, 8, 8, 8);
 
-				ResizeKnob resize = new ResizeKnob(this.window.Root);
+				ResizeKnob resize = new ResizeKnob (this.window.Root);
 				resize.Anchor = AnchorStyles.BottomRight;
-				resize.Margins = new Margins(0, -8, 0, -8);
-				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
+				resize.Margins = new Margins (0, -8, 0, -8);
+				ToolTip.Default.SetToolTip (resize, Res.Strings.Dialog.Tooltip.Resize);
 
 				//	Partie principale.
-				Widget main = new Widget(this.window.Root);
+				Widget main = new Widget (this.window.Root);
 				main.Dock = DockStyle.Fill;
 
-				this.leftPanel = new Widget(main);
+				this.leftPanel = new Widget (main);
 				this.leftPanel.PreferredWidth = 140;
 				this.leftPanel.Dock = DockStyle.Left;
 
-				this.rightPanel = new Widget(main);
+				this.rightPanel = new Widget (main);
 				this.rightPanel.Dock = DockStyle.Fill;
 
 				//	Partie gauche.
 				this.tabIndex = 1;
 				this.index = 0;
-				this.radioButtons = new List<RadioButton>();
-				this.CreateRadio(Res.Captions.Types.Type.Boolean);
-				this.CreateRadio(Res.Captions.Types.Type.Integer);
-				this.CreateRadio(Res.Captions.Types.Type.LongInteger);
-				this.CreateRadio(Res.Captions.Types.Type.Decimal);
-				this.CreateRadio(Res.Captions.Types.Type.String);
-				this.CreateRadio(Res.Captions.Types.Type.Date);
-				this.CreateRadio(Res.Captions.Types.Type.Time);
-				this.CreateRadio(Res.Captions.Types.Type.DateTime);
-				this.CreateRadio(Res.Captions.Types.Type.Enum);
-				this.CreateRadio(Res.Captions.Types.Type.Collection);
-				this.CreateRadio(Res.Captions.Types.Type.Native);
-				this.CreateRadio(Res.Captions.Types.Type.Binary);
+				this.radioButtons = new List<RadioButton> ();
+				this.CreateRadio (Res.Captions.Types.Type.Boolean);
+				this.CreateRadio (Res.Captions.Types.Type.Integer);
+				this.CreateRadio (Res.Captions.Types.Type.LongInteger);
+				this.CreateRadio (Res.Captions.Types.Type.Decimal);
+				this.CreateRadio (Res.Captions.Types.Type.String);
+				this.CreateRadio (Res.Captions.Types.Type.Date);
+				this.CreateRadio (Res.Captions.Types.Type.Time);
+				this.CreateRadio (Res.Captions.Types.Type.DateTime);
+				this.CreateRadio (Res.Captions.Types.Type.Enum);
+				this.CreateRadio (Res.Captions.Types.Type.Collection);
+				this.CreateRadio (Res.Captions.Types.Type.Native);
+				this.CreateRadio (Res.Captions.Types.Type.Binary);
 				this.tabIndex++;
 
 				//	Partie droite.
-				this.checkNative = new CheckButton(this.rightPanel);
+				this.checkNative = new CheckButton (this.rightPanel);
 				this.checkNative.Text = Res.Strings.Dialog.TypeCode.EnumNative;
-				this.checkNative.Margins = new Margins(0, 0, 0, 8);
+				this.checkNative.Margins = new Margins (0, 0, 0, 8);
 				this.checkNative.Dock = DockStyle.Top;
 				this.checkNative.ActiveStateChanged += this.HandleCheckNativeActiveStateChanged;
 
-				this.fieldFilter = new TextFieldCombo(this.rightPanel);
-				this.fieldFilter.Text = Res.Strings.Dialog.Icon.Filter.All;
-				this.fieldFilter.IsReadOnly = true;
-				this.fieldFilter.Margins = new Margins(0, 0, 0, 8);
-				this.fieldFilter.Dock = DockStyle.Top;
-				this.fieldFilter.ComboClosed += this.HandleFieldFilterComboClosed;
-				this.UpdateFilter();
+				this.comboFilterField = new TextFieldCombo (this.rightPanel);
+				this.comboFilterField.Text = Res.Strings.Dialog.Icon.Filter.All;
+				this.comboFilterField.IsReadOnly = true;
+				this.comboFilterField.Margins = new Margins (0, 0, 0, 8);
+				this.comboFilterField.Dock = DockStyle.Top;
+				this.comboFilterField.ComboClosed += this.HandleComboFilterFieldClosed;
+				this.UpdateFilter ();
 
-				this.enumList = new ScrollList(this.rightPanel);
+				{
+					var band = new FrameBox (this.rightPanel);
+					band.Dock = DockStyle.Top;
+					band.Margins = new Margins (0, 0, 0, 8);
+					band.TabIndex = tabIndex++;
+
+					this.filterLabel = new StaticText (band);
+					this.filterLabel.Text = "Rechercher";
+					this.filterLabel.PreferredWidth = 64;
+					this.filterLabel.Dock = DockStyle.Left;
+
+					this.filterField = new TextField (band);
+					this.filterField.Dock = DockStyle.Fill;
+					this.filterField.TextChanged += new EventHandler (this.HandleFilterFieldTextChanged);
+					this.filterField.TabIndex = tabIndex++;
+
+					this.filterClearButton = new GlyphButton (band);
+					this.filterClearButton.GlyphShape = GlyphShape.Close;
+					this.filterClearButton.Dock = DockStyle.Right;
+					this.filterClearButton.Margins = new Margins (1, 0, 0, 0);
+
+					this.filterClearButton.Clicked += delegate
+					{
+						this.filterField.Text = null;
+						this.filterField.SelectAll ();
+						this.filterField.Focus ();
+					};
+				}
+
+				this.enumList = new ScrollList (this.rightPanel);
 				this.enumList.Dock = DockStyle.Fill;
 				this.enumList.SelectionActivated += this.HandleEnumListSelectionActivated;
 
 				//	Boutons de fermeture.
-				Widget footer = new Widget(this.window.Root);
+				Widget footer = new Widget (this.window.Root);
 				footer.PreferredHeight = 22;
-				footer.Margins = new Margins(0, 0, 8, 0);
+				footer.Margins = new Margins (0, 0, 8, 0);
 				footer.Dock = DockStyle.Bottom;
 
-				this.buttonCancel = new Button(footer);
+				this.buttonCancel = new Button (footer);
 				this.buttonCancel.PreferredWidth = 75;
 				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
 				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
@@ -101,32 +130,21 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.TabIndex = 101;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-				this.buttonOk = new Button(footer);
+				this.buttonOk = new Button (footer);
 				this.buttonOk.PreferredWidth = 75;
 				this.buttonOk.Text = Res.Strings.Dialog.Button.OK;
 				this.buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonOk.Dock = DockStyle.Right;
-				this.buttonOk.Margins = new Margins(0, 6, 0, 0);
+				this.buttonOk.Margins = new Margins (0, 6, 0, 0);
 				this.buttonOk.Clicked += this.HandleButtonOKClicked;
 				this.buttonOk.TabIndex = 100;
 				this.buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-
-				this.buttonExtend = new GlyphButton(footer);
-				this.buttonExtend.PreferredWidth = 16;
-				this.buttonExtend.ButtonStyle = ButtonStyle.Slider;
-				this.buttonExtend.AutoFocus = false;
-				this.buttonExtend.TabNavigationMode = TabNavigationMode.None;
-				this.buttonExtend.Dock = DockStyle.Left;
-				this.buttonExtend.Margins = new Margins(0, 0, 3, 3);
-				this.buttonExtend.Clicked += this.HandleButtonExtendClicked;
-				ToolTip.Default.SetToolTip(this.buttonExtend, Res.Strings.Dialog.TypeCode.Tooltip.Options);
-
-				this.UpdateExtended();
 			}
 
-			this.UpdateRadios();
-			this.UpdateEnumList();
-			this.UpdateButtons();
+			this.UpdateRadios ();
+			this.UpdateEnumList ();
+			this.UpdateExtended ();
+			this.UpdateButtons ();
 
 			this.window.ShowDialog();
 		}
@@ -175,7 +193,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		protected void CreateRadio(Caption caption)
+		private void CreateRadio(Caption caption)
 		{
 			//	Crée un bouton radio.
 			RadioButton button = new RadioButton(this.leftPanel);
@@ -186,17 +204,16 @@ namespace Epsitec.Common.Designer.Dialogs
 			button.Index = this.index++;
 			button.TabIndex = this.tabIndex;
 			button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			button.ActiveStateChanged += this.HandleRadioButtonActiveStateChanged;
+			button.Clicked += new EventHandler<MessageEventArgs> (this.HandleRadioButtonClicked);
 
 			this.radioButtons.Add(button);
 		}
 
-		protected void UpdateRadios()
+		private void UpdateRadios()
 		{
 			//	Met à jour le bouton radio enfoncé en fonction du type.
 			string actual = ResourceAccess.TypeCodeToName(this.typeEdited);
 
-			this.ignoreChanged = true;
 			foreach (RadioButton button in this.radioButtons)
 			{
 				string name = button.Name;
@@ -209,25 +226,28 @@ namespace Epsitec.Common.Designer.Dialogs
 					button.Focus();
 				}
 			}
-			this.ignoreChanged = false;
 
-			this.checkNative.Enable = (this.typeEdited == TypeCode.Enum);
-			this.fieldFilter.Enable = (this.typeEdited == TypeCode.Enum && this.checkNative.ActiveState == ActiveState.Yes);
-			this.enumList.Enable    = (this.typeEdited == TypeCode.Enum && this.checkNative.ActiveState == ActiveState.Yes);
+			this.checkNative.Enable       = (this.typeEdited == TypeCode.Enum);
+			this.filterLabel.Enable       = (this.typeEdited == TypeCode.Enum && this.checkNative.ActiveState == ActiveState.Yes);
+			this.filterField.Enable       = (this.typeEdited == TypeCode.Enum && this.checkNative.ActiveState == ActiveState.Yes);
+			this.filterClearButton.Enable = (this.typeEdited == TypeCode.Enum && this.checkNative.ActiveState == ActiveState.Yes);
+			this.comboFilterField.Enable  = (this.typeEdited == TypeCode.Enum && this.checkNative.ActiveState == ActiveState.Yes);
+			this.enumList.Enable          = (this.typeEdited == TypeCode.Enum && this.checkNative.ActiveState == ActiveState.Yes);
 		}
 
-		protected void UpdateExtended()
+		private void UpdateExtended()
 		{
 			//	Met à jour le bouton pour montrer/cacher les options.
-			this.buttonExtend.GlyphShape = this.isExtentended ? GlyphShape.ArrowLeft : GlyphShape.ArrowRight;
-			this.rightPanel.Visibility = this.isExtentended;
+			bool isExtended = (this.typeEdited == TypeCode.Enum);
+
+			this.rightPanel.Visibility = isExtended;
 
 			Size size = this.window.ClientSize;
-			size.Width = this.isExtentended ? ResourceTypeCode.windowWidthExtended : ResourceTypeCode.windowWidthCompacted;
+			size.Width = isExtended ? ResourceTypeCode.windowWidthExtended : ResourceTypeCode.windowWidthCompacted;
 			this.window.ClientSize = size;
 		}
 
-		protected void UpdateButtons()
+		private void UpdateButtons()
 		{
 			//	Met à jour le bouton D'accord.
 			bool enable = true;
@@ -240,7 +260,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.buttonOk.Enable = enable;
 		}
 
-		protected void UpdateFilter()
+		private void UpdateFilter()
 		{
 			//	Met à jour la liste des filtres.
 			this.filters = new List<string>();
@@ -259,28 +279,35 @@ namespace Epsitec.Common.Designer.Dialogs
 				}
 			}
 
-			this.fieldFilter.Items.Clear();
-			this.fieldFilter.Items.Add(Res.Strings.Dialog.TypeCode.EnumAll);
+			this.comboFilterField.Items.Clear();
+			this.comboFilterField.Items.Add(Res.Strings.Dialog.TypeCode.EnumAll);
 			foreach (string filter in this.filters)
 			{
-				this.fieldFilter.Items.Add(string.Format(Res.Strings.Dialog.TypeCode.EnumOne, filter));
+				this.comboFilterField.Items.Add(string.Format(Res.Strings.Dialog.TypeCode.EnumOne, filter));
 			}
 		}
 
-		protected void UpdateEnumList()
+		private void UpdateEnumList()
 		{
 			//	Met à jour la liste des énumérations C# natives en fonction du filtre.
 			string filter = null;
-			if (this.fieldFilter.SelectedItemIndex > 0)  // pas "tout montrer" ?
+			if (this.comboFilterField.SelectedItemIndex > 0)  // pas "tout montrer" ?
 			{
-				filter = this.filters[this.fieldFilter.SelectedItemIndex-1];
+				filter = this.filters[this.comboFilterField.SelectedItemIndex-1];
 			}
 
 			this.systemTypes = new List<System.Type>();
 			this.enumList.Items.Clear();
+
 			foreach (System.Type stype in EnumLister.GetDesignerVisibleEnums())
 			{
 				string name = this.resourceAccess.GetEnumBaseName(stype);
+
+				if (this.IsFiltered (name))
+				{
+					continue;
+				}
+
 				if (filter == null || name.StartsWith(filter))
 				{
 					if (this.resourceAccess.IsCorrectNewName(ref name))
@@ -292,24 +319,32 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
+		private bool IsFiltered(string name)
+		{
+			if (string.IsNullOrWhiteSpace (this.filterField.Text))
+			{
+				return false;
+			}
+			else
+			{
+				string filter = this.filterField.Text.ToLower ();
+				return !name.ToLower ().Contains (filter);
+			}
+		}
 
-		private void HandleRadioButtonActiveStateChanged(object sender)
+
+		private void HandleRadioButtonClicked(object sender, MessageEventArgs e)
 		{
 			//	Bouton radio cliqué.
-			if (this.ignoreChanged)
-			{
-				return;
-			}
-
 			RadioButton button = sender as RadioButton;
-			if (button.ActiveState == ActiveState.Yes)
-			{
-				string name = button.Name;
-				name = name.Substring(name.LastIndexOf('.')+1);  // enlève "Res.Captions.Types.Type."
-				this.typeEdited = ResourceAccess.NameToTypeCode(name);
-				this.UpdateRadios();
-				this.UpdateButtons();
-			}
+
+			string name = button.Name;
+			name = name.Substring (name.LastIndexOf ('.')+1);  // enlève "Res.Captions.Types.Type."
+			this.typeEdited = ResourceAccess.NameToTypeCode (name);
+
+			this.UpdateRadios ();
+			this.UpdateExtended ();
+			this.UpdateButtons ();
 		}
 
 		private void HandleCheckNativeActiveStateChanged(object sender)
@@ -319,7 +354,13 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.UpdateButtons();
 		}
 
-		private void HandleFieldFilterComboClosed(object sender)
+		private void HandleFilterFieldTextChanged(object sender)
+		{
+			this.UpdateEnumList ();
+			this.UpdateButtons ();
+		}
+
+		private void HandleComboFilterFieldClosed(object sender)
 		{
 			//	Menu pour choisir le filtre fermé.
 			this.UpdateEnumList();
@@ -358,38 +399,31 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.OnClosed();
 		}
 
-		private void HandleButtonExtendClicked(object sender, MessageEventArgs e)
-		{
-			//	Bouton ">" ou "<" pour montrer/cacher les options cliqué.
-			this.isExtentended = !this.isExtentended;
-			this.UpdateExtended();
-			this.UpdateButtons();
-		}
 
+		private static readonly double			windowWidthCompacted = 8+75+6+75+8;
+		private static readonly double			windowWidthExtended = 500;
+		private static readonly double			windowHeight = 284;
 
-		protected static readonly double		windowWidthCompacted = 195;
-		protected static readonly double		windowWidthExtended = 500;
-		protected static readonly double		windowHeight = 280;
+		private ResourceAccess					resourceAccess;
+		private TypeCode						typeEdited;
+		private TypeCode						typeAccepted;
+		private List<string>					filters;
+		private List<System.Type>				systemTypes;
+		private int								index;
+		private int								tabIndex;
 
-		protected ResourceAccess				resourceAccess;
-		protected TypeCode						typeEdited;
-		protected TypeCode						typeAccepted;
-		protected List<string>					filters;
-		protected List<System.Type>				systemTypes;
-		protected bool							isExtentended;
-		protected int							index;
-		protected int							tabIndex;
+		private Widget							leftPanel;
+		private List<RadioButton>				radioButtons;
 
-		protected Widget						leftPanel;
-		protected List<RadioButton>				radioButtons;
+		private Widget							rightPanel;
+		private CheckButton						checkNative;
+		private StaticText						filterLabel;
+		private TextField						filterField;
+		private GlyphButton						filterClearButton;
+		private TextFieldCombo					comboFilterField;
+		private ScrollList						enumList;
 
-		protected Widget						rightPanel;
-		protected CheckButton					checkNative;
-		protected TextFieldCombo				fieldFilter;
-		protected ScrollList					enumList;
-
-		protected Button						buttonOk;
-		protected Button						buttonCancel;
-		protected GlyphButton					buttonExtend;
+		private Button							buttonOk;
+		private Button							buttonCancel;
 	}
 }
