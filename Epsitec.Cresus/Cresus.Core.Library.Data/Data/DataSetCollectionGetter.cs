@@ -10,5 +10,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Data
 {
+	/// <summary>
+	/// The <c>DataSetCollectionGetter</c> delegate is used to retrieve all items found
+	/// in a data set as a collection of entities.
+	/// </summary>
+	/// <param name="dataContext">The data context.</param>
+	/// <returns>The collection of entities.</returns>
 	public delegate IEnumerable<AbstractEntity> DataSetCollectionGetter(DataContext dataContext);
 }
