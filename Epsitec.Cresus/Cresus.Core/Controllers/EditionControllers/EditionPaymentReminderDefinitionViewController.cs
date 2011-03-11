@@ -52,27 +52,29 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUITaxArticle(UIBuilder builder)
 		{
-			throw new System.NotImplementedException ();
 #if false
 			var controller = new SelectionController<ArticleDefinitionEntity> (this.BusinessContext)
 			{
-				ValueGetter         = () => this.Entity.AdministrativeTaxArticle,
-				ValueSetter         = x => this.Entity.AdministrativeTaxArticle = x,
-				ReferenceController = new ReferenceController (() => this.Entity.AdministrativeTaxArticle, creator: this.CreateNewTaxArticleDefinition),
+				ValueGetter         = () => this.Entity.AdministrativeTaxCode,
+				ValueSetter         = x => this.Entity.AdministrativeTaxCode = x,
+				ReferenceController = new ReferenceController (() => this.Entity.AdministrativeTaxCode, creator: this.CreateNewTaxArticleDefinition),
 
 				ToTextArrayConverter     = x => x.GetEntityKeywords (),
 				ToFormattedTextConverter = x => x.GetCompactSummary ()
 			};
 
 			builder.CreateAutoCompleteTextField ("Article pour facturer une taxe", controller);
+#else
+//			TODO: faire le lien avec l'article, non pas au niveau d'une référence, mais au niveau d'un code d'article
 #endif
 		}
 
-
+#if false
 		private NewEntityReference CreateNewTaxArticleDefinition(DataContext context)
 		{
 			var article = context.CreateEntityAndRegisterAsEmpty<ArticleDefinitionEntity> ();
 			return article;
 		}
+#endif
 	}
 }

@@ -51,6 +51,23 @@ namespace Epsitec.Cresus.Core
 			{
 			}
 			
+			public static class Data
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				public static class String
+				{
+					internal static void _Initialize()
+					{
+					}
+					
+					//	designer:cap/8VA81
+					public static readonly Epsitec.Common.Types.StringType ItemCode = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 40));
+				}
+			}
+			
 			//	designer:cap/8VAQ
 			public static readonly Epsitec.Common.Types.StructuredType Comment = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 26));
 			//	designer:cap/8VA61
@@ -342,6 +359,7 @@ namespace Epsitec.Cresus.Core
 			CommandIds._Initialize ();
 			CommandIds.Base._Initialize ();
 			Types._Initialize ();
+			Types.Data.String._Initialize ();
 			Fields.Comment._Initialize ();
 			Fields.IComments._Initialize ();
 			Fields.IDataHash._Initialize ();
