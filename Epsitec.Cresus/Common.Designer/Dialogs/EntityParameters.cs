@@ -82,7 +82,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			var mainPane = new FrameBox
 			{
 				Parent = container,
-				Dock = DockStyle.Fill,
+				PreferredWidth = 200,
+				Dock = DockStyle.Left,
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 				Margins = new Margins (0, 0, 2, 10),
 			};
@@ -173,8 +174,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.entitySample = new MyWidgets.EntitySample
 			{
 				Parent = container,
-				PreferredWidth = 200,
-				Dock = DockStyle.Right,
+				Dock = DockStyle.Fill,
 			};
 		}
 

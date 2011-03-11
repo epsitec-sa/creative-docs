@@ -154,30 +154,30 @@ namespace Epsitec.Common.Designer.Dialogs
 			body.Dock = DockStyle.Fill;
 			body.TabIndex = tabIndex++;
 
-			Widget left = new Widget (body);
-			left.PreferredWidth = 200;
-			left.MinWidth = 150;
-			left.MinHeight = 100;
-			left.Dock = DockStyle.Left;
-			left.TabIndex = tabIndex++;
+			this.leftContainer = new FrameBox (body);
+			this.leftContainer.PreferredWidth = 200;
+			this.leftContainer.MinWidth = 150;
+			this.leftContainer.MinHeight = 100;
+			this.leftContainer.Dock = DockStyle.Left;
+			this.leftContainer.TabIndex = tabIndex++;
 
 			this.splitter = new VSplitter (body);
 			this.splitter.Dock = DockStyle.Left;
 			this.splitter.Margins = new Margins (8, 8, 0, 0);
 
-			Widget right = new Widget (body);
-			right.MinWidth = 150;
-			right.MinHeight = 100;
-			right.Dock = DockStyle.Fill;
-			right.TabIndex = tabIndex++;
+			this.rightContainer = new FrameBox (body);
+			this.rightContainer.MinWidth = 150;
+			this.rightContainer.MinHeight = 100;
+			this.rightContainer.Dock = DockStyle.Fill;
+			this.rightContainer.TabIndex = tabIndex++;
 
 			//	Partie gauche.
-			this.header1 = new StaticText (left);
-			this.header1.Text = "<font size=\"150%\"><b>Modules</b></font>";
-			this.header1.Dock = DockStyle.Top;
-			this.header1.Margins = new Margins (0, 0, 5, 5);
+			var header1 = new StaticText (this.leftContainer);
+			header1.Text = "<font size=\"150%\"><b>Modules</b></font>";
+			header1.Dock = DockStyle.Top;
+			header1.Margins = new Margins (0, 0, 5, 5);
 
-			this.allModulesButton = new CheckButton (left);
+			this.allModulesButton = new CheckButton (this.leftContainer);
 			this.allModulesButton.Text = "Tous les modules";
 			this.allModulesButton.AutoToggle = false;
 			this.allModulesButton.Dock = DockStyle.Top;
@@ -185,7 +185,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.allModulesButton.Clicked += new EventHandler<MessageEventArgs> (this.HandleAllModulesButtonClicked);
 			this.allModulesButton.TabIndex = tabIndex++;
 
-			this.listModules = new ScrollList (left);
+			this.listModules = new ScrollList (this.leftContainer);
 			this.listModules.Dock = DockStyle.Fill;
 			this.listModules.Margins = new Margins (0, 0, 0, 8);
 			this.listModules.TabIndex = tabIndex++;
@@ -193,12 +193,12 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.listModules.TabIndex = tabIndex++;
 
 			//	Partie droite.
-			this.header2 = new StaticText (right);
-			this.header2.Text = "<font size=\"150%\"><b>Ressources</b></font>";
-			this.header2.Dock = DockStyle.Top;
-			this.header2.Margins = new Margins (0, 0, 5, 5);
+			var header2 = new StaticText (this.rightContainer);
+			header2.Text = "<font size=\"150%\"><b>Ressources</b></font>";
+			header2.Dock = DockStyle.Top;
+			header2.Margins = new Margins (0, 0, 5, 5);
 
-			var band = new FrameBox (right);
+			var band = new FrameBox (this.rightContainer);
 			band.Dock = DockStyle.Top;
 			band.Margins = new Margins (0, 0, 8, 8);
 			band.TabIndex = tabIndex++;
@@ -225,7 +225,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.resourceFilterField.Focus ();
 			};
 
-			this.listResources = new ScrollList (right);
+			this.listResources = new ScrollList (this.rightContainer);
 			this.listResources.Dock = DockStyle.Fill;
 			this.listResources.Margins = new Margins (0, 0, 0, 8);
 			this.listResources.TabIndex = tabIndex++;
@@ -711,15 +711,15 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.ignoreChanged = false;
 
-				this.header1.Enable = this.IsInherit;
-				this.header2.Enable = this.IsInherit;
+				this.leftContainer.Enable = this.IsInherit;
+				this.rightContainer.Enable = this.IsInherit;
 				this.listModules.Enable = this.IsInherit && !ResourceSelector.showAllModules;
 				this.listResources.Enable = this.IsInherit;
 			}
 			else
 			{
-				this.header1.Enable = true;
-				this.header2.Enable = true;
+				this.leftContainer.Enable = true;
+				this.rightContainer.Enable = true;
 				this.listModules.Enable = !ResourceSelector.showAllModules;
 				this.listResources.Enable = true;
 			}
@@ -974,11 +974,11 @@ namespace Epsitec.Common.Designer.Dialogs
 		private CheckButton						checkInterface;
 		private RadioButton						radioAlone;
 		private RadioButton						radioInherit;
-		private StaticText						header1;
+		private FrameBox						leftContainer;
 		private CheckButton						allModulesButton;
 		private ScrollList						listModules;
 		private VSplitter						splitter;
-		private StaticText						header2;
+		private FrameBox						rightContainer;
 		private TextField						resourceFilterField;
 		private ScrollList						listResources;
 		private CheckButton						buttonIsNullable;
