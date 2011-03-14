@@ -28,18 +28,18 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primarySummary.MinHeight = AbstractCaptions.iconSize;
 			this.primarySummary.Dock = DockStyle.Fill;
 
-			this.primarySummaryIcon = new IconButton(leftContainer.Container);
-			this.primarySummaryIcon.AutoFocus = false;
+			this.primarySummaryIcon = new MyWidgets.IconViewer (leftContainer.Container);
 			this.primarySummaryIcon.MinSize = new Size (AbstractCaptions.iconSize, AbstractCaptions.iconSize);
+			this.primarySummaryIcon.PreferredSize = new Size (AbstractCaptions.iconSize, AbstractCaptions.iconSize);
 			this.primarySummaryIcon.Dock = DockStyle.Right;
 
 			this.secondarySummary = new StaticText(rightContainer.Container);
 			this.secondarySummary.MinHeight = AbstractCaptions.iconSize;
 			this.secondarySummary.Dock = DockStyle.Fill;
 
-			this.secondarySummaryIcon = new IconButton(rightContainer.Container);
-			this.secondarySummaryIcon.AutoFocus = false;
+			this.secondarySummaryIcon = new MyWidgets.IconViewer (rightContainer.Container);
 			this.secondarySummaryIcon.MinSize = new Size (AbstractCaptions.iconSize, AbstractCaptions.iconSize);
+			this.secondarySummaryIcon.PreferredSize = new Size (AbstractCaptions.iconSize, AbstractCaptions.iconSize);
 			this.secondarySummaryIcon.Dock = DockStyle.Right;
 
 			//	Textes.
@@ -124,7 +124,8 @@ namespace Epsitec.Common.Designer.Viewers
 			label.Dock = DockStyle.Left;
 
 			this.primaryIcon = new MyWidgets.IconViewer (this.groupPrimaryIcon.GroupBox);
-			this.primaryIcon.AutoFocus = false;
+			this.primaryIcon.ShowAllIcons = true;
+			this.primaryIcon.IsClickable = true;
 			this.primaryIcon.MinHeight = AbstractCaptions.iconSize;  // attention, très important !
 			this.primaryIcon.PreferredHeight = AbstractCaptions.iconSize;
 			this.primaryIcon.PreferredWidth = AbstractCaptions.iconSize*4;
@@ -281,6 +282,7 @@ namespace Epsitec.Common.Designer.Viewers
 		private void UpdateIcon()
 		{
 			this.groupPrimaryIcon.Enable = !this.designerApplication.IsReadonly;
+			this.primaryIcon.Enable = !this.designerApplication.IsReadonly;
 
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			string icon = null;
@@ -316,10 +318,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			this.primarySummaryIcon.IconUri = this.primaryIcon.IconUri;
-			this.primarySummaryIcon.PreferredIconSize = new Size (31, 31);
-
 			this.secondarySummaryIcon.IconUri = this.primaryIcon.IconUri;
-			this.secondarySummaryIcon.PreferredIconSize = new Size (31, 31);
 		}
 
 
@@ -783,8 +782,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private static readonly int				iconSize = 40+6;  // pour afficher confortablement les icônes 40x40
 
-		private IconButton						primarySummaryIcon;
-		private IconButton						secondarySummaryIcon;
+		private MyWidgets.IconViewer			primarySummaryIcon;
+		private MyWidgets.IconViewer			secondarySummaryIcon;
 		private MyWidgets.ResetBox				groupPrimaryLabels;
 		private MyWidgets.StringCollection		primaryLabels;
 		private MyWidgets.ResetBox				groupSecondaryLabels;

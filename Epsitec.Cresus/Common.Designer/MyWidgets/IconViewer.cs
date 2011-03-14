@@ -17,7 +17,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			this.ButtonStyle = ButtonStyle.ToolItem;
 			this.AutoEngage = false;
-			this.AutoFocus = true;
+			this.AutoFocus = false;
 
 			this.icons = new List<OneIcon> ();
 		}
@@ -29,18 +29,53 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
+		public bool ShowAllIcons
+		{
+			get
+			{
+				return this.showAllIcons;
+			}
+			set
+			{
+				if (this.showAllIcons != value)
+				{
+					this.showAllIcons = value;
+					this.lastIconUri = null;
+					this.Invalidate ();
+				}
+			}
+		}
+
+		public bool IsClickable
+		{
+			get
+			{
+				return this.isClickable;
+			}
+			set
+			{
+				if (this.isClickable != value)
+				{
+					this.isClickable = value;
+					this.lastIconUri = null;
+					this.Invalidate ();
+				}
+			}
+		}
+
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			//	Dessine le fond standard du bouton.
-			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+			if (this.isClickable)
+			{
+				base.PaintBackgroundImplementation (graphics, clipRect);
 
-			base.PaintBackgroundImplementation (graphics, clipRect);
-
-			var bounds = this.Client.Bounds;
-			bounds.Deflate (0.5);
-			graphics.AddRectangle (bounds);
-			graphics.RenderSolid (adorner.ColorBorder);
+				var bounds = this.Client.Bounds;
+				bounds.Deflate (0.5);
+				graphics.AddRectangle (bounds);
+				graphics.RenderSolid (this.BorderColor);
+			}
 
 			this.UpdateIcons ();
 
@@ -52,7 +87,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				graphics.AddLine (rect.BottomLeft, rect.TopRight);
 				graphics.AddLine (rect.BottomRight, rect.TopLeft);
-				graphics.RenderSolid (adorner.ColorBorder);
+				graphics.RenderSolid (this.BorderColor);
 			}
 			else  // une ou plusieurs icônes ?
 			{
@@ -66,15 +101,26 @@ namespace Epsitec.Common.Designer.MyWidgets
 		private void DrawOneIcon(Graphics graphics, OneIcon oneIcon)
 		{
 			//	Dessine une icône à sa place.
-			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+			if (this.isClickable)
+			{
+				var bounds = oneIcon.Bounds;
+				bounds.Inflate (0.5);
 
-			var bounds = oneIcon.Bounds;
-			bounds.Inflate (0.5);
-
-			graphics.AddRectangle (bounds);
-			graphics.RenderSolid (adorner.ColorBorder);
+				graphics.AddRectangle (bounds);
+				graphics.RenderSolid (this.BorderColor);
+			}
 
 			oneIcon.TextLayout.Paint (oneIcon.Bounds.BottomLeft, graphics);
+		}
+
+		private Color BorderColor
+		{
+			get
+			{
+				IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+
+				return adorner.ColorTextFieldBorder (this.Enable);
+			}
 		}
 
 
@@ -116,6 +162,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 						var list = canvas.IconKeys.ToList ();
 						list.Sort (new IconKeyComparer ());  // de la plus petite icône à la plus grande
 
+						if (this.showAllIcons == false && list.Count != 0)
+						{
+							//	On ne garde que la plus grande icône.
+							var big = list[list.Count-1];
+							list.Clear ();
+							list.Add (big);
+						}
+
 						//	Calcule la largeur totale nécessaire.
 						double totalWidth = 0;
 
@@ -156,9 +210,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 					return a.Size.Height.CompareTo (b.Size.Height);
 				}
 
-				if (a.PageRank != b.PageRank)
+				//	Les icônes avec un style viennent en dernier.
+				if (a.Style != b.Style)
 				{
-					return a.PageRank.CompareTo (b.PageRank);
+					if (a.Style == null)
+					{
+						return -1;
+					}
+
+					return a.Style.CompareTo (b.Style);
 				}
 
 				return 0;
@@ -231,7 +291,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		private string							lastIconUri;
 		private readonly List<OneIcon>			icons;
+
+		private bool							showAllIcons;
+		private bool							isClickable;
+		private string							lastIconUri;
 	}
 }
