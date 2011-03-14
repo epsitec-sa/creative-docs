@@ -82,13 +82,11 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				//	Tableau principal.
 				this.arrayDetail = new MyWidgets.StringArray(this.window.Root);
-				this.arrayDetail.Columns = 3;
+				this.arrayDetail.Columns = 2;
 				this.arrayDetail.SetColumnsRelativeWidth(0, 0.15);  // icône
-				this.arrayDetail.SetColumnsRelativeWidth(1, 0.30);  // nom du module
-				this.arrayDetail.SetColumnsRelativeWidth(2, 0.55);  // nom de l'icône
+				this.arrayDetail.SetColumnsRelativeWidth(1, 0.85);  // nom du module.icône
 				this.arrayDetail.SetColumnAlignment(0, ContentAlignment.MiddleCenter);
 				this.arrayDetail.SetColumnBreakMode(1, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
-				this.arrayDetail.SetColumnBreakMode(2, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
 				this.arrayDetail.LineHeight = 25;
 				this.arrayDetail.Dock = DockStyle.Fill;
 				this.arrayDetail.CellCountChanged += this.HandleArrayCellCountChanged;
@@ -205,7 +203,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		protected void UpdateMode()
+		private void UpdateMode()
 		{
 			this.arrayDetail.Visibility = !this.compactMode;
 			this.arrayCompact.Visibility = this.compactMode;
@@ -213,7 +211,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.buttonMode.ActiveState = this.compactMode ? ActiveState.Yes : ActiveState.No;
 		}
 
-		protected void UpdateFilter()
+		private void UpdateFilter()
 		{
 			string filter = null;
 
@@ -254,7 +252,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-		protected void UpdateArray()
+		private void UpdateArray()
 		{
 			//	Met à jour le tableau des icônes.
 			if (this.icons == null)
@@ -271,43 +269,38 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				if (row == 0)  // première ligne 'pas d'icône' ?
 				{
-					this.arrayDetail.SetLineState(0, row, MyWidgets.StringList.CellState.Normal);
-					this.arrayDetail.SetLineState(1, row, MyWidgets.StringList.CellState.Normal);
-					this.arrayDetail.SetLineState(2, row, MyWidgets.StringList.CellState.Normal);
-					this.arrayDetail.SetLineString(0, row, "");
-					this.arrayDetail.SetLineString(1, row, "");
-					this.arrayDetail.SetLineString(2, row, Res.Strings.Dialog.Icon.None);
+					this.arrayDetail.SetLineState (0, row, MyWidgets.StringList.CellState.Normal);
+					this.arrayDetail.SetLineState (1, row, MyWidgets.StringList.CellState.Normal);
+					this.arrayDetail.SetLineString (0, row, "");
+					this.arrayDetail.SetLineString (1, row, Res.Strings.Dialog.Icon.None);
 				}
 				else if (row-1 < this.icons.Count)
 				{
 					string icon = this.icons[row-1];
-					string text = Misc.ImageFull(icon);
+					string text = Misc.ImageFull (icon);
 
 					string module, name;
-					Misc.GetIconNames(icon, out module, out name);
+					Misc.GetIconNames (icon, out module, out name);
+					string description = Misc.CompactModuleAndName (module, name);
 
-					this.arrayDetail.SetLineState(0, row, MyWidgets.StringList.CellState.Normal);
-					this.arrayDetail.SetLineState(1, row, MyWidgets.StringList.CellState.Normal);
-					this.arrayDetail.SetLineState(2, row, MyWidgets.StringList.CellState.Normal);
-					this.arrayDetail.SetLineString(0, row, text);
-					this.arrayDetail.SetLineString(1, row, module);
-					this.arrayDetail.SetLineString(2, row, name);
+					this.arrayDetail.SetLineState (0, row, MyWidgets.StringList.CellState.Normal);
+					this.arrayDetail.SetLineState (1, row, MyWidgets.StringList.CellState.Normal);
+					this.arrayDetail.SetLineString (0, row, text);
+					this.arrayDetail.SetLineString (1, row, description);
 				}
 				else
 				{
-					this.arrayDetail.SetLineState(0, row, MyWidgets.StringList.CellState.Disabled);
-					this.arrayDetail.SetLineState(1, row, MyWidgets.StringList.CellState.Disabled);
-					this.arrayDetail.SetLineState(2, row, MyWidgets.StringList.CellState.Disabled);
-					this.arrayDetail.SetLineString(0, row, "");
-					this.arrayDetail.SetLineString(1, row, "");
-					this.arrayDetail.SetLineString(2, row, "");
+					this.arrayDetail.SetLineState (0, row, MyWidgets.StringList.CellState.Disabled);
+					this.arrayDetail.SetLineState (1, row, MyWidgets.StringList.CellState.Disabled);
+					this.arrayDetail.SetLineString (0, row, "");
+					this.arrayDetail.SetLineString (1, row, "");
 				}
 			}
 
 			this.arrayCompact.SetIcons(this.icons);
 		}
 
-		protected int SelectedIcon(string icon)
+		private int SelectedIcon(string icon)
 		{
 			//	Retourne le rang d'une icône dans le tableau.
 			if (string.IsNullOrEmpty(icon))
@@ -326,7 +319,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			return 0;  // première ligne 'pas d'icône'
 		}
 
-		protected string SelectedIcon(int sel)
+		private string SelectedIcon(int sel)
 		{
 			//	Retourne une icône d'après son rang dans le tableau.
 			if (sel < 0)
@@ -343,7 +336,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-		protected void Search(string searching, int direction)
+		private void Search(string searching, int direction)
 		{
 			//	Cherche dans une direction donnée.
 			searching = Searcher.RemoveAccent(searching.ToLower());
@@ -378,7 +371,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.designerApplication.DialogMessage(Res.Strings.Dialog.Search.Message.Error);
 		}
 
-		protected int Selected
+		private int Selected
 		{
 			//	Case sélectionnée dans un tableau (détaillé ou compact).
 			get
@@ -400,7 +393,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-		protected void ShowSelection()
+		private void ShowSelection()
 		{
 			//	Montre la sélection dans un tableau (détaillé ou compact).
 			this.arrayDetail.ShowSelectedRow();
@@ -528,20 +521,20 @@ namespace Epsitec.Common.Designer.Dialogs
 
 
 
-		protected ResourceManager				manager;
-		protected string						moduleName;
-		protected List<string>					modules;
-		protected List<string>					icons;
-		protected string						icon;
-		protected bool							compactMode = false;
+		private ResourceManager					manager;
+		private string							moduleName;
+		private List<string>					modules;
+		private List<string>					icons;
+		private string							icon;
+		private bool							compactMode = false;
 
-		protected TextFieldCombo				fieldSearch;
-		protected TextFieldCombo				fieldFilter;
-		protected IconButton					searchPrev;
-		protected IconButton					searchNext;
-		protected MyWidgets.StringArray			arrayDetail;
-		protected MyWidgets.IconArray			arrayCompact;
-		protected HSlider						slider;
-		protected IconButton					buttonMode;
+		private TextFieldCombo					fieldSearch;
+		private TextFieldCombo					fieldFilter;
+		private IconButton						searchPrev;
+		private IconButton						searchNext;
+		private MyWidgets.StringArray			arrayDetail;
+		private MyWidgets.IconArray				arrayCompact;
+		private HSlider							slider;
+		private IconButton						buttonMode;
 	}
 }

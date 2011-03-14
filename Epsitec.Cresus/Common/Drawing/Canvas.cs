@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Drawing
 {
 	/// <summary>
@@ -100,6 +102,22 @@ namespace Epsitec.Common.Drawing
 			{
 				this.adorner = adorner;
 				this.InvalidateCache();
+			}
+		}
+
+
+		public IEnumerable<IconKey> IconKeys
+		{
+			get
+			{
+				var list = new List<IconKey> ();
+
+				foreach (IconKey key in this.keys.Keys)
+				{
+					list.Add (key);
+				}
+
+				return list;
 			}
 		}
 

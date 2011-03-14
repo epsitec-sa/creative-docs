@@ -105,6 +105,7 @@
     <Compile Include="FormEditor\ObjectModifier.cs" />
     <Compile Include="ModuleSupport\ModuleStore.cs" />
     <Compile Include="ModuleSupport\ResGenerator.cs" />
+    <Compile Include="MyWidgets\IconViewer.cs" />
     <Compile Include="MyWidgets\EntitySample.cs" />
     <Compile Include="MyWidgets\RelationSample.cs" />
     <Compile Include="PanelEditor\Constrain.cs" />

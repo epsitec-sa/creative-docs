@@ -25,19 +25,21 @@ namespace Epsitec.Common.Designer.Viewers
 			this.buttonMainExtendRight.Clicked += this.HandleButtonCompactOrExtendClicked;
 
 			this.primarySummary = new StaticText(leftContainer.Container);
-			this.primarySummary.MinHeight = 30;
+			this.primarySummary.MinHeight = AbstractCaptions.iconSize;
 			this.primarySummary.Dock = DockStyle.Fill;
 
 			this.primarySummaryIcon = new IconButton(leftContainer.Container);
-			this.primarySummaryIcon.MinSize = new Size(30, 30);
+			this.primarySummaryIcon.AutoFocus = false;
+			this.primarySummaryIcon.MinSize = new Size (AbstractCaptions.iconSize, AbstractCaptions.iconSize);
 			this.primarySummaryIcon.Dock = DockStyle.Right;
 
 			this.secondarySummary = new StaticText(rightContainer.Container);
-			this.secondarySummary.MinHeight = 30;
+			this.secondarySummary.MinHeight = AbstractCaptions.iconSize;
 			this.secondarySummary.Dock = DockStyle.Fill;
 
 			this.secondarySummaryIcon = new IconButton(rightContainer.Container);
-			this.secondarySummaryIcon.MinSize = new Size(30, 30);
+			this.secondarySummaryIcon.AutoFocus = false;
+			this.secondarySummaryIcon.MinSize = new Size (AbstractCaptions.iconSize, AbstractCaptions.iconSize);
 			this.secondarySummaryIcon.Dock = DockStyle.Right;
 
 			//	Textes.
@@ -114,25 +116,26 @@ namespace Epsitec.Common.Designer.Viewers
 
 			StaticText label = new StaticText(this.groupPrimaryIcon.GroupBox);
 			label.Text = Res.Strings.Viewers.Captions.Icon.Title;
-			label.MinHeight = 30;  // attention, très important !
-			label.PreferredHeight = 30;
-			label.PreferredWidth = 30;
+			label.MinHeight = AbstractCaptions.iconSize;  // attention, très important !
+			label.PreferredHeight = AbstractCaptions.iconSize;
+			label.PreferredWidth = AbstractCaptions.iconSize;
 			label.ContentAlignment = ContentAlignment.MiddleRight;
-			label.Margins = new Margins(0, 5, 0, 0);
+			label.Margins = new Margins(0, 10, 0, 0);
 			label.Dock = DockStyle.Left;
 
-			this.primaryIcon = new IconButton(this.groupPrimaryIcon.GroupBox);
-			this.primaryIcon.MinHeight = 30;  // attention, très important !
-			this.primaryIcon.PreferredHeight = 30;
-			this.primaryIcon.PreferredWidth = 30;
-			this.primaryIcon.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.primaryIcon = new MyWidgets.IconViewer (this.groupPrimaryIcon.GroupBox);
+			this.primaryIcon.AutoFocus = false;
+			this.primaryIcon.MinHeight = AbstractCaptions.iconSize;  // attention, très important !
+			this.primaryIcon.PreferredHeight = AbstractCaptions.iconSize;
+			this.primaryIcon.PreferredWidth = AbstractCaptions.iconSize*4;
 			this.primaryIcon.Dock = DockStyle.Left;
 			this.primaryIcon.TabIndex = this.tabIndex++;
 			this.primaryIcon.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.primaryIcon.Clicked += this.HandlePrimaryIconClicked;
+			ToolTip.Default.SetToolTip (this.primaryIcon, "*");
 
 			this.primaryIconInfo = new StaticText(this.groupPrimaryIcon.GroupBox);
-			this.primaryIconInfo.PreferredHeight = 30;
+			this.primaryIconInfo.PreferredHeight = AbstractCaptions.iconSize;
 			this.primaryIconInfo.PreferredWidth = 300;
 			this.primaryIconInfo.Margins = new Margins(10, 0, 0, 0);
 			this.primaryIconInfo.Dock = DockStyle.Left;
@@ -308,12 +311,15 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 				else
 				{
-					this.primaryIconInfo.Text = string.Format("{0}<br/>{1}", module, name);
+					this.primaryIconInfo.Text = Misc.CompactModuleAndName (module, name);
 				}
 			}
 
 			this.primarySummaryIcon.IconUri = this.primaryIcon.IconUri;
+			this.primarySummaryIcon.PreferredIconSize = new Size (31, 31);
+
 			this.secondarySummaryIcon.IconUri = this.primaryIcon.IconUri;
+			this.secondarySummaryIcon.PreferredIconSize = new Size (31, 31);
 		}
 
 
@@ -775,6 +781,8 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		private static readonly int				iconSize = 37;  // pour afficher confortablement les icônes 31x31
+
 		private IconButton						primarySummaryIcon;
 		private IconButton						secondarySummaryIcon;
 		private MyWidgets.ResetBox				groupPrimaryLabels;
@@ -786,7 +794,7 @@ namespace Epsitec.Common.Designer.Viewers
 		private MyWidgets.ResetBox				groupSecondaryDescription;
 		private TextFieldMulti					secondaryDescription;
 		private MyWidgets.ResetBox				groupPrimaryIcon;
-		private IconButton						primaryIcon;
+		private MyWidgets.IconViewer			primaryIcon;
 		private StaticText						primaryIconInfo;
 		private MyWidgets.ResetBox				groupPrimaryComment;
 		private TextFieldMulti					primaryComment;

@@ -31,115 +31,118 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Crée et montre la fenêtre du dialogue.
 			if ( this.window == null )
 			{
-				this.window = new Window();
+				this.window = new Window ();
 				this.window.Icon = this.designerApplication.Icon;
 				this.window.MakeSecondaryWindow ();
 				this.window.PreventAutoClose = true;
-				this.WindowInit("Open", 600, 440, true);
+				this.WindowInit ("Open", 600, 440, true);
 				this.window.Text = Res.Strings.Dialog.Open.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
-				this.window.Root.Padding = new Margins(8, 8, 8, 8);
+				this.window.Root.Padding = new Margins (8, 8, 8, 8);
 
-				ResizeKnob resize = new ResizeKnob(this.window.Root);
+				ResizeKnob resize = new ResizeKnob (this.window.Root);
 				resize.Anchor = AnchorStyles.BottomRight;
-				resize.Margins = new Margins(0, -8, 0, -8);
-				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
+				resize.Margins = new Margins (0, -8, 0, -8);
+				ToolTip.Default.SetToolTip (resize, Res.Strings.Dialog.Tooltip.Resize);
 
-				FrameBox topFrame = new FrameBox
+				//	Barre supérieure de recherche.
 				{
-					Parent = this.window.Root,
-					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, 6),
-					TabIndex = 1,
-					TabNavigationMode = TabNavigationMode.ForwardTabPassive,
-				};
+					FrameBox topFrame = new FrameBox
+					{
+						Parent = this.window.Root,
+						Dock = DockStyle.Top,
+						Margins = new Margins (0, 0, 0, 6),
+						TabIndex = 1,
+						TabNavigationMode = TabNavigationMode.ForwardTabPassive,
+					};
 
-				StaticText label = new StaticText
-				{
-					Parent = topFrame,
-					Dock = DockStyle.Left,
-					PreferredWidth = 160,
-					Text = Res.Strings.Dialog.Open.Label,
-					ContentAlignment = ContentAlignment.MiddleLeft,
-				};
+					StaticText label = new StaticText
+					{
+						Parent = topFrame,
+						Dock = DockStyle.Left,
+						PreferredWidth = 64,
+						Text = "Rechercher",
+						ContentAlignment = ContentAlignment.MiddleLeft,
+					};
 
-				this.filterTextField = new TextField
-				{
-					Parent = topFrame,
-					Dock = DockStyle.Fill,
-					TabIndex = 1,
-					TabNavigationMode = TabNavigationMode.ActivateOnTab,
-				};
+					this.filterTextField = new TextField
+					{
+						Parent = topFrame,
+						Dock = DockStyle.Fill,
+						TabIndex = 1,
+						TabNavigationMode = TabNavigationMode.ActivateOnTab,
+					};
 
-				var clearButton = new GlyphButton
-				{
-					Parent = topFrame,
-					GlyphShape = GlyphShape.Close,
-					Dock = DockStyle.Right,
-					Margins = new Margins (1, 0, 0, 0),
-				};
+					var clearButton = new GlyphButton
+					{
+						Parent = topFrame,
+						GlyphShape = GlyphShape.Close,
+						Dock = DockStyle.Right,
+						Margins = new Margins (1, 0, 0, 0),
+					};
 
-				clearButton.Clicked += delegate
-				{
-					this.filterTextField.Text = null;
-					this.filterTextField.SelectAll ();
-					this.filterTextField.Focus ();
-				};
+					clearButton.Clicked += delegate
+					{
+						this.filterTextField.Text = null;
+						this.filterTextField.SelectAll ();
+						this.filterTextField.Focus ();
+					};
+				}
 
 				this.filterTextField.TextChanged += this.HandlerFilterTextChanged;
 
 				//	Tableau principal.
-				StructuredType st = new StructuredType();
-				st.Fields.Add("Name",  StringType.NativeDefault);
-				st.Fields.Add("Id",    StringType.NativeDefault);
-				st.Fields.Add("State", StringType.NativeDefault);
-				st.Fields.Add("Icon",  StringType.NativeDefault);
-				st.Fields.Add("Patch", StringType.NativeDefault);
+				StructuredType st = new StructuredType ();
+				st.Fields.Add ("Name", StringType.NativeDefault);
+				st.Fields.Add ("Id", StringType.NativeDefault);
+				st.Fields.Add ("State", StringType.NativeDefault);
+				st.Fields.Add ("Icon", StringType.NativeDefault);
+				st.Fields.Add ("Patch", StringType.NativeDefault);
 
-				this.table = new UI.ItemTable(this.window.Root);
+				this.table = new UI.ItemTable (this.window.Root);
 				this.table.ItemPanel.CustomItemViewFactoryGetter = this.ItemViewFactoryGetter;
 				this.table.SourceType = st;
 				this.table.Items = this.moduleInfosShowed;
-				this.table.Columns.Add("Name",  400);
-				this.table.Columns.Add("Id",     35);
-				this.table.Columns.Add("State",  70);
-				this.table.Columns.Add("Icon",   30);
-				this.table.Columns.Add("Patch",  30);
-				this.table.ColumnHeader.SetColumnText(0, "Nom");
-				this.table.ColumnHeader.SetColumnText(1, "No");
-				this.table.ColumnHeader.SetColumnText(2, "Etat");
-				this.table.ColumnHeader.SetColumnText(3, "");
-				this.table.ColumnHeader.SetColumnText(4, "");
-				this.table.ColumnHeader.SetColumnComparer(0, this.CompareName);
-				this.table.ColumnHeader.SetColumnComparer(1, this.CompareId);
-				this.table.ColumnHeader.SetColumnComparer(2, this.CompareState);
-				this.table.ColumnHeader.SetColumnComparer(3, this.CompareIcon);
-				this.table.ColumnHeader.SetColumnComparer(4, this.ComparePatch);
+				this.table.Columns.Add ("Name", 400);
+				this.table.Columns.Add ("Id", 35);
+				this.table.Columns.Add ("State", 70);
+				this.table.Columns.Add ("Icon", 30);
+				this.table.Columns.Add ("Patch", 30);
+				this.table.ColumnHeader.SetColumnText (0, "Nom");
+				this.table.ColumnHeader.SetColumnText (1, "No");
+				this.table.ColumnHeader.SetColumnText (2, "Etat");
+				this.table.ColumnHeader.SetColumnText (3, "");
+				this.table.ColumnHeader.SetColumnText (4, "");
+				this.table.ColumnHeader.SetColumnComparer (0, this.CompareName);
+				this.table.ColumnHeader.SetColumnComparer (1, this.CompareId);
+				this.table.ColumnHeader.SetColumnComparer (2, this.CompareState);
+				this.table.ColumnHeader.SetColumnComparer (3, this.CompareIcon);
+				this.table.ColumnHeader.SetColumnComparer (4, this.ComparePatch);
 				this.table.HeaderVisibility = true;
 				this.table.FrameVisibility = true;
 				this.table.ItemPanel.Layout = UI.ItemPanelLayout.VerticalList;
 				this.table.ItemPanel.ItemSelectionMode = UI.ItemPanelSelectionMode.ExactlyOne;
 				this.table.ItemPanel.CurrentItemTrackingMode = UI.CurrentItemTrackingMode.AutoSelectAndDeselect;
-				this.table.ItemPanel.SelectionChanged += new EventHandler<UI.ItemPanelSelectionChangedEventArgs>(this.HandleTableSelectionChanged);
+				this.table.ItemPanel.SelectionChanged += new EventHandler<UI.ItemPanelSelectionChangedEventArgs> (this.HandleTableSelectionChanged);
 				this.table.TabIndex = 2;
 				this.table.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.table.Dock = Widgets.DockStyle.Fill;
-				
+
 				//	Boutons de fermeture.
-				Widget footer = new Widget(this.window.Root);
+				Widget footer = new Widget (this.window.Root);
 				footer.PreferredHeight = 22;
-				footer.Margins = new Margins(0, 0, 8, 0);
+				footer.Margins = new Margins (0, 0, 8, 0);
 				footer.Dock = DockStyle.Bottom;
 				footer.TabIndex = 3;
 				footer.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
-				this.checkOpened = new CheckButton(footer);
+				this.checkOpened = new CheckButton (footer);
 				this.checkOpened.AutoToggle = false;
 				this.checkOpened.Text = "Modules ouverts";
 				this.checkOpened.PreferredWidth = 110;
 				this.checkOpened.Dock = DockStyle.Left;
-				this.checkOpened.Margins = new Margins(0, 0, 0, 0);
+				this.checkOpened.Margins = new Margins (0, 0, 0, 0);
 				this.checkOpened.Clicked += this.HandleCheckClicked;
 				this.checkOpened.TabIndex = 8;
 				this.checkOpened.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -173,12 +176,12 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.TabIndex = 11;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-				this.buttonOpen = new Button(footer);
+				this.buttonOpen = new Button (footer);
 				this.buttonOpen.PreferredWidth = 75;
 				this.buttonOpen.Text = Res.Strings.Dialog.Open.Button.Open;
 				this.buttonOpen.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonOpen.Dock = DockStyle.Right;
-				this.buttonOpen.Margins = new Margins(0, 6, 0, 0);
+				this.buttonOpen.Margins = new Margins (0, 6, 0, 0);
 				this.buttonOpen.Clicked += this.HandleButtonOpenClicked;
 				this.buttonOpen.TabIndex = 10;
 				this.buttonOpen.TabNavigationMode = TabNavigationMode.ActivateOnTab;

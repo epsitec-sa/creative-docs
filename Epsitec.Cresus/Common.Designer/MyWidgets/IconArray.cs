@@ -457,7 +457,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				string module, name;
 				Misc.GetIconNames(this.icons[index-1], out module, out name);
-				return string.Format("{0}<br/>{1}", module, name);
+				return Misc.CompactModuleAndName (module, name);
 			}
 
 			return null;  // pas de tooltip

@@ -547,7 +547,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 					{
 						state |= WidgetPaintState.Selected;
 					}
-					Color color = adorner.ColorText(state);
 
 					double leftMargin = 0;
 					if (this.alignment == ContentAlignment.MiddleLeft || this.alignment == ContentAlignment.TopLeft || this.alignment == ContentAlignment.BottomLeft)
@@ -556,7 +555,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					}
 
 					this.cells[i].TextLayout.LayoutSize = new Size(rect.Width-5, rect.Height);
-					this.cells[i].TextLayout.Paint(new Point(leftMargin, rect.Bottom), graphics, Rectangle.MaxValue, color, GlyphPaintStyle.Normal);
+					adorner.PaintButtonTextLayout (graphics, new Point (leftMargin, rect.Bottom), this.cells[i].TextLayout, state, ButtonStyle.ListItem);
 				}
 
 				rect.Offset(0, -h);

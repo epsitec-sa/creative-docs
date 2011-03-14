@@ -10,6 +10,17 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class Misc
 	{
+		static public string CompactModuleAndName(string module, string name)
+		{
+			if (module.StartsWith ("Epsitec."))
+			{
+				module = module.Substring (8);
+			}
+
+			return string.Concat ("<font color=\"#777777\">", module, ".</font>", name);
+		}
+
+
 		static public bool IsValidGuid(string guid)
 		{
 			//	Retourne true si la chaîne correspond à un Guid valide.

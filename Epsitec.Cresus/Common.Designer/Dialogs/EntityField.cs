@@ -576,7 +576,7 @@ namespace Epsitec.Common.Designer.Dialogs
 							continue;
 						}
 
-						name = string.Concat ("<font color=\"#777777\">", module.ModuleInfo.FullId.Name, ".</font>", cultureMap.Name);
+						name = Misc.CompactModuleAndName (module.ModuleInfo.FullId.Name, cultureMap.Name);
 
 						this.listResources.Items.Add (name);
 						this.allModules.Add (module);
