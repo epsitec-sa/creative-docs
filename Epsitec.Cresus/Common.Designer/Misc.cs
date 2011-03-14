@@ -12,6 +12,8 @@ namespace Epsitec.Common.Designer
 	{
 		static public string CompactModuleAndName(string module, string name)
 		{
+			//	Retourne le texte description pour un nom d'un module, sous la forme "module.name".
+			//	Le nom du module est affiché en estompé, pour le distinguer du "name".
 			if (module.StartsWith ("Epsitec."))
 			{
 				module = module.Substring (8);

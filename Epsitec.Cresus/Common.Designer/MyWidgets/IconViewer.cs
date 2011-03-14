@@ -32,12 +32,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
+			//	Dessine le fond standard du bouton.
 			base.PaintBackgroundImplementation (graphics, clipRect);
 
 			this.UpdateIcons ();
 
-			if (this.icons.Count == 0)
+			if (this.icons.Count == 0)  // aucune icône ?
 			{
+				//	Dessine une croix 'x'.
 				IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
 				double size = System.Math.Min (this.Client.Bounds.Width, this.Client.Bounds.Height) - 8;
@@ -47,7 +49,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.AddLine (rect.BottomRight, rect.TopLeft);
 				graphics.RenderSolid (adorner.ColorBorder);
 			}
-			else
+			else  // une ou plusieurs icônes ?
 			{
 				foreach (var oneIcon in this.icons)
 				{
@@ -58,6 +60,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		private void DrawOneIcon(Graphics graphics, OneIcon oneIcon)
 		{
+			//	Dessine une icône à sa place.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
 			var bounds = oneIcon.Bounds;
@@ -93,7 +96,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		private void UpdateIcons()
 		{
-			if (this.lastIconUri != this.IconUri)
+			if (this.lastIconUri != this.IconUri)  // IconUri changé ?
 			{
 				this.lastIconUri = this.IconUri;
 				this.icons.Clear ();
@@ -108,15 +111,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 						var list = canvas.IconKeys.ToList ();
 						list.Sort (new IconKeyComparer ());  // de la plus petite icône à la plus grande
 
+						//	Calcule la largeur totale nécessaire.
 						double totalWidth = 0;
-						double maxHeight = 0;
 
 						foreach (var iconKey in list)
 						{
 							totalWidth += iconKey.Size.Width+3;
-							maxHeight = System.Math.Max (maxHeight, iconKey.Size.Height);
 						}
 
+						//	Place les icônes.
 						double x = this.Client.Bounds.Left + System.Math.Floor ((this.Client.Bounds.Width-totalWidth)/2);
 
 						foreach (var iconKey in list)
@@ -197,6 +200,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		private static string GetIconDescripton(Canvas.IconKey iconKey)
 		{
+			//	Retourne un texte de description pour une icône, qui sera placé dans un tooltip.
 			var builder = new System.Text.StringBuilder ();
 
 			builder.Append ("Taille: ");
