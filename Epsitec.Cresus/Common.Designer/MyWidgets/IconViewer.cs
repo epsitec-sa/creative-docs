@@ -19,7 +19,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.AutoEngage = false;
 			this.AutoFocus = false;
 
-			this.icons = new List<OneIcon> ();
+			this.sampleIcons = new List<SampleIcon> ();
 		}
 
 		public IconViewer(Widget embedder)
@@ -31,6 +31,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public bool ShowAllIcons
 		{
+			//	false -> montre seulement la plus grande icône.
+			//	true  -> montre toutes les icônes, de la plus petite à la plus grande
 			get
 			{
 				return this.showAllIcons;
@@ -48,6 +50,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public bool IsClickable
 		{
+			//	false -> dessine seulement l'icône
+			//	true  -> dessine les cadres d'un bouton cliquable.
 			get
 			{
 				return this.isClickable;
@@ -66,15 +70,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			//	Dessine le fond standard du bouton.
 			if (this.isClickable)
 			{
+				//	Dessine le fond standard du bouton.
 				base.PaintBackgroundImplementation (graphics, clipRect);
 			}
 
-			this.UpdateIcons ();
+			this.UpdateSampleIcons ();
 
-			if (this.icons.Count == 0)  // aucune icône ?
+			if (this.sampleIcons.Count == 0)  // aucune icône ?
 			{
 				//	Dessine une croix 'x'.
 				double size = System.Math.Min (this.Client.Bounds.Width, this.Client.Bounds.Height) - 8;
@@ -86,19 +90,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			else  // une ou plusieurs icônes ?
 			{
-				foreach (var oneIcon in this.icons)
+				foreach (var sample in this.sampleIcons)
 				{
-					this.DrawOneIcon (graphics, oneIcon);
+					this.DrawSampleIcon (graphics, sample);
 				}
 			}
 		}
 
-		private void DrawOneIcon(Graphics graphics, OneIcon oneIcon)
+		private void DrawSampleIcon(Graphics graphics, SampleIcon sample)
 		{
 			//	Dessine une icône à sa place.
 			if (this.isClickable)
 			{
-				var bounds = oneIcon.Bounds;
+				var bounds = sample.Bounds;
 				bounds.Inflate (0.5);
 
 				graphics.AddRectangle (bounds);
@@ -107,11 +111,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			var style = this.Enable ? GlyphPaintStyle.Normal : GlyphPaintStyle.Disabled;
 
-			oneIcon.TextLayout.Paint (oneIcon.Bounds.BottomLeft, graphics, oneIcon.Bounds, Color.Empty, style);
+			sample.TextLayout.Paint (sample.Bounds.BottomLeft, graphics, sample.Bounds, Color.Empty, style);
 		}
 
 		private Color BorderColor
 		{
+			//	Retourne la couleur à utiliser pour les cadres.
 			get
 			{
 				IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
@@ -126,13 +131,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public object GetToolTipCaption(Point pos)
 		{
 			//	Donne l'objet (string ou widget) pour le tooltip en fonction de la position.
-			this.UpdateIcons ();
+			this.UpdateSampleIcons ();
 
-			foreach (var oneIcon in this.icons)
+			foreach (var sample in this.sampleIcons)
 			{
-				if (oneIcon.Bounds.Contains (pos))
+				var bounds = sample.Bounds;
+				bounds.Inflate (1);
+
+				if (bounds.Contains (pos))  // souris dans l'écnahtillon ?
 				{
-					return IconViewer.GetIconDescripton (oneIcon.IconKey);
+					return IconViewer.GetIconDescripton (sample.IconKey);
 				}
 			}
 
@@ -142,51 +150,54 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#endregion
 
 
-		private void UpdateIcons()
+		private void UpdateSampleIcons()
 		{
-			if (this.lastIconUri != this.IconUri)  // IconUri changé ?
+			//	Met à jour tous les échantillons.
+			if (this.lastIconUri == this.IconUri)  // IconUri inchangé ?
 			{
-				this.lastIconUri = this.IconUri;
-				this.icons.Clear ();
+				return;
+			}
 
-				if (!string.IsNullOrEmpty (this.IconUri))
+			this.lastIconUri = this.IconUri;
+			this.sampleIcons.Clear ();
+
+			if (!string.IsNullOrEmpty (this.IconUri))
+			{
+				Image image = ImageProvider.Default.GetImage (this.IconUri, Resources.DefaultManager);
+				Canvas canvas = image as Canvas;
+
+				if (canvas != null)
 				{
-					Image image = ImageProvider.Default.GetImage (this.IconUri, Resources.DefaultManager);
-					Canvas canvas = image as Canvas;
+					var list = canvas.IconKeys.ToList ();
+					list.Sort (new IconKeyComparer ());  // de la plus petite icône à la plus grande
 
-					if (canvas != null)
+					if (this.showAllIcons == false && list.Count != 0)
 					{
-						var list = canvas.IconKeys.ToList ();
-						list.Sort (new IconKeyComparer ());  // de la plus petite icône à la plus grande
+						//	On ne garde que la plus grande icône.
+						var big = list[list.Count-1];
+						list.Clear ();
+						list.Add (big);
+					}
 
-						if (this.showAllIcons == false && list.Count != 0)
-						{
-							//	On ne garde que la plus grande icône.
-							var big = list[list.Count-1];
-							list.Clear ();
-							list.Add (big);
-						}
+					//	Calcule la largeur totale nécessaire.
+					double totalWidth = 0;
 
-						//	Calcule la largeur totale nécessaire.
-						double totalWidth = 0;
+					foreach (var iconKey in list)
+					{
+						totalWidth += iconKey.Size.Width+3;
+					}
 
-						foreach (var iconKey in list)
-						{
-							totalWidth += iconKey.Size.Width+3;
-						}
+					//	Place les icônes.
+					double x = this.Client.Bounds.Left + System.Math.Max (System.Math.Floor ((this.Client.Bounds.Width-totalWidth)/2), 0);
 
-						//	Place les icônes.
-						double x = this.Client.Bounds.Left + System.Math.Max (System.Math.Floor ((this.Client.Bounds.Width-totalWidth)/2), 0);
+					foreach (var iconKey in list)
+					{
+						double y = this.Client.Bounds.Bottom + System.Math.Floor ((this.Client.Bounds.Height-iconKey.Size.Height)/2);
+						Rectangle bounds = new Rectangle (x, y, iconKey.Size.Width, iconKey.Size.Height);
 
-						foreach (var iconKey in list)
-						{
-							double y = this.Client.Bounds.Bottom + System.Math.Floor ((this.Client.Bounds.Height-iconKey.Size.Height)/2);
-							Rectangle bounds = new Rectangle (x, y, iconKey.Size.Width, iconKey.Size.Height);
+						this.sampleIcons.Add (new SampleIcon (this.IconUri, iconKey, bounds));
 
-							this.icons.Add (new OneIcon (this.IconUri, iconKey, bounds));
-
-							x += iconKey.Size.Width+3;
-						}
+						x += iconKey.Size.Width+3;
 					}
 				}
 			}
@@ -218,13 +229,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 					return a.Style.CompareTo (b.Style);
 				}
 
+				if (a.Language != b.Language)
+				{
+					if (a.Language == null)
+					{
+						return -1;
+					}
+
+					return a.Language.CompareTo (b.Language);
+				}
+
 				return 0;
 			}
 		}
 
-		private class OneIcon
+		private class SampleIcon
 		{
-			public OneIcon(string iconUri, Canvas.IconKey iconKey, Rectangle bounds)
+			public SampleIcon(string iconUri, Canvas.IconKey iconKey, Rectangle bounds)
 			{
 				this.iconUri = iconUri;
 				this.IconKey = iconKey;
@@ -274,7 +295,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				builder.Append ("<br/>");
 				builder.Append ("Langue: ");
-				builder.Append (iconKey.Language);
+				builder.Append (IconViewer.GetLanguage (iconKey.Language));
 			}
 
 			if (!string.IsNullOrEmpty (iconKey.Style))
@@ -287,8 +308,26 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return builder.ToString ();
 		}
 
+		private static string GetLanguage(string twoLetters)
+		{
+			switch (twoLetters)
+			{
+				case "fr":
+					return "Français";
 
-		private readonly List<OneIcon>			icons;
+				case "en":
+					return "Anglais";
+
+				case "de":
+					return "Allemand";
+
+				default:
+					return twoLetters.ToUpper();;
+			}
+		}
+
+
+		private readonly List<SampleIcon>		sampleIcons;
 
 		private bool							showAllIcons;
 		private bool							isClickable;

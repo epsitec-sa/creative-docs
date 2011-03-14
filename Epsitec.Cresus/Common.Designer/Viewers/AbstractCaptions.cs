@@ -118,7 +118,7 @@ namespace Epsitec.Common.Designer.Viewers
 			label.Text = Res.Strings.Viewers.Captions.Icon.Title;
 			label.MinHeight = AbstractCaptions.iconSize;  // attention, très important !
 			label.PreferredHeight = AbstractCaptions.iconSize;
-			label.PreferredWidth = AbstractCaptions.iconSize;
+			label.PreferredWidth = 40;
 			label.ContentAlignment = ContentAlignment.MiddleRight;
 			label.Margins = new Margins(0, 10, 0, 0);
 			label.Dock = DockStyle.Left;
@@ -128,7 +128,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryIcon.IsClickable = true;
 			this.primaryIcon.MinHeight = AbstractCaptions.iconSize;  // attention, très important !
 			this.primaryIcon.PreferredHeight = AbstractCaptions.iconSize;
-			this.primaryIcon.PreferredWidth = AbstractCaptions.iconSize*3;
+			this.primaryIcon.PreferredWidth = AbstractCaptions.iconSize*2;
 			this.primaryIcon.Dock = DockStyle.Left;
 			this.primaryIcon.TabIndex = this.tabIndex++;
 			this.primaryIcon.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -780,7 +780,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		private static readonly int				iconSize = 40+6;  // pour afficher confortablement les icônes 40x40
+		private static readonly int				iconSize = 64+2;  // pour afficher confortablement les icônes 64x64
 
 		private MyWidgets.IconViewer			primarySummaryIcon;
 		private MyWidgets.IconViewer			secondarySummaryIcon;
