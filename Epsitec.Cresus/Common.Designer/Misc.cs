@@ -10,7 +10,7 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class Misc
 	{
-		static public string CompactModuleAndName(string module, string name)
+		static public string CompactModuleAndName(string module, string name, bool tags = true)
 		{
 			//	Retourne le texte description pour un nom d'un module, sous la forme "module.name".
 			//	Le nom du module est affiché en estompé, pour le distinguer du "name".
@@ -19,7 +19,14 @@ namespace Epsitec.Common.Designer
 				module = module.Substring (8);
 			}
 
-			return string.Concat ("<font color=\"#777777\">", module, ".</font>", name);
+			if (tags)
+			{
+				return string.Concat ("<font color=\"#777777\">", module, ".</font>", name);
+			}
+			else
+			{
+				return string.Concat (module, ".", name);
+			}
 		}
 
 

@@ -570,7 +570,7 @@ namespace Epsitec.Common.Designer.Dialogs
 					{
 						CultureMap cultureMap = this.collectionView.Items[i] as CultureMap;
 
-						string name = string.Concat (module.ModuleInfo.FullId.Name, ".", cultureMap.Name);
+						string name = Misc.CompactModuleAndName (module.ModuleInfo.FullId.Name, cultureMap.Name, tags: false);
 						if (this.IsFiltered (name))
 						{
 							continue;

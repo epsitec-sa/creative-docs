@@ -252,11 +252,10 @@ namespace Epsitec.Common.Designer.Dialogs
 				string module, name;
 				Misc.GetIconNames(names[i], out module, out name);
 
-				string t = string.Concat (module, ".", name).ToLower ();
-
+				string mdn = Misc.CompactModuleAndName (module, name, tags: false).ToLower ();
 				if (!string.IsNullOrEmpty (search))
 				{
-					if (!t.Contains (search))
+					if (!mdn.Contains (search))
 					{
 						continue;
 					}

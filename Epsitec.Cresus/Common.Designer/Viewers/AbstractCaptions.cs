@@ -128,7 +128,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryIcon.IsClickable = true;
 			this.primaryIcon.MinHeight = AbstractCaptions.iconSize;  // attention, très important !
 			this.primaryIcon.PreferredHeight = AbstractCaptions.iconSize;
-			this.primaryIcon.PreferredWidth = AbstractCaptions.iconSize*4;
+			this.primaryIcon.PreferredWidth = AbstractCaptions.iconSize*3;
 			this.primaryIcon.Dock = DockStyle.Left;
 			this.primaryIcon.TabIndex = this.tabIndex++;
 			this.primaryIcon.TabNavigationMode = TabNavigationMode.ActivateOnTab;
