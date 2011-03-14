@@ -50,12 +50,10 @@ namespace Epsitec.Common.DocumentEditor
 		
 		public Application(DocumentType type)
 		{
-			this.editor = new DocumentEditor(type, this.CommandDispatcher, this.CommandContext);
+			Window window = new Window ();
 
-			Window window;
+			this.editor = new DocumentEditor (type, this.CommandDispatcher, this.CommandContext, window);
 
-			window = new Window();
-			
 			this.Window = window;
 
 			window.IsValidDropTarget = true;

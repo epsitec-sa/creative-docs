@@ -136,7 +136,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				delegate(Common.Dialogs.IWorkInProgressReport report)
 				{
 					report.DefineOperation(Res.Strings.Export.PDF.Progress.Operation);
-					err = this.editor.CurrentDocument.ExportPDF(filename, report);
+					err = this.editor.CurrentDocument.ExportPdf(filename, report);
 				},
 				this.editor.Window
 			);

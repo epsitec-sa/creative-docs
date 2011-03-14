@@ -156,7 +156,20 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Windows.Forms.Application.DoEvents ();
 		}
-		
+
+
+		public void Invoke(System.Action action)
+		{
+			if ((this.window != null) &&
+				(this.window.InvokeRequired))
+			{
+				this.window.Invoke (action);
+			}
+			else
+			{
+				action ();
+			}
+		}
 		
 		public void MakeTopLevelWindow()
 		{

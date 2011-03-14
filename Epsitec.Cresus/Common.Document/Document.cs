@@ -166,7 +166,7 @@ namespace Epsitec.Common.Document
 				this.dialogs   = new DocumentDialogs(this);
 				this.settings  = new Settings.Settings(this);
 				this.printer   = new Printer(this);
-				this.exportPDF = new PDF.Export(this);
+				this.exportPdf = new PDF.Export(this);
 			}
 
 			if ( this.mode == DocumentMode.Samples )
@@ -245,10 +245,10 @@ namespace Epsitec.Common.Document
 				this.printer = null;
 			}
 
-			if (this.exportPDF != null)
+			if (this.exportPdf != null)
 			{
-				this.exportPDF.Dispose();
-				this.exportPDF = null;
+				this.exportPdf.Dispose();
+				this.exportPdf = null;
 			}
 		}
 
@@ -264,9 +264,9 @@ namespace Epsitec.Common.Document
 			get { return this.mode; }
 		}
 
-		public PDF.Export GetExportPDF()
+		public PDF.Export GetExportPdf()
 		{
-			return this.exportPDF;
+			return this.exportPdf;
 		}
 
 		public InstallType InstallType
@@ -2450,32 +2450,53 @@ namespace Epsitec.Common.Document
 			return err;
 		}
 
-		public string ExportPDF(string filename, Common.Dialogs.IWorkInProgressReport report)
+		public string ExportPdf(string filename, Common.Dialogs.IWorkInProgressReport report)
 		{
 			//	Exporte le document.
-			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
-			this.Modifier.DeselectAll();
 
-			//	MainWindowSetFrozen évite des appels à ImageCache.SetResolution pendant l'exportation,
-			//	si la fenêtre doit être repeinte !
-			this.MainWindowSetFrozen();
+			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
+
+			//	Exécute sur le processus principal (celui qui a accès à la fenêtre d'application)
+			this.mainWindow.Invoke (this.BeforeExportPdf);
 
 			if (this.imageCache != null)
 			{
-				this.imageCache.SetResolution(ImageCacheResolution.High);
+				this.imageCache.SetResolution (ImageCacheResolution.High);
 			}
 			
-			string err = this.exportPDF.FileExport(filename, report);
+			string err = this.exportPdf.FileExport(filename, report);
 			
 			//	Libérer toute la mémoire accumulée pendant l'exportation PDF est une bonne idée, car
 			//	cela peut occuper pas loing d'un GB de RAM...
 			GlobalImageCache.FreeEverything ();
 
-			this.MainWindowClearFrozen();
+
+			//	Exécute sur le processus principal (celui qui a accès à la fenêtre d'application)
+			this.mainWindow.Invoke (this.AfterExportPdf);
+			
 			return err;
 		}
 
-        public string ExportICO(string filename)
+		private void BeforeExportPdf()
+		{
+			System.Diagnostics.Debug.Assert (Application.IsRunningOnMainUIThread);
+
+			this.Modifier.DeselectAll ();
+
+			//	MainWindowSetFrozen évite des appels à ImageCache.SetResolution pendant l'exportation,
+			//	si la fenêtre doit être repeinte !
+			
+			this.MainWindowSetFrozen ();
+		}
+
+		private void AfterExportPdf()
+		{
+			System.Diagnostics.Debug.Assert (Application.IsRunningOnMainUIThread);
+
+			this.MainWindowClearFrozen ();
+		}
+
+		public string ExportICO(string filename)
         {
             //	Exporte le document.
             System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
@@ -3317,8 +3338,8 @@ namespace Epsitec.Common.Document
 		protected Wrappers						wrappers;
 		protected Notifier						notifier;
 		protected Printer						printer;
-		protected Common.Dialogs.PrintDialog			printDialog;
-		protected PDF.Export					exportPDF;
+		protected Common.Dialogs.PrintDialog	printDialog;
+		protected PDF.Export					exportPdf;
 		protected DocumentDialogs				dialogs;
 		protected string						ioDirectory;
 		protected System.Collections.ArrayList	readWarnings;
