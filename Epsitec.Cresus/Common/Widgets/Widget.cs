@@ -1388,7 +1388,10 @@ namespace Epsitec.Common.Widgets
 					}
 					
 					Widget.ExitWidgetsNotParentOf (this);
-					Widget.enteredWidgets.Add (this);
+					lock (Widget.enteredWidgets)
+					{
+						Widget.enteredWidgets.Add (this);
+					}
 
 					this.SetValue (Visual.EnteredProperty, value);
 					
@@ -1398,35 +1401,25 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					Widget.enteredWidgets.Remove (this);
+					lock (Widget.enteredWidgets)
+					{
+						Widget.enteredWidgets.Remove (this);
+					}
 
 					this.SetValue (Visual.EnteredProperty, value);
 					
 					//	Il faut aussi supprimer les éventuels enfants encore marqués comme 'entered'.
 					//	Pour ce faire, on passe en revue tous les widgets à la recherche d'enfants
 					//	directs.
-					
-					int i = 0;
-					
-					while (i < Widget.enteredWidgets.Count)
-					{
-						Widget candidate = Widget.enteredWidgets[i];
-						
-						if (candidate.Parent == this)
+
+					Widget.ProcessEntered (
+						delegate (Widget candidate)
 						{
-							candidate.SetEntered (false);
-							
-							//	Note: le fait de changer l'état de l'enfant va modifier la liste des
-							//	widgets sur laquelle on est en train d'itérer. On reprend donc, par
-							//	précaution, l'itération au début...
-							
-							i = 0;
-						}
-						else
-						{
-							i++;
-						}
-					}
+							if (candidate.Parent == this)
+							{
+								candidate.SetEntered (false);
+							}
+						});
 
 					message = Message.CreateDummyMessage (MessageType.MouseLeave);
 					
@@ -1445,56 +1438,52 @@ namespace Epsitec.Common.Widgets
 		
 		protected static void ExitWidgetsNotParentOf(Widget widget)
 		{
-			int i = 0;
-			
-			while (i < Widget.enteredWidgets.Count)
-			{
-				Widget candidate = Widget.enteredWidgets[i];
-				
-				if (VisualTree.IsAncestor (widget, candidate) == false)
+			Widget.ProcessEntered (
+				delegate (Widget candidate)
 				{
-					//	Ce candidat n'est pas un ancêtre (parent direct ou indirect) du widget
-					//	considéré; il faut donc changer son état Entered pour refléter le fait
-					//	que le candidat n'a plus la souris :
-					
-					candidate.SetEntered (false);
-					
-					//	Note: le fait de changer l'état du candidat va modifier la liste des
-					//	widgets sur laquelle on est en train d'itérer. On reprend donc, par
-					//	précaution, l'itération au début...
-					
-					i = 0;
-				}
-				else
-				{
-					i++;
-				}
-			}
+					if (VisualTree.IsAncestor (widget, candidate) == false)
+					{
+						candidate.SetEntered (false);
+					}
+				});
 		}
 
 
 		internal static void ClearEntered(Window window)
 		{
-			while (Widget.enteredWidgets.Count > 0)
+			Widget.ProcessEntered (widget => widget.SetEntered (false));
+		}
+
+		private static void ProcessEntered(System.Action<Widget> action)
+		{
+			var currentThread = System.Threading.Thread.CurrentThread;
+			bool again = true;
+
+			while (again)
 			{
-				Widget widget = Widget.enteredWidgets[0];
-				widget.SetEntered (false);
+				again = false;
+
+				Widget[] widgets;
+
+				lock (Widget.enteredWidgets)
+				{
+					widgets = Widget.enteredWidgets.Where (x => x.Window != null && x.Window.Thread == currentThread).ToArray ();
+				}
+
+				foreach (var widget in widgets)
+				{
+					bool enteredBefore = widget.IsEntered;
+					action (widget);
+					bool enteredAfter  = widget.IsEntered;
+					
+					again |= enteredAfter != enteredBefore;
+				}
 			}
 		}
 
 		internal static void UpdateEntered(Window window, Message message)
 		{
-			int index = Widget.enteredWidgets.Count;
-			
-			while (index > 0)
-			{
-				index--;
-				
-				if (index < Widget.enteredWidgets.Count)
-				{
-					Widget.UpdateEntered (window, Widget.enteredWidgets[index], message);
-				}
-			}
+			Widget.ProcessEntered (widget => Widget.UpdateEntered (window, widget, message));
 		}
 		
 		internal static void UpdateEntered(Window window, Widget widget, Message message)

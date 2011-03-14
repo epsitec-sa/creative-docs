@@ -20,6 +20,8 @@ namespace Epsitec.Common.Dialogs
 			
 			this.commandDispatcher = new CommandDispatcher ("Dialog", CommandDispatcherLevel.Secondary);
 			this.commandContext    = new CommandContext ();
+			
+			this.useAsyncDisposePattern = true;
 
 			CommandDispatcher.SetDispatcher (this, this.commandDispatcher);
 			CommandContext.SetContext (this, this.commandContext);
@@ -330,8 +332,15 @@ namespace Epsitec.Common.Dialogs
 
 				this.dialogWindow = null;
 
-				window.WindowDisposing += sender => this.Dispose ();
-				window.AsyncDispose ();
+				if (this.useAsyncDisposePattern)
+				{
+					window.WindowDisposing += sender => this.Dispose ();
+					window.AsyncDispose ();
+				}
+				else
+				{
+					window.Dispose ();
+				}
 			}
 		}
 
@@ -492,6 +501,8 @@ namespace Epsitec.Common.Dialogs
 		private Window							ownerWindow;
 		private Window							dialogWindow;
 		private DialogResult					dialogResult;
+
+		protected bool							useAsyncDisposePattern;
 
 		private readonly CommandDispatcher		commandDispatcher;
 		private readonly CommandContext			commandContext;

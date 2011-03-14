@@ -7,6 +7,7 @@ using Epsitec.Common.Support.Extensions;
 using System.Collections.Generic;
 
 using Epsitec.Common.Types;
+using System.Linq;
 
 namespace Epsitec.Common.Widgets
 {
@@ -30,6 +31,7 @@ namespace Epsitec.Common.Widgets
 		internal Window(WindowRoot root)
 		{
 			this.id = System.Threading.Interlocked.Increment (ref Window.nextWindowId);
+			this.thread = System.Threading.Thread.CurrentThread;
 
 			if (root == null)
 			{
@@ -108,7 +110,8 @@ namespace Epsitec.Common.Widgets
 
 		public static IEnumerable<Window> GetAllLiveWindows()
 		{
-			return Window.windows.FindAll (window => !window.IsDisposed);
+			var currentThread = System.Threading.Thread.CurrentThread;
+			return Window.windows.FindAll (window => !window.IsDisposed && window.Thread == currentThread);
 		}
 		
 		public static void GrabScreen(Drawing.Image bitmap, int x, int y)
@@ -135,7 +138,7 @@ namespace Epsitec.Common.Widgets
 		
 		public static Window FindFromHandle(System.IntPtr handle)
 		{
-			return Window.windows.FindFirst (window => !window.IsDisposed && window.window.Handle == handle);
+			return Window.windows.FindFirst (window => !window.IsDisposed && !window.window.InvokeRequired && window.window.Handle == handle);
 		}
 		
 		public static Window FindFromName(string name)
@@ -213,7 +216,8 @@ namespace Epsitec.Common.Widgets
 		
 		public void MakeActive()
 		{
-			if (! this.IsDisposed)
+			if ((!this.IsDisposed) &&
+				(!this.window.InvokeRequired))
 			{
 				this.window.Activate ();
 			}
@@ -606,6 +610,14 @@ namespace Epsitec.Common.Widgets
 				{
 					this.window.SetFrozen (value);
 				}
+			}
+		}
+
+		public System.Threading.Thread			Thread
+		{
+			get
+			{
+				return this.thread;
 			}
 		}
 
@@ -1360,8 +1372,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.window = null;
 		}
-		
-		
+
 		protected void OnAsyncNotification()
 		{
 			if (this.AsyncNotification != null)
@@ -1389,17 +1400,32 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnAboutToShowWindow()
 		{
-			if ((this.owner != null) &&
-				(this.window != null))
-			{
-				this.window.Owner = this.owner.window;
-			}
-
+			this.AssignWindowOwner ();
 			this.ForceLayout ();
 			
 			if (this.AboutToShowWindow != null)
 			{
 				this.AboutToShowWindow (this);
+			}
+		}
+
+		private void AssignWindowOwner()
+		{
+			if ((this.owner != null) &&
+				(this.window != null) &&
+				(this.window.Owner == null))
+			{
+				if ((this.owner.window.InvokeRequired) ||
+					(this.window.InvokeRequired))
+				{
+					//	Don't set the owner... it won't work ! Even if we first turn off the cross-thread
+					//	checking, things degenerate afterwards. The owner is anyways set by calling the
+					//	ShowDialog(owner) method.
+				}
+				else
+				{
+					this.window.Owner = this.owner.window;
+				}
 			}
 		}
 		
@@ -1441,14 +1467,7 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (! this.windowIsVisible);
 
 			this.windowIsVisible = true;
-			
-			if ((this.owner != null) &&
-				(this.window != null) &&
-				(this.window.Owner == null))
-			{
-				this.window.Owner = this.owner.window;
-			}
-
+			this.AssignWindowOwner ();
 			this.root.NotifyWindowIsVisibleChanged ();
 			
 			if (this.WindowShown != null)
@@ -1567,6 +1586,7 @@ namespace Epsitec.Common.Widgets
 				this.OnWindowDefocused ();
 				
 				if ((this.owner != null) &&
+					(this.owner.window.InvokeRequired == false) &&
 					(this.owner.window.Focused == false))
 				{
 					this.owner.NotifyWindowDefocused ();
@@ -1879,8 +1899,17 @@ namespace Epsitec.Common.Widgets
 		
 		public void AsyncDispose()
 		{
-			this.isDisposeQueued = true;
-			this.SendQueueCommand ();
+			Platform.Window.ProcessCrossThreadOperation (() => this.window.Owner = null);
+
+			if (Application.MainUIThread == System.Threading.Thread.CurrentThread)
+			{
+				this.isDisposeQueued = true;
+				this.SendQueueCommand ();
+			}
+			else
+			{
+				this.Dispose ();
+			}
 		}
 		
 		public void AsyncNotify()
@@ -1896,10 +1925,17 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.IsVisible)
 			{
-				if (this.isAsyncLayoutQueued == false)
+				if (Application.MainUIThread == System.Threading.Thread.CurrentThread)
 				{
-					this.isAsyncLayoutQueued = true;
-					this.SendQueueCommand ();
+					if (this.isAsyncLayoutQueued == false)
+					{
+						this.isAsyncLayoutQueued = true;
+						this.SendQueueCommand ();
+					}
+				}
+				else
+				{
+					this.ForceLayout ();
 				}
 			}
 		}
@@ -1941,7 +1977,11 @@ namespace Epsitec.Common.Widgets
 
 				foreach (Window window in windows)
 				{
-					window.window.SendQueueCommand ();
+					if ((window.window != null) &&
+						(window.window.InvokeRequired == false))
+					{
+						window.window.SendQueueCommand ();
+					}
 				}
 			}
 		}
@@ -2069,6 +2109,11 @@ namespace Epsitec.Common.Widgets
 
 		internal void DispatchQueuedCommands()
 		{
+			if (Application.MainUIThread != System.Threading.Thread.CurrentThread)
+			{
+				return;
+			}
+
 			while (this.cmdQueue.Count > 0)
 			{
 				QueueItem item          = this.cmdQueue.Dequeue ();
@@ -2734,6 +2779,7 @@ namespace Epsitec.Common.Widgets
 		private string							text;
 
 		private readonly long					id;
+		private readonly System.Threading.Thread thread;
 		
 		private Platform.Window					window;
 		private Window							owner;

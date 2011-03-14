@@ -482,6 +482,11 @@ namespace Epsitec.Common.Widgets
 		
 		private void ShowToolTip(Drawing.Point mouse, object caption, Color color)
 		{
+			if (Application.IsRunningOnMainUIThread == false)
+			{
+				return;
+			}
+
 			Widget tip = null;
 			
 			Caption realCaption = caption as Caption;
@@ -579,8 +584,13 @@ namespace Epsitec.Common.Widgets
 
 		private void HideToolTip()
 		{
+			if (Application.IsRunningOnMainUIThread == false)
+			{
+				return;
+			}
+
 			this.timer.Stop ();
-			
+
 			if (this.isDisplayed)
 			{
 				this.window.Hide ();

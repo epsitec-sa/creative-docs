@@ -17,6 +17,7 @@ namespace Epsitec.Common.Widgets
 	{
 		protected Application()
 		{
+			this.applicationThread = System.Threading.Thread.CurrentThread;
 			this.applicationStartStatus = Platform.AppSupport.CreateSemaphore (this.ApplicationIdentifier);
 			this.commandDispatcher = CommandDispatcher.DefaultDispatcher;
 			this.commandContext = new CommandContext ();
@@ -95,8 +96,42 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		/// <summary>
+		/// Gets the main application thread.
+		/// </summary>
+		/// <value>
+		/// The main application thread.
+		/// </value>
+		public System.Threading.Thread			ApplicationThread
+		{
+			get
+			{
+				return this.applicationThread;
+			}
+		}
+
+		/// <summary>
+		/// Gets the global application thread (i.e. the one which first accessed the
+		/// <see cref="Application"/> class). This is the main UI thread for the process.
+		/// </summary>
+		public static System.Threading.Thread	MainUIThread
+		{
+			get
+			{
+				return Application.thread;
+			}
+		}
 		
-		protected bool							DisableAsyncCallbackExecution
+		public static bool						IsRunningOnMainUIThread
+		{
+			get
+			{
+				return Application.MainUIThread == System.Threading.Thread.CurrentThread;
+			}
+		}
+
+
+		public static bool						DisableAsyncCallbackExecution
 		{
 			get
 			{
@@ -446,6 +481,7 @@ namespace Epsitec.Common.Widgets
 		private static bool disableAsyncCallbackExecution;
 		private static int waitCursorCount;
 
+		private readonly System.Threading.Thread applicationThread;
 		private readonly CommandDispatcher commandDispatcher;
 		private readonly CommandContext commandContext;
 		private readonly Support.ResourceManager resourceManager;

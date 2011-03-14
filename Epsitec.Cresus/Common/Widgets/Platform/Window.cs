@@ -1703,7 +1703,7 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		protected override void WndProc(ref System.Windows.Forms.Message msg)
 		{
-//			System.Diagnostics.Debug.WriteLine (msg.ToString ());
+			//System.Diagnostics.Debug.WriteLine (msg.ToString ());
 
 			bool syncCommandCache = false;
 
@@ -2576,6 +2576,23 @@ namespace Epsitec.Common.Widgets.Platform
 			System.Windows.Forms.MessageBox.Show (null, message, title);
 		}
 		
+		internal static void ProcessCrossThreadOperation(System.Action action)
+		{
+			bool state = System.Windows.Forms.Control.CheckForIllegalCrossThreadCalls;
+
+			try
+			{
+				System.Windows.Forms.Control.CheckForIllegalCrossThreadCalls = false;
+
+				action ();
+			}
+			finally
+			{
+				System.Windows.Forms.Control.CheckForIllegalCrossThreadCalls = state;
+			}
+		}
+		
+		
 		
 		internal void DispatchMessage(Message message)
 		{
@@ -2584,7 +2601,7 @@ namespace Epsitec.Common.Widgets.Platform
 				this.widgetWindow.DispatchMessage (message);
 			}
 		}
-		
+
 		
 		internal void ShowWindow()
 		{
@@ -2616,13 +2633,47 @@ namespace Epsitec.Common.Widgets.Platform
 				this.preventQuit = true;
 				Window.globalWndProcDepth = 0;
 
-				this.ShowDialog (this.Owner);
+				if ((this.Owner != null) &&
+					(this.Owner.InvokeRequired))
+				{
+					//	Don't set the owner... it won't work ! First turn off the cross-thread
+					//	checking, or else we will crash (bug in WinForms).
+					//	See http://stackoverflow.com/questions/5273674/cross-thread-exception-when-setting-winforms-form-owner-how-to-do-it-right
+
+					Platform.Window.ProcessCrossThreadOperation (() => this.ShowDialog (this.Owner));
+				}
+				else
+				{
+					this.ShowDialog (this.Owner);
+				}
 			}
 			finally
 			{
 				this.preventQuit = preventQuit;
 				Window.globalWndProcDepth = wndProcDepth;
 			}
+		}
+
+		class WindowHandleWrapper : System.Windows.Forms.IWin32Window
+		{
+			public WindowHandleWrapper(System.IntPtr handle)
+			{
+				this.handle = handle;
+			}
+
+			#region IWin32Window Members
+
+			System.IntPtr System.Windows.Forms.IWin32Window.Handle
+			{
+				get
+				{
+					return this.handle;
+				}
+			}
+
+			#endregion
+
+			private readonly System.IntPtr handle;
 		}
 
 		#region IApplicationThreadInvoker Members

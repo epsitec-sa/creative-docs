@@ -8,4 +8,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle ("Epsitec.Common.Document")]
 [assembly: AssemblyDescription ("Epsitec Document Library")]
 [assembly: AssemblyProduct ("Framework")]
-[assembly: AssemblyCopyright ("Copyright © 2003-2010, Daniel Roux, Pierre Arnaud, EPSITEC SA & OPaC bright ideas, Switzerland")]
+[assembly: AssemblyCopyright ("Copyright © 2003-2011, Daniel Roux, Pierre Arnaud, EPSITEC SA & OPaC bright ideas, Switzerland")]
