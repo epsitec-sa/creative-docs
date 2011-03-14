@@ -281,7 +281,7 @@
   <data name="Dialog.Delete.Question" id="0U9">Voulez-vous supprimer la ressource {0} ?</data>
   <data name="Dialog.Icon.Title" id="016" mod="1">Choix d&amp;apos;une icône</data>
   <data name="Dialog.Icon.Label.Search" id="096" mod="1">Rechercher</data>
-  <data name="Dialog.Icon.Label.Filter" id="0A6" mod="1">Filtrer</data>
+  <data name="Dialog.Icon.Label.Filter" id="0A6" mod="1">Modules</data>
   <data name="Dialog.Icon.None" id="046" mod="1">&lt;i&gt;Pas d&amp;apos;icône&lt;/i&gt;</data>
   <data name="Dialog.Icon.Button.OK" id="026" mod="1">D&amp;apos;accord</data>
   <data name="Dialog.Icon.Button.Cancel" id="036" mod="1">Annuler</data>

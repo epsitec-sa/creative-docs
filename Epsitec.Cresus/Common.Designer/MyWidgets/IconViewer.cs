@@ -33,15 +33,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			//	Dessine le fond standard du bouton.
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+
 			base.PaintBackgroundImplementation (graphics, clipRect);
+
+			var bounds = this.Client.Bounds;
+			bounds.Deflate (0.5);
+			graphics.AddRectangle (bounds);
+			graphics.RenderSolid (adorner.ColorBorder);
 
 			this.UpdateIcons ();
 
 			if (this.icons.Count == 0)  // aucune icône ?
 			{
 				//	Dessine une croix 'x'.
-				IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
-
 				double size = System.Math.Min (this.Client.Bounds.Width, this.Client.Bounds.Height) - 8;
 				var rect = new Rectangle (this.Client.Bounds.Center.X-size/2, this.Client.Bounds.Center.Y-size/2, size, size);
 

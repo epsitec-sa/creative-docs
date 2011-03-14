@@ -781,7 +781,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		private static readonly int				iconSize = 37;  // pour afficher confortablement les icônes 31x31
+		private static readonly int				iconSize = 40+6;  // pour afficher confortablement les icônes 40x40
 
 		private IconButton						primarySummaryIcon;
 		private IconButton						secondarySummaryIcon;

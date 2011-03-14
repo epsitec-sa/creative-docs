@@ -2,6 +2,6 @@
 <ModuleInfo id="3" name="Common.Designer" layer="s" textMode="String" namespace="Epsitec.Common.Designer">
   <Versions>
     <Version id="1" build="4" date="2011-02-28T14:50:17.4617638Z" />
-    <Version id="2" build="180" date="2011-03-03T16:18:57.1194807Z" />
+    <Version id="2" build="181" date="2011-03-14T13:43:28.8347021Z" />
   </Versions>
 </ModuleInfo>

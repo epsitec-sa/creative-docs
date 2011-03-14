@@ -205,7 +205,7 @@
   <data id="0M4">Do you want to delete culture {0} ?</data>
   <data id="016" mod="1">Pick an icon</data>
   <data id="096" mod="1">Find</data>
-  <data id="0A6" mod="1">Filter</data>
+  <data id="0A6" mod="1">Modules</data>
   <data id="046" mod="1">&lt;i&gt;No icon&lt;/i&gt;</data>
   <data id="026" mod="1">OK</data>
   <data id="036" mod="1">Cancel</data>

@@ -19,74 +19,77 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Crée et montre la fenêtre du dialogue.
 			if ( this.window == null )
 			{
-				this.window = new Window();
+				this.window = new Window ();
 				this.window.Icon = this.designerApplication.Icon;
 				this.window.MakeSecondaryWindow ();
 				this.window.PreventAutoClose = true;
-				this.WindowInit("Icon", 400, 400, true);
+				this.WindowInit ("Icon", 400, 400, true);
 				this.window.Text = Res.Strings.Dialog.Icon.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
-				this.window.Root.MinSize = new Size(200, 150);
-				this.window.Root.Padding = new Margins(8, 8, 8, 8);
+				this.window.Root.MinSize = new Size (200, 150);
+				this.window.Root.Padding = new Margins (8, 8, 8, 8);
 
-				ResizeKnob resize = new ResizeKnob(this.window.Root);
+				ResizeKnob resize = new ResizeKnob (this.window.Root);
 				resize.Anchor = AnchorStyles.BottomRight;
-				resize.Margins = new Margins(0, -8, 0, -8);
-				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
+				resize.Margins = new Margins (0, -8, 0, -8);
+				ToolTip.Default.SetToolTip (resize, Res.Strings.Dialog.Tooltip.Resize);
 
 				//	Bande horizontale pour la recherche.
-				Widget header = new Widget(this.window.Root);
-				header.PreferredHeight = 20;
-				header.Margins = new Margins(0, 0, 0, 6);
-				header.Dock = DockStyle.Top;
+				{
+					var topFrame = new FrameBox (this.window.Root);
+					topFrame.PreferredHeight = 20;
+					topFrame.Margins = new Margins (0, 0, 0, 6);
+					topFrame.Dock = DockStyle.Top;
 
-				StaticText label = new StaticText(header);
-				label.Text = Res.Strings.Dialog.Icon.Label.Search;
-				label.PreferredWidth = 70;
-				label.Dock = DockStyle.Left;
+					var label = new StaticText (topFrame);
+					label.Text = Res.Strings.Dialog.Icon.Label.Search;
+					label.PreferredWidth = 64;
+					label.Dock = DockStyle.Left;
 
-				this.fieldSearch = new TextFieldCombo(header);
-				this.fieldSearch.Margins = new Margins(5, 5, 0, 0);
-				this.fieldSearch.Dock = DockStyle.Fill;
+					this.fieldSearch = new TextField (topFrame);
+					this.fieldSearch.Dock = DockStyle.Fill;
+					this.fieldSearch.TextChanged += new EventHandler (this.HandleFieldSearchTextChanged);
 
-				this.searchNext = new IconButton(header);
-				this.searchNext.IconUri = Misc.Icon("SearchNext");
-				this.searchNext.Dock = DockStyle.Right;
-				this.searchNext.Clicked += this.HandleSearchNextClicked;
-				ToolTip.Default.SetToolTip(this.searchNext, Res.Strings.Action.SearchNext);
+					var clearButton = new GlyphButton (topFrame);
+					clearButton.GlyphShape = GlyphShape.Close;
+					clearButton.Dock = DockStyle.Right;
+					clearButton.Margins = new Margins (1, 0, 0, 0);
 
-				this.searchPrev = new IconButton(header);
-				this.searchPrev.IconUri = Misc.Icon("SearchPrev");
-				this.searchPrev.Dock = DockStyle.Right;
-				this.searchPrev.Clicked += this.HandleSearchPrevClicked;
-				ToolTip.Default.SetToolTip(this.searchPrev, Res.Strings.Action.SearchPrev);
+					clearButton.Clicked += delegate
+					{
+						this.fieldSearch.Text = null;
+						this.fieldSearch.SelectAll ();
+						this.fieldSearch.Focus ();
+					};
+				}
 
 				//	Bande horizontale pour le filtre.
-				header = new Widget(this.window.Root);
-				header.PreferredHeight = 20;
-				header.Margins = new Margins(0, 0, 0, 6);
-				header.Dock = DockStyle.Top;
+				{
+					var topFrame = new Widget (this.window.Root);
+					topFrame.PreferredHeight = 20;
+					topFrame.Margins = new Margins (0, 0, 0, 6);
+					topFrame.Dock = DockStyle.Top;
 
-				label = new StaticText(header);
-				label.Text = Res.Strings.Dialog.Icon.Label.Filter;
-				label.PreferredWidth = 70;
-				label.Dock = DockStyle.Left;
+					var label = new StaticText (topFrame);
+					label.Text = Res.Strings.Dialog.Icon.Label.Filter;
+					label.PreferredWidth = 64;
+					label.Dock = DockStyle.Left;
 
-				this.fieldFilter = new TextFieldCombo(header);
-				this.fieldFilter.Text = Res.Strings.Dialog.Icon.Filter.All;
-				this.fieldFilter.IsReadOnly = true;
-				this.fieldFilter.Margins = new Margins(5, 5+22+22, 0, 0);
-				this.fieldFilter.Dock = DockStyle.Fill;
-				this.fieldFilter.ComboClosed += this.HandleFieldFilterComboClosed;
+					this.fieldFilter = new TextFieldCombo (topFrame);
+					this.fieldFilter.Text = Res.Strings.Dialog.Icon.Filter.All;
+					this.fieldFilter.IsReadOnly = true;
+					this.fieldFilter.Dock = DockStyle.Fill;
+					this.fieldFilter.ComboClosed += this.HandleFieldFilterComboClosed;
+				}
 
 				//	Tableau principal.
-				this.arrayDetail = new MyWidgets.StringArray(this.window.Root);
+				this.arrayDetail = new MyWidgets.StringArray (this.window.Root);
 				this.arrayDetail.Columns = 2;
-				this.arrayDetail.SetColumnsRelativeWidth(0, 0.15);  // icône
-				this.arrayDetail.SetColumnsRelativeWidth(1, 0.85);  // nom du module.icône
-				this.arrayDetail.SetColumnAlignment(0, ContentAlignment.MiddleCenter);
-				this.arrayDetail.SetColumnBreakMode(1, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
+				this.arrayDetail.SetColumnsRelativeWidth (0, 0.15);  // icône
+				this.arrayDetail.SetColumnsRelativeWidth (1, 0.85);  // nom du module.icône
+				this.arrayDetail.SetColumnAlignment (0, ContentAlignment.MiddleCenter);
+				this.arrayDetail.SetColumnBreakMode (1, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
 				this.arrayDetail.LineHeight = 25;
 				this.arrayDetail.Dock = DockStyle.Fill;
 				this.arrayDetail.CellCountChanged += this.HandleArrayCellCountChanged;
@@ -96,21 +99,21 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.arrayDetail.TabIndex = 1;
 				this.arrayDetail.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-				this.arrayCompact = new MyWidgets.IconArray(this.window.Root);
+				this.arrayCompact = new MyWidgets.IconArray (this.window.Root);
 				this.arrayCompact.CellSize = this.arrayDetail.LineHeight;
 				this.arrayCompact.Dock = DockStyle.Fill;
 				this.arrayCompact.ChangeSelected += this.HandleArrayCompactChangeSelected;
 				this.arrayCompact.TabIndex = 2;
 				this.arrayCompact.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-				ToolTip.Default.SetToolTip(this.arrayCompact, "*");
+				ToolTip.Default.SetToolTip (this.arrayCompact, "*");
 
 				//	Pied.
-				Widget footer = new Widget(this.window.Root);
+				Widget footer = new Widget (this.window.Root);
 				footer.PreferredHeight = 22;
-				footer.Margins = new Margins(0, 0, 8, 0);
+				footer.Margins = new Margins (0, 0, 8, 0);
 				footer.Dock = DockStyle.Bottom;
 
-				Button buttonClose = new Button(footer);
+				Button buttonClose = new Button (footer);
 				buttonClose.PreferredWidth = 75;
 				buttonClose.Text = Res.Strings.Dialog.Icon.Button.Cancel;
 				buttonClose.ButtonStyle = ButtonStyle.DefaultCancel;
@@ -119,28 +122,28 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonClose.TabIndex = 11;
 				buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-				Button buttonOk = new Button(footer);
+				Button buttonOk = new Button (footer);
 				buttonOk.PreferredWidth = 75;
 				buttonOk.Text = Res.Strings.Dialog.Icon.Button.OK;
 				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonOk.Dock = DockStyle.Right;
-				buttonOk.Margins = new Margins(0, 6, 0, 0);
+				buttonOk.Margins = new Margins (0, 6, 0, 0);
 				buttonOk.Clicked += this.HandleButtonInsertClicked;
 				buttonOk.TabIndex = 10;
 				buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-				this.buttonMode = new IconButton(footer);
-				this.buttonMode.IconUri = Misc.Icon("DialogIconMode");
+				this.buttonMode = new IconButton (footer);
+				this.buttonMode.IconUri = Misc.Icon ("DialogIconMode");
 				this.buttonMode.ButtonStyle = ButtonStyle.ActivableIcon;
 				this.buttonMode.Dock = DockStyle.Left;
-				this.buttonMode.Margins = new Margins(0, 6, 0, 0);
+				this.buttonMode.Margins = new Margins (0, 6, 0, 0);
 				this.buttonMode.Clicked += this.HandleButtonModeClicked;
-				ToolTip.Default.SetToolTip(this.buttonMode, Res.Strings.Dialog.Icon.Tooltip.Mode);
+				ToolTip.Default.SetToolTip (this.buttonMode, Res.Strings.Dialog.Icon.Tooltip.Mode);
 
-				this.slider = new HSlider(footer);
+				this.slider = new HSlider (footer);
 				this.slider.PreferredWidth = 80;
 				this.slider.Dock = DockStyle.Left;
-				this.slider.Margins = new Margins(0, 0, 4, 4);
+				this.slider.Margins = new Margins (0, 0, 4, 4);
 				this.slider.TabIndex = 9;
 				this.slider.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.slider.MinValue = 20.0M;
@@ -150,8 +153,10 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.slider.Resolution = 1.0M;
 				this.slider.Value = (decimal) this.arrayDetail.LineHeight;
 				this.slider.ValueChanged += this.HandleSliderChanged;
-				ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.Icon.Tooltip.Size);
+				ToolTip.Default.SetToolTip (this.slider, Res.Strings.Dialog.Icon.Tooltip.Size);
 			}
+
+			this.fieldSearch.Text = null;
 
 			this.UpdateMode();
 			this.UpdateFilter();
@@ -159,7 +164,10 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.Selected = this.SelectedIcon(this.icon);
 			this.ShowSelection();
 
-			this.window.ShowDialog();
+			this.fieldSearch.SelectAll ();
+			this.fieldSearch.Focus ();
+
+			this.window.ShowDialog ();
 		}
 
 
@@ -232,10 +240,28 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.icons = new List<string>();
 			string[] names = ImageProvider.Default.GetImageNames("manifest", this.manager);
+
+			string search = null;
+			if (this.fieldSearch != null && !string.IsNullOrEmpty (this.fieldSearch.Text))
+			{
+				search = this.fieldSearch.Text.ToLower ();
+			}
+
 			for (int i=0; i<names.Length; i++)
 			{
 				string module, name;
 				Misc.GetIconNames(names[i], out module, out name);
+
+				string t = string.Concat (module, ".", name).ToLower ();
+
+				if (!string.IsNullOrEmpty (search))
+				{
+					if (!t.Contains (search))
+					{
+						continue;
+					}
+				}
+
 				string text = string.Format(Res.Strings.Dialog.Icon.Filter.One, module);
 
 				if (filter == null || filter == text)
@@ -336,41 +362,6 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-		private void Search(string searching, int direction)
-		{
-			//	Cherche dans une direction donnée.
-			searching = Searcher.RemoveAccent(searching.ToLower());
-			int sel = this.Selected-1;
-
-			for (int i=0; i<this.icons.Count; i++)
-			{
-				sel += direction;  // suivant, en avant ou en arrière
-
-				if (sel >= this.icons.Count)  // fin dépassée ?
-				{
-					sel = 0;  // revient au début
-				}
-
-				if (sel < 0)  // début dépassé ?
-				{
-					sel = this.icons.Count-1;  // va à la fin
-				}
-
-				string module, name;
-				Misc.GetIconNames(this.icons[sel], out module, out name);
-				name = Searcher.RemoveAccent(name.ToLower());
-
-				if (name.Contains(searching))
-				{
-					this.Selected = sel+1;
-					this.ShowSelection();
-					return;
-				}
-			}
-
-			this.designerApplication.DialogMessage(Res.Strings.Dialog.Search.Message.Error);
-		}
-
 		private int Selected
 		{
 			//	Case sélectionnée dans un tableau (détaillé ou compact).
@@ -401,18 +392,9 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		void HandleSearchPrevClicked(object sender, MessageEventArgs e)
+		private void HandleFieldSearchTextChanged(object sender)
 		{
-			//	Cherche l'occurence précédente.
-			Misc.ComboMenuAdd(this.fieldSearch);
-			this.Search(this.fieldSearch.Text, -1);
-		}
-
-		void HandleSearchNextClicked(object sender, MessageEventArgs e)
-		{
-			//	Cherche l'occurence suivante.
-			Misc.ComboMenuAdd(this.fieldSearch);
-			this.Search(this.fieldSearch.Text, 1);
+			this.HandleFieldFilterComboClosed (sender);
 		}
 
 		void HandleFieldFilterComboClosed(object sender)
@@ -420,7 +402,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Menu pour choisir le filtre fermé.
 			string icon = null;
 			int sel = this.Selected;
-			if (sel >= 1)
+			if (sel-1 >= 0 && sel-1 < this.icons.Count)
 			{
 				icon = this.icons[sel-1];
 			}
@@ -528,10 +510,8 @@ namespace Epsitec.Common.Designer.Dialogs
 		private string							icon;
 		private bool							compactMode = false;
 
-		private TextFieldCombo					fieldSearch;
+		private TextField						fieldSearch;
 		private TextFieldCombo					fieldFilter;
-		private IconButton						searchPrev;
-		private IconButton						searchNext;
 		private MyWidgets.StringArray			arrayDetail;
 		private MyWidgets.IconArray				arrayCompact;
 		private HSlider							slider;
