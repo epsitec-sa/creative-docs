@@ -70,11 +70,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.isClickable)
 			{
 				base.PaintBackgroundImplementation (graphics, clipRect);
-
-				var bounds = this.Client.Bounds;
-				bounds.Deflate (0.5);
-				graphics.AddRectangle (bounds);
-				graphics.RenderSolid (this.BorderColor);
 			}
 
 			this.UpdateIcons ();
@@ -110,7 +105,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.RenderSolid (this.BorderColor);
 			}
 
-			oneIcon.TextLayout.Paint (oneIcon.Bounds.BottomLeft, graphics);
+			var style = this.Enable ? GlyphPaintStyle.Normal : GlyphPaintStyle.Disabled;
+
+			oneIcon.TextLayout.Paint (oneIcon.Bounds.BottomLeft, graphics, oneIcon.Bounds, Color.Empty, style);
 		}
 
 		private Color BorderColor
@@ -179,7 +176,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						}
 
 						//	Place les icônes.
-						double x = this.Client.Bounds.Left + System.Math.Floor ((this.Client.Bounds.Width-totalWidth)/2);
+						double x = this.Client.Bounds.Left + System.Math.Max (System.Math.Floor ((this.Client.Bounds.Width-totalWidth)/2), 0);
 
 						foreach (var iconKey in list)
 						{
