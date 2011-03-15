@@ -7,13 +7,13 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Bricks
 {
-	public class InternalInputBrick<TSource, TField, TSelf, TParent> : Brick
-		where TSelf : InternalInputBrick<TSource, TField, TSelf, TParent>
+	public class InternalInputGroupBrick<TSource, TField, TSelf, TParent> : Brick
+		where TSelf : InternalInputGroupBrick<TSource, TField, TSelf, TParent>
 		where TParent : Brick
 	{
-		public InternalInputBrick(TParent parent)
+		public InternalInputGroupBrick(TParent parent)
 		{
-			parent.AddProperty (new BrickProperty (BrickPropertyKey.Input, this));
+			parent.AddProperty (new BrickProperty (BrickPropertyKey.InputGroup, this));
 
 			this.DefineBrickWall (parent.BrickWall);
 			this.parent = parent;
@@ -23,16 +23,6 @@ namespace Epsitec.Cresus.Bricks
 		{
 			this.AddProperty (new BrickProperty (BrickPropertyKey.Title, value));
 			return this as TSelf;
-		}
-
-		public InputGroupBrick<TField, TField, TSelf> InputGroup(string value)
-		{
-			return new InputGroupBrick<TField, TField, TSelf> (this as TSelf).Title (value);
-		}
-
-		public InputGroupBrick<TField, TField, TSelf> InputGroup()
-		{
-			return new InputGroupBrick<TField, TField, TSelf> (this as TSelf);
 		}
 
 		public TSelf Field<TResult>(Expression<System.Func<TField, TResult>> expression)

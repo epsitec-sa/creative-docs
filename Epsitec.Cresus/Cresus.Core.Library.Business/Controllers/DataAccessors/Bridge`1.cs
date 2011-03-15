@@ -150,7 +150,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 					switch (property.Key)
 					{
 						case BrickPropertyKey.Input:
-							this.CreateActionsForInput (property.Brick);
+							this.CreateActionsForInput (property.Brick, this.inputProperties);
 							break;
 					}
 				}
@@ -158,9 +158,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				this.RecordActions ();
 			}
 
-			private void CreateActionsForInput(Brick brick)
+			private void CreateActionsForInput(Brick brick, BrickPropertyCollection inputProperties)
 			{
-				var fieldProperties = Brick.GetProperties (brick, BrickPropertyKey.Field);
+				var fieldProperties = Brick.GetProperties (brick, BrickPropertyKey.Field, BrickPropertyKey.InputGroup);
 
 				foreach (var property in fieldProperties)
 				{
@@ -169,13 +169,49 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 						case BrickPropertyKey.Field:
 							this.CreateActionForInputField (property.ExpressionValue, fieldProperties);
 							break;
+
+						case BrickPropertyKey.InputGroup:
+							this.CreateActionsForInputGroup (property);
+							break;
 					}
 				}
 
-				if (this.inputProperties.PeekAfter (BrickPropertyKey.Separator).HasValue)
+				if ((inputProperties != null) &&
+					(inputProperties.PeekAfter (BrickPropertyKey.Separator).HasValue))
 				{
 					this.CreateActionForSeparator ();
 				}
+			}
+
+			private void CreateActionsForInputGroup(BrickProperty property)
+			{
+				int index = this.actions.Count ();
+
+				var title = Brick.GetProperty (property.Brick, BrickPropertyKey.Title).StringValue;
+
+				this.CreateActionsForInput (property.Brick, null);
+
+				var actions = new List<System.Action<EditionTile, UIBuilder>> ();
+
+				while (index < this.actions.Count)
+				{
+					actions.Add (this.actions[index]);
+					this.actions.RemoveAt (index);
+				}
+
+				if (actions.Count == 0)
+				{
+					return;
+				}
+
+				System.Action<EditionTile, UIBuilder> groupAction =
+					(tile, builder) =>
+					{
+						builder.CreateGroup (tile, title);
+						actions.ForEach (x => x (tile, builder));
+					};
+
+				this.actions.Add (groupAction);
 			}
 
 			private void CreateActionForInputField(Expression expression, BrickPropertyCollection fieldProperties)

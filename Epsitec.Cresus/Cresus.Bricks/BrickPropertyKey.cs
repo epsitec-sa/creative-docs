@@ -28,6 +28,7 @@ namespace Epsitec.Cresus.Bricks
 		Field,
 		Width,
 		Separator,
+		InputGroup,
 
 		CollectionAnnotation,
 	}

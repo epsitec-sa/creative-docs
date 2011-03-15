@@ -23,10 +23,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		protected override void CreateBricks()
 		{
-			this.AddBrick (x => x.Relation)
-				.Name ("Customer")
-				.Icon ("Data.Customer")
-				.Title (TextFormatter.FormatText ("Client"));
+			this.AddBrick (x => x);
 
 			this.AddBrick (x => x.Relation.Person.Contacts)
 				.AsType<MailContactEntity> ()

@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.Bricks
 
 		public BrickProperty? PeekAfter(BrickPropertyKey adjacentPropertyKey)
 		{
-			int index = this.index + 1;
+			int index = this.index;
 
 			while ((index > 0) && (index < this.properties.Count))
 			{

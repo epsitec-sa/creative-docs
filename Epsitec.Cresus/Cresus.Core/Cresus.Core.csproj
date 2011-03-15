@@ -99,6 +99,7 @@
     <Compile Include="CommandHandlers\NavigationCommandHandler.cs" />
     <Compile Include="Controllers\ComplexControllers\ChartsOfAccountsController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationCustomerViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionCustomerViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDocumentCategoryMappingViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDocumentPrintingUnitsEditorViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDocumentPrintingUnitsViewController.cs" />

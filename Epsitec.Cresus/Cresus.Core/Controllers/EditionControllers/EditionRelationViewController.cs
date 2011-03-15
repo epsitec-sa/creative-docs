@@ -70,11 +70,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			FrameBox group = builder.CreateGroup (tile, "N° de client (principal, externe et interne)");
-//			builder.CreateTextField (group, DockStyle.Left, 74, Marshaler.Create (() => this.Entity.IdA, x => this.Entity.IdA = x));
-//			builder.CreateTextField (group, DockStyle.Left, 74, Marshaler.Create (() => this.Entity.IdB, x => this.Entity.IdB = x));
-//			builder.CreateTextField (group, DockStyle.Left, 74, Marshaler.Create (() => this.Entity.IdC, x => this.Entity.IdC = x));
-
 			builder.CreateMargin                (tile, horizontalSeparator: false);
 			builder.CreateTextField             (tile,  90,                              "Client depuis le",                         Marshaler.Create (() => this.Entity.FirstContactDate,         x => this.Entity.FirstContactDate = x));
 			builder.CreateMargin                (tile, horizontalSeparator: true);

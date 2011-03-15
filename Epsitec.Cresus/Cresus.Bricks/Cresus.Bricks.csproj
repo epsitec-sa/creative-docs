@@ -49,11 +49,13 @@
     <Compile Include="BrickPropertyAddedEventArgs.cs" />
     <Compile Include="BrickWall.cs" />
     <Compile Include="InputBrick.cs" />
+    <Compile Include="InputGroupBrick.cs" />
     <Compile Include="InternalBaseBrick.cs" />
     <Compile Include="Brick.cs" />
     <Compile Include="BrickProperty.cs" />
     <Compile Include="BrickPropertyKey.cs" />
     <Compile Include="InternalInputBrick.cs" />
+    <Compile Include="InternalInputGroupBrick.cs" />
     <Compile Include="InternalSimpleBrick.cs" />
     <Compile Include="Mortar.cs" />
     <Compile Include="Mortar`1.cs" />

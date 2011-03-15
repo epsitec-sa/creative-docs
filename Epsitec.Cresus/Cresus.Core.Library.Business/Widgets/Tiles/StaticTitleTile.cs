@@ -43,7 +43,8 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				{
 					this.iconUri = value;
 
-					if (string.IsNullOrEmpty (this.iconUri))
+					if ((string.IsNullOrEmpty (this.iconUri)) ||
+						(this.iconUri == "none"))
 					{
 						this.staticTextIcon.Text = "";
 					}

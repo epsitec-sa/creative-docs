@@ -300,11 +300,18 @@ namespace Epsitec.Cresus.Core
 		/// <summary>
 		/// Retourne le nom complet d'une icône, à utiliser pour la propriété IconButton.IconUri.
 		/// </summary>
-		/// <param name="icon">Nom brut de l'icône, sans extension.</param>
+		/// <param name="icon">Nom brut de l'icône, sans extension; accepte aussi un nom complet avec procole et extension.</param>
 		/// <returns></returns>
 		public static string GetResourceIconUri(string icon)
 		{
-			return string.Format ("manifest:Epsitec.Cresus.Core.Images.{0}.icon", icon);
+			if (icon.Contains (':'))
+			{
+				return icon;
+			}
+			else
+			{
+				return string.Format ("manifest:Epsitec.Cresus.Core.Images.{0}.icon", icon);
+			}
 		}
 
 		/// <summary>
