@@ -91,6 +91,7 @@
     <Compile Include="Comparers\ResourceModuleInfoToOpen.cs" />
     <Compile Include="Comparers\ProxyRank.cs" />
     <Compile Include="Comparers\WidgetDisposition.cs" />
+    <Compile Include="Controllers\FilterController.cs" />
     <Compile Include="Dialogs\SaveAllImages.cs" />
     <Compile Include="Dialogs\ModuleInfo.cs" />
     <Compile Include="Dialogs\EntityCreation.cs" />

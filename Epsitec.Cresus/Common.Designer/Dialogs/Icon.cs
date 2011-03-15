@@ -37,31 +37,10 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				//	Bande horizontale pour la recherche.
 				{
-					var topFrame = new FrameBox (this.window.Root);
-					topFrame.PreferredHeight = 20;
-					topFrame.Margins = new Margins (0, 0, 0, 6);
-					topFrame.Dock = DockStyle.Top;
-
-					var label = new StaticText (topFrame);
-					label.Text = Res.Strings.Dialog.Icon.Label.Search;
-					label.PreferredWidth = 64;
-					label.Dock = DockStyle.Left;
-
-					this.fieldSearch = new TextField (topFrame);
-					this.fieldSearch.Dock = DockStyle.Fill;
-					this.fieldSearch.TextChanged += new EventHandler (this.HandleFieldSearchTextChanged);
-
-					var clearButton = new GlyphButton (topFrame);
-					clearButton.GlyphShape = GlyphShape.Close;
-					clearButton.Dock = DockStyle.Right;
-					clearButton.Margins = new Margins (1, 0, 0, 0);
-
-					clearButton.Clicked += delegate
-					{
-						this.fieldSearch.Text = null;
-						this.fieldSearch.SelectAll ();
-						this.fieldSearch.Focus ();
-					};
+					this.filterController = new Controllers.FilterController ();
+					var frame = this.filterController.CreateUI (this.window.Root);
+					frame.Margins = new Margins (0, 0, 0, 6);
+					this.filterController.FilterChanged += new EventHandler (this.HandleFilterControllerChanged);
 				}
 
 				//	Bande horizontale pour le filtre.
@@ -156,7 +135,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				ToolTip.Default.SetToolTip (this.slider, Res.Strings.Dialog.Icon.Tooltip.Size);
 			}
 
-			this.fieldSearch.Text = null;
+			this.filterController.ClearFilter ();
 
 			this.UpdateMode();
 			this.UpdateFilter();
@@ -164,8 +143,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.Selected = this.SelectedIcon(this.icon);
 			this.ShowSelection();
 
-			this.fieldSearch.SelectAll ();
-			this.fieldSearch.Focus ();
+			this.filterController.SetFocus ();
 
 			this.window.ShowDialog ();
 		}
@@ -242,9 +220,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			string[] names = ImageProvider.Default.GetImageNames("manifest", this.manager);
 
 			string search = null;
-			if (this.fieldSearch != null && !string.IsNullOrEmpty (this.fieldSearch.Text))
+			if (this.filterController != null && this.filterController.HasFilter)
 			{
-				search = this.fieldSearch.Text.ToLower ();
+				search = this.filterController.Filter.ToLower ();
 			}
 
 			for (int i=0; i<names.Length; i++)
@@ -391,7 +369,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		private void HandleFieldSearchTextChanged(object sender)
+		private void HandleFilterControllerChanged(object sender)
 		{
 			this.HandleFieldFilterComboClosed (sender);
 		}
@@ -509,7 +487,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		private string							icon;
 		private bool							compactMode = false;
 
-		private TextField						fieldSearch;
+		private Controllers.FilterController	filterController;
 		private TextFieldCombo					fieldFilter;
 		private MyWidgets.StringArray			arrayDetail;
 		private MyWidgets.IconArray				arrayCompact;

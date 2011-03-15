@@ -321,6 +321,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 				case "de":
 					return "Allemand";
 
+				case "it":
+					return "Italien";
+
 				default:
 					return twoLetters.ToUpper();;
 			}
