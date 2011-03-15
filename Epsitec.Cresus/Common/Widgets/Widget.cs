@@ -1472,11 +1472,15 @@ namespace Epsitec.Common.Widgets
 
 				foreach (var widget in widgets)
 				{
-					bool enteredBefore = widget.IsEntered;
-					action (widget);
-					bool enteredAfter  = widget.IsEntered;
-					
-					again |= enteredAfter != enteredBefore;
+					if (widget.IsEntered)
+					{
+						action (widget);
+
+						if (widget.IsEntered == false)
+						{
+							again = true;
+						}
+					}
 				}
 			}
 		}
