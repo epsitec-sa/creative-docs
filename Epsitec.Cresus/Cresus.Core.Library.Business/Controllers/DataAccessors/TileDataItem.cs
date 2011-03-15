@@ -397,6 +397,19 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
+		public void SetEntityConverter<T>(System.Delegate converter)
+			where T : AbstractEntity
+		{
+			if (converter == null)
+			{
+				this.EntityMarshalerConverter = null;
+			}
+			else
+			{
+				this.EntityMarshalerConverter = x => (AbstractEntity) converter.DynamicInvoke (x);
+			}
+		}
+
 
 		public static string BuildName(string prefix, int index)
 		{

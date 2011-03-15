@@ -112,6 +112,15 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			else
 			{
 				item.EntityMarshaler = this.controller.CreateEntityMarshaler ();
+
+				if (brick.GetFieldType () == typeof (T))
+				{
+					//	Type already ok.
+				}
+				else
+				{
+					item.SetEntityConverter<T> (brick.GetResolver (brick.GetFieldType ()));
+				}
 				data.Add (item);
 			}
 
