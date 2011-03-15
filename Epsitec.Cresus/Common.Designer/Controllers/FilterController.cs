@@ -255,7 +255,7 @@ namespace Epsitec.Common.Designer.Controllers
 
 			this.AddItemToMenu (menu, true, any,   "Any",   Res.Strings.Dialog.Filter.Radio.Any);
 			this.AddItemToMenu (menu, true, begin, "Begin", Res.Strings.Dialog.Filter.Radio.Begin);
-			this.AddItemToMenu (menu, true, end,   "End",   "A la fin" /*Res.Strings.Dialog.Filter.Radio.End*/);
+			this.AddItemToMenu (menu, true, end,   "End",   Res.Strings.Dialog.Filter.Radio.End);
 			this.AddItemToMenu (menu, true, joker, "Joker", Res.Strings.Dialog.Filter.Radio.Joker);
 
 			menu.Items.Add (new MenuSeparator ());

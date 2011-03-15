@@ -587,4 +587,5 @@
   <data name="Dialog.EntityComment.Title" id="K73">Commentaire</data>
   <data name="Dialog.EntityParameters.Title" id="K83">Paramètres de l&amp;apos;entité</data>
   <data name="Entities.Action.SaveAllBitmaps" id="K93">Exporter plusieurs vues dans des fichiers image bitmap</data>
+  <data name="Dialog.Filter.Radio.End" id="KA3">A la fin</data>
 </bundle>

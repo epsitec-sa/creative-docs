@@ -242,4 +242,5 @@
   <data id="KQ1">Cultures</data>
   <data id="KR1">Properties</data>
   <data id="KM2">*</data>
+  <data id="KA3">From end</data>
 </bundle>

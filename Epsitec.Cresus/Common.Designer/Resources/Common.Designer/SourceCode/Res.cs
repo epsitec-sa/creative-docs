@@ -3556,6 +3556,14 @@ namespace Epsitec.Common.Designer
 								return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (122));
 							}
 						}
+						//	designer:str/30KA3
+						public static global::System.String End
+						{
+							get
+							{
+								return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544426));
+							}
+						}
 						//	designer:str/300S3
 						public static global::System.String Joker
 						{
