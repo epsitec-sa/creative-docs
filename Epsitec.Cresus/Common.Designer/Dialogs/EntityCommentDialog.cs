@@ -9,9 +9,9 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// <summary>
 	/// Dialogue permettant d'éditer le texte d'un commentaire dans l'éditeur d'entités.
 	/// </summary>
-	public class EntityComment : Abstract
+	public class EntityCommentDialog : AbstractDialog
 	{
-		public EntityComment(DesignerApplication designerApplication) : base(designerApplication)
+		public EntityCommentDialog(DesignerApplication designerApplication) : base(designerApplication)
 		{
 		}
 

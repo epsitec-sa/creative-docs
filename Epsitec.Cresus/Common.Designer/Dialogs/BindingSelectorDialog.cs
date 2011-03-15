@@ -10,9 +10,9 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// Dialogue permettant de choisir une rubrique (string) d'une ressource de type
 	/// 'structure de données' (StructuredType).
 	/// </summary>
-	public class BindingSelector : Abstract
+	public class BindingSelectorDialog : AbstractDialog
 	{
-		public BindingSelector(DesignerApplication designerApplication) : base(designerApplication)
+		public BindingSelectorDialog(DesignerApplication designerApplication) : base(designerApplication)
 		{
 		}
 
@@ -86,7 +86,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.array.SetDynamicToolTips(3, false);
 				this.array.SetDynamicToolTips(4, false);
 				this.array.SetDynamicToolTips(5, false);
-				this.array.LineHeight = BindingSelector.arrayLineHeight;
+				this.array.LineHeight = BindingSelectorDialog.arrayLineHeight;
 				this.array.Dock = DockStyle.Fill;
 				this.array.Margins = new Margins(0, 0, 0, 4);
 				this.array.ColumnsWidthChanged += this.HandleArrayColumnsWidthChanged;
@@ -129,7 +129,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.slider.SmallChange = 5.0M;
 				this.slider.LargeChange = 10.0M;
 				this.slider.Resolution = 1.0M;
-				this.slider.Value = (decimal) BindingSelector.arrayLineHeight;
+				this.slider.Value = (decimal) BindingSelectorDialog.arrayLineHeight;
 				this.slider.ValueChanged += this.HandleSliderChanged;
 				//?ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.Icon.Tooltip.Size);
 
@@ -473,8 +473,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			HSlider slider = sender as HSlider;
-			BindingSelector.arrayLineHeight = (double) slider.Value;
-			this.array.LineHeight = BindingSelector.arrayLineHeight;
+			BindingSelectorDialog.arrayLineHeight = (double) slider.Value;
+			this.array.LineHeight = BindingSelectorDialog.arrayLineHeight;
 		}
 
 		private void HandleArrayColumnsWidthChanged(object sender)

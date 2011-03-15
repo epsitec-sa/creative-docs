@@ -7,9 +7,9 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// <summary>
 	/// Dialogue permettant de choisir le filtre pour les ressources.
 	/// </summary>
-	public class Filter : Abstract
+	public class FilterDialog : AbstractDialog
 	{
-		public Filter(DesignerApplication designerApplication) : base(designerApplication)
+		public FilterDialog(DesignerApplication designerApplication) : base(designerApplication)
 		{
 		}
 

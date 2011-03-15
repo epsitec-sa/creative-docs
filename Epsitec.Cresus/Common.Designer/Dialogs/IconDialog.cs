@@ -8,9 +8,9 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// <summary>
 	/// Dialogue permettant de choisir une icône.
 	/// </summary>
-	public class Icon : Abstract
+	public class IconDialog : AbstractDialog
 	{
-		public Icon(DesignerApplication designerApplication) : base(designerApplication)
+		public IconDialog(DesignerApplication designerApplication) : base(designerApplication)
 		{
 		}
 

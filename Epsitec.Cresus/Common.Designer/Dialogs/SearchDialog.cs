@@ -8,9 +8,9 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// <summary>
 	/// Dialogue permettant de choisir le texte de recherche.
 	/// </summary>
-	public class Search : Abstract
+	public class SearchDialog : AbstractDialog
 	{
-		public Search(DesignerApplication designerApplication) : base(designerApplication)
+		public SearchDialog(DesignerApplication designerApplication) : base(designerApplication)
 		{
 			this.designerApplication = designerApplication;
 		}

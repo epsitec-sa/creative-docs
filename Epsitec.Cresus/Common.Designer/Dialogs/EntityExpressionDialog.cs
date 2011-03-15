@@ -9,9 +9,9 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// <summary>
 	/// Dialogue permettant d'éditer une expression régulière dans l'éditeur d'entités.
 	/// </summary>
-	public class EntityExpression : Abstract
+	public class EntityExpressionDialog : AbstractDialog
 	{
-		public EntityExpression(DesignerApplication designerApplication) : base(designerApplication)
+		public EntityExpressionDialog(DesignerApplication designerApplication) : base(designerApplication)
 		{
 		}
 

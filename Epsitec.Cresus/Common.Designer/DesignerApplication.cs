@@ -88,26 +88,26 @@ namespace Epsitec.Common.Designer
 				
 				DesignerApplication.SetInstance(window, this);  // attache l'instance de DesignerApplication à la fenêtre
 
-				this.dlgNew              = new Dialogs.New(this);
-				this.dlgOpen             = new Dialogs.Open(this);
-				this.dlgGlyphs           = new Dialogs.Glyphs(this);
-				this.dlgIcon             = new Dialogs.Icon(this);
-				this.dlgFilter           = new Dialogs.Filter(this);
-				this.dlgSearch           = new Dialogs.Search(this);
-				this.dlgNewCulture       = new Dialogs.NewCulture(this);
-				this.dlgResourceTypeCode = new Dialogs.ResourceTypeCode(this);
-				this.dlgResourceSelector = new Dialogs.ResourceSelector(this);
-				this.dlgBindingSelector  = new Dialogs.BindingSelector(this);
-				this.dlgFieldName        = new Dialogs.ResourceName(this);
-				this.dlgEntityField      = new Dialogs.EntityField(this);
-				this.dlgLabelReplacement = new Dialogs.LabelReplacement(this);
-				this.dlgEntityComment    = new Dialogs.EntityComment (this);
-				this.dlgEntityParameters = new Dialogs.EntityParameters (this);
-				this.dlgEntityCreation   = new Dialogs.EntityCreation (this);
-				this.dlgEntityExpression = new Dialogs.EntityExpression(this);
-				this.dlgInitialMessage   = new Dialogs.InitialMessage (this);
-				this.dlgModuleInfo       = new Dialogs.ModuleInfo (this);
-				this.dlgSaveAllImages    = new Dialogs.SaveAllImages (this);
+				this.dlgNew              = new Dialogs.NewDialog(this);
+				this.dlgOpen             = new Dialogs.OpenDialog(this);
+				this.dlgGlyphs           = new Dialogs.GlyphsDialog(this);
+				this.dlgIcon             = new Dialogs.IconDialog(this);
+				this.dlgFilter           = new Dialogs.FilterDialog(this);
+				this.dlgSearch           = new Dialogs.SearchDialog(this);
+				this.dlgNewCulture       = new Dialogs.NewCultureDialog(this);
+				this.dlgResourceTypeCode = new Dialogs.ResourceTypeCodeDialog(this);
+				this.dlgResourceSelector = new Dialogs.ResourceSelectorDialog(this);
+				this.dlgBindingSelector  = new Dialogs.BindingSelectorDialog(this);
+				this.dlgFieldName        = new Dialogs.ResourceNameDialog(this);
+				this.dlgEntityField      = new Dialogs.EntityFieldDialog(this);
+				this.dlgLabelReplacement = new Dialogs.LabelReplacementDialog(this);
+				this.dlgEntityComment    = new Dialogs.EntityCommentDialog (this);
+				this.dlgEntityParameters = new Dialogs.EntityParametersDialog (this);
+				this.dlgEntityCreation   = new Dialogs.EntityCreationDialog (this);
+				this.dlgEntityExpression = new Dialogs.EntityExpressionDialog(this);
+				this.dlgInitialMessage   = new Dialogs.InitialMessageDialog (this);
+				this.dlgModuleInfo       = new Dialogs.ModuleInfoDialog (this);
+				this.dlgSaveAllImages    = new Dialogs.SaveAllImagesDialog (this);
 
 				this.dlgGlyphs.Closed         += this.HandleDlgClosed;
 				this.dlgFilter.Closed         += this.HandleDlgClosed;
@@ -2551,7 +2551,7 @@ namespace Epsitec.Common.Designer
 			return this.dlgBindingSelector.IsOk;
 		}
 
-		public Common.Dialogs.DialogResult DlgResourceSelector(Dialogs.ResourceSelector.Operation operation, Module baseModule, ResourceAccess.Type type, ref StructuredTypeClass typeClass, ref Druid resource, ref bool isNullable, List<Druid> exclude, Druid typeId)
+		public Common.Dialogs.DialogResult DlgResourceSelector(Dialogs.ResourceSelectorDialog.Operation operation, Module baseModule, ResourceAccess.Type type, ref StructuredTypeClass typeClass, ref Druid resource, ref bool isNullable, List<Druid> exclude, Druid typeId)
 		{
 			//	Ouvre le dialogue pour choisir une ressource (sous forme d'un Druid) d'un type à choix.
 			this.dlgResourceSelector.AccessOpen(operation, baseModule, type, resource, isNullable, exclude, typeId);
@@ -2598,7 +2598,7 @@ namespace Epsitec.Common.Designer
 			stype = this.dlgResourceTypeCode.SystemType;
 		}
 
-		public string DlgResourceName(Dialogs.ResourceName.Operation operation, Dialogs.ResourceName.Type type, string name)
+		public string DlgResourceName(Dialogs.ResourceNameDialog.Operation operation, Dialogs.ResourceNameDialog.Type type, string name)
 		{
 			//	Ouvre le dialogue pour choisir le nom d'un champ.
 			this.dlgFieldName.Initialise(operation, type, name);
@@ -2666,9 +2666,9 @@ namespace Epsitec.Common.Designer
 		public Common.Dialogs.DialogResult DlgEntityCreation(Module module, ref string name, ref StructuredTypeClass typeClass, ref Druid resource, ref DataLifetimeExpectancy lifetime, ref StructuredTypeFlags flags)
 		{
 			//	Ouvre le dialogue (en 3 volets) pour créer une entité.
-			this.dlgEntityCreation.ResourceName.Initialise (Dialogs.ResourceName.Operation.Create, Dialogs.ResourceName.Type.Entity, name);
+			this.dlgEntityCreation.ResourceName.Initialise (Dialogs.ResourceNameDialog.Operation.Create, Dialogs.ResourceNameDialog.Type.Entity, name);
 
-			this.dlgEntityCreation.ResourceSelector.AccessOpen (Dialogs.ResourceSelector.Operation.InheritEntities, module, Common.Designer.ResourceAccess.Type.Entities, resource, false, null, Druid.Empty);
+			this.dlgEntityCreation.ResourceSelector.AccessOpen (Dialogs.ResourceSelectorDialog.Operation.InheritEntities, module, Common.Designer.ResourceAccess.Type.Entities, resource, false, null, Druid.Empty);
 			this.dlgEntityCreation.ResourceSelector.StructuredTypeClass = typeClass;
 
 			this.dlgEntityCreation.EntityParameters.DataLifetimeExpectancy = lifetime;
@@ -2741,7 +2741,7 @@ namespace Epsitec.Common.Designer
 			return this.dlgSaveAllImages.Result;
 		}
 
-		public Dialogs.Search DialogSearch
+		public Dialogs.SearchDialog DialogSearch
 		{
 			get
 			{
@@ -2939,26 +2939,26 @@ namespace Epsitec.Common.Designer
 		private TabBook							bookModules;
 		private StatusBar						info;
 		private ResizeKnob						resize;
-		private Dialogs.New						dlgNew;
-		private Dialogs.Open					dlgOpen;
-		private Dialogs.Glyphs					dlgGlyphs;
-		private Dialogs.Icon					dlgIcon;
-		private Dialogs.Filter					dlgFilter;
-		private Dialogs.Search					dlgSearch;
-		private Dialogs.NewCulture				dlgNewCulture;
-		private Dialogs.ResourceTypeCode		dlgResourceTypeCode;
-		private Dialogs.ResourceSelector		dlgResourceSelector;
-		private Dialogs.BindingSelector			dlgBindingSelector;
-		private Dialogs.ResourceName			dlgFieldName;
-		private Dialogs.EntityField				dlgEntityField;
-		private Dialogs.LabelReplacement		dlgLabelReplacement;
-		private Dialogs.EntityComment			dlgEntityComment;
-		private Dialogs.EntityParameters		dlgEntityParameters;
-		private Dialogs.EntityCreation			dlgEntityCreation;
-		private Dialogs.EntityExpression		dlgEntityExpression;
-		private Dialogs.InitialMessage			dlgInitialMessage;
-		private Dialogs.ModuleInfo				dlgModuleInfo;
-		private Dialogs.SaveAllImages			dlgSaveAllImages;
+		private Dialogs.NewDialog						dlgNew;
+		private Dialogs.OpenDialog					dlgOpen;
+		private Dialogs.GlyphsDialog					dlgGlyphs;
+		private Dialogs.IconDialog					dlgIcon;
+		private Dialogs.FilterDialog					dlgFilter;
+		private Dialogs.SearchDialog					dlgSearch;
+		private Dialogs.NewCultureDialog				dlgNewCulture;
+		private Dialogs.ResourceTypeCodeDialog		dlgResourceTypeCode;
+		private Dialogs.ResourceSelectorDialog		dlgResourceSelector;
+		private Dialogs.BindingSelectorDialog			dlgBindingSelector;
+		private Dialogs.ResourceNameDialog			dlgFieldName;
+		private Dialogs.EntityFieldDialog				dlgEntityField;
+		private Dialogs.LabelReplacementDialog		dlgLabelReplacement;
+		private Dialogs.EntityCommentDialog			dlgEntityComment;
+		private Dialogs.EntityParametersDialog		dlgEntityParameters;
+		private Dialogs.EntityCreationDialog			dlgEntityCreation;
+		private Dialogs.EntityExpressionDialog		dlgEntityExpression;
+		private Dialogs.InitialMessageDialog			dlgInitialMessage;
+		private Dialogs.ModuleInfoDialog				dlgModuleInfo;
+		private Dialogs.SaveAllImagesDialog			dlgSaveAllImages;
 		private PanelsContext					context;
 		private DisplayMode						displayMode;
 		private Window							viewersWindow;

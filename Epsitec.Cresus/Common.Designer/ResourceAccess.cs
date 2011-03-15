@@ -684,7 +684,7 @@ namespace Epsitec.Common.Designer
 					bool isNullable = false;
 					StructuredTypeClass typeClass = StructuredTypeClass.Entity;
 
-					var subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Entities, this.ownerModule, Type.Entities, ref typeClass, ref entityId, ref isNullable, null, Druid.Empty);
+					var subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelectorDialog.Operation.Entities, this.ownerModule, Type.Entities, ref typeClass, ref entityId, ref isNullable, null, Druid.Empty);
 					if (subResult != Common.Dialogs.DialogResult.Yes)
 					{
 						return false;
@@ -709,7 +709,7 @@ namespace Epsitec.Common.Designer
 					bool isNullable = false;
 					StructuredTypeClass typeClass = StructuredTypeClass.None;
 
-					var subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Form, this.ownerModule, Type.Forms, ref typeClass, ref deltaBaseformId, ref isNullable, null, Druid.Empty);
+					var subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelectorDialog.Operation.Form, this.ownerModule, Type.Forms, ref typeClass, ref deltaBaseformId, ref isNullable, null, Druid.Empty);
 					if (subResult != Common.Dialogs.DialogResult.Yes)
 					{
 						return false;
@@ -721,7 +721,7 @@ namespace Epsitec.Common.Designer
 					isNullable = false;
 					typeClass = StructuredTypeClass.Entity;
 
-					subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Entities, this.ownerModule, Type.Entities, ref typeClass, ref entityId, ref isNullable, null, deltaBaseformId);
+					subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelectorDialog.Operation.Entities, this.ownerModule, Type.Entities, ref typeClass, ref entityId, ref isNullable, null, deltaBaseformId);
 					if (subResult != Common.Dialogs.DialogResult.Yes)
 					{
 						return false;

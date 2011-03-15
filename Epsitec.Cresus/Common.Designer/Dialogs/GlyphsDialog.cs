@@ -8,9 +8,9 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// Dialogue permettant de choisir un caractère quelconque à insérer dans
 	/// un texte en édition.
 	/// </summary>
-	public class Glyphs : Abstract
+	public class GlyphsDialog : AbstractDialog
 	{
-		public Glyphs(DesignerApplication designerApplication) : base(designerApplication)
+		public GlyphsDialog(DesignerApplication designerApplication) : base(designerApplication)
 		{
 			Font font = Font.DefaultFont;
 			this.fontFace  = font.FaceName;   // "Tahoma"

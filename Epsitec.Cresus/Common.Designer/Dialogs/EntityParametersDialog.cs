@@ -9,9 +9,9 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// <summary>
 	/// Dialogue permettant d'éditer les paramètres d'une entité.
 	/// </summary>
-	public class EntityParameters : Abstract
+	public class EntityParametersDialog : AbstractDialog
 	{
-		public EntityParameters(DesignerApplication designerApplication)
+		public EntityParametersDialog(DesignerApplication designerApplication)
 			: base (designerApplication)
 		{
 			this.titleEntity = "Exemple";

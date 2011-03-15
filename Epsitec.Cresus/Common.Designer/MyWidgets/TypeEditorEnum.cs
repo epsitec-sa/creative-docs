@@ -277,7 +277,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Crée une nouvelle valeur dans l'énumération.
 			string name = this.GetNewName();
-			name = this.module.DesignerApplication.DlgResourceName(Dialogs.ResourceName.Operation.Create, Dialogs.ResourceName.Type.Value, name);
+			name = this.module.DesignerApplication.DlgResourceName(Dialogs.ResourceNameDialog.Operation.Create, Dialogs.ResourceNameDialog.Type.Value, name);
 			if (string.IsNullOrEmpty(name))
 			{
 				return;

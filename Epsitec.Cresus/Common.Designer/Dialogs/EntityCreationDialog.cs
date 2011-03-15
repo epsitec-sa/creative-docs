@@ -9,18 +9,18 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// <summary>
 	/// Dialogue en 3 volets permettant de créer une entité.
 	/// </summary>
-	public class EntityCreation : Abstract
+	public class EntityCreationDialog : AbstractDialog
 	{
-		public EntityCreation(DesignerApplication designerApplication)
+		public EntityCreationDialog(DesignerApplication designerApplication)
 			: base (designerApplication)
 		{
-			this.resourceName     = new ResourceName     (this.designerApplication);
-			this.resourceSelector = new ResourceSelector (this.designerApplication);
-			this.entityParameters = new EntityParameters (this.designerApplication);
+			this.resourceName     = new ResourceNameDialog     (this.designerApplication);
+			this.resourceSelector = new ResourceSelectorDialog (this.designerApplication);
+			this.entityParameters = new EntityParametersDialog (this.designerApplication);
 		}
 
 
-		public ResourceName ResourceName
+		public ResourceNameDialog ResourceName
 		{
 			get
 			{
@@ -28,7 +28,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-		public ResourceSelector ResourceSelector
+		public ResourceSelectorDialog ResourceSelector
 		{
 			get
 			{
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-		public EntityParameters EntityParameters
+		public EntityParametersDialog EntityParameters
 		{
 			get
 			{
@@ -236,9 +236,9 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		private readonly ResourceName			resourceName;
-		private readonly ResourceSelector		resourceSelector;
-		private readonly EntityParameters		entityParameters;
+		private readonly ResourceNameDialog			resourceName;
+		private readonly ResourceSelectorDialog		resourceSelector;
+		private readonly EntityParametersDialog		entityParameters;
 
 		private bool							isEditOk;
 		private bool							closed;

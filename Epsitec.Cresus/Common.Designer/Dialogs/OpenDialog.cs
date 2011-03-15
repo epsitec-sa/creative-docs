@@ -10,7 +10,7 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// <summary>
 	/// Dialogue permettant de choisir le module à ouvrir.
 	/// </summary>
-	public class Open : Abstract
+	public class OpenDialog : AbstractDialog
 	{
 		private enum ModuleState
 		{
@@ -20,7 +20,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			Locked,
 		}
 
-		public Open(DesignerApplication designerApplication) : base(designerApplication)
+		public OpenDialog(DesignerApplication designerApplication) : base(designerApplication)
 		{
 			this.moduleInfosLive = new Types.Collections.ObservableList<ResourceModuleInfo>();
 			this.moduleInfosShowed = new CollectionView(this.moduleInfosLive);
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				//	Bande horizontale pour la recherche.
 				{
-					this.filterController = new Controllers.FilterController (Open.FilterUnifier);
+					this.filterController = new Controllers.FilterController (OpenDialog.FilterUnifier);
 					
 					var frame = this.filterController.CreateUI (this.window.Root);
 					frame.Margins = new Margins (0, 0, 0, 8);
@@ -414,7 +414,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			ResourceManagerPool pool = this.designerApplication.ResourceManagerPool;
 
 			string path = pool.GetRootRelativePath(info.FullId.Path);
-			path = Open.FilterUnifier (path);
+			path = OpenDialog.FilterUnifier (path);
 			path = path.Replace ("%app%/", "");
 
 			return path;
@@ -549,7 +549,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		private class ItemViewFactory : UI.AbstractItemViewFactory
 		{
 			//	Cette classe peuple les colonnes du tableau.
-			public ItemViewFactory(Open owner)
+			public ItemViewFactory(OpenDialog owner)
 			{
 				this.owner = owner;
 			}
@@ -600,7 +600,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				return main;
 			}
 
-			Open owner;
+			OpenDialog owner;
 		}
 
 

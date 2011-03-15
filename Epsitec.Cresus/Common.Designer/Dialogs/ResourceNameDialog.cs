@@ -9,7 +9,7 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// <summary>
 	/// Dialogue permettant de choisir le nom d'une ressource qui va être créée.
 	/// </summary>
-	public class ResourceName : Abstract
+	public class ResourceNameDialog : AbstractDialog
 	{
 		public enum Operation
 		{
@@ -25,7 +25,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		public ResourceName(DesignerApplication designerApplication) : base(designerApplication)
+		public ResourceNameDialog(DesignerApplication designerApplication) : base(designerApplication)
 		{
 		}
 

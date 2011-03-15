@@ -8,9 +8,9 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// <summary>
 	/// Dialogue permettant d'éditer les informations d'un module.
 	/// </summary>
-	public class SaveAllImages : Abstract
+	public class SaveAllImagesDialog : AbstractDialog
 	{
-		public SaveAllImages(DesignerApplication designerApplication)
+		public SaveAllImagesDialog(DesignerApplication designerApplication)
 			: base (designerApplication)
 		{
 			this.entitySamples = new List<EntitiesEditor.EntitySample> ();

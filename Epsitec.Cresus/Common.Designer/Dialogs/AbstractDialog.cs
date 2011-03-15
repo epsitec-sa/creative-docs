@@ -7,9 +7,9 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// <summary>
 	/// Classe de base.
 	/// </summary>
-	public abstract class Abstract
+	public abstract class AbstractDialog
 	{
-		public Abstract(DesignerApplication designerApplication)
+		public AbstractDialog(DesignerApplication designerApplication)
 		{
 			this.designerApplication = designerApplication;
 			this.parentWindow = designerApplication.Window;

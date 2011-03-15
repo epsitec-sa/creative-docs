@@ -9,9 +9,9 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// <summary>
 	/// Dialogue permettant de créer ou de choisir un Caption de remplacement pour l'éditeur de Forms.
 	/// </summary>
-	public class LabelReplacement : Abstract
+	public class LabelReplacementDialog : AbstractDialog
 	{
-		public LabelReplacement(DesignerApplication designerApplication) : base(designerApplication)
+		public LabelReplacementDialog(DesignerApplication designerApplication) : base(designerApplication)
 		{
 		}
 

@@ -8,9 +8,9 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// <summary>
 	/// Dialogue permettant d'afficher le message initial contenant des liens hypertexte.
 	/// </summary>
-	public class InitialMessage : Abstract
+	public class InitialMessageDialog : AbstractDialog
 	{
-		public InitialMessage(DesignerApplication designerApplication) : base(designerApplication)
+		public InitialMessageDialog(DesignerApplication designerApplication) : base(designerApplication)
 		{
 		}
 

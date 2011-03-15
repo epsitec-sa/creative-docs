@@ -9,7 +9,7 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// <summary>
 	/// Dialogue permettant de choisir une ressource de type quelconque.
 	/// </summary>
-	public class ResourceSelector : Abstract
+	public class ResourceSelectorDialog : AbstractDialog
 	{
 		public enum Operation
 		{
@@ -22,7 +22,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		public ResourceSelector(DesignerApplication designerApplication) : base(designerApplication)
+		public ResourceSelectorDialog(DesignerApplication designerApplication) : base(designerApplication)
 		{
 			this.allModules = new List<Module> ();
 			this.allIndexesInModules = new List<int> ();
@@ -515,7 +515,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			int sel = -1;
 
-			if (ResourceSelector.showAllModules)
+			if (ResourceSelectorDialog.showAllModules)
 			{
 				var currentModule = this.module;
 
@@ -590,7 +590,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		private void UpdateButtons()
 		{
 			//	Met à jour tous les boutons.
-			this.allModulesButton.ActiveState = ResourceSelector.showAllModules ? ActiveState.Yes : ActiveState.No;
+			this.allModulesButton.ActiveState = ResourceSelectorDialog.showAllModules ? ActiveState.Yes : ActiveState.No;
 
 			//	Met à jour le bouton "Utiliser".
 			if (this.buttonUse != null)
@@ -688,14 +688,14 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.leftContainer.Enable = this.IsInherit;
 				this.rightContainer.Enable = this.IsInherit;
-				this.listModules.Enable = this.IsInherit && !ResourceSelector.showAllModules;
+				this.listModules.Enable = this.IsInherit && !ResourceSelectorDialog.showAllModules;
 				this.listResources.Enable = this.IsInherit;
 			}
 			else
 			{
 				this.leftContainer.Enable = true;
 				this.rightContainer.Enable = true;
-				this.listModules.Enable = !ResourceSelector.showAllModules;
+				this.listModules.Enable = !ResourceSelectorDialog.showAllModules;
 				this.listResources.Enable = true;
 			}
 		}
@@ -754,7 +754,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				{
 					int sel = this.listResources.SelectedItemIndex;
 
-					if (ResourceSelector.showAllModules)
+					if (ResourceSelectorDialog.showAllModules)
 					{
 						var module = this.allModules[sel];
 						this.AccessChange (module);
@@ -837,7 +837,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleAllModulesButtonClicked(object sender, MessageEventArgs e)
 		{
-			ResourceSelector.showAllModules = !ResourceSelector.showAllModules;
+			ResourceSelectorDialog.showAllModules = !ResourceSelectorDialog.showAllModules;
 
 			this.UpdateButtons ();
 			this.UpdateRadios();

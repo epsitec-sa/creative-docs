@@ -7,9 +7,9 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// <summary>
 	/// Dialogue permettant d'éditer les informations d'un module.
 	/// </summary>
-	public class ModuleInfo : Abstract
+	public class ModuleInfoDialog : AbstractDialog
 	{
-		public ModuleInfo(DesignerApplication designerApplication)
+		public ModuleInfoDialog(DesignerApplication designerApplication)
 			: base (designerApplication)
 		{
 		}

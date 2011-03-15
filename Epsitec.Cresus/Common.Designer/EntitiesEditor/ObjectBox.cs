@@ -1691,7 +1691,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Module module = this.editor.Module;
 			StructuredTypeClass typeClass = StructuredTypeClass.Interface;
 			
-			var result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InterfaceEntities, module, ResourceAccess.Type.Entities, ref typeClass, ref druid, ref isNullable, exclude, Druid.Empty);
+			var result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelectorDialog.Operation.InterfaceEntities, module, ResourceAccess.Type.Entities, ref typeClass, ref druid, ref isNullable, exclude, Druid.Empty);
 			
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{

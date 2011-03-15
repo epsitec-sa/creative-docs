@@ -8,9 +8,9 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// <summary>
 	/// Dialogue permettant de choisir la culture à créer.
 	/// </summary>
-	public class NewCulture : Abstract
+	public class NewCultureDialog : AbstractDialog
 	{
-		public NewCulture(DesignerApplication designerApplication) : base(designerApplication)
+		public NewCultureDialog(DesignerApplication designerApplication) : base(designerApplication)
 		{
 		}
 

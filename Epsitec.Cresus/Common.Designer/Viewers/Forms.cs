@@ -1720,7 +1720,7 @@ namespace Epsitec.Common.Designer.Viewers
 				return;
 			}
 			StructuredTypeClass typeClass = StructuredTypeClass.None;
-			var result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Form, module, ResourceAccess.Type.Forms, ref typeClass, ref druid, ref isNullable, null, typeId);
+			var result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelectorDialog.Operation.Form, module, ResourceAccess.Type.Forms, ref typeClass, ref druid, ref isNullable, null, typeId);
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;
@@ -2014,7 +2014,7 @@ namespace Epsitec.Common.Designer.Viewers
 			StructuredTypeClass typeClass = StructuredTypeClass.None;
 			Druid druid = Druid.Empty;
 			bool isNullable = false;
-			var result = this.designerApplication.DlgResourceSelector(Epsitec.Common.Designer.Dialogs.ResourceSelector.Operation.Selection, this.module, ResourceAccess.Type.Commands, ref typeClass, ref druid, ref isNullable, null, Druid.Empty);
+			var result = this.designerApplication.DlgResourceSelector(Epsitec.Common.Designer.Dialogs.ResourceSelectorDialog.Operation.Selection, this.module, ResourceAccess.Type.Commands, ref typeClass, ref druid, ref isNullable, null, Druid.Empty);
 			if (result != Common.Dialogs.DialogResult.Yes)  // annuler ?
 			{
 				return;

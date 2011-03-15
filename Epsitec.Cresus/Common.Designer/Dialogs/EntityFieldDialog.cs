@@ -9,9 +9,9 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// <summary>
 	/// Dialogue permettant de définir entièrement un champ dans une entité.
 	/// </summary>
-	public class EntityField : Abstract
+	public class EntityFieldDialog : AbstractDialog
 	{
-		public EntityField(DesignerApplication designerApplication) : base(designerApplication)
+		public EntityFieldDialog(DesignerApplication designerApplication) : base(designerApplication)
 		{
 			this.allModules = new List<Module> ();
 			this.allIndexesInModules = new List<int> ();
@@ -539,7 +539,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			int sel = -1;
 
-			if (EntityField.showAllModules)
+			if (EntityFieldDialog.showAllModules)
 			{
 				var currentModule = this.module;
 
@@ -614,8 +614,8 @@ namespace Epsitec.Common.Designer.Dialogs
 		private void UpdateButtons()
 		{
 			//	Met à jour tous les boutons.
-			this.allModulesButton.ActiveState = EntityField.showAllModules ? ActiveState.Yes : ActiveState.No;
-			this.listModules.Enable = !EntityField.showAllModules;
+			this.allModulesButton.ActiveState = EntityFieldDialog.showAllModules ? ActiveState.Yes : ActiveState.No;
+			this.listModules.Enable = !EntityFieldDialog.showAllModules;
 
 			//	Met à jour le bouton "Utiliser".
 			this.buttonUse.Enable = (this.listResources.SelectedItemIndex != -1 && this.glyphFieldName.GlyphShape == GlyphShape.Accept);
@@ -652,7 +652,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				{
 					int sel = this.listResources.SelectedItemIndex;
 
-					if (EntityField.showAllModules)
+					if (EntityFieldDialog.showAllModules)
 					{
 						var module = this.allModules[sel];
 						this.AccessChange (module);
@@ -769,7 +769,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleAllModulesButtonClicked(object sender, MessageEventArgs e)
 		{
-			EntityField.showAllModules = !EntityField.showAllModules;
+			EntityFieldDialog.showAllModules = !EntityFieldDialog.showAllModules;
 
 			this.UpdateButtons ();
 			this.UpdateRadios ();

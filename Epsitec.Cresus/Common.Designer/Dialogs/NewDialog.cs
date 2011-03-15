@@ -9,9 +9,9 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// <summary>
 	/// Dialogue permettant de créer un nouveau module.
 	/// </summary>
-	public class New : Abstract
+	public class NewDialog : AbstractDialog
 	{
-		public New(DesignerApplication designerApplication) : base(designerApplication)
+		public NewDialog(DesignerApplication designerApplication) : base(designerApplication)
 		{
 		}
 
