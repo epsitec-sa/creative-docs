@@ -6,10 +6,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Bricks
 {
-	public class InputGroupBrick<TSource, TField, TParent> : InternalInputGroupBrick<TSource, TField, InputGroupBrick<TSource, TField, TParent>, TParent>
+	public class HorizontalGroupBrick<TSource, TField, TParent> : InputHorizontalGroupBrick<TSource, TField, HorizontalGroupBrick<TSource, TField, TParent>, TParent>
 				where TParent : Brick
 	{
-		public InputGroupBrick(TParent parent)
+		public HorizontalGroupBrick(TParent parent)
 			: base (parent)
 		{
 		}

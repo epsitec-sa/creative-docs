@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				this.data  = data;
 				this.item  = item;
 				this.root  = root;
-				this.actions = new List<System.Action<EditionTile, UIBuilder>> ();
+				this.actions = new List<System.Action<FrameBox, UIBuilder>> ();
 				this.inputProperties = Brick.GetProperties (this.root, BrickPropertyKey.Input);
 			}
 			
@@ -160,7 +160,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 			private void CreateActionsForInput(Brick brick, BrickPropertyCollection inputProperties)
 			{
-				var fieldProperties = Brick.GetProperties (brick, BrickPropertyKey.Field, BrickPropertyKey.InputGroup);
+				var fieldProperties = Brick.GetProperties (brick, BrickPropertyKey.Field, BrickPropertyKey.HorizontalGroup);
 
 				foreach (var property in fieldProperties)
 				{
@@ -170,8 +170,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 							this.CreateActionForInputField (property.ExpressionValue, fieldProperties);
 							break;
 
-						case BrickPropertyKey.InputGroup:
-							this.CreateActionsForInputGroup (property);
+						case BrickPropertyKey.HorizontalGroup:
+							this.CreateActionsForHorizontalGroup (property);
 							break;
 					}
 				}
@@ -183,7 +183,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				}
 			}
 
-			private void CreateActionsForInputGroup(BrickProperty property)
+			private void CreateActionsForHorizontalGroup(BrickProperty property)
 			{
 				int index = this.actions.Count ();
 
@@ -191,7 +191,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 				this.CreateActionsForInput (property.Brick, null);
 
-				var actions = new List<System.Action<EditionTile, UIBuilder>> ();
+				var actions = new List<System.Action<FrameBox, UIBuilder>> ();
 
 				while (index < this.actions.Count)
 				{
@@ -204,11 +204,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 					return;
 				}
 
-				System.Action<EditionTile, UIBuilder> groupAction =
+				System.Action<FrameBox, UIBuilder> groupAction =
 					(tile, builder) =>
 					{
-						builder.CreateGroup (tile, title);
-						actions.ForEach (x => x (tile, builder));
+						var group = builder.CreateGroup (tile as EditionTile, title);
+						group.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+						actions.ForEach (x => x (group, builder));
 					};
 
 				this.actions.Add (groupAction);
@@ -265,7 +266,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			
 			private void CreateActionForSeparator()
 			{
-				this.actions.Add ((tile, builder) => builder.CreateMargin (tile, horizontalSeparator: true));
+				this.actions.Add ((tile, builder) => builder.CreateMargin (tile as EditionTile, horizontalSeparator: true));
 			}
 
 			private void RecordActions()
@@ -338,7 +339,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			private readonly BusinessContext business;
 			private readonly TileDataItems data;
 			private readonly Brick root;
-			private readonly List<System.Action<EditionTile, UIBuilder>> actions;
+			private readonly List<System.Action<FrameBox, UIBuilder>> actions;
 			private readonly BrickPropertyCollection inputProperties;
 			
 			private TileDataItem item;

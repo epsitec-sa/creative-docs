@@ -70,12 +70,23 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 				return new NonNullableMarshaler<TField> (this.CreateGetter (), this.CreateSetter (), this.lambda);
 			}
 
-			public override object CreateUI(EditionTile tile, UIBuilder builder)
+			public override object CreateUI(FrameBox frame, UIBuilder builder)
 			{
+				var tile      = frame as EditionTile;
 				var marshaler = this.CreateMarshaler ();
 				var caption   = DynamicFactory.GetInputCaption (this.lambda);
 				var title     = this.title ?? DynamicFactory.GetInputTitle (caption);
-				var widget    = builder.CreateTextField (tile, width, title, marshaler);
+
+				TextFieldEx widget;
+
+				if (tile != null)
+				{
+					widget = builder.CreateTextField (tile, width, title, marshaler);
+				}
+				else
+				{
+					widget = builder.CreateTextField (frame, DockStyle.Stacked, width, marshaler);
+				}
 
 				if ((caption != null) &&
 					(caption.HasDescription))

@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			this.AddBrick ()
 				.Input ()
-				  .InputGroup ("N° de client (principal, externe et interne)")
+				  .HorizontalGroup ("N° de client (principal, externe et interne)")
 				    .Field (x => x.IdA).Width (74)
 				    .Field (x => x.IdB).Width (74)
 				    .Field (x => x.IdC).Width (74)

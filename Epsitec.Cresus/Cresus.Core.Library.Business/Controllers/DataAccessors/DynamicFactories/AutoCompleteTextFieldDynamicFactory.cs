@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 				return context.CreateEntityAndRegisterAsEmpty<TField> ();
 			}
 
-			public override object CreateUI(EditionTile tile, UIBuilder builder)
+			public override object CreateUI(FrameBox frame, UIBuilder builder)
 			{
 				var sel = new SelectionController<TField> (this.business)
 				{
@@ -92,9 +92,10 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 					ReferenceController = this.CreateReferenceController (),
 				};
 
-				var caption= DynamicFactory.GetInputCaption (this.lambda);
-				var title  = this.title ?? DynamicFactory.GetInputTitle (caption);
-				var widget = builder.CreateAutoCompleteTextField<TField> (tile, title, sel);
+				var tile    = frame as EditionTile;
+				var caption = DynamicFactory.GetInputCaption (this.lambda);
+				var title   = this.title ?? DynamicFactory.GetInputTitle (caption);
+				var widget  = builder.CreateAutoCompleteTextField<TField> (tile, title, sel);
 
 				if ((caption != null) &&
 					(caption.HasDescription))

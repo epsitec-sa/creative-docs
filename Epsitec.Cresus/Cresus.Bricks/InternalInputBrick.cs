@@ -25,14 +25,16 @@ namespace Epsitec.Cresus.Bricks
 			return this as TSelf;
 		}
 
-		public InputGroupBrick<TField, TField, TSelf> InputGroup(string value)
+		public HorizontalGroupBrick<TField, TField, TSelf> HorizontalGroup(string value)
 		{
-			return new InputGroupBrick<TField, TField, TSelf> (this as TSelf).Title (value);
+			var group = new HorizontalGroupBrick<TField, TField, TSelf> (this as TSelf);
+			group.AddProperty (new BrickProperty (BrickPropertyKey.Title, value));
+			return group;
 		}
 
-		public InputGroupBrick<TField, TField, TSelf> InputGroup()
+		public HorizontalGroupBrick<TField, TField, TSelf> HorizontalGroup()
 		{
-			return new InputGroupBrick<TField, TField, TSelf> (this as TSelf);
+			return new HorizontalGroupBrick<TField, TField, TSelf> (this as TSelf);
 		}
 
 		public TSelf Field<TResult>(Expression<System.Func<TField, TResult>> expression)

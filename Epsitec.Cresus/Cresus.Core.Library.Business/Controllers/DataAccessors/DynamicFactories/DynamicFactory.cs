@@ -2,8 +2,9 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
@@ -15,7 +16,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 {
 	internal abstract class DynamicFactory
 	{
-		public abstract object CreateUI(EditionTile tile, UIBuilder builder);
+		public abstract object CreateUI(FrameBox tile, UIBuilder builder);
 		
 		public static Caption GetInputCaption(LambdaExpression expression)
 		{
