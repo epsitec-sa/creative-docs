@@ -60,6 +60,21 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 		}
 
+
+		/// <summary>
+		/// Opens a linked sub-view (if any). This gets called by the <see cref="DataViewController"/>
+		/// after this controller's view was successfully recorded in a data view column.
+		/// </summary>
+		public override void OpenLinkedSubView()
+		{
+			var summaryTiles   = this.TileContainer.Children.OfType<TitleTile> ().SelectMany (x => x.Items.OfType<SummaryTile> ());
+			var defaultSummary = summaryTiles.FirstOrDefault ();
+
+			if (defaultSummary != null)
+			{
+				defaultSummary.ToggleSubView (this.Orchestrator, this);
+			}
+		}
 		
 		protected void ReopenSubView(params NavigationPathElement[] elements)
 		{

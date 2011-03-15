@@ -528,6 +528,7 @@
     <Compile Include="Support\Resources.cs" />
     <Compile Include="Support\ResourceSetMode.cs" />
     <Compile Include="Support\ResourceTextMode.cs" />
+    <Compile Include="Support\SafeCounter.cs" />
     <Compile Include="Support\SerialAlgorithm.cs" />
     <Compile Include="Support\Serialization\Converters\BinaryArrayConverter.cs" />
     <Compile Include="Support\Serialization\Helper.cs" />

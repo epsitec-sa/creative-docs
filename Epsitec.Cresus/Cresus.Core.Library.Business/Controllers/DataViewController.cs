@@ -15,6 +15,7 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -29,7 +30,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			: base ("Data", orchestrator)
 		{
 			this.viewControllers = new Stack<CoreViewController> ();
-			
+			this.pushSafeRecursion = new SafeCounter ();
 			this.frame = new FrameBox ();
 			this.viewLayoutController = new ViewLayoutController (this.Name + ".ViewLayout", this.frame);
 		}
@@ -111,7 +112,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.Navigator.Add (leaf, controller);
 
-			this.PushViewController (controller.GetSiblingController ());
+			this.pushSafeRecursion.IfZero (controller.OpenLinkedSubView);
 		}
 
 		/// <summary>
@@ -408,6 +409,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly Stack<CoreViewController>	viewControllers;
 		private readonly ViewLayoutController		viewLayoutController;
 		private readonly FrameBox					frame;
+		private readonly SafeCounter				pushSafeRecursion;
 		
 		private Scrollable							scrollable;
 	}

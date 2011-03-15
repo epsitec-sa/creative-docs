@@ -186,9 +186,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			return this;
 		}
 
-		public virtual CoreViewController GetSiblingController()
+		/// <summary>
+		/// Opens a linked sub-view (if any). This gets called by the <see cref="DataViewController"/>
+		/// after this controller's view was successfully recorded in a data view column.
+		/// </summary>
+		public virtual void OpenLinkedSubView()
 		{
-			return null;
 		}
 
 		private IEnumerable<CoreViewController> GetCoreViewControllers()

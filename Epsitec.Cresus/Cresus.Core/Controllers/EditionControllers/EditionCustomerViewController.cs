@@ -4,7 +4,6 @@
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Factories;
-using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -31,19 +30,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			this.AddBrick (x => x.Relation)
 				.Icon ("none");
-		}
-
-		public override CoreViewController GetSiblingController()
-		{
-			var summaryTiles   = this.TileContainer.Children.OfType<TitleTile> ().SelectMany (x => x.Items.OfType<SummaryTile> ());
-			var defaultSummary = summaryTiles.FirstOrDefault ();
-
-			if (defaultSummary != null)
-			{
-				defaultSummary.ToggleSubView (this.Orchestrator, this);
-			}
-
-			return null;
 		}
 	}
 }
