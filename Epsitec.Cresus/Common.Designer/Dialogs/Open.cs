@@ -46,51 +46,16 @@ namespace Epsitec.Common.Designer.Dialogs
 				resize.Margins = new Margins (0, -8, 0, -8);
 				ToolTip.Default.SetToolTip (resize, Res.Strings.Dialog.Tooltip.Resize);
 
-				//	Barre supérieure de recherche.
+				//	Bande horizontale pour la recherche.
 				{
-					FrameBox topFrame = new FrameBox
-					{
-						Parent = this.window.Root,
-						Dock = DockStyle.Top,
-						Margins = new Margins (0, 0, 0, 6),
-						TabIndex = 1,
-						TabNavigationMode = TabNavigationMode.ForwardTabPassive,
-					};
-
-					StaticText label = new StaticText
-					{
-						Parent = topFrame,
-						Dock = DockStyle.Left,
-						PreferredWidth = 64,
-						Text = "Rechercher",
-						ContentAlignment = ContentAlignment.MiddleLeft,
-					};
-
-					this.filterTextField = new TextField
-					{
-						Parent = topFrame,
-						Dock = DockStyle.Fill,
-						TabIndex = 1,
-						TabNavigationMode = TabNavigationMode.ActivateOnTab,
-					};
-
-					var clearButton = new GlyphButton
-					{
-						Parent = topFrame,
-						GlyphShape = GlyphShape.Close,
-						Dock = DockStyle.Right,
-						Margins = new Margins (1, 0, 0, 0),
-					};
-
-					clearButton.Clicked += delegate
-					{
-						this.filterTextField.Text = null;
-						this.filterTextField.SelectAll ();
-						this.filterTextField.Focus ();
-					};
+					this.filterController = new Controllers.FilterController ();
+					
+					var frame = this.filterController.CreateUI (this.window.Root);
+					frame.Margins = new Margins (0, 0, 0, 8);
+					frame.TabIndex = 1;
+					
+					this.filterController.FilterChanged += new EventHandler (this.HandleFilterControllerChanged);
 				}
-
-				this.filterTextField.TextChanged += this.HandlerFilterTextChanged;
 
 				//	Tableau principal.
 				StructuredType st = new StructuredType ();
@@ -187,7 +152,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonOpen.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
 
-			this.filterTextField.Text = "";
+			this.filterController.ClearFilter ();
 
 			this.UpdateModules(true);
 			this.moduleInfosShowed.MoveCurrentToPosition(-1);
@@ -195,11 +160,13 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.window.Root.SetFocusOnTabWidget ();
 			this.window.ShowDialog();
+
+			this.filterController.SetFocus ();
 		}
 
-		private void HandlerFilterTextChanged(object sender)
+		private void HandleFilterControllerChanged(object sender)
 		{
-			string filter = Open.GetComparableText (this.filterTextField.FormattedText.ToSimpleText ());
+			string filter = Open.GetComparableText (this.filterController.Filter);
 
 			this.filterPredicate = moduleInfo => string.IsNullOrWhiteSpace (filter) || Open.GetComparableText (this.GetModulePath (moduleInfo)).Contains (filter);
 			this.UpdateModules (false);
@@ -643,7 +610,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		private bool									showLocked;
 		private bool									showSecondary;
 
-		private TextField								filterTextField;
+		private Controllers.FilterController			filterController;
 		private System.Predicate<ResourceModuleInfo>	filterPredicate;
 	}
 }

@@ -80,9 +80,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.window.ShowDialog();
 
-			this.resourceFilterField.Text = null;
-			this.resourceFilterField.SelectAll ();
-			this.resourceFilterField.Focus ();
+			this.filterController.ClearFilter ();
+			this.filterController.SetFocus ();
 		}
 
 		public void CreateUI(Widget parent)
@@ -198,32 +197,16 @@ namespace Epsitec.Common.Designer.Dialogs
 			header2.Dock = DockStyle.Top;
 			header2.Margins = new Margins (0, 0, 5, 5);
 
-			var band = new FrameBox (this.rightContainer);
-			band.Dock = DockStyle.Top;
-			band.Margins = new Margins (0, 0, 8, 8);
-			band.TabIndex = tabIndex++;
-
-			var t = new StaticText (band);
-			t.Text = "Rechercher";
-			t.PreferredWidth = 64;
-			t.Dock = DockStyle.Left;
-
-			this.resourceFilterField = new TextField (band);
-			this.resourceFilterField.Dock = DockStyle.Fill;
-			this.resourceFilterField.TextChanged += new EventHandler (this.HandleResourceFilterFieldTextChanged);
-			this.resourceFilterField.TabIndex = tabIndex++;
-
-			var clearButton = new GlyphButton (band);
-			clearButton.GlyphShape = GlyphShape.Close;
-			clearButton.Dock = DockStyle.Right;
-			clearButton.Margins = new Margins (1, 0, 0, 0);
-
-			clearButton.Clicked += delegate
+			//	Bande horizontale pour la recherche.
 			{
-				this.resourceFilterField.Text = null;
-				this.resourceFilterField.SelectAll ();
-				this.resourceFilterField.Focus ();
-			};
+				this.filterController = new Controllers.FilterController ();
+
+				var frame = this.filterController.CreateUI (this.rightContainer);
+				frame.Margins = new Margins (0, 0, 8, 8);
+				frame.TabIndex = tabIndex++;
+				
+				this.filterController.FilterChanged += new EventHandler (this.HandleFilterControllerChanged);
+			}
 
 			this.listResources = new ScrollList (this.rightContainer);
 			this.listResources.Dock = DockStyle.Fill;
@@ -601,14 +584,14 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private bool IsFiltered(string name)
 		{
-			if (string.IsNullOrWhiteSpace (this.resourceFilterField.Text))
+			if (this.filterController.HasFilter)
 			{
-				return false;
+				string filter = this.filterController.Filter.ToLower ();
+				return !name.ToLower ().Contains (filter);
 			}
 			else
 			{
-				string filter = this.resourceFilterField.Text.ToLower ();
-				return !name.ToLower ().Contains (filter);
+				return false;
 			}
 		}
 
@@ -870,8 +853,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.UpdateArray();
 			this.UpdateInherit ();
 
-			this.resourceFilterField.SelectAll ();
-			this.resourceFilterField.Focus ();
+			this.filterController.SetFocus ();
 		}
 
 		private void HandleListModulesSelected(object sender)
@@ -904,7 +886,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-		private void HandleResourceFilterFieldTextChanged(object sender)
+		private void HandleFilterControllerChanged(object sender)
 		{
 			this.UpdateArray ();
 		}
@@ -979,7 +961,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		private ScrollList						listModules;
 		private VSplitter						splitter;
 		private FrameBox						rightContainer;
-		private TextField						resourceFilterField;
+		private Controllers.FilterController	filterController;
 		private ScrollList						listResources;
 		private CheckButton						buttonIsNullable;
 		private Button							buttonUse;

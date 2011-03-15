@@ -82,33 +82,16 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.comboFilterField.ComboClosed += this.HandleComboFilterFieldClosed;
 				this.UpdateFilter ();
 
+				//	Bande horizontale pour la recherche.
 				{
-					var band = new FrameBox (this.rightPanel);
-					band.Dock = DockStyle.Top;
-					band.Margins = new Margins (0, 0, 0, 8);
-					band.TabIndex = tabIndex++;
+					this.filterController = new Controllers.FilterController ();
 
-					this.filterLabel = new StaticText (band);
-					this.filterLabel.Text = "Rechercher";
-					this.filterLabel.PreferredWidth = 64;
-					this.filterLabel.Dock = DockStyle.Left;
-
-					this.filterField = new TextField (band);
-					this.filterField.Dock = DockStyle.Fill;
-					this.filterField.TextChanged += new EventHandler (this.HandleFilterFieldTextChanged);
-					this.filterField.TabIndex = tabIndex++;
-
-					this.filterClearButton = new GlyphButton (band);
-					this.filterClearButton.GlyphShape = GlyphShape.Close;
-					this.filterClearButton.Dock = DockStyle.Right;
-					this.filterClearButton.Margins = new Margins (1, 0, 0, 0);
-
-					this.filterClearButton.Clicked += delegate
-					{
-						this.filterField.Text = null;
-						this.filterField.SelectAll ();
-						this.filterField.Focus ();
-					};
+					this.filterFrame = this.filterController.CreateUI (this.rightPanel);
+					this.filterFrame.Margins = new Margins (0, 0, 0, 8);
+					this.filterFrame.TabIndex = tabIndex++;
+					this.filterFrame.TabIndex = tabIndex++;
+					
+					this.filterController.FilterChanged += new EventHandler (this.HandleFilterControllerChanged);
 				}
 
 				this.enumList = new ScrollList (this.rightPanel);
@@ -227,12 +210,10 @@ namespace Epsitec.Common.Designer.Dialogs
 				}
 			}
 
-			this.checkNative.Enable       = (this.typeEdited == TypeCode.Enum);
-			this.filterLabel.Enable       = (this.typeEdited == TypeCode.Enum && this.checkNative.ActiveState == ActiveState.Yes);
-			this.filterField.Enable       = (this.typeEdited == TypeCode.Enum && this.checkNative.ActiveState == ActiveState.Yes);
-			this.filterClearButton.Enable = (this.typeEdited == TypeCode.Enum && this.checkNative.ActiveState == ActiveState.Yes);
-			this.comboFilterField.Enable  = (this.typeEdited == TypeCode.Enum && this.checkNative.ActiveState == ActiveState.Yes);
-			this.enumList.Enable          = (this.typeEdited == TypeCode.Enum && this.checkNative.ActiveState == ActiveState.Yes);
+			this.checkNative.Enable      = (this.typeEdited == TypeCode.Enum);
+			this.filterFrame.Enable      = (this.typeEdited == TypeCode.Enum && this.checkNative.ActiveState == ActiveState.Yes);
+			this.comboFilterField.Enable = (this.typeEdited == TypeCode.Enum && this.checkNative.ActiveState == ActiveState.Yes);
+			this.enumList.Enable         = (this.typeEdited == TypeCode.Enum && this.checkNative.ActiveState == ActiveState.Yes);
 		}
 
 		private void UpdateExtended()
@@ -321,14 +302,14 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private bool IsFiltered(string name)
 		{
-			if (string.IsNullOrWhiteSpace (this.filterField.Text))
+			if (this.filterController.HasFilter)
 			{
-				return false;
+				string filter = this.filterController.Filter.ToLower ();
+				return !name.ToLower ().Contains (filter);
 			}
 			else
 			{
-				string filter = this.filterField.Text.ToLower ();
-				return !name.ToLower ().Contains (filter);
+				return false;
 			}
 		}
 
@@ -354,7 +335,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.UpdateButtons();
 		}
 
-		private void HandleFilterFieldTextChanged(object sender)
+		private void HandleFilterControllerChanged(object sender)
 		{
 			this.UpdateEnumList ();
 			this.UpdateButtons ();
@@ -417,9 +398,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private Widget							rightPanel;
 		private CheckButton						checkNative;
-		private StaticText						filterLabel;
-		private TextField						filterField;
-		private GlyphButton						filterClearButton;
+		private Controllers.FilterController	filterController;
+		private FrameBox						filterFrame;
 		private TextFieldCombo					comboFilterField;
 		private ScrollList						enumList;
 

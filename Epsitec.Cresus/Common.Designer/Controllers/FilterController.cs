@@ -38,6 +38,7 @@ namespace Epsitec.Common.Designer.Controllers
 			{
 				Parent = frame,
 				Dock = DockStyle.Fill,
+				TabIndex = 1,
 			};
 
 			this.clearButton = new GlyphButton
