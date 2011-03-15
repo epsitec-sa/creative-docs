@@ -6,6 +6,7 @@ using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Orchestrators;
 using Epsitec.Cresus.Core.Orchestrators.Navigation;
 using Epsitec.Cresus.Core.PlugIns;
@@ -27,10 +28,10 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 		{
 			this.factory = factory;
 			this.application = this.factory.Application;
-			this.orchestrator = this.application.MainWindowOrchestrator;
+			this.orchestrator = this.application.FindActiveComponent<DataViewOrchestrator> ();
 
-			this.application.CreatedUI       += sender => System.Diagnostics.Debug.WriteLine ("EVENT: Application finished creating the UI");
-			this.application.ShutdownStarted += sender => System.Diagnostics.Debug.WriteLine ("EVENT: Application shutting down");
+//			this.application.CreatedUI       += sender => System.Diagnostics.Debug.WriteLine ("EVENT: Application finished creating the UI");
+//			this.application.ShutdownStarted += sender => System.Diagnostics.Debug.WriteLine ("EVENT: Application shutting down");
 
 			this.orchestrator.SettingActiveEntity += this.HandleOrchestratorSettingActiveEntity;
 			CommandDispatcher.CommandDispatching  += this.HandleCommandDispatcherCommandDispatching;
@@ -139,7 +140,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 		
 		private readonly PlugInFactory			factory;
-		private readonly CoreApplication		application;
+		private readonly CoreApp				application;
 		private readonly DataViewOrchestrator	orchestrator;
 
 		private WorkflowDesigner				activeDesigner;

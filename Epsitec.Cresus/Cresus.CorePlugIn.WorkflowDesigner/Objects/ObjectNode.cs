@@ -836,7 +836,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				var circlePath = new Path ();
 				circlePath.AppendCircle (this.bounds.Center, ObjectNode.frameRadius + offset);
 
-				Misc.DrawPathDash (graphics, circlePath, width, 5, 8.4, false, colorFrame);
+				graphics.PaintDashedOutline (circlePath, width, 5, 8.4, CapStyle.Square, colorFrame);
 			}
 
 			if (this.Entity.IsForeign)
@@ -852,7 +852,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				var circlePath = new Path ();
 				circlePath.AppendCircle (this.bounds.Center, ObjectNode.frameRadius + offset);
 
-				Misc.DrawPathDash (graphics, circlePath, width, 5, 5, false, colorFrame);
+				graphics.PaintDashedOutline (circlePath, width, 5, 5, CapStyle.Square, colorFrame);
 			}
 		}
 
