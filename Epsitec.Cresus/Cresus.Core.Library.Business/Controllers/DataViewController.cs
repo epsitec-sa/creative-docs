@@ -110,6 +110,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.AttachColumn (column);
 
 			this.Navigator.Add (leaf, controller);
+
+			this.PushViewController (controller.GetSiblingController ());
 		}
 
 		/// <summary>

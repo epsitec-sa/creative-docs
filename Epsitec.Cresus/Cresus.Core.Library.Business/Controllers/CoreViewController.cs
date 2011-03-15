@@ -186,6 +186,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			return this;
 		}
 
+		public virtual CoreViewController GetSiblingController()
+		{
+			return null;
+		}
+
 		private IEnumerable<CoreViewController> GetCoreViewControllers()
 		{
 			return this.GetSubControllers ().Where (x => x is CoreViewController).Cast<CoreViewController> ();
