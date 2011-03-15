@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		#region InputProcessor Class
 
-		class InputProcessor
+		private class InputProcessor
 		{
 			public InputProcessor(EntityViewController<T> controller, TileDataItems data, TileDataItem item, Brick root)
 			{

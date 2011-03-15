@@ -47,6 +47,7 @@
     </Compile>
     <Compile Include="BrickAddedEventArgs.cs" />
     <Compile Include="BrickPropertyAddedEventArgs.cs" />
+    <Compile Include="BrickPropertyCollection.cs" />
     <Compile Include="BrickWall.cs" />
     <Compile Include="InputBrick.cs" />
     <Compile Include="HorizontalGroupBrick.cs" />
