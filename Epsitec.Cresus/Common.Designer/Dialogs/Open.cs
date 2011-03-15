@@ -48,7 +48,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				//	Bande horizontale pour la recherche.
 				{
-					this.filterController = new Controllers.FilterController ();
+					this.filterController = new Controllers.FilterController (Open.FilterUnifier);
 					
 					var frame = this.filterController.CreateUI (this.window.Root);
 					frame.Margins = new Margins (0, 0, 0, 8);
@@ -164,19 +164,6 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.filterController.SetFocus ();
 		}
 
-		private void HandleFilterControllerChanged(object sender)
-		{
-			string filter = Open.GetComparableText (this.filterController.Filter);
-
-			this.filterPredicate = moduleInfo => string.IsNullOrWhiteSpace (filter) || Open.GetComparableText (this.GetModulePath (moduleInfo)).Contains (filter);
-			this.UpdateModules (false);
-		}
-
-		private static string GetComparableText(string text)
-		{
-			return text.ToLowerInvariant ().Replace ('\\', '/');
-		}
-
 
 		public void SetResourcePrefix(string prefix)
 		{
@@ -220,25 +207,9 @@ namespace Epsitec.Common.Designer.Dialogs
 					ResourceModuleInfo moduleInfo = this.moduleInfosAll[i];
 					ModuleState state = this.GetModuleState (moduleInfo);
 
-					if ((this.filterPredicate != null) &&
-						(this.filterPredicate (moduleInfo) == false))
+					if (this.IsFiltered (moduleInfo))
 					{
 						continue;
-					}
-
-					int result = DesignerApplication.IsOriginalModule (moduleInfo.FullId);
-
-					if (result == -1)
-					{
-						continue;
-					}
-
-					if (this.showSecondary == false)
-					{
-						if (result != 1)
-						{
-							continue;
-						}
 					}
 
 					if (state == ModuleState.Openable)
@@ -441,7 +412,12 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Retourne le nom du chemin d'un module.
 			ResourceManagerPool pool = this.designerApplication.ResourceManagerPool;
-			return pool.GetRootRelativePath(info.FullId.Path);
+
+			string path = pool.GetRootRelativePath(info.FullId.Path);
+			path = Open.FilterUnifier (path);
+			path = path.Replace ("%app%/", "");
+
+			return path;
 		}
 
 		private ModuleState GetModuleState(ResourceModuleInfo info)
@@ -474,6 +450,11 @@ namespace Epsitec.Common.Designer.Dialogs
 			return false;
 		}
 
+
+		private void HandleFilterControllerChanged(object sender)
+		{
+			this.UpdateModules (false);
+		}
 
 		private void HandleTableSelectionChanged(object sender, UI.ItemPanelSelectionChangedEventArgs e)
 		{
@@ -523,6 +504,33 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.parentWindow.MakeActive();
 			this.window.Hide();
 			this.OnClosed();
+		}
+
+
+		private bool IsFiltered(ResourceModuleInfo moduleInfo)
+		{
+			int result = DesignerApplication.IsOriginalModule (moduleInfo.FullId);
+
+			if (result == -1)
+			{
+				return true;
+			}
+
+			if (this.showSecondary == false)
+			{
+				if (result != 1)
+				{
+					return true;
+				}
+			}
+
+			string name = this.GetModulePath (moduleInfo);
+			return this.filterController.IsFiltered (name);
+		}
+
+		private static string FilterUnifier(string text)
+		{
+			return text.Replace ('\\', '/');
 		}
 
 
@@ -611,6 +619,5 @@ namespace Epsitec.Common.Designer.Dialogs
 		private bool									showSecondary;
 
 		private Controllers.FilterController			filterController;
-		private System.Predicate<ResourceModuleInfo>	filterPredicate;
 	}
 }

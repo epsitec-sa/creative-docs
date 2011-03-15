@@ -170,13 +170,16 @@ namespace Epsitec.Common.Designer.Dialogs
 		private void HandleButtonFilterClicked(object sender, MessageEventArgs e)
 		{
 			Module module = this.designerApplication.CurrentModule;
-			if ( module == null )  return;
+			if (module == null)
+			{
+				return;
+			}
 
 			Searcher.SearchingMode mode = Searcher.SearchingMode.None;
-			if (this.radioBegin.ActiveState  == ActiveState.Yes)  mode |= Searcher.SearchingMode.AtBeginning;
+			if (this.radioBegin.ActiveState == ActiveState.Yes)  mode |= Searcher.SearchingMode.AtBeginning;
 			if (this.radioJoker.ActiveState == ActiveState.Yes)  mode |= Searcher.SearchingMode.Joker;
-			if (this.checkCase.ActiveState   == ActiveState.Yes)  mode |= Searcher.SearchingMode.CaseSensitive;
-			if (this.checkWord.ActiveState   == ActiveState.Yes)  mode |= Searcher.SearchingMode.WholeWord;
+			if (this.checkCase.ActiveState  == ActiveState.Yes)  mode |= Searcher.SearchingMode.CaseSensitive;
+			if (this.checkWord.ActiveState  == ActiveState.Yes)  mode |= Searcher.SearchingMode.WholeWord;
 			module.Modifier.ActiveViewer.DoFilter(this.fieldFilter.Text, mode);
 
 			Misc.ComboMenuAdd(this.fieldFilter);
@@ -185,7 +188,10 @@ namespace Epsitec.Common.Designer.Dialogs
 		private void HandleButtonAllClicked(object sender, MessageEventArgs e)
 		{
 			Module module = this.designerApplication.CurrentModule;
-			if ( module == null )  return;
+			if (module == null)
+			{
+				return;
+			}
 
 			module.Modifier.ActiveViewer.DoFilter("", Searcher.SearchingMode.None);
 		}

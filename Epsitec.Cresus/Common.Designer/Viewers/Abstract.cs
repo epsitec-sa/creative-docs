@@ -40,10 +40,10 @@ namespace Epsitec.Common.Designer.Viewers
 			this.access = access;
 			this.designerApplication = designerApplication;
 			this.access.ResourceType = this.ResourceType;
-			this.itemViewFactory = new ItemViewFactory(this);
-			
+			this.itemViewFactory = new ItemViewFactory (this);
+
 			//	Crée les deux volets séparés d'un splitter.
-			this.firstPane = new FrameBox(this);
+			this.firstPane = new FrameBox (this);
 			this.firstPane.Name = "FirstPane";
 			if (this.IsDisplayModeHorizontal)
 			{
@@ -58,25 +58,25 @@ namespace Epsitec.Common.Designer.Viewers
 				this.firstPane.PreferredHeight = Abstract.topArrayHeight;
 			}
 			this.firstPane.Dock = this.IsDisplayModeHorizontal ? DockStyle.Left : DockStyle.Top;
-			this.firstPane.Padding = new Margins(10, 10, 10, 10);
+			this.firstPane.Padding = new Margins (10, 10, 10, 10);
 			this.firstPane.TabIndex = this.tabIndex++;
 			this.firstPane.Visibility = (this.designerApplication.DisplayModeState != DesignerApplication.DisplayMode.FullScreen);
 
 			if (this.IsDisplayModeHorizontal)
 			{
-				this.splitter = new VSplitter(this);
+				this.splitter = new VSplitter (this);
 				this.splitter.Dock = DockStyle.Left;
 			}
 			else
 			{
-				this.splitter = new HSplitter(this);
+				this.splitter = new HSplitter (this);
 				this.splitter.Dock = DockStyle.Top;
 			}
 			this.splitter.SplitterDragged += this.HandleSplitterDragged;
 			this.splitter.Visibility = (this.designerApplication.DisplayModeState != DesignerApplication.DisplayMode.FullScreen);
-			AbstractSplitter.SetAutoCollapseEnable(this.firstPane, true);
+			AbstractSplitter.SetAutoCollapseEnable (this.firstPane, true);
 
-			this.lastPane = new FrameBox(this);
+			this.lastPane = new FrameBox (this);
 			this.lastPane.Name = "LastPane";
 			if (this.IsDisplayModeHorizontal)
 			{
@@ -88,27 +88,38 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			this.lastPane.Dock = DockStyle.Fill;
 			this.lastPane.TabIndex = this.tabIndex++;
-			
+
 			//	Crée la première partie (gauche ou supérieure).
-			this.labelEdit = new MyWidgets.TextFieldExName(this.firstPane);
+			{
+				this.filterController = new Controllers.FilterController ();
+
+				this.filterFrame = this.filterController.CreateUI (this.firstPane);
+				this.filterFrame.Margins = new Margins (0, 0, 0, 6);
+
+				this.filterController.Filter = this.access.FilterString;
+
+				this.filterController.FilterChanged += new EventHandler (this.HandleFilterControllerChanged);
+			}
+
+			this.labelEdit = new MyWidgets.TextFieldExName (this.firstPane);
 			this.labelEdit.Name = "LabelEdit";
-			this.labelEdit.Margins = new Margins(0, 0, 10, 0);
+			this.labelEdit.Margins = new Margins (0, 0, 10, 0);
 			this.labelEdit.Dock = DockStyle.Bottom;
 			this.labelEdit.ButtonShowCondition = ButtonShowCondition.WhenModified;
 			this.labelEdit.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 			this.labelEdit.EditionAccepted += this.HandleTextChanged;
 			this.labelEdit.EditionRejected += this.HandleTextRejected;
 			this.labelEdit.CursorChanged += this.HandleCursorChanged;
-			this.labelEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
+			this.labelEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs> (this.HandleLabelKeyboardFocusChanged);
 			this.labelEdit.TabIndex = this.tabIndex++;
 			this.labelEdit.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.labelEdit.Visibility = (this.module.Mode == DesignerMode.Build);
 			this.currentTextField = this.labelEdit;
 
-			this.table = new UI.ItemTable(this.firstPane);
+			this.table = new UI.ItemTable (this.firstPane);
 			this.table.ItemPanel.CustomItemViewFactoryGetter = this.ItemViewFactoryGetter;
 			this.table.Items = this.access.CollectionView;
-			this.InitializeTable();
+			this.InitializeTable ();
 			this.table.HorizontalScrollMode = this.IsDisplayModeHorizontal ? UI.ItemTableScrollMode.Linear : UI.ItemTableScrollMode.None;
 			this.table.VerticalScrollMode = UI.ItemTableScrollMode.ItemBased;
 			this.table.HeaderVisibility = true;
@@ -116,7 +127,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.ItemPanel.Layout = UI.ItemPanelLayout.VerticalList;
 			this.table.ItemPanel.ItemSelectionMode = UI.ItemPanelSelectionMode.ExactlyOne;
 			this.table.ItemPanel.CurrentItemTrackingMode = UI.CurrentItemTrackingMode.AutoSelect;
-			this.table.ItemPanel.SelectionChanged += new EventHandler<UI.ItemPanelSelectionChangedEventArgs>(this.HandleTableSelectionChanged);
+			this.table.ItemPanel.SelectionChanged += new EventHandler<UI.ItemPanelSelectionChangedEventArgs> (this.HandleTableSelectionChanged);
 			this.table.SizeChanged += this.HandleTableSizeChanged;
 			this.table.ColumnHeader.ColumnWidthChanged += this.HandleColumnHeaderColumnWidthChanged;
 			//?this.table.ColumnHeader.SetColumnSort(0, ListSortDirection.Ascending);
@@ -124,62 +135,62 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.Margins = Drawing.Margins.Zero;
 
 			//	Crée la dernière partie (droite ou inférieure), bande supérieure pour les boutons des cultures.
-			this.lastGroup = new FrameBox(this.lastPane);
-			this.lastGroup.Padding = new Margins(10, 10, 10, 10);
+			this.lastGroup = new FrameBox (this.lastPane);
+			this.lastGroup.Padding = new Margins (10, 10, 10, 10);
 			this.lastGroup.Dock = DockStyle.Fill;
 			this.lastGroup.TabIndex = this.tabIndex++;
 
-			Widget sup = new FrameBox(this.lastGroup);
+			Widget sup = new FrameBox (this.lastGroup);
 			sup.Name = "Sup";
 			sup.PreferredHeight = 26;
-			sup.Padding = new Margins(0, 0, 1, 0);
+			sup.Padding = new Margins (0, 0, 1, 0);
 			sup.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			sup.Dock = DockStyle.Top;
 			sup.TabIndex = this.tabIndex++;
-			
-			this.primaryButtonCulture = new IconButtonMark(sup);
+
+			this.primaryButtonCulture = new IconButtonMark (sup);
 			this.primaryButtonCulture.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.primaryButtonCulture.MarkDisposition = ButtonMarkDisposition.Below;
 			this.primaryButtonCulture.MarkLength = 5;
 			this.primaryButtonCulture.PreferredHeight = 25;
 			this.primaryButtonCulture.ActiveState = ActiveState.Yes;
 			this.primaryButtonCulture.AutoFocus = false;
-			this.primaryButtonCulture.Margins = new Margins(0, 1, 0, 0);
+			this.primaryButtonCulture.Margins = new Margins (0, 1, 0, 0);
 			this.primaryButtonCulture.Dock = DockStyle.Fill;
 
-			this.secondaryButtonsCultureGroup = new FrameBox(sup);
-			this.secondaryButtonsCultureGroup.Margins = new Margins(1, 0, 0, 0);
+			this.secondaryButtonsCultureGroup = new FrameBox (sup);
+			this.secondaryButtonsCultureGroup.Margins = new Margins (1, 0, 0, 0);
 			this.secondaryButtonsCultureGroup.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			this.secondaryButtonsCultureGroup.Dock = DockStyle.Fill;
 			this.secondaryButtonsCultureGroup.TabIndex = this.tabIndex++;
 
-			this.cultureMenuButton = new GlyphButton(sup);
+			this.cultureMenuButton = new GlyphButton (sup);
 			this.cultureMenuButton.GlyphShape = GlyphShape.Menu;
 			this.cultureMenuButton.ButtonStyle = ButtonStyle.ToolItem;
 			this.cultureMenuButton.AutoFocus = false;
 			this.cultureMenuButton.Clicked += this.HandleCultureMenuButtonClicked;
-			this.cultureMenuButton.Margins = new Margins(1, 0, 2, 7);
+			this.cultureMenuButton.Margins = new Margins (1, 0, 2, 7);
 			this.cultureMenuButton.Dock = DockStyle.Right;
 
 			//	Crée le titre.
-			this.titleBox = new FrameBox(this.lastGroup);
+			this.titleBox = new FrameBox (this.lastGroup);
 			this.titleBox.DrawFullFrame = true;
 			this.titleBox.PreferredHeight = 26;
 			this.titleBox.Dock = DockStyle.Top;
-			this.titleBox.Margins = new Margins(0, 0, 1, -1);
+			this.titleBox.Margins = new Margins (0, 0, 1, -1);
 
-			this.titleText = new StaticText(this.titleBox);
+			this.titleText = new StaticText (this.titleBox);
 			this.titleText.ContentAlignment = ContentAlignment.MiddleCenter;
 			this.titleText.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 			this.titleText.Dock = DockStyle.Fill;
-			this.titleText.Margins = new Margins(4, 4, 0, 0);
+			this.titleText.Margins = new Margins (4, 4, 0, 0);
 
 			//	Crée la dernière partie (droite ou inférieure), bande inférieure pour la zone d'étition scrollable.
-			this.scrollable = new Scrollable(this.lastGroup);
+			this.scrollable = new Scrollable (this.lastGroup);
 			this.scrollable.Name = "Scrollable";
 			this.scrollable.MinWidth = 100;
 			this.scrollable.MinHeight = 39;
-			this.scrollable.Margins = new Margins(0, 0, 0, 0);
+			this.scrollable.Margins = new Margins (0, 0, 0, 0);
 			this.scrollable.Dock = DockStyle.Fill;
 			this.scrollable.HorizontalScrollerMode = ScrollableScrollerMode.HideAlways;
 			this.scrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
@@ -190,7 +201,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.scrollable.TabIndex = this.tabIndex++;
 			this.scrollable.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
-			this.bands = new List<Band>();
+			this.bands = new List<Band> ();
 		}
 
 		protected override void Dispose(bool disposing)
@@ -634,11 +645,19 @@ namespace Epsitec.Common.Designer.Viewers
 		public void DoFilter(string filter, Searcher.SearchingMode mode)
 		{
 			//	Change le filtre des ressources visibles.
-			this.access.SetFilter(filter, mode);
+			this.filterFrame.Enable = string.IsNullOrEmpty (filter);
 
-			this.UpdateArray();
+			this.ChangeFilter (filter, mode);
+		}
+
+		private void ChangeFilter(string filter, Searcher.SearchingMode mode)
+		{
+			//	Change le filtre des ressources visibles.
+			this.access.SetFilter (filter, mode);
+
+			this.UpdateArray ();
 			this.SelectedRow = this.access.AccessIndex;
-			this.UpdateCommands();
+			this.UpdateCommands ();
 		}
 
 		public void DoAccess(string name)
@@ -2700,6 +2719,11 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
+		private void HandleFilterControllerChanged(object sender)
+		{
+			this.ChangeFilter (this.filterController.Filter, this.filterController.Mode);
+		}
+
 		protected void HandleLabelKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 		{
 			//	Appelé lorsque la ligne éditable pour le label voit son focus changer.
@@ -2741,6 +2765,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected FrameBox						firstPane;
 		protected FrameBox						lastPane;
 		protected AbstractSplitter				splitter;
+		protected Controllers.FilterController	filterController;
+		protected FrameBox						filterFrame;
 		protected UI.ItemTable					table;
 		protected MyWidgets.TextFieldExName		labelEdit;
 

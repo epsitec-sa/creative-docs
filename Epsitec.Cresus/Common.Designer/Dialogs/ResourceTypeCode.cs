@@ -302,7 +302,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private bool IsFiltered(string name)
 		{
-			return !this.filterController.IsFilterPassed (name);
+			return this.filterController.IsFiltered (name);
 		}
 
 

@@ -38,8 +38,10 @@ namespace Epsitec.Common.Designer.Dialogs
 				//	Bande horizontale pour la recherche.
 				{
 					this.filterController = new Controllers.FilterController ();
+
 					var frame = this.filterController.CreateUI (this.window.Root);
 					frame.Margins = new Margins (0, 0, 0, 6);
+					
 					this.filterController.FilterChanged += new EventHandler (this.HandleFilterControllerChanged);
 				}
 
@@ -52,7 +54,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 					var label = new StaticText (topFrame);
 					label.Text = Res.Strings.Dialog.Icon.Label.Filter;
-					label.PreferredWidth = 64;
+					label.PreferredWidth = 50;
 					label.Dock = DockStyle.Left;
 
 					this.fieldFilter = new TextFieldCombo (topFrame);
@@ -224,8 +226,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				string module, name;
 				Misc.GetIconNames(names[i], out module, out name);
 
-				string mdn = Misc.CompactModuleAndName (module, name, tags: false).ToLower ();
-				if (this.filterController != null && !this.filterController.IsFilterPassed (mdn))
+				string mdn = Misc.CompactModuleAndName (module, name, tags: false);
+				if (this.filterController != null && this.filterController.IsFiltered (mdn))
 				{
 					continue;
 				}

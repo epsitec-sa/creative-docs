@@ -1191,6 +1191,22 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		public string FilterString
+		{
+			get
+			{
+				return this.collectionViewFilter;
+			}
+		}
+
+		public Searcher.SearchingMode FilterMode
+		{
+			get
+			{
+				return this.collectionViewMode;
+			}
+		}
+
 		public void SetFilter(string filter, Searcher.SearchingMode mode)
 		{
 			//	Construit l'index en fonction des ressources primaires.
@@ -1198,19 +1214,30 @@ namespace Epsitec.Common.Designer
 			{
 				this.collectionViewMode = mode;
 
-				if ((this.collectionViewMode&Searcher.SearchingMode.CaseSensitive) == 0)
+				if (string.IsNullOrEmpty (filter))
 				{
-					this.collectionViewFilter = Searcher.RemoveAccent(filter.ToLower());
+					this.collectionViewFilter = null;
+					this.collectionViewRegex = null;
 				}
 				else
 				{
-					this.collectionViewFilter = filter;
-				}
+					if ((this.collectionViewMode&Searcher.SearchingMode.CaseSensitive) == 0)
+					{
+						this.collectionViewFilter = Searcher.RemoveAccent (filter.ToLowerInvariant ());
+					}
+					else
+					{
+						this.collectionViewFilter = filter;
+					}
 
-				this.collectionViewRegex = null;
-				if ((this.collectionViewMode&Searcher.SearchingMode.Joker) != 0)
-				{
-					this.collectionViewRegex = RegexFactory.FromSimpleJoker(this.collectionViewFilter, RegexFactory.Options.None);
+					if ((this.collectionViewMode&Searcher.SearchingMode.Joker) == 0)
+					{
+						this.collectionViewRegex = null;
+					}
+					else
+					{
+						this.collectionViewRegex = RegexFactory.FromSimpleJoker (this.collectionViewFilter, RegexFactory.Options.None);
+					}
 				}
 
 				this.collectionView.Refresh();
@@ -1222,16 +1249,29 @@ namespace Epsitec.Common.Designer
 			//	Méthode passé comme paramètre System.Predicate<object> à CollectionView.Filter.
 			//	Retourne false si la ressource doit être exclue.
 			CultureMap item = obj as CultureMap;
+
+			//	Si la ressource en cours est modifiée, il faut toujours l'inclure au filtre !
+			if (this.isLocalDirty)
+			{
+				CultureMap currentItem = this.collectionView.CurrentItem as CultureMap;
+
+				if (item == currentItem)
+				{
+					return true;  // on garde cette ressource, même si elle ne correspond pas au filtre
+				}
+			}
 			
 			if (!string.IsNullOrEmpty(this.collectionViewFilter))
 			{
 				if ((this.collectionViewMode&Searcher.SearchingMode.Joker) != 0)
 				{
 					string text = item.Name;
+
 					if ((this.collectionViewMode&Searcher.SearchingMode.CaseSensitive) == 0)
 					{
-						text = Searcher.RemoveAccent(text.ToLower());
+						text = Searcher.RemoveAccent (text.ToLowerInvariant ());
 					}
+					
 					if (!this.collectionViewRegex.IsMatch(text))
 					{
 						return false;
@@ -1239,19 +1279,35 @@ namespace Epsitec.Common.Designer
 				}
 				else
 				{
-					int index = Searcher.IndexOf(item.Name, this.collectionViewFilter, 0, this.collectionViewMode);
+					var mode = this.collectionViewMode;
+					int start = 0;
+
+					if ((mode & Searcher.SearchingMode.AtEnding) != 0)
+					{
+						mode |= Searcher.SearchingMode.Reverse;
+						start = item.Name.Length;
+					}
+
+					int index = Searcher.IndexOf (item.Name, this.collectionViewFilter, start, mode);
+					
 					if (index == -1)
 					{
 						return false;
 					}
+
 					if ((this.collectionViewMode&Searcher.SearchingMode.AtBeginning) != 0 && index != 0)
+					{
+						return false;
+					}
+
+					if ((this.collectionViewMode&Searcher.SearchingMode.AtEnding) != 0 && index != item.Name.Length-this.collectionViewFilter.Length)
 					{
 						return false;
 					}
 				}
 			}
 
-			return true;
+			return true;  // on garde cette ressource
 		}
 
 		public int TotalCount
@@ -1285,6 +1341,11 @@ namespace Epsitec.Common.Designer
 		public Druid AccessDruid(int index)
 		{
 			//	Retourne le druid d'un index donné.
+			if (index < 0 || index >= this.CollectionView.Items.Count)
+			{
+				return Druid.Empty;
+			}
+
 			CultureMap item = this.collectionView.Items[index] as CultureMap;
 			return item.Id;
 		}
@@ -1526,6 +1587,11 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne les données d'un champ.
 			//	Si cultureName est nul, on accède à la culture de base.
+			if (index < 0 || index >= this.CollectionView.Items.Count)
+			{
+				return null;
+			}
+
 			CultureMap item = this.collectionView.Items[index] as CultureMap;
 
 			if (cultureName == null)
@@ -1570,6 +1636,11 @@ namespace Epsitec.Common.Designer
 		{
 			//	Modifie les données d'un champ.
 			//	Si cultureName est nul, on accède à la culture de base.
+			if (index < 0 || index >= this.CollectionView.Items.Count)
+			{
+				return;
+			}
+
 			CultureMap item = this.collectionView.Items[index] as CultureMap;
 
 			if (cultureName == null)
@@ -1625,7 +1696,7 @@ namespace Epsitec.Common.Designer
 		public CultureMapSource GetCultureMapSource(int index)
 		{
 			//	Retourne le type de la ressource.
-			if (index != -1)
+			if (index >= 0 && index < this.CollectionView.Items.Count)
 			{
 				CultureMap item = this.collectionView.Items[index] as CultureMap;
 				return this.GetCultureMapSource(item);
@@ -1650,7 +1721,7 @@ namespace Epsitec.Common.Designer
 		public bool IsNameReadOnly(int index)
 		{
 			//	Indique si le nom est en lecture seule.
-			if (index != -1)
+			if (index >= 0 && index < this.CollectionView.Items.Count)
 			{
 				CultureMap item = this.collectionView.Items[index] as CultureMap;
 				return item.IsNameReadOnly;
@@ -1662,7 +1733,7 @@ namespace Epsitec.Common.Designer
 		public ModificationState GetModification(int index, string cultureName)
 		{
 			//	Donne l'état 'modifié'.
-			if (index != -1)
+			if (index >= 0 && index < this.CollectionView.Items.Count)
 			{
 				CultureMap item = this.collectionView.Items[index] as CultureMap;
 				return this.GetModification(item, cultureName);
@@ -1727,6 +1798,11 @@ namespace Epsitec.Common.Designer
 		public void ModificationClear(int index, string cultureName)
 		{
 			//	Considère une ressource comme 'à jour' dans une culture.
+			if (index < 0 || index >= this.CollectionView.Items.Count)
+			{
+				return;
+			}
+
 			CultureMap item = this.collectionView.Items[index] as CultureMap;
 			StructuredData data = item.GetCultureData(cultureName);
 			StructuredData primaryData = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
@@ -1740,6 +1816,11 @@ namespace Epsitec.Common.Designer
 		public void ModificationSetAll(int index)
 		{
 			//	Considère une ressource comme 'modifiée' dans toutes les cultures.
+			if (index < 0 || index >= this.CollectionView.Items.Count)
+			{
+				return;
+			}
+
 			CultureMap item = this.collectionView.Items[index] as CultureMap;
 			StructuredData primaryData = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 
@@ -1752,6 +1833,11 @@ namespace Epsitec.Common.Designer
 		public bool IsModificationAll(int index)
 		{
 			//	Donne l'état de la commande ModificationAll.
+			if (index < 0 || index >= this.CollectionView.Items.Count)
+			{
+				return false;
+			}
+
 			CultureMap item = this.collectionView.Items[index] as CultureMap;
 			StructuredData primaryData = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 			int primaryValue = this.GetModificationId(primaryData);
@@ -2090,7 +2176,7 @@ namespace Epsitec.Common.Designer
 			//	Empêche tous les tris jusqu'au Undefer.
 			//	Retourne l'index pour accéder à une ressource après la suppression du tri. En effet,
 			//	comme il n'y aura plus de tri, l'index change !
-			if (this.collectionView != null)
+			if (this.collectionView != null && index >= 0 && index < this.CollectionView.Items.Count)
 			{
 				CultureMap item = this.collectionView.Items[index] as CultureMap;
 				this.SortDefer();
@@ -2105,7 +2191,7 @@ namespace Epsitec.Common.Designer
 			//	Permet de nouveau les tris.
 			//	Retourne l'index pour accéder à une ressource après la remise du tri. En effet,
 			//	avec le nouveau tri, l'index change !
-			if (this.collectionView != null)
+			if (this.collectionView != null && index >= 0 && index < this.CollectionView.Items.Count)
 			{
 				CultureMap item = this.collectionView.Items[index] as CultureMap;
 				this.SortUndefer();
@@ -2234,6 +2320,11 @@ namespace Epsitec.Common.Designer
 
 		public UI.Panel GetPanel(int index)
 		{
+			if (index < 0 || index >= this.CollectionView.Items.Count)
+			{
+				return null;
+			}
+
 			//?CultureMap item = this.accessor.Collection[index];  // "RunPanel" affiche parfois la mauvaise resource avec cela !
 			CultureMap item = this.collectionView.Items[index] as CultureMap;
 			return this.GetPanel(item);

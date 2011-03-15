@@ -12,9 +12,8 @@ namespace Epsitec.Common.Designer.Ribbons
 		public Access(DesignerApplication designerApplication) : base(designerApplication)
 		{
 			this.Title = Res.Strings.Ribbon.Section.Access;
-			this.PreferredWidth = 8 + 22*1.5*2 + 4 + 22*3 + this.separatorWidth + 22*2 + 4 + 22*1.5*1;
+			this.PreferredWidth = 8 + 22*1.5*1 + 4 + 22*3 + this.separatorWidth + 22*2 + 4 + 22*1.5*1;
 
-			this.buttonFilter = this.CreateIconButton("Filter", "Large");
 			this.buttonSearch = this.CreateIconButton("Search", "Large");
 
 			this.buttonSearchPrev = this.CreateIconButton("SearchPrev");
@@ -51,13 +50,13 @@ namespace Epsitec.Common.Designer.Ribbons
 			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
-			if ( this.buttonFilter == null )  return;
+			if ( this.buttonSearch == null )  return;
 
-			double dx = this.buttonFilter.PreferredWidth;
-			double dy = this.buttonFilter.PreferredHeight;
+			double dx = this.buttonSearch.PreferredWidth;
+			double dy = this.buttonSearch.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
-			rect.Left += dx*1.5*2+4 + dx*3;
+			rect.Left += dx*1.5*1+4 + dx*3;
 			rect.Width = this.separatorWidth;
 			this.separator1.SetManualBounds(rect);
 
@@ -65,8 +64,6 @@ namespace Epsitec.Common.Designer.Ribbons
 			rect.Width  = dx*1.5;
 			rect.Height = dy*1.5;
 			rect.Offset(0, dy*0.5);
-			this.buttonFilter.SetManualBounds(rect);
-			rect.Offset(dx*1.5, 0);
 			this.buttonSearch.SetManualBounds(rect);
 			rect.Offset(dx*1.5+8+dx*5+this.separatorWidth, 0);
 			this.buttonModificationClear.SetManualBounds(rect);
@@ -74,7 +71,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			rect.Offset(dx*1.5*2+4, dy+5);
+			rect.Offset(dx*1.5*1+4, dy+5);
 			this.buttonSearchPrev.SetManualBounds(rect);
 			rect.Offset(dx, 0);
 			this.buttonAccessFirst.SetManualBounds(rect);
@@ -88,7 +85,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			rect.Offset(dx*1.5*2+4, 0);
+			rect.Offset(dx*1.5*1+4, 0);
 			this.buttonSearchNext.SetManualBounds(rect);
 			rect.Offset(dx, 0);
 			this.buttonAccessLast.SetManualBounds(rect);
@@ -99,7 +96,6 @@ namespace Epsitec.Common.Designer.Ribbons
 		}
 
 
-		protected IconButton				buttonFilter;
 		protected IconButton				buttonSearch;
 		protected IconButton				buttonSearchPrev;
 		protected IconButton				buttonSearchNext;

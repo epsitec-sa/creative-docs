@@ -8,12 +8,13 @@ namespace Epsitec.Common.Designer
 	{
 		[System.Flags] public enum SearchingMode
 		{
-			None                   = 0x00000000,
-			CaseSensitive          = 0x00000001,
-			WholeWord              = 0x00000002,
-			AtBeginning            = 0x00000004,
-			Joker                 = 0x00000008,
-			Reverse                = 0x00000010,
+			None          = 0x00000000,
+			CaseSensitive = 0x00000001,
+			WholeWord     = 0x00000002,
+			AtBeginning   = 0x00000004,
+			AtEnding      = 0x00000008,
+			Joker         = 0x00000010,
+			Reverse       = 0x00000020,
 		}
 
 
@@ -237,7 +238,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		protected void InitSearching(string searching)
+		private void InitSearching(string searching)
 		{
 			this.searching = searching;
 
@@ -247,7 +248,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected bool Find()
+		private bool Find()
 		{
 			//	Cherche si la chaîne est trouvé à la position du curseur.
 			string text = this.ResourceText;
@@ -283,7 +284,7 @@ namespace Epsitec.Common.Designer
 			return false;
 		}
 
-		protected bool MoveCurrentCursor()
+		private bool MoveCurrentCursor()
 		{
 			//	Avance le curseur sur le row/field/index suivant.
 			//	Retourne false si on atteint de nouveau le début (et donc que la recherche est terminée).
@@ -331,7 +332,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected string ResourceText
+		private string ResourceText
 		{
 			//	Retourne le texte à la position du curseur courant (en fonction de row/field/subfield).
 			get
@@ -391,7 +392,7 @@ namespace Epsitec.Common.Designer
 			return Searcher.IndexOf(text, value, startIndex, count, mode);
 		}
 
-		static protected int IndexOf(string text, string value, int startIndex, int count, SearchingMode mode)
+		static private int IndexOf(string text, string value, int startIndex, int count, SearchingMode mode)
 		{
 			//	Cherche l'index de 'value' dans 'text' (un peu comme string.IndexOf), mais avec quelques
 			//	options supplémentaires.
@@ -461,7 +462,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		static protected bool IsWholeWord(string text, int index, int count)
+		static private bool IsWholeWord(string text, int index, int count)
 		{
 			//	Vérifie si un mot et précédé et suivi d'un caractère séparateur de mots.
 			if (index > 0)
@@ -497,7 +498,7 @@ namespace Epsitec.Common.Designer
 			return builder.ToString();
 		}
 
-		static protected char RemoveAccent(char c)
+		static private char RemoveAccent(char c)
 		{
 			//	Retourne le même caractère sans accent (é -> e).
 			//	TODO: traiter tous les accents unicode ?
@@ -549,7 +550,7 @@ namespace Epsitec.Common.Designer
 
 
 		#region Cursor
-		protected class Cursor
+		private class Cursor
 		{
 			public int Row
 			{
@@ -624,21 +625,21 @@ namespace Epsitec.Common.Designer
 				return 0;
 			}
 
-			protected int					row;
-			protected int					field;
-			protected int					subfield;
-			protected int					index;
+			private int					row;
+			private int					field;
+			private int					subfield;
+			private int					index;
 		}
 		#endregion
 
 
-		protected ResourceAccess			access;
-		protected SearchingMode				mode;
-		protected List<int>					filter;
-		protected string					secondaryCulture;
-		protected string					searching;
-		protected Cursor					starting;
-		protected Cursor					current;
-		protected bool						limitOverflow;
+		private ResourceAccess				access;
+		private SearchingMode				mode;
+		private List<int>					filter;
+		private string						secondaryCulture;
+		private string						searching;
+		private Cursor						starting;
+		private Cursor						current;
+		private bool						limitOverflow;
 	}
 }
