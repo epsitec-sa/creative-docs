@@ -608,15 +608,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private bool IsFiltered(string name)
 		{
-			if (this.filterController.HasFilter)
-			{
-				string filter = this.filterController.Filter.ToLower ();
-				return !name.ToLower ().Contains (filter);
-			}
-			else
-			{
-				return false;
-			}
+			return !this.filterController.IsFilterPassed (name);
 		}
 
 		private void UpdateButtons()

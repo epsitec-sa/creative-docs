@@ -219,24 +219,15 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.icons = new List<string>();
 			string[] names = ImageProvider.Default.GetImageNames("manifest", this.manager);
 
-			string search = null;
-			if (this.filterController != null && this.filterController.HasFilter)
-			{
-				search = this.filterController.Filter.ToLower ();
-			}
-
 			for (int i=0; i<names.Length; i++)
 			{
 				string module, name;
 				Misc.GetIconNames(names[i], out module, out name);
 
 				string mdn = Misc.CompactModuleAndName (module, name, tags: false).ToLower ();
-				if (!string.IsNullOrEmpty (search))
+				if (this.filterController != null && !this.filterController.IsFilterPassed (mdn))
 				{
-					if (!mdn.Contains (search))
-					{
-						continue;
-					}
+					continue;
 				}
 
 				string text = string.Format(Res.Strings.Dialog.Icon.Filter.One, module);

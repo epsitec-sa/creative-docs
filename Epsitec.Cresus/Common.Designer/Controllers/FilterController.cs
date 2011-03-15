@@ -71,6 +71,19 @@ namespace Epsitec.Common.Designer.Controllers
 			this.field.Text = null;
 		}
 
+		public bool IsFilterPassed(string text)
+		{
+			if (this.HasFilter)
+			{
+				if (!string.IsNullOrEmpty (text))
+				{
+					return text.ToLower ().Contains (this.Filter.ToLower ());
+				}
+			}
+
+			return true;
+		}
+
 		public bool HasFilter
 		{
 			get
