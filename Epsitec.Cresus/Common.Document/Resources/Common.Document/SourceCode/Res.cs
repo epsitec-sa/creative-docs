@@ -4026,6 +4026,14 @@ namespace Epsitec.Common.Document
 				}
 				public static class Bool
 				{
+					//	designer:str/20K92
+					public static global::System.String ExportPDFExecute
+					{
+						get
+						{
+							return global::Epsitec.Common.Document.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544393));
+						}
+					}
 					//	designer:str/20032
 					public static global::System.String ExportPDFTarget
 					{

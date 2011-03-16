@@ -442,6 +442,8 @@ namespace Epsitec.Common.Document
 				DocumentDialogs.CreateSeparator(container);
 				this.CreateBool(container, "ExportPDFTextCurve");
 				DocumentDialogs.CreateSeparator(container);
+				this.CreateBool(container, "ExportPDFExecute");
+				DocumentDialogs.CreateSeparator(container);
 
 				//	Onglet Couleurs:
 				parent = book.FindChild("Color");

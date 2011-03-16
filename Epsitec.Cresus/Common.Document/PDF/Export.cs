@@ -516,6 +516,11 @@ namespace Epsitec.Common.Document.PDF
 			this.FlushImageSurface();
 			this.FlushFont();
 
+			if (info.Execute)
+			{
+				System.Diagnostics.Process.Start (filename);
+			}
+
 			return "";  // ok
 		}
 

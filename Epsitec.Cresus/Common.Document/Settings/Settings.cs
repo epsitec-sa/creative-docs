@@ -121,6 +121,7 @@ namespace Epsitec.Common.Document.Settings
 			this.CreateDefaultDouble("ExportPDF", "ExportPDFBleedOddRight");
 			this.CreateDefaultBool("ExportPDF", "ExportPDFTarget");
 			this.CreateDefaultBool("ExportPDF", "ExportPDFTextCurve");
+			this.CreateDefaultBool("ExportPDF", "ExportPDFExecute");
 			this.CreateDefaultInteger("ExportPDF", "ExportPDFColorConversion");
 			this.CreateDefaultInteger("ExportPDF", "ExportPDFImageCompression");
 			this.CreateDefaultDouble("ExportPDF", "ExportPDFJpegQuality");

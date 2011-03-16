@@ -60,7 +60,7 @@
   <data id="0S">Objects: {0}/{1} Selected: {2}</data>
   <data id="0T">x={0} y={1} dx={2} dy={3}</data>
   <data id="0A5" mod="1">Labels</data>
-  <data id="0C5" mod="1">Description (tool tip text)</data>
+  <data id="0C5" mod="1">Tool tip text</data>
   <data id="0J5" mod="1">Description</data>
   <data id="0D5" mod="1">Icon</data>
   <data id="0B5" mod="1">Comment</data>

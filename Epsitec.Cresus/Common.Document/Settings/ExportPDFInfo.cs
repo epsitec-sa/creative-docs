@@ -26,6 +26,7 @@ namespace Epsitec.Common.Document.Settings
 			this.targetWidth = 1.0;  // 0.1mm
 			this.targetOffset = 50.0;  // 5mm
 			this.textCurve = false;
+			this.execute = true;
 			this.colorConversion = PDF.ColorConversion.None;
 			this.imageCompression = PDF.ImageCompression.ZIP;
 			this.jpegQuality = 0.7;
@@ -127,6 +128,12 @@ namespace Epsitec.Common.Document.Settings
 			set { this.textCurve = value; }
 		}
 
+		public bool Execute
+		{
+			get { return this.execute; }
+			set { this.execute = value; }
+		}
+
 		public PDF.ColorConversion ColorConversion
 		{
 			get { return this.colorConversion; }
@@ -179,7 +186,7 @@ namespace Epsitec.Common.Document.Settings
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			//	Sérialise les réglages.
-			info.AddValue("Rev", 7);
+			info.AddValue("Rev", 8);
 			info.AddValue("PageRange", this.pageRange);
 			info.AddValue("PageFrom", this.pageFrom);
 			info.AddValue("PageTo", this.pageTo);
@@ -189,6 +196,7 @@ namespace Epsitec.Common.Document.Settings
 			info.AddValue("TargetWidth", this.targetWidth);
 			info.AddValue("TargetOffset", this.targetOffset);
 			info.AddValue("TextCurve", this.textCurve);
+			info.AddValue("Execute", this.execute);
 			info.AddValue("ColorConversion", this.colorConversion);
 			info.AddValue("ImageCompression", this.imageCompression);
 			info.AddValue("JpegQuality", this.jpegQuality);
@@ -253,9 +261,14 @@ namespace Epsitec.Common.Document.Settings
 				this.bleedOddMargins  = Margins.Zero;
 			}
 
-			if ( rev >= 7 )
+			if (rev >= 7)
 			{
-				this.targetOffset = info.GetDouble("TargetOffset");
+				this.targetOffset = info.GetDouble ("TargetOffset");
+			}
+
+			if (rev >= 8)
+			{
+				this.execute = info.GetBoolean("Execute");
 			}
 		}
 		#endregion
@@ -273,6 +286,7 @@ namespace Epsitec.Common.Document.Settings
 		protected double					targetOffset;
 		protected double?					targetOffsetX, targetOffsetY;
 		protected bool						textCurve;
+		protected bool						execute;
 		protected PDF.ColorConversion		colorConversion;
 		protected PDF.ImageCompression		imageCompression;
 		protected double					jpegQuality;

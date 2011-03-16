@@ -1490,4 +1490,5 @@
   <data name="Panel.Frame.Long.MarginConvexity" id="K62">Convexité</data>
   <data name="Panel.Frame.Short.ShadowConvexity" id="K72">X</data>
   <data name="Panel.Frame.Tooltip.MarginConvexity" id="K82">Convexité ou concavité de la bordure</data>
+  <data name="Dialog.Bool.ExportPDFExecute" id="K92">Ouvrir le document PDF produit</data>
 </bundle>

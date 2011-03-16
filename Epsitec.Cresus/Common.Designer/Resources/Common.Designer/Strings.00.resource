@@ -53,7 +53,7 @@
   <data name="Viewers.Panels.StatusBar.Next" id="0J9">Sélectionner l&amp;apos;objet suivant</data>
   <data name="Viewers.Panels.StatusBar.All" id="0K9">Sélectionner tous les enfants</data>
   <data name="Viewers.Captions.Labels.Title" id="0A5" mod="1">Textes</data>
-  <data name="Viewers.Captions.Description.Title" id="0C5" mod="1">Description pour la bulle d&amp;apos;aide</data>
+  <data name="Viewers.Captions.Description.Title" id="0C5" mod="1">Bulle d&amp;apos;aide</data>
   <data name="Viewers.Captions.Description.Short" id="0J5" mod="1">Description</data>
   <data name="Viewers.Captions.Icon.Title" id="0D5" mod="1">Icône</data>
   <data name="Viewers.Captions.About.Title" id="0B5" mod="1">Commentaires</data>

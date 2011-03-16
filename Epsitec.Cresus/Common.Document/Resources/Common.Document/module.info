@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModuleInfo id="2" name="Common.Document" layer="s" textMode="String" namespace="Epsitec.Common.Document">
   <Versions>
-    <Version id="2" build="47" date="2011-01-31T18:34:31.6865954Z" />
     <Version id="1" build="8" date="2011-03-08T09:46:59.3968114Z" />
+    <Version id="2" build="48" date="2011-03-16T13:04:48.4078066Z" />
   </Versions>
 </ModuleInfo>

@@ -134,6 +134,10 @@ namespace Epsitec.Common.Document.Settings
 					this.text = Res.Strings.Dialog.Bool.ExportPDFTextCurve;
 					break;
 
+				case "ExportPDFExecute":
+					this.text = Res.Strings.Dialog.Bool.ExportPDFExecute;
+					break;
+
 				case "RepeatDuplicateMove":
 					this.text = Res.Strings.Dialog.Bool.RepeatDuplicateMove;
 					break;
@@ -224,6 +228,9 @@ namespace Epsitec.Common.Document.Settings
 
 					case "ExportPDFTextCurve":
 						return this.document.Settings.ExportPDFInfo.TextCurve;
+
+					case "ExportPDFExecute":
+						return this.document.Settings.ExportPDFInfo.Execute;
 
 					case "RepeatDuplicateMove":
 						return this.document.Modifier.RepeatDuplicateMove;
@@ -339,6 +346,10 @@ namespace Epsitec.Common.Document.Settings
 
 					case "ExportPDFTextCurve":
 						this.document.Settings.ExportPDFInfo.TextCurve = value;
+						break;
+
+					case "ExportPDFExecute":
+						this.document.Settings.ExportPDFInfo.Execute = value;
 						break;
 
 					case "RepeatDuplicateMove":
