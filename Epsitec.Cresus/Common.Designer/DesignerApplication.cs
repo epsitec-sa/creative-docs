@@ -1878,62 +1878,90 @@ namespace Epsitec.Common.Designer
 		{
 			ModuleInfo mi = this.CurrentModuleInfo;
 
-			mi.TabPage = new TabPage();
-			mi.TabPage.TabTitle = Misc.GetModuleName(mi.Module.ModuleId.Name, mi.Module.IsGlobalDirty, mi.Module.IsPatch);
+			mi.TabPage = new TabPage ();
+			mi.TabPage.TabTitle = Misc.GetModuleName (mi.Module.ModuleId.Name, mi.Module.IsGlobalDirty, mi.Module.IsPatch);
 
-			this.bookModules.Items.Insert(this.currentModule, mi.TabPage);
+			this.bookModules.Items.Insert (this.currentModule, mi.TabPage);
 
-			double margin = 3;
-			double size = 20;
-
-			var topFrame = new FrameBox
+			//	Bande horizontale pour le nom du module.
 			{
-				Parent = mi.TabPage,
-				PreferredHeight = margin+size+margin,
-				Dock = DockStyle.Top,
-				Padding = new Margins (0, 0, margin, margin),
-			};
+				double margin = 3;
+				double size = 20;
 
-			var accessButton = new GlyphButton
-			{
-				Parent = topFrame,
-				GlyphShape = GlyphShape.TriangleRight,
-				ButtonStyle = ButtonStyle.ToolItem,
-				PreferredSize = new Size (size, size),
-				Dock = DockStyle.Left,
-				Margins = new Margins (0, 6, 0, 0),
-			};
-
-			ToolTip.Default.SetToolTip (accessButton, "Accès aux informations du module");
-
-			accessButton.Clicked += delegate
-			{
-				if (!this.Terminate ())
+				mi.ModuleFrame = new FrameBox
 				{
-					return;
-				}
+					Parent = mi.TabPage,
+					Visibility = this.showModuleTitle,
+					PreferredHeight = margin+size+margin,
+					Dock = DockStyle.Top,
+					Padding = new Margins (0, 0, margin, margin),
+				};
 
-				this.CurrentModule.Info ();
-			};
+				var accessButton = new GlyphButton
+				{
+					Parent = mi.ModuleFrame,
+					GlyphShape = GlyphShape.TriangleRight,
+					ButtonStyle = ButtonStyle.ToolItem,
+					PreferredSize = new Size (size, size),
+					Dock = DockStyle.Left,
+					Margins = new Margins (0, 6, 0, 0),
+				};
 
-			mi.ModuleTitle = new StaticText
+				ToolTip.Default.SetToolTip (accessButton, "Accès aux informations du module");
+
+				accessButton.Clicked += delegate
+				{
+					if (!this.Terminate ())
+					{
+						return;
+					}
+
+					this.CurrentModule.Info ();
+				};
+
+				mi.ModuleTitle = new StaticText
+				{
+					Parent = mi.ModuleFrame,
+					Text = Misc.GetModuleDescription (this, mi.Module),
+					PreferredHeight = 20,
+					ContentAlignment = ContentAlignment.MiddleLeft,
+					Dock = DockStyle.Fill,
+				};
+			}
+
+			//	Bande horizontale pour les boutons d'accès aux différents types de ressources.
 			{
-				Parent = topFrame,
-				Text = Misc.GetModuleDescription (this, mi.Module),
-				PreferredHeight = 20,
-				ContentAlignment = ContentAlignment.MiddleLeft,
-				Dock = DockStyle.Fill,
-			};
+				mi.BundleTypeWidget = new MyWidgets.BundleType
+				{
+					Parent = mi.TabPage,
+					Dock = DockStyle.Top,
+				};
+			}
 
-			mi.BundleTypeWidget = new MyWidgets.BundleType
+			//	Bouton pour monter/cacher le titre du module.
 			{
-				Parent = mi.TabPage,
-				Dock = DockStyle.Top,
-			};
+				mi.ShowHideButton = new GlyphButton
+				{
+					Parent = mi.TabPage,
+					GlyphShape = this.showModuleTitle ? GlyphShape.TriangleUp : GlyphShape.TriangleDown,
+					ButtonStyle = Widgets.ButtonStyle.Slider,
+					PreferredSize = new Size (19, 19),
+					Anchor = AnchorStyles.TopRight,
+					Margins = new Margins (0, 3, 3, 0),
+				};
 
-			mi.BundleTypeWidget.TypeChanged += new EventHandler<CancelEventArgs>(this.HandleTypeChanged);
+				ToolTip.Default.SetToolTip (mi.ShowHideButton, "Montre ou cache le titre du module");
 
-			this.CreateViewerLayout();
+				mi.ShowHideButton.Clicked += delegate
+				{
+					this.showModuleTitle = !this.showModuleTitle;
+					this.UpdateModuleTitle ();
+				};
+			}
+
+			mi.BundleTypeWidget.TypeChanged += new EventHandler<CancelEventArgs> (this.HandleTypeChanged);
+
+			this.CreateViewerLayout ();
 		}
 
 		private void CreateViewerLayout()
@@ -1963,6 +1991,14 @@ namespace Epsitec.Common.Designer
 				viewer.Window.ForceLayout();
 				viewer.ShowSelectedRow();
 			}
+		}
+
+		private void UpdateModuleTitle()
+		{
+			ModuleInfo mi = this.CurrentModuleInfo;
+
+			mi.ShowHideButton.GlyphShape = this.showModuleTitle ? GlyphShape.TriangleUp : GlyphShape.TriangleDown;
+			mi.ModuleFrame.Visibility = this.showModuleTitle;
 		}
 
 		public bool Terminate()
@@ -2197,11 +2233,15 @@ namespace Epsitec.Common.Designer
 		private void UseModule(int rank)
 		{
 			//	Utilise un module ouvert.
-			if ( this.ignoreChange )  return;
+			if (this.ignoreChange)
+			{
+				return;
+			}
 
 			this.lastModule = this.currentModule;
 			this.currentModule = rank;
 
+			this.UpdateModuleTitle ();
 			this.UpdateCommandEditLocked();
 
 			if ( rank >= 0 )
@@ -2914,8 +2954,10 @@ namespace Epsitec.Common.Designer
 		{
 			public Module						Module;
 			public TabPage						TabPage;
+			public FrameBox						ModuleFrame;
 			public StaticText					ModuleTitle;
 			public MyWidgets.BundleType			BundleTypeWidget;
+			public GlyphButton					ShowHideButton;
 
 			#region IDisposable Members
 			public void Dispose()
@@ -2981,6 +3023,7 @@ namespace Epsitec.Common.Designer
 		private bool							ignoreChange = false;
 		private double							moveHorizontal = 5;
 		private double							moveVertical = 5;
+		private bool							showModuleTitle = true;
 
 		private List<Viewers.Locator>			locators;
 		private int								locatorIndex;
