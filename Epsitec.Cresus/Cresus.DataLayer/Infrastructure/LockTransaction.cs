@@ -1,6 +1,5 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
-
 
 using Epsitec.Common.Support.Extensions;
 
@@ -11,11 +10,8 @@ using System.Collections.Generic;
 
 using System.Linq;
 
-
 namespace Epsitec.Cresus.DataLayer.Infrastructure
 {
-
-
 	/// <summary>
 	/// The <c>LockTransaction</c> class provides the tools required to manage the high level
 	/// transactions.
@@ -24,8 +20,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 	/// </summary>
 	public sealed class LockTransaction : System.IDisposable
 	{
-		
-		
 		/// <summary>
 		/// Builds a new <see cref="LockTransaction"/> for a given set of locks.
 		/// </summary>
@@ -52,7 +46,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			this.connectionId = connectionId;
 		}
 
-
 		/// <summary>
 		/// Destructor of the class.
 		/// </summary>
@@ -70,24 +63,22 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// used by the transaction is interrupted. This should never happen while the application is
 		/// still running, but you never know.
 		/// </remarks>
-		public LockState State
+		public LockState						State
 		{
 			get;
 			private set;
 		}
 
-
 		/// <summary>
 		/// The <see cref="DbLockManager"/> used to access the low level lock functionnalities.
 		/// </summary>
-		private DbLockManager DbLockManager
+		private DbLockManager					DbLockManager
 		{
 			get
 			{
 				return this.dbInfrastructure.ServiceManager.LockManager;
 			}
 		}
-
 		
 		#region IDisposable Members
 
@@ -150,7 +141,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			}
 		}
 
-
 		/// <summary>
 		/// Releases all the locks within the transaction. This method must be called if the transaction
 		/// has ever been locked.
@@ -172,7 +162,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 			this.State = LockState.Disposed;
 		}
-
 
 		/// <summary>
 		/// For each lock defined in this instance, finds its name, the time at which it has been
@@ -217,7 +206,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			return canLock;
 		}
 
-
 		/// <summary>
 		/// Releases all the locks. This method does not uses any transaction, so its call must be
 		/// included in one to ensure atomicity.
@@ -230,7 +218,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			}
 		}
 
-
 		/// <summary>
 		/// Gets the data about who owns the locks of this instance. This method does not uses any
 		/// transaction, so its call must be included in one to ensure atomicity.
@@ -242,7 +229,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 			return data.Select (x => new LockOwner (x)).ToList ();
 		}
-
 		
 		/// <summary>
 		/// Disposes the transaction, which release the locks if they haven't been released before.
@@ -299,7 +285,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			}
 		}
 
-
 		/// <summary>
 		/// Removes the locks associated with an inactive connection.
 		/// </summary>
@@ -313,7 +298,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 			lockManager.RemoveInactiveLocks ();
 		}
-
 		
 		/// <summary>
 		/// Checks whether a set of locks is available for a given connection id.
@@ -331,7 +315,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			});
 		}
 
-
 		/// <summary>
 		/// Creates the <see cref="DbTransaction"/> object used for read only transactions.
 		/// </summary>
@@ -341,7 +324,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			return dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly);
 		}
-
 
 		/// <summary>
 		/// Creates the <see cref="DbTransaction"/> object used for read write transactions.
@@ -359,24 +341,8 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		}
 
 
-		/// <summary>
-		/// The names of the locks contained in the transaction.
-		/// </summary>
-		private IEnumerable<string> lockNames;
-
-
-		/// <summary>
-		/// The id of the connection used to acquire the locks.
-		/// </summary>
-		private long connectionId;
-
-
-		/// <summary>
-		/// The <see cref="DbInfrastructure"/> object used to communicate with the database.
-		/// </summary>
-		private DbInfrastructure dbInfrastructure;
-
-
+		private readonly List<string>			lockNames;
+		private readonly long					connectionId;
+		private readonly DbInfrastructure		dbInfrastructure;
 	}
-
 }

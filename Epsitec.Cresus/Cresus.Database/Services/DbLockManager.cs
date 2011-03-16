@@ -1,16 +1,13 @@
-﻿using Epsitec.Common.Support.Extensions;
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
-using Epsitec.Cresus.Database.Collections;
+using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
-
 using System.Linq;
-
 
 namespace Epsitec.Cresus.Database.Services
 {
-
-
 	/// <summary>
 	/// The <c>DbLockManager</c> class provides the low level tools required to interact with the
 	/// high level locks.
@@ -20,8 +17,6 @@ namespace Epsitec.Cresus.Database.Services
 	/// </summary>
 	public sealed class DbLockManager : DbAbstractTableService
 	{
-
-
 		// TODO Comment this class.
 		// Marc
 
@@ -39,7 +34,6 @@ namespace Epsitec.Cresus.Database.Services
 		{
 			return Tags.TableLock;
 		}
-
 
 		internal override DbTable CreateDbTable()
 		{
@@ -117,7 +111,6 @@ namespace Epsitec.Cresus.Database.Services
 			}
 		}
 
-
 		/// <summary>
 		/// Releases a given lock for a given connectionId. If the lock cannot be release because it
 		/// does not exists or because it is owned by another connection, an
@@ -163,7 +156,6 @@ namespace Epsitec.Cresus.Database.Services
 			}
 		}
 
-
 		/// <summary>
 		/// Gets the data of a single lock.
 		/// </summary>
@@ -202,7 +194,7 @@ namespace Epsitec.Cresus.Database.Services
 			return this.RowExists (condition);
 		}
 
-
+		
 		/// <summary>
 		/// Inserts a brand new lock in the database.
 		/// </summary>
@@ -220,7 +212,6 @@ namespace Epsitec.Cresus.Database.Services
 			this.AddRow (columnNameToValues);
 		}
 
-
 		/// <summary>
 		/// Removes a lock in the database.
 		/// </summary>
@@ -231,7 +222,6 @@ namespace Epsitec.Cresus.Database.Services
 
 			this.RemoveRows (condition);
 		}
-
 
 		/// <summary>
 		/// Sets the value of the counter of a single lock.
@@ -249,7 +239,6 @@ namespace Epsitec.Cresus.Database.Services
 
 			this.SetRowValues (columnNamesToValues, condition);
 		}
-
 
 		/// <summary>
 		/// Deletes all locks that are associated with an inactive connection (i.e. a connection that
@@ -282,7 +271,6 @@ namespace Epsitec.Cresus.Database.Services
 			);
 		}
 
-
 		/// <summary>
 		/// Creates the <see cref="SqlFunction"/> object that describes the condition that returns
 		/// true only for the locks whose connection is active.
@@ -306,9 +294,5 @@ namespace Epsitec.Cresus.Database.Services
 				SqlField.CreateSubQuery (queryForOpenConnectionIds)
 			);
 		}
-
-
 	}
-
-
 }
