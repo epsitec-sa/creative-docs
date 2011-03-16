@@ -25,7 +25,7 @@ namespace Epsitec.Common.Designer.Controllers
 			this.filterUnifier = filterUnifier;
 		}
 
-		public FrameBox CreateUI(Widget parent)
+		public FrameBox CreateUI(Widget parent, double labelWidth = 36)
 		{
 			var frame = new FrameBox
 			{
@@ -37,7 +37,7 @@ namespace Epsitec.Common.Designer.Controllers
 			{
 				Parent = frame,
 				Text = "Filtrer",
-				PreferredWidth = 50,
+				PreferredWidth = labelWidth,
 				Dock = DockStyle.Left,
 			};
 

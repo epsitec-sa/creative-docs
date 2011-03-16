@@ -252,8 +252,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected override void PaintForegroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			//	Peinture du widget.
-			IAdorner    adorner = Widgets.Adorners.Factory.Active;
-			WidgetPaintState state   = this.PaintState;
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
+			WidgetPaintState state = this.PaintState;
 			
 			Rectangle area = this.DrawingArea();
 			int dx = this.TotalCellVisibleX();

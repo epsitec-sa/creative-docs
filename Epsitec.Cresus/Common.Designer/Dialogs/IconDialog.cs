@@ -39,7 +39,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				{
 					this.filterController = new Controllers.FilterController ();
 
-					var frame = this.filterController.CreateUI (this.window.Root);
+					var frame = this.filterController.CreateUI (this.window.Root, 50);
 					frame.Margins = new Margins (0, 0, 0, 6);
 					
 					this.filterController.FilterChanged += new EventHandler (this.HandleFilterControllerChanged);

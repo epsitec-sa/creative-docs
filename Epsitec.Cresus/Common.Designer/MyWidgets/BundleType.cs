@@ -12,31 +12,26 @@ namespace Epsitec.Common.Designer.MyWidgets
 	{
 		public BundleType() : base()
 		{
-			new Separator  // trait de séparation supérieur
+			IAdorner    adorner = Widgets.Adorners.Factory.Active;
+
+			var frame = new FrameBox
 			{
 				Parent = this,
-				PreferredHeight = 1,
-				Margins = new Margins (0, 0, 0, 5),
+				DrawFullFrame = true,
+				BackColor = adorner.ColorWindow,
+				Padding = new Margins (4, 4, 7, 2),
 				Dock = DockStyle.Top,
 			};
 
-			new Separator  // trait de séparation inférieur
-			{
-				Parent = this,
-				PreferredHeight = 1,
-				Margins = new Margins (0, 0, 0, 0),
-				Dock = DockStyle.Bottom,
-			};
-
-			this.buttonStrings  = this.CreateButton (ResourceAccess.Type.Strings);
-			this.buttonCaptions = this.CreateButton (ResourceAccess.Type.Captions);
-			this.buttonCommands = this.CreateButton (ResourceAccess.Type.Commands);
-			this.buttonTypes    = this.CreateButton (ResourceAccess.Type.Types);
-			this.buttonValues   = this.CreateButton (ResourceAccess.Type.Values);
-			this.buttonFields   = this.CreateButton (ResourceAccess.Type.Fields);
-			this.buttonEntities = this.CreateButton (ResourceAccess.Type.Entities);
-			this.buttonForms    = this.CreateButton (ResourceAccess.Type.Forms);
-			this.buttonPanels   = this.CreateButton (ResourceAccess.Type.Panels);
+			this.buttonStrings  = this.CreateButton (frame, ResourceAccess.Type.Strings);
+			this.buttonCaptions = this.CreateButton (frame, ResourceAccess.Type.Captions);
+			this.buttonCommands = this.CreateButton (frame, ResourceAccess.Type.Commands);
+			this.buttonTypes    = this.CreateButton (frame, ResourceAccess.Type.Types);
+			this.buttonValues   = this.CreateButton (frame, ResourceAccess.Type.Values);
+			this.buttonFields   = this.CreateButton (frame, ResourceAccess.Type.Fields);
+			this.buttonEntities = this.CreateButton (frame, ResourceAccess.Type.Entities);
+			this.buttonForms    = this.CreateButton (frame, ResourceAccess.Type.Forms);
+			this.buttonPanels   = this.CreateButton (frame, ResourceAccess.Type.Panels);
 
 			this.UpdateButtons();
 		}
@@ -69,11 +64,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		private IconButtonMark CreateButton(ResourceAccess.Type type)
+		private IconButtonMark CreateButton(Widget parent, ResourceAccess.Type type)
 		{
 			var button = new IconButtonMark
 			{
-				Parent = this,
+				Parent = parent,
 				Text = ResourceAccess.TypeDisplayName (type),
 				Name = BundleType.Convert (type),
 				MarkDisposition = ButtonMarkDisposition.Below,
