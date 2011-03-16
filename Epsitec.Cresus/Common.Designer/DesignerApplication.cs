@@ -1891,11 +1891,11 @@ namespace Epsitec.Common.Designer
 			ModuleInfo mi = this.CurrentModuleInfo;
 
 			mi.TabPage = new TabPage();
-			mi.TabPage.TabTitle = Misc.ExtractName(mi.Module.ModuleId.Name, mi.Module.IsGlobalDirty, mi.Module.IsPatch);
+			mi.TabPage.TabTitle = Misc.GetModuleName(mi.Module.ModuleId.Name, mi.Module.IsGlobalDirty, mi.Module.IsPatch);
 			this.bookModules.Items.Insert(this.currentModule, mi.TabPage);
 
 			mi.ModuleTitle = new StaticText (mi.TabPage);
-			mi.ModuleTitle.Text = Misc.DescriptionName (mi.Module.ModuleId.Name, mi.Module.IsGlobalDirty, mi.Module.IsPatch);
+			mi.ModuleTitle.Text = Misc.GetModuleNameDescription (mi.Module.ModuleId.Name, mi.Module.IsGlobalDirty, mi.Module.IsPatch);
 			mi.ModuleTitle.ContentAlignment = ContentAlignment.MiddleLeft;
 			mi.ModuleTitle.Dock = DockStyle.Top;
 			mi.ModuleTitle.Margins = new Margins (5);
@@ -2509,7 +2509,7 @@ namespace Epsitec.Common.Designer
 			foreach (var mi in this.moduleInfoList)
 			{
 				TabPage tab = mi.TabPage;
-				string name = Misc.ExtractName (mi.Module.ModuleId.Name, mi.Module.IsGlobalDirty, mi.Module.IsPatch);
+				string name = Misc.GetModuleName (mi.Module.ModuleId.Name, mi.Module.IsGlobalDirty, mi.Module.IsPatch);
 
 				if (tab.TabTitle != name)
 				{
@@ -2517,7 +2517,7 @@ namespace Epsitec.Common.Designer
 					changed = true;
 				}
 
-				mi.ModuleTitle.Text = Misc.DescriptionName (mi.Module.ModuleId.Name, mi.Module.IsGlobalDirty, mi.Module.IsPatch);
+				mi.ModuleTitle.Text = Misc.GetModuleNameDescription (mi.Module.ModuleId.Name, mi.Module.IsGlobalDirty, mi.Module.IsPatch);
 			}
 
 			if (changed)

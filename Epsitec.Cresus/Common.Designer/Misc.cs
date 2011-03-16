@@ -811,7 +811,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		static public string DescriptionName(string moduleName, bool dirtySerialize, bool isPatch)
+		static public string GetModuleNameDescription(string moduleName, bool dirtySerialize, bool isPatch)
 		{
 			//	Retourne le nom d'un module et son état.
 			var builder = new System.Text.StringBuilder();
@@ -822,7 +822,7 @@ namespace Epsitec.Common.Designer
 			}
 			else
 			{
-				builder.Append (Misc.ExtractName (moduleName, shortName: false));
+				builder.Append (Misc.GetModuleName (moduleName, shortName: false));
 			}
 
 			if (isPatch || dirtySerialize)
@@ -850,13 +850,13 @@ namespace Epsitec.Common.Designer
 			return builder.ToString ();
 		}
 
-		static public string ExtractName(string moduleName, bool dirtySerialize, bool isPatch)
+		static public string GetModuleName(string moduleName, bool dirtySerialize, bool isPatch)
 		{
-			//	Extrait le nom de module.
+			//	Retourne le nom d'un module.
 			//	Si le nom n'existe pas, donne "sans titre".
 			//	Si le module doit être sérialisé, donne le nom en gras.
 			//	Si le module provient d'un patch, donne le nom en italique.
-			string name = string.IsNullOrEmpty (moduleName) ? Res.Strings.Misc.NoTitle : Misc.ExtractName (moduleName, shortName: true);
+			string name = string.IsNullOrEmpty (moduleName) ? Res.Strings.Misc.NoTitle : Misc.GetModuleName (moduleName, shortName: true);
 
 			if (isPatch)
 			{
@@ -871,9 +871,9 @@ namespace Epsitec.Common.Designer
 			return name;
 		}
 
-		static public string ExtractName(string moduleName, bool shortName)
+		static public string GetModuleName(string moduleName, bool shortName)
 		{
-			//	Extrait le nom de module.
+			//	Retourne le nom d'un module.
 			//	Si shortName = true, "Cresus.Core.Business" devient "Business".
 			if (shortName)
 			{
