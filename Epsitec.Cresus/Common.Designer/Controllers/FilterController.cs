@@ -52,14 +52,15 @@ namespace Epsitec.Common.Designer.Controllers
 			{
 				Parent = frame,
 				GlyphShape = GlyphShape.Menu,
+				ButtonStyle = ButtonStyle.ToolItem,
 				Dock = DockStyle.Right,
 				Margins = new Margins (1, 0, 0, 0),
 			};
 
-			this.clearButton = new GlyphButton
+			this.clearButton = new IconButton
 			{
 				Parent = frame,
-				GlyphShape = GlyphShape.Close,
+				IconUri = Misc.Icon ("Reset"),
 				Dock = DockStyle.Right,
 				Margins = new Margins (-1, 0, 0, 0),
 			};
@@ -380,7 +381,7 @@ namespace Epsitec.Common.Designer.Controllers
 
 		private StaticText					label;
 		private TextField					field;
-		private GlyphButton					clearButton;
+		private IconButton					clearButton;
 		private GlyphButton					menuButton;
 
 		private bool						ignoreChange;
