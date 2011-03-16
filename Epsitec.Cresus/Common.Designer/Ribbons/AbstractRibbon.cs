@@ -7,9 +7,9 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// <summary>
 	/// La classe Abstract est la classe de base pour toutes les sections de rubans.
 	/// </summary>
-	public abstract class Abstract : RibbonSection
+	public abstract class AbstractRibbon : RibbonSection
 	{
-		public Abstract(DesignerApplication designerApplication)
+		public AbstractRibbon(DesignerApplication designerApplication)
 		{
 			this.designerApplication = designerApplication;
 		}

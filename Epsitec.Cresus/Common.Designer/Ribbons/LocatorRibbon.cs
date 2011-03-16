@@ -5,13 +5,13 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.Ribbons
 {
 	/// <summary>
-	/// La classe Undo correspond aux commandes annuler/refaire.
+	/// La classe Locator correspond aux commandes de navigation précédent/suivant.
 	/// </summary>
-	public class Undo : Abstract
+	public class LocatorRibbon : AbstractRibbon
 	{
-		public Undo(DesignerApplication designerApplication) : base(designerApplication)
+		public LocatorRibbon(DesignerApplication designerApplication) : base(designerApplication)
 		{
-			this.Title = Res.Strings.Ribbon.Section.Undo;
+			this.Title = Res.Strings.Ribbon.Section.Locator;
 			this.PreferredWidth = 8 + 22*1.5*2;
 
 			double dx = 22;
@@ -19,20 +19,20 @@ namespace Epsitec.Common.Designer.Ribbons
 
 			this.group = new FrameBox(this);
 
-			this.buttonList = this.CreateMenuButton("UndoRedoList", Res.Strings.Action.UndoRedoList, this.HandleListPressed);
+			this.buttonList = this.CreateMenuButton("LocatorList", Res.Strings.Action.LocatorList, this.HandleListPressed);
 			this.buttonList.ContentAlignment = ContentAlignment.BottomCenter;
 			this.buttonList.GlyphSize = new Size(dx*3.0, dy*0.5);
 			this.buttonList.Anchor = AnchorStyles.All;
 			this.buttonList.SetParent(this.group);
 
-			this.buttonPrev = this.CreateIconButton("Undo", "Large");
+			this.buttonPrev = this.CreateIconButton("LocatorPrev", "Large");
 			this.buttonPrev.ButtonStyle = ButtonStyle.ComboItem;
 			this.buttonPrev.PreferredSize = new Size(dx*1.5, dy*1.5);
 			this.buttonPrev.Dock = DockStyle.Left;
 			this.buttonPrev.VerticalAlignment = VerticalAlignment.Top;
 			this.buttonPrev.SetParent(this.group);
 
-			this.buttonNext = this.CreateIconButton("Redo", "Large");
+			this.buttonNext = this.CreateIconButton("LocatorNext", "Large");
 			this.buttonNext.ButtonStyle = ButtonStyle.ComboItem;
 			this.buttonNext.PreferredSize = new Size(dx*1.5, dy*1.5);
 			this.buttonNext.Dock = DockStyle.Left;
@@ -83,14 +83,11 @@ namespace Epsitec.Common.Designer.Ribbons
 				return;
 			}
 
-			VMenu menu = this.designerApplication.UndoRedoCreateMenu(null);
-			if (menu != null)
-			{
-				menu.Host = this;
-				menu.MinWidth = button.ActualWidth;
-				TextFieldCombo.AdjustComboSize(button, menu, false);
-				menu.ShowAsComboList(button, Point.Zero, button);
-			}
+			VMenu menu = this.designerApplication.LocatorCreateMenu(null);
+			menu.Host = this;
+			menu.MinWidth = button.ActualWidth;
+			TextFieldCombo.AdjustComboSize(button, menu, false);
+			menu.ShowAsComboList(button, Point.Zero, button);
 		}
 
 

@@ -7,9 +7,9 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// <summary>
 	/// La classe File correspond au menu fichiers.
 	/// </summary>
-	public class File : Abstract
+	public class FileRibbon : AbstractRibbon
 	{
-		public File(DesignerApplication designerApplication) : base(designerApplication)
+		public FileRibbon(DesignerApplication designerApplication) : base(designerApplication)
 		{
 			this.Title = Res.Strings.Ribbon.Section.File;
 			this.PreferredWidth = 8 + 22*1.5*5 + 4 + 22*1;

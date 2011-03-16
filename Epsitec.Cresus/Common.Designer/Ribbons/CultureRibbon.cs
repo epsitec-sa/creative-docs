@@ -7,9 +7,9 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// <summary>
 	/// La classe Culture permet de gérer les cultures.
 	/// </summary>
-	public class Culture : Abstract
+	public class CultureRibbon : AbstractRibbon
 	{
-		public Culture(DesignerApplication designerApplication) : base(designerApplication)
+		public CultureRibbon(DesignerApplication designerApplication) : base(designerApplication)
 		{
 			this.Title = Res.Strings.Ribbon.Section.Culture;
 			this.PreferredWidth = 8 + 22*2;

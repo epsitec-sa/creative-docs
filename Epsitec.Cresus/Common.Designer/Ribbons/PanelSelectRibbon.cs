@@ -7,9 +7,9 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// <summary>
 	/// La classe PanelSelect permet de gérer la sélection.
 	/// </summary>
-	public class PanelSelect : Abstract
+	public class PanelSelectRibbon : AbstractRibbon
 	{
-		public PanelSelect(DesignerApplication designerApplication) : base(designerApplication)
+		public PanelSelectRibbon(DesignerApplication designerApplication) : base(designerApplication)
 		{
 			this.Title = Res.Strings.Ribbon.Section.PanelSelect;
 			this.PreferredWidth = 8 + 22*3;

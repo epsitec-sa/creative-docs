@@ -7,13 +7,13 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// <summary>
 	/// La classe Display correspond aux commandes du mode d'affichage.
 	/// </summary>
-	public class Display : Abstract
+	public class DisplayRibbon : AbstractRibbon
 	{
-		public Display(DesignerApplication designerApplication) : base(designerApplication)
+		public DisplayRibbon(DesignerApplication designerApplication) : base(designerApplication)
 		{
 			this.Title = Res.Strings.Ribbon.Section.Display;
 
-			if (Display.large)
+			if (DisplayRibbon.large)
 			{
 				this.PreferredWidth = 8 + 22*1.5*4;
 
@@ -55,7 +55,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			double dx = this.buttonHorizontal.PreferredWidth;
 			double dy = this.buttonHorizontal.PreferredHeight;
 
-			if (Display.large)
+			if (DisplayRibbon.large)
 			{
 				Rectangle rect = this.UsefulZone;
 				rect.Width  = dx*1.5;

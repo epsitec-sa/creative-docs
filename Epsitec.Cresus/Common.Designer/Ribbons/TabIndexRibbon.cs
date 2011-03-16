@@ -7,9 +7,9 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// <summary>
 	/// La classe TabIndex permet de choisir l'ordre de la sélection.
 	/// </summary>
-	public class TabIndex : Abstract
+	public class TabIndexRibbon : AbstractRibbon
 	{
-		public TabIndex(DesignerApplication designerApplication) : base(designerApplication)
+		public TabIndexRibbon(DesignerApplication designerApplication) : base(designerApplication)
 		{
 			this.Title = Res.Strings.Ribbon.Section.TabIndex;
 			this.PreferredWidth = 8 + 22*4;

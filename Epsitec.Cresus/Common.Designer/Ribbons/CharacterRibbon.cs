@@ -7,9 +7,9 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// <summary>
 	/// La classe Character permet de choisir la typographie des caractères.
 	/// </summary>
-	public class Character : Abstract
+	public class CharacterRibbon : AbstractRibbon
 	{
-		public Character(DesignerApplication designerApplication) : base(designerApplication)
+		public CharacterRibbon(DesignerApplication designerApplication) : base(designerApplication)
 		{
 			this.Title = Res.Strings.Ribbon.Section.Character;
 			this.PreferredWidth = 8 + 22*3;

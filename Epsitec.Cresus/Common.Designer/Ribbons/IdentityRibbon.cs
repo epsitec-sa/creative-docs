@@ -11,9 +11,9 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// <summary>
 	/// La classe Identity correspond aux commandes de choix d'identité.
 	/// </summary>
-	public class Identity : Abstract
+	public class IdentityRibbon : AbstractRibbon
 	{
-		public Identity(DesignerApplication designerApplication) : base(designerApplication)
+		public IdentityRibbon(DesignerApplication designerApplication) : base(designerApplication)
 		{
 			this.Title = "Identité";
 			this.PreferredWidth = 8 + 48;

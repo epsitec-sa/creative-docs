@@ -7,9 +7,9 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// <summary>
 	/// La classe Align permet de choisir les commandes d'alignement de la sélection.
 	/// </summary>
-	public class Align : Abstract
+	public class AlignRibbon : AbstractRibbon
 	{
-		public Align(DesignerApplication designerApplication) : base(designerApplication)
+		public AlignRibbon(DesignerApplication designerApplication) : base(designerApplication)
 		{
 			this.Title = Res.Strings.Ribbon.Section.Align;
 			this.PreferredWidth = 8 + 22*4 + this.separatorWidth + 22;

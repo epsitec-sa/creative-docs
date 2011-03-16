@@ -7,9 +7,9 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// <summary>
 	/// La classe Access permet de choisir comment accéder aux ressources.
 	/// </summary>
-	public class Access : Abstract
+	public class AccessRibbon : AbstractRibbon
 	{
-		public Access(DesignerApplication designerApplication) : base(designerApplication)
+		public AccessRibbon(DesignerApplication designerApplication) : base(designerApplication)
 		{
 			this.Title = Res.Strings.Ribbon.Section.Access;
 			this.PreferredWidth = 8 + 22*1.5*1 + 4 + 22*3 + this.separatorWidth + 22*2 + 4 + 22*1.5*1;

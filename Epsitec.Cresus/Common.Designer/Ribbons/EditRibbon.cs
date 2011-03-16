@@ -7,9 +7,9 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// <summary>
 	/// La classe Select permet de gérer la sélection.
 	/// </summary>
-	public class Edit : Abstract
+	public class EditRibbon : AbstractRibbon
 	{
-		public Edit(DesignerApplication designerApplication) : base(designerApplication)
+		public EditRibbon(DesignerApplication designerApplication) : base(designerApplication)
 		{
 			this.Title = Res.Strings.Ribbon.Section.Edit;
 			this.PreferredWidth = 8 + 22*1.5*6;

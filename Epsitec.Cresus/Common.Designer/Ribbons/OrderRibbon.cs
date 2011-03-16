@@ -7,9 +7,9 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// <summary>
 	/// La classe Order permet de choisir l'ordre de la sélection.
 	/// </summary>
-	public class Order : Abstract
+	public class OrderRibbon : AbstractRibbon
 	{
-		public Order(DesignerApplication designerApplication) : base(designerApplication)
+		public OrderRibbon(DesignerApplication designerApplication) : base(designerApplication)
 		{
 			this.Title = Res.Strings.Ribbon.Section.Order;
 			this.PreferredWidth = 8 + 22*2;

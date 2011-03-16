@@ -7,9 +7,9 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// <summary>
 	/// La classe Clipboard permet de gérer le presse-papiers.
 	/// </summary>
-	public class Clipboard : Abstract
+	public class ClipboardRibbon : AbstractRibbon
 	{
-		public Clipboard(DesignerApplication designerApplication) : base(designerApplication)
+		public ClipboardRibbon(DesignerApplication designerApplication) : base(designerApplication)
 		{
 			this.Title = Res.Strings.Ribbon.Section.Clipboard;
 			this.PreferredWidth = 8 + 22 + 4 + 22*1.5;

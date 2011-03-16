@@ -7,9 +7,9 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// <summary>
 	/// La classe Move permet de déplacer des objets sélectionnés.
 	/// </summary>
-	public class Move : Abstract
+	public class MoveRibbon : AbstractRibbon
 	{
-		public Move(DesignerApplication designerApplication) : base(designerApplication)
+		public MoveRibbon(DesignerApplication designerApplication) : base(designerApplication)
 		{
 			this.Title = Res.Strings.Ribbon.Section.Move;
 			this.PreferredWidth = 8 + 22*2 + 50;

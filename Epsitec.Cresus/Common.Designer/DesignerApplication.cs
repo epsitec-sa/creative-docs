@@ -243,31 +243,31 @@ namespace Epsitec.Common.Designer
 			this.ribbonMain.RibbonTitle = Res.Strings.Ribbon.Main;
 			this.ribbonBook.Pages.Add(this.ribbonMain);
 
-			this.ribbonMain.Items.Add(new Ribbons.Identity(this));
-			this.ribbonMain.Items.Add(new Ribbons.File(this));
-			this.ribbonMain.Items.Add(new Ribbons.Clipboard(this));
+			this.ribbonMain.Items.Add(new Ribbons.IdentityRibbon(this));
+			this.ribbonMain.Items.Add(new Ribbons.FileRibbon(this));
+			this.ribbonMain.Items.Add(new Ribbons.ClipboardRibbon(this));
 			if (this.mode == DesignerMode.Build)
 			{
-				this.ribbonMain.Items.Add(new Ribbons.Undo(this));
-				this.ribbonMain.Items.Add(new Ribbons.Edit(this));
+				this.ribbonMain.Items.Add(new Ribbons.UndoRibbon(this));
+				this.ribbonMain.Items.Add(new Ribbons.EditRibbon(this));
 			}
-			this.ribbonMain.Items.Add(new Ribbons.Access(this));
-			this.ribbonMain.Items.Add(new Ribbons.Display(this));
-			this.ribbonMain.Items.Add(new Ribbons.Locator(this));
+			this.ribbonMain.Items.Add(new Ribbons.AccessRibbon(this));
+			this.ribbonMain.Items.Add(new Ribbons.DisplayRibbon(this));
+			this.ribbonMain.Items.Add(new Ribbons.LocatorRibbon(this));
 
 			//	Crée le ruban des opérations.
 			this.ribbonOper = new RibbonPage();
 			this.ribbonOper.RibbonTitle = Res.Strings.Ribbon.Oper;
 			this.ribbonBook.Pages.Add(this.ribbonOper);
 
-			this.ribbonOper.Items.Add(new Ribbons.Culture(this));
-			this.ribbonOper.Items.Add(new Ribbons.Character(this));
-			this.ribbonOper.Items.Add(new Ribbons.PanelShow(this));
-			this.ribbonOper.Items.Add(new Ribbons.PanelSelect(this));
-			this.ribbonOper.Items.Add(new Ribbons.Move(this));
-			this.ribbonOper.Items.Add(new Ribbons.Align(this));
-			this.ribbonOper.Items.Add(new Ribbons.Order(this));
-			this.ribbonOper.Items.Add(new Ribbons.TabIndex(this));
+			this.ribbonOper.Items.Add(new Ribbons.CultureRibbon(this));
+			this.ribbonOper.Items.Add(new Ribbons.CharacterRibbon(this));
+			this.ribbonOper.Items.Add(new Ribbons.PanelShowRibbon(this));
+			this.ribbonOper.Items.Add(new Ribbons.PanelSelectRibbon(this));
+			this.ribbonOper.Items.Add(new Ribbons.MoveRibbon(this));
+			this.ribbonOper.Items.Add(new Ribbons.AlignRibbon(this));
+			this.ribbonOper.Items.Add(new Ribbons.OrderRibbon(this));
+			this.ribbonOper.Items.Add(new Ribbons.TabIndexRibbon(this));
 
 			//	Crée la barre de statuts.
 			this.info = new StatusBar(this.Window.Root);
@@ -352,7 +352,7 @@ namespace Epsitec.Common.Designer
 			//	Cherche le bouton utilisé pour une commande, dans un ruban.
 			foreach (Widget widget in page.Items)
 			{
-				Ribbons.Abstract section = widget as Ribbons.Abstract;
+				Ribbons.AbstractRibbon section = widget as Ribbons.AbstractRibbon;
 				if (section != null)
 				{
 					IconButton button = section.SearchIconButton(command);
