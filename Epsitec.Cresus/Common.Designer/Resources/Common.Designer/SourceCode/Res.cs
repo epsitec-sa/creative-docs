@@ -3721,6 +3721,108 @@ namespace Epsitec.Common.Designer
 					}
 				}
 				
+				public static class ModuleInfo
+				{
+					//	designer:str/30KB3
+					public static global::System.String Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544427));
+						}
+					}
+					public static class Label
+					{
+						//	designer:str/30KF3
+						public static global::System.String Assemblies
+						{
+							get
+							{
+								return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544431));
+							}
+						}
+						//	designer:str/30KE3
+						public static global::System.String Id
+						{
+							get
+							{
+								return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544430));
+							}
+						}
+						//	designer:str/30KD3
+						public static global::System.String Name
+						{
+							get
+							{
+								return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544429));
+							}
+						}
+						//	designer:str/30KG3
+						public static global::System.String NamespaceDefault
+						{
+							get
+							{
+								return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544432));
+							}
+						}
+						//	designer:str/30KH3
+						public static global::System.String NamespaceEntities
+						{
+							get
+							{
+								return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544433));
+							}
+						}
+						//	designer:str/30KI3
+						public static global::System.String NamespaceForms
+						{
+							get
+							{
+								return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544434));
+							}
+						}
+						//	designer:str/30KJ3
+						public static global::System.String NamespaceRes
+						{
+							get
+							{
+								return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544435));
+							}
+						}
+						//	designer:str/30KC3
+						public static global::System.String Path
+						{
+							get
+							{
+								return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544428));
+							}
+						}
+					}
+					
+					public static class Radio
+					{
+						public static class TextMode
+						{
+							//	designer:str/30KL3
+							public static global::System.String FormattedText
+							{
+								get
+								{
+									return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544437));
+								}
+							}
+							//	designer:str/30KK3
+							public static global::System.String String
+							{
+								get
+								{
+									return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544436));
+								}
+							}
+						}
+					}
+				}
+				
 				public static class New
 				{
 					//	designer:str/30K6

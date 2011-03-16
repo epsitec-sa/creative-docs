@@ -24,7 +24,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.MakeSecondaryWindow ();
 				this.window.PreventAutoClose = true;
 				this.WindowInit ("ModuleInfo", 540, 340, true);
-				this.window.Text = "Informations du module";  // Res.Strings.Dialog.ModuleInfo.Title;
+				this.window.Text = Res.Strings.Dialog.ModuleInfo.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
@@ -107,9 +107,9 @@ namespace Epsitec.Common.Designer.Dialogs
 				Margins = new Margins (0, 0, 0, 10),
 			};
 
-			this.fieldPath       = this.CreateField (box, "Chemin");
-			this.fieldName       = this.CreateField (box, "Nom");
-			this.fieldId         = this.CreateField (box, "Numéro", fieldWidth: 60);
+			this.fieldPath       = this.CreateField (box, Res.Strings.Dialog.ModuleInfo.Label.Path);
+			this.fieldName       = this.CreateField (box, Res.Strings.Dialog.ModuleInfo.Label.Name);
+			this.fieldId         = this.CreateField (box, Res.Strings.Dialog.ModuleInfo.Label.Id, fieldWidth: 60);
 
 			new Separator
 			{
@@ -119,17 +119,17 @@ namespace Epsitec.Common.Designer.Dialogs
 				Margins = new Margins (0, 0, 10, 10),
 			};
 
-			this.fieldAssemblies = this.CreateField (box, "Assemblies", bottomSpace: true);
-			
-			this.fieldDefault    = this.CreateField (box, "Namespace par défaut");
-			this.fieldEntities   = this.CreateField (box, "Namespace pour les entités");
-			this.fieldForms      = this.CreateField (box, "Namespace pour les panneaux");
-			this.fieldRes        = this.CreateField (box, "Namespace pour les ressources");
+			this.fieldAssemblies = this.CreateField (box, Res.Strings.Dialog.ModuleInfo.Label.Assemblies, bottomSpace: true);
+
+			this.fieldDefault    = this.CreateField (box, Res.Strings.Dialog.ModuleInfo.Label.NamespaceDefault);
+			this.fieldEntities   = this.CreateField (box, Res.Strings.Dialog.ModuleInfo.Label.NamespaceEntities);
+			this.fieldForms      = this.CreateField (box, Res.Strings.Dialog.ModuleInfo.Label.NamespaceForms);
+			this.fieldRes        = this.CreateField (box, Res.Strings.Dialog.ModuleInfo.Label.NamespaceRes);
 
 			this.radioString = new RadioButton
 			{
 				Parent = box,
-				Text = "Textes simples (string)",
+				Text = Res.Strings.Dialog.ModuleInfo.Radio.TextMode.String,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 10, 0),
 			};
@@ -137,7 +137,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.radioFormatted = new RadioButton
 			{
 				Parent = box,
-				Text = "Textes riches (FormattedText)",
+				Text = Res.Strings.Dialog.ModuleInfo.Radio.TextMode.FormattedText,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, 0),
 			};

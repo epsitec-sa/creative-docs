@@ -588,4 +588,15 @@
   <data name="Dialog.EntityParameters.Title" id="K83">Paramètres de l&amp;apos;entité</data>
   <data name="Entities.Action.SaveAllBitmaps" id="K93">Exporter plusieurs vues dans des fichiers image bitmap</data>
   <data name="Dialog.Filter.Radio.End" id="KA3">A la fin</data>
+  <data name="Dialog.ModuleInfo.Title" id="KB3">Informations du module</data>
+  <data name="Dialog.ModuleInfo.Label.Path" id="KC3">Chemin</data>
+  <data name="Dialog.ModuleInfo.Label.Name" id="KD3">Nom</data>
+  <data name="Dialog.ModuleInfo.Label.Id" id="KE3">Numéro</data>
+  <data name="Dialog.ModuleInfo.Label.Assemblies" id="KF3">Assemblies</data>
+  <data name="Dialog.ModuleInfo.Label.NamespaceDefault" id="KG3">Namespace par défaut</data>
+  <data name="Dialog.ModuleInfo.Label.NamespaceEntities" id="KH3">Namespace pour les entités</data>
+  <data name="Dialog.ModuleInfo.Label.NamespaceForms" id="KI3">Namespace pour les panneaux</data>
+  <data name="Dialog.ModuleInfo.Label.NamespaceRes" id="KJ3">Namespace pour les ressources</data>
+  <data name="Dialog.ModuleInfo.Radio.TextMode.String" id="KK3">Textes simples (string)</data>
+  <data name="Dialog.ModuleInfo.Radio.TextMode.FormattedText" id="KL3">Textes riches (FormattedText)</data>
 </bundle>
