@@ -13,6 +13,11 @@ using System.Text.RegularExpressions;
 
 namespace Epsitec.Common.Designer.Controllers
 {
+	/// <summary>
+	/// Ce contrôleur gère la ligne qui contient "Filtrer [    ] x v".
+	/// Le bouton 'x' efface le filtre.
+	/// Le bouton 'v' montre un menu avec les options.
+	/// </summary>
 	public class FilterController
 	{
 		public FilterController(System.Func<string, string> filterUnifier = null)
@@ -79,17 +84,22 @@ namespace Epsitec.Common.Designer.Controllers
 				this.ShowMenu ();
 			};
 
+			this.UpdateFilter ();
+			this.UpdateWidgets ();
+
 			return frame;
 		}
 
 
 		public void ClearFilter()
 		{
+			//	Efface le filtre.
 			this.Filter = null;
 		}
 
 		public bool IsFiltered(string text)
 		{
+			//	Retourne true si un texte doit être exclu par le filtre.
 			if (this.HasFilter && !string.IsNullOrEmpty (text))
 			{
 				return this.IsBaseFiltered (text);
@@ -100,6 +110,7 @@ namespace Epsitec.Common.Designer.Controllers
 
 		public bool HasFilter
 		{
+			//	Retourne true s'il existe un filtre.
 			get
 			{
 				return !string.IsNullOrEmpty (this.filterString);
@@ -108,6 +119,7 @@ namespace Epsitec.Common.Designer.Controllers
 
 		public string Filter
 		{
+			//	Texte brut du filtre.
 			get
 			{
 				return this.filterString;
@@ -127,6 +139,7 @@ namespace Epsitec.Common.Designer.Controllers
 
 		public Searcher.SearchingMode Mode
 		{
+			//	Mode du filtre.
 			get
 			{
 				return this.filterMode;
@@ -146,6 +159,7 @@ namespace Epsitec.Common.Designer.Controllers
 
 		public void SetFocus()
 		{
+			//	Met le focus dans la ligne éditable du filtre.
 			this.field.SelectAll ();
 			this.field.Focus ();
 		}
@@ -156,10 +170,13 @@ namespace Epsitec.Common.Designer.Controllers
 			this.ignoreChange = true;
 			this.field.Text = this.filterString;
 			this.ignoreChange = false;
+
+			this.clearButton.Enable = this.HasFilter;
 		}
 
 		private void UpdateFilter()
 		{
+			//	Met à jour les formes dérivées du filtre. Doit être appelé lorsque le texte ou le mode du filtre ont changé.
 			if (string.IsNullOrEmpty (this.filterString))
 			{
 				this.filterStringPrepared = null;
@@ -196,7 +213,7 @@ namespace Epsitec.Common.Designer.Controllers
 
 		private bool IsBaseFiltered(string text)
 		{
-			if (this.filterStringRegex == null)
+			if (this.filterStringRegex == null)  // filtre sans jokers ?
 			{
 				var mode = this.Mode;
 				int start = 0;
@@ -226,7 +243,7 @@ namespace Epsitec.Common.Designer.Controllers
 
 				return false;  // accepté
 			}
-			else
+			else  // filtre avec jokers ?
 			{
 				if (this.filterUnifier != null)
 				{
