@@ -179,7 +179,6 @@
     <Compile Include="Dialogs\AbstractDialog.cs" />
     <Compile Include="Dialogs\NewCultureDialog.cs" />
     <Compile Include="Dialogs\SearchDialog.cs" />
-    <Compile Include="Dialogs\FilterDialog.cs" />
     <Compile Include="Dialogs\GlyphsDialog.cs" />
     <Compile Include="DesignerApplication.cs" />
     <Compile Include="Misc.cs" />

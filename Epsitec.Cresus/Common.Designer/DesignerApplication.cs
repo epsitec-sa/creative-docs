@@ -92,7 +92,6 @@ namespace Epsitec.Common.Designer
 				this.dlgOpen             = new Dialogs.OpenDialog(this);
 				this.dlgGlyphs           = new Dialogs.GlyphsDialog(this);
 				this.dlgIcon             = new Dialogs.IconDialog(this);
-				this.dlgFilter           = new Dialogs.FilterDialog(this);
 				this.dlgSearch           = new Dialogs.SearchDialog(this);
 				this.dlgNewCulture       = new Dialogs.NewCultureDialog(this);
 				this.dlgResourceTypeCode = new Dialogs.ResourceTypeCodeDialog(this);
@@ -110,7 +109,6 @@ namespace Epsitec.Common.Designer
 				this.dlgSaveAllImages    = new Dialogs.SaveAllImagesDialog (this);
 
 				this.dlgGlyphs.Closed         += this.HandleDlgClosed;
-				this.dlgFilter.Closed         += this.HandleDlgClosed;
 				this.dlgSearch.Closed         += this.HandleDlgClosed;
 				this.dlgInitialMessage.Closed += this.HandleDlgClosed;
 
@@ -689,7 +687,6 @@ namespace Epsitec.Common.Designer
 			this.WriteSettings();
 
 			this.dlgGlyphs.Hide();
-			this.dlgFilter.Hide();
 			this.dlgSearch.Hide();
 
 			if (this.standalone)
@@ -714,21 +711,6 @@ namespace Epsitec.Common.Designer
 			{
 				this.dlgGlyphs.Hide();
 				this.glyphsState.ActiveState = ActiveState.No;
-			}
-		}
-
-		[Command("Filter")]
-		void CommandFilter(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			if (this.filterState.ActiveState == ActiveState.No)
-			{
-				this.dlgFilter.Show();
-				this.filterState.ActiveState = ActiveState.Yes;
-			}
-			else
-			{
-				this.dlgFilter.Hide();
-				this.filterState.ActiveState = ActiveState.No;
 			}
 		}
 
@@ -2879,11 +2861,6 @@ namespace Epsitec.Common.Designer
 				this.glyphsState.ActiveState = ActiveState.No;
 			}
 
-			if (sender == this.dlgFilter)
-			{
-				this.filterState.ActiveState = ActiveState.No;
-			}
-
 			if (sender == this.dlgSearch)
 			{
 				this.searchState.ActiveState = ActiveState.No;
@@ -2943,7 +2920,6 @@ namespace Epsitec.Common.Designer
 		private Dialogs.OpenDialog				dlgOpen;
 		private Dialogs.GlyphsDialog			dlgGlyphs;
 		private Dialogs.IconDialog				dlgIcon;
-		private Dialogs.FilterDialog			dlgFilter;
 		private Dialogs.SearchDialog			dlgSearch;
 		private Dialogs.NewCultureDialog		dlgNewCulture;
 		private Dialogs.ResourceTypeCodeDialog	dlgResourceTypeCode;
