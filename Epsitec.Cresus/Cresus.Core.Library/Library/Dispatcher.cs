@@ -11,9 +11,9 @@ namespace Epsitec.Cresus.Core.Library
 {
 	public static class Dispatcher
 	{
-		public static void Queue(System.Action action)
+		public static void Queue(SimpleCallback action)
 		{
-//-			CoreApplication.QueueAsyncCallback (action);
+			Application.QueueAsyncCallback (action);
 		}
 
 		public static void RequestRefreshUI()
@@ -23,12 +23,12 @@ namespace Epsitec.Cresus.Core.Library
 
 		public static void QueueTasklets(string name, params TaskletJob[] jobs)
 		{
-//-			CoreApplication.QueueTasklets (name, jobs);
+			Application.QueueTasklets (name, jobs);
 		}
 
 		public static void ExecutePending()
 		{
-//-			CoreApplication.ExecuteAsyncCallbacks ();
+			Application.ExecuteAsyncCallbacks ();
 		}
 	}
 }

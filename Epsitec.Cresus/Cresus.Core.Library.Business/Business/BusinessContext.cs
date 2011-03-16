@@ -343,8 +343,18 @@ namespace Epsitec.Cresus.Core.Business
 		/// <param name="masterEntity">The master entity.</param>
 		public void AddMasterEntity(AbstractEntity masterEntity)
 		{
-			this.masterEntities.Add (masterEntity);
-			this.OnMasterEntitiesChanged ();
+			if (this.masterEntities.Contains (masterEntity))
+			{
+				//	The master entity is already known. Add it, but don't count this as a change
+				//	in the list of master entities.
+				
+				this.masterEntities.Add (masterEntity);
+			}
+			else
+			{
+				this.masterEntities.Add (masterEntity);
+				this.OnMasterEntitiesChanged ();
+			}
 		}
 
 		/// <summary>
@@ -353,8 +363,25 @@ namespace Epsitec.Cresus.Core.Business
 		/// <param name="masterEntity">The master entity.</param>
 		public void RemoveMasterEntity(AbstractEntity masterEntity)
 		{
-			this.masterEntities.Remove (masterEntity);
-			this.OnMasterEntitiesChanged ();
+			int pos = this.masterEntities.FindLastIndex (x => x == masterEntity);
+
+			if (pos < 0)
+			{
+				throw new System.ArgumentException ("The specified master entity is not known in this context");
+			}
+
+			this.masterEntities.RemoveAt (pos);
+
+			if (this.masterEntities.Contains (masterEntity))
+			{
+				//	The master entity was removed, but it is still known as such; this means that
+				//	it was added several times into the list. Don't notify anybody about this non-
+				//	change.
+			}
+			else
+			{
+				this.OnMasterEntitiesChanged ();
+			}
 		}
 
 		/// <summary>
@@ -409,7 +436,7 @@ namespace Epsitec.Cresus.Core.Business
 
 		public IEnumerable<AbstractEntity> GetMasterEntities()
 		{
-			return this.masterEntities;
+			return this.masterEntities.Distinct ();
 		}
 
 		public Date GetReferenceDate()
