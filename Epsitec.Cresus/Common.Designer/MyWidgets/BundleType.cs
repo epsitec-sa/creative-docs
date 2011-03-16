@@ -12,15 +12,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 	{
 		public BundleType() : base()
 		{
-			var topSeparator = new Separator (this);
-			topSeparator.PreferredHeight = 1;
-			topSeparator.Margins = new Margins (0, 0, 0, 5);
-			topSeparator.Dock = DockStyle.Top;
+			new Separator  // trait de séparation supérieur
+			{
+				Parent = this,
+				PreferredHeight = 1,
+				Margins = new Margins (0, 0, 0, 5),
+				Dock = DockStyle.Top,
+			};
 
-			var bottomSeparator = new Separator (this);
-			bottomSeparator.PreferredHeight = 1;
-			bottomSeparator.Margins = new Margins (0, 0, 0, 0);
-			bottomSeparator.Dock = DockStyle.Bottom;
+			new Separator  // trait de séparation inférieur
+			{
+				Parent = this,
+				PreferredHeight = 1,
+				Margins = new Margins (0, 0, 0, 0),
+				Dock = DockStyle.Bottom,
+			};
 
 			this.buttonStrings  = this.CreateButton (ResourceAccess.Type.Strings);
 			this.buttonCaptions = this.CreateButton (ResourceAccess.Type.Captions);
@@ -52,9 +58,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				if (this.currentType != value)
 				{
-					ResourceAccess.Type oldType = this.currentType;
+					var oldType = this.currentType;
+
 					this.currentType = value;
 					this.UpdateButtons();
+					
 					this.OnTypeChanged(oldType);
 				}
 			}
