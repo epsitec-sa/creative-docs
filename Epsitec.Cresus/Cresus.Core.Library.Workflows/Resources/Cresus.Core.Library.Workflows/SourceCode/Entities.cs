@@ -833,19 +833,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/DVA6/DVAN
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[DVAN]")]
-		public string SerializedDesign
+		public global::Epsitec.Cresus.Core.Entities.XmlBlobEntity SerializedDesign
 		{
 			get
 			{
-				return this.GetField<string> ("[DVAN]");
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.XmlBlobEntity> ("[DVAN]");
 			}
 			set
 			{
-				string oldValue = this.SerializedDesign;
+				global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue = this.SerializedDesign;
 				if (oldValue != value || !this.IsFieldDefined("[DVAN]"))
 				{
 					this.OnSerializedDesignChanging (oldValue, value);
-					this.SetField<string> ("[DVAN]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.XmlBlobEntity> ("[DVAN]", oldValue, value);
 					this.OnSerializedDesignChanged (oldValue, value);
 				}
 			}
@@ -855,8 +855,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnWorkflowNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnWorkflowDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnWorkflowDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnSerializedDesignChanging(string oldValue, string newValue);
-		partial void OnSerializedDesignChanged(string oldValue, string newValue);
+		partial void OnSerializedDesignChanging(global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue, global::Epsitec.Cresus.Core.Entities.XmlBlobEntity newValue);
+		partial void OnSerializedDesignChanged(global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue, global::Epsitec.Cresus.Core.Entities.XmlBlobEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
