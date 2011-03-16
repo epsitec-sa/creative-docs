@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+Ôªøusing System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
@@ -6,14 +6,14 @@ using Epsitec.Common.Support;
 namespace Epsitec.Common.Designer
 {
 	/// <summary>
-	/// La classe Misc contient quelques routines gÈnÈrales.
+	/// La classe Misc contient quelques routines g√©n√©rales.
 	/// </summary>
 	public class Misc
 	{
 		static public string CompactModuleAndName(string module, string name, bool tags = true)
 		{
 			//	Retourne le texte description pour un nom d'un module, sous la forme "module.name".
-			//	Le nom du module est affichÈ en estompÈ (si tags = true), pour le distinguer du "name".
+			//	Le nom du module est affich√© en estomp√© (si tags = true), pour le distinguer du "name".
 			if (tags)
 			{
 				return string.Concat ("<font color=\"#777777\">", module, ".</font>", name);
@@ -27,7 +27,7 @@ namespace Epsitec.Common.Designer
 
 		static public bool IsValidGuid(string guid)
 		{
-			//	Retourne true si la chaÓne correspond ‡ un Guid valide.
+			//	Retourne true si la cha√Æne correspond √† un Guid valide.
 			//	Le Guid doit contenir 32 chiffres et 4 tirets (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx).
 			if (string.IsNullOrEmpty(guid))
 			{
@@ -73,7 +73,7 @@ namespace Epsitec.Common.Designer
 
 		static public Path GetCrossPath(Rectangle column, Rectangle row)
 		{
-			//	Retourne le chemin d'une croix. Le chemin peut Ègalement prendre la forme
+			//	Retourne le chemin d'une croix. Le chemin peut √©galement prendre la forme
 			//	d'un "T" ou d'un "L" dans n'importe quelle orientation.
 			Path path = new Path();
 
@@ -142,11 +142,11 @@ namespace Epsitec.Common.Designer
 
 		static public Path GetHatchPath(Rectangle rect, double distance, Point reference)
 		{
-			//	Retourne des hachures ‡ 45 degrÈs remplissant sans dÈborder un rectangle.
-			//	Une hachure passe toujours par le point de rÈfÈrence.
+			//	Retourne des hachures √† 45 degr√©s remplissant sans d√©border un rectangle.
+			//	Une hachure passe toujours par le point de r√©f√©rence.
 			Path path = new Path();
 
-			//	DÈplace le point de rÈfÈrence sur le bord gauche du rectangle.
+			//	D√©place le point de r√©f√©rence sur le bord gauche du rectangle.
 			reference.Y += rect.Left - reference.X;
 			reference.X = rect.Left;
 			double d = reference.Y - rect.Bottom;
@@ -245,7 +245,7 @@ namespace Epsitec.Common.Designer
 
 		static public int IndexOfString(string[] list, string searched)
 		{
-			//	Cherche l'index d'une chaÓne dans une liste de chaÓnes.
+			//	Cherche l'index d'une cha√Æne dans une liste de cha√Ænes.
 			for (int i=0; i<list.Length; i++)
 			{
 				if (list[i] == searched)  return i;
@@ -260,10 +260,10 @@ namespace Epsitec.Common.Designer
 			switch (source)
 			{
 				case CultureMapSource.ReferenceModule:
-					return "inchangÈ";
+					return "inchang√©";
 
 				case CultureMapSource.DynamicMerge:
-					return "modifiÈ";
+					return "modifi√©";
 
 				case CultureMapSource.PatchModule:
 					return "local";
@@ -275,14 +275,14 @@ namespace Epsitec.Common.Designer
 
 		static public Color SourceColor(CultureMapSource source)
 		{
-			//	Retourne la couleur de fond ‡ utiliser en fonction de la source d'une ressource.
+			//	Retourne la couleur de fond √† utiliser en fonction de la source d'une ressource.
 			switch (source)
 			{
 				case CultureMapSource.ReferenceModule:
-					return Color.FromAlphaRgb(0.1, 0.0, 0.0, 0.0);  // noir trËs transparent (gris clair)
+					return Color.FromAlphaRgb(0.1, 0.0, 0.0, 0.0);  // noir tr√®s transparent (gris clair)
 
 				case CultureMapSource.DynamicMerge:
-					return Color.FromAlphaRgb(0.2, 1.0, 0.7, 0.0);  // orange trËs transparent
+					return Color.FromAlphaRgb(0.2, 1.0, 0.7, 0.0);  // orange tr√®s transparent
 
 				default:
 					return Color.Empty;
@@ -291,19 +291,19 @@ namespace Epsitec.Common.Designer
 
 		static public Color AlphaColor(Color c, double a)
 		{
-			//	Retourne la mÍme couleur avec la valeur alpha spÈcifiÈe.
+			//	Retourne la m√™me couleur avec la valeur alpha sp√©cifi√©e.
 			return Color.FromAlphaRgb(a, c.R, c.G, c.B);
 		}
 
 		static public Color FactorColor(Color c, double factor)
 		{
-			//	Retroune le mÍme couleur en multipliant son canal alpha par le facteur.
+			//	Retroune le m√™me couleur en multipliant son canal alpha par le facteur.
 			return Color.FromAlphaRgb(c.A*factor, c.R, c.G, c.B);
 		}
 
 		static public Color WarningColor
 		{
-			//	Retourne la couleur ‡ utiliser pour un texte d'avertissement dans une fenÍtre.
+			//	Retourne la couleur √† utiliser pour un texte d'avertissement dans une fen√™tre.
 			get
 			{
 				IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
@@ -315,13 +315,13 @@ namespace Epsitec.Common.Designer
 				else
 				{
 					//?return Color.FromRgb(0.5, 0, 0);  // brun
-					return Color.FromRgb(0, 0.2, 0.5);  // bleu foncÈ
+					return Color.FromRgb(0, 0.2, 0.5);  // bleu fonc√©
 				}
 			}
 		}
 
 
-		//	Liste des cultures gÈrÈes par Designer, par ordre d'importance.
+		//	Liste des cultures g√©r√©es par Designer, par ordre d'importance.
 		static public string[] Cultures = { "fr", "en", "de", "it", "es", "pt" };
 
 		static public string CultureBaseName(System.Globalization.CultureInfo culture)
@@ -345,21 +345,21 @@ namespace Epsitec.Common.Designer
 
 		static public string CultureName(System.Globalization.CultureInfo culture)
 		{
-			//	Retourne le nom standard (FranÁais, Deutsch, English, etc.) d'une culture.
+			//	Retourne le nom standard (Fran√ßais, Deutsch, English, etc.) d'une culture.
 			return Misc.ProperName(culture.NativeName);
 		}
 
 		static public string CultureName(string twoLettersCode)
 		{
-			//	Retourne le nom standard (FranÁais, Deutsch, English, etc.) d'une culture.
+			//	Retourne le nom standard (Fran√ßais, Deutsch, English, etc.) d'une culture.
 			System.Globalization.CultureInfo culture = Support.Resources.FindCultureInfo(twoLettersCode);
-			return (culture == null) ? Misc.Italic("(indÈfini)") : Misc.ProperName(culture.NativeName);
+			return (culture == null) ? Misc.Italic("(ind√©fini)") : Misc.ProperName(culture.NativeName);
 		}
 
 
 		static public string ProperName(string text)
 		{
-			//	Retourne le texte avec une majuscule au dÈbut.
+			//	Retourne le texte avec une majuscule au d√©but.
 			if (text.Length <= 1)
 			{
 				return text.ToUpper();
@@ -373,13 +373,13 @@ namespace Epsitec.Common.Designer
 
 		static public string Resume(string text)
 		{
-			//	Retourne une version rÈsumÈe ‡ environ 20 caractËres au maximum.
+			//	Retourne une version r√©sum√©e √† environ 20 caract√®res au maximum.
 			return Misc.Resume(text, 20);
 		}
 		
 		static public string Resume(string text, int max)
 		{
-			//	Retourne une version rÈsumÈe ‡ environ 'max' caractËres au maximum.
+			//	Retourne une version r√©sum√©e √† environ 'max' caract√®res au maximum.
 			System.Diagnostics.Debug.Assert(max > 2);
 			if ( text.Length > max )
 			{
@@ -394,7 +394,7 @@ namespace Epsitec.Common.Designer
 
 		static public bool IsValidLabel(ref string label, bool isEntityOrForm)
 		{
-			//	VÈrifie si un nom de label est correct.
+			//	V√©rifie si un nom de label est correct.
 			if (isEntityOrForm)
 			{
 				return Misc.IsValidName(ref label, isEntityOrForm);
@@ -424,8 +424,8 @@ namespace Epsitec.Common.Designer
 
 		static protected bool IsValidName(ref string name, bool isEntityOrForm)
 		{
-			//	VÈrifie si un nom commence par une lettre puis est suivi de lettres ou de chiffres.
-			//	Le nom retournÈ commence par une majuscule suivie de minuscules.
+			//	V√©rifie si un nom commence par une lettre puis est suivi de lettres ou de chiffres.
+			//	Le nom retourn√© commence par une majuscule suivie de minuscules.
 			if (name.Length == 0)
 			{
 				return false;
@@ -483,40 +483,40 @@ namespace Epsitec.Common.Designer
 
 		static protected bool IsLowerLetter(char c)
 		{
-			//	Indique si un caractËre est une lettre.
+			//	Indique si un caract√®re est une lettre.
 			//	TODO: traiter tous les accents unicode ?
 			switch (c)
 			{
-				case '·':
-				case '‡':
-				case '‚':
-				case '‰':
-				case '„':
+				case '√°':
+				case '√†':
+				case '√¢':
+				case '√§':
+				case '√£':
 
-				case 'Á':
+				case '√ß':
 
-				case 'È':
-				case 'Ë':
-				case 'Í':
-				case 'Î':
+				case '√©':
+				case '√®':
+				case '√™':
+				case '√´':
 
-				case 'Ì':
-				case 'Ï':
-				case 'Ó':
-				case 'Ô':
+				case '√≠':
+				case '√¨':
+				case '√Æ':
+				case '√Ø':
 
-				case 'Ò':
+				case '√±':
 
-				case 'Û':
-				case 'Ú':
-				case 'Ù':
-				case 'ˆ':
-				case 'ı':
+				case '√≥':
+				case '√≤':
+				case '√¥':
+				case '√∂':
+				case '√µ':
 
-				case '˙':
-				case '˘':
-				case '˚':
-				case '¸':
+				case '√∫':
+				case '√π':
+				case '√ª':
+				case '√º':
 					return true;
 			}
 
@@ -525,40 +525,40 @@ namespace Epsitec.Common.Designer
 
 		static protected bool IsUpperLetter(char c)
 		{
-			//	Indique si un caractËre est une lettre.
+			//	Indique si un caract√®re est une lettre.
 			//	TODO: traiter tous les accents unicode ?
 			switch (c)
 			{
-				case '¡':
-				case '¿':
-				case '¬':
-				case 'ƒ':
-				case '√':
+				case '√Å':
+				case '√Ä':
+				case '√Ç':
+				case '√Ñ':
+				case '√É':
 
-				case '«':
+				case '√á':
 
-				case '…':
-				case '»':
-				case ' ':
-				case 'À':
+				case '√â':
+				case '√à':
+				case '√ä':
+				case '√ã':
 
-				case 'Õ':
-				case 'Ã':
-				case 'Œ':
-				case 'œ':
+				case '√ç':
+				case '√å':
+				case '√é':
+				case '√è':
 
-				case '—':
+				case '√ë':
 
-				case '”':
-				case '“':
-				case '‘':
-				case '÷':
-				case '’':
+				case '√ì':
+				case '√í':
+				case '√î':
+				case '√ñ':
+				case '√ï':
 
-				case '⁄':
-				case 'Ÿ':
-				case '€':
-				case '‹':
+				case '√ö':
+				case '√ô':
+				case '√õ':
+				case '√ú':
 					return true;
 			}
 
@@ -613,7 +613,7 @@ namespace Epsitec.Common.Designer
 
 		static public string GetUnicodeName(int code)
 		{
-			//	Retourne le nom d'un caractËre Unicode.
+			//	Retourne le nom d'un caract√®re Unicode.
 			if ( code == 0 )  return "";
 
 			string text = TextBreak.GetUnicodeName(code);
@@ -630,7 +630,7 @@ namespace Epsitec.Common.Designer
 
 			if ( !minus )  // aucune minuscule dans le texte ?
 			{
-				//	PremiËre lettre en majuscule, le reste en minuscules.
+				//	Premi√®re lettre en majuscule, le reste en minuscules.
 				text = string.Format("{0}{1}", text.Substring(0, 1).ToUpper(), text.Substring(1, text.Length-1).ToLower());
 			}
 
@@ -676,13 +676,13 @@ namespace Epsitec.Common.Designer
 
 		static public string GetMenuIconCheckState(bool state)
 		{
-			//	Retourne l'icÙne ‡ utiliser dans un menu, pour un item boolÈen de type check.
+			//	Retourne l'ic√¥ne √† utiliser dans un menu, pour un item bool√©en de type check.
 			return state ? Misc.Icon("ActiveYes") : Misc.Icon("ActiveNo");
 		}
 
 		static public string GetMenuIconRadioState(bool state)
 		{
-			//	Retourne l'icÙne ‡ utiliser dans un menu, pour un item boolÈen de type radio.
+			//	Retourne l'ic√¥ne √† utiliser dans un menu, pour un item bool√©en de type radio.
 			return state ? Misc.Icon("RadioYes") : Misc.Icon("RadioNo");
 		}
 
@@ -705,7 +705,7 @@ namespace Epsitec.Common.Designer
 				if (infixPos > 0)
 				{
 					//	"manifest:Epsitec.Common.Designer.Images.Xyz.Abc.icon" produit les
-					//	rÈsultats suivants :
+					//	r√©sultats suivants :
 					//
 					//	moduleName = "Epsitec.Common.Designer"
 					//	shortName  = "Xyz.Abc"
@@ -766,7 +766,7 @@ namespace Epsitec.Common.Designer
 
 		static public Size IconPreferredSize(string iconSize)
 		{
-			//	Retourne la taille prÈfÈrÈe pour une icÙne. Si la taille rÈelle de l'icÙne n'est
+			//	Retourne la taille pr√©f√©r√©e pour une ic√¥ne. Si la taille r√©elle de l'ic√¥ne n'est
 			//	pas exactement identique, ce n'est pas important. Drawing.Canvas cherche au mieux.
 			if ( iconSize == "Small" )  return new Size(14, 14);
 			if ( iconSize == "Large" )  return new Size(31, 31);
@@ -775,20 +775,20 @@ namespace Epsitec.Common.Designer
 
 		static public string Icon(string icon)
 		{
-			//	Retourne le nom complet d'une icÙne.
+			//	Retourne le nom complet d'une ic√¥ne.
 			return string.Format("manifest:Epsitec.Common.Designer.Images.{0}.icon", icon);
 		}
 
 		static public string IconDyn(string name, string parameter)
 		{
-			//	Retourne le nom complet d'une icÙne dynamique.
+			//	Retourne le nom complet d'une ic√¥ne dynamique.
 			return string.Format("dyn:{0}/{1}", name, parameter);
 		}
 
 
 		static public string GetShortcut(Command command)
 		{
-			//	Retourne le nom des touches associÈes ‡ une commande.
+			//	Retourne le nom des touches associ√©es √† une commande.
 			if (command == null || command.HasShortcuts == false)
 				return null;
 
@@ -797,7 +797,7 @@ namespace Epsitec.Common.Designer
 
 		static public string GetTextWithShortcut(Command command)
 		{
-			//	Donne le nom d'une commande, avec le raccourci clavier Èventuel entre parenthËses.
+			//	Donne le nom d'une commande, avec le raccourci clavier √©ventuel entre parenth√®ses.
 			string shortcut = Misc.GetShortcut(command);
 
 			if (shortcut == null)
@@ -811,32 +811,37 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		static public string GetModuleNameDescription(string moduleName, bool dirtySerialize, bool isPatch)
+		static public string GetModuleNameDescription(DesignerApplication application, Module module)
 		{
-			//	Retourne le nom d'un module et son Ètat.
-			var builder = new System.Text.StringBuilder();
+			ResourceManagerPool pool = application.ResourceManagerPool;
 
-			if (string.IsNullOrEmpty (moduleName))
+			string path = pool.GetRootRelativePath (module.ModuleInfo.FullId.Path);
+			path = path.Replace ("\\", "/");
+			path = path.Replace ("%app%/", "");
+
+			int index = path.LastIndexOf ('/');
+			if (index != -1)
 			{
-				builder.Append (Res.Strings.Misc.NoTitle);
-			}
-			else
-			{
-				builder.Append (Misc.GetModuleName (moduleName, shortName: false));
+				path = string.Concat (path.Substring (0, index+1), "<b>", path.Substring (index+1), "</b>");
 			}
 
-			if (isPatch || dirtySerialize)
+			var builder = new System.Text.StringBuilder ();
+
+			builder.Append ("‚óè ");
+			builder.Append (path);
+
+			if (module.IsPatch || module.IsGlobalDirty)
 			{
 				builder.Append (" (");
 
-				if (dirtySerialize)
+				if (module.IsGlobalDirty)
 				{
-					builder.Append ("modifiÈ");
+					builder.Append ("modifi√©");
 				}
 
-				if (isPatch)
+				if (module.IsPatch)
 				{
-					if (dirtySerialize)
+					if (module.IsGlobalDirty)
 					{
 						builder.Append (", ");
 					}
@@ -854,7 +859,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne le nom d'un module.
 			//	Si le nom n'existe pas, donne "sans titre".
-			//	Si le module doit Ítre sÈrialisÈ, donne le nom en gras.
+			//	Si le module doit √™tre s√©rialis√©, donne le nom en gras.
 			//	Si le module provient d'un patch, donne le nom en italique.
 			string name = string.IsNullOrEmpty (moduleName) ? Res.Strings.Misc.NoTitle : Misc.GetModuleName (moduleName, shortName: true);
 
@@ -891,7 +896,7 @@ namespace Epsitec.Common.Designer
 
 		static public bool IsExtension(string filename, string ext)
 		{
-			//	Indique si un fichier utilise une extension donnÈe.
+			//	Indique si un fichier utilise une extension donn√©e.
 			return filename.ToLower().EndsWith(ext);
 		}
 
