@@ -184,7 +184,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.isEditOk = false;
 			this.closed = false;
 
-			string name = Misc.ExtractName (this.Module.ModuleId.Name);
+			string name = Misc.ExtractName (this.Module.ModuleId.Name, shortName: false);
 			this.title.Text = string.Concat("<font size=\"200%\"><b>", name, "</b></font>");
 
 			this.fieldPath.Text       = this.Module.ModuleInfo.FullId.Path;

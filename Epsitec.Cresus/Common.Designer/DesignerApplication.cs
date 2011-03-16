@@ -1894,6 +1894,12 @@ namespace Epsitec.Common.Designer
 			mi.TabPage.TabTitle = Misc.ExtractName(mi.Module.ModuleId.Name, mi.Module.IsGlobalDirty, mi.Module.IsPatch);
 			this.bookModules.Items.Insert(this.currentModule, mi.TabPage);
 
+			mi.ModuleTitle = new StaticText (mi.TabPage);
+			mi.ModuleTitle.Text = Misc.DescriptionName (mi.Module.ModuleId.Name, mi.Module.IsGlobalDirty, mi.Module.IsPatch);
+			mi.ModuleTitle.ContentAlignment = ContentAlignment.MiddleLeft;
+			mi.ModuleTitle.Dock = DockStyle.Top;
+			mi.ModuleTitle.Margins = new Margins (5);
+
 			mi.BundleTypeWidget = new MyWidgets.BundleType(mi.TabPage);
 			mi.BundleTypeWidget.Dock = DockStyle.Top;
 			mi.BundleTypeWidget.TypeChanged += new EventHandler<CancelEventArgs>(this.HandleTypeChanged);
@@ -2510,6 +2516,8 @@ namespace Epsitec.Common.Designer
 					tab.TabTitle = name;
 					changed = true;
 				}
+
+				mi.ModuleTitle.Text = Misc.DescriptionName (mi.Module.ModuleId.Name, mi.Module.IsGlobalDirty, mi.Module.IsPatch);
 			}
 
 			if (changed)
@@ -2879,6 +2887,7 @@ namespace Epsitec.Common.Designer
 		{
 			public Module						Module;
 			public TabPage						TabPage;
+			public StaticText					ModuleTitle;
 			public MyWidgets.BundleType			BundleTypeWidget;
 
 			#region IDisposable Members
@@ -2906,9 +2915,6 @@ namespace Epsitec.Common.Designer
 
 		private DesignerMode					mode;
 		private bool							standalone;
-//-		private Window							window;
-//-		private CommandDispatcher				commandDispatcher;
-//-		private CommandContext					commandContext;
 		private RibbonBook						ribbonBook;
 		private RibbonPage						ribbonMain;
 		private RibbonPage						ribbonOper;

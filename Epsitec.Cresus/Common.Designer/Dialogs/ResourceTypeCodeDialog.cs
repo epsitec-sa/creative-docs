@@ -374,7 +374,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 
 		private static readonly double			windowWidthCompacted = 8+75+6+75+8;
-		private static readonly double			windowWidthExtended = 500;
+		private static readonly double			windowWidthExtended = 600;
 		private static readonly double			windowHeight = 284;
 
 		private ResourceAccess					resourceAccess;

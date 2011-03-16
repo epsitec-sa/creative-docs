@@ -14,11 +14,6 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne le texte description pour un nom d'un module, sous la forme "module.name".
 			//	Le nom du module est affiché en estompé (si tags = true), pour le distinguer du "name".
-			if (module.StartsWith ("Epsitec."))
-			{
-				module = module.Substring (8);
-			}
-
 			if (tags)
 			{
 				return string.Concat ("<font color=\"#777777\">", module, ".</font>", name);
@@ -815,36 +810,84 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		
+
+		static public string DescriptionName(string moduleName, bool dirtySerialize, bool isPatch)
+		{
+			//	Retourne le nom d'un module et son état.
+			var builder = new System.Text.StringBuilder();
+
+			if (string.IsNullOrEmpty (moduleName))
+			{
+				builder.Append (Res.Strings.Misc.NoTitle);
+			}
+			else
+			{
+				builder.Append (Misc.ExtractName (moduleName, shortName: false));
+			}
+
+			if (isPatch || dirtySerialize)
+			{
+				builder.Append (" (");
+
+				if (dirtySerialize)
+				{
+					builder.Append ("modifié");
+				}
+
+				if (isPatch)
+				{
+					if (dirtySerialize)
+					{
+						builder.Append (", ");
+					}
+
+					builder.Append ("patch");
+				}
+
+				builder.Append (")");
+			}
+
+			return builder.ToString ();
+		}
+
 		static public string ExtractName(string moduleName, bool dirtySerialize, bool isPatch)
 		{
 			//	Extrait le nom de module.
 			//	Si le nom n'existe pas, donne "sans titre".
 			//	Si le module doit être sérialisé, donne le nom en gras.
 			//	Si le module provient d'un patch, donne le nom en italique.
-			string name = "";
-			if ( isPatch )  name += "<i>";
-			if ( dirtySerialize )  name += "<b>";
+			string name = string.IsNullOrEmpty (moduleName) ? Res.Strings.Misc.NoTitle : Misc.ExtractName (moduleName, shortName: true);
 
-			if ( moduleName == "" )
+			if (isPatch)
 			{
-				name += Res.Strings.Misc.NoTitle;
-			}
-			else
-			{
-				name += ExtractName(moduleName);
+				name = Misc.Italic (name);
 			}
 
-			if ( dirtySerialize )  name += "</b>";
-			if ( isPatch )  name += "</i>";
+			if (dirtySerialize)
+			{
+				name = Misc.Bold (name);
+			}
+
 			return name;
 		}
 
-		static public string ExtractName(string moduleName)
+		static public string ExtractName(string moduleName, bool shortName)
 		{
 			//	Extrait le nom de module.
+			//	Si shortName = true, "Cresus.Core.Business" devient "Business".
+			if (shortName)
+			{
+				int index = moduleName.LastIndexOf ('.');
+
+				if (index != -1)
+				{
+					moduleName = moduleName.Substring (index+1);
+				}
+			}
+
 			return TextLayout.ConvertToTaggedText(moduleName);
 		}
+
 
 		static public bool IsExtension(string filename, string ext)
 		{

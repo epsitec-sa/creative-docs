@@ -1163,22 +1163,7 @@ namespace Epsitec.Common.Designer
 		public string GetEnumBaseName(System.Type stype)
 		{
 			//	Retourne le nom de base à utiliser pour une énumération native C#.
-			string name = stype.FullName.Replace('+', '.');
-
-			//	Enlève le préfixe "Epsitec.Common." s'il existe.
-			if (name.StartsWith(ResourceAccess.filterPrefix))
-			{
-				name = name.Substring(ResourceAccess.filterPrefix.Length);
-			}
-
-			//	Enlève son propre nom de module s'il existe.
-			string module = string.Concat(ResourceAccess.LastName(this.moduleInfo.Name), ".");
-			if (name.StartsWith(module))
-			{
-				name = name.Substring(module.Length);
-			}
-
-			return name;
+			return stype.FullName.Replace('+', '.');
 		}
 
 		public void Delete()
@@ -2903,8 +2888,6 @@ namespace Epsitec.Common.Designer
 		public event Support.EventHandler DirtyChanged;
 		#endregion
 
-
-		private static string								filterPrefix = "Epsitec.Common.";
 
 		private Module										ownerModule;
 		private Type										type;

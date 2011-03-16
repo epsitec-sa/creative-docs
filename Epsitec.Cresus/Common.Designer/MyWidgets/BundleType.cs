@@ -12,10 +12,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 	{
 		public BundleType() : base()
 		{
-			Separator sep = new Separator(this);
-			sep.PreferredHeight = 1;
-			sep.Margins = new Margins(0, 0, 0, 0);
-			sep.Dock = DockStyle.Bottom;
+			var topSeparator = new Separator (this);
+			topSeparator.PreferredHeight = 1;
+			topSeparator.Margins = new Margins (0, 0, 0, 5);
+			topSeparator.Dock = DockStyle.Top;
+
+			var bottomSeparator = new Separator (this);
+			bottomSeparator.PreferredHeight = 1;
+			bottomSeparator.Margins = new Margins (0, 0, 0, 0);
+			bottomSeparator.Dock = DockStyle.Bottom;
 
 			double width = 75;
 
@@ -28,7 +33,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonStrings.PreferredWidth = width;
 			this.buttonStrings.MinHeight = 20+5;
 			this.buttonStrings.AutoFocus = false;
-			this.buttonStrings.Margins = new Margins(2, 0, 10, 0);
+			this.buttonStrings.Margins = new Margins(2, 0, 0, 0);
 			this.buttonStrings.Dock = DockStyle.Left;
 			this.buttonStrings.Clicked += this.HandleButtonClicked;
 
@@ -41,7 +46,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonCaptions.PreferredWidth = width;
 			this.buttonCaptions.MinHeight = 20+5;
 			this.buttonCaptions.AutoFocus = false;
-			this.buttonCaptions.Margins = new Margins(2, 0, 10, 0);
+			this.buttonCaptions.Margins = new Margins(2, 0, 0, 0);
 			this.buttonCaptions.Dock = DockStyle.Left;
 			this.buttonCaptions.Clicked += this.HandleButtonClicked;
 
@@ -54,7 +59,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonCommands.PreferredWidth = width;
 			this.buttonCommands.MinHeight = 20+5;
 			this.buttonCommands.AutoFocus = false;
-			this.buttonCommands.Margins = new Margins(2, 0, 10, 0);
+			this.buttonCommands.Margins = new Margins(2, 0, 0, 0);
 			this.buttonCommands.Dock = DockStyle.Left;
 			this.buttonCommands.Clicked += this.HandleButtonClicked;
 
@@ -67,7 +72,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonTypes.PreferredWidth = width;
 			this.buttonTypes.MinHeight = 20+5;
 			this.buttonTypes.AutoFocus = false;
-			this.buttonTypes.Margins = new Margins(2, 0, 10, 0);
+			this.buttonTypes.Margins = new Margins(2, 0, 0, 0);
 			this.buttonTypes.Dock = DockStyle.Left;
 			this.buttonTypes.Clicked += this.HandleButtonClicked;
 
@@ -80,7 +85,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonValues.PreferredWidth = width;
 			this.buttonValues.MinHeight = 20+5;
 			this.buttonValues.AutoFocus = false;
-			this.buttonValues.Margins = new Margins(2, 0, 10, 0);
+			this.buttonValues.Margins = new Margins(2, 0, 0, 0);
 			this.buttonValues.Dock = DockStyle.Left;
 			this.buttonValues.Clicked += this.HandleButtonClicked;
 
@@ -93,7 +98,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonFields.PreferredWidth = width;
 			this.buttonFields.MinHeight = 20+5;
 			this.buttonFields.AutoFocus = false;
-			this.buttonFields.Margins = new Margins(2, 0, 10, 0);
+			this.buttonFields.Margins = new Margins(2, 0, 0, 0);
 			this.buttonFields.Dock = DockStyle.Left;
 			this.buttonFields.Clicked += this.HandleButtonClicked;
 
@@ -106,7 +111,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonEntities.PreferredWidth = width;
 			this.buttonEntities.MinHeight = 20+5;
 			this.buttonEntities.AutoFocus = false;
-			this.buttonEntities.Margins = new Margins(2, 0, 10, 0);
+			this.buttonEntities.Margins = new Margins(2, 0, 0, 0);
 			this.buttonEntities.Dock = DockStyle.Left;
 			this.buttonEntities.Clicked += this.HandleButtonClicked;
 
@@ -119,7 +124,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonForms.PreferredWidth = width;
 			this.buttonForms.MinHeight = 20+5;
 			this.buttonForms.AutoFocus = false;
-			this.buttonForms.Margins = new Margins(2, 0, 10, 0);
+			this.buttonForms.Margins = new Margins(2, 0, 0, 0);
 			this.buttonForms.Dock = DockStyle.Left;
 			this.buttonForms.Clicked += this.HandleButtonClicked;
 
@@ -132,7 +137,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonPanels.PreferredWidth = width;
 			this.buttonPanels.MinHeight = 20+5;
 			this.buttonPanels.AutoFocus = false;
-			this.buttonPanels.Margins = new Margins(2, 0, 10, 0);
+			this.buttonPanels.Margins = new Margins(2, 0, 0, 0);
 			this.buttonPanels.Dock = DockStyle.Left;
 			this.buttonPanels.Clicked += this.HandleButtonClicked;
 
@@ -165,17 +170,31 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		protected void UpdateButtons()
+		private void UpdateButtons()
 		{
-			this.buttonStrings.ActiveState  = (this.currentType == ResourceAccess.Type.Strings ) ? ActiveState.Yes : ActiveState.No;
-			this.buttonCaptions.ActiveState = (this.currentType == ResourceAccess.Type.Captions) ? ActiveState.Yes : ActiveState.No;
-			this.buttonFields.ActiveState   = (this.currentType == ResourceAccess.Type.Fields  ) ? ActiveState.Yes : ActiveState.No;
-			this.buttonCommands.ActiveState = (this.currentType == ResourceAccess.Type.Commands) ? ActiveState.Yes : ActiveState.No;
-			this.buttonTypes.ActiveState    = (this.currentType == ResourceAccess.Type.Types   ) ? ActiveState.Yes : ActiveState.No;
-			this.buttonValues.ActiveState   = (this.currentType == ResourceAccess.Type.Values  ) ? ActiveState.Yes : ActiveState.No;
-			this.buttonPanels.ActiveState   = (this.currentType == ResourceAccess.Type.Panels  ) ? ActiveState.Yes : ActiveState.No;
-			this.buttonEntities.ActiveState = (this.currentType == ResourceAccess.Type.Entities) ? ActiveState.Yes : ActiveState.No;
-			this.buttonForms.ActiveState    = (this.currentType == ResourceAccess.Type.Forms   ) ? ActiveState.Yes : ActiveState.No;
+			BundleType.ActiveButton (this.buttonStrings , this.currentType == ResourceAccess.Type.Strings );
+			BundleType.ActiveButton (this.buttonCaptions, this.currentType == ResourceAccess.Type.Captions);
+			BundleType.ActiveButton (this.buttonFields  , this.currentType == ResourceAccess.Type.Fields  );
+			BundleType.ActiveButton (this.buttonCommands, this.currentType == ResourceAccess.Type.Commands);
+			BundleType.ActiveButton (this.buttonTypes   , this.currentType == ResourceAccess.Type.Types   );
+			BundleType.ActiveButton (this.buttonValues  , this.currentType == ResourceAccess.Type.Values  );
+			BundleType.ActiveButton (this.buttonPanels  , this.currentType == ResourceAccess.Type.Panels  );
+			BundleType.ActiveButton (this.buttonEntities, this.currentType == ResourceAccess.Type.Entities);
+			BundleType.ActiveButton (this.buttonForms   , this.currentType == ResourceAccess.Type.Forms   );
+		}
+
+		private static void ActiveButton(IconButtonMark button, bool active)
+		{
+			if (active)
+			{
+				button.ButtonStyle = ButtonStyle.ActivableIcon;
+				button.ActiveState = ActiveState.Yes;
+			}
+			else
+			{
+				button.ButtonStyle = ButtonStyle.ToolItem;  // mode discret, sans cadre
+				button.ActiveState = ActiveState.No;
+			}
 		}
 
 
@@ -186,12 +205,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		protected static ResourceAccess.Type Convert(string name)
+		private static ResourceAccess.Type Convert(string name)
 		{
 			return (ResourceAccess.Type) System.Enum.Parse(typeof(ResourceAccess.Type), name);
 		}
 
-		protected static string Convert(ResourceAccess.Type type)
+		private static string Convert(ResourceAccess.Type type)
 		{
 			return type.ToString();
 		}
@@ -229,15 +248,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#endregion
 
 
-		protected ResourceAccess.Type		currentType = ResourceAccess.Type.Strings;
-		protected IconButtonMark			buttonStrings;
-		protected IconButtonMark			buttonEntities;
-		protected IconButtonMark			buttonCaptions;
-		protected IconButtonMark			buttonFields;
-		protected IconButtonMark			buttonCommands;
-		protected IconButtonMark			buttonPanels;
-		protected IconButtonMark			buttonTypes;
-		protected IconButtonMark			buttonValues;
-		protected IconButtonMark			buttonForms;
+		private ResourceAccess.Type				currentType = ResourceAccess.Type.Strings;
+		private IconButtonMark					buttonStrings;
+		private IconButtonMark					buttonEntities;
+		private IconButtonMark					buttonCaptions;
+		private IconButtonMark					buttonFields;
+		private IconButtonMark					buttonCommands;
+		private IconButtonMark					buttonPanels;
+		private IconButtonMark					buttonTypes;
+		private IconButtonMark					buttonValues;
+		private IconButtonMark					buttonForms;
 	}
 }

@@ -81,7 +81,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.sampleIcons.Count == 0)  // aucune icône ?
 			{
 				//	Dessine une croix 'x'.
-				double size = System.Math.Min (this.Client.Bounds.Width, this.Client.Bounds.Height) - 8;
+				double size = System.Math.Min (this.Client.Bounds.Width, this.Client.Bounds.Height) * 0.5;
 				var rect = new Rectangle (this.Client.Bounds.Center.X-size/2, this.Client.Bounds.Center.Y-size/2, size, size);
 
 				graphics.AddLine (rect.BottomLeft, rect.TopRight);
