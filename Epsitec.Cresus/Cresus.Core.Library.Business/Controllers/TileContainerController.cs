@@ -788,7 +788,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void HandleControllerDisposing(object sender)
 		{
-			this.navigator.Unregister (this);
+			this.Dispose ();
 		}
 
 		private void HandleTimerTimeElapsed(object sender)

@@ -146,8 +146,9 @@ namespace Epsitec.Common.Widgets
 						//	Si l'exactitude temporelle des événements n'importe pas trop, il
 						//	vaut mieux tricher ici et prendre un peu de retard, mais au moins
 						//	passer par la boucle des événements...
-						
+
 						delta = 1;
+						this.expirationDate = now.AddMilliseconds (delta);
 					}
 					
 					if (delta > 0)

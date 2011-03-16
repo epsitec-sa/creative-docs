@@ -35,15 +35,13 @@ namespace Epsitec.Cresus.Core
 			
 			this.plugIns = new List<PlugIns.ICorePlugIn> ();
 			
-			this.data = new CoreData (this, forceDatabaseCreation: true, allowDatabaseUpdate: true);
+			this.data = new CoreData (this, forceDatabaseCreation: false, allowDatabaseUpdate: true);
 
-			this.exceptionManager = new ExceptionManager ();
+			new ExceptionManager (this);
 
-			this.mainWindowOrchestrator = new DataViewOrchestrator (this, this.data, this.CommandContext);
-			
-			var ribbonController = new RibbonViewController (this.mainWindowOrchestrator);
-			
-			this.mainWindowController = new MainWindowController (this.data, this.CommandContext, this.mainWindowOrchestrator, ribbonController);
+			var mainWindowOrchestrator = new DataViewOrchestrator (this, this.data, this.CommandContext);
+			var ribbonController       = new RibbonViewController (this);
+			this.mainWindowController  = new MainWindowController (this, this.data, this.CommandContext, ribbonController);
 
 			this.UserManager.AuthenticatedUserChanged += this.HandleAuthenticatedUserChanged;
 		}
@@ -60,14 +58,6 @@ namespace Epsitec.Cresus.Core
 			get
 			{
 				return this.data;
-			}
-		}
-
-		public IExceptionManager				ExceptionManager
-		{
-			get
-			{
-				return this.exceptionManager;
 			}
 		}
 
@@ -100,14 +90,6 @@ namespace Epsitec.Cresus.Core
 			get
 			{
 				return this.mainWindowController;
-			}
-		}
-
-		public DataViewOrchestrator				MainWindowOrchestrator
-		{
-			get
-			{
-				return this.mainWindowOrchestrator;
 			}
 		}
 
@@ -217,23 +199,6 @@ namespace Epsitec.Cresus.Core
 		
 		protected override void Dispose(bool disposing)
 		{
-			if (disposing)
-			{
-				this.mainWindowOrchestrator.Dispose ();
-				this.mainWindowController.Dispose ();
-
-				if (this.data != null)
-				{
-					this.data.Dispose ();
-					this.data = null;
-				}
-				if (this.exceptionManager != null)
-				{
-					this.exceptionManager.Dispose ();
-					this.exceptionManager = null;
-				}
-			}
-
 			base.Dispose (disposing);
 		}
 
@@ -357,15 +322,10 @@ namespace Epsitec.Cresus.Core
 		public event EventHandler						ShutdownStarted;
 
 
-		private static Dictionary<string, string>		settings = new Dictionary<string, string> ();
-
 		private readonly List<PlugIns.ICorePlugIn>		plugIns;
 
 		private CoreData								data;
-		private ExceptionManager						exceptionManager;
-		private DataViewOrchestrator					mainWindowOrchestrator;
 		private MainWindowController					mainWindowController;
-		private FinanceSettingsEntity					financeSettings;
 		private PlugIns.PlugInFactory					plugInFactory;
 	}
 }
