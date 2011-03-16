@@ -814,22 +814,24 @@ namespace Epsitec.Common.Designer
 		static public string GetModuleDescription(DesignerApplication application, Module module)
 		{
 			//	Retourne une description d'un module, incluant son état.
-			string path = Misc.GetModulePath (application, module.ModuleInfo);
-
-			int index = path.LastIndexOf ('/');
-			if (index != -1)
-			{
-				path = string.Concat (path.Substring (0, index+1), "<b>", path.Substring (index+1), "</b>");
-			}
-
 			var builder = new System.Text.StringBuilder ();
 
-			builder.Append ("● ");
-			builder.Append (path);
+			{
+				string path = Misc.GetModulePath (application, module.ModuleInfo);
+
+				int index = path.LastIndexOf ('/');
+				if (index != -1)
+				{
+					index++;  // après le slash
+					path = string.Concat ("<font size=\"120%\"><font color=\"#777777\">", path.Substring (0, index), "</font><b>", path.Substring (index), "</b></font>");
+				}
+
+				builder.Append (path);
+			}
 
 			if (module.IsPatch || module.IsGlobalDirty)
 			{
-				builder.Append (" (");
+				builder.Append ("      (");  // pas trop proche
 
 				if (module.IsGlobalDirty)
 				{

@@ -12,12 +12,11 @@ namespace Epsitec.Common.Designer.Ribbons
 		public FileRibbon(DesignerApplication designerApplication) : base(designerApplication)
 		{
 			this.Title = Res.Strings.Ribbon.Section.File;
-			this.PreferredWidth = 8 + 22*1.5*5 + 4 + 22*1;
+			this.PreferredWidth = 8 + 22*1.5*4 + 4 + 22*1;
 
 			this.buttonOpen           = this.CreateIconButton ("Open", "Large");
 			this.buttonInitialMessage = this.CreateIconButton ("InitialMessage", "Large");
 			this.buttonCheck          = this.CreateIconButton ("Check", "Large");
-			this.buttonInfo           = this.CreateIconButton ("Info", "Large");
 			this.buttonSave           = this.CreateIconButton ("Save", "Large");
 			this.buttonNew            = this.CreateIconButton ("New");
 			this.buttonRecycle        = this.CreateIconButton ("Recycle");
@@ -55,14 +54,12 @@ namespace Epsitec.Common.Designer.Ribbons
 			rect.Offset (dx*1.5, 0);
 			this.buttonCheck.SetManualBounds (rect);
 			rect.Offset (dx*1.5, 0);
-			this.buttonInfo.SetManualBounds (rect);
-			rect.Offset (dx*1.5, 0);
 			this.buttonSave.SetManualBounds (rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			rect.Offset (dx*1.5*5+4, dy+5);
+			rect.Offset (dx*1.5*4+4, dy+5);
 			this.buttonNew.SetManualBounds (rect);
 			rect.Offset (0, -dx-5);
 			this.buttonRecycle.SetManualBounds (rect);
@@ -72,7 +69,6 @@ namespace Epsitec.Common.Designer.Ribbons
 		protected IconButton				buttonOpen;
 		protected IconButton				buttonInitialMessage;
 		protected IconButton				buttonCheck;
-		protected IconButton				buttonInfo;
 		protected IconButton				buttonSave;
 		protected IconButton				buttonNew;
 		protected IconButton				buttonRecycle;

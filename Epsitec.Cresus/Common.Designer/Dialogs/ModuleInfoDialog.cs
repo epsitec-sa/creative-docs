@@ -64,7 +64,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.Update ();
 
-			this.window.Show ();
+			this.window.ShowDialog ();
 		}
 
 

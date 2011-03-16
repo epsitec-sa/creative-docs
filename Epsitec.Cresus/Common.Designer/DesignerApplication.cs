@@ -621,17 +621,6 @@ namespace Epsitec.Common.Designer
 			this.CurrentModule.Check();
 		}
 
-		[Command ("Info")]
-		void CommandInfo(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			if (!this.Terminate ())
-			{
-				return;
-			}
-
-			this.CurrentModule.Info ();
-		}
-
 		[Command ("InitialMessage")]
 		void CommandInitialMessage(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -1088,7 +1077,6 @@ namespace Epsitec.Common.Designer
 			this.saveAsState = this.CreateCommandState("SaveAs");
 			this.initialMessageState = this.CreateCommandState("InitialMessage");
 			this.checkState = this.CreateCommandState ("Check");
-			this.infoState = this.CreateCommandState ("Info");
 			this.closeState = this.CreateCommandState("Close", KeyCode.ModifierControl|KeyCode.FuncF4);
 			this.cutState = this.CreateCommandState("Cut", KeyCode.ModifierControl|KeyCode.AlphaX);
 			this.copyState = this.CreateCommandState("Copy", KeyCode.ModifierControl|KeyCode.AlphaC);
@@ -1892,16 +1880,57 @@ namespace Epsitec.Common.Designer
 
 			mi.TabPage = new TabPage();
 			mi.TabPage.TabTitle = Misc.GetModuleName(mi.Module.ModuleId.Name, mi.Module.IsGlobalDirty, mi.Module.IsPatch);
+
 			this.bookModules.Items.Insert(this.currentModule, mi.TabPage);
 
-			mi.ModuleTitle = new StaticText (mi.TabPage);
-			mi.ModuleTitle.Text = Misc.GetModuleDescription (this, mi.Module);
-			mi.ModuleTitle.ContentAlignment = ContentAlignment.MiddleLeft;
-			mi.ModuleTitle.Dock = DockStyle.Top;
-			mi.ModuleTitle.Margins = new Margins (5);
+			double margin = 3;
+			double size = 20;
 
-			mi.BundleTypeWidget = new MyWidgets.BundleType(mi.TabPage);
-			mi.BundleTypeWidget.Dock = DockStyle.Top;
+			var topFrame = new FrameBox
+			{
+				Parent = mi.TabPage,
+				PreferredHeight = margin+size+margin,
+				Dock = DockStyle.Top,
+				Padding = new Margins (0, 0, margin, margin),
+			};
+
+			var accessButton = new GlyphButton
+			{
+				Parent = topFrame,
+				GlyphShape = GlyphShape.TriangleRight,
+				ButtonStyle = ButtonStyle.ToolItem,
+				PreferredSize = new Size (size, size),
+				Dock = DockStyle.Left,
+				Margins = new Margins (0, 6, 0, 0),
+			};
+
+			ToolTip.Default.SetToolTip (accessButton, "Accès aux informations du module");
+
+			accessButton.Clicked += delegate
+			{
+				if (!this.Terminate ())
+				{
+					return;
+				}
+
+				this.CurrentModule.Info ();
+			};
+
+			mi.ModuleTitle = new StaticText
+			{
+				Parent = topFrame,
+				Text = Misc.GetModuleDescription (this, mi.Module),
+				PreferredHeight = 20,
+				ContentAlignment = ContentAlignment.MiddleLeft,
+				Dock = DockStyle.Fill,
+			};
+
+			mi.BundleTypeWidget = new MyWidgets.BundleType
+			{
+				Parent = mi.TabPage,
+				Dock = DockStyle.Top,
+			};
+
 			mi.BundleTypeWidget.TypeChanged += new EventHandler<CancelEventArgs>(this.HandleTypeChanged);
 
 			this.CreateViewerLayout();
@@ -2194,7 +2223,6 @@ namespace Epsitec.Common.Designer
 
 				this.recycleState.Enable = true;
 				this.checkState.Enable = true;
-				this.infoState.Enable = true;
 			}
 			else
 			{
@@ -2202,7 +2230,6 @@ namespace Epsitec.Common.Designer
 				this.saveState.Enable = false;
 				this.saveAsState.Enable = false;
 				this.checkState.Enable = false;
-				this.infoState.Enable = false;
 				this.cutState.Enable = false;
 				this.copyState.Enable = false;
 				this.pasteState.Enable = false;
@@ -2966,7 +2993,6 @@ namespace Epsitec.Common.Designer
 		private CommandState					saveAsState;
 		private CommandState					initialMessageState;
 		private CommandState					checkState;
-		private CommandState					infoState;
 		private CommandState					closeState;
 		private CommandState					cutState;
 		private CommandState					copyState;
