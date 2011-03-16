@@ -22,124 +22,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 			bottomSeparator.Margins = new Margins (0, 0, 0, 0);
 			bottomSeparator.Dock = DockStyle.Bottom;
 
-			double width = 75;
-
-			this.buttonStrings = new IconButtonMark(this);
-			this.buttonStrings.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Strings);
-			this.buttonStrings.Name = BundleType.Convert(ResourceAccess.Type.Strings);
-			this.buttonStrings.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonStrings.MarkDisposition = ButtonMarkDisposition.Below;
-			this.buttonStrings.MarkLength = 5;
-			this.buttonStrings.PreferredWidth = width;
-			this.buttonStrings.MinHeight = 20+5;
-			this.buttonStrings.AutoFocus = false;
-			this.buttonStrings.Margins = new Margins(2, 0, 0, 0);
-			this.buttonStrings.Dock = DockStyle.Left;
-			this.buttonStrings.Clicked += this.HandleButtonClicked;
-
-			this.buttonCaptions = new IconButtonMark(this);
-			this.buttonCaptions.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Captions);
-			this.buttonCaptions.Name = BundleType.Convert(ResourceAccess.Type.Captions);
-			this.buttonCaptions.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonCaptions.MarkDisposition = ButtonMarkDisposition.Below;
-			this.buttonCaptions.MarkLength = 5;
-			this.buttonCaptions.PreferredWidth = width;
-			this.buttonCaptions.MinHeight = 20+5;
-			this.buttonCaptions.AutoFocus = false;
-			this.buttonCaptions.Margins = new Margins(2, 0, 0, 0);
-			this.buttonCaptions.Dock = DockStyle.Left;
-			this.buttonCaptions.Clicked += this.HandleButtonClicked;
-
-			this.buttonCommands = new IconButtonMark(this);
-			this.buttonCommands.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Commands);
-			this.buttonCommands.Name = BundleType.Convert(ResourceAccess.Type.Commands);
-			this.buttonCommands.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonCommands.MarkDisposition = ButtonMarkDisposition.Below;
-			this.buttonCommands.MarkLength = 5;
-			this.buttonCommands.PreferredWidth = width;
-			this.buttonCommands.MinHeight = 20+5;
-			this.buttonCommands.AutoFocus = false;
-			this.buttonCommands.Margins = new Margins(2, 0, 0, 0);
-			this.buttonCommands.Dock = DockStyle.Left;
-			this.buttonCommands.Clicked += this.HandleButtonClicked;
-
-			this.buttonTypes = new IconButtonMark(this);
-			this.buttonTypes.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Types);
-			this.buttonTypes.Name = BundleType.Convert(ResourceAccess.Type.Types);
-			this.buttonTypes.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonTypes.MarkDisposition = ButtonMarkDisposition.Below;
-			this.buttonTypes.MarkLength = 5;
-			this.buttonTypes.PreferredWidth = width;
-			this.buttonTypes.MinHeight = 20+5;
-			this.buttonTypes.AutoFocus = false;
-			this.buttonTypes.Margins = new Margins(2, 0, 0, 0);
-			this.buttonTypes.Dock = DockStyle.Left;
-			this.buttonTypes.Clicked += this.HandleButtonClicked;
-
-			this.buttonValues = new IconButtonMark(this);
-			this.buttonValues.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Values);
-			this.buttonValues.Name = BundleType.Convert(ResourceAccess.Type.Values);
-			this.buttonValues.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonValues.MarkDisposition = ButtonMarkDisposition.Below;
-			this.buttonValues.MarkLength = 5;
-			this.buttonValues.PreferredWidth = width;
-			this.buttonValues.MinHeight = 20+5;
-			this.buttonValues.AutoFocus = false;
-			this.buttonValues.Margins = new Margins(2, 0, 0, 0);
-			this.buttonValues.Dock = DockStyle.Left;
-			this.buttonValues.Clicked += this.HandleButtonClicked;
-
-			this.buttonFields = new IconButtonMark(this);
-			this.buttonFields.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Fields);
-			this.buttonFields.Name = BundleType.Convert(ResourceAccess.Type.Fields);
-			this.buttonFields.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonFields.MarkDisposition = ButtonMarkDisposition.Below;
-			this.buttonFields.MarkLength = 5;
-			this.buttonFields.PreferredWidth = width;
-			this.buttonFields.MinHeight = 20+5;
-			this.buttonFields.AutoFocus = false;
-			this.buttonFields.Margins = new Margins(2, 0, 0, 0);
-			this.buttonFields.Dock = DockStyle.Left;
-			this.buttonFields.Clicked += this.HandleButtonClicked;
-
-			this.buttonEntities = new IconButtonMark(this);
-			this.buttonEntities.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Entities);
-			this.buttonEntities.Name = BundleType.Convert(ResourceAccess.Type.Entities);
-			this.buttonEntities.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonEntities.MarkDisposition = ButtonMarkDisposition.Below;
-			this.buttonEntities.MarkLength = 5;
-			this.buttonEntities.PreferredWidth = width;
-			this.buttonEntities.MinHeight = 20+5;
-			this.buttonEntities.AutoFocus = false;
-			this.buttonEntities.Margins = new Margins(2, 0, 0, 0);
-			this.buttonEntities.Dock = DockStyle.Left;
-			this.buttonEntities.Clicked += this.HandleButtonClicked;
-
-			this.buttonForms = new IconButtonMark(this);
-			this.buttonForms.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Forms);
-			this.buttonForms.Name = BundleType.Convert(ResourceAccess.Type.Forms);
-			this.buttonForms.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonForms.MarkDisposition = ButtonMarkDisposition.Below;
-			this.buttonForms.MarkLength = 5;
-			this.buttonForms.PreferredWidth = width;
-			this.buttonForms.MinHeight = 20+5;
-			this.buttonForms.AutoFocus = false;
-			this.buttonForms.Margins = new Margins(2, 0, 0, 0);
-			this.buttonForms.Dock = DockStyle.Left;
-			this.buttonForms.Clicked += this.HandleButtonClicked;
-
-			this.buttonPanels = new IconButtonMark(this);
-			this.buttonPanels.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Panels);
-			this.buttonPanels.Name = BundleType.Convert(ResourceAccess.Type.Panels);
-			this.buttonPanels.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonPanels.MarkDisposition = ButtonMarkDisposition.Below;
-			this.buttonPanels.MarkLength = 5;
-			this.buttonPanels.PreferredWidth = width;
-			this.buttonPanels.MinHeight = 20+5;
-			this.buttonPanels.AutoFocus = false;
-			this.buttonPanels.Margins = new Margins(2, 0, 0, 0);
-			this.buttonPanels.Dock = DockStyle.Left;
-			this.buttonPanels.Clicked += this.HandleButtonClicked;
+			this.buttonStrings  = this.CreateButton (ResourceAccess.Type.Strings);
+			this.buttonCaptions = this.CreateButton (ResourceAccess.Type.Captions);
+			this.buttonCommands = this.CreateButton (ResourceAccess.Type.Commands);
+			this.buttonTypes    = this.CreateButton (ResourceAccess.Type.Types);
+			this.buttonValues   = this.CreateButton (ResourceAccess.Type.Values);
+			this.buttonFields   = this.CreateButton (ResourceAccess.Type.Fields);
+			this.buttonEntities = this.CreateButton (ResourceAccess.Type.Entities);
+			this.buttonForms    = this.CreateButton (ResourceAccess.Type.Forms);
+			this.buttonPanels   = this.CreateButton (ResourceAccess.Type.Panels);
 
 			this.UpdateButtons();
 		}
@@ -170,17 +61,38 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
+		private IconButtonMark CreateButton(ResourceAccess.Type type)
+		{
+			var button = new IconButtonMark
+			{
+				Parent = this,
+				Text = ResourceAccess.TypeDisplayName (type),
+				Name = BundleType.Convert (type),
+				MarkDisposition = ButtonMarkDisposition.Below,
+				MarkLength = 5,
+				PreferredWidth = 75,
+				MinHeight = 20+5,
+				AutoFocus = false,
+				Margins = new Margins (2, 0, 0, 0),
+				Dock = DockStyle.Left,
+			};
+
+			button.Clicked += this.HandleButtonClicked;
+
+			return button;
+		}
+
 		private void UpdateButtons()
 		{
-			BundleType.ActiveButton (this.buttonStrings , this.currentType == ResourceAccess.Type.Strings );
+			BundleType.ActiveButton (this.buttonStrings,  this.currentType == ResourceAccess.Type.Strings );
 			BundleType.ActiveButton (this.buttonCaptions, this.currentType == ResourceAccess.Type.Captions);
-			BundleType.ActiveButton (this.buttonFields  , this.currentType == ResourceAccess.Type.Fields  );
+			BundleType.ActiveButton (this.buttonFields,   this.currentType == ResourceAccess.Type.Fields  );
 			BundleType.ActiveButton (this.buttonCommands, this.currentType == ResourceAccess.Type.Commands);
-			BundleType.ActiveButton (this.buttonTypes   , this.currentType == ResourceAccess.Type.Types   );
-			BundleType.ActiveButton (this.buttonValues  , this.currentType == ResourceAccess.Type.Values  );
-			BundleType.ActiveButton (this.buttonPanels  , this.currentType == ResourceAccess.Type.Panels  );
+			BundleType.ActiveButton (this.buttonTypes,    this.currentType == ResourceAccess.Type.Types   );
+			BundleType.ActiveButton (this.buttonValues,   this.currentType == ResourceAccess.Type.Values  );
+			BundleType.ActiveButton (this.buttonPanels,   this.currentType == ResourceAccess.Type.Panels  );
 			BundleType.ActiveButton (this.buttonEntities, this.currentType == ResourceAccess.Type.Entities);
-			BundleType.ActiveButton (this.buttonForms   , this.currentType == ResourceAccess.Type.Forms   );
+			BundleType.ActiveButton (this.buttonForms,    this.currentType == ResourceAccess.Type.Forms   );
 		}
 
 		private static void ActiveButton(IconButtonMark button, bool active)
@@ -249,6 +161,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		private ResourceAccess.Type				currentType = ResourceAccess.Type.Strings;
+
 		private IconButtonMark					buttonStrings;
 		private IconButtonMark					buttonEntities;
 		private IconButtonMark					buttonCaptions;
