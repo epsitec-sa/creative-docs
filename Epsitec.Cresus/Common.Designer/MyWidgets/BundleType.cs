@@ -112,7 +112,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			else
 			{
-				button.ButtonStyle = ButtonStyle.ToolItem;  // mode discret, sans cadre
+				button.ButtonStyle = ButtonStyle.ActivableIcon;
+				//?button.ButtonStyle = ButtonStyle.ToolItem;  // mode discret, sans cadre, pour le LookRoyal
 				button.ActiveState = ActiveState.No;
 			}
 		}
