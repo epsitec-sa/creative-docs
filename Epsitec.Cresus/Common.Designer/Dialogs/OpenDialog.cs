@@ -90,6 +90,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.table.ItemPanel.ItemSelectionMode = UI.ItemPanelSelectionMode.ExactlyOne;
 				this.table.ItemPanel.CurrentItemTrackingMode = UI.CurrentItemTrackingMode.AutoSelectAndDeselect;
 				this.table.ItemPanel.SelectionChanged += new EventHandler<UI.ItemPanelSelectionChangedEventArgs> (this.HandleTableSelectionChanged);
+				this.table.ItemPanel.DoubleClicked += new EventHandler<MessageEventArgs> (this.HandleTableDoubleClicked);
 				this.table.TabIndex = 2;
 				this.table.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.table.Dock = Widgets.DockStyle.Fill;
@@ -454,6 +455,13 @@ namespace Epsitec.Common.Designer.Dialogs
 		private void HandleFilterControllerChanged(object sender)
 		{
 			this.UpdateModules (false);
+		}
+
+		private void HandleTableDoubleClicked(object sender, MessageEventArgs e)
+		{
+			this.parentWindow.MakeActive ();
+			this.window.Hide ();
+			this.OnClosed ();
 		}
 
 		private void HandleTableSelectionChanged(object sender, UI.ItemPanelSelectionChangedEventArgs e)

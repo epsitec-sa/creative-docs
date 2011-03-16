@@ -874,14 +874,14 @@ namespace Epsitec.Common.Designer
 		static public string GetModuleName(string moduleName, bool shortName)
 		{
 			//	Retourne le nom d'un module.
-			//	Si shortName = true, "Cresus.Core.Business" devient "Business".
+			//	Si shortName = true, "Cresus.Core.Library.Business" devient "Business".
 			if (shortName)
 			{
 				int index = moduleName.LastIndexOf ('.');
 
 				if (index != -1)
 				{
-					moduleName = moduleName.Substring (index+1);
+					moduleName = moduleName.Substring (index+1);  // ne garde que le dernier
 				}
 			}
 
