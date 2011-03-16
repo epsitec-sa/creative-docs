@@ -3343,6 +3343,21 @@ namespace Epsitec.Common.Designer
 				}
 			}
 			
+			public static class Controller
+			{
+				public static class Filter
+				{
+					//	designer:str/30KM3
+					public static global::System.String Label
+					{
+						get
+						{
+							return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544438));
+						}
+					}
+				}
+			}
+			
 			public static class Dialog
 			{
 				public static class BindingSelector

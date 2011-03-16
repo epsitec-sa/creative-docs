@@ -25,7 +25,7 @@ namespace Epsitec.Common.Designer.Controllers
 			this.filterUnifier = filterUnifier;
 		}
 
-		public FrameBox CreateUI(Widget parent, double labelWidth = 36)
+		public FrameBox CreateUI(Widget parent, double labelWidth = 36)  // 36 = largeur pour "Filtrer"
 		{
 			var frame = new FrameBox
 			{
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Designer.Controllers
 			this.label = new StaticText
 			{
 				Parent = frame,
-				Text = "Filtrer",
+				Text = Res.Strings.Controller.Filter.Label,
 				PreferredWidth = labelWidth,
 				Dock = DockStyle.Left,
 			};
@@ -298,8 +298,8 @@ namespace Epsitec.Common.Designer.Controllers
 
 		private void AddItemToMenu(VMenu menu, bool radio, bool check, string name, string text)
 		{
-			string icon = radio ? (check ? "RadioYes" : "RadioNo") : (check ? "ActiveYes" : "ActiveNo");
-			var item = new MenuItem (name, Misc.Icon (icon), text, null, name);
+			string icon = radio ? Misc.GetMenuIconRadioState (check) : Misc.GetMenuIconCheckState (check);
+			var item = new MenuItem (name, icon, text, null, name);
 
 			item.Clicked += delegate
 			{

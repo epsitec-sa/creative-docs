@@ -599,4 +599,5 @@
   <data name="Dialog.ModuleInfo.Label.NamespaceRes" id="KJ3">Namespace pour les ressources</data>
   <data name="Dialog.ModuleInfo.Radio.TextMode.String" id="KK3">Textes simples (string)</data>
   <data name="Dialog.ModuleInfo.Radio.TextMode.FormattedText" id="KL3">Textes riches (FormattedText)</data>
+  <data name="Controller.Filter.Label" id="KM3">Filtrer</data>
 </bundle>
