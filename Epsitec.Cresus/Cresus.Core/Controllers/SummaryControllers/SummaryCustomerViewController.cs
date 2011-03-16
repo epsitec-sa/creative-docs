@@ -55,5 +55,11 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				 .TextCompact (x => TextFormatter.FormatText (x.IdA))
 				.End ();
 		}
+
+		protected override IEnumerable<AbstractEntity> GetMasterEntities()
+		{
+			yield return this.Entity;
+			yield return this.Entity.Relation;
+		}
 	}
 }

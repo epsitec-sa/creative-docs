@@ -3,7 +3,7 @@
 
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
-using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Widgets;
 
@@ -136,13 +136,15 @@ namespace Epsitec.Cresus.Core.Controllers
 			return CollectionAccessor.Create (this.EntityGetter, template);
 		}
 
-		protected override void AboutToCreateUI()
+		protected override sealed void AboutToCreateUI()
 		{
 			var businessContext = this.BusinessContext;
 
 			System.Diagnostics.Debug.Assert (businessContext != null);
+			System.Diagnostics.Debug.Assert (this.masterEntities == null);
 
-			businessContext.AddMasterEntity (this.Entity);
+			this.masterEntities = this.GetMasterEntities ().ToArray ();
+			this.masterEntities.ForEach (x => businessContext.AddMasterEntity (x));
 		}
 		
 		protected override void AboutToCloseUI()
@@ -152,7 +154,16 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			var businessContext = this.BusinessContext;
 
-			businessContext.RemoveMasterEntity (this.Entity);
+			System.Diagnostics.Debug.Assert (businessContext != null);
+			System.Diagnostics.Debug.Assert (this.masterEntities != null);
+
+			this.masterEntities.ForEach (x => businessContext.RemoveMasterEntity (x));
+			this.masterEntities = null;
+		}
+		
+		protected virtual IEnumerable<AbstractEntity> GetMasterEntities()
+		{
+			yield return this.Entity;
 		}
 
 
@@ -188,6 +199,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private T entity;
+		private T								entity;
+		private AbstractEntity[]				masterEntities;
 	}
 }
