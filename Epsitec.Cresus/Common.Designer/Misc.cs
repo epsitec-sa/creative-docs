@@ -811,13 +811,10 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		static public string GetModuleNameDescription(DesignerApplication application, Module module)
+		static public string GetModuleDescription(DesignerApplication application, Module module)
 		{
-			ResourceManagerPool pool = application.ResourceManagerPool;
-
-			string path = pool.GetRootRelativePath (module.ModuleInfo.FullId.Path);
-			path = path.Replace ("\\", "/");
-			path = path.Replace ("%app%/", "");
+			//	Retourne une description d'un module, incluant son état.
+			string path = Misc.GetModulePath (application, module.ModuleInfo);
 
 			int index = path.LastIndexOf ('/');
 			if (index != -1)
@@ -853,6 +850,18 @@ namespace Epsitec.Common.Designer
 			}
 
 			return builder.ToString ();
+		}
+
+		static public string GetModulePath(DesignerApplication application, ResourceModuleInfo info)
+		{
+			//	Retourne le nom du chemin d'un module, sous une forme agréable.
+			ResourceManagerPool pool = application.ResourceManagerPool;
+
+			string path = pool.GetRootRelativePath (info.FullId.Path);
+			path = path.Replace ("\\", "/");
+			path = path.Replace ("%app%/", "");
+
+			return path;
 		}
 
 		static public string GetModuleName(string moduleName, bool dirtySerialize, bool isPatch)

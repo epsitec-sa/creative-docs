@@ -1895,7 +1895,7 @@ namespace Epsitec.Common.Designer
 			this.bookModules.Items.Insert(this.currentModule, mi.TabPage);
 
 			mi.ModuleTitle = new StaticText (mi.TabPage);
-			mi.ModuleTitle.Text = Misc.GetModuleNameDescription (this, mi.Module);
+			mi.ModuleTitle.Text = Misc.GetModuleDescription (this, mi.Module);
 			mi.ModuleTitle.ContentAlignment = ContentAlignment.MiddleLeft;
 			mi.ModuleTitle.Dock = DockStyle.Top;
 			mi.ModuleTitle.Margins = new Margins (5);
@@ -2517,7 +2517,7 @@ namespace Epsitec.Common.Designer
 					changed = true;
 				}
 
-				mi.ModuleTitle.Text = Misc.GetModuleNameDescription (this, mi.Module);
+				mi.ModuleTitle.Text = Misc.GetModuleDescription (this, mi.Module);
 			}
 
 			if (changed)

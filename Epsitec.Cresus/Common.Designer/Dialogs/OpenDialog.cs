@@ -412,13 +412,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		private string GetModulePath(ResourceModuleInfo info)
 		{
 			//	Retourne le nom du chemin d'un module.
-			ResourceManagerPool pool = this.designerApplication.ResourceManagerPool;
-
-			string path = pool.GetRootRelativePath(info.FullId.Path);
-			path = OpenDialog.FilterUnifier (path);
-			path = path.Replace ("%app%/", "");
-
-			return path;
+			return Misc.GetModulePath (this.designerApplication, info);
 		}
 
 		private ModuleState GetModuleState(ResourceModuleInfo info)
