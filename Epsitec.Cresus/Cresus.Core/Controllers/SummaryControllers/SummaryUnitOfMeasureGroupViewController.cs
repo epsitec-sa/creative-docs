@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					Text		 = CollectionTemplate.DefaultEmptyText,
 				});
 
-			var template = new CollectionTemplate<UnitOfMeasureEntity> ("UnitOfMeasures", data.Controller, this.DataContext);
+			var template = new CollectionTemplate<UnitOfMeasureEntity> ("UnitOfMeasures", this.BusinessContext);
 
 			template.DefineText        (x => x.GetCompactSummary ());
 			template.DefineCompactText (x => x.GetCompactSummary ());

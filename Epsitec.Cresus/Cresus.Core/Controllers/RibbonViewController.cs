@@ -18,12 +18,18 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	class RibbonViewController : CoreViewController
+	class RibbonViewController : CoreViewController, ICoreManualComponent
 	{
-		public RibbonViewController(DataViewOrchestrator orchestrator)
-			: base ("Ribbon", orchestrator)
+		public RibbonViewController(CoreApp app)
+			: base ("Ribbon", app.FindActiveComponent<DataViewOrchestrator> ())
 		{
-			CoreProgram.Application.UserManager.AuthenticatedUserChanged += this.HandleAuthenticatedUserChanged;
+			app.RegisterComponent (this);
+			app.RegisterComponentAsDisposable (this);
+
+			var coreData    = app.FindComponent<CoreData> ();
+			var userManager = coreData.GetComponent<UserManager> ();
+
+			userManager.AuthenticatedUserChanged += this.HandleAuthenticatedUserChanged;
 		}
 
 		

@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			where T2 : CommentEntity, new ()
 			where T3 : CommentEntity, T2, new ()
 		{
-			var template = new CollectionTemplate<T3> ("Comment", data.Controller, businessContext.DataContext)
+			var template = new CollectionTemplate<T3> ("Comment", businessContext)
 				.DefineText        (x => x.GetCompactSummary ())
 				.DefineCompactText (x => x.GetCompactSummary ());
 
@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			where T2 : AbstractEntity, new ()
 			where T3 : MailContactEntity, T2, new ()
 		{
-			var template = new CollectionTemplate<T3> ("MailContact", data.Controller, businessContext.DataContext)
+			var template = new CollectionTemplate<T3> ("MailContact", businessContext)
 				.DefineTitle		(x => x.GetTitle ())
 				.DefineText			(x => x.GetSummary ())
 				.DefineCompactText	(x => x.GetCompactSummary ());
@@ -88,7 +88,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			where T2 : AbstractEntity, new ()
 			where T3 : TelecomContactEntity, T2, new ()
 		{
-			var template = new CollectionTemplate<T3> ("TelecomContact", data.Controller, businessContext.DataContext)
+			var template = new CollectionTemplate<T3> ("TelecomContact", businessContext)
 				.DefineText			(x => x.GetSummary ())
 				.DefineCompactText  (x => x.GetCompactSummary ());
 
@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			where T2 : AbstractEntity, new ()
 			where T3 : UriContactEntity, T2, new ()
 		{
-			var template = new CollectionTemplate<T3> ("UriContact", data.Controller, businessContext.DataContext, filter: x => x.UriType.Protocol == "mailto")
+			var template = new CollectionTemplate<T3> ("UriContact", businessContext, filter: x => x.UriType.Protocol == "mailto")
 				.DefineText			(x => x.GetSummary ())
 				.DefineCompactText	(x => x.GetCompactSummary ())
 				.DefineSetupItem    (x => x.UriType = businessContext.GetLocalEntity (businessContext.Data.GetAllEntities<UriTypeEntity> ().Where (y => y.Protocol == "mailto").FirstOrDefault ()));

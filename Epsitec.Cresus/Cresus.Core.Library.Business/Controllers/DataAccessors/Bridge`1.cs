@@ -372,10 +372,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			var constructedCollectionTemplateType = genericCollectionTemplateType.MakeGenericType (genericCollectionTemplateTypeArg);
 
 			object arg1 = name;
-			object arg2 = this.controller;
-			object arg3 = this.controller.BusinessContext.DataContext;
+			object arg2 = this.controller.BusinessContext;
 
-			return System.Activator.CreateInstance (constructedCollectionTemplateType, arg1, arg2, arg3) as CollectionTemplate;
+			return System.Activator.CreateInstance (constructedCollectionTemplateType, arg1, arg2) as CollectionTemplate;
 		}
 
 		private CollectionAccessor DynamicCreateCollectionAccessor(Brick root, System.Type templateFieldType, CollectionTemplate collectionTemplate)

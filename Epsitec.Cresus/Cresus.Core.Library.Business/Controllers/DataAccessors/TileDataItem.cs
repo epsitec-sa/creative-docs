@@ -113,14 +113,26 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		public bool								HideAddButton
 		{
-			get;
-			set;
+			get
+			{
+				return this.hideAddButton || this.AddNewItem == null;
+			}
+			set
+			{
+				this.hideAddButton = value;
+			}
 		}
 
 		public bool								HideRemoveButton
 		{
-			get;
-			set;
+			get
+			{
+				return this.hideRemoveButton || this.DeleteItem == null;
+			}
+			set
+			{
+				this.hideRemoveButton = value;
+			}
 		}
 
 		public bool								InitialVisibility
@@ -584,5 +596,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		private FormattedText						displayedText;
 		private FormattedText						displayedCompactTitle;
 		private FormattedText						displayedCompactText;
+		
+		private bool								hideAddButton;
+		private bool								hideRemoveButton;
 	}
 }

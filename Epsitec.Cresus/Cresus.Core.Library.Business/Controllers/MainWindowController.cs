@@ -5,6 +5,7 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Orchestrators;
 using Epsitec.Cresus.Core.Widgets;
 
@@ -13,11 +14,15 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public class MainWindowController : CoreViewController, IWidgetUpdater
+	public class MainWindowController : CoreViewController, IWidgetUpdater, ICoreManualComponent
 	{
-		public MainWindowController(CoreData data, CommandContext commandContext, DataViewOrchestrator orchestrator, CoreViewController ribbonController)
-			: base ("MainWindow", orchestrator)
+		public MainWindowController(CoreApp app, CoreData data, CommandContext commandContext, CoreViewController ribbonController)
+			: base ("MainWindow", app.FindActiveComponent<DataViewOrchestrator> ())
 		{
+			app.RegisterComponent (this);
+			app.RegisterComponentAsDisposable (this);
+			app.ActivateComponent (this);
+
 			this.data = data;
 			this.commandContext = commandContext;
 			

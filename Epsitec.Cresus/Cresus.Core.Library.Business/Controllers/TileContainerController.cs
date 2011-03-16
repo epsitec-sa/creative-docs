@@ -363,6 +363,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 
 			tile.Clicked += (sender, e) => this.HandleTileClicked (this.liveItems.First (x => x.TitleTile == tile));
+
 			tile.AddClicked += (sender, e) =>
 				{
 					string itemName = TileDataItem.GetNamePrefix (item.Name);

@@ -17,14 +17,16 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 	public class CollectionTemplate<T> : CollectionTemplate
 			where T : AbstractEntity, new ()
 	{
-		public CollectionTemplate(string name, EntityViewController controller, DataContext dataContext)
+#if false
+		public CollectionTemplate(string name, EntityViewController controller, BusinessContext businessContext)
 			: base (name)
 		{
-			this.businessContext = null;
-			this.dataContextPool = dataContext.DataContextPool;
+			this.businessContext = businessContext;
+			this.dataContextPool = businessContext.Data.DataContextPool;
 
-			this.DefineCreateItem (() => dataContext.CreateEntityAndRegisterAsEmpty<T> ());
+			this.DefineCreateItem (() => this.businessContext.CreateEntityAndRegisterAsEmpty<T> ());
 		}
+#endif
 
 		public CollectionTemplate(string name, BusinessContext businessContext)
 			: base (name)
@@ -36,11 +38,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			this.DefineDeleteItem (x => this.businessContext.ArchiveEntity<T> (x));
 		}
 
-		public CollectionTemplate(string name, EntityViewController controller, DataContext dataContext, System.Predicate<T> filter)
-			: this (name, controller, dataContext)
+		public CollectionTemplate(string name, BusinessContext businessContext, System.Predicate<T> filter)
+			: this (name, businessContext)
 		{
 			this.Filter = filter;
 		}
+
 
 
 		public BusinessContext					BusinessContext

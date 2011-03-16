@@ -29,6 +29,7 @@ namespace Epsitec.Cresus.Core
 		{
 			this.app = app;
 			this.app.RegisterComponent (this);
+			this.app.RegisterComponentAsDisposable (this);
 
 			this.ForceDatabaseCreation = forceDatabaseCreation;
 			this.AllowDatabaseUpdate   = allowDatabaseUpdate;

@@ -40,6 +40,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			this.commandContext     = commandContext;
 
 			this.host.RegisterComponent (this);
+			this.host.RegisterComponentAsDisposable (this);
 			this.host.ActivateComponent (this);
 
 			this.CreateNewBusinessContext ();

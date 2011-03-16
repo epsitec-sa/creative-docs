@@ -67,6 +67,21 @@ namespace Epsitec.Cresus.Core.Library
 			this.manualComponents.ActivateComponent (component);
 		}
 
+		public void RegisterComponentAsDisposable(ICoreManualComponent component)
+		{
+			var disposable = component as System.IDisposable;
+
+			if (disposable == null)
+			{
+				throw new System.ArgumentException ("The component does not implement IDisposable");
+			}
+
+			ICoreComponentHost<ICoreManualComponent> self = this as ICoreComponentHost<ICoreManualComponent>;
+
+			self.RegisterComponentAsDisposable (disposable);
+		}
+
+
 		#region ICoreComponentHost<CoreAppComponent> Members
 
 		public bool ContainsComponent<T>() where T : CoreAppComponent
@@ -151,9 +166,11 @@ namespace Epsitec.Cresus.Core.Library
 
 		void ICoreComponentHost<ICoreManualComponent>.RegisterComponentAsDisposable(System.IDisposable disposable)
 		{
-			this.manualComponents.RegisterComponentAsDisposable (disposable);
-		}
+			//	Register the manual component just like any other component, so that it will be
+			//	disposed in the proper sequence:
 
+			this.components.RegisterComponentAsDisposable (disposable);
+		}
 
 		#endregion
 

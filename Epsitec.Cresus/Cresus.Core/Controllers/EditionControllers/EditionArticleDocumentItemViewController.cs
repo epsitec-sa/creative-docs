@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					Text		 = CollectionTemplate.DefaultEmptyText,
 				});
 
-			var template = new CollectionTemplate<ArticleQuantityEntity> ("ArticleQuantities", data.Controller, this.DataContext);
+			var template = new CollectionTemplate<ArticleQuantityEntity> ("ArticleQuantities", this.BusinessContext);
 
 			template.DefineText        (x => x.GetCompactSummary ());
 			template.DefineCompactText (x => x.GetCompactSummary ());

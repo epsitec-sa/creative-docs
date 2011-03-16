@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			data.Add (tileDataItem);
 
-			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("ArticleLines", data.Controller, this.DataContext);
+			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("ArticleLines", this.BusinessContext);
 
 			template.DefineText        (x => x.GetCompactSummary ());
 			template.DefineCompactText (x => x.GetCompactSummary ());
@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			data.Add (tileDataItem);
 
-			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("FreightAndTaxLines", data.Controller, this.DataContext);
+			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("FreightAndTaxLines", this.BusinessContext);
 
 			template.DefineText        (x => x.GetCompactSummary ());
 			template.DefineCompactText (x => x.GetCompactSummary ());
@@ -138,7 +138,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			data.Add (tileDataItem);
 
-			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("VatLines", data.Controller, this.DataContext);
+			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("VatLines", this.BusinessContext);
 
 			template.DefineText        (x => x.GetCompactSummary ());
 			template.DefineCompactText (x => x.GetCompactSummary ());

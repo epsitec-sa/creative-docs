@@ -127,6 +127,7 @@
     <Compile Include="Controllers\NewEntityReference.cs" />
     <Compile Include="Controllers\PreviewViewController.cs" />
     <Compile Include="Controllers\ReferenceController.cs" />
+    <Compile Include="Controllers\RibbonViewController.cs" />
     <Compile Include="Controllers\SelectionController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryViewController.cs" />
     <Compile Include="Controllers\TabIds\ArticleParameterTabId.cs" />
