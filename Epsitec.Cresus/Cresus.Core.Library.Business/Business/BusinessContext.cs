@@ -434,9 +434,20 @@ namespace Epsitec.Cresus.Core.Business
 			return master.WrapNullEntity ();
 		}
 
+		/// <summary>
+		/// Gets the master entities, i.e. those which are currently displayed in the UI.
+		/// </summary>
+		/// <returns>A collection of master entities.</returns>
 		public IEnumerable<AbstractEntity> GetMasterEntities()
 		{
-			return this.masterEntities.Distinct ();
+			if (Logic.Current == null)
+			{
+				return this.masterEntities.Distinct ();
+			}
+			else
+			{
+				return Logic.Current.Find ().Concat (this.masterEntities).Distinct ();
+			}
 		}
 
 		public Date GetReferenceDate()

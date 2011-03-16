@@ -45,19 +45,20 @@ namespace Epsitec.Cresus.Core.Business
 		public IEnumerable<T> Find<T>()
 			where T : AbstractEntity
 		{
+			return this.Find ().OfType<T> ();
+		}
+
+		public IEnumerable<AbstractEntity> Find()
+		{
 			var logic = this;
 
 			while (logic != null)
 			{
-				if (logic.entity is T)
-				{
-					yield return logic.entity as T;
-				}
-
+				yield return logic.entity;
+				
 				logic = logic.link;
 			}
 		}
-
 
 		#region ICoreComponentHost<ICoreComponent> Members
 
