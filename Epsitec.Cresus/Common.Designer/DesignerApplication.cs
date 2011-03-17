@@ -1945,9 +1945,9 @@ namespace Epsitec.Common.Designer
 					Parent = mi.TabPage,
 					GlyphShape = this.showModuleTitle ? GlyphShape.TriangleUp : GlyphShape.TriangleDown,
 					ButtonStyle = Widgets.ButtonStyle.Slider,
-					PreferredSize = new Size (19, 19),
+					PreferredSize = new Size (17, 17),
 					Anchor = AnchorStyles.TopRight,
-					Margins = new Margins (0, 3, 3, 0),
+					Margins = new Margins (0, 2, 4, 0),
 				};
 
 				ToolTip.Default.SetToolTip (mi.ShowHideButton, "Montre ou cache le titre du module");

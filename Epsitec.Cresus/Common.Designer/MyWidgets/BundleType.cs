@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 	{
 		public BundleType() : base()
 		{
-			IAdorner    adorner = Widgets.Adorners.Factory.Active;
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			var frame = new FrameBox
 			{

@@ -27,6 +27,8 @@ namespace Epsitec.Common.Designer.Controllers
 
 		public FrameBox CreateUI(Widget parent, double labelWidth = 36)  // 36 = largeur pour "Filtrer"
 		{
+			labelWidth = System.Math.Max (labelWidth, 36);  // garde-fou: jamais moins
+
 			var frame = new FrameBox
 			{
 				Parent = parent,
