@@ -446,9 +446,9 @@
   <data name="Viewers.Column.Entity" id="2O3">Entité</data>
   <data name="Viewers.Column.Type" id="2P3">Type</data>
   <data name="Viewers.Column.Prefix" id="2Q3">Enumération</data>
-  <data name="Viewers.Source.Short.Reference" id="2R3">R</data>
-  <data name="Viewers.Source.Short.Patch" id="2S3">P</data>
-  <data name="Viewers.Source.Short.Merge" id="2T3">M</data>
+  <data name="Viewers.Source.Short.Reference" id="2R3">Référence</data>
+  <data name="Viewers.Source.Short.Patch" id="2S3">Patch</data>
+  <data name="Viewers.Source.Short.Merge" id="2T3">Fusion</data>
   <data name="Viewers.Identity.God" id="2U3">Dieu</data>
   <data name="Viewers.Identity.Developer" id="2V3">Dev {0}</data>
   <data name="Viewers.Captions.Brief" id="204">Résumé</data>
@@ -600,4 +600,5 @@
   <data name="Dialog.ModuleInfo.Radio.TextMode.String" id="KK3">Textes simples (string)</data>
   <data name="Dialog.ModuleInfo.Radio.TextMode.FormattedText" id="KL3">Textes riches (FormattedText)</data>
   <data name="Controller.Filter.Label" id="KM3">Filtrer</data>
+  <data name="Viewers.Column.Source" id="KN3">Source</data>
 </bundle>

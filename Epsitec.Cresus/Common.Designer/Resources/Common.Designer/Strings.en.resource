@@ -243,4 +243,16 @@
   <data id="KR1">Properties</data>
   <data id="KM2">*</data>
   <data id="KA3">From end</data>
+  <data id="2T3">Merge</data>
+  <data id="2S3">Patch</data>
+  <data id="2R3">Reference</data>
+  <data id="KN3">Source</data>
+  <data id="2L3">Druid</data>
+  <data id="2O3">Entity</data>
+  <data id="2N3">Identity</data>
+  <data id="2M3">Local</data>
+  <data id="2K3">Name</data>
+  <data id="K4">Level</data>
+  <data id="2Q3">Enum</data>
+  <data id="2P3">Type</data>
 </bundle>

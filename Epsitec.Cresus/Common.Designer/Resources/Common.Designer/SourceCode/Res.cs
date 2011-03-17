@@ -6428,6 +6428,14 @@ namespace Epsitec.Common.Designer
 							return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (33554554));
 						}
 					}
+					//	designer:str/30KN3
+					public static global::System.String Source
+					{
+						get
+						{
+							return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544439));
+						}
+					}
 					//	designer:str/302P3
 					public static global::System.String Type
 					{
