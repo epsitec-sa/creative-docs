@@ -72,7 +72,7 @@ namespace Epsitec.Common.Designer.Ribbons
 		private void HandleListPressed(object sender, MessageEventArgs e)
 		{
 			//	Bouton pour ouvrir la liste cliqué.
-			if (!this.designerApplication.IsCurrentModule)
+			if (!this.designerApplication.HasCurrentModule)
 			{
 				return;
 			}

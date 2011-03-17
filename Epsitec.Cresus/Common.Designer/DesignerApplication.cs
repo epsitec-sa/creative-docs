@@ -488,7 +488,7 @@ namespace Epsitec.Common.Designer
 			string moduleName        = "";
 			string sourceNamespace   = "";
 
-			if (this.IsCurrentModule)
+			if (this.HasCurrentModule)
 			{
 				actualModuleName = this.CurrentModuleInfo.Module.ModuleId.Name;
 				ResourceModuleInfo info = this.CurrentModuleInfo.Module.ResourceManager.DefaultModuleInfo;
@@ -556,7 +556,7 @@ namespace Epsitec.Common.Designer
 		{
 			this.CloseInitialMessage();
 
-			if (!this.IsCurrentModule || !this.Terminate())
+			if (!this.HasCurrentModule || !this.Terminate())
 			{
 				return;
 			}
@@ -740,7 +740,7 @@ namespace Epsitec.Common.Designer
 		[Command("AccessLast")]
 		void CommandAccess(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			if ( !this.IsCurrentModule )  return;
+			if ( !this.HasCurrentModule )  return;
 			this.CurrentModule.Modifier.ActiveViewer.DoAccess(e.Command.CommandId);
 		}
 
@@ -750,7 +750,7 @@ namespace Epsitec.Common.Designer
 		[Command("ModificationNext")]
 		void CommandModification(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			if ( !this.IsCurrentModule )  return;
+			if ( !this.HasCurrentModule )  return;
 			this.CurrentModule.Modifier.ActiveViewer.DoModification(e.Command.CommandId);
 		}
 
@@ -762,7 +762,7 @@ namespace Epsitec.Common.Designer
 				return;
 			}
 
-			if (!this.IsCurrentModule)
+			if (!this.HasCurrentModule)
 			{
 				return;
 			}
@@ -778,7 +778,7 @@ namespace Epsitec.Common.Designer
 				return;
 			}
 
-			if (!this.IsCurrentModule)
+			if (!this.HasCurrentModule)
 			{
 				return;
 			}
@@ -800,7 +800,7 @@ namespace Epsitec.Common.Designer
 		[Command("EditOk")]
 		void CommandEditOk(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			if (!this.IsCurrentModule)
+			if (!this.HasCurrentModule)
 			{
 				return;
 			}
@@ -811,7 +811,7 @@ namespace Epsitec.Common.Designer
 		[Command("EditCancel")]
 		void CommandEditCancel(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			if (!this.IsCurrentModule)
+			if (!this.HasCurrentModule)
 			{
 				return;
 			}
@@ -827,7 +827,7 @@ namespace Epsitec.Common.Designer
 				return;
 			}
 
-			if (!this.IsCurrentModule)
+			if (!this.HasCurrentModule)
 			{
 				return;
 			}
@@ -843,7 +843,7 @@ namespace Epsitec.Common.Designer
 				return;
 			}
 
-			if (!this.IsCurrentModule)
+			if (!this.HasCurrentModule)
 			{
 				return;
 			}
@@ -859,7 +859,7 @@ namespace Epsitec.Common.Designer
 				return;
 			}
 
-			if (!this.IsCurrentModule)
+			if (!this.HasCurrentModule)
 			{
 				return;
 			}
@@ -875,7 +875,7 @@ namespace Epsitec.Common.Designer
 				return;
 			}
 
-			if (!this.IsCurrentModule)
+			if (!this.HasCurrentModule)
 			{
 				return;
 			}
@@ -888,7 +888,7 @@ namespace Epsitec.Common.Designer
 		[Command("Paste")]
 		void CommandClipboard(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			if (!this.IsCurrentModule)
+			if (!this.HasCurrentModule)
 			{
 				return;
 			}
@@ -901,7 +901,7 @@ namespace Epsitec.Common.Designer
 		[Command("FontUnderline")]
 		void CommandFont(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			if (!this.IsCurrentModule)
+			if (!this.HasCurrentModule)
 			{
 				return;
 			}
@@ -928,7 +928,7 @@ namespace Epsitec.Common.Designer
 		[Command("ObjectPanel")]
 		void CommandTool(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			if (!this.IsCurrentModule)
+			if (!this.HasCurrentModule)
 			{
 				return;
 			}
@@ -982,7 +982,7 @@ namespace Epsitec.Common.Designer
 		[Command("ShowSecondaryCulture")]
 		void CommandCommand(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			if (!this.IsCurrentModule)
+			if (!this.HasCurrentModule)
 			{
 				return;
 			}
@@ -2013,7 +2013,7 @@ namespace Epsitec.Common.Designer
 			//	Termine le travail sur une ressource, avant de passer à une autre.
 			//	Si soft = true, on sérialise temporairement sans poser de question.
 			//	Retourne false si l'utilisateur a choisi "annuler".
-			if (this.IsCurrentModule && this.CurrentModule.Modifier.ActiveViewer != null)
+			if (this.HasCurrentModule && this.CurrentModule.Modifier.ActiveViewer != null)
 			{
 				return this.CurrentModule.Modifier.ActiveViewer.Terminate(soft);
 			}
@@ -2026,7 +2026,7 @@ namespace Epsitec.Common.Designer
 			//	Mise à jour après avoir changé le type de ressource.
 			this.ViewersWindowClear();
 
-			if (this.IsCurrentModule)
+			if (this.HasCurrentModule)
 			{
 				this.CreateViewerLayout();
 				this.DialogSearchAdapt();
@@ -2074,7 +2074,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public bool IsCurrentModule
+		public bool HasCurrentModule
 		{
 			//	Indique s'il existe un module courant.
 			get

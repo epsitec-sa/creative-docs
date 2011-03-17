@@ -764,7 +764,8 @@ namespace Epsitec.Common.Designer
 			//	Ici, si c'est un type, on a forcément TypeCode qui a été initialisé soit
 			//	explicitement avec un SetValue, soit par recopie de l'original via CopyData;
 			//	c'est indispensable que TypeCode soit défini avant de faire le Add :
-			this.accessor.Collection.Add(newItem);
+			this.neverExcludedByFilterItem = newItem;  // cet item ne devra jamais être exclu par le filtre
+			this.accessor.Collection.Add (newItem);
 			this.collectionView.MoveCurrentTo(newItem);
 
 			if (generateMissingValues)
@@ -1195,6 +1196,8 @@ namespace Epsitec.Common.Designer
 		public void SetFilter(string filter, Searcher.SearchingMode mode)
 		{
 			//	Construit l'index en fonction des ressources primaires.
+			this.neverExcludedByFilterItem = null;  // plus de privilégié si le filtre change
+
 			if (this.collectionViewFilter != filter || this.collectionViewMode != mode)
 			{
 				this.collectionViewMode = mode;
@@ -1235,6 +1238,12 @@ namespace Epsitec.Common.Designer
 			//	Retourne false si la ressource doit être exclue.
 			CultureMap item = obj as CultureMap;
 
+			//	Vérifie si on est en présence de "la" ressource privilégiée, jamais exclue.
+			if (item == this.neverExcludedByFilterItem)
+			{
+				return true;  // on garde cette ressource, même si elle ne correspond pas au filtre
+			}
+
 			//	Si la ressource en cours est modifiée, il faut toujours l'inclure au filtre !
 			if (this.isLocalDirty)
 			{
@@ -1259,7 +1268,7 @@ namespace Epsitec.Common.Designer
 					
 					if (!this.collectionViewRegex.IsMatch(text))
 					{
-						return false;
+						return false;  // ressource exclue
 					}
 				}
 				else
@@ -1277,17 +1286,17 @@ namespace Epsitec.Common.Designer
 					
 					if (index == -1)
 					{
-						return false;
+						return false;  // ressource exclue
 					}
 
 					if ((this.collectionViewMode&Searcher.SearchingMode.AtBeginning) != 0 && index != 0)
 					{
-						return false;
+						return false;  // ressource exclue
 					}
 
 					if ((this.collectionViewMode&Searcher.SearchingMode.AtEnding) != 0 && index != item.Name.Length-this.collectionViewFilter.Length)
 					{
-						return false;
+						return false;  // ressource exclue
 					}
 				}
 			}
@@ -2913,5 +2922,7 @@ namespace Epsitec.Common.Designer
 
 		private DataLifetimeExpectancy						lastLifetime;
 		private StructuredTypeFlags							lastFlags;
+
+		private CultureMap									neverExcludedByFilterItem;
 	}
 }
