@@ -888,7 +888,7 @@ namespace Epsitec.Common.Designer
 			if (dirtySerialize)
 			{
 				string image = Misc.Image ("Save", -3, new Size (14, 14));
-				name = string.Concat (name, " ", image);
+				name = string.Concat (Misc.Bold (name), " ", image);
 			}
 
 			return name;

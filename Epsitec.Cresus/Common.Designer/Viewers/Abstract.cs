@@ -300,6 +300,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.ColumnHeader.SetColumnComparer(7, this.ComparePatchLevel);
 
 			this.table.ColumnHeader.SetColumnText(0, Res.Strings.Viewers.Column.Name);
+			this.table.ColumnHeader.SetColumnText(3, Res.Strings.Viewers.Column.Source);
 			this.table.ColumnHeader.SetColumnText(4, Res.Strings.Viewers.Column.Druid);
 			this.table.ColumnHeader.SetColumnText(5, Res.Strings.Viewers.Column.Local);
 			this.table.ColumnHeader.SetColumnText(6, Res.Strings.Viewers.Column.Identity);
@@ -2221,7 +2222,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				//	Crée le contenu pour la source de la ressource.
 				string text = this.owner.GetSourceText(item);
-				return this.CreateItemViewText(item, text, ContentAlignment.MiddleCenter, Color.Empty);
+				return this.CreateItemViewText (item, text, ContentAlignment.MiddleLeft, Color.Empty);
 			}
 
 			private Widget CreateType(CultureMap item, UI.ItemViewShape shape)
@@ -2758,8 +2759,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected static bool					suiteExtended = false;
 		protected static bool					showPrimaryCulture = true;
 		protected static bool					showSecondaryCulture = true;
-		private static double[]					columnWidthHorizontal = { 200, 100, 100, 20, 80, 50, 100, 50 };
-		private static double[]					columnWidthVertical = { 250, 300, 300, 20, 80, 50, 100, 50 };
+		private static double[]					columnWidthHorizontal = { 200, 100, 100, 60, 80, 50, 100, 50 };
+		private static double[]					columnWidthVertical = { 250, 300, 300, 60, 80, 50, 100, 50 };
 
 		protected Module						module;
 		protected PanelsContext					context;
