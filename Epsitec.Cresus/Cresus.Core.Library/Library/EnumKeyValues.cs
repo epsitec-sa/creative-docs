@@ -35,8 +35,15 @@ namespace Epsitec.Cresus.Core.Library
 			{
 				var enumKey = (T) (object) item.Value;
 				var caption = item.Caption;
+				var labels  = caption.Labels.ToArray ();
 
-				yield return EnumKeyValues.Create<T> (enumKey, caption.Labels.ToArray ());
+				if (labels.Length == 0)
+				{
+					var red = Epsitec.Common.Drawing.Color.FromName ("Red");
+					labels = new string[] { FormattedText.FromSimpleText (enumKey.ToString ()).ApplyFontColor (red).ToString () };
+				}
+
+				yield return EnumKeyValues.Create<T> (enumKey, labels);
 			}
 		}
 
