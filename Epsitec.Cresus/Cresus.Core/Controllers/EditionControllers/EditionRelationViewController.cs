@@ -74,9 +74,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField             (tile,  90,                              "Client depuis le",                         Marshaler.Create (() => this.Entity.FirstContactDate,         x => this.Entity.FirstContactDate = x));
 			builder.CreateMargin                (tile, horizontalSeparator: true);
 			builder.CreateTextField             (tile, 150,                              "Numéro de TVA",                            Marshaler.Create (() => this.Entity.VatNumber,                x => this.Entity.VatNumber = x));
-			builder.CreateAutoCompleteTextField (tile, 150-UIBuilder.ComboButtonWidth+1, "Mode d'assujetissement à la TVA",          Marshaler.Create (() => this.Entity.TaxMode,                  x => this.Entity.TaxMode = x), EnumKeyValues.FromEnum<TaxMode> (), x => TextFormatter.FormatText (x.Values[0]));
+			builder.CreateAutoCompleteTextField (tile, 150-UIBuilder.ComboButtonWidth+1, "Mode d'assujetissement à la TVA",          Marshaler.Create (() => this.Entity.TaxMode,                  x => this.Entity.TaxMode = x), EnumKeyValues.FromEnum<TaxMode> (), x => TextFormatter.FormatText (x));
 			builder.CreateAccountEditor         (tile,                                   "Compte débiteur pour la comptabilisation", Marshaler.Create (() => this.Entity.DefaultDebtorBookAccount, x => this.Entity.DefaultDebtorBookAccount = x));
-			builder.CreateAutoCompleteTextField (tile, 150-UIBuilder.ComboButtonWidth+1, "Monnaie utilisée",                         Marshaler.Create (() => this.Entity.DefaultCurrencyCode,      x => this.Entity.DefaultCurrencyCode = x), EnumKeyValues.FromEnum<CurrencyCode> (), x => TextFormatter.FormatText (x.Values[0], "-", x.Values[1]));
+			builder.CreateAutoCompleteTextField (tile, 150-UIBuilder.ComboButtonWidth+1, "Monnaie utilisée",                         Marshaler.Create (() => this.Entity.DefaultCurrencyCode,      x => this.Entity.DefaultCurrencyCode = x), EnumKeyValues.FromEnum<CurrencyCode> (), x => TextFormatter.FormatText (x));
 		}
 
 

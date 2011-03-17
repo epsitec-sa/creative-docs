@@ -51,9 +51,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
-			builder.CreateAutoCompleteTextField (tile, 0, "Type du document",  Marshaler.Create (() => this.Entity.DocumentType,          x => this.Entity.DocumentType = x),          EnumKeyValues.FromEnum<DocumentType> (),          x => TextFormatter.FormatText (x.Values[0]));
-			builder.CreateAutoCompleteTextField (tile, 0, "Source",            Marshaler.Create (() => this.Entity.DocumentSource,        x => this.Entity.DocumentSource = x),        EnumKeyValues.FromEnum<DocumentSource> (),        x => TextFormatter.FormatText (x.Values[0]));
-			builder.CreateAutoCompleteTextField (tile, 0, "Direction du flux", Marshaler.Create (() => this.Entity.DocumentFlowDirection, x => this.Entity.DocumentFlowDirection = x), EnumKeyValues.FromEnum<DocumentFlowDirection> (), x => TextFormatter.FormatText (x.Values[0]));
+			builder.CreateAutoCompleteTextField (tile, 0, "Type du document",  Marshaler.Create (() => this.Entity.DocumentType,          x => this.Entity.DocumentType = x),          EnumKeyValues.FromEnum<DocumentType> (),          x => TextFormatter.FormatText (x));
+			builder.CreateAutoCompleteTextField (tile, 0, "Source",            Marshaler.Create (() => this.Entity.DocumentSource,        x => this.Entity.DocumentSource = x),        EnumKeyValues.FromEnum<DocumentSource> (),        x => TextFormatter.FormatText (x));
+			builder.CreateAutoCompleteTextField (tile, 0, "Direction du flux", Marshaler.Create (() => this.Entity.DocumentFlowDirection, x => this.Entity.DocumentFlowDirection = x), EnumKeyValues.FromEnum<DocumentFlowDirection> (), x => TextFormatter.FormatText (x));
 		}
 
 		private void CreateUIOptions(UIBuilder builder)
