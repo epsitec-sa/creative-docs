@@ -23,6 +23,11 @@ namespace Epsitec.Common.Splash
 			this.logoFilePath = System.IO.Path.Combine (SplashScreen.GetStartupPath (), logoFileName);
 			this.phase = SplashPhase.FadeIn;
 
+			if (SplashScreen.activeSplashScreen == null)
+			{
+				SplashScreen.activeSplashScreen = this;
+			}
+
 			this.LaunchSplashThread ();
 		}
 
@@ -65,6 +70,15 @@ namespace Epsitec.Common.Splash
 		public void NotifyIsRunning()
 		{
 			this.Phase = SplashPhase.FadeOut;
+		}
+
+		public static void DismissSplashScreen()
+		{
+			if (SplashScreen.activeSplashScreen != null)
+			{
+				SplashScreen.activeSplashScreen.Phase = SplashPhase.FadeOut;
+				SplashScreen.activeSplashScreen = null;
+			}
 		}
 
 		#region IDisposable Members
@@ -175,6 +189,8 @@ namespace Epsitec.Common.Splash
 			System.Windows.Forms.Application.Run (splashForm);
 		}
 
+
+		private static SplashScreen activeSplashScreen;
 
 		private readonly string logoFileName;
 		private readonly string logoFilePath;
