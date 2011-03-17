@@ -46,7 +46,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.array.SelectedIndex = -1;
 				this.array.DoubleClicked += this.HandleDoubleClicked;
 				this.array.ChangeSelected += this.HandleArraySelected;
-				ToolTip.Default.SetToolTip(this.array, "*");
+				ToolTip.Default.RegisterDynamicToolTipHost (this.array);  // pour voir les tooltips dynamiques
 
 				//	Boutons de fermeture.
 				Widget footer = new Widget(this.window.Root);

@@ -2545,7 +2545,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected VMenu CreateCultureMenu()
+		private VMenu CreateCultureMenu()
 		{
 			//	Crée le petit menu associé au bouton "v" des cultures.
 			VMenu menu = new VMenu();

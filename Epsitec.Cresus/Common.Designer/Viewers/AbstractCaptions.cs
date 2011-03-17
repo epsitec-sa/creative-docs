@@ -133,7 +133,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryIcon.TabIndex = this.tabIndex++;
 			this.primaryIcon.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.primaryIcon.Clicked += this.HandlePrimaryIconClicked;
-			ToolTip.Default.SetToolTip (this.primaryIcon, "*");
+			ToolTip.Default.RegisterDynamicToolTipHost (this.primaryIcon);  // pour voir les tooltips dynamiques
 
 			this.primaryIconInfo = new StaticText(this.groupPrimaryIcon.GroupBox);
 			this.primaryIconInfo.PreferredHeight = AbstractCaptions.iconSize;

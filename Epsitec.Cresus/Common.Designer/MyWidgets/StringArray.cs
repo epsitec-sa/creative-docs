@@ -80,7 +80,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.columns[i].DraggingCellSelectionChanged += this.HandleDraggingCellSelectionChanged;
 					this.columns[i].FinalCellSelectionChanged += this.HandleFinalCellSelectionChanged;
 					this.columns[i].DoubleClicked += this.HandleDoubleClicked;
-					ToolTip.Default.SetToolTip(this.columns[i], "*");
+					ToolTip.Default.RegisterDynamicToolTipHost (this.columns[i]);  // pour voir les tooltips dynamiques
 				}
 				this.columns[this.columns.Length-1].CellCountChanged += this.HandleCellCountChanged;
 			}

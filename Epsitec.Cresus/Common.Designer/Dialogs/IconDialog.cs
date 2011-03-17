@@ -86,7 +86,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.arrayCompact.ChangeSelected += this.HandleArrayCompactChangeSelected;
 				this.arrayCompact.TabIndex = 2;
 				this.arrayCompact.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-				ToolTip.Default.SetToolTip (this.arrayCompact, "*");
+				ToolTip.Default.RegisterDynamicToolTipHost (this.arrayCompact);  // pour voir les tooltips dynamiques
 
 				//	Pied.
 				Widget footer = new Widget (this.window.Root);
