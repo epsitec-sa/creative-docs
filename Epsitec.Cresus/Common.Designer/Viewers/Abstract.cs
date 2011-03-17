@@ -270,24 +270,25 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Initialise la table.
 			StructuredType cultureMapType = new StructuredType();
-			cultureMapType.Fields.Add("Name", StringType.NativeDefault);
-			cultureMapType.Fields.Add("Primary", StringType.NativeDefault);
-			cultureMapType.Fields.Add("Secondary", StringType.NativeDefault);
-			cultureMapType.Fields.Add("Source", StringType.NativeDefault);
-			cultureMapType.Fields.Add("Druid", StringType.NativeDefault);
-			cultureMapType.Fields.Add("Local", StringType.NativeDefault);
-			cultureMapType.Fields.Add("Identity", StringType.NativeDefault);
+
+			cultureMapType.Fields.Add("Name",       StringType.NativeDefault);
+			cultureMapType.Fields.Add("Primary",    StringType.NativeDefault);
+			cultureMapType.Fields.Add("Secondary",  StringType.NativeDefault);
+			cultureMapType.Fields.Add("Source",     StringType.NativeDefault);
+			cultureMapType.Fields.Add("Druid",      StringType.NativeDefault);
+			cultureMapType.Fields.Add("Local",      StringType.NativeDefault);
+			cultureMapType.Fields.Add("Identity",   StringType.NativeDefault);
 			cultureMapType.Fields.Add("PatchLevel", StringType.NativeDefault);
 
 			this.table.SourceType = cultureMapType;
 
-			this.table.Columns.Add(new UI.ItemTableColumn("Name", new Widgets.Layouts.GridLength(this.GetColumnWidth(0), Widgets.Layouts.GridUnitType.Proportional)));
-			this.table.Columns.Add(new UI.ItemTableColumn("Primary", new Widgets.Layouts.GridLength(this.GetColumnWidth(1), Widgets.Layouts.GridUnitType.Proportional)));
-			this.table.Columns.Add(new UI.ItemTableColumn("Secondary", new Widgets.Layouts.GridLength(this.GetColumnWidth(2), Widgets.Layouts.GridUnitType.Proportional)));
-			this.table.Columns.Add(new UI.ItemTableColumn("Source", new Widgets.Layouts.GridLength(this.GetColumnWidth(3), Widgets.Layouts.GridUnitType.Proportional)));
-			this.table.Columns.Add(new UI.ItemTableColumn("Druid", new Widgets.Layouts.GridLength(this.GetColumnWidth(4), Widgets.Layouts.GridUnitType.Proportional)));
-			this.table.Columns.Add(new UI.ItemTableColumn("Local", new Widgets.Layouts.GridLength(this.GetColumnWidth(5), Widgets.Layouts.GridUnitType.Proportional)));
-			this.table.Columns.Add(new UI.ItemTableColumn("Identity", new Widgets.Layouts.GridLength(this.GetColumnWidth(6), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Name",       new Widgets.Layouts.GridLength(this.GetColumnWidth(0), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Primary",    new Widgets.Layouts.GridLength(this.GetColumnWidth(1), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Secondary",  new Widgets.Layouts.GridLength(this.GetColumnWidth(2), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Source",     new Widgets.Layouts.GridLength(this.GetColumnWidth(3), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Druid",      new Widgets.Layouts.GridLength(this.GetColumnWidth(4), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Local",      new Widgets.Layouts.GridLength(this.GetColumnWidth(5), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Identity",   new Widgets.Layouts.GridLength(this.GetColumnWidth(6), Widgets.Layouts.GridUnitType.Proportional)));
 			this.table.Columns.Add(new UI.ItemTableColumn("PatchLevel", new Widgets.Layouts.GridLength(this.GetColumnWidth(7), Widgets.Layouts.GridUnitType.Proportional)));
 
 			this.table.ColumnHeader.SetColumnComparer(1, this.ComparePrimary);
@@ -2206,13 +2207,13 @@ namespace Epsitec.Common.Designer.Viewers
 			private Widget CreateName(CultureMap item, UI.ItemViewShape shape)
 			{
 				//	Crée le contenu pour le nom de la ressource.
-				string text = (shape == UI.ItemViewShape.ToolTip) ? item.FullName : item.Name;
+				string text = (shape == UI.ItemViewShape.ToolTip) ? item.FullName : this.owner.GetItemName (item);
 				if (shape == UI.ItemViewShape.ToolTip && string.IsNullOrEmpty(text))
 				{
 					return null;
 				}
 
-				text = TextLayout.ConvertToTaggedText(text);
+				//?text = TextLayout.ConvertToTaggedText(text);
 				return this.CreateItemViewText(item, text, ContentAlignment.MiddleLeft, Color.Empty);
 			}
 
@@ -2465,6 +2466,12 @@ namespace Epsitec.Common.Designer.Viewers
 			int iB = itemB.Id.PatchLevel;
 
 			return iA.CompareTo(iB);
+		}
+
+		public virtual string GetItemName(CultureMap item)
+		{
+			//	Retourne le nom d'un item.
+			return item.Name;
 		}
 
 		public virtual string GetColumnText(CultureMap item, string twoLettersCulture)

@@ -3508,19 +3508,22 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
-			if ((flags & Types.StructuredTypeFlags.GenerateRepository) != 0)
+			if (isExtended)
 			{
-				graphics.PaintText (center.X-15-10-10, center.Y-4, "R", Font.DefaultFont, 11.0);
-			}
+				if ((flags & Types.StructuredTypeFlags.GenerateRepository) != 0)
+				{
+					graphics.PaintText (center.X-15-10-10, center.Y-4, "R", Font.DefaultFont, 11.0);
+				}
 
-			if ((flags & Types.StructuredTypeFlags.StandaloneDisplay) != 0)
-			{
-				graphics.PaintText (center.X-15-10, center.Y-4, "A", Font.DefaultFont, 11.0);
-			}
+				if ((flags & Types.StructuredTypeFlags.StandaloneDisplay) != 0)
+				{
+					graphics.PaintText (center.X-15-10, center.Y-4, "A", Font.DefaultFont, 11.0);
+				}
 
-			if ((flags & Types.StructuredTypeFlags.StandaloneCreation) != 0)
-			{
-				graphics.PaintText (center.X-15, center.Y-4, "C", Font.DefaultFont, 11.0);
+				if ((flags & Types.StructuredTypeFlags.StandaloneCreation) != 0)
+				{
+					graphics.PaintText (center.X-15, center.Y-4, "C", Font.DefaultFont, 11.0);
+				}
 			}
 		}
 

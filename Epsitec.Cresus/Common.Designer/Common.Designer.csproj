@@ -755,6 +755,10 @@
     <EmbeddedResource Include="Images\Info.icon" />
     <EmbeddedResource Include="Images\SaveAll.icon" />
     <EmbeddedResource Include="Images\AddEntity.icon" />
+    <EmbeddedResource Include="Images\EntityAbstract.icon" />
+    <EmbeddedResource Include="Images\EntityInterface.icon" />
+    <EmbeddedResource Include="Images\EntityNormal.icon" />
+    <EmbeddedResource Include="Images\EntitySchema.icon" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
