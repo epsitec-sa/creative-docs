@@ -61,6 +61,21 @@ namespace Epsitec.Cresus.Core.Library
 				return component;
 			}
 
+			if ((type.IsInterface) ||
+				(type.IsClass))
+			{
+				//	We are requesting a component which implements the specified interface or
+				//	derives from a base class; search for it sequentially :
+
+				component = this.registeredComponents.Where (x => type.IsAssignableFrom (x.GetType ())).FirstOrDefault ();
+
+				if (component != null)
+				{
+					return component;
+				}
+			}
+
+
 			throw new System.ArgumentException (string.Format ("The specified component {0} does not exist", type.FullName));
 		}
 

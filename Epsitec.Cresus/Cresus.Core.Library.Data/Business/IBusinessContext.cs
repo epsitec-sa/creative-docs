@@ -4,6 +4,7 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Repositories;
 
 using Epsitec.Cresus.DataLayer.Context;
@@ -13,7 +14,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business
 {
-	public interface IBusinessContext : System.IDisposable
+	public interface IBusinessContext : System.IDisposable, ICoreManualComponent
 	{
 		CoreData Data
 		{
