@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCulture ("")]
 [assembly: AssemblyConfiguration ("")]
 
-[assembly: AssemblyVersion ("3.2.2.1111")]
-[assembly: AssemblyFileVersion ("3.2.2.1111")]
+[assembly: AssemblyVersion ("3.2.3.1111")]
+[assembly: AssemblyFileVersion ("3.2.3.1111")]
 
 [assembly: ComVisible (false)]

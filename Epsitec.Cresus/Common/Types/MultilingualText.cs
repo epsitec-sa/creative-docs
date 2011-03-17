@@ -253,6 +253,33 @@ namespace Epsitec.Common.Types
 			return (languageId == MultilingualText.DefaultLanguageId);
 		}
 
+		/// <summary>
+		/// Creates a multilingual <see cref="FormattedText"/>, based on a collection of prefixed
+		/// texts, such as <c>"fr:Texte"</c>, <c>"de:Text"</c>, etc.
+		/// </summary>
+		/// <param name="prefixedTexts">The prefixed texts.</param>
+		/// <returns>The multilingual (global) text.</returns>
+		public static FormattedText CreateText(params string[] prefixedTexts)
+		{
+			var text = new MultilingualText ();
+
+			foreach (var prefixedText in prefixedTexts)
+			{
+				if ((prefixedText.Length < 3) ||
+					(prefixedText[2] != ':'))
+				{
+					throw new System.FormatException (string.Format ("Argument '{0}' does not contain valid prefix", prefixedText));
+				}
+
+				string languageId   = prefixedText.Substring (0, 2);
+				string languageText = prefixedText.Substring (3);
+
+				text.SetText (languageId, languageText);
+			}
+
+			return text.GetGlobalText ();
+		}
+
 		#region IEquatable<MultilingualText> Members
 
 		public bool Equals(MultilingualText other)
