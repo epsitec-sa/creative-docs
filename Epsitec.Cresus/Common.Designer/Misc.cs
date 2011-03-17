@@ -749,7 +749,13 @@ namespace Epsitec.Common.Designer
 		static public string Image(string icon, double verticalOffset)
 		{
 			//	Retourne le texte pour mettre une image dans un texte.
-			return string.Format(@"<img src=""{0}"" voff=""{1}""/>", Misc.Icon(icon), verticalOffset.ToString(System.Globalization.CultureInfo.InvariantCulture));
+			return string.Format (@"<img src=""{0}"" voff=""{1}""/>", Misc.Icon (icon), verticalOffset.ToString (System.Globalization.CultureInfo.InvariantCulture));
+		}
+
+		static public string Image(string icon, double verticalOffset, Size size)
+		{
+			//	Retourne le texte pour mettre une image dans un texte.
+			return string.Format (@"<img src=""{0}"" voff=""{1}"" dx=""{2}"" dy=""{3}""/>", Misc.Icon (icon), verticalOffset.ToString (System.Globalization.CultureInfo.InvariantCulture), size.Width.ToString (System.Globalization.CultureInfo.InvariantCulture), size.Height.ToString (System.Globalization.CultureInfo.InvariantCulture));
 		}
 
 		static public string ImageDyn(string name, string parameter)
@@ -881,7 +887,8 @@ namespace Epsitec.Common.Designer
 
 			if (dirtySerialize)
 			{
-				name = Misc.Bold (name);
+				string image = Misc.Image ("Save", -3, new Size (14, 14));
+				name = string.Concat (name, " ", image);
 			}
 
 			return name;
