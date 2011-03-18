@@ -238,9 +238,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			//	Ajoute l'en-tête de la facture dans le document.
 			if (this.HasOption (DocumentOption.HeaderLogo))
 			{
-				throw new System.NotImplementedException ();
-#if false
-				var settings = CoreProgram.Application.BusinessSettings;
+				BusinessContext context = this.businessContext as BusinessContext;
+				var settings = context.GetCachedBusinessSettings ();
 
 				if (settings.CompanyLogo.IsNotNull ())
 				{
@@ -268,7 +267,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 						}
 					}
 				}
-#endif
 			}
 
 			var mailContactBand = new TextBand ();
@@ -1501,7 +1499,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			{
 				var metadata = this.Metadata;
 
-				if (metadata == null)
+				if (metadata.IsNull ())
 				{
 					return null;
 				}
@@ -1521,6 +1519,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
+		#region Factory Class
+
 		private class Factory : IEntityPrinterFactory
 		{
 			#region IEntityPrinterFactory Members
@@ -1537,6 +1537,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			#endregion
 		}
+
+		#endregion
 
 
 		private static readonly Font		font = Font.GetFont ("Arial", "Regular");
