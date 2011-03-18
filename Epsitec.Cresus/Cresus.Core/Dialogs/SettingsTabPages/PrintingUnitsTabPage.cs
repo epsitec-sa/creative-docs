@@ -287,7 +287,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				new StaticText
 				{
 					Parent = this.pageTypesBox,
-					Text = "Types des pages succeptibles d'être imprimées par l'unité d'impression :",
+					Text = "Types des pages susceptibles d'être imprimées par l'unité d'impression :",
 					TextBreakMode = TextBreakMode.Hyphenate,
 					ContentAlignment = ContentAlignment.TopLeft,
 					PreferredHeight = 68,
