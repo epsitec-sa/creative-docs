@@ -311,7 +311,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			mainViewController.SetPreviewPanelVisibility (true);
 
 			//	Crée le contrôleur.
-			DocumentMetadataEntity metadoc = this.GetMetadoc ();
+			DocumentMetadataEntity metadoc = this.GetDocumentMetadata ();
 
 			//?Business.DocumentType type = Business.DocumentType.Unknown;
 			Business.DocumentType type = Business.DocumentType.Invoice;  // TODO: remplacer cette ligne par la précédente !
@@ -328,23 +328,24 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			previewController.Updating += this.HandlePreviewPanelUpdating;
 		}
 
-		private DocumentMetadataEntity GetMetadoc()
+		private DocumentMetadataEntity GetDocumentMetadata()
 		{
-			var metadoc = this.BusinessContext.GetMasterEntity<DocumentMetadataEntity> ();
+			var meta = this.BusinessContext.GetMasterEntity<DocumentMetadataEntity> ();
 
-			if (metadoc.IsNull ())
+			if (meta.IsNull ())
 			{
-				DocumentMetadataEntity example = new DocumentMetadataEntity ()
+				var repository = this.BusinessContext.GetRepository<DocumentMetadataEntity> ();
+				var example    = new DocumentMetadataEntity ()
 				{
 					IsArchive = false,
 					BusinessDocument = this.Entity
 				};
 
-				return this.BusinessContext.GetRepository<DocumentMetadataEntity> ().GetByExample (example).FirstOrDefault ();
+				return repository.GetByExample (example).FirstOrDefault ();
 			}
 			else
 			{
-				return metadoc;
+				return meta;
 			}
 		}
 

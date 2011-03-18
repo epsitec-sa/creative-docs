@@ -414,11 +414,18 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			public bool CanPrint(AbstractEntity entity, OptionsDictionary options)
 			{
-				return entity is RelationEntity;
+				return entity is RelationEntity || entity is CustomerEntity;
 			}
 
 			public AbstractPrinter CreatePrinter(IBusinessContext businessContext, AbstractEntity entity, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
 			{
+				var customer = entity as CustomerEntity;
+
+				if (customer != null)
+				{
+					return new RelationPrinter (businessContext, customer.Relation, options, printingUnits);
+				}
+
 				return new RelationPrinter (businessContext, entity, options, printingUnits);
 			}
 
