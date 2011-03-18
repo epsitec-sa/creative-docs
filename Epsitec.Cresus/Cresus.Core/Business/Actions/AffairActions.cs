@@ -1,6 +1,8 @@
 ﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Types;
+
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Repositories;
@@ -22,14 +24,13 @@ namespace Epsitec.Cresus.Core.Business.Actions
 
 			var documentMetadata = businessContext.CreateEntity<DocumentMetadataEntity> ();
 			var businessDocument = businessContext.CreateEntity<BusinessDocumentEntity> ();
-
-			documentMetadata.DocumentCategory = categoryRepo.Find (DocumentType.SalesQuote).First ();
-
-			throw new System.NotImplementedException ();
-#if false
-			documentMetadata.BusinessDocument = businessDocument;
-#endif
+			var documentCategory = categoryRepo.Find (DocumentType.SalesQuote).First ();
 			
+			documentMetadata.DocumentCategory = documentCategory;
+			documentMetadata.DocumentTitle    = documentCategory.Name;
+			documentMetadata.BusinessDocument = businessDocument;
+			documentMetadata.DocumentState    = DocumentState.Active;
+
 			documentMetadata.Workflow = WorkflowFactory.CreateDefaultWorkflow<DocumentMetadataEntity> (businessContext, "Document/SalesQuote");
 
 			currentAffair.Documents.Add (documentMetadata);

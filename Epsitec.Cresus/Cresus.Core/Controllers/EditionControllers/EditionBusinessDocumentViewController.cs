@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueGetter = () => this.Entity.BillToMailContact,
 				ValueSetter = x => this.Entity.BillToMailContact = x,
 				ReferenceController = new ReferenceController (() => this.Entity.BillToMailContact, creator: this.CreateNewMailContact),
-				PossibleItemsGetter = () => this.Data.GetAllEntities<MailContactEntity> (),
+				PossibleItemsGetter = () => this.Data.GetAllEntities<MailContactEntity> (dataContext: this.BusinessContext.DataContext),
 			};
 
 			builder.CreateAutoCompleteTextField ("Adresse de facturation", controller);
@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueGetter = () => this.Entity.ShipToMailContact,
 				ValueSetter = x => this.Entity.ShipToMailContact = x,
 				ReferenceController = new ReferenceController (() => this.Entity.ShipToMailContact, creator: this.CreateNewMailContact),
-				PossibleItemsGetter = () => this.Data.GetAllEntities<MailContactEntity> (),
+				PossibleItemsGetter = () => this.Data.GetAllEntities<MailContactEntity> (dataContext: this.BusinessContext.DataContext),
 			};
 
 			builder.CreateAutoCompleteTextField ("Adresse de livraison", controller);

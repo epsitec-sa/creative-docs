@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			{
 				ValueGetter = () => this.Entity.QuantityType,
 				ValueSetter = x => this.Entity.QuantityType = x,
-				ValueToDescriptionConverter = x => TextFormatter.FormatText (x as string[]),
+				ValueToDescriptionConverter = x => TextFormatter.FormatText (x),
 			};
 
 			builder.CreateEditionDetailedItemPicker ("Type", controller);

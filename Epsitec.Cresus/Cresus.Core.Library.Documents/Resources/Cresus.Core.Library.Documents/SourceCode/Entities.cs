@@ -860,7 +860,7 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>AbstractDocument</c> entity.
 	///	designer:cap/HVA4
 	///	</summary>
-	public abstract partial class AbstractDocumentEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemCode
+	public partial class AbstractDocumentEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemCode
 	{
 		#region IItemCode Members
 		///	<summary>
@@ -892,6 +892,15 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1009, 10, 4);	// [HVA4]
 		public static readonly new string EntityStructuredTypeKey = "[HVA4]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AbstractDocumentEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Volatile)
+			{
+			}
+		}
+		#endregion
 	}
 }
 #endregion

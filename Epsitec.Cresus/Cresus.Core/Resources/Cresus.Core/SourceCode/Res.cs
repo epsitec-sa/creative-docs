@@ -24,6 +24,8 @@ namespace Epsitec.Cresus.Core
 				
 				//	designer:cap/L0AMC
 				public static readonly global::Epsitec.Common.Widgets.Command ShowArticleDefinitions = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 406));
+				//	designer:cap/L0KE
+				public static readonly global::Epsitec.Common.Widgets.Command ShowBusinessDocuments = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 14));
 				//	designer:cap/L0KH
 				public static readonly global::Epsitec.Common.Widgets.Command ShowBusinessSettings = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 17));
 				//	designer:cap/L0A23
@@ -36,8 +38,6 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Widgets.Command ShowDocumentOptions = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 29));
 				//	designer:cap/L0K41
 				public static readonly global::Epsitec.Common.Widgets.Command ShowDocumentPrintingUnits = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 36));
-				//	designer:cap/L0KE
-				public static readonly global::Epsitec.Common.Widgets.Command ShowDocuments = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 14));
 				//	designer:cap/L0KJ
 				public static readonly global::Epsitec.Common.Widgets.Command ShowImageBlobs = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 19));
 				//	designer:cap/L0KI
@@ -141,6 +141,8 @@ namespace Epsitec.Cresus.Core
 				
 				//	designer:cap/L0AMC
 				public const long ShowArticleDefinitions = 0x150000A000196L;
+				//	designer:cap/L0KE
+				public const long ShowBusinessDocuments = 0x150001400000EL;
 				//	designer:cap/L0KH
 				public const long ShowBusinessSettings = 0x1500014000011L;
 				//	designer:cap/L0A23
@@ -153,8 +155,6 @@ namespace Epsitec.Cresus.Core
 				public const long ShowDocumentOptions = 0x150001400001DL;
 				//	designer:cap/L0K41
 				public const long ShowDocumentPrintingUnits = 0x1500014000024L;
-				//	designer:cap/L0KE
-				public const long ShowDocuments = 0x150001400000EL;
 				//	designer:cap/L0KJ
 				public const long ShowImageBlobs = 0x1500014000013L;
 				//	designer:cap/L0KI
@@ -285,8 +285,6 @@ namespace Epsitec.Cresus.Core
 			public static readonly Epsitec.Common.Types.StringType PostFinanceAccount = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 622));
 			//	designer:cap/L0AUC
 			public static readonly Epsitec.Common.Types.EnumType PriceDisplayModes = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 414));
-			//	designer:cap/L0K91
-			public static readonly Epsitec.Common.Types.EnumType PrintableEntities = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 41));
 			//	designer:cap/L0ALA
 			public static readonly Epsitec.Common.Types.EnumType RoundingPolicy = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 341));
 			//	designer:cap/L0AV8
@@ -907,198 +905,6 @@ namespace Epsitec.Cresus.Core
 				}
 			}
 			
-			public static class DocumentType
-			{
-				internal static void _Initialize()
-				{
-				}
-				
-				//	designer:cap/L0KF1
-				public static global::Epsitec.Common.Types.Caption ArticleDefinitionSummary
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 47));
-					}
-				}
-				//	designer:cap/L0A5I
-				public static global::Epsitec.Common.Types.Caption CreditMemo
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 581));
-					}
-				}
-				//	designer:cap/L0KQ
-				public static global::Epsitec.Common.Types.Caption Debug1
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 26));
-					}
-				}
-				//	designer:cap/L0KR
-				public static global::Epsitec.Common.Types.Caption Debug2
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 27));
-					}
-				}
-				//	designer:cap/L0A0I
-				public static global::Epsitec.Common.Types.Caption DeliveryNote
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 576));
-					}
-				}
-				//	designer:cap/L0A1I
-				public static global::Epsitec.Common.Types.Caption Invoice
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 577));
-					}
-				}
-				//	designer:cap/L0A2I
-				public static global::Epsitec.Common.Types.Caption InvoiceProForma
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 578));
-					}
-				}
-				//	designer:cap/L0KG1
-				public static global::Epsitec.Common.Types.Caption MailContactLabel
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 48));
-					}
-				}
-				//	designer:cap/L0ALI
-				public static global::Epsitec.Common.Types.Caption None
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 597));
-					}
-				}
-				//	designer:cap/L0ARH
-				public static global::Epsitec.Common.Types.Caption OrderBooking
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 571));
-					}
-				}
-				//	designer:cap/L0AQH
-				public static global::Epsitec.Common.Types.Caption OrderConfiguration
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 570));
-					}
-				}
-				//	designer:cap/L0ASH
-				public static global::Epsitec.Common.Types.Caption OrderConfirmation
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 572));
-					}
-				}
-				//	designer:cap/L0A3I
-				public static global::Epsitec.Common.Types.Caption PaymentReminder
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 579));
-					}
-				}
-				//	designer:cap/L0AUH
-				public static global::Epsitec.Common.Types.Caption ProductionChecklist
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 574));
-					}
-				}
-				//	designer:cap/L0ATH
-				public static global::Epsitec.Common.Types.Caption ProductionOrder
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 573));
-					}
-				}
-				//	designer:cap/L0A7I
-				public static global::Epsitec.Common.Types.Caption PurchaseOrder
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 583));
-					}
-				}
-				//	designer:cap/L0A6I
-				public static global::Epsitec.Common.Types.Caption QuoteRequest
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 582));
-					}
-				}
-				//	designer:cap/L0A4I
-				public static global::Epsitec.Common.Types.Caption Receipt
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 580));
-					}
-				}
-				//	designer:cap/L0KE1
-				public static global::Epsitec.Common.Types.Caption RelationSummary
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 46));
-					}
-				}
-				//	designer:cap/L0APH
-				public static global::Epsitec.Common.Types.Caption SalesQuote
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 569));
-					}
-				}
-				//	designer:cap/L0AVH
-				public static global::Epsitec.Common.Types.Caption ShipmentChecklist
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 575));
-					}
-				}
-				//	designer:cap/L0KP
-				public static global::Epsitec.Common.Types.Caption Summary
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 25));
-					}
-				}
-				//	designer:cap/L0AOH
-				public static global::Epsitec.Common.Types.Caption Unknown
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 568));
-					}
-				}
-			}
-			
 			public static class EnumValueCardinality
 			{
 				internal static void _Initialize()
@@ -1287,46 +1093,6 @@ namespace Epsitec.Cresus.Core
 					get
 					{
 						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 449));
-					}
-				}
-			}
-			
-			public static class PrintableEntities
-			{
-				internal static void _Initialize()
-				{
-				}
-				
-				//	designer:cap/L0KC1
-				public static global::Epsitec.Common.Types.Caption ArticleDefinition
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 44));
-					}
-				}
-				//	designer:cap/L0KD1
-				public static global::Epsitec.Common.Types.Caption DocumentMetadata
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 45));
-					}
-				}
-				//	designer:cap/L0KA1
-				public static global::Epsitec.Common.Types.Caption None
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 42));
-					}
-				}
-				//	designer:cap/L0KB1
-				public static global::Epsitec.Common.Types.Caption Relation
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 43));
 					}
 				}
 			}
@@ -3512,12 +3278,10 @@ namespace Epsitec.Cresus.Core
 			Values.DocumentFlowDirection._Initialize ();
 			Values.DocumentSource._Initialize ();
 			Values.DocumentState._Initialize ();
-			Values.DocumentType._Initialize ();
 			Values.EnumValueCardinality._Initialize ();
 			Values.ExchangeRateType._Initialize ();
 			Values.PaymentDetailType._Initialize ();
 			Values.PriceDisplayModes._Initialize ();
-			Values.PrintableEntities._Initialize ();
 			Values.RoundingPolicy._Initialize ();
 			Values.TaxMode._Initialize ();
 			Values.UnitOfMeasureCategory._Initialize ();

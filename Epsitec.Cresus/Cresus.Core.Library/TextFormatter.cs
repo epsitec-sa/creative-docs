@@ -16,8 +16,12 @@ namespace Epsitec.Cresus.Core
 		public static FormattedText FormatText(params object[] values)
 		{
 			var buffer = new System.Text.StringBuilder ();
+
+			List<object> flat = new List<object> ();
+
+			TextFormatter.Flatten (flat, values);
 			
-			List<string> items = TextFormatter.ConvertItemsToStrings (values);
+			List<string> items = TextFormatter.ConvertItemsToStrings (flat);
 
 			TextFormatter.ProcessTags (items);
 			TextFormatter.FormatText (buffer, items);
@@ -25,8 +29,29 @@ namespace Epsitec.Cresus.Core
 			return new FormattedText (string.Join (FormattedText.HtmlBreak, buffer.ToString ().Split (new string[] { FormattedText.HtmlBreak }, System.StringSplitOptions.RemoveEmptyEntries)).Replace ("()", ""));
 		}
 
+		private static void Flatten(List<object> flat, System.Collections.IEnumerable values)
+		{
+			foreach (var value in values)
+			{
+				var enumerable = value as System.Collections.IEnumerable;
+				var convertible = value as ITextFormatter;
 
-		private static List<string> ConvertItemsToStrings(object[] values)
+				if ((convertible == null) &&
+					(enumerable != null) &&
+					((value is string) == false) &&
+					((value is FormattedText) == false))
+				{
+					TextFormatter.Flatten (flat, enumerable);
+				}
+				else
+				{
+					flat.Add (value);
+				}
+			}
+		}
+
+
+		private static List<string> ConvertItemsToStrings(IEnumerable<object> values)
 		{
 			var items  = new List<string> ();
 
