@@ -24,10 +24,9 @@ namespace Epsitec.Cresus.Core.Documents
 		}
 
 		public PrintingUnit(string logicalName)
+			: this ()
 		{
 			this.LogicalName = logicalName;
-			this.Copies = 1;
-			this.optionsDictionary = new OptionsDictionary ();
 		}
 
 
@@ -107,7 +106,7 @@ namespace Epsitec.Cresus.Core.Documents
 			}
 		}
 
-		public List<PageType> PageTypes
+		public IList<PageType> PageTypes
 		{
 			get
 			{
@@ -135,6 +134,12 @@ namespace Epsitec.Cresus.Core.Documents
 			}
 		}
 
+
+		public void ReplacePageTypes(IEnumerable<PageType> pageTypes)
+		{
+			this.pageTypes.Clear ();
+			this.pageTypes.AddRange (pageTypes);
+		}
 
 		public string GetSerializableContent()
 		{

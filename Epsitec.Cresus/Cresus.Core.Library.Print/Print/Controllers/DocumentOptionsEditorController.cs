@@ -44,7 +44,12 @@ namespace Epsitec.Cresus.Core.Print.Controllers
 
 		private void HandleBusinessContextSavingChanges(object sender, CancelEventArgs e)
 		{
-			this.mainController.SaveDesign ();
+			if (this.mainController != null)
+			{
+				this.mainController.SaveDesign ();
+				this.mainController = null;
+			}
+			
 			this.businessContext.DataContext.SaveChanges ();
 		}
 

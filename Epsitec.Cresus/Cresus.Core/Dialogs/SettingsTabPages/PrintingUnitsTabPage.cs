@@ -556,6 +556,17 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.yOffsetField.Text   = printingUnit.YOffset.ToString ();
 				this.copiesField.Text    = printingUnit.Copies.ToString ();
 
+				List<PageType> pageTypes = new List<PageType> ();
+
+				foreach (var button in this.pageTypeButtons)
+				{
+					pageTypes.Add (PageTypes.Parse (button.Name));
+				}
+
+				printingUnit.ReplacePageTypes (pageTypes);
+
+#if false
+				//	HACK -- implémentation incorrecte, probablement en chantier
 				foreach (var button in this.pageTypeButtons)
 				{
 					var option = DocumentOptions.Parse (button.Name);
@@ -569,6 +580,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 						button.ActiveState = ActiveState.Maybe;
 					}
 				}
+#endif
 			}
 
 			this.ErrorMessage = this.GetError ();
@@ -889,7 +901,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private void UpdatePageTypes()
 		{
 			//	Met à jour tous les boutons à cocher pour les types de page.
-			List<PageType> list = null;
+			IList<PageType> list = null;
 
 			int sel = this.listController.SelectedIndex;
 			if (sel != -1)
