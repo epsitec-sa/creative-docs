@@ -17,17 +17,20 @@ namespace Epsitec.Cresus.Core.Business
 		/// <summary>
 		/// Gets a new reference number for an ISR.
 		/// </summary>
-		/// <param name="data">The <see cref="CoreData"/>.</param>
+		/// <param name="context">The business context.</param>
 		/// <param name="subscriberNumber">The (compact) subscriber number.</param>
 		/// <param name="bankPrefix">The optional bank prefix (6-12 digits).</param>
-		/// <returns>A unique reference number for an ISR slip.</returns>
-		public static string GetNewReferenceNumber(CoreData data, string subscriberNumber, string bankPrefix = null)
+		/// <returns>
+		/// A unique reference number for an ISR slip.
+		/// </returns>
+		public static string GetNewReferenceNumber(IBusinessContext context, string subscriberNumber, string bankPrefix = null)
 		{
 			if (!Isr.IsCompactSubscriberNumber (subscriberNumber))
 			{
 				throw new System.ArgumentException ("Subscriber number is invalid");
 			}
 
+			var data       = context.Data;
 			var generator  = data.GetComponent<RefIdGeneratorPool> ().GetGenerator (Isr.GeneratorNamePrefix + subscriberNumber);
 			var nextLongId = generator.GetNextId ();
 
@@ -41,7 +44,7 @@ namespace Epsitec.Cresus.Core.Business
 			return refLine + checksum;
 		}
 
-		public static string GetNewReferenceNumber(CoreData data, IsrDefinitionEntity isrDefinition)
+		public static string GetNewReferenceNumber(IBusinessContext context, IsrDefinitionEntity isrDefinition)
 		{
 			if (isrDefinition.IsNull ())
 			{
@@ -49,7 +52,7 @@ namespace Epsitec.Cresus.Core.Business
 			}
 			else
 			{
-				return Isr.GetNewReferenceNumber (data, isrDefinition.SubscriberNumber, isrDefinition.BankReferenceNumberPrefix);
+				return Isr.GetNewReferenceNumber (context, isrDefinition.SubscriberNumber, isrDefinition.BankReferenceNumberPrefix);
 			}
 		}
 

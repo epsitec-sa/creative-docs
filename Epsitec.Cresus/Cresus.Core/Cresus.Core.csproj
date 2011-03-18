@@ -143,7 +143,6 @@
     <Compile Include="Dialogs\SettingsTabPages\SearchMode.cs" />
     <Compile Include="EntityPrinters\MailContactPrinter.cs" />
     <Compile Include="EntityPrinters\DocumentMetadataPrinter.cs" />
-    <Compile Include="EntityPrinters\IBusinessSettings.cs" />
     <Compile Include="EntityPrinters\RelationPrinter.cs" />
     <Compile Include="Hack.cs" />
     <Compile Include="Dialogs\SettingsTabPages\LoggingTabPage.cs" />

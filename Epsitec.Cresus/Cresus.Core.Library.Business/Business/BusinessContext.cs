@@ -172,10 +172,15 @@ namespace Epsitec.Cresus.Core.Business
 		/// <returns></returns>
 		public BusinessSettingsEntity GetCachedBusinessSettings()
 		{
-			return this.data.GetAllEntities<BusinessSettingsEntity> ().FirstOrDefault ()
+			return this.GetAllEntities<BusinessSettingsEntity> ().FirstOrDefault ()
 				?? EntityNullReferenceVirtualizer.CreateFrozenEntity<BusinessSettingsEntity> ();
 		}
 
+		public IEnumerable<T> GetAllEntities<T>()
+			where T : AbstractEntity, new ()
+		{
+			return this.data.GetAllEntities<T> (dataContext: this.dataContext);
+		}
 
 		public static BusinessContext Create(CoreData data)
 		{

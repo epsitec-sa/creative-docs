@@ -62,7 +62,7 @@
     <Compile Include="Business\Rules\AffairBusinessRules.cs" />
     <Compile Include="Business\Rules\ArticleGroupBusinessRules.cs" />
     <Compile Include="Business\Rules\ArticlePriceBusinessRules.cs" />
-    <Compile Include="Business\Rules\BusinessBillingDetailBusinessRules.cs" />
+    <Compile Include="Business\Rules\BillingDetailBusinessRules.cs" />
     <Compile Include="Business\Rules\BusinessDocumentBusinessRules.cs" />
     <Compile Include="Business\Rules\CustomerBusinessRules.cs" />
     <Compile Include="Business\Rules\EnumValueArticleParameterDefinitionBusinessRules.cs" />
