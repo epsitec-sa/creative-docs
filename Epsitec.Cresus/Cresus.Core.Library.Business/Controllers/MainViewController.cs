@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.Orchestrator.Host.RegisterComponent (this);
 
 			this.actionViewController  = new ActionViewController (this.Orchestrator);
-//-			this.previewViewController = new PreviewViewController (this.Orchestrator);
+			this.previewViewController = new PreviewViewController (this.Orchestrator);
 
 			this.browserViewController = new BrowserViewController (this.Orchestrator);
 			this.browserSettingsController = new BrowserSettingsController (this.browserViewController);
@@ -100,7 +100,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-#if false
 		public PreviewViewController PreviewViewController
 		{
 			get
@@ -108,7 +107,6 @@ namespace Epsitec.Cresus.Core.Controllers
 				return this.previewViewController;
 			}
 		}
-#endif
 
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
@@ -116,7 +114,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			yield return this.browserSettingsController;
 			yield return this.DataViewController;
 			yield return this.actionViewController;
-//-			yield return this.previewViewController;
+			yield return this.previewViewController;
 		}
 
 		public override void CreateUI(Widget container)
@@ -127,7 +125,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.browserViewController.CreateUI (this.leftPanel);
 			this.browserSettingsController.CreateUI (this.browserSettingsPanel);
 			this.DataViewController.CreateUI (this.mainPanel);
-//-			this.previewViewController.CreateUI (this.rightPreviewPanel);
+			this.previewViewController.CreateUI (this.rightPreviewPanel);
 			this.actionViewController.CreateUI (this.rightActionPanel);
 
 			this.BrowserSettingsMode = BrowserSettingsMode.Compact;
@@ -385,7 +383,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly BrowserViewController browserViewController;
 		private readonly BrowserSettingsController browserSettingsController;
 		private readonly ActionViewController actionViewController;
-//-		private readonly PreviewViewController previewViewController;
+		private readonly PreviewViewController previewViewController;
 
 		private FrameBox frame;
 

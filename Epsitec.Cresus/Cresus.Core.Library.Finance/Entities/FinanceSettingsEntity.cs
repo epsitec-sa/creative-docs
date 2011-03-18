@@ -18,126 +18,104 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class FinanceSettingsEntity
 	{
-		public IList<CresusChartOfAccounts> GetChartsOfAccounts()
+		public FinanceSettingsEntity()
 		{
-			this.EnsureThatChartsOfAccountsAreDeserialized ();
-
-			return this.chartsOfAccounts.AsReadOnly ();
-		}
-
-		public CresusChartOfAccounts GetRecentChartOfAccounts(Date date)
-		{
-			//	Retourne le plan comptable correspondant à une date, ou le plan comptable le plus récent.
-			//	Retourne null s'il n'existe aucun plan comptable.
-			var chart = this.GetChartOfAccounts (date);
-
-			if (chart == null)
-			{
-				Date max = new Date (0);  // date très ancienne
-
-				foreach (var c in this.GetChartsOfAccounts ())
-				{
-					if (max < c.EndDate)
-					{
-						max = c.EndDate;
-						chart = c;
-					}
-				}
-			}
-
-			return chart;
+			this.chartsOfAccounts = new List<CresusChartOfAccounts> ();
 		}
 
 		/// <summary>
-		/// Gets the chart of accounts.
+		/// Gets all charts of accounts.
+		/// </summary>
+		/// <returns>The collection of all charts of accounts.</returns>
+		public IList<CresusChartOfAccounts> GetAllChartsOfAccounts()
+		{
+			this.DeserializeChartsOfAccountsIfNeeded ();
+			return this.chartsOfAccounts.AsReadOnly ();
+		}
+
+		/// <summary>
+		/// Gets the best chart of accounts (either the one matching the specified date,
+		/// or the most recent one which is older than the specified date, or else the
+		/// one nearest to the specified date), if any.
 		/// </summary>
 		/// <param name="date">The date.</param>
-		/// <returns></returns>
-		private CresusChartOfAccounts GetChartOfAccounts(Date date)
+		/// <returns>The chart of accounts if one can be found; otherwise, <c>null</c>.</returns>
+		public CresusChartOfAccounts GetChartOfAccountsOrDefaultToNearest(Date date)
 		{
-			//	Retourne le plan comptable correspondant à une date.
-			//	Retourne null si aucun plan comptable ne correspond.
-			this.EnsureThatChartsOfAccountsAreDeserialized ();
+			return this.GetChartOfAccounts (date)
+				?? this.GetAllChartsOfAccounts ().Where (x => x.EndDate < date).OrderByDescending (x => x.EndDate).FirstOrDefault ()
+				?? this.GetAllChartsOfAccounts ().OrderBy (x => x.EndDate).FirstOrDefault ();
+		}
 
-			return this.GetChartsOfAccounts ().Where (chart => date >= chart.BeginDate && date <= chart.EndDate).FirstOrDefault ();
+		/// <summary>
+		/// Gets the chart of accounts for the specified date or <c>null</c> if none could
+		/// be found.
+		/// </summary>
+		/// <param name="date">The date.</param>
+		/// <returns>The chart of accounts if one can be found; otherwise, <c>null</c>.</returns>
+		public CresusChartOfAccounts GetChartOfAccounts(Date date)
+		{
+			return this.GetAllChartsOfAccounts ().Where (chart => (date >= chart.BeginDate) && (date <= chart.EndDate)).FirstOrDefault ();
 		}
 
 		public void AddChartOfAccounts(IBusinessContext businessContext, CresusChartOfAccounts chart)
 		{
-			this.EnsureThatChartsOfAccountsAreDeserialized ();
+			this.DeserializeChartsOfAccountsIfNeeded ();
 
-			string chartId  = ItemCodeGenerator.FromGuid (chart.Id);
-			var    chartXml = chart.SerializeToXml ("chartOfAccounts");
+			var chartId  = chart.Id;
+			var chartXml = chart.SerializeToXml ("chartOfAccounts");
 
-			var blob = businessContext.CreateEntity<XmlBlobEntity> ();
+			var xmlBlob = businessContext.CreateEntity<XmlBlobEntity> ();
 			
-			blob.Code    = chartId;
-			blob.XmlData = chartXml;
+			xmlBlob.GuidCode = chartId;
+			xmlBlob.XmlData  = chartXml;
 
-			this.SerializedChartsOfAccounts.Add (blob);
+			this.SerializedChartsOfAccounts.Add (xmlBlob);
+			this.chartsOfAccounts.Add (chart);
 		}
 
 		public void RemoveChartOfAccounts(IBusinessContext businessContext, CresusChartOfAccounts chart)
 		{
-			this.EnsureThatChartsOfAccountsAreDeserialized ();
-
-			string chartId = chart.Id.ToString ("D");
-
 			var repository = businessContext.GetRepository<XmlBlobEntity> ();
 			var example    = repository.CreateExample ();
 
-			example.Code = chartId;
+			example.GuidCode = chart.Id;
 
-			foreach (var blob in repository.GetByExample (example))
+			foreach (var xmlBlob in repository.GetByExample (example))
 			{
-				businessContext.DeleteEntity (blob);
-				this.SerializedChartsOfAccounts.Remove (blob);
+				this.SerializedChartsOfAccounts.Remove (xmlBlob);
+				
+				businessContext.DeleteEntity (xmlBlob);
 			}
+
+			this.chartsOfAccounts.Remove (chart);
 		}
 
 
-		private void EnsureThatChartsOfAccountsAreDeserialized()
+		private void DeserializeChartsOfAccountsIfNeeded()
 		{
-			//	Crée les listes si elles n'existent pas.
-			if (this.chartsOfAccounts == null)
+			if (this.NeedsDeserialization)
 			{
-				this.chartsOfAccounts = new List<CresusChartOfAccounts> ();
-			}
+				var xmlBlobs = this.SerializedChartsOfAccounts;
+				var deserializedChartsOfAccounts = xmlBlobs.Select (blob => CresusChartOfAccounts.DeserializeFromXml (blob.XmlData));
 
-			if (this.lastCodes == null)
-			{
-				this.lastCodes = new List<string> ();
-			}
-
-			if (!this.HasSameCodes)  // y a-t-il eu un changement de plan comptable ?
-			{
 				this.chartsOfAccounts.Clear ();
-				this.chartsOfAccounts.AddRange (this.SerializedChartsOfAccounts.Select (blob => CresusChartOfAccounts.DeserializeFromXml (blob.XmlData)));
-				this.CopyCodes ();
+				this.chartsOfAccounts.AddRange (deserializedChartsOfAccounts);
 			}
 		}
 
-		private bool HasSameCodes
+		private bool NeedsDeserialization
 		{
 			get
 			{
-				if (this.lastCodes.Count != this.SerializedChartsOfAccounts.Count)
-				{
-					return false;
-				}
+				IEnumerable<System.Guid> guidsInCache  = this.chartsOfAccounts.Select (x => x.Id);
+				IEnumerable<System.Guid> guidsInSource = this.SerializedChartsOfAccounts.Select (x => x.GuidCode);
 
-				return Comparer.EqualObjects (this.lastCodes, this.SerializedChartsOfAccounts.Select (x => x.Code));
+				return ! Comparer.EqualValues (guidsInCache, guidsInSource);
 			}
 		}
 
-		private void CopyCodes()
-		{
-			this.lastCodes.Clear ();
-			this.lastCodes.AddRange (this.SerializedChartsOfAccounts.Select (x => x.Code));
-		}
 
-
-		private List<CresusChartOfAccounts>		chartsOfAccounts;
-		private List<string>					lastCodes;
+		private readonly List<CresusChartOfAccounts>	chartsOfAccounts;
 	}
 }

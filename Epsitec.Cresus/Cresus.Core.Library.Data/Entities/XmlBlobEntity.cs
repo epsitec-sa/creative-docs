@@ -1,6 +1,8 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
+using Epsitec.Cresus.Core.Data;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -41,6 +43,34 @@ namespace Epsitec.Cresus.Core.Entities
 				{
 					this.Data = XmlBlobEntity.StringToByteArray (content);
 					this.xmlSourceCache = content;
+				}
+			}
+		}
+
+		public System.Guid GuidCode
+		{
+			get
+			{
+				string code = this.Code;
+
+				if (string.IsNullOrEmpty (code))
+				{
+					return System.Guid.Empty;
+				}
+				else
+				{
+					return ItemCodeGenerator.ToGuid (code);
+				}
+			}
+			set
+			{
+				if (System.Guid.Empty == value)
+				{
+					this.Code = null;
+				}
+				else
+				{
+					this.Code = ItemCodeGenerator.FromGuid (value);
 				}
 			}
 		}

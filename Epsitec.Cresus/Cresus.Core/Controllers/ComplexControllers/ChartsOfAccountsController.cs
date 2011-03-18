@@ -367,7 +367,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 			//	Retourne la liste des plans comptables.
 			get
 			{
-				return this.financeSettingsEntity.GetChartsOfAccounts ();
+				return this.financeSettingsEntity.GetAllChartsOfAccounts ();
 			}
 		}
 

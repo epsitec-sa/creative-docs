@@ -406,5 +406,24 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				return this.entity as RelationEntity;
 			}
 		}
+		
+		
+		private class Factory : IEntityPrinterFactory
+		{
+			#region IEntityPrinterFactory Members
+
+			public bool CanPrint(AbstractEntity entity, OptionsDictionary options)
+			{
+				return entity is RelationEntity;
+			}
+
+			public AbstractPrinter CreatePrinter(IBusinessContext businessContext, AbstractEntity entity, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
+			{
+				return new RelationPrinter (businessContext, entity, options, printingUnits);
+			}
+
+			#endregion
+		}
+
 	}
 }

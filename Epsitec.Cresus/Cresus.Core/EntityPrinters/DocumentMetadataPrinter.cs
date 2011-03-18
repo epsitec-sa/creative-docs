@@ -1521,6 +1521,24 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
+		private class Factory : IEntityPrinterFactory
+		{
+			#region IEntityPrinterFactory Members
+
+			public bool CanPrint(AbstractEntity entity, OptionsDictionary options)
+			{
+				return entity is DocumentMetadataEntity;
+			}
+
+			public AbstractPrinter CreatePrinter(IBusinessContext businessContext, AbstractEntity entity, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
+			{
+				return new DocumentMetadataPrinter (businessContext, entity, options, printingUnits);
+			}
+
+			#endregion
+		}
+
+
 		private static readonly Font		font = Font.GetFont ("Arial", "Regular");
 		private static readonly double		reportHeight = 7.0;
 		private static readonly double		marginBeforeEsr = 10;

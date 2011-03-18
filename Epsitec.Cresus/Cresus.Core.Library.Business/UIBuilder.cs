@@ -684,7 +684,7 @@ namespace Epsitec.Cresus.Core
 			var financeSettings  = businessSettings.Finance;
 
 			System.Diagnostics.Debug.Assert (financeSettings != null);
-			var chart = financeSettings.GetRecentChartOfAccounts (this.businessContext.GetReferenceDate ());
+			var chart = financeSettings.GetChartOfAccountsOrDefaultToNearest (this.businessContext.GetReferenceDate ());
 
 			if (chart == null)  // aucun plan comptable trouvé ?
 			{

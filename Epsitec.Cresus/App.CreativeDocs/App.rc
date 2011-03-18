@@ -79,7 +79,7 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3, 2, 2, 1111
+ FILEVERSION 3, 2, 3, 1111
  PRODUCTVERSION 3,0,0,0
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
@@ -98,7 +98,7 @@ BEGIN
             VALUE "Comments", "Visit http://www.creativedocs.net/ for detailed information"
             VALUE "CompanyName", "OPaC bright ideas"
             VALUE "FileDescription", "Creative Docs .NET"
-            VALUE "FileVersion", "3, 2, 2, 1111"
+            VALUE "FileVersion", "3, 2, 3, 1111"
             VALUE "InternalName", "Creative Docs .NET"
             VALUE "LegalCopyright", "Copyright © 2002-2011, OPaC bright ideas & EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland"
             VALUE "OriginalFilename", "Creative Docs .NET.exe"

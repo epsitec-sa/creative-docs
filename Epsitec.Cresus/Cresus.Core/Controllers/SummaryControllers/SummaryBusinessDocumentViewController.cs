@@ -11,6 +11,8 @@ using Epsitec.Cresus.Core.Print.Controllers;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
@@ -293,8 +295,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		private void CreateUIPreviewPanel()
 		{
-//			throw new System.NotImplementedException ();
-#if false
 			//	Crée le conteneur.
 			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 
@@ -321,28 +321,26 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				type = metadoc.DocumentCategory.DocumentType;
 			}
 
-			this.previewController = new ContinuousController (this.Data, metadoc, type);
+			this.previewController = new ContinuousController (this.BusinessContext, metadoc, type);
 			this.previewController.CreateUI (previewFrame);
 
 			previewController.Add (previewFrame);
 			previewController.Updating += this.HandlePreviewPanelUpdating;
-#endif
 		}
 
 		private DocumentMetadataEntity GetMetadoc()
 		{
-			var metadoc = this.DataContext.GetEntitiesOfType<DocumentMetadataEntity> ().FirstOrDefault ();
+			var metadoc = this.BusinessContext.GetMasterEntity<DocumentMetadataEntity> ();
 
-			if (metadoc == null)
+			if (metadoc.IsNull ())
 			{
-				DocumentMetadataEntity example = new DocumentMetadataEntity ();
-				throw new System.NotImplementedException ();
-#if false
-				example.BusinessDocument = this.Entity;
-#endif
-				example.IsArchive = false;
+				DocumentMetadataEntity example = new DocumentMetadataEntity ()
+				{
+					IsArchive = false,
+					BusinessDocument = this.Entity
+				};
 
-				return this.DataContext.GetByExample<DocumentMetadataEntity> (example).FirstOrDefault ();
+				return this.BusinessContext.GetRepository<DocumentMetadataEntity> ().GetByExample (example).FirstOrDefault ();
 			}
 			else
 			{
@@ -352,8 +350,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		private void CloseUIPreviewPanel()
 		{
-//-			throw new System.NotImplementedException ();
-#if false
 			var mainViewController = this.Orchestrator.MainViewController;
 			var previewController  = mainViewController.PreviewViewController;
 
@@ -365,7 +361,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				previewController.Clear ();
 				previewController.Updating -= this.HandlePreviewPanelUpdating;
 			}
-#endif
 		}
 
 		private void HandlePreviewPanelUpdating(object sender)
