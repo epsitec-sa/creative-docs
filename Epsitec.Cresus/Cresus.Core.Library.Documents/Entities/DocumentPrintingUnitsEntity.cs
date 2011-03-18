@@ -91,7 +91,6 @@ namespace Epsitec.Cresus.Core.Entities
 			return dict;
 		}
 
-#if false
 		public void SetPrintingUnits(PrintingUnitsDictionary options)
 		{
 			//	Spécifie le dictionnaire "type de pages" / "unité d'impression".
@@ -116,6 +115,5 @@ namespace Epsitec.Cresus.Core.Entities
 				this.SerializedData = bytes;
 			}
 		}
-#endif
 	}
 }
