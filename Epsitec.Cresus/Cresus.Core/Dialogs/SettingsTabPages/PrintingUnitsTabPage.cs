@@ -555,32 +555,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.xOffsetField.Text   = printingUnit.XOffset.ToString ();
 				this.yOffsetField.Text   = printingUnit.YOffset.ToString ();
 				this.copiesField.Text    = printingUnit.Copies.ToString ();
-
-				List<PageType> pageTypes = new List<PageType> ();
-
-				foreach (var button in this.pageTypeButtons)
-				{
-					pageTypes.Add (PageTypes.Parse (button.Name));
-				}
-
-				printingUnit.ReplacePageTypes (pageTypes);
-
-#if false
-				//	HACK -- implémentation incorrecte, probablement en chantier
-				foreach (var button in this.pageTypeButtons)
-				{
-					var option = DocumentOptions.Parse (button.Name);
-
-					if (printingUnit.OptionsDictionary.ContainsOption (option))
-					{
-						button.ActiveState = (printingUnit.OptionsDictionary.GetValue (option) == "true") ? ActiveState.Yes : ActiveState.No;
-					}
-					else
-					{
-						button.ActiveState = ActiveState.Maybe;
-					}
-				}
-#endif
 			}
 
 			this.ErrorMessage = this.GetError ();
