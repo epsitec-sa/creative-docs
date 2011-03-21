@@ -300,14 +300,14 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					{
 						Parent = this.pageTypesBox,
 						Text = pageType.ShortDescription,
-						Name = PageTypes.ToString (pageType.Type),
+						Name = PageTypeConverter.ToString (pageType.Type),
 						AutoToggle = false,
 						Dock = DockStyle.Top,
 					};
 
 					button.Clicked += delegate
 					{
-						var type = PageTypes.Parse (button.Name);
+						var type = PageTypeConverter.Parse (button.Name);
 						this.ActionPageTypeChanged (type);
 					};
 
@@ -885,7 +885,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			foreach (var button in this.pageTypeButtons)
 			{
-				var pageType = PageTypes.Parse (button.Name);
+				var pageType = PageTypeConverter.Parse (button.Name);
 				bool check = (list != null && list.Contains (pageType));
 				button.ActiveState = check ? ActiveState.Yes : ActiveState.No;
 			}

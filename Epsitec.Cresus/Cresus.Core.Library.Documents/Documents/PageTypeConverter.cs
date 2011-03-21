@@ -5,7 +5,7 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Documents
 {
-	public static class PageTypes
+	public static class PageTypeConverter
 	{
 		public static string ToString(PageType type)
 		{

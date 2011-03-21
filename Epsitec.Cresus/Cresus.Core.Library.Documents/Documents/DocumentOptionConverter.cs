@@ -5,7 +5,7 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Documents
 {
-	public static class DocumentOptions
+	public static class DocumentOptionConverter
 	{
 		public static string ToString(DocumentOption option)
 		{

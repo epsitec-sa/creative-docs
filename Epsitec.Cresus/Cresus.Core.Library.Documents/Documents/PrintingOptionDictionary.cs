@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Core.Documents
 
 			foreach (var pair in this.dictionary)
 			{
-				list.Add (DocumentOptions.ToString (pair.Key));
+				list.Add (DocumentOptionConverter.ToString (pair.Key));
 				list.Add (pair.Value);
 			}
 
@@ -138,7 +138,7 @@ namespace Epsitec.Cresus.Core.Documents
 
 				for (int i = 0; i+2 < list.Count; i += 2)
 				{
-					var option = DocumentOptions.Parse (list[i+0]);
+					var option = DocumentOptionConverter.Parse (list[i+0]);
 					var value  = list[i+1];
 
 					this.dictionary.Add (option, value);

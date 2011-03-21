@@ -207,7 +207,7 @@ namespace Epsitec.Cresus.Core.Documents
 		private string GetStringPageTypes()
 		{
 			//	Accès à la liste des types de page sous une forme 'string', pour la (dé)sérialisation.
-			var list = new List<string> (this.pageTypes.Select (x => Documents.PageTypes.ToString (x)));
+			var list = new List<string> (this.pageTypes.Select (x => Documents.PageTypeConverter.ToString (x)));
 			return string.Join (",", list);
 		}
 
@@ -218,7 +218,7 @@ namespace Epsitec.Cresus.Core.Documents
 			if (!string.IsNullOrEmpty (value))
 			{
 				var parts = value.Split (',');
-				this.pageTypes.AddRange (parts.Select (x => Documents.PageTypes.Parse (x)));
+				this.pageTypes.AddRange (parts.Select (x => Documents.PageTypeConverter.Parse (x)));
 			}
 		}
 

@@ -52,7 +52,7 @@
     <Compile Include="Business\Rules\DocumentMetadataBusinessRules.cs" />
     <Compile Include="DocumentOptionsEditor\OptionsController.cs" />
     <Compile Include="Documents\DocumentOption.cs" />
-    <Compile Include="Documents\DocumentOptions.cs" />
+    <Compile Include="Documents\DocumentOptionConverter.cs" />
     <Compile Include="DocumentOptionsEditor\DocumentOptionsEditorController.cs" />
     <Compile Include="DocumentOptionsEditor\MainController.cs" />
     <Compile Include="DocumentOptionsEditor\SelectController.cs" />
@@ -64,7 +64,7 @@
     <Compile Include="Entities\DocumentPrintingUnitsEntity.cs" />
     <Compile Include="Documents\PrintingOptionDictionary.cs" />
     <Compile Include="Documents\PageType.cs" />
-    <Compile Include="Documents\PageTypes.cs" />
+    <Compile Include="Documents\PageTypeConverter.cs" />
     <Compile Include="Documents\PrintingUnit.cs" />
     <Compile Include="Documents\PrintingUnitDictionary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
