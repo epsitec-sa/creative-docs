@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Core.Print
 	/// </summary>
 	public class SectionToPrint
 	{
-		public SectionToPrint(PrintingUnit printingUnit, string job, int firstPage, AbstractPrinter documentPrinter, Size pageSize, OptionsDictionary options)
+		public SectionToPrint(PrintingUnit printingUnit, string job, int firstPage, AbstractPrinter documentPrinter, Size pageSize, PrintingOptions options)
 		{
 			//	Crée une section d'une page.
 			this.printingUnit    = printingUnit;
@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Core.Print
 			}
 		}
 
-		public OptionsDictionary Options
+		public PrintingOptions Options
 		{
 			get
 			{
@@ -156,6 +156,6 @@ namespace Epsitec.Cresus.Core.Print
 		private readonly int						firstPage;
 		private readonly AbstractPrinter			documentPrinter;
 		private readonly Size						pageSize;
-		private readonly OptionsDictionary			options;
+		private readonly PrintingOptions			options;
 	}
 }

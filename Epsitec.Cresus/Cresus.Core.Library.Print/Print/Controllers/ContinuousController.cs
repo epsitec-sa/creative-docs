@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Core.Print.Controllers
 			var entities = new List<AbstractEntity> ();
 			entities.Add (metadoc);
 
-			var options = OptionsDictionary.GetDefault ();
+			var options = PrintingOptions.GetDefault ();
 
 			this.documentPrinter = AbstractPrinter.CreateDocumentPrinter (businessContext, metadoc, options, null);
 			System.Diagnostics.Debug.Assert (this.documentPrinter != null);

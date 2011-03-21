@@ -65,11 +65,11 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 #endif
 
-		public PrintingUnitsDictionary GetPrintingUnits()
+		public PrintingUnits GetPrintingUnits()
 		{
 			//	Retourne le dictionnaire "type de pages" / "unité d'impression".
 			// TODO: Ajouter un cache pour accélérer l'accès !
-			var dict = new PrintingUnitsDictionary ();
+			var dict = new PrintingUnits ();
 
 			if (this.SerializedData != null)
 			{
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Core.Entities
 					for (int i = 0; i < split.Length-1; i+=2)
 					{
 						var type = PageTypes.Parse (split[i]);
-						dict.Add (type, split[i+1]);
+						dict[type] = split[i+1];
 					}
 				}
 			}
@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Core.Entities
 			return dict;
 		}
 
-		public void SetPrintingUnits(PrintingUnitsDictionary options)
+		public void SetPrintingUnits(PrintingUnits options)
 		{
 			//	Spécifie le dictionnaire "type de pages" / "unité d'impression".
 			if (options.Count == 0)

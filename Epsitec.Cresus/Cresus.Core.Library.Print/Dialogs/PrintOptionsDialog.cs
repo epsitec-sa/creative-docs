@@ -185,7 +185,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				for (int i = 0; i < this.entitiesToPrint.Count; i++)
 				{
-					this.entitiesToPrint[i].Options.Merge (this.pages[i].FinalOptions);
+					this.entitiesToPrint[i].Options.MergeWith (this.pages[i].FinalOptions);
 				}
 
 				this.Result = DialogResult.Accept;
@@ -208,9 +208,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.entityToPrint   = entityToPrint;
 				this.isPreview       = isPreview;
 
-				this.categoryOptions = new OptionsDictionary ();
-				this.modifiedOptions = new OptionsDictionary ();
-				this.finalOptions    = new OptionsDictionary ();
+				this.categoryOptions = new PrintingOptions ();
+				this.modifiedOptions = new PrintingOptions ();
+				this.finalOptions    = new PrintingOptions ();
 
 				this.documentCategoryEntities = this.GetDocumentCategoryEntities ();
 				this.confirmationButtons = new List<ConfirmationButton> ();
@@ -229,7 +229,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				}
 			}
 
-			public OptionsDictionary FinalOptions
+			public PrintingOptions FinalOptions
 			{
 				get
 				{
@@ -389,14 +389,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 				var category = this.SelectedDocumentCategoryEntity;
 
 				this.categoryOptions.Clear ();
-				this.categoryOptions.Merge (this.entityToPrint.Options);
+				this.categoryOptions.MergeWith (this.entityToPrint.Options);
 
 				if (category != null && category.DocumentOptions != null)
 				{
 					foreach (var documentOptions in category.DocumentOptions)
 					{
 						var option = documentOptions.GetOptions ();
-						this.categoryOptions.Merge (option);
+						this.categoryOptions.MergeWith (option);
 					}
 				}
 
@@ -405,8 +405,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 				if (category != null)
 				{
 					this.modifiedOptions.Clear ();
-					this.modifiedOptions.Merge (this.categoryOptions);
-					this.modifiedOptions.Extract (this.GetForcingOptions (this.entityToPrint.PrintingUnits));
+					this.modifiedOptions.MergeWith (this.categoryOptions);
+					this.modifiedOptions.Remove (this.GetForcingOptions (this.entityToPrint.PrintingUnits));
 
 					var controller = new DocumentOptionsEditor.OptionsController (this.modifiedOptions);
 					controller.CreateUI (this.optionsFrame.Viewport, this.OnOptionsChanged);
@@ -446,8 +446,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 				else
 				{
 					this.finalOptions.Clear ();
-					this.finalOptions.Merge (this.categoryOptions);
-					this.finalOptions.Merge (this.modifiedOptions);
+					this.finalOptions.MergeWith (this.categoryOptions);
+					this.finalOptions.MergeWith (this.modifiedOptions);
 
 					var xml = PrintEngine.MakePrintingData (this.businessContext, this.entityToPrint.Entity, this.finalOptions, this.entityToPrint.PrintingUnits);
 					this.deserializeJobs = SerializationEngine.DeserializeJobs (this.businessContext, xml);
@@ -587,10 +587,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 
 
-			private OptionsDictionary GetForcingOptions(PrintingUnitsDictionary printingUnits)
+			private PrintingOptions GetForcingOptions(PrintingUnits printingUnits)
 			{
 				//	Retourne toutes les options forcées par un ensemble d'unités d'impressiom.
-				var options = new OptionsDictionary ();
+				var options = new PrintingOptions ();
 
 				foreach (var pair in printingUnits.ContentPair)
 				{
@@ -598,7 +598,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 					if (printingUnit != null)
 					{
-						options.Merge (printingUnit.OptionsDictionary);
+						options.MergeWith (printingUnit.OptionsDictionary);
 					}
 				}
 
@@ -608,9 +608,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			private readonly IBusinessContext						businessContext;
 			private readonly EntityToPrint							entityToPrint;
-			private readonly OptionsDictionary						categoryOptions;
-			private readonly OptionsDictionary						modifiedOptions;
-			private readonly OptionsDictionary						finalOptions;
+			private readonly PrintingOptions						categoryOptions;
+			private readonly PrintingOptions						modifiedOptions;
+			private readonly PrintingOptions						finalOptions;
 			private readonly bool									isPreview;
 			private readonly IEnumerable<DocumentCategoryEntity>	documentCategoryEntities;
 			private readonly List<ConfirmationButton>				confirmationButtons;

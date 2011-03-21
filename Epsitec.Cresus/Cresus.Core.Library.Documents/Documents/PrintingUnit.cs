@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Documents
 		public PrintingUnit()
 		{
 			this.Copies = 1;
-			this.optionsDictionary = new OptionsDictionary ();
+			this.optionsDictionary = new PrintingOptions ();
 			this.pageTypes = new List<PageType> ();
 		}
 
@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Documents
 		}
 
 
-		public string LogicalName
+		public string							LogicalName
 		{
 			//	Nom logique choisi par l'utilisateur (nom de fonction).
 			//	Les caractères spéciaux sont encodés (par exemple, un "&" vaut "&amp;").
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core.Documents
 			set;
 		}
 
-		public string Comment
+		public string							Comment
 		{
 			//	Description de l'unité d'impression.
 			//	Les caractères spéciaux sont encodés (par exemple, un "&" vaut "&amp;").
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Core.Documents
 			set;
 		}
 
-		public string PhysicalPrinterName
+		public string							PhysicalPrinterName
 		{
 			//	Nom physique de l'imprimante.
 			//	Les caractères spéciaux sont encodés (par exemple, un "&" vaut "&amp;").
@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Core.Documents
 			set;
 		}
 
-		public string PhysicalPrinterTray
+		public string							PhysicalPrinterTray
 		{
 			//	Nom physique du bac de l'impriante.
 			//	Les caractères spéciaux sont encodés (par exemple, un "&" vaut "&amp;").
@@ -68,37 +68,37 @@ namespace Epsitec.Cresus.Core.Documents
 			set;
 		}
 
-		public DuplexMode PhysicalDuplexMode
+		public DuplexMode						PhysicalDuplexMode
 		{
 			get;
 			set;
 		}
 
-		public Size PhysicalPaperSize
+		public Size								PhysicalPaperSize
 		{
 			get;
 			set;
 		}
 
-		public double XOffset
+		public double							XOffset
 		{
 			get;
 			set;
 		}
 
-		public double YOffset
+		public double							YOffset
 		{
 			get;
 			set;
 		}
 
-		public int Copies
+		public int								Copies
 		{
 			get;
 			set;
 		}
 
-		public OptionsDictionary OptionsDictionary
+		public PrintingOptions					OptionsDictionary
 		{
 			get
 			{
@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Core.Documents
 			}
 		}
 
-		public IList<PageType> PageTypes
+		public IList<PageType>					PageTypes
 		{
 			get
 			{
@@ -144,90 +144,56 @@ namespace Epsitec.Cresus.Core.Documents
 		public string GetSerializableContent()
 		{
 			//	Retourne une string permettant de sérialiser l'ensemble de la classe.
-			return string.Concat
-				(
-					                                    "LogicalName=",              this.LogicalName,
-					PrintingUnit.serializableSeparator, "PhysicalName=",             this.PhysicalPrinterName,
-					PrintingUnit.serializableSeparator, "Tray=",                     this.PhysicalPrinterTray,
-					PrintingUnit.serializableSeparator, "XOffset=",                  this.XOffset.ToString (System.Globalization.CultureInfo.InvariantCulture),
-					PrintingUnit.serializableSeparator, "YOffset=",                  this.YOffset.ToString (System.Globalization.CultureInfo.InvariantCulture),
-					PrintingUnit.serializableSeparator, "Copies=",                   this.Copies.ToString (System.Globalization.CultureInfo.InvariantCulture),
-					PrintingUnit.serializableSeparator, "Comment=",                  this.Comment,
-					PrintingUnit.serializableSeparator, "OptionsDictionary=",        this.optionsDictionary.GetSerializedData (),
-					PrintingUnit.serializableSeparator, "PhysicalPaperSize.Width=",  this.PhysicalPaperSize.Width.ToString (System.Globalization.CultureInfo.InvariantCulture),
-					PrintingUnit.serializableSeparator, "PhysicalPaperSize.Height=", this.PhysicalPaperSize.Height.ToString (System.Globalization.CultureInfo.InvariantCulture),
-					PrintingUnit.serializableSeparator, "PhysicalDuplexMode=",       PrintingUnit.DuplexToString (this.PhysicalDuplexMode),
-					PrintingUnit.serializableSeparator, "PageTypes=",                this.StringPageTypes,
-					null  // pour permettre de terminer le dernier par une virgule !
-				);
+			var list = new List<string> ()
+			{
+				"LogicalName",              this.LogicalName,
+				"PhysicalName",             this.PhysicalPrinterName,
+				"Tray",                     this.PhysicalPrinterTray,
+				"XOffset",                  this.XOffset.ToString (System.Globalization.CultureInfo.InvariantCulture),
+				"YOffset",                  this.YOffset.ToString (System.Globalization.CultureInfo.InvariantCulture),
+				"Copies",                   this.Copies.ToString (System.Globalization.CultureInfo.InvariantCulture),
+				"Comment",                  this.Comment,
+				"OptionsDictionary",        this.optionsDictionary.GetSerializedData (),
+				"PhysicalPaperSize.Width",  this.PhysicalPaperSize.Width.ToString (System.Globalization.CultureInfo.InvariantCulture),
+				"PhysicalPaperSize.Height", this.PhysicalPaperSize.Height.ToString (System.Globalization.CultureInfo.InvariantCulture),
+				"PhysicalDuplexMode",       PrintingUnit.DuplexToString (this.PhysicalDuplexMode),
+				"PageTypes",                this.GetStringPageTypes (),
+			};
+
+			return StringPacker.Pack (list);
 		}
 
-		public void SetSerializableContent(string content)
+		public void SetSerializableContent(string data)
 		{
 			//	Initialise l'ensemble de la classe à partir d'une string sérialisée.
-			var list = content.Split (new string[] { PrintingUnit.serializableSeparator }, System.StringSplitOptions.RemoveEmptyEntries);
+			var list = StringPacker.Unpack (data).ToList ();
 
+			System.Diagnostics.Debug.Assert ((list.Count % 2) == 0);
+			
 			double paperSizeWidth  = 0;
 			double paperSizeHeight = 0;
 
 			this.optionsDictionary.Clear ();
 
-			foreach (var line in list)
+			for (int i = 0; i+2 < list.Count; i += 2)
 			{
-				var words = line.Split (new string[] { "=" }, System.StringSplitOptions.None);
-
-				if (words.Length == 2)
+				string key   = list[i+0];
+				string value = list[i+1];
+					
+				switch (key)
 				{
-					switch (words[0])
-					{
-						case "LogicalName":
-							this.LogicalName = words[1];
-							break;
-
-						case "PhysicalName":
-							this.PhysicalPrinterName = words[1];
-							break;
-
-						case "Tray":
-							this.PhysicalPrinterTray = words[1];
-							break;
-
-						case "XOffset":
-							this.XOffset = double.Parse (words[1]);
-							break;
-
-						case "YOffset":
-							this.YOffset = double.Parse (words[1]);
-							break;
-
-						case "Copies":
-							this.Copies = int.Parse (words[1]);
-							break;
-
-						case "Comment":
-							this.Comment = words[1];
-							break;
-
-						case "OptionsDictionary":
-							this.optionsDictionary.SetSerializedData (words[1]);
-							break;
-
-						case "PhysicalPaperSize.Width":
-							paperSizeWidth = int.Parse (words[1]);
-							break;
-
-						case "PhysicalPaperSize.Height":
-							paperSizeHeight = int.Parse (words[1]);
-							break;
-
-						case "PhysicalDuplexMode":
-							this.PhysicalDuplexMode = PrintingUnit.StringToDuplex (words[1]);
-							break;
-
-						case "PageTypes":
-							this.StringPageTypes = words[1];
-							break;
-					}
+					case "LogicalName":					this.LogicalName = value;										break;
+					case "PhysicalName":				this.PhysicalPrinterName = value;								break;
+					case "Tray":						this.PhysicalPrinterTray = value;								break;
+					case "XOffset":						this.XOffset = double.Parse (value);							break;
+					case "YOffset":						this.YOffset = double.Parse (value);							break;
+					case "Copies":						this.Copies = int.Parse (value);								break;
+					case "Comment":						this.Comment = value;											break;
+					case "OptionsDictionary":			this.optionsDictionary.SetSerializedData (value);				break;
+					case "PhysicalPaperSize.Width":		paperSizeWidth = int.Parse (value);								break;
+					case "PhysicalPaperSize.Height":	paperSizeHeight = int.Parse (value);							break;
+					case "PhysicalDuplexMode":			this.PhysicalDuplexMode = PrintingUnit.StringToDuplex (value);	break;
+					case "PageTypes":					this.SetStringPageTypes (value);								break;
 				}
 			}
 
@@ -238,46 +204,21 @@ namespace Epsitec.Cresus.Core.Documents
 		}
 
 
-		private string StringPageTypes
+		private string GetStringPageTypes()
 		{
 			//	Accès à la liste des types de page sous une forme 'string', pour la (dé)sérialisation.
-			get
-			{
-				var list = new List<string> ();
-
-				foreach (var pageType in this.pageTypes)
-				{
-					list.Add (Documents.PageTypes.ToString (pageType));
-				}
-
-				return string.Join (",", list);
-			}
-			set
-			{
-				this.pageTypes.Clear ();
-
-				if (!string.IsNullOrEmpty (value))
-				{
-					var parts = value.Split (',');
-
-					foreach (var s in parts)
-					{
-						this.pageTypes.Add (Documents.PageTypes.Parse (s));
-					}
-				}
-			}
+			var list = new List<string> (this.pageTypes.Select (x => Documents.PageTypes.ToString (x)));
+			return string.Join (",", list);
 		}
 
-
-		public static bool CheckString(string value)
+		private void SetStringPageTypes(string value)
 		{
-			if (string.IsNullOrEmpty (value))
+			this.pageTypes.Clear ();
+
+			if (!string.IsNullOrEmpty (value))
 			{
-				return true;
-			}
-			else
-			{
-				return !value.Contains (PrintingUnit.serializableSeparator);
+				var parts = value.Split (',');
+				this.pageTypes.AddRange (parts.Select (x => Documents.PageTypes.Parse (x)));
 			}
 		}
 
@@ -291,10 +232,10 @@ namespace Epsitec.Cresus.Core.Documents
 					return "Simple face";
 
 				case DuplexMode.Horizontal:
-					return "Recto verso horizontal";
+					return "Recto verso";
 
 				case DuplexMode.Vertical:
-					return "Recto verso vertical";
+					return "Recto verso retourné";
 
 				default:
 					return "Par défaut";
@@ -338,9 +279,7 @@ namespace Epsitec.Cresus.Core.Documents
 		#endregion
 
 
-		private static readonly string serializableSeparator = "•";  // puce, unicode 2022
-
-		private readonly OptionsDictionary		optionsDictionary;
+		private readonly PrintingOptions		optionsDictionary;
 		private readonly List<PageType>			pageTypes;
 	}
 }

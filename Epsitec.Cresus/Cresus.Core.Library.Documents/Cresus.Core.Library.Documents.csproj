@@ -62,11 +62,11 @@
     <Compile Include="Entities\DocumentMetadataEntity.cs" />
     <Compile Include="Entities\DocumentOptionsEntity.cs" />
     <Compile Include="Entities\DocumentPrintingUnitsEntity.cs" />
-    <Compile Include="Documents\OptionsDictionary.cs" />
+    <Compile Include="Documents\PrintingOptions.cs" />
     <Compile Include="Documents\PageType.cs" />
     <Compile Include="Documents\PageTypes.cs" />
     <Compile Include="Documents\PrintingUnit.cs" />
-    <Compile Include="Documents\PrintingUnitsDictionary.cs" />
+    <Compile Include="Documents\PrintingUnits.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Documents\SourceCode\Entities.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Documents\SourceCode\Res.cs" />

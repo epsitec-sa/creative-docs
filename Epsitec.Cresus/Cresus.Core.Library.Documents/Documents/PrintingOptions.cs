@@ -5,6 +5,7 @@ using Epsitec.Common.Types;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Core.Documents
 {
@@ -13,33 +14,15 @@ namespace Epsitec.Cresus.Core.Documents
 	/// La clé du dictionnaire est un nom d'option (DocumentOption).
 	/// La valeur du dictionnaire est la valeur de l'option. Par exemple "true".
 	/// </summary>
-	public class OptionsDictionary
+	public class PrintingOptions
 	{
-		public OptionsDictionary()
+		public PrintingOptions()
 		{
 			this.dictionary = new Dictionary<DocumentOption, string> ();
 		}
 
-		public void Clear()
-		{
-			this.dictionary.Clear ();
-		}
-
-		public void Add(DocumentOption option, string value)
-		{
-			this.dictionary[option] = value;
-		}
-
-		public void Remove(DocumentOption option)
-		{
-			if (this.dictionary.ContainsKey (option))
-			{
-				this.dictionary.Remove (option);
-			}
-		}
-
-
-		public int Count
+		
+		public int													Count
 		{
 			get
 			{
@@ -47,24 +30,7 @@ namespace Epsitec.Cresus.Core.Documents
 			}
 		}
 
-		public bool ContainsOption(DocumentOption option)
-		{
-			return this.dictionary.ContainsKey (option);
-		}
-
-		public string GetValue(DocumentOption option)
-		{
-			if (this.dictionary.ContainsKey (option))
-			{
-				return this.dictionary[option];
-			}
-			else
-			{
-				return null;
-			}
-		}
-
-		public IEnumerable<DocumentOption> Options
+		public IEnumerable<DocumentOption>							Options
 		{
 			get
 			{
@@ -72,7 +38,7 @@ namespace Epsitec.Cresus.Core.Documents
 			}
 		}
 
-		public IEnumerable<KeyValuePair<DocumentOption, string>> ContentPair
+		public IEnumerable<KeyValuePair<DocumentOption, string>>	ContentPair
 		{
 			get
 			{
@@ -83,25 +49,63 @@ namespace Epsitec.Cresus.Core.Documents
 			}
 		}
 
+		public string												this[DocumentOption option]
+		{
+			get
+			{
+				string value;
+				if (this.dictionary.TryGetValue (option, out value))
+				{
+					return value;
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if (value == null)
+				{
+					this.dictionary.Remove (option);
+				}
+				else
+				{
+					this.dictionary[option] = value;
+				}
+			}
+		}
+		
+		
+		public void Clear()
+		{
+			this.dictionary.Clear ();
+		}
 
-		public void Merge(OptionsDictionary src)
+		public bool ContainsOption(DocumentOption option)
+		{
+			return this.dictionary.ContainsKey (option);
+		}
+
+
+		public void MergeWith(PrintingOptions src)
 		{
 			if (src != null)
 			{
 				foreach (var pair in src.ContentPair)
 				{
-					this.Add (pair.Key, pair.Value);
+					this[pair.Key] = pair.Value;
 				}
 			}
 		}
 
-		public void Extract(OptionsDictionary src)
+		public void Remove(PrintingOptions src)
 		{
 			if (src != null)
 			{
 				foreach (var pair in src.ContentPair)
 				{
-					this.Remove (pair.Key);
+					this[pair.Key] = null;
 				}
 			}
 		}
@@ -118,7 +122,7 @@ namespace Epsitec.Cresus.Core.Documents
 				list.Add (pair.Value);
 			}
 
-			return string.Join ("◊", list);
+			return StringPacker.Pack (list);
 		}
 
 		public void SetSerializedData(string data)
@@ -128,12 +132,14 @@ namespace Epsitec.Cresus.Core.Documents
 
 			if (!string.IsNullOrEmpty (data))
 			{
-				var list = data.Split ('◊');
+				var list = StringPacker.Unpack (data).ToList ();
 
-				for (int i = 0; i < list.Length-1; i+=2)
+				System.Diagnostics.Debug.Assert ((list.Count % 2) == 0);
+
+				for (int i = 0; i+2 < list.Count; i += 2)
 				{
-					var option = DocumentOptions.Parse (list[i]);
-					var value = list[i+1];
+					var option = DocumentOptions.Parse (list[i+0]);
+					var value  = list[i+1];
 
 					this.dictionary.Add (option, value);
 				}
@@ -141,15 +147,15 @@ namespace Epsitec.Cresus.Core.Documents
 		}
 
 
-		public static OptionsDictionary GetDefault()
+		public static PrintingOptions GetDefault()
 		{
 			//	Retourne toutes les options par défaut.
-			var dict = new OptionsDictionary ();
+			var dict = new PrintingOptions ();
 			var all = Verbose.VerboseDocumentOption.GetAll ();
 
-			foreach (var one in all)
+			foreach (var item in all)
 			{
-				dict.Add (one.Option, one.DefaultValue);
+				dict[item.Option] = item.DefaultValue;
 			}
 
 			return dict;

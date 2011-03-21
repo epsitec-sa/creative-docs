@@ -100,11 +100,11 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 #endif
 
-		public OptionsDictionary GetOptions()
+		public PrintingOptions GetOptions()
 		{
 			//	Retourne le dictionnaire "option d'impression" / "valeur".
 			// TODO: Ajouter un cache pour accélérer l'accès !
-			var dict = new OptionsDictionary ();
+			var dict = new PrintingOptions ();
 
 			if (this.SerializedData != null)
 			{
@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Core.Entities
 					for (int i = 0; i < split.Length-1; i+=2)
 					{
 						var option = DocumentOptions.Parse (split[i]);
-						dict.Add (option, split[i+1]);
+						dict[option] = split[i+1];
 					}
 				}
 			}
@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.Core.Entities
 			return dict;
 		}
 
-		public void SetOptions(OptionsDictionary options)
+		public void SetOptions(PrintingOptions options)
 		{
 			//	Spécifie le dictionnaire "option d'impression" / "valeur".
 			if (options.Count == 0)

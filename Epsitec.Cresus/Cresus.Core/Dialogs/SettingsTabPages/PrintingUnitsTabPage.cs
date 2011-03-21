@@ -651,10 +651,10 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		{
 			this.optionsBox.Viewport.Children.Clear ();
 
-			var optionsKeys = new OptionsDictionary ();
+			var optionsKeys = new PrintingOptions ();
 			foreach (var option in VerboseDocumentOption.GetDefault ())
 			{
-				optionsKeys.Add (option.Option, null);
+				optionsKeys[option.Option] = "";
 			}
 
 			PrintingUnit printingUnit = this.SelectedPrinter;
@@ -1007,17 +1007,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				{
 					return string.Format ("<b>{0}</b>: Il faut choisir la taille du papier.", this.printingUnitList[i].LogicalName);
 				}
-
-				if (!PrintingUnit.CheckString (this.printingUnitList[i].LogicalName))
-				{
-					return string.Format ("<b>{0}</b>: Ce nom de fonction est incorrect.", this.printingUnitList[i].LogicalName);
-				}
-
-				if (!PrintingUnit.CheckString (this.printingUnitList[i].Comment))
-				{
-					return string.Format ("<b>{0}</b>: La description est incorrecte.", this.printingUnitList[i].LogicalName);
-				}
-
+				
 				for (int j = 0; j < this.printingUnitList.Count; j++)
 				{
 					if (j != i && this.printingUnitList[j].LogicalName == this.printingUnitList[i].LogicalName)

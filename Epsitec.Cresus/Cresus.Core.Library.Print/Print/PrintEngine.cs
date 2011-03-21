@@ -186,7 +186,7 @@ namespace Epsitec.Cresus.Core.Print
 			return SerializationEngine.SerializeJobs (jobs);
 		}
 
-		public static string MakePrintingData(IBusinessContext businessContext, AbstractEntity entity, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
+		public static string MakePrintingData(IBusinessContext businessContext, AbstractEntity entity, PrintingOptions options, PrintingUnits printingUnits)
 		{
 			//	Fabrique les données permettant d'imprimer un document, sans aucune interaction.
 			//	Retourne le source xml correspondant.
@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.Core.Print
 			return SerializationEngine.SerializeJobs (jobs);
 		}
 
-		private static List<JobToPrint> MakePrintingJobs(IBusinessContext businessContext, AbstractEntity entity, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
+		private static List<JobToPrint> MakePrintingJobs(IBusinessContext businessContext, AbstractEntity entity, PrintingOptions options, PrintingUnits printingUnits)
 		{
 			//	Fabrique les données permettant d'imprimer un document, sans aucune interaction.
 			//	Retourne les jobs correspondant.
@@ -228,9 +228,9 @@ namespace Epsitec.Cresus.Core.Print
 				{
 					//	Fabrique le dictionnaire des options à partir des options de base et
 					//	des options définies avec l'unité d'impression.
-					var customOptions = new OptionsDictionary ();
-					customOptions.Merge (options);                         // options les moins prioritaires
-					customOptions.Merge (printingUnit.OptionsDictionary);  // options les plus prioritaires
+					var customOptions = new PrintingOptions ();
+					customOptions.MergeWith (options);                         // options les moins prioritaires
+					customOptions.MergeWith (printingUnit.OptionsDictionary);  // options les plus prioritaires
 
 					documentPrinter.SetPrintingUnit (printingUnit, customOptions, PreviewMode.Print);
 					documentPrinter.BuildSections ();
@@ -346,10 +346,10 @@ namespace Epsitec.Cresus.Core.Print
 		
 		
 		#region Dictionary getters
-		private static OptionsDictionary GetOptions(IBusinessContext businessContext, AbstractEntity entity)
+		private static PrintingOptions GetOptions(IBusinessContext businessContext, AbstractEntity entity)
 		{
 			//	Retourne les options à utiliser pour l'entité.
-			var result = new OptionsDictionary ();
+			var result = new PrintingOptions ();
 
 			var categories = PrintEngine.GetDocumentCategoryEntities(businessContext, entity);
 			if (categories != null)
@@ -361,7 +361,7 @@ namespace Epsitec.Cresus.Core.Print
 						foreach (var documentOptions in category.DocumentOptions)
 						{
 							var option = documentOptions.GetOptions ();
-							result.Merge (option);
+							result.MergeWith (option);
 						}
 					}
 				}
@@ -378,10 +378,10 @@ namespace Epsitec.Cresus.Core.Print
 			return result;
 		}
 
-		private static PrintingUnitsDictionary GetPrintingUnits(IBusinessContext businessContext, AbstractEntity entity)
+		private static PrintingUnits GetPrintingUnits(IBusinessContext businessContext, AbstractEntity entity)
 		{
 			//	Retourne les unités d'impression à utiliser pour l'entité.
-			var result = new PrintingUnitsDictionary ();
+			var result = new PrintingUnits ();
 
 			var categories = PrintEngine.GetDocumentCategoryEntities (businessContext, entity);
 			if (categories != null)
@@ -393,7 +393,7 @@ namespace Epsitec.Cresus.Core.Print
 						foreach (var printingUnits in category.DocumentPrintingUnits)
 						{
 							var printingUnit = printingUnits.GetPrintingUnits ();
-							result.Merge (printingUnit);
+							result.MergeWith (printingUnit);
 						}
 					}
 				}
@@ -402,10 +402,10 @@ namespace Epsitec.Cresus.Core.Print
 #if true
 			if (result.Count == 0)  // TODO: Hack à supprimer dès que possible !
 			{
-				result.Add (PageType.All, "Blanc");
+				result[PageType.All] = "Blanc";
 				//?result.Add (PageType.Esr, "Jaune");
 				//?result.Add (PageType.Copy, "Brouillon");
-				result.Add (PageType.Label, "Etiquettes");
+				result[PageType.Label] = "Etiquettes";
 			}
 #endif
 
