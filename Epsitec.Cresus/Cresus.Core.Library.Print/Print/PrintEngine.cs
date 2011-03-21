@@ -371,7 +371,7 @@ namespace Epsitec.Cresus.Core.Print
 			if (result.Count == 0)  // TODO: Hack à supprimer dès que possible !
 			{
 				result = OptionsDictionary.GetDefault ();
-				result.Add (DocumentOption.EsrPosition, "WithInside");  // force un BV
+				result.Add (DocumentOption.IsrPosition, "WithInside");  // force un BV
 			}
 #endif
 
@@ -403,7 +403,7 @@ namespace Epsitec.Cresus.Core.Print
 			if (result.Count == 0)  // TODO: Hack à supprimer dès que possible !
 			{
 				result[PageType.All] = "Blanc";
-				//?result.Add (PageType.Esr, "Jaune");
+				//?result.Add (PageType.Isr, "Jaune");
 				//?result.Add (PageType.Copy, "Brouillon");
 				result[PageType.Label] = "Etiquettes";
 			}

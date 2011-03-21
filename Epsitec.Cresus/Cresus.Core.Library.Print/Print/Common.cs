@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Core.Print
 			if (printerUnitFunction == PageType.Single    && pageType == PageType.Single    ||
 				printerUnitFunction == PageType.First     && pageType == PageType.First     ||
 				printerUnitFunction == PageType.Following && pageType == PageType.Following ||
-				printerUnitFunction == PageType.Esr       && pageType == PageType.Esr       ||
+				printerUnitFunction == PageType.Isr       && pageType == PageType.Isr       ||
 				printerUnitFunction == PageType.Label     && pageType == PageType.Label     )
 			{
 				return true;

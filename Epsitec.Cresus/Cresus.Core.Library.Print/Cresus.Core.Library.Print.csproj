@@ -54,10 +54,10 @@
     <Compile Include="Dialogs\OptimalPreviewPlacer.cs" />
     <Compile Include="Dialogs\PrintPreviewDialog.cs" />
     <Compile Include="Print\Bands\AbstractBand.cs" />
-    <Compile Include="Print\Bands\AbstractEsrBand.cs" />
+    <Compile Include="Print\Bands\AbstractIsrBand.cs" />
     <Compile Include="Print\Bands\CellBorder.cs" />
-    <Compile Include="Print\Bands\EsBand.cs" />
-    <Compile Include="Print\Bands\EsrBand.cs" />
+    <Compile Include="Print\Bands\IsBand.cs" />
+    <Compile Include="Print\Bands\IsrBand.cs" />
     <Compile Include="Print\Bands\ImageBand.cs" />
     <Compile Include="Print\Bands\SurfaceBand.cs" />
     <Compile Include="Print\Bands\TableBand.cs" />

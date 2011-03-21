@@ -32,9 +32,9 @@ namespace Epsitec.Cresus.Core.Documents
 
 		ColumnsOrder,		// enum: QD, DQ
 
-		EsrPosition,		// enum: WithInside, WithOutside, Without
-		EsrType,			// enum: Esr, Es
-		EsrFacsimile,		// bool
+		IsrPosition,		// enum: WithInside, WithOutside, Without
+		IsrType,			// enum: Isr, Is
+		IsrFacsimile,		// bool
 
 		Signing,			// bool
 

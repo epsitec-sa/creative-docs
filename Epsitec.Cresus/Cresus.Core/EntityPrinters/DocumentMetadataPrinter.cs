@@ -66,9 +66,9 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 				double h = this.IsDocumentWithoutPrice ? 0 : DocumentMetadataPrinter.reportHeight;
 
-				if (this.HasOption (DocumentOption.EsrPosition, "WithInside"))
+				if (this.HasOption (DocumentOption.IsrPosition, "WithInside"))
 				{
-					return new Margins (leftMargin, rightMargin, topMargin+h*2, h+DocumentMetadataPrinter.marginBeforeEsr+AbstractEsrBand.DefautlSize.Height);
+					return new Margins (leftMargin, rightMargin, topMargin+h*2, h+DocumentMetadataPrinter.marginBeforeIsr+AbstractIsrBand.DefautlSize.Height);
 				}
 				else
 				{
@@ -150,7 +150,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			if (this.DocumentType == Business.DocumentType.Invoice)
 			{
-				if (this.HasOption (DocumentOption.EsrPosition, "Without") || this.PreviewMode == Print.PreviewMode.ContinuousPreview)
+				if (this.HasOption (DocumentOption.IsrPosition, "Without") || this.PreviewMode == Print.PreviewMode.ContinuousPreview)
 				{
 					if (this.Entity.BillingDetails.Count != 0)
 					{
@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 						this.BuildPages (billingDetails, firstPage);
 						this.BuildReportHeaders (firstPage);
 						this.BuildReportFooters (firstPage);
-						this.BuildEsrs (billingDetails, firstPage);
+						this.BuildIsrs (billingDetails, firstPage);
 
 						this.documentContainer.Ending (firstPage);
 						onlyTotal = true;
@@ -1298,62 +1298,62 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
-		private void BuildEsrs(BillingDetailEntity billingDetails, int firstPage)
+		private void BuildIsrs(BillingDetailEntity billingDetails, int firstPage)
 		{
-			if (this.HasOption (DocumentOption.EsrPosition, "WithInside"))
+			if (this.HasOption (DocumentOption.IsrPosition, "WithInside"))
 			{
-				this.BuildInsideEsrs (billingDetails, firstPage);
+				this.BuildInsideIsrs (billingDetails, firstPage);
 			}
 
-			if (this.HasOption (DocumentOption.EsrPosition, "WithOutside"))
+			if (this.HasOption (DocumentOption.IsrPosition, "WithOutside"))
 			{
-				this.BuildOutsideEsr (billingDetails, firstPage);
+				this.BuildOutsideIsr (billingDetails, firstPage);
 			}
 		}
 
-		private void BuildInsideEsrs(BillingDetailEntity billingDetails, int firstPage)
+		private void BuildInsideIsrs(BillingDetailEntity billingDetails, int firstPage)
 		{
 			//	Met un BVR orangé ou un BV rose en bas de chaque page.
 			for (int page = firstPage; page < this.documentContainer.PageCount (); page++)
 			{
 				this.documentContainer.CurrentPage = page;
 
-				this.BuildEsr (billingDetails, mackle: page != this.documentContainer.PageCount ()-1);
+				this.BuildIsr (billingDetails, mackle: page != this.documentContainer.PageCount ()-1);
 			}
 		}
 
-		private void BuildOutsideEsr(BillingDetailEntity billingDetails, int firstPage)
+		private void BuildOutsideIsr(BillingDetailEntity billingDetails, int firstPage)
 		{
 			//	Met un BVR orangé ou un BV rose sur une dernière page séparée.
-			var bounds = new Rectangle (Point.Zero, AbstractEsrBand.DefautlSize);
+			var bounds = new Rectangle (Point.Zero, AbstractIsrBand.DefautlSize);
 
 			if (this.documentContainer.PageCount () - firstPage > 1 ||
-				this.documentContainer.CurrentVerticalPosition - DocumentMetadataPrinter.marginBeforeEsr < bounds.Top ||
+				this.documentContainer.CurrentVerticalPosition - DocumentMetadataPrinter.marginBeforeIsr < bounds.Top ||
 				this.HasPrintingUnitDefined (PageType.Single) == false)
 			{
 				//	On ne prépare pas une nouvelle page si on peut mettre la facture
 				//	et le BV sur une seule page !
-				this.documentContainer.PrepareEmptyPage (PageType.Esr);
+				this.documentContainer.PrepareEmptyPage (PageType.Isr);
 			}
 
-			this.BuildEsr (billingDetails);
+			this.BuildIsr (billingDetails);
 		}
 
-		private void BuildEsr(BillingDetailEntity billingDetails, bool mackle=false)
+		private void BuildIsr(BillingDetailEntity billingDetails, bool mackle=false)
 		{
 			//	Met un BVR orangé ou un BV rose au bas de la page courante.
-			AbstractEsrBand isr;
+			AbstractIsrBand isr;
 
-			if (this.HasOption (DocumentOption.EsrType, "Esr"))
+			if (this.HasOption (DocumentOption.IsrType, "Isr"))
 			{
-				isr = new EsrBand ();  // BVR orangé
+				isr = new IsrBand ();  // BVR orangé
 			}
 			else
 			{
-				isr = new EsBand ();  // BV rose
+				isr = new IsBand ();  // BV rose
 			}
 
-			isr.PaintEsrSimulator = this.HasOption (DocumentOption.EsrFacsimile);
+			isr.PaintIsrSimulator = this.HasOption (DocumentOption.IsrFacsimile);
 			isr.From = this.Entity.BillToMailContact.GetSummary ();
 			isr.To = billingDetails.IsrDefinition.SubscriberAddress;
 			isr.Communication = InvoiceDocumentHelper.GetTitle (this.Metadata, this.Entity, billingDetails);
@@ -1361,7 +1361,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			isr.Slip = new IsrSlip (billingDetails);
 			isr.NotForUse = mackle;  // pour imprimer "XXXXX XX" sur un faux BVR
 
-			var bounds = new Rectangle (Point.Zero, AbstractEsrBand.DefautlSize);
+			var bounds = new Rectangle (Point.Zero, AbstractIsrBand.DefautlSize);
 			this.documentContainer.AddAbsolute (isr, bounds);
 		}
 
@@ -1548,7 +1548,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 		private static readonly Font		font = Font.GetFont ("Arial", "Regular");
 		private static readonly double		reportHeight = 7.0;
-		private static readonly double		marginBeforeEsr = 10;
+		private static readonly double		marginBeforeIsr = 10;
 
 		private TableBand					table;
 		private int							visibleColumnCount;

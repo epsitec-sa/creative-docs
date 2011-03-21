@@ -196,18 +196,18 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 			list.Add (new VerboseDocumentOption (DocumentOption.ColumnsOrder, "ColumnsOrder", false, e, d, 0, Business.DocumentType.Invoice));
 
 			//	Ajoute les options d'impression liées aux BV.
-			list.Add (new VerboseDocumentOption ("Type de la facture", "EsrPosition"));
+			list.Add (new VerboseDocumentOption ("Type de la facture", "IsrPosition"));
 			e = new string[] { "Without", "WithInside", "WithOutside" };
 			d = new string[] { "Facture sans BV", "Facture avec BV intégré", "Facture avec BV séparé" };
-			list.Add (new VerboseDocumentOption (DocumentOption.EsrPosition, "EsrPosition", false, e, d, 0, Business.DocumentType.Invoice));
+			list.Add (new VerboseDocumentOption (DocumentOption.IsrPosition, "IsrPosition", false, e, d, 0, Business.DocumentType.Invoice));
 
-			list.Add (new VerboseDocumentOption ("Type de bulletin de versement", "EsrType"));
-			e = new string[] { "Esr", "Es" };
+			list.Add (new VerboseDocumentOption ("Type de bulletin de versement", "IsrType"));
+			e = new string[] { "Isr", "Is" };
 			d = new string[] { "BV orange", "BV rose" };
-			list.Add (new VerboseDocumentOption (DocumentOption.EsrType, "EsrType", false, e, d, 0, Business.DocumentType.Invoice));
+			list.Add (new VerboseDocumentOption (DocumentOption.IsrType, "IsrType", false, e, d, 0, Business.DocumentType.Invoice));
 
-			list.Add (new VerboseDocumentOption ("Mode d'impression du BV", "InvoiceEsrMode"));
-			list.Add (new VerboseDocumentOption (DocumentOption.EsrFacsimile, "InvoiceEsrMode", true, DocumentOptionValueType.Boolean, "Fac-similé complet du BV", "true", Business.DocumentType.Invoice));
+			list.Add (new VerboseDocumentOption ("Mode d'impression du BV", "InvoiceIsrMode"));
+			list.Add (new VerboseDocumentOption (DocumentOption.IsrFacsimile, "InvoiceIsrMode", true, DocumentOptionValueType.Boolean, "Fac-similé complet du BV", "true", Business.DocumentType.Invoice));
 
 			//	Ajoute les options pour les clients.
 			list.Add (new VerboseDocumentOption ("Données du client à inclure", "Relation"));

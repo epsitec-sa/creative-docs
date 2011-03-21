@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Core.Documents
 		First,			// la première page (0)
 		Following,		// les pages suivantes (1..n)
 
-		Esr,			// BV
+		Isr,			// BV
 		Label,			// étiquettes
 	}
 }

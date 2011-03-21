@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Core.Business
 {
 
 	/// <summary>
-	/// The class <c>EsrHelper</c> contains static methods used to check or build es values.
+	/// The class <c>IsrHelper</c> contains static methods used to check or build es values.
 	/// </summary>
 	static class IsrHelper
 	{

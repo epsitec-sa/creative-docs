@@ -22,9 +22,9 @@ namespace Epsitec.Cresus.Core.Print.Bands
 	/// <summary>
 	/// Dessine un BV rose.
 	/// </summary>
-	public class EsBand : AbstractEsrBand
+	public class IsBand : AbstractIsrBand
 	{
-		public EsBand()
+		public IsBand()
 			: base ()
 		{
 		}
@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 			port.PaintOutline (Path.FromLine (topLeft.X+123, topLeft.Y-55, topLeft.X+204, topLeft.Y-55));
 			port.PaintOutline (Path.FromLine (topLeft.X+123, topLeft.Y-61, topLeft.X+204, topLeft.Y-61));
 			port.PaintOutline (Path.FromLine (topLeft.X+123, topLeft.Y-67, topLeft.X+204, topLeft.Y-67));
-			EsBand.PaintDashedLine (port, new Point (topLeft.X+123, topLeft.Y-73), new Point (topLeft.X+204, topLeft.Y-73));
+			IsBand.PaintDashedLine (port, new Point (topLeft.X+123, topLeft.Y-73), new Point (topLeft.X+204, topLeft.Y-73));
 
 			//	Dessine les cases pour les montants.
 			port.LineWidth = 0.1;
@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 				if (i == 1 || i == 4)
 				{
-					EsBand.PaintLittleTriangle (port, new Point (pos.X+4.5, pos.Y+5));
+					IsBand.PaintLittleTriangle (port, new Point (pos.X+4.5, pos.Y+5));
 				}
 
 				pos.X += 5;
@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 				if (i == 1 || i == 4)
 				{
-					EsBand.PaintLittleTriangle (port, new Point (pos.X+4.5, pos.Y+5));
+					IsBand.PaintLittleTriangle (port, new Point (pos.X+4.5, pos.Y+5));
 				}
 
 				pos.X += 5;
@@ -118,10 +118,10 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 			//	Dessine les textes.
 			port.Color = Color.FromBrightness (0);
-			port.PaintText (topLeft.X+70, topLeft.Y-76, "105", AbstractEsrBand.ocrFont, 4.2);
+			port.PaintText (topLeft.X+70, topLeft.Y-76, "105", AbstractIsrBand.ocrFont, 4.2);
 
 			port.Color = this.DarkPinkColor (previewMode);
-			port.PaintText (topLeft.X+123, topLeft.Y-7, "Zahlungsweck / Motif versement / Motivo versamento", AbstractEsrBand.fixFontRegular, 2.0);
+			port.PaintText (topLeft.X+123, topLeft.Y-7, "Zahlungsweck / Motif versement / Motivo versamento", AbstractIsrBand.fixFontRegular, 2.0);
 		}
 
 		protected override void PaintContent(IPaintPort port, Point topLeft)
@@ -133,22 +133,22 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 			string subscriber = this.Slip.GetFormattedSubscriberNumber ();
 
-			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+8, topLeft.Y-40, 50, 28), ContentAlignment.TopLeft, fixFontBold, 3.5, this.To);
-			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+68, topLeft.Y-40, 50, 28), ContentAlignment.TopLeft, fixFontBold, 3.5, this.To);
+			AbstractIsrBand.PaintText (port, new Rectangle (topLeft.X+8, topLeft.Y-40, 50, 28), ContentAlignment.TopLeft, fixFontBold, 3.5, this.To);
+			AbstractIsrBand.PaintText (port, new Rectangle (topLeft.X+68, topLeft.Y-40, 50, 28), ContentAlignment.TopLeft, fixFontBold, 3.5, this.To);
 
-			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+7, topLeft.Y-85, 50, 20), ContentAlignment.TopLeft, fixFontRegular, 2.4, this.From);
-			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+129, topLeft.Y-75, 74, 24), ContentAlignment.TopLeft, fixFontRegular, 3.0, this.From);
+			AbstractIsrBand.PaintText (port, new Rectangle (topLeft.X+7, topLeft.Y-85, 50, 20), ContentAlignment.TopLeft, fixFontRegular, 2.4, this.From);
+			AbstractIsrBand.PaintText (port, new Rectangle (topLeft.X+129, topLeft.Y-75, 74, 24), ContentAlignment.TopLeft, fixFontRegular, 3.0, this.From);
 
-			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+34, topLeft.Y-47, 25, 5), ContentAlignment.TopLeft, fixFontRegular, 3.0, subscriber);
-			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+94, topLeft.Y-47, 25, 5), ContentAlignment.TopLeft, fixFontRegular, 3.0, subscriber);
+			AbstractIsrBand.PaintText (port, new Rectangle (topLeft.X+34, topLeft.Y-47, 25, 5), ContentAlignment.TopLeft, fixFontRegular, 3.0, subscriber);
+			AbstractIsrBand.PaintText (port, new Rectangle (topLeft.X+94, topLeft.Y-47, 25, 5), ContentAlignment.TopLeft, fixFontRegular, 3.0, subscriber);
 
-//-			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+60, topLeft.Y-90, 143, 5), ContentAlignment.TopRight, ocrFont, 4.2, this.FullEsrReferenceNumber);
-//-			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+60, topLeft.Y-98, 143, 5), ContentAlignment.TopRight, ocrFont, 4.2, this.FullEsrReferenceNumber);
+//-			AbstractIsrBand.PaintText (port, new Rectangle (topLeft.X+60, topLeft.Y-90, 143, 5), ContentAlignment.TopRight, ocrFont, 4.2, this.FullIsrReferenceNumber);
+//-			AbstractIsrBand.PaintText (port, new Rectangle (topLeft.X+60, topLeft.Y-98, 143, 5), ContentAlignment.TopRight, ocrFont, 4.2, this.FullIsrReferenceNumber);
 
-			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+125, topLeft.Y-29, 50, 19), ContentAlignment.TopLeft, fixFontRegular, 3.5, this.Communication);
+			AbstractIsrBand.PaintText (port, new Rectangle (topLeft.X+125, topLeft.Y-29, 50, 19), ContentAlignment.TopLeft, fixFontRegular, 3.5, this.Communication);
 
-			EsBand.PaintPrice (port, new Point (topLeft.X+2, topLeft.Y-55), this.Slip.Amount, this.NotForUse);
-			EsBand.PaintPrice (port, new Point (topLeft.X+63, topLeft.Y-55), this.Slip.Amount, this.NotForUse);
+			IsBand.PaintPrice (port, new Point (topLeft.X+2, topLeft.Y-55), this.Slip.Amount, this.NotForUse);
+			IsBand.PaintPrice (port, new Point (topLeft.X+63, topLeft.Y-55), this.Slip.Amount, this.NotForUse);
 		}
 
 
@@ -197,8 +197,8 @@ namespace Epsitec.Cresus.Core.Print.Bands
 				return;
 			}
 
-			string franc = EsBand.PriceToStringFranc (price);
-			string cent  = EsBand.PriceToStringCent (price);
+			string franc = IsBand.PriceToStringFranc (price);
+			string cent  = IsBand.PriceToStringCent (price);
 
 			if (notForUse)
 			{
@@ -209,13 +209,13 @@ namespace Epsitec.Cresus.Core.Print.Bands
 			for (int i = 0; i < 8; i++)
 			{
 				Rectangle bounds = new Rectangle (bottomLeft.X+5*i, bottomLeft.Y, 4, 5);
-				AbstractEsrBand.PaintText (port, bounds, ContentAlignment.MiddleCenter, fixFontBold, 4.5, new string (franc[i], 1));
+				AbstractIsrBand.PaintText (port, bounds, ContentAlignment.MiddleCenter, fixFontBold, 4.5, new string (franc[i], 1));
 			}
 
 			for (int i = 0; i < 2; i++)
 			{
 				Rectangle bounds = new Rectangle (bottomLeft.X+46+5*i, bottomLeft.Y, 4, 5);
-				AbstractEsrBand.PaintText (port, bounds, ContentAlignment.MiddleCenter, fixFontBold, 4.5, new string (franc[i], 1));
+				AbstractIsrBand.PaintText (port, bounds, ContentAlignment.MiddleCenter, fixFontBold, 4.5, new string (franc[i], 1));
 			}
 		}
 
