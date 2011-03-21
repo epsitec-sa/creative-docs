@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		{
 			this.printingUnitList = PrinterApplicationSettings.GetPrintingUnitList (this.Container.Data.Host);
 
-			this.documentPrintingUnits = this.Container.Data.GetAllEntities<DocumentPrintingUnitsEntity> ();
+			this.documentPrintingUnits = this.Container.Data.GetAllEntities<DocumentPrintingUnitsEntity> ().ToList ();
 		}
 
 
@@ -390,7 +390,9 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.yOffsetField.Enable   = sel != -1;
 			this.copiesField.Enable    = sel != -1;
 
-			if (sel == -1)
+			PrintingUnit printingUnit = this.SelectedPrinter;
+
+			if (printingUnit == null)
 			{
 				this.physicalField.Text  = null;
 				this.trayField.Text      = null;
@@ -402,8 +404,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			}
 			else
 			{
-				PrintingUnit printingUnit = this.SelectedPrinter;
-
 				this.physicalField.Text  = printingUnit.PhysicalPrinterName;
 				this.trayField.Text      = printingUnit.PhysicalPrinterTray;
 				this.paperSizeField.Text = PrintingUnitsTabPage.PaperSizeToNiceDescription (printingUnit.PhysicalPaperSize);
@@ -790,7 +790,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				}
 				else
 				{
-					return this.printingUnitList[sel];
+					var documentPrintingUnit = this.documentPrintingUnits[sel];
+					return this.printingUnitList.Where (x => x.DocumentPrintingUnitCode == documentPrintingUnit.Code).FirstOrDefault ();
 				}
 			}
 		}
@@ -903,7 +904,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 
 		private readonly List<PrintingUnit>					printingUnitList;
-		private readonly IEnumerable<DocumentPrintingUnitsEntity> documentPrintingUnits;
+		private readonly List<DocumentPrintingUnitsEntity>	documentPrintingUnits;
 
 		private ScrollList									list;
 		private FrameBox									physicalBox;
