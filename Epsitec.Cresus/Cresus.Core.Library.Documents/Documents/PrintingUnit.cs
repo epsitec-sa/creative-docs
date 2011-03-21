@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Core.Documents
 			set;
 		}
 
-		public PrintingOptionDictionary					OptionsDictionary
+		public PrintingOptionDictionary			Options
 		{
 			get
 			{
@@ -153,7 +153,7 @@ namespace Epsitec.Cresus.Core.Documents
 				"YOffset",                  this.YOffset.ToString (System.Globalization.CultureInfo.InvariantCulture),
 				"Copies",                   this.Copies.ToString (System.Globalization.CultureInfo.InvariantCulture),
 				"Comment",                  this.Comment,
-				"OptionsDictionary",        this.optionsDictionary.GetSerializedData (),
+				"Options",				    this.optionsDictionary.GetSerializedData (),
 				"PhysicalPaperSize.Width",  this.PhysicalPaperSize.Width.ToString (System.Globalization.CultureInfo.InvariantCulture),
 				"PhysicalPaperSize.Height", this.PhysicalPaperSize.Height.ToString (System.Globalization.CultureInfo.InvariantCulture),
 				"PhysicalDuplexMode",       PrintingUnit.DuplexToString (this.PhysicalDuplexMode),
@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.Core.Documents
 					case "YOffset":						this.YOffset = double.Parse (value);							break;
 					case "Copies":						this.Copies = int.Parse (value);								break;
 					case "Comment":						this.Comment = value;											break;
-					case "OptionsDictionary":			this.optionsDictionary.SetSerializedData (value);				break;
+					case "Options":						this.optionsDictionary.SetSerializedData (value);				break;
 					case "PhysicalPaperSize.Width":		paperSizeWidth = int.Parse (value);								break;
 					case "PhysicalPaperSize.Height":	paperSizeHeight = int.Parse (value);							break;
 					case "PhysicalDuplexMode":			this.PhysicalDuplexMode = PrintingUnit.StringToDuplex (value);	break;
