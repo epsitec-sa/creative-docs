@@ -233,7 +233,7 @@ namespace Epsitec.Cresus.Core.Data
 
 			foreach (var type in allEntityIds.Select (x => EntityInfo.GetStructuredType (x)))
 			{
-				if ((type.Flags & StructuredTypeFlags.GenerateSchema) != 0)
+				if (type.Flags.HasFlag (StructuredTypeFlags.GenerateSchema))
 				{
 					yield return type;
 				}
