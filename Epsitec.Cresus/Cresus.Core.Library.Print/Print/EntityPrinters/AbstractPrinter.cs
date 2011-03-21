@@ -245,31 +245,17 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 		public static AbstractPrinter CreateDocumentPrinter(IBusinessContext businessContext, AbstractEntity entity, OptionsDictionary options, PrintingUnitsDictionary printingUnits)
 		{
 			//	Crée le XxxPrinter adapté à un type d'entité.
-			//	Quel bonheur de ne pas utiliser la réflexion, c'est tellement plus simple !
 			//	Il ne faut pas perdre de vue qu'il n'y a pas de lien direct entre un type d'entité et
 			//	un XxxPrinter. En particulier, il peut y avoir plusieurs XxxPrinter pour une même entité.
+			
 			var factory = AbstractPrinter.FindPrinterFactory (entity, options);
-	
-			if (entity is DocumentMetadataEntity)
+
+			if (factory == null)
 			{
-				return factory.CreatePrinter (businessContext, entity, options, printingUnits);
-				//?return new DocumentMetadataPrinter (businessContext, entity, options, printingUnits);
+				return null;
 			}
 
-			// TODO: DR
-#if false
-			if (entity is MailContactEntity)
-			{
-				return new MailContactPrinter (businessContext, entity, options, printingUnits);
-			}
-
-			if (entity is RelationEntity)
-			{
-				return new RelationPrinter (businessContext, entity, options, printingUnits);
-			}
-#endif
-
-			return null;
+			return factory.CreatePrinter (businessContext, entity, options, printingUnits);
 		}
 
 		private static IEntityPrinterFactory FindPrinterFactory(AbstractEntity entity, OptionsDictionary options)
@@ -329,7 +315,7 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 
 
 		private static readonly Font						specimenFont = Font.GetFont ("Arial", "Bold");
-		public static readonly double						continuousHeight = 100000;  // 100m devrait suffire
+		public static readonly double						ContinuousHeight = 100*1000;  // 100 mètres devraient suffire
 
 		protected readonly IBusinessContext					businessContext;
 		protected readonly CoreData							coreData;

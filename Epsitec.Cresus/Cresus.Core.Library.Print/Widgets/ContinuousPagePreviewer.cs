@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			//	Met à jour le contenu de la page.
 			double w = this.documentPrinter.RequiredPageSize.Width;
-			double h = AbstractPrinter.continuousHeight - this.documentPrinter.ContinuousVerticalMax;
+			double h = AbstractPrinter.ContinuousHeight - this.documentPrinter.ContinuousVerticalMax;
 			var documentSize = new Size (w, h);
 			var changed = false;
 
@@ -354,7 +354,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			int w = (int) width;
 			int h = (int) (this.documentSize.Height * scale);
 
-			double offsetY = h - AbstractPrinter.continuousHeight*scale;
+			double offsetY = h - AbstractPrinter.ContinuousHeight*scale;
 
 			Graphics graphics = new Graphics ();
 			graphics.SetPixmapSize (w, h);
