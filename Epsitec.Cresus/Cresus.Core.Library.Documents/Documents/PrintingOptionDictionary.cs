@@ -136,7 +136,7 @@ namespace Epsitec.Cresus.Core.Documents
 
 				System.Diagnostics.Debug.Assert ((list.Count % 2) == 0);
 
-				for (int i = 0; i+2 < list.Count; i += 2)
+				for (int i = 0; i+2 <= list.Count; i += 2)
 				{
 					var option = DocumentOptionConverter.Parse (list[i+0]);
 					var value  = list[i+1];

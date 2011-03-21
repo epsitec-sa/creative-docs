@@ -175,7 +175,7 @@ namespace Epsitec.Cresus.Core.Documents
 
 			this.optionsDictionary.Clear ();
 
-			for (int i = 0; i+2 < list.Count; i += 2)
+			for (int i = 0; i+2 <= list.Count; i += 2)
 			{
 				string key   = list[i+0];
 				string value = list[i+1];
