@@ -100,11 +100,11 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 #endif
 
-		public PrintingOptions GetOptions()
+		public PrintingOptionDictionary GetOptions()
 		{
 			//	Retourne le dictionnaire "option d'impression" / "valeur".
 			// TODO: Ajouter un cache pour accélérer l'accès !
-			var dict = new PrintingOptions ();
+			var dict = new PrintingOptionDictionary ();
 
 			if (this.SerializedData != null)
 			{
@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.Core.Entities
 			return dict;
 		}
 
-		public void SetOptions(PrintingOptions options)
+		public void SetOptions(PrintingOptionDictionary options)
 		{
 			//	Spécifie le dictionnaire "option d'impression" / "valeur".
 			if (options.Count == 0)

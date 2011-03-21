@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Core.Print
 {
 	public class EntityToPrint
 	{
-		public EntityToPrint(AbstractEntity entity, PrintingOptions options, PrintingUnits printingUnits, string title)
+		public EntityToPrint(AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits, string title)
 		{
 			this.Entity        = entity;
 			this.Options       = options;
@@ -26,13 +26,13 @@ namespace Epsitec.Cresus.Core.Print
 			private set;
 		}
 
-		public PrintingOptions Options
+		public PrintingOptionDictionary Options
 		{
 			get;
 			private set;
 		}
 
-		public PrintingUnits PrintingUnits
+		public PrintingUnitDictionary PrintingUnits
 		{
 			get;
 			private set;

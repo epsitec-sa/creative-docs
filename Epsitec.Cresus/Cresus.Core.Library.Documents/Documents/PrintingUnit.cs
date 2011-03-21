@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Documents
 		public PrintingUnit()
 		{
 			this.Copies = 1;
-			this.optionsDictionary = new PrintingOptions ();
+			this.optionsDictionary = new PrintingOptionDictionary ();
 			this.pageTypes = new List<PageType> ();
 		}
 
@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Core.Documents
 			set;
 		}
 
-		public PrintingOptions					OptionsDictionary
+		public PrintingOptionDictionary					OptionsDictionary
 		{
 			get
 			{
@@ -279,7 +279,7 @@ namespace Epsitec.Cresus.Core.Documents
 		#endregion
 
 
-		private readonly PrintingOptions		optionsDictionary;
+		private readonly PrintingOptionDictionary		optionsDictionary;
 		private readonly List<PageType>			pageTypes;
 	}
 }

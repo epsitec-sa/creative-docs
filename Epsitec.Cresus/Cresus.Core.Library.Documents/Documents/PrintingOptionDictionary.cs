@@ -14,9 +14,9 @@ namespace Epsitec.Cresus.Core.Documents
 	/// La clé du dictionnaire est un nom d'option (DocumentOption).
 	/// La valeur du dictionnaire est la valeur de l'option. Par exemple "true".
 	/// </summary>
-	public class PrintingOptions
+	public class PrintingOptionDictionary
 	{
-		public PrintingOptions()
+		public PrintingOptionDictionary()
 		{
 			this.dictionary = new Dictionary<DocumentOption, string> ();
 		}
@@ -88,7 +88,7 @@ namespace Epsitec.Cresus.Core.Documents
 		}
 
 
-		public void MergeWith(PrintingOptions src)
+		public void MergeWith(PrintingOptionDictionary src)
 		{
 			if (src != null)
 			{
@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.Core.Documents
 			}
 		}
 
-		public void Remove(PrintingOptions src)
+		public void Remove(PrintingOptionDictionary src)
 		{
 			if (src != null)
 			{
@@ -147,10 +147,10 @@ namespace Epsitec.Cresus.Core.Documents
 		}
 
 
-		public static PrintingOptions GetDefault()
+		public static PrintingOptionDictionary GetDefault()
 		{
 			//	Retourne toutes les options par défaut.
-			var dict = new PrintingOptions ();
+			var dict = new PrintingOptionDictionary ();
 			var all = Verbose.VerboseDocumentOption.GetAll ();
 
 			foreach (var item in all)

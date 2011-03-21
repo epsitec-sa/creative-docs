@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 {
 	public abstract class AbstractPrinter
 	{
-		protected AbstractPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptions options, PrintingUnits printingUnits)
+		protected AbstractPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 		{
 			this.businessContext   = businessContext;
 			this.coreData          = this.businessContext.Data;
@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 		/// Spécifie l'unité d'impression, afin de déterminer la taille des pages à produire.
 		/// Cet appel est nécessaire avant d'appeler BuildSections !
 		/// </summary>
-		public void SetPrintingUnit(PrintingUnit printingUnit, PrintingOptions options, PreviewMode mode)
+		public void SetPrintingUnit(PrintingUnit printingUnit, PrintingOptionDictionary options, PreviewMode mode)
 		{
 			System.Diagnostics.Debug.Assert (options != null);
 			this.options = options;
@@ -242,7 +242,7 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 		}
 
 
-		public static AbstractPrinter CreateDocumentPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptions options, PrintingUnits printingUnits)
+		public static AbstractPrinter CreateDocumentPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 		{
 			//	Crée le XxxPrinter adapté à un type d'entité.
 			//	Il ne faut pas perdre de vue qu'il n'y a pas de lien direct entre un type d'entité et
@@ -258,7 +258,7 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 			return factory.CreatePrinter (businessContext, entity, options, printingUnits);
 		}
 
-		private static IEntityPrinterFactory FindPrinterFactory(AbstractEntity entity, PrintingOptions options)
+		private static IEntityPrinterFactory FindPrinterFactory(AbstractEntity entity, PrintingOptionDictionary options)
 		{
 			return EntityPrinterFactoryResolver.Resolve ().FirstOrDefault (x => x.CanPrint (entity, options));
 		}
@@ -320,8 +320,8 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 		protected readonly IBusinessContext					businessContext;
 		protected readonly CoreData							coreData;
 		protected readonly AbstractEntity					entity;
-		private readonly PrintingUnits			printingUnits;
-		private PrintingOptions							options;
+		private readonly PrintingUnitDictionary			printingUnits;
+		private PrintingOptionDictionary							options;
 		protected readonly DocumentContainer				documentContainer;
 		protected readonly Dictionary<TableColumnKeys, TableColumn>	tableColumns;
 		protected Size										requiredPageSize;

@@ -11,9 +11,9 @@ namespace Epsitec.Cresus.Core.Documents
 	/// La clé du dictionnaire est un type de page (PageType).
 	/// La valeur du dictionnaire est le nom d'une unité d'impression. Par exemple "Blanc".
 	/// </summary>
-	public class PrintingUnits
+	public class PrintingUnitDictionary
 	{
-		public PrintingUnits()
+		public PrintingUnitDictionary()
 		{
 			this.dictionary = new Dictionary<PageType, string> ();
 		}
@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Core.Documents
 			return this.dictionary.ContainsKey (pageType);
 		}
 
-		public void MergeWith(PrintingUnits src)
+		public void MergeWith(PrintingUnitDictionary src)
 		{
 			foreach (var pair in src.ContentPair)
 			{

@@ -208,9 +208,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.entityToPrint   = entityToPrint;
 				this.isPreview       = isPreview;
 
-				this.categoryOptions = new PrintingOptions ();
-				this.modifiedOptions = new PrintingOptions ();
-				this.finalOptions    = new PrintingOptions ();
+				this.categoryOptions = new PrintingOptionDictionary ();
+				this.modifiedOptions = new PrintingOptionDictionary ();
+				this.finalOptions    = new PrintingOptionDictionary ();
 
 				this.documentCategoryEntities = this.GetDocumentCategoryEntities ();
 				this.confirmationButtons = new List<ConfirmationButton> ();
@@ -229,7 +229,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				}
 			}
 
-			public PrintingOptions FinalOptions
+			public PrintingOptionDictionary FinalOptions
 			{
 				get
 				{
@@ -587,10 +587,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 
 
-			private PrintingOptions GetForcingOptions(PrintingUnits printingUnits)
+			private PrintingOptionDictionary GetForcingOptions(PrintingUnitDictionary printingUnits)
 			{
 				//	Retourne toutes les options forcées par un ensemble d'unités d'impressiom.
-				var options = new PrintingOptions ();
+				var options = new PrintingOptionDictionary ();
 
 				foreach (var pair in printingUnits.ContentPair)
 				{
@@ -608,9 +608,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			private readonly IBusinessContext						businessContext;
 			private readonly EntityToPrint							entityToPrint;
-			private readonly PrintingOptions						categoryOptions;
-			private readonly PrintingOptions						modifiedOptions;
-			private readonly PrintingOptions						finalOptions;
+			private readonly PrintingOptionDictionary						categoryOptions;
+			private readonly PrintingOptionDictionary						modifiedOptions;
+			private readonly PrintingOptionDictionary						finalOptions;
 			private readonly bool									isPreview;
 			private readonly IEnumerable<DocumentCategoryEntity>	documentCategoryEntities;
 			private readonly List<ConfirmationButton>				confirmationButtons;

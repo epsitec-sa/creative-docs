@@ -186,7 +186,7 @@ namespace Epsitec.Cresus.Core.Print
 			return SerializationEngine.SerializeJobs (jobs);
 		}
 
-		public static string MakePrintingData(IBusinessContext businessContext, AbstractEntity entity, PrintingOptions options, PrintingUnits printingUnits)
+		public static string MakePrintingData(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 		{
 			//	Fabrique les données permettant d'imprimer un document, sans aucune interaction.
 			//	Retourne le source xml correspondant.
@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.Core.Print
 			return SerializationEngine.SerializeJobs (jobs);
 		}
 
-		private static List<JobToPrint> MakePrintingJobs(IBusinessContext businessContext, AbstractEntity entity, PrintingOptions options, PrintingUnits printingUnits)
+		private static List<JobToPrint> MakePrintingJobs(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 		{
 			//	Fabrique les données permettant d'imprimer un document, sans aucune interaction.
 			//	Retourne les jobs correspondant.
@@ -228,7 +228,7 @@ namespace Epsitec.Cresus.Core.Print
 				{
 					//	Fabrique le dictionnaire des options à partir des options de base et
 					//	des options définies avec l'unité d'impression.
-					var customOptions = new PrintingOptions ();
+					var customOptions = new PrintingOptionDictionary ();
 					customOptions.MergeWith (options);                         // options les moins prioritaires
 					customOptions.MergeWith (printingUnit.OptionsDictionary);  // options les plus prioritaires
 
@@ -346,10 +346,10 @@ namespace Epsitec.Cresus.Core.Print
 		
 		
 		#region Dictionary getters
-		private static PrintingOptions GetOptions(IBusinessContext businessContext, AbstractEntity entity)
+		private static PrintingOptionDictionary GetOptions(IBusinessContext businessContext, AbstractEntity entity)
 		{
 			//	Retourne les options à utiliser pour l'entité.
-			var result = new PrintingOptions ();
+			var result = new PrintingOptionDictionary ();
 
 			var categories = PrintEngine.GetDocumentCategoryEntities(businessContext, entity);
 			if (categories != null)
@@ -378,10 +378,10 @@ namespace Epsitec.Cresus.Core.Print
 			return result;
 		}
 
-		private static PrintingUnits GetPrintingUnits(IBusinessContext businessContext, AbstractEntity entity)
+		private static PrintingUnitDictionary GetPrintingUnits(IBusinessContext businessContext, AbstractEntity entity)
 		{
 			//	Retourne les unités d'impression à utiliser pour l'entité.
-			var result = new PrintingUnits ();
+			var result = new PrintingUnitDictionary ();
 
 			var categories = PrintEngine.GetDocumentCategoryEntities (businessContext, entity);
 			if (categories != null)

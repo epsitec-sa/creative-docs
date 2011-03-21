@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 {
 	public class DocumentMetadataPrinter : AbstractPrinter
 	{
-		private DocumentMetadataPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptions options, PrintingUnits printingUnits)
+		private DocumentMetadataPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 			: base (businessContext, entity, options, printingUnits)
 		{
 		}
@@ -1525,12 +1525,12 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 			#region IEntityPrinterFactory Members
 
-			public bool CanPrint(AbstractEntity entity, PrintingOptions options)
+			public bool CanPrint(AbstractEntity entity, PrintingOptionDictionary options)
 			{
 				return entity is DocumentMetadataEntity;
 			}
 
-			public AbstractPrinter CreatePrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptions options, PrintingUnits printingUnits)
+			public AbstractPrinter CreatePrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 			{
 				return new DocumentMetadataPrinter (businessContext, entity, options, printingUnits);
 			}

@@ -651,7 +651,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		{
 			this.optionsBox.Viewport.Children.Clear ();
 
-			var optionsKeys = new PrintingOptions ();
+			var optionsKeys = new PrintingOptionDictionary ();
 			foreach (var option in VerboseDocumentOption.GetDefault ())
 			{
 				optionsKeys[option.Option] = "";

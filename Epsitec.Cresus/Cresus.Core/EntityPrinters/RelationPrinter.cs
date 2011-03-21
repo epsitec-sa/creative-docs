@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 {
 	public class RelationPrinter : AbstractPrinter
 	{
-		private RelationPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptions options, PrintingUnits printingUnits)
+		private RelationPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 			: base (businessContext, entity, options, printingUnits)
 		{
 		}
@@ -412,12 +412,12 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 			#region IEntityPrinterFactory Members
 
-			public bool CanPrint(AbstractEntity entity, PrintingOptions options)
+			public bool CanPrint(AbstractEntity entity, PrintingOptionDictionary options)
 			{
 				return entity is RelationEntity || entity is CustomerEntity;
 			}
 
-			public AbstractPrinter CreatePrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptions options, PrintingUnits printingUnits)
+			public AbstractPrinter CreatePrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 			{
 				var customer = entity as CustomerEntity;
 
