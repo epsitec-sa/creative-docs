@@ -598,7 +598,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 					if (printingUnit != null)
 					{
-						options.MergeWith (printingUnit.OptionsDictionary);
+						options.MergeWith (printingUnit.Options);
 					}
 				}
 

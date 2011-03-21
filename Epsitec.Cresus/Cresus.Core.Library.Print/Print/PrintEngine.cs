@@ -229,8 +229,8 @@ namespace Epsitec.Cresus.Core.Print
 					//	Fabrique le dictionnaire des options à partir des options de base et
 					//	des options définies avec l'unité d'impression.
 					var customOptions = new PrintingOptionDictionary ();
-					customOptions.MergeWith (options);                         // options les moins prioritaires
-					customOptions.MergeWith (printingUnit.OptionsDictionary);  // options les plus prioritaires
+					customOptions.MergeWith (options);						// options les moins prioritaires
+					customOptions.MergeWith (printingUnit.Options);			// options les plus prioritaires
 
 					documentPrinter.SetPrintingUnit (printingUnit, customOptions, PreviewMode.Print);
 					documentPrinter.BuildSections ();
