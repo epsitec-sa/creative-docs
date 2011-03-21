@@ -503,7 +503,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				get
 				{
-					var type = this.GetPrintableEntities (this.entityToPrint.Entity);
+					var type = this.GetPrintableEntityId (this.entityToPrint.Entity);
 
 					if (PrintOptionsDialog.selectedDocumentCategoryCode.ContainsKey (type))
 					{
@@ -516,7 +516,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				}
 				set
 				{
-					var type = this.GetPrintableEntities (this.entityToPrint.Entity);
+					var type = this.GetPrintableEntityId (this.entityToPrint.Entity);
 					PrintOptionsDialog.selectedDocumentCategoryCode[type] = value;
 				}
 			}
@@ -555,12 +555,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				var example = new DocumentCategoryMappingEntity ();
 				
-				example.PrintableEntity = this.GetPrintableEntities (this.entityToPrint.Entity).ToString ();
+				example.PrintableEntity = this.GetPrintableEntityId (this.entityToPrint.Entity).ToString ();
 				
 				return this.businessContext.DataContext.GetByExample (example);
 			}
 
-			private Druid GetPrintableEntities(AbstractEntity entity)
+			private Druid GetPrintableEntityId(AbstractEntity entity)
 			{
 				if (entity != null)
 				{

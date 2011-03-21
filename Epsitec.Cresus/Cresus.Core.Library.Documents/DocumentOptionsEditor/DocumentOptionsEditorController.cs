@@ -56,7 +56,6 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 		private void HandleBusinessContextSavingChanges(object sender, CancelEventArgs e)
 		{
 			this.mainController.SaveDesign ();
-			this.businessContext.SaveChanges ();
 		}
 
 
