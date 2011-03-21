@@ -6,6 +6,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Dialogs.SettingsTabPages;
 
@@ -19,9 +20,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// </summary>
 	public class SettingsDialog : CoreDialog, ISettingsDialog
 	{
-		public SettingsDialog(CoreApp application)
+		public SettingsDialog(CoreApp application, BusinessContext businessContext)
 			: base (application)
 		{
+			this.businessContext = businessContext;
 			this.settingsTabPages = new List<SettingsTabPages.AbstractSettingsTabPage> ();
 		}
 
@@ -43,7 +45,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			window.Text = "Réglages globaux";
 			window.MakeFixedSizeWindow ();
-			window.ClientSize = new Size (940, 600);
+			window.ClientSize = new Size (900, 600);
 		}
 
 		protected override void SetupWidgets(Window window)
@@ -111,7 +113,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			};
 
 			//	Rempli les onglets.
-			var printerUnits = new SettingsTabPages.PrintingUnitsTabPage (this);
+			var printerUnits = new SettingsTabPages.PrintingUnitsTabPage (this, this.businessContext);
 			printerUnits.CreateUI (printerUnitsPage);
 			this.settingsTabPages.Add (printerUnits);
 
@@ -219,6 +221,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private static string									lastActivedPageName;
 
+		private readonly BusinessContext						businessContext;
 		private readonly List<AbstractSettingsTabPage>			settingsTabPages;
 
 		private TabBook											tabBook;

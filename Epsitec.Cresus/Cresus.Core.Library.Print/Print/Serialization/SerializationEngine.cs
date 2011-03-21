@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.Print.Serialization
 					foreach (var section in sectionsToPrint)
 					{
 						var xSection = new XElement ("section");
-						xSection.Add (new XAttribute ("printer-unit",     section.PrintingUnit.LogicalName));
+						xSection.Add (new XAttribute ("printer-code",     section.PrintingUnit.DocumentPrintingUnitCode));
 						xSection.Add (new XAttribute ("printer-tray",     section.PrintingUnit.PhysicalPrinterTray));
 						xSection.Add (new XAttribute ("printer-x-offset", section.PrintingUnit.XOffset));
 						xSection.Add (new XAttribute ("printer-y-offset", section.PrintingUnit.YOffset));
@@ -102,12 +102,12 @@ namespace Epsitec.Cresus.Core.Print.Serialization
 
 					foreach (var xSection in xJob.Elements ())
 					{
-						string printerLogicalName  = (string) xSection.Attribute ("printer-unit");
-						string printerPhysicalTray = (string) xSection.Attribute ("printer-tray");
-						double width               = (double) xSection.Attribute ("printer-width");
-						double height              = (double) xSection.Attribute ("printer-height");
+						string documentPrintingUnitCode = (string) xSection.Attribute ("printer-code");
+						string printerPhysicalTray      = (string) xSection.Attribute ("printer-tray");
+						double width                    = (double) xSection.Attribute ("printer-width");
+						double height                   = (double) xSection.Attribute ("printer-height");
 
-						var section = new DeserializedSection (job, printerLogicalName, printerPhysicalTray, new Size (width, height));
+						var section = new DeserializedSection (job, documentPrintingUnitCode, printerPhysicalTray, new Size (width, height));
 
 						foreach (var xPage in xSection.Elements ())
 						{

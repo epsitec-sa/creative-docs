@@ -5,6 +5,8 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Printing;
 
+using Epsitec.Cresus.Core.Entities;
+
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Types;
@@ -23,27 +25,10 @@ namespace Epsitec.Cresus.Core.Documents
 			this.pageTypes = new List<PageType> ();
 		}
 
-		public PrintingUnit(string logicalName)
-			: this ()
-		{
-			this.LogicalName = logicalName;
-		}
 
-
-		public string							LogicalName
+		public string							DocumentPrintingUnitCode
 		{
-			//	Nom logique choisi par l'utilisateur (nom de fonction).
-			//	Les caractères spéciaux sont encodés (par exemple, un "&" vaut "&amp;").
-			//	Cette propriété est donc compatible avec Widget.Text.
-			get;
-			set;
-		}
-
-		public string							Comment
-		{
-			//	Description de l'unité d'impression.
-			//	Les caractères spéciaux sont encodés (par exemple, un "&" vaut "&amp;").
-			//	Cette propriété est donc compatible avec Widget.Text.
+			//	Champ Code de l'entité DocumentPrintingUnitEntity.
 			get;
 			set;
 		}
@@ -115,22 +100,21 @@ namespace Epsitec.Cresus.Core.Documents
 		}
 
 
-		public string NiceDescription
+		public FormattedText GetNiceDescription(Business.IBusinessContext businessContext)
 		{
-			//	Retourne une description consise et claire de l'unité d'impression.
-			get
-			{
-				string c = this.Copies < 2 ? null : string.Format ("{0}×", this.Copies);
-				var name = TextFormatter.FormatText (this.LogicalName, c);
+			var example = new DocumentPrintingUnitsEntity ();
+			example.Code = this.DocumentPrintingUnitCode;
 
-				if (string.IsNullOrWhiteSpace (this.Comment))
-				{
-					return TextFormatter.FormatText (name, "(", this.PhysicalPrinterName, ",~", this.PhysicalPrinterTray, ")").ToString ();
-				}
-				else
-				{
-					return TextFormatter.FormatText (name, "(", this.Comment, ")").ToString ();
-				}
+			var documentPrintingUnits = businessContext.DataContext.GetByExample<DocumentPrintingUnitsEntity> (example).FirstOrDefault ();
+
+			if (documentPrintingUnits == null)
+			{
+				return TextFormatter.FormatText ("Error (Code=", this.DocumentPrintingUnitCode, ")");
+			}
+			else
+			{
+				string copies = this.Copies < 2 ? null : string.Format ("{0}×", this.Copies);
+				return TextFormatter.FormatText (documentPrintingUnits.Name, copies, "(", this.PhysicalPrinterName, ",~", this.PhysicalPrinterTray, ")");
 			}
 		}
 
@@ -146,13 +130,12 @@ namespace Epsitec.Cresus.Core.Documents
 			//	Retourne une string permettant de sérialiser l'ensemble de la classe.
 			var list = new List<string> ()
 			{
-				"LogicalName",              this.LogicalName,
+				"Code",                     this.DocumentPrintingUnitCode,
 				"PhysicalName",             this.PhysicalPrinterName,
 				"Tray",                     this.PhysicalPrinterTray,
 				"XOffset",                  this.XOffset.ToString (System.Globalization.CultureInfo.InvariantCulture),
 				"YOffset",                  this.YOffset.ToString (System.Globalization.CultureInfo.InvariantCulture),
 				"Copies",                   this.Copies.ToString (System.Globalization.CultureInfo.InvariantCulture),
-				"Comment",                  this.Comment,
 				"Options",				    this.optionsDictionary.GetSerializedData (),
 				"PhysicalPaperSize.Width",  this.PhysicalPaperSize.Width.ToString (System.Globalization.CultureInfo.InvariantCulture),
 				"PhysicalPaperSize.Height", this.PhysicalPaperSize.Height.ToString (System.Globalization.CultureInfo.InvariantCulture),
@@ -182,13 +165,12 @@ namespace Epsitec.Cresus.Core.Documents
 					
 				switch (key)
 				{
-					case "LogicalName":					this.LogicalName = value;										break;
+					case "Code":	    				this.DocumentPrintingUnitCode = value;							break;
 					case "PhysicalName":				this.PhysicalPrinterName = value;								break;
 					case "Tray":						this.PhysicalPrinterTray = value;								break;
 					case "XOffset":						this.XOffset = double.Parse (value);							break;
 					case "YOffset":						this.YOffset = double.Parse (value);							break;
 					case "Copies":						this.Copies = int.Parse (value);								break;
-					case "Comment":						this.Comment = value;											break;
 					case "Options":						this.optionsDictionary.SetSerializedData (value);				break;
 					case "PhysicalPaperSize.Width":		paperSizeWidth = int.Parse (value);								break;
 					case "PhysicalPaperSize.Height":	paperSizeHeight = int.Parse (value);							break;
@@ -279,7 +261,7 @@ namespace Epsitec.Cresus.Core.Documents
 		#endregion
 
 
-		private readonly PrintingOptionDictionary		optionsDictionary;
-		private readonly List<PageType>			pageTypes;
+		private readonly PrintingOptionDictionary	optionsDictionary;
+		private readonly List<PageType>				pageTypes;
 	}
 }

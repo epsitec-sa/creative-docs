@@ -219,10 +219,10 @@ namespace Epsitec.Cresus.Core.Print
 			int documentPrinterRank = 0;
 			foreach (var pair in printingUnits.ContentPair)
 			{
-				var pageType         = pair.Key;
-				var printingUnitName = pair.Value;
+				var pageType                 = pair.Key;
+				var documentPrintingUnitCode = pair.Value;
 
-				var printingUnit = Common.GetPrintingUnit (businessContext.Data.Host, printingUnitName);
+				var printingUnit = Common.GetPrintingUnit (businessContext.Data.Host, documentPrintingUnitCode);
 
 				if (printingUnit != null && printingUnit.PageTypes.Contains (pageType))
 				{

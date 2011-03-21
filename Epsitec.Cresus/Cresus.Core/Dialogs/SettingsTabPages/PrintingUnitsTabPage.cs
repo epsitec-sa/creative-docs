@@ -7,6 +7,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Documents;
 using Epsitec.Cresus.Core.Documents.Verbose;
 using Epsitec.Cresus.Core.Entities;
@@ -24,11 +25,11 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 	/// </summary>
 	public class PrintingUnitsTabPage : AbstractSettingsTabPage
 	{
-		public PrintingUnitsTabPage(ISettingsDialog container)
-			: base (container)
+		public PrintingUnitsTabPage(ISettingsDialog container, BusinessContext businessContext)
+			: base (container, businessContext)
 		{
 			this.printingUnitList = PrinterApplicationSettings.GetPrintingUnitList (this.Container.Data.Host);
-			this.pageTypeButtons = new List<CheckButton> ();
+			this.documentPrintingUnits = this.businessContext.DataContext.GetEntities ().OfType<DocumentPrintingUnitsEntity> ();
 		}
 
 
@@ -56,29 +57,21 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			{
 				Parent = frame,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (0, 4, 0, 0),
-			};
-
-			var column4 = new FrameBox
-			{
-				Parent = frame,
-				PreferredWidth = 250,
-				Dock = DockStyle.Right,
-				Margins = new Margins (5, 0, 0, 0),
+				Margins = new Margins (0, 10, 0, 0),
 			};
 
 			var column3 = new FrameBox
 			{
 				Parent = frame,
-				PreferredWidth = 150,
+				PreferredWidth = 300,
 				Dock = DockStyle.Right,
-				Margins = new Margins (5, 0, 0, 0),
+				Margins = new Margins (10, 0, 0, 0),
 			};
 
 			var column2 = new FrameBox
 			{
 				Parent = frame,
-				PreferredWidth = 250,
+				PreferredWidth = 300,
 				Dock = DockStyle.Right,
 				Margins = new Margins (0, 0, 0, 0),
 			};
@@ -87,13 +80,11 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			var columnTitle1 = new StaticText (column1);
 			columnTitle1.SetColumnTitle ("Liste des unités d'impression");
 
-			this.listController = new Controllers.ListController<PrintingUnit> (this.printingUnitList, this.ListControllerItemToText, this.ListControllerGetTextInfo, this.ListControllerCreateItem);
-			this.listController.CreateUI (column1, Direction.Right, 23);
-
-			ToolTip.Default.SetToolTip (this.listController.AddButton,      "Ajoute une nouvelle unité d'impression");
-			ToolTip.Default.SetToolTip (this.listController.RemoveButton,   "Supprime l'unité d'impression");
-			ToolTip.Default.SetToolTip (this.listController.MoveUpButton,   "Monte l'unité d'impression dans la liste");
-			ToolTip.Default.SetToolTip (this.listController.MoveDownButton, "Descend l'unité d'impression dans la liste");
+			this.list = new ScrollList
+			{
+				Parent = column1,
+				Dock = DockStyle.Fill,
+			};
 
 			//	Rempli la deuxième colonne.
 			var columnTitle2 = new StaticText (column2);
@@ -106,57 +97,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				BackColor = Widgets.ArrowedFrame.SurfaceColors.First (),
 				Dock = DockStyle.Fill,
 			};
-
-			{
-				var box = new FrameBox
-				{
-					Parent = this.physicalBox,
-					DrawFullFrame = true,
-					Dock = DockStyle.Top,
-					Padding = new Margins (10),
-					Margins = new Margins (0, 0, 0, -1),
-				};
-
-
-				var logicalLabel = new StaticText
-				{
-					Parent = box,
-					Text = "Fonction de l'unité d'impression :",
-					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
-				};
-
-				this.logicalField = new TextFieldEx
-				{
-					Parent = box,
-					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderTextField),
-					DefocusAction = DefocusAction.AutoAcceptOrRejectEdition,
-					SwallowEscapeOnRejectEdition = true,
-					SwallowReturnOnAcceptEdition = true,
-					TabIndex = ++tabIndex,
-				};
-
-
-				var commentLabel = new StaticText
-				{
-					Parent = box,
-					Text = "Description de l'unité d'impression :",
-					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
-				};
-
-				this.commentField = new TextFieldEx
-				{
-					Parent = box,
-					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderTextField),
-					DefocusAction = DefocusAction.AutoAcceptOrRejectEdition,
-					SwallowEscapeOnRejectEdition = true,
-					SwallowReturnOnAcceptEdition = true,
-					TabIndex = ++tabIndex,
-				};
-			}
 
 			{
 				var box = new FrameBox
@@ -268,86 +208,13 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.copiesField = PrintingUnitsTabPage.CreateTextField (box, "Nombre de copies :", "×", ++tabIndex);
 			}
 
-			//	Rempli la troisième colonne.
-			var columnTitle3 = new StaticText (column3);
-			columnTitle3.SetColumnTitle ("Pages imprimées");
-
-			this.pageTypesBox = new FrameBox
-			{
-				Parent = column3,
-				DrawFullFrame = true,
-				BackColor = Widgets.ArrowedFrame.SurfaceColors.First (),
-				Dock = DockStyle.Fill,
-				Padding = new Margins (10),
-			};
-
-			{
-				var all = VerbosePageType.GetAll ();
-
-				new StaticText
-				{
-					Parent = this.pageTypesBox,
-					Text = "Types des pages susceptibles d'être imprimées par l'unité d'impression :",
-					TextBreakMode = TextBreakMode.Hyphenate,
-					ContentAlignment = ContentAlignment.TopLeft,
-					PreferredHeight = 68,
-					Dock = DockStyle.Top,
-				};
-
-				foreach (var pageType in all)
-				{
-					var button = new CheckButton
-					{
-						Parent = this.pageTypesBox,
-						Text = pageType.ShortDescription,
-						Name = PageTypeConverter.ToString (pageType.Type),
-						AutoToggle = false,
-						Dock = DockStyle.Top,
-					};
-
-					button.Clicked += delegate
-					{
-						var type = PageTypeConverter.Parse (button.Name);
-						this.ActionPageTypeChanged (type);
-					};
-
-					this.pageTypeButtons.Add (button);
-				}
-
-				var allButton = new Button
-				{
-					Parent = this.pageTypesBox,
-					Text = "Toutes",
-					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 10, 0),
-				};
-
-				var clearButton = new Button
-				{
-					Parent = this.pageTypesBox,
-					Text = "Aucune",
-					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 1, 0),
-				};
-
-				allButton.Clicked += delegate
-				{
-					this.ActionAllPageTypes ();
-				};
-
-				clearButton.Clicked += delegate
-				{
-					this.ActionClearPageTypes ();
-				};
-			}
-
 			//	Rempli la colonne de droite.
-			var columnTitle4 = new StaticText (column4);
+			var columnTitle4 = new StaticText (column3);
 			columnTitle4.SetColumnTitle ("Options imposées");
 
 			var optionsHelpBox = new FrameBox
 			{
-				Parent = column4,
+				Parent = column3,
 				DrawFullFrame = true,
 				BackColor = Color.FromHexa ("fffde8"),  // jaune pâle
 				Dock = DockStyle.Top,
@@ -395,7 +262,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			var rightBox = new FrameBox
 			{
-				Parent = column4,
+				Parent = column3,
 				DrawFullFrame = true,
 				BackColor = Widgets.ArrowedFrame.SurfaceColors.First (),
 				Dock = DockStyle.Fill,
@@ -413,24 +280,9 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.optionsBox.Viewport.IsAutoFitting = true;
 
 			//	Connection des événements.
-			this.listController.SelectedItemChanged += delegate
+			this.list.SelectedItemChanged += delegate
 			{
-				this.ActionSelectedItemChanged ();
-			};
-
-			this.listController.ItemInserted += delegate
-			{
-				this.ActionItemInserted ();
-			};
-
-			this.logicalField.AcceptingEdition += delegate
-			{
-				this.ActionLogicalChanged ();
-			};
-
-			this.commentField.AcceptingEdition += delegate
-			{
-				this.ActionCommentChanged ();
+				this.ListChanged ();
 			};
 
 			this.physicalField.SelectedItemChanged += delegate
@@ -468,8 +320,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.ActionCopiesChanged ();
 			};
 
+			this.UpdateList ();
 			this.UpdatePhysicalField ();
-			this.UpdatePageTypes ();
 			this.UpdateOptions ();
 			this.UpdateWidgets ();
 		}
@@ -513,15 +365,22 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			return field;
 		}
 
+		private void UpdateList()
+		{
+			this.list.Items.Clear ();
+
+			foreach (var x in this.documentPrintingUnits)
+			{
+				this.list.Items.Add (x.Name);
+			}
+		}
+
 		private void UpdateWidgets()
 		{
-			int sel = this.listController.SelectedIndex;
+			int sel = this.list.SelectedItemIndex;
 
 			this.physicalBox.Enable    = sel != -1;
-			this.pageTypesBox.Enable   = sel != -1;
 			this.optionsBox.Enable     = sel != -1;
-			this.logicalField.Enable   = sel != -1;
-			this.commentField.Enable   = sel != -1;
 			this.physicalField.Enable  = sel != -1;
 			this.trayField.Enable      = sel != -1;
 			this.paperSizeField.Enable = sel != -1;
@@ -532,8 +391,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			if (sel == -1)
 			{
-				this.logicalField.Text   = null;
-				this.commentField.Text   = null;
 				this.physicalField.Text  = null;
 				this.trayField.Text      = null;
 				this.paperSizeField.Text = null;
@@ -546,8 +403,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			{
 				PrintingUnit printingUnit = this.SelectedPrinter;
 
-				this.logicalField.Text   = printingUnit.LogicalName;
-				this.commentField.Text   = printingUnit.Comment;
 				this.physicalField.Text  = printingUnit.PhysicalPrinterName;
 				this.trayField.Text      = printingUnit.PhysicalPrinterTray;
 				this.paperSizeField.Text = PrintingUnitsTabPage.PaperSizeToNiceDescription (printingUnit.PhysicalPaperSize);
@@ -668,51 +523,18 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
-		private void ActionSelectedItemChanged()
+		private void ListChanged()
 		{
-			this.UpdatePageTypes ();
-			this.UpdateOptions ();
 			this.UpdateWidgets ();
 			this.UpdateTrayField ();
 			this.UpdatePaperSizeField ();
 			this.UpdateDuplexField ();
 		}
 
-		private void ActionItemInserted()
-		{
-			this.logicalField.SelectAll ();
-			this.logicalField.Focus ();
-		}
-
-		private void ActionLogicalChanged()
-		{
-			int sel = this.listController.SelectedIndex;
-
-			if (this.printingUnitList[sel].LogicalName != this.logicalField.Text)
-			{
-				this.printingUnitList[sel].LogicalName = this.logicalField.Text;
-
-				this.listController.UpdateList (sel);
-				this.UpdateWidgets ();
-			}
-		}
-
-		private void ActionCommentChanged()
-		{
-			int sel = this.listController.SelectedIndex;
-
-			if (this.printingUnitList[sel].Comment != this.commentField.Text)
-			{
-				this.printingUnitList[sel].Comment = this.commentField.Text;
-
-				this.listController.UpdateList (sel);
-				this.UpdateWidgets ();
-			}
-		}
 
 		private void ActionPhysicalChanged()
 		{
-			int sel = this.listController.SelectedIndex;
+			int sel = this.list.SelectedItemIndex;
 
 			if (this.printingUnitList[sel].PhysicalPrinterName != this.physicalField.Text)
 			{
@@ -721,7 +543,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.printingUnitList[sel].XOffset = 0;
 				this.printingUnitList[sel].YOffset = 0;
 
-				this.listController.UpdateList (sel);
 				this.UpdateWidgets ();
 				this.UpdateTrayField ();
 				this.UpdatePaperSizeField ();
@@ -731,20 +552,19 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void ActionTrayChanged()
 		{
-			int sel = this.listController.SelectedIndex;
+			int sel = this.list.SelectedItemIndex;
 
 			if (this.printingUnitList[sel].PhysicalPrinterTray != this.trayField.Text)
 			{
 				this.printingUnitList[sel].PhysicalPrinterTray = this.trayField.Text;
 
-				this.listController.UpdateList (sel);
 				this.UpdateWidgets ();
 			}
 		}
 
 		private void ActionPaperSizeChanged()
 		{
-			int sel = this.listController.SelectedIndex;
+			int sel = this.list.SelectedItemIndex;
 
 			var paperSize = PrintingUnitsTabPage.NiceDescriptionToPaperSize (this.paperSizeField.Text);
 
@@ -752,14 +572,13 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			{
 				this.printingUnitList[sel].PhysicalPaperSize = paperSize;
 
-				this.listController.UpdateList (sel);
 				this.UpdateWidgets ();
 			}
 		}
 
 		private void ActionDuplexChanged()
 		{
-			int sel = this.listController.SelectedIndex;
+			int sel = this.list.SelectedItemIndex;
 
 			var duplex = PrintingUnit.DescriptionToDuplex (this.duplexField.Text);
 
@@ -767,14 +586,13 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			{
 				this.printingUnitList[sel].PhysicalDuplexMode = duplex;
 
-				this.listController.UpdateList (sel);
 				this.UpdateWidgets ();
 			}
 		}
 
 		private void ActionOffsetXChanged()
 		{
-			int sel = this.listController.SelectedIndex;
+			int sel = this.list.SelectedItemIndex;
 
 			double value;
 			if (double.TryParse (this.xOffsetField.Text, out value))
@@ -783,7 +601,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				{
 					this.printingUnitList[sel].XOffset = value;
 
-					this.listController.UpdateList (sel);
 					this.UpdateWidgets ();
 				}
 			}
@@ -791,7 +608,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void ActionOffsetYChanged()
 		{
-			int sel = this.listController.SelectedIndex;
+			int sel = this.list.SelectedItemIndex;
 
 			double value;
 			if (double.TryParse (this.yOffsetField.Text, out value))
@@ -800,7 +617,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				{
 					this.printingUnitList[sel].YOffset = value;
 
-					this.listController.UpdateList (sel);
 					this.UpdateWidgets ();
 				}
 			}
@@ -808,7 +624,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void ActionCopiesChanged()
 		{
-			int sel = this.listController.SelectedIndex;
+			int sel = this.list.SelectedItemIndex;
 
 			int value;
 			if (int.TryParse (this.copiesField.Text, out value))
@@ -819,75 +635,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				{
 					this.printingUnitList[sel].Copies = value;
 
-					this.listController.UpdateList (sel);
 					this.UpdateWidgets ();
 				}
-			}
-		}
-
-		private void ActionPageTypeChanged(PageType pageType)
-		{
-			//	Un bouton à cocher pour un type de page a été cliqué.
-			int sel = this.listController.SelectedIndex;
-			var list = this.printingUnitList[sel].PageTypes;
-
-			if (list.Contains (pageType))
-			{
-				list.Remove (pageType);
-			}
-			else
-			{
-				list.Add (pageType);
-			}
-
-			this.UpdatePageTypes ();
-			this.UpdateWidgets ();
-		}
-
-		private void ActionAllPageTypes()
-		{
-			//	Utilise tous les types de page.
-			int sel = this.listController.SelectedIndex;
-			var list = this.printingUnitList[sel].PageTypes;
-
-			var all = VerbosePageType.GetAll ();
-			foreach (var one in all)
-			{
-				list.Add (one.Type);
-			}
-
-			this.UpdatePageTypes ();
-			this.UpdateWidgets ();
-		}
-
-		private void ActionClearPageTypes()
-		{
-			//	N'utilise aucun type de page.
-			int sel = this.listController.SelectedIndex;
-			var list = this.printingUnitList[sel].PageTypes;
-
-			list.Clear ();
-
-			this.UpdatePageTypes ();
-			this.UpdateWidgets ();
-		}
-
-		private void UpdatePageTypes()
-		{
-			//	Met à jour tous les boutons à cocher pour les types de page.
-			IList<PageType> list = null;
-
-			int sel = this.listController.SelectedIndex;
-			if (sel != -1)
-			{
-				list = this.printingUnitList[sel].PageTypes;
-			}
-
-			foreach (var button in this.pageTypeButtons)
-			{
-				var pageType = PageTypeConverter.Parse (button.Name);
-				bool check = (list != null && list.Contains (pageType));
-				button.ActiveState = check ? ActiveState.Yes : ActiveState.No;
 			}
 		}
 
@@ -982,6 +731,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private string GetError()
 		{
+#if false
 			for (int i = 0; i < this.printingUnitList.Count; i++)
 			{
 				if (string.IsNullOrWhiteSpace (this.printingUnitList[i].LogicalName))
@@ -1021,6 +771,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					return string.Format ("<b>Rang {0}</b>: Il faut spécifier au moins un type de page à imprimer.", (i+1).ToString ());
 				}
 			}
+#endif
 
 			return null;
 		}
@@ -1030,7 +781,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		{
 			get
 			{
-				int sel = this.listController.SelectedIndex;
+				int sel = this.list.SelectedItemIndex;
 
 				if (sel == -1)
 				{
@@ -1150,44 +901,12 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		#endregion
 
 
-		#region ListController callbacks
-		private FormattedText ListControllerItemToText(PrintingUnit printingUnit)
-		{
-			return printingUnit.NiceDescription;
-		}
-
-		private FormattedText ListControllerGetTextInfo(int count)
-		{
-			if (count == 0)
-			{
-				return "Aucune unité d'impression définie";
-			}
-			else if (count == 1)
-			{
-				return string.Format ("{0} unité d'impression définie", count.ToString ());
-			}
-			else
-			{
-				return string.Format ("{0} unités d'impression définies", count.ToString ());
-			}
-		}
-
-		private PrintingUnit ListControllerCreateItem(int sel)
-		{
-			return new PrintingUnit (this.DefaultLogicalName);
-		}
-		#endregion
-
-
 		private readonly List<PrintingUnit>					printingUnitList;
-		private readonly List<CheckButton>					pageTypeButtons;
+		private readonly IEnumerable<DocumentPrintingUnitsEntity> documentPrintingUnits;
 
-		private Controllers.ListController<PrintingUnit>	listController;
+		private ScrollList									list;
 		private FrameBox									physicalBox;
-		private FrameBox									pageTypesBox;
 		private Scrollable									optionsBox;
-		private TextFieldEx									logicalField;
-		private TextFieldEx									commentField;
 		private TextFieldCombo								physicalField;
 		private TextFieldCombo								trayField;
 		private TextFieldCombo								paperSizeField;

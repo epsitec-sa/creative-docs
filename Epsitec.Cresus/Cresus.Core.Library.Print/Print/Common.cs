@@ -99,11 +99,11 @@ namespace Epsitec.Cresus.Core.Print
 			}
 		}
 
-		public static PrintingUnit GetPrintingUnit(CoreApp app, string logicalPrinterName)
+		public static PrintingUnit GetPrintingUnit(CoreApp app, string documentPrintingUnitCode)
 		{
 			//	Cherche une unité d'impression d'après son nom.
 			List<PrintingUnit> printerUnitList = PrinterApplicationSettings.GetPrintingUnitList (app);
-			return printerUnitList.Where (p => p.LogicalName == logicalPrinterName).FirstOrDefault ();
+			return printerUnitList.Where (p => p.DocumentPrintingUnitCode == documentPrintingUnitCode).FirstOrDefault ();
 		}
 	}
 }

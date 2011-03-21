@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			this.commandDispatcher.Dispatch (dispatcher, e,
 				delegate
 				{
-					using (var dialog = new Dialogs.SettingsDialog (CoreProgram.Application))
+					using (var dialog = new Dialogs.SettingsDialog (CoreProgram.Application, this.Orchestrator.DefaultBusinessContext))
 					{
 						dialog.OpenDialog ();
 					}

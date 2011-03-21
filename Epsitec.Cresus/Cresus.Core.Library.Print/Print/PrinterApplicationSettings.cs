@@ -46,8 +46,7 @@ namespace Epsitec.Cresus.Core.Print
 
 			foreach (var printingUnit in list)
 			{
-				if ((!string.IsNullOrWhiteSpace (printingUnit.LogicalName)) &&
-					(!string.IsNullOrWhiteSpace (printingUnit.PhysicalPrinterName)))
+				if (!string.IsNullOrWhiteSpace (printingUnit.PhysicalPrinterName))
 				{
 					string key = PrinterApplicationSettings.GetKey (index++);
 					settings[key] = printingUnit.GetSerializableContent ();

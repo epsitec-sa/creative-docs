@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Core.Print
 		public override string ToString()
 		{
 			// Pratique pour le debug.
-			return string.Format ("PrinterLogicalName={0}, PrinterPhysicalName={1}, Job={2}, FirstPage={3}, PageCount={4}", this.printingUnit.LogicalName, this.printingUnit.PhysicalPrinterName, this.job, this.firstPage, this.PageCount);
+			return string.Format ("DocumentPrintingUnitCode={0}, PrinterPhysicalName={1}, Job={2}, FirstPage={3}, PageCount={4}", this.printingUnit.DocumentPrintingUnitCode, this.printingUnit.PhysicalPrinterName, this.job, this.firstPage, this.PageCount);
 		}
 
 

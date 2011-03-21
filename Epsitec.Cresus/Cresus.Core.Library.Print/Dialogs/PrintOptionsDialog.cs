@@ -594,9 +594,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			private readonly IBusinessContext						businessContext;
 			private readonly EntityToPrint							entityToPrint;
-			private readonly PrintingOptionDictionary						categoryOptions;
-			private readonly PrintingOptionDictionary						modifiedOptions;
-			private readonly PrintingOptionDictionary						finalOptions;
+			private readonly PrintingOptionDictionary				categoryOptions;
+			private readonly PrintingOptionDictionary				modifiedOptions;
+			private readonly PrintingOptionDictionary				finalOptions;
 			private readonly bool									isPreview;
 			private readonly IEnumerable<DocumentCategoryEntity>	documentCategoryEntities;
 			private readonly List<ConfirmationButton>				confirmationButtons;

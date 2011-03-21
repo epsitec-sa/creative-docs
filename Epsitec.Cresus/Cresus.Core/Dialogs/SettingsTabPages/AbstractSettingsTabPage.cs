@@ -4,6 +4,8 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core.Business;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,9 +16,10 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 	/// </summary>
 	public abstract class AbstractSettingsTabPage
 	{
-		public AbstractSettingsTabPage(ISettingsDialog container)
+		public AbstractSettingsTabPage(ISettingsDialog container, BusinessContext businessContext)
 		{
 			this.container = container;
+			this.businessContext = businessContext;
 		}
 
 
@@ -68,6 +71,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		public event EventHandler						AcceptStateChanging;
 		
 		private readonly ISettingsDialog				container;
+		protected readonly BusinessContext				businessContext;
+
 		private string									errorMessage;
 	}
 }

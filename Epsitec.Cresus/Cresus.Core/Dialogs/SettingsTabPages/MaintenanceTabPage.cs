@@ -12,6 +12,7 @@ using Epsitec.Common.Widgets;
 
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Business;
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -24,8 +25,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 	/// </summary>
 	public class MaintenanceTabPage : AbstractSettingsTabPage
 	{
-		public MaintenanceTabPage(ISettingsDialog container)
-			: base (container)
+		public MaintenanceTabPage(ISettingsDialog container, BusinessContext businessContext)
+			: base (container, businessContext)
 		{
 		}
 

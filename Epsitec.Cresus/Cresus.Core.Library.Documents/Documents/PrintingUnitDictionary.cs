@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Core.Documents
 	/// <summary>
 	/// Ce dictionnaire contient toutes les unités d'impression à utiliser pour l'impression d'un document.
 	/// La clé du dictionnaire est un type de page (PageType).
-	/// La valeur du dictionnaire est le nom d'une unité d'impression. Par exemple "Blanc".
+	/// La valeur du dictionnaire est le code de l'entité DocumentPrintingUnits.
 	/// </summary>
 	public class PrintingUnitDictionary
 	{

@@ -11,8 +11,9 @@ using Epsitec.Common.Widgets;
 
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Database.Logging;
 using Epsitec.Cresus.Core.Widgets;
+using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Database.Logging;
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -45,8 +46,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			LoggingTabPage.globalAutoBreak  = true;
 		}
 
-		public LoggingTabPage(ISettingsDialog container)
-			: base (container)
+		public LoggingTabPage(ISettingsDialog container, BusinessContext businessContext)
+			: base (container, businessContext)
 		{
 			this.taggedText = new TaggedText ();
 		}

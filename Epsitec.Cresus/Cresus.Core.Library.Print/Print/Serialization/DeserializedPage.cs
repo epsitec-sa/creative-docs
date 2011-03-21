@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Core.Print.Serialization
 		{
 			get
 			{
-				return string.Format ("<b>{0}</b> ({1} {2}×{3})", this.parentSection.ParentJob.JobFullName, this.parentSection.PrinterLogicalName, this.parentSection.PageSize.Width, this.parentSection.PageSize.Height);
+				return string.Format ("<b>{0}</b> ({1} {2}×{3})", this.parentSection.ParentJob.JobFullName, this.parentSection.DocumentPrintingUnitCode, this.parentSection.PageSize.Width, this.parentSection.PageSize.Height);
 			}
 		}
 
@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Core.Print.Serialization
 			get
 			{
 				string s1 = string.Concat ("● Titre: <b>",           this.parentSection.ParentJob.JobFullName, "</b>");
-				string s2 = string.Concat ("● Unité d'impression: ", this.parentSection.PrinterLogicalName);
+				string s2 = string.Concat ("● Unité d'impression: ", this.parentSection.DocumentPrintingUnitCode);
 				string s3 = string.Concat ("● Imprimante: ",         this.parentSection.ParentJob.PrinterPhysicalName);
 				string s4 = string.Concat ("● Bac: ",                this.parentSection.PrinterPhysicalTray);
 				string s5 = string.Concat ("● Dimensions: ",         this.parentSection.PageSize.Width, "×", this.parentSection.PageSize.Height, " mm");

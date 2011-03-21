@@ -12,14 +12,14 @@ namespace Epsitec.Cresus.Core.Print.Serialization
 {
 	public class DeserializedSection
 	{
-		public DeserializedSection(DeserializedJob parentJob, string printerLogicalName, string printerPhysicalTray, Size pageSize)
+		public DeserializedSection(DeserializedJob parentJob, string documentPrintingUnitCode, string printerPhysicalTray, Size pageSize)
 		{
 			this.pages = new List<DeserializedPage> ();
 
-			this.parentJob           = parentJob;
-			this.printerLogicalName  = printerLogicalName;
-			this.printerPhysicalTray = printerPhysicalTray;
-			this.pageSize            = pageSize;
+			this.parentJob                = parentJob;
+			this.documentPrintingUnitCode = documentPrintingUnitCode;
+			this.printerPhysicalTray      = printerPhysicalTray;
+			this.pageSize                 = pageSize;
 		}
 
 
@@ -39,11 +39,11 @@ namespace Epsitec.Cresus.Core.Print.Serialization
 			}
 		}
 
-		public string PrinterLogicalName
+		public string DocumentPrintingUnitCode
 		{
 			get
 			{
-				return this.printerLogicalName;
+				return this.documentPrintingUnitCode;
 			}
 		}
 
@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.Core.Print.Serialization
 		private readonly DeserializedJob		parentJob;
 		private readonly List<DeserializedPage> pages;
 
-		private string							printerLogicalName;
+		private string							documentPrintingUnitCode;
 		private readonly string					printerPhysicalTray;
 		private readonly Size					pageSize;
 	}
