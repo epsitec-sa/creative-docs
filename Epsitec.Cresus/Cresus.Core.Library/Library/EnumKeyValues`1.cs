@@ -18,13 +18,13 @@ namespace Epsitec.Cresus.Core.Library
 		public EnumKeyValues(T key, params string[] values)
 		{
 			this.key = key;
-			this.values = values.Select (x => new FormattedText (x)).ToArray ();
+			this.values = values.Where (x => !string.IsNullOrEmpty (x)).Select (x => new FormattedText (x)).ToArray ();
 		}
 
 		public EnumKeyValues(T key, params FormattedText[] values)
 		{
 			this.key = key;
-			this.values = values.ToArray ();
+			this.values = values.Where (x => !x.IsNullOrEmpty).ToArray ();
 		}
 
 
