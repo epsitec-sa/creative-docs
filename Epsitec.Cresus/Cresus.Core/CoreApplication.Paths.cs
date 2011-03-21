@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Core
 	{
 		internal static class Paths
 		{
-			public static readonly string SettingsPath = System.IO.Path.Combine (Globals.Directories.UserAppData, "Cresus.Core.settings.xml");
+			public static readonly string SettingsPath = System.IO.Path.Combine (Globals.Directories.UserAppData, "Cresus Core settings.xml");
 		}
 	}
 }
