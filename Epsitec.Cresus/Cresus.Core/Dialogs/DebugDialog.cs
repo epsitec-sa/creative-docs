@@ -125,14 +125,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 			//	Remplit les onglets.
 			if (devel)
 			{
-				var loggingSettings = new SettingsTabPages.LoggingTabPage (this, null);
+				var loggingSettings = new SettingsTabPages.LoggingTabPage (this);
 				loggingSettings.CreateUI (loggingPage);
 				this.settingsTabPages.Add (loggingSettings);
 			}
 
 			if (devel)
 			{
-				var maintenanceSettings = new SettingsTabPages.MaintenanceTabPage (this, null);
+				var maintenanceSettings = new SettingsTabPages.MaintenanceTabPage (this);
 				maintenanceSettings.CreateUI (maintenancePage);
 				this.settingsTabPages.Add (maintenanceSettings);
 			}

@@ -20,10 +20,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// </summary>
 	public class SettingsDialog : CoreDialog, ISettingsDialog
 	{
-		public SettingsDialog(CoreApp application, BusinessContext businessContext)
+		public SettingsDialog(CoreApp application)
 			: base (application)
 		{
-			this.businessContext = businessContext;
 			this.settingsTabPages = new List<SettingsTabPages.AbstractSettingsTabPage> ();
 		}
 
@@ -113,7 +112,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			};
 
 			//	Rempli les onglets.
-			var printerUnits = new SettingsTabPages.PrintingUnitsTabPage (this, this.businessContext);
+			var printerUnits = new SettingsTabPages.PrintingUnitsTabPage (this);
 			printerUnits.CreateUI (printerUnitsPage);
 			this.settingsTabPages.Add (printerUnits);
 
@@ -221,7 +220,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private static string									lastActivedPageName;
 
-		private readonly BusinessContext						businessContext;
 		private readonly List<AbstractSettingsTabPage>			settingsTabPages;
 
 		private TabBook											tabBook;

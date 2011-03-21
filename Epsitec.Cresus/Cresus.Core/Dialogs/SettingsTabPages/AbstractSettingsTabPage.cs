@@ -16,10 +16,9 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 	/// </summary>
 	public abstract class AbstractSettingsTabPage
 	{
-		public AbstractSettingsTabPage(ISettingsDialog container, BusinessContext businessContext)
+		public AbstractSettingsTabPage(ISettingsDialog container)
 		{
 			this.container = container;
-			this.businessContext = businessContext;
 		}
 
 
@@ -71,8 +70,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		public event EventHandler						AcceptStateChanging;
 		
 		private readonly ISettingsDialog				container;
-		protected readonly BusinessContext				businessContext;
-
 		private string									errorMessage;
 	}
 }

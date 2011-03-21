@@ -46,8 +46,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			LoggingTabPage.globalAutoBreak  = true;
 		}
 
-		public LoggingTabPage(ISettingsDialog container, BusinessContext businessContext)
-			: base (container, businessContext)
+		public LoggingTabPage(ISettingsDialog container)
+			: base (container)
 		{
 			this.taggedText = new TaggedText ();
 		}

@@ -25,11 +25,12 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 	/// </summary>
 	public class PrintingUnitsTabPage : AbstractSettingsTabPage
 	{
-		public PrintingUnitsTabPage(ISettingsDialog container, BusinessContext businessContext)
-			: base (container, businessContext)
+		public PrintingUnitsTabPage(ISettingsDialog container)
+			: base (container)
 		{
 			this.printingUnitList = PrinterApplicationSettings.GetPrintingUnitList (this.Container.Data.Host);
-			this.documentPrintingUnits = this.businessContext.DataContext.GetEntities ().OfType<DocumentPrintingUnitsEntity> ();
+
+			this.documentPrintingUnits = this.Container.Data.GetAllEntities<DocumentPrintingUnitsEntity> ();
 		}
 
 

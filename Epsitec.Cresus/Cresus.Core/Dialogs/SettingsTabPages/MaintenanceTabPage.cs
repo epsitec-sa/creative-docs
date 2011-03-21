@@ -25,8 +25,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 	/// </summary>
 	public class MaintenanceTabPage : AbstractSettingsTabPage
 	{
-		public MaintenanceTabPage(ISettingsDialog container, BusinessContext businessContext)
-			: base (container, businessContext)
+		public MaintenanceTabPage(ISettingsDialog container)
+			: base (container)
 		{
 		}
 
