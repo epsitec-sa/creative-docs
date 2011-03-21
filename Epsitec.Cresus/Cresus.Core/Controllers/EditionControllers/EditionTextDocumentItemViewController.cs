@@ -22,11 +22,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionTextDocumentItemViewController : EditionViewController<Entities.TextDocumentItemEntity>
 	{
-		public EditionTextDocumentItemViewController(string name, Entities.TextDocumentItemEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

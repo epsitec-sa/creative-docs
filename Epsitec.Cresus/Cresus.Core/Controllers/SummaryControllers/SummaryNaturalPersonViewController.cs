@@ -16,12 +16,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryNaturalPersonViewController : SummaryViewController<Entities.NaturalPersonEntity>
 	{
-		public SummaryNaturalPersonViewController(string name, Entities.NaturalPersonEntity entity)
-			: base (name, entity)
-		{
-		}
-
-
 		protected override void CreateBricks()
 		{
 			this.AddBrick ()

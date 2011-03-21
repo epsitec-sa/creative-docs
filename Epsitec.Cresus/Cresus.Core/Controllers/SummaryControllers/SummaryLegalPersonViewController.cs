@@ -16,12 +16,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryLegalPersonViewController : SummaryViewController<Entities.LegalPersonEntity>
 	{
-		public SummaryLegalPersonViewController(string name, Entities.LegalPersonEntity entity)
-			: base (name, entity)
-		{
-		}
-
-
 		protected override void CreateUI()
 		{
 			using (var data = TileContainerController.Setup (this))

@@ -16,11 +16,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionImageBlobViewController : EditionViewController<Entities.ImageBlobEntity>
 	{
-		public EditionImageBlobViewController(string name, Entities.ImageBlobEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

@@ -8,6 +8,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
+using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Widgets;
 
 using Epsitec.Cresus.DataLayer;
@@ -22,10 +23,10 @@ namespace Epsitec.Cresus.Core.Controllers
 	public abstract class EntityViewController<T> : EntityViewController
 		where T : AbstractEntity, new ()
 	{
-		protected EntityViewController(string name, T entity)
-			: base (name)
+		protected EntityViewController()
+			: base (EntityViewControllerFactory.Default.ControllerName)
 		{
-			this.entity = entity;
+			this.entity = EntityViewControllerFactory.Default.Entity as T;
 
 			System.Diagnostics.Debug.Assert (this.DataContext != null, "No DataContext");
 			System.Diagnostics.Debug.Assert ((this.Orchestrator.Data.IsDummyEntity (this.entity)) || (this.DataContext.Contains (this.entity)), "Invalid entity");

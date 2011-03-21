@@ -68,9 +68,11 @@ namespace Epsitec.Cresus.Core.Factories
 					Mode = mode,
 					ControllerSubTypeId = controllerSubTypeId,
 					NavigationPathElement = navigationPathElement,
+					ControllerName = name,
+					Entity = entity,
 				};
 
-				return EntityViewControllerResolver.Resolve (name, entity, mode, controllerSubTypeId, resolutionMode);
+				return EntityViewControllerResolver.Resolve (mode, controllerSubTypeId, resolutionMode);
 			}
 			finally
 			{
@@ -107,6 +109,18 @@ namespace Epsitec.Cresus.Core.Factories
 			}
 
 			public NavigationPathElement		NavigationPathElement
+			{
+				get;
+				set;
+			}
+
+			public string						ControllerName
+			{
+				get;
+				set;
+			}
+
+			public AbstractEntity				Entity
 			{
 				get;
 				set;

@@ -14,12 +14,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryPaymentModeViewController : SummaryViewController<Entities.PaymentModeEntity>
 	{
-		public SummaryPaymentModeViewController(string name, Entities.PaymentModeEntity entity)
-			: base (name, entity)
-		{
-		}
-
-
 		protected override void CreateUI()
 		{
 			using (var data = TileContainerController.Setup (this))

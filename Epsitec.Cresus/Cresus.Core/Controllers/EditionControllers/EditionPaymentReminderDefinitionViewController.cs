@@ -20,11 +20,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionPaymentReminderDefinitionViewController : EditionViewController<Entities.PaymentReminderDefinitionEntity>
 	{
-		public EditionPaymentReminderDefinitionViewController(string name, Entities.PaymentReminderDefinitionEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

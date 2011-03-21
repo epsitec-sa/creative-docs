@@ -22,11 +22,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionFreeTextValueArticleParameterDefinitionViewController : EditionViewController<Entities.FreeTextValueArticleParameterDefinitionEntity>
 	{
-		public EditionFreeTextValueArticleParameterDefinitionViewController(string name, Entities.FreeTextValueArticleParameterDefinitionEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

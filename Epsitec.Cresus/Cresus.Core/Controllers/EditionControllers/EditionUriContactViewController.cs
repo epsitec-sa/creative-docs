@@ -18,11 +18,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionUriContactViewController : EditionViewController<Entities.UriContactEntity>
 	{
-		public EditionUriContactViewController(string name, Entities.UriContactEntity entity)
-			: base (name, entity)
-		{
-		}
-
 #if false
 		protected override void CreateUI()
 		{

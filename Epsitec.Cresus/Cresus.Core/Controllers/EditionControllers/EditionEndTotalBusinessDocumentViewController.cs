@@ -19,11 +19,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 	[ControllerSubType (1)]
 	public class EditionEndTotalBusinessDocumentViewController : EditionViewController<BusinessDocumentEntity>
 	{
-		public EditionEndTotalBusinessDocumentViewController(string name, BusinessDocumentEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

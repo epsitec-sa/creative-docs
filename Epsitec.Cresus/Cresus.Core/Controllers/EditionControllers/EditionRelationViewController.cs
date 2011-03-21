@@ -21,12 +21,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionRelationViewController : EditionViewController<RelationEntity>
 	{
-		public EditionRelationViewController(string name, Entities.RelationEntity entity)
-			: base (name, entity)
-		{
-			this.InitializeDefaultValues ();
-		}
-
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
 			if (this.personController != null)
@@ -48,20 +42,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				this.personController.CreateUI (this.TileContainer);
 
 				builder.CreateFooterEditorTile ();
-			}
-		}
-
-
-		private void InitializeDefaultValues()
-		{
-			if (!this.Entity.TaxMode.HasValue)
-			{
-				this.Entity.TaxMode = Business.Finance.TaxMode.None;
-			}
-
-			if (!this.Entity.DefaultCurrencyCode.HasValue)
-			{
-				this.Entity.DefaultCurrencyCode = Business.Finance.CurrencyCode.Chf;
 			}
 		}
 

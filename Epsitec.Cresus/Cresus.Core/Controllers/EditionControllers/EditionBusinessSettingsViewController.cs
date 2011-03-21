@@ -21,11 +21,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionBusinessSettingsViewController : EditionViewController<BusinessSettingsEntity>
 	{
-		public EditionBusinessSettingsViewController(string name, BusinessSettingsEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

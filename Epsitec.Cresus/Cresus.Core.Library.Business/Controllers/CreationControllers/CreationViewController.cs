@@ -22,11 +22,10 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 	public abstract class CreationViewController<T> : EntityViewController<T>, ICreationController
 		where T : AbstractEntity, new ()
 	{
-		protected CreationViewController(string name, T entity)
-			: base (name, entity)
+		protected CreationViewController()
 		{
 			System.Diagnostics.Debug.Assert (this.Orchestrator != null);
-			System.Diagnostics.Debug.Assert (this.Orchestrator.Data.IsDummyEntity (entity));
+			System.Diagnostics.Debug.Assert (this.Orchestrator.Data.IsDummyEntity (this.Entity));
 		}
 
 

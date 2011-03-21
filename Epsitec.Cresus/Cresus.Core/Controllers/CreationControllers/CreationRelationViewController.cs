@@ -15,11 +15,6 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 {
 	public class CreationRelationViewController : CreationViewController<RelationEntity>
 	{
-		public CreationRelationViewController(string name, RelationEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

@@ -17,11 +17,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionLegalPersonViewController : EditionViewController<Entities.LegalPersonEntity>
 	{
-		public EditionLegalPersonViewController(string name, Entities.LegalPersonEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

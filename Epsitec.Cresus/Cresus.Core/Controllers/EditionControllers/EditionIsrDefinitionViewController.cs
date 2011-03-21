@@ -19,11 +19,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionIsrDefinitionViewController : EditionViewController<Entities.IsrDefinitionEntity>
 	{
-		public EditionIsrDefinitionViewController(string name, Entities.IsrDefinitionEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

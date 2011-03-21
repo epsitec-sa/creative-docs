@@ -16,11 +16,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryRelationViewController : SummaryViewController<Entities.RelationEntity>
 	{
-		public SummaryRelationViewController(string name, Entities.RelationEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateBricks()
 		{
 			this.AddBrick ()

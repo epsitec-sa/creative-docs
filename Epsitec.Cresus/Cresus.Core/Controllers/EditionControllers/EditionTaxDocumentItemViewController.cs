@@ -22,11 +22,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionTaxDocumentItemViewController : EditionViewController<Entities.TaxDocumentItemEntity>
 	{
-		public EditionTaxDocumentItemViewController(string name, Entities.TaxDocumentItemEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

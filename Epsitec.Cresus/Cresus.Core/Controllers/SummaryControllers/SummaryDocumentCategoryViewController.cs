@@ -14,12 +14,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryDocumentCategoryViewController : SummaryViewController<Entities.DocumentCategoryEntity>
 	{
-		public SummaryDocumentCategoryViewController(string name, Entities.DocumentCategoryEntity entity)
-			: base (name, entity)
-		{
-		}
-
-
 		protected override void CreateUI()
 		{
 			using (var data = TileContainerController.Setup (this))

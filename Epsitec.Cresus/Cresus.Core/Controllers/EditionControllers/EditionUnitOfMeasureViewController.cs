@@ -19,11 +19,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionUnitOfMeasureViewController : EditionViewController<Entities.UnitOfMeasureEntity>
 	{
-		public EditionUnitOfMeasureViewController(string name, Entities.UnitOfMeasureEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

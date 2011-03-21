@@ -16,11 +16,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryCustomerViewController : SummaryViewController<CustomerEntity>
 	{
-		public SummaryCustomerViewController(string name, CustomerEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateBricks()
 		{
 			this.AddBrick (x => x);

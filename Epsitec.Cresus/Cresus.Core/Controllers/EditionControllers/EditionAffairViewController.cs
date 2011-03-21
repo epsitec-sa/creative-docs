@@ -22,12 +22,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionAffairViewController : EditionViewController<Entities.AffairEntity>
 	{
-		public EditionAffairViewController(string name, Entities.AffairEntity entity)
-			: base (name, entity)
-		{
-		}
-
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

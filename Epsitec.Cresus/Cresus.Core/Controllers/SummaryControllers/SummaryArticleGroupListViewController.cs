@@ -18,12 +18,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 	[ControllerSubType (2)]
 	public class SummaryArticleGroupListViewController : SummaryViewController<ArticleDefinitionEntity>
 	{
-		public SummaryArticleGroupListViewController(string name, ArticleDefinitionEntity entity)
-			: base (name, entity)
-		{
-		}
-
-
 		protected override void CreateUI()
 		{
 			using (var data = TileContainerController.Setup (this))

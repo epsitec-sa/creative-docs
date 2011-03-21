@@ -16,11 +16,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionTitleViewController : EditionViewController<PersonTitleEntity>
 	{
-		public EditionTitleViewController(string name, PersonTitleEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

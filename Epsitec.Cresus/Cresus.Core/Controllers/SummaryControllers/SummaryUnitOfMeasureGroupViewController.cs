@@ -16,12 +16,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryUnitOfMeasureGroupViewController : SummaryViewController<Entities.UnitOfMeasureGroupEntity>
 	{
-		public SummaryUnitOfMeasureGroupViewController(string name, Entities.UnitOfMeasureGroupEntity entity)
-			: base (name, entity)
-		{
-		}
-
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

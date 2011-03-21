@@ -15,12 +15,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryCountryViewController : SummaryViewController<Entities.CountryEntity>
 	{
-		public SummaryCountryViewController(string name, Entities.CountryEntity entity)
-			: base (name, entity)
-		{
-		}
-
-
 		protected override void CreateUI()
 		{
 			using (var data = TileContainerController.Setup (this))

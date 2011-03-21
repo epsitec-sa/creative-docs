@@ -19,11 +19,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionArticlePriceViewController : EditionViewController<Entities.ArticlePriceEntity>
 	{
-		public EditionArticlePriceViewController(string name, Entities.ArticlePriceEntity entity)
-			: base (name, entity)
-		{
-		}
-
 #if false
 		protected override void CreateUI()
 		{

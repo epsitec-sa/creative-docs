@@ -20,11 +20,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionBillingDetailViewController : EditionViewController<Entities.BillingDetailEntity>
 	{
-		public EditionBillingDetailViewController(string name, Entities.BillingDetailEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

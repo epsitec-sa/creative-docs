@@ -14,12 +14,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryLocationViewController : SummaryViewController<Entities.LocationEntity>
 	{
-		public SummaryLocationViewController(string name, Entities.LocationEntity entity)
-			: base (name, entity)
-		{
-		}
-
-
 		protected override void CreateUI()
 		{
 			using (var data = TileContainerController.Setup (this))

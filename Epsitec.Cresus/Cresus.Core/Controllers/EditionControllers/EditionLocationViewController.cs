@@ -17,11 +17,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionLocationViewController : EditionViewController<Entities.LocationEntity>
 	{
-		public EditionLocationViewController(string name, Entities.LocationEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

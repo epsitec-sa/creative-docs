@@ -18,12 +18,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryBusinessDocumentViewController : SummaryViewController<BusinessDocumentEntity>
 	{
-		public SummaryBusinessDocumentViewController(string name, BusinessDocumentEntity entity)
-			: base (name, entity)
-		{
-		}
-
-
 		protected override void CreateUI()
 		{
 			using (var data = TileContainerController.Setup (this))

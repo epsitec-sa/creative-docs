@@ -22,9 +22,9 @@ namespace Epsitec.Cresus.Core.Business.Rules
 		
 		public override void ApplySetupRule(RelationEntity relation)
 		{
-			relation.FirstContactDate = Date.Today;
-			relation.TaxMode = Business.Finance.TaxMode.LiableForVat;
-			relation.DefaultBillingMode =	Business.Finance.BillingMode.IncludingTax;
+			relation.FirstContactDate    = Date.Today;
+			relation.TaxMode             = Business.Finance.TaxMode.LiableForVat;
+			relation.DefaultBillingMode  = Business.Finance.BillingMode.IncludingTax;
 			relation.DefaultCurrencyCode = Business.Finance.CurrencyCode.Chf;
 		}
 		

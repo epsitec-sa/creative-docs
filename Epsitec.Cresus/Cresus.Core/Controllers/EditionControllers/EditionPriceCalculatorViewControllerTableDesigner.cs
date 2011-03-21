@@ -18,11 +18,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 	[ControllerSubType (1)]
 	public class EditionPriceCalculatorViewControllerTableDesigner : EditionViewController<PriceCalculatorEntity>
 	{
-		public EditionPriceCalculatorViewControllerTableDesigner(string name, PriceCalculatorEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		public override double GetPreferredWidth(int columnIndex, int columnCount)
 		{
 			return base.GetPreferredWidth (columnIndex, columnCount) * 3;

@@ -14,11 +14,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 	public abstract class SummaryViewController<T> : EntityViewController<T>
 		where T : AbstractEntity, new ()
 	{
-		protected SummaryViewController(string name, T entity)
-			: base (name, entity)
-		{
-		}
-
 		public void SerializeData()
 		{
 			//	TODO: ...

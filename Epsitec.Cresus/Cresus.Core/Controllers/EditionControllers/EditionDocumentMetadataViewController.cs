@@ -18,12 +18,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionDocumentMetadataViewController : EditionViewController<Entities.DocumentMetadataEntity>
 	{
-		public EditionDocumentMetadataViewController(string name, Entities.DocumentMetadataEntity entity)
-			: base (name, entity)
-		{
-		}
-
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

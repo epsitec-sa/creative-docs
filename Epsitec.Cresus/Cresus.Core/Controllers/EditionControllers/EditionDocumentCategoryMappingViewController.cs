@@ -22,11 +22,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionDocumentCategoryMappingViewController : EditionViewController<Entities.DocumentCategoryMappingEntity>
 	{
-		public EditionDocumentCategoryMappingViewController(string name, Entities.DocumentCategoryMappingEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

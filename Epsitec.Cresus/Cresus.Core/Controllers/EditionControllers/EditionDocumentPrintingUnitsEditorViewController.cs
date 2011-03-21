@@ -18,11 +18,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 	[ControllerSubType (2)]
 	public class EditionDocumentPrintingUnitsEditorViewController : EditionViewController<DocumentPrintingUnitsEntity>
 	{
-		public EditionDocumentPrintingUnitsEditorViewController(string name, DocumentPrintingUnitsEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		public override double GetPreferredWidth(int columnIndex, int columnCount)
 		{
 			return base.GetPreferredWidth (columnIndex, columnCount) * 2;

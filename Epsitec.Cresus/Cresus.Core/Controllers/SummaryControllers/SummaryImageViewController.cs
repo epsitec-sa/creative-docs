@@ -18,12 +18,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryImageViewController : SummaryViewController<ImageEntity>
 	{
-		public SummaryImageViewController(string name, ImageEntity entity)
-			: base (name, entity)
-		{
-		}
-
-
 		protected override void CreateUI()
 		{
 			using (var data = TileContainerController.Setup (this))

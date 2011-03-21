@@ -18,12 +18,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 	[ControllerSubType (6)]
 	public class SummaryImageGroupListViewController : SummaryViewController<NaturalPersonEntity>
 	{
-		public SummaryImageGroupListViewController(string name, NaturalPersonEntity entity)
-			: base (name, entity)
-		{
-		}
-
-
 		protected override void CreateUI()
 		{
 			using (var data = TileContainerController.Setup (this))

@@ -16,11 +16,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionImageCategoryViewController : EditionViewController<Entities.ImageCategoryEntity>
 	{
-		public EditionImageCategoryViewController(string name, Entities.ImageCategoryEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

@@ -16,11 +16,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionContactRoleViewController : EditionViewController<Entities.ContactGroupEntity>
 	{
-		public EditionContactRoleViewController(string name, Entities.ContactGroupEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

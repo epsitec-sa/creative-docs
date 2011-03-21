@@ -21,11 +21,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionOptionValueViewController : EditionViewController<Entities.OptionValueEntity>
 	{
-		public EditionOptionValueViewController(string name, Entities.OptionValueEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

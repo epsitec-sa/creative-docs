@@ -16,11 +16,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionPaymentModeViewController : EditionViewController<Entities.PaymentModeEntity>
 	{
-		public EditionPaymentModeViewController(string name, Entities.PaymentModeEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

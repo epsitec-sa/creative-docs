@@ -18,12 +18,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 	[ControllerSubType (3)]
 	public class SummaryContactRoleListViewController : SummaryViewController<AbstractContactEntity>
 	{
-		public SummaryContactRoleListViewController(string name, AbstractContactEntity entity)
-			: base (name, entity)
-		{
-		}
-
-
 		protected override void CreateUI()
 		{
 			using (var data = TileContainerController.Setup (this))

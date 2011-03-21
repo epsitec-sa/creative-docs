@@ -11,11 +11,6 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 {
 	public class CreationCustomerViewController : CreationViewController<CustomerEntity>
 	{
-		public CreationCustomerViewController(string name, CustomerEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

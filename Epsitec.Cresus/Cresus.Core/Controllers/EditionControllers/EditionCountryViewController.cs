@@ -16,11 +16,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionCountryViewController : EditionViewController<Entities.CountryEntity>
 	{
-		public EditionCountryViewController(string name, Entities.CountryEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

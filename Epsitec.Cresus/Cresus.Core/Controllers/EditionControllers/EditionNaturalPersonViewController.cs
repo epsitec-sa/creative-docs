@@ -21,11 +21,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionNaturalPersonViewController : EditionViewController<NaturalPersonEntity>
 	{
-		public EditionNaturalPersonViewController(string name, NaturalPersonEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateBricks()
 		{
 			this.AddBrick ()

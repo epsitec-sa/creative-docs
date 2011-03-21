@@ -14,11 +14,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionPriceCalculatorViewController : EditionViewController<PriceCalculatorEntity>
 	{
-		public EditionPriceCalculatorViewController(string name, PriceCalculatorEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

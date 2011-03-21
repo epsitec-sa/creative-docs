@@ -17,11 +17,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionCommentViewController : EditionViewController<Entities.CommentEntity>
 	{
-		public EditionCommentViewController(string name, Entities.CommentEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

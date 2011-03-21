@@ -14,11 +14,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionDocumentPrintingUnitsViewController : EditionViewController<DocumentPrintingUnitsEntity>
 	{
-		public EditionDocumentPrintingUnitsViewController(string name, DocumentPrintingUnitsEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

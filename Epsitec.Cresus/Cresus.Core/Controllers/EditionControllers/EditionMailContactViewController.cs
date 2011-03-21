@@ -23,11 +23,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionMailContactViewController : EditionViewController<MailContactEntity>
 	{
-		public EditionMailContactViewController(string name, MailContactEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		//	Si this.Entity.NaturalPerson existe et this.Entity.LegalPerson nul :
 		//		Les onglets sont présents et réglés sur "Adresse spécifique".
 		//		On définit l'adresse spécifique d'une personne physique.

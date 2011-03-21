@@ -22,11 +22,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionPriceDocumentItemViewController : EditionViewController<Entities.SubTotalDocumentItemEntity>
 	{
-		public EditionPriceDocumentItemViewController(string name, Entities.SubTotalDocumentItemEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

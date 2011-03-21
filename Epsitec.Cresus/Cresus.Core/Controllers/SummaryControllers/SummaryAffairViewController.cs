@@ -18,11 +18,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryAffairViewController : SummaryViewController<AffairEntity>
 	{
-		public SummaryAffairViewController(string name, AffairEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateUI()
 		{
 			using (var data = TileContainerController.Setup (this))

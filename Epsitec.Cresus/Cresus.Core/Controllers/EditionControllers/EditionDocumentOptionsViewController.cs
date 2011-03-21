@@ -19,11 +19,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionDocumentOptionsViewController : EditionViewController<DocumentOptionsEntity>
 	{
-		public EditionDocumentOptionsViewController(string name, DocumentOptionsEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

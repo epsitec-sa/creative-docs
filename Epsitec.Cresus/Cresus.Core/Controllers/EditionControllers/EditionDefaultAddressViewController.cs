@@ -15,11 +15,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionDefaultAddressViewController : EditionViewController<Entities.AddressEntity>
 	{
-		public EditionDefaultAddressViewController(string name, Entities.AddressEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

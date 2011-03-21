@@ -18,8 +18,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryDocumentMetadataViewController : SummaryViewController<DocumentMetadataEntity>
 	{
-		public SummaryDocumentMetadataViewController(string name, DocumentMetadataEntity entity)
-			: base (name, entity)
+		public SummaryDocumentMetadataViewController()
 		{
 			var doc = this.Entity.BusinessDocument;
 

@@ -25,11 +25,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionArticleDefinitionViewController : EditionViewController<Entities.ArticleDefinitionEntity>
 	{
-		public EditionArticleDefinitionViewController(string name, Entities.ArticleDefinitionEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core.Orchestrators.Navigation;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Factories;
 
 namespace Epsitec.Cresus.Core.Resolvers
 {
@@ -16,23 +17,26 @@ namespace Epsitec.Cresus.Core.Resolvers
 	/// The <c>EntityViewControllerResolver</c> is used to instantiate a controller for a given
 	/// entity type, mode and sub type ID.
 	/// </summary>
-	public static class EntityViewControllerResolver
+	internal static class EntityViewControllerResolver
 	{
-		public static EntityViewController Resolve(string name, AbstractEntity entity, ViewControllerMode mode, int controllerSubTypeId, ResolutionMode resolutionMode)
+		public static EntityViewController Resolve(ViewControllerMode mode, int controllerSubTypeId, ResolutionMode resolutionMode)
 		{
-			var entityType = entity.GetType ();
-			var type = EntityViewControllerResolver.ResolveEntityViewController (entityType, mode, controllerSubTypeId);
+			var name   = EntityViewControllerFactory.Default.ControllerName;
+			var entity = EntityViewControllerFactory.Default.Entity;
+			
+			var entityType     = entity.GetType ();
+			var controllerType = EntityViewControllerResolver.ResolveEntityViewController (entityType, mode, controllerSubTypeId);
 
-			if (type == null)
+			if (controllerType == null)
 			{
 				if (mode == ViewControllerMode.Creation)
 				{
-					type = EntityViewControllerResolver.ResolveEntityViewController (entityType, ViewControllerMode.Summary, controllerSubTypeId)
+					controllerType = EntityViewControllerResolver.ResolveEntityViewController (entityType, ViewControllerMode.Summary, controllerSubTypeId)
 						?? EntityViewControllerResolver.ResolveEntityViewController (entityType, ViewControllerMode.Edition, controllerSubTypeId);
 				}
 			}
 
-			if (type == null)
+			if (controllerType == null)
 			{
 				if (resolutionMode == ResolutionMode.NullOnError)
 				{
@@ -46,8 +50,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 				}
 			}
 
-			object[] constructorArguments = new object[] { name, entity };
-			object controllerInstance = System.Activator.CreateInstance (type, constructorArguments);
+			object controllerInstance = System.Activator.CreateInstance (controllerType);
 			
 			return controllerInstance as EntityViewController;
 		}

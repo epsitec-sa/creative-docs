@@ -12,11 +12,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionCustomerViewController : EditionViewController<CustomerEntity>
 	{
-		public EditionCustomerViewController(string name, Entities.CustomerEntity entity)
-			: base (name, entity)
-		{
-		}
-
 		protected override void CreateBricks()
 		{
 			this.AddBrick ()
