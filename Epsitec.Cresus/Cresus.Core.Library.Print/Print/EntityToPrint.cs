@@ -20,25 +20,25 @@ namespace Epsitec.Cresus.Core.Print
 			this.Title         = title;
 		}
 
-		public AbstractEntity Entity
+		public AbstractEntity					Entity
 		{
 			get;
 			private set;
 		}
 
-		public PrintingOptionDictionary Options
+		public PrintingOptionDictionary			Options
 		{
 			get;
 			private set;
 		}
 
-		public PrintingUnitDictionary PrintingUnits
+		public PrintingUnitDictionary			PrintingUnits
 		{
 			get;
 			private set;
 		}
 
-		public string Title
+		public string							Title
 		{
 			get;
 			private set;

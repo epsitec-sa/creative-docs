@@ -417,6 +417,12 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				return entity is RelationEntity || entity is CustomerEntity;
 			}
 
+			public IEnumerable<System.Type> GetSupportedEntityTypes()
+			{
+				yield return typeof (RelationEntity);
+				yield return typeof (CustomerEntity);
+			}
+
 			public AbstractPrinter CreatePrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 			{
 				var customer = entity as CustomerEntity;

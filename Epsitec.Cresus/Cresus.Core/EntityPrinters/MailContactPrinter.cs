@@ -119,6 +119,11 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				return entity is MailContactEntity;
 			}
 
+			public IEnumerable<System.Type> GetSupportedEntityTypes()
+			{
+				yield return typeof (MailContactEntity);
+			}
+
 			public AbstractPrinter CreatePrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 			{
 				return new MailContactPrinter (businessContext, entity, options, printingUnits);

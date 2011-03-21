@@ -14,6 +14,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 {
 	public interface IEntityPrinterFactory
 	{
+		IEnumerable<System.Type> GetSupportedEntityTypes();
 		bool CanPrint(AbstractEntity entity, PrintingOptionDictionary options);
 		AbstractPrinter CreatePrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits);
 	}

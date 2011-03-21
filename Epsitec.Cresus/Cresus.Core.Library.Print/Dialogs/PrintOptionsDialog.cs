@@ -554,36 +554,22 @@ namespace Epsitec.Cresus.Core.Dialogs
 			private IEnumerable<DocumentCategoryMappingEntity> GetMappingEntities()
 			{
 				var example = new DocumentCategoryMappingEntity ();
-				example.PrintableEntity = this.GetPrintableEntities (this.entityToPrint.Entity);
+				
+				example.PrintableEntity = this.GetPrintableEntities (this.entityToPrint.Entity).ToString ();
+				
 				return this.businessContext.DataContext.GetByExample (example);
 			}
 
-			private Business.PrintableEntities GetPrintableEntities(AbstractEntity entity)
+			private Druid GetPrintableEntities(AbstractEntity entity)
 			{
-				if (entity is DocumentMetadataEntity)
+				if (entity != null)
 				{
-					return Business.PrintableEntities.DocumentMetadata;
+					return EntityInfo.GetTypeId (entity.GetType ());
 				}
-
-				// TODO: DR
-#if false
-				if (entity is MailContactEntity)
+				else
 				{
-					return Business.PrintableEntities.MailContact;
+					return Druid.Empty;
 				}
-
-				if (entity is RelationEntity)
-				{
-					return Business.PrintableEntities.Relation;
-				}
-
-				if (entity is ArticleDefinitionEntity)
-				{
-					return Business.PrintableEntities.ArticleDefinition;
-				}
-#endif
-
-				return Business.PrintableEntities.None;
 			}
 
 
@@ -627,7 +613,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
-		private static Dictionary<Business.PrintableEntities, string> selectedDocumentCategoryCode = new Dictionary<Business.PrintableEntities, string> ();
+		private static Dictionary<Druid, string> selectedDocumentCategoryCode = new Dictionary<Druid, string> ();
 
 		private readonly Application							application;
 		private readonly IBusinessContext						businessContext;

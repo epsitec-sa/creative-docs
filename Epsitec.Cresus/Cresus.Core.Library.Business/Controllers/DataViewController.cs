@@ -158,7 +158,9 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			var focusedColumn = this.viewLayoutController.GetColumns ().FirstOrDefault (x => x.ContainsKeyboardFocus);
 
-			if (focusedColumn == null)
+			if ((focusedColumn == null) ||
+				(focusedColumn.Window == null) ||
+				(focusedColumn.Window.FocusedWidget == null))
 			{
 				return FocusInformation.Empty;
 			}

@@ -1013,19 +1013,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/HVAM1/HVAN1
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[HVAN1]")]
-		public global::Epsitec.Cresus.Core.Business.PrintableEntities PrintableEntity
+		public string PrintableEntity
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Business.PrintableEntities> ("[HVAN1]");
+				return this.GetField<string> ("[HVAN1]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Business.PrintableEntities oldValue = this.PrintableEntity;
+				string oldValue = this.PrintableEntity;
 				if (oldValue != value || !this.IsFieldDefined("[HVAN1]"))
 				{
 					this.OnPrintableEntityChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Business.PrintableEntities> ("[HVAN1]", oldValue, value);
+					this.SetField<string> ("[HVAN1]", oldValue, value);
 					this.OnPrintableEntityChanged (oldValue, value);
 				}
 			}
@@ -1043,8 +1043,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnPrintableEntityChanging(global::Epsitec.Cresus.Core.Business.PrintableEntities oldValue, global::Epsitec.Cresus.Core.Business.PrintableEntities newValue);
-		partial void OnPrintableEntityChanged(global::Epsitec.Cresus.Core.Business.PrintableEntities oldValue, global::Epsitec.Cresus.Core.Business.PrintableEntities newValue);
+		partial void OnPrintableEntityChanging(string oldValue, string newValue);
+		partial void OnPrintableEntityChanged(string oldValue, string newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

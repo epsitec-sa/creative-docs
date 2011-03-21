@@ -1530,6 +1530,11 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				return entity is DocumentMetadataEntity;
 			}
 
+			public IEnumerable<System.Type> GetSupportedEntityTypes()
+			{
+				yield return typeof (DocumentMetadataEntity);
+			}
+
 			public AbstractPrinter CreatePrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 			{
 				return new DocumentMetadataPrinter (businessContext, entity, options, printingUnits);

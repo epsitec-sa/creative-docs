@@ -1,8 +1,9 @@
 //	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Types;
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Business;
@@ -26,16 +27,19 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public FormattedText GetPrintableEntityName()
 		{
-			var printableEntities = EnumKeyValues.FromEnum<PrintableEntities> ();
+			Druid id;
 
-			var t = printableEntities.Where (x => x.Key == this.PrintableEntity).FirstOrDefault ();
-			if (t == null)
+			if (Druid.TryParse (this.PrintableEntity, out id))
 			{
-				return TextFormatter.FormatText ("(inconnu)").ApplyItalic ();
+				//	Found entity ID.
+				var caption = EntityInfo.GetStructuredType (id).Caption;
+				var text    = caption.DefaultLabel ?? caption.Name;
+
+				return new FormattedText (text);
 			}
 			else
 			{
-				return t.Values[0];
+				return TextFormatter.FormatText ("(inconnu)").ApplyItalic ();
 			}
 		}
 	}

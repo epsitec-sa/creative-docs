@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
@@ -45,7 +46,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateAutoCompleteTextField (tile, 0, "Type des données imprimables", Marshaler.Create (() => this.Entity.PrintableEntity, x => this.Entity.PrintableEntity = x), EnumKeyValues.FromEnum<PrintableEntities> (), x => TextFormatter.FormatText (x));
+			var types  = Epsitec.Cresus.Core.Print.EntityPrinters.AbstractPrinter.GetPrintableEntityTypes ();
+			var values = EnumKeyValues.FromEntityIds (types.Select (x => EntityInfo.GetTypeId (x)));
+
+			builder.CreateAutoCompleteTextField (tile, 0, "Type des données imprimables", Marshaler.Create (() => this.Entity.PrintableEntity, x => this.Entity.PrintableEntity = x), values, x => TextFormatter.FormatText (x));
 		}
 
 		private void CreateUICategories(UIBuilder builder)
