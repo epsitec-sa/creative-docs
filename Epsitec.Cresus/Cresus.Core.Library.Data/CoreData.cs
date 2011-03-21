@@ -157,8 +157,6 @@ namespace Epsitec.Cresus.Core
 			}
 
 			throw new System.NotImplementedException ();
-
-//-			return this.activeDataContext;
 		}
 
 		private DataContext EnsureDataContext(ref DataContext dataContext, string name)

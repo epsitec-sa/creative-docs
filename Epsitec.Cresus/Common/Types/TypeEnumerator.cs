@@ -2,16 +2,22 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Epsitec.Common.Types
 {
+	/// <summary>
+	/// The <c>TypeEnumerator</c> class is used to enumerate all types found in all loaded
+	/// assemblies. This class maintains a cache, which helps in speeding up subsequent
+	/// queries. The cache is automatically updated if new assemblies get loaded.
+	/// </summary>
 	public sealed class TypeEnumerator
 	{
 		public TypeEnumerator()
 		{
-			this.types = new List<System.Type> ();
+			this.types      = new List<System.Type> ();
 			this.assemblies = new List<System.Reflection.Assembly> ();
-			this.typeNames = new HashSet<string> ();
+			this.typeNames  = new HashSet<string> ();
 
 			System.AppDomain.CurrentDomain.AssemblyLoad += new System.AssemblyLoadEventHandler (this.HandleCurrentDomainAssemblyLoad);
 
@@ -21,7 +27,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public static TypeEnumerator Instance
+		public static TypeEnumerator			Instance
 		{
 			get
 			{
@@ -29,19 +35,38 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets all currently loaded types. This method is thread safe.
+		/// </summary>
+		/// <returns>The collection of all currently loaded types.</returns>
 		public IEnumerable<System.Type> GetAllTypes()
 		{
-			for (int i = 0; i < this.types.Count; i++)
+			int index = 0;
+
+			while (true)
 			{
-				yield return this.types[i];
+				System.Type type;
+
+				lock (this.types)
+				{
+					if (index >= this.types.Count)
+					{
+						yield break;
+					}
+
+					type = this.types[index++];
+				}
+
+				yield return type;
 			}
 		}
 
 		private void HandleCurrentDomainAssemblyLoad(object sender, System.AssemblyLoadEventArgs args)
 		{
-			var assembly = args.LoadedAssembly;
+			//	An additional assembly was just loaded; analyze it and update the cache
+			//	accordinly :
 
-			this.AnalyseAssembly (assembly);
+			this.AnalyseAssembly (args.LoadedAssembly);
 		}
 
 		private void AnalyseAssembly(System.Reflection.Assembly assembly)
@@ -67,10 +92,10 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private static readonly TypeEnumerator instance = new TypeEnumerator ();
+		private static readonly TypeEnumerator	instance = new TypeEnumerator ();
 
-		private readonly List<System.Type> types;
-		private readonly List<System.Reflection.Assembly> assemblies;
-		private readonly HashSet<string> typeNames;
+		private readonly List<System.Type>		types;
+		private readonly List<Assembly>			assemblies;
+		private readonly HashSet<string>		typeNames;
 	}
 }

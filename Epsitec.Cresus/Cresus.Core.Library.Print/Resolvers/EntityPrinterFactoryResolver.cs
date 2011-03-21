@@ -11,6 +11,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Resolvers
 {
+	/// <summary>
+	/// The <c>EntityPrinterFactoryResolver</c> class is used to find implementations of the
+	/// <see cref="IEntityPrinterFactory"/> interface.
+	/// </summary>
 	public sealed class EntityPrinterFactoryResolver
 	{
 		public static IEnumerable<IEntityPrinterFactory> Resolve()

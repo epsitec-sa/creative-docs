@@ -347,7 +347,7 @@
     <Compile Include="Support\ArrayEqualityComparer.cs" />
     <Compile Include="Support\AssemblyLoader.cs" />
     <Compile Include="Support\CacheManager.cs" />
-    <Compile Include="Support\Callbacks.cs" />
+    <Compile Include="Support\SimpleCallback.cs" />
     <Compile Include="Support\CancelEventArgs.cs" />
     <Compile Include="Support\CaptionCache.cs" />
     <Compile Include="Support\Clipboard.cs" />
@@ -533,6 +533,7 @@
     <Compile Include="Support\Serialization\Converters\BinaryArrayConverter.cs" />
     <Compile Include="Support\Serialization\Helper.cs" />
     <Compile Include="Support\Settings.cs" />
+    <Compile Include="Support\SimpleCallback`1.cs" />
     <Compile Include="Support\StringPacker.cs" />
     <Compile Include="Support\StringPluralizer.cs" />
     <Compile Include="Support\Sync.cs" />
@@ -540,6 +541,7 @@
     <Compile Include="Support\TaskletJob.cs" />
     <Compile Include="Support\TaskletRunMode.cs" />
     <Compile Include="Support\TimedLock.cs" />
+    <Compile Include="Support\TransformCallback.cs" />
     <Compile Include="Support\UrlNavigator.cs" />
     <Compile Include="Support\Utilities.cs" />
     <Compile Include="Support\ValueEventArgs.cs" />
