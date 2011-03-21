@@ -92,7 +92,7 @@ namespace Epsitec.Common.Support
 		/// <param name="separatorChar">The <see cref="char"/> used to separate the <see cref="System.String"/>.</param>
 		/// <param name="escapeChar">The <see cref="char"/> used to escape itself and the separator.</param>
 		/// <returns>A single <see cref="System.String"/> that contains all the input ones.</returns>
-		private static string Join(IList<string> strings, char separatorChar, char escapeChar)
+		private static string Join(IEnumerable<string> strings, char separatorChar, char escapeChar)
 		{
 			var processedStrings = strings.Select (s => StringPacker.Escape (s, separatorChar, escapeChar)).ToArray ();
 
@@ -163,9 +163,16 @@ namespace Epsitec.Common.Support
 		/// <returns>The escaped <see cref="System.String"/>.</returns>
 		private static string Escape(string s, char separatorChar, char escapeChar)
 		{
-			return s
-				.Replace (string.Format ("{0}", escapeChar),    string.Format ("{0}{1}", escapeChar, escapeChar))
-				.Replace (string.Format ("{0}", separatorChar), string.Format ("{0}{1}", escapeChar, separatorChar));
+			if (string.IsNullOrEmpty (s))
+			{
+				return s;
+			}
+			else
+			{
+				return s
+					.Replace (escapeChar.ToString (), escapeChar.ToString () + escapeChar.ToString ())
+					.Replace (separatorChar.ToString (), escapeChar.ToString () + separatorChar.ToString ());
+			}
 		}
 
 		/// <summary>
@@ -178,9 +185,16 @@ namespace Epsitec.Common.Support
 		/// <returns>The unescaped <see cref="System.String"/>.</returns>
 		private static string Unescape(string s, char separatorChar, char escapeChar)
 		{
-			return s
-				.Replace (string.Format ("{0}{1}", escapeChar, separatorChar), string.Format ("{0}", separatorChar))
-				.Replace (string.Format ("{0}{1}", escapeChar, escapeChar),    string.Format ("{0}", escapeChar));
+			if (string.IsNullOrEmpty (s))
+			{
+				return s;
+			}
+			else
+			{
+				return s
+					.Replace (escapeChar.ToString () + separatorChar.ToString (), separatorChar.ToString ())
+					.Replace (escapeChar.ToString () + escapeChar.ToString (), escapeChar.ToString ());
+			}
 		}
 	}
 }
