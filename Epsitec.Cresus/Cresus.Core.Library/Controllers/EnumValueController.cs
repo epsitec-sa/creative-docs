@@ -34,7 +34,16 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			foreach (var item in possibleItems)
 			{
-				var key = EnumConverter<T>.ConvertToNumericString (item.Key);
+				string key;
+				
+				if (typeof (T).IsEnum)
+				{
+					key = EnumConverter<T>.ConvertToNumericString (item.Key);
+				}
+				else
+				{
+					key = item.Key.ToString ();
+				}
 
 				widget.Items.Add (key, item);
 			}

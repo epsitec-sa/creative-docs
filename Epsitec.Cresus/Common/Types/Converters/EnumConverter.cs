@@ -13,6 +13,8 @@ namespace Epsitec.Common.Types.Converters
 		public EnumConverter(System.Type systemType)
 			: base (System.Globalization.CultureInfo.InvariantCulture)
 		{
+			System.Diagnostics.Debug.Assert (systemType.IsEnum);
+
 			this.enumType = EnumType.GetDefault (systemType);
 		}
 

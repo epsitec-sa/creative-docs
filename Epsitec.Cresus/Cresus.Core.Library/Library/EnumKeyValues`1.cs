@@ -21,6 +21,12 @@ namespace Epsitec.Cresus.Core.Library
 			this.values = values.Select (x => new FormattedText (x)).ToArray ();
 		}
 
+		public EnumKeyValues(T key, params FormattedText[] values)
+		{
+			this.key = key;
+			this.values = values.ToArray ();
+		}
+
 
 		/// <summary>
 		/// Gets the key which is an <c>enum</c> value.

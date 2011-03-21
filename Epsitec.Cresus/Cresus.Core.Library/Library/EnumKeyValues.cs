@@ -1,6 +1,8 @@
 //	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
 using System.Collections.Generic;
@@ -16,6 +18,11 @@ namespace Epsitec.Cresus.Core.Library
 	public abstract class EnumKeyValues : ITextFormatter
 	{
 		public static EnumKeyValues<T> Create<T>(T key, params string[] values)
+		{
+			return new EnumKeyValues<T> (key, values);
+		}
+		
+		public static EnumKeyValues<T> Create<T>(T key, params FormattedText[] values)
 		{
 			return new EnumKeyValues<T> (key, values);
 		}
@@ -44,6 +51,19 @@ namespace Epsitec.Cresus.Core.Library
 				}
 
 				yield return EnumKeyValues.Create<T> (enumKey, labels);
+			}
+		}
+
+		public static IEnumerable<EnumKeyValues<Druid>> FromEntityIds(IEnumerable<Druid> entityIds)
+		{
+			foreach (var entityId in entityIds)
+			{
+				var info    = EntityInfo.GetStructuredType (entityId);
+				var caption = info == null ? null : info.Caption;
+				var label   = new FormattedText (info.Caption.DefaultLabel ?? info.Caption.Description ?? "");
+				var name    = FormattedText.FromSimpleText (info.Caption.Name);
+
+				yield return EnumKeyValues.Create (caption.Id, name, label);
 			}
 		}
 
