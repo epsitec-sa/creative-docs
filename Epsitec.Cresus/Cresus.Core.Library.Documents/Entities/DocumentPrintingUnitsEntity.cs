@@ -65,6 +65,7 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 #endif
 
+#if false
 		public PrintingUnitDictionary GetPrintingUnits()
 		{
 			//	Retourne le dictionnaire "type de pages" / "unité d'impression".
@@ -111,6 +112,58 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 
 				// Exemple de chaîne obtenue: "ForAllPages◊Blanc◊ForPagesCopy◊Recyclé◊"
+				byte[] bytes = System.Text.Encoding.UTF8.GetBytes (builder.ToString ());
+				this.SerializedData = bytes;
+			}
+		}
+#endif
+
+		public List<PageType> GetPageTypes()
+		{
+			var pageTypes = new List<PageType> ();
+
+			if (this.SerializedData != null)
+			{
+				string s = System.Text.Encoding.UTF8.GetString (this.SerializedData);
+
+				if (!string.IsNullOrEmpty (s))
+				{
+					string[] split = s.Split ('◊');
+
+					for (int i=0; i<split.Length; i++)
+					{
+						PageType pageType;
+						if (System.Enum.TryParse (split[i], out pageType))
+						{
+							pageTypes.Add (pageType);
+						}
+					}
+				}
+			}
+
+			return pageTypes;
+		}
+
+		public void SetPageTypes(List<PageType> pageTypes)
+		{
+			if (pageTypes == null || pageTypes.Count == 0)
+			{
+				this.SerializedData = null;
+			}
+			else
+			{
+				var builder = new System.Text.StringBuilder ();
+
+				for (int i=0; i<pageTypes.Count; i++)
+				{
+					builder.Append (pageTypes[i].ToString ());
+
+					if (i < pageTypes.Count-1)
+					{
+						builder.Append ("◊");
+					}
+				}
+
 				byte[] bytes = System.Text.Encoding.UTF8.GetBytes (builder.ToString ());
 				this.SerializedData = bytes;
 			}

@@ -343,8 +343,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			int rows = this.documentPrintingUnits.Count;
 			this.table.SetArraySize (8, rows);
 
-			this.table.SetWidthColumn (0, 180);
-			this.table.SetWidthColumn (1, 180);
+			this.table.SetWidthColumn (0, 160);  // \_ total = 360 pour occuper la largeur visible
+			this.table.SetWidthColumn (1, 200);  // / 
 			this.table.SetWidthColumn (2, 150);
 			this.table.SetWidthColumn (3, 120);
 			this.table.SetWidthColumn (4, 120);

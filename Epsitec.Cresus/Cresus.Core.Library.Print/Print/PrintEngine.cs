@@ -388,13 +388,28 @@ namespace Epsitec.Cresus.Core.Print
 			{
 				foreach (var category in categories)
 				{
-					if (category.DocumentOptions != null)
+					if (category.DocumentPrintingUnits != null)
 					{
+#if false
 						foreach (var printingUnits in category.DocumentPrintingUnits)
 						{
 							var printingUnit = printingUnits.GetPrintingUnits ();
 							result.MergeWith (printingUnit);
 						}
+#else
+						foreach (var documentPrintingUnit in category.DocumentPrintingUnits)
+						{
+							PrintingUnitDictionary dict = new PrintingUnitDictionary ();
+							var pageTypes = documentPrintingUnit.GetPageTypes ();
+
+							foreach (var pageType in pageTypes)
+							{
+								dict[pageType] = documentPrintingUnit.Code;
+							}
+
+							result.MergeWith (dict);
+						}
+#endif
 					}
 				}
 			}
