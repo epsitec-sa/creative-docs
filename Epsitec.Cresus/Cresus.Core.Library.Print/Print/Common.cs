@@ -101,7 +101,7 @@ namespace Epsitec.Cresus.Core.Print
 
 		public static PrintingUnit GetPrintingUnit(CoreApp app, string documentPrintingUnitCode)
 		{
-			//	Cherche une unité d'impression d'après son nom.
+			//	Cherche une unité d'impression d'après son code.
 			List<PrintingUnit> printerUnitList = PrinterApplicationSettings.GetPrintingUnitList (app);
 			return printerUnitList.Where (p => p.DocumentPrintingUnitCode == documentPrintingUnitCode).FirstOrDefault ();
 		}

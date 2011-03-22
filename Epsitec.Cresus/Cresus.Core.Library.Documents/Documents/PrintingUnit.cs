@@ -106,15 +106,35 @@ namespace Epsitec.Cresus.Core.Documents
 			example.Code = this.DocumentPrintingUnitCode;
 
 			var documentPrintingUnits = businessContext.DataContext.GetByExample<DocumentPrintingUnitsEntity> (example).FirstOrDefault ();
+			return PrintingUnit.GetNiceDescription (this, documentPrintingUnits);
+		}
 
-			if (documentPrintingUnits == null)
+		public static FormattedText GetNiceDescription(PrintingUnit printingUnit, DocumentPrintingUnitsEntity documentPrintingUnits)
+		{
+			if (printingUnit == null && documentPrintingUnits == null)
 			{
-				return TextFormatter.FormatText ("Error (Code=", this.DocumentPrintingUnitCode, ")");
+				return "null";
+			}
+
+			if (printingUnit == null)
+			{
+				return documentPrintingUnits.Name;
+			}
+			else if (documentPrintingUnits == null)
+			{
+				return TextFormatter.FormatText ("Error (Code=", printingUnit.DocumentPrintingUnitCode, ")");
 			}
 			else
 			{
-				string copies = this.Copies < 2 ? null : string.Format ("{0}×", this.Copies);
-				return TextFormatter.FormatText (documentPrintingUnits.Name, copies, "(", this.PhysicalPrinterName, ",~", this.PhysicalPrinterTray, ")");
+				if (printingUnit.Copies < 2)
+				{
+					return TextFormatter.FormatText (documentPrintingUnits.Name, "(", printingUnit.PhysicalPrinterName, ",~", printingUnit.PhysicalPrinterTray, ")");
+				}
+				else
+				{
+					string copies = string.Format ("{0}×", printingUnit.Copies);
+					return TextFormatter.FormatText (documentPrintingUnits.Name, copies, "(", printingUnit.PhysicalPrinterName, ",~", printingUnit.PhysicalPrinterTray, ")");
+				}
 			}
 		}
 
