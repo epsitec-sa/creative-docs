@@ -219,7 +219,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			//	Connection des événements.
 			this.table.SelectionChanged += delegate
 			{
-				this.TableChanged ();
+				this.TableSelectionChanged ();
 			};
 
 			this.physicalField.SelectedItemChanged += delegate
@@ -454,9 +454,9 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void UpdateTrayField()
 		{
-			List<string> trayNames = PrintingUnitsTabPage.GetTrayList (this.physicalField.Text);
-
 			this.trayField.Items.Clear ();
+
+			List<string> trayNames = PrintingUnitsTabPage.GetTrayList (this.physicalField.Text);
 			foreach (var trayName in trayNames)
 			{
 				string name = FormattedText.Escape (trayName);
@@ -479,9 +479,9 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void UpdatePaperSizeField()
 		{
-			List<PaperSize> paperSizes = PrintingUnitsTabPage.GetPaperSizeList (this.physicalField.Text);
-
 			this.paperSizeField.Items.Clear ();
+
+			List<PaperSize> paperSizes = PrintingUnitsTabPage.GetPaperSizeList (this.physicalField.Text);
 			foreach (var paperSize in paperSizes)
 			{
 				string name = PrintingUnitsTabPage.PaperSizeToNiceDescription (paperSize.Size);
@@ -536,7 +536,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
-		private void TableChanged()
+		private void TableSelectionChanged()
 		{
 			this.UpdateTrayField ();
 			this.UpdatePaperSizeField ();
@@ -550,23 +550,52 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			if (this.physicalField.Text == PrintingUnitsTabPage.nullPrinter)
 			{
 				this.RemovePrintingUnit (this.SelectedCode);
+
+				this.UpdateTrayField ();
+				this.UpdatePaperSizeField ();
+				this.UpdateDuplexField ();
+				this.UpdateTable ();
+				this.UpdateWidgets ();
 			}
 			else
 			{
 				var printingUnit = this.CreatePrintingUnit (this.SelectedCode);
+
 				printingUnit.PhysicalPrinterName = this.physicalField.Text;
 				printingUnit.PhysicalPrinterTray = null;
+				printingUnit.PhysicalPaperSize = Size.Zero;
 				printingUnit.PhysicalDuplexMode = DuplexMode.Default;
 				printingUnit.XOffset = 0;
 				printingUnit.YOffset = 0;
 				printingUnit.Copies = 1;
-			}
 
-			this.UpdateTable ();
-			this.UpdateTrayField ();
-			this.UpdatePaperSizeField ();
-			this.UpdateDuplexField ();
-			this.UpdateWidgets ();
+				this.UpdateTrayField ();
+				this.UpdatePaperSizeField ();
+				this.UpdateDuplexField ();
+
+				//	Initialise des valeurs par défaut.
+				if (this.trayField.Items.Count > 0)
+				{
+					//	Utilise le premier bac, généralement "Sélection automatique".
+					printingUnit.PhysicalPrinterTray = this.trayField.Items[0];
+				}
+
+				var a4 = new Size(210, 297);  // A4 vertical
+				if (this.paperSizeField.Items.Contains (PrintingUnitsTabPage.PaperSizeToNiceDescription (a4)))
+				{
+					//	Utilise le format A4 vertical s'il existe.
+					printingUnit.PhysicalPaperSize = a4;
+				}
+				else if (this.paperSizeField.Items.Count > 0)
+				{
+					//	S'il n'existe pas de A4, sélectionne le premier format, qui sera prioritairement
+					//	un format connu, grâce au tri ComparePaperSize.
+					printingUnit.PhysicalPaperSize = PrintingUnitsTabPage.NiceDescriptionToPaperSize (this.paperSizeField.Items[0]);
+				}
+
+				this.UpdateTable ();
+				this.UpdateWidgets ();
+			}
 		}
 
 		private void ActionTrayChanged()
@@ -708,22 +737,33 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private static int ComparePaperSize(PaperSize x, PaperSize y)
 		{
-			if (x.Width < y.Width)
+			string xDescription = PrintingUnitsTabPage.PaperSizeToDescription (x.Size);
+			string yDescription = PrintingUnitsTabPage.PaperSizeToDescription (y.Size);
+
+			//	Met en premier les tailles de papier connues (A4, A5, etc.).
+			if (xDescription != null && yDescription != null)
+			{
+				return xDescription.CompareTo (yDescription);
+			}
+
+			if (xDescription != null)
 			{
 				return -1;
 			}
-			else if (x.Width > y.Width)
+
+			if (yDescription != null)
 			{
 				return 1;
 			}
 
-			if (x.Height < y.Height)
+			if (x.Width != y.Width)
 			{
-				return -1;
+				return x.Width.CompareTo (y.Width);
 			}
-			else if (x.Height > y.Height)
+
+			if (x.Height != y.Height)
 			{
-				return 1;
+				return x.Height.CompareTo (y.Height);
 			}
 
 			return 0;
