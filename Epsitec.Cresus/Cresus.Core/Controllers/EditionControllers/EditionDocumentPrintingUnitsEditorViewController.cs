@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 	{
 		public override double GetPreferredWidth(int columnIndex, int columnCount)
 		{
-			return base.GetPreferredWidth (columnIndex, columnCount) * 2;
+			return base.GetPreferredWidth (columnIndex, columnCount);
 		}
 
 		protected override void CreateUI()
