@@ -38,18 +38,13 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Icon ("Data.Customer")
 				.Title ("Client")
 				.Input ()
-				  .Title ("Client depuis le")
 				  .Field (x => x.FirstContactDate).Width (90)
 				.End ()
 				.Separator ()
 				.Input ()
-				  .Title ("Numéro de TVA")
 				  .Field (x => x.VatNumber)
-				  .Title ("Mode d'assujetissement à la TVA")
 				  .Field (x => x.TaxMode)
-				  .Title ("Compte débiteur pour la comptabilisation")
 				  .Field (x => x.DefaultDebtorBookAccount)
-				  .Title ("Monnaie utilisée")
 				  .Field (x => x.DefaultCurrencyCode)
 				.End ();
 		}

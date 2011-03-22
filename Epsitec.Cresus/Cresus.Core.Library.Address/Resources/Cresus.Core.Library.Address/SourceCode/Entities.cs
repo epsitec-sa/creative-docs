@@ -443,19 +443,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/FVA5/FVAJ
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[FVAJ]")]
-		public global::Epsitec.Common.Types.Date DateOfBirth
+		public global::Epsitec.Common.Types.Date? DateOfBirth
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Common.Types.Date> ("[FVAJ]");
+				return this.GetField<global::Epsitec.Common.Types.Date?> ("[FVAJ]");
 			}
 			set
 			{
-				global::Epsitec.Common.Types.Date oldValue = this.DateOfBirth;
+				global::Epsitec.Common.Types.Date? oldValue = this.DateOfBirth;
 				if (oldValue != value || !this.IsFieldDefined("[FVAJ]"))
 				{
 					this.OnDateOfBirthChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.Date> ("[FVAJ]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.Date?> ("[FVAJ]", oldValue, value);
 					this.OnDateOfBirthChanged (oldValue, value);
 				}
 			}
@@ -481,8 +481,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnLastnameChanged(string oldValue, string newValue);
 		partial void OnGenderChanging(global::Epsitec.Cresus.Core.Entities.PersonGenderEntity oldValue, global::Epsitec.Cresus.Core.Entities.PersonGenderEntity newValue);
 		partial void OnGenderChanged(global::Epsitec.Cresus.Core.Entities.PersonGenderEntity oldValue, global::Epsitec.Cresus.Core.Entities.PersonGenderEntity newValue);
-		partial void OnDateOfBirthChanging(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
-		partial void OnDateOfBirthChanged(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
+		partial void OnDateOfBirthChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+		partial void OnDateOfBirthChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
