@@ -38,7 +38,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateMargin (tile, horizontalSeparator: false);
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
-			//?builder.CreateButtonOpeningSubviewController ("DocumentPrintingUnitsEditor", TextFormatter.FormatText ("Voir les types de page &gt;"), this.Entity, ViewControllerMode.Edition, 2);
 			var controller = new PageTypesController (this.Entity);
 			controller.CreateUI (tile.Container);
 		}

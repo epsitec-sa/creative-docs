@@ -16,8 +16,7 @@ namespace Epsitec.Cresus.Core.Entities
 		public override FormattedText GetSummary()
 		{
 			//	L'espace entre les <br/> est nécessaire, à cause de FormatText qui fait du zèle !
-			return TextFormatter.FormatText (this.Name, FormattedText.Concat ("<br/>________________________________________<br/> <br/>"
-				/*, this.GetPrintingUnitsSummary ()*/));
+			return TextFormatter.FormatText (this.Name, FormattedText.Concat ("<br/> <br/>", this.GetPageTypesSummary ()));
 		}
 
 		public override FormattedText GetCompactSummary()
@@ -36,87 +35,29 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
-#if false
-		private FormattedText GetPrintingUnitsSummary()
+		private FormattedText GetPageTypesSummary()
 		{
-			var dict = this.GetPrintingUnits ();
-			var all = VerbosePageType.GetAll ();
 			var builder = new System.Text.StringBuilder ();
+			builder.Append ("Pages pouvant être imprimées par cette unité :<br/>");
 
-			foreach (var pageType in all)
+			var list = this.GetPageTypes ();
+
+			if (list.Count == 0)
 			{
-				if (dict.ContainsPageType (pageType.Type))
+				builder.Append ("● <i>Aucune</i><br/>");
+			}
+			else
+			{
+				foreach (var pageType in list)
 				{
-					var unit = dict.GetPrintingUnit (pageType.Type);
-
-					if (string.IsNullOrEmpty (unit))
-					{
-						unit = "<i>(aucune)</i>";
-					}
-
-					builder.Append (pageType.ShortDescription);
-					builder.Append (" = ");
-					builder.Append (unit);
+					builder.Append ("● ");
+					builder.Append (pageType.ToString ());  // TODO: Comment accéder à Epsitec.Cresus.Core.Documents.Verbose.VerbosePageType pour afficher le PageType en clair ?
 					builder.Append ("<br/>");
 				}
 			}
 
 			return builder.ToString ();
 		}
-#endif
-
-#if false
-		public PrintingUnitDictionary GetPrintingUnits()
-		{
-			//	Retourne le dictionnaire "type de pages" / "unité d'impression".
-			// TODO: Ajouter un cache pour accélérer l'accès !
-			var dict = new PrintingUnitDictionary ();
-
-			if (this.SerializedData != null)
-			{
-				string s = System.Text.Encoding.UTF8.GetString (this.SerializedData);
-
-				if (!string.IsNullOrEmpty (s))
-				{
-					// Exemple de table obtenue: "ForAllPages", "Blanc", "ForPagesCopy", "Recyclé", ""
-					string[] split = s.Split ('◊');
-
-					for (int i = 0; i < split.Length-1; i+=2)
-					{
-						var type = PageTypeConverter.Parse (split[i]);
-						dict[type] = split[i+1];
-					}
-				}
-			}
-
-			return dict;
-		}
-
-		public void SetPrintingUnits(PrintingUnitDictionary options)
-		{
-			//	Spécifie le dictionnaire "type de pages" / "unité d'impression".
-			if (options.Count == 0)
-			{
-				this.SerializedData = null;
-			}
-			else
-			{
-				var builder = new System.Text.StringBuilder ();
-
-				foreach (var pair in options.ContentPair)
-				{
-					builder.Append (pair.Key);
-					builder.Append ("◊");
-					builder.Append (pair.Value);
-					builder.Append ("◊");
-				}
-
-				// Exemple de chaîne obtenue: "ForAllPages◊Blanc◊ForPagesCopy◊Recyclé◊"
-				byte[] bytes = System.Text.Encoding.UTF8.GetBytes (builder.ToString ());
-				this.SerializedData = bytes;
-			}
-		}
-#endif
 
 		public List<PageType> GetPageTypes()
 		{
