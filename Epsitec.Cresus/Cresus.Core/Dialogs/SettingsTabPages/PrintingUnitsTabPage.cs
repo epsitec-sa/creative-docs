@@ -349,7 +349,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.table.SetWidthColumn (3, 120);
 
 			this.table.SetHeaderTextH (0, "Unité d'impression");
-			this.table.SetHeaderTextH (1, "Imprimante");
+			this.table.SetHeaderTextH (1, "Imprimante physique");
 			this.table.SetHeaderTextH (2, "Bac");
 			this.table.SetHeaderTextH (3, "Papier");
 
@@ -405,7 +405,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.physicalBox.Enable  = (sel != -1);
 			this.trayBox.Enable      = (sel != -1 && printingUnit != null);
 			this.paperSizeBox.Enable = (sel != -1 && printingUnit != null);
-			this.duplexBox.Enable    = (sel != -1 && printingUnit != null);
+			this.duplexBox.Enable    = (sel != -1 && printingUnit != null && PrintingUnitsTabPage.CanDuplex (this.physicalField.Text));
 			this.xOffsetBox.Enable   = (sel != -1 && printingUnit != null);
 			this.yOffsetBox.Enable   = (sel != -1 && printingUnit != null);
 			this.copiesBox.Enable    = (sel != -1 && printingUnit != null);
@@ -500,11 +500,10 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void UpdateDuplexField()
 		{
+			this.duplexField.Items.Clear ();
+
 			if (PrintingUnitsTabPage.CanDuplex (this.physicalField.Text))
 			{
-				this.duplexBox.Enable = true;
-				
-				this.duplexField.Items.Clear ();
 				this.duplexField.Items.Add (PrintingUnit.DuplexToDescription (DuplexMode.Default));
 				this.duplexField.Items.Add (PrintingUnit.DuplexToDescription (DuplexMode.Simplex));
 				this.duplexField.Items.Add (PrintingUnit.DuplexToDescription (DuplexMode.Horizontal));
@@ -512,9 +511,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			}
 			else
 			{
-				this.duplexBox.Enable = false;
-
-				this.duplexField.Items.Clear ();
 				this.duplexField.Text = null;
 			}
 		}
@@ -559,6 +555,11 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			{
 				var printingUnit = this.CreatePrintingUnit (this.SelectedCode);
 				printingUnit.PhysicalPrinterName = this.physicalField.Text;
+				printingUnit.PhysicalPrinterTray = null;
+				printingUnit.PhysicalDuplexMode = DuplexMode.Default;
+				printingUnit.XOffset = 0;
+				printingUnit.YOffset = 0;
+				printingUnit.Copies = 1;
 			}
 
 			this.UpdateTable ();
