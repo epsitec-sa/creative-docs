@@ -73,7 +73,10 @@ namespace Epsitec.Common.Text
 			CursorInfo.Filter  filter = Cursors.FitterCursor.GetFrameFilter (index);
 			CursorInfo[]       infos  = text.FindCursors (0, length, filter, false);
 
-			Debug.Assert.IsInBounds (index, 0, this.frames.Count-1);
+			if (index != -1)
+			{
+				Debug.Assert.IsInBounds (index, 0, this.frames.Count-1);
+			}
 
 			if (infos.Length > 0)
 			{

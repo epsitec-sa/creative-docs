@@ -8,8 +8,8 @@
     <ProjectGuid>{F3A53056-6C28-470B-A79F-9AA9C2235BBF}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>X.Export</RootNamespace>
-    <AssemblyName>X.Export</AssemblyName>
+    <RootNamespace>Tool.Export</RootNamespace>
+    <AssemblyName>Tool.Export</AssemblyName>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
@@ -60,8 +60,9 @@
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
-    <CodeAnalysisLogFile>bin\Debug\X.Export.exe.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <CodeAnalysisLogFile>bin\Debug\Tool.Export.exe.CodeAnalysisLog.xml</CodeAnalysisLogFile>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
@@ -78,7 +79,8 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(TargetDir)*.dll" "$(SolutionDir)Export" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+    <PostBuildEvent>
+xcopy "$(TargetDir)*.dll" "$(SolutionDir)Export" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(TargetDir)*.pdb" "$(SolutionDir)Export" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(TargetDir)*.xml" "$(SolutionDir)Export" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(TargetDir)*.exe" "$(SolutionDir)Export" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
@@ -86,18 +88,18 @@ xcopy "$(TargetDir)*.exe" "$(SolutionDir)Export" /S/Y /EXCLUDE:..\..\..\excludes
 xcopy "$(SolutionDir)External\DotNet35\*.dll" "$(SolutionDir)Export" /Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)External\DotNet35\*.pdb" "$(SolutionDir)Export" /Y /EXCLUDE:..\..\..\excludesvn.ini
 
-xcopy "$(SolutionDir)App.DocumentEditor\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.DocumentEditor\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)App.CresusDocuments\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)Common.Designer\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.Dialogs\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)Common.DocumentEditor\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)Common.Document\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.Support\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.Types\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.Widgets\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Cresus.Database\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)Common\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 </PostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\App.CresusDocuments\App.CresusDocuments.csproj">
+      <Project>{D0BF9A45-E6F2-4FEF-B5A0-008BE0159967}</Project>
+      <Name>App.CresusDocuments</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.DocumentEditor\Common.DocumentEditor.csproj">
       <Project>{B3B20AC3-680D-41E0-94C2-8113577CE703}</Project>
       <Name>Common.DocumentEditor</Name>
@@ -106,9 +108,13 @@ xcopy "$(SolutionDir)Cresus.Database\Resources\*" "$(SolutionDir)Export\Resource
       <Project>{B324896E-2CDE-45B8-91CE-B476687EA384}</Project>
       <Name>Common.Document</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common.Support.Implementation\Common.Support.Implementation.csproj">
-      <Project>{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}</Project>
-      <Name>Common.Support.Implementation</Name>
+    <ProjectReference Include="..\Common.Splash\Common.Splash.csproj">
+      <Project>{28FBE9C0-881E-4BF0-BDFA-4F8BB9E31083}</Project>
+      <Name>Common.Splash</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
+      <Name>Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

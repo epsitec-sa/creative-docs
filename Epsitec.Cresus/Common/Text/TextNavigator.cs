@@ -1572,8 +1572,8 @@ again:
 			
 			TextStyle[] metaProperties = TextStyle.FilterStyles (styles, TextStyleClass.MetaProperty);
 			
-			System.Diagnostics.Debug.Assert (metaProperties.Length == styles.Length);
-			System.Diagnostics.Debug.Assert (metaProperties.Length > 0);
+//?			System.Diagnostics.Debug.Assert (metaProperties.Length == styles.Length);
+//?			System.Diagnostics.Debug.Assert (metaProperties.Length > 0);
 			
 			bool isUniform = false;
 			
