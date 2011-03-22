@@ -101,7 +101,6 @@
     <Compile Include="Controllers\CreationControllers\CreationCustomerViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionCustomerViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDocumentCategoryMappingViewController.cs" />
-    <Compile Include="Controllers\EditionControllers\EditionDocumentPrintingUnitsEditorViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDocumentPrintingUnitsViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDocumentOptionsEditorViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDocumentOptionsViewController.cs" />

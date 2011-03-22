@@ -48,7 +48,6 @@
     </Compile>
     <Compile Include="Dialogs\PrintOptionsDialog.cs" />
     <Compile Include="Print\Controllers\PageTypesController.cs" />
-    <Compile Include="Print\Controllers\DocumentOptionsEditorController.cs" />
     <Compile Include="Dialogs\OptimalPreviewPlacer.cs" />
     <Compile Include="Dialogs\PrintPreviewDialog.cs" />
     <Compile Include="Print\Bands\AbstractBand.cs" />

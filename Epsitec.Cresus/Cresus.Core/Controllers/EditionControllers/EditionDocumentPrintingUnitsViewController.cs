@@ -6,6 +6,7 @@ using Epsitec.Common.Types.Converters;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Print.Controllers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -34,10 +35,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField      (tile,   0, "Nom",         Marshaler.Create (() => this.Entity.Name,        x => this.Entity.Name = x));
 			builder.CreateTextFieldMulti (tile, 100, "Description", Marshaler.Create (() => this.Entity.Description, x => this.Entity.Description = x));
 
-			builder.CreateMargin (tile, horizontalSeparator: true);
 			builder.CreateMargin (tile, horizontalSeparator: false);
+			builder.CreateMargin (tile, horizontalSeparator: true);
 
-			builder.CreateButtonOpeningSubviewController ("DocumentPrintingUnitsEditor", TextFormatter.FormatText ("Voir les unités d'impression &gt;"), this.Entity, ViewControllerMode.Edition, 2);
+			//?builder.CreateButtonOpeningSubviewController ("DocumentPrintingUnitsEditor", TextFormatter.FormatText ("Voir les types de page &gt;"), this.Entity, ViewControllerMode.Edition, 2);
+			var controller = new PageTypesController (this.Entity);
+			controller.CreateUI (tile.Container);
 		}
 	}
 }
