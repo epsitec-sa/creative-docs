@@ -50,6 +50,12 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		protected abstract void CreateUI();
 
+		internal EntityViewController NotifyAboutToCreateUI()
+		{
+			this.AboutToCreateUI ();
+			return this;
+		}
+
 		internal abstract Bridge CreateBridgeAndBuildBricks();
 
 		public T NotifyChildItemCreated<T>(T entity)

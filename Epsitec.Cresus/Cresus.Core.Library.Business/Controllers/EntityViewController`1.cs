@@ -26,7 +26,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		protected EntityViewController()
 			: base (EntityViewControllerFactory.Default.ControllerName)
 		{
-			this.entity = EntityViewControllerFactory.Default.Entity as T;
+			this.uiControllers = new List<EntityViewController> ();
+			this.entity        = EntityViewControllerFactory.Default.Entity as T;
 
 			System.Diagnostics.Debug.Assert (this.DataContext != null, "No DataContext");
 			System.Diagnostics.Debug.Assert ((this.Orchestrator.Data.IsDummyEntity (this.entity)) || (this.DataContext.Contains (this.entity)), "Invalid entity");
@@ -50,11 +51,13 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		public override IEnumerable<CoreController> GetSubControllers()
+		{
+			return this.uiControllers;
+		}
 
         public sealed override void CreateUI(Widget container)
 		{
-			this.CreateSubControllers ();
-			
 			base.CreateUI (container);
 
 			var context       = this.DataContext;
@@ -77,9 +80,23 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					bridge.CreateTileDataItems (data);
 
-					this.GetSubControllers ().OfType<EntityViewController> ().ForEach (x => x.CreateBridgeAndBuildBricks ().CreateTileDataItems (data));
+					this.uiControllers.ForEach (x => x.NotifyAboutToCreateUI ().CreateBridgeAndBuildBricks ().CreateTileDataItems (data));
 				}
 			}
+		}
+
+		public void AddUIController(EntityViewController controller)
+		{
+			this.uiControllers.Add (controller);
+		}
+
+		protected EntityViewController CreateEditionSubController<TField>(Expression<System.Func<T, TField>> entityGetter)
+			where TField : AbstractEntity
+		{
+			var name = EntityInfo.GetFieldCaption (entityGetter).Name;
+			var func = entityGetter.Compile ();
+
+			return EntityViewControllerFactory.Create (this.Name + name, func (this.Entity), ViewControllerMode.Edition, this.Orchestrator);
 		}
 
 		internal sealed override Bridge CreateBridgeAndBuildBricks()
@@ -93,10 +110,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		protected virtual void CreateBricks(Bricks.BrickWall<T> wall)
-		{
-		}
-
-		protected virtual void CreateSubControllers()
 		{
 		}
 
@@ -194,7 +207,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private T								entity;
-		private AbstractEntity[]				masterEntities;
+		private readonly List<EntityViewController>	uiControllers;
+		private T									entity;
+		private AbstractEntity[]					masterEntities;
 	}
 }

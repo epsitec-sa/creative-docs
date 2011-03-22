@@ -21,16 +21,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionRelationViewController : EditionViewController<RelationEntity>
 	{
-		public override IEnumerable<CoreController> GetSubControllers()
-		{
-			yield return this.personController;
-		}
-
-		protected override void CreateSubControllers()
-		{
-			this.personController = EntityViewControllerFactory.Create (this.Name + "Person", this.Entity.Person, ViewControllerMode.Edition, this.Orchestrator);
-		}
-
 		protected override void CreateBricks(Bricks.BrickWall<RelationEntity> wall)
 		{
 			wall.AddBrick ()
@@ -47,49 +37,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .Field (x => x.DefaultDebtorBookAccount)
 				  .Field (x => x.DefaultCurrencyCode)
 				.End ();
+
+			this.AddUIController (this.CreateEditionSubController (x => x.Person));
 		}
-
-#if false
-		protected override void CreateUI()
-		{
-			using (var builder = new UIBuilder (this))
-			{
-				builder.CreateHeaderEditorTile ();
-				builder.CreateEditionTitleTile ("Data.Customer", "Client");
-
-				this.CreateUIMain (builder);
-
-				this.personController = EntityViewControllerFactory.Create (this.Name + "Person", this.Entity.Person, ViewControllerMode.Edition, this.Orchestrator);
-				this.personController.CreateUI (this.TileContainer);
-
-				builder.CreateFooterEditorTile ();
-			}
-		}
-#endif
-
-
-		private void CreateUIMain(UIBuilder builder)
-		{
-			var tile = builder.CreateEditionTile ();
-
-			builder.CreateMargin                (tile, horizontalSeparator: false);
-			builder.CreateTextField             (tile,  90,                              "Client depuis le",                         Marshaler.Create (() => this.Entity.FirstContactDate,         x => this.Entity.FirstContactDate = x));
-			builder.CreateMargin                (tile, horizontalSeparator: true);
-			builder.CreateTextField             (tile, 150,                              "Numéro de TVA",                            Marshaler.Create (() => this.Entity.VatNumber,                x => this.Entity.VatNumber = x));
-			builder.CreateAutoCompleteTextField (tile, 150-UIBuilder.ComboButtonWidth+1, "Mode d'assujetissement à la TVA",          Marshaler.Create (() => this.Entity.TaxMode,                  x => this.Entity.TaxMode = x), EnumKeyValues.FromEnum<TaxMode> (), x => TextFormatter.FormatText (x));
-			builder.CreateAccountEditor         (tile,                                   "Compte débiteur pour la comptabilisation", Marshaler.Create (() => this.Entity.DefaultDebtorBookAccount, x => this.Entity.DefaultDebtorBookAccount = x));
-			builder.CreateAutoCompleteTextField (tile, 150-UIBuilder.ComboButtonWidth+1, "Monnaie utilisée",                         Marshaler.Create (() => this.Entity.DefaultCurrencyCode,      x => this.Entity.DefaultCurrencyCode = x), EnumKeyValues.FromEnum<CurrencyCode> (), x => TextFormatter.FormatText (x));
-			
-			
-			
-			builder.CreateAutoCompleteTextField (tile,
-				150-UIBuilder.ComboButtonWidth+1,
-				"Monnaie utilisée",
-				Marshaler.Create (() => this.Entity.DefaultCurrencyCode, x => this.Entity.DefaultCurrencyCode = x),
-				EnumKeyValues.FromEnum<CurrencyCode> (),
-				x => TextFormatter.FormatText (x));
-		}
-
-		private EntityViewController personController;
 	}
 }
