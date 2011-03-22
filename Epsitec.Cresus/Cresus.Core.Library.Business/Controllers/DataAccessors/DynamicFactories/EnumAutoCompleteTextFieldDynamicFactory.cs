@@ -13,12 +13,14 @@ using Epsitec.Cresus.DataLayer.Context;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Epsitec.Cresus.Core.Library;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 {
-	internal abstract class AutoCompleteTextFieldDynamicFactory : DynamicFactory
+	internal abstract class EnumAutoCompleteTextFieldDynamicFactory : DynamicFactory
 	{
-		public static DynamicFactory Create<T>(BusinessContext business, LambdaExpression lambda, System.Func<T> entityGetter, string title)
+		public static DynamicFactory Create<T>(BusinessContext business, LambdaExpression lambda, System.Func<T> entityGetter, string title, int width)
 		{
 			var fieldType    = lambda.ReturnType;
 			var sourceType   = lambda.Parameters[0].Type;
@@ -40,15 +42,15 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 			var setterFunc   = setterLambda.Compile ();
 
 			var factoryType = typeof (Factory<,>).MakeGenericType (sourceType, fieldType);
-			var instance    = System.Activator.CreateInstance (factoryType, business, lambda, entityGetter, getterFunc, setterFunc, title);
+			var instance    = System.Activator.CreateInstance (factoryType, business, lambda, entityGetter, getterFunc, setterFunc, title, width);
 
 			return (DynamicFactory) instance;
 		}
 		
 		class Factory<TSource, TField> : DynamicFactory
-			where TField : AbstractEntity, new ()
+			where TField : struct
 		{
-			public Factory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title)
+			public Factory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title, int width)
 			{
 				this.business = business;
 				this.lambda = lambda;
@@ -56,6 +58,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 				this.getter = getter;
 				this.setter = setter;
 				this.title  = title;
+				this.width  = width;
 			}
 
 			private System.Func<TField> CreateGetter()
@@ -73,29 +76,21 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 				return () => (AbstractEntity) this.getter.DynamicInvoke (this.sourceGetter ());
 			}
 
-			private ReferenceController CreateReferenceController()
+			private Marshaler CreateMarshaler()
 			{
-				return new ReferenceController ("x", this.CreateGenericGetter (), creator: this.CreateNewEntity);
-			}
-
-			private NewEntityReference CreateNewEntity(DataContext context)
-			{
-				return context.CreateEntityAndRegisterAsEmpty<TField> ();
+				return new NonNullableMarshaler<TField> (this.CreateGetter (), this.CreateSetter (), this.lambda);
 			}
 
 			public override object CreateUI(FrameBox frame, UIBuilder builder)
 			{
-				var sel = new SelectionController<TField> (this.business)
-				{
-					ValueGetter = this.CreateGetter (),
-					ValueSetter = this.CreateSetter (),
-					ReferenceController = this.CreateReferenceController (),
-				};
+				IEnumerable<EnumKeyValues<TField>> possibleItems = EnumKeyValues.FromEnum<TField> ();
+				System.Func<EnumKeyValues<TField>, FormattedText> getUserText = x => TextFormatter.FormatText (x);
 
 				var tile    = frame as EditionTile;
+				var marshaler = this.CreateMarshaler ();
 				var caption = DynamicFactory.GetInputCaption (this.lambda);
 				var title   = this.title ?? DynamicFactory.GetInputTitle (caption);
-				var widget  = builder.CreateAutoCompleteTextField<TField> (tile, title, sel);
+				var widget  = builder.CreateAutoCompleteTextField<TField> (tile, this.width, title, marshaler, possibleItems, getUserText);
 
 				if ((caption != null) &&
 					(caption.HasDescription))
@@ -113,6 +108,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 			private readonly System.Delegate getter;
 			private readonly System.Delegate setter;
 			private readonly string title;
+			private readonly int width;
 		}
 	}
 }

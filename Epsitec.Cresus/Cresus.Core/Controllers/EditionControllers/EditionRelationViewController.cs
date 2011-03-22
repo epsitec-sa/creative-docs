@@ -65,6 +65,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				builder.CreateFooterEditorTile ();
 			}
 		}
+#endif
 
 
 		private void CreateUIMain(UIBuilder builder)
@@ -78,8 +79,16 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateAutoCompleteTextField (tile, 150-UIBuilder.ComboButtonWidth+1, "Mode d'assujetissement à la TVA",          Marshaler.Create (() => this.Entity.TaxMode,                  x => this.Entity.TaxMode = x), EnumKeyValues.FromEnum<TaxMode> (), x => TextFormatter.FormatText (x));
 			builder.CreateAccountEditor         (tile,                                   "Compte débiteur pour la comptabilisation", Marshaler.Create (() => this.Entity.DefaultDebtorBookAccount, x => this.Entity.DefaultDebtorBookAccount = x));
 			builder.CreateAutoCompleteTextField (tile, 150-UIBuilder.ComboButtonWidth+1, "Monnaie utilisée",                         Marshaler.Create (() => this.Entity.DefaultCurrencyCode,      x => this.Entity.DefaultCurrencyCode = x), EnumKeyValues.FromEnum<CurrencyCode> (), x => TextFormatter.FormatText (x));
+			
+			
+			
+			builder.CreateAutoCompleteTextField (tile,
+				150-UIBuilder.ComboButtonWidth+1,
+				"Monnaie utilisée",
+				Marshaler.Create (() => this.Entity.DefaultCurrencyCode, x => this.Entity.DefaultCurrencyCode = x),
+				EnumKeyValues.FromEnum<CurrencyCode> (),
+				x => TextFormatter.FormatText (x));
 		}
-#endif
 
 		private EntityViewController personController;
 	}

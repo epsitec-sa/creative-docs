@@ -16,10 +16,11 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 {
 	internal abstract class ItemPickerDynamicFactory : DynamicFactory
 	{
-		public static DynamicFactory Create<T>(BusinessContext business, LambdaExpression lambda, System.Type itemType, System.Func<T> entityGetter, string title)
+		public static DynamicFactory Create<T>(BusinessContext business, LambdaExpression lambda, System.Func<T> entityGetter, string title)
 		{
 			var fieldType    = lambda.ReturnType;
 			var sourceType   = lambda.Parameters[0].Type;
+			var itemType     = fieldType.GetGenericArguments ()[0];
 
 			var getterLambda = lambda;
 			var getterFunc   = getterLambda.Compile ();

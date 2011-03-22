@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Widgets.Tiles;
@@ -250,12 +251,11 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				int    width = InputProcessor.GetInputWidth (fieldProperties);
 				string title = InputProcessor.GetInputTitle (fieldProperties);
 
-				if ((fieldType.IsClass) &&
-					(entityType.IsAssignableFrom (fieldType)))
+				if (fieldType.IsEntity ())
 				{
 					//	The field is an entity : use an AutoCompleteTextField for it.
 
-					var factory = DynamicFactories.AutoCompleteTextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title);
+					var factory = DynamicFactories.EntityAutoCompleteTextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title);
 					this.actions.Add ((tile, builder) => factory.CreateUI (tile, builder));
 
 					return;
@@ -271,20 +271,25 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 					return;
 				}
 
-				if ((fieldType.IsGenericType) &&
-					(fieldType.GetGenericTypeDefinition () == typeof (System.Collections.Generic.IList<>)))
+				if (fieldType.IsGenericIListOfEntities ())
 				{
-					var itemType = fieldType.GetGenericArguments ()[0];
+					var factory = DynamicFactories.ItemPickerDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title);
+					this.actions.Add ((tile, builder) => factory.CreateUI (tile, builder));
 
-					if ((itemType.IsClass) &&
-						(entityType.IsAssignableFrom (itemType)))
-					{
-						var factory = DynamicFactories.ItemPickerDynamicFactory.Create<T> (business, lambda, itemType, this.controller.EntityGetter, title);
-						this.actions.Add ((tile, builder) => factory.CreateUI (tile, builder));
-					}
+					return;
+				}
+
+				if (fieldType.IsEnum)
+				{
+					//	The field is an enumeration : use an AutoCompleteTextField for it.
+
+					var factory = DynamicFactories.EnumAutoCompleteTextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, width);
+					this.actions.Add ((tile, builder) => factory.CreateUI (tile, builder));
+
+					return;
 				}
 			}
-			
+
 			private void CreateActionForSeparator()
 			{
 				this.actions.Add ((tile, builder) => builder.CreateMargin (tile as EditionTile, horizontalSeparator: true));
