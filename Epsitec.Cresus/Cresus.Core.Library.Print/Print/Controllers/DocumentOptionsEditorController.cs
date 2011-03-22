@@ -38,16 +38,16 @@ namespace Epsitec.Cresus.Core.Print.Controllers
 				Padding = new Margins (5),
 			};
 
-			this.mainController = new MainController (this.businessContext, this.documentPrintingUnitsEntity);
-			this.mainController.CreateUI (box);
+			this.documentPrintingUnitController = new DocumentPrintingUnitController (this.businessContext, this.documentPrintingUnitsEntity);
+			this.documentPrintingUnitController.CreateUI (box);
 		}
 
 		private void HandleBusinessContextSavingChanges(object sender, CancelEventArgs e)
 		{
-			if (this.mainController != null)
+			if (this.documentPrintingUnitController != null)
 			{
-				this.mainController.SaveDesign ();
-				this.mainController = null;
+				this.documentPrintingUnitController.SaveDesign ();
+				this.documentPrintingUnitController = null;
 			}
 			
 			this.businessContext.DataContext.SaveChanges ();
@@ -67,6 +67,6 @@ namespace Epsitec.Cresus.Core.Print.Controllers
 		private readonly IBusinessContext					businessContext;
 		private readonly DocumentPrintingUnitsEntity		documentPrintingUnitsEntity;
 
-		private MainController								mainController;
+		private DocumentPrintingUnitController				documentPrintingUnitController;
 	}
 }
