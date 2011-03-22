@@ -16,11 +16,11 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryCustomerViewController : SummaryViewController<CustomerEntity>
 	{
-		protected override void CreateBricks()
+		protected override void CreateBricks(Bricks.BrickWall<CustomerEntity> wall)
 		{
-			this.AddBrick (x => x);
+			wall.AddBrick (x => x);
 
-			this.AddBrick (x => x.Relation.Person.Contacts)
+			wall.AddBrick (x => x.Relation.Person.Contacts)
 				.AsType<MailContactEntity> ()
 				.Template ()
 				 .Title (x => x.GetTitle ())
@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				 .TextCompact (x => x.GetCompactSummary ())
 				.End ();
 
-			this.AddBrick (x => x.Relation.Person.Contacts)
+			wall.AddBrick (x => x.Relation.Person.Contacts)
 				.AsType<TelecomContactEntity> ()
 				.AutoGroup ()
 				.Template ()
@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				 .TextCompact (x => x.GetCompactSummary ())
 				.End ();
 
-			this.AddBrick (x => x.Relation.Person.Contacts)
+			wall.AddBrick (x => x.Relation.Person.Contacts)
 				.AsType<UriContactEntity> ()
 				.AutoGroup ()
 				.Template ()
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				 .TextCompact (x => x.GetCompactSummary ())
 				.End ();
 
-			this.AddBrick (x => x.Relation.Affairs)
+			wall.AddBrick (x => x.Relation.Affairs)
 				.Template ()
 				 .Text (x => x.GetSummary ())
 				 .TextCompact (x => TextFormatter.FormatText (x.IdA))

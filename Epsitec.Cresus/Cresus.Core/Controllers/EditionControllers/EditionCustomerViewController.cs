@@ -12,9 +12,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionCustomerViewController : EditionViewController<CustomerEntity>
 	{
-		protected override void CreateBricks()
+		protected override void CreateBricks(Bricks.BrickWall<CustomerEntity> wall)
 		{
-			this.AddBrick ()
+			wall.AddBrick ()
 				.Input ()
 				  .HorizontalGroup ("N° de client (principal, externe et interne)")
 				    .Field (x => x.IdA).Width (74)
@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .End ()
 				.End ();
 
-			this.AddBrick (x => x.Relation)
+			wall.AddBrick (x => x.Relation)
 				.Icon ("none");
 		}
 	}

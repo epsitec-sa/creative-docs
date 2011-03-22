@@ -28,6 +28,16 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		public Bridge(EntityViewController<T> controller)
 		{
 			this.controller = controller;
+			this.walls = new List<BrickWall<T>> ();
+		}
+
+
+		public override bool ContainsBricks
+		{
+			get
+			{
+				return this.walls.Any (x => x.Bricks.Any ());
+			}
 		}
 
 		
@@ -38,10 +48,20 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			wall.BrickAdded += this.HandleBrickWallBrickAdded;
 			wall.BrickPropertyAdded += this.HandleBrickWallBrickPropertyAdded;
 
+			this.walls.Add (wall);
+
 			return wall;
 		}
+
+		public override void CreateTileDataItems(TileDataItems data)
+		{
+			foreach (var brick in this.walls.SelectMany (x => x.Bricks))
+			{
+				this.CreateTileDataItem (data, brick);
+			}
+		}
 		
-		public TileDataItem CreateTileDataItem(TileDataItems data, Brick brick)
+		private TileDataItem CreateTileDataItem(TileDataItems data, Brick brick)
 		{
 			var item = new TileDataItem ();
 			var root = brick;
@@ -242,7 +262,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				}
 
 				if ((fieldType == typeof (string)) ||
-					(fieldType == typeof (Date)))
+					(fieldType == typeof (Date)) ||
+					(fieldType == typeof (Date?)))
 				{
 					var factory = DynamicFactories.TextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, width);
 					this.actions.Add ((tile, builder) => factory.CreateUI (tile, builder));
@@ -418,5 +439,6 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 
 		private readonly EntityViewController<T> controller;
+		private readonly List<BrickWall<T>> walls;
 	}
 }

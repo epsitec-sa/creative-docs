@@ -53,6 +53,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
         public sealed override void CreateUI(Widget container)
 		{
+			this.CreateSubControllers ();
+			
 			base.CreateUI (container);
 
 			var context       = this.DataContext;
@@ -67,46 +69,36 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		protected override void CreateUI()
 		{
-			var bridge = new Bridge<T> (this);
-			
-			this.wall = bridge.CreateBrickWall ();
-				
-			this.CreateBricks ();
+			var bridge = this.CreateBridgeAndBuildBricks ();
 
-			if (this.wall.Bricks.Any ())
+			if (bridge.ContainsBricks)
 			{
 				using (var data = TileContainerController.Setup (this))
 				{
-					foreach (var brick in wall.Bricks)
-					{
-						bridge.CreateTileDataItem (data, brick);
-					}
+					bridge.CreateTileDataItems (data);
+
+					this.GetSubControllers ().OfType<EntityViewController> ().ForEach (x => x.CreateBridgeAndBuildBricks ().CreateTileDataItems (data));
 				}
 			}
-			this.wall = null;
 		}
 
-		protected virtual void CreateBricks()
+		internal sealed override Bridge CreateBridgeAndBuildBricks()
+		{
+			var bridge = new Bridge<T> (this);
+			var wall   = bridge.CreateBrickWall ();
+
+			this.CreateBricks (wall);
+
+			return bridge;
+		}
+
+		protected virtual void CreateBricks(Bricks.BrickWall<T> wall)
 		{
 		}
 
-		protected Bricks.SimpleBrick<T, T> AddBrick()
+		protected virtual void CreateSubControllers()
 		{
-			return this.wall.AddBrick ();
 		}
-
-		protected Bricks.SimpleBrick<T, TField> AddBrick<TField>(Expression<System.Func<T, TField>> expression)
-		{
-			return this.wall.AddBrick (expression);
-		}
-
-		protected Bricks.SimpleBrick<T, TField> AddBrick<TField>(Expression<System.Func<T, IList<TField>>> expression)
-		{
-			return this.wall.AddBrick (expression);
-		}
-
-
-		protected Bricks.BrickWall<T> wall;
 
 		public sealed override AbstractEntity GetEntity()
 		{
@@ -146,6 +138,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.masterEntities = this.GetMasterEntities ().ToArray ();
 			this.masterEntities.ForEach (x => businessContext.AddMasterEntity (x));
+
+			base.AboutToCreateUI ();
 		}
 		
 		protected override void AboutToCloseUI()

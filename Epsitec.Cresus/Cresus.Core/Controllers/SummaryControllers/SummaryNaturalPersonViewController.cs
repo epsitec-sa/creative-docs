@@ -14,11 +14,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
-	public class SummaryNaturalPersonViewController : SummaryViewController<Entities.NaturalPersonEntity>
+	public class SummaryNaturalPersonViewController : SummaryViewController<NaturalPersonEntity>
 	{
-		protected override void CreateBricks()
+		protected override void CreateBricks(Bricks.BrickWall<NaturalPersonEntity> wall)
 		{
-			this.AddBrick ()
+			wall.AddBrick ()
 //				.Name ("NaturalPerson")
 //				.Icon ("Data.NaturalPerson")
 //				.Title (TextFormatter.FormatText ("Personne physique"))
@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 //				.TextCompact (x => x.GetCompactSummary ())
 			;
 
-			this.AddBrick (x => x.Contacts)
+			wall.AddBrick (x => x.Contacts)
 				.AsType<MailContactEntity> ()
 //				.Name ("MailContact")
 //				.Icon ("Data.MailContact")
@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				 .TextCompact (x => x.GetCompactSummary ())
 				.End ();
 
-			this.AddBrick (x => x.Contacts)
+			wall.AddBrick (x => x.Contacts)
 				.AsType<TelecomContactEntity> ()
 				.AutoGroup ()
 //				.Name ("TelecomContact")
@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				 .TextCompact (x => x.GetCompactSummary ())
 				.End ();
 
-			this.AddBrick (x => x.Contacts)
+			wall.AddBrick (x => x.Contacts)
 				.AsType<UriContactEntity> ()
 				.AutoGroup ()
 //				.Name ("UriContact")

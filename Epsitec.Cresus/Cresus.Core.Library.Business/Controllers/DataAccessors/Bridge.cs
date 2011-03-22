@@ -17,6 +17,13 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 	/// </summary>
 	public abstract class Bridge
 	{
+		public abstract bool ContainsBricks
+		{
+			get;
+		}
+
+		public abstract void CreateTileDataItems(TileDataItems data);
+
 		protected static void CreateDefaultProperties(Brick brick, System.Type type)
 		{
 			var typeInfo = EntityInfo.GetStructuredType (type) as StructuredType;

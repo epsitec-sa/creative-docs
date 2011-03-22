@@ -23,12 +23,38 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 	{
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
-			if (this.personController != null)
-			{
-				yield return this.personController;
-			}
+			yield return this.personController;
 		}
 
+		protected override void CreateSubControllers()
+		{
+			this.personController = EntityViewControllerFactory.Create (this.Name + "Person", this.Entity.Person, ViewControllerMode.Edition, this.Orchestrator);
+		}
+
+		protected override void CreateBricks(Bricks.BrickWall<RelationEntity> wall)
+		{
+			wall.AddBrick ()
+				.Name ("Customer")
+				.Icon ("Data.Customer")
+				.Title ("Client")
+				.Input ()
+				  .Title ("Client depuis le")
+				  .Field (x => x.FirstContactDate).Width (90)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Title ("Numéro de TVA")
+				  .Field (x => x.VatNumber)
+				  .Title ("Mode d'assujetissement à la TVA")
+				  .Field (x => x.TaxMode)
+				  .Title ("Compte débiteur pour la comptabilisation")
+				  .Field (x => x.DefaultDebtorBookAccount)
+				  .Title ("Monnaie utilisée")
+				  .Field (x => x.DefaultCurrencyCode)
+				.End ();
+		}
+
+#if false
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -58,7 +84,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateAccountEditor         (tile,                                   "Compte débiteur pour la comptabilisation", Marshaler.Create (() => this.Entity.DefaultDebtorBookAccount, x => this.Entity.DefaultDebtorBookAccount = x));
 			builder.CreateAutoCompleteTextField (tile, 150-UIBuilder.ComboButtonWidth+1, "Monnaie utilisée",                         Marshaler.Create (() => this.Entity.DefaultCurrencyCode,      x => this.Entity.DefaultCurrencyCode = x), EnumKeyValues.FromEnum<CurrencyCode> (), x => TextFormatter.FormatText (x));
 		}
-
+#endif
 
 		private EntityViewController personController;
 	}
