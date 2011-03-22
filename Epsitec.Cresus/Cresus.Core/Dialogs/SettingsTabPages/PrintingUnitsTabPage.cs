@@ -112,10 +112,10 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					Margins = new Margins (0, 0, 0, -1),
 				};
 
-				PrintingUnitsTabPage.CreateTextField (box, "Choix de l'imprimante physique",               ref tabIndex, out this.physicalBox,  out this.physicalField);
-				PrintingUnitsTabPage.CreateTextField (box, "Choix du bac de l'imprimante",                 ref tabIndex, out this.trayBox,      out this.trayField);
-				PrintingUnitsTabPage.CreateTextField (box, "Taille du papier dans le bac de l'imprimante", ref tabIndex, out this.paperSizeBox, out this.paperSizeField);
-				PrintingUnitsTabPage.CreateTextField (box, "Mode recto/verso de l'imprimante",             ref tabIndex, out this.duplexBox,    out this.duplexField);
+				PrintingUnitsTabPage.CreateTextField (box, "Choix de l'imprimante physique", ref tabIndex, out this.physicalBox,  out this.physicalField);
+				PrintingUnitsTabPage.CreateTextField (box, "Choix du bac",                   ref tabIndex, out this.trayBox,      out this.trayField);
+				PrintingUnitsTabPage.CreateTextField (box, "Taille du papier dans le bac",   ref tabIndex, out this.paperSizeBox, out this.paperSizeField);
+				PrintingUnitsTabPage.CreateTextField (box, "Mode recto/verso",               ref tabIndex, out this.duplexBox,    out this.duplexField);
 			}
 
 			{
@@ -542,6 +542,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.UpdatePaperSizeField ();
 			this.UpdateDuplexField ();
 			this.UpdateWidgets ();
+			this.UpdateOptions ();
 		}
 
 
@@ -556,6 +557,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				this.UpdateDuplexField ();
 				this.UpdateTable ();
 				this.UpdateWidgets ();
+				this.UpdateOptions ();
 			}
 			else
 			{
@@ -595,6 +597,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 				this.UpdateTable ();
 				this.UpdateWidgets ();
+				this.UpdateOptions ();
 			}
 		}
 

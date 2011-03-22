@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Core.Print
 
 			for (int i = 0; i < settings.Count; i++)
 			{
-				string key = PrinterApplicationSettings.GetKey (i++);
+				string key = PrinterApplicationSettings.GetKey (i);
 				string value = settings[key];
 
 				var printingUnit = new PrintingUnit ();
@@ -46,7 +46,8 @@ namespace Epsitec.Cresus.Core.Print
 
 			foreach (var printingUnit in list)
 			{
-				if (!string.IsNullOrWhiteSpace (printingUnit.PhysicalPrinterName))
+				if (!string.IsNullOrWhiteSpace (printingUnit.DocumentPrintingUnitCode) &&
+					!string.IsNullOrWhiteSpace (printingUnit.PhysicalPrinterName))
 				{
 					string key = PrinterApplicationSettings.GetKey (index++);
 					settings[key] = printingUnit.GetSerializableContent ();
