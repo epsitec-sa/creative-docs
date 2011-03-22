@@ -341,17 +341,25 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			int sel = this.table.SelectedRow;
 
 			int rows = this.documentPrintingUnits.Count;
-			this.table.SetArraySize (4, rows);
+			this.table.SetArraySize (8, rows);
 
-			this.table.SetWidthColumn (0, 110);
-			this.table.SetWidthColumn (1, 150);
-			this.table.SetWidthColumn (2, 100);
+			this.table.SetWidthColumn (0, 180);
+			this.table.SetWidthColumn (1, 180);
+			this.table.SetWidthColumn (2, 150);
 			this.table.SetWidthColumn (3, 120);
+			this.table.SetWidthColumn (4, 120);
+			this.table.SetWidthColumn (5, 50);
+			this.table.SetWidthColumn (6, 50);
+			this.table.SetWidthColumn (7, 50);
 
 			this.table.SetHeaderTextH (0, "Unité d'impression");
 			this.table.SetHeaderTextH (1, "Imprimante physique");
 			this.table.SetHeaderTextH (2, "Bac");
 			this.table.SetHeaderTextH (3, "Papier");
+			this.table.SetHeaderTextH (4, "Recto/verso");
+			this.table.SetHeaderTextH (5, "Horiz.");
+			this.table.SetHeaderTextH (6, "Vert.");
+			this.table.SetHeaderTextH (7, "Copies");
 
 			ContentAlignment[] alignments =
 			{
@@ -359,6 +367,10 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				ContentAlignment.MiddleLeft,
 				ContentAlignment.MiddleLeft,
 				ContentAlignment.MiddleLeft,
+				ContentAlignment.MiddleLeft,
+				ContentAlignment.MiddleRight,
+				ContentAlignment.MiddleRight,
+				ContentAlignment.MiddleRight,
 			};
 
 			for (int row=0; row<rows; row++)
@@ -372,7 +384,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private string[] GetRowTexts(int row)
 		{
-			var result = new string[4];
+			var result = new string[8];
 
 
 			var printingUnit = this.GetPrintingUnit (this.documentPrintingUnits[row].Code);
@@ -383,6 +395,10 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				result[1] = "";
 				result[2] = "";
 				result[3] = "";
+				result[4] = "";
+				result[5] = "";
+				result[6] = "";
+				result[7] = "";
 			}
 			else
 			{
@@ -390,6 +406,10 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				result[1] = printingUnit.PhysicalPrinterName;
 				result[2] = printingUnit.PhysicalPrinterTray;
 				result[3] = PrintingUnitsTabPage.PaperSizeToNiceDescription (printingUnit.PhysicalPaperSize);
+				result[4] = PrintingUnit.DuplexToDescription (printingUnit.PhysicalDuplexMode);
+				result[5] = string.Concat (printingUnit.XOffset.ToString (), " mm");
+				result[6] = string.Concat (printingUnit.YOffset.ToString (), " mm");
+				result[7] = string.Concat (printingUnit.Copies.ToString (), "×");
 			}
 
 			return result;
