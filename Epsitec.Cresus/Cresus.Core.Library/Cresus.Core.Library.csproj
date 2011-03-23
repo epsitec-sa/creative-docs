@@ -61,6 +61,8 @@
     <Compile Include="Library\CoreApp.cs" />
     <Compile Include="Library\CoreAppComponent.cs" />
     <Compile Include="Library\CoreComponent.cs" />
+    <Compile Include="Library\IPrettyPrinter.cs" />
+    <Compile Include="Library\PrettyPrinter.cs" />
     <Compile Include="Library\SettingsCollection.cs" />
     <Compile Include="Library\SettingsManager.cs" />
     <Compile Include="Library\ICoreManualComponent.cs" />
@@ -90,6 +92,7 @@
     <Compile Include="Factories\CoreCommandHandlerFactory.cs" />
     <Compile Include="Factories\FieldBinderFactory.cs" />
     <Compile Include="Resolvers\InterfaceImplementationResolver.cs" />
+    <Compile Include="Resolvers\PrettyPrinterResolver.cs" />
     <Compile Include="Resolvers\ResolutionMode.cs" />
     <Compile Include="Resources\Cresus.Core.Library\SourceCode\Res.cs" />
     <Compile Include="TextBuilder.cs" />
