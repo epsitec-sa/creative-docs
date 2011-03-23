@@ -45,7 +45,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		private void CreateTileDataItems()
 		{
-			this.controller.CreateBridgeAndBuildBricks ();
+			System.Diagnostics.Debug.Assert (this.bridges.Count > 0);
+			System.Diagnostics.Debug.Assert (this.bridges[0].Controller == this.controller);
 
 			if (this.bridges.Any (x => x.ContainsBricks))
 			{
@@ -53,9 +54,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				{
 					foreach (var bridge in this.bridges)
 					{
+						bridge.Controller.NotifyAboutToCreateUI ();
 						bridge.CreateTileDataItems (data);
-
-//-						this.uiControllers.ForEach (x => x.NotifyAboutToCreateUI ().CreateBridgeAndBuildBricks ().CreateTileDataItems (data));
 					}
 				}
 			}
@@ -65,7 +65,13 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		void System.IDisposable.Dispose()
 		{
-			this.CreateTileDataItems ();
+			this.controller.CreateBridgeAndBuildBricks ();
+
+			if (this.bridges.Count > 0)
+			{
+				this.CreateTileDataItems ();
+			}
+
 			BridgeContext.instance = null;
 		}
 

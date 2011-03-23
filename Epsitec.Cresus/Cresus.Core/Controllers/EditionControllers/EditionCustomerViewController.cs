@@ -26,9 +26,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .End ()
 				.End ();
 
-			wall.AddBrick (x => x.Relation)
-				.Icon ("none");
-			
 			this.AddUIController (this.CreateEditionSubController (x => x.Relation));
 		}
 	}

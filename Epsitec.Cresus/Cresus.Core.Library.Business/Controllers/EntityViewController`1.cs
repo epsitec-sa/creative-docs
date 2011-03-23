@@ -76,6 +76,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		public void AddUIController(EntityViewController controller)
 		{
 			this.uiControllers.Add (controller);
+			controller.CreateBridgeAndBuildBricks ();
 		}
 
 		protected EntityViewController CreateEditionSubController<TField>(Expression<System.Func<T, TField>> entityGetter)
@@ -132,15 +133,20 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		protected override sealed void AboutToCreateUI()
 		{
-			var businessContext = this.BusinessContext;
+			//	This method might be called more than once. Don't do anything if it has already
+			//	been called :
 
-			System.Diagnostics.Debug.Assert (businessContext != null);
-			System.Diagnostics.Debug.Assert (this.masterEntities == null);
+			if (this.masterEntities == null)
+			{
+				var businessContext = this.BusinessContext;
 
-			this.masterEntities = this.GetMasterEntities ().ToArray ();
-			this.masterEntities.ForEach (x => businessContext.AddMasterEntity (x));
+				System.Diagnostics.Debug.Assert (businessContext != null);
 
-			base.AboutToCreateUI ();
+				this.masterEntities = this.GetMasterEntities ().ToArray ();
+				this.masterEntities.ForEach (x => businessContext.AddMasterEntity (x));
+
+				base.AboutToCreateUI ();
+			}
 		}
 		
 		protected override void AboutToCloseUI()

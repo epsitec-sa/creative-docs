@@ -17,10 +17,25 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 	/// </summary>
 	public abstract class Bridge
 	{
+		protected Bridge(EntityViewController controller)
+		{
+			this.controller = controller;
+		}
+
+		public EntityViewController Controller
+		{
+			get
+			{
+				return this.controller;
+			}
+		}
+
 		public abstract bool ContainsBricks
 		{
 			get;
 		}
+
+		
 
 		public abstract void CreateTileDataItems(TileDataItems data);
 
@@ -128,5 +143,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
+
+		private readonly EntityViewController controller;
 	}
 }

@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		where T : AbstractEntity, new ()
 	{
 		public Bridge(EntityViewController<T> controller)
+			: base (controller)
 		{
 			this.controller = controller;
 			this.walls = new List<BrickWall<T>> ();
