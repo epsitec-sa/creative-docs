@@ -167,9 +167,10 @@ namespace Epsitec.Cresus.Core.Documents
 
 		private static FormattedText GetSummary(PrintingOptionDictionary printingOptions)
 		{
-			var all = VerboseDocumentOption.GetAll ();
 			var builder = new System.Text.StringBuilder ();
+			bool first = true;
 
+			var all = VerboseDocumentOption.GetAll ();
 			foreach (var option in all)
 			{
 				if (option.Option != DocumentOption.None && printingOptions.ContainsOption (option.Option))
@@ -211,19 +212,28 @@ namespace Epsitec.Cresus.Core.Documents
 						value = string.Concat (value, " mm");
 					}
 
-#if false
 					if (string.IsNullOrEmpty (description))
 					{
-						description = Print.Common.DocumentOptionToString (option.Option);
+						description = option.Option.ToString ();
 					}
-#endif
+
+					if (!first)
+					{
+						builder.Append ("<br/>");
+					}
 
 					builder.Append ("● ");
 					builder.Append (description);
 					builder.Append (" = ");
 					builder.Append (value);
-					builder.Append ("<br/>");
+
+					first = false;
 				}
+			}
+
+			if (first)
+			{
+				builder.Append ("● <i>Aucune</i>");
 			}
 
 			return builder.ToString ();

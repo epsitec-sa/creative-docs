@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 			if (list.Count == 0)
 			{
-				builder.Append ("● <i>Aucune</i><br/>");
+				builder.Append ("● <i>Aucune</i>");
 			}
 			else
 			{

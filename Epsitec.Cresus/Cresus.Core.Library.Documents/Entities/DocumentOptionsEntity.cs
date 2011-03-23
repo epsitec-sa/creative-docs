@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Core.Entities
 			var builder = new System.Text.StringBuilder ();
 
 			//	Astuce pour avoir 1/4 d'interligne !
-			builder.Append ("Options et valeurs associées :<br/><font size=\"25%\"><br/></font>");
+			builder.Append ("Options et valeurs définies :<br/><font size=\"25%\"><br/></font>");
 			builder.Append (TextFormatter.FormatText (this.GetOptions ()));
 
 			return builder.ToString ();
