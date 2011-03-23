@@ -84,18 +84,33 @@ namespace Epsitec.Common.Support
 			throw new System.ArgumentException ();
 		}
 
+		/// <summary>
+		/// Groups all the given <see cref="System.String"/> into a single <see cref="byte[]"/>,
+		/// which can later be expanded with the <see cref="StringPacker.UnpackFromBytes"/> method.
+		/// <param name="strings">The <see cref="System.String"/> to join.</param>
+		/// <param name="separatorChar">The <see cref="char"/> used to separate the <see cref="System.String"/>.</param>
+		/// <param name="escapeChar">The <see cref="char"/> used to escape itself and the separator.</param>
+		/// <returns>A single <see cref="byte[]"/> that contains all the input strings.</returns>
 		public static byte[] PackToBytes(IEnumerable<string> strings, char separatorChar = ';', char escapeChar = '\\')
 		{
 			return System.Text.Encoding.UTF8.GetBytes (StringPacker.Pack (strings, separatorChar, escapeChar));
 		}
 
+		/// <summary>
+		/// Expands the given <see cref="byte[]"/> which is the result of the
+		/// <see cref="StringPacker.PackToBytes"/> method into the original <see cref="System.String"/>
+		/// sequence.
+		/// <param name="data">The result of the <see cref="StringPacker.Pack"/> function.</param>
+		/// <param name="separatorChar">The <see cref="char"/> used to separate the <see cref="string"/>.</param>
+		/// <param name="escapeChar">The <see cref="char"/> used to escape itself and the separator.</param>
+		/// <returns>The sequence of <see cref="string"/>.</returns>
 		public static IEnumerable<string> UnpackFromBytes(byte[] data, char separatorChar = ';', char escapeChar = '\\')
 		{
 			return StringPacker.Unpack (System.Text.Encoding.UTF8.GetString (data), separatorChar, escapeChar);
 		}
 
 		/// <summary>
-		/// Joins all the given <see cref="System.String"/> into a single <see cref="System.String"/>,
+		/// Joins all the given <see cref="string"/> into a single <see cref="string"/>,
 		/// 
 		/// </summary>
 		/// <param name="strings">The <see cref="System.String"/> to join.</param>

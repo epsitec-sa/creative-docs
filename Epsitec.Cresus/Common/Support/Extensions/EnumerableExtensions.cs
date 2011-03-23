@@ -1,19 +1,30 @@
-﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2009-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
-
 using System.Linq;
-
-using System.Threading;
-
 
 namespace Epsitec.Common.Support.Extensions
 {
-
-
 	public static class EnumerableExtensions
 	{
+		/// <summary>
+		/// Gets an instance of <see cref="System.Random"/> local to the calling thread. That means
+		/// that no other thread will ever call the same instance and thus the obtained dice can be
+		/// used safely.
+		/// </summary>
+		private static System.Random			Dice
+		{
+			get
+			{
+				if (EnumerableExtensions.dice == null)
+				{
+					EnumerableExtensions.dice = new System.Random ();
+				}
+
+				return EnumerableExtensions.dice;
+			}
+		}
 
 
 		public static void ForEach<T>(this IEnumerable<T> collection, System.Action<T> action)
@@ -24,7 +35,6 @@ namespace Epsitec.Common.Support.Extensions
 			}
 		}
 
-
 		public static bool IsEmpty<T>(this IEnumerable<T> collection)
 		{
 			foreach (T item in collection)
@@ -34,7 +44,6 @@ namespace Epsitec.Common.Support.Extensions
 
 			return true;
 		}
-
 		
 		public static int IndexOf<T>(this IEnumerable<T> collection, T value, IEqualityComparer<T> comparer = null)
 		{
@@ -86,7 +95,6 @@ namespace Epsitec.Common.Support.Extensions
 			return EnumerableExtensions.IndexOf (sequence, element, iEqualityComparer);
 		}
 
-
 		/// <summary>
 		/// Appends one or more elements at the end of an <see cref="IEnumerable{T}"/>.
 		/// </summary>
@@ -110,7 +118,6 @@ namespace Epsitec.Common.Support.Extensions
 			return EnumerableExtensions.AppendInternal<T> (sequence, elements);
 		}
 
-
 		/// <summary>
 		/// Helper method for <see cref="EnumerableExtensions.Append"/> that will perform the real
 		/// work.
@@ -124,12 +131,11 @@ namespace Epsitec.Common.Support.Extensions
 			return sequence.Concat (elements);
 		}
 
-
 		/// <summary>
 		/// Shuffles the given <see cref="IEnumerable{T}"/>, that is, enumerates it in a random
 		/// order.
 		/// </summary>
-		/// <remarks>This linq method use deferred execution but will buffer the input sequence and
+		/// <remarks>This linq method uses deferred execution but will buffer the input sequence and
 		/// has a complexity of O(n) where n is the length of the sequence. 
 		/// <typeparam name="T">The type of the elements in the <see cref="IEnumerable{T}"/>.</typeparam>
 		/// <param name="sequence">The sequence to shuffle.</param>
@@ -238,28 +244,7 @@ namespace Epsitec.Common.Support.Extensions
 		}
 #endif
 
-		/// <summary>
-		/// Gets an instance of <see cref="System.Random"/> local to the calling thread. That means
-		/// that no other thread will ever call the same instance and thus the obtained dice can be
-		/// used safely.
-		/// </summary>
-		private static System.Random Dice
-		{
-			get
-			{
-				if (EnumerableExtensions.dice == null)
-				{
-					EnumerableExtensions.dice = new System.Random ();
-				}
-
-				return EnumerableExtensions.dice;
-			}
-		}
-
-
 		[System.ThreadStatic]
 		private static System.Random dice;
-      
-  
 	}
 }
