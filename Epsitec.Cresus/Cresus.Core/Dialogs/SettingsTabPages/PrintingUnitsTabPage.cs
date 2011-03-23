@@ -30,7 +30,12 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		{
 			this.printingUnitList = PrinterApplicationSettings.GetPrintingUnitList (this.Container.Data.Host);
 
-			this.documentPrintingUnits = this.Container.Data.GetAllEntities<DocumentPrintingUnitsEntity> ().ToList ();
+			this.documentPrintingUnits = this.Container.Data.GetAllEntities<DocumentPrintingUnitsEntity> ().Where (x => PrintingUnitsTabPage.IsValid (x)).ToList ();
+		}
+
+		private static bool IsValid(DocumentPrintingUnitsEntity documentPrintingUnit)
+		{
+			return !string.IsNullOrEmpty (documentPrintingUnit.Name.ToString ());
 		}
 
 
