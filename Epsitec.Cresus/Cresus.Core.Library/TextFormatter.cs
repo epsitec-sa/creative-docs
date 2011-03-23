@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -13,6 +13,36 @@ namespace Epsitec.Cresus.Core
 {
 	public static class TextFormatter
 	{
+		private static void SetCultureOverride(System.Globalization.CultureInfo culture, TextFormatterDetailLevel detailLevel)
+		{
+			TextFormatter.cultureOverride = culture;
+			TextFormatter.detailLevel = detailLevel;
+		}
+
+		private static void ClearCultureOverride()
+		{
+			TextFormatter.cultureOverride = null;
+			TextFormatter.detailLevel = TextFormatterDetailLevel.Default;
+		}
+
+		public static System.IDisposable UsingCulture(System.Globalization.CultureInfo culture, TextFormatterDetailLevel detailLevel)
+		{
+			TextFormatter.SetCultureOverride (culture, detailLevel);
+			return new UsingCultureHelper ();
+		}
+
+		private class UsingCultureHelper : System.IDisposable
+		{
+			#region IDisposable Members
+
+			void System.IDisposable.Dispose()
+			{
+				TextFormatter.ClearCultureOverride ();
+			}
+
+			#endregion
+		}
+
 		public static FormattedText FormatText(params object[] values)
 		{
 			var buffer = new System.Text.StringBuilder ();
@@ -214,7 +244,15 @@ namespace Epsitec.Cresus.Core
 		{
 			get
 			{
-				return UI.Settings.CultureForData.CultureInfo;
+				return TextFormatter.cultureOverride ?? UI.Settings.CultureForData.CultureInfo;
+			}
+		}
+
+		public static TextFormatterDetailLevel CurrentDetailLevel
+		{
+			get
+			{
+				return TextFormatter.detailLevel;
 			}
 		}
 		
@@ -232,39 +270,38 @@ namespace Epsitec.Cresus.Core
 				return text;
 			}
 
-			ITextFormatter formatter = value as ITextFormatter;
-
-			if (formatter != null)
-			{
-				value = formatter.ToFormattedText (TextFormatter.CurrentCulture, TextFormatterDetailLevel.Default);
-			}
-
-			if (value is FormattedText)
-			{
-				FormattedText formattedText = (FormattedText) value;
-
-				//	Multilingual texts must be "flattened" : only one language may survive the conversion
-				//	to text, or else TextLayout would crash, not recognizing <div> tags:
-				
-				if (MultilingualText.IsMultilingual (formattedText))
-                {
-					MultilingualText multilingualText = new MultilingualText (formattedText);
-					return multilingualText.GetTextOrDefault (TextFormatter.CurrentLanguageId).ToString ();
-                }
-			}
-
 			if (value is Date)
 			{
 				return ((Date) value).ToDateTime ().ToShortDateString ();
 			}
 
-			return value.ToString ();
+			FormattedText formattedText = PrettyPrinter.ToFormattedText (value, TextFormatter.CurrentCulture, TextFormatter.CurrentDetailLevel);
+
+			//	Multilingual texts must be "flattened" : only one language may survive the conversion
+			//	to text, or else TextLayout would crash, not recognizing <div> tags:
+
+			if (MultilingualText.IsMultilingual (formattedText))
+			{
+				MultilingualText multilingualText = new MultilingualText (formattedText);
+				return multilingualText.GetTextOrDefault (TextFormatter.CurrentLanguageId).ToString ();
+			}
+			else
+			{
+				return formattedText.ToString ();
+			}
 		}
 
 		public static FormattedText Join(string separator, IEnumerable<FormattedText> collection)
 		{
 			return new FormattedText (string.Join (separator, collection.Select (x => TextFormatter.ConvertToText (x)).ToArray ()));
 		}
+
+		[System.ThreadStatic]
+		private static System.Globalization.CultureInfo cultureOverride;
+
+		[System.ThreadStatic]
+		private static TextFormatterDetailLevel detailLevel;
+
 	}
 	
 	static class StringExtension

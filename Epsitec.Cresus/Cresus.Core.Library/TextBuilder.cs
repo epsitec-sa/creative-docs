@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core
 {
-	public class TextBuilder
+	public sealed class TextBuilder
 	{
 		public TextBuilder()
 		{
@@ -26,9 +26,12 @@ namespace Epsitec.Cresus.Core
 			this.items.Clear ();
 		}
 
-		public FormattedText ToFormattedText()
+		public FormattedText ToFormattedText(System.Globalization.CultureInfo culture = null, TextFormatterDetailLevel detailLevel = TextFormatterDetailLevel.Default)
 		{
-			return TextFormatter.FormatText (items.ToArray ());
+			using (TextFormatter.UsingCulture (culture, detailLevel))
+			{
+				return TextFormatter.FormatText (items.ToArray ());
+			}
 		}
 
 
