@@ -8,6 +8,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Library
 {
+	/// <summary>
+	/// The <c>PrettyPrinter</c> class is used to format an object so that it can be
+	/// displayed to the user, either using the object's own <see cref="ITextFormatter"/>
+	/// interface, or using the associated <see cref="IPrettyPrinter"/>, if any.
+	/// </summary>
 	public static class PrettyPrinter
 	{
 		public static FormattedText ToFormattedText(object value, System.Globalization.CultureInfo culture = null, TextFormatterDetailLevel detailLevel = TextFormatterDetailLevel.Default)
@@ -24,6 +29,10 @@ namespace Epsitec.Cresus.Core.Library
 		
 		private static FormattedText ToFormattedText(object value, System.Type type, System.Globalization.CultureInfo culture, TextFormatterDetailLevel detailLevel)
 		{
+			System.Diagnostics.Debug.Assert (value != null);
+			System.Diagnostics.Debug.Assert (type != null);
+			System.Diagnostics.Debug.Assert (culture != null);
+
 			if (type == typeof (FormattedText))
 			{
 				return (FormattedText) value;

@@ -57,7 +57,6 @@
     <Compile Include="Factories\CoreComponentFactory.cs" />
     <Compile Include="Factories\DefaultCoreAppComponentFactory.cs" />
     <Compile Include="Factories\ICoreAppComponentFactory.cs" />
-    <Compile Include="Factories\ICoreDataComponentFactory.cs" />
     <Compile Include="Library\CoreApp.cs" />
     <Compile Include="Library\CoreAppComponent.cs" />
     <Compile Include="Library\CoreComponent.cs" />
@@ -95,6 +94,8 @@
     <Compile Include="Resolvers\PrettyPrinterResolver.cs" />
     <Compile Include="Resolvers\ResolutionMode.cs" />
     <Compile Include="Resources\Cresus.Core.Library\SourceCode\Res.cs" />
+    <Compile Include="Library\Internal\StringBuilderExtension.cs" />
+    <Compile Include="Library\Internal\StringExtension.cs" />
     <Compile Include="TextBuilder.cs" />
     <Compile Include="TextFormatter.cs" />
     <Compile Include="Library\UI.Constants.cs" />

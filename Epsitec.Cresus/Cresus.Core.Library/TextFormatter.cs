@@ -4,45 +4,41 @@
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Library.Internal;
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core
 {
 	public static class TextFormatter
 	{
-		private static void SetCultureOverride(System.Globalization.CultureInfo culture, TextFormatterDetailLevel detailLevel)
+		public static string							CurrentLanguageId
 		{
-			TextFormatter.cultureOverride = culture;
-			TextFormatter.detailLevel = detailLevel;
-		}
-
-		private static void ClearCultureOverride()
-		{
-			TextFormatter.cultureOverride = null;
-			TextFormatter.detailLevel = TextFormatterDetailLevel.Default;
-		}
-
-		public static System.IDisposable UsingCulture(System.Globalization.CultureInfo culture, TextFormatterDetailLevel detailLevel)
-		{
-			TextFormatter.SetCultureOverride (culture, detailLevel);
-			return new UsingCultureHelper ();
-		}
-
-		private class UsingCultureHelper : System.IDisposable
-		{
-			#region IDisposable Members
-
-			void System.IDisposable.Dispose()
+			get
 			{
-				TextFormatter.ClearCultureOverride ();
+				UI.CultureSettings culture = UI.Settings.CultureForData;
+				return culture.LanguageId;
 			}
-
-			#endregion
 		}
 
+		public static System.Globalization.CultureInfo	CurrentCulture
+		{
+			get
+			{
+				return TextFormatter.cultureOverride ?? UI.Settings.CultureForData.CultureInfo;
+			}
+		}
+
+		public static TextFormatterDetailLevel			CurrentDetailLevel
+		{
+			get
+			{
+				return TextFormatter.detailLevel;
+			}
+		}
+		
+		
 		public static FormattedText FormatText(params object[] values)
 		{
 			var buffer = new System.Text.StringBuilder ();
@@ -59,6 +55,65 @@ namespace Epsitec.Cresus.Core
 			return new FormattedText (string.Join (FormattedText.HtmlBreak, buffer.ToString ().Split (new string[] { FormattedText.HtmlBreak }, System.StringSplitOptions.RemoveEmptyEntries)).Replace ("()", ""));
 		}
 
+		public static string ConvertToText(object value)
+		{
+			if (value == null)
+			{
+				return "";
+			}
+
+			string text = value as string;
+
+			if (text != null)
+			{
+				return text;
+			}
+
+			if (value is Date)
+			{
+				return ((Date) value).ToDateTime ().ToShortDateString ();
+			}
+
+			FormattedText formattedText = PrettyPrinter.ToFormattedText (value, TextFormatter.CurrentCulture, TextFormatter.CurrentDetailLevel);
+
+			//	Multilingual texts must be "flattened" : only one language may survive the conversion
+			//	to text, or else TextLayout would crash, not recognizing <div> tags:
+
+			if (MultilingualText.IsMultilingual (formattedText))
+			{
+				MultilingualText multilingualText = new MultilingualText (formattedText);
+				return multilingualText.GetTextOrDefault (TextFormatter.CurrentLanguageId).ToString ();
+			}
+			else
+			{
+				return formattedText.ToString ();
+			}
+		}
+
+		public static FormattedText Join(string separator, IEnumerable<FormattedText> collection)
+		{
+			return new FormattedText (string.Join (separator, collection.Select (x => TextFormatter.ConvertToText (x)).ToArray ()));
+		}
+
+		public static System.IDisposable UsingCulture(System.Globalization.CultureInfo culture, TextFormatterDetailLevel detailLevel)
+		{
+			TextFormatter.SetCultureOverride (culture, detailLevel);
+			return new UsingCultureHelper ();
+		}
+
+		
+		private static void SetCultureOverride(System.Globalization.CultureInfo culture, TextFormatterDetailLevel detailLevel)
+		{
+			TextFormatter.cultureOverride = culture;
+			TextFormatter.detailLevel = detailLevel;
+		}
+
+		private static void ClearCultureOverride()
+		{
+			TextFormatter.cultureOverride = null;
+			TextFormatter.detailLevel = TextFormatterDetailLevel.Default;
+		}
+		
 		private static void Flatten(List<object> flat, System.Collections.IEnumerable values)
 		{
 			foreach (var value in values)
@@ -79,7 +134,6 @@ namespace Epsitec.Cresus.Core
 				}
 			}
 		}
-
 
 		private static List<string> ConvertItemsToStrings(IEnumerable<object> values)
 		{
@@ -161,6 +215,23 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+
+		#region UsingCultureHelper Class
+
+		private class UsingCultureHelper : System.IDisposable
+		{
+			#region IDisposable Members
+
+			void System.IDisposable.Dispose()
+			{
+				TextFormatter.ClearCultureOverride ();
+			}
+
+			#endregion
+		}
+
+		#endregion
+
 		public static class Prefix
 		{
 			public const char SkipItemIfPreviousEmpty = '~';
@@ -231,126 +302,10 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public static string CurrentLanguageId
-		{
-			get
-			{
-				UI.CultureSettings culture = UI.Settings.CultureForData;
-				return culture.LanguageId;
-			}
-		}
-
-		public static System.Globalization.CultureInfo CurrentCulture
-		{
-			get
-			{
-				return TextFormatter.cultureOverride ?? UI.Settings.CultureForData.CultureInfo;
-			}
-		}
-
-		public static TextFormatterDetailLevel CurrentDetailLevel
-		{
-			get
-			{
-				return TextFormatter.detailLevel;
-			}
-		}
-		
-		public static string ConvertToText(object value)
-		{
-			if (value == null)
-			{
-				return "";
-			}
-
-			string text = value as string;
-
-			if (text != null)
-			{
-				return text;
-			}
-
-			if (value is Date)
-			{
-				return ((Date) value).ToDateTime ().ToShortDateString ();
-			}
-
-			FormattedText formattedText = PrettyPrinter.ToFormattedText (value, TextFormatter.CurrentCulture, TextFormatter.CurrentDetailLevel);
-
-			//	Multilingual texts must be "flattened" : only one language may survive the conversion
-			//	to text, or else TextLayout would crash, not recognizing <div> tags:
-
-			if (MultilingualText.IsMultilingual (formattedText))
-			{
-				MultilingualText multilingualText = new MultilingualText (formattedText);
-				return multilingualText.GetTextOrDefault (TextFormatter.CurrentLanguageId).ToString ();
-			}
-			else
-			{
-				return formattedText.ToString ();
-			}
-		}
-
-		public static FormattedText Join(string separator, IEnumerable<FormattedText> collection)
-		{
-			return new FormattedText (string.Join (separator, collection.Select (x => TextFormatter.ConvertToText (x)).ToArray ()));
-		}
-
 		[System.ThreadStatic]
 		private static System.Globalization.CultureInfo cultureOverride;
 
 		[System.ThreadStatic]
 		private static TextFormatterDetailLevel detailLevel;
-
-	}
-	
-	static class StringExtension
-	{
-		public static char LastCharacter(this string text)
-		{
-			int n = text.Length - 1;
-			return n < 0 ? (char) 0 : text[n];
-		}
-		
-		public static char FirstCharacter(this string text)
-		{
-			int n = text.Length;
-			return n < 1 ? (char) 0 : text[0];
-		}
-
-		public static string RemoveTag(this string text)
-		{
-			return FormattedText.Unescape (text);
-		}
-		
-		public static bool IsPunctuationMark(this char c)
-		{
-			// Exclut le caractère '/', pour permettre de numéroter une facture "1000 / 45 / bg" (par exemple).
-			
-			switch (c)
-			{
-				case ',':
-				case ';':
-				case '.':
-				case ':':
-				case '!':
-				case '?':
-					return true;
-
-				default:
-					return false;
-			}
-		}
-
-
-	}
-	
-	static class StringBuilderExtension
-	{
-		public static char LastCharacter(this System.Text.StringBuilder builder)
-		{
-			string text = builder.ToString ();
-			return text.RemoveTag ().LastCharacter ();
-		}
 	}
 }
