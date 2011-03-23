@@ -37,9 +37,7 @@ namespace Epsitec.Common.Types.Converters
 		/// <returns>The type of the matching converter if it exists in the current assembly; otherwise, <c>null</c>.</returns>
 		protected static System.Type FindConverterType<T>()
 		{
-			var assembly = System.Reflection.Assembly.GetAssembly (typeof (GenericConverter));
-
-			var types = from type in assembly.GetTypes ()
+			var types = from type in TypeEnumerator.Instance.GetAllTypes ()
 						where type.IsClass && !type.IsAbstract && type.IsSubclassOf (typeof (GenericConverter)) && type.BaseType.BaseType == typeof (GenericConverter<T>)
 						select type;
 

@@ -84,6 +84,16 @@ namespace Epsitec.Common.Support
 			throw new System.ArgumentException ();
 		}
 
+		public static byte[] PackToBytes(IEnumerable<string> strings, char separatorChar = ';', char escapeChar = '\\')
+		{
+			return System.Text.Encoding.UTF8.GetBytes (StringPacker.Pack (strings, separatorChar, escapeChar));
+		}
+
+		public static IEnumerable<string> UnpackFromBytes(byte[] data, char separatorChar = ';', char escapeChar = '\\')
+		{
+			return StringPacker.Unpack (System.Text.Encoding.UTF8.GetString (data), separatorChar, escapeChar);
+		}
+
 		/// <summary>
 		/// Joins all the given <see cref="System.String"/> into a single <see cref="System.String"/>,
 		/// 
