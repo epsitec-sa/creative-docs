@@ -58,31 +58,19 @@ namespace Epsitec.Cresus.Core.Controllers
 
         public sealed override void CreateUI(Widget container)
 		{
+			System.Diagnostics.Debug.Assert (container is TileContainer);
+
+			this.TileContainer = container as TileContainer;
 			base.CreateUI (container);
 
-			var context       = this.DataContext;
-			var entity        = this.Entity;
-			var tileContainer = container as TileContainer;
-			
-			System.Diagnostics.Debug.Assert (tileContainer != null);
-
-			this.TileContainer = tileContainer;
-			this.CreateUI ();
+			using (new BridgeContext (this))
+			{
+				this.CreateUI ();
+			}
 		}
 
 		protected override void CreateUI()
 		{
-			var bridge = this.CreateBridgeAndBuildBricks ();
-
-			if (bridge.ContainsBricks)
-			{
-				using (var data = TileContainerController.Setup (this))
-				{
-					bridge.CreateTileDataItems (data);
-
-					this.uiControllers.ForEach (x => x.NotifyAboutToCreateUI ().CreateBridgeAndBuildBricks ().CreateTileDataItems (data));
-				}
-			}
 		}
 
 		public void AddUIController(EntityViewController controller)
@@ -101,7 +89,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		internal sealed override Bridge CreateBridgeAndBuildBricks()
 		{
-			var bridge = new Bridge<T> (this);
+			var bridge = BridgeContext.Instance.CreateBridge<T> (this);
 			var wall   = bridge.CreateBrickWall ();
 
 			this.CreateBricks (wall);
