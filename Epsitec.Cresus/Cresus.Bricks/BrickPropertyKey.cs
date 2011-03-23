@@ -31,5 +31,6 @@ namespace Epsitec.Cresus.Bricks
 		HorizontalGroup,
 
 		CollectionAnnotation,
+		Include,
 	}
 }

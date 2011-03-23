@@ -9,11 +9,11 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Library
 {
 	/// <summary>
-	/// The <c>IPrettyPrinter</c> interface is implemented by the pretty pringing
+	/// The <c>ITextFormatterConverter</c> interface is implemented by the pretty pringing
 	/// classes, which provide a textual representation for some simple type; this
 	/// can be used to convert <c>enum</c> values to their descriptions.
 	/// </summary>
-	public interface IPrettyPrinter
+	public interface ITextFormatterConverter
 	{
 		/// <summary>
 		/// Gets the collection of all types which can be converted by this

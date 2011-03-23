@@ -9,11 +9,11 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Library
 {
 	/// <summary>
-	/// The <c>PrettyPrinter</c> class is used to format an object so that it can be
+	/// The <c>TextFormatterConverter</c> class is used to format an object so that it can be
 	/// displayed to the user, either using the object's own <see cref="ITextFormatter"/>
-	/// interface, or using the associated <see cref="IPrettyPrinter"/>, if any.
+	/// interface, or using the associated <see cref="ITextFormatterConverter"/>, if any.
 	/// </summary>
-	public static class PrettyPrinter
+	public static class TextFormatterConverter
 	{
 		public static FormattedText ToFormattedText(object value, System.Globalization.CultureInfo culture = null, TextFormatterDetailLevel detailLevel = TextFormatterDetailLevel.Default)
 		{
@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Core.Library
 			}
 			else
 			{
-				return PrettyPrinter.ToFormattedText (value, value.GetType (), culture ?? System.Globalization.CultureInfo.CurrentCulture, detailLevel);
+				return TextFormatterConverter.ToFormattedText (value, value.GetType (), culture ?? System.Globalization.CultureInfo.CurrentCulture, detailLevel);
 			}
 		}
 		
@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Core.Library
 				return autoConvert.ToFormattedText (culture, detailLevel);
 			}
 
-			var prettyPrinter = Resolvers.PrettyPrinterResolver.Resolve (type);
+			var prettyPrinter = Resolvers.TextFormatterConverterResolver.Resolve (type);
 
 			if (prettyPrinter == null)
 			{

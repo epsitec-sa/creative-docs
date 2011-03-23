@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Bricks
 {
@@ -12,6 +13,12 @@ namespace Epsitec.Cresus.Bricks
 		public TSelf Name(string value)
 		{
 			this.AddProperty (new BrickProperty (BrickPropertyKey.Name, value));
+			return this as TSelf;
+		}
+
+		public TSelf Include<TResult>(Expression<System.Func<TSource, TResult>> expression)
+		{
+			this.AddProperty (new BrickProperty (BrickPropertyKey.Include, expression));
 			return this as TSelf;
 		}
 

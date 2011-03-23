@@ -125,6 +125,16 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
+		protected void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<Expression> setter)
+		{
+			var value = Brick.GetProperty (brick, key).ExpressionValue;
+
+			if (value != null)
+			{
+				setter (value);
+			}
+		}
+
 		protected void ProcessTemplateProperty(Brick brick, BrickPropertyKey key, System.Action<object> setter)
 		{
 			var expression = Brick.GetProperty (brick, key).ExpressionValue;

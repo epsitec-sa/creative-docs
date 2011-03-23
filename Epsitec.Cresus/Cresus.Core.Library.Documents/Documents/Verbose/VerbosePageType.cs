@@ -136,9 +136,9 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 		}
 
 
-		private class PrettyPrinter : IPrettyPrinter
+		private class TextFormatterConverter : ITextFormatterConverter
 		{
-			#region IPrettyPrinter Members
+			#region ITextFormatterConverter Members
 
 			public IEnumerable<System.Type> GetConvertibleTypes()
 			{

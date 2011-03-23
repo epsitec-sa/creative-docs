@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Core
 				return ((Date) value).ToDateTime ().ToShortDateString ();
 			}
 
-			FormattedText formattedText = PrettyPrinter.ToFormattedText (value, TextFormatter.CurrentCulture, TextFormatter.CurrentDetailLevel);
+			FormattedText formattedText = TextFormatterConverter.ToFormattedText (value, TextFormatter.CurrentCulture, TextFormatter.CurrentDetailLevel);
 
 			//	Multilingual texts must be "flattened" : only one language may survive the conversion
 			//	to text, or else TextLayout would crash, not recognizing <div> tags:

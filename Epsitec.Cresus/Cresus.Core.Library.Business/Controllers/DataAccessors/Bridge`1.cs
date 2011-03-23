@@ -15,6 +15,7 @@ using System.Linq.Expressions;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Core.Factories;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
@@ -98,6 +99,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			this.ProcessProperty (brick, BrickPropertyKey.TextCompact, x => item.CompactText = x);
 
 			this.ProcessProperty (brick, BrickPropertyKey.AutoGroup, x => item.AutoGroup = x);
+			this.ProcessProperty (brick, BrickPropertyKey.Include, x => this.ProcessInclusion (x));
 
 			if ((!item.Title.IsNullOrEmpty) &&
 				(item.CompactTitle.IsNull))
@@ -149,6 +151,21 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			return item;
 		}
 
+
+		private void ProcessInclusion(Expression expression)
+		{
+			var lambda = expression as LambdaExpression;
+			var func   = lambda.Compile ();
+			var entity = func.DynamicInvoke (this.controller.Entity) as AbstractEntity;
+			var name   = this.controller.Name + EntityInfo.GetFieldCaption (lambda).Name;
+
+			//	Create the controller for the included subview, which will represent the entity
+			//	pointed to by the expression :
+
+			var sub = EntityViewControllerFactory.Create (name, entity, ViewControllerMode.Edition, this.controller.Orchestrator);
+
+			this.controller.AddUIController (sub);
+		}
 
 		#region InputProcessor Class
 

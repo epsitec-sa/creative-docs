@@ -24,9 +24,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				    .Field (x => x.IdB).Width (74)
 				    .Field (x => x.IdC).Width (74)
 				  .End ()
-				.End ();
-
-			this.AddUIController (this.CreateEditionSubController (x => x.Relation));
+				.End ()
+				.Include (x => x.Relation);
 		}
 	}
 }

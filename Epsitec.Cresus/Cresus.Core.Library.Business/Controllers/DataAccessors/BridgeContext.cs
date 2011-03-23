@@ -52,8 +52,13 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			{
 				using (var data = TileContainerController.Setup (this.controller))
 				{
-					foreach (var bridge in this.bridges)
+					//	The collection of bridges might change while we are processing the
+					//	items :
+
+					for (int i = 0; i < this.bridges.Count; i++)
 					{
+						var bridge = this.bridges[i];
+
 						bridge.Controller.NotifyAboutToCreateUI ();
 						bridge.CreateTileDataItems (data);
 					}

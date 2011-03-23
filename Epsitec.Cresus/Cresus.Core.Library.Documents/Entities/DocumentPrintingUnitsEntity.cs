@@ -70,11 +70,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		private static FormattedText PageTypeToFormattedText(PageType pageType)
 		{
-			var builder = new TextBuilder ();
-
-			builder.Append (pageType);  // VerbosePageType.PrettyPrinter convertit PageType en texte clair (ShortDescription en l'occurrence)
-			
-			return builder.ToFormattedText (detailLevel: TextFormatterDetailLevel.Default);
+			return TextFormatter.FormatText (pageType);	// VerbosePageType.TextFormatterConverter convertit PageType en texte clair (ShortDescription en l'occurrence)
 		}
 
 		public List<PageType> GetPageTypes()
