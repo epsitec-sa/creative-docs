@@ -2,10 +2,12 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Database;
-using Epsitec.Common.Support.EntityEngine;
+
+using Epsitec.Cresus.DataLayer.Schema;
 
 namespace Epsitec.Cresus.DataLayer.Context
 {
@@ -27,7 +29,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 		/// <summary>
-		/// Creates the normalized <c>EntityKey</c> corresponding the <paramref name="entity"/> and
+		/// Creates the <c>EntityKey</c> corresponding the <paramref name="entity"/> and
 		/// <paramref name="rowKey"/>.
 		/// </summary>
 		/// <param name="rowKey">The <see cref="DbKey"/> of the <see cref="AbstractEntity"/> in the database.</param>
@@ -38,10 +40,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			entity.ThrowIfNull ("entity");
 
-			Druid entityId = entity.GetEntityStructuredTypeId ();
-			Druid rootEntityId = entity.GetEntityContext ().GetRootEntityId (entityId);
-
-			this.entityId = rootEntityId;
+			this.entityId = entity.GetEntityStructuredTypeId ();
 			this.rowKey = rowKey;
 		}
 		
@@ -171,14 +170,14 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// targets a sub type of an <see cref="AbstractEntity"/>, the normalized version targets
 		/// the corresponding root type.
 		/// </summary>
-		/// <param name="entityContext">The <see cref="EntityContext"/> used for the normalization.</param>
+		/// <param name="entityTypeEngine">The <see cref="EntityTypeEngine"/> used for the normalization.</param>
 		/// <returns>The normalized version of this instance.</returns>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="entityContext"/> is <c>null</c>.</exception>
-		public EntityKey GetNormalizedEntityKey(EntityContext entityContext)
+		/// <exception cref="System.ArgumentNullException">If <paramref name="entityTypeEngine"/> is <c>null</c>.</exception>
+		internal EntityKey GetNormalizedEntityKey(EntityTypeEngine entityTypeEngine)
 		{
-			entityContext.ThrowIfNull ("entityContext");
+			entityTypeEngine.ThrowIfNull ("entityTypeEngine");
 
-			Druid rootEntityId = entityContext.GetRootEntityId (this.entityId);
+			Druid rootEntityId = entityTypeEngine.GetRootType (this.entityId).CaptionId;
 
 			return new EntityKey (rootEntityId, this.rowKey);
 		}
@@ -186,14 +185,14 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <summary>
 		/// Creates a normalized <c>EntityKey</c>.
 		/// </summary>
-		/// <param name="entityContext">The <see cref="EntityContext"/> used for the normalization.</param>
+		/// <param name="entityTypeEngine">The <see cref="EntityContext"/> used for the normalization.</param>
 		/// <param name="entityId">The id of the <see cref="AbstractEntity"></see>.</param>
 		/// <param name="rowKey">The row key of the <see cref="AbstractEntity"></see> in the database.</param>
 		/// <returns>A new normalized <c>EntityKey</c>.</returns>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="entityContext"/> is <c>null</c>.</exception>
-		public static EntityKey CreateNormalizedEntityKey(EntityContext entityContext, Druid entityId, DbKey rowKey)
+		/// <exception cref="System.ArgumentNullException">If <paramref name="entityTypeEngine"/> is <c>null</c>.</exception>
+		internal static EntityKey CreateNormalizedEntityKey(EntityTypeEngine entityTypeEngine, Druid entityId, DbKey rowKey)
 		{
-			return new EntityKey (entityId, rowKey).GetNormalizedEntityKey (entityContext);
+			return new EntityKey (entityId, rowKey).GetNormalizedEntityKey (entityTypeEngine);
 		}
 		
 		/// <summary>

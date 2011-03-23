@@ -54,18 +54,6 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 
 		/// <summary>
-		/// The <see cref="EntityContext"/> associated with this instance.
-		/// </summary>
-		private EntityContext EntityContext
-		{
-			get
-			{
-				return this.DataContext.EntityContext;
-			}
-		}
-
-
-		/// <summary>
 		/// The <see cref="DbInfrastructure"/> associated with this instance.
 		/// </summary>
 		private DbInfrastructure DbInfrastructure
@@ -310,7 +298,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// </summary>
 		private void UpdateDataGeneration()
 		{
-			this.EntityContext.NewDataGeneration ();
+			this.DataContext.EntityContext.NewDataGeneration ();
 		}
 
 

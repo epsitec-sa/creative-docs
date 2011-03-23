@@ -4,6 +4,7 @@ using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Infrastructure;
+using Epsitec.Cresus.DataLayer.Schema;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Entities;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Helpers;
 
@@ -347,8 +348,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 				NaturalPersonEntity person2 = dataContexts[2].ResolveEntity<NaturalPersonEntity> (dbKey2);
 				NaturalPersonEntity person3 = dataContext11.ResolveEntity<NaturalPersonEntity> (dbKey3);
 
-				Assert.AreEqual (new EntityKey (person1, dbKey1), dataContextPool.FindEntityKey (person1));
-				Assert.AreEqual (new EntityKey (person2, dbKey2), dataContextPool.FindEntityKey (person2));
+				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+
+				Assert.AreEqual (new EntityKey (person1, dbKey1).GetNormalizedEntityKey (entityTypeEngine), dataContextPool.FindEntityKey (person1));
+				Assert.AreEqual (new EntityKey (person2, dbKey2).GetNormalizedEntityKey (entityTypeEngine), dataContextPool.FindEntityKey (person2));
 				Assert.IsNull (dataContextPool.FindEntityKey (person3));
 
 				foreach (DataContext dataContext in dataContexts)

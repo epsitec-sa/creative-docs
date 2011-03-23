@@ -5,6 +5,7 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Schema;
 
 
 namespace Epsitec.Cresus.DataLayer.Proxies
@@ -40,7 +41,7 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 			entity.ThrowIfNull ("entity");
 			entity.ThrowIf (e => !dataContext.Contains (e), "dataContext does not own entity");
 			fieldId.ThrowIf (id => id.IsEmpty, "fieldId cannot be empty");
-			fieldId.ThrowIf (id => !this.CheckFieldId (entity, id), "fieldId is not valid for entity.");
+			fieldId.ThrowIf (id => !this.CheckFieldId (dataContext, entity, id), "fieldId is not valid for entity.");
 
 			this.DataContext = dataContext;
 			this.Entity = entity;
@@ -52,17 +53,33 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// Checks that the field given by a <see cref="Druid"/> exists in the given
 		/// <see cref="AbstractEntity"/> and is of the appropriate relation type.
 		/// </summary>
+		/// <param name="dataContext">The <see cref="DataContext"></see> responsible of <paramref name="entity"></paramref>.</param>
 		/// <param name="entity">The <see cref="AbstractEntity"/> to check.</param>
 		/// <param name="fieldId">The <see cref="Druid"/> defining the field to check.</param>
 		/// <returns><c>true</c> if the <see cref="Druid"/> defines a valid field for the <see cref="AbstractEntity"/>.</returns>
-		private bool CheckFieldId(AbstractEntity entity, Druid fieldId)
+		private bool CheckFieldId(DataContext dataContext, AbstractEntity entity, Druid fieldId)
 		{
-			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-			string fieldName = fieldId.ToResourceId ();
+			Druid entityTypeId = entity.GetEntityStructuredTypeId ();
 
-			var field = entity.GetEntityContext ().GetEntityFieldDefinition (leafEntityId, fieldName);
+			EntityTypeEngine entityTypeEngine = dataContext.DataInfrastructure.EntityTypeEngine;
 
-			return field != null && field.Relation == this.FieldRelation;
+			StructuredTypeField field;
+
+			try
+			{
+				// If the field does not exists, entityTypeEngine throws an exception because it
+				// cannot find it. Therefore we catch and return false in that case. If this
+				// statement succeed, then we know that the field exists.
+				// Marc
+
+				field = entityTypeEngine.GetField (entityTypeId, fieldId);
+			}
+			catch (System.ArgumentException)
+			{
+				return false;
+			}
+
+			return field.Relation == this.FieldRelation;
 		}
 
 

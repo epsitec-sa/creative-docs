@@ -50,18 +50,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 
 		/// <summary>
-		/// The <see cref="EntityContext"/> associated with this instance.
-		/// </summary>
-		private EntityContext EntityContext
-		{
-			get
-			{
-				return this.DataContext.EntityContext;
-			}
-		}
-
-
-		/// <summary>
 		/// The <see cref="LoaderQueryGenerator"/> used by this instance to generate queries.
 		/// </summary>
 		private LoaderQueryGenerator LoaderQueryGenerator
@@ -313,8 +301,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			Druid leafEntityId = entityData.LeafEntityId;
 			DbKey rowKey = entityData.RowKey;
 
-			EntityKey entityKey = EntityKey.CreateNormalizedEntityKey (this.EntityContext, leafEntityId, rowKey);
-
+			EntityKey entityKey = new EntityKey(leafEntityId, rowKey);
 			AbstractEntity entity = this.DataContext.GetEntity (entityKey);
 
 			if (entity == null)

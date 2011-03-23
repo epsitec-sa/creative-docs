@@ -53,18 +53,6 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 
 		/// <summary>
-		/// The <see cref="EntityContext"/> used by this instance.
-		/// </summary>
-		private EntityContext EntityContext
-		{
-			get
-			{
-				return this.DataContext.EntityContext;
-			}
-		}
-
-
-		/// <summary>
 		/// The <see cref="SchemaEngine"/> used by this instance.
 		/// </summary>
 		private SchemaEngine SchemaEngine
@@ -72,6 +60,15 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			get
 			{
 				return this.DataContext.DataInfrastructure.SchemaEngine;
+			}
+		}
+
+
+		private EntityTypeEngine EntityTypeEngine
+		{
+			get
+			{
+				return this.DataContext.DataInfrastructure.EntityTypeEngine;
 			}
 		}
 
@@ -189,9 +186,9 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
-			foreach (Druid localEntityId in this.EntityContext.GetInheritedEntityIds (leafEntityId))
+			foreach (var localEntityType in this.EntityTypeEngine.GetBaseTypes (leafEntityId))
 			{
-				this.DeleteEntityValues (transaction, localEntityId, dbKey);
+				this.DeleteEntityValues (transaction, localEntityType.CaptionId, dbKey);
 			}
 		}
 
@@ -229,11 +226,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
-			var fields = from field in this.EntityContext.GetEntityFieldDefinitions (leafEntityId)
-						 where field.Relation == FieldRelation.Collection
-						 select field;
-
-			foreach (StructuredTypeField field in fields)
+			foreach (var field in this.EntityTypeEngine.GetCollectionFields (leafEntityId))
 			{
 				Druid localEntityId = field.DefiningTypeId;
 				Druid fieldId = field.CaptionId;
@@ -254,27 +247,27 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
-			foreach (Druid localEntityId in this.EntityContext.GetInheritedEntityIds (leafEntityId))
+			foreach (var item in this.EntityTypeEngine.GetReferencingFields (leafEntityId))
 			{
-				foreach (var field in this.SchemaEngine.GetReferencingFields (localEntityId))
-				{
-					Druid localTargetEntityId = field.Item1.CaptionId;
-					Druid fieldId = field.Item2.CaptionId;
+				Druid localSourceEntityId = item.Key.CaptionId;
 
-					switch (field.Item2.Relation)
+				foreach (var field in item.Value)
+				{
+					Druid fieldId = field.CaptionId;
+
+					switch (field.Relation)
 					{
 						case FieldRelation.Reference:
-							this.DeleteEntityTargetReference (transaction, localTargetEntityId, fieldId, dbKey);
+							this.DeleteEntityTargetReference (transaction, localSourceEntityId, fieldId, dbKey);
 							break;
 
 						case FieldRelation.Collection:
-							this.DeleteEntityTargetCollection (transaction, localTargetEntityId, fieldId, dbKey);
+							this.DeleteEntityTargetCollection (transaction, localSourceEntityId, fieldId, dbKey);
 							break;
 
 						default:
 							throw new System.NotImplementedException ();
 					}
-
 				}
 			}
 		}
@@ -701,7 +694,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 				Druid fieldId = fieldIdWithValue.Key;
 				object value = fieldIdWithValue.Value;
 
-				var field = this.EntityContext.GetEntityFieldDefinition (localEntityId, fieldId.ToResourceId ());
+				var field = this.EntityTypeEngine.GetField (localEntityId, fieldId);
 
 				AbstractType fieldType = field.Type as AbstractType;
 				INullableType nullableType = field.GetNullableType ();

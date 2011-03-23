@@ -7,6 +7,8 @@ using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Database;
 
+using Epsitec.Cresus.DataLayer.Schema;
+
 using System.Collections.Generic;
 
 using System.Linq;
@@ -27,13 +29,13 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <summary>
 		/// Builds a new empty <see cref="EntityCache"/>.
 		/// </summary>
-		/// <param name="entityContext">The <see cref="EntityContext"/> used by this instance.</param>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="entityContext"/> is <c>null</c>.</exception>
-		public EntityCache(EntityContext entityContext)
+		/// <param name="entityTypeEngine">The <see cref="EntityTypeEngine"/> used by this instance.</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="entityTypeEngine"/> is <c>null</c>.</exception>
+		public EntityCache(EntityTypeEngine entityTypeEngine)
 		{
-			entityContext.ThrowIfNull ("entityContext");
+			entityTypeEngine.ThrowIfNull ("entityTypeEngine");
 
-			this.EntityContext = entityContext;
+			this.EntityTypeEngine = entityTypeEngine;
 
 			this.entityIdToEntity = new Dictionary<long, AbstractEntity> ();
 			this.entityIdToEntityKey = new Dictionary<long, EntityKey> ();
@@ -43,10 +45,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
-		/// <summary>
-		/// The <see cref="EntityContext"/> associated with this instance.
-		/// </summary>
-		private EntityContext EntityContext
+
+		private EntityTypeEngine EntityTypeEngine
 		{
 			get;
 			set;
@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 
 			EntityKey entityKey = new EntityKey (entity, key);
-			EntityKey normalizedEntityKey = entityKey.GetNormalizedEntityKey (this.EntityContext);
+			EntityKey normalizedEntityKey = entityKey.GetNormalizedEntityKey (this.EntityTypeEngine);
 
 			this.entityIdToEntityKey[id] = normalizedEntityKey;
 			this.entityKeyToEntity[normalizedEntityKey] = entity;
@@ -207,7 +207,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <returns>The corresponding <see cref="AbstractEntity"/>.</returns>
 		public AbstractEntity GetEntity(EntityKey entityKey)
 		{
-			EntityKey normalizedEntityKey = entityKey.GetNormalizedEntityKey (this.EntityContext);
+			EntityKey normalizedEntityKey = entityKey.GetNormalizedEntityKey (this.EntityTypeEngine);
 
 			if (this.entityKeyToEntity.ContainsKey (normalizedEntityKey))
 			{

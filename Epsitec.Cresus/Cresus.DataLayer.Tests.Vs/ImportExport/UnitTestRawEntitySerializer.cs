@@ -74,7 +74,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure);
+				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure, entityTypeEngine);
 
 				FileInfo file = new FileInfo ("test.xml");
 
@@ -148,8 +149,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure);
-
+				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure, entityTypeEngine);
+				
 				FileInfo file = new FileInfo ("test.xml");
 
 				DbLogEntry dbLogEntry = dbInfrastructure.ServiceManager.Logger.CreateLogEntry (new DbId (1));
@@ -256,7 +258,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure);
+				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure, entityTypeEngine);
 
 				FileInfo file = new FileInfo ("test.xml");
 
@@ -321,8 +324,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure);
-
+				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure, entityTypeEngine);
 				
 				FileInfo file = new FileInfo ("test.xml");
 

@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.IsReadOnly = isReadOnly;
 			this.EnableNullVirtualization = enableNullVirtualization;
 
-			this.entitiesCache = new EntityCache (this.EntityContext);
+			this.entitiesCache = new EntityCache (this.EntityTypeEngine);
 			this.emptyEntities = new HashSet<AbstractEntity> ();
 			this.entitiesToDelete = new HashSet<AbstractEntity> ();
 			this.entitiesDeleted = new HashSet<AbstractEntity> ();
@@ -164,6 +164,16 @@ namespace Epsitec.Cresus.DataLayer.Context
 				return this.DataInfrastructure.DbInfrastructure;
 			}
 		}
+
+
+		private EntityTypeEngine EntityTypeEngine
+		{
+			get
+			{
+				return this.DataInfrastructure.EntityTypeEngine;
+			}
+		}
+
 
 		/// <summary>
 		/// Gets the <see cref="DataLoader"/> associated with this instance.
@@ -766,7 +776,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="target">The <see cref="AbstractEntity"/> targeted by the referencing field.</param>
 		private void ResaveReferencingField(AbstractEntity source, Druid fieldId, AbstractEntity target)
 		{
-			StructuredTypeField field = this.EntityContext.GetStructuredTypeField (source, fieldId.ToResourceId ());
+			Druid entityTypeId = source.GetEntityStructuredTypeId ();
+			StructuredTypeField field = this.EntityTypeEngine.GetField (entityTypeId, fieldId);
 
 			bool found;
 
@@ -1206,7 +1217,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="eventSource">The source that must be used for the event to be fired.</param>
 		internal void RemoveReference(AbstractEntity source, Druid fieldId, AbstractEntity target, EntityChangedEventSource eventSource)
 		{
-			StructuredTypeField field = this.EntityContext.GetStructuredTypeField (source, fieldId.ToResourceId ());
+			Druid entityTypeId = source.GetEntityStructuredTypeId ();
+			StructuredTypeField field = this.EntityTypeEngine.GetField (entityTypeId, fieldId);
 
 			bool updated = false;
 
@@ -1264,25 +1276,22 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			Druid leafTargetEntityId = target.GetEntityStructuredTypeId ();
 
-			var fields = this.EntityContext.GetInheritedEntityIds (leafTargetEntityId)
-				.SelectMany (id => this.DataInfrastructure.SchemaEngine.GetReferencingFields (id))
-				.GroupBy (f => f.Item1.CaptionId, f => f.Item2.CaptionId)
-				.ToDictionary (g => g.Key, g => g.ToList ());
+			var fields = this.EntityTypeEngine.GetReferencingFields (leafTargetEntityId);
 
 			IEnumerable<AbstractEntity> entities = this.GetEntities ();
 
 			foreach (AbstractEntity source in entities)
 			{
 				Druid leafSourceEntityId = source.GetEntityStructuredTypeId ();
-				var sourceInheritedIds = this.EntityContext.GetInheritedEntityIds (leafSourceEntityId);
+				var localSourceEntityTypes = this.EntityTypeEngine.GetBaseTypes (leafSourceEntityId);
 
-				foreach (Druid localSourceId in sourceInheritedIds)
+				foreach (StructuredType localSourceEntityType in localSourceEntityTypes)
 				{
-					if (fields.ContainsKey (localSourceId))
+					if (fields.ContainsKey (localSourceEntityType))
 					{
-						foreach (Druid fieldId in fields[localSourceId])
+						foreach (StructuredTypeField field in fields[localSourceEntityType])
 						{
-							yield return new KeyValuePair<AbstractEntity, Druid> (source, fieldId);
+							yield return new KeyValuePair<AbstractEntity, Druid> (source, field.CaptionId);
 						}
 					}
 				}

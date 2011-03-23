@@ -32,15 +32,15 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// </summary>
 		/// <param name="dbInfrastructure">The <see cref="DbInfrastructure"/> that will be used by the new instance.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="dbInfrastructure"/> is null.</exception>
-		public SchemaEngine(DbInfrastructure dbInfrastructure)
+		public SchemaEngine(DbInfrastructure dbInfrastructure, EntityTypeEngine entityTypeEngine)
 		{
 			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
 
 			this.DbInfrastructure = dbInfrastructure;
-			this.EntityContext = new EntityContext ();
+			//this.EntityContext = new EntityContext ();
+			this.EntityTypeEngine = entityTypeEngine;
 
 			this.tableDefinitionCache = new Dictionary<string, DbTable> ();
-			this.referencingFieldsCache = new Dictionary<Druid, IList<System.Tuple<StructuredType, StructuredTypeField>>> ();
 		}
 
 
@@ -54,10 +54,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		}
 
 
-		/// <summary>
-		/// The <see cref="EntityContext"/> associated with this instance.
-		/// </summary>
-		private EntityContext EntityContext
+		private EntityTypeEngine EntityTypeEngine
 		{
 			get;
 			set;
@@ -70,7 +67,6 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		public void Clear()
 		{
 			this.tableDefinitionCache.Clear ();
-			this.referencingFieldsCache.Clear ();
 		}
 
 
@@ -80,24 +76,19 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// <param name="entityId">The <see cref="Druid"/> whose schema to load.</param>
 		public void LoadSchema(Druid entityId)
 		{
-			Druid localEntityId = entityId;
+			var entityTypesToLoad = this.EntityTypeEngine.GetBaseTypes (entityId)
+				.TakeWhile (t => !this.IsTableDefinitionInCache (this.GetEntityTableName (t.CaptionId)));
 
-			while (localEntityId.IsValid && !this.IsTableDefinitionInCache (this.GetEntityTableName (localEntityId)))
+			foreach (var entityType in entityTypesToLoad)
 			{
 				// This call loads the table in the cache if it is not yet loaded.
 				// Marc
 
+				Druid localEntityId = entityType.CaptionId;
+
 				this.GetEntityTableDefinition (localEntityId);
 
-				ResourceManager manager = this.DbInfrastructure.DefaultContext.ResourceManager;
-				StructuredType entityType = TypeRosetta.CreateTypeObject (manager, localEntityId) as StructuredType;
-
-				var collectionFields =
-					from field in this.EntityContext.GetEntityLocalFieldDefinitions (localEntityId)
-					where field.Relation == FieldRelation.Collection
-					select field;
-
-				foreach (StructuredTypeField field in collectionFields)
+				foreach (var field in this.EntityTypeEngine.GetLocalCollectionFields (localEntityId))
 				{
 					// This call loads the relation tables in the cache if it is not yet loaded.
 					// Marc
@@ -186,7 +177,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// <returns>The sequence of <see cref="DbTable"/>.</returns>
 		public IEnumerable<DbTable> GetEntityTableDefinitions()
 		{
-			foreach (StructuredType entityType in this.GetEntityStructuredTypes ())
+			foreach (StructuredType entityType in this.EntityTypeEngine.GetEntityTypes ())
 			{
 				yield return this.GetEntityTableDefinition (entityType.CaptionId);
 			}
@@ -200,12 +191,9 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// <returns>The sequence of <see cref="DbTable"/>.</returns>
 		public IEnumerable<DbTable> GetEntityCollectionTableDefinitions()
 		{
-			foreach (StructuredType entityType in this.GetEntityStructuredTypes ())
+			foreach (StructuredType entityType in this.EntityTypeEngine.GetEntityTypes ())
 			{
-				var collectionFields =
-					from field in this.EntityContext.GetEntityLocalFieldDefinitions (entityType.CaptionId)
-					where field.Relation == FieldRelation.Collection
-					select field;
+				var collectionFields = this.EntityTypeEngine.GetLocalCollectionFields (entityType.CaptionId);
 
 				foreach (StructuredTypeField field in collectionFields)
 				{
@@ -250,59 +238,6 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 
 		/// <summary>
-		/// Gets the description of which fields of which entities references the entities defined
-		/// by the given <see cref="Druid"/>.
-		/// </summary>
-		/// <remarks>
-		/// This method retrieves only the source references for the given <see cref="Druid"/>, but
-		/// do not retrieves the ones of base or derived entities.
-		/// </remarks>
-		/// <param name="targetEntityTypeId">The type of entities of the target.</param>
-		/// <returns>The description of the field and entities that references the given target entity.</returns>
-		public IEnumerable<System.Tuple<StructuredType, StructuredTypeField>> GetReferencingFields(Druid targetEntityTypeId)
-		{
-			if (!this.referencingFieldsCache.ContainsKey (targetEntityTypeId))
-			{
-				this.BuildReferencingFieldsCache ();
-			}
-
-			if (!this.referencingFieldsCache.ContainsKey (targetEntityTypeId))
-			{
-				return new List<System.Tuple<StructuredType, StructuredTypeField>> ();
-			}
-			else
-			{
-				return this.referencingFieldsCache[targetEntityTypeId];
-			}
-		}
-
-		/// <summary>
-		/// Builds the referencing fields cache.
-		/// </summary>
-		private void BuildReferencingFieldsCache()
-		{
-			List<StructuredType> entityStructuredTypes = this.GetEntityStructuredTypes ().ToList ();
-				
-			foreach (var entityStructuredType in entityStructuredTypes)
-			{
-				Druid entityId = entityStructuredType.CaptionId;
-				
-				var referencingFields = 
-					from structuredType in entityStructuredTypes
-					from structuredField in structuredType.Fields.Values
-					where structuredField.Membership != FieldMembership.Inherited
-					where structuredField.Source == FieldSource.Value
-					let relation = structuredField.Relation
-					where relation == FieldRelation.Reference || relation == FieldRelation.Collection
-					where structuredField.TypeId == entityId
-					select System.Tuple.Create (structuredType, structuredField);
-
-				this.referencingFieldsCache[entityId] = referencingFields.ToList ();
-			}
-		}
-
-
-		/// <summary>
 		/// Gets the name of the <see cref="DbTable"/> corresponding to an <see cref="AbstractEntity"/>
 		/// <see cref="Druid"/>.
 		/// </summary>
@@ -340,24 +275,6 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 			return string.Concat (localEntityName, ":", fieldName);
 		}
-		
-
-		/// <summary>
-		/// Gets all the <see cref="StructuredType"/> of the entities that should be defined in the
-		/// database.
-		/// </summary>
-		/// <returns>The sequence of <see cref="StructuredType"/>.</returns>
-		private IEnumerable<StructuredType> GetEntityStructuredTypes()
-		{
-			// TODO Check that we get all the structured types that we want here. No more, no less.
-			// Marc
-
-			return from id in EntityClassFactory.GetAllEntityIds ()
-				   let type = (StructuredType) EntityInfo.GetStructuredType (id)
-				   where type.Class == StructuredTypeClass.Entity
-				   where type.Flags.HasFlag (StructuredTypeFlags.GenerateSchema)
-				   select type;
-		}
 
 
 		/// <summary>
@@ -365,13 +282,6 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// instance.
 		/// </summary>
 		private readonly IDictionary<string, DbTable> tableDefinitionCache;
-
-
-		/// <summary>
-		/// The cache containing all the referencing fields, that is, the information about which
-		/// field of which entity does reference a given entity <see cref="Druid"/>.
-		/// </summary>
-		private readonly IDictionary<Druid, IList<System.Tuple<StructuredType, StructuredTypeField>>> referencingFieldsCache;
 
 
 		/// <summary>

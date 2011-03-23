@@ -169,6 +169,7 @@
     <Compile Include="Proxies\KeyedReferenceFieldProxy.cs" />
     <Compile Include="Saver\PersistenceJobTableComputer.cs" />
     <Compile Include="Schema\DataConverter.cs" />
+    <Compile Include="Schema\EntityTypeEngine.cs" />
     <Compile Include="Serialization\EntitySerializationManager.cs" />
     <Compile Include="Expressions\Operation.cs" />
     <Compile Include="Loader\DataLoader.cs" />

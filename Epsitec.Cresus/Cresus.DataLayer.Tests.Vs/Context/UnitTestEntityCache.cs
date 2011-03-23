@@ -14,6 +14,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.DataLayer.Schema;
 
 
 
@@ -36,8 +37,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		[TestMethod]
 		public void EntityCacheConstructorTest()
 		{
-			EntityContext entityContext = new EntityContext ();
-			EntityCache entityCache = new EntityCache (entityContext);
+			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityCache entityCache = new EntityCache (entityTypeEngine);
 		}
 
 
@@ -55,8 +56,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 				EntityContext.Current.CreateEntity<LocationEntity> (),
 			};
 
-			EntityContext entityContext = new EntityContext ();
-			EntityCache entityCache = new EntityCache (entityContext);
+			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityCache entityCache = new EntityCache (entityTypeEngine);
 
 			foreach (AbstractEntity entity in entities)
 			{
@@ -73,8 +74,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		[TestMethod]
 		public void AddArgumentCheck()
 		{
-			EntityContext entityContext = new EntityContext ();
-			EntityCache entityCache = new EntityCache (entityContext);
+			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityCache entityCache = new EntityCache (entityTypeEngine);
 
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
@@ -108,8 +109,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 				EntityContext.Current.CreateEntity<LocationEntity> (),
 			};
 
-			EntityContext entityContext = new EntityContext ();
-			EntityCache entityCache = new EntityCache (entityContext);
+			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityCache entityCache = new EntityCache (entityTypeEngine);
 
 			foreach (AbstractEntity entity in entities1)
 			{
@@ -142,14 +143,14 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 				EntityContext.Current.CreateEntity<LocationEntity> (),
 			};
 
-			EntityContext entityContext = new EntityContext ();
-			EntityCache entityCache = new EntityCache (entityContext);
+			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityCache entityCache = new EntityCache (entityTypeEngine);
 
 			for (int i = 0; i < entities.Count; i++)
 			{
 				AbstractEntity entity = entities[i];
 				DbKey dbKey = new DbKey (new DbId (i + 1));
-				EntityKey entityKey = new EntityKey (entity, dbKey);
+				EntityKey entityKey = new EntityKey (entity, dbKey).GetNormalizedEntityKey (entityTypeEngine);
 
 				entityCache.Add (entity);
 				entityCache.DefineRowKey (entity, dbKey);
@@ -163,8 +164,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		[TestMethod]
 		public void DefineRowKeyArgumentCheck()
 		{
-			EntityContext entityContext = new EntityContext ();
-			EntityCache entityCache = new EntityCache (entityContext);
+			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityCache entityCache = new EntityCache (entityTypeEngine);
 			NaturalPersonEntity entity = EntityContext.Current.CreateEntity<NaturalPersonEntity> ();
 
 			ExceptionAssert.Throw<System.ArgumentNullException>
@@ -200,8 +201,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 				EntityContext.Current.CreateEntity<LocationEntity> (),
 			};
 
-			EntityContext entityContext = new EntityContext ();
-			EntityCache entityCache = new EntityCache (entityContext);
+			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityCache entityCache = new EntityCache (entityTypeEngine);
 
 			foreach (AbstractEntity entity in entities1)
 			{
@@ -229,8 +230,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 				EntityContext.Current.CreateEntity<LocationEntity> (),
 			};
 
-			EntityContext entityContext = new EntityContext ();
-			EntityCache entityCache = new EntityCache (entityContext);
+			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityCache entityCache = new EntityCache (entityTypeEngine);
 
 			for (int i = 0; i < entities.Count; i++)
 			{
@@ -277,8 +278,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 				EntityContext.Current.CreateEntity<LocationEntity> (),
 			};
 
-			EntityContext entityContext = new EntityContext ();
-			EntityCache entityCache = new EntityCache (entityContext);
+			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityCache entityCache = new EntityCache (entityTypeEngine);
 
 			for (int i = 0; i < entities1.Count; i++)
 			{
@@ -293,7 +294,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 			{
 				AbstractEntity entity = entities1[i];
 				DbKey dbKey = new DbKey (new DbId (i + 1));
-				EntityKey entityKey = new EntityKey (entity, dbKey);
+				EntityKey entityKey = new EntityKey (entity, dbKey).GetNormalizedEntityKey (entityTypeEngine);
 
 				Assert.AreEqual (entityKey, entityCache.GetEntityKey (entity));
 			}
@@ -308,8 +309,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		[TestMethod]
 		public void GetEntityKeyArgumentCheck()
 		{
-			EntityContext entityContext = new EntityContext ();
-			EntityCache entityCache = new EntityCache (entityContext);
+			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityCache entityCache = new EntityCache (entityTypeEngine);
 
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
@@ -332,8 +333,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 				EntityContext.Current.CreateEntity<LocationEntity> (),
 			};
 
-			EntityContext entityContext = new EntityContext ();
-			EntityCache entityCache = new EntityCache (entityContext);
+			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityCache entityCache = new EntityCache (entityTypeEngine);
 
 			foreach (AbstractEntity entity in entities)
 			{
@@ -396,8 +397,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		[TestMethod]
 		public void RemoveArgumentCheck()
 		{
-			EntityContext entityContext = new EntityContext ();
-			EntityCache entityCache = new EntityCache (entityContext);
+			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityCache entityCache = new EntityCache (entityTypeEngine);
 
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
@@ -409,8 +410,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		[TestMethod]
 		public void DefineAndGetLogIdTest1()
 		{
-			EntityContext entityContext = new EntityContext ();
-			EntityCache entityCache = new EntityCache (entityContext);
+			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityCache entityCache = new EntityCache (entityTypeEngine);
 
 			List<Druid> samples = Enumerable.Range (1, 10).Select (i => Druid.FromLong (i)).ToList ();
 
@@ -432,8 +433,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		[TestMethod]
 		public void DefineLogIdArgumentCheck2()
 		{
-			EntityContext entityContext = new EntityContext ();
-			EntityCache entityCache = new EntityCache (entityContext);
+			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityCache entityCache = new EntityCache (entityTypeEngine);
 
 			List<AbstractEntity> samples = new List<AbstractEntity> ()
 			{
@@ -468,8 +469,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		[TestMethod]
 		public void DefineAndGetLogIdTest2()
 		{
-			EntityContext entityContext = new EntityContext ();
-			EntityCache entityCache = new EntityCache (entityContext);
+			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityCache entityCache = new EntityCache (entityTypeEngine);
 
 			entityCache.Add (new NaturalPersonEntity ());
 
@@ -488,8 +489,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		[TestMethod]
 		public void GetMinimumLogId()
 		{
-			EntityContext entityContext = new EntityContext ();
-			EntityCache entityCache = new EntityCache (entityContext);
+			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityCache entityCache = new EntityCache (entityTypeEngine);
 
 			Assert.IsNull (entityCache.GetMinimumLogId ());
 
@@ -505,8 +506,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		[TestMethod]
 		public void GetEntityTypeIdsTest()
 		{
-			EntityContext entityContext = new EntityContext ();
-			EntityCache entityCache = new EntityCache (entityContext);
+			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityCache entityCache = new EntityCache (entityTypeEngine);
 
 			List<Druid> samples = Enumerable.Range (1, 10).Select (i => Druid.FromLong (i)).ToList ();
 

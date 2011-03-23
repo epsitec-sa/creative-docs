@@ -197,8 +197,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// <returns><c>true</c> if the field is valid, false if it isn't.</returns>
 		private bool IsEntityValueField(AbstractEntity entity, string fieldId)
 		{
-			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-			StructuredTypeField field = entity.GetEntityContext ().GetEntityFieldDefinition (leafEntityId, fieldId);
+			StructuredTypeField field = entity.GetEntityContext ().GetStructuredTypeField(entity, fieldId);
 
 			return field != null && field.Relation == FieldRelation.None;
 		}

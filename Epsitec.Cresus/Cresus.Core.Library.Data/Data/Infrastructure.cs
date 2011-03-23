@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Core.Data
 			: base (data)
 		{
 			this.dbInfrastructure = new DbInfrastructure ();
-			this.dataInfrastructure = new DataLayer.Infrastructure.DataInfrastructure (this.dbInfrastructure);
+			this.dataInfrastructure = new DataLayer.Infrastructure.DataInfrastructure (this.dbInfrastructure, Infrastructure.GetManagedEntityIds ());
 		}
 
 

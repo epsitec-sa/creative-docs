@@ -1,11 +1,18 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
+
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Entities;
+
+using System.Collections.Generic;
+
+using System.Linq;
 
 
 namespace Epsitec.Cresus.DataLayer.Tests.Vs.Helpers

@@ -453,7 +453,7 @@ namespace Epsitec.Cresus.Core
 			{
 				dbInfrastructure.CreateDatabase (dbAccess);
 
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
+				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure, Infrastructure.GetManagedEntityIds ()))
 				{
 					dataInfrastructure.OpenConnection ("root");
 					dataInfrastructure.CreateSchema (Infrastructure.GetManagedEntityIds ());
@@ -479,7 +479,7 @@ namespace Epsitec.Cresus.Core
 			{
 				dbInfrastructure.AttachToDatabase (dbAccess);
 
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
+				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure, Infrastructure.GetManagedEntityIds ()))
 				{
 					dataInfrastructure.OpenConnection ("root");
 
@@ -504,7 +504,7 @@ namespace Epsitec.Cresus.Core
 			{
 				dbInfrastructure.AttachToDatabase (dbAccess);
 
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
+				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure, Infrastructure.GetManagedEntityIds ()))
 				{
 					dataInfrastructure.OpenConnection ("root");
 

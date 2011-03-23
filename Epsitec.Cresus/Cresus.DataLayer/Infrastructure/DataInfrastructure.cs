@@ -36,7 +36,8 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// Creates a new instance of <c>DataInfrastructure</c>.
 		/// </summary>
 		/// <param name="dbInfrastructure">The <see cref="DbInfrastructure"/> used to communicate to the Database.</param>
-		public DataInfrastructure(DbInfrastructure dbInfrastructure)
+		/// <param name="entityTypeIds">The sequence of entity types ids that are supposed to be managed by this instance.</param>
+		public DataInfrastructure(DbInfrastructure dbInfrastructure, IEnumerable<Druid> entityTypeIds)
 		{
 			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
 
@@ -45,10 +46,15 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 				throw new System.ArgumentException ("DbInfrastructure already attached to another DataInfrastructure object", "dbInfrastructure");
 			}
 
+			entityTypeIds.ThrowIfNull ("entityTypeIds");
+
+			var relatedEntityTypeIds = EntityTypeEngine.GetRelatedEntityTypeIds (entityTypeIds);
+
 			this.dbInfrastructure = dbInfrastructure;
 			this.dbInfrastructure.SetValue (DataInfrastructure.DbInfrastructureProperty, this);
-			this.SchemaEngine = new SchemaEngine (this.dbInfrastructure);
-			this.SchemaBuilder = new SchemaBuilder (this.SchemaEngine, this.dbInfrastructure);
+			this.EntityTypeEngine = new EntityTypeEngine (relatedEntityTypeIds);
+			this.SchemaEngine = new SchemaEngine (this.dbInfrastructure, this.EntityTypeEngine);
+			this.SchemaBuilder = new SchemaBuilder (this.SchemaEngine, this.EntityTypeEngine, this.dbInfrastructure);
 			this.DataContextPool = new DataContextPool ();
 		}
 		
@@ -92,6 +98,14 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			get;
 			private set;
 		}
+
+
+		internal EntityTypeEngine EntityTypeEngine
+		{
+			get;
+			private set;
+		}
+
 
 		/// <summary>
 		/// Gets the <see cref="SchemaBuilder"/> associated with this instance.
@@ -352,6 +366,8 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			this.AssertIsConnected ();
 
+			entityIds = EntityTypeEngine.GetRelatedEntityTypeIds (entityIds);
+
 			return this.SchemaBuilder.CheckSchema (entityIds);
 		}
 
@@ -365,6 +381,8 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		public void CreateSchema(IEnumerable<Druid> entityIds)
 		{
 			this.AssertIsConnected ();
+
+			entityIds = EntityTypeEngine.GetRelatedEntityTypeIds (entityIds);
 
 			this.SchemaBuilder.RegisterSchema (entityIds);
 			this.SchemaEngine.Clear ();
@@ -380,6 +398,8 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		public void UpdateSchema(IEnumerable<Druid> entityIds)
 		{
 			this.AssertIsConnected ();
+
+			entityIds = EntityTypeEngine.GetRelatedEntityTypeIds (entityIds);
 
 			this.SchemaBuilder.UpdateSchema (entityIds);
 			this.SchemaEngine.Clear ();

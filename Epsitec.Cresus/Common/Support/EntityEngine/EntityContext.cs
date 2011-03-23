@@ -40,11 +40,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.propertyGetters = new Dictionary<string, PropertyGetter> ();
 			this.propertySetters = new Dictionary<string, PropertySetter> ();
 
-			this.rootEntityId = new Dictionary<Druid, Druid> ();
-			this.inheritedEntityIds = new Dictionary<Druid, IEnumerable<Druid>> ();
-
-			this.entityFields = new Dictionary<Druid, IEnumerable<StructuredTypeField>> ();
-
 			this.dataGeneration = 1;
 		}
 
@@ -319,51 +314,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			return entityType.GetFieldIds ();
 		}
 
-
-		public IEnumerable<StructuredTypeField> GetEntityFieldDefinitions(Druid entityId)
-		{
-			if (!this.entityFields.ContainsKey (entityId))
-			{
-				this.entityFields[entityId] = this.ComputeEntityFieldDefinitions (entityId).ToArray ();
-			}
-
-			return this.entityFields[entityId];
-		}
-
-
-		public StructuredTypeField GetEntityFieldDefinition(Druid entityId, string fieldId)
-		{
-			StructuredType entityType = this.GetStructuredType (entityId);
-			StructuredTypeField field = entityType.GetField (fieldId);
-
-			return field;
-		}
-
-
-
-		public IEnumerable<StructuredTypeField> ComputeEntityFieldDefinitions(Druid entityId)
-		{
-			StructuredType entityType = this.GetStructuredType (entityId);
-
-			if (entityType == null)
-			{
-				throw new System.ArgumentException ("Invalid entity; no associated StructuredType");
-			}
-
-			foreach (string fieldId in entityType.GetFieldIds ())
-			{
-				yield return entityType.GetField (fieldId);
-			}
-		}
-
-
-		public IEnumerable<StructuredTypeField> GetEntityLocalFieldDefinitions(Druid entityId)
-		{
-			return this.GetEntityFieldDefinitions (entityId)
-				.Where (field => field.Membership != FieldMembership.Inherited)
-				.Where (field => field.Source == FieldSource.Value);
-		}
-
 		public StructuredType GetStructuredType(Druid entityId)
 		{
 			this.EnsureCorrectThread ();
@@ -432,69 +382,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			else
 			{
 				this.structuredTypeMap[id] = type;
-			}
-		}
-
-		/// <summary>
-		/// Gets the entity id of the root entity class.
-		/// </summary>
-		/// <param name="entityId">The entity id.</param>
-		/// <returns>The root entity id.</returns>
-		public Druid GetRootEntityId(Druid entityId)
-		{
-			if (!this.rootEntityId.ContainsKey (entityId))
-			{
-				this.rootEntityId[entityId] = this.GetInheritedEntityIds (entityId).Last ();
-			}
-
-			return this.rootEntityId[entityId];
-		}
-
-		/// <summary>
-		/// Gets the entity id of the entity where the field is defined.
-		/// </summary>
-		/// <param name="entityId">The entity id.</param>
-		/// <param name="fieldId">The field id.</param>
-		/// <returns>The entity id where the field is defined.</returns>
-		/// <exception cref="System.InvalidOperationException">Thrown if the field does not belong to this entity.</exception>
-		public Druid GetLocalEntityId(Druid entityId, Druid fieldId)
-		{
-			return this.GetInheritedEntityIds (entityId).First (id => this.GetEntityLocalFieldDefinitions (id).Any (f => f.CaptionId == fieldId));
-		}
-
-		/// <summary>
-		/// Gets the entity ids for the class hierarchy, starting with the specified entity
-		/// and up to the root of the hierarchy.
-		/// </summary>
-		/// <param name="entityId">The entity id.</param>
-		/// <returns></returns>
-		public IEnumerable<Druid> GetInheritedEntityIds(Druid entityId)
-		{
-			if (!this.inheritedEntityIds.ContainsKey (entityId))
-			{
-				this.inheritedEntityIds[entityId] = this.ComputeInheritedEntityIds (entityId).ToArray ();
-			}
-
-			return this.inheritedEntityIds[entityId];
-		}
-
-
-		private IEnumerable<Druid> ComputeInheritedEntityIds(Druid entityId)
-		{
-			Druid currentId = entityId;
-
-			while (currentId.IsValid)
-			{
-				yield return currentId;
-
-				var structuredType = this.GetStructuredType (currentId) as StructuredType;
-
-				if (structuredType == null)
-				{
-					break;
-				}
-
-				currentId = structuredType.BaseTypeId;
 			}
 		}
 
@@ -604,12 +491,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			T entity = this.CreateEmptyEntity<T> ();
 			this.CreateRelatedEntities (entity);
 			return entity;
-		}
-
-		
-		public IEnumerable<string> GetDefinedFieldIds(AbstractEntity entity)
-		{
-			return this.GetEntityFieldIds (entity).Where (f => this.IsFieldDefined (f, entity));
 		}
 
 
@@ -1210,10 +1091,10 @@ namespace Epsitec.Common.Support.EntityEngine
 		private readonly Dictionary<string, PropertySetter> propertySetters;
 		private readonly string name;
 
-		private readonly Dictionary<Druid, Druid> rootEntityId;
-		private readonly Dictionary<Druid, IEnumerable<Druid>> inheritedEntityIds;
+		//private readonly Dictionary<Druid, Druid> rootEntityId;
+		//private readonly Dictionary<Druid, IEnumerable<Druid>> inheritedEntityIds;
 
-		private readonly Dictionary<Druid, IEnumerable<StructuredTypeField>> entityFields;
+		//private readonly Dictionary<Druid, IEnumerable<StructuredTypeField>> entityFields;
 
 		private long dataGeneration;
 		private int suspendConstraintChecking;

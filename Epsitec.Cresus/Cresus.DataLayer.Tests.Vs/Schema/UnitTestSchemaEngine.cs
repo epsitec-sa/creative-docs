@@ -41,7 +41,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				new SchemaEngine (dbInfrastructure);
+				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure, entityTypeEngine);
 			}
 		}
 
@@ -50,10 +51,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		public void SchemaEngineConstructorArgumentCheck()
 		{
 			DbInfrastructure dbInfrastructure = null;
-
+			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
-				() => new SchemaEngine (dbInfrastructure)
+				() => new SchemaEngine (dbInfrastructure, entityTypeEngine)
 			);
 		}
 
@@ -63,7 +64,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				SchemaEngine engine = new SchemaEngine (dbInfrastructure);
+				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+				SchemaEngine engine = new SchemaEngine (dbInfrastructure, entityTypeEngine);
 				SchemaEngine_Accessor engineAccessor = new SchemaEngine_Accessor (new PrivateObject (engine));
 
 				List<System.Tuple<Druid, string>> data = new List<System.Tuple<Druid, string>>
@@ -92,7 +94,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				SchemaEngine engine = new SchemaEngine (dbInfrastructure);
+				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+				SchemaEngine engine = new SchemaEngine (dbInfrastructure, entityTypeEngine);
 				SchemaEngine_Accessor engineAccessor = new SchemaEngine_Accessor (new PrivateObject (engine));
 
 				List<System.Tuple<Druid,string>> data = new List<System.Tuple<Druid, string>> ()
@@ -125,7 +128,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				SchemaEngine engine = new SchemaEngine (dbInfrastructure);
+				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+				SchemaEngine engine = new SchemaEngine (dbInfrastructure, entityTypeEngine);
 				SchemaEngine_Accessor engineAccessor = new SchemaEngine_Accessor (new PrivateObject (engine));
 
 				List<System.Tuple<Druid,Druid,string>> data = new List<System.Tuple<Druid, Druid, string>> ()
@@ -153,9 +157,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				SchemaBuilder schemaBuilder = new SchemaBuilder (new SchemaEngine (dbInfrastructure), dbInfrastructure);
+				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure, entityTypeEngine);
+				SchemaBuilder schemaBuilder = new SchemaBuilder (schemaEngine, entityTypeEngine, dbInfrastructure);
 
-				schemaBuilder.RegisterSchema (new List<Druid> () { Druid.Parse ("[J1AB1]") });
+				schemaBuilder.RegisterSchema (DataInfrastructureHelper.GetEntityIds ());
 			}
 
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
@@ -182,7 +188,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 					System.Tuple.Create (Druid.Parse ("[J1AA1]"), Druid.Parse ("[J1AQ1]")),
 				};
 
-				SchemaEngine engine = new SchemaEngine (dbInfrastructure);
+				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+				SchemaEngine engine = new SchemaEngine (dbInfrastructure, entityTypeEngine);
 
 				engine.LoadSchema (Druid.Parse ("[J1AJ1]"));
 

@@ -9,7 +9,6 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
 
-using System.Collections;
 using System.Collections.Generic;
 
 using System.Linq;
@@ -31,12 +30,13 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// <summary>
 		/// Builds a new <c>SchemaBuilder.</c>
 		/// </summary>
-		public SchemaBuilder(SchemaEngine schemaEngine, DbInfrastructure dbInfrastructure)
+		public SchemaBuilder(SchemaEngine schemaEngine, EntityTypeEngine entityTypeEngine, DbInfrastructure dbInfrastructure)
 		{
 			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
 
 			this.DbInfrastructure = dbInfrastructure;
 			this.SchemaEngine = schemaEngine;
+			this.EntityTypeEngine = entityTypeEngine;
 		}
 
 
@@ -51,6 +51,13 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 
 		private SchemaEngine SchemaEngine
+		{
+			get;
+			set;
+		}
+
+
+		private EntityTypeEngine EntityTypeEngine
 		{
 			get;
 			set;
@@ -179,52 +186,13 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 
 		/// <summary>
-		/// Gets the sequence of <see cref="StructuredType"/> that are referenced somewhere in the
-		/// graph of <see cref="AbstractEntity"/> containing the <see cref="AbstractEntity"/> defined
-		/// by the given sequence of <see cref="Druid"/>.
-		/// </summary>
+		/// Gets the sequence of <see cref="StructuredType"/> that are correspond to the given
+		/// sequence of entity types ids.
 		/// <param name="typeIds">The sequence of <see cref="Druid"/> defining the types of the <see cref="AbstractEntity"/>.</param>
 		/// <returns>The sequence of <see cref="StructuredType"/>.</returns>
 		private IList<StructuredType> GetStructuredTypesUsedInSchema(IEnumerable<Druid> typeIds)
 		{
-			IDictionary<Druid, StructuredType> types = new Dictionary<Druid, StructuredType> ();
-
-			foreach (Druid typeId in typeIds)
-			{
-				this.GetStructuredTypesUsedInSchema (types, typeId);
-			}
-
-			return types.Values.ToList ();
-		}
-
-
-		/// <summary>
-		/// Adds the given <see cref="Druid"/> and the corresponding <see cref="StructuredType"/> if
-		/// it is not already in the <see cref="IDictionary"/> and recursively adds the same data
-		/// for its base type and its fields.
-		/// </summary>
-		/// <param name="types">The <see cref="IDictionary"/> that contains the <see cref="Druid"/> and the <see cref="StructuredType"/>.</param>
-		/// <param name="typeId">The <see cref="Druid"/> of the <see cref="StructuredType"/> to add.</param>
-		private void GetStructuredTypesUsedInSchema(IDictionary<Druid, StructuredType> types, Druid typeId)
-		{
-			if (!types.ContainsKey (typeId))
-			{
-				StructuredType type = this.GetStructuredType (typeId);
-
-				types[type.CaptionId] = type;
-
-				StructuredType baseType = type.BaseType;
-
-				if (baseType != null)
-				{
-					this.GetStructuredTypesUsedInSchema (types, type.BaseType.CaptionId);
-				}
-
-				foreach (StructuredTypeField field in this.GetFields (type, FieldRelation.Reference, FieldRelation.Collection))
-				{
-					this.GetStructuredTypesUsedInSchema (types, field.Type.CaptionId);
-				}
-			}
+			return typeIds.Select (id => this.EntityTypeEngine.GetEntityType (id)).ToList ();
 		}
 
 
@@ -240,7 +208,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 			foreach (StructuredType structuredType in structuredTypes)
 			{
-				foreach (StructuredTypeField field in this.GetFields (structuredType, FieldRelation.None))
+				foreach (StructuredTypeField field in this.EntityTypeEngine.GetLocalValueFields (structuredType.CaptionId))
 				{
 					INamedType namedType = field.Type;
 					Druid namedTypeId = namedType.CaptionId;
@@ -253,56 +221,6 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			}
 
 			return namedTypes.Values.ToList ();
-		}
-
-
-		/// <summary>
-		/// Gets the <see cref="StructuredType"/> that corresponds to the given <see cref="Druid"/>.
-		/// </summary>
-		/// <param name="typeId">The <see cref="Druid"/> defining the <see cref="StructuredType"/> to get.</param>
-		/// <returns>The <see cref="StructuredType"/>.</returns>
-		private StructuredType GetStructuredType(Druid typeId)
-		{
-			ResourceManager manager = this.DbInfrastructure.DefaultContext.ResourceManager;
-
-			StructuredType structuredType = TypeRosetta.CreateTypeObject (manager, typeId) as StructuredType;
-
-			if (structuredType == null)
-			{
-				throw new System.ArgumentException ("typeId does not defined a structured type.");
-			}
-
-			return structuredType;
-		}
-
-
-		/// <summary>
-		/// Gets the sequence of <see cref="StructuredTypeField"></see> of the given <see cref="StructuredType"></see>
-		/// that are value fields.
-		/// </summary>
-		/// <param name="fieldRelation"></param>
-		/// <param name="type">The <see cref="StructuredType"></see> whose value fields to get.</param>
-		/// <returns>The value fields of the given <see cref="StructuredType"></see>.</returns>
-		private IEnumerable<StructuredTypeField> GetFields(StructuredType type, params FieldRelation[] fieldRelation)
-		{
-			return from field in this.GetLocalFields (type)
-				   where fieldRelation.Contains (field.Relation)
-				   select field;
-		}
-
-
-		/// <summary>
-		/// Gets the sequence of <see cref="StructuredTypeField"/> of the given <see cref="StructuredType"/>
-		/// that are local fields.
-		/// </summary>
-		/// <param name="type">The <see cref="StructuredType"/> whose local fields to get.</param>
-		/// <returns>The local fields of the given <see cref="StructuredType"/>.</returns>
-		private IEnumerable<StructuredTypeField> GetLocalFields(StructuredType type)
-		{
-			return from field in type.Fields.Values
-				   where field.Membership == FieldMembership.Local || field.Membership == FieldMembership.LocalOverride
-				   where field.Source == FieldSource.Value
-				   select field;
 		}
 
 
@@ -418,8 +336,9 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			foreach (DbTable unregisteredDbTable in unregisteredEntityDbTables)
 			{
 				StructuredType type = unregisteredTablesDict[unregisteredDbTable.CaptionId];
+				Druid typeId = type.CaptionId;
 
-				foreach (var field in this.GetFields (type, FieldRelation.None))
+				foreach (var field in this.EntityTypeEngine.GetLocalValueFields (typeId))
 				{
 					DbColumn column = this.BuildValueColumn (dbTypeDefsDict, field);
 
@@ -428,7 +347,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 					this.AddIndexes (unregisteredDbTable, column, type, field);
 				}
 
-				foreach (var field in this.GetFields (type, FieldRelation.Reference))
+				foreach (var field in this.EntityTypeEngine.GetLocalReferenceFields (typeId))
 				{
 					DbColumn column = this.BuildReferenceColumn (field);
 
@@ -437,7 +356,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 					this.AddIndexes (unregisteredDbTable, column, type, field);
 				}
 
-				foreach (var field in this.GetFields (type, FieldRelation.Collection))
+				foreach (var field in this.EntityTypeEngine.GetLocalCollectionFields (typeId))
 				{
 					DbTable collectionTable = this.BuildCollectionTable (type, field);
 

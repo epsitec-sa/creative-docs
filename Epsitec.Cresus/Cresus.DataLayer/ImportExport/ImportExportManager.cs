@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 					{
 						exportableEntities.Add (e);
 
-						foreach (AbstractEntity child in ImportExportManager.GetChildren (e))
+						foreach (AbstractEntity child in ImportExportManager.GetChildren (dataContext, e))
 						{
 							entitiesToProcess.Push (child);
 						}
@@ -94,13 +94,13 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private static IEnumerable<AbstractEntity> GetChildren(AbstractEntity entity)
+		private static IEnumerable<AbstractEntity> GetChildren(DataContext dataContext, AbstractEntity entity)
 		{
 			EntityContext entityContext = entity.GetEntityContext ();
 
 			Druid entityId = entity.GetEntityStructuredTypeId ();
 
-			var fields = from field in entityContext.GetEntityFieldDefinitions (entityId)
+			var fields = from field in dataContext.DataInfrastructure.EntityTypeEngine.GetFields (entityId)
 						 where field.Relation == FieldRelation.Reference || field.Relation == FieldRelation.Collection
 						 where entityContext.IsFieldDefined (field.Id, entity)
 						 select new

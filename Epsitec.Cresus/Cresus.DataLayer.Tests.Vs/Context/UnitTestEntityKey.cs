@@ -12,6 +12,8 @@ using Epsitec.Cresus.DataLayer.Tests.Vs.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Collections.Generic;
+using Epsitec.Cresus.DataLayer.Schema;
+using Epsitec.Common.Types;
 
 
 namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
@@ -57,12 +59,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 			foreach (AbstractEntity entity in entities)
 			{
 				DbKey rowKey = new DbKey (new DbId (1));
+				Druid entityId = entity.GetEntityStructuredTypeId ();
+
 				EntityKey key = new EntityKey (entity, rowKey);
 
-				Druid entityId = entity.GetEntityStructuredTypeId ();
-				Druid rootEntityId = entity.GetEntityContext ().GetRootEntityId (entityId);
-
-				Assert.AreEqual (key.EntityId, rootEntityId);
+				Assert.AreEqual (key.EntityId, entityId);
 				Assert.AreEqual (key.RowKey, rowKey);
 			}
 		}
@@ -193,7 +194,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		[TestMethod]
 		public void CreateNormalizedEntityKeyTest()
 		{
-			EntityContext entityContext = new EntityContext ();
+			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
 
 			List<System.Tuple<Druid, Druid>> samples = new List<System.Tuple<Druid, Druid>> ()
 			{
@@ -206,7 +207,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 
 			foreach (var sample in samples)
 			{
-				EntityKey key = EntityKey.CreateNormalizedEntityKey (entityContext, sample.Item1, new DbKey (new DbId (1)));
+				EntityKey key = EntityKey.CreateNormalizedEntityKey (entityTypeEngine, sample.Item1, new DbKey (new DbId (1)));
 
 				Assert.AreEqual (sample.Item2, key.EntityId);
 			}
@@ -226,7 +227,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		[TestMethod]
 		public void NormalizeEntityKeyTest()
 		{
-			EntityContext entityContext = new EntityContext ();
+			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
 
 			List<System.Tuple<Druid, Druid>> samples = new List<System.Tuple<Druid, Druid>> ()
 			{
@@ -240,7 +241,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 			foreach (var sample in samples)
 			{
 				EntityKey key1 = new EntityKey (sample.Item1, new DbKey (new DbId (1)));
-				EntityKey key2 = key1.GetNormalizedEntityKey (entityContext);
+				EntityKey key2 = key1.GetNormalizedEntityKey (entityTypeEngine);
 
 				Assert.AreEqual (sample.Item2, key2.EntityId);
 			}

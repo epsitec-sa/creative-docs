@@ -11,6 +11,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Collections.Generic;
 
+using System.Linq;
+
 
 namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 {
@@ -40,7 +42,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				new SchemaBuilder (new SchemaEngine (dbInfrastructure), dbInfrastructure);
+				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure, entityTypeEngine);
+
+				new SchemaBuilder (schemaEngine, entityTypeEngine, dbInfrastructure);
 			}
 		}
 
@@ -50,9 +55,12 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
+				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure, entityTypeEngine);
+
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
-					() => new SchemaBuilder (new SchemaEngine (dbInfrastructure), (DbInfrastructure) null)
+					() => new SchemaBuilder (schemaEngine, entityTypeEngine, (DbInfrastructure) null)
 				);
 			}
 		}
@@ -74,62 +82,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 
 		[TestMethod]
 		public void RegisterAndCheckSchema2()
-		{
-			List<Druid> entityIdsToRegister = new List<Druid> ()
-			{
-				Druid.Parse ("[J1A9]")
-			};
-
-			List<Druid> entityIdsToCheck = new List<Druid> ()
-			{
-				Druid.Parse ("[J1A9]"),
-				Druid.Parse ("[J1A6]"),
-				Druid.Parse ("[J1A4]"),
-			};
-
-			this.CheckSchema (entityIdsToCheck, false);
-			this.RegisterSchema (entityIdsToRegister);
-			this.CheckSchema (entityIdsToCheck, true);
-		}
-
-
-		[TestMethod]
-		public void RegisterAndCheckSchema3()
-		{
-			List<Druid> entityIdsToRegister = new List<Druid> ()
-			{
-				Druid.Parse ("[J1AT1]")
-			};
-
-			List<Druid> entityIdsToCheck = new List<Druid> ()
-			{
-				Druid.Parse ("[J1AT1]"),
-				Druid.Parse ("[J1AA1]"),
-				Druid.Parse ("[J1AV]"),
-				Druid.Parse ("[J1A41]"),
-				Druid.Parse ("[J1AJ1]"),
-				Druid.Parse ("[J1AB1]"),
-				Druid.Parse ("[J1AE1]"),
-				Druid.Parse ("[J1A11]"),
-				Druid.Parse ("[J1AN]"),
-				Druid.Parse ("[J1AQ]"),
-				Druid.Parse ("[J1AT]"),
-				Druid.Parse ("[J1AJ]"),
-				Druid.Parse ("[J1AG]"),
-				Druid.Parse ("[J1AE]"),
-				Druid.Parse ("[J1A6]"),
-				Druid.Parse ("[J1A9]"),
-				Druid.Parse ("[J1A4]"),
-			};
-
-			this.CheckSchema (entityIdsToCheck, false);
-			this.RegisterSchema (entityIdsToRegister);
-			this.CheckSchema (entityIdsToCheck, true);
-		}
-
-
-		[TestMethod]
-		public void RegisterAndCheckSchema4()
 		{
 			List<Druid> entityIds = new List<Druid> ()
 			{
@@ -161,24 +113,14 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void RegisterAndCheckSchema5()
 		{
-			List<Druid> entityIdsToRegister1 = new List<Druid> ()
-			{
-				Druid.Parse ("[J1A9]")
-			};
-
-			List<Druid> entityIdsToCheck1 = new List<Druid> ()
+			List<Druid> entityIds1 = new List<Druid> ()
 			{
 				Druid.Parse ("[J1A9]"),
 				Druid.Parse ("[J1A6]"),
 				Druid.Parse ("[J1A4]"),
 			};
 
-			List<Druid> entityIdsToRegister2 = new List<Druid> ()
-			{
-				Druid.Parse ("[J1AT1]")
-			};
-
-			List<Druid> entityIdsToCheck2 = new List<Druid> ()
+			List<Druid> entityIds2 = new List<Druid> ()
 			{
 				Druid.Parse ("[J1AT1]"),
 				Druid.Parse ("[J1AA1]"),
@@ -196,42 +138,32 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 				Druid.Parse ("[J1AE]"),
 			};
 
-			this.CheckSchema (entityIdsToCheck1, false);
-			this.CheckSchema (entityIdsToCheck2, false);
+			this.CheckSchema (entityIds1, false);
+			this.CheckSchema (entityIds2, false);
 
-			this.RegisterSchema (entityIdsToRegister1);
+			this.RegisterSchema (entityIds1);
 
-			this.CheckSchema (entityIdsToCheck1, true);
-			this.CheckSchema (entityIdsToCheck2, false);
+			this.CheckSchema (entityIds1, true);
+			this.CheckSchema (entityIds2, false);
 
-			this.RegisterSchema (entityIdsToRegister2);
+			this.RegisterSchema (entityIds2);
 
-			this.CheckSchema (entityIdsToCheck1, true);
-			this.CheckSchema (entityIdsToCheck2, true);
+			this.CheckSchema (entityIds1, true);
+			this.CheckSchema (entityIds2, true);
 		}
 
 
 		[TestMethod]
 		public void UpdateAndCheckSchema1()
 		{
-			List<Druid> entityIdsToRegister1 = new List<Druid> ()
-			{
-				Druid.Parse ("[J1A9]")
-			};
-
-			List<Druid> entityIdsToCheck1 = new List<Druid> ()
+			List<Druid> entityIds1 = new List<Druid> ()
 			{
 				Druid.Parse ("[J1A9]"),
 				Druid.Parse ("[J1A6]"),
 				Druid.Parse ("[J1A4]"),
 			};
 
-			List<Druid> entityIdsToRegister2 = new List<Druid> ()
-			{
-				Druid.Parse ("[J1AT1]")
-			};
-
-			List<Druid> entityIdsToCheck2 = new List<Druid> ()
+			List<Druid> entityIds2 = new List<Druid> ()
 			{
 				Druid.Parse ("[J1AT1]"),
 				Druid.Parse ("[J1AA1]"),
@@ -249,30 +181,25 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 				Druid.Parse ("[J1AE]"),
 			};
 
-			this.CheckSchema (entityIdsToCheck1, false);
-			this.CheckSchema (entityIdsToCheck2, false);
+			this.CheckSchema (entityIds1, false);
+			this.CheckSchema (entityIds2, false);
 
-			this.UpdateSchema (entityIdsToRegister1);
+			this.UpdateSchema (entityIds1);
 
-			this.CheckSchema (entityIdsToCheck1, true);
-			this.CheckSchema (entityIdsToCheck2, false);
+			this.CheckSchema (entityIds1, true);
+			this.CheckSchema (entityIds2, false);
 
-			this.UpdateSchema (entityIdsToRegister2);
+			this.UpdateSchema (entityIds2.Concat (entityIds1).ToList ());
 
-			this.CheckSchema (entityIdsToCheck1, true);
-			this.CheckSchema (entityIdsToCheck2, true);
+			this.CheckSchema (entityIds1, true);
+			this.CheckSchema (entityIds2, true);
 		}
 
 
 		[TestMethod]
 		public void UpdateAndCheckSchema2()
 		{
-			List<Druid> entityIdsToRegister1 = new List<Druid> ()
-			{
-				Druid.Parse ("[J1AT1]")
-			};
-
-			List<Druid> entityIdsToCheck1 = new List<Druid> ()
+			List<Druid> entityIds1 = new List<Druid> ()
 			{
 				Druid.Parse ("[J1AT1]"),
 				Druid.Parse ("[J1AA1]"),
@@ -290,30 +217,25 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 				Druid.Parse ("[J1AE]"),
 			};
 
-			List<Druid> entityIdsToRegister2 = new List<Druid> ()
-			{
-				Druid.Parse ("[J1A9]")
-			};
-
-			List<Druid> entityIdsToCheck2 = new List<Druid> ()
+			List<Druid> entityIds2 = new List<Druid> ()
 			{
 				Druid.Parse ("[J1A9]"),
 				Druid.Parse ("[J1A6]"),
 				Druid.Parse ("[J1A4]"),
 			};
 
-			this.CheckSchema (entityIdsToCheck1, false);
-			this.CheckSchema (entityIdsToCheck2, false);
+			this.CheckSchema (entityIds1, false);
+			this.CheckSchema (entityIds2, false);
 
-			this.UpdateSchema (entityIdsToRegister1);
+			this.UpdateSchema (entityIds1.Concat (entityIds2).ToList ());
 
-			this.CheckSchema (entityIdsToCheck1, true);
-			this.CheckSchema (entityIdsToCheck2, true);
+			this.CheckSchema (entityIds1, true);
+			this.CheckSchema (entityIds2, true);
 
-			this.UpdateSchema (entityIdsToRegister2);
+			this.UpdateSchema (entityIds2);
 
-			this.CheckSchema (entityIdsToCheck1, false);
-			this.CheckSchema (entityIdsToCheck2, true);
+			this.CheckSchema (entityIds1, false);
+			this.CheckSchema (entityIds2, true);
 		}
 
 
@@ -322,7 +244,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				var builder = new SchemaBuilder (new SchemaEngine (dbInfrastructure), dbInfrastructure);
+				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure, entityTypeEngine);
+
+				var builder = new SchemaBuilder (schemaEngine, entityTypeEngine, dbInfrastructure);
 
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
@@ -337,7 +262,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				var builder = new SchemaBuilder (new SchemaEngine (dbInfrastructure), dbInfrastructure);
+				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure, entityTypeEngine);
+
+				var builder = new SchemaBuilder (schemaEngine, entityTypeEngine, dbInfrastructure);
 
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
@@ -352,7 +280,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				var builder = new SchemaBuilder (new SchemaEngine (dbInfrastructure), dbInfrastructure);
+				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure, entityTypeEngine);
+
+				var builder = new SchemaBuilder (schemaEngine, entityTypeEngine, dbInfrastructure);
 
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
@@ -366,7 +297,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				SchemaBuilder builder = new SchemaBuilder (new SchemaEngine (dbInfrastructure), dbInfrastructure);
+				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure, entityTypeEngine);
+
+				var builder = new SchemaBuilder (schemaEngine, entityTypeEngine, dbInfrastructure);
 
 				builder.RegisterSchema (entityIdsToRegister);
 			}
@@ -377,7 +311,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				SchemaBuilder builder = new SchemaBuilder (new SchemaEngine (dbInfrastructure), dbInfrastructure);
+				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure, entityTypeEngine);
+
+				var builder = new SchemaBuilder (schemaEngine, entityTypeEngine, dbInfrastructure);
 
 				builder.UpdateSchema (entityIdsToRegister);
 			}
@@ -388,7 +325,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				SchemaBuilder builder = new SchemaBuilder (new SchemaEngine (dbInfrastructure), dbInfrastructure);
+				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure, entityTypeEngine);
+
+				var builder = new SchemaBuilder (schemaEngine, entityTypeEngine, dbInfrastructure);
 
 				Assert.AreEqual (isRegistered, builder.CheckSchema (entityIdsToCheck));
 			}

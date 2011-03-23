@@ -2,10 +2,9 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
-using Epsitec.Common.Types;
-
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Saver.PersistenceJobs;
+using Epsitec.Cresus.DataLayer.Schema;
 
 using System.Collections.Generic;
 
@@ -49,14 +48,11 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		/// <summary>
-		/// The <see cref="EntityContext"/> associated with this instance.
-		/// </summary>
-		private EntityContext EntityContext
+		private EntityTypeEngine EntityTypeEngine
 		{
 			get
 			{
-				return this.DataContext.EntityContext;
+				return this.DataContext.DataInfrastructure.EntityTypeEngine;
 			}
 		}
 
@@ -123,9 +119,9 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		private IEnumerable<AbstractPersistenceJob> CreateInsertionValueJobs(AbstractEntity entity)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-			var localEntityIds = this.EntityContext.GetInheritedEntityIds (leafEntityId);
-
-			return from Druid localEntityId in localEntityIds
+			
+			return from localEntityType in this.EntityTypeEngine.GetBaseTypes (leafEntityId)
+				   let localEntityId = localEntityType.CaptionId
 				   select this.CreateInsertionValueJob (entity, localEntityId);
 		}
 
@@ -139,8 +135,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <returns>The <see cref="AbstractPersistenceJob"/>.</returns>
 		private AbstractPersistenceJob CreateInsertionValueJob(AbstractEntity entity, Druid localEntityId)
 		{
-			var fieldIds = from field in this.EntityContext.GetEntityLocalFieldDefinitions (localEntityId)
-						   where field.Relation == FieldRelation.None
+			var fieldIds = from field in this.EntityTypeEngine.GetLocalValueFields(localEntityId)
 						   select field.CaptionId;
 
 			return this.CreateValueJob (entity, localEntityId, fieldIds, PersistenceJobType.Insert);
@@ -156,9 +151,9 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		private IEnumerable<AbstractPersistenceJob> CreateUpdateValueJobs(AbstractEntity entity)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-			var localEntityIds = this.EntityContext.GetInheritedEntityIds (leafEntityId);
 
-			return from Druid localEntityId in localEntityIds
+			return from localEntityType in this.EntityTypeEngine.GetBaseTypes (leafEntityId)
+				   let localEntityId = localEntityType.CaptionId
 				   select this.CreateUpdateValueJob (entity, localEntityId);
 		}
 
@@ -175,14 +170,13 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			AbstractPersistenceJob job = null;
 
 			List<Druid> fieldIds = new List<Druid> (
-				from field in this.EntityContext.GetEntityLocalFieldDefinitions (localEntityId)
+				from field in this.EntityTypeEngine.GetLocalValueFields(localEntityId)
 				let fieldId = field.CaptionId
-				where field.Relation == FieldRelation.None
 				where entity.HasValueChanged (fieldId)
 				select fieldId
 			);
 
-			Druid rootEntityId = this.EntityContext.GetRootEntityId (localEntityId);
+			Druid rootEntityId = this.EntityTypeEngine.GetRootType (localEntityId).CaptionId;
 			bool isRootType = localEntityId == rootEntityId;
 
 			if (fieldIds.Any () || isRootType)
@@ -205,7 +199,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <returns>The <see cref="AbstractPersistenceJob"/>.</returns>
 		private AbstractPersistenceJob CreateValueJob(AbstractEntity entity, Druid localEntityId, IEnumerable<Druid> fieldIds, PersistenceJobType jobType)
 		{
-			Druid rootEntityId = this.EntityContext.GetRootEntityId (localEntityId);
+			Druid rootEntityId = this.EntityTypeEngine.GetRootType (localEntityId).CaptionId;
 			bool isRootType = localEntityId == rootEntityId;
 
 			var fieldIdsWithValues = fieldIds.ToDictionary
@@ -227,9 +221,9 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		private IEnumerable<AbstractPersistenceJob> CreateInsertionReferenceJobs(AbstractEntity entity)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-			var localEntityIds = this.EntityContext.GetInheritedEntityIds (leafEntityId);
 
-			return from Druid localEntityId in localEntityIds
+			return from localEntityType in this.EntityTypeEngine.GetBaseTypes (leafEntityId)
+				   let localEntityId = localEntityType.CaptionId
 				   select this.CreateInsertionReferenceJob (entity, localEntityId);
 		}
 
@@ -246,8 +240,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			AbstractPersistenceJob job = null;
 
 			var fieldIds = new List<Druid> (
-				from field in this.EntityContext.GetEntityLocalFieldDefinitions (localEntityId)
-				where field.Relation == FieldRelation.Reference
+				from field in this.EntityTypeEngine.GetLocalReferenceFields(localEntityId)
 				let fieldId = field.CaptionId
 				let target = entity.GetField<AbstractEntity> (fieldId.ToResourceId ())
 				where this.DataContext.DataSaver.CheckIfEntityCanBeSaved (target)
@@ -272,9 +265,9 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		private IEnumerable<AbstractPersistenceJob> CreateUpdateReferenceJobs(AbstractEntity entity)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-			var localEntityIds = this.EntityContext.GetInheritedEntityIds (leafEntityId);
 
-			return from Druid localEntityId in localEntityIds
+			return from localEntityType in this.EntityTypeEngine.GetBaseTypes (leafEntityId)
+				   let localEntityId = localEntityType.CaptionId
 				   select this.CreateUpdateReferenceJob (entity, localEntityId);
 		}
 
@@ -291,9 +284,8 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			AbstractPersistenceJob job = null;
 
 			List<Druid> fieldIds = new List<Druid> (
-				from field in this.EntityContext.GetEntityLocalFieldDefinitions (localEntityId)
+				from field in this.EntityTypeEngine.GetLocalReferenceFields(localEntityId)
 				let fieldId = field.CaptionId
-				where field.Relation == FieldRelation.Reference
 				where entity.HasReferenceChanged (fieldId)
 				   || this.DataContext.DataSaver.CheckIfFieldMustBeResaved (entity, fieldId)
 				let target = entity.GetField<AbstractEntity> (fieldId.ToResourceId ())
@@ -342,8 +334,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
-			return from field in this.EntityContext.GetEntityFieldDefinitions (leafEntityId)
-				   where field.Relation == FieldRelation.Collection
+			return from field in this.EntityTypeEngine.GetCollectionFields(leafEntityId)
 				   select this.CreateInsertionCollectionJob (entity, field.CaptionId);
 		}
 
@@ -387,9 +378,8 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
-			return from field in this.EntityContext.GetEntityFieldDefinitions (leafEntityId)
+			return from field in this.EntityTypeEngine.GetCollectionFields(leafEntityId)
 				   let fieldId = field.CaptionId
-				   where field.Relation == FieldRelation.Collection
 				   where entity.HasCollectionChanged (fieldId)
 					  || this.DataContext.DataSaver.CheckIfFieldMustBeResaved (entity, fieldId)
 				   select this.CreateUpdateCollectionJob (entity, field.CaptionId);
@@ -429,7 +419,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		private CollectionPersistenceJob CreateCollectionJob(AbstractEntity entity, Druid fieldId, IEnumerable<AbstractEntity> targets, PersistenceJobType jobType)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-			Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
+			Druid localEntityId = this.EntityTypeEngine.GetLocalType (leafEntityId, fieldId).CaptionId;
 
 			return new CollectionPersistenceJob (entity, localEntityId, fieldId, targets, jobType);
 		}

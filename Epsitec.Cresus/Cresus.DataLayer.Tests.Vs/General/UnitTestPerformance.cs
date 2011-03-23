@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 		[TestMethod]
-		public void RetrieveAllDataWithWarmup()
+		public void RetrieveAllData()
 		{
 			TestHelper.WriteStartTest ("Retrieve all data", UnitTestPerformance.logFile);
 
@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			this.RetrieveAllDataNoWarmup<TelecomContactEntity> ();
 			this.RetrieveAllDataNoWarmup<TelecomTypeEntity> ();
 			this.RetrieveAllDataNoWarmup<UriContactEntity> ();
-			this.RetrieveAllDataWarmup<UriSchemeEntity> ();
+			this.RetrieveAllDataNoWarmup<UriSchemeEntity> ();
 			this.RetrieveAllDataWarmup<AbstractPersonEntity> ();
 			this.RetrieveAllDataWarmup<NaturalPersonEntity> ();
 			this.RetrieveAllDataWarmup<LegalPersonEntity> ();
@@ -889,8 +889,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				dataInfrastructure.SchemaEngine.GetReferencingFields (Druid.Parse ("[J1AV]"));
-
 				EntityType entity = dataContext.ResolveEntity<EntityType> (new DbKey (new DbId (1000000000 + id)));
 
 				TestHelper.MeasureAndWriteTime (

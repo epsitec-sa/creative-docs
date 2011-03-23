@@ -52,10 +52,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 			using (DbInfrastructure dbInfrastructure3 = DbInfrastructureHelper.ConnectToTestDatabase ())
 			using (DbInfrastructure dbInfrastructure4 = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				using (DataInfrastructure dataInfrastructure1 = new DataInfrastructure (dbInfrastructure1))
-				using (DataInfrastructure dataInfrastructure2 = new DataInfrastructure (dbInfrastructure2))
-				using (DataInfrastructure dataInfrastructure3 = new DataInfrastructure (dbInfrastructure3))
-				using (DataInfrastructure dataInfrastructure4 = new DataInfrastructure (dbInfrastructure4))
+				using (DataInfrastructure dataInfrastructure1 = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure1))
+				using (DataInfrastructure dataInfrastructure2 = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure2))
+				using (DataInfrastructure dataInfrastructure3 = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure3))
+				using (DataInfrastructure dataInfrastructure4 = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure4))
 				{
 					dataInfrastructure1.OpenConnection ("1");
 					dataInfrastructure2.OpenConnection ("2");
@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		public void GetDatabaseInfoArgumentCheck()
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		public void SetDatabaseInfoArgumentCheck()
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		public void GetSetAndExistsInfo()
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
 			{
 				Dictionary<string, string> info = new Dictionary<string, string> ();
 

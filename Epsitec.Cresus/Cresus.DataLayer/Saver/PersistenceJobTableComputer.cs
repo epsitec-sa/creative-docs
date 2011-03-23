@@ -62,14 +62,11 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		/// <summary>
-		/// The <see cref="EntityContext"/> used by this instance.
-		/// </summary>
-		private EntityContext EntityContext
+		private EntityTypeEngine EntityTypeEngine
 		{
 			get
 			{
-				return this.DataContext.EntityContext;
+				return this.DataContext.DataInfrastructure.EntityTypeEngine;
 			}
 		}
 
@@ -101,51 +98,43 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		private IEnumerable<DbTable> GetAffectedTablesHelper(DeletePersistenceJob job)
 		{
 			Druid leafEntityId = job.Entity.GetEntityStructuredTypeId ();
-			var localEntityIds = this.EntityContext.GetInheritedEntityIds (leafEntityId).ToList ();
 
 			IEnumerable<DbTable> localEntityTables =
-				from localEntityId in localEntityIds
-				select this.SchemaEngine.GetEntityTableDefinition (localEntityId);
+				from localEntityType in this.EntityTypeEngine.GetBaseTypes (leafEntityId)
+				select this.SchemaEngine.GetEntityTableDefinition (localEntityType.CaptionId);
 
 			IEnumerable<DbTable> collectionOutTables = 
-				from localEntityId in localEntityIds
-				from field in this.EntityContext.GetEntityLocalFieldDefinitions (localEntityId)
-				where field.Relation == FieldRelation.Collection
+				from localEntityType in this.EntityTypeEngine.GetBaseTypes (leafEntityId)
+				let localEntityId = localEntityType.CaptionId
+				from field in this.EntityTypeEngine.GetLocalCollectionFields (localEntityId)
 				let fieldId = field.CaptionId
 				select this.SchemaEngine.GetCollectionTableDefinition (localEntityId, fieldId);
 
-			var fieldsIn = localEntityIds
-				.SelectMany (id => this.DataContext.DataInfrastructure.SchemaEngine.GetReferencingFields (id))
-				.GroupBy (f => f.Item2.Relation)
-				.ToDictionary (g => g.Key, g => g);
+			List<DbTable> referenceInTables = new List<DbTable> ();
+			List<DbTable> collectionInTables = new List<DbTable> ();
 
-			IEnumerable<DbTable> collectionInTables;
+			foreach (var item in this.EntityTypeEngine.GetReferencingFields (leafEntityId))
+			{
+				Druid localSourceEntityId = item.Key.CaptionId;
 
-			if (fieldsIn.ContainsKey (FieldRelation.Collection))
-			{
-				collectionInTables =
-					from field in fieldsIn[FieldRelation.Collection]
-					let localEntityId = field.Item1.CaptionId
-					let fieldId = field.Item2.CaptionId
-					select this.SchemaEngine.GetCollectionTableDefinition (localEntityId, fieldId);
-			}
-			else
-			{
-				collectionInTables = new List<DbTable> ();
-			}
+				foreach (var field in item.Value)
+				{
+					Druid fieldId = field.CaptionId;
 
-			IEnumerable<DbTable> referenceInTables;
+					switch (field.Relation)
+					{
+						case FieldRelation.Reference:
+							referenceInTables.Add (this.SchemaEngine.GetEntityTableDefinition (localSourceEntityId));
+							break;
 
-			if (fieldsIn.ContainsKey (FieldRelation.Reference))
-			{
-				referenceInTables = fieldsIn[FieldRelation.Reference]
-					.Select (f => f.Item1.CaptionId)
-					.Distinct ()
-					.Select (id => this.SchemaEngine.GetEntityTableDefinition (id));
-			}
-			else
-			{
-				referenceInTables = new List<DbTable> ();
+						case FieldRelation.Collection:
+							collectionInTables.Add (this.SchemaEngine.GetCollectionTableDefinition (localSourceEntityId, fieldId));
+							break;
+
+						default:
+							throw new System.NotImplementedException ();
+					}
+				}
 			}
 
 			return localEntityTables
