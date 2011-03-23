@@ -165,18 +165,24 @@ namespace Epsitec.Cresus.Core.Documents
 		}
 
 
-		private static FormattedText GetSummary(PrintingOptionDictionary printingOptions)
+		private FormattedText GetSummary()
 		{
-			var builder = new System.Text.StringBuilder ();
-			bool first = true;
+			//	Retourne un résumé complet d'un dictionnaire, composé des options et de leurs valeurs.
 
+			//	On ne peut pas utiliser ce foutu TextBuilder, à cause des trop subtiles
+			//	opérations effectuées (espaces ajoutés imprévisibles) !
+			var builder = new System.Text.StringBuilder ();
+			builder.Append ("Options et valeurs définies :<br/><font size=\"25%\"><br/></font>");
+
+			bool first = true;
 			var all = VerboseDocumentOption.GetAll ();
+
 			foreach (var option in all)
 			{
-				if (option.Option != DocumentOption.None && printingOptions.ContainsOption (option.Option))
+				if (option.Option != DocumentOption.None && this.ContainsOption (option.Option))
 				{
 					var description = option.Description;
-					var value = printingOptions[option.Option];
+					var value = this[option.Option];
 
 					if (option.Type == DocumentOptionValueType.Boolean)
 					{
@@ -217,7 +223,7 @@ namespace Epsitec.Cresus.Core.Documents
 						description = option.Option.ToString ();
 					}
 
-					if (!first)
+					if (!first)  // déjà mis une option précédemment ?
 					{
 						builder.Append ("<br/>");
 					}
@@ -231,7 +237,7 @@ namespace Epsitec.Cresus.Core.Documents
 				}
 			}
 
-			if (first)
+			if (first)  // aucune option ?
 			{
 				builder.Append ("● <i>Aucune</i>");
 			}
@@ -265,7 +271,7 @@ namespace Epsitec.Cresus.Core.Documents
 						case TextFormatterDetailLevel.Title:
 						case TextFormatterDetailLevel.Compact:
 						case TextFormatterDetailLevel.Full:
-							return PrintingOptionDictionary.GetSummary (printingOptions);
+							return printingOptions.GetSummary ();
 
 						default:
 							throw new System.NotSupportedException (string.Format ("Detail level {0} not supported", detailLevel));

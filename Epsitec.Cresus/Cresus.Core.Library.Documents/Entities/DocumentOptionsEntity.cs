@@ -37,15 +37,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		private FormattedText GetOptionsSummary()
 		{
-			//	On ne peut pas utiliser ce foutu TextBuilder, à cause des trop subtiles
-			//	opérations effectuées (espaces ajoutés imprévisibles) !
-			var builder = new System.Text.StringBuilder ();
-
-			//	Astuce pour avoir 1/4 d'interligne !
-			builder.Append ("Options et valeurs définies :<br/><font size=\"25%\"><br/></font>");
-			builder.Append (TextFormatter.FormatText (this.GetOptions ()));
-
-			return builder.ToString ();
+			return TextFormatter.FormatText (this.GetOptions ());
 		}
 
 		public PrintingOptionDictionary GetOptions()
