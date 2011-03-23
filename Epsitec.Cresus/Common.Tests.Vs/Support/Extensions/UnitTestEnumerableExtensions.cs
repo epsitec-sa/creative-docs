@@ -211,6 +211,30 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 		}
 
 
+		[TestMethod]
+		public void AsReadOnlyCollectionArgumentCheck()
+		{
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => ((IEnumerable<int>) null).AsReadOnlyCollection ()
+			);
+		}
+
+
+		[TestMethod]
+		public void AsReadOnlyCollectionTest()
+		{
+			for (int i = 0; i < 25; i++)
+			{
+				var sequence = Enumerable.Range (0, 25).Shuffle ().ToList ();
+				var readOnlySequence = sequence.Select (e => e).AsReadOnlyCollection ();
+
+				Assert.IsTrue (((ICollection<int>) readOnlySequence).IsReadOnly);
+				CollectionAssert.AreEqual (sequence, readOnlySequence);
+			}
+		}
+
+
 	}
 
 

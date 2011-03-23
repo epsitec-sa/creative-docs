@@ -56,11 +56,12 @@
     <Compile Include="Resources\Common.Tests.Vs\SourceCode\Res.cs" />
     <Compile Include="Support\EntityEngine\UnitTestEntities.cs" />
     <Compile Include="Support\EntityEngine\UnitTestEntityNullReferenceVirtualizer.cs" />
+    <Compile Include="Support\Extensions\UnitTestDictionaryExtensions.cs" />
     <Compile Include="Support\Extensions\UnitTestEntityModifications.cs" />
     <Compile Include="Support\Extensions\UnitTestEnumerableExtensions.cs" />
     <Compile Include="Support\Extensions\UnitTestExceptionThrower.cs" />
     <Compile Include="Support\Extensions\UnitTestStringExtensions.cs" />
-    <Compile Include="Support\TestHelper.cs" />
+    <Compile Include="TestHelper.cs" />
     <Compile Include="Support\UnitTestArrayEqualityComparer.cs" />
     <Compile Include="Support\UnitTestLambdaComparer.cs" />
     <Compile Include="Support\UnitTestStringPacker.cs" />

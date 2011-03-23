@@ -2,6 +2,8 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
 using System.Linq;
 
 namespace Epsitec.Common.Support.Extensions
@@ -243,6 +245,27 @@ namespace Epsitec.Common.Support.Extensions
 			return System.Tuple.Create (groups[false], groups[true]);
 		}
 #endif
+
+
+		/// <summary>
+		/// Returns a read only collection that contains the elements of the given
+		/// <see cref="IEnumerable{T}"/>.
+		/// </summary>
+		/// <remarks>
+		/// This LINQ method will execute immediately and will buffer the whole input sequence. It
+		/// has a complexity of O(n) where n is the length of the input sequence.
+		/// </remarks>
+		/// <typeparam name="T">The type of the elements in the <see cref="IEnumerable{T}"/>.</typeparam>
+		/// <param name="sequence">The sequence whose elements to put in the collection.</param>
+		/// <returns>The new readonly collection.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="sequence"/> is <c>null</c>.</exception>
+		public static ReadOnlyCollection<T> AsReadOnlyCollection<T>(this IEnumerable<T> sequence)
+		{
+			sequence.ThrowIfNull ("sequence");
+			
+			return sequence.ToList ().AsReadOnly ();
+		}
+
 
 		[System.ThreadStatic]
 		private static System.Random dice;
