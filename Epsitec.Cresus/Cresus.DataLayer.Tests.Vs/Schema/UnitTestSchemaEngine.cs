@@ -50,12 +50,20 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void SchemaEngineConstructorArgumentCheck()
 		{
-			DbInfrastructure dbInfrastructure = null;
-			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
-			ExceptionAssert.Throw<System.ArgumentNullException>
-			(
-				() => new SchemaEngine (dbInfrastructure, entityTypeEngine)
-			);
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => new SchemaEngine (null, entityTypeEngine)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => new SchemaEngine (dbInfrastructure, null)
+				);
+			}
 		}
 
 

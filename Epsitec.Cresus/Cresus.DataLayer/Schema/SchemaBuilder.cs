@@ -32,8 +32,10 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// </summary>
 		public SchemaBuilder(SchemaEngine schemaEngine, EntityTypeEngine entityTypeEngine, DbInfrastructure dbInfrastructure)
 		{
+			schemaEngine.ThrowIfNull ("schemaEngine");
+			entityTypeEngine.ThrowIfNull ("entityTypeEngine");
 			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
-
+			
 			this.DbInfrastructure = dbInfrastructure;
 			this.SchemaEngine = schemaEngine;
 			this.EntityTypeEngine = entityTypeEngine;
@@ -188,8 +190,9 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// <summary>
 		/// Gets the sequence of <see cref="StructuredType"/> that are correspond to the given
 		/// sequence of entity types ids.
+		/// </summary>
 		/// <param name="typeIds">The sequence of <see cref="Druid"/> defining the types of the <see cref="AbstractEntity"/>.</param>
-		/// <returns>The sequence of <see cref="StructuredType"/>.</returns>
+		/// <returns>The sequence of <see cref="Druid"/>.</returns>
 		private IList<StructuredType> GetStructuredTypesUsedInSchema(IEnumerable<Druid> typeIds)
 		{
 			return typeIds.Select (id => this.EntityTypeEngine.GetEntityType (id)).ToList ();

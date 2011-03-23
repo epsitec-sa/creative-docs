@@ -31,13 +31,14 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// <see cref="DbInfrastructure"/>.
 		/// </summary>
 		/// <param name="dbInfrastructure">The <see cref="DbInfrastructure"/> that will be used by the new instance.</param>
+		/// <param name="entityTypeEngine">The <see cref="EntityTypeEngine"/> that will be used by the new instance.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="dbInfrastructure"/> is null.</exception>
 		public SchemaEngine(DbInfrastructure dbInfrastructure, EntityTypeEngine entityTypeEngine)
 		{
 			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
+			entityTypeEngine.ThrowIfNull ("entityTypeEngine");
 
 			this.DbInfrastructure = dbInfrastructure;
-			//this.EntityContext = new EntityContext ();
 			this.EntityTypeEngine = entityTypeEngine;
 
 			this.tableDefinitionCache = new Dictionary<string, DbTable> ();

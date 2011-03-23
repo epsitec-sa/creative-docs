@@ -60,7 +60,17 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
-					() => new SchemaBuilder (schemaEngine, entityTypeEngine, (DbInfrastructure) null)
+					() => new SchemaBuilder (null, entityTypeEngine, dbInfrastructure)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => new SchemaBuilder (schemaEngine, null, dbInfrastructure)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => new SchemaBuilder (schemaEngine, entityTypeEngine, null)
 				);
 			}
 		}
