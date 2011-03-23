@@ -2,10 +2,13 @@
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Support;
+
+using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Documents.Verbose;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Core.Documents
 {
@@ -159,6 +162,107 @@ namespace Epsitec.Cresus.Core.Documents
 			}
 
 			return dict;
+		}
+
+
+		private static FormattedText GetSummary(PrintingOptionDictionary printingOptions)
+		{
+			var all = VerboseDocumentOption.GetAll ();
+			var builder = new System.Text.StringBuilder ();
+
+			foreach (var option in all)
+			{
+				if (option.Option != DocumentOption.None && printingOptions.ContainsOption (option.Option))
+				{
+					var description = option.Description;
+					var value = printingOptions[option.Option];
+
+					if (option.Type == DocumentOptionValueType.Boolean)
+					{
+						switch (value)
+						{
+							case "false":
+								value = "non";
+								break;
+
+							case "true":
+								value = "oui";
+								break;
+						}
+					}
+
+					if (option.Type == DocumentOptionValueType.Enumeration)
+					{
+						description = all.Where (x => x.IsTitle && x.Group == option.Group).Select (x => x.Title).FirstOrDefault ();
+
+						for (int i = 0; i < option.Enumeration.Count (); i++)
+						{
+							if (option.Enumeration.ElementAt (i) == value)
+							{
+								value = option.EnumerationDescription.ElementAt (i);
+								break;
+							}
+						}
+					}
+
+					if (option.Type == DocumentOptionValueType.Distance ||
+						option.Type == DocumentOptionValueType.Size)
+					{
+						value = string.Concat (value, " mm");
+					}
+
+#if false
+					if (string.IsNullOrEmpty (description))
+					{
+						description = Print.Common.DocumentOptionToString (option.Option);
+					}
+#endif
+
+					builder.Append (description);
+					builder.Append (" = ");
+					builder.Append (value);
+					builder.Append ("<br/>");
+				}
+			}
+
+			return builder.ToString ();
+		}
+
+
+		private class TextFormatterConverter : ITextFormatterConverter
+		{
+			#region ITextFormatterConverter Members
+
+			public IEnumerable<System.Type> GetConvertibleTypes()
+			{
+				yield return typeof (PrintingOptionDictionary);
+			}
+
+			public FormattedText ToFormattedText(object value, System.Globalization.CultureInfo culture, TextFormatterDetailLevel detailLevel)
+			{
+				var printingOptions = (PrintingOptionDictionary) value;
+
+				if (printingOptions == null)
+				{
+					return FormattedText.Empty;
+				}
+				else
+				{
+					switch (detailLevel)
+					{
+						case TextFormatterDetailLevel.Default:
+						case TextFormatterDetailLevel.Title:
+						case TextFormatterDetailLevel.Compact:
+						case TextFormatterDetailLevel.Full:
+							return PrintingOptionDictionary.GetSummary (printingOptions);
+
+						default:
+							throw new System.NotSupportedException (string.Format ("Detail level {0} not supported", detailLevel));
+					}
+				}
+			}
+
+			#endregion
 		}
 
 

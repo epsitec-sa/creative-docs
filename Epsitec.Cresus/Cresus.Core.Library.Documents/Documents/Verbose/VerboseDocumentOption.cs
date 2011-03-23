@@ -1,10 +1,13 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using System.Collections.Generic;
-using System.Linq;
+using Epsitec.Common.Types;
+
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Business;
+
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Cresus.Core.Documents.Verbose
 {
@@ -217,6 +220,7 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 
 			VerboseDocumentOption.allOptions = list;
 		}
+
 
 		private static IEnumerable<VerboseDocumentOption> allOptions;
 	}

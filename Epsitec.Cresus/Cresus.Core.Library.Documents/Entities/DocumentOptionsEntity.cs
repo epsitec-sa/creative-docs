@@ -16,8 +16,7 @@ namespace Epsitec.Cresus.Core.Entities
 		public override FormattedText GetSummary()
 		{
 			//	L'espace entre les <br/> est nécessaire, à cause de FormatText qui fait du zèle !
-			return TextFormatter.FormatText (this.Name, FormattedText.Concat ("<br/>________________________________________<br/> <br/>"
-				/*, this.GetOptionsSummary ()*/));
+			return TextFormatter.FormatText (this.Name, FormattedText.Concat ("<br/>________________________________________<br/> <br/>", this.GetOptionsSummary ()));
 		}
 
 		public override FormattedText GetCompactSummary()
@@ -36,69 +35,11 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
-#if false
 		private FormattedText GetOptionsSummary()
 		{
-			var dict = this.GetOptions ();
-			var all = VerboseDocumentOption.GetAll ();
-			var builder = new System.Text.StringBuilder ();
-
-			foreach (var option in all)
-			{
-				if (option.Option != DocumentOption.None && dict.ContainsOption (option.Option))
-				{
-					var description = option.Description;
-					var value = dict.GetValue (option.Option);
-
-					if (option.Type == DocumentOptionValueType.Boolean)
-					{
-						switch (value)
-						{
-							case "false":
-								value = "non";
-								break;
-
-							case "true":
-								value = "oui";
-								break;
-						}
-					}
-
-					if (option.Type == DocumentOptionValueType.Enumeration)
-					{
-						description = all.Where (x => x.IsTitle && x.Group == option.Group).Select (x => x.Title).FirstOrDefault ();
-
-						for (int i = 0; i < option.Enumeration.Count (); i++)
-						{
-							if (option.Enumeration.ElementAt (i) == value)
-							{
-								value = option.EnumerationDescription.ElementAt (i);
-								break;
-							}
-						}
-					}
-
-					if (option.Type == DocumentOptionValueType.Distance ||
-						option.Type == DocumentOptionValueType.Size)
-					{
-						value = string.Concat (value, " mm");
-					}
-
-					if (string.IsNullOrEmpty (description))
-					{
-						description = Print.Common.DocumentOptionToString (option.Option);
-					}
-
-					builder.Append (description);
-					builder.Append (" = ");
-					builder.Append (value);
-					builder.Append ("<br/>");
-				}
-			}
-
-			return builder.ToString ();
+			var printingOptions = this.GetOptions ();
+			return TextFormatter.FormatText (printingOptions);
 		}
-#endif
 
 		public PrintingOptionDictionary GetOptions()
 		{
