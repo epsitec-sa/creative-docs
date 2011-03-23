@@ -1,12 +1,14 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
+using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Documents;
+using Epsitec.Cresus.Core.Library;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Core.Library;
-using Epsitec.Cresus.Core.Business;
 
 namespace Epsitec.Cresus.Core.Documents.Verbose
 {
@@ -134,6 +136,46 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 		}
 
 
-		private static IEnumerable<VerbosePageType> allPageTypes;
+		private class PrettyPrinter : IPrettyPrinter
+		{
+			#region IPrettyPrinter Members
+
+			public bool CanConvertToFormattedText(System.Type type)
+			{
+				return type == typeof (PageType);
+			}
+
+			public FormattedText ConvertToFormattedText(object value, System.Globalization.CultureInfo culture, TextFormatterDetailLevel detailLevel)
+			{
+				var pageType = (PageType) value;
+				var verbose  = VerbosePageType.GetAll ().Where (x => x.Type == pageType).FirstOrDefault ();
+
+				if (verbose == null)
+				{
+					return FormattedText.Empty;
+				}
+				else
+				{
+					switch (detailLevel)
+					{
+						case TextFormatterDetailLevel.Default:
+						case TextFormatterDetailLevel.Title:
+						case TextFormatterDetailLevel.Compact:
+							return verbose.ShortDescription;
+
+						case TextFormatterDetailLevel.Full:
+							return verbose.LongDescription;
+
+						default:
+							throw new System.NotSupportedException (string.Format ("Detail level {0} not supported", detailLevel));
+					}
+				}
+			}
+
+			#endregion
+		}
+
+
+		private static List<VerbosePageType> allPageTypes;
 	}
 }

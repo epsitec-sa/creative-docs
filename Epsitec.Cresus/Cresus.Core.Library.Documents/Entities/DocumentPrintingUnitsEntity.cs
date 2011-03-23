@@ -8,6 +8,7 @@ using Epsitec.Cresus.Core.Documents;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -37,7 +38,8 @@ namespace Epsitec.Cresus.Core.Entities
 
 		private FormattedText GetPageTypesSummary()
 		{
-			var builder = new System.Text.StringBuilder ();
+			var builder = new TextBuilder ();
+
 			builder.Append ("Pages pouvant être imprimées par cette unité :<br/>");
 
 			var list = this.GetPageTypes ();
@@ -50,13 +52,13 @@ namespace Epsitec.Cresus.Core.Entities
 			{
 				foreach (var pageType in list)
 				{
-					builder.Append ("● ");
-					builder.Append (pageType.ToString ());  // TODO: Comment accéder à Epsitec.Cresus.Core.Documents.Verbose.VerbosePageType pour afficher le PageType en clair ?
+					builder.Append ("●");
+					builder.Append (pageType);  // TODO: Comment accéder à Epsitec.Cresus.Core.Documents.Verbose.VerbosePageType pour afficher le PageType en clair ?
 					builder.Append ("<br/>");
 				}
 			}
 
-			return builder.ToString ();
+			return builder.ToFormattedText (detailLevel: TextFormatterDetailLevel.Default);
 		}
 
 		public List<PageType> GetPageTypes()
@@ -65,19 +67,13 @@ namespace Epsitec.Cresus.Core.Entities
 
 			if (this.SerializedData != null)
 			{
-				string s = System.Text.Encoding.UTF8.GetString (this.SerializedData);
-
-				if (!string.IsNullOrEmpty (s))
+				foreach (var item in StringPacker.UnpackFromBytes (this.SerializedData))
 				{
-					string[] split = s.Split ('◊');
+					PageType pageType = InvariantConverter.ToEnum<PageType> (item, PageType.Unknown);
 
-					for (int i=0; i<split.Length; i++)
+					if (pageType != PageType.Unknown)
 					{
-						PageType pageType;
-						if (System.Enum.TryParse (split[i], out pageType))
-						{
-							pageTypes.Add (pageType);
-						}
+						pageTypes.Add (pageType);
 					}
 				}
 			}
@@ -85,28 +81,15 @@ namespace Epsitec.Cresus.Core.Entities
 			return pageTypes;
 		}
 
-		public void SetPageTypes(List<PageType> pageTypes)
+		public void SetPageTypes(IEnumerable<PageType> pageTypes)
 		{
-			if (pageTypes == null || pageTypes.Count == 0)
+			if ((pageTypes == null) || (pageTypes.Any () == false))
 			{
 				this.SerializedData = null;
 			}
 			else
 			{
-				var builder = new System.Text.StringBuilder ();
-
-				for (int i=0; i<pageTypes.Count; i++)
-				{
-					builder.Append (pageTypes[i].ToString ());
-
-					if (i < pageTypes.Count-1)
-					{
-						builder.Append ("◊");
-					}
-				}
-
-				byte[] bytes = System.Text.Encoding.UTF8.GetBytes (builder.ToString ());
-				this.SerializedData = bytes;
+				this.SerializedData = StringPacker.PackToBytes (pageTypes.Select (x => x.ToString ()));
 			}
 		}
 	}
