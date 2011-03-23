@@ -36,11 +36,14 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
-		private FormattedText GetPageTypesSummary()
+		public FormattedText GetPageTypesSummary()
 		{
-			var builder = new TextBuilder ();
+			//	On ne peut pas utiliser ce foutu TextBuilder, à cause des trop subtiles
+			//	opérations effectuées (espaces ajoutés imprévisibles) !
+			var builder = new System.Text.StringBuilder ();
 
-			builder.Append ("Pages imprimables par cette unité :<br/>");
+			//	Astuce pour avoir 1/4 d'interligne !
+			builder.Append ("Pages imprimables par cette unité :<br/><font size=\"25%\"><br/></font>");
 
 			var list = this.GetPageTypes ();
 
@@ -50,14 +53,27 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			else
 			{
-				foreach (var pageType in list)
+				for (int i=0; i<list.Count; i++)
 				{
-					builder.Append ("●");
-					builder.Append (pageType);  // VerbosePageType.PrettyPrinter convertit PageType en texte clair (ShortDescription en l'occurrence)
-					builder.Append ("<br/>");
+					builder.Append ("● ");
+					builder.Append (DocumentPrintingUnitsEntity.PageTypeToFormattedText (list[i]));
+
+					if (i < list.Count-1)
+					{
+						builder.Append ("<br/>");
+					}
 				}
 			}
 
+			return builder.ToString ();
+		}
+
+		private static FormattedText PageTypeToFormattedText(PageType pageType)
+		{
+			var builder = new TextBuilder ();
+
+			builder.Append (pageType);  // VerbosePageType.PrettyPrinter convertit PageType en texte clair (ShortDescription en l'occurrence)
+			
 			return builder.ToFormattedText (detailLevel: TextFormatterDetailLevel.Default);
 		}
 

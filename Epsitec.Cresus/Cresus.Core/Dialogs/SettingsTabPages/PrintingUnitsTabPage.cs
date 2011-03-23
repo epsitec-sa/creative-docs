@@ -90,6 +90,23 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				StyleV = CellArrayStyles.Separator | CellArrayStyles.ScrollNorm | CellArrayStyles.SelectLine,
 			};
 
+			var pageTypesBox = new FrameBox
+			{
+				Parent = column1,
+				PreferredHeight = 150,
+				DrawFullFrame = true,
+				Dock = DockStyle.Bottom,
+				Margins = new Margins (0, 0, 5, 0),
+				Padding = new Margins (10),
+			};
+
+			this.pageTypesDescription = new StaticText
+			{
+				Parent = pageTypesBox,
+				ContentAlignment = ContentAlignment.TopLeft,
+				Dock = DockStyle.Fill,
+			};
+
 			//	Rempli la deuxième colonne.
 			var columnTitle2 = new StaticText (column2);
 			columnTitle2.SetColumnTitle ("Choix pour l'unité d'impression");
@@ -385,8 +402,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private string[] GetRowTexts(int row)
 		{
 			var result = new string[8];
-
-
 			var printingUnit = this.GetPrintingUnit (this.documentPrintingUnits[row].Code);
 
 			if (printingUnit == null)
@@ -454,6 +469,20 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			}
 
 			this.ErrorMessage = this.GetError ();
+		}
+
+		private void UpdatePageTypes()
+		{
+			var documentPrintingUnit = this.SelectedDocumentPrintingUnit;
+
+			if (documentPrintingUnit == null)
+			{
+				this.pageTypesDescription.FormattedText = null;
+			}
+			else
+			{
+				this.pageTypesDescription.FormattedText = documentPrintingUnit.GetPageTypesSummary ();
+			}
 		}
 
 		private void UpdatePhysicalField()
@@ -563,6 +592,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			this.UpdateDuplexField ();
 			this.UpdateWidgets ();
 			this.UpdateOptions ();
+			this.UpdatePageTypes ();
 		}
 
 
@@ -855,21 +885,37 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		{
 			get
 			{
-				int sel = this.table.SelectedRow;
+				var documentPrintingUnit = this.SelectedDocumentPrintingUnit;
 
-				if (sel == -1)
+				if (documentPrintingUnit == null)
 				{
 					return null;
 				}
 				else
 				{
-					var documentPrintingUnit = this.documentPrintingUnits[sel];
 					return this.GetPrintingUnit (documentPrintingUnit.Code);
 				}
 			}
 		}
 
 		private string SelectedCode
+		{
+			get
+			{
+				var documentPrintingUnit = this.SelectedDocumentPrintingUnit;
+
+				if (documentPrintingUnit == null)
+				{
+					return null;
+				}
+				else
+				{
+					return documentPrintingUnit.Code;
+				}
+			}
+		}
+
+		private DocumentPrintingUnitsEntity SelectedDocumentPrintingUnit
 		{
 			get
 			{
@@ -881,8 +927,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				}
 				else
 				{
-					var documentPrintingUnit = this.documentPrintingUnits[sel];
-					return documentPrintingUnit.Code;
+					return this.documentPrintingUnits[sel];
 				}
 			}
 		}
@@ -1032,6 +1077,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private readonly List<DocumentPrintingUnitsEntity>	documentPrintingUnits;
 
 		private CellTable									table;
+		private StaticText									pageTypesDescription;
 		private FrameBox									printerBox;
 		private Scrollable									optionsBox;
 
