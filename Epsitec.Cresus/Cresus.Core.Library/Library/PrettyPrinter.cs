@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Core.Library
 			}
 			else
 			{
-				return prettyPrinter.ConvertToFormattedText (value, culture, detailLevel);
+				return prettyPrinter.ToFormattedText (value, culture, detailLevel);
 			}
 		}
 	}

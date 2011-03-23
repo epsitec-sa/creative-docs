@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Core.Library
 {
 	public interface IPrettyPrinter
 	{
-		bool CanConvertToFormattedText(System.Type type);
-		FormattedText ConvertToFormattedText(object value, System.Globalization.CultureInfo culture, TextFormatterDetailLevel detailLevel);
+		IEnumerable<System.Type> GetConvertibleTypes();
+		FormattedText ToFormattedText(object value, System.Globalization.CultureInfo culture, TextFormatterDetailLevel detailLevel);
 	}
 }

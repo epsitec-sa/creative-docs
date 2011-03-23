@@ -140,12 +140,12 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 		{
 			#region IPrettyPrinter Members
 
-			public bool CanConvertToFormattedText(System.Type type)
+			public IEnumerable<System.Type> GetConvertibleTypes()
 			{
-				return type == typeof (PageType);
+				yield return typeof (PageType);
 			}
 
-			public FormattedText ConvertToFormattedText(object value, System.Globalization.CultureInfo culture, TextFormatterDetailLevel detailLevel)
+			public FormattedText ToFormattedText(object value, System.Globalization.CultureInfo culture, TextFormatterDetailLevel detailLevel)
 			{
 				var pageType = (PageType) value;
 				var verbose  = VerbosePageType.GetAll ().Where (x => x.Type == pageType).FirstOrDefault ();

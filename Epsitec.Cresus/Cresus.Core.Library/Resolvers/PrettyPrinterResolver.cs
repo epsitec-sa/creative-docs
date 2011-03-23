@@ -14,13 +14,35 @@ namespace Epsitec.Cresus.Core.Resolvers
 		{
 			if (PrettyPrinterResolver.prettyPrinters == null)
 			{
-				PrettyPrinterResolver.prettyPrinters = InterfaceImplementationResolver<IPrettyPrinter>.CreateInstances ().ToList ();
+				PrettyPrinterResolver.Setup ();
 			}
 
-			return PrettyPrinterResolver.prettyPrinters.Where (x => x.CanConvertToFormattedText (type)).FirstOrDefault ();
+			IPrettyPrinter prettyPrinter;
+
+			if (PrettyPrinterResolver.prettyPrinters.TryGetValue (type, out prettyPrinter))
+			{
+				return prettyPrinter;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		private static void Setup()
+		{
+			PrettyPrinterResolver.prettyPrinters = new Dictionary<System.Type, IPrettyPrinter> ();
+
+			foreach (var item in InterfaceImplementationResolver<IPrettyPrinter>.CreateInstances ())
+			{
+				foreach (var convertibleType in item.GetConvertibleTypes ())
+				{
+					PrettyPrinterResolver.prettyPrinters[convertibleType] = item;
+				}
+			}
 		}
 
 		[System.ThreadStatic]
-		private static List<IPrettyPrinter>		prettyPrinters;
+		private static Dictionary<System.Type, IPrettyPrinter> prettyPrinters;
 	}
 }
