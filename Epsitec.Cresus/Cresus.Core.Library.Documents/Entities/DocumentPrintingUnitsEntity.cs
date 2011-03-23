@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			var builder = new TextBuilder ();
 
-			builder.Append ("Pages pouvant être imprimées par cette unité :<br/>");
+			builder.Append ("Pages imprimables par cette unité :<br/>");
 
 			var list = this.GetPageTypes ();
 
@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Core.Entities
 				foreach (var pageType in list)
 				{
 					builder.Append ("●");
-					builder.Append (pageType);  // TODO: Comment accéder à Epsitec.Cresus.Core.Documents.Verbose.VerbosePageType pour afficher le PageType en clair ?
+					builder.Append (pageType);  // VerbosePageType.PrettyPrinter convertit PageType en texte clair (ShortDescription en l'occurrence)
 					builder.Append ("<br/>");
 				}
 			}
