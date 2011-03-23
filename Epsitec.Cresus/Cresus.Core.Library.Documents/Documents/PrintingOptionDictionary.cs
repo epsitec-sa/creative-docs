@@ -218,6 +218,7 @@ namespace Epsitec.Cresus.Core.Documents
 					}
 #endif
 
+					builder.Append ("● ");
 					builder.Append (description);
 					builder.Append (" = ");
 					builder.Append (value);

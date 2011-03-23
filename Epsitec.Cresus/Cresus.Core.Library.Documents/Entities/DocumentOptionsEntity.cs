@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Entities
 		public override FormattedText GetSummary()
 		{
 			//	L'espace entre les <br/> est nécessaire, à cause de FormatText qui fait du zèle !
-			return TextFormatter.FormatText (this.Name, FormattedText.Concat ("<br/>________________________________________<br/> <br/>", this.GetOptionsSummary ()));
+			return TextFormatter.FormatText (this.Name, FormattedText.Concat ("<br/> <br/>", this.GetOptionsSummary ()));
 		}
 
 		public override FormattedText GetCompactSummary()
@@ -37,8 +37,15 @@ namespace Epsitec.Cresus.Core.Entities
 
 		private FormattedText GetOptionsSummary()
 		{
-			var printingOptions = this.GetOptions ();
-			return TextFormatter.FormatText (printingOptions);
+			//	On ne peut pas utiliser ce foutu TextBuilder, à cause des trop subtiles
+			//	opérations effectuées (espaces ajoutés imprévisibles) !
+			var builder = new System.Text.StringBuilder ();
+
+			//	Astuce pour avoir 1/4 d'interligne !
+			builder.Append ("Options et valeurs associées :<br/><font size=\"25%\"><br/></font>");
+			builder.Append (TextFormatter.FormatText (this.GetOptions ()));
+
+			return builder.ToString ();
 		}
 
 		public PrintingOptionDictionary GetOptions()
