@@ -20,6 +20,23 @@ namespace Epsitec.Cresus.DataLayer.Schema
 	{
 
 
+		/*
+		 * All the method of this class are thread safe, but the StructuredType and
+		 * StructuredTypeField that it returns are not. There is no formal guarantee whatsoever that
+		 * they are thread safe. However, given how these objects are used within the DataLayer
+		 * project (they are accessed only for read operations) and that they are not modified
+		 * by the Cresus.Core project (they are supposed to be accessed only for read operation)
+		 * and that this class calls the appropriate methods so that their internal state is supposed
+		 * to be stable at the end of the constructor execution, they can be used in a thread safe
+		 * way by the DataLayer project.
+		 * However, I repeat, there are no formal guarantees on that. These objects are not
+		 * synchronized and are mutable. This is some kind of "we know that it will work, so finger
+		 * crossed" situation. And of course, if they are modified in any way, all those assumptions
+		 * might turn out to be false and then we'll be screwed up.
+		 * Marc
+		 */
+
+
 		public EntityTypeEngine(IEnumerable<Druid> entityTypeIds)
 		{
 			this.entityTypesCache = this.ComputeEntityTypesCache (entityTypeIds);
@@ -37,6 +54,8 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			this.localReferenceFieldsCache = this.ComputeLocalReferenceFieldsCache ();
 			this.localCollectionFieldsCache = this.ComputeLocalCollectionFieldsCache ();
 			this.referencingFieldsCache = this.ComputeReferencingFieldsCache ();
+
+			this.EnsureReferencedObjectsAreDeserialized ();
 		}
 
 
@@ -359,6 +378,28 @@ namespace Epsitec.Cresus.DataLayer.Schema
 				.GroupBy (item => item.TId, item => item.F)
 				.ToDictionary (g => this.entityTypeCache[g.Key], g => g.AsReadOnlyCollection ())
 				.AsReadOnlyDictionary ();
+		}
+
+
+		private void EnsureReferencedObjectsAreDeserialized()
+		{
+			foreach (var type in this.GetEntityTypes ())
+			{
+				var typeCaption = type.Caption;
+				
+				// The call to type.Fields ensures that the cache for the fields are built.
+				// Marc
+
+				foreach (var field in type.Fields.Values)
+				{
+					AbstractType fieldType = field.Type as AbstractType;
+
+					if (fieldType != null)
+					{
+						var fieldTypeCaption = fieldType.Caption;
+					}
+				}
+			}
 		}
 
 
