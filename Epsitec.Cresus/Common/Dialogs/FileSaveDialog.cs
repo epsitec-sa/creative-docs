@@ -185,8 +185,13 @@ namespace Epsitec.Common.Dialogs
 		
 		
 		#region IDialog Members
-		public void OpenDialog()
+		public void OpenDialog(Epsitec.Common.Widgets.Window owner = null)
 		{
+			if (owner != null)
+			{
+				this.OwnerWindow = owner;
+			}
+
 			this.dialog.Filter = this.Filters.FileDialogFilter;
 			this.dialog.FilterIndex = this.filterIndex + 1;
 			

@@ -15,7 +15,7 @@ namespace Epsitec.Common.Dialogs
 		/// dialog is modal, this method won't return until the user closes
 		/// the dialog.
 		/// </summary>
-		void OpenDialog();
+		void OpenDialog(Window owner = null);
 
 		/// <summary>
 		/// Gets or sets the owner window for this dialog.

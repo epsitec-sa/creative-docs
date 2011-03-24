@@ -230,8 +230,13 @@ namespace Epsitec.Common.Dialogs
 		/// dialog is modal, this method won't return until the user closes
 		/// the dialog.
 		/// </summary>
-		public void OpenDialog()
+		public void OpenDialog(Window owner = null)
 		{
+			if (owner != null)
+			{
+				this.OwnerWindow = owner;
+			}
+			
 			Window window = this.DialogWindow;
 
 			if (window == null)
@@ -241,7 +246,7 @@ namespace Epsitec.Common.Dialogs
 
 			System.Diagnostics.Debug.Assert ((Application.IsExecutingAsyncCallbacks == false) || (Application.HasPendingAsyncCallbacks == false));
 
-			Window owner = this.OwnerWindow;
+			owner = this.OwnerWindow;
 			Drawing.Rectangle ownerBounds;
 
 			if ((owner != null) &&
