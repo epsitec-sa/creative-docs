@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -21,7 +21,7 @@ namespace Epsitec.Common.Drawing.Platform
 		/// <returns>The contents of the ICO file.</returns>
 		public static byte[] CreateIcon(NativeBitmap image)
 		{
-			return NativeIcon.CreateIcon (image, 48, 32, 16);
+			return NativeIcon.CreateIcon (image, 72, 48, 32, 16);
 		}
 
 		public static byte[] CreateIcon(byte[] imageBytes, int pitch, int dx, int dy)
@@ -37,7 +37,7 @@ namespace Epsitec.Common.Drawing.Platform
 		/// <returns>The contents of the ICO file.</returns>
 		public static byte[] CreatePngIcon(NativeBitmap image)
 		{
-			return NativeIcon.CreateIcon (image, 48, 32, 16, 256);
+			return NativeIcon.CreateIcon (image, 72, 48, 32, 16, 256);
 		}
 
 		public static byte[] CreatePngIcon(byte[] imageBytes, int pitch, int dx, int dy)
@@ -91,7 +91,7 @@ namespace Epsitec.Common.Drawing.Platform
 				{
 					int size = image.Width;
 
-					if (size < 256)
+					if (size < 128)
 					{
 						switch (bpp)
 						{
