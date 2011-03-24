@@ -3323,7 +3323,7 @@ process_ranges:
 			//	courants.
 			
 			System.Diagnostics.Debug.Assert (this.IsSelectionActive == false);
-			System.Diagnostics.Debug.Assert (this.HasSelection == false);
+//?			System.Diagnostics.Debug.Assert (this.HasSelection == false);
 			
 			if (text.Length == 0)
 			{

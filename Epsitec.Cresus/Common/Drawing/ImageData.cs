@@ -1,4 +1,4 @@
-//	Copyright © 2007-2008, OPaC bright ideas, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2007-2011, OPaC bright ideas, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing.Platform;
@@ -162,7 +162,7 @@ namespace Epsitec.Common.Drawing
 
 			if (thumbnail == null)
 			{
-				this.SyncCreateThumbnail ();
+				this.CreateThumbnail ();
 				thumbnail = this.Thumbnail;
 			}
 
@@ -177,7 +177,7 @@ namespace Epsitec.Common.Drawing
 
 			if (sampleImage == null)
 			{
-				this.SyncCreateThumbnail ();
+				this.CreateThumbnail ();
 				sampleImage = this.SampleImage;
 			}
 
@@ -398,15 +398,15 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		private void SyncCreateThumbnail()
+		private void CreateThumbnail()
 		{
 			lock (this.exclusion)
 			{
-				this.CreateThumbnail ();
+				this.CreateThumbnailWithActiveExclusion ();
 			}
 		}
 
-		private void CreateThumbnail()
+		private void CreateThumbnailWithActiveExclusion()
 		{
 			if (string.IsNullOrEmpty (this.imageFilePath))
 			{
@@ -571,11 +571,7 @@ namespace Epsitec.Common.Drawing
 
 		private void NotifyChanged(ImageDataEventArgs e)
 		{
-			ImageManager.AsyncInvoke (
-				delegate ()
-				{
-					this.OnChanged (e);
-				});
+			ImageManager.AsyncInvoke (() => this.OnChanged (e));
 		}
 
 		private void OnChanged(ImageDataEventArgs e)
@@ -590,36 +586,37 @@ namespace Epsitec.Common.Drawing
 
 		public void Dispose()
 		{
-			this.ReleaseImageData ();
-
-			NativeBitmap image;
-
-			image = this.thumbnail;
-
-			if (image != null)
+			lock (this.exclusion)
 			{
-				this.Thumbnail = null;
-				image.Dispose ();
-			}
+				this.ReleaseImageData ();
 
-			image = this.sampleImage;
+				NativeBitmap image = this.thumbnail;
 
-			if (image != null)
-			{
-				this.SampleImage = null;
-				image.Dispose ();
-			}
+				if (image != null)
+				{
+					this.Thumbnail = null;
+					image.Dispose ();
+				}
 
-			if (this.compressedThumbnail != null)
-			{
-				this.engine.RemoveMemoryPressure (this.compressedThumbnail.Length);
-				this.compressedThumbnail = null;
-			}
+				image = this.sampleImage;
 
-			if (this.compressedSampleImage != null)
-			{
-				this.engine.RemoveMemoryPressure (this.compressedSampleImage.Length);
-				this.compressedSampleImage = null;
+				if (image != null)
+				{
+					this.SampleImage = null;
+					image.Dispose ();
+				}
+
+				if (this.compressedThumbnail != null)
+				{
+					this.engine.RemoveMemoryPressure (this.compressedThumbnail.Length);
+					this.compressedThumbnail = null;
+				}
+
+				if (this.compressedSampleImage != null)
+				{
+					this.engine.RemoveMemoryPressure (this.compressedSampleImage.Length);
+					this.compressedSampleImage = null;
+				}
 			}
 		}
 

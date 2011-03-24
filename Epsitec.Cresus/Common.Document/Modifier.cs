@@ -6209,6 +6209,13 @@ namespace Epsitec.Common.Document
 		public void AggregateUse(Properties.Aggregate agg)
 		{
 			//	Utilise un agrégat.
+
+			if (agg == null)
+			{
+				this.AggregateFree ();
+				return;
+			}
+
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.SetDirtySerialize(CacheBitmapChanging.All);
 

@@ -55,6 +55,12 @@ namespace Epsitec.Common.Document.Properties
 			this.cropMargins    = Margins.Zero;
 		}
 
+		public static bool DisablePopupInterface
+		{
+			get;
+			set;
+		}
+
 		public string FileName
 		{
 			//	Nom du fichier original avec le chemin d'accès complet.
@@ -369,7 +375,7 @@ namespace Epsitec.Common.Document.Properties
 		#region Popup interface
 		public override void OpenOrClosePopupInterface(Objects.Abstract obj)
 		{
-			if (obj.IsSelected && !obj.IsGlobalSelected)  // objet sélectionné ?
+			if (obj.IsSelected && !obj.IsGlobalSelected && !Image.DisablePopupInterface)  // objet sélectionné ?
 			{
 				var viewer = this.document.Modifier.ActiveViewer;
 
