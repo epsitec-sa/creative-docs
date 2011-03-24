@@ -437,42 +437,14 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 			}
 		}
 
-		
-		private List<Druid> GetEntityIds()
-		{
-			return new List<Druid> ()
-			{
-				new Druid ("[J1A4]"), 
-				new Druid ("[J1A6]"), 
-				new Druid ("[J1A9]"), 
-				new Druid ("[J1AE]"), 
-				new Druid ("[J1AG]"), 
-				new Druid ("[J1AJ]"), 
-				new Druid ("[J1AN]"), 
-				new Druid ("[J1AQ]"), 
-				new Druid ("[J1AT]"), 
-				new Druid ("[J1AV]"), 
-				new Druid ("[J1A11]"),
-				new Druid ("[J1A41]"),
-				new Druid ("[J1A61]"),
-				new Druid ("[J1A81]"),
-				new Druid ("[J1AA1]"),
-				new Druid ("[J1AB1]"),
-				new Druid ("[J1AE1]"),
-				new Druid ("[J1AJ1]"),
-				new Druid ("[J1AT1]"),
-				new Druid ("[J1A02]"),
-				new Druid ("[J1A42]"),
-				new Druid ("[J1A72]"),
-			};
-		}
-
 
 		private List<StructuredType> GetEntityTypes()
 		{
 			EntityContext entityContext = new EntityContext ();
 
-			return this.GetEntityIds ().Select (id => entityContext.GetStructuredType (id)).ToList ();
+			return DataInfrastructureHelper.GetEntityIds()
+				.Select (id => entityContext.GetStructuredType (id))
+				.ToList ();
 		}
 
 
