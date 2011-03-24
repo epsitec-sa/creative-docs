@@ -143,11 +143,11 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			// TODO: Remplacer "backup1" par un fichier à choix ?
 			try
 			{
-				CoreData.BackupDatabase ("backup1", CoreData.GetDatabaseAccess ());
+				CoreData.BackupDatabase (Paths.BackupPath, CoreData.GetDatabaseAccess ());
 			}
 			catch (System.Exception ex)
 			{
-				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, ex.Message).OpenDialog ();
+				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, ex.Message).OpenDialog (CoreProgram.Application.Window);
 			}
 		}
 
@@ -158,11 +158,13 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			// TODO: Remplacer "backup1" par un fichier à choix ?
 			try
 			{
-				CoreData.RestoreDatabase ("backup1", CoreData.GetDatabaseAccess ());
+				CoreData.RestoreDatabase (Paths.BackupPath, CoreData.GetDatabaseAccess ());
+				MessageDialog.CreateOk ("Restitution de la base de données", DialogIcon.Warning, "La restitution s'est terminée correctement.<br/>L'application devra être relancée.").OpenDialog (CoreProgram.Application.Window);
+				System.Environment.Exit (0);
 			}
 			catch (System.Exception ex)
 			{
-				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, ex.Message).OpenDialog ();
+				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, ex.Message).OpenDialog (CoreProgram.Application.Window);
 			}
 		}
 
@@ -266,6 +268,11 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			MaintenanceTabPage.currentDirectory = System.IO.Path.GetDirectoryName (dialog.FileName);
 			return dialog.FileName;
+		}
+
+		private static class Paths
+		{
+			public const string BackupPath = "C:\\ProgramData\\Epsitec\\Firebird Databases\\core-backup1.firebird-backup";
 		}
 
 

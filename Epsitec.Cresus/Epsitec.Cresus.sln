@@ -87,6 +87,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Library.Finance", "Cresus.Core.Library.Finance\Cresus.Core.Library.Finance.csproj", "{608DCEB5-9004-44C6-B221-755E9D95FBB2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.CresusCore", "App.CresusCore\App.CresusCore.csproj", "{3401E72C-6D2B-49AF-BD88-4178B370D33F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{527D3555-0B76-4E86-9EE0-443CC97061F0} = {527D3555-0B76-4E86-9EE0-443CC97061F0}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Library.UserManagement", "Cresus.Core.Library.UserManagement\Cresus.Core.Library.UserManagement.csproj", "{F5EA8D13-3119-4563-BC77-9E9D6CE94148}"
 EndProject

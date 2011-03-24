@@ -45,6 +45,9 @@ namespace Epsitec.Cresus.Core.Business
 		Repository<T> GetRepository<T>()
 			where T : AbstractEntity, new ();
 
+		T GetSpecificRepository<T>()
+			where T : Repositories.Repository;
+
 		void Register(AbstractEntity entity);
 		
 		void SaveChanges();
