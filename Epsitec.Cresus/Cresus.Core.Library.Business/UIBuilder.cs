@@ -1468,11 +1468,13 @@ namespace Epsitec.Cresus.Core
 			tileButton.Clicked += delegate
 			{
 				editor.DefocusAndAcceptOrReject ();
-					
+
+				var navPath = new TileNavigationPathElement (clickSimulator.Name);
+	
 				if (tileButton.GlyphShape == GlyphShape.ArrowRight)
 				{
 					tile.Controller = new ReferenceTileController (referenceController);
-					tile.ToggleSubView (controller.Orchestrator, controller, new TileNavigationPathElement (clickSimulator.Name));
+					tile.ToggleSubView (controller.Orchestrator, controller, navPath);
 				}
 
 				if (tileButton.GlyphShape == GlyphShape.Plus)
@@ -1488,7 +1490,7 @@ namespace Epsitec.Cresus.Core
 							var newValue  = referenceController.CreateNewValue (controller.DataContext);
 							var newEntity = newValue.GetEditionEntity ();
 							var refEntity = newValue.GetReferenceEntity ();
-							var newController = EntityViewControllerFactory.Create ("Creation", newEntity, newValue.CreationControllerMode, controller.Orchestrator);
+							var newController = EntityViewControllerFactory.Create ("Creation", newEntity, newValue.CreationControllerMode, controller.Orchestrator, navigationPathElement: navPath);
 							tile.OpenSubView (controller.Orchestrator, controller, newController);
 							editor.SelectedItemIndex = editor.Items.Add (refEntity);
 							valueSetter (refEntity);
@@ -1787,20 +1789,23 @@ namespace Epsitec.Cresus.Core
 			{
 				if (!this.isDisposed)
 				{
-					if (this.Container.ContainsKeyboardFocus)
+					if (this.tabIndex > 0)
 					{
-						//	The container already contains the keyboard focus: there is no need to set
-						//	the initial focus; this would only remove the focus from where it already
-						//	is...
-					}
-					else
-					{
-						UI.SetInitialFocus (this.Container);
-					}
+						if (this.Container.ContainsKeyboardFocus)
+						{
+							//	The container already contains the keyboard focus: there is no need to set
+							//	the initial focus; this would only remove the focus from where it already
+							//	is...
+						}
+						else
+						{
+							UI.SetInitialFocus (this.Container);
+						}
 
-					if (this.nextBuilder != null)
-					{
-						this.nextBuilder.tabIndex = this.tabIndex;
+						if (this.nextBuilder != null)
+						{
+							this.nextBuilder.tabIndex = this.tabIndex;
+						}
 					}
 
 					UIBuilder.current = this.nextBuilder;
