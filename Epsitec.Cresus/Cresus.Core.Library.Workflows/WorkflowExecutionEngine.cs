@@ -31,6 +31,15 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
+		public IBusinessContext BusinessContext
+		{
+			get
+			{
+				return this.Transition.BusinessContext;
+			}
+		}
+
+
 		public WorkflowTransition Transition
 		{
 			get

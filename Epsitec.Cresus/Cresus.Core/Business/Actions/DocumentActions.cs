@@ -12,38 +12,5 @@ namespace Epsitec.Cresus.Core.Business.Actions
 {
 	public static class DocumentActions
 	{
-		public static void CreateOrderBooking()
-		{
-			var workflowEngine  = WorkflowExecutionEngine.Current;
-			var businessContext = workflowEngine.Transition.BusinessContext as BusinessContext;
-			var categoryRepo    = businessContext.GetSpecificRepository<DocumentCategoryEntity.Repository> ();
-			var currentAffair   = businessContext.GetMasterEntity<AffairEntity> ();
-			var currentDocument = businessContext.GetMasterEntity<DocumentMetadataEntity> ();
-
-			var documentMetadata = businessContext.CreateEntity<DocumentMetadataEntity> ();
-
-			documentMetadata.DocumentCategory = categoryRepo.Find (DocumentType.OrderBooking).First ();
-			documentMetadata.BusinessDocument = currentDocument.BusinessDocument;
-			documentMetadata.Workflow         = currentDocument.Workflow;
-
-			currentAffair.Documents.Add (documentMetadata);
-		}
-		
-		public static void CreateOrderConfirmation()
-		{
-			var workflowEngine  = WorkflowExecutionEngine.Current;
-			var businessContext = workflowEngine.Transition.BusinessContext as BusinessContext;
-			var categoryRepo    = businessContext.GetSpecificRepository<DocumentCategoryEntity.Repository> ();
-			var currentAffair   = businessContext.GetMasterEntity<AffairEntity> ();
-			var currentDocument = businessContext.GetMasterEntity<DocumentMetadataEntity> ();
-
-			var documentMetadata = businessContext.CreateEntity<DocumentMetadataEntity> ();
-
-			documentMetadata.DocumentCategory = categoryRepo.Find (DocumentType.OrderConfirmation).First ();
-			documentMetadata.BusinessDocument = currentDocument.BusinessDocument;
-			documentMetadata.Workflow         = currentDocument.Workflow;
-
-			currentAffair.Documents.Add (documentMetadata);
-		}
 	}
 }

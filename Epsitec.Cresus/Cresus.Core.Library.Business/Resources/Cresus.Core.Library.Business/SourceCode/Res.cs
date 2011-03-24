@@ -236,12 +236,12 @@ namespace Epsitec.Cresus.Core.Business
 				public static readonly global::Epsitec.Common.Support.Druid ActiveAffairOwner = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 8);
 				//	designer:cap/GVA7
 				public static readonly global::Epsitec.Common.Support.Druid ActiveSalesRepresentative = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 7);
+				//	designer:cap/GVA2
+				public static readonly global::Epsitec.Common.Support.Druid Customer = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 2);
 				//	designer:cap/GVA6
 				public static readonly global::Epsitec.Common.Support.Druid DefaultDebtorBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 6);
 				//	designer:cap/GVAA
 				public static readonly global::Epsitec.Common.Support.Druid Documents = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10);
-				//	designer:cap/GVA2
-				public static readonly global::Epsitec.Common.Support.Druid Relation = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 2);
 				//	designer:cap/GVA9
 				public static readonly global::Epsitec.Common.Support.Druid SubAffairs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 9);
 			}
@@ -500,8 +500,20 @@ namespace Epsitec.Cresus.Core.Business
 				{
 				}
 				
+				//	designer:cap/GVA26
+				public static readonly global::Epsitec.Common.Support.Druid Affairs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 194);
+				//	designer:cap/GVA46
+				public static readonly global::Epsitec.Common.Support.Druid DefaultBillingMode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 196);
+				//	designer:cap/GVA36
+				public static readonly global::Epsitec.Common.Support.Druid DefaultDebtorBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 195);
+				//	designer:cap/GVA66
+				public static readonly global::Epsitec.Common.Support.Druid DefaultDiscounts = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 198);
+				//	designer:cap/GVA56
+				public static readonly global::Epsitec.Common.Support.Druid DefaultPriceGroup = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 197);
 				//	designer:cap/GVA06
 				public static readonly global::Epsitec.Common.Support.Druid Relation = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 192);
+				//	designer:cap/GVA16
+				public static readonly global::Epsitec.Common.Support.Druid SalesRepresentative = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 193);
 			}
 			
 			public static class EndTotalDocumentItem
@@ -630,26 +642,14 @@ namespace Epsitec.Cresus.Core.Business
 				{
 				}
 				
-				//	designer:cap/GVAE
-				public static readonly global::Epsitec.Common.Support.Druid Affairs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 14);
 				//	designer:cap/GVAB
 				public static readonly global::Epsitec.Common.Support.Druid DefaultAddress = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 11);
-				//	designer:cap/GVAI
-				public static readonly global::Epsitec.Common.Support.Druid DefaultBillingMode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 18);
 				//	designer:cap/GVAL
 				public static readonly global::Epsitec.Common.Support.Druid DefaultCurrencyCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 21);
-				//	designer:cap/GVAH
-				public static readonly global::Epsitec.Common.Support.Druid DefaultDebtorBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 17);
-				//	designer:cap/GVAK
-				public static readonly global::Epsitec.Common.Support.Druid DefaultDiscounts = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 20);
-				//	designer:cap/GVAJ
-				public static readonly global::Epsitec.Common.Support.Druid DefaultPriceGroup = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 19);
 				//	designer:cap/GVAD
 				public static readonly global::Epsitec.Common.Support.Druid FirstContactDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 13);
 				//	designer:cap/GVA3
 				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 3);
-				//	designer:cap/GVAC
-				public static readonly global::Epsitec.Common.Support.Druid SalesRepresentative = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 12);
 				//	designer:cap/GVAG
 				public static readonly global::Epsitec.Common.Support.Druid TaxMode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 16);
 				//	designer:cap/GVAF

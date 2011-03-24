@@ -4,6 +4,8 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
+using System.Linq;
+
 namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class CustomerEntity
@@ -13,7 +15,8 @@ namespace Epsitec.Cresus.Core.Entities
 			return TextFormatter.FormatText
 				(
 					"N°", this.IdA, "\n",
-					this.Relation.GetSummary ()
+					this.Relation.GetSummary (), "\n",
+					"Représentant: ~", this.SalesRepresentative.GetCompactSummary ()
 				);
 		}
 
@@ -34,7 +37,9 @@ namespace Epsitec.Cresus.Core.Entities
 				a.Accumulate (this.IdA.GetEntityStatus ());
 				a.Accumulate (this.IdB.GetEntityStatus ().TreatAsOptional ());
 				a.Accumulate (this.IdC.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.Affairs.Select (x => x.GetEntityStatus ()));
 				a.Accumulate (this.Relation.GetEntityStatus ());
+				a.Accumulate (this.SalesRepresentative.GetEntityStatus ().TreatAsOptional ());
 
 				return a.EntityStatus;
 			}

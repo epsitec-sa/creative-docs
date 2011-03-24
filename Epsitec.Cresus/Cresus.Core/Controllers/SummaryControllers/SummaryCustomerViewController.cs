@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				 .TextCompact (x => x.GetCompactSummary ())
 				.End ();
 
-			wall.AddBrick (x => x.Relation.Affairs)
+			wall.AddBrick (x => x.Affairs)
 				.Template ()
 				 .Text (x => x.GetSummary ())
 				 .TextCompact (x => TextFormatter.FormatText (x.IdA))

@@ -24,7 +24,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Input ()
 				  .Field (x => x.VatNumber)
 				  .Field (x => x.TaxMode)
-				  .Field (x => x.DefaultDebtorBookAccount)
 				  .Field (x => x.DefaultCurrencyCode)
 				.End ()
 				.Include (x => x.Person);
