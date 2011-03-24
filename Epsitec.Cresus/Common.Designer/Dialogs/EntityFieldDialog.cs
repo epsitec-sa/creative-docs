@@ -662,7 +662,7 @@ namespace Epsitec.Common.Designer.Dialogs
 					}
 					else
 					{
-						CultureMap cultureMap = this.collectionView.Items[sel] as CultureMap;
+						CultureMap cultureMap = this.collectionView.Items[this.allIndexesInModules[sel]] as CultureMap;
 						return cultureMap.Id;
 					}
 				}
