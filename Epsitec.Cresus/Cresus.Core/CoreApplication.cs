@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Core
 		{
 			get
 			{
-				return "EpCresusCore";		//	TODO: Res.Strings.ProductAppId.ToSimpleText ();
+				return Res.Strings.ProductAppId.ToSimpleText ();
 			}
 		}
 
@@ -102,21 +102,6 @@ namespace Epsitec.Cresus.Core
 		}
 
 		
-#if false
-		public static T GetController<T>(CommandContext context)
-			where T : CoreController
-		{
-			var root = CoreProgram.Application.MainWindowController;
-
-			if (root is T)
-			{
-				return root as T;
-			}
-
-			return root.GetAllSubControllers ().Where (item => item is T).FirstOrDefault () as T;
-		}
-#endif
-
 		public override void SetupApplication()
 		{
 			base.SetupApplication ();
@@ -324,8 +309,8 @@ namespace Epsitec.Cresus.Core
 
 		private readonly List<PlugIns.ICorePlugIn>		plugIns;
 
-		private CoreData								data;
-		private MainWindowController					mainWindowController;
+		private readonly CoreData						data;
+		private readonly MainWindowController			mainWindowController;
 		private PlugIns.PlugInFactory					plugInFactory;
 	}
 }

@@ -8,6 +8,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Library
 {
+	/// <summary>
+	/// The <c>TextFormatterConverter&lt;T&gt;</c> class simplifies the implementation of
+	/// simple converters, which only handle one type with no special handling.
+	/// </summary>
+	/// <typeparam name="T">The type of the data being converted.</typeparam>
 	public abstract class TextFormatterConverter<T> : ITextFormatterConverter
 	{
 		#region ITextFormatterConverter Members

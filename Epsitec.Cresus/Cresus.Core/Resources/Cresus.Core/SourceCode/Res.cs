@@ -3199,6 +3199,14 @@ namespace Epsitec.Cresus.Core
 				}
 			}
 			
+			//	designer:str/L0A4
+			public static global::Epsitec.Common.Types.FormattedText ProductAppId
+			{
+				get
+				{
+					return global::Epsitec.Cresus.Core.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (167772164));
+				}
+			}
 			//	designer:str/L01
 			public static global::Epsitec.Common.Types.FormattedText ProductName
 			{
