@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Helpers
 
 			watch.Stop ();
 
-			string text = message + "\t\t\t\tnumber of runs: " + count + "\t average time (ms): " + watch.ElapsedMilliseconds / count;
+			string text = message + "\tnumber of runs: " + count + "\t average time (ms): " + watch.ElapsedMilliseconds / count;
 
 			Logger.Log (text, file);
 		}
