@@ -194,6 +194,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			var fileInfo = new System.IO.FileInfo (filename);
 
 			this.Container.Data.ImportDatabase (fileInfo);
+			MessageDialog.CreateOk ("Importation de la base de données", DialogIcon.Warning, "L'importation s'est terminée correctement.<br/>L'application devra être relancée.").OpenDialog (CoreProgram.Application.Window);
+			System.Environment.Exit (0);
 		}
 
 		private void ActionCreate()
