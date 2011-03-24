@@ -128,7 +128,7 @@
     <Compile Include="Expressions\UnitTestUnaryOperation.cs" />
     <Compile Include="Expressions\UnitTestUnaryComparison.cs" />
     <Compile Include="Schema\UnitTestSchemaBuilder.cs" />
-    <Compile Include="Schema\UnitTestSchemaEngine.cs" />
+    <Compile Include="Schema\UnitTestEntitySchemaEngine.cs" />
     <Compile Include="General\UnitTestSynchronization.cs" />
     <Compile Include="Saver\SynchronizationJobs\UnitTestDeleteSynchronizationJob.cs" />
     <Compile Include="Saver\SynchronizationJobs\UnitTestValueSynchronizationJob.cs" />

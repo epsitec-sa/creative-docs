@@ -43,9 +43,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
-				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure, entityTypeEngine);
 
-				new SchemaBuilder (schemaEngine, entityTypeEngine, dbInfrastructure);
+				new SchemaBuilder (entityTypeEngine, dbInfrastructure);
 			}
 		}
 
@@ -56,21 +55,15 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
-				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure, entityTypeEngine);
-
+				
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
-					() => new SchemaBuilder (null, entityTypeEngine, dbInfrastructure)
+					() => new SchemaBuilder (null, dbInfrastructure)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
-					() => new SchemaBuilder (schemaEngine, null, dbInfrastructure)
-				);
-
-				ExceptionAssert.Throw<System.ArgumentNullException>
-				(
-					() => new SchemaBuilder (schemaEngine, entityTypeEngine, null)
+					() => new SchemaBuilder (entityTypeEngine, null)
 				);
 			}
 		}
@@ -255,9 +248,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
-				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure, entityTypeEngine);
-
-				var builder = new SchemaBuilder (schemaEngine, entityTypeEngine, dbInfrastructure);
+				
+				var builder = new SchemaBuilder (entityTypeEngine, dbInfrastructure);
 
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
@@ -273,9 +265,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
-				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure, entityTypeEngine);
-
-				var builder = new SchemaBuilder (schemaEngine, entityTypeEngine, dbInfrastructure);
+				
+				var builder = new SchemaBuilder (entityTypeEngine, dbInfrastructure);
 
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
@@ -291,9 +282,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
-				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure, entityTypeEngine);
-
-				var builder = new SchemaBuilder (schemaEngine, entityTypeEngine, dbInfrastructure);
+				
+				var builder = new SchemaBuilder (entityTypeEngine, dbInfrastructure);
 
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
@@ -308,9 +298,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
-				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure, entityTypeEngine);
-
-				var builder = new SchemaBuilder (schemaEngine, entityTypeEngine, dbInfrastructure);
+				
+				var builder = new SchemaBuilder (entityTypeEngine, dbInfrastructure);
 
 				builder.RegisterSchema (entityIdsToRegister);
 			}
@@ -322,9 +311,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
-				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure, entityTypeEngine);
-
-				var builder = new SchemaBuilder (schemaEngine, entityTypeEngine, dbInfrastructure);
+				
+				var builder = new SchemaBuilder (entityTypeEngine, dbInfrastructure);
 
 				builder.UpdateSchema (entityIdsToRegister);
 			}
@@ -336,9 +324,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
-				SchemaEngine schemaEngine = new SchemaEngine (dbInfrastructure, entityTypeEngine);
-
-				var builder = new SchemaBuilder (schemaEngine, entityTypeEngine, dbInfrastructure);
+				
+				var builder = new SchemaBuilder (entityTypeEngine, dbInfrastructure);
 
 				Assert.AreEqual (isRegistered, builder.CheckSchema (entityIdsToCheck));
 			}

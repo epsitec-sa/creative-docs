@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <summary>
 		/// The <see cref="SchemaEngine"/> used by this instance.
 		/// </summary>
-		private SchemaEngine SchemaEngine
+		private EntitySchemaEngine SchemaEngine
 		{
 			get
 			{
@@ -101,14 +101,14 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			IEnumerable<DbTable> localEntityTables =
 				from localEntityType in this.EntityTypeEngine.GetBaseTypes (leafEntityId)
-				select this.SchemaEngine.GetEntityTableDefinition (localEntityType.CaptionId);
+				select this.SchemaEngine.GetEntityTable (localEntityType.CaptionId);
 
 			IEnumerable<DbTable> collectionOutTables = 
 				from localEntityType in this.EntityTypeEngine.GetBaseTypes (leafEntityId)
 				let localEntityId = localEntityType.CaptionId
 				from field in this.EntityTypeEngine.GetLocalCollectionFields (localEntityId)
 				let fieldId = field.CaptionId
-				select this.SchemaEngine.GetCollectionTableDefinition (localEntityId, fieldId);
+				select this.SchemaEngine.GetEntityFieldTable (localEntityId, fieldId);
 
 			List<DbTable> referenceInTables = new List<DbTable> ();
 			List<DbTable> collectionInTables = new List<DbTable> ();
@@ -120,15 +120,15 @@ namespace Epsitec.Cresus.DataLayer.Saver
 				foreach (var field in item.Value)
 				{
 					Druid fieldId = field.CaptionId;
-
+					
 					switch (field.Relation)
 					{
 						case FieldRelation.Reference:
-							referenceInTables.Add (this.SchemaEngine.GetEntityTableDefinition (localSourceEntityId));
+							referenceInTables.Add (this.SchemaEngine.GetEntityTable (localSourceEntityId));
 							break;
 
 						case FieldRelation.Collection:
-							collectionInTables.Add (this.SchemaEngine.GetCollectionTableDefinition (localSourceEntityId, fieldId));
+							collectionInTables.Add (this.SchemaEngine.GetEntityFieldTable (localSourceEntityId, fieldId));
 							break;
 
 						default:
@@ -172,7 +172,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			Druid localEntityId = job.LocalEntityId;
 
-			yield return this.SchemaEngine.GetEntityTableDefinition (localEntityId);
+			yield return this.SchemaEngine.GetEntityTable (localEntityId);
 		}
 
 
@@ -204,7 +204,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			Druid localEntityId = job.LocalEntityId;
 
-			yield return this.SchemaEngine.GetEntityTableDefinition (localEntityId);
+			yield return this.SchemaEngine.GetEntityTable (localEntityId);
 		}
 
 
@@ -237,7 +237,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			Druid localEntityId = job.LocalEntityId;
 			Druid fieldId = job.FieldId;
 
-			yield return this.SchemaEngine.GetCollectionTableDefinition (localEntityId, fieldId);
+			yield return this.SchemaEngine.GetEntityFieldTable (localEntityId, fieldId);
 		}
 
 

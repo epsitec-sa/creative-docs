@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 	{
 
 
-		public static void Export(FileInfo file, DbInfrastructure dbInfrastructure, SchemaEngine schemaEngine, RawExportMode exportMode)
+		public static void Export(FileInfo file, DbInfrastructure dbInfrastructure, EntitySchemaEngine schemaEngine, RawExportMode exportMode)
 		{
 			List<TableDefinition> tableDefinitions = RawEntitySerializer.GetTableDefinitions (schemaEngine).ToList ();
 
@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			};
 
 			string version = "1.0.0";
-			long idShift = SchemaEngine.AutoIncrementStartValue;
+			long idShift = EntitySchemaEngine.AutoIncrementStartValue;
 
 			using (XmlWriter xmlWriter = XmlWriter.Create (file.FullName, settings))
 			{
@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private static IEnumerable<TableDefinition> GetTableDefinitions(SchemaEngine schemaEngine)
+		private static IEnumerable<TableDefinition> GetTableDefinitions(EntitySchemaEngine schemaEngine)
 		{
 			var dataTableDefinitions = RawEntitySerializer.GetValueTableDefinitions (schemaEngine);
 			var relationTableDefitions = RawEntitySerializer.GetCollectionTableDefinitions (schemaEngine);
@@ -58,29 +58,29 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private static IEnumerable<TableDefinition> GetValueTableDefinitions(SchemaEngine schemaEngine)
+		private static IEnumerable<TableDefinition> GetValueTableDefinitions(EntitySchemaEngine schemaEngine)
 		{
 			return from dbTable in RawEntitySerializer.GetValueTables (schemaEngine)
 				   select RawEntitySerializer.GetValueTableDefinition (dbTable);
 		}
 
 
-		private static IEnumerable<TableDefinition> GetCollectionTableDefinitions(SchemaEngine schemaEngine)
+		private static IEnumerable<TableDefinition> GetCollectionTableDefinitions(EntitySchemaEngine schemaEngine)
 		{
 			return from dbTable in RawEntitySerializer.GetCollectionTables (schemaEngine)
 				   select RawEntitySerializer.GetCollectionTableDefinition (dbTable);
 		}
 
 
-		private static IEnumerable<DbTable> GetValueTables(SchemaEngine schemaEngine)
+		private static IEnumerable<DbTable> GetValueTables(EntitySchemaEngine schemaEngine)
 		{
-			return schemaEngine.GetEntityTableDefinitions ();
+			return schemaEngine.GetEntityTables ();
 		}
 
 
-		private static IEnumerable<DbTable> GetCollectionTables(SchemaEngine schemaEngine)
+		private static IEnumerable<DbTable> GetCollectionTables(EntitySchemaEngine schemaEngine)
 		{
-			return schemaEngine.GetEntityCollectionTableDefinitions ();
+			return schemaEngine.GetEntityFieldTables ();
 		}
 
 
@@ -244,7 +244,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 				throw new System.FormatException ("Invalid id shift.");
 			}
 
-			if (idShiftAsLong != SchemaEngine.AutoIncrementStartValue)
+			if (idShiftAsLong != EntitySchemaEngine.AutoIncrementStartValue)
 			{
 				throw new System.FormatException ("Invalid id shift.");
 			}

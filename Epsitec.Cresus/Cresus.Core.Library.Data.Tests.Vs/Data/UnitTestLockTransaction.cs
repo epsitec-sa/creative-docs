@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
 using System.Linq;
+using Epsitec.Common.Support;
 
 
 namespace Epsitec.Cresus.Core.Library.Data.Tests.Vs.Data
@@ -40,7 +41,7 @@ namespace Epsitec.Cresus.Core.Library.Data.Tests.Vs.Data
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure))
+				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure, new Druid[0]))
 				{
 					dataInfrastructure.OpenConnection ("id");
 
@@ -60,8 +61,8 @@ namespace Epsitec.Cresus.Core.Library.Data.Tests.Vs.Data
 			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
 			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure1 = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure1))
-				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure2 = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure2))
+				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure1 = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure1, new Druid[0]))
+				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure2 = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure2, new Druid[0]))
 				{
 					string cId1 = new ConnectionUserIdentity (new ItemCode ("id1")).ToString ();
 					string cId2 = new ConnectionUserIdentity (new ItemCode ("id2")).ToString ();
@@ -119,10 +120,10 @@ namespace Epsitec.Cresus.Core.Library.Data.Tests.Vs.Data
 			using (DbInfrastructure dbInfrastructure3 = DbInfrastructureHelper.ConnectToTestDatabase ())
 			using (DbInfrastructure dbInfrastructure4 = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure1 = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure1))
-				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure2 = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure2))
-				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure3 = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure3))
-				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure4 = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure4))
+				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure1 = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure1, new Druid[0]))
+				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure2 = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure2, new Druid[0]))
+				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure3 = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure3, new Druid[0]))
+				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure4 = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure4, new Druid[0]))
 				{
 					string cId1 = new ConnectionUserIdentity (new ItemCode ("id1")).ToString ();
 					string cId2 = new ConnectionUserIdentity (new ItemCode ("id2")).ToString ();

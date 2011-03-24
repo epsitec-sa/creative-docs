@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <summary>
 		/// The <see cref="SchemaEngine"/> used by this instance.
 		/// </summary>
-		private SchemaEngine SchemaEngine
+		private EntitySchemaEngine SchemaEngine
 		{
 			get
 			{
@@ -202,7 +202,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <param name="dbKey">The <see cref="DbKey"/> of the <see cref="AbstractEntity"/>.</param>
 		private void DeleteEntityValues(DbTransaction transaction, Druid localEntityId, DbKey dbKey)
 		{
-			DbTable table = this.SchemaEngine.GetEntityTableDefinition (localEntityId);
+			DbTable table = this.SchemaEngine.GetEntityTable (localEntityId);
 
 			SqlFieldList conditions = new SqlFieldList ();
 			conditions.Add (this.CreateConditionForRowId (table, dbKey));
@@ -226,12 +226,16 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
-			foreach (var field in this.EntityTypeEngine.GetCollectionFields (leafEntityId))
+			foreach (var entityType in this.EntityTypeEngine.GetBaseTypes (leafEntityId))
 			{
-				Druid localEntityId = field.DefiningTypeId;
-				Druid fieldId = field.CaptionId;
+				Druid localEntityId = entityType.CaptionId;
 
-				this.DeleteEntitySourceCollection (transaction, localEntityId, fieldId, dbKey);
+				foreach (var field in this.EntityTypeEngine.GetLocalCollectionFields (localEntityId))
+				{
+					Druid fieldId = field.CaptionId;
+
+					this.DeleteEntitySourceCollection (transaction, localEntityId, fieldId, dbKey);
+				}
 			}
 		}
 
@@ -363,7 +367,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			Druid leafEntityId = job.Entity.GetEntityStructuredTypeId ();
 			Druid localEntityId = job.LocalEntityId;
 
-			DbTable table = this.SchemaEngine.GetEntityTableDefinition (localEntityId);
+			DbTable table = this.SchemaEngine.GetEntityTable (localEntityId);
 			string tableName = table.GetSqlName ();
 
 			SqlFieldList fields = new SqlFieldList ();
@@ -410,7 +414,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			Druid localEntityId = job.LocalEntityId;
 			DbKey dbKey = this.GetPersistentEntityDbKey (job.Entity);
 
-			DbTable table = this.SchemaEngine.GetEntityTableDefinition (localEntityId);
+			DbTable table = this.SchemaEngine.GetEntityTable (localEntityId);
 			string tableName = table.GetSqlName ();
 
 			SqlFieldList fields = new SqlFieldList ();
@@ -439,7 +443,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			Druid localEntityId = job.LocalEntityId;
 
-			DbTable table = this.SchemaEngine.GetEntityTableDefinition (localEntityId);
+			DbTable table = this.SchemaEngine.GetEntityTable (localEntityId);
 			string tableName = table.GetSqlName ();
 
 			SqlFieldList fields = new SqlFieldList ();
@@ -466,8 +470,8 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <param name="targetKey">The key that defines the references that must be removed.</param>
 		private void DeleteEntityTargetReference(DbTransaction transaction, Druid localEntityId, Druid fieldId, DbKey targetKey)
 		{
-			DbTable table = this.SchemaEngine.GetEntityTableDefinition (localEntityId);
-			DbColumn column = this.SchemaEngine.GetEntityFieldColumnDefinition (localEntityId, fieldId);
+			DbTable table = this.SchemaEngine.GetEntityTable (localEntityId);
+			DbColumn column = this.SchemaEngine.GetEntityFieldColumn (localEntityId, fieldId);
 			string tableName = table.GetSqlName ();
 
 			SqlFieldList fields = new SqlFieldList ();
@@ -534,7 +538,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <param name="targetKeys">The sequence of <see cref="DbKey"/> of the <see cref="AbstractEntity"/> that are the target of the relation.</param>
 		private void InsertEntityCollection(DbTransaction transaction, Druid localEntityId, Druid fieldId, DbKey sourceKey, IEnumerable<DbKey> targetKeys)
 		{
-			DbTable table = this.SchemaEngine.GetCollectionTableDefinition (localEntityId, fieldId);
+			DbTable table = this.SchemaEngine.GetEntityFieldTable (localEntityId, fieldId);
 
 			string tableName = table.GetSqlName ();
 
@@ -565,7 +569,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <param name="sourceKey">The <see cref="DbKey"/> of the source of the relation.</param>
 		private void DeleteEntitySourceCollection(DbTransaction transaction, Druid localEntityId, Druid fieldId, DbKey sourceKey)
 		{
-			DbTable table = this.SchemaEngine.GetCollectionTableDefinition (localEntityId, fieldId);
+			DbTable table = this.SchemaEngine.GetEntityFieldTable (localEntityId, fieldId);
 			string tableName = table.GetSqlName ();
 
 			SqlFieldList conditions = new SqlFieldList ();
@@ -586,7 +590,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <param name="targetKey">The <see cref="DbKey"/> of the target of the relation.</param>
 		private void DeleteEntityTargetCollection(DbTransaction transaction, Druid localEntityId, Druid fieldId, DbKey targetKey)
 		{
-			DbTable table = this.SchemaEngine.GetCollectionTableDefinition (localEntityId, fieldId);
+			DbTable table = this.SchemaEngine.GetEntityFieldTable (localEntityId, fieldId);
 			string tableName = table.GetSqlName ();
 
 			SqlFieldList conditions = new SqlFieldList ();
@@ -841,7 +845,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <returns>The <see cref="SqlField"/> that contain the setter clause.</returns>
 		private SqlField CreateSqlFieldForEntityField(Druid localEntityId, Druid fieldId, object value)
 		{
-			DbColumn column = this.SchemaEngine.GetEntityFieldColumnDefinition (localEntityId, fieldId);
+			DbColumn column = this.SchemaEngine.GetEntityFieldColumn (localEntityId, fieldId);
 
 			return this.CreateSqlFieldForColumn (column, value);
 		}

@@ -53,8 +53,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			this.dbInfrastructure = dbInfrastructure;
 			this.dbInfrastructure.SetValue (DataInfrastructure.DbInfrastructureProperty, this);
 			this.EntityTypeEngine = new EntityTypeEngine (relatedEntityTypeIds);
-			this.SchemaEngine = new SchemaEngine (this.dbInfrastructure, this.EntityTypeEngine);
-			this.SchemaBuilder = new SchemaBuilder (this.SchemaEngine, this.EntityTypeEngine, this.dbInfrastructure);
+			this.SchemaBuilder = new SchemaBuilder (this.EntityTypeEngine, this.dbInfrastructure);
 			this.DataContextPool = new DataContextPool ();
 		}
 		
@@ -93,10 +92,21 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <summary>
 		/// Gets the <see cref="SchemaEngine"/> associated with this instance.
 		/// </summary>
-		internal SchemaEngine SchemaEngine
+		internal EntitySchemaEngine SchemaEngine
 		{
-			get;
-			private set;
+			get
+			{
+				if (this.schemaEngine == null)
+				{
+					this.schemaEngine = new EntitySchemaEngine (this.dbInfrastructure, this.EntityTypeEngine);
+				}
+
+				return this.schemaEngine;
+			}
+			set
+			{
+				this.schemaEngine = value;
+			}
 		}
 
 
@@ -385,7 +395,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			entityIds = EntityTypeEngine.GetRelatedEntityTypeIds (entityIds);
 
 			this.SchemaBuilder.RegisterSchema (entityIds);
-			this.SchemaEngine.Clear ();
+			this.SchemaEngine = new EntitySchemaEngine (this.dbInfrastructure, this.EntityTypeEngine);
 		}
 
 		/// <summary>
@@ -402,7 +412,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			entityIds = EntityTypeEngine.GetRelatedEntityTypeIds (entityIds);
 
 			this.SchemaBuilder.UpdateSchema (entityIds);
-			this.SchemaEngine.Clear ();
+			this.SchemaEngine = new EntitySchemaEngine (this.dbInfrastructure, this.EntityTypeEngine);
 		}
 
 		/// <summary>
@@ -501,5 +511,8 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// instance.
 		/// </summary>
 		private ConnectionInformation connectionInformation;
+
+		private EntitySchemaEngine schemaEngine;
+
 	}
 }

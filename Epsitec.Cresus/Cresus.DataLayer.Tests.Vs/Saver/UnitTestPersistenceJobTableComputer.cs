@@ -106,10 +106,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 				List<DbTable> tables1 = new List<DbTable> ()
                 {
-                    dataInfrastructure.SchemaEngine.GetEntityTableDefinition (Druid.Parse ("[J1AB1]")),
-                    dataInfrastructure.SchemaEngine.GetEntityTableDefinition (Druid.Parse ("[J1AJ1]")),
-					dataInfrastructure.SchemaEngine.GetEntityTableDefinition (Druid.Parse ("[J1AA1]")),
-                    dataInfrastructure.SchemaEngine.GetCollectionTableDefinition (Druid.Parse ("[J1AB1]"), Druid.Parse ("[J1AC1]")),
+                    dataInfrastructure.SchemaEngine.GetEntityTable (Druid.Parse ("[J1AB1]")),
+                    dataInfrastructure.SchemaEngine.GetEntityTable (Druid.Parse ("[J1AJ1]")),
+					dataInfrastructure.SchemaEngine.GetEntityTable (Druid.Parse ("[J1AA1]")),
+                    dataInfrastructure.SchemaEngine.GetEntityFieldTable (Druid.Parse ("[J1AB1]"), Druid.Parse ("[J1AC1]")),
                 };
 
 				List<DbTable> tables2 = computer.GetAffectedTables (job).ToList ();
@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 				ValuePersistenceJob job = new ValuePersistenceJob (entity, localEntityId, fieldIdsWithValues, false, jobType);
 
-				DbTable table = dataInfrastructure.SchemaEngine.GetEntityTableDefinition (localEntityId);
+				DbTable table = dataInfrastructure.SchemaEngine.GetEntityTable (localEntityId);
 				List<DbTable> tables = computer.GetAffectedTables (job).ToList ();
 
 				Assert.IsTrue (tables.Count == 1);
@@ -173,7 +173,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 				ReferencePersistenceJob job = new ReferencePersistenceJob (entity, localEntityId, fieldIdsWithTargets, jobType);
 
-				DbTable table = dataInfrastructure.SchemaEngine.GetEntityTableDefinition (localEntityId);
+				DbTable table = dataInfrastructure.SchemaEngine.GetEntityTable (localEntityId);
 				List<DbTable> tables = computer.GetAffectedTables (job).ToList ();
 
 				Assert.IsTrue (tables.Count == 1);
@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
             };
 
 			Druid localEntityId = Druid.Parse ("[J1AB1]");
-			Druid fieldId = Druid.Parse ("[J1AJ]");
+			Druid fieldId = Druid.Parse ("[J1AC1]");
 
 			PersistenceJobType jobType = PersistenceJobType.Insert;
 
@@ -206,7 +206,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 				CollectionPersistenceJob job = new CollectionPersistenceJob (entity, localEntityId, fieldId, targets, jobType);
 
-				DbTable table = dataInfrastructure.SchemaEngine.GetCollectionTableDefinition (localEntityId, fieldId);
+				DbTable table = dataInfrastructure.SchemaEngine.GetEntityFieldTable (localEntityId, fieldId);
 				List<DbTable> tables = computer.GetAffectedTables (job).ToList ();
 
 				Assert.IsTrue (tables.Count == 1);

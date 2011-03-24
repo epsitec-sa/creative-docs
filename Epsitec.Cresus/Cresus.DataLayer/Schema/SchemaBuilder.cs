@@ -30,14 +30,12 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// <summary>
 		/// Builds a new <c>SchemaBuilder.</c>
 		/// </summary>
-		public SchemaBuilder(SchemaEngine schemaEngine, EntityTypeEngine entityTypeEngine, DbInfrastructure dbInfrastructure)
+		public SchemaBuilder(EntityTypeEngine entityTypeEngine, DbInfrastructure dbInfrastructure)
 		{
-			schemaEngine.ThrowIfNull ("schemaEngine");
 			entityTypeEngine.ThrowIfNull ("entityTypeEngine");
 			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
 			
 			this.DbInfrastructure = dbInfrastructure;
-			this.SchemaEngine = schemaEngine;
 			this.EntityTypeEngine = entityTypeEngine;
 		}
 
@@ -46,13 +44,6 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// The <see cref="DbInfrastructure"/> associated with this instance.
 		/// </summary>
 		private DbInfrastructure DbInfrastructure
-		{
-			get;
-			set;
-		}
-
-
-		private SchemaEngine SchemaEngine
 		{
 			get;
 			set;
@@ -401,7 +392,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 				// Marc
 
 				columnId.IsAutoIncremented = true;
-				columnId.AutoIncrementStartValue = SchemaEngine.AutoIncrementStartValue;
+				columnId.AutoIncrementStartValue = EntitySchemaEngine.AutoIncrementStartValue;
 
 				DbColumn typeColumn = new DbColumn (Tags.ColumnInstanceType, keyTypeDef, DbColumnClass.Data, DbElementCat.Internal);
 				DbColumn logColumn = new DbColumn (Tags.ColumnRefLog, keyTypeDef, DbColumnClass.RefInternal, DbElementCat.Internal);
@@ -467,7 +458,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			DbTypeDef refIdType = this.DbInfrastructure.ResolveDbType (Tags.TypeKeyId);
 			DbTypeDef rankType = this.DbInfrastructure.ResolveDbType (Tags.TypeCollectionRank);
 
-			string relationTableName = this.SchemaEngine.GetCollectionTableName (type.CaptionId, field.CaptionId);
+			string relationTableName = EntitySchemaEngine.GetEntityFieldTableName (type.CaptionId, field.CaptionId);
 			string entityName = type.Caption.Name;
 			string fieldName = this.DbInfrastructure.DefaultContext.ResourceManager.GetCaption (field.CaptionId).Name;
 
@@ -476,7 +467,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			DbColumn columnId = new DbColumn (Tags.ColumnId, refIdType, DbColumnClass.KeyId, DbElementCat.Internal)
 			{
 				IsAutoIncremented = true,
-				AutoIncrementStartValue = SchemaEngine.AutoIncrementStartValue
+				AutoIncrementStartValue = EntitySchemaEngine.AutoIncrementStartValue
 			};
 			DbColumn columnSourceId = new DbColumn (Tags.ColumnRefSourceId, refIdType, DbColumnClass.RefInternal, DbElementCat.Internal);
 			DbColumn columnTargetId = new DbColumn (Tags.ColumnRefTargetId, refIdType, DbColumnClass.RefInternal, DbElementCat.Internal);

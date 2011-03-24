@@ -1516,16 +1516,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.OnCreationRegisterAsEmptyEntity (entity, e);
 			this.OnCreationFreezeEntity (entity);
 			this.OnCreationAddToCache (entity);
-			
-			try
-			{
-				this.OnCreationLoadSchema (entity);
-			}
-			catch
-			{
-				this.OnCreationRemoveFromCache (entity);
-				throw;
-			}
 		}
 
 
@@ -1599,28 +1589,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 		private void OnCreationAddToCache(AbstractEntity entity)
 		{
 			this.entitiesCache.Add (entity);
-		}
-
-
-		/// <summary>
-		/// Removes the given <see cref="AbstractEntity"/> to the cache of this instance.
-		/// </summary>
-		/// <param name="entity">The <see cref="AbstractEntity"/> to remove from the cache.</param>
-		private void OnCreationRemoveFromCache(AbstractEntity entity)
-		{
-			this.entitiesCache.Remove (entity);
-		}
-
-
-		/// <summary>
-		/// Loads the schema of the given <see cref="AbstractEntity"/> in the <see cref="SchemaEngine"/>.
-		/// </summary>
-		/// <param name="entity">The <see cref="AbstractEntity"/> whose schema to load.</param>
-		private void OnCreationLoadSchema(AbstractEntity entity)
-		{
-			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-			
-			this.DataInfrastructure.SchemaEngine.LoadSchema (leafEntityId);
 		}
 
 

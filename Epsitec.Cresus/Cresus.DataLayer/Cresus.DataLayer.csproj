@@ -224,7 +224,7 @@
     <Compile Include="Saver\PersistenceJobs\ValuePersistenceJob.cs" />
     <Compile Include="Saver\SynchronizationJobs\ValueSynchronizationJob.cs" />
     <Compile Include="Schema\SchemaBuilder.cs" />
-    <Compile Include="Schema\SchemaEngine.cs" />
+    <Compile Include="Schema\EntitySchemaEngine.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
