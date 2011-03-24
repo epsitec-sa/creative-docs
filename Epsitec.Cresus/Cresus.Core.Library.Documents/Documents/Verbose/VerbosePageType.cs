@@ -136,19 +136,11 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 		}
 
 
-		private class TextFormatterConverter : ITextFormatterConverter
+		private class TextFormatterConverter : TextFormatterConverter<PageType>
 		{
-			#region ITextFormatterConverter Members
-
-			public IEnumerable<System.Type> GetConvertibleTypes()
+			protected override FormattedText ToFormattedText(PageType value, System.Globalization.CultureInfo culture, TextFormatterDetailLevel detailLevel)
 			{
-				yield return typeof (PageType);
-			}
-
-			public FormattedText ToFormattedText(object value, System.Globalization.CultureInfo culture, TextFormatterDetailLevel detailLevel)
-			{
-				var pageType = (PageType) value;
-				var verbose  = VerbosePageType.GetAll ().Where (x => x.Type == pageType).FirstOrDefault ();
+				var verbose = VerbosePageType.GetAll ().FirstOrDefault (x => x.Type == value);
 
 				if (verbose == null)
 				{
@@ -156,23 +148,16 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 				}
 				else
 				{
-					switch (detailLevel)
+					if (detailLevel == TextFormatterDetailLevel.Full)
 					{
-						case TextFormatterDetailLevel.Default:
-						case TextFormatterDetailLevel.Title:
-						case TextFormatterDetailLevel.Compact:
-							return verbose.ShortDescription;
-
-						case TextFormatterDetailLevel.Full:
-							return verbose.LongDescription;
-
-						default:
-							throw new System.NotSupportedException (string.Format ("Detail level {0} not supported", detailLevel));
+						return verbose.LongDescription;
+					}
+					else
+					{
+						return verbose.ShortDescription;
 					}
 				}
 			}
-
-			#endregion
 		}
 
 

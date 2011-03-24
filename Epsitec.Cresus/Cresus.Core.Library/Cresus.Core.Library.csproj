@@ -66,6 +66,7 @@
     <Compile Include="Library\SettingsManager.cs" />
     <Compile Include="Library\ICoreManualComponent.cs" />
     <Compile Include="Library\SettingsTuple.cs" />
+    <Compile Include="Library\TextFormatterConverter`1.cs" />
     <Compile Include="Resolvers\CoreComponentFactoryResolver.cs" />
     <Compile Include="Library\CoreComponentHostImplementation.cs" />
     <Compile Include="Library\DialogCentral.cs" />

@@ -246,40 +246,12 @@ namespace Epsitec.Cresus.Core.Documents
 		}
 
 
-		private class TextFormatterConverter : ITextFormatterConverter
+		private class TextFormatterConverter : TextFormatterConverter<PrintingOptionDictionary>
 		{
-			#region ITextFormatterConverter Members
-
-			public IEnumerable<System.Type> GetConvertibleTypes()
+			protected override FormattedText ToFormattedText(PrintingOptionDictionary value, System.Globalization.CultureInfo culture, TextFormatterDetailLevel detailLevel)
 			{
-				yield return typeof (PrintingOptionDictionary);
+				return value.GetSummary ();
 			}
-
-			public FormattedText ToFormattedText(object value, System.Globalization.CultureInfo culture, TextFormatterDetailLevel detailLevel)
-			{
-				var printingOptions = (PrintingOptionDictionary) value;
-
-				if (printingOptions == null)
-				{
-					return FormattedText.Empty;
-				}
-				else
-				{
-					switch (detailLevel)
-					{
-						case TextFormatterDetailLevel.Default:
-						case TextFormatterDetailLevel.Title:
-						case TextFormatterDetailLevel.Compact:
-						case TextFormatterDetailLevel.Full:
-							return printingOptions.GetSummary ();
-
-						default:
-							throw new System.NotSupportedException (string.Format ("Detail level {0} not supported", detailLevel));
-					}
-				}
-			}
-
-			#endregion
 		}
 
 
