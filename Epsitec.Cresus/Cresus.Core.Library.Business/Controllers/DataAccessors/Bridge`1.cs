@@ -280,6 +280,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				}
 
 				if ((fieldType == typeof (string)) ||
+					(fieldType == typeof (FormattedText)) ||
+					(fieldType == typeof (System.DateTime)) ||
+					(fieldType == typeof (System.DateTime?)) ||
 					(fieldType == typeof (Date)) ||
 					(fieldType == typeof (Date?)))
 				{
@@ -438,7 +441,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		
 		private void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<Accessor<FormattedText>> setter)
 		{
-			var formatter = this.ToAccessor (Brick.GetProperty (brick, key));
+			var formatter = this.ToAccessor (brick, Brick.GetProperty (brick, key));
 
 			if (formatter != null)
 			{
@@ -446,17 +449,44 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
-		private Accessor<FormattedText> ToAccessor(BrickProperty property)
+		private Accessor<FormattedText> ToAccessor(Brick brick, BrickProperty property)
 		{
-			System.Func<T, FormattedText> formatter = property.GetFormatter<T> ();
-			
-			if (formatter == null)
+			var getter    = this.controller.EntityGetter;
+			var resolver  = brick.GetResolver (null);
+			var formatterExpression = (property.ExpressionValue as LambdaExpression);
+
+			if (formatterExpression == null)
 			{
 				return null;
 			}
+
+			var formatterFunc = formatterExpression.Compile ();
+			
+			if (resolver == null)
+			{
+				System.Func<FormattedText> composite =
+					delegate
+					{
+						var expression = property.ExpressionValue as LambdaExpression;
+						var source = getter ();
+						var target = source;
+						return (FormattedText) formatterFunc.DynamicInvoke (target);
+					};
+
+				return new Accessor<FormattedText> (composite);
+			}
 			else
 			{
-				return this.controller.CreateAccessor (formatter);
+				System.Func<FormattedText> composite =
+					delegate
+					{
+						var expression = property.ExpressionValue as LambdaExpression;
+						var source = getter ();
+						var target = resolver.DynamicInvoke (source);
+						return (FormattedText) formatterFunc.DynamicInvoke (target);
+					};
+
+				return new Accessor<FormattedText> (composite);
 			}
 		}
 
