@@ -309,6 +309,10 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 					return;
 				}
+
+				System.Diagnostics.Debug.WriteLine (
+					string.Format ("*** Field {0} of type {1} : no automatic binding implemented in Bridge<{2}>",
+						lambda.ToString (), fieldType.FullName, typeof (T).Name));
 			}
 
 			private void CreateActionForSeparator()

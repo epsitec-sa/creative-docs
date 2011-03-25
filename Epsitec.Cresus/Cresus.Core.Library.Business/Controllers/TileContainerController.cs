@@ -665,11 +665,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			//	évite de prendre plusieurs fois le même.
 			var visualIds  = new HashSet<long> ();
 
-			foreach (var item in this.liveItems)
+			foreach (var titleTile in this.liveItems.Select (x => x.TitleTile))
 			{
-				if (visualIds.Add (item.TitleTile.GetVisualSerialId ()))
+				if (titleTile != null)
 				{
-					yield return item.TitleTile;
+					if (visualIds.Add (titleTile.GetVisualSerialId ()))
+					{
+						yield return titleTile;
+					}
 				}
 			}
 		}
