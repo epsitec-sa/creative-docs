@@ -6,6 +6,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Bricks;
+using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
@@ -473,8 +474,16 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 					{
 						var expression = property.ExpressionValue as LambdaExpression;
 						var source = getter ();
-						var target = source;
-						return (FormattedText) formatterFunc.DynamicInvoke (target);
+						var target = source as AbstractEntity;
+
+						if (target.IsNull ())
+						{
+							return FormattedText.Empty;
+						}
+						else
+						{
+							return (FormattedText) formatterFunc.DynamicInvoke (target);
+						}
 					};
 
 				return new Accessor<FormattedText> (composite);
@@ -486,8 +495,16 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 					{
 						var expression = property.ExpressionValue as LambdaExpression;
 						var source = getter ();
-						var target = resolver.DynamicInvoke (source);
-						return (FormattedText) formatterFunc.DynamicInvoke (target);
+						var target = resolver.DynamicInvoke (source) as AbstractEntity;
+
+						if (target.IsNull ())
+						{
+							return FormattedText.Empty;
+						}
+						else
+						{
+							return (FormattedText) formatterFunc.DynamicInvoke (target);
+						}
 					};
 
 				return new Accessor<FormattedText> (composite);

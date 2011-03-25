@@ -48,6 +48,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			{
 				ValueGetter = () => this.Entity.Country,
 				ValueSetter = x  => this.Entity.Country = x,
+				ReferenceController = new ReferenceController (() => this.Entity.Country),
 			};
 
 			this.countryTextField = builder.CreateAutoCompleteTextField ("Nom et code du pays", controller);
