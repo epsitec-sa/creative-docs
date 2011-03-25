@@ -21,14 +21,19 @@ namespace Epsitec.Cresus.Core.Business.Actions
 			var businessContext = workflowEngine.BusinessContext;
 			var categoryRepo    = businessContext.GetSpecificRepository<DocumentCategoryEntity.Repository> ();
 			var currentAffair   = businessContext.GetMasterEntity<AffairEntity> ();
-			var currentDocument = businessContext.GetMasterEntity<DocumentMetadataEntity> ();
+			var currentDocument = currentAffair.Documents.LastOrDefault (x => x.DocumentCategory.DocumentType == DocumentType.SalesQuote);
 
-			var documentMetadata = businessContext.CreateEntity<DocumentMetadataEntity> ();
+			System.Diagnostics.Debug.Assert (currentDocument.IsNotNull (), "No sales quote document can be found");
 
-			documentMetadata.DocumentCategory = categoryRepo.Find (DocumentType.OrderBooking).First ();
-			documentMetadata.BusinessDocument = currentDocument.BusinessDocument;
+			if (currentDocument.IsNotNull ())
+			{
+				var documentMetadata = businessContext.CreateEntity<DocumentMetadataEntity> ();
 
-			currentAffair.Documents.Add (documentMetadata);
+				documentMetadata.DocumentCategory = categoryRepo.Find (DocumentType.OrderBooking).First ();
+				documentMetadata.BusinessDocument = currentDocument.BusinessDocument;
+
+				currentAffair.Documents.Add (documentMetadata);
+			}
 		}
 
 		public static void CreateOrderConfirmation()
@@ -37,14 +42,19 @@ namespace Epsitec.Cresus.Core.Business.Actions
 			var businessContext = workflowEngine.BusinessContext;
 			var categoryRepo    = businessContext.GetSpecificRepository<DocumentCategoryEntity.Repository> ();
 			var currentAffair   = businessContext.GetMasterEntity<AffairEntity> ();
-			var currentDocument = businessContext.GetMasterEntity<DocumentMetadataEntity> ();
+			var currentDocument = currentAffair.Documents.LastOrDefault (x => x.DocumentCategory.DocumentType == DocumentType.OrderBooking);
 
-			var documentMetadata = businessContext.CreateEntity<DocumentMetadataEntity> ();
+			System.Diagnostics.Debug.Assert (currentDocument.IsNotNull (), "No order booking document can be found");
 
-			documentMetadata.DocumentCategory = categoryRepo.Find (DocumentType.OrderConfirmation).First ();
-			documentMetadata.BusinessDocument = currentDocument.BusinessDocument;
+			if (currentDocument.IsNotNull ())
+			{
+				var documentMetadata = businessContext.CreateEntity<DocumentMetadataEntity> ();
 
-			currentAffair.Documents.Add (documentMetadata);
+				documentMetadata.DocumentCategory = categoryRepo.Find (DocumentType.OrderConfirmation).First ();
+				documentMetadata.BusinessDocument = currentDocument.BusinessDocument;
+
+				currentAffair.Documents.Add (documentMetadata);
+			}
 		}
 	}
 }

@@ -23,11 +23,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			wall.AddBrick (x => x)
 				.Name ("InvoiceDocument")
 				.Icon ("Data.InvoiceDocument")
-				.Title ("Document")
-				.Text (x => x.GetSummary ())
-				.TextCompact (x => x.GetCompactSummary ());
-
-			wall.AddBrick (x => x.DocumentCategory)
+				.Title (x => x.DocumentCategory.Name)
 				.Text (x => x.GetSummary ())
 				.TextCompact (x => x.GetCompactSummary ());
 
