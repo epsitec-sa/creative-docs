@@ -18,43 +18,33 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionDocumentMetadataViewController : EditionViewController<Entities.DocumentMetadataEntity>
 	{
-		protected override void CreateUI()
+		protected override void CreateBricks(Bricks.BrickWall<DocumentMetadataEntity> wall)
 		{
-			using (var builder = new UIBuilder (this))
-			{
-				builder.CreateHeaderEditorTile ();
-				builder.CreateEditionTitleTile ("Data.Document", "Document");
+			wall.AddBrick (x => x)
+				.Name ("Document")
+				.Icon ("Data.Document")
+				.Title ("Informations générales")
+				.Input ()
+				  .Title ("N° de document (principal, externe et interne)")
+				  .HorizontalGroup ()
+					.Field (x => x.IdA).Width (74)
+					.Field (x => x.IdB).Width (74)
+					.Field (x => x.IdC).Width (74)
+				  .End ()
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.Description)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.CreationDate)
+				  .Field (x => x.LastModificationDate)
+				.End ();
 
-				this.CreateUIMain (builder);
-
-				builder.CreateFooterEditorTile ();
-			}
-
-			//	Summary:
-			using (var data = TileContainerController.Setup (this))
-			{
-				this.CreateUIComments (data);
-			}
-		}
-
-		private void CreateUIComments(TileDataItems data)
-		{
-			SummaryControllers.Common.CreateUIComments (this.BusinessContext, data, this.EntityGetter, x => x.Comments);
-		}
-
-
-		private void CreateUIMain(Epsitec.Cresus.Core.UIBuilder builder)
-		{
-			var tile = builder.CreateEditionTile ();
-
-			FrameBox group = builder.CreateGroup (tile, "N° de document (principal, externe et interne)");
-			builder.CreateTextField (group, DockStyle.Left, 74, Marshaler.Create (() => this.Entity.IdA));
-			builder.CreateTextField (group, DockStyle.Left, 74, Marshaler.Create (() => this.Entity.IdB, x => this.Entity.IdB = x));
-			builder.CreateTextField (group, DockStyle.Left, 74, Marshaler.Create (() => this.Entity.IdC, x => this.Entity.IdC = x));
-			
-			builder.CreateTextField (tile, 0, "Description", Marshaler.Create (() => this.Entity.Description, x => this.Entity.Description = x));
-			builder.CreateTextField (tile, 150, "Date et heure de création",              Marshaler.Create (() => this.Entity.CreationDate));
-			builder.CreateTextField (tile, 150, "Date et heure de dernière modification", Marshaler.Create (() => this.Entity.LastModificationDate));
+			wall.AddBrick (x => x.Comments)
+				.Template ()
+				.End ();
 		}
 	}
 }

@@ -18,63 +18,26 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryDocumentMetadataViewController : SummaryViewController<DocumentMetadataEntity>
 	{
-		public SummaryDocumentMetadataViewController()
+		protected override void CreateBricks(Bricks.BrickWall<DocumentMetadataEntity> wall)
 		{
-			var doc = this.Entity.BusinessDocument;
+			wall.AddBrick (x => x)
+				.Name ("InvoiceDocument")
+				.Icon ("Data.InvoiceDocument")
+				.Title ("Document")
+				.Text (x => x.GetSummary ())
+				.TextCompact (x => x.GetCompactSummary ());
 
-			if (doc.IsNotNull ())
-			{
-				this.businessDocumentController = EntityViewControllerFactory.Create ("Meta", doc, ViewControllerMode.Summary, this.Orchestrator);
-			}
+			wall.AddBrick (x => x.DocumentCategory)
+				.Text (x => x.GetSummary ())
+				.TextCompact (x => x.GetCompactSummary ());
+
+			wall.AddBrick (x => x.BusinessDocument)
+				.AsType<BusinessDocumentEntity> ()
+				.Text (x => x.GetSummary ())
+				.TextCompact (x => x.GetCompactSummary ());
+
+			wall.AddBrick (x => x.Comments)
+				.Template ();
 		}
-
-
-		public override IEnumerable<CoreController> GetSubControllers()
-		{
-			if (this.businessDocumentController != null)
-			{
-				yield return this.businessDocumentController;
-			}
-		}
-
-		protected override void CreateUI()
-		{
-			using (var builder = UIBuilder.Create (this))
-			{
-				using (var data = TileContainerController.Setup (builder))
-				{
-					this.CreateUIMetadata (data);
-				}
-				
-				this.CreateUIBusinessDocument ();
-			}
-		}
-
-		private void CreateUIMetadata(TileDataItems data)
-		{
-			data.Add (
-				new TileDataItem
-				{
-					Name				= "InvoiceDocument",
-					IconUri				= "Data.InvoiceDocument",
-					Title				= TextFormatter.FormatText ("Document"),
-					CompactTitle		= TextFormatter.FormatText ("Document"),
-					TextAccessor		= this.CreateAccessor (x => x.GetSummary ()),
-					CompactTextAccessor = this.CreateAccessor (x => x.GetCompactSummary ()),
-					EntityMarshaler		= this.CreateEntityMarshaler (),
-				});
-		}
-
-
-		private void CreateUIBusinessDocument()
-		{
-			if (this.businessDocumentController != null)
-			{
-				this.businessDocumentController.CreateUI (this.TileContainer);
-			}
-		}
-		
-		
-		private EntityViewController businessDocumentController;
 	}
 }

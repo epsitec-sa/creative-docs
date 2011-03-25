@@ -287,7 +287,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			//	Place les boutons pour les bases de données les plus courantes.
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Base.ShowCustomers));
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Base.ShowArticleDefinitions));
-			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Base.ShowBusinessDocuments));
+			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Base.ShowDocumentMetadata));
 
 			this.CreateRibbonDatabaseSectionMenuButton (section);
 		}
