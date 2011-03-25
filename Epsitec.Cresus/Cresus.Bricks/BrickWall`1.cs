@@ -23,9 +23,9 @@ namespace Epsitec.Cresus.Bricks
 			return brick;
 		}
 
-		public SimpleBrick<T, TField> AddBrick<TField>(Expression<System.Func<T, TField>> expression)
+		public SimpleBrick<TField, TField> AddBrick<TField>(Expression<System.Func<T, TField>> expression)
 		{
-			var brick = new SimpleBrick<T, TField> ();
+			var brick = new SimpleBrick<TField, TField> ();
 
 			brick.DefineResolver (expression);
 

@@ -82,6 +82,11 @@ namespace Epsitec.Cresus.Bricks
 			}
 		}
 
+		internal void InheritResolver(Brick brick)
+		{
+			this.resolver = brick.resolver;
+		}
+
 		internal void DefineResolver(Expression resolver)
 		{
 			this.resolver = resolver;

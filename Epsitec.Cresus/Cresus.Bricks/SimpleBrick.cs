@@ -20,6 +20,9 @@ namespace Epsitec.Cresus.Bricks
 		public SimpleBrick<TOutput, TOutput> AsType<TOutput>()
 		{
 			var brick = new SimpleBrick<TOutput, TOutput> (this);
+
+			brick.InheritResolver (this);
+
 			return brick;
 		}
 	}
