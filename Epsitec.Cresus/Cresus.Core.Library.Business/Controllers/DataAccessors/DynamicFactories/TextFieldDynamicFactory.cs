@@ -36,7 +36,16 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 			var getterFunc   = getterLambda.Compile ();
 			var setterFunc   = setterLambda.Compile ();
 
-			var factoryType = typeof (Factory<,>).MakeGenericType (sourceType, fieldType);
+			bool nullable    = false;
+
+			if ((fieldType.IsGenericType) &&
+				(fieldType.GetGenericTypeDefinition () == typeof (System.Nullable<>)))
+			{
+				nullable  = true;
+				fieldType = fieldType.GetGenericArguments ()[0];
+			}
+
+			var factoryType = (nullable ? typeof (NullableFactory<,>) : typeof (Factory<,>)).MakeGenericType (sourceType, fieldType);
 			var instance    = System.Activator.CreateInstance (factoryType, business, lambda, entityGetter, getterFunc, setterFunc, title, width);
 
 			return (DynamicFactory) instance;
@@ -49,10 +58,10 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 				this.business = business;
 				this.lambda   = lambda;
 				this.sourceGetter = sourceGetter;
-				this.getter = getter;
-				this.setter = setter;
-				this.title  = title;
-				this.width  = width;
+				this.getter   = getter;
+				this.setter   = setter;
+				this.title    = title;
+				this.width    = width;
 			}
 
 			private System.Func<TField> CreateGetter()
@@ -68,6 +77,72 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 			private Marshaler CreateMarshaler()
 			{
 				return new NonNullableMarshaler<TField> (this.CreateGetter (), this.CreateSetter (), this.lambda);
+			}
+
+			public override object CreateUI(FrameBox frame, UIBuilder builder)
+			{
+				var tile      = frame as EditionTile;
+				var marshaler = this.CreateMarshaler ();
+				var caption   = DynamicFactory.GetInputCaption (this.lambda);
+				var title     = this.title ?? DynamicFactory.GetInputTitle (caption);
+
+				TextFieldEx widget;
+
+				if (tile != null)
+				{
+					widget = builder.CreateTextField (tile, width, title, marshaler);
+				}
+				else
+				{
+					widget = builder.CreateTextField (frame, DockStyle.Stacked, width, marshaler);
+				}
+
+				if ((caption != null) &&
+					(caption.HasDescription))
+				{
+					ToolTip.SetToolTipCaption (widget, caption);
+				}
+
+				return widget;
+			}
+
+
+			private readonly BusinessContext		business;
+			private readonly LambdaExpression		lambda;
+			private readonly System.Func<TSource>	sourceGetter;
+			private readonly System.Delegate		getter;
+			private readonly System.Delegate		setter;
+			private readonly string					title;
+			private readonly int					width;
+		}
+		
+		class NullableFactory<TSource, TField> : DynamicFactory
+			where TField : struct
+		{
+			public NullableFactory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title, int width)
+			{
+				this.business = business;
+				this.lambda   = lambda;
+				this.sourceGetter = sourceGetter;
+				this.getter   = getter;
+				this.setter   = setter;
+				this.title    = title;
+				this.width    = width;
+			}
+
+			private System.Func<TField?> CreateGetter()
+			{
+				return () => (TField?) this.getter.DynamicInvoke (this.sourceGetter ());
+			}
+
+			private System.Action<TField?> CreateSetter()
+			{
+				return x => this.setter.DynamicInvoke (this.sourceGetter (), x);
+			}
+
+			private Marshaler CreateMarshaler()
+			{
+				return new NullableMarshaler<TField> (this.CreateGetter (), this.CreateSetter (), this.lambda);
 			}
 
 			public override object CreateUI(FrameBox frame, UIBuilder builder)

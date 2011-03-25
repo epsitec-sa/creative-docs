@@ -5,12 +5,25 @@ using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Epsitec.Common.Types.Converters.Marshalers
 {
 	public sealed class NullableMarshaler<T> : GenericMarshaler<T?, T>
 			where T : struct
 	{
+		public NullableMarshaler()
+		{
+		}
+
+		public NullableMarshaler(System.Func<T?> getter, System.Action<T?> setter, Expression expression)
+		{
+			this.ValueGetter = getter;
+			this.ValueSetter = setter;
+			this.InitialValue = getter ();
+			this.ValueGetterExpression = expression;
+		}
+
 		public override string GetStringValue()
 		{
 			var value = this.GetValue ();
