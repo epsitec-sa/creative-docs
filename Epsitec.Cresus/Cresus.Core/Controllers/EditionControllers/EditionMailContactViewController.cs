@@ -541,7 +541,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 						ValueGetter         = () => this.Entity.LegalPerson,
 						ValueSetter         = x => this.Entity.LegalPerson = x,
 						ReferenceController = this.GetLegalPersonReferenceController (),
-						PossibleItemsGetter = () => this.Data.GetAllEntities<LegalPersonEntity> (),
+						PossibleItemsGetter = () => this.Data.GetAllEntities<LegalPersonEntity> (dataContext: this.DataContext),
 					};
 
 					var textField = builder.CreateAutoCompleteTextField (tile, "Entreprise (personne morale)", controller);
@@ -600,25 +600,27 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private ReferenceController GetLegalPersonReferenceController()
 		{
-			throw new System.NotImplementedException ();
-#if false
 			return ReferenceController.Create (
 				this.EntityGetter,
 				entity => entity.LegalPerson,
-				entity => CoreProgram.Application.Data.GetCustomers (entity.LegalPerson).FirstOrDefault (),
+				entity => this.GetCustomers (entity.LegalPerson).FirstOrDefault (),
 				creator: this.CreateNewLegalPerson);
-#endif
 		}
 
 		private ReferenceController GetAddressReferenceController()
 		{
-			throw new System.NotImplementedException ();
-#if false
 			return ReferenceController.Create (
 				this.EntityGetter,
 				entity => entity.Address,
-				entity => CoreProgram.Application.Data.GetCustomers (entity.LegalPerson).FirstOrDefault ());
-#endif
+				entity => this.GetCustomers (entity.LegalPerson).FirstOrDefault ());
+		}
+
+		private IEnumerable<RelationEntity> GetCustomers(AbstractPersonEntity person)
+		{
+			var repository = new RelationEntity.Repository (this.Data, this.DataContext);
+			var example = repository.CreateExample ();
+			example.Person = person;
+			return repository.GetByExample (example);
 		}
 
 		private NewEntityReference CreateNewLegalPerson(DataContext context)
@@ -708,11 +710,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			{
 				if (this.selectedCountry == null)
 				{
-					return this.Data.GetAllEntities<LocationEntity> (dataContext: this.BusinessContext.DataContext);
+					return this.Data.GetAllEntities<LocationEntity> (dataContext: this.DataContext);
 				}
 				else
 				{
-					return this.Data.GetAllEntities<LocationEntity> (dataContext: this.BusinessContext.DataContext).Where (x => x.Country.CountryCode == this.selectedCountry.CountryCode);
+					return this.Data.GetAllEntities<LocationEntity> (dataContext: this.DataContext).Where (x => x.Country.CountryCode == this.selectedCountry.CountryCode);
 				}
 			}
 		}
@@ -737,7 +739,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			if (string.IsNullOrEmpty (this.Entity.Address.Location.Country.CountryCode))  // pays indéfini ?
 			{
-				foreach (var country in this.Data.GetAllEntities<CountryEntity> ().ToList ())
+				foreach (var country in this.Data.GetAllEntities<CountryEntity> (dataContext: this.DataContext))
 				{
 					if (country.CountryCode == "CH")
 					{
