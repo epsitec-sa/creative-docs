@@ -9,6 +9,7 @@ using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Infrastructure;
+using Epsitec.Cresus.DataLayer.Schema;
 using Epsitec.Cresus.DataLayer.Serialization;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Entities;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Helpers;
@@ -42,8 +43,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Serialization
 		[TestMethod]
 		public void EntitySerializationManagerConstructorTest()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
 				new EntitySerializationManager (dataContext);
@@ -64,8 +65,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Serialization
 		[TestMethod]
 		public void SerializeArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
 				ExceptionAssert.Throw<System.ArgumentNullException>
@@ -79,8 +80,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Serialization
 		[TestMethod]
 		public void DeserializeArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
 				ExceptionAssert.Throw<System.ArgumentNullException>
@@ -104,8 +105,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Serialization
 		[TestMethod]
 		public void SerializeAndDeserialize()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
 				EntitySerializationManager serializer = new EntitySerializationManager (dataContext);
@@ -124,8 +125,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Serialization
 		[TestMethod]
 		public void Deserialize()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
@@ -176,7 +177,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Serialization
 		{
 			Druid leafEntityId = entity1.GetEntityStructuredTypeId();
 
-			var fieldIds = from field in dataContext.DataInfrastructure.EntityTypeEngine.GetValueFields (leafEntityId)
+			var fieldIds = from field in dataContext.DataInfrastructure.EntityEngine.TypeEngine.GetValueFields (leafEntityId)
 						   select field.CaptionId;
 
 			foreach (Druid fieldId in fieldIds)
@@ -193,7 +194,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Serialization
 		{
 			Druid leafEntityId = entity1.GetEntityStructuredTypeId ();
 
-			var fieldIds = from field in dataContext.DataInfrastructure.EntityTypeEngine.GetReferenceFields (leafEntityId)
+			var fieldIds = from field in dataContext.DataInfrastructure.EntityEngine.TypeEngine.GetReferenceFields (leafEntityId)
 						   select field.CaptionId;
 
 			foreach (Druid fieldId in fieldIds)
@@ -217,7 +218,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Serialization
 		{
 			Druid leafEntityId = entity1.GetEntityStructuredTypeId ();
 
-			var fieldIds = from field in dataContext.DataInfrastructure.EntityTypeEngine.GetCollectionFields (leafEntityId)
+			var fieldIds = from field in dataContext.DataInfrastructure.EntityEngine.TypeEngine.GetCollectionFields (leafEntityId)
 						   select field.CaptionId;
 
 			foreach (Druid fieldId in fieldIds)

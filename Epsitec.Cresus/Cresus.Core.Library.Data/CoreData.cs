@@ -15,6 +15,7 @@ using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.ImportExport;
+using Epsitec.Cresus.DataLayer.Schema;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -25,14 +26,15 @@ namespace Epsitec.Cresus.Core
 {
 	public sealed partial class CoreData : System.IDisposable, ICoreComponentHost<CoreDataComponent>, ICoreManualComponent
 	{
-		public CoreData(CoreApp app, bool forceDatabaseCreation, bool allowDatabaseUpdate)
+		public CoreData(CoreApp app, bool forceDatabaseCreation, bool allowDatabaseUpdate, bool enableConnectionRecycling)
 		{
 			this.app = app;
 			this.app.RegisterComponent (this);
 			this.app.RegisterComponentAsDisposable (this);
 
-			this.ForceDatabaseCreation = forceDatabaseCreation;
-			this.AllowDatabaseUpdate   = allowDatabaseUpdate;
+			this.ForceDatabaseCreation		= forceDatabaseCreation;
+			this.AllowDatabaseUpdate		= allowDatabaseUpdate;
+			this.EnableConnectionRecycling	= enableConnectionRecycling;
 
 			this.components = new CoreComponentHostImplementation<CoreDataComponent> ();
 			this.independentEntityContext = new EntityContext (Resources.DefaultManager, EntityLoopHandlingMode.Throw, "Independent Entities");
@@ -93,6 +95,12 @@ namespace Epsitec.Cresus.Core
 		}
 
 		public bool								AllowDatabaseUpdate
+		{
+			get;
+			private set;
+		}
+
+		public bool								EnableConnectionRecycling
 		{
 			get;
 			private set;
@@ -444,7 +452,7 @@ namespace Epsitec.Cresus.Core
 
 		private static void CreateDatabase(System.IO.FileInfo file, DbAccess dbAccess, RawImportMode importMode)
 		{
-			if (Infrastructure.CheckDatabaseEsistence (dbAccess))
+			if (Infrastructure.CheckDatabaseExistence (dbAccess))
 			{
 				Infrastructure.DropDatabase (dbAccess);
 			}
@@ -452,14 +460,18 @@ namespace Epsitec.Cresus.Core
 			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
 			{
 				dbInfrastructure.CreateDatabase (dbAccess);
+			}
 
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure, Infrastructure.GetManagedEntityIds ()))
-				{
-					dataInfrastructure.OpenConnection ("root");
-					dataInfrastructure.CreateSchema (Infrastructure.GetManagedEntityIds ());
+			IEnumerable<Druid> managedEntityIds = Infrastructure.GetManagedEntityIds ();
 
-					CoreData.ImportDatabase (file, dataInfrastructure, importMode);
-				}
+			EntityEngine.Create (dbAccess, managedEntityIds);
+			EntityEngine entityEngine = EntityEngine.Connect (dbAccess, managedEntityIds);
+
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbAccess, entityEngine))
+			{
+				dataInfrastructure.OpenConnection ("root");
+
+				CoreData.ImportDatabase (file, dataInfrastructure, importMode);
 			}
 		}
 
@@ -475,16 +487,15 @@ namespace Epsitec.Cresus.Core
 
 		public static void ImportSharedData(System.IO.FileInfo file, DbAccess dbAccess)
 		{
-			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
+			IEnumerable<Druid> managedEntityIds = Infrastructure.GetManagedEntityIds ();
+
+			EntityEngine entityEngine = EntityEngine.Connect (dbAccess, managedEntityIds);
+
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbAccess, entityEngine))
 			{
-				dbInfrastructure.AttachToDatabase (dbAccess);
+				dataInfrastructure.OpenConnection ("root");
 
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure, Infrastructure.GetManagedEntityIds ()))
-				{
-					dataInfrastructure.OpenConnection ("root");
-
-					CoreData.ImportSharedData (file, dataInfrastructure);
-				}
+				CoreData.ImportSharedData (file, dataInfrastructure);
 			}
 		}
 		
@@ -500,16 +511,15 @@ namespace Epsitec.Cresus.Core
 
 		public static void ExportDatabase(System.IO.FileInfo file, DbAccess dbAccess, bool exportOnlyUserData)
 		{
-			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
+			IEnumerable<Druid> managedEntityIds = Infrastructure.GetManagedEntityIds ();
+
+			EntityEngine entityEngine = EntityEngine.Connect (dbAccess, managedEntityIds);
+
+			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbAccess, entityEngine))
 			{
-				dbInfrastructure.AttachToDatabase (dbAccess);
+				dataInfrastructure.OpenConnection ("root");
 
-				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure, Infrastructure.GetManagedEntityIds ()))
-				{
-					dataInfrastructure.OpenConnection ("root");
-
-					CoreData.ExportDatabase (file, dataInfrastructure, exportOnlyUserData);
-				}
+				CoreData.ExportDatabase (file, dataInfrastructure, exportOnlyUserData);
 			}
 		}
 

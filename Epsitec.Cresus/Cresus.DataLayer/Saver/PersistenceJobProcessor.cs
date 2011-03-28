@@ -59,16 +59,16 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			get
 			{
-				return this.DataContext.DataInfrastructure.SchemaEngine;
+				return this.DataContext.DataInfrastructure.EntityEngine.SchemaEngine;
 			}
 		}
 
 
-		private EntityTypeEngine EntityTypeEngine
+		private EntityTypeEngine TypeEngine
 		{
 			get
 			{
-				return this.DataContext.DataInfrastructure.EntityTypeEngine;
+				return this.DataContext.DataInfrastructure.EntityEngine.TypeEngine;
 			}
 		}
 
@@ -186,7 +186,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
-			foreach (var localEntityType in this.EntityTypeEngine.GetBaseTypes (leafEntityId))
+			foreach (var localEntityType in this.TypeEngine.GetBaseTypes (leafEntityId))
 			{
 				this.DeleteEntityValues (transaction, localEntityType.CaptionId, dbKey);
 			}
@@ -226,11 +226,11 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
-			foreach (var entityType in this.EntityTypeEngine.GetBaseTypes (leafEntityId))
+			foreach (var entityType in this.TypeEngine.GetBaseTypes (leafEntityId))
 			{
 				Druid localEntityId = entityType.CaptionId;
 
-				foreach (var field in this.EntityTypeEngine.GetLocalCollectionFields (localEntityId))
+				foreach (var field in this.TypeEngine.GetLocalCollectionFields (localEntityId))
 				{
 					Druid fieldId = field.CaptionId;
 
@@ -251,7 +251,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
-			foreach (var item in this.EntityTypeEngine.GetReferencingFields (leafEntityId))
+			foreach (var item in this.TypeEngine.GetReferencingFields (leafEntityId))
 			{
 				Druid localSourceEntityId = item.Key.CaptionId;
 
@@ -698,7 +698,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 				Druid fieldId = fieldIdWithValue.Key;
 				object value = fieldIdWithValue.Value;
 
-				var field = this.EntityTypeEngine.GetField (localEntityId, fieldId);
+				var field = this.TypeEngine.GetField (localEntityId, fieldId);
 
 				AbstractType fieldType = field.Type as AbstractType;
 				INullableType nullableType = field.GetNullableType ();

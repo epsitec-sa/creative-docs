@@ -7,6 +7,7 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer.Infrastructure;
+using Epsitec.Cresus.DataLayer.Schema;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -16,30 +17,56 @@ using Epsitec.Cresus.Core.Factories;
 
 namespace Epsitec.Cresus.Core.Data
 {
-	public sealed class Infrastructure : CoreDataComponent, System.IDisposable
+	public sealed class Infrastructure : CoreDataComponent, IIsDisposed
 	{
+
+		// HACK This class has been temporarily hacked because of how things happens in Cresus.Core
+		// in order to be retro compatible until things are changed there. The hack in the class is
+		// the initialization of the field this.dataInfrastructure done in the constructor that must
+		// be removed and the ConnectToDatabase method and its call site that must be reverted back
+		// to their original values.
+		// Also, in order to remove this hack, things have to be cleaned up, regarding the order
+		// in which the components are set up, how they access the DataInfrastructure property of
+		// this object, etc. This property should never be called before this object setup method
+		// has been called. That's why there is this assertion. So probably that the sequence of
+		// CanExecuteSetupPhase and ExecuteSetupPhase methods must be changed in some
+		// CoreDataComponents. Moreover, maybe there should be some changes in how stuff is done,
+		// like to have a second setup phase for objects that implement ICoreManualComponent, to
+		// ensure that this object is properly initialized when they are initialized.
+		// Marc
+
 		public Infrastructure(CoreData data)
 			: base (data)
 		{
-			this.dbInfrastructure = new DbInfrastructure ();
-			this.dataInfrastructure = new DataLayer.Infrastructure.DataInfrastructure (this.dbInfrastructure, Infrastructure.GetManagedEntityIds ());
+			this.dataInfrastructure = new DataInfrastructure (DbAccess.Empty, null);
+			this.isDisposed = false;
 		}
-
 
 		public DataInfrastructure DataInfrastructure
 		{
 			get
 			{
+				// This assertion will fire as if this property is called but the ExecupteSetupPhase
+				// method has not yet been called. See comment above.
+				// Marc
+				System.Diagnostics.Debug.Assert (this.Host.IsReady);
+
 				return this.dataInfrastructure;
+			}	
+		}
+
+		#region IIsDisposed Members
+
+		public bool IsDisposed
+		{
+			get
+			{
+				return this.isDisposed;
 			}
 		}
 
-		public override bool CanExecuteSetupPhase()
-		{
-			return this.Host.ConnectionManager != null
-				&& this.Host.DataLocker != null;
-		}
-
+		#endregion
+	
 		public override void ExecuteSetupPhase()
 		{
 			base.ExecuteSetupPhase ();
@@ -50,145 +77,72 @@ namespace Epsitec.Cresus.Core.Data
 			this.Host.IsReady = true;
 		}
 
-		#region IDisposable Members
-
-		public void Dispose()
-		{
-			this.dataInfrastructure.Dispose ();
-
-			if (this.dbInfrastructure.IsConnectionOpen)
-			{
-				this.dbInfrastructure.Dispose ();
-			}
-		}
-
-		#endregion
-
-		public void SetupDatabase(bool createNewDatabase)
-		{
-			createNewDatabase |= this.Host.ForceDatabaseCreation;
-
-			if (createNewDatabase)
-			{
-				this.CreateDatabaseSchemas ();
-				this.PopulateDatabase ();
-			}
-			else
-			{
-				this.VerifyDatabaseSchemas ();
-				this.ReloadDatabase ();
-			}
-
-			this.ValidateConnection ();
-			this.VerifyUidGenerators ();
-		}
-
 		public void SetupDatabase()
 		{
-			System.Diagnostics.Debug.Assert (this.dbInfrastructure.IsConnectionOpen == false);
+			var access = CoreData.GetDatabaseAccess ();
+			var managedEntityTypeIds = Infrastructure.GetManagedEntityIds ();
 
-			var databaseAccess = CoreData.GetDatabaseAccess ();
+			bool forceDatabaseCreation = this.Host.ForceDatabaseCreation;
+			bool allowDatabaseUpdate = this.Host.AllowDatabaseUpdate;
 
 			try
 			{
-				bool databaseIsNew  = this.ConnectToDatabase (databaseAccess);
+				bool databaseExists = Infrastructure.CheckDatabaseExistence (access);
 
-				System.Diagnostics.Debug.Assert (this.dbInfrastructure.IsConnectionOpen);
-
-//-				var context = this.Data.CreateDataContext ("setup-only");
-//-				this.Data.SetupDataContext (context);
-				this.SetupDatabase (createNewDatabase: databaseIsNew);
-//-				this.Data.DisposeDataContext (context);
-				
-				System.Diagnostics.Debug.WriteLine ("Database ready");
-			}
-			catch (Epsitec.Cresus.Database.Exceptions.IncompatibleDatabaseException ex)
-			{
-				// TODO All this part where we try to update the schema of the database if it is
-				// incompatible is experimental, and must be checked/modified in order to be of
-				// production quality.
-				// Marc
-
-				System.Diagnostics.Trace.WriteLine ("Failed to connect to database: " + ex.Message + "\n\n" + ex.StackTrace);
-
-				if (this.Host.AllowDatabaseUpdate)
+				if (forceDatabaseCreation && databaseExists)
 				{
-					IDialog d = MessageDialog.CreateYesNo ("Base de donnée incompatible", DialogIcon.Warning, "La base de donnée est incompatible. Voulez vous la modifier pour la mettre à jour?");
+					Infrastructure.DropDatabase (access);
+				}
 
-					d.OpenDialog ();
+				bool createDatabase = forceDatabaseCreation || !databaseExists;
 
-					if (d.Result == DialogResult.Yes)
-					{
-						try
-						{
-							this.dataInfrastructure.UpdateSchema (Infrastructure.GetManagedEntityIds ());
-						}
-						catch (System.Exception e)
-						{
-							UI.ShowErrorMessage ("Erreur", "Impossible de mettre à jour la base de donnée.", e);
-						}
-					}
-
-					System.Environment.Exit (0);
+				if (createDatabase)
+				{
+					Infrastructure.CreateDatabase (access);
+					Infrastructure.CreateDatabaseSchemas (access, managedEntityTypeIds);
 				}
 				else
 				{
-					// TODO This way of exiting the program is kind of violent. It might be a
-					// good idea to soften it.
-					// Marc
+					bool valid = Infrastructure.VerifyDatabaseSchemas (access, managedEntityTypeIds);
 
-					UI.ShowErrorMessage (
-						Res.Strings.Error.IncompatibleDatabase,
-						Res.Strings.Hint.Error.IncompatibleDatabase, ex);
+					if (!valid)
+					{
+						bool updateAllowed = Infrastructure.IsDatabasesSchemaUpdateAllowed (allowDatabaseUpdate);
+						
+						bool updateSuccess = false;
 
-					System.Environment.Exit (0);
+						if (updateAllowed)
+						{
+							updateSuccess = Infrastructure.UpdateDatabaseSchemas (access, managedEntityTypeIds);
+						}
+
+						if (!updateAllowed)
+						{
+							throw new System.Exception ("Database schema is incompatible.");
+						}
+						else if (!updateSuccess)
+						{
+							throw new System.Exception ("Error while updating database schema.");
+						}
+					}
 				}
+
+				this.dataInfrastructure = Infrastructure.ConnectToDatabase (this.dataInfrastructure, access, managedEntityTypeIds);
 			}
 			catch (System.Exception ex)
 			{
-				UI.ShowErrorMessage (
+				UI.ShowErrorMessage
+				(
 					Res.Strings.Error.CannotConnectToLocalDatabase,
-					Res.Strings.Hint.Error.CannotConnectToLocalDatabase, ex);
+					Res.Strings.Hint.Error.CannotConnectToLocalDatabase,
+					ex
+				);
 
 				System.Environment.Exit (0);
 			}
 		}
-		
-		internal bool ConnectToDatabase(DbAccess access)
-		{
-			bool forceCreation = this.Host.ForceDatabaseCreation;
 
-			if (forceCreation && Infrastructure.CheckDatabaseEsistence (access))
-			{
-				Infrastructure.DropDatabase (access);
-			}
-
-			try
-			{
-				if (Infrastructure.CheckDatabaseEsistence (access))
-				{
-					this.dbInfrastructure.AttachToDatabase (access);
-					System.Diagnostics.Trace.WriteLine ("Connected to database");
-					return false;
-				}
-			}
-			catch (Epsitec.Cresus.Database.Exceptions.IncompatibleDatabaseException)
-			{
-				throw;
-			}
-			catch (System.Exception ex)
-			{
-				System.Diagnostics.Trace.WriteLine ("Failed to connect to database: " + ex.Message + "\n\n" + ex.StackTrace);
-			}
-
-			System.Diagnostics.Trace.WriteLine ("Cannot connect to database");
-			this.dbInfrastructure.CreateDatabase (access);
-			System.Diagnostics.Trace.WriteLine ("Created new database");
-
-			return true;
-		}
-
-		internal static bool CheckDatabaseEsistence(DbAccess access)
+		internal static bool CheckDatabaseExistence(DbAccess access)
 		{
 			return DbInfrastructure.CheckDatabaseExistence (access);
 		}
@@ -198,68 +152,85 @@ namespace Epsitec.Cresus.Core.Data
 			DbInfrastructure.DropDatabase (access);
 		}
 
-		private void ValidateConnection()
+		private static void CreateDatabase(DbAccess access)
 		{
-			this.connectionManager.Validate ();
-		}
-
-		private void VerifyUidGenerators()
-		{
-#if false
-			this.refIdGeneratorPool.GetGenerator<RelationEntity> ();
-			this.refIdGeneratorPool.GetGenerator<AffairEntity> ();
-			this.refIdGeneratorPool.GetGenerator<ArticleDefinitionEntity> ();
-#endif
-		}
-
-		private void VerifyDatabaseSchemas()
-		{
-			this.connectionManager.Validate ();
-
-			if (!this.dataInfrastructure.CheckSchema (Infrastructure.GetManagedEntityIds ()))
+			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
 			{
-				throw new Epsitec.Cresus.Database.Exceptions.IncompatibleDatabaseException ("Incompatible database schema");
+				dbInfrastructure.CreateDatabase (access);
 			}
 		}
 
-		public static IEnumerable<Druid> GetManagedEntityIds()
+		private static void CreateDatabaseSchemas(DbAccess access, IEnumerable<Druid> managedEntityTypeIds)
 		{
-			return Infrastructure.GetManagedEntityStructuredTypes ().Select (x => x.CaptionId);
+			EntityEngine.Create (access, managedEntityTypeIds);
 		}
 
-		public static IEnumerable<StructuredType> GetManagedEntityStructuredTypes()
+		private static bool VerifyDatabaseSchemas(DbAccess access, IEnumerable<Druid> managedEntityTypeIds)
 		{
-			var allEntityIds = EntityClassFactory.GetAllEntityIds ();
+			return EntityEngine.Check (access, managedEntityTypeIds);
+		}
 
-			foreach (var type in allEntityIds.Select (x => EntityInfo.GetStructuredType (x)))
+		private static bool IsDatabasesSchemaUpdateAllowed(bool allowDatabaseUpdate)
+		{
+			bool updateAllowed = false;
+
+			if (allowDatabaseUpdate)
 			{
-				if (type.Flags.HasFlag (StructuredTypeFlags.GenerateSchema))
+				IDialog d = MessageDialog.CreateYesNo ("Base de donnée incompatible", DialogIcon.Warning, "La base de donnée est incompatible. Voulez vous la modifier pour la mettre à jour?");
+
+				d.OpenDialog ();
+
+				if (d.Result == DialogResult.Yes)
 				{
-					yield return type;
+					updateAllowed = true;
 				}
 			}
+
+			return updateAllowed;
 		}
 
-
-		private void CreateDatabaseSchemas()
+		private static bool UpdateDatabaseSchemas(DbAccess access, IEnumerable<Druid> managedEntityTypeIds)
 		{
-			this.connectionManager.Validate ();
-			this.dataInfrastructure.CreateSchema (Infrastructure.GetManagedEntityIds ());
+			try
+			{
+				EntityEngine.Update (access, managedEntityTypeIds);
+
+				return true;
+			}
+			catch (System.Exception e)
+			{
+				return false;
+			}
 		}
 
-		private void PopulateDatabase()
+		private static DataInfrastructure ConnectToDatabase(DataInfrastructure dataInfrastructure /*TMP ARGUMENT*/, DbAccess access, IEnumerable<Druid> managedEntityTypeIds)
 		{
-			this.connectionManager.Validate ();
+			EntityEngine entityEngine = EntityEngine.Connect (access, managedEntityTypeIds);
 
-//-			this.PopulateDatabaseHack ();
-//-			this.PopulateUsers ();
+			//return new DataInfrastructure (access, entityEngine, enableConnectionRecycling);
+			/* TMP STUFF */
+			dataInfrastructure.TMPSETUP (access, entityEngine);
+
+			return dataInfrastructure;
 		}
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			if (!this.isDisposed)
+			{
+				if (this.dataInfrastructure != null)
+				{
+					this.dataInfrastructure.Dispose ();
+				}
+
+				this.isDisposed = true;		
+			}
+		}
+
+		#endregion
 		
-		private void ReloadDatabase()
-		{
-			// TODO
-		}
-
 		#region Factory Class
 
 		private sealed class Factory : ICoreDataComponentFactory
@@ -286,8 +257,27 @@ namespace Epsitec.Cresus.Core.Data
 
 		#endregion
 
-		private readonly DbInfrastructure dbInfrastructure;
-		private readonly DataLayer.Infrastructure.DataInfrastructure dataInfrastructure;
+		public static IEnumerable<Druid> GetManagedEntityIds()
+		{
+			return Infrastructure.GetManagedEntityStructuredTypes ().Select (x => x.CaptionId);
+		}
+
+		public static IEnumerable<StructuredType> GetManagedEntityStructuredTypes()
+		{
+			var allEntityIds = EntityClassFactory.GetAllEntityIds ();
+
+			foreach (var type in allEntityIds.Select (x => EntityInfo.GetStructuredType (x)))
+			{
+				if (type.Flags.HasFlag (StructuredTypeFlags.GenerateSchema))
+				{
+					yield return type;
+				}
+			}
+		}
+
+		private DataInfrastructure dataInfrastructure;
 		private ConnectionManager connectionManager;
+		private bool isDisposed;
+
 	}
 }

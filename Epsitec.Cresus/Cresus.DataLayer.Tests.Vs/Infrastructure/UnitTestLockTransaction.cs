@@ -6,6 +6,7 @@ using Epsitec.Cresus.Database;
 using Epsitec.Cresus.Database.Services;
 
 using Epsitec.Cresus.DataLayer.Infrastructure;
+using Epsitec.Cresus.DataLayer.Schema;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -44,11 +45,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				List<string> lockNames = new List<string> ()
-		    {
-		        "myLock1",
-		        "myLock2",
-		        "myLock3",
-		    };
+				{
+					"myLock1",
+					"myLock2",
+					"myLock3",
+				};
 				long connectionId = 0;
 
 				ExceptionAssert.Throw<System.ArgumentNullException>

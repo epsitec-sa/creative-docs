@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		[TestMethod]
 		public void CreateNormalizedEntityKeyTest()
 		{
-			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			List<System.Tuple<Druid, Druid>> samples = new List<System.Tuple<Druid, Druid>> ()
 			{
@@ -227,7 +227,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		[TestMethod]
 		public void NormalizeEntityKeyTest()
 		{
-			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			List<System.Tuple<Druid, Druid>> samples = new List<System.Tuple<Druid, Druid>> ()
 			{

@@ -3,6 +3,7 @@
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Infrastructure;
+using Epsitec.Cresus.DataLayer.Schema;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -263,11 +264,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 					string name = "myCounter" + i;
 
 					List<UidSlot> slots = new List<UidSlot> ()
-				{
-					new UidSlot (20, 29),
-					new UidSlot (0, 9),
-					new UidSlot (10, 19),
-				};
+					{
+						new UidSlot (20, 29),
+						new UidSlot (0, 9),
+						new UidSlot (10, 19),
+					};
 
 					Assert.IsFalse (UidGenerator.UidGeneratorExists (dbInfrastructure, name));
 
@@ -304,9 +305,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 				string name = "myCounter";
 
 				List<UidSlot> slots = new List<UidSlot> ()
-			{
-				new UidSlot (0, 9),
-			};
+				{
+					new UidSlot (0, 9),
+				};
 
 				UidGenerator.CreateUidGenerator (dbInfrastructure, name, slots);
 

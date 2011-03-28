@@ -57,16 +57,16 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			get
 			{
-				return this.DataContext.DataInfrastructure.SchemaEngine;
+				return this.DataContext.DataInfrastructure.EntityEngine.SchemaEngine;
 			}
 		}
 
 
-		private EntityTypeEngine EntityTypeEngine
+		private EntityTypeEngine TypeEngine
 		{
 			get
 			{
-				return this.DataContext.DataInfrastructure.EntityTypeEngine;
+				return this.DataContext.DataInfrastructure.EntityEngine.TypeEngine;
 			}
 		}
 
@@ -100,20 +100,20 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			Druid leafEntityId = job.Entity.GetEntityStructuredTypeId ();
 
 			IEnumerable<DbTable> localEntityTables =
-				from localEntityType in this.EntityTypeEngine.GetBaseTypes (leafEntityId)
+				from localEntityType in this.TypeEngine.GetBaseTypes (leafEntityId)
 				select this.SchemaEngine.GetEntityTable (localEntityType.CaptionId);
 
 			IEnumerable<DbTable> collectionOutTables = 
-				from localEntityType in this.EntityTypeEngine.GetBaseTypes (leafEntityId)
+				from localEntityType in this.TypeEngine.GetBaseTypes (leafEntityId)
 				let localEntityId = localEntityType.CaptionId
-				from field in this.EntityTypeEngine.GetLocalCollectionFields (localEntityId)
+				from field in this.TypeEngine.GetLocalCollectionFields (localEntityId)
 				let fieldId = field.CaptionId
 				select this.SchemaEngine.GetEntityFieldTable (localEntityId, fieldId);
 
 			List<DbTable> referenceInTables = new List<DbTable> ();
 			List<DbTable> collectionInTables = new List<DbTable> ();
 
-			foreach (var item in this.EntityTypeEngine.GetReferencingFields (leafEntityId))
+			foreach (var item in this.TypeEngine.GetReferencingFields (leafEntityId))
 			{
 				Druid localSourceEntityId = item.Key.CaptionId;
 

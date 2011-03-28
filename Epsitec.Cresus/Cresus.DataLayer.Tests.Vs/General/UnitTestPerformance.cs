@@ -9,6 +9,7 @@ using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Infrastructure;
+using Epsitec.Cresus.DataLayer.Schema;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Entities;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Helpers;
 
@@ -78,7 +79,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 			for (int i = 1; i <= 3; i++)
 			{
-				foreach (Druid entityTypeId in DataInfrastructureHelper.GetEntityIds ())
+				foreach (Druid entityTypeId in EntityEngineHelper.GetEntityTypeIds ())
 				{
 					this.RetrieveAllData (entityTypeId, i);
 				}				
@@ -96,7 +97,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				dataContext.GetByExample (entity).Count ();
 			};
 
-			this.Execute (title, action, warmupLevel);
+			this.Execute (title, action, warmupLevel, UnitTestPerformance.nbRuns);
 		}
 
 
@@ -128,7 +129,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				dataContext.GetByExample<UriContactEntity> (example).Count ();
 			};
 
-			this.Execute (title, action, warmupLevel);
+			this.Execute (title, action, warmupLevel, UnitTestPerformance.nbRuns);
 		}
 
 
@@ -148,7 +149,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				dataContext.GetByExample<UriContactEntity> (example).Count ();
 			};
 
-			this.Execute (title, action, warmupLevel);
+			this.Execute (title, action, warmupLevel, UnitTestPerformance.nbRuns);
 		}
 
 		
@@ -180,7 +181,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				dataContext.GetByExample<LocationEntity> (example).Count ();
 			};
 
-			this.Execute (title, action, warmupLevel);
+			this.Execute (title, action, warmupLevel, UnitTestPerformance.nbRuns);
 		}
 
 
@@ -200,7 +201,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				dataContext.GetByExample<LocationEntity> (example).Count ();
 			};
 
-			this.Execute (title, action, warmupLevel);
+			this.Execute (title, action, warmupLevel, UnitTestPerformance.nbRuns);
 		}
 
 
@@ -232,7 +233,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				dataContext.GetByExample<LegalPersonEntity> (example).Count ();
 			};
 
-			this.Execute (title, action, warmupLevel);
+			this.Execute (title, action, warmupLevel, UnitTestPerformance.nbRuns);
 		}
 
 
@@ -252,7 +253,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				dataContext.GetByExample<LegalPersonEntity> (example).Count ();
 			};
 
-			this.Execute (title, action, warmupLevel);
+			this.Execute (title, action, warmupLevel, UnitTestPerformance.nbRuns);
 		}
 
 
@@ -284,7 +285,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				dataContext.GetByExample<AbstractContactEntity> (example).Count ();
 			};
 
-			this.Execute (title, action, warmupLevel);
+			this.Execute (title, action, warmupLevel, UnitTestPerformance.nbRuns);
 		}
 
 
@@ -304,7 +305,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				dataContext.GetByExample<AbstractContactEntity> (example).Count ();
 			};
 
-			this.Execute (title, action, warmupLevel);
+			this.Execute (title, action, warmupLevel, UnitTestPerformance.nbRuns);
 		}
 
 
@@ -343,7 +344,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				dataContext.GetByExample<NaturalPersonEntity> (example).Count ();
 			};
 
-			this.Execute (title, action, warmupLevel);
+			this.Execute (title, action, warmupLevel, UnitTestPerformance.nbRuns);
 		}
 
 
@@ -370,7 +371,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				dataContext.GetByExample<NaturalPersonEntity> (example).Count ();
 			};
 
-			this.Execute (title, action, warmupLevel);
+			this.Execute (title, action, warmupLevel, UnitTestPerformance.nbRuns);
 		}
 
 
@@ -402,7 +403,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				dataContext.GetByExample<MailContactEntity> (example).Select (c => c.Address).Count ();
 			};
 
-			this.Execute (title, action, warmupLevel);
+			this.Execute (title, action, warmupLevel, UnitTestPerformance.nbRuns);
 		}
 
 
@@ -422,7 +423,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				dataContext.GetByExample<MailContactEntity> (example).Select (c => c.Address).Count ();
 			};
 
-			this.Execute (title, action, warmupLevel);
+			this.Execute (title, action, warmupLevel, UnitTestPerformance.nbRuns);
 		}
 
 
@@ -435,7 +436,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			{
 				for (int i = 1; i <= 2; i++)
 				{
-					foreach (Druid entityTypeId in DataInfrastructureHelper.GetEntityIds ())
+					foreach (Druid entityTypeId in EntityEngineHelper.GetEntityTypeIds ())
 					{
 						this.DeleteEntity (entityTypeId, i);
 					}
@@ -473,7 +474,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		}
 
 
-		public void Execute(string title, System.Action<DataContext> action, int warmupLevel, int nbRuns = UnitTestPerformance.nbRuns)
+		public void Execute(string title, System.Action<DataContext> action, int warmupLevel, int nbRuns)
 		{
 			switch (warmupLevel)
 			{
@@ -503,8 +504,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				UnitTestPerformance.logFile,
 				() =>
 				{
-					using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-					using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+					
+					using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 					using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 					{
 						action (dataContext);
@@ -517,8 +518,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		private void ExecuteWarmupLevel2(string title, System.Action<DataContext> action, int nbRuns)
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				TestHelper.MeasureAndWriteTime (
 					title,
@@ -538,8 +539,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		private void ExecuteWarmupLevel3(string title, System.Action<DataContext> action, int nbRun)
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
 				action (dataContext);
@@ -563,16 +564,17 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		};
 
 
-		private const int nbRuns = 1;
+		private static readonly int nbRuns = 1;
+				
 
 
-		private const bool createDatabase = true;
+		private static readonly bool createDatabase = true;
+				
 
+		private static readonly bool runDeleteTests = true;
+				
 
-		private const bool runDeleteTests = true;
-
-
-		private const DatabaseSize databaseSize = DatabaseSize.Small;
+		private static readonly DatabaseSize databaseSize = DatabaseSize.Small;
 
 
 		private const string logFile = @"results.txt";

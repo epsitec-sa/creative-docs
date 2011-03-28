@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			var fields = exportableEntities
 				.Select (e => e.GetEntityStructuredTypeId ())
 				.Distinct ()
-				.SelectMany (d => dataContext.DataInfrastructure.EntityTypeEngine.GetFields (d))
+				.SelectMany (d => dataContext.DataInfrastructure.EntityEngine.TypeEngine.GetFields (d))
 				.Select (d => d.CaptionId)
 				.Distinct ();
 
@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			xEntity.SetAttributeValue (XName.Get (XmlConstants.DefinitionIdTag), eId);
 			xEntity.SetAttributeValue (XName.Get (XmlConstants.DruidTag), eDruid);
 
-			foreach (var field in dataContext.DataInfrastructure.EntityTypeEngine.GetFields (entityDruid))
+			foreach (var field in dataContext.DataInfrastructure.EntityEngine.TypeEngine.GetFields (entityDruid))
 			{
 				Druid fieldDruid = field.CaptionId;
 				int fieldId = fieldDefinitionsToIds[fieldDruid];
@@ -159,7 +159,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		{
 			XElement xEntity = XmlEntitySerializer.CreateXElementForEntity (entitiesToIds, entityDefinitionsToIds, entity);
 
-			foreach (StructuredTypeField field in dataContext.DataInfrastructure.EntityTypeEngine.GetFields (entity.GetEntityStructuredTypeId ()))
+			foreach (StructuredTypeField field in dataContext.DataInfrastructure.EntityEngine.TypeEngine.GetFields (entity.GetEntityStructuredTypeId ()))
 			{
 				XElement xField = XmlEntitySerializer.SerializeEntityField(discardedEntities, entitiesToIds, fieldDefinitionsToIds, entity, field);
 
@@ -411,7 +411,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 				int entityId = InvariantConverter.ConvertFromString<int> (eId);
 				Druid entityDruid = Druid.Parse (eDruid);
 
-				StructuredType entityDefinition = dataContext.DataInfrastructure.EntityTypeEngine.GetEntityType (entityDruid);
+				StructuredType entityDefinition = dataContext.DataInfrastructure.EntityEngine.TypeEngine.GetEntityType (entityDruid);
 
 				idsToEntityDefinitions[entityId] = entityDefinition;
 			}
@@ -437,7 +437,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 					int fieldId = InvariantConverter.ConvertFromString<int> (fId);
 					Druid fieldDruid = Druid.Parse (fDruid);
 
-					StructuredTypeField fieldDefinition = dataContext.DataInfrastructure.EntityTypeEngine.GetField (entityDruid, fieldDruid);
+					StructuredTypeField fieldDefinition = dataContext.DataInfrastructure.EntityEngine.TypeEngine.GetField (entityDruid, fieldDruid);
 
 					idsToFieldDefinitions[fieldId] = fieldDefinition;
 				}

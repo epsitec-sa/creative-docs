@@ -7,6 +7,7 @@ using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.ImportExport;
 using Epsitec.Cresus.DataLayer.Infrastructure;
+using Epsitec.Cresus.DataLayer.Schema;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Entities;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Helpers;
 
@@ -45,8 +46,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		{
 			FileInfo file = new FileInfo ("test.xml");
 
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = dataInfrastructure.CreateDataContext (true))
 			{
 				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
@@ -67,13 +68,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 				ImportExportManager.Export (file, dataContext, entities, e => true, ExportationMode.PersistedEntities);
 			}
 
-			DbInfrastructureHelper.ResetTestDatabase ();
-
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			DatabaseCreator2.ResetEmptyTestDatabase ();
+			
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DatabaseCreator2.RegisterSchema (dataInfrastructure);
-
 				ImportExportManager.Import (file, dataInfrastructure);
 
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -94,8 +92,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		{
 			FileInfo file = new FileInfo ("test.xml");
 
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = dataInfrastructure.CreateDataContext(true))
 			{
 				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
@@ -116,13 +114,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 				ImportExportManager.Export (file, dataContext, entities, e => true, ExportationMode.NonNullVirtualizedEntities);
 			}
 
-			DbInfrastructureHelper.ResetTestDatabase ();
-
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			DatabaseCreator2.ResetEmptyTestDatabase ();
+			
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DatabaseCreator2.RegisterSchema (dataInfrastructure);
-
 				ImportExportManager.Import (file, dataInfrastructure);
 
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -160,8 +155,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		{
 			FileInfo file = new FileInfo ("test.xml");
 
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
 				List<AbstractEntity> entities = new List<AbstractEntity> ()
@@ -172,13 +167,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 				ImportExportManager.Export (file, dataContext, entities, e => e is NaturalPersonEntity || e is UriContactEntity, ExportationMode.PersistedEntities);
 			}
 
-			DbInfrastructureHelper.ResetTestDatabase ();
+			DatabaseCreator2.ResetEmptyTestDatabase ();
 
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DatabaseCreator2.RegisterSchema (dataInfrastructure);
-
 				ImportExportManager.Import (file, dataInfrastructure);
 
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -213,9 +205,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		public void EmptyGraph()
 		{
 			FileInfo file = new FileInfo ("test.xml");
-
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
 				List<AbstractEntity> entities = new List<AbstractEntity> ()
@@ -226,13 +217,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 				ImportExportManager.Export (file, dataContext, entities, e => false, ExportationMode.PersistedEntities);
 			}
 
-			DbInfrastructureHelper.ResetTestDatabase ();
-
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			DatabaseCreator2.ResetEmptyTestDatabase ();
+			
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DatabaseCreator2.RegisterSchema (dataInfrastructure);
-
 				ImportExportManager.Import (file, dataInfrastructure);
 
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))

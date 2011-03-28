@@ -169,6 +169,7 @@
     <Compile Include="Proxies\KeyedReferenceFieldProxy.cs" />
     <Compile Include="Saver\PersistenceJobTableComputer.cs" />
     <Compile Include="Schema\DataConverter.cs" />
+    <Compile Include="Schema\EntityEngine.cs" />
     <Compile Include="Schema\EntityTypeEngine.cs" />
     <Compile Include="Serialization\EntitySerializationManager.cs" />
     <Compile Include="Expressions\Operation.cs" />
@@ -223,7 +224,7 @@
     <Compile Include="Saver\SynchronizationJobs\ReferenceSynchronizationJob.cs" />
     <Compile Include="Saver\PersistenceJobs\ValuePersistenceJob.cs" />
     <Compile Include="Saver\SynchronizationJobs\ValueSynchronizationJob.cs" />
-    <Compile Include="Schema\SchemaBuilder.cs" />
+    <Compile Include="Schema\EntitySchemaBuilder.cs" />
     <Compile Include="Schema\EntitySchemaEngine.cs" />
   </ItemGroup>
   <ItemGroup>

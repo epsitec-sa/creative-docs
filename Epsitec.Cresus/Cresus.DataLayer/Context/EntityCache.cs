@@ -26,17 +26,25 @@ namespace Epsitec.Cresus.DataLayer.Context
 	{
 
 
+		// HACK This class has been temporarily hacked because of how things happens in Cresus.Core
+		// in order to be retro compatible until things are changed there. Hacks are the DataContext
+		// property and the DataContext argument in the constructor that must be removed and the
+		// EntityEngine property that must be transformed to a single field property and the check
+		// in the constructor that must be uncommented.
+		// Marc
+
+
 		/// <summary>
 		/// Builds a new empty <see cref="EntityCache"/>.
 		/// </summary>
 		/// <param name="entityTypeEngine">The <see cref="EntityTypeEngine"/> used by this instance.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="entityTypeEngine"/> is <c>null</c>.</exception>
-		public EntityCache(EntityTypeEngine entityTypeEngine)
+		public EntityCache(DataContext dataContext, EntityTypeEngine entityTypeEngine)
 		{
-			entityTypeEngine.ThrowIfNull ("entityTypeEngine");
+			//entityTypeEngine.ThrowIfNull ("entityTypeEngine");
 
 			this.EntityTypeEngine = entityTypeEngine;
-
+			this.DataContext = dataContext;
 			this.entityIdToEntity = new Dictionary<long, AbstractEntity> ();
 			this.entityIdToEntityKey = new Dictionary<long, EntityKey> ();
 			this.entityKeyToEntity = new Dictionary<EntityKey, AbstractEntity> ();
@@ -44,13 +52,27 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.entityIdToLogId = new Dictionary<long, long> ();
 		}
 
-
-
-		private EntityTypeEngine EntityTypeEngine
+		private DataContext DataContext
 		{
 			get;
 			set;
 		}
+		
+
+		private EntityTypeEngine EntityTypeEngine
+		{
+			get
+			{
+				return this.entityTypeEngine ?? this.DataContext.DataInfrastructure.EntityEngine.TypeEngine;
+			}
+			set
+			{
+				this.entityTypeEngine = value;
+			}
+		}
+
+
+		private EntityTypeEngine entityTypeEngine;
 		
 
 		/// <summary>

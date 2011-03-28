@@ -89,6 +89,7 @@
     <Compile Include="Context\UnitTestEntityKey.cs" />
     <Compile Include="Helpers\DataInfrastructureHelper.cs" />
     <Compile Include="Helpers\DbInfrastructureHelper.cs" />
+    <Compile Include="Helpers\EntityEngineHelper.cs" />
     <Compile Include="ImportExport\UnitTestRawEntitySerializer.cs" />
     <Compile Include="ImportExport\UnitTestImportExportManager.cs" />
     <Compile Include="ImportExport\UnitTestXmlEntitySerializer.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="Proxies\UnitTestReferenceFieldProxy.cs" />
     <Compile Include="Proxies\UnitTestCollectionFieldProxy.cs" />
     <Compile Include="Loader\UnitTestAliasNode.cs" />
+    <Compile Include="Schema\UnitTestEntityEngine.cs" />
     <Compile Include="Schema\UnitTestEntityTypeEngine.cs" />
     <Compile Include="Serialization\UnitTestCollectionData.cs" />
     <Compile Include="Serialization\UnitTestEntityData.cs" />
@@ -127,7 +129,7 @@
     <Compile Include="Loader\UnitTestRequest.cs" />
     <Compile Include="Expressions\UnitTestUnaryOperation.cs" />
     <Compile Include="Expressions\UnitTestUnaryComparison.cs" />
-    <Compile Include="Schema\UnitTestSchemaBuilder.cs" />
+    <Compile Include="Schema\UnitTestEntitySchemaBuilder.cs" />
     <Compile Include="Schema\UnitTestEntitySchemaEngine.cs" />
     <Compile Include="General\UnitTestSynchronization.cs" />
     <Compile Include="Saver\SynchronizationJobs\UnitTestDeleteSynchronizationJob.cs" />

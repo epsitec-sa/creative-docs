@@ -39,17 +39,14 @@ namespace Epsitec.Cresus.Core.Library.Data.Tests.Vs.Data
 		[TestMethod]
 		public void SimpleTest1()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataInfrastructure = DbInfrastructureHelper.CreateDataInfrastructure ())
 			{
-				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure, new Druid[0]))
-				{
-					dataInfrastructure.OpenConnection ("id");
+				dataInfrastructure.OpenConnection ("id");
 
-					using (LockTransaction lt = new LockTransaction (dataInfrastructure, new List<string> { "lock", }))
-					{
-						Assert.IsTrue (lt.Poll ());
-						Assert.IsTrue (lt.Acquire ());
-					}
+				using (LockTransaction lt = new LockTransaction (dataInfrastructure, new List<string> { "lock", }))
+				{
+					Assert.IsTrue (lt.Poll ());
+					Assert.IsTrue (lt.Acquire ());
 				}
 			}
 		}
@@ -58,55 +55,51 @@ namespace Epsitec.Cresus.Core.Library.Data.Tests.Vs.Data
 		[TestMethod]
 		public void SimpleTest2()
 		{
-			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataInfrastructure1 = DbInfrastructureHelper.CreateDataInfrastructure ())
+			using (var dataInfrastructure2 = DbInfrastructureHelper.CreateDataInfrastructure ())
 			{
-				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure1 = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure1, new Druid[0]))
-				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure2 = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure2, new Druid[0]))
+				string cId1 = new ConnectionUserIdentity (new ItemCode ("id1")).ToString ();
+				string cId2 = new ConnectionUserIdentity (new ItemCode ("id2")).ToString ();
+
+				dataInfrastructure1.OpenConnection (cId1);
+				dataInfrastructure2.OpenConnection (cId2);
+
+				using (LockTransaction lt1 = new LockTransaction (dataInfrastructure1, new List<string> { "lock1", "lock2" }))
+				using (LockTransaction lt2 = new LockTransaction (dataInfrastructure1, new List<string> { "lock2" }))
+				using (LockTransaction lt3 = new LockTransaction (dataInfrastructure2, new List<string> { "lock2", "lock3" }))
 				{
-					string cId1 = new ConnectionUserIdentity (new ItemCode ("id1")).ToString ();
-					string cId2 = new ConnectionUserIdentity (new ItemCode ("id2")).ToString ();
+					Assert.IsTrue (lt1.Poll ());
+					Assert.IsTrue (lt2.Poll ());
+					Assert.IsTrue (lt3.Poll ());
 
-					dataInfrastructure1.OpenConnection (cId1);
-					dataInfrastructure2.OpenConnection (cId2);
+					Assert.IsTrue (lt1.Acquire ());
 
-					using (LockTransaction lt1 = new LockTransaction (dataInfrastructure1, new List<string> { "lock1", "lock2" }))
-					using (LockTransaction lt2 = new LockTransaction (dataInfrastructure1, new List<string> { "lock2" }))
-					using (LockTransaction lt3 = new LockTransaction (dataInfrastructure2, new List<string> { "lock2", "lock3" }))
-					{
-						Assert.IsTrue (lt1.Poll ());
-						Assert.IsTrue (lt2.Poll ());
-						Assert.IsTrue (lt3.Poll ());
+					Assert.IsTrue (lt1.Poll ());
+					Assert.IsTrue (lt2.Poll ());
+					Assert.IsFalse (lt3.Poll ());
 
-						Assert.IsTrue (lt1.Acquire ());
+					Assert.IsTrue (lt2.Acquire ());
+					Assert.IsFalse (lt3.Acquire ());
 
-						Assert.IsTrue (lt1.Poll ());
-						Assert.IsTrue (lt2.Poll ());
-						Assert.IsFalse (lt3.Poll ());
+					Assert.IsTrue (lt1.Poll ());
+					Assert.IsTrue (lt2.Poll ());
+					Assert.IsFalse (lt3.Poll ());
 
-						Assert.IsTrue (lt2.Acquire ());
-						Assert.IsFalse (lt3.Acquire ());
+					lt1.Dispose ();
 
-						Assert.IsTrue (lt1.Poll ());
-						Assert.IsTrue (lt2.Poll ());
-						Assert.IsFalse (lt3.Poll ());
+					Assert.IsFalse (lt3.Acquire ());
 
-						lt1.Dispose ();
+					Assert.IsTrue (lt2.Poll ());
+					Assert.IsFalse (lt3.Poll ());
 
-						Assert.IsFalse (lt3.Acquire ());
+					lt2.Dispose ();
 
-						Assert.IsTrue (lt2.Poll ());
-						Assert.IsFalse (lt3.Poll ());
+					Assert.IsTrue (lt3.Poll ());
+					Assert.IsTrue (lt3.Acquire ());
 
-						lt2.Dispose ();
+					Assert.IsTrue (lt3.Poll ());
 
-						Assert.IsTrue (lt3.Poll ());
-						Assert.IsTrue (lt3.Acquire ());
-
-						Assert.IsTrue (lt3.Poll ());
-
-						lt3.Dispose ();
-					}
+					lt3.Dispose ();
 				}
 			}
 		}
@@ -115,49 +108,43 @@ namespace Epsitec.Cresus.Core.Library.Data.Tests.Vs.Data
 		[TestMethod]
 		public void GetLockOwnersAndCreationTimeTest()
 		{
-			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DbInfrastructure dbInfrastructure3 = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DbInfrastructure dbInfrastructure4 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataInfrastructure1 = DbInfrastructureHelper.CreateDataInfrastructure ())
+			using (var dataInfrastructure2 = DbInfrastructureHelper.CreateDataInfrastructure ())
+			using (var dataInfrastructure3 = DbInfrastructureHelper.CreateDataInfrastructure ())
+			using (var dataInfrastructure4 = DbInfrastructureHelper.CreateDataInfrastructure ())
 			{
-				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure1 = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure1, new Druid[0]))
-				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure2 = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure2, new Druid[0]))
-				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure3 = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure3, new Druid[0]))
-				using (Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure dataInfrastructure4 = new Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure (dbInfrastructure4, new Druid[0]))
+				string cId1 = new ConnectionUserIdentity (new ItemCode ("id1")).ToString ();
+				string cId2 = new ConnectionUserIdentity (new ItemCode ("id2")).ToString ();
+				string cId3 = new ConnectionUserIdentity (new ItemCode ("id3")).ToString ();
+				string cId4 = new ConnectionUserIdentity (new ItemCode ("id4")).ToString ();
+
+				dataInfrastructure1.OpenConnection (cId1);
+				dataInfrastructure2.OpenConnection (cId2);
+				dataInfrastructure3.OpenConnection (cId3);
+				dataInfrastructure4.OpenConnection (cId4);
+
+				using (LockTransaction lt1 = new LockTransaction (dataInfrastructure1, new List<string> { "lock1", "lock2" }))
+				using (LockTransaction lt2 = new LockTransaction (dataInfrastructure2, new List<string> { "lock3" }))
+				using (LockTransaction lt3 = new LockTransaction (dataInfrastructure3, new List<string> { "lock4" }))
+				using (LockTransaction lt4 = new LockTransaction (dataInfrastructure4, new List<string> { "lock1", "lock2", "lock3" }))
 				{
-					string cId1 = new ConnectionUserIdentity (new ItemCode ("id1")).ToString ();
-					string cId2 = new ConnectionUserIdentity (new ItemCode ("id2")).ToString ();
-					string cId3 = new ConnectionUserIdentity (new ItemCode ("id3")).ToString ();
-					string cId4 = new ConnectionUserIdentity (new ItemCode ("id4")).ToString ();
-					
-					dataInfrastructure1.OpenConnection (cId1);
-					dataInfrastructure2.OpenConnection (cId2);
-					dataInfrastructure3.OpenConnection (cId3);
-					dataInfrastructure4.OpenConnection (cId4);
+					Assert.IsTrue (lt1.Acquire ());
+					Assert.IsTrue (lt2.Acquire ());
+					Assert.IsTrue (lt3.Acquire ());
+					Assert.IsFalse (lt4.Acquire ());
 
-					using (LockTransaction lt1 = new LockTransaction (dataInfrastructure1, new List<string> { "lock1", "lock2" }))
-					using (LockTransaction lt2 = new LockTransaction (dataInfrastructure2, new List<string> { "lock3" }))
-					using (LockTransaction lt3 = new LockTransaction (dataInfrastructure3, new List<string> { "lock4" }))
-					using (LockTransaction lt4 = new LockTransaction (dataInfrastructure4, new List<string> { "lock1", "lock2", "lock3" }))
-					{
-						Assert.IsTrue (lt1.Acquire ());
-						Assert.IsTrue (lt2.Acquire ());
-						Assert.IsTrue (lt3.Acquire ());
-						Assert.IsFalse (lt4.Acquire ());
+					Assert.IsFalse (lt1.ForeignLockOwners.Any ());
+					Assert.IsFalse (lt2.ForeignLockOwners.Any ());
+					Assert.IsFalse (lt3.ForeignLockOwners.Any ());
 
-						Assert.IsFalse (lt1.ForeignLockOwners.Any ());
-						Assert.IsFalse (lt2.ForeignLockOwners.Any ());
-						Assert.IsFalse (lt3.ForeignLockOwners.Any ());
+					var expectedLockOwners4 = new Dictionary<string, string>
+		            {
+		                { "lock1", cId1 },
+		                { "lock2", cId1 },
+		                { "lock3", cId2 },
+		            };
 
-						var expectedLockOwners4 = new Dictionary<string, string>
-		                {
-		                    { "lock1", cId1 },
-		                    { "lock2", cId1 },
-		                    { "lock3", cId2 },
-		                };
-
-						this.CheckLockOwner (expectedLockOwners4, lt4.ForeignLockOwners);					
-					}
+					this.CheckLockOwner (expectedLockOwners4, lt4.ForeignLockOwners);
 				}
 			}
 		}

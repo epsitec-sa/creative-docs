@@ -5,6 +5,7 @@ using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Infrastructure;
+using Epsitec.Cresus.DataLayer.Schema;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Entities;
 
 using System.Collections.Generic;
@@ -196,21 +197,22 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Helpers
 
 		public static void PopulateDatabase(DatabaseSize size)
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			DbAccess access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
+			
+			List<Druid> entityIds = new List<Druid> ()
+			{
+				EntityInfo<NaturalPersonEntity>.GetTypeId (),
+				EntityInfo<MailContactEntity>.GetTypeId (),
+				EntityInfo<TelecomContactEntity>.GetTypeId (),
+				EntityInfo<UriContactEntity>.GetTypeId (),
+				EntityInfo<ValueDataEntity>.GetTypeId (),
+			};
+			
+			EntityEngine.Create (access, entityIds);
+
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				List<Druid> entityIds = new List<Druid> ()
-				{
-					EntityInfo<NaturalPersonEntity>.GetTypeId (),
-					EntityInfo<MailContactEntity>.GetTypeId (),
-					EntityInfo<TelecomContactEntity>.GetTypeId (),
-					EntityInfo<UriContactEntity>.GetTypeId (),
-					EntityInfo<ValueDataEntity>.GetTypeId (),
-				};
-
-				dataInfrastructure.CreateSchema (entityIds);
-
 				System.Diagnostics.Debug.WriteLine ("Populating database. This might take a few minutes");
 
 				int nbContactRoles = DatabaseCreator1.NbElements["contactRoles"][size];

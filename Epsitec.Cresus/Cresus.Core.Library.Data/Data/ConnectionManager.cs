@@ -21,8 +21,6 @@ namespace Epsitec.Cresus.Core.Data
 		public ConnectionManager(CoreData data)
 			: base (data)
 		{
-			this.dataInfrastructure = data.DataInfrastructure;
-			
 			this.keepAliveTimer = new Timer ()
 			{
 				AutoRepeat = ConnectionManager.KeepAlivePeriodInSeconds,
@@ -31,15 +29,14 @@ namespace Epsitec.Cresus.Core.Data
 
 			this.keepAliveTimer.TimeElapsed += this.HandleKeepAliveTimerTimeElapsed;
 		}
-
-
+		
 		public bool								IsActive
 		{
 			get
 			{
-				this.dataInfrastructure.RefreshConnectionInformation ();
+				this.DataInfrastructure.RefreshConnectionInformation ();
 				
-				var info = this.dataInfrastructure.ConnectionInformation;
+				var info = this.DataInfrastructure.ConnectionInformation;
 				
 				return info != null && info.Status == ConnectionStatus.Open;
 			}
@@ -61,7 +58,14 @@ namespace Epsitec.Cresus.Core.Data
 			}
 		}
 
-
+		private DataInfrastructure DataInfrastructure
+		{
+			get
+			{
+				return this.Host.DataInfrastructure;
+			}
+		}
+		
 		public override void ExecuteSetupPhase()
 		{
 			base.ExecuteSetupPhase ();
@@ -95,9 +99,9 @@ namespace Epsitec.Cresus.Core.Data
 		private void OpenConnection()
 		{
 			var identity = this.GetIdentity ();
-			this.dataInfrastructure.OpenConnection (identity.ToString ());
+			this.DataInfrastructure.OpenConnection (identity.ToString ());
 			
-			var databaseTime = this.dataInfrastructure.DbInfrastructure.GetDatabaseTime ();
+			var databaseTime = this.DataInfrastructure.GetDatabaseTime ();
 			var localAppTime = System.DateTime.Now;
 
 			this.timeOffset = localAppTime - databaseTime;
@@ -108,7 +112,7 @@ namespace Epsitec.Cresus.Core.Data
 		private void CloseConnection()
 		{
 			this.isReady = false;
-			this.dataInfrastructure.CloseConnection ();
+			this.DataInfrastructure.CloseConnection ();
 		}
 
 
@@ -134,7 +138,12 @@ namespace Epsitec.Cresus.Core.Data
 
 		private void KeepAliveConnection()
 		{
-			this.dataInfrastructure.KeepConnectionAlive ();
+			System.Diagnostics.Debug.WriteLine ("KeepAlive pulsed");
+
+			if (this.Host.EnableConnectionRecycling)
+			{
+				this.DataInfrastructure.KeepConnectionAlive ();
+			}
 		}
 
 		private void StartTimerIfNotRunning()
@@ -179,7 +188,6 @@ namespace Epsitec.Cresus.Core.Data
 
 		private static readonly double KeepAlivePeriodInSeconds = 10.0;
 
-		private readonly DataInfrastructure		dataInfrastructure;
 		private readonly Timer					keepAliveTimer;
 		
 		private bool							isReady;

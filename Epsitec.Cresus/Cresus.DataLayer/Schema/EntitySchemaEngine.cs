@@ -44,6 +44,14 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		 * Marc
 		 */
 
+		// TODO Add more checks so that we are sure that everything is defined properly in the
+		// database as it is defined in the EntityTypeEngine.
+		// Marc
+
+		// TODO Add methods to retrieve extra columns from the tables, such as the ones for the
+		// row id, the relation source id, the relation target id and the relation rank.
+ 		// Marc
+
 		/// <summary>
 		/// Builds a new <see cref="EntitySchemaEngine"/> which will be associated with a given
 		/// <see cref="DbInfrastructure"/>.
@@ -86,7 +94,14 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		{
 			string tableName = EntitySchemaEngine.GetEntityTableName (entityTypeId);
 
-			return dbInfrastructure.ResolveDbTable (tableName);
+			DbTable table = dbInfrastructure.ResolveDbTable (tableName);
+
+			if (table == null)
+			{
+				throw new System.ArgumentException ("Table for type " + entityTypeId + " is not defined in the database.");
+			}
+
+			return table;
 		}
 
 
@@ -117,7 +132,14 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		{
 			string tableName = EntitySchemaEngine.GetEntityFieldTableName (entityTypeId, fieldId);
 
-			return dbInfrastructure.ResolveDbTable (tableName);
+			DbTable table = dbInfrastructure.ResolveDbTable (tableName);
+
+			if (table == null)
+			{
+				throw new System.ArgumentException ("Table for field " + fieldId + " of type " + entityTypeId + " is not defined in the database");
+			}
+
+			return table;
 		}
 
 
@@ -151,6 +173,11 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 			DbTable table = this.entityTableCache[entityTypeId];
 			DbColumn column = table.Columns[columnName];
+
+			if (column == null)
+			{
+				throw new System.ArgumentException ("Column for field " + fieldId + " of type " + entityTypeId + " is not defined in the database");
+			}
 
 			return column;
 		}

@@ -33,6 +33,12 @@ namespace Epsitec.Cresus.DataLayer.Context
 	[System.Diagnostics.DebuggerDisplay ("DataContext #{UniqueId}")]
 	public sealed class DataContext : IEntityPersistenceManager, IIsDisposed, IReadOnly
 	{
+		// HACK This class has been temporarily hacked because of how things happens in Cresus.Core
+		// in order to be retro compatible until things are changed there. The hack in the class is
+		// the call to the constructor of EntityCache that must be transformed to the commented
+		// version in the constructor.
+		// Marc
+
 		/// <summary>
 		/// Creates a new <c>DataContext</c>.
 		/// </summary>
@@ -52,7 +58,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.IsReadOnly = isReadOnly;
 			this.EnableNullVirtualization = enableNullVirtualization;
 
-			this.entitiesCache = new EntityCache (this.EntityTypeEngine);
+			this.entitiesCache = new EntityCache (this, null);
+			//this.entitiesCache = new EntityCache (this.TypeEngine);
 			this.emptyEntities = new HashSet<AbstractEntity> ();
 			this.entitiesToDelete = new HashSet<AbstractEntity> ();
 			this.entitiesDeleted = new HashSet<AbstractEntity> ();
@@ -166,11 +173,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
-		private EntityTypeEngine EntityTypeEngine
+		private EntityTypeEngine TypeEngine
 		{
 			get
 			{
-				return this.DataInfrastructure.EntityTypeEngine;
+				return this.DataInfrastructure.EntityEngine.TypeEngine;
 			}
 		}
 
@@ -777,7 +784,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		private void ResaveReferencingField(AbstractEntity source, Druid fieldId, AbstractEntity target)
 		{
 			Druid entityTypeId = source.GetEntityStructuredTypeId ();
-			StructuredTypeField field = this.EntityTypeEngine.GetField (entityTypeId, fieldId);
+			StructuredTypeField field = this.TypeEngine.GetField (entityTypeId, fieldId);
 
 			bool found;
 
@@ -1218,7 +1225,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		internal void RemoveReference(AbstractEntity source, Druid fieldId, AbstractEntity target, EntityChangedEventSource eventSource)
 		{
 			Druid entityTypeId = source.GetEntityStructuredTypeId ();
-			StructuredTypeField field = this.EntityTypeEngine.GetField (entityTypeId, fieldId);
+			StructuredTypeField field = this.TypeEngine.GetField (entityTypeId, fieldId);
 
 			bool updated = false;
 
@@ -1276,14 +1283,14 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			Druid leafTargetEntityId = target.GetEntityStructuredTypeId ();
 
-			var fields = this.EntityTypeEngine.GetReferencingFields (leafTargetEntityId);
+			var fields = this.TypeEngine.GetReferencingFields (leafTargetEntityId);
 
 			IEnumerable<AbstractEntity> entities = this.GetEntities ();
 
 			foreach (AbstractEntity source in entities)
 			{
 				Druid leafSourceEntityId = source.GetEntityStructuredTypeId ();
-				var localSourceEntityTypes = this.EntityTypeEngine.GetBaseTypes (leafSourceEntityId);
+				var localSourceEntityTypes = this.TypeEngine.GetBaseTypes (leafSourceEntityId);
 
 				foreach (StructuredType localSourceEntityType in localSourceEntityTypes)
 				{

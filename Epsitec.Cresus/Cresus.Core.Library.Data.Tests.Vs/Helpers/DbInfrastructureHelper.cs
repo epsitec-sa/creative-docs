@@ -2,7 +2,12 @@
 #define REMOTE_HOST_MARC
 
 
+using Epsitec.Common.Support;
+
 using Epsitec.Cresus.Database;
+
+using Epsitec.Cresus.DataLayer.Infrastructure;
+using Epsitec.Cresus.DataLayer.Schema;
 
 
 namespace Epsitec.Cresus.Core.Library.Data.Tests.Vs.Helpers
@@ -51,7 +56,7 @@ namespace Epsitec.Cresus.Core.Library.Data.Tests.Vs.Helpers
 		}
 
 
-		public static DbInfrastructure ConnectToTestDatabase()
+		public static DbInfrastructure CreateDbInfrastructure()
 		{
 			DbAccess dbAccess = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
 
@@ -60,6 +65,16 @@ namespace Epsitec.Cresus.Core.Library.Data.Tests.Vs.Helpers
 			dbInfrastructure.AttachToDatabase (dbAccess);
 
 			return dbInfrastructure;
+		}
+
+
+		public static DataInfrastructure CreateDataInfrastructure()
+		{
+			DbAccess dbAccess = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
+
+			EntityEngine engine = EntityEngine.Connect (dbAccess, new Druid[0]);
+
+			return new DataInfrastructure (dbAccess, engine);
 		}
 
 

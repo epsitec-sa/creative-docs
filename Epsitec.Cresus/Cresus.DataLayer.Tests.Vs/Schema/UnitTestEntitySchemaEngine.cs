@@ -29,7 +29,12 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		public static void ClassInitialize(TestContext testContext)
 		{
 			TestHelper.Initialize ();
-		
+		}
+
+
+		[TestInitialize]
+		public void TestInitialize()
+		{
 			DatabaseCreator2.ResetEmptyTestDatabase ();
 		}
 
@@ -39,7 +44,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 				EntitySchemaEngine schemaEngine = new EntitySchemaEngine (dbInfrastructure, entityTypeEngine);
 			}
 		}
@@ -50,7 +55,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+				EntityTypeEngine entityTypeEngine = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
@@ -60,6 +65,38 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
 					() => new EntitySchemaEngine (dbInfrastructure, null)
+				);
+
+				EntityTypeEngine entityTypeEngine1 = entityTypeEngine;
+				string tableName1 = EntitySchemaEngine.GetEntityFieldTableName (new Druid ("[J1AN]"), new Druid ("[J1AS]"));
+				DbTable table1 = dbInfrastructure.ResolveDbTable (tableName1);
+				dbInfrastructure.RemoveTable (table1);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => new EntitySchemaEngine (dbInfrastructure, entityTypeEngine1)
+				);
+				
+				EntityTypeEngine entityTypeEngine2 = new EntityTypeEngine (new List<Druid> () { new Druid ("[J1A6]"), new Druid ("[J1A4]") });
+				string tableName2 = EntitySchemaEngine.GetEntityTableName (new Druid ("[J1A6]"));
+				DbTable table2 = dbInfrastructure.ResolveDbTable (tableName2);
+				dbInfrastructure.RemoveTable (table2);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+				  () => new EntitySchemaEngine (dbInfrastructure, entityTypeEngine2)
+				);
+
+				EntityTypeEngine entityTypeEngine3 = new EntityTypeEngine (new List<Druid> () { new Druid ("[J1A4]") });
+				string tableName3 = EntitySchemaEngine.GetEntityTableName (new Druid ("[J1A4]"));
+				string columnName3 = EntitySchemaEngine.GetEntityFieldColumnName (new Druid ("[J1A3]"));
+				DbTable table3 = dbInfrastructure.ResolveDbTable (tableName3);
+				DbColumn column3 = table2.Columns[columnName3];
+				dbInfrastructure.RemoveColumnFromTable (table3, column3);
+								
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => new EntitySchemaEngine (dbInfrastructure, entityTypeEngine3)
 				);
 			}
 		}
@@ -78,7 +115,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void GetEntityTableNameTest()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			foreach (var type in ete.GetEntityTypes())
 			{
@@ -109,7 +146,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void GetEntityFieldTableNameTest()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			var fields =
 				from entityType in ete.GetEntityTypes ()
@@ -143,7 +180,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void GetEntityFieldColumnNameTest()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			var fieldIds =
 				from entityType in ete.GetEntityTypes ()
@@ -167,7 +204,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				var entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+				var entityTypeEngine = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 				var entitySchemaEngine = new EntitySchemaEngine (dbInfrastructure, entityTypeEngine);
 
 				ExceptionAssert.Throw<System.ArgumentException>
@@ -183,7 +220,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				var entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+				var entityTypeEngine = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 				var entitySchemaEngine = new EntitySchemaEngine (dbInfrastructure, entityTypeEngine);
 
 				var tables = from entityType in entityTypeEngine.GetEntityTypes ()
@@ -212,7 +249,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				var entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+				var entityTypeEngine = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 				var entitySchemaEngine = new EntitySchemaEngine (dbInfrastructure, entityTypeEngine);
 
 				ExceptionAssert.Throw<System.ArgumentException>
@@ -228,7 +265,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				var entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+				var entityTypeEngine = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 				var entitySchemaEngine = new EntitySchemaEngine (dbInfrastructure, entityTypeEngine);
 
 				var tables = from entityType in entityTypeEngine.GetEntityTypes ()
@@ -258,9 +295,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void GetEntityFieldColumnArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())	
 			{
-				var entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+				var entityTypeEngine = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 				var entitySchemaEngine = new EntitySchemaEngine (dbInfrastructure, entityTypeEngine);
 
 				ExceptionAssert.Throw<System.ArgumentException>
@@ -276,7 +313,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				var entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+				var entityTypeEngine = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 				var entitySchemaEngine = new EntitySchemaEngine (dbInfrastructure, entityTypeEngine);
 
 				var columns = from entityType in entityTypeEngine.GetEntityTypes ()
@@ -311,7 +348,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				var entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+				var entityTypeEngine = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 				var entitySchemaEngine = new EntitySchemaEngine (dbInfrastructure, entityTypeEngine);
 
 				var expected = from entityType in entityTypeEngine.GetEntityTypes ()
@@ -333,7 +370,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				var entityTypeEngine = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+				var entityTypeEngine = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 				var entitySchemaEngine = new EntitySchemaEngine (dbInfrastructure, entityTypeEngine);
 
 				var expected = from entityType in entityTypeEngine.GetEntityTypes ()

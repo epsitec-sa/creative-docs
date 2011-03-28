@@ -10,6 +10,7 @@ using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Saver;
 using Epsitec.Cresus.DataLayer.Saver.PersistenceJobs;
 using Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs;
+using Epsitec.Cresus.DataLayer.Schema;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Entities;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Helpers;
 
@@ -41,8 +42,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 		[TestMethod]
 		public void PersistenceJobConverterConstructor()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
 				new PersistenceJobConverter (dataContext);
@@ -63,8 +64,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 		[TestMethod]
 		public void ConvertDeleteJobArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
 				PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
@@ -80,8 +81,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 		[TestMethod]
 		public void ConvertDeleteJobTest()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
 				PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
@@ -102,8 +103,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 		[TestMethod]
 		public void ConvertValueJobArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
 				PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
@@ -119,8 +120,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 		[TestMethod]
 		public void ConvertValueJobTest1()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
 				PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
@@ -146,8 +147,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 		[TestMethod]
 		public void ConvertValueJobTest2()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
 				PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
@@ -183,8 +184,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 		[TestMethod]
 		public void ConvertReferenceJobArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
 				PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
@@ -200,8 +201,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 		[TestMethod]
 		public void ConvertReferenceJobTest1()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
 				PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
@@ -228,8 +229,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 		[TestMethod]
 		public void ConvertReferenceJobTest2()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
 				PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
@@ -266,8 +267,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 		[TestMethod]
 		public void ConvertCollectionJobArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
 				PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
@@ -283,8 +284,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 		[TestMethod]
 		public void ConvertCollectionJobTest1()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
 				PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
@@ -310,8 +311,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 		[TestMethod]
 		public void ConvertCollectionJobTest2()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
 				PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);

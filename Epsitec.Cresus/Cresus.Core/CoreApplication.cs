@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core
 			
 			this.plugIns = new List<PlugIns.ICorePlugIn> ();
 			
-			this.data = new CoreData (this, forceDatabaseCreation: false, allowDatabaseUpdate: true);
+			this.data = new CoreData (this, forceDatabaseCreation: false, allowDatabaseUpdate: true, enableConnectionRecycling: false);
 
 			new ExceptionManager (this);
 

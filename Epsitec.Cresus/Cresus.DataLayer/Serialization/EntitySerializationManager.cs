@@ -50,11 +50,11 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		}
 
 
-		private EntityTypeEngine EntityTypeEngine
+		private EntityTypeEngine TypeEngine
 		{
 			get
 			{
-				return this.DataContext.DataInfrastructure.EntityTypeEngine;
+				return this.DataContext.DataInfrastructure.EntityEngine.TypeEngine;
 			}
 		}
 
@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
-			var fields = from field in this.EntityTypeEngine.GetValueFields (leafEntityId)
+			var fields = from field in this.TypeEngine.GetValueFields (leafEntityId)
 						 let fieldId = field.CaptionId
 						 let fieldValue = entity.GetField<object> (fieldId.ToResourceId ())
 						 select new
@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
-			var fields = from field in this.EntityTypeEngine.GetReferenceFields(leafEntityId)
+			var fields = from field in this.TypeEngine.GetReferenceFields(leafEntityId)
 						 let fieldId = field.CaptionId
 						 let fieldTarget = entity.GetField<AbstractEntity> (fieldId.ToResourceId ())
 						 where fieldTarget != null
@@ -155,7 +155,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
-			var fields = from field in this.EntityTypeEngine.GetCollectionFields(leafEntityId)
+			var fields = from field in this.TypeEngine.GetCollectionFields(leafEntityId)
 						 let fieldId = field.CaptionId
 						 let fieldTargets = entity.GetFieldCollection<AbstractEntity> (fieldId.ToResourceId ())
 						 let fieldTargetKeys = new List<DbKey>
@@ -235,7 +235,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		private void DeserializeEntityFields(EntityData data, AbstractEntity entity)
 		{
 			Druid localEntityId = entity.GetEntityStructuredTypeId ();
-			var entityIds = this.EntityTypeEngine.GetBaseTypes (localEntityId)
+			var entityIds = this.TypeEngine.GetBaseTypes (localEntityId)
 				.Select (t => t.CaptionId)
 				.ToList ();
 
@@ -265,7 +265,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		/// <param name="localEntityId">The <see cref="Druid"/> of the type whose fields to set.</param>
 		private void DeserializeEntityLocalWithProxies(AbstractEntity entity, Druid localEntityId)
 		{
-			foreach (StructuredTypeField field in this.EntityTypeEngine.GetLocalFields (localEntityId))
+			foreach (StructuredTypeField field in this.TypeEngine.GetLocalFields (localEntityId))
 			{
 				this.InsertProxyForField (entity, field);
 			}
@@ -320,7 +320,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		/// <param name="localEntityId">The <see cref="Druid"/> of the type whose fields to set.</param>
 		private void DeserializeEntityLocal(AbstractEntity entity, EntityData entityData, Druid localEntityId)
 		{
-			foreach (StructuredTypeField field in this.EntityTypeEngine.GetLocalFields (localEntityId))
+			foreach (StructuredTypeField field in this.TypeEngine.GetLocalFields (localEntityId))
 			{
 				this.DeserializeEntityLocalField (entity, entityData, field);
 			}
@@ -392,7 +392,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 
 			if (targetKey.HasValue)
 			{
-				EntityKey entityKey = EntityKey.CreateNormalizedEntityKey (this.EntityTypeEngine, field.TypeId, targetKey.Value);
+				EntityKey entityKey = EntityKey.CreateNormalizedEntityKey (this.TypeEngine, field.TypeId, targetKey.Value);
 
 				object target = new KeyedReferenceFieldProxy (this.DataContext, entity, fieldId, entityKey);
 
@@ -415,7 +415,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 			if (collectionKeys.Any ())
 			{
 				var targetKeys = from rowKey in collectionKeys
-								 select EntityKey.CreateNormalizedEntityKey (this.EntityTypeEngine, field.TypeId, rowKey);
+								 select EntityKey.CreateNormalizedEntityKey (this.TypeEngine, field.TypeId, rowKey);
 
 				object target = new KeyedCollectionFieldProxy (this.DataContext, entity, fieldId, targetKeys);
 

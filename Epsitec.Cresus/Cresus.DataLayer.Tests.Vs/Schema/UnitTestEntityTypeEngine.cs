@@ -32,9 +32,26 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 
 
 		[TestMethod]
+		public void EntityTypeEngineConstructorArgumentCheck()
+		{
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new EntityTypeEngine (null)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => new EntityTypeEngine (new List<Druid> () { Druid.FromLong (999999) })
+			);
+
+			new EntityTypeEngine (new List<Druid> ());
+		}
+
+
+		[TestMethod]
 		public void EntityTypesCacheTest()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			var expected = this.GetEntityTypes ().OrderBy (t => t.CaptionId.ToLong ()).ToList ();
 			var actual = ete.GetEntityTypes ().OrderBy (t => t.CaptionId.ToLong ()).ToList ();
@@ -46,7 +63,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void EntityTypeCacheArgumentCheck()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
@@ -58,7 +75,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void EntityTypeCacheTest()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			foreach (var type in this.GetEntityTypes ())
 			{
@@ -73,7 +90,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void BaseTypesCacheArgumentCheck()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
@@ -85,7 +102,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void BaseTypesCacheTest()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			foreach (var type in this.GetEntityTypes ())
 			{
@@ -100,7 +117,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void RootTypeCacheArgumentCheck()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
@@ -112,7 +129,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void RootTypeCacheTest()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			foreach (var type in this.GetEntityTypes ())
 			{
@@ -127,7 +144,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void FieldsCacheArgumentCheck()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
@@ -139,7 +156,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void FieldsCacheTest()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			foreach (var type in this.GetEntityTypes ())
 			{
@@ -154,7 +171,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void FieldCacheArgumentCheck()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
@@ -166,7 +183,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void FieldCacheTest()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			foreach (var type in this.GetEntityTypes ())
 			{
@@ -184,7 +201,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void LocalTypeCacheArgumentCheck()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
@@ -196,7 +213,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void LocalTypeCacheTest()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			foreach (var type in this.GetEntityTypes())
 			{
@@ -214,7 +231,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void ValueFieldsCacheArgumentCheck()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
@@ -226,7 +243,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void ValueFieldsCacheTest()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			foreach (var type in this.GetEntityTypes ())
 			{
@@ -241,7 +258,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void ReferenceFieldsCacheArgumentCheck()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
@@ -253,7 +270,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void ReferenceFieldsCacheTest()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			foreach (var type in this.GetEntityTypes ())
 			{
@@ -268,7 +285,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void CollectionFieldsCacheArgumentCheck()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
@@ -280,7 +297,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void CollectionFieldsCacheTest()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			foreach (var type in this.GetEntityTypes ())
 			{
@@ -295,7 +312,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void LocalFieldsCacheArgumentCheck()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
@@ -307,7 +324,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void LocalFieldsCacheTest()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			foreach (var type in this.GetEntityTypes ())
 			{
@@ -322,7 +339,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void LocalValueFieldsCacheArgumentCheck()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
@@ -334,7 +351,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void LocalValueFieldsCacheTest()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			foreach (var type in this.GetEntityTypes ())
 			{
@@ -349,7 +366,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void LocalReferenceFieldsCacheArgumentCheck()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
@@ -361,7 +378,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void LocalReferenceFieldsCacheTest()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			foreach (var type in this.GetEntityTypes ())
 			{
@@ -376,7 +393,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void LocalCollectionFieldsCacheArgumentCheck()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
@@ -388,7 +405,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void LocalCollectionFieldsCacheTest()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			foreach (var type in this.GetEntityTypes ())
 			{
@@ -403,7 +420,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void ReferencingFieldsCacheArgumentCheck()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
@@ -415,7 +432,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void ReferencingFieldsFieldsCacheTest()
 		{
-			EntityTypeEngine ete = new EntityTypeEngine (DataInfrastructureHelper.GetEntityIds ());
+			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 
 			foreach (var type in this.GetEntityTypes ())
 			{
@@ -438,11 +455,39 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		}
 
 
+		[TestMethod]
+		public void GetRelatedEntityTypeIdsArgumentCheck()
+		{
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => EntityTypeEngine.GetRelatedEntityTypeIds (null)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => EntityTypeEngine.GetRelatedEntityTypeIds (new List<Druid> () { Druid.FromLong (999999) })
+			);
+		}
+
+
+		[TestMethod]
+		public void GetRelatedEntityTypeIdsTest()
+		{
+			foreach (var relatedEntityTypeIds in this.GetRelatedEntityTypeIds ())
+			{
+				var expected = relatedEntityTypeIds.Item2.OrderBy (id => id.ToLong ()).ToList ();
+				var actual = EntityTypeEngine.GetRelatedEntityTypeIds (relatedEntityTypeIds.Item1).OrderBy (id => id.ToLong ()).ToList ();
+
+				CollectionAssert.AreEqual (expected, actual);
+			}
+		}
+
+
 		private List<StructuredType> GetEntityTypes()
 		{
 			EntityContext entityContext = new EntityContext ();
 
-			return DataInfrastructureHelper.GetEntityIds()
+			return EntityEngineHelper.GetEntityTypeIds()
 				.Select (id => entityContext.GetStructuredType (id))
 				.ToList ();
 		}
@@ -539,6 +584,80 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 
 			return tmp.GroupBy (item => item.T, item => item.F)
 				.ToDictionary (g => g.Key, g => g.ToList ());
+		}
+
+
+		private IEnumerable<Tuple<List<Druid>, List<Druid>>> GetRelatedEntityTypeIds()
+		{
+			List<Druid> input1 = new List<Druid> ()
+			{
+				new Druid ("[J1A4]"),
+			};
+
+			List<Druid> output1 = new List<Druid> ()
+			{
+				new Druid ("[J1A4]"),
+			};
+
+			yield return Tuple.Create (input1, output1);
+
+			List<Druid> input2 = new List<Druid> ()
+			{
+				new Druid ("[J1A4]"),
+				new Druid ("[J1AE]"),
+				new Druid ("[J1AJ]"),
+			};
+
+			List<Druid> output2 = new List<Druid> ()
+			{
+				new Druid ("[J1A4]"),
+				new Druid ("[J1A6]"),
+				new Druid ("[J1A9]"),
+				new Druid ("[J1AE]"),
+				new Druid ("[J1AG]"),
+				new Druid ("[J1AJ]"),
+			};
+
+			yield return Tuple.Create (input2, output2);
+
+			List<Druid> input3 = new List<Druid> ()
+			{
+				new Druid ("[J1AE1]"),
+				new Druid ("[J1AJ1]"),
+				new Druid ("[J1AT1]"),
+				new Druid ("[J1A02]"),
+				new Druid ("[J1A42]"),
+				new Druid ("[J1A72]"),
+			};
+
+			List<Druid> output3 = new List<Druid> ()
+			{
+				new Druid ("[J1A4]"),
+				new Druid ("[J1A6]"),
+				new Druid ("[J1A9]"),
+				new Druid ("[J1AE]"),
+				new Druid ("[J1AG]"),
+				new Druid ("[J1AJ]"),
+				new Druid ("[J1AN]"),
+				new Druid ("[J1AQ]"),
+				new Druid ("[J1AT]"),
+				new Druid ("[J1AV]"),
+				new Druid ("[J1A11]"),
+				new Druid ("[J1A41]"),
+				new Druid ("[J1A61]"),
+				new Druid ("[J1A81]"),
+				new Druid ("[J1AA1]"),
+				new Druid ("[J1AB1]"),
+				new Druid ("[J1AE1]"),
+				new Druid ("[J1AJ1]"),
+				new Druid ("[J1AT1]"),
+				new Druid ("[J1A02]"),
+				new Druid ("[J1A42]"),
+				new Druid ("[J1A72]"),
+			};
+
+			yield return Tuple.Create (input3, output3);
+
 		}
 
 

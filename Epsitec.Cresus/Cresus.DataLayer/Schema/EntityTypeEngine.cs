@@ -39,6 +39,8 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 		public EntityTypeEngine(IEnumerable<Druid> entityTypeIds)
 		{
+			entityTypeIds.ThrowIfNull ("entityTypeIds");
+
 			this.entityTypesCache = this.ComputeEntityTypesCache (entityTypeIds);
 			this.entityTypeCache = this.ComputeEntityTypeCache ();
 			this.baseTypesCache = this.ComputeBaseTypesCache ();
@@ -67,7 +69,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 		private ReadOnlyCollection<StructuredType> ComputeEntityTypesCache(IEnumerable<Druid> entityTypeIds)
 		{
-			return EntityTypeEngine.GetEntityTypes (entityTypeIds);
+			return EntityTypeEngine.ComputeEntityTypes (entityTypeIds);
 		}
 
 
@@ -405,7 +407,9 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 		public static IEnumerable<Druid> GetRelatedEntityTypeIds(IEnumerable<Druid> entityTypeIds)
 		{
-			var entityTypes = EntityTypeEngine.GetEntityTypes (entityTypeIds);
+			entityTypeIds.ThrowIfNull ("entityTypeIds");
+
+			var entityTypes = EntityTypeEngine.ComputeEntityTypes (entityTypeIds);
 			var relatedEntityTypes = new HashSet<StructuredType> ();
 
 			foreach (StructuredType entityType in entityTypes)
@@ -442,11 +446,27 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		}
 
 
-		private static ReadOnlyCollection<StructuredType> GetEntityTypes(IEnumerable<Druid> entityTypeIds)
+		private static ReadOnlyCollection<StructuredType> ComputeEntityTypes(IEnumerable<Druid> entityTypeIds)
 		{
 			return entityTypeIds
-				.Select (id => Epsitec.Common.Support.Resources.DefaultManager.GetStructuredType (id))
+				.Distinct ()
+				.Select (id => EntityTypeEngine.ComputeEntityType (id))
 				.AsReadOnlyCollection ();
+		}
+
+
+		private static StructuredType ComputeEntityType(Druid entityTypeId)
+		{
+			ResourceManager resourceManager = Epsitec.Common.Support.Resources.DefaultManager;
+
+			StructuredType entityType = resourceManager.GetStructuredType (entityTypeId);
+
+			if (entityType == null)
+			{
+				throw new System.ArgumentException ("The structured type " + entityTypeId + " does not exists.");
+			}
+
+			return entityType;
 		}
 
 

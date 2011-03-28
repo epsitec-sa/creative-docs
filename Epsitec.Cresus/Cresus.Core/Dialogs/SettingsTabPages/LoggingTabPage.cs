@@ -1104,8 +1104,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			}
 			set
 			{
-				var db = this.Container.Data.DataInfrastructure.DbInfrastructure;
-
 				if (value)  // démarre l'enregistrement ?
 				{
 					if (this.logEnabled)
@@ -1120,7 +1118,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 						LogThreadName = LoggingTabPage.globalLogThreadName
 					};
 
-					db.QueryLogs.Add (this.queryLog);
+					this.Container.Data.DataInfrastructure.AddLog (this.queryLog);
 
 					this.logEnabled = true;
 
@@ -1133,7 +1131,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 						throw new System.InvalidOperationException ("Logging is already disabled.");
 					}
 
-					db.QueryLogs.Remove (this.queryLog);
+					this.Container.Data.DataInfrastructure.RemoveLog (this.queryLog);
 
 					this.logEnabled = false;
 

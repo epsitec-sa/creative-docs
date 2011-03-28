@@ -9,6 +9,7 @@ using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Infrastructure;
+using Epsitec.Cresus.DataLayer.Schema;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Entities;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Helpers;
 
@@ -40,8 +41,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void CopyEntityArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -82,8 +83,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void CopyToSelfTest()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
 				NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
@@ -98,8 +99,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void CopyExistingEntityTest()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -127,8 +128,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void SimlpeCopyTest()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (dbInfrastructure))
+			
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -164,7 +165,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		{
 			Druid leafEntityId = entity1.GetEntityStructuredTypeId ();
 
-			var fieldIds = from field in dataContext1.DataInfrastructure.EntityTypeEngine.GetValueFields (leafEntityId)
+			var fieldIds = from field in dataContext1.DataInfrastructure.EntityEngine.TypeEngine.GetValueFields (leafEntityId)
 						   select field.CaptionId;
 
 			foreach (Druid fieldId in fieldIds)
@@ -181,7 +182,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		{
 			Druid leafEntityId = entity1.GetEntityStructuredTypeId ();
 
-			var fieldIds = from field in dataContext1.DataInfrastructure.EntityTypeEngine.GetReferenceFields (leafEntityId)
+			var fieldIds = from field in dataContext1.DataInfrastructure.EntityEngine.TypeEngine.GetReferenceFields (leafEntityId)
 						   select field.CaptionId;
 
 			foreach (Druid fieldId in fieldIds)
@@ -208,7 +209,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		{
 			Druid leafEntityId = entity1.GetEntityStructuredTypeId ();
 
-			var fieldIds = from field in dataContext1.DataInfrastructure.EntityTypeEngine.GetCollectionFields (leafEntityId)
+			var fieldIds = from field in dataContext1.DataInfrastructure.EntityEngine.TypeEngine.GetCollectionFields (leafEntityId)
 						   select field.CaptionId;
 
 			foreach (Druid fieldId in fieldIds)

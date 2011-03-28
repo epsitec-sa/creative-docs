@@ -5,9 +5,9 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Support;
-using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
+using Epsitec.Cresus.Database.Logging;
 using Epsitec.Cresus.Database.Services;
 
 using Epsitec.Cresus.DataLayer.Context;
@@ -15,67 +15,105 @@ using Epsitec.Cresus.DataLayer.ImportExport;
 using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Schema;
 
-using System.Collections;
 using System.Collections.Generic;
 
 using System.IO;
 
 using System.Linq;
 
-[assembly: DependencyClass (typeof (DataInfrastructure))]
 
 namespace Epsitec.Cresus.DataLayer.Infrastructure
 {
+
+
 	/// <summary>
 	/// The <c>DataInfrastructure</c> class provides an high level access to the data stored in the
 	/// database.
 	/// </summary>
-	public sealed class DataInfrastructure : DependencyObject
+	public sealed class DataInfrastructure : IIsDisposed
 	{
+		// HACK This class has been temporarily hacked because of how things happens in Cresus.Core
+		// in order to be retro compatible until things are changed there. The hacks in this class
+		// are the check in the constructor that must be uncommented, the TMPSETUP method that should
+		// be removed and the checks on the emptiness on the dbaccess in the constructor that must be
+		// removed.
+		// Marc
+
 		/// <summary>
 		/// Creates a new instance of <c>DataInfrastructure</c>.
 		/// </summary>
 		/// <param name="dbInfrastructure">The <see cref="DbInfrastructure"/> used to communicate to the Database.</param>
 		/// <param name="entityTypeIds">The sequence of entity types ids that are supposed to be managed by this instance.</param>
-		public DataInfrastructure(DbInfrastructure dbInfrastructure, IEnumerable<Druid> entityTypeIds)
+		public DataInfrastructure(DbAccess access, EntityEngine entityEngine)
 		{
-			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
+			//access.ThrowIf (a => a.IsEmpty, "access is empty");
+			//entityEngine.ThrowIfNull ("entityEngine");
 
-			if (dbInfrastructure.ContainsValue (DataInfrastructure.DbInfrastructureProperty))
+			this.entityEngine = entityEngine;
+			
+			this.dbInfrastructure = new DbInfrastructure ();
+
+			if (!access.IsEmpty)
 			{
-				throw new System.ArgumentException ("DbInfrastructure already attached to another DataInfrastructure object", "dbInfrastructure");
+				this.dbInfrastructure.AttachToDatabase (access);
 			}
 
-			entityTypeIds.ThrowIfNull ("entityTypeIds");
+			this.dataContextPool = new DataContextPool ();
 
-			var relatedEntityTypeIds = EntityTypeEngine.GetRelatedEntityTypeIds (entityTypeIds);
+			this.connectionInformation = null;
+		}
 
-			this.dbInfrastructure = dbInfrastructure;
-			this.dbInfrastructure.SetValue (DataInfrastructure.DbInfrastructureProperty, this);
-			this.EntityTypeEngine = new EntityTypeEngine (relatedEntityTypeIds);
-			this.SchemaBuilder = new SchemaBuilder (this.EntityTypeEngine, this.dbInfrastructure);
-			this.DataContextPool = new DataContextPool ();
+		public void TMPSETUP(DbAccess access, EntityEngine entityEngine)
+		{
+			entityEngine.ThrowIfNull ("entityEngine");
+			access.ThrowIf (a => a.IsEmpty, "access is empty");
+
+			if (this.entityEngine != null)
+			{
+				throw new System.InvalidOperationException ();
+			}
+
+			if (this.dbInfrastructure.IsConnectionOpen)
+			{
+				throw new System.InvalidOperationException ();
+			}
+			
+			this.entityEngine = entityEngine;
+			this.dbInfrastructure.AttachToDatabase (access);
 		}
 		
 		/// <summary>
-		/// The <see cref="DbInfrastructure"/> object used to communicate with the database.
+		/// The <see cref="DbInfrastructure"></see> object used to communicate with the database.
 		/// </summary>
-		public DbInfrastructure DbInfrastructure
+		internal DbInfrastructure DbInfrastructure
 		{
 			get
 			{
-				return this.dbInfrastructure;
+				return dbInfrastructure;
 			}
 		}
 
+
+		internal EntityEngine EntityEngine
+		{
+			get
+			{
+				return entityEngine;
+			}
+		}
+		
+		
 		/// <summary>
-		/// The <see cref="DataContextPool"/> associated with this instance.
+		/// The <see cref="DataContextPool"></see> associated with this instance.
 		/// </summary>
 		public DataContextPool DataContextPool
 		{
-			get;
-			private set;
+			get
+			{
+				return dataContextPool;
+			}
 		}
+
 
 		/// <summary>
 		/// The <see cref="ConnectionInformation"/> object that describes the connection of this
@@ -87,44 +125,75 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			{
 				return this.connectionInformation;
 			}
-		}		
-		
-		/// <summary>
-		/// Gets the <see cref="SchemaEngine"/> associated with this instance.
-		/// </summary>
-		internal EntitySchemaEngine SchemaEngine
-		{
-			get
-			{
-				if (this.schemaEngine == null)
-				{
-					this.schemaEngine = new EntitySchemaEngine (this.dbInfrastructure, this.EntityTypeEngine);
-				}
-
-				return this.schemaEngine;
-			}
-			set
-			{
-				this.schemaEngine = value;
-			}
 		}
+	
+
+		#region IIsDisposed Members
 
 
-		internal EntityTypeEngine EntityTypeEngine
+		public bool IsDisposed
 		{
 			get;
 			private set;
 		}
 
 
-		/// <summary>
-		/// Gets the <see cref="SchemaBuilder"/> associated with this instance.
-		/// </summary>
-		private SchemaBuilder SchemaBuilder
+		#endregion
+
+
+		#region IDisposable Members 
+
+
+		public void Dispose()
 		{
-			get;
-			set;
+			this.Dispose (true);
 		}
+
+
+		#endregion
+
+
+		private void Dispose(bool disposing)
+		{
+			if (disposing && !this.IsDisposed)
+			{
+				if (this.DataContextPool != null)
+				{
+					foreach (DataContext dataContext in this.DataContextPool.ToList ())
+					{
+						this.DeleteDataContext (dataContext);
+					}
+
+					this.DataContextPool.Dispose ();
+				}
+
+				if (this.DbInfrastructure != null)
+				{
+					this.DbInfrastructure.Dispose ();
+				}				
+
+				this.IsDisposed = true;
+			}
+		}
+
+
+		public System.DateTime GetDatabaseTime()
+		{
+			return this.dbInfrastructure.GetDatabaseTime ();
+		}
+
+
+		public void AddLog(AbstractLog log)
+		{
+			this.dbInfrastructure.QueryLogs.Add (log);
+		}
+
+
+		public void RemoveLog(AbstractLog log)
+		{
+			this.dbInfrastructure.QueryLogs.Remove (log);
+		}
+
 
 		/// <summary>
 		/// Gets an information stored in the database.
@@ -136,6 +205,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			return this.dbInfrastructure.ServiceManager.InfoManager.GetInfo (key);
 		}
 
+
 		/// <summary>
 		/// Sets the information corresponding to the given key to the given value in the database.
 		/// </summary>
@@ -145,6 +215,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			this.dbInfrastructure.ServiceManager.InfoManager.SetInfo (key, value);
 		}
+
 		
 		/// <summary>
 		/// Creates a new generator for unique ids in the database.
@@ -172,6 +243,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			return UidGenerator.GetUidGenerator (this.dbInfrastructure, name);
 		}
 
+
 		/// <summary>
 		/// Deletes a generator for unique ids from the database.
 		/// </summary>
@@ -184,6 +256,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 			UidGenerator.DeleteUidGenerator (this.dbInfrastructure, name);
 		}
+
 
 		/// <summary>
 		/// Tells whether a generator for unique ids exists in the database.
@@ -198,6 +271,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 			return UidGenerator.UidGeneratorExists (this.dbInfrastructure, name);
 		}
+
 
 		/// <summary>
 		/// Gets the <see cref="UidGenerator"/> object used to manipulate a generator of unique ids
@@ -215,6 +289,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			return UidGenerator.GetUidGenerator (this.dbInfrastructure, name);
 		}
 		
+
 		/// <summary>
 		/// Opens the high-level connection with the database: this will create a
 		/// new <see cref="ConnectionInformation"/>.
@@ -237,6 +312,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			this.connectionInformation.Open ();
 		}
 
+
 		/// <summary>
 		/// Closes the high level connection with the database.
 		/// </summary>
@@ -251,6 +327,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			this.connectionInformation.Close ();
 		}
 		
+
 		/// <summary>
 		/// Notifies the database that this instance of the application is still up and running and
 		/// clean dirty data related to inactive connections in the database.
@@ -263,17 +340,12 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 				throw new System.InvalidOperationException ("This instance is not connected.");
 			}
 
-			System.Diagnostics.Debug.WriteLine ("KeepAlive pulsed");
-
 			this.connectionInformation.KeepAlive ();
-
-#if false
-			// HACK: disabled dead connection recycling -- this is a real annoyance when debugging with multiple instances running
 
 			ConnectionInformation.InterruptDeadConnections (this.dbInfrastructure, System.TimeSpan.FromSeconds (30));
 			LockTransaction.RemoveInactiveLocks (this.dbInfrastructure);
-#endif
 		}
+
 				
 		/// <summary>
 		/// Refreshes the data about the connection of this instance.
@@ -289,6 +361,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			this.connectionInformation.RefreshStatus ();
 		}
 
+
 		/// <summary>
 		/// Tells whether all the given locks are available or not.
 		/// </summary>
@@ -301,6 +374,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			return LockTransaction.AreAllLocksAvailable (this.dbInfrastructure, this.connectionInformation.ConnectionId, lockNames);
 		}
 				
+
 		/// <summary>
 		/// Creates a new <see cref="LockTransaction"/> for the given locks.
 		/// </summary>
@@ -313,6 +387,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			return new LockTransaction (this.dbInfrastructure, this.connectionInformation.ConnectionId, lockNames);
 		}
 
+
 		public DataContext CreateDataContext(bool enableNullVirtualization = false, bool readOnly = false)
 		{
 			DataContext dataContext = new DataContext (this, enableNullVirtualization, readOnly);
@@ -322,6 +397,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			return dataContext;
 		}
 
+
 		public bool DeleteDataContext(DataContext dataContext)
 		{
 			dataContext.Dispose ();
@@ -329,30 +405,14 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			return this.DataContextPool.Remove (dataContext);
 		}
 
+
 		public bool ContainsDataContext(DataContext dataContext)
 		{
 			return this.DataContextPool.Contains (dataContext);
-		}
-
-		/// <summary>
-		/// Does the real job of disposing this instance.
-		/// </summary>
-		/// <param name="disposing">Tells whether this method is called by the Dispose() method or by the destructor.</param>
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				this.dbInfrastructure.ClearValue (DataInfrastructure.DbInfrastructureProperty);
-
-				foreach (DataContext dataContext in this.DataContextPool.ToList ())
-				{
-					this.DeleteDataContext (dataContext);
-				}
-			}
-
-			base.Dispose (disposing);
+	
 		}
 		
+
 		/// <summary>
 		/// Asserts that the connection of this instance is open and throws an
 		/// <see cref="System.InvalidOperationException"/> otherwise.
@@ -366,55 +426,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			}
 		}
 
-		/// <summary>
-		/// Checks that the entity defined by the given sequence of <see cref="Druid"/> are properly
-		/// defined in the database.
-		/// </summary>
-		/// <param name="entityIds">The sequence of <see cref="Druid"/> defining the entities to check.</param>
-		/// <returns><c>true</c> if the schema in the database is valid, <c>false</c> if it isn't.</returns>
-		public bool CheckSchema(IEnumerable<Druid> entityIds)
-		{
-			this.AssertIsConnected ();
-
-			entityIds = EntityTypeEngine.GetRelatedEntityTypeIds (entityIds);
-
-			return this.SchemaBuilder.CheckSchema (entityIds);
-		}
-
-		/// <summary>
-		/// Creates the schema for the given entity ids in the database. This will use existing
-		/// tables and types in the database and will only add new items that are not yet defined
-		/// in the database. This method is thus intended to be used to add the schema of new
-		/// entities which are not yet defined in the database.
-		/// </summary>
-		/// <param name="entityIds">The <see cref="Druid"/> defining the entities to add to the database.</param>
-		public void CreateSchema(IEnumerable<Druid> entityIds)
-		{
-			this.AssertIsConnected ();
-
-			entityIds = EntityTypeEngine.GetRelatedEntityTypeIds (entityIds);
-
-			this.SchemaBuilder.RegisterSchema (entityIds);
-			this.SchemaEngine = new EntitySchemaEngine (this.dbInfrastructure, this.EntityTypeEngine);
-		}
-
-		/// <summary>
-		/// Updates the schema in the database so that it will match the schema given by the tables
-		/// corresponding to the entities defined by the given sequence of <see cref="Druid"/>. This
-		/// method is thus intended to be used to modify the existing schema by replacing it completely
-		/// with a new one.
-		/// </summary>
-		/// <param name="entityIds">The <see cref="Druid"/> defining the entities to put in the database.</param>
-		public void UpdateSchema(IEnumerable<Druid> entityIds)
-		{
-			this.AssertIsConnected ();
-
-			entityIds = EntityTypeEngine.GetRelatedEntityTypeIds (entityIds);
-
-			this.SchemaBuilder.UpdateSchema (entityIds);
-			this.SchemaEngine = new EntitySchemaEngine (this.dbInfrastructure, this.EntityTypeEngine);
-		}
-
+		
 		/// <summary>
 		/// Exports a set of <see cref="AbstractEntity"/> to an xml file. The set of exported
 		/// <see cref="AbstractEntity"/> is defined by the given <see cref="AbstractEntity"/> and
@@ -449,6 +461,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			ImportExportManager.Export (file, dataContext, entities, predicate, exportMode);
 		}
 
+
 		/// <summary>
 		/// Imports a set of <see cref="AbstractEntity"/> from an xml file that has been written by
 		/// the <see cref="DataInfrastructure.Export"/> method.
@@ -473,7 +486,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			file.ThrowIfNull ("file");
 
-			RawEntitySerializer.Export (file, this.dbInfrastructure, this.SchemaEngine, exportMode);
+			RawEntitySerializer.Export (file, this.dbInfrastructure, this.EntityEngine.SchemaEngine, exportMode);
 		}
 
 
@@ -494,17 +507,15 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			RawEntitySerializer.Import (file, this.dbInfrastructure, dbLogEntry, importMode);
 		}
 
-		
-		/// <summary>
-		/// Some obscure property :-P Ask Pierre if you want to know more about it...
-		/// </summary>
-		private static DependencyProperty DbInfrastructureProperty = DependencyProperty<DataInfrastructure>.RegisterAttached ("DataInfrastructure", typeof (DataInfrastructure));
 
-		/// <summary>
-		/// The <see cref="DbInfrastructure"/> object used by this instance to interact with the
-		/// database.
-		/// </summary>
 		private readonly DbInfrastructure dbInfrastructure;
+
+
+		private /*readonly*/ EntityEngine entityEngine;
+
+
+		private readonly DataContextPool dataContextPool;
+
 		
 		/// <summary>
 		/// The <see cref="ConnectionInformation"/> object that stores the connection data of this
@@ -512,7 +523,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// </summary>
 		private ConnectionInformation connectionInformation;
 
-		private EntitySchemaEngine schemaEngine;
 
-	}
+
+		}
 }

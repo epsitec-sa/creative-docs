@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		{
 			Druid entityTypeId = entity.GetEntityStructuredTypeId ();
 
-			EntityTypeEngine entityTypeEngine = dataContext.DataInfrastructure.EntityTypeEngine;
+			EntityTypeEngine entityTypeEngine = dataContext.DataInfrastructure.EntityEngine.TypeEngine;
 
 			StructuredTypeField field;
 
