@@ -165,7 +165,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		{
 			Druid leafEntityId = entity1.GetEntityStructuredTypeId ();
 
-			var fieldIds = from field in dataContext1.DataInfrastructure.EntityEngine.TypeEngine.GetValueFields (leafEntityId)
+			var fieldIds = from field in dataContext1.DataInfrastructure.EntityEngine.EntityTypeEngine.GetValueFields (leafEntityId)
 						   select field.CaptionId;
 
 			foreach (Druid fieldId in fieldIds)
@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		{
 			Druid leafEntityId = entity1.GetEntityStructuredTypeId ();
 
-			var fieldIds = from field in dataContext1.DataInfrastructure.EntityEngine.TypeEngine.GetReferenceFields (leafEntityId)
+			var fieldIds = from field in dataContext1.DataInfrastructure.EntityEngine.EntityTypeEngine.GetReferenceFields (leafEntityId)
 						   select field.CaptionId;
 
 			foreach (Druid fieldId in fieldIds)
@@ -209,7 +209,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		{
 			Druid leafEntityId = entity1.GetEntityStructuredTypeId ();
 
-			var fieldIds = from field in dataContext1.DataInfrastructure.EntityEngine.TypeEngine.GetCollectionFields (leafEntityId)
+			var fieldIds = from field in dataContext1.DataInfrastructure.EntityEngine.EntityTypeEngine.GetCollectionFields (leafEntityId)
 						   select field.CaptionId;
 
 			foreach (Druid fieldId in fieldIds)

@@ -8,7 +8,7 @@ namespace Epsitec.Cresus.Core.Data
 {
 	using DataInfrastructure=Epsitec.Cresus.DataLayer.Infrastructure.DataInfrastructure;
 	using LowLevelLockTransaction=Epsitec.Cresus.DataLayer.Infrastructure.LockTransaction;
-	using LowLevelLockOwner=Epsitec.Cresus.DataLayer.Infrastructure.LockOwner;
+	using LowLevelLockOwner=Epsitec.Cresus.DataLayer.Infrastructure.Lock;
 	using LockState=Epsitec.Cresus.DataLayer.Infrastructure.LockState;
 
 	/// <summary>
@@ -78,15 +78,16 @@ namespace Epsitec.Cresus.Core.Data
 				throw new System.InvalidOperationException ("Cannot execute this operation in the current state.");
 			}
 
-			var lockOwners = new List<LowLevelLockOwner> ();
-			var result     = this.lockTransaction.Lock (lockOwners);
+			var result = this.lockTransaction.Lock ();
+			var locked = result.Item1;
+			var unavailableLocks = result.Item2;
 
-			this.foreignLockOwners = lockOwners
+			this.foreignLockOwners = unavailableLocks
 				.Select (x => new LockOwner (x))
 				.ToList ()
 				.AsReadOnly ();
 
-			return result;
+			return locked;
 		}
 
 		/// <summary>
@@ -103,11 +104,11 @@ namespace Epsitec.Cresus.Core.Data
 				throw new System.InvalidOperationException ("Cannot execute this operation in the current state.");
 			}
 			
-			string id = this.dataInfrastructure.ConnectionInformation.ConnectionIdentity;
+			string id = this.dataInfrastructure.Connection.Identity;
 
 			this.foreignLockOwners = this.lockTransaction
-				.GetLockOwners ()
-				.Where (x => x.ConnectionIdentity != id)
+				.GetLocks ()
+				.Where (x => x.Owner.Identity != id)
 				.Select (x => new LockOwner (x))
 				.ToList ()
 				.AsReadOnly ();

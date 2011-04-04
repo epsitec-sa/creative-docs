@@ -6,7 +6,8 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.Database.Collections;
-using Epsitec.Cresus.Database.Services;
+
+using Epsitec.Cresus.DataLayer.Infrastructure;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Saver.PersistenceJobs;
@@ -52,6 +53,15 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		private DataInfrastructure DataInfrastructure
+		{
+			get
+			{
+				return this.DataContext.DataInfrastructure;
+			}
+		}
+
+
 		/// <summary>
 		/// The <see cref="SchemaEngine"/> used by this instance.
 		/// </summary>
@@ -59,7 +69,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			get
 			{
-				return this.DataContext.DataInfrastructure.EntityEngine.SchemaEngine;
+				return this.DataInfrastructure.EntityEngine.EntitySchemaEngine;
 			}
 		}
 
@@ -68,7 +78,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			get
 			{
-				return this.DataContext.DataInfrastructure.EntityEngine.TypeEngine;
+				return this.DataInfrastructure.EntityEngine.EntityTypeEngine;
 			}
 		}
 
@@ -80,19 +90,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			get
 			{
-				return this.DataContext.DataInfrastructure.DbInfrastructure;
-			}
-		}
-
-
-		/// <summary>
-		/// The <see cref="DbEntityDeletionLogger"/> used by this instance.
-		/// </summary>
-		private DbEntityDeletionLogger EntityDeletionLogger
-		{
-			get
-			{
-				return this.DbInfrastructure.ServiceManager.EntityDeletionLogger;
+				return this.DataInfrastructure.DbInfrastructure;
 			}
 		}
 
@@ -116,32 +114,33 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// each <see cref="AbstractEntity"/> which has been inserted to the database.
 		/// </summary>
 		/// <param name="transaction">The <see cref="DbTransaction"/> that must be used for the operation.</param>
-		/// <param name="dbLogEntry">The <see cref="DbLogEntry"/> that must be used to log the operation.</param>
+		/// <param name="entityModificationEntry">The <see cref="EntityModificationEntry"/> that must be used to log the operation.</param>
 		/// <param name="jobs">The sequence of <see cref="AbstractPersistenceJob"/> to execute.</param>
 		/// <returns>The mapping from the <see cref="AbstractEntity"/> that have been inserted in the database to their newly assigned <see cref="DbKey"/>.</returns>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="transaction"/> is <c>null</c>.</exception>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="jobs"/> is <c>null</c>.</exception>
-		public IEnumerable<KeyValuePair<AbstractEntity, DbKey>> ProcessJobs(DbTransaction transaction, DbLogEntry dbLogEntry, IEnumerable<AbstractPersistenceJob> jobs)
+		public IEnumerable<KeyValuePair<AbstractEntity, DbKey>> ProcessJobs(DbTransaction transaction, EntityModificationEntry entityModificationEntry, IEnumerable<AbstractPersistenceJob> jobs)
 		{
 			jobs.ThrowIfNull ("jobs");
 			transaction.ThrowIfNull ("transaction");
+			entityModificationEntry.ThrowIfNull ("entityModificationEntry");
 
 			List<AbstractPersistenceJob> jobsCopy = jobs.ToList ();
 			Dictionary<AbstractEntity, DbKey> newEntityKeys = new Dictionary<AbstractEntity, DbKey> ();
 
 			foreach (var deleteJob in jobsCopy.OfType<DeletePersistenceJob> ())
 			{
-				this.ProcessJob (transaction, dbLogEntry, deleteJob);
+				this.ProcessJob (transaction, entityModificationEntry, deleteJob);
 			}
 
 			foreach (var rootValueJob in jobsCopy.OfType<ValuePersistenceJob> ().Where (j => j.IsRootTypeJob))
 			{
-				this.ProcessJob (transaction, newEntityKeys, dbLogEntry, rootValueJob);
+				this.ProcessJob (transaction, newEntityKeys, entityModificationEntry, rootValueJob);
 			}
 
 			foreach (var subRootValueJob in jobsCopy.OfType<ValuePersistenceJob> ().Where (j => !j.IsRootTypeJob))
 			{
-				this.ProcessJob (transaction, newEntityKeys, dbLogEntry, subRootValueJob);
+				this.ProcessJob (transaction, newEntityKeys, entityModificationEntry, subRootValueJob);
 			}
 
 			foreach (var referenceJob in jobsCopy.OfType<ReferencePersistenceJob> ())
@@ -162,9 +161,9 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// Executes the given <see cref="DeletePersistenceJob"/> to the database.
 		/// </summary>
 		/// <param name="transaction">The <see cref="DbTransaction"/> object to use.</param>
-		/// <param name="dbLogEntry">The <see cref="DbLogEntry"/> that must be used to log the operation.</param>
+		/// <param name="entityModificationEntry">The <see cref="EntityModificationEntry"/> that must be used to log the operation.</param>
 		/// <param name="job">The <see cref="DeletePersistenceJob"/> to execute.</param>
-		private void ProcessJob(DbTransaction transaction, DbLogEntry dbLogEntry, DeletePersistenceJob job)
+		private void ProcessJob(DbTransaction transaction, EntityModificationEntry entityModificationEntry, DeletePersistenceJob job)
 		{
 			AbstractEntity entity = job.Entity;
 			DbKey dbKey = this.GetPersistentEntityDbKey (entity);
@@ -172,7 +171,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			this.DeleteEntityValues (transaction, entity, dbKey);
 			this.DeleteEntitySourceCollections (transaction, entity, dbKey);
 			this.DeleteEntityTargetRelations (transaction, entity, dbKey);
-			this.AddEntityDeletionLogEntry (dbLogEntry, entity, dbKey);
+			this.AddEntityDeletionLogEntry (entityModificationEntry, entity, dbKey);
 		}
 
 
@@ -280,16 +279,16 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <summary>
 		/// Adds an entry in the CR_EDL table that store which entities have been deleted.
 		/// </summary>
-		/// <param name="dbLogEntry">The <see cref="DbLogEntry"/> that must be used to log the operation.</param>
+		/// <param name="entityModificationEntry">The <see cref="EntityModificationEntry"/> that must be used to log the operation.</param>
 		/// <param name="entity">The entity which has been deleted.</param>
 		/// <param name="dbKey">The <see cref="DbKey"/> of the deleted entity.</param>
-		private void AddEntityDeletionLogEntry(DbLogEntry dbLogEntry, AbstractEntity entity, DbKey dbKey)
+		private void AddEntityDeletionLogEntry(EntityModificationEntry entityModificationEntry, AbstractEntity entity, DbKey dbKey)
 		{
-			DbId logEntryId = dbLogEntry.EntryId;
-			long instanceType = entity.GetEntityStructuredTypeId ().ToLong ();
+			DbId entityModificationEntryId = entityModificationEntry.EntryId;
+			Druid entityTypeId = entity.GetEntityStructuredTypeId ();
 			DbId entityId = dbKey.Id;
 
-			this.EntityDeletionLogger.CreateEntityDeletionLogEntry (logEntryId, instanceType, entityId);
+			this.DataInfrastructure.CreateEntityDeletionEntry (entityModificationEntryId, entityTypeId, entityId);
 		}
 
 
@@ -299,18 +298,18 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// </summary>
 		/// <param name="transaction">The <see cref="DbTransaction"/> object to use.</param>
 		/// <param name="newEntityKeys">The <see cref="Dictionary{AbstractEntity, DbKey}"/> containing the mapping from the newly inserted <see cref="AbstractEntity"/> to their newly assigned <see cref="DbKey"/>.</param>
-		/// <param name="dbLogEntry">The <see cref="DbLogEntry"/> that must be used to log the operation.</param>
+		/// <param name="entityModificationEntry">The <see cref="EntityModificationEntry"/> that must be used to log the operation.</param>
 		/// <param name="job">The <see cref="ValuePersistenceJob"/> to execute.</param>
-		private void ProcessJob(DbTransaction transaction, Dictionary<AbstractEntity, DbKey> newEntityKeys, DbLogEntry dbLogEntry, ValuePersistenceJob job)
+		private void ProcessJob(DbTransaction transaction, Dictionary<AbstractEntity, DbKey> newEntityKeys, EntityModificationEntry entityModificationEntry, ValuePersistenceJob job)
 		{
 			switch (job.JobType)
 			{
 				case PersistenceJobType.Insert:
-					this.InsertValueData (transaction, newEntityKeys, dbLogEntry, job);
+					this.InsertValueData (transaction, newEntityKeys, entityModificationEntry, job);
 					break;
 
 				case PersistenceJobType.Update:
-					this.UpdateValueData (transaction, dbLogEntry, job);
+					this.UpdateValueData (transaction, entityModificationEntry, job);
 					break;
 
 				default:
@@ -360,9 +359,9 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// </summary>
 		/// <param name="transaction">The <see cref="DbTransaction"/> object to use.</param>
 		/// <param name="newEntityKeys">The <see cref="Dictionary{AbstractEntity, DbKey}"/> containing the mapping from the newly inserted <see cref="AbstractEntity"/> to their newly assigned <see cref="DbKey"/>.</param>
-		/// <param name="dbLogEntry">The <see cref="DbLogEntry"/> that must be used to log the operation.</param>
+		/// <param name="entityModificationEntry">The <see cref="EntityModificationEntry"/> that must be used to log the operation.</param>
 		/// <param name="job">The <see cref="ValuePersistenceJob"/> to execute.</param>
-		private void InsertValueData(DbTransaction transaction, Dictionary<AbstractEntity, DbKey> newEntityKeys, DbLogEntry dbLogEntry, ValuePersistenceJob job)
+		private void InsertValueData(DbTransaction transaction, Dictionary<AbstractEntity, DbKey> newEntityKeys, EntityModificationEntry entityModificationEntry, ValuePersistenceJob job)
 		{
 			Druid leafEntityId = job.Entity.GetEntityStructuredTypeId ();
 			Druid localEntityId = job.LocalEntityId;
@@ -376,12 +375,12 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			if (job.IsRootTypeJob)
 			{
-				fields.Add (this.CreateSqlFieldForLog (table, dbLogEntry));
+				fields.Add (this.CreateSqlFieldForLog (table, entityModificationEntry));
 				fields.Add (this.CreateSqlFieldForType (table, leafEntityId));
 
 				SqlFieldList fieldsToReturn = new SqlFieldList ()
 			    {
-			        new SqlField () { Alias = table.Columns[Tags.ColumnId].GetSqlName() },
+			        new SqlField () { Alias = table.Columns[EntitySchemaBuilder.EntityTableColumnIdName].GetSqlName() },
 			    };
 
 				transaction.SqlBuilder.InsertData (tableName, fields, fieldsToReturn);
@@ -405,9 +404,9 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// Updates the value data for the given <see cref="ValuePersistenceJob"/> in the database.
 		/// </summary>
 		/// <param name="transaction">The <see cref="DbTransaction"/> object to use.</param>
-		/// <param name="dbLogEntry">The <see cref="DbLogEntry"/> that must be used to log the operation.</param>
+		/// <param name="entityModificationEntry">The <see cref="EntityModificationEntry"/> that must be used to log the operation.</param>
 		/// <param name="job">The <see cref="ValuePersistenceJob"/> to execute.</param>
-		private void UpdateValueData(DbTransaction transaction, DbLogEntry dbLogEntry, ValuePersistenceJob job)
+		private void UpdateValueData(DbTransaction transaction, EntityModificationEntry entityModificationEntry, ValuePersistenceJob job)
 		{
 			var fieldIdsWithValues = job.GetFieldIdsWithValues ().ToList ();
 
@@ -422,7 +421,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			if (job.IsRootTypeJob)
 			{
-				fields.Add (this.CreateSqlFieldForLog (table, dbLogEntry));
+				fields.Add (this.CreateSqlFieldForLog (table, entityModificationEntry));
 			}
 
 			SqlFieldList conditions = new SqlFieldList ();
@@ -611,7 +610,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <returns>The <see cref="SqlField"/> that holds the condition.</returns>
 		private SqlField CreateConditionForRowId(DbTable table, DbKey dbKey)
 		{
-			DbColumn column = table.Columns[Tags.ColumnId];
+			DbColumn column = table.Columns[EntitySchemaBuilder.EntityTableColumnIdName];
 			long value = dbKey.Id.Value;
 
 			return this.CreateConditionForField (column, value);
@@ -628,7 +627,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <returns>The <see cref="SqlField"/> that holds the condition.</returns>
 		private SqlField CreateConditionForSourceId(DbTable table, DbKey dbKey)
 		{
-			DbColumn column = table.Columns[Tags.ColumnRefSourceId];
+			DbColumn column = table.Columns[EntitySchemaBuilder.EntityFieldTableColumnSourceIdName];
 			long value = dbKey.Id.Value;
 
 			return this.CreateConditionForField (column, value);
@@ -645,7 +644,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <returns>The <see cref="SqlField"/> that holds the condition.</returns>
 		private SqlField CreateConditionForTargetId(DbTable table, DbKey dbKey)
 		{
-			DbColumn column = table.Columns[Tags.ColumnRefTargetId];
+			DbColumn column = table.Columns[EntitySchemaBuilder.EntityFieldTableColumnTargetIdName];
 			long value = dbKey.Id.Value;
 
 			return this.CreateConditionForField (column, value);
@@ -749,7 +748,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <returns>The <see cref="SqlField"/> that contain the setter clause.</returns>
 		private SqlField CreateSqlFieldForKey(DbTable table, DbKey key)
 		{
-			DbColumn column = table.Columns[Tags.ColumnId];
+			DbColumn column = table.Columns[EntitySchemaBuilder.EntityTableColumnIdName];
 			object value = key.Id.Value;
 
 			return this.CreateSqlFieldForColumn (column, value);
@@ -765,7 +764,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <returns>The <see cref="SqlField"/> that contain the setter clause.</returns>
 		private SqlField CreateSqlFieldForType(DbTable table, Druid leafEntityId)
 		{
-			DbColumn column = table.Columns[Tags.ColumnInstanceType];
+			DbColumn column = table.Columns[EntitySchemaBuilder.EntityTableColumnEntityTypeIdName];
 			object value = leafEntityId.ToLong ();
 
 			return this.CreateSqlFieldForColumn (column, value);
@@ -776,12 +775,12 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// Builds the <see cref="SqlField"/> used to set the value of log of a row in a SQL request.
 		/// </summary>
 		/// <param name="table">The <see cref="DbTable"/> targeted by the SQL request.</param>
-		/// <param name="dbLogEntry">The <see cref="DbLogEntry"/> that must be used to log the operation.</param>
+		/// <param name="entityModificationEntry">The <see cref="EntityModificationEntry"/> that must be used to log the operation.</param>
 		/// <returns>The <see cref="SqlField"/> that contain the setter clause.</returns>
-		private SqlField CreateSqlFieldForLog(DbTable table, DbLogEntry dbLogEntry)
+		private SqlField CreateSqlFieldForLog(DbTable table, EntityModificationEntry entityModificationEntry)
 		{
-			DbColumn column = table.Columns[Tags.ColumnRefLog];
-			long value = dbLogEntry.EntryId.Value;
+			DbColumn column = table.Columns[EntitySchemaBuilder.EntityTableColumnEntityModificationEntryIdName];
+			long value = entityModificationEntry.EntryId.Value;
 
 			return this.CreateSqlFieldForColumn (column, value);
 		}
@@ -796,7 +795,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <returns>The <see cref="SqlField"/> that contain the setter clause.</returns>
 		private SqlField CreateSqlFieldForSourceId(DbTable table, DbKey key)
 		{
-			DbColumn column = table.Columns[Tags.ColumnRefSourceId];
+			DbColumn column = table.Columns[EntitySchemaBuilder.EntityFieldTableColumnSourceIdName];
 			object value = key.Id.Value;
 
 			return this.CreateSqlFieldForColumn (column, value);
@@ -812,7 +811,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <returns>The <see cref="SqlField"/> that contain the setter clause.</returns>
 		private SqlField CreateSqlFieldForTargetId(DbTable table, DbKey key)
 		{
-			DbColumn column = table.Columns[Tags.ColumnRefTargetId];
+			DbColumn column = table.Columns[EntitySchemaBuilder.EntityFieldTableColumnTargetIdName];
 			object value = key.Id.Value;
 
 			return this.CreateSqlFieldForColumn (column, value);
@@ -828,7 +827,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <returns>The <see cref="SqlField"/> that contain the setter clause.</returns>
 		private SqlField CreateSqlFieldForRank(DbTable table, int rank)
 		{
-			DbColumn column = table.Columns[Tags.ColumnRefRank];
+			DbColumn column = table.Columns[EntitySchemaBuilder.EntityFieldTableColumnRankName];
 			object value = rank;
 
 			return this.CreateSqlFieldForColumn (column, value);

@@ -3,9 +3,9 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Database;
-using Epsitec.Cresus.Database.Services;
 
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Saver.PersistenceJobs;
 using Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs;
 
@@ -53,6 +53,15 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		private DataInfrastructure DataInfrastructure
+		{
+			get
+			{
+				return this.DataContext.DataInfrastructure;
+			}
+		}
+
+
 		/// <summary>
 		/// The <see cref="DbInfrastructure"/> associated with this instance.
 		/// </summary>
@@ -60,7 +69,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			get
 			{
-				return this.DataContext.DataInfrastructure.DbInfrastructure;
+				return this.DataInfrastructure.DbInfrastructure;
 			}
 		}
 
@@ -214,17 +223,16 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// </summary>
 		/// <param name="jobs">The <see cref="AbstractPersistenceJob"/> to execute.</param>
 		/// <param name="affectedTables">The <see cref="DbTable"/> that will be modified during the execution.</param>
-		/// <returns>The <see cref="DbLogEntry"/> used by the operation and the mapping between the <see cref="AbstractEntity"/> that have been inserted in the database and their newly assigned <see cref="DbKey"/>.</returns>
+		/// <returns>The <see cref="EntityModificationEntry"/> used by the operation and the mapping between the <see cref="AbstractEntity"/> that have been inserted in the database and their newly assigned <see cref="DbKey"/>.</returns>
 		private IEnumerable<KeyValuePair<AbstractEntity, DbKey>> ProcessPersistenceJobs(IEnumerable<AbstractPersistenceJob> jobs, IEnumerable<DbTable> affectedTables)
 		{
 			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite, affectedTables))
 			{
 				IEnumerable<KeyValuePair<AbstractEntity, DbKey>> newEntityKeys = new List<KeyValuePair<AbstractEntity, DbKey>> ();
 
-				DbId connectionId = new DbId (this.DataContext.DataInfrastructure.ConnectionInformation.ConnectionId);
-				DbLogEntry dbLogEntry = this.DbInfrastructure.ServiceManager.Logger.CreateLogEntry (connectionId);
+				EntityModificationEntry entityModificationEntry = this.DataInfrastructure.CreateEntityModificationEntry ();
 
-				newEntityKeys = this.JobProcessor.ProcessJobs (transaction, dbLogEntry, jobs);
+				newEntityKeys = this.JobProcessor.ProcessJobs (transaction, entityModificationEntry, jobs);
 
 				transaction.Commit ();
 

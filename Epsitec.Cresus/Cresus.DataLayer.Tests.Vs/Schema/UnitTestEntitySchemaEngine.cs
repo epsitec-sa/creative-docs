@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 				);
 
 				EntityTypeEngine entityTypeEngine1 = entityTypeEngine;
-				string tableName1 = EntitySchemaEngine.GetEntityFieldTableName (new Druid ("[J1AN]"), new Druid ("[J1AS]"));
+				string tableName1 = EntitySchemaBuilder.GetEntityFieldTableName (new Druid ("[J1AN]"), new Druid ("[J1AS]"));
 				DbTable table1 = dbInfrastructure.ResolveDbTable (tableName1);
 				dbInfrastructure.RemoveTable (table1);
 
@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 				);
 				
 				EntityTypeEngine entityTypeEngine2 = new EntityTypeEngine (new List<Druid> () { new Druid ("[J1A6]"), new Druid ("[J1A4]") });
-				string tableName2 = EntitySchemaEngine.GetEntityTableName (new Druid ("[J1A6]"));
+				string tableName2 = EntitySchemaBuilder.GetEntityTableName (new Druid ("[J1A6]"));
 				DbTable table2 = dbInfrastructure.ResolveDbTable (tableName2);
 				dbInfrastructure.RemoveTable (table2);
 
@@ -88,8 +88,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 				);
 
 				EntityTypeEngine entityTypeEngine3 = new EntityTypeEngine (new List<Druid> () { new Druid ("[J1A4]") });
-				string tableName3 = EntitySchemaEngine.GetEntityTableName (new Druid ("[J1A4]"));
-				string columnName3 = EntitySchemaEngine.GetEntityFieldColumnName (new Druid ("[J1A3]"));
+				string tableName3 = EntitySchemaBuilder.GetEntityTableName (new Druid ("[J1A4]"));
+				string columnName3 = EntitySchemaBuilder.GetEntityFieldColumnName (new Druid ("[J1A3]"));
 				DbTable table3 = dbInfrastructure.ResolveDbTable (tableName3);
 				DbColumn column3 = table2.Columns[columnName3];
 				dbInfrastructure.RemoveColumnFromTable (table3, column3);
@@ -98,103 +98,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 				(
 					() => new EntitySchemaEngine (dbInfrastructure, entityTypeEngine3)
 				);
-			}
-		}
-
-
-		[TestMethod]
-		public void GetEntityTableNameArgumentCheck()
-		{
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => EntitySchemaEngine.GetEntityTableName (Druid.Empty)
-			);
-		}
-
-
-		[TestMethod]
-		public void GetEntityTableNameTest()
-		{
-			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
-
-			foreach (var type in ete.GetEntityTypes())
-			{
-				string expected = Druid.ToFullString (type.CaptionId.ToLong ());
-
-				string actual = EntitySchemaEngine.GetEntityTableName (type.CaptionId);
-
-				Assert.AreEqual (expected, actual);
-			}
-		}
-
-
-		[TestMethod]
-		public void GetEntityFieldTableNameArgumentCheck()
-		{
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => EntitySchemaEngine.GetEntityFieldTableName (Druid.Empty, Druid.FromLong (1))
-			);
-
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => EntitySchemaEngine.GetEntityFieldTableName (Druid.FromLong (1), Druid.Empty)
-			);
-		}
-
-
-		[TestMethod]
-		public void GetEntityFieldTableNameTest()
-		{
-			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
-
-			var fields =
-				from entityType in ete.GetEntityTypes ()
-				let entityTypeId = entityType.CaptionId
-				from field in ete.GetLocalCollectionFields (entityTypeId)
-				select new { EntityTypeId = entityTypeId, FieldId = field.CaptionId };
-
-			foreach (var field in fields)
-			{
-				string expected = Druid.ToFullString (field.EntityTypeId.ToLong ())
-					+ ":"
-					+ Druid.ToFullString (field.FieldId.ToLong ());
-
-				string actual = EntitySchemaEngine.GetEntityFieldTableName (field.EntityTypeId, field.FieldId);
-
-				Assert.AreEqual (expected, actual);
-			}
-		}
-
-
-		[TestMethod]
-		public void GetEntityFieldColumnNameArgumentCheck()
-		{
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => EntitySchemaEngine.GetEntityFieldColumnName (Druid.Empty)
-			);
-		}
-
-
-		[TestMethod]
-		public void GetEntityFieldColumnNameTest()
-		{
-			EntityTypeEngine ete = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
-
-			var fieldIds =
-				from entityType in ete.GetEntityTypes ()
-				let entityTypeId = entityType.CaptionId
-				from field in ete.GetLocalFields (entityTypeId)
-				where field.Relation == FieldRelation.None || field.Relation == FieldRelation.Reference
-				select field.CaptionId;
-
-			foreach (var fieldId in fieldIds)
-			{
-				string expected = Druid.ToFullString (fieldId.ToLong ());
-				string actual = EntitySchemaEngine.GetEntityFieldColumnName (fieldId);
-
-				Assert.AreEqual (expected, actual);
 			}
 		}
 
@@ -225,7 +128,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 
 				var tables = from entityType in entityTypeEngine.GetEntityTypes ()
 							let entityTypeId = entityType.CaptionId
-							let entityTableName = EntitySchemaEngine.GetEntityTableName (entityTypeId)
+							 let entityTableName = EntitySchemaBuilder.GetEntityTableName (entityTypeId)
 							let entityTable = dbInfrastructure.ResolveDbTable (entityTableName)
 							select new
 							{
@@ -272,7 +175,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 							 let entityTypeId = entityType.CaptionId
 							 from field in entityTypeEngine.GetLocalCollectionFields(entityTypeId)
 							 let fieldId = field.CaptionId
-							 let entityFieldTableName = EntitySchemaEngine.GetEntityFieldTableName (entityTypeId, fieldId)
+							 let entityFieldTableName = EntitySchemaBuilder.GetEntityFieldTableName (entityTypeId, fieldId)
 							 let entityFieldTable = dbInfrastructure.ResolveDbTable (entityFieldTableName)
 							 select new
 							 {
@@ -318,12 +221,12 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 
 				var columns = from entityType in entityTypeEngine.GetEntityTypes ()
 							  let entityTypeId = entityType.CaptionId
-							  let entityTableName = EntitySchemaEngine.GetEntityTableName (entityTypeId)
+							  let entityTableName = EntitySchemaBuilder.GetEntityTableName (entityTypeId)
 							  let entityTable = dbInfrastructure.ResolveDbTable (entityTableName)
 							  from field in entityTypeEngine.GetLocalFields (entityTypeId)
 							  where field.Relation == FieldRelation.None || field.Relation == FieldRelation.Reference
 							  let fieldId = field.CaptionId
-							  let entityFieldColumnName = EntitySchemaEngine.GetEntityFieldColumnName (fieldId)
+							  let entityFieldColumnName = EntitySchemaBuilder.GetEntityFieldColumnName (fieldId)
 							  let entityFieldColumn = entityTable.Columns[entityFieldColumnName]
 							  select new
 							  {
@@ -339,52 +242,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 
 					Assert.AreEqual (expected, actual);
 				}
-			}
-		}
-
-
-		[TestMethod]
-		public void GetEntityTablesTest()
-		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			{
-				var entityTypeEngine = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
-				var entitySchemaEngine = new EntitySchemaEngine (dbInfrastructure, entityTypeEngine);
-
-				var expected = from entityType in entityTypeEngine.GetEntityTypes ()
-							   let entityTypeId = entityType.CaptionId
-							   let entityTableName = EntitySchemaEngine.GetEntityTableName (entityTypeId)
-							   let entityTable = dbInfrastructure.ResolveDbTable (entityTableName)
-							   orderby entityTable.Name
-							   select entityTable;
-
-				var actual = entitySchemaEngine.GetEntityTables ().OrderBy (t => t.Name);
-
-				CollectionAssert.AreEqual (expected.ToList (), actual.ToList ());
-			}
-		}
-
-
-		[TestMethod]
-		public void GetEntityFieldTablesTest()
-		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			{
-				var entityTypeEngine = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
-				var entitySchemaEngine = new EntitySchemaEngine (dbInfrastructure, entityTypeEngine);
-
-				var expected = from entityType in entityTypeEngine.GetEntityTypes ()
-							   let entityTypeId = entityType.CaptionId
-							   from field in entityTypeEngine.GetLocalCollectionFields (entityTypeId)
-							   let fieldId = field.CaptionId
-							   let entityFieldTableName = EntitySchemaEngine.GetEntityFieldTableName (entityTypeId, fieldId)
-							   let entityFieldTable = dbInfrastructure.ResolveDbTable (entityFieldTableName)
-							   orderby entityFieldTable.Name
-							   select entityFieldTable;
-
-				var actual = entitySchemaEngine.GetEntityFieldTables ().OrderBy (t => t.Name);
-
-				CollectionAssert.AreEqual (expected.ToList (), actual.ToList ());
 			}
 		}
 		

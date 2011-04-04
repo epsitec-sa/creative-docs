@@ -93,8 +93,11 @@
     <Compile Include="ImportExport\UnitTestRawEntitySerializer.cs" />
     <Compile Include="ImportExport\UnitTestImportExportManager.cs" />
     <Compile Include="ImportExport\UnitTestXmlEntitySerializer.cs" />
-    <Compile Include="Infrastructure\UnitTestConnectionInformation.cs" />
+    <Compile Include="Infrastructure\UnitTestConnection.cs" />
     <Compile Include="Infrastructure\UnitTestDataInfrastructure.cs" />
+    <Compile Include="Infrastructure\UnitTestEntityDeletionEntry.cs" />
+    <Compile Include="Infrastructure\UnitTestEntityModificationEntry.cs" />
+    <Compile Include="Infrastructure\UnitTestLock.cs" />
     <Compile Include="Infrastructure\UnitTestUidSlot.cs" />
     <Compile Include="Loader\UnitTestSqlContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -107,6 +110,8 @@
     <Compile Include="Loader\UnitTestAliasNode.cs" />
     <Compile Include="Schema\UnitTestEntityEngine.cs" />
     <Compile Include="Schema\UnitTestEntityTypeEngine.cs" />
+    <Compile Include="Schema\UnitTestServiceSchemaBuilder.cs" />
+    <Compile Include="Schema\UnitTestServiceSchemaEngine.cs" />
     <Compile Include="Serialization\UnitTestCollectionData.cs" />
     <Compile Include="Serialization\UnitTestEntityData.cs" />
     <Compile Include="Expressions\UnitTestConstant.cs" />
@@ -150,6 +155,12 @@
     <Compile Include="Proxies\UnitTestKeyedReferenceFieldProxy.cs" />
     <Compile Include="Infrastructure\UnitTestUidGenerator.cs" />
     <Compile Include="Infrastructure\UnitTestLockTransaction.cs" />
+    <Compile Include="Infrastructure\UnitTestConnectionManager.cs" />
+    <Compile Include="Infrastructure\UnitTestEntityDeletionLog.cs" />
+    <Compile Include="Infrastructure\UnitTestInfoManager.cs" />
+    <Compile Include="Infrastructure\UnitTestLockManager.cs" />
+    <Compile Include="Infrastructure\UnitTestEntityModificationLog.cs" />
+    <Compile Include="Infrastructure\UnitTestUidManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.UnitTesting\Common.UnitTesting.csproj">
@@ -199,6 +210,9 @@
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

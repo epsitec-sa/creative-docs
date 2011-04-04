@@ -649,11 +649,6 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 					dbInfrastructure.ResolveDbTable (Tags.TableColumnDef),
 					dbInfrastructure.ResolveDbTable (Tags.TableTableDef),
 					dbInfrastructure.ResolveDbTable (Tags.TableTypeDef),
-					dbInfrastructure.ResolveDbTable (Tags.TableConnection),
-					dbInfrastructure.ResolveDbTable (Tags.TableInfo),
-					dbInfrastructure.ResolveDbTable (Tags.TableLock),
-					dbInfrastructure.ResolveDbTable (Tags.TableLog),
-					dbInfrastructure.ResolveDbTable (Tags.TableUid),
 				};
 
 				Assert.IsTrue (DbSchemaChecker.CheckSchema (dbInfrastructure, dbTables));
@@ -671,7 +666,6 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 					dbInfrastructure.ResolveDbTable (Tags.TableColumnDef),
 					dbInfrastructure.ResolveDbTable (Tags.TableTableDef),
 					dbInfrastructure.ResolveDbTable (Tags.TableTypeDef),
-					dbInfrastructure.ResolveDbTable (Tags.TableConnection),
 					this.CreateDbTableSample3 (dbInfrastructure, "myUndefinedTable")
 				};
 
@@ -820,13 +814,9 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 		private IEnumerable<string> GetSampleTableNames()
 		{
-			yield return Tags.TableConnection;
-			yield return Tags.TableInfo;
-			yield return Tags.TableLock;
-			yield return Tags.TableLog;
+			yield return Tags.TableColumnDef;
 			yield return Tags.TableTableDef;
 			yield return Tags.TableTypeDef;
-			yield return Tags.TableUid;
 		}
 
 

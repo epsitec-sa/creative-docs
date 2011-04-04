@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Serialization
 		{
 			Druid leafEntityId = entity1.GetEntityStructuredTypeId();
 
-			var fieldIds = from field in dataContext.DataInfrastructure.EntityEngine.TypeEngine.GetValueFields (leafEntityId)
+			var fieldIds = from field in dataContext.DataInfrastructure.EntityEngine.EntityTypeEngine.GetValueFields (leafEntityId)
 						   select field.CaptionId;
 
 			foreach (Druid fieldId in fieldIds)
@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Serialization
 		{
 			Druid leafEntityId = entity1.GetEntityStructuredTypeId ();
 
-			var fieldIds = from field in dataContext.DataInfrastructure.EntityEngine.TypeEngine.GetReferenceFields (leafEntityId)
+			var fieldIds = from field in dataContext.DataInfrastructure.EntityEngine.EntityTypeEngine.GetReferenceFields (leafEntityId)
 						   select field.CaptionId;
 
 			foreach (Druid fieldId in fieldIds)
@@ -218,7 +218,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Serialization
 		{
 			Druid leafEntityId = entity1.GetEntityStructuredTypeId ();
 
-			var fieldIds = from field in dataContext.DataInfrastructure.EntityEngine.TypeEngine.GetCollectionFields (leafEntityId)
+			var fieldIds = from field in dataContext.DataInfrastructure.EntityEngine.EntityTypeEngine.GetCollectionFields (leafEntityId)
 						   select field.CaptionId;
 
 			foreach (Druid fieldId in fieldIds)

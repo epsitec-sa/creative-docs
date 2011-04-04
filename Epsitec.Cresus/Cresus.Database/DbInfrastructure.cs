@@ -9,7 +9,6 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Database.Collections;
 using Epsitec.Cresus.Database.Exceptions;
 using Epsitec.Cresus.Database.Logging;
-using Epsitec.Cresus.Database.Services;
 
 using System.Collections.Generic;
 
@@ -136,14 +135,6 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public DbServiceManager					ServiceManager
-		{
-			get
-			{
-				return this.serviceManager;
-			}
-		}
-
 		public ISet<AbstractLog> QueryLogs
 		{
 			get;
@@ -200,10 +191,6 @@ namespace Epsitec.Cresus.Database
 				transaction.Commit ();
 			}
 
-			this.serviceManager = new DbServiceManager (this);
-			this.serviceManager.RegisterServiceTables ();
-			this.serviceManager.TurnOn ();
-
 			return true;
 		}
 
@@ -218,9 +205,6 @@ namespace Epsitec.Cresus.Database
 			{
 				this.ConnectToDatabase (access);
 				this.LoadCoreTables ();
-
-				this.serviceManager = new DbServiceManager (this);
-				this.serviceManager.TurnOn ();
 			}
 			catch
 			{
@@ -1760,20 +1744,24 @@ namespace Epsitec.Cresus.Database
 		/// /// <exception cref="Exceptions.GenericException">Thrown if a type is not registered.</exception>
 		private void CheckForRegisteredTypes(DbTransaction transaction, DbTable table)
 		{
-			foreach (DbColumn column in table.Columns)
+			foreach (DbColumn column in table.Columns.Where (c => c.Cardinality == DbCardinality.None))
 			{
-				if (column.Cardinality == DbCardinality.None)
+				DbTypeDef typeDef = column.Type;
+
+				if (typeDef.Key.IsEmpty)
 				{
-					DbTypeDef typeDef = column.Type;
+					DbTypeDef myTypeDef = this.ResolveDbType (transaction, typeDef.Name);
 
-					System.Diagnostics.Debug.Assert (typeDef != null);
-
-					if (typeDef.Key.IsEmpty)
+					if (myTypeDef == null)
 					{
 						string message = string.Format ("Unregistered type '{0}' used in table '{1}', column '{2}'.",
 							/* */						typeDef.Name, table.Name, column.Name);
 
 						throw new Exceptions.GenericException (this.access, message);
+					}
+					else
+					{
+						typeDef.DefineKey (myTypeDef.Key);
 					}
 				}
 			}
@@ -3565,7 +3553,6 @@ namespace Epsitec.Cresus.Database
 		private ITypeConverter					converter;
 		
 		private TypeHelper						types;
-		private DbServiceManager				serviceManager;
 
 		private DbTableList						internalTables = new DbTableList ();
 		private DbTypeDefList					internalTypes = new DbTypeDefList ();

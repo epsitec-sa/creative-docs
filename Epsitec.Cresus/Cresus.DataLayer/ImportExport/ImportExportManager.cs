@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 			Druid entityId = entity.GetEntityStructuredTypeId ();
 
-			var fields = from field in dataContext.DataInfrastructure.EntityEngine.TypeEngine.GetFields (entityId)
+			var fields = from field in dataContext.DataInfrastructure.EntityEngine.EntityTypeEngine.GetFields (entityId)
 						 where field.Relation == FieldRelation.Reference || field.Relation == FieldRelation.Collection
 						 where entityContext.IsFieldDefined (field.Id, entity)
 						 select new

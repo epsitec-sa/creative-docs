@@ -8,7 +8,6 @@ using Epsitec.Common.Support;
 
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.Database.Logging;
-using Epsitec.Cresus.Database.Services;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.ImportExport;
@@ -32,6 +31,8 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 	/// </summary>
 	public sealed class DataInfrastructure : IIsDisposed
 	{
+		
+		
 		// HACK This class has been temporarily hacked because of how things happens in Cresus.Core
 		// in order to be retro compatible until things are changed there. The hacks in this class
 		// are the check in the constructor that must be uncommented, the TMPSETUP method that should
@@ -39,35 +40,45 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		// removed.
 		// Marc
 
+
+		// TODO Comment this class
+		// Marc
+
+
 		/// <summary>
 		/// Creates a new instance of <c>DataInfrastructure</c>.
 		/// </summary>
-		/// <param name="dbInfrastructure">The <see cref="DbInfrastructure"/> used to communicate to the Database.</param>
-		/// <param name="entityTypeIds">The sequence of entity types ids that are supposed to be managed by this instance.</param>
+		/// <param name="access">The <see cref="DbAccess"/> used to connect to the Database.</param>
+		/// <param name="entityEngine">The instance of <see cref="EntityEngine"/> used by this object.</param>
 		public DataInfrastructure(DbAccess access, EntityEngine entityEngine)
 		{
 			//access.ThrowIf (a => a.IsEmpty, "access is empty");
 			//entityEngine.ThrowIfNull ("entityEngine");
 
 			this.entityEngine = entityEngine;
-			
+
 			this.dbInfrastructure = new DbInfrastructure ();
 
-			if (!access.IsEmpty)
+			if (!access.IsEmpty && entityEngine != null)
 			{
 				this.dbInfrastructure.AttachToDatabase (access);
+
+				this.infoManager = new InfoManager (this.dbInfrastructure, this.entityEngine.ServiceSchemaEngine);
+				this.uidManager = new UidManager (this.dbInfrastructure, this.entityEngine.ServiceSchemaEngine);
+				this.entityModificationLog = new EntityModificationLog (this.dbInfrastructure, this.entityEngine.ServiceSchemaEngine);
+				this.entityDeletionLog = new EntityDeletionLog (this.dbInfrastructure, this.entityEngine.ServiceSchemaEngine);
+				this.connectionManager = new ConnectionManager (this.dbInfrastructure, this.entityEngine.ServiceSchemaEngine);
+				this.lockManager = new LockManager (this.dbInfrastructure, this.entityEngine.ServiceSchemaEngine);
+
 			}
 
 			this.dataContextPool = new DataContextPool ();
 
-			this.connectionInformation = null;
+			this.connection = null;
 		}
 
 		public void TMPSETUP(DbAccess access, EntityEngine entityEngine)
 		{
-			entityEngine.ThrowIfNull ("entityEngine");
-			access.ThrowIf (a => a.IsEmpty, "access is empty");
-
 			if (this.entityEngine != null)
 			{
 				throw new System.InvalidOperationException ();
@@ -77,32 +88,19 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			{
 				throw new System.InvalidOperationException ();
 			}
-			
+
 			this.entityEngine = entityEngine;
 			this.dbInfrastructure.AttachToDatabase (access);
-		}
-		
-		/// <summary>
-		/// The <see cref="DbInfrastructure"></see> object used to communicate with the database.
-		/// </summary>
-		internal DbInfrastructure DbInfrastructure
-		{
-			get
-			{
-				return dbInfrastructure;
-			}
+
+			this.infoManager = new InfoManager (this.dbInfrastructure, this.entityEngine.ServiceSchemaEngine);
+			this.uidManager = new UidManager (this.dbInfrastructure, this.entityEngine.ServiceSchemaEngine);
+			this.entityModificationLog = new EntityModificationLog (this.dbInfrastructure, this.entityEngine.ServiceSchemaEngine);
+			this.entityDeletionLog = new EntityDeletionLog (this.dbInfrastructure, this.entityEngine.ServiceSchemaEngine);
+			this.connectionManager = new ConnectionManager (this.dbInfrastructure, this.entityEngine.ServiceSchemaEngine);
+			this.lockManager = new LockManager (this.dbInfrastructure, this.entityEngine.ServiceSchemaEngine);
 		}
 
 
-		internal EntityEngine EntityEngine
-		{
-			get
-			{
-				return entityEngine;
-			}
-		}
-		
-		
 		/// <summary>
 		/// The <see cref="DataContextPool"></see> associated with this instance.
 		/// </summary>
@@ -115,18 +113,39 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		}
 
 
-		/// <summary>
-		/// The <see cref="ConnectionInformation"/> object that describes the connection of this
-		/// instance with the database.
-		/// </summary>
-		public ConnectionInformation ConnectionInformation
+		internal EntityEngine EntityEngine
 		{
 			get
 			{
-				return this.connectionInformation;
+				return entityEngine;
 			}
 		}
-	
+
+
+		/// <summary>
+		/// The <see cref="DbInfrastructure"></see> object used to communicate with the database.
+		/// </summary>
+		internal DbInfrastructure DbInfrastructure
+		{
+			get
+			{
+				return dbInfrastructure;
+			}
+		}
+
+
+		/// <summary>
+		/// The <see cref="Connection"/> object that describes the connection of this
+		/// instance with the database.
+		/// </summary>
+		public Connection Connection
+		{
+			get
+			{
+				return this.connection;
+			}
+		}
+
 
 		#region IIsDisposed Members
 
@@ -141,7 +160,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		#endregion
 
 
-		#region IDisposable Members 
+		#region IDisposable Members
 
 
 		public void Dispose()
@@ -157,6 +176,16 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			if (disposing && !this.IsDisposed)
 			{
+				if (this.connection != null && this.connection.Status == ConnectionStatus.Open)
+				{
+					try
+					{
+						this.connectionManager.CloseConnection (this.connection.Id);
+					}
+					catch (System.Exception)
+					{
+					}
+				}
 				if (this.DataContextPool != null)
 				{
 					foreach (DataContext dataContext in this.DataContextPool.ToList ())
@@ -170,7 +199,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 				if (this.DbInfrastructure != null)
 				{
 					this.DbInfrastructure.Dispose ();
-				}				
+				}
 
 				this.IsDisposed = true;
 			}
@@ -183,14 +212,18 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		}
 
 
-		public void AddLog(AbstractLog log)
+		public void AddQueryLog(AbstractLog log)
 		{
+			log.ThrowIfNull ("log");
+
 			this.dbInfrastructure.QueryLogs.Add (log);
 		}
 
 
-		public void RemoveLog(AbstractLog log)
+		public void RemoveQueryLog(AbstractLog log)
 		{
+			log.ThrowIfNull ("log");
+
 			this.dbInfrastructure.QueryLogs.Remove (log);
 		}
 
@@ -202,7 +235,9 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <returns>The value of the information corresponding to the given key.</returns>
 		public string GetDatabaseInfo(string key)
 		{
-			return this.dbInfrastructure.ServiceManager.InfoManager.GetInfo (key);
+			this.AssertIsConnected ();
+
+			return this.infoManager.GetInfo (key);
 		}
 
 
@@ -213,10 +248,12 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <param name="value">The new value of the information.</param>
 		public void SetDatabaseInfo(string key, string value)
 		{
-			this.dbInfrastructure.ServiceManager.InfoManager.SetInfo (key, value);
+			this.AssertIsConnected ();
+
+			this.infoManager.SetInfo (key, value);
 		}
 
-		
+
 		/// <summary>
 		/// Creates a new generator for unique ids in the database.
 		/// </summary>
@@ -230,17 +267,17 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is <c>null</c> or empty.</exception>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="slots"/> is <c>null</c>.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="slots"/> is empty.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="slots"/> contains negative elements.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="slots"/> contains slots with inconsistent bounds.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="slots"/> contains overlapping slots.</exception>
 		/// <exception cref="System.InvalidOperationException">If this instance is not connected.</exception>
 		public UidGenerator CreateUidGenerator(string name, IEnumerable<UidSlot> slots)
 		{
 			this.AssertIsConnected ();
 
-			UidGenerator.CreateUidGenerator (this.dbInfrastructure, name, slots);
-			
-			return UidGenerator.GetUidGenerator (this.dbInfrastructure, name);
+			List<UidSlot> orderedSlots = slots == null
+				? null
+				: slots.OrderBy (s => s.MinValue).ToList ();
+
+			return this.uidManager.CreateUidGenerator (name, orderedSlots);
 		}
 
 
@@ -254,7 +291,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			this.AssertIsConnected ();
 
-			UidGenerator.DeleteUidGenerator (this.dbInfrastructure, name);
+			this.uidManager.DeleteUidGenerator (name);
 		}
 
 
@@ -265,11 +302,11 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <returns><c>true</c> if a generator with <paramref name="name"/> exists in the database, <c>false</c> if there aren't.</returns>
 		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is <c>null</c> or empty.</exception>
 		/// <exception cref="System.InvalidOperationException">If this instance is not connected.</exception>
-		public bool UidGeneratorExists(string name)
+		public bool DoesUidGeneratorExists(string name)
 		{
 			this.AssertIsConnected ();
 
-			return UidGenerator.UidGeneratorExists (this.dbInfrastructure, name);
+			return this.uidManager.DoesUidGeneratorExist (name);
 		}
 
 
@@ -286,30 +323,24 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			this.AssertIsConnected ();
 
-			return UidGenerator.GetUidGenerator (this.dbInfrastructure, name);
+			return this.uidManager.GetUidGenerator (name);
 		}
-		
+
 
 		/// <summary>
 		/// Opens the high-level connection with the database: this will create a
-		/// new <see cref="ConnectionInformation"/>.
+		/// new <see cref="Connection"/>.
 		/// </summary>
 		/// <param name="identity">The user/machine identity.</param>
 		/// <exception cref="System.InvalidOperationException">If the connection is already open.</exception>
 		public void OpenConnection(string identity)
 		{
-			if (this.connectionInformation != null)
+			if (this.connection != null && this.connection.Status == ConnectionStatus.Open)
 			{
-				ConnectionStatus status = this.connectionInformation.Status;
-
-				if (status == ConnectionStatus.NotYetOpen || status == ConnectionStatus.Open)
-				{
-					throw new System.InvalidOperationException ("This instance is already connected.");
-				}
+				throw new System.InvalidOperationException ("This instance is already connected.");
 			}
 
-			this.connectionInformation = new ConnectionInformation (this.dbInfrastructure, identity);
-			this.connectionInformation.Open ();
+			this.connection = this.connectionManager.OpenConnection (identity);
 		}
 
 
@@ -319,46 +350,60 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <exception cref="System.InvalidOperationException">If the connection is not open.</exception>
 		public void CloseConnection()
 		{
-			if (this.connectionInformation == null)
-			{
-				throw new System.InvalidOperationException ("This instance is not connected.");
-			}
+			this.AssertIsConnected ();
 
-			this.connectionInformation.Close ();
-		}
-		
+			var id = this.connection.Id;
 
-		/// <summary>
-		/// Notifies the database that this instance of the application is still up and running and
-		/// clean dirty data related to inactive connections in the database.
-		/// </summary>
-		/// <exception cref="System.InvalidOperationException">If the connection is not open.</exception>
-		public void KeepConnectionAlive()
-		{
-			if (this.connectionInformation == null)
-			{
-				throw new System.InvalidOperationException ("This instance is not connected.");
-			}
+			this.connectionManager.CloseConnection (id);
 
-			this.connectionInformation.KeepAlive ();
+			var identity = this.connection.Identity;
+			var status = ConnectionStatus.Closed;
+			var establishmenthTime = this.connection.EstablishmentTime;
+			var refreshTime = this.connection.RefreshTime;
 
-			ConnectionInformation.InterruptDeadConnections (this.dbInfrastructure, System.TimeSpan.FromSeconds (30));
-			LockTransaction.RemoveInactiveLocks (this.dbInfrastructure);
+			this.connection = new Connection (id, identity, status, establishmenthTime, refreshTime);
 		}
 
-				
+
 		/// <summary>
 		/// Refreshes the data about the connection of this instance.
 		/// </summary>
 		/// <exception cref="System.InvalidOperationException">If the connection has never been opened.</exception>
-		public void RefreshConnectionInformation()
+		public void RefreshConnectionData()
 		{
-			if (this.connectionInformation == null)
+			if (this.connection == null)
 			{
 				throw new System.InvalidOperationException ("This instance has never been connected.");
 			}
 
-			this.connectionInformation.RefreshStatus ();
+			this.connection = this.connectionManager.GetConnection (this.connection.Id);
+		}
+
+
+		/// <summary>
+		/// Notifies the database that this instance of the application is still up and running. 
+		/// </summary>
+		/// <exception cref="System.InvalidOperationException">If the connection is not open.</exception>
+		public void KeepConnectionAlive()
+		{
+			this.AssertIsConnected ();
+
+			this.connectionManager.KeepConnectionAlive (this.connection.Id);
+		}
+
+
+		/// <summary>
+		/// Interrupts the connection to the database that are open but inactive for the given
+		/// timeout and clean related data such as locks.
+		/// </summary>
+		/// <param name="timeout">The amount of time after which an open connection should be killed.</param>
+		public void KillDeadConnections(System.TimeSpan timeout)
+		{
+			this.AssertIsConnected ();
+
+			this.connectionManager.KillDeadConnections (timeout);
+
+			this.lockManager.KillDeadLocks ();
 		}
 
 
@@ -367,13 +412,16 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// </summary>
 		/// <param name="lockNames">The name of the locks.</param>
 		/// <returns><c>true</c> if all locks are available, <c>false</c> if at least one is not.</returns>
-		public bool AreAllLocksAvailable(IEnumerable<string> lockNames)
+		public bool AreLocksAvailable(IEnumerable<string> lockNames)
 		{
 			this.AssertIsConnected ();
 
-			return LockTransaction.AreAllLocksAvailable (this.dbInfrastructure, this.connectionInformation.ConnectionId, lockNames);
+			lockNames.ThrowIfNull ("lockNames");
+
+			return this.lockManager.GetLocks (lockNames.ToList ())
+				.All (l => l.Owner.Id == this.connection.Id);
 		}
-				
+
 
 		/// <summary>
 		/// Creates a new <see cref="LockTransaction"/> for the given locks.
@@ -384,7 +432,39 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			this.AssertIsConnected ();
 
-			return new LockTransaction (this.dbInfrastructure, this.connectionInformation.ConnectionId, lockNames);
+			return new LockTransaction (this.lockManager, this.connection.Id, lockNames);
+		}
+
+
+		internal EntityDeletionEntry CreateEntityDeletionEntry(DbId entityModificationEntryId, Druid entityTypeId, DbId entityId)
+		{
+			this.AssertIsConnected ();
+
+			return this.entityDeletionLog.CreateEntry (entityModificationEntryId, entityTypeId, entityId);
+		}
+
+
+		internal IEnumerable<EntityDeletionEntry> GetEntityDeletionEntriesNewerThan(DbId minimumId)
+		{
+			this.AssertIsConnected ();
+
+			return this.entityDeletionLog.GetEntriesNewerThan (minimumId);
+		}
+
+
+		internal EntityModificationEntry CreateEntityModificationEntry()
+		{
+			this.AssertIsConnected ();
+
+			return this.entityModificationLog.CreateEntry (this.connection.Id);
+		}
+
+
+		internal EntityModificationEntry GetLatestEntityModificationEntry()
+		{
+			this.AssertIsConnected ();
+
+			return this.entityModificationLog.GetLatestEntry ();
 		}
 
 
@@ -400,6 +480,9 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 		public bool DeleteDataContext(DataContext dataContext)
 		{
+			dataContext.ThrowIfNull ("dataContext");
+			dataContext.ThrowIf (d => !this.DataContextPool.Contains (d), "dataContext is not owned by this instance");
+
 			dataContext.Dispose ();
 
 			return this.DataContextPool.Remove (dataContext);
@@ -408,25 +491,12 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 		public bool ContainsDataContext(DataContext dataContext)
 		{
+			dataContext.ThrowIfNull ("dataContext");
+
 			return this.DataContextPool.Contains (dataContext);
-	
-		}
-		
-
-		/// <summary>
-		/// Asserts that the connection of this instance is open and throws an
-		/// <see cref="System.InvalidOperationException"/> otherwise.
-		/// </summary>
-		/// <exception cref="System.InvalidOperationException">If this instance is not connected.</exception>
-		private void AssertIsConnected()
-		{
-			if (this.connectionInformation == null || this.connectionInformation.Status != ConnectionStatus.Open)
-			{
-				throw new System.InvalidOperationException ("This instance is not connected.");
-			}
 		}
 
-		
+
 		/// <summary>
 		/// Exports a set of <see cref="AbstractEntity"/> to an xml file. The set of exported
 		/// <see cref="AbstractEntity"/> is defined by the given <see cref="AbstractEntity"/> and
@@ -449,9 +519,11 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			file.ThrowIfNull ("file");
 			dataContext.ThrowIfNull ("dataContext");
-			dataContext.ThrowIf (d => d.DataInfrastructure != this, "dataContext has not been created by this instance.");
+			dataContext.ThrowIf (d => !this.DataContextPool.Contains (d), "dataContext is not owned by this instance");
 			entities.ThrowIfNull ("entity");
 			entities.ThrowIf (e => e.Any (x => dataContext.IsForeignEntity (x)), "entity is not owned by dataContext.");
+
+			this.AssertIsConnected ();
 
 			if (predicate == null)
 			{
@@ -472,6 +544,8 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			file.ThrowIfNull ("file");
 
+			this.AssertIsConnected ();
+
 			ImportExportManager.Import (file, this);
 		}
 
@@ -486,7 +560,14 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			file.ThrowIfNull ("file");
 
-			RawEntitySerializer.Export (file, this.dbInfrastructure, this.EntityEngine.SchemaEngine, exportMode);
+			this.AssertIsConnected ();
+
+			DbInfrastructure dbInfrastructure = this.dbInfrastructure;
+			
+			EntityTypeEngine typeEngine = this.EntityEngine.EntityTypeEngine;
+			EntitySchemaEngine schemaEngine = this.EntityEngine.EntitySchemaEngine;
+
+			RawEntitySerializer.Export (file, dbInfrastructure, typeEngine, schemaEngine, exportMode);
 		}
 
 
@@ -500,11 +581,27 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			file.ThrowIfNull ("file");
 
-			DbId connectionId = new DbId (this.ConnectionInformation.ConnectionId);
-			DbLogEntry dbLogEntry = this.DbInfrastructure.ServiceManager.Logger.CreateLogEntry (connectionId);
+			this.AssertIsConnected ();
+
+			DbId connectionId = this.connection.Id;
+			EntityModificationEntry entityModificationEntry = this.entityModificationLog.CreateEntry (connectionId);
 
 			RawEntitySerializer.CleanDatabase (file, this.dbInfrastructure, importMode);
-			RawEntitySerializer.Import (file, this.dbInfrastructure, dbLogEntry, importMode);
+			RawEntitySerializer.Import (file, this.dbInfrastructure, entityModificationEntry, importMode);
+		}
+
+
+		/// <summary>
+		/// Asserts that the connection of this instance is open and throws an
+		/// <see cref="System.InvalidOperationException"/> otherwise.
+		/// </summary>
+		/// <exception cref="System.InvalidOperationException">If this instance is not connected.</exception>
+		private void AssertIsConnected()
+		{
+			if (this.connection == null || this.connection.Status != ConnectionStatus.Open)
+			{
+				throw new System.InvalidOperationException ("This instance is not connected.");
+			}
 		}
 
 
@@ -516,14 +613,29 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 		private readonly DataContextPool dataContextPool;
 
-		
-		/// <summary>
-		/// The <see cref="ConnectionInformation"/> object that stores the connection data of this
-		/// instance.
-		/// </summary>
-		private ConnectionInformation connectionInformation;
+
+		private /*readonly*/ InfoManager infoManager;
 
 
+		private /*readonly*/ UidManager uidManager;
 
-		}
+
+		private /*readonly*/ EntityModificationLog entityModificationLog;
+
+
+		private /*readonly*/ EntityDeletionLog entityDeletionLog;
+
+
+		private /*readonly*/ ConnectionManager connectionManager;
+
+
+		private /*readonly*/ LockManager lockManager;
+
+
+		private Connection connection;
+
+
+	}
+
+
 }

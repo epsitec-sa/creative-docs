@@ -3,9 +3,9 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Database;
-using Epsitec.Cresus.Database.Services;
 
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Serialization;
 
 using System.Collections.Generic;
@@ -59,6 +59,15 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		private DataInfrastructure DataInfrastructure
+		{
+			get
+			{
+				return this.DataContext.DataInfrastructure;
+			}
+		}
+
+
 		/// <summary>
 		/// The <see cref="DbInfrastructure"/> used by this instance.
 		/// </summary>
@@ -66,19 +75,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		{
 			get
 			{
-				return this.DataContext.DataInfrastructure.DbInfrastructure;
-			}
-		}
-
-
-		/// <summary>
-		/// The <see cref="DbLogger"/> used by this instance.
-		/// </summary>
-		private DbLogger DbLogger
-		{
-			get
-			{
-				return this.DbInfrastructure.ServiceManager.Logger;
+				return this.DataInfrastructure.DbInfrastructure;
 			}
 		}
 
@@ -147,12 +144,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			request.RootEntity.ThrowIfNull ("request.RootEntity");
 			request.RequestedEntity.ThrowIfNull ("request.RequestedEntity");
 
-			DbLogEntry lastLogEntry;
+			EntityModificationEntry latestEntityModificationEntry;
 			IEnumerable<EntityData> entityData;
 
 			using (DbTransaction dbTransaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				lastLogEntry = this.DbLogger.GetLatestLogEntry ();
+				latestEntityModificationEntry = this.DataInfrastructure.GetLatestEntityModificationEntry ();
 				entityData = this.LoaderQueryGenerator.GetEntitiesData (request);
 
 				dbTransaction.Commit ();
@@ -160,7 +157,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			List<T> entities = entityData.Select (d => (T) this.DeserializeEntityData (d)).ToList ();
 
-			this.AssignLogIds (lastLogEntry, entities);
+			this.AssignModificationEntryIds (latestEntityModificationEntry, entities);
 
 			return entities;
 		}
@@ -198,12 +195,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			fieldId.ThrowIf (id => id.IsEmpty, "fieldId cannot be empty");
 
 			EntityData entityData;
-			DbLogEntry lastLogEntry;
+			EntityModificationEntry latestEntityModificationEntry;
 			
 			using (DbTransaction dbTransaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				entityData = this.LoaderQueryGenerator.GetReferenceField (entity, fieldId);
-				lastLogEntry = this.DbLogger.GetLatestLogEntry ();
+				latestEntityModificationEntry = this.DataInfrastructure.GetLatestEntityModificationEntry ();
 
 				dbTransaction.Commit ();
 			}
@@ -214,7 +211,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			{
 				target = this.DeserializeEntityData (entityData);
 
-				this.AssignLogIds (lastLogEntry, new List<AbstractEntity> () { target });
+				this.AssignModificationEntryIds (latestEntityModificationEntry, new List<AbstractEntity> () { target });
 			}
 
 			return target;
@@ -236,19 +233,19 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			fieldId.ThrowIf (id => id.IsEmpty, "fieldId cannot be empty");
 
 			IEnumerable<EntityData> entityData;
-			DbLogEntry lastLogEntry;
+			EntityModificationEntry latestModificationEntry;
 			
 			using (DbTransaction dbTransaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				entityData = this.LoaderQueryGenerator.GetCollectionField (entity, fieldId);
-				lastLogEntry = this.DbLogger.GetLatestLogEntry ();
+				latestModificationEntry = this.DataInfrastructure.GetLatestEntityModificationEntry ();
 
 				dbTransaction.Commit ();
 			}
 			
 			var entities = entityData.Select (d => this.DeserializeEntityData (d)).ToList ();
 
-			this.AssignLogIds (lastLogEntry, entities);
+			this.AssignModificationEntryIds (latestModificationEntry, entities);
 
 			return entities;
 		}
@@ -281,7 +278,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				modifications = modifications || modified;
 			}
 
-			this.DataContext.DefineLogId (entityTypeId, newLogId);
+			this.DataContext.DefineEntityModificationEntryId (entityTypeId, newLogId);
 
 			return modifications;
 		}
@@ -326,7 +323,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			if (entity != null)
 			{
-				long? oldEntityLogId = this.DataContext.GetLogId (entity);
+				long? oldEntityLogId = this.DataContext.GetEntityModificationEntryId (entity);
 				long newEntityLogId = entityData.LogId;
 
 				if (!oldEntityLogId.HasValue || oldEntityLogId.Value < newEntityLogId)
@@ -340,7 +337,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 					modifications = true;
 				}
 
-				this.DataContext.DefineLogId (entity, newLogId);
+				this.DataContext.DefineEntityModificationEntryId (entity, newLogId);
 			}
 
 			return modifications;
@@ -349,25 +346,25 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// <summary>
 		/// Assigns the log ids to the entity types in the associated DataContext.
 		/// </summary>
-		/// <param name="logEntry">The log entry that contains the new log id.</param>
+		/// <param name="entityModificationEntry">The log entry that contains the new log id.</param>
 		/// <param name="entities">The <see cref="AbstractEntity"/> for which to assign the new log ids.</param>
-		private void AssignLogIds(DbLogEntry logEntry, IEnumerable<AbstractEntity> entities)
+		private void AssignModificationEntryIds(EntityModificationEntry entityModificationEntry, IEnumerable<AbstractEntity> entities)
 		{
 			var entityTypeIds = entities
 				.Select (e => e.GetEntityStructuredTypeId ())
 				.Distinct ()
-				.Where (d => !this.DataContext.GetLogId (d).HasValue);
+				.Where (d => !this.DataContext.GetEntityModificationEntryId (d).HasValue);
 
-			long newLogId = logEntry == null ? 0 : logEntry.EntryId.Value;
+			long entryId = entityModificationEntry == null ? 1 : entityModificationEntry.EntryId.Value;
 
 			foreach (Druid entityTypeId in entityTypeIds)
 			{
-				this.DataContext.DefineLogId (entityTypeId, newLogId);
+				this.DataContext.DefineEntityModificationEntryId (entityTypeId, entryId);
 			}
 
 			foreach (AbstractEntity entity in entities)
 			{
-				this.DataContext.DefineLogId (entity, newLogId);
+				this.DataContext.DefineEntityModificationEntryId (entity, entryId);
 			}
 		}
 		

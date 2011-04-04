@@ -1238,15 +1238,13 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 			{
 				using (DbTransaction transaction = infrastructure.BeginTransaction ())
 				{
-					infrastructure.ServiceManager.InfoManager.SetInfo ("key", "value");
-
-					DbTable table = infrastructure.ResolveDbTable (Tags.TableInfo);
+					DbTable table = infrastructure.ResolveDbTable (Tags.TableTypeDef);
 					string tableName = table.GetSqlName ();
 
 					SqlFieldList fieldsToUpdate = new SqlFieldList ()
 		            {
-		                infrastructure.CreateSqlFieldFromAdoValue (table.Columns[Tags.ColumnKey], "newKey"),
-		                infrastructure.CreateSqlFieldFromAdoValue (table.Columns[Tags.ColumnValue], "newValue"),
+		                infrastructure.CreateSqlFieldFromAdoValue (table.Columns[Tags.ColumnName], "K00C"),
+		                infrastructure.CreateSqlFieldFromAdoValue (table.Columns[Tags.ColumnDisplayName], "Other.ReqData"),
 		            };
 
 					SqlFieldList conditions = new SqlFieldList ()
@@ -1254,8 +1252,8 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 		                new SqlFunction
 		                (
 		                    SqlFunctionCode.CompareEqual,
-		                    SqlField.CreateName (tableName, Tags.ColumnKey),
-		                    SqlField.CreateConstant ("key", DbRawType.String)
+		                    SqlField.CreateName (tableName, Tags.ColumnId),
+		                    SqlField.CreateConstant ("11", DbRawType.LargeDecimal)
 		                ),
 		            };
 
@@ -1283,7 +1281,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 					Query entry = log.GetEntry (0);
 
 					Assert.IsNotNull (entry);
-					Assert.AreEqual ("UPDATE CR_INFO SET CR_KEY = @PARAM_0,CR_VALUE = @PARAM_1 WHERE (CR_INFO.CR_KEY = @PARAM_2);\n", entry.SourceCode);
+					Assert.AreEqual ("UPDATE CR_TYPE_DEF SET CR_NAME = @PARAM_0,CR_DISPLAY_NAME = @PARAM_1 WHERE (CR_TYPE_DEF.CR_ID = @PARAM_2);\n", entry.SourceCode);
 					Assert.IsTrue (startTime <= entry.StartTime);
 					Assert.IsTrue (startTime + watch.Elapsed >= entry.StartTime);
 					Assert.IsTrue (watch.Elapsed >= entry.Duration);
@@ -1291,9 +1289,9 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 					Assert.AreEqual ("@PARAM_0", entry.Parameters[0].Name);
 					Assert.AreEqual ("@PARAM_1", entry.Parameters[1].Name);
 					Assert.AreEqual ("@PARAM_2", entry.Parameters[2].Name);
-					Assert.AreEqual ("newKey", entry.Parameters[0].Value);
-					Assert.AreEqual ("newValue", entry.Parameters[1].Value);
-					Assert.AreEqual ("key", entry.Parameters[2].Value);
+					Assert.AreEqual ("K00C", entry.Parameters[0].Value);
+					Assert.AreEqual ("Other.ReqData", entry.Parameters[1].Value);
+					Assert.AreEqual ("11", entry.Parameters[2].Value);
 					Assert.AreEqual (1, entry.Result.Tables.Count);
 					Assert.AreEqual ("result", entry.Result.Tables[0].Name);
 					Assert.AreEqual (1, entry.Result.Tables[0].Columns.Count);
@@ -1469,20 +1467,22 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 			{
 				using (DbTransaction transaction = infrastructure.BeginTransaction ())
 				{
-					DbTable table = infrastructure.ResolveDbTable (Tags.TableInfo);
+					DbTable table = infrastructure.ResolveDbTable (Tags.TableTableDef);
 					string tableName = table.GetSqlName ();
 
 					SqlFieldList fieldsToInsert = new SqlFieldList ()
 		            {
-		                infrastructure.CreateSqlFieldFromAdoValue (table.Columns[Tags.ColumnKey], "key"),
-		                infrastructure.CreateSqlFieldFromAdoValue (table.Columns[Tags.ColumnValue], "value"),
+		                infrastructure.CreateSqlFieldFromAdoValue (table.Columns[Tags.ColumnName], "NEW"),
+						infrastructure.CreateSqlFieldFromAdoValue (table.Columns[Tags.ColumnDisplayName], "NEW"),
+						infrastructure.CreateSqlFieldFromAdoValue (table.Columns[Tags.ColumnInfoXml], "XML"),
 		            };
 
 					SqlFieldList fieldsToReturn = new SqlFieldList ()
 		            {
 		                new SqlField () { Alias = table.Columns[Tags.ColumnId].Name },
-		                new SqlField () { Alias = table.Columns[Tags.ColumnKey].Name },
-		                new SqlField () { Alias = table.Columns[Tags.ColumnValue].Name },
+		                new SqlField () { Alias = table.Columns[Tags.ColumnName].Name },
+		                new SqlField () { Alias = table.Columns[Tags.ColumnDisplayName].Name },
+		                new SqlField () { Alias = table.Columns[Tags.ColumnInfoXml].Name },
 		            };
 
 					transaction.SqlBuilder.InsertData (tableName, fieldsToInsert, fieldsToReturn);
@@ -1509,26 +1509,30 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 					Query entry = log.GetEntry (0);
 
 					Assert.IsNotNull (entry);
-					Assert.AreEqual ("INSERT INTO CR_INFO(CR_KEY,CR_VALUE) VALUES (@PARAM_0,@PARAM_1) RETURNING CR_ID, CR_KEY, CR_VALUE;\n", entry.SourceCode);
+					Assert.AreEqual ("INSERT INTO CR_TABLE_DEF(CR_NAME,CR_DISPLAY_NAME,CR_INFO) VALUES (@PARAM_0,@PARAM_1,@PARAM_2) RETURNING CR_ID, CR_NAME, CR_DISPLAY_NAME, CR_INFO;\n", entry.SourceCode);
 					Assert.IsTrue (startTime <= entry.StartTime);
 					Assert.IsTrue (startTime + watch.Elapsed >= entry.StartTime);
 					Assert.IsTrue (watch.Elapsed >= entry.Duration);
-					Assert.AreEqual (2, entry.Parameters.Count);
+					Assert.AreEqual (3, entry.Parameters.Count);
 					Assert.AreEqual ("@PARAM_0", entry.Parameters[0].Name);
 					Assert.AreEqual ("@PARAM_1", entry.Parameters[1].Name);
-					Assert.AreEqual ("key", entry.Parameters[0].Value);
-					Assert.AreEqual ("value", entry.Parameters[1].Value);
+					Assert.AreEqual ("@PARAM_2", entry.Parameters[2].Name);
+					Assert.AreEqual ("NEW", entry.Parameters[0].Value);
+					Assert.AreEqual ("NEW", entry.Parameters[1].Value);
+					Assert.AreEqual ("XML", entry.Parameters[2].Value);
 					Assert.AreEqual (1, entry.Result.Tables.Count);
 					Assert.AreEqual ("result", entry.Result.Tables[0].Name);
-					Assert.AreEqual (3, entry.Result.Tables[0].Columns.Count);
-					Assert.AreEqual ("@PARAM_2", entry.Result.Tables[0].Columns[0].Name);
-					Assert.AreEqual ("@PARAM_3", entry.Result.Tables[0].Columns[1].Name);
-					Assert.AreEqual ("@PARAM_4", entry.Result.Tables[0].Columns[2].Name);
+					Assert.AreEqual (4, entry.Result.Tables[0].Columns.Count);
+					Assert.AreEqual ("@PARAM_3", entry.Result.Tables[0].Columns[0].Name);
+					Assert.AreEqual ("@PARAM_4", entry.Result.Tables[0].Columns[1].Name);
+					Assert.AreEqual ("@PARAM_5", entry.Result.Tables[0].Columns[2].Name);
+					Assert.AreEqual ("@PARAM_6", entry.Result.Tables[0].Columns[3].Name);
 					Assert.AreEqual (1, entry.Result.Tables[0].Rows.Count);
-					Assert.AreEqual (3, entry.Result.Tables[0].Rows[0].Values.Count);
-					Assert.AreEqual (1, System.Convert.ToInt32 (entry.Result.Tables[0].Rows[0].Values[0]));
-					Assert.AreEqual ("key", entry.Result.Tables[0].Rows[0].Values[1]);
-					Assert.AreEqual ("value", entry.Result.Tables[0].Rows[0].Values[2]);
+					Assert.AreEqual (4, entry.Result.Tables[0].Rows[0].Values.Count);
+					Assert.AreEqual (4, System.Convert.ToInt32 (entry.Result.Tables[0].Rows[0].Values[0]));
+					Assert.AreEqual ("NEW", entry.Result.Tables[0].Rows[0].Values[1]);
+					Assert.AreEqual ("NEW", entry.Result.Tables[0].Rows[0].Values[2]);
+					Assert.AreEqual ("XML", entry.Result.Tables[0].Rows[0].Values[3]);
 					Assert.AreEqual (System.Threading.Thread.CurrentThread.Name, entry.ThreadName);
 
 					System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace (0, true);
@@ -1549,19 +1553,15 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 			{
 				using (DbTransaction transaction = infrastructure.BeginTransaction ())
 				{
-					infrastructure.ServiceManager.InfoManager.SetInfo ("key1", "value1");
-					infrastructure.ServiceManager.InfoManager.SetInfo ("key2", "value2");
-					infrastructure.ServiceManager.InfoManager.SetInfo ("key3", "value3");
-
-					DbTable table = infrastructure.ResolveDbTable (Tags.TableInfo);
+					DbTable table = infrastructure.ResolveDbTable (Tags.TableTableDef);
 					string tableName = table.GetSqlName ();
 
 					SqlSelect query = new SqlSelect ();
 
 					query.Tables.Add (SqlField.CreateName (tableName));
 					query.Fields.Add (SqlField.CreateName (table.Columns[Tags.ColumnId].GetSqlName ()));
-					query.Fields.Add (SqlField.CreateName (table.Columns[Tags.ColumnKey].GetSqlName ()));
-					query.Fields.Add (SqlField.CreateName (table.Columns[Tags.ColumnValue].GetSqlName ()));
+					query.Fields.Add (SqlField.CreateName (table.Columns[Tags.ColumnName].GetSqlName ()));
+					query.Fields.Add (SqlField.CreateName (table.Columns[Tags.ColumnDisplayName].GetSqlName ()));
 
 					transaction.SqlBuilder.SelectData (query);
 
@@ -1578,7 +1578,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 					System.DateTime startTime = System.DateTime.Now;
 
 					watch.Start ();
-					infrastructure.ExecuteRetData (transaction);
+					var x = infrastructure.ExecuteRetData (transaction);
 					watch.Stop ();
 
 					Assert.IsNotNull (log);
@@ -1587,7 +1587,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 					Query entry = log.GetEntry (0);
 
 					Assert.IsNotNull (entry);
-					Assert.AreEqual ("SELECT CR_ID, CR_KEY, CR_VALUE FROM CR_INFO;\n", entry.SourceCode);
+					Assert.AreEqual ("SELECT CR_ID, CR_NAME, CR_DISPLAY_NAME FROM CR_TABLE_DEF;\n", entry.SourceCode);
 					Assert.IsTrue (startTime <= entry.StartTime);
 					Assert.IsTrue (startTime + watch.Elapsed >= entry.StartTime);
 					Assert.IsTrue (watch.Elapsed >= entry.Duration);
@@ -1596,17 +1596,24 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 					Assert.AreEqual ("Table", entry.Result.Tables[0].Name);
 					Assert.AreEqual (3, entry.Result.Tables[0].Columns.Count);
 					Assert.AreEqual ("CR_ID", entry.Result.Tables[0].Columns[0].Name);
-					Assert.AreEqual ("CR_KEY", entry.Result.Tables[0].Columns[1].Name);
-					Assert.AreEqual ("CR_VALUE", entry.Result.Tables[0].Columns[2].Name);
+					Assert.AreEqual ("CR_NAME", entry.Result.Tables[0].Columns[1].Name);
+					Assert.AreEqual ("CR_DISPLAY_NAME", entry.Result.Tables[0].Columns[2].Name);
 					Assert.AreEqual (3, entry.Result.Tables[0].Rows.Count);
 
-					for (int i = 0; i < 3; i++)
-					{
-						Assert.AreEqual (3, entry.Result.Tables[0].Rows[0].Values.Count);
-						Assert.AreEqual (i + 1, System.Convert.ToInt32 (entry.Result.Tables[0].Rows[i].Values[0]));
-						Assert.AreEqual ("key" + (i + 1), entry.Result.Tables[0].Rows[i].Values[1]);
-						Assert.AreEqual ("value" + (i + 1), entry.Result.Tables[0].Rows[i].Values[2]);
-					}
+					Assert.AreEqual (3, entry.Result.Tables[0].Rows[0].Values.Count);
+					Assert.AreEqual (1, System.Convert.ToInt32 (entry.Result.Tables[0].Rows[0].Values[0]));
+					Assert.AreEqual ("CR_TABLE_DEF", entry.Result.Tables[0].Rows[0].Values[1]);
+					Assert.AreEqual ("CR_TABLE_DEF", entry.Result.Tables[0].Rows[0].Values[2]);
+
+					Assert.AreEqual (3, entry.Result.Tables[0].Rows[0].Values.Count);
+					Assert.AreEqual (2, System.Convert.ToInt32 (entry.Result.Tables[0].Rows[1].Values[0]));
+					Assert.AreEqual ("CR_COLUMN_DEF", entry.Result.Tables[0].Rows[1].Values[1]);
+					Assert.AreEqual ("CR_COLUMN_DEF", entry.Result.Tables[0].Rows[1].Values[2]);
+
+					Assert.AreEqual (3, entry.Result.Tables[0].Rows[0].Values.Count);
+					Assert.AreEqual (3, System.Convert.ToInt32 (entry.Result.Tables[0].Rows[2].Values[0]));
+					Assert.AreEqual ("CR_TYPE_DEF", entry.Result.Tables[0].Rows[2].Values[1]);
+					Assert.AreEqual ("CR_TYPE_DEF", entry.Result.Tables[0].Rows[2].Values[2]);
 
 					Assert.AreEqual (System.Threading.Thread.CurrentThread.Name, entry.ThreadName);
 

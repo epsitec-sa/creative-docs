@@ -37,6 +37,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <summary>
 		/// Builds a new empty <see cref="EntityCache"/>.
 		/// </summary>
+		/// <param name="dataContext">The <see cref="DataContext"/> used by this isntance.</param>
 		/// <param name="entityTypeEngine">The <see cref="EntityTypeEngine"/> used by this instance.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="entityTypeEngine"/> is <c>null</c>.</exception>
 		public EntityCache(DataContext dataContext, EntityTypeEngine entityTypeEngine)
@@ -48,8 +49,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.entityIdToEntity = new Dictionary<long, AbstractEntity> ();
 			this.entityIdToEntityKey = new Dictionary<long, EntityKey> ();
 			this.entityKeyToEntity = new Dictionary<EntityKey, AbstractEntity> ();
-			this.entityTypeIdToLogId = new Dictionary<Druid, long> ();
-			this.entityIdToLogId = new Dictionary<long, long> ();
+			this.entityTypeIdToEntityModificationEntryId = new Dictionary<Druid, long> ();
+			this.entityIdToEntityModificationEntryId = new Dictionary<long, long> ();
 		}
 
 		private DataContext DataContext
@@ -63,7 +64,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			get
 			{
-				return this.entityTypeEngine ?? this.DataContext.DataInfrastructure.EntityEngine.TypeEngine;
+				return this.entityTypeEngine ?? this.DataContext.DataInfrastructure.EntityEngine.EntityTypeEngine;
 			}
 			set
 			{
@@ -111,9 +112,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 				this.entityKeyToEntity.Remove (entityKey);
 			}
 
-			if (this.entityIdToLogId.ContainsKey (id))
+			if (this.entityIdToEntityModificationEntryId.ContainsKey (id))
 			{
-				this.entityIdToLogId.Remove (id);
+				this.entityIdToEntityModificationEntryId.Remove (id);
 			}
 		}
 
@@ -153,9 +154,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <param name="entityTypeId">The <see cref="Druid"/> that identifies the entity type.</param>
 		/// <param name="logId">The log id that must be associated with the entity type.</param>
-		public void DefineLogId(Druid entityTypeId, long logId)
+		public void DefineEntityModificationEntryId(Druid entityTypeId, long logId)
 		{
-			this.entityTypeIdToLogId[entityTypeId] = logId;
+			this.entityTypeIdToEntityModificationEntryId[entityTypeId] = logId;
 		}
 
 
@@ -166,7 +167,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="logId">The log id that must be associated with the <see cref="AbstractEntity"/>.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is not defined in this instance.</exception>
-		public void DefineLogId(AbstractEntity entity, long logId)
+		public void DefineEntityModificationEntryId(AbstractEntity entity, long logId)
 		{
 			entity.ThrowIfNull ("entity");
 
@@ -177,7 +178,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				throw new System.ArgumentException ("Entity is not yet defined cache");
 			}
 
-			this.entityIdToLogId[id] = logId;
+			this.entityIdToEntityModificationEntryId[id] = logId;
 		}
 
 
@@ -249,9 +250,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <returns>The log is currently associated with the given entity type.</returns>
 		public long? GetLogId(Druid entityTypeId)
 		{
-			if (this.entityTypeIdToLogId.ContainsKey (entityTypeId))
+			if (this.entityTypeIdToEntityModificationEntryId.ContainsKey (entityTypeId))
 			{
-				return this.entityTypeIdToLogId[entityTypeId];
+				return this.entityTypeIdToEntityModificationEntryId[entityTypeId];
 			}
 			else
 			{
@@ -271,9 +272,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			long id = entity.GetEntitySerialId ();
 
-			if (this.entityIdToLogId.ContainsKey (id))
+			if (this.entityIdToEntityModificationEntryId.ContainsKey (id))
 			{
-				return this.entityIdToLogId[id];
+				return this.entityIdToEntityModificationEntryId[id];
 			}
 			else
 			{
@@ -288,13 +289,13 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <returns>The smallest log id.</returns>
 		public long? GetMinimumLogId()
 		{
-			if (this.entityTypeIdToLogId.Count == 0)
+			if (this.entityTypeIdToEntityModificationEntryId.Count == 0)
 			{
 				return null;
 			}
 			else
 			{
-				return this.entityTypeIdToLogId.Values.Min ();
+				return this.entityTypeIdToEntityModificationEntryId.Values.Min ();
 			}
 		}
 
@@ -316,7 +317,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <returns>The sequence of <see cref="Druid"/>.</returns>
 		public IEnumerable<Druid> GetEntityTypeIds()
 		{
-			return this.entityTypeIdToLogId.Keys;
+			return this.entityTypeIdToEntityModificationEntryId.Keys;
 		}
 		
 
@@ -341,12 +342,12 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <summary>
 		/// Maps the <see cref="Druid"/> of the entity types known by this instance to their log id.
 		/// </summary>
-		private readonly Dictionary<Druid, long> entityTypeIdToLogId;
+		private readonly Dictionary<Druid, long> entityTypeIdToEntityModificationEntryId;
 		
 		/// <summary>
 		/// Maps the entity serial ids to their corresponding log sequence number.
 		/// </summary>
-		private readonly Dictionary<long, long> entityIdToLogId;
+		private readonly Dictionary<long, long> entityIdToEntityModificationEntryId;
 
 
 	}

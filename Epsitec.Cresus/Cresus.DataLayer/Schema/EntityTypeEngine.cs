@@ -37,6 +37,10 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		 */
 
 
+		// TODO Comment this class
+		// Marc
+
+
 		public EntityTypeEngine(IEnumerable<Druid> entityTypeIds)
 		{
 			entityTypeIds.ThrowIfNull ("entityTypeIds");
@@ -82,11 +86,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		private ReadOnlyDictionary<Druid, StructuredType> ComputeEntityTypeCache()
 		{
 			return this.entityTypesCache
-				.ToDictionary
-				(
-					t => t.CaptionId,
-					t => t
-				)
+				.ToDictionary (t => t.CaptionId)
 				.AsReadOnlyDictionary ();
 		}
 

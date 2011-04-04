@@ -139,12 +139,6 @@
     <Compile Include="Logging\Result.cs" />
     <Compile Include="Logging\Row.cs" />
     <Compile Include="Logging\Table.cs" />
-    <Compile Include="Services\DbAbstractService.cs" />
-    <Compile Include="Services\DbConnection.cs" />
-    <Compile Include="Services\DbEntityDeletionLogEntry.cs" />
-    <Compile Include="Services\DbEntityDeletionLogger.cs" />
-    <Compile Include="Services\DbInfoManager.cs" />
-    <Compile Include="Services\DbAbstractTableService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -170,14 +164,7 @@
     <Compile Include="Collections\SqlFieldList.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\DbConnectionManager.cs" />
-    <Compile Include="Services\DbConnectionStatus.cs" />
-    <Compile Include="Services\DbLock.cs" />
-    <Compile Include="Services\DbLockManager.cs" />
     <Compile Include="DbSchemaChecker.cs" />
-    <Compile Include="Services\DbServiceManager.cs" />
-    <Compile Include="Services\DbUidSlot.cs" />
-    <Compile Include="Services\DbUidManager.cs" />
     <Compile Include="Exceptions\EmptyDatabaseException.cs" />
     <Compile Include="Exceptions\IncompatibleDatabaseException.cs" />
     <Compile Include="SqlIndex.cs" />
@@ -190,7 +177,6 @@
     <Compile Include="SqlFunctionCode.cs" />
     <Compile Include="DbNullability.cs" />
     <Compile Include="SqlAggregateFunction.cs" />
-    <Compile Include="Services\DbLogEntry.cs" />
     <Compile Include="IXmlSerializable.cs" />
     <Compile Include="DbTypeDef.cs" />
     <Compile Include="DbColumnClass.cs" />
@@ -224,9 +210,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DbKey.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\DbLogger.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DbNumDef.cs">

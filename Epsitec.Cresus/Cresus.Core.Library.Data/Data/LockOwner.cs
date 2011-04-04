@@ -16,12 +16,12 @@ namespace Epsitec.Cresus.Core.Data
 		/// <summary>
 		/// Initializes a new instance of the <see cref="LockOwner"/> class.
 		/// </summary>
-		/// <param name="owner">The low level lock owner information.</param>
-		internal LockOwner(DataLayer.Infrastructure.LockOwner owner)
+		/// <param name="lock">The low level lock information.</param>
+		internal LockOwner(DataLayer.Infrastructure.Lock l)
 		{
-			this.User         = ConnectionUserIdentity.Parse (owner.ConnectionIdentity);
-			this.LockName     = owner.LockName;
-			this.LockTime = new DatabaseTime (owner.LockDateTime);
+			this.User         = ConnectionUserIdentity.Parse (l.Owner.Identity);
+			this.LockName     = l.Name;
+			this.LockTime = new DatabaseTime (l.CreationTime);
 		}
 
 

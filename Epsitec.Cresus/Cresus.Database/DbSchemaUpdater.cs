@@ -104,15 +104,8 @@ namespace Epsitec.Cresus.Database
 
 		private static bool IsBuiltInOrRelation(DbInfrastructure dbInfrastructure, DbTable dbTable)
 		{
-			// HACK This method is an ugly hack and should be cleaned when the categories for the
-			// tables are implemented.
-			// Marc
-
 			return dbTable.Category == DbElementCat.Relation
-				|| dbInfrastructure.FindBuiltInDbTables ()
-				.Select (t => t.Name)
-				.Append (Tags.TableConnection, Tags.TableInfo, Tags.TableLog, Tags.TableLock, Tags.TableUid, Tags.TableEntityDeletionLog)
-				.Any (n => string.Equals (n, dbTable.Name));
+				|| dbInfrastructure.FindBuiltInDbTables ().Contains (dbTable, INameComparer.Instance);
 		}
 
 
@@ -191,7 +184,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public static IEnumerable<System.Tuple<DbTable, DbTable>> GetDbTablesWithIndexDifference(IEnumerable<System.Tuple<DbTable, DbTable>> dbTablesToAlter)
+		private static IEnumerable<System.Tuple<DbTable, DbTable>> GetDbTablesWithIndexDifference(IEnumerable<System.Tuple<DbTable, DbTable>> dbTablesToAlter)
 		{
 			return dbTablesToAlter
 				.Where (t => !DbSchemaChecker.AreDbTableIndexesEqual (t.Item1, t.Item2));

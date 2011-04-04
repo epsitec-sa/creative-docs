@@ -16,30 +16,47 @@ namespace Epsitec.Cresus.DataLayer.Schema
 	{
 
 
+		// TODO Comment this class
+		// Marc
+
+
 		private EntityEngine(DbInfrastructure infrastructure, IEnumerable<Druid> entityTypeIds)
 		{
-			var typeEngine = new EntityTypeEngine (entityTypeIds);
-			var schemaEngine = new EntitySchemaEngine (infrastructure, typeEngine);
+			var serviceTableNames = ServiceSchemaBuilder.GetServiceTableNames ();
 
-			this.typeEngine = typeEngine;
-			this.schemaEngine = schemaEngine;
+			var entityTypeEngine = new EntityTypeEngine (entityTypeIds);
+			var entitySchemaEngine = new EntitySchemaEngine (infrastructure, entityTypeEngine);
+			var serviceSchemaEngine = new ServiceSchemaEngine (infrastructure, serviceTableNames);
+
+			this.entityTypeEngine = entityTypeEngine;
+			this.entitySchemaEngine = entitySchemaEngine;
+			this.serviceSchemaEngine = serviceSchemaEngine;
 		}
 
 
-		internal EntitySchemaEngine SchemaEngine
+		internal EntitySchemaEngine EntitySchemaEngine
 		{
 			get
 			{
-				return this.schemaEngine;
+				return this.entitySchemaEngine;
 			}
 		}
 
 
-		internal EntityTypeEngine TypeEngine
+		internal EntityTypeEngine EntityTypeEngine
 		{
 			get
 			{
-				return this.typeEngine;
+				return this.entityTypeEngine;
+			}
+		}
+
+
+		internal ServiceSchemaEngine ServiceSchemaEngine
+		{
+			get
+			{
+				return this.serviceSchemaEngine;
 			}
 		}
 
@@ -49,17 +66,13 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			access.ThrowIf (a => a.IsEmpty, "access is empty");
 			entityTypeIds.ThrowIfNull ("entityTypeIds");
 
-			using (DbInfrastructure infrastructure = new DbInfrastructure ())
+			System.Func<DbInfrastructure, IList<DbTable>, int> action = (infrastructure, tables) =>
 			{
-				infrastructure.AttachToDatabase (access);
+				DbSchemaUpdater.UpdateSchema (infrastructure, tables);
+				return 0;
+			};
 
-				var relatedEntityTypeIds = EntityTypeEngine.GetRelatedEntityTypeIds (entityTypeIds).ToList ();
-
-				var typeEngine = new EntityTypeEngine (relatedEntityTypeIds);
-				var schemaBuilder = new EntitySchemaBuilder (typeEngine, infrastructure);
-
-				schemaBuilder.RegisterSchema (relatedEntityTypeIds);
-			}
+			EntityEngine.ExecuteAction (access, entityTypeIds, action);
 		}
 
 
@@ -68,17 +81,11 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			access.ThrowIf (a => a.IsEmpty, "access is empty");
 			entityTypeIds.ThrowIfNull ("entityTypeIds");
 
-			using (DbInfrastructure infrastructure = new DbInfrastructure ())
-			{
-				infrastructure.AttachToDatabase (access);
+			System.Func<DbInfrastructure, IList<DbTable>, bool> action = (infrastructure, tables) =>
 
-				var relatedEntityTypeIds = EntityTypeEngine.GetRelatedEntityTypeIds (entityTypeIds).ToList ();
+				DbSchemaChecker.CheckSchema (infrastructure, tables);
 
-				var typeEngine = new EntityTypeEngine (relatedEntityTypeIds);
-				var schemaBuilder = new EntitySchemaBuilder (typeEngine, infrastructure);
-
-				return schemaBuilder.CheckSchema (relatedEntityTypeIds);
-			}
+			return EntityEngine.ExecuteAction (access, entityTypeIds, action);
 		}
 
 
@@ -87,17 +94,13 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			access.ThrowIf (a => a.IsEmpty, "access is empty");
 			entityTypeIds.ThrowIfNull ("entityTypeIds");
 
-			using (DbInfrastructure infrastructure = new DbInfrastructure ())
+			System.Func<DbInfrastructure, IList<DbTable>, int> action = (infrastructure, tables) =>
 			{
-				infrastructure.AttachToDatabase (access);
+				DbSchemaUpdater.UpdateSchema (infrastructure, tables);
+				return 0;
+			};
 
-				var relatedEntityTypeIds = EntityTypeEngine.GetRelatedEntityTypeIds (entityTypeIds).ToList ();
-
-				var typeEngine = new EntityTypeEngine (relatedEntityTypeIds);
-				var schemaBuilder = new EntitySchemaBuilder (typeEngine, infrastructure);
-
-				schemaBuilder.UpdateSchema (relatedEntityTypeIds);
-			}
+			EntityEngine.ExecuteAction (access, entityTypeIds, action);
 		}
 
 
@@ -117,10 +120,33 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		}
 
 
-		private readonly EntitySchemaEngine schemaEngine;
+		private static T ExecuteAction<T>(DbAccess access, IEnumerable<Druid> entityTypeIds, System.Func<DbInfrastructure, IList<DbTable>, T> action)
+		{
+			using (DbInfrastructure infrastructure = new DbInfrastructure ())
+			{
+				infrastructure.AttachToDatabase (access);
+
+				var relatedEntityTypeIds = EntityTypeEngine.GetRelatedEntityTypeIds (entityTypeIds).ToList ();
+
+				var typeEngine = new EntityTypeEngine (relatedEntityTypeIds);
+
+				var entityTables = EntitySchemaBuilder.BuildTables (typeEngine);
+				var serviceTables = ServiceSchemaBuilder.BuildServiceTables ();
+
+				var tables = entityTables.Concat (serviceTables).ToList ();
+
+				return action (infrastructure, tables);
+			}
+		}
+		
+
+		private readonly EntitySchemaEngine entitySchemaEngine;
 
 
-		private readonly EntityTypeEngine typeEngine;
+		private readonly EntityTypeEngine entityTypeEngine;
+
+
+		private readonly ServiceSchemaEngine serviceSchemaEngine;
 
 
 	}

@@ -4,6 +4,7 @@ using Epsitec.Common.UnitTesting;
 
 using Epsitec.Cresus.Database;
 
+using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Schema;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Helpers;
 
@@ -125,7 +126,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 
 
 		[TestMethod]
-		public void UpdateAndCheckTest()
+		public void UpdateAndCheckTest1()
 		{
 			var access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
 			
@@ -152,6 +153,33 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 
 
 		[TestMethod]
+		public void UpdateAndCheckTest2()
+		{
+			var access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
+
+			var entityTypeIds = this.GetSubGraphOfEntityTypeIds ().Item2;
+
+			EntityEngine.Create (access, entityTypeIds);
+
+			Assert.IsTrue (EntityEngine.Check (access, entityTypeIds));
+
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable connectionTable = dbInfrastructure.ResolveDbTable (ConnectionManager.TableFactory.TableName);
+				DbColumn column = connectionTable.Columns[ConnectionManager.TableFactory.ColumnStatusName];
+
+				dbInfrastructure.RemoveColumnFromTable (connectionTable, column);
+			}
+
+			Assert.IsFalse (EntityEngine.Check (access, entityTypeIds));
+
+			EntityEngine.Update (access, entityTypeIds);
+
+			Assert.IsTrue (EntityEngine.Check (access, entityTypeIds));
+		}
+
+
+		[TestMethod]
 		public void ConnectTest()
 		{
 			var access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
@@ -163,18 +191,36 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 			EntityEngine engine = EntityEngine.Connect (access, partialEntityTypeIds);
 
 			Assert.IsNotNull (engine);
-			Assert.IsNotNull (engine.TypeEngine);
-			Assert.IsNotNull (engine.SchemaEngine);
+			Assert.IsNotNull (engine.EntityTypeEngine);
+			Assert.IsNotNull (engine.EntitySchemaEngine);
+			Assert.IsNotNull (engine.ServiceSchemaEngine);
 
 			var expectedTypeIds = completeEntityTypeIds.OrderBy (id => id.ToLong ()).ToList ();
-			var actualTypeIds = engine.TypeEngine.GetEntityTypes ().Select (t => t.CaptionId).OrderBy (id => id.ToLong ()).ToList ();
+			var actualTypeIds = engine.EntityTypeEngine.GetEntityTypes ().Select (t => t.CaptionId).OrderBy (id => id.ToLong ()).ToList ();
 
 			CollectionAssert.AreEqual (expectedTypeIds, actualTypeIds);
 
-			var expectedTableIds = completeEntityTypeIds.OrderBy (id => id.ToLong ()).ToList ();
-			var actualTableIds = engine.SchemaEngine.GetEntityTables ().Select (t => t.CaptionId).OrderBy (id => id.ToLong ()).ToList ();
+			var expectedEntityTableIds = completeEntityTypeIds.OrderBy (id => id.ToLong ()).ToList ();
 
-			CollectionAssert.AreEqual (expectedTableIds, actualTableIds);
+			foreach (var tableId in expectedEntityTableIds)
+			{
+				Assert.IsNotNull (engine.EntitySchemaEngine.GetEntityTable (tableId));
+			}
+			
+			var serviceTableNames = new List<string> ()
+			{
+				ConnectionManager.TableFactory.TableName,
+				EntityDeletionLog.TableFactory.TableName,
+				EntityModificationLog.TableFactory.TableName,
+				InfoManager.TableFactory.TableName,
+				LockManager.TableFactory.TableName,
+				UidManager.TableFactory.TableName,
+			};
+
+			foreach (var serviceTableName in serviceTableNames)
+			{
+				Assert.IsNotNull (engine.ServiceSchemaEngine.GetServiceTable (serviceTableName));
+			}
 		}
 
 

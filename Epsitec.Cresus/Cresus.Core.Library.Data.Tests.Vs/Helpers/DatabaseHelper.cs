@@ -9,18 +9,20 @@ using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Schema;
 
+using System.Collections.Generic;
+
 
 namespace Epsitec.Cresus.Core.Library.Data.Tests.Vs.Helpers
 {
 
 
-	internal static class DbInfrastructureHelper
+	internal static class DatabaseHelper
 	{
-
-
+		
+		
 		public static bool CheckDatabaseExistence()
 		{
-			DbAccess access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
+			DbAccess access = DatabaseHelper.GetDbAccessForTestDatabase ();
 
 			return DbInfrastructure.CheckDatabaseExistence (access);
 		}
@@ -28,18 +30,20 @@ namespace Epsitec.Cresus.Core.Library.Data.Tests.Vs.Helpers
 
 		public static void CreateTestDatabase()
 		{
+			DbAccess access = DatabaseHelper.GetDbAccessForTestDatabase ();
+
 			using (DbInfrastructure infrastructure = new DbInfrastructure ())
 			{
-				DbAccess access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
-
 				infrastructure.CreateDatabase (access);
 			}
+
+			EntityEngine.Create (access, new List<Druid> ());
 		}
 
 
 		public static void DeleteTestDatabase()
 		{
-			DbAccess access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
+			DbAccess access = DatabaseHelper.GetDbAccessForTestDatabase ();
 
 			DbInfrastructure.DropDatabase (access);
 		}
@@ -47,18 +51,18 @@ namespace Epsitec.Cresus.Core.Library.Data.Tests.Vs.Helpers
 
 		public static void ResetTestDatabase()
 		{
-			if (DbInfrastructureHelper.CheckDatabaseExistence ())
+			if (DatabaseHelper.CheckDatabaseExistence ())
 			{
-				DbInfrastructureHelper.DeleteTestDatabase ();
+				DatabaseHelper.DeleteTestDatabase ();
 			}
 
-			DbInfrastructureHelper.CreateTestDatabase ();
+			DatabaseHelper.CreateTestDatabase ();
 		}
 
 
 		public static DbInfrastructure CreateDbInfrastructure()
 		{
-			DbAccess dbAccess = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
+			DbAccess dbAccess = DatabaseHelper.GetDbAccessForTestDatabase ();
 
 			DbInfrastructure dbInfrastructure = new DbInfrastructure ();
 
@@ -70,7 +74,7 @@ namespace Epsitec.Cresus.Core.Library.Data.Tests.Vs.Helpers
 
 		public static DataInfrastructure CreateDataInfrastructure()
 		{
-			DbAccess dbAccess = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
+			DbAccess dbAccess = DatabaseHelper.GetDbAccessForTestDatabase ();
 
 			EntityEngine engine = EntityEngine.Connect (dbAccess, new Druid[0]);
 

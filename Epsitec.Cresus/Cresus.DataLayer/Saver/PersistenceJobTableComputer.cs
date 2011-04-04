@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			get
 			{
-				return this.DataContext.DataInfrastructure.EntityEngine.SchemaEngine;
+				return this.DataContext.DataInfrastructure.EntityEngine.EntitySchemaEngine;
 			}
 		}
 
@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			get
 			{
-				return this.DataContext.DataInfrastructure.EntityEngine.TypeEngine;
+				return this.DataContext.DataInfrastructure.EntityEngine.EntityTypeEngine;
 			}
 		}
 

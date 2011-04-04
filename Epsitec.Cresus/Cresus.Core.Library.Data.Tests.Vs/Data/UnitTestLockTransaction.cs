@@ -32,14 +32,14 @@ namespace Epsitec.Cresus.Core.Library.Data.Tests.Vs.Data
 		[TestInitialize]
 		public void TestInitialize()
 		{
-			DbInfrastructureHelper.ResetTestDatabase ();
+			DatabaseHelper.ResetTestDatabase ();
 		}
 
 
 		[TestMethod]
 		public void SimpleTest1()
 		{
-			using (var dataInfrastructure = DbInfrastructureHelper.CreateDataInfrastructure ())
+			using (var dataInfrastructure = DatabaseHelper.CreateDataInfrastructure ())
 			{
 				dataInfrastructure.OpenConnection ("id");
 
@@ -55,8 +55,8 @@ namespace Epsitec.Cresus.Core.Library.Data.Tests.Vs.Data
 		[TestMethod]
 		public void SimpleTest2()
 		{
-			using (var dataInfrastructure1 = DbInfrastructureHelper.CreateDataInfrastructure ())
-			using (var dataInfrastructure2 = DbInfrastructureHelper.CreateDataInfrastructure ())
+			using (var dataInfrastructure1 = DatabaseHelper.CreateDataInfrastructure ())
+			using (var dataInfrastructure2 = DatabaseHelper.CreateDataInfrastructure ())
 			{
 				string cId1 = new ConnectionUserIdentity (new ItemCode ("id1")).ToString ();
 				string cId2 = new ConnectionUserIdentity (new ItemCode ("id2")).ToString ();
@@ -108,10 +108,10 @@ namespace Epsitec.Cresus.Core.Library.Data.Tests.Vs.Data
 		[TestMethod]
 		public void GetLockOwnersAndCreationTimeTest()
 		{
-			using (var dataInfrastructure1 = DbInfrastructureHelper.CreateDataInfrastructure ())
-			using (var dataInfrastructure2 = DbInfrastructureHelper.CreateDataInfrastructure ())
-			using (var dataInfrastructure3 = DbInfrastructureHelper.CreateDataInfrastructure ())
-			using (var dataInfrastructure4 = DbInfrastructureHelper.CreateDataInfrastructure ())
+			using (var dataInfrastructure1 = DatabaseHelper.CreateDataInfrastructure ())
+			using (var dataInfrastructure2 = DatabaseHelper.CreateDataInfrastructure ())
+			using (var dataInfrastructure3 = DatabaseHelper.CreateDataInfrastructure ())
+			using (var dataInfrastructure4 = DatabaseHelper.CreateDataInfrastructure ())
 			{
 				string cId1 = new ConnectionUserIdentity (new ItemCode ("id1")).ToString ();
 				string cId2 = new ConnectionUserIdentity (new ItemCode ("id2")).ToString ();
@@ -157,8 +157,6 @@ namespace Epsitec.Cresus.Core.Library.Data.Tests.Vs.Data
 
 			Assert.IsTrue (set1.SetEquals(set2));
 		}
-
-
 
 
 	}

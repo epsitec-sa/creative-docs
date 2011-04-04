@@ -1,8 +1,10 @@
 ﻿using Epsitec.Common.UnitTesting;
 
 using Epsitec.Cresus.Database;
-using Epsitec.Cresus.Database.Services;
-using Epsitec.Cresus.Database.Tests.Vs.Helpers;
+
+using Epsitec.Cresus.DataLayer.Infrastructure;
+using Epsitec.Cresus.DataLayer.Schema;
+using Epsitec.Cresus.DataLayer.Tests.Vs.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -11,13 +13,13 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-namespace Epsitec.Cresus.Database.Tests.Vs.Services
+namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 {
 
 
-	[TestClass]
-	public sealed class UnitTestDbInfoManager
-	{
+    [TestClass]
+    public sealed class UnitTestInfoManager
+    {
 
 
 		[ClassInitialize]
@@ -30,33 +32,47 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Services
 		[TestInitialize]
 		public void TestInitialize()
 		{
-			DbInfrastructureHelper.ResetTestDatabase ();
+			DatabaseCreator2.ResetEmptyTestDatabase ();
 		}
 
 
 		[TestMethod]
 		public void ConstructorArgumentCheck()
 		{
-			ExceptionAssert.Throw<System.ArgumentNullException>
-			(
-				() => new DbInfoManager (null)
-			);
+			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => new InfoManager (null, entityEngine.ServiceSchemaEngine)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => new InfoManager (dbinfrastructure, null)
+				);
+			}
 		}
 
 
 		[TestMethod]
-		public void ExistsInfoArgumentCheck()
+		public void DoesInfoExistsArgumentCheck()
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+
+				InfoManager manager = new InfoManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
+
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => dbInfrastructure.ServiceManager.InfoManager.ExistsInfo (null)
+					() => manager.DoesInfoExists (null)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => dbInfrastructure.ServiceManager.InfoManager.ExistsInfo ("")
+					() => manager.DoesInfoExists ("")
 				);
 			}
 		}
@@ -67,14 +83,18 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Services
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+
+				InfoManager manager = new InfoManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
+
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => dbInfrastructure.ServiceManager.InfoManager.SetInfo (null, "test")
+					() => manager.SetInfo (null, "test")
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => dbInfrastructure.ServiceManager.InfoManager.SetInfo ("", "test")
+					() => manager.SetInfo ("", "test")
 				);
 			}
 		}
@@ -85,14 +105,18 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Services
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+
+				InfoManager manager = new InfoManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
+
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => dbInfrastructure.ServiceManager.InfoManager.GetInfo (null)
+					() => manager.GetInfo (null)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => dbInfrastructure.ServiceManager.InfoManager.GetInfo ("")
+					() => manager.GetInfo ("")
 				);
 			}
 		}
@@ -103,7 +127,9 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Services
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbInfoManager manager = dbInfrastructure.ServiceManager.InfoManager;
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+
+				InfoManager manager = new InfoManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				Dictionary<string, string> info = new Dictionary<string, string> ();
 
@@ -114,7 +140,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Services
 
 				foreach (string key in info.Keys)
 				{
-					Assert.IsFalse (manager.ExistsInfo (key));
+					Assert.IsFalse (manager.DoesInfoExists (key));
 				}
 
 				for (int i = 0; i < 10; i++)
@@ -123,7 +149,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Services
 					{
 						manager.SetInfo (key, info[key]);
 
-						Assert.IsTrue (manager.ExistsInfo (key));
+						Assert.IsTrue (manager.DoesInfoExists (key));
 
 						Assert.AreEqual (info[key], manager.GetInfo (key));
 
@@ -138,7 +164,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Services
 
 				foreach (string key in info.Keys)
 				{
-					Assert.IsFalse (manager.ExistsInfo (key));
+					Assert.IsFalse (manager.DoesInfoExists (key));
 				}
 			}
 		}
@@ -150,7 +176,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Services
 		}
 
 
-        private System.Random dice = new System.Random ();
+		private System.Random dice = new System.Random ();
 
 	}
 

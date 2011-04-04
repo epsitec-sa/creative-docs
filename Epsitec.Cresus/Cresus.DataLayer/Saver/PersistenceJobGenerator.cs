@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			get
 			{
-				return this.DataContext.DataInfrastructure.EntityEngine.TypeEngine;
+				return this.DataContext.DataInfrastructure.EntityEngine.EntityTypeEngine;
 			}
 		}
 

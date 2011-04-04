@@ -8,7 +8,6 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
-using Epsitec.Cresus.Database.Services;
 
 using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Loader;
@@ -177,7 +176,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			get
 			{
-				return this.DataInfrastructure.EntityEngine.TypeEngine;
+				return this.DataInfrastructure.EntityEngine.EntityTypeEngine;
 			}
 		}
 
@@ -432,11 +431,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="entityTypeId">The <see cref="Druid"/> that defines the entity type id.</param>
 		/// <param name="logId">The new log id.</param>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		internal void DefineLogId(Druid entityTypeId, long logId)
+		internal void DefineEntityModificationEntryId(Druid entityTypeId, long logId)
 		{
 			this.AssertDataContextIsNotDisposed ();
 
-			this.entitiesCache.DefineLogId (entityTypeId, logId);
+			this.entitiesCache.DefineEntityModificationEntryId (entityTypeId, logId);
 		}
 
 		/// <summary>
@@ -445,11 +444,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="entity">The <see cref="AbstractEntity"/> to which associate the log id.</param>
 		/// <param name="logId">The new log id.</param>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		internal void DefineLogId(AbstractEntity entity, long logId)
+		internal void DefineEntityModificationEntryId(AbstractEntity entity, long logId)
 		{
 			this.AssertDataContextIsNotDisposed ();
 
-			this.entitiesCache.DefineLogId (entity, logId);
+			this.entitiesCache.DefineEntityModificationEntryId (entity, logId);
 		}
 		
 		/// <summary>
@@ -458,7 +457,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="entityTypeId">The <see cref="Druid"/> that defines the entity type id.</param>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		/// <returns>The log id.</returns>
-		internal long? GetLogId(Druid entityTypeId)
+		internal long? GetEntityModificationEntryId(Druid entityTypeId)
 		{
 			this.AssertDataContextIsNotDisposed ();
 
@@ -471,7 +470,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="entity">The <see cref="AbstractEntity"/> whose log id to get.</param>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		/// <returns>The log id.</returns>
-		internal long? GetLogId(AbstractEntity entity)
+		internal long? GetEntityModificationEntryId(AbstractEntity entity)
 		{
 			this.AssertDataContextIsNotDisposed ();
 
@@ -944,15 +943,14 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			bool deletions = false;
 
-			DbId logId = new DbId (this.entitiesCache.GetMinimumLogId () ?? 0);
+			DbId logId = new DbId (this.entitiesCache.GetMinimumLogId () ?? 1);
 
-			var dbEntityDeletionLogger = this.DbInfrastructure.ServiceManager.EntityDeletionLogger;
-			var deletionLogEntries = dbEntityDeletionLogger.GetEntityDeletionLogEntries (logId);
+			var entityDeletionEntries = this.DataInfrastructure.GetEntityDeletionEntriesNewerThan (logId);
 
-			foreach (var deletionLogEntry in deletionLogEntries)
+			foreach (var entityDeletionEntry in entityDeletionEntries)
 			{
-				Druid entityTypeId = Druid.FromLong (deletionLogEntry.InstanceType);
-				DbKey rowKey = new DbKey (deletionLogEntry.EntityId);
+				Druid entityTypeId = entityDeletionEntry.EntityTypeId;
+				DbKey rowKey = new DbKey (entityDeletionEntry.EntityId);
 
 				EntityKey entityKey = new EntityKey (entityTypeId, rowKey);
 
@@ -980,14 +978,14 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			bool modifications = false;
 			
-			DbLogEntry lastLogEntry = this.DbInfrastructure.ServiceManager.Logger.GetLatestLogEntry ();
+			EntityModificationEntry latestEntityModificationEntry = this.DataInfrastructure.GetLatestEntityModificationEntry ();
 
 			foreach (Druid entityTypeId in this.GetManagedEntityTypeIds ().ToList ())
 			{
-				long currentLogId = this.GetLogId (entityTypeId).Value;
-				long lastLogId = lastLogEntry.EntryId.Value;
+				long currentEntryId = this.GetEntityModificationEntryId (entityTypeId).Value;
+				long lastEntryId = latestEntityModificationEntry.EntryId.Value;
 
-				bool modificationsForTypeId = this.DataLoader.ReloadOutDatedEntities (entityTypeId, currentLogId, lastLogId);
+				bool modificationsForTypeId = this.DataLoader.ReloadOutDatedEntities (entityTypeId, currentEntryId, lastEntryId);
 
 				modifications = modifications || modificationsForTypeId;
 			}
@@ -1693,13 +1691,13 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			TEntity copiedEntity = (TEntity) receiver.DataLoader.DeserializeEntityData (data);
 
-			receiver.entitiesCache.DefineLogId (copiedEntity, senderEntityLogId);
+			receiver.entitiesCache.DefineEntityModificationEntryId (copiedEntity, senderEntityLogId);
 			
 			long? receiverLogId = receiver.entitiesCache.GetLogId (entityTypeId);
 
 			if (!receiverLogId.HasValue || receiverLogId.Value > senderEntityLogId)
 			{
-				receiver.entitiesCache.DefineLogId (entityTypeId, senderEntityLogId);
+				receiver.entitiesCache.DefineEntityModificationEntryId (entityTypeId, senderEntityLogId);
 			}
 
 			return copiedEntity;

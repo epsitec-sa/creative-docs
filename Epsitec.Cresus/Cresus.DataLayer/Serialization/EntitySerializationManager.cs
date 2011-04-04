@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		{
 			get
 			{
-				return this.DataContext.DataInfrastructure.EntityEngine.TypeEngine;
+				return this.DataContext.DataInfrastructure.EntityEngine.EntityTypeEngine;
 			}
 		}
 

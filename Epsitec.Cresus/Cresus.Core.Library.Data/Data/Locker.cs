@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Core.Data
 
 		public bool AreAllLocksAvailable(IEnumerable<string> lockNames)
 		{
-			return this.dataInfrastructure.AreAllLocksAvailable (lockNames);
+			return this.dataInfrastructure.AreLocksAvailable (lockNames);
 		}
 
 

@@ -2,8 +2,8 @@
 
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.Database.Collections;
-using Epsitec.Cresus.Database.Services;
 
+using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Schema;
 
 using System.Collections.Generic;
@@ -189,10 +189,10 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 			if (!exportOnlyUserData)
 			{
-				ranges.Add (System.Tuple.Create ((long) 0, (long) EntitySchemaEngine.AutoIncrementStartValue - 1));
+				ranges.Add (System.Tuple.Create ((long) 0, (long) EntitySchemaBuilder.AutoIncrementStartValue - 1));
 			}
 
-			ranges.Add (System.Tuple.Create ((long) EntitySchemaEngine.AutoIncrementStartValue, long.MaxValue));
+			ranges.Add (System.Tuple.Create ((long) EntitySchemaBuilder.AutoIncrementStartValue, long.MaxValue));
 
 			int length = 1000;
 
@@ -259,6 +259,8 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 		private SqlField CreateConditionForInterval(long firstIndex, long lastIndex)
 		{
+			string rowIdColumnName = GetRowIdColumnName ();		
+			
 			return SqlField.CreateFunction
 			(
 				new SqlFunction (
@@ -268,7 +270,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 						new SqlFunction
 						(
 							SqlFunctionCode.CompareGreaterThanOrEqual,
-							SqlField.CreateName (Tags.ColumnId),
+							SqlField.CreateName (rowIdColumnName),
 							SqlField.CreateConstant (firstIndex, DbRawType.Int64)
 						)
 					),
@@ -277,7 +279,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 						new SqlFunction
 						(
 							SqlFunctionCode.CompareLessThanOrEqual,
-							SqlField.CreateName (Tags.ColumnId),
+							SqlField.CreateName (rowIdColumnName),
 							SqlField.CreateConstant (lastIndex, DbRawType.Int64)
 						)
 					)
@@ -424,7 +426,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		public void ReadXmlData(DbInfrastructure dbInfrastructure, XmlReader xmlReader, DbLogEntry dbLogEntry, int index, bool decrementIds)
+		public void ReadXmlData(DbInfrastructure dbInfrastructure, XmlReader xmlReader, EntityModificationEntry entityModificationEntry, int index, bool decrementIds)
 		{
 			bool isEmpty = xmlReader.IsEmptyElement;
 
@@ -432,7 +434,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 			if (!isEmpty)
 			{
-				this.InsertRows (dbInfrastructure, dbLogEntry, this.ProcessRowsRead (dbInfrastructure.Converter, decrementIds, this.ReadXmlRows (xmlReader)));
+				this.InsertRows (dbInfrastructure, entityModificationEntry, this.ProcessRowsRead (dbInfrastructure.Converter, decrementIds, this.ReadXmlRows (xmlReader)));
 
 				if (!decrementIds)
 				{
@@ -523,9 +525,9 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 				object valueAsObject = (valueAsString == null) ? null : converter.ConvertFromString (valueAsString, null);
 
-				if (isIdColumn[i])
+				if (isIdColumn[i] && valueAsObject is long)
 				{
-					valueAsObject = ((long) valueAsObject) - EntitySchemaEngine.AutoIncrementStartValue;
+					valueAsObject = ((long) valueAsObject) - EntitySchemaBuilder.AutoIncrementStartValue;
 				}
 
 				processedRow.Add (valueAsObject);
@@ -535,13 +537,13 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private void InsertRows(DbInfrastructure dbInfrastructure, DbLogEntry dbLogEntry, IEnumerable<IList<object>> rows)
+		private void InsertRows(DbInfrastructure dbInfrastructure, EntityModificationEntry entityModificationEntry, IEnumerable<IList<object>> rows)
 		{
 			using (DbTransaction dbTransaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				foreach (IList<object> row in rows)
 				{
-					this.InsertRow (dbInfrastructure, dbTransaction, dbLogEntry, row);
+					this.InsertRow (dbInfrastructure, dbTransaction, entityModificationEntry, row);
 				}
 
 				dbTransaction.Commit ();
@@ -549,7 +551,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private void InsertRow(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, DbLogEntry dbLogEntry, IList<object> row)
+		private void InsertRow(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, EntityModificationEntry entityModificationEntry, IList<object> row)
 		{
 			string tableName = this.SqlName;
 			SqlFieldList sqlFields = new SqlFieldList ();
@@ -570,7 +572,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 			if (this.Category == TableCategory.Data && this.ContainsLogColumn)
 			{
-				sqlFields.Add (this.CreateSqlFieldForLog (dbLogEntry));
+				sqlFields.Add (this.CreateSqlFieldForEntitModificationLog (entityModificationEntry));
 			}
 
 			dbTransaction.SqlBuilder.InsertData (tableName, sqlFields);
@@ -582,8 +584,10 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		{
 			using (DbTransaction dbTransaction = dbInfrastructure.BeginTransaction(DbTransactionMode.ReadWrite))
 			{
+				string rowIdColumnName = this.GetRowIdColumnName ();
+
 				DbTable dbTable = dbInfrastructure.ResolveDbTable (dbTransaction, this.DbName);
-				DbColumn dbColumn = dbTable.Columns[Tags.ColumnId];
+				DbColumn dbColumn = dbTable.Columns[rowIdColumnName];
 
 				if (dbColumn != null && dbColumn.IsAutoIncremented)
 				{
@@ -602,7 +606,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 					dbTransaction.SqlBuilder.SelectData (query);
 
 					object value = dbInfrastructure.ExecuteScalar (dbTransaction);
-					long startValue = System.Math.Max ((long) value, EntitySchemaEngine.AutoIncrementStartValue);
+					long startValue = System.Math.Max ((long) value, EntitySchemaBuilder.AutoIncrementStartValue);
 
 
 					dbInfrastructure.SetColumnAutoIncrementValue (dbTransaction, dbTable, dbColumn, startValue);
@@ -613,10 +617,10 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private SqlField CreateSqlFieldForLog(DbLogEntry logEntryId)
+		private SqlField CreateSqlFieldForEntitModificationLog(EntityModificationEntry entityModificationEntry)
 		{
-			SqlField sqlField = SqlField.CreateConstant (logEntryId.EntryId, DbRawType.Int64);
-			sqlField.Alias = Tags.ColumnRefLog;
+			SqlField sqlField = SqlField.CreateConstant (entityModificationEntry.EntryId, DbRawType.Int64);
+			sqlField.Alias = EntitySchemaBuilder.EntityTableColumnEntityModificationEntryIdName;
 
 			return sqlField;
 		}
@@ -652,6 +656,23 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			return internalRawType;
 		}
 
+
+		private string GetRowIdColumnName()
+		{
+			switch (this.Category)
+			{
+				case TableCategory.Data:
+					return EntitySchemaBuilder.EntityTableColumnIdName;
+
+				case TableCategory.Relation:
+					return EntitySchemaBuilder.EntityFieldTableColumnIdName;
+					
+				default:
+					throw new System.NotImplementedException ();
+			}
+		}
+
+
 		public void Clean(DbInfrastructure dbInfrastructure, bool cleanOnlyEpsitecData)
 		{
 			using (DbTransaction dbTransaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
@@ -661,7 +682,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 				if (cleanOnlyEpsitecData)
 				{
-					conditions.Add (this.CreateConditionForInterval (0, EntitySchemaEngine.AutoIncrementStartValue));
+					conditions.Add (this.CreateConditionForInterval (0, EntitySchemaBuilder.AutoIncrementStartValue));
 				}
 
 				dbTransaction.SqlBuilder.RemoveData (tableName, conditions);

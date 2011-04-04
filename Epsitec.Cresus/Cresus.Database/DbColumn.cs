@@ -4,6 +4,9 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Cresus.Database.Collections;
+using System.Collections.Generic;
+using Epsitec.Cresus.Database;
 
 namespace Epsitec.Cresus.Database
 {
@@ -821,7 +824,19 @@ namespace Epsitec.Cresus.Database
 
 		#endregion
 
-		/// <summary>
+		
+		public void EnsureIsDeserialized()
+		{
+			var columnCaption = this.Caption;
+			var columnType = this.Type;
+
+			if (columnType != null)
+			{
+				var columnTypeCaption = columnType.Caption;
+			}
+		}
+        
+        /// <summary>
 		/// Deserializes a column from the specified XML reader.
 		/// </summary>
 		/// <param name="xmlReader">The XML reader.</param>

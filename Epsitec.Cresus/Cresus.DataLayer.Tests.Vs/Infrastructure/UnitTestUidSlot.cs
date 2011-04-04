@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 
 
 		[TestMethod]
-		public void Constructor()
+		public void ConstructorAndProperties()
 		{
 			for (int i = 0; i < 10; i++)
 			{

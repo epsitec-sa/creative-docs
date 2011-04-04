@@ -1,6 +1,10 @@
-﻿using Epsitec.Cresus.Database;
-using Epsitec.Cresus.Database.Services;
+﻿using Epsitec.Common.Support;
 
+using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Database;
+
+using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Schema;
 
 using System.Collections.Generic;
@@ -24,9 +28,9 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 	{
 
 
-		public static void Export(FileInfo file, DbInfrastructure dbInfrastructure, EntitySchemaEngine schemaEngine, RawExportMode exportMode)
+		public static void Export(FileInfo file, DbInfrastructure dbInfrastructure, EntityTypeEngine typeEngine, EntitySchemaEngine schemaEngine, RawExportMode exportMode)
 		{
-			List<TableDefinition> tableDefinitions = RawEntitySerializer.GetTableDefinitions (schemaEngine).ToList ();
+			List<TableDefinition> tableDefinitions = RawEntitySerializer.GetTableDefinitions (typeEngine, schemaEngine).ToList ();
 
 			XmlWriterSettings settings = new XmlWriterSettings ()
 			{
@@ -36,7 +40,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			};
 
 			string version = "1.0.0";
-			long idShift = EntitySchemaEngine.AutoIncrementStartValue;
+			long idShift = EntitySchemaBuilder.AutoIncrementStartValue;
 
 			using (XmlWriter xmlWriter = XmlWriter.Create (file.FullName, settings))
 			{
@@ -49,70 +53,73 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private static IEnumerable<TableDefinition> GetTableDefinitions(EntitySchemaEngine schemaEngine)
+		private static IEnumerable<TableDefinition> GetTableDefinitions(EntityTypeEngine typeEngine, EntitySchemaEngine schemaEngine)
 		{
-			var dataTableDefinitions = RawEntitySerializer.GetValueTableDefinitions (schemaEngine);
-			var relationTableDefitions = RawEntitySerializer.GetCollectionTableDefinitions (schemaEngine);
+			var dataTableDefinitions = RawEntitySerializer.GetValueTableDefinitions (typeEngine, schemaEngine);
+			var relationTableDefitions = RawEntitySerializer.GetCollectionTableDefinitions (typeEngine, schemaEngine);
 
 			return dataTableDefinitions.Concat (relationTableDefitions);
 		}
 
 
-		private static IEnumerable<TableDefinition> GetValueTableDefinitions(EntitySchemaEngine schemaEngine)
+		private static IEnumerable<TableDefinition> GetValueTableDefinitions(EntityTypeEngine typeEngine, EntitySchemaEngine schemaEngine)
 		{
-			return from dbTable in RawEntitySerializer.GetValueTables (schemaEngine)
-				   select RawEntitySerializer.GetValueTableDefinition (dbTable);
+			return from entityType in typeEngine.GetEntityTypes()
+				   select RawEntitySerializer.GetValueTableDefinition (typeEngine, schemaEngine, entityType);
 		}
 
 
-		private static IEnumerable<TableDefinition> GetCollectionTableDefinitions(EntitySchemaEngine schemaEngine)
+		private static IEnumerable<TableDefinition> GetCollectionTableDefinitions(EntityTypeEngine typeEngine, EntitySchemaEngine schemaEngine)
 		{
-			return from dbTable in RawEntitySerializer.GetCollectionTables (schemaEngine)
-				   select RawEntitySerializer.GetCollectionTableDefinition (dbTable);
+			return from entityType in typeEngine.GetEntityTypes ()
+				   from field in typeEngine.GetLocalCollectionFields(entityType.CaptionId)
+				   select RawEntitySerializer.GetCollectionTableDefinition (schemaEngine, entityType, field);
 		}
 
 
-		private static IEnumerable<DbTable> GetValueTables(EntitySchemaEngine schemaEngine)
+		private static TableDefinition GetValueTableDefinition(EntityTypeEngine typeEngine, EntitySchemaEngine schemaEngine, StructuredType entityType)
 		{
-			return schemaEngine.GetEntityTables ();
-		}
+			Druid entityTypeId = entityType.CaptionId;
 
+			DbTable dbTable = schemaEngine.GetEntityTable (entityTypeId);
 
-		private static IEnumerable<DbTable> GetCollectionTables(EntitySchemaEngine schemaEngine)
-		{
-			return schemaEngine.GetEntityFieldTables ();
-		}
-
-
-		private static TableDefinition GetValueTableDefinition(DbTable dbTable)
-		{
 			IList<DbColumn> idDbColumns = new List<DbColumn> ()
 		    {
-		        dbTable.Columns[Tags.ColumnId],
+		        dbTable.Columns[EntitySchemaBuilder.EntityTableColumnIdName],
 		    };
 
-		    IList<DbColumn> regularDbColumns = dbTable.Columns
-		        .Where (c => !idDbColumns.Contains (c))
-		        .Where (c => c.Name != Tags.ColumnRefLog)
-		        .Where (c => c.Cardinality == DbCardinality.None)
-		        .ToList ();
+			foreach (var field in typeEngine.GetLocalReferenceFields (entityTypeId))
+			{
+				Druid fieldId = field.CaptionId;
+				DbColumn fieldColumn = schemaEngine.GetEntityFieldColumn (entityTypeId, fieldId);
+
+				idDbColumns.Add (fieldColumn);
+			}
+
+			IList<DbColumn> regularDbColumns = dbTable.Columns
+				.Where (c => !idDbColumns.Contains (c))
+				.Where (c => c.Name != EntitySchemaBuilder.EntityTableColumnEntityModificationEntryIdName)
+				.Where (c => c.Cardinality == DbCardinality.None)
+				.ToList ();
 
 			return RawEntitySerializer.GetTableDefitition (dbTable, TableCategory.Data, idDbColumns, regularDbColumns);
 		}
 
 
-		private static TableDefinition GetCollectionTableDefinition(DbTable dbTable)
+		private static TableDefinition GetCollectionTableDefinition(EntitySchemaEngine schemaEngine, StructuredType type, StructuredTypeField field)
 		{
+			DbTable dbTable = schemaEngine.GetEntityFieldTable (type.CaptionId, field.CaptionId);
+
 			IList<DbColumn> idDbColumns = new List<DbColumn> ()
 		    {
-		        dbTable.Columns[Tags.ColumnId],
-		        dbTable.Columns[Tags.ColumnRefSourceId],
-		        dbTable.Columns[Tags.ColumnRefTargetId],
+		        dbTable.Columns[EntitySchemaBuilder.EntityFieldTableColumnIdName],
+		        dbTable.Columns[EntitySchemaBuilder.EntityFieldTableColumnSourceIdName],
+		        dbTable.Columns[EntitySchemaBuilder.EntityFieldTableColumnTargetIdName],
 		    };
 
 			IList<DbColumn> regularDbColumns = new List<DbColumn> ()
 		    {
-		        dbTable.Columns[Tags.ColumnRefRank],
+		        dbTable.Columns[EntitySchemaBuilder.EntityFieldTableColumnRankName],
 		    };
 
 			return RawEntitySerializer.GetTableDefitition (dbTable, TableCategory.Relation, idDbColumns, regularDbColumns);
@@ -127,7 +134,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			IEnumerable<ColumnDefinition> idColumns = RawEntitySerializer.GetColumnDefinitions (idDbColumns, true);
 			IEnumerable<ColumnDefinition> regularColumns = RawEntitySerializer.GetColumnDefinitions (regularDbColumns, false);
 
-			bool containsLogColumn = dbTable.Columns.Any (c => c.Name == Tags.ColumnRefLog);
+			bool containsLogColumn = dbTable.Columns.Any (c => c.Name == EntitySchemaBuilder.EntityTableColumnEntityModificationEntryIdName);
 
 			return new TableDefinition (dbName, sqlName, tableCategory, containsLogColumn, idColumns.Concat (regularColumns));
 		}
@@ -198,14 +205,14 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		public static void Import(FileInfo file, DbInfrastructure dbInfrastructure, DbLogEntry dbLogEntry, RawImportMode importMode)
+		public static void Import(FileInfo file, DbInfrastructure dbInfrastructure, EntityModificationEntry entityModificationEntry, RawImportMode importMode)
 		{
 			using (XmlReader xmlReader = XmlReader.Create (file.FullName))
 			{
 				RawEntitySerializer.ReadDocumentStart (xmlReader);
 				RawEntitySerializer.ReadHeader (xmlReader);
 				var tableDefinitions = RawEntitySerializer.ReadDefinition(xmlReader);
-				RawEntitySerializer.ReadData (dbInfrastructure, xmlReader, dbLogEntry, tableDefinitions, importMode);
+				RawEntitySerializer.ReadData (dbInfrastructure, xmlReader, entityModificationEntry, tableDefinitions, importMode);
 				RawEntitySerializer.ReadDocumentEnd (xmlReader);
 			}
 		}
@@ -244,7 +251,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 				throw new System.FormatException ("Invalid id shift.");
 			}
 
-			if (idShiftAsLong != EntitySchemaEngine.AutoIncrementStartValue)
+			if (idShiftAsLong != EntitySchemaBuilder.AutoIncrementStartValue)
 			{
 				throw new System.FormatException ("Invalid id shift.");
 			}
@@ -275,7 +282,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private static void ReadData(DbInfrastructure dbInfrastructure, XmlReader xmlReader, DbLogEntry dbLogEntry, IList<TableDefinition> tableDefinitions, RawImportMode importMode)
+		private static void ReadData(DbInfrastructure dbInfrastructure, XmlReader xmlReader, EntityModificationEntry entityModificationEntry, IList<TableDefinition> tableDefinitions, RawImportMode importMode)
 		{
 			bool isEmpty = xmlReader.IsEmptyElement;
 			bool decrementIds = importMode == RawImportMode.DecrementIds;
@@ -290,7 +297,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 				{
 					if (index < tableDefinitions.Count)
 					{
-						tableDefinitions[index].ReadXmlData (dbInfrastructure, xmlReader, dbLogEntry, index, decrementIds);
+						tableDefinitions[index].ReadXmlData (dbInfrastructure, xmlReader, entityModificationEntry, index, decrementIds);
 					}
 
 					index++;

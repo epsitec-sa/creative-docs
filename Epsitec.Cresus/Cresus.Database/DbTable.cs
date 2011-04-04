@@ -751,6 +751,18 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		public void EnsureIsDeserialized()
+		{
+			var tableCaption = this.Caption;
+			var tablePrimaryKeys = this.PrimaryKeys;
+			var tableIndexes = this.Indexes;
+
+			foreach (DbColumn column in this.Columns)
+			{
+				column.EnsureIsDeserialized ();
+			}
+		}
+
 		/// <summary>
 		/// Creates a foreign key reference column pointing to the specified target
 		/// table.

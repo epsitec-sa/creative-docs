@@ -18,356 +18,100 @@ using System;
 
 namespace Epsitec.Cresus.DataLayer.Schema
 {
-
-
-	/// <summary>
-	/// The <c>SchemaBuilder</c> class is used internally to build <see cref="DbTable"/> and 
-	/// <see cref="DbTypeDef"/> and then register them to the database.
-	/// </summary>
-	internal sealed class EntitySchemaBuilder
+	
+	
+	internal static class EntitySchemaBuilder
 	{
 
 
-		/// <summary>
-		/// Builds a new <c>SchemaBuilder.</c>
-		/// </summary>
-		public EntitySchemaBuilder(EntityTypeEngine entityTypeEngine, DbInfrastructure dbInfrastructure)
+		// TODO Comment this class
+		// Marc
+
+
+		public static IEnumerable<DbTable> BuildTables(EntityTypeEngine entityTypeEngine)
 		{
 			entityTypeEngine.ThrowIfNull ("entityTypeEngine");
-			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
-			
-			this.dbInfrastructure = dbInfrastructure;
-			this.entityTypeEngine = entityTypeEngine;
+
+			var entityTypes = EntitySchemaBuilder.GetEntityTypes (entityTypeEngine);
+
+			var valueFieldTypes = EntitySchemaBuilder.GetValueFieldTypes (entityTypeEngine);
+			var builtInTypes = EntitySchemaBuilder.GetBuiltInTypes ();
+
+			var dbTypeDefs = EntitySchemaBuilder.BuildDbTypeDefs (valueFieldTypes.Concat (builtInTypes));
+			var dbTables = EntitySchemaBuilder.BuildDbTables (entityTypeEngine, dbTypeDefs, entityTypes);
+
+			return dbTables;
 		}
 
 
-		/// <summary>
-		/// Builds and registers the schema of the <see cref="AbstractEntity"/> defined by the given
-		/// sequence of <see cref="Druid"/> in the database. This method will also build and register
-		/// all the required <see cref="AbstractEntity"/> that are not yet defined in the database.
-		/// </summary>
-		/// <param name="entityIds">The sequence of <see cref="Druid"/> defining the <see cref="AbstractEntity"/> whose schemas to register.</param>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="entityIds"/> is <c>null</c>.</exception>
-		public void RegisterSchema(IEnumerable<Druid> entityIds)
+		private static IEnumerable<StructuredType> GetEntityTypes(EntityTypeEngine entityTypeEngine)
 		{
-			entityIds.ThrowIfNull ("entityIds");
-
-			using (DbTransaction transaction = this.dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
-			{
-				var schema = this.BuildSchema (entityIds, true);
-
-				IList<DbTable> schemaDbTables = schema.Item1;
-				IList<DbTypeDef> schemaDbTypesDefs = schema.Item2;
-
-				this.RegisterDbTypeDefs (schemaDbTypesDefs);
-				this.RegisterDbTables (schemaDbTables);
-
-				transaction.Commit ();
-			}
+			return entityTypeEngine.GetEntityTypes ();
 		}
 
 
-		/// <summary>
-		/// This method will alter the schema that is in the database in order to make it match the
-		/// schema of the <see cref="AbstractEntity"/> defined by the given sequence of
-		/// <see cref="Druid"/>.
-		/// </summary>
-		/// <param name="entityIds">The sequence of <see cref="Druid"/> defining the <see cref="AbstractEntity"/> whose schemas to update.</param>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="entityIds"/> is <c>null</c>.</exception>
-		public void UpdateSchema(IEnumerable<Druid> entityIds)
+		private static IEnumerable<INamedType> GetValueFieldTypes(EntityTypeEngine entityTypeEngine)
 		{
-			entityIds.ThrowIfNull ("entityIds");
-
-			var schema = this.BuildSchema (entityIds, false);
-
-			IList<DbTable> schemaDbTables = schema.Item1;
-
-			using (DbTransaction transaction = this.dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
-			{
-				DbSchemaUpdater.UpdateSchema (this.dbInfrastructure, schemaDbTables);
-
-				transaction.Commit ();
-			}
+			return entityTypeEngine.GetEntityTypes ()
+				.SelectMany (t => entityTypeEngine.GetLocalValueFields (t.CaptionId))
+				.Select (f => f.Type)
+				.Distinct ();
 		}
 
 
-		/// <summary>
-		/// Checks that the schema of the <see cref="AbstractEntity"/> defined by the given sequence
-		/// of <see cref="Druid"/> is correctly defined in the database. All the referenced
-		/// <see cref="AbstractEntity"/> are also checked.
-		/// </summary>
-		/// <param name="entityIds">The sequence of <see cref="Druid"/> defining the <see cref="AbstractEntity"/> whose schemas to check.</param>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="entityIds"/> is <c>null</c>.</exception>
-		public bool CheckSchema(IEnumerable<Druid> entityIds)
+		private static IEnumerable<INamedType> GetBuiltInTypes()
 		{
-			entityIds.ThrowIfNull ("entityIds");
-
-			IList<DbTable> schemaDbTables = this.BuildSchema (entityIds, false).Item1;
-
-			using (DbTransaction transaction = this.dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
-			{
-				bool ok = this.CheckSchema (schemaDbTables);
-
-				transaction.Commit ();
-
-				return ok;
-			}
+			yield return Epsitec.Cresus.Database.Res.Types.Num.KeyId;
+			yield return Epsitec.Cresus.Database.Res.Types.Num.CollectionRank;
 		}
 
 
-		/// <summary>
-		/// Builds the schema of the <see cref="AbstractEntity"/> defined by the given sequence of
-		/// <see cref="Druid"/>. The new schema may or may not reference existing stuff in the
-		/// database, depending on the value of <paramref name="useDatabase"/>.
-		/// </summary>
-		/// <param name="entityIds">The sequence of <see cref="Druid"/> defining the schema to build.</param>
-		/// <param name="useDatabase">If set to <c>true</c>, the created schema will reference existing stuff in the database, if set to <c>false</c>, the created schema will create everything, event if it already exists in the database.</param>
-		/// <returns>A tuple containing the sequence of created <see cref="DbTable"/> and the sequence of created <see cref="DbTypeDef"/>.</returns>
-		private Tuple<IList<DbTable>, IList<DbTypeDef>> BuildSchema(IEnumerable<Druid> entityIds, bool useDatabase)
+		private static IEnumerable<DbTypeDef> BuildDbTypeDefs(IEnumerable<INamedType> namedTypes)
 		{
-			// We follow the graph of AbstractEntity starting by the ones defined by entityIds in
-			// order to get all the StructuredTypes that are connected directly or indirectly to the
-			// ones defined by entityIds, including the ones defined by entityIds.
-			var structuredTypes = this.GetStructuredTypesUsedInSchema (entityIds);
-
-			// We process these StructuredTypes to get on one side the list of StructuredTypes that
-			// are not yet defined in the database, and on the other side the list of DbTables that
-			// correspond to a StructuredType that is defined in the database.
-			var splitedTables = this.SplitTables (structuredTypes, useDatabase);
-
-			var unregisteredTables = splitedTables.Item1;
-			var registeredDbTables = splitedTables.Item2;
-
-			// We get all the INamedTypes that are used in the StructuredTypes that are not yet
-			// defined in the database.
-			var namedTypes = this.GetNamedTypesUsedInStructuredTypes (unregisteredTables);
-
-			// We process them to get on one side the list of DbTypeDefs that correspond to the
-			// INamedType that are not yet defined in the database, and on the other side, the list
-			// of DbTypeDefs that correspond to an INamedType that is defined in the database.
-			var splitedDbTypeDefs = this.SplitAndBuildDbTypeDefs (namedTypes, useDatabase);
-
-			var unregisteredDbTypeDefs = splitedDbTypeDefs.Item1;
-			var registeredDbTypeDefs = splitedDbTypeDefs.Item2;
-
-			// We get the built in DbTypeDefs, for keys, rank, etc.
-			var builtInDbTypeDefs = this.GetBuiltInDbTypeDefs (useDatabase);
-
-			var dbTypeDefs = unregisteredDbTypeDefs
-				.Concat (registeredDbTypeDefs)
-				.Concat (builtInDbTypeDefs)
-				.ToList ();
-
-			// We build the DbTable objects that correspond to the StructuredTypes that must be
-			// created.
-			var unexistingDbTables = this.BuildDbTables (unregisteredTables, registeredDbTables, dbTypeDefs);
-
-			// We return the created schema, that is the newly created DbTables and the newly created
-			// DbTypeDefs.
-			return Tuple.Create (unexistingDbTables, unregisteredDbTypeDefs);
+			return namedTypes.Select(t => new DbTypeDef (t));
 		}
 
 
-		/// <summary>
-		/// Gets the sequence of <see cref="StructuredType"/> that are correspond to the given
-		/// sequence of entity types ids.
-		/// </summary>
-		/// <param name="typeIds">The sequence of <see cref="Druid"/> defining the types of the <see cref="AbstractEntity"/>.</param>
-		/// <returns>The sequence of <see cref="Druid"/>.</returns>
-		private IList<StructuredType> GetStructuredTypesUsedInSchema(IEnumerable<Druid> typeIds)
+		private static IEnumerable<DbTable> BuildDbTables(EntityTypeEngine entityTypeEngine, IEnumerable<DbTypeDef> dbTypeDefs, IEnumerable<StructuredType> entityTypes)
 		{
-			return typeIds.Select (id => this.entityTypeEngine.GetEntityType (id)).ToList ();
+			var dbTypeDefsDictionary = dbTypeDefs.ToDictionary (t => t.TypeId);
+
+			return entityTypes.SelectMany (t => EntitySchemaBuilder.BuildDbTables (entityTypeEngine, dbTypeDefsDictionary, t));
 		}
 
 
-		/// <summary>
-		/// Gets the sequence of <see cref="INamedType"/> used in the given sequence of
-		/// <see cref="StructuredType"/>.
-		/// </summary>
-		/// <param name="structuredTypes">The sequence of <see cref="StructuredType"/> whose <see cref="INamedType"/> to retrieve.</param>
-		/// <returns>The sequence of <see cref="INamedType"/> referenced in the sequence of <see cref="StructuredType"/>.</returns>
-		private IList<INamedType> GetNamedTypesUsedInStructuredTypes(IList<StructuredType> structuredTypes)
+		private static IEnumerable<DbTable> BuildDbTables(EntityTypeEngine entityTypeEngine, Dictionary<Druid, DbTypeDef> dbTypeDefs, StructuredType entityType)
 		{
-			var namedTypes = new Dictionary<Druid, INamedType> ();
+			Druid entityTypeId = entityType.CaptionId;
 
-			foreach (StructuredType structuredType in structuredTypes)
+			DbTable entityTable = EntitySchemaBuilder.BuildBasicTable (dbTypeDefs, entityType);
+
+			foreach (var field in entityTypeEngine.GetLocalValueFields (entityTypeId))
 			{
-				foreach (StructuredTypeField field in this.entityTypeEngine.GetLocalValueFields (structuredType.CaptionId))
-				{
-					INamedType namedType = field.Type;
-					Druid namedTypeId = namedType.CaptionId;
+				DbColumn column = EntitySchemaBuilder.BuildValueColumn (dbTypeDefs, field);
 
-					if (namedTypes.ContainsKey (namedTypeId) == false)
-					{
-						namedTypes[namedTypeId] = namedType;
-					}
-				}
+				entityTable.Columns.Add (column);
+
+				EntitySchemaBuilder.AddIndexes (entityTable, column, entityType, field);
 			}
 
-			return namedTypes.Values.ToList ();
-		}
-
-
-		/// <summary>
-		/// Splits the given sequence of <see cref="StructuredType"/> in a sequence which contains
-		/// the ones that are not defined in the database, and in a sequence which contains the
-		/// <see cref="DbTable"/> corresponding to the ones that are defined in the database.
-		/// </summary>
-		/// <param name="types">The sequence of <see cref="StructuredType"/> to split.</param>
-		/// <param name="useDatabase">If set to <c>true</c>, this method will really look in the database, if set to <c>false</c>, every <see cref="StructuredType"/> will be considered as not defined in the database.</param>
-		/// <returns>The pair of resulting sequences.</returns>
-		private System.Tuple<IList<StructuredType>, IList<DbTable>> SplitTables(IEnumerable<StructuredType> types, bool useDatabase)
-		{
-			List<StructuredType> unregisteredTables = new List<StructuredType> ();
-			List<DbTable> registeredTables = new List<DbTable> ();
-
-			foreach (StructuredType type in types)
+			foreach (var field in entityTypeEngine.GetLocalReferenceFields (entityTypeId))
 			{
-				Druid typeId = type.CaptionId;
+				DbColumn column = EntitySchemaBuilder.BuildReferenceColumn (dbTypeDefs, field);
 
-				DbTable registeredDbTable = null;
+				entityTable.Columns.Add (column);
 
-				if (useDatabase)
-				{
-					registeredDbTable = this.dbInfrastructure.ResolveDbTable (typeId);
-				}
-
-				if (registeredDbTable != null)
-				{
-					registeredTables.Add (registeredDbTable);
-				}
-				else
-				{
-					unregisteredTables.Add (type);
-				}
+				EntitySchemaBuilder.AddIndexes (entityTable, column, entityType, field);
 			}
 
-			return System.Tuple.Create ((IList<StructuredType>) unregisteredTables, (IList<DbTable>) registeredTables);
-		}
+			yield return entityTable;
 
-
-		/// <summary>
-		/// Splits the given sequence of <see cref="INamedType"/> in a sequence which contains the
-		/// corresponding <see cref="DbTypeDef"/> of the ones that are not defined in the database
-		/// and in a sequence which contains the corresponding <see cref="DbTypeDef"/> of the ones
-		/// that are defined in the database.
-		/// </summary>
-		/// <param name="namedTypes">The sequence of <see cref="INamedType"/>.</param>
-		/// <param name="useDatabase">If set to <c>true</c>, this method will really look in the database, if set to <c>false</c>, every <see cref="INamedType"/> will be considered as not defined in the database.</param>
-		/// <returns>The pair of resulting sequences.</returns>
-		private System.Tuple<IList<DbTypeDef>, IList<DbTypeDef>> SplitAndBuildDbTypeDefs(IEnumerable<INamedType> namedTypes, bool useDatabase)
-		{
-			List<DbTypeDef> unregisteredDbTypeDefs = new List<DbTypeDef> ();
-			List<DbTypeDef> registeredDbTypeDefs = new List<DbTypeDef> ();
-
-			foreach (INamedType namedType in namedTypes)
+			foreach (var field in entityTypeEngine.GetLocalCollectionFields (entityTypeId))
 			{
-				DbTypeDef registeredDbTypeDef = null;
+				DbTable collectionTable = EntitySchemaBuilder.BuildCollectionTable (dbTypeDefs, entityType, field);
 
-				if (useDatabase)
-				{
-					registeredDbTypeDef = this.dbInfrastructure.ResolveDbType (namedType);
-				}
-
-				if (registeredDbTypeDef != null)
-				{
-					registeredDbTypeDefs.Add (registeredDbTypeDef);
-				}
-				else
-				{
-					DbTypeDef unregisteredDbTypeDef = new DbTypeDef (namedType);
-
-					unregisteredDbTypeDefs.Add (unregisteredDbTypeDef);
-				}
+				yield return collectionTable;
 			}
-
-			return System.Tuple.Create ((IList<DbTypeDef>) unregisteredDbTypeDefs, (IList<DbTypeDef>) registeredDbTypeDefs);
-		}
-
-
-		private IList<DbTypeDef> GetBuiltInDbTypeDefs(bool useDatabase)
-		{
-			List<DbTypeDef> builtInDbTypeDefs = new List<DbTypeDef> ();
-
-			if (useDatabase)
-			{
-				builtInDbTypeDefs.Add (this.dbInfrastructure.ResolveDbType (Tags.TypeKeyId));
-				builtInDbTypeDefs.Add (this.dbInfrastructure.ResolveDbType (Tags.TypeCollectionRank));
-			}
-			else
-			{
-				builtInDbTypeDefs.Add (new DbTypeDef (Epsitec.Cresus.Database.Res.Types.Num.KeyId));
-				builtInDbTypeDefs.Add (new DbTypeDef (Epsitec.Cresus.Database.Res.Types.Num.CollectionRank));
-			}
-
-			return builtInDbTypeDefs;
-		}
-
-
-		/// <summary>
-		/// Builds the sequence of <see cref="DbTable"/> that corresponds to the given sequence of
-		/// <see cref="StructuredType"/>. In order to build them, this method takes a sequence of
-		/// the <see cref="DbTable"/> that already exists and the sequence of <see cref="DbTypeDef"/>
-		/// that will be used to build the <see cref="DbTable"/>.
-		/// </summary>
-		/// <param name="unregisteredTables">The sequence of <see cref="StructuredType"/> whose corresponding <see cref="DbTable"/> to build.</param>
-		/// <param name="registeredDbTables">The sequence of <see cref="DbTable"/> that already exist.</param>
-		/// <param name="dbTypeDefs">The sequence of <see cref="DbTypeDef"/> that will be used to build the sequence of <see cref="DbTable"/>.</param>
-		/// <returns>The sequence of newly created <see cref="DbTable"/>.</returns>
-		private IList<DbTable> BuildDbTables(IEnumerable<StructuredType> unregisteredTables, IEnumerable<DbTable> registeredDbTables, IEnumerable<DbTypeDef> dbTypeDefs)
-		{
-			Dictionary<Druid, DbTable> dbTables = registeredDbTables.ToDictionary (t => t.CaptionId, t => t);
-			Dictionary<Druid, DbTypeDef> dbTypeDefsDict = dbTypeDefs.ToDictionary (t => t.TypeId, t => t);
-			Dictionary<Druid, StructuredType> unregisteredTablesDict = unregisteredTables.ToDictionary (t => t.CaptionId, t => t);
-
-			List<DbTable> unregisteredEntityDbTables = new List<DbTable> ();
-			List<DbTable> unregisteredCollectionDbTables = new List<DbTable> ();
-
-			// We build the sequence of DbTables in two passes. In the first one, we create a basic
-			// DbTable that contains only the metadata columns. Then we create the data columns in
-			// the second pass. The reason for these two passes is that we must build all DbTables
-			// before we can reference them, and there might be cycles in their graph.
-
-			foreach (StructuredType unregisteredTable in unregisteredTablesDict.Values)
-			{
-				DbTable unregisteredDbTable = this.BuildBasicTable (dbTypeDefsDict, unregisteredTable);
-
-				dbTables[unregisteredTable.CaptionId] = unregisteredDbTable;
-				unregisteredEntityDbTables.Add (unregisteredDbTable);
-			}
-
-			foreach (DbTable unregisteredDbTable in unregisteredEntityDbTables)
-			{
-				StructuredType type = unregisteredTablesDict[unregisteredDbTable.CaptionId];
-				Druid typeId = type.CaptionId;
-
-				foreach (var field in this.entityTypeEngine.GetLocalValueFields (typeId))
-				{
-					DbColumn column = this.BuildValueColumn (dbTypeDefsDict, field);
-
-					unregisteredDbTable.Columns.Add (column);
-
-					this.AddIndexes (unregisteredDbTable, column, type, field);
-				}
-
-				foreach (var field in this.entityTypeEngine.GetLocalReferenceFields (typeId))
-				{
-					DbColumn column = this.BuildReferenceColumn (dbTypeDefsDict, field);
-
-					unregisteredDbTable.Columns.Add (column);
-
-					this.AddIndexes (unregisteredDbTable, column, type, field);
-				}
-
-				foreach (var field in this.entityTypeEngine.GetLocalCollectionFields (typeId))
-				{
-					DbTable collectionTable = this.BuildCollectionTable (dbTypeDefsDict, type, field);
-
-					unregisteredCollectionDbTables.Add (collectionTable);
-				}
-			}
-
-			return unregisteredEntityDbTables.Concat (unregisteredCollectionDbTables).ToList ();
 		}
 
 
@@ -375,16 +119,17 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// Builds a basic <see cref="DbTable"/> for the given <see cref="StructuredType"/>. The
 		/// created <see cref="DbTable"/> will only contains a name, comment and the metadata columns.
 		/// </summary>
+		/// <param name="dbTypeDefs">The mapping of <see cref="Druid"/>  to<see cref="DbTypeDef"/> that can be used for the types.</param>
 		/// <param name="tableType">The <see cref="StructuredType"/> corresponding to the <see cref="DbTable"/> to create.</param>
 		/// <returns>The newly created <see cref="DbTable"/>.</returns>
-		private DbTable BuildBasicTable(IDictionary<Druid, DbTypeDef> dbTypeDefs, StructuredType tableType)
+		private static DbTable BuildBasicTable(IDictionary<Druid, DbTypeDef> dbTypeDefs, StructuredType tableType)
 		{
 			Druid keyTypeDefId = Epsitec.Cresus.Database.Res.Types.Num.KeyId.CaptionId;
 			DbTypeDef keyTypeDef = dbTypeDefs[keyTypeDefId];
 
 			DbTable table = new DbTable (tableType.CaptionId);
 
-			DbColumn columnId = new DbColumn (Tags.ColumnId, keyTypeDef, DbColumnClass.KeyId, DbElementCat.Internal);
+			DbColumn columnId = new DbColumn (EntitySchemaBuilder.EntityTableColumnIdName, keyTypeDef, DbColumnClass.KeyId, DbElementCat.Internal);
 
 			table.Columns.Add (columnId);
 			table.PrimaryKeys.Add (columnId);
@@ -402,10 +147,10 @@ namespace Epsitec.Cresus.DataLayer.Schema
 				// Marc
 
 				columnId.IsAutoIncremented = true;
-				columnId.AutoIncrementStartValue = EntitySchemaEngine.AutoIncrementStartValue;
+				columnId.AutoIncrementStartValue = EntitySchemaBuilder.AutoIncrementStartValue;
 
-				DbColumn typeColumn = new DbColumn (Tags.ColumnInstanceType, keyTypeDef, DbColumnClass.Data, DbElementCat.Internal);
-				DbColumn logColumn = new DbColumn (Tags.ColumnRefLog, keyTypeDef, DbColumnClass.RefInternal, DbElementCat.Internal);
+				DbColumn typeColumn = new DbColumn (EntitySchemaBuilder.EntityTableColumnEntityTypeIdName, keyTypeDef, DbColumnClass.Data, DbElementCat.Internal);
+				DbColumn logColumn = new DbColumn (EntitySchemaBuilder.EntityTableColumnEntityModificationEntryIdName, keyTypeDef, DbColumnClass.RefInternal, DbElementCat.Internal);
 
 				table.Columns.Add (typeColumn);
 				table.Columns.Add (logColumn);
@@ -426,7 +171,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// <param name="dbTypeDefs">The mapping of <see cref="Druid"/>  to<see cref="DbTypeDef"/> that can be used for the types.</param>
 		/// <param name="field">The <see cref="StructuredTypeField"/> whose corresponding <see cref="DbColumn"/> to create.</param>
 		/// <returns>The newly created <see cref="DbColumn"/>.</returns>
-		private DbColumn BuildValueColumn(IDictionary<Druid, DbTypeDef> dbTypeDefs, StructuredTypeField field)
+		private static DbColumn BuildValueColumn(IDictionary<Druid, DbTypeDef> dbTypeDefs, StructuredTypeField field)
 		{
 			DbTypeDef columnType = dbTypeDefs[field.Type.CaptionId];
 			DbColumn column = new DbColumn (field.CaptionId, columnType, DbColumnClass.Data, DbElementCat.ManagedUserData);
@@ -442,9 +187,10 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// Builds the <see cref="DbColumn"/> that corresponds to the given reference
 		/// <see cref="StructuredTypeField"/>.
 		/// </summary>
+		/// <param name="dbTypeDefs">The mapping of <see cref="Druid"/>  to<see cref="DbTypeDef"/> that can be used for the types.</param>
 		/// <param name="field">The <see cref="StructuredTypeField"/> whose corresponding <see cref="DbColumn"/> to create.</param>
 		/// <returns>The newly created <see cref="DbColumn"/>.</returns>
-		private DbColumn BuildReferenceColumn(IDictionary<Druid, DbTypeDef> dbTypeDefs, StructuredTypeField field)
+		private static DbColumn BuildReferenceColumn(IDictionary<Druid, DbTypeDef> dbTypeDefs, StructuredTypeField field)
 		{
 			Druid keyTypeDefId = Epsitec.Cresus.Database.Res.Types.Num.KeyId.CaptionId;
 			DbTypeDef keyTypeDef = dbTypeDefs[keyTypeDefId];
@@ -462,10 +208,11 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// Builds the <see cref="DbTable"/> that corresponds to the given collection
 		/// <see cref="StructuredTypeField"/>.
 		/// </summary>
+		/// <param name="dbTypeDefs">The mapping of <see cref="Druid"/>  to<see cref="DbTypeDef"/> that can be used for the types.</param>
 		/// <param name="type">The <see cref="StructuredType"/> of the entity containing the field</param>
 		/// <param name="field">The <see cref="StructuredTypeField"/> whose corresponding <see cref="DbTable"/> to create.</param>
 		/// <returns>The newly created <see cref="DbTable"/>.</returns>
-		private DbTable BuildCollectionTable(IDictionary<Druid, DbTypeDef> dbTypeDefs, StructuredType type, StructuredTypeField field)
+		private static DbTable BuildCollectionTable(IDictionary<Druid, DbTypeDef> dbTypeDefs, StructuredType type, StructuredTypeField field)
 		{
 			Druid keyTypeDefId = Epsitec.Cresus.Database.Res.Types.Num.KeyId.CaptionId;
 			Druid rankTypeDefId = Epsitec.Cresus.Database.Res.Types.Num.CollectionRank.CaptionId;
@@ -473,20 +220,20 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			DbTypeDef refIdType = dbTypeDefs[keyTypeDefId];
 			DbTypeDef rankType = dbTypeDefs[rankTypeDefId];
 
-			string relationTableName = EntitySchemaEngine.GetEntityFieldTableName (type.CaptionId, field.CaptionId);
+			string relationTableName = EntitySchemaBuilder.GetEntityFieldTableName (type.CaptionId, field.CaptionId);
 			string entityName = type.Caption.Name;
 			string fieldName = Epsitec.Common.Support.Resources.DefaultManager.GetCaption (field.CaptionId).Name;
 
 			DbTable relationTable = new DbTable (relationTableName);
 
-			DbColumn columnId = new DbColumn (Tags.ColumnId, refIdType, DbColumnClass.KeyId, DbElementCat.Internal)
+			DbColumn columnId = new DbColumn (EntitySchemaBuilder.EntityFieldTableColumnIdName, refIdType, DbColumnClass.KeyId, DbElementCat.Internal)
 			{
 				IsAutoIncremented = true,
-				AutoIncrementStartValue = EntitySchemaEngine.AutoIncrementStartValue
+				AutoIncrementStartValue = EntitySchemaBuilder.AutoIncrementStartValue
 			};
-			DbColumn columnSourceId = new DbColumn (Tags.ColumnRefSourceId, refIdType, DbColumnClass.RefInternal, DbElementCat.Internal);
-			DbColumn columnTargetId = new DbColumn (Tags.ColumnRefTargetId, refIdType, DbColumnClass.RefInternal, DbElementCat.Internal);
-			DbColumn columnRank = new DbColumn (Tags.ColumnRefRank, rankType, DbColumnClass.Data, DbElementCat.Internal);
+			DbColumn columnSourceId = new DbColumn (EntitySchemaBuilder.EntityFieldTableColumnSourceIdName, refIdType, DbColumnClass.RefInternal, DbElementCat.Internal);
+			DbColumn columnTargetId = new DbColumn (EntitySchemaBuilder.EntityFieldTableColumnTargetIdName, refIdType, DbColumnClass.RefInternal, DbElementCat.Internal);
+			DbColumn columnRank = new DbColumn (EntitySchemaBuilder.EntityFieldTableColumnRankName, rankType, DbColumnClass.Data, DbElementCat.Internal);
 
 			relationTable.Columns.Add (columnId);
 			relationTable.Columns.Add (columnSourceId);
@@ -499,7 +246,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			relationTable.DefineCategory (DbElementCat.ManagedUserData);
 			relationTable.Comment = entityName + "." + fieldName;
 
-			this.AddCollectionIndexes (relationTable, type, field);
+			EntitySchemaBuilder.AddCollectionIndexes (relationTable, type, field);
 
 			return relationTable;
 		}
@@ -511,7 +258,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// <param name="table">The table to index.</param>
 		/// <param name="type">The type definition that defines the entity which corresponds to the table.</param>
 		/// <param name="field">The field definition that corresponds to the table.</param>
-		private void AddCollectionIndexes(DbTable table, StructuredType type, StructuredTypeField field)
+		private static void AddCollectionIndexes(DbTable table, StructuredType type, StructuredTypeField field)
 		{
 			string typeName = Druid.ToFullString (type.CaptionId.ToLong ());
 			string fieldName = Druid.ToFullString (field.CaptionId.ToLong ());
@@ -520,8 +267,8 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			const string targetName = "TGT";
 			const string prefix = "IDX";
 
-			DbColumn sourceColumn = table.Columns[Tags.ColumnRefSourceId];
-			DbColumn targetColumn = table.Columns[Tags.ColumnRefTargetId];
+			DbColumn sourceColumn = table.Columns[EntitySchemaBuilder.EntityFieldTableColumnSourceIdName];
+			DbColumn targetColumn = table.Columns[EntitySchemaBuilder.EntityFieldTableColumnTargetIdName];
 
 			if (field.Options.HasFlag (FieldOptions.IndexAscending))
 			{
@@ -551,7 +298,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// <param name="column">The column to index.</param>
 		/// <param name="type">The type definition that defines the entity which corresponds to the table.</param>
 		/// <param name="field">The field definition that corresponds to the column.</param>
-		private void AddIndexes(DbTable table, DbColumn column, StructuredType type, StructuredTypeField field)
+		private static void AddIndexes(DbTable table, DbColumn column, StructuredType type, StructuredTypeField field)
 		{
 			string typeName = Druid.ToFullString (type.CaptionId.ToLong ());
 			string fieldName = Druid.ToFullString (field.CaptionId.ToLong ());
@@ -572,46 +319,128 @@ namespace Epsitec.Cresus.DataLayer.Schema
 				table.AddIndex (indexName, SqlSortOrder.Descending, column);
 			}
 		}
-		
+
 
 		/// <summary>
-		/// Registers all the given <see cref="DbTypeDef"/> to the database.
+		/// The number that should be used for the auto incremented fields of the entities.
 		/// </summary>
-		/// <param name="dbTypeDefs">The sequence of <see cref="DbTypeDef"/> to register.</param>
-		private void RegisterDbTypeDefs(IList<DbTypeDef> dbTypeDefs)
+		public static int AutoIncrementStartValue
 		{
-			foreach (DbTypeDef dbTypeDef in dbTypeDefs)
+			get
 			{
-				this.dbInfrastructure.AddType (dbTypeDef);
+				return 1000000000;
+			}
+		}
+
+
+		public static string EntityTableColumnIdName
+		{
+			get
+			{
+				return "CR_ID";
+			}
+		}
+
+
+		public static string EntityTableColumnEntityTypeIdName
+		{
+			get
+			{
+				return "CR_TYPE_ID";
+			}
+		}
+
+
+		public static string EntityTableColumnEntityModificationEntryIdName
+		{
+			get
+			{
+				return "CR_EM_ID";
+			}
+		}
+
+
+		public static string EntityFieldTableColumnIdName
+		{
+			get
+			{
+				return "CR_ID";
+			}
+		}
+
+
+		public static string EntityFieldTableColumnSourceIdName
+		{
+			get
+			{
+				return "CR_SOURCE_ID";
+			}
+		}
+
+
+		public static string EntityFieldTableColumnTargetIdName
+		{
+			get
+			{
+				return "CR_TARGET_ID";
+			}
+		}
+
+
+		public static string EntityFieldTableColumnRankName
+		{
+			get
+			{
+				return "CR_RANK";
 			}
 		}
 
 
 		/// <summary>
-		/// Registers all the given <see cref="DbTable"/> to the database.
+		/// Gets the name of the <see cref="DbTable"/> corresponding to an <see cref="AbstractEntity"/>
+		/// <see cref="Druid"/>.
 		/// </summary>
-		/// <param name="dbTables">The sequence of <see cref="DbTable"/> to register in the database.</param>
-		private void RegisterDbTables(IList<DbTable> dbTables)
+		/// <param name="entityId">The <see cref="Druid"/> whose <see cref="DbTable"/> name to get.</param>
+		/// <returns>The name of the <see cref="DbTable"/>.</returns>
+		public static string GetEntityTableName(Druid entityId)
 		{
-			this.dbInfrastructure.AddTables (dbTables);
+			entityId.ThrowIf (id => !id.IsValid, "entityId is not valid");
+
+			return DbTable.GetEntityTableName (entityId);
 		}
 
 
 		/// <summary>
-		/// Checks that all the given <see cref="DbTable"/> are correctly defined in the database.
+		/// Gets the name of the relation <see cref="DbTable"/> corresponding to the field of an
+		/// <see cref="AbstractEntity"/>.
 		/// </summary>
-		/// <param name="schema">The sequence of <see cref="DbTable"/> to check.</param>
-		/// <returns><c>true</c> if all the <see cref="DbTable"/> ar </returns>
-		private bool CheckSchema(IList<DbTable> schema)
+		/// <param name="localEntityId">The <see cref="Druid"/> of the <see cref="AbstractEntity"/>.</param>
+		/// <param name="fieldId">The <see cref="Druid"/> of the field.</param>
+		/// <returns>The name of the <see cref="DbTable"/>.</returns>
+		public static string GetEntityFieldTableName(Druid localEntityId, Druid fieldId)
 		{
-			return DbSchemaChecker.CheckSchema (this.dbInfrastructure, schema);
+			localEntityId.ThrowIf (id => !id.IsValid, "localEntityId is not valid");
+			fieldId.ThrowIf (id => !id.IsValid, "fieldId is not valid");
+
+			string fieldName = Druid.ToFullString (fieldId.ToLong ());
+			string localEntityName = Druid.ToFullString (localEntityId.ToLong ());
+
+			return string.Concat (localEntityName, ":", fieldName);
 		}
 
 
-		private readonly DbInfrastructure dbInfrastructure;
+		/// <summary>
+		/// Gets the name of the <see cref="DbColumn"/> corresponding to the <see cref="Druid"/>
+		/// of a field.
+		/// </summary>
+		/// <param name="fieldId">The <see cref="Druid"/> of the field.</param>
+		/// <returns>The name of the <see cref="DbColumn"/>.</returns>
+		public static string GetEntityFieldColumnName(Druid fieldId)
+		{
+			fieldId.ThrowIf (id => !id.IsValid, "fieldId is not valid");
 
-
-		private readonly EntityTypeEngine entityTypeEngine;
+			return DbColumn.GetColumnName (fieldId);
+		}
 
 
 	}

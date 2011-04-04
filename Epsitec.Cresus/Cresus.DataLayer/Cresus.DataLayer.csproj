@@ -156,10 +156,9 @@
     <Compile Include="ImportExport\TableCategory.cs" />
     <Compile Include="ImportExport\TableDefinition.cs" />
     <Compile Include="ImportExport\XmlEntitySerializer.cs" />
-    <Compile Include="Infrastructure\ConnectionInformation.cs" />
     <Compile Include="Infrastructure\ConnectionStatus.cs" />
     <Compile Include="Infrastructure\DataInfrastructure.cs" />
-    <Compile Include="Infrastructure\LockOwner.cs" />
+    <Compile Include="Infrastructure\Lock.cs" />
     <Compile Include="Infrastructure\LockTransaction.cs" />
     <Compile Include="Infrastructure\LockState.cs" />
     <Compile Include="Infrastructure\UidGenerator.cs" />
@@ -171,6 +170,8 @@
     <Compile Include="Schema\DataConverter.cs" />
     <Compile Include="Schema\EntityEngine.cs" />
     <Compile Include="Schema\EntityTypeEngine.cs" />
+    <Compile Include="Schema\ServiceSchemaBuilder.cs" />
+    <Compile Include="Schema\ServiceSchemaEngine.cs" />
     <Compile Include="Serialization\EntitySerializationManager.cs" />
     <Compile Include="Expressions\Operation.cs" />
     <Compile Include="Loader\DataLoader.cs" />
@@ -226,6 +227,16 @@
     <Compile Include="Saver\SynchronizationJobs\ValueSynchronizationJob.cs" />
     <Compile Include="Schema\EntitySchemaBuilder.cs" />
     <Compile Include="Schema\EntitySchemaEngine.cs" />
+    <Compile Include="Infrastructure\TableQueryHelper.cs" />
+    <Compile Include="Infrastructure\Connection.cs" />
+    <Compile Include="Infrastructure\ConnectionManager.cs" />
+    <Compile Include="Infrastructure\EntityDeletionEntry.cs" />
+    <Compile Include="Infrastructure\EntityDeletionLog.cs" />
+    <Compile Include="Infrastructure\InfoManager.cs" />
+    <Compile Include="Infrastructure\LockManager.cs" />
+    <Compile Include="Infrastructure\EntityModificationEntry.cs" />
+    <Compile Include="Infrastructure\EntityModificationLog.cs" />
+    <Compile Include="Infrastructure\UidManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">

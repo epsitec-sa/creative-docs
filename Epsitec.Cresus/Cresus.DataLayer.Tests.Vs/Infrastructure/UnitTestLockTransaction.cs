@@ -3,7 +3,6 @@
 using Epsitec.Common.UnitTesting;
 
 using Epsitec.Cresus.Database;
-using Epsitec.Cresus.Database.Services;
 
 using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Schema;
@@ -20,37 +19,41 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 {
 
 
-	[TestClass]
-	public sealed class UnitTestLockTransaction
-	{
+    [TestClass]
+    public sealed class UnitTestLockTransaction
+    {
 
 
-		[ClassInitialize]
-		public static void ClassInitialize(TestContext testContext)
-		{
-			TestHelper.Initialize ();
-		}
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext testContext)
+        {
+            TestHelper.Initialize ();
+        }
 
 
-		[TestInitialize]
-		public void TestInitialize()
-		{
-			DbInfrastructureHelper.ResetTestDatabase ();
-		}
+        [TestInitialize]
+        public void TestInitialize()
+        {
+			DatabaseCreator2.ResetEmptyTestDatabase ();
+        }
 
 
 		[TestMethod]
 		public void LockTransactionConstructorArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+
+				LockManager manager = new LockManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+
 				List<string> lockNames = new List<string> ()
-				{
-					"myLock1",
-					"myLock2",
-					"myLock3",
-				};
-				long connectionId = 0;
+                {
+                    "myLock1",
+                    "myLock2",
+                    "myLock3",
+                };
+				DbId connectionId = new DbId (1);
 
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
@@ -59,27 +62,32 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => new LockTransaction (dbInfrastructure, -1, lockNames)
+					() => new LockTransaction (manager, DbId.Empty, lockNames)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
-					() => new LockTransaction (dbInfrastructure, connectionId, null)
+					() => new LockTransaction (manager, connectionId, null)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => new LockTransaction (dbInfrastructure, connectionId, new List<string> () { "l1", "" })
+					() => new LockTransaction (manager, connectionId, new List<string> () { })
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => new LockTransaction (dbInfrastructure, connectionId, new List<string> () { "l1", null })
+					() => new LockTransaction (manager, connectionId, new List<string> () { "" })
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => new LockTransaction (dbInfrastructure, connectionId, new List<string> () { "l1", "l2", "l1" })
+					() => new LockTransaction (manager, connectionId, new List<string> () { null })
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => new LockTransaction (manager, connectionId, new List<string> () { "l1", "l1" })
 				);
 			}
 		}
@@ -88,19 +96,27 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void StateMachine1()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				using (LockTransaction l1 = new LockTransaction (dbInfrastructure, 0, new List<string> () { "lock1" }))
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+
+				ConnectionManager connectionManager = new ConnectionManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				LockManager lockManager = new LockManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+
+				Connection c1 = connectionManager.OpenConnection ("c1");
+				Connection c2 = connectionManager.OpenConnection ("c2");
+
+				using (LockTransaction l1 = new LockTransaction (lockManager, c1.Id, new List<string> () { "lock1" }))
 				{
 					Assert.AreEqual (LockState.Idle, l1.State);
 					l1.Dispose ();
 					Assert.AreEqual (LockState.Disposed, l1.State);
 				}
 
-				using (LockTransaction l2 = new LockTransaction (dbInfrastructure, 0, new List<string> () { "lock2" }))
+				using (LockTransaction l2 = new LockTransaction (lockManager, c1.Id, new List<string> () { "lock2" }))
 				{
 					Assert.AreEqual (LockState.Idle, l2.State);
-					Assert.IsTrue (l2.Lock ());
+					Assert.IsTrue (l2.Lock ().Item1);
 					Assert.AreEqual (LockState.Locked, l2.State);
 					l2.Release ();
 					Assert.AreEqual (LockState.Disposed, l2.State);
@@ -108,41 +124,32 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 					Assert.AreEqual (LockState.Disposed, l2.State);
 				}
 
-				using (LockTransaction l3 = new LockTransaction (dbInfrastructure, 0, new List<string> () { "lock3" }))
+				using (LockTransaction l3 = new LockTransaction (lockManager, c1.Id, new List<string> () { "lock3" }))
 				{
 					Assert.AreEqual (LockState.Idle, l3.State);
-					Assert.IsTrue (l3.Lock ());
+					Assert.IsTrue (l3.Lock ().Item1);
 					Assert.AreEqual (LockState.Locked, l3.State);
 					l3.Dispose ();
 					Assert.AreEqual (LockState.Disposed, l3.State);
 				}
 
-				using (LockTransaction l4a = new LockTransaction (dbInfrastructure, 0, new List<string> () { "lock4" }))
-				using (LockTransaction l4b = new LockTransaction (dbInfrastructure, 1, new List<string> () { "lock4" }))
+				using (LockTransaction l4a = new LockTransaction (lockManager, c1.Id, new List<string> () { "lock4" }))
+				using (LockTransaction l4b = new LockTransaction (lockManager, c2.Id, new List<string> () { "lock4" }))
 				{
 					Assert.AreEqual (LockState.Idle, l4a.State);
-					Assert.IsTrue (l4a.Lock ());
+					Assert.IsTrue (l4a.Lock ().Item1);
 					Assert.AreEqual (LockState.Locked, l4a.State);
-					Assert.IsFalse (l4b.Lock ());
+					Assert.IsFalse (l4b.Lock ().Item1);
 					Assert.AreEqual (LockState.Idle, l4b.State);
 					l4a.Release ();
 					Assert.AreEqual (LockState.Disposed, l4a.State);
-					Assert.IsTrue (l4b.Lock ());
+					Assert.IsTrue (l4b.Lock ().Item1);
 					Assert.AreEqual (LockState.Locked, l4b.State);
 					l4b.Release ();
 					Assert.AreEqual (LockState.Disposed, l4b.State);
 				}
 
-				using (LockTransaction l1 = new LockTransaction (dbInfrastructure, 1, new List<string> () { "lock1" }))
-				using (LockTransaction l2 = new LockTransaction (dbInfrastructure, 1, new List<string> () { "lock2" }))
-				using (LockTransaction l3 = new LockTransaction (dbInfrastructure, 1, new List<string> () { "lock3" }))
-				using (LockTransaction l4 = new LockTransaction (dbInfrastructure, 1, new List<string> () { "lock4" }))
-				{
-					Assert.IsTrue (l1.Lock ());
-					Assert.IsTrue (l2.Lock ());
-					Assert.IsTrue (l3.Lock ());
-					Assert.IsTrue (l4.Lock ());
-				}
+				Assert.AreEqual (0, lockManager.GetLocks (new List<string> () { "lock1", "lock2", "lock3", "lock4" }).Count ());
 			}
 		}
 
@@ -150,9 +157,16 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void StateMachine2()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				using (LockTransaction l1 = new LockTransaction (dbInfrastructure, 0, new List<string> () { "lock1" }))
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+
+				ConnectionManager connectionManager = new ConnectionManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				LockManager lockManager = new LockManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+
+				Connection c = connectionManager.OpenConnection ("c");
+
+				using (LockTransaction l1 = new LockTransaction (lockManager, c.Id, new List<string> () { "lock1" }))
 				{
 					ExceptionAssert.Throw<System.InvalidOperationException>
 					(
@@ -160,9 +174,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 					);
 				}
 
-				using (LockTransaction l2 = new LockTransaction (dbInfrastructure, 0, new List<string> () { "lock2" }))
+				using (LockTransaction l2 = new LockTransaction (lockManager, c.Id, new List<string> () { "lock2" }))
 				{
-					Assert.IsTrue (l2.Lock ());
+					Assert.IsTrue (l2.Lock ().Item1);
 
 					ExceptionAssert.Throw<System.InvalidOperationException>
 					(
@@ -170,9 +184,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 					);
 				}
 
-				using (LockTransaction l3 = new LockTransaction (dbInfrastructure, 0, new List<string> () { "lock3" }))
+				using (LockTransaction l3 = new LockTransaction (lockManager, c.Id, new List<string> () { "lock3" }))
 				{
-					Assert.IsTrue (l3.Lock ());
+					Assert.IsTrue (l3.Lock ().Item1);
 					l3.Release ();
 
 					ExceptionAssert.Throw<System.InvalidOperationException>
@@ -181,7 +195,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 					);
 				}
 
-				using (LockTransaction l4 = new LockTransaction (dbInfrastructure, 0, new List<string> () { "lock4" }))
+				using (LockTransaction l4 = new LockTransaction (lockManager, c.Id, new List<string> () { "lock4" }))
 				{
 					l4.Dispose ();
 
@@ -191,73 +205,101 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 					);
 				}
 
-				using (LockTransaction l1 = new LockTransaction (dbInfrastructure, 1, new List<string> () { "lock1" }))
-				using (LockTransaction l2 = new LockTransaction (dbInfrastructure, 1, new List<string> () { "lock2" }))
-				using (LockTransaction l3 = new LockTransaction (dbInfrastructure, 1, new List<string> () { "lock3" }))
-				using (LockTransaction l4 = new LockTransaction (dbInfrastructure, 1, new List<string> () { "lock4" }))
-				{
-					Assert.IsTrue (l1.Lock ());
-					Assert.IsTrue (l2.Lock ());
-					Assert.IsTrue (l3.Lock ());
-					Assert.IsTrue (l4.Lock ());
-				}
+				Assert.AreEqual (0, lockManager.GetLocks (new List<string> () { "lock1", "lock2", "lock3", "lock4" }).Count ());
 			}
 		}
 
 
 		[TestMethod]
-		public void SimpleCase1()
+		public void SimpleCase()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbConnection c1 = dbInfrastructure.ServiceManager.ConnectionManager.OpenConnection ("1");
-				DbConnection c2 = dbInfrastructure.ServiceManager.ConnectionManager.OpenConnection ("2");
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
 
-				using (LockTransaction la = new LockTransaction (dbInfrastructure, c1.Id, new List<string> () { "lock" }))
-				using (LockTransaction lb = new LockTransaction (dbInfrastructure, c2.Id, new List<string> () { "lock" }))
+				ConnectionManager connectionManager = new ConnectionManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				LockManager lockManager = new LockManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+
+				Connection c1 = connectionManager.OpenConnection ("c1");
+				Connection c2 = connectionManager.OpenConnection ("c2");
+
+				using (LockTransaction la = new LockTransaction (lockManager, c1.Id, new List<string> () { "lock" }))
+				using (LockTransaction lb = new LockTransaction (lockManager, c2.Id, new List<string> () { "lock" }))
 				{
-					List<LockOwner> owners = new List<LockOwner> ();
+					var result1 = la.Lock ();
+					Assert.IsTrue (result1.Item1);
+					Assert.IsTrue (result1.Item2.IsEmpty ());
 
-					Assert.IsTrue (la.Lock (owners));
-					Assert.IsTrue (!owners.Any ());
-
-					Assert.IsFalse (lb.Lock (owners));
-					Assert.AreEqual (c1.Identity, owners.Single ().ConnectionIdentity);
-					Assert.AreEqual ("lock", owners.Single ().LockName);
-					Assert.AreEqual (dbInfrastructure.ServiceManager.LockManager.GetLock ("lock").CreationTime, owners.Single ().LockDateTime);
+					var result2 = lb.Lock ();
+					Assert.IsFalse (result2.Item1);
+					this.CheckLock (result2.Item2.Single (), c1, "lock", System.DateTime.Now);
 
 					la.Release ();
 
-					Assert.IsTrue (lb.Lock (owners));
-					Assert.IsTrue (!owners.Any ());
+					var result3 = lb.Lock ();
+					Assert.IsTrue (result3.Item1);
+					Assert.IsTrue (result3.Item2.IsEmpty ());
 
 					lb.Release ();
 				}
 
-				using (LockTransaction l = new LockTransaction (dbInfrastructure, 2, new List<string> () { "lock" }))
-				{
-					Assert.IsTrue (l.Lock ());
-				}
+				Assert.AreEqual (0, lockManager.GetLocks (new List<string> () { "lock" }).Count ());
 			}
 		}
 
 
 		[TestMethod]
-		public void SimpleCase2()
+		public void ComplexeCase()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				using (LockTransaction la = new LockTransaction (dbInfrastructure, 0, new List<string> () { "lock" }))
-				using (LockTransaction lb = new LockTransaction (dbInfrastructure, 1, new List<string> () { "lock" }))
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+
+				ConnectionManager connectionManager = new ConnectionManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				LockManager lockManager = new LockManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+
+				Connection c1 = connectionManager.OpenConnection ("c1");
+				Connection c2 = connectionManager.OpenConnection ("c2");
+				Connection c3 = connectionManager.OpenConnection ("c3");
+				Connection c4 = connectionManager.OpenConnection ("c4");
+
+				using (LockTransaction la = new LockTransaction (lockManager, c1.Id, new List<string> () { "lock1" }))
+				using (LockTransaction lb = new LockTransaction (lockManager, c1.Id, new List<string> () { "lock1", "lock2", "lock3" }))
+				using (LockTransaction lc = new LockTransaction (lockManager, c2.Id, new List<string> () { "lock2", "lock4", "lock5" }))
+				using (LockTransaction ld = new LockTransaction (lockManager, c3.Id, new List<string> () { "lock4" }))
+				using (LockTransaction le = new LockTransaction (lockManager, c4.Id, new List<string> () { "lock1" }))
 				{
-					Assert.IsTrue (la.Lock ());
-					Assert.IsFalse (lb.Lock ());
+					Assert.IsTrue (la.Lock ().Item1);
+					Assert.IsFalse (le.Lock ().Item1);
+
+					Assert.IsTrue (lc.Lock ().Item1);
+					Assert.IsFalse (lb.Lock ().Item1);
+					Assert.IsFalse (ld.Lock ().Item1);
+					Assert.IsFalse (le.Lock ().Item1);
+
+					lc.Release ();
+
+					Assert.IsTrue (lb.Lock ().Item1);
+					Assert.IsFalse (le.Lock ().Item1);
+
+					Assert.IsTrue (ld.Lock ().Item1);
+
+					la.Release ();
+
+					Assert.IsFalse (le.Lock ().Item1);
+
+					ld.Release ();
+
+					Assert.IsFalse (le.Lock ().Item1);
+
+					lb.Release ();
+
+					Assert.IsTrue (le.Lock ().Item1);
+
+					le.Release ();
 				}
 
-				using (LockTransaction l = new LockTransaction (dbInfrastructure, 2, new List<string> () { "lock" }))
-				{
-					Assert.IsTrue (l.Lock ());
-				}
+				Assert.AreEqual (0, lockManager.GetLocks (new List<string> () { "lock1", "lock2", "lock3", "lock4", "lock5" }).Count ());
 			}
 		}
 
@@ -265,31 +307,36 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void ReEntrency1()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				using (LockTransaction la = new LockTransaction (dbInfrastructure, 0, new List<string> () { "lock" }))
-				using (LockTransaction lb = new LockTransaction (dbInfrastructure, 0, new List<string> () { "lock" }))
-				using (LockTransaction lc = new LockTransaction (dbInfrastructure, 1, new List<string> () { "lock" }))
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+
+				ConnectionManager connectionManager = new ConnectionManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				LockManager lockManager = new LockManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+
+				Connection c1 = connectionManager.OpenConnection ("c1");
+				Connection c2 = connectionManager.OpenConnection ("c2");
+
+				using (LockTransaction la = new LockTransaction (lockManager, c1.Id, new List<string> () { "lock" }))
+				using (LockTransaction lb = new LockTransaction (lockManager, c1.Id, new List<string> () { "lock" }))
+				using (LockTransaction lc = new LockTransaction (lockManager, c2.Id, new List<string> () { "lock" }))
 				{
-					Assert.IsTrue (la.Lock ());
-					Assert.IsTrue (lb.Lock ());
-					Assert.IsFalse (lc.Lock ());
+					Assert.IsTrue (la.Lock ().Item1);
+					Assert.IsTrue (lb.Lock ().Item1);
+					Assert.IsFalse (lc.Lock ().Item1);
 
 					la.Release ();
 
-					Assert.IsFalse (lc.Lock ());
+					Assert.IsFalse (lc.Lock ().Item1);
 
 					lb.Release ();
 
-					Assert.IsTrue (lc.Lock ());
+					Assert.IsTrue (lc.Lock ().Item1);
 
 					lc.Release ();
 				}
 
-				using (LockTransaction ld = new LockTransaction (dbInfrastructure, 1, new List<string> () { "lock" }))
-				{
-					Assert.IsTrue (ld.Lock ());
-				}
+				Assert.AreEqual (0, lockManager.GetLocks (new List<string> () { "lock" }).Count ());
 			}
 		}
 
@@ -297,37 +344,36 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void ReEntrency2()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				using (LockTransaction la = new LockTransaction (dbInfrastructure, 0, new List<string> () { "lock1", "lock0" }))
-				using (LockTransaction lb = new LockTransaction (dbInfrastructure, 0, new List<string> () { "lock1", "lock0" }))
-				using (LockTransaction lc = new LockTransaction (dbInfrastructure, 1, new List<string> () { "lock3", "lock0" }))
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+
+				ConnectionManager connectionManager = new ConnectionManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				LockManager lockManager = new LockManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+
+				Connection c1 = connectionManager.OpenConnection ("c1");
+				Connection c2 = connectionManager.OpenConnection ("c2");
+
+				using (LockTransaction la = new LockTransaction (lockManager, c1.Id, new List<string> () { "lock1", "lock0" }))
+				using (LockTransaction lb = new LockTransaction (lockManager, c1.Id, new List<string> () { "lock1", }))
+				using (LockTransaction lc = new LockTransaction (lockManager, c2.Id, new List<string> () { "lock2", "lock0" }))
 				{
-					Assert.IsTrue (la.Lock ());
-					Assert.IsTrue (lb.Lock ());
-					Assert.IsFalse (lc.Lock ());
+					Assert.IsTrue (la.Lock ().Item1);
+					Assert.IsTrue (lb.Lock ().Item1);
+					Assert.IsFalse (lc.Lock ().Item1);
 
 					lb.Release ();
 
-					Assert.IsFalse (lc.Lock ());
+					Assert.IsFalse (lc.Lock ().Item1);
 
 					la.Release ();
 
-					Assert.IsTrue (lc.Lock ());
+					Assert.IsTrue (lc.Lock ().Item1);
 
 					lc.Release ();
 				}
 
-				using (LockTransaction l0 = new LockTransaction (dbInfrastructure, 1, new List<string> () { "lock0" }))
-				using (LockTransaction l1 = new LockTransaction (dbInfrastructure, 1, new List<string> () { "lock1" }))
-				using (LockTransaction l2 = new LockTransaction (dbInfrastructure, 1, new List<string> () { "lock2" }))
-				using (LockTransaction l3 = new LockTransaction (dbInfrastructure, 1, new List<string> () { "lock3" }))
-				{
-					Assert.IsTrue (l0.Lock ());
-					Assert.IsTrue (l1.Lock ());
-					Assert.IsTrue (l2.Lock ());
-					Assert.IsTrue (l3.Lock ());
-				}
+				Assert.AreEqual (0, lockManager.GetLocks (new List<string> () { "lock1", "lock2", "lock3", "lock4" }).Count ());
 			}
 		}
 
@@ -335,155 +381,94 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void GetLockOwnersTest()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbConnection connection1 = dbInfrastructure.ServiceManager.ConnectionManager.OpenConnection ("1");
-				DbConnection connection2 = dbInfrastructure.ServiceManager.ConnectionManager.OpenConnection ("2");
-				DbConnection connection3 = dbInfrastructure.ServiceManager.ConnectionManager.OpenConnection ("3");
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
 
-				using (LockTransaction lt1 = new LockTransaction (dbInfrastructure, connection1.Id, new List<string> () { "lock1", "lock2" }))
-				using (LockTransaction lt2 = new LockTransaction (dbInfrastructure, connection2.Id, new List<string> () { "lock3", }))
-				using (LockTransaction lt3 = new LockTransaction (dbInfrastructure, connection3.Id, new List<string> () { "lock1", "lock2", "lock3", "lock4" }))
+				ConnectionManager connectionManager = new ConnectionManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				LockManager lockManager = new LockManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+
+				Connection c1 = connectionManager.OpenConnection ("c1");
+				Connection c2 = connectionManager.OpenConnection ("c2");
+				Connection c3 = connectionManager.OpenConnection ("c2");
+
+				using (LockTransaction lt1 = new LockTransaction (lockManager, c1.Id, new List<string> () { "lock1", "lock2" }))
+				using (LockTransaction lt2 = new LockTransaction (lockManager, c2.Id, new List<string> () { "lock3", }))
+				using (LockTransaction lt3 = new LockTransaction (lockManager, c3.Id, new List<string> () { "lock1", "lock2", "lock3", "lock4" }))
 				{
-					List<LockOwner> lockOwners = new List<LockOwner> ();
+					var result1 = lt1.Lock ();
+					System.DateTime t1 = System.DateTime.Now;
+					
+					var result2 = lt2.Lock ();
+					System.DateTime t2 = System.DateTime.Now;
+					
+					var result3 = lt3.Lock ();
 
-					Assert.IsTrue (lt1.Lock (lockOwners));
-					Assert.IsTrue (!lockOwners.Any ());
-					Assert.IsTrue (lt2.Lock (lockOwners));
-					Assert.IsTrue (!lockOwners.Any ());
-					Assert.IsFalse (lt3.Lock (lockOwners));
+					Assert.IsTrue (result1.Item1);
+					Assert.IsTrue (result1.Item2.IsEmpty ());
 
-					DbLock lock1 = dbInfrastructure.ServiceManager.LockManager.GetLock ("lock1");
-					DbLock lock2 = dbInfrastructure.ServiceManager.LockManager.GetLock ("lock2");
-					DbLock lock3 = dbInfrastructure.ServiceManager.LockManager.GetLock ("lock3");
+					Assert.IsTrue (result2.Item1);
+					Assert.IsTrue (result2.Item2.IsEmpty ());
 
-					var expected1 = new List<LockOwner> ()
-					{
-						new LockOwner (connection1, lock1),
-						new LockOwner (connection1, lock2),
-					};
+					Assert.IsFalse (result3.Item1);
 
-					var expected2 = new List<LockOwner> ()
-					{
-						new LockOwner (connection2, lock3),
-					};
+					var locks = result3.Item2.ToDictionary (l => l.Name);
 
-					var expected3 =  new List<LockOwner> ()
-					{
-						new LockOwner (connection1, lock1),
-						new LockOwner (connection1, lock2),
-						new LockOwner (connection2, lock3),
-					};	
+					Assert.AreEqual (3, locks.Count);
 
-					var result1 = lt1.GetLockOwners ();
-					var result2 = lt2.GetLockOwners ();
-					var result3 = lt3.GetLockOwners ();
-
-					this.CheckLockOwners (expected1, result1);
-					this.CheckLockOwners (expected2, result2);
-					this.CheckLockOwners (expected3, result3);
-					this.CheckLockOwners (expected3, lockOwners);
+					this.CheckLock (locks["lock1"], c1, "lock1", t1);
+					this.CheckLock (locks["lock2"], c1, "lock2", t1);
+					this.CheckLock (locks["lock3"], c2, "lock3", t2);
 				}
 			}
 		}
 
 
-		private void CheckLockOwners(IEnumerable<LockOwner> expected, IEnumerable<LockOwner> actual)
-		{
-			var expectedAsList = expected.ToList ();
-			var actualAsList = actual.ToList ();
-
-			Assert.IsTrue (expectedAsList.Count == actualAsList.Count);
-
-			foreach (var item in expectedAsList)
-			{
-				Assert.IsNotNull (actualAsList.Single (i => i.ConnectionIdentity == item.ConnectionIdentity && i.LockName == item.LockName && i.LockDateTime == item.LockDateTime));
-			}
-		}
-
-
 		[TestMethod]
-		public void AreAllLocksAvailableArgumentCheck()
+		public void DisposeTest()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				List<string> lockNames = new List<string> ()
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+
+				ConnectionManager connectionManager = new ConnectionManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				LockManager lockManager = new LockManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+
+				Connection c1 = connectionManager.OpenConnection ("c1");
+				Connection c2 = connectionManager.OpenConnection ("c2");
+
+				using (LockTransaction la = new LockTransaction (lockManager, c1.Id, new List<string> () { "lock1", "lock2", "lock3" }))
+				using (LockTransaction lb = new LockTransaction (lockManager, c1.Id, new List<string> () { "lock1", }))
 				{
-					"myLock1",
-					"myLock2",
-					"myLock3",
-				};
-				long connectionId = 0;
+					Assert.IsTrue (la.Lock ().Item1);
 
-				ExceptionAssert.Throw<System.ArgumentNullException>
-				(
-					() => LockTransaction.AreAllLocksAvailable (null, connectionId, lockNames)
-				);
+					lockManager.ReleaseLocks (c1.Id, new List<string> () { "lock1" });
+					lockManager.ReleaseLocks (c1.Id, new List<string> () { "lock2" });
 
-				ExceptionAssert.Throw<System.ArgumentException>
-				(
-					() => LockTransaction.AreAllLocksAvailable (dbInfrastructure, -1, lockNames)
-				);
+					Assert.IsTrue (lb.Lock ().Item1);
 
-				ExceptionAssert.Throw<System.ArgumentNullException>
-				(
-					() => LockTransaction.AreAllLocksAvailable (dbInfrastructure, connectionId, null)
-				);
+					Assert.AreEqual (c1.Id, lockManager.GetLocks (new List<string> () { "lock1" }).Single ().Owner.Id);
+					Assert.AreEqual (0, lockManager.GetLocks (new List<string> () { "lock2" }).Count ());
+					Assert.AreEqual (c1.Id, lockManager.GetLocks (new List<string> () { "lock3" }).Single ().Owner.Id);
 
-				ExceptionAssert.Throw<System.ArgumentException>
-				(
-					() => LockTransaction.AreAllLocksAvailable (dbInfrastructure, connectionId, new List<string> () { "l1", "" })
-				);
+					la.Dispose ();
+					lb.Dispose ();
 
-				ExceptionAssert.Throw<System.ArgumentException>
-				(
-					() => LockTransaction.AreAllLocksAvailable (dbInfrastructure, connectionId, new List<string> () { "l1", null })
-				);
-
-				ExceptionAssert.Throw<System.ArgumentException>
-				(
-					() => LockTransaction.AreAllLocksAvailable (dbInfrastructure, connectionId, new List<string> () { "l1", "l2", "l1" })
-				);
-			}
-		}
-
-
-		[TestMethod]
-		public void AreAllLocksAvailable()
-		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			{
-				Assert.IsTrue (LockTransaction.AreAllLocksAvailable (dbInfrastructure, 0, new List<string> () { "l1", "l2" }));
-				Assert.IsTrue (LockTransaction.AreAllLocksAvailable (dbInfrastructure, 1, new List<string> () { "l1", "l2" }));
-
-				using (LockTransaction l1 = new LockTransaction (dbInfrastructure, 0, new List<string> () { "l1" }))
-				using (LockTransaction l2 = new LockTransaction (dbInfrastructure, 1, new List<string> () { "l2" }))
-				{
-					l1.Lock ();
-
-					Assert.IsTrue (LockTransaction.AreAllLocksAvailable (dbInfrastructure, 0, new List<string> () { "l1", "l2" }));
-					Assert.IsFalse (LockTransaction.AreAllLocksAvailable (dbInfrastructure, 1, new List<string> () { "l1", "l2" }));
-					Assert.IsTrue (LockTransaction.AreAllLocksAvailable (dbInfrastructure, 1, new List<string> () { "l2" }));
-
-					l2.Lock ();
-
-					Assert.IsFalse (LockTransaction.AreAllLocksAvailable (dbInfrastructure, 0, new List<string> () { "l1", "l2" }));
-					Assert.IsFalse (LockTransaction.AreAllLocksAvailable (dbInfrastructure, 1, new List<string> () { "l1", "l2" }));
-					Assert.IsTrue (LockTransaction.AreAllLocksAvailable (dbInfrastructure, 0, new List<string> () { "l1" }));
-					Assert.IsTrue (LockTransaction.AreAllLocksAvailable (dbInfrastructure, 1, new List<string> () { "l2" }));
-
-					l1.Release ();
-
-					Assert.IsFalse (LockTransaction.AreAllLocksAvailable (dbInfrastructure, 0, new List<string> () { "l1", "l2" }));
-					Assert.IsTrue (LockTransaction.AreAllLocksAvailable (dbInfrastructure, 1, new List<string> () { "l1", "l2" }));
-					Assert.IsTrue (LockTransaction.AreAllLocksAvailable (dbInfrastructure, 0, new List<string> () { "l1" }));
-
-					l2.Release ();
-
-					Assert.IsTrue (LockTransaction.AreAllLocksAvailable (dbInfrastructure, 0, new List<string> () { "l1", "l2" }));
-					Assert.IsTrue (LockTransaction.AreAllLocksAvailable (dbInfrastructure, 1, new List<string> () { "l1", "l2" }));
+					Assert.AreEqual (0, lockManager.GetLocks (new List<string> () { "lock1", "lock2", "lock3" }).Count ());
 				}
 			}
+		}
+
+
+		private void CheckLock(Lock l, Connection connection, string name, System.DateTime time)
+		{
+			Assert.AreEqual (name, l.Name);
+			Assert.IsTrue (System.Math.Abs ((time - l.CreationTime).TotalMilliseconds) < 100);
+			Assert.AreEqual (connection.Id, l.Owner.Id);
+			Assert.AreEqual (connection.Identity, l.Owner.Identity);
+			Assert.AreEqual (connection.Status, l.Owner.Status);
+			Assert.AreEqual (connection.EstablishmentTime, l.Owner.EstablishmentTime);
+			Assert.AreEqual (connection.RefreshTime, l.Owner.RefreshTime);
 		}
 
 

@@ -34,9 +34,9 @@ namespace Epsitec.Cresus.Core.Data
 		{
 			get
 			{
-				this.DataInfrastructure.RefreshConnectionInformation ();
+				this.DataInfrastructure.RefreshConnectionData ();
 				
-				var info = this.DataInfrastructure.ConnectionInformation;
+				var info = this.DataInfrastructure.Connection;
 				
 				return info != null && info.Status == ConnectionStatus.Open;
 			}
@@ -140,9 +140,11 @@ namespace Epsitec.Cresus.Core.Data
 		{
 			System.Diagnostics.Debug.WriteLine ("KeepAlive pulsed");
 
+			this.DataInfrastructure.KeepConnectionAlive ();
+
 			if (this.Host.EnableConnectionRecycling)
 			{
-				this.DataInfrastructure.KeepConnectionAlive ();
+				this.DataInfrastructure.KillDeadConnections(System.TimeSpan.FromSeconds(30));
 			}
 		}
 

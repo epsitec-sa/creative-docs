@@ -1,5 +1,9 @@
 ﻿using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
+
 using Epsitec.Common.Types;
+
+using Epsitec.Common.UnitTesting;
 
 using Epsitec.Cresus.DataLayer.Schema;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Helpers;
@@ -11,8 +15,7 @@ using System;
 using System.Collections.Generic;
 
 using System.Linq;
-using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.UnitTesting;
+
 
 
 namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema

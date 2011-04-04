@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		{
 			get
 			{
-				return this.DataContext.DataInfrastructure.EntityEngine.TypeEngine;
+				return this.DataContext.DataInfrastructure.EntityEngine.EntityTypeEngine;
 			}
 		}
 
@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		{
 			get
 			{
-				return this.DataContext.DataInfrastructure.EntityEngine.SchemaEngine;
+				return this.DataContext.DataInfrastructure.EntityEngine.EntitySchemaEngine;
 			}
 		}
 
@@ -213,7 +213,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				targetsData = this.GetCollectionEntityData (entity, fieldId)
-					.ToDictionary (data => data.RowKey, data => data);
+					.ToDictionary (data => data.RowKey);
 
 				if (targetsData.Any ())
 				{
@@ -603,7 +603,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				SqlFunction sqlCondition = new SqlFunction
 				(
 					SqlFunctionCode.CompareEqual,
-					this.BuildSqlFieldForEntityColumn (rootEntityAlias, rootEntityId, Tags.ColumnId),
+					this.BuildSqlFieldForEntityColumn (rootEntityAlias, rootEntityId, EntitySchemaBuilder.EntityTableColumnIdName),
 					SqlField.CreateConstant (id, DbRawType.Int64)
 				);
 
@@ -628,7 +628,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				SqlFunction sqlCondition = new SqlFunction
 				(
 					SqlFunctionCode.CompareGreaterThanOrEqual,
-					this.BuildSqlFieldForEntityColumn (rootEntityAlias, rootEntityId, Tags.ColumnRefLog),
+					this.BuildSqlFieldForEntityColumn (rootEntityAlias, rootEntityId, EntitySchemaBuilder.EntityTableColumnEntityModificationEntryIdName),
 					SqlField.CreateConstant (minimumLogId.Value, DbRawType.Int64)
 				);
 
@@ -660,13 +660,13 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			DbTable rootDbTable = this.SchemaEngine.GetEntityTable (rootEntityId);
 			DbTable localDbTable = this.SchemaEngine.GetEntityTable (localEntityId);
 
-			DbColumn rootIdDbColumn = rootDbTable.Columns[Tags.ColumnId];
-			DbColumn localIdDbColumn = localDbTable.Columns[Tags.ColumnId];
+			DbColumn rootIdDbColumn = rootDbTable.Columns[EntitySchemaBuilder.EntityTableColumnIdName];
+			DbColumn localIdDbColumn = localDbTable.Columns[EntitySchemaBuilder.EntityTableColumnIdName];
 
 			SqlField sqlTable = SqlField.CreateAliasedName (localDbTable.GetSqlName (), localEntityAlias.Alias);
 
-			SqlField rootIdColumn = SqlField.CreateAliasedName (rootEntityAlias.Alias, rootIdDbColumn.GetSqlName (), Tags.ColumnId);
-			SqlField localIdColumn = SqlField.CreateAliasedName (localEntityAlias.Alias, localIdDbColumn.GetSqlName (), Tags.ColumnId);
+			SqlField rootIdColumn = SqlField.CreateAliasedName (rootEntityAlias.Alias, rootIdDbColumn.GetSqlName (), EntitySchemaBuilder.EntityTableColumnIdName);
+			SqlField localIdColumn = SqlField.CreateAliasedName (localEntityAlias.Alias, localIdDbColumn.GetSqlName (), EntitySchemaBuilder.EntityTableColumnIdName);
 
 			SqlJoinCode sqlJoinCode = SqlJoinCode.Inner;
 
@@ -836,12 +836,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			DbColumn localSourceRefIdDbColumn = this.SchemaEngine.GetEntityFieldColumn (localEntityId, fieldId);
 
 			DbTable rootTargetDbTable = this.SchemaEngine.GetEntityTable (rootTargetId);
-			DbColumn targetIdDbColumn = rootTargetDbTable.Columns[Tags.ColumnId];
+			DbColumn targetIdDbColumn = rootTargetDbTable.Columns[EntitySchemaBuilder.EntityTableColumnIdName];
 
 			SqlField sqlTable = SqlField.CreateAliasedName (rootTargetDbTable.GetSqlName (), rootTargetAlias.Alias);
 
-			SqlField sourceRefIdColumn = SqlField.CreateAliasedName (localSourceAlias.Alias, localSourceRefIdDbColumn.GetSqlName (), Tags.ColumnRefTargetId);
-			SqlField targetIdColumn = SqlField.CreateAliasedName (rootTargetAlias.Alias, targetIdDbColumn.GetSqlName (), Tags.ColumnId);
+			SqlField sourceRefIdColumn = SqlField.CreateAliasedName (localSourceAlias.Alias, localSourceRefIdDbColumn.GetSqlName (), EntitySchemaBuilder.EntityFieldTableColumnTargetIdName);
+			SqlField targetIdColumn = SqlField.CreateAliasedName (rootTargetAlias.Alias, targetIdDbColumn.GetSqlName (), EntitySchemaBuilder.EntityTableColumnIdName);
 
 			SqlJoinCode sqlJoinCode = SqlJoinCode.Inner;
 
@@ -928,13 +928,13 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			DbTable rootSourceDbTable = this.SchemaEngine.GetEntityTable (rootEntityId);
 			DbTable relationDbTable = this.SchemaEngine.GetEntityFieldTable (localEntityId, fieldId);
 
-			DbColumn sourceIdDbColumn = rootSourceDbTable.Columns[Tags.ColumnId];
-			DbColumn relationSourceIdDbColumn = relationDbTable.Columns[Tags.ColumnRefSourceId];
+			DbColumn sourceIdDbColumn = rootSourceDbTable.Columns[EntitySchemaBuilder.EntityTableColumnIdName];
+			DbColumn relationSourceIdDbColumn = relationDbTable.Columns[EntitySchemaBuilder.EntityFieldTableColumnSourceIdName];
 
 			SqlField sqlTable = SqlField.CreateAliasedName (relationDbTable.GetSqlName (), relationAlias.Alias);
 
-			SqlField sourceIdColumn = SqlField.CreateAliasedName (rootEntityAlias.Alias, sourceIdDbColumn.GetSqlName (), Tags.ColumnId);
-			SqlField relationSourceIdColumn = SqlField.CreateAliasedName (relationAlias.Alias, relationSourceIdDbColumn.GetSqlName (), Tags.ColumnRefSourceId);
+			SqlField sourceIdColumn = SqlField.CreateAliasedName (rootEntityAlias.Alias, sourceIdDbColumn.GetSqlName (), EntitySchemaBuilder.EntityTableColumnIdName);
+			SqlField relationSourceIdColumn = SqlField.CreateAliasedName (relationAlias.Alias, relationSourceIdDbColumn.GetSqlName (), EntitySchemaBuilder.EntityFieldTableColumnSourceIdName);
 
 			SqlJoin sqlJoin = new SqlJoin (sourceIdColumn, relationSourceIdColumn, sqlJoinCode);
 
@@ -949,13 +949,13 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			DbTable relationDbTable = this.SchemaEngine.GetEntityFieldTable (localEntityId, fieldId);
 			DbTable rootTargetDbTable = this.SchemaEngine.GetEntityTable (rootTargetId);
 
-			DbColumn relationTargetIdDbColumn = relationDbTable.Columns[Tags.ColumnRefTargetId];
-			DbColumn targetIdDbColumn = rootTargetDbTable.Columns[Tags.ColumnId];
+			DbColumn relationTargetIdDbColumn = relationDbTable.Columns[EntitySchemaBuilder.EntityFieldTableColumnTargetIdName];
+			DbColumn targetIdDbColumn = rootTargetDbTable.Columns[EntitySchemaBuilder.EntityTableColumnIdName];
 
 			SqlField sqlTable = SqlField.CreateAliasedName (rootTargetDbTable.GetSqlName (), rootTargetAlias.Alias);
 
-			SqlField relationTargetIdColumn = SqlField.CreateAliasedName (relationAlias.Alias, relationTargetIdDbColumn.GetSqlName (), Tags.ColumnRefTargetId);
-			SqlField targetIdColumn = SqlField.CreateAliasedName (rootTargetAlias.Alias, targetIdDbColumn.GetSqlName (), Tags.ColumnId);
+			SqlField relationTargetIdColumn = SqlField.CreateAliasedName (relationAlias.Alias, relationTargetIdDbColumn.GetSqlName (), EntitySchemaBuilder.EntityFieldTableColumnTargetIdName);
+			SqlField targetIdColumn = SqlField.CreateAliasedName (rootTargetAlias.Alias, targetIdDbColumn.GetSqlName (), EntitySchemaBuilder.EntityTableColumnIdName);
 
 			SqlJoinCode sqlJoinCode = SqlJoinCode.Inner;
 
@@ -970,7 +970,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			return new SqlFunction
 			(
 				SqlFunctionCode.CompareEqual,
-				this.BuildSqlFieldForRelationColumn (rootEntityAlias, localEntityId, fieldId, Tags.ColumnRefTargetId),
+				this.BuildSqlFieldForRelationColumn (rootEntityAlias, localEntityId, fieldId, EntitySchemaBuilder.EntityFieldTableColumnTargetIdName),
 				SqlField.CreateConstant (targetId, DbRawType.Int64)
 			);
 		}
@@ -1036,8 +1036,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			SqlContainer sqlContainerForMetaData = SqlContainer.Empty
 				.PlusSqlFields (this.BuildSqlFieldForLogId (rootEntityAlias, rootEntityId))
-				.PlusSqlFields (this.BuildSqlFieldForEntityColumn (rootEntityAlias, rootEntityId, Tags.ColumnInstanceType))
-				.PlusSqlFields (this.BuildSqlFieldForEntityColumn (rootEntityAlias, rootEntityId, Tags.ColumnId));
+				.PlusSqlFields (this.BuildSqlFieldForEntityColumn (rootEntityAlias, rootEntityId, EntitySchemaBuilder.EntityTableColumnEntityTypeIdName))
+				.PlusSqlFields (this.BuildSqlFieldForEntityColumn (rootEntityAlias, rootEntityId, EntitySchemaBuilder.EntityTableColumnIdName));
 
 			return sqlContainerForValues
 				.Plus (sqlContainerForReferences)
@@ -1060,9 +1060,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		private SqlField BuildSqlFieldForLogId(AliasNode rootEntityAlias, Druid rootEntityId)
 		{
 			DbTable dbTable = this.DbInfrastructure.ResolveDbTable (rootEntityId);
-			DbColumn dbColumn = dbTable.Columns[Tags.ColumnRefLog];
+			DbColumn dbColumn = dbTable.Columns[EntitySchemaBuilder.EntityTableColumnEntityModificationEntryIdName];
 
-			return SqlField.CreateAliasedName (rootEntityAlias.Alias, dbColumn.GetSqlName (), Tags.ColumnRefLog);
+			return SqlField.CreateAliasedName (rootEntityAlias.Alias, dbColumn.GetSqlName (), EntitySchemaBuilder.EntityTableColumnEntityModificationEntryIdName);
 		}
 
 
@@ -1091,10 +1091,10 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			SqlContainer sqlContainerForRelationJoin = this.BuildSqlContainerForJoinToCollectionTable (rootEntityAlias, localEntityId, fieldId, SqlJoinCode.Inner);
 
-			SqlField sqlFieldForTargetId = this.BuildSqlFieldForRelationColumn (rootEntityAlias, localEntityId, fieldId, Tags.ColumnRefTargetId);
-			SqlField sqlFieldForSourceId = this.BuildSqlFieldForRelationColumn (rootEntityAlias, localEntityId, fieldId, Tags.ColumnRefSourceId);
+			SqlField sqlFieldForTargetId = this.BuildSqlFieldForRelationColumn (rootEntityAlias, localEntityId, fieldId, EntitySchemaBuilder.EntityFieldTableColumnTargetIdName);
+			SqlField sqlFieldForSourceId = this.BuildSqlFieldForRelationColumn (rootEntityAlias, localEntityId, fieldId, EntitySchemaBuilder.EntityFieldTableColumnSourceIdName);
 
-			SqlField sqlFieldForRank = this.BuildSqlFieldForRelationColumn (rootEntityAlias, localEntityId, fieldId, Tags.ColumnRefRank);
+			SqlField sqlFieldForRank = this.BuildSqlFieldForRelationColumn (rootEntityAlias, localEntityId, fieldId, EntitySchemaBuilder.EntityFieldTableColumnRankName);
 			sqlFieldForRank.SortOrder = SqlSortOrder.Ascending;
 
 			return sqlContainerForRelationJoin

@@ -1,11 +1,5 @@
-﻿using Epsitec.Common.Support;
-
-using Epsitec.Cresus.Database;
-
-using Epsitec.Cresus.DataLayer.Infrastructure;
+﻿using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Schema;
-
-using System.Collections.Generic;
 
 
 namespace Epsitec.Cresus.DataLayer.Tests.Vs.Helpers

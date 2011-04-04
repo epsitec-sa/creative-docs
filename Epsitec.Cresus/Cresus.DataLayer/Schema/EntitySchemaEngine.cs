@@ -52,6 +52,10 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		// row id, the relation source id, the relation target id and the relation rank.
  		// Marc
 
+		// TODO Comment this class
+		// Marc
+
+
 		/// <summary>
 		/// Builds a new <see cref="EntitySchemaEngine"/> which will be associated with a given
 		/// <see cref="DbInfrastructure"/>.
@@ -92,7 +96,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 		private DbTable ComputeEntityTable(DbInfrastructure dbInfrastructure, Druid entityTypeId)
 		{
-			string tableName = EntitySchemaEngine.GetEntityTableName (entityTypeId);
+			string tableName = EntitySchemaBuilder.GetEntityTableName (entityTypeId);
 
 			DbTable table = dbInfrastructure.ResolveDbTable (tableName);
 
@@ -130,7 +134,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 		private DbTable ComputeEntityFieldTable(DbInfrastructure dbInfrastructure, Druid entityTypeId, Druid fieldId)
 		{
-			string tableName = EntitySchemaEngine.GetEntityFieldTableName (entityTypeId, fieldId);
+			string tableName = EntitySchemaBuilder.GetEntityFieldTableName (entityTypeId, fieldId);
 
 			DbTable table = dbInfrastructure.ResolveDbTable (tableName);
 
@@ -169,7 +173,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 		private DbColumn ComputeEntityFieldColumn(Druid entityTypeId, Druid fieldId)
 		{
-			string columnName = EntitySchemaEngine.GetEntityFieldColumnName (fieldId);
+			string columnName = EntitySchemaBuilder.GetEntityFieldColumnName (fieldId);
 
 			DbTable table = this.entityTableCache[entityTypeId];
 			DbColumn column = table.Columns[columnName];
@@ -185,24 +189,11 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 		private void EnsureReferencedObjectsAreDeserialized()
 		{
-			IEnumerable<DbTable> tables = this.GetEntityTables ().Concat (this.GetEntityFieldTables ());
+			IEnumerable<DbTable> tables = this.entityTableCache.Values.Concat (this.entityFieldTableCache.Values);
 
 			foreach (DbTable table in tables)
 			{
-				var tableCaption = table.Caption;
-				var tablePrimaryKeys = table.PrimaryKeys;
-				var tableIndexes = table.Indexes;
-				
-				foreach (DbColumn column in table.Columns)
-				{
-					var columnCaption = column.Caption;
-					var columnType = column.Type;
-
-					if (columnType != null)
-					{
-						var columnTypeCaption = columnType.Caption;
-					}
-				}
+				table.EnsureIsDeserialized ();
 			}
 		}
 
@@ -250,86 +241,6 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			var key = EntitySchemaEngine.GetEntityFieldColumnKey (entityTypeId, fieldId);
 
 			return EntitySchemaEngine.GetFromCache (cache, key);
-		}
-
-
-		/// <summary>
-		/// Gets all the table definition for the entities which are defined in the database.
-		/// </summary>
-		/// <returns>The sequence of <see cref="DbTable"/>.</returns>
-		public IEnumerable<DbTable> GetEntityTables()
-		{
-			return this.entityTableCache.Values;
-		}
-
-
-		/// <summary>
-		/// Gets all the tables definition for the collection of the entities which are defined in
-		/// the database.
-		/// </summary>
-		/// <returns>The sequence of <see cref="DbTable"/>.</returns>
-		public IEnumerable<DbTable> GetEntityFieldTables()
-		{
-			return this.entityFieldTableCache.Values;
-		}
-
-
-		/// <summary>
-		/// The number that should be used for the auto incremented fields of the entities.
-		/// </summary>
-		internal static int AutoIncrementStartValue
-		{
-			get
-			{
-				return 1000000000;
-			}
-		}
-
-
-		/// <summary>
-		/// Gets the name of the <see cref="DbTable"/> corresponding to an <see cref="AbstractEntity"/>
-		/// <see cref="Druid"/>.
-		/// </summary>
-		/// <param name="entityId">The <see cref="Druid"/> whose <see cref="DbTable"/> name to get.</param>
-		/// <returns>The name of the <see cref="DbTable"/>.</returns>
-		internal static string GetEntityTableName(Druid entityId)
-		{
-			entityId.ThrowIf (id => !id.IsValid, "entityId is not valid");
-
-			return DbTable.GetEntityTableName (entityId);
-		}
-
-
-		/// <summary>
-		/// Gets the name of the relation <see cref="DbTable"/> corresponding to the field of an
-		/// <see cref="AbstractEntity"/>.
-		/// </summary>
-		/// <param name="localEntityId">The <see cref="Druid"/> of the <see cref="AbstractEntity"/>.</param>
-		/// <param name="fieldId">The <see cref="Druid"/> of the field.</param>
-		/// <returns>The name of the <see cref="DbTable"/>.</returns>
-		internal static string GetEntityFieldTableName(Druid localEntityId, Druid fieldId)
-		{
-			localEntityId.ThrowIf (id => !id.IsValid, "localEntityId is not valid");
-			fieldId.ThrowIf (id => !id.IsValid, "fieldId is not valid");
-
-			string fieldName = Druid.ToFullString (fieldId.ToLong ());
-			string localEntityName = Druid.ToFullString (localEntityId.ToLong ());
-
-			return string.Concat (localEntityName, ":", fieldName);
-		}
-
-
-		/// <summary>
-		/// Gets the name of the <see cref="DbColumn"/> corresponding to the <see cref="Druid"/>
-		/// of a field.
-		/// </summary>
-		/// <param name="fieldId">The <see cref="Druid"/> of the field.</param>
-		/// <returns>The name of the <see cref="DbColumn"/>.</returns>
-		internal static string GetEntityFieldColumnName(Druid fieldId)
-		{
-			fieldId.ThrowIf (id => !id.IsValid, "fieldId is not valid");
-
-			return DbColumn.GetColumnName (fieldId);
 		}
 
 

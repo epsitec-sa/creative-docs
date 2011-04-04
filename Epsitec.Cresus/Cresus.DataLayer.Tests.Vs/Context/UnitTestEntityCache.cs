@@ -419,7 +419,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 			{
 				foreach (Druid sample in samples)
 				{
-					entityCache.DefineLogId (sample, sample.ToLong () + i);
+					entityCache.DefineEntityModificationEntryId (sample, sample.ToLong () + i);
 				}
 
 				foreach (Druid sample in samples)
@@ -455,7 +455,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 			{
 				for (int j = 0; j < samples.Count; j++)
 				{
-					entityCache.DefineLogId (samples[j], j + i);
+					entityCache.DefineEntityModificationEntryId (samples[j], j + i);
 				}
 
 				for (int j = 0; j < samples.Count; j++)
@@ -476,12 +476,12 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
-				() => entityCache.DefineLogId ((AbstractEntity) null, 0)
+				() => entityCache.DefineEntityModificationEntryId ((AbstractEntity) null, 0)
 			);
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
-				() => entityCache.DefineLogId (new NaturalPersonEntity (), 0)
+				() => entityCache.DefineEntityModificationEntryId (new NaturalPersonEntity (), 0)
 			);
 		}
 
@@ -496,7 +496,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 
 			for (int i = 0; i < 10; i++)
 			{
-				entityCache.DefineLogId (Druid.FromLong (i + 1), i);
+				entityCache.DefineEntityModificationEntryId (Druid.FromLong (i + 1), i);
 
 				Assert.AreEqual (0, entityCache.GetMinimumLogId ());
 			}
@@ -513,7 +513,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 
 			foreach (Druid sample in samples)
 			{
-				entityCache.DefineLogId (sample, 1);
+				entityCache.DefineEntityModificationEntryId (sample, 1);
 			}
 
 			Assert.IsTrue (samples.SetEquals (entityCache.GetEntityTypeIds ()));
