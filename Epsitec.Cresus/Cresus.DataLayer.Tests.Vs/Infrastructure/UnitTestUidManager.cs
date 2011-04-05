@@ -357,6 +357,163 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		}
 
 
+		[TestMethod]
+		public void Concurrency()
+		{
+			int nbThreads = 100;
+
+			var entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+
+			var dbInfrastructures = Enumerable.Range (0, nbThreads)
+				.Select (i => DbInfrastructureHelper.ConnectToTestDatabase ())
+				.ToList ();
+
+			List<UidGenerator> generators = new List<UidGenerator> ();
+
+			try
+			{
+				System.DateTime time = System.DateTime.Now;
+
+				var threads = dbInfrastructures.Select (d => new System.Threading.Thread (() =>
+				{
+					var dice = new System.Random (System.Threading.Thread.CurrentThread.ManagedThreadId);
+
+					var uidManager = new UidManager (d, entityEngine.ServiceSchemaEngine);
+
+					while (System.DateTime.Now - time <= System.TimeSpan.FromSeconds (15))
+					{
+						int count;
+
+						lock (generators)
+						{
+							count = generators.Count;
+						}
+
+						if (count < 20 || dice.NextDouble () > 0.9)
+						{
+							var slots = Enumerable.Range (0, 5)
+								.Select (i => new UidSlot (i * 3, (i + 1) * 3 - 1))
+								.ToList ();
+
+							var generator = uidManager.CreateUidGenerator (System.Guid.NewGuid ().ToString (), slots);
+
+							lock (generators)
+							{
+								generators.Add (generator);
+							}
+						}
+
+						string generatorName1 = null;
+
+						lock (generators)
+						{
+							if (generators.Count > 0)
+							{
+								var generator = generators[dice.Next (0, generators.Count)];
+
+								generatorName1 = generator.Name;
+							}
+						}
+
+						if (generatorName1 != null)
+						{
+							uidManager.DoesUidGeneratorExist (generatorName1);
+						}
+
+						string generatorName2 = null;
+
+						lock (generators)
+						{
+							if (generators.Count > 0)
+							{
+								var generator = generators[dice.Next (0, generators.Count)];
+
+								generatorName2 = generator.Name;
+							}
+						}
+
+						if (generatorName2 != null)
+						{
+							try
+							{
+								uidManager.GetUidGenerator (generatorName2);
+							}
+							catch (System.InvalidOperationException)
+							{
+								// The generator has been deleted. Let's ignore this exception.
+								// Marc
+							}
+						}
+
+						string generatorName3 = null;
+
+						lock (generators)
+						{
+							if (generators.Count > 0)
+							{
+								var generator = generators[dice.Next (0, generators.Count)];
+
+								generatorName3 = generator.Name;
+							}
+						}
+
+						if (generatorName3 != null)
+						{
+							try
+							{
+								uidManager.GetNextUid (generatorName3);
+							}
+							catch (System.InvalidOperationException)
+							{
+								// The generator has been deleted. Let's ignore this exception.
+								// Marc
+							}
+						}
+
+						if (count > 20 && dice.NextDouble () > 0.95)
+						{
+							UidGenerator generator = null;
+
+							lock (generators)
+							{
+								if (generators.Count > 0)
+								{
+									int index = dice.Next (0, generators.Count);
+
+									generator = generators[index];
+
+									generators.RemoveAt (index);
+								}
+							}
+
+							if (generator != null)
+							{
+								uidManager.DeleteUidGenerator (generator.Name);
+							}
+						}
+					}
+				})).ToList ();
+
+				foreach (var thread in threads)
+				{
+					thread.Start ();
+				}
+
+				foreach (var thread in threads)
+				{
+					thread.Join ();
+				}
+			}
+			finally
+			{
+				foreach (var dbInfrastructure in dbInfrastructures)
+				{
+					dbInfrastructure.Dispose ();
+				}
+			}
+		}
+
+
 	}
 
 }

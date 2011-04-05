@@ -148,6 +148,57 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		}
 
 
+		[TestMethod]
+		public void Concurrency()
+		{
+			int nbThreads = 100;
+
+			var entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+
+			var dbInfrastructures = Enumerable.Range (0, nbThreads)
+				.Select (i => DbInfrastructureHelper.ConnectToTestDatabase ())
+				.ToList ();
+
+			try
+			{
+				System.DateTime time = System.DateTime.Now;
+
+				var threads = dbInfrastructures.Select (d => new System.Threading.Thread (() =>
+				{
+					var dice = new System.Random (System.Threading.Thread.CurrentThread.ManagedThreadId);
+
+					var log = new EntityDeletionLog (d, entityEngine.ServiceSchemaEngine);
+
+					while (System.DateTime.Now - time <= System.TimeSpan.FromSeconds (15))
+					{
+						var entry = log.CreateEntry (new DbId (dice.Next ()), Druid.FromLong (dice.Next ()), new DbId (dice.Next ()));
+
+						var id = System.Math.Max (entry.EntryId.Value - 10, 1);
+
+						var entries = log.GetEntriesNewerThan (new DbId (id));
+					}
+				})).ToList ();
+
+				foreach (var thread in threads)
+				{
+					thread.Start ();
+				}
+
+				foreach (var thread in threads)
+				{
+					thread.Join ();
+				}
+			}
+			finally
+			{
+				foreach (var dbInfrastructure in dbInfrastructures)
+				{
+					dbInfrastructure.Dispose ();
+				}
+			}
+		}
+
+
 		private IEnumerable<System.Tuple<DbId, Druid, DbId>> GetSamples()
 		{
 			for (int i = 1; i < 10; i++)

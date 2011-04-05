@@ -29,6 +29,12 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 	/// The <c>DataInfrastructure</c> class provides an high level access to the data stored in the
 	/// database.
 	/// </summary>
+	/// <remarks>
+	/// This class is not completely thread safe. That means that all its members should always be
+	/// called by the same thread or the thread safety must be ensured externally. The only two
+	/// methods that are thread safe and that can be called from any thread are the KeepConnectionAlive
+	/// and the KillDeadConnections methods.
+	/// </remarks>
 	public sealed class DataInfrastructure : IIsDisposed
 	{
 		
@@ -383,6 +389,10 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <summary>
 		/// Notifies the database that this instance of the application is still up and running. 
 		/// </summary>
+		/// <remarks>
+		/// This method is thread safe and thus can be called by any thread, even if the other
+		/// methods of the same instance are being called by another thread.
+		/// </remarks>
 		/// <exception cref="System.InvalidOperationException">If the connection is not open.</exception>
 		public void KeepConnectionAlive()
 		{
@@ -396,6 +406,10 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// Interrupts the connection to the database that are open but inactive for the given
 		/// timeout and clean related data such as locks.
 		/// </summary>
+		/// <remarks>
+		/// This method is thread safe and thus can be called by any thread, even if the other
+		/// methods of the same instance are being called by another thread.
+		/// </remarks>
 		/// <param name="timeout">The amount of time after which an open connection should be killed.</param>
 		public void KillDeadConnections(System.TimeSpan timeout)
 		{

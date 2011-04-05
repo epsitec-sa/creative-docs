@@ -170,6 +170,71 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		}
 
 
+		[TestMethod]
+		public void Concurrency()
+		{
+			int nbThreads = 100;
+
+			var entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+
+			var dbInfrastructures = Enumerable.Range (0, nbThreads)
+				.Select (i => DbInfrastructureHelper.ConnectToTestDatabase ())
+				.ToList ();
+
+			try
+			{
+				System.DateTime time = System.DateTime.Now;
+				var keys = Enumerable.Range (0, 50).Select (i => i.ToString ()).ToList ();
+
+				var threads = dbInfrastructures.Select (d => new System.Threading.Thread (() =>
+				{
+					var dice = new System.Random (System.Threading.Thread.CurrentThread.ManagedThreadId);
+					
+					var infoManager = new InfoManager (d, entityEngine.ServiceSchemaEngine);
+
+					while (System.DateTime.Now - time <= System.TimeSpan.FromSeconds (15))
+					{
+						var key1 = keys[dice.Next (0, keys.Count)];
+
+					    if (dice.NextDouble () > 0.2)
+					    {
+					        infoManager.SetInfo (key1, System.Guid.NewGuid ().ToString ());
+					    }
+					    else
+					    {
+					        infoManager.SetInfo (key1, null);
+						}
+
+						var key2 = keys[dice.Next (0, keys.Count)];
+
+						infoManager.GetInfo (key2);
+
+						var key3 = keys[dice.Next (0, keys.Count)];
+
+						infoManager.DoesInfoExists (key3);
+					}
+				})).ToList ();
+
+				foreach (var thread in threads)
+				{
+					thread.Start ();
+				}
+
+				foreach (var thread in threads)
+				{
+					thread.Join ();
+				}
+			}
+			finally
+			{
+				foreach (var dbInfrastructure in dbInfrastructures)
+				{
+					dbInfrastructure.Dispose ();
+				}
+			}
+		}
+
+
 		private string GetRandomString()
 		{
 			return this.dice.Next ().ToString ();

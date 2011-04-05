@@ -96,7 +96,12 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			
 			SqlFunction condition = this.CreateConditionForEntryId (entryId);
 
-			this.tableQueryHelper.RemoveRows (condition);
+			using (DbTransaction transaction = this.tableQueryHelper.CreateLockTransaction ())
+			{
+				this.tableQueryHelper.RemoveRows (condition);
+
+				transaction.Commit ();
+			}
 		}
 
 

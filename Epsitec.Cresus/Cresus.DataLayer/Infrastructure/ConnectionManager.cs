@@ -94,8 +94,15 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 				this.CreateConditionForStatus (ConnectionStatus.Open),
 			};
 
-			int nbRowsAffected = this.tableQueryHelper.SetRow (columnNamesToValues, conditions);
+			int nbRowsAffected;
 
+			using (DbTransaction transaction = this.tableQueryHelper.CreateLockTransaction ())
+			{
+				nbRowsAffected = this.tableQueryHelper.SetRow (columnNamesToValues, conditions);
+
+				transaction.Commit ();
+			}
+	
 			if (nbRowsAffected == 0)
 			{
 				throw new System.InvalidOperationException ("Could not close connection because it not open or it does not exist.");
@@ -142,7 +149,14 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 				this.CreateConditionForStatus (ConnectionStatus.Open),
 			};
 
-			int nbRowsAffected = this.tableQueryHelper.SetRow (columnNamesToValues, conditions);
+			int nbRowsAffected;
+
+			using (DbTransaction transaction = this.tableQueryHelper.CreateLockTransaction ())
+			{
+				nbRowsAffected = this.tableQueryHelper.SetRow (columnNamesToValues, conditions);
+
+				transaction.Commit ();
+			}
 
 			if (nbRowsAffected == 0)
 			{
@@ -170,7 +184,14 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 				this.CreateConditionForTimeOut (timeOutValue),
 			};
 
-			int nbRowsAffected = this.tableQueryHelper.SetRow (columnNamesToValues, conditions);
+			int nbRowsAffected;
+
+			using (DbTransaction transaction = this.tableQueryHelper.CreateLockTransaction ())
+			{
+				nbRowsAffected = this.tableQueryHelper.SetRow (columnNamesToValues, conditions);
+
+				transaction.Commit ();
+			}
 
 			return nbRowsAffected > 0;
 		}

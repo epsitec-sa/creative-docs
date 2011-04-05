@@ -185,6 +185,86 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		}
 
 
+		[TestMethod]
+		public void Concurrency()
+		{
+			int nbThreads = 100;
+
+			var entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+
+			var dbInfrastructures = Enumerable.Range (0, nbThreads)
+				.Select (i => DbInfrastructureHelper.ConnectToTestDatabase ())
+				.ToList ();
+
+			try
+			{
+				System.DateTime time = System.DateTime.Now;
+
+				List<DbId> ids = new List<DbId> ();
+
+				var threads = dbInfrastructures.Select (d => new System.Threading.Thread (() =>
+				{
+					var dice = new System.Random (System.Threading.Thread.CurrentThread.ManagedThreadId);
+
+					var log = new EntityModificationLog (d, entityEngine.ServiceSchemaEngine);
+					
+					while (System.DateTime.Now - time <= System.TimeSpan.FromSeconds (15))
+					{
+						var entry1 = log.CreateEntry (new DbId (dice.Next ()));
+
+						lock (ids)
+						{
+							ids.Add (entry1.EntryId);
+						}
+
+						Assert.IsTrue (log.DoesEntryExists (entry1.EntryId));
+
+						if (dice.NextDouble () > 0.5)
+						{
+							DbId id = DbId.Empty;
+
+							lock (ids)
+							{
+								if (ids.Count > 0)
+								{
+									int index = dice.Next (0, ids.Count);
+
+									id = ids[index];
+
+									ids.RemoveAt (index);
+								}
+							}
+
+							if (!id.IsEmpty)
+							{
+								log.DeleteEntry (id);
+							}
+						}
+
+						var entry2 = log.GetLatestEntry ();
+					}
+				})).ToList ();
+
+				foreach (var thread in threads)
+				{
+					thread.Start ();
+				}
+
+				foreach (var thread in threads)
+				{
+					thread.Join ();
+				}
+			}
+			finally
+			{
+				foreach (var dbInfrastructure in dbInfrastructures)
+				{
+					dbInfrastructure.Dispose ();
+				}
+			}
+		}
+
+
 		private IEnumerable<DbId> GetDbIdSamples()
 		{
 			for (int i = 1; i < 11; i++)

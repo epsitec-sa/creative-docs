@@ -976,6 +976,258 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		}
 
 
+		[TestMethod]
+		public void ThreadSafetyTest()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				var dice = new System.Random (System.Threading.Thread.CurrentThread.ManagedThreadId);
+				var time = System.DateTime.Now;
+				var duration = System.TimeSpan.FromSeconds (15);
+				List<System.Threading.Thread> threads = new List<System.Threading.Thread> ();
+
+				threads.Add (new System.Threading.Thread (() =>
+				{
+					Dictionary<string, string> data = new Dictionary<string, string> ();
+					List<LockTransaction> lockTransactions = new List<LockTransaction> ();
+
+					while (System.DateTime.Now - time <= duration)
+					{
+						var key = System.Guid.NewGuid ().ToString ();
+						var value = System.Guid.NewGuid ().ToString ();
+
+						if (dataInfrastructure.Connection != null)
+						{
+							dataInfrastructure.RefreshConnectionData ();
+						}
+
+						if (dataInfrastructure.Connection != null && dataInfrastructure.Connection.Status == ConnectionStatus.Open)
+						{
+							if (dice.NextDouble () > 0.999)
+							{
+								try
+								{
+									dataInfrastructure.CloseConnection ();
+								}
+								catch (System.InvalidOperationException)
+								{
+									// dataInfrastructure is probably deconnected. Let's ignore that exception
+									// Marc
+								}
+							}
+						}
+
+						if (dataInfrastructure.Connection == null || dataInfrastructure.Connection.Status != ConnectionStatus.Open)
+						{
+							try
+							{
+								dataInfrastructure.OpenConnection ("myId");
+							}
+							catch (System.InvalidOperationException)
+							{
+								// dataInfrastructure is probably deconnected. Let's ignore that exception
+								// Marc
+							}
+						}
+
+						try
+						{
+							var lockNames = new List<string> ()
+						        {
+						            System.Guid.NewGuid().ToString (),
+						            System.Guid.NewGuid().ToString (),
+						            System.Guid.NewGuid().ToString (),
+						        };
+
+							LockTransaction lockTransaction = dataInfrastructure.CreateLockTransaction (lockNames);
+
+							lockTransactions.Add (lockTransaction);
+
+							lockTransaction.Lock ();
+						}
+						catch (System.InvalidOperationException)
+						{
+							// dataInfrastructure is probably deconnected. Let's ignore that exception
+							// Marc
+						}
+
+						try
+						{
+							if (dice.NextDouble () > 0.75 && lockTransactions.Count > 0)
+							{
+								int index = dice.Next (0, lockTransactions.Count);
+
+								LockTransaction lockTransaction = lockTransactions[index];
+								lockTransactions.RemoveAt (index);
+
+								lockTransaction.Dispose ();
+							}
+						}
+						catch (System.InvalidOperationException)
+						{
+							// dataInfrastructure is probably deconnected. Let's ignore that exception
+							// Marc
+						}
+
+						try
+						{
+							dataInfrastructure.SetDatabaseInfo (key, value);
+							data[key] = value;
+
+							Assert.AreEqual (value, dataInfrastructure.GetDatabaseInfo (key));
+						}
+						catch (System.InvalidOperationException)
+						{
+							// dataInfrastructure is probably deconnected. Let's ignore that exception
+							// Marc
+						}
+
+						if (data.Count > 15)
+						{
+							var k = data.Keys.ElementAt (dice.Next (0, data.Count));
+							var v = data[k];
+
+							try
+							{
+								dataInfrastructure.SetDatabaseInfo (k, null);
+								data.Remove (k);
+
+								Assert.IsNull (dataInfrastructure.GetDatabaseInfo (k));
+							}
+							catch (System.InvalidOperationException)
+							{
+								// dataInfrastructure is probably deconnected. Let's ignore that exception
+								// Marc
+							}
+						}
+					}
+
+					foreach (var lockTransaction in lockTransactions)
+					{
+						lockTransaction.Dispose ();
+					}
+				}));
+
+				threads.Add (new System.Threading.Thread (() =>
+				{
+					var startTime = System.DateTime.Now;
+					var stopTime = System.DateTime.Now + System.TimeSpan.FromSeconds (1);
+
+					while (System.DateTime.Now - time <= duration)
+					{
+						if (startTime < System.DateTime.Now && System.DateTime.Now < stopTime)
+						{
+							if (dataInfrastructure.Connection != null && dataInfrastructure.Connection.Status == ConnectionStatus.Open)
+							{
+								try
+								{
+									dataInfrastructure.KeepConnectionAlive ();
+								}
+								catch (System.InvalidOperationException)
+								{
+								}
+							}
+						}
+						else if (startTime <= System.DateTime.Now && stopTime <= System.DateTime.Now)
+						{
+							startTime = System.DateTime.Now + System.TimeSpan.FromSeconds (2);
+							stopTime = System.DateTime.Now + System.TimeSpan.FromSeconds (3);
+						}
+						else
+						{
+							System.Threading.Thread.Sleep (50);
+						}
+					}
+				}));
+
+				threads.Add (new System.Threading.Thread (() =>
+				{
+					while (System.DateTime.Now - time <= duration)
+					{
+						if (dataInfrastructure.Connection != null && dataInfrastructure.Connection.Status == ConnectionStatus.Open)
+						{
+							try
+							{
+								dataInfrastructure.KillDeadConnections (System.TimeSpan.FromSeconds (1));
+							}
+							catch (System.InvalidOperationException)
+							{
+							}
+						}
+					}
+				}));
+
+				foreach (var thread in threads)
+				{
+					thread.Start ();
+				}
+
+				foreach (var thread in threads)
+				{
+					thread.Join ();
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void ConcurrencyTest()
+		{
+			var infrastructures = Enumerable
+				.Range (0, 10)
+				.Select (e => DataInfrastructureHelper.ConnectToTestDatabase ())
+				.ToList ();
+
+			foreach (var infrastructure in infrastructures)
+			{
+				infrastructure.CloseConnection ();
+			}
+
+			try
+			{
+				var time = System.DateTime.Now;
+
+				var threads = infrastructures.Select (i => new System.Threading.Thread (() =>
+				{
+					while (System.DateTime.Now - time <= System.TimeSpan.FromMilliseconds (15000))
+					{
+						i.OpenConnection ("id");
+
+						var lockManager = new LockManager (i.DbInfrastructure, i.EntityEngine.ServiceSchemaEngine);
+
+						lockManager.RequestLocks (i.Connection.Id, new List<string> ()
+						{
+							this.GetRandomString(),
+							this.GetRandomString(),
+							this.GetRandomString()
+						});
+
+						i.KillDeadConnections (System.TimeSpan.FromSeconds (5));
+
+						i.CloseConnection ();
+					}
+				})).ToList ();
+
+				foreach (var thread in threads)
+				{
+					thread.Start ();
+				}
+
+				foreach (var thread in threads)
+				{
+					thread.Join ();
+				}
+			}
+			finally
+			{
+				foreach (var infrastructure in infrastructures)
+				{
+					infrastructure.Dispose ();
+				}
+			}
+		}
+
+
 		private string GetRandomString()
 		{
 			return this.dice.Next ().ToString ();

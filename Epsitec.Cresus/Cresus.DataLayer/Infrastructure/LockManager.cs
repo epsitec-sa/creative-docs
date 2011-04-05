@@ -259,7 +259,12 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			SqlFunction condition = this.CreateConditionForInactiveLocks ();
 
-			this.tableLockQueryHelper.RemoveRows (condition);
+			using (DbTransaction transaction = this.tableLockQueryHelper.CreateLockTransaction ())
+			{
+				this.tableLockQueryHelper.RemoveRows (condition);
+
+				transaction.Commit ();
+			}
 		}
 
 

@@ -278,14 +278,20 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 
 				manager.CloseConnection (connectionId1);
 
-				for (int i = 0; i < 5; i++)
+				for (int i = 0; i < 3; i++)
 				{
 					manager.KeepConnectionAlive (connectionId2);
 
 					System.Threading.Thread.Sleep (1000);
+
+					Assert.AreEqual (false, manager.KillDeadConnections (System.TimeSpan.FromSeconds (5)));
 				}
 
-				System.Threading.Thread.Sleep (1000);
+				Assert.AreEqual (ConnectionStatus.Closed, manager.GetConnection (connectionId1).Status);
+				Assert.AreEqual (ConnectionStatus.Open, manager.GetConnection (connectionId2).Status);
+				Assert.AreEqual (ConnectionStatus.Open, manager.GetConnection (connectionId3).Status);
+
+				System.Threading.Thread.Sleep (2000);
 
 				Assert.AreEqual (true, manager.KillDeadConnections (System.TimeSpan.FromSeconds (5)));
 
@@ -347,6 +353,68 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 				manager.CloseConnection (connectionId2);
 				connectionIds.Remove (connectionId2);
 				Assert.IsTrue (connectionIds.SetEquals (manager.GetOpenConnections ().Select (c => c.Id)));
+			}
+		}
+
+
+		[TestMethod]
+		public void Concurrency()
+		{
+			int nbThreads = 100;
+
+			var entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+
+			var dbInfrastructures = Enumerable.Range (0, nbThreads)
+				.Select (i => DbInfrastructureHelper.ConnectToTestDatabase ())
+				.ToList ();
+
+			try
+			{
+				System.DateTime time = System.DateTime.Now;
+
+				var threads = dbInfrastructures.Select (d => new System.Threading.Thread (() =>
+				{
+					var dice = new System.Random (System.Threading.Thread.CurrentThread.ManagedThreadId);
+
+					var connectionManager = new ConnectionManager (d, entityEngine.ServiceSchemaEngine);
+
+					while (System.DateTime.Now - time <= System.TimeSpan.FromSeconds (15))
+					{
+						var connection = connectionManager.OpenConnection (System.Guid.NewGuid ().ToString ());
+
+						if (dice.NextDouble () > 0.5)
+						{
+							connectionManager.KeepConnectionAlive (connection.Id);
+						}
+
+						if (dice.NextDouble () > 0.5)
+						{
+							connectionManager.CloseConnection (connection.Id);
+						}
+
+						if (dice.NextDouble () > 0.9)
+						{
+							connectionManager.KillDeadConnections (System.TimeSpan.FromSeconds (1));
+						}
+					}
+				})).ToList ();
+
+				foreach (var thread in threads)
+				{
+					thread.Start ();
+				}
+
+				foreach (var thread in threads)
+				{
+					thread.Join ();
+				}
+			}
+			finally
+			{
+				foreach (var dbInfrastructure in dbInfrastructures)
+				{
+					dbInfrastructure.Dispose ();
+				}
 			}
 		}
 

@@ -69,13 +69,13 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			key.ThrowIfNullOrEmpty ("key");
 
-			if (value == null)
+			using (DbTransaction transaction = this.tableQueryHelper.CreateLockTransaction ())
 			{
-				this.RemoveValue (key);
-			}
-			else
-			{
-				using (DbTransaction transaction = this.tableQueryHelper.CreateLockTransaction ())
+				if (value == null)
+				{
+					this.RemoveValue (key);
+				}
+				else
 				{
 					int nbRowsAffected = this.SetValue (key, value);
 
@@ -83,9 +83,9 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 					{
 						this.InsertValue (key, value);
 					}
-
-					transaction.Commit ();
 				}
+
+				transaction.Commit ();
 			}
 		}
 
