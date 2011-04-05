@@ -37,10 +37,11 @@ namespace Epsitec.Cresus.Database
 			this.database       = liveTransaction.database;
 			this.infrastructure = liveTransaction.infrastructure;
 			this.mode           = liveTransaction.mode;
-			
+
 			this.inheritFromTransaction = liveTransaction;
 
 			System.Threading.Interlocked.Increment (ref this.inheritFromTransaction.inheritanceCount);
+
 		}
 
 		/// <summary>
@@ -176,6 +177,8 @@ namespace Epsitec.Cresus.Database
 			if (this.IsInherited)
 			{
 				System.Threading.Interlocked.Decrement (ref this.inheritFromTransaction.inheritanceCount);
+
+				this.infrastructure.NotifyEndInheritedTransaction (this);
 
 				this.inheritFromTransaction = null;
 				this.infrastructure         = null;

@@ -24,6 +24,19 @@ namespace Epsitec.Cresus.Database
 	/// <summary>
 	/// The <c>DbInfrastructure</c> class provides support for the database
 	/// infrastructure needed by CRESUS (internal tables, metadata, etc.)
+	/// <remarks>
+	/// This class is not thread safe. However, the methods used to create transactions are thread
+	/// safe enough to ensure that a transaction can be created only one thread at a time and must
+	/// be disposed/rolled back/committed in order for another thread to obtain a transaction.
+	/// Therefore, as all the methods provided by this class that make a request to the database
+	/// require a transaction, they are indirectly thread safe because they cannot be called without
+	/// having a valid transaction.
+	/// So, you can consider the methods BeginTransaction(...), InheritOrBeginTransaction(...),
+	/// ExecuteNonQuery(...), ExecuteOutputParameters(...), ExecuteRetData(...), ExecuteScalar(...),
+	/// ExecuteSilent(...) and ExecuteSqlSelect(...) to be thread safe, as long as the transaction
+	/// objects are used on the same thread as they are created. Any other member of this class
+	/// should not be considered as thread safe.
+	/// </remarks>
 	/// </summary>
 	public sealed class DbInfrastructure : DependencyObject, System.IDisposable
 	{
@@ -507,21 +520,39 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The transaction.</returns>
 		public DbTransaction InheritOrBeginTransaction(DbTransactionMode mode)
 		{
-			DbTransaction live = this.DefaultLiveTransaction;
+			this.DatabaseLock (this.abstraction);
 
-			if (live == null)
+			try
 			{
-				return this.BeginTransaction (mode);
-			}
-			else
-			{
-				if ((mode == DbTransactionMode.ReadWrite) &&
-					(live.IsReadOnly))
+				DbTransaction live = this.FindLiveTransaction (this.abstraction);
+
+				if (live == null)
 				{
-					throw new System.InvalidOperationException ("Cannot begin read/write transaction from inherited read-only transaction");
+					return this.BeginTransaction (mode);
 				}
-				
-				return new DbTransaction (live);
+				else
+				{
+					if (mode == DbTransactionMode.ReadWrite && live.IsReadOnly)
+					{
+						throw new System.InvalidOperationException ("Cannot begin read/write transaction from inherited read-only transaction");
+					}
+
+					this.DatabaseLock (live.Database);
+
+					try
+					{
+						return new DbTransaction (live);
+					}
+					catch
+					{
+						this.DatabaseUnlock (live.Database);
+						throw;
+					}
+				}
+			}
+			finally
+			{
+				this.DatabaseUnlock (this.abstraction);
 			}
 		}
 
@@ -2005,6 +2036,15 @@ namespace Epsitec.Cresus.Database
 				this.ReleaseConnection (abstraction);
 			}
 		}
+
+
+		internal void NotifyEndInheritedTransaction(DbTransaction transaction)
+		{
+			IDbAbstraction abstraction = transaction.Database;
+
+			this.DatabaseUnlock (abstraction);
+		}
+
 
 		/// <summary>
 		/// Finds the live transaction for the specified database abstraction.
