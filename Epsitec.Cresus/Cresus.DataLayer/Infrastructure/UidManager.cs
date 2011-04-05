@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 				if (slot != null)
 				{
-					this.IncrementRow (name, slot.NextValue);
+					this.IncrementRow (name, slot.MinValue, slot.NextValue);
 
 					result = slot.NextValue;
 				}
@@ -202,7 +202,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		}
 
 
-		private void IncrementRow(string name, long nextValue)
+		private void IncrementRow(string name, long minValue, long nextValue)
 		{
 			IDictionary<string, object> columnNamesToValues = new Dictionary<string, object> ()
 		    {
@@ -212,6 +212,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			SqlFunction[] conditions = new SqlFunction[]
 		    {
 		        this.CreateConditionForName (name),
+				this.CreateConditionForMinValue (minValue),
 		        this.CreateConditionForNextValue (nextValue),
 		    };
 
@@ -243,6 +244,17 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 				SqlFunctionCode.CompareEqual,
 				SqlField.CreateName (this.table.Columns[UidManager.TableFactory.ColumnNextName].GetSqlName ()),
 				SqlField.CreateConstant (nextValue, DbRawType.Int64)
+			);
+		}
+
+
+		private SqlFunction CreateConditionForMinValue(long minValue)
+		{
+			return new SqlFunction
+			(
+				SqlFunctionCode.CompareEqual,
+				SqlField.CreateName (this.table.Columns[UidManager.TableFactory.ColumnMinName].GetSqlName ()),
+				SqlField.CreateConstant (minValue, DbRawType.Int64)
 			);
 		}
 
