@@ -227,12 +227,14 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 				using (LockTransaction lb = new LockTransaction (lockManager, c2.Id, new List<string> () { "lock" }))
 				{
 					var result1 = la.Lock ();
+					System.DateTime t = System.DateTime.Now;
+					
 					Assert.IsTrue (result1.Item1);
 					Assert.IsTrue (result1.Item2.IsEmpty ());
 
 					var result2 = lb.Lock ();
 					Assert.IsFalse (result2.Item1);
-					this.CheckLock (result2.Item2.Single (), c1, "lock", System.DateTime.Now);
+					this.CheckLock (result2.Item2.Single (), c1, "lock", t);
 
 					la.Release ();
 
