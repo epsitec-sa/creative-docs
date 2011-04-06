@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 
 		public override bool CanExecuteSetupPhase()
 		{
-			return this.Host.IsReady;
+			return this.Host.IsReady && this.Host.ConnectionManager.IsReady;
 		}
 
 		public override void ExecuteSetupPhase()

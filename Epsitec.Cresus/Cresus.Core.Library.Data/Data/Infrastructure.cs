@@ -17,40 +17,30 @@ using Epsitec.Cresus.Core.Factories;
 
 namespace Epsitec.Cresus.Core.Data
 {
+	/// <summary>
+	/// The <c>Infrastructure</c> class handles the connection to the database (i.e. setting
+	/// up the lower level <see cref="DataInfrastructure"/> class and making sure that the
+	/// database exists and has the proper schema).
+	/// </summary>
 	public sealed class Infrastructure : CoreDataComponent, IIsDisposed
 	{
-
-		// HACK This class has been temporarily hacked because of how things happens in Cresus.Core
-		// in order to be retro compatible until things are changed there. The hack in the class is
-		// the initialization of the field this.dataInfrastructure done in the constructor that must
-		// be removed and the ConnectToDatabase method and its call site that must be reverted back
-		// to their original values.
-		// Also, in order to remove this hack, things have to be cleaned up, regarding the order
-		// in which the components are set up, how they access the DataInfrastructure property of
-		// this object, etc. This property should never be called before this object setup method
-		// has been called. That's why there is this assertion. So probably that the sequence of
-		// CanExecuteSetupPhase and ExecuteSetupPhase methods must be changed in some
-		// CoreDataComponents. Moreover, maybe there should be some changes in how stuff is done,
-		// like to have a second setup phase for objects that implement ICoreManualComponent, to
-		// ensure that this object is properly initialized when they are initialized.
-		// Marc
-
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Infrastructure"/> class.
+		/// This will initialize the connection to the database and setup the lower
+		/// level <see cref="DataInfrastructure"/> class.
+		/// </summary>
+		/// <param name="data">The data.</param>
 		public Infrastructure(CoreData data)
 			: base (data)
 		{
-			this.dataInfrastructure = new DataInfrastructure (DbAccess.Empty, null);
-			this.isDisposed = false;
+			this.dataInfrastructure = this.SetupDatabase ();
+			this.Host.NotifyDatabaseReady ();
 		}
 
-		public DataInfrastructure DataInfrastructure
+		public DataInfrastructure				DataInfrastructure
 		{
 			get
 			{
-				// This assertion will fire as if this property is called but the ExecupteSetupPhase
-				// method has not yet been called. See comment above.
-				// Marc
-				System.Diagnostics.Debug.Assert (this.Host.IsReady);
-
 				return this.dataInfrastructure;
 			}	
 		}
@@ -70,14 +60,21 @@ namespace Epsitec.Cresus.Core.Data
 		public override void ExecuteSetupPhase()
 		{
 			base.ExecuteSetupPhase ();
-
+			
 			this.connectionManager = this.Host.ConnectionManager;
-
-			this.SetupDatabase ();
-			this.Host.IsReady = true;
 		}
 
-		public void SetupDatabase()
+		internal static bool CheckDatabaseExistence(DbAccess access)
+		{
+			return DbInfrastructure.CheckDatabaseExistence (access);
+		}
+
+		public static void DropDatabase(DbAccess access)
+		{
+			DbInfrastructure.DropDatabase (access);
+		}
+
+		private DataInfrastructure SetupDatabase()
 		{
 			var access = CoreData.GetDatabaseAccess ();
 			var managedEntityTypeIds = Infrastructure.GetManagedEntityIds ();
@@ -108,7 +105,7 @@ namespace Epsitec.Cresus.Core.Data
 					if (!valid)
 					{
 						bool updateAllowed = Infrastructure.IsDatabasesSchemaUpdateAllowed (allowDatabaseUpdate);
-						
+
 						bool updateSuccess = false;
 
 						if (updateAllowed)
@@ -127,7 +124,7 @@ namespace Epsitec.Cresus.Core.Data
 					}
 				}
 
-				this.dataInfrastructure = Infrastructure.ConnectToDatabase (this.dataInfrastructure, access, managedEntityTypeIds);
+				return Infrastructure.ConnectToDatabase (access, managedEntityTypeIds);
 			}
 			catch (System.Exception ex)
 			{
@@ -139,17 +136,8 @@ namespace Epsitec.Cresus.Core.Data
 				);
 
 				System.Environment.Exit (0);
+				throw;
 			}
-		}
-
-		internal static bool CheckDatabaseExistence(DbAccess access)
-		{
-			return DbInfrastructure.CheckDatabaseExistence (access);
-		}
-
-		public static void DropDatabase(DbAccess access)
-		{
-			DbInfrastructure.DropDatabase (access);
 		}
 
 		private static void CreateDatabase(DbAccess access)
@@ -203,15 +191,11 @@ namespace Epsitec.Cresus.Core.Data
 			}
 		}
 
-		private static DataInfrastructure ConnectToDatabase(DataInfrastructure dataInfrastructure /*TMP ARGUMENT*/, DbAccess access, IEnumerable<Druid> managedEntityTypeIds)
+		private static DataInfrastructure ConnectToDatabase(DbAccess access, IEnumerable<Druid> managedEntityTypeIds)
 		{
 			EntityEngine entityEngine = EntityEngine.Connect (access, managedEntityTypeIds);
 
-			//return new DataInfrastructure (access, entityEngine, enableConnectionRecycling);
-			/* TMP STUFF */
-			dataInfrastructure.TMPSETUP (access, entityEngine);
-
-			return dataInfrastructure;
+			return new DataInfrastructure (access, entityEngine);
 		}
 
 		#region IDisposable Members
@@ -275,9 +259,8 @@ namespace Epsitec.Cresus.Core.Data
 			}
 		}
 
-		private DataInfrastructure dataInfrastructure;
-		private ConnectionManager connectionManager;
-		private bool isDisposed;
-
+		private readonly DataInfrastructure		dataInfrastructure;
+		private ConnectionManager				connectionManager;
+		private bool							isDisposed;
 	}
 }

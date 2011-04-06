@@ -34,10 +34,11 @@ namespace Epsitec.Cresus.Core
 			UI.SetApplication (this);
 			
 			this.plugIns = new List<PlugIns.ICorePlugIn> ();
-			
-			this.data = new CoreData (this, forceDatabaseCreation: false, allowDatabaseUpdate: true, enableConnectionRecycling: false);
 
 			new ExceptionManager (this);
+			
+			this.data = new CoreData (this, forceDatabaseCreation: true, allowDatabaseUpdate: true, enableConnectionRecycling: false);
+			this.data.SetupBusiness ();
 
 			var mainWindowOrchestrator = new DataViewOrchestrator (this, this.data, this.CommandContext);
 			var ribbonController       = new RibbonViewController (this);
@@ -136,7 +137,7 @@ namespace Epsitec.Cresus.Core
 
 		internal void SetupData()
 		{
-			this.data.SetupBusiness ();
+//-			this.data.SetupBusiness ();
 
 			if (this.data.ForceDatabaseCreation)
 			{

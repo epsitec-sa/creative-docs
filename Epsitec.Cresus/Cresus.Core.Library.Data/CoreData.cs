@@ -84,8 +84,10 @@ namespace Epsitec.Cresus.Core
 
 		public bool								IsReady
 		{
-			get;
-			internal set;
+			get
+			{
+				return this.isReady;
+			}
 		}
 
 		public bool								ForceDatabaseCreation
@@ -244,31 +246,6 @@ namespace Epsitec.Cresus.Core
 			return 0;
 		}
 
-		class ItemRankComparer : IComparer<IItemRank>
-		{
-			#region IComparer<IItemRank> Members
-
-			public int Compare(IItemRank x, IItemRank y)
-			{
-				int valueA = x.Rank ?? -1;
-				int valueB = y.Rank ?? -1;
-
-				if (valueA < valueB)
-				{
-					return -1;
-				}
-				if (valueA > valueB)
-				{
-					return 1;
-				}
-				return 0;
-			}
-
-			#endregion
-		}
-
-		private static ItemRankComparer itemRankComparer = new ItemRankComparer ();
-
 
 		public IEnumerable<T> GetAllEntities<T>(DataExtractionMode extraction = DataExtractionMode.Default, DataContext dataContext = null)
 			where T : AbstractEntity, new ()
@@ -288,7 +265,7 @@ namespace Epsitec.Cresus.Core
 				{
 					if (EntityInfo<T>.Implements<IItemRank> ())
 					{
-						all = all.OrderBy (x => x as IItemRank, CoreData.itemRankComparer);
+						all = all.OrderBy (x => x as IItemRank, CoreData.ItemRankComparer.Instance);
 					}
 				}
 
@@ -400,9 +377,10 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-
-
-
+		internal void NotifyDatabaseReady()
+		{
+			this.isReady = true;
+		}
 
 
 		#region IDisposable Members
@@ -558,16 +536,45 @@ namespace Epsitec.Cresus.Core
 			return access;
 		}
 
+		#region ItemRankComparer Class
 
-		private readonly CoreApp app;
+		class ItemRankComparer : IComparer<IItemRank>
+		{
+			#region IComparer<IItemRank> Members
+
+			public int Compare(IItemRank x, IItemRank y)
+			{
+				int valueA = x.Rank ?? -1;
+				int valueB = y.Rank ?? -1;
+
+				if (valueA < valueB)
+				{
+					return -1;
+				}
+				if (valueA > valueB)
+				{
+					return 1;
+				}
+				return 0;
+			}
+
+			#endregion
+
+			public static readonly ItemRankComparer Instance = new ItemRankComparer ();
+		}
+
+		#endregion
+
+		private readonly CoreApp				app;
 		private readonly CoreComponentHostImplementation<CoreDataComponent>	components;
 
-		private readonly EntityContext independentEntityContext;
+		private readonly EntityContext			independentEntityContext;
 
-		private DataContext immutableDataContext;
-		private DataContext stableDataContext;
-		private DataContext activeDataContext;
+		private bool							isReady;
+		private DataContext						immutableDataContext;
+		private DataContext						stableDataContext;
+		private DataContext						activeDataContext;
 
-		private string activeUserCode;
+		private string							activeUserCode;
 	}
 }

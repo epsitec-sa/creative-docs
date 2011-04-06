@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.Core.Data
 
 			public bool CanCreate(CoreData data)
 			{
-				return data.DataInfrastructure != null;
+				return data.IsReady;
 			}
 
 			public CoreDataComponent Create(CoreData data)

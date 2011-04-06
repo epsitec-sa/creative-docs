@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Core.Data
 
 		public override bool CanExecuteSetupPhase()
 		{
-			return this.Host.IsReady;
+			return this.Host.IsReady && this.Host.ConnectionManager.IsReady;
 		}
 
 		public override void ExecuteSetupPhase()
@@ -339,7 +339,7 @@ namespace Epsitec.Cresus.Core.Data
 		{
 			public bool CanCreate(CoreData data)
 			{
-				return data.DataInfrastructure != null;
+				return data.IsReady;
 			}
 
 			public CoreDataComponent Create(CoreData data)

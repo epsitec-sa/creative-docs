@@ -20,11 +20,8 @@ using System.IO;
 
 using System.Linq;
 
-
 namespace Epsitec.Cresus.DataLayer.Infrastructure
 {
-
-
 	/// <summary>
 	/// The <c>DataInfrastructure</c> class provides an high level access to the data stored in the
 	/// database.
@@ -37,16 +34,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 	/// </remarks>
 	public sealed class DataInfrastructure : IIsDisposed
 	{
-		
-		
-		// HACK This class has been temporarily hacked because of how things happens in Cresus.Core
-		// in order to be retro compatible until things are changed there. The hacks in this class
-		// are the check in the constructor that must be uncommented, the TMPSETUP method that should
-		// be removed and the checks on the emptiness on the dbaccess in the constructor that must be
-		// removed.
-		// Marc
-
-
 		// TODO Comment this class
 		// Marc
 
@@ -58,44 +45,13 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <param name="entityEngine">The instance of <see cref="EntityEngine"/> used by this object.</param>
 		public DataInfrastructure(DbAccess access, EntityEngine entityEngine)
 		{
-			//access.ThrowIf (a => a.IsEmpty, "access is empty");
-			//entityEngine.ThrowIfNull ("entityEngine");
+			access.ThrowIf (a => a.IsEmpty, "access is empty");
+			entityEngine.ThrowIfNull ("entityEngine");
 
 			this.entityEngine = entityEngine;
 
 			this.dbInfrastructure = new DbInfrastructure ();
 
-			if (!access.IsEmpty && entityEngine != null)
-			{
-				this.dbInfrastructure.AttachToDatabase (access);
-
-				this.infoManager = new InfoManager (this.dbInfrastructure, this.entityEngine.ServiceSchemaEngine);
-				this.uidManager = new UidManager (this.dbInfrastructure, this.entityEngine.ServiceSchemaEngine);
-				this.entityModificationLog = new EntityModificationLog (this.dbInfrastructure, this.entityEngine.ServiceSchemaEngine);
-				this.entityDeletionLog = new EntityDeletionLog (this.dbInfrastructure, this.entityEngine.ServiceSchemaEngine);
-				this.connectionManager = new ConnectionManager (this.dbInfrastructure, this.entityEngine.ServiceSchemaEngine);
-				this.lockManager = new LockManager (this.dbInfrastructure, this.entityEngine.ServiceSchemaEngine);
-
-			}
-
-			this.dataContextPool = new DataContextPool ();
-
-			this.connection = null;
-		}
-
-		public void TMPSETUP(DbAccess access, EntityEngine entityEngine)
-		{
-			if (this.entityEngine != null)
-			{
-				throw new System.InvalidOperationException ();
-			}
-
-			if (this.dbInfrastructure.IsConnectionOpen)
-			{
-				throw new System.InvalidOperationException ();
-			}
-
-			this.entityEngine = entityEngine;
 			this.dbInfrastructure.AttachToDatabase (access);
 
 			this.infoManager = new InfoManager (this.dbInfrastructure, this.entityEngine.ServiceSchemaEngine);
@@ -104,6 +60,10 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			this.entityDeletionLog = new EntityDeletionLog (this.dbInfrastructure, this.entityEngine.ServiceSchemaEngine);
 			this.connectionManager = new ConnectionManager (this.dbInfrastructure, this.entityEngine.ServiceSchemaEngine);
 			this.lockManager = new LockManager (this.dbInfrastructure, this.entityEngine.ServiceSchemaEngine);
+
+			this.dataContextPool = new DataContextPool ();
+
+			this.connection = null;
 		}
 
 
@@ -619,37 +579,16 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		}
 
 
-		private readonly DbInfrastructure dbInfrastructure;
-
-
-		private /*readonly*/ EntityEngine entityEngine;
-
-
-		private readonly DataContextPool dataContextPool;
-
-
-		private /*readonly*/ InfoManager infoManager;
-
-
-		private /*readonly*/ UidManager uidManager;
-
-
-		private /*readonly*/ EntityModificationLog entityModificationLog;
-
-
-		private /*readonly*/ EntityDeletionLog entityDeletionLog;
-
-
-		private /*readonly*/ ConnectionManager connectionManager;
-
-
-		private /*readonly*/ LockManager lockManager;
-
+		private readonly DbInfrastructure		dbInfrastructure;
+		private readonly EntityEngine			entityEngine;
+		private readonly DataContextPool		dataContextPool;
+		private readonly InfoManager			infoManager;
+		private readonly UidManager				uidManager;
+		private readonly EntityModificationLog	entityModificationLog;
+		private readonly EntityDeletionLog		entityDeletionLog;
+		private readonly ConnectionManager		connectionManager;
+		private readonly LockManager			lockManager;
 
 		private Connection connection;
-
-
 	}
-
-
 }
