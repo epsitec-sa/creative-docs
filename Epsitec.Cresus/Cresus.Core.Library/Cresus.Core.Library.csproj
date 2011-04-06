@@ -60,6 +60,7 @@
     <Compile Include="Library\CoreApp.cs" />
     <Compile Include="Library\CoreAppComponent.cs" />
     <Compile Include="Library\CoreComponent.cs" />
+    <Compile Include="Library\ICoreComponent`2.cs" />
     <Compile Include="Library\ITextFormatterConverter.cs" />
     <Compile Include="Library\TextFormatterConverter.cs" />
     <Compile Include="Library\SettingsCollection.cs" />

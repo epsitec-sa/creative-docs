@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Core.Factories
 	public abstract class CoreComponentFactory<THost, TFactory, TComponent>
 		where THost : class, ICoreComponentHost<TComponent>
 		where TFactory : class, ICoreComponentFactory<THost, TComponent>
-		where TComponent : CoreComponent<THost, TComponent>, ICoreComponent
+		where TComponent : class, ICoreComponent<THost, TComponent>
 	{
 		public static void RegisterComponents(THost host)
 		{

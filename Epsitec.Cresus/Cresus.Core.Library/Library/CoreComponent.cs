@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Library
 	/// </summary>
 	/// <typeparam name="THost"></typeparam>
 	/// <typeparam name="TComponent">The type of the component.</typeparam>
-	public abstract class CoreComponent<THost, TComponent> : ICoreComponent
+	public abstract class CoreComponent<THost, TComponent> : ICoreComponent<THost, TComponent>
 		where THost : class, ICoreComponentHost<TComponent>
 		where TComponent : class, ICoreComponent
 	{
@@ -23,6 +23,7 @@ namespace Epsitec.Cresus.Core.Library
 			this.host= host;
 		}
 
+		#region ICoreComponent<THost, TComponent> Implementation
 
 		public THost Host
 		{
@@ -58,6 +59,7 @@ namespace Epsitec.Cresus.Core.Library
 			return this as System.IDisposable;
 		}
 
+		#endregion
 
 		private readonly THost host;
 		private bool wasSetupExecuted;
