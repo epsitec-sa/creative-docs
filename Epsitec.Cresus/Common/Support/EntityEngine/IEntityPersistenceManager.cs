@@ -21,6 +21,6 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </summary>
 		/// <param name="id">The id (identifies the instance).</param>
 		/// <returns>The persisted entity or <c>null</c>.</returns>
-		AbstractEntity GetPeristedEntity(string id);
+		AbstractEntity GetPersistedEntity(string id);
 	}
 }

@@ -198,12 +198,12 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 		/// <summary>
-		/// Gets the peristed entity for the specified id and entity id.
+		/// Gets the persisted entity for the specified id and entity id.
 		/// </summary>
 		/// <param name="id">The id (identifies the instance).</param>
 		/// <param name="entityId">The entity id (identifies the type).</param>
 		/// <returns>The persisted entity or <c>null</c>.</returns>
-		public AbstractEntity GetPeristedEntity(string id)
+		public AbstractEntity GetPersistedEntity(string id)
 		{
 			if (string.IsNullOrEmpty (id))
 			{
@@ -212,7 +212,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			foreach (var manager in this.persistenceManagers)
 			{
-				AbstractEntity entity = manager.GetPeristedEntity (id);
+				AbstractEntity entity = manager.GetPersistedEntity (id);
 
 				if (entity != null)
 				{

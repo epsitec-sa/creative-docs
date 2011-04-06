@@ -1416,7 +1416,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
-		public AbstractEntity GetPeristedEntity(string id)
+		public AbstractEntity GetPersistedEntity(string id)
 		{
 			this.AssertDataContextIsNotDisposed ();
 
