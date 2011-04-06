@@ -25,6 +25,9 @@ namespace Epsitec.Cresus.Core.Library
 		public void ActivateComponent(TComponent component)
 		{
 			System.Diagnostics.Debug.Assert (this.registeredComponents.Contains (component));
+			System.Diagnostics.Debug.Assert (this.components.ContainsKey (component.GetType ().FullName));
+
+			this.components[component.GetType ().FullName] = component;
 
 			this.activeComponents.Remove (component);
 			this.activeComponents.Insert (0, component);

@@ -27,12 +27,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			: base ("MainView", orchestrator)
 		{
 			this.commandContext = orchestrator.Host.CommandContext;
-			this.Orchestrator.Host.RegisterComponent (this);
+			
+			this.Orchestrator.RegisterApplicationComponent (this);
 
-			this.actionViewController  = new ActionViewController (this.Orchestrator);
-			this.previewViewController = new PreviewViewController (this.Orchestrator);
-
-			this.browserViewController = new BrowserViewController (this.Orchestrator);
+			this.actionViewController      = new ActionViewController (this.Orchestrator);
+			this.previewViewController     = new PreviewViewController (this.Orchestrator);
+			this.browserViewController     = new BrowserViewController (this.Orchestrator);
 			this.browserSettingsController = new BrowserSettingsController (this.browserViewController);
 
 			

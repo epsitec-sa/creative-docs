@@ -260,6 +260,14 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		}
 
 
+		public void RegisterApplicationComponent<T>(T component)
+			where T : ICoreManualComponent
+		{
+			this.Host.RegisterComponent (component);
+			this.Host.ActivateComponent (component);
+		}
+
+
 		#region IDisposable Members
 
 		public void Dispose()
