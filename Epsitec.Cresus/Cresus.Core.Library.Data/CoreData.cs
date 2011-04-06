@@ -560,7 +560,7 @@ namespace Epsitec.Cresus.Core
 		{
 			public override CoreAppComponent Create(CoreApp host)
 			{
-				var data = new CoreData (host, forceDatabaseCreation: false);
+				var data = new CoreData (host, forceDatabaseCreation: true);
 				data.SetupBusiness ();
 				return data;
 			}
@@ -568,7 +568,6 @@ namespace Epsitec.Cresus.Core
 
 		#endregion
 
-		private readonly CoreApp				app;
 		private readonly CoreComponentHostImplementation<CoreDataComponent>	components;
 
 		private readonly EntityContext			independentEntityContext;

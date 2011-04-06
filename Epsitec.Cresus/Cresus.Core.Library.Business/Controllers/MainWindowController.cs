@@ -14,10 +14,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public class MainWindowController : CoreViewController, IWidgetUpdater, ICoreManualComponent
+	public sealed class MainWindowController : ViewControllerComponent<MainWindowController>, IWidgetUpdater
 	{
-		public MainWindowController(DataViewOrchestrator orchestrator)
-			: base ("MainWindow", orchestrator)
+		private MainWindowController(DataViewOrchestrator orchestrator)
+			: base (orchestrator)
 		{
 			this.app = orchestrator.Host;
 
@@ -88,6 +88,19 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		#endregion
 
+		#region Factory Class
+
+		private sealed class Factory : Epsitec.Cresus.Core.Factories.DefaultViewControllerComponentFactory<MainWindowController>
+		{
+			public override bool CanCreate(DataViewOrchestrator host)
+			{
+				return host.MainViewController != null;
+			}
+		}
+
+		#endregion
+		
+		
 		private readonly CoreApp				app;
 		private readonly CoreData				data;
 		private readonly MainViewController		mainViewController;

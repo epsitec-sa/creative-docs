@@ -16,6 +16,7 @@ using Epsitec.Cresus.DataLayer.Context;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Support;
+using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -24,10 +25,10 @@ namespace Epsitec.Cresus.Core.Controllers
 	/// instances which have a parent/child relationship. The <see cref="ViewLayoutController"/>
 	/// is used for the layout.
 	/// </summary>
-	public class DataViewController : CoreViewController, IWidgetUpdater
+	public sealed class DataViewController : ViewControllerComponent<DataViewController>, IWidgetUpdater
 	{
-		public DataViewController(DataViewOrchestrator orchestrator)
-			: base ("Data", orchestrator)
+		private DataViewController(DataViewOrchestrator orchestrator)
+			: base (orchestrator)
 		{
 			this.viewControllers = new Stack<CoreViewController> ();
 			this.pushSafeRecursion = new SafeCounter ();
@@ -409,6 +410,15 @@ namespace Epsitec.Cresus.Core.Controllers
 				return this.viewControllers.Peek ();
 			}
 		}
+
+
+		#region Factory Class
+
+		private sealed class Factory : Epsitec.Cresus.Core.Factories.DefaultViewControllerComponentFactory<DataViewController>
+		{
+		}
+
+		#endregion
 
 
 		private readonly Stack<CoreViewController>	viewControllers;

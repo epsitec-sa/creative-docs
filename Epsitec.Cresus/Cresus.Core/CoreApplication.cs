@@ -183,10 +183,13 @@ namespace Epsitec.Cresus.Core
 
 		private void CreateUIControllers()
 		{
-			var orchestrator = this.FindComponent<DataViewOrchestrator> ();
-			var mainWindowController = orchestrator.MainWindowController;
-			
-			mainWindowController.CreateUI (this.Window.Root);
+			//	HACK: loop not needed
+			foreach (var orchestrator in this.FindAllComponents ().OfType<DataViewOrchestrator> ())
+			{
+				var mainWindowController = orchestrator.MainWindowController;
+
+				mainWindowController.CreateUI (this.Window.Root);
+			}
 		}
 
 		private void RestoreApplicationState()

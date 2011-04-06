@@ -49,9 +49,6 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			Factories.ViewControllerComponentFactory.RegisterComponents (this);
 			Factories.ViewControllerComponentFactory.SetupComponents (this.components.GetComponents ());
 
-			this.mainViewController = this.GetComponent<MainViewController> ();
-			this.mainWindowController = new MainWindowController (this);
-			this.dataViewController = new DataViewController (this);
 			this.navigator          = new NavigationOrchestrator (this);
 			this.workflowController = new WorkflowController (this);
 
@@ -88,7 +85,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		{
 			get
 			{
-				return this.mainWindowController;
+				return this.GetComponent<MainWindowController> ();
 			}
 		}
 
@@ -96,7 +93,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		{
 			get
 			{
-				return this.mainViewController;
+				return this.GetComponent<MainViewController> ();
 			}
 		}
 
@@ -112,7 +109,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		{
 			get
 			{
-				return this.dataViewController;
+				return this.GetComponent<DataViewController> ();
 			}
 		}
 
@@ -147,7 +144,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			this.OnSettingActiveEntity (new ActiveEntityCancelEventArgs ());
 
 			this.activeEntityKey = null;
-			this.dataViewController.PopAllViewControllers ();
+			this.DataViewController.PopAllViewControllers ();
 			this.ClearBusinessContext ();
 		}
 
@@ -156,7 +153,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		/// </summary>
 		private void ClearBusinessContext()
 		{
-			System.Diagnostics.Debug.Assert (this.dataViewController.IsEmpty);
+			System.Diagnostics.Debug.Assert (this.DataViewController.IsEmpty);
 			
 			if ((this.businessContext != null) &&
 				(this.businessContext.IsEmpty == false))
@@ -185,7 +182,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 				var liveEntity = this.businessContext.ActiveEntity;
 				var controller = EntityViewControllerFactory.Create ("Root", liveEntity, ViewControllerMode.Summary, this, navigationPathElement: navigationPathElement);
 
-				this.dataViewController.PushViewController (controller);
+				this.DataViewController.PushViewController (controller);
 			}
 		}
 
@@ -198,9 +195,9 @@ namespace Epsitec.Cresus.Core.Orchestrators
 				{
 					var liveEntity = this.businessContext.ActiveEntity;
 					var controller = EntityViewControllerFactory.Create ("Root", liveEntity, ViewControllerMode.Summary, this, navigationPathElement: navigationPathElement);
-					
-					this.dataViewController.PopAllViewControllers ();
-					this.dataViewController.PushViewController (controller);
+
+					this.DataViewController.PopAllViewControllers ();
+					this.DataViewController.PushViewController (controller);
 				}
 			}
 			else
@@ -218,8 +215,8 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		/// <param name="subViewController">The sub view controller.</param>
 		public void ShowSubView(CoreViewController viewController, CoreViewController subViewController)
 		{
-			this.dataViewController.PopViewControllersUntil (viewController);
-			this.dataViewController.PushViewController (subViewController);
+			this.DataViewController.PopViewControllersUntil (viewController);
+			this.DataViewController.PushViewController (subViewController);
 		}
 
 		/// <summary>
@@ -229,7 +226,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		/// <param name="viewController">The view controller (or <c>null</c> to close all views).</param>
 		public void CloseSubViews(CoreViewController viewController = null)
 		{
-			this.dataViewController.PopViewControllersUntil (viewController);
+			this.DataViewController.PopViewControllersUntil (viewController);
 		}
 
 		/// <summary>
@@ -238,8 +235,8 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		/// <param name="viewController">The view controller.</param>
 		public void CloseView(CoreViewController viewController)
 		{
-			this.dataViewController.PopViewControllersUntil (viewController);
-			this.dataViewController.PopViewController ();
+			this.DataViewController.PopViewControllersUntil (viewController);
+			this.DataViewController.PopViewController ();
 		}
 
 		/// <summary>
@@ -251,7 +248,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		/// <param name="newViewController">The new view controller.</param>
 		public void ReplaceView(CoreViewController oldViewController, CoreViewController newViewController)
 		{
-			this.dataViewController.ReplaceViewController (oldViewController, newViewController);
+			this.DataViewController.ReplaceViewController (oldViewController, newViewController);
 		}
 
 		/// <summary>
@@ -260,7 +257,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		/// <returns>The leaf view controller.</returns>
 		public CoreViewController GetLeafViewController()
 		{
-			return this.dataViewController.GetLeafViewController ();
+			return this.DataViewController.GetLeafViewController ();
 		}
 
 
@@ -433,9 +430,6 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		private readonly CoreData				data;
 		private readonly CommandContext			commandContext;
 		private readonly WorkflowController		workflowController;
-		private readonly MainViewController		mainViewController;
-		private readonly DataViewController		dataViewController;
-		private readonly MainWindowController	mainWindowController;
 		private readonly NavigationOrchestrator navigator;
 
 

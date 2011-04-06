@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Cresus.Core.Library
 {
@@ -36,6 +37,14 @@ namespace Epsitec.Cresus.Core.Library
 		public virtual void SetupApplication()
 		{
 			Factories.CoreAppComponentFactory.SetupComponents (this.components.GetComponents ());
+		}
+
+		public virtual IEnumerable<ICoreComponent> FindAllComponents()
+		{
+			var compo1 = this.components.GetComponents ().Cast<ICoreComponent> ();
+			var compo2 = this.manualComponents.GetComponents ().Cast<ICoreComponent> ();
+
+			return compo1.Concat (compo2).Distinct ();
 		}
 
 		public virtual T FindComponent<T>()

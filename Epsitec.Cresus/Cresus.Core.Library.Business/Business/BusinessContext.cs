@@ -152,7 +152,16 @@ namespace Epsitec.Cresus.Core.Business
 
 		public bool AreAllLocksAvailable()
 		{
-			return this.locker.AreAllLocksAvailable (this.GetLockNames ());
+			string[] lockNames = this.GetLockNames ().ToArray ();
+
+			if (lockNames.Length == 0)
+			{
+				return true;
+			}
+			else
+			{
+				return this.locker.AreAllLocksAvailable (lockNames);
+			}
 		}
 
 		public void NotifyExternalChanges()
@@ -214,7 +223,14 @@ namespace Epsitec.Cresus.Core.Business
 				return true;
 			}
 
-			var lockNames       = this.GetLockNames ().Where (name => !string.IsNullOrEmpty (name));
+			string[] lockNames = this.GetLockNames ().Where (name => !string.IsNullOrEmpty (name)).ToArray ();
+
+			if (lockNames.Length == 0)
+			{
+				foreignLockOwners = EmptyList<LockOwner>.Instance;
+				return false;
+			}
+
 			var lockTransaction = this.locker.RequestLock (lockNames, out foreignLockOwners);
 
 			if (lockTransaction == null)

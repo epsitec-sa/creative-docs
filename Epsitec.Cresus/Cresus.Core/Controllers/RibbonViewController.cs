@@ -18,9 +18,9 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	class RibbonViewController : ViewControllerComponent<RibbonViewController>
+	public sealed class RibbonViewController : ViewControllerComponent<RibbonViewController>
 	{
-		public RibbonViewController(DataViewOrchestrator orchestrator)
+		private RibbonViewController(DataViewOrchestrator orchestrator)
 			: base (orchestrator)
 		{
 			var app         = orchestrator.Host;
