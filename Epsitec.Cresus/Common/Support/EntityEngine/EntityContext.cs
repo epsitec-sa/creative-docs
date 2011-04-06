@@ -1091,11 +1091,6 @@ namespace Epsitec.Common.Support.EntityEngine
 		private readonly Dictionary<string, PropertySetter> propertySetters;
 		private readonly string name;
 
-		//private readonly Dictionary<Druid, Druid> rootEntityId;
-		//private readonly Dictionary<Druid, IEnumerable<Druid>> inheritedEntityIds;
-
-		//private readonly Dictionary<Druid, IEnumerable<StructuredTypeField>> entityFields;
-
 		private long dataGeneration;
 		private int suspendConstraintChecking;
 	}
