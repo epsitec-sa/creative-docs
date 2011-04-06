@@ -125,13 +125,13 @@
     <Compile Include="Controllers\ITileController.cs" />
     <Compile Include="Controllers\ListController.cs" />
     <Compile Include="Controllers\MainViewController.cs" />
-    <Compile Include="Library\MainWindowComponent.cs" />
-    <Compile Include="Library\MainWindowComponent`1.cs" />
+    <Compile Include="Factories\DefaultViewControllerComponentFactory.cs" />
+    <Compile Include="Library\ViewControllerComponent.cs" />
+    <Compile Include="Library\ViewControllerComponent`1.cs" />
     <Compile Include="Controllers\MainWindowController.cs" />
     <Compile Include="Controllers\NewEntityReference.cs" />
     <Compile Include="Controllers\PreviewViewController.cs" />
     <Compile Include="Controllers\ReferenceController.cs" />
-    <Compile Include="Controllers\RibbonViewController.cs" />
     <Compile Include="Controllers\SelectionController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryViewController.cs" />
     <Compile Include="Controllers\TabIds\ArticleParameterTabId.cs" />
@@ -168,8 +168,8 @@
     <Compile Include="Entities\TaxDocumentItemEntity.cs" />
     <Compile Include="Entities\TextDocumentItemEntity.cs" />
     <Compile Include="Factories\EntityViewControllerFactory.cs" />
-    <Compile Include="Factories\IMainWindowComponentFactory.cs" />
-    <Compile Include="Factories\MainWindowComponentFactory.cs" />
+    <Compile Include="Factories\IViewControllerComponentFactory.cs" />
+    <Compile Include="Factories\ViewControllerComponentFactory.cs" />
     <Compile Include="Helpers\AbstractDocumentItemHelper.cs" />
     <Compile Include="Helpers\ArticleDocumentItemHelper.cs" />
     <Compile Include="Helpers\ArticleParameterHelper.cs" />

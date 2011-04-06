@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 	/// The <c>DataViewOrchestrator</c> class is used by the various view controllers
 	/// to change what is visible in the data view.
 	/// </summary>
-	public class DataViewOrchestrator : System.IDisposable, ICoreManualComponent
+	public class DataViewOrchestrator : System.IDisposable, ICoreManualComponent, ICoreComponentHost<ViewControllerComponent>
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DataViewOrchestrator"/> class.
@@ -35,6 +35,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		/// <param name="commandContext">The command context.</param>
 		public DataViewOrchestrator(CoreApp host)
 		{
+			this.components         = new CoreComponentHostImplementation<ViewControllerComponent> ();
 			this.host               = host;
 			this.data               = this.host.FindComponent<CoreData> ();
 			this.commandContext     = this.host.CommandContext;
@@ -45,7 +46,10 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 			this.CreateNewBusinessContext ();
 
-			this.mainViewController = new MainViewController (this);
+			Factories.ViewControllerComponentFactory.RegisterComponents (this);
+			Factories.ViewControllerComponentFactory.SetupComponents (this.components.GetComponents ());
+
+			this.mainViewController = this.GetComponent<MainViewController> ();
 			this.mainWindowController = new MainWindowController (this);
 			this.dataViewController = new DataViewController (this);
 			this.navigator          = new NavigationOrchestrator (this);
@@ -374,8 +378,56 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			}
 		}
 
+		#region ICoreComponentHost<MainWindowComponent> Members
+
+		public T GetComponent<T>()
+			where T : ViewControllerComponent
+		{
+			return this.components.GetComponent<T> ();
+		}
+
+		ViewControllerComponent ICoreComponentHost<ViewControllerComponent>.GetComponent(System.Type type)
+		{
+			return this.components.GetComponent (type);
+		}
+
+		public IEnumerable<ViewControllerComponent> GetComponents()
+		{
+			return this.components.GetComponents ();
+		}
+
+		public bool ContainsComponent<T>()
+			where T : ViewControllerComponent
+		{
+			return this.components.ContainsComponent<T> ();
+		}
+
+		bool ICoreComponentHost<ViewControllerComponent>.ContainsComponent(System.Type type)
+		{
+			return this.components.ContainsComponent (type);
+		}
+
+		void ICoreComponentHost<ViewControllerComponent>.RegisterComponent<T>(T component)
+		{
+			this.components.RegisterComponent<T> (component);
+		}
+
+		void ICoreComponentHost<ViewControllerComponent>.RegisterComponent(System.Type type, ViewControllerComponent component)
+		{
+			this.components.RegisterComponent (type, component);
+		}
+
+		void ICoreComponentHost<ViewControllerComponent>.RegisterComponentAsDisposable(System.IDisposable component)
+		{
+			this.components.RegisterComponentAsDisposable (component);
+		}
+
+		#endregion
+
 
 		public event EventHandler<ActiveEntityCancelEventArgs> SettingActiveEntity;
+
+		private readonly CoreComponentHostImplementation<ViewControllerComponent> components;
 
 		private readonly CoreApp				host;
 		private readonly CoreData				data;

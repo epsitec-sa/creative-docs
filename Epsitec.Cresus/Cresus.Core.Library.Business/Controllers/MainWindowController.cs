@@ -14,18 +14,15 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public class MainWindowController : CoreViewController, IWidgetUpdater, ICoreManualComponent, ICoreComponentHost<MainWindowComponent>
+	public class MainWindowController : CoreViewController, IWidgetUpdater, ICoreManualComponent
 	{
 		public MainWindowController(DataViewOrchestrator orchestrator)
 			: base ("MainWindow", orchestrator)
 		{
 			this.app = orchestrator.Host;
 
-			this.components = new CoreComponentHostImplementation<MainWindowComponent> ();
 			this.data           = this.app.FindComponent<CoreData> ();
 			this.commandContext = this.app.CommandContext;
-
-			Factories.MainWindowComponentFactory.RegisterComponents (this);
 			
 			this.mainViewController = this.Orchestrator.MainViewController;
 
@@ -43,11 +40,9 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
-			foreach (var component in this.components.GetComponents ())
-			{
-				yield return component;
-			}
-			
+			var ribbonViewController = this.Orchestrator.GetComponents ().First (x => x.GetType ().Name == "RibbonViewController");
+			//	HACK: clean up
+			yield return ribbonViewController;
 			yield return this.mainViewController;
 		}
 
@@ -77,14 +72,9 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void CreateUIControllers()
 		{
-			Factories.MainWindowComponentFactory.SetupComponents (this.components.GetComponents ());
-
-			foreach (var component in this.components.GetComponents ())
-			{
-				//	TODO: clean up hack -- ribbon box should not be created in the main window controller !
-				component.CreateUI (this.ribbonBox);
-			}
-			
+			var ribbonViewController = this.Orchestrator.GetComponents ().First (x => x.GetType ().Name == "RibbonViewController");
+			//	HACK: clean up
+			ribbonViewController.CreateUI (this.ribbonBox);
 			this.mainViewController.CreateUI (this.contentBox);
 		}
 
@@ -97,54 +87,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		#endregion
-
-		#region ICoreComponentHost<MainWindowComponent> Members
-
-		public T GetComponent<T>()
-			where T : MainWindowComponent
-		{
-			return this.components.GetComponent<T> ();
-		}
-
-		MainWindowComponent ICoreComponentHost<MainWindowComponent>.GetComponent(System.Type type)
-		{
-			return this.components.GetComponent (type);
-		}
-
-		IEnumerable<MainWindowComponent> ICoreComponentHost<MainWindowComponent>.GetComponents()
-		{
-			return this.components.GetComponents ();
-		}
-
-		public bool ContainsComponent<T>()
-			where T : MainWindowComponent
-		{
-			return this.components.ContainsComponent<T> ();
-		}
-
-		bool ICoreComponentHost<MainWindowComponent>.ContainsComponent(System.Type type)
-		{
-			return this.components.ContainsComponent (type);
-		}
-
-		void ICoreComponentHost<MainWindowComponent>.RegisterComponent<T>(T component)
-		{
-			this.components.RegisterComponent<T> (component);
-		}
-
-		void ICoreComponentHost<MainWindowComponent>.RegisterComponent(System.Type type, MainWindowComponent component)
-		{
-			this.components.RegisterComponent (type, component);
-		}
-
-		void ICoreComponentHost<MainWindowComponent>.RegisterComponentAsDisposable(System.IDisposable component)
-		{
-			this.components.RegisterComponentAsDisposable (component);
-		}
-
-		#endregion
-
-		private readonly CoreComponentHostImplementation<MainWindowComponent> components;
 
 		private readonly CoreApp				app;
 		private readonly CoreData				data;

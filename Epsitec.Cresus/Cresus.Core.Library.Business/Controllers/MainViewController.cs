@@ -2,29 +2,25 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
-using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Controllers.BrowserControllers;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Orchestrators;
-//-using Epsitec.Cresus.Core.Print;
+using Epsitec.Cresus.Core.Print;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.DataLayer.Context;
-using System.Collections;
-using Epsitec.Cresus.Core.Print;
+using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public class MainViewController : CoreViewController, ICommandHandler
+	public class MainViewController : ViewControllerComponent<MainViewController>, ICommandHandler
 	{
 		public MainViewController(DataViewOrchestrator orchestrator)
-			: base ("MainView", orchestrator)
+			: base (orchestrator)
 		{
 			this.commandContext = orchestrator.Host.CommandContext;
 			
@@ -34,8 +30,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.previewViewController     = new PreviewViewController (this.Orchestrator);
 			this.browserViewController     = new BrowserViewController (this.Orchestrator);
 			this.browserSettingsController = new BrowserSettingsController (this.browserViewController);
-
-			
 			
 			
 			//	TODO: check if following code is still meaningful
@@ -378,6 +372,15 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		#endregion
+
+		#region Factory Class
+
+		private sealed class Factory : Epsitec.Cresus.Core.Factories.DefaultViewControllerComponentFactory<MainViewController>
+		{
+		}
+
+		#endregion
+		
 
 		private readonly CommandContext commandContext;
 		private readonly BrowserViewController browserViewController;

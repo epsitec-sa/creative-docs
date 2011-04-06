@@ -9,7 +9,6 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Factories
 {
-
 	/// <summary>
 	/// The <c>CoreComponentFactory</c> class provides methods to register and setup
 	/// components.

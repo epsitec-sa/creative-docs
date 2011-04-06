@@ -7,18 +7,18 @@ using Epsitec.Cresus.Core.Orchestrators;
 
 namespace Epsitec.Cresus.Core.Library
 {
-	public abstract class MainWindowComponent : CoreViewController, ICoreComponent<MainWindowController, MainWindowComponent>
+	public abstract class ViewControllerComponent : CoreViewController, ICoreComponent<DataViewOrchestrator, ViewControllerComponent>
 	{
-		protected MainWindowComponent(MainWindowController host, System.Type type, CoreApp app)
+		protected ViewControllerComponent(DataViewOrchestrator host, System.Type type, CoreApp app)
 			: base (type.Name, app.FindActiveComponent<DataViewOrchestrator> ())
 		{
 			this.host = host;
 		}
 
 
-		#region ICoreComponent<MainWindowController,MainWindowComponent> Members
+		#region ICoreComponent<DataViewOrchestrator, MainWindowComponent> Members
 
-		public MainWindowController Host
+		public DataViewOrchestrator Host
 		{
 			get
 			{
@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Core.Library
 
 		#endregion
 
-		private readonly MainWindowController host;
+		private readonly DataViewOrchestrator host;
 		private bool wasSetupExecuted;
 	}
 }

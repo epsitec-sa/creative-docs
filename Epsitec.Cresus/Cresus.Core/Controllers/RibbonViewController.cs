@@ -18,12 +18,12 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	class RibbonViewController : MainWindowComponent<RibbonViewController>, ICoreManualComponent
+	class RibbonViewController : ViewControllerComponent<RibbonViewController>
 	{
-		public RibbonViewController(MainWindowController controller)
-			: base (controller)
+		public RibbonViewController(DataViewOrchestrator orchestrator)
+			: base (orchestrator)
 		{
-			var app         = controller.Host;
+			var app         = orchestrator.Host;
 			var coreData    = app.FindComponent<CoreData> ();
 			var userManager = coreData.GetComponent<UserManager> ();
 
@@ -690,26 +690,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		#region Factory Class
 
-		private sealed class Factory : Epsitec.Cresus.Core.Factories.IMainWindowComponentFactory
+		private sealed class Factory : Epsitec.Cresus.Core.Factories.DefaultViewControllerComponentFactory<RibbonViewController>
 		{
-			#region ICoreDataComponentFactory Members
-
-			public bool CanCreate(MainWindowController controller)
-			{
-				return true;
-			}
-
-			public MainWindowComponent Create(MainWindowController controller)
-			{
-				return new RibbonViewController (controller);
-			}
-
-			public System.Type GetComponentType()
-			{
-				return typeof (RibbonViewController);
-			}
-
-			#endregion
 		}
 
 		#endregion
