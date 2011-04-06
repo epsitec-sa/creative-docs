@@ -151,10 +151,6 @@ namespace Epsitec.Cresus.Database
 
 		private static bool IsUsedOrBuiltIn(DbInfrastructure dbInfrastructure, DbTypeDef dbTypeDef)
 		{
-			// HACK This method is an ugly hack and should be cleaned when the categories for the
-			// tables are implemented.
-			// Marc
-
 			return dbInfrastructure.FindBuiltInDbTypes ()
 				.Select (t => t.Name)
 				.Any (n => string.Equals (n, dbTypeDef.Name));
