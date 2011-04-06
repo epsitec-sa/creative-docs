@@ -11,13 +11,11 @@ namespace Epsitec.Cresus.Core.Library
 	/// The <c>ExceptionManager</c> class manages expressions which might throw a
 	/// <see cref="System.NullReferenceException"/> exception.
 	/// </summary>
-	public sealed class ExceptionManager : IExceptionManager, System.IDisposable, ICoreManualComponent
+	public sealed class ExceptionManager : CoreAppComponent, IExceptionManager, System.IDisposable
 	{
 		public ExceptionManager(CoreApp app)
+			: base (app)
 		{
-			this.app = app;
-			this.app.RegisterComponent (this);
-			this.app.RegisterComponentAsDisposable (this);
 		}
 
 
@@ -52,6 +50,12 @@ namespace Epsitec.Cresus.Core.Library
 
 		#endregion
 
-		private readonly CoreApp app;
+		#region Factory Class
+
+		class Factory : Epsitec.Cresus.Core.Factories.DefaultCoreAppComponentFactory<ExceptionManager>
+		{
+		}
+
+		#endregion
 	}
 }

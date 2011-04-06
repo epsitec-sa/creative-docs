@@ -125,6 +125,8 @@
     <Compile Include="Controllers\ITileController.cs" />
     <Compile Include="Controllers\ListController.cs" />
     <Compile Include="Controllers\MainViewController.cs" />
+    <Compile Include="Library\MainWindowComponent.cs" />
+    <Compile Include="Library\MainWindowComponent`1.cs" />
     <Compile Include="Controllers\MainWindowController.cs" />
     <Compile Include="Controllers\NewEntityReference.cs" />
     <Compile Include="Controllers\PreviewViewController.cs" />
@@ -166,6 +168,8 @@
     <Compile Include="Entities\TaxDocumentItemEntity.cs" />
     <Compile Include="Entities\TextDocumentItemEntity.cs" />
     <Compile Include="Factories\EntityViewControllerFactory.cs" />
+    <Compile Include="Factories\IMainWindowComponentFactory.cs" />
+    <Compile Include="Factories\MainWindowComponentFactory.cs" />
     <Compile Include="Helpers\AbstractDocumentItemHelper.cs" />
     <Compile Include="Helpers\ArticleDocumentItemHelper.cs" />
     <Compile Include="Helpers\ArticleParameterHelper.cs" />

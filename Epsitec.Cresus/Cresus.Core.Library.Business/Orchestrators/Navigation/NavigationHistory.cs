@@ -3,14 +3,16 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 {
 	public class NavigationHistory
 	{
-		public NavigationHistory(NavigationOrchestrator navigator)
+		public NavigationHistory(NavigationOrchestrator navigator, CommandContext commandContext)
 		{
 			this.navigator = navigator;
+			this.commandContext = commandContext;
 			this.backwardHistory = new Stack<NavigationPath> ();
 			this.forwardHistory  = new Stack<NavigationPath> ();
 			this.UpdateNavigationCommands ();
@@ -115,7 +117,7 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 		
 		private void UpdateNavigationCommands()
 		{
-			var commandContext = this.navigator.MainViewController.CommandContext;
+			var commandContext = this.commandContext;
 
 			commandContext.GetCommandState (Library.Res.Commands.History.NavigateBackward).Enable = this.backwardHistory.Count > 0;
 			commandContext.GetCommandState (Library.Res.Commands.History.NavigateForward).Enable  = this.forwardHistory.Count > 0;
@@ -204,15 +206,16 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 
 			#endregion
 			
-			private readonly string name;
-			private readonly NavigationHistory history;
+			private readonly string				name;
+			private readonly NavigationHistory	history;
 		}
 
 		private readonly NavigationOrchestrator navigator;
-		private readonly Stack<NavigationPath> backwardHistory;
-		private readonly Stack<NavigationPath> forwardHistory;
+		private readonly CommandContext			commandContext;
+		private readonly Stack<NavigationPath>	backwardHistory;
+		private readonly Stack<NavigationPath>	forwardHistory;
 		
-		private int suspendCounter;
-		private State state;
+		private int								suspendCounter;
+		private State							state;
 	}
 }

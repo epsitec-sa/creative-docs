@@ -27,46 +27,22 @@ namespace Epsitec.Cresus.Core.Orchestrators
 	/// </summary>
 	public class NavigationOrchestrator
 	{
-		public NavigationOrchestrator(MainViewController mainViewController)
+		public NavigationOrchestrator(DataViewOrchestrator orchestrator)
 		{
 			this.liveNodes = new List<Node> ();
-			this.mainViewController = mainViewController;
-			this.history = new NavigationHistory (this);
+			this.orchestrator = orchestrator;
+			this.history = new NavigationHistory (this, this.orchestrator.CommandContext);
 			this.clickSimulators = new KeyedClickSimulators ();
 			
 			this.MakeDirty ();
 		}
 
 
-		public MainViewController				MainViewController
-		{
-			get
-			{
-				return this.mainViewController;
-			}
-		}
-
 		public BrowserViewController			BrowserViewController
 		{
 			get
 			{
-				return this.mainViewController.BrowserViewController;
-			}
-		}
-
-		public DataViewController				DataViewController
-		{
-			get
-			{
-				return this.mainViewController.DataViewController;
-			}
-		}
-
-		public DataViewOrchestrator				Orchestrator
-		{
-			get
-			{
-				return this.mainViewController.Orchestrator;
+				return this.MainViewController.BrowserViewController;
 			}
 		}
 
@@ -75,6 +51,22 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			get
 			{
 				return this.history;
+			}
+		}
+
+		private MainViewController				MainViewController
+		{
+			get
+			{
+				return this.orchestrator.MainViewController;
+			}
+		}
+
+		private DataViewController				DataViewController
+		{
+			get
+			{
+				return this.MainViewController.DataViewController;
 			}
 		}
 
@@ -203,7 +195,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		public void PreserveNavigation(System.Action action)
 		{
 			var history            = this.History;
-			var dataViewController = this.Orchestrator.DataViewController;
+			var dataViewController = this.orchestrator.DataViewController;
 			var navigationPath     = this.GetLeafNavigationPath ();
 
 			using (history.SuspendRecording ())
@@ -562,7 +554,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 		private readonly List<Node>				liveNodes;
 		private readonly KeyedClickSimulators	clickSimulators;
-		private readonly MainViewController		mainViewController;
+		private readonly DataViewOrchestrator	orchestrator;
 		private readonly NavigationHistory		history;
 		
 		private bool							isDirty;

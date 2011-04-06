@@ -24,14 +24,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core
 {
-	public sealed partial class CoreData : System.IDisposable, ICoreComponentHost<CoreDataComponent>, ICoreManualComponent
+	public sealed partial class CoreData : CoreAppComponent, System.IDisposable, ICoreComponentHost<CoreDataComponent>
 	{
-		public CoreData(CoreApp app, bool forceDatabaseCreation, bool allowDatabaseUpdate, bool enableConnectionRecycling)
+		public CoreData(CoreApp app, bool forceDatabaseCreation = false, bool allowDatabaseUpdate = true, bool enableConnectionRecycling = true)
+			: base (app)
 		{
-			this.app = app;
-			this.app.RegisterComponent (this);
-			this.app.RegisterComponentAsDisposable (this);
-
 			this.ForceDatabaseCreation		= forceDatabaseCreation;
 			this.AllowDatabaseUpdate		= allowDatabaseUpdate;
 			this.EnableConnectionRecycling	= enableConnectionRecycling;
@@ -40,14 +37,6 @@ namespace Epsitec.Cresus.Core
 			this.independentEntityContext = new EntityContext (Resources.DefaultManager, EntityLoopHandlingMode.Throw, "Independent Entities");
 
 			Factories.CoreDataComponentFactory.RegisterComponents (this);
-		}
-
-		public CoreApp							Host
-		{
-			get
-			{
-				return this.app;
-			}
 		}
 
 		public DataInfrastructure				DataInfrastructure
@@ -561,6 +550,20 @@ namespace Epsitec.Cresus.Core
 			#endregion
 
 			public static readonly ItemRankComparer Instance = new ItemRankComparer ();
+		}
+
+		#endregion
+
+		#region Factory Class
+
+		class Factory : Epsitec.Cresus.Core.Factories.DefaultCoreAppComponentFactory<CoreData>
+		{
+			public override CoreAppComponent Create(CoreApp host)
+			{
+				var data = new CoreData (host, forceDatabaseCreation: false);
+				data.SetupBusiness ();
+				return data;
+			}
 		}
 
 		#endregion

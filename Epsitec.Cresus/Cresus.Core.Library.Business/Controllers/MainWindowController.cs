@@ -14,28 +14,40 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public class MainWindowController : CoreViewController, IWidgetUpdater, ICoreManualComponent
+	public class MainWindowController : CoreViewController, IWidgetUpdater, ICoreManualComponent, ICoreComponentHost<MainWindowComponent>
 	{
-		public MainWindowController(CoreApp app, CoreData data, CommandContext commandContext, CoreViewController ribbonController)
-			: base ("MainWindow", app.FindActiveComponent<DataViewOrchestrator> ())
+		public MainWindowController(DataViewOrchestrator orchestrator)
+			: base ("MainWindow", orchestrator)
 		{
-			app.RegisterComponent (this);
-			app.RegisterComponentAsDisposable (this);
-			app.ActivateComponent (this);
+			this.app = orchestrator.Host;
 
-			this.data = data;
-			this.commandContext = commandContext;
+			this.components = new CoreComponentHostImplementation<MainWindowComponent> ();
+			this.data           = this.app.FindComponent<CoreData> ();
+			this.commandContext = this.app.CommandContext;
+
+			Factories.MainWindowComponentFactory.RegisterComponents (this);
 			
-			this.ribbonController = ribbonController;
 			this.mainViewController = this.Orchestrator.MainViewController;
 
 			Library.UI.UpdateRequested += sender => this.Update ();
 		}
 
 
+		public CoreApp Host
+		{
+			get
+			{
+				return this.app;
+			}
+		}
+
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
-			yield return this.ribbonController;
+			foreach (var component in this.components.GetComponents ())
+			{
+				yield return component;
+			}
+			
 			yield return this.mainViewController;
 		}
 
@@ -65,7 +77,14 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void CreateUIControllers()
 		{
-			this.ribbonController.CreateUI (this.ribbonBox);
+			Factories.MainWindowComponentFactory.SetupComponents (this.components.GetComponents ());
+
+			foreach (var component in this.components.GetComponents ())
+			{
+				//	TODO: clean up hack -- ribbon box should not be created in the main window controller !
+				component.CreateUI (this.ribbonBox);
+			}
+			
 			this.mainViewController.CreateUI (this.contentBox);
 		}
 
@@ -78,11 +97,57 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		#endregion
-		
 
+		#region ICoreComponentHost<MainWindowComponent> Members
 
+		public T GetComponent<T>()
+			where T : MainWindowComponent
+		{
+			return this.components.GetComponent<T> ();
+		}
+
+		MainWindowComponent ICoreComponentHost<MainWindowComponent>.GetComponent(System.Type type)
+		{
+			return this.components.GetComponent (type);
+		}
+
+		IEnumerable<MainWindowComponent> ICoreComponentHost<MainWindowComponent>.GetComponents()
+		{
+			return this.components.GetComponents ();
+		}
+
+		public bool ContainsComponent<T>()
+			where T : MainWindowComponent
+		{
+			return this.components.ContainsComponent<T> ();
+		}
+
+		bool ICoreComponentHost<MainWindowComponent>.ContainsComponent(System.Type type)
+		{
+			return this.components.ContainsComponent (type);
+		}
+
+		void ICoreComponentHost<MainWindowComponent>.RegisterComponent<T>(T component)
+		{
+			this.components.RegisterComponent<T> (component);
+		}
+
+		void ICoreComponentHost<MainWindowComponent>.RegisterComponent(System.Type type, MainWindowComponent component)
+		{
+			this.components.RegisterComponent (type, component);
+		}
+
+		void ICoreComponentHost<MainWindowComponent>.RegisterComponentAsDisposable(System.IDisposable component)
+		{
+			this.components.RegisterComponentAsDisposable (component);
+		}
+
+		#endregion
+
+		private readonly CoreComponentHostImplementation<MainWindowComponent> components;
+
+		private readonly CoreApp				app;
 		private readonly CoreData				data;
-		private readonly CoreViewController		ribbonController;
 		private readonly MainViewController		mainViewController;
 		private readonly CommandContext			commandContext;
 		

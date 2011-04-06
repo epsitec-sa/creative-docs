@@ -33,11 +33,11 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		/// <param name="host">The host.</param>
 		/// <param name="data">The core data.</param>
 		/// <param name="commandContext">The command context.</param>
-		public DataViewOrchestrator(CoreApp host, CoreData data, CommandContext commandContext)
+		public DataViewOrchestrator(CoreApp host)
 		{
 			this.host               = host;
-			this.data               = data;
-			this.commandContext     = commandContext;
+			this.data               = this.host.FindComponent<CoreData> ();
+			this.commandContext     = this.host.CommandContext;
 
 			this.host.RegisterComponent (this);
 			this.host.RegisterComponentAsDisposable (this);
@@ -45,9 +45,10 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 			this.CreateNewBusinessContext ();
 
-			this.mainViewController = new MainViewController (this, commandContext);
+			this.mainViewController = new MainViewController (this);
+			this.mainWindowController = new MainWindowController (this);
 			this.dataViewController = new DataViewController (this);
-			this.navigator          = new NavigationOrchestrator (this.mainViewController);
+			this.navigator          = new NavigationOrchestrator (this);
 			this.workflowController = new WorkflowController (this);
 
 			this.workflowController.AttachBusinessContext (this.businessContext);
@@ -67,6 +68,23 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			get
 			{
 				return this.data;
+			}
+		}
+
+
+		public CommandContext					CommandContext
+		{
+			get
+			{
+				return this.commandContext;
+			}
+		}
+
+		public MainWindowController				MainWindowController
+		{
+			get
+			{
+				return this.mainWindowController;
 			}
 		}
 
@@ -357,6 +375,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		private readonly WorkflowController		workflowController;
 		private readonly MainViewController		mainViewController;
 		private readonly DataViewController		dataViewController;
+		private readonly MainWindowController	mainWindowController;
 		private readonly NavigationOrchestrator navigator;
 
 

@@ -23,10 +23,10 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public class MainViewController : CoreViewController, ICommandHandler
 	{
-		public MainViewController(DataViewOrchestrator orchestrator, CommandContext commandContext)
+		public MainViewController(DataViewOrchestrator orchestrator)
 			: base ("MainView", orchestrator)
 		{
-			this.commandContext = commandContext;
+			this.commandContext = orchestrator.Host.CommandContext;
 			this.Orchestrator.Host.RegisterComponent (this);
 
 			this.actionViewController  = new ActionViewController (this.Orchestrator);

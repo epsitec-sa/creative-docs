@@ -35,14 +35,9 @@ namespace Epsitec.Cresus.Core
 			
 			this.plugIns = new List<PlugIns.ICorePlugIn> ();
 
-			new ExceptionManager (this);
-			
-			this.data = new CoreData (this, forceDatabaseCreation: true, allowDatabaseUpdate: true, enableConnectionRecycling: false);
-			this.data.SetupBusiness ();
+			//	CoreData est initialisé dans la classe Factory.CoreData, dans CoreData.cs:563
 
-			var mainWindowOrchestrator = new DataViewOrchestrator (this, this.data, this.CommandContext);
-			var ribbonController       = new RibbonViewController (this);
-			this.mainWindowController  = new MainWindowController (this, this.data, this.CommandContext, ribbonController);
+			this.CreateManualComponents ();
 
 			this.UserManager.AuthenticatedUserChanged += this.HandleAuthenticatedUserChanged;
 		}
@@ -58,7 +53,7 @@ namespace Epsitec.Cresus.Core
 		{
 			get
 			{
-				return this.data;
+				return this.GetComponent<CoreData> ();
 			}
 		}
 
@@ -86,14 +81,6 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public MainWindowController				MainWindowController
-		{
-			get
-			{
-				return this.mainWindowController;
-			}
-		}
-
 		public UserManager						UserManager
 		{
 			get
@@ -113,23 +100,6 @@ namespace Epsitec.Cresus.Core
 			this.CreateUI ();
 		}
 
-		private void HandleAuthenticatedUserChanged(object sender)
-		{
-			this.data.SetActiveUser (this.UserManager.AuthenticatedUser);
-			this.data.ConnectionManager.ReopenConnection ();
-		}
-
-		internal void CreateUI()
-		{
-			this.OnCreatingUI ();
-			this.CreateUIMainWindow ();
-			this.CreateUIControllers ();
-			this.RestoreApplicationState ();
-			this.OnCreatedUI ();
-
-			this.IsReady = true;
-		}
-
 		internal void AsyncSaveApplicationState()
 		{
 			Application.QueueAsyncCallback (this.SaveApplicationState);
@@ -137,28 +107,12 @@ namespace Epsitec.Cresus.Core
 
 		internal void SetupData()
 		{
-//-			this.data.SetupBusiness ();
-
-			if (this.data.ForceDatabaseCreation)
+			if (this.Data.ForceDatabaseCreation)
 			{
-				Hack.PopulateUsers (this.data.CreateDataContext ("hack"));
+				Hack.PopulateUsers (this.Data.CreateDataContext ("hack"));
 			}
 
 			this.OnSetupDataDone ();
-
-#if false
-			var blob  = this.data.ImageDataStore.PersistImageBlob (new System.IO.FileInfo (@"C:\Users\arnaud\Pictures\Lionel Tardy et Marc Bettex.jpg"));
-			var image = this.data.ImageDataStore.GetImageData (blob.Code);
-			bool same1 = this.data.ImageDataStore.CheckEqual (blob.Code, image);
-			bool same2 = this.data.ImageDataStore.CheckEqual (blob.Code, new Epsitec.Cresus.Core.Data.ImageData (System.IO.File.ReadAllBytes (image.Uri.Path)));
-
-			var imageEntity = this.Data.DataContext.CreateEntity<ImageEntity> ();
-
-			this.data.ImageDataStore.UpdateImage (this.Data.DataContext, imageEntity, new System.IO.FileInfo (@"C:\Users\arnaud\Pictures\Lionel Tardy et Marc Bettex.jpg"));
-			this.data.ImageDataStore.GetImageData (blob.Code, 100);
-			this.data.ImageDataStore.GetImageData (blob.Code, 200);
-			this.data.ImageDataStore.GetImageData (blob.Code, 100);
-#endif
 		}
 
 		internal void DiscoverPlugIns()
@@ -189,6 +143,22 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		private void CreateManualComponents()
+		{
+			new DataViewOrchestrator (this);
+		}
+
+		private void CreateUI()
+		{
+			this.OnCreatingUI ();
+			this.CreateUIMainWindow ();
+			this.CreateUIControllers ();
+			this.RestoreApplicationState ();
+			this.OnCreatedUI ();
+
+			this.IsReady = true;
+		}
+
 		private void CreateUIMainWindow()
 		{
 			string path = System.IO.Path.Combine (Globals.Directories.ExecutableRoot, "app.ico");
@@ -213,7 +183,10 @@ namespace Epsitec.Cresus.Core
 
 		private void CreateUIControllers()
 		{
-			this.mainWindowController.CreateUI (this.Window.Root);
+			var orchestrator = this.FindComponent<DataViewOrchestrator> ();
+			var mainWindowController = orchestrator.MainWindowController;
+			
+			mainWindowController.CreateUI (this.Window.Root);
 		}
 
 		private void RestoreApplicationState()
@@ -261,6 +234,13 @@ namespace Epsitec.Cresus.Core
 
 
 
+		private void HandleAuthenticatedUserChanged(object sender)
+		{
+			this.Data.SetActiveUser (this.UserManager.AuthenticatedUser);
+			this.Data.ConnectionManager.ReopenConnection ();
+		}
+
+		
 		private void OnSetupDataDone()
 		{
 			var handler = this.SetupDataDone;
@@ -311,7 +291,6 @@ namespace Epsitec.Cresus.Core
 		private readonly List<PlugIns.ICorePlugIn>		plugIns;
 
 		private readonly CoreData						data;
-		private readonly MainWindowController			mainWindowController;
 		private PlugIns.PlugInFactory					plugInFactory;
 	}
 }

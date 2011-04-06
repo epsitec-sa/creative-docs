@@ -18,14 +18,12 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	class RibbonViewController : CoreViewController, ICoreManualComponent
+	class RibbonViewController : MainWindowComponent<RibbonViewController>, ICoreManualComponent
 	{
-		public RibbonViewController(CoreApp app)
-			: base ("Ribbon", app.FindActiveComponent<DataViewOrchestrator> ())
+		public RibbonViewController(MainWindowController controller)
+			: base (controller)
 		{
-			app.RegisterComponent (this);
-			app.RegisterComponentAsDisposable (this);
-
+			var app         = controller.Host;
 			var coreData    = app.FindComponent<CoreData> ();
 			var userManager = coreData.GetComponent<UserManager> ();
 
@@ -690,6 +688,33 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
+		#region Factory Class
+
+		private sealed class Factory : Epsitec.Cresus.Core.Factories.IMainWindowComponentFactory
+		{
+			#region ICoreDataComponentFactory Members
+
+			public bool CanCreate(MainWindowController controller)
+			{
+				return true;
+			}
+
+			public MainWindowComponent Create(MainWindowController controller)
+			{
+				return new RibbonViewController (controller);
+			}
+
+			public System.Type GetComponentType()
+			{
+				return typeof (RibbonViewController);
+			}
+
+			#endregion
+		}
+
+		#endregion
+		
+		
 		public event EventHandler				DatabaseMenuDefaultCommandNameChanged;
 
 		private RibbonBook						ribbonBook;
