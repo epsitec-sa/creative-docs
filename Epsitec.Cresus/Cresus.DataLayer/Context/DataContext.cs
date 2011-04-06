@@ -32,12 +32,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 	[System.Diagnostics.DebuggerDisplay ("DataContext #{UniqueId}")]
 	public sealed class DataContext : IEntityPersistenceManager, IIsDisposed, IReadOnly
 	{
-		// HACK This class has been temporarily hacked because of how things happens in Cresus.Core
-		// in order to be retro compatible until things are changed there. The hack in the class is
-		// the call to the constructor of EntityCache that must be transformed to the commented
-		// version in the constructor.
-		// Marc
-
 		/// <summary>
 		/// Creates a new <c>DataContext</c>.
 		/// </summary>
@@ -57,8 +51,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.IsReadOnly = isReadOnly;
 			this.EnableNullVirtualization = enableNullVirtualization;
 
-			this.entitiesCache = new EntityCache (this, null);
-			//this.entitiesCache = new EntityCache (this.TypeEngine);
+			this.entitiesCache = new EntityCache (this.TypeEngine);
 			this.emptyEntities = new HashSet<AbstractEntity> ();
 			this.entitiesToDelete = new HashSet<AbstractEntity> ();
 			this.entitiesDeleted = new HashSet<AbstractEntity> ();

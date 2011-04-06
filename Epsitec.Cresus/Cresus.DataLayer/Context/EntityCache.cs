@@ -26,37 +26,22 @@ namespace Epsitec.Cresus.DataLayer.Context
 	{
 
 
-		// HACK This class has been temporarily hacked because of how things happens in Cresus.Core
-		// in order to be retro compatible until things are changed there. Hacks are the DataContext
-		// property and the DataContext argument in the constructor that must be removed and the
-		// EntityEngine property that must be transformed to a single field property and the check
-		// in the constructor that must be uncommented.
-		// Marc
-
-
 		/// <summary>
 		/// Builds a new empty <see cref="EntityCache"/>.
 		/// </summary>
-		/// <param name="dataContext">The <see cref="DataContext"/> used by this isntance.</param>
+		/// <param name="dataContext">The <see cref="DataContext"/> used by this instance.</param>
 		/// <param name="entityTypeEngine">The <see cref="EntityTypeEngine"/> used by this instance.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="entityTypeEngine"/> is <c>null</c>.</exception>
-		public EntityCache(DataContext dataContext, EntityTypeEngine entityTypeEngine)
+		public EntityCache(EntityTypeEngine entityTypeEngine)
 		{
-			//entityTypeEngine.ThrowIfNull ("entityTypeEngine");
+			entityTypeEngine.ThrowIfNull ("entityTypeEngine");
 
-			this.EntityTypeEngine = entityTypeEngine;
-			this.DataContext = dataContext;
+			this.entityTypeEngine = entityTypeEngine;
 			this.entityIdToEntity = new Dictionary<long, AbstractEntity> ();
 			this.entityIdToEntityKey = new Dictionary<long, EntityKey> ();
 			this.entityKeyToEntity = new Dictionary<EntityKey, AbstractEntity> ();
 			this.entityTypeIdToEntityModificationEntryId = new Dictionary<Druid, long> ();
 			this.entityIdToEntityModificationEntryId = new Dictionary<long, long> ();
-		}
-
-		private DataContext DataContext
-		{
-			get;
-			set;
 		}
 		
 
@@ -64,16 +49,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			get
 			{
-				return this.entityTypeEngine ?? this.DataContext.DataInfrastructure.EntityEngine.EntityTypeEngine;
-			}
-			set
-			{
-				this.entityTypeEngine = value;
+				return this.entityTypeEngine;
 			}
 		}
-
-
-		private EntityTypeEngine entityTypeEngine;
 		
 
 		/// <summary>
@@ -320,6 +298,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 			return this.entityTypeIdToEntityModificationEntryId.Keys;
 		}
 		
+
+		private readonly EntityTypeEngine entityTypeEngine;
+
 
 		/// <summary>
 		/// Maps the entity serial ids to the corresponding <see cref="AbstractEntity"/>.
