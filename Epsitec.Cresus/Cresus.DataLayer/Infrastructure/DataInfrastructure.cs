@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.IO;
 
 using System.Linq;
+using System.Collections;
 
 namespace Epsitec.Cresus.DataLayer.Infrastructure
 {
@@ -28,9 +29,17 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 	/// </summary>
 	/// <remarks>
 	/// This class is not completely thread safe. That means that all its members should always be
-	/// called by the same thread or the thread safety must be ensured externally. The only two
-	/// methods that are thread safe and that can be called from any thread are the KeepConnectionAlive
-	/// and the KillDeadConnections methods.
+	/// called by the same thread or the thread safety must be ensured externally. The only two sets
+	/// of members that can be called from any thread are the members dealing with the connection (
+	/// Connection, OpenConnection, CloseConnection, RefreshConnectionData, KeepConnectionAlive,
+	/// KillDeadConnections, AreLocksAvailable and CreateLockTransaction) and the members dealing
+	/// with the DataContextPool (DataContextPool, CreateDataContext, DeleteDataContext and
+	/// ContainsDataContext).
+	/// Note that this class only ensure atomic execution of those methods, but that doesn't protect
+	/// the user of this class from messing things up. For instance, it is possible to close the
+	/// connection while a DataContext is saving, or to delete the DataContext while it is saving. So
+	/// you still have to be careful about what you do when using instances of this class from 
+	/// multiple threads.
 	/// </remarks>
 	public sealed class DataInfrastructure : IIsDisposed
 	{
@@ -63,6 +72,8 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 			this.dataContextPool = new DataContextPool ();
 
+			this.connectionLock = new object ();
+
 			this.connection = null;
 		}
 
@@ -74,7 +85,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			get
 			{
-				return dataContextPool;
+				return this.dataContextPool;
 			}
 		}
 
@@ -83,7 +94,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			get
 			{
-				return entityEngine;
+				return this.entityEngine;
 			}
 		}
 
@@ -95,7 +106,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			get
 			{
-				return dbInfrastructure;
+				return this.dbInfrastructure;
 			}
 		}
 
@@ -108,7 +119,10 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			get
 			{
-				return this.connection;
+				lock (this.connectionLock)
+				{
+					return this.connection;
+				}
 			}
 		}
 
@@ -142,29 +156,33 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			if (disposing && !this.IsDisposed)
 			{
-				if (this.connection != null && this.connection.Status == ConnectionStatus.Open)
+				lock (this.connectionLock)
 				{
-					try
+					if (this.connection != null && this.connection.Status == ConnectionStatus.Open)
 					{
-						this.connectionManager.CloseConnection (this.connection.Id);
-					}
-					catch (System.Exception)
-					{
+						try
+						{
+							this.connectionManager.CloseConnection (this.connection.Id);
+						}
+						catch (System.Exception)
+						{
+						}
 					}
 				}
-				if (this.DataContextPool != null)
+
+				if (this.dataContextPool != null)
 				{
-					foreach (DataContext dataContext in this.DataContextPool.ToList ())
+					foreach (DataContext dataContext in this.dataContextPool)
 					{
 						this.DeleteDataContext (dataContext);
 					}
 
-					this.DataContextPool.Dispose ();
+					this.dataContextPool.Dispose ();
 				}
 
-				if (this.DbInfrastructure != null)
+				if (this.dbInfrastructure != null)
 				{
-					this.DbInfrastructure.Dispose ();
+					this.dbInfrastructure.Dispose ();
 				}
 
 				this.IsDisposed = true;
@@ -301,12 +319,15 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <exception cref="System.InvalidOperationException">If the connection is already open.</exception>
 		public void OpenConnection(string identity)
 		{
-			if (this.connection != null && this.connection.Status == ConnectionStatus.Open)
+			lock (this.connectionLock)
 			{
-				throw new System.InvalidOperationException ("This instance is already connected.");
-			}
+				if (this.connection != null && this.connection.Status == ConnectionStatus.Open)
+				{
+					throw new System.InvalidOperationException ("This instance is already connected.");
+				}
 
-			this.connection = this.connectionManager.OpenConnection (identity);
+				this.connection = this.connectionManager.OpenConnection (identity);
+			}
 		}
 
 
@@ -316,18 +337,21 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <exception cref="System.InvalidOperationException">If the connection is not open.</exception>
 		public void CloseConnection()
 		{
-			this.AssertIsConnected ();
+			lock (this.connectionLock)
+			{
+				this.AssertIsConnected ();
 
-			var id = this.connection.Id;
+				var id = this.connection.Id;
 
-			this.connectionManager.CloseConnection (id);
+				this.connectionManager.CloseConnection (id);
 
-			var identity = this.connection.Identity;
-			var status = ConnectionStatus.Closed;
-			var establishmenthTime = this.connection.EstablishmentTime;
-			var refreshTime = this.connection.RefreshTime;
+				var identity = this.connection.Identity;
+				var status = ConnectionStatus.Closed;
+				var establishmenthTime = this.connection.EstablishmentTime;
+				var refreshTime = this.connection.RefreshTime;
 
-			this.connection = new Connection (id, identity, status, establishmenthTime, refreshTime);
+				this.connection = new Connection (id, identity, status, establishmenthTime, refreshTime);
+			}
 		}
 
 
@@ -337,12 +361,15 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <exception cref="System.InvalidOperationException">If the connection has never been opened.</exception>
 		public void RefreshConnectionData()
 		{
-			if (this.connection == null)
+			lock (this.connectionLock)
 			{
-				throw new System.InvalidOperationException ("This instance has never been connected.");
-			}
+				if (this.connection == null)
+				{
+					throw new System.InvalidOperationException ("This instance has never been connected.");
+				}
 
-			this.connection = this.connectionManager.GetConnection (this.connection.Id);
+				this.connection = this.connectionManager.GetConnection (this.connection.Id);
+			}
 		}
 
 
@@ -356,9 +383,12 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <exception cref="System.InvalidOperationException">If the connection is not open.</exception>
 		public void KeepConnectionAlive()
 		{
-			this.AssertIsConnected ();
+			lock (this.connectionLock)
+			{
+				this.AssertIsConnected ();
 
-			this.connectionManager.KeepConnectionAlive (this.connection.Id);
+				this.connectionManager.KeepConnectionAlive (this.connection.Id);
+			}
 		}
 
 
@@ -388,12 +418,15 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <returns><c>true</c> if all locks are available, <c>false</c> if at least one is not.</returns>
 		public bool AreLocksAvailable(IEnumerable<string> lockNames)
 		{
-			this.AssertIsConnected ();
+			lock (this.connectionLock)
+			{
+				this.AssertIsConnected ();
 
-			lockNames.ThrowIfNull ("lockNames");
+				lockNames.ThrowIfNull ("lockNames");
 
-			return this.lockManager.GetLocks (lockNames.ToList ())
-				.All (l => l.Owner.Id == this.connection.Id);
+				return this.lockManager.GetLocks (lockNames.ToList ())
+					.All (l => l.Owner.Id == this.connection.Id);
+			}
 		}
 
 
@@ -404,9 +437,12 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <returns>The new <see cref="LockTransaction"/> object.</returns>
 		public LockTransaction CreateLockTransaction(IEnumerable<string> lockNames)
 		{
-			this.AssertIsConnected ();
+			lock (this.connectionLock)
+			{
+				this.AssertIsConnected ();
 
-			return new LockTransaction (this.lockManager, this.connection.Id, lockNames);
+				return new LockTransaction (this.lockManager, this.connection.Id, lockNames);
+			}
 		}
 
 
@@ -428,9 +464,12 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 		internal EntityModificationEntry CreateEntityModificationEntry()
 		{
-			this.AssertIsConnected ();
+			lock (this.connectionLock)
+			{
+				this.AssertIsConnected ();
 
-			return this.entityModificationLog.CreateEntry (this.connection.Id);
+				return this.entityModificationLog.CreateEntry (this.connection.Id);
+			}
 		}
 
 
@@ -446,20 +485,24 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			DataContext dataContext = new DataContext (this, enableNullVirtualization, readOnly);
 
-			this.DataContextPool.Add (dataContext);
+			this.dataContextPool.Add (dataContext);
 
 			return dataContext;
 		}
 
 
-		public bool DeleteDataContext(DataContext dataContext)
+		public void DeleteDataContext(DataContext dataContext)
 		{
 			dataContext.ThrowIfNull ("dataContext");
-			dataContext.ThrowIf (d => !this.DataContextPool.Contains (d), "dataContext is not owned by this instance");
+			
+			bool removed = this.dataContextPool.Remove (dataContext);
+
+			if (!removed)
+			{
+				throw new System.ArgumentException ("dataContext is not owned by this instance");
+			}
 
 			dataContext.Dispose ();
-
-			return this.DataContextPool.Remove (dataContext);
 		}
 
 
@@ -467,7 +510,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			dataContext.ThrowIfNull ("dataContext");
 
-			return this.DataContextPool.Contains (dataContext);
+			return this.dataContextPool.Contains (dataContext);
 		}
 
 
@@ -493,7 +536,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			file.ThrowIfNull ("file");
 			dataContext.ThrowIfNull ("dataContext");
-			dataContext.ThrowIf (d => !this.DataContextPool.Contains (d), "dataContext is not owned by this instance");
+			dataContext.ThrowIf (d => !this.dataContextPool.Contains (d), "dataContext is not owned by this instance");
 			entities.ThrowIfNull ("entity");
 			entities.ThrowIf (e => e.Any (x => dataContext.IsForeignEntity (x)), "entity is not owned by dataContext.");
 
@@ -572,9 +615,12 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <exception cref="System.InvalidOperationException">If this instance is not connected.</exception>
 		private void AssertIsConnected()
 		{
-			if (this.connection == null || this.connection.Status != ConnectionStatus.Open)
+			lock (this.connectionLock)
 			{
-				throw new System.InvalidOperationException ("This instance is not connected.");
+				if (this.connection == null || this.connection.Status != ConnectionStatus.Open)
+				{
+					throw new System.InvalidOperationException ("This instance is not connected.");
+				}
 			}
 		}
 
@@ -588,6 +634,8 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		private readonly EntityDeletionLog		entityDeletionLog;
 		private readonly ConnectionManager		connectionManager;
 		private readonly LockManager			lockManager;
+
+		private readonly object					connectionLock;
 
 		private Connection connection;
 	}
