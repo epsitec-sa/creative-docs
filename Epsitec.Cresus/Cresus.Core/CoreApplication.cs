@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core
 
 			//	CoreData est initialisé dans la classe Factory.CoreData, dans CoreData.cs:563
 
-			this.CreateManualComponents ();
+//			this.CreateManualComponents ();
 
 			this.UserManager.AuthenticatedUserChanged += this.HandleAuthenticatedUserChanged;
 		}
@@ -93,6 +93,8 @@ namespace Epsitec.Cresus.Core
 		public override void SetupApplication()
 		{
 			base.SetupApplication ();
+
+			this.CreateManualComponents ();
 
 			this.DiscoverPlugIns ();
 			this.CreatePlugIns ();

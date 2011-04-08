@@ -25,9 +25,11 @@ namespace Epsitec.Cresus.Core.Business
 
 			var infrastructure = this.pool.Host.DataInfrastructure;
 
-			this.uidGenerator = infrastructure.GetUidGenerator (this.name);
-
-			if (this.uidGenerator == null)
+			if (infrastructure.DoesUidGeneratorExists (this.name))
+			{
+				this.uidGenerator = infrastructure.GetUidGenerator (this.name);
+			}
+			else
 			{
 				List<UidSlot> slots = new List<UidSlot> ();
 				slots.Add (new UidSlot (firstId, 999999999999L));

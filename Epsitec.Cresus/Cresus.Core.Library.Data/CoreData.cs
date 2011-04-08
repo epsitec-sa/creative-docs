@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Core
 {
 	public sealed partial class CoreData : CoreAppComponent, System.IDisposable, ICoreComponentHost<CoreDataComponent>
 	{
-		public CoreData(CoreApp app, bool forceDatabaseCreation = false, bool allowDatabaseUpdate = true, bool enableConnectionRecycling = true)
+		private CoreData(CoreApp app, bool forceDatabaseCreation = false, bool allowDatabaseUpdate = true, bool enableConnectionRecycling = true)
 			: base (app)
 		{
 			this.ForceDatabaseCreation		= forceDatabaseCreation;
