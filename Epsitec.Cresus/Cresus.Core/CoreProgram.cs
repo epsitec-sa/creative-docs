@@ -152,7 +152,7 @@ namespace Epsitec.Cresus.Core
 
 			var user = app.UserManager.FindActiveUser ();
 
-			if (app.UserManager.Authenticate (app, app.Data, user, softwareStartup: true))
+			if (app.UserManager.Authenticate (app, user, softwareStartup: true))
 			{
 				app.Window.Show ();
 				app.Window.Run ();

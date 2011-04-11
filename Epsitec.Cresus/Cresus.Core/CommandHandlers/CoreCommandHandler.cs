@@ -123,7 +123,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 				{
 					var app = CoreProgram.Application;
 					var manager = app.UserManager;
-					manager.Authenticate (app, app.Data, manager.AuthenticatedUser, softwareStartup: false);
+					manager.Authenticate (app, manager.AuthenticatedUser, softwareStartup: false);
 				});
 		}
 

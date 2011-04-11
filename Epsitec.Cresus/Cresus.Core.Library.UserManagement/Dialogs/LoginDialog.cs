@@ -1,72 +1,78 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Debug;
 using Epsitec.Common.Dialogs;
 using Epsitec.Common.Drawing;
-using Epsitec.Common.IO;
-using Epsitec.Common.Printing;
-using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
-using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Business.UserManagement;
 
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 
 namespace Epsitec.Cresus.Core.Dialogs
 {
 	/// <summary>
-	/// Dialogue pour choisir l'utilisateur (loggin).
+	/// The <c>LoginDialog</c> displays the dialog used to log in, based on the list of
+	/// users provided by the <see cref="UserManager"/>.
 	/// </summary>
-	class LoginDialog : AbstractDialog
+	internal sealed class LoginDialog : AbstractDialog
 	{
-		public LoginDialog(Application application, CoreData data, SoftwareUserEntity user, bool softwareStartup)
+		public LoginDialog(CoreApp application, SoftwareUserEntity user, bool softwareStartup)
 		{
 			this.application     = application;
-			this.data            = data;
+			this.data            = this.application.GetComponent<CoreData> ();
 			this.manager         = this.data.GetComponent<UserManager> ();
 			this.initialUser     = user;
 			this.softwareStartup = softwareStartup;
-
-			this.users = this.manager.GetActiveUsers ().OrderBy (x => x.DisplayName).ToList ();
+			this.users           = this.manager.GetActiveUsers ().OrderBy (x => x.DisplayName).ToList ();
+			this.OwnerWindow     = this.application.Window;
 		}
 
 
+		public SoftwareUserEntity				SelectedUser
+		{
+			get
+			{
+				int sel = this.table.SelectedRow;
+
+				return (sel < 0) ? null : this.users[sel];
+			}
+		}
+
+		
+		
 		protected override Window CreateWindow()
 		{
-			Window window = new Window ();
-
-			this.SetupWindow  (window);
-			this.SetupWidgets (window);
-			this.SetupEvents  (window);
+			Window window = this.CreateEmptyWindow ();
+			
+			this.CreateUI (window);
+			this.CreateEventHandlers  ();
 
 			window.AdjustWindowSize ();
 
 			return window;
 		}
 
-		protected void SetupWindow(Window window)
+		private Window CreateEmptyWindow()
 		{
-			this.OwnerWindow = this.application.Window;
-			window.Icon = this.application.Window.Icon;
-			window.Text = "Identification de l'utilisateur";
-			window.MakeFixedSizeWindow ();
-			window.ClientSize = new Size (450, 420);
-
-			window.WindowCloseClicked += delegate
+			Window window = new Window ()
 			{
-				this.OnDialogClosed ();
-				this.CloseDialog ();
+				Icon = this.application.Window.Icon,
+				Text = "Identification de l'utilisateur",
+				ClientSize = new Size (450, 420),
 			};
+			
+			window.MakeFixedSizeWindow ();
+
+			return window;
 		}
 
-		protected void SetupWidgets(Window window)
+		private void CreateUI(Window window)
 		{
 			int tabIndex = 1;
 
@@ -139,7 +145,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					TabIndex = tabIndex++,
 				};
 
-				this.passField = new TextField
+				this.passwordField = new TextField
 				{
 					Parent = box,
 					IsPassword = true,
@@ -219,7 +225,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.UpdateWidgets ();
 		}
 
-		protected void SetupEvents(Window window)
+		private void CreateEventHandlers()
 		{
 			this.table.SelectionChanged += delegate
 			{
@@ -228,58 +234,20 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				this.UpdateWidgets ();
 
-				this.passField.Text = null;
-				this.passField.SelectAll ();
-				this.passField.Focus ();
+				this.passwordField.Text = null;
+				this.passwordField.SelectAll ();
+				this.passwordField.Focus ();
 			};
 
-			this.table.DoubleClicked += delegate
-			{
-				var result = this.DoubleClickedAction ();
-
-				if (result == LoginResult.OK)
-				{
-					this.CloseAction (cancel: false);
-				}
-
-				if (result == LoginResult.Quit)
-				{
-					this.CloseAction (cancel: true);
-				}
-			};
-
-			this.passField.TextChanged += delegate
-			{
-				this.UpdateWidgets ();
-			};
-
-			this.loginButton.Clicked += delegate
-			{
-				var result = this.LoginAction ();
-
-				if (result == LoginResult.OK)
-				{
-					this.CloseAction (cancel: false);
-				}
-
-				if (result == LoginResult.Quit)
-				{
-					this.CloseAction (cancel: true);
-				}
-			};
-
-			this.manageButton.Clicked += delegate
-			{
-				this.ManageAction ();
-			};
-
-			this.cancelButton.Clicked += delegate
-			{
-				this.CloseAction (cancel: true);
-			};
+			this.table.DoubleClicked       += this.HandleTableDoubleClicked;
+			this.passwordField.TextChanged += sender => this.UpdateWidgets ();
+			this.loginButton.Clicked       += this.HandleLoginButtonClicked;
+			this.manageButton.Clicked      += (sender, e) => this.ProcessManage ();
+			this.cancelButton.Clicked      += (sender, e) => this.ProcessClose (cancel: true);
 		}
 
-		private void CloseAction(bool cancel)
+		
+		private void ProcessClose(bool cancel)
 		{
 			if (cancel)
 			{
@@ -297,9 +265,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.CloseDialog ();
 		}
 
-		private void ManageAction()
+		private void ProcessManage()
 		{
-			this.CloseAction (cancel: true);
+			this.ProcessClose (cancel: true);
 
 			var dialog = new Dialogs.UserManagerDialog (this.application, this.data, this.SelectedUser);
 			dialog.IsModal = true;
@@ -320,6 +288,30 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 		}
 
+		private void UpdateWidgets()
+		{
+			var user = this.SelectedUser;
+			bool passwordRequired = (user != null) && user.IsPasswordRequired;
+
+			this.passBoxEdit.Visibility = (user == null ||  passwordRequired);
+			this.passBoxInfo.Visibility = (user != null && !passwordRequired);
+
+			this.loginButton.Enable  = (user != null && (!passwordRequired || !string.IsNullOrEmpty (this.passwordField.Text)));
+
+			var message = this.GetErrorMessage ();
+
+			if (message.IsNullOrEmpty)
+			{
+				this.errorMessage.Visibility = false;
+			}
+			else
+			{
+				this.errorMessage.Visibility = true;
+				this.errorMessage.BackColor = Color.FromName ("Gold");
+				this.errorMessage.FormattedText = message;
+			}
+		}
+		
 		private void TableFillRow(int row)
 		{
 			//	Peuple une ligne de la table, si nécessaire.
@@ -371,31 +363,32 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
-		private void UpdateWidgets()
+
+		private void HandleTableDoubleClicked(object sender, MessageEventArgs e)
 		{
-			var user = this.SelectedUser;
-			bool passwordRequired = (user != null) && user.IsPasswordRequired;
-
-			this.passBoxEdit.Visibility = (user == null ||  passwordRequired);
-			this.passBoxInfo.Visibility = (user != null && !passwordRequired);
-
-			this.loginButton.Enable  = (user != null && (!passwordRequired || !string.IsNullOrEmpty (this.passField.Text)));
-
-			var message = this.GetErrorMessage ();
-			if (message == null)
-			{
-				this.errorMessage.Visibility = false;
-			}
-			else
-			{
-				this.errorMessage.Visibility = true;
-				this.errorMessage.BackColor = Color.FromName ("Gold");
-				this.errorMessage.FormattedText = message;
-			}
+			this.ProcessLoginResult (this.ProcessTableDoubleClick ());
 		}
 
+		private void HandleLoginButtonClicked(object sender, MessageEventArgs e)
+		{
+			this.ProcessLoginResult (this.ProcessLoginButtonClicked ());
+		}
 
-		private LoginResult DoubleClickedAction()
+		private void ProcessLoginResult(LoginResult result)
+		{
+			switch (result)
+			{
+				case LoginResult.OK:
+					this.ProcessClose (cancel: false);
+					break;
+
+				case LoginResult.Quit:
+					this.ProcessClose (cancel: true);
+					break;
+			}
+		}
+		
+		private LoginResult ProcessTableDoubleClick()
 		{
 			var user = this.SelectedUser;
 			System.Diagnostics.Debug.Assert (user != null);
@@ -406,16 +399,16 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 			else
 			{
-				return this.LoginAction ();
+				return this.ProcessLoginButtonClicked ();
 			}
 		}
 
-		private LoginResult LoginAction()
+		private LoginResult ProcessLoginButtonClicked()
 		{
 			var user = this.SelectedUser;
 			System.Diagnostics.Debug.Assert (user != null);
 
-			if (this.manager.CheckUserAuthentication (user, this.passField.Text))
+			if (this.manager.CheckUserAuthentication (user, this.passwordField.Text))
 			{
 				return LoginResult.OK;
 			}
@@ -430,11 +423,18 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.loginErrorMessage = string.Format ("Mot de passe incorrect, réessayez ({0}/3).", this.loginErrorCounter.ToString ());
 			this.UpdateWidgets ();
 
-			this.passField.SelectAll ();
-			this.passField.Focus ();
+			this.passwordField.SelectAll ();
+			this.passwordField.Focus ();
 
 			return LoginResult.Retry;
 		}
+
+		private FormattedText GetErrorMessage()
+		{
+			return this.loginErrorMessage;
+		}
+
+		#region LoginResult Enumeration
 
 		private enum LoginResult
 		{
@@ -443,35 +443,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 			Quit,
 		}
 
+		#endregion
 
-		private FormattedText GetErrorMessage()
-		{
-			if (!this.loginErrorMessage.IsNullOrEmpty)
-			{
-				return this.loginErrorMessage;
-			}
-
-			return null;
-		}
-
-
-		public SoftwareUserEntity SelectedUser
-		{
-			get
-			{
-				int sel = this.table.SelectedRow;
-
-				if (sel == -1)
-				{
-					return null;
-				}
-
-				return this.users[sel];
-			}
-		}
-
-
-
+		
 		private static FrameBox CreateContainer(Widget parent, FormattedText number, FormattedText text)
 		{
 			//	Crée un container de cette forme:
@@ -502,6 +476,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			};
 
 			var columnTitle = new StaticText (rightPart);
+			
 			columnTitle.SetColumnTitle (text);
 
 			return new FrameBox
@@ -512,14 +487,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
-		protected override void OnDialogClosed()
-		{
-			base.OnDialogClosed ();
-		}
-
-
-
-		private readonly Application							application;
+		private readonly CoreApp								application;
 		private readonly CoreData								data;
 		private readonly UserManager							manager;
 		private readonly SoftwareUserEntity						initialUser;
@@ -529,7 +497,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private CellTable										table;
 		private FrameBox										passBoxInfo;
 		private FrameBox										passBoxEdit;
-		private TextField										passField;
+		private TextField										passwordField;
 		private StaticText										errorMessage;
 		private Button											loginButton;
 		private Button											manageButton;

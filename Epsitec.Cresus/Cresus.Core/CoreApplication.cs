@@ -36,10 +36,6 @@ namespace Epsitec.Cresus.Core
 			this.plugIns = new List<PlugIns.ICorePlugIn> ();
 
 			//	CoreData est initialisé dans la classe Factory.CoreData, dans CoreData.cs:563
-
-//			this.CreateManualComponents ();
-
-			this.UserManager.AuthenticatedUserChanged += this.HandleAuthenticatedUserChanged;
 		}
 
 
@@ -95,6 +91,7 @@ namespace Epsitec.Cresus.Core
 			base.SetupApplication ();
 
 			this.CreateManualComponents ();
+			this.RegisterEventHandlers ();
 
 			this.DiscoverPlugIns ();
 			this.CreatePlugIns ();
@@ -148,6 +145,11 @@ namespace Epsitec.Cresus.Core
 		private void CreateManualComponents()
 		{
 			new DataViewOrchestrator (this);
+		}
+
+		private void RegisterEventHandlers()
+		{
+			this.UserManager.AuthenticatedUserChanged += this.HandleAuthenticatedUserChanged;
 		}
 
 		private void CreateUI()

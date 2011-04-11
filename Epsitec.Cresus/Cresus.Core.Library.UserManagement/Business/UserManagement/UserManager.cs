@@ -12,6 +12,7 @@ using Epsitec.Cresus.Core.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Core.Factories;
+using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Cresus.Core.Business.UserManagement
 {
@@ -63,13 +64,12 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		/// user name and/or password.
 		/// </summary>
 		/// <param name="application">The application.</param>
-		/// <param name="data">The data.</param>
 		/// <param name="user">The user (or <c>null</c> if it must be selected interactively).</param>
 		/// <param name="softwareStartup">if set to <c>true</c> [software startup].</param>
 		/// <returns>
 		///   <c>true</c> if the user was successfully authenticated; otherwise, <c>false</c>.
 		/// </returns>
-		public bool Authenticate(Application application, CoreData data, SoftwareUserEntity user = null, bool softwareStartup = false)
+		public bool Authenticate(CoreApp application, SoftwareUserEntity user = null, bool softwareStartup = false)
 		{
 			//	Make sure the user entity belongs to our data context; the only way to know for sure
 			//	is to retrieve the user based on its 'code':
@@ -90,7 +90,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 				return true;
 			}
 
-			var dialog = new Dialogs.LoginDialog (application, data, user, softwareStartup);
+			var dialog = new Dialogs.LoginDialog (application, user, softwareStartup);
 			dialog.IsModal = true;
 			dialog.OpenDialog ();
 
