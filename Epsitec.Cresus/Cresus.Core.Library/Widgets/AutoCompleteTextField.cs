@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		/// Méthode de conversion d'un objet stocké dans Items.Value en une chaîne à afficher.
 		/// </summary>
 		/// <value>The value converter.</value>
-		public ValueToFormattedTextConverter				ValueToDescriptionConverter
+		public ValueToFormattedTextConverter			ValueToDescriptionConverter
 		{
 			get;
 			set;
@@ -725,7 +725,9 @@ namespace Epsitec.Cresus.Core.Widgets
 				Dock = DockStyle.Fill
 			};
 
+			this.Window.WindowPlacementChanged += this.HandleWindowPlacementChanged;
 			this.scrollList.SelectionActivated += this.HandleScrollListSelectionActivated;
+			Window.ApplicationDeactivated      += this.HandleApplicationDeactivated;
 		}
 
 		private void UpdateHintListWithAllItems()
@@ -796,16 +798,18 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private void CloseComboMenu()
 		{
-			// TODO: Le menu n'est pas fermé lorsqu'on déplace la fenêtre !
 			if (!this.IsComboMenuOpen)
 			{
 				return;
 			}
 
+			this.scrollList.SelectionActivated -= this.HandleScrollListSelectionActivated;
+			this.window.WindowPlacementChanged -= this.HandleWindowPlacementChanged;
+			Window.ApplicationDeactivated      -= this.HandleApplicationDeactivated;
+
 			this.window.Close ();
 			this.window = null;
 
-			this.scrollList.SelectionActivated -= this.HandleScrollListSelectionActivated;
 			this.scrollList = null;
 		}
 
@@ -889,6 +893,16 @@ namespace Epsitec.Cresus.Core.Widgets
 			Common.Widgets.Layouts.LayoutContext.SyncArrange (scrollList);
 		}
 
+
+		private void HandleWindowPlacementChanged(object sender)
+		{
+			this.CloseComboMenu ();
+		}
+
+		private void HandleApplicationDeactivated(object sender)
+		{
+			this.CloseComboMenu ();
+		}
 
 		private void HandleScrollListSelectionActivated(object sender)
 		{
