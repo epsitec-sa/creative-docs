@@ -55,29 +55,6 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		/// <summary>
-		/// Gets the application object.
-		/// </summary>
-		/// <value>The application object.</value>
-		public static CoreApplication Application
-		{
-			get
-			{
-				return CoreProgram.application;
-			}
-			internal set
-			{
-				if (CoreProgram.application == null)
-				{
-					CoreProgram.application = value;
-				}
-				else
-				{
-					throw new System.InvalidOperationException ();
-				}
-			}
-		}
-
 		private static void ExecuteCreateEpsitecDatabase(string[] args)
 		{
 			FileInfo file = new FileInfo (args[1]);
@@ -141,29 +118,24 @@ namespace Epsitec.Cresus.Core
 
 			UI.Initialize ();
 
-			var app = new CoreApplication ();
-
-			System.Diagnostics.Debug.Assert (app == CoreProgram.application);
-			System.Diagnostics.Debug.Assert (app.ResourceManagerPool.PoolName == "Core");
-
-			app.SetupApplication ();
-
-			SplashScreen.DismissSplashScreen ();
-
-			var user = app.UserManager.FindActiveUser ();
-
-			if (app.UserManager.Authenticate (app, user, softwareStartup: true))
+			using (var app = new CoreApplication ())
 			{
-				app.Window.Show ();
-				app.Window.Run ();
+				System.Diagnostics.Debug.Assert (app.ResourceManagerPool.PoolName == "Core");
+
+				app.SetupApplication ();
+
+				SplashScreen.DismissSplashScreen ();
+
+				var user = app.UserManager.FindActiveUser ();
+
+				if (app.UserManager.Authenticate (app, user, softwareStartup: true))
+				{
+					app.Window.Show ();
+					app.Window.Run ();
+				}
+
+				UI.ShutDown ();
 			}
-
-			UI.ShutDown ();
-
-			app.Dispose ();
-			CoreProgram.application = null;
 		}
-
-		private static CoreApplication application;
 	}
 }

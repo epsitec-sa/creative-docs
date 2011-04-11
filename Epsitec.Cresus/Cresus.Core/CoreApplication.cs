@@ -30,7 +30,6 @@ namespace Epsitec.Cresus.Core
 	{
 		public CoreApplication()
 		{
-			CoreProgram.Application = this;
 			UI.SetApplication (this);
 			
 			this.plugIns = new List<PlugIns.ICorePlugIn> ();
