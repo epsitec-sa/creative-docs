@@ -136,7 +136,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected virtual void OnTypeChanged(ResourceAccess.Type oldType)
 		{
 			//	Génère un événement pour dire que le type a été changé.
-			EventHandler<CancelEventArgs> handler = (EventHandler<CancelEventArgs>) this.GetUserEventHandler("TypeChanged");
+			EventHandler<CancelEventArgs> handler = this.GetUserEventHandler<CancelEventArgs>("TypeChanged");
 			if (handler != null)
 			{
 				CancelEventArgs e = new CancelEventArgs();

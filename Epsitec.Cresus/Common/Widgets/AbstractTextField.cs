@@ -1706,7 +1706,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnAutoSelecting(CancelEventArgs e)
 		{
-			EventHandler<CancelEventArgs> handler = (EventHandler<CancelEventArgs>) this.GetUserEventHandler ("AutoSelecting");
+			EventHandler<CancelEventArgs> handler = this.GetUserEventHandler<CancelEventArgs> ("AutoSelecting");
 			if (handler != null)
 			{
 				handler (this, e);
@@ -1715,7 +1715,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnAutoErasing(CancelEventArgs e)
 		{
-			EventHandler<CancelEventArgs> handler = (EventHandler<CancelEventArgs>) this.GetUserEventHandler ("AutoErasing");
+			EventHandler<CancelEventArgs> handler = this.GetUserEventHandler<CancelEventArgs> ("AutoErasing");
 			if (handler != null)
 			{
 				handler (this, e);

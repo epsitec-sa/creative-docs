@@ -1124,14 +1124,14 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		protected System.Delegate GetUserEventHandler(string name)
+		protected Support.EventHandler GetUserEventHandler(string name)
 		{
 			System.Delegate value;
 			
 			if ((this.userEvents != null) &&
 				(this.userEvents.TryGetValue (name, out value)))
 			{
-				return value;
+				return value as Support.EventHandler;
 			}
 			else
 			{
@@ -1161,7 +1161,7 @@ namespace Epsitec.Common.Types
 
 		protected virtual void OnBindingChanged(DependencyProperty property)
 		{
-			BindingChangedEventHandler handler = (BindingChangedEventHandler) this.GetUserEventHandler (DependencyObject.BindingChangedString);
+			BindingChangedEventHandler handler = this.GetUserEventHandler<BindingChangedEventArgs> (DependencyObject.BindingChangedString);
 
 			if (handler != null)
 			{

@@ -334,8 +334,8 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private void OnSelectedItemChanged()
 		{
-			//	Génère un événement pour dire que la sélection dans la liste a changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler (AutoCompleteTextField.SelectedItemChangedEvent);
+			var handler = (EventHandler) this.GetUserEventHandler (AutoCompleteTextField.SelectedItemChangedEvent);
+			
 			if (handler != null)
 			{
 				handler (this);
@@ -353,7 +353,6 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			base.Dispose (disposing);
 		}
-
 
 		protected override bool AboutToGetFocus(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
 		{

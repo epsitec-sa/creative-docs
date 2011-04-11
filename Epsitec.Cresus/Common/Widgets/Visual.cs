@@ -1628,7 +1628,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnSizeChanged(Drawing.Size oldValue, Drawing.Size newValue)
 		{
-			PropertyChangedEventHandler handler = (PropertyChangedEventHandler) this.GetUserEventHandler ("SizeChanged");
+			PropertyChangedEventHandler handler = this.GetUserEventHandler<DependencyPropertyChangedEventArgs> ("SizeChanged");
 
 			if (handler != null)
 			{
@@ -1638,7 +1638,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnBoundsChanged(Drawing.Rectangle oldValue, Drawing.Rectangle newValue)
 		{
-			PropertyChangedEventHandler handler = (PropertyChangedEventHandler) this.GetUserEventHandler ("BoundsChanged");
+			PropertyChangedEventHandler handler = this.GetUserEventHandler<DependencyPropertyChangedEventArgs> ("BoundsChanged");
 
 			if (handler != null)
 			{

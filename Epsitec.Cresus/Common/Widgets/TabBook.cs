@@ -692,7 +692,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnActivePageChanged(TabPage oldPage)
 		{
-			EventHandler<CancelEventArgs> handler = (EventHandler<CancelEventArgs>) this.GetUserEventHandler("ActivePageChanged");
+			EventHandler<CancelEventArgs> handler = this.GetUserEventHandler<CancelEventArgs> ("ActivePageChanged");
 			if (handler != null)
 			{
 				CancelEventArgs e = new CancelEventArgs();

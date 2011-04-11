@@ -610,7 +610,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnComboOpening(Support.CancelEventArgs e)
 		{
-			EventHandler<CancelEventArgs> handler = (EventHandler<CancelEventArgs>) this.GetUserEventHandler("ComboOpening");
+			EventHandler<CancelEventArgs> handler = this.GetUserEventHandler<CancelEventArgs> ("ComboOpening");
 
 			if (handler != null)
 			{
