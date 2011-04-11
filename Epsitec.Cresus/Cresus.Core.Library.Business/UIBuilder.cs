@@ -1133,8 +1133,6 @@ namespace Epsitec.Cresus.Core
 
 			menuButton.Clicked += delegate
 			{
-				textField.SelectAll ();
-				textField.Focus ();
 				textField.OpenComboMenu ();
 			};
 

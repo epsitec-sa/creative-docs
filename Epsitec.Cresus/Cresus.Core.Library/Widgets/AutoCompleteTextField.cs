@@ -26,9 +26,10 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			this.items = new Common.Widgets.Collections.StringCollection (this);
 			this.selectedRow = -1;
+			this.ignoreChanges = new SafeCounter ();
 
 			this.hintListIndex = new List<int> ();
-			this.hintSelected = -1;
+			this.selectedHint = -1;
 
 			this.hintWordSeparators = new List<string> ();
 
@@ -89,9 +90,10 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public void RefreshTextBasedOnSelectedItem()
 		{
-			this.ignoreChange = true;
-			this.Text = this.GetItemText (this.selectedRow);
-			this.ignoreChange = false;
+			using (this.ignoreChanges.Enter ())
+			{
+				this.Text = this.GetItemText (this.selectedRow);
+			}
 		}
 		
 		
@@ -225,10 +227,9 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			if (this.hintListIndex.Count <= 1)
 			{
-				if (this.IsComboMenuOpen)
-				{
-					this.CloseComboMenu ();
-				}
+				//	Zero or one item in the list: no need to display a menu !
+
+				this.CloseComboMenu ();
 			}
 			else
 			{
@@ -238,7 +239,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				}
 				else
 				{
-					this.OpenComboMenu (completeMenu: false);
+					this.OpenComboMenu (displayAllItems: false);
 				}
 			}
 		}
@@ -247,11 +248,11 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			if (this.hintListIndex.Count == 0)
 			{
-				this.hintSelected = -1;
+				this.selectedHint = -1;
 			}
 			else
 			{
-				this.hintSelected = 0;  // la première proposition
+				this.selectedHint = 0;  // la première proposition
 			}
 		}
 		
@@ -363,7 +364,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		protected override void OnTextChanged()
 		{
-			if (this.ignoreChange)
+			if (this.ignoreChanges.Value > 0)
 			{
 				return;
 			}
@@ -496,7 +497,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				if (this.hintListIndex.Count != 0)  // pas de menu ?
 				{
-					int sel = this.hintSelected + dir;
+					int sel = this.selectedHint + dir;
 
 					if (sel < 0)
 					{
@@ -508,7 +509,7 @@ namespace Epsitec.Cresus.Core.Widgets
 						sel = 0;
 					}
 
-					this.hintSelected = sel;
+					this.selectedHint = sel;
 
 					this.UpdateComboMenuSelection ();
 					this.UseSelectedHint (SelectedHintMode.StartEdition);
@@ -541,7 +542,7 @@ namespace Epsitec.Cresus.Core.Widgets
 					sel = 0;
 				}
 
-				this.hintSelected = sel;
+				this.selectedHint = sel;
 				this.UseSelectedHint (SelectedHintMode.StartEdition);
 
 				this.hintListIndex.Clear ();
@@ -553,54 +554,52 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			Searching,
 			StartEdition,
-			FinalEdition,
+			AcceptEdition,
 		}
 
 		private void UseSelectedHint(SelectedHintMode selectedHintMode)
 		{
-			this.ignoreChange = true;
-
-			if (this.hintSelected >= 0 && this.hintSelected < this.hintListIndex.Count)
+			using (this.ignoreChanges.Enter ())
 			{
-				int i = this.hintListIndex[this.hintSelected];
-
-				this.SetSilentSelectedItemIndex (i);  // (*)
-				this.HintText = this.GetItemText (i);
-				this.SetError (false);
-			}
-			else
-			{
-				this.SetSilentSelectedItemIndex (-1);  // (*)
-				this.HintText = null;
-
-				if (this.ContentValidator == null)
+				if (this.selectedHint >= 0 && this.selectedHint < this.hintListIndex.Count)
 				{
-					this.SetError (!string.IsNullOrEmpty (this.Text));
+					int i = this.hintListIndex[this.selectedHint];
+
+					this.SetSilentSelectedItemIndex (i);  // (*)
+					this.HintText = this.GetItemText (i);
+					this.SetError (false);
 				}
 				else
 				{
-					bool ok = this.ContentValidator (this.Text);
-					this.SetError (!ok);
+					this.SetSilentSelectedItemIndex (-1);  // (*)
+					this.HintText = null;
+
+					if (this.ContentValidator == null)
+					{
+						this.SetError (!string.IsNullOrEmpty (this.Text));
+					}
+					else
+					{
+						bool ok = this.ContentValidator (this.Text);
+						this.SetError (!ok);
+					}
+				}
+
+				if (selectedHintMode == SelectedHintMode.StartEdition)
+				{
+					this.StartEdition ();
+					this.TextNavigator.TextLayout.Text = this.HintText;
+					this.OnTextEdited ();
+					this.SelectAll ();
+				}
+
+				if (selectedHintMode == SelectedHintMode.AcceptEdition)
+				{
+					this.StartEdition ();
+					this.AcceptEdition ();
+					this.SelectAll ();
 				}
 			}
-
-			if (selectedHintMode == SelectedHintMode.StartEdition)
-			{
-				this.StartEdition ();
-				this.TextNavigator.TextLayout.Text = this.HintText;
-				this.OnTextEdited ();
-				this.SelectAll ();
-			}
-
-			if (selectedHintMode == SelectedHintMode.FinalEdition)
-			{
-				this.StartEdition ();
-				this.OnAcceptingEdition (new CancelEventArgs ());
-				this.OnEditionAccepted ();
-				this.SelectAll ();
-			}
-
-			this.ignoreChange = false;
 		}
 
 		// (*)	Il ne faut surtout pas utiliser SelectedItemIndex = i, car il ne faut pas modifier this.Text !
@@ -637,7 +636,9 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public void OpenComboMenu()
 		{
-			this.OpenComboMenu (completeMenu: true);
+			this.SelectAll ();
+			this.Focus ();
+			this.OpenComboMenu (displayAllItems: true);
 		}
 
 		private bool IsComboMenuOpen
@@ -648,16 +649,20 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		private void OpenComboMenu(bool completeMenu)
+		private void OpenComboMenu(bool displayAllItems)
 		{
 			if (this.IsComboMenuOpen)
 			{
-				if (completeMenu)
+				if (displayAllItems)
 				{
 					this.CloseComboMenu ();
 
-					if (this.completeMenu)
+					if (this.displayAllItems)
 					{
+						//	The user clicked on the button to open the combo menu, while the
+						//	combo menu was already showing all items; simply toggle from the
+						//	visible combo to the hidden combo :
+
 						return;
 					}
 				}
@@ -667,46 +672,44 @@ namespace Epsitec.Cresus.Core.Widgets
 				}
 			}
 
-			this.completeMenu = completeMenu;
+			this.displayAllItems = displayAllItems;
 
-			if (this.completeMenu)
+			if (this.displayAllItems)
 			{
-				this.UpdateHintList (this.Text);
-
-				if (this.hintListIndex.Count == 0)
-				{
-					this.hintSelected = -1;
-				}
-				else
-				{
-					this.hintSelected = this.hintListIndex[0];
-				}
-
-				this.hintListIndex.Clear ();
-				for (int i = 0; i < this.items.Count; i++)
-				{
-					this.hintListIndex.Add (i);
-				}
+				this.UpdateHintListWithAllItems ();
 			}
 			else
 			{
-				if (this.HintEditorMode == Widgets.HintEditorMode.InLine)
+				switch (this.HintEditorMode)
 				{
-					return;
-				}
+					case Widgets.HintEditorMode.InLine:
+						return;
+						
+					case Widgets.HintEditorMode.DisplayMenuForSmallList:
+						if (this.hintListIndex.Count >= this.HintEditorSmallListLimit)
+						{
+							return;
+						}
+						break;
 
-				if (this.HintEditorMode == Widgets.HintEditorMode.DisplayMenuForSmallList &&
-					this.hintListIndex.Count >= this.HintEditorSmallListLimit)
-				{
-					return;
+					default:
+						break;
 				}
 			}
 
 			if (this.hintListIndex.Count == 0)
 			{
-				return;  // on n'ouvre pas un menu vide !
+				//	Don't open an empty menu:
+				return;
 			}
 
+			this.CreateComboMenu ();
+			this.UpdateComboMenuContent ();
+			this.window.Show ();
+		}
+
+		private void CreateComboMenu()
+		{
 			this.window = new Common.Widgets.Window ();
 
 			this.window.Owner = this.Window;
@@ -714,18 +717,40 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.window.MakeFloatingWindow ();
 			this.window.DisableMouseActivation ();
 
-			this.scrollList = new ScrollList ();
-			this.scrollList.Parent = window.Root;
-			this.scrollList.ScrollListStyle = ScrollListStyle.Menu;
-			this.scrollList.AutomaticScrollEnable = false;
-			this.scrollList.Dock = DockStyle.Fill;
-			this.scrollList.SelectionActivated += new EventHandler (this.HandleScrollListSelectionActivated);
+			this.scrollList = new ScrollList ()
+			{
+				Parent = window.Root,
+				ScrollListStyle = ScrollListStyle.Menu,
+				AutomaticScrollEnable = false,
+				Dock = DockStyle.Fill
+			};
 
-			this.UpdateComboMenuContent ();
-
-			this.window.Show ();
+			this.scrollList.SelectionActivated += this.HandleScrollListSelectionActivated;
 		}
 
+		private void UpdateHintListWithAllItems()
+		{
+			this.UpdateHintList (this.Text);
+			this.UpdateSelectedHint ();
+			
+			this.hintListIndex.Clear ();
+			for (int i = 0; i < this.items.Count; i++)
+			{
+				this.hintListIndex.Add (i);
+			}
+		}
+
+		private void UpdateSelectedHint()
+		{
+			if (this.hintListIndex.Count == 0)
+			{
+				this.selectedHint = -1;
+			}
+			else
+			{
+				this.selectedHint = this.hintListIndex[0];
+			}
+		}
 		private void UpdateComboMenuContent()
 		{
 			if (!this.IsComboMenuOpen)
@@ -733,7 +758,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				return;
 			}
 
-			if (!this.completeMenu)
+			if (!this.displayAllItems)
 			{
 				if (this.HintEditorMode == Widgets.HintEditorMode.DisplayMenuForSmallList &&
 					this.hintListIndex.Count >= this.HintEditorSmallListLimit)
@@ -762,10 +787,11 @@ namespace Epsitec.Cresus.Core.Widgets
 				return;
 			}
 
-			this.ignoreChange = true;
-			this.scrollList.SelectedItemIndex = this.hintSelected;
-			this.scrollList.ShowSelected (ScrollShowMode.Center);
-			this.ignoreChange = false;
+			using (this.ignoreChanges.Enter ())
+			{
+				this.scrollList.SelectedItemIndex = this.selectedHint;
+				this.scrollList.ShowSelected (ScrollShowMode.Center);
+			}
 		}
 
 		private void CloseComboMenu()
@@ -779,7 +805,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.window.Close ();
 			this.window = null;
 
-			this.scrollList.SelectionActivated -= new EventHandler (this.HandleScrollListSelectionActivated);
+			this.scrollList.SelectionActivated -= this.HandleScrollListSelectionActivated;
 			this.scrollList = null;
 		}
 
@@ -798,10 +824,11 @@ namespace Epsitec.Cresus.Core.Widgets
 				this.scrollList.Items.Add (key, text);
 			}
 
-			this.ignoreChange = true;
-			this.scrollList.SelectedItemIndex = this.hintSelected;
-			this.scrollList.ShowSelected (ScrollShowMode.Center);
-			this.ignoreChange = false;
+			using (this.ignoreChanges.Enter ())
+			{
+				this.scrollList.SelectedItemIndex = this.selectedHint;
+				this.scrollList.ShowSelected (ScrollShowMode.Center);
+			}
 
 			Size size = this.scrollList.GetBestFitSizeBasedOnContent ();
 			this.scrollList.RowHeight      = size.Height;
@@ -865,13 +892,14 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private void HandleScrollListSelectionActivated(object sender)
 		{
-			if (this.ignoreChange)
+			if (this.ignoreChanges.Value > 0)
 			{
 				return;
 			}
 
-			this.hintSelected = this.scrollList.SelectedItemIndex;
-			this.UseSelectedHint (SelectedHintMode.FinalEdition);
+			this.selectedHint = this.scrollList.SelectedItemIndex;
+			
+			this.UseSelectedHint (SelectedHintMode.AcceptEdition);
 
 			this.CloseComboMenu ();
 		}
@@ -881,17 +909,16 @@ namespace Epsitec.Cresus.Core.Widgets
 
 
 		private readonly Common.Widgets.Collections.StringCollection items;
-		private int selectedRow;
-
 		private readonly List<int> hintListIndex;
-		private int hintSelected;
-
-		private List<string> hintWordSeparators;
+		private readonly List<string> hintWordSeparators;
+		private readonly SafeCounter ignoreChanges;
+		
+		private int selectedRow;
+		private int selectedHint;
 
 		private Window window;
 		private ScrollList scrollList;
 
-		private bool completeMenu;
-		private bool ignoreChange;
+		private bool displayAllItems;
 	}
 }
