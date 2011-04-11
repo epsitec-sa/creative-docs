@@ -29,6 +29,4 @@ namespace Epsitec.Cresus.Core.Widgets
 		/// </summary>
 		NoMatch = 2,
 	}
-
-	public delegate HintComparerResult HintComparerPredicate<T1, T2>(T1 arg1, T2 arg2);
 }

@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateTextField             (tile, 150,                              "Numéro d'adhérent",  Marshaler.Create (() => this.Entity.SubscriberNumber, x => this.Entity.SubscriberNumber = x));
 			builder.CreateTextFieldMulti        (tile,  52,                              "Adresse d'adhérent", Marshaler.Create (() => this.Entity.SubscriberAddress, x => this.Entity.SubscriberAddress = x));
-			builder.CreateAutoCompleteTextField (tile, 150-UIBuilder.ComboButtonWidth+1, "Monnaie",            Marshaler.Create (() => this.Entity.Currency, x => this.Entity.Currency = x), EnumKeyValues.FromEnum<CurrencyCode> (), x => TextFormatter.FormatText (x));
+			builder.CreateAutoCompleteTextField (tile, 150-Library.UI.ComboButtonWidth+1, "Monnaie", Marshaler.Create (() => this.Entity.Currency, x => this.Entity.Currency = x), EnumKeyValues.FromEnum<CurrencyCode> (), x => TextFormatter.FormatText (x));
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 

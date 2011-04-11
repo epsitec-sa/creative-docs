@@ -19,6 +19,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			this.HintEditorMode = Widgets.HintEditorMode.DisplayMenuForSmallList;
 			this.HintEditorSmallListLimit = 100;
+			this.MenuButtonWidth = Library.UI.ComboButtonWidth-1;
 
 			this.TextDisplayMode = TextFieldDisplayMode.ActiveHint;
 			this.DefocusAction = Common.Widgets.DefocusAction.AcceptEdition;
@@ -36,7 +37,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 		
-		public HintEditorMode									HintEditorMode
+		public HintEditorMode							HintEditorMode
 		{
 			get;
 			set;
@@ -46,18 +47,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		/// Lorsque HintEditorComboMenu = IfReasonable, détermine à partir de combien le combo-menu est caché.
 		/// </summary>
 		/// <value>The combo menu items limit.</value>
-		public int												HintEditorSmallListLimit
-		{
-			get;
-			set;
-		}
-
-
-		/// <summary>
-		/// Méthode de conversion d'un objet stocké dans Items.Value en une chaîne à afficher.
-		/// </summary>
-		/// <value>The value converter.</value>
-		public System.Func<object, FormattedText>				ValueToDescriptionConverter
+		public int										HintEditorSmallListLimit
 		{
 			get;
 			set;
@@ -67,19 +57,29 @@ namespace Epsitec.Cresus.Core.Widgets
 		/// Méthode de comparaison d'un objet stocké dans Items.Value avec une chaîne partielle entrée par l'utilisateur.
 		/// </summary>
 		/// <value>The hint comparer.</value>
-		public HintComparerPredicate<object, string>			HintComparer
+		public HintComparerPredicate<object, string>	HintComparer
 		{
 			get;
 			set;
 		}
 
-		public System.Predicate<string>							ContentValidator
+		/// <summary>
+		/// Méthode de conversion d'un objet stocké dans Items.Value en une chaîne à afficher.
+		/// </summary>
+		/// <value>The value converter.</value>
+		public ValueToDescriptionConverter				ValueToDescriptionConverter
 		{
 			get;
 			set;
 		}
 
-		public double											MenuButtonWidth
+		public System.Predicate<string>					ContentValidator
+		{
+			get;
+			set;
+		}
+
+		public double									MenuButtonWidth
 		{
 			get;
 			set;

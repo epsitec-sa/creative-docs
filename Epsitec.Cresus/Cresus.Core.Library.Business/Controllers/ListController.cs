@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (buttonSize == null)
 			{
-				buttonSize = UIBuilder.TinyButtonSize;
+				buttonSize = Library.UI.TinyButtonSize;
 			}
 
 			this.toolbar = UIBuilder.CreateMiniToolbar (parent, buttonSize.Value);

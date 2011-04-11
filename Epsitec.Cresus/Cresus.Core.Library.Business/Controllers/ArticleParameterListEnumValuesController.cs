@@ -44,13 +44,13 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			var listContainer = new FrameBox
 			{
 				Parent = parent,
-				PreferredHeight = UIBuilder.TinyButtonSize+3+124+2+TileArrow.Breadth,
+				PreferredHeight = Library.UI.TinyButtonSize+3+124+2+TileArrow.Breadth,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, UIBuilder.RightMargin, 2, 0),
+				Margins = new Margins (0, Library.UI.RightMargin, 2, 0),
 			};
 
 			this.listController = new ListController<EnumValue> (this.enumValues, this.ListControllerItemToText, this.ListControllerGetTextInfo, this.ListControllerCreateItem);
-			this.listController.CreateUI (listContainer, Direction.Down, UIBuilder.TinyButtonSize, isReadOnly);
+			this.listController.CreateUI (listContainer, Direction.Down, Library.UI.TinyButtonSize, isReadOnly);
 
 			ToolTip.Default.SetToolTip (this.listController.AddButton,      "Ajoute une nouvelle valeur dans l'énumération");
 			ToolTip.Default.SetToolTip (this.listController.RemoveButton,   "Supprime la valeur de l'énumération");
@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				Text = "Valeur :",
 				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
+				Margins = new Margins (0, Library.UI.RightMargin, 0, Library.UI.MarginUnderLabel),
 			};
 
 			this.valueField = new TextFieldEx
@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				IsReadOnly = isReadOnly,
 				PreferredHeight = 20,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
+				Margins = new Margins (0, Library.UI.RightMargin, 0, Library.UI.MarginUnderTextField),
 				TabIndex = 3,
 				DefocusAction = DefocusAction.AcceptEdition,
 			};
@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				Text = "Description courte :",
 				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
+				Margins = new Margins (0, Library.UI.RightMargin, 0, Library.UI.MarginUnderLabel),
 			};
 
 			this.shortDescriptionField = new TextFieldEx
@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				IsReadOnly = isReadOnly,
 				PreferredHeight = 20,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
+				Margins = new Margins (0, Library.UI.RightMargin, 0, Library.UI.MarginUnderTextField),
 				TabIndex = 4,
 				DefocusAction = DefocusAction.AcceptEdition,
 			};
@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				Text = "Description longue :",
 				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
+				Margins = new Margins (0, Library.UI.RightMargin, 0, Library.UI.MarginUnderLabel),
 			};
 
 			this.longDescriptionField = new TextFieldMultiEx
@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				IsReadOnly = isReadOnly,
 				PreferredHeight = 78,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
+				Margins = new Margins (0, Library.UI.RightMargin, 0, Library.UI.MarginUnderTextField),
 				TabIndex = 5,
 				DefocusAction = DefocusAction.AcceptEdition,
 				ScrollerVisibility = false,
@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				Text = "Cette valeur est la valeur par défaut",
 				AutoToggle = false,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, UIBuilder.RightMargin, 5, UIBuilder.MarginUnderTextField),
+				Margins = new Margins (0, Library.UI.RightMargin, 5, Library.UI.MarginUnderTextField),
 				TabIndex = 6,
 			};
 

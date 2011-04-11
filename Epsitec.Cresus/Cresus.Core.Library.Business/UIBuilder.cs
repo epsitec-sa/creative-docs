@@ -338,7 +338,7 @@ namespace Epsitec.Cresus.Core
 			{
 				Parent = tile.Container,
 				Dock = DockStyle.Stacked,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, 5),
+				Margins = new Margins (0, Library.UI.RightMargin, 0, 5),
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				TabIndex = ++this.tabIndex,
 			};
@@ -354,7 +354,7 @@ namespace Epsitec.Cresus.Core
 			{
 				Parent = tile.Container,
 				Dock = DockStyle.Stacked,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, 5),
+				Margins = new Margins (0, Library.UI.RightMargin, 0, 5),
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				TabIndex = ++this.tabIndex,
 			};
@@ -543,7 +543,7 @@ namespace Epsitec.Cresus.Core
 				TextBreakMode = Common.Drawing.TextBreakMode.Hyphenate,
 				PreferredHeight = height,
 				Dock = DockStyle.Stacked,
-				Margins = new Margins (0, UIBuilder.RightMargin, 5, 5),
+				Margins = new Margins (0, Library.UI.RightMargin, 5, 5),
 			};
 
 			this.ContentListAdd (staticText);
@@ -561,7 +561,7 @@ namespace Epsitec.Cresus.Core
 				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split,
 				PreferredHeight =  Misc.GetEstimatedHeight (text),
 				Dock = DockStyle.Stacked,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, 0),
+				Margins = new Margins (0, Library.UI.RightMargin, 0, 0),
 			};
 
 			this.ContentListAdd (staticText);
@@ -580,7 +580,7 @@ namespace Epsitec.Cresus.Core
 					Text = string.Concat (label, " :"),
 					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 					Dock = DockStyle.Stacked,
-					Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
+					Margins = new Margins (0, Library.UI.RightMargin, 0, Library.UI.MarginUnderLabel),
 				};
 
 				this.ContentListAdd (staticText);
@@ -591,7 +591,7 @@ namespace Epsitec.Cresus.Core
 				Parent = tile.Container,
 				PreferredHeight = 20,
 				Dock = DockStyle.Stacked,
-				Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderTextField),
+				Margins = new Margins (0, 0, 0, Library.UI.MarginUnderTextField),
 				TabIndex = ++this.tabIndex,
 			};
 
@@ -611,7 +611,7 @@ namespace Epsitec.Cresus.Core
 					Text = string.Concat (label, " :"),
 					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 					Dock = DockStyle.Stacked,
-					Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
+					Margins = new Margins (0, Library.UI.RightMargin, 0, Library.UI.MarginUnderLabel),
 				};
 
 				this.ContentListAdd (staticText);
@@ -628,7 +628,7 @@ namespace Epsitec.Cresus.Core
 				Text = buttonText,
 				PreferredHeight = 20,
 				Dock = dockStyle,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
+				Margins = new Margins (0, Library.UI.RightMargin, 0, Library.UI.MarginUnderTextField),
 				TabIndex = ++this.tabIndex,
 			};
 
@@ -700,7 +700,7 @@ namespace Epsitec.Cresus.Core
 					Text = string.Concat (label, " :"),
 					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 					Dock = DockStyle.Stacked,
-					Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
+					Margins = new Margins (0, Library.UI.RightMargin, 0, Library.UI.MarginUnderLabel),
 				};
 
 				this.ContentListAdd (staticText);
@@ -710,7 +710,7 @@ namespace Epsitec.Cresus.Core
 			{
 				Parent = tile.Container,
 				Dock = DockStyle.Stacked,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
+				Margins = new Margins (0, Library.UI.RightMargin, 0, Library.UI.MarginUnderTextField),
 				TabIndex = ++this.tabIndex,
 			};
 
@@ -718,7 +718,7 @@ namespace Epsitec.Cresus.Core
 			{
 				Parent = container,
 				IsReadOnly = this.ReadOnly,
-				MenuButtonWidth = UIBuilder.ComboButtonWidth-1,
+				MenuButtonWidth = Library.UI.ComboButtonWidth-1,
 				PreferredHeight = 20,
 				Dock = DockStyle.Fill,
 				Margins = new Margins (0, 0, 0, 0),
@@ -736,7 +736,7 @@ namespace Epsitec.Cresus.Core
 				Enable = !this.ReadOnly,
 				ButtonStyle = Common.Widgets.ButtonStyle.Combo,
 				GlyphShape = GlyphShape.Menu,
-				PreferredWidth = UIBuilder.ComboButtonWidth,
+				PreferredWidth = Library.UI.ComboButtonWidth,
 				PreferredHeight = 20,
 				Dock = DockStyle.Right,
 				Margins = new Margins (-1, 0, 0, 0),
@@ -836,7 +836,7 @@ namespace Epsitec.Cresus.Core
 					Text = string.Concat (label, " :"),
 					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 					Dock = DockStyle.Stacked,
-					Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
+					Margins = new Margins (0, Library.UI.RightMargin, 0, Library.UI.MarginUnderLabel),
 				};
 
 				this.ContentListAdd (staticText);
@@ -853,7 +853,7 @@ namespace Epsitec.Cresus.Core
 				IsReadOnly = this.ReadOnly || marshaler.IsReadOnly,
 				PreferredHeight = 20,
 				Dock = dockStyle,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
+				Margins = new Margins (0, Library.UI.RightMargin, 0, Library.UI.MarginUnderTextField),
 				TabIndex = ++this.tabIndex,
 				DefocusAction = DefocusAction.AutoAcceptOrRejectEdition,
 				SwallowEscapeOnRejectEdition = true,
@@ -886,7 +886,7 @@ namespace Epsitec.Cresus.Core
 					Text = string.Concat (label, " :"),
 					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 					Dock = DockStyle.Stacked,
-					Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
+					Margins = new Margins (0, Library.UI.RightMargin, 0, Library.UI.MarginUnderLabel),
 				};
 
 				this.ContentListAdd (staticText);
@@ -898,7 +898,7 @@ namespace Epsitec.Cresus.Core
 				IsReadOnly = this.ReadOnly,
 				PreferredHeight = height,
 				Dock = DockStyle.Stacked,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
+				Margins = new Margins (0, Library.UI.RightMargin, 0, Library.UI.MarginUnderTextField),
 				TabIndex = ++this.tabIndex,
 				DefocusAction = DefocusAction.AutoAcceptOrRejectEdition,
 				ScrollerVisibility = false,
@@ -943,7 +943,7 @@ namespace Epsitec.Cresus.Core
 					Text = string.Concat (label, " :"),
 					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 					Dock = DockStyle.Stacked,
-					Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
+					Margins = new Margins (0, Library.UI.RightMargin, 0, Library.UI.MarginUnderLabel),
 				};
 
 				this.ContentListAdd (staticText);
@@ -954,7 +954,7 @@ namespace Epsitec.Cresus.Core
 				Parent = tile.Container,
 				PreferredHeight = 20,
 				Dock = DockStyle.Stacked,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
+				Margins = new Margins (0, Library.UI.RightMargin, 0, Library.UI.MarginUnderTextField),
 				TabIndex = ++this.tabIndex,
 			};
 
@@ -967,7 +967,7 @@ namespace Epsitec.Cresus.Core
 				{
 					Parent = container,
 					IsReadOnly = this.ReadOnly,
-					MenuButtonWidth = UIBuilder.ComboButtonWidth-1,
+					MenuButtonWidth = Library.UI.ComboButtonWidth-1,
 					PreferredHeight = 20,
 					Dock = DockStyle.Fill,
 					Margins = new Margins (0, 0, 0, 0),
@@ -983,7 +983,7 @@ namespace Epsitec.Cresus.Core
 					Enable = !this.ReadOnly,
 					ButtonStyle = Common.Widgets.ButtonStyle.Combo,
 					GlyphShape = GlyphShape.Menu,
-					PreferredWidth = UIBuilder.ComboButtonWidth,
+					PreferredWidth = Library.UI.ComboButtonWidth,
 					PreferredHeight = 20,
 					Dock = DockStyle.Right,
 					Margins = new Margins (-1, 0, 0, 0),
@@ -996,7 +996,7 @@ namespace Epsitec.Cresus.Core
 				{
 					Parent = container,
 					IsReadOnly = this.ReadOnly,
-					MenuButtonWidth = UIBuilder.ComboButtonWidth-1,
+					MenuButtonWidth = Library.UI.ComboButtonWidth-1,
 					PreferredWidth = width,
 					PreferredHeight = 20,
 					Dock = DockStyle.Left,
@@ -1013,7 +1013,7 @@ namespace Epsitec.Cresus.Core
 					Enable = !this.ReadOnly,
 					ButtonStyle = Common.Widgets.ButtonStyle.Combo,
 					GlyphShape = GlyphShape.Menu,
-					PreferredWidth = UIBuilder.ComboButtonWidth,
+					PreferredWidth = Library.UI.ComboButtonWidth,
 					PreferredHeight = 20,
 					Dock = DockStyle.Left,
 					Margins = new Margins (-1, 0, 0, 0),
@@ -1050,7 +1050,7 @@ namespace Epsitec.Cresus.Core
 					Text = string.Concat (label, " :"),
 					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 					Dock = DockStyle.Stacked,
-					Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
+					Margins = new Margins (0, Library.UI.RightMargin, 0, Library.UI.MarginUnderLabel),
 				};
 
 				this.ContentListAdd (staticText);
@@ -1060,7 +1060,7 @@ namespace Epsitec.Cresus.Core
 			{
 				Parent = tile.Container,
 				Dock = DockStyle.Stacked,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
+				Margins = new Margins (0, Library.UI.RightMargin, 0, Library.UI.MarginUnderTextField),
 				TabIndex = ++this.tabIndex,
 			};
 
@@ -1074,7 +1074,7 @@ namespace Epsitec.Cresus.Core
 				{
 					Parent = container,
 					IsReadOnly = this.ReadOnly,
-					MenuButtonWidth = UIBuilder.ComboButtonWidth-1,
+					MenuButtonWidth = Library.UI.ComboButtonWidth-1,
 					PreferredHeight = 20,
 					Dock = DockStyle.Fill,
 					Margins = new Margins (0, 0, 0, 0),
@@ -1090,7 +1090,7 @@ namespace Epsitec.Cresus.Core
 					Enable = !this.ReadOnly,
 					ButtonStyle = Common.Widgets.ButtonStyle.Combo,
 					GlyphShape = GlyphShape.Menu,
-					PreferredWidth = UIBuilder.ComboButtonWidth,
+					PreferredWidth = Library.UI.ComboButtonWidth,
 					PreferredHeight = 20,
 					Dock = DockStyle.Right,
 					Margins = new Margins (-1, 0, 0, 0),
@@ -1103,7 +1103,7 @@ namespace Epsitec.Cresus.Core
 				{
 					Parent = container,
 					IsReadOnly = this.ReadOnly,
-					MenuButtonWidth = UIBuilder.ComboButtonWidth-1,
+					MenuButtonWidth = Library.UI.ComboButtonWidth-1,
 					PreferredWidth = width,
 					PreferredHeight = 20,
 					Dock = DockStyle.Left,
@@ -1120,7 +1120,7 @@ namespace Epsitec.Cresus.Core
 					Enable = !this.ReadOnly,
 					ButtonStyle = Common.Widgets.ButtonStyle.Combo,
 					GlyphShape = GlyphShape.Menu,
-					PreferredWidth = UIBuilder.ComboButtonWidth,
+					PreferredWidth = Library.UI.ComboButtonWidth,
 					PreferredHeight = 20,
 					Dock = DockStyle.Left,
 					Margins = new Margins (-1, 0, 0, 0),
@@ -1177,7 +1177,7 @@ namespace Epsitec.Cresus.Core
 					Text = string.Concat (label, " :"),
 					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 					Dock = DockStyle.Stacked,
-					Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
+					Margins = new Margins (0, Library.UI.RightMargin, 0, Library.UI.MarginUnderTextField),
 				};
 
 				this.ContentListAdd (staticText);
@@ -1317,7 +1317,7 @@ namespace Epsitec.Cresus.Core
 			{
 				var separator = new Separator
 				{
-					Margins = new Margins (0, UIBuilder.RightMargin, 5, 5),
+					Margins = new Margins (0, Library.UI.RightMargin, 5, 5),
 					PreferredHeight = 1,
 				};
 
@@ -1343,7 +1343,7 @@ namespace Epsitec.Cresus.Core
 				{
 					Parent = tile.Container,
 					Dock = DockStyle.Stacked,
-					Margins = new Margins (0, UIBuilder.RightMargin, 5, 5),
+					Margins = new Margins (0, Library.UI.RightMargin, 5, 5),
 					PreferredHeight = 1,
 				};
 
@@ -1376,7 +1376,7 @@ namespace Epsitec.Cresus.Core
 					Text = string.Concat (label, " :"),
 					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 					Dock = DockStyle.Stacked,
-					Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
+					Margins = new Margins (0, Library.UI.RightMargin, 0, Library.UI.MarginUnderLabel),
 				};
 
 				this.ContentListAdd (staticText);
@@ -1386,7 +1386,7 @@ namespace Epsitec.Cresus.Core
 			{
 				Parent = tile.Container,
 				Dock = DockStyle.Stacked,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
+				Margins = new Margins (0, Library.UI.RightMargin, 0, Library.UI.MarginUnderTextField),
 				TabIndex = ++this.tabIndex,
 			};
 
@@ -1394,7 +1394,7 @@ namespace Epsitec.Cresus.Core
 			{
 				Parent = container,
 				IsReadOnly = this.ReadOnly,
-				MenuButtonWidth = UIBuilder.ComboButtonWidth-1,
+				MenuButtonWidth = Library.UI.ComboButtonWidth-1,
 				PreferredHeight = 20,
 				Dock = DockStyle.Fill,
 				Margins = new Margins (0, 0, 0, 0),
@@ -1412,7 +1412,7 @@ namespace Epsitec.Cresus.Core
 			var tileButton = new GlyphButton
 			{
 				Parent = container,
-				PreferredWidth = UIBuilder.ComboButtonWidth,
+				PreferredWidth = Library.UI.ComboButtonWidth,
 				PreferredHeight = 20,
 				Dock = DockStyle.Right,
 				Margins = new Margins (3, 0, 0, 0),
@@ -1427,7 +1427,7 @@ namespace Epsitec.Cresus.Core
 				Enable = !this.ReadOnly,
 				ButtonStyle = Common.Widgets.ButtonStyle.Combo,
 				GlyphShape = GlyphShape.Menu,
-				PreferredWidth = UIBuilder.ComboButtonWidth,
+				PreferredWidth = Library.UI.ComboButtonWidth,
 				PreferredHeight = 20,
 				Dock = DockStyle.Right,
 				Margins = new Margins (-1, 0, 0, 0),
@@ -1556,7 +1556,7 @@ namespace Epsitec.Cresus.Core
 					Parent = tile.Container,
 					Text = string.Concat (label, " :"),
 					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-					Margins = new Margins (0, UIBuilder.RightMargin, 2, UIBuilder.MarginUnderTextField),
+					Margins = new Margins (0, Library.UI.RightMargin, 2, Library.UI.MarginUnderTextField),
 					Dock = DockStyle.Stacked,
 				};
 
@@ -1569,7 +1569,7 @@ namespace Epsitec.Cresus.Core
 				{
 					Parent = tile.Container,
 					GlyphShape = Common.Widgets.GlyphShape.ArrowRight,
-					PreferredWidth = UIBuilder.ComboButtonWidth,
+					PreferredWidth = Library.UI.ComboButtonWidth,
 					PreferredHeight = 20,
 					Anchor = AnchorStyles.TopRight,
 					Margins = new Margins (0, 3, 0, 0),
@@ -1818,12 +1818,6 @@ namespace Epsitec.Cresus.Core
 
 		#endregion
 
-
-		public static readonly double RightMargin				= 10;
-		public static readonly double MarginUnderLabel			= 1;
-		public static readonly double MarginUnderTextField		= 2;
-		public static readonly double TinyButtonSize			= 19;  // doit être impair à cause de GlyphButton !
-		public static readonly double ComboButtonWidth			= 14;
 
 		[System.ThreadStatic]
 		private static UIBuilder				current;

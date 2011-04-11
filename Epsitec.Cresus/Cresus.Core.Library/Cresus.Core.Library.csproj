@@ -111,6 +111,7 @@
     <Compile Include="Widgets\ButtonExtensions.cs" />
     <Compile Include="Widgets\CellTableExtensions.cs" />
     <Compile Include="Widgets\HintComparer.cs" />
+    <Compile Include="Widgets\HintComparerPredicate.cs" />
     <Compile Include="Widgets\HintComparerResult.cs" />
     <Compile Include="Widgets\HintEditorMode.cs" />
     <Compile Include="Widgets\StaticTextExtensions.cs" />
@@ -123,6 +124,7 @@
     <Compile Include="Widgets\Tiles\Tile.cs" />
     <Compile Include="Widgets\Tiles\TileArrow.cs" />
     <Compile Include="Widgets\Tiles\TileArrowMode.cs" />
+    <Compile Include="Widgets\ValueToDescriptionConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Document\Common.Document.csproj">

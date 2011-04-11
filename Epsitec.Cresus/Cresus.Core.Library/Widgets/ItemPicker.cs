@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		/// Méthode de conversion d'un objet stocké dans Items.Value en une chaîne à afficher.
 		/// </summary>
 		/// <value>The value converter.</value>
-		public System.Func<object, FormattedText> ValueToDescriptionConverter
+		public ValueToDescriptionConverter ValueToDescriptionConverter
 		{
 			get;
 			set;

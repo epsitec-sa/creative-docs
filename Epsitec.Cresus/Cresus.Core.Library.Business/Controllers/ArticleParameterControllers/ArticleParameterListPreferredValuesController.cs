@@ -43,13 +43,13 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			var listContainer = new FrameBox
 			{
 				Parent = parent,
-				PreferredHeight = UIBuilder.TinyButtonSize+3+124+2+TileArrow.Breadth,
+				PreferredHeight = Library.UI.TinyButtonSize+3+124+2+TileArrow.Breadth,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, UIBuilder.RightMargin, 2, 0),
+				Margins = new Margins (0, Library.UI.RightMargin, 2, 0),
 			};
 
 			this.listController = new ListController<decimal> (this.values, this.ListControllerItemToText, this.ListControllerGetTextInfo, this.ListControllerCreateItem);
-			this.listController.CreateUI (listContainer, Direction.Down, UIBuilder.TinyButtonSize, isReadOnly);
+			this.listController.CreateUI (listContainer, Direction.Down, Library.UI.TinyButtonSize, isReadOnly);
 
 			ToolTip.Default.SetToolTip (this.listController.AddButton,      "Ajoute une nouvelle valeur préférentielle");
 			ToolTip.Default.SetToolTip (this.listController.RemoveButton,   "Supprime la valeur préférentielle");
@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				Text = "Valeur préférentielle :",
 				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
+				Margins = new Margins (0, Library.UI.RightMargin, 0, Library.UI.MarginUnderLabel),
 			};
 
 			this.valueField = new TextFieldEx
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				IsReadOnly = isReadOnly,
 				PreferredHeight = 20,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
+				Margins = new Margins (0, Library.UI.RightMargin, 0, Library.UI.MarginUnderTextField),
 				TabIndex = 3,
 				DefocusAction = DefocusAction.AcceptEdition,
 			};

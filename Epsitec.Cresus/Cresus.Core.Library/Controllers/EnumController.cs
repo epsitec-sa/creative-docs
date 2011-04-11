@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		public System.Func<object, FormattedText> ValueToDescriptionConverter
+		public ValueToDescriptionConverter ValueToDescriptionConverter
 		{
 			get;
 			set;

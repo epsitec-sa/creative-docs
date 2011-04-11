@@ -51,8 +51,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateAccountEditor (tile, "Compte pour les rabais sur les achats", Marshaler.Create (() => this.Entity.PurchaseDiscountBookAccount, x => this.Entity.PurchaseDiscountBookAccount = x));
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
-			
-			builder.CreateAutoCompleteTextField (tile, 150-UIBuilder.ComboButtonWidth+1, "Monnaie", Marshaler.Create (() => this.Entity.CurrencyCode, x => this.Entity.CurrencyCode = x), EnumKeyValues.FromEnum<CurrencyCode> (), x => TextFormatter.FormatText (x));
+
+			builder.CreateAutoCompleteTextField (tile, 150-Library.UI.ComboButtonWidth+1, "Monnaie", Marshaler.Create (() => this.Entity.CurrencyCode, x => this.Entity.CurrencyCode = x), EnumKeyValues.FromEnum<CurrencyCode> (), x => TextFormatter.FormatText (x));
 		}
 	}
 }
