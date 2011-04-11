@@ -338,8 +338,6 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
         public event EventHandler AuthenticatedUserChanged;
 
 
-		private readonly CoreData			data;
-
 		private SoftwareUserEntity			authenticatedUser;
 		private IBusinessContext			businessContext;
 	}

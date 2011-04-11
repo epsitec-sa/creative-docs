@@ -91,19 +91,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/AVA/AVA6
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[AVA6]")]
-		public string Person
+		public global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity Person
 		{
 			get
 			{
-				return this.GetField<string> ("[AVA6]");
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity> ("[AVA6]");
 			}
 			set
 			{
-				string oldValue = this.Person;
+				global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue = this.Person;
 				if (oldValue != value || !this.IsFieldDefined("[AVA6]"))
 				{
 					this.OnPersonChanging (oldValue, value);
-					this.SetField<string> ("[AVA6]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity> ("[AVA6]", oldValue, value);
 					this.OnPersonChanged (oldValue, value);
 				}
 			}
@@ -253,8 +253,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnPersonChanging(string oldValue, string newValue);
-		partial void OnPersonChanged(string oldValue, string newValue);
+		partial void OnPersonChanging(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
+		partial void OnPersonChanged(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
 		partial void OnDisplayNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDisplayNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnLoginPictureChanging(global::Epsitec.Cresus.Core.Entities.ImageEntity oldValue, global::Epsitec.Cresus.Core.Entities.ImageEntity newValue);

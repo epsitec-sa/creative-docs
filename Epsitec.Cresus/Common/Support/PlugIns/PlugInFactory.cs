@@ -5,6 +5,8 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
+using System.Linq;
+
 using System.Collections.Generic;
 
 namespace Epsitec.Common.Support.PlugIns
@@ -131,12 +133,20 @@ namespace Epsitec.Common.Support.PlugIns
 
 			foreach (Assembly assembly in assemblies)
 			{
-				PlugInFactory<TClass, TAttribute, TId>.Analyze (assembly);
+				if (!assembly.ReflectionOnly)
+				{
+					PlugInFactory<TClass, TAttribute, TId>.Analyze (assembly);
+				}
 			}
 		}
 
 		private static void Analyze(Assembly assembly)
 		{
+			System.Diagnostics.Debug.Assert (PlugInFactory<TClass, TAttribute, TId>.assemblies.Contains (assembly) == false);
+			System.Diagnostics.Debug.Assert (assembly.ReflectionOnly == false);
+
+			PlugInFactory<TClass, TAttribute, TId>.assemblies.Add (assembly);
+			
 			foreach (TAttribute attribute in PlugInFactory<TClass, TAttribute, TId>.GetRegisteredAttributes (assembly))
 			{
 				PlugInFactory<TClass, TAttribute, TId>.types[attribute.Id] = new Record (attribute.Type);
@@ -147,7 +157,6 @@ namespace Epsitec.Common.Support.PlugIns
 		{
 			if (!args.LoadedAssembly.ReflectionOnly)
 			{
-				PlugInFactory<TClass, TAttribute, TId>.assemblies.Add (args.LoadedAssembly);
 				PlugInFactory<TClass, TAttribute, TId>.Analyze (args.LoadedAssembly);
 			}
 		}
