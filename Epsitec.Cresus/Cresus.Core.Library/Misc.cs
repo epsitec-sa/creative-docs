@@ -325,11 +325,6 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public static string RemoveAccentsToLower(string text)
-		{
-			return Epsitec.Common.Types.Converters.TextConverter.ConvertToLowerAndStripAccents (text);
-		}
-
 
 
 		private static readonly decimal maxValue = 1000000000;  // en francs, 1'000'000'000.-, soit 1 milliard

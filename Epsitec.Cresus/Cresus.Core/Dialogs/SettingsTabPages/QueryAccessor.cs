@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using Epsitec.Cresus.Core.Widgets;
 
 namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 {
@@ -38,7 +39,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 				if (!mode.CaseSensitive)
 				{
-					text = Misc.RemoveAccentsToLower (t);
+					text = HintComparer.GetComparableText (t);
 				}
 
 				count += text.Count (search);
@@ -56,7 +57,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 				if (!mode.CaseSensitive)
 				{
-					text = Misc.RemoveAccentsToLower (t);
+					text = HintComparer.GetComparableText (t);
 				}
 
 				if (text.Contains (search))
@@ -816,7 +817,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			if (!mode.CaseSensitive)
 			{
-				text = Misc.RemoveAccentsToLower (text);
+				text = HintComparer.GetComparableText (text);
 			}
 
 			var color = Color.FromName ("Red");
@@ -853,7 +854,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			if (!mode.CaseSensitive)
 			{
-				text = Misc.RemoveAccentsToLower (text);
+				text = HintComparer.GetComparableText (text);
 			}
 
 			var color = Color.FromName ("Red");

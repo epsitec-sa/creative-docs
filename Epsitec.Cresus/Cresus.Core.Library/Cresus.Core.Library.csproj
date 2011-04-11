@@ -110,6 +110,9 @@
     <Compile Include="Widgets\AutoCompleteTextField.cs" />
     <Compile Include="Widgets\ButtonExtensions.cs" />
     <Compile Include="Widgets\CellTableExtensions.cs" />
+    <Compile Include="Widgets\HintComparer.cs" />
+    <Compile Include="Widgets\HintComparerResult.cs" />
+    <Compile Include="Widgets\HintEditorMode.cs" />
     <Compile Include="Widgets\StaticTextExtensions.cs" />
     <Compile Include="Widgets\DragTargetMarker.cs" />
     <Compile Include="Widgets\ItemPicker.cs" />

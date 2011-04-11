@@ -722,8 +722,8 @@ namespace Epsitec.Cresus.Core
 				PreferredHeight = 20,
 				Dock = DockStyle.Fill,
 				Margins = new Margins (0, 0, 0, 0),
-				HintEditorComboMenu = Widgets.HintEditorComboMenu.IfReasonable,
-				ComboMenuReasonableItemsLimit = 100,
+				HintEditorMode = Widgets.HintEditorMode.DisplayMenuForSmallList,
+				HintEditorSmallListLimit = 100,
 				TabIndex = ++this.tabIndex,
 				SwallowEscapeOnRejectEdition = true,
 				SwallowReturnOnAcceptEdition = true,
@@ -754,7 +754,7 @@ namespace Epsitec.Cresus.Core
 
 			editor.ValueToDescriptionConverter = value => UIBuilder.GetAccountText ((Business.Accounting.BookAccountDefinition) value);
 			editor.HintComparer                = (value, text) => UIBuilder.MatchAccountText ((Business.Accounting.BookAccountDefinition) value, text);
-			editor.HintComparisonConverter     = x => TextConverter.ConvertToLowerAndStripAccents (x);
+			editor.HintComparisonConverter     = x => HintComparer.GetComparableText (x);
 
 			UIBuilder.InitializeAccount (editor, marshaler);
 
@@ -787,8 +787,8 @@ namespace Epsitec.Cresus.Core
 				return Widgets.HintComparerResult.NoMatch;
 			}
 
-			var itemText = TextConverter.ConvertToLowerAndStripAccents (UIBuilder.GetAccountText (account).ToSimpleText ());
-			return AutoCompleteTextField.Compare (itemText, userText);
+			var itemText = HintComparer.GetComparableText (UIBuilder.GetAccountText (account).ToSimpleText ());
+			return HintComparer.Compare (itemText, userText);
 		}
 
 		private static void InitializeAccount(Widgets.AutoCompleteTextField editor, Marshaler marshaler)
@@ -971,7 +971,7 @@ namespace Epsitec.Cresus.Core
 					PreferredHeight = 20,
 					Dock = DockStyle.Fill,
 					Margins = new Margins (0, 0, 0, 0),
-					HintEditorComboMenu = Widgets.HintEditorComboMenu.Always,
+					HintEditorMode = Widgets.HintEditorMode.DisplayMenu,
 					TabIndex = ++this.tabIndex,
 					SwallowEscapeOnRejectEdition = true,
 					SwallowReturnOnAcceptEdition = true,
@@ -1001,7 +1001,7 @@ namespace Epsitec.Cresus.Core
 					PreferredHeight = 20,
 					Dock = DockStyle.Left,
 					Margins = new Margins (0, 0, 0, 0),
-					HintEditorComboMenu = Widgets.HintEditorComboMenu.Always,
+					HintEditorMode = Widgets.HintEditorMode.DisplayMenu,
 					TabIndex = ++this.tabIndex,
 					SwallowEscapeOnRejectEdition = true,
 					SwallowReturnOnAcceptEdition = true,
@@ -1078,7 +1078,7 @@ namespace Epsitec.Cresus.Core
 					PreferredHeight = 20,
 					Dock = DockStyle.Fill,
 					Margins = new Margins (0, 0, 0, 0),
-					HintEditorComboMenu = Widgets.HintEditorComboMenu.Always,
+					HintEditorMode = Widgets.HintEditorMode.DisplayMenu,
 					TabIndex = ++this.tabIndex,
 					SwallowEscapeOnRejectEdition = true,
 					SwallowReturnOnAcceptEdition = true,
@@ -1108,7 +1108,7 @@ namespace Epsitec.Cresus.Core
 					PreferredHeight = 20,
 					Dock = DockStyle.Left,
 					Margins = new Margins (0, 0, 0, 0),
-					HintEditorComboMenu = Widgets.HintEditorComboMenu.Always,
+					HintEditorMode = Widgets.HintEditorMode.DisplayMenu,
 					TabIndex = ++this.tabIndex,
 					SwallowEscapeOnRejectEdition = true,
 					SwallowReturnOnAcceptEdition = true,
@@ -1398,8 +1398,8 @@ namespace Epsitec.Cresus.Core
 				PreferredHeight = 20,
 				Dock = DockStyle.Fill,
 				Margins = new Margins (0, 0, 0, 0),
-				HintEditorComboMenu = Widgets.HintEditorComboMenu.IfReasonable,
-				ComboMenuReasonableItemsLimit = 100,
+				HintEditorMode = Widgets.HintEditorMode.DisplayMenuForSmallList,
+				HintEditorSmallListLimit = 100,
 				TabIndex = ++this.tabIndex,
 				SwallowEscapeOnRejectEdition = true,
 				SwallowReturnOnAcceptEdition = true,

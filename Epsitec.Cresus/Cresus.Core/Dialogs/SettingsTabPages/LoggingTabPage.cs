@@ -1088,7 +1088,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 				if (!string.IsNullOrEmpty (search) && !LoggingTabPage.globalSearchMode.CaseSensitive)
 				{
-					search = Misc.RemoveAccentsToLower (search);
+					search = HintComparer.GetComparableText (search);
 				}
 
 				return search;

@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				Parent = parent,
 				MenuButtonWidth = buttonWidth-1,
 				Dock = DockStyle.Fill,
-				HintEditorComboMenu = Widgets.HintEditorComboMenu.Always,
+				HintEditorMode = Widgets.HintEditorMode.DisplayMenu,
 				TabIndex = 1,
 			};
 
@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 			editor.ValueToDescriptionConverter = value => this.GetUserText (value as string);
 			editor.HintComparer = (value, text) => this.MatchUserText (value as string, text);
-			editor.HintComparisonConverter = x => TextConverter.ConvertToLowerAndStripAccents (x);
+			editor.HintComparisonConverter = x => HintComparer.GetComparableText (x);
 			editor.ContentValidator = x => this.ContentValidator (x);
 
 			if (editor.Items.Count != 0)
@@ -121,8 +121,8 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				return Widgets.HintComparerResult.NoMatch;
 			}
 
-			var itemText = TextConverter.ConvertToLowerAndStripAccents (value);
-			return AutoCompleteTextField.Compare (itemText, userText);
+			var itemText = HintComparer.GetComparableText (value);
+			return HintComparer.Compare (itemText, userText);
 		}
 
 		private bool ContentValidator(string value)

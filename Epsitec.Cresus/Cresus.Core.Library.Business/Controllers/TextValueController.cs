@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			widget.ValueToDescriptionConverter = value => this.getUserText (value as string[]);
 			widget.HintComparer                = (value, text) => TextValueController.MatchUserText (value as string[], text);
-			widget.HintComparisonConverter     = TextConverter.ConvertToLowerAndStripAccents;
+			widget.HintComparisonConverter     = HintComparer.GetComparableText;
 
 			this.Attach (widget as AbstractTextField);
 		}
@@ -128,8 +128,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			foreach (var text in value)
 			{
-				var itemText = TextConverter.ConvertToLowerAndStripAccents (text);
-				result = Widgets.AutoCompleteTextField.Bestof (result, Widgets.AutoCompleteTextField.Compare (itemText, userText));
+				var itemText = HintComparer.GetComparableText (text);
+				result = Widgets.HintComparer.GetBestResult (result, Widgets.HintComparer.Compare (itemText, userText));
 			}
 
 			return result;

@@ -88,7 +88,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			widget.ValueToDescriptionConverter = this.ConvertHintValueToDescription;
 
 			widget.HintComparer = (value, text) => this.MatchUserText (value as T, text);
-			widget.HintComparisonConverter = x => TextConverter.ConvertToLowerAndStripAccents (x);
+			widget.HintComparisonConverter = x => HintComparer.GetComparableText (x);
 
 			widget.EditionAccepted += this.HandleEditionAccepted;
 
@@ -318,8 +318,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			foreach (var text in texts)
 			{
-				var itemText = TextConverter.ConvertToLowerAndStripAccents (text);
-				result = Widgets.AutoCompleteTextField.Bestof (result, Widgets.AutoCompleteTextField.Compare (itemText, userText));
+				var itemText = HintComparer.GetComparableText (text);
+				result = Widgets.HintComparer.GetBestResult (result, Widgets.HintComparer.Compare (itemText, userText));
 			}
 
 			return result;

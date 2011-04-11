@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
+using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Helpers;
@@ -12,27 +13,12 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Widgets
 {
-	public enum HintEditorComboMenu
-	{
-		Never,
-		IfReasonable,
-		Always,
-	}
-
-	public enum HintComparerResult
-	{
-		NoMatch,
-		SecondaryMatch,
-		PrimaryMatch,	// le "meilleur" en dernier
-	}
-
-
-	public class AutoCompleteTextField : TextFieldEx, Common.Widgets.Collections.IStringCollectionHost, Common.Support.Data.IKeyedStringSelection
+	public sealed class AutoCompleteTextField : TextFieldEx, Common.Widgets.Collections.IStringCollectionHost, Common.Support.Data.IKeyedStringSelection
 	{
 		public AutoCompleteTextField()
 		{
-			this.HintEditorComboMenu = Widgets.HintEditorComboMenu.IfReasonable;
-			this.ComboMenuReasonableItemsLimit = 100;
+			this.HintEditorMode = Widgets.HintEditorMode.DisplayMenuForSmallList;
+			this.HintEditorSmallListLimit = 100;
 
 			this.TextDisplayMode = TextFieldDisplayMode.ActiveHint;
 			this.DefocusAction = Common.Widgets.DefocusAction.AcceptEdition;
@@ -49,27 +35,8 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.TextChanged += this.HandleTextChanged;
 		}
 
-		public AutoCompleteTextField(Widget embedder)
-			: this ()
-		{
-			this.SetEmbedder (embedder);
-		}
-
-
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				this.IsFocusedChanged -= this.HandleIsFocusedChanged;
-
-				this.CloseComboMenu ();
-			}
-
-			base.Dispose (disposing);
-		}
-
-
-		public HintEditorComboMenu HintEditorComboMenu
+		
+		public HintEditorMode									HintEditorMode
 		{
 			get;
 			set;
@@ -79,7 +46,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		/// Lorsque HintEditorComboMenu = IfReasonable, détermine à partir de combien le combo-menu est caché.
 		/// </summary>
 		/// <value>The combo menu items limit.</value>
-		public int ComboMenuReasonableItemsLimit
+		public int												HintEditorSmallListLimit
 		{
 			get;
 			set;
@@ -90,7 +57,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		/// Méthode de conversion d'un objet stocké dans Items.Value en une chaîne à afficher.
 		/// </summary>
 		/// <value>The value converter.</value>
-		public System.Func<object, FormattedText> ValueToDescriptionConverter
+		public System.Func<object, FormattedText>				ValueToDescriptionConverter
 		{
 			get;
 			set;
@@ -100,34 +67,24 @@ namespace Epsitec.Cresus.Core.Widgets
 		/// Méthode de comparaison d'un objet stocké dans Items.Value avec une chaîne partielle entrée par l'utilisateur.
 		/// </summary>
 		/// <value>The hint comparer.</value>
-		public System.Func<object, string, HintComparerResult> HintComparer
+		public HintComparerPredicate<object, string>			HintComparer
 		{
 			get;
 			set;
 		}
 
-		public System.Func<string, bool> ContentValidator
+		public System.Predicate<string>							ContentValidator
 		{
 			get;
 			set;
 		}
 
-
-		public double MenuButtonWidth
+		public double											MenuButtonWidth
 		{
 			get;
 			set;
 		}
 
-
-		public bool HasItemValue
-		{
-			get
-			{
-				this.HintUpdateList (this.Text);
-				return this.hintListIndex.Count == 1;
-			}
-		}
 
 
 		public void RefreshTextBasedOnSelectedItem()
@@ -137,36 +94,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.ignoreChange = false;
 		}
 		
-		public static HintComparerResult Compare(string text, string typed)
-		{
-			int index = (text == null) ? -1 : text.IndexOf (typed);
-
-			if (index == -1)
-			{
-				return HintComparerResult.NoMatch;
-			}
-			else if (index == 0)
-			{
-				return HintComparerResult.PrimaryMatch;
-			}
-			else
-			{
-				return HintComparerResult.SecondaryMatch;
-			}
-		}
-
-		public static HintComparerResult Bestof(HintComparerResult result1, HintComparerResult result2)
-		{
-			if (result1 > result2)
-			{
-				return result1;
-			}
-			else
-			{
-				return result2;
-			}
-		}
-
+		
 
 		#region IStringCollectionHost Members
 
@@ -279,27 +207,22 @@ namespace Epsitec.Cresus.Core.Widgets
 		#endregion
 
 
-		private void HintSearching(string typed)
+		private void UpdateHint(string typed)
 		{
-			if (this.ValueToDescriptionConverter == null || this.HintComparer == null)
+			if ((this.ValueToDescriptionConverter == null) || 
+				(this.HintComparer == null))
 			{
 				return;
 			}
 
-			this.HintUpdateList (typed);
+			this.UpdateHintList (typed);
+			this.SelectDefaultHint ();
+			this.UseSelectedHint (SelectedHintMode.Searching);
+			this.UpdateComboMenuVisibility ();
+		}
 
-			if (this.hintListIndex.Count == 0)
-			{
-				this.hintSelected = -1;
-			}
-			else
-			{
-				this.hintSelected = 0;  // la première proposition
-			}
-
-			this.UseSelectedHint (SelectedHintMode.HintProcess);
-
-			//	Gère le combo menu.
+		private void UpdateComboMenuVisibility()
+		{
 			if (this.hintListIndex.Count <= 1)
 			{
 				if (this.IsComboMenuOpen)
@@ -319,8 +242,20 @@ namespace Epsitec.Cresus.Core.Widgets
 				}
 			}
 		}
-
-		private void HintUpdateList(string typed)
+		
+		private void SelectDefaultHint()
+		{
+			if (this.hintListIndex.Count == 0)
+			{
+				this.hintSelected = -1;
+			}
+			else
+			{
+				this.hintSelected = 0;  // la première proposition
+			}
+		}
+		
+		private void UpdateHintList(string typed)
 		{
 			if (this.ValueToDescriptionConverter == null || this.HintComparer == null)
 			{
@@ -396,7 +331,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		protected virtual void OnSelectedItemChanged()
+		private void OnSelectedItemChanged()
 		{
 			//	Génère un événement pour dire que la sélection dans la liste a changé.
 			EventHandler handler = (EventHandler) this.GetUserEventHandler (AutoCompleteTextField.SelectedItemChangedEvent);
@@ -405,6 +340,19 @@ namespace Epsitec.Cresus.Core.Widgets
 				handler (this);
 			}
 		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.IsFocusedChanged -= this.HandleIsFocusedChanged;
+
+				this.CloseComboMenu ();
+			}
+
+			base.Dispose (disposing);
+		}
+
 
 		protected override bool AboutToGetFocus(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
 		{
@@ -420,7 +368,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				return;
 			}
 
-			this.HintSearching (this.Text);
+			this.UpdateHint (this.Text);
 			base.OnTextChanged ();
 		}
 
@@ -570,7 +518,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				int sel = 0;
 
-				this.HintUpdateList (this.Text);
+				this.UpdateHintList (this.Text);
 
 				if (this.hintListIndex.Count != 0)
 				{
@@ -603,7 +551,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private enum SelectedHintMode
 		{
-			HintProcess,
+			Searching,
 			StartEdition,
 			FinalEdition,
 		}
@@ -724,7 +672,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			if (this.completeMenu)
 			{
-				this.HintUpdateList (this.Text);
+				this.UpdateHintList (this.Text);
 
 				if (this.hintListIndex.Count == 0)
 				{
@@ -743,13 +691,13 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 			else
 			{
-				if (this.HintEditorComboMenu == Widgets.HintEditorComboMenu.Never)
+				if (this.HintEditorMode == Widgets.HintEditorMode.InLine)
 				{
 					return;
 				}
 
-				if (this.HintEditorComboMenu == Widgets.HintEditorComboMenu.IfReasonable &&
-					this.hintListIndex.Count >= this.ComboMenuReasonableItemsLimit)
+				if (this.HintEditorMode == Widgets.HintEditorMode.DisplayMenuForSmallList &&
+					this.hintListIndex.Count >= this.HintEditorSmallListLimit)
 				{
 					return;
 				}
@@ -788,8 +736,8 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			if (!this.completeMenu)
 			{
-				if (this.HintEditorComboMenu == Widgets.HintEditorComboMenu.IfReasonable &&
-					this.hintListIndex.Count >= this.ComboMenuReasonableItemsLimit)
+				if (this.HintEditorMode == Widgets.HintEditorMode.DisplayMenuForSmallList &&
+					this.hintListIndex.Count >= this.HintEditorSmallListLimit)
 				{
 					this.CloseComboMenu ();
 					return;
