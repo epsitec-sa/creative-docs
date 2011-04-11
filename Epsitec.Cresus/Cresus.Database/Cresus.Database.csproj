@@ -317,7 +317,6 @@
     <Compile Include="TypeConverter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Content Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Cresus.Database\Captions.00.resource">
