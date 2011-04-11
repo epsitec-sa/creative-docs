@@ -17,7 +17,9 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public class EnumValueController<T> : IWidgetUpdater
 	{
-		public EnumValueController(Marshaler marshaler, IEnumerable<EnumKeyValues<T>> possibleItems = null, System.Func<EnumKeyValues<T>, FormattedText> getUserText = null)
+		public EnumValueController(Marshaler marshaler,
+								   IEnumerable<EnumKeyValues<T>> possibleItems = null,
+								   ValueToFormattedTextConverter<EnumKeyValues<T>> getUserText = null)
 		{
 			this.marshaler     = marshaler;
 			this.possibleItems = possibleItems;
@@ -32,21 +34,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public void Attach(AutoCompleteTextField widget)
 		{
-			foreach (var item in possibleItems)
-			{
-				string key;
-				
-				if (typeof (T).IsEnum)
-				{
-					key = EnumConverter<T>.ConvertToNumericString (item.Key);
-				}
-				else
-				{
-					key = item.Key.ToString ();
-				}
-
-				widget.Items.Add (key, item);
-			}
+			this.AddItems (widget);
 
 			widget.ValueToDescriptionConverter = value => this.getUserText (value as EnumKeyValues<T>);
 			widget.HintComparer = (value, text) => EnumValueController<T>.MatchUserText (value as EnumKeyValues<T>, text);
@@ -68,23 +56,25 @@ namespace Epsitec.Cresus.Core.Controllers
 			//widget.KeyboardFocusChanged += (sender, e) => this.Update ();
 		}
 
-		private string[] TextList
+		private void AddItems(AutoCompleteTextField widget)
 		{
-			get
+			foreach (var item in this.possibleItems)
 			{
-				List<string> list = new List<string> ();
+				string key;
 
-				foreach (var item in possibleItems)
+				if (typeof (T).IsEnum)
 				{
-					string text = TextFormatter.FormatText (this.getUserText (item)).ToSimpleText ();
-					list.Add (text);
+					key = EnumConverter<T>.ConvertToNumericString (item.Key);
+				}
+				else
+				{
+					key = item.Key.ToString ();
 				}
 
-				return list.ToArray ();
+				widget.Items.Add (key, item);
 			}
 		}
-
-
+		
 		private static HintComparerResult MatchUserText(EnumKeyValues<T> value, string userText)
 		{
 			if (string.IsNullOrWhiteSpace (userText))
@@ -118,7 +108,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private readonly Marshaler marshaler;
 		private readonly IEnumerable<EnumKeyValues<T>> possibleItems;
-		private readonly System.Func<EnumKeyValues<T>, FormattedText> getUserText;
+		private readonly ValueToFormattedTextConverter<EnumKeyValues<T>> getUserText;
 		private AutoCompleteTextField widget;
 	}
 }

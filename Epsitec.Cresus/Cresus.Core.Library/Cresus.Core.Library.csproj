@@ -124,7 +124,7 @@
     <Compile Include="Widgets\Tiles\Tile.cs" />
     <Compile Include="Widgets\Tiles\TileArrow.cs" />
     <Compile Include="Widgets\Tiles\TileArrowMode.cs" />
-    <Compile Include="Widgets\ValueToDescriptionConverter.cs" />
+    <Compile Include="Widgets\ValueToFormattedTextConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Document\Common.Document.csproj">

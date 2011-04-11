@@ -297,12 +297,15 @@ namespace Epsitec.Cresus.Core.Controllers
 			var context = data.DataContextPool.FindDataContext (entity);
 
 			if ((context != null) &&
-				(context.IsRegisteredAsEmptyEntity (entity)))
+				(context.IsRegisteredAsEmptyEntity (entity)) &&
+				(entity.GetEntityStatus () != EntityStatus.Valid))
 			{
 				return Epsitec.Cresus.Core.Controllers.DataAccessors.CollectionTemplate.DefaultDefinitionInProgressText;
 			}
-			
-			return this.ToFormattedTextConverter (entity);
+			else
+			{
+				return this.ToFormattedTextConverter (entity);
+			}
 		}
 
 		private Widgets.HintComparerResult MatchUserText(T entity, string userText)

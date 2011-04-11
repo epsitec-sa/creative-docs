@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public class TextValueController : IWidgetUpdater
 	{
-		public TextValueController(Marshaler marshaler, IEnumerable<string[]> possibleItems = null, System.Func<string[], FormattedText> getUserText = null)
+		public TextValueController(Marshaler marshaler, IEnumerable<string[]> possibleItems = null, ValueToFormattedTextConverter<string[]> getUserText = null)
 		{
 			this.marshaler     = marshaler;
 			this.possibleItems = possibleItems;
@@ -349,7 +349,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		
 		private readonly Marshaler marshaler;
 		private readonly IEnumerable<string[]> possibleItems;
-		private readonly System.Func<string[], FormattedText> getUserText;
+		private readonly ValueToFormattedTextConverter<string[]> getUserText;
 		private readonly bool useFormattedText;
 		
 		private Widget widget;

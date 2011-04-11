@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		/// Méthode de conversion d'un objet stocké dans Items.Value en une chaîne à afficher.
 		/// </summary>
 		/// <value>The value converter.</value>
-		public ValueToDescriptionConverter				ValueToDescriptionConverter
+		public ValueToFormattedTextConverter				ValueToDescriptionConverter
 		{
 			get;
 			set;
@@ -635,7 +635,6 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		#region Combo menu
 		public void OpenComboMenu()
 		{
 			this.OpenComboMenu (completeMenu: true);
@@ -876,8 +875,8 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			this.CloseComboMenu ();
 		}
-		#endregion
 
+		
 		private const string SelectedItemChangedEvent = "SelectedItemChanged";
 
 

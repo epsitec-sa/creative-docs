@@ -15,6 +15,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Common.Types;
+using Epsitec.Cresus.Core.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 {
@@ -84,7 +85,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 			public override object CreateUI(FrameBox frame, UIBuilder builder)
 			{
 				IEnumerable<EnumKeyValues<TField>> possibleItems = EnumKeyValues.FromEnum<TField> ();
-				System.Func<EnumKeyValues<TField>, FormattedText> getUserText = x => TextFormatter.FormatText (x);
+				ValueToFormattedTextConverter<EnumKeyValues<TField>> getUserText = x => TextFormatter.FormatText (x);
 
 				var tile    = frame as EditionTile;
 				var marshaler = this.CreateMarshaler ();
