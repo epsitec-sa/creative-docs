@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 				}
 			}
 
-			object controllerInstance = System.Activator.CreateInstance (controllerType);
+			object controllerInstance = System.Activator.CreateInstance (controllerType, true);
 			
 			return controllerInstance as EntityViewController;
 		}

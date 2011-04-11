@@ -1,13 +1,12 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Dialogs;
 
 using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
@@ -24,8 +23,12 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionImageViewController : EditionViewController<Entities.ImageEntity>
+	public sealed class EditionImageViewController : EditionViewController<Entities.ImageEntity>
 	{
+		private EditionImageViewController()
+		{
+		}
+
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -142,7 +145,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void ImportImage()
 		{
-			var filename = this.OpenFileDialog (CoreProgram.Application, this.Entity.ImageBlob.FileUri);
+			var filename = this.OpenFileDialog (this.Orchestrator.Host, this.Entity.ImageBlob.FileUri);
 
 			if (!string.IsNullOrWhiteSpace (filename))
 			{
@@ -150,7 +153,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
-		private string OpenFileDialog(CoreApplication application, string uri)
+		private string OpenFileDialog(CoreApp application, string uri)
 		{
 			//	Exemple de contenu pour uri:
 			//	"file://daniel@daniel-pc/C:/Users/Daniel/Documents/t.jpg"
@@ -192,20 +195,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			dialog.AcceptMultipleSelection = false;
 			dialog.OwnerWindow = application.Window;
 			dialog.OpenDialog ();
-			if (dialog.Result != DialogResult.Accept)
-			{
-				return null;
-			}
 
-			return dialog.FileName;
+			return (dialog.Result == DialogResult.Accept) ? dialog.FileName : null;
 		}
 
 		private void ImportImage(string filename)
 		{
-			throw new System.NotImplementedException ();
-#if false
 			var file = new System.IO.FileInfo (filename);
-			var store = this.Data.ImageDataStore;
+			var store = this.Data.GetComponent<ImageDataStore> ();
 
 			store.UpdateImage (this.DataContext, this.Entity, file);
 
@@ -213,7 +210,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			{
 				this.Entity.Name = System.IO.Path.GetFileNameWithoutExtension (this.Entity.ImageBlob.FileName);
 			}
-#endif
 		}
 	}
 }

@@ -8,6 +8,7 @@ using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
+using Epsitec.Cresus.Core.Data;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -43,10 +44,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		private void CreateUIPreview(Widget parent)
 		{
-			throw new System.NotImplementedException ();
-#if false
 			//	Crée l'aperçu de l'image.
-			var store = this.Data.ImageDataStore;
+			var store = this.Data.GetComponent<ImageDataStore> ();
 			var data = store.GetImageData (this.Entity.Code, 300);
 			Image image = data.GetImage ();
 
@@ -66,7 +65,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				Image = image,
 				Dock = DockStyle.Fill,
 			};
-#endif
 		}
 	}
 }
