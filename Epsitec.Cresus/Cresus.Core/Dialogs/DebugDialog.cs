@@ -28,9 +28,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.settingsTabPages = new List<SettingsTabPages.AbstractSettingsTabPage> ();
 		}
 
-		#region ISettingsTabBook Members
+		#region ISettingsDialog Members
 
-		public CoreData Data
+		CoreData ISettingsDialog.Data
 		{
 			get
 			{
@@ -38,6 +38,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 		}
 
+		Window ISettingsDialog.DefaultOwnerWindow
+		{
+			get
+			{
+				return this.application.Window;
+			}
+		}
 		#endregion
 
 		protected override void SetupWindow(Window window)
@@ -48,7 +55,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		protected override void SetupWidgets(Window window)
 		{
-			var userManager = this.Data.GetComponent<UserManager> ();
+			ISettingsDialog settingsDialog = this;
+
+			var userManager = settingsDialog.Data.GetComponent<UserManager> ();
 			bool devel = userManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.Developer);
 
 			var frame = new FrameBox

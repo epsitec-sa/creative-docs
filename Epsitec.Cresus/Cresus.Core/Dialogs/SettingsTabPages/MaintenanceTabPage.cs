@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			}
 			catch (System.Exception ex)
 			{
-				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, ex.Message).OpenDialog (CoreProgram.Application.Window);
+				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, ex.Message).OpenDialog (this.Container.DefaultOwnerWindow);
 			}
 		}
 
@@ -159,12 +159,12 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			try
 			{
 				CoreData.RestoreDatabase (Paths.BackupPath, CoreData.GetDatabaseAccess ());
-				MessageDialog.CreateOk ("Restitution de la base de données", DialogIcon.Warning, "La restitution s'est terminée correctement.<br/>L'application devra être relancée.").OpenDialog (CoreProgram.Application.Window);
+				MessageDialog.CreateOk ("Restitution de la base de données", DialogIcon.Warning, "La restitution s'est terminée correctement.<br/>L'application devra être relancée.").OpenDialog (this.Container.DefaultOwnerWindow);
 				System.Environment.Exit (0);
 			}
 			catch (System.Exception ex)
 			{
-				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, ex.Message).OpenDialog (CoreProgram.Application.Window);
+				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, ex.Message).OpenDialog (this.Container.DefaultOwnerWindow);
 			}
 		}
 
@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			var fileInfo = new System.IO.FileInfo (filename);
 
 			this.Container.Data.ImportDatabase (fileInfo);
-			MessageDialog.CreateOk ("Importation de la base de données", DialogIcon.Warning, "L'importation s'est terminée correctement.<br/>L'application devra être relancée.").OpenDialog (CoreProgram.Application.Window);
+			MessageDialog.CreateOk ("Importation de la base de données", DialogIcon.Warning, "L'importation s'est terminée correctement.<br/>L'application devra être relancée.").OpenDialog (this.Container.DefaultOwnerWindow);
 			System.Environment.Exit (0);
 		}
 
@@ -237,7 +237,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			dialog.Filters.Add ("xml", "Xml", "*.xml");
 			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
 
-			dialog.OwnerWindow = CoreProgram.Application.Window;
+			dialog.OwnerWindow = this.Container.DefaultOwnerWindow;
 			dialog.OpenDialog ();
 
 			if (dialog.Result != DialogResult.Accept)
@@ -260,7 +260,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
 
 			dialog.AcceptMultipleSelection = false;
-			dialog.OwnerWindow = CoreProgram.Application.Window;
+			dialog.OwnerWindow = this.Container.DefaultOwnerWindow;
 			dialog.OpenDialog ();
 
 			if (dialog.Result != DialogResult.Accept)

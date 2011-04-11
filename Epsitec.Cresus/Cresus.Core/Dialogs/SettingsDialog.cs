@@ -28,13 +28,21 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 
 
-		#region ISettingsTabBook Members
+		#region ISettingsDialog Members
 
 		CoreData ISettingsDialog.Data
 		{
 			get
 			{
 				return this.application.FindComponent<CoreData> ();
+			}
+		}
+
+		Window ISettingsDialog.DefaultOwnerWindow
+		{
+			get
+			{
+				return this.application.Window;
 			}
 		}
 
