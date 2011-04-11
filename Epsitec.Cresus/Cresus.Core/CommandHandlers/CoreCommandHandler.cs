@@ -17,6 +17,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		public CoreCommandHandler(CoreCommandDispatcher commandDispatcher)
 		{
 			this.commandDispatcher = commandDispatcher;
+			this.application = this.commandDispatcher.Host as CoreApplication;
 		}
 
 
@@ -31,7 +32,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		[Command (ApplicationCommands.Id.Quit)]
 		public void ProcessQuit(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			CoreProgram.Application.Shutdown ();
+			this.application.Shutdown ();
 		}
 
 
@@ -86,7 +87,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		public void ProcessFileImportV11(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var v11 = new V11.ImportFile ();
-			v11.Import (CoreProgram.Application);
+			v11.Import (this.application);
 		}
 
 		[Command (Res.CommandIds.Global.ShowSettings)]
@@ -95,7 +96,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			this.commandDispatcher.Dispatch (dispatcher, e,
 				delegate
 				{
-					using (var dialog = new Dialogs.SettingsDialog (CoreProgram.Application))
+					using (var dialog = new Dialogs.SettingsDialog (this.application))
 					{
 						dialog.OpenDialog ();
 					}
@@ -108,7 +109,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			this.commandDispatcher.Dispatch (dispatcher, e,
 				delegate
 				{
-					using (var dialog = new Dialogs.DebugDialog (CoreProgram.Application))
+					using (var dialog = new Dialogs.DebugDialog (this.application))
 					{
 						dialog.OpenDialog ();
 					}
@@ -121,7 +122,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			this.commandDispatcher.Dispatch (dispatcher, e,
 				delegate
 				{
-					var app = CoreProgram.Application;
+					var app = this.application;
 					var manager = app.UserManager;
 					manager.Authenticate (app, manager.AuthenticatedUser, softwareStartup: false);
 				});
@@ -142,7 +143,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 
 		#endregion
 
-		private readonly CoreCommandDispatcher commandDispatcher;
+		private readonly CoreCommandDispatcher	commandDispatcher;
+		private readonly CoreApplication		application;
 	}
-
 }
