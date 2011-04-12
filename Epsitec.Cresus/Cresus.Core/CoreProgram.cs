@@ -1,15 +1,12 @@
-﻿//	Copyright © 2008-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2008-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Debug;
 using Epsitec.Common.Splash;
 
 using Epsitec.Cresus.Core.Library;
 
-using Epsitec.Cresus.Database;
-
 using System.Collections.Generic;
-
-using System.IO;
 
 namespace Epsitec.Cresus.Core
 {
@@ -20,102 +17,22 @@ namespace Epsitec.Cresus.Core
 		/// </summary>
 		[System.STAThread]
 		public static void Main(string[] args)
-		{		
-			if (args.Length == 2 && args[0].Equals ("-db-create-epsitec"))
+		{
+			if (args.Length > 0)
 			{
-				CoreProgram.ExecuteCreateEpsitecDatabase (args);
-			}
-			else if (args.Length == 2 && args[0].Equals ("-db-create-user"))
-			{
-				CoreProgram.ExecuteCreateUserDatabase (args);
-			}
-			else if (args.Length == 2 && args[0].Equals ("-db-reload-epsitec"))
-			{
-				CoreProgram.ExecuteReloadEpsitecData (args);
-			}
-			else if (args.Length == 2 && args[0].Equals ("-db-export"))
-			{
-				CoreProgram.ExecuteDatabaseExport (args);
-			}
-			else if (args.Length == 2 && args[0].Equals ("-db-backup"))
-			{
-				CoreProgram.ExecuteDatabaseBackup (args);
-			}
-			else if (args.Length == 2 && args[0].Equals ("-db-restore"))
-			{
-				CoreProgram.ExecuteDatabaseRestore (args);
-			}
-			else if (args.Length == 1 && args[0].Equals ("-db-delete"))
-			{
-				CoreProgram.ExecuteDatabaseDelete (args);
+				CoreProgramOperations.ProcessCommandLine (args);
 			}
 			else
 			{
 				CoreProgram.ExecuteCoreProgram ();
 			}
 		}
-
-		private static void ExecuteCreateEpsitecDatabase(string[] args)
-		{
-			FileInfo file = new FileInfo (args[1]);
-			DbAccess dbAccess = CoreData.GetDatabaseAccess ();
-
-			CoreData.ImportDatabase (file, dbAccess);
-		}
-
-		private static void ExecuteCreateUserDatabase(string[] args)
-		{
-			FileInfo file = new FileInfo (args[1]);
-			DbAccess dbAccess = CoreData.GetDatabaseAccess ();
-
-			CoreData.CreateUserDatabase (file, dbAccess);
-		}
-
-		private static void ExecuteReloadEpsitecData(string[] args)
-		{
-			FileInfo file = new FileInfo (args[1]);
-			DbAccess dbAccess = CoreData.GetDatabaseAccess ();
-
-			CoreData.ImportSharedData (file, dbAccess);
-		}
-
-		private static void ExecuteDatabaseExport(string[] args)
-		{
-			FileInfo file = new FileInfo (args[1]);
-			DbAccess dbAccess = CoreData.GetDatabaseAccess ();
-
-			CoreData.ExportDatabase  (file, dbAccess, false);
-		}
-
-		private static void ExecuteDatabaseBackup(string[] args)
-		{
-			string file = args[1];
-			DbAccess dbAccess = CoreData.GetDatabaseAccess ();
-
-			CoreData.BackupDatabase (file, dbAccess);
-		}
-
-		private static void ExecuteDatabaseRestore(string[] args)
-		{
-			string file = args[1];
-			DbAccess dbAccess = CoreData.GetDatabaseAccess ();
-
-			CoreData.RestoreDatabase (file, dbAccess);
-		}
-
-		private static void ExecuteDatabaseDelete(string[] args)
-		{
-			DbAccess dbAccess = CoreData.GetDatabaseAccess ();
-
-			Data.Infrastructure.DropDatabase (dbAccess);
-		}
 		
         private static void ExecuteCoreProgram()
 		{
 //-			Data.Test.Example1 ();
 			
-			Epsitec.Common.Debug.GeneralExceptionCatcher.Setup ();
-
+			GeneralExceptionCatcher.Setup ();
 			UI.Initialize ();
 
 			using (var app = new CoreApplication ())
