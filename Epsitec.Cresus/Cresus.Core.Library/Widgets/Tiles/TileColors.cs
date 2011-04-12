@@ -9,6 +9,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Widgets.Tiles
 {
+	/// <summary>
+	/// The <c>TileColors</c> class defines the various colors used to paint the tiles,
+	/// based on the active <see cref="IAdorner"/>.
+	/// </summary>
 	public static class TileColors
 	{
 		public static IEnumerable<Color> BorderColors

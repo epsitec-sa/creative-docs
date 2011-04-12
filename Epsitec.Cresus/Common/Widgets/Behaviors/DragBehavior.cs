@@ -1,5 +1,5 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets.Behaviors
 {
@@ -8,13 +8,9 @@ namespace Epsitec.Common.Widgets.Behaviors
 	/// détecter la condition de début de drag, gérer le déplacement et terminer
 	/// le drag.
 	/// </summary>
-	public class DragBehavior
+	public sealed class DragBehavior
 	{
-		public DragBehavior(IDragBehaviorHost host, Widget widget) : this (host, widget, false, false)
-		{
-		}
-		
-		public DragBehavior(IDragBehaviorHost host, Widget widget, bool isRelative, bool isZeroBased)
+		public DragBehavior(IDragBehaviorHost host, Widget widget, bool isRelative = false, bool isZeroBased = false)
 		{
 			this.host          = host;
 			this.widget        = widget;
@@ -22,28 +18,34 @@ namespace Epsitec.Common.Widgets.Behaviors
 			this.isZeroBased = isZeroBased;
 		}
 		
-		public DragBehavior(Widget widget) : this(widget as IDragBehaviorHost, widget)
+		public DragBehavior(Widget widget, bool isRelative = false, bool isZeroBased = false)
+			: this (widget as IDragBehaviorHost, widget, isRelative, isZeroBased)
 		{
 		}
-		
-		public DragBehavior(Widget widget, bool isRelative, bool isZeroBased) : this(widget as IDragBehaviorHost, widget, isRelative, isZeroBased)
+
+
+		public IDragBehaviorHost Host
 		{
+			get
+			{
+				return this.host;
+			}
 		}
-		
-		
-		public IDragBehaviorHost			Host
+
+		public Widget Widget
 		{
-			get { return this.host; }
+			get
+			{
+				return this.widget;
+			}
 		}
-		
-		public Widget						Widget
+
+		public bool IsDragging
 		{
-			get { return this.widget; }
-		}
-		
-		public bool							IsDragging
-		{
-			get { return this.isDragging; }
+			get
+			{
+				return this.isDragging;
+			}
 		}
 		
 		
@@ -101,7 +103,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 		}
 		
 		
-		protected void StartDragging(Message message, Drawing.Point pos)
+		private void StartDragging(Message message, Drawing.Point pos)
 		{
 			if (this.isRelative)
 			{
@@ -127,8 +129,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			this.isDragging = true;
 		}
-		
-		protected void StopDragging(Message message, Drawing.Point pos)
+
+		private void StopDragging(Message message, Drawing.Point pos)
 		{
 			if (this.isDragging)
 			{
@@ -140,8 +142,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 				this.host.OnDragEnd ();
 			}
 		}
-		
-		protected void HandleDragging(Message message, Drawing.Point pos)
+
+		private void HandleDragging(Message message, Drawing.Point pos)
 		{
 			if (this.isDragging)
 			{
@@ -165,13 +167,13 @@ namespace Epsitec.Common.Widgets.Behaviors
 		}
 		
 		
-		protected IDragBehaviorHost			host;
-		protected Widget					widget;
+		private readonly IDragBehaviorHost		host;
+		private readonly Widget					widget;
 		
-		protected bool						isDragging;
-		protected bool						isRelative;
-		protected bool						isZeroBased;
+		private bool							isDragging;
+		private bool							isRelative;
+		private bool							isZeroBased;
 		
-		protected Drawing.Point				dragOffset;
+		private Drawing.Point					dragOffset;
 	}
 }

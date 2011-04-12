@@ -42,24 +42,12 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	///       o--TilePageButton
 	/// 
 	/// </summary>
-	public abstract class Tile : FrameBox, Common.Widgets.Behaviors.IDragBehaviorHost
+	public abstract class Tile : FrameBox, Common.Widgets.Behaviors.IDragBehaviorHost, IReadOnly
 	{
 		protected Tile(Direction arrowDirection)
 		{
 			this.tileArrow    = new TileArrow (arrowDirection);
-			this.dragBehavior = new Common.Widgets.Behaviors.DragBehavior (this, true, true);
-		}
-
-		/// <summary>
-		/// Gets or sets a value indicating whether this tile is read only.
-		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if this tile is read only; otherwise, <c>false</c>.
-		/// </value>
-		public bool IsReadOnly
-		{
-			get;
-			set;
+			this.dragBehavior = new Common.Widgets.Behaviors.DragBehavior (this, isRelative: true, isZeroBased: true);
 		}
 
 		public virtual bool IsDraggable
@@ -342,6 +330,22 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		#endregion
 
+
+		#region IReadOnly Members
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this tile is read only.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this tile is read only; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsReadOnly
+		{
+			get;
+			set;
+		}
+
+		#endregion
 
 		#region IDragBehaviorHost Members
 
