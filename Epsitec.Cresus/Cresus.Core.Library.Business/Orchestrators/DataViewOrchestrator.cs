@@ -136,6 +136,12 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 
 
+		public void CreateUI(Widget container)
+		{
+			this.MainWindowController.CreateUI (container);
+		}
+
+
 		/// <summary>
 		/// Clears the active entity. This implicitly calls <see cref="ClearBusinessContext"/>.
 		/// </summary>

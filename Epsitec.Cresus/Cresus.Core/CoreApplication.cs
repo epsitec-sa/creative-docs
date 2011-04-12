@@ -89,21 +89,36 @@ namespace Epsitec.Cresus.Core
 		{
 			base.SetupApplication ();
 
-			this.CreateManualComponents ();
+			var initializers = new List<System.Action> ();
+
+			this.CreateManualComponents (initializers);
 			this.RegisterEventHandlers ();
 
 			this.DiscoverPlugIns ();
 			this.CreatePlugIns ();
 			this.SetupData ();
-			this.CreateUI ();
+			this.CreateUI (initializers);
 		}
 
-		internal void AsyncSaveApplicationState()
+		public void ShutdownApplication()
+		{
+			this.OnShutdownStarted ();
+			this.DisposePlugIns ();
+		}
+
+
+		protected override void Dispose(bool disposing)
+		{
+			base.Dispose (disposing);
+		}
+
+		
+		private void AsyncSaveApplicationState()
 		{
 			Application.QueueAsyncCallback (this.SaveApplicationState);
 		}
 
-		internal void SetupData()
+		private void SetupData()
 		{
 			if (this.Data.ForceDatabaseCreation)
 			{
@@ -113,12 +128,13 @@ namespace Epsitec.Cresus.Core
 			this.OnSetupDataDone ();
 		}
 
-		internal void DiscoverPlugIns()
+		
+		private void DiscoverPlugIns()
 		{
 			this.plugInFactory = new PlugIns.PlugInFactory (this);
 		}
 
-		internal void CreatePlugIns()
+		private void CreatePlugIns()
 		{
 			foreach (var attribute in this.plugInFactory.GetPlugInAttributeList ())
 			{
@@ -126,24 +142,17 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		internal void Shutdown()
+		private void DisposePlugIns()
 		{
-			this.OnShutdownStarted ();
-
 			this.plugIns.ForEach (x => x.Dispose ());
 			this.plugIns.Clear ();
 		}
-
 		
-		protected override void Dispose(bool disposing)
+		private void CreateManualComponents(IList<System.Action> initializers)
 		{
-			base.Dispose (disposing);
-		}
+			var orchestrator = new DataViewOrchestrator (this);
 
-
-		private void CreateManualComponents()
-		{
-			new DataViewOrchestrator (this);
+			initializers.Add (() => orchestrator.CreateUI (this.Window.Root));
 		}
 
 		private void RegisterEventHandlers()
@@ -151,15 +160,17 @@ namespace Epsitec.Cresus.Core
 			this.UserManager.AuthenticatedUserChanged += this.HandleAuthenticatedUserChanged;
 		}
 
-		private void CreateUI()
+		private void CreateUI(IEnumerable<System.Action> initializers)
 		{
 			this.OnCreatingUI ();
+			
 			this.CreateUIMainWindow ();
-			this.CreateUIControllers ();
+			this.CreateUIControllers (initializers);
+			
 			this.RestoreApplicationState ();
+			
 			this.OnCreatedUI ();
-
-			this.IsReady = true;
+			this.OnApplicationReady ();
 		}
 
 		private void CreateUIMainWindow()
@@ -184,14 +195,30 @@ namespace Epsitec.Cresus.Core
 			this.PersistenceManager.Register (this.Window);
 		}
 
-		private void CreateUIControllers()
+		private void CreateUIControllers(IEnumerable<System.Action> initializers)
 		{
-			//	HACK: loop not needed
-			foreach (var orchestrator in this.FindAllComponents ().OfType<DataViewOrchestrator> ())
-			{
-				var mainWindowController = orchestrator.MainWindowController;
+			initializers.ForEach (action => action ());
+		}
 
-				mainWindowController.CreateUI (this.Window.Root);
+		private void SaveApplicationState()
+		{
+			if (this.IsReady)
+			{
+				System.Diagnostics.Debug.WriteLine ("Saving application state.");
+				System.DateTime now = System.DateTime.Now.ToUniversalTime ();
+				string timeStamp = string.Concat (now.ToShortDateString (), " ", now.ToShortTimeString (), " UTC");
+
+				XDocument doc = new XDocument (
+					new XDeclaration ("1.0", "utf-8", "yes"),
+					new XComment ("Saved on " + timeStamp),
+					new XElement ("store",
+					//-						this.StateManager.SaveStates ("stateManager"),
+						UI.SaveWindowPositions ("windowPositions"),
+						this.PersistenceManager.Save ("uiSettings"),
+						this.SettingsManager.Save ("appSettings")));
+
+				doc.Save (CoreApplication.Paths.SettingsPath);
+				System.Diagnostics.Debug.WriteLine ("Save done.");
 			}
 		}
 
@@ -216,30 +243,7 @@ namespace Epsitec.Cresus.Core
 //-			this.UpdateCommandsAfterStateChange ();
 		}
 
-		private void SaveApplicationState()
-		{
-			if (this.IsReady)
-			{
-				System.Diagnostics.Debug.WriteLine ("Saving application state.");
-				System.DateTime now = System.DateTime.Now.ToUniversalTime ();
-				string timeStamp = string.Concat (now.ToShortDateString (), " ", now.ToShortTimeString (), " UTC");
-
-				XDocument doc = new XDocument (
-					new XDeclaration ("1.0", "utf-8", "yes"),
-					new XComment ("Saved on " + timeStamp),
-					new XElement ("store",
-//-						this.StateManager.SaveStates ("stateManager"),
-						UI.SaveWindowPositions ("windowPositions"),
-						this.PersistenceManager.Save ("uiSettings"),
-						this.SettingsManager.Save ("appSettings")));
-
-				doc.Save (CoreApplication.Paths.SettingsPath);
-				System.Diagnostics.Debug.WriteLine ("Save done.");
-			}
-		}
-
-
-
+		
 		private void HandleAuthenticatedUserChanged(object sender)
 		{
 			this.Data.SetActiveUser (this.UserManager.AuthenticatedUser);
@@ -277,7 +281,11 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		
+		private void OnApplicationReady()
+		{
+			this.IsReady = true;
+		}
+
 		private void OnShutdownStarted()
 		{
 			var handler = this.ShutdownStarted;
@@ -288,6 +296,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		
 		public event EventHandler						SetupDataDone;
 		public event EventHandler						CreatingUI;
 		public event EventHandler						CreatedUI;
@@ -295,8 +304,6 @@ namespace Epsitec.Cresus.Core
 
 
 		private readonly List<PlugIns.ICorePlugIn>		plugIns;
-
-		private readonly CoreData						data;
 		private PlugIns.PlugInFactory					plugInFactory;
 	}
 }

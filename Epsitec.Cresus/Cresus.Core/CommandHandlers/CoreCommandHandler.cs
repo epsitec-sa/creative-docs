@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		[Command (ApplicationCommands.Id.Quit)]
 		public void ProcessQuit(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.application.Shutdown ();
+			this.application.ShutdownApplication ();
 		}
 
 
