@@ -543,11 +543,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private SqlContainer BuildSqlContainerForRequest(Request request, AliasNode rootEntityAlias, AbstractEntity entity)
 		{
-			if (this.DataContext.IsForeignEntity (entity))
-			{
-				throw new System.InvalidOperationException ("Usage of a foreign entity in a request is not allowed.");
-			}
-
 			SqlField sqlTableForRequestRootEntity = this.BuildTableForRootEntity (rootEntityAlias, entity);
 			SqlContainer sqlContainerForEntity = this.BuildSqlContainerForEntity (request, rootEntityAlias, entity);
 
@@ -568,11 +563,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private SqlContainer BuildSqlContainerForEntity(Request request, AliasNode rootEntityAlias, AbstractEntity entity)
 		{
-			if (this.DataContext.IsForeignEntity (entity))
-			{
-				throw new System.InvalidOperationException ("Usage of a foreign entity in a request is not allowed.");
-			}
-
 			SqlContainer sqlContainerForRequestRootEntityId = this.BuildSqlContainerForRequestRootEntityId (request, rootEntityAlias, entity);
 			SqlContainer sqlContainerForRequestRequestedEntity = this.BuildSqlContainerForRequestRequestedEntity (request, rootEntityAlias, entity);
 			SqlContainer sqlContainerForSubEntities = this.BuildSqlContainerForSubEntities (rootEntityAlias, entity);
@@ -764,11 +754,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		{
 			AbstractEntity target = entity.GetField<AbstractEntity> (field.Id);
 
-			if (this.DataContext.IsForeignEntity (target))
-			{
-				throw new System.InvalidOperationException ("Usage of a foreign entity in a request is not allowed.");
-			}
-
 			if (this.DataContext.IsPersistent (target))
 			{
 				DbKey targetKey = this.DataContext.GetNormalizedEntityKey (target).Value.RowKey;
@@ -862,11 +847,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private SqlContainer BuildSqlContainerForCollection(Request request, AliasNode rootSourceAlias, AbstractEntity source, StructuredTypeField field, AbstractEntity target)
 		{
-			if (this.DataContext.IsForeignEntity (target))
-			{
-				throw new System.InvalidOperationException ("Usage of a foreign entity in a request is not allowed.");
-			}
-
 			if (this.DataContext.IsPersistent (target))
 			{
 				DbKey targetKey = this.DataContext.GetNormalizedEntityKey (target).Value.RowKey;

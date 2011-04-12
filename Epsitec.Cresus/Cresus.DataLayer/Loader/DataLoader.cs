@@ -6,6 +6,7 @@ using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Infrastructure;
+using Epsitec.Cresus.DataLayer.Schema;
 using Epsitec.Cresus.DataLayer.Serialization;
 
 using System.Collections.Generic;
@@ -143,6 +144,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			request.ThrowIfNull ("request");
 			request.RootEntity.ThrowIfNull ("request.RootEntity");
 			request.RequestedEntity.ThrowIfNull ("request.RequestedEntity");
+
+			this.CheckForCycles (request.RootEntity);
+			this.CheckForForeignEntities (request.RootEntity);
 
 			EntityModificationEntry latestEntityModificationEntry;
 			IEnumerable<EntityData> entityData;
@@ -310,7 +314,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-
 		private bool DeserializeEntityData(EntityData entityData, long newLogId)
 		{
 			bool modifications = false;
@@ -367,8 +370,99 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				this.DataContext.DefineEntityModificationEntryId (entity, entryId);
 			}
 		}
-		
 
+
+		private void CheckForCycles(AbstractEntity entity)
+		{
+			if (!this.DataContext.IsPersistent (entity))
+			{
+				ISet<AbstractEntity> currentEntities = new HashSet<AbstractEntity> ();
+				ISet<AbstractEntity> entitiesChecked = new HashSet<AbstractEntity> ();
+
+				this.CheckForCycles (currentEntities, entitiesChecked, entity);
+			}
+		}
+
+
+		private void CheckForCycles(ISet<AbstractEntity> currentEntities, ISet<AbstractEntity> entitiesChecked, AbstractEntity entity)
+		{
+			if (currentEntities.Contains (entity))
+			{
+				throw new System.ArgumentException ("Cycles are not allowed in requests.");
+			}
+
+			if (!entitiesChecked.Contains (entity))
+			{
+				currentEntities.Add (entity);
+
+				var targets = this.GetDefinedChildren (entity)
+					.Where (e => !this.DataContext.IsPersistent (e))
+					.ToList ();
+
+				foreach (var target in targets)
+				{
+					this.CheckForCycles (currentEntities, entitiesChecked, target);
+				}
+
+				currentEntities.Remove (entity);
+				entitiesChecked.Add (entity);
+			}
+		}
+
+
+		private void CheckForForeignEntities(AbstractEntity entity)
+		{
+			HashSet<AbstractEntity> entitiesChecked = new HashSet<AbstractEntity> ();
+			HashSet<AbstractEntity> entitiesToCheck = new HashSet<AbstractEntity> ()
+			{
+				entity,
+			};
+
+			while (entitiesToCheck.Count > 0)
+			{
+				var entityToCheck = entitiesToCheck.First ();
+
+				entitiesToCheck.Remove (entityToCheck);
+
+				if (this.DataContext.IsForeignEntity (entityToCheck))
+				{
+					throw new System.ArgumentException ("Usage of a foreign entity in a request is not allowed.");
+				}
+
+				entitiesChecked.Add (entityToCheck);
+
+				if (!this.DataContext.IsPersistent (entityToCheck))
+				{
+					var targets = this.GetDefinedChildren (entityToCheck)
+						.Where (e => !entitiesChecked.Contains (e));
+
+					entitiesToCheck.AddRange (targets);
+				}
+			}
+		}
+
+
+		private IEnumerable<AbstractEntity> GetDefinedChildren(AbstractEntity entity)
+		{
+			EntityTypeEngine entityTypeEngine = this.DataInfrastructure.EntityEngine.EntityTypeEngine;
+			EntityContext entityContext = this.DataContext.EntityContext;
+
+			Druid entityTypeId = entity.GetEntityStructuredTypeId ();
+
+			var referenceTargets = entityTypeEngine
+				.GetReferenceFields (entityTypeId)
+				.Where (f => entityContext.IsFieldDefined (f.CaptionId.ToResourceId (), entity))
+				.Select (f => entity.GetField<AbstractEntity> (f.CaptionId.ToResourceId ()));
+
+			var collectionTargets = entityTypeEngine
+				.GetCollectionFields (entityTypeId)
+				.Where (f => entityContext.IsFieldDefined (f.CaptionId.ToResourceId (), entity))
+				.SelectMany (f => entity.GetFieldCollection<AbstractEntity> (f.CaptionId.ToResourceId ()));
+
+			return referenceTargets.Concat (collectionTargets);
+		}
+
+		
 	}
 
 
