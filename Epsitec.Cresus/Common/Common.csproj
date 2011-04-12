@@ -348,6 +348,7 @@
     <Compile Include="Support\AssemblyLoader.cs" />
     <Compile Include="Support\CacheManager.cs" />
     <Compile Include="Support\Extensions\TypeExtensions.cs" />
+    <Compile Include="Support\TimedReaderWriterLock.cs" />
     <Compile Include="Support\SimpleCallback.cs" />
     <Compile Include="Support\CancelEventArgs.cs" />
     <Compile Include="Support\CaptionCache.cs" />

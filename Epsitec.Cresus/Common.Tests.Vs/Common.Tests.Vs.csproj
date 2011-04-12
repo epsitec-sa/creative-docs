@@ -60,7 +60,9 @@
     <Compile Include="Support\Extensions\UnitTestEntityModifications.cs" />
     <Compile Include="Support\Extensions\UnitTestEnumerableExtensions.cs" />
     <Compile Include="Support\Extensions\UnitTestExceptionThrower.cs" />
+    <Compile Include="Support\Extensions\UnitTestIlistExtensions.cs" />
     <Compile Include="Support\Extensions\UnitTestStringExtensions.cs" />
+    <Compile Include="Support\UnitTestTimedReaderWriterLock.cs" />
     <Compile Include="TestHelper.cs" />
     <Compile Include="Support\UnitTestArrayEqualityComparer.cs" />
     <Compile Include="Support\UnitTestLambdaComparer.cs" />
