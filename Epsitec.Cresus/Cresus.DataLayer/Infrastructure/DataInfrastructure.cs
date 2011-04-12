@@ -538,7 +538,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			dataContext.ThrowIfNull ("dataContext");
 			dataContext.ThrowIf (d => !this.dataContextPool.Contains (d), "dataContext is not owned by this instance");
 			entities.ThrowIfNull ("entity");
-			entities.ThrowIf (e => e.Any (x => dataContext.IsForeignEntity (x)), "entity is not owned by dataContext.");
+			entities.ThrowIf (e => e.Any (x => !dataContext.Contains (x)), "entity is not owned by dataContext.");
 
 			this.AssertIsConnected ();
 
