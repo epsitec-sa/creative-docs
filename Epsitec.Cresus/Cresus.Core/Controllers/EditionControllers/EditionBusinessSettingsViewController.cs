@@ -46,6 +46,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueGetter         = () => this.Entity.Company,
 				ValueSetter         = x => this.Entity.Company = x,
 				ReferenceController = new ReferenceController (() => this.Entity.Company),
+				PossibleItemsFilter = x => x.Person is LegalPersonEntity,
 
 				ToTextArrayConverter     = x => x.GetEntityKeywords (),
 				ToFormattedTextConverter = x => x.GetCompactSummary ()

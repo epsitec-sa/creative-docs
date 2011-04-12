@@ -41,6 +41,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			set;
 		}
 
+		public System.Predicate<T>				PossibleItemsFilter
+		{
+			get;
+			set;
+		}
+
 		public System.Action<T>					ValueSetter
 		{
 			get;
@@ -139,13 +145,24 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public IEnumerable<T> GetPossibleItems()
 		{
+			IEnumerable<T> collection;
+
 			if (this.PossibleItemsGetter == null)
 			{
-				return this.businessContext.Data.GetAllEntities<T> (DataExtractionMode.Sorted, this.businessContext.DataContext);
+				 collection = this.businessContext.Data.GetAllEntities<T> (DataExtractionMode.Sorted, this.businessContext.DataContext);
 			}
 			else
 			{
-				return this.PossibleItemsGetter ();
+				collection = this.PossibleItemsGetter ();
+			}
+
+			if (this.PossibleItemsFilter == null)
+			{
+				return collection;
+			}
+			else
+			{
+				return collection.Where (x => this.PossibleItemsFilter (x));
 			}
 		}
 
