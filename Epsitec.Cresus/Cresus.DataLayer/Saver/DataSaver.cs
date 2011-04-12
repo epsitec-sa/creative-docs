@@ -140,6 +140,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			var synchronizationJobs = this.ConvertPersistenceJobs (persistenceJobs);
 
 			this.CleanDeletedEntities (entitiesToDelete);
+			this.DataContext.ClearFieldsToResave ();
 			this.UpdateDataGeneration ();
 
 			return synchronizationJobs;
