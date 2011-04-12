@@ -29,7 +29,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <summary>
 		/// Builds a new empty <see cref="EntityCache"/>.
 		/// </summary>
-		/// <param name="dataContext">The <see cref="DataContext"/> used by this instance.</param>
 		/// <param name="entityTypeEngine">The <see cref="EntityTypeEngine"/> used by this instance.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="entityTypeEngine"/> is <c>null</c>.</exception>
 		public EntityCache(EntityTypeEngine entityTypeEngine)
