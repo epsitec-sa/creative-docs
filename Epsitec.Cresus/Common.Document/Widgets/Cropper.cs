@@ -966,7 +966,7 @@ namespace Epsitec.Common.Document.Widgets
 		protected virtual void OnCropChanged()
 		{
 			//	Génère un événement pour dire que l'offset a changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("CropChanged");
+			var handler = this.GetUserEventHandler("CropChanged");
 			if (handler != null)
 			{
 				handler(this);

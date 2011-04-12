@@ -502,7 +502,7 @@ namespace Epsitec.Common.Widgets
 
 		private void OnColorChanged()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler (ColorSample.ColorChangedEvent);
+			var handler = this.GetUserEventHandler (ColorSample.ColorChangedEvent);
 			
 			if (handler != null)
 			{

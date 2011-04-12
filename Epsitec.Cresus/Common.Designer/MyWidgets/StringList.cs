@@ -619,7 +619,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected virtual void OnCellCountChanged()
 		{
 			//	Génère un événement pour dire que le nombre de cellules a changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("CellCountChanged");
+			var handler = this.GetUserEventHandler("CellCountChanged");
 			if (handler != null)
 			{
 				handler(this);
@@ -642,7 +642,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected virtual void OnDraggingCellSelectionChanged()
 		{
 			//	Génère un événement pour dire qu'une cellule a été sélectionnée.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("DraggingCellSelectionChanged");
+			var handler = this.GetUserEventHandler("DraggingCellSelectionChanged");
 			if (handler != null)
 			{
 				handler(this);
@@ -665,7 +665,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected virtual void OnFinalCellSelectionChanged()
 		{
 			//	Génère un événement pour dire qu'une cellule a été sélectionnée.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("FinalCellSelectionChanged");
+			var handler = this.GetUserEventHandler("FinalCellSelectionChanged");
 			if (handler != null)
 			{
 				handler(this);

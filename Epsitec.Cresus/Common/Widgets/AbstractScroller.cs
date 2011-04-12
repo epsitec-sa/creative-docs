@@ -504,7 +504,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.UpdateInternalGeometry ();
 
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("ValueChanged");
+			var handler = this.GetUserEventHandler("ValueChanged");
 
 			if (handler != null)
 			{

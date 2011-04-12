@@ -519,7 +519,7 @@ namespace Epsitec.Common.Widgets
 		#region Event handlers
 		protected virtual void OnSplitterDragged()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("SplitterDragged");
+			var handler = this.GetUserEventHandler("SplitterDragged");
 
 			if (handler != null)
 			{

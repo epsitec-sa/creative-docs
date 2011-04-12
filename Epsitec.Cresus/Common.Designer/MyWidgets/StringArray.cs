@@ -933,7 +933,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected virtual void OnColumnsWidthChanged()
 		{
 			//	Génère un événement pour dire que la largeur de colonnes a changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("ColumnsWidthChanged");
+			var handler = this.GetUserEventHandler("ColumnsWidthChanged");
 			if (handler != null)
 			{
 				handler(this);
@@ -956,7 +956,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected virtual void OnCellCountChanged()
 		{
 			//	Génère un événement pour dire que le nombre de cellules a changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("CellCountChanged");
+			var handler = this.GetUserEventHandler("CellCountChanged");
 			if (handler != null)
 			{
 				handler(this);
@@ -979,7 +979,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected virtual void OnCellsContentChanged()
 		{
 			//	Génère un événement pour dire que le contenu des cellules a changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("CellsContentChanged");
+			var handler = this.GetUserEventHandler("CellsContentChanged");
 			if (handler != null)
 			{
 				handler(this);
@@ -1002,7 +1002,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected virtual void OnSelectedRowChanged()
 		{
 			//	Génère un événement pour dire que la ligne sélectionnée a changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectedRowChanged");
+			var handler = this.GetUserEventHandler("SelectedRowChanged");
 			if (handler != null)
 			{
 				handler(this);
@@ -1025,7 +1025,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected virtual void OnSelectedRowDoubleClicked()
 		{
 			//	Génère un événement pour dire que la ligne sélectionnée a été double cliquée.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectedRowDoubleClicked");
+			var handler = this.GetUserEventHandler("SelectedRowDoubleClicked");
 			if (handler != null)
 			{
 				handler(this);

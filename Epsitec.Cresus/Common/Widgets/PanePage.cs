@@ -248,7 +248,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnRankChanged()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("RankChanged");
+			var handler = this.GetUserEventHandler("RankChanged");
 			if (handler != null)
 			{
 				handler(this);

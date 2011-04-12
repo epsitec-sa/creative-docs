@@ -225,7 +225,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnSelectionChanged()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("SelectionChanged");
+			var handler = this.GetUserEventHandler ("SelectionChanged");
 			
 			if (handler != null)
 			{

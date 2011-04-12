@@ -156,7 +156,7 @@ namespace Epsitec.Common.Widgets.Tools
 		
 		protected virtual void OnHotColorChanged()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("HotColorChanged");
+			var handler = this.GetUserEventHandler("HotColorChanged");
 			if (handler != null)
 			{
 				handler(this);

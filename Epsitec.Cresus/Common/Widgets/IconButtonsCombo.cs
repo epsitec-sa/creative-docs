@@ -411,7 +411,7 @@ namespace Epsitec.Common.Widgets
 			//	Ne notifie les changements d'index que lorsque le menu déroulant est fermé.
 			if ( this.IsComboOpen == false )
 			{
-				EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectedItemChanged");
+				var handler = this.GetUserEventHandler("SelectedItemChanged");
 				if (handler != null)
 				{
 					handler(this);
@@ -421,7 +421,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnFirstIconChanged()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("FirstIconChanged");
+			var handler = this.GetUserEventHandler("FirstIconChanged");
 			if (handler != null)
 			{
 				handler(this);
@@ -638,7 +638,7 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Diagnostics.Debug.Assert(this.IsComboOpen == true);
 
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("ComboOpened");
+			var handler = this.GetUserEventHandler("ComboOpened");
 			if (handler != null)
 			{
 				handler(this);
@@ -649,7 +649,7 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Diagnostics.Debug.Assert(this.IsComboOpen == false);
 
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("ComboClosed");
+			var handler = this.GetUserEventHandler("ComboClosed");
 			if (handler != null)
 			{
 				handler(this);

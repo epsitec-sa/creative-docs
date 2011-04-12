@@ -407,7 +407,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#region Events
 		public virtual void OnContentChanged()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("ContentChanged");
+			var handler = this.GetUserEventHandler("ContentChanged");
 			if (handler != null)
 			{
 				handler(this);

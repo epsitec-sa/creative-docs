@@ -1613,7 +1613,7 @@ namespace Epsitec.Common.Widgets
 
 //-			this.OnTextChanged ();
 
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("TextDeleted");
+			var handler = this.GetUserEventHandler ("TextDeleted");
 			if (handler != null)
 			{
 				handler (this);
@@ -1626,7 +1626,7 @@ namespace Epsitec.Common.Widgets
 
 //-			this.OnTextChanged ();
 
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("TextInserted");
+			var handler = this.GetUserEventHandler ("TextInserted");
 			if (handler != null)
 			{
 				handler (this);
@@ -1642,7 +1642,7 @@ namespace Epsitec.Common.Widgets
 				this.UpdateButtonVisibility ();
 			}
 
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("TextEdited");
+			var handler = this.GetUserEventHandler ("TextEdited");
 
 			if (handler != null)
 			{
@@ -1652,7 +1652,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnMultilingualEditionCalled()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("MultilingualEditionCalled");
+			var handler = this.GetUserEventHandler ("MultilingualEditionCalled");
 
 			if (handler != null)
 			{
@@ -1674,7 +1674,7 @@ namespace Epsitec.Common.Widgets
 			if ((this.navigator.Context.HasSelection) ||
 				(this.lastHasSelection))
 			{
-				EventHandler handler = (EventHandler) this.GetUserEventHandler ("SelectionChanged");
+				var handler = this.GetUserEventHandler ("SelectionChanged");
 				
 				if (handler != null)
 				{
@@ -1685,7 +1685,7 @@ namespace Epsitec.Common.Widgets
 			if ((!silent) &&
 				(!this.navigator.Context.HasSelection))
 			{
-				EventHandler handler = (EventHandler) this.GetUserEventHandler ("CursorChanged");
+				var handler = this.GetUserEventHandler ("CursorChanged");
 				if (handler != null)
 				{
 					handler (this);
@@ -1697,7 +1697,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnReadOnlyChanged()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("ReadOnlyChanged");
+			var handler = this.GetUserEventHandler ("ReadOnlyChanged");
 			if (handler != null)
 			{
 				handler (this);
@@ -1725,7 +1725,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnEditionStarted()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("EditionStarted");
+			var handler = this.GetUserEventHandler ("EditionStarted");
 			if (handler != null)
 			{
 				handler (this);
@@ -1735,7 +1735,7 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnEditionAccepted()
 		{
 			//	OnEditionAccepted est appelé après que l'édition ait été validée et acceptée.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("EditionAccepted");
+			var handler = this.GetUserEventHandler ("EditionAccepted");
 			if (handler != null)
 			{
 				handler (this);
@@ -1744,7 +1744,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnEditionRejected()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("EditionRejected");
+			var handler = this.GetUserEventHandler ("EditionRejected");
 			if (handler != null)
 			{
 				handler (this);

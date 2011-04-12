@@ -568,7 +568,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnAccepted()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("Accepted");
+			var handler = this.GetUserEventHandler ("Accepted");
 			if (handler != null)
 			{
 				handler (this);
@@ -577,7 +577,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnRejected()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("Rejected");
+			var handler = this.GetUserEventHandler ("Rejected");
 			if (handler != null)
 			{
 				handler (this);

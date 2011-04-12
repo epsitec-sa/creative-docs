@@ -936,7 +936,7 @@ namespace Epsitec.Common.Widgets
 
 		private void OnCloseClicked()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler (ColorSelector.CloseClickedEvent);
+			var handler = this.GetUserEventHandler (ColorSelector.CloseClickedEvent);
 			
 			if (handler != null)
 			{

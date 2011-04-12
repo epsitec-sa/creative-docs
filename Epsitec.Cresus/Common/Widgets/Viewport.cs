@@ -179,7 +179,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnSurfaceSizeChanged()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("SurfaceSizeChanged");
+			var handler = this.GetUserEventHandler("SurfaceSizeChanged");
 			if (handler != null)
 			{
 				handler(this);
@@ -188,7 +188,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnIsAutoFittingChanged()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("IsAutoFittingChanged");
+			var handler = this.GetUserEventHandler("IsAutoFittingChanged");
 			if (handler != null)
 			{
 				handler(this);

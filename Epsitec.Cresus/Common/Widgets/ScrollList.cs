@@ -714,7 +714,7 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnSelectedItemChanged()
 		{
 			//	Génère un événement pour dire que la sélection dans la liste a changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("SelectedItemChanged");
+			var handler = this.GetUserEventHandler ("SelectedItemChanged");
 			if (handler != null)
 			{
 				handler(this);
@@ -724,7 +724,7 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnSelectionActivated()
 		{
 			//	Génère un événement pour dire que la sélection a été validée
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectionActivated");
+			var handler = this.GetUserEventHandler("SelectionActivated");
 			if (handler != null)
 			{
 				handler(this);

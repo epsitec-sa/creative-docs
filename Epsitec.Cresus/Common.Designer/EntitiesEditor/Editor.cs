@@ -2286,7 +2286,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected virtual void OnAreaSizeChanged()
 		{
 			//	Génère un événement pour dire que les dimensions ont changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("AreaSizeChanged");
+			var handler = this.GetUserEventHandler("AreaSizeChanged");
 			if (handler != null)
 			{
 				handler(this);
@@ -2308,7 +2308,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected virtual void OnAreaOffsetChanged()
 		{
 			//	Génère un événement pour dire que l'offset de la surface de travail a changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("AreaOffsetChanged");
+			var handler = this.GetUserEventHandler("AreaOffsetChanged");
 			if (handler != null)
 			{
 				handler(this);
@@ -2330,7 +2330,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected virtual void OnZoomChanged()
 		{
 			//	Génère un événement pour dire que l'offset de la surface de travail a changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("ZoomChanged");
+			var handler = this.GetUserEventHandler("ZoomChanged");
 			if (handler != null)
 			{
 				handler(this);

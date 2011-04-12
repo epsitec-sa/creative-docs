@@ -665,7 +665,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnCloseClicked()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("CloseClicked");
+			var handler = this.GetUserEventHandler("CloseClicked");
 			if (handler != null)
 			{
 				handler(this);
@@ -674,7 +674,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnMenuClicked()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("MenuClicked");
+			var handler = this.GetUserEventHandler("MenuClicked");
 			if (handler != null)
 			{
 				handler(this);
@@ -683,7 +683,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnPageCountChanged()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("PageCountChanged");
+			var handler = this.GetUserEventHandler("PageCountChanged");
 			if (handler != null)
 			{
 				handler(this);

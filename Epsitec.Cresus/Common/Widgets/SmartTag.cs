@@ -74,7 +74,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual  void OnPrepareMenu()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("PrepareMenu");
+			var handler = this.GetUserEventHandler("PrepareMenu");
 			if (handler != null)
 			{
 				handler(this);

@@ -539,7 +539,7 @@ namespace Epsitec.Common.Widgets
 		private void OnExportSelectedColor()
 		{
 			//	Génère un événement pour dire qu'on exporte une couleur.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler (ColorPalette.ExportEvent);
+			var handler = this.GetUserEventHandler (ColorPalette.ExportEvent);
 
 			if (handler != null)
 			{
@@ -550,7 +550,7 @@ namespace Epsitec.Common.Widgets
 		private void OnImportSelectedColor()
 		{
 			//	Génère un événement pour dire qu'on importe une couleur.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler (ColorPalette.ImportEvent);
+			var handler = this.GetUserEventHandler (ColorPalette.ImportEvent);
 
 			if (handler != null)
 			{

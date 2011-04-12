@@ -1243,7 +1243,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		#region Events
 		protected virtual void OnChildrenAdded()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("ChildrenAdded");
+			var handler = this.GetUserEventHandler("ChildrenAdded");
 			if (handler != null)
 			{
 				handler(this);
@@ -1264,7 +1264,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected virtual void OnChildrenSelected()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("ChildrenSelected");
+			var handler = this.GetUserEventHandler("ChildrenSelected");
 			if (handler != null)
 			{
 				handler(this);
@@ -1285,7 +1285,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public virtual void OnUpdateCommands()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("UpdateCommands");
+			var handler = this.GetUserEventHandler("UpdateCommands");
 			if (handler != null)
 			{
 				handler(this);

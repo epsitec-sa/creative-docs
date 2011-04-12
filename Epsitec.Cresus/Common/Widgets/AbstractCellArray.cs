@@ -1265,7 +1265,7 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnSelectionChanged()
 		{
 			//	Génère un événement pour dire que la sélection a changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectionChanged");
+			var handler = this.GetUserEventHandler("SelectionChanged");
 
 			if (handler != null)
 			{
@@ -1276,7 +1276,7 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnFinalSelectionChanged()
 		{
 			//	Génère un événement pour dire que la sélection a changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("FinalSelectionChanged");
+			var handler = this.GetUserEventHandler("FinalSelectionChanged");
 
 			if (handler != null)
 			{
@@ -1287,7 +1287,7 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnSortChanged()
 		{
 			//	Génère un événement pour dire que le tri a changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("SortChanged");
+			var handler = this.GetUserEventHandler("SortChanged");
 
 			if (handler != null)
 			{
@@ -1298,7 +1298,7 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnFlyOverChanged()
 		{
 			//	Génère un événement pour dire que la cellule survolée à changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("FlyOverChanged");
+			var handler = this.GetUserEventHandler("FlyOverChanged");
 
 			if (handler != null)
 			{

@@ -135,7 +135,7 @@ namespace Epsitec.Common.Designer.Proxies
 		protected virtual void OnValueChanged()
 		{
 			//	Génère un événement pour dire que la valeur a été changée.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("ValueChanged");
+			var handler = this.GetUserEventHandler("ValueChanged");
 			if (handler != null)
 			{
 				handler(this);

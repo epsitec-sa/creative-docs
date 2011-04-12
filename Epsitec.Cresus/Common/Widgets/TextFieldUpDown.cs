@@ -420,7 +420,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnValueChanged()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("ValueChanged");
+			var handler = this.GetUserEventHandler ("ValueChanged");
 			if (handler != null)
 			{
 				handler (this);
@@ -431,7 +431,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.UpdateValidator ();
 
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("RangeChanged");
+			var handler = this.GetUserEventHandler ("RangeChanged");
 			if (handler != null)
 			{
 				handler (this);
@@ -440,7 +440,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnTextSuffixChanged()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("TextSuffixChanged");
+			var handler = this.GetUserEventHandler ("TextSuffixChanged");
 			if (handler != null)
 			{
 				handler (this);

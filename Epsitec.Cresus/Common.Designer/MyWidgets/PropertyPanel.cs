@@ -232,7 +232,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected virtual void OnExtendedSize()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("ExtendedSize");
+			var handler = this.GetUserEventHandler("ExtendedSize");
 			if (handler != null)
 			{
 				handler(this);

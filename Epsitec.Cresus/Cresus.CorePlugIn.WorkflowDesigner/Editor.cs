@@ -1940,7 +1940,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 		protected virtual void OnAreaSizeChanged()
 		{
 			//	Génère un événement pour dire que les dimensions ont changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("AreaSizeChanged");
+			var handler = this.GetUserEventHandler("AreaSizeChanged");
 			if (handler != null)
 			{
 				handler(this);
@@ -1962,7 +1962,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 		protected virtual void OnAreaOffsetChanged()
 		{
 			//	Génère un événement pour dire que l'offset de la surface de travail a changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("AreaOffsetChanged");
+			var handler = this.GetUserEventHandler("AreaOffsetChanged");
 			if (handler != null)
 			{
 				handler(this);
@@ -1984,7 +1984,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 		protected virtual void OnZoomChanged()
 		{
 			//	Génère un événement pour dire que l'offset de la surface de travail a changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("ZoomChanged");
+			var handler = this.GetUserEventHandler("ZoomChanged");
 			if (handler != null)
 			{
 				handler(this);
@@ -2006,7 +2006,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 		protected virtual void OnEditingStateChanged()
 		{
 			//	Génère un événement pour dire que l'état d'édition a changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("EditingStateChanged");
+			var handler = this.GetUserEventHandler ("EditingStateChanged");
 			if (handler != null)
 			{
 				handler (this);

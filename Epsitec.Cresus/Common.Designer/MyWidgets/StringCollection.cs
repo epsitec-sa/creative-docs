@@ -507,7 +507,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected virtual void OnStringTextChanged()
 		{
 			//	Génère un événement pour dire qu'une string a changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("StringTextChanged");
+			var handler = this.GetUserEventHandler("StringTextChanged");
 			if (handler != null)
 			{
 				handler(this);
@@ -529,7 +529,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected virtual void OnStringFocusChanged()
 		{
 			//	Génère un événement pour dire qu'une string a changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("StringFocusChanged");
+			var handler = this.GetUserEventHandler("StringFocusChanged");
 			if (handler != null)
 			{
 				handler(this);

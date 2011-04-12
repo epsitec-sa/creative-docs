@@ -182,7 +182,7 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnCloseNeeded()
 		{
 			//	Génère un événement pour dire que la fermeture est nécessaire.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("CloseNeeded");
+			var handler = this.GetUserEventHandler("CloseNeeded");
 			if (handler != null)
 			{
 				handler(this);

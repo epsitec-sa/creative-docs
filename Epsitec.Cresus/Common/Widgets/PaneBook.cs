@@ -723,7 +723,7 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnPaneSizeChanged()
 		{
 			//	Génère un événement pour dire qu'une taille a changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("PaneSizeChanged");
+			var handler = this.GetUserEventHandler("PaneSizeChanged");
 			if (handler != null)
 			{
 				handler(this);

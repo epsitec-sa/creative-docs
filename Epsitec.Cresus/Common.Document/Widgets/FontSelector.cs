@@ -642,7 +642,7 @@ namespace Epsitec.Common.Document.Widgets
 		protected virtual void OnSelectionChanged()
 		{
 			//	Génère un événement pour dire que la fermeture est nécessaire.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectionChanged");
+			var handler = this.GetUserEventHandler("SelectionChanged");
 			if (handler != null)
 			{
 				handler(this);

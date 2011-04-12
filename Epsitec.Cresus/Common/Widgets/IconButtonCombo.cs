@@ -242,7 +242,7 @@ namespace Epsitec.Common.Widgets
 			//	est fermé.
 			if ( this.IsComboOpen == false )
 			{
-				EventHandler handler = (EventHandler) this.GetUserEventHandler ("SelectedItemChanged");
+				var handler = this.GetUserEventHandler ("SelectedItemChanged");
 				if (handler != null)
 				{
 					handler(this);
@@ -460,7 +460,7 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Diagnostics.Debug.Assert(this.IsComboOpen == true);
 
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("ComboOpened");
+			var handler = this.GetUserEventHandler("ComboOpened");
 			if (handler != null)
 			{
 				handler(this);
@@ -471,7 +471,7 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Diagnostics.Debug.Assert(this.IsComboOpen == false);
 
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("ComboClosed");
+			var handler = this.GetUserEventHandler("ComboClosed");
 			if (handler != null)
 			{
 				handler(this);

@@ -187,7 +187,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected virtual void OnDragStarting()
 		{
 			//	Génère un événement pour dire que le drag a commencé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("DragStarting");
+			var handler = this.GetUserEventHandler("DragStarting");
 			if (handler != null)
 			{
 				handler(this);
@@ -209,7 +209,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected virtual void OnDragEnding()
 		{
 			//	Génère un événement pour dire que le drag est terminé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("DragEnding");
+			var handler = this.GetUserEventHandler("DragEnding");
 			if (handler != null)
 			{
 				handler(this);

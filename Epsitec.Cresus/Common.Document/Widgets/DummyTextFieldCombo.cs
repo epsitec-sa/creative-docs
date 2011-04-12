@@ -27,7 +27,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected virtual void OnComboOpenPressed()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("ComboOpenPressed");
+			var handler = this.GetUserEventHandler("ComboOpenPressed");
 			if (handler != null)
 			{
 				handler(this);

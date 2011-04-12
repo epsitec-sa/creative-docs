@@ -1608,7 +1608,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnDisplayCaptionChanged()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("DisplayCaptionChanged");
+			var handler = this.GetUserEventHandler ("DisplayCaptionChanged");
 
 			if (handler != null)
 			{
@@ -1618,7 +1618,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnMeasuring()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("Measuring");
+			var handler = this.GetUserEventHandler ("Measuring");
 
 			if (handler != null)
 			{
@@ -1648,7 +1648,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnChildrenChanged()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("ChildrenChanged");
+			var handler = this.GetUserEventHandler ("ChildrenChanged");
 
 			if (handler != null)
 			{

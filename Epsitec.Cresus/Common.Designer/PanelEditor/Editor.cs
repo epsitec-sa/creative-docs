@@ -4914,7 +4914,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 		#region Events
 		protected virtual void OnChildrenAdded()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("ChildrenAdded");
+			var handler = this.GetUserEventHandler("ChildrenAdded");
 			if (handler != null)
 			{
 				handler(this);
@@ -4935,7 +4935,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected virtual void OnChildrenSelected()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("ChildrenSelected");
+			var handler = this.GetUserEventHandler("ChildrenSelected");
 			if (handler != null)
 			{
 				handler(this);
@@ -4956,7 +4956,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected virtual void OnChildrenGeometryChanged()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("ChildrenGeometryChanged");
+			var handler = this.GetUserEventHandler("ChildrenGeometryChanged");
 			if (handler != null)
 			{
 				handler(this);
@@ -4977,7 +4977,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 		protected virtual void OnUpdateCommands()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("UpdateCommands");
+			var handler = this.GetUserEventHandler("UpdateCommands");
 			if (handler != null)
 			{
 				handler(this);

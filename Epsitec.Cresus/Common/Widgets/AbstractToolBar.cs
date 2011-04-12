@@ -109,7 +109,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnItemsChanged()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("ItemsChanged");
+			var handler = this.GetUserEventHandler("ItemsChanged");
 			if (handler != null)
 			{
 				handler(this);

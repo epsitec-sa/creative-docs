@@ -304,7 +304,7 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnChanged()
 		{
 			//	Génère un événement pour dire ça a changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("Changed");
+			var handler = this.GetUserEventHandler("Changed");
 			if (handler != null)
 			{
 				handler(this);

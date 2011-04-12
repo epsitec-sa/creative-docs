@@ -342,7 +342,7 @@ namespace Epsitec.Common.Widgets
 		#region Event handlers
 		protected void OnEditedShortcutChanged()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("EditedShortcutChanged");
+			var handler = this.GetUserEventHandler("EditedShortcutChanged");
 
 			if (handler != null)
 			{

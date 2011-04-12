@@ -208,7 +208,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnPageCountChanged()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("PageCountChanged");
+			var handler = this.GetUserEventHandler("PageCountChanged");
 			if (handler != null)
 			{
 				handler(this);
@@ -217,7 +217,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnActivePageChanged()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("ActivePageChanged");
+			var handler = this.GetUserEventHandler("ActivePageChanged");
 			if (handler != null)
 			{
 				handler(this);

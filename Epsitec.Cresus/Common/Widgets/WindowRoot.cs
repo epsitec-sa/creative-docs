@@ -398,7 +398,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual  void OnWindowStylesChanged()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("WindowStylesChanged");
+			var handler = this.GetUserEventHandler("WindowStylesChanged");
 			if (handler != null)
 			{
 				handler(this);
@@ -407,7 +407,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual  void OnWindowTypeChanged()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("WindowTypeChanged");
+			var handler = this.GetUserEventHandler("WindowTypeChanged");
 			if (handler != null)
 			{
 				handler(this);

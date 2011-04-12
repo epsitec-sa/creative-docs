@@ -1953,7 +1953,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnSelectedItemChanging()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("SelectedItemChanging");
+			var handler = this.GetUserEventHandler ("SelectedItemChanging");
 			if (handler != null)
 			{
 				handler (this);
@@ -1962,7 +1962,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnSelectedItemChanged()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("SelectedItemChanged");
+			var handler = this.GetUserEventHandler ("SelectedItemChanged");
 			if (handler != null)
 			{
 				handler (this);
@@ -1971,7 +1971,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnContentsChanged()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("ContentsChanged");
+			var handler = this.GetUserEventHandler ("ContentsChanged");
 			if (handler != null)
 			{
 				handler (this);
@@ -1980,7 +1980,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnContentsInvalidated()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("ContentsInvalidated");
+			var handler = this.GetUserEventHandler ("ContentsInvalidated");
 			if (handler != null)
 			{
 				handler (this);
@@ -1989,7 +1989,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnSortChanged()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("SortChanged");
+			var handler = this.GetUserEventHandler ("SortChanged");
 			if (handler != null)
 			{
 				handler (this);
@@ -1998,7 +1998,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnLayoutUpdated()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("LayoutUpdated");
+			var handler = this.GetUserEventHandler ("LayoutUpdated");
 			if (handler != null)
 			{
 				handler (this);
@@ -2007,7 +2007,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnTextArrayStoreContentsChanged()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("TextArrayStoreContentsChanged");
+			var handler = this.GetUserEventHandler ("TextArrayStoreContentsChanged");
 			if (handler != null)
 			{
 				handler (this);
@@ -2016,7 +2016,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnInteractionModeChanging()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("InteractionModeChanging");
+			var handler = this.GetUserEventHandler ("InteractionModeChanging");
 			if (handler != null)
 			{
 				handler (this);
@@ -2025,7 +2025,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnInteractionModeChanged()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("InteractionModeChanged");
+			var handler = this.GetUserEventHandler ("InteractionModeChanged");
 			if (handler != null)
 			{
 				handler (this);
