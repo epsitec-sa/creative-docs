@@ -13,6 +13,8 @@ using System.Collections.Generic;
 
 using System.Linq;
 
+using System.Threading;
+
 
 namespace Epsitec.Cresus.Database.Tests.Vs
 {
@@ -1098,18 +1100,22 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTransaction transaction1 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly);
-				DbTransaction transaction2 = infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly);
+				using (DbTransaction transaction1 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
+				using (DbTransaction transaction2 = infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+				{
+					ExceptionAssert.Throw<System.InvalidOperationException>
+					(
+					   () => transaction2.Dispose ()
+					);
 
-				ExceptionAssert.Throw<System.InvalidOperationException>
-				(
-					() => transaction2.Dispose ()
-				);
+					ExceptionAssert.Throw<System.InvalidOperationException>
+					(
+						() => transaction1.Dispose ()
+					);
 
-				ExceptionAssert.Throw<System.InvalidOperationException>
-				(
-					() => transaction1.Dispose ()
-				);
+					transaction2.Commit ();
+					transaction1.Commit ();
+				}
 			}
 		}
 
@@ -1121,13 +1127,17 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{		
-				DbTransaction transaction1 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly);
-				DbTransaction transaction2 = infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly);
+				using (DbTransaction transaction1 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
+				using (DbTransaction transaction2 = infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+				{
+					ExceptionAssert.Throw<System.InvalidOperationException>
+					(
+						() => transaction1.Commit ()
+					);
 
-				ExceptionAssert.Throw<System.InvalidOperationException>
-				(
-					() => transaction1.Commit ()
-				);
+					transaction2.Commit ();
+					transaction1.Commit ();
+				}
 			}
 		}
 
@@ -1139,13 +1149,17 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTransaction transaction1 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly);
-				DbTransaction transaction2 = infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly);
+				using (DbTransaction transaction1 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
+				using (DbTransaction transaction2 = infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+				{
+					ExceptionAssert.Throw<System.InvalidOperationException>
+					(
+						() => transaction1.Rollback ()
+					);
 
-				ExceptionAssert.Throw<System.InvalidOperationException>
-				(
-					() => transaction1.Rollback ()
-				);
+					transaction2.Commit ();
+					transaction1.Commit ();
+				}
 			}
 		}
 
@@ -1157,13 +1171,17 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				DbTransaction transaction1 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly);
-				DbTransaction transaction2 = infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly);
+				using (DbTransaction transaction1 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
+				using (DbTransaction transaction2 = infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+				{
+					ExceptionAssert.Throw<System.InvalidOperationException>
+					(
+						() => transaction2.Rollback ()
+					);
 
-				ExceptionAssert.Throw<System.InvalidOperationException>
-				(
-					() => transaction2.Rollback ()
-				);
+					transaction2.Commit ();
+					transaction1.Commit ();
+				}
 			}
 		}
 
@@ -1299,7 +1317,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 					Assert.AreEqual (1, entry.Result.Tables[0].Rows.Count);
 					Assert.AreEqual (1, entry.Result.Tables[0].Rows[0].Values.Count);
 					Assert.AreEqual (1, System.Convert.ToInt32 (entry.Result.Tables[0].Rows[0].Values[0]));
-					Assert.AreEqual (System.Threading.Thread.CurrentThread.Name, entry.ThreadName);
+					Assert.AreEqual (Thread.CurrentThread.Name, entry.ThreadName);
 
 					System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace (0, true);
 
@@ -1369,7 +1387,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 					Assert.AreEqual (1, entry.Result.Tables[0].Rows.Count);
 					Assert.AreEqual (1, entry.Result.Tables[0].Rows[0].Values.Count);
 					Assert.AreEqual (14, System.Convert.ToInt32 (entry.Result.Tables[0].Rows[0].Values[0]));
-					Assert.AreEqual (System.Threading.Thread.CurrentThread.Name, entry.ThreadName);
+					Assert.AreEqual (Thread.CurrentThread.Name, entry.ThreadName);
 
 					System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace (0, true);
 
@@ -1447,7 +1465,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 					Assert.AreEqual (1, entry.Result.Tables[0].Rows.Count);
 					Assert.AreEqual (1, entry.Result.Tables[0].Rows[0].Values.Count);
 					Assert.AreEqual (1, System.Convert.ToInt32 (entry.Result.Tables[0].Rows[0].Values[0]));
-					Assert.AreEqual (System.Threading.Thread.CurrentThread.Name, entry.ThreadName);
+					Assert.AreEqual (Thread.CurrentThread.Name, entry.ThreadName);
 
 					System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace (0, true);
 
@@ -1533,7 +1551,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 					Assert.AreEqual ("NEW", entry.Result.Tables[0].Rows[0].Values[1]);
 					Assert.AreEqual ("NEW", entry.Result.Tables[0].Rows[0].Values[2]);
 					Assert.AreEqual ("XML", entry.Result.Tables[0].Rows[0].Values[3]);
-					Assert.AreEqual (System.Threading.Thread.CurrentThread.Name, entry.ThreadName);
+					Assert.AreEqual (Thread.CurrentThread.Name, entry.ThreadName);
 
 					System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace (0, true);
 
@@ -1615,12 +1633,146 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 					Assert.AreEqual ("CR_TYPE_DEF", entry.Result.Tables[0].Rows[2].Values[1]);
 					Assert.AreEqual ("CR_TYPE_DEF", entry.Result.Tables[0].Rows[2].Values[2]);
 
-					Assert.AreEqual (System.Threading.Thread.CurrentThread.Name, entry.ThreadName);
+					Assert.AreEqual (Thread.CurrentThread.Name, entry.ThreadName);
 
 					System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace (0, true);
 
 					Assert.AreEqual (stackTrace.GetFrame (0).GetMethod (), entry.StackTrace.GetFrame (4).GetMethod ());
 					CollectionAssert.AreEqual (stackTrace.GetFrames ().Skip (1).Select (f => f.ToString ()).ToList (), entry.StackTrace.GetFrames ().Skip (5).Select (sf => sf.ToString ()).ToList ());
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void ThreadSafetyTest1()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				List<Thread> threads = new List<Thread> ();
+				System.DateTime startTime = System.DateTime.Now;
+				
+				for (int i = 0; i < 100; i++)
+				{
+					Thread thread = new Thread
+					(
+						() =>
+						{
+							while (System.DateTime.Now - startTime < System.TimeSpan.FromSeconds(15))
+							{
+								using (DbTransaction transaction = infrastructure.BeginTransaction ())
+								{
+									DbTable table = infrastructure.ResolveDbTable (Tags.TableTypeDef);
+
+									SqlSelect query = new SqlSelect ();
+
+									query.Tables.Add (SqlField.CreateName (table.GetSqlName ()));
+									query.Fields.Add
+									(
+										SqlField.CreateAggregate
+										(
+											SqlAggregateFunction.Max,
+											SqlField.CreateName (table.Columns[Tags.ColumnId].GetSqlName ())
+										)
+									);
+
+									transaction.SqlBuilder.SelectData (query);
+									
+									infrastructure.ExecuteScalar (transaction);
+
+									transaction.Commit ();
+								}
+							}
+						}
+					);
+
+					threads.Add (thread);
+				}
+
+				foreach (var thread in threads)
+				{
+					thread.Start ();
+				}
+
+				foreach (var thread in threads)
+				{
+					thread.Join ();
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void ThreadSafetyTest2()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				List<Thread> threads = new List<Thread> ();
+				System.DateTime startTime = System.DateTime.Now;
+
+				for (int i = 0; i < 100; i++)
+				{
+					Thread thread = new Thread
+					(
+						() =>
+						{
+							System.Random dice = new System.Random (Thread.CurrentThread.ManagedThreadId);
+
+							while (System.DateTime.Now - startTime < System.TimeSpan.FromSeconds (15))
+							{
+								List<DbTransaction> transactions = new List<DbTransaction> ();
+
+								try
+								{
+									for (int j = 0; j < 10; j++)
+									{
+										transactions.Add (infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly));
+									}
+
+									DbTable table = infrastructure.ResolveDbTable (Tags.TableTypeDef);
+
+									SqlSelect query = new SqlSelect ();
+
+									query.Tables.Add (SqlField.CreateName (table.GetSqlName ()));
+									query.Fields.Add
+									(
+										SqlField.CreateAggregate
+										(
+											SqlAggregateFunction.Max,
+											SqlField.CreateName (table.Columns[Tags.ColumnId].GetSqlName ())
+										)
+									);
+
+									transactions.Last().SqlBuilder.SelectData (query);
+
+									infrastructure.ExecuteScalar (transactions.Last ());
+								}
+								finally
+								{
+									for (int j = 9; j >= 0; j--)
+									{
+										transactions[j].Commit ();
+									}
+								}
+							}
+						}
+					);
+
+					threads.Add (thread);
+				}
+
+				foreach (var thread in threads)
+				{
+					thread.Start ();
+				}
+
+				foreach (var thread in threads)
+				{
+					thread.Join ();
 				}
 			}
 		}

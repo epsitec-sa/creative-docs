@@ -14,6 +14,8 @@ using System.Collections.Generic;
 
 using System.Linq;
 
+using System.Threading;
+
 
 namespace Epsitec.Cresus.Database
 {
@@ -136,7 +138,7 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				return this.globalLock.IsWriterLockHeld;
+				return this.globalLock.IsWriteLockHeld;
 			}
 		}
 
@@ -537,7 +539,7 @@ namespace Epsitec.Cresus.Database
 						throw new System.InvalidOperationException ("Cannot begin read/write transaction from inherited read-only transaction");
 					}
 
-					this.DatabaseLock (live.Database);
+					this.DatabaseLock (this.abstraction);
 
 					try
 					{
@@ -545,7 +547,7 @@ namespace Epsitec.Cresus.Database
 					}
 					catch
 					{
-						this.DatabaseUnlock (live.Database);
+						this.DatabaseUnlock (this.abstraction);
 						throw;
 					}
 				}
@@ -1911,47 +1913,7 @@ namespace Epsitec.Cresus.Database
 		/// <returns>An object which should be used in a <c>using</c> block.</returns>
 		public System.IDisposable GlobalLock()
 		{
-			this.globalLock.AcquireWriterLock (this.lockTimeout);
-
-			return new GlobalLockHelper (this);
-		}
-
-		/// <summary>
-		/// Releases the global lock from the database. See <see cref="GlobalLock"/>.
-		/// </summary>
-		private void GlobalUnlock()
-		{
-			this.globalLock.ReleaseWriterLock ();
-		}
-
-		private class GlobalLockHelper : System.IDisposable
-		{
-			public GlobalLockHelper(DbInfrastructure infrastructure)
-			{
-				this.infrastructure = infrastructure;
-			}
-
-			~GlobalLockHelper()
-			{
-				throw new System.InvalidOperationException ("Caller of GlobalLock forgot to call Dispose");
-			}
-
-			#region IDisposable Members
-
-			public void Dispose()
-			{
-				this.Dispose (true);
-				System.GC.SuppressFinalize (this);
-			}
-
-			#endregion
-
-			private void Dispose(bool disposing)
-			{
-				this.infrastructure.GlobalUnlock ();
-			}
-
-			readonly DbInfrastructure infrastructure;
+			return TimedReaderWriterLock.LockWrite (this.globalLock, this.lockTimeout);
 		}
 
 		/// <summary>
@@ -1961,11 +1923,16 @@ namespace Epsitec.Cresus.Database
 		/// <param name="database">The database abstraction.</param>
 		internal void DatabaseLock(IDbAbstraction database)
 		{
-			this.globalLock.AcquireReaderLock (this.lockTimeout);
-			
-			if (System.Threading.Monitor.TryEnter (database, this.lockTimeout) == false)
+			bool success = this.globalLock.TryEnterReadLock (this.lockTimeout);
+
+			if (!success)
 			{
-				this.globalLock.ReleaseReaderLock ();
+				throw new LockTimeoutException ();
+			}
+
+			if (Monitor.TryEnter (database, this.lockTimeout) == false)
+			{
+				this.globalLock.ExitReadLock ();
 				throw new Exceptions.DeadLockException (this.access, "Cannot lock database.");
 			}
 		}
@@ -1976,8 +1943,8 @@ namespace Epsitec.Cresus.Database
 		/// <param name="database">The database abstraction.</param>
 		internal void DatabaseUnlock(IDbAbstraction database)
 		{
-			this.globalLock.ReleaseReaderLock ();
-			System.Threading.Monitor.Exit (database);
+			Monitor.Exit (database);
+			this.globalLock.ExitReadLock ();
 		}
 
 		/// <summary>
@@ -2013,8 +1980,6 @@ namespace Epsitec.Cresus.Database
 		{
 			IDbAbstraction abstraction = transaction.Database;
 			
-			this.DatabaseUnlock (abstraction);
-
 			bool release = false;
 			
 			lock (this.liveTransactions)
@@ -2035,6 +2000,8 @@ namespace Epsitec.Cresus.Database
 			{
 				this.ReleaseConnection (abstraction);
 			}
+
+			this.DatabaseUnlock (abstraction);		
 		}
 
 
@@ -3148,7 +3115,7 @@ namespace Epsitec.Cresus.Database
 			{
 				if (this.globalLock != null)
 				{
-					this.globalLock.ReleaseLock ();
+					this.globalLock.Dispose ();
 					this.globalLock = null;
 				}
 
@@ -3604,8 +3571,8 @@ namespace Epsitec.Cresus.Database
 		private List<DbTransaction>				liveTransactions;
 		private List<IDbAbstraction>			releaseRequested;
 
-		private int								lockTimeout = 15000;
-		System.Threading.ReaderWriterLock		globalLock = new System.Threading.ReaderWriterLock ();
+		private System.TimeSpan					lockTimeout = System.TimeSpan.FromSeconds (15);
+		private ReaderWriterLockSlim			globalLock = new ReaderWriterLockSlim (LockRecursionPolicy.SupportsRecursion);
 
 	}
 }

@@ -240,15 +240,16 @@ namespace Epsitec.Cresus.Database
 				throw new System.InvalidOperationException ("Inherited transaction may not be rolled back by Dispose");
 			}
 
-			if (this.infrastructure != null)
-			{
-				this.infrastructure.NotifyEndTransaction (this);
-				this.infrastructure = null;
-			}
 			if (this.transaction != null)
 			{
 				this.transaction.Dispose ();
 				this.transaction = null;
+			}
+
+			if (this.infrastructure != null)
+			{
+				this.infrastructure.NotifyEndTransaction (this);
+				this.infrastructure = null;
 			}
 			
 			this.database = null;
