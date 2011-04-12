@@ -42,8 +42,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Serialization
 
 		[TestMethod]
 		public void EntitySerializationManagerConstructorTest()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -64,8 +63,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Serialization
 
 		[TestMethod]
 		public void SerializeArgumentCheck()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -79,8 +77,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Serialization
 
 		[TestMethod]
 		public void DeserializeArgumentCheck()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -104,8 +101,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Serialization
 
 		[TestMethod]
 		public void SerializeAndDeserialize()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -124,8 +120,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Serialization
 
 		[TestMethod]
 		public void Deserialize()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{

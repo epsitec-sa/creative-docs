@@ -38,8 +38,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void ExternalEntityCreatedEventTest()
-		{
-			
+		{		
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -61,8 +60,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void ExternalEntityUpdatedValueEventTest()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -86,8 +84,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void ExternalEntityUpdatedReferenceEventTest()
-		{
-			
+		{		
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -112,8 +109,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void ExternalEntityUpdatedCollectionEventTest()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -141,8 +137,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void ExternalEntityDeletedEventTest()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -170,8 +165,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void ExternalEntityReferenceDeletedEventTest()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -204,8 +198,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void ExternalEntityCollectionDeletedEventTest()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -241,8 +234,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void SynchronizationEntityValueUpdatedEventTest()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -284,8 +276,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void SynchronizationEntityReferenceUpdatedEventTest()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -328,8 +319,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void SynchronizationEntityCollectionUpdatedEventTest()
-		{
-			
+		{		
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -372,8 +362,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void SynchronizationEntityDeletedEventTest()
-		{
-			
+		{		
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -414,8 +403,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void SynchronizationEntityReferenceDeletedEventTest()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -461,8 +449,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void SynchronizationEntityCollectionDeletedEventTest()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))

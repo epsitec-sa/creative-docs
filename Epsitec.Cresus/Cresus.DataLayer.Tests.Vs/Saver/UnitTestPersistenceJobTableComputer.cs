@@ -39,8 +39,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void ConstructorTest()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -61,8 +60,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void GetAffectedTablesArgumentCheck()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -95,7 +93,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 		public void GetAffectedTablesDeletePersistenceJob()
 		{
 			NaturalPersonEntity entity = new NaturalPersonEntity ();
-
 			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -132,8 +129,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 			Druid localEntityId = Druid.Parse ("[J1AJ1]");
 
 			PersistenceJobType jobType = PersistenceJobType.Insert;
-
-			
+		
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -164,7 +160,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
             };
 
 			PersistenceJobType jobType = PersistenceJobType.Insert;
-
 			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -197,7 +192,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 			Druid fieldId = Druid.Parse ("[J1AC1]");
 
 			PersistenceJobType jobType = PersistenceJobType.Insert;
-
 			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))

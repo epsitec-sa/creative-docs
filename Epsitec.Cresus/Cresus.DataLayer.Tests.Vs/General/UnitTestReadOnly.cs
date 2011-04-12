@@ -42,8 +42,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void ReadOnlyDataContextEntities1()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly:true))
 			{
@@ -62,8 +61,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void ReadOnlyDataContextEntities2()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: true))
 			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: true))
@@ -80,7 +78,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void ReadOnlyDataContextExceptions1()
 		{
-			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: true))
 			{
@@ -109,8 +106,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void ReadOnlyDataContextExceptions2()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: true))
 			{
@@ -136,8 +132,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void ReadOnlyDataContextExceptions3()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: false))
 			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: true))
@@ -154,8 +149,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void ReadOnlyDataContextExceptions4()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: false))
 			{
@@ -190,8 +184,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void ValueSynchronizationBackDoor()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: false))
 			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: true))
@@ -220,8 +213,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void ReferenceSynchronizationBackDoor()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: false))
 			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: true))
@@ -253,8 +245,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void CollectionSynchronizationBackDoor()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: false))
 			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: true))
@@ -302,8 +293,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void DeleteSynchronizationBackDoor()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: false))
 			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: true))
@@ -341,8 +331,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void DeletePropagationBackDoor()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: false))
 			{

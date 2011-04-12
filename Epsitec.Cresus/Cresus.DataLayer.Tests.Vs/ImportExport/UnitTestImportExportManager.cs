@@ -45,7 +45,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		public void CompleteGraphPersistedEntities()
 		{
 			FileInfo file = new FileInfo ("test.xml");
-
 			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = dataInfrastructure.CreateDataContext (true))
@@ -91,7 +90,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		public void CompleteGraphNonNullVirtualizedEntities()
 		{
 			FileInfo file = new FileInfo ("test.xml");
-
 			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = dataInfrastructure.CreateDataContext(true))
@@ -154,7 +152,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		public void PartialGraph()
 		{
 			FileInfo file = new FileInfo ("test.xml");
-
 			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))

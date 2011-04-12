@@ -40,8 +40,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void CopyEntityArgumentCheck()
-		{
-			
+		{		
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -82,8 +81,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void CopyToSelfTest()
-		{
-			
+		{		
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -98,8 +96,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void CopyExistingEntityTest()
-		{
-			
+		{		
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -127,8 +124,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void SimlpeCopyTest()
-		{
-			
+		{		
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))

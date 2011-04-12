@@ -38,8 +38,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void ArgumentCheck()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -70,8 +69,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void RegistredEmptyEntitiesTest1()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -100,8 +98,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void RegistredEmptyEntitiesTest2()
-		{
-			
+		{		
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -130,8 +127,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void RegistredEmptyEntitiesTest3()
-		{
-			
+		{		
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -155,8 +151,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void UnregistredEmptyEntitiesTest1()
-		{
-			
+		{		
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -186,8 +181,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void UnregistredEmptyEntitiesTest2()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -218,8 +212,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void UnregistredEmptyEntitiesTest3()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -249,8 +242,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void UnregistredEmptyEntitiesTest4()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -275,8 +267,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void UnregistredEmptyEntitiesTest5()
-		{
-			
+		{		
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -309,8 +300,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void UnregistredEmptyEntitiesTest6()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -343,8 +333,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void UnregistredEmptyEntitiesTest7()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -377,8 +366,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void UnregistredEmptyEntitiesTest8()
-		{
-			
+		{		
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -406,8 +394,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void UpdateEmptyEmptyEntitiesStatusTest1()
-		{
-			
+		{		
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -431,8 +418,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void UpdateEmptyEmptyEntitiesStatusTest2()
-		{
-			
+		{		
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -460,8 +446,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void CreateEmptyEntityTest()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))

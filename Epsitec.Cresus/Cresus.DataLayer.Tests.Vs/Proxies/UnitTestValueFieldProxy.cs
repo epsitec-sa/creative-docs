@@ -35,8 +35,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Proxies
 
 		[TestMethod]
 		public void ValueFieldProxyConstructorTest()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -54,8 +53,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Proxies
 
 		[TestMethod]
 		public void ValueFieldProxyConstructorArgumentCheck()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -100,8 +98,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Proxies
 
 		[TestMethod]
 		public void GetValueTest1()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -124,8 +121,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Proxies
 
 		[TestMethod]
 		public void GetValueTest2()
-		{
-			
+		{		
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{

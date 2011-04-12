@@ -706,7 +706,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		private void CheckLock(Lock l, Connection connection, string name, System.DateTime time)
 		{
 			Assert.AreEqual (name, l.Name);
-			Assert.IsTrue (System.Math.Abs ((time - l.CreationTime).TotalMilliseconds) < 100);
+			Assert.IsTrue (System.Math.Abs ((time - l.CreationTime).TotalMilliseconds) < 150);
 			Assert.AreEqual (connection.Id, l.Owner.Id);
 			Assert.AreEqual (connection.Identity, l.Owner.Identity);
 			Assert.AreEqual (connection.Status, l.Owner.Status);

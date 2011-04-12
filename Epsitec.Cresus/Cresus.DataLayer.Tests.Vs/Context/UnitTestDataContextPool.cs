@@ -44,8 +44,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		public void AddTest()
 		{
 			DataContextPool dataContextPool = new DataContextPool ();
-
-			
+		
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				List<DataContext> dataContexts = new List<DataContext> ()
@@ -94,7 +93,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		public void ContainsTest()
 		{
 			DataContextPool dataContextPool = new DataContextPool ();
-
 			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
@@ -166,8 +164,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 
 		[TestMethod]
 		public void GetEnumeratorTest1()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DataContextPool dataContextPool = new DataContextPool ();
@@ -212,8 +209,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		[TestMethod]
 		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void GetEnumeratorTest2()
-		{
-			
+		{		
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DataContextPool dataContextPool = new DataContextPool ();
@@ -266,8 +262,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 
 		[TestMethod]
 		public void FindDataContextTest1()
-		{
-			
+		{		
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DataContextPool dataContextPool = new DataContextPool ();
@@ -313,8 +308,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		
 		[TestMethod]
 		public void FindEntityKeyTest()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DataContextPool dataContextPool = new DataContextPool ();
@@ -366,8 +360,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		
 		[TestMethod]
 		public void RemoveTest()
-		{
-			
+		{		
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DataContextPool dataContextPool = new DataContextPool ();
@@ -432,8 +425,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 
 		[TestMethod]
 		public void AreEqualDatabaseInstancesTest()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				DataContextPool dataContextPool = new DataContextPool ();

@@ -251,7 +251,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 					refreshTimes.Add (manager.GetConnection (connectionId).RefreshTime);
 				}
 
-				Assert.IsTrue (refreshTimes.First () == manager.GetConnection (connectionId).EstablishmentTime);
+				Assert.AreEqual (refreshTimes.First (), manager.GetConnection (connectionId).EstablishmentTime);
 
 				for (int i = 0; i < refreshTimes.Count - 1; i++)
 				{

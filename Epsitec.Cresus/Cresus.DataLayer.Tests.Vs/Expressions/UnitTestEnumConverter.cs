@@ -82,7 +82,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 
 		[TestMethod]
 		public void ToSqlFunctionCodeTest4()
-		{var matches = new Dictionary<BinaryOperator, SqlFunctionCode> ()
+		{
+			var matches = new Dictionary<BinaryOperator, SqlFunctionCode> ()
 			{
 				{ BinaryOperator.And, SqlFunctionCode.LogicAnd },
 				{ BinaryOperator.Or, SqlFunctionCode.LogicOr },

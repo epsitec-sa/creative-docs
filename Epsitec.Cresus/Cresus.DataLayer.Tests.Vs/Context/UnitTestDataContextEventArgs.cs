@@ -30,8 +30,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		[TestMethod]
 		public void DataContextEventArgsConstructorTest()
 		{
-			
-
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -43,7 +41,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		[TestMethod]
 		public void DataContextTest()
 		{
-			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{

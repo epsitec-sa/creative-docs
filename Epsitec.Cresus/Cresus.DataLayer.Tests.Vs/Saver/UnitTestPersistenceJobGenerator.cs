@@ -39,8 +39,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void PersistenceJobGeneratorConstructorTest()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -61,8 +60,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void InsertEntityArgumentCheck()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -78,8 +76,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void InsertEntityTest1()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -119,8 +116,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void InsertEntityTest2()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -148,8 +144,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void InsertEntityTest3()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -185,8 +180,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void InsertEntityTest4()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -252,8 +246,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void UpdateEntityArgumentCheck()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -269,8 +262,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void UpdateEntityTest1()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -303,8 +295,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void UpdateEntityTest2()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -337,8 +328,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void UpdateEntityTest3()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -377,8 +367,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void UpdateEntityTest4()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -428,8 +417,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void DeleteEntityArgumentCheck()
-		{
-			
+		{		
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -445,8 +433,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void DeleteEntityTest()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{

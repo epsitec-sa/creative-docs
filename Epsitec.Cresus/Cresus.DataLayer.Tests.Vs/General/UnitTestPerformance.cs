@@ -503,8 +503,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				title,
 				UnitTestPerformance.logFile,
 				() =>
-				{
-					
+				{					
 					using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 					using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 					{
@@ -517,8 +516,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 		private void ExecuteWarmupLevel2(string title, System.Action<DataContext> action, int nbRuns)
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				TestHelper.MeasureAndWriteTime (
@@ -538,8 +536,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 		private void ExecuteWarmupLevel3(string title, System.Action<DataContext> action, int nbRun)
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{

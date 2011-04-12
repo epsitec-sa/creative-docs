@@ -43,7 +43,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		public void TestAllExported()
 		{
 			XDocument xDocument;
-
 			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -86,7 +85,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		public void TestWithExternalEntities()
 		{
 			XDocument xDocument;
-
 			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
@@ -132,8 +130,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		public void TestWithDiscardedEntities()
 		{
 			XDocument xDocument;
-
-			
+		
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -178,7 +175,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		public void TestInwardBrokenRelations()
 		{
 			XDocument xDocument;
-
 			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
@@ -231,7 +227,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		public void TestOutwardBrokenReference()
 		{
 			XDocument xDocument;
-
 			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
@@ -275,7 +270,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		public void TestOutwardBrokenCollection()
 		{
 			XDocument xDocument;
-
 			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{

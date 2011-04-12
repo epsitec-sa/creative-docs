@@ -41,8 +41,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void PersistenceJobConverterConstructor()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -63,8 +62,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void ConvertDeleteJobArgumentCheck()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -80,8 +78,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void ConvertDeleteJobTest()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -102,8 +99,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void ConvertValueJobArgumentCheck()
-		{
-			
+		{		
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -119,8 +115,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void ConvertValueJobTest1()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -146,8 +141,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void ConvertValueJobTest2()
-		{
-			
+		{		
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -183,8 +177,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void ConvertReferenceJobArgumentCheck()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -200,8 +193,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void ConvertReferenceJobTest1()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -228,8 +220,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void ConvertReferenceJobTest2()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -266,8 +257,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void ConvertCollectionJobArgumentCheck()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -283,8 +273,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void ConvertCollectionJobTest1()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -310,8 +299,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void ConvertCollectionJobTest2()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{

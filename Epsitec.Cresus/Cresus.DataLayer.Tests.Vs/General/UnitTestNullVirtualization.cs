@@ -36,8 +36,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void ModifyNullReferenceData1()
-		{
-			
+		{		
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase(dataInfrastructure, enableNullVirtualization:true))
@@ -94,8 +93,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void ModifyNullReferenceData2()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
@@ -168,8 +166,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void ReplaceNullReferenceEntity1()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
@@ -231,8 +228,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void ReplaceNullReferenceData2()
-		{
-			
+		{			
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
