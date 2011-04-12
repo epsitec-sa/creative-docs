@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core.Orchestrators.Navigation;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Widgets.Tiles
 {
@@ -184,7 +185,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			get
 			{
-				return Misc.ColorsCompare (this.SurfaceColors, Tile.SurfaceHilitedColors);
+				return Comparer.EqualValues (this.SurfaceColors, TileColors.SurfaceHilitedColors);
 			}
 		}
 
@@ -194,7 +195,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			{
 				if (this.IsReadOnly == false)
 				{
-					return Tile.SurfaceEditingColors;
+					return TileColors.SurfaceEditingColors;
 				}
 				else if (this.IsCompact)
 				{
@@ -202,13 +203,13 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 					{
 						if (this.IsEntered || this.Hilited)
 						{
-							return Tile.SurfaceHilitedColors;
+							return TileColors.SurfaceHilitedColors;
 						}
 					}
 
 					if (this.IsSelected)
 					{
-						return Tile.SurfaceSelectedContainerColors;
+						return TileColors.SurfaceSelectedContainerColors;
 					}
 				}
 
@@ -224,12 +225,12 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				{
 					if (this.AutoHilite && (this.IsEntered || this.Hilited))
 					{
-						return Tile.BorderColors;
+						return TileColors.BorderColors;
 					}
 
 					if (this.IsSelected)
 					{
-						return Tile.BorderColors;
+						return TileColors.BorderColors;
 					}
 				}
 

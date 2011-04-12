@@ -58,8 +58,8 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			get
 			{
-				this.tileArrow.SetOutlineColors (Tile.BorderColors);
-				this.tileArrow.SetSurfaceColors (Tile.SurfaceSummaryColors);
+				this.tileArrow.SetOutlineColors (TileColors.BorderColors);
+				this.tileArrow.SetSurfaceColors (TileColors.SurfaceSummaryColors);
 				this.tileArrow.MouseHilite = false;
 
 				return this.tileArrow;

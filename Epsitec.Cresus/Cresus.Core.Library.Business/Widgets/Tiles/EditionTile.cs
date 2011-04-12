@@ -111,8 +111,8 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			get
 			{
-				return Misc.ColorsCompare (this.SurfaceColors, Tile.SurfaceHilitedColors) || 
-					   Misc.ColorsCompare (this.SurfaceColors, Tile.SurfaceHilitedSelectedColors);
+				return Comparer.EqualValues (this.SurfaceColors, TileColors.SurfaceHilitedColors) || 
+					   Comparer.EqualValues (this.SurfaceColors, TileColors.SurfaceHilitedSelectedColors);
 			}
 		}
 
@@ -126,17 +126,17 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 					{
 						if (this.IsSelected)
 						{
-							return Tile.SurfaceHilitedSelectedColors;
+							return TileColors.SurfaceHilitedSelectedColors;
 						}
 						else
 						{
-							return Tile.SurfaceHilitedColors;
+							return TileColors.SurfaceHilitedColors;
 						}
 					}
 
 					if (this.IsSelected)
 					{
-						return Tile.SurfaceSelectedGroupingColors;
+						return TileColors.SurfaceSelectedGroupingColors;
 					}
 				}
 
@@ -152,7 +152,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				{
 					if (this.TileArrowHilite || this.IsSelected)
 					{
-						return Tile.BorderColors;
+						return TileColors.BorderColors;
 					}
 				}
 

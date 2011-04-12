@@ -205,36 +205,6 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public static bool ColorsCompare(IEnumerable<Color> colors1, IEnumerable<Color> colors2)
-		{
-			if (colors1 == null && colors2 == null)
-			{
-				return true;
-			}
-
-			if (colors1 == null || colors2 == null)
-			{
-				return false;
-			}
-
-			int count1 = colors1.Count ();
-			int count2 = colors2.Count ();
-
-			if (count1 != count2)
-			{
-				return false;
-			}
-
-			for (int i = 0; i < count1; i++)
-			{
-				if (colors1.ElementAt (i) != colors2.ElementAt (i))
-				{
-					return false;
-				}
-			}
-
-			return true;
-		}
 
 
 		public static string FormatUnit(decimal quantity, string unit)

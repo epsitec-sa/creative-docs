@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get
 			{
-				this.tileArrow.SetOutlineColors (Tiles.Tile.BorderColors);
+				this.tileArrow.SetOutlineColors (Tiles.TileColors.BorderColors);
 				this.tileArrow.SetSurfaceColors (this.InternalSurfaceColors);
 				this.tileArrow.MouseHilite = false;
 
@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				if (this.IsSelected)
 				{
-					return Tiles.Tile.SurfaceSelectedContainerColors;
+					return Tiles.TileColors.SurfaceSelectedContainerColors;
 				}
 				else
 				{

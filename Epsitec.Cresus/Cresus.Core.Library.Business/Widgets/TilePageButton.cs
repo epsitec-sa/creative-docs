@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get
 			{
-				this.tileArrow.SetOutlineColors (Tiles.Tile.BorderColors);
+				this.tileArrow.SetOutlineColors (Tiles.TileColors.BorderColors);
 				this.tileArrow.SetSurfaceColors (this.SurfaceColors);
 				this.tileArrow.MouseHilite = this.MouseHilite;
 
@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get
 			{
-				return Misc.ColorsCompare (this.SurfaceColors, Tiles.Tile.SurfaceHilitedColors);
+				return Comparer.EqualValues (this.SurfaceColors, Tiles.TileColors.SurfaceHilitedColors);
 			}
 		}
 
@@ -104,22 +104,22 @@ namespace Epsitec.Cresus.Core.Widgets
 				{
 					if (this.IsSelected)
 					{
-						return Tiles.Tile.SurfaceHilitedSelectedColors;
+						return Tiles.TileColors.SurfaceHilitedSelectedColors;
 					}
 					else
 					{
-						return Tiles.Tile.SurfaceHilitedColors;
+						return Tiles.TileColors.SurfaceHilitedColors;
 					}
 				}
 				else
 				{
 					if (this.IsSelected)
 					{
-						return Tiles.Tile.SurfaceSelectedContainerColors;
+						return Tiles.TileColors.SurfaceSelectedContainerColors;
 					}
 					else
 					{
-						return Tiles.Tile.SurfaceSummaryColors;
+						return Tiles.TileColors.SurfaceSummaryColors;
 					}
 				}
 			}
