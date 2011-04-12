@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Core.Library
 
 		public static void SetApplication(Application application)
 		{
-			UI.application = application;
+			UI.data = new PrivateData (application);
 		}
 
 		/// <summary>
@@ -50,8 +50,16 @@ namespace Epsitec.Cresus.Core.Library
 			{
 				get
 				{
-					return UI.cultureSettingsForData;
+					return UI.data.CultureSettings;
 				}
+			}
+		}
+
+		private static List<WindowPlacementHint> WindowPlacementHints
+		{
+			get
+			{
+				return UI.data.WindowPlacementHints;
 			}
 		}
 
@@ -78,7 +86,7 @@ namespace Epsitec.Cresus.Core.Library
 		/// <param name="xml">The XML tree.</param>
 		public static void RestoreWindowPositions(XElement xml)
 		{
-			UI.windowPlacementHints.Clear ();
+			UI.WindowPlacementHints.Clear ();
 
 			foreach (XElement element in xml.Elements ("window"))
 			{
@@ -88,7 +96,7 @@ namespace Epsitec.Cresus.Core.Library
 
 				WindowPlacement wp = WindowPlacement.Parse (placement);
 
-				UI.windowPlacementHints.Add (new WindowPlacementHint (name, title, wp));
+				UI.WindowPlacementHints.Add (new WindowPlacementHint (name, title, wp));
 			}
 
 			UI.RestoreWindowPositionsOfExistingWindows ();
@@ -104,10 +112,10 @@ namespace Epsitec.Cresus.Core.Library
 
 			if (hint.IsEmpty == false)
             {
-				UI.windowPlacementHints.Remove (hint);
+				UI.WindowPlacementHints.Remove (hint);
             }
 
-			UI.windowPlacementHints.Add (new WindowPlacementHint (window.Name, window.Text, window.WindowPlacement));
+			UI.WindowPlacementHints.Add (new WindowPlacementHint (window.Name, window.Text, window.WindowPlacement));
 		}
 		
 		/// <summary>
@@ -170,7 +178,7 @@ namespace Epsitec.Cresus.Core.Library
 		public static void ShowErrorMessage(FormattedText message, FormattedText hint, System.Exception ex)
 		{
 			string exMessage   = ex == null ? "" : ex.Message;
-			string fullMessage = string.Format (message.ToString (), UI.application.ShortWindowTitle, exMessage);
+			string fullMessage = string.Format (message.ToString (), UI.data.Application.ShortWindowTitle, exMessage);
 			FormattedText formattedMessage;
 
 			if (hint.IsNullOrEmpty)
@@ -184,11 +192,11 @@ namespace Epsitec.Cresus.Core.Library
 					fullMessage,
 					UI.StringEndFontElement,
 					@"<br/><br/>",
-					string.Format (hint.ToString (), UI.application.ShortWindowTitle, exMessage),
+					string.Format (hint.ToString (), UI.data.Application.ShortWindowTitle, exMessage),
 					@"<br/>&#160;"));
 			}
 
-			MessageDialog.ShowError (formattedMessage, UI.application.ShortWindowTitle, null);
+			MessageDialog.ShowError (formattedMessage, UI.data.Application.ShortWindowTitle, null);
 		}
 
 
@@ -202,7 +210,7 @@ namespace Epsitec.Cresus.Core.Library
 		{
 			IEnumerable<Visual> children = container.Children;
 
-			if (UI.reverseSetFocus)
+			if (UI.data.ReverseSetFocus)
 			{
 				//	We are called as a result to ExecuteWithReverseSetFocus, which means
 				//	that we should start looking for the widgets in reverse order:
@@ -260,9 +268,9 @@ namespace Epsitec.Cresus.Core.Library
 		
 		private static T ExecuteWithSpecifiedSetFocus<T>(System.Func<T> action, bool reverseSetFocus)
 		{
-			bool focus = UI.reverseSetFocus;
+			bool focus = UI.data.ReverseSetFocus;
 			
-			UI.reverseSetFocus = reverseSetFocus;
+			UI.data.ReverseSetFocus = reverseSetFocus;
 			
 			try
 			{
@@ -270,7 +278,7 @@ namespace Epsitec.Cresus.Core.Library
 			}
 			finally
 			{
-				UI.reverseSetFocus = focus;
+				UI.data.ReverseSetFocus = focus;
 			}
 		}
 
@@ -336,7 +344,7 @@ namespace Epsitec.Cresus.Core.Library
 		private static void RestoreWindowPositionsOfExistingWindows()
 		{
 			var windows = new List<Window> (Window.GetAllLiveWindows ());
-			var hints   = UI.windowPlacementHints.ToArray ();
+			var hints   = UI.WindowPlacementHints.ToArray ();
 
 			foreach (var hint in hints)
 			{
@@ -368,7 +376,7 @@ namespace Epsitec.Cresus.Core.Library
 			string title = window.Text ?? "";
 
 			//	First, try to find an exact match : name + title
-			foreach (var hint in UI.windowPlacementHints)
+			foreach (var hint in UI.WindowPlacementHints)
 			{
 				if ((hint.Name == name) &&
 					(hint.Title == title))
@@ -378,7 +386,7 @@ namespace Epsitec.Cresus.Core.Library
 			}
 
 			//	Second, try to find a match based only on the name
-			foreach (var hint in UI.windowPlacementHints)
+			foreach (var hint in UI.WindowPlacementHints)
 			{
 				if (hint.Name == name)
 				{
@@ -391,24 +399,53 @@ namespace Epsitec.Cresus.Core.Library
 
 		private static void NotifyUpdateRequested(object sender)
 		{
-			var handler = UI.UpdateRequested;
-			
-			if (handler != null)
+			UI.data.NotifyUpdateRequested (sender);
+		}
+
+		public static event EventHandler					UpdateRequested
+		{
+			add
 			{
-				handler (sender);
+				UI.data.UpdateRequested += value;
+			}
+			remove
+			{
+				UI.data.UpdateRequested -= value;
 			}
 		}
 
+		private class PrivateData
+		{
+			public PrivateData(Application application)
+			{
+				this.Application = application;
+				this.WindowPlacementHints = new List<WindowPlacementHint> ();
+				this.CultureSettings = new CultureSettings ();
+			}
 
-		public static event EventHandler					UpdateRequested;
-		
-		private const string								StringMessageFontElement			= @"<font size=""125%"">";
-		private const string								StringEndFontElement				= "</font>";
-		
-		private static readonly List<WindowPlacementHint>	windowPlacementHints				= new List<WindowPlacementHint> ();
-		private static readonly CultureSettings				cultureSettingsForData				= new CultureSettings ();
-		private static bool									reverseSetFocus;
+			public void NotifyUpdateRequested(object sender)
+			{
+				var handler = this.UpdateRequested;
 
-		private static Application							application;
+				if (handler != null)
+				{
+					handler (sender);
+				}
+			}
+			
+			public event EventHandler						UpdateRequested;
+			
+			public readonly List<WindowPlacementHint>		WindowPlacementHints;
+			public readonly CultureSettings					CultureSettings;
+			public readonly Application						Application;
+			
+			public bool										ReverseSetFocus;
+		}
+		
+		private const string								StringMessageFontElement	= @"<font size=""125%"">";
+		private const string								StringEndFontElement		= "</font>";
+
+		[System.ThreadStatic]
+		private static PrivateData							data;
 	}
 }

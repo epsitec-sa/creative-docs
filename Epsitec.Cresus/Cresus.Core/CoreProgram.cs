@@ -7,6 +7,7 @@ using Epsitec.Common.Splash;
 using Epsitec.Cresus.Core.Library;
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Cresus.Core
 {
@@ -18,9 +19,9 @@ namespace Epsitec.Cresus.Core
 		[System.STAThread]
 		public static void Main(string[] args)
 		{
-			if (args.Length > 0)
+			if (args.Length > 1)
 			{
-				CoreProgramOperations.ProcessCommandLine (args);
+				CoreProgramOperations.ProcessCommandLine (args.Skip (1).ToArray ());
 			}
 			else
 			{
