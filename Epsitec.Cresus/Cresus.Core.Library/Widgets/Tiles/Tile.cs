@@ -148,8 +148,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 
 
-		#region Drag & drop
-
 		public virtual bool IsDragAndDropEnabled
 		{
 			get
@@ -164,28 +162,21 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			//	On devrait pouvoir faire cela plus proprement (avec Swallowed ?).
 			get
 			{
-				return this.dragHelper != null && this.dragHelper.IsClickForDrag;
+				if (this.dragHelper != null && this.dragHelper.IsClickForDrag)
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
 		}
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
-			switch (message.MessageType)
-			{
-				case MessageType.KeyDown:
-				case MessageType.KeyUp:
-					if ((message.MessageType == MessageType.KeyDown) &&
-						(this.ProcessKeyDown (message.KeyCode)))
-					{
-						message.Consumer = this;
-						return;
-					}
-
-					break;
-			}
-
 			if ((this.dragHelper == null) &&
-				(this.MightStartDrag (message)))
+				(this.MessageMightStartDrag (message)))
 			{
 				this.dragHelper = new DragHelper (this);
 			}
@@ -197,7 +188,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		private bool MightStartDrag(Message message)
+		private bool MessageMightStartDrag(Message message)
 		{
 			if ((message.MessageType == MessageType.MouseDown) &&
 				(message.Button == MouseButtons.Left) &&
@@ -210,30 +201,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				return false;
 			}
 		}
-
-		private bool ProcessKeyDown(KeyCode key)
-		{
-			ColorPalette palette = this.Parent as ColorPalette;
-
-			if (palette == null)
-			{
-				return false;
-			}
-
-			switch (key)
-			{
-				case KeyCode.ArrowUp:
-				case KeyCode.ArrowDown:
-				case KeyCode.ArrowLeft:
-				case KeyCode.ArrowRight:
-					//?return palette.Navigate (this, key);
-					return false;
-			}
-
-			return false;
-		}
-
-		#endregion
 
 
 		#region IReadOnly Members
