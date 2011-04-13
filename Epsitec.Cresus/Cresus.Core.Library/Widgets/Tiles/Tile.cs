@@ -275,7 +275,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			public void OnDragging(DragEventArgs e)
 			{
 				// TODO: IsSelected pas suffisant
-				if (this.host.IsDraggable)
+				if (this.host.IsDraggable == false)
 				{
 					return;
 				}
@@ -352,7 +352,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 					Tile target = this.FindDropTarget (mouseCursor);
 
-					if (target == null || target.GroupId != this.dragGroupId || !target.IsDraggable)
+					if (target is ErsatzTile || target == null || target.GroupId != this.dragGroupId || !target.IsDraggable)
 					{
 						this.dragWindowTarget.Hide ();
 					}
