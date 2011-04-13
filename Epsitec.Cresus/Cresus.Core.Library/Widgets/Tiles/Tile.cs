@@ -49,6 +49,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			this.tileArrow    = new TileArrow (arrowDirection);
 		}
 
+		
 		public virtual bool IsDraggable
 		{
 			get
@@ -63,23 +64,8 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			set;
 		}
 
-
 		/// <summary>
-		/// Retourne le rectangle pour le contenu, qui exclu la zone occupée par la flèche.
-		/// </summary>
-		public Rectangle ContainerBounds
-		{
-			get
-			{
-				var bounds = this.Client.Bounds;
-				bounds.Deflate (this.ContainerPadding);
-
-				return bounds;
-			}
-		}
-
-		/// <summary>
-		/// Retourne les marges pour le contenu, qui excluent la zone occupée par la flèche.
+		/// Gets the container padding, which excludes the space used by the arrow.
 		/// </summary>
 		public Margins ContainerPadding
 		{
@@ -89,6 +75,20 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
+		/// <summary>
+		/// Gets the container bounds, which excludes the space used by the arrow.
+		/// </summary>
+		protected Rectangle ContainerBounds
+		{
+			get
+			{
+				var bounds = this.Client.Bounds;
+				
+				bounds.Deflate (this.ContainerPadding);
+
+				return bounds;
+			}
+		}
 
 		protected abstract int GroupedItemIndex
 		{
