@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	/// 
 	/// o--Common.Widgets.FrameBox
 	///    |
-	///    o--Tiles.Tile
+	///    o--Tiles.Tile (abstract)
   	///       |
 	///       o--Tiles.GenericTile (abstract)
   	///       |  |
@@ -115,7 +115,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-
 		public virtual TileArrowMode ArrowMode
 		{
 			get
@@ -139,14 +138,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				return this.tileArrow;
 			}
 		}
-
-		
-		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
-		{
-			this.TileArrow.Paint (graphics, this.Client.Bounds, this.ArrowMode, this.Frameless);
-		}
-
-
 
 		public virtual bool IsDragAndDropEnabled
 		{
@@ -172,6 +163,14 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				}
 			}
 		}
+
+		
+		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
+		{
+			this.TileArrow.Paint (graphics, this.Client.Bounds, this.ArrowMode, this.Frameless);
+		}
+
+
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{

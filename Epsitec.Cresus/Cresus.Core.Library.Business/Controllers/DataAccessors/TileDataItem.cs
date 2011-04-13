@@ -38,8 +38,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				this.Rank                     = template.Rank;
 				this.IconUri                  = template.IconUri;
 				this.AutoGroup                = template.AutoGroup;
-				this.HideAddButton            = template.HideAddButton;
-				this.HideRemoveButton         = template.HideRemoveButton;
+				this.hideAddButton            = template.hideAddButton;
+				this.hideRemoveButton         = template.hideRemoveButton;
 				this.Frameless                = template.Frameless;
 				this.InitialVisibility        = template.InitialVisibility;
 				this.DataType                 = template.DataType;
