@@ -133,24 +133,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		public bool IsClickForDrag
-		{
-			//	Indique si l'événement Clicked doit être ignoré parce qu'il a servi à faire du drag & drop.
-			//	On devrait pouvoir faire cela plus proprement (avec Swallowed ?).
-			get
-			{
-				if (this.dragHelper != null && this.dragHelper.IsClickForDrag)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-		}
-
-		
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			this.TileArrow.Paint (graphics, this.Client.Bounds, this.ArrowMode, this.Frameless);
@@ -237,8 +219,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			{
 				Point mouseCursor = DragHelper.MouseCursorLocation;
 
-				this.isClickForDrag = false;
-
 				if (this.host.GroupId == null)
 				{
 					return false;
@@ -248,14 +228,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				this.dragBeginSize  = this.host.PreferredSize;
 				
 				return true;
-			}
-
-			public bool IsClickForDrag
-			{
-				get
-				{
-					return this.isClickForDrag;
-				}
 			}
 
 			public void OnDragging(DragEventArgs e)
@@ -276,8 +248,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 					double distance = Point.Distance (this.dragBeginPoint, mouseCursor);
 					if (distance >= DragHelper.dragBeginMinimalMove)  // déplacement minimal atteint ?
 					{
-						this.isClickForDrag = true;
-
 						this.dragWindowSourceBeginPosition = mouseCursor;
 						this.dragWindowSourceOffset = this.host.MapScreenToClient (mouseCursor);
 						this.dragWindowSourceSize = this.host.ActualSize;
@@ -503,8 +473,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 			private readonly Tile									host;
 			private readonly Common.Widgets.Behaviors.DragBehavior	dragBehavior;
-			
-			private bool											isClickForDrag;
 			
 			private Point											dragBeginPoint;
 			private Size											dragBeginSize;

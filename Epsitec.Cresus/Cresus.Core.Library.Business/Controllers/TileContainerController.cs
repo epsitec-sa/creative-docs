@@ -401,10 +401,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 			else
 			{
-				if (!item.Tile.IsClickForDrag)
-				{
-					item.Tile.ToggleSubView (this.controller.Orchestrator, this.controller);
-				}
+				item.Tile.ToggleSubView (this.controller.Orchestrator, this.controller);
 			}
 		}
 
