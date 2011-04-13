@@ -22,13 +22,72 @@ using System.Collections.Generic;
 
 using System.Linq;
 
+using System.Threading;
+
 namespace Epsitec.Cresus.DataLayer.Context
 {
+
+
 	/// <summary>
 	/// The <c>DataContext</c> class is responsible of the mapping between the object model and the
 	/// relational model of the <see cref="AbstractEntity"/>. It is therefore the designated entry
 	/// point for everything which is related to them.
 	/// </summary>
+	/// 
+	/// <remarks>
+	/// This class is partially thread safe. Instances of this class which are not readonly are not
+	/// thread-safe and should therefore only be accessed by a single thread at a time. Some Members
+	/// are thread safe for readonly instances. They are roughly all the public members of this
+	/// class that are available in readonly mode. The mechanism used is a reader writer lock per
+	/// instance. Therefore, several threads can access members that do not modify the internal
+	/// state at the same time. The access is exclusive for members that might modify the internal 
+	/// state.
+	/// 
+	/// Members that have a shared access are the following:
+	/// - DataContextPool
+	/// - EnableNullVirtualization
+	/// - Contains (the public overload)
+	/// - ContainsChanges
+	/// - GetEntities
+	/// - GetNormalizedEntityKey
+	/// - GetPersistedId
+	/// - IsDeleted
+	/// - IsForeignEntity
+	/// - IsPersistent
+	/// - IsReadOnly
+	/// - IsRegisteredAsEmptyEntity
+	/// - Name (only the getter, the setter isn't thread safe).
+	/// - UniqueId
+	/// 
+	/// Members that have an exclusive access are the following:
+	/// - EntityChanged
+	/// - GetByExample
+	/// - GetByRequest
+	/// - GetPersistedEntity
+	/// - Reload	
+	/// - ResolveEntity (all three overloads)
+	///
+	/// Members that concerns more than one instance of DataContext
+	/// - CopyEntity (exclusive access to both instances of DataContext, the sender first and then
+	///   the receiver)
+	/// - GetLocalEntity (shared access to sender DataContext and then exclusive access to receiver
+	///   DataContext)
+	///   
+	/// Two members might result in calls to more than one instance of DataContext : CopyEntity and
+	/// GetLocalEntity. The instances of DataContext are accessed one after the other and thus both
+	/// are never locked at the same time, which helps avoids deadlocks.
+	/// 
+	/// The mechanism used for the synchronization of the data between the instances of DataContext
+	/// registered to a DataContextPool is not thread safe. Therefore all dataContexts from the same
+	/// DataContextPool must be readonly if they are accessed by more than one thread. Otherwise,
+	/// the consistency of the data within the instances might become corrupted while the data is
+	/// synchronized.
+	/// 
+	/// The mechanism used by the proxies (CollectionFieldProxy, KeyedCollectionFieldProxy,
+	/// ReferenceFieldProxy, KeyedReferenceFieldProxy and ValueFieldProxy) are also thread safe for
+	/// the entities owned by a readonly instance of DataContext, so that when those proxies are
+	/// resolved, the consistency of the data is ensure.
+	/// </remarks>
 	[System.Diagnostics.DebuggerDisplay ("DataContext #{UniqueId}")]
 	public sealed class DataContext : IEntityPersistenceManager, IIsDisposed, IReadOnly
 	{
@@ -57,7 +116,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.entitiesDeleted = new HashSet<AbstractEntity> ();
 			this.fieldsToResave = new Dictionary<AbstractEntity, HashSet<Druid>> ();
 
-			this.eventExclusion = new object ();
+			this.eventLock = new ReaderWriterLockSlim (LockRecursionPolicy.SupportsRecursion);
+			this.dataContextLock = new ReaderWriterLockSlim (LockRecursionPolicy.SupportsRecursion);
+			this.lockTimeOut = System.TimeSpan.FromSeconds (15);
 
 			this.EntityContext.EntityAttached += this.HandleEntityCreated;
 			this.EntityContext.EntityChanged += this.HandleEntityChanged;
@@ -115,14 +176,14 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			add
 			{
-				lock (this.eventExclusion)
+				using (TimedReaderWriterLock.LockWrite (this.eventLock, this.lockTimeOut))
 				{
 					this.entityChanged += value;
 				}
 			}
 			remove
 			{
-				lock (this.eventExclusion)
+				using (TimedReaderWriterLock.LockWrite (this.eventLock, this.lockTimeOut))
 				{
 					this.entityChanged -= value;
 				}
@@ -146,6 +207,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			get;
 			private set;
 		}
+
 
 		public DataContextPool DataContextPool
 		{
@@ -271,7 +333,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
-
 		/// <summary>
 		/// Creates a new <see cref="AbstractEntity"/> of type <typeparamref name="TEntity"/> associated
 		/// with this instance and registers it as an empty one.
@@ -304,21 +365,10 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			this.AssertDataContextIsNotDisposed ();
 
-			return this.entitiesCache.ContainsEntity (entity);
-		}
-
-		/// <summary>
-		/// Tells whether this instance manages an <see cref="AbstractEntity"/> corresponding to a
-		/// given <see cref="EntityKey"/>.
-		/// </summary>
-		/// <param name="entityKey">The <see cref="EntityKey"/> to check if the corresponding <see cref="AbstractEntity"/> is managed by this instance.</param>
-		/// <returns><c>true</c> if the corresponding <see cref="AbstractEntity"/> is managed by this instance, <c>false</c> if it is not.</returns>
-		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		internal bool Contains(EntityKey entityKey)
-		{
-			this.AssertDataContextIsNotDisposed ();
-
-			return this.entitiesCache.GetEntity (entityKey) != null;
+			using (this.LockRead ())
+			{
+				return this.entitiesCache.ContainsEntity (entity);
+			}
 		}
 
 		/// <summary>
@@ -328,24 +378,35 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <typeparam name="T">The type of the entity.</typeparam>
 		/// <param name="entity">The entity.</param>
 		/// <returns>The entity, as loaded in the current context.</returns>
-		public T GetLocalEntity<T>(T entity)
-			where T : AbstractEntity
+		public T GetLocalEntity<T>(T entity) where T : AbstractEntity
 		{
 			if (entity.UnwrapNullEntity () == null)
 			{
 				return entity;
 			}
 
-			if (this.Contains (entity))
+			var entityKey = DataContextPool.GetEntityKey (entity);
+
+			if (!entityKey.HasValue)
 			{
-				return entity;
+				throw new System.ArgumentException ("entity has no key!");
 			}
+			
+			using (this.LockWrite ())
+			{
+				T localEntity;
 
-			var key = this.DataContextPool.FindEntityKey (entity);
+				if (this.Contains (entity))
+				{
+					localEntity = entity;
+				}
+				else
+				{
+					localEntity = (T) this.ResolveEntity (entityKey);
+				}
 
-			System.Diagnostics.Debug.Assert (key.HasValue);
-
-			return this.ResolveEntity (key) as T;
+				return localEntity;
+			}
 		}
 
         /// <summary>
@@ -362,31 +423,10 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.AssertDataContextIsNotDisposed ();
 			this.AssertEntityIsNotForeign (entity);
 
-			return this.entitiesCache.GetEntityKey (entity);
-		}
-
-		/// <summary>
-		/// Gets the leaf <see cref="EntityKey"/> associated with an <see cref="AbstractEntity"/>.
-		/// Leaf means that the <see cref="Druid"/> of the type is the leaf type of the
-		/// <see cref="AbstractEntity"/>.
-		/// </summary>
-		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="EntityKey"/> to get.</param>
-		/// <returns>The <see cref="EntityKey"/> or <c>null</c> if there is none defined in this instance.</returns>
-		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is managed by another <see cref="DataContext"/>.</exception>
-		public EntityKey? GetLeafEntityKey(AbstractEntity entity)
-		{
-			this.AssertDataContextIsNotDisposed ();
-			this.AssertEntityIsNotForeign (entity);
-
-			EntityKey? key = this.GetNormalizedEntityKey (entity);
-
-			if (key.HasValue)
+			using (this.LockRead ())
 			{
-				key = new EntityKey (entity.GetEntityStructuredTypeId (), key.Value.RowKey);
+				return this.entitiesCache.GetEntityKey (entity);
 			}
-
-			return key;
 		}
 
 
@@ -480,10 +520,13 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			this.AssertDataContextIsNotDisposed ();
 
-			bool containsDeletedEntities = this.entitiesToDelete.Any ();
-			bool containsChangedEntities = this.GetEntitiesModified ().Any ();
+			using (this.LockRead ())
+			{
+				bool containsDeletedEntities = this.entitiesToDelete.Any ();
+				bool containsChangedEntities = this.GetEntitiesModified ().Any ();
 
-			return containsDeletedEntities || containsChangedEntities;
+				return containsDeletedEntities || containsChangedEntities;
+			}
 		}
 
 
@@ -550,7 +593,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
-
 		/// <summary>
 		/// Sets the registered empty status of an <see cref="AbstractEntity"/> to a given value, if
 		/// the given <see cref="AbstractEntity"/> is not persistent.
@@ -594,7 +636,10 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.AssertDataContextIsNotDisposed ();
 			this.AssertEntityIsNotForeign (entity);
 
-			return this.emptyEntities.Contains (entity);
+			using (this.LockRead ())
+			{
+				return this.emptyEntities.Contains (entity);
+			}
 		}
 
 
@@ -644,7 +689,10 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.AssertDataContextIsNotDisposed ();
 			this.AssertEntityIsNotForeign (entity);
 
-			return this.entitiesDeleted.Contains (entity) || this.entitiesToDelete.Contains (entity);
+			using (this.LockRead ())
+			{
+				return this.entitiesDeleted.Contains (entity) || this.entitiesToDelete.Contains (entity);
+			}
 		}
 
 		/// <summary>
@@ -656,25 +704,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			this.AssertDataContextIsNotDisposed ();
 
-			IEnumerable<AbstractEntity> allLiveEntities = this.entitiesCache.GetEntities ().Except (this.entitiesDeleted);
-
-			return allLiveEntities.ToList ();
-		}
-
-		public IList<T> GetEntitiesOfType<T>(System.Predicate<T> filter = null)
-			where T : AbstractEntity
-		{
-			this.AssertDataContextIsNotDisposed ();
-
-			var allLiveEntities = this.entitiesCache.GetEntities ().Except (this.entitiesDeleted);
-
-			if (filter == null)
+			using (this.LockRead ())
 			{
-				return allLiveEntities.OfType<T> ().ToList ();
-			}
-			else
-			{
-				return allLiveEntities.OfType<T> ().Where (x => filter (x)).ToList ();
+				return this.entitiesCache.GetEntities ()
+					.Except (this.entitiesDeleted)
+					.ToList ();
 			}
 		}
 
@@ -684,7 +718,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// managed by this instance.
 		/// </summary>
 		/// <returns>The sequence of <see cref="Druid"/> for the types.</returns>
-		internal IEnumerable<Druid> GetManagedEntityTypeIds()
+		private IEnumerable<Druid> GetManagedEntityTypeIds()
 		{
 			return this.entitiesCache.GetEntityTypeIds ();
 		}
@@ -703,19 +737,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 			return from AbstractEntity entity in this.GetEntities ()
 				   where entity.GetEntityDataGeneration () >= this.EntityContext.DataGeneration
 				   select entity;
-		}
-
-
-		/// <summary>
-		/// Gets the <see cref="AbstractEntity"/> that have been deleted by this instance.
-		/// </summary>
-		/// <returns>The <see cref="AbstractEntity"/> that have been deleted by this instance.</returns>
-		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		internal IEnumerable<AbstractEntity> GetEntitiesDeleted()
-		{
-			this.AssertDataContextIsNotDisposed ();
-
-			return this.entitiesDeleted;
 		}
 
 
@@ -859,8 +880,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 			// in a very concise way.
 			// Marc
 
-			return this.GetEntity (entityKey)
-				?? this.DataLoader.ResolveEntity (entityId, rowKey);
+			using (this.LockWrite ())
+			{
+				return this.GetEntity (entityKey)
+					?? this.DataLoader.ResolveEntity (entityId, rowKey);
+			}
 		}
 
 
@@ -916,12 +940,15 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			bool changes;
 
-			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			using (this.LockWrite ())
 			{
-				bool deletions = this.DeleteDeletedEnties ();
-				bool modifications = this.ReloadOutDatedEntities ();
+				using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+				{
+					bool deletions = this.DeleteDeletedEnties ();
+					bool modifications = this.ReloadOutDatedEntities ();
 
-				changes = deletions || modifications;
+					changes = deletions || modifications;
+				}
 			}
 
 			return changes;
@@ -936,9 +963,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			bool deletions = false;
 
-			DbId logId = new DbId (this.entitiesCache.GetMinimumLogId () ?? 1);
+			long id = System.Math.Max (this.entitiesCache.GetMinimumLogId () ?? 1, 1);
 
-			var entityDeletionEntries = this.DataInfrastructure.GetEntityDeletionEntriesNewerThan (logId);
+			var entityDeletionEntries = this.DataInfrastructure.GetEntityDeletionEntriesNewerThan (new DbId (id));
 
 			foreach (var entityDeletionEntry in entityDeletionEntries)
 			{
@@ -1002,7 +1029,10 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.AssertDataContextIsNotDisposed ();
 			this.AssertEntityIsNotForeign (example);
 
-			return this.DataLoader.GetByExample<TEntity> (example);
+			using (this.LockWrite ())
+			{
+				return this.DataLoader.GetByExample<TEntity> (example);
+			}
 		}
 
 		/// <summary>
@@ -1025,8 +1055,10 @@ namespace Epsitec.Cresus.DataLayer.Context
 			{
 				this.AssertEntityIsNotForeign (request.RootEntity);
 			}
-
-			return this.DataLoader.GetByRequest<TEntity> (request);
+			using (this.LockWrite ())
+			{
+				return this.DataLoader.GetByRequest<TEntity> (request);
+			}
 		}
 
 		/// <summary>
@@ -1045,6 +1077,19 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.DataContextPool.Synchronize (this, jobs);
 		}
 
+		/// <summary>
+		/// Tells whether this instance manages an <see cref="AbstractEntity"/> corresponding to a
+		/// given <see cref="EntityKey"/>.
+		/// </summary>
+		/// <param name="entityKey">The <see cref="EntityKey"/> to check if the corresponding <see cref="AbstractEntity"/> is managed by this instance.</param>
+		/// <returns><c>true</c> if the corresponding <see cref="AbstractEntity"/> is managed by this instance, <c>false</c> if it is not.</returns>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		private bool Contains(EntityKey entityKey)
+		{
+			this.AssertDataContextIsNotDisposed ();
+
+			return this.entitiesCache.GetEntity (entityKey) != null;
+		}
 
 		/// <summary>
 		/// Applies the modifications described by the given <see cref="DeleteSynchronizationJob"/>
@@ -1338,6 +1383,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				this.EntityContext.EntityAttached -= this.HandleEntityCreated;
 				this.EntityContext.EntityChanged -= this.HandleEntityChanged;
 				this.EntityContext.PersistenceManagers.Remove (this);
+				this.dataContextLock.Dispose ();
 			}
 
 			this.isDisposed = true;
@@ -1402,17 +1448,20 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.AssertDataContextIsNotDisposed ();
 			this.AssertEntityIsNotForeign (entity);
 
-			string persistedId = null;
-
-			if (this.IsPersistent (entity))
+			using (this.LockRead ())
 			{
-				Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-				DbKey key = this.GetNormalizedEntityKey (entity).Value.RowKey;
+				string persistedId = null;
 
-				persistedId = string.Format (System.Globalization.CultureInfo.InvariantCulture, "db:{0}:{1}", leafEntityId, key.Id);
+				if (this.IsPersistent (entity))
+				{
+					Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+					DbKey key = this.GetNormalizedEntityKey (entity).Value.RowKey;
+
+					persistedId = string.Format (System.Globalization.CultureInfo.InvariantCulture, "db:{0}:{1}", leafEntityId, key.Id);
+				}
+
+				return persistedId;
 			}
-
-			return persistedId;
 		}
 
 
@@ -1420,32 +1469,35 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			this.AssertDataContextIsNotDisposed ();
 
-			AbstractEntity entity = null;
-
-			if (!string.IsNullOrEmpty (id) && id.StartsWith ("db:"))
+			using (this.LockWrite ())
 			{
-				string[] args = id.Split (':');
+				AbstractEntity entity = null;
 
-				DbKey key = DbKey.Empty;
-				Druid entityId = Druid.Empty;
+				if (!string.IsNullOrEmpty (id) && id.StartsWith ("db:"))
+				{
+					string[] args = id.Split (':');
 
-				entityId = Druid.Parse (args[1]);
+					DbKey key = DbKey.Empty;
+					Druid entityId = Druid.Empty;
 
-				long  keyId;
+					entityId = Druid.Parse (args[1]);
 
-				if ((entityId.IsValid) &&
+					long  keyId;
+
+					if ((entityId.IsValid) &&
 					(long.TryParse (args[2], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out keyId)))
-				{
-					key = new DbKey (keyId);
+					{
+						key = new DbKey (keyId);
+					}
+
+					if (!key.IsEmpty && !entityId.IsEmpty)
+					{
+						entity = this.ResolveEntity (entityId, key);
+					}
 				}
 
-				if (!key.IsEmpty && !entityId.IsEmpty)
-				{
-					entity = this.ResolveEntity (entityId, key);
-				}
+				return entity;
 			}
-
-			return entity;
 		}
 
 
@@ -1467,35 +1519,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 			EntityKey? key = this.GetNormalizedEntityKey (entity);
 
 			return key.HasValue && !key.Value.RowKey.IsEmpty;
-		}
-
-
-		/// <summary>
-		/// Gets the ID of the <see cref="DataContext"/> associated with the entity, if any.
-		/// </summary>
-		/// <param name="entity">The entity.</param>
-		/// <returns>The ID of the associated <see cref="DataContext"/> if there is one; otherwise, <c>-1</c>.</returns>
-		public static long GetDataContextId(AbstractEntity entity)
-		{
-			if ((entity == null) ||
-				(entity.DataContextId.HasValue == false))
-			{
-				return -1;
-			}
-			else
-			{
-				return entity.DataContextId.Value;
-			}
-		}
-
-		/// <summary>
-		/// Gets the <see cref="DataContext"/> associated with the entity, if any.
-		/// </summary>
-		/// <param name="entity">The entity.</param>
-		/// <returns>The <see cref="DataContext"/> if there is one; otherwise, <c>null</c>.</returns>
-		public static DataContext GetDataContext(AbstractEntity entity)
-		{
-			return DataContextPool.GetDataContext (DataContext.GetDataContextId (entity));
 		}
 
 
@@ -1616,7 +1639,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			EventHandler<EntityChangedEventArgs> handler;
 
-			lock (this.eventExclusion)
+			using (TimedReaderWriterLock.LockRead (this.eventLock, this.lockTimeOut))
 			{
 				handler = this.entityChanged;
 			}
@@ -1627,6 +1650,22 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 				handler (this, eventArgs);
 			}
+		}
+
+
+		internal System.IDisposable LockRead()
+		{
+			return this.IsReadOnly
+				? TimedReaderWriterLock.LockRead (this.dataContextLock, this.lockTimeOut)
+				: null;
+		}
+
+
+		internal System.IDisposable LockWrite()
+		{
+			return this.IsReadOnly
+				? TimedReaderWriterLock.LockWrite (this.dataContextLock, this.lockTimeOut)
+				: null;
 		}
 
 
@@ -1666,57 +1705,63 @@ namespace Epsitec.Cresus.DataLayer.Context
 				return entity;
 			}
 
-			entity.ThrowIfNull ("entity");
-			entity.ThrowIf (e => !sender.Contains (e), "entity is not managed by sender.");
-			entity.ThrowIf (e => !sender.IsPersistent (e), "entity is not persistent.");
+			EntityKey entityKey;
+			Druid entityTypeId;
+			long senderEntityLogId;
+			EntityData data;
 
-			TEntity receiverEntity = (TEntity) receiver.GetEntity (sender.GetLeafEntityKey (entity).Value);
-			
-			if (receiverEntity != null)
+			using (sender.LockWrite ())
 			{
-				return receiverEntity;
-			}
-			
-			Druid entityTypeId = entity.GetEntityStructuredTypeId ();
+				entity.ThrowIfNull ("entity");
+				entity.ThrowIf (e => !sender.Contains (e), "entity is not managed by sender.");
+				entity.ThrowIf (e => !sender.IsPersistent (e), "entity is not persistent.");
 
-			long senderEntityLogId = sender.entitiesCache.GetLogId (entity).Value;
-			EntityData data = sender.SerializationManager.Serialize (entity, senderEntityLogId);
+				entityKey = sender.GetNormalizedEntityKey (entity).Value;
+				entityTypeId = entity.GetEntityStructuredTypeId ();
 
-			TEntity copiedEntity = (TEntity) receiver.DataLoader.DeserializeEntityData (data);
-
-			receiver.entitiesCache.DefineEntityModificationEntryId (copiedEntity, senderEntityLogId);
-			
-			long? receiverLogId = receiver.entitiesCache.GetLogId (entityTypeId);
-
-			if (!receiverLogId.HasValue || receiverLogId.Value > senderEntityLogId)
-			{
-				receiver.entitiesCache.DefineEntityModificationEntryId (entityTypeId, senderEntityLogId);
+				senderEntityLogId = sender.entitiesCache.GetLogId (entity).Value;
+				data = sender.SerializationManager.Serialize (entity, senderEntityLogId);
 			}
 
-			return copiedEntity;
+			using (receiver.LockWrite ())
+			{
+				TEntity receiverEntity = (TEntity) receiver.GetEntity (entityKey);
+
+				if (receiverEntity != null)
+				{
+					return receiverEntity;
+				}
+
+				TEntity copiedEntity = (TEntity) receiver.DataLoader.DeserializeEntityData (data);
+
+				receiver.entitiesCache.DefineEntityModificationEntryId (copiedEntity, senderEntityLogId);
+
+				long? receiverLogId = receiver.entitiesCache.GetLogId (entityTypeId);
+
+				if (!receiverLogId.HasValue || receiverLogId.Value > senderEntityLogId)
+				{
+					receiver.entitiesCache.DefineEntityModificationEntryId (entityTypeId, senderEntityLogId);
+				}
+
+				return copiedEntity;
+			}
 		}
 
-		public TEntity ResolveEntity<TEntity>(TEntity model)
-			where TEntity : AbstractEntity
-		{
-			var sourceContext = this.DataContextPool.FindDataContext (model);
-			var sourceEntityKey = sourceContext.GetNormalizedEntityKey (model);
-			var localEntity = this.ResolveEntity (sourceEntityKey);
+		private static long							nextUniqueId;					//	next unique ID
 
-			return localEntity as TEntity;
-		}
+		private readonly long						uniqueId;						//	uniue ID associated with this instance
 
-		private static long							nextUniqueId;			//	next unique ID
+		private readonly ReaderWriterLockSlim		eventLock;						//	lock used to access the entityChanged event
+		private readonly ReaderWriterLockSlim		dataContextLock;				//  lock used to access thread safe methods in the DataContext
+		private readonly System.TimeSpan			lockTimeOut;					//  maximum time that we can wait for locks.
 
-		private readonly long						uniqueId;				//	uniue ID associated with this instance
-		private readonly object						eventExclusion;			//	exclusion lock used to access the entityChanged event
-		private readonly EntityCache				entitiesCache;			//	entities managed by this instance
-		private readonly HashSet<AbstractEntity>	emptyEntities;			//	entities registered as empty
-		private readonly HashSet<AbstractEntity>	entitiesToDelete;		//	entities to be deleted
-		private readonly HashSet<AbstractEntity>	entitiesDeleted;		//	entities which have been deleted
-		private readonly Dictionary<AbstractEntity, HashSet<Druid>> fieldsToResave;		//	mapping between entities and their fields that must be re-saved, even if their value has not changed
+		private readonly EntityCache				entitiesCache;					//	entities managed by this instance
+		private readonly HashSet<AbstractEntity>	emptyEntities;					//	entities registered as empty
+		private readonly HashSet<AbstractEntity>	entitiesToDelete;				//	entities to be deleted
+		private readonly HashSet<AbstractEntity>	entitiesDeleted;				//	entities which have been deleted
+		private readonly Dictionary<AbstractEntity, HashSet<Druid>> fieldsToResave;	//	mapping between entities and their fields that must be re-saved, even if their value has not changed
 
-        private EventHandler<EntityChangedEventArgs> entityChanged;			//	fired when entities managed by this instance change
+        private EventHandler<EntityChangedEventArgs> entityChanged;					//	fired when entities managed by this instance change
 
 		private bool								isDisposed;
 

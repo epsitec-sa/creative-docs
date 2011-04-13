@@ -61,7 +61,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				return;
 			}
 
-			var invoiceDocument = dataContext.GetEntitiesOfType<BusinessDocumentEntity> (x => x.Lines.Contains (entity)).Single ();
+			var invoiceDocument = dataContext.GetEntities ()
+									.OfType<BusinessDocumentEntity> ()
+									.Where (x => x.Lines.Contains (entity))
+									.Single ();
 			var navigator       = controller.Navigator;
 
 			navigator.PreserveNavigation (
@@ -117,8 +120,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				return;
 			}
 
-			var articleDefinition = dataContext.GetEntitiesOfType<ArticleDefinitionEntity> (x => x.ArticleParameterDefinitions.Contains (entity)).Single ();
-			var navigator       = controller.Navigator;
+			var articleDefinition	= dataContext.GetEntities ()
+										.OfType<ArticleDefinitionEntity> ()
+										.Where (x => x.ArticleParameterDefinitions.Contains (entity))
+										.Single ();
+			var navigator			= controller.Navigator;
 
 			navigator.PreserveNavigation (
 				delegate

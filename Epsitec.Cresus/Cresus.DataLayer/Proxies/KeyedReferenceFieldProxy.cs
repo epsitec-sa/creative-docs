@@ -48,14 +48,17 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// <returns>The real instance.</returns>
 		public override object PromoteToRealInstance()
 		{
-			object target = this.DataContext.GetEntity (this.targetKey);
-
-			if (target == null)
+			using (this.DataContext.LockWrite ())
 			{
-				target = base.PromoteToRealInstance ();
-			}
+				object target = this.DataContext.GetEntity (this.targetKey);
 
-			return target;
+				if (target == null)
+				{
+					target = base.PromoteToRealInstance ();
+				}
+
+				return target;
+			}
 		}
 		
 

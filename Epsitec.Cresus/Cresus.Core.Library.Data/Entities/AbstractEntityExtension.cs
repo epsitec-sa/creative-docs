@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public static DataContext GetDataContext(this AbstractEntity entity)
 		{
-			return DataContext.GetDataContext (entity);
+			return DataContextPool.GetDataContext (entity);
 		}
 
 		/// <summary>

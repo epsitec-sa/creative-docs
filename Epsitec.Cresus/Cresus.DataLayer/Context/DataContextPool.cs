@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				return null;
 			}
 
-			return this.FindDataContext (DataContext.GetDataContextId (entity));
+			return this.FindDataContext (DataContextPool.GetDataContextId (entity));
 		}
 
 		/// <summary>
@@ -140,8 +140,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 
 			DataContext context = this.FindDataContext (entity);
-
-			//	TODO: make implementation of DataContext.GetNormalizedEntityKey thread safe
 
 			return (context == null) ? null : context.GetNormalizedEntityKey (entity);
 		}
@@ -245,15 +243,39 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 		#endregion
 
+
+		public static EntityKey? GetEntityKey(AbstractEntity entity)
+		{
+			DataContext context = DataContextPool.GetDataContext (entity);
+
+			return (context == null) ? null : context.GetNormalizedEntityKey (entity);
+		}
+
+
+		/// <summary>
+		/// Gets the <see cref="DataContext"/> associated with the entity, if any.
+		/// </summary>
+		/// <param name="entity">The entity.</param>
+		/// <returns>The <see cref="DataContext"/> if there is one; otherwise, <c>null</c>.</returns>
+		public static DataContext GetDataContext(AbstractEntity entity)
+		{
+			lock (DataContextPool.pools)
+			{
+				long dataContextId = DataContextPool.GetDataContextId (entity);
+
+				return DataContextPool.GetDataContext (dataContextId);
+			}
+		}
+
 		/// <summary>
 		/// Gets the data context with the specified ID. The search is done in a thread safe
 		/// manner, across all known pools.
 		/// </summary>
 		/// <param name="contextId">The context id.</param>
 		/// <returns>The data context instance, if found; otherwise, <c>null</c>.</returns>
-		internal static DataContext GetDataContext(long contextId)
+		private static DataContext GetDataContext(long contextId)
 		{
-			foreach (var pool in DataContextPool.GetPools ())
+			foreach (var pool in DataContextPool.pools)
 			{
 				var context = pool.FindDataContext (contextId);
 				
@@ -264,6 +286,24 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 
 			return null;
+		}
+
+		/// <summary>
+		/// Gets the ID of the <see cref="DataContext"/> associated with the entity, if any.
+		/// </summary>
+		/// <param name="entity">The entity.</param>
+		/// <returns>The ID of the associated <see cref="DataContext"/> if there is one; otherwise, <c>-1</c>.</returns>
+		private static long GetDataContextId(AbstractEntity entity)
+		{
+			if ((entity == null) ||
+				(entity.DataContextId.HasValue == false))
+			{
+				return -1;
+			}
+			else
+			{
+				return entity.DataContextId.Value;
+			}
 		}
 
 		private static void Register(DataContextPool pool)
@@ -282,24 +322,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}
 
-		private static IEnumerable<DataContextPool> GetPools()
-		{
-			IEnumerable<DataContextPool> pools;
-
-			lock (DataContextPool.pools)
-			{
-				pools = DataContextPool.pools.GetCopyOfList ();
-			}
-
-			//	The return list is a copy which can be accessed without having other threads
-			//	interfere with its contents:
-
-			return pools;
-		}
-
 		private static WeakList<DataContextPool> pools = new WeakList<DataContextPool> ();
 
 		
-		private readonly Dictionary<long, DataContext> dataContexts;		//	collection of associted DataContext instances
+		private readonly Dictionary<long, DataContext> dataContexts;		//	collection of associated DataContext instances
 	}
 }

@@ -55,22 +55,25 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// <returns>The real instance.</returns>
 		public override object PromoteToRealInstance()
 		{
-			List<AbstractEntity> targets = this.targetKeys
+			using (this.DataContext.LockWrite ())
+			{
+				List<AbstractEntity> targets = this.targetKeys
 				.Select (tk => this.DataContext.GetEntity (tk))
 				.ToList ();
 
-			object result;
+				object result;
 
-			if (targets.Contains (null))
-			{
-				result = base.PromoteToRealInstance ();
-			}
-			else
-			{
-				result = this.CreateEntityCollection (this.FieldId, targets);
-			}
+				if (targets.Contains (null))
+				{
+					result = base.PromoteToRealInstance ();
+				}
+				else
+				{
+					result = this.CreateEntityCollection (this.FieldId, targets);
+				}
 
-			return result;
+				return result;
+			}
 		}
 
 

@@ -80,6 +80,7 @@
     <Compile Include="General\UnitTestEntityReload.cs" />
     <Compile Include="General\UnitTestForeignEntities.cs" />
     <Compile Include="General\UnitTestReadOnly.cs" />
+    <Compile Include="General\UnitTestThreadSafety.cs" />
     <Compile Include="Helpers\DataContextHelper.cs" />
     <Compile Include="Helpers\DatabaseCreator1.cs" />
     <Compile Include="Helpers\DatabaseCreator2.cs" />

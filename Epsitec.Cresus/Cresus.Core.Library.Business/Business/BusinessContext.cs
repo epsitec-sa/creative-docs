@@ -438,8 +438,8 @@ namespace Epsitec.Cresus.Core.Business
 			{
 				//	There is no defined master entity in the current context; try to derive it
 				//	from the active entities.
-				
-				var entities = this.DataContext.GetEntitiesOfType<T> ();
+
+				var entities = this.DataContext.GetEntities ().OfType<T> ();
 				
 				foreach (var entity in entities)
 				{

@@ -42,8 +42,8 @@ namespace Epsitec.Cresus.Core.Repositories
 			//	back all entities of the given type.
 			
 			this.GetAllEntities ().ToList ();
-			
-			return this.dataContext.GetEntitiesOfType<T> ();
+
+			return this.dataContext.GetEntities ().OfType<T> ().ToList ();
 		}
 
 

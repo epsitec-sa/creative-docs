@@ -108,9 +108,12 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// <returns>The real instance.</returns>
 		public virtual object PromoteToRealInstance()
 		{
-			var targets = this.DataContext.DataLoader.ResolveCollectionField (this.Entity, this.FieldId);
+			using (this.DataContext.LockWrite ())
+			{
+				var targets = this.DataContext.DataLoader.ResolveCollectionField (this.Entity, this.FieldId);
 
-			return this.CreateEntityCollection (this.FieldId, targets);
+				return this.CreateEntityCollection (this.FieldId, targets);
+			}
 		}
 
 

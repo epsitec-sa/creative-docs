@@ -107,9 +107,12 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// <returns>The real instance.</returns>
 		public virtual object PromoteToRealInstance()
 		{
-			object result = this.DataContext.DataLoader.ResolveReferenceField (this.Entity, this.FieldId);
+			using (this.DataContext.LockWrite ())
+			{
+				object result = this.DataContext.DataLoader.ResolveReferenceField (this.Entity, this.FieldId);
 
-			return result ?? UndefinedValue.Value;
+				return result ?? UndefinedValue.Value;
+			}
 		}
 
 
