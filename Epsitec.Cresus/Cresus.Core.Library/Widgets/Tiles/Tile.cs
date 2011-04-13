@@ -85,34 +85,20 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			get
 			{
-				return Tile.GetContainerPadding (this.tileArrow.ArrowDirection);
+				return TileArrow.GetContainerPadding (this.tileArrow.ArrowDirection);
 			}
 		}
 
-		/// <summary>
-		/// Retourne les marges pour le contenu, qui excluent la zone occupée par la flèche.
-		/// </summary>
-		/// <param name="arrowDirection">Position de la flèche</param>
-		/// <returns>Marges sans la zone de la flèche</returns>
-		public static Margins GetContainerPadding(Direction arrowDirection)
+
+		protected abstract int GroupedItemIndex
 		{
-			switch (arrowDirection)
-			{
-				case Direction.Left:
-					return new Margins (TileArrow.Breadth, 0, 0, 0);
+			get;
+			set;
+		}
 
-				case Direction.Right:
-					return new Margins (0, TileArrow.Breadth, 0, 0);
-
-				case Direction.Up:
-					return new Margins (0, 0, TileArrow.Breadth, 0);
-
-				case Direction.Down:
-					return new Margins (0, 0, 0, TileArrow.Breadth);
-
-				default:
-					return new Margins (0);
-			}
+		protected abstract string GroupId
+		{
+			get;
 		}
 
 		public virtual TileArrowMode ArrowMode
@@ -565,11 +551,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 		#endregion
-
-		protected abstract int GroupedItemIndex { get; set; }
-
-		protected abstract string GroupId { get; }
-
 
 
 		protected readonly TileArrow							tileArrow;

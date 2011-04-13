@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		protected override Rectangle GetFrameRectangle()
 		{
-			var margins = Widgets.Tiles.Tile.GetContainerPadding (Direction.Right) + new Margins (0.5);
+			var margins = Widgets.Tiles.TileArrow.GetContainerPadding (Direction.Right) + new Margins (0.5);
 			var frame   = Rectangle.Deflate (this.Client.Bounds, margins);
 			
 			return frame;

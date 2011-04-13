@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				Padding = new Margins (10),
 				DrawFrameState = FrameState.Bottom,
 				Dock = DockStyle.Top,
-				Margins = Widgets.Tiles.Tile.GetContainerPadding (Direction.Right),
+				Margins = Widgets.Tiles.TileArrow.GetContainerPadding (Direction.Right),
 			};
 
 			var miniature = new Widgets.Miniature ()
