@@ -60,7 +60,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 	/// - UniqueId
 	/// 
 	/// Members that have an exclusive access are the following:
-	/// - EntityChanged
 	/// - GetByExample
 	/// - GetByRequest
 	/// - GetPersistedEntity
@@ -72,6 +71,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 	///   the receiver)
 	/// - GetLocalEntity (shared access to sender DataContext and then exclusive access to receiver
 	///   DataContext)
+	///   
+	/// Event member
+	/// - EntityChanged
 	///   
 	/// Two members might result in calls to more than one instance of DataContext : CopyEntity and
 	/// GetLocalEntity. The instances of DataContext are accessed one after the other and thus both
@@ -87,6 +89,18 @@ namespace Epsitec.Cresus.DataLayer.Context
 	/// ReferenceFieldProxy, KeyedReferenceFieldProxy and ValueFieldProxy) are also thread safe for
 	/// the entities owned by a readonly instance of DataContext, so that when those proxies are
 	/// resolved, the consistency of the data is ensure.
+	/// 
+	/// The event member EntityChanged is not fully thread safe. Registration and unregistration to
+	/// it is thread safe and can be done by any thread at any time. However, it might happen that
+	/// the event handler calls a method which has been unregistered from the event. Therefore, the
+	/// methods that registers to this event must be able to handle the case when they are called
+	/// after they have been unregistered if the DataContext and its entities are used by more than
+	/// one thread. In addition, events might be fired while the instance of DataContext is in read
+	/// or write lock. That means that dead locks are possible if the action to take when an event
+	/// is fired on one DataContext might lock another one and vice versa.
+	/// So unless you know exactly what you are doing and can garantee that what you do won't cause
+	/// any deadlock, it is safer to avoid to use this event in a DataContext that is used by more
+	/// than one thread.
 	/// </remarks>
 	[System.Diagnostics.DebuggerDisplay ("DataContext #{UniqueId}")]
 	public sealed class DataContext : IEntityPersistenceManager, IIsDisposed, IReadOnly
@@ -167,28 +181,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			get;
 			set;
 		}
-
-		/// <summary>
-		/// The event is fired when an <see cref="AbstractEntity"/> managed by this instance is
-		/// created, updated or deleted.
-		/// </summary>
-		public event EventHandler<EntityChangedEventArgs> EntityChanged
-		{
-			add
-			{
-				using (TimedReaderWriterLock.LockWrite (this.eventLock, this.lockTimeOut))
-				{
-					this.entityChanged += value;
-				}
-			}
-			remove
-			{
-				using (TimedReaderWriterLock.LockWrite (this.eventLock, this.lockTimeOut))
-				{
-					this.entityChanged -= value;
-				}
-			}
-		}
+				
 
 		/// <summary>
 		/// Gets the <see cref="EntityContext"/> associated with this instance.
@@ -1637,19 +1630,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			this.AssertDataContextIsNotDisposed ();
 
-			EventHandler<EntityChangedEventArgs> handler;
+			var eventArgs = new EntityChangedEventArgs (entity, type, source);
 
-			using (TimedReaderWriterLock.LockRead (this.eventLock, this.lockTimeOut))
-			{
-				handler = this.entityChanged;
-			}
-
-			if (handler != null)
-			{
-				EntityChangedEventArgs eventArgs = new EntityChangedEventArgs (entity, type, source);
-
-				handler (this, eventArgs);
-			}
+			this.EntityChanged.Raise (this, eventArgs);
 		}
 
 
@@ -1761,7 +1744,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		private readonly HashSet<AbstractEntity>	entitiesDeleted;				//	entities which have been deleted
 		private readonly Dictionary<AbstractEntity, HashSet<Druid>> fieldsToResave;	//	mapping between entities and their fields that must be re-saved, even if their value has not changed
 
-        private EventHandler<EntityChangedEventArgs> entityChanged;					//	fired when entities managed by this instance change
+		/// <summary>
+		/// The event is fired when an <see cref="AbstractEntity"/> managed by this instance is
+		/// created, updated or deleted.
+		/// </summary>
+		public event EventHandler<EntityChangedEventArgs> EntityChanged;
 
 		private bool								isDisposed;
 
