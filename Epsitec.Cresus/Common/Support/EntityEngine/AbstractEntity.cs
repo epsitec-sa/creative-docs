@@ -90,25 +90,6 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
-		public event EventHandler<EntityFieldChangedEventArgs> EntityChanged
-		{
-			add
-			{
-				lock (this.eventExclusion)
-				{
-					this.entityChangedEvent += value;
-				}
-			}
-			remove
-			{
-				lock (this.eventExclusion)
-				{
-					this.entityChangedEvent -= value;
-				}
-			}
-		}
-
-
 		/// <summary>
 		/// Retourne un résumé complet de l'entité.
 		/// </summary>
@@ -1619,22 +1600,6 @@ namespace Epsitec.Common.Support.EntityEngine
 		#endregion
 
 
-		internal void OnEntityChanged(EntityFieldChangedEventArgs e)
-		{
-			EventHandler<EntityFieldChangedEventArgs> handler;
-
-			lock (this.eventExclusion)
-			{
-				handler = this.entityChangedEvent;
-			}
-
-			if (handler != null)
-			{
-				handler (this, e);
-			}
-		}
-
-
 		public static readonly Druid EntityStructuredTypeId = Druid.Empty;
 		public static readonly string EntityStructuredTypeKey = null;
 		
@@ -1654,13 +1619,6 @@ namespace Epsitec.Common.Support.EntityEngine
 		private IValueStore modifiedValues;
 		private Dictionary<string, System.Delegate> eventHandlers;
 		private IEntityProxy proxy;
-
-
-		// TODO All the stuff related to this event has been very quickly implemented and it might
-		// be not the best way of doing things. This implementation was not meant to be definitive
-		// but only working, so change it if you don't like it.
-		// Marc
-		private EventHandler<EntityFieldChangedEventArgs> entityChangedEvent;
 
 		
 	}

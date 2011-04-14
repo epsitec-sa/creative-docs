@@ -407,7 +407,8 @@ namespace Epsitec.Common.Support.EntityEngine
 				EntityContext.Pop ();
 			}
 
-			this.OnEntityAttached (new EntityContextEventArgs (entity, null, this));
+			this.NotifyEntityAttached (entity, null);
+
 			return entity;
 		}
 
@@ -436,7 +437,8 @@ namespace Epsitec.Common.Support.EntityEngine
 				EntityContext.Pop ();
 			}
 
-			this.OnEntityAttached (new EntityContextEventArgs (entity, null, this));
+			this.NotifyEntityAttached (entity, null);
+
 			return entity;
 		}
 
@@ -455,8 +457,9 @@ namespace Epsitec.Common.Support.EntityEngine
 			{
 				EntityContext.Pop ();
 			}
-			
-			this.OnEntityAttached (new EntityContextEventArgs (entity, null, this));
+
+			this.NotifyEntityAttached (entity, null);
+
 			return entity;
 		}
 
@@ -776,67 +779,25 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		internal void NotifyEntityAttached(AbstractEntity entity, EntityContext oldContext)
 		{
-			this.OnEntityAttached (new EntityContextEventArgs (entity, oldContext, this));
+			var eventArgs = new EntityContextEventArgs (entity, oldContext, this);
+
+			this.EntityAttached.Raise (this, eventArgs);
 		}
 
 		internal void NotifyEntityDetached(AbstractEntity entity, EntityContext newContext)
 		{
-			this.OnEntityDetached (new EntityContextEventArgs (entity, this, newContext));
+			var eventArgs = new EntityContextEventArgs (entity, this, newContext);
+
+			this.EntityDetached.Raise (this, eventArgs);
 		}
 
 		internal void NotifyEntityChanged(AbstractEntity entity, string id, object oldValue, object newValue)
 		{
 			if (entity.AreEventsEnabled)
 			{
-				EntityFieldChangedEventArgs eventArgs = new EntityFieldChangedEventArgs (entity, id, oldValue, newValue);
+				var eventArgs = new EntityFieldChangedEventArgs (entity, id, oldValue, newValue);
 
-				this.OnEntityChanged (eventArgs);
-				entity.OnEntityChanged (eventArgs);
-			}
-		}
-
-		protected virtual void OnEntityAttached(EntityContextEventArgs e)
-		{
-			EventHandler<EntityContextEventArgs> handler;
-
-			lock (this.eventExclusion)
-			{
-				handler = this.entityAttachedEvent;
-			}
-
-			if (handler != null)
-			{
-				handler (this, e);
-			}
-		}
-
-		protected virtual void OnEntityDetached(EntityContextEventArgs e)
-		{
-			EventHandler<EntityContextEventArgs> handler;
-
-			lock (this.eventExclusion)
-			{
-				handler = this.entityDetachedEvent;
-			}
-
-			if (handler != null)
-			{
-				handler (this, e);
-			}
-		}
-
-		protected virtual void OnEntityChanged(EntityFieldChangedEventArgs e)
-		{
-			EventHandler<EntityFieldChangedEventArgs> handler;
-
-			lock (this.eventExclusion)
-			{
-				handler = this.entityChangedEvent;
-			}
-
-			if (handler != null)
-			{
-				handler (this, e);
+				this.EntityChanged.Raise (this, eventArgs);
 			}
 		}
 
@@ -1014,73 +975,16 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			private readonly EntityContext context;
 		}
-
-
-		public event EventHandler<EntityContextEventArgs> EntityAttached
-		{
-			add
-			{
-				lock (this.eventExclusion)
-				{
-					this.entityAttachedEvent += value;
-				}
-			}
-			remove
-			{
-				lock (this.eventExclusion)
-				{
-					this.entityAttachedEvent -= value;
-				}
-			}
-		}
-
-		public event EventHandler<EntityContextEventArgs> EntityDetached
-		{
-			add
-			{
-				lock (this.eventExclusion)
-				{
-					this.entityDetachedEvent += value;
-				}
-			}
-			remove
-			{
-				lock (this.eventExclusion)
-				{
-					this.entityDetachedEvent -= value;
-				}
-			}
-		}
-
-		public event EventHandler<EntityFieldChangedEventArgs> EntityChanged
-		{
-			add
-			{
-				lock (this.eventExclusion)
-				{
-					this.entityChangedEvent += value;
-				}
-			}
-			remove
-			{
-				lock (this.eventExclusion)
-				{
-					this.entityChangedEvent -= value;
-				}
-			}
-		}
-
+		
 		[System.ThreadStatic]
 		private static EntityContext current;
 
 		[System.ThreadStatic]
 		private static Stack<EntityContext> contextStack;
 
-		private readonly object eventExclusion = new object ();
-
-		private EventHandler<EntityContextEventArgs> entityAttachedEvent;
-		private EventHandler<EntityContextEventArgs> entityDetachedEvent;
-        private EventHandler<EntityFieldChangedEventArgs> entityChangedEvent;
+		public event EventHandler<EntityContextEventArgs> EntityAttached;
+		public event EventHandler<EntityContextEventArgs> EntityDetached;
+		public event EventHandler<EntityFieldChangedEventArgs> EntityChanged;
 
 		private readonly IStructuredTypeResolver resourceManager;
 		private readonly System.Threading.Thread associatedThread;
