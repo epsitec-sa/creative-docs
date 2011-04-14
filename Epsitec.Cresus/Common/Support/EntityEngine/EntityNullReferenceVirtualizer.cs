@@ -122,8 +122,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			else
 			{
 				var stores = entity.InternalGetValueStores ()
-					.Where (store => store is Store)
-					.Cast<Store> ()
+					.OfType<Store> ()
 					.ToArray ();
 
 				if ((stores.Length > 0) &&
