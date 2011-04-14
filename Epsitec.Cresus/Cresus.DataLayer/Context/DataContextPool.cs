@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 		/// <summary>
 		/// Finds the data context with the specified ID. The search is done only in the
-		/// current pool. To search across all pools, use the static version, <see cref="DataContextPool.GetDataContext"/>.
+		/// current pool. To search across all pools, use the static version, <see cref="DataContextPool.GetDataContext(long)"/>.
 		/// </summary>
 		/// <param name="contextId">The context id.</param>
 		/// <returns></returns>
