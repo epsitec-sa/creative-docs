@@ -59,6 +59,7 @@
     <Compile Include="Support\Extensions\UnitTestDictionaryExtensions.cs" />
     <Compile Include="Support\Extensions\UnitTestEntityModifications.cs" />
     <Compile Include="Support\Extensions\UnitTestEnumerableExtensions.cs" />
+    <Compile Include="Support\Extensions\UnitTestEventHandlerExtensions.cs" />
     <Compile Include="Support\Extensions\UnitTestExceptionThrower.cs" />
     <Compile Include="Support\Extensions\UnitTestIlistExtensions.cs" />
     <Compile Include="Support\Extensions\UnitTestStringExtensions.cs" />
