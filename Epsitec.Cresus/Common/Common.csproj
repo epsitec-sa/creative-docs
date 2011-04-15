@@ -350,6 +350,7 @@
     <Compile Include="Support\DisposableWraper.cs" />
     <Compile Include="Support\Extensions\TypeExtensions.cs" />
     <Compile Include="Support\Extensions\EventHandlerExtensions.cs" />
+    <Compile Include="Support\InterlockedSafeCounter.cs" />
     <Compile Include="Support\TimedReaderWriterLock.cs" />
     <Compile Include="Support\SimpleCallback.cs" />
     <Compile Include="Support\CancelEventArgs.cs" />
