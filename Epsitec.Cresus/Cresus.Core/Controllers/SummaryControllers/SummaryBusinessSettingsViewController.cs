@@ -16,6 +16,31 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryBusinessSettingsViewController : SummaryViewController<Entities.BusinessSettingsEntity>
 	{
+		protected override void CreateBricks(Bricks.BrickWall<BusinessSettingsEntity> wall)
+		{
+			wall.AddBrick ()
+				.Name ("BusinessSettings")
+				.Icon ("Data.BusinessSettings")
+				.Title ("Réglages de l'entreprise")
+				.Text (x => x.Company.Person.GetSummary ());
+
+			wall.AddBrick (x => x.Finance.IsrDefs)
+				.Name ("IsrDefinition")
+				.Icon ("Data.IsrDefinition")
+				.Title ("Contrats BVR")
+				.Template ()
+				 .Text (x => x.GetSummary ())
+				.End ();
+
+			wall.AddBrick (x => x.Finance.PaymentReminderDefs)
+				.Name ("PaymentReminderDefinition")
+				.Icon ("Data.PaymentReminderDefinition")
+				.Title ("Rappels")
+				.Template ()
+				 .Text (x => x.GetSummary ())
+				.End ();
+		}
+#if false
 		protected override void CreateUI()
 		{
 			using (var data = TileContainerController.Setup (this))
@@ -82,6 +107,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			data.Add (this.CreateCollectionAccessor (template, x => x.Finance.PaymentReminderDefs));
 		}
-
+#endif
 	}
 }

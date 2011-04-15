@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public override Tiles.TileArrow TileArrow
+		public override Tiles.TileArrow Arrow
 		{
 			get
 			{
@@ -69,36 +69,15 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		protected override int GroupedItemIndex
-		{
-			get
-			{
-				throw new System.NotImplementedException ();
-			}
-			set
-			{
-				throw new System.NotImplementedException ();
-			}
-		}
-
-		protected override string GroupId
-		{
-			get
-			{
-				throw new System.NotImplementedException ();
-			}
-		}
-
 	
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			base.PaintBackgroundImplementation (graphics, clipRect);
 
-			var rect  = this.Client.Bounds;
-			rect.Bottom += Tiles.TileArrow.Breadth;
+			var rect = Rectangle.Deflate (this.Client.Bounds, new Margins (0, 0, 0, Tiles.TileArrow.Breadth));
 
 			graphics.Color = Color.FromName ("Black");
-			graphics.PaintText (rect.Left, rect.Bottom, rect.Width, rect.Height, this.Text, Font.DefaultFont, Font.DefaultFontSize, Common.Drawing.ContentAlignment.MiddleCenter);
+			graphics.PaintText (rect.Left, rect.Bottom, rect.Width, rect.Height, this.Text, Font.DefaultFont, Font.DefaultFontSize, ContentAlignment.MiddleCenter);
 		}
 	}
 }

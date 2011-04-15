@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		public override TileArrow TileArrow
+		public override TileArrow Arrow
 		{
 			get
 			{

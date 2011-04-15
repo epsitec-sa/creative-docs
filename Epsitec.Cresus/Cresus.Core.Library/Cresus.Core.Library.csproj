@@ -120,7 +120,6 @@
     <Compile Include="Widgets\ItemPickerCombo.cs" />
     <Compile Include="Widgets\IWidgetUpdater.cs" />
     <Compile Include="Widgets\StaticGlyph.cs" />
-    <Compile Include="Widgets\Tiles\FrameTile.cs" />
     <Compile Include="Widgets\Tiles\Tile.cs" />
     <Compile Include="Widgets\Tiles\TileArrow.cs" />
     <Compile Include="Widgets\Tiles\TileArrowMode.cs" />

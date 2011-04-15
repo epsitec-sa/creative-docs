@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public override Tiles.TileArrow TileArrow
+		public override Tiles.TileArrow Arrow
 		{
 			get
 			{
