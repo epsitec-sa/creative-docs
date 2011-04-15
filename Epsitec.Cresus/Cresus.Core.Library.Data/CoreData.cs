@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Core
 			this.EnableConnectionRecycling	= enableConnectionRecycling;
 
 			this.components = new CoreComponentHostImplementation<CoreDataComponent> ();
-			this.independentEntityContext = new EntityContext (Resources.DefaultManager, EntityLoopHandlingMode.Throw, "Independent Entities");
+			this.independentEntityContext = new EntityContext (Resources.DefaultManager, Resources.DefaultManager, EntityLoopHandlingMode.Throw, "Independent Entities");
 
 			Factories.CoreDataComponentFactory.RegisterComponents (this);
 		}

@@ -18,7 +18,7 @@ namespace Epsitec.Common.Support.EntityEngine
 	public class EntityContext : IEntityPersistenceManager
 	{
 		public EntityContext()
-			: this (Resources.DefaultManager, EntityLoopHandlingMode.Throw)
+			: this (Resources.DefaultManager, Resources.DefaultManager, EntityLoopHandlingMode.Throw)
 		{
 		}
 
@@ -27,14 +27,18 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </summary>
 		/// <param name="resourceManager">The resource manager.</param>
 		/// <param name="loopHandlingMode">The loop handling mode.</param>
-		public EntityContext(IStructuredTypeResolver resourceManager, EntityLoopHandlingMode loopHandlingMode, string name = null)
+		public EntityContext(IStructuredTypeResolver resourceManager, ICaptionResolver captionResolver, EntityLoopHandlingMode loopHandlingMode, string name = null)
 		{
 			this.name = name;
 			
 			this.resourceManager     = resourceManager;
-			this.associatedThread    = System.Threading.Thread.CurrentThread;
-			this.structuredTypeMap   = new Dictionary<Druid, StructuredType> ();
+			this.captionResolver	 = captionResolver;
+
 			this.loopHandlingMode    = loopHandlingMode;
+
+			this.associatedThread    = System.Threading.Thread.CurrentThread;
+
+			this.structuredTypeMap   = new Dictionary<Druid, StructuredType> ();
 			this.persistenceManagers = new List<IEntityPersistenceManager> ();
 
 			this.propertyGetters = new Dictionary<string, PropertyGetter> ();
@@ -94,14 +98,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			get
 			{
 				return this.persistenceManagers;
-			}
-		}
-
-		public ICaptionResolver					CaptionResolver
-		{
-			get
-			{
-				return this.resourceManager as ICaptionResolver ?? Resources.DefaultManager;
 			}
 		}
 
@@ -296,6 +292,13 @@ namespace Epsitec.Common.Support.EntityEngine
 				}
 			}
 		}
+
+
+		public Caption GetCaption(Druid captionId)
+		{
+			return this.captionResolver.GetCaption (captionId);
+		}
+
 
 		public IEnumerable<string> GetEntityFieldIds(AbstractEntity entity)
 		{
@@ -987,15 +990,17 @@ namespace Epsitec.Common.Support.EntityEngine
 		public event EventHandler<EntityFieldChangedEventArgs> EntityChanged;
 
 		private readonly IStructuredTypeResolver resourceManager;
+		private readonly ICaptionResolver captionResolver;
+
+		private readonly string name;
 		private readonly System.Threading.Thread associatedThread;
-		private readonly Dictionary<Druid, StructuredType> structuredTypeMap;
 		private readonly EntityLoopHandlingMode loopHandlingMode;
 		private readonly List<IEntityPersistenceManager> persistenceManagers;
-		private readonly Dictionary<string, PropertyGetter> propertyGetters;
-		private readonly Dictionary<string, PropertySetter> propertySetters;
-		private readonly string name;
-
 		private long dataGeneration;
 		private int suspendConstraintChecking;
+
+		private readonly Dictionary<Druid, StructuredType> structuredTypeMap;
+		private readonly Dictionary<string, PropertyGetter> propertyGetters;
+		private readonly Dictionary<string, PropertySetter> propertySetters;
 	}
 }

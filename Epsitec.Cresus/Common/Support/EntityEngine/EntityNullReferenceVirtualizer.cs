@@ -250,7 +250,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		private class EmptyEntityContext : EntityContext
 		{
 			public EmptyEntityContext()
-				: base (Resources.DefaultManager, EntityLoopHandlingMode.Throw, "EmptyEntities")
+				: base (Resources.DefaultManager, Resources.DefaultManager, EntityLoopHandlingMode.Throw, "EmptyEntities")
 			{
 			}
 		}

@@ -25,7 +25,7 @@ namespace Epsitec.Common.FormEngine
 			this.resourceProvider = resourceProvider;
 
 			this.arrange = new Arrange(this.resourceProvider);
-			this.entityContext = new EntityContext(this.resourceProvider, EntityLoopHandlingMode.Skip);
+			this.entityContext = new EntityContext(this.resourceProvider, this.resourceProvider, EntityLoopHandlingMode.Skip);
 			this.defaultMode = FieldEditionMode.Data;
 		}
 

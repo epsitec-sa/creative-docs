@@ -354,7 +354,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			
 			if (history.Add (this))
 			{
-				ICaptionResolver manager = this.context.CaptionResolver;
 				string nullValue = "<null>";
 				
 				foreach (string id in this.context.GetEntityFieldIds (this))
@@ -369,7 +368,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 					if (includeLabels)
 					{
-						Caption caption = manager.GetCaption (field.CaptionId);
+						Caption caption = this.context.GetCaption (field.CaptionId);
 						name = caption.Name;
 					}
 
