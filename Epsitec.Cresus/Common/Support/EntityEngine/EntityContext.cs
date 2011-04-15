@@ -37,6 +37,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.loopHandlingMode    = loopHandlingMode;
 
 			this.associatedThread    = System.Threading.Thread.CurrentThread;
+			this.suspendConstraintChecking = new InterlockedSafeCounter ();
 
 			this.structuredTypeMap   = new Dictionary<Druid, StructuredType> ();
 			this.persistenceManagers = new List<IEntityPersistenceManager> ();
@@ -79,7 +80,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			get
 			{
-				return this.suspendConstraintChecking > 0;
+				return !this.suspendConstraintChecking.IsZero;
 			}
 		}
 
@@ -233,7 +234,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		public System.IDisposable SuspendConstraintChecking()
 		{
-			return new SuspendConstraintCheckingHelper (this);
+			return this.suspendConstraintChecking.Enter ();
 		}
 
 		/// <summary>
@@ -951,34 +952,6 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		#endregion
 
-		private class SuspendConstraintCheckingHelper : System.IDisposable
-		{
-			public SuspendConstraintCheckingHelper(EntityContext context)
-			{
-				this.context = context;
-				System.Threading.Interlocked.Increment (ref this.context.suspendConstraintChecking);
-			}
-
-			~SuspendConstraintCheckingHelper()
-			{
-				throw new System.InvalidOperationException ("Caller of SuspendConstraintChecking forgot to call Dispose");
-			}
-
-
-			#region IDisposable Members
-
-			public void Dispose()
-			{
-				System.GC.SuppressFinalize (this);
-				System.Threading.Interlocked.Decrement (ref this.context.suspendConstraintChecking);
-			}
-
-			#endregion
-
-
-			private readonly EntityContext context;
-		}
-		
 		[System.ThreadStatic]
 		private static EntityContext current;
 
@@ -997,7 +970,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		private readonly EntityLoopHandlingMode loopHandlingMode;
 		private readonly List<IEntityPersistenceManager> persistenceManagers;
 		private long dataGeneration;
-		private int suspendConstraintChecking;
+		private InterlockedSafeCounter suspendConstraintChecking;
 
 		private readonly Dictionary<Druid, StructuredType> structuredTypeMap;
 		private readonly Dictionary<string, PropertyGetter> propertyGetters;
