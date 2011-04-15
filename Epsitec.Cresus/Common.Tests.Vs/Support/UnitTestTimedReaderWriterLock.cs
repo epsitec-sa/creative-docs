@@ -79,6 +79,7 @@ namespace Epsitec.Common.Tests.Vs.Support
 				Assert.IsFalse (rwLock.IsReadLockHeld);
 				Assert.IsFalse (rwLock.IsUpgradeableReadLockHeld);
 				Assert.IsFalse (rwLock.IsWriteLockHeld);
+				
 				using (var l = TimedReaderWriterLock.LockRead (rwLock, timeOut))
 				{
 					Assert.IsNotNull (l);
@@ -86,6 +87,7 @@ namespace Epsitec.Common.Tests.Vs.Support
 					Assert.IsFalse (rwLock.IsUpgradeableReadLockHeld);
 					Assert.IsFalse (rwLock.IsWriteLockHeld);
 				}
+				
 				Assert.IsFalse (rwLock.IsReadLockHeld);
 				Assert.IsFalse (rwLock.IsUpgradeableReadLockHeld);
 				Assert.IsFalse (rwLock.IsWriteLockHeld);
@@ -108,6 +110,7 @@ namespace Epsitec.Common.Tests.Vs.Support
 				Assert.IsFalse (rwLock.IsReadLockHeld);
 				Assert.IsFalse (rwLock.IsUpgradeableReadLockHeld);
 				Assert.IsFalse (rwLock.IsWriteLockHeld);
+				
 				using (var l = TimedReaderWriterLock.LockWrite (rwLock, timeOut))
 				{
 					Assert.IsNotNull (l);
@@ -115,6 +118,7 @@ namespace Epsitec.Common.Tests.Vs.Support
 					Assert.IsFalse (rwLock.IsUpgradeableReadLockHeld);
 					Assert.IsTrue (rwLock.IsWriteLockHeld);
 				}
+				
 				Assert.IsFalse (rwLock.IsReadLockHeld);
 				Assert.IsFalse (rwLock.IsUpgradeableReadLockHeld);
 				Assert.IsFalse (rwLock.IsWriteLockHeld);
