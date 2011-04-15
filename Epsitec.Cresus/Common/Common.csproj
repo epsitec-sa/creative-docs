@@ -347,6 +347,7 @@
     <Compile Include="Support\ArrayEqualityComparer.cs" />
     <Compile Include="Support\AssemblyLoader.cs" />
     <Compile Include="Support\CacheManager.cs" />
+    <Compile Include="Support\DisposableWraper.cs" />
     <Compile Include="Support\Extensions\TypeExtensions.cs" />
     <Compile Include="Support\Extensions\EventHandlerExtensions.cs" />
     <Compile Include="Support\TimedReaderWriterLock.cs" />
