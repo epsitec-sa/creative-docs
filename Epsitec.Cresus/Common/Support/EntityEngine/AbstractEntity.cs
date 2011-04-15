@@ -28,10 +28,10 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.entitySerialId = System.Threading.Interlocked.Increment (ref AbstractEntity.nextSerialId);
 			this.context = EntityContext.Current;
 
-			this.defineOriginalValuesCount = 0;
-			this.silentUpdateCount = 0;
-			this.disableEventsCount = 0;
-			this.disableReadOnlyCheckCount = 0;
+			this.defineOriginalValues = new InterlockedSafeCounter ();
+			this.silentUpdates = new InterlockedSafeCounter ();
+			this.disableEvents = new InterlockedSafeCounter ();
+			this.disableReadOnlyChecks = new InterlockedSafeCounter ();
 
 			this.IsReadOnly = false;
 		}
@@ -54,38 +54,38 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// 	<c>true</c> if this entity is currently defining its original
 		///		values; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsDefiningOriginalValues
+		internal bool IsDefiningOriginalValues
 		{
 			get
 			{
-				return this.defineOriginalValuesCount > 0;
+				return !this.defineOriginalValues.IsZero;
 			}
 		}
 
 
-		public bool IsUpdateSilent
+		internal bool IsUpdateSilent
 		{
 			get
 			{
-				return this.silentUpdateCount > 0;
+				return !this.silentUpdates.IsZero;
 			}
 		}
 
 
-		public bool AreEventsEnabled
+		internal bool AreEventsEnabled
 		{
 			get
 			{
-				return this.disableEventsCount == 0;
+				return this.disableEvents.IsZero;
 			}
 		}
 
 
-		public bool ReadOnlyChecksEnabled
+		internal bool ReadOnlyChecksEnabled
 		{
 			get
 			{
-				return this.disableReadOnlyCheckCount == 0;
+				return this.disableReadOnlyChecks.IsZero;
 			}
 		}
 
@@ -468,24 +468,27 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// data definition mode.</returns>
 		public System.IDisposable DefineOriginalValues()
 		{
-			return new DefineOriginalValuesHelper (this);
+			var d1 = this.silentUpdates.Enter ();
+			var d2 = this.defineOriginalValues.Enter ();
+
+			return DisposableWrapper.Combine (d2, d1);
 		}
 
 
 		public System.IDisposable UseSilentUpdates()
 		{
-			return new SilentUpdatesHelper (this);
+			return this.silentUpdates.Enter ();
 		}
 
 
 		public System.IDisposable DisableEvents()
 		{
-			return new DisableEventsHelper (this);
+			return this.disableEvents.Enter ();
 		}
 
 		public System.IDisposable DisableReadOnlyChecks()
 		{
-			return new DisableReadOnlyChecksHelper (this);
+			return this.disableReadOnlyChecks.Enter ();
 		}
 
 
@@ -1463,156 +1466,21 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
-		#region Helper Classes
-
-
-		private abstract class Helper : System.IDisposable
-		{
-
-
-			protected AbstractEntity Entity
-			{
-				get;
-				private set;
-			}
-
-
-			protected bool Done
-			{
-				get;
-				private set;
-			}
-
-
-			public Helper(AbstractEntity entity)
-			{
-				this.Entity = entity;
-				this.Done = false;
-			}
-
-
-			~Helper()
-			{
-				throw new System.InvalidOperationException ("Caller forgot to call Dispose");
-			}
-
-
-			public void Dispose()
-			{
-				if (!this.Done && this.Entity != null)
-				{
-					this.Done = true;
-					this.Finish ();
-					
-					System.GC.SuppressFinalize (this);
-				}
-			}
-
-
-			protected abstract void Finish();
-
-
-		}
-
-
-		/// <summary>
-		/// The <c>DefineOriginalValuesHelper</c> is used by the <see cref="DefineOriginalValues"/>
-		/// method to manage the end of the definition phase; instances of this class
-		/// are meant to be used in a <c>using</c> block.
-		/// </summary>
-		private class DefineOriginalValuesHelper : SilentUpdatesHelper
-		{
-			public DefineOriginalValuesHelper(AbstractEntity entity) : base (entity)
-			{
-				System.Threading.Interlocked.Increment (ref this.Entity.defineOriginalValuesCount);
-			}
-
-			
-			protected override void Finish()
-			{
-				System.Threading.Interlocked.Decrement (ref this.Entity.defineOriginalValuesCount);
-				base.Finish ();
-			}
-
-
-		}
-
-		private class SilentUpdatesHelper : Helper
-		{
-
-	
-			public SilentUpdatesHelper(AbstractEntity entity) : base (entity)
-			{
-				System.Threading.Interlocked.Increment (ref this.Entity.silentUpdateCount);
-			}
-			
-
-			protected override void Finish()
-			{
-				System.Threading.Interlocked.Decrement (ref this.Entity.silentUpdateCount);
-			}
-
-
-		}
-
-
-		private class DisableEventsHelper : Helper
-		{
-
-
-			public DisableEventsHelper(AbstractEntity entity)
-				: base (entity)
-			{
-				System.Threading.Interlocked.Increment (ref this.Entity.disableEventsCount);
-			}
-
-
-			protected override void Finish()
-			{
-				System.Threading.Interlocked.Decrement (ref this.Entity.disableEventsCount);
-			}
-
-
-		}
-
-
-		private class DisableReadOnlyChecksHelper : Helper
-		{
-
-
-			public DisableReadOnlyChecksHelper(AbstractEntity entity)
-				: base (entity)
-			{
-				System.Threading.Interlocked.Increment (ref this.Entity.disableReadOnlyCheckCount);
-			}
-
-
-			protected override void Finish()
-			{
-				System.Threading.Interlocked.Decrement (ref this.Entity.disableReadOnlyCheckCount);
-			}
-
-
-		}
-
-
-		#endregion
-
-
 		public static readonly Druid EntityStructuredTypeId = Druid.Empty;
 		public static readonly string EntityStructuredTypeKey = null;
 		
 		private static long nextSerialId = 1;
 		private static readonly object globalExclusion = new object ();
-		private readonly object eventExclusion = new object ();
+
+		private InterlockedSafeCounter silentUpdates;
+		private InterlockedSafeCounter defineOriginalValues;
+		private InterlockedSafeCounter disableEvents;
+		private InterlockedSafeCounter disableReadOnlyChecks;
 
 		private readonly long entitySerialId;
 		private EntityContext context;
 		private long dataGeneration;
-		private int silentUpdateCount;
-		private int defineOriginalValuesCount;
-		private int disableEventsCount;
-		private int disableReadOnlyCheckCount;
+		
 		private bool calculationsDisabled;
 		private IValueStore originalValues;
 		private IValueStore modifiedValues;
