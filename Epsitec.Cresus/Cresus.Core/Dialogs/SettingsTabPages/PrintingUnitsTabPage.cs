@@ -13,6 +13,7 @@ using Epsitec.Cresus.Core.Documents.Verbose;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Print;
 using Epsitec.Cresus.Core.Widgets;
+using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -120,7 +121,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			{
 				Parent = column2,
 				DrawFullFrame = true,
-				BackColor = Widgets.ArrowedFrame.SurfaceColors.First (),
+				BackColor = TileColors.SurfaceDefaultColors.First (),
 				Dock = DockStyle.Fill,
 			};
 
@@ -223,7 +224,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			{
 				Parent = column3,
 				DrawFullFrame = true,
-				BackColor = Widgets.ArrowedFrame.SurfaceColors.First (),
+				BackColor = TileColors.SurfaceDefaultColors.First (),
 				Dock = DockStyle.Fill,
 				Margins = new Margins (0, 0, -1, 0),
 			};

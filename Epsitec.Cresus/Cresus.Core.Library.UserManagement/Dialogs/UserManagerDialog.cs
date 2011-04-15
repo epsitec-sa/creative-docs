@@ -13,6 +13,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Widgets;
+using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.Business.UserManagement;
 
 using System.Collections.Generic;
@@ -160,7 +161,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			{
 				//	Crée la liste.
-				var tile = new ArrowedFrame (Direction.Right)
+				var tile = new ArrowedTile (Direction.Right)
 				{
 					Parent = leftPane,
 					Dock = DockStyle.Fill,

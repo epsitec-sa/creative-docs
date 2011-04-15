@@ -24,6 +24,14 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
+		public static IEnumerable<Color> SurfaceDefaultColors
+		{
+			get
+			{
+				yield return Color.FromHexa ("f4f9ff");  // bleuté
+			}
+		}
+		
 		public static IEnumerable<Color> SurfaceSummaryColors
 		{
 			get

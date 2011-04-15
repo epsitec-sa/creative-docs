@@ -436,7 +436,7 @@ namespace Epsitec.Cresus.Core
 			{
 				Parent = parent,
 				DrawFullFrame = true,
-				BackColor = ArrowedFrame.SurfaceColors.First (),
+				BackColor = TileColors.SurfaceDefaultColors.First (),
 				Padding = new Margins (2),
 				Dock = DockStyle.Stacked,
 			};

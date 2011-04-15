@@ -8,6 +8,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Widgets;
+using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -105,7 +106,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			};
 
 			//	Crée le cadre avec une flèche.
-			var tile = new ArrowedFrame (arrowDirection)
+			var tile = new ArrowedTile (arrowDirection)
 			{
 				Parent = parent,
 				Dock = DockStyle.Fill,

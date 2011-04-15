@@ -106,7 +106,7 @@
     <Compile Include="Library\UI.Properties.cs" />
     <Compile Include="Library\UI.Toolkit.cs" />
     <Compile Include="Library\UI.WindowPlacementHint.cs" />
-    <Compile Include="Widgets\ArrowedFrame.cs" />
+    <Compile Include="Widgets\Tiles\ArrowedTile.cs" />
     <Compile Include="Widgets\AutoCompleteTextField.cs" />
     <Compile Include="Widgets\ButtonExtensions.cs" />
     <Compile Include="Widgets\CellTableExtensions.cs" />
