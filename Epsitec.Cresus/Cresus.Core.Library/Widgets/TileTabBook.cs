@@ -1,10 +1,12 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Collections;
 using Epsitec.Common.Widgets;
+
+using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Linq;
 using System.Collections.Generic;
@@ -24,7 +26,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 		
-		public IEnumerable<TabPageDef> Items
+		public IEnumerable<TabPageDef>			Items
 		{
 			get
 			{
@@ -38,11 +40,12 @@ namespace Epsitec.Cresus.Core.Widgets
 			if (this.selectedItemName != description.Name)
 			{
 				this.selectedItemName = description.Name;
+				
 				this.RefreshTabPageSelection ();
 
 				if (description != null)
 				{
-					description.ExecuteAction ();
+					description.ExecuteSelectAction ();
 				}
 			}
 		}
@@ -63,10 +66,10 @@ namespace Epsitec.Cresus.Core.Widgets
 				var name = pageDescription.Name;
 				var text = pageDescription.Text;
 
-				var tilePage = new Widgets.Tiles.ArrowedTileTabPageButton (pageDescription)
+				var tilePage = new ArrowedTileTabPageButton (pageDescription)
 				{
 					Parent = this,
-					PreferredHeight = 24 + Widgets.Tiles.TileArrow.Breadth,
+					PreferredHeight = 24 + TileArrow.Breadth,
 					Margins = new Margins (0, pageDescription == lastPageDescription ? 0 : -1, 0, 0),
 					Dock = DockStyle.StackFill,
 				};
@@ -77,7 +80,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private void HandleChildClicked(object sender, MessageEventArgs e)
 		{
-			var page = sender as Widgets.Tiles.ArrowedTileTabPageButton;
+			var page = sender as ArrowedTileTabPageButton;
 
 			if (page == null)
 			{
@@ -91,7 +94,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private void RefreshTabPageSelection()
 		{
-			foreach (Widgets.Tiles.ArrowedTileTabPageButton page in this.Children.Widgets)
+			foreach (ArrowedTileTabPageButton page in this.Children.Widgets)
 			{
 				bool isSelected = page.TabPageDef.Name == this.selectedItemName;
 
@@ -100,7 +103,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		private readonly List<TabPageDef> items;
-		private string selectedItemName;
+		private readonly List<TabPageDef>		items;
+		private string							selectedItemName;
 	}
 }

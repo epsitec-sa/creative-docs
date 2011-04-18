@@ -410,7 +410,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		void Common.Widgets.Collections.IWidgetCollectionHost<GenericTile>.NotifyRemoval(GenericTile widget)
 		{
 			widget.Parent  = null;
-			widget.Hilited = false;
+//-			widget.Hilited = false;
 
 			this.DetachEventHandlers (widget);
 		}

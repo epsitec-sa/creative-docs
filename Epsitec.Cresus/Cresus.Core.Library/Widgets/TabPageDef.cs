@@ -7,17 +7,21 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Widgets
 {
+	/// <summary>
+	/// The <c>TabPageDef</c> class defines a tab managed by the <see cref="TileTabBook"/>
+	/// class. When the tab gets activated, the associated action will be executed.
+	/// </summary>
 	public abstract class TabPageDef
 	{
-		protected TabPageDef(string name, FormattedText text, System.Action action)
+		protected TabPageDef(string name, FormattedText text, System.Action selectAction)
 		{
 			this.name = name;
 			this.text = text;
-			this.action = action;
+			this.selectAction = selectAction;
 			this.pageWidgets = new List<Widget> ();
 		}
 
-		public string Name
+		public string							Name
 		{
 			get
 			{
@@ -25,7 +29,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public FormattedText Text
+		public FormattedText					Text
 		{
 			get
 			{
@@ -33,7 +37,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public IList<Widget> PageWidgets
+		public IList<Widget>					PageWidgets
 		{
 			get
 			{
@@ -41,11 +45,11 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public void ExecuteAction()
+		public void ExecuteSelectAction()
 		{
-			if (this.action != null)
+			if (this.selectAction != null)
 			{
-				this.action ();
+				this.selectAction ();
 			}
 		}
 
@@ -72,9 +76,9 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		private readonly string name;
-		private readonly FormattedText text;
-		private readonly System.Action action;
-		private readonly List<Widget> pageWidgets;
+		private readonly string					name;
+		private readonly FormattedText			text;
+		private readonly System.Action			selectAction;
+		private readonly List<Widget>			pageWidgets;
 	}
 }

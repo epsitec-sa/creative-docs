@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -12,8 +12,8 @@ using System.Collections.Generic;
 namespace Epsitec.Cresus.Core.Widgets
 {
 	/// <summary>
-	/// The <c>TileTabBook{T}</c> implements a <see cref="TileTabBook"/> where the tab
-	/// pages are identified by ids of type <c>T</c>.
+	/// The <c>TileTabBook&lt;T&gt;</c> implements a <see cref="TileTabBook"/> where the tab
+	/// pages are identified by ids of type <typeparamref name="T"/>.
 	/// </summary>
 	/// <typeparam name="T">The type used for the tab page ids.</typeparam>
 	public class TileTabBook<T> : TileTabBook
@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		
 		public void SelectTabPage(T id)
 		{
-			this.SelectTabPage (this.Items.Where (x => x.Id.Equals (id)).FirstOrDefault ());
+			this.SelectTabPage (this.Items.FirstOrDefault (x => x.Id.Equals (id)));
 		}
 	}
 }

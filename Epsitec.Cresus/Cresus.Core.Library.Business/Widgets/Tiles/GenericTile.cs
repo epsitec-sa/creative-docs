@@ -19,49 +19,32 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	/// </summary>
 	public abstract class GenericTile : ControllerTile
 	{
-		public GenericTile()
+		protected GenericTile()
 			: base (Direction.Right)
 		{
-			this.Padding = new Margins (GenericTile.leftRightGap, 0, 0, 0);
+			this.Padding = new Margins (GenericTile.LeftRightGap, 0, 0, 0);
 		}
 
-		public GenericTile(Widget embedder)
-			: this ()
-		{
-			this.SetEmbedder (embedder);
-		}
-
-
-
-		/// <summary>
-		/// Détermine si le widget est sensible au survol de la souris.
-		/// </summary>
-		/// <value><c>true</c> if [entered sensitivity]; otherwise, <c>false</c>.</value>
-		public bool AutoHilite
+		
+		public bool								AutoHilite
 		{
 			get;
 			set;
 		}
 
-		public bool Hilited
+		public bool								IsCompact
 		{
 			get;
 			set;
 		}
 
-		public bool IsCompact
+		public sealed override ITileController	Controller
 		{
 			get;
 			set;
 		}
 
-		public override Controllers.ITileController Controller
-		{
-			get;
-			set;
-		}
-
-		public CoreViewController SubViewController
+		public CoreViewController				SubViewController
 		{
 			get
 			{
@@ -69,7 +52,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 		
-		public override TileArrowMode ArrowMode
+		public sealed override TileArrowMode	ArrowMode
 		{
 			get
 			{
@@ -77,18 +60,15 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 			set
 			{
-				throw new System.NotImplementedException ();
+				throw new System.InvalidOperationException ("GenericTile.ArrowMode is read-only");
 			}
 		}
 
-		public override TileArrow Arrow
+		public sealed override TileArrow		Arrow
 		{
 			get
 			{
-				this.tileArrow.SetOutlineColors (this.OutlineColors);
-				this.tileArrow.SetSurfaceColors (this.SurfaceColors);
-				this.tileArrow.MouseHilite = this.MouseHilite;
-
+				this.UpdateTileArrow ();
 				return this.tileArrow;
 			}
 		}
@@ -151,14 +131,13 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			base.Dispose (disposing);
 		}
 
-		
 		protected virtual TileArrowMode GetPaintingArrowMode()
 		{
 			if (this.IsReadOnly && this.IsCompact)
 			{
 				if (this.AutoHilite)
 				{
-					if (this.IsEntered || this.Hilited)
+					if (this.IsEntered)
 					{
 						return Tiles.TileArrowMode.Selected;
 					}
@@ -181,63 +160,60 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			return Tiles.TileArrowMode.Normal;
 		}
 
-		private bool MouseHilite
+		protected virtual bool GetMouseHilite()
 		{
-			get
-			{
-				return Comparer.EqualValues (this.SurfaceColors, TileColors.SurfaceHilitedColors);
-			}
+			return Comparer.EqualValues (this.GetSurfaceColors (), TileColors.SurfaceHilitedColors);
 		}
 
-		private IEnumerable<Color> SurfaceColors
+		protected virtual IEnumerable<Color> GetSurfaceColors()
 		{
-			get
+			if (this.IsReadOnly == false)
 			{
-				if (this.IsReadOnly == false)
-				{
-					return TileColors.SurfaceEditingColors;
-				}
-				else if (this.IsCompact)
+				return TileColors.SurfaceEditingColors;
+			}
+			else
+			{
+				if (this.IsCompact)
 				{
 					if (this.AutoHilite)
 					{
-						if (this.IsEntered || this.Hilited)
+						if (this.IsEntered)
 						{
 							return TileColors.SurfaceHilitedColors;
 						}
 					}
-
 					if (this.IsSelected)
 					{
 						return TileColors.SurfaceSelectedContainerColors;
 					}
 				}
-
-				return null;
 			}
+			return null;
 		}
 
-		private IEnumerable<Color> OutlineColors
+		protected virtual IEnumerable<Color> GetOutlineColors()
 		{
-			get
+			if (this.IsCompact && this.IsReadOnly)
 			{
-				if (this.IsCompact && this.IsReadOnly)
+				if (this.AutoHilite && this.IsEntered)
 				{
-					if (this.AutoHilite && (this.IsEntered || this.Hilited))
-					{
-						return TileColors.BorderColors;
-					}
-
-					if (this.IsSelected)
-					{
-						return TileColors.BorderColors;
-					}
+					return TileColors.BorderColors;
 				}
-
-				return null;
+				if (this.IsSelected)
+				{
+					return TileColors.BorderColors;
+				}
 			}
+			return null;
 		}
 
+
+		private void UpdateTileArrow()
+		{
+			this.tileArrow.SetOutlineColors (this.GetOutlineColors ());
+			this.tileArrow.SetSurfaceColors (this.GetSurfaceColors ());
+			this.tileArrow.MouseHilite = this.GetMouseHilite ();
+		}
 
 		private EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator, NavigationPathElement navigationPathElement)
 		{
@@ -262,8 +238,9 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 
-		public  static readonly double leftRightGap = 4;
+		public static readonly double LeftRightGap = 4;
 
-		private CoreViewController subViewController;
+		
+		private CoreViewController				subViewController;
 	}
 }

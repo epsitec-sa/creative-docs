@@ -133,7 +133,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				PreferredHeight  = StaticTitleTile.titleHeight,
 				PreferredWidth   = 0,
 				Dock             = DockStyle.Top,
-				Margins          = this.ContainerPadding + new Margins (GenericTile.leftRightGap, 0, 0, 0),
+				Margins          = this.ContainerPadding + new Margins (GenericTile.LeftRightGap, 0, 0, 0),
 				ContentAlignment = ContentAlignment.TopLeft,
 				TextBreakMode    = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 			};

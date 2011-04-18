@@ -127,6 +127,8 @@
     <Compile Include="Widgets\Tiles\TileArrow.cs" />
     <Compile Include="Widgets\Tiles\TileArrowMode.cs" />
     <Compile Include="Widgets\Tiles\TileColors.cs" />
+    <Compile Include="Widgets\TileTabBook.cs" />
+    <Compile Include="Widgets\TileTabBook`1.cs" />
     <Compile Include="Widgets\ValueToFormattedTextConverter.cs" />
   </ItemGroup>
   <ItemGroup>

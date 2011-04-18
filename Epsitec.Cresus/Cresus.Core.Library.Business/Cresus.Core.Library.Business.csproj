@@ -210,8 +210,6 @@
     <Compile Include="Widgets\Tiles\StaticTitleTile.cs" />
     <Compile Include="Widgets\Tiles\SummaryTile.cs" />
     <Compile Include="Widgets\Tiles\TitleTile.cs" />
-    <Compile Include="Widgets\TileTabBook.cs" />
-    <Compile Include="Widgets\TileTabBook`1.cs" />
     <Compile Include="Widgets\VStaticText.cs" />
   </ItemGroup>
   <ItemGroup>

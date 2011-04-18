@@ -16,8 +16,8 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Widgets.Tiles
 {
 	/// <summary>
-	/// Ce widget s'utilise un peu à la façon d'un TabPage, pour simuler des onglets
-	/// avec une tuile ayant une flèche 'v' en bas.
+	/// The <c>ArrowedTileTabPageButton</c> class implements a widget which looks like a
+	/// tab page header button, with a 'v' arrow below.
 	/// </summary>
 	public sealed class ArrowedTileTabPageButton : ArrowedTile
 	{

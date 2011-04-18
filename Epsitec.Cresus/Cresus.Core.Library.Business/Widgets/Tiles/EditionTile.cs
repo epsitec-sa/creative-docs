@@ -69,32 +69,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 
-		public override TileArrowMode ArrowMode
-		{
-			get
-			{
-				return this.GetArrowMode ();
-			}
-			set
-			{
-				throw new System.NotImplementedException ();
-			}
-		}
-
-		public override TileArrow Arrow
-		{
-			get
-			{
-				this.tileArrow.SetOutlineColors (this.OutlineColors);
-				this.tileArrow.SetSurfaceColors (this.SurfaceColors);
-				this.tileArrow.MouseHilite = this.MouseHilite;
-
-				return this.tileArrow;
-			}
-		}
-
-
-		private TileArrowMode GetArrowMode()
+		protected override TileArrowMode GetPaintingArrowMode()
 		{
 			if (this.AllowSelection)
 			{
@@ -107,57 +82,45 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			return Tiles.TileArrowMode.Normal;
 		}
 
-		private bool MouseHilite
+		protected override bool GetMouseHilite()
 		{
-			get
-			{
-				return Comparer.EqualValues (this.SurfaceColors, TileColors.SurfaceHilitedColors) || 
-					   Comparer.EqualValues (this.SurfaceColors, TileColors.SurfaceHilitedSelectedColors);
-			}
+			return Comparer.EqualValues (this.GetSurfaceColors (), TileColors.SurfaceHilitedColors) || 
+				   Comparer.EqualValues (this.GetSurfaceColors (), TileColors.SurfaceHilitedSelectedColors);
 		}
 
-		private IEnumerable<Color> SurfaceColors
+		protected override IEnumerable<Color> GetSurfaceColors()
 		{
-			get
+			if (this.AllowSelection)
 			{
-				if (this.AllowSelection)
+				if (this.TileArrowHilite)
 				{
-					if (this.TileArrowHilite)
-					{
-						if (this.IsSelected)
-						{
-							return TileColors.SurfaceHilitedSelectedColors;
-						}
-						else
-						{
-							return TileColors.SurfaceHilitedColors;
-						}
-					}
-
 					if (this.IsSelected)
 					{
-						return TileColors.SurfaceSelectedGroupingColors;
+						return TileColors.SurfaceHilitedSelectedColors;
+					}
+					else
+					{
+						return TileColors.SurfaceHilitedColors;
 					}
 				}
-
-				return null;
+				if (this.IsSelected)
+				{
+					return TileColors.SurfaceSelectedGroupingColors;
+				}
 			}
+			return null;
 		}
 
-		private IEnumerable<Color> OutlineColors
+		protected override IEnumerable<Color> GetOutlineColors()
 		{
-			get
+			if (this.AllowSelection)
 			{
-				if (this.AllowSelection)
+				if (this.TileArrowHilite || this.IsSelected)
 				{
-					if (this.TileArrowHilite || this.IsSelected)
-					{
-						return TileColors.BorderColors;
-					}
+					return TileColors.BorderColors;
 				}
-
-				return null;
 			}
+			return null;
 		}
 
 

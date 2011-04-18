@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	/// 
 	/// o--Common.Widgets.FrameBox
 	///    |
-	///    o--Tiles.Tile (abstract)
+	///    o--Tile (abstract)
   	///       | 
 	///       o--ArrowedTile
 	///       | |    
@@ -27,19 +27,19 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	///       |
 	///       o--ControllerTile
 	///       |  |
-	///       |  o--Tiles.GenericTile (abstract)
+	///       |  o--GenericTile (abstract)
 	///       |  |  |
-	///       |  |  o--Tiles.EditionTile
+	///       |  |  o--EditionTile
 	///       |  |  |
-	///       |  |  o--Tiles.SummaryTile
+	///       |  |  o--SummaryTile
 	///       |  |  |  |
-	///       |  |  |  o--Tiles.CollectionItemTile
+	///       |  |  |  o--CollectionItemTile
 	///       |  | 
-	///       |  o--Tiles.StaticTitleTile (abstract)
+	///       |  o--StaticTitleTile (abstract)
 	///       |     |
-	///       |     o--Tiles.PanelTitleTile
+	///       |     o--PanelTitleTile
 	///       |     |
-	///       |     o--Tiles.TitleTile
+	///       |     o--TitleTile
 	/// 	  |
 	/// 	  o--ControllerTile.DragHelper.ErsatzTile
 	/// 	     |
