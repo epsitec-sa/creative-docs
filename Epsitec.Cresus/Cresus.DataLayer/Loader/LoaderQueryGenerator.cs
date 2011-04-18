@@ -669,7 +669,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		private SqlContainer BuildSqlContainerForFields(Request request, AliasNode rootEntityAlias, AbstractEntity entity)
 		{
 			return this.TypeEngine.GetFields (entity.GetEntityStructuredTypeId ())
-				.Where (f => entity.GetEntityContext ().IsFieldDefined (f.Id, entity))
+				.Where (f => entity.IsFieldNotEmpty (f.Id))
 				.Select (f => this.BuildSqlContainerForField (entity, request, rootEntityAlias, f.CaptionId))
 				.Aggregate (SqlContainer.Empty, (acc, e) => acc.Plus (e));
 		}
@@ -1153,7 +1153,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 				Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 				var definedFields = this.TypeEngine.GetFields (leafEntityId)
-					.Where (f => entity.GetEntityContext ().IsFieldDefined (f.Id, entity))
+					.Where (f => entity.IsFieldNotEmpty (f.Id))
 					.ToList ();
 
 				for (int i = 0; i < definedFields.Count && requestedEntityAlias == null; i++)

@@ -445,18 +445,17 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		private IEnumerable<AbstractEntity> GetDefinedChildren(AbstractEntity entity)
 		{
 			EntityTypeEngine entityTypeEngine = this.DataInfrastructure.EntityEngine.EntityTypeEngine;
-			EntityContext entityContext = this.DataContext.EntityContext;
 
 			Druid entityTypeId = entity.GetEntityStructuredTypeId ();
 
 			var referenceTargets = entityTypeEngine
 				.GetReferenceFields (entityTypeId)
-				.Where (f => entityContext.IsFieldDefined (f.CaptionId.ToResourceId (), entity))
+				.Where (f => entity.IsFieldNotEmpty (f.Id))
 				.Select (f => entity.GetField<AbstractEntity> (f.CaptionId.ToResourceId ()));
 
 			var collectionTargets = entityTypeEngine
 				.GetCollectionFields (entityTypeId)
-				.Where (f => entityContext.IsFieldDefined (f.CaptionId.ToResourceId (), entity))
+				.Where (f => entity.IsFieldNotEmpty (f.Id))
 				.SelectMany (f => entity.GetFieldCollection<AbstractEntity> (f.CaptionId.ToResourceId ()));
 
 			return referenceTargets.Concat (collectionTargets);

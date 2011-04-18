@@ -96,13 +96,11 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 		private static IEnumerable<AbstractEntity> GetChildren(DataContext dataContext, AbstractEntity entity)
 		{
-			EntityContext entityContext = entity.GetEntityContext ();
-
 			Druid entityId = entity.GetEntityStructuredTypeId ();
 
 			var fields = from field in dataContext.DataInfrastructure.EntityEngine.EntityTypeEngine.GetFields (entityId)
 						 where field.Relation == FieldRelation.Reference || field.Relation == FieldRelation.Collection
-						 where entityContext.IsFieldDefined (field.Id, entity)
+						 where entity.IsFieldNotEmpty (field.Id)
 						 select new
 						 {
 							 Id = field.Id,

@@ -430,39 +430,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		public bool IsFieldDefined(string fieldId, AbstractEntity entity)
-		{
-			bool isDefined;
-
-			StructuredType entityType = this.GetStructuredType (entity.GetEntityStructuredTypeId ());
-			StructuredTypeField field = entityType.GetField (fieldId);
-
-			object value = entity.InternalGetValueOrFieldCollection (fieldId);
-
-			switch (field.Relation)
-			{
-				case FieldRelation.None:
-				case FieldRelation.Reference:
-
-					isDefined = (value != null) && (value != UndefinedValue.Value);
-
-					break;
-
-				case FieldRelation.Collection:
-
-					IList values = value as IList;
-
-					isDefined = (values != null) && (values.Count > 0);
-
-					break;
-
-				default:
-					throw new System.NotSupportedException ();
-			}
-
-			return isDefined;
-		}
-
 		public void DisableCalculations(AbstractEntity entity)
 		{
 			if (entity != null)

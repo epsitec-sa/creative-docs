@@ -7,6 +7,7 @@ using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
+using System.Collections;
 using System.Collections.Generic;
 
 using System.Linq;
@@ -73,7 +74,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-
 		internal bool AreEventsEnabled
 		{
 			get
@@ -82,7 +82,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-
 		internal bool ReadOnlyChecksEnabled
 		{
 			get
@@ -90,7 +89,6 @@ namespace Epsitec.Common.Support.EntityEngine
 				return this.disableReadOnlyChecks.IsZero;
 			}
 		}
-
 
 		/// <summary>
 		/// Retourne un résumé complet de l'entité.
@@ -118,7 +116,6 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			return null;
 		}
-
 
 		public bool IsEntityEmpty
 		{
@@ -149,7 +146,6 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			this.IsReadOnly = true;
 		}
-
 
 		/// <summary>
 		/// Gets a value indicating whether calculations are disabled.
@@ -270,20 +266,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		public string Dump()
-		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			this.Dump (buffer, includeLabels: true);
-			return buffer.ToString ();
-		}
-
-		public string DumpFlatData(System.Predicate<StructuredTypeField> filter = null)
-		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			this.Dump (buffer, filter: filter);
-			return buffer.ToString ();
-		}
-
 		public void ForEachField(EntityDataVersion version, System.Action<EntityFieldPath, StructuredTypeField, object> action)
 		{
 			this.ForEachField (version, "", action);
@@ -343,6 +325,19 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		public string Dump()
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			this.Dump (buffer, includeLabels: true);
+			return buffer.ToString ();
+		}
+
+		public string DumpFlatData(System.Predicate<StructuredTypeField> filter = null)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			this.Dump (buffer, filter: filter);
+			return buffer.ToString ();
+		}
 
 		private void Dump(System.Text.StringBuilder buffer, int level = 0, HashSet<AbstractEntity> history = null, System.Predicate<StructuredTypeField> filter = null, bool includeLabels = false, bool topLevelOnly = false, bool skipUndefinedFields = false)
 		{
@@ -461,7 +456,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-
 		/// <summary>
 		/// Switches the entity into a mode which allows the caller to define
 		/// the original values. Call this method in a <c>using</c> block.
@@ -475,7 +469,6 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			return DisposableWrapper.Combine (d2, d1);
 		}
-
 
 		public System.IDisposable UseSilentUpdates()
 		{
@@ -493,7 +486,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			return this.disableReadOnlyChecks.Enter ();
 		}
 
-
 		internal void DisableCalculations()
 		{
 			if (this.calculationsDisabled == false)
@@ -508,7 +500,6 @@ namespace Epsitec.Common.Support.EntityEngine
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Resolves the specified entity to the specified type. If the specified
@@ -691,14 +682,11 @@ namespace Epsitec.Common.Support.EntityEngine
 				throw new System.NotSupportedException (string.Format ("Trying to modify calculation {0} for entity {1}", id, typeof (T).Name));
 			}
 		}
-
 		
 		internal void InternalDefineProxy(IEntityProxy proxy)
 		{
 			this.proxy = proxy;
 		}
-
-
 
 		/// <summary>
 		/// Tells whether the field given by <paramref name="id"/> is defined.
@@ -718,6 +706,48 @@ namespace Epsitec.Common.Support.EntityEngine
 			return !UndefinedValue.IsUndefinedValue (value);
 		}
 
+		/// <summary>
+		/// Tells whether the field given by <paramref name="fieldId"/> does contain a non empty
+		/// value.
+		/// </summary>
+		/// <remarks>
+		/// A non empty value for value and reference field means that the value must not be the
+		/// undefined value or null. A non empty value for collection fields means that the value
+		/// must be a collection with at least one item.
+		/// </remarks>
+		/// <param name="id">The id of the field.</param>
+		/// <returns><c>true</c> if the field is defined, <c>false</c> if it isn't.</returns>
+		public bool IsFieldNotEmpty(string fieldId)
+		{
+			bool isNotEmpty;
+
+			StructuredTypeField field = this.context.GetStructuredTypeField (this, fieldId);
+
+			object value = this.InternalGetValueOrFieldCollection (fieldId);
+
+			switch (field.Relation)
+			{
+				case FieldRelation.None:
+				case FieldRelation.Reference:
+
+					isNotEmpty = (value != null) && !UndefinedValue.IsUndefinedValue(value);
+
+					break;
+
+				case FieldRelation.Collection:
+
+					IList values = value as IList;
+
+					isNotEmpty = (values != null) && (values.Count > 0);
+
+					break;
+
+				default:
+					throw new System.NotSupportedException ();
+			}
+
+			return isNotEmpty;
+		}
 
 		internal object InternalGetValueOrFieldCollection(string id)
 		{
@@ -799,7 +829,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
 			return field.Source;
 		}
-
 
 		internal System.Collections.IList InternalGetFieldCollection(string id)
 		{
@@ -939,7 +968,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-
 		/// <summary>
 		/// Gets the value for the specified field.
 		/// </summary>
@@ -1064,7 +1092,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			return this.OriginalValues;
 		}
 
-
 		/// <summary>
 		/// Resolves this instance; override this method if the entity is just
 		/// a façade.
@@ -1074,8 +1101,6 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			return this;
 		}
-
-
 
 		/// <summary>
 		/// Gets the value for the specified field, without any casting. Calls
@@ -1223,7 +1248,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			System.Diagnostics.Debug.Assert (field != null);
 			System.Diagnostics.Debug.Assert (field.Relation == FieldRelation.Collection);
 		}
-
 		
 		#region IStructuredTypeProvider Members
 
@@ -1381,7 +1405,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-
 		/// <summary>
 		/// Resets the data generation for this entity to zero.
 		/// </summary>
@@ -1389,7 +1412,6 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			this.dataGeneration = 0;
 		}
-
 
 		/// <summary>
 		/// Updates the data generation for this entity to match the one of the
@@ -1403,7 +1425,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.NotifyEventHandlers ("*", null, null);
 			this.NotifyContextEventHandlers ("*", null, null);
 		}
-
 
 		internal void SetModifiedValuesAsOriginalValues()
 		{
@@ -1420,7 +1441,6 @@ namespace Epsitec.Common.Support.EntityEngine
 				}
 			}
 		}
-
 
 		private static void SetModifiedValueAsOriginalValue(IValueStore originalValues, IValueStore modifiedValues, Druid fieldId)
 		{
@@ -1439,7 +1459,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-
 		internal void ResetValueStores()
 		{
 			IEnumerable<string> fieldIds = this.context.GetEntityFieldIds (this);
@@ -1452,7 +1471,6 @@ namespace Epsitec.Common.Support.EntityEngine
 				}
 			}
 		}
-
 
 		internal void ResetValue(Druid fieldId)
 		{
