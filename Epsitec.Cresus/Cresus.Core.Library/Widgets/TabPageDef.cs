@@ -1,16 +1,15 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
-using System.Linq;
 using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Widgets
 {
-	public class TabPageDef
+	public abstract class TabPageDef
 	{
-		public TabPageDef(string name, FormattedText text, System.Action action)
+		protected TabPageDef(string name, FormattedText text, System.Action action)
 		{
 			this.name = name;
 			this.text = text;
@@ -72,29 +71,10 @@ namespace Epsitec.Cresus.Core.Widgets
 				return new TabPageDef<T> (id, id.ToString (), text, () => action (id));
 			}
 		}
-		
+
 		private readonly string name;
 		private readonly FormattedText text;
 		private readonly System.Action action;
 		private readonly List<Widget> pageWidgets;
-	}
-	
-	public class TabPageDef<T> : TabPageDef
-	{
-		public TabPageDef(T id, string name, FormattedText text, System.Action action)
-			: base (name, text, action)
-		{
-			this.id = id;
-		}
-
-		public T Id
-		{
-			get
-			{
-				return this.id;
-			}
-		}
-
-		private readonly T id;
 	}
 }

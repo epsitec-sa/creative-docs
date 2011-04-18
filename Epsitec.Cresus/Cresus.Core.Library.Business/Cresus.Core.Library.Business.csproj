@@ -199,11 +199,9 @@
     <Compile Include="Widgets\Miniature.cs" />
     <Compile Include="Widgets\RibbonIconButton.cs" />
     <Compile Include="Widgets\TabNavigateEventArgs.cs" />
-    <Compile Include="Widgets\TabPageDef.cs" />
     <Compile Include="Widgets\TaggedText.cs" />
     <Compile Include="Widgets\TextFieldNavigator.cs" />
     <Compile Include="Widgets\TileContainer.cs" />
-    <Compile Include="Widgets\Tiles\ArrowedTileTabPageButton.cs" />
     <Compile Include="Widgets\Tiles\CollectionItemTile.cs" />
     <Compile Include="Widgets\Tiles\ControllerTile.cs" />
     <Compile Include="Widgets\Tiles\EditionTile.cs" />
