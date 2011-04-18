@@ -37,17 +37,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		public override TileArrow Arrow
-		{
-			get
-			{
-				this.UpdateTileArrow ();
-
-				return this.tileArrow;
-			}
-		}
-
-
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			base.PaintBackgroundImplementation (graphics, clipRect);
@@ -79,7 +68,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			return TileArrowMode.Selected;
 		}
 		
-		protected virtual void UpdateTileArrow()
+		protected override void UpdateTileArrow()
 		{
 			this.tileArrow.SetSurfaceColors (this.GetInternalSurfaceColors ());
 		}

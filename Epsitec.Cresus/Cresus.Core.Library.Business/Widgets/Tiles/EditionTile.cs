@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 {
 	/// <summary>
 	/// The <c>EditionTile</c> class displays the widgets used to edit data.
-	/// Its parent is a <see cref="TileGrouping"/>.
+	/// Its parent is a <see cref="TitleTile"/>.
 	/// </summary>
 	public sealed class EditionTile : GenericTile
 	{

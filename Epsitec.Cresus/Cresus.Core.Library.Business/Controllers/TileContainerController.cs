@@ -543,19 +543,19 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					case TileDataType.CollectionItem:
 					case TileDataType.EmptyItem:
-						item.TitleTile.ContainsAddedCollectionItemTiles   = !item.HideAddButton;
-						item.TitleTile.ContainsRemovedCollectionItemTiles = !item.HideRemoveButton;
+						item.TitleTile.EnableAddItems   = !item.HideAddButton;
+						item.TitleTile.EnableRemoveItems = !item.HideRemoveButton;
 						break;
 
 					case TileDataType.EditableItem:
 					case TileDataType.CustomizedItem:
-						item.TitleTile.ContainsAddedCollectionItemTiles   = false;
-						item.TitleTile.ContainsRemovedCollectionItemTiles = false;
+						item.TitleTile.EnableAddItems   = false;
+						item.TitleTile.EnableRemoveItems = false;
 						break;
 
 					default:
-						item.TitleTile.ContainsAddedCollectionItemTiles   = false;
-						item.TitleTile.ContainsRemovedCollectionItemTiles = false;
+						item.TitleTile.EnableAddItems   = false;
+						item.TitleTile.EnableRemoveItems = false;
 						isItemPartOfCollection = false;
 						break;
 				}
@@ -630,7 +630,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private static void SetTileContent(TileDataItem item)
 		{
-			item.TitleTile.TitleIconUri = item.IconUri;
+			item.TitleTile.IconUri = item.IconUri;
 
 			if (item.IsCompact || item.AutoGroup)
 			{

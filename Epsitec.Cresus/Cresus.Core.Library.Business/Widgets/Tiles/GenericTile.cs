@@ -64,15 +64,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		public sealed override TileArrow		Arrow
-		{
-			get
-			{
-				this.UpdateTileArrow ();
-				return this.tileArrow;
-			}
-		}
-
 
 		public void ToggleSubView(Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController, NavigationPathElement navigationPathElement = null)
 		{
@@ -208,7 +199,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 
-		private void UpdateTileArrow()
+		protected override void UpdateTileArrow()
 		{
 			this.tileArrow.SetOutlineColors (this.GetOutlineColors ());
 			this.tileArrow.SetSurfaceColors (this.GetSurfaceColors ());

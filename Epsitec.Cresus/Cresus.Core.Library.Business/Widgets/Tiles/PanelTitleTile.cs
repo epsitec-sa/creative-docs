@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	/// where the panel is below the title and occupies the whole available width. Contrast
 	/// this with the <see cref="TitleTile"/> where the panel occupies only the right part.
 	/// </summary>
-	public class PanelTitleTile : StaticTitleTile
+	public sealed class PanelTitleTile : StaticTitleTile
 	{
 		public PanelTitleTile()
 		{
@@ -35,6 +35,10 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				Margins = this.ContainerPadding,
 			};
 
+			//	Reparent the various frames of the static title tile so that the layout
+			//	matches what we need : the main panel below the title, using the full
+			//	available width.
+
 			this.leftPanel.Parent  = topFrame;
 			this.rightPanel.Parent = topFrame;
 			this.mainPanel.Parent  = bottomFrame;
@@ -45,25 +49,20 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		/// Gets the panel below the icon and the text.
 		/// </summary>
 		/// <value>The panel.</value>
-		public Widget Panel
+		public Widget							Panel
 		{
 			get
 			{
 				return this.mainPanel;
 			}
 		}
-		
-		
-		public override TileArrow Arrow
-		{
-			get
-			{
-				this.tileArrow.SetOutlineColors (TileColors.BorderColors);
-				this.tileArrow.SetSurfaceColors (TileColors.SurfaceSummaryColors);
-				this.tileArrow.MouseHilite = false;
 
-				return this.tileArrow;
-			}
+
+		protected override void UpdateTileArrow()
+		{
+			this.tileArrow.SetOutlineColors (TileColors.BorderColors);
+			this.tileArrow.SetSurfaceColors (TileColors.SurfaceSummaryColors);
+			this.tileArrow.MouseHilite = false;
 		}
 	}
 }

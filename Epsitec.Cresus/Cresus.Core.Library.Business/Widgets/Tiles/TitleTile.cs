@@ -1,11 +1,14 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+
+using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Controllers.DataAccessors;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +19,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	/// Cette tuile regroupe plusieurs tuiles simples (AbstractTile) dans son conteneur (Container).
 	/// Elle affiche une icône en haut à gauche (TitleIconUri) et un titre (Title).
 	/// </summary>
-	public class TitleTile : StaticTitleTile, Epsitec.Common.Widgets.Collections.IWidgetCollectionHost<GenericTile>
+	public sealed class TitleTile : StaticTitleTile, Epsitec.Common.Widgets.Collections.IWidgetCollectionHost<GenericTile>
 	{
 		public TitleTile()
 		{
@@ -26,25 +29,25 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 
-		public bool CanExpandSubTile
+		public bool								CanExpandSubTile
 		{
 			get;
 			set;
 		}
 
-		public bool ContainsAddedCollectionItemTiles
+		public bool								EnableAddItems
 		{
 			get;
 			set;
 		}
 
-		public bool ContainsRemovedCollectionItemTiles
+		public bool								EnableRemoveItems
 		{
 			get;
 			set;
 		}
 
-		public bool ContainsFrozenTiles
+		public bool								ContainsFrozenTiles
 		{
 			get
 			{
@@ -52,7 +55,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		public TileCollection Items
+		public TileCollection					Items
 		{
 			get
 			{
@@ -60,30 +63,11 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		public void SetTileVisibility(string name, bool visibility)
-		{
-			//	Montre ou cache une tuile d'après son nom.
-			//	Si la tuile TitleTile contient une tuile GenericTile utilisant un contrôleur du nom
-			//	cherché, elle est montrée/cachée.
-			foreach (var tile in this.Items)
-			{
-				if (tile.Controller is Controllers.DataAccessors.TileDataItem)
-				{
-					var tileDataItem = tile.Controller as Controllers.DataAccessors.TileDataItem;
-
-					if (tileDataItem.Name == name)
-					{
-						this.Visibility = visibility;
-					}
-				}
-			}
-		}
-
-		public override Controllers.ITileController Controller
+		public override ITileController			Controller
 		{
 			get
 			{
-				if ((this.ContainsAddedCollectionItemTiles || this.ContainsRemovedCollectionItemTiles) && this.ContainsFrozenTiles)
+				if ((this.EnableAddItems || this.EnableRemoveItems) && this.ContainsFrozenTiles)
 				{
 					return this.Items.Select (item => item.Controller).FirstOrDefault ();
 				}
@@ -98,7 +82,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 		
-		public override TileArrowMode ArrowMode
+		public override TileArrowMode			ArrowMode
 		{
 			get
 			{
@@ -106,23 +90,11 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 			set
 			{
-				throw new System.NotImplementedException ();
+				throw new System.InvalidOperationException ("TitleTile.ArrowMode is read-only");
 			}
 		}
 
-		public override TileArrow Arrow
-		{
-			get
-			{
-				this.tileArrow.SetOutlineColors (this.OutlineColors);
-				this.tileArrow.SetSurfaceColors (this.SurfaceColors);
-				this.tileArrow.MouseHilite = this.MouseHilite;
-
-				return this.tileArrow;
-			}
-		}
-
-		protected override bool IsDragAndDropEnabled
+		protected override bool					IsDragAndDropEnabled
 		{
 			get
 			{
@@ -130,31 +102,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		private bool HasSingleChild
-		{
-			get
-			{
-				return this.items.Count < 2;
-			}
-		}
-
-		private bool HasManyChildren
-		{
-			get
-			{
-				return this.items.Count > 1;
-			}
-		}
-
-		private bool HasEnteredChild
-		{
-			get
-			{
-				return this.items.Any (x => x.IsEntered);
-			}
-		}
-
-		private bool HasSelectedChild
+		private bool							ContainsAnySelectedChildren
 		{
 			get
 			{
@@ -162,27 +110,36 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-	
-		public static double MinimumTileWidth
+
+
+		public void SetTileVisibility(string name, bool visibility)
 		{
-			get
+			//	Montre ou cache une tuile d'après son nom.
+			//	Si la tuile TitleTile contient une tuile GenericTile utilisant un contrôleur du nom
+			//	cherché, elle est montrée/cachée.
+
+			foreach (var item in this.Items.Select (x => x.Controller).OfType<TileDataItem> ())
 			{
-				return TitleTile.iconSize+TitleTile.iconMargins*2;
+				if (item.Name == name)
+				{
+					this.Visibility = visibility;
+					break;
+				}
 			}
 		}
-	
 
 		public double GetFullHeight()
 		{
-			double height = TitleTile.titleHeight;
+			double height = TitleTile.TitleHeight;
 
 			foreach (var item in this.Items)
 			{
 				height += item.PreferredHeight;
 			}
 
-			return System.Math.Max (height, TitleTile.iconMargins + TitleTile.iconSize);
+			return System.Math.Max (height, TitleTile.IconMargins + TitleTile.IconSize);
 		}
+
 		
 		protected override void SetBoundsOverride(Rectangle oldRect, Rectangle newRect)
 		{
@@ -200,7 +157,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			base.OnEntered (e);
 
-			this.UpdateDefaultChildHilite ();
 			this.SetButtonVisibility (true);
 		}
 
@@ -221,22 +177,11 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			this.SetButtonVisibility (false);
 		}
 
-		private void UpdateDefaultChildHilite()
+		protected override void UpdateTileArrow()
 		{
-#if false
-			if (this.HasManyChildren)
-			{
-				bool hilite = this.IsEntered;
-
-				if (hilite && this.items.Any (x => x.IsEntered))
-				{
-					hilite = false;
-				}
-
-				this.Items[0].Hilited = hilite;
-				this.Items[0].Invalidate ();
-			}
-#endif
+			this.tileArrow.SetOutlineColors (this.GetOutlineColors ());
+			this.tileArrow.SetSurfaceColors (this.GetSurfaceColors ());
+			this.tileArrow.MouseHilite = this.GetMouseHilite ();
 		}
 
 		private void CreateUI()
@@ -259,8 +204,8 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 					ButtonStyle		= Common.Widgets.ButtonStyle.Normal,
 					GlyphShape		= Common.Widgets.GlyphShape.Plus,
 					Anchor			= AnchorStyles.TopLeft,
-					PreferredSize	= new Size (TitleTile.iconSize, TitleTile.iconSize),
-					Margins			= new Margins (TitleTile.iconMargins, 0, TitleTile.iconMargins, 0),
+					PreferredSize	= new Size (TitleTile.IconSize, TitleTile.IconSize),
+					Margins			= new Margins (TitleTile.IconMargins, 0, TitleTile.IconMargins, 0),
 					Visibility		= false,
 				};
 
@@ -278,7 +223,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 					ButtonStyle		= Common.Widgets.ButtonStyle.Normal,
 					GlyphShape		= Common.Widgets.GlyphShape.Minus,
 					Anchor			= AnchorStyles.BottomRight,
-					PreferredSize	= new Size (TitleTile.buttonSize, TitleTile.buttonSize),
+					PreferredSize	= new Size (TitleTile.ButtonSize, TitleTile.ButtonSize),
 					Margins         = this.ContainerPadding,
 					Visibility		= false,
 				};
@@ -290,8 +235,8 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		private void SetButtonVisibility(bool visibility)
 		{
-			bool showAdd    = visibility && this.ContainsAddedCollectionItemTiles;
-			bool showRemove = visibility && this.ContainsRemovedCollectionItemTiles && this.ContainsFrozenTiles;
+			bool showAdd    = visibility && this.EnableAddItems;
+			bool showRemove = visibility && this.EnableRemoveItems && this.ContainsFrozenTiles;
 
 			if (showAdd || showRemove)
 			{
@@ -314,14 +259,14 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			if (this.IsReadOnly)
 			{
-				if (this.HasSelectedChild)
+				if (this.ContainsAnySelectedChildren)
 				{
 					return Tiles.TileArrowMode.Selected;
 				}
 			}
 			else if (this.CanExpandSubTile)
 			{
-				if (this.HasSelectedChild)
+				if (this.ContainsAnySelectedChildren)
 				{
 					return Tiles.TileArrowMode.Selected;
 				}
@@ -330,24 +275,41 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			return Tiles.TileArrowMode.Normal;
 		}
 
-		private bool MouseHilite
+		private bool GetMouseHilite()
 		{
-			get
-			{
-				return Comparer.EqualValues (this.SurfaceColors, TileColors.SurfaceHilitedColors) ||
-					   Comparer.EqualValues (this.SurfaceColors, TileColors.SurfaceHilitedSelectedColors);
-			}
+			return Comparer.EqualValues (this.GetSurfaceColors (), TileColors.SurfaceHilitedColors)
+				|| Comparer.EqualValues (this.GetSurfaceColors (), TileColors.SurfaceHilitedSelectedColors);
 		}
 
-		private IEnumerable<Color> SurfaceColors
+		private IEnumerable<Color> GetSurfaceColors()
 		{
-			get
+			if (this.IsReadOnly)
 			{
-				if (this.IsReadOnly)
+				if (this.IsEntered)
+				{
+					if (this.ContainsAnySelectedChildren)
+					{
+						return TileColors.SurfaceHilitedSelectedColors;
+					}
+					else
+					{
+						return TileColors.SurfaceHilitedColors;
+					}
+				}
+				if (this.ContainsAnySelectedChildren)
+				{
+					return TileColors.SurfaceSelectedGroupingColors;
+				}
+
+				return TileColors.SurfaceSummaryColors;
+			}
+			else
+			{
+				if (this.CanExpandSubTile)
 				{
 					if (this.IsEntered)
 					{
-						if (this.HasSelectedChild)
+						if (this.ContainsAnySelectedChildren)
 						{
 							return TileColors.SurfaceHilitedSelectedColors;
 						}
@@ -356,44 +318,19 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 							return TileColors.SurfaceHilitedColors;
 						}
 					}
-
-					if (this.HasSelectedChild)
-					{
-						return TileColors.SurfaceSelectedGroupingColors;
-					}
-
-					return TileColors.SurfaceSummaryColors;
-				}
-				else if (this.CanExpandSubTile)
-				{
-					if (this.IsEntered)
-					{
-						if (this.HasSelectedChild)
-						{
-							return TileColors.SurfaceHilitedSelectedColors;
-						}
-						else
-						{
-							return TileColors.SurfaceHilitedColors;
-						}
-					}
-
-					if (this.HasSelectedChild)
+					if (this.ContainsAnySelectedChildren)
 					{
 						return TileColors.SurfaceSelectedGroupingColors;
 					}
 				}
-
-				return TileColors.SurfaceEditingColors;
 			}
+			
+			return TileColors.SurfaceEditingColors;
 		}
 
-		private IEnumerable<Color> OutlineColors
+		private IEnumerable<Color> GetOutlineColors()
 		{
-			get
-			{
-				return TileColors.BorderColors;
-			}
+			return TileColors.BorderColors;
 		}
 
 
@@ -458,7 +395,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		private void HandleChildWidgetEnteredOrExited(object sender, MessageEventArgs e)
 		{
-			this.UpdateDefaultChildHilite ();
 			this.Invalidate ();
 		}
 
@@ -467,7 +403,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			this.Invalidate ();
 		}
 
-		protected virtual void OnAddClicked(MessageEventArgs e)
+		private void OnAddClicked(MessageEventArgs e)
 		{
 			var handler = this.AddClicked;
 			
@@ -477,7 +413,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		protected virtual void OnRemoveClicked(MessageEventArgs e)
+		private void OnRemoveClicked(MessageEventArgs e)
 		{
 			var handler = this.RemoveClicked;
 
@@ -491,21 +427,21 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
 
-			metadataDy.DefineDefaultValue (TitleTile.iconSize+TitleTile.iconMargins*2);
+			metadataDy.DefineDefaultValue (TitleTile.IconSize+TitleTile.IconMargins*2);
 
 			Common.Widgets.Visual.PreferredHeightProperty.OverrideMetadata (typeof (TitleTile), metadataDy);
 		}
 
 
-		public event EventHandler<MessageEventArgs> AddClicked;
-		public event EventHandler<MessageEventArgs> RemoveClicked;
+		public event EventHandler<MessageEventArgs>		AddClicked;
+		public event EventHandler<MessageEventArgs>		RemoveClicked;
 
 
-		private static readonly double buttonSize	= 16;
+		private static readonly double			ButtonSize	= 16;
 
-		private readonly TileCollection items;
+		private readonly TileCollection			items;
 
-		private GlyphButton buttonAdd;
-		private GlyphButton buttonRemove;
+		private GlyphButton						buttonAdd;
+		private GlyphButton						buttonRemove;
 	}
 }

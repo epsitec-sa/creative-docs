@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	/// </summary>
 	public abstract class StaticTitleTile : ControllerTile
 	{
-		public StaticTitleTile()
+		protected StaticTitleTile()
 			: base (Direction.Right)
 		{
 			this.CreateUI ();
@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		/// Si on donne un seul caractère, il est affiché tel quel.
 		/// </summary>
 		/// <value>Nom brut de l'icône, sans prefix ni extension.</value>
-		public string							TitleIconUri
+		public string							IconUri
 		{
 			get
 			{
@@ -42,20 +42,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				if (this.iconUri != value)
 				{
 					this.iconUri = value;
-
-					if ((string.IsNullOrEmpty (this.iconUri)) ||
-						(this.iconUri == "none"))
-					{
-						this.staticTextIcon.Text = "";
-					}
-					else if (this.iconUri.Length == 1)  // un seul caractère ?
-					{
-						this.staticTextIcon.Text = string.Concat ("<font size=\"200%\">", this.iconUri, "</font>");
-					}
-					else
-					{
-						this.staticTextIcon.Text = Misc.GetResourceIconImageTag (value);
-					}
+					this.UpdateStaticIcon ();
 				}
 			}
 		}
@@ -75,9 +62,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				if (this.title != value)
 				{
 					this.title = value;
-					
-					this.staticTextTitle.FormattedText = this.title.ApplyBold ().ApplyFontSizePercent (120);
-					this.staticTextTitle.Visibility    = string.IsNullOrEmpty (this.title.ToSimpleText ());
+					this.UpdateStaticTitle ();
 				}
 			}
 		}
@@ -85,7 +70,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		private void CreateUI()
 		{
-			this.PreferredWidth = StaticTitleTile.iconSize + 2*StaticTitleTile.iconMargins;
+			this.PreferredWidth = StaticTitleTile.IconSize + 2*StaticTitleTile.IconMargins;
 
 			this.CreateLeftPanel ();
 			this.CreateLeftPanelIcon ();
@@ -99,7 +84,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			this.leftPanel = new FrameBox
 			{
 				Parent         = this,
-				PreferredWidth = StaticTitleTile.iconSize + 2*StaticTitleTile.iconMargins,
+				PreferredWidth = StaticTitleTile.IconSize + 2*StaticTitleTile.IconMargins,
 				Dock           = DockStyle.Left,
 			};
 		}
@@ -109,8 +94,8 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			this.staticTextIcon = new StaticText
 			{
 				Parent           = this.leftPanel,
-				Margins          = new Margins (StaticTitleTile.iconMargins),
-				PreferredSize    = new Size (StaticTitleTile.iconSize, StaticTitleTile.iconSize),
+				Margins          = new Margins (StaticTitleTile.IconMargins),
+				PreferredSize    = new Size (StaticTitleTile.IconSize, StaticTitleTile.IconSize),
 				Dock             = DockStyle.Top,
 				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
 			};
@@ -131,7 +116,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			this.staticTextTitle = new StaticText
 			{
 				Parent           = this.rightPanel,
-				PreferredHeight  = StaticTitleTile.titleHeight,
+				PreferredHeight  = StaticTitleTile.TitleHeight,
 				PreferredWidth   = 0,
 				Dock             = DockStyle.Top,
 				Margins          = this.ContainerPadding + new Margins (GenericTile.LeftRightGap, 0, 0, 0),
@@ -151,18 +136,42 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 
-		protected static readonly double iconSize		= 32;
-		protected static readonly double iconMargins	= 2;
-		protected static readonly double titleHeight	= 20;
+		private void UpdateStaticIcon()
+		{
+			if ((string.IsNullOrEmpty (this.iconUri)) ||
+				(this.iconUri == "none"))
+			{
+				this.staticTextIcon.Text = "";
+			}
+			else if (this.iconUri.Length == 1)  // un seul caractère ?
+			{
+				this.staticTextIcon.FormattedText = FormattedText.FromSimpleText (this.iconUri).ApplyFontSizePercent (200);
+			}
+			else
+			{
+				this.staticTextIcon.Text = string.Format (@"<img src=""{0}""/>", FormattedText.Escape (this.iconUri));
+			}
+		}
 
-		private string iconUri;
-		private FormattedText title;
+		private void UpdateStaticTitle()
+		{
+			this.staticTextTitle.FormattedText = this.title.ApplyBold ().ApplyFontSizePercent (120);
+			this.staticTextTitle.Visibility    = string.IsNullOrEmpty (this.title.ToSimpleText ());
+		}
+
+		protected static readonly double IconSize		= 32;
+		protected static readonly double IconMargins	= 2;
+		protected static readonly double TitleHeight	= 20;
+		protected static readonly double MinimumTileWidth = StaticTitleTile.IconSize + StaticTitleTile.IconMargins*2;
+
+		private string							iconUri;
+		private FormattedText					title;
 		
-		protected FrameBox leftPanel;
-		protected FrameBox rightPanel;
-		protected FrameBox mainPanel;
+		protected FrameBox						leftPanel;
+		protected FrameBox						rightPanel;
+		protected FrameBox						mainPanel;
 
-		private StaticText staticTextIcon;
-		private StaticText staticTextTitle;
+		private StaticText						staticTextIcon;
+		private StaticText						staticTextTitle;
 	}
 }

@@ -101,14 +101,18 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		public virtual TileArrow Arrow
+		public TileArrow Arrow
 		{
 			get
 			{
+				this.UpdateTileArrow ();
 				return this.tileArrow;
 			}
 		}
 
+		protected virtual void UpdateTileArrow()
+		{
+		}
 		
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
