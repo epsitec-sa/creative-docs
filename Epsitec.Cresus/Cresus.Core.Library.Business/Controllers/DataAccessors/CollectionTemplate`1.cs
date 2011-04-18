@@ -295,6 +295,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		private void BindEmptyEntityTileData(TileDataItem data, T source)
 		{
+			data.ClearAccessors ();
 			data.TitleAccessor        = IndirectAccessor<T, FormattedText>.GetAccessor (this.TitleAccessor, source);
 			data.TextAccessor         = IndirectAccessor<T, FormattedText>.GetAccessor (this.TextAccessor, source, CollectionTemplate.DefaultDefinitionInProgressText, x => x.IsNullOrEmpty);
 			data.CompactTitleAccessor = IndirectAccessor<T, FormattedText>.GetAccessor (this.CompactTitleAccessor, source);
@@ -303,6 +304,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		private void BindRealEntityTileData(TileDataItem data, T source, ICollectionAccessor collectionAccessor)
 		{
+			data.ClearAccessors ();
 			data.TitleAccessor        = IndirectAccessor<T, FormattedText>.GetAccessor (this.TitleAccessor, source);
 			data.TextAccessor         = IndirectAccessor<T, FormattedText>.GetAccessor (this.TextAccessor, source, CollectionTemplate.DefaultEmptyText, x => x.IsNullOrEmpty);
 			data.CompactTitleAccessor = IndirectAccessor<T, FormattedText>.GetAccessor (this.CompactTitleAccessor, source);

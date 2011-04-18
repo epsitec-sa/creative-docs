@@ -387,6 +387,11 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			this.bindings.ForEach (x => x.Execute ());
 		}
 
+		public void ClearAccessors()
+		{
+			this.bindings.Clear ();
+		}
+
 		public void SetEntityConverter<T>(System.Func<T, AbstractEntity> converter)
 			where T : AbstractEntity
 		{
