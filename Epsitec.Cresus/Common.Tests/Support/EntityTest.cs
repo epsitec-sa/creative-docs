@@ -186,7 +186,7 @@ namespace Epsitec.Common.Tests.Support
 		[Test]
 		public void CheckCollections1()
 		{
-			EntityContext context = EntityContext.Current;
+			EntityContext context = new EntityContext ();
 			
 			MyResourceCommandEntity cmd1 = context.CreateEmptyEntity<MyResourceCommandEntity> ();
 			MyResourceCommandEntity cmd2 = context.CreateEmptyEntity<MyResourceCommandEntity> ();
@@ -236,7 +236,7 @@ namespace Epsitec.Common.Tests.Support
 		[Test]
 		public void CheckCollections2()
 		{
-			EntityContext context = EntityContext.Current;
+			EntityContext context = new EntityContext ();
 
 			MyResourceCommandEntity cmd1 = context.CreateEmptyEntity<MyResourceCommandEntity> ();
 			MyResourceCommandEntity cmd2 = context.CreateEmptyEntity<MyResourceCommandEntity> ();
@@ -301,7 +301,7 @@ namespace Epsitec.Common.Tests.Support
 		public void CheckCreation()
 		{
 			AbstractEntity entity;
-			EntityContext context = EntityContext.Current;
+			EntityContext context = new EntityContext ();
 
 			entity = context.CreateEmptyEntity (Epsitec.Common.Support.Res.Types.ResourceEnumType.CaptionId);
 
@@ -329,7 +329,8 @@ namespace Epsitec.Common.Tests.Support
 		[Test]
 		public void CheckEventHandling()
 		{
-			MyEnumTypeEntity entity = EntityContext.Current.CreateEmptyEntity<MyEnumTypeEntity> ();
+			EntityContext entityContext = new EntityContext ();
+			MyEnumTypeEntity entity = entityContext.CreateEmptyEntity<MyEnumTypeEntity> ();
 			IStructuredData data = entity;
 
 			Assert.IsNotNull (entity);
@@ -344,14 +345,14 @@ namespace Epsitec.Common.Tests.Support
 					Assert.AreEqual (entity, sender);
 					events.Add (string.Format ("Field modified from {0} to {1}", e.OldValue ?? "<null>", e.NewValue ?? "<null>"));
 				});
-			
+
 			data.AttachListener ("*",
 				delegate (object sender, DependencyPropertyChangedEventArgs e)
 				{
 					Assert.AreEqual (entity, sender);
 					events.Add (string.Format ("Content modified from {0} to {1}", e.OldValue ?? "<null>", e.NewValue ?? "<null>"));
 				});
-			
+
 			entity.SetField (fieldId, null, "Abc");
 			entity.SetField (fieldId, "Abc", "Xyz");
 
@@ -375,7 +376,7 @@ namespace Epsitec.Common.Tests.Support
 		[Test]
 		public void CheckIStructuredData()
 		{
-			EntityContext context = EntityContext.Current;
+			EntityContext context = new EntityContext ();
 
 			MyTestInterfaceUserEntity entity = context.CreateEntity<MyTestInterfaceUserEntity> ();
 
@@ -430,7 +431,7 @@ namespace Epsitec.Common.Tests.Support
 			AbstractEntity entity;
 			AbstractEntity proxyData;
 
-			EntityContext context = EntityContext.Current;
+			EntityContext context = new EntityContext ();
 
 			proxyData = context.CreateEmptyEntity<MyResourceStringEntity> ();
 			entity = context.CreateEmptyEntity<MyTestInterfaceUserEntity> ();

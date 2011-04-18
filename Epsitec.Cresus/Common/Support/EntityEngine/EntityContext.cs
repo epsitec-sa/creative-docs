@@ -70,7 +70,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// setting a value.
 		/// </summary>
 		/// <value>
-		/// 	<c>true</c> if constraint checkin should be skipped; otherwise, <c>false</c>.
+		/// 	<c>true</c> if constraint checking should be skipped; otherwise, <c>false</c>.
 		/// </value>
 		public bool								SkipConstraintChecking
 		{
@@ -96,47 +96,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			{
 				return this.persistenceManagers;
 			}
-		}
-
-		/// <summary>
-		/// Gets the current, thread specific, entity context.
-		/// </summary>
-		/// <value>The entity context for this thread.</value>
-		public static EntityContext				Current
-		{
-			get
-			{
-				if (EntityContext.current == null)
-				{
-					EntityContext.current = new EntityContext ();
-				}
-				
-				return EntityContext.current;
-			}
-		}
-
-		/// <summary>
-		/// Pushes the current context on an internal stack and makes the
-		/// specified context the new current context.
-		/// </summary>
-		/// <param name="context">The context.</param>
-		public static void Push(EntityContext context)
-		{
-			if (EntityContext.contextStack == null)
-			{
-				EntityContext.contextStack = new Stack<EntityContext> ();
-			}
-
-			EntityContext.contextStack.Push (EntityContext.current);
-			EntityContext.current = context;
-		}
-
-		/// <summary>
-		/// Pops the current context from an internal stack. See <see cref="Push"/>.
-		/// </summary>
-		public static void Pop()
-		{
-			EntityContext.current = EntityContext.contextStack.Pop ();
 		}
 
 		/// <summary>
@@ -297,21 +256,11 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <returns>The search template entity.</returns>
 		public AbstractEntity CreateSearchEntity(Druid entityId)
 		{
-			AbstractEntity entity;
+			AbstractEntity entity = EntityClassFactory.CreateEmptyEntity (entityId) ?? this.CreateGenericEntity (entityId);
 
-			EntityContext.Push (this);
+			entity = new SearchEntity (entity);
 
-			try
-			{
-				entity = EntityClassFactory.CreateEmptyEntity (entityId) ?? this.CreateGenericEntity (entityId);
-				entity = new SearchEntity (entity);
-			}
-			finally
-			{
-				EntityContext.Pop ();
-			}
-
-			this.NotifyEntityAttached (entity, null);
+			entity.ReplaceEntityContext (this);
 
 			return entity;
 		}
@@ -323,25 +272,14 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		public AbstractEntity CreateEmptyEntity(Druid entityId)
 		{
-			AbstractEntity entity;
-
-			EntityContext.Push (this);
-
-			try
-			{
-				entity = EntityClassFactory.CreateEmptyEntity (entityId);
+			AbstractEntity entity = EntityClassFactory.CreateEmptyEntity (entityId);
 				
-				if (entity == null)
-				{
-					entity = this.CreateGenericEntity (entityId);
-				}
-			}
-			finally
+			if (entity == null)
 			{
-				EntityContext.Pop ();
+				entity = this.CreateGenericEntity (entityId);
 			}
 
-			this.NotifyEntityAttached (entity, null);
+			entity.ReplaceEntityContext (this);
 
 			return entity;
 		}
@@ -349,20 +287,9 @@ namespace Epsitec.Common.Support.EntityEngine
 		public T CreateEmptyEntity<T>()
 			where T : AbstractEntity, new ()
 		{
-			T entity;
-			
-			EntityContext.Push (this);
-			
-			try
-			{
-				entity = new T ();
-			}
-			finally
-			{
-				EntityContext.Pop ();
-			}
+			T entity = new T ();
 
-			this.NotifyEntityAttached (entity, null);
+			entity.ReplaceEntityContext (this);
 
 			return entity;
 		}
@@ -882,12 +809,6 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 		#endregion
-
-		[System.ThreadStatic]
-		private static EntityContext current;
-
-		[System.ThreadStatic]
-		private static Stack<EntityContext> contextStack;
 
 		public event EventHandler<EntityContextEventArgs> EntityAttached;
 		public event EventHandler<EntityContextEventArgs> EntityDetached;

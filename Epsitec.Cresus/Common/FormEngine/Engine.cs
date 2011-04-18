@@ -147,16 +147,7 @@ namespace Epsitec.Common.FormEngine
 				//	que nous allons créer, alors on crée nous-même une entité vide pour
 				//	permettre d'utiliser correctement le binding par la suite.
 
-				EntityContext.Push (this.entityContext);
-
-				try
-				{
-					entityData = this.entityContext.CreateEntity (entityId);
-				}
-				finally
-				{
-					EntityContext.Pop ();
-				}
+				entityData = this.entityContext.CreateEntity (entityId);
 			}
 			else
 			{

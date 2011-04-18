@@ -27,7 +27,8 @@ namespace Epsitec.Common.Support.EntityEngine
 		protected AbstractEntity()
 		{
 			this.entitySerialId = System.Threading.Interlocked.Increment (ref AbstractEntity.nextSerialId);
-			this.context = EntityContext.Current;
+
+			this.context = AbstractEntity.defaultContext;
 
 			this.defineOriginalValues = new InterlockedSafeCounter ();
 			this.silentUpdates = new InterlockedSafeCounter ();
@@ -1464,13 +1465,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			modifiedValues.SetValue (fieldName, UndefinedValue.Value, ValueStoreSetMode.ShortCircuit);
 		}
 
-
-		public static readonly Druid EntityStructuredTypeId = Druid.Empty;
-		public static readonly string EntityStructuredTypeKey = null;
-		
-		private static long nextSerialId = 1;
-		private static readonly object globalExclusion = new object ();
-
 		private InterlockedSafeCounter silentUpdates;
 		private InterlockedSafeCounter defineOriginalValues;
 		private InterlockedSafeCounter disableEvents;
@@ -1485,6 +1479,17 @@ namespace Epsitec.Common.Support.EntityEngine
 		private IValueStore modifiedValues;
 		private Dictionary<string, System.Delegate> eventHandlers;
 		private IEntityProxy proxy;
+
+		static AbstractEntity()
+		{
+			AbstractEntity.defaultContext = new EntityContext ();
+		}
+
+		private static long nextSerialId = 1;
+
+		private static readonly object globalExclusion = new object ();
+
+		private static readonly EntityContext defaultContext;
 
 		
 	}

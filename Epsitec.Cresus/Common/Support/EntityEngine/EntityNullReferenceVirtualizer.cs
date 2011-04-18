@@ -373,7 +373,12 @@ namespace Epsitec.Common.Support.EntityEngine
 			{
 				if (this.parentEntity == null)
 				{
-					return EntityContext.Current;
+					// NOTE Unless I completely misunderstood what happens, we should never be in
+					// that case, because that would mean that an empty entity has no parent entity,
+					// and empty entities can in theory only be created by their parent.
+					// Marc
+
+					return new EntityContext ();
 				}
 				else
 				{

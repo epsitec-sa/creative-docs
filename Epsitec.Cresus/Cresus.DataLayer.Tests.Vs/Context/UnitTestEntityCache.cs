@@ -57,13 +57,13 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		{
 			List<AbstractEntity> entities = new List<AbstractEntity> ()
 			{
-				EntityContext.Current.CreateEntity<NaturalPersonEntity> (),
-				EntityContext.Current.CreateEntity<LegalPersonEntity> (),
-				EntityContext.Current.CreateEntity<AbstractContactEntity> (),
-				EntityContext.Current.CreateEntity<UriContactEntity> (),
-				EntityContext.Current.CreateEntity<AbstractContactEntity> (),
-				EntityContext.Current.CreateEntity<CountryEntity> (),
-				EntityContext.Current.CreateEntity<LocationEntity> (),
+				new NaturalPersonEntity (),
+				new LegalPersonEntity (),
+				new AbstractContactEntity (),
+				new UriContactEntity (),
+				new AbstractContactEntity (),
+				new CountryEntity (),
+				new LocationEntity (),
 			};
 
 			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
@@ -99,24 +99,24 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		{
 			List<AbstractEntity> entities1 = new List<AbstractEntity> ()
 			{
-				EntityContext.Current.CreateEntity<NaturalPersonEntity> (),
-				EntityContext.Current.CreateEntity<LegalPersonEntity> (),
-				EntityContext.Current.CreateEntity<AbstractContactEntity> (),
-				EntityContext.Current.CreateEntity<UriContactEntity> (),
-				EntityContext.Current.CreateEntity<AbstractContactEntity> (),
-				EntityContext.Current.CreateEntity<CountryEntity> (),
-				EntityContext.Current.CreateEntity<LocationEntity> (),
+				new NaturalPersonEntity (),
+				new LegalPersonEntity (),
+				new AbstractContactEntity (),
+				new UriContactEntity (),
+				new AbstractContactEntity (),
+				new CountryEntity (),
+				new LocationEntity (),
 			};
 
 			List<AbstractEntity> entities2 = new List<AbstractEntity> ()
 			{
-				EntityContext.Current.CreateEntity<NaturalPersonEntity> (),
-				EntityContext.Current.CreateEntity<LegalPersonEntity> (),
-				EntityContext.Current.CreateEntity<AbstractContactEntity> (),
-				EntityContext.Current.CreateEntity<UriContactEntity> (),
-				EntityContext.Current.CreateEntity<AbstractContactEntity> (),
-				EntityContext.Current.CreateEntity<CountryEntity> (),
-				EntityContext.Current.CreateEntity<LocationEntity> (),
+				new NaturalPersonEntity (),
+				new LegalPersonEntity (),
+				new AbstractContactEntity (),
+				new UriContactEntity (),
+				new AbstractContactEntity (),
+				new CountryEntity (),
+				new LocationEntity (),
 			};
 
 			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
@@ -144,13 +144,13 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		{
 			List<AbstractEntity> entities = new List<AbstractEntity> ()
 			{
-				EntityContext.Current.CreateEntity<NaturalPersonEntity> (),
-				EntityContext.Current.CreateEntity<LegalPersonEntity> (),
-				EntityContext.Current.CreateEntity<AbstractContactEntity> (),
-				EntityContext.Current.CreateEntity<UriContactEntity> (),
-				EntityContext.Current.CreateEntity<AbstractContactEntity> (),
-				EntityContext.Current.CreateEntity<CountryEntity> (),
-				EntityContext.Current.CreateEntity<LocationEntity> (),
+				new NaturalPersonEntity (),
+				new LegalPersonEntity (),
+				new AbstractContactEntity (),
+				new UriContactEntity (),
+				new AbstractContactEntity (),
+				new CountryEntity (),
+				new LocationEntity (),
 			};
 
 			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
@@ -176,7 +176,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		{
 			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 			EntityCache entityCache = new EntityCache (entityTypeEngine);
-			NaturalPersonEntity entity = EntityContext.Current.CreateEntity<NaturalPersonEntity> ();
+			NaturalPersonEntity entity = new NaturalPersonEntity ();
 
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
@@ -202,13 +202,13 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		{
 			List<AbstractEntity> entities1 = new List<AbstractEntity> ()
 			{
-				EntityContext.Current.CreateEntity<NaturalPersonEntity> (),
-				EntityContext.Current.CreateEntity<LegalPersonEntity> (),
-				EntityContext.Current.CreateEntity<AbstractContactEntity> (),
-				EntityContext.Current.CreateEntity<UriContactEntity> (),
-				EntityContext.Current.CreateEntity<AbstractContactEntity> (),
-				EntityContext.Current.CreateEntity<CountryEntity> (),
-				EntityContext.Current.CreateEntity<LocationEntity> (),
+				new NaturalPersonEntity (),
+				new LegalPersonEntity (),
+				new AbstractContactEntity (),
+				new UriContactEntity (),
+				new AbstractContactEntity (),
+				new CountryEntity (),
+				new LocationEntity (),
 			};
 
 			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
@@ -231,13 +231,13 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		{
 			List<AbstractEntity> entities = new List<AbstractEntity> ()
 			{
-				EntityContext.Current.CreateEntity<NaturalPersonEntity> (),
-				EntityContext.Current.CreateEntity<LegalPersonEntity> (),
-				EntityContext.Current.CreateEntity<AbstractContactEntity> (),
-				EntityContext.Current.CreateEntity<UriContactEntity> (),
-				EntityContext.Current.CreateEntity<AbstractContactEntity> (),
-				EntityContext.Current.CreateEntity<CountryEntity> (),
-				EntityContext.Current.CreateEntity<LocationEntity> (),
+				new NaturalPersonEntity (),
+				new LegalPersonEntity (),
+				new AbstractContactEntity (),
+				new UriContactEntity (),
+				new AbstractContactEntity (),
+				new CountryEntity (),
+				new LocationEntity (),
 			};
 
 			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
@@ -268,24 +268,24 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		{
 			List<AbstractEntity> entities1 = new List<AbstractEntity> ()
 			{
-				EntityContext.Current.CreateEntity<NaturalPersonEntity> (),
-				EntityContext.Current.CreateEntity<LegalPersonEntity> (),
-				EntityContext.Current.CreateEntity<AbstractContactEntity> (),
-				EntityContext.Current.CreateEntity<UriContactEntity> (),
-				EntityContext.Current.CreateEntity<AbstractContactEntity> (),
-				EntityContext.Current.CreateEntity<CountryEntity> (),
-				EntityContext.Current.CreateEntity<LocationEntity> (),
+				new NaturalPersonEntity (),
+				new LegalPersonEntity (),
+				new AbstractContactEntity (),
+				new UriContactEntity (),
+				new AbstractContactEntity (),
+				new CountryEntity (),
+				new LocationEntity (),
 			};
 
 			List<AbstractEntity> entities2 = new List<AbstractEntity> ()
 			{
-				EntityContext.Current.CreateEntity<NaturalPersonEntity> (),
-				EntityContext.Current.CreateEntity<LegalPersonEntity> (),
-				EntityContext.Current.CreateEntity<AbstractContactEntity> (),
-				EntityContext.Current.CreateEntity<UriContactEntity> (),
-				EntityContext.Current.CreateEntity<AbstractContactEntity> (),
-				EntityContext.Current.CreateEntity<CountryEntity> (),
-				EntityContext.Current.CreateEntity<LocationEntity> (),
+				new NaturalPersonEntity (),
+				new LegalPersonEntity (),
+				new AbstractContactEntity (),
+				new UriContactEntity (),
+				new AbstractContactEntity (),
+				new CountryEntity (),
+				new LocationEntity (),
 			};
 
 			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
@@ -334,13 +334,13 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		{
 			List<AbstractEntity> entities = new List<AbstractEntity> ()
 			{
-				EntityContext.Current.CreateEntity<NaturalPersonEntity> (),
-				EntityContext.Current.CreateEntity<LegalPersonEntity> (),
-				EntityContext.Current.CreateEntity<AbstractContactEntity> (),
-				EntityContext.Current.CreateEntity<UriContactEntity> (),
-				EntityContext.Current.CreateEntity<AbstractContactEntity> (),
-				EntityContext.Current.CreateEntity<CountryEntity> (),
-				EntityContext.Current.CreateEntity<LocationEntity> (),
+				new NaturalPersonEntity (),
+				new LegalPersonEntity (),
+				new AbstractContactEntity (),
+				new UriContactEntity (),
+				new AbstractContactEntity (),
+				new CountryEntity (),
+				new LocationEntity (),
 			};
 
 			EntityTypeEngine entityTypeEngine = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());

@@ -28,7 +28,7 @@ namespace Epsitec.Common.Tests.Dialogs
 		[Test]
 		public void Check01DialogModeIsolated()
 		{
-			EntityContext context = EntityContext.Current;
+			EntityContext context = new EntityContext ();
 			PrixEntity prix1 = context.CreateEmptyEntity<PrixEntity> ();
 			prix1.Monnaie = context.CreateEmptyEntity<MonnaieEntity> ();
 			prix1.Ht = 10.0M;
@@ -127,7 +127,7 @@ namespace Epsitec.Common.Tests.Dialogs
 		[Test]
 		public void Check02DialogModeRealTime()
 		{
-			EntityContext context = EntityContext.Current;
+			EntityContext context = new EntityContext ();
 			PrixEntity prix1 = context.CreateEmptyEntity<PrixEntity> ();
 			prix1.Monnaie = context.CreateEmptyEntity<MonnaieEntity> ();
 			prix1.Ht = 10.0M;
@@ -242,7 +242,7 @@ namespace Epsitec.Common.Tests.Dialogs
 		[Test]
 		public void Check03DialogModeTransparent()
 		{
-			EntityContext context = EntityContext.Current;
+			EntityContext context = new EntityContext ();
 			PrixEntity prix1 = context.CreateEmptyEntity<PrixEntity> ();
 			prix1.Monnaie = context.CreateEmptyEntity<MonnaieEntity> ();
 			prix1.Ht = 10.0M;
@@ -282,8 +282,10 @@ namespace Epsitec.Common.Tests.Dialogs
 		[Test]
 		public void Check04ReferenceReplacement()
 		{
-			Epsitec.Cresus.AddressBook.Entities.AdresseEntity originalAdr = DialogTest.CreateDefaultAdresseEntity ();
-			Epsitec.Cresus.AddressBook.Entities.LocalitéEntity loc = EntityContext.Current.CreateEmptyEntity<Epsitec.Cresus.AddressBook.Entities.LocalitéEntity> ();
+			EntityContext entityContext = new EntityContext ();
+
+			Epsitec.Cresus.AddressBook.Entities.AdresseEntity originalAdr = DialogTest.CreateDefaultAdresseEntity (entityContext);
+			Epsitec.Cresus.AddressBook.Entities.LocalitéEntity loc = entityContext.CreateEmptyEntity<Epsitec.Cresus.AddressBook.Entities.LocalitéEntity> ();
 			
 			DialogData data = new DialogData (originalAdr, DialogDataMode.Isolated);
 

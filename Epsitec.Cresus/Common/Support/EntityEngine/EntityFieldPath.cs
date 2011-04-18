@@ -225,7 +225,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <returns><c>true</c> if the path could be resolved; otherwise, <c>false</c>.</returns>
 		public bool NavigateSchema(Druid root, out Druid leaf, out string id)
 		{
-			return this.NavigateSchema (EntityContext.Current, root, out leaf, out id);
+			return this.NavigateSchema (new EntityContext (), root, out leaf, out id);
 		}
 
 		/// <summary>
@@ -238,7 +238,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <returns><c>true</c> if the path could be resolved; otherwise, <c>false</c>.</returns>
 		public bool NavigateSchema(out Druid leaf, out string id)
 		{
-			return this.NavigateSchema (EntityContext.Current, this.entityId, out leaf, out id);
+			return this.NavigateSchema (new EntityContext (), this.entityId, out leaf, out id);
 		}
 
 		/// <summary>
@@ -254,7 +254,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </returns>
 		public bool NavigateSchema(EntityContext context, out Druid leaf, out string id)
 		{
-			return this.NavigateSchema (EntityContext.Current, this.entityId, out leaf, out id);
+			return this.NavigateSchema (context, this.entityId, out leaf, out id);
 		}
 
 		/// <summary>

@@ -165,7 +165,7 @@ namespace Epsitec.Common.Tests.Dialogs
 			Assert.IsTrue (dialog.HasWindow);
 
 			dialog.IsModal = false;
-			dialog.Data = DialogTest.CreateDefaultDialogData (yverdon);
+			dialog.Data = DialogTest.CreateDefaultDialogData (new EntityContext (), yverdon);
 			dialog.SearchController = searchController;
 			dialog.OpenDialog ();
 			Window.RunInTestEnvironment (window);
@@ -191,9 +191,9 @@ namespace Epsitec.Common.Tests.Dialogs
 		}
 
 
-		internal static AdresseEntity CreateDefaultAdresseEntity()
+		internal static AdresseEntity CreateDefaultAdresseEntity(EntityContext entityContext)
 		{
-			AdresseEntity adresse = EntityContext.Current.CreateEntity<AdresseEntity> ();
+			AdresseEntity adresse = entityContext.CreateEntity<AdresseEntity> ();
 
 			adresse.Rue = "Ch. du Fontenay 6";
 			adresse.Localité.Nom = "Yverdon-les-Bains";
@@ -204,9 +204,9 @@ namespace Epsitec.Common.Tests.Dialogs
 			return adresse;
 		}
 
-		internal static AdresseEntity CreateDefaultAdresseEntity(LocalitéEntity loc)
+		internal static AdresseEntity CreateDefaultAdresseEntity(EntityContext entityContext, LocalitéEntity loc)
 		{
-			AdresseEntity adresse = EntityContext.Current.CreateEntity<AdresseEntity> ();
+			AdresseEntity adresse = entityContext.CreateEntity<AdresseEntity> ();
 
 			adresse.Rue = "Ch. du Fontenay 6";
 			adresse.Localité = loc;
@@ -214,9 +214,9 @@ namespace Epsitec.Common.Tests.Dialogs
 			return adresse;
 		}
 
-		internal static DialogData CreateDefaultDialogData(LocalitéEntity loc)
+		internal static DialogData CreateDefaultDialogData(EntityContext entityContext, LocalitéEntity loc)
 		{
-			return new DialogData (DialogTest.CreateDefaultAdresseEntity (loc), DialogDataMode.Isolated);
+			return new DialogData (DialogTest.CreateDefaultAdresseEntity (entityContext, loc), DialogDataMode.Isolated);
 		}
 
 		private static TestResolver CreateSuggestions()
@@ -291,7 +291,7 @@ namespace Epsitec.Common.Tests.Dialogs
 		[Test]
 		public void Check80Speed()
 		{
-			EntityContext context = EntityContext.Current;
+			EntityContext context = new EntityContext ();
 
 			PaysEntity pays = context.CreateEmptyEntity<PaysEntity> ();
 			pays.Code = "CH";
