@@ -22,6 +22,8 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	///    o--Tiles.Tile (abstract)
   	///       | 
 	///       o--ArrowedTile
+	///       | |    
+	///       | o--ArrowedTileTabPageButton
 	///       |
 	///       o--ControllerTile
 	///       |  |
@@ -34,12 +36,10 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	///       |  |  |  o--Tiles.CollectionItemTile
 	///       |  | 
 	///       |  o--Tiles.StaticTitleTile (abstract)
-	///       |  |  |
-	///       |  |  o--Tiles.PanelTitleTile
-	///       |  |  |
-	///       |  |  o--Tiles.TitleTile
-	///       |  | 
-	///       |  o--TilePageButton
+	///       |     |
+	///       |     o--Tiles.PanelTitleTile
+	///       |     |
+	///       |     o--Tiles.TitleTile
 	/// 	  |
 	/// 	  o--ControllerTile.DragHelper.ErsatzTile
 	/// 	     |

@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	/// The <c>ArrowedTile</c> class is a container which paints a frame with an arrow on
 	/// one of its sides. This is used as a container for the <see cref="Epsitec.Cresus.Core.Controllers.ListController&lt;T&gt;"/>.
 	/// </summary>
-	public sealed class ArrowedTile : Tile
+	public class ArrowedTile : Tile
 	{
 		public ArrowedTile(Direction arrowDirection)
 			: base (arrowDirection)
@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			get
 			{
-				return TileArrowMode.Selected;
+				return this.GetPaintingArrowMode ();
 			}
 			set
 			{
@@ -52,13 +52,34 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			base.PaintBackgroundImplementation (graphics, clipRect);
 
-			var rect = Rectangle.Deflate (this.Client.Bounds, new Margins (0, 0, 0, TileArrow.Breadth));
+			if (string.IsNullOrWhiteSpace (this.Text))
+			{
+				return;
+			}
+
+			Rectangle rect = this.Client.Bounds;
+
+			switch (this.Arrow.ArrowDirection)
+			{
+				case Direction.Right:
+					rect = Rectangle.Deflate (rect, new Margins (0, TileArrow.Breadth, 0, 0));
+					break;
+
+				case Direction.Down:
+					rect = Rectangle.Deflate (rect, new Margins (0, 0, 0, TileArrow.Breadth));
+					break;
+			}
 
 			graphics.Color = Color.FromName ("Black");
 			graphics.PaintText (rect, this.Text, Font.DefaultFont, Font.DefaultFontSize);
-		
 		}
-		private void UpdateTileArrow()
+
+		protected virtual TileArrowMode GetPaintingArrowMode()
+		{
+			return TileArrowMode.Selected;
+		}
+		
+		protected virtual void UpdateTileArrow()
 		{
 			this.tileArrow.SetSurfaceColors (this.GetInternalSurfaceColors ());
 		}

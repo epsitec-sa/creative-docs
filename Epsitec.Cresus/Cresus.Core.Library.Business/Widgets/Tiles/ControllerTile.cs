@@ -11,7 +11,12 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Widgets.Tiles
 {
-	public class ControllerTile : Tile
+	/// <summary>
+	/// The <c>ControllerTile</c> class implements a specialized version of <see cref="Tile"/>
+	/// which provides support for an associted <see cref="ITileController"/>, and if enabled,
+	/// drag and drop reordering operations.
+	/// </summary>
+	public abstract class ControllerTile : Tile
 	{
 		protected ControllerTile(Direction direction)
 			: base (direction)

@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				var name = pageDescription.Name;
 				var text = pageDescription.Text;
 
-				var tilePage = new Widgets.TilePageButton (pageDescription)
+				var tilePage = new Widgets.Tiles.ArrowedTileTabPageButton (pageDescription)
 				{
 					Parent = this,
 					PreferredHeight = 24 + Widgets.Tiles.TileArrow.Breadth,
@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private void HandleChildClicked(object sender, MessageEventArgs e)
 		{
-			var page = sender as TilePageButton;
+			var page = sender as Widgets.Tiles.ArrowedTileTabPageButton;
 
 			if (page == null)
 			{
@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private void RefreshTabPageSelection()
 		{
-			foreach (TilePageButton page in this.Children.Widgets)
+			foreach (Widgets.Tiles.ArrowedTileTabPageButton page in this.Children.Widgets)
 			{
 				bool isSelected = page.TabPageDef.Name == this.selectedItemName;
 
