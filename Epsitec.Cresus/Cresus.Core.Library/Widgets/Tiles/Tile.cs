@@ -21,32 +21,35 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	///    |
 	///    o--Tiles.Tile (abstract)
   	///       | 
-	///       o--ArrowedFrame
+	///       o--ArrowedTile
 	///       |
 	///       o--ControllerTile
-	///          |
-	///          o--Tiles.GenericTile (abstract)
-	///          |  |
-	///          |  o--Tiles.EditionTile
-	///          |  |
-	///          |  o--Tiles.SummaryTile
-	///          |  |  |
-	///          |  |  o--Tiles.CollectionItemTile
-	///          | 
-	///          o--Tiles.StaticTitleTile (abstract)
-	///          |  |
-	///          |  o--Tiles.PanelTitleTile
-	///          |  |
-	///          |  o--Tiles.TitleTile
-	///          | 
-	///          o--TilePageButton
-	/// 
+	///       |  |
+	///       |  o--Tiles.GenericTile (abstract)
+	///       |  |  |
+	///       |  |  o--Tiles.EditionTile
+	///       |  |  |
+	///       |  |  o--Tiles.SummaryTile
+	///       |  |  |  |
+	///       |  |  |  o--Tiles.CollectionItemTile
+	///       |  | 
+	///       |  o--Tiles.StaticTitleTile (abstract)
+	///       |  |  |
+	///       |  |  o--Tiles.PanelTitleTile
+	///       |  |  |
+	///       |  |  o--Tiles.TitleTile
+	///       |  | 
+	///       |  o--TilePageButton
+	/// 	  |
+	/// 	  o--ControllerTile.DragHelper.ErsatzTile
+	/// 	     |
+	/// 	     o--ControllerTile.DragHelper.DragTile
 	/// </summary>
 	public abstract class Tile : FrameBox, IReadOnly
 	{
 		protected Tile(Direction arrowDirection)
 		{
-			this.tileArrow    = new TileArrow (arrowDirection);
+			this.tileArrow = new TileArrow (arrowDirection);
 		}
 
 		
@@ -130,6 +133,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		protected readonly TileArrow							tileArrow;
 		
-		private TileArrowMode									arrowMode;
+		protected TileArrowMode									arrowMode;
 	}
 }

@@ -1,5 +1,5 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
@@ -10,14 +10,18 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Widgets.Tiles
 {
 	/// <summary>
-	/// Ce widget permet de dessiner un cadre avec une pointe/flèche sur l'un des côtés.
-	/// Il sert de conteneur pour ListController.
+	/// The <c>ArrowedTile</c> class is a container which paints a frame with an arrow on
+	/// one of its sides. This is used as a container for the <see cref="Epsitec.Cresus.Core.Controllers.ListController&lt;T&gt;"/>.
 	/// </summary>
 	public sealed class ArrowedTile : Tile
 	{
 		public ArrowedTile(Direction arrowDirection)
 			: base (arrowDirection)
 		{
+			this.arrowMode = TileArrowMode.Selected;
+			
+			this.tileArrow.SetOutlineColors (TileColors.BorderColors);
+			this.tileArrow.MouseHilite = false;
 		}
 
 
@@ -29,7 +33,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 			set
 			{
-				throw new System.NotImplementedException ();
+				throw new System.InvalidOperationException ("ArrowedTile.ArrowMode is read-only");
 			}
 		}
 
@@ -37,31 +41,13 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			get
 			{
-				this.tileArrow.SetOutlineColors (TileColors.BorderColors);
-				this.tileArrow.SetSurfaceColors (this.InternalSurfaceColors);
-				this.tileArrow.MouseHilite = false;
+				this.UpdateTileArrow ();
 
 				return this.tileArrow;
 			}
 		}
 
 
-		private IEnumerable<Color> InternalSurfaceColors
-		{
-			get
-			{
-				if (this.IsSelected)
-				{
-					return TileColors.SurfaceSelectedContainerColors;
-				}
-				else
-				{
-					return TileColors.SurfaceDefaultColors;
-				}
-			}
-		}
-
-	
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			base.PaintBackgroundImplementation (graphics, clipRect);
@@ -69,7 +55,24 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			var rect = Rectangle.Deflate (this.Client.Bounds, new Margins (0, 0, 0, TileArrow.Breadth));
 
 			graphics.Color = Color.FromName ("Black");
-			graphics.PaintText (rect.Left, rect.Bottom, rect.Width, rect.Height, this.Text, Font.DefaultFont, Font.DefaultFontSize, ContentAlignment.MiddleCenter);
+			graphics.PaintText (rect, this.Text, Font.DefaultFont, Font.DefaultFontSize);
+		
+		}
+		private void UpdateTileArrow()
+		{
+			this.tileArrow.SetSurfaceColors (this.GetInternalSurfaceColors ());
+		}
+
+		private IEnumerable<Color> GetInternalSurfaceColors()
+		{
+			if (this.IsSelected)
+			{
+				return TileColors.SurfaceSelectedContainerColors;
+			}
+			else
+			{
+				return TileColors.SurfaceDefaultColors;
+			}
 		}
 	}
 }

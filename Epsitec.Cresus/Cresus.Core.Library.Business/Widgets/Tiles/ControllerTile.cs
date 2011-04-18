@@ -4,6 +4,8 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core.Controllers;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,23 +18,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 		}
 
-		public virtual bool IsDraggable
-		{
-			get
-			{
-				return (this.Controller == null || !this.IsDragAndDropEnabled || this.IsSelected) ? false : true;
-			}
-		}
-
-		public virtual bool IsDragAndDropEnabled
-		{
-			get
-			{
-				return false;
-			}
-		}
-		
-		public virtual Controllers.ITileController Controller
+		public virtual ITileController			Controller
 		{
 			get
 			{
@@ -40,14 +26,39 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 			set
 			{
-				throw new System.InvalidOperationException ();
+				throw new System.InvalidOperationException ("ControllerTile.Controller is read-only");
 			}
 		}
-		protected virtual int GroupedItemIndex
+		
+		public virtual bool						IsDraggable
 		{
 			get
 			{
-				var grouped = this.Controller as Epsitec.Cresus.Core.Controllers.IGroupedItem;
+				if ((this.Controller == null) ||
+					(this.IsSelected))
+				{
+					return false;
+				}
+				else
+				{
+					return this.IsDragAndDropEnabled;
+				}
+			}
+		}
+
+		protected virtual bool					IsDragAndDropEnabled
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+		private int								GroupedItemIndex
+		{
+			get
+			{
+				var grouped = this.Controller as IGroupedItem;
 
 				if (grouped == null)
 				{
@@ -60,7 +71,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 			set
 			{
-				var grouped = this.Controller as Epsitec.Cresus.Core.Controllers.IGroupedItem;
+				var grouped = this.Controller as IGroupedItem;
 
 				if (grouped != null)
 				{
@@ -69,11 +80,11 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		protected virtual string GroupId
+		private string							GroupId
 		{
 			get
 			{
-				var grouped = this.Controller as Epsitec.Cresus.Core.Controllers.IGroupedItem;
+				var grouped = this.Controller as IGroupedItem;
 
 				if (grouped == null)
 				{
@@ -85,10 +96,11 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				}
 			}
 		}
+
 		protected override void ProcessMessage(Message message, Point pos)
 		{
 			if ((this.dragHelper == null) &&
-				(this.MessageMightStartDrag (message)))
+				(ControllerTile.MessageMightStartDrag (message)))
 			{
 				this.dragHelper = new DragHelper (this);
 			}
@@ -100,7 +112,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		private bool MessageMightStartDrag(Message message)
+		private static bool MessageMightStartDrag(Message message)
 		{
 			if ((message.MessageType == MessageType.MouseDown) &&
 				(message.Button == MouseButtons.Left) &&

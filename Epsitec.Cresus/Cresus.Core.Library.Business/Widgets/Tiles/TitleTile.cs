@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		public override bool IsDragAndDropEnabled
+		protected override bool IsDragAndDropEnabled
 		{
 			get
 			{

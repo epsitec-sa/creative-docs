@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -404,8 +404,12 @@ namespace Epsitec.Common.Drawing
 				return false;
 			}
 		}
-		
-		
+
+
+		public void PaintText(Rectangle bounds, string text, Font font, double size, ContentAlignment align = ContentAlignment.MiddleCenter)
+		{
+			this.PaintText (bounds.X, bounds.Y, bounds.Width, bounds.Height, text, font, size, align);
+		}
 		
 		public void   PaintText(double x, double y, double width, double height, string text, Font font, double size, ContentAlignment align)
 		{
