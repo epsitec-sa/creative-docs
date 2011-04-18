@@ -562,7 +562,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 		private static readonly int nbRuns = 1;
-				
 
 
 		private static readonly bool createDatabase = true;
