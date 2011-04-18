@@ -105,7 +105,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		private class EmptyEntityContext : EntityContext
 		{
 			public EmptyEntityContext()
-				: base (Resources.DefaultManager, Resources.DefaultManager, EntityLoopHandlingMode.Throw, "Analysis/EmptyEntities")
+				: base (SafeResourceResolver.Instance, EntityLoopHandlingMode.Throw, "Analysis/EmptyEntities")
 			{
 			}
 

@@ -346,8 +346,10 @@
     <Compile Include="Support\AbstractOplet.cs" />
     <Compile Include="Support\ArrayEqualityComparer.cs" />
     <Compile Include="Support\AssemblyLoader.cs" />
+    <Compile Include="Support\AutoCache.cs" />
     <Compile Include="Support\CacheManager.cs" />
     <Compile Include="Support\DisposableWraper.cs" />
+    <Compile Include="Support\EntityEngine\SafeResourceResolver.cs" />
     <Compile Include="Support\Extensions\TypeExtensions.cs" />
     <Compile Include="Support\Extensions\EventHandlerExtensions.cs" />
     <Compile Include="Support\InterlockedSafeCounter.cs" />

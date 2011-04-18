@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
@@ -899,18 +900,16 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		internal StructuredType GetSyntheticStructuredType(EntityContext context)
 		{
-			HashSet<string> ids = new HashSet<string> ();
-
-			context.FillValueStoreDataIds (this.OriginalValues, ids);
-			context.FillValueStoreDataIds (this.ModifiedValues, ids);
-
-			List<string> list = new List<string> (ids);
-			list.Sort ();
+			var ids = EntityContext.GetValueStoreDataIds (this.originalValues)
+				.Concat (EntityContext.GetValueStoreDataIds (this.modifiedValues))
+				.Distinct ()
+				.OrderBy (id => id)
+				.ToList ();
 
 			StructuredType type = new StructuredType (StructuredTypeClass.Entity);
 			int rank = 0;
 
-			foreach (string id in list)
+			foreach (string id in ids)
 			{
 				StructuredTypeField field = new StructuredTypeField (id, null, Druid.Empty, rank++);
 				type.Fields.Add (field);

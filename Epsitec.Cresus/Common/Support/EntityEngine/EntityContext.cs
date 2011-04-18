@@ -4,6 +4,7 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
+using Epsitec.Common.Types.Collections;
 
 using System.Collections;
 using System.Collections.Generic;
@@ -17,8 +18,8 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// </summary>
 	public class EntityContext : IEntityPersistenceManager
 	{
-		public EntityContext()
-			: this (Resources.DefaultManager, Resources.DefaultManager, EntityLoopHandlingMode.Throw)
+
+		public EntityContext() : this (SafeResourceResolver.Instance)
 		{
 		}
 
@@ -27,20 +28,16 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </summary>
 		/// <param name="resourceManager">The resource manager.</param>
 		/// <param name="loopHandlingMode">The loop handling mode.</param>
-		public EntityContext(IStructuredTypeResolver resourceManager, ICaptionResolver captionResolver, EntityLoopHandlingMode loopHandlingMode, string name = null)
+		public EntityContext(SafeResourceResolver resourceResolver, EntityLoopHandlingMode loopHandlingMode = EntityLoopHandlingMode.Throw, string name = null)
 		{
 			this.name = name;
-			
-			this.resourceManager     = resourceManager;
-			this.captionResolver	 = captionResolver;
+			this.loopHandlingMode = loopHandlingMode;
 
-			this.loopHandlingMode    = loopHandlingMode;
-
-			this.associatedThread    = System.Threading.Thread.CurrentThread;
 			this.suspendConstraintChecking = new InterlockedSafeCounter ();
 
-			this.structuredTypeMap   = new Dictionary<Druid, StructuredType> ();
 			this.persistenceManagers = new List<IEntityPersistenceManager> ();
+
+			this.resourceResolver = resourceResolver;
 
 			this.propertyGetters = new Dictionary<string, PropertyGetter> ();
 			this.propertySetters = new Dictionary<string, PropertySetter> ();
@@ -55,7 +52,6 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			EntityClassFactory.Setup ();
 		}
-
 
 		/// <summary>
 		/// Gets the active data generation.
@@ -143,7 +139,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			EntityContext.current = EntityContext.contextStack.Pop ();
 		}
 
-
 		/// <summary>
 		/// Compares two entities for equality. This compares the contents of
 		/// both entities; the two entities may therefore be of differing types
@@ -222,7 +217,6 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		#endregion
 
-
 		/// <summary>
 		/// Starts a new data generation. This increments the <see cref="DataGeneration"/>
 		/// property.
@@ -281,111 +275,17 @@ namespace Epsitec.Common.Support.EntityEngine
 			return new Data (type);
 		}
 
-		internal void FillValueStoreDataIds(IValueStore store, HashSet<string> ids)
+		internal static IEnumerable<string> GetValueStoreDataIds(IValueStore store)
 		{
 			Data data = store as Data;
 
 			if (data != null)
 			{
-				foreach (string id in data.GetIds ())
-				{
-					ids.Add (id);
-				}
-			}
-		}
-
-
-		public Caption GetCaption(Druid captionId)
-		{
-			return this.captionResolver.GetCaption (captionId);
-		}
-
-
-		public IEnumerable<string> GetEntityFieldIds(AbstractEntity entity)
-		{
-			if (entity == null)
-			{
-				throw new System.ArgumentNullException ("entity");
-			}
-
-			StructuredType entityType = this.GetStructuredType (entity);
-
-			if (entityType == null)
-			{
-				throw new System.ArgumentException ("Invalid entity; no associated StructuredType");
-			}
-
-			return entityType.GetFieldIds ();
-		}
-
-		public StructuredType GetStructuredType(Druid entityId)
-		{
-			this.EnsureCorrectThread ();
-
-			StructuredType type;
-
-			if (!this.structuredTypeMap.TryGetValue (entityId, out type))
-			{
-				if (entityId.IsTemporary)
-				{
-					return null;
-				}
-				
-				type = this.resourceManager.GetStructuredType (entityId);
-				this.structuredTypeMap[entityId] = type;
-			}
-			
-			return type;
-		}
-
-		public StructuredType GetStructuredType(AbstractEntity entity)
-		{
-			this.EnsureCorrectThread ();
-
-			IStructuredTypeProvider provider = entity.GetStructuredTypeProvider ();
-			StructuredType type;
-
-			if (provider == null)
-			{
-				type = this.GetStructuredType (entity.GetEntityStructuredTypeId ());
+				return data.GetIds ();
 			}
 			else
 			{
-				type = provider.GetStructuredType () as StructuredType;
-			}
-
-			if (type == null)
-			{
-				type = entity.GetSyntheticStructuredType (this);
-			}
-
-			return type;
-		} 
-
-		internal StructuredTypeField GetStructuredTypeField(AbstractEntity entity, string fieldId)
-		{
-			StructuredType      type  = this.GetStructuredType (entity);
-			StructuredTypeField field = type == null ? null : type.GetField (fieldId);
-
-			return field;
-		}
-
-		/// <summary>
-		/// Defines a structured type.
-		/// </summary>
-		/// <param name="id">The id.</param>
-		/// <param name="type">The type.</param>
-		internal void DefineStructuredType(Druid id, StructuredType type)
-		{
-			this.EnsureCorrectThread ();
-
-			if (this.structuredTypeMap.ContainsKey (id))
-			{
-				throw new System.InvalidOperationException ("StructuredType cannot be redefined");
-			}
-			else
-			{
-				this.structuredTypeMap[id] = type;
+				return EmptyEnumerable<string>.Instance;
 			}
 		}
 
@@ -500,184 +400,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			return entity;
 		}
 
-
-		public bool IsFieldDefined(string fieldId, AbstractEntity entity)
-		{
-			bool isDefined;
-
-			StructuredType entityType = this.GetStructuredType (entity.GetEntityStructuredTypeId ());
-			StructuredTypeField field = entityType.GetField (fieldId);
-
-			object value = entity.InternalGetValueOrFieldCollection (fieldId);
-
-			switch (field.Relation)
-			{
-				case FieldRelation.None:
-				case FieldRelation.Reference:
-
-					isDefined = (value != null) && (value != UndefinedValue.Value);
-
-					break;
-
-				case FieldRelation.Collection:
-
-					IList values = value as IList;
-
-					isDefined = (values != null) && (values.Count > 0);
-
-					break;
-
-				default:
-					throw new System.NotSupportedException ();
-			}
-
-			return isDefined;
-		}
-
-
-		public INamedType GetFieldType(AbstractEntity entity, string id)
-		{
-			StructuredTypeField field = this.GetStructuredTypeField (entity, id);
-			return field == null ? null : field.Type;
-		}
-
-		public System.Type GetFieldSystemType(AbstractEntity entity, string id)
-		{
-			INamedType type = this.GetFieldType (entity, id);
-			return type == null ? null : type.SystemType;
-		}
-
-
-		public void DisableCalculations(AbstractEntity entity)
-		{
-			if (entity != null)
-			{
-				entity.DisableCalculations ();
-			}
-		}
-
-		public bool IsNullable(Druid entityId, string fieldId)
-		{
-			StructuredType type = this.GetStructuredType (entityId);
-
-			if (type == null)
-			{
-				throw new System.ArgumentException ("Entity id cannot be resolved to a type");
-			}
-
-			StructuredTypeField field = type.GetField (fieldId);
-
-			if (field == null)
-			{
-				throw new System.ArgumentException ("Field cannot be resolved");
-			}
-			
-			return this.IsNullable (field);
-		}
-		
-		public bool IsNullable(AbstractEntity entity, string fieldId)
-		{
-			StructuredTypeField field = this.GetStructuredTypeField (entity, fieldId);
-
-			return this.IsNullable (field);
-		}
-
-		private bool IsNullable(StructuredTypeField field)
-		{
-			if (field.IsNullable)
-			{
-				return true;
-			}
-
-			INullableType nullableType = field.Type as INullableType;
-
-			if ((nullableType != null) &&
-				(nullableType.IsNullable))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-
-		/// <summary>
-		/// Finds the property setter used to write to the specified field.
-		/// This uses an internal cache.
-		/// </summary>
-		/// <param name="entity">The entity.</param>
-		/// <param name="id">The field id.</param>
-		/// <returns>The <see cref="PropertySetter"/> delegate or <c>null</c>.</returns>
-		internal PropertySetter FindPropertySetter(AbstractEntity entity, string id)
-		{
-			string entityId = entity.GetEntityStructuredTypeKey ();
-			string key = string.Concat (entityId, id);
-			PropertySetter setter;
-			
-			if (this.propertySetters.TryGetValue (key, out setter))
-			{
-				return setter;
-			}
-
-			this.propertySetters[key] = setter = DynamicCodeFactory.CreatePropertySetter (this.FindPropertyInfo (entity, id));
-
-			return setter;
-		}
-
-		/// <summary>
-		/// Finds the property getter used to read from the specified field.
-		/// This uses an internal cache.
-		/// </summary>
-		/// <param name="entity">The entity.</param>
-		/// <param name="id">The field id.</param>
-		/// <returns>The <see cref="PropertyGetter"/> delegate or <c>null</c>.</returns>
-		internal PropertyGetter FindPropertyGetter(AbstractEntity entity, string id)
-		{
-			string entityId = entity.GetEntityStructuredTypeKey ();
-			string key = string.Concat (entityId, id);
-			PropertyGetter getter;
-			
-			if (this.propertyGetters.TryGetValue (key, out getter))
-			{
-				return getter;
-			}
-
-			this.propertyGetters[key] = getter = DynamicCodeFactory.CreatePropertyGetter (this.FindPropertyInfo (entity, id));
-
-			return getter;
-		}
-
-		/// <summary>
-		/// Finds the property info for the matching property.
-		/// </summary>
-		/// <param name="entity">The entity.</param>
-		/// <param name="id">The field id to map to a property.</param>
-		/// <returns>The <see cref="System.Reflection.PropertyInfo"/> or <c>null</c>.</returns>
-		private System.Reflection.PropertyInfo FindPropertyInfo(AbstractEntity entity, string id)
-		{
-			System.Type entityType = entity.GetType ();
-			System.Reflection.PropertyInfo[] propertyInfos = entityType.GetProperties (System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-
-			foreach (System.Reflection.PropertyInfo propertyInfo in propertyInfos)
-			{
-				foreach (EntityFieldAttribute attribute in propertyInfo.GetCustomAttributes (typeof (EntityFieldAttribute), true))
-				{
-					if (attribute.FieldId == id)
-					{
-						//	We have found the property which maps to the specified
-						//	field :
-
-						return propertyInfo;
-					}
-				}
-			}
-
-			return null;
-		}
-
-
 		private AbstractEntity CreateGenericEntity(Druid entityId)
 		{
 			return new GenericEntity (entityId);
@@ -696,7 +418,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			parents.Push (entity.GetEntityStructuredTypeId ());
 
 			StructuredType type = this.GetStructuredType (entity);
-			
+
 			foreach (string id in type.GetFieldIds ())
 			{
 				StructuredTypeField field = type.GetField (id);
@@ -781,6 +503,121 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		public bool IsFieldDefined(string fieldId, AbstractEntity entity)
+		{
+			bool isDefined;
+
+			StructuredType entityType = this.GetStructuredType (entity.GetEntityStructuredTypeId ());
+			StructuredTypeField field = entityType.GetField (fieldId);
+
+			object value = entity.InternalGetValueOrFieldCollection (fieldId);
+
+			switch (field.Relation)
+			{
+				case FieldRelation.None:
+				case FieldRelation.Reference:
+
+					isDefined = (value != null) && (value != UndefinedValue.Value);
+
+					break;
+
+				case FieldRelation.Collection:
+
+					IList values = value as IList;
+
+					isDefined = (values != null) && (values.Count > 0);
+
+					break;
+
+				default:
+					throw new System.NotSupportedException ();
+			}
+
+			return isDefined;
+		}
+
+		public void DisableCalculations(AbstractEntity entity)
+		{
+			if (entity != null)
+			{
+				entity.DisableCalculations ();
+			}
+		}
+
+		/// <summary>
+		/// Finds the property setter used to write to the specified field.
+		/// This uses an internal cache.
+		/// </summary>
+		/// <param name="entity">The entity.</param>
+		/// <param name="id">The field id.</param>
+		/// <returns>The <see cref="PropertySetter"/> delegate or <c>null</c>.</returns>
+		internal PropertySetter FindPropertySetter(AbstractEntity entity, string id)
+		{
+			string entityId = entity.GetEntityStructuredTypeKey ();
+			string key = string.Concat (entityId, id);
+			PropertySetter setter;
+			
+			if (this.propertySetters.TryGetValue (key, out setter))
+			{
+				return setter;
+			}
+
+			this.propertySetters[key] = setter = DynamicCodeFactory.CreatePropertySetter (this.FindPropertyInfo (entity, id));
+
+			return setter;
+		}
+
+		/// <summary>
+		/// Finds the property getter used to read from the specified field.
+		/// This uses an internal cache.
+		/// </summary>
+		/// <param name="entity">The entity.</param>
+		/// <param name="id">The field id.</param>
+		/// <returns>The <see cref="PropertyGetter"/> delegate or <c>null</c>.</returns>
+		internal PropertyGetter FindPropertyGetter(AbstractEntity entity, string id)
+		{
+			string entityId = entity.GetEntityStructuredTypeKey ();
+			string key = string.Concat (entityId, id);
+			PropertyGetter getter;
+			
+			if (this.propertyGetters.TryGetValue (key, out getter))
+			{
+				return getter;
+			}
+
+			this.propertyGetters[key] = getter = DynamicCodeFactory.CreatePropertyGetter (this.FindPropertyInfo (entity, id));
+
+			return getter;
+		}
+
+		/// <summary>
+		/// Finds the property info for the matching property.
+		/// </summary>
+		/// <param name="entity">The entity.</param>
+		/// <param name="id">The field id to map to a property.</param>
+		/// <returns>The <see cref="System.Reflection.PropertyInfo"/> or <c>null</c>.</returns>
+		private System.Reflection.PropertyInfo FindPropertyInfo(AbstractEntity entity, string id)
+		{
+			System.Type entityType = entity.GetType ();
+			System.Reflection.PropertyInfo[] propertyInfos = entityType.GetProperties (System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+
+			foreach (System.Reflection.PropertyInfo propertyInfo in propertyInfos)
+			{
+				foreach (EntityFieldAttribute attribute in propertyInfo.GetCustomAttributes (typeof (EntityFieldAttribute), true))
+				{
+					if (attribute.FieldId == id)
+					{
+						//	We have found the property which maps to the specified
+						//	field :
+
+						return propertyInfo;
+					}
+				}
+			}
+
+			return null;
+		}
+
 		internal void NotifyEntityAttached(AbstractEntity entity, EntityContext oldContext)
 		{
 			var eventArgs = new EntityContextEventArgs (entity, oldContext, this);
@@ -805,14 +642,108 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		protected void EnsureCorrectThread()
+		public Caption GetCaption(Druid captionId)
 		{
-			if (this.associatedThread == System.Threading.Thread.CurrentThread)
+			return this.resourceResolver.GetCaption (captionId);
+		}
+
+		public StructuredType GetStructuredType(Druid entityTypeId)
+		{
+			return this.resourceResolver.GetStructuredType (entityTypeId);
+		}
+
+		public StructuredType GetStructuredType(AbstractEntity entity)
+		{
+			IStructuredTypeProvider provider = entity.GetStructuredTypeProvider ();
+
+			StructuredType type;
+
+			if (provider == null)
 			{
-				return;
+				type = this.GetStructuredType (entity.GetEntityStructuredTypeId ());
+			}
+			else
+			{
+				type = provider.GetStructuredType () as StructuredType;
 			}
 
-			throw new System.InvalidOperationException ("Invalid thread calling into EntityContext");
+			if (type == null)
+			{
+				type = entity.GetSyntheticStructuredType (this);
+			}
+
+			return type;
+		}
+
+		internal StructuredTypeField GetStructuredTypeField(AbstractEntity entity, string fieldId)
+		{
+			StructuredType      type  = this.GetStructuredType (entity);
+			StructuredTypeField field = type == null ? null : type.GetField (fieldId);
+
+			return field;
+		}
+
+		public IEnumerable<string> GetEntityFieldIds(AbstractEntity entity)
+		{
+			if (entity == null)
+			{
+				throw new System.ArgumentNullException ("entity");
+			}
+
+			StructuredType entityType = this.GetStructuredType (entity);
+
+			if (entityType == null)
+			{
+				throw new System.ArgumentException ("Invalid entity; no associated StructuredType");
+			}
+
+			return entityType.GetFieldIds ();
+		}
+
+		public bool IsNullable(Druid entityId, string fieldId)
+		{
+			StructuredType type = this.GetStructuredType (entityId);
+
+			if (type == null)
+			{
+				throw new System.ArgumentException ("Entity id cannot be resolved to a type");
+			}
+
+			StructuredTypeField field = type.GetField (fieldId);
+
+			if (field == null)
+			{
+				throw new System.ArgumentException ("Field cannot be resolved");
+			}
+
+			return this.IsNullable (field);
+		}
+
+		public bool IsNullable(AbstractEntity entity, string fieldId)
+		{
+			StructuredTypeField field = this.GetStructuredTypeField (entity, fieldId);
+
+			return this.IsNullable (field);
+		}
+
+		private bool IsNullable(StructuredTypeField field)
+		{
+			if (field.IsNullable)
+			{
+				return true;
+			}
+
+			INullableType nullableType = field.Type as INullableType;
+
+			if ((nullableType != null) &&
+				(nullableType.IsNullable))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		#region Private Data Class
@@ -962,17 +893,14 @@ namespace Epsitec.Common.Support.EntityEngine
 		public event EventHandler<EntityContextEventArgs> EntityDetached;
 		public event EventHandler<EntityFieldChangedEventArgs> EntityChanged;
 
-		private readonly IStructuredTypeResolver resourceManager;
-		private readonly ICaptionResolver captionResolver;
-
 		private readonly string name;
-		private readonly System.Threading.Thread associatedThread;
 		private readonly EntityLoopHandlingMode loopHandlingMode;
+
 		private readonly List<IEntityPersistenceManager> persistenceManagers;
 		private long dataGeneration;
 		private InterlockedSafeCounter suspendConstraintChecking;
 
-		private readonly Dictionary<Druid, StructuredType> structuredTypeMap;
+		private readonly SafeResourceResolver resourceResolver;
 		private readonly Dictionary<string, PropertyGetter> propertyGetters;
 		private readonly Dictionary<string, PropertySetter> propertySetters;
 	}

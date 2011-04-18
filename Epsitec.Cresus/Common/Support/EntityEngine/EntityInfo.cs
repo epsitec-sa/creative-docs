@@ -30,7 +30,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 			else
 			{
-				return EntityInfo.EmptyEntityContext.Instance.GetStructuredType (entityId);
+				return SafeResourceResolver.Instance.GetStructuredType (entityId);
 			}
 		}
 
@@ -101,42 +101,8 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			Druid id = Druid.Parse (fieldAttribute.FieldId);
 
-			return Resources.DefaultManager.GetCaption (id);
+			return SafeResourceResolver.Instance.GetCaption (id);
 		}
-
-
-		#region EmptyEntityContext class
-
-		/// <summary>
-		/// The <c>EmptyEntityContext</c> class will be used when creating empty entities
-		/// for analysis purposes only.
-		/// </summary>
-		private class EmptyEntityContext : EntityContext
-		{
-			public EmptyEntityContext()
-				: base (Resources.DefaultManager, Resources.DefaultManager, EntityLoopHandlingMode.Throw, "Analysis/EmptyEntities")
-			{
-			}
-
-
-			public static EmptyEntityContext Instance
-			{
-				get
-				{
-					if (EmptyEntityContext.instance == null)
-					{
-						EmptyEntityContext.instance = new EmptyEntityContext ();
-					}
-
-					return EmptyEntityContext.instance;
-				}
-			}
-
-			[System.ThreadStatic]
-			public static EmptyEntityContext instance;
-		}
-
-		#endregion
 
 	}
 }

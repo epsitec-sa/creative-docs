@@ -1,4 +1,5 @@
 ﻿using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
@@ -457,9 +458,9 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 		private static StructuredType ComputeEntityType(Druid entityTypeId)
 		{
-			ResourceManager resourceManager = Epsitec.Common.Support.Resources.DefaultManager;
+			IStructuredTypeResolver resolver = SafeResourceResolver.Instance;
 
-			StructuredType entityType = resourceManager.GetStructuredType (entityTypeId);
+			StructuredType entityType = resolver.GetStructuredType (entityTypeId);
 
 			if (entityType == null)
 			{

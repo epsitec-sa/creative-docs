@@ -63,6 +63,7 @@
     <Compile Include="Support\Extensions\UnitTestExceptionThrower.cs" />
     <Compile Include="Support\Extensions\UnitTestIlistExtensions.cs" />
     <Compile Include="Support\Extensions\UnitTestStringExtensions.cs" />
+    <Compile Include="Support\UnitTestAutoCache.cs" />
     <Compile Include="Support\UnitTestDisposableWrapper.cs" />
     <Compile Include="Support\UnitTestInterlockedSafeCounter.cs" />
     <Compile Include="Support\UnitTestTimedReaderWriterLock.cs" />
