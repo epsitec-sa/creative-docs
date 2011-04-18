@@ -559,7 +559,7 @@ namespace Epsitec.Cresus.Core
 				Text = text,
 				ContentAlignment = ContentAlignment.TopLeft,
 				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split,
-				PreferredHeight =  Misc.GetEstimatedHeight (text),
+				PreferredHeight =  Misc.GetEstimatedHeight (new FormattedText (text)),
 				Dock = DockStyle.Stacked,
 				Margins = new Margins (0, Library.UI.RightMargin, 0, 0),
 			};
@@ -1226,12 +1226,12 @@ namespace Epsitec.Cresus.Core
 
 			tileButton.Entered += delegate
 			{
-				tile.TileArrowHilite = true;
+				tile.Hilite = true;
 			};
 
 			tileButton.Exited += delegate
 			{
-				tile.TileArrowHilite = false;
+				tile.Hilite = false;
 			};
 
 			var rootController = this.GetRootController ();
@@ -1258,12 +1258,12 @@ namespace Epsitec.Cresus.Core
 
 			tileButton.Entered += delegate
 			{
-				tile.TileArrowHilite = true;
+				tile.Hilite = true;
 			};
 
 			tileButton.Exited += delegate
 			{
-				tile.TileArrowHilite = false;
+				tile.Hilite = false;
 			};
 
 			var rootController = this.GetRootController ();
@@ -1452,12 +1452,12 @@ namespace Epsitec.Cresus.Core
 
 			tileButton.Entered += delegate
 			{
-				tile.TileArrowHilite = true;
+				tile.Hilite = true;
 			};
 
 			tileButton.Exited += delegate
 			{
-				tile.TileArrowHilite = false;
+				tile.Hilite = false;
 			};
 
 			var controller = this.GetRootController ();

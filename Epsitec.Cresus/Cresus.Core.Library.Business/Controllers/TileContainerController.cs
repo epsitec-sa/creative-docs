@@ -460,7 +460,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					};
 				}
 
-				tile.EnableRemoveButtons = (item.DataType == TileDataType.CollectionItem && item.AutoGroup && !item.HideRemoveButton);
+				tile.EnableRemoveButton = (item.DataType == TileDataType.CollectionItem && item.AutoGroup && !item.HideRemoveButton);
 				item.Tile = tile;
 
 				if (item.AutoGroup)

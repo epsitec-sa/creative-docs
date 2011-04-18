@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -18,13 +18,13 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	{
 		public CollectionItemTile()
 		{
-			this.EnableRemoveButtons = true;
+			this.EnableRemoveButton = true;
 
 			this.CreateUI ();
 		}
 
 
-		public bool EnableRemoveButtons
+		public bool								EnableRemoveButton
 		{
 			get;
 			set;
@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		protected override void OnEntered(MessageEventArgs e)
 		{
-			this.SetButtonVisibility (this.EnableRemoveButtons);
+			this.SetButtonVisibility (this.EnableRemoveButton);
 			
 			base.OnEntered (e);
 		}
@@ -65,6 +65,16 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			return base.GetPaintingArrowMode ();
 		}
 
+		protected virtual void OnRemoveClicked()
+		{
+			var handler = this.GetUserEventHandler (CollectionItemTile.RemoveClickedEvent);
+
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
+
 
 		private void CreateUI()
 		{
@@ -79,7 +89,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				ButtonStyle   = Common.Widgets.ButtonStyle.Normal,
 				GlyphShape    = Common.Widgets.GlyphShape.Minus,
 				Anchor        = AnchorStyles.Right | AnchorStyles.Bottom,
-				PreferredSize = new Size (CollectionItemTile.simpleButtonSize, CollectionItemTile.simpleButtonSize),
+				PreferredSize = new Size (CollectionItemTile.SimpleButtonSize, CollectionItemTile.SimpleButtonSize),
 				Margins       = this.ContainerPadding,
 				Visibility    = false,
 			};
@@ -89,23 +99,12 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				this.OnRemoveClicked ();
 			};
 		}
-
 		
 		private void SetButtonVisibility(bool visibility)
 		{
 			this.buttonRemove.Visibility = visibility;
 		}
 
-
-		protected virtual void OnRemoveClicked()
-		{
-			var handler = (EventHandler) this.GetUserEventHandler (CollectionItemTile.RemoveClickedEvent);
-
-			if (handler != null)
-			{
-				handler (this);
-			}
-		}
 
 		
 		public event EventHandler RemoveClicked
@@ -121,11 +120,9 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 
-		private const string RemoveClickedEvent = "RemoveClicked";
-		
+		private const string					RemoveClickedEvent = "RemoveClicked";
+		private static readonly double			SimpleButtonSize = 16;
 
-		private static readonly double simpleButtonSize = 16;
-
-		private GlyphButton buttonRemove;
+		private GlyphButton						buttonRemove;
 	}
 }

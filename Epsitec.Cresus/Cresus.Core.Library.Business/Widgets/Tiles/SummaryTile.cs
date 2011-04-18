@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -24,17 +24,17 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 		
-		public string Summary
+		public FormattedText					Summary
 		{
 			get
 			{
-				return this.staticTextSummary.Text;
+				return this.staticTextSummary.FormattedText;
 			}
 			set
 			{
 				if (this.Summary != value)
 				{
-					this.staticTextSummary.Text = value;
+					this.staticTextSummary.FormattedText = value;
 					this.UpdatePreferredSize ();
 				}
 			}
@@ -46,6 +46,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			return new Size (this.PreferredWidth, Misc.GetEstimatedHeight (this.Summary));
 		}
 
+		
 		private void CreateUI()
 		{
 			this.staticTextSummary = new StaticText

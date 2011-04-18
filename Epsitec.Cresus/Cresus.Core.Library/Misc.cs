@@ -237,10 +237,10 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public static double GetEstimatedHeight(string text, double lineHeight = 16)
+		public static double GetEstimatedHeight(FormattedText text, double lineHeight = 16)
 		{
 			//	Retourne la hauteur estimée pour un texte, en fonction du nombre de lignes.
-			var lines = text.Split (new string[] { FormattedText.HtmlBreak }, System.StringSplitOptions.None);
+			var lines = text.ToString ().Split (new string[] { FormattedText.HtmlBreak }, System.StringSplitOptions.None);
 			return lines.Length*lineHeight;
 		}
 

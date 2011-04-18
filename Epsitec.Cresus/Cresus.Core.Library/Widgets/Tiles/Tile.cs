@@ -32,8 +32,8 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	///       |  |  o--EditionTile
 	///       |  |  |
 	///       |  |  o--SummaryTile
-	///       |  |  |  |
-	///       |  |  |  o--CollectionItemTile
+	///       |  |     |
+	///       |  |     o--CollectionItemTile
 	///       |  | 
 	///       |  o--StaticTitleTile (abstract)
 	///       |     |

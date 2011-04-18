@@ -1,5 +1,5 @@
-﻿//	Copyright © 2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
@@ -12,33 +12,30 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Widgets.Tiles
 {
 	/// <summary>
-	/// Cette tuile contient tout ce qu'il faut pour éditer une entité.
-	/// Son parent est forcément un TileGrouping.
+	/// The <c>EditionTile</c> class displays the widgets used to edit data.
+	/// Its parent is a <see cref="TileGrouping"/>.
 	/// </summary>
-	public class EditionTile : GenericTile
+	public sealed class EditionTile : GenericTile
 	{
 		public EditionTile()
 		{
 			this.container = new FrameBox
 			{
-				Parent = this,
-				Dock = DockStyle.Fill,
+				Parent  = this,
+				Dock    = DockStyle.Fill,
 				Margins = this.ContainerPadding + new Margins (0, 0, 0, 3),
 			};
 		}
 
-		public EditionTile(Widget embedder)
-			: this ()
-		{
-			this.SetEmbedder (embedder);
-		}
-
 
 		/// <summary>
-		/// Donne le conteneur dans lequel on va mettre tous les widgets permettant d'éditer l'entité associée à la tuile.
+		/// Gets the container which will host the widgets used to edit the data represented
+		/// by this tile.
 		/// </summary>
-		/// <value>The container.</value>
-		public FrameBox Container
+		/// <value>
+		/// The container.
+		/// </value>
+		public FrameBox							Container
 		{
 			get
 			{
@@ -46,13 +43,13 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		public bool AllowSelection
+		public bool								AllowSelection
 		{
 			get;
 			set;
 		}
 
-		public bool TileArrowHilite
+		public bool								Hilite
 		{
 			get
 			{
@@ -71,28 +68,28 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		protected override TileArrowMode GetPaintingArrowMode()
 		{
-			if (this.AllowSelection)
+			if ((this.AllowSelection) &&
+				(this.IsSelected))
 			{
-				if (this.IsSelected)
-				{
-					return Tiles.TileArrowMode.Selected;
-				}
+				return Tiles.TileArrowMode.Selected;
 			}
-
-			return Tiles.TileArrowMode.Normal;
+			else
+			{
+				return Tiles.TileArrowMode.Normal;
+			}
 		}
 
 		protected override bool GetMouseHilite()
 		{
-			return Comparer.EqualValues (this.GetSurfaceColors (), TileColors.SurfaceHilitedColors) || 
-				   Comparer.EqualValues (this.GetSurfaceColors (), TileColors.SurfaceHilitedSelectedColors);
+			return Comparer.EqualValues (this.GetSurfaceColors (), TileColors.SurfaceHilitedColors)
+				|| Comparer.EqualValues (this.GetSurfaceColors (), TileColors.SurfaceHilitedSelectedColors);
 		}
 
 		protected override IEnumerable<Color> GetSurfaceColors()
 		{
 			if (this.AllowSelection)
 			{
-				if (this.TileArrowHilite)
+				if (this.Hilite)
 				{
 					if (this.IsSelected)
 					{
@@ -115,7 +112,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			if (this.AllowSelection)
 			{
-				if (this.TileArrowHilite || this.IsSelected)
+				if (this.Hilite || this.IsSelected)
 				{
 					return TileColors.BorderColors;
 				}
@@ -124,7 +121,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 
-		private FrameBox container;
-		private bool tileHilite;
+		private readonly FrameBox				container;
+		private bool							tileHilite;
 	}
 }
