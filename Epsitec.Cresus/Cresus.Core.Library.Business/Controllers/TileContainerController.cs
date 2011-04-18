@@ -162,9 +162,14 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public void ShowSubView(int index, string itemName)
 		{
+#if true
+			this.GenerateTiles ();
+			this.OpenSubView (index, itemName);
+#else
 			this.QueueTasklets ("CreateNewTile",
 				new TaskletJob (() => this.GenerateTiles (), TaskletRunMode.After),
 				new TaskletJob (() => this.OpenSubView (index, itemName), TaskletRunMode.After));
+#endif
 		}
 
 		#region IClickSimulator Members
@@ -227,7 +232,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		#endregion
 
-		
+#if false
 		private void QueueTasklets(string name, params TaskletJob[] jobs)
 		{
 			//	TODO: use another thread to run the asynchronous work
@@ -236,14 +241,18 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			Application.QueueTasklets (name, jobs);
 		}
+#endif
 		
 		private void RefreshCollectionItems()
 		{
-//-			System.Diagnostics.Debug.WriteLine ("About to RefreshCollectionItems on DataContext #" + this.dataContext.UniqueId);
-
+#if true
+			this.dataItems.RefreshCollectionItems ();
+			this.RefreshLiveItems ();
+#else
 			this.QueueTasklets ("RefreshCollectionItems",
 				new TaskletJob (() => this.dataItems.RefreshCollectionItems (), TaskletRunMode.Async),
 				new TaskletJob (() => this.RefreshLiveItems (), TaskletRunMode.BeforeAndAfter));
+#endif
 		}
 		
 		private void RefreshLiveItems()
@@ -256,11 +265,14 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			TileContainerController.DisposeDataItems (obsoleteItems);
 
-//-			System.Diagnostics.Debug.WriteLine ("About to RefreshLiveItems on DataContext #" + this.dataContext.UniqueId);
-
+#if true
+			this.liveItems.ForEach (x => x.ExecuteAccessors ());
+			this.RefreshDataTiles ();
+#else
 			this.QueueTasklets ("ExecuteAccessors",
 				new TaskletJob (() => this.liveItems.ForEach (x => x.ExecuteAccessors ()), TaskletRunMode.Async),
 				new TaskletJob (() => this.RefreshDataTiles (), TaskletRunMode.BeforeAndAfter));
+#endif
 		}
 
 		private void RefreshDataTiles()
@@ -367,11 +379,16 @@ namespace Epsitec.Cresus.Core.Controllers
 			tile.AddClicked += (sender, e) =>
 				{
 					string itemName = TileDataItem.GetNamePrefix (item.Name);
-
+#if true
+					item.AddNewItem ();
+					this.GenerateTiles ();
+					this.OpenSubViewForCreatedTile (item, itemName);
+#else
 					this.QueueTasklets ("CreateNewTile",
 						new TaskletJob (() => item.AddNewItem (), TaskletRunMode.Async),
 						new TaskletJob (() => this.GenerateTiles (), TaskletRunMode.After),
 						new TaskletJob (() => this.OpenSubViewForCreatedTile (item, itemName), TaskletRunMode.After));
+#endif
 				};
 			tile.RemoveClicked += (sender, e) =>
 				{
@@ -393,11 +410,16 @@ namespace Epsitec.Cresus.Core.Controllers
 			if (item.DataType == TileDataType.EmptyItem)
 			{
 				string itemName = item.Name;
-
+#if true
+				item.AddNewItem ();
+				this.GenerateTiles ();
+				this.OpenSubViewForCreatedTile (item, itemName);
+#else
 				this.QueueTasklets ("CreateNewTile",
 					new TaskletJob (() => item.AddNewItem (), TaskletRunMode.Async),
 					new TaskletJob (() => this.GenerateTiles (), TaskletRunMode.After),
 					new TaskletJob (() => this.OpenSubViewForCreatedTile (item, itemName), TaskletRunMode.After));
+#endif
 			}
 			else
 			{

@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 			else
 			{
-				this.staticTextIcon.Text = string.Format (@"<img src=""{0}""/>", FormattedText.Escape (this.iconUri));
+				this.staticTextIcon.Text = string.Format (@"<img src=""{0}""/>", Misc.GetResourceIconUri (this.iconUri));
 			}
 		}
 
