@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		/// Si on donne un seul caractère, il est affiché tel quel.
 		/// </summary>
 		/// <value>Nom brut de l'icône, sans prefix ni extension.</value>
-		public string TitleIconUri
+		public string							TitleIconUri
 		{
 			get
 			{
@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		/// Titre affiché en haut de la tuile.
 		/// </summary>
 		/// <value>The title.</value>
-		public string Title
+		public FormattedText					Title
 		{
 			get
 			{
@@ -75,8 +75,9 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				if (this.title != value)
 				{
 					this.title = value;
-					this.staticTextTitle.Text = string.Concat ("<b><font size=\"120%\">", this.title, "</font></b>");
-					this.staticTextTitle.Visibility = !string.IsNullOrEmpty (this.title);
+					
+					this.staticTextTitle.FormattedText = this.title.ApplyBold ().ApplyFontSizePercent (120);
+					this.staticTextTitle.Visibility    = string.IsNullOrEmpty (this.title.ToSimpleText ());
 				}
 			}
 		}
@@ -155,7 +156,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		protected static readonly double titleHeight	= 20;
 
 		private string iconUri;
-		private string title;
+		private FormattedText title;
 		
 		protected FrameBox leftPanel;
 		protected FrameBox rightPanel;

@@ -148,6 +148,11 @@ namespace Epsitec.Common.Types
 			return this.ApplyElement (string.Concat ("<font size=\"", InvariantConverter.ToString (size), "\">"), "</font>");
 		}
 
+		public FormattedText ApplyFontSizePercent(double size)
+		{
+			return this.ApplyElement (string.Concat ("<font size=\"", InvariantConverter.ToString (size), "%\">"), "</font>");
+		}
+
 		public FormattedText ApplyFontColor(Drawing.Color color)
 		{
 			return this.ApplyElement (string.Concat ("<font color=\"#", Drawing.Color.ToHexa (color), "\">"), "</font>");
