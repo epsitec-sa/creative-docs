@@ -200,11 +200,11 @@ namespace Epsitec.Cresus.Core
 		}
 
 		
-		public PanelTitleTile CreatePanelTitleTile(string iconUri, string title)
+		public TitleTileWithVerticalLayout CreatePanelTitleTile(string iconUri, string title)
 		{
 			double bottomMargin = -1;
 
-			this.panelTitleTile = new PanelTitleTile
+			this.panelTitleTile = new TitleTileWithVerticalLayout
 			{
 				Parent = this.Container,
 				Dock = DockStyle.Stacked,
@@ -1826,7 +1826,7 @@ namespace Epsitec.Cresus.Core
 		private int								tabIndex;
 		private int								recursionCount;
 		private TitleTile						titleTile;
-		private PanelTitleTile					panelTitleTile;
+		private TitleTileWithVerticalLayout					panelTitleTile;
 		private TileTabBook						tileTabBook;
 		private IList<Widget>					contentList;
 	}

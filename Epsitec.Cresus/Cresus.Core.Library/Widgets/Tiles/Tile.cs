@@ -14,10 +14,9 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	/// The <c>Tile</c> class paints a widget with an arrow; the logic which defines
 	/// how and where the arrow should be painted can be overridden by the derived
 	/// classes.
-	/// 
-	/// Résumé de l'héritage des différents widgets 'Tile':
-	/// 
-	/// o--Common.Widgets.FrameBox
+	/// </summary>
+	/// <example>
+	/// o--Epsitec.Common.Widgets.FrameBox
 	///    |
 	///    o--Tile (abstract)
   	///       | 
@@ -25,26 +24,26 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	///       | |    
 	///       | o--ArrowedTileTabPageButton
 	///       |
-	///       o--ControllerTile
+	///       o--ControllerTile (abstract)
 	///       |  |
 	///       |  o--GenericTile (abstract)
 	///       |  |  |
-	///       |  |  o--EditionTile
+	///       |  |  o--EditionTile ....................... displays edition widgets
 	///       |  |  |
-	///       |  |  o--SummaryTile
+	///       |  |  o--SummaryTile ....................... displays static text
 	///       |  |     |
-	///       |  |     o--CollectionItemTile
+	///       |  |     o--CollectionItemTile ............. displays static text
 	///       |  | 
 	///       |  o--StaticTitleTile (abstract)
 	///       |     |
-	///       |     o--PanelTitleTile
+	///       |     o--TitleTile ......................... displays a title and a panel
 	///       |     |
-	///       |     o--TitleTile
+	///       |     o--TitleTileWithVerticalLayout ....... displays a title and a panel below
 	/// 	  |
-	/// 	  o--ControllerTile.DragHelper.ErsatzTile
+	/// 	  o--ControllerTile.DragHelper.ErsatzTile (internal)
 	/// 	     |
-	/// 	     o--ControllerTile.DragHelper.DragTile
-	/// </summary>
+	/// 	     o--ControllerTile.DragHelper.DragTile (internal)
+	/// </example>
 	public abstract class Tile : FrameBox, IReadOnly
 	{
 		protected Tile(Direction arrowDirection)
@@ -53,7 +52,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 		
-		public bool Frameless
+		public bool								Frameless
 		{
 			get;
 			set;
@@ -62,7 +61,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		/// <summary>
 		/// Gets the container padding, which excludes the space used by the arrow.
 		/// </summary>
-		public Margins ContainerPadding
+		public Margins							ContainerPadding
 		{
 			get
 			{
@@ -73,7 +72,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		/// <summary>
 		/// Gets the container bounds, which excludes the space used by the arrow.
 		/// </summary>
-		protected Rectangle ContainerBounds
+		protected Rectangle						ContainerBounds
 		{
 			get
 			{
@@ -85,7 +84,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		public virtual TileArrowMode ArrowMode
+		public virtual TileArrowMode			ArrowMode
 		{
 			get
 			{
@@ -101,7 +100,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		public TileArrow Arrow
+		public TileArrow						Arrow
 		{
 			get
 			{
@@ -135,8 +134,8 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		#endregion
 
-		protected readonly TileArrow							tileArrow;
+		protected readonly TileArrow			tileArrow;
 		
-		protected TileArrowMode									arrowMode;
+		protected TileArrowMode					arrowMode;
 	}
 }

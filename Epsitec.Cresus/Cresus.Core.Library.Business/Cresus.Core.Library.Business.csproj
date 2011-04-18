@@ -206,7 +206,7 @@
     <Compile Include="Widgets\Tiles\ControllerTile.cs" />
     <Compile Include="Widgets\Tiles\EditionTile.cs" />
     <Compile Include="Widgets\Tiles\GenericTile.cs" />
-    <Compile Include="Widgets\Tiles\PanelTitleTile.cs" />
+    <Compile Include="Widgets\Tiles\TitleTileWithVerticalLayout.cs" />
     <Compile Include="Widgets\Tiles\StaticTitleTile.cs" />
     <Compile Include="Widgets\Tiles\SummaryTile.cs" />
     <Compile Include="Widgets\Tiles\TitleTile.cs" />

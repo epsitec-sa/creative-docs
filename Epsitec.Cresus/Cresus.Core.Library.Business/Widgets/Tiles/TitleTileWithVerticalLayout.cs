@@ -14,13 +14,13 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Widgets.Tiles
 {
 	/// <summary>
-	/// The <c>PanelTitleTile</c> class is a variation of the <see cref="StaticTitleTile"/>
+	/// The <c>TitleTileWithVerticalLayout</c> class is a variation of the <see cref="StaticTitleTile"/>
 	/// where the panel is below the title and occupies the whole available width. Contrast
 	/// this with the <see cref="TitleTile"/> where the panel occupies only the right part.
 	/// </summary>
-	public sealed class PanelTitleTile : StaticTitleTile
+	public sealed class TitleTileWithVerticalLayout : StaticTitleTile
 	{
-		public PanelTitleTile()
+		public TitleTileWithVerticalLayout()
 		{
 			var topFrame = new FrameBox
 			{
