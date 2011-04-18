@@ -11,11 +11,11 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 {
 	/// <summary>
 	/// The <c>ArrowedTile</c> class is a container which paints a frame with an arrow on
-	/// one of its sides. This is used as a container for the <see cref="Epsitec.Cresus.Core.Controllers.ListController&lt;T&gt;"/>.
+	/// one of its sides.
 	/// </summary>
-	public class ArrowedTile : Tile
+	public abstract class ArrowedTile : Tile
 	{
-		public ArrowedTile(Direction arrowDirection)
+		protected ArrowedTile(Direction arrowDirection)
 			: base (arrowDirection)
 		{
 			this.arrowMode = TileArrowMode.Selected;

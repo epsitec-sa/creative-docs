@@ -20,9 +20,11 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	///    |
 	///    o--Tile (abstract)
   	///       | 
-	///       o--ArrowedTile
-	///       | |    
-	///       | o--ArrowedTileTabPageButton
+	///       o--ArrowedTile (abstract)
+	///       |  |    
+	///       |  o--ArrowedTileFrame ..................... frame with an arrow
+	///       |  |    
+	///       |  o--ArrowedTileTabPageButton ............. tab page button with an arrow
 	///       |
 	///       o--ControllerTile (abstract)
 	///       |  |
@@ -39,10 +41,12 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	///       |     o--TitleTile ......................... displays a title and a panel
 	///       |     |
 	///       |     o--TitleTileWithVerticalLayout ....... displays a title and a panel below
+	///       |
+	///  (internal)
 	/// 	  |
-	/// 	  o--ControllerTile.DragHelper.ErsatzTile (internal)
+	/// 	  o--ControllerTile.DragHelper.ErsatzTile
 	/// 	     |
-	/// 	     o--ControllerTile.DragHelper.DragTile (internal)
+	/// 	     o--ControllerTile.DragHelper.DragTile
 	/// </example>
 	public abstract class Tile : FrameBox, IReadOnly
 	{

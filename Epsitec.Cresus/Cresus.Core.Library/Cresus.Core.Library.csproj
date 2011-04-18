@@ -122,6 +122,7 @@
     <Compile Include="Widgets\ItemPickerCombo.cs" />
     <Compile Include="Widgets\IWidgetUpdater.cs" />
     <Compile Include="Widgets\StaticGlyph.cs" />
+    <Compile Include="Widgets\Tiles\ArrowedTileFrame.cs" />
     <Compile Include="Widgets\Tiles\ArrowedTileTabPageButton.cs" />
     <Compile Include="Widgets\Tiles\Tile.cs" />
     <Compile Include="Widgets\Tiles\TileArrow.cs" />

@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			};
 
 			//	Crée le cadre avec une flèche.
-			var tile = new ArrowedTile (arrowDirection)
+			var tile = new ArrowedTileFrame (arrowDirection)
 			{
 				Parent = parent,
 				Dock = DockStyle.Fill,

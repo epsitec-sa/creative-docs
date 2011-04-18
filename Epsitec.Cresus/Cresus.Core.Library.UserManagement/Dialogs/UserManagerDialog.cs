@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			{
 				//	Crée la liste.
-				var tile = new ArrowedTile (Direction.Right)
+				var tile = new ArrowedTileFrame (Direction.Right)
 				{
 					Parent = leftPane,
 					Dock = DockStyle.Fill,
