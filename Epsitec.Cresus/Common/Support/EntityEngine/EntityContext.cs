@@ -16,6 +16,32 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// The <c>EntityContext</c> class defines the context associated with a
 	/// set of related entities. It is responsible of the value store management.
 	/// </summary>
+	/// <remarks>
+	/// This class is partially thread safe. The members which are intended to be used by multiple
+	/// threads at once are thread safe. They are the following :
+	/// - GetCaption
+	/// - GetStructuredType (all overloads)
+	/// - GetStructuredTypeField 
+	/// - GetEntityFieldIds
+	/// - IsNullable (all overloads)
+	/// All these members are those directly related to the SafeResourceResolver. Either they are
+	/// only used to forward calls to them or they process its output before returning. That is why
+	/// they are thread safe even if there isn't any lock in this class. The locking takes place
+	/// deeper in the SafeResourceResolver instance.
+	/// 
+	/// Event members not fully thread safe. Listeners to event handlers must expect to be called
+	/// after they have been unregistered to the event. This is due to the nature of events in C#.
+	/// You can refer to the comment in the class Epsitec.Cresus.DataLayer.DataContext for more
+	/// information about that.
+	/// 
+	/// All other members are not designed to be thread safe. In particular, all members relative to
+	/// the entity persistence, data generation, constraint checking, value store, entity creation,
+	/// properties getters and setters and so on are NOT thread safe and should not be accessed by
+	/// more than one thread at once.
+	/// 
+	/// In a nutshell, this class has been made as thread safe as it need to be so that we can use
+	/// readonly DataContexts as caches accessed by multiple thread at once.
+	/// </remarks>
 	public class EntityContext : IEntityPersistenceManager
 	{
 
@@ -26,7 +52,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <summary>
 		/// Initializes a new instance of the <see cref="EntityContext"/> class.
 		/// </summary>
-		/// <param name="resourceManager">The resource manager.</param>
+		/// <param name="resourceResolver">The safe resource resolver.</param>
 		/// <param name="loopHandlingMode">The loop handling mode.</param>
 		public EntityContext(SafeResourceResolver resourceResolver, EntityLoopHandlingMode loopHandlingMode = EntityLoopHandlingMode.Throw, string name = null)
 		{
