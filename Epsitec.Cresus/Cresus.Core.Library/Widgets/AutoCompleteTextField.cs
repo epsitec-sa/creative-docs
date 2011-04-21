@@ -363,7 +363,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		protected override void OnTextChanged()
 		{
-			if (this.ignoreChanges.Value > 0)
+			if (!this.ignoreChanges.IsZero)
 			{
 				return;
 			}
@@ -905,7 +905,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private void HandleScrollListSelectionActivated(object sender)
 		{
-			if (this.ignoreChanges.Value > 0)
+			if (!this.ignoreChanges.IsZero)
 			{
 				return;
 			}

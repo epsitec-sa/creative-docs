@@ -356,7 +356,7 @@
     <Compile Include="Support\Extensions\TypeExtensions.cs" />
     <Compile Include="Support\Extensions\EventHandlerExtensions.cs" />
     <Compile Include="Support\GroupedException.cs" />
-    <Compile Include="Support\InterlockedSafeCounter.cs" />
+    <Compile Include="Support\SafeCounter.cs" />
     <Compile Include="Support\TimedReaderWriterLock.cs" />
     <Compile Include="Support\SimpleCallback.cs" />
     <Compile Include="Support\CancelEventArgs.cs" />
@@ -539,7 +539,6 @@
     <Compile Include="Support\Resources.cs" />
     <Compile Include="Support\ResourceSetMode.cs" />
     <Compile Include="Support\ResourceTextMode.cs" />
-    <Compile Include="Support\SafeCounter.cs" />
     <Compile Include="Support\SerialAlgorithm.cs" />
     <Compile Include="Support\Serialization\Converters\BinaryArrayConverter.cs" />
     <Compile Include="Support\Serialization\Helper.cs" />

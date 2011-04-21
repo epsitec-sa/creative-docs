@@ -126,10 +126,10 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			this.context = AbstractEntity.defaultContext;
 
-			this.defineOriginalValues = new InterlockedSafeCounter ();
-			this.silentUpdates = new InterlockedSafeCounter ();
-			this.disableEvents = new InterlockedSafeCounter ();
-			this.disableReadOnlyChecks = new InterlockedSafeCounter ();
+			this.defineOriginalValues = new SafeCounter ();
+			this.silentUpdates = new SafeCounter ();
+			this.disableEvents = new SafeCounter ();
+			this.disableReadOnlyChecks = new SafeCounter ();
 
 			this.eventLock = new object ();
 
@@ -1704,10 +1704,10 @@ namespace Epsitec.Common.Support.EntityEngine
 				&& this.ReadOnlyChecksEnabled;
 		}
 
-		private readonly InterlockedSafeCounter silentUpdates;
-		private readonly InterlockedSafeCounter defineOriginalValues;
-		private readonly InterlockedSafeCounter disableEvents;
-		private readonly InterlockedSafeCounter disableReadOnlyChecks;
+		private readonly SafeCounter silentUpdates;
+		private readonly SafeCounter defineOriginalValues;
+		private readonly SafeCounter disableEvents;
+		private readonly SafeCounter disableReadOnlyChecks;
 
 		private readonly long entitySerialId;
 		private readonly object eventLock;

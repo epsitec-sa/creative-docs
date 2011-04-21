@@ -59,7 +59,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.name = name;
 			this.loopHandlingMode = loopHandlingMode;
 
-			this.suspendConstraintChecking = new InterlockedSafeCounter ();
+			this.suspendConstraintChecking = new SafeCounter ();
 
 			this.persistenceManagers = new List<IEntityPersistenceManager> ();
 
@@ -812,7 +812,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		private readonly List<IEntityPersistenceManager> persistenceManagers;
 		private long dataGeneration;
-		private InterlockedSafeCounter suspendConstraintChecking;
+		private SafeCounter suspendConstraintChecking;
 
 		private readonly SafeResourceResolver resourceResolver;
 		private readonly Dictionary<string, PropertyGetter> propertyGetters;

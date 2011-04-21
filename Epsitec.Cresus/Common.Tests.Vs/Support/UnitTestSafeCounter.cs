@@ -10,7 +10,7 @@ namespace Epsitec.Common.Tests.Vs.Support
 
 
 	[TestClass]
-	public sealed class UnitTestInterlockedSafeCounter
+	public sealed class UnitTestSafeCounter
 	{
 		
 
@@ -18,7 +18,7 @@ namespace Epsitec.Common.Tests.Vs.Support
 		[TestMethod]
 		public void SimpleTest()
 		{
-			InterlockedSafeCounter counter = new InterlockedSafeCounter ();
+			SafeCounter counter = new SafeCounter ();
 
 			Assert.IsTrue (counter.IsZero);
 
@@ -37,7 +37,7 @@ namespace Epsitec.Common.Tests.Vs.Support
 		[TestMethod]
 		public void ComplexeTest()
 		{
-			InterlockedSafeCounter counter = new InterlockedSafeCounter ();
+			SafeCounter counter = new SafeCounter ();
 
 			Assert.IsTrue (counter.IsZero);
 
@@ -62,6 +62,43 @@ namespace Epsitec.Common.Tests.Vs.Support
 			}
 
 			Assert.IsTrue (counter.IsZero);
+		}
+
+
+		[TestMethod]
+		public void IfZeroTest()
+		{
+			SafeCounter counter = new SafeCounter ();
+
+			int nbCalls = 0;
+
+			System.Action action = () => nbCalls++;
+
+			Assert.AreEqual (0, nbCalls);
+
+			Assert.IsTrue(counter.IfZero (action));
+
+			Assert.AreEqual (1, nbCalls);
+
+			using (counter.Enter ())
+			{
+				Assert.IsFalse(counter.IfZero (action));
+
+				Assert.AreEqual (1, nbCalls);
+
+				using (counter.Enter())
+				{
+					Assert.IsFalse (counter.IfZero (action));
+
+					Assert.AreEqual (1, nbCalls);
+				}
+			}
+
+			Assert.AreEqual (1, nbCalls);
+
+			Assert.IsTrue (counter.IfZero (action));
+
+			Assert.AreEqual (2, nbCalls);
 		}
 
 
