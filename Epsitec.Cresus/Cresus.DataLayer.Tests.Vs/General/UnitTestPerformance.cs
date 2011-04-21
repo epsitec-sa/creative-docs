@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		public void RetrieveAllData(Druid entityTypeId, int warmupLevel)
 		{
-			AbstractEntity entity = new EntityContext ().CreateEntity (entityTypeId);
+			AbstractEntity entity = new EntityContext ().CreateEmptyEntity (entityTypeId);
 
 			string title = TestHelper.extendString (entity.GetType ().Name, 40) + "warmup: level " + warmupLevel;
 			System.Action<DataContext> action = (dataContext) =>
@@ -447,7 +447,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		private void DeleteEntity(Druid entityTypeId, int warmupLevel)
 		{
-			AbstractEntity entity = new EntityContext ().CreateEntity (entityTypeId);
+			AbstractEntity entity = new EntityContext ().CreateEmptyEntity (entityTypeId);
 			
 			string title = TestHelper.extendString (entity.GetType ().Name, 40) + "warmup: level " + warmupLevel;
 			System.Action<DataContext> action = (dataContext) =>
