@@ -12,6 +12,8 @@ using System.Collections.Generic;
 
 using System.Linq;
 
+using System.Threading;
+
 
 namespace Epsitec.Common.Support.EntityEngine
 {
@@ -25,9 +27,102 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AbstractEntity"/> class.
 		/// </summary>
+		/// <remarks>
+		/// This class is partially thread safe. It has been made as thread safe as required by the
+		/// usage as readonly DataContext and readonly entities as cache that are accessed by
+		/// several threads at once. This has several implications.
+		/// 
+		/// All members which are not used in this case such as the implementation of
+		/// IStructuredData and of IValueStore are not thread safe.
+		/// 
+		/// All members that should throw an exception when called on a readonly entity are not
+		/// thread safe. Hummm not totally true. That is how you should consider them because in the
+		/// case where we want thread safety, the entity is in readonly mode and thus is not
+		/// supposed to be modified. So in theory you shouldn't be calling these method in the first
+		/// place. However, I made some of them thread safe in order to ensure that whatever the
+		/// case, we throw if we must throw the ReadOnlyException or we proceed if we are in the
+		/// special mode with readonly checks disabled. I believe that the complete thread safety on
+		/// these memebers is overkill, but I felt not confident enought to leave them without some
+		/// locking mechanisme that will ensure that we will do the right thing. I hope that by
+		/// doing this, I will make it easier to maintain this already hard to maintain code with
+		/// regard to thread safety.
+		/// 
+		/// The members that might modify the internal state of the entity are locked in exclusive
+		/// mode. They are the following : 
+		/// - GetField
+		/// - GetFieldCollection
+		/// - IsFieldDefined
+		/// - IsFieldNotEmpty
+		/// - InternalGetFieldValueOrCollection
+		/// - InternalGetValue
+		/// - InternalSetValue
+		/// - InternalGetFieldCollection
+		/// - CreateOriginalValues
+		/// - CreateModifiedValues
+		/// - SetOriginalValues
+		/// - GetOriginalValues
+		/// - SetModifiedValues
+		/// - GetModifiedValues
+		/// - GenericSetValue
+		/// - UpdateDataGeneration
+		/// - ResetDataGeneration
+		/// 
+		/// 
+		/// The members that don't modify the internal state of the entity are locked in shared
+		/// mode. They are the following:
+		/// - GetEntityContext
+		/// - GetEntityDataGeneration
+		/// - GetStructuredTypeProvider
+		/// - InternalGetValueStores
+		/// - ModifiedValues
+		/// - OriginalValues
+		/// - NotifyContextEventHandlers
+		/// - AssertNotReadOnly
+		/// 
+		/// The members which return an IDisposable helper object used to modify the way the entity
+		/// state require an exclusive access to avoid the situation where one thread calls one such
+		/// member while another is doing something with the same entity. Therefore, the exclusive
+		/// lock is acquired in the member call and is released when the IDisposable helper object
+		/// returned is disposed by the caller. These member are the following:
+		/// - DefineOriginalValues
+		/// - UseSilentUpdates
+		/// - DisableEvents
+		/// - DisableReadOnlyChecks
+		/// 
+		/// Other members are not locked either because they are not supposed to be used in
+		/// Cresus.Core or because they are thread safe because they rely on immutable data or because
+		/// I know that they are used only in members or in cases where the shared or exclusive lock
+		/// must have been acquired before (at least now when I write this comment).
+		/// 
+		/// Also, we have a special case with the GetFieldCollection and the InternalGetFieldCollection
+		/// methods. The problem is that we need to make sure that the collection is not modified
+		/// by a thread while another thread is reading it. To ensure that, if we know that the
+		/// collection can be accessed by more that one thread, we wrap it inside a
+		/// ThreadSafeReadOnlyListProxy (which one depends if the caller expects to get a IList{T}
+		/// or an IList back). Those classes are simple wrappers that basically lock their entity in
+		/// write mode and forward the call to the underlying collection. Any operation which is not
+		/// readonly throws a ReadOnlyException because as the entity is supposed to be in read only
+		/// mode, the underlying collection should also throw. The only situation when we don't wrap
+		/// the collection is when we already have suspended the readonly checks. In this case, we
+		/// know that the entity is already locked by the thread. That means that we trust the caller
+		/// not to keep the reference to the collection after he has re enabled the readonly checks.
+		/// 
+		/// In order to lock the entity, we need to acquire the lock on the associated DataContext. I
+		/// wish I could find a solution where we would have one lock per entity, but it turned out
+		/// that this solution would be prone to dead locks. Thread1 does something with EntityA
+		/// while Thread2 does something with DataContextA. Then the action on EntityA by thread1
+		/// requires a proxy resolution so it waits on the lock owned by Thread2. Then the action
+		/// on DataContextA by Thread2 requires to to a modifiation on EntityA so it waits on the
+		/// lock owned by Thread1. Bang, deadlock! This situation can happen quite often, say because
+		/// there is a proxy resolution on a thread while there is a DataContext.Reload() on another.
+		/// The only way to avoid those deadlocks is to acquire a lock on the DataContext which
+		/// prevents any other thread to do anything that would cause a deadlock. We use two
+		/// System.Func{System.IDisposable} in order to avoid mutual dependencies between this
+		/// project and the DataLayer project, instead of relying on an interface for instance.
+		/// </remarks>
 		protected AbstractEntity()
 		{
-			this.entitySerialId = System.Threading.Interlocked.Increment (ref AbstractEntity.nextSerialId);
+			this.entitySerialId = Interlocked.Increment (ref AbstractEntity.nextSerialId);
 
 			this.context = AbstractEntity.defaultContext;
 
@@ -35,6 +130,8 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.silentUpdates = new InterlockedSafeCounter ();
 			this.disableEvents = new InterlockedSafeCounter ();
 			this.disableReadOnlyChecks = new InterlockedSafeCounter ();
+
+			this.eventLock = new object ();
 
 			this.IsReadOnly = false;
 		}
@@ -65,8 +162,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-
-		internal bool IsUpdateSilent
+		private bool IsUpdateSilent
 		{
 			get
 			{
@@ -82,7 +178,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		internal bool ReadOnlyChecksEnabled
+		private bool ReadOnlyChecksEnabled
 		{
 			get
 			{
@@ -121,7 +217,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			get
 			{
-				return (this.GetEntityStatus () & EntityStatus.Empty) != 0;
+				return this.GetEntityStatus ().HasFlag (EntityStatus.Empty);
 			}
 		}
 
@@ -129,7 +225,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			get
 			{
-				return (this.GetEntityStatus () & EntityStatus.Valid) != 0;
+				return this.GetEntityStatus ().HasFlag (EntityStatus.Valid);
 			}
 		}
 
@@ -208,7 +304,10 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <returns>The <see cref="EntityContext"/> instance.</returns>
 		public EntityContext GetEntityContext()
 		{
-			return this.context;
+			using (this.LockRead ())
+			{
+				return this.context;
+			}
 		}
 
 		/// <summary>
@@ -242,7 +341,10 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <returns>The entity data generation.</returns>
 		public long GetEntityDataGeneration()
 		{
-			return this.dataGeneration;
+			using (this.LockRead ())
+			{
+				return this.dataGeneration;
+			}
 		}
 
 		/// <summary>
@@ -464,26 +566,36 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// data definition mode.</returns>
 		public System.IDisposable DefineOriginalValues()
 		{
-			var d1 = this.silentUpdates.Enter ();
-			var d2 = this.defineOriginalValues.Enter ();
+			var d1 = this.LockWrite () ?? EmptyDisposable.Instance;
+			var d2 = this.silentUpdates.Enter ();
+			var d3 = this.defineOriginalValues.Enter ();
 
-			return DisposableWrapper.Combine (d2, d1);
+			return DisposableWrapper.Combine (d3, d2, d1);
 		}
 
 		public System.IDisposable UseSilentUpdates()
 		{
-			return this.silentUpdates.Enter ();
+			var d1 = this.LockWrite () ?? EmptyDisposable.Instance;
+			var d2 = this.silentUpdates.Enter ();
+
+			return DisposableWrapper.Combine (d2, d1);
 		}
 
 
 		public System.IDisposable DisableEvents()
 		{
-			return this.disableEvents.Enter ();
+			var d1 = this.LockWrite () ?? EmptyDisposable.Instance;
+			var d2 = this.disableEvents.Enter ();
+
+			return DisposableWrapper.Combine (d2, d1);
 		}
 
 		public System.IDisposable DisableReadOnlyChecks()
 		{
-			return this.disableReadOnlyChecks.Enter ();
+			var d1 = this.LockWrite () ?? EmptyDisposable.Instance;
+			var d2 = this.disableReadOnlyChecks.Enter ();
+
+			return DisposableWrapper.Combine (d2, d1);
 		}
 
 		internal void DisableCalculations()
@@ -541,31 +653,52 @@ namespace Epsitec.Common.Support.EntityEngine
 		public IList<T> GetFieldCollection<T>(string id) where T : AbstractEntity
 		{
 			this.AssertCollectionField (id);
-			
-			object  value = this.InternalGetValue (id);
-			IList<T> list = value as IList<T>;
 
-			if (list == null)
+			using (this.LockWrite ())
 			{
-				if (UndefinedValue.IsUndefinedValue (value))
+				object  value = this.InternalGetValue (id);
+				IList<T> list = value as IList<T>;
+
+				if (list == null)
 				{
-					//	The value store does not (yet) contain a collection for the
-					//	specified items. We have to allocate one :
-
-					using (this.DefineOriginalValues ())
+					if (UndefinedValue.IsUndefinedValue (value))
 					{
-						list = new EntityCollection<T> (id, this, copyOnWrite: true);
-						this.InternalSetValue (id, list, ValueStoreSetMode.InitialCollection);
-					}
+						//	The value store does not (yet) contain a collection for the
+						//	specified items. We have to allocate one :
 
-					list = new EntityCollectionProxy<T> (id, this);
+						using (this.DefineOriginalValues ())
+						{
+							list = new EntityCollection<T> (id, this, copyOnWrite: true);
+							this.InternalSetValue (id, list, ValueStoreSetMode.InitialCollection);
+						}
+
+						list = new EntityCollectionProxy<T> (id, this);
+					}
+					else
+					{
+						IEntityCollection collection = value as IEntityCollection;
+						System.Collections.IList simpleList = value as System.Collections.IList;
+
+						if (collection == null || simpleList == null)
+						{
+							throw new System.NotSupportedException (string.Format ("Field {0} uses incompatible collection type", id));
+						}
+
+						if (collection.HasCopyOnWriteState)
+						{
+							list = new EntityCollectionProxy<T> (id, this);
+						}
+						else
+						{
+							list = new EntityCollectionProxy<T> (simpleList);
+						}
+					}
 				}
 				else
 				{
 					IEntityCollection collection = value as IEntityCollection;
-					System.Collections.IList simpleList = value as System.Collections.IList;
 
-					if (collection == null || simpleList == null)
+					if (collection == null)
 					{
 						throw new System.NotSupportedException (string.Format ("Field {0} uses incompatible collection type", id));
 					}
@@ -574,41 +707,36 @@ namespace Epsitec.Common.Support.EntityEngine
 					{
 						list = new EntityCollectionProxy<T> (id, this);
 					}
-					else
-					{
-						list = new EntityCollectionProxy<T> (simpleList);
-					}
-				}
-			}
-			else
-			{
-				IEntityCollection collection = value as IEntityCollection;
-				
-				if (collection == null)
-				{
-					throw new System.NotSupportedException (string.Format ("Field {0} uses incompatible collection type", id));
 				}
 
-				if (collection.HasCopyOnWriteState)
+				if (this.MustAcquireCollectionLock ())
 				{
-					list = new EntityCollectionProxy<T> (id, this);
+					list = new ThreadSafeReadOnlyListProxy<T> (this, list);
 				}
-			}
 
-			return list;
+				return list;
+			}
 		}
 
 		public void SetField<T>(string id, T newValue)
 		{
-			T oldValue = this.GetField<T> (id);
-			this.SetField<T> (id, oldValue, newValue);
+			using (this.LockWrite ())
+			{
+				this.AssertIsNotReadOnly ();
+
+				T oldValue = this.GetField<T> (id);
+				this.SetField<T> (id, oldValue, newValue);
+			}
 		}
 		
 		public void SetField<T>(string id, T oldValue, T newValue)
 		{
-			this.AssertIsNotReadOnly ();
+			using (this.LockWrite ())
+			{
+				this.AssertIsNotReadOnly ();
 
-			this.GenericSetValue (id, oldValue, newValue);
+				this.GenericSetValue (id, oldValue, newValue);
+			}
 		}
 
 		/// <summary>
@@ -682,11 +810,6 @@ namespace Epsitec.Common.Support.EntityEngine
 				throw new System.NotSupportedException (string.Format ("Trying to modify calculation {0} for entity {1}", id, typeof (T).Name));
 			}
 		}
-		
-		internal void InternalDefineProxy(IEntityProxy proxy)
-		{
-			this.proxy = proxy;
-		}
 
 		/// <summary>
 		/// Tells whether the field given by <paramref name="id"/> is defined.
@@ -717,7 +840,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </remarks>
 		/// <param name="id">The id of the field.</param>
 		/// <returns><c>true</c> if the field is defined, <c>false</c> if it isn't.</returns>
-		public bool IsFieldNotEmpty(string fieldId)
+		internal bool IsFieldNotEmpty(string fieldId)
 		{
 			bool isNotEmpty;
 
@@ -749,7 +872,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			return isNotEmpty;
 		}
 
-		internal object InternalGetValueOrFieldCollection(string id)
+		private object InternalGetValueOrFieldCollection(string id)
 		{
 			object value;
 
@@ -773,48 +896,54 @@ namespace Epsitec.Common.Support.EntityEngine
 		
 		internal object InternalGetValue(string id)
 		{
-			object value;
-
-			if (this.ModifiedValues != null && this.IsDefiningOriginalValues == false)
+			using (this.LockWrite ())
 			{
-				value = this.ModifiedValues.GetValue (id);
+				object value;
 
-				if (this.OriginalValues != null && UndefinedValue.IsUndefinedValue (value))
+				if (this.ModifiedValues != null && this.IsDefiningOriginalValues == false)
 				{
-				    value = this.OriginalValues.GetValue (id);
+					value = this.ModifiedValues.GetValue (id);
+
+					if (this.OriginalValues != null && UndefinedValue.IsUndefinedValue (value))
+					{
+						value = this.OriginalValues.GetValue (id);
+					}
 				}
+				else if (this.OriginalValues != null)
+				{
+					value = this.OriginalValues.GetValue (id);
+				}
+				else
+				{
+					value = UndefinedValue.Value;
+				}
+
+				return value;
 			}
-			else if (this.OriginalValues != null)
-			{
-				value = this.OriginalValues.GetValue (id);
-			}
-			else
-			{
-				value = UndefinedValue.Value;
-			}
-			
-			return value;
 		}
-		
+
 		internal void InternalSetValue(string id, object value, ValueStoreSetMode mode = ValueStoreSetMode.Default)
 		{
-			if (this.IsDefiningOriginalValues)
+			using (this.LockWrite ())
 			{
-				if (this.OriginalValues == null)
+				if (this.IsDefiningOriginalValues)
 				{
-					this.CreateOriginalValues ();
-				}
+					if (this.OriginalValues == null)
+					{
+						this.CreateOriginalValues ();
+					}
 
-				this.OriginalValues.SetValue (id, value, mode);
-			}
-			else
-			{
-				if (this.ModifiedValues == null)
+					this.OriginalValues.SetValue (id, value, mode);
+				}
+				else
 				{
-					this.CreateModifiedValues ();
-				}
+					if (this.ModifiedValues == null)
+					{
+						this.CreateModifiedValues ();
+					}
 
-				this.ModifiedValues.SetValue (id, value, mode);
+					this.ModifiedValues.SetValue (id, value, mode);
+				}
 			}
 		}
 
@@ -832,78 +961,74 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		internal System.Collections.IList InternalGetFieldCollection(string id)
 		{
-			object value = this.InternalGetValue (id);
-			System.Collections.IList list = value as System.Collections.IList;
-
-			if (list == null)
+			using (this.LockWrite ())
 			{
-				if (UndefinedValue.IsUndefinedValue (value))
+				object value = this.InternalGetValue (id);
+				System.Collections.IList list = value as System.Collections.IList;
+
+				if (list == null)
 				{
-					//	The value store does not (yet) contain a collection for the
-					//	specified items. We have to allocate one :
-
-					using (this.DefineOriginalValues ())
+					if (UndefinedValue.IsUndefinedValue (value))
 					{
-						// TODO It would be nice to instantiate a EntityCollection<> with the proper
-						// type and not AbstractEntity. Below was the way it was done before. A good
-						// way of doing it would be to add a method for that in every cocnrete class
-						// of entities.
-						// Marc
+						//	The value store does not (yet) contain a collection for the
+						//	specified items. We have to allocate one :
 
-						//StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
-						//AbstractEntity model = this.context.CreateEmptyEntity (field.TypeId);
+						using (this.DefineOriginalValues ())
+						{
+							// TODO It would be nice to instantiate a EntityCollection<> with the proper
+							// type and not AbstractEntity. Below was the way it was done before. A good
+							// way of doing it would be to add a method for that in every concrete class
+							// of entities.
+							// Marc
 
-						//System.Type itemType = model.GetType ();
-						//System.Type genericType = typeof (EntityCollection<>);
-						//System.Type collectionType = genericType.MakeGenericType (itemType);
+							//StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
+							//AbstractEntity model = this.context.CreateEmptyEntity (field.TypeId);
 
-						//list = System.Activator.CreateInstance (collectionType, id, this, true) as System.Collections.IList;
-						
-						//genericType = typeof (EntityCollectionProxy<>);
-						//collectionType = genericType.MakeGenericType (itemType);
+							//System.Type itemType = model.GetType ();
+							//System.Type genericType = typeof (EntityCollection<>);
+							//System.Type collectionType = genericType.MakeGenericType (itemType);
 
-						//list = System.Activator.CreateInstance (collectionType, id, this) as System.Collections.IList;
+							//list = System.Activator.CreateInstance (collectionType, id, this, true) as System.Collections.IList;
 
-						list = new EntityCollection<AbstractEntity> (id, this, copyOnWrite: true);
-						this.InternalSetValue (id, list, ValueStoreSetMode.InitialCollection);
+							//genericType = typeof (EntityCollectionProxy<>);
+							//collectionType = genericType.MakeGenericType (itemType);
+
+							//list = System.Activator.CreateInstance (collectionType, id, this) as System.Collections.IList;
+
+							list = new EntityCollection<AbstractEntity> (id, this, copyOnWrite: true);
+							this.InternalSetValue (id, list, ValueStoreSetMode.InitialCollection);
+						}
+					}
+					else
+					{
+						throw new System.NotSupportedException (string.Format ("Field {0} uses incompatible collection type", id));
 					}
 				}
 				else
 				{
-					throw new System.NotSupportedException (string.Format ("Field {0} uses incompatible collection type", id));
-				}
-			}
-			else
-			{
-				IEntityCollection collection = value as IEntityCollection;
+					IEntityCollection collection = value as IEntityCollection;
 
-				if (collection == null)
+					if (collection == null)
+					{
+						throw new System.NotSupportedException (string.Format ("Field {0} uses incompatible collection type", id));
+					}
+
+					if (collection.HasCopyOnWriteState)
+					{
+						System.Type itemType = collection.GetItemType ();
+						System.Type genericType = typeof (EntityCollectionProxy<>);
+						System.Type collectionType = genericType.MakeGenericType (itemType);
+
+						list = System.Activator.CreateInstance (collectionType, id, this) as System.Collections.IList;
+					}
+				}
+
+				if (this.MustAcquireCollectionLock ())
 				{
-					throw new System.NotSupportedException (string.Format ("Field {0} uses incompatible collection type", id));
+					list = new ThreadSafeReadOnlyListProxy (this, list);
 				}
 
-				if (collection.HasCopyOnWriteState)
-				{
-					System.Type itemType = collection.GetItemType ();
-					System.Type genericType = typeof (EntityCollectionProxy<>);
-					System.Type collectionType = genericType.MakeGenericType (itemType);
-
-					list = System.Activator.CreateInstance (collectionType, id, this) as System.Collections.IList;
-				}
-			}
-
-			return list;
-		}
-
-		internal IEnumerable<IValueStore> InternalGetValueStores()
-		{
-			if (this.OriginalValues != null)
-			{
-				yield return this.OriginalValues;
-			}
-			if (this.ModifiedValues != null)
-			{
-				yield return this.ModifiedValues;
+				return list;
 			}
 		}
 
@@ -912,7 +1037,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			System.Diagnostics.Debug.Assert (this.IsDefiningOriginalValues == false);
 
 			EntityCollection<T> copy = new EntityCollection<T> (id, this, copyOnWrite: false);
-			
+
 			using (copy.DisableNotifications ())
 			{
 				copy.AddRange (collection);
@@ -922,19 +1047,31 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			return copy;
 		}
+		
+		#region IStructuredTypeProvider Members
+
+		IStructuredType IStructuredTypeProvider.GetStructuredType()
+		{
+			return this.context.GetStructuredType (this);
+		}
+
+		#endregion
 
 		internal IStructuredTypeProvider GetStructuredTypeProvider()
 		{
-			return (this.OriginalValues ?? this.ModifiedValues) as IStructuredTypeProvider;
+			using (this.LockRead ())
+			{
+				return (this.OriginalValues ?? this.ModifiedValues) as IStructuredTypeProvider;
+			}
 		}
 
 		internal StructuredType GetSyntheticStructuredType(EntityContext context)
 		{
 			var ids = EntityContext.GetValueStoreDataIds (this.originalValues)
-				.Concat (EntityContext.GetValueStoreDataIds (this.modifiedValues))
-				.Distinct ()
-				.OrderBy (id => id)
-				.ToList ();
+				   .Concat (EntityContext.GetValueStoreDataIds (this.modifiedValues))
+				   .Distinct ()
+				   .OrderBy (id => id)
+				   .ToList ();
 
 			StructuredType type = new StructuredType (StructuredTypeClass.Entity);
 			int rank = 0;
@@ -948,22 +1085,25 @@ namespace Epsitec.Common.Support.EntityEngine
 			return type;
 		}
 
-		internal void ReplaceEntityContext(EntityContext newContext)
+		internal void AssignEntityContext(EntityContext newContext)
 		{
-			var oldContext = this.GetEntityContext ();
-			
-			if (oldContext != newContext)
+			using (this.LockWrite ())
 			{
-				if (this.context != null)
-				{
-					this.context.NotifyEntityDetached (this, newContext);
-				}
+				var oldContext = this.GetEntityContext ();
 
-				this.context = newContext;
-
-				if (this.context != null)
+				if (oldContext != newContext)
 				{
-					this.context.NotifyEntityAttached (this, oldContext);
+					if (this.context != null)
+					{
+						this.context.NotifyEntityDetached (this, newContext);
+					}
+
+					this.context = newContext;
+
+					if (this.context != null)
+					{
+						this.context.NotifyEntityAttached (this, oldContext);
+					}
 				}
 			}
 		}
@@ -1023,7 +1163,10 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			get
 			{
-				return this.originalValues;
+				using (this.LockRead ())
+				{
+					return this.originalValues;
+				}
 			}
 		}
 
@@ -1031,65 +1174,102 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			get
 			{
-				return this.modifiedValues;
+				using (this.LockRead ())
+				{
+					return this.modifiedValues;
+				}
+			}
+		}
+
+		internal IEnumerable<IValueStore> InternalGetValueStores()
+		{
+			using (this.LockRead ())
+			{
+				if (this.OriginalValues != null)
+				{
+					yield return this.OriginalValues;
+				}
+				if (this.ModifiedValues != null)
+				{
+					yield return this.ModifiedValues;
+				}
 			}
 		}
 
 		protected virtual void CreateOriginalValues()
 		{
-			AbstractEntity that = this.Resolve ();
+			using (this.LockWrite ())
+			{
+				AbstractEntity that = this.Resolve ();
 
-			if (that.originalValues == null)
-			{
-				that.originalValues = that.context.CreateValueStore (that);
-			}
-			if (this != that)
-			{
-				this.originalValues = that.originalValues;
+				if (that.originalValues == null)
+				{
+					that.originalValues = that.context.CreateValueStore (that);
+				}
+				if (this != that)
+				{
+					this.originalValues = that.originalValues;
+				}
 			}
 		}
 
 		protected virtual void CreateModifiedValues()
 		{
-			AbstractEntity that = this.Resolve ();
-
-			if (that.modifiedValues == null)
+			using (this.LockWrite ())
 			{
-				that.modifiedValues = that.context.CreateValueStore (that);
-			}
-			if (this != that)
-			{
-				this.modifiedValues = that.modifiedValues;
-			}
-			
-		}
+				AbstractEntity that = this.Resolve ();
 
-		internal void SetModifiedValues(IValueStore values)
-		{
-			this.modifiedValues = values;
-		}
-
-		internal IValueStore GetModifiedValues()
-		{
-			if (this.ModifiedValues == null)
-			{
-				this.CreateModifiedValues ();
+				if (that.modifiedValues == null)
+				{
+					that.modifiedValues = that.context.CreateValueStore (that);
+				}
+				if (this != that)
+				{
+					this.modifiedValues = that.modifiedValues;
+				}
 			}
-			return this.ModifiedValues;
-		}
-
-		internal void SetOriginalValues(IValueStore values)
-		{
-			this.originalValues = values;
 		}
 
 		internal IValueStore GetOriginalValues()
 		{
-			if (this.OriginalValues == null)
+			using (this.LockWrite ())
 			{
-				this.CreateOriginalValues ();
+				if (this.OriginalValues == null)
+				{
+					this.CreateOriginalValues ();
+				}
+
+				return this.OriginalValues;
 			}
-			return this.OriginalValues;
+		}
+
+		internal void SetOriginalValues(IValueStore values)
+		{
+			using (this.LockWrite ())
+			{
+				this.originalValues = values;
+			}
+		}
+
+		internal IValueStore GetModifiedValues()
+		{
+			using (this.LockWrite ())
+			{
+				if (this.ModifiedValues == null)
+				{
+					this.CreateModifiedValues ();
+				}
+
+				return this.ModifiedValues;
+			}
+		}
+
+		internal void SetModifiedValues(IValueStore values)
+		{
+			using (this.LockWrite ())
+			{
+				this.modifiedValues = values;
+			}
 		}
 
 		/// <summary>
@@ -1122,57 +1302,62 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <param name="newValue">The new value.</param>
 		protected virtual void GenericSetValue(string id, object oldValue, object newValue)
 		{
-			StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
-
-			if (field == null || field.Type == null)
+			using (this.LockWrite ())
 			{
-				throw new System.ArithmeticException (string.Format ("Invalid field '{0}' specified", id));
-			}
+				this.AssertIsNotReadOnly ();
 
-			System.Diagnostics.Debug.Assert (field != null);
-			System.Diagnostics.Debug.Assert (field.Relation != FieldRelation.Collection);
+				StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
 
-			bool isNullValue = field.IsNullValue (newValue);
-
-			if (isNullValue && (field.IsNullable || this.context.SkipConstraintChecking))
-			{
-				//	The value is null and the field is nullable; this operation
-				//	is valid and it will clear the field.
-
-				this.InternalSetValue (id, null);
-				this.UpdateDataGeneration ();
-			}
-			else
-			{
-				IDataConstraint constraint = field.Type as IDataConstraint;
-
-				System.Diagnostics.Debug.Assert (constraint != null);
-
-				if ((this.context.SkipConstraintChecking) ||
-					(constraint.IsValidValue (newValue)))
+				if (field == null || field.Type == null)
 				{
-					object value;
+					throw new System.ArithmeticException (string.Format ("Invalid field '{0}' specified", id));
+				}
 
-					if (isNullValue)
-					{
-						value = UndefinedValue.Value;
-					}
-					else
-					{
-						value = (object) newValue;
-					}
+				System.Diagnostics.Debug.Assert (field != null);
+				System.Diagnostics.Debug.Assert (field.Relation != FieldRelation.Collection);
 
-					this.InternalSetValue (id, value);
+				bool isNullValue = field.IsNullValue (newValue);
+
+				if (isNullValue && (field.IsNullable || this.context.SkipConstraintChecking))
+				{
+					//	The value is null and the field is nullable; this operation
+					//	is valid and it will clear the field.
+
+					this.InternalSetValue (id, null);
 					this.UpdateDataGeneration ();
 				}
 				else
 				{
-					throw new System.ArgumentException (string.Format ("Invalid value '{0}' specified for field {1}", newValue ?? "<null>", id));
-				}
-			}
+					IDataConstraint constraint = field.Type as IDataConstraint;
 
-			this.NotifyEventHandlers (id, oldValue, newValue);
-			this.NotifyContextEventHandlers (id, oldValue, newValue);
+					System.Diagnostics.Debug.Assert (constraint != null);
+
+					if ((this.context.SkipConstraintChecking) ||
+					(constraint.IsValidValue (newValue)))
+					{
+						object value;
+
+						if (isNullValue)
+						{
+							value = UndefinedValue.Value;
+						}
+						else
+						{
+							value = (object) newValue;
+						}
+
+						this.InternalSetValue (id, value);
+						this.UpdateDataGeneration ();
+					}
+					else
+					{
+						throw new System.ArgumentException (string.Format ("Invalid value '{0}' specified for field {1}", newValue ?? "<null>", id));
+					}
+				}
+
+				this.NotifyEventHandlers (id, oldValue, newValue);
+				this.NotifyContextEventHandlers (id, oldValue, newValue);
+			}
 		}
 
 		/// <summary>
@@ -1209,17 +1394,23 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		protected void NotifyContextEventHandlers(string id, object oldValue, object newValue)
 		{
-			if (this.context != null)
+			using (this.LockRead ())
 			{
-				this.context.NotifyEntityChanged (this, id, oldValue, newValue);
+				if (this.context != null)
+				{
+					this.context.NotifyEntityChanged (this, id, oldValue, newValue);
+				}
 			}
 		}
 
 		internal void AssertIsNotReadOnly()
 		{
-			if (this.ReadOnlyChecksEnabled)
+			using (this.LockRead())
 			{
-				IReadOnlyExtensions.ThrowIfReadOnly (this);
+				if (this.ReadOnlyChecksEnabled)
+				{
+					IReadOnlyExtensions.ThrowIfReadOnly (this);
+				}
 			}
 		}
 		
@@ -1249,15 +1440,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			System.Diagnostics.Debug.Assert (field.Relation == FieldRelation.Collection);
 		}
 		
-		#region IStructuredTypeProvider Members
-
-		IStructuredType IStructuredTypeProvider.GetStructuredType()
-		{
-			return this.context.GetStructuredType (this);
-		}
-
-		#endregion
-
 		#region IStructuredData Members
 
 		/// <summary>
@@ -1269,7 +1451,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			this.EnsureEventHandlers ();
 
-			lock (this.eventHandlers)
+			lock (this.eventLock)
 			{
 				System.Delegate handlers;
 
@@ -1293,7 +1475,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			this.EnsureEventHandlers ();
 
-			lock (this.eventHandlers)
+			lock (this.eventLock)
 			{
 				System.Delegate handlers;
 
@@ -1337,6 +1519,20 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		#endregion
 
+		private void EnsureEventHandlers()
+		{
+			if (this.eventHandlers == null)
+			{
+				lock (this.eventLock)
+				{
+					if (this.eventHandlers == null)
+					{
+						this.eventHandlers = new Dictionary<string, System.Delegate> ();
+					}
+				}
+			}
+		}
+
 		#region IValueStore Members
 
 		/// <summary>
@@ -1370,6 +1566,11 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		#endregion
 
+		internal void InternalDefineProxy(IEntityProxy proxy)
+		{
+			this.proxy = proxy;
+		}
+
 		#region IEntityProxyProvider Members
 
 		IEntityProxy IEntityProxyProvider.GetEntityProxy()
@@ -1379,29 +1580,18 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		#endregion
 
-		private void EnsureEventHandlers()
-		{
-			if (this.eventHandlers == null)
-			{
-				lock (AbstractEntity.globalExclusion)
-				{
-					if (this.eventHandlers == null)
-					{
-						this.eventHandlers = new Dictionary<string, System.Delegate> ();
-					}
-				}
-			}
-		}
-
 		/// <summary>
 		/// Updates the data generation for this entity to match the one of the
 		/// associated context.
 		/// </summary>
 		internal void UpdateDataGeneration()
 		{
-			if (!this.IsUpdateSilent)
+			using (this.LockWrite ())
 			{
-				this.dataGeneration = this.context.DataGeneration;
+				if (!this.IsUpdateSilent)
+				{
+					this.dataGeneration = this.context.DataGeneration;
+				}
 			}
 		}
 
@@ -1410,7 +1600,10 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </summary>
 		internal void ResetDataGeneration()
 		{
-			this.dataGeneration = 0;
+			using (this.LockWrite ())
+			{
+				this.dataGeneration = 0;
+			}
 		}
 
 		/// <summary>
@@ -1472,7 +1665,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		internal void ResetValue(Druid fieldId)
+		private void ResetValue(Druid fieldId)
 		{
 			string fieldName = fieldId.ToResourceId ();
 
@@ -1483,12 +1676,45 @@ namespace Epsitec.Common.Support.EntityEngine
 			modifiedValues.SetValue (fieldName, UndefinedValue.Value, ValueStoreSetMode.ShortCircuit);
 		}
 
-		private InterlockedSafeCounter silentUpdates;
-		private InterlockedSafeCounter defineOriginalValues;
-		private InterlockedSafeCounter disableEvents;
-		private InterlockedSafeCounter disableReadOnlyChecks;
+		internal void DefineLockFunctions(System.Func<System.IDisposable> readLockFunction, System.Func<System.IDisposable> writeLockFunction)
+		{
+			this.readLockFunction = readLockFunction;
+			this.writeLockFunction = writeLockFunction;
+		}
+
+		internal System.IDisposable LockRead()
+		{
+			return this.IsReadOnly && this.readLockFunction != null
+				? this.readLockFunction ()
+				: null;
+		}
+
+		internal System.IDisposable LockWrite()
+		{
+			return this.IsReadOnly && this.writeLockFunction != null
+				? this.writeLockFunction ()
+				: null;
+		}
+
+		private bool MustAcquireCollectionLock()
+		{
+			return this.IsReadOnly
+				&& this.readLockFunction != null
+				&& this.writeLockFunction != null
+				&& this.ReadOnlyChecksEnabled;
+		}
+
+		private readonly InterlockedSafeCounter silentUpdates;
+		private readonly InterlockedSafeCounter defineOriginalValues;
+		private readonly InterlockedSafeCounter disableEvents;
+		private readonly InterlockedSafeCounter disableReadOnlyChecks;
 
 		private readonly long entitySerialId;
+		private readonly object eventLock;
+
+        private System.Func<System.IDisposable> readLockFunction;
+		private System.Func<System.IDisposable> writeLockFunction;
+
 		private EntityContext context;
 		private long dataGeneration;
 		
@@ -1496,19 +1722,20 @@ namespace Epsitec.Common.Support.EntityEngine
 		private IValueStore originalValues;
 		private IValueStore modifiedValues;
 		private Dictionary<string, System.Delegate> eventHandlers;
+		
 		private IEntityProxy proxy;
 
 		static AbstractEntity()
 		{
 			AbstractEntity.defaultContext = new EntityContext ();
+			AbstractEntity.lockTimeOut = System.TimeSpan.FromSeconds (15);
 		}
 
 		private static long nextSerialId = 1;
 
-		private static readonly object globalExclusion = new object ();
-
 		private static readonly EntityContext defaultContext;
 
+		private static readonly System.TimeSpan lockTimeOut;
 		
 	}
 }

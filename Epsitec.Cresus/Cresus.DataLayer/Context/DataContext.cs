@@ -88,7 +88,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 	/// The mechanism used by the proxies (CollectionFieldProxy, KeyedCollectionFieldProxy,
 	/// ReferenceFieldProxy, KeyedReferenceFieldProxy and ValueFieldProxy) are also thread safe for
 	/// the entities owned by a readonly instance of DataContext, so that when those proxies are
-	/// resolved, the consistency of the data is ensure.
+	/// resolved, the consistency of the data is ensured.
 	/// 
 	/// The event member EntityChanged is not fully thread safe. Registration and unregistration to
 	/// it is thread safe and can be done by any thread at any time. However, it might happen that
@@ -130,7 +130,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.entitiesDeleted = new HashSet<AbstractEntity> ();
 			this.fieldsToResave = new Dictionary<AbstractEntity, HashSet<Druid>> ();
 
-			this.eventLock = new ReaderWriterLockSlim (LockRecursionPolicy.SupportsRecursion);
 			this.dataContextLock = new ReaderWriterLockSlim (LockRecursionPolicy.SupportsRecursion);
 			this.lockTimeOut = System.TimeSpan.FromSeconds (15);
 
@@ -1592,6 +1591,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 			if (this.IsReadOnly)
 			{
 				entity.Freeze ();
+
+				entity.DefineLockFunctions (this.LockRead, this.LockWrite);
 			}
 		}
 
@@ -1734,7 +1735,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 		private readonly long						uniqueId;						//	uniue ID associated with this instance
 
-		private readonly ReaderWriterLockSlim		eventLock;						//	lock used to access the entityChanged event
 		private readonly ReaderWriterLockSlim		dataContextLock;				//  lock used to access thread safe methods in the DataContext
 		private readonly System.TimeSpan			lockTimeOut;					//  maximum time that we can wait for locks.
 

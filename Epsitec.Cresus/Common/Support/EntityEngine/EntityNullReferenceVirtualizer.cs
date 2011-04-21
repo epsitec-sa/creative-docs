@@ -364,7 +364,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 					var entityContext = this.GetCurrentEntityContext ();
 
-					this.entity.ReplaceEntityContext (entityContext);
+					this.entity.AssignEntityContext (entityContext);
 				}
 			}
 

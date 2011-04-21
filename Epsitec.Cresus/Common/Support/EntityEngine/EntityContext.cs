@@ -286,7 +286,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			entity = new SearchEntity (entity);
 
-			entity.ReplaceEntityContext (this);
+			entity.AssignEntityContext (this);
 
 			return entity;
 		}
@@ -305,7 +305,7 @@ namespace Epsitec.Common.Support.EntityEngine
 				entity = this.CreateGenericEntity (entityId);
 			}
 
-			entity.ReplaceEntityContext (this);
+			entity.AssignEntityContext (this);
 
 			return entity;
 		}
@@ -315,7 +315,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			T entity = new T ();
 
-			entity.ReplaceEntityContext (this);
+			entity.AssignEntityContext (this);
 
 			return entity;
 		}

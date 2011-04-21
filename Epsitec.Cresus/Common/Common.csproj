@@ -349,9 +349,13 @@
     <Compile Include="Support\AutoCache.cs" />
     <Compile Include="Support\CacheManager.cs" />
     <Compile Include="Support\DisposableWraper.cs" />
+    <Compile Include="Support\EmptyDisposable.cs" />
     <Compile Include="Support\EntityEngine\SafeResourceResolver.cs" />
+    <Compile Include="Support\EntityEngine\ThreadSafeReadOnlyListProxy.cs" />
+    <Compile Include="Support\EntityEngine\ThreadSafeReadOnlyListProxy`1.cs" />
     <Compile Include="Support\Extensions\TypeExtensions.cs" />
     <Compile Include="Support\Extensions\EventHandlerExtensions.cs" />
+    <Compile Include="Support\GroupedException.cs" />
     <Compile Include="Support\InterlockedSafeCounter.cs" />
     <Compile Include="Support\TimedReaderWriterLock.cs" />
     <Compile Include="Support\SimpleCallback.cs" />

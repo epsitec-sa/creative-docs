@@ -2,6 +2,11 @@
 
 using System;
 
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
+using System.Linq;
+
 
 namespace Epsitec.Common.Support
 {
@@ -76,25 +81,51 @@ namespace Epsitec.Common.Support
 
 
 		/// <summary>
-		/// Gets an instance of <see cref="IDisposable"/> that will dispose <paramref name="d1"/>
-		/// and the <paramref name="d2"/> when disposed and that will throw an
+		/// Gets an instance of <see cref="IDisposable"/> that will dispose all objects in
+		/// <paramref name="disposables"/> when disposed and that will throw an
 		/// <see cref="InvalidOperationException"/> if not disposed.
 		/// </summary>
-		/// <param name="d1">The first object to dispose.</param>
-		/// <param name="d2">The second object to dispose.</param>
+		/// <remarks>
+		/// All the given objects will be disposed, even if one of then throws an exception when its
+		/// dispose method is called. If a single object throws an exception, it is catch and
+		/// thrown after all other objects have been disposed. If more than one object throws an
+		/// exception when disposed, they are catch and throw after all other objects have been
+		/// disposed, grouped in an instance of GroupedException.
+		/// </remarks>
+		/// <param name="disposables">The objects to dispose.</param>
 		/// <returns>The <see cref="IDisposable"/> object</returns>
 		/// <exception cref="ArgumentNullException">If <paramref name="action"/> is <c>null</c>.</exception>
-		public static IDisposable Combine(IDisposable d1, IDisposable d2)
+		public static IDisposable Combine(params IDisposable[] disposables)
 		{
-			d1.ThrowIfNull ("d1");
-			d2.ThrowIfNull ("d2");
+			disposables.ThrowIfNull ("disposables");
+			disposables.ThrowIf (ds => ds.Any (d => d == null), "disposables cannot contain null items");
 
 			Action initializer = () => { };
 			
 			Action finalizer = () =>
 			{
-				d1.Dispose ();
-				d2.Dispose ();
+				List<Exception> exceptions = new List<Exception> ();
+
+				foreach (IDisposable disposable in disposables)
+				{
+					try
+					{
+						disposable.Dispose ();
+					}
+					catch (Exception e)
+					{
+						exceptions.Add (e);
+					}
+				}
+
+				if (exceptions.Count == 1)
+				{
+					throw exceptions.Single ();
+				}
+				else if (exceptions.Count > 1)
+				{
+					throw new GroupedException (exceptions);
+				}
 			};
 
 			return DisposableWrapper.Get (finalizer);
