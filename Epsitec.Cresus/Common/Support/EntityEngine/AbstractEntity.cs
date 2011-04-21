@@ -368,65 +368,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		public void ForEachField(EntityDataVersion version, System.Action<EntityFieldPath, StructuredTypeField, object> action)
-		{
-			this.ForEachField (version, "", action);
-		}
-
-		private void ForEachField(EntityDataVersion version, string root, System.Action<EntityFieldPath, StructuredTypeField, object> action)
-		{
-			IValueStore store;
-			
-			switch (version)
-			{
-				case EntityDataVersion.Modified:
-					store = this.ModifiedValues;
-					break;
-				
-				case EntityDataVersion.Original:
-					store = this.OriginalValues;
-					break;
-				
-				default:
-					throw new System.NotImplementedException ();
-			}
-			
-			if (store == null)
-			{
-				return;
-			}
-
-			foreach (string id in this.context.GetEntityFieldIds (this))
-			{
-				StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
-				object              value = store.GetValue (field.Id);
-				EntityFieldPath     path  = string.IsNullOrEmpty (root) ? EntityFieldPath.CreateRelativePath (field.Id) : EntityFieldPath.CreateRelativePath (root, field.Id);
-
-				if ((UndefinedValue.IsUndefinedValue (value)) ||
-					(value == null))
-				{
-					continue;
-				}
-
-				action (path, field, value);
-
-				switch (field.Relation)
-				{
-					case FieldRelation.Reference:
-						AbstractEntity entity = value as AbstractEntity;
-						if (entity != null)
-						{
-							entity.ForEachField (version, path.ToString (), action);
-						}
-						break;
-
-					case FieldRelation.Collection:
-						//	TODO: implement...
-						break;
-				}
-			}
-		}
-
 		public string Dump()
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -844,22 +785,22 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			bool isNotEmpty;
 
-			StructuredTypeField field = this.context.GetStructuredTypeField (this, fieldId);
-
-			object value = this.InternalGetValueOrFieldCollection (fieldId);
-
-			switch (field.Relation)
+			FieldRelation relation = this.InternalGetFieldRelation (fieldId);
+			
+			switch (relation)
 			{
 				case FieldRelation.None:
 				case FieldRelation.Reference:
+					
+						object value = this.InternalGetValue (fieldId);
 
-					isNotEmpty = (value != null) && !UndefinedValue.IsUndefinedValue(value);
-
+						isNotEmpty = (value != null) && !UndefinedValue.IsUndefinedValue (value);
+					
 					break;
 
 				case FieldRelation.Collection:
-
-					IList values = value as IList;
+					
+					IList values = this.InternalGetFieldCollection (fieldId);
 
 					isNotEmpty = (values != null) && (values.Count > 0);
 
@@ -870,28 +811,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 
 			return isNotEmpty;
-		}
-
-		private object InternalGetValueOrFieldCollection(string id)
-		{
-			object value;
-
-			switch (this.InternalGetFieldRelation (id))
-			{
-				case FieldRelation.None:
-				case FieldRelation.Reference:
-					value = this.InternalGetValue (id);
-					break;
-
-				case FieldRelation.Collection:
-					value = this.InternalGetFieldCollection (id);
-					break;
-
-				default:
-					throw new System.NotSupportedException ();
-			}
-
-			return value;
 		}
 		
 		internal object InternalGetValue(string id)
@@ -1604,19 +1523,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			{
 				this.dataGeneration = 0;
 			}
-		}
-
-		/// <summary>
-		/// Updates the data generation for this entity to match the one of the
-		/// associated context, and notifies the <see cref="EntityContext"/>
-		/// about the change.
-		/// </summary>
-		internal void UpdateDataGenerationAndNotifyEntityContextAboutChange()
-		{
-			this.UpdateDataGeneration ();
-
-			this.NotifyEventHandlers ("*", null, null);
-			this.NotifyContextEventHandlers ("*", null, null);
 		}
 
 		internal void SetModifiedValuesAsOriginalValues()
