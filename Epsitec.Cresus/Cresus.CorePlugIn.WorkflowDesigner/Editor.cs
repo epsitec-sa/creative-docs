@@ -184,11 +184,19 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 			//	prenant garde au préalable de vérifier que la collection est déjà "writable".
 
 			var collection = this.workflowDefinitionEntity.WorkflowNodes as ISuspendCollectionChanged;
-			
-			using (collection.SuspendNotifications ())
+
+			if (collection == null)
 			{
 				this.workflowDefinitionEntity.WorkflowNodes.Clear ();
 				this.workflowDefinitionEntity.WorkflowNodes.AddRange (newList);
+			}
+			else
+			{
+				using (collection.SuspendNotifications ())
+				{
+					this.workflowDefinitionEntity.WorkflowNodes.Clear ();
+					this.workflowDefinitionEntity.WorkflowNodes.AddRange (newList);
+				}
 			}
 		}
 
