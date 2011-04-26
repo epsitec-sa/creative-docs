@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public void UpdateAllWidgets()
 		{
-			Dispatcher.RequestRefreshUI ();
+			this.controller.Orchestrator.MainWindowController.Update ();
 		}
 
 		public double GetPreferredWidth(int columnIndex, int columnCount)
