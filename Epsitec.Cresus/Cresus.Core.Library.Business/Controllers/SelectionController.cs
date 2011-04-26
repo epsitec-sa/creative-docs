@@ -168,11 +168,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private T GetBusinessContextCompatibleEntity(T value)
 		{
-			if (value.IsNull ())
-            {
-				return this.businessContext.DataContext.WrapNullEntity (value);
-            }
-
 			System.Diagnostics.Debug.Assert (this.businessContext != null);
 
 			if (this.businessContext != null)

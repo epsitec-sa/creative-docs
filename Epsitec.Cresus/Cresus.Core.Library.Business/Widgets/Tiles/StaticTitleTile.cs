@@ -156,7 +156,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		private void UpdateStaticTitle()
 		{
 			this.staticTextTitle.FormattedText = this.title.ApplyBold ().ApplyFontSizePercent (120);
-			this.staticTextTitle.Visibility    = string.IsNullOrEmpty (this.title.ToSimpleText ());
+			this.staticTextTitle.Visibility    = string.IsNullOrEmpty (this.title.ToSimpleText ()) == false;
 		}
 
 		protected static readonly double IconSize		= 32;
