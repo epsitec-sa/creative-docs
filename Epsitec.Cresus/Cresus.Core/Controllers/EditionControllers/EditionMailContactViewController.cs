@@ -156,7 +156,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			if (this.Entity.LegalPerson.IsNotNull ())
 			{
-				this.Entity.LegalPerson = EntityNullReferenceVirtualizer.CreateEmptyEntity<LegalPersonEntity> ();
+				this.Entity.LegalPerson = this.DataContext.CreateNullEntity<LegalPersonEntity> ();
 				this.Entity.Address     = this.BusinessContext.CreateEntityAndRegisterAsEmpty<AddressEntity> ();
 				this.selectedCountry    = this.defaultCountry;
 
@@ -434,7 +434,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					this.selectedCountry = value;
 
 					// On efface la ville si on change de pays.
-					this.Entity.Address.Location = EntityNullReferenceVirtualizer.CreateEmptyEntity<LocationEntity> ();
+					this.Entity.Address.Location = this.DataContext.CreateNullEntity<LocationEntity> ();
 					this.locationTextField.Text = null;
 
 					this.locationTextField.Items.Clear ();

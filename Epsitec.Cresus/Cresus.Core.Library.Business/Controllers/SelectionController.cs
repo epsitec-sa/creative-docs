@@ -170,7 +170,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			if (value.IsNull ())
             {
-				return value.WrapNullEntity ();
+				return this.businessContext.DataContext.WrapNullEntity (value);
             }
 
 			System.Diagnostics.Debug.Assert (this.businessContext != null);

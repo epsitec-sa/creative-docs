@@ -4,6 +4,8 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.DataLayer.Context;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,7 +17,10 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			get
 			{
-				return this.History.FirstOrDefault ().WrapNullEntity ();
+				WorkflowStepEntity step = this.History.FirstOrDefault ();
+				DataContext dataContext = this.GetDataContext ();
+
+				return dataContext.WrapNullEntity (step);
 			}
 		}
 

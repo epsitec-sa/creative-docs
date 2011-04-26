@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.Core.Business
 		public BusinessSettingsEntity GetCachedBusinessSettings()
 		{
 			return this.GetAllEntities<BusinessSettingsEntity> ().FirstOrDefault ()
-				?? EntityNullReferenceVirtualizer.CreateFrozenEntity<BusinessSettingsEntity> ();
+				?? this.dataContext.CreateNullEntity<BusinessSettingsEntity> (freeze:true);
 		}
 
 		public IEnumerable<T> GetAllEntities<T>()
@@ -452,7 +452,7 @@ namespace Epsitec.Cresus.Core.Business
 				}
 			}
 
-			return master.WrapNullEntity ();
+			return this.dataContext.WrapNullEntity (master);
 		}
 
 		/// <summary>
@@ -534,7 +534,7 @@ namespace Epsitec.Cresus.Core.Business
 		{
 			if (entity == null)
             {
-				return entity.WrapNullEntity ();
+				return this.dataContext.CreateNullEntity<T> ();
             }
 			else
 			{

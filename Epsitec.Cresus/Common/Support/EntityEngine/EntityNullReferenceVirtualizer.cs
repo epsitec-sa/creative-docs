@@ -35,11 +35,20 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			if (!EntityNullReferenceVirtualizer.IsPatchedEntity (entity))
 			{
-				var originalValues = entity.GetOriginalValues ();
-				var modifiedValues = entity.GetModifiedValues ();
-				
-				entity.SetOriginalValues (new Store (originalValues, modifiedValues, entity));
+				EntityContext realEntityContext = entity.GetEntityContext ();
+
+				EntityNullReferenceVirtualizer.PatchNullReferences (entity, realEntityContext);
 			}
+		}
+
+
+		private static void PatchNullReferences<T>(T entity, EntityContext realEntityContext)
+			where T : AbstractEntity
+		{
+			var originalValues = entity.GetOriginalValues ();
+			var modifiedValues = entity.GetModifiedValues ();
+
+			entity.SetOriginalValues (new Store (originalValues, modifiedValues, entity, realEntityContext));
 		}
 
 
@@ -138,15 +147,6 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
-		// TODO It seem to me that the four next methods are kind of extremely dangerous, because
-		// they skip the DataContext to directly talk to the EntityContext. This used to work in
-		// the previous implementation, but it seem not to really work now, and that is kind of logical,
-		// since everything regarding entities should go through the DataContext. Therefore, it would
-		// be nice to remove those four methods and replace them by call to the DataContext. Maybe the
-		// last one is ok, I must investigate, but all the other are begging for a problem to happen.
-		// Marc
-
-
 		/// <summary>
 		/// Unwraps the entity. If it maps to a null entity, then return <c>null</c>.
 		/// </summary>
@@ -173,10 +173,10 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <typeparam name="T">The entity type.</typeparam>
 		/// <param name="entity">The entity.</param>
 		/// <returns>The wrapped entity.</returns>
-		public static T WrapNullEntity<T>(this T entity)
+		internal static T WrapNullEntity<T>(EntityContext realEntityContext, T entity)
 			where T : AbstractEntity, new ()
 		{
-			return entity ?? EntityNullReferenceVirtualizer.CreateEmptyEntity<T> ();
+			return entity ?? EntityNullReferenceVirtualizer.CreateEmptyEntity<T> (realEntityContext, false);
 		}
 
 
@@ -186,28 +186,19 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </summary>
 		/// <typeparam name="T">The entity type.</typeparam>
 		/// <returns>The empty entity created the same way as the automatically generated entity produced by the virtualizer.</returns>
-		public static T CreateEmptyEntity<T>()
+		internal static T CreateEmptyEntity<T>(EntityContext realEntityContext, bool freeze)
 			where T : AbstractEntity, new ()
 		{
-			var context = EntityNullReferenceVirtualizer.GetEmptyEntityContext ();
-			var entity  = context.CreateEmptyEntity<T> ();
+			var emptyEntityContext = EntityNullReferenceVirtualizer.GetEmptyEntityContext ();
+			var entity = emptyEntityContext.CreateEmptyEntity<T> ();
 
-			EntityNullReferenceVirtualizer.PatchNullReferences (entity);
-			
-			return entity;
-		}
+			EntityNullReferenceVirtualizer.PatchNullReferences (entity, realEntityContext);
 
-		/// <summary>
-		/// Creates an empty, frozen (i.e. read-only), entity which will be considered
-		/// equal to a null reference when calling <see cref="IsNullEntity"/>.
-		/// </summary>
-		/// <typeparam name="T">The entity type.</typeparam>
-		/// <returns>The empty read-only entity created the same way as the automatically generated entity produced by the virtualizer.</returns>
-		public static T CreateFrozenEntity<T>()
-			where T : AbstractEntity, new ()
-		{
-			T entity = EntityNullReferenceVirtualizer.CreateEmptyEntity<T> ();
-			entity.Freeze ();
+			if (freeze)
+			{
+				entity.Freeze ();
+			}
+
 			return entity;
 		}
 
@@ -270,19 +261,19 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </summary>
 		private sealed class Store : IValueStore
 		{
-			public Store(IValueStore realReadStore, IValueStore realWriteStore, AbstractEntity entity)
+			public Store(IValueStore realReadStore, IValueStore realWriteStore, AbstractEntity entity, EntityContext realEntityContext)
 			{
 				this.realReadStore = realReadStore;
 				this.realWriteStore = realWriteStore;
+				this.realEntityContext = realEntityContext;
 				this.values = new Dictionary<string, object> ();
 				this.entity = entity;
 			}
 
-			public Store(IValueStore realReadStore, IValueStore realWriteStore, AbstractEntity entity, AbstractEntity parentEntity, Store parentStore, string fieldIdInParentStore)
-				: this (realReadStore, realWriteStore, entity)
+			public Store(IValueStore realReadStore, IValueStore realWriteStore, AbstractEntity entity, Store parentStore, string fieldIdInParentStore)
+				: this (realReadStore, realWriteStore, entity, parentStore.realEntityContext)
 			{
 				this.parentStore = parentStore;
-				this.parentEntity = parentEntity;
 				this.fieldIdInParentStore = fieldIdInParentStore;
 				this.isReadOnly = true;
 			}
@@ -321,7 +312,7 @@ namespace Epsitec.Common.Support.EntityEngine
 				{
 					var entity = value as AbstractEntity;
 
-					EntityNullReferenceVirtualizer.PatchNullReferences (entity);
+					EntityNullReferenceVirtualizer.PatchNullReferences (entity, this.realEntityContext);
 				}
 				else if (value is EntityCollection)
 				{
@@ -364,27 +355,9 @@ namespace Epsitec.Common.Support.EntityEngine
 					this.parentStore.SetLiveEntity (this.fieldIdInParentStore, this.entity);
 					this.isReadOnly = false;
 
-					var entityContext = this.GetCurrentEntityContext ();
+					var entityContext = this.realEntityContext;
 
 					this.entity.AssignEntityContext (entityContext);
-				}
-			}
-
-
-			private EntityContext GetCurrentEntityContext()
-			{
-				if (this.parentEntity == null)
-				{
-					// NOTE Unless I completely misunderstood what happens, we should never be in
-					// that case, because that would mean that an empty entity has no parent entity,
-					// and empty entities can in theory only be created by their parent.
-					// Marc
-
-					return new EntityContext ();
-				}
-				else
-				{
-					return this.parentEntity.GetEntityContext ();
 				}
 			}
 
@@ -440,7 +413,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 					System.Diagnostics.Debug.Assert (entity != null);
 
-					Store.PatchNullReferences (entity, parentEntity: this.entity, parentStore: this, id: id);
+					Store.PatchNullReferences (entity, parentStore: this, id: id);
 					this.values.Add (id, entity);
 
 					return entity;
@@ -472,12 +445,12 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 
 
-			private static void PatchNullReferences(AbstractEntity entity, AbstractEntity parentEntity, Store parentStore, string id)
+			private static void PatchNullReferences(AbstractEntity entity, Store parentStore, string id)
 			{
 				IValueStore realOriginalValueStore = entity.GetOriginalValues ();
 				IValueStore realModifiedValueStore = entity.GetModifiedValues ();
 
-				var store1 = new Store (realOriginalValueStore, realModifiedValueStore, entity, parentEntity, parentStore, id);
+				var store1 = new Store (realOriginalValueStore, realModifiedValueStore, entity, parentStore, id);
 				var store2 = new StoreForwarder (realModifiedValueStore, store1);
 
 				entity.SetOriginalValues (store1);
@@ -489,7 +462,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			private readonly IValueStore				realWriteStore;
 			private readonly Dictionary<string, object>	values;
 			private readonly AbstractEntity				entity;
-			private readonly AbstractEntity				parentEntity;
+			private readonly EntityContext				realEntityContext;
 			private readonly Store						parentStore;
 			private readonly string						fieldIdInParentStore;
 			private bool								isReadOnly;

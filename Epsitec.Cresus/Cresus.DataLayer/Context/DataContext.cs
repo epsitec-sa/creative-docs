@@ -105,6 +105,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 	[System.Diagnostics.DebuggerDisplay ("DataContext #{UniqueId}")]
 	public sealed class DataContext : IEntityPersistenceManager, IIsDisposed, IReadOnly
 	{
+
+
 		/// <summary>
 		/// Creates a new <c>DataContext</c>.
 		/// </summary>
@@ -138,6 +140,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.EntityContext.PersistenceManagers.Add (this);
 		}
 
+
 		/// <summary>
 		/// Destructor for the <c>DataContext</c>.
 		/// </summary>
@@ -146,7 +149,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.Dipose (false);
 		}
 
+
 		#region IReadOnly Members
+
 
 		/// <summary>
 		/// Tells whether this instance contains only read only entities.
@@ -157,7 +162,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 			private set;
 		}
 
+
 		#endregion
+
 
 		/// <summary>
 		/// Gets the unique id of the current instance.
@@ -169,6 +176,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				return this.uniqueId;
 			}
 		}
+
 
 		/// <summary>
 		/// Gets or sets the name of the <c>DataContext</c>. This is useful when
@@ -190,6 +198,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			get;
 			private set;
 		}
+
 
 		/// <summary>
 		/// Gets the <see cref="DataInfrastructure"/> associated with this instance.
@@ -237,6 +246,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			private set;
 		}
 
+
 		/// <summary>
 		/// Gets the <see cref="DataSaver"/> associated with this instance.
 		/// </summary>
@@ -278,6 +288,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			private set;
 		}
 
+
 		/// <summary>
 		/// Creates a new <see cref="AbstractEntity"/> of type <typeparamref name="TEntity"/> associated
 		/// with this instance. This methods fires an event indicating that the <see cref="AbstractEntity"/>
@@ -301,6 +312,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			return entity;
 		}
+
 
 		/// <summary>
 		/// Creates a new <see cref="AbstractEntity"/> with the type given by <paramref name="entityId"/>
@@ -347,6 +359,28 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
+		public T UnwrapNullEntity<T>(T entity) where T : AbstractEntity
+		{
+			return EntityNullReferenceVirtualizer.UnwrapNullEntity (entity);
+		}
+
+
+		public T WrapNullEntity<T>(T entity) where T : AbstractEntity, new ()
+		{
+			EntityContext realEntityContext = this.EntityContext;
+
+			return EntityNullReferenceVirtualizer.WrapNullEntity (realEntityContext, entity);
+		}
+
+
+		public T CreateNullEntity<T>(bool freeze = false) where T : AbstractEntity, new ()
+		{
+			EntityContext realEntityContext = this.EntityContext;
+
+			return EntityNullReferenceVirtualizer.CreateEmptyEntity<T> (realEntityContext, freeze);
+		}
+
+
 		/// <summary>
 		/// Tells whether an <see cref="AbstractEntity"/> is managed by this instance.
 		/// </summary>
@@ -363,6 +397,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}
 
+
 		/// <summary>
 		/// Gets the local copy of the specified entity. If it already belongs to this <c>DataContext</c>,
 		/// the entity will be returned unchanged. Otherwise, it will be loaded into the context. If
@@ -374,11 +409,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <returns>The entity, as loaded in the current context if possible; otherwise, <c>null</c>.</returns>
 		public T GetLocalEntity<T>(T entity) where T : AbstractEntity
 		{
-			if (entity.UnwrapNullEntity () == null)
-			{
-				return entity;
-			}
-
 			var entityKey = DataContextPool.GetEntityKey (entity);
 
 			if (entityKey.HasValue)
@@ -399,12 +429,17 @@ namespace Epsitec.Cresus.DataLayer.Context
 					return localEntity;
 				}
 			}
+			else if (EntityNullReferenceVirtualizer.IsNullEntity (entity))
+			{
+				return null;
+			}
 			else
 			{
 				System.Diagnostics.Debug.Assert (this.IsForeignEntity (entity) == false, "Unpersisted entities cannot be resolved to local entities");
 				return null;
 			}
 		}
+
 
         /// <summary>
 		/// Gets the normalized <see cref="EntityKey"/> associated with an <see cref="AbstractEntity"/>.
@@ -455,6 +490,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.entitiesCache.DefineRowKey (entity, key);
 		}
 		
+
 		/// <summary>
 		/// Associates a new log id to an entity type id.
 		/// </summary>
@@ -468,6 +504,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.entitiesCache.DefineEntityModificationEntryId (entityTypeId, logId);
 		}
 
+
 		/// <summary>
 		/// Associates a new log id to an <see cref="AbstractEntity"/>.
 		/// </summary>
@@ -480,6 +517,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			this.entitiesCache.DefineEntityModificationEntryId (entity, logId);
 		}
+
 		
 		/// <summary>
 		/// Gets the log id associated to an entity type id.
@@ -494,6 +532,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			return this.entitiesCache.GetLogId (entityTypeId);
 		}
 
+
 		/// <summary>
 		/// Gets the log id associated to an <see cref="AbstractEntity"/>.
 		/// </summary>
@@ -506,6 +545,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			return this.entitiesCache.GetLogId (entity);
 		}
+
 
 		/// <summary>
 		/// Tells whether the <see cref="AbstractEntity"/> managed by this instance have been
@@ -692,6 +732,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}
 
+
 		/// <summary>
 		/// Gets the <see cref="AbstractEntity"/> managed by this instance.
 		/// </summary>
@@ -768,6 +809,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.fieldsToResave.Remove (entity);
 		}
 
+
 		/// <summary>
 		/// Notifies this instance that all the fields referencing an <see cref="AbstractEntity"/>
 		/// must be persisted again, even if their value has not changed.
@@ -783,6 +825,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				this.ResaveReferencingField (source, fieldId, target);
 			}
 		}
+
 
 		/// <summary>
 		/// Notifies this instance that the given field of the given <see cref="AbstractEntity"/> must
@@ -838,6 +881,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.fieldsToResave[entity].Add (fieldId);
 		}
 
+
 		/// <summary>
 		/// Gets the fields that must be persisted again for each <see cref="AbstractEntity"/>.
 		/// </summary>
@@ -849,6 +893,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			return this.fieldsToResave;
 		}
 
+
 		/// <summary>
 		/// Resets the list of fields that must be persisted again.
 		/// </summary>
@@ -856,6 +901,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			this.fieldsToResave.Clear ();
 		}
+
 
 		/// <summary>
 		/// Gets the <see cref="AbstractEntity"/> corresponding to a <see cref="DbKey"/> and a type
@@ -905,6 +951,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			return this.ResolveEntity (entityKey.Value.EntityId, entityKey.Value.RowKey);
 		}
 		
+
 		/// <summary>
 		/// Gets the <see cref="AbstractEntity"/> of type <typeparamref name="TEntity"/> with a given
 		/// <see cref="DbKey"/>. This method looks in the cache and then queries the database.
@@ -922,6 +969,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			return (TEntity) this.ResolveEntity (entityId, rowKey);
 		}
+
 
 		/// <summary>
 		/// Refreshes the <see cref="AbstractEntity"/> that are managed by this instance and that
@@ -950,6 +998,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			return changes;
 		}
+
 
 		/// <summary>
 		/// Deletes the <see cref="AbstractEntity"/> that are managed by this instance and that have
@@ -986,6 +1035,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			return deletions;
 		}
 
+
 		/// <summary>
 		/// Reloads the data of the <see cref="AbstractEntity"/> that are managed by this instance
 		/// and that have been modified in the database after they have been loaded in memory.
@@ -1010,6 +1060,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			return modifications;
 		}
 
+
 		/// <summary>
 		/// Queries the database to retrieve all the <see cref="AbstractEntity"/> which match the
 		/// given example.
@@ -1031,6 +1082,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				return this.DataLoader.GetByExample<TEntity> (example);
 			}
 		}
+
 
 		/// <summary>
 		/// Queries the database to retrieve all the <see cref="AbstractEntity"/> which correspond
@@ -1058,6 +1110,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}
 
+
 		/// <summary>
 		/// Persists all the changes that have been made to the <see cref="AbstractEntity"/> managed
 		/// by this instance to the database.
@@ -1074,6 +1127,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.DataContextPool.Synchronize (this, jobs);
 		}
 
+
 		/// <summary>
 		/// Tells whether this instance manages an <see cref="AbstractEntity"/> corresponding to a
 		/// given <see cref="EntityKey"/>.
@@ -1087,6 +1141,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			return this.entitiesCache.GetEntity (entityKey) != null;
 		}
+
 
 		/// <summary>
 		/// Applies the modifications described by the given <see cref="DeleteSynchronizationJob"/>
@@ -1353,7 +1408,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 		#endregion
 
+
 		#region IIsDisposed Members
+
 
 		/// <summary>
 		/// Tells whether this instance was disposed or not.
@@ -1365,6 +1422,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				return this.isDisposed;
 			}
 		}
+
 
 		#endregion
 
@@ -1415,6 +1473,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}		
 		
+
 		/// <summary>
 		/// Tells whether an <see cref="AbstractEntity"/> is managed by another
 		/// <see cref="DataContext"/>.
@@ -1600,8 +1659,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 				entity.DefineLockFunctions (this.LockRead, this.LockWrite);
 			}
 		}
-
 		
+
 		/// <summary>
 		/// Adds the given <see cref="AbstractEntity"/> to the cache of this instance.
 		/// </summary>
@@ -1656,7 +1715,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 				? TimedReaderWriterLock.LockWrite (this.dataContextLock, this.lockTimeOut)
 				: null;
 		}
-
 
 		/// <summary>
 		/// Copies an <see cref="AbstractEntity"/> present in a <see cref="DataContext"/> in another
@@ -1736,12 +1794,14 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}
 
-		private static long							nextUniqueId;					//	next unique ID
 
+		private static long							nextUniqueId;					//	next unique ID
 		private readonly long						uniqueId;						//	uniue ID associated with this instance
+
 
 		private readonly ReaderWriterLockSlim		dataContextLock;				//  lock used to access thread safe methods in the DataContext
 		private readonly System.TimeSpan			lockTimeOut;					//  maximum time that we can wait for locks.
+
 
 		private readonly EntityCache				entitiesCache;					//	entities managed by this instance
 		private readonly HashSet<AbstractEntity>	emptyEntities;					//	entities registered as empty
@@ -1749,13 +1809,18 @@ namespace Epsitec.Cresus.DataLayer.Context
 		private readonly HashSet<AbstractEntity>	entitiesDeleted;				//	entities which have been deleted
 		private readonly Dictionary<AbstractEntity, HashSet<Druid>> fieldsToResave;	//	mapping between entities and their fields that must be re-saved, even if their value has not changed
 
+
 		/// <summary>
 		/// The event is fired when an <see cref="AbstractEntity"/> managed by this instance is
 		/// created, updated or deleted.
 		/// </summary>
 		public event EventHandler<EntityChangedEventArgs> EntityChanged;
 
+
 		private bool								isDisposed;
 
+
 	}
+
+
 }
