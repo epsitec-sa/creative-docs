@@ -175,8 +175,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		{
 			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CountryEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 4);	// [J1A4]
-		public static readonly new string EntityStructuredTypeKey = "[J1A4]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 4);	// [J1A4]
+		public static readonly string EntityStructuredTypeKey = "[J1A4]";
 	}
 }
 #endregion
@@ -266,8 +266,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		{
 			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.RegionEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 6);	// [J1A6]
-		public static readonly new string EntityStructuredTypeKey = "[J1A6]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 6);	// [J1A6]
+		public static readonly string EntityStructuredTypeKey = "[J1A6]";
 	}
 }
 #endregion
@@ -387,8 +387,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		{
 			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LocationEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 9);	// [J1A9]
-		public static readonly new string EntityStructuredTypeKey = "[J1A9]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 9);	// [J1A9]
+		public static readonly string EntityStructuredTypeKey = "[J1A9]";
 	}
 }
 #endregion
@@ -436,8 +436,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		{
 			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PostBoxEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 14);	// [J1AE]
-		public static readonly new string EntityStructuredTypeKey = "[J1AE]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 14);	// [J1AE]
+		public static readonly string EntityStructuredTypeKey = "[J1AE]";
 	}
 }
 #endregion
@@ -509,8 +509,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		{
 			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.StreetEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 16);	// [J1AG]
-		public static readonly new string EntityStructuredTypeKey = "[J1AG]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 16);	// [J1AG]
+		public static readonly string EntityStructuredTypeKey = "[J1AG]";
 	}
 }
 #endregion
@@ -606,8 +606,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		{
 			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AddressEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 19);	// [J1AJ]
-		public static readonly new string EntityStructuredTypeKey = "[J1AJ]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 19);	// [J1AJ]
+		public static readonly string EntityStructuredTypeKey = "[J1AJ]";
 	}
 }
 #endregion
@@ -709,8 +709,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		{
 			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonTitleEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 23);	// [J1AN]
-		public static readonly new string EntityStructuredTypeKey = "[J1AN]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 23);	// [J1AN]
+		public static readonly string EntityStructuredTypeKey = "[J1AN]";
 	}
 }
 #endregion
@@ -794,8 +794,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		{
 			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonGenderEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 26);	// [J1AQ]
-		public static readonly new string EntityStructuredTypeKey = "[J1AQ]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 26);	// [J1AQ]
+		public static readonly string EntityStructuredTypeKey = "[J1AQ]";
 	}
 }
 #endregion
@@ -861,8 +861,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		{
 			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LanguageEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 29);	// [J1AT]
-		public static readonly new string EntityStructuredTypeKey = "[J1AT]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 29);	// [J1AT]
+		public static readonly string EntityStructuredTypeKey = "[J1AT]";
 	}
 }
 #endregion
@@ -928,8 +928,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		{
 			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.ContactRoleEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 31);	// [J1AV]
-		public static readonly new string EntityStructuredTypeKey = "[J1AV]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 31);	// [J1AV]
+		public static readonly string EntityStructuredTypeKey = "[J1AV]";
 	}
 }
 #endregion
@@ -1019,8 +1019,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		{
 			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LegalPersonTypeEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 33);	// [J1A11]
-		public static readonly new string EntityStructuredTypeKey = "[J1A11]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 33);	// [J1A11]
+		public static readonly string EntityStructuredTypeKey = "[J1A11]";
 	}
 }
 #endregion
@@ -1068,8 +1068,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		{
 			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CommentEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 36);	// [J1A41]
-		public static readonly new string EntityStructuredTypeKey = "[J1A41]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 36);	// [J1A41]
+		public static readonly string EntityStructuredTypeKey = "[J1A41]";
 	}
 }
 #endregion
@@ -1153,8 +1153,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		{
 			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.TelecomTypeEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 38);	// [J1A61]
-		public static readonly new string EntityStructuredTypeKey = "[J1A61]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 38);	// [J1A61]
+		public static readonly string EntityStructuredTypeKey = "[J1A61]";
 	}
 }
 #endregion
@@ -1238,8 +1238,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		{
 			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.UriSchemeEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 40);	// [J1A81]
-		public static readonly new string EntityStructuredTypeKey = "[J1A81]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 40);	// [J1A81]
+		public static readonly string EntityStructuredTypeKey = "[J1A81]";
 	}
 }
 #endregion
@@ -1335,8 +1335,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		{
 			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AbstractContactEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 42);	// [J1AA1]
-		public static readonly new string EntityStructuredTypeKey = "[J1AA1]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 42);	// [J1AA1]
+		public static readonly string EntityStructuredTypeKey = "[J1AA1]";
 	}
 }
 #endregion
@@ -1396,8 +1396,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		{
 			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AbstractPersonEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 43);	// [J1AB1]
-		public static readonly new string EntityStructuredTypeKey = "[J1AB1]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 43);	// [J1AB1]
+		public static readonly string EntityStructuredTypeKey = "[J1AB1]";
 	}
 }
 #endregion
@@ -2170,8 +2170,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		{
 			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.ValueDataEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 71);	// [J1A72]
-		public static readonly new string EntityStructuredTypeKey = "[J1A72]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (51, 10, 71);	// [J1A72]
+		public static readonly string EntityStructuredTypeKey = "[J1A72]";
 	}
 }
 #endregion

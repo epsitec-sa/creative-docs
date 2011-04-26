@@ -58,94 +58,6 @@ namespace Epsitec.Common.Support
 			public static readonly Epsitec.Common.Types.StructuredType Shortcut = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 26));
 		}
 		
-		public static class Values
-		{
-			internal static void _Initialize()
-			{
-			}
-			
-			public static class DataLifetimeExpectancy
-			{
-				internal static void _Initialize()
-				{
-				}
-				
-				//	designer:cap/70A7
-				public static global::Epsitec.Common.Types.Caption Immutable
-				{
-					get
-					{
-						return global::Epsitec.Common.Support.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 7));
-					}
-				}
-				//	designer:cap/70A6
-				public static global::Epsitec.Common.Types.Caption Stable
-				{
-					get
-					{
-						return global::Epsitec.Common.Support.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 6));
-					}
-				}
-				//	designer:cap/70A4
-				public static global::Epsitec.Common.Types.Caption Unknown
-				{
-					get
-					{
-						return global::Epsitec.Common.Support.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 4));
-					}
-				}
-				//	designer:cap/70A5
-				public static global::Epsitec.Common.Types.Caption Volatile
-				{
-					get
-					{
-						return global::Epsitec.Common.Support.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 5));
-					}
-				}
-			}
-			
-			public static class StructuredTypeFlags
-			{
-				internal static void _Initialize()
-				{
-				}
-				
-				//	designer:cap/70AF
-				public static global::Epsitec.Common.Types.Caption AbstractClass
-				{
-					get
-					{
-						return global::Epsitec.Common.Support.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 15));
-					}
-				}
-				//	designer:cap/70AE
-				public static global::Epsitec.Common.Types.Caption GenerateRepository
-				{
-					get
-					{
-						return global::Epsitec.Common.Support.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 14));
-					}
-				}
-				//	designer:cap/70AD
-				public static global::Epsitec.Common.Types.Caption GenerateSchema
-				{
-					get
-					{
-						return global::Epsitec.Common.Support.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 13));
-					}
-				}
-				//	designer:cap/70A9
-				public static global::Epsitec.Common.Types.Caption None
-				{
-					get
-					{
-						return global::Epsitec.Common.Support.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 9));
-					}
-				}
-			}
-			
-		}
-		
 		public static class Fields
 		{
 			public static class EnumValue
@@ -549,9 +461,6 @@ namespace Epsitec.Common.Support
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Common.Support");
 			Types._Initialize ();
-			Values._Initialize ();
-			Values.DataLifetimeExpectancy._Initialize ();
-			Values.StructuredTypeFlags._Initialize ();
 			Fields.EnumValue._Initialize ();
 			Fields.Field._Initialize ();
 			Fields.InterfaceId._Initialize ();

@@ -2,5 +2,6 @@
 <ModuleInfo id="1004" name="Cresus.Core.Library.Finance" layer="s" textMode="FormattedText" assemblies="Cresus.Core.Library.Finance" namespace="Epsitec.Cresus.Core">
   <Versions>
     <Version id="1" build="49" date="2011-03-11T06:16:41.8377669Z" />
+    <Version id="8" build="1" date="2011-04-26T07:11:40.0571751Z" />
   </Versions>
 </ModuleInfo>

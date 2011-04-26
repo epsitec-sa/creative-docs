@@ -659,8 +659,8 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.CommentEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 10, 26);	// [8VAQ]
-		public static readonly new string EntityStructuredTypeKey = "[8VAQ]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 10, 26);	// [8VAQ]
+		public static readonly string EntityStructuredTypeKey = "[8VAQ]";
 	}
 }
 #endregion
@@ -790,8 +790,8 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.LanguageEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 10, 30);	// [8VAU]
-		public static readonly new string EntityStructuredTypeKey = "[8VAU]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 10, 30);	// [8VAU]
+		public static readonly string EntityStructuredTypeKey = "[8VAU]";
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<LanguageEntity>
@@ -966,8 +966,8 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.XmlBlobEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 10, 36);	// [8VA41]
-		public static readonly new string EntityStructuredTypeKey = "[8VA41]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 10, 36);	// [8VA41]
+		public static readonly string EntityStructuredTypeKey = "[8VA41]";
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<XmlBlobEntity>
@@ -1034,8 +1034,8 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.DateRangeEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 10, 38);	// [8VA61]
-		public static readonly new string EntityStructuredTypeKey = "[8VA61]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 10, 38);	// [8VA61]
+		public static readonly string EntityStructuredTypeKey = "[8VA61]";
 	}
 }
 #endregion

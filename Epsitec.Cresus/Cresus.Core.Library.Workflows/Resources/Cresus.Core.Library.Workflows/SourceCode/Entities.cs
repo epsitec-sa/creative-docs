@@ -42,8 +42,8 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.WorkflowEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1005, 10, 0);	// [DVA]
-		public static readonly new string EntityStructuredTypeKey = "[DVA]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1005, 10, 0);	// [DVA]
+		public static readonly string EntityStructuredTypeKey = "[DVA]";
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<WorkflowEntity>
@@ -148,8 +148,8 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.WorkflowThreadEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1005, 10, 1);	// [DVA1]
-		public static readonly new string EntityStructuredTypeKey = "[DVA1]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1005, 10, 1);	// [DVA1]
+		public static readonly string EntityStructuredTypeKey = "[DVA1]";
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<WorkflowThreadEntity>
@@ -336,8 +336,8 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1005, 10, 2);	// [DVA2]
-		public static readonly new string EntityStructuredTypeKey = "[DVA2]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1005, 10, 2);	// [DVA2]
+		public static readonly string EntityStructuredTypeKey = "[DVA2]";
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<WorkflowNodeEntity>
@@ -536,8 +536,8 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1005, 10, 3);	// [DVA3]
-		public static readonly new string EntityStructuredTypeKey = "[DVA3]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1005, 10, 3);	// [DVA3]
+		public static readonly string EntityStructuredTypeKey = "[DVA3]";
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<WorkflowEdgeEntity>
@@ -690,8 +690,8 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.WorkflowStepEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1005, 10, 4);	// [DVA4]
-		public static readonly new string EntityStructuredTypeKey = "[DVA4]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1005, 10, 4);	// [DVA4]
+		public static readonly string EntityStructuredTypeKey = "[DVA4]";
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<WorkflowStepEntity>
@@ -748,8 +748,8 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.WorkflowCallEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1005, 10, 5);	// [DVA5]
-		public static readonly new string EntityStructuredTypeKey = "[DVA5]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1005, 10, 5);	// [DVA5]
+		public static readonly string EntityStructuredTypeKey = "[DVA5]";
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<WorkflowCallEntity>

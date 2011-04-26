@@ -91,8 +91,8 @@ namespace Epsitec.Common.Support.Entities
 		{
 			return global::Epsitec.Common.Support.Entities.ResourceBaseEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (7, 0, 43);	// [700B1]
-		public static readonly new string EntityStructuredTypeKey = "[700B1]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (7, 0, 43);	// [700B1]
+		public static readonly string EntityStructuredTypeKey = "[700B1]";
 	}
 }
 #endregion
@@ -697,8 +697,8 @@ namespace Epsitec.Common.Support.Entities
 		{
 			return global::Epsitec.Common.Support.Entities.ShortcutEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (7, 0, 26);	// [700Q]
-		public static readonly new string EntityStructuredTypeKey = "[700Q]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (7, 0, 26);	// [700Q]
+		public static readonly string EntityStructuredTypeKey = "[700Q]";
 	}
 }
 #endregion
@@ -986,8 +986,8 @@ namespace Epsitec.Common.Support.Entities
 		{
 			return global::Epsitec.Common.Support.Entities.FieldEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (7, 0, 36);	// [70041]
-		public static readonly new string EntityStructuredTypeKey = "[70041]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (7, 0, 36);	// [70041]
+		public static readonly string EntityStructuredTypeKey = "[70041]";
 	}
 }
 #endregion
@@ -1750,8 +1750,8 @@ namespace Epsitec.Common.Support.Entities
 		{
 			return global::Epsitec.Common.Support.Entities.EnumValueEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (7, 0, 70);	// [70062]
-		public static readonly new string EntityStructuredTypeKey = "[70062]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (7, 0, 70);	// [70062]
+		public static readonly string EntityStructuredTypeKey = "[70062]";
 	}
 }
 #endregion
@@ -1823,8 +1823,8 @@ namespace Epsitec.Common.Support.Entities
 		{
 			return global::Epsitec.Common.Support.Entities.InterfaceIdEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (7, 1, 9);	// [7019]
-		public static readonly new string EntityStructuredTypeKey = "[7019]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (7, 1, 9);	// [7019]
+		public static readonly string EntityStructuredTypeKey = "[7019]";
 	}
 }
 #endregion
@@ -1896,8 +1896,8 @@ namespace Epsitec.Common.Support.Entities
 		{
 			return global::Epsitec.Common.Support.Entities.ResourceBaseFileEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (7, 1, 25);	// [701P]
-		public static readonly new string EntityStructuredTypeKey = "[701P]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (7, 1, 25);	// [701P]
+		public static readonly string EntityStructuredTypeKey = "[701P]";
 	}
 }
 #endregion

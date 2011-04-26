@@ -364,8 +364,8 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.DocumentMetadataEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1009, 10, 0);	// [HVA]
-		public static readonly new string EntityStructuredTypeKey = "[HVA]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1009, 10, 0);	// [HVA]
+		public static readonly string EntityStructuredTypeKey = "[HVA]";
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<DocumentMetadataEntity>
@@ -582,8 +582,8 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.DocumentCategoryEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1009, 10, 1);	// [HVA1]
-		public static readonly new string EntityStructuredTypeKey = "[HVA1]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1009, 10, 1);	// [HVA1]
+		public static readonly string EntityStructuredTypeKey = "[HVA1]";
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<DocumentCategoryEntity>
@@ -710,8 +710,8 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.DocumentOptionsEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1009, 10, 2);	// [HVA2]
-		public static readonly new string EntityStructuredTypeKey = "[HVA2]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1009, 10, 2);	// [HVA2]
+		public static readonly string EntityStructuredTypeKey = "[HVA2]";
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<DocumentOptionsEntity>
@@ -838,8 +838,8 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.DocumentPrintingUnitsEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1009, 10, 3);	// [HVA3]
-		public static readonly new string EntityStructuredTypeKey = "[HVA3]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1009, 10, 3);	// [HVA3]
+		public static readonly string EntityStructuredTypeKey = "[HVA3]";
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<DocumentPrintingUnitsEntity>
@@ -890,8 +890,8 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.AbstractDocumentEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1009, 10, 4);	// [HVA4]
-		public static readonly new string EntityStructuredTypeKey = "[HVA4]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1009, 10, 4);	// [HVA4]
+		public static readonly string EntityStructuredTypeKey = "[HVA4]";
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AbstractDocumentEntity>
@@ -966,8 +966,8 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.SerializedDocumentBlobEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1009, 10, 12);	// [HVAC]
-		public static readonly new string EntityStructuredTypeKey = "[HVAC]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1009, 10, 12);	// [HVAC]
+		public static readonly string EntityStructuredTypeKey = "[HVAC]";
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<SerializedDocumentBlobEntity>
@@ -1054,8 +1054,8 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.DocumentCategoryMappingEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1009, 10, 54);	// [HVAM1]
-		public static readonly new string EntityStructuredTypeKey = "[HVAM1]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1009, 10, 54);	// [HVAM1]
+		public static readonly string EntityStructuredTypeKey = "[HVAM1]";
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<DocumentCategoryMappingEntity>

@@ -48,7 +48,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				string oldValue = this.Désignation;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630A]"))
 				{
 					this.OnDésignationChanging (oldValue, value);
 					this.SetField<string> ("[630A]", oldValue, value);
@@ -70,7 +70,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::System.Decimal oldValue = this.TauxChangeVersChf;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630B]"))
 				{
 					this.OnTauxChangeVersChfChanging (oldValue, value);
 					this.SetField<global::System.Decimal> ("[630B]", oldValue, value);
@@ -92,7 +92,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Epsitec.Common.Types.Date oldValue = this.Date;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630C]"))
 				{
 					this.OnDateChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.Date> ("[630C]", oldValue, value);
@@ -116,8 +116,8 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.MonnaieEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 5);	// [6305]
-		public static readonly new string EntityStructuredTypeKey = "[6305]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 5);	// [6305]
+		public static readonly string EntityStructuredTypeKey = "[6305]";
 	}
 }
 #endregion
@@ -145,7 +145,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				string oldValue = this.Désignation;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630D]"))
 				{
 					this.OnDésignationChanging (oldValue, value);
 					this.SetField<string> ("[630D]", oldValue, value);
@@ -167,7 +167,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::System.Decimal oldValue = this.Taux;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630E]"))
 				{
 					this.OnTauxChanging (oldValue, value);
 					this.SetField<global::System.Decimal> ("[630E]", oldValue, value);
@@ -189,7 +189,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Epsitec.Common.Types.Date oldValue = this.DateDébutValidité;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630F]"))
 				{
 					this.OnDateDébutValiditéChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.Date> ("[630F]", oldValue, value);
@@ -213,8 +213,8 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.CodeTvaEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 7);	// [6307]
-		public static readonly new string EntityStructuredTypeKey = "[6307]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 7);	// [6307]
+		public static readonly string EntityStructuredTypeKey = "[6307]";
 	}
 }
 #endregion
@@ -242,7 +242,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Demo.Demo5juin.Entities.MonnaieEntity oldValue = this.Monnaie;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630G]"))
 				{
 					this.OnMonnaieChanging (oldValue, value);
 					this.SetField<global::Demo.Demo5juin.Entities.MonnaieEntity> ("[630G]", oldValue, value);
@@ -264,7 +264,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::System.Decimal oldValue = this.Ht;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630H]"))
 				{
 					this.OnHtChanging (oldValue, value);
 					this.SetField<global::System.Decimal> ("[630H]", oldValue, value);
@@ -286,7 +286,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Demo.Demo5juin.Entities.CodeTvaEntity oldValue = this.CodeTva;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630I]"))
 				{
 					this.OnCodeTvaChanging (oldValue, value);
 					this.SetField<global::Demo.Demo5juin.Entities.CodeTvaEntity> ("[630I]", oldValue, value);
@@ -308,7 +308,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::System.Decimal oldValue = this.ArrondiTva;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630J]"))
 				{
 					this.OnArrondiTvaChanging (oldValue, value);
 					this.SetField<global::System.Decimal> ("[630J]", oldValue, value);
@@ -330,7 +330,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::System.Decimal oldValue = this.MontantTva;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630K]"))
 				{
 					this.OnMontantTvaChanging (oldValue, value);
 					this.SetField<global::System.Decimal> ("[630K]", oldValue, value);
@@ -352,7 +352,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::System.Decimal oldValue = this.Ttc;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630L]"))
 				{
 					this.OnTtcChanging (oldValue, value);
 					this.SetField<global::System.Decimal> ("[630L]", oldValue, value);
@@ -382,8 +382,8 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.PrixEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 8);	// [6308]
-		public static readonly new string EntityStructuredTypeKey = "[6308]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 8);	// [6308]
+		public static readonly string EntityStructuredTypeKey = "[6308]";
 	}
 }
 #endregion
@@ -423,7 +423,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::System.Decimal oldValue = this.TotalHt;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630N]"))
 				{
 					this.OnTotalHtChanging (oldValue, value);
 					this.SetField<global::System.Decimal> ("[630N]", oldValue, value);
@@ -445,7 +445,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::System.Decimal oldValue = this.TotalTtc;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630O]"))
 				{
 					this.OnTotalTtcChanging (oldValue, value);
 					this.SetField<global::System.Decimal> ("[630O]", oldValue, value);
@@ -467,7 +467,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::System.Decimal oldValue = this.TotalTva;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630P]"))
 				{
 					this.OnTotalTvaChanging (oldValue, value);
 					this.SetField<global::System.Decimal> ("[630P]", oldValue, value);
@@ -491,8 +491,8 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.PrixComposeEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 9);	// [6309]
-		public static readonly new string EntityStructuredTypeKey = "[6309]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 9);	// [6309]
+		public static readonly string EntityStructuredTypeKey = "[6309]";
 	}
 }
 #endregion
@@ -520,7 +520,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				string oldValue = this.Numéro;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[63091]"))
 				{
 					this.OnNuméroChanging (oldValue, value);
 					this.SetField<string> ("[63091]", oldValue, value);
@@ -542,7 +542,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				string oldValue = this.Désignation;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630A1]"))
 				{
 					this.OnDésignationChanging (oldValue, value);
 					this.SetField<string> ("[630A1]", oldValue, value);
@@ -564,7 +564,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Demo.Demo5juin.Entities.PrixEntity oldValue = this.PrixVente;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630B1]"))
 				{
 					this.OnPrixVenteChanging (oldValue, value);
 					this.SetField<global::Demo.Demo5juin.Entities.PrixEntity> ("[630B1]", oldValue, value);
@@ -586,7 +586,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Demo.Demo5juin.Entities.PrixEntity oldValue = this.PrixAchat;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[6313]"))
 				{
 					this.OnPrixAchatChanging (oldValue, value);
 					this.SetField<global::Demo.Demo5juin.Entities.PrixEntity> ("[6313]", oldValue, value);
@@ -608,7 +608,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Demo.Demo5juin.Entities.AdresseEntity oldValue = this.Fournisseur;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630C1]"))
 				{
 					this.OnFournisseurChanging (oldValue, value);
 					this.SetField<global::Demo.Demo5juin.Entities.AdresseEntity> ("[630C1]", oldValue, value);
@@ -630,7 +630,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Demo.Demo5juin.Entities.UniteEntity oldValue = this.Unité;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630D1]"))
 				{
 					this.OnUnitéChanging (oldValue, value);
 					this.SetField<global::Demo.Demo5juin.Entities.UniteEntity> ("[630D1]", oldValue, value);
@@ -664,7 +664,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				int oldValue = this.QuantitéEnStock;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630F1]"))
 				{
 					this.OnQuantitéEnStockChanging (oldValue, value);
 					this.SetField<int> ("[630F1]", oldValue, value);
@@ -696,8 +696,8 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.ArticleEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 26);	// [630Q]
-		public static readonly new string EntityStructuredTypeKey = "[630Q]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 26);	// [630Q]
+		public static readonly string EntityStructuredTypeKey = "[630Q]";
 	}
 }
 #endregion
@@ -737,7 +737,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				string oldValue = this.Désignation;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630H1]"))
 				{
 					this.OnDésignationChanging (oldValue, value);
 					this.SetField<string> ("[630H1]", oldValue, value);
@@ -757,8 +757,8 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.StockEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 27);	// [630R]
-		public static readonly new string EntityStructuredTypeKey = "[630R]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 27);	// [630R]
+		public static readonly string EntityStructuredTypeKey = "[630R]";
 	}
 }
 #endregion
@@ -786,7 +786,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Demo.Demo5juin.Entities.ArticleEntity oldValue = this.Article;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630I1]"))
 				{
 					this.OnArticleChanging (oldValue, value);
 					this.SetField<global::Demo.Demo5juin.Entities.ArticleEntity> ("[630I1]", oldValue, value);
@@ -808,7 +808,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Demo.Demo5juin.Entities.EmplacementStockEntity oldValue = this.Emplacement;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630J1]"))
 				{
 					this.OnEmplacementChanging (oldValue, value);
 					this.SetField<global::Demo.Demo5juin.Entities.EmplacementStockEntity> ("[630J1]", oldValue, value);
@@ -830,7 +830,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Demo.Demo5juin.Entities.MouvementStockEntity oldValue = this.Mouvements;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630K1]"))
 				{
 					this.OnMouvementsChanging (oldValue, value);
 					this.SetField<global::Demo.Demo5juin.Entities.MouvementStockEntity> ("[630K1]", oldValue, value);
@@ -852,7 +852,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Demo.Demo5juin.Entities.PrixComposeEntity oldValue = this.TotalValeurAchat;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630L1]"))
 				{
 					this.OnTotalValeurAchatChanging (oldValue, value);
 					this.SetField<global::Demo.Demo5juin.Entities.PrixComposeEntity> ("[630L1]", oldValue, value);
@@ -874,7 +874,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Demo.Demo5juin.Entities.PrixComposeEntity oldValue = this.TotalValeurVente;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630M1]"))
 				{
 					this.OnTotalValeurVenteChanging (oldValue, value);
 					this.SetField<global::Demo.Demo5juin.Entities.PrixComposeEntity> ("[630M1]", oldValue, value);
@@ -896,7 +896,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				int oldValue = this.QuantitéEnStock;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630N1]"))
 				{
 					this.OnQuantitéEnStockChanging (oldValue, value);
 					this.SetField<int> ("[630N1]", oldValue, value);
@@ -926,8 +926,8 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.ArticleStockEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 28);	// [630S]
-		public static readonly new string EntityStructuredTypeKey = "[630S]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 28);	// [630S]
+		public static readonly string EntityStructuredTypeKey = "[630S]";
 	}
 }
 #endregion
@@ -955,7 +955,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Demo.Demo5juin.Entities.PrixEntity oldValue = this.PrixAchatOuVente;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630O1]"))
 				{
 					this.OnPrixAchatOuVenteChanging (oldValue, value);
 					this.SetField<global::Demo.Demo5juin.Entities.PrixEntity> ("[630O1]", oldValue, value);
@@ -977,7 +977,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				int oldValue = this.Opération;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630P1]"))
 				{
 					this.OnOpérationChanging (oldValue, value);
 					this.SetField<int> ("[630P1]", oldValue, value);
@@ -999,7 +999,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				int oldValue = this.ModifQuantité;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630Q1]"))
 				{
 					this.OnModifQuantitéChanging (oldValue, value);
 					this.SetField<int> ("[630Q1]", oldValue, value);
@@ -1021,7 +1021,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Epsitec.Common.Types.Date oldValue = this.Date;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630R1]"))
 				{
 					this.OnDateChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.Date> ("[630R1]", oldValue, value);
@@ -1047,8 +1047,8 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.MouvementStockEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 29);	// [630T]
-		public static readonly new string EntityStructuredTypeKey = "[630T]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 29);	// [630T]
+		public static readonly string EntityStructuredTypeKey = "[630T]";
 	}
 }
 #endregion
@@ -1076,7 +1076,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Demo.Demo5juin.Entities.StockEntity oldValue = this.Stock;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630S1]"))
 				{
 					this.OnStockChanging (oldValue, value);
 					this.SetField<global::Demo.Demo5juin.Entities.StockEntity> ("[630S1]", oldValue, value);
@@ -1098,7 +1098,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				string oldValue = this.Etage;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630T1]"))
 				{
 					this.OnEtageChanging (oldValue, value);
 					this.SetField<string> ("[630T1]", oldValue, value);
@@ -1120,7 +1120,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				string oldValue = this.Allée;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630U1]"))
 				{
 					this.OnAlléeChanging (oldValue, value);
 					this.SetField<string> ("[630U1]", oldValue, value);
@@ -1142,7 +1142,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				string oldValue = this.Casier;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630V1]"))
 				{
 					this.OnCasierChanging (oldValue, value);
 					this.SetField<string> ("[630V1]", oldValue, value);
@@ -1168,8 +1168,8 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.EmplacementStockEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 30);	// [630U]
-		public static readonly new string EntityStructuredTypeKey = "[630U]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 30);	// [630U]
+		public static readonly string EntityStructuredTypeKey = "[630U]";
 	}
 }
 #endregion
@@ -1197,7 +1197,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				string oldValue = this.Désignation;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[63002]"))
 				{
 					this.OnDésignationChanging (oldValue, value);
 					this.SetField<string> ("[63002]", oldValue, value);
@@ -1219,7 +1219,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				int oldValue = this.Code;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[63012]"))
 				{
 					this.OnCodeChanging (oldValue, value);
 					this.SetField<int> ("[63012]", oldValue, value);
@@ -1241,7 +1241,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Demo.Demo5juin.Entities.UniteEntity oldValue = this.UnitéDeBase;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[63022]"))
 				{
 					this.OnUnitéDeBaseChanging (oldValue, value);
 					this.SetField<global::Demo.Demo5juin.Entities.UniteEntity> ("[63022]", oldValue, value);
@@ -1263,7 +1263,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::System.Decimal oldValue = this.MultipleUnitéDeBase;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[63032]"))
 				{
 					this.OnMultipleUnitéDeBaseChanging (oldValue, value);
 					this.SetField<global::System.Decimal> ("[63032]", oldValue, value);
@@ -1289,8 +1289,8 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.UniteEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 31);	// [630V]
-		public static readonly new string EntityStructuredTypeKey = "[630V]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 31);	// [630V]
+		public static readonly string EntityStructuredTypeKey = "[630V]";
 	}
 }
 #endregion
@@ -1318,7 +1318,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Demo.Demo5juin.Entities.ArticleEntity oldValue = this.Article;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[63042]"))
 				{
 					this.OnArticleChanging (oldValue, value);
 					this.SetField<global::Demo.Demo5juin.Entities.ArticleEntity> ("[63042]", oldValue, value);
@@ -1340,7 +1340,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::System.Decimal? oldValue = this.Quantité;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[63052]"))
 				{
 					this.OnQuantitéChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[63052]", oldValue, value);
@@ -1362,7 +1362,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Demo.Demo5juin.Entities.UniteEntity oldValue = this.Unité;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[63062]"))
 				{
 					this.OnUnitéChanging (oldValue, value);
 					this.SetField<global::Demo.Demo5juin.Entities.UniteEntity> ("[63062]", oldValue, value);
@@ -1398,8 +1398,8 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.PositionEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 32);	// [63001]
-		public static readonly new string EntityStructuredTypeKey = "[63001]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 32);	// [63001]
+		public static readonly string EntityStructuredTypeKey = "[63001]";
 	}
 }
 #endregion
@@ -1427,7 +1427,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::System.Decimal oldValue = this.Pourcent;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[63082]"))
 				{
 					this.OnPourcentChanging (oldValue, value);
 					this.SetField<global::System.Decimal> ("[63082]", oldValue, value);
@@ -1449,7 +1449,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				int oldValue = this.CodeRaison;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[63092]"))
 				{
 					this.OnCodeRaisonChanging (oldValue, value);
 					this.SetField<int> ("[63092]", oldValue, value);
@@ -1471,8 +1471,8 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.RabaisSurArticleEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 33);	// [63011]
-		public static readonly new string EntityStructuredTypeKey = "[63011]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 33);	// [63011]
+		public static readonly string EntityStructuredTypeKey = "[63011]";
 	}
 }
 #endregion
@@ -1500,7 +1500,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				string oldValue = this.Numéro;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630A2]"))
 				{
 					this.OnNuméroChanging (oldValue, value);
 					this.SetField<string> ("[630A2]", oldValue, value);
@@ -1522,7 +1522,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Demo.Demo5juin.Entities.AffaireEntity oldValue = this.Affaire;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630B2]"))
 				{
 					this.OnAffaireChanging (oldValue, value);
 					this.SetField<global::Demo.Demo5juin.Entities.AffaireEntity> ("[630B2]", oldValue, value);
@@ -1544,7 +1544,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Epsitec.Common.Types.Date oldValue = this.DateTravail;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630C2]"))
 				{
 					this.OnDateTravailChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.Date> ("[630C2]", oldValue, value);
@@ -1566,7 +1566,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Epsitec.Common.Types.Date oldValue = this.DateFacture;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630D2]"))
 				{
 					this.OnDateFactureChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.Date> ("[630D2]", oldValue, value);
@@ -1588,7 +1588,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Epsitec.Common.Types.Date oldValue = this.DateEchéance;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630E2]"))
 				{
 					this.OnDateEchéanceChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.Date> ("[630E2]", oldValue, value);
@@ -1610,7 +1610,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Demo.Demo5juin.Entities.AdressePlusEntity oldValue = this.AdresseFacturation;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630F2]"))
 				{
 					this.OnAdresseFacturationChanging (oldValue, value);
 					this.SetField<global::Demo.Demo5juin.Entities.AdressePlusEntity> ("[630F2]", oldValue, value);
@@ -1632,7 +1632,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Demo.Demo5juin.Entities.AdressePlusEntity oldValue = this.AdresseLivraison;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630G2]"))
 				{
 					this.OnAdresseLivraisonChanging (oldValue, value);
 					this.SetField<global::Demo.Demo5juin.Entities.AdressePlusEntity> ("[630G2]", oldValue, value);
@@ -1666,7 +1666,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Demo.Demo5juin.Entities.PrixEntity oldValue = this.FraisDePort;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630I2]"))
 				{
 					this.OnFraisDePortChanging (oldValue, value);
 					this.SetField<global::Demo.Demo5juin.Entities.PrixEntity> ("[630I2]", oldValue, value);
@@ -1688,7 +1688,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Demo.Demo5juin.Entities.MoyenDePaiementEntity oldValue = this.MoyenDePaiement;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630J2]"))
 				{
 					this.OnMoyenDePaiementChanging (oldValue, value);
 					this.SetField<global::Demo.Demo5juin.Entities.MoyenDePaiementEntity> ("[630J2]", oldValue, value);
@@ -1710,7 +1710,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Demo.Demo5juin.Entities.PrixEntity oldValue = this.Remise;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630K2]"))
 				{
 					this.OnRemiseChanging (oldValue, value);
 					this.SetField<global::Demo.Demo5juin.Entities.PrixEntity> ("[630K2]", oldValue, value);
@@ -1732,7 +1732,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Demo.Demo5juin.Entities.PrixComposeEntity oldValue = this.TotalFacturé;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630L2]"))
 				{
 					this.OnTotalFacturéChanging (oldValue, value);
 					this.SetField<global::Demo.Demo5juin.Entities.PrixComposeEntity> ("[630L2]", oldValue, value);
@@ -1772,8 +1772,8 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.FactureEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 34);	// [63021]
-		public static readonly new string EntityStructuredTypeKey = "[63021]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 34);	// [63021]
+		public static readonly string EntityStructuredTypeKey = "[63021]";
 	}
 }
 #endregion
@@ -1801,7 +1801,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				int oldValue = this.Nième;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630M2]"))
 				{
 					this.OnNièmeChanging (oldValue, value);
 					this.SetField<int> ("[630M2]", oldValue, value);
@@ -1823,7 +1823,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				string oldValue = this.Texte;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630N2]"))
 				{
 					this.OnTexteChanging (oldValue, value);
 					this.SetField<string> ("[630N2]", oldValue, value);
@@ -1845,7 +1845,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Demo.Demo5juin.Entities.FactureEntity oldValue = this.Facture;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630O2]"))
 				{
 					this.OnFactureChanging (oldValue, value);
 					this.SetField<global::Demo.Demo5juin.Entities.FactureEntity> ("[630O2]", oldValue, value);
@@ -1867,7 +1867,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Demo.Demo5juin.Entities.PrixEntity oldValue = this.FraisRappel;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630P2]"))
 				{
 					this.OnFraisRappelChanging (oldValue, value);
 					this.SetField<global::Demo.Demo5juin.Entities.PrixEntity> ("[630P2]", oldValue, value);
@@ -1889,7 +1889,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Demo.Demo5juin.Entities.PrixComposeEntity oldValue = this.TotalRappel;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630Q2]"))
 				{
 					this.OnTotalRappelChanging (oldValue, value);
 					this.SetField<global::Demo.Demo5juin.Entities.PrixComposeEntity> ("[630Q2]", oldValue, value);
@@ -1917,8 +1917,8 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.RappelEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 35);	// [63031]
-		public static readonly new string EntityStructuredTypeKey = "[63031]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 35);	// [63031]
+		public static readonly string EntityStructuredTypeKey = "[63031]";
 	}
 }
 #endregion
@@ -1946,7 +1946,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				string oldValue = this.Désignation;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630R2]"))
 				{
 					this.OnDésignationChanging (oldValue, value);
 					this.SetField<string> ("[630R2]", oldValue, value);
@@ -1966,8 +1966,8 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.MoyenDePaiementEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 36);	// [63041]
-		public static readonly new string EntityStructuredTypeKey = "[63041]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 36);	// [63041]
+		public static readonly string EntityStructuredTypeKey = "[63041]";
 	}
 }
 #endregion
@@ -1995,7 +1995,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				string oldValue = this.Client;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630S2]"))
 				{
 					this.OnClientChanging (oldValue, value);
 					this.SetField<string> ("[630S2]", oldValue, value);
@@ -2017,7 +2017,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				string oldValue = this.Désignation;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630T2]"))
 				{
 					this.OnDésignationChanging (oldValue, value);
 					this.SetField<string> ("[630T2]", oldValue, value);
@@ -2039,7 +2039,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Demo.Demo5juin.Entities.FactureEntity oldValue = this.Facture;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630U2]"))
 				{
 					this.OnFactureChanging (oldValue, value);
 					this.SetField<global::Demo.Demo5juin.Entities.FactureEntity> ("[630U2]", oldValue, value);
@@ -2111,8 +2111,8 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.AffaireEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 37);	// [63051]
-		public static readonly new string EntityStructuredTypeKey = "[63051]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 37);	// [63051]
+		public static readonly string EntityStructuredTypeKey = "[63051]";
 	}
 }
 #endregion
@@ -2140,7 +2140,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Demo.Demo5juin.Entities.MoyenDePaiementEntity oldValue = this.Moyen;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[63033]"))
 				{
 					this.OnMoyenChanging (oldValue, value);
 					this.SetField<global::Demo.Demo5juin.Entities.MoyenDePaiementEntity> ("[63033]", oldValue, value);
@@ -2162,7 +2162,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Demo.Demo5juin.Entities.PrixSimpleEntity oldValue = this.Valeur;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[63043]"))
 				{
 					this.OnValeurChanging (oldValue, value);
 					this.SetField<global::Demo.Demo5juin.Entities.PrixSimpleEntity> ("[63043]", oldValue, value);
@@ -2184,8 +2184,8 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.PaiementEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 38);	// [63061]
-		public static readonly new string EntityStructuredTypeKey = "[63061]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 38);	// [63061]
+		public static readonly string EntityStructuredTypeKey = "[63061]";
 	}
 }
 #endregion
@@ -2213,7 +2213,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::System.Decimal oldValue = this.Montant;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[63053]"))
 				{
 					this.OnMontantChanging (oldValue, value);
 					this.SetField<global::System.Decimal> ("[63053]", oldValue, value);
@@ -2235,7 +2235,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				global::Demo.Demo5juin.Entities.MonnaieEntity oldValue = this.Monnaie;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[63063]"))
 				{
 					this.OnMonnaieChanging (oldValue, value);
 					this.SetField<global::Demo.Demo5juin.Entities.MonnaieEntity> ("[63063]", oldValue, value);
@@ -2257,8 +2257,8 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.PrixSimpleEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 39);	// [63071]
-		public static readonly new string EntityStructuredTypeKey = "[63071]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 39);	// [63071]
+		public static readonly string EntityStructuredTypeKey = "[63071]";
 	}
 }
 #endregion
@@ -2286,7 +2286,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				string oldValue = this.Désignation;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[63073]"))
 				{
 					this.OnDésignationChanging (oldValue, value);
 					this.SetField<string> ("[63073]", oldValue, value);
@@ -2308,7 +2308,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				string oldValue = this.Rue;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[63083]"))
 				{
 					this.OnRueChanging (oldValue, value);
 					this.SetField<string> ("[63083]", oldValue, value);
@@ -2330,7 +2330,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				string oldValue = this.Numéro;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[63093]"))
 				{
 					this.OnNuméroChanging (oldValue, value);
 					this.SetField<string> ("[63093]", oldValue, value);
@@ -2352,7 +2352,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				string oldValue = this.Case;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630A3]"))
 				{
 					this.OnCaseChanging (oldValue, value);
 					this.SetField<string> ("[630A3]", oldValue, value);
@@ -2374,7 +2374,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				string oldValue = this.Ville;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630B3]"))
 				{
 					this.OnVilleChanging (oldValue, value);
 					this.SetField<string> ("[630B3]", oldValue, value);
@@ -2396,7 +2396,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				string oldValue = this.Npa;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630C3]"))
 				{
 					this.OnNpaChanging (oldValue, value);
 					this.SetField<string> ("[630C3]", oldValue, value);
@@ -2418,7 +2418,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				string oldValue = this.Etat;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630D3]"))
 				{
 					this.OnEtatChanging (oldValue, value);
 					this.SetField<string> ("[630D3]", oldValue, value);
@@ -2440,7 +2440,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				string oldValue = this.Pays;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[630E3]"))
 				{
 					this.OnPaysChanging (oldValue, value);
 					this.SetField<string> ("[630E3]", oldValue, value);
@@ -2474,8 +2474,8 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.AdresseEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 40);	// [63081]
-		public static readonly new string EntityStructuredTypeKey = "[63081]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 40);	// [63081]
+		public static readonly string EntityStructuredTypeKey = "[63081]";
 	}
 }
 #endregion
@@ -2503,7 +2503,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				int oldValue = this.Longueur;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[6311]"))
 				{
 					this.OnLongueurChanging (oldValue, value);
 					this.SetField<int> ("[6311]", oldValue, value);
@@ -2525,7 +2525,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				string oldValue = this.Dimension;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[6312]"))
 				{
 					this.OnDimensionChanging (oldValue, value);
 					this.SetField<string> ("[6312]", oldValue, value);
@@ -2576,7 +2576,7 @@ namespace Demo.Demo5juin.Entities
 			set
 			{
 				string oldValue = this.Téléphone;
-				if (oldValue != value)
+				if (oldValue != value || !this.IsFieldDefined("[6322]"))
 				{
 					this.OnTéléphoneChanging (oldValue, value);
 					this.SetField<string> ("[6322]", oldValue, value);

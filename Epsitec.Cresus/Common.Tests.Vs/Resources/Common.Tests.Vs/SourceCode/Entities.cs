@@ -74,8 +74,8 @@ namespace Epsitec.Common.Tests.Vs.Entities
 		{
 			return global::Epsitec.Common.Tests.Vs.Entities.ValueDataEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (50, 10, 0);	// [I1A]
-		public static readonly new string EntityStructuredTypeKey = "[I1A]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (50, 10, 0);	// [I1A]
+		public static readonly string EntityStructuredTypeKey = "[I1A]";
 	}
 }
 #endregion
@@ -123,8 +123,8 @@ namespace Epsitec.Common.Tests.Vs.Entities
 		{
 			return global::Epsitec.Common.Tests.Vs.Entities.ReferenceDataEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (50, 10, 3);	// [I1A3]
-		public static readonly new string EntityStructuredTypeKey = "[I1A3]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (50, 10, 3);	// [I1A3]
+		public static readonly string EntityStructuredTypeKey = "[I1A3]";
 	}
 }
 #endregion
@@ -160,8 +160,8 @@ namespace Epsitec.Common.Tests.Vs.Entities
 		{
 			return global::Epsitec.Common.Tests.Vs.Entities.CollectionDataEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (50, 10, 5);	// [I1A5]
-		public static readonly new string EntityStructuredTypeKey = "[I1A5]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (50, 10, 5);	// [I1A5]
+		public static readonly string EntityStructuredTypeKey = "[I1A5]";
 	}
 }
 #endregion

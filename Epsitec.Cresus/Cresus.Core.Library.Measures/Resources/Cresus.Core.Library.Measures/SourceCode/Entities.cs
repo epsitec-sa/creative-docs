@@ -191,8 +191,8 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1010, 10, 0);	// [IVA]
-		public static readonly new string EntityStructuredTypeKey = "[IVA]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1010, 10, 0);	// [IVA]
+		public static readonly string EntityStructuredTypeKey = "[IVA]";
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<UnitOfMeasureEntity>
@@ -313,8 +313,8 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.UnitOfMeasureGroupEntity.EntityStructuredTypeKey;
 		}
-		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1010, 10, 15);	// [IVAF]
-		public static readonly new string EntityStructuredTypeKey = "[IVAF]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1010, 10, 15);	// [IVAF]
+		public static readonly string EntityStructuredTypeKey = "[IVAF]";
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<UnitOfMeasureGroupEntity>
