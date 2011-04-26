@@ -38,8 +38,6 @@ namespace Epsitec.Common.Designer.ModuleSupport
 		/// </summary>
 		private CodeFormatter GenerateResFile()
 		{
-			this.commandsGenerated = false;
-
 			System.Diagnostics.Debug.Assert (this.manager.DefaultModuleId >= 0);
 
 			CodeHelper.EmitHeader (this.formatter);
@@ -241,7 +239,6 @@ namespace Epsitec.Common.Designer.ModuleSupport
 		
 		private void GenerateCommands(ResourceBundle bundle, List<string> cmdFields)
 		{
-			this.commandsGenerated = true;
 			string prefix   = "";
 			bool addNewline = false;
 
@@ -905,8 +902,6 @@ namespace Epsitec.Common.Designer.ModuleSupport
 
 			this.formatter.WriteEndClass ();
 		}
-
-		private bool commandsGenerated;
 
 		private readonly ResourceManager manager;
 		private readonly string defaultNamespace;

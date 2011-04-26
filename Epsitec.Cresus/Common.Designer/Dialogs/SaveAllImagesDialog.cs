@@ -648,7 +648,6 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private System.Windows.Forms.DialogResult	result;
 		private bool								closed;
-		private int									tabIndex;
 		private List<EntitiesEditor.EntitySample>	entitySamples;
 		private List<string>						selectedEntityNames;
 

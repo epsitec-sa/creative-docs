@@ -842,7 +842,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private static readonly double infoHeaderHeight = 24;
 		private static readonly double textMargin = 5;
-		private static readonly double queueThickness = 5;
 		private static readonly double roundFrameRadius = 12;
 		private static readonly double shadowOffset = 8;
 

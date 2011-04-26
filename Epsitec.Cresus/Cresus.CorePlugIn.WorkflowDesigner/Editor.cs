@@ -318,7 +318,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 				xmlDoc.Save (writer);
 			}
 			
-			Editor.SaveData (this.workflowDefinitionEntity, buffer.ToString ());
+			this.SaveData (this.workflowDefinitionEntity, buffer.ToString ());
 		}
 
 		private IEnumerable<XElement> GetSaveObjectsElements()
@@ -415,8 +415,13 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 			return this.BusinessContext.DataContext.GetByExample (example).FirstOrDefault ();
 		}
 
-		private static void SaveData(WorkflowDefinitionEntity def, string xmlSource)
+		private void SaveData(WorkflowDefinitionEntity def, string xmlSource)
 		{
+			if (def.SerializedDesign.IsNull ())
+			{
+				def.SerializedDesign = this.BusinessContext.CreateEntity<XmlBlobEntity> ();
+			}
+
 			def.SerializedDesign.Code = "WorkflowDesigner";
 			def.SerializedDesign.Data = Editor.EncodeString (xmlSource);
 		}

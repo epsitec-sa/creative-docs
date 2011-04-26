@@ -99,6 +99,5 @@ namespace Epsitec.Cresus.Graph
 		private readonly Dictionary<string, string> meta;
 		private readonly string					metaSource;
 		private long							checksum;
-		private int								ticks;
 	}
 }
