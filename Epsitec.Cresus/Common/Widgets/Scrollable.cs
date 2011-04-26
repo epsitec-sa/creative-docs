@@ -726,7 +726,6 @@ namespace Epsitec.Common.Widgets
 
 		public bool OnDragBegin(Point cursor)
 		{
-			this.isDragging = true;
 			this.draggingInitialViewportOffset = this.ViewportOffset;
 
 			return true;
@@ -744,7 +743,6 @@ namespace Epsitec.Common.Widgets
 
 		public void OnDragEnd()
 		{
-			this.isDragging = false;
 		}
 
 		#endregion
@@ -818,7 +816,6 @@ namespace Epsitec.Common.Widgets
 		protected const double					LargeScrollPercent = 50;
 
 		private bool							scrollWithHand;
-		private bool							isDragging;
 		private Point							draggingInitialViewportOffset;
 
 		private bool							somethingToScroll;

@@ -130,8 +130,8 @@ namespace Epsitec.Cresus.Core.Data
 			{
 				UI.ShowErrorMessage
 				(
-					Res.Strings.Error.CannotConnectToLocalDatabase,
-					Res.Strings.Hint.Error.CannotConnectToLocalDatabase,
+					Epsitec.Cresus.Core.Library.Data.Res.Strings.Error.CannotConnectToLocalDatabase,
+					Epsitec.Cresus.Core.Library.Data.Res.Strings.Hint.Error.CannotConnectToLocalDatabase,
 					ex
 				);
 
@@ -185,7 +185,7 @@ namespace Epsitec.Cresus.Core.Data
 
 				return true;
 			}
-			catch (System.Exception e)
+			catch (System.Exception)
 			{
 				return false;
 			}

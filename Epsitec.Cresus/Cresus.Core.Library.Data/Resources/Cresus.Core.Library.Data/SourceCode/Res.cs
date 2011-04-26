@@ -4,7 +4,7 @@
 //  toute modification sera perdue. 
 //  --------------------------------------------------------------------------- 
 
-namespace Epsitec.Cresus.Core
+namespace Epsitec.Cresus.Core.Library.Data
 {
 	public static class Res
 	{
@@ -270,19 +270,19 @@ namespace Epsitec.Cresus.Core
 			public static class Error
 			{
 				//	designer:str/8VA
-				public static global::System.String CannotConnectToLocalDatabase
+				public static global::Epsitec.Common.Types.FormattedText CannotConnectToLocalDatabase
 				{
 					get
 					{
-						return global::Epsitec.Cresus.Core.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (167772160));
+						return global::Epsitec.Cresus.Core.Library.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (167772160));
 					}
 				}
 				//	designer:str/8VA1
-				public static global::System.String IncompatibleDatabase
+				public static global::Epsitec.Common.Types.FormattedText IncompatibleDatabase
 				{
 					get
 					{
-						return global::Epsitec.Cresus.Core.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (167772161));
+						return global::Epsitec.Cresus.Core.Library.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (167772161));
 					}
 				}
 			}
@@ -292,19 +292,19 @@ namespace Epsitec.Cresus.Core
 				public static class Error
 				{
 					//	designer:str/8VA2
-					public static global::System.String CannotConnectToLocalDatabase
+					public static global::Epsitec.Common.Types.FormattedText CannotConnectToLocalDatabase
 					{
 						get
 						{
-							return global::Epsitec.Cresus.Core.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (167772162));
+							return global::Epsitec.Cresus.Core.Library.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (167772162));
 						}
 					}
 					//	designer:str/8VA3
-					public static global::System.String IncompatibleDatabase
+					public static global::Epsitec.Common.Types.FormattedText IncompatibleDatabase
 					{
 						get
 						{
-							return global::Epsitec.Cresus.Core.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (167772163));
+							return global::Epsitec.Cresus.Core.Library.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (167772163));
 						}
 					}
 				}
@@ -326,12 +326,12 @@ namespace Epsitec.Cresus.Core
 			
 			private static global::Epsitec.Common.Types.FormattedText GetText(string bundle, params string[] path)
 			{
-				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Cresus.Core.Res.Strings.GetString (bundle, path));
+				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Cresus.Core.Library.Data.Res.Strings.GetString (bundle, path));
 			}
 			
 			private static global::Epsitec.Common.Types.FormattedText GetText(global::Epsitec.Common.Support.Druid druid)
 			{
-				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Cresus.Core.Res.Strings.GetString (druid));
+				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Cresus.Core.Library.Data.Res.Strings.GetString (druid));
 			}
 			
 			private static global::System.String GetString(string bundle, params string[] path)

@@ -4,7 +4,7 @@
 //  toute modification sera perdue. 
 //  --------------------------------------------------------------------------- 
 
-namespace Epsitec.Cresus.Core
+namespace Epsitec.Cresus.Core.Library.Address
 {
 	public static class Res
 	{
@@ -300,12 +300,12 @@ namespace Epsitec.Cresus.Core
 			
 			private static global::Epsitec.Common.Types.FormattedText GetText(string bundle, params string[] path)
 			{
-				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Cresus.Core.Res.Strings.GetString (bundle, path));
+				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Cresus.Core.Library.Address.Res.Strings.GetString (bundle, path));
 			}
 			
 			private static global::Epsitec.Common.Types.FormattedText GetText(global::Epsitec.Common.Support.Druid druid)
 			{
-				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Cresus.Core.Res.Strings.GetString (druid));
+				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Cresus.Core.Library.Address.Res.Strings.GetString (druid));
 			}
 			
 			private static global::System.String GetString(string bundle, params string[] path)

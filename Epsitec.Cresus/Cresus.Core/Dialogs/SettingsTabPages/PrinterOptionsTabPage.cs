@@ -43,8 +43,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		public override void CreateUI(Widget parent)
 		{
-			int tabIndex = 0;
-
 			var frame = new FrameBox
 			{
 				Parent = parent,
@@ -75,6 +73,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			//	Rempli le panneau de gauche.
 #if false
 			this.confirmationButtons.Clear ();
+
+			int tabIndex = 0;
 
 			this.entityPrintingSettings.DocumentTypeSelected = DocumentTypeDefinition.StringToType (this.GetSettings (true, "SelectedType"));
 

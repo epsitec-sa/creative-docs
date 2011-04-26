@@ -254,7 +254,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 					var target = this.FindDropTarget (mouseCursor);
 
-					if (target is ErsatzTile || target == null || target.GroupId != this.dragGroupId || !target.IsDraggable)
+					if (target == null || target.GroupId != this.dragGroupId || !target.IsDraggable)
 					{
 						this.dragWindowTarget.Hide ();
 					}

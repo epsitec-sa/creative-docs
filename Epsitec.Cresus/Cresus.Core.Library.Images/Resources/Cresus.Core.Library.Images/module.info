@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ModuleInfo id="1001" name="Cresus.Core.Library.Images" layer="A" textMode="String" assemblies="Cresus.Core.Library.Images" namespace="Epsitec.Cresus.Core">
+<ModuleInfo id="1001" name="Cresus.Core.Library.Images" layer="A" textMode="FormattedText" assemblies="Cresus.Core.Library.Images" namespace="Epsitec.Cresus.Core" namespaceRes="Epsitec.Cresus.Core.Library.Images">
   <Versions>
     <Version id="8" build="1" date="2011-04-26T07:13:03.3489391Z" />
-    <Version id="1" build="10" date="2011-04-26T10:17:02.7372140Z" />
+    <Version id="1" build="11" date="2011-04-26T10:29:50.6338412Z" />
   </Versions>
 </ModuleInfo>

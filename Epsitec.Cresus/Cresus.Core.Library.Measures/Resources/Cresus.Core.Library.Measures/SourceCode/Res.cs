@@ -4,7 +4,7 @@
 //  toute modification sera perdue. 
 //  --------------------------------------------------------------------------- 
 
-namespace Epsitec.Cresus.Core.Measures
+namespace Epsitec.Cresus.Core.Library.Measures
 {
 	public static class Res
 	{
@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Core.Measures
 				{
 					get
 					{
-						return global::Epsitec.Cresus.Core.Measures.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 14));
+						return global::Epsitec.Cresus.Core.Library.Measures.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 14));
 					}
 				}
 				//	designer:cap/IVAA
@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Core.Measures
 				{
 					get
 					{
-						return global::Epsitec.Cresus.Core.Measures.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10));
+						return global::Epsitec.Cresus.Core.Library.Measures.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10));
 					}
 				}
 				//	designer:cap/IVA9
@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.Measures
 				{
 					get
 					{
-						return global::Epsitec.Cresus.Core.Measures.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 9));
+						return global::Epsitec.Cresus.Core.Library.Measures.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 9));
 					}
 				}
 				//	designer:cap/IVA6
@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Core.Measures
 				{
 					get
 					{
-						return global::Epsitec.Cresus.Core.Measures.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 6));
+						return global::Epsitec.Cresus.Core.Library.Measures.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 6));
 					}
 				}
 				//	designer:cap/IVAB
@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Core.Measures
 				{
 					get
 					{
-						return global::Epsitec.Cresus.Core.Measures.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 11));
+						return global::Epsitec.Cresus.Core.Library.Measures.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 11));
 					}
 				}
 				//	designer:cap/IVAD
@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Core.Measures
 				{
 					get
 					{
-						return global::Epsitec.Cresus.Core.Measures.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 13));
+						return global::Epsitec.Cresus.Core.Library.Measures.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 13));
 					}
 				}
 				//	designer:cap/IVA8
@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Core.Measures
 				{
 					get
 					{
-						return global::Epsitec.Cresus.Core.Measures.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 8));
+						return global::Epsitec.Cresus.Core.Library.Measures.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 8));
 					}
 				}
 				//	designer:cap/IVA7
@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Core.Measures
 				{
 					get
 					{
-						return global::Epsitec.Cresus.Core.Measures.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 7));
+						return global::Epsitec.Cresus.Core.Library.Measures.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 7));
 					}
 				}
 				//	designer:cap/IVAC
@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.Core.Measures
 				{
 					get
 					{
-						return global::Epsitec.Cresus.Core.Measures.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 12));
+						return global::Epsitec.Cresus.Core.Library.Measures.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 12));
 					}
 				}
 			}
@@ -164,12 +164,12 @@ namespace Epsitec.Cresus.Core.Measures
 			
 			private static global::Epsitec.Common.Types.FormattedText GetText(string bundle, params string[] path)
 			{
-				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Cresus.Core.Measures.Res.Strings.GetString (bundle, path));
+				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Cresus.Core.Library.Measures.Res.Strings.GetString (bundle, path));
 			}
 			
 			private static global::Epsitec.Common.Types.FormattedText GetText(global::Epsitec.Common.Support.Druid druid)
 			{
-				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Cresus.Core.Measures.Res.Strings.GetString (druid));
+				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Cresus.Core.Library.Measures.Res.Strings.GetString (druid));
 			}
 			
 			private static global::System.String GetString(string bundle, params string[] path)

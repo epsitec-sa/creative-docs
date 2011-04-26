@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		public CoreApp Host
+		public new CoreApp Host
 		{
 			get
 			{

@@ -527,21 +527,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.RemoveAction ();
 			};
 
-#if false
-			this.list.SelectedItemChanging += delegate
-			{
-				if (!this.ignoreChange)
-				{
-					this.loginNameField.DefocusAndAcceptOrReject ();
-					this.displayNameField.DefocusAndAcceptOrReject ();
-					this.newPasswordField1.DefocusAndAcceptOrReject ();
-					this.newPasswordField2.DefocusAndAcceptOrReject ();
-					this.beginDateField.DefocusAndAcceptOrReject ();
-					this.endDateField.DefocusAndAcceptOrReject ();
-				}
-			};
-#endif
-
 			this.table.SelectionChanged += delegate
 			{
 				this.UpdateUser ();
@@ -777,8 +762,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private void UpdateTable(int? sel = null)
 		{
 			//	Met à jour le contenu de la table.
-			this.ignoreChange = true;
-
 			int rows = this.users.Count;
 			this.table.SetArraySize (2, rows);
 
@@ -807,7 +790,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 
 			this.initialUser = null;  // ne sert que la 1ère fois !
-			this.ignoreChange = false;
 		}
 
 		private void TableFillRow(int row)
@@ -1397,7 +1379,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private Button										cancelButton;
 		private bool										editionStarted;
 //-		private List<NaturalPersonEntity>					naturalPersonEntities;
-		private bool										ignoreChange;
 		private IList<Data.LockOwner>						lockOwners;
 		private bool										isLockAcquired;
 

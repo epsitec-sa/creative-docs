@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		/// Si on donne un seul caractère, il est affiché tel quel.
 		/// </summary>
 		/// <value>Nom brut de l'icône, sans prefix ni extension.</value>
-		public string							IconUri
+		public new string						IconUri
 		{
 			get
 			{

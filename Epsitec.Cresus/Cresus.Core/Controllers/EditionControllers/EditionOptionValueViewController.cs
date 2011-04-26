@@ -78,7 +78,5 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 
 		private ArticleParameterControllers.ValuesArticleParameterController	parameterController;
-		private ArticleParameterControllers.ArticleParameterToolbarController	toolbarController;
-		private TextFieldMultiEx												articleDescriptionTextField;
 	}
 }

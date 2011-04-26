@@ -4,7 +4,7 @@
 //  toute modification sera perdue. 
 //  --------------------------------------------------------------------------- 
 
-namespace Epsitec.Cresus.Core
+namespace Epsitec.Cresus.Core.Library.Workflows
 {
 	public static class Res
 	{
@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Core
 				{
 					get
 					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 39));
+						return global::Epsitec.Cresus.Core.Library.Workflows.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 39));
 					}
 				}
 				//	designer:cap/DVA91
@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Core
 				{
 					get
 					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 41));
+						return global::Epsitec.Cresus.Core.Library.Workflows.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 41));
 					}
 				}
 				//	designer:cap/DVA81
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Core
 				{
 					get
 					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 40));
+						return global::Epsitec.Cresus.Core.Library.Workflows.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 40));
 					}
 				}
 				//	designer:cap/DVA51
@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Core
 				{
 					get
 					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 37));
+						return global::Epsitec.Cresus.Core.Library.Workflows.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 37));
 					}
 				}
 				//	designer:cap/DVA61
@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Core
 				{
 					get
 					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 38));
+						return global::Epsitec.Cresus.Core.Library.Workflows.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 38));
 					}
 				}
 				//	designer:cap/DVAA1
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Core
 				{
 					get
 					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 42));
+						return global::Epsitec.Cresus.Core.Library.Workflows.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 42));
 					}
 				}
 			}
@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.Core
 				{
 					get
 					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 33));
+						return global::Epsitec.Cresus.Core.Library.Workflows.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 33));
 					}
 				}
 				//	designer:cap/DVAV
@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.Core
 				{
 					get
 					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 31));
+						return global::Epsitec.Cresus.Core.Library.Workflows.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 31));
 					}
 				}
 				//	designer:cap/DVA01
@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.Core
 				{
 					get
 					{
-						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 32));
+						return global::Epsitec.Cresus.Core.Library.Workflows.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 32));
 					}
 				}
 			}
@@ -270,12 +270,12 @@ namespace Epsitec.Cresus.Core
 			
 			private static global::Epsitec.Common.Types.FormattedText GetText(string bundle, params string[] path)
 			{
-				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Cresus.Core.Res.Strings.GetString (bundle, path));
+				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Cresus.Core.Library.Workflows.Res.Strings.GetString (bundle, path));
 			}
 			
 			private static global::Epsitec.Common.Types.FormattedText GetText(global::Epsitec.Common.Support.Druid druid)
 			{
-				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Cresus.Core.Res.Strings.GetString (druid));
+				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Cresus.Core.Library.Workflows.Res.Strings.GetString (druid));
 			}
 			
 			private static global::System.String GetString(string bundle, params string[] path)
