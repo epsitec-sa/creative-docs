@@ -1,4 +1,5 @@
 using Epsitec.Common.Drawing;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Document.PDF
 {
@@ -33,8 +34,8 @@ namespace Epsitec.Common.Document.PDF
 			//	Il n'est pas nécessaire de se soucier du "%PDF-1.4" en début de fichier,
 			//	ni des tables "xref..startxref..%%EOF" en fin de fichier.
 			this.filename = filename;
-			this.parts = new System.Collections.ArrayList();
-			this.dictionary = new System.Collections.Hashtable();
+			this.parts = new List<Part> ();
+			this.dictionary = new Dictionary<string, Object> ();
 			this.objectNextId = 1;  // premier identificateur d'objet
 			this.streamIO = null;  // fichier pas encore ouvert
 		}
@@ -64,20 +65,20 @@ namespace Epsitec.Common.Document.PDF
 			if ( type == "D" )  // définition ?
 			{
 				//	On vérifie qu'un objet n'est pas défini 2 fois:
-				Object obj = this.dictionary[objectName] as Object;
+				Object obj = this.dictionary[objectName];
 				System.Diagnostics.Debug.Assert(obj != null);
 				System.Diagnostics.Debug.Assert(!obj.Defined, "PDF.Writer: Attempt to redefine a object");
 				System.Diagnostics.Debug.Assert(obj.Id == 1 || objectName != "Root", "PDF.Writer: Root objet must have number 1");
 				obj.Defined = true;
 			}
 
-			this.parts.Add(string.Format(CultureInfo.InvariantCulture, "{0}{1}", type, objectName));
-			this.WriteString(ending);
+			this.parts.Add (new Part (type, objectName));
+			this.WriteString (ending);
 		}
 
 		protected int GetObjectId(string objectName)
 		{
-			Object obj = this.dictionary[objectName] as Object;
+			Object obj = this.dictionary[objectName];
 			return obj.Id;
 		}
 
@@ -91,7 +92,7 @@ namespace Epsitec.Common.Document.PDF
 		public void WriteString(string text)
 		{
 			//	Ecrit juste une string telle quelle.
-			this.parts.Add(string.Format(CultureInfo.InvariantCulture, "F{0}", text));  // texte fixe
+			this.parts.Add (new Part ("F", text));  // texte fixe
 		}
 
 		public void Flush()
@@ -107,24 +108,31 @@ namespace Epsitec.Common.Document.PDF
 			}
 
 			//	Ecrit toutes les parties fixes ou variables.
-			foreach ( string part in this.parts )
+			foreach (Part part in this.parts)
 			{
-				if ( part[0] == 'F' )  // texte fixe ?
+				switch (part.Type)
 				{
-					this.FileWriteString(part.Substring(1));
-				}
+					case "F":	// texte fixe ?
+						this.FileWriteString (part.Text);
+						break;
 
-				if ( part[0] == 'D' )  // définition d'un objet ?
-				{
-					Object obj = this.dictionary[part.Substring(1)] as Object;
-					obj.Offset = this.streamOffset;
-					this.FileWriteString(Writer.ToString(obj.Id));
-				}
+					case "D":	// définition d'un objet ?
+						{
+							Object obj = this.dictionary[part.Text];
+							obj.Offset = this.streamOffset;
+							this.FileWriteString (Writer.ToString (obj.Id));
+						}
+						break;
 
-				if ( part[0] == 'R' )  // référence à un objet ?
-				{
-					Object obj = this.dictionary[part.Substring(1)] as Object;
-					this.FileWriteString(Writer.ToString(obj.Id));
+					case "R":	// référence à un objet ?
+						{
+							Object obj = this.dictionary[part.Text];
+							this.FileWriteString (Writer.ToString (obj.Id));
+						}
+						break;
+
+					default:
+						throw new System.NotSupportedException (string.Format ("Part type {0} not supported here", part.Type));
 				}
 			}
 
@@ -226,11 +234,23 @@ namespace Epsitec.Common.Document.PDF
 		}
 
 
-		protected string						filename;
-		protected System.Collections.ArrayList	parts;
-		protected System.Collections.Hashtable	dictionary;
-		protected int							objectNextId;
-		protected System.IO.FileStream			streamIO;
-		protected int							streamOffset;
+		struct Part
+		{
+			public Part(string type, string text)
+			{
+				this.Type = type;
+				this.Text = text;
+			}
+
+			public readonly string Type;
+			public readonly string Text;
+		}
+
+		private string							filename;
+		private readonly List<Part>				parts;
+		private readonly Dictionary<string, Object>	dictionary;
+		private int								objectNextId;
+		private System.IO.FileStream			streamIO;
+		private int								streamOffset;
 	}
 }
