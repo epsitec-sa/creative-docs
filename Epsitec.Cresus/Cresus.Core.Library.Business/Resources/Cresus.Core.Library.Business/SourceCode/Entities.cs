@@ -1184,7 +1184,7 @@ namespace Epsitec.Cresus.Core.Entities
 		public static readonly new string EntityStructuredTypeKey = "[GVAT]";
 		
 		#region Repository Class
-		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<BusinessDocumentEntity>
+		public new partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<BusinessDocumentEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Volatile)
 			{
@@ -1840,7 +1840,7 @@ namespace Epsitec.Cresus.Core.Entities
 		public static readonly new string EntityStructuredTypeKey = "[GVAC1]";
 		
 		#region Repository Class
-		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<ArticleDocumentItemEntity>
+		public new partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<ArticleDocumentItemEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Volatile)
 			{

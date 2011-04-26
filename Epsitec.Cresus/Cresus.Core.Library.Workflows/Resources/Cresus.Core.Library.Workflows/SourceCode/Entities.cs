@@ -870,7 +870,7 @@ namespace Epsitec.Cresus.Core.Entities
 		public static readonly new string EntityStructuredTypeKey = "[DVA6]";
 		
 		#region Repository Class
-		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<WorkflowDefinitionEntity>
+		public new partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<WorkflowDefinitionEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{

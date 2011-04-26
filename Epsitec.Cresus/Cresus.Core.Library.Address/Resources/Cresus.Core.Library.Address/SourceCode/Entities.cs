@@ -496,7 +496,7 @@ namespace Epsitec.Cresus.Core.Entities
 		public static readonly new string EntityStructuredTypeKey = "[FVA5]";
 		
 		#region Repository Class
-		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<NaturalPersonEntity>
+		public new partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<NaturalPersonEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Volatile)
 			{
@@ -626,7 +626,7 @@ namespace Epsitec.Cresus.Core.Entities
 		public static readonly new string EntityStructuredTypeKey = "[FVA6]";
 		
 		#region Repository Class
-		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<LegalPersonEntity>
+		public new partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<LegalPersonEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Volatile)
 			{
@@ -1082,7 +1082,7 @@ namespace Epsitec.Cresus.Core.Entities
 		public static readonly new string EntityStructuredTypeKey = "[FVAR]";
 		
 		#region Repository Class
-		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<MailContactEntity>
+		public new partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<MailContactEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Volatile)
 			{
@@ -1948,7 +1948,7 @@ namespace Epsitec.Cresus.Core.Entities
 		public static readonly new string EntityStructuredTypeKey = "[FVAL1]";
 		
 		#region Repository Class
-		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<TelecomContactEntity>
+		public new partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<TelecomContactEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Volatile)
 			{
@@ -2030,7 +2030,7 @@ namespace Epsitec.Cresus.Core.Entities
 		public static readonly new string EntityStructuredTypeKey = "[FVAP1]";
 		
 		#region Repository Class
-		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<UriContactEntity>
+		public new partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<UriContactEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Volatile)
 			{
