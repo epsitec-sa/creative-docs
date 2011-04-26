@@ -1142,7 +1142,17 @@ namespace Epsitec.Common.Types
 		protected Support.EventHandler<TEventArgs> GetUserEventHandler<TEventArgs>(string name)
 			where TEventArgs : System.EventArgs
 		{
-			return this.GetUserEventHandler (name) as Support.EventHandler<TEventArgs>;
+			System.Delegate value;
+
+			if ((this.userEvents != null) &&
+				(this.userEvents.TryGetValue (name, out value)))
+			{
+				return value as Support.EventHandler<TEventArgs>;
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		protected virtual void Dispose(bool disposing)
