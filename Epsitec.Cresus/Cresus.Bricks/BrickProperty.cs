@@ -63,6 +63,12 @@ namespace Epsitec.Cresus.Bricks
 			}
 		}
 
+		public BrickProperty(BrickPropertyKey key, AttributeValue value)
+		{
+			this.key = key;
+			this.value = value;
+		}
+
 
 		public BrickPropertyKey					Key
 		{
@@ -100,6 +106,14 @@ namespace Epsitec.Cresus.Bricks
 				{
 					return null;
 				}
+			}
+		}
+
+		public AttributeValue					AttributeValue
+		{
+			get
+			{
+				return this.value as AttributeValue;
 			}
 		}
 

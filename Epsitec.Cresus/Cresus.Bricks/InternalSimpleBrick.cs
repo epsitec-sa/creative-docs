@@ -22,9 +22,9 @@ namespace Epsitec.Cresus.Bricks
 			return this as TSelf;
 		}
 
-		public TSelf AutoGroup()
+		public TSelf Attribute<T>(T attributeValue)
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.AutoGroup));
+			this.AddProperty (new BrickProperty (BrickPropertyKey.Attribute, new AttributeValue<T> (attributeValue)));
 			return this as TSelf;
 		}
 

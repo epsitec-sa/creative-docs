@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			this.ProcessProperty (brick, BrickPropertyKey.Text, x => item.Text = x);
 			this.ProcessProperty (brick, BrickPropertyKey.TextCompact, x => item.CompactText = x);
 
-			this.ProcessProperty (brick, BrickPropertyKey.AutoGroup, x => item.AutoGroup = x);
+			this.ProcessProperty (brick, BrickPropertyKey.Attribute, x => this.ProcessAttribute (item, x));
 			this.ProcessProperty (brick, BrickPropertyKey.Include, x => this.ProcessInclusion (x));
 
 			if ((!item.Title.IsNullOrEmpty) &&
@@ -152,6 +152,20 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			return item;
 		}
 
+
+		private void ProcessAttribute(TileDataItem item, BrickMode value)
+		{
+			switch (value)
+			{
+				case BrickMode.AutoGroup:
+					item.AutoGroup = true;
+					break;
+				
+				case BrickMode.DefaultToSummarySubview:
+					item.DefaultMode = ViewControllerMode.Summary;
+					break;
+			}
+		}
 
 		private void ProcessInclusion(Expression expression)
 		{
@@ -443,7 +457,18 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 			return accessorFactory.CollectionAccessor;
 		}
-		
+
+		private void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<BrickMode> setter)
+		{
+			var attributeValue = Brick.GetProperty (brick, key).AttributeValue;
+			
+			if ((attributeValue != null) &&
+				(attributeValue.ContainsValue<BrickMode> ()))
+			{
+				setter (attributeValue.GetValue<BrickMode> ());
+			}
+		}
+
 		private void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<Accessor<FormattedText>> setter)
 		{
 			var formatter = this.ToAccessor (brick, Brick.GetProperty (brick, key));

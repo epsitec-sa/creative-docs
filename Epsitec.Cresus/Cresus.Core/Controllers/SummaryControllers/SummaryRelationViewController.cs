@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			wall.AddBrick (x => x.Person.Contacts)
 				.AsType<TelecomContactEntity> ()
-				.AutoGroup ()
+				.Attribute (BrickMode.AutoGroup)
 				.Template ()
 				 .Text (x => x.GetSummary ())
 				 .TextCompact (x => x.GetCompactSummary ())
@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			wall.AddBrick (x => x.Person.Contacts)
 				.AsType<UriContactEntity> ()
-				.AutoGroup ()
+				.Attribute (BrickMode.AutoGroup)
 				.Template ()
 				 .Text (x => x.GetSummary ())
 				 .TextCompact (x => x.GetCompactSummary ())
