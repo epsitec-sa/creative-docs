@@ -59,6 +59,7 @@
     <Compile Include="Business\Finance\PriceCalculators\GroupPriceCalculator.cs" />
     <Compile Include="Business\Finance\PriceCalculators\IDocumentPriceCalculator.cs" />
     <Compile Include="Business\Finance\PriceCalculators\SubTotalPriceCalculator.cs" />
+    <Compile Include="Business\Rules\AddressBusinessRules.cs" />
     <Compile Include="Business\Rules\AffairBusinessRules.cs" />
     <Compile Include="Business\Rules\ArticleGroupBusinessRules.cs" />
     <Compile Include="Business\Rules\ArticlePriceBusinessRules.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Business\Rules\CustomerBusinessRules.cs" />
     <Compile Include="Business\Rules\EnumValueArticleParameterDefinitionBusinessRules.cs" />
     <Compile Include="Business\Rules\FreeTextValueArticleParameterDefinitionBusinessRules.cs" />
+    <Compile Include="Business\Rules\MailContactBusinessRules.cs" />
     <Compile Include="Business\Rules\NumericValueArticleParameterDefinitionBusinessRules.cs" />
     <Compile Include="Business\Rules\OptionValueArticleParameterDefinitionBusinessRules.cs" />
     <Compile Include="Business\Rules\OptionValueBusinessRules.cs" />
