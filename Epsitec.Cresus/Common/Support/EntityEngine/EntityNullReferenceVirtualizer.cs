@@ -359,6 +359,8 @@ namespace Epsitec.Common.Support.EntityEngine
 			{
 				if (this.IsReadOnly)
 				{
+					System.Diagnostics.Debug.Fail ("Writing to a null entity is no longer considered to be good practice!");
+
 					this.parentStore.SetLiveEntity (this.fieldIdInParentStore, this.entity);
 					this.isReadOnly = false;
 

@@ -36,6 +36,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		protected override void CreateUI()
 		{
+			this.SetupDefaultCountry ();
+
 			using (var data = TileContainerController.Setup (this))
 			{
 				this.CreateUIRoles (data);
@@ -57,6 +59,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 				this.CreateUIComments (data);
 			}
+		}
+
+		private void SetupDefaultCountry()
+		{
+			this.defaultCountry = this.BusinessContext.GetAllEntities<CountryEntity> ().FirstOrDefault (x => x.CountryCode == "CH");
 		}
 
 		private void CreateUIRoles(TileDataItems data)
@@ -150,9 +157,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			if (this.Entity.LegalPerson.IsNotNull ())
 			{
 				this.Entity.LegalPerson = EntityNullReferenceVirtualizer.CreateEmptyEntity<LegalPersonEntity> ();
-				this.Entity.Address = this.BusinessContext.CreateEntityAndRegisterAsEmpty<AddressEntity> ();
-				this.InitializeDefaultCountry ();  // met "Suisse" si rien
-				this.selectedCountry = this.Entity.Address.Location.Country;
+				this.Entity.Address     = this.BusinessContext.CreateEntityAndRegisterAsEmpty<AddressEntity> ();
+				this.selectedCountry    = this.defaultCountry;
 
 				this.TileContainer.UpdateAllWidgets ();
 			}
@@ -317,8 +323,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				InitialVisibility = visibility,
 				CreateEditionUI   = (tile, builder) =>
 				{
-					this.InitializeDefaultCountry ();  // met "Suisse" si rien
-					this.selectedCountry = this.Entity.Address.Location.Country;
+					if (this.Entity.Address.Location.Country.IsNull ())
+					{
+						this.selectedCountry = this.defaultCountry;
+					}
+					else
+					{
+						this.selectedCountry = this.Entity.Address.Location.Country;
+					}
 
 					var controller = new SelectionController<CountryEntity> (this.BusinessContext)
 					{
@@ -363,7 +375,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			//	Retourne les localités du pays choisi.
 			get
 			{
-				if (this.selectedCountry == null)
+				if (this.selectedCountry.IsNull ())
 				{
 					return this.Data.GetAllEntities<LocationEntity> (dataContext: this.DataContext);
 				}
@@ -463,35 +475,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		private bool IsMailUsedByLegalPerson
-		{
-			get
-			{
-				if (this.Entity.LegalPerson != null)
-				{
-					foreach (var contact in this.Entity.LegalPerson.Contacts)
-					{
-						if (contact is MailContactEntity)
-						{
-							var mail = contact as MailContactEntity;
-
-							if (mail.Address == this.Entity.Address)
-							{
-								return true;
-							}
-						}
-					}
-				}
-
-				return false;
-			}
-		}
-
-
 		private TileTabBook<TabPageId>					tabBookContainer;
 		private AutoCompleteTextField					addressTextField;
 		private AutoCompleteTextField					countryTextField;
 		private AutoCompleteTextField					locationTextField;
 		private CountryEntity							selectedCountry;
+		private CountryEntity							defaultCountry;
 	}
 }

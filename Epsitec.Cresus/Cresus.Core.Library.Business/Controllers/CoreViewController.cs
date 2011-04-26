@@ -201,7 +201,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void ReleaseUIFocus(Widget container)
 		{
-			if (container.ContainsKeyboardFocus)
+			if ((container.ContainsKeyboardFocus) &&
+				(container.Window != null))
 			{
 				//	This will produce an automatic validation or cancellation of any pending
 				//	TextFieldEx edition; without this, the last edition would not be validated
