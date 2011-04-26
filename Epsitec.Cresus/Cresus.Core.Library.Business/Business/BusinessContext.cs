@@ -536,13 +536,9 @@ namespace Epsitec.Cresus.Core.Business
             {
 				return entity.WrapNullEntity ();
             }
-			if (this.dataContext.IsPersistent (entity))
-			{
-				return this.dataContext.GetLocalEntity (entity);
-			}
 			else
 			{
-				return entity;
+				return this.dataContext.GetLocalEntity (entity) ?? entity;
 			}
 		}
 
@@ -559,13 +555,9 @@ namespace Epsitec.Cresus.Core.Business
 			{
 				throw new System.ArgumentNullException ("entity");
 			}
-			if (this.dataContext.IsPersistent (entity))
-			{
-				return this.dataContext.GetLocalEntity (entity);
-			}
 			else
 			{
-				return entity;
+				return this.dataContext.GetLocalEntity (entity) ?? entity;
 			}
 		}
 

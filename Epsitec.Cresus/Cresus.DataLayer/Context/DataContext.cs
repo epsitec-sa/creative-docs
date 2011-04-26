@@ -365,11 +365,13 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 		/// <summary>
 		/// Gets the local copy of the specified entity. If it already belongs to this <c>DataContext</c>,
-		/// the entity will be returned unchanged. Otherwise, it will be loaded into the context.
+		/// the entity will be returned unchanged. Otherwise, it will be loaded into the context. If
+		/// the entity was not persisted to the base, it cannot be made local and <c>null</c> will
+		/// be returned instead.
 		/// </summary>
 		/// <typeparam name="T">The type of the entity.</typeparam>
-		/// <param name="entity">The entity.</param>
-		/// <returns>The entity, as loaded in the current context.</returns>
+		/// <param name="entity">The entity, which might be <c>null</c> or might not be persisted yet.</param>
+		/// <returns>The entity, as loaded in the current context if possible; otherwise, <c>null</c>.</returns>
 		public T GetLocalEntity<T>(T entity) where T : AbstractEntity
 		{
 			if (entity.UnwrapNullEntity () == null)
@@ -379,25 +381,28 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			var entityKey = DataContextPool.GetEntityKey (entity);
 
-			if (!entityKey.HasValue)
+			if (entityKey.HasValue)
 			{
-				throw new System.ArgumentException ("entity has no key!");
+				using (this.LockWrite ())
+				{
+					T localEntity;
+
+					if (this.Contains (entity))
+					{
+						localEntity = entity;
+					}
+					else
+					{
+						localEntity = (T) this.ResolveEntity (entityKey);
+					}
+
+					return localEntity;
+				}
 			}
-			
-			using (this.LockWrite ())
+			else
 			{
-				T localEntity;
-
-				if (this.Contains (entity))
-				{
-					localEntity = entity;
-				}
-				else
-				{
-					localEntity = (T) this.ResolveEntity (entityKey);
-				}
-
-				return localEntity;
+				System.Diagnostics.Debug.Assert (this.IsForeignEntity (entity) == false, "Unpersisted entities cannot be resolved to local entities");
+				return null;
 			}
 		}
 

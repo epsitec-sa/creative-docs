@@ -39,6 +39,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
@@ -65,14 +66,17 @@
     <Compile Include="Business\Rules\ArticlePriceBusinessRules.cs" />
     <Compile Include="Business\Rules\BillingDetailBusinessRules.cs" />
     <Compile Include="Business\Rules\BusinessDocumentBusinessRules.cs" />
+    <Compile Include="Business\Rules\BusinessSettingsBusinessRules.cs" />
     <Compile Include="Business\Rules\CustomerBusinessRules.cs" />
     <Compile Include="Business\Rules\EnumValueArticleParameterDefinitionBusinessRules.cs" />
+    <Compile Include="Business\Rules\FinanceSettingsBusinessRules.cs" />
     <Compile Include="Business\Rules\FreeTextValueArticleParameterDefinitionBusinessRules.cs" />
     <Compile Include="Business\Rules\MailContactBusinessRules.cs" />
     <Compile Include="Business\Rules\NumericValueArticleParameterDefinitionBusinessRules.cs" />
     <Compile Include="Business\Rules\OptionValueArticleParameterDefinitionBusinessRules.cs" />
     <Compile Include="Business\Rules\OptionValueBusinessRules.cs" />
     <Compile Include="Business\Rules\RelationBusinessRules.cs" />
+    <Compile Include="Business\Rules\TaxSettingsBusinessRules.cs" />
     <Compile Include="Controllers\ActionViewController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\AbstractArticleParameterController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\ArticleParameterListPreferredValuesController.cs" />
@@ -127,6 +131,8 @@
     <Compile Include="Controllers\ITileController.cs" />
     <Compile Include="Controllers\ListController.cs" />
     <Compile Include="Controllers\MainViewController.cs" />
+    <Compile Include="Entities\FinanceSettingsEntity.cs" />
+    <Compile Include="Entities\PaymentReminderDefinitionEntity.cs" />
     <Compile Include="Factories\DefaultViewControllerComponentFactory.cs" />
     <Compile Include="Library\ViewControllerComponent.cs" />
     <Compile Include="Library\ViewControllerComponent`1.cs" />

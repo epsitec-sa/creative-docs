@@ -10,10 +10,8 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVAU]", typeof (Epsitec.Cresus.Core.Entities.ExchangeRateSourceEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVAV]", typeof (Epsitec.Cresus.Core.Entities.PaymentModeEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVA21]", typeof (Epsitec.Cresus.Core.Entities.PaymentDetailEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[CVA22]", typeof (Epsitec.Cresus.Core.Entities.PaymentReminderDefinitionEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVAR2]", typeof (Epsitec.Cresus.Core.Entities.VatDefinitionEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVAP3]", typeof (Epsitec.Cresus.Core.Entities.TaxSettingsEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[CVAT3]", typeof (Epsitec.Cresus.Core.Entities.FinanceSettingsEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVA24]", typeof (Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVA44]", typeof (Epsitec.Cresus.Core.Entities.PriceDiscountEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVAA4]", typeof (Epsitec.Cresus.Core.Entities.PriceGroupEntity))]
@@ -281,8 +279,8 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity.EntityStructuredTypeKey;
 		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 9);	// [CVA9]
-		public static readonly string EntityStructuredTypeKey = "[CVA9]";
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 9);	// [CVA9]
+		public static readonly new string EntityStructuredTypeKey = "[CVA9]";
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<IsrDefinitionEntity>
@@ -483,8 +481,8 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.BillingDetailEntity.EntityStructuredTypeKey;
 		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 21);	// [CVAL]
-		public static readonly string EntityStructuredTypeKey = "[CVAL]";
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 21);	// [CVAL]
+		public static readonly new string EntityStructuredTypeKey = "[CVAL]";
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<BillingDetailEntity>
@@ -665,8 +663,8 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.CurrencyEntity.EntityStructuredTypeKey;
 		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 29);	// [CVAT]
-		public static readonly string EntityStructuredTypeKey = "[CVAT]";
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 29);	// [CVAT]
+		public static readonly new string EntityStructuredTypeKey = "[CVAT]";
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<CurrencyEntity>
@@ -765,8 +763,8 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.ExchangeRateSourceEntity.EntityStructuredTypeKey;
 		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 30);	// [CVAU]
-		public static readonly string EntityStructuredTypeKey = "[CVAU]";
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 30);	// [CVAU]
+		public static readonly new string EntityStructuredTypeKey = "[CVAU]";
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<ExchangeRateSourceEntity>
@@ -935,8 +933,8 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.PaymentModeEntity.EntityStructuredTypeKey;
 		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 31);	// [CVAV]
-		public static readonly string EntityStructuredTypeKey = "[CVAV]";
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 31);	// [CVAV]
+		public static readonly new string EntityStructuredTypeKey = "[CVAV]";
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<PaymentModeEntity>
@@ -1113,165 +1111,13 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity.EntityStructuredTypeKey;
 		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 34);	// [CVA21]
-		public static readonly string EntityStructuredTypeKey = "[CVA21]";
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 34);	// [CVA21]
+		public static readonly new string EntityStructuredTypeKey = "[CVA21]";
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<PaymentDetailEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Volatile)
-			{
-			}
-		}
-		#endregion
-	}
-}
-#endregion
-
-#region Epsitec.Cresus.Core.PaymentReminderDefinition Entity
-namespace Epsitec.Cresus.Core.Entities
-{
-	///	<summary>
-	///	The <c>PaymentReminderDefinition</c> entity.
-	///	designer:cap/CVA22
-	///	</summary>
-	public partial class PaymentReminderDefinitionEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ICategory
-	{
-		#region ILifetime Members
-		///	<summary>
-		///	The <c>IsArchive</c> field.
-		///	designer:fld/CVA22/8VA3
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
-		public bool IsArchive
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
-			}
-		}
-		#endregion
-		#region IItemCode Members
-		///	<summary>
-		///	The <c>Code</c> field.
-		///	designer:fld/CVA22/8VA5
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VA5]")]
-		public string Code
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
-			}
-		}
-		#endregion
-		#region INameDescription Members
-		///	<summary>
-		///	The <c>Name</c> field.
-		///	designer:fld/CVA22/8VA7
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VA7]")]
-		public global::Epsitec.Common.Types.FormattedText Name
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetName (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
-			}
-		}
-		///	<summary>
-		///	The <c>Description</c> field.
-		///	designer:fld/CVA22/8VA8
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VA8]")]
-		public global::Epsitec.Common.Types.FormattedText Description
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetDescription (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetDescription (this, value);
-			}
-		}
-		#endregion
-		///	<summary>
-		///	The <c>ExtraPaymentTerm</c> field.
-		///	designer:fld/CVA22/CVA32
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[CVA32]")]
-		public int ExtraPaymentTerm
-		{
-			get
-			{
-				return this.GetField<int> ("[CVA32]");
-			}
-			set
-			{
-				int oldValue = this.ExtraPaymentTerm;
-				if (oldValue != value || !this.IsFieldDefined("[CVA32]"))
-				{
-					this.OnExtraPaymentTermChanging (oldValue, value);
-					this.SetField<int> ("[CVA32]", oldValue, value);
-					this.OnExtraPaymentTermChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>AdministrativeTaxCode</c> field.
-		///	designer:fld/CVA22/CVA42
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[CVA42]")]
-		public string AdministrativeTaxCode
-		{
-			get
-			{
-				return this.GetField<string> ("[CVA42]");
-			}
-			set
-			{
-				string oldValue = this.AdministrativeTaxCode;
-				if (oldValue != value || !this.IsFieldDefined("[CVA42]"))
-				{
-					this.OnAdministrativeTaxCodeChanging (oldValue, value);
-					this.SetField<string> ("[CVA42]", oldValue, value);
-					this.OnAdministrativeTaxCodeChanged (oldValue, value);
-				}
-			}
-		}
-		
-		partial void OnExtraPaymentTermChanging(int oldValue, int newValue);
-		partial void OnExtraPaymentTermChanged(int oldValue, int newValue);
-		partial void OnAdministrativeTaxCodeChanging(string oldValue, string newValue);
-		partial void OnAdministrativeTaxCodeChanged(string oldValue, string newValue);
-		
-		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
-		{
-			return global::Epsitec.Cresus.Core.Entities.PaymentReminderDefinitionEntity.EntityStructuredTypeId;
-		}
-		public override string GetEntityStructuredTypeKey()
-		{
-			return global::Epsitec.Cresus.Core.Entities.PaymentReminderDefinitionEntity.EntityStructuredTypeKey;
-		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 66);	// [CVA22]
-		public static readonly string EntityStructuredTypeKey = "[CVA22]";
-		
-		#region Repository Class
-		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<PaymentReminderDefinitionEntity>
-		{
-			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{
 			}
 		}
@@ -1455,8 +1301,8 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.VatDefinitionEntity.EntityStructuredTypeKey;
 		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 91);	// [CVAR2]
-		public static readonly string EntityStructuredTypeKey = "[CVAR2]";
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 91);	// [CVAR2]
+		public static readonly new string EntityStructuredTypeKey = "[CVAR2]";
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<VatDefinitionEntity>
@@ -1621,93 +1467,11 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.TaxSettingsEntity.EntityStructuredTypeKey;
 		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 121);	// [CVAP3]
-		public static readonly string EntityStructuredTypeKey = "[CVAP3]";
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 121);	// [CVAP3]
+		public static readonly new string EntityStructuredTypeKey = "[CVAP3]";
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<TaxSettingsEntity>
-		{
-			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
-			{
-			}
-		}
-		#endregion
-	}
-}
-#endregion
-
-#region Epsitec.Cresus.Core.FinanceSettings Entity
-namespace Epsitec.Cresus.Core.Entities
-{
-	///	<summary>
-	///	The <c>FinanceSettings</c> entity.
-	///	designer:cap/CVAT3
-	///	</summary>
-	public partial class FinanceSettingsEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
-	{
-		///	<summary>
-		///	The <c>IsrDefs</c> field.
-		///	designer:fld/CVAT3/CVAU3
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[CVAU3]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity> IsrDefs
-		{
-			get
-			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity> ("[CVAU3]");
-			}
-		}
-		///	<summary>
-		///	The <c>PaymentReminderDefs</c> field.
-		///	designer:fld/CVAT3/CVAV3
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[CVAV3]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.PaymentReminderDefinitionEntity> PaymentReminderDefs
-		{
-			get
-			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.PaymentReminderDefinitionEntity> ("[CVAV3]");
-			}
-		}
-		///	<summary>
-		///	The <c>PaymentModes</c> field.
-		///	designer:fld/CVAT3/CVA04
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[CVA04]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.PaymentModeEntity> PaymentModes
-		{
-			get
-			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.PaymentModeEntity> ("[CVA04]");
-			}
-		}
-		///	<summary>
-		///	The <c>SerializedChartsOfAccounts</c> field.
-		///	designer:fld/CVAT3/CVA14
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[CVA14]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.XmlBlobEntity> SerializedChartsOfAccounts
-		{
-			get
-			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.XmlBlobEntity> ("[CVA14]");
-			}
-		}
-		
-		
-		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
-		{
-			return global::Epsitec.Cresus.Core.Entities.FinanceSettingsEntity.EntityStructuredTypeId;
-		}
-		public override string GetEntityStructuredTypeKey()
-		{
-			return global::Epsitec.Cresus.Core.Entities.FinanceSettingsEntity.EntityStructuredTypeKey;
-		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 125);	// [CVAT3]
-		public static readonly string EntityStructuredTypeKey = "[CVAT3]";
-		
-		#region Repository Class
-		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<FinanceSettingsEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{
@@ -1833,8 +1597,8 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity.EntityStructuredTypeKey;
 		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 130);	// [CVA24]
-		public static readonly string EntityStructuredTypeKey = "[CVA24]";
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 130);	// [CVA24]
+		public static readonly new string EntityStructuredTypeKey = "[CVA24]";
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<PriceRoundingModeEntity>
@@ -1987,8 +1751,8 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.PriceDiscountEntity.EntityStructuredTypeKey;
 		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 132);	// [CVA44]
-		public static readonly string EntityStructuredTypeKey = "[CVA44]";
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 132);	// [CVA44]
+		public static readonly new string EntityStructuredTypeKey = "[CVA44]";
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<PriceDiscountEntity>
@@ -2169,8 +1933,8 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.PriceGroupEntity.EntityStructuredTypeKey;
 		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 138);	// [CVAA4]
-		public static readonly string EntityStructuredTypeKey = "[CVAA4]";
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 138);	// [CVAA4]
+		public static readonly new string EntityStructuredTypeKey = "[CVAA4]";
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<PriceGroupEntity>
@@ -2321,8 +2085,8 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return global::Epsitec.Cresus.Core.Entities.PriceCalculatorEntity.EntityStructuredTypeKey;
 		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 143);	// [CVAF4]
-		public static readonly string EntityStructuredTypeKey = "[CVAF4]";
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 143);	// [CVAF4]
+		public static readonly new string EntityStructuredTypeKey = "[CVAF4]";
 	}
 }
 #endregion

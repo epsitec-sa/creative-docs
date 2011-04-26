@@ -72,10 +72,8 @@
     <Compile Include="Business\IsrHelper.cs" />
     <Compile Include="Dialogs\V11ImportDialog.cs" />
     <Compile Include="Entities\BillingDetailEntity.cs" />
-    <Compile Include="Entities\FinanceSettingsEntity.cs" />
     <Compile Include="Entities\IsrDefinitionEntity.cs" />
     <Compile Include="Entities\PaymentModeEntity.cs" />
-    <Compile Include="Entities\PaymentReminderDefinitionEntity.cs" />
     <Compile Include="Entities\PriceCalculatorEntity.cs" />
     <Compile Include="Entities\PriceGroupEntity.cs" />
     <Compile Include="Entities\PriceRoundingModeEntity.cs" />

@@ -54,8 +54,6 @@ namespace Epsitec.Cresus.Core
 			public static readonly Epsitec.Common.Types.StructuredType Currency = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 29));
 			//	designer:cap/CVAU
 			public static readonly Epsitec.Common.Types.StructuredType ExchangeRateSource = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 30));
-			//	designer:cap/CVAT3
-			public static readonly Epsitec.Common.Types.StructuredType FinanceSettings = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 125));
 			//	designer:cap/CVAM3
 			public static readonly Epsitec.Common.Types.StructuredType IRoundingMode = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 118));
 			//	designer:cap/CVA9
@@ -64,8 +62,6 @@ namespace Epsitec.Cresus.Core
 			public static readonly Epsitec.Common.Types.StructuredType PaymentDetail = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 34));
 			//	designer:cap/CVAV
 			public static readonly Epsitec.Common.Types.StructuredType PaymentMode = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 31));
-			//	designer:cap/CVA22
-			public static readonly Epsitec.Common.Types.StructuredType PaymentReminderDefinition = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 66));
 			//	designer:cap/CVAF4
 			public static readonly Epsitec.Common.Types.StructuredType PriceCalculator = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 143));
 			//	designer:cap/CVA44

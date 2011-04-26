@@ -56,6 +56,8 @@ namespace Epsitec.Cresus.Core.Business
 			public static readonly Epsitec.Common.Types.StructuredType EndTotalDocumentItem = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 137));
 			//	designer:cap/GVA85
 			public static readonly Epsitec.Common.Types.StructuredType EnumValueArticleParameterDefinition = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 168));
+			//	designer:cap/GVA76
+			public static readonly Epsitec.Common.Types.StructuredType FinanceSettings = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 199));
 			//	designer:cap/GVAP5
 			public static readonly Epsitec.Common.Types.StructuredType FreeTextValueArticleParameterDefinition = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 185));
 			//	designer:cap/GVAH1
@@ -68,6 +70,8 @@ namespace Epsitec.Cresus.Core.Business
 			public static readonly Epsitec.Common.Types.StructuredType OptionValue = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 182));
 			//	designer:cap/GVAK5
 			public static readonly Epsitec.Common.Types.StructuredType OptionValueArticleParameterDefinition = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 180));
+			//	designer:cap/GVAD6
+			public static readonly Epsitec.Common.Types.StructuredType PaymentReminderDefinition = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 205));
 			//	designer:cap/GVAM
 			public static readonly Epsitec.Common.Types.StructuredType People = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 22));
 			//	designer:cap/GVA
@@ -488,8 +492,8 @@ namespace Epsitec.Cresus.Core.Business
 				public static readonly global::Epsitec.Common.Support.Druid Company = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 25);
 				//	designer:cap/GVAS
 				public static readonly global::Epsitec.Common.Support.Druid CompanyLogo = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 28);
-				//	designer:cap/GVAQ
-				public static readonly global::Epsitec.Common.Support.Druid Finance = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 26);
+				//	designer:cap/GVA86
+				public static readonly global::Epsitec.Common.Support.Druid Finance = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 200);
 				//	designer:cap/GVAR
 				public static readonly global::Epsitec.Common.Support.Druid Tax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 27);
 			}
@@ -550,6 +554,22 @@ namespace Epsitec.Cresus.Core.Business
 				public static readonly global::Epsitec.Common.Support.Druid ShortDescriptions = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 172);
 				//	designer:cap/GVAB5
 				public static readonly global::Epsitec.Common.Support.Druid Values = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 171);
+			}
+			
+			public static class FinanceSettings
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/GVA96
+				public static readonly global::Epsitec.Common.Support.Druid IsrDefs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 201);
+				//	designer:cap/GVAB6
+				public static readonly global::Epsitec.Common.Support.Druid PaymentModes = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 203);
+				//	designer:cap/GVAA6
+				public static readonly global::Epsitec.Common.Support.Druid PaymentReminderDefs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 202);
+				//	designer:cap/GVAC6
+				public static readonly global::Epsitec.Common.Support.Druid SerializedChartsOfAccounts = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 204);
 			}
 			
 			public static class FreeTextValueArticleParameterDefinition
@@ -624,6 +644,18 @@ namespace Epsitec.Cresus.Core.Business
 				public static readonly global::Epsitec.Common.Support.Druid Cardinality = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 181);
 				//	designer:cap/GVAO5
 				public static readonly global::Epsitec.Common.Support.Druid Options = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 184);
+			}
+			
+			public static class PaymentReminderDefinition
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/GVAF6
+				public static readonly global::Epsitec.Common.Support.Druid AdministrativeTaxArticle = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 207);
+				//	designer:cap/GVAE6
+				public static readonly global::Epsitec.Common.Support.Druid ExtraPaymentTerm = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 206);
 			}
 			
 			public static class People
@@ -785,12 +817,14 @@ namespace Epsitec.Cresus.Core.Business
 			Fields.Customer._Initialize ();
 			Fields.EndTotalDocumentItem._Initialize ();
 			Fields.EnumValueArticleParameterDefinition._Initialize ();
+			Fields.FinanceSettings._Initialize ();
 			Fields.FreeTextValueArticleParameterDefinition._Initialize ();
 			Fields.IArticleDefinitionParameters._Initialize ();
 			Fields.IBusinessLink._Initialize ();
 			Fields.NumericValueArticleParameterDefinition._Initialize ();
 			Fields.OptionValue._Initialize ();
 			Fields.OptionValueArticleParameterDefinition._Initialize ();
+			Fields.PaymentReminderDefinition._Initialize ();
 			Fields.People._Initialize ();
 			Fields.Relation._Initialize ();
 			Fields.SubTotalDocumentItem._Initialize ();
