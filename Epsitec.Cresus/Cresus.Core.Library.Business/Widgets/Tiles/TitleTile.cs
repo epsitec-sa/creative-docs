@@ -24,8 +24,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		public TitleTile()
 		{
 			this.items = new TileCollection (this);
-			
-			this.CreateUI ();
 		}
 
 
@@ -182,10 +180,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			this.tileArrow.SetOutlineColors (this.GetOutlineColors ());
 			this.tileArrow.SetSurfaceColors (this.GetSurfaceColors ());
 			this.tileArrow.MouseHilite = this.GetMouseHilite ();
-		}
-
-		private void CreateUI()
-		{
 		}
 
 		private void CreateButtons()
