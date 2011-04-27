@@ -83,7 +83,11 @@ namespace Epsitec.Cresus.Core.Business.Finance
 				decimal directRate  = 1.0M + this.TotalTaxRate;
 				decimal inverseRate = 1.0M / directRate;
 
-				return amountAfterTax * inverseRate;
+				decimal after  = amountAfterTax * inverseRate;
+				decimal cent   = 0.01M;
+				decimal adjust = cent - (after % cent);
+
+				return after + adjust;
 			}
 		}
 
