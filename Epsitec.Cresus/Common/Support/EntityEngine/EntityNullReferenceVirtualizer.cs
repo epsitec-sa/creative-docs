@@ -8,10 +8,14 @@ using System.Linq;
 
 namespace Epsitec.Common.Support.EntityEngine
 {
+	
+	
 	// TODO It would be nice to clean that class out of its black magic, which makes it quite
 	// difficult to understand. But, I'm not sure if this is really possible.
 	// In addition, it would be nice to remove all the stuff related to virtualizing entities in
 	// entity collections, in this class and in EntityCollection, or to implement it completely.
+	// Actually, I think that this stuff is not used in practice, as we never put proxy instances in
+	// collection, but the whole collection is the proxy.
 	// Marc
 
 
@@ -21,6 +25,8 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// </summary>
 	public static class EntityNullReferenceVirtualizer
 	{
+		
+		
 		/// <summary>
 		/// Patches the null references in the specified entity.
 		/// </summary>
@@ -34,11 +40,12 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 
 			EntityContext realEntityContext = entity.GetEntityContext ();
-			EntityNullReferenceVirtualizer.PatchNullReferences (entity, realEntityContext);
+
+			EntityNullReferenceVirtualizer.PatchNullReferences (entity, realEntityContext, false);
 		}
 
 
-		private static void PatchNullReferences<T>(T entity, EntityContext realEntityContext)
+		private static void PatchNullReferences<T>(T entity, EntityContext realEntityContext, bool newEntity)
 			where T : AbstractEntity
 		{
 			if (EntityNullReferenceVirtualizer.IsPatchedEntity (entity))
@@ -49,7 +56,13 @@ namespace Epsitec.Common.Support.EntityEngine
 			var originalValues = entity.GetOriginalValues ();
 			var modifiedValues = entity.GetModifiedValues ();
 
-			entity.SetOriginalValues (new Store (originalValues, modifiedValues, entity, realEntityContext));
+			var newOriginalValues = new Store (originalValues, modifiedValues, entity, realEntityContext, newEntity);
+			var newModifiedValues = newEntity
+				? new StoreForwarder (modifiedValues, newOriginalValues)
+				: modifiedValues;
+
+			entity.SetOriginalValues (newOriginalValues);
+			entity.SetModifiedValues (newModifiedValues);
 		}
 
 
@@ -193,7 +206,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			var emptyEntityContext = EntityNullReferenceVirtualizer.GetEmptyEntityContext ();
 			var entity = emptyEntityContext.CreateEmptyEntity<T> ();
 
-			EntityNullReferenceVirtualizer.PatchNullReferences (entity, realEntityContext);
+			EntityNullReferenceVirtualizer.PatchNullReferences (entity, realEntityContext, true);
 
 			if (freeze)
 			{
@@ -202,6 +215,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			return entity;
 		}
+
 
 		/// <summary>
 		/// Creates an empty entity attached to a dedicated context.
@@ -241,10 +255,14 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </summary>
 		private class EmptyEntityContext : EntityContext
 		{
+
+
 			public EmptyEntityContext()
 				: base (SafeResourceResolver.Instance, EntityLoopHandlingMode.Throw, "EmptyEntities")
 			{
 			}
+
+
 		}
 
 
@@ -262,23 +280,27 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </summary>
 		private sealed class Store : IValueStore
 		{
-			public Store(IValueStore realReadStore, IValueStore realWriteStore, AbstractEntity entity, EntityContext realEntityContext)
+
+
+			public Store(IValueStore realReadStore, IValueStore realWriteStore, AbstractEntity entity, EntityContext realEntityContext, bool isReadOnly)
 			{
 				this.realReadStore = realReadStore;
 				this.realWriteStore = realWriteStore;
 				this.realEntityContext = realEntityContext;
 				this.values = new Dictionary<string, object> ();
 				this.entity = entity;
+				this.isReadOnly = isReadOnly;
 			}
 
+
 			public Store(IValueStore realReadStore, IValueStore realWriteStore, AbstractEntity entity, Store parentStore, string fieldIdInParentStore)
-				: this (realReadStore, realWriteStore, entity, parentStore.realEntityContext)
+				: this (realReadStore, realWriteStore, entity, parentStore.realEntityContext, true)
 			{
 				this.parentStore = parentStore;
 				this.fieldIdInParentStore = fieldIdInParentStore;
-				this.isReadOnly = true;
 			}
 			
+
 			public bool IsReadOnly
 			{
 				get
@@ -287,7 +309,9 @@ namespace Epsitec.Common.Support.EntityEngine
 				}
 			}
 
+
 			#region IValueStore Members
+
 
 			public object GetValue(string id)
 			{
@@ -313,7 +337,7 @@ namespace Epsitec.Common.Support.EntityEngine
 				{
 					var entity = value as AbstractEntity;
 
-					EntityNullReferenceVirtualizer.PatchNullReferences (entity, this.realEntityContext);
+					EntityNullReferenceVirtualizer.PatchNullReferences (entity, this.realEntityContext, false);
 				}
 				else if (value is EntityCollection)
 				{
@@ -323,6 +347,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 				return value;
 			}
+
 
 			public void SetValue(string id, object value, ValueStoreSetMode mode)
 			{
@@ -344,6 +369,7 @@ namespace Epsitec.Common.Support.EntityEngine
 				}
 			}
 			
+
 			#endregion
 
 
@@ -351,9 +377,14 @@ namespace Epsitec.Common.Support.EntityEngine
 			{
 				if (this.IsReadOnly)
 				{
-//-					System.Diagnostics.Debug.Fail ("Writing to a null entity is no longer considered to be good practice!");
+					// If the entity has a parent, we make sure that it is alive. Then we make
+					// ourselves alive.
 
-					this.parentStore.SetLiveEntity (this.fieldIdInParentStore, this.entity);
+					if (this.parentStore != null && this.fieldIdInParentStore != null)
+					{
+						this.parentStore.SetLiveEntity (this.fieldIdInParentStore, this.entity);
+					}
+
 					this.isReadOnly = false;
 
 					var entityContext = this.realEntityContext;
@@ -467,24 +498,33 @@ namespace Epsitec.Common.Support.EntityEngine
 			private readonly Store						parentStore;
 			private readonly string						fieldIdInParentStore;
 			private bool								isReadOnly;
+
+
 		}
+
 
 		#endregion
 
+
 		private class StoreForwarder : IValueStore
 		{
+
+
 			public StoreForwarder(IValueStore store1, Store store2)
 			{
 				this.store1 = store1;
 				this.store2 = store2;
 			}
 
+
 			#region IValueStore Members
+
 
 			public object GetValue(string id)
 			{
 				return this.store1.GetValue (id);
 			}
+
 
 			public void SetValue(string id, object value, ValueStoreSetMode mode)
 			{
@@ -492,13 +532,18 @@ namespace Epsitec.Common.Support.EntityEngine
 				this.store2.TranformNullEntityIntoLiveEntity ();
 			}
 
+
 			#endregion
+
 
 			private readonly IValueStore store1;
 			private readonly Store store2;
 		}
 		
+
 		[System.ThreadStatic]
 		private static EntityContext emptyEntityContext;
 	}
+
+
 }
