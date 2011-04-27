@@ -18,18 +18,27 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryAffairViewController : SummaryViewController<AffairEntity>
 	{
-		protected override void CreateUI()
+		protected override void CreateBricks(Bricks.BrickWall<AffairEntity> wall)
 		{
-			using (var data = TileContainerController.Setup (this))
-			{
-				this.CreateUIAffair            (data);
-				this.CreateUIDocuments         (data);
-				this.CreateUIDocumentWorkflows (data);
-				this.CreateUIEvents            (data);
-				this.CreateUIComments          (data);
-			}
-		}
+			wall.AddBrick (x => x);
 
+			wall.AddBrick (x => x.Documents)
+				.Attribute (BrickMode.HideAddButton)
+				.Attribute (BrickMode.HideRemoveButton)
+				.Attribute (BrickMode.DefaultToSummarySubview)
+				.Name ("DocMetadata")
+				.Icon ("Data.Document")
+				.Title ("Document lié")
+				.TitleCompact ("Documents liés")
+				.Template ()
+				  .Title (x => x.GetCompactSummary ())
+				  .Text (x => x.GetSummary ())
+				  .TextCompact (x => x.GetCompactSummary ())
+				.End ();
+
+			wall.AddBrick (x => x.Comments)
+				.Template ();
+		}
 		private void CreateUIAffair(TileDataItems data)
 		{
 			data.Add (
@@ -67,62 +76,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			template.DefineCompactText (x => x.GetCompactSummary ());
 
 			data.Add (this.CreateCollectionAccessor (template, x => x.Documents));
-		}
-
-		private void CreateUIDocumentWorkflows(TileDataItems data)
-		{
-#if false
-			var tileData =
-				new TileDataItem
-				{
-					AutoGroup    = false,
-					Name		 = "DocWorkflow",
-					IconUri		 = "Data.Document",
-					Title		 = TextFormatter.FormatText ("Document"),
-					CompactTitle = TextFormatter.FormatText ("Documents"),
-					Text		 = CollectionTemplate.DefaultEmptyText
-				};
-
-			tileData.SetEntityConverter<WorkflowEntity> (x => x.ActiveDocument);
-
-			data.Add (tileData);
-
-			var template = new CollectionTemplate<WorkflowEntity> ("DocWorkflow", this.BusinessContext);
-
-			template.DefineTitle       (x => x.GetCompactSummary ());
-			template.DefineText        (x => x.GetSummary ());
-			template.DefineCompactText (x => x.GetCompactSummary ());
-
-			data.Add (this.CreateCollectionAccessor (template, x => x.Workflows));
-#endif
-		}
-
-		private void CreateUIEvents(TileDataItems data)
-		{
-#if false
-			data.Add (
-				new TileDataItem
-				{
-					AutoGroup    = true,
-					Name		 = "WorkflowEvent",
-					IconUri		 = "Data.WorkflowEvent",
-					Title		 = TextFormatter.FormatText ("Evénement"),
-					CompactTitle = TextFormatter.FormatText ("Evénements"),
-					Text		 = CollectionTemplate.DefaultEmptyText
-				});
-
-			var template = new CollectionTemplate<WorkflowEventEntity> ("WorkflowEvent", this.BusinessContext);
-
-			template.DefineText (x => x.GetSummary ());
-			template.DefineCompactText (x => x.GetSummary ());
-
-			data.Add (this.CreateCollectionAccessor (template, x => x.Workflows.SelectMany (w => w.Events).ToList ()));
-#endif
-		}
-
-		private void CreateUIComments(TileDataItems data)
-		{
-			Common.CreateUIComments (this.BusinessContext, data, this.EntityGetter, x => x.Comments);
 		}
 	}
 }

@@ -20,5 +20,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		/// than <see cref="ViewControllerMode.Edition"/>.
 		/// </summary>
 		DefaultToSummarySubview,
+
+		HideAddButton,
+		HideRemoveButton,
 	}
 }

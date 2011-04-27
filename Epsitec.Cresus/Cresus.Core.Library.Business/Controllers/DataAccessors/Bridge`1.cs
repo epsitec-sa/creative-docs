@@ -164,6 +164,14 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				case BrickMode.DefaultToSummarySubview:
 					item.DefaultMode = ViewControllerMode.Summary;
 					break;
+
+				case BrickMode.HideAddButton:
+					item.HideAddButton = true;
+					break;
+
+				case BrickMode.HideRemoveButton:
+					item.HideRemoveButton = true;
+					break;
 			}
 		}
 
@@ -460,12 +468,13 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		private void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<BrickMode> setter)
 		{
-			var attributeValue = Brick.GetProperty (brick, key).AttributeValue;
-			
-			if ((attributeValue != null) &&
-				(attributeValue.ContainsValue<BrickMode> ()))
+			foreach (var attributeValue in Brick.GetProperties (brick, key).Select (x => x.AttributeValue))
 			{
-				setter (attributeValue.GetValue<BrickMode> ());
+				if ((attributeValue != null) &&
+					(attributeValue.ContainsValue<BrickMode> ()))
+				{
+					setter (attributeValue.GetValue<BrickMode> ());
+				}
 			}
 		}
 
