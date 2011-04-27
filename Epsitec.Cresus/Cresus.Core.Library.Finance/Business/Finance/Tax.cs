@@ -83,11 +83,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 				decimal directRate  = 1.0M + this.TotalTaxRate;
 				decimal inverseRate = 1.0M / directRate;
 
-				decimal after  = amountAfterTax * inverseRate;
-				decimal cent   = 0.01M;
-				decimal adjust = cent - (after % cent);
-
-				return after + adjust;
+				return Tax.RoundToCents (amountAfterTax * inverseRate);
 			}
 		}
 
@@ -113,6 +109,27 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			return this.rateAmounts[index].Rate;
 		}
 
+
+		private static decimal RoundToCents(decimal value)
+		{
+			if (value < 0)
+			{
+				return -Tax.RoundToCents (-value);
+			}
+			
+			decimal cent     = 0.01M;
+			decimal halfCent = cent / 2;
+			decimal rest     = value % cent;
+
+			if (rest < halfCent)
+			{
+				return value - rest;
+			}
+			else
+			{
+				return value + cent - rest;
+			}
+		}
 
 		public static Tax Combine(Tax a, Tax b)
 		{
