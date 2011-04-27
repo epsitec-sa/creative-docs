@@ -21,7 +21,7 @@ namespace Epsitec.Common.Tests.Vs.Support
 		{
 			ExceptionAssert.Throw<ArgumentNullException>
 			(
-				() => DisposableWrapper.Get (null)
+				() => DisposableWrapper.CreateDisposable (null)
 			);
 		}
 
@@ -35,7 +35,7 @@ namespace Epsitec.Common.Tests.Vs.Support
 
 			Assert.AreEqual (0, nbFinalizerCalls);
 
-			IDisposable disposableWrapper = DisposableWrapper.Get (finalizer);
+			IDisposable disposableWrapper = DisposableWrapper.CreateDisposable (finalizer);
 
 			Assert.IsNotNull (disposableWrapper);
 
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Tests.Vs.Support
 
 			Assert.AreEqual (0, nbFinalizerCalls);
 
-			IDisposable disposableWrapper = DisposableWrapper.Get (finalizer);
+			IDisposable disposableWrapper = DisposableWrapper.CreateDisposable (finalizer);
 
 			Assert.IsNotNull (disposableWrapper);
 
@@ -82,21 +82,21 @@ namespace Epsitec.Common.Tests.Vs.Support
 		[TestMethod]
 		public void CombineArgumentCheck()
 		{
-			IDisposable disposableWrapper = DisposableWrapper.Get (() => { });
+			IDisposable disposableWrapper = DisposableWrapper.CreateDisposable (() => { });
 
 			ExceptionAssert.Throw<ArgumentNullException>
 			(
-				() => DisposableWrapper.Combine (null)
+				() => DisposableWrapper.CombineDisposables (null)
 			);
 
 			ExceptionAssert.Throw<ArgumentException>
 			(
-				() => DisposableWrapper.Combine (null, disposableWrapper)
+				() => DisposableWrapper.CombineDisposables (null, disposableWrapper)
 			);
 
 			ExceptionAssert.Throw<ArgumentException>
 			(
-				() => DisposableWrapper.Combine (disposableWrapper, null)
+				() => DisposableWrapper.CombineDisposables (disposableWrapper, null)
 			);
 		}
 
@@ -110,13 +110,13 @@ namespace Epsitec.Common.Tests.Vs.Support
 			Action finalizer1 = () => nbFinalizerCalls1++;
 			Action finalizer2 = () => nbFinalizerCalls2++;
 
-			IDisposable disposableWrapper1 = DisposableWrapper.Get (finalizer1);
-			IDisposable disposableWrapper2 = DisposableWrapper.Get (finalizer2);
+			IDisposable disposableWrapper1 = DisposableWrapper.CreateDisposable (finalizer1);
+			IDisposable disposableWrapper2 = DisposableWrapper.CreateDisposable (finalizer2);
 
 			Assert.AreEqual (0, nbFinalizerCalls1);
 			Assert.AreEqual (0, nbFinalizerCalls2);
 
-			IDisposable disposableWrapper3 = DisposableWrapper.Combine (disposableWrapper1, disposableWrapper2);
+			IDisposable disposableWrapper3 = DisposableWrapper.CombineDisposables (disposableWrapper1, disposableWrapper2);
 
 			Assert.AreEqual (0, nbFinalizerCalls1);
 			Assert.AreEqual (0, nbFinalizerCalls2);
@@ -144,13 +144,13 @@ namespace Epsitec.Common.Tests.Vs.Support
 			Action finalizer1 = () => nbFinalizerCalls1++;
 			Action finalizer2 = () => nbFinalizerCalls2++;
 
-			IDisposable disposableWrapper1 = DisposableWrapper.Get (finalizer1);
-			IDisposable disposableWrapper2 = DisposableWrapper.Get (finalizer2);
+			IDisposable disposableWrapper1 = DisposableWrapper.CreateDisposable (finalizer1);
+			IDisposable disposableWrapper2 = DisposableWrapper.CreateDisposable (finalizer2);
 
 			Assert.AreEqual (0, nbFinalizerCalls1);
 			Assert.AreEqual (0, nbFinalizerCalls2);
 
-			IDisposable disposableWrapper3 = DisposableWrapper.Combine (disposableWrapper1, disposableWrapper2);
+			IDisposable disposableWrapper3 = DisposableWrapper.CombineDisposables (disposableWrapper1, disposableWrapper2);
 			
 			Assert.AreEqual (0, nbFinalizerCalls1);
 			Assert.AreEqual (0, nbFinalizerCalls2);
@@ -190,13 +190,13 @@ namespace Epsitec.Common.Tests.Vs.Support
 
 			Action finalizer2 = () => nbFinalizerCalls2++;
 
-			IDisposable disposableWrapper1 = DisposableWrapper.Get (finalizer1);
-			IDisposable disposableWrapper2 = DisposableWrapper.Get (finalizer2);
+			IDisposable disposableWrapper1 = DisposableWrapper.CreateDisposable (finalizer1);
+			IDisposable disposableWrapper2 = DisposableWrapper.CreateDisposable (finalizer2);
 
 			Assert.AreEqual (0, nbFinalizerCalls1);
 			Assert.AreEqual (0, nbFinalizerCalls2);
 
-			IDisposable disposableWrapper3 = DisposableWrapper.Combine (disposableWrapper1, disposableWrapper2);
+			IDisposable disposableWrapper3 = DisposableWrapper.CombineDisposables (disposableWrapper1, disposableWrapper2);
 
 			Assert.AreEqual (0, nbFinalizerCalls1);
 			Assert.AreEqual (0, nbFinalizerCalls2);
@@ -247,15 +247,15 @@ namespace Epsitec.Common.Tests.Vs.Support
 				nbFinalizerCalls3++;
 			};
 
-			IDisposable disposableWrapper1 = DisposableWrapper.Get (finalizer1);
-			IDisposable disposableWrapper2 = DisposableWrapper.Get (finalizer2);
-			IDisposable disposableWrapper3 = DisposableWrapper.Get (finalizer3);
+			IDisposable disposableWrapper1 = DisposableWrapper.CreateDisposable (finalizer1);
+			IDisposable disposableWrapper2 = DisposableWrapper.CreateDisposable (finalizer2);
+			IDisposable disposableWrapper3 = DisposableWrapper.CreateDisposable (finalizer3);
 
 			Assert.AreEqual (0, nbFinalizerCalls1);
 			Assert.AreEqual (0, nbFinalizerCalls2);
 			Assert.AreEqual (0, nbFinalizerCalls3);
 
-			IDisposable disposableWrapper4 = DisposableWrapper.Combine (disposableWrapper1, disposableWrapper2, disposableWrapper3);
+			IDisposable disposableWrapper4 = DisposableWrapper.CombineDisposables (disposableWrapper1, disposableWrapper2, disposableWrapper3);
 
 			Assert.AreEqual (0, nbFinalizerCalls1);
 			Assert.AreEqual (0, nbFinalizerCalls2);

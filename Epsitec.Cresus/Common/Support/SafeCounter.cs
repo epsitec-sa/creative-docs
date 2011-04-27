@@ -1,7 +1,8 @@
-﻿namespace Epsitec.Common.Support
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Marc BETTEX
+
+namespace Epsitec.Common.Support
 {
-
-
 	/// <summary>
 	/// The <see cref="SafeCounter"/> class is used to manage a counter in a safe way; you
 	/// call the <see cref="Enter"/> method in a <c>using</c> block to increment/decrement
@@ -9,8 +10,6 @@
 	/// </summary>
 	public sealed class SafeCounter
 	{
-
-
 		public SafeCounter()
 		{
 			this.value = 0;
@@ -25,14 +24,25 @@
 			}
 		}
 
+		public int Value
+		{
+			get
+			{
+				return this.value;
+			}
+		}
+
 
 		public System.IDisposable Enter ()
 		{
 			this.value++;
 
-			System.Action action = () => this.value--;
+			return DisposableWrapper.CreateDisposable (this.Release);
+		}
 
-			return DisposableWrapper.Get (action);
+		private void Release()
+		{
+			this.value--;
 		}
 		
 		
@@ -60,9 +70,5 @@
 
 
 		private int value;
-
-
 	}
-
-
 }

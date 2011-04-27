@@ -511,7 +511,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			var d2 = this.silentUpdates.Enter ();
 			var d3 = this.defineOriginalValues.Enter ();
 
-			return DisposableWrapper.Combine (d3, d2, d1);
+			return DisposableWrapper.CombineDisposables (d3, d2, d1);
 		}
 
 		public System.IDisposable UseSilentUpdates()
@@ -519,7 +519,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			var d1 = this.LockWrite () ?? EmptyDisposable.Instance;
 			var d2 = this.silentUpdates.Enter ();
 
-			return DisposableWrapper.Combine (d2, d1);
+			return DisposableWrapper.CombineDisposables (d2, d1);
 		}
 
 
@@ -528,7 +528,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			var d1 = this.LockWrite () ?? EmptyDisposable.Instance;
 			var d2 = this.disableEvents.Enter ();
 
-			return DisposableWrapper.Combine (d2, d1);
+			return DisposableWrapper.CombineDisposables (d2, d1);
 		}
 
 		public System.IDisposable DisableReadOnlyChecks()
@@ -536,7 +536,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			var d1 = this.LockWrite () ?? EmptyDisposable.Instance;
 			var d2 = this.disableReadOnlyChecks.Enter ();
 
-			return DisposableWrapper.Combine (d2, d1);
+			return DisposableWrapper.CombineDisposables (d2, d1);
 		}
 
 		internal void DisableCalculations()

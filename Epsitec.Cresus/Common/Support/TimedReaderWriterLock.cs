@@ -39,7 +39,7 @@ namespace Epsitec.Common.Support
 
 			Action releaseAction = () => rwLock.ExitReadLock ();
 
-			return DisposableWrapper.Get (releaseAction);
+			return DisposableWrapper.CreateDisposable (releaseAction);
 		}
 
 
@@ -61,7 +61,7 @@ namespace Epsitec.Common.Support
 
 			Action releaseAction = () => rwLock.ExitWriteLock ();
 
-			return DisposableWrapper.Get (releaseAction);
+			return DisposableWrapper.CreateDisposable (releaseAction);
 		}
 
 

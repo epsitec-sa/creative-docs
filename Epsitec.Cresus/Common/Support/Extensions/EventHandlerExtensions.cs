@@ -1,15 +1,14 @@
-﻿namespace Epsitec.Common.Support
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+namespace Epsitec.Common.Support
 {
-
-
 	/// <summary>
 	/// The <see cref="EventHandlerExtensions"/> class provides extensions methods for instances of
 	/// <see cref="EventHandler{T}"/>.
 	/// </summary>
 	public static class EventHandlerExtensions
 	{
-
-
 		/// <summary>
 		/// Raises an event on <paramref name="eventHandler"/> using the standard C# design
 		/// pattern.
@@ -39,16 +38,21 @@
 		/// <param name="eventHandler">The event handler to fire.</param>
 		/// <param name="sender">The object considered as the sender of the event.</param>
 		/// <param name="eventArg">The data of the event.</param>
-		public static void Raise<T>(this EventHandler<T> eventHandler, object sender, T eventArg) where T : EventArgs
+		public static void Raise<T>(this EventHandler<T> eventHandler, object sender, T eventArg)
+			where T : EventArgs
 		{
 			if (eventHandler != null)
 			{
 				eventHandler (sender, eventArg);
 			}
 		}
-
-
+		
+		public static void Raise(this EventHandler eventHandler, object sender)
+		{
+			if (eventHandler != null)
+			{
+				eventHandler (sender);
+			}
+		}
 	}
-
-
 }
