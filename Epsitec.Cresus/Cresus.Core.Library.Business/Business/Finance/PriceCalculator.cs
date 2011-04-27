@@ -40,12 +40,35 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		}
 
 
+
+		public static decimal RoundToCents(decimal value, decimal cent = 0.01M)
+		{
+			if (value < 0)
+			{
+				return -PriceCalculator.RoundToCents (-value, cent);
+			}
+
+			System.Diagnostics.Debug.Assert (cent > 0M);
+
+			decimal halfCent = cent / 2;
+			decimal rest     = value % cent;
+
+			if (rest < halfCent)
+			{
+				return value - rest;
+			}
+			else
+			{
+				return value + cent - rest;
+			}
+		}
+
 		public static decimal ClipPriceValue(decimal value, CurrencyCode currency)
 		{
 			//	Currently, keep only cents for any price value. Maybe we should consider
-			//	using 3 decimal places after the EUR...
+			//	using 3 decimal places for some currencies ?
 
-			return 0.01M * System.Math.Round (value * 100);
+			return PriceCalculator.RoundToCents (value);
 		}
 		
 		public static decimal? ClipPriceValue(decimal? value, CurrencyCode currency)
