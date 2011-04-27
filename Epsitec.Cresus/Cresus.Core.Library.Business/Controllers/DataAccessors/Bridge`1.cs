@@ -307,7 +307,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 					(fieldType == typeof (System.DateTime)) ||
 					(fieldType == typeof (System.DateTime?)) ||
 					(fieldType == typeof (Date)) ||
-					(fieldType == typeof (Date?)))
+					(fieldType == typeof (Date?)) ||
+					(fieldType == typeof (decimal)) ||
+					(fieldType == typeof (decimal?)) )
 				{
 					var factory = DynamicFactories.TextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, width);
 					this.actions.Add ((tile, builder) => factory.CreateUI (tile, builder));
