@@ -27,12 +27,7 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
-		public BusinessContext CreateBusinessContext()
-		{
-			return new BusinessContext (this);
-		}
-
-		public void DisposeBusinessContext(BusinessContext context)
+		internal void DisposeBusinessContext(BusinessContext context)
 		{
 			if (this.pool.Contains (context))
 			{

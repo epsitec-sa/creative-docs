@@ -26,8 +26,8 @@ namespace Epsitec.Cresus.Core.Business
 			: this (data.GetComponent<BusinessContextPool> ())
 		{
 		}
-
-		public BusinessContext(BusinessContextPool pool)
+		
+		private BusinessContext(BusinessContextPool pool)
 		{
 			this.pool = pool;
 			this.UniqueId = System.Threading.Interlocked.Increment (ref BusinessContext.nextUniqueId);
@@ -189,12 +189,6 @@ namespace Epsitec.Cresus.Core.Business
 			where T : AbstractEntity, new ()
 		{
 			return this.data.GetAllEntities<T> (dataContext: this.dataContext);
-		}
-
-		public static BusinessContext Create(CoreData data)
-		{
-			var pool = data.GetComponent<BusinessContextPool> ();
-			return pool.CreateBusinessContext ();
 		}
 
 
@@ -823,7 +817,7 @@ namespace Epsitec.Cresus.Core.Business
 				return;
 			}
 
-			Dispatcher.RequestRefreshUI ();
+			this.OnRefreshUIRequested ();
 		}
 
 		private void HandleFirstEntityChange()
@@ -851,37 +845,28 @@ namespace Epsitec.Cresus.Core.Business
 
 		private void OnSavingChanges(CancelEventArgs e)
 		{
-			var handler = this.SavingChanges;
-
-			if (handler != null)
-			{
-				handler (this, e);
-			}
+			this.SavingChanges.Raise (this, e);
 		}
 
 		private void OnContainsChangesChanged()
 		{
-			var handler = this.ContainsChangesChanged;
-
-			if (handler != null)
-			{
-				handler (this);
-			}
+			this.ContainsChangesChanged.Raise (this);
 		}
 
 		private void OnMasterEntitiesChanged()
 		{
-			var handler = this.MasterEntitiesChanged;
+			this.MasterEntitiesChanged.Raise (this);
+		}
 
-			if (handler != null)
-            {
-				handler (this);
-            }
+		private void OnRefreshUIRequested()
+		{
+			this.RefreshUIRequested.Raise (this);
 		}
 
         public event EventHandler<CancelEventArgs>	SavingChanges;
 		public event EventHandler					ContainsChangesChanged;
 		public event EventHandler					MasterEntitiesChanged;
+		public event EventHandler					RefreshUIRequested;
 
 		private static int						nextUniqueId;
 

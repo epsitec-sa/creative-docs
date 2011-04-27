@@ -313,7 +313,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			
 			System.Diagnostics.Debug.Assert (this.businessContext == null);
 
-			this.SetActiveBusinessContext (BusinessContext.Create (this.data));
+			this.SetActiveBusinessContext (new BusinessContext (this.data));
 		}
 		
 		private void SetActiveBusinessContext(BusinessContext context)
@@ -328,12 +328,15 @@ namespace Epsitec.Cresus.Core.Orchestrators
 				if (oldContext != null)
 				{
 					oldContext.ContainsChangesChanged -= this.HandleBusinessContextContainsChangesChanged;
+					oldContext.RefreshUIRequested     -= this.HandleBusinessContextRefreshUIRequested;
+
 					this.workflowController.DetachBusinessContext (oldContext);
 				}
 				
 				if (newContext != null)
 				{
 					newContext.ContainsChangesChanged += this.HandleBusinessContextContainsChangesChanged;
+					newContext.RefreshUIRequested     += this.HandleBusinessContextRefreshUIRequested;
 
 					if (this.workflowController == null)
 					{
@@ -353,6 +356,16 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		private void HandleBusinessContextContainsChangesChanged(object sender)
 		{
 			this.UpdateBusinessContextContainsChanges ();
+		}
+
+		private void HandleBusinessContextRefreshUIRequested(object sender)
+		{
+			var controller = this.MainWindowController;
+
+			if (controller != null)
+			{
+				controller.Update ();
+			}
 		}
 
 		private void UpdateBusinessContextContainsChanges()
