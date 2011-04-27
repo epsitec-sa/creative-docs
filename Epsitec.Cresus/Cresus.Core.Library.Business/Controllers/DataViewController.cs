@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (this.viewControllers.Count > 1)
 			{
-				this.pushSafeRecursion.IfZero (controller.OpenLinkedSubView);
+//-				this.pushSafeRecursion.IfZero (controller.OpenLinkedSubView);
 			}
 		}
 

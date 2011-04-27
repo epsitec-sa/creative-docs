@@ -39,43 +39,5 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			wall.AddBrick (x => x.Comments)
 				.Template ();
 		}
-		private void CreateUIAffair(TileDataItems data)
-		{
-			data.Add (
-				new TileDataItem
-				{
-					Name				= "Affair",
-					IconUri				= "Data.Affair",
-					Title				= TextFormatter.FormatText ("Affaire"),
-					CompactTitle		= TextFormatter.FormatText ("Affaire"),
-					TextAccessor		= this.CreateAccessor (x => x.GetSummary ()),
-					CompactTextAccessor = this.CreateAccessor (x => x.GetCompactSummary ()),
-					EntityMarshaler		= this.CreateEntityMarshaler (),
-				});
-		}
-
-		private void CreateUIDocuments(TileDataItems data)
-		{
-			data.Add (
-				new TileDataItem
-				{
-					AutoGroup        = false,
-					Name		     = "DocMetadata",
-					IconUri		     = "Data.Document",
-					Title		     = TextFormatter.FormatText ("Document lié"),
-					CompactTitle     = TextFormatter.FormatText ("Documents liés"),
-					Text		     = CollectionTemplate.DefaultEmptyText,
-					HideAddButton    = true,
-					DefaultMode      = ViewControllerMode.Summary,
-				});
-
-			var template = new CollectionTemplate<DocumentMetadataEntity> ("DocMetadata", this.BusinessContext);
-
-			template.DefineTitle       (x => x.GetCompactSummary ());
-			template.DefineText        (x => x.GetSummary ());
-			template.DefineCompactText (x => x.GetCompactSummary ());
-
-			data.Add (this.CreateCollectionAccessor (template, x => x.Documents));
-		}
 	}
 }
