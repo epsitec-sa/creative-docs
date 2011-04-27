@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			else
 			{
-				return text;
+				return TextFormatter.FormatText (string.Format ("{0:0.0%} :", this.Rate), text);
 			}
 		}
 

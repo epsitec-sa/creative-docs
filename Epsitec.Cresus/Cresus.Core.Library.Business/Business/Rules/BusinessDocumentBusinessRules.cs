@@ -26,8 +26,11 @@ namespace Epsitec.Cresus.Core.Business.Rules
 		public override void ApplyUpdateRule(BusinessDocumentEntity entity)
 		{
 			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
-
-			Epsitec.Cresus.Core.Business.Finance.PriceCalculator.UpdatePrices (businessContext, entity);
+			
+			using (var calculator = new Epsitec.Cresus.Core.Business.Finance.PriceCalculators.DocumentPriceCalculator (businessContext, entity))
+			{
+				Epsitec.Cresus.Core.Business.Finance.PriceCalculator.UpdatePrices (calculator);
+			}
 		}
 	}
 }

@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 {
 	public static class PriceCalculator
 	{
-		public static void UpdatePrices(IBusinessContext context, BusinessDocumentEntity document)
+		public static void UpdatePrices(IPriceCalculator calculator)
 		{
 			if (PriceCalculator.activeCalculator != null)
             {
@@ -28,10 +28,8 @@ namespace Epsitec.Cresus.Core.Business.Finance
 
 			try
 			{
-				using (PriceCalculator.activeCalculator = new DocumentPriceCalculator (context, document))
-				{
-					PriceCalculator.activeCalculator.UpdatePrices ();
-				}
+				PriceCalculator.activeCalculator = calculator;
+				PriceCalculator.activeCalculator.UpdatePrices ();
 			}
 			finally
 			{
@@ -41,6 +39,12 @@ namespace Epsitec.Cresus.Core.Business.Finance
 
 
 
+		/// <summary>
+		/// Rounds the amount to the nearest cent.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <param name="cent">The value of a cent (0.01).</param>
+		/// <returns>The rounded value.</returns>
 		public static decimal RoundToCents(decimal value, decimal cent = 0.01M)
 		{
 			if (value < 0)
@@ -121,6 +125,6 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		
 		
 		[System.ThreadStatic]
-		private static DocumentPriceCalculator	activeCalculator;
+		private static IPriceCalculator	activeCalculator;
 	}
 }

@@ -95,7 +95,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			button.Clicked += delegate
 			{
-				Epsitec.Cresus.Core.Business.Finance.PriceCalculator.UpdatePrices (this.BusinessContext, this.Entity);
+				using (var calculator = new Epsitec.Cresus.Core.Business.Finance.PriceCalculators.DocumentPriceCalculator (this.BusinessContext, this.Entity))
+				{
+					Epsitec.Cresus.Core.Business.Finance.PriceCalculator.UpdatePrices (calculator);
+				}
 				this.TileContainer.UpdateAllWidgets ();
 			};
 #endif

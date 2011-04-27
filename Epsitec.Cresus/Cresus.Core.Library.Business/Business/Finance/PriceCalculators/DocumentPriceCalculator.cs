@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 	/// The <c>DocumentPriceCalculator</c> class implements the price calculation
 	/// algorithm used to compute the total of an invoice, for instance.
 	/// </summary>
-	public sealed class DocumentPriceCalculator : IDocumentPriceCalculator, System.IDisposable
+	public sealed class DocumentPriceCalculator : IPriceCalculator, IDocumentPriceCalculator, System.IDisposable
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DocumentPriceCalculator"/> class.
