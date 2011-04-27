@@ -33,18 +33,19 @@ namespace Epsitec.Common.Support.EntityEngine
 				throw new System.NullReferenceException ();
 			}
 
-			if (!EntityNullReferenceVirtualizer.IsPatchedEntity (entity))
-			{
-				EntityContext realEntityContext = entity.GetEntityContext ();
-
-				EntityNullReferenceVirtualizer.PatchNullReferences (entity, realEntityContext);
-			}
+			EntityContext realEntityContext = entity.GetEntityContext ();
+			EntityNullReferenceVirtualizer.PatchNullReferences (entity, realEntityContext);
 		}
 
 
 		private static void PatchNullReferences<T>(T entity, EntityContext realEntityContext)
 			where T : AbstractEntity
 		{
+			if (EntityNullReferenceVirtualizer.IsPatchedEntity (entity))
+			{
+				return;
+			}
+
 			var originalValues = entity.GetOriginalValues ();
 			var modifiedValues = entity.GetModifiedValues ();
 
