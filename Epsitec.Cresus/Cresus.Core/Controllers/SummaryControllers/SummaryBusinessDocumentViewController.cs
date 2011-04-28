@@ -27,7 +27,17 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				this.CreateUIFreightAndTaxLines (data);
 				this.CreateUITotalSummary (data);
 				this.CreateUIVatLines (data);
-				this.CreateUIBillings (data);
+
+				var metadata = this.BusinessContext.GetMasterEntity<DocumentMetadataEntity> ();
+
+				if (metadata != null)
+				{
+					if (metadata.DocumentCategory.DocumentType == Business.DocumentType.Invoice)
+					{
+						this.CreateUIBillings (data);
+					}
+				}
+
 				this.CreateUIComments (data);
 			}
 
