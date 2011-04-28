@@ -6,6 +6,7 @@ using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Controllers.TabIds;
 using Epsitec.Cresus.Core.Business.Finance.PriceCalculators;
+using Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalculators;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -52,7 +53,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override void Process(IDocumentPriceCalculator priceCalculator)
 		{
-			priceCalculator.Process (new SubTotalItemPriceCalculator (priceCalculator.Data, priceCalculator.Document, this));
+			priceCalculator.Process (new SubTotalItemPriceCalculator (priceCalculator, this));
 		}
 	}
 }

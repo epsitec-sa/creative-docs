@@ -11,10 +11,15 @@ using Epsitec.Cresus.Core.Entities;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
+namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalculators
 {
 	public class SubTotalItemPriceCalculator : AbstractItemPriceCalculator
 	{
+		public SubTotalItemPriceCalculator(IDocumentPriceCalculator priceCalculator, SubTotalDocumentItemEntity totalItem)
+			: this (priceCalculator.Data, priceCalculator.Document, totalItem)
+		{
+		}
+
 		public SubTotalItemPriceCalculator(CoreData data, BusinessDocumentEntity document, SubTotalDocumentItemEntity totalItem)
 		{
 			this.document  = document;

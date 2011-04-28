@@ -12,10 +12,15 @@ using Epsitec.Cresus.Core.Helpers;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
+namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalculators
 {
 	public class ArticleItemPriceCalculator : AbstractItemPriceCalculator
 	{
+		public ArticleItemPriceCalculator(IDocumentPriceCalculator priceCalculator, ArticleDocumentItemEntity articleItem)
+			: this (priceCalculator.Data, priceCalculator.Document, articleItem)
+		{
+		}
+
 		public ArticleItemPriceCalculator(CoreData data, BusinessDocumentEntity document, ArticleDocumentItemEntity articleItem)
 		{
 			this.data = data;

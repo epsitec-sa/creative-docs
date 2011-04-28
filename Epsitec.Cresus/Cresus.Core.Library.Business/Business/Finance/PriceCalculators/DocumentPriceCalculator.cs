@@ -7,6 +7,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Types.Collections;
 
 using Epsitec.Cresus.Core.Business.Finance;
+using Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalculators;
 using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer.Context;

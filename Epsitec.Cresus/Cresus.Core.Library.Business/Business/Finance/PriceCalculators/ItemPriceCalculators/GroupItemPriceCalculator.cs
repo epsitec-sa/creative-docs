@@ -11,7 +11,7 @@ using Epsitec.Cresus.Core.Entities;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
+namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalculators
 {
 	public class GroupItemPriceCalculator : AbstractItemPriceCalculator
 	{
