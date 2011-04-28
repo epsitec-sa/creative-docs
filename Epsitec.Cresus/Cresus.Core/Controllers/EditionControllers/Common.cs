@@ -83,19 +83,31 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 					if (id == DocumentItemTabId.Text)
 					{
-						newEntity = controller.BusinessContext.CreateEntityAndRegisterAsEmpty<TextDocumentItemEntity> ();
+						var text = controller.BusinessContext.CreateEntityAndRegisterAsEmpty<TextDocumentItemEntity> ();
+
+						text.GroupLevel = 1;
+						
+						newEntity = text;
 					}
 					else if (id == DocumentItemTabId.Article)
 					{
-						newEntity = controller.BusinessContext.CreateEntityAndRegisterAsEmpty<ArticleDocumentItemEntity> ();
+						var article = controller.BusinessContext.CreateEntityAndRegisterAsEmpty<ArticleDocumentItemEntity> ();
 
-						var article = newEntity as ArticleDocumentItemEntity;
-						article.BeginDate = invoiceDocument.BillingDate;
-						article.EndDate   = invoiceDocument.BillingDate;
+						article.BeginDate  = invoiceDocument.BillingDate;
+						article.EndDate    = invoiceDocument.BillingDate;
+						article.GroupLevel = 1;
+
+						newEntity = article;
 					}
 					else if (id == DocumentItemTabId.Price)
 					{
-						newEntity = controller.BusinessContext.CreateEntityAndRegisterAsEmpty<SubTotalDocumentItemEntity> ();
+						var price = controller.BusinessContext.CreateEntityAndRegisterAsEmpty<SubTotalDocumentItemEntity> ();
+
+						price.TextForPrimaryPrice   = TextFormatter.FormatText ("Sous-total avant rabais");
+						price.TextForResultingPrice = TextFormatter.FormatText ("Sous-total");
+						price.GroupLevel            = 1;
+
+						newEntity = price;
 					}
 
 					System.Diagnostics.Debug.Assert (newEntity != null);
