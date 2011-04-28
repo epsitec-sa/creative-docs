@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 {
 
 
-    [TestClass]
+	[TestClass]
 	public sealed class UnitTestNullVirtualization
 	{
 
@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 							dataContext.SaveChanges ();
 						}
 					}
-				}				
+				}
 			}
 		}
 
@@ -116,10 +116,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void CreationWIthModificationDepth1()
-		{		
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase(dataInfrastructure, enableNullVirtualization:true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
 				{
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
 
@@ -173,7 +173,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void CreationWithModificationDepth2()
-		{			
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
@@ -246,7 +246,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void CreationAndReplacementDepth1()
-		{			
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
@@ -308,7 +308,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void CreationAndReplacementDepth2()
-		{			
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
@@ -463,6 +463,70 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 		[TestMethod]
+		public void CreationAndRemoval()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				{
+					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
+
+					Assert.IsNotNull (gertrude);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
+
+					LanguageEntity language = gertrude.PreferredLanguage;
+
+					Assert.IsNotNull (language);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (language));
+
+					gertrude.PreferredLanguage = null;
+
+					Assert.IsNull (gertrude.PreferredLanguage);
+
+					dataContext.SaveChanges ();
+
+					// NOTE Here what happens is that when we call SaveChanges() we assign the
+					// modified values to the original values. This action "resets" the original
+					// value store for the modified fields, which implies that we forget that we
+					// set the field to null explicitely. So the next time that we access it, we
+					// create a "null" entity on the fly, as usual. But in this case, it is wrong.
+					// I suspect that there are also other problems with this, because when assigning
+					// the modified values to the original store, we call the TransformInLiveEntity
+					// method of the NullEntityReferenceVirtualizer, which I think might cause troubles
+					// in some special cases. In the normal case it shouldn't because if there are
+					// modified values, and the entity has been "null", it shouldn't be "null"
+					// anymore, because we assigned a value to one of its field. But it doesn't seem
+					// right to me that we make that call.
+					// Marc
+
+					Assert.IsNull (gertrude.PreferredLanguage);
+				}
+
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				{
+					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
+
+					Assert.IsNotNull (gertrude);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
+
+					LanguageEntity languageGertrude = gertrude.PreferredLanguage;
+
+					Assert.IsNotNull (languageGertrude);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (languageGertrude));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (languageGertrude));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (languageGertrude));
+				}
+			}
+		}
+
+
+		[TestMethod]
 		public void CreationRemovalAndModification()
 		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
@@ -487,11 +551,22 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 					// NOTE Here what happens is that we set the preferred language of Gertrude to
 					// null in the modified value store, but there is still the reference to the
-					// leet speak language in its original value store. So when we save, we find that
-					// the value is leet speak and we save it instead of saving null.
+					// "null" leet speak language in its original value store. And the value store of
+					// the "null" leet speak language still thinks that Gertrude is its parent
+					// entity. So when we assign something to a field of the leet speak language,
+					// this call goes all the way up to the value store of Gertrude in order to tell
+					// that store that the leet speak language is not "null" anymore so that it can
+					// remove it from its list of "null" entities and assign it to the real write
+					// store. Of course, this is wrong because the leet speak language is not the
+					// language of Gertrude anymore.
 					// Marc
 
+					Assert.IsNull (gertrude.PreferredLanguage);
+
 					language.Code = "1337";
+
+					Assert.IsNull (gertrude.PreferredLanguage);
+
 					language.Name = "1337 5|*34|<";
 
 					Assert.IsNotNull (language);
@@ -501,7 +576,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					Assert.AreEqual ("1337", language.Code);
 					Assert.AreEqual ("1337 5|*34|<", language.Name);
 
+					Assert.IsNull (gertrude.PreferredLanguage);
+
 					dataContext.SaveChanges ();
+
+					Assert.IsNull (gertrude.PreferredLanguage);
 				}
 
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
@@ -519,6 +598,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (languageGertrude));
 					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (languageGertrude));
 					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (languageGertrude));
+
+					Assert.IsNull (languageGertrude.Code);
+					Assert.IsNull (languageGertrude.Name);
 				}
 			}
 		}
@@ -545,7 +627,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
 
 					LanguageEntity language = gertrude.PreferredLanguage;
-					
+
 					Assert.IsNotNull (language);
 					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
 					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
@@ -630,11 +712,22 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 					// NOTE Here what happens is that we set the preferred language of Gertrude to
 					// null in the modified value store, but there is still the reference to the
-					// leet speak language in its original value store. So when we save, we find that
-					// the value is leet speak and we save it instead of saving null.
+					// "null" leet speak language in its original value store. And the value store of
+					// the "null" leet speak language still thinks that Gertrude is its parent
+					// entity. So when we assign something to a field of the leet speak language,
+					// this call goes all the way up to the value store of Gertrude in order to tell
+					// that store that the leet speak language is not "null" anymore so that it can
+					// remove it from its list of "null" entities and assign it to the real write
+					// store. Of course, this is wrong because the leet speak language is not the
+					// language of Gertrude anymore.
 					// Marc
 
+					Assert.IsNull (gertrude.PreferredLanguage);
+
 					language.Code = "1337";
+
+					Assert.IsNull (gertrude.PreferredLanguage);
+
 					language.Name = "1337 5|*34|<";
 
 					Assert.IsNotNull (language);
@@ -644,7 +737,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					Assert.AreEqual ("1337", language.Code);
 					Assert.AreEqual ("1337 5|*34|<", language.Name);
 
+					Assert.IsNull (gertrude.PreferredLanguage);
+
 					dataContext.SaveChanges ();
+
+					Assert.IsNull (gertrude.PreferredLanguage);
 				}
 
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
@@ -679,6 +776,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (languageGertrude));
 					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (languageGertrude));
 					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (languageGertrude));
+
+					Assert.IsNull (languageGertrude.Code);
+					Assert.IsNull (languageGertrude.Name);
 				}
 			}
 		}
@@ -721,7 +821,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					NaturalPersonEntity wrapedGertrude = dataContext.WrapNullEntity (gertrude);
 					LanguageEntity wrapedLanguage = dataContext.WrapNullEntity (language);
 					NaturalPersonEntity wrapedNoOne = dataContext.WrapNullEntity (noOne);
-					
+
 					Assert.AreSame (gertrude, wrapedGertrude);
 					Assert.AreSame (language, wrapedLanguage);
 
@@ -729,6 +829,24 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (wrapedNoOne));
 					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (wrapedNoOne));
 					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (wrapedNoOne));
+
+					wrapedNoOne.Firstname = "Blupi";
+					wrapedNoOne.Lastname = "Mania";
+
+					dataContext.SaveChanges ();
+				}
+
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				{
+					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
+
+					Assert.IsNotNull (person);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (person));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (person));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (person));
+
+					Assert.AreEqual ("Blupi", person.Firstname);
+					Assert.AreEqual ("Mania", person.Lastname);
 				}
 			}
 		}
