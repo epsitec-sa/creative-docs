@@ -14,9 +14,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 {
-	public class ArticlePriceCalculator : AbstractPriceCalculator
+	public class ArticleItemPriceCalculator : AbstractItemPriceCalculator
 	{
-		public ArticlePriceCalculator(CoreData data, BusinessDocumentEntity document, ArticleDocumentItemEntity articleItem)
+		public ArticleItemPriceCalculator(CoreData data, BusinessDocumentEntity document, ArticleDocumentItemEntity articleItem)
 		{
 			this.data = data;
 			this.document     = document;

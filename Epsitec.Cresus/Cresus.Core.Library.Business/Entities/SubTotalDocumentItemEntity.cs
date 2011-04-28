@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override void Process(IDocumentPriceCalculator priceCalculator)
 		{
-			priceCalculator.Process (new SubTotalPriceCalculator (priceCalculator.Data, priceCalculator.Document, this));
+			priceCalculator.Process (new SubTotalItemPriceCalculator (priceCalculator.Data, priceCalculator.Document, this));
 		}
 	}
 }

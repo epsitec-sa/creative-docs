@@ -13,7 +13,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 {
-	public abstract class AbstractPriceCalculator
+	public abstract class AbstractItemPriceCalculator
 	{
 		public abstract void ApplyFinalPriceAdjustment(decimal adjustment);
 	}

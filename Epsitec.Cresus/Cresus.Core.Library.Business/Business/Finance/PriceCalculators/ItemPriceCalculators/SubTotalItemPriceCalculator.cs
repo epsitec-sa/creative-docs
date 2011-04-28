@@ -13,9 +13,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 {
-	public class SubTotalPriceCalculator : AbstractPriceCalculator
+	public class SubTotalItemPriceCalculator : AbstractItemPriceCalculator
 	{
-		public SubTotalPriceCalculator(CoreData data, BusinessDocumentEntity document, SubTotalDocumentItemEntity totalItem)
+		public SubTotalItemPriceCalculator(CoreData data, BusinessDocumentEntity document, SubTotalDocumentItemEntity totalItem)
 		{
 			this.document  = document;
 			this.totalItem = totalItem;
@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
-		public GroupPriceCalculator Group
+		public GroupItemPriceCalculator Group
 		{
 			get
 			{
@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 		
-		public void ComputePrice(GroupPriceCalculator groupPriceCalculator)
+		public void ComputePrice(GroupItemPriceCalculator groupPriceCalculator)
 		{
 			this.group = groupPriceCalculator;
 			
@@ -183,7 +183,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		private readonly PriceDiscountEntity				discount;
 		private readonly CurrencyCode				currencyCode;
 
-		private GroupPriceCalculator				group;
+		private GroupItemPriceCalculator				group;
 		private Tax									taxDiscountable;
 		private Tax									taxNotDiscountable;
 	}

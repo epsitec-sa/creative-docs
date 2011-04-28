@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			get;
 		}
 		
-		void Process(ArticlePriceCalculator calculator);
-		void Process(SubTotalPriceCalculator calculator);
+		void Process(ArticleItemPriceCalculator calculator);
+		void Process(SubTotalItemPriceCalculator calculator);
 	}
 }

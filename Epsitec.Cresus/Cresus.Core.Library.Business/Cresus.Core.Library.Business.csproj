@@ -53,12 +53,12 @@
     <Compile Include="Business\BusinessContextPool.cs" />
     <Compile Include="Business\EntitySaveMode.cs" />
     <Compile Include="Business\Enumerations.cs" />
-    <Compile Include="Business\Finance\PriceCalculators\AbstractPriceCalculator.cs" />
-    <Compile Include="Business\Finance\PriceCalculators\ArticlePriceCalculator.cs" />
+    <Compile Include="Business\Finance\PriceCalculators\ItemPriceCalculators\AbstractItemPriceCalculator.cs" />
+    <Compile Include="Business\Finance\PriceCalculators\ItemPriceCalculators\ArticleItemPriceCalculator.cs" />
     <Compile Include="Business\Finance\PriceCalculators\DocumentPriceCalculator.cs" />
-    <Compile Include="Business\Finance\PriceCalculators\GroupPriceCalculator.cs" />
+    <Compile Include="Business\Finance\PriceCalculators\ItemPriceCalculators\GroupItemPriceCalculator.cs" />
     <Compile Include="Business\Finance\PriceCalculators\IDocumentPriceCalculator.cs" />
-    <Compile Include="Business\Finance\PriceCalculators\SubTotalPriceCalculator.cs" />
+    <Compile Include="Business\Finance\PriceCalculators\ItemPriceCalculators\SubTotalItemPriceCalculator.cs" />
     <Compile Include="Business\Rules\AddressBusinessRules.cs" />
     <Compile Include="Business\Rules\AffairBusinessRules.cs" />
     <Compile Include="Business\Rules\ArticleGroupBusinessRules.cs" />

@@ -31,8 +31,8 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		{
 			this.context     = context;
 			this.document    = document;
-			this.calculators = new List<AbstractPriceCalculator> ();
-			this.groups      = new Stack<GroupPriceCalculator> ();
+			this.calculators = new List<AbstractItemPriceCalculator> ();
+			this.groups      = new Stack<GroupItemPriceCalculator> ();
 			this.suspender   = this.document.DisableEvents ();
 		}
 
@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			this.RecordCurrentGroup ();
 		}
 
-		private void ComputeTaxesAndEndTotal(GroupPriceCalculator group, Tax taxTotals)
+		private void ComputeTaxesAndEndTotal(GroupItemPriceCalculator group, Tax taxTotals)
 		{
 			DataContext context = this.context.DataContext;
 			
@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			this.GenerateEndTotalLine (totalReservoir, taxTotals, currency);
 		}
 
-		private void ComputeFinalPrices(GroupPriceCalculator group, Tax taxTotals)
+		private void ComputeFinalPrices(GroupItemPriceCalculator group, Tax taxTotals)
 		{
 			group.AdjustFinalPrices (taxTotals.TotalAmount);
 		}
@@ -217,7 +217,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			}
 		}
 
-		void IDocumentPriceCalculator.Process(ArticlePriceCalculator calculator)
+		void IDocumentPriceCalculator.Process(ArticleItemPriceCalculator calculator)
 		{
 			int groupLevel = calculator.ArticleItem.GroupLevel;
 
@@ -228,7 +228,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 				this.RecordCurrentGroup ();
 				this.currentState = State.Article;
-				this.currentGroup = new GroupPriceCalculator (groupLevel);
+				this.currentGroup = new GroupItemPriceCalculator (groupLevel);
 			}
 
 			System.Diagnostics.Debug.Assert (this.currentGroup != null);
@@ -248,7 +248,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			this.IncludeSubgroups (this.currentGroup, groupLevel);
 		}
 
-		void IDocumentPriceCalculator.Process(SubTotalPriceCalculator calculator)
+		void IDocumentPriceCalculator.Process(SubTotalItemPriceCalculator calculator)
 		{
 			this.calculators.Add (calculator);
 
@@ -257,7 +257,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			if (localGroup == null)
 			{
-				localGroup = new GroupPriceCalculator (groupLevel);
+				localGroup = new GroupItemPriceCalculator (groupLevel);
 			}
 			else if (localGroup.GroupLevel > groupLevel)
 			{
@@ -267,7 +267,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 				this.groups.Push (localGroup);
 
-				localGroup = new GroupPriceCalculator (groupLevel);
+				localGroup = new GroupItemPriceCalculator (groupLevel);
 
 				this.IncludeSubgroups (localGroup, groupLevel);
 			}
@@ -275,7 +275,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			calculator.ComputePrice (localGroup);
 
 			this.currentState = State.SubTotal;
-			this.currentGroup = new GroupPriceCalculator (groupLevel);
+			this.currentGroup = new GroupItemPriceCalculator (groupLevel);
 			this.currentGroup.Add (calculator);
 		}
 
@@ -300,11 +300,11 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
-		private GroupPriceCalculator GetLastGroup()
+		private GroupItemPriceCalculator GetLastGroup()
 		{
 			if (this.groups.Count == 0)
 			{
-				return new GroupPriceCalculator (0);
+				return new GroupItemPriceCalculator (0);
 			}
 			else
 			{
@@ -312,7 +312,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			}
 		}
 
-		private void IncludeSubgroups(GroupPriceCalculator localGroup, int groupLevel)
+		private void IncludeSubgroups(GroupItemPriceCalculator localGroup, int groupLevel)
 		{
 			while (this.groups.Count > 0 && this.groups.Peek ().GroupLevel > groupLevel)
 			{
@@ -322,11 +322,11 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		
 		private readonly IBusinessContext				context;
 		private readonly BusinessDocumentEntity			document;
-		private readonly List<AbstractPriceCalculator>	calculators;
-		private readonly Stack<GroupPriceCalculator>	groups;
+		private readonly List<AbstractItemPriceCalculator>	calculators;
+		private readonly Stack<GroupItemPriceCalculator>	groups;
 		private readonly System.IDisposable				suspender;
 
-		private GroupPriceCalculator			currentGroup;
+		private GroupItemPriceCalculator			currentGroup;
 		private State							currentState;
 	}
 }

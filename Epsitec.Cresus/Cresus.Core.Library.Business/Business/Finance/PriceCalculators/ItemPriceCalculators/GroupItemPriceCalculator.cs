@@ -13,11 +13,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 {
-	public class GroupPriceCalculator : AbstractPriceCalculator
+	public class GroupItemPriceCalculator : AbstractItemPriceCalculator
 	{
-		public GroupPriceCalculator(int groupLevel)
+		public GroupItemPriceCalculator(int groupLevel)
 		{
-			this.members = new List<AbstractPriceCalculator> ();
+			this.members = new List<AbstractItemPriceCalculator> ();
 			this.groupLevel = groupLevel;
 		}
 
@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			}
 		}
 
-		public IList<AbstractPriceCalculator>	Members
+		public IList<AbstractItemPriceCalculator>	Members
 		{
 			get
 			{
@@ -116,13 +116,13 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
-		public void Add(GroupPriceCalculator calculator)
+		public void Add(GroupItemPriceCalculator calculator)
 		{
-			calculator.Members.OfType<ArticlePriceCalculator> ().ForEach (x => this.Add (x));
-			calculator.Members.OfType<SubTotalPriceCalculator> ().ForEach (x => this.Add (x));
+			calculator.Members.OfType<ArticleItemPriceCalculator> ().ForEach (x => this.Add (x));
+			calculator.Members.OfType<SubTotalItemPriceCalculator> ().ForEach (x => this.Add (x));
 		}
 
-		public void Add(ArticlePriceCalculator calculator)
+		public void Add(ArticleItemPriceCalculator calculator)
 		{
 			var item  = calculator.ArticleItem;
 			var tax   = calculator.Tax;
@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			this.Accumulate (tax, calculator.NotDiscountable);
 		}
 
-		public void Add(SubTotalPriceCalculator calculator)
+		public void Add(SubTotalItemPriceCalculator calculator)
 		{
 			var group = calculator.Group;
 
@@ -143,7 +143,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			decimal discountableBefore = group.totalPriceBeforeTaxDiscountable;
 			decimal discountableAfter  = discountableBefore + delta;
 
-			decimal ratio = GroupPriceCalculator.GetRatio (discountableBefore, discountableAfter);
+			decimal ratio = GroupItemPriceCalculator.GetRatio (discountableBefore, discountableAfter);
 
 			Tax discountedTax = new Tax (group.TaxDiscountable.RateAmounts.Select (tax => new TaxRateAmount (tax.Amount * ratio, tax.Code, tax.Rate)));
 			
@@ -157,7 +157,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			decimal delta  = desiredPriceBeforeTax - this.TotalPriceBeforeTax;
 			decimal result = this.TotalPriceBeforeTaxDiscountable;
 			decimal final  = result + delta;
-			decimal ratio = GroupPriceCalculator.GetRatio (result, final);
+			decimal ratio = GroupItemPriceCalculator.GetRatio (result, final);
 			this.members.ForEach (x => x.ApplyFinalPriceAdjustment (ratio));
 		}
 
@@ -259,7 +259,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			}
 		}
 
-		private readonly List<AbstractPriceCalculator> members;
+		private readonly List<AbstractItemPriceCalculator> members;
 		private readonly int					groupLevel;
 
 		private decimal							totalPriceBeforeTaxDiscountable;
