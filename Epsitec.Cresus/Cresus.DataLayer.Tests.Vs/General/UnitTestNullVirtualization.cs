@@ -527,6 +527,74 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 		[TestMethod]
+		public void SetToNull()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				{
+					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
+
+					Assert.IsNotNull (gertrude);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
+
+					// NOTE Here everything seems to happen fine, but under the hood, when we set
+					// the value to null, we make a call to get the current value, so that we can
+					// trigger the event with the old value. So when we get the current value, as
+					// there are no value for the language, we create a "null" language, which is
+					// immediately overwritten by the null that we put in the modified value store.
+					// But this "null" language is still present in the original value stores. I'm
+					// not sure if this is a problem (for the correctness or for the performance),
+					// but I don't see how we could correct this behavior without modifying the code
+					// generated for the entities.
+					// Marc
+
+					gertrude.PreferredLanguage = null;
+
+					Assert.IsNull (gertrude.PreferredLanguage);
+
+					dataContext.SaveChanges ();
+
+					// NOTE Here what happens is that when we call SaveChanges() we assign the
+					// modified values to the original values. This action "resets" the original
+					// value store for the modified fields, which implies that we forget that we
+					// set the field to null explicitely. So the next time that we access it, we
+					// create a "null" entity on the fly, as usual. But in this case, it is wrong.
+					// I suspect that there are also other problems with this, because when assigning
+					// the modified values to the original store, we call the TransformInLiveEntity
+					// method of the NullEntityReferenceVirtualizer, which I think might cause troubles
+					// in some special cases. In the normal case it shouldn't because if there are
+					// modified values, and the entity has been "null", it shouldn't be "null"
+					// anymore, because we assigned a value to one of its field. But it doesn't seem
+					// right to me that we make that call.
+					// Marc
+
+					Assert.IsNull (gertrude.PreferredLanguage);
+				}
+
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				{
+					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
+
+					Assert.IsNotNull (gertrude);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
+
+					LanguageEntity languageGertrude = gertrude.PreferredLanguage;
+
+					Assert.IsNotNull (languageGertrude);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (languageGertrude));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (languageGertrude));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (languageGertrude));
+				}
+			}
+		}
+
+
+		[TestMethod]
 		public void CreationRemovalAndModification()
 		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
