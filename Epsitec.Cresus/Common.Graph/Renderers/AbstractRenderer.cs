@@ -379,7 +379,7 @@ namespace Epsitec.Common.Graph.Renderers
         /// <param name="newValue">SeriesIndex after the change</param>
         public virtual void HoverIndexChanged(object oldValue, object newValue)
         {
-            System.Diagnostics.Debug.WriteLine("Hover changed from {0} to {1}", oldValue, newValue);
+            System.Diagnostics.Debug.WriteLine(string.Format ("Hover changed from {0} to {1}", oldValue, newValue));
             this.activeIndex = (int) newValue;
         }
 

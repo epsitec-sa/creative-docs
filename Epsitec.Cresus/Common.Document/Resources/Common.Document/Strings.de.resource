@@ -1488,4 +1488,5 @@
   <data id="K62">Konvexität</data>
   <data id="K72">X</data>
   <data id="K82">Konvexität (Wölbung) des Rahmens</data>
+  <data id="K92">PDF nach dem Export öffnen</data>
 </bundle>
