@@ -8,6 +8,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[8VAU]", typeof (Epsitec.Cresus.Core.Entities.LanguageEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[8VA41]", typeof (Epsitec.Cresus.Core.Entities.XmlBlobEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[8VA61]", typeof (Epsitec.Cresus.Core.Entities.DateRangeEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[8VA91]", typeof (Epsitec.Cresus.Core.Entities.GeneratorDefinitionEntity))]
 #region Epsitec.Cresus.Core.IItemRank Interface
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -1036,6 +1037,170 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 10, 38);	// [8VA61]
 		public static readonly string EntityStructuredTypeKey = "[8VA61]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.GeneratorDefinition Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>GeneratorDefinition</c> entity.
+	///	designer:cap/8VA91
+	///	</summary>
+	public partial class GeneratorDefinitionEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.INameDescription
+	{
+		#region INameDescription Members
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/8VA91/8VA7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA7]")]
+		public global::Epsitec.Common.Types.FormattedText Name
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetName (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/8VA91/8VA8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA8]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetDescription (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetDescription (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>Entity</c> field.
+		///	designer:fld/8VA91/8VAA1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAA1]")]
+		public string Entity
+		{
+			get
+			{
+				return this.GetField<string> ("[8VAA1]");
+			}
+			set
+			{
+				string oldValue = this.Entity;
+				if (oldValue != value || !this.IsFieldDefined("[8VAA1]"))
+				{
+					this.OnEntityChanging (oldValue, value);
+					this.SetField<string> ("[8VAA1]", oldValue, value);
+					this.OnEntityChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>IdField</c> field.
+		///	designer:fld/8VA91/8VAB1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAB1]")]
+		public string IdField
+		{
+			get
+			{
+				return this.GetField<string> ("[8VAB1]");
+			}
+			set
+			{
+				string oldValue = this.IdField;
+				if (oldValue != value || !this.IsFieldDefined("[8VAB1]"))
+				{
+					this.OnIdFieldChanging (oldValue, value);
+					this.SetField<string> ("[8VAB1]", oldValue, value);
+					this.OnIdFieldChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Format</c> field.
+		///	designer:fld/8VA91/8VAC1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAC1]")]
+		public string Format
+		{
+			get
+			{
+				return this.GetField<string> ("[8VAC1]");
+			}
+			set
+			{
+				string oldValue = this.Format;
+				if (oldValue != value || !this.IsFieldDefined("[8VAC1]"))
+				{
+					this.OnFormatChanging (oldValue, value);
+					this.SetField<string> ("[8VAC1]", oldValue, value);
+					this.OnFormatChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Key</c> field.
+		///	designer:fld/8VA91/8VAD1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAD1]")]
+		public string Key
+		{
+			get
+			{
+				return this.GetField<string> ("[8VAD1]");
+			}
+			set
+			{
+				string oldValue = this.Key;
+				if (oldValue != value || !this.IsFieldDefined("[8VAD1]"))
+				{
+					this.OnKeyChanging (oldValue, value);
+					this.SetField<string> ("[8VAD1]", oldValue, value);
+					this.OnKeyChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnEntityChanging(string oldValue, string newValue);
+		partial void OnEntityChanged(string oldValue, string newValue);
+		partial void OnIdFieldChanging(string oldValue, string newValue);
+		partial void OnIdFieldChanged(string oldValue, string newValue);
+		partial void OnFormatChanging(string oldValue, string newValue);
+		partial void OnFormatChanged(string oldValue, string newValue);
+		partial void OnKeyChanging(string oldValue, string newValue);
+		partial void OnKeyChanged(string oldValue, string newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.GeneratorDefinitionEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.GeneratorDefinitionEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 10, 41);	// [8VA91]
+		public static readonly string EntityStructuredTypeKey = "[8VA91]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<GeneratorDefinitionEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
 	}
 }
 #endregion

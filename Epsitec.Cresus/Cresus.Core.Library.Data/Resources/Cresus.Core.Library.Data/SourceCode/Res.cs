@@ -72,6 +72,8 @@ namespace Epsitec.Cresus.Core.Library.Data
 			public static readonly Epsitec.Common.Types.StructuredType Comment = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 26));
 			//	designer:cap/8VA61
 			public static readonly Epsitec.Common.Types.StructuredType DateRange = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 38));
+			//	designer:cap/8VA91
+			public static readonly Epsitec.Common.Types.StructuredType GeneratorDefinition = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 41));
 			//	designer:cap/8VAM
 			public static readonly Epsitec.Common.Types.StructuredType ICategory = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 22));
 			//	designer:cap/8VAS
@@ -112,6 +114,22 @@ namespace Epsitec.Cresus.Core.Library.Data
 				
 				//	designer:cap/8VAR
 				public static readonly global::Epsitec.Common.Support.Druid Text = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 27);
+			}
+			
+			public static class GeneratorDefinition
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/8VAA1
+				public static readonly global::Epsitec.Common.Support.Druid Entity = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 42);
+				//	designer:cap/8VAC1
+				public static readonly global::Epsitec.Common.Support.Druid Format = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 44);
+				//	designer:cap/8VAB1
+				public static readonly global::Epsitec.Common.Support.Druid IdField = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 43);
+				//	designer:cap/8VAD1
+				public static readonly global::Epsitec.Common.Support.Druid Key = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 45);
 			}
 			
 			public static class IComments
@@ -361,6 +379,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			Types._Initialize ();
 			Types.Data.String._Initialize ();
 			Fields.Comment._Initialize ();
+			Fields.GeneratorDefinition._Initialize ();
 			Fields.IComments._Initialize ();
 			Fields.IDataHash._Initialize ();
 			Fields.IDateMetadata._Initialize ();

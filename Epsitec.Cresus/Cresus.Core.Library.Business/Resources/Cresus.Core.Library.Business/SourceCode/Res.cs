@@ -136,6 +136,22 @@ namespace Epsitec.Cresus.Core.Library.Business
 						return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 163));
 					}
 				}
+				//	designer:cap/GVAG6
+				public static global::Epsitec.Common.Types.Caption Shipped
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 208));
+					}
+				}
+				//	designer:cap/GVAH6
+				public static global::Epsitec.Common.Types.Caption ShippedPreviously
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 209));
+					}
+				}
 			}
 			
 			public static class ArticleType
@@ -494,6 +510,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid CompanyLogo = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 28);
 				//	designer:cap/GVA86
 				public static readonly global::Epsitec.Common.Support.Druid Finance = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 200);
+				//	designer:cap/GVAI6
+				public static readonly global::Epsitec.Common.Support.Druid Generators = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 210);
 				//	designer:cap/GVAR
 				public static readonly global::Epsitec.Common.Support.Druid Tax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 27);
 			}

@@ -821,6 +821,18 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>Generators</c> field.
+		///	designer:fld/GVAO/GVAI6
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVAI6]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.GeneratorDefinitionEntity> Generators
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.GeneratorDefinitionEntity> ("[GVAI6]");
+			}
+		}
+		///	<summary>
 		///	The <c>CompanyLogo</c> field.
 		///	designer:fld/GVAO/GVAS
 		///	</summary>
