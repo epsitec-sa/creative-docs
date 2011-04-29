@@ -92,7 +92,7 @@ namespace Epsitec.Common.Document.PDF
 			this.imageMaxDpi = info.ImageMaxDpi;
 
 			this.complexSurfaces = new System.Collections.ArrayList();
-			this.imageSurfaces   = new System.Collections.ArrayList();
+			this.imageSurfaces   = new List<ImageSurface> ();
 			this.characterList   = new System.Collections.Hashtable();
 			this.fontList        = new System.Collections.Hashtable();
 
@@ -1809,23 +1809,306 @@ namespace Epsitec.Common.Document.PDF
 		protected bool CreateImageSurface(Writer writer, Port port, ImageSurface image,
 										  TypeComplexSurface baseType, TypeComplexSurface maskType)
 		{
-			//	Crée une image.
-			byte[] imageData = image.Cache.GetImageData();
-			var fi = NativeBitmap.Load(imageData);
-			image.Cache.FreeImage();
-			imageData = null;
+			ImageCompression compression = this.GetCompressionMode (baseType);
 
+			//	Crée une image.
+			NativeBitmap fi;
+			bool useMask = false;
+			int dx, dy;
+
+			fi = Export.LoadImage (image);
+			fi = Export.CropImage (image, fi);
+			fi = Export.ResizeImage (image, fi, this.imageMinDpi, this.imageMaxDpi, out dx, out dy);
+
+			this.EmitHeader (writer, baseType, image, compression, fi, dx, dy);
+
+			if (fi.IsTransparent)
+			{
+				useMask = true;
+			}
+
+			if (compression == ImageCompression.JPEG)  // compression JPEG ?
+			{
+				this.EmitJpegImageSurface (writer, port, baseType, fi);
+			}
+			else	// compression ZIP ou aucune ?
+			{
+				this.EmitLosslessImageSurface (writer, port, baseType, image, compression, fi, dx, dy);
+			}
+
+			fi.Dispose ();
+			fi = null;
+
+			if (maskType == TypeComplexSurface.XObjectMask && useMask)
+			{
+				writer.WriteString ("/SMask ");
+				writer.WriteObjectRef (Export.NameComplexSurface (image.Id, maskType));
+			}
+
+			string pdf = port.GetPDF ();
+			writer.WriteLine (string.Format (CultureInfo.InvariantCulture, " {0} >>", Port.StringLength (pdf.Length)));
+			writer.WriteLine ("stream");
+			writer.WriteString (pdf);
+			writer.WriteLine ("endstream endobj");
+
+			return useMask;
+		}
+
+		private void EmitHeader(Writer writer, TypeComplexSurface baseType, ImageSurface image, ImageCompression compression, NativeBitmap fi, int dx, int dy)
+		{
+			//	Génération de l'en-tête.
+			writer.WriteObjectDef (Export.NameComplexSurface (image.Id, baseType));
+			writer.WriteString ("<< /Subtype /Image ");
+
+			if (baseType == TypeComplexSurface.XObject)
+			{
+				if (this.colorConversion == PDF.ColorConversion.ToGray)
+				{
+					writer.WriteString ("/ColorSpace /DeviceGray ");
+				}
+				else if (this.colorConversion == PDF.ColorConversion.ToCmyk)
+				{
+					writer.WriteString ("/ColorSpace /DeviceCMYK ");
+				}
+				else
+				{
+					switch (fi.ColorType)
+					{
+						case BitmapColorType.MinIsBlack:
+						case BitmapColorType.MinIsWhite:
+							writer.WriteString ("/ColorSpace /DeviceGray ");
+							break;
+
+						case BitmapColorType.Rgb:
+						case BitmapColorType.RgbAlpha:
+						case BitmapColorType.Palette:
+							writer.WriteString ("/ColorSpace /DeviceRGB ");
+							break;
+
+						case BitmapColorType.Cmyk:
+							if (compression == ImageCompression.JPEG)
+							{
+								writer.WriteString ("/ColorSpace /DeviceRGB ");
+							}
+							else
+							{
+								writer.WriteString ("/ColorSpace /DeviceCMYK ");
+							}
+							break;
+
+						default:
+							throw new System.InvalidOperationException ();
+					}
+				}
+			}
+			if (baseType == TypeComplexSurface.XObjectMask)
+			{
+				writer.WriteString ("/ColorSpace /DeviceGray ");
+			}
+
+			writer.WriteString ("/BitsPerComponent 8 /Width ");  // voir [*] page 310
+			writer.WriteString (Port.StringValue (dx, 0));
+			writer.WriteString (" /Height ");
+			writer.WriteString (Port.StringValue (dy, 0));
+			writer.WriteString (" ");
+
+			if (image.Filter.Active)
+			{
+				writer.WriteString ("/Interpolate true ");
+			}
+		}
+		private void EmitLosslessImageSurface(Writer writer, Port port, TypeComplexSurface baseType, ImageSurface image, ImageCompression compression, NativeBitmap fi, int dx, int dy)
+		{
+			if (compression == ImageCompression.ZIP)  // compression ZIP ?
+			{
+				writer.WriteString ("/Filter [/ASCII85Decode /FlateDecode] ");  // voir [*] page 43
+			}
+			else
+			{
+				writer.WriteString ("/Filter /ASCII85Decode ");  // voir [*] page 43
+			}
+
+			int bpp = 3;
+			if (baseType == TypeComplexSurface.XObject)
+			{
+				if (this.colorConversion == PDF.ColorConversion.ToGray)
+				{
+					bpp = 1;
+				}
+				else if (this.colorConversion == PDF.ColorConversion.ToRgb)
+				{
+					bpp = 3;
+				}
+				else if (this.colorConversion == PDF.ColorConversion.ToCmyk)
+				{
+					bpp = 4;
+				}
+				else
+				{
+					switch (fi.ColorType)
+					{
+						case BitmapColorType.MinIsBlack:
+						case BitmapColorType.MinIsWhite:
+							bpp = 1;
+							break;
+
+						case BitmapColorType.Rgb:
+						case BitmapColorType.RgbAlpha:
+						case BitmapColorType.Palette:
+							bpp = 3;
+							break;
+
+						case BitmapColorType.Cmyk:
+							bpp = 4;
+							break;
+
+						default:
+							throw new System.InvalidOperationException ();
+					}
+				}
+			}
+			else
+			{
+				bpp = -1;
+			}
+
+			byte[] data = null;
+
+			if (bpp == -1)  // alpha ?
+			{
+				data = this.CreateImageSurfaceChannel (fi, BitmapColorChannel.Alpha, image.Filter);
+			}
+
+			if (bpp == 1)
+			{
+				data = this.CreateImageSurfaceChannel (fi, BitmapColorChannel.Grayscale, image.Filter);
+			}
+
+			if (bpp == 3)
+			{
+				byte[] bufferRed   = this.CreateImageSurfaceChannel (fi, BitmapColorChannel.Red, image.Filter);
+				byte[] bufferGreen = this.CreateImageSurfaceChannel (fi, BitmapColorChannel.Green, image.Filter);
+				byte[] bufferBlue  = this.CreateImageSurfaceChannel (fi, BitmapColorChannel.Blue, image.Filter);
+
+				data = new byte[dx*dy*3];
+				for (int i=0; i<dx*dy; i++)
+				{
+					data[i*3+0] = bufferRed[i];
+					data[i*3+1] = bufferGreen[i];
+					data[i*3+2] = bufferBlue[i];
+				}
+			}
+
+			if (bpp == 4)
+			{
+				byte[] bufferCyan    = this.CreateImageSurfaceChannel (fi, BitmapColorChannel.Cyan, image.Filter);
+				byte[] bufferMagenta = this.CreateImageSurfaceChannel (fi, BitmapColorChannel.Magenta, image.Filter);
+				byte[] bufferYellow  = this.CreateImageSurfaceChannel (fi, BitmapColorChannel.Yellow, image.Filter);
+				byte[] bufferBlack   = this.CreateImageSurfaceChannel (fi, BitmapColorChannel.Black, image.Filter);
+
+				data = new byte[dx*dy*4];
+				for (int i=0; i<dx*dy; i++)
+				{
+					data[i*4+0] = bufferCyan[i];
+					data[i*4+1] = bufferMagenta[i];
+					data[i*4+2] = bufferYellow[i];
+					data[i*4+3] = bufferBlack[i];
+				}
+			}
+
+			if (compression == ImageCompression.ZIP)  // compression ZIP ?
+			{
+				byte[] zip = Common.IO.DeflateCompressor.Compress (data, 9);  // 9 = compression forte mais lente
+				data = zip;
+				zip = null;
+			}
+
+			port.Reset ();
+			port.PutASCII85 (data);
+			Export.debugTotal += data.Length;
+			port.PutEOL ();
+
+			data = null;
+		}
+		
+		private void EmitJpegImageSurface(Writer writer, Port port, TypeComplexSurface baseType, NativeBitmap fi)
+		{
+			writer.WriteString ("/Filter [/ASCII85Decode /DCTDecode] ");  // voir [*] page 43
+
+			bool isGray = false;
+			if (this.colorConversion == PDF.ColorConversion.ToGray)
+				isGray = true;
+			if (baseType == TypeComplexSurface.XObjectMask)
+				isGray = true;
+			if (fi.ColorType == BitmapColorType.MinIsBlack)
+				isGray = true;
+			if (fi.ColorType == BitmapColorType.MinIsWhite)
+				isGray = true;
+
+			byte[] jpeg;
+
+			if (baseType == TypeComplexSurface.XObjectMask)
+			{
+				var mask = fi.GetChannel (BitmapColorChannel.Alpha);
+				jpeg = mask.SaveToMemory (Properties.Image.FilterQualityToMode (this.jpegQuality));
+				mask.Dispose ();
+			}
+			else if (isGray)
+			{
+				var gray = fi.ConvertToGrayscale ();
+				jpeg = gray.SaveToMemory (Properties.Image.FilterQualityToMode (this.jpegQuality));
+				gray.Dispose ();
+			}
+			else
+			{
+				if (fi.ColorType == BitmapColorType.Rgb)
+				{
+					jpeg = fi.SaveToMemory (Properties.Image.FilterQualityToMode (this.jpegQuality));
+				}
+				else
+				{
+					var rgb = fi.ConvertToArgb32 ();
+					var rgb24 = rgb.ConvertToRgb24 ();
+					jpeg = rgb24.SaveToMemory (Properties.Image.FilterQualityToMode (this.jpegQuality));
+					rgb24.Dispose ();
+					rgb.Dispose ();
+				}
+			}
+
+			System.Diagnostics.Debug.Assert (jpeg != null);
+
+			port.Reset ();
+			port.PutASCII85 (jpeg);
+			Export.debugTotal += jpeg.Length;
+			port.PutEOL ();
+
+			jpeg = null;
+		}
+		
+		private static NativeBitmap LoadImage(ImageSurface image)
+		{
+			byte[] imageData = image.Cache.GetImageDataBypassingCache ();
+			var fi = NativeBitmap.Load (imageData);
+			image.Cache.FreeImage ();
+			imageData = null;
+			return fi;
+		}
+		private static NativeBitmap CropImage(ImageSurface image, NativeBitmap fi)
+		{
 			Margins crop = image.Crop;
 			if (crop != Margins.Zero)  // recadrage nécessaire ?
 			{
 				var cropped = fi.Crop ((int) crop.Left, (int) crop.Top, fi.Width-(int) (crop.Left+crop.Right), fi.Height-(int) (crop.Top+crop.Bottom));
-				fi.Dispose();
+				fi.Dispose ();
 				fi = cropped;
 			}
 
-			bool useMask = false;
-			int dx = fi.Width;
-			int dy = fi.Height;
+			return fi;
+		}
+		private static NativeBitmap ResizeImage(ImageSurface image, NativeBitmap fi, double imageMinDpi, double imageMaxDpi, out int dx, out int dy)
+		{
+			dx = fi.Width;
+			dy = fi.Height;
 
 			//	Mise à l'échelle éventuelle de l'image selon les choix de l'utilisateur.
 			//	Une image sans filtrage n'est jamais mise à l'échelle !
@@ -1835,21 +2118,21 @@ namespace Epsitec.Common.Document.PDF
 			double finalDpiX = currentDpiX;
 			double finalDpiY = currentDpiY;
 
-			if ( this.imageMinDpi != 0.0 )
+			if (imageMinDpi != 0.0)
 			{
-				finalDpiX = System.Math.Max(finalDpiX, this.imageMinDpi);
-				finalDpiY = System.Math.Max(finalDpiY, this.imageMinDpi);
+				finalDpiX = System.Math.Max (finalDpiX, imageMinDpi);
+				finalDpiY = System.Math.Max (finalDpiY, imageMinDpi);
 			}
 
-			if ( this.imageMaxDpi != 0.0 )
+			if (imageMaxDpi != 0.0)
 			{
-				finalDpiX = System.Math.Min(finalDpiX, this.imageMaxDpi);
-				finalDpiY = System.Math.Min(finalDpiY, this.imageMaxDpi);
+				finalDpiX = System.Math.Min (finalDpiX, imageMaxDpi);
+				finalDpiY = System.Math.Min (finalDpiY, imageMaxDpi);
 			}
 
 			bool resizeRequired = false;
 
-			if ( currentDpiX != finalDpiX || currentDpiY != finalDpiY )
+			if (currentDpiX != finalDpiX || currentDpiY != finalDpiY)
 			{
 				dx = (int) System.Math.Ceiling ((dx+0.5)*finalDpiX/currentDpiX);
 				dy = (int) System.Math.Ceiling ((dy+0.5)*finalDpiY/currentDpiY);
@@ -1866,263 +2149,33 @@ namespace Epsitec.Common.Document.PDF
 				resizeRequired = true;
 			}
 
-			if ( resizeRequired )
+			if (resizeRequired)
 			{
 				//	TODO: take into account the value of 'image.Filter'
 
 				var resized = fi.Rescale (dx, dy);
-				fi.Dispose();
+				fi.Dispose ();
 				fi = resized;
 			}
 
-			//	Choix du mode de compression possible.
+			return fi;
+		}
+
+		private ImageCompression GetCompressionMode(TypeComplexSurface baseType)
+		{
+			//	Ajuste le mode de compression possible.
 			ImageCompression compression = this.imageCompression;
 
-			if ( baseType == TypeComplexSurface.XObject &&
-				 this.colorConversion == PDF.ColorConversion.ToCmyk &&
-				 compression == ImageCompression.JPEG )  // cmyk impossible en jpg !
+			if ((baseType == TypeComplexSurface.XObject) &&
+				(this.colorConversion == PDF.ColorConversion.ToCmyk) &&
+				(compression == ImageCompression.JPEG)) // cmyk impossible en jpg !
 			{
-				compression = ImageCompression.ZIP;  // utilise la compression sans pertes
+				return ImageCompression.ZIP;  // utilise la compression sans pertes
 			}
-
-			//	Génération de l'en-tête.
-			writer.WriteObjectDef(Export.NameComplexSurface(image.Id, baseType));
-			writer.WriteString("<< /Subtype /Image ");
-
-			if ( baseType == TypeComplexSurface.XObject )
+			else
 			{
-				if ( this.colorConversion == PDF.ColorConversion.ToGray )
-				{
-					writer.WriteString("/ColorSpace /DeviceGray ");
-				}
-				else if ( this.colorConversion == PDF.ColorConversion.ToCmyk )
-				{
-					writer.WriteString("/ColorSpace /DeviceCMYK ");
-				}
-				else
-				{
-					switch (fi.ColorType)
-					{
-						case BitmapColorType.MinIsBlack:
-						case BitmapColorType.MinIsWhite:
-							writer.WriteString("/ColorSpace /DeviceGray ");
-							break;
-						
-						case BitmapColorType.Rgb:
-						case BitmapColorType.RgbAlpha:
-						case BitmapColorType.Palette:
-							writer.WriteString("/ColorSpace /DeviceRGB ");
-							break;
-						
-						case BitmapColorType.Cmyk:
-							if (compression == ImageCompression.JPEG)
-							{
-								writer.WriteString("/ColorSpace /DeviceRGB ");
-							}
-							else
-							{
-								writer.WriteString("/ColorSpace /DeviceCMYK ");
-							}
-							break;
-						
-						default:
-							throw new System.InvalidOperationException();
-					}
-				}
+				return compression;
 			}
-			if ( baseType == TypeComplexSurface.XObjectMask )
-			{
-				writer.WriteString("/ColorSpace /DeviceGray ");
-			}
-
-			writer.WriteString("/BitsPerComponent 8 /Width ");  // voir [*] page 310
-			writer.WriteString(Port.StringValue(dx, 0));
-			writer.WriteString(" /Height ");
-			writer.WriteString(Port.StringValue(dy, 0));
-			writer.WriteString(" ");
-
-			if ( image.Filter.Active )
-			{
-				writer.WriteString("/Interpolate true ");
-			}
-
-			if (fi.IsTransparent)
-			{
-				useMask = true;
-			}
-			
-			if ( compression == ImageCompression.JPEG )  // compression JPEG ?
-			{
-				writer.WriteString("/Filter [/ASCII85Decode /DCTDecode] ");  // voir [*] page 43
-
-				bool isGray = false;
-				if ( this.colorConversion == PDF.ColorConversion.ToGray )   isGray = true;
-				if ( baseType == TypeComplexSurface.XObjectMask )           isGray = true;
-				if ( fi.ColorType == BitmapColorType.MinIsBlack )  isGray = true;
-				if ( fi.ColorType == BitmapColorType.MinIsWhite )  isGray = true;
-
-				byte[] jpeg;
-
-				if ( baseType == TypeComplexSurface.XObjectMask )
-				{
-					var mask = fi.GetChannel (BitmapColorChannel.Alpha);
-					jpeg = mask.SaveToMemory (Properties.Image.FilterQualityToMode (this.jpegQuality));
-					mask.Dispose();
-				}
-				else if (isGray)
-				{
-					var gray = fi.ConvertToGrayscale ();
-					jpeg = gray.SaveToMemory (Properties.Image.FilterQualityToMode (this.jpegQuality));
-					gray.Dispose();
-				}
-				else
-				{
-					var rgb = fi.ConvertToArgb32 ();
-					var rgb24 = rgb.ConvertToRgb24 ();
-					jpeg = rgb24.SaveToMemory (Properties.Image.FilterQualityToMode (this.jpegQuality));
-					rgb24.Dispose();
-					rgb.Dispose();
-				}
-
-				System.Diagnostics.Debug.Assert(jpeg != null);
-
-				port.Reset();
-				port.PutASCII85(jpeg);
-				Export.debugTotal += jpeg.Length;
-				port.PutEOL();
-
-				jpeg = null;
-			}
-			else	// compression ZIP ou aucune ?
-			{
-				if ( compression == ImageCompression.ZIP )  // compression ZIP ?
-				{
-					writer.WriteString("/Filter [/ASCII85Decode /FlateDecode] ");  // voir [*] page 43
-				}
-				else
-				{
-					writer.WriteString("/Filter /ASCII85Decode ");  // voir [*] page 43
-				}
-
-				int bpp = 3;
-				if ( baseType == TypeComplexSurface.XObject )
-				{
-					if ( this.colorConversion == PDF.ColorConversion.ToGray )
-					{
-						bpp = 1;
-					}
-					else if ( this.colorConversion == PDF.ColorConversion.ToRgb )
-					{
-						bpp = 3;
-					}
-					else if ( this.colorConversion == PDF.ColorConversion.ToCmyk )
-					{
-						bpp = 4;
-					}
-					else
-					{
-						switch (fi.ColorType)
-						{
-							case BitmapColorType.MinIsBlack:
-							case BitmapColorType.MinIsWhite:
-								bpp = 1;
-								break;
-							
-							case BitmapColorType.Rgb:
-							case BitmapColorType.RgbAlpha:
-							case BitmapColorType.Palette:
-								bpp = 3;
-								break;
-							
-							case BitmapColorType.Cmyk:
-								bpp = 4;
-								break;
-							
-							default:
-								throw new System.InvalidOperationException();
-						}
-					}
-				}
-				else
-				{
-					bpp = -1;
-				}
-
-				byte[] data = null;
-
-				if ( bpp == -1 )  // alpha ?
-				{
-					data = this.CreateImageSurfaceChannel(fi, BitmapColorChannel.Alpha, image.Filter);
-				}
-
-				if ( bpp == 1 )
-				{
-					data = this.CreateImageSurfaceChannel(fi, BitmapColorChannel.Grayscale, image.Filter);
-				}
-
-				if ( bpp == 3 )
-				{
-					byte[] bufferRed   = this.CreateImageSurfaceChannel(fi, BitmapColorChannel.Red, image.Filter);
-					byte[] bufferGreen = this.CreateImageSurfaceChannel(fi, BitmapColorChannel.Green, image.Filter);
-					byte[] bufferBlue  = this.CreateImageSurfaceChannel(fi, BitmapColorChannel.Blue, image.Filter);
-
-					data = new byte[dx*dy*3];
-					for ( int i=0 ; i<dx*dy ; i++ )
-					{
-						data[i*3+0] = bufferRed[i];
-						data[i*3+1] = bufferGreen[i];
-						data[i*3+2] = bufferBlue[i];
-					}
-				}
-
-				if ( bpp == 4 )
-				{
-					byte[] bufferCyan    = this.CreateImageSurfaceChannel(fi, BitmapColorChannel.Cyan, image.Filter);
-					byte[] bufferMagenta = this.CreateImageSurfaceChannel(fi, BitmapColorChannel.Magenta, image.Filter);
-					byte[] bufferYellow  = this.CreateImageSurfaceChannel(fi, BitmapColorChannel.Yellow, image.Filter);
-					byte[] bufferBlack   = this.CreateImageSurfaceChannel(fi, BitmapColorChannel.Black, image.Filter);
-
-					data = new byte[dx*dy*4];
-					for ( int i=0 ; i<dx*dy ; i++ )
-					{
-						data[i*4+0] = bufferCyan[i];
-						data[i*4+1] = bufferMagenta[i];
-						data[i*4+2] = bufferYellow[i];
-						data[i*4+3] = bufferBlack[i];
-					}
-				}
-
-				if ( compression == ImageCompression.ZIP )  // compression ZIP ?
-				{
-					byte[] zip = Common.IO.DeflateCompressor.Compress(data, 9);  // 9 = compression forte mais lente
-					data = zip;
-					zip = null;
-				}
-
-				port.Reset();
-				port.PutASCII85(data);
-				Export.debugTotal += data.Length;
-				port.PutEOL();
-
-				data = null;
-			}
-
-			fi.Dispose();
-			fi = null;
-
-			if ( maskType == TypeComplexSurface.XObjectMask && useMask )
-			{
-				writer.WriteString("/SMask ");
-				writer.WriteObjectRef(Export.NameComplexSurface(image.Id, maskType));
-			}
-
-			string pdf = port.GetPDF();
-			writer.WriteLine(string.Format(CultureInfo.InvariantCulture, " {0} >>", Port.StringLength(pdf.Length)));
-			writer.WriteLine("stream");
-			writer.WriteString(pdf);
-			writer.WriteLine("endstream endobj");
-
-			return useMask;
 		}
 
 		protected byte[] CreateImageSurfaceChannel(NativeBitmap fi, BitmapColorChannel channel, ImageFilter filter)
@@ -2427,7 +2480,7 @@ namespace Epsitec.Common.Document.PDF
 
 		protected Document						document;
 		protected System.Collections.ArrayList	complexSurfaces;
-		protected System.Collections.ArrayList	imageSurfaces;
+		protected List<ImageSurface>			imageSurfaces;
 		protected System.Collections.Hashtable	characterList;
 		protected System.Collections.Hashtable	fontList;
 		protected ColorConversion				colorConversion;

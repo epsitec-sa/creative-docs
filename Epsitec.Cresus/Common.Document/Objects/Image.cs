@@ -638,7 +638,12 @@ namespace Epsitec.Common.Document.Objects
 			Margins crop = pi.CropMargins;
 			port.ImageFinalSize = size;
 
-			ImageFilter filter = this.GetFilter(port, drawingContext);
+			double imageWidth  = 0;
+			double imageHeight = 0;
+
+			PDF.Port pdfPort = port as PDF.Port;
+
+			ImageFilter filter = this.GetFilter (port, drawingContext);
 
 			if (item != null)
 			{
@@ -649,23 +654,30 @@ namespace Epsitec.Common.Document.Objects
 				crop.Top    /= scale;
 				port.ImageCrop = crop;
 
-				if (port is PDF.Port)  // exportation PDF ?
+				if (pdfPort != null)  // exportation PDF ?
 				{
-					PDF.Port pdfPort = port as PDF.Port;
 					PDF.ImageSurface surface = pdfPort.SearchImageSurface(pi.FileName, size, crop, filter);
+					
 					System.Diagnostics.Debug.Assert(surface != null);
-					image = (surface == null) ? null : surface.DrawingImage;
+
+					image = null;	// on ne va pas spécifier l'image plus loin; le PDF Port se souvient de la dernière surface cherchée...
+
+					imageWidth  = surface.Cache.Size.Width;
+					imageHeight = surface.Cache.Size.Height;
 
 					port.ImageCrop = crop;
 				}
 				else
 				{
-					//?image = drawingContext.IsDimmed ? item.DimmedImage : item.Image;
 					image = item.Image;
+					
+					imageWidth  = image.Width;
+					imageHeight = image.Height;
 				}
 			}
 
-			if ( image == null )
+			if ((image == null) &&
+				(pdfPort == null))
 			{
 				if (!drawingContext.PreviewActive)
 				{
@@ -702,7 +714,7 @@ namespace Epsitec.Common.Document.Objects
 
 				if ( width > 0 && height > 0 )
 				{
-					Drawing.Rectangle cropRect = new Drawing.Rectangle(0, 0, image.Width, image.Height);
+					Drawing.Rectangle cropRect = new Drawing.Rectangle(0, 0, imageWidth, imageHeight);
 					cropRect.Deflate(crop);
 
 					if (!cropRect.IsSurfaceZero)
@@ -720,18 +732,6 @@ namespace Epsitec.Common.Document.Objects
 							}
 						}
 
-#if false
-						port.TranslateTransform(center.X, center.Y);
-						port.RotateTransformDeg(angle, 0, 0);
-
-						double mirrorx = pi.MirrorH ? -1 : 1;
-						double mirrory = pi.MirrorV ? -1 : 1;
-						port.ScaleTransform(mirrorx, mirrory, 0, 0);
-
-						Drawing.Rectangle rect = new Drawing.Rectangle(-width/2, -height/2, width, height);
-						port.PaintImage(image, rect);
-#endif
-#if true
 						port.TranslateTransform(center.X-width/2, center.Y-height/2);
 						port.RotateTransformDeg(angle, width/2, height/2);
 						port.TranslateTransform(width/2, height/2);
@@ -745,7 +745,6 @@ namespace Epsitec.Common.Document.Objects
 						port.ImageFilter = filter;
 						port.PaintImage(image, rect, cropRect);
 						port.ImageFilter = oldFilter;
-#endif
 					}
 				}
 

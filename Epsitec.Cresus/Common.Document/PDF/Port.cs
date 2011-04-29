@@ -29,7 +29,7 @@ namespace Epsitec.Common.Document.PDF
 		}
 
 		public Port(System.Collections.ArrayList complexSurfaceList,
-					System.Collections.ArrayList imageSurfaceList,
+					IEnumerable<ImageSurface> imageSurfaceList,
 					System.Collections.Hashtable fontList)
 		{
 			this.complexSurfaceList = complexSurfaceList;
@@ -638,23 +638,37 @@ namespace Epsitec.Common.Document.PDF
 		{
 			this.PaintImage(bitmap, fillX, fillY, fillWidth, fillHeight, imageOriginX, imageOriginY, fillWidth, fillHeight);
 		}
-		
+
 		public void PaintImage(Image bitmap, double fillX, double fillY, double fillWidth, double fillHeight, double imageOriginX, double imageOriginY, double imageWidth, double imageHeight)
 		{
-			System.Diagnostics.Debug.Assert(fillX == 0.0);
-			System.Diagnostics.Debug.Assert(fillY == 0.0);
-			System.Diagnostics.Debug.Assert(System.Math.Abs(fillWidth-1.0) < 0.000001);
-			System.Diagnostics.Debug.Assert(System.Math.Abs(fillHeight-1.0) < 0.000001);
+			System.Diagnostics.Debug.Assert (fillX == 0.0);
+			System.Diagnostics.Debug.Assert (fillY == 0.0);
+			System.Diagnostics.Debug.Assert (System.Math.Abs (fillWidth-1.0) < 0.000001);
+			System.Diagnostics.Debug.Assert (System.Math.Abs (fillHeight-1.0) < 0.000001);
+			
+			if (this.imageSurfaceList == null)
+			{
+				return;
+			}
 
-			if ( this.imageSurfaceList == null )  return;
+			ImageSurface image = this.lastImageSurface;
 
-			ImageSurface image = ImageSurface.Search(this.imageSurfaceList, bitmap, this.imageFinalSize, this.imageCrop, this.imageFilter);
-			if ( image == null )  return;
+#if false
+			if (bitmap != null)
+			{
+				image = ImageSurface.Search (this.imageSurfaceList, bitmap.UniqueId, this.imageFinalSize, this.imageCrop, this.imageFilter);
+			}
+#endif
 
-			this.SetTransform(this.transform);
-			this.PutCommand(Export.ShortNameComplexSurface(image.Id, TypeComplexSurface.XObject));
-			this.PutCommand("Do ");  // external object, voir [*] page 302
-			this.PutEOL();
+			if (image == null)
+			{
+				return;
+			}
+
+			this.SetTransform (this.transform);
+			this.PutCommand (Export.ShortNameComplexSurface (image.Id, TypeComplexSurface.XObject));
+			this.PutCommand ("Do ");  // external object, voir [*] page 302
+			this.PutEOL ();
 		}
 		#endregion
 		
@@ -1342,13 +1356,23 @@ namespace Epsitec.Common.Document.PDF
 		public ImageSurface SearchImageSurface(string filename, Size size, Margins crop, ImageFilter filter)
 		{
 			//	Cherche l'image à utiliser.
-			if ( this.imageSurfaceList == null )  return null;
-			return ImageSurface.Search(this.imageSurfaceList, filename, size, crop, filter);
+			if (this.imageSurfaceList == null)
+			{
+				this.lastImageSurface = null;
+			}
+			else
+			{
+				this.lastImageSurface = ImageSurface.Search (this.imageSurfaceList, filename, size, crop, filter);
+			}
+
+			return this.lastImageSurface;
 		}
 
 
+		private ImageSurface lastImageSurface;
+
 		protected System.Collections.ArrayList	complexSurfaceList;
-		protected System.Collections.ArrayList	imageSurfaceList;
+		protected IEnumerable<ImageSurface>		imageSurfaceList;
 		protected System.Collections.Hashtable	fontList;
 
 		protected ColorForce					colorForce;

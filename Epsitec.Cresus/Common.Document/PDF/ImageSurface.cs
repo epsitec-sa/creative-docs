@@ -1,4 +1,5 @@
 using Epsitec.Common.Drawing;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Document.PDF
 {
@@ -80,41 +81,48 @@ namespace Epsitec.Common.Document.PDF
 		}
 
 
-		public static ImageSurface Search(System.Collections.ArrayList list, string filename, Size size, Margins crop, ImageFilter filter)
+		public static ImageSurface Search(IEnumerable<ImageSurface> list, string filename, Size size, Margins crop, ImageFilter filter)
 		{
 			//	Cherche une image d'après son nom dans une liste.
-			foreach ( ImageSurface image in list )
+			foreach (ImageSurface image in list)
 			{
-				if ( image.cache.FileName == filename &&
-					 image.size           == size     &&
-					 image.crop           == crop     &&
-					 image.filter         == filter   )
+				if ((image.cache.FileName == filename) &&
+					(image.size           == size)     &&
+					(image.crop           == crop)     &&
+					(image.filter         == filter))
 				{
 					return image;
 				}
 			}
+
 			return null;
 		}
 
-		public static ImageSurface Search(System.Collections.ArrayList list, Drawing.Image drim, Size size, Margins crop, ImageFilter filter)
+#if false
+		public static ImageSurface Search(IEnumerable<ImageSurface> list, long uniqueId, Size size, Margins crop, ImageFilter filter)
 		{
 			//	Cherche une image d'après son Drawing.Image.
-			foreach ( ImageSurface image in list )
+			foreach (ImageSurface image in list)
 			{
 				Drawing.Image di = image.cache.CachedImage;
-				if ( di == null )  continue;
 
-				if ( di.UniqueId  == drim.UniqueId &&
+				if (di == null)
+				{
+					continue;
+				}
+
+				if (di.UniqueId  == uniqueId &&
 					 image.size   == size          &&
 					 image.crop   == crop          &&
-					 image.filter == filter        )
+					 image.filter == filter)
 				{
 					return image;
 				}
 			}
+
 			return null;
 		}
-
+#endif
 
 		protected ImageCache.Item			cache;
 		protected Size						size;

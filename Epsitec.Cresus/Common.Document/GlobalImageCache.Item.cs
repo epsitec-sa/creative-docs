@@ -444,15 +444,22 @@ namespace Epsitec.Common.Document
 					return;
 				}
 
+				this.data = this.LowLeveReadImageData ();
+
+				this.SetRecentTimeStamp ();
+			}
+
+			public byte[] LowLeveReadImageData()
+			{
+				byte[] data = null;
+
 				if (this.zipFilename == null)
 				{
-					//?System.Diagnostics.Debug.WriteLine(string.Format("GlobalImageCache: ReadImageData from file {0}", this.filename));
-					this.data = System.IO.File.ReadAllBytes (this.filename);
+					data      = System.IO.File.ReadAllBytes (this.filename);
 					this.date = GlobalImageCache.GetFileDate (this.filename);
 				}
 				else
 				{
-					//?System.Diagnostics.Debug.WriteLine(string.Format("GlobalImageCache: ReadImageData from zip {0} {1}", this.zipFilename, this.zipEntryName));
 					IO.ZipFile zip = new IO.ZipFile ();
 
 					bool ok = zip.TryLoadFile (this.zipFilename,
@@ -463,11 +470,11 @@ namespace Epsitec.Common.Document
 
 					if (ok)
 					{
-						this.data = zip[this.zipEntryName].Data;  // lit les données dans le fichier zip
+						data = zip[this.zipEntryName].Data;  // lit les données dans le fichier zip
 					}
 				}
 
-				this.SetRecentTimeStamp ();
+				return data;
 			}
 
 			#region IDisposable Members

@@ -592,6 +592,11 @@ namespace Epsitec.Common.Document
 				return this.globalItem.GetImageData();
 			}
 
+			internal byte[] GetImageDataBypassingCache()
+			{
+				return this.globalItem.LowLeveReadImageData ();
+			}
+
 			internal bool ReloadImage()
 			{
 				return this.globalItem.Reload();
