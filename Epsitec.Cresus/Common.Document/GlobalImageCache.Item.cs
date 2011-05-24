@@ -449,6 +449,61 @@ namespace Epsitec.Common.Document
 				this.SetRecentTimeStamp ();
 			}
 
+			public bool CheckLowLevelImageData()
+			{
+				try
+				{
+					if (string.IsNullOrEmpty (this.zipFilename))
+					{
+						if ((!string.IsNullOrEmpty (this.filename)) &&
+						(System.IO.File.Exists (this.filename)))
+						{
+							return true;
+						}
+					}
+					else
+					{
+						IO.ZipFile zip = new IO.ZipFile ();
+
+						return zip.TryLoadFile (this.zipFilename,
+							delegate (string entryName)
+							{
+								return (entryName == this.zipEntryName);
+							});
+					}
+				}
+				catch
+				{
+				}
+
+				return false;
+			}
+
+			public ImageFileReference GetLowLevelFileReference()
+			{
+				if (this.zipFilename == null)
+				{
+					return new ImageFileReference (this.filename);
+				}
+				else
+				{
+					IO.ZipFile zip = new IO.ZipFile ();
+
+					bool ok = zip.TryLoadFile (this.zipFilename,
+						delegate (string entryName)
+						{
+							return (entryName == this.zipEntryName);
+						});
+
+					if (ok)
+					{
+						return new ImageFileReference (zip[this.zipEntryName].Data, this.zipEntryName);
+					}
+				}
+
+				return null;
+			}
+
 			public byte[] LowLeveReadImageData()
 			{
 				byte[] data = null;

@@ -1,4 +1,4 @@
-//	Copyright � 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
@@ -98,7 +98,15 @@ namespace Epsitec.Common.Drawing
 		{
 			return System.String.Format (System.Globalization.CultureInfo.InvariantCulture, "{0};{1};{2};{3}", this.left, this.right, this.top, this.bottom);
 		}
-		
+
+
+		public static bool Equal(Margins a, Margins b, double δ)
+		{
+			return Math.Equal (a.Left,   b.Left,  δ)
+				&& Math.Equal (a.Right,  b.Right, δ)
+				&& Math.Equal (a.Top,    b.Top,   δ)
+				&& Math.Equal (a.Bottom, b.Bottom, δ);
+		}
 		
 		public override bool Equals(object obj)
 		{

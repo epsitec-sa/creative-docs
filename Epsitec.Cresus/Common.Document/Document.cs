@@ -2464,7 +2464,7 @@ namespace Epsitec.Common.Document
 				this.imageCache.SetResolution (ImageCacheResolution.High);
 			}
 			
-			string err = this.exportPdf.FileExport(filename, report);
+			string err = this.exportPdf.ExportToFile(filename, report);
 			
 			//	Libérer toute la mémoire accumulée pendant l'exportation PDF est une bonne idée, car
 			//	cela peut occuper pas loing d'un GB de RAM...

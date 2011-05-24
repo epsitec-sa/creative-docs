@@ -25,7 +25,7 @@ namespace Epsitec.Common.Document.PDF
 	/// writer.WriteObjectDef("Tralala");  // définition de l'objet
 	/// writer.WriteString("<< /ProcSet [/PDF /Text] >> endobj");
 	/// </summary>
-	public class Writer
+	public sealed class Writer : System.IDisposable
 	{
 		public Writer(string filename)
 		{
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Document.PDF
 			this.WriteObject(objectName, " 0 R ", "R");  // référence
 		}
 
-		protected void WriteObject(string objectName, string ending, string type)
+		private void WriteObject(string objectName, string ending, string type)
 		{
 			//	Ecrit une définition ou une référence d'objet.
 			if ( !this.dictionary.ContainsKey(objectName) )
@@ -76,7 +76,7 @@ namespace Epsitec.Common.Document.PDF
 			this.WriteString (ending);
 		}
 
-		protected int GetObjectId(string objectName)
+		private int GetObjectId(string objectName)
 		{
 			Object obj = this.dictionary[objectName];
 			return obj.Id;
@@ -164,7 +164,28 @@ namespace Epsitec.Common.Document.PDF
 			this.dictionary.Clear();
 		}
 
-		protected Object DictionarySearch(int id)
+
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			this.FileClose ();
+			
+			this.parts.Clear ();
+			this.dictionary.Clear ();
+		}
+
+		#endregion
+
+
+		public void WriteHugeString(string text)
+		{
+			this.Flush ();
+			this.FileWriteString (text);
+		}
+
+		private Object DictionarySearch(int id)
 		{
 			//	Cherche un objet dans le dictionnaire d'après son identificateur.
 			foreach ( Object obj in this.dictionary.Values )
@@ -176,21 +197,21 @@ namespace Epsitec.Common.Document.PDF
 
 
 
-		protected void FileOpen(string filename)
+		private void FileOpen(string filename)
 		{
 			//	Ouvre le fichier PDF.
 			this.streamIO = new System.IO.FileStream(filename, System.IO.FileMode.CreateNew);
 			this.streamOffset = 0;
 		}
 
-		protected void FileWriteLine(string line)
+		private void FileWriteLine(string line)
 		{
 			//	Ecrit une string suivie d'une fin de ligne.
 			line += "\r\n";
 			this.FileWriteString(line);
 		}
 
-		protected void FileWriteString(string text)
+		private void FileWriteString(string text)
 		{
 			//	Ecrit juste une string telle quelle.
 			System.Text.Encoding e = System.Text.Encoding.GetEncoding(1252);
@@ -199,20 +220,24 @@ namespace Epsitec.Common.Document.PDF
 			this.streamOffset += array.Length;
 		}
 
-		protected void FileClose()
+		private void FileClose()
 		{
 			//	Ferme le fichier PDF.
-			this.streamIO.Close();
+			if (this.streamIO != null)
+			{
+				this.streamIO.Close ();
+				this.streamIO = null;
+			}
 		}
 
 
-		protected static string ToString(int value)
+		private static string ToString(int value)
 		{
 			//	Conversion d'un entier en chaîne.
 			return value.ToString(CultureInfo.InvariantCulture);
 		}
 
-		protected static string ToStringD10(int value)
+		private static string ToStringD10(int value)
 		{
 			//	Conversion d'un entier en chaîne.
 			return value.ToString("D10", CultureInfo.InvariantCulture);
@@ -220,7 +245,7 @@ namespace Epsitec.Common.Document.PDF
 
 
 		//	Objet PDF.
-		protected class Object
+		class Object
 		{
 			public Object(int id, int offset)
 			{
@@ -246,7 +271,7 @@ namespace Epsitec.Common.Document.PDF
 			public readonly string Text;
 		}
 
-		private string							filename;
+		private readonly string					filename;
 		private readonly List<Part>				parts;
 		private readonly Dictionary<string, Object>	dictionary;
 		private int								objectNextId;

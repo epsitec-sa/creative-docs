@@ -117,7 +117,7 @@ namespace Epsitec.Common.Document.PDF
 		}
 
 
-		public static void CreateFonts(System.Collections.Hashtable fonts, System.Collections.Hashtable characters)
+		public static void CreateFonts(FontHash fonts, CharacterHash characters)
 		{
 			//	Crée les fontes d'après les caractères.
 			int id = 0;
@@ -156,7 +156,7 @@ namespace Epsitec.Common.Document.PDF
 #endif
 		}
 
-		public static FontList Search(System.Collections.Hashtable fonts, Drawing.Font drawingFont)
+		public static FontList Search(FontHash fonts, Drawing.Font drawingFont)
 		{
 			//	Cherche une fonte ayant une apparence identique.
 			foreach ( System.Collections.DictionaryEntry dict in fonts )

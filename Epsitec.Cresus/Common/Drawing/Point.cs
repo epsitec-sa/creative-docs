@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+ï»¿//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
@@ -90,7 +90,13 @@ namespace Epsitec.Common.Drawing
 		{
 			return System.String.Format (System.Globalization.CultureInfo.InvariantCulture, "{0};{1}", this.x, this.y);
 		}
-		
+
+
+		public static bool Equal(Point a, Point b, double Î´)
+		{
+			return Math.Equal (a.X, b.X, Î´)
+				&& Math.Equal (a.Y, b.Y, Î´);
+		}
 		
 		public override bool Equals(object obj)
 		{
@@ -268,8 +274,8 @@ namespace Epsitec.Common.Drawing
 		
 		public static Point Scale(Point a, Point b, double scale)
 		{
-			//	Multiplie le vecteur AB par le facteur d'échelle.
-			//	Retourne la nouvelle extrémité B.
+			//	Multiplie le vecteur AB par le facteur d'Ã©chelle.
+			//	Retourne la nouvelle extrÃ©mitÃ© B.
 			
 			return new Point (a.X + (b.X-a.X)*scale, a.Y + (b.Y-a.Y)*scale);
 		}
@@ -286,7 +292,7 @@ namespace Epsitec.Common.Drawing
 
 		public static Point Symmetry(Point c, Point a)
 		{
-			//	Calcule le point A' symétrique de A par rapport au centre C.
+			//	Calcule le point A' symÃ©trique de A par rapport au centre C.
 			
 			return new Point (c.X-(a.X-c.X), c.Y-(a.Y-c.Y));
 		}
@@ -294,7 +300,7 @@ namespace Epsitec.Common.Drawing
 
 		public static bool DetectSegment(Point a, Point b, Point p, double width)
 		{
-			//	Détecte si le point P est sur un segment AB d'épaisseur 'width'.
+			//	DÃ©tecte si le point P est sur un segment AB d'Ã©paisseur 'width'.
 			
 			double xLeft   = System.Math.Min (a.X, b.X) - width;
 			double xRight  = System.Math.Max (a.X, b.X) + width;
@@ -316,9 +322,9 @@ namespace Epsitec.Common.Drawing
 
 		public static bool DetectBezier(Point p1, Point s1, Point s2, Point p2, Point p, double width)
 		{
-			//	Détecte si le point P est sur un segment de Bezier d'épaisseur 'width'.
+			//	DÃ©tecte si le point P est sur un segment de Bezier d'Ã©paisseur 'width'.
 			
-			int maxStep = 10;		//	nombre d'étapes arbitraire fixé à 10
+			int maxStep = 10;		//	nombre d'Ã©tapes arbitraire fixÃ© Ã  10
 			
 			Point  a = p1;
 			double t = 0;
@@ -343,7 +349,7 @@ namespace Epsitec.Common.Drawing
 
 		public static Point FromBezier(Point p1, Point s1, Point s2, Point p2, double t)
 		{
-			//	Calcule un point sur une courbe de Bézier, en fonction du paramètre t (0..1).
+			//	Calcule un point sur une courbe de BÃ©zier, en fonction du paramÃ¨tre t (0..1).
 			//	Si t=0, on est sur p1.
 			//	Si t=1, on est sur p2.
 			
@@ -362,7 +368,7 @@ namespace Epsitec.Common.Drawing
 			//	Il n'est pas obligatoire que le nouveau point soit sur la courbe
 			//	(algorithme = distance la plus courte).
 			
-			int maxStep = 1000;	//	nombre d'étapes arbitraire fixé à 1000
+			int maxStep = 1000;	//	nombre d'Ã©tapes arbitraire fixÃ© Ã  1000
 			
 			double t = 0;
 			double dt = 1.0 / maxStep;

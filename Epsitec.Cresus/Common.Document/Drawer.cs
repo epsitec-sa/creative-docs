@@ -790,7 +790,7 @@ namespace Epsitec.Common.Document
 					PDF.Port pdfPort = port as PDF.Port;
 
 					int id = pdfPort.SearchComplexSurface(obj, surface);
-					pdfPort.SetColoredComplexSurface(color, id, firstColor ? PDF.TypeComplexSurface.ExtGStateP1 : PDF.TypeComplexSurface.ExtGStateP2);
+					pdfPort.SetColoredComplexSurface(color, id, firstColor ? PDF.PdfComplexSurfaceType.ExtGStateP1 : PDF.PdfComplexSurfaceType.ExtGStateP2);
 					return;
 				}
 			}

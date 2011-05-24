@@ -1,4 +1,4 @@
-//	Copyright � 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
@@ -90,7 +90,13 @@ namespace Epsitec.Common.Drawing
 				return string.Concat (arg1, ";", arg2);
 			}
 		}
-		
+
+
+		public static bool Equal(Size a, Size b, double δ)
+		{
+			return Math.Equal (a.Width, b.Width, δ)
+				&& Math.Equal (a.Height, b.Height, δ);
+		}
 		
 		public override bool Equals(object obj)
 		{

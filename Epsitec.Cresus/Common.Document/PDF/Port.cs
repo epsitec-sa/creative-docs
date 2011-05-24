@@ -22,19 +22,19 @@ namespace Epsitec.Common.Document.PDF
 		{
 			this.complexSurfaceList = null;
 			this.imageSurfaceList   = null;
-			this.fontList           = null;
+			this.fontHash           = null;
 
 			this.stackColorModifier = new Stack<ColorModifierCallback> ();
 			this.Reset();
 		}
 
-		public Port(System.Collections.ArrayList complexSurfaceList,
+		public Port(IEnumerable<ComplexSurface> complexSurfaceList,
 					IEnumerable<ImageSurface> imageSurfaceList,
-					System.Collections.Hashtable fontList)
+					FontHash fontHash)
 		{
 			this.complexSurfaceList = complexSurfaceList;
 			this.imageSurfaceList   = imageSurfaceList;
-			this.fontList           = fontList;
+			this.fontHash           = fontHash;
 
 			this.stackColorModifier = new Stack<ColorModifierCallback> ();
 			this.Reset();
@@ -60,7 +60,7 @@ namespace Epsitec.Common.Document.PDF
 			this.originalColor = RichColor.FromBrightness(0.0);
 			this.color = RichColor.FromBrightness(0.0);
 			this.complexSurfaceId = -1;
-			this.complexType = TypeComplexSurface.ExtGState;
+			this.complexType = PdfComplexSurfaceType.ExtGState;
 			this.transform = Transform.Identity;
 			this.fillMode = FillMode.NonZero;
 
@@ -190,7 +190,7 @@ namespace Epsitec.Common.Document.PDF
 			{
 				this.color = value;
 				this.complexSurfaceId = -1;
-				this.complexType = TypeComplexSurface.ExtGState;
+				this.complexType = PdfComplexSurfaceType.ExtGState;
 			}
 		}
 		
@@ -202,7 +202,7 @@ namespace Epsitec.Common.Document.PDF
 			{
 				this.color.Basic = value;
 				this.complexSurfaceId = -1;
-				this.complexType = TypeComplexSurface.ExtGState;
+				this.complexType = PdfComplexSurfaceType.ExtGState;
 			}
 		}
 		
@@ -277,10 +277,10 @@ namespace Epsitec.Common.Document.PDF
 		{
 			this.FinalRichColor = color;
 			this.complexSurfaceId = id;
-			this.complexType = TypeComplexSurface.ExtGState;
+			this.complexType = PdfComplexSurfaceType.ExtGState;
 		}
 
-		public void SetColoredComplexSurface(RichColor color, int id, TypeComplexSurface type)
+		public void SetColoredComplexSurface(RichColor color, int id, PdfComplexSurfaceType type)
 		{
 			this.FinalRichColor = color;
 			this.complexSurfaceId = id;
@@ -394,7 +394,7 @@ namespace Epsitec.Common.Document.PDF
 			if ( n == 0 )  return;
 			if ( n == 1 && glyphs[0] >= 0xffff )  return;
 			
-			if ( this.fontList == null )  // textes en courbes ?
+			if ( this.fontHash == null )  // textes en courbes ?
 			{
 				Drawing.Path path = new Drawing.Path();
 				Drawing.Transform ft = font.SyntheticTransform;
@@ -416,7 +416,7 @@ namespace Epsitec.Common.Document.PDF
 			}
 			else	// textes en fontes ?
 			{
-				FontList fl = FontList.Search(this.fontList, font);
+				FontList fl = FontList.Search(this.fontHash, font);
 				System.Diagnostics.Debug.Assert(fl != null);
 
 				this.SetTransform(this.transform);
@@ -435,7 +435,7 @@ namespace Epsitec.Common.Document.PDF
 					if ( glyph >= 0xffff )  continue;
 
 					int code = fl.GetGlyphIndex((ushort)glyph);
-					int fontPage = code/Export.charPerFont;
+					int fontPage = Export.GetFontPage (code);
 
 					double posx = x[i];
 					double posy = y[i];
@@ -445,7 +445,7 @@ namespace Epsitec.Common.Document.PDF
 					
 					if ( fontPage != lastFontPage )
 					{
-						this.PutCommand(Export.ShortNameFont(fl.Id, fontPage));
+						this.PutCommand(Export.GetFontShortName(fl.Id, fontPage));
 						this.PutValue(size);
 						this.PutCommand("Tf ");
 						lastFontPage = fontPage;
@@ -468,7 +468,7 @@ namespace Epsitec.Common.Document.PDF
 					}
 
 					this.PutCommand("<");
-					this.PutCommand((code%Export.charPerFont).ToString("X2"));
+					this.PutCommand (Export.GetFontIndex (code));
 					this.PutCommand("> Tj ");  // voir [*] page 377
 
 					lastX = posx;
@@ -482,7 +482,7 @@ namespace Epsitec.Common.Document.PDF
 		
 		public double PaintText(double x, double y, string text, Font font, double size)
 		{
-			if ( this.fontList == null )  // textes en courbes ?
+			if ( this.fontHash == null )  // textes en courbes ?
 			{
 				int n = text.Length;
 				if ( n == 0 )  return 0.0;
@@ -522,7 +522,7 @@ namespace Epsitec.Common.Document.PDF
 			}
 			else	// textes en fontes ?
 			{
-				FontList fl = FontList.Search(this.fontList, font);
+				FontList fl = FontList.Search(this.fontHash, font);
 				System.Diagnostics.Debug.Assert(fl != null);
 
 				int n = text.Length;
@@ -551,7 +551,7 @@ namespace Epsitec.Common.Document.PDF
 					int unicode = (int) text[i];
 					int code = fl.GetUnicodeIndex(unicode);
 					System.Diagnostics.Debug.Assert(code != -1);
-					int fontPage = code/Export.charPerFont;
+					int fontPage = Export.GetFontPage (code);
 					
 					if ( fontPage != lastFontPage )
 					{
@@ -559,7 +559,7 @@ namespace Epsitec.Common.Document.PDF
 						{
 							this.PutCommand("> Tj ");  // voir [*] page 377
 						}
-						this.PutCommand(Export.ShortNameFont(fl.Id, fontPage));
+						this.PutCommand(Export.GetFontShortName(fl.Id, fontPage));
 						this.PutValue(size);
 						this.PutCommand("Tf ");
 						this.PutPoint(new Point(x-lastX, y-lastY));
@@ -570,7 +570,7 @@ namespace Epsitec.Common.Document.PDF
 						lastFontPage = fontPage;
 					}
 
-					this.PutCommand((code%Export.charPerFont).ToString("X2"));
+					this.PutCommand(Export.GetFontIndex (code));
 
 					x += (glyphX[i]-ox) * size;
 					ox = glyphX[i];
@@ -666,7 +666,7 @@ namespace Epsitec.Common.Document.PDF
 			}
 
 			this.SetTransform (this.transform);
-			this.PutCommand (Export.ShortNameComplexSurface (image.Id, TypeComplexSurface.XObject));
+			this.PutCommand (Export.GetComplexSurfaceShortName (image.Id, PdfComplexSurfaceType.XObject));
 			this.PutCommand ("Do ");  // external object, voir [*] page 302
 			this.PutEOL ();
 		}
@@ -708,7 +708,7 @@ namespace Epsitec.Common.Document.PDF
 			{
 				if ( this.currentComplexSurfaceId != -1 )
 				{
-					this.PutCommand(Export.ShortNameComplexSurface(0, TypeComplexSurface.ExtGState));
+					this.PutCommand(Export.GetComplexSurfaceShortName(0, PdfComplexSurfaceType.ExtGState));
 					this.PutCommand("gs ");  // graphic state, voir [*] page 189
 				}
 
@@ -729,7 +729,7 @@ namespace Epsitec.Common.Document.PDF
 					if ( cs.Type == Type.TransparencyRegular  ||
 						 cs.Type == Type.TransparencyGradient )
 					{
-						this.PutCommand(Export.ShortNameComplexSurface(this.complexSurfaceId, this.complexType));
+						this.PutCommand(Export.GetComplexSurfaceShortName(this.complexSurfaceId, this.complexType));
 						this.PutCommand("gs ");  // graphic state, voir [*] page 189
 					}
 				}
@@ -745,7 +745,7 @@ namespace Epsitec.Common.Document.PDF
 			{
 				if ( this.currentComplexSurfaceId != -1 )
 				{
-					this.PutCommand(Export.ShortNameComplexSurface(0, TypeComplexSurface.ExtGState));
+					this.PutCommand(Export.GetComplexSurfaceShortName(0, PdfComplexSurfaceType.ExtGState));
 					this.PutCommand("gs ");  // graphic state, voir [*] page 189
 				}
 
@@ -766,24 +766,24 @@ namespace Epsitec.Common.Document.PDF
 					if ( cs.IsSmooth )
 					{
 						this.PutCommand("q ");
-						this.PutCommand(Export.ShortNameComplexSurface(this.complexSurfaceId, this.complexType));
+						this.PutCommand(Export.GetComplexSurfaceShortName(this.complexSurfaceId, this.complexType));
 						this.PutCommand("gs ");  // graphic state, voir [*] page 189
 					}
 					else if ( cs.Type == Type.TransparencyRegular )
 					{
-						this.PutCommand(Export.ShortNameComplexSurface(this.complexSurfaceId, this.complexType));
+						this.PutCommand(Export.GetComplexSurfaceShortName(this.complexSurfaceId, this.complexType));
 						this.PutCommand("gs ");  // graphic state, voir [*] page 189
 					}
 					else if ( cs.Type == Type.TransparencyPattern &&
-							  this.complexType != TypeComplexSurface.ExtGState )
+							  this.complexType != PdfComplexSurfaceType.ExtGState )
 					{
-						this.PutCommand(Export.ShortNameComplexSurface(this.complexSurfaceId, this.complexType));
+						this.PutCommand(Export.GetComplexSurfaceShortName(this.complexSurfaceId, this.complexType));
 						this.PutCommand("gs ");  // graphic state, voir [*] page 189
 					}
 					else if ( cs.Type == Type.TransparencyGradient )
 					{
 						this.PutCommand("q ");
-						this.PutCommand(Export.ShortNameComplexSurface(this.complexSurfaceId, this.complexType));
+						this.PutCommand(Export.GetComplexSurfaceShortName(this.complexSurfaceId, this.complexType));
 						this.PutCommand("gs ");  // graphic state, voir [*] page 189
 					}
 				}
@@ -795,7 +795,7 @@ namespace Epsitec.Common.Document.PDF
 			//	Rempli la surface du chemin défini.
 			this.SearchComplexSurfaceByColor();
 
-			if ( this.complexSurfaceId == -1 || this.complexType != TypeComplexSurface.ExtGState )
+			if ( this.complexSurfaceId == -1 || this.complexType != PdfComplexSurfaceType.ExtGState )
 			{
 				this.PutPath(path);
 				this.PutCommandFill();
@@ -818,7 +818,7 @@ namespace Epsitec.Common.Document.PDF
 						this.PutCommandStroke();
 						this.PutCommand("n ");
 						this.PutTransform(cs.Matrix);  // current clipping, voir [*] page 205
-						this.PutCommand(Export.ShortNameComplexSurface(this.complexSurfaceId, TypeComplexSurface.ShadingColor));
+						this.PutCommand(Export.GetComplexSurfaceShortName(this.complexSurfaceId, PdfComplexSurfaceType.ShadingColor));
 						this.PutCommand("sh Q ");  // shading, voir [*] page 273
 					}
 					else
@@ -834,7 +834,7 @@ namespace Epsitec.Common.Document.PDF
 					this.PutCommandStroke();
 					this.PutCommand("n ");
 					this.PutTransform(cs.Matrix);  // current clipping, voir [*] page 205
-					this.PutCommand(Export.ShortNameComplexSurface(this.complexSurfaceId, TypeComplexSurface.ShadingColor));
+					this.PutCommand(Export.GetComplexSurfaceShortName(this.complexSurfaceId, PdfComplexSurfaceType.ShadingColor));
 					this.PutCommand("sh Q ");  // shading, voir [*] page 273
 				}
 				else if ( cs.Type == Type.TransparencyGradient )
@@ -843,7 +843,7 @@ namespace Epsitec.Common.Document.PDF
 					this.PutCommandStroke();
 					this.PutCommand("n ");
 					this.PutTransform(cs.Matrix);  // current clipping, voir [*] page 205
-					this.PutCommand(Export.ShortNameComplexSurface(this.complexSurfaceId, TypeComplexSurface.ShadingColor));
+					this.PutCommand(Export.GetComplexSurfaceShortName(this.complexSurfaceId, PdfComplexSurfaceType.ShadingColor));
 					this.PutCommand("sh Q ");  // shading, voir [*] page 273
 				}
 				else if ( cs.Type == Type.OpaquePattern       ||
@@ -853,7 +853,7 @@ namespace Epsitec.Common.Document.PDF
 					this.PutCommand("q ");  // save, voir [*] page 189
 					this.PutCommandStroke();
 					this.PutCommand("n ");
-					this.PutCommand(Export.ShortNameComplexSurface(this.complexSurfaceId, TypeComplexSurface.XObject));
+					this.PutCommand(Export.GetComplexSurfaceShortName(this.complexSurfaceId, PdfComplexSurfaceType.XObject));
 					this.PutCommand("Do Q ");  // external object, voir [*] page 302
 				}
 				else
@@ -1371,9 +1371,9 @@ namespace Epsitec.Common.Document.PDF
 
 		private ImageSurface lastImageSurface;
 
-		protected System.Collections.ArrayList	complexSurfaceList;
+		protected IEnumerable<ComplexSurface>	complexSurfaceList;
 		protected IEnumerable<ImageSurface>		imageSurfaceList;
-		protected System.Collections.Hashtable	fontList;
+		protected FontHash						fontHash;
 
 		protected ColorForce					colorForce;
 		protected int							defaultDecimals;
@@ -1392,7 +1392,7 @@ namespace Epsitec.Common.Document.PDF
 		protected RichColor						color;
 		readonly Stack<ColorModifierCallback>	stackColorModifier;
 		protected int							complexSurfaceId;
-		protected TypeComplexSurface			complexType;
+		protected PdfComplexSurfaceType			complexType;
 		protected Transform						transform;
 		protected FillMode						fillMode;
 		protected ImageFilter					imageFilter;

@@ -3016,43 +3016,62 @@ namespace Epsitec.Common.Document.Objects
 			return !context.PreviewActive;
 		}
 
-		public System.Collections.ArrayList GetComplexSurfacesPDF(IPaintPort port)
+		public IList<Properties.Abstract> GetPdfComplexSurfaces(IPaintPort port)
 		{
 			//	Donne la liste des propriétés qui utilisent des surfaces complexes.
-			System.Collections.ArrayList list = new System.Collections.ArrayList();
+			List<Properties.Abstract> list = new List<Properties.Abstract> ();
 
 			foreach (Properties.Abstract property in this.properties)
 			{
-				this.GetComplexSurfacePDF (port, property, list);
+				this.GetPdfComplexSurface (port, property, list);
 			}
 
 			if (this.additionnalProperties != null)
 			{
 				foreach (Properties.Abstract property in this.additionnalProperties)
 				{
-					this.GetComplexSurfacePDF (port, property, list);
+					this.GetPdfComplexSurface (port, property, list);
 				}
 			}
 
 			return list;
 		}
 
-		private void GetComplexSurfacePDF(IPaintPort port, Properties.Abstract property, System.Collections.ArrayList list)
+		private void GetPdfComplexSurface(IPaintPort port, Properties.Abstract property, IList<Properties.Abstract> list)
 		{
-			for ( int i=0 ; i<2 ; i++ )
+			for (int i=0; i<2; i++)
 			{
 				Properties.Abstract surface = null;
-				if ( i == 0 )  surface = property as Properties.Gradient;
-				if ( i == 1 )  surface = property as Properties.Font;
-				if ( surface == null )  continue;
 
-				PDF.Type type = surface.TypeComplexSurfacePDF(port);
-				bool isSmooth = surface.IsSmoothSurfacePDF(port);
+				switch (i)
+				{
+					case 0:
+						surface = property as Properties.Gradient;
+						break;
 
-				if ( type == PDF.Type.None )  continue;
-				if ( type == PDF.Type.OpaqueRegular && !isSmooth )  continue;
+					case 1:
+						surface = property as Properties.Font;
+						break;
+				}
 
-				list.Add(surface);
+				if (surface == null)
+				{
+					continue;
+				}
+
+				PDF.Type type = surface.TypeComplexSurfacePDF (port);
+				bool isSmooth = surface.IsSmoothSurfacePDF (port);
+
+				if (type == PDF.Type.None)
+				{
+					continue;
+				}
+				if (type == PDF.Type.OpaqueRegular && !isSmooth)
+				{
+					continue;
+				}
+
+				list.Add (surface);
 			}
 		}
 

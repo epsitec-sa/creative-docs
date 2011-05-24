@@ -1,4 +1,4 @@
-//	Copyright � 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
@@ -493,7 +493,7 @@ namespace Epsitec.Common.Drawing
 		{
 			if (r.IsEmpty)
 			{
-				//	Rien � faire...
+				//	Rien à faire...
 			}
 			else if (this.IsEmpty)
 			{
@@ -812,7 +812,15 @@ namespace Epsitec.Common.Drawing
 				this.X, this.Y, this.Width, this.Height);
 		}
 
-		
+
+		public static bool Equal(Margins a, Margins b, double δ)
+		{
+			return Math.Equal (a.Left, b.Left, δ)
+				&& Math.Equal (a.Right, b.Right, δ)
+				&& Math.Equal (a.Top, b.Top, δ)
+				&& Math.Equal (a.Bottom, b.Bottom, δ);
+		}
+
 		public override bool Equals(object obj)
 		{
 			return (obj is Rectangle) && (this == (Rectangle) obj);

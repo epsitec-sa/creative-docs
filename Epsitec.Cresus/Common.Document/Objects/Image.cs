@@ -629,41 +629,42 @@ namespace Epsitec.Common.Document.Objects
 		public override void DrawImage(IPaintPort port, DrawingContext drawingContext)
 		{
 			//	Dessine l'image.
-			if ( this.TotalHandle < 2 )  return;
+			if (this.TotalHandle < 2)
+			{
+				return;
+			}
 
-			Drawing.Image image = null;
-			ImageCache.Item item = this.Item;
-			Size size = this.ImageBitmapSize;
-			Properties.Image pi = this.PropertyImage;
-			Margins crop = pi.CropMargins;
-			port.ImageFinalSize = size;
+			System.Diagnostics.Debug.Assert (this != null, "Image instance is null");
+			System.Diagnostics.Debug.Assert (this.PropertyImage != null, "PropertyImage is null");
+
+			Drawing.Image    image   = null;
+			ImageCache.Item  item    = this.Item;
+			Properties.Image pi      = this.PropertyImage;
+			Margins          crop    = pi.CropMargins;
+			ImageFilter      filter  = this.GetFilter (port, drawingContext);
+			PDF.Port         pdfPort = port as PDF.Port;
+
+			port.ImageFinalSize = this.ImageBitmapSize;
 
 			double imageWidth  = 0;
 			double imageHeight = 0;
 
-			PDF.Port pdfPort = port as PDF.Port;
-
-			ImageFilter filter = this.GetFilter (port, drawingContext);
-
 			if (item != null)
 			{
-				double scale = item.Scale;
-				crop.Left   /= scale;
-				crop.Right  /= scale;
-				crop.Bottom /= scale;
-				crop.Top    /= scale;
+				crop = Image.ScaleCropMargins (item, crop);
 				port.ImageCrop = crop;
 
 				if (pdfPort != null)  // exportation PDF ?
 				{
-					PDF.ImageSurface surface = pdfPort.SearchImageSurface(pi.FileName, size, crop, filter);
-					
-					System.Diagnostics.Debug.Assert(surface != null);
+					PDF.ImageSurface surface = pdfPort.SearchImageSurface (pi.FileName, port.ImageFinalSize, crop, filter);
+
+					System.Diagnostics.Debug.Assert (surface != null);
+					System.Diagnostics.Debug.Assert (surface.FilePath != null);
 
 					image = null;	// on ne va pas spécifier l'image plus loin; le PDF Port se souvient de la dernière surface cherchée...
 
-					imageWidth  = surface.Cache.Size.Width;
-					imageHeight = surface.Cache.Size.Height;
+					imageWidth  = surface.BitmapSize.Width;
+					imageHeight = surface.BitmapSize.Height;
 
 					port.ImageCrop = crop;
 				}
@@ -710,18 +711,20 @@ namespace Epsitec.Common.Document.Objects
 
 				Point center;
 				double width, height, angle;
-				this.ImageGeometry(out center, out width, out height, out angle);
+				
+				this.ImageGeometry (out center, out width, out height, out angle);
 
-				if ( width > 0 && height > 0 )
+				if (width > 0 && height > 0)
 				{
-					Drawing.Rectangle cropRect = new Drawing.Rectangle(0, 0, imageWidth, imageHeight);
-					cropRect.Deflate(crop);
+					Drawing.Rectangle cropRect = new Drawing.Rectangle (0, 0, imageWidth, imageHeight);
+					cropRect.Deflate (crop);
 
 					if (!cropRect.IsSurfaceZero)
 					{
 						if (pi.Homo)  // conserve les proportions ?
 						{
-							double rapport = cropRect.Height/cropRect.Width;
+							double rapport = cropRect.Height / cropRect.Width;
+
 							if (rapport < height/width)
 							{
 								height = width*rapport;
@@ -732,18 +735,18 @@ namespace Epsitec.Common.Document.Objects
 							}
 						}
 
-						port.TranslateTransform(center.X-width/2, center.Y-height/2);
-						port.RotateTransformDeg(angle, width/2, height/2);
-						port.TranslateTransform(width/2, height/2);
+						port.TranslateTransform (center.X-width/2, center.Y-height/2);
+						port.RotateTransformDeg (angle, width/2, height/2);
+						port.TranslateTransform (width/2, height/2);
 						double sx = pi.MirrorH ? -width  : width;
 						double sy = pi.MirrorV ? -height : height;
-						port.ScaleTransform(sx, sy, 0.0, 0.0);
-						port.TranslateTransform(-0.5, -0.5);
+						port.ScaleTransform (sx, sy, 0.0, 0.0);
+						port.TranslateTransform (-0.5, -0.5);
 
-						Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, 1.0, 1.0);
+						Drawing.Rectangle rect = new Drawing.Rectangle (0, 0, 1.0, 1.0);
 						ImageFilter oldFilter = port.ImageFilter;
 						port.ImageFilter = filter;
-						port.PaintImage(image, rect, cropRect);
+						port.PaintImage (image, rect, cropRect);
 						port.ImageFilter = oldFilter;
 					}
 				}
@@ -752,6 +755,12 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+
+		private static Margins ScaleCropMargins(ImageCache.Item item, Margins crop)
+		{
+			double scale = item.Scale;
+			return new Margins (crop.Left / scale, crop.Right / scale, crop.Top / scale, crop.Bottom / scale);
+		}
 
 		public override Path GetMagnetPath()
 		{

@@ -637,8 +637,16 @@ namespace Epsitec.Common.Drawing
 		public static Image FromData(byte[] data)
 		{
 			Image bitmap = Bitmap.FromData (data, new Point (0, 0));
-			bitmap.isOriginDefined = false;
-			return bitmap;
+			
+			if (bitmap == null)
+			{
+				return null;
+			}
+			else
+			{
+				bitmap.isOriginDefined = false;
+				return bitmap;
+			}
 		}
 		
 		public static Image FromData(byte[] data, Point origin)
@@ -748,7 +756,7 @@ namespace Epsitec.Common.Drawing
 						using (System.IO.MemoryStream stream = new System.IO.MemoryStream (data, false))
 						{
 							System.Drawing.Bitmap srcBitmap = Bitmap.DecompressBitmap (stream, data);
-							System.Drawing.Bitmap dstBitmap = new System.Drawing.Bitmap (srcBitmap.Width, srcBitmap.Height);
+							System.Drawing.Bitmap dstBitmap = new System.Drawing.Bitmap (8, 8);
 
 							double dpiX = srcBitmap.HorizontalResolution;
 							double dpiY = srcBitmap.VerticalResolution;
@@ -757,9 +765,17 @@ namespace Epsitec.Common.Drawing
 
 							using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage (dstBitmap))
 							{
-								graphics.DrawImageUnscaled (srcBitmap, 0, 0, srcBitmap.Width, srcBitmap.Height);
+								try
+								{
+									graphics.DrawImageUnscaled (srcBitmap, 0, 0);
+								}
+								catch
+								{
+									graphics.DrawImageUnscaled (srcBitmap, 0, 0);
+								}
 							}
 
+							dstBitmap = srcBitmap;
 							Image image = Bitmap.FromNativeBitmap (dstBitmap, origin, size);
 
 							if (image != null)

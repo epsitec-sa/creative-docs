@@ -119,7 +119,17 @@ namespace Epsitec.Common.Drawing
 			
 			return System.Math.Sqrt ((a*a + b*b) / 2);
 		}
-		
+
+
+		public static bool Equal(Transform a, Transform b, double δ)
+		{
+			return Math.Equal (a.XX, b.XX, δ)
+				&& Math.Equal (a.XY, b.XY, δ)
+				&& Math.Equal (a.YX, b.YX, δ)
+				&& Math.Equal (a.YY, b.YY, δ)
+				&& Math.Equal (a.TX, b.TX, δ)
+				&& Math.Equal (a.TY, b.TY, δ);
+		}
 		
 		public Point TransformDirect(Point pt)
 		{

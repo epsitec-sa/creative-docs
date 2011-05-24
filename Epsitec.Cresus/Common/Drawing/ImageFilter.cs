@@ -69,6 +69,28 @@ namespace Epsitec.Common.Drawing
 			return this.mode.GetHashCode () ^ this.radius.GetHashCode ();
 		}
 
+
+		public override string ToString()
+		{
+			return string.Concat (this.mode.ToString (), ":", this.radius.ToString (System.Globalization.CultureInfo.InvariantCulture));
+		}
+
+		public static ImageFilter Parse(string text)
+		{
+			string[] args = text.Split (':');
+
+			if (args.Length != 2)
+			{
+				throw new System.FormatException ("Invalid format");
+			}
+
+			var mode   = Epsitec.Common.Types.InvariantConverter.ToEnum<ImageFilteringMode> (args[0]);
+			var radius = Epsitec.Common.Types.InvariantConverter.ToDouble (args[1]);
+
+			return new ImageFilter (mode, radius);
+		}
+
+
 		#region IEquatable<ImageFilter> Members
 
 		public bool Equals(ImageFilter other)
