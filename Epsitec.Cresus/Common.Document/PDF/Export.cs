@@ -529,7 +529,7 @@ namespace Epsitec.Common.Document.PDF
 			this.CropToBleedBox (port, page);  // efface ce qui dépasse de la BleedBox
 			this.DrawCropMarks (port, page);  // traits de coupe
 
-			string pdf = port.GetPDF ();
+			var pdf = port.GetPDF ();
 			writer.WriteObjectDef (Export.GetPageContentName (page));
 			writer.WriteLine (string.Format (CultureInfo.InvariantCulture, "<< {0} >>", Port.StringLength (pdf.Length)));
 			writer.WriteLine ("stream");
@@ -1051,7 +1051,7 @@ namespace Epsitec.Common.Document.PDF
 			port.PutCommand ("/ca ");
 			port.PutValue (alpha, 3);
 			port.PutCommand (">> endobj");
-			writer.WriteLine (port.GetPDF ());
+			writer.WriteString (port.GetPDF ());
 		}
 
 		public static void SurfaceInflate(ComplexSurface cs, ref Rectangle bbox)
@@ -1141,7 +1141,7 @@ namespace Epsitec.Common.Document.PDF
 			}
 			port.PutEOL ();
 
-			string pdf = port.GetPDF ();
+			var pdf = port.GetPDF ();
 			writer.WriteLine (string.Format (CultureInfo.InvariantCulture, "{0} >>", Port.StringLength (pdf.Length)));
 			writer.WriteLine ("stream");
 			writer.WriteString (pdf);
@@ -1233,7 +1233,7 @@ namespace Epsitec.Common.Document.PDF
 				}
 			}
 
-			string pdf = port.GetPDF ();
+			var pdf = port.GetPDF ();
 			writer.WriteLine (string.Format (CultureInfo.InvariantCulture, "{0} >>", Port.StringLength (pdf.Length)));
 			writer.WriteLine ("stream");
 			writer.WriteString (pdf);
@@ -1365,7 +1365,7 @@ namespace Epsitec.Common.Document.PDF
 				port.PutCommand ("] /N 1 >> ");
 
 				port.PutCommand ("/Extend [true true] >> endobj");
-				writer.WriteLine (port.GetPDF ());
+				writer.WriteString (port.GetPDF ());
 			}
 
 			if (gradient.FillType == Properties.GradientFillType.Linear ||
@@ -1438,7 +1438,7 @@ namespace Epsitec.Common.Document.PDF
 				}
 
 				port.PutCommand ("/Extend [true true] >> endobj");
-				writer.WriteLine (port.GetPDF ());
+				writer.WriteString (port.GetPDF ());
 			}
 
 			if (gradient.FillType == Properties.GradientFillType.Diamond ||
@@ -1479,7 +1479,7 @@ namespace Epsitec.Common.Document.PDF
 				port.PutValue (domainMinY, 3);
 				port.PutValue (domainMaxY, 3);
 				port.PutCommand ("]");
-				string domain = port.GetPDF ();
+				string domain = port.GetPDF ().ToString ();
 				port.Reset ();
 
 				writer.WriteObjectDef (Export.GetComplexSurfaceName (cs.Id, tcs));
@@ -1817,7 +1817,7 @@ namespace Epsitec.Common.Document.PDF
 			writer.WriteString ("<< /Subtype /Form ");  // voir [*] page 328
 			writer.WriteString (Port.StringBBox (bbox));
 
-			string pdf = port.GetPDF ();
+			var pdf = port.GetPDF ();
 			writer.WriteLine (string.Format (CultureInfo.InvariantCulture, "{0} >>", Port.StringLength (pdf.Length)));
 			writer.WriteLine ("stream");
 			writer.WriteString (pdf);
@@ -1885,35 +1885,6 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		class PdfImageStream
-		{
-			public PdfImageStream(string code, string stream)
-			{
-				this.code = code;
-				this.stream = stream;
-			}
-
-			public string Code
-			{
-				get
-				{
-					return this.code;
-				}
-			}
-
-			public string Stream
-			{
-				get
-				{
-					return this.stream;
-				}
-			}
-
-
-			private readonly string code;
-			private readonly string stream;
-		}
-
 		private bool CreateImageSurface(Writer writer, ImageSurface image,
 										PdfComplexSurfaceType baseType, PdfComplexSurfaceType maskType)
 		{
@@ -1924,11 +1895,11 @@ namespace Epsitec.Common.Document.PDF
 			image.MinDpi = this.imageMinDpi;
 			image.MaxDpi = this.imageMaxDpi;
 
-			PdfImageStream pdf = this.ProcessImageAndCreatePdfStream (image, baseType, compression);
+			image = this.ProcessImageAndCreatePdfStream (image, baseType, compression);
 			
 			Export.EmitImageHeader (writer, baseType, image, compression, this.colorConversion);
 
-			writer.WriteString (pdf.Code);
+			writer.WriteString (image.ImageStream.Code);
 
 			if (maskType == PdfComplexSurfaceType.XObjectMask && image.IsTransparent)
 			{
@@ -1936,12 +1907,16 @@ namespace Epsitec.Common.Document.PDF
 				writer.WriteObjectRef (Export.GetComplexSurfaceName (image.Id, maskType));
 			}
 
-			writer.WriteLine (string.Format (CultureInfo.InvariantCulture, " {0} >>", Port.StringLength (pdf.Stream.Length)));
+			writer.WriteLine (string.Format (CultureInfo.InvariantCulture, " {0} >>", Port.StringLength (image.ImageStream.StreamLength)));
 			writer.WriteLine ("stream");
-			writer.WriteHugeString (pdf.Stream);
+			writer.WriteStream (image.ImageStream.Stream);
 			writer.WriteLine ("endstream endobj");
 
-			return image.IsTransparent;
+			bool transparent = image.IsTransparent;
+
+			image.Dispose ();
+
+			return transparent;
 		}
 
 		private static NativeBitmap PrepareImage(ImageSurface image)
@@ -1967,20 +1942,69 @@ namespace Epsitec.Common.Document.PDF
 			return fi;
 		}
 
-		private PdfImageStream ProcessImageAndCreatePdfStream(ImageSurface image, PdfComplexSurfaceType baseType, ImageCompression compression)
+		private ImageSurface ProcessImageAndCreatePdfStream(ImageSurface image, PdfComplexSurfaceType baseType, ImageCompression compression)
 		{
-			ColorConversion colorConversion = this.colorConversion;
-			double jpegQuality = this.jpegQuality;
+			image.ColorConversion  = this.colorConversion;
+			image.JpegQuality      = this.jpegQuality;
+			image.SurfaceType      = baseType;
+			image.ImageCompression = compression;
+
+			return Export.LaunchProcessImageAndCreatePdfStream (image);
+		}
+
+		private static ImageSurface LaunchProcessImageAndCreatePdfStream(ImageSurface image)
+		{
+			string path = System.IO.Path.GetTempFileName ();
+
+			try
+			{
+				System.IO.File.WriteAllText (path, ImageSurface.Serialize (image), System.Text.Encoding.Default);
+
+				string program = "Common.Document.ExportEngine.exe";
+                
+				string exe1 = System.IO.Path.Combine (Epsitec.Common.Support.Globals.Directories.Executable, program);
+				string exe2 = System.IO.Path.Combine (Epsitec.Common.Support.Globals.Directories.InitialDirectory, program);
+				string exe3 = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (typeof (Export).Assembly.Location), program);
+
+				string exe = System.IO.File.Exists (exe1) ? exe1 :
+							 System.IO.File.Exists (exe2) ? exe2 :
+							 exe3;
+
+				string args = string.Concat (@"""", path, @"""");
+				var process = System.Diagnostics.Process.Start (exe, args);
+
+				process.WaitForExit ();
+
+				return ImageSurface.Deserialize (System.IO.File.ReadAllText (path, System.Text.Encoding.Default));
+			}
+			finally
+			{
+				System.IO.File.Delete (path);
+			}
+		}
+
+		public static void ExecuteProcessImageAndCreatePdfStream(ImageSurface image)
+		{
+			Export.InternalProcessImageAndCreatePdfStream (image);
+		}
+
+
+		private static void InternalProcessImageAndCreatePdfStream(ImageSurface image)
+		{
+			PdfComplexSurfaceType baseType = image.SurfaceType;
+			ImageCompression compression = image.ImageCompression;
+			ColorConversion colorConversion = image.ColorConversion;
+			double jpegQuality = image.JpegQuality;
 
 			using (NativeBitmap fi = Export.PrepareImage (image))
 			{
 				if (compression == ImageCompression.JPEG)  // compression JPEG ?
 				{
-					return Export.EmitJpegImageSurface (baseType, fi, colorConversion, jpegQuality);
+					image.ImageStream = Export.EmitJpegImageSurface (baseType, fi, colorConversion, jpegQuality);
 				}
 				else	// compression ZIP ou aucune ?
 				{
-					return Export.EmitLosslessImageSurface (baseType, image, compression, fi, colorConversion);
+					image.ImageStream = Export.EmitLosslessImageSurface (baseType, image, compression, fi, colorConversion);
 				}
 			}
 		}
@@ -2561,7 +2585,7 @@ namespace Epsitec.Common.Document.PDF
 
 			port.PaintSurface (path);
 
-			string pdf = port.GetPDF ();
+			var pdf = port.GetPDF ();
 			writer.WriteLine (string.Format (CultureInfo.InvariantCulture, "<< {0} >>", Port.StringLength (pdf.Length)));
 			writer.WriteLine ("stream");
 			writer.WriteString (pdf);
@@ -2661,4 +2685,5 @@ namespace Epsitec.Common.Document.PDF
 		private string							documentTitle;
 		private double							zoom;
 	}
+
 }

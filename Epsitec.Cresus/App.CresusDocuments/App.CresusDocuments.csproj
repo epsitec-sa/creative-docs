@@ -108,6 +108,10 @@
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common.Document.ExportEngine\Common.Document.ExportEngine.csproj">
+      <Project>{DBB98025-2979-45C6-AB5E-A36E7015F9EE}</Project>
+      <Name>Common.Document.ExportEngine</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.DocumentEditor\Common.DocumentEditor.csproj">
       <Project>{B3B20AC3-680D-41E0-94C2-8113577CE703}</Project>
       <Name>Common.DocumentEditor</Name>

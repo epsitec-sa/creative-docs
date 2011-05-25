@@ -189,6 +189,8 @@
     <Compile Include="PDF\PdfExportPageRange.cs" />
     <Compile Include="PDF\PdfFontType.cs" />
     <Compile Include="PDF\PdfFunctionType.cs" />
+    <Compile Include="PDF\PdfImageStream.cs" />
+    <Compile Include="PDF\StringBuffer.cs" />
     <Compile Include="Properties\CropLogic.cs" />
     <Compile Include="Polygon.cs" />
     <Compile Include="GlobalImageCache.Item.cs" />

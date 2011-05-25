@@ -121,7 +121,37 @@ namespace Epsitec.Common.Document.PDF
 			set;
 		}
 
+		public PdfImageStream ImageStream
+		{
+			get;
+			set;
+		}
+
+		public ImageCompression ImageCompression
+		{
+			get;
+			set;
+		}
+
+		public PdfComplexSurfaceType SurfaceType
+		{
+			get;
+			set;
+		}
+
 		public BitmapColorType ColorType
+		{
+			get;
+			set;
+		}
+
+		public ColorConversion ColorConversion
+		{
+			get;
+			set;
+		}
+
+		public double JpegQuality
 		{
 			get;
 			set;
@@ -138,6 +168,10 @@ namespace Epsitec.Common.Document.PDF
 			if (this.fileReference != null)
 			{
 				this.fileReference.Dispose ();
+			}
+			if (this.ImageStream != null)
+			{
+				this.ImageStream.Dispose ();
 			}
 		}
 
@@ -159,10 +193,20 @@ namespace Epsitec.Common.Document.PDF
 					new XAttribute ("imageSize", item.imageSize.ToString ()),
 					new XAttribute ("bitmapSize", item.BitmapSize.ToString ()),
 					new XAttribute ("colorType", item.ColorType.ToString ()),
+					new XAttribute ("colorConv", item.ColorConversion.ToString ()),
+					new XAttribute ("jpegQuality", item.JpegQuality),
+					new XAttribute ("surfaceType", item.SurfaceType.ToString ()),
+					new XAttribute ("compression", item.ImageCompression.ToString ()),
 					new XAttribute ("crop", item.crop.ToString ()),
 					new XAttribute ("filter", item.filter.ToString ()),
 					new XAttribute ("id", item.id),
-					new XAttribute ("file", item.fileReference.Path)
+					new XAttribute ("file", item.fileReference.Path),
+					new XAttribute ("minDPI", item.MinDpi),
+					new XAttribute ("maxDPI", item.MaxDpi),
+					new XAttribute ("dx", item.DX),
+					new XAttribute ("dy", item.DY),
+					new XAttribute ("transparent", item.IsTransparent),
+					PdfImageStream.ToXml (item.ImageStream)
 					));
 
 			return xml.ToString ();
@@ -175,14 +219,24 @@ namespace Epsitec.Common.Document.PDF
 
 			var item = new ImageSurface ();
 
-			item.imageName     = (string) surface.Attribute ("imageName");
-			item.imageSize     = Size.Parse ((string) surface.Attribute ("imageSize"));
-			item.BitmapSize    = Size.Parse ((string) surface.Attribute ("bitmapSize"));
-			item.ColorType     = Epsitec.Common.Types.InvariantConverter.ToEnum<BitmapColorType> ((string) surface.Attribute ("colorType"));
-			item.crop          = Margins.Parse ((string) surface.Attribute ("crop"));
-			item.filter        = ImageFilter.Parse ((string) surface.Attribute ("filter"));
-			item.id            = (int) surface.Attribute ("id");
-			item.fileReference = new ImageFileReference ((string) surface.Attribute ("file"));
+			item.imageName        = (string) surface.Attribute ("imageName");
+			item.imageSize        = Size.Parse ((string) surface.Attribute ("imageSize"));
+			item.BitmapSize       = Size.Parse ((string) surface.Attribute ("bitmapSize"));
+			item.ColorType        = Epsitec.Common.Types.InvariantConverter.ToEnum<BitmapColorType> ((string) surface.Attribute ("colorType"));
+			item.ColorConversion  = Epsitec.Common.Types.InvariantConverter.ToEnum<ColorConversion> ((string) surface.Attribute ("colorConv"));
+			item.JpegQuality      = (double) surface.Attribute ("jpegQuality");
+			item.SurfaceType      = Epsitec.Common.Types.InvariantConverter.ToEnum<PdfComplexSurfaceType> ((string) surface.Attribute ("surfaceType"));
+			item.ImageCompression = Epsitec.Common.Types.InvariantConverter.ToEnum<ImageCompression> ((string) surface.Attribute ("compression"));
+			item.crop             = Margins.Parse ((string) surface.Attribute ("crop"));
+			item.filter           = ImageFilter.Parse ((string) surface.Attribute ("filter"));
+			item.id               = (int) surface.Attribute ("id");
+			item.fileReference    = new ImageFileReference ((string) surface.Attribute ("file"));
+			item.MinDpi           = (double) surface.Attribute ("minDPI");
+			item.MaxDpi           = (double) surface.Attribute ("maxDPI");
+			item.DX               = (int) surface.Attribute ("dx");
+			item.DY               = (int) surface.Attribute ("dy");
+			item.IsTransparent    = (bool) surface.Attribute ("transparent");
+			item.ImageStream      = PdfImageStream.FromXml (surface);
 
 			return item;
 		}

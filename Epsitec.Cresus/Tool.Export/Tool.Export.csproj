@@ -100,6 +100,10 @@ xcopy "$(SolutionDir)Common\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y 
       <Project>{D0BF9A45-E6F2-4FEF-B5A0-008BE0159967}</Project>
       <Name>App.CresusDocuments</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Common.Document.ExportEngine\Common.Document.ExportEngine.csproj">
+      <Project>{DBB98025-2979-45C6-AB5E-A36E7015F9EE}</Project>
+      <Name>Common.Document.ExportEngine</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.DocumentEditor\Common.DocumentEditor.csproj">
       <Project>{B3B20AC3-680D-41E0-94C2-8113577CE703}</Project>
       <Name>Common.DocumentEditor</Name>

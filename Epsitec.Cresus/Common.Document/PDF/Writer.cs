@@ -82,6 +82,25 @@ namespace Epsitec.Common.Document.PDF
 			return obj.Id;
 		}
 
+		public void WriteString(StringBuffer buffer)
+		{
+			if (buffer.InMemory)
+			{
+				this.WriteString (buffer.ToString ());
+			}
+			else
+			{
+				var stream = buffer.GetStream ();
+				this.WriteStream (stream);
+				buffer.CloseStream (stream);
+			}
+
+			if (buffer.EndsWithWhitespace == false)
+			{
+				this.WriteString (" ");
+			}
+		}
+
 		public void WriteLine(string line)
 		{
 			//	Ecrit une string suivie d'une fin de ligne.
@@ -184,6 +203,13 @@ namespace Epsitec.Common.Document.PDF
 			this.Flush ();
 			this.FileWriteString (text);
 		}
+		
+		public void WriteStream(System.IO.Stream stream)
+		{
+			this.Flush ();
+			this.FileWriteStream (stream);
+		}
+
 
 		private Object DictionarySearch(int id)
 		{
@@ -214,10 +240,28 @@ namespace Epsitec.Common.Document.PDF
 		private void FileWriteString(string text)
 		{
 			//	Ecrit juste une string telle quelle.
-			System.Text.Encoding e = System.Text.Encoding.GetEncoding(1252);
-			byte[] array = e.GetBytes(text);
-			this.streamIO.Write(array, 0, array.Length);
-			this.streamOffset += array.Length;
+			System.Text.Encoding e = System.Text.Encoding.Default;
+			byte[] buffer = e.GetBytes (text);
+			this.streamIO.Write (buffer, 0, buffer.Length);
+			this.streamOffset += buffer.Length;
+		}
+
+		private void FileWriteStream(System.IO.Stream stream)
+		{
+			byte[] buffer = new byte[64*1024];
+
+			while (true)
+			{
+				int count = stream.Read (buffer, 0, buffer.Length);
+
+				if (count == 0)
+				{
+					break;
+				}
+
+				this.streamIO.Write (buffer, 0, count);
+				this.streamOffset += count;
+			}
 		}
 
 		private void FileClose()

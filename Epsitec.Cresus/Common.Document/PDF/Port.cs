@@ -673,19 +673,25 @@ namespace Epsitec.Common.Document.PDF
 		#endregion
 		
 		
-		public string GetPDF()
+		public StringBuffer GetPDF()
 		{
 			//	Donne tout le texte PDF généré.
-			string s = this.stringBuilder.ToString();
-			this.Reset();
-			return s;
+
+			try
+			{
+				return this.stringBuilder;
+			}
+			finally
+			{
+				this.Reset ();
+			}
 		}
 
 		protected void Init()
 		{
 			//	Initialise tous les paramètres graphiques à des valeurs différentes
 			//	des valeurs utilisées par la suite, ou aux valeurs par défaut.
-			this.stringBuilder = new System.Text.StringBuilder();
+			this.stringBuilder = new StringBuffer ();
 			this.currentWidth = -1.0;
 			this.currentCap = (CapStyle) 999;
 			this.currentJoin = (JoinStyle) 999;
@@ -1194,26 +1200,19 @@ namespace Epsitec.Common.Document.PDF
 			this.stringBuilder.Append(" ");
 		}
 
-		public void PutASCII85(byte[] buffer)
+		public void PutASCII85(byte[] data)
 		{
 			//	Met un buffer binaire en codage ASCII85 (voir [*] page 45).
 			IO.Ascii85.Engine converter = new IO.Ascii85.Engine();
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			converter.EnforceMarks = false;
-			converter.Encode(buffer, this.stringBuilder);
+			converter.Encode(data, buffer);
+			this.stringBuilder.Append (buffer.ToString ());
 		}
 
 		public void PutEOL()
 		{
-			//	Met une fin de ligne.
-			int len = this.stringBuilder.Length;
-			if ( len == 0 )  return;
-
-			if ( this.stringBuilder[len-1] == ' ' )
-			{
-				this.stringBuilder.Remove(len-1, 1);  // enlève l'espace à la fin
-			}
-
-			this.stringBuilder.Append("\r\n");
+			this.stringBuilder.AppendNewLine ();
 		}
 
 		protected void PutCommandFill()
@@ -1399,7 +1398,7 @@ namespace Epsitec.Common.Document.PDF
 		protected Margins						imageCrop;
 		protected Size							imageFinalSize;
 
-		protected System.Text.StringBuilder		stringBuilder;
+		protected StringBuffer					stringBuilder;
 		protected RichColor						currentStrokeColor;
 		protected RichColor						currentFillColor;
 		protected int							currentComplexSurfaceId;
