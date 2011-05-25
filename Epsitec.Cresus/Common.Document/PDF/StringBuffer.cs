@@ -3,7 +3,12 @@
 
 namespace Epsitec.Common.Document.PDF
 {
-	public class StringBuffer
+	/// <summary>
+	/// The <c>StringBuffer</c> class is used as a replacement of <see cref="System.StringBuilder"/>
+	/// where the amount of memory used might be high; if the threshold is exceeded, the string
+	/// will be stored in a backing file.
+	/// </summary>
+	public sealed class StringBuffer : System.IDisposable
 	{
 		public StringBuffer()
 		{
@@ -12,19 +17,11 @@ namespace Epsitec.Common.Document.PDF
 
 		~StringBuffer()
 		{
-			if ((this.path != null) &&
-				(System.IO.File.Exists (this.path)))
-			{
-				if (this.stream != null)
-				{
-					this.stream.Close ();
-				}
-
-				System.IO.File.Delete (this.path);
-			}
+			this.Dispose (false);
 		}
 		
-		public bool InMemory
+		
+		public bool							InMemory
 		{
 			get
 			{
@@ -32,7 +29,7 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		public int Length
+		public int							Length
 		{
 			get
 			{
@@ -40,7 +37,7 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		public bool EndsWithWhitespace
+		public bool							EndsWithWhitespace
 		{
 			get
 			{
@@ -48,8 +45,14 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
+		
 		public void Append(string text)
 		{
+			if (this.length < 0)
+			{
+				throw new System.ObjectDisposedException ("StringBuffer");
+			}
+
 			if (string.IsNullOrEmpty (text))
 			{
 				return;
@@ -82,6 +85,7 @@ namespace Epsitec.Common.Document.PDF
 			this.Append ("\r\n");
 		}
 
+		
 		public override string ToString()
 		{
 			if (this.path != null)
@@ -102,12 +106,51 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
+		
 		public System.IO.Stream GetStream()
 		{
 			this.FlushBuffer ();
 			this.stream.Seek (0, System.IO.SeekOrigin.Begin);
 
 			return this.stream;
+		}
+
+		public void CloseStream(System.IO.Stream stream)
+		{
+			System.Diagnostics.Debugger.Break (this.stream == stream);
+
+			//	Dispose the string buffer; we won't use it anymore after this point.
+
+			this.Dispose ();
+		}
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			System.GC.SuppressFinalize (this);
+			this.Dispose (true);
+		}
+
+		#endregion
+
+		private void Dispose(bool disposing)
+		{
+			if ((this.path != null) &&
+				(System.IO.File.Exists (this.path)))
+			{
+				if (this.stream != null)
+				{
+					this.stream.Close ();
+				}
+
+				System.IO.File.Delete (this.path);
+				
+				this.path = null;
+				this.stream = null;
+			}
+			
+			this.length = -1;
 		}
 
 		private void FlushBuffer()
@@ -133,16 +176,15 @@ namespace Epsitec.Common.Document.PDF
 			this.stream.Write (data, 0, data.Length);
 			this.buffer.Length = 0;
 		}
-		public void CloseStream(System.IO.Stream stream)
-		{
-		}
 
+		
 		private const int Threshold = 1024*4;
 
-		private System.Text.StringBuilder buffer;
-		private System.IO.Stream stream;
-		private int length;
-		private string path;
-		private bool endsWithWhitespace;
+		private readonly System.Text.StringBuilder buffer;
+		
+		private System.IO.Stream			stream;
+		private int							length;
+		private string						path;
+		private bool						endsWithWhitespace;
 	}
 }

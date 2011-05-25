@@ -1,4 +1,6 @@
-using Epsitec.Common.Drawing;
+//	Copyright © 2004-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
+
 using System.Collections.Generic;
 
 namespace Epsitec.Common.Document.PDF
