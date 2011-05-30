@@ -117,7 +117,7 @@ namespace Epsitec.Common.Document.PDF
 
 		public void CloseStream(System.IO.Stream stream)
 		{
-			System.Diagnostics.Debugger.Break (this.stream == stream);
+			System.Diagnostics.Debug.Assert (this.stream == stream);
 
 			//	Dispose the string buffer; we won't use it anymore after this point.
 
