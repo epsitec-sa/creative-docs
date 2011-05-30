@@ -52,6 +52,27 @@ namespace Epsitec.Cresus.Database
 			this.DefineCaptionId (captionId);
 		}
 
+		// HACK: I added this hack to bypass the test for relation table in the GetSqlName() method.
+		// The trouble is that this method adds a suffix after the table name if the table does not
+		// represent a Druid. This was done in order to allow several table with the same high level
+		// name but with different low level names. Now, this suffix was removed for relation tables
+		// which are supposed to have unique names because the name of their table is included in
+		// them. So, for the entities, before I made some changes, their relations where stored as
+		// relation tables (in the sense that their category was Relation). So their suffix was
+		// removed. But now that they are regular tables and are not associated with a Druid, the
+		// have the suffix included in their name. We don't want that, because the suffix messes up
+		// everything when exporting and importing. I totally overlooked that suffix stuff when
+		// designing the importation/exportation stuff. So I create this property in order to remove
+		// the suffix in some cases. As the name implies, this is an ugly hack designed to bypass all
+		// that stuff. It is not definitive and I will fix all this stuff properly once I come back
+		// to work in Crésus.Core. I promise ;-P
+		// Marc
+		public bool EnableUglyHackInOrderToRemoveSuffixFromTableName
+		{
+			get;
+			set;
+		}
+
 		/// <summary>
 		/// Gets the display name of the table. If no name is defined, tries to use
 		/// the caption name instead.
@@ -483,7 +504,7 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The SQL name.</returns>
 		public string GetSqlName()
 		{
-			if (this.category == DbElementCat.Relation)
+			if (this.category == DbElementCat.Relation || this.EnableUglyHackInOrderToRemoveSuffixFromTableName)
 			{
 				return DbSqlStandard.MakeSqlTableName (this.Name, false, this.Category, this.Key);
 			}
@@ -596,6 +617,7 @@ namespace Epsitec.Cresus.Database
 			DbTools.WriteAttribute (xmlWriter, "rstn", DbTools.StringToString (this.relationSourceTableName));
 			DbTools.WriteAttribute (xmlWriter, "rttn", DbTools.StringToString (this.relationTargetTableName));
 			DbTools.WriteAttribute (xmlWriter, "com", DbTools.StringToString (this.Comment));
+			DbTools.WriteAttribute (xmlWriter, "uhr", DbTools.BoolDefaultingToFalseToString (this.EnableUglyHackInOrderToRemoveSuffixFromTableName));
 
 			xmlWriter.WriteEndElement ();
 		}
@@ -731,6 +753,7 @@ namespace Epsitec.Cresus.Database
 				table.relationTargetTableName = DbTools.ParseString (xmlReader.GetAttribute ("rttn"));
 				table.serializedIndexTuples   = DbTools.ParseString (xmlReader.GetAttribute ("idx"));
 				table.Comment				  = DbTools.ParseString (xmlReader.GetAttribute ("com"));
+				table.EnableUglyHackInOrderToRemoveSuffixFromTableName = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("uhr"));
 				
 				// NOTE Here we do not deserialize the indexes but keep them in their serialized
 				// form because the columns are not yet deserialized and added to the table.

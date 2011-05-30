@@ -224,7 +224,10 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			string entityName = type.Caption.Name;
 			string fieldName = Epsitec.Common.Support.Resources.DefaultManager.GetCaption (field.CaptionId).Name;
 
-			DbTable relationTable = new DbTable (relationTableName);
+			DbTable relationTable = new DbTable (relationTableName)
+			{
+				EnableUglyHackInOrderToRemoveSuffixFromTableName = true,
+			};
 
 			DbColumn columnId = new DbColumn (EntitySchemaBuilder.EntityFieldTableColumnIdName, refIdType, DbColumnClass.KeyId, DbElementCat.Internal)
 			{
