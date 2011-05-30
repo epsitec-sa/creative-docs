@@ -244,7 +244,7 @@ namespace Epsitec.Cresus.Database
 		/// <returns><c>true</c> if both <see cref="DbColumn"/> are equal, <c>false</c> if they are not.</returns>
 		public static bool AreDbColumnEqual(DbColumn a, DbColumn b)
 		{
-			return (a == null && b == null) ||
+			var eq = (a == null && b == null) ||
 			(
 				   a != null && b != null
 				&& a.CaptionId == b.CaptionId
@@ -264,6 +264,7 @@ namespace Epsitec.Cresus.Database
 				&& a.IsAutoTimeStampOnUpdate == b.IsAutoTimeStampOnUpdate
 				&& DbSchemaChecker.AreDbTypeDefEqual (a.Type, b.Type)
 			);
+			return eq;
 		}
 
 

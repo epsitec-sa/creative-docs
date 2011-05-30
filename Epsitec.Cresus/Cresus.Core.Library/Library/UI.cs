@@ -178,7 +178,7 @@ namespace Epsitec.Cresus.Core.Library
 		public static void ShowErrorMessage(FormattedText message, FormattedText hint, System.Exception ex)
 		{
 			string exMessage   = ex == null ? "" : ex.Message;
-			string fullMessage = string.Format (message.ToString (), UI.data.Application.ShortWindowTitle, exMessage);
+			string fullMessage = string.Format (message.ToString (), UI.GetShortWindowTitle (), exMessage);
 			FormattedText formattedMessage;
 
 			if (hint.IsNullOrEmpty)
@@ -192,11 +192,11 @@ namespace Epsitec.Cresus.Core.Library
 					fullMessage,
 					UI.StringEndFontElement,
 					@"<br/><br/>",
-					string.Format (hint.ToString (), UI.data.Application.ShortWindowTitle, exMessage),
+					string.Format (hint.ToString (), UI.GetShortWindowTitle (), exMessage),
 					@"<br/>&#160;"));
 			}
 
-			MessageDialog.ShowError (formattedMessage, UI.data.Application.ShortWindowTitle, null);
+			MessageDialog.ShowError (formattedMessage, UI.GetShortWindowTitle (), null);
 		}
 
 
@@ -280,6 +280,11 @@ namespace Epsitec.Cresus.Core.Library
 			{
 				UI.data.ReverseSetFocus = focus;
 			}
+		}
+
+		private static string GetShortWindowTitle()
+		{
+			return UI.data.Application.ShortWindowTitle;
 		}
 
 		private static void SetupResourceManagerPool()

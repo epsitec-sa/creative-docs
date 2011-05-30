@@ -185,6 +185,18 @@ namespace Epsitec.Cresus.Core.Business
 				?? this.dataContext.CreateNullEntity<BusinessSettingsEntity> (freeze:true);
 		}
 
+		public void AssignIds<T>(T entity, RefIdGeneratorPool generatorPool)
+			where T : AbstractEntity, IReferenceNumber, new ()
+		{
+			var settings  = this.GetCachedBusinessSettings ();
+			var generator = new FormattedIdGenerator (generatorPool, settings.Generators);
+
+			if (generator.AssignIds (entity) == false)
+			{
+				entity.IdA = string.Format ("{0:000000}", generatorPool.GetGenerator<T> ().GetNextId ());
+			}
+		}
+
 		public IEnumerable<T> GetAllEntities<T>()
 			where T : AbstractEntity, new ()
 		{

@@ -46,6 +46,7 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="Business\FormattedIdGenerator.cs" />
     <Compile Include="Business\RefIdGenerator.cs" />
     <Compile Include="Business\RefIdGeneratorPool.cs" />
     <Compile Include="Business\Rules\IItemCodeBusinessRules.cs" />

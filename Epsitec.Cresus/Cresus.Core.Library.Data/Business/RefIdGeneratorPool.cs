@@ -53,6 +53,11 @@ namespace Epsitec.Cresus.Core.Business
 		{
 			Druid entityId = EntityInfo<T>.GetTypeId ();
 
+			return RefIdGeneratorPool.GetGeneratorName (entityId, suffix);
+		}
+
+		public static string GetGeneratorName(Druid entityId, string suffix = null)
+		{
 			if (string.IsNullOrEmpty (suffix))
 			{
 				return entityId.ToString ();

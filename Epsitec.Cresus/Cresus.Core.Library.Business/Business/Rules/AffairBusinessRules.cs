@@ -18,14 +18,9 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
 			var generatorPool   = Logic.Current.GetComponent<RefIdGeneratorPool> ();
 
-			var generator = generatorPool.GetGenerator<AffairEntity> ();
-			var nextId    = generator.GetNextId ();
-			var workflow  = WorkflowFactory.CreateDefaultWorkflow<AffairEntity> (businessContext);
+			businessContext.AssignIds (affair, generatorPool);
 
-			affair.IdA = string.Format ("{0:000000}", nextId);
-			affair.Workflow = workflow;
-			
-//-			System.Diagnostics.Debug.Assert (workflow.Affair == affair);
+			affair.Workflow = WorkflowFactory.CreateDefaultWorkflow<AffairEntity> (businessContext);
 
 			//	TODO: ...compléter...
 		}
