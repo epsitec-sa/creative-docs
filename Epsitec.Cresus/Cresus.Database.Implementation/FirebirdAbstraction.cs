@@ -433,6 +433,10 @@ namespace Epsitec.Cresus.Database.Implementation
 			return list.ToArray ();
 		}
 
+		public string QueryDatabaseFolderPath()
+		{
+			return FirebirdAbstraction.fbRootDbPath;
+		}
 		
 		public System.Data.IDbCommand NewDbCommand()
 		{
@@ -555,16 +559,12 @@ namespace Epsitec.Cresus.Database.Implementation
 		static FirebirdAbstraction()
 		{
 			string path;
-			
-			path = Globals.Directories.CommonAppData;
-			path = System.IO.Path.GetDirectoryName (path);
-			path = System.IO.Path.GetDirectoryName (path);
+
+			path = System.Environment.GetFolderPath (System.Environment.SpecialFolder.CommonApplicationData);
 			path = System.IO.Path.Combine (path, "Epsitec");
 			path = System.IO.Path.Combine (path, "Firebird Databases");
 
 			FirebirdAbstraction.fbRootDbPath = path;
-
-			System.Diagnostics.Debug.WriteLine ("Database path : " + path);
 		}
 		
 		

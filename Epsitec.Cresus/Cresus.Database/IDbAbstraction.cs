@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -95,6 +95,12 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <returns>An array of names.</returns>
 		string[] QueryUserTableNames();
+
+		/// <summary>
+		/// Queries the path of the database folder.
+		/// </summary>
+		/// <returns>The path of the database folder.</returns>
+		string QueryDatabaseFolderPath();
 
 		/// <summary>
 		/// Creates a new database command object.
