@@ -1,6 +1,7 @@
 //	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX & Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Dialogs.Helpers;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.IO;
 using Epsitec.Common.Support;
@@ -9,9 +10,7 @@ using Epsitec.Common.Types.Collections;
 using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
 
-using System.IO;
 using System.Collections.Generic;
-using System.Runtime.Remoting.Messaging;
 
 namespace Epsitec.Common.Dialogs
 {
@@ -2201,7 +2200,7 @@ namespace Epsitec.Common.Dialogs
 				string question = Epsitec.Common.Dialogs.Res.Strings.Dialog.Question.Open.File.ToString ();
 				string filePath = this.selectedFileName;
 				string fileName = FolderItem.GetShortFileName (filePath);
-				string message  = string.Format (question, MessageDialog.FormatMessage (fileName), MessageDialog.FormatMessage (filePath));
+				string message  = string.Format (question, MessageBuilder.FormatMessage (fileName), MessageBuilder.FormatMessage (filePath));
 
 				Common.Dialogs.DialogResult result = MessageDialog.ShowError (message, this.window);
 
@@ -2215,7 +2214,7 @@ namespace Epsitec.Common.Dialogs
 				string question = Epsitec.Common.Dialogs.Res.Strings.Dialog.Question.Save.File.ToString ();
 				string filePath = this.selectedFileName;
 				string fileName = FolderItem.GetShortFileName (filePath);
-				string message  = string.Format (question, MessageDialog.FormatMessage (fileName), MessageDialog.FormatMessage (filePath));
+				string message  = string.Format (question, MessageBuilder.FormatMessage (fileName), MessageBuilder.FormatMessage (filePath));
 
 				Common.Dialogs.DialogResult result = MessageDialog.ShowQuestion (message, this.window);
 

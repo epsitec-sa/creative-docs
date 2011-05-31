@@ -1,5 +1,5 @@
-//	Copyright © 2004-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
@@ -10,9 +10,9 @@ namespace Epsitec.Common.Dialogs
 	/// <summary>
 	/// Summary description for AbstractOkCancel.
 	/// </summary>
-	public abstract class AbstractOkCancel : AbstractMessageDialog
+	public abstract class AbstractOkCancelDialog : AbstractMessageDialog
 	{
-		public AbstractOkCancel(string dialogTitle, string okText, string cancelText, string commandTemplate, CommandDispatcher commandDispatcher)
+		public AbstractOkCancelDialog(string dialogTitle, string okText, string cancelText, string commandTemplate, CommandDispatcher commandDispatcher)
 		{
 			this.dialogTitle       = dialogTitle;
 			this.okText            = okText;

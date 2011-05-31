@@ -1,5 +1,5 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
@@ -10,9 +10,9 @@ namespace Epsitec.Common.Dialogs
 	/// <summary>
 	/// Summary description for AbstractYesNoCancel.
 	/// </summary>
-	public abstract class AbstractYesNoCancel : AbstractMessageDialog
+	public abstract class AbstractYesNoCancelDialog : AbstractMessageDialog
 	{
-		public AbstractYesNoCancel(string dialogTitle, string yesText, string noText, string cancelText, string commandYesTemplate, string commandNoTemplate, CommandDispatcher commandDispatcher)
+		public AbstractYesNoCancelDialog(string dialogTitle, string yesText, string noText, string cancelText, string commandYesTemplate, string commandNoTemplate, CommandDispatcher commandDispatcher)
 		{
 			this.dialogTitle         = dialogTitle;
 			this.yesText             = yesText;

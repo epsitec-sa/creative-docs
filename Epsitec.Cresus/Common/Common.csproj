@@ -104,8 +104,8 @@
     <Compile Include="Dialogs\AbstractDialog.cs" />
     <Compile Include="Dialogs\AbstractFileDialog.cs" />
     <Compile Include="Dialogs\AbstractMessageDialog.cs" />
-    <Compile Include="Dialogs\AbstractOkCancel.cs" />
-    <Compile Include="Dialogs\AbstractYesNoCancel.cs" />
+    <Compile Include="Dialogs\AbstractOkCancelDialog.cs" />
+    <Compile Include="Dialogs\AbstractYesNoCancelDialog.cs" />
     <Compile Include="Dialogs\ConfirmationDialog.cs" />
     <Compile Include="Dialogs\Controllers\FileNavigationController.cs" />
     <Compile Include="Dialogs\Controllers\FolderBrowserController.cs" />
@@ -141,12 +141,14 @@
     <Compile Include="Dialogs\ItemViewFactories\EntityItemViewFactory.cs" />
     <Compile Include="Dialogs\IWorkInProgressReport.cs" />
     <Compile Include="Dialogs\MessageDialog.cs" />
+    <Compile Include="Dialogs\OkCancelDialog.cs" />
     <Compile Include="Dialogs\OperationResult.cs" />
     <Compile Include="Dialogs\Platform\Beep.cs" />
     <Compile Include="Dialogs\PrintDialog.cs" />
     <Compile Include="Dialogs\PrinterDocumentPropertiesDialog.cs" />
     <Compile Include="Dialogs\SelectFromList.cs" />
     <Compile Include="Dialogs\WorkInProgressDialog.cs" />
+    <Compile Include="Dialogs\YesNoCancelDialog.cs" />
     <Compile Include="Drawing\AbstractRasterizer.cs" />
     <Compile Include="Drawing\Agg\Library.cs" />
     <Compile Include="Drawing\Agg\SafeGradientRendererHandle.cs" />

@@ -9,7 +9,7 @@ namespace Epsitec.Common.Dialogs
 	/// <summary>
 	/// Summary description for SelectFromList.
 	/// </summary>
-	public class SelectFromList : AbstractOkCancel
+	public class SelectFromList : AbstractOkCancelDialog
 	{
 		public SelectFromList(string title, string caption, string[] data, string commandTemplate, CommandDispatcher commandDispatcher) : base (title, null, null, commandTemplate, commandDispatcher)
 		{
