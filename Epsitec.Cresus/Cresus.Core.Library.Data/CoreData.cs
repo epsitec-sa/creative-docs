@@ -1,11 +1,11 @@
-﻿//	Copyright © 2008-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2008-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Dialogs;
+//#define REBUILD_DATABASE			//	uncomment this line to force database creation
+
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
-using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Entities;
@@ -19,7 +19,6 @@ using Epsitec.Cresus.DataLayer.Schema;
 
 using System.Collections.Generic;
 using System.Linq;
-
 
 
 namespace Epsitec.Cresus.Core
@@ -560,7 +559,11 @@ namespace Epsitec.Cresus.Core
 		{
 			public override CoreAppComponent Create(CoreApp host)
 			{
+#if REBUILD_DATABASE
+				var data = new CoreData (host, forceDatabaseCreation: true);
+#else
 				var data = new CoreData (host, forceDatabaseCreation: false);
+#endif
 				data.SetupBusiness ();
 				return data;
 			}
@@ -569,14 +572,12 @@ namespace Epsitec.Cresus.Core
 		#endregion
 
 		private readonly CoreComponentHostImplementation<CoreDataComponent>	components;
-
 		private readonly EntityContext			independentEntityContext;
 
 		private bool							isReady;
 		private DataContext						immutableDataContext;
 		private DataContext						stableDataContext;
 		private DataContext						activeDataContext;
-
 		private string							activeUserCode;
 	}
 }
