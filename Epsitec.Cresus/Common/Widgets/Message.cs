@@ -1,4 +1,4 @@
-//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 
@@ -8,8 +8,8 @@ namespace Epsitec.Common.Widgets
 	using Win32Const = Epsitec.Common.Widgets.Platform.Win32Const;
 	
 	/// <summary>
-	/// La classe Message décrit un événement en provenance du clavier ou de
-	/// la souris.
+	/// The <c>Message</c> class describes a user event, such as a key press or a
+	/// mouse click.
 	/// </summary>
 	public sealed class Message
 	{
@@ -764,11 +764,34 @@ namespace Epsitec.Common.Widgets
 				Message.state.buttonDownCount = downCount;
 				Message.state.buttonDownId    = message.button;
 			}
+
+			if (type == MessageType.MouseUp)
+			{
+				if (Message.state.window != Message.state.windowMouseDown)
+				{
+					//	The button was pressed in another window and we are getting a parasitic
+					//	mouse up event here...
+
+					return null;
+				}
+				if (Message.state.buttonDownCount == 0)
+				{
+					//	The button was pressed in a window not controlled by this framework
+					//	(e.g. in a native "Open File" dialog) and we are getting the residual
+					//	mouse release, after a double-click which closed the dialog, for
+					//	instance.
+				}
+			}
 			
 			if ((type == MessageType.MouseDown) ||
 				(type == MessageType.MouseUp))
 			{
 				message.buttonDownCount = Message.state.buttonDownCount;
+
+				if (type == MessageType.MouseUp)
+				{
+					Message.state.buttonDownCount = 0;
+				}
 			}
 			
 			return message;

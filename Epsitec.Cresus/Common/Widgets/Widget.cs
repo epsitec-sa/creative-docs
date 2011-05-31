@@ -1,4 +1,4 @@
-//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -3678,8 +3678,23 @@ namespace Epsitec.Common.Widgets
 						{
 							switch (message.ButtonDownCount)
 							{
-								case 1:	this.OnClicked (new MessageEventArgs (message, pos));		break;
-								case 2:	this.OnDoubleClicked (new MessageEventArgs (message, pos));	break;
+								case 0:
+									//	Special case : button released; the press was not done in this window,
+									//	so we really must not process this as a click !
+
+									break;
+
+								case 1:
+									this.OnClicked (new MessageEventArgs (message, pos));
+									break;
+								
+								case 2:
+									this.OnDoubleClicked (new MessageEventArgs (message, pos));
+									break;
+
+								default:
+									System.Diagnostics.Debug.WriteLine (string.Format ("Multiple-click (button down count is {0}) not handled", message.ButtonDownCount));
+									break;
 							}
 						}
 

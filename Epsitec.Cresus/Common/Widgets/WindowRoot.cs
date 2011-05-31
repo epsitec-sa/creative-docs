@@ -1,5 +1,5 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 using Epsitec.Common.Support;
@@ -10,22 +10,25 @@ namespace Epsitec.Common.Widgets
 	/// La classe WindowRoot implémente le fond de chaque fenêtre. L'utilisateur obtient
 	/// en général une instance de WindowRoot en appelant Window.Root.
 	/// </summary>
-	public class WindowRoot : AbstractGroup
+	public sealed class WindowRoot : AbstractGroup
 	{
-		protected WindowRoot()
+		private WindowRoot()
 		{
+			this.focusChain = new List<Visual> ();
+
 			this.WindowType   = WindowType.Document;
 			this.WindowStyles = WindowStyles.CanResize | WindowStyles.HasCloseButton;
 			
 			this.InternalState |= WidgetInternalState.PossibleContainer;
 			this.AutoDoubleClick = true;
 		}
-		
-		
-		public WindowRoot(Window window) : this ()
+
+
+		public WindowRoot(Window window)
+			: this ()
 		{
-			this.window       = window;
-			this.isReady     = true;
+			this.window  = window;
+			this.isReady = true;
 		}
 		
 		
@@ -202,7 +205,7 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 		
-		protected virtual bool InternalShortcutHandler(Shortcut shortcut, bool executeFocused)
+		private bool InternalShortcutHandler(Shortcut shortcut, bool executeFocused)
 		{
 			if (this.window != null)
 			{
@@ -396,7 +399,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected virtual  void OnWindowStylesChanged()
+		private void OnWindowStylesChanged()
 		{
 			var handler = this.GetUserEventHandler("WindowStylesChanged");
 			if (handler != null)
@@ -404,8 +407,8 @@ namespace Epsitec.Common.Widgets
 				handler(this);
 			}
 		}
-		
-		protected virtual  void OnWindowTypeChanged()
+
+		private void OnWindowTypeChanged()
 		{
 			var handler = this.GetUserEventHandler("WindowTypeChanged");
 			if (handler != null)
@@ -474,12 +477,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		
-		protected WindowStyles						windowStyles;
-		protected WindowType						windowType;
-		protected Window							window;
-		protected bool								isReady;
-		protected List<Visual>						focusChain = new List<Visual> ();
-		protected int								treeChangeCounter;
+
+		private WindowStyles						windowStyles;
+		private WindowType							windowType;
+		private Window								window;
+		private bool								isReady;
+		private readonly List<Visual>				focusChain;
+		private int									treeChangeCounter;
 	}
 }
