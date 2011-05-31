@@ -1,5 +1,5 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Debug;
 using Epsitec.Common.Dialogs;
@@ -159,7 +159,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			try
 			{
 				CoreData.RestoreDatabase (Paths.BackupPath, CoreData.GetDatabaseAccess ());
-				MessageDialog.CreateOk ("Restitution de la base de données", DialogIcon.Warning, "La restitution s'est terminée correctement.<br/>L'application devra être relancée.").OpenDialog (this.Container.DefaultOwnerWindow);
+				MessageDialog.CreateOk ("Restitution de la base de données", DialogIcon.None, "La restitution s'est terminée correctement.<br/>L'application devra être relancée.").OpenDialog (this.Container.DefaultOwnerWindow);
 				System.Environment.Exit (0);
 			}
 			catch (System.Exception ex)
@@ -170,7 +170,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void ActionExport()
 		{
-			string filename = this.ExportFileDialog ();
+			string filename = this.ShowExportFileDialog ();
 
 			if (string.IsNullOrEmpty (filename))
 			{
@@ -184,23 +184,69 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void ActionImport()
 		{
-			string filename = this.ImportFileDialog ();
+			string filename = this.ShowImportFileDialog ();
 
 			if (string.IsNullOrEmpty (filename))
 			{
 				return;
 			}
 
-			var fileInfo = new System.IO.FileInfo (filename);
+			if (System.IO.Path.GetExtension (filename).ToLowerInvariant () == ".zip")
+			{
+				ZipFile zip = new ZipFile ();
 
-			this.Container.Data.ImportDatabase (fileInfo);
-			MessageDialog.CreateOk ("Importation de la base de données", DialogIcon.Warning, "L'importation s'est terminée correctement.<br/>L'application devra être relancée.").OpenDialog (this.Container.DefaultOwnerWindow);
-			System.Environment.Exit (0);
+				if (zip.TryLoadFile (filename))
+				{
+					var entries = zip.EntryNames.ToList ();
+
+					if ((entries.Count == 1) ||
+						(System.IO.Path.GetExtension (entries[0]).ToLowerInvariant () == ".xml"))
+					{
+						string temp = System.IO.Path.GetTempFileName ();
+						System.IO.File.WriteAllBytes (temp, zip.Entries.First ().Data);
+						this.ImportXmlFromFile (temp, () => System.IO.File.Delete (temp));
+					}
+				}
+
+				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "L'importation a échoué (fichier ZIP incompatible).").OpenDialog (this.Container.DefaultOwnerWindow);
+			}
+			else
+			{
+				this.ImportXmlFromFile (filename);
+			}
 		}
 
+		private void ImportXmlFromFile(string filename, System.Action beforeExit = null)
+		{
+			try
+			{
+				var fileInfo = new System.IO.FileInfo (filename);
+
+				this.Container.Data.ImportDatabase (fileInfo);
+
+				MessageDialog.CreateOk ("Importation de la base de données", DialogIcon.None, "L'importation s'est terminée correctement.<br/>L'application devra être relancée.").OpenDialog (this.Container.DefaultOwnerWindow);
+
+				if (beforeExit != null)
+				{
+					beforeExit ();
+				}
+
+				System.Environment.Exit (0);
+			}
+			catch (System.Exception ex)
+			{
+				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, ex.Message).OpenDialog (this.Container.DefaultOwnerWindow);
+			}
+			
+			if (beforeExit != null)
+			{
+				beforeExit ();
+			}
+		}
+		
 		private void ActionCreate()
 		{
-			string filename = this.ImportFileDialog ();
+			string filename = this.ShowImportFileDialog ();
 
 			if (string.IsNullOrEmpty (filename))
 			{
@@ -214,7 +260,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private void ActionUpdate()
 		{
-			string filename = this.ImportFileDialog ();
+			string filename = this.ShowImportFileDialog ();
 
 			if (string.IsNullOrEmpty (filename))
 			{
@@ -227,14 +273,14 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
-		private string ExportFileDialog()
+		private string ShowExportFileDialog()
 		{
 			var dialog = new FileSaveDialog ();
 
 			dialog.InitialDirectory = MaintenanceTabPage.currentDirectory;
 			dialog.Title = "Exportation d'une base de données";
 
-			dialog.Filters.Add ("xml", "Xml", "*.xml");
+			dialog.Filters.Add ("xml", "XML", "*.xml");
 			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
 
 			dialog.OwnerWindow = this.Container.DefaultOwnerWindow;
@@ -246,17 +292,19 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			}
 
 			MaintenanceTabPage.currentDirectory = System.IO.Path.GetDirectoryName (dialog.FileName);
+			
 			return dialog.FileName;
 		}
 
-		private string ImportFileDialog()
+		private string ShowImportFileDialog()
 		{
 			var dialog = new FileOpenDialog ();
 
 			dialog.InitialDirectory = MaintenanceTabPage.currentDirectory;
 			dialog.Title = "Importation d'une base de données";
 
-			dialog.Filters.Add ("xml", "Xml", "*.xml");
+			dialog.Filters.Add ("xml", "XML", "*.xml");
+			dialog.Filters.Add ("zip", "XML comprimé", "*.zip");
 			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
 
 			dialog.AcceptMultipleSelection = false;
@@ -269,14 +317,36 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			}
 
 			MaintenanceTabPage.currentDirectory = System.IO.Path.GetDirectoryName (dialog.FileName);
+			
 			return dialog.FileName;
 		}
 
+		#region Paths Class
+
 		private static class Paths
 		{
-			public const string BackupPath = "C:\\ProgramData\\Epsitec\\Firebird Databases\\core-backup1.firebird-backup";
+			public static string DatabaseFolderPath
+			{
+				get
+				{
+					return System.IO.Path.Combine (
+						System.Environment.GetFolderPath (System.Environment.SpecialFolder.CommonApplicationData),
+						"Epsitec", "Firebird Databases");
+				}
+			}
+
+			public static string BackupPath
+			{
+				get
+				{
+					return System.IO.Path.Combine (Paths.DatabaseFolderPath, Paths.BackupFileName);
+				}
+			}
+
+			private const string BackupFileName = "core-backup1.firebird-backup";
 		}
 
+		#endregion
 
 		private static string			currentDirectory;
 	}
