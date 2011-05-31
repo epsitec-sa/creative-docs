@@ -1,12 +1,10 @@
-using System.Collections.Generic;
-using System.Xml;
-using System.Xml.Serialization;
-using System.IO;
-using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.ResourceAccessors;
-using Epsitec.Common.Drawing;
 using Epsitec.Common.Identity;
+
+using System.Collections.Generic;
+using System.Xml;
+using System.IO;
 
 namespace Epsitec.Common.Designer
 {
@@ -88,7 +86,7 @@ namespace Epsitec.Common.Designer
 			//	Ecrit le fichier des réglages globaux.
 			try
 			{
-				File.WriteAllBytes(this.GlobalSettingsFilename, this.Serialize());
+				File.WriteAllBytes(Settings.GlobalSettingsFilename, this.Serialize());
 				return true;
 			}
 			catch
@@ -102,7 +100,7 @@ namespace Epsitec.Common.Designer
 			//	Lit le fichier des réglages globaux.
 			try
 			{
-				this.Deserialize(File.ReadAllBytes(this.GlobalSettingsFilename));
+				this.Deserialize(File.ReadAllBytes(Settings.GlobalSettingsFilename));
 				return true;
 			}
 			catch
@@ -387,7 +385,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		private string GlobalSettingsFilename
+		private static string GlobalSettingsFilename
 		{
 			//	Retourne le nom du fichier des réglages de l'application.
 			//	Le dossier est qq chose du genre:
@@ -395,13 +393,13 @@ namespace Epsitec.Common.Designer
 			//	C:\Users\Daniel Roux\AppData\Roaming\Epsitec\Crésus Designer (sous Vista)
 			get
 			{
-				return string.Concat(Common.Support.Globals.Directories.UserAppData, "\\Designer.settings");
+				return System.IO.Path.Combine (Common.Support.Globals.Directories.UserAppData, "Designer.settings");
 			}
 		}
 
 
-		private List<ResourceModuleId> modules;
+		private readonly List<ResourceModuleId> modules;
+		private readonly Dictionary<string, string> saveAllImageParameters;
 		private IdentityCard identityCard;
-		private Dictionary<string, string> saveAllImageParameters;
 	}
 }

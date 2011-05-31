@@ -1,9 +1,12 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Support.Extensions;
 
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.Support.Implementation
 {
@@ -16,7 +19,7 @@ namespace Epsitec.Common.Support.Implementation
 		public FileProvider(ResourceManager manager)
 			: base (manager)
 		{
-			foreach (var path in FileProvider.GetProbingPaths (manager))
+			foreach (var path in FileProvider.GetProbingPaths (manager).Distinct ())
 			{
 				if (this.SelectPath (path))
 				{
@@ -31,13 +34,26 @@ namespace Epsitec.Common.Support.Implementation
 
 		private static IEnumerable<string> GetProbingPaths(ResourceManager manager)
 		{
+			var assembly = typeof (ResourceManager).Assembly;
+			
 			foreach (var path in manager.ResourceProbingPaths)
 			{
 				yield return path;
 			}
 
 			yield return System.IO.Directory.GetCurrentDirectory ();
-			yield return System.IO.Path.GetDirectoryName (typeof (ResourceManager).Assembly.Location);
+			yield return System.IO.Path.GetDirectoryName (assembly.Location);
+
+			//	If the assembly is shadow copied by the CLR loader (for instance because it is
+			//	being loaded in an AppDomain where AppDomainSetup.ShadowCopyFiles is "true"),
+			//	then the assembly location won't point to the real location of the assembly.
+
+			string codeBaseFilePath = assembly.GetCodeBaseFilePath ();
+
+			if (string.IsNullOrEmpty (codeBaseFilePath) == false)
+			{
+				yield return System.IO.Path.GetDirectoryName (codeBaseFilePath);
+			}
 		}
 
 		public override string Prefix

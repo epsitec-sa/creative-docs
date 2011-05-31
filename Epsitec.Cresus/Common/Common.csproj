@@ -346,6 +346,7 @@
     <Compile Include="Resources\Common.Types\SourceCode\Res.cs" />
     <Compile Include="Resources\Common.Widgets\SourceCode\Res.cs" />
     <Compile Include="Support\AbstractOplet.cs" />
+    <Compile Include="Support\AppDomainStarter.cs" />
     <Compile Include="Support\ArrayEqualityComparer.cs" />
     <Compile Include="Support\AssemblyLoader.cs" />
     <Compile Include="Support\AutoCache.cs" />
