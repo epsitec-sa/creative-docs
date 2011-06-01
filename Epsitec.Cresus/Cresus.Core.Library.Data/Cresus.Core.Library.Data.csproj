@@ -46,7 +46,12 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="Business\Helpers\ArgumentFormatToken.cs" />
+    <Compile Include="Business\Helpers\FormatContext.cs" />
+    <Compile Include="Business\Helpers\FormatterHelper.cs" />
     <Compile Include="Business\FormattedIdGenerator.cs" />
+    <Compile Include="Business\Helpers\FormatToken.cs" />
+    <Compile Include="Business\Helpers\SimpleFormatToken.cs" />
     <Compile Include="Business\RefIdGenerator.cs" />
     <Compile Include="Business\RefIdGeneratorPool.cs" />
     <Compile Include="Business\Rules\IItemCodeBusinessRules.cs" />

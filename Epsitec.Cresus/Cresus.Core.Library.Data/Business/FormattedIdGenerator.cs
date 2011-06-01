@@ -20,24 +20,15 @@ namespace Epsitec.Cresus.Core.Business
 			this.generatorDefinitions = generatorDefinitions;
 		}
 
-		public bool AssignIds<T>(T entity)
+		public bool AssignIds<T>(IBusinessContext businessContext, T entity)
 			where T : AbstractEntity, IReferenceNumber, new ()
 		{
 			bool assigned = false;
+			var  helper   = new Helpers.FormatterHelper (this, businessContext, entity);
 
 			foreach (var def in this.FindDefinition<T> ())
 			{
-				var assigner = FormattedIdGenerator.GetAssigner (def, entity);
-
-				if (assigner != null)
-				{
-					string name  = this.GetKeyName (def);
-					long   id    = this.pool.GetGenerator (name).GetNextId ();
-					string value = this.FormatId (def, id);
-					
-					assigner (value);
-					assigned = true;
-				}
+				assigned |= helper.AssignId (def);
 			}
 
 			return assigned;
@@ -47,6 +38,11 @@ namespace Epsitec.Cresus.Core.Business
 			where T : AbstractEntity, new ()
 		{
 			return this.FindDefinition (EntityInfo<T>.GetTypeId ());
+		}
+
+		internal long GetGeneratorNextId(string name)
+		{
+			return this.pool.GetGenerator (name).GetNextId ();
 		}
 
 		private IEnumerable<GeneratorDefinitionEntity> FindDefinition(Druid entityId)
@@ -59,7 +55,7 @@ namespace Epsitec.Cresus.Core.Business
 				(!string.IsNullOrEmpty (x.Format)));
 		}
 
-		private static System.Action<string> GetAssigner(GeneratorDefinitionEntity definition, IReferenceNumber entity)
+		internal static System.Action<string> GetAssigner(GeneratorDefinitionEntity definition, IReferenceNumber entity)
 		{
 			switch (definition.IdField.ToUpperInvariant ())
 			{
@@ -72,16 +68,6 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
-		private string GetKeyName(GeneratorDefinitionEntity definition)
-		{
-			return definition.Entity;
-		}
-
-		private string FormatId(GeneratorDefinitionEntity definition, long id)
-		{
-			return string.Format ("{0}", id);
-		}
-		
 		private readonly RefIdGeneratorPool		pool;
 		private readonly CoreData				data;
 		private readonly IEnumerable<GeneratorDefinitionEntity> generatorDefinitions;
