@@ -42,6 +42,41 @@ namespace Epsitec.Common.Support.Extensions
 		}
 
 		/// <summary>
+		/// Determines whether the string contains the search text at the specified position.
+		/// </summary>
+		/// <param name="text">The string.</param>
+		/// <param name="search">The search text.</param>
+		/// <param name="pos">The position where the search is done.</param>
+		/// <returns>
+		///   <c>true</c> if the string contains the search text at the specified position; otherwise, <c>false</c>.
+		/// </returns>
+		public static bool ContainsAtPosition(this string text, string search, int pos)
+		{
+			if ((pos < 0) ||
+				(pos > text.Length))
+			{
+				return false;
+			}
+
+			int i = 0;
+
+			while (i < search.Length)
+			{
+				if (pos >= text.Length)
+				{
+					return false;
+				}
+
+				if (text[pos++] != search[i++])
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		/// <summary>
 		/// Checks that <paramref name="value"/> is an alpha numeric <see cref="System.String"/>,
 		/// i.e. that it is empty or that it contains only lower case letters, upper case letters
 		/// or numbers.

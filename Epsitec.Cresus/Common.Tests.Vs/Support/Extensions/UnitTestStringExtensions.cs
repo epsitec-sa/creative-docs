@@ -1,22 +1,19 @@
-﻿using Epsitec.Common.Support.Extensions;
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.UnitTesting;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Collections.Generic;
-
-
+using System.Linq;
 
 namespace Epsitec.Common.Tests.Vs.Support.Extensions
 {
-
-
 	[TestClass]
 	public class UnitTestStringExtensions
 	{
-
-
 		[TestMethod]
 		public void IsAlphaNumericArgumentCheck()
 		{
@@ -25,7 +22,6 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 				() => StringExtensions.IsAlphaNumeric (null)
 			);
 		}
-
 
 		[TestMethod]
 		public void IsAlphaNumericTest()
@@ -42,6 +38,37 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 			Assert.IsFalse (StringExtensions.IsAlphaNumeric ("1_a B"));
 		}
 
+		[TestMethod]
+		public void ContainsAtPositionCheck()
+		{
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => StringExtensions.ContainsAtPosition (null, "", 0)
+			);
+			
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => StringExtensions.ContainsAtPosition ("x", null, 0)
+			);
+		}
+
+		[TestMethod]
+		public void ContainsAtPositionTest()
+		{
+			string a = "abcdef";
+
+			Assert.IsTrue (StringExtensions.ContainsAtPosition (a, "", 0));
+			Assert.IsTrue (StringExtensions.ContainsAtPosition (a, "a", 0));
+			Assert.IsTrue (StringExtensions.ContainsAtPosition (a, "abcdef", 0));
+			Assert.IsTrue (StringExtensions.ContainsAtPosition (a, "b", 1));
+			Assert.IsTrue (StringExtensions.ContainsAtPosition (a, "f", 5));
+			Assert.IsTrue (StringExtensions.ContainsAtPosition (a, "", 6));
+			Assert.IsFalse (StringExtensions.ContainsAtPosition (a, "x", 6));
+			Assert.IsFalse (StringExtensions.ContainsAtPosition (a, "", 7));
+			Assert.IsFalse (StringExtensions.ContainsAtPosition (a, "", -1));
+			Assert.IsFalse (StringExtensions.ContainsAtPosition (a, "a", 1));
+			Assert.IsFalse (StringExtensions.ContainsAtPosition (a, "abcdex", 0));
+		}
 
 		[TestMethod]
 		public void SplitArgumentCheck()
@@ -62,7 +89,6 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 			);
 		}
 
-
 		[TestMethod]
 		public void SplitTest()
 		{
@@ -82,7 +108,5 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 				Assert.AreEqual (s, string.Join (";", StringExtensions.Split (s, ";")));
 			}
 		}
-
-
 	}
 }
