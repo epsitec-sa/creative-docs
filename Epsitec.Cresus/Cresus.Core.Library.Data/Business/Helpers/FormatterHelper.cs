@@ -11,8 +11,18 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business.Helpers
 {
-	internal class FormatterHelper
+	/// <summary>
+	/// The <c>FormatterHelper</c> class gets instantiated by the <see cref="FormattedIdGenerator"/>
+	/// when it needs to assign a new set of IDs for a given entity.
+	/// </summary>
+	internal sealed class FormatterHelper
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="FormatterHelper"/> class.
+		/// </summary>
+		/// <param name="generator">The ID generator.</param>
+		/// <param name="businessContext">The business context.</param>
+		/// <param name="entity">The entity (which has <c>IdA</c>, <c>IdB</c> and <c>IdC</c> properties.</param>
 		public FormatterHelper(FormattedIdGenerator generator, IBusinessContext businessContext, IReferenceNumber entity)
 		{
 			this.generator = generator;
@@ -22,7 +32,11 @@ namespace Epsitec.Cresus.Core.Business.Helpers
 		}
 
 
-		public FormatContext					FormatContext
+		/// <summary>
+		/// Gets the formatting context (see <see cref="FormattingContext"/>)
+		/// used internally by the token classes.
+		/// </summary>
+		public FormattingContext					FormattingContext
 		{
 			get
 			{
@@ -30,6 +44,12 @@ namespace Epsitec.Cresus.Core.Business.Helpers
 			}
 		}
 
+
+		/// <summary>
+		/// Assigns an ID to the attached entity.
+		/// </summary>
+		/// <param name="def">The generator definition.</param>
+		/// <returns>Returns <c>true</c> if the assignment could be processed; otherwise, <c>false</c>.</returns>
 		public bool AssignId(GeneratorDefinitionEntity def)
 		{
 			var assigner = FormattedIdGenerator.GetAssigner (def, this.entity);
@@ -40,9 +60,9 @@ namespace Epsitec.Cresus.Core.Business.Helpers
 			}
 			else
 			{
-				string name  = this.GetKeyName (def);
-				long   id    = this.generator.GetGeneratorNextId (name);
-				string value = this.FormatId (def, id);
+				string            name  = this.GetKeyName (def);
+				System.Func<long> id    = () => this.generator.GetGeneratorNextId (name);
+				string            value = this.FormatId (def, id);
 
 				assigner (value);
 				
@@ -53,16 +73,16 @@ namespace Epsitec.Cresus.Core.Business.Helpers
 		
 		private string GetKeyName(GeneratorDefinitionEntity definition)
 		{
-			return string.Concat (definition.Entity, ">", this.Format (definition.Key));
+			return string.Concat (definition.Entity, ">", this.Format (definition.Key, () => 0L));
 		}
 
-		private string FormatId(GeneratorDefinitionEntity definition, long id)
+		private string FormatId(GeneratorDefinitionEntity definition, System.Func<long> idFunc)
 		{
-			return this.Format (definition.Format, id);
+			return this.Format (definition.Format, idFunc);
 		}
 
 
-		private string Format(string format, long id = 0)
+		private string Format(string format, System.Func<long> idFunc)
 		{
 			if (string.IsNullOrEmpty (format))
 			{
@@ -71,7 +91,7 @@ namespace Epsitec.Cresus.Core.Business.Helpers
 
 			System.Diagnostics.Debug.Assert (this.formatContext == null);
 
-			this.formatContext = new FormatContext (id);
+			this.formatContext = new FormattingContext (idFunc);
 
 			var buffer = new System.Text.StringBuilder ();
 			int pos    = 0;
@@ -145,6 +165,6 @@ namespace Epsitec.Cresus.Core.Business.Helpers
 		private readonly IReferenceNumber		entity;
 		private readonly System.DateTime		date;
 
-		private FormatContext					formatContext;
+		private FormattingContext					formatContext;
 	}
 }

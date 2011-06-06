@@ -47,7 +47,7 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="Business\Helpers\ArgumentFormatToken.cs" />
-    <Compile Include="Business\Helpers\FormatContext.cs" />
+    <Compile Include="Business\Helpers\FormattingContext.cs" />
     <Compile Include="Business\Helpers\FormatterHelper.cs" />
     <Compile Include="Business\FormattedIdGenerator.cs" />
     <Compile Include="Business\Helpers\FormatToken.cs" />

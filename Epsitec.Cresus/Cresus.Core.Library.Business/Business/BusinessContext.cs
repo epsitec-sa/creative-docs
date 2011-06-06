@@ -191,7 +191,7 @@ namespace Epsitec.Cresus.Core.Business
 			var settings  = this.GetCachedBusinessSettings ();
 			var generator = new FormattedIdGenerator (generatorPool, settings.Generators);
 
-			if (generator.AssignIds (entity) == false)
+			if (generator.AssignIds (this, entity) == false)
 			{
 				entity.IdA = string.Format ("{0:000000}", generatorPool.GetGenerator<T> ().GetNextId ());
 			}
