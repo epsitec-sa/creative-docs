@@ -106,6 +106,7 @@
     <Compile Include="Controllers\EditionControllers\EditionDocumentOptionsViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDocumentCategoryViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticleAccountingDefinitionViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionGeneratorDefinitionViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionOptionValueViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionOptionValueArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPriceCalculatorViewController.cs" />
@@ -122,6 +123,7 @@
     <Compile Include="Controllers\EditionControllers\EditionImageGroupViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionImageViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionFreeTextValueArticleParameterDefinitionViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryGeneratorDefinitionViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryImageBlobViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryImageGroupListViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryImageGroupViewController.cs" />
@@ -411,6 +413,7 @@
     <EmbeddedResource Include="Images\Data.DocumentPrintingUnits.icon" />
     <EmbeddedResource Include="Images\Base.DocumentCategoryMapping.icon" />
     <EmbeddedResource Include="Images\Data.DocumentCategoryMapping.icon" />
+    <EmbeddedResource Include="Images\Base.GeneratorDefinitions.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

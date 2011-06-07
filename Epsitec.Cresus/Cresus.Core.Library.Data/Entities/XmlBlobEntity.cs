@@ -1,7 +1,10 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
+using Epsitec.Common.Support.EntityEngine;
+
 using Epsitec.Cresus.Core.Data;
+using Epsitec.Cresus.Core.Extensions;
 
 using System.Collections.Generic;
 using System.Linq;

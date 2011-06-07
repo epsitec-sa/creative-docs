@@ -581,36 +581,17 @@ namespace Epsitec.Cresus.Core.Controllers
 			if (admin || devel || power)
 			{
 				yield return Res.Commands.Base.ShowDocumentCategoryMapping;
-			}
-
-			if (admin || devel || power)
-			{
 				yield return Res.Commands.Base.ShowDocumentCategory;
-			}
-
-			if (admin || devel || power)
-			{
 				yield return Res.Commands.Base.ShowDocumentOptions;
-			}
-
-			if (admin || devel || power)
-			{
 				yield return Res.Commands.Base.ShowDocumentPrintingUnits;
-			}
-
-			if (admin || devel || power)
-			{
 				yield return Res.Commands.Base.ShowImages;
 			}
 
 			if (admin || devel)
 			{
 				yield return Res.Commands.Base.ShowImageBlobs;
-			}
-
-			if (admin || devel)
-			{
 				yield return Res.Commands.Base.ShowBusinessSettings;
+				yield return Res.Commands.Base.ShowGeneratorDefinitions;
 			}
 
 			if (devel)

@@ -38,6 +38,8 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Widgets.Command ShowDocumentOptions = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 29));
 				//	designer:cap/L0K41
 				public static readonly global::Epsitec.Common.Widgets.Command ShowDocumentPrintingUnits = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 36));
+				//	designer:cap/L0AAL
+				public static readonly global::Epsitec.Common.Widgets.Command ShowGeneratorDefinitions = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 682));
 				//	designer:cap/L0KJ
 				public static readonly global::Epsitec.Common.Widgets.Command ShowImageBlobs = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 19));
 				//	designer:cap/L0KI
@@ -155,6 +157,8 @@ namespace Epsitec.Cresus.Core
 				public const long ShowDocumentOptions = 0x150001400001DL;
 				//	designer:cap/L0K41
 				public const long ShowDocumentPrintingUnits = 0x1500014000024L;
+				//	designer:cap/L0AAL
+				public const long ShowGeneratorDefinitions = 0x150000A0002AAL;
 				//	designer:cap/L0KJ
 				public const long ShowImageBlobs = 0x1500014000013L;
 				//	designer:cap/L0KI
