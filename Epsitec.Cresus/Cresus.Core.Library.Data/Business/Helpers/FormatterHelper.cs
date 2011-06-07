@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Core.Business.Helpers
 			else
 			{
 				string            name  = this.GetKeyName (def);
-				System.Func<long> id    = () => this.generator.GetGeneratorNextId (name);
+				System.Func<long> id    = () => this.generator.GetGeneratorNextId (name, def.InitialValue);
 				string            value = this.FormatId (def, id);
 
 				assigner (value);

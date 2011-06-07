@@ -40,9 +40,9 @@ namespace Epsitec.Cresus.Core.Business
 			return this.FindDefinition (EntityInfo<T>.GetTypeId ());
 		}
 
-		internal long GetGeneratorNextId(string name)
+		internal long GetGeneratorNextId(string name, long firstId)
 		{
-			return this.pool.GetGenerator (name).GetNextId ();
+			return this.pool.GetGenerator (name, firstId).GetNextId ();
 		}
 
 		private IEnumerable<GeneratorDefinitionEntity> FindDefinition(Druid entityId)

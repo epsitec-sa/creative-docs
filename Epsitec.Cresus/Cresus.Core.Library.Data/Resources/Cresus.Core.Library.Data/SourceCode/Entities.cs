@@ -1172,6 +1172,28 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>InitialValue</c> field.
+		///	designer:fld/8VA91/8VAE1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAE1]")]
+		public long InitialValue
+		{
+			get
+			{
+				return this.GetField<long> ("[8VAE1]");
+			}
+			set
+			{
+				long oldValue = this.InitialValue;
+				if (oldValue != value || !this.IsFieldDefined("[8VAE1]"))
+				{
+					this.OnInitialValueChanging (oldValue, value);
+					this.SetField<long> ("[8VAE1]", oldValue, value);
+					this.OnInitialValueChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnEntityChanging(string oldValue, string newValue);
 		partial void OnEntityChanged(string oldValue, string newValue);
@@ -1181,6 +1203,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnFormatChanged(string oldValue, string newValue);
 		partial void OnKeyChanging(string oldValue, string newValue);
 		partial void OnKeyChanged(string oldValue, string newValue);
+		partial void OnInitialValueChanging(long oldValue, long newValue);
+		partial void OnInitialValueChanged(long oldValue, long newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

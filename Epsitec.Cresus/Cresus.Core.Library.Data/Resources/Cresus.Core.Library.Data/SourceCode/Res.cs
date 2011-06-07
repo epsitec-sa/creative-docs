@@ -128,6 +128,8 @@ namespace Epsitec.Cresus.Core.Library.Data
 				public static readonly global::Epsitec.Common.Support.Druid Format = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 44);
 				//	designer:cap/8VAB1
 				public static readonly global::Epsitec.Common.Support.Druid IdField = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 43);
+				//	designer:cap/8VAE1
+				public static readonly global::Epsitec.Common.Support.Druid InitialValue = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 46);
 				//	designer:cap/8VAD1
 				public static readonly global::Epsitec.Common.Support.Druid Key = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 45);
 			}
