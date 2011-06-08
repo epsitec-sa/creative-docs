@@ -1,7 +1,7 @@
 ﻿//	Copyright © 2008-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-#define REBUILD_DATABASE			//	uncomment this line to force database creation
+//#define REBUILD_DATABASE			//	uncomment this line to force database creation
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
