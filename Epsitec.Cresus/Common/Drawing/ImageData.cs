@@ -18,7 +18,7 @@ namespace Epsitec.Common.Drawing
 			this.fileFormat = null;
 		}
 
-		internal QueueStatus QueueStatus
+		internal QueueStatus					QueueStatus
 		{
 			get
 			{
@@ -41,7 +41,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public string ImageFilePath
+		public string							ImageFilePath
 		{
 			get
 			{
@@ -49,7 +49,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		public string ImageId
+		public string							ImageId
 		{
 			get
 			{
@@ -57,7 +57,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		public string ImageFileName
+		public string							ImageFileName
 		{
 			get
 			{
@@ -65,13 +65,13 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public long MemorySize
+		public long								MemorySize
 		{
 			get
 			{
 				lock (this.exclusion)
 				{
-					long size = 0;
+					long size = 100;
 
 					if (this.thumbnail != null)
 					{
@@ -95,7 +95,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		public int SourceWidth
+		public int								SourceWidth
 		{
 			get
 			{
@@ -103,7 +103,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		public int SourceHeight
+		public int								SourceHeight
 		{
 			get
 			{
@@ -111,11 +111,13 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
+		
 		public void Discard()
 		{
 			this.discarded = true;
 		}
 
+		
 		public BitmapFileFormat GetFileFormat()
 		{
 			if (this.fileFormat == null)
@@ -210,16 +212,17 @@ namespace Epsitec.Common.Drawing
 						this.thumbnail.Information = this.thumbnail.Information + "/dead " + System.Environment.TickCount;
 					}
 
-					this.thumbnail = value;
-
-					if (this.thumbnail != null)
+					if ((value != null) &&
+						(value.IsValid))
 					{
+						this.thumbnail = value;
 						this.thumbnail.Information = "THUMB:" + this.imageFilePath + "/" + System.Environment.TickCount;
 						this.engine.AddMemoryPressure (ImageData.GetMemorySize (this.thumbnail));
 						this.thumbnailTimestamp = System.DateTime.Now.Ticks;
 					}
 					else
 					{
+						this.thumbnail = null;
 						this.thumbnailTimestamp = 0;
 					}
 				}
@@ -252,28 +255,34 @@ namespace Epsitec.Common.Drawing
 						this.sampleImage.Information = this.sampleImage.Information + "/dead " + System.Environment.TickCount;
 					}
 
-					this.sampleImage = value;
-
-					if (this.sampleImage != null)
+					if ((value != null) &&
+						(value.IsValid))
 					{
+						this.sampleImage = value;
 						this.sampleImage.Information = "SAMPLE:" + this.imageFilePath + "/" + System.Environment.TickCount;
 						this.engine.AddMemoryPressure (ImageData.GetMemorySize (this.sampleImage));
 						this.sampleImageTimestamp = System.DateTime.Now.Ticks;
 					}
 					else
 					{
+						this.sampleImage = null;
 						this.sampleImageTimestamp = 0;
 					}
 				}
 			}
 		}
 
+		
 		private static int GetMemorySize(NativeBitmap image)
 		{
-			int dx = image.Pitch;
-			int dy = image.Height;
-
-			return dx * dy;
+			if (image == null)
+			{
+				return 0;
+			}
+			else
+			{
+				return image.MemorySize;
+			}
 		}
 
 		internal long GetCacheTimestamp(CacheClearing mode)
@@ -341,6 +350,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
+		
 		private void DecompressThumbnail()
 		{
 			if ((this.compressedThumbnail != null) &&
@@ -426,7 +436,7 @@ namespace Epsitec.Common.Drawing
 				{
 					byte[] cachedSampleImageData = ImageManager.ImageStore.LoadImageData (this.imageId, this.imageFileDate, this.engine.SampleImageSize, out this.width, out this.height);
 
-					System.Diagnostics.Debug.Assert (this.compressedSampleImage == null);
+					System.Diagnostics.Debug.Assert (this.compressedSampleImage == null, "CompressedSampleImage not null");
 
 					if ((cachedSampleImageData == null) ||
 						(cachedSampleImageData.Length == 0))
@@ -489,7 +499,7 @@ namespace Epsitec.Common.Drawing
 				{
 					byte[] cachedThumbnailData = ImageManager.ImageStore.LoadImageData (this.imageId, this.imageFileDate, this.engine.ThumbnailSize, out this.width, out this.height);
 
-					System.Diagnostics.Debug.Assert (this.compressedThumbnail == null);
+					System.Diagnostics.Debug.Assert (this.compressedThumbnail == null, "CompressedThumbnail not null");
 					
 					if ((cachedThumbnailData == null) ||
 						(cachedThumbnailData.Length == 0))
@@ -699,10 +709,10 @@ namespace Epsitec.Common.Drawing
 		public event System.EventHandler<ImageDataEventArgs> Changed;
 
 		private readonly object exclusion = new object ();
-		private string imageFilePath;
-		private string imageId;
-		private System.DateTime imageFileDate;
-		private ImageManager engine;
+		private readonly string imageFilePath;
+		private readonly string imageId;
+		private readonly System.DateTime imageFileDate;
+		private readonly ImageManager engine;
 		
 		private int pendingCounter;
 		private int workingCounter;

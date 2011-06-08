@@ -1952,7 +1952,12 @@ namespace Epsitec.Common.Document.PDF
 			image.SurfaceType      = baseType;
 			image.ImageCompression = compression;
 
+#if true
 			return Export.LaunchProcessImageAndCreatePdfStream (image);
+#else
+			Export.ExecuteProcessImageAndCreatePdfStream (image);
+			return image;
+#endif
 		}
 
 		private static ImageSurface LaunchProcessImageAndCreatePdfStream(ImageSurface image)
@@ -2200,14 +2205,14 @@ namespace Epsitec.Common.Document.PDF
 		private static PdfImageStream EmitJpegImageSurface(PdfComplexSurfaceType baseType, NativeBitmap fi, ColorConversion colorConversion, double jpegQuality)
 		{
 			bool isGray = false;
-			if (colorConversion == PDF.ColorConversion.ToGray)
+
+			if ((colorConversion == PDF.ColorConversion.ToGray) ||
+				(baseType == PdfComplexSurfaceType.XObjectMask) ||
+				(fi.ColorType == BitmapColorType.MinIsBlack) ||
+				(fi.ColorType == BitmapColorType.MinIsWhite))
+			{
 				isGray = true;
-			if (baseType == PdfComplexSurfaceType.XObjectMask)
-				isGray = true;
-			if (fi.ColorType == BitmapColorType.MinIsBlack)
-				isGray = true;
-			if (fi.ColorType == BitmapColorType.MinIsWhite)
-				isGray = true;
+			}
 
 			byte[] jpeg;
 

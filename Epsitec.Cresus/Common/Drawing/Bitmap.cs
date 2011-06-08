@@ -444,7 +444,8 @@ namespace Epsitec.Common.Drawing
 
 		public static Image FromImage(NativeBitmap image)
 		{
-			if (image == null)
+			if ((image == null) ||
+				(image.IsValid == false))
 			{
 				return null;
 			}

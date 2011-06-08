@@ -74,7 +74,7 @@ namespace Epsitec.Common.Drawing.Platform
 		{
 			get
 			{
-				return this.bitmapSource.PixelWidth;
+				return this.bitmapSource == null ? 0 : this.bitmapSource.PixelWidth;
 			}
 		}
 
@@ -82,7 +82,7 @@ namespace Epsitec.Common.Drawing.Platform
 		{
 			get
 			{
-				return this.bitmapSource.PixelHeight;
+				return this.bitmapSource == null ? 0 : this.bitmapSource.PixelHeight;
 			}
 		}
 
@@ -90,9 +90,16 @@ namespace Epsitec.Common.Drawing.Platform
 		{
 			get
 			{
-				var format = this.bitmapSource.Format;
+				if (this.bitmapSource == null)
+				{
+					return false;
+				}
+				else
+				{
+					var format = this.bitmapSource.Format;
 
-				return NativeBitmap.GetRgbAlphaPixelFormats ().Any (x => x == format);
+					return NativeBitmap.GetRgbAlphaPixelFormats ().Any (x => x == format);
+				}
 			}
 		}
 
@@ -154,13 +161,13 @@ namespace Epsitec.Common.Drawing.Platform
 				{
 					return BitmapColorType.RgbAlpha;
 				}
-				if (NativeBitmap.GetRgbPixelFormats ().Any (x => x == format))
-				{
-					return BitmapColorType.Rgb;
-				}
 				if (NativeBitmap.GetGrayscalePixelFormats ().Any (x => x == format))
 				{
 					return BitmapColorType.MinIsBlack;
+				}
+				if (NativeBitmap.GetRgbPixelFormats ().Any (x => x == format))
+				{
+					return BitmapColorType.Rgb;
 				}
 				if (NativeBitmap.GetIndexedPixelFormats ().Any (x => x == format))
 				{
