@@ -11,7 +11,6 @@ namespace Epsitec.Common.Types.Converters
 		public ByteArrayConverter()
 			: base (System.Globalization.CultureInfo.InvariantCulture)
 		{
-
 		}
 
 		public override string ConvertToString(byte[] value)

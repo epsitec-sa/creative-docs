@@ -17,6 +17,10 @@ namespace Epsitec.Common.Types.Converters
 		public NullableDateConverter()
 			: this (null)
 		{
+			//	Keep the constructor with no argument -- it is required by the conversion
+			//	framework. We cannot collapse both constructors to a single one with a
+			//	default culture set to null, since this won't produce the parameterless
+			//	constructor.
 		}
 
 		public NullableDateConverter(System.Globalization.CultureInfo culture)

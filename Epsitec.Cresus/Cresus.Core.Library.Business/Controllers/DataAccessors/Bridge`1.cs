@@ -308,6 +308,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 					(fieldType == typeof (System.DateTime?)) ||
 					(fieldType == typeof (Date)) ||
 					(fieldType == typeof (Date?)) ||
+					(fieldType == typeof (long)) ||
+					(fieldType == typeof (long?)) ||
 					(fieldType == typeof (decimal)) ||
 					(fieldType == typeof (decimal?)) )
 				{

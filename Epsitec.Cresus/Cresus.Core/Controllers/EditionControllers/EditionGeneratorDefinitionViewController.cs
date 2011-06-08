@@ -20,6 +20,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .Field (x => x.IdField)
 				  .Field (x => x.Format)
 				  .Field (x => x.Key)
+				  .Field (x => x.InitialValue)
 				.End ();
 		}
 	}

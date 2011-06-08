@@ -802,6 +802,7 @@
     <Compile Include="Types\Converters\GenericConverter`2.cs" />
     <Compile Include="Types\Converters\GenericConverter`1.cs" />
     <Compile Include="Types\Converters\IntConverter.cs" />
+    <Compile Include="Types\Converters\LongConverter.cs" />
     <Compile Include="Types\Converters\Marshaler.cs" />
     <Compile Include="Types\Converters\Marshalers\GenericMarshaler.cs" />
     <Compile Include="Types\Converters\Marshalers\NonNullableMarshaler.cs" />
