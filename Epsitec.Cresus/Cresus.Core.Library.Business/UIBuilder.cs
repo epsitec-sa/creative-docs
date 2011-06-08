@@ -1038,8 +1038,12 @@ namespace Epsitec.Cresus.Core
 			return textField;
 		}
 
+		public Widgets.AutoCompleteTextField CreateAutoCompleteTextField<T>(EditionTile tile, double width, string label, Marshaler marshaler, IEnumerable<EnumKeyValues<T>> possibleItems)
+		{
+			return this.CreateAutoCompleteTextField<T> (tile, width, label, marshaler, possibleItems, x => TextFormatter.FormatText (x));
+		}
 
-		public Widgets.AutoCompleteTextField CreateAutoCompleteTextField<T>(EditionTile tile, double width, string label, Marshaler marshaler, IEnumerable<EnumKeyValues<T>> possibleItems, ValueToFormattedTextConverter<EnumKeyValues<T>> getUserText)
+		private Widgets.AutoCompleteTextField CreateAutoCompleteTextField<T>(EditionTile tile, double width, string label, Marshaler marshaler, IEnumerable<EnumKeyValues<T>> possibleItems, ValueToFormattedTextConverter<EnumKeyValues<T>> getUserText)
 		{
 			//	possibleItems.Item1 est la 'key' !
 			if (!string.IsNullOrEmpty (label))

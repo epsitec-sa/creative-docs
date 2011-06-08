@@ -38,10 +38,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateWarning               (tile);
 			builder.CreateTextField             (tile, 0, "Nom",                    Marshaler.Create (() => this.Entity.Name,                 x => this.Entity.Name = x));
-			builder.CreateAutoCompleteTextField (tile, 0, "Code TVA à l'achat",		Marshaler.Create (() => this.Entity.DefaultInputVatCode,  x => this.Entity.DefaultInputVatCode = x),  EnumKeyValues.FromEnum<VatCode> (), x => TextFormatter.FormatText (x));
-			builder.CreateAutoCompleteTextField (tile, 0, "Code TVA à la vente",	Marshaler.Create (() => this.Entity.DefaultOutputVatCode, x => this.Entity.DefaultOutputVatCode = x), EnumKeyValues.FromEnum<VatCode> (), x => TextFormatter.FormatText (x));
+			builder.CreateAutoCompleteTextField (tile, 0, "Code TVA à l'achat",		Marshaler.Create (() => this.Entity.DefaultInputVatCode,  x => this.Entity.DefaultInputVatCode = x),  EnumKeyValues.FromEnum<VatCode> ());
+			builder.CreateAutoCompleteTextField (tile, 0, "Code TVA à la vente",	Marshaler.Create (() => this.Entity.DefaultOutputVatCode, x => this.Entity.DefaultOutputVatCode = x), EnumKeyValues.FromEnum<VatCode> ());
 			builder.CreateTextField             (tile, 0, "Numéro TVA",             Marshaler.Create (() => this.Entity.VatNumber,            x => this.Entity.VatNumber = x));
-			builder.CreateAutoCompleteTextField (tile, 0, "Type d'article",         Marshaler.Create (() => this.Entity.ArticleType,          x => this.Entity.ArticleType = x),          EnumKeyValues.FromEnum<ArticleType> (), x => TextFormatter.FormatText (x));
+			builder.CreateAutoCompleteTextField (tile, 0, "Type d'article",         Marshaler.Create (() => this.Entity.ArticleType,          x => this.Entity.ArticleType = x),          EnumKeyValues.FromEnum<ArticleType> ());
 		}
 	}
 }

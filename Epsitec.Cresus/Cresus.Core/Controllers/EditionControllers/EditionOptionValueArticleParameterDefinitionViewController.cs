@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
-			builder.CreateAutoCompleteTextField (tile, 0, "Cardinalité", Marshaler.Create (() => this.Entity.Cardinality, x => this.Entity.Cardinality = x), EnumKeyValues.FromEnum<EnumValueCardinality> (), x => TextFormatter.FormatText (x));
+			builder.CreateAutoCompleteTextField (tile, 0, "Cardinalité", Marshaler.Create (() => this.Entity.Cardinality, x => this.Entity.Cardinality = x), EnumKeyValues.FromEnum<EnumValueCardinality> ());
 		}
 
 		private void CreateUIOptions(TileDataItems data)

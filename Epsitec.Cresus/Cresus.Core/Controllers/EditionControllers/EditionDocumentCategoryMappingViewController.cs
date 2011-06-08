@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var types  = Epsitec.Cresus.Core.Print.EntityPrinters.AbstractPrinter.GetPrintableEntityTypes ();
 			var values = EnumKeyValues.FromEntityIds (types.Select (x => EntityInfo.GetTypeId (x)));
 
-			builder.CreateAutoCompleteTextField (tile, 0, "Type des données imprimables", Marshaler.Create (() => this.Entity.PrintableEntity, x => this.Entity.PrintableEntity = x), values, x => TextFormatter.FormatText (x));
+			builder.CreateAutoCompleteTextField (tile, 0, "Type des données imprimables", Marshaler.Create (() => this.Entity.PrintableEntity, x => this.Entity.PrintableEntity = x), values);
 		}
 
 		private void CreateUICategories(UIBuilder builder)

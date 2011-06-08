@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateMargin                (tile, horizontalSeparator: true);
 			builder.CreateTextField             (tile, 150,                              "Numéro de TVA",                   Marshaler.Create (() => this.Entity.Tax.VatNumber, x => this.Entity.Tax.VatNumber = x));
-			builder.CreateAutoCompleteTextField (tile, 150-Library.UI.ComboButtonWidth+1, "Mode d'assujetissement à la TVA", Marshaler.Create (() => this.Entity.Tax.TaxMode, x => this.Entity.Tax.TaxMode = x), EnumKeyValues.FromEnum<TaxMode> (), x => TextFormatter.FormatText (x));
+			builder.CreateAutoCompleteTextField (tile, 150-Library.UI.ComboButtonWidth+1, "Mode d'assujetissement à la TVA", Marshaler.Create (() => this.Entity.Tax.TaxMode, x => this.Entity.Tax.TaxMode = x), EnumKeyValues.FromEnum<TaxMode> ());
 		}
 
 		private void CreateUISeparator(UIBuilder builder)

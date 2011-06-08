@@ -85,13 +85,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 			public override object CreateUI(FrameBox frame, UIBuilder builder)
 			{
 				IEnumerable<EnumKeyValues<TField>> possibleItems = EnumKeyValues.FromEnum<TField> ();
-				ValueToFormattedTextConverter<EnumKeyValues<TField>> getUserText = x => TextFormatter.FormatText (x);
 
 				var tile    = frame as EditionTile;
 				var marshaler = this.CreateMarshaler ();
 				var caption = DynamicFactory.GetInputCaption (this.lambda);
 				var title   = this.title ?? DynamicFactory.GetInputTitle (caption);
-				var widget  = builder.CreateAutoCompleteTextField<TField> (tile, this.width, title, marshaler, possibleItems, getUserText);
+				var widget  = builder.CreateAutoCompleteTextField<TField> (tile, this.width, title, marshaler, possibleItems);
 
 				if ((caption != null) &&
 					(caption.HasDescription))

@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateTextField             (tile,   0, "Nom",       Marshaler.Create (() => this.Entity.Name,     x => this.Entity.Name = x));
 			builder.CreateTextField             (tile, 100, "Code",      Marshaler.Create (() => this.Entity.Code,     x => this.Entity.Code = x));
-			builder.CreateAutoCompleteTextField (tile, 100, "Catégorie", Marshaler.Create (() => this.Entity.Category, x => this.Entity.Category = x), EnumKeyValues.FromEnum<UnitOfMeasureCategory> (), x => TextFormatter.FormatText (x.Values));
+			builder.CreateAutoCompleteTextField (tile, 100, "Catégorie", Marshaler.Create (() => this.Entity.Category, x => this.Entity.Category = x), EnumKeyValues.FromEnum<UnitOfMeasureCategory> ());
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 

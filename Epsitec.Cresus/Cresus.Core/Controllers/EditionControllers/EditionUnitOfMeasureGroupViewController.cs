@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateTextField             (tile,   0, "Nom du groupe",         Marshaler.Create (() => this.Entity.Name,        x => this.Entity.Name = x));
 			builder.CreateTextFieldMulti        (tile,  70, "Description du groupe", Marshaler.Create (() => this.Entity.Description, x => this.Entity.Description = x));
-			builder.CreateAutoCompleteTextField (tile, 100, "Catégorie du groupe",   Marshaler.Create (() => this.Entity.Category,    x => this.Entity.Category = x), EnumKeyValues.FromEnum<UnitOfMeasureCategory> (), x => TextFormatter.FormatText (x.Values));
+			builder.CreateAutoCompleteTextField (tile, 100, "Catégorie du groupe",   Marshaler.Create (() => this.Entity.Category,    x => this.Entity.Category = x), EnumKeyValues.FromEnum<UnitOfMeasureCategory> ());
 		}
 	}
 }
