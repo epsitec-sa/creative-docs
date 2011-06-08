@@ -1032,6 +1032,60 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 
 		[TestMethod]
+		public void RenameTableColumnNameTest()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table1 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
+				DbTable table2 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
+
+				DbColumn column1 = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData);
+				table1.Columns.Add (column1);
+
+				DbColumn column2 = new DbColumn ("renamed column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData);
+				table2.Columns.Add (column2);
+
+				infrastructure.AddTable (table1);
+
+				infrastructure.RenameTableColumn (table1, column1, "renamed column");
+
+				DbTable result = infrastructure.ResolveDbTable ("table");
+
+				Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (result, table2));
+			}
+		}
+
+
+		[TestMethod]
+		public void RenameTableColumnDruidTest()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table1 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
+				DbTable table2 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
+
+				DbColumn column1 = new DbColumn (Druid.FromLong (1), infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData);
+				table1.Columns.Add (column1);
+
+				DbColumn column2 = new DbColumn ("renamed column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData);
+				table2.Columns.Add (column2);
+
+				infrastructure.AddTable (table1);
+
+				infrastructure.RenameTableColumn (table1, column1, "renamed column");
+
+				DbTable result = infrastructure.ResolveDbTable ("table");
+
+				Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (result, table2));
+			}
+		}
+
+
+		[TestMethod]
 		public void MultipleTransactionsTest()
 		{
 			DbInfrastructureHelper.ResetTestDatabase ();

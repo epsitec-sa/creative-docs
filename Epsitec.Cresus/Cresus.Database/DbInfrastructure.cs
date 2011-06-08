@@ -914,7 +914,54 @@ namespace Epsitec.Cresus.Database
 			this.DropAutoIncrementFromColumn (transaction, internalTable, internalColumn);
 			this.InsertAutoIncrementForColumn (transaction, internalTable, internalColumn);
 		}
-		
+
+		public void RenameTableColumn(DbTable table, DbColumn column, string newName)
+		{
+			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				this.RenameTableColumn (transaction, table, column, newName);
+
+				transaction.Commit ();
+			}
+		}
+
+		public void RenameTableColumn(DbTransaction transaction, DbTable table, DbColumn column, string newName)
+		{
+			DbTable internalTable = this.ResolveDbTable (transaction, table.Name);
+
+			if (internalTable == null)
+			{
+				throw new GenericException (this.access, "Table " + table.Name + " is not defined.");
+			}
+
+			DbColumn internalColumn = internalTable.Columns[column.Name];
+
+			if (internalColumn == null)
+			{
+				throw new GenericException (this.access, "The column " + column.Name + " is not defined for table " + table.Name + ".");
+			}
+
+			if (internalColumn.Cardinality == DbCardinality.Collection)
+			{
+				throw new GenericException (this.access, "Cannot rename collection columns!");
+			}
+
+			if (internalTable.Columns[newName] != null)
+			{
+				throw new GenericException (this.access, "There is already a column with name " + newName + " in table " + table.Name + ".");
+			}
+
+			DbColumn columnWithOldName = internalColumn;
+			DbColumn columnWithNewName = (DbColumn) internalColumn.Clone ();
+
+			columnWithNewName.DefineCaptionId (Druid.Empty);
+			columnWithNewName.DefineDisplayName (newName);
+
+			this.UpdateColumnDefRow (transaction, table, columnWithNewName);
+			this.RenameColumn (transaction, table, columnWithOldName, columnWithNewName);
+			this.RemoveFromCache (internalTable);
+		}
+
 		private void AddTableInternal(DbTransaction transaction, DbTable table)
 		{
 			this.AddConcreteTable (transaction, table);
@@ -1247,6 +1294,16 @@ namespace Epsitec.Cresus.Database
 		private void ResetIndex(DbTransaction transaction, SqlIndex index)
 		{
 			transaction.SqlBuilder.ResetIndex (index);
+			this.ExecuteSilent (transaction);
+		}
+
+		private void RenameColumn(DbTransaction transaction, DbTable table, DbColumn columnWithOldName, DbColumn columnWithNewName)
+		{
+			string tableName = table.GetSqlName ();
+			string oldColumnName = columnWithOldName.GetSqlName ();
+			string newColumnName = columnWithNewName.GetSqlName ();
+
+			transaction.SqlBuilder.RenameTableColumn (tableName, oldColumnName, newColumnName);
 			this.ExecuteSilent (transaction);
 		}
 

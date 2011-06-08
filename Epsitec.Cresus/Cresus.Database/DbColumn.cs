@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Database
 	/// This is our version of the column metadata wrapper (compare with the
 	/// ADO.NET <see cref="System.Data.DataColumn"/> class).
 	/// </summary>
-	public sealed class DbColumn : IName, ICaption, IXmlSerializable, System.IEquatable<DbColumn>
+	public sealed class DbColumn : IName, ICaption, IXmlSerializable, System.IEquatable<DbColumn>, System.ICloneable
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DbColumn"/> class.
@@ -901,6 +901,39 @@ namespace Epsitec.Cresus.Database
 
 		#endregion
 
+
+		#region ICloneable Members
+
+
+		public object Clone()
+		{
+			DbColumn clone = new DbColumn ();
+
+			clone.type = this.type;
+			clone.table = this.table;
+			clone.name = this.name;
+			clone.targetTableName = this.targetTableName;
+			clone.captionId = this.captionId;
+			clone.caption = this.caption;
+			clone.key = this.key;
+			clone.isPrimaryKey = this.isPrimaryKey;
+			clone.isAutoIncremented = this.isAutoIncremented;
+			clone.isAutoTimeStampOnInsert = this.isAutoTimeStampOnInsert;
+			clone.isAutoTimeStampOnUpdate = this.isAutoTimeStampOnUpdate;
+			clone.autoIncrementStartValue = this.autoIncrementStartValue;
+			clone.comment = this.comment;
+			clone.category = this.category;
+			clone.columnClass = this.columnClass;
+			clone.cardinality = this.cardinality;
+			clone.IsNullable = this.IsNullable;
+
+			return clone;
+		}
+
+
+		#endregion
+
+
 		private static readonly Caption nullCaption = new Caption ();
 
 		private DbTypeDef						type;
@@ -922,5 +955,6 @@ namespace Epsitec.Cresus.Database
 		private DbElementCat					category;
 		private DbColumnClass					columnClass;
 		private DbCardinality					cardinality;
+
 	}
 }

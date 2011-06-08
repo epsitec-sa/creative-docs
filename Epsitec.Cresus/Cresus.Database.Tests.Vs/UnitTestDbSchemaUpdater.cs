@@ -3,6 +3,7 @@ using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.UnitTesting;
 
+using Epsitec.Cresus.Database.Collections;
 using Epsitec.Cresus.Database.Tests.Vs.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -455,6 +456,139 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 				DbSchemaUpdater.UpdateSchema (dbInfrastructure2, tables);
 
 				Assert.IsTrue (DbSchemaChecker.CheckSchema (dbInfrastructure2, tables));
+			}
+
+			this.CheckCoreAndServiceTables ();
+		}
+
+
+		[TestMethod]
+		public void ChangeNullabilityTest1()
+		{
+			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table1 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2, DbElementCat.ManagedUserData);
+				DbTable table2 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2, DbElementCat.ManagedUserData);
+
+				table1.Columns[1].IsNullable = false;
+				table2.Columns[1].IsNullable = true;
+
+				dbInfrastructure1.AddTable (table1);
+				dbInfrastructure1.ClearCaches ();
+				dbInfrastructure2.ClearCaches ();
+
+				List<DbTable> tables = new List<DbTable> ()
+				{
+					table2,
+				};
+
+				using (DbTransaction transaction = dbInfrastructure1.BeginTransaction (DbTransactionMode.ReadWrite))
+				{
+					for (int i = 0; i < 10; i++)
+					{
+						var sqlFields = new SqlFieldList ()
+						{
+							dbInfrastructure1.CreateSqlFieldFromAdoValue (table1.Columns[0], i),
+							dbInfrastructure1.CreateSqlFieldFromAdoValue (table1.Columns[1], i),
+						};
+
+						transaction.SqlBuilder.InsertData (table1.GetSqlName (), sqlFields);
+						dbInfrastructure1.ExecuteSilent (transaction);
+					}
+
+					transaction.Commit ();
+				}
+
+				DbSchemaUpdater.UpdateSchema (dbInfrastructure2, tables);
+
+				Assert.IsTrue (DbSchemaChecker.CheckSchema (dbInfrastructure2, tables));
+
+				using (DbTransaction transaction = dbInfrastructure2.BeginTransaction (DbTransactionMode.ReadWrite))
+				{
+					var table2B = dbInfrastructure2.ResolveDbTable (transaction, table2.Name);
+					var sqlQuery = new SqlSelect ();
+
+					sqlQuery.Tables.Add ("t", SqlField.CreateName (table2B.GetSqlName ()));
+					sqlQuery.Fields.Add ("c", SqlField.CreateName ("t", table2B.Columns[1].GetSqlName ()));
+
+					var result = dbInfrastructure2.ExecuteSqlSelect (transaction, sqlQuery, 0);
+
+					transaction.Commit ();
+
+					for (int i = 0; i < 10; i++)
+					{
+						Assert.AreEqual ((long) i, result.Rows[i][0]);
+					}
+				}
+			}
+
+			this.CheckCoreAndServiceTables ();
+		}
+
+
+		[TestMethod]
+		public void ChangeNullabilityTest2()
+		{
+			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table1 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2, DbElementCat.ManagedUserData);
+				DbTable table2 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2, DbElementCat.ManagedUserData);
+
+				table1.Columns[1].IsNullable = true;
+				table2.Columns[1].IsNullable = false;
+
+				dbInfrastructure1.AddTable (table1);
+				dbInfrastructure1.ClearCaches ();
+				dbInfrastructure2.ClearCaches ();
+
+				List<DbTable> tables = new List<DbTable> ()
+				{
+					table2,
+				};
+
+				using (DbTransaction transaction = dbInfrastructure1.BeginTransaction (DbTransactionMode.ReadWrite))
+				{
+					for (int i = 0; i < 15; i++)
+					{
+						var sqlFields = new SqlFieldList ()
+						{
+							dbInfrastructure1.CreateSqlFieldFromAdoValue (table1.Columns[0], i),
+							dbInfrastructure1.CreateSqlFieldFromAdoValue (table1.Columns[1], i < 10 ? (int?) i : null),
+						};
+
+						transaction.SqlBuilder.InsertData (table1.GetSqlName (), sqlFields);
+						dbInfrastructure1.ExecuteSilent (transaction);
+					}
+
+					transaction.Commit ();
+				}
+
+				DbSchemaUpdater.UpdateSchema (dbInfrastructure2, tables);
+
+				Assert.IsTrue (DbSchemaChecker.CheckSchema (dbInfrastructure2, tables));
+
+				using (DbTransaction transaction = dbInfrastructure2.BeginTransaction (DbTransactionMode.ReadWrite))
+				{
+					var table2B = dbInfrastructure2.ResolveDbTable (transaction, table2.Name);
+					var sqlQuery = new SqlSelect ();
+
+					sqlQuery.Tables.Add ("t", SqlField.CreateName (table2B.GetSqlName ()));
+					sqlQuery.Fields.Add ("c", SqlField.CreateName ("t", table2B.Columns[1].GetSqlName ()));
+
+					var result = dbInfrastructure2.ExecuteSqlSelect (transaction, sqlQuery, 0);
+
+					transaction.Commit ();
+
+					for (int i = 0; i < 15; i++)
+					{
+						long actual = (long) result.Rows[i][0];
+						long expected = i < 10 ? i : 0;
+
+						Assert.AreEqual (expected, actual);
+					}
+				}
 			}
 
 			this.CheckCoreAndServiceTables ();
