@@ -179,23 +179,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 		/// <returns>The name of the method which implements the specified business rule.</returns>
 		private static string GetMethodName(RuleType ruleType)
 		{
-			switch (ruleType)
-			{
-				case RuleType.Bind:
-					return "ApplyBindRule";
-
-				case RuleType.Setup:
-					return "ApplySetupRule";
-
-				case RuleType.Update:
-					return "ApplyUpdateRule";
-
-				case RuleType.Validate:
-					return "ApplyValidateRule";
-
-				default:
-					throw new System.NotImplementedException ();
-			}
+			return string.Format ("Apply{0}Rule", ruleType);
 		}
 
 		private static IEnumerable<GenericBusinessRule> CreateBusinessRules(System.Type entityType, RuleType ruleType)

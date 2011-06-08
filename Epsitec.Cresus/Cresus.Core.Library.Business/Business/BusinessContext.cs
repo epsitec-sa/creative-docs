@@ -610,27 +610,52 @@ namespace Epsitec.Cresus.Core.Business
 			this.Register (entity);
 		}
 
+		/// <summary>
+		/// Registers the specified entity with the business context. The business rules will
+		/// be applied to the entity, until it gets unregistered.
+		/// </summary>
+		/// <param name="entity">The entity.</param>
 		public void Register(AbstractEntity entity)
 		{
 			if (entity.IsNotNull ())
 			{
-				if (this.entityRecords.Any (x => x.Entity == entity))
+				var record = this.entityRecords.FirstOrDefault (x => x.Entity == entity);
+
+				if (record == null)
 				{
-					throw new System.InvalidOperationException ("Duplicate entity registration");
+					this.entityRecords.Add (new EntityRecord (entity, this));
+					this.ApplyRules (RuleType.Bind, entity);
 				}
-
-				this.entityRecords.Add (new EntityRecord (entity, this));
-				this.ApplyRules (RuleType.Bind, entity);
+				else
+				{
+					record.IncrementRegistration ();
+				}
 			}
 		}
 
-		public void Register(IEnumerable<AbstractEntity> collection)
+		/// <summary>
+		/// Unregisters the specified entity from the business context.
+		/// </summary>
+		/// <param name="entity">The entity.</param>
+		public void Unregister(AbstractEntity entity)
 		{
-			if (collection != null)
+			if (entity.IsNotNull ())
 			{
-				collection.ForEach (entity => this.Register (entity));
+				var record = this.entityRecords.FirstOrDefault (x => x.Entity == entity);
+
+				System.Diagnostics.Debug.Assert (record != null);
+
+				if (record.DecrementRegistration ())
+				{
+					//	The entity is no longer referenced; remove it from our records, so that
+					//	we no longer apply the business rules to it.
+
+					this.entityRecords.Remove (record);
+					this.ApplyRules (RuleType.Unbind, record.Entity);
+				}
 			}
 		}
+
 
 		public void ApplyRulesToRegisteredEntities(RuleType ruleType)
 		{
@@ -733,6 +758,7 @@ namespace Epsitec.Cresus.Core.Business
 				this.entity = entity;
 				this.businessContext = businessContext;
 				this.dataContext = this.businessContext.Data.DataContextPool.FindDataContext (entity);
+				this.counter = 1;
 			}
 
 			public DataContext DataContext
@@ -764,11 +790,34 @@ namespace Epsitec.Cresus.Core.Business
 				}
 			}
 
+			public bool HasMultipleRegistration
+			{
+				get
+				{
+					return this.counter > 1;
+				}
+			}
+
+			public void IncrementRegistration()
+			{
+				System.Threading.Interlocked.Increment (ref this.counter);
+			}
+
+			/// <summary>
+			/// Decrements the registration counter.
+			/// </summary>
+			/// <returns><c>true</c> if this was the last registration; otherwise, <c>false</c>.</returns>
+			public bool DecrementRegistration()
+			{
+				return System.Threading.Interlocked.Decrement (ref this.counter) == 0;
+			}
+
 
 			private readonly AbstractEntity entity;
 			private readonly BusinessContext businessContext;
 			private readonly DataContext dataContext;
 			private Logic logic;
+			private int counter;
 		}
 
 		#endregion

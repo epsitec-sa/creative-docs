@@ -188,7 +188,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 				var liveEntity = this.businessContext.ActiveEntity;
 				var controller = EntityViewControllerFactory.Create ("Root", liveEntity, ViewControllerMode.Summary, this, navigationPathElement: navigationPathElement);
 
-				this.DataViewController.PushViewController (controller);
+				this.ShowSubView (null, controller);
 			}
 		}
 
@@ -202,8 +202,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 					var liveEntity = this.businessContext.ActiveEntity;
 					var controller = EntityViewControllerFactory.Create ("Root", liveEntity, ViewControllerMode.Summary, this, navigationPathElement: navigationPathElement);
 
-					this.DataViewController.PopAllViewControllers ();
-					this.DataViewController.PushViewController (controller);
+					this.ShowSubView (null, controller);
 				}
 			}
 			else
@@ -274,6 +273,26 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			this.Host.ActivateComponent (component);
 		}
 
+
+		internal void NotifyPushViewController(CoreViewController controller)
+		{
+			var entityController = controller as EntityViewController;
+
+			if (entityController != null)
+			{
+				this.businessContext.Register (entityController.GetEntity ());
+			}
+		}
+
+		internal void NotifyPopViewController(CoreViewController controller)
+		{
+			var entityController = controller as EntityViewController;
+
+			if (entityController != null)
+			{
+				this.businessContext.Unregister (entityController.GetEntity ());
+			}
+		}
 
 		#region IDisposable Members
 

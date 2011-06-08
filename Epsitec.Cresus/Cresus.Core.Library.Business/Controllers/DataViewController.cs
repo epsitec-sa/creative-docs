@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -112,11 +112,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.AttachColumn (column);
 
 			this.Navigator.Add (leaf, controller);
-
-			if (this.viewControllers.Count > 1)
-			{
-//-				this.pushSafeRecursion.IfZero (controller.OpenLinkedSubView);
-			}
+			this.Host.NotifyPushViewController (controller);
 		}
 
 		/// <summary>
@@ -130,9 +126,9 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			var lastController = this.viewControllers.Pop ();
 			var leafController = this.GetLeafController ();
-			var lastContext    = lastController.DataContext;
 
 			this.Navigator.Remove (leafController, lastController);
+			this.Host.NotifyPopViewController (lastController);
 
 			lastController.CloseUI (this.viewLayoutController.LastColumn);
 			lastController.Dispose ();
