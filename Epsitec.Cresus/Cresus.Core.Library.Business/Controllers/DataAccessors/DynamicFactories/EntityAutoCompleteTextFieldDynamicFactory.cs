@@ -16,7 +16,7 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 {
-	internal abstract class EntityAutoCompleteTextFieldDynamicFactory : DynamicFactory
+	internal static class EntityAutoCompleteTextFieldDynamicFactory
 	{
 		public static DynamicFactory Create<T>(BusinessContext business, LambdaExpression lambda, System.Func<T> entityGetter, string title)
 		{
@@ -44,8 +44,10 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 
 			return (DynamicFactory) instance;
 		}
-		
-		class Factory<TSource, TField> : DynamicFactory
+
+		#region Factory Class
+
+		private sealed class Factory<TSource, TField> : DynamicFactory
 			where TField : AbstractEntity, new ()
 		{
 			public Factory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title)
@@ -114,5 +116,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 			private readonly System.Delegate setter;
 			private readonly string title;
 		}
+
+		#endregion
 	}
 }

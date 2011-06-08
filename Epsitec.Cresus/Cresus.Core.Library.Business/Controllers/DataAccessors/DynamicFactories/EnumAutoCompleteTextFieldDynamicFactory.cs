@@ -19,7 +19,7 @@ using Epsitec.Cresus.Core.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 {
-	internal abstract class EnumAutoCompleteTextFieldDynamicFactory : DynamicFactory
+	internal static class EnumAutoCompleteTextFieldDynamicFactory
 	{
 		public static DynamicFactory Create<T>(BusinessContext business, LambdaExpression lambda, System.Func<T> entityGetter, string title, int width)
 		{
@@ -47,8 +47,10 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 
 			return (DynamicFactory) instance;
 		}
-		
-		class Factory<TSource, TField> : DynamicFactory
+
+		#region Factory Class
+
+		private sealed class Factory<TSource, TField> : DynamicFactory
 			where TField : struct
 		{
 			public Factory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title, int width)
@@ -70,11 +72,6 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 			private System.Action<TField> CreateSetter()
 			{
 				return x => this.setter.DynamicInvoke (this.sourceGetter (), x);
-			}
-
-			private System.Func<AbstractEntity> CreateGenericGetter()
-			{
-				return () => (AbstractEntity) this.getter.DynamicInvoke (this.sourceGetter ());
 			}
 
 			private Marshaler CreateMarshaler()
@@ -110,5 +107,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 			private readonly string title;
 			private readonly int width;
 		}
+
+		#endregion
 	}
 }

@@ -14,7 +14,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 {
-	internal abstract class ItemPickerDynamicFactory : DynamicFactory
+	internal static class ItemPickerDynamicFactory
 	{
 		public static DynamicFactory Create<T>(BusinessContext business, LambdaExpression lambda, System.Func<T> entityGetter, string title)
 		{
@@ -31,7 +31,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 			return (DynamicFactory) instance;
 		}
 
-		class Factory<TSource, TField, TItem> : DynamicFactory
+		#region Factory Class
+
+		private sealed class Factory<TSource, TField, TItem> : DynamicFactory
 			where TSource : AbstractEntity
 			where TItem : AbstractEntity, new ()
 			where TField : IList<TItem>
@@ -79,5 +81,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 			private readonly System.Delegate getter;
 			private readonly string title;
 		}
+
+		#endregion
 	}
 }
