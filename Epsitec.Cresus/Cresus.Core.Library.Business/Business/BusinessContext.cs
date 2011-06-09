@@ -664,14 +664,14 @@ namespace Epsitec.Cresus.Core.Business
 
 		public void ApplyRulesToRegisteredEntities(RuleType ruleType)
 		{
-			this.entityRecords.ForEach (x => x.Logic.ApplyRules (ruleType, x.Entity));
+			this.entityRecords.ForEach (x => x.Logic.ApplyRule (ruleType, x.Entity));
 		}
 
 		public T ApplyRules<T>(RuleType ruleType, T entity)
 			where T : AbstractEntity
 		{
 			var logic = this.CreateLogic (entity);
-			logic.ApplyRules (ruleType, entity);
+			logic.ApplyRule (ruleType, entity);
 			return entity;
 		}
 

@@ -1,9 +1,11 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Collections;
+
+using Epsitec.Cresus.Core.Business;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -12,26 +14,6 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class AffairEntity
 	{
-		public IList<BusinessDocumentEntity> WorkflowDocuments
-		{
-			get
-			{
-				if (this.documents == null)
-                {
-					throw new System.NotImplementedException ();
-#if false
-					this.documents = new ObservableList<BusinessDocumentEntity> ();
-					this.documents.AddRange (this.Workflow.Threads.SelectMany (thread => thread.ActiveDocuments).Select (x => x.BusinessDocument).Where (x => x.IsNotNull ()).Distinct ());
-#endif
-                }
-
-				//	TODO : refresh this list when changes happen
-
-				return this.documents.AsReadOnly ();
-			}
-		}
-
-
 		public override FormattedText GetSummary()
 		{
 			if (this.Workflow.IsNull ())
@@ -79,6 +61,37 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
-		private ObservableList<BusinessDocumentEntity> documents;
+		protected override void OnCollectionChanged(EntityCollection collection, string id, CollectionChangedEventArgs e)
+		{
+			if (e.Action != CollectionChangedAction.Add)
+			{
+				return;
+			}
+
+			if (Epsitec.Cresus.Core.Business.Logic.IsNotAvailable)
+			{
+				return;
+			}
+
+			if (id == "[GVAA]")	//	this.Documents
+			{
+				foreach (DocumentMetadataEntity document in e.NewItems)
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("Changed document collection : {0} type={1}", e.Action, document.DocumentCategory.DocumentType));
+					
+					this.HandleDocumentAdded (document);
+				}
+			}
+		}
+
+		private void HandleDocumentAdded(DocumentMetadataEntity document)
+		{
+			var logic = Epsitec.Cresus.Core.Business.Logic.Current;
+
+			var businessContext = logic.GetComponent<BusinessContext> ();
+			var generatorPool   = logic.GetComponent<RefIdGeneratorPool> ();
+
+			businessContext.AssignIds (document, generatorPool);
+		}
 	}
 }

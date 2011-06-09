@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Core
 			var group = context.CreateEntity<SoftwareUserGroupEntity> ();
 			var logic = new Logic (group);
 
-			logic.ApplyRules (RuleType.Setup, group);
+			logic.ApplyRule (RuleType.Setup, group);
 
 			group.Code           = "?";
 			group.Name           = name;
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Core
 			var user = context.CreateEntity<SoftwareUserEntity> ();
 			var logic = new Logic (user);
 
-			logic.ApplyRules (RuleType.Setup, user);
+			logic.ApplyRule (RuleType.Setup, user);
 
 			user.AuthenticationMethod = am;
 			user.DisplayName = displayName;

@@ -14,6 +14,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business
 {
+	/// <summary>
+	/// The <c>IBusinessContext</c> interface defines the methods which need to be
+	/// accessed by users of the <c>BusinessContext</c> class, but without a direct
+	/// reference to the <c>Core.Business</c> assembly.
+	/// </summary>
 	public interface IBusinessContext : System.IDisposable, ICoreManualComponent
 	{
 		CoreData Data

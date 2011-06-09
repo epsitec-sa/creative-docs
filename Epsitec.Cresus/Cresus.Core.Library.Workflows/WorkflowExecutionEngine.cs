@@ -39,6 +39,19 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		[System.Diagnostics.DebuggerBrowsable (System.Diagnostics.DebuggerBrowsableState.Never)]
+		public Logic BusinessLogic
+		{
+			get
+			{
+				if (this.businessLogic == null)
+				{
+					this.businessLogic = this.businessContext.CreateLogic (null);
+				}
+
+				return this.businessLogic;
+			}
+		}
 
 		public WorkflowTransition Transition
 		{
@@ -56,7 +69,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			try
 			{
 				WorkflowExecutionEngine.current = this;
-				this.ExecuteInContext ();
+				this.BusinessLogic.ApplyAction (this.ExecuteInContext);
 			}
 			finally
 			{
@@ -304,6 +317,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly CoreData			data;
 		private readonly IBusinessContext	businessContext;
 
+		private Logic						businessLogic;
 		private bool isDisposed;
 	}
 }
