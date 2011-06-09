@@ -183,7 +183,7 @@ namespace Epsitec.Cresus.Core.Print
 				jobs.AddRange (job);
 			}
 
-			return SerializationEngine.SerializeJobs (jobs);
+			return SerializationEngine.SerializeJobs (businessContext, jobs);
 		}
 
 		public static string MakePrintingData(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
@@ -191,7 +191,7 @@ namespace Epsitec.Cresus.Core.Print
 			//	Fabrique les données permettant d'imprimer un document, sans aucune interaction.
 			//	Retourne le source xml correspondant.
 			var jobs = PrintEngine.MakePrintingJobs (businessContext, entity, options, printingUnits);
-			return SerializationEngine.SerializeJobs (jobs);
+			return SerializationEngine.SerializeJobs (businessContext, jobs);
 		}
 
 		private static List<JobToPrint> MakePrintingJobs(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
@@ -224,7 +224,7 @@ namespace Epsitec.Cresus.Core.Print
 
 				var printingUnit = Common.GetPrintingUnit (businessContext.Data.Host, documentPrintingUnitCode);
 
-				if (printingUnit != null && printingUnit.PageTypes.Contains (pageType))
+				if (printingUnit != null)
 				{
 					//	Fabrique le dictionnaire des options à partir des options de base et
 					//	des options définies avec l'unité d'impression.

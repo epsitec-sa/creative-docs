@@ -22,7 +22,6 @@ namespace Epsitec.Cresus.Core.Documents
 		{
 			this.Copies = 1;
 			this.optionsDictionary = new PrintingOptionDictionary ();
-			this.pageTypes = new List<PageType> ();
 		}
 
 
@@ -91,14 +90,6 @@ namespace Epsitec.Cresus.Core.Documents
 			}
 		}
 
-		public IList<PageType>					PageTypes
-		{
-			get
-			{
-				return this.pageTypes;
-			}
-		}
-
 
 		public FormattedText GetNiceDescription(Business.IBusinessContext businessContext)
 		{
@@ -109,7 +100,7 @@ namespace Epsitec.Cresus.Core.Documents
 			return PrintingUnit.GetNiceDescription (this, documentPrintingUnits);
 		}
 
-		public static FormattedText GetNiceDescription(PrintingUnit printingUnit, DocumentPrintingUnitsEntity documentPrintingUnits)
+		private static FormattedText GetNiceDescription(PrintingUnit printingUnit, DocumentPrintingUnitsEntity documentPrintingUnits)
 		{
 			if (printingUnit == null && documentPrintingUnits == null)
 			{
@@ -128,22 +119,18 @@ namespace Epsitec.Cresus.Core.Documents
 			{
 				if (printingUnit.Copies < 2)
 				{
-					return TextFormatter.FormatText (documentPrintingUnits.Name, "(", printingUnit.PhysicalPrinterName, ",~", printingUnit.PhysicalPrinterTray, ")");
+					//?return TextFormatter.FormatText (documentPrintingUnits.Name, "(", printingUnit.PhysicalPrinterName, ",~", printingUnit.PhysicalPrinterTray, ")");
+					return documentPrintingUnits.Name;
 				}
 				else
 				{
 					string copies = string.Format ("{0}×", printingUnit.Copies);
-					return TextFormatter.FormatText (documentPrintingUnits.Name, copies, "(", printingUnit.PhysicalPrinterName, ",~", printingUnit.PhysicalPrinterTray, ")");
+					//?return TextFormatter.FormatText (documentPrintingUnits.Name, copies, "(", printingUnit.PhysicalPrinterName, ",~", printingUnit.PhysicalPrinterTray, ")");
+					return TextFormatter.FormatText (documentPrintingUnits.Name, copies);
 				}
 			}
 		}
 
-
-		public void ReplacePageTypes(IEnumerable<PageType> pageTypes)
-		{
-			this.pageTypes.Clear ();
-			this.pageTypes.AddRange (pageTypes);
-		}
 
 		public string GetSerializableContent()
 		{
@@ -160,7 +147,6 @@ namespace Epsitec.Cresus.Core.Documents
 				"PhysicalPaperSize.Width",  this.PhysicalPaperSize.Width.ToString (System.Globalization.CultureInfo.InvariantCulture),
 				"PhysicalPaperSize.Height", this.PhysicalPaperSize.Height.ToString (System.Globalization.CultureInfo.InvariantCulture),
 				"PhysicalDuplexMode",       PrintingUnit.DuplexToString (this.PhysicalDuplexMode),
-				"PageTypes",                this.GetStringPageTypes (),
 			};
 
 			return StringPacker.Pack (list);
@@ -195,32 +181,12 @@ namespace Epsitec.Cresus.Core.Documents
 					case "PhysicalPaperSize.Width":		paperSizeWidth = int.Parse (value);								break;
 					case "PhysicalPaperSize.Height":	paperSizeHeight = int.Parse (value);							break;
 					case "PhysicalDuplexMode":			this.PhysicalDuplexMode = PrintingUnit.StringToDuplex (value);	break;
-					case "PageTypes":					this.SetStringPageTypes (value);								break;
 				}
 			}
 
 			if (paperSizeWidth != 0 && paperSizeHeight != 0)
 			{
 				this.PhysicalPaperSize = new Size (paperSizeWidth, paperSizeHeight);
-			}
-		}
-
-
-		private string GetStringPageTypes()
-		{
-			//	Accès à la liste des types de page sous une forme 'string', pour la (dé)sérialisation.
-			var list = new List<string> (this.pageTypes.Select (x => Documents.PageTypeConverter.ToString (x)));
-			return string.Join (",", list);
-		}
-
-		private void SetStringPageTypes(string value)
-		{
-			this.pageTypes.Clear ();
-
-			if (!string.IsNullOrEmpty (value))
-			{
-				var parts = value.Split (',');
-				this.pageTypes.AddRange (parts.Select (x => Documents.PageTypeConverter.Parse (x)));
 			}
 		}
 
@@ -282,6 +248,5 @@ namespace Epsitec.Cresus.Core.Documents
 
 
 		private readonly PrintingOptionDictionary	optionsDictionary;
-		private readonly List<PageType>				pageTypes;
 	}
 }
