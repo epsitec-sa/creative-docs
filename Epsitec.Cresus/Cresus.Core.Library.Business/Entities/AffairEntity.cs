@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Core.Entities
 				return;
 			}
 
-			if (Epsitec.Cresus.Core.Business.Logic.IsNotAvailable)
+			if (Logic.IsNotAvailable)
 			{
 				return;
 			}
@@ -86,12 +86,15 @@ namespace Epsitec.Cresus.Core.Entities
 
 		private void HandleDocumentAdded(DocumentMetadataEntity document)
 		{
-			var logic = Epsitec.Cresus.Core.Business.Logic.Current;
+			if (string.IsNullOrEmpty (document.IdA))
+			{
+				var logic = Logic.Current;
 
-			var businessContext = logic.GetComponent<BusinessContext> ();
-			var generatorPool   = logic.GetComponent<RefIdGeneratorPool> ();
+				var businessContext = logic.GetComponent<BusinessContext> ();
+				var generatorPool   = logic.GetComponent<RefIdGeneratorPool> ();
 
-			businessContext.AssignIds (document, generatorPool);
+				businessContext.AssignIds (document, generatorPool);
+			}
 		}
 	}
 }
