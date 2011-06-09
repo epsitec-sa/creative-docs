@@ -1,4 +1,4 @@
-//	Copyright © 2007-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2007-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Marc BETTEX
 
 using Epsitec.Common.Support;
@@ -26,8 +26,6 @@ using System.Threading;
 
 namespace Epsitec.Cresus.DataLayer.Context
 {
-
-
 	/// <summary>
 	/// The <c>DataContext</c> class is responsible of the mapping between the object model and the
 	/// relational model of the <see cref="AbstractEntity"/>. It is therefore the designated entry
@@ -105,8 +103,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 	[System.Diagnostics.DebuggerDisplay ("DataContext #{UniqueId}")]
 	public sealed class DataContext : IEntityPersistenceManager, IIsDisposed, IReadOnly
 	{
-
-
 		/// <summary>
 		/// Creates a new <c>DataContext</c>.
 		/// </summary>
@@ -965,7 +961,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			this.AssertDataContextIsNotDisposed ();
 
-			Druid entityId = EntityClassFactory.GetEntityId (typeof (TEntity));
+			Druid entityId = EntityInfo.GetTypeId (typeof (TEntity));
 
 			return (TEntity) this.ResolveEntity (entityId, rowKey);
 		}
@@ -1795,8 +1791,15 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
+		/// <summary>
+		/// The event is fired when an <see cref="AbstractEntity"/> managed by this instance is
+		/// created, updated or deleted.
+		/// </summary>
+		public event EventHandler<EntityChangedEventArgs> EntityChanged;
+
+
 		private static long							nextUniqueId;					//	next unique ID
-		private readonly long						uniqueId;						//	uniue ID associated with this instance
+		private readonly long						uniqueId;						//	unique ID associated with this instance
 
 
 		private readonly ReaderWriterLockSlim		dataContextLock;				//  lock used to access thread safe methods in the DataContext
@@ -1810,17 +1813,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 		private readonly Dictionary<AbstractEntity, HashSet<Druid>> fieldsToResave;	//	mapping between entities and their fields that must be re-saved, even if their value has not changed
 
 
-		/// <summary>
-		/// The event is fired when an <see cref="AbstractEntity"/> managed by this instance is
-		/// created, updated or deleted.
-		/// </summary>
-		public event EventHandler<EntityChangedEventArgs> EntityChanged;
-
-
 		private bool								isDisposed;
-
-
 	}
-
-
 }

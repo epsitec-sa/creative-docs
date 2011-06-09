@@ -15,8 +15,19 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
+	/// <summary>
+	/// The <c>EnumValueController</c> class manages an <see cref="AutoCompleteTextField"/>,
+	/// where the data being edited is represented by an <see cref="EnumKeyValues"/> instance.
+	/// </summary>
+	/// <typeparam name="T">The underlying type represented by <see cref="EnumKeyValues&lt;T&gt;"/>.</typeparam>
 	public class EnumValueController<T> : IWidgetUpdater
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="EnumValueController&lt;T&gt;"/> class.
+		/// </summary>
+		/// <param name="marshaler">The marshaler (getter/setter associated with the data source).</param>
+		/// <param name="possibleItems">The collection of all possible items.</param>
+		/// <param name="getUserText">The function used to get a user text from a value.</param>
 		public EnumValueController(Marshaler marshaler,
 								   IEnumerable<EnumKeyValues<T>> possibleItems = null,
 								   ValueToFormattedTextConverter<EnumKeyValues<T>> getUserText = null)
@@ -32,13 +43,17 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
+		/// <summary>
+		/// Attaches the specified widget to the data source.
+		/// </summary>
+		/// <param name="widget">The widget.</param>
 		public void Attach(AutoCompleteTextField widget)
 		{
 			this.AddItems (widget);
 
 			widget.ValueToDescriptionConverter = value => this.getUserText (value as EnumKeyValues<T>);
-			widget.HintComparer = (value, text) => EnumValueController<T>.MatchUserText (value as EnumKeyValues<T>, text);
-			widget.HintComparisonConverter = x => Widgets.HintComparer.GetComparableText (x);
+			widget.HintComparer                = (value, text) => EnumValueController<T>.MatchUserText (value as EnumKeyValues<T>, text);
+			widget.HintComparisonConverter     = x => Widgets.HintComparer.GetComparableText (x);
 
 			this.widget = widget;
 			this.Update ();
@@ -49,11 +64,6 @@ namespace Epsitec.Cresus.Core.Controllers
 				string key   = index < 0 ? null : widget.Items.GetKey (index);
 				this.marshaler.SetStringValue (key);
 			};
-
-			//	Je ne sais pas qui a eu l'idée farfelue d'appeler Update lorsque
-			//	le widget perd le focus, mais cela cause des catastrophes. La valeur
-			//	éditée reprend l'ancien contenu !
-			//widget.KeyboardFocusChanged += (sender, e) => this.Update ();
 		}
 
 		private void AddItems(AutoCompleteTextField widget)

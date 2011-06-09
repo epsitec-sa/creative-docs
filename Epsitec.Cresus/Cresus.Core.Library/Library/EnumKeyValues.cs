@@ -12,8 +12,9 @@ namespace Epsitec.Cresus.Core.Library
 {
 	/// <summary>
 	/// The <c>EnumKeyValues</c> class is used to store an <c>enum</c> key
-	/// and associated texts which represent its value. See the generic
-	/// type <c>EnumKeyValues{T}</c> for a concrete implementation.
+	/// and associated texts which represent its value (it can also be used
+	/// with a <see cref="Druid"/> in place of an <c>enum</c>).
+	/// See the generic/ type <c>EnumKeyValues{T}</c> for a concrete implementation.
 	/// </summary>
 	public abstract class EnumKeyValues : ITextFormatter
 	{

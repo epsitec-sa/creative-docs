@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Data
 		public DataSetCollectionGetter ResolveDataSet(string dataSetName)
 		{
 			var entityId   = DataSetGetter.FindEntityId (dataSetName);
-			var entityType = EntityClassFactory.FindEntityType (entityId);
+			var entityType = EntityInfo.GetType (entityId);
 
 			return Resolver.ResolveGetter (entityType, this.Host);
 		}

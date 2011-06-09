@@ -1,4 +1,4 @@
-//	Copyright © 2007-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2007-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </summary>
 		/// <param name="id">The entity id.</param>
 		/// <returns>The entity type if it is known; otherwise, <c>null</c>.</returns>
-		public static System.Type FindEntityType(Druid id)
+		internal static System.Type FindEntityType(Druid id)
 		{
 			if (id.IsEmpty)
 			{
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </summary>
 		/// <param name="type">The entity type.</param>
 		/// <returns>The <see cref="Druid"/> of the specified entity or <c>Druid.Empty</c>.</returns>
-		public static Druid GetEntityId(System.Type type)
+		internal static Druid GetEntityId(System.Type type)
 		{
 			return EntityClassFactory.FindId (type);
 		}
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// Gets all the entity ids for all known entities in the current application domain.
 		/// </summary>
 		/// <returns>The collection of <see cref="Druid"/> of the known entities.</returns>
-		public static IEnumerable<Druid> GetAllEntityIds()
+		internal static IEnumerable<Druid> GetAllEntityIds()
 		{
 			return EntityClassFactory.FindAll ().Select (x => x.Item1);
 		}

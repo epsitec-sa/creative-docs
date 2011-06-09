@@ -55,12 +55,14 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 				fieldType = fieldType.GetGenericArguments ()[0];
 			}
 
+			//	TODO: improve the special case handling here -- probably should make something
+			//	truly dynamic with plug-ins.
 
 			if ((typeField != null) &&
 				(fieldType == typeof (string)) &&
 				(typeField.TypeId == Druid.Parse ("[8VAF1]")))	//	Data.String.EntityId
 			{
-				var list        = new List<Druid> (EntityClassFactory.GetAllEntityIds ());
+				var list        = new List<Druid> (EntityInfo.GetAllTypeIds ());
 				var factoryType = typeof (EntityIdFactory<>).MakeGenericType (sourceType);
 				var instance    = System.Activator.CreateInstance (factoryType, business, lambda, entityGetter, getterFunc, setterFunc, title, width, list);
 

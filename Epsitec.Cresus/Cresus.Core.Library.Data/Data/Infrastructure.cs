@@ -248,7 +248,7 @@ namespace Epsitec.Cresus.Core.Data
 
 		public static IEnumerable<StructuredType> GetManagedEntityStructuredTypes()
 		{
-			var allEntityIds = EntityClassFactory.GetAllEntityIds ();
+			var allEntityIds = EntityInfo.GetAllTypeIds ();
 
 			foreach (var type in allEntityIds.Select (x => EntityInfo.GetStructuredType (x)))
 			{

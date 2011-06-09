@@ -313,6 +313,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 					(fieldType == typeof (decimal)) ||
 					(fieldType == typeof (decimal?)) )
 				{
+					//	Produce either a text field or a variation of such a widget (pull-down list, etc.)
+					//	based on the real type being edited.
+
 					var factory = DynamicFactories.TextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, width);
 					this.actions.Add ((tile, builder) => factory.CreateUI (tile, builder));
 
