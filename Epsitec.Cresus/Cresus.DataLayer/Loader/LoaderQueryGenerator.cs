@@ -1,6 +1,5 @@
-﻿//	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
-
+﻿//	Copyright © 2007-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Marc BETTEX
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
@@ -25,30 +24,24 @@ using System.Linq;
 
 namespace Epsitec.Cresus.DataLayer.Loader
 {
-
-
 	// TODO Comment this class
 	// Marc
 
-
 	internal sealed class LoaderQueryGenerator
 	{
-
-
 		public LoaderQueryGenerator(DataContext dataContext)
 		{
 			this.DataContext = dataContext;
 		}
 
 
-		private DataContext DataContext
+		private DataContext						DataContext
 		{
 			get;
 			set;
 		}
 
-
-		private DbInfrastructure DbInfrastructure
+		private DbInfrastructure				DbInfrastructure
 		{
 			get
 			{
@@ -56,8 +49,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			}
 		}
 
-
-		private EntityTypeEngine TypeEngine
+		private EntityTypeEngine				TypeEngine
 		{
 			get
 			{
@@ -65,8 +57,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			}
 		}
 
-
-		private EntitySchemaEngine SchemaEngine
+		private EntitySchemaEngine				SchemaEngine
 		{
 			get
 			{
@@ -74,8 +65,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			}
 		}
 
-
-		private DataConverter DataConverter
+		private DataConverter					DataConverter
 		{
 			get
 			{
@@ -132,7 +122,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		#endregion
 
-
 		#region GET VALUE FIELD
 
 
@@ -165,7 +154,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		#endregion
 
-
 		#region GET REFERENCE FIELD
 
 
@@ -176,15 +164,18 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 			StructuredTypeField field = this.TypeEngine.GetField (leafEntityId, fieldId);
 
-			AbstractEntity rootExample = EntityClassFactory.CreateEmptyEntity (leafEntityId);
+			AbstractEntity rootExample   = EntityClassFactory.CreateEmptyEntity (leafEntityId);
 			AbstractEntity targetExample = EntityClassFactory.CreateEmptyEntity (field.TypeId);
 
-			rootExample.SetField<AbstractEntity> (fieldName, targetExample);
+			using (rootExample.DefineOriginalValues ())
+			{
+				rootExample.SetField<AbstractEntity> (fieldName, targetExample);
+			}
 
 			Request request = new Request ()
 			{
-				RootEntity = rootExample,
-				RootEntityKey = this.DataContext.GetNormalizedEntityKey (entity).Value.RowKey,
+				RootEntity      = rootExample,
+				RootEntityKey   = this.DataContext.GetNormalizedEntityKey (entity).Value.RowKey,
 				RequestedEntity = targetExample,
 			};
 
@@ -200,7 +191,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 
 		#endregion
-
 
 		#region GET COLLECTION FIELD
 
@@ -249,15 +239,18 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 			StructuredTypeField field = this.TypeEngine.GetField (leafEntityId, fieldId);
 
-			AbstractEntity rootExample = EntityClassFactory.CreateEmptyEntity (leafEntityId);
+			AbstractEntity rootExample   = EntityClassFactory.CreateEmptyEntity (leafEntityId);
 			AbstractEntity targetExample = EntityClassFactory.CreateEmptyEntity (field.TypeId);
 
-			rootExample.GetFieldCollection<AbstractEntity> (fieldName).Add (targetExample);
+			using (rootExample.DefineOriginalValues ())
+			{
+				rootExample.GetFieldCollection<AbstractEntity> (fieldName).Add (targetExample);
+			}
 
 			Request request = new Request ()
 			{
-				RootEntity = rootExample,
-				RootEntityKey = this.DataContext.GetNormalizedEntityKey (entity).Value.RowKey,
+				RootEntity      = rootExample,
+				RootEntityKey   = this.DataContext.GetNormalizedEntityKey (entity).Value.RowKey,
 				RequestedEntity = targetExample,
 			};
 
@@ -270,9 +263,10 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
 			AbstractEntity rootExample = EntityClassFactory.CreateEmptyEntity (leafEntityId);
+			
 			Request request = new Request ()
 			{
-				RootEntity = rootExample,
+				RootEntity    = rootExample,
 				RootEntityKey = this.DataContext.GetNormalizedEntityKey (entity).Value.RowKey,
 			};
 
@@ -281,7 +275,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 
 		#endregion
-
 
 		#region GET SINGLE VALUE
 
@@ -361,7 +354,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		
 		
 		#endregion
-
 
 		#region GET VALUE AND REFERENCE DATA
 		
@@ -461,7 +453,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		#endregion
 
-
 		#region GET COLLECTION DATA
 
 
@@ -536,7 +527,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 
 		#endregion
-
 
 		#region CONDITION GENERATION
 
@@ -992,7 +982,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		#endregion
 
-
 		#region VALUE AND REFERENCE QUERY GENERATION
 
 
@@ -1060,7 +1049,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		#endregion
 
-
 		#region COLLECTION QUERY GENERATION
 
 
@@ -1084,7 +1072,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 
 		#endregion
-
 
 		#region MISC
 
@@ -1112,7 +1099,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 
 		#endregion
-
 
 		#region ALIAS
 
@@ -1206,9 +1192,5 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 
 		#endregion
-
-
 	}
-
-
 }
