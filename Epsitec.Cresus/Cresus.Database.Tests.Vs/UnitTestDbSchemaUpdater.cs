@@ -463,7 +463,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 
 		[TestMethod]
-		public void ChangeNullabilityTest1()
+		public void AlterColumnNullabilityTest1()
 		{
 			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
 			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
@@ -528,7 +528,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 
 		[TestMethod]
-		public void ChangeNullabilityTest2()
+		public void AlterColumnNullabilityTest2()
 		{
 			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
 			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
@@ -585,6 +585,153 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 					{
 						long actual = (long) result.Rows[i][0];
 						long expected = i < 10 ? i : 0;
+
+						Assert.AreEqual (expected, actual);
+					}
+				}
+			}
+
+			this.CheckCoreAndServiceTables ();
+		}
+
+
+		[TestMethod]
+		public void AlterColumnTypeTest1()
+		{
+			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTypeDef[] typesInfrastructure1 = dbInfrastructure1.FindDbTypes ();
+				DbTypeDef[] typesInfrastructure2 = dbInfrastructure2.FindDbTypes ();
+				
+				DbTypeDef typeInt1 = typesInfrastructure1[11];
+				DbTypeDef typeInt2 = typesInfrastructure2[11];
+				DbTypeDef typeLong2 = typesInfrastructure2[12];
+
+				DbTypeDef[] types1 = new DbTypeDef[] { typeInt1, typeInt1, };
+				DbTypeDef[] types2 = new DbTypeDef[] { typeInt2, typeLong2, };
+
+				DbTable table1 = this.BuildNewTableWithGivenTypes (2, types1, DbElementCat.ManagedUserData);
+				DbTable table2 = this.BuildNewTableWithGivenTypes (2, types2, DbElementCat.ManagedUserData);
+
+				dbInfrastructure1.AddTable (table1);
+				dbInfrastructure1.ClearCaches ();
+				dbInfrastructure2.ClearCaches ();
+
+				List<DbTable> tables = new List<DbTable> ()
+				{
+					table2,
+				};
+
+				using (DbTransaction transaction = dbInfrastructure1.BeginTransaction (DbTransactionMode.ReadWrite))
+				{
+					for (int i = 0; i < 10; i++)
+					{
+						var sqlFields = new SqlFieldList ()
+				        {
+				            dbInfrastructure1.CreateSqlFieldFromAdoValue (table1.Columns[0], i),
+				            dbInfrastructure1.CreateSqlFieldFromAdoValue (table1.Columns[1], i),
+				        };
+
+						transaction.SqlBuilder.InsertData (table1.GetSqlName (), sqlFields);
+						dbInfrastructure1.ExecuteSilent (transaction);
+					}
+
+					transaction.Commit ();
+				}
+
+				DbSchemaUpdater.UpdateSchema (dbInfrastructure2, tables);
+
+				Assert.IsTrue (DbSchemaChecker.CheckSchema (dbInfrastructure2, tables));
+
+				using (DbTransaction transaction = dbInfrastructure2.BeginTransaction (DbTransactionMode.ReadWrite))
+				{
+					var table2B = dbInfrastructure2.ResolveDbTable (transaction, table2.Name);
+					var sqlQuery = new SqlSelect ();
+
+					sqlQuery.Tables.Add ("t", SqlField.CreateName (table2B.GetSqlName ()));
+					sqlQuery.Fields.Add ("c", SqlField.CreateName ("t", table2B.Columns[1].GetSqlName ()));
+
+					var result = dbInfrastructure2.ExecuteSqlSelect (transaction, sqlQuery, 0);
+
+					transaction.Commit ();
+
+					for (int i = 0; i < 10; i++)
+					{
+						Assert.AreEqual ((long) i, (long) result.Rows[i][0]);
+					}
+				}
+			}
+
+			this.CheckCoreAndServiceTables ();
+		}
+
+
+		[TestMethod]
+		public void AlterColumnTypeTest2()
+		{
+			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTypeDef[] typesInfrastructure1 = dbInfrastructure1.FindDbTypes ();
+				DbTypeDef[] typesInfrastructure2 = dbInfrastructure2.FindDbTypes ();
+
+				DbTypeDef typeInt1 = typesInfrastructure1[11];
+				DbTypeDef typeInt2 = typesInfrastructure2[11];
+				DbTypeDef typeString2 = typesInfrastructure2[13];
+
+				DbTypeDef[] types1 = new DbTypeDef[] { typeInt1, typeInt1, };
+				DbTypeDef[] types2 = new DbTypeDef[] { typeInt2, typeString2, };
+
+				DbTable table1 = this.BuildNewTableWithGivenTypes (2, types1, DbElementCat.ManagedUserData);
+				DbTable table2 = this.BuildNewTableWithGivenTypes (2, types2, DbElementCat.ManagedUserData);
+
+				dbInfrastructure1.AddTable (table1);
+				dbInfrastructure1.ClearCaches ();
+				dbInfrastructure2.ClearCaches ();
+
+				List<DbTable> tables = new List<DbTable> ()
+				{
+					table2,
+				};
+
+				using (DbTransaction transaction = dbInfrastructure1.BeginTransaction (DbTransactionMode.ReadWrite))
+				{
+					for (int i = 0; i < 10; i++)
+					{
+						var sqlFields = new SqlFieldList ()
+				        {
+				            dbInfrastructure1.CreateSqlFieldFromAdoValue (table1.Columns[0], i),
+				            dbInfrastructure1.CreateSqlFieldFromAdoValue (table1.Columns[1], i),
+				        };
+
+						transaction.SqlBuilder.InsertData (table1.GetSqlName (), sqlFields);
+						dbInfrastructure1.ExecuteSilent (transaction);
+					}
+
+					transaction.Commit ();
+				}
+
+				DbSchemaUpdater.UpdateSchema (dbInfrastructure2, tables);
+
+				Assert.IsTrue (DbSchemaChecker.CheckSchema (dbInfrastructure2, tables));
+
+				using (DbTransaction transaction = dbInfrastructure2.BeginTransaction (DbTransactionMode.ReadWrite))
+				{
+					var table2B = dbInfrastructure2.ResolveDbTable (transaction, table2.Name);
+					var sqlQuery = new SqlSelect ();
+
+					sqlQuery.Tables.Add ("t", SqlField.CreateName (table2B.GetSqlName ()));
+					sqlQuery.Fields.Add ("c", SqlField.CreateName ("t", table2B.Columns[1].GetSqlName ()));
+
+					var result = dbInfrastructure2.ExecuteSqlSelect (transaction, sqlQuery, 0);
+
+					transaction.Commit ();
+
+					for (int i = 0; i < 10; i++)
+					{
+						long expected = (long) i;
+						long actual = long.Parse ((string) result.Rows[i][0]);
 
 						Assert.AreEqual (expected, actual);
 					}

@@ -138,10 +138,14 @@ namespace Epsitec.Cresus.Database
 
 			using (DbTransaction dbTransaction = dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				// NOTE For now, all we can do is alter the nullability of the column. Note that I
-				// said the nullability of the column, I don't speak of the nullability of the type
-				// of the data in the column. All other alterations are not treated and should not
-				// happen as we make sure that there aren't such alterations before in this method.
+				// NOTE For now, all we can do is the following :
+				// - alter the nullability of the column. Note that I said the nullability of the
+				//  column, I don't speak of the nullability of the type of the data in the column.
+				// - alter the type of the column. Only the type alterations that doesn't require a
+				//   conversion of the values are allowed. For instance int to long is allowed as
+				//   well as anything to string, but long to int is not allowed.
+				// All other alterations are not treated and should not happen as we make sure that
+				// there aren't such alterations before in this method.
 				// Marc
 
 				DbSchemaUpdater.ExecutePart2OfColumnAlteration (dbInfrastructure, dbTransaction, dbColumnsToAlter);
@@ -343,8 +347,96 @@ namespace Epsitec.Cresus.Database
 					|| a.IsAutoIncremented != b.IsAutoIncremented
 					|| a.IsAutoTimeStampOnInsert != b.IsAutoTimeStampOnInsert
 					|| a.IsAutoTimeStampOnUpdate != b.IsAutoTimeStampOnUpdate
-					|| !DbSchemaChecker.AreDbTypeDefEqual (a.Type, b.Type)
+					|| !DbSchemaUpdater.AreDbTypeDefsValueCompatibles (a.Type, b.Type)
 				   select item;
+		}
+
+
+		private static bool AreDbTypeDefsValueCompatibles(DbTypeDef a, DbTypeDef b)
+		{
+			return DbSchemaUpdater.AreDbRawTypesValueCompatible (a.RawType, b.RawType)
+				&& DbSchemaUpdater.AreDbSimpleTypesValueCompatible (a.SimpleType, b.SimpleType)
+				&& DbSchemaUpdater.AreDbNumDefValueCompatible (a.NumDef, b.NumDef);
+		}
+
+
+		private static bool AreDbSimpleTypesValueCompatible(DbSimpleType a, DbSimpleType b)
+		{
+			switch (b)
+			{
+				case DbSimpleType.ByteArray:
+				case DbSimpleType.Date:
+				case DbSimpleType.Time:
+				case DbSimpleType.Guid:
+				case DbSimpleType.Decimal:
+					return a == b;
+				
+				case DbSimpleType.DateTime:
+					return a == DbSimpleType.Date
+						|| a == DbSimpleType.DateTime;
+
+				case DbSimpleType.String:
+					return true;
+				
+				default:
+					throw new System.NotImplementedException ();
+			}
+		}
+
+
+		private static bool AreDbRawTypesValueCompatible(DbRawType a, DbRawType b)
+		{
+			switch (b)
+			{
+				case DbRawType.Boolean:
+				case DbRawType.ByteArray:
+				case DbRawType.Guid:
+				case DbRawType.Date:
+				case DbRawType.Time:
+				case DbRawType.Int16:
+					return a == b;
+	
+				case DbRawType.String:
+					return true;
+
+				case DbRawType.DateTime:
+					return a == DbRawType.Date
+						|| a == DbRawType.DateTime;
+
+				case DbRawType.Int32:
+					return a == DbRawType.Int16
+						|| a == DbRawType.Int32;
+
+				case DbRawType.Int64:
+					return a == DbRawType.Int16
+						|| a == DbRawType.Int32
+						|| a == DbRawType.Int64;
+
+				case DbRawType.SmallDecimal:
+					return a == DbRawType.Int16
+						|| a == DbRawType.Int32;
+
+				case DbRawType.LargeDecimal:
+					return a == DbRawType.Int16
+						|| a == DbRawType.Int32
+						|| a == DbRawType.SmallDecimal;
+
+				default:
+					throw new System.NotImplementedException ();
+			}
+		}
+
+
+		private static bool AreDbNumDefValueCompatible(DbNumDef a, DbNumDef b)
+		{
+			return (b == null) || 
+				(
+					   a != null && b != null
+					&& a.MinValue >= b.MinValue
+					&& a.MaxValue <= b.MaxValue
+					&& a.DigitShift <= b.DigitShift
+					&& a.DigitPrecision - a.DigitShift <= b.DigitPrecision - b.DigitShift
+				);
 		}
 
 
@@ -537,7 +629,7 @@ namespace Epsitec.Cresus.Database
 			switch (type.RawType)
 			{
 				case DbRawType.Boolean:
-					return SqlField.CreateConstant (true, DbRawType.Boolean);
+					return SqlField.CreateConstant (false, DbRawType.Boolean);
 
 				case DbRawType.ByteArray:
 					return SqlField.CreateConstant (new byte[0], DbRawType.ByteArray);
