@@ -54,6 +54,8 @@ namespace Epsitec.Cresus.Core.Business
 
 		void Discard();
 
+		Logic CreateLogic(AbstractEntity entity);
+
 		Data.GlobalLock GlobalLock
 		{
 			get;

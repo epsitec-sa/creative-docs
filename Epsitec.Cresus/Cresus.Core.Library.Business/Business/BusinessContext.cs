@@ -348,6 +348,11 @@ namespace Epsitec.Cresus.Core.Business
 			private readonly BusinessContext	context;
 		}
 
+		public Logic CreateLogic(AbstractEntity entity)
+		{
+			return new Logic (entity, this, this.data.GetComponent<RefIdGeneratorPool> ());
+		}
+
 		public void SetActiveEntity(EntityKey? entityKey, NavigationPathElement navigationPathElement = null)
 		{
 			System.Diagnostics.Debug.Assert (this.activeEntity == null);
@@ -832,11 +837,6 @@ namespace Epsitec.Cresus.Core.Business
 		}
 
 		
-		private Logic CreateLogic(AbstractEntity entity)
-		{
-			return new Logic (entity, this, this.data.GetComponent<RefIdGeneratorPool> ());
-		}
-
 		private void HandleDataContextEntityChanged(object sender, EntityChangedEventArgs e)
 		{
 			try

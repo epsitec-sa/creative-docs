@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Business
 		public Logic(AbstractEntity entity, params ICoreManualComponent[] components)
 		{
 			this.entity = entity;
-			this.entityType = entity.GetType ();
+			this.entityType = entity == null ? null : entity.GetType ();
 			this.rules = new Dictionary<RuleType, GenericBusinessRule> ();
 			this.components = new CoreComponentHostImplementation<ICoreManualComponent> ();
 			this.components.RegisterComponents (components);
@@ -25,14 +25,23 @@ namespace Epsitec.Cresus.Core.Business
 
 		public void ApplyRules(RuleType ruleType, AbstractEntity entity)
 		{
-			var rule = this.ResolveRule (ruleType);
+			GenericBusinessRule rule   = this.ResolveRule (ruleType);
+			System.Action       action = () => rule.Apply (ruleType, entity);
+
+			this.ApplyAction (action);
+		}
+
+		public void ApplyAction(System.Action action)
+		{
+			System.Diagnostics.Debug.Assert (this.link == null);
+
 			this.link = Logic.current;
 
 			Logic.current = this;
 
 			try
 			{
-				rule.Apply (ruleType, entity);
+				action ();
 			}
 			finally
 			{
@@ -40,7 +49,6 @@ namespace Epsitec.Cresus.Core.Business
 				this.link = null;
 			}
 		}
-
 
 		public IEnumerable<T> Find<T>()
 			where T : AbstractEntity
@@ -54,7 +62,10 @@ namespace Epsitec.Cresus.Core.Business
 
 			while (logic != null)
 			{
-				yield return logic.entity;
+				if (logic.entity != null)
+				{
+					yield return logic.entity;
+				}
 				
 				logic = logic.link;
 			}

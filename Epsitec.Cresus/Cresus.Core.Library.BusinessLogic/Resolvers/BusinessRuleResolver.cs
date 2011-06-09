@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -24,9 +24,14 @@ namespace Epsitec.Cresus.Core.Resolvers
 		/// </summary>
 		/// <param name="entityType">Type of the entity.</param>
 		/// <param name="ruleType">Type of the rule.</param>
-		/// <returns>The business rule.</returns>
+		/// <returns>The business rule if one exists for the entity type; otherwise, <c>null</c>.</returns>
 		public static GenericBusinessRule Resolve(System.Type entityType, RuleType ruleType)
 		{
+			if (entityType == null)
+			{
+				return null;
+			}
+
 			var businessRules = BusinessRuleResolver.CreateBusinessRules (entityType, ruleType);
 
 			return new CompositeBusinessRule (entityType, businessRules);
