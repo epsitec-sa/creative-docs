@@ -14,15 +14,39 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 {
+	/// <summary>
+	/// The <c>DynamicFactory</c> class is used to dynamically create a piece of user
+	/// interface for a given entity field.
+	/// </summary>
 	internal abstract class DynamicFactory
 	{
+		/// <summary>
+		/// Creates the UI to edit the underlying entity field.
+		/// </summary>
+		/// <param name="tile">The tile widget where the UI should be created.</param>
+		/// <param name="builder">The UI builder.</param>
+		/// <returns>The widget created by the <see cref="UIBuilder"/>.</returns>
 		public abstract object CreateUI(FrameBox tile, UIBuilder builder);
-		
+
+
+		/// <summary>
+		/// Gets the caption associated with the entity field, by analyzing a lambda
+		/// expression based on a property getter.
+		/// </summary>
+		/// <param name="expression">The expression.</param>
+		/// <returns>The <see cref="Caption"/> if one exists; otherwise, <c>null</c>.</returns>
 		public static Caption GetInputCaption(LambdaExpression expression)
 		{
 			return EntityInfo.GetFieldCaption (expression);
 		}
 
+		/// <summary>
+		/// Gets the title associated with a caption; this will either be the default label
+		/// or the description; if no label and no description were defined, returns the name
+		/// of the caption, with a red color.
+		/// </summary>
+		/// <param name="caption">The caption.</param>
+		/// <returns>The title associated with the caption if the caption is not <c>null</c>; otherwise, <c>null</c>.</returns>
 		public static string GetInputTitle(Caption caption)
 		{
 			if (caption == null)
