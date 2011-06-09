@@ -447,8 +447,7 @@ namespace Epsitec.Common.Support.EntityEngine
 				//	Notifies the entity context that the containing entity changed, since
 				//	one of its collections changed.
 
-				var context = this.container.GetEntityContext ();
-				context.NotifyEntityChanged (this.container, this.containerFieldId, null, null);
+				this.container.NotifyCollectionChanged (this, this.containerFieldId, e);
 			}
 		}
 

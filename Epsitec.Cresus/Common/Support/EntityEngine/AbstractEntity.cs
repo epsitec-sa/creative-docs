@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using System.Threading;
+using System;
 
 
 namespace Epsitec.Common.Support.EntityEngine
@@ -112,7 +113,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// that this solution would be prone to dead locks. Thread1 does something with EntityA
 		/// while Thread2 does something with DataContextA. Then the action on EntityA by thread1
 		/// requires a proxy resolution so it waits on the lock owned by Thread2. Then the action
-		/// on DataContextA by Thread2 requires to to a modifiation on EntityA so it waits on the
+		/// on DataContextA by Thread2 requires to do a modification on EntityA so it waits on the
 		/// lock owned by Thread1. Bang, deadlock! This situation can happen quite often, say because
 		/// there is a proxy resolution on a thread while there is a DataContext.Reload() on another.
 		/// The only way to avoid those deadlocks is to acquire a lock on the DataContext which
@@ -966,8 +967,26 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			return copy;
 		}
-		
-		#region IStructuredTypeProvider Members
+
+		internal void NotifyCollectionChanged(EntityCollection collection, string id, CollectionChangedEventArgs e)
+		{
+			if ((this.AreEventsEnabled) &&
+				(this.IsDefiningOriginalValues == false) &&
+				(this.IsUpdateSilent == false))
+			{
+				this.OnCollectionChanged (collection, id, e);
+			}
+
+			var context = this.GetEntityContext ();
+
+			context.NotifyEntityChanged (this, id, oldValue: null, newValue: null);
+		}
+
+		protected virtual void OnCollectionChanged(EntityCollection collection, string id, CollectionChangedEventArgs e)
+		{
+		}
+
+        #region IStructuredTypeProvider Members
 
 		IStructuredType IStructuredTypeProvider.GetStructuredType()
 		{

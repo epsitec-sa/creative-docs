@@ -1,4 +1,4 @@
-//	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2007-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -17,7 +17,8 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// and in copy-on-write mode.
 	/// </summary>
 	/// <typeparam name="T">The type of the list items.</typeparam>
-	public sealed class EntityCollectionProxy<T> : IList<T>, System.Collections.IList, IEntityCollection where T : AbstractEntity
+	public sealed class EntityCollectionProxy<T> : IList<T>, System.Collections.IList, IEntityCollection
+		where T : AbstractEntity
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="EntityCollectionProxy&lt;T&gt;"/> class.
