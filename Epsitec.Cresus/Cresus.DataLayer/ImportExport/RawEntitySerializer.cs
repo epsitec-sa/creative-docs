@@ -143,10 +143,11 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		private static IEnumerable<ColumnDefinition> GetColumnDefinitions(IEnumerable<DbColumn> dbColumns, bool isIdColumn)
 		{
 			return from dbColumn in dbColumns
-				   let name = dbColumn.GetSqlName ()
+				   let dbName = dbColumn.Name
+				   let sqlName = dbColumn.GetSqlName ()
 				   let dbRawType = dbColumn.Type.RawType
 				   let adoType = TypeConverter.GetAdoType (dbColumn.Type.RawType)
-				   select new ColumnDefinition (name, dbRawType, adoType, isIdColumn);
+				   select new ColumnDefinition (dbName, sqlName, dbRawType, adoType, isIdColumn);
 		}
 
 

@@ -241,7 +241,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 		private IList<SqlField> CreateColumnSqlFields()
 		{
-			return this.Columns.Select (c => SqlField.CreateName (c.Name)).ToList ();
+			return this.Columns.Select (c => SqlField.CreateName (c.SqlName)).ToList ();
 		}
 
 
@@ -434,7 +434,10 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 			if (!isEmpty)
 			{
-				this.InsertRows (dbInfrastructure, entityModificationEntry, this.ProcessRowsRead (dbInfrastructure.Converter, decrementIds, this.ReadXmlRows (xmlReader)));
+				var rowsRead = this.ReadXmlRows (xmlReader);
+				var rowsProcessed = this.ProcessRowsRead (dbInfrastructure.Converter, decrementIds, rowsRead);
+
+				this.InsertRows (dbInfrastructure, entityModificationEntry, rowsProcessed);
 
 				if (!decrementIds)
 				{
@@ -541,9 +544,20 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		{
 			using (DbTransaction dbTransaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
+				var table = dbInfrastructure.ResolveDbTable (this.DbName);
+
 				foreach (IList<object> row in rows)
 				{
-					this.InsertRow (dbInfrastructure, dbTransaction, entityModificationEntry, row);
+					if (table != null)
+					{
+						var newNonNullableColumns = table.Columns
+							.Where (c => !c.IsNullable)
+							.Where (c1 => this.Columns.All (c2 => c1.Name != c2.DbName))
+							.Where (c => c.Name != EntitySchemaBuilder.EntityTableColumnEntityModificationEntryIdName)
+							.ToList ();
+
+						this.InsertRow (dbInfrastructure, dbTransaction, entityModificationEntry, newNonNullableColumns, row);
+					}
 				}
 
 				dbTransaction.Commit ();
@@ -551,23 +565,50 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private void InsertRow(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, EntityModificationEntry entityModificationEntry, IList<object> row)
+		private void InsertRow(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, EntityModificationEntry entityModificationEntry, IEnumerable<DbColumn> newNonNullableColumns, IList<object> row)
 		{
-			string tableName = this.SqlName;
+			string dbTableName = this.DbName;
+			DbTable dbTable = dbInfrastructure.ResolveDbTable (dbTableName);
+
+			string sqlTableName = this.SqlName;
 			SqlFieldList sqlFields = new SqlFieldList ();
 
 			int index = 0;
 
 			foreach (ColumnDefinition column in this.Columns)
 			{
-				DbRawType internalDbRawType = this.GetInternalRawType (dbInfrastructure.Converter, column.DbRawType);
+				DbColumn dbColumn = dbTable.Columns[column.DbName];
 
-				SqlField sqlField = SqlField.CreateConstant (row[index], internalDbRawType);
-				sqlField.Alias = column.Name;
+				if (dbColumn != null)
+				{
+					DbRawType internalDbRawType = this.GetInternalRawType (dbInfrastructure.Converter, column.DbRawType);
 
-				sqlFields.Add (sqlField);
+					object value = row[index];
+
+					if (!dbColumn.IsNullable && value == null)
+					{
+						value = TypeConverter.GetDefaultValueForDbRawType (internalDbRawType);
+					}
+
+					SqlField sqlField = SqlField.CreateConstant (value, internalDbRawType);
+					sqlField.Alias = column.SqlName;
+
+					sqlFields.Add (sqlField);
+				}
 
 				index++;
+			}
+
+			foreach (var column in newNonNullableColumns)
+			{
+				DbRawType internalDbRawType = this.GetInternalRawType (dbInfrastructure.Converter, column.Type.RawType);
+
+				object value = TypeConverter.GetDefaultValueForDbRawType (internalDbRawType);
+				
+				SqlField sqlField = SqlField.CreateConstant (value, internalDbRawType);
+				sqlField.Alias = column.GetSqlName ();
+
+				sqlFields.Add (sqlField);
 			}
 
 			if (this.Category == TableCategory.Data && this.ContainsLogColumn)
@@ -575,7 +616,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 				sqlFields.Add (this.CreateSqlFieldForEntitModificationLog (entityModificationEntry));
 			}
 
-			dbTransaction.SqlBuilder.InsertData (tableName, sqlFields);
+			dbTransaction.SqlBuilder.InsertData (sqlTableName, sqlFields);
 			dbInfrastructure.ExecuteNonQuery (dbTransaction);
 		}
 

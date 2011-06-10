@@ -1,4 +1,7 @@
-﻿using Epsitec.Cresus.Database;
+﻿using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
+
+using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.ImportExport;
@@ -338,7 +341,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 
 				var xColumnsToRemove = from xTable in xDocument.Descendants ("table")
 									   let id = (string) xTable.Attribute ("id")
-									   where id == "20"	// Table for natural persons
+									   where id == "15"	// Table for natural persons
 									   select xTable into xTable
 									   from xColumn in xTable.Descendants ("column")
 									   let id = (string) xColumn.Attribute ("id")
@@ -363,6 +366,218 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 					Assert.IsNotNull (alfred);
 					Assert.IsNotNull (gertrude);
 					Assert.IsNotNull (hans);
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void ExportImportWithColumnRemovedInDatabase()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				FileInfo file = new FileInfo ("test.xml");
+
+				EntityModificationEntry entry = dataInfrastructure.CreateEntityModificationEntry ();
+
+				DbInfrastructure dbInfrastructure = dataInfrastructure.DbInfrastructure;
+				EntityTypeEngine typeEngine = dataInfrastructure.EntityEngine.EntityTypeEngine;
+				EntitySchemaEngine schemaEngine = dataInfrastructure.EntityEngine.EntitySchemaEngine;
+
+				RawEntitySerializer.Export (file, dbInfrastructure, typeEngine, schemaEngine, RawExportMode.UserData);
+
+				RawEntitySerializer.CleanDatabase (file, dbInfrastructure, RawImportMode.DecrementIds);
+
+				XDocument xDocument = XDocument.Load (file.FullName);
+
+				var xTables = from xt in xDocument.Descendants ("definition").Single ().Descendants ("table")
+							  let id = (string) xt.Attribute ("id")
+							  where id == "15"	// Table for natural persons
+							  select xt;
+
+				var xTable = xTables.Single ();
+				var xColumns = xTable.Descendants ("columns").Single ();
+				xColumns.Add (
+					new XElement ("column",
+						new XAttribute ("id", "6"),
+						new XElement ("dbName", "MyColumn"),
+						new XElement ("sqlName", "MyColumn"),
+						new XElement ("dbRawType", "Int64"),
+						new XElement ("adoType", "System.Int64, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"),
+						new XElement ("isIdColumn", "false")
+					)
+				);
+
+				var xRows = from xD in xDocument.Descendants ("data").Single ().Descendants ("table")
+							let id = (string) xD.Attribute ("id")
+							where id == "15"
+							select xD into table
+							from xRow in table.Descendants ("row")
+							select xRow;
+
+				foreach (var xRow in xRows.ToList ())
+				{
+					xRow.Add (
+						new XElement ("column",
+							new XAttribute ("id", "6"),
+							"42"
+						)
+					);
+				}
+
+				xDocument.Save (file.FullName);
+
+				RawEntitySerializer.Import (file, dbInfrastructure, entry, RawImportMode.DecrementIds);
+
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				{
+					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
+					NaturalPersonEntity hans = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (3)));
+
+					Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
+					Assert.IsTrue (DatabaseCreator2.CheckGertrude (gertrude));
+					Assert.IsTrue (DatabaseCreator2.CheckHans (hans));
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void ExportImportWithTableRemovedInDatabase()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				FileInfo file = new FileInfo ("test.xml");
+
+				EntityModificationEntry entry = dataInfrastructure.CreateEntityModificationEntry ();
+
+				DbInfrastructure dbInfrastructure = dataInfrastructure.DbInfrastructure;
+				EntityTypeEngine typeEngine = dataInfrastructure.EntityEngine.EntityTypeEngine;
+				EntitySchemaEngine schemaEngine = dataInfrastructure.EntityEngine.EntitySchemaEngine;
+
+				RawEntitySerializer.Export (file, dbInfrastructure, typeEngine, schemaEngine, RawExportMode.UserData);
+
+				RawEntitySerializer.CleanDatabase (file, dbInfrastructure, RawImportMode.DecrementIds);
+
+				DbTable table = EntitySchemaBuilder.BuildTables (typeEngine).Single (t => t.CaptionId == Druid.Parse ("[J1AJ1]"));
+				DbColumn column = new DbColumn ("myColumn", table.Columns.First ().Type, DbColumnClass.Data, DbElementCat.ManagedUserData)
+				{
+					IsNullable = false,
+				};
+
+				dbInfrastructure.RemoveTable (table);
+
+				table.Columns.Add (column);
+				
+				dbInfrastructure.AddTable (table);
+
+				dbInfrastructure.ClearCaches ();
+				
+				RawEntitySerializer.Import (file, dbInfrastructure, entry, RawImportMode.DecrementIds);
+
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				{
+					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
+					NaturalPersonEntity hans = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (3)));
+
+					Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
+					Assert.IsTrue (DatabaseCreator2.CheckGertrude (gertrude));
+					Assert.IsTrue (DatabaseCreator2.CheckHans (hans));
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void ExportImportWithNonNullableColumnAddedInDatabase()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				FileInfo file = new FileInfo ("test.xml");
+
+				EntityModificationEntry entry = dataInfrastructure.CreateEntityModificationEntry ();
+
+				DbInfrastructure dbInfrastructure = dataInfrastructure.DbInfrastructure;
+				EntityTypeEngine typeEngine = dataInfrastructure.EntityEngine.EntityTypeEngine;
+				EntitySchemaEngine schemaEngine = dataInfrastructure.EntityEngine.EntitySchemaEngine;
+
+				RawEntitySerializer.Export (file, dbInfrastructure, typeEngine, schemaEngine, RawExportMode.UserData);
+
+				RawEntitySerializer.CleanDatabase (file, dbInfrastructure, RawImportMode.DecrementIds);
+
+				DbTable table = dbInfrastructure.ResolveDbTable (Druid.Parse ("[J1AN]"));
+
+				dbInfrastructure.RemoveTable (table);
+
+				dbInfrastructure.ClearCaches ();
+
+				RawEntitySerializer.Import (file, dbInfrastructure, entry, RawImportMode.DecrementIds);
+
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				{
+					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
+					NaturalPersonEntity hans = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (3)));
+
+					Assert.IsNotNull (alfred);
+					Assert.IsNotNull (gertrude);
+					Assert.IsNotNull (hans);
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void ExportImportWithColumnChangedToNonNullableInDatabase()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				{
+					NaturalPersonEntity hans = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000003)));
+
+					hans.Firstname = null;
+
+					dataContext.SaveChanges ();
+				}
+
+				FileInfo file = new FileInfo ("test.xml");
+
+				EntityModificationEntry entry = dataInfrastructure.CreateEntityModificationEntry ();
+
+				DbInfrastructure dbInfrastructure = dataInfrastructure.DbInfrastructure;
+				EntityTypeEngine typeEngine = dataInfrastructure.EntityEngine.EntityTypeEngine;
+				EntitySchemaEngine schemaEngine = dataInfrastructure.EntityEngine.EntitySchemaEngine;
+
+				RawEntitySerializer.Export (file, dbInfrastructure, typeEngine, schemaEngine, RawExportMode.UserData);
+
+				RawEntitySerializer.CleanDatabase (file, dbInfrastructure, RawImportMode.DecrementIds);
+
+				DbTable table = EntitySchemaBuilder.BuildTables (typeEngine).Single (t => t.CaptionId == Druid.Parse ("[J1AJ1]"));
+				DbColumn columnFirstName = table.Columns.Single (c => c.CaptionId == Druid.Parse ("[J1AL1]"));
+
+				columnFirstName.IsNullable = false;
+
+				dbInfrastructure.RemoveTable (table);
+				dbInfrastructure.AddTable (table);
+
+				dbInfrastructure.ClearCaches ();
+
+				RawEntitySerializer.Import (file, dbInfrastructure, entry, RawImportMode.DecrementIds);
+				
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				{
+					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
+					NaturalPersonEntity hans = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (3)));
+
+					Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
+					Assert.IsTrue (DatabaseCreator2.CheckGertrude (gertrude));
+
+					Assert.IsNotNull (hans);
+					Assert.AreEqual ("", hans.Firstname);
 				}
 			}
 		}

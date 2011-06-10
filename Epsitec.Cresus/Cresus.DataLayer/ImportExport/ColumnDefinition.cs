@@ -17,16 +17,24 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 	{
 
 
-		public ColumnDefinition(string name, DbRawType dbRawType, System.Type adoType, bool isIdColumn)
+		public ColumnDefinition(string dbName, string sqlName, DbRawType dbRawType, System.Type adoType, bool isIdColumn)
 		{
-			this.Name = name;
+			this.DbName = dbName;
+			this.SqlName = sqlName;
 			this.DbRawType = dbRawType;
 			this.AdoType = adoType;
 			this.IsIdColumn = isIdColumn;
 		}
 
 
-		public string Name
+		public string DbName
+		{
+			get;
+			private set;
+		}
+
+
+		public string SqlName
 		{
 			get;
 			private set;
@@ -57,7 +65,8 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		public void WriteXmlDefinition(XmlWriter xmlWriter, int index)
 		{
 			this.WriteXmlStart (xmlWriter, index);
-			this.WriteXmlName (xmlWriter);
+			this.WriteXmlDbName (xmlWriter);
+			this.WriteXmlSqlName (xmlWriter);
 			this.WriteXmlDbRawType (xmlWriter);
 			this.WriteXmlAdoType (xmlWriter);
 			this.WriteXmlIsIdColumn (xmlWriter);
@@ -72,10 +81,18 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private void WriteXmlName(XmlWriter xmlWriter)
+		private void WriteXmlDbName(XmlWriter xmlWriter)
 		{
-			xmlWriter.WriteStartElement ("name");
-			xmlWriter.WriteValue (this.Name);
+			xmlWriter.WriteStartElement ("dbName");
+			xmlWriter.WriteValue (this.DbName);
+			xmlWriter.WriteEndElement ();
+		}
+
+
+		private void WriteXmlSqlName(XmlWriter xmlWriter)
+		{
+			xmlWriter.WriteStartElement ("sqlName");
+			xmlWriter.WriteValue (this.SqlName);
 			xmlWriter.WriteEndElement ();
 		}
 
@@ -114,14 +131,15 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		{
 			ColumnDefinition.ReadXmlStart (xmlReader, index);
 
-			string name = ColumnDefinition.ReadXmlName (xmlReader);
+			string dbName = ColumnDefinition.ReadXmlDbName (xmlReader);
+			string sqlName = ColumnDefinition.ReadXmlSqlName (xmlReader);
 			DbRawType dbRawType = ColumnDefinition.ReadXmlDbRawType (xmlReader);
 			System.Type adoType = ColumnDefinition.ReadXmlAdoType(xmlReader);
 			bool isIdColumn = ColumnDefinition.ReadXmlIsIdColumn (xmlReader);
 
 			ColumnDefinition.ReadXmlEnd (xmlReader);
 
-			return new ColumnDefinition (name, dbRawType, adoType, isIdColumn);
+			return new ColumnDefinition (dbName, sqlName, dbRawType, adoType, isIdColumn);
 		}
 
 
@@ -144,9 +162,21 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-		private static string ReadXmlName(XmlReader xmlReader)
+		private static string ReadXmlDbName(XmlReader xmlReader)
 		{
-			xmlReader.ReadStartElement ("name");
+			xmlReader.ReadStartElement ("dbName");
+
+			string name = xmlReader.ReadContentAsString ();
+
+			xmlReader.ReadEndElement ();
+
+			return name;
+		}
+
+
+		private static string ReadXmlSqlName(XmlReader xmlReader)
+		{
+			xmlReader.ReadStartElement ("sqlName");
 
 			string name = xmlReader.ReadContentAsString ();
 
