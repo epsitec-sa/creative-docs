@@ -200,6 +200,11 @@ namespace Epsitec.Cresus.Core.Library
 		}
 
 
+		public void AsyncSave()
+		{
+			this.NotifyChange (this);
+		}
+
 		#region IDisposable Members
 
 		public void Dispose()

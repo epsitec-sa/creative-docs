@@ -44,8 +44,10 @@ namespace Epsitec.Cresus.Core.Library
 				{
 					return value;
 				}
-
-				return null;
+				else
+				{
+					return null;
+				}
 			}
 			set
 			{
@@ -87,26 +89,37 @@ namespace Epsitec.Cresus.Core.Library
 			this.tuples.Clear ();
 		}
 
-		public void AddRange(IEnumerable<SettingsTuple> collection)
+		public bool AddRange(IEnumerable<SettingsTuple> collection)
 		{
-			collection.ForEach (x => this[x.Key] = x.Value);
+			int changes = 0;
+
+			foreach (var item in collection)
+			{
+				if (this[item.Key] != item.Value)
+				{
+					this[item.Key] = item.Value;
+					changes++;
+				}
+			}
+
+			return changes > 0;
 		}
 
 		public bool Remove(string key)
 		{
-			bool result = false;
+			bool changed = false;
 
 			System.Diagnostics.Debug.Assert (this.dict.Count == this.tuples.Count);
 			
 			if (this.dict.Remove (key))
 			{
 				this.tuples.RemoveAt (this.tuples.FindIndex (x => x.Key == key));
-				result = true;
+				changed = true;
 			}
 			
 			System.Diagnostics.Debug.Assert (this.dict.Count == this.tuples.Count);
 
-			return result;
+			return changed;
 		}
 
 		#region IEnumerable<SettingTuple> Members

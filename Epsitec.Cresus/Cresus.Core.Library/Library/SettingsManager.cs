@@ -29,7 +29,11 @@ namespace Epsitec.Cresus.Core.Library
 
 		public void SetSettings(string key, string value)
 		{
-			this.settings[key] = value;
+			if (this.settings[key] != value)
+			{
+				this.settings[key] = value;
+				this.OnSettingsChanged ();
+			}
 		}
 
 		public SettingsCollection ExtractSettings(string startKey)
@@ -41,17 +45,33 @@ namespace Epsitec.Cresus.Core.Library
 		{
 			//	Met à jour tous les réaglages d'une catégorie donnée.
 
-			this.RemoveSettings (startKey);
-			this.settings.AddRange (settings);
+			bool changed = false;
+
+			changed |= this.RemoveSettings (startKey);
+			changed |= this.settings.AddRange (settings);
+
+			if (changed)
+			{
+				this.OnSettingsChanged ();
+			}
 		}
 
-		private void RemoveSettings(string startKey)
+		private bool RemoveSettings(string startKey)
 		{
-			this.settings
-				.Select (x => x.Key)
-				.Where (key => key.StartsWith (startKey))
-				.ToArray ()
-				.ForEach (key => this.settings.Remove (key));
+			var remove = (from setting in this.settings
+						  let key = setting.Key
+						  where key.StartsWith (startKey)
+						  select key).ToArray ();
+
+			if (remove.Length > 0)
+			{
+				remove.ForEach (key => this.settings.Remove (key));
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		public XElement Save(string xmlNodeName)
@@ -83,6 +103,14 @@ namespace Epsitec.Cresus.Core.Library
 				this.settings[key] = value;
 			}
 		}
+
+		private void OnSettingsChanged()
+		{
+			//	Make sure the settings get persisted in some near future.
+
+			this.Host.PersistenceManager.AsyncSave ();
+		}
+
 
 		#region Factory Class
 

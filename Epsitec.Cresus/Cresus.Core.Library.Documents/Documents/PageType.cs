@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -7,6 +7,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Documents
 {
+	/// <summary>
+	/// The <c>PageType</c> enumeration lists all different types of pages which can
+	/// then be mapped to specific printing units.
+	/// </summary>
 	public enum PageType
 	{
 		//	ATTENTION: Les noms des pages sont sérialisés. Il ne faut donc pas les changer !
