@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Core.Library
 						   where string.IsNullOrEmpty (path) == false
 						   orderby path ascending
 						   let binding = this.bindings[path]
-						   select binding.ExecuteSave (new XElement ("w", new XAttribute ("id", path)));
+						   select binding.ExecuteSave (PersistenceManager.CreateWidgetElement (path));
 
 			var oldNodes = from node in this.pendingRestores
 						   let id = (string) node.Attribute ("id")
@@ -191,7 +191,7 @@ namespace Epsitec.Cresus.Core.Library
 
 				if (this.bindings.TryGetValue (path, out oldBinding))
 				{
-					var pending = new XElement ("w");
+					var pending = PersistenceManager.CreateWidgetElement (path);
 					oldBinding.ExecuteUnregister ();
 					oldBinding.ExecuteSave (pending);
 					this.pendingRestores.Add (pending);
@@ -226,7 +226,7 @@ namespace Epsitec.Cresus.Core.Library
 
 			if (this.bindings.TryGetValue (path, out oldBinding))
 			{
-				pending = new XElement ("w");
+				pending = PersistenceManager.CreateWidgetElement (path);
 				oldBinding.ExecuteUnregister ();
 				oldBinding.ExecuteSave (pending);
 				this.pendingRestores.Add (pending);
@@ -239,6 +239,11 @@ namespace Epsitec.Cresus.Core.Library
 			}
 			
 			this.bindings[path] = binding;
+		}
+
+		private static XElement CreateWidgetElement(string path)
+		{
+			return new XElement ("w", new XAttribute ("id", path));
 		}
 
 		private void NotifyChange(object sender)
