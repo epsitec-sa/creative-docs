@@ -59,6 +59,7 @@
     <Compile Include="Business\Finance\PriceCalculators\ItemPriceCalculators\GroupItemPriceCalculator.cs" />
     <Compile Include="Business\Finance\PriceCalculators\IDocumentPriceCalculator.cs" />
     <Compile Include="Business\Finance\PriceCalculators\ItemPriceCalculators\SubTotalItemPriceCalculator.cs" />
+    <Compile Include="Business\ReferenceNumberFormatters\DocumentInAffairReferenceNumberFormatter.cs" />
     <Compile Include="Business\Rules\AddressBusinessRules.cs" />
     <Compile Include="Business\Rules\AffairBusinessRules.cs" />
     <Compile Include="Business\Rules\ArticleGroupBusinessRules.cs" />

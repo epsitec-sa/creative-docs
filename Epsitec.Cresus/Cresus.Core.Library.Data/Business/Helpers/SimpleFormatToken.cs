@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Core.Business.Helpers
 	/// as "yy" to produce the short year (11) or "yyyy" to produce the long year (2011)
 	/// representation.
 	/// </summary>
-	internal sealed class SimpleFormatToken : FormatToken
+	public sealed class SimpleFormatToken : FormatToken
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SimpleFormatToken"/> class.

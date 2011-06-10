@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Core.Business.Helpers
 	/// The <c>FormatToken</c> class is the base class for <see cref="SimpleFormatToken"/> and
 	/// <see cref="ArgumentFormatToken"/>, which implement the formatting details.
 	/// </summary>
-	internal abstract class FormatToken
+	public abstract class FormatToken
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="FormatToken"/> class for

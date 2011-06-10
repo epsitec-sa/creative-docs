@@ -7,7 +7,7 @@ namespace Epsitec.Cresus.Core.Business.Helpers
 	/// The <c>FormattingContext</c> class is tightly coupled with the <see cref="FormatterHelper"/>.
 	/// It stores temporary information about the current formatting operation.
 	/// </summary>
-	internal sealed class FormattingContext
+	public sealed class FormattingContext
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="FormattingContext"/> class.

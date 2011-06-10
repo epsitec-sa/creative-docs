@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Core.Business.Helpers
 	/// The <c>ArgumentFormatToken</c> class implements handling of formatting tokens
 	/// which take one or more arguments, simply enclosed by a pair of parentheses.
 	/// </summary>
-	internal sealed class ArgumentFormatToken : FormatToken
+	public sealed class ArgumentFormatToken : FormatToken
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ArgumentFormatToken"/> class.

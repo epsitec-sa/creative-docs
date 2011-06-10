@@ -8,6 +8,7 @@ using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Resolvers;
 
 namespace Epsitec.Cresus.Core.Business.Helpers
 {
@@ -15,7 +16,7 @@ namespace Epsitec.Cresus.Core.Business.Helpers
 	/// The <c>FormatterHelper</c> class gets instantiated by the <see cref="FormattedIdGenerator"/>
 	/// when it needs to assign a new set of IDs for a given entity.
 	/// </summary>
-	internal sealed class FormatterHelper
+	public sealed class FormatterHelper
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="FormatterHelper"/> class.
@@ -141,6 +142,17 @@ namespace Epsitec.Cresus.Core.Business.Helpers
 
 		public static IEnumerable<FormatToken> GetTokens()
 		{
+			var simple   = FormatterHelper.GetSimpleTokens ();
+			var argument = FormatterHelper.GetArgumentTokens ();
+
+			return Enumerable.Concat (simple, argument);
+		}
+
+		private static IEnumerable<FormatToken> GetSimpleTokens()
+		{
+			//	Tokens such as '#ref(x)' are processed by class ArgumentFormatToken, which takes
+			//	apart the provided format string in order to extract the argument (here, 'x').
+			
 			yield return new SimpleFormatToken ("yy",     x => x.FormatShortYear ());
 			yield return new SimpleFormatToken ("yyyy",   x => x.FormatLongYear ());
 			yield return new SimpleFormatToken ("##",     x => "#");
@@ -150,15 +162,12 @@ namespace Epsitec.Cresus.Core.Business.Helpers
 			yield return new SimpleFormatToken ("nnnn",   x => x.FormatId ("{0:0000}"));
 			yield return new SimpleFormatToken ("nnnnn",  x => x.FormatId ("{0:00000}"));
 			yield return new SimpleFormatToken ("nnnnnn", x => x.FormatId ("{0:000000}"));
-			
-			//	Tokens such as '#ref(x)' are processed by class ArgumentFormatToken, which takes
-			//	apart the provided format string in order to extract the argument (here, 'x').
-			
-			yield return new ArgumentFormatToken ("#ref", (x, arg) => x.FormatReference (arg));
 		}
 
-
-		
+		private static IEnumerable<FormatToken> GetArgumentTokens()
+		{
+			return ReferenceNumberFormatterResolver.GetTokens ();
+		}
 		
 		private readonly FormattedIdGenerator	generator;
 		private readonly IBusinessContext		businessContext;
