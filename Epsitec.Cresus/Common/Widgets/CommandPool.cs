@@ -30,9 +30,14 @@ namespace Epsitec.Common.Widgets
 			{
 				System.Diagnostics.Debug.Assert (CommandPool.commandList.Contains (command));
 
-				if (CommandPool.commandDict.ContainsKey (commandId))
+				Weak<Command> weak;
+
+				if (CommandPool.commandDict.TryGetValue (commandId, out weak))
 				{
-					throw new System.ArgumentException (string.Format ("Command {0} already registered", commandId));
+					if (weak.IsAlive)
+					{
+						throw new System.ArgumentException (string.Format ("Command {0} already registered", commandId));
+					}
 				}
 
 				CommandPool.commandDict[commandId] = new Weak<Command> (command);
