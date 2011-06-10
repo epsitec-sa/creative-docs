@@ -626,47 +626,10 @@ namespace Epsitec.Cresus.Database
 
 		private static SqlField GetConstantWithDefaultValue(DbTypeDef type)
 		{
-			switch (type.RawType)
-			{
-				case DbRawType.Boolean:
-					return SqlField.CreateConstant (false, DbRawType.Boolean);
+			var typeRawType = type.RawType;
+			var value = TypeConverter.GetDefaultValueForDbRawType(typeRawType);
 
-				case DbRawType.ByteArray:
-					return SqlField.CreateConstant (new byte[0], DbRawType.ByteArray);
-
-				case DbRawType.Date:
-					return SqlField.CreateConstant (new Date (), DbRawType.Date);
-
-				case DbRawType.DateTime:
-					return SqlField.CreateConstant (new System.DateTime (), DbRawType.DateTime);
-
-				case DbRawType.Guid:
-					return SqlField.CreateConstant (new System.Guid (), DbRawType.Guid);
-
-				case DbRawType.Int16:
-					return SqlField.CreateConstant ((short) 0, DbRawType.Int16);
-
-				case DbRawType.Int32:
-					return SqlField.CreateConstant ((short) 0, DbRawType.Int32);
-
-				case DbRawType.Int64:
-					return SqlField.CreateConstant ((short) 0, DbRawType.Int64);
-
-				case DbRawType.LargeDecimal:
-					return SqlField.CreateConstant ((decimal) 0, DbRawType.LargeDecimal);
-
-				case DbRawType.SmallDecimal:
-					return SqlField.CreateConstant ((decimal) 0, DbRawType.SmallDecimal);
-
-				case DbRawType.String:
-					return SqlField.CreateConstant ("", DbRawType.String);
-
-				case DbRawType.Time:
-					return SqlField.CreateConstant (new Time(), DbRawType.Time);
-
-				default:
-					throw new System.NotImplementedException ();
-			}
+			return SqlField.CreateConstant (value, type.RawType);
 		}
 
 

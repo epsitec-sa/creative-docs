@@ -668,7 +668,6 @@ namespace Epsitec.Cresus.Database
 			throw new System.InvalidOperationException (string.Format ("Cannot convert from internal representation to type {0}.", rawType));
 		}
 
-
 		/// <summary>
 		/// Gets the invariant format provider.
 		/// </summary>
@@ -680,8 +679,6 @@ namespace Epsitec.Cresus.Database
 				return System.Globalization.CultureInfo.InvariantCulture;
 			}
 		}
-
-
 
 		/// <summary>
 		/// Determines whether the specified type is an <c>enum</c> which needs 64-bit to
@@ -702,6 +699,51 @@ namespace Epsitec.Cresus.Database
 			}
 
 			throw new System.ArgumentException ("Type not an Enum", "systemType");
+		}
+
+		public static object GetDefaultValueForDbRawType(DbRawType dbRawType)
+		{
+			switch (dbRawType)
+			{
+				case DbRawType.Boolean:
+					return false;
+
+				case DbRawType.ByteArray:
+					return new byte[0];
+
+				case DbRawType.Date:
+					return new Date ();
+
+				case DbRawType.DateTime:
+					return new System.DateTime ();
+
+				case DbRawType.Guid:
+					return new System.Guid ();
+
+				case DbRawType.Int16:
+					return (short) 0;
+
+				case DbRawType.Int32:
+					return (int) 0;
+
+				case DbRawType.Int64:
+					return (long) 0;
+
+				case DbRawType.LargeDecimal:
+					return (decimal) 0;
+
+				case DbRawType.SmallDecimal:
+					return (decimal) 0;
+
+				case DbRawType.String:
+					return "";
+
+				case DbRawType.Time:
+					return new Time ();
+
+				default:
+					throw new System.NotImplementedException ();
+			}
 		}
 
 
