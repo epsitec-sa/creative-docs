@@ -17,40 +17,46 @@ namespace Epsitec.Cresus.Core.Business.Actions
 	{
 		public static void CreateOrderBooking()
 		{
-			var workflowEngine  = WorkflowExecutionEngine.Current;
-			var businessContext = workflowEngine.BusinessContext;
-			var categoryRepo    = businessContext.GetSpecificRepository<DocumentCategoryEntity.Repository> ();
-			var currentAffair   = businessContext.GetMasterEntity<AffairEntity> ();
-			var currentDocument = currentAffair.Documents.LastOrDefault (x => x.DocumentCategory.DocumentType == DocumentType.SalesQuote);
-
-			System.Diagnostics.Debug.Assert (currentDocument.IsNotNull (), "No sales quote document can be found");
-
-			if (currentDocument.IsNotNull ())
-			{
-				var documentMetadata = businessContext.CreateEntity<DocumentMetadataEntity> ();
-
-				documentMetadata.DocumentCategory = categoryRepo.Find (DocumentType.OrderBooking).First ();
-				documentMetadata.BusinessDocument = currentDocument.BusinessDocument;
-
-				currentAffair.Documents.Add (documentMetadata);
-			}
+			AffairActions.CreateDocument (DocumentType.SalesQuote, DocumentType.OrderBooking);
 		}
 
 		public static void CreateOrderConfirmation()
+		{
+			AffairActions.CreateDocument (DocumentType.OrderBooking, DocumentType.OrderConfirmation);
+		}
+
+		public static void CreateProductionOrder()
+		{
+			AffairActions.CreateDocument (DocumentType.OrderConfirmation, DocumentType.ProductionOrder);
+		}
+
+		public static void CreateProductionCheckList()
+		{
+			AffairActions.CreateDocument (DocumentType.ProductionOrder, DocumentType.ProductionChecklist);
+		}
+
+		public static void CreateInvoice()
+		{
+			AffairActions.CreateDocument (DocumentType.OrderConfirmation, DocumentType.Invoice);
+		}
+		
+		
+		
+		private static void CreateDocument(DocumentType docTypeOld, DocumentType docTypeNew)
 		{
 			var workflowEngine  = WorkflowExecutionEngine.Current;
 			var businessContext = workflowEngine.BusinessContext;
 			var categoryRepo    = businessContext.GetSpecificRepository<DocumentCategoryEntity.Repository> ();
 			var currentAffair   = businessContext.GetMasterEntity<AffairEntity> ();
-			var currentDocument = currentAffair.Documents.LastOrDefault (x => x.DocumentCategory.DocumentType == DocumentType.OrderBooking);
+			var currentDocument = currentAffair.Documents.LastOrDefault (x => x.DocumentCategory.DocumentType == docTypeOld);
 
-			System.Diagnostics.Debug.Assert (currentDocument.IsNotNull (), "No order booking document can be found");
+			System.Diagnostics.Debug.Assert (currentDocument.IsNotNull (), string.Format ("No {0} document can be found", docTypeOld));
 
 			if (currentDocument.IsNotNull ())
 			{
 				var documentMetadata = businessContext.CreateEntity<DocumentMetadataEntity> ();
 
-				documentMetadata.DocumentCategory = categoryRepo.Find (DocumentType.OrderConfirmation).First ();
+				documentMetadata.DocumentCategory = categoryRepo.Find (docTypeNew).First ();
 				documentMetadata.BusinessDocument = currentDocument.BusinessDocument;
 
 				currentAffair.Documents.Add (documentMetadata);
