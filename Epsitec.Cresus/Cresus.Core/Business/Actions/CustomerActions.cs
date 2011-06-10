@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Core.Controllers;
@@ -18,9 +18,14 @@ namespace Epsitec.Cresus.Core.Business.Actions
 			var categoryRepo    = businessContext.GetSpecificRepository<DocumentCategoryEntity.Repository> ();
 			var currentCustomer = businessContext.GetMasterEntity<CustomerEntity> ();
 
-			var affair           = businessContext.CreateEntity<AffairEntity> ();
-			var documentMetadata = businessContext.CreateEntity<DocumentMetadataEntity> ();
-			var businessDocument = businessContext.CreateEntity<BusinessDocumentEntity> ();
+			//	Create the affair, the document metadata and the document itself; as these might
+			//	be referred to from the business logic, make sure we temporarily register them as
+			//	master entities :
+			
+			var affair           = businessContext.CreateMasterEntity<AffairEntity> ();
+			var documentMetadata = businessContext.CreateMasterEntity<DocumentMetadataEntity> ();
+			var businessDocument = businessContext.CreateMasterEntity<BusinessDocumentEntity> ();
+			
 			var documentCategory = categoryRepo.Find (DocumentType.SalesQuote).First ();
 
 			documentMetadata.DocumentCategory = documentCategory;
@@ -34,6 +39,14 @@ namespace Epsitec.Cresus.Core.Business.Actions
 			affair.Documents.Add (documentMetadata);
 
 			currentCustomer.Affairs.Add (affair);
+
+			//	Now that everything has been properly set up, we can remove the entities from
+			//	the list of master entities. They will be registered appropriately when the
+			//	UI panels are opened.
+			
+			businessContext.RemoveMasterEntity (businessDocument);
+			businessContext.RemoveMasterEntity (documentMetadata);
+			businessContext.RemoveMasterEntity (affair);
 		}
 	}
 }

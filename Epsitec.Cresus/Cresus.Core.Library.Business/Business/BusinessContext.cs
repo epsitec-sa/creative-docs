@@ -688,6 +688,14 @@ namespace Epsitec.Cresus.Core.Business
 			return this.ApplyRules (RuleType.Setup, newEntity);
 		}
 
+		public T CreateMasterEntity<T>()
+			where T : AbstractEntity, new ()
+		{
+			var entity = this.CreateEntity<T> ();
+			this.AddMasterEntity (entity);
+			return entity;
+		}
+
 		public T CreateEntityAndRegisterAsEmpty<T>()
 			where T : AbstractEntity, new ()
 		{
