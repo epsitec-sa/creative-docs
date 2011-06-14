@@ -68,6 +68,19 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
+		public static EnumKeyValues GetEnumKeyValue(object value)
+		{
+			var type = typeof (Helper<>).MakeGenericType (value.GetType ());
+			var helper = System.Activator.CreateInstance (type) as Helper;
+			return helper.GetEnumKeyValues (value);
+		}
+
+		public static EnumKeyValues GetEnumKeyValue<T>(T value)
+			where T : struct
+		{
+			return EnumKeyValues.FromEnum<T> ().FirstOrDefault (x => x.Key.Equals (value));
+		}
+
 		public abstract FormattedText[] Values
 		{
 			get;
@@ -81,5 +94,19 @@ namespace Epsitec.Cresus.Core.Library
 		}
 
 		#endregion
+
+		private abstract class Helper
+		{
+			public abstract EnumKeyValues GetEnumKeyValues(object value);
+		}
+		private class Helper<T> : Helper
+			where T : struct
+		{
+			public override EnumKeyValues GetEnumKeyValues(object value)
+			{
+				return EnumKeyValues.GetEnumKeyValue<T> ((T) value);
+			}
+		}
+
 	}
 }

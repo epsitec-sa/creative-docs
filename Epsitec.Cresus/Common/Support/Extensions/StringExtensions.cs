@@ -25,6 +25,19 @@ namespace Epsitec.Common.Support.Extensions
 #endif
 		}
 
+		public static bool StartsWith(this string text, char character)
+		{
+			if ((text != null) &&
+				(text.Length > 0))
+			{
+				return text[0] == character;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
 		public static string StripSuffix(this string text, string suffix)
 		{
 			if (string.IsNullOrEmpty (suffix))

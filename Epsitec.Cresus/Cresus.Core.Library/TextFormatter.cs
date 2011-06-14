@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Library.Internal;
@@ -72,6 +73,10 @@ namespace Epsitec.Cresus.Core
 			if (value is Date)
 			{
 				return ((Date) value).ToDateTime ().ToShortDateString ();
+			}
+			if (value.GetType ().IsEnum)
+			{
+				return TextFormatter.ConvertToText (EnumKeyValues.GetEnumKeyValue (value));
 			}
 
 			FormattedText formattedText = TextFormatterConverter.ToFormattedText (value, TextFormatter.CurrentCulture, TextFormatter.CurrentDetailLevel);
@@ -235,6 +240,7 @@ namespace Epsitec.Cresus.Core
 		public static class Prefix
 		{
 			public const char SkipItemIfPreviousEmpty = '~';
+			public const char CommandEscape = '‼';
 		}
 
 		public static class Suffix
@@ -242,9 +248,13 @@ namespace Epsitec.Cresus.Core
 			public const char SkipItemIfNextEmpty = '~';
 		}
 
-
-		public const string Mark = "‼[mark]";
-		public const string ClearGroupIfEmpty = "‼[clear-group-if-empty]";
+		public static class Command
+		{
+			public const string EmptyReplacement	= "‼empty";
+			public const string Ignore				= "‼ignore";
+			public const string Mark				= "‼[mark]";
+			public const string ClearGroupIfEmpty	= "‼[clear-group-if-empty]";
+		}
 
 		private static void ProcessTags(List<string> items)
 		{
@@ -254,21 +264,36 @@ namespace Epsitec.Cresus.Core
 			{
 				string item = items[i];
 
-				if ((item == TextFormatter.ClearGroupIfEmpty) &&
-					(i > 0))
+				if ((item.Length > 0) &&
+					(item[0] == Prefix.CommandEscape))
 				{
-					string probe = items[i-1];
+					string command = item.Split(':')[0];
 
-					if (string.IsNullOrWhiteSpace (probe))
+					if (i > 0)
 					{
-						TextFormatter.ClearGroup (items, i);
-						TextFormatter.ProcessTags (items);
-						break;
+						string probe = items[i-1];
+
+						if (string.IsNullOrWhiteSpace (probe))
+						{
+							if (command == Command.ClearGroupIfEmpty)
+							{
+								TextFormatter.ClearGroup (items, i);
+								TextFormatter.ProcessTags (items);
+								break;
+							}
+							else if (command == Command.EmptyReplacement)
+							{
+								items[i-1] = item.Substring (command.Length+1);
+								items[i-0] = Command.Ignore;
+								TextFormatter.ProcessTags (items);
+								break;
+							}
+						}
 					}
 				}
 			}
 
-			items.RemoveAll (x => x.StartsWith ("‼"));
+			items.RemoveAll (x => x.StartsWith (Prefix.CommandEscape));
 		}
 
 		private static void ClearGroup(List<string> items, int index)
@@ -277,7 +302,7 @@ namespace Epsitec.Cresus.Core
 
 			for (int i = index-1; i > 0; i--)
 			{
-				if (items[i] == TextFormatter.Mark)
+				if (items[i] == Command.Mark)
 				{
 					startIndex = i+1;
 					break;
@@ -289,7 +314,7 @@ namespace Epsitec.Cresus.Core
 
 			for (int i = index+1; i < count; i++)
 			{
-				if (items[i] == TextFormatter.Mark)
+				if (items[i] == Command.Mark)
 				{
 					endIndex = i-1;
 					break;
