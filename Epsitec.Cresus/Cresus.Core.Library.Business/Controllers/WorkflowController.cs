@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -175,9 +175,31 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			return from workflow in WorkflowController.GetEnabledWorkflows (context).Distinct ()
 				   from thread in workflow.Threads
+				   where WorkflowController.IsActiveThread (thread)
 				   let  node = WorkflowController.GetCurrentNode (thread)
 				   from edge in WorkflowController.GetEnabledEdges (thread, node)
 				   select new WorkflowTransition (context, workflow, thread, node, edge);
+		}
+
+		private static bool IsActiveThread(WorkflowThreadEntity thread)
+		{
+			WorkflowStatus status = thread.Status;
+
+			switch (status)
+			{
+				case WorkflowStatus.None:
+				case WorkflowStatus.Active:
+				case WorkflowStatus.Pending:
+					return true;
+
+				case WorkflowStatus.Done:
+				case WorkflowStatus.Cancelled:
+				case WorkflowStatus.TimedOut:
+					return false;
+
+				default:
+					throw new System.NotImplementedException (string.Format ("WorkflowStatus.{0} not implemented", status));
+			}
 		}
 
 		private static IEnumerable<WorkflowEntity> GetEnabledWorkflows(BusinessContext context)

@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Core.Business;
@@ -9,8 +9,20 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
+	/// <summary>
+	/// The <c>WorkflowTransition</c> class captures a workflow transition (from one node
+	/// to another).
+	/// </summary>
 	public class WorkflowTransition
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="WorkflowTransition"/> class.
+		/// </summary>
+		/// <param name="businessContext">The business context.</param>
+		/// <param name="workflow">The workflow.</param>
+		/// <param name="workflowThread">The workflow thread.</param>
+		/// <param name="workflowNode">The workflow node.</param>
+		/// <param name="workflowEdge">The workflow edge.</param>
 		public WorkflowTransition(IBusinessContext businessContext, WorkflowEntity workflow, WorkflowThreadEntity workflowThread, WorkflowNodeEntity workflowNode, WorkflowEdgeEntity workflowEdge)
 		{
 			this.businessContext = businessContext;

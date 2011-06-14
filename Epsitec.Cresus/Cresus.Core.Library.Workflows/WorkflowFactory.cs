@@ -20,6 +20,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			var workflow  = businessContext.CreateEntity<WorkflowEntity> ();
 			var thread    = businessContext.CreateEntity<WorkflowThreadEntity> ();
 
+			thread.Status     = WorkflowStatus.Pending;
 			thread.Definition = businessContext.GetLocalEntity (WorkflowFactory.FindDefaultWorkflowDefinition<T> (businessContext.Data, workflowName));
 
 			workflow.Threads.Add (thread);

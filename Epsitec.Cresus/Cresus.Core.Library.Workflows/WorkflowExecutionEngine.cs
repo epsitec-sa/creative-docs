@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -13,6 +13,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
+	/// <summary>
+	/// The <c>WorkflowExecutionEngine</c> class manages the execution of workflow steps.
+	/// </summary>
 	public sealed class WorkflowExecutionEngine : IIsDisposed
 	{
 		public WorkflowExecutionEngine(WorkflowTransition transition)
@@ -22,7 +25,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.businessContext = this.transition.BusinessContext;
 		}
 
-		public static WorkflowExecutionEngine Current
+
+		/// <summary>
+		/// Gets the current <see cref="WorkflowExecutionEngine"/>; this is only available while
+		/// the engine is executing method <see cref="Execute"/>.
+		/// </summary>
+		public static WorkflowExecutionEngine	Current
 		{
 			get
 			{
@@ -31,7 +39,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		public IBusinessContext BusinessContext
+		public IBusinessContext					BusinessContext
 		{
 			get
 			{
@@ -40,7 +48,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		[System.Diagnostics.DebuggerBrowsable (System.Diagnostics.DebuggerBrowsableState.Never)]
-		public Logic BusinessLogic
+		public Logic							BusinessLogic
 		{
 			get
 			{
@@ -53,7 +61,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public WorkflowTransition Transition
+		public WorkflowTransition				Transition
 		{
 			get
 			{
@@ -62,6 +70,11 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
+		/// <summary>
+		/// Executes one step in the workflow (this might include several edges/nodes, as
+		/// there might be automatic transitions) as defined by the <see cref="WorkflowTransition"/>
+		/// specified in the constructor.
+		/// </summary>
 		public void Execute()
 		{
 			var previousExecutionEngine = WorkflowExecutionEngine.current;
@@ -76,6 +89,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				WorkflowExecutionEngine.current = previousExecutionEngine;
 			}
 		}
+
 
 		#region IDisposable Members
 
@@ -134,42 +148,21 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				if (iterationCount++ > 100)
 				{
-					throw new System.Exception ("Fatal error: malformed workflow produces too many transitions at once");
+					using (this.businessContext.AutoLock (workflow))
+					{
+						WorkflowExecutionEngine.ChangeThreadStatus (thread, WorkflowStatus.Cancelled);
+						this.businessContext.SaveChanges ();
+					}
+					
+					throw new System.Exception ("Fatal error: malformed workflow produces too many transitions at once -- cancelled");
 				}
 			}
-		}
-
-		private struct Arc
-		{
-			public Arc(WorkflowNodeEntity node, WorkflowEdgeEntity edge)
-			{
-				this.node = node;
-				this.edge = edge;
-			}
-
-
-			public WorkflowNodeEntity Node
-			{
-				get
-				{
-					return this.node;
-				}
-			}
-
-			public WorkflowEdgeEntity Edge
-			{
-				get
-				{
-					return this.edge;
-				}
-			}
-
-			private readonly WorkflowNodeEntity node;
-			private readonly WorkflowEdgeEntity edge;
 		}
 
 		private bool FollowThreadWorkflowEdge(WorkflowThreadEntity thread, Queue<Arc> arcs, System.Func<Arc, bool> executor)
 		{
+			WorkflowExecutionEngine.ChangeThreadStatus (thread, WorkflowStatus.Active);
+
 			var arc  = arcs.Dequeue ();
 			var edge = arc.Edge;
 
@@ -259,6 +252,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			WorkflowThreadEntity thread = this.businessContext.CreateEntity<WorkflowThreadEntity> ();
 
+			thread.Status     = WorkflowStatus.Pending;
 			thread.Definition = null;
 
 			this.AddThreadToWorkflow (thread);
@@ -286,6 +280,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			if (lastIndex < 0)
 			{
 				//	We have reached the end of the graph...
+
+				WorkflowExecutionEngine.ChangeThreadStatus (thread, WorkflowStatus.Done);
 			}
 			else
 			{
@@ -310,14 +306,51 @@ namespace Epsitec.Cresus.Core.Controllers
 			thread.History.Add (step);
 		}
 
+		private static void ChangeThreadStatus(WorkflowThreadEntity thread, WorkflowStatus status)
+		{
+			thread.Status = status;
+		}
+
+		#region Arc Structure
+
+		private struct Arc
+		{
+			public Arc(WorkflowNodeEntity node, WorkflowEdgeEntity edge)
+			{
+				this.node = node;
+				this.edge = edge;
+			}
+
+
+			public WorkflowNodeEntity			Node
+			{
+				get
+				{
+					return this.node;
+				}
+			}
+
+			public WorkflowEdgeEntity			Edge
+			{
+				get
+				{
+					return this.edge;
+				}
+			}
+
+			private readonly WorkflowNodeEntity node;
+			private readonly WorkflowEdgeEntity edge;
+		}
+
+		#endregion
+
 		[System.ThreadStatic]
-		private static WorkflowExecutionEngine current;
+		private static WorkflowExecutionEngine	current;
 
-		private readonly WorkflowTransition transition;
-		private readonly CoreData			data;
-		private readonly IBusinessContext	businessContext;
-
-		private Logic						businessLogic;
-		private bool isDisposed;
+		private readonly WorkflowTransition		transition;
+		private readonly CoreData				data;
+		private readonly IBusinessContext		businessContext;
+		private Logic							businessLogic;
+		private bool							isDisposed;
 	}
 }
