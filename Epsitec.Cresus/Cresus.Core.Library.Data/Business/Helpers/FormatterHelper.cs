@@ -135,11 +135,6 @@ namespace Epsitec.Cresus.Core.Business.Helpers
 			return string.Format (numberFormat, this.formatContext.Id);
 		}
 
-		private string FormatReference(string arg)
-		{
-			return "";
-		}
-
 		public static IEnumerable<FormatToken> GetTokens()
 		{
 			var simple   = FormatterHelper.GetSimpleTokens ();
