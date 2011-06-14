@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Types;
@@ -14,14 +14,14 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionContactRoleViewController : EditionViewController<Entities.ContactGroupEntity>
+	public class EditionContactGroupViewController : EditionViewController<Entities.ContactGroupEntity>
 	{
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
 			{
 				builder.CreateHeaderEditorTile ();
-				builder.CreateEditionTitleTile ("Data.ContactRole", "Rôle");
+				builder.CreateEditionTitleTile ("Data.ContactGroup", "Rôle");
 
 				this.CreateUIMain (builder);
 

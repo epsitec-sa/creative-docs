@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
 			};
 
-			builder.CreateEditionDetailedItemPicker ("ContactRoles", this.Entity, "Rôles souhaités", controller, Business.EnumValueCardinality.Any, ViewControllerMode.Summary, 3);
+			builder.CreateEditionDetailedItemPicker ("ContactGroups", this.Entity, "Rôles souhaités", controller, Business.EnumValueCardinality.Any, ViewControllerMode.Summary, 3);
 		}
 		
 		private void CreateUITelecomType(Epsitec.Cresus.Core.UIBuilder builder)
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tileData = new TileDataItem
 			{
-				Name            = "TelecomContactRoles",
+				Name            = "TelecomContactGroups",
 				IconUri	        = "Data.TelecomContact",
 				Title	        = TextFormatter.FormatText ("Téléphone"),
 				CompactTitle    = TextFormatter.FormatText ("Téléphone"),
@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 						ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
 					};
 
-					builder.CreateEditionDetailedItemPicker (tile, "ContactRoles", this.Entity, "Rôles souhaités", controller, EnumValueCardinality.Any, ViewControllerMode.Summary, 3);
+					builder.CreateEditionDetailedItemPicker (tile, "ContactGroups", this.Entity, "Rôles souhaités", controller, EnumValueCardinality.Any, ViewControllerMode.Summary, 3);
 				}
 			};
 

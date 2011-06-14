@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tileData = new TileDataItem
 			{
-				Name            = "MailContactRoles",
+				Name            = "MailContactGroups",
 				IconUri	        = "Data.MailContact",
 				Title	        = TextFormatter.FormatText ("Adresse"),
 				CompactTitle    = TextFormatter.FormatText ("Adresse"),
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 						ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
 					};
 
-					builder.CreateEditionDetailedItemPicker (tile, "ContactRoles", this.Entity, "Rôles souhaités", controller, EnumValueCardinality.Any, ViewControllerMode.Summary, 3);
+					builder.CreateEditionDetailedItemPicker (tile, "ContactGroups", this.Entity, "Rôles souhaités", controller, EnumValueCardinality.Any, ViewControllerMode.Summary, 3);
 				}
 			};
 

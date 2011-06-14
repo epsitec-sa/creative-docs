@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Support.EntityEngine;
@@ -16,31 +16,31 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	[ControllerSubType (3)]
-	public class SummaryContactRoleListViewController : SummaryViewController<AbstractContactEntity>
+	public class SummaryContactGroupListViewController : SummaryViewController<AbstractContactEntity>
 	{
 		protected override void CreateUI()
 		{
 			using (var data = TileContainerController.Setup (this))
 			{
-				this.CreateUIContactRoles (data);
+				this.CreateUIContactGroups (data);
 			}
 		}
 
 
-		private void CreateUIContactRoles(TileDataItems data)
+		private void CreateUIContactGroups(TileDataItems data)
 		{
 			data.Add (
 				new TileDataItem
 				{
 					AutoGroup    = true,
-					Name		 = "ContactRoles",
-					IconUri		 = "Data.ContactRole",
+					Name		 = "ContactGroups",
+					IconUri		 = "Data.ContactGroup",
 					Title		 = TextFormatter.FormatText ("Tous les rôles connus"),
 					CompactTitle = TextFormatter.FormatText ("Tous les rôles connus"),
 					Text		 = CollectionTemplate.DefaultEmptyText,
 				});
 
-			var template = new CollectionTemplate<ContactGroupEntity> ("ContactRoles", this.BusinessContext);
+			var template = new CollectionTemplate<ContactGroupEntity> ("ContactGroups", this.BusinessContext);
 
 			template.DefineText        (x => x.GetSummary ());
 			template.DefineCompactText (x => x.GetCompactSummary ());

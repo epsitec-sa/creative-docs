@@ -152,11 +152,11 @@
     <Compile Include="Dialogs\SettingsTabPages\MaintenanceTabPage.cs" />
     <Compile Include="Helpers\StatusHelperCardinality.cs" />
     <Compile Include="Controllers\EditionControllers\EditionUnitOfMeasureGroupViewController.cs" />
-    <Compile Include="Controllers\EditionControllers\EditionContactRoleViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionContactGroupViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticlePriceViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionEndTotalBusinessDocumentViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryUnitOfMeasureGroupViewController.cs" />
-    <Compile Include="Controllers\SummaryControllers\SummaryContactRoleListViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryContactGroupListViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleGroupListViewController.cs" />
     <Compile Include="Dialogs\SettingsTabPages\PrintingUnitsTabPage.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticleQuantityViewController.cs" />
@@ -240,7 +240,7 @@
     <EmbeddedResource Include="Images\Clipboard.Copy.icon" />
     <EmbeddedResource Include="Images\Clipboard.Cut.icon" />
     <EmbeddedResource Include="Images\Clipboard.Paste.icon" />
-    <EmbeddedResource Include="Images\Data.ContactRole.icon" />
+    <EmbeddedResource Include="Images\Data.ContactGroup.icon" />
     <EmbeddedResource Include="Images\logo-cresus.png" />
     <Content Include="Resources\Cresus.Core\module.info">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
