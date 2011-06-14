@@ -119,10 +119,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				IconUri		       = "Data.TotalDocumentItem",
 				Title		       = TextFormatter.FormatText ("Total"),
 				CompactTitle       = TextFormatter.FormatText ("Total"),
-				CreateCustomizedUI = (tile, builder) =>
-				{
-					builder.CreateStaticText (tile, GetTotalSummary (this.Entity).ToString ());
-				}
+				TextAccessor       = this.CreateAccessor (x => GetTotalSummary (x))
 			};
 
 			data.Add (tileData);
