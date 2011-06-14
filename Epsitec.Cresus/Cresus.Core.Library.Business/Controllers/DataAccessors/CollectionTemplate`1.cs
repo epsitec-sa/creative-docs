@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			this.dataContextPool = businessContext.Data.DataContextPool;
 
 			this.DefineCreateItem (() => this.businessContext.CreateEntityAndRegisterAsEmpty<T> ());
-			this.DefineDeleteItem (x => this.businessContext.ArchiveEntity<T> (x));
+			this.DefineDeleteItem (x => this.businessContext.ArchiveOrDeleteEntity<T> (x));
 		}
 
 		public CollectionTemplate(string name, BusinessContext businessContext, System.Predicate<T> filter)

@@ -708,26 +708,39 @@ namespace Epsitec.Cresus.Core.Business
 		{
 			ILifetime lifetime = entity as ILifetime;
 
-			if (lifetime != null)
+			if (lifetime == null)
 			{
-				if (this.DataContext.IsPersistent (entity))
-				{
-					lifetime.IsArchive = true;
-				}
-				else
-				{
-					this.DataContext.DeleteEntity (entity);
-				}
-
-				return true;
+				return false;
 			}
 
-			throw new System.InvalidOperationException ("ArchiveEntity not possible on this entity type");
+			if (this.DataContext.IsPersistent (entity))
+			{
+				lifetime.IsArchive = true;
+			}
+			else
+			{
+				this.DataContext.DeleteEntity (entity);
+			}
+
+			return true;
 		}
 
-		public void DeleteEntity(AbstractEntity entity)
+		public bool ArchiveOrDeleteEntity<T>(T entity)
+			where T : AbstractEntity, new ()
 		{
-			this.DataContext.DeleteEntity (entity);
+			if (this.ArchiveEntity (entity))
+			{
+				return true;
+			}
+			else
+			{
+				return this.DeleteEntity (entity);
+			}
+		}
+
+		public bool DeleteEntity(AbstractEntity entity)
+		{
+			return this.DataContext.DeleteEntity (entity);
 		}
 
 		#region IDisposable Members

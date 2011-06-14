@@ -679,6 +679,17 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <summary>
 		/// Deletes an <see cref="AbstractEntity"/> from the database.
 		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> to delete.</param>
+		/// <returns><c>true</c> if the entity has been added to the list of pending deletes; otherwise, <c>false</c>.</returns>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		///   
+		/// <exception cref="Epsitec.Common.Types.Exceptions.ReadOnlyException">If this instance is in read only mode.</exception>
+		///   
+		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
+		///   
+		/// <exception cref="Epsitec.Common.Types.Exceptions.ReadOnlyException">If <paramref name="entity"/> is in read only mode.</exception>
+		///   
+		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is managed by another <see cref="DataContext"/>.</exception>
 		/// <remarks>
 		/// Take care with this feature, because it is subtle. It will remove the <see cref="AbstractEntity"/>
 		/// from the database during the call to <see cref="SaveChanges"/>. In the meantime, it will
@@ -687,13 +698,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// will be able to use it as a normal <see cref="AbstractEntity"/>, except that nothing will
 		/// be persisted to the database.
 		/// </remarks>
-		/// <param name="entity">The <see cref="AbstractEntity"/> to delete.</param>
-		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		/// <exception cref="Epsitec.Common.Types.Exceptions.ReadOnlyException">If this instance is in read only mode.</exception>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
-		/// <exception cref="Epsitec.Common.Types.Exceptions.ReadOnlyException">If <paramref name="entity"/> is in read only mode.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is managed by another <see cref="DataContext"/>.</exception>
-		public void DeleteEntity(AbstractEntity entity)
+		public bool DeleteEntity(AbstractEntity entity)
 		{
 			this.AssertDataContextIsNotDisposed ();
 			this.ThrowIfReadOnly ();
@@ -702,9 +707,14 @@ namespace Epsitec.Cresus.DataLayer.Context
 			entity.AssertIsNotReadOnly ();
 			this.AssertEntityIsNotForeign (entity);
 
-			if (!this.entitiesDeleted.Contains (entity))
+			if (this.entitiesDeleted.Contains (entity))
+			{
+				return false;
+			}
+			else
 			{
 				this.entitiesToDelete.Add (entity);
+				return true;
 			}
 		}
 

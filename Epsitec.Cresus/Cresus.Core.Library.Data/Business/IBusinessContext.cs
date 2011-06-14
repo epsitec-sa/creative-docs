@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Core.Business
 		T CreateMasterEntity<T>()
 			where T : AbstractEntity, new ();
 
-		void DeleteEntity(AbstractEntity entity);
+		bool DeleteEntity(AbstractEntity entity);
 
 		void AddMasterEntity(AbstractEntity masterEntity);
 		
