@@ -254,6 +254,7 @@ namespace Epsitec.Cresus.Graph
 					case "-connector":
 						if (param == "SendData")
                         {
+							System.Diagnostics.Debugger.Break ();
 							this.SetupConnectorServer ();
 						}
 						break;

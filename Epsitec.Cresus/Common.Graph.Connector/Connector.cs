@@ -36,9 +36,9 @@ namespace Epsitec.Cresus.Graph
 
 					try
 					{
-						if (System.IO.Directory.Exists (@"S:\Epsitec.Cresus\Cresus.Graph\bin\Debug"))
+						if (System.IO.Directory.Exists (@"S:\Epsitec.Cresus\App.CresusGraph\bin\Debug"))
 						{
-							graphDirPath = @"S:\Epsitec.Cresus\Cresus.Graph\bin\Debug";
+							graphDirPath = @"S:\Epsitec.Cresus\App.CresusGraph\bin\Debug";
 						}
 					}
 					catch
