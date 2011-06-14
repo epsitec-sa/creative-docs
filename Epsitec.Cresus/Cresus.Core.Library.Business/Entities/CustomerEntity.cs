@@ -4,12 +4,26 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Core.Business;
+
 using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class CustomerEntity
 	{
+		/// <summary>
+		/// Gets the mail contact of the specified type.
+		/// </summary>
+		/// <param name="type">The type of mail contact.</param>
+		/// <returns>The mail contact if a match can be found; otherwise, <c>null</c>.</returns>
+		public MailContactEntity GetMailContact(ContactGroupType type)
+		{
+			var mailContacts = this.Relation.Person.Contacts.OfType<MailContactEntity> ();
+
+			return mailContacts.FirstOrDefault (x => x.ContactGroups.Any (c => c.ContactGroupType == type));
+		}
+
 		public override FormattedText GetSummary()
 		{
 			return TextFormatter.FormatText
