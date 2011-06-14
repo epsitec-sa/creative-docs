@@ -16,6 +16,8 @@ namespace Epsitec.Cresus.Core.Library.Address
 			{
 			}
 			
+			//	designer:cap/FVAU1
+			public static readonly Epsitec.Common.Types.EnumType ContactGroupType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 62));
 			//	designer:cap/FVA1
 			public static readonly Epsitec.Common.Types.StructuredType AbstractContact = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 1));
 			//	designer:cap/FVA
@@ -58,6 +60,62 @@ namespace Epsitec.Cresus.Core.Library.Address
 			public static readonly Epsitec.Common.Types.StructuredType UriType = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 58));
 		}
 		
+		public static class Values
+		{
+			internal static void _Initialize()
+			{
+			}
+			
+			public static class ContactGroupType
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/FVA12
+				public static global::Epsitec.Common.Types.Caption Billing
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Address.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 65));
+					}
+				}
+				//	designer:cap/FVA02
+				public static global::Epsitec.Common.Types.Caption None
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Address.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 64));
+					}
+				}
+				//	designer:cap/FVA32
+				public static global::Epsitec.Common.Types.Caption Return
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Address.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 67));
+					}
+				}
+				//	designer:cap/FVA22
+				public static global::Epsitec.Common.Types.Caption Shipping
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Address.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 66));
+					}
+				}
+				//	designer:cap/FVAV1
+				public static global::Epsitec.Common.Types.Caption Unknown
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Address.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 63));
+					}
+				}
+			}
+			
+		}
+		
 		public static class Fields
 		{
 			public static class AbstractContact
@@ -98,6 +156,16 @@ namespace Epsitec.Cresus.Core.Library.Address
 				public static readonly global::Epsitec.Common.Support.Druid PostBox = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 47);
 				//	designer:cap/FVAE1
 				public static readonly global::Epsitec.Common.Support.Druid Street = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 46);
+			}
+			
+			public static class ContactGroup
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/FVA42
+				public static readonly global::Epsitec.Common.Support.Druid ContactGroupType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 68);
 			}
 			
 			public static class Country
@@ -329,9 +397,12 @@ namespace Epsitec.Cresus.Core.Library.Address
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Cresus.Core.Library.Address");
 			Types._Initialize ();
+			Values._Initialize ();
+			Values.ContactGroupType._Initialize ();
 			Fields.AbstractContact._Initialize ();
 			Fields.AbstractPerson._Initialize ();
 			Fields.Address._Initialize ();
+			Fields.ContactGroup._Initialize ();
 			Fields.Country._Initialize ();
 			Fields.IAddressComplement._Initialize ();
 			Fields.LegalPerson._Initialize ();

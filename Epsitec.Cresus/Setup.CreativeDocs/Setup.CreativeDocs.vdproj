@@ -411,7 +411,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Common.Document, Version=3.3.0.1121, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Common.Document, Version=3.3.1.1123, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_0CC0F243CD14E984C08EB3D67BC20CEE"
@@ -442,7 +442,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Common.DocumentEditor, Version=3.3.0.1121, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Common.DocumentEditor, Version=3.3.1.1123, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_10ED59C032C634DEB57C66AC085313D8"
@@ -544,7 +544,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Common.Document, Version=3.3.0.1121, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Common.Document, Version=3.3.1.1123, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_6A5156D6419345F88A530E89663C3587"
@@ -575,7 +575,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Common, Version=3.3.0.1121, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Common, Version=3.3.1.1123, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_76859236A9984EE19EAED75863051399"
@@ -677,7 +677,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:App.CreativeDocs, Version=3.3.0.1121, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:App.CreativeDocs, Version=3.3.1.1123, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_897E7C0BBFDD4ED89A9894C3CE9A3EE8"
@@ -708,7 +708,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Common.DocumentEditor, Version=3.3.0.1121, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Common.DocumentEditor, Version=3.3.1.1123, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_A8C1A9DA7F524FCC9F893C87BDD4B034"
@@ -810,7 +810,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Common, Version=3.3.0.1121, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Common, Version=3.3.1.1123, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_F0A61FE1C6E2A08FF60935033AAF786E"
@@ -994,7 +994,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Creative Docs .NET"
         "ProductCode" = "8:{B51EEA40-38E6-4AFA-909E-28FE5D1F2E49}"
-        "PackageCode" = "8:{61EEE011-C24C-4BEC-A931-5BCCA33C4F96}"
+        "PackageCode" = "8:{16804AEC-C7FF-4DB0-BBE8-13B893EB5975}"
         "UpgradeCode" = "8:{925CE84A-106F-439D-B0AA-6222B871FB71}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

@@ -44,6 +44,7 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="Business\ContactGroupType.cs" />
     <Compile Include="Business\Rules\LegalPersonBusinessRules.cs" />
     <Compile Include="Business\Rules\NaturalPersonBusinessRules.cs" />
     <Compile Include="Entities\AbstractPersonEntity.cs" />

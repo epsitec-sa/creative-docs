@@ -316,7 +316,31 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		#endregion
+		///	<summary>
+		///	The <c>ContactGroupType</c> field.
+		///	designer:fld/FVA4/FVA42
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[FVA42]")]
+		public global::Epsitec.Cresus.Core.Business.ContactGroupType ContactGroupType
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Business.ContactGroupType> ("[FVA42]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Business.ContactGroupType oldValue = this.ContactGroupType;
+				if (oldValue != value || !this.IsFieldDefined("[FVA42]"))
+				{
+					this.OnContactGroupTypeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.ContactGroupType> ("[FVA42]", oldValue, value);
+					this.OnContactGroupTypeChanged (oldValue, value);
+				}
+			}
+		}
 		
+		partial void OnContactGroupTypeChanging(global::Epsitec.Cresus.Core.Business.ContactGroupType oldValue, global::Epsitec.Cresus.Core.Business.ContactGroupType newValue);
+		partial void OnContactGroupTypeChanged(global::Epsitec.Cresus.Core.Business.ContactGroupType oldValue, global::Epsitec.Cresus.Core.Business.ContactGroupType newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

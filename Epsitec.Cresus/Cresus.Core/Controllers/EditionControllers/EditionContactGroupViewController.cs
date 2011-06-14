@@ -16,25 +16,16 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionContactGroupViewController : EditionViewController<Entities.ContactGroupEntity>
 	{
-		protected override void CreateUI()
+		protected override void CreateBricks(Bricks.BrickWall<ContactGroupEntity> wall)
 		{
-			using (var builder = new UIBuilder (this))
-			{
-				builder.CreateHeaderEditorTile ();
-				builder.CreateEditionTitleTile ("Data.ContactGroup", "Rôle");
-
-				this.CreateUIMain (builder);
-
-				builder.CreateFooterEditorTile ();
-			}
-		}
-
-		private void CreateUIMain(UIBuilder builder)
-		{
-			var tile = builder.CreateEditionTile ();
-
-			builder.CreateWarning   (tile);
-			builder.CreateTextField (tile, 0, "Nom", Marshaler.Create (() => this.Entity.Name, x => this.Entity.Name = x));
+			wall.AddBrick ()
+				.Input ()
+				  .Field (x => x.Name)
+				  .Field (x => x.Description)
+				.End ()
+				.Input ()
+				  .Field (x => x.ContactGroupType)
+				.End ();
 		}
 	}
 }
