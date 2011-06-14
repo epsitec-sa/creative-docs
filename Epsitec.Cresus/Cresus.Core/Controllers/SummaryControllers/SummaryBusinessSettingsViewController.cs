@@ -41,10 +41,16 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				.End ();
 
 			wall.AddBrick (x => x.Tax.VatDefinitions)
-				.Template ();
+				.Template ()
+				 .Text (x => x.GetSummary ())
+				 .TextCompact (x => x.GetCompactSummary ())
+				.End ();
 
 			wall.AddBrick (x => x.Generators)
-				.Template ();
+				.Template ()
+				 .Text (x => x.GetSummary ())
+				 .TextCompact (x => x.GetCompactSummary ())
+				.End ();
 		}
 	}
 }

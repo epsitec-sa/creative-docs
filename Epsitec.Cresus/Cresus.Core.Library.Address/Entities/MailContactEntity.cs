@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -27,9 +27,9 @@ namespace Epsitec.Cresus.Core.Entities
 					this.Address.Street.StreetName, "\n",
 					this.Address.Street.Complement, "\n",
 					this.Address.PostBox.Number, "\n",
-					TextFormatter.Mark,
-					this.Address.Location.Country.CountryCode, "~-", this.Address.Location.PostalCode, TextFormatter.ClearGroupIfEmpty,
-					TextFormatter.Mark,
+					TextFormatter.Command.Mark,
+					this.Address.Location.Country.CountryCode, "~-", this.Address.Location.PostalCode, TextFormatter.Command.ClearGroupIfEmpty,
+					TextFormatter.Command.Mark,
 					this.Address.Location.Name
 				);
 		}
