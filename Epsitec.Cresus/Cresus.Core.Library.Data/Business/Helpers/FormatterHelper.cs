@@ -72,6 +72,15 @@ namespace Epsitec.Cresus.Core.Business.Helpers
 		}
 		
 		
+		internal static IEnumerable<FormatToken> GetTokens()
+		{
+			var simple   = FormatterHelper.GetSimpleTokens ();
+			var argument = FormatterHelper.GetArgumentTokens ();
+
+			return Enumerable.Concat (simple, argument);
+		}
+
+
 		private string GetKeyName(GeneratorDefinitionEntity definition)
 		{
 			return string.Concat (definition.Entity, ">", this.Format (definition.Key, () => 0L));
@@ -135,14 +144,6 @@ namespace Epsitec.Cresus.Core.Business.Helpers
 			return string.Format (numberFormat, this.formatContext.Id);
 		}
 
-		public static IEnumerable<FormatToken> GetTokens()
-		{
-			var simple   = FormatterHelper.GetSimpleTokens ();
-			var argument = FormatterHelper.GetArgumentTokens ();
-
-			return Enumerable.Concat (simple, argument);
-		}
-
 		private static IEnumerable<FormatToken> GetSimpleTokens()
 		{
 			//	Tokens such as '#ref(x)' are processed by class ArgumentFormatToken, which takes
@@ -161,14 +162,15 @@ namespace Epsitec.Cresus.Core.Business.Helpers
 
 		private static IEnumerable<FormatToken> GetArgumentTokens()
 		{
-			return ReferenceNumberFormatterResolver.GetTokens ();
+			return FormatTokenFormatterResolver.GetFormatTokens ();
 		}
+		
 		
 		private readonly FormattedIdGenerator	generator;
 		private readonly IBusinessContext		businessContext;
 		private readonly IReferenceNumber		entity;
 		private readonly System.DateTime		date;
 
-		private FormattingContext					formatContext;
+		private FormattingContext				formatContext;
 	}
 }

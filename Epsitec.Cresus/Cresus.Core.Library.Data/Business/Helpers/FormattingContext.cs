@@ -16,6 +16,17 @@ namespace Epsitec.Cresus.Core.Business.Helpers
 		public FormattingContext(System.Func<long> idFunc)
 		{
 			this.idFunc = idFunc;
+			this.data   = null;
+		}
+		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="FormattingContext"/> class.
+		/// </summary>
+		/// <param name="data">The associated data.</param>
+		public FormattingContext(object data)
+		{
+			this.idFunc = null;
+			this.data   = data;
 		}
 
 
@@ -27,6 +38,11 @@ namespace Epsitec.Cresus.Core.Business.Helpers
 		{
 			get
 			{
+				if (this.idFunc == null)
+				{
+					throw new System.InvalidOperationException ("Cannot generate ID without an idFunc");
+				}
+
 				if (this.id == null)
 				{
 					this.id = this.idFunc ();
@@ -42,14 +58,26 @@ namespace Epsitec.Cresus.Core.Business.Helpers
 		/// <value>
 		/// The arguments.
 		/// </value>
-		public string Args
+		public string							Args
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Gets the associated data.
+		/// </summary>
+		public object							Data
+		{
+			get
+			{
+				return this.data;
+			}
+		}
 
-		private readonly System.Func<long> idFunc;
-		private long? id;
+
+		private readonly System.Func<long>		idFunc;
+		private readonly object					data;
+		private long?							id;
 	}
 }

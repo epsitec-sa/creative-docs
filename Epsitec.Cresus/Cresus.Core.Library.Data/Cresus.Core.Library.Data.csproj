@@ -87,8 +87,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\Repository.cs" />
     <Compile Include="Repositories\Repository`1.cs" />
-    <Compile Include="Resolvers\IReferenceNumberFormatter.cs" />
-    <Compile Include="Resolvers\ReferenceNumberFormatterResolver.cs" />
+    <Compile Include="Resolvers\IFormatTokenFormatter.cs" />
+    <Compile Include="Resolvers\FormatTokenFormatterResolver.cs" />
     <Compile Include="Resolvers\RepositoryResolver.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Data\SourceCode\Entities.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Data\SourceCode\Res.cs" />

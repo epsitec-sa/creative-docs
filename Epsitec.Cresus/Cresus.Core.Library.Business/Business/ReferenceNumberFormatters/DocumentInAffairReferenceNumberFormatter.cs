@@ -11,16 +11,13 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business.ReferenceNumberFormatters
 {
-	public class DocumentInAffairReferenceNumberFormatter : IReferenceNumberFormatter
+	public class DocumentInAffairReferenceNumberFormatter : IFormatTokenFormatter
 	{
-		#region IReferenceNumberFormatter Members
+		#region IFormatTokenFormatter Members
 
-		public Helpers.FormatToken FormatToken
+		public Helpers.FormatToken GetFormatToken()
 		{
-			get
-			{
-				return new ArgumentFormatToken ("#doc", this.CreateReferenceNumber);
-			}
+			return new ArgumentFormatToken ("#doc", this.CreateReferenceNumber);
 		}
 
 		#endregion
