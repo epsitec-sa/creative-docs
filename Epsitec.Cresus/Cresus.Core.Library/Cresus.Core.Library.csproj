@@ -60,6 +60,11 @@
     <Compile Include="Library\CoreApp.cs" />
     <Compile Include="Library\CoreAppComponent.cs" />
     <Compile Include="Library\CoreComponent.cs" />
+    <Compile Include="Library\Formatters\ArgumentFormatToken.cs" />
+    <Compile Include="Library\Formatters\FormatterHelper.cs" />
+    <Compile Include="Library\Formatters\FormattingContext.cs" />
+    <Compile Include="Library\Formatters\FormatToken.cs" />
+    <Compile Include="Library\Formatters\SimpleFormatToken.cs" />
     <Compile Include="Library\ICoreComponent`2.cs" />
     <Compile Include="Library\ITextFormatterConverter.cs" />
     <Compile Include="Library\TextFormatterConverter.cs" />
@@ -92,6 +97,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Factories\CoreCommandHandlerFactory.cs" />
     <Compile Include="Factories\FieldBinderFactory.cs" />
+    <Compile Include="Resolvers\FormatTokenFormatterResolver.cs" />
+    <Compile Include="Resolvers\IFormatTokenFormatter.cs" />
     <Compile Include="Resolvers\InterfaceImplementationResolver.cs" />
     <Compile Include="Resolvers\TextFormatterConverterResolver.cs" />
     <Compile Include="Resolvers\ResolutionMode.cs" />

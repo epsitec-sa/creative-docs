@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Business
 			where T : AbstractEntity, IReferenceNumber, new ()
 		{
 			bool assigned = false;
-			var  helper   = new Helpers.FormatterHelper (this, businessContext, entity);
+			var  helper   = new ReferenceIdFormatterHelper (this, businessContext, entity);
 
 			foreach (var def in this.FindDefinition<T> ())
 			{

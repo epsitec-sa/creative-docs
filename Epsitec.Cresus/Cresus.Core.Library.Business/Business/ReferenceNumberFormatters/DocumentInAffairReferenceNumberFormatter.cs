@@ -4,6 +4,7 @@
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.Helpers;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Library.Formatters;
 using Epsitec.Cresus.Core.Resolvers;
 
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace Epsitec.Cresus.Core.Business.ReferenceNumberFormatters
 	{
 		#region IFormatTokenFormatter Members
 
-		public Helpers.FormatToken GetFormatToken()
+		public FormatToken GetFormatToken()
 		{
 			return new ArgumentFormatToken ("#doc", this.CreateReferenceNumber);
 		}
