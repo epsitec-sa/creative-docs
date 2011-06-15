@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.OwnerWindow = this.application.Window;
 			window.Icon = this.application.Window.Icon;
 			window.Text = "Choix des options d'impression";
-			window.ClientSize = new Size (this.isPreview ? 940 : 650, this.isPreview ? 550 : 500);
+			window.ClientSize = new Size (this.isPreview ? 940 : 350, this.isPreview ? 550 : 500);
 			window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;  // pour avoir les boutons Minimize/Maximize/Close !
 
 			window.WindowCloseClicked += delegate
@@ -211,9 +211,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.categoryOptions = new PrintingOptionDictionary ();
 				this.modifiedOptions = new PrintingOptionDictionary ();
 				this.finalOptions    = new PrintingOptionDictionary ();
-
-				this.documentCategoryEntities = this.GetDocumentCategoryEntities ();
-				this.confirmationButtons = new List<ConfirmationButton> ();
 			}
 
 			public List<DeserializedJob> DeserializeJobs
@@ -259,21 +256,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 					TabIndex = tabIndex++,
 				};
 
-				//	Crée les 3 colonnes.
-				var leftFrame = new FrameBox
-				{
-					Parent = mainFrame,
-					Dock = DockStyle.Left,
-					PreferredWidth = 300,
-					Margins = new Margins (0, 0, 0, 0),
-				};
-
-				this.centerFrame = new FrameBox
+				//	Crée les 2 colonnes.
+				this.leftFrame = new FrameBox
 				{
 					Parent = mainFrame,
 					Dock = this.isPreview ? DockStyle.Left : DockStyle.Fill,
 					PreferredWidth = 300,
-					Margins = new Margins (10, 0, 0, 0),
+					Margins = new Margins (0, this.isPreview ? 10 : 0, 0, 0),
 				};
 
 				var rightFrame = new FrameBox
@@ -281,7 +270,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Parent = mainFrame,
 					Visibility = this.isPreview,
 					Dock = DockStyle.Fill,
-					Margins = new Margins (10, 0, 0, 0),
+					Margins = new Margins (0, 0, 0, 0),
 				};
 
 				//	Crée le bouton '>' par-dessus le reste.
@@ -291,32 +280,23 @@ namespace Epsitec.Cresus.Core.Dialogs
 					ButtonStyle = ButtonStyle.Slider,
 					PreferredSize = new Size (20, 20),
 					Anchor = AnchorStyles.TopLeft,
-					Margins = new Margins (300-20, 0, 0, 0),
+					Margins = new Margins (0, 0, 0, 0),
+					Visibility = this.isPreview,
 				};
 				ToolTip.Default.SetToolTip (this.showOptionsButton, "Montre ou cache les options d'impression");
 
-				//	Rempli la première colonne (à gauche).
-				var columnTitle1 = new StaticText (leftFrame);
-				columnTitle1.SetColumnTitle ("Catégories de documents");
-
-				this.categoriesFrame = new Scrollable
-				{
-					Parent = leftFrame,
-					Dock = DockStyle.Fill,
-					HorizontalScrollerMode = ScrollableScrollerMode.HideAlways,
-					VerticalScrollerMode = ScrollableScrollerMode.Auto,
-					PaintViewportFrame = true,
-					TabIndex = tabIndex++,
-				};
-				this.categoriesFrame.Viewport.IsAutoFitting = true;
-
-				//	Rempli la deuxième colonne (au centre).
-				var columnTitle2 = new StaticText (this.centerFrame);
+				//	Rempli la colonne de gauche.
+				var columnTitle2 = new StaticText (this.leftFrame);
 				columnTitle2.SetColumnTitle ("Options d'impression");
+
+				if (this.isPreview)
+				{
+					columnTitle2.Margins = new Margins (30, columnTitle2.Margins.Right, columnTitle2.Margins.Top, columnTitle2.Margins.Bottom);
+				}
 
 				this.optionsFrame = new Scrollable
 				{
-					Parent = this.centerFrame,
+					Parent = this.leftFrame,
 					Dock = DockStyle.Fill,
 					HorizontalScrollerMode = ScrollableScrollerMode.HideAlways,
 					VerticalScrollerMode = ScrollableScrollerMode.Auto,
@@ -326,7 +306,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.optionsFrame.Viewport.IsAutoFitting = true;
 				this.optionsFrame.ViewportPadding = new Margins (1);
 
-				//	Rempli la troisième colonne (à droite).
+				//	Rempli la colonne de droite.
 				this.previewFrame = new FrameBox
 				{
 					Parent = rightFrame,
@@ -350,43 +330,15 @@ namespace Epsitec.Cresus.Core.Dialogs
 					this.UpdateWidgets ();
 				};
 
-				this.UpdateCategories ();
 				this.UpdateOptions ();
 				this.UpdatePreview ();
 				this.UpdateWidgets ();
 			}
 
 
-			private void UpdateCategories()
-			{
-				this.categoriesFrame.Viewport.Children.Clear ();
-				this.confirmationButtons.Clear ();
-
-				int index = 0;
-				foreach (var category in this.documentCategoryEntities)
-				{
-					var button = new ConfirmationButton
-					{
-						Parent = this.categoriesFrame.Viewport,
-						Index = index++,
-						Dock = DockStyle.Top,
-					};
-
-					button.FormattedText = ConfirmationButton.FormatContent (category.Name, category.Description);
-
-					button.Clicked += delegate
-					{
-						var entity = this.documentCategoryEntities.ElementAt (button.Index);
-						this.UseCategoryEntity (entity);
-					};
-
-					this.confirmationButtons.Add (button);
-				}
-			}
-
 			private void UpdateOptions()
 			{
-				var category = this.SelectedDocumentCategoryEntity;
+				var category = this.DocumentCategoryEntityToUse;
 
 				this.categoryOptions.Clear ();
 				this.categoryOptions.MergeWith (this.entityToPrint.Options);
@@ -437,7 +389,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			private void UpdateDeserializeJobs()
 			{
-				var category = this.SelectedDocumentCategoryEntity;
+				var category = this.DocumentCategoryEntityToUse;
 				
 				if (category == null)
 				{
@@ -456,19 +408,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			private void UpdateWidgets()
 			{
-				var category = this.SelectedDocumentCategoryEntity;
-				string code = (category == null) ? "_none_" : category.Code;
-
-				for (int i = 0; i < this.confirmationButtons.Count; i++)
-				{
-					bool selected = (this.documentCategoryEntities.ElementAt (i).Code == code);
-					this.confirmationButtons[i].SelectConfirmationButton (selected);
-				}
-
-				//?this.printButton.Enable = (category != null);
-
 				this.showOptionsButton.GlyphShape = this.showOptions ? GlyphShape.TriangleLeft : GlyphShape.TriangleRight;
-				this.centerFrame.Visibility = this.showOptions;
+				this.leftFrame.Visibility = this.showOptions || !this.isPreview;
 			}
 
 
@@ -481,20 +422,29 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.UpdateWidgets ();
 			}
 
-			private DocumentCategoryEntity SelectedDocumentCategoryEntity
+			private DocumentCategoryEntity DocumentCategoryEntityToUse
 			{
+				//	Retourne le DocumentCategoryEntity à utiliser pour imprimer l'entité dans this.entityToPrint.Entity.
 				get
 				{
-					string code = this.SelectedDocumentCategoryCode;
+					if (this.entityToPrint.Entity is DocumentMetadataEntity)
+					{
+						var documentMetadata = this.entityToPrint.Entity as DocumentMetadataEntity;
 
-					if (code == "_none_")
-					{
-						return null;
+						if (documentMetadata.DocumentCategory != null)
+						{
+							return documentMetadata.DocumentCategory;
+						}
 					}
-					else
+
+					var mapping = this.MappingEntity;
+
+					if (mapping != null)
 					{
-						return this.documentCategoryEntities.Where (x => x.Code == code).FirstOrDefault ();
+						return mapping.DocumentCategories.FirstOrDefault ();
 					}
+
+					return null;
 				}
 			}
 
@@ -522,42 +472,16 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 
 
-			private IEnumerable<DocumentCategoryEntity> GetDocumentCategoryEntities()
+			private DocumentCategoryMappingEntity MappingEntity
 			{
-				//	Retourne toutes les entités DocumentCategoryEntity correspondant à l'entité à imprimer.
-				//	En principe, il ne devrait y avoir qu'une seule entité DocumentCategoryMappingEntity,
-				//	mais s'il y en a plusieurs, on cumule toutes les DocumentCategoryEntity trouvés.
-				var list = new List<DocumentCategoryEntity> ();
-
-				var none = new DocumentCategoryEntity
+				get
 				{
-					Code        = "_none_",
-					Name        = "Aucun",
-					Description = "N'imprime pas ce document.",
-				};
-				list.Add (none);
+					var example = new DocumentCategoryMappingEntity ();
 
-				foreach (var mapping in this.GetMappingEntities ())
-				{
-					foreach (var documentCategory in mapping.DocumentCategories)
-					{
-						if (!list.Contains (documentCategory))
-						{
-							list.Add (documentCategory);
-						}
-					}
+					example.PrintableEntity = this.GetPrintableEntityId (this.entityToPrint.Entity).ToString ();
+
+					return this.businessContext.DataContext.GetByExample (example).FirstOrDefault ();
 				}
-
-				return list;
-			}
-
-			private IEnumerable<DocumentCategoryMappingEntity> GetMappingEntities()
-			{
-				var example = new DocumentCategoryMappingEntity ();
-				
-				example.PrintableEntity = this.GetPrintableEntityId (this.entityToPrint.Entity).ToString ();
-				
-				return this.businessContext.DataContext.GetByExample (example);
 			}
 
 			private Druid GetPrintableEntityId(AbstractEntity entity)
@@ -598,15 +522,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 			private readonly PrintingOptionDictionary				modifiedOptions;
 			private readonly PrintingOptionDictionary				finalOptions;
 			private readonly bool									isPreview;
-			private readonly IEnumerable<DocumentCategoryEntity>	documentCategoryEntities;
-			private readonly List<ConfirmationButton>				confirmationButtons;
 
 			private bool											showOptions;
 			private List<DeserializedJob>							deserializeJobs;
 
-			private Scrollable										categoriesFrame;
 			private GlyphButton										showOptionsButton;
-			private FrameBox										centerFrame;
+			private FrameBox										leftFrame;
 			private Scrollable										optionsFrame;
 			private FrameBox										previewFrame;
 			private FrameBox										toolbarFrame;
