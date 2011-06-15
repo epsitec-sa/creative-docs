@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Library.Formatters
 		/// Gets the formatting context (see <see cref="FormattingContext"/>)
 		/// used internally by the token classes.
 		/// </summary>
-		public FormattingContext					FormattingContext
+		public FormattingContext				FormattingContext
 		{
 			get
 			{
@@ -43,6 +43,20 @@ namespace Epsitec.Cresus.Core.Library.Formatters
 		}
 
 
+		/// <summary>
+		/// Gets the specified component. This method is overridden by the specialized
+		/// formatter helpers, in order to provide access to <c>IBusinessContext</c>,
+		/// for instance.
+		/// </summary>
+		/// <typeparam name="T">The type of the component.</typeparam>
+		/// <returns>The specified component, or <c>null</c>.</returns>
+		public virtual T GetComponent<T>()
+			where T : class, ICoreComponent
+		{
+			return null;
+		}
+
+		
 		internal static IEnumerable<FormatToken> GetTokens()
 		{
 			var simple   = FormatterHelper.GetSimpleTokens ();
@@ -51,6 +65,41 @@ namespace Epsitec.Cresus.Core.Library.Formatters
 			return Enumerable.Concat (simple, argument);
 		}
 
+		internal string Format(string format, object value)
+		{
+			if (string.IsNullOrEmpty (format))
+			{
+				return "";
+			}
+
+			System.Diagnostics.Debug.Assert (this.FormattingContext == null);
+
+			this.FormattingContext = new FormattingContext (value);
+
+			var buffer = new System.Text.StringBuilder ();
+			int pos    = 0;
+
+			while (pos < format.Length)
+			{
+				foreach (var token in FormatToken.Items)
+				{
+					if (token.Matches (this, format, pos))
+					{
+						pos += token.Format (this, buffer);
+						goto next;
+					}
+				}
+
+				buffer.Append (format[pos++]);
+			next:
+				;
+			}
+
+			this.FormattingContext = null;
+
+			return buffer.ToString ();
+		}
+		
 
 		private string FormatShortYear()
 		{

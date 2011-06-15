@@ -2,7 +2,6 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Core.Business;
-using Epsitec.Cresus.Core.Business.Helpers;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Library.Formatters;
 using Epsitec.Cresus.Core.Resolvers;
@@ -25,7 +24,7 @@ namespace Epsitec.Cresus.Core.Business.ReferenceNumberFormatters
 
 		private string CreateReferenceNumber(FormatterHelper helper, string argument)
 		{
-			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
+			var businessContext = helper.GetComponent<IBusinessContext> ();
 			var affair = businessContext.GetMasterEntity<AffairEntity> ();
 
 			return string.Format ("{0}-{1:00}", affair.IdA, affair.Documents.Count);

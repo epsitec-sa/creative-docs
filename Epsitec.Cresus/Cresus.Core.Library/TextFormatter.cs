@@ -46,6 +46,7 @@ namespace Epsitec.Cresus.Core
 
 			List<object> flat = new List<object> ();
 
+			TextFormatter.Preprocess (values);
 			TextFormatter.Flatten (flat, values);
 			
 			List<string> items = TextFormatter.ConvertItemsToStrings (flat);
@@ -117,6 +118,34 @@ namespace Epsitec.Cresus.Core
 		{
 			TextFormatter.cultureOverride = null;
 			TextFormatter.detailLevel = TextFormatterDetailLevel.Default;
+		}
+
+		private static void Preprocess(object[] values)
+		{
+			int n = values.Length;
+			Library.Formatters.FormatterHelper formatter = null;
+
+			for (int i = 1; i < n; i++)
+			{
+				var text = values[i] as string;
+
+				if ((text.StartsWith (Prefix.CommandEscape)) &&
+					(text.StartsWith (Command.Format)))
+				{
+					var format = text.SplitAtFirst (":");
+
+					if (format.Length > 0)
+					{
+						if (formatter == null)
+						{
+							formatter = new Library.Formatters.FormatterHelper ();
+						}
+
+						values[i-1] = formatter.Format (format, values[i-1]);
+						values[i-0] = Command.Ignore;
+					}
+				}
+			}
 		}
 		
 		private static void Flatten(List<object> flat, System.Collections.IEnumerable values)
@@ -250,10 +279,11 @@ namespace Epsitec.Cresus.Core
 
 		public static class Command
 		{
-			public const string EmptyReplacement	= "‼empty";
+			public const string EmptyReplacement	= "‼replaceIfEmpty";
 			public const string Ignore				= "‼ignore";
-			public const string Mark				= "‼[mark]";
-			public const string ClearGroupIfEmpty	= "‼[clear-group-if-empty]";
+			public const string Mark				= "‼mark";
+			public const string ClearGroupIfEmpty	= "‼clearToMarkIfEmpty";
+			public const string Format				= "‼format";
 		}
 
 		private static void ProcessTags(List<string> items)

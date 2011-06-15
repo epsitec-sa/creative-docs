@@ -65,6 +65,7 @@
     <Compile Include="Library\Formatters\FormattingContext.cs" />
     <Compile Include="Library\Formatters\FormatToken.cs" />
     <Compile Include="Library\Formatters\SimpleFormatToken.cs" />
+    <Compile Include="Library\Formatters\StringFormatTokenFormatter.cs" />
     <Compile Include="Library\ICoreComponent`2.cs" />
     <Compile Include="Library\ITextFormatterConverter.cs" />
     <Compile Include="Library\TextFormatterConverter.cs" />

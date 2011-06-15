@@ -10,7 +10,8 @@ namespace Epsitec.Cresus.Core.Library.Formatters
 	public sealed class FormattingContext
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="FormattingContext"/> class.
+		/// Initializes a new instance of the <see cref="FormattingContext"/> class, in
+		/// the context of a number generation.
 		/// </summary>
 		/// <param name="idFunc">The function which will return the ID, if property ID is accessed.</param>
 		public FormattingContext(System.Func<long> idFunc)
@@ -20,7 +21,8 @@ namespace Epsitec.Cresus.Core.Library.Formatters
 		}
 		
 		/// <summary>
-		/// Initializes a new instance of the <see cref="FormattingContext"/> class.
+		/// Initializes a new instance of the <see cref="FormattingContext"/> class, in
+		/// the context of a text formatter.
 		/// </summary>
 		/// <param name="data">The associated data.</param>
 		public FormattingContext(object data)
@@ -31,7 +33,8 @@ namespace Epsitec.Cresus.Core.Library.Formatters
 
 
 		/// <summary>
-		/// Gets the id which will have to be pretty printed.
+		/// Gets the id which will have to be pretty printed. This is only possible in
+		/// the context of a number generation.
 		/// </summary>
 		[System.Diagnostics.DebuggerBrowsable (System.Diagnostics.DebuggerBrowsableState.Never)]
 		public long								Id
@@ -60,12 +63,19 @@ namespace Epsitec.Cresus.Core.Library.Formatters
 		/// </value>
 		public string							Args
 		{
-			get;
-			set;
+			get
+			{
+				return this.args;
+			}
+			set
+			{
+				this.args = value;
+			}
 		}
 
 		/// <summary>
-		/// Gets the associated data.
+		/// Gets the associated data. This is only meaningful in the context of a text
+		/// formatter.
 		/// </summary>
 		public object							Data
 		{
@@ -79,5 +89,6 @@ namespace Epsitec.Cresus.Core.Library.Formatters
 		private readonly System.Func<long>		idFunc;
 		private readonly object					data;
 		private long?							id;
+		private string							args;
 	}
 }

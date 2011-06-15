@@ -11,6 +11,10 @@ using Epsitec.Common.Support.EntityEngine;
 
 namespace Epsitec.Cresus.Core.Business
 {
+	/// <summary>
+	/// The <c>FormattedIdGenerator</c> class implements the assignment of reference numbers
+	/// to entities implementing <see cref="IReferenceNumber"/>.
+	/// </summary>
 	public class FormattedIdGenerator
 	{
 		public FormattedIdGenerator(RefIdGeneratorPool pool, IEnumerable<GeneratorDefinitionEntity> generatorDefinitions)
@@ -20,6 +24,16 @@ namespace Epsitec.Cresus.Core.Business
 			this.generatorDefinitions = generatorDefinitions;
 		}
 
+
+		public RefIdGeneratorPool				RefIdGeneratorPool
+		{
+			get
+			{
+				return this.pool;
+			}
+		}
+
+		
 		public bool AssignIds<T>(IBusinessContext businessContext, T entity)
 			where T : AbstractEntity, IReferenceNumber, new ()
 		{

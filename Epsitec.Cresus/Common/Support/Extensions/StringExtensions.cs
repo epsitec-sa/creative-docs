@@ -130,5 +130,25 @@ namespace Epsitec.Common.Support.Extensions
 
 			return value.Split (new string[] { separator }, System.StringSplitOptions.None);
 		}
+
+		public static string SplitAtFirst(this string text, string separator)
+		{
+			if ((string.IsNullOrEmpty (text)) ||
+				(string.IsNullOrEmpty (separator)))
+			{
+				return text ?? "";
+			}
+
+			int pos = text.IndexOf (separator);
+
+			if (pos < 0)
+			{
+				return "";
+			}
+			else
+			{
+				return text.Substring (pos + separator.Length);
+			}
+		}
 	}
 }

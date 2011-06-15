@@ -59,6 +59,23 @@ namespace Epsitec.Cresus.Core.Business
 		}
 
 
+		public override T GetComponent<T>()
+		{
+			var type = typeof (T);
+
+			if (type == typeof (IBusinessContext))
+			{
+				return this.businessContext as T;
+			}
+			if (type == typeof (RefIdGeneratorPool))
+			{
+				return this.generator.RefIdGeneratorPool as T;
+			}
+
+			return base.GetComponent<T> ();
+		}
+
+
 		private string Format(string format, System.Func<long> idFunc)
 		{
 			if (string.IsNullOrEmpty (format))
