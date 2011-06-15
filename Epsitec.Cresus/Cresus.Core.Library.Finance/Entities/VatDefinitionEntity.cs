@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Core.Entities
 				this.Name, "\n",
 				this.Description, "\n",
 				"Code ", this.VatCode, "\n",
-				"Taux ", this.Rate * 100, "%\n",
+				"Taux ", this.Rate * 100, TextFormatter.FormatCommand ("#string {0:0.0}%"), "\n",
 				"Du", this.BeginDate, emptyReplacement, "au", this.EndDate, emptyReplacement);
 		}
 		

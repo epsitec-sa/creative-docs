@@ -285,6 +285,11 @@ namespace Epsitec.Cresus.Core
 			public const string ClearGroupIfEmpty	= "‼clearToMarkIfEmpty";
 			public const string Format				= "‼format";
 		}
+		
+		public static string FormatCommand(string format)
+		{
+			return string.Concat (Command.Format, ":", format);
+		}
 
 		private static void ProcessTags(List<string> items)
 		{

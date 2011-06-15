@@ -41,14 +41,29 @@ namespace Epsitec.Cresus.Core.Library.Formatters
 
 			if (format.ContainsAtPosition (this.format, pos))
 			{
+				int n = this.format.Length;
+
 				int start  = format.IndexOf ('(', pos) + 1;
 				int length = format.IndexOf (')', start) - start;
 
-				if ((start == pos + this.format.Length + 1) &&
+				if ((start-1 == pos+n) &&
 					(length >= 0))
 				{
+					//	Argument specified within a pair of parentheses, such as "#foo(abc)";
+					//	the format string contains more text after the argument.
+
 					string arguments = format.Substring (start, length);
-					formatter.FormattingContext.Args = arguments;
+					formatter.FormattingContext.Args = "("+arguments;
+					return true;
+				}
+
+				if (format.ContainsAtPosition (" ", pos+n))
+				{
+					//	Argument specified with a space as the separator, such as "#foo abc";
+					//	the format string does not contain any other text after the argument.
+
+					string arguments = format.Substring (pos+n+1);
+					formatter.FormattingContext.Args = " "+arguments;
 					return true;
 				}
 			}
@@ -68,9 +83,25 @@ namespace Epsitec.Cresus.Core.Library.Formatters
 		public override int Format(FormatterHelper formatter, System.Text.StringBuilder buffer)
 		{
 			string args = formatter.FormattingContext.Args;
-			int skipLength = this.format.Length + 1 + args.Length + 1;
+			char   type = args[0];
 
-			buffer.Append (this.func (formatter, args));
+			int skipLength;
+
+			switch (type)
+			{
+				case ' ':
+					skipLength = this.format.Length + args.Length;			//	skip "#foo abc"
+					break;
+
+				case '(':
+					skipLength = this.format.Length + args.Length + 1;		//	skip "#foo(abc)"
+					break;
+
+				default:
+					throw new System.InvalidOperationException ();
+			}
+
+			buffer.Append (this.func (formatter, args.Substring (1)));
 
 			return skipLength;
 		}
