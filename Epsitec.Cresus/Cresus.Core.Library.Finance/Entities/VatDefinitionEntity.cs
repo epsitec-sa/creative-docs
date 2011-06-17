@@ -14,14 +14,14 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			string emptyReplacement = TextFormatter.Command.EmptyReplacement + ":—";
-
 			return TextFormatter.FormatText (
 				this.Name, "\n",
 				this.Description, "\n",
 				"Code ", this.VatCode, "\n",
 				"Taux ", this.Rate * 100, TextFormatter.FormatCommand ("#string {0:0.0}%"), "\n",
-				"Du", this.BeginDate, emptyReplacement, "au", this.EndDate, emptyReplacement);
+//-				"Date de début : ", this.BeginDate, TextFormatter.FormatCommand ("#string {0:yyyy}"), "inconnue", "...", TextFormatter.Command.IfElseEmpty, "\n",
+//-				"Date de fin : ", this.EndDate, TextFormatter.FormatCommand ("#string {0:yyyy}"), "inconnue", "...", TextFormatter.Command.IfElseEmpty, "\n",
+				"Du", this.BeginDate, "—", TextFormatter.Command.IfEmpty, "au", this.EndDate, "—", TextFormatter.Command.IfEmpty);
 		}
 		
 		public override FormattedText GetCompactSummary()

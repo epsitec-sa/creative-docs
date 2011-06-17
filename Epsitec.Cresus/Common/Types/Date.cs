@@ -1,4 +1,4 @@
-//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
@@ -12,7 +12,7 @@ namespace Epsitec.Common.Types
 	[System.Serializable]
 	[System.ComponentModel.TypeConverter (typeof (Date.Converter))]
 	
-	public struct Date : System.IComparable, INullable, System.IEquatable<Date>
+	public struct Date : System.IComparable, INullable, System.IEquatable<Date>, System.IFormattable
 	{
 		public Date(System.DateTime dateTime)
 		{
@@ -214,15 +214,19 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				return this.InternalDate.ToString ("d", System.Globalization.CultureInfo.CurrentCulture);
+				return this.ToString ("d", System.Globalization.CultureInfo.CurrentCulture);
 			}
 		}
 
-		public string ToString(System.IFormatProvider provider)
+		#region IFormattable Members
+
+		public string ToString(string format, System.IFormatProvider formatProvider)
 		{
-			return this.InternalDate.ToString ("d", provider);
+			return this.InternalDate.ToString (format, formatProvider);
 		}
 
+		#endregion
+		
 		#region IEquatable<Date> Members
 
 		public bool Equals(Date other)

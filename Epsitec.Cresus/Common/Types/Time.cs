@@ -1,4 +1,4 @@
-//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
@@ -11,7 +11,7 @@ namespace Epsitec.Common.Types
 	[System.Serializable]
 	[System.ComponentModel.TypeConverter (typeof (Time.Converter))]
 	
-	public struct Time : System.IComparable, INullable, System.IEquatable<Time>
+	public struct Time : System.IComparable, INullable, System.IEquatable<Time>, System.IFormattable
 	{
 		public Time(long ticks)
 		{
@@ -268,6 +268,15 @@ namespace Epsitec.Common.Types
 			return new System.TimeSpan (t1.Ticks - t2.Ticks);
 		}
 
+		#region IFormattable Members
+
+		public string ToString(string format, System.IFormatProvider formatProvider)
+		{
+			return this.ToDateTime ().ToString (format, formatProvider);
+		}
+
+		#endregion
+		
 
 		#region IEquatable<Time> Members
 

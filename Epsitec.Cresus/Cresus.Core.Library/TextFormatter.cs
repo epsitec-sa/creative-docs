@@ -44,15 +44,16 @@ namespace Epsitec.Cresus.Core
 		{
 			var buffer = new System.Text.StringBuilder ();
 
-			List<object> flat = new List<object> ();
+			List<object> items = new List<object> (values);
+			List<object> flat  = new List<object> ();
 
-			TextFormatter.Preprocess (values);
-			TextFormatter.Flatten (flat, values);
+			TextFormatter.Preprocess (items);
+			TextFormatter.Flatten (flat, items);
 			
-			List<string> items = TextFormatter.ConvertItemsToStrings (flat);
+			List<string> texts = TextFormatter.ConvertItemsToStrings (flat);
 
-			TextFormatter.ProcessTags (items);
-			TextFormatter.FormatText (buffer, items);
+			TextFormatter.ProcessTags (texts);
+			TextFormatter.FormatText (buffer, texts);
 
 			return new FormattedText (string.Join (FormattedText.HtmlBreak, buffer.ToString ().Split (new string[] { FormattedText.HtmlBreak }, System.StringSplitOptions.RemoveEmptyEntries)).Replace ("()", ""));
 		}
@@ -120,9 +121,9 @@ namespace Epsitec.Cresus.Core
 			TextFormatter.detailLevel = TextFormatterDetailLevel.Default;
 		}
 
-		private static void Preprocess(object[] values)
+		private static void Preprocess(List<object> values)
 		{
-			int n = values.Length;
+			int n = values.Count;
 			Library.Formatters.FormatterHelper formatter = null;
 
 			for (int i = 1; i < n; i++)
@@ -146,6 +147,8 @@ namespace Epsitec.Cresus.Core
 					}
 				}
 			}
+
+			TextFormatter.RemoveIgnoreTags (values);
 		}
 		
 		private static void Flatten(List<object> flat, System.Collections.IEnumerable values)
@@ -169,16 +172,16 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		private static List<string> ConvertItemsToStrings(IEnumerable<object> values)
+		private static List<string> ConvertItemsToStrings(IEnumerable<object> items)
 		{
-			var items  = new List<string> ();
+			var texts  = new List<string> ();
 
-			foreach (var value in values.Select (item => TextFormatter.ConvertToText (item)))
+			foreach (var value in items.Select (item => TextFormatter.ConvertToText (item)))
 			{
-				items.Add (value.Replace ("\n", FormattedText.HtmlBreak).Trim ());
+				texts.Add (value.Replace ("\n", FormattedText.HtmlBreak).Trim ());
 			}
 
-			return items;
+			return texts;
 		}
 
 		private static void FormatText(System.Text.StringBuilder buffer, List<string> items)
@@ -279,10 +282,11 @@ namespace Epsitec.Cresus.Core
 
 		public static class Command
 		{
-			public const string EmptyReplacement	= "‼replaceIfEmpty";
+			public const string IfEmpty				= "‼ifEmpty";
+			public const string IfElseEmpty			= "‼ifElseEmpty";
 			public const string Ignore				= "‼ignore";
 			public const string Mark				= "‼mark";
-			public const string ClearGroupIfEmpty	= "‼clearToMarkIfEmpty";
+			public const string ClearToMarkIfEmpty	= "‼clearToMarkIfEmpty";
 			public const string Format				= "‼format";
 		}
 		
@@ -293,43 +297,87 @@ namespace Epsitec.Cresus.Core
 
 		private static void ProcessTags(List<string> items)
 		{
+			TextFormatter.RemoveIgnoreTags (items);
+
 			int count = items.Count;
 			
 			for (int i = 0; i < count; i++)
 			{
-				string item = items[i];
+				string command = items[i];
 
-				if ((item.Length > 0) &&
-					(item[0] == Prefix.CommandEscape))
+				if ((command.Length > 0) &&
+					(command[0] == Prefix.CommandEscape))
 				{
-					string command = item.Split(':')[0];
-
-					if (i > 0)
+					if ((command == Command.ClearToMarkIfEmpty) &&
+						(i > 0) &&
+						(string.IsNullOrWhiteSpace (items[i-1])))
 					{
-						string probe = items[i-1];
+						TextFormatter.ClearGroup (items, i);
+						TextFormatter.ProcessTags (items);
+						break;
+					}
 
-						if (string.IsNullOrWhiteSpace (probe))
+					if ((command == Command.IfEmpty) &&
+						(i > 1))
+					{
+						if (string.IsNullOrWhiteSpace (items[i-2]))
 						{
-							if (command == Command.ClearGroupIfEmpty)
-							{
-								TextFormatter.ClearGroup (items, i);
-								TextFormatter.ProcessTags (items);
-								break;
-							}
-							else if (command == Command.EmptyReplacement)
-							{
-								items[i-1] = item.Substring (command.Length+1);
-								items[i-0] = Command.Ignore;
-								TextFormatter.ProcessTags (items);
-								break;
-							}
+							//	"", "x", ifEmpty => ignore, "x", ignore
+							items[i-2] = Command.Ignore;
+							items[i-0] = Command.Ignore;
 						}
+						else
+						{
+							//	"a", "x", ifEmpty => "a", ignore, ignore
+							items[i-1] = Command.Ignore;
+							items[i-0] = Command.Ignore;
+						}
+
+						TextFormatter.ProcessTags (items);
+						break;
+					}
+					
+					if ((command == Command.IfElseEmpty) &&
+						(i > 2))
+					{
+						if (string.IsNullOrWhiteSpace (items[i-3]))
+						{
+							//	"", "x", "y", ifElseEmpty => ignore, "x", ignore, ignore
+							items[i-3] = Command.Ignore;
+							items[i-1] = Command.Ignore;
+							items[i-0] = Command.Ignore;
+						}
+						else
+						{
+							//	"a", "x", "y", ifElseEmpty => "a", ignore, "y", ignore
+							items[i-2] = Command.Ignore;
+							items[i-0] = Command.Ignore;
+						}
+
+						TextFormatter.ProcessTags (items);
+						break;
 					}
 				}
 			}
 
+			TextFormatter.RemoveAllTags (items);
+		}
+
+		private static void RemoveAllTags(List<string> items)
+		{
 			items.RemoveAll (x => x.StartsWith (Prefix.CommandEscape));
 		}
+
+		private static void RemoveIgnoreTags(List<object> items)
+		{
+			items.RemoveAll (x => Command.Ignore.Equals (x));
+		}
+
+		private static void RemoveIgnoreTags(List<string> items)
+		{
+			items.RemoveAll (x => Command.Ignore == x);
+		}
+
 
 		private static void ClearGroup(List<string> items, int index)
 		{

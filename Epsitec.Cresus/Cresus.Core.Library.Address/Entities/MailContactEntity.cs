@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Entities
 					this.Address.Street.Complement, "\n",
 					this.Address.PostBox.Number, "\n",
 					TextFormatter.Command.Mark,
-					this.Address.Location.Country.CountryCode, "~-", this.Address.Location.PostalCode, TextFormatter.Command.ClearGroupIfEmpty,
+					this.Address.Location.Country.CountryCode, "~-", this.Address.Location.PostalCode, TextFormatter.Command.ClearToMarkIfEmpty,
 					TextFormatter.Command.Mark,
 					this.Address.Location.Name
 				);

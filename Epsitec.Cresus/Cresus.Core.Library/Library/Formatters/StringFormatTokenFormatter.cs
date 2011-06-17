@@ -23,7 +23,14 @@ namespace Epsitec.Cresus.Core.Library.Formatters
 		{
 			var value = helper.FormattingContext.Data;
 
-			return string.Format (argument, value);
+			if (value == null)
+			{
+				return null;
+			}
+			else
+			{
+				return string.Format (argument, value);
+			}
 		}
 	}
 }
