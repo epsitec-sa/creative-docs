@@ -415,8 +415,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			private void UseCategoryEntity(DocumentCategoryEntity category)
 			{
-				this.SelectedDocumentCategoryCode = category.Code;
-
 				this.UpdateOptions ();
 				this.UpdatePreview ();
 				this.UpdateWidgets ();
@@ -427,62 +425,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 				//	Retourne le DocumentCategoryEntity à utiliser pour imprimer l'entité dans this.entityToPrint.Entity.
 				get
 				{
-					if (this.entityToPrint.Entity is DocumentMetadataEntity)
-					{
-						var documentMetadata = this.entityToPrint.Entity as DocumentMetadataEntity;
-
-						if (documentMetadata.DocumentCategory != null)
-						{
-							return documentMetadata.DocumentCategory;
-						}
-					}
-
-					var mapping = this.MappingEntity;
-
-					if (mapping != null)
-					{
-						return mapping.DocumentCategories.FirstOrDefault ();
-					}
-
-					return null;
+					return PrintEngine.GetDocumentCategoryEntity (this.businessContext, this.entityToPrint.Entity);
 				}
 			}
 
-
-			private string SelectedDocumentCategoryCode
-			{
-				get
-				{
-					var type = this.GetPrintableEntityId (this.entityToPrint.Entity);
-
-					if (PrintOptionsDialog.selectedDocumentCategoryCode.ContainsKey (type))
-					{
-						return PrintOptionsDialog.selectedDocumentCategoryCode[type];
-					}
-					else
-					{
-						return null;
-					}
-				}
-				set
-				{
-					var type = this.GetPrintableEntityId (this.entityToPrint.Entity);
-					PrintOptionsDialog.selectedDocumentCategoryCode[type] = value;
-				}
-			}
-
-
-			private DocumentCategoryMappingEntity MappingEntity
-			{
-				get
-				{
-					var example = new DocumentCategoryMappingEntity ();
-
-					example.PrintableEntity = this.GetPrintableEntityId (this.entityToPrint.Entity).ToString ();
-
-					return this.businessContext.DataContext.GetByExample (example).FirstOrDefault ();
-				}
-			}
 
 			private Druid GetPrintableEntityId(AbstractEntity entity)
 			{
@@ -533,8 +479,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			private FrameBox										toolbarFrame;
 		}
 
-
-		private static Dictionary<Druid, string> selectedDocumentCategoryCode = new Dictionary<Druid, string> ();
 
 		private readonly Application							application;
 		private readonly IBusinessContext						businessContext;

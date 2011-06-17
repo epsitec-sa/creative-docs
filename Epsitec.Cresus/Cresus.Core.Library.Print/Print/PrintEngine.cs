@@ -351,18 +351,15 @@ namespace Epsitec.Cresus.Core.Print
 			//	Retourne les options à utiliser pour l'entité.
 			var result = new PrintingOptionDictionary ();
 
-			var categories = PrintEngine.GetDocumentCategoryEntities(businessContext, entity);
-			if (categories != null)
+			var category = PrintEngine.GetDocumentCategoryEntity(businessContext, entity);
+			if (category != null)
 			{
-				foreach (var category in categories)
+				if (category.DocumentOptions != null)
 				{
-					if (category.DocumentOptions != null)
+					foreach (var documentOptions in category.DocumentOptions)
 					{
-						foreach (var documentOptions in category.DocumentOptions)
-						{
-							var option = documentOptions.GetOptions ();
-							result.MergeWith (option);
-						}
+						var option = documentOptions.GetOptions ();
+						result.MergeWith (option);
 					}
 				}
 			}
@@ -383,38 +380,35 @@ namespace Epsitec.Cresus.Core.Print
 			//	Retourne les unités d'impression à utiliser pour l'entité.
 			var result = new PrintingUnitDictionary ();
 
-			var categories = PrintEngine.GetDocumentCategoryEntities (businessContext, entity);
-			if (categories != null)
+			var category = PrintEngine.GetDocumentCategoryEntity (businessContext, entity);
+			if (category != null)
 			{
-				foreach (var category in categories)
+				if (category.DocumentPrintingUnits != null)
 				{
-					if (category.DocumentPrintingUnits != null)
-					{
 #if false
-						foreach (var printingUnits in category.DocumentPrintingUnits)
-						{
-							var printingUnit = printingUnits.GetPrintingUnits ();
-							result.MergeWith (printingUnit);
-						}
-#else
-						foreach (var documentPrintingUnit in category.DocumentPrintingUnits)
-						{
-							PrintingUnitDictionary dict = new PrintingUnitDictionary ();
-							var pageTypes = documentPrintingUnit.GetPageTypes ();
-
-							foreach (var pageType in pageTypes)
-							{
-								dict[pageType] = documentPrintingUnit.Code;
-							}
-
-							result.MergeWith (dict);
-						}
-#endif
+					foreach (var printingUnits in category.DocumentPrintingUnits)
+					{
+						var printingUnit = printingUnits.GetPrintingUnits ();
+						result.MergeWith (printingUnit);
 					}
+#else
+					foreach (var documentPrintingUnit in category.DocumentPrintingUnits)
+					{
+						PrintingUnitDictionary dict = new PrintingUnitDictionary ();
+						var pageTypes = documentPrintingUnit.GetPageTypes ();
+
+						foreach (var pageType in pageTypes)
+						{
+							dict[pageType] = documentPrintingUnit.Code;
+						}
+
+						result.MergeWith (dict);
+					}
+#endif
 				}
 			}
 
-#if true
+#if false
 			if (result.Count == 0)  // TODO: Hack à supprimer dès que possible !
 			{
 				result[PageType.All] = "Blanc";
@@ -427,58 +421,48 @@ namespace Epsitec.Cresus.Core.Print
 			return result;
 		}
 
-		private static IEnumerable<DocumentCategoryEntity> GetDocumentCategoryEntities(IBusinessContext businessContext, AbstractEntity entity)
+		public static DocumentCategoryEntity GetDocumentCategoryEntity(IBusinessContext businessContext, AbstractEntity entity)
 		{
-			//	Retourne les entités de catégorie de document pour une entité représentant un document quelconque.
+			//	Retourne l'entité de catégorie de document à utiliser, pour une entité représentant un document quelconque.
 			if (entity is DocumentMetadataEntity)
 			{
 				var metadata = entity as DocumentMetadataEntity;
 
 				if (metadata.DocumentCategory != null)
 				{
-					var list = new List<DocumentCategoryEntity> ();
-					list.Add (metadata.DocumentCategory);
-					return list;
+					return metadata.DocumentCategory;
 				}
 			}
 
-			DocumentType type = DocumentType.Unknown;
+			var mapping = PrintEngine.GetMappingEntity (businessContext, entity);
 
-#if true
-			if (entity is DocumentMetadataEntity)  // TODO: Hack à supprimer dès que possible !
+			if (mapping != null)
 			{
-				type = DocumentType.Invoice;
-			}
-#endif
-
-			// TODO: DR
-#if false
-			if (entity is ArticleDefinitionEntity)
-			{
-				type = DocumentType.ArticleDefinitionSummary;
-			}
-
-			if (entity is RelationEntity)
-			{
-				type = DocumentType.RelationSummary;
-			}
-
-			if (entity is MailContactEntity)
-			{
-				type = DocumentType.MailContactLabel;
-			}
-#endif
-
-			if (type != DocumentType.Unknown)
-			{
-
-				DocumentCategoryEntity example = new DocumentCategoryEntity ();
-				example.DocumentType = type;
-
-				businessContext.DataContext.GetByExample<DocumentCategoryEntity> (example);
+				return mapping.DocumentCategories.FirstOrDefault ();
 			}
 
 			return null;
+		}
+
+		private static DocumentCategoryMappingEntity GetMappingEntity(IBusinessContext businessContext, AbstractEntity entity)
+		{
+			var example = new DocumentCategoryMappingEntity ();
+
+			example.PrintableEntity = PrintEngine.GetPrintableEntityId (entity).ToString ();
+
+			return businessContext.DataContext.GetByExample (example).FirstOrDefault ();
+		}
+
+		private static Druid GetPrintableEntityId(AbstractEntity entity)
+		{
+			if (entity != null)
+			{
+				return EntityInfo.GetTypeId (entity.GetType ());
+			}
+			else
+			{
+				return Druid.Empty;
+			}
 		}
 		#endregion
 
