@@ -26,6 +26,8 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Widgets.Command ShowArticleDefinitions = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 406));
 				//	designer:cap/L0KH
 				public static readonly global::Epsitec.Common.Widgets.Command ShowBusinessSettings = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 17));
+				//	designer:cap/L0K61
+				public static readonly global::Epsitec.Common.Widgets.Command ShowCurrency = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 38));
 				//	designer:cap/L0A23
 				public static readonly global::Epsitec.Common.Widgets.Command ShowCustomers = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 98));
 				//	designer:cap/L0KS
@@ -145,6 +147,8 @@ namespace Epsitec.Cresus.Core
 				public const long ShowArticleDefinitions = 0x150000A000196L;
 				//	designer:cap/L0KH
 				public const long ShowBusinessSettings = 0x1500014000011L;
+				//	designer:cap/L0K61
+				public const long ShowCurrency = 0x1500014000026L;
 				//	designer:cap/L0A23
 				public const long ShowCustomers = 0x150000A000062L;
 				//	designer:cap/L0KS
