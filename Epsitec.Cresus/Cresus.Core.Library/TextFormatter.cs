@@ -65,17 +65,13 @@ namespace Epsitec.Cresus.Core
 				return "";
 			}
 
-			string text = value as string;
+			var converter = TextFormatter.GetDefaultConverter (value.GetType ());
 
-			if (text != null)
+			if (converter != null)
 			{
-				return text;
+				return converter (value);
 			}
 
-			if (value is Date)
-			{
-				return ((Date) value).ToDateTime ().ToShortDateString ();
-			}
 			if (value.GetType ().IsEnum)
 			{
 				return TextFormatter.ConvertToText (EnumKeyValues.GetEnumKeyValue (value));
@@ -94,6 +90,29 @@ namespace Epsitec.Cresus.Core
 			else
 			{
 				return formattedText.ToString ();
+			}
+		}
+
+		public static void DefineDefaultConverter<T>(System.Func<T, string> converter)
+		{
+			TextFormatter.DefineDefaultConverter (typeof (T), (object x) => converter ((T) x));
+		}
+
+		public static void DefineDefaultConverter(System.Type type, System.Func<object, string> converter)
+		{
+			lock (TextFormatter.exclusion)
+			{
+				TextFormatter.defaultConverters[type] = converter;
+			}
+		}
+
+		private static System.Func<object, string> GetDefaultConverter(System.Type type)
+		{
+			lock (TextFormatter.exclusion)
+			{
+				System.Func<object, string> converter;
+				TextFormatter.defaultConverters.TryGetValue (type, out converter);
+				return converter;
 			}
 		}
 
@@ -409,11 +428,23 @@ namespace Epsitec.Cresus.Core
 			items.RemoveRange (startIndex, num);
 		}
 
+		static TextFormatter()
+		{
+			TextFormatter.DefineDefaultConverter<string> (x => x);
+			TextFormatter.DefineDefaultConverter<Date> (x => x.ToString ("d", System.Globalization.DateTimeFormatInfo.CurrentInfo));
+			TextFormatter.DefineDefaultConverter<Time> (x => x.ToString ("t", System.Globalization.DateTimeFormatInfo.CurrentInfo));
+			TextFormatter.DefineDefaultConverter<System.DateTime> (x => x.ToString ("g", System.Globalization.DateTimeFormatInfo.CurrentInfo));
+			TextFormatter.DefineDefaultConverter<Caption> (x => x.DefaultLabelOrName);
+		}
+
 
 		[System.ThreadStatic]
 		private static System.Globalization.CultureInfo cultureOverride;
 
 		[System.ThreadStatic]
 		private static TextFormatterDetailLevel detailLevel;
+
+		private static readonly object exclusion = new object ();
+		private static readonly Dictionary<System.Type, System.Func<object, string>> defaultConverters = new Dictionary<System.Type, System.Func<object, string>> ();
 	}
 }
