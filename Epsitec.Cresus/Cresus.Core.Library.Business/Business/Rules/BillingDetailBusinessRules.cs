@@ -30,8 +30,10 @@ namespace Epsitec.Cresus.Core.Business.Rules
 				{
 					dueDate = invoice.BillingDate.Value;
 				}
-
-				currencyCode = invoice.CurrencyCode;
+				if (invoice.CurrencyCode != CurrencyCode.None)
+				{
+					currencyCode = invoice.CurrencyCode;
+				}
 			}
 
 			var currencyEntity = context.GetAllEntities<CurrencyEntity> ().FirstOrDefault (x => x.CurrencyCode == currencyCode);
