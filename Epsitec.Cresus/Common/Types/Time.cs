@@ -258,7 +258,19 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				return string.Format ("{0:00}:{1:00}:{2:00}.{3:000}", this.Hour, this.Minute, this.Second, this.Millisecond);
+				var hour   = this.Hour;
+				var minute = this.Minute;
+				var second = this.Second;
+				var milli  = this.Millisecond;
+
+				if (milli == 0)
+				{
+					return string.Format (System.Globalization.CultureInfo.CurrentCulture, "{0:00}:{1:00}:{2:00}", hour, minute, second);
+				}
+				else
+				{
+					return string.Format (System.Globalization.CultureInfo.CurrentCulture, "{0:00}:{1:00}:{2:00}.{3:000}", hour, minute, second, milli);
+				}
 			}
 		}
 		

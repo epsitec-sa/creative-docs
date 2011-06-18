@@ -202,6 +202,22 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets the default label, or if it is undefined, the name of the caption.
+		/// </summary>
+		/// <value>
+		/// The default caption label or the caption name.
+		/// </value>
+		public string							DefaultLabelOrName
+		{
+			get
+			{
+				string label = this.DefaultLabel;
+
+				return string.IsNullOrEmpty (label) ? this.Name ?? "" : label;
+			}
+		}
+
 
 		/// <summary>
 		/// Defines the ID associated with the caption. The ID can be defined
