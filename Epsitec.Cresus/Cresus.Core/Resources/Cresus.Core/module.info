@@ -2,6 +2,6 @@
 <ModuleInfo id="21" name="Cresus.Core" layer="s" textMode="FormattedText" assemblies="Cresus.Core" namespace="Epsitec.Cresus.Core">
   <Versions>
     <Version id="1" build="609" date="2011-06-06T05:25:18.6799080Z" />
-    <Version id="2" build="54" date="2011-06-18T06:53:27.4512487Z" />
+    <Version id="2" build="55" date="2011-06-18T07:13:10.2685872Z" />
   </Versions>
 </ModuleInfo>
