@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryCurrencyViewController : SummaryViewController<CurrencyEntity>
 	{
-		protected override void CreateBricks(Bricks.BrickWall<DocumentCategoryMappingEntity> wall)
+		protected override void CreateBricks(Bricks.BrickWall<CurrencyEntity> wall)
 		{
 			wall.AddBrick ();
 		}
