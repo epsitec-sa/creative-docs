@@ -364,14 +364,6 @@ namespace Epsitec.Cresus.Core.Print
 				}
 			}
 
-#if false
-			if (result.Count == 0)  // TODO: Hack à supprimer dès que possible !
-			{
-				result = OptionsDictionary.GetDefault ();
-				result.Add (DocumentOption.IsrPosition, "WithInside");  // force un BV
-			}
-#endif
-
 			return result;
 		}
 
@@ -407,16 +399,6 @@ namespace Epsitec.Cresus.Core.Print
 #endif
 				}
 			}
-
-#if false
-			if (result.Count == 0)  // TODO: Hack à supprimer dès que possible !
-			{
-				result[PageType.All] = "Blanc";
-				//?result.Add (PageType.Isr, "Jaune");
-				//?result.Add (PageType.Copy, "Brouillon");
-				result[PageType.Label] = "Etiquettes";
-			}
-#endif
 
 			return result;
 		}
