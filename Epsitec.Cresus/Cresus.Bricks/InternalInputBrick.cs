@@ -49,6 +49,12 @@ namespace Epsitec.Cresus.Bricks
 			return this as TSelf;
 		}
 
+		public TSelf PickFromCollection(System.Collections.IEnumerable value)
+		{
+			this.AddProperty (new BrickProperty (BrickPropertyKey.FromCollection, value));
+			return this as TSelf;
+		}
+
 		public TParent End()
 		{
 			return this.parent;

@@ -263,6 +263,11 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 			return EntityPrinterFactoryResolver.Resolve ().SelectMany (x => x.GetSupportedEntityTypes ()).Distinct ();
 		}
 
+		public static IEnumerable<Druid> GetPrintableEntityIds()
+		{
+			return AbstractPrinter.GetPrintableEntityTypes ().Select (x => EntityInfo.GetTypeId (x));
+		}
+
 		private static IEntityPrinterFactory FindPrinterFactory(AbstractEntity entity, PrintingOptionDictionary options)
 		{
 			return EntityPrinterFactoryResolver.Resolve ().FirstOrDefault (x => x.CanPrint (entity, options));

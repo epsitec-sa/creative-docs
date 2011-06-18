@@ -34,6 +34,12 @@ namespace Epsitec.Cresus.Bricks
 			this.value = value;
 		}
 
+		public BrickProperty(BrickPropertyKey key, System.Collections.IEnumerable collection)
+		{
+			this.key = key;
+			this.value = collection;
+		}
+
 		public BrickProperty(BrickPropertyKey key, Brick value)
 		{
 			this.key = key;
@@ -122,6 +128,14 @@ namespace Epsitec.Cresus.Bricks
 			get
 			{
 				return this.value as Expression;
+			}
+		}
+
+		public System.Collections.IEnumerable	CollectionValue
+		{
+			get
+			{
+				return this.value as System.Collections.IEnumerable;
 			}
 		}
 

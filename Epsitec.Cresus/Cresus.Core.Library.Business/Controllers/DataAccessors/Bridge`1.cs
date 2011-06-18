@@ -291,6 +291,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 				int    width = InputProcessor.GetInputWidth (fieldProperties);
 				string title = InputProcessor.GetInputTitle (fieldProperties);
+				
+				System.Collections.IEnumerable collection = InputProcessor.GetInputCollection (fieldProperties);
 
 				if (fieldType.IsEntity ())
 				{
@@ -316,7 +318,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 					//	Produce either a text field or a variation of such a widget (pull-down list, etc.)
 					//	based on the real type being edited.
 
-					var factory = DynamicFactories.TextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, width);
+					var factory = DynamicFactories.TextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, width, collection);
 					this.actions.Add ((tile, builder) => factory.CreateUI (tile, builder));
 
 					return;
@@ -390,11 +392,11 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 			private static int GetInputWidth(BrickPropertyCollection properties)
 			{
-				var widthProperty = properties.PeekAfter (BrickPropertyKey.Width);
+				var property = properties.PeekAfter (BrickPropertyKey.Width);
 
-				if (widthProperty.HasValue)
+				if (property.HasValue)
 				{
-					return widthProperty.Value.IntValue.GetValueOrDefault (0);
+					return property.Value.IntValue.GetValueOrDefault (0);
 				}
 				else
 				{
@@ -404,11 +406,25 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 			private static string GetInputTitle(BrickPropertyCollection properties)
 			{
-				var titleProperty = properties.PeekBefore (BrickPropertyKey.Title);
+				var property = properties.PeekBefore (BrickPropertyKey.Title);
 
-				if (titleProperty.HasValue)
+				if (property.HasValue)
 				{
-					return titleProperty.Value.StringValue;
+					return property.Value.StringValue;
+				}
+				else
+				{
+					return null;
+				}
+			}
+
+			private static System.Collections.IEnumerable GetInputCollection(BrickPropertyCollection properties)
+			{
+				var property = properties.PeekAfter (BrickPropertyKey.FromCollection);
+
+				if (property.HasValue)
+				{
+					return property.Value.CollectionValue;
 				}
 				else
 				{

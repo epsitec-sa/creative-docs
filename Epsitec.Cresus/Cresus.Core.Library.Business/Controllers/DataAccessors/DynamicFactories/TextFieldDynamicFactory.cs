@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 	/// </summary>
 	internal static class TextFieldDynamicFactory
 	{
-		public static DynamicFactory Create<T>(BusinessContext business, LambdaExpression lambda, System.Func<T> entityGetter, string title, int width)
+		public static DynamicFactory Create<T>(BusinessContext business, LambdaExpression lambda, System.Func<T> entityGetter, string title, int width, System.Collections.IEnumerable collection)
 		{
 			var lambdaMember = (MemberExpression) lambda.Body;
 			var propertyInfo = lambdaMember.Member as System.Reflection.PropertyInfo;
@@ -62,7 +62,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 				(fieldType == typeof (string)) &&
 				(typeField.TypeId == Druid.Parse ("[8VAF1]")))	//	Data.String.EntityId
 			{
-				var list        = new List<Druid> (EntityInfo.GetAllTypeIds ());
+				var source      = collection as IEnumerable<Druid>;
+				var list        = new List<Druid> (source ?? EntityInfo.GetAllTypeIds ());
 				var factoryType = typeof (EntityIdFactory<>).MakeGenericType (sourceType);
 				var instance    = System.Activator.CreateInstance (factoryType, business, lambda, entityGetter, getterFunc, setterFunc, title, width, list);
 
