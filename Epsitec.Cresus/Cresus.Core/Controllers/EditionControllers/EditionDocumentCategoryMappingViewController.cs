@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Support;
@@ -22,6 +22,16 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionDocumentCategoryMappingViewController : EditionViewController<Entities.DocumentCategoryMappingEntity>
 	{
+		protected override void CreateBricks(Bricks.BrickWall<Entities.DocumentCategoryMappingEntity> wall)
+		{
+			wall.AddBrick ()
+				.Input ()
+				  .Field (x => x.PrintableEntity)
+				  .Field (x => x.DocumentCategories)
+				.End ();
+		}
+#if false
+	
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -57,5 +67,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateEditionDetailedItemPicker ("DocumentCategory", this.Entity, "Catégories", controller, EnumValueCardinality.Any, ViewControllerMode.Summary);
 		}
+#endif
 	}
 }

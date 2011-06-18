@@ -16,9 +16,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(Bricks.BrickWall<Entities.DocumentCategoryMappingEntity> wall)
 		{
-			wall.AddBrick ()
-				.Title ("Assignations pour l'impression")
-				.TitleCompact ("Assignations");
+			wall.AddBrick ();
 		}
 	}
 }
