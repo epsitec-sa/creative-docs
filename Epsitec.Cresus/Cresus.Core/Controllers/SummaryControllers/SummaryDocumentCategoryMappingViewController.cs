@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Types;
@@ -14,22 +14,11 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryDocumentCategoryMappingViewController : SummaryViewController<Entities.DocumentCategoryMappingEntity>
 	{
-		protected override void CreateUI()
+		protected override void CreateBricks(Bricks.BrickWall<Entities.DocumentCategoryMappingEntity> wall)
 		{
-			using (var data = TileContainerController.Setup (this))
-			{
-				data.Add (
-					new TileDataItem
-					{
-						Name				= "DocumentCategoryMapping",
-						IconUri				= "Data.DocumentCategoryMapping",
-						Title				= TextFormatter.FormatText ("Assignations pour l'impression"),
-						CompactTitle		= TextFormatter.FormatText ("Assignations"),
-						TextAccessor		= this.CreateAccessor (x => x.GetSummary ()),
-						CompactTextAccessor = this.CreateAccessor (x => x.GetCompactSummary ()),
-						EntityMarshaler		= this.CreateEntityMarshaler (),
-					});
-			}
+			wall.AddBrick ()
+				.Title ("Assignations pour l'impression")
+				.TitleCompact ("Assignations");
 		}
 	}
 }
