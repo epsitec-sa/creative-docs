@@ -584,6 +584,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				yield return Res.Commands.Base.ShowDocumentCategory;
 				yield return Res.Commands.Base.ShowDocumentOptions;
 				yield return Res.Commands.Base.ShowDocumentPrintingUnits;
+				yield return Res.Commands.Base.ShowCurrency;
 				yield return Res.Commands.Base.ShowImages;
 			}
 
