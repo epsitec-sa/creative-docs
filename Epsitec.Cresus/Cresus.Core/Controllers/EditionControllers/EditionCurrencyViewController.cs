@@ -16,6 +16,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Input ()
 				  .Field (x => x.BeginDate)
 				  .Field (x => x.EndDate)
+				  .Field (x => x.CurrencyCode)
 				  .Field (x => x.ExchangeRateBase)
 				  .Field (x => x.ExchangeRate)
 				  .Field (x => x.ExchangeRateSource)
