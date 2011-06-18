@@ -1,5 +1,7 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Support
 {
@@ -21,7 +23,7 @@ namespace Epsitec.Common.Support
 	[Types.SerializationConverter (typeof (Druid.SerializationConverter))]
 	[System.Diagnostics.DebuggerStepThrough]
 
-	public struct Druid : System.IEquatable<Druid>
+	public struct Druid : System.IEquatable<Druid>, INullable
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:Druid"/> structure.
@@ -994,6 +996,18 @@ namespace Epsitec.Common.Support
 
 			return new Druid (module, developer, local);
 		}
+
+		#region INullable Members
+
+		bool INullable.IsNull
+		{
+			get
+			{
+				return this.IsEmpty;
+			}
+		}
+
+		#endregion
 
 		#region IEquatable<Druid> Members
 

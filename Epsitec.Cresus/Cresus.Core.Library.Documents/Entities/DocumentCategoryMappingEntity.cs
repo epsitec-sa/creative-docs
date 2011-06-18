@@ -17,29 +17,21 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			return this.GetPrintableEntityName ();
+			return TextFormatter.FormatText (this.PrintableEntityId);
 		}
 
 		public override FormattedText GetCompactSummary()
 		{
-			return this.GetPrintableEntityName ();
+			return TextFormatter.FormatText (this.PrintableEntityId);
 		}
 
-		public FormattedText GetPrintableEntityName()
+		public Druid PrintableEntityId
 		{
-			Druid id;
-
-			if (Druid.TryParse (this.PrintableEntity, out id))
+			get
 			{
-				//	Found entity ID.
-				var caption = EntityInfo.GetStructuredType (id).Caption;
-				var text    = caption.DefaultLabel ?? caption.Name;
-
-				return new FormattedText (text);
-			}
-			else
-			{
-				return TextFormatter.FormatText ("(inconnu)").ApplyItalic ();
+				Druid id;
+				Druid.TryParse (this.PrintableEntity, out id);
+				return id;
 			}
 		}
 	}

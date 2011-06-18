@@ -2,6 +2,8 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Library;
@@ -38,8 +40,27 @@ namespace Epsitec.Cresus.Core
 				return TextFormatter.detailLevel;
 			}
 		}
-		
-		
+
+
+		public static FormattedText						DefaultUnknownText
+		{
+			get
+			{
+				switch (TextFormatter.CurrentLanguageId)
+				{
+					case "fr":
+						return TextFormatter.FormatText ("<i>inconnu</i>");
+					
+					case "de":
+						return TextFormatter.FormatText ("<i>unbekannt</i>");
+					
+					default:
+					case "en":
+						return TextFormatter.FormatText ("<i>unknown</i>");
+				}
+			}
+		}
+
 		public static FormattedText FormatText(params object[] values)
 		{
 			var buffer = new System.Text.StringBuilder ();
@@ -435,6 +456,8 @@ namespace Epsitec.Cresus.Core
 			TextFormatter.DefineDefaultConverter<Time> (x => x.ToString ("t", System.Globalization.DateTimeFormatInfo.CurrentInfo));
 			TextFormatter.DefineDefaultConverter<System.DateTime> (x => x.ToString ("g", System.Globalization.DateTimeFormatInfo.CurrentInfo));
 			TextFormatter.DefineDefaultConverter<Caption> (x => x.DefaultLabelOrName);
+			TextFormatter.DefineDefaultConverter<StructuredType> (x => x.Caption.DefaultLabelOrName);
+			TextFormatter.DefineDefaultConverter<Druid> (x => x.IsEmpty ? TextFormatter.DefaultUnknownText.ToString () : EntityInfo.GetStructuredType (x).Caption.DefaultLabelOrName);
 		}
 
 
