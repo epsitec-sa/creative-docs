@@ -239,7 +239,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				}
 
 				if ((inputProperties != null) &&
-					(inputProperties.PeekAfter (BrickPropertyKey.Separator).HasValue))
+					(inputProperties.PeekAfter (BrickPropertyKey.Separator, -1).HasValue))
 				{
 					this.CreateActionForSeparator ();
 				}
@@ -392,7 +392,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 			private static int GetInputWidth(BrickPropertyCollection properties)
 			{
-				var property = properties.PeekAfter (BrickPropertyKey.Width);
+				var property = properties.PeekAfter (BrickPropertyKey.Width, -1);
 
 				if (property.HasValue)
 				{
@@ -406,7 +406,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 			private static string GetInputTitle(BrickPropertyCollection properties)
 			{
-				var property = properties.PeekBefore (BrickPropertyKey.Title);
+				var property = properties.PeekBefore (BrickPropertyKey.Title, -1);
 
 				if (property.HasValue)
 				{
@@ -420,7 +420,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 			private static System.Collections.IEnumerable GetInputCollection(BrickPropertyCollection properties)
 			{
-				var property = properties.PeekAfter (BrickPropertyKey.FromCollection);
+				var property = properties.PeekAfter (BrickPropertyKey.FromCollection, -1);
 
 				if (property.HasValue)
 				{
