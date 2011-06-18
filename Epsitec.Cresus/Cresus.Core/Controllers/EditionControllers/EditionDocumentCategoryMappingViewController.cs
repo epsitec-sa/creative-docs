@@ -21,9 +21,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionDocumentCategoryMappingViewController : EditionViewController<Entities.DocumentCategoryMappingEntity>
+	public class EditionDocumentCategoryMappingViewController : EditionViewController<DocumentCategoryMappingEntity>
 	{
-		protected override void CreateBricks(Bricks.BrickWall<Entities.DocumentCategoryMappingEntity> wall)
+		protected override void CreateBricks(Bricks.BrickWall<DocumentCategoryMappingEntity> wall)
 		{
 			wall.AddBrick ()
 				.Input ()
