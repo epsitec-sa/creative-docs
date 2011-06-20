@@ -238,7 +238,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			//	Ajoute l'en-tête de la facture dans le document.
 			if (this.HasOption (DocumentOption.HeaderLogo))
 			{
-				BusinessContext context = this.businessContext as BusinessContext;
+				var context = this.businessContext as BusinessContext;
 				var settings = context.GetCachedBusinessSettings ();
 
 				if (settings.CompanyLogo.IsNotNull ())
@@ -326,11 +326,31 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			this.documentContainer.AddAbsolute (titleBand, new Rectangle (leftMargin, this.RequiredPageSize.Height-82, 90, 10));
 
 			string date = Misc.GetDateShortDescription (this.Entity.BillingDate);
+			var location = this.DefaultLocation;
 			var dateBand = new TextBand ();
-			dateBand.Text = FormattedText.Concat (DocumentMetadataPrinter.GetDefaultLocation (), ", le ", date);
+			dateBand.Text = (location == null) ? FormattedText.Concat ("Le ", date) : FormattedText.Concat (location, ", le ", date);
 			dateBand.Font = font;
 			dateBand.FontSize = this.FontSize;
 			this.documentContainer.AddAbsolute (dateBand, new Rectangle (120, this.RequiredPageSize.Height-82, 80, 10-2));
+		}
+
+		private FormattedText DefaultLocation
+		{
+			//	Retourne la ville de l'entreprise, pour imprimer par exemple "Yverdon-les-Bains, le 30 septembre 2010".
+			get
+			{
+				var context = this.businessContext as BusinessContext;
+				var settings = context.GetCachedBusinessSettings ();
+
+				if (settings == null || settings.Company == null || settings.Company.DefaultAddress == null)
+				{
+					return null;
+				}
+				else
+				{
+					return settings.Company.DefaultAddress.Location.Name;
+				}
+			}
 		}
 
 		private void BuildArticles(ArticleGroupEntity group=null, bool onlyTotal=false)

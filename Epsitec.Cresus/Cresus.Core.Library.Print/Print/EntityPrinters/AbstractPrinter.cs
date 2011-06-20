@@ -223,26 +223,6 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 		}
 
 
-		protected static FormattedText GetDefaultLocation()
-		{
-			//	Retourne la ville de l'entreprise, pour imprimer par exemple "Yverdon-les-Bains, le 30 septembre 2010".
-			// TODO: DR
-			return "tralala";
-#if false
-			var m = CoreProgram.Application.BusinessSettings.Company.Person.Contacts.Where (x => x is MailContactEntity).First () as MailContactEntity;
-
-			if (m == null)
-			{
-				return null;
-			}
-			else
-			{
-				return m.Address.Location.Name;
-			}
-#endif
-		}
-
-
 		public static AbstractPrinter CreateDocumentPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 		{
 			//	Crée le XxxPrinter adapté à un type d'entité.
