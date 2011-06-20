@@ -22,76 +22,46 @@ using Epsitec.Cresus.Core.Business;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Epsitec.Common.Types.Collections;
 
 namespace Epsitec.Cresus.Core.Dialogs
 {
 	/// <summary>
 	/// Dialogue pour choisir les options d'impression ainsi que les pages à imprimer.
 	/// </summary>
-	public class PrintOptionsDialog : AbstractDialog
+	public sealed class PrintOptionsDialog : CoreDialog
 	{
 		public PrintOptionsDialog(IBusinessContext businessContext, IEnumerable<EntityToPrint> entitiesToPrint, bool isPreview)
+			: base (businessContext.Data.Host)
 		{
-			this.IsApplicationWindow = true;  // pour avoir les boutons Minimize/Maximize/Close !
-
 			this.businessContext = businessContext;
-			this.application     = this.businessContext.Data.Host;
 			this.entitiesToPrint = entitiesToPrint.ToList ();
+			this.entitiesPageControllers   = new List<PageController> ();
 			this.isPreview       = isPreview;
-
-			this.pages = new List<Page> ();
 		}
 
 
-		public List<DeserializedJob> DeserializeJobs
+		public IList<DeserializedJob> GetJobs()
 		{
-			get
+			var list = new List<DeserializedJob> ();
+
+			foreach (var page in this.entitiesPageControllers)
 			{
-				var list = new List<DeserializedJob> ();
-
-				for (int i = 0; i < this.pages.Count; i++)
-				{
-					var jobs = this.pages[i].DeserializeJobs;
-
-					if (jobs != null)
-					{
-						list.AddRange (jobs);
-					}
-				}
-
-				return list;
+				list.AddRange (page.GetJobs ());
 			}
+
+			return list;
 		}
 
 
-		protected override Window CreateWindow()
+		protected override void SetupWindow(Window window)
 		{
-			Window window = new Window ();
-
-			this.SetupWindow (window);
-			this.SetupWidgets (window);
-
-			window.AdjustWindowSize ();
-
-			return window;
-		}
-
-		protected void SetupWindow(Window window)
-		{
-			this.OwnerWindow = this.application.Window;
-			window.Icon = this.application.Window.Icon;
 			window.Text = "Choix des options d'impression";
 			window.ClientSize = new Size (this.isPreview ? 940 : 350, this.isPreview ? 550 : 500);
 			window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;  // pour avoir les boutons Minimize/Maximize/Close !
-
-			window.WindowCloseClicked += delegate
-			{
-				this.OnDialogClosed ();
-				this.CloseDialog ();
-			};
 		}
 
-		protected void SetupWidgets(Window window)
+		protected override void SetupWidgets(Window window)
 		{
 			int tabIndex = 1;
 
@@ -112,97 +82,96 @@ namespace Epsitec.Cresus.Core.Dialogs
 				TabIndex = tabIndex++,
 			};
 
-			//	Rempli les onglets.
+			this.CreateTabBook (mainFrame);
+			this.CreateFooterButtons (footer);
+		}
+
+		protected override void UpdateWidgets()
+		{
+		}
+
+		
+		private void CreateTabBook(FrameBox container)
+		{
+			//	Remplit les onglets.
 			var book = new TabBook
 			{
-				Parent = mainFrame,
+				Parent = container,
 				Dock = DockStyle.Fill,
 			};
 
-			for (int i = 0; i < this.entitiesToPrint.Count; i++)
-			{
-				var tabPage = new TabPage ();
-				tabPage.TabTitle = this.entitiesToPrint[i].Title;
+			this.entitiesToPrint.ForEach (entityToPrint => this.CreatePageControllers (book, entityToPrint));
 
-				book.Items.Add (tabPage);
-
-				if (i == 0)
-				{
-					book.ActivePage = tabPage;
-				}
-
-				var page = new Page (this.businessContext, this.entitiesToPrint[i], this.isPreview);
-				page.CreateUI (tabPage);
-
-				this.pages.Add (page);
-			}
-
-			//	Rempli le pied de page.
-			{
-				this.cancelButton = new Button
-				{
-					Parent = footer,
-					Text = "Annuler",
-					ButtonStyle = Common.Widgets.ButtonStyle.DefaultCancel,
-					Dock = DockStyle.Right,
-					Margins = new Margins (10, 0, 0, 0),
-					TabIndex = tabIndex++,
-				};
-
-				this.printButton = new Button
-				{
-					Parent = footer,
-					Text = "Imprimer",
-					ButtonStyle = Common.Widgets.ButtonStyle.DefaultAccept,
-					Dock = DockStyle.Right,
-					Margins = new Margins (20, 0, 0, 0),
-					TabIndex = tabIndex++,
-				};
-
-			}
-			
-			//	Connexion des événements.
-			this.printButton.Clicked += delegate
-			{
-				this.CloseAction (cancel: false);
-			};
-
-			this.cancelButton.Clicked += delegate
-			{
-				this.CloseAction (cancel: true);
-			};
-
+			//	Active par défaut le premier onglet:
+			book.ActivePageIndex = 0;
 		}
 
-
-		private void CloseAction(bool cancel)
+		private void CreateFooterButtons(FrameBox container)
 		{
-			if (cancel)
+			//	Remplit le pied de page.
+			int tabIndex = 1;
+			new Button (Epsitec.Common.Dialogs.Res.Commands.Dialog.Generic.Cancel)
 			{
-				this.Result = DialogResult.Cancel;
-			}
-			else
+				Parent = container,
+//				Text = "Annuler",
+//				ButtonStyle = Common.Widgets.ButtonStyle.DefaultCancel,
+				Dock = DockStyle.Right,
+				Margins = new Margins (10, 0, 0, 0),
+				TabIndex = tabIndex++,
+			};
+
+			new Button (Epsitec.Common.Widgets.Res.Commands.Print)
 			{
-				for (int i = 0; i < this.entitiesToPrint.Count; i++)
-				{
-					this.entitiesToPrint[i].Options.MergeWith (this.pages[i].FinalOptions);
-				}
+				Parent = container,
+//				Text = "Imprimer",
+				ButtonStyle = Common.Widgets.ButtonStyle.DefaultAccept,
+				Dock = DockStyle.Right,
+				Margins = new Margins (20, 0, 0, 0),
+				TabIndex = tabIndex++,
+			};
+		}
+		
+		private void CreatePageControllers(TabBook book, EntityToPrint entityToPrint)
+		{
+			var tabPage = new TabPage ()
+			{
+				TabTitle = entityToPrint.Title
+			};
 
-				this.Result = DialogResult.Accept;
-			}
+			book.Items.Add (tabPage);
 
+			var pageController = new PageController (this.businessContext, entityToPrint, tabPage, this.isPreview);
+
+			this.entitiesPageControllers.Add (pageController);
+		}
+
+		
+		[Command (Epsitec.Common.Dialogs.Res.CommandIds.Dialog.Generic.Cancel)]
+		private void ProcessCancel()
+		{
+			this.Result = DialogResult.Cancel;
 			this.CloseDialog ();
 		}
 
-		protected override void OnDialogClosed()
+		[Command (Epsitec.Common.Widgets.Res.CommandIds.Print)]
+		private void ProcessPrint()
 		{
-			base.OnDialogClosed ();
+			for (int i = 0; i < this.entitiesToPrint.Count; i++)
+			{
+				this.entitiesPageControllers[i].ApplyFinalOptions (this.entitiesToPrint[i]);
+				
+			}
+
+			this.Result = DialogResult.Accept;
+			this.CloseDialog ();
 		}
 
 
-		private class Page
+		#region Page Class
+
+		private sealed class PageController
 		{
-			public Page(IBusinessContext businessContext, EntityToPrint entityToPrint, bool isPreview)
+			public PageController(IBusinessContext businessContext, EntityToPrint entityToPrint, Widget container, bool isPreview)
 			{
 				this.businessContext = businessContext;
 				this.entityToPrint   = entityToPrint;
@@ -211,30 +180,26 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.categoryOptions = new PrintingOptionDictionary ();
 				this.modifiedOptions = new PrintingOptionDictionary ();
 				this.finalOptions    = new PrintingOptionDictionary ();
+
+				this.CreateUI (container);
 			}
 
-			public List<DeserializedJob> DeserializeJobs
+			public void ApplyFinalOptions(EntityToPrint entityToPrint)
 			{
-				get
-				{
-					if (this.deserializeJobs == null)
-					{
-						this.UpdateDeserializeJobs ();
-					}
-
-					return this.deserializeJobs;
-				}
+				entityToPrint.Options.MergeWith (this.finalOptions);
 			}
 
-			public PrintingOptionDictionary FinalOptions
+			public IList<DeserializedJob> GetJobs()
 			{
-				get
+				if (this.jobs == null)
 				{
-					return this.finalOptions;
+					this.UpdateJobs ();
 				}
+
+				return this.jobs;
 			}
 
-			public void CreateUI(Widget parent)
+			private void CreateUI(Widget parent)
 			{
 				int tabIndex = 1;
 
@@ -335,7 +300,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.UpdateWidgets ();
 			}
 
-
 			private void UpdateOptions()
 			{
 				var category = this.DocumentCategoryEntityToUse;
@@ -377,23 +341,20 @@ namespace Epsitec.Cresus.Core.Dialogs
 					this.previewFrame.Children.Clear ();
 					this.toolbarFrame.Children.Clear ();
 
-					this.UpdateDeserializeJobs ();
+					this.UpdateJobs ();
 
-					if (this.deserializeJobs != null)
-					{
-						var controller = new XmlPreviewerController (this.businessContext, this.deserializeJobs, showCheckButtons: true);
-						controller.CreateUI (this.previewFrame, this.toolbarFrame);
-					}
+					var controller = new XmlPreviewerController (this.businessContext, this.jobs, showCheckButtons: true);
+					controller.CreateUI (this.previewFrame, this.toolbarFrame);
 				}
 			}
 
-			private void UpdateDeserializeJobs()
+			private void UpdateJobs()
 			{
 				var category = this.DocumentCategoryEntityToUse;
 				
 				if (category == null)
 				{
-					this.deserializeJobs = null;
+					this.jobs = EmptyList<DeserializedJob>.Instance;
 				}
 				else
 				{
@@ -402,7 +363,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					this.finalOptions.MergeWith (this.modifiedOptions);
 
 					var xml = PrintEngine.MakePrintingData (this.businessContext, this.entityToPrint.Entity, this.finalOptions, this.entityToPrint.PrintingUnits);
-					this.deserializeJobs = SerializationEngine.DeserializeJobs (this.businessContext, xml);
+					this.jobs = SerializationEngine.DeserializeJobs (this.businessContext, xml);
 				}
 			}
 
@@ -470,7 +431,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			private readonly bool									isPreview;
 
 			private bool											showOptions;
-			private List<DeserializedJob>							deserializeJobs;
+			private IList<DeserializedJob>							jobs;
 
 			private GlyphButton										showOptionsButton;
 			private FrameBox										leftFrame;
@@ -479,14 +440,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 			private FrameBox										toolbarFrame;
 		}
 
+		#endregion
 
-		private readonly Application							application;
+
 		private readonly IBusinessContext						businessContext;
 		private readonly List<EntityToPrint>					entitiesToPrint;
+		private readonly List<PageController>					entitiesPageControllers;
 		private readonly bool									isPreview;
-		private readonly List<Page>								pages;
-
-		private Button											printButton;
-		private Button											cancelButton;
 	}
 }

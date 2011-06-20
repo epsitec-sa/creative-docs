@@ -20,10 +20,17 @@ namespace Epsitec.Common.Widgets
 		{
 			this.Text = text;
 		}
-		
-		public Button(Widget embedder) : this()
+
+		public Button(Widget embedder)
+			: this ()
 		{
-			this.SetEmbedder(embedder);
+			this.SetEmbedder (embedder);
+		}
+
+		public Button(Command command)
+			: this ()
+		{
+			this.CommandObject = command;
 		}
 		
 		

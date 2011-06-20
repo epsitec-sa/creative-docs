@@ -32,10 +32,10 @@ namespace Epsitec.Cresus.Core.Print.Controllers
 		}
 
 
-		public XmlPreviewerController(IBusinessContext businessContext, List<DeserializedJob> jobs, bool showCheckButtons)
+		public XmlPreviewerController(IBusinessContext businessContext, IEnumerable<DeserializedJob> jobs, bool showCheckButtons)
 		{
 			this.businessContext  = businessContext;
-			this.jobs             = jobs;
+			this.jobs             = jobs.ToList ();
 			this.pages            = Print.Common.GetDeserializedPages (this.jobs).ToList ();
 			this.showCheckButtons = showCheckButtons;
 

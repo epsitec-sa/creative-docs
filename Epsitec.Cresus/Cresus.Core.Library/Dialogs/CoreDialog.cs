@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 {
 	/// <summary>
 	/// The <c>CoreDialog</c> class implements the basic functionality for dialogs used
-	/// in the Core projects (window persitence and basic command handling capabilities).
+	/// in the Core projects (window persistence and basic command handling capabilities).
 	/// </summary>
 	public abstract class CoreDialog : AbstractDialog
 	{
