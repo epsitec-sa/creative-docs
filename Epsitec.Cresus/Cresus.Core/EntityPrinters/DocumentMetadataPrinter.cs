@@ -342,7 +342,10 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				var context = this.businessContext as BusinessContext;
 				var settings = context.GetCachedBusinessSettings ();
 
-				if (settings == null || settings.Company == null || settings.Company.DefaultAddress == null)
+				if (settings == null ||
+					settings.Company == null ||
+					settings.Company.DefaultAddress == null ||
+					settings.Company.DefaultAddress.Location == null)
 				{
 					return null;
 				}
