@@ -15,23 +15,23 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			string date = Misc.GetDateShortDescription (this.BillingDate);
-			string total = Misc.PriceToString (InvoiceDocumentHelper.GetTotalPriceTTC (this));
-
 			FormattedText billing  = BusinessDocumentEntity.GetShortMailContactSummary (this.BillToMailContact);
 			FormattedText shipping = BusinessDocumentEntity.GetShortMailContactSummary (this.ShipToMailContact);
 
 			FormattedText addresses;
 			if (this.BillToMailContact == this.ShipToMailContact || (!this.BillToMailContact.IsNotNull () && !this.ShipToMailContact.IsNotNull ()))
 			{
-				addresses = FormattedText.Concat ("\n\n<b>• Adresse de facturation et de livraison:</b>\n", billing);
+				addresses = FormattedText.Concat ("\n<b>• Adresse de facturation et de livraison:</b>\n", billing);
 			}
 			else
 			{
-				addresses = FormattedText.Concat ("\n\n<b>• Adresse de facturation:</b>\n", billing, "\n\n<b>• Adresse de livraison:</b>\n", shipping);
+				addresses = FormattedText.Concat ("\n<b>• Adresse de facturation:</b>\n", billing, "\n\n<b>• Adresse de livraison:</b>\n", shipping);
 			}
 
-			return TextFormatter.FormatText (/*"N°", this.IdA, "/~", this.IdB, "/~", this.IdC, ", ", */date, ", ", total, addresses);
+			return TextFormatter.FormatText (
+				this.BillingDate, ", ",
+				InvoiceDocumentHelper.GetTotalPriceTTC (this), TextFormatter.FormatCommand ("#price()"), "\n",
+				addresses);
 		}
 
 		public override FormattedText GetCompactSummary()

@@ -65,10 +65,12 @@
     <Compile Include="Library\Formatters\FormatterHelper.cs" />
     <Compile Include="Library\Formatters\FormattingContext.cs" />
     <Compile Include="Library\Formatters\FormatToken.cs" />
+    <Compile Include="Library\Formatters\PriceFormatTokenFormatter.cs" />
     <Compile Include="Library\Formatters\SimpleFormatToken.cs" />
     <Compile Include="Library\Formatters\StringFormatTokenFormatter.cs" />
     <Compile Include="Library\ICoreComponent`2.cs" />
     <Compile Include="Library\ITextFormatterConverter.cs" />
+    <Compile Include="Library\Numeric.cs" />
     <Compile Include="Library\TextFormatterConverter.cs" />
     <Compile Include="Library\SettingsCollection.cs" />
     <Compile Include="Library\SettingsManager.cs" />

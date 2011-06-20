@@ -875,7 +875,7 @@ namespace Epsitec.Cresus.Core
 
 			return textField;
 		}
-
+		
 		public TextFieldMultiEx CreateTextFieldMulti(EditionTile tile, double height, string label, Marshaler marshaler)
 		{
 			if (!string.IsNullOrEmpty (label))
@@ -892,12 +892,17 @@ namespace Epsitec.Cresus.Core
 				this.ContentListAdd (staticText);
 			}
 
+			return this.CreateTextFieldMulti (tile.Container, DockStyle.Stacked, height, marshaler);
+		}
+
+		public TextFieldMultiEx CreateTextFieldMulti(FrameBox container, DockStyle dockStyle, double height, Marshaler marshaler)
+		{
 			var textField = new TextFieldMultiEx
 			{
-				Parent = tile.Container,
+				Parent = container,
 				IsReadOnly = this.ReadOnly,
 				PreferredHeight = height,
-				Dock = DockStyle.Stacked,
+				Dock = dockStyle,
 				Margins = new Margins (0, Library.UI.RightMargin, 0, Library.UI.MarginUnderTextField),
 				TabIndex = ++this.tabIndex,
 				DefocusAction = DefocusAction.AutoAcceptOrRejectEdition,
@@ -1464,6 +1469,16 @@ namespace Epsitec.Cresus.Core
 				tile.Hilite = false;
 			};
 
+			tile.Selected += delegate
+			{
+				tileButton.GlyphShape = GlyphShape.ArrowLeft;
+			};
+
+			tile.Deselected += delegate
+			{
+				tileButton.GlyphShape = GlyphShape.ArrowRight;
+			};
+
 			var controller = this.GetRootController ();
 			var clickSimulator = new TileButtonClickSimulator (tileButton, controller, referenceController.Id);
 
@@ -1472,34 +1487,36 @@ namespace Epsitec.Cresus.Core
 				editor.DefocusAndAcceptOrReject ();
 
 				var navPath = new TileNavigationPathElement (clickSimulator.Name);
-	
-				if (tileButton.GlyphShape == GlyphShape.ArrowRight)
-				{
-					tile.Controller = new ReferenceTileController (referenceController);
-					tile.ToggleSubView (controller.Orchestrator, controller, navPath);
-				}
 
-				if (tileButton.GlyphShape == GlyphShape.Plus)
+				switch (tileButton.GlyphShape)
 				{
-					if (referenceController.HasCreator)
-					{
-						if (tile.IsSelected)
+					case GlyphShape.ArrowRight:
+					case GlyphShape.ArrowLeft:
+						tile.Controller = new ReferenceTileController (referenceController);
+						tile.ToggleSubView (controller.Orchestrator, controller, navPath);
+						break;
+				
+					case GlyphShape.Plus:
+						if (referenceController.HasCreator)
 						{
-							tile.CloseSubView (controller.Orchestrator);
-						}
-						else
-						{
-							var newValue  = referenceController.CreateNewValue (controller.DataContext);
-							var newEntity = newValue.GetEditionEntity ();
-							var refEntity = newValue.GetReferenceEntity ();
-							var newController = EntityViewControllerFactory.Create ("Creation", newEntity, newValue.CreationControllerMode, controller.Orchestrator, navigationPathElement: navPath);
-							tile.OpenSubView (controller.Orchestrator, controller, newController);
-							editor.SelectedItemIndex = editor.Items.Add (refEntity);
-							valueSetter (refEntity);
+							if (tile.IsSelected)
+							{
+								tile.CloseSubView (controller.Orchestrator);
+							}
+							else
+							{
+								var newValue  = referenceController.CreateNewValue (controller.DataContext);
+								var newEntity = newValue.GetEditionEntity ();
+								var refEntity = newValue.GetReferenceEntity ();
+								var newController = EntityViewControllerFactory.Create ("Creation", newEntity, newValue.CreationControllerMode, controller.Orchestrator, navigationPathElement: navPath);
+								tile.OpenSubView (controller.Orchestrator, controller, newController);
+								editor.SelectedItemIndex = editor.Items.Add (refEntity);
+								valueSetter (refEntity);
 
-							new AutoCompleteItemSynchronizer (editor, newController, refEntity);
+								new AutoCompleteItemSynchronizer (editor, newController, refEntity);
+							}
 						}
-					}
+						break;
 				}
 			};
 

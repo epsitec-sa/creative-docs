@@ -24,6 +24,15 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionBusinessDocumentViewController : EditionViewController<BusinessDocumentEntity>
 	{
+		protected override void CreateBricks(Bricks.BrickWall<BusinessDocumentEntity> wall)
+		{
+			wall.AddBrick ()
+				.Input ()
+				  .Field (x => x.BillToMailContact)
+				  .Field (x => x.ShipToMailContact)
+				.End ();
+		}
+#if false
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -31,7 +40,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				builder.CreateHeaderEditorTile ();
 				builder.CreateEditionTitleTile ("Data.InvoiceDocument", "Document");
 
-				this.CreateUIMain1        (builder);
 				this.CreateUIBillingMail  (builder);
 				this.CreateUIShippingMail (builder);
 				this.CreateUIMain2        (builder);
@@ -40,18 +48,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
-
-		private void CreateUIMain1(Epsitec.Cresus.Core.UIBuilder builder)
-		{
-			//var tile = builder.CreateEditionTile ();
-
-			//FrameBox group = builder.CreateGroup (tile, "N° du document (principal, externe et interne)");
-			//builder.CreateTextField (group, DockStyle.Left, 74, Marshaler.Create (() => this.Entity.IdA, x => this.Entity.IdA = x));
-			//builder.CreateTextField (group, DockStyle.Left, 74, Marshaler.Create (() => this.Entity.IdB, x => this.Entity.IdB = x));
-			//builder.CreateTextField (group, DockStyle.Left, 74, Marshaler.Create (() => this.Entity.IdC, x => this.Entity.IdC = x));
-
-			//builder.CreateMargin (tile, horizontalSeparator: true);
-		}
 
 		private void CreateUIBillingMail(UIBuilder builder)
 		{
@@ -104,7 +100,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 #endif
 		}
 
-
 	
 		private NewEntityReference CreateNewMailContact(DataContext context)
 		{
@@ -112,5 +107,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			return country;
 		}
+#endif
 	}
 }
