@@ -994,7 +994,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Creative Docs .NET"
         "ProductCode" = "8:{B51EEA40-38E6-4AFA-909E-28FE5D1F2E49}"
-        "PackageCode" = "8:{EA128EB7-E76F-4427-A784-88D0596E498B}"
+        "PackageCode" = "8:{99561238-9E5F-42F7-AA25-2290E5010D39}"
         "UpgradeCode" = "8:{925CE84A-106F-439D-B0AA-6222B871FB71}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

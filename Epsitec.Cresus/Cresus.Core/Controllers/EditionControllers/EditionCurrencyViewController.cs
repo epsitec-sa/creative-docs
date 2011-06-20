@@ -23,15 +23,4 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.End ();
 		}
 	}
-	public class EditionExchangeRateSourceViewController : EditionViewController<ExchangeRateSourceEntity>
-	{
-		protected override void CreateBricks(Bricks.BrickWall<ExchangeRateSourceEntity> wall)
-		{
-			wall.AddBrick ()
-				.Input ()
-				  .Field (x => x.Type)
-				  .Field (x => x.Originator)
-				.End ();
-		}
-	}
 }
