@@ -1,4 +1,5 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿#if false
+//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Debug;
@@ -174,3 +175,4 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private Button											closeButton;
 	}
 }
+#endif

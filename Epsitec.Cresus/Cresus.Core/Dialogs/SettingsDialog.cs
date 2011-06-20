@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Dialogs;
@@ -132,9 +132,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.RegisterWithPersistenceManager (this.tabBook);
 		}
 
-		protected override void UpdateWidgets()
-		{
-		}
 
 		[Command (Epsitec.Common.Dialogs.Res.CommandIds.Dialog.Generic.Cancel)]
 		private void ExecuteCancelCommand()

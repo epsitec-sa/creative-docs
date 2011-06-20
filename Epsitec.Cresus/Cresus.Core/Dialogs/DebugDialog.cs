@@ -215,10 +215,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 		}
 
-		protected override void UpdateWidgets()
-		{
-		}
-
 
 		private readonly List<AbstractSettingsTabPage>			settingsTabPages;
 

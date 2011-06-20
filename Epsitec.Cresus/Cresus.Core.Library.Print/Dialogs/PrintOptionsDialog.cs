@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Debug;
@@ -86,10 +86,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.CreateFooterButtons (footer);
 		}
 
-		protected override void UpdateWidgets()
-		{
-		}
-
 		
 		private void CreateTabBook(FrameBox container)
 		{
@@ -167,7 +163,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
-		#region Page Class
+		#region PageController Class
 
 		private sealed class PageController
 		{

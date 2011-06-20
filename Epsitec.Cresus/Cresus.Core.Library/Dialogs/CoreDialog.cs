@@ -77,7 +77,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		protected abstract void SetupWindow(Window window);
 		protected abstract void SetupWidgets(Window window);
-		protected abstract void UpdateWidgets();
+
+		protected virtual void UpdateWidgets()
+		{
+		}
 
 		protected readonly CoreApp application;
 		private readonly List<DependencyObject> persisted;
