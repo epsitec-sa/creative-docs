@@ -226,7 +226,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Margins = new Margins (0, this.isPreview ? 10 : 0, 0, 0),
 				};
 
-				var rightFrame = new FrameBox
+				this.rightFrame = new FrameBox
 				{
 					Parent = mainFrame,
 					Visibility = this.isPreview,
@@ -270,7 +270,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				//	Rempli la colonne de droite.
 				this.previewFrame = new FrameBox
 				{
-					Parent = rightFrame,
+					Parent = this.rightFrame,
 					Dock = DockStyle.Fill,
 					TabIndex = tabIndex++,
 				};
@@ -367,6 +367,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				this.showOptionsButton.GlyphShape = this.showOptions ? GlyphShape.TriangleLeft : GlyphShape.TriangleRight;
 				this.leftFrame.Visibility = this.showOptions || !this.isPreview;
+				this.rightFrame.Margins = new Margins (this.showOptions ? 0 : 24, 0, 0, 0);
 			}
 
 
@@ -431,6 +432,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			private GlyphButton										showOptionsButton;
 			private FrameBox										leftFrame;
+			private FrameBox										rightFrame;
 			private Scrollable										optionsFrame;
 			private FrameBox										previewFrame;
 			private FrameBox										toolbarFrame;
