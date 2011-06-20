@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Entities
 			//	Retourne le code du pays où est localisée l'entreprise.
 			get
 			{
-				return "CH";  // TODO: aller cherche ce code dans les BusinessSettings !
+				return "CH";  // TODO: aller chercher ce code dans les BusinessSettings !
 			}
 		}
 

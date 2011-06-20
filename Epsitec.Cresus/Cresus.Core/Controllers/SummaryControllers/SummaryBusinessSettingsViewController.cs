@@ -36,6 +36,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				.Name ("PaymentReminderDefinition")
 				.Icon ("Data.PaymentReminderDefinition")
 				.Title ("Rappels")
+				.Attribute (BrickMode.AutoGroup)
 				.Template ()
 				 .Text (x => x.GetSummary ())
 				.End ();
