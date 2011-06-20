@@ -20,6 +20,24 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionPaymentReminderDefinitionViewController : EditionViewController<Entities.PaymentReminderDefinitionEntity>
 	{
+		protected override void CreateBricks(Bricks.BrickWall<PaymentReminderDefinitionEntity> wall)
+		{
+			wall.AddBrick ()
+				.Name ("PaymentReminderDefinition")
+				.Icon ("Data.PaymentReminderDefinition")
+				.Title ("PaymentReminderDefinition")
+				.Input ()
+				  .Field (x => x.Name)
+				  .Field (x => x.Description)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Title ("Terme (nombre de jours)")
+				  .Field (x => x.ExtraPaymentTerm).Width (80)
+				.End ();
+		}
+
+#if false
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -70,6 +88,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var article = context.CreateEntityAndRegisterAsEmpty<ArticleDefinitionEntity> ();
 			return article;
 		}
+#endif
 #endif
 	}
 }
