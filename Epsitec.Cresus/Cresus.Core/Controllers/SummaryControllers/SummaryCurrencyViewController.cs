@@ -16,4 +16,11 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			wall.AddBrick ();
 		}
 	}
+	public class SummaryExchangeRateSourceViewController : SummaryViewController<ExchangeRateSourceEntity>
+	{
+		protected override void CreateBricks(Bricks.BrickWall<ExchangeRateSourceEntity> wall)
+		{
+			wall.AddBrick ();
+		}
+	}
 }

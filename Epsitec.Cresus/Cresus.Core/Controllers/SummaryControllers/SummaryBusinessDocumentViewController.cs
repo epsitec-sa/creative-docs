@@ -168,8 +168,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			var template = new CollectionTemplate<BillingDetailEntity> ("BillingDetails", this.BusinessContext);
 
-			template.DefineText        (x => x.GetCompactSummary (this.Entity));
-			template.DefineCompactText (x => x.GetCompactSummary (this.Entity));
+			template.DefineText        (x => x.GetCompactSummary ());
+			template.DefineCompactText (x => x.GetCompactSummary ());
 
 			data.Add (this.CreateCollectionAccessor (template, x => x.BillingDetails));
 		}

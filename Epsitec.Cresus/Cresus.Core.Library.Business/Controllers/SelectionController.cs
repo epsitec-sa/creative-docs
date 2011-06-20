@@ -331,6 +331,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			var texts = this.ToTextArrayConverter (entity);
 			var result = Widgets.HintComparerResult.NoMatch;
 
+			if (texts == null)
+			{
+				throw new System.InvalidOperationException ("Source entity probably missing a GetEntityKeywords implementation");
+			}
+
 			foreach (var text in texts)
 			{
 				var itemText = HintComparer.GetComparableText (text);

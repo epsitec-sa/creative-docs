@@ -503,7 +503,7 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>Currency</c> entity.
 	///	designer:cap/CVAT
 	///	</summary>
-	public partial class CurrencyEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IDateTimeRange
+	public partial class CurrencyEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IDateRange
 	{
 		#region ILifetime Members
 		///	<summary>
@@ -523,37 +523,37 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		#endregion
-		#region IDateTimeRange Members
+		#region IDateRange Members
 		///	<summary>
 		///	The <c>BeginDate</c> field.
-		///	designer:fld/CVAT/8VAK
+		///	designer:fld/CVAT/8VAO
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VAK]")]
-		public global::System.DateTime? BeginDate
+		[global::Epsitec.Common.Support.EntityField ("[8VAO]")]
+		public global::Epsitec.Common.Types.Date? BeginDate
 		{
 			get
 			{
-				return global::Epsitec.Cresus.Core.Entities.IDateTimeRangeInterfaceImplementation.GetBeginDate (this);
+				return global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.GetBeginDate (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.IDateTimeRangeInterfaceImplementation.SetBeginDate (this, value);
+				global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.SetBeginDate (this, value);
 			}
 		}
 		///	<summary>
 		///	The <c>EndDate</c> field.
-		///	designer:fld/CVAT/8VAL
+		///	designer:fld/CVAT/8VAP
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VAL]")]
-		public global::System.DateTime? EndDate
+		[global::Epsitec.Common.Support.EntityField ("[8VAP]")]
+		public global::Epsitec.Common.Types.Date? EndDate
 		{
 			get
 			{
-				return global::Epsitec.Cresus.Core.Entities.IDateTimeRangeInterfaceImplementation.GetEndDate (this);
+				return global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.GetEndDate (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.IDateTimeRangeInterfaceImplementation.SetEndDate (this, value);
+				global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.SetEndDate (this, value);
 			}
 		}
 		#endregion
