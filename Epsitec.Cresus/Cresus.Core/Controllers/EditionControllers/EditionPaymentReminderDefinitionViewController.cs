@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
+using Epsitec.Common.Support;
 
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
@@ -34,8 +35,19 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Input ()
 				  .Title ("Terme (nombre de jours)")
 				  .Field (x => x.ExtraPaymentTerm).Width (80)
-				.End ();
+				  .Title ("Article \"frais de rappel\"")
+				  .Field (x => x.AdministrativeTaxArticle).PickFromCollection (this.GetAdminArticles ())  // TODO: ne fonctionne pas comme j'imagine !
+				.End ()
+				;
 		}
+
+		private IEnumerable<Druid> GetAdminArticles()
+		{
+			return this.BusinessContext.Data.GetAllEntities<ArticleDefinitionEntity> ()
+				.Where (x => x.ArticleCategory.ArticleType == Business.ArticleType.Admin)
+				.Select (x => x.GetEntityStructuredTypeId ());
+		}
+
 
 #if false
 		protected override void CreateUI()
