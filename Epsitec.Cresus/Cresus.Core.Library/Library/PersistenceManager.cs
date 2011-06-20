@@ -195,6 +195,7 @@ namespace Epsitec.Cresus.Core.Library
 					oldBinding.ExecuteUnregister ();
 					oldBinding.ExecuteSave (pending);
 					this.pendingRestores.Add (pending);
+					this.bindings.Remove (path);
 				}
 			}
 		}
@@ -231,9 +232,17 @@ namespace Epsitec.Cresus.Core.Library
 
 			if (this.bindings.TryGetValue (path, out oldBinding))
 			{
-				pending = PersistenceManager.CreateWidgetElement (path);
-				oldBinding.ExecuteUnregister ();
-				oldBinding.ExecuteSave (pending);
+				if (pending == null)
+				{
+					pending = PersistenceManager.CreateWidgetElement (path);
+					oldBinding.ExecuteUnregister ();
+					oldBinding.ExecuteSave (pending);
+				}
+				else
+				{
+					oldBinding.ExecuteUnregister ();
+				}
+				
 				this.pendingRestores.Add (pending);
 			}
 
