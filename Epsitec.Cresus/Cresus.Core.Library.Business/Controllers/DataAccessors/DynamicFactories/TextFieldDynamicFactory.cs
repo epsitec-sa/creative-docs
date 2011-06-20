@@ -1,18 +1,19 @@
 //	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Types.Converters.Marshalers;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Linq.Expressions;
 using System.Collections.Generic;
-using Epsitec.Cresus.Core.Library;
-using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 {
@@ -22,7 +23,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 	/// </summary>
 	internal static class TextFieldDynamicFactory
 	{
-		public static DynamicFactory Create<T>(BusinessContext business, LambdaExpression lambda, System.Func<T> entityGetter, string title, int width, System.Collections.IEnumerable collection)
+		public static DynamicFactory Create<T>(BusinessContext business, LambdaExpression lambda, System.Func<T> entityGetter, string title, int width, int height, System.Collections.IEnumerable collection)
 		{
 			var lambdaMember = (MemberExpression) lambda.Body;
 			var propertyInfo = lambdaMember.Member as System.Reflection.PropertyInfo;
@@ -30,7 +31,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 
 			var fieldType    = lambda.ReturnType;
 			var sourceType   = lambda.Parameters[0].Type;
-			
+
 			var sourceParameterExpression = Expression.Parameter (sourceType, "source");
 			var valueParameterExpression  = Expression.Parameter (fieldType, "value");
 
@@ -58,31 +59,48 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 			//	TODO: improve the special case handling here -- probably should make something
 			//	truly dynamic with plug-ins.
 
-			if ((typeField != null) &&
-				(fieldType == typeof (string)) &&
-				(typeField.TypeId == Druid.Parse ("[8VAF1]")))	//	Data.String.EntityId
-			{
-				var source      = collection as IEnumerable<Druid>;
-				var list        = new List<Druid> (source ?? EntityInfo.GetAllTypeIds ());
-				var factoryType = typeof (EntityIdFactory<>).MakeGenericType (sourceType);
-				var instance    = System.Activator.CreateInstance (factoryType, business, lambda, entityGetter, getterFunc, setterFunc, title, width, list);
+			System.Type    factoryType;
+			DynamicFactory instance = null;
 
-				return (DynamicFactory) instance;
-			}
-			else
+			if (typeField != null)
 			{
-				var factoryType = (nullable ? typeof (NullableTextFieldFactory<,>) : typeof (TextFieldFactory<,>)).MakeGenericType (sourceType, fieldType);
-				var instance    = System.Activator.CreateInstance (factoryType, business, lambda, entityGetter, getterFunc, setterFunc, title, width);
+				if ((fieldType == typeof (string)) &&
+					(typeField.TypeId == Druid.Parse ("[8VAF1]")))	//	Data.String.EntityId
+				{
+					var source  = collection as IEnumerable<Druid>;
+					var list    = new List<Druid> (source ?? EntityInfo.GetAllTypeIds ());
+					factoryType = typeof (EntityIdFactory<>).MakeGenericType (sourceType);
+					instance    = System.Activator.CreateInstance (factoryType, business, lambda, entityGetter, getterFunc, setterFunc, title, width, list) as DynamicFactory;
+				}
 
-				return (DynamicFactory) instance;
+				if (height == 0)
+				{
+					if ((fieldType == typeof (string)) ||
+						(fieldType == typeof (FormattedText)))
+					{
+						if ((typeField.TypeId == Druid.Parse ("[10AH]")) ||	//	Default.TextMultiline
+							(typeField.TypeId == Druid.Parse ("[1016]")))	//	Default.StringMultiline
+						{
+							height = 60;
+						}
+					}
+				}
 			}
+
+			if (instance == null)
+			{
+				factoryType = (nullable ? typeof (NullableTextFieldFactory<,>) : typeof (TextFieldFactory<,>)).MakeGenericType (sourceType, fieldType);
+				instance    = System.Activator.CreateInstance (factoryType, business, lambda, entityGetter, getterFunc, setterFunc, title, width, height) as DynamicFactory;
+			}
+
+			return instance;
 		}
 
 		#region TextFieldFactory Class
 
 		private sealed class TextFieldFactory<TSource, TField> : DynamicFactory
 		{
-			public TextFieldFactory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title, int width)
+			public TextFieldFactory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title, int width, int height)
 			{
 				this.business = business;
 				this.lambda   = lambda;
@@ -91,6 +109,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 				this.setter   = setter;
 				this.title    = title;
 				this.width    = width;
+				this.height   = height;
 			}
 
 			private System.Func<TField> CreateGetter()
@@ -115,15 +134,29 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 				var caption   = DynamicFactory.GetInputCaption (this.lambda);
 				var title     = this.title ?? DynamicFactory.GetInputTitle (caption);
 
-				TextFieldEx widget;
+				AbstractTextField widget;
 
 				if (tile != null)
 				{
-					widget = builder.CreateTextField (tile, width, title, marshaler);
+					if (this.height > 0)
+					{
+						widget = builder.CreateTextFieldMulti (tile, this.height, title, marshaler);
+					}
+					else
+					{
+						widget = builder.CreateTextField (tile, this.width, title, marshaler);
+					}
 				}
 				else
 				{
-					widget = builder.CreateTextField (frame, DockStyle.Stacked, width, marshaler);
+					if (this.height > 0)
+					{
+						widget = builder.CreateTextFieldMulti (frame, DockStyle.Stacked, this.height, marshaler);
+					}
+					else
+					{
+						widget = builder.CreateTextField (frame, DockStyle.Stacked, width, marshaler);
+					}
 				}
 
 				if ((caption != null) &&
@@ -143,6 +176,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 			private readonly System.Delegate		setter;
 			private readonly string					title;
 			private readonly int					width;
+			private readonly int					height;
 		}
 
 		#endregion
@@ -152,7 +186,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 		private sealed class NullableTextFieldFactory<TSource, TField> : DynamicFactory
 			where TField : struct
 		{
-			public NullableTextFieldFactory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title, int width)
+			public NullableTextFieldFactory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title, int width, int height)
 			{
 				this.business = business;
 				this.lambda   = lambda;
@@ -161,6 +195,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 				this.setter   = setter;
 				this.title    = title;
 				this.width    = width;
+				this.height   = height;
 			}
 
 			private System.Func<TField?> CreateGetter()
@@ -185,15 +220,29 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 				var caption   = DynamicFactory.GetInputCaption (this.lambda);
 				var title     = this.title ?? DynamicFactory.GetInputTitle (caption);
 
-				TextFieldEx widget;
+				AbstractTextField widget;
 
 				if (tile != null)
 				{
-					widget = builder.CreateTextField (tile, width, title, marshaler);
+					if (this.height > 0)
+					{
+						widget = builder.CreateTextFieldMulti (tile, this.height, title, marshaler);
+					}
+					else
+					{
+						widget = builder.CreateTextField (tile, this.width, title, marshaler);
+					}
 				}
 				else
 				{
-					widget = builder.CreateTextField (frame, DockStyle.Stacked, width, marshaler);
+					if (this.height > 0)
+					{
+						widget = builder.CreateTextFieldMulti (frame, DockStyle.Stacked, this.height, marshaler);
+					}
+					else
+					{
+						widget = builder.CreateTextField (frame, DockStyle.Stacked, width, marshaler);
+					}
 				}
 
 				if ((caption != null) &&
@@ -213,6 +262,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 			private readonly System.Delegate		setter;
 			private readonly string					title;
 			private readonly int					width;
+			private readonly int					height;
 		}
 
 		#endregion

@@ -289,8 +289,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				var fieldType  = lambda.ReturnType;
 				var entityType = typeof (AbstractEntity);
 
-				int    width = InputProcessor.GetInputWidth (fieldProperties);
-				string title = InputProcessor.GetInputTitle (fieldProperties);
+				int    width  = InputProcessor.GetInputWidth (fieldProperties);
+				int    height = InputProcessor.GetInputHeight (fieldProperties);
+				string title  = InputProcessor.GetInputTitle (fieldProperties);
 				
 				System.Collections.IEnumerable collection = InputProcessor.GetInputCollection (fieldProperties);
 
@@ -320,7 +321,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 					//	Produce either a text field or a variation of such a widget (pull-down list, etc.)
 					//	based on the real type being edited.
 
-					var factory = DynamicFactories.TextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, width, collection);
+					var factory = DynamicFactories.TextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, width, height, collection);
 					this.actions.Add ((tile, builder) => factory.CreateUI (tile, builder));
 
 					return;
@@ -395,6 +396,20 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			private static int GetInputWidth(BrickPropertyCollection properties)
 			{
 				var property = properties.PeekAfter (BrickPropertyKey.Width, -1);
+
+				if (property.HasValue)
+				{
+					return property.Value.IntValue.GetValueOrDefault (0);
+				}
+				else
+				{
+					return 0;
+				}
+			}
+
+			private static int GetInputHeight(BrickPropertyCollection properties)
+			{
+				var property = properties.PeekAfter (BrickPropertyKey.Height, -1);
 
 				if (property.HasValue)
 				{
