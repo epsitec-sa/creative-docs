@@ -269,6 +269,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				}
 			}
 
+			//	Génère l'adresse du client.
 			var mailContactBand = new TextBand ();
 			mailContactBand.Text = this.Entity.BillToMailContact.GetSummary ();
 			mailContactBand.Font = font;

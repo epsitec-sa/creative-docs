@@ -18,21 +18,62 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText
-				(
-					this.LegalPerson.Name, "\n",
-					this.LegalPerson.Complement, "\n",
-					this.NaturalPerson.Firstname, this.NaturalPerson.Lastname, "\n",
-					this.Complement, "\n",
-					this.Address.Street.StreetName, "\n",
-					this.Address.Street.Complement, "\n",
-					this.Address.PostBox.Number, "\n",
-					TextFormatter.Command.Mark,
-					this.Address.Location.Country.CountryCode, "~-", this.Address.Location.PostalCode, TextFormatter.Command.ClearToMarkIfEmpty,
-					TextFormatter.Command.Mark,
-					this.Address.Location.Name
-				);
+			if (this.Address.Location.Country.CountryCode == this.BusinessCountryCode)
+			{
+				return this.LocalSummary;
+			}
+			else
+			{
+				return this.ForeignSummary;
+			}
 		}
+
+		private string BusinessCountryCode
+		{
+			//	Retourne le code du pays où est localisée l'entreprise.
+			get
+			{
+				return "CH";  // TODO: aller cherche ce code dans les BusinessSettings !
+			}
+		}
+
+		private FormattedText LocalSummary
+		{
+			get
+			{
+				return TextFormatter.FormatText
+					(
+						this.LegalPerson.Name, "\n",
+						this.LegalPerson.Complement, "\n",
+						this.NaturalPerson.Firstname, this.NaturalPerson.Lastname, "\n",
+						this.Complement, "\n",
+						this.Address.Street.StreetName, "\n",
+						this.Address.Street.Complement, "\n",
+						this.Address.PostBox.Number, "\n",
+						this.Address.Location.PostalCode, this.Address.Location.Name
+					);
+			}
+		}
+
+		private FormattedText ForeignSummary
+		{
+			get
+			{
+				return TextFormatter.FormatText
+					(
+						this.LegalPerson.Name, "\n",
+						this.LegalPerson.Complement, "\n",
+						this.NaturalPerson.Firstname, this.NaturalPerson.Lastname, "\n",
+						this.Complement, "\n",
+						this.Address.Street.StreetName, "\n",
+						this.Address.Street.Complement, "\n",
+						this.Address.PostBox.Number, "\n",
+						this.Address.Location.PostalCode, this.Address.Location.Name, "\n",
+						this.Address.Location.Country.Name
+					);
+			}
+		}
+
 
 		public override FormattedText GetCompactSummary()
 		{
