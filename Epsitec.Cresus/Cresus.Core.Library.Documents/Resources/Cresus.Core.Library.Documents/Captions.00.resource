@@ -63,4 +63,13 @@
   <data name="Val.PrintableEntities.Relation" id="K7">&lt;s:data id="_0" f:Name="Relation" f:Labels="{Collection {Text 'Client'}}" /&gt;</data>
   <data name="Val.PrintableEntities.ArticleDefinition" id="K8">&lt;s:data id="_0" f:Name="ArticleDefinition" f:Labels="{Collection {Text 'Article'}}" /&gt;</data>
   <data name="Typ.PrintableEntities" id="K3">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="PrintableEntities" f:_1.SystemType="E:Epsitec.Cresus.Core.Business.PrintableEntities, Cresus.Core.Library.Documents" f:_2.EnumValues="{Collection {Text '0 [HVK4]'}, {Text '1 [HVK5]'}, {Text '2 [HVK6]'}, {Text '3 [HVK7]'}, {Text '4 [HVK8]'}}" f:Labels="{Collection {Text 'Documents imprimables'}}" /&gt;</data>
+  <data name="Val.PageType.Unknown" id="AQ1">&lt;s:data id="_0" f:Name="Unknown" f:Labels="{Collection {Text 'Inconnu'}}" /&gt;</data>
+  <data name="Val.PageType.All" id="AR1">&lt;s:data id="_0" f:Name="All" f:Labels="{Collection {Text 'Toutes'}}" /&gt;</data>
+  <data name="Val.PageType.Copy" id="AS1">&lt;s:data id="_0" f:Name="Copy" f:Labels="{Collection {Text 'Copies'}}" /&gt;</data>
+  <data name="Val.PageType.Single" id="AT1">&lt;s:data id="_0" f:Name="Single" f:Labels="{Collection {Text 'Unique'}}" /&gt;</data>
+  <data name="Val.PageType.First" id="AU1">&lt;s:data id="_0" f:Name="First" f:Labels="{Collection {Text 'Première'}}" /&gt;</data>
+  <data name="Val.PageType.Following" id="AV1">&lt;s:data id="_0" f:Name="Following" f:Labels="{Collection {Text 'Suivantes'}}" /&gt;</data>
+  <data name="Val.PageType.Isr" id="A02">&lt;s:data id="_0" f:Name="Isr" f:Labels="{Collection {Text 'Page avec BVR'}}" /&gt;</data>
+  <data name="Val.PageType.Label" id="A12">&lt;s:data id="_0" f:Name="Label" f:Labels="{Collection {Text 'Étiquette'}}" /&gt;</data>
+  <data name="Typ.PageType" id="AP1">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="PageType" f:_1.SystemType="E:Epsitec.Cresus.Core.Documents.PageType, Cresus.Core.Library.Documents" f:_2.EnumValues="{Collection {Text '0 [HVAQ1]'}, {Text '1 [HVAR1]'}, {Text '2 [HVAS1]'}, {Text '3 [HVAT1]'}, {Text '4 [HVAU1]'}, {Text '5 [HVAV1]'}, {Text '6 [HVA02]'}, {Text '7 [HVA12]'}}" f:Labels="{Collection {Text 'Types de pages'}}" /&gt;</data>
 </bundle>
