@@ -1500,8 +1500,12 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			//	En mode DocumentOption.IsrPosition = "WithOutside", cela évite d'imprimer à double un BV sur l'imprimante 'Blanc'.
 			get
 			{
-				if (this.HasOption (DocumentOption.IsrPosition, "WithInside") ||
-					this.HasOption (DocumentOption.IsrPosition, "WithOutside"))
+				if (this.HasOption (DocumentOption.IsrPosition, "WithInside"))
+				{
+					return true;
+				}
+
+				if (this.HasOption (DocumentOption.IsrPosition, "WithOutside"))
 				{
 					if (this.currentPrintingUnit != null)
 					{
