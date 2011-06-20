@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			dueDate     = dueDate.AddDays (paymentTerm);
 
 			billingDetails.AmountDue.Date = dueDate;
-			billingDetails.Text = string.Format ("Échéance au {0}", Misc.GetDateTimeDescription (dueDate));
+			billingDetails.Text = string.Format ("Payable net au {0}", Misc.GetDateTimeDescription (dueDate));
 
 			var isrDef = settings.Finance.IsrDefs.FirstOrDefault (x => x.Currency == currencyCode);
 

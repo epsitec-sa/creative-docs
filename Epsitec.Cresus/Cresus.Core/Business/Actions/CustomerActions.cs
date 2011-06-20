@@ -59,9 +59,10 @@ namespace Epsitec.Cresus.Core.Business.Actions
 		{
 			//	Define default billing & shipping addresses :
 
-			businessDocument.BillToMailContact = currentCustomer.GetMailContact (ContactGroupType.Billing);
-			businessDocument.ShipToMailContact = currentCustomer.GetMailContact (ContactGroupType.Shipping);
+			var defaultAddress = currentCustomer.Relation.Person.Contacts.OfType<MailContactEntity> ().FirstOrDefault ();
+			
+			businessDocument.BillToMailContact = businessContext.GetLocalEntity (currentCustomer.GetMailContact (ContactGroupType.Billing) ?? defaultAddress);
+			businessDocument.ShipToMailContact = businessContext.GetLocalEntity (currentCustomer.GetMailContact (ContactGroupType.Shipping) ?? defaultAddress);
 		}
-
 	}
 }

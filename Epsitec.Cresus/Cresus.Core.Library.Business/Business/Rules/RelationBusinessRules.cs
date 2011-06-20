@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 		public override void ApplyUpdateRule(RelationEntity relation)
 		{
 			var oldAddress = relation.DefaultAddress;
-			var newAddress = relation.Person.Contacts.Select (x => x as Entities.MailContactEntity).Where (x => x != null).Select (x => x.Address).FirstOrDefault ();
+			var newAddress = relation.Person.Contacts.OfType<MailContactEntity> ().Select (x => x.Address).FirstOrDefault ();
 
 			if (oldAddress.RefDiffers (newAddress))
 			{
