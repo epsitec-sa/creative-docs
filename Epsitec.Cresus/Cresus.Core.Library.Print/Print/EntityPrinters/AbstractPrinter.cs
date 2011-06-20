@@ -144,6 +144,7 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 		public void SetPrintingUnit(PrintingUnit printingUnit, PrintingOptionDictionary options, PreviewMode mode)
 		{
 			System.Diagnostics.Debug.Assert (options != null);
+			this.currentPrintingUnit = printingUnit;
 			this.options = options;
 			this.previewMode = mode;
 
@@ -330,8 +331,9 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 		protected readonly IBusinessContext					businessContext;
 		protected readonly CoreData							coreData;
 		protected readonly AbstractEntity					entity;
-		private readonly PrintingUnitDictionary			printingUnits;
-		private PrintingOptionDictionary							options;
+		private readonly PrintingUnitDictionary				printingUnits;
+		protected PrintingUnit								currentPrintingUnit;
+		private PrintingOptionDictionary					options;
 		protected readonly DocumentContainer				documentContainer;
 		protected readonly Dictionary<TableColumnKeys, TableColumn>	tableColumns;
 		protected Size										requiredPageSize;

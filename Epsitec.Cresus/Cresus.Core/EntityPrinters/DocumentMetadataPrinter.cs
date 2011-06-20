@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 				double h = this.IsDocumentWithoutPrice ? 0 : DocumentMetadataPrinter.reportHeight;
 
-				if (this.HasOption (DocumentOption.IsrPosition, "WithInside"))
+				if (this.HasIsr && this.HasOption (DocumentOption.IsrPosition, "WithInside"))
 				{
 					return new Margins (leftMargin, rightMargin, topMargin+h*2, h+DocumentMetadataPrinter.marginBeforeIsr+AbstractIsrBand.DefautlSize.Height);
 				}
@@ -150,7 +150,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			if (this.DocumentType == Business.DocumentType.Invoice)
 			{
-				if (this.HasOption (DocumentOption.IsrPosition, "Without") || this.PreviewMode == Print.PreviewMode.ContinuousPreview)
+				if (!this.HasIsr || this.HasOption (DocumentOption.IsrPosition, "Without") || this.PreviewMode == Print.PreviewMode.ContinuousPreview)
 				{
 					if (this.Entity.BillingDetails.Count != 0)
 					{
@@ -1471,6 +1471,36 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
+		private bool HasIsr
+		{
+			//	Indique s'il faut imprimer le BV. Pour cela, il faut que l'unité d'impression soit définie pour le type PageType.Isr.
+			//	En mode DocumentOption.IsrPosition = "WithOutside", cela évite d'imprimer à double un BV sur l'imprimante 'Blanc'.
+			get
+			{
+				if (this.HasOption (DocumentOption.IsrPosition, "WithInside") ||
+					this.HasOption (DocumentOption.IsrPosition, "WithOutside"))
+				{
+					if (this.currentPrintingUnit != null)
+					{
+						var example = new DocumentPrintingUnitsEntity ();
+						example.Code = this.currentPrintingUnit.DocumentPrintingUnitCode;
+
+						var documentPrintingUnits = this.businessContext.DataContext.GetByExample<DocumentPrintingUnitsEntity> (example).FirstOrDefault ();
+
+						if (documentPrintingUnits != null)
+						{
+							var pageTypes = documentPrintingUnits.GetPageTypes ();
+
+							return pageTypes.Contains (PageType.Isr);
+						}
+					}
+				}
+
+				return false;
+			}
+		}
+
+
 		private DocumentType DocumentType
 		{
 			get
@@ -1481,13 +1511,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				}
 				else
 				{
-#if true
-					if (this.Metadata.DocumentCategory.DocumentType == Business.DocumentType.None)
-					{
-						return Business.DocumentType.Invoice;  // TODO: Hask à supprimer dès que possible !
-					}
-#endif
-
 					return this.Metadata.DocumentCategory.DocumentType;
 				}
 			}
