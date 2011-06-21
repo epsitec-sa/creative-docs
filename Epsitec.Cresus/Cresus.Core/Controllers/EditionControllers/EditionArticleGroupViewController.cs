@@ -16,6 +16,22 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionArticleGroupViewController : EditionViewController<Entities.ArticleGroupEntity>
 	{
+#if true
+		protected override void CreateBricks(Bricks.BrickWall<ArticleGroupEntity> wall)
+		{
+			wall.AddBrick ()
+				//.Name ("ArticleGroupEntity")
+				.Icon ("Data.Group")
+				.Title ("Groupe d'article")
+				.Input ()
+				  .Field (x => x.Name)
+				  .Field (x => x.Description)
+				.End ()
+				;
+		}
+#endif
+
+#if false
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -37,5 +53,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField (tile, 0, "Nom court", Marshaler.Create (() => this.Entity.Name,        x => this.Entity.Name        = x));
 			builder.CreateTextField (tile, 0, "Nom long",  Marshaler.Create (() => this.Entity.Description, x => this.Entity.Description = x));
 		}
+#endif
 	}
 }
