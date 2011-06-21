@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
+using Epsitec.Common.Support;
 
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
@@ -19,6 +20,51 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionArticleAccountingDefinitionViewController : EditionViewController<Entities.ArticleAccountingDefinitionEntity>
 	{
+#if true
+		protected override void CreateBricks(Bricks.BrickWall<ArticleAccountingDefinitionEntity> wall)
+		{
+			wall.AddBrick ()
+				//.Name ("ArticleAccountingDefinition")
+				//.Icon ("Data.ArticleAccountingDefinition")
+				.Title ("Comptabilisation")
+				.Input ()
+				  .Title ("Du")
+				  .Field (x => x.BeginDate).Width (150)
+				  .Title ("Au")
+				  .Field (x => x.EndDate).Width (150)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Title ("Compte pour les ventes")
+				  .Field (x => x.SellingBookAccount)  // TODO: comment utiliser UIBuilder.CreateAccountEditor ?
+				  .Title ("Compte pour les rabais sur les ventes")
+				  .Field (x => x.SellingDiscountBookAccount)  // TODO: comment utiliser UIBuilder.CreateAccountEditor ?
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Title ("Compte pour les achats")
+				  .Field (x => x.PurchaseBookAccount)  // TODO: comment utiliser UIBuilder.CreateAccountEditor ?
+				  .Title ("Compte pour les rabais sur les achats")
+				  .Field (x => x.PurchaseDiscountBookAccount)  // TODO: comment utiliser UIBuilder.CreateAccountEditor ?
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Title ("Monnaie")
+				  .Field (x => x.CurrencyCode).PickFromCollection (this.CurrencyCodes)  // TODO: pas supporté par Bricks !
+				.End ()
+				;
+		}
+
+		private IEnumerable<EnumKeyValues> CurrencyCodes
+		{
+			get
+			{
+				return EnumKeyValues.FromEnum<CurrencyCode> ();
+			}
+		}
+#endif
+	
+#if false
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -54,5 +100,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateAutoCompleteTextField (tile, 150-Library.UI.ComboButtonWidth+1, "Monnaie", Marshaler.Create (() => this.Entity.CurrencyCode, x => this.Entity.CurrencyCode = x), EnumKeyValues.FromEnum<CurrencyCode> ());
 		}
+#endif
 	}
 }
