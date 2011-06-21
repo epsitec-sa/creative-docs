@@ -787,11 +787,6 @@ namespace Epsitec.Common.Widgets
 				(type == MessageType.MouseUp))
 			{
 				message.buttonDownCount = Message.state.buttonDownCount;
-
-				if (type == MessageType.MouseUp)
-				{
-					Message.state.buttonDownCount = 0;
-				}
 			}
 			
 			return message;
