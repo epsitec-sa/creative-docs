@@ -238,10 +238,17 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 					}
 				}
 
-				if ((inputProperties != null) &&
-					(inputProperties.PeekAfter (BrickPropertyKey.Separator, -1).HasValue))
+				if (inputProperties != null)
 				{
-					this.CreateActionForSeparator ();
+					if (inputProperties.PeekAfter (BrickPropertyKey.Separator, -1).HasValue)
+					{
+						this.CreateActionForSeparator ();
+					}
+
+					if (inputProperties.PeekAfter (BrickPropertyKey.GlobalWarning, -1).HasValue)
+					{
+						this.CreateActionForGlobalWarning ();
+					}
 				}
 			}
 
@@ -353,6 +360,11 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			private void CreateActionForSeparator()
 			{
 				this.actions.Add ((tile, builder) => builder.CreateMargin (tile as EditionTile, horizontalSeparator: true));
+			}
+
+			private void CreateActionForGlobalWarning()
+			{
+				this.actions.Add ((tile, builder) => builder.CreateWarning (tile as EditionTile));
 			}
 
 			private void RecordActions()

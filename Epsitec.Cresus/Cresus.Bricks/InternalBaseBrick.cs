@@ -63,6 +63,12 @@ namespace Epsitec.Cresus.Bricks
 			return this as TSelf;
 		}
 
+		public TSelf GlobalWarning()
+		{
+			this.AddProperty (new BrickProperty (BrickPropertyKey.GlobalWarning));
+			return this as TSelf;
+		}
+
 
 		public override System.Type GetFieldType()
 		{
