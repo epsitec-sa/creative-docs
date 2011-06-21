@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Code, this.Name);
+			return TextFormatter.FormatText (this.Name);
 		}
 
 		public override EntityStatus GetEntityStatus()
