@@ -65,6 +65,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 				double buttonSize = Library.UI.TinyButtonSize;
 
 				var toolbar = UIBuilder.CreateMiniToolbar (frame, buttonSize);
+				toolbar.Dock = DockStyle.Top;
 				toolbar.Margins = new Margins (0, 0, 0, -1);
 				toolbar.TabIndex = tabIndex++;
 

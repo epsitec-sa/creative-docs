@@ -29,7 +29,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				//.Title ("PaymentReminderDefinition")
 				.Input ()
 				  .Field (x => x.Name)
-				  //.Field (x => x.Description).Height (50)  // TODO: la méthode Height n'existe pas !
 				  .Field (x => x.Description)
 				.End ()
 				.Separator ()

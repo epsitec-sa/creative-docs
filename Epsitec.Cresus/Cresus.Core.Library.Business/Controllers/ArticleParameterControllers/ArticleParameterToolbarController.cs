@@ -42,12 +42,13 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 					Parent = parent,
 					Text = string.Concat (label, " :"),
 					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-					Dock = DockStyle.Top,
+					Dock = DockStyle.Stacked,
 					Margins = new Margins (0, Library.UI.RightMargin, 0, Library.UI.MarginUnderLabel),
 				};
 			}
 
 			this.toolbar = UIBuilder.CreateMiniToolbar (parent, Library.UI.TinyButtonSize);
+			this.toolbar.Dock = DockStyle.Stacked;
 			this.toolbar.Margins = new Margins (0, Library.UI.RightMargin, 0, -1);
 		}
 
