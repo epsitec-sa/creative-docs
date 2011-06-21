@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 {
 	internal static class EntityAutoCompleteTextFieldDynamicFactory
 	{
-		public static DynamicFactory Create<T>(BusinessContext business, LambdaExpression lambda, System.Func<T> entityGetter, string title)
+		public static DynamicFactory Create<T>(BusinessContext business, LambdaExpression lambda, System.Func<T> entityGetter, string title, System.Collections.IEnumerable collection)
 		{
 			var fieldType    = lambda.ReturnType;
 			var sourceType   = lambda.Parameters[0].Type;
@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 			var setterFunc   = setterLambda.Compile ();
 
 			var factoryType = typeof (Factory<,>).MakeGenericType (sourceType, fieldType);
-			var instance    = System.Activator.CreateInstance (factoryType, business, lambda, entityGetter, getterFunc, setterFunc, title);
+			var instance    = System.Activator.CreateInstance (factoryType, business, lambda, entityGetter, getterFunc, setterFunc, title, collection);
 
 			return (DynamicFactory) instance;
 		}
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 		private sealed class Factory<TSource, TField> : DynamicFactory
 			where TField : AbstractEntity, new ()
 		{
-			public Factory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title)
+			public Factory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title, System.Collections.IEnumerable collection)
 			{
 				this.business = business;
 				this.lambda = lambda;
@@ -58,6 +58,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 				this.getter = getter;
 				this.setter = setter;
 				this.title  = title;
+				this.collection = collection == null ? null : collection.OfType<TField> ();
 			}
 
 			private System.Func<TField> CreateGetter()
@@ -80,6 +81,18 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 				return new ReferenceController ("x", this.CreateGenericGetter (), creator: this.CreateNewEntity);
 			}
 
+			private System.Func<IEnumerable<TField>> CreatePossibleItemsGetter()
+			{
+				if (this.collection == null)
+				{
+					return null;
+				}
+				else
+				{
+					return () => this.collection;
+				}
+			}
+
 			private NewEntityReference CreateNewEntity(DataContext context)
 			{
 				return context.CreateEntityAndRegisterAsEmpty<TField> ();
@@ -92,6 +105,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 					ValueGetter = this.CreateGetter (),
 					ValueSetter = this.CreateSetter (),
 					ReferenceController = this.CreateReferenceController (),
+					PossibleItemsGetter = this.CreatePossibleItemsGetter (),
 				};
 
 				var tile    = frame as EditionTile;
@@ -115,6 +129,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 			private readonly System.Delegate getter;
 			private readonly System.Delegate setter;
 			private readonly string title;
+			private readonly IEnumerable<TField> collection;
 		}
 
 		#endregion

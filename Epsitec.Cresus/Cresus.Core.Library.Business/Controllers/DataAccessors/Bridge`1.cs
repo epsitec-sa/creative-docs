@@ -299,7 +299,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				{
 					//	The field is an entity : use an AutoCompleteTextField for it.
 
-					var factory = DynamicFactories.EntityAutoCompleteTextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title);
+					var factory = DynamicFactories.EntityAutoCompleteTextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, collection);
 					this.actions.Add ((tile, builder) => factory.CreateUI (tile, builder));
 
 					return;

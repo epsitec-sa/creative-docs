@@ -41,12 +41,19 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				;
 		}
 
-		private IEnumerable<Druid> GetAdminArticles()
+		private IEnumerable<Druid> GetAdminArticlesKO()
 		{
 			return this.BusinessContext.Data.GetAllEntities<ArticleDefinitionEntity> ()
 				.Where (x => x.ArticleCategory.ArticleType == Business.ArticleType.Admin)
 				.Select (x => x.GetEntityStructuredTypeId ());
 		}
+
+		private IEnumerable<ArticleDefinitionEntity> GetAdminArticles()
+		{
+			return this.BusinessContext.Data.GetAllEntities<ArticleDefinitionEntity> ()
+				.Where (x => x.ArticleCategory.ArticleType == Business.ArticleType.Admin);
+		}
+
 
 
 #if false
