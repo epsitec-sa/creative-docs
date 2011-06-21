@@ -21,6 +21,31 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionArticleQuantityViewController : EditionViewController<Entities.ArticleQuantityEntity>
 	{
+#if true
+		protected override void CreateBricks(Bricks.BrickWall<ArticleQuantityEntity> wall)
+		{
+			wall.AddBrick ()
+				//.Name ("ArticleQuantity")
+				//.Icon ("Data.ArticleQuantity")
+				.Title ("Quantité")
+				.Input ()
+				  .Title ("Type")
+				  .Field (x => x.QuantityType)  // TODO: Comment faire pour utiliser UIBuilder.CreateEditionDetailedItemPicker et avoir des boutons radio ?
+				  .Title ("Date prévue")
+				  .Field (x => x.ExpectedDate)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Title ("Quantité")
+				  .Field (x => x.Quantity)
+				  .Title ("Unité")
+				  .Field (x => x.Unit)  // TODO: Comment faire pour avoir des boutons radio ?
+				.End ()
+				;
+		}
+#endif
+
+#if false
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -98,5 +123,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var title = context.CreateEntityAndRegisterAsEmpty<UnitOfMeasureEntity> ();
 			return title;
 		}
+#endif
 	}
 }
