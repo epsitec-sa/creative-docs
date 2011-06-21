@@ -29,6 +29,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Title ("PaymentReminderDefinition")
 				.Input ()
 				  .Field (x => x.Name)
+				  //.Field (x => x.Description).Height (50)  // TODO: la méthode Height n'existe pas !
 				  .Field (x => x.Description)
 				.End ()
 				.Separator ()
@@ -36,16 +37,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .Title ("Terme (nombre de jours)")
 				  .Field (x => x.ExtraPaymentTerm).Width (80)
 				  .Title ("Article \"frais de rappel\"")
-				  .Field (x => x.AdministrativeTaxArticle).PickFromCollection (this.GetAdminArticles ())  // TODO: ne fonctionne pas comme j'imagine !
+				  .Field (x => x.AdministrativeTaxArticle).PickFromCollection (this.GetAdminArticles ())
 				.End ()
 				;
-		}
-
-		private IEnumerable<Druid> GetAdminArticlesKO()
-		{
-			return this.BusinessContext.Data.GetAllEntities<ArticleDefinitionEntity> ()
-				.Where (x => x.ArticleCategory.ArticleType == Business.ArticleType.Admin)
-				.Select (x => x.GetEntityStructuredTypeId ());
 		}
 
 		private IEnumerable<ArticleDefinitionEntity> GetAdminArticles()
@@ -53,61 +47,5 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			return this.BusinessContext.Data.GetAllEntities<ArticleDefinitionEntity> ()
 				.Where (x => x.ArticleCategory.ArticleType == Business.ArticleType.Admin);
 		}
-
-
-
-#if false
-		protected override void CreateUI()
-		{
-			using (var builder = new UIBuilder (this))
-			{
-				builder.CreateHeaderEditorTile ();
-				builder.CreateEditionTitleTile ("Data.PaymentReminderDefinition", "Rappel");
-
-				this.CreateUIMain (builder);
-				this.CreateUITaxArticle (builder);
-
-				builder.CreateFooterEditorTile ();
-			}
-		}
-
-
-		private void CreateUIMain(Epsitec.Cresus.Core.UIBuilder builder)
-		{
-			var tile = builder.CreateEditionTile ();
-
-			builder.CreateTextField      (tile, 100, "Code",                    Marshaler.Create (() => this.Entity.Code,             x => this.Entity.Code = x));
-			builder.CreateTextField      (tile,   0, "Nom",                     Marshaler.Create (() => this.Entity.Name,             x => this.Entity.Name = x));
-			builder.CreateTextFieldMulti (tile,  72, "Description",             Marshaler.Create (() => this.Entity.Description,      x => this.Entity.Description = x));
-			builder.CreateTextField      (tile, 100, "Terme (nombre de jours)", Marshaler.Create (() => this.Entity.ExtraPaymentTerm, x => this.Entity.ExtraPaymentTerm = x));
-		}
-
-		private void CreateUITaxArticle(UIBuilder builder)
-		{
-#if false
-			var controller = new SelectionController<ArticleDefinitionEntity> (this.BusinessContext)
-			{
-				ValueGetter         = () => this.Entity.AdministrativeTaxCode,
-				ValueSetter         = x => this.Entity.AdministrativeTaxCode = x,
-				ReferenceController = new ReferenceController (() => this.Entity.AdministrativeTaxCode, creator: this.CreateNewTaxArticleDefinition),
-
-				ToTextArrayConverter     = x => x.GetEntityKeywords (),
-				ToFormattedTextConverter = x => x.GetCompactSummary ()
-			};
-
-			builder.CreateAutoCompleteTextField ("Article pour facturer une taxe", controller);
-#else
-//			TODO: faire le lien avec l'article, non pas au niveau d'une référence, mais au niveau d'un code d'article
-#endif
-		}
-
-#if false
-		private NewEntityReference CreateNewTaxArticleDefinition(DataContext context)
-		{
-			var article = context.CreateEntityAndRegisterAsEmpty<ArticleDefinitionEntity> ();
-			return article;
-		}
-#endif
-#endif
 	}
 }
