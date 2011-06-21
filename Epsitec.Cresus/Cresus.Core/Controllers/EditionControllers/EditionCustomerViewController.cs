@@ -19,11 +19,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			wall.AddBrick ()
 				.Input ()
 				  .HorizontalGroup ("N° de client (principal, externe et interne)")
-				    .Field (x => x.IdA).Width (74)
-				    .Field (x => x.IdB).Width (74)
-				    .Field (x => x.IdC).Width (74)
+				    .Field (x => x.IdA).Width (72)
+				    .Field (x => x.IdB).Width (72)
+				    .Field (x => x.IdC).Width (72)
 				  .End ()
-				  .Field (x => x.DefaultDebtorBookAccount)
+				  .Title ("Compte débiteur pour la comptabilisation")
+				  .Field (x => x.DefaultDebtorBookAccount)  // TODO: comment utiliser UIBuilder.CreateAccountEditor ?
 				.End ()
 				.Include (x => x.Relation);
 		}

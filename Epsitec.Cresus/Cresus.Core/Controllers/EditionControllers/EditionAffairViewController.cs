@@ -22,6 +22,24 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionAffairViewController : EditionViewController<Entities.AffairEntity>
 	{
+#if true
+		protected override void CreateBricks(Bricks.BrickWall<AffairEntity> wall)
+		{
+			wall.AddBrick ()
+				.Input ()
+				  .HorizontalGroup ("N° de l'affaire (principal, externe et interne)")
+				    .Field (x => x.IdA).Width (72)
+				    .Field (x => x.IdB).Width (72)
+				    .Field (x => x.IdC).Width (72)
+				  .End ()
+				  .Title ("Compte débiteur pour la comptabilisation")
+				  .Field (x => x.DefaultDebtorBookAccount)  // TODO: comment utiliser UIBuilder.CreateAccountEditor ?
+				.End ()
+				;
+		}
+#endif
+
+#if false
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -47,5 +65,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateMargin (tile, horizontalSeparator: true);
 			builder.CreateAccountEditor (tile, "Compte débiteur pour la comptabilisation", Marshaler.Create (() => this.Entity.DefaultDebtorBookAccount, x => this.Entity.DefaultDebtorBookAccount = x));
 		}
+#endif
 	}
 }
