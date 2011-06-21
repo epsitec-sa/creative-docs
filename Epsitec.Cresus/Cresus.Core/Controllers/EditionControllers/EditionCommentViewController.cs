@@ -17,6 +17,22 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionCommentViewController : EditionViewController<Entities.CommentEntity>
 	{
+#if true
+		protected override void CreateBricks(Bricks.BrickWall<CommentEntity> wall)
+		{
+			wall.AddBrick ()
+				//.Name ("Comment")
+				//.Icon ("Data.Comment")
+				.Title ("Commentaire")
+				.Input ()
+				  .Title ("Texte")
+				  .Field (x => x.Text).Height (120)
+				.End ()
+				;
+		}
+#endif
+
+#if false
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -37,5 +53,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateTextFieldMulti (tile, 120, "Texte", Marshaler.Create (() => this.Entity.Text, x => this.Entity.Text = x));
 		}
+#endif
 	}
 }

@@ -30,8 +30,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Input ()
 				  .Field (x => x.BillToMailContact)
 				  .Field (x => x.ShipToMailContact)
-				.End ();
+				.End ()
+				;
 		}
+
 #if false
 		protected override void CreateUI()
 		{
