@@ -1,5 +1,5 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2006-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
@@ -20,6 +20,40 @@ namespace Epsitec.Common.Support
 			this.fullPath = fullPath;
 			this.handle = handle;
 			this.attributes = attributes;
+			
+			if ((this.IsFolder) &&
+				(this.IsHidden == false) &&
+				(string.IsNullOrEmpty (this.fullPath) == false))
+			{
+				//	For some yet unknown reasons, the attributes provided by the enumeration
+				//	functions don't provide the correct 'Hidden' attribute in some cases; for
+				//	instance, a .svn folder in a document library won't be marked as hidden.
+					
+				//	Make sure what the visibility of the directory really is:
+
+				this.attributes = FolderItem.FixDirectoryHiddenAttribute (this.attributes, this.fullPath);
+			}
+		}
+
+		private static Platform.FolderItemAttributes FixDirectoryHiddenAttribute(Platform.FolderItemAttributes attributes, string fullPath)
+		{
+			try
+			{
+				if (System.IO.Directory.Exists (fullPath))
+				{
+					var folderAttrib = new System.IO.DirectoryInfo (fullPath).Attributes;
+
+					if ((folderAttrib & System.IO.FileAttributes.Hidden) != 0)
+					{
+						attributes |= Platform.FolderItemAttributes.Hidden;
+					}
+				}
+			}
+			catch
+			{
+			}
+
+			return attributes;
 		}
 		
 		internal FolderItem(Platform.FolderItemHandle handle)
@@ -185,7 +219,14 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return (this.attributes & Platform.FolderItemAttributes.Hidden) != 0;
+				if ((this.attributes & Platform.FolderItemAttributes.Hidden) != 0)
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
 		}
 
@@ -473,20 +514,26 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		private FolderItemIcon					icon;
-		private string							displayName;
-		private string							typeName;
-		private string							fullPath;
-		private Platform.FolderItemHandle		handle;
-		private Platform.FolderItemAttributes	attributes;
-		private FolderQueryMode					queryMode;
+		private readonly FolderItemIcon					icon;
+		private readonly string							displayName;
+		private readonly string							typeName;
+		private readonly string							fullPath;
+		private readonly Platform.FolderItemAttributes	attributes;
+		private readonly FolderQueryMode				queryMode;
+		private Platform.FolderItemHandle				handle;
 
-		private static bool hideFileExtensionsCacheValue;
-		private static bool showHiddenFilesCacheValue;
+		[System.ThreadStatic]
+		private static bool								hideFileExtensionsCacheValue;
 		
-		private static int hideFileExtensionsCacheTicks;
-		private static int showHiddenFilesCacheTicks;
+		[System.ThreadStatic]
+		private static bool								showHiddenFilesCacheValue;
 
-		private const int cacheTickLifeTime = 10*1000;
+		[System.ThreadStatic]
+		private static int								hideFileExtensionsCacheTicks;
+		
+		[System.ThreadStatic]
+		private static int								showHiddenFilesCacheTicks;
+
+		private const int								cacheTickLifeTime = 10*1000;
 	}
 }

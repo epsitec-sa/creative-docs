@@ -90,6 +90,7 @@ namespace Epsitec.Common.Dialogs.Controllers
 				}
 
 				if ((!includeHidden) &&
+					(item.IsDrive == false) &&
 					(item.IsHidden))
 				{
 					continue;
@@ -110,6 +111,7 @@ namespace Epsitec.Common.Dialogs.Controllers
 						}
 
 						if ((!includeHidden) &&
+							(subItem.IsDrive == false) &&
 							(subItem.IsHidden))
 						{
 							continue;
