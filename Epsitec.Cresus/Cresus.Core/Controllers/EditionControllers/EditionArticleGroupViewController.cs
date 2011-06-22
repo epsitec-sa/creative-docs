@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Types;
@@ -23,16 +23,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				//.Name ("ArticleGroupEntity")
 				.Icon ("Data.Group")
 				.Title ("Groupe d'article")
-				.GlobalWarning ()  // TODO: On devrait pouvoir le mettre avant le .Input !
+				.GlobalWarning ()
 				.Input ()
 				  .Field (x => x.Name)
 				  .Field (x => x.Description)
 				.End ()
 				;
 		}
-#endif
-
-#if false
+#else
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
