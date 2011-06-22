@@ -380,7 +380,6 @@
     <EmbeddedResource Include="Images\Data.WorkflowEvent.icon" />
     <EmbeddedResource Include="Images\Print.icon" />
     <EmbeddedResource Include="Images\ImportV11.icon" />
-    <EmbeddedResource Include="Images\Base.Documents.icon" />
     <EmbeddedResource Include="Images\Data.UnitOfMeasureGroup.icon" />
     <EmbeddedResource Include="Images\UserManager.icon" />
     <EmbeddedResource Include="Images\Base.BusinessSettings.icon" />
@@ -419,6 +418,8 @@
     <EmbeddedResource Include="Images\Base.GeneratorDefinitions.icon" />
     <EmbeddedResource Include="Images\Base.Currency.icon" />
     <EmbeddedResource Include="Images\Data.DocumentMetadata.icon" />
+    <EmbeddedResource Include="Images\Data.BusinessDocument.icon" />
+    <EmbeddedResource Include="Images\Base.DocumentMetadata.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

@@ -25,16 +25,17 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				.Icon ("Data.InvoiceDocument")
 				.Title (x => x.DocumentCategory.Name)
 				.Text (x => x.GetSummary ())
-				.TextCompact (x => x.GetCompactSummary ());
-
+				.TextCompact (x => x.GetCompactSummary ())
+				;
 			wall.AddBrick (x => x.BusinessDocument)
 				.AsType<BusinessDocumentEntity> ()
 				.Attribute (BrickMode.DefaultToSummarySubview)
 				.Text (x => x.GetSummary ())
-				.TextCompact (x => x.GetCompactSummary ());
-
+				.TextCompact (x => x.GetCompactSummary ())
+				;
 			wall.AddBrick (x => x.Comments)
-				.Template ();
+				.Template ()
+				;
 		}
 	}
 }
