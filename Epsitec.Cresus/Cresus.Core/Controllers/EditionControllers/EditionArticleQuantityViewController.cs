@@ -25,9 +25,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		protected override void CreateBricks(Bricks.BrickWall<ArticleQuantityEntity> wall)
 		{
 			wall.AddBrick ()
-				//.Name ("ArticleQuantity")
-				//.Icon ("Data.ArticleQuantity")
-				.Title ("Quantité")
 				.Input ()
 				  .Title ("Type")
 				  .Field (x => x.QuantityType)  // TODO: Comment faire pour utiliser UIBuilder.CreateEditionDetailedItemPicker et avoir des boutons radio ?

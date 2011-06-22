@@ -284,7 +284,14 @@ namespace Epsitec.Cresus.Core.Library
 
 		private static string GetShortWindowTitle()
 		{
-			return UI.data.Application.ShortWindowTitle;
+			if (UI.data == null)
+			{
+				return null;
+			}
+			else
+			{
+				return UI.data.Application.ShortWindowTitle;
+			}
 		}
 
 		private static void SetupResourceManagerPool()

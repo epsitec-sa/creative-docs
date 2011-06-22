@@ -20,7 +20,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		protected override void CreateBricks(Bricks.BrickWall<LegalPersonEntity> wall)
 		{
 			wall.AddBrick ()
-				.Title ("Personne morale")
 				.Input ()
 				 .Field (x => x.Name)
 				 .Field (x => x.ShortName)

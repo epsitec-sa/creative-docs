@@ -20,9 +20,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		protected override void CreateBricks(Bricks.BrickWall<CountryEntity> wall)
 		{
 			wall.AddBrick ()
-				//.Name ("Country")
-				//.Icon ("Data.Country")
-				.Title ("Pays")
 				.GlobalWarning ()
 				.Input ()
 				  .Title ("Pays")

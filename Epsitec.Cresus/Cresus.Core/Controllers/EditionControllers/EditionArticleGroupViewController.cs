@@ -20,7 +20,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		protected override void CreateBricks(Bricks.BrickWall<ArticleGroupEntity> wall)
 		{
 			wall.AddBrick ()
-				.Title ("Groupe d'article")
 				.GlobalWarning ()
 				.Input ()
 				  .Field (x => x.Name)

@@ -23,7 +23,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		protected override void CreateBricks(Bricks.BrickWall<UnitOfMeasureEntity> wall)
 		{
 			wall.AddBrick ()
-				.Title ("Unité de mesure")
 				.GlobalWarning ()
 				.Input ()
 				  .Title ("Nom")

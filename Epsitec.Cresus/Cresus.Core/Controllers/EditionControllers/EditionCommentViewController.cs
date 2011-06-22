@@ -21,9 +21,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		protected override void CreateBricks(Bricks.BrickWall<CommentEntity> wall)
 		{
 			wall.AddBrick ()
-				//.Name ("Comment")
-				//.Icon ("Data.Comment")
-				.Title ("Commentaire")
 				.Input ()
 				  .Title ("Texte")
 				  .Field (x => x.Text).Height (120)

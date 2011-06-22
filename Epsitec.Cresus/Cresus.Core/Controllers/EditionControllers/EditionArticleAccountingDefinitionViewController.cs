@@ -24,9 +24,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		protected override void CreateBricks(Bricks.BrickWall<ArticleAccountingDefinitionEntity> wall)
 		{
 			wall.AddBrick ()
-				//.Name ("ArticleAccountingDefinition")
-				//.Icon ("Data.ArticleAccountingDefinition")
-				.Title ("Comptabilisation")
 				.Input ()
 				  .Title ("Du")
 				  .Field (x => x.BeginDate).Width (150)
