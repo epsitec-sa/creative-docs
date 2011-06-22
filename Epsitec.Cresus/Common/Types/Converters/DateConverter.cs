@@ -82,5 +82,8 @@ namespace Epsitec.Common.Types.Converters
 				return false;
 			}
 		}
+
+
+		public static readonly DateConverter Invariant = new DateConverter (System.Globalization.CultureInfo.InvariantCulture);
 	}
 }

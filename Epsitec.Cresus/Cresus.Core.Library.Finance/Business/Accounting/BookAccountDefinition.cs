@@ -9,17 +9,21 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Business.Accounting
 {
-	public struct BookAccountDefinition
+	/// <summary>
+	/// The <c>BookAccountDefinition</c> structure defines a book account (account number
+	/// and caption). See class <see cref="CresusChartOfAccounts"/>.
+	/// </summary>
+	public struct BookAccountDefinition : System.IEquatable<BookAccountDefinition>, System.IComparable<BookAccountDefinition>
 	{
 		public BookAccountDefinition(string accountNumber, FormattedText caption)
 		{
-			this.accountNumber = accountNumber;
-			this.caption = caption;
+			this.accountNumber = accountNumber ?? "";
+			this.caption       = caption;
 		}
 
 		internal BookAccountDefinition(Epsitec.CresusToolkit.CresusComptaCompte cresus)
 		{
-			this.accountNumber = cresus.Number;
+			this.accountNumber = cresus.Number ?? "";
 			this.caption       = FormattedText.FromSimpleText (cresus.Caption);
 		}
 
@@ -44,21 +48,73 @@ namespace Epsitec.Cresus.Core.Business.Accounting
 		public XElement SerializeToXml(string xmlNodeName)
 		{
 			return new XElement (xmlNodeName,
-				new XAttribute (BookAccountDefinition.XmlNumber, this.accountNumber),
-				new XAttribute (BookAccountDefinition.XmlCaption, this.caption.ToSimpleText ()));
+				new XAttribute (Xml.Number, this.accountNumber),
+				new XAttribute (Xml.Caption, this.caption.ToSimpleText ()));
 		}
 
 		public static BookAccountDefinition DeserializeFromXml(XElement xml)
 		{
-			string number  = (string) xml.Attribute (BookAccountDefinition.XmlNumber);
-			string caption = (string) xml.Attribute (BookAccountDefinition.XmlCaption);
+			string number  = (string) xml.Attribute (Xml.Number);
+			string caption = (string) xml.Attribute (Xml.Caption);
 
 			return new BookAccountDefinition (number, FormattedText.FromSimpleText (caption));
 		}
 
-		private const string XmlNumber	= "n";
-		private const string XmlCaption	= "c";
+		
+		public override bool Equals(object obj)
+		{
+			if (obj is BookAccountDefinition)
+			{
+				return this.Equals ((BookAccountDefinition) obj);
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public override int GetHashCode()
+		{
+			return this.accountNumber.GetHashCode () ^ this.caption.GetHashCode ();
+		}
+
+		
+		#region IEquatable<BookAccountDefinition> Members
+
+		public bool Equals(BookAccountDefinition other)
+		{
+			return this.accountNumber == other.accountNumber
+				&& this.caption == other.caption;
+		}
+
+		#endregion
+
+		#region IComparable<BookAccountDefinition> Members
+
+		public int CompareTo(BookAccountDefinition other)
+		{
+			var result = string.CompareOrdinal (this.accountNumber, other.accountNumber);
+
+			if (result == 0)
+			{
+				return this.caption.CompareTo (other.caption);
+			}
+			else
+			{
+				return result;
+			}
+		}
+
+		#endregion
+
+		
+		private static class Xml
+		{
+			public const string Number		= "n";
+			public const string Caption		= "c";
+		}
 	
+		
 		private readonly string				accountNumber;
 		private readonly FormattedText		caption;
 	}

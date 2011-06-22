@@ -67,14 +67,14 @@ namespace Epsitec.Cresus.Core.Business.Accounting
 
 		public XElement SerializeToXml(string xmlNodeName)
 		{
-			var accounts = this.items.Select (item => item.SerializeToXml (CresusChartOfAccounts.XmlAccount));
+			var accounts = this.items.Select (item => item.SerializeToXml (Xml.Account));
 
 			return new XElement (xmlNodeName,
-				new XAttribute (CresusChartOfAccounts.XmlTitle, this.Title.ToSimpleText ()),
-				new XAttribute (CresusChartOfAccounts.XmlPath, this.Path.ToString ()),
-				new XAttribute (CresusChartOfAccounts.XmlBeginDate, CresusChartOfAccounts.dateConverter.ConvertToString (this.BeginDate)),
-				new XAttribute (CresusChartOfAccounts.XmlEndDate, CresusChartOfAccounts.dateConverter.ConvertToString (this.EndDate)),
-				new XAttribute (CresusChartOfAccounts.XmlId, ItemCodeGenerator.FromGuid (this.Id)),
+				new XAttribute (Xml.Title, this.Title.ToSimpleText ()),
+				new XAttribute (Xml.Path, this.Path.ToString ()),
+				new XAttribute (Xml.BeginDate, DateConverter.Invariant.ConvertToString (this.BeginDate)),
+				new XAttribute (Xml.EndDate, DateConverter.Invariant.ConvertToString (this.EndDate)),
+				new XAttribute (Xml.Id, ItemCodeGenerator.FromGuid (this.Id)),
 				accounts);
 		}
 
@@ -82,32 +82,35 @@ namespace Epsitec.Cresus.Core.Business.Accounting
 		{
 			var chartOfAccounts = new CresusChartOfAccounts ();
 
-			string title      = (string) xml.Attribute (CresusChartOfAccounts.XmlTitle);
-			string path       = (string) xml.Attribute (CresusChartOfAccounts.XmlPath);
-			string beginDate  = (string) xml.Attribute (CresusChartOfAccounts.XmlBeginDate);
-			string endDate    = (string) xml.Attribute (CresusChartOfAccounts.XmlEndDate);
-			string id         = (string) xml.Attribute (CresusChartOfAccounts.XmlId);
+			string title      = (string) xml.Attribute (Xml.Title);
+			string path       = (string) xml.Attribute (Xml.Path);
+			string beginDate  = (string) xml.Attribute (Xml.BeginDate);
+			string endDate    = (string) xml.Attribute (Xml.EndDate);
+			string id         = (string) xml.Attribute (Xml.Id);
 			
-			var accounts = xml.Elements (CresusChartOfAccounts.XmlAccount).Select (element => BookAccountDefinition.DeserializeFromXml (element));
+			var accounts = xml.Elements (Xml.Account).Select (element => BookAccountDefinition.DeserializeFromXml (element));
 
 			chartOfAccounts.Title     = FormattedText.FromSimpleText (title);
 			chartOfAccounts.Path      = MachineFilePath.Parse (path);
-			chartOfAccounts.BeginDate = CresusChartOfAccounts.dateConverter.ConvertFromString (beginDate).Value;
-			chartOfAccounts.EndDate   = CresusChartOfAccounts.dateConverter.ConvertFromString (endDate).Value;
+			chartOfAccounts.BeginDate = DateConverter.Invariant.ConvertFromString (beginDate).Value;
+			chartOfAccounts.EndDate   = DateConverter.Invariant.ConvertFromString (endDate).Value;
 			chartOfAccounts.Id        = ItemCodeGenerator.ToGuid (id);
 			chartOfAccounts.Items.AddRange (accounts);
 
 			return chartOfAccounts;
 		}
 
-		private const string XmlTitle		= "title";
-		private const string XmlPath		= "path";
-		private const string XmlBeginDate	= "beginDate";
-		private const string XmlEndDate		= "endDate";
-		private const string XmlId			= "id";
-		private const string XmlAccount		= "account";
+
+		private static class Xml
+		{
+			public const string Title		= "title";
+			public const string Path		= "path";
+			public const string BeginDate	= "beginDate";
+			public const string EndDate		= "endDate";
+			public const string Id			= "id";
+			public const string Account		= "account";
+		}
 		
-		private static readonly DateConverter dateConverter = new DateConverter (System.Globalization.CultureInfo.InvariantCulture);
 
 		private readonly List<BookAccountDefinition> items;
 	}
