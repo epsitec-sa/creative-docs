@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
-	public class BrowserList : IEnumerable<BrowserListItem>
+	public class BrowserList : IEnumerable<BrowserListItem>, System.IDisposable
 	{
 		public BrowserList(DataContext context)
 		{
@@ -32,12 +32,12 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		public void DefineEntities(IEnumerable<AbstractEntity> entities)
 		{
 			this.list.Clear ();
-			this.list.AddRange (entities.Select (x => new BrowserListItem (this, x)));
+			this.list.AddRange (entities.Select (x => new BrowserListItem (x)));
 		}
 
 		public void Insert(AbstractEntity entity)
 		{
-			this.list.Add (new BrowserListItem (this, entity));
+			this.list.Add (new BrowserListItem (entity));
 		}
 
 		public void Invalidate()
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				(index < this.list.Count))
 			{
 				var item = this.list[index];
-				return item.EntityKey;
+				return item.GetEntityKey (this);
 			}
 			else
 			{
@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			var rowKey = key.Value.RowKey;
 
-			return this.list.FindIndex (x => x.RowKey == rowKey);
+			return this.list.FindIndex (x => x.GetRowKey (this) == rowKey);
 		}
 
 		
@@ -101,7 +101,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			return key.Value;
 		}
 
-		internal static string ValueConverterFunction(object value)
+		internal string ValueConverterFunction(object value)
 		{
 			BrowserListItem item = value as BrowserListItem;
 
@@ -111,10 +111,19 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 			else
 			{
-				return item.DisplayText.ToString ();
+				return item.GetDisplayText (this).ToString ();
 			}
 		}
-		
+
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			this.list.Clear ();
+		}
+
+		#endregion
 
 		#region IEnumerable<BrowserListItem> Members
 

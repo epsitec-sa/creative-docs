@@ -10,6 +10,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Library.Formatters
 {
+	/// <summary>
+	/// The <c>StringFormatTokenFormatter</c> class implements the <c>#string(format)</c>
+	/// formatting command, which has the same syntax as the <see cref="string.Format"/>
+	/// format string.
+	/// </summary>
 	public class StringFormatTokenFormatter : IFormatTokenFormatter
 	{
 		#region IFormatTokenFormatter Members

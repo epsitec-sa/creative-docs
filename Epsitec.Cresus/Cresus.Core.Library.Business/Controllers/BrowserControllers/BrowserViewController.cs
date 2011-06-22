@@ -136,8 +136,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				Margins = new Common.Drawing.Margins (-1, -1, -1, -1),
 			};
 
-			this.scrollList.Items.ValueConverter = BrowserList.ValueConverterFunction;
-
 			this.scrollList.SelectedItemChanged += this.HandleScrollListSelectedItemChanged;
 
 			this.RefreshScrollList ();
@@ -149,6 +147,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.browserDataContext = this.data.CreateDataContext (string.Format ("Browser.DataSet={0}", this.DataSetName));
 			this.collection         = new BrowserList (this.browserDataContext);
 
+			this.scrollList.Items.ValueConverter   = this.collection.ValueConverterFunction;
 			this.browserDataContext.EntityChanged += this.HandleDataContextEntityChanged;
 		}
 
@@ -157,9 +156,13 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			if (this.browserDataContext != null)
 			{
 				this.browserDataContext.EntityChanged -= this.HandleDataContextEntityChanged;
+				this.scrollList.Items.ValueConverter   = null;
+
+				this.collection.Dispose ();
 				this.data.DisposeDataContext (this.browserDataContext);
+				
+				this.collection         = null;
 				this.browserDataContext = null;
-				this.collection = null;
 			}
 		}
 

@@ -13,30 +13,16 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
-	public class BrowserListItem
+	/// <summary>
+	/// The <c>BrowserListItem</c> class represents one item in the browser list.
+	/// </summary>
+	public sealed class BrowserListItem
 	{
-		public BrowserListItem(BrowserList list, AbstractEntity entity)
+		public BrowserListItem(AbstractEntity entity)
 		{
-			this.list = list;
 			this.entity = entity;
 		}
 
-
-		public EntityKey						EntityKey
-		{
-			get
-			{
-				return this.list.GetEntityKey (this.entity);
-			}
-		}
-
-		public Epsitec.Cresus.Database.DbKey	RowKey
-		{
-			get
-			{
-				return this.EntityKey.RowKey;
-			}
-		}
 
 		public AbstractEntity					Entity
 		{
@@ -46,27 +32,36 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
-		public FormattedText					DisplayText
+		
+		internal EntityKey GetEntityKey(BrowserList list)
 		{
-			get
-			{
-				if (this.text == null)
-				{
-					this.GenerateDisplayText ();
-				}
-
-				return this.text.Value;
-			}
+			return list.GetEntityKey (this.entity);
 		}
 
-		public void ClearCachedDisplayText()
+		internal Epsitec.Cresus.Database.DbKey GetRowKey(BrowserList list)
+		{
+			return this.GetEntityKey (list).RowKey;
+		}
+
+		internal FormattedText GetDisplayText(BrowserList list)
+		{
+			if (this.text == null)
+			{
+				this.GenerateDisplayText (list);
+			}
+
+			return this.text.Value;
+		}
+
+		internal void ClearCachedDisplayText()
 		{
 			this.text = null;
 		}
 
-		private void GenerateDisplayText()
+
+		private void GenerateDisplayText(BrowserList list)
 		{
-			this.text = this.list.GenerateEntityDisplayText (this.entity);
+			this.text = list.GenerateEntityDisplayText (this.entity);
 
 			if ((this.text == null) ||
 				(this.text.Value.IsNullOrEmpty))
@@ -75,7 +70,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
-		private readonly BrowserList			list;
+		
 		private readonly AbstractEntity			entity;
 		private FormattedText?					text;
 	}
