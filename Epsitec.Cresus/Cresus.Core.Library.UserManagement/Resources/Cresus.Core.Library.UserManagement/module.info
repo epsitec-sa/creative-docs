@@ -2,7 +2,7 @@
 <ModuleInfo id="1002" name="Cresus.Core.Library.UserManagement" layer="s" textMode="FormattedText" assemblies="Cresus.Core.Library.UserManagement" namespace="Epsitec.Cresus.Core" namespaceRes="Epsitec.Cresus.Core.Library.UserManagement">
   <Versions>
     <Version id="8" build="1" date="2011-04-26T07:13:43.0302087Z" />
-    <Version id="2" build="1" date="2011-06-22T06:41:06.3076604Z" />
     <Version id="1" build="16" date="2011-06-22T07:38:32.3817188Z" />
+    <Version id="2" build="2" date="2011-06-22T15:14:37.6429038Z" />
   </Versions>
 </ModuleInfo>
