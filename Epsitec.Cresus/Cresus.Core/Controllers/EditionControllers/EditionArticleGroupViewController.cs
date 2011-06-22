@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			wall.AddBrick ()
 				//.Name ("ArticleGroupEntity")
-				.Icon ("Data.Group")
+				//.Icon ("Data.Group")
 				.Title ("Groupe d'article")
 				.GlobalWarning ()
 				.Input ()
