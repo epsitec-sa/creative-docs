@@ -342,6 +342,18 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 					return;
 				}
 
+				if ((fieldType.IsGenericType) &&
+					(fieldType.GetGenericTypeDefinition () == typeof (System.Nullable<>)))
+				{
+					if (fieldType.GetGenericArguments ()[0].IsEnum)
+					{
+						var factory = DynamicFactories.EnumAutoCompleteTextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, width);
+						this.actions.Add ((tile, builder) => factory.CreateUI (tile, builder));
+
+						return;
+					}
+				}
+
 				if (fieldType.IsEnum)
 				{
 					//	The field is an enumeration : use an AutoCompleteTextField for it.

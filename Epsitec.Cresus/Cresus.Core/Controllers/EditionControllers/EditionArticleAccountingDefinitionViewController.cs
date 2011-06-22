@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Types;
@@ -50,21 +50,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Separator ()
 				.Input ()
 				  .Title ("Monnaie")
-				  .Field (x => x.CurrencyCode).PickFromCollection (this.CurrencyCodes)  // TODO: pas supporté par Bricks !
+				  .Field (x => x.CurrencyCode)
 				.End ()
 				;
 		}
-
-		private IEnumerable<EnumKeyValues> CurrencyCodes
-		{
-			get
-			{
-				return EnumKeyValues.FromEnum<CurrencyCode> ();
-			}
-		}
-#endif
-	
-#if false
+#else
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

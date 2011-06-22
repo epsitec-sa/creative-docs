@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Types.Converters.Marshalers;
@@ -47,13 +48,11 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 			var getterFunc   = getterLambda.Compile ();
 			var setterFunc   = setterLambda.Compile ();
 
-			bool nullable    = false;
+			bool nullable    = fieldType.IsNullable ();
 
-			if ((fieldType.IsGenericType) &&
-				(fieldType.GetGenericTypeDefinition () == typeof (System.Nullable<>)))
+			if (nullable)
 			{
-				nullable  = true;
-				fieldType = fieldType.GetGenericArguments ()[0];
+				fieldType = fieldType.GetNullableTypeUnderlyingType ();
 			}
 
 			//	TODO: improve the special case handling here -- probably should make something
