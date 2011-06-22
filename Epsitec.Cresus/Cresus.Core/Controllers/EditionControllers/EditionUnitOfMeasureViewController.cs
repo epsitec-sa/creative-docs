@@ -19,6 +19,32 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionUnitOfMeasureViewController : EditionViewController<Entities.UnitOfMeasureEntity>
 	{
+#if true
+		protected override void CreateBricks(Bricks.BrickWall<UnitOfMeasureEntity> wall)
+		{
+			wall.AddBrick ()
+				.Title ("Unité de mesure")
+				.GlobalWarning ()
+				.Input ()
+				  .Title ("Nom")
+				  .Field (x => x.Name)
+				  .Title ("Catégorie")
+				  .Field (x => x.Category).Width (100)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Title ("Diviseur")
+				  .Field (x => x.DivideRatio).Width (50)
+				  .Title ("Multiplicateur")
+				  .Field (x => x.MultiplyRatio).Width (50)
+				  .Title ("Incrément")
+				  .Field (x => x.SmallestIncrement).Width (50)
+				.End ()
+				;
+		}
+#endif
+
+#if false
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -54,5 +80,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField (tile, 50, "Multiplicateur", Marshaler.Create (() => this.Entity.MultiplyRatio,     x => this.Entity.MultiplyRatio = x));
 			builder.CreateTextField (tile, 50, "Incrément",      Marshaler.Create (() => this.Entity.SmallestIncrement, x => this.Entity.SmallestIncrement = x));
 		}
+#endif
 	}
 }
