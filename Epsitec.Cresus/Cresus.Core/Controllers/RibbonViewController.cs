@@ -494,7 +494,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void UpdateDatabaseMenu()
 		{
 			//	Met à jour les boutons pour les bases de données d'usage peu fréquent, après un changement d'utilisateur.
-			var list  = this.GetDatabaseMenuCommands ().ToList ();
+			var list  = this.GetDatabaseMenuCommands ().Where (x => x != null).ToList ();
 			int count = list.Count;
 
 			this.databaseButton.Visibility     = (count > 0);
@@ -511,10 +511,17 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			//	Construit puis affiche le menu des bases de données d'usage peu fréquent.
 			var menu = new VMenu ();
-			var commands = this.GetDatabaseMenuCommands ();
+			var commands = this.GetDatabaseMenuCommands ().ToArray ();
 
-			foreach (var command in commands)
+			for (int i=0; i<commands.Length; i++)
 			{
+				var command = commands[i];
+
+				if (i == commands.Length-1 && command == null)
+				{
+					break;
+				}
+
 				RibbonViewController.AddDatabaseToMenu (menu, command);
 			}
 
@@ -526,13 +533,20 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private static void AddDatabaseToMenu(VMenu menu, Command command)
 		{
-			var item = new MenuItem ()
+			if (command == null)
 			{
-				CommandObject = command,
-				Name = command.Name,
-			};
+				menu.Items.Add (new MenuSeparator ());
+			}
+			else
+			{
+				var item = new MenuItem ()
+				{
+					CommandObject = command,
+					Name = command.Name,
+				};
 
-			menu.Items.Add (item);
+				menu.Items.Add (item);
+			}
 		}
 
 		private void UpdateDatabaseButton()
@@ -560,7 +574,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private Command GetDatabaseCommand(string name)
 		{
-			return this.GetDatabaseMenuCommands ().Where (x => x.Name == name).FirstOrDefault ();
+			return this.GetDatabaseMenuCommands ().Where (x => x != null && x.Name == name).FirstOrDefault ();
 		}
 
 		private CommandHandlers.DatabaseCommandHandler GetDatabaseCommandHandler()
@@ -574,6 +588,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private IEnumerable<Command> GetDatabaseMenuCommands()
 		{
+			//	Retourne null lorsque le menu doit contenir un séparateur.
 			bool admin = this.userManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.Administrator);
 			bool devel = this.userManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.Developer);
 			bool power = this.userManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.PowerUser);
@@ -584,22 +599,66 @@ namespace Epsitec.Cresus.Core.Controllers
 				yield return Res.Commands.Base.ShowDocumentCategory;
 				yield return Res.Commands.Base.ShowDocumentOptions;
 				yield return Res.Commands.Base.ShowDocumentPrintingUnits;
+				yield return null;
+
 				yield return Res.Commands.Base.ShowCurrency;
+				yield return Res.Commands.Base.ShowExchangeRateSource;
+				yield return Res.Commands.Base.ShowVatDefinition;
+				yield return Res.Commands.Base.ShowPriceRoundingMode;
+				yield return Res.Commands.Base.ShowIsrDefinition;
+				yield return Res.Commands.Base.ShowPaymentMode;
+				yield return Res.Commands.Base.ShowPaymentReminderDefinition;
+				yield return Res.Commands.Base.ShowUnitOfMeasure;
+				yield return null;
+
 				yield return Res.Commands.Base.ShowImage;
+
+				if (admin || devel)
+				{
+					yield return Res.Commands.Base.ShowImageBlob;
+					yield return Res.Commands.Base.ShowImageCategory;
+					yield return Res.Commands.Base.ShowImageGroup;
+				}
+
+				yield return null;
 			}
 
 			if (admin || devel)
 			{
-				yield return Res.Commands.Base.ShowImageBlob;
+				yield return Res.Commands.Base.ShowPersonGender;
+				yield return Res.Commands.Base.ShowPersonTitle;
+				yield return Res.Commands.Base.ShowLegalPersonType;
+				yield return Res.Commands.Base.ShowContactGroup;
+				yield return Res.Commands.Base.ShowTelecomType;
+				yield return Res.Commands.Base.ShowUriType;
+				yield return Res.Commands.Base.ShowStateProvinceCounty;
+				yield return Res.Commands.Base.ShowLocation;
+				yield return Res.Commands.Base.ShowCountry;
+				yield return null;
+
+				yield return Res.Commands.Base.ShowArticleCategory;
+				yield return Res.Commands.Base.ShowArticleGroup;
+				yield return null;
+
 				yield return Res.Commands.Base.ShowBusinessSettings;
 				yield return Res.Commands.Base.ShowGeneratorDefinition;
+				yield return null;
 			}
 
 			if (devel)
 			{
+				yield return Res.Commands.Base.ShowLanguage;
+				yield return null;
+
+				yield return Res.Commands.Base.ShowSoftwareUserGroup;
+				yield return Res.Commands.Base.ShowSoftwareUserRole;
+				yield return null;
+				
 				yield return Res.Commands.Base.ShowWorkflowDefinition;
+				yield return null;
 			}
 		}
+
 
 
 		private void HandleAuthenticatedUserChanged(object sender)
