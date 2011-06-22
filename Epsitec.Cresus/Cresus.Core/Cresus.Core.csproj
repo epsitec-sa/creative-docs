@@ -99,6 +99,7 @@
     <Compile Include="CommandHandlers\NavigationCommandHandler.cs" />
     <Compile Include="Controllers\ComplexControllers\ChartsOfAccountsController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationCustomerViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionLanguageViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionCurrencyViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionCustomerViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDocumentCategoryMappingViewController.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="Controllers\EditionControllers\EditionPriceCalculatorViewControllerTableDesigner.cs" />
     <Compile Include="Controllers\EditionControllers\EditionVatDefinitionViewController.cs" />
     <Compile Include="Controllers\RibbonViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryLanguageViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryCurrencyViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryCustomerViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryDocumentCategoryMappingViewController.cs" />
