@@ -36,16 +36,16 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Separator ()
 				.Input ()
 				  .Title ("Compte pour les ventes")
-				  .Field (x => x.SellingBookAccount)  // TODO: comment utiliser UIBuilder.CreateAccountEditor ?
+				  .Field (x => x.SellingBookAccount)
 				  .Title ("Compte pour les rabais sur les ventes")
-				  .Field (x => x.SellingDiscountBookAccount)  // TODO: comment utiliser UIBuilder.CreateAccountEditor ?
+				  .Field (x => x.SellingDiscountBookAccount)
 				.End ()
 				.Separator ()
 				.Input ()
 				  .Title ("Compte pour les achats")
-				  .Field (x => x.PurchaseBookAccount)  // TODO: comment utiliser UIBuilder.CreateAccountEditor ?
+				  .Field (x => x.PurchaseBookAccount)
 				  .Title ("Compte pour les rabais sur les achats")
-				  .Field (x => x.PurchaseDiscountBookAccount)  // TODO: comment utiliser UIBuilder.CreateAccountEditor ?
+				  .Field (x => x.PurchaseDiscountBookAccount)
 				.End ()
 				.Separator ()
 				.Input ()
