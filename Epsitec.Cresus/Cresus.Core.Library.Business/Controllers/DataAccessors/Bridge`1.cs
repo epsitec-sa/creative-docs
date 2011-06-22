@@ -245,7 +245,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 						this.CreateActionForSeparator ();
 					}
 
-					if (inputProperties.PeekAfter (BrickPropertyKey.GlobalWarning, -1).HasValue)
+					if (inputProperties.PeekBefore (BrickPropertyKey.GlobalWarning, -1).HasValue)
 					{
 						this.CreateActionForGlobalWarning ();
 					}

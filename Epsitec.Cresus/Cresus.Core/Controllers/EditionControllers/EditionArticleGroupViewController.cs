@@ -23,11 +23,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				//.Name ("ArticleGroupEntity")
 				.Icon ("Data.Group")
 				.Title ("Groupe d'article")
+				.GlobalWarning ()  // TODO: On devrait pouvoir le mettre avant le .Input !
 				.Input ()
 				  .Field (x => x.Name)
 				  .Field (x => x.Description)
 				.End ()
-				.GlobalWarning ()  // TODO: On devrait pouvoir le mettre avant le .Input !
 				;
 		}
 #endif
