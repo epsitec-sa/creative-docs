@@ -59,48 +59,86 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 			//	TODO: improve the special case handling here -- probably should make something
 			//	truly dynamic with plug-ins.
 
-			System.Type    factoryType;
-			DynamicFactory instance = null;
+			CreateWidget callback = null;
 
-			if (typeField != null)
+			if ((typeField != null) &&
+				(height == 0))
 			{
-				if ((fieldType == typeof (string)) &&
-					(typeField.TypeId == Druid.Parse ("[8VAF1]")))	//	Data.String.EntityId
+				if (fieldType == typeof (string))
 				{
-					var source  = collection as IEnumerable<Druid>;
-					var list    = new List<Druid> (source ?? EntityInfo.GetAllTypeIds ());
-					factoryType = typeof (EntityIdFactory<>).MakeGenericType (sourceType);
-					instance    = System.Activator.CreateInstance (factoryType, business, lambda, entityGetter, getterFunc, setterFunc, title, width, list) as DynamicFactory;
+					if (typeField.TypeId == Druid.Parse ("[8VAF1]"))		//	Data.String.EntityId
+					{
+						var list  = new List<Druid> (collection as IEnumerable<Druid> ?? EntityInfo.GetAllTypeIds ());
+						var items = EnumKeyValues.FromEntityIds (list);
+
+						callback = (frame, builder, caption, marshaler) => builder.CreateAutoCompleteTextField<Druid> (frame as EditionTile, width, caption, marshaler, items);
+					}
+					else if (typeField.TypeId == Druid.Parse ("[CVAK]"))	//	Finance.BookAccount
+					{
+						callback = (frame, builder, caption, marshaler) => builder.CreateAccountEditor (frame as EditionTile, caption, marshaler);
+					}
 				}
 
-				if (height == 0)
+				if ((fieldType == typeof (string)) ||
+					(fieldType == typeof (FormattedText)))
 				{
-					if ((fieldType == typeof (string)) ||
-						(fieldType == typeof (FormattedText)))
+					if ((typeField.TypeId == Druid.Parse ("[10AH]")) ||		//	Default.TextMultiline
+						(typeField.TypeId == Druid.Parse ("[1016]")))		//	Default.StringMultiline
 					{
-						if ((typeField.TypeId == Druid.Parse ("[10AH]")) ||	//	Default.TextMultiline
-							(typeField.TypeId == Druid.Parse ("[1016]")))	//	Default.StringMultiline
-						{
-							height = 60;
-						}
+						height = 60;
 					}
 				}
 			}
 
-			if (instance == null)
+			if (callback == null)
 			{
-				factoryType = (nullable ? typeof (NullableTextFieldFactory<,>) : typeof (TextFieldFactory<,>)).MakeGenericType (sourceType, fieldType);
-				instance    = System.Activator.CreateInstance (factoryType, business, lambda, entityGetter, getterFunc, setterFunc, title, width, height) as DynamicFactory;
+				//	Default text field creation callback:
+
+				callback = (frame, builder, caption, marshaler) => TextFieldDynamicFactory.CreateTextField (frame, builder, title, marshaler, width, height);
 			}
+
+			var factoryType = (nullable ? typeof (NullableTextFieldFactory<,>) : typeof (TextFieldFactory<,>)).MakeGenericType (sourceType, fieldType);
+			var instance    = System.Activator.CreateInstance (factoryType, business, lambda, entityGetter, getterFunc, setterFunc, title, callback) as DynamicFactory;
 
 			return instance;
 		}
 
+		private static Widget CreateTextField(FrameBox frame, UIBuilder builder, string title, Marshaler marshaler, int width, int height)
+		{
+			var tile = frame as EditionTile;
+			
+			if (tile != null)
+			{
+				if (height > 0)
+				{
+					return builder.CreateTextFieldMulti (tile, height, title, marshaler);
+				}
+				else
+				{
+					return builder.CreateTextField (tile, width, title, marshaler);
+				}
+			}
+			else
+			{
+				if (height > 0)
+				{
+					return builder.CreateTextFieldMulti (frame, DockStyle.Stacked, height, marshaler);
+				}
+				else
+				{
+					return builder.CreateTextField (frame, DockStyle.Stacked, width, marshaler);
+				}
+			}
+		}
+
+		delegate Widget CreateWidget(FrameBox frame, UIBuilder builder, string caption, Marshaler marshaler);
+		
+		
 		#region TextFieldFactory Class
 
 		private sealed class TextFieldFactory<TSource, TField> : DynamicFactory
 		{
-			public TextFieldFactory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title, int width, int height)
+			public TextFieldFactory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title, CreateWidget createWidgetCallback)
 			{
 				this.business = business;
 				this.lambda   = lambda;
@@ -108,8 +146,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 				this.getter   = getter;
 				this.setter   = setter;
 				this.title    = title;
-				this.width    = width;
-				this.height   = height;
+				this.createWidgetCallback = createWidgetCallback;
 			}
 
 			private System.Func<TField> CreateGetter()
@@ -129,35 +166,11 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 
 			public override object CreateUI(FrameBox frame, UIBuilder builder)
 			{
-				var tile      = frame as EditionTile;
 				var marshaler = this.CreateMarshaler ();
 				var caption   = DynamicFactory.GetInputCaption (this.lambda);
 				var title     = this.title ?? DynamicFactory.GetInputTitle (caption);
 
-				AbstractTextField widget;
-
-				if (tile != null)
-				{
-					if (this.height > 0)
-					{
-						widget = builder.CreateTextFieldMulti (tile, this.height, title, marshaler);
-					}
-					else
-					{
-						widget = builder.CreateTextField (tile, this.width, title, marshaler);
-					}
-				}
-				else
-				{
-					if (this.height > 0)
-					{
-						widget = builder.CreateTextFieldMulti (frame, DockStyle.Stacked, this.height, marshaler);
-					}
-					else
-					{
-						widget = builder.CreateTextField (frame, DockStyle.Stacked, width, marshaler);
-					}
-				}
+				Widget widget = this.createWidgetCallback (frame, builder, title, marshaler);
 
 				if ((caption != null) &&
 					(caption.HasDescription))
@@ -175,8 +188,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 			private readonly System.Delegate		getter;
 			private readonly System.Delegate		setter;
 			private readonly string					title;
-			private readonly int					width;
-			private readonly int					height;
+			private readonly CreateWidget			createWidgetCallback;
 		}
 
 		#endregion
@@ -186,7 +198,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 		private sealed class NullableTextFieldFactory<TSource, TField> : DynamicFactory
 			where TField : struct
 		{
-			public NullableTextFieldFactory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title, int width, int height)
+			public NullableTextFieldFactory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title, CreateWidget createWidgetCallback)
 			{
 				this.business = business;
 				this.lambda   = lambda;
@@ -194,8 +206,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 				this.getter   = getter;
 				this.setter   = setter;
 				this.title    = title;
-				this.width    = width;
-				this.height   = height;
+				this.createWidgetCallback = createWidgetCallback;
 			}
 
 			private System.Func<TField?> CreateGetter()
@@ -215,35 +226,11 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 
 			public override object CreateUI(FrameBox frame, UIBuilder builder)
 			{
-				var tile      = frame as EditionTile;
 				var marshaler = this.CreateMarshaler ();
 				var caption   = DynamicFactory.GetInputCaption (this.lambda);
 				var title     = this.title ?? DynamicFactory.GetInputTitle (caption);
 
-				AbstractTextField widget;
-
-				if (tile != null)
-				{
-					if (this.height > 0)
-					{
-						widget = builder.CreateTextFieldMulti (tile, this.height, title, marshaler);
-					}
-					else
-					{
-						widget = builder.CreateTextField (tile, this.width, title, marshaler);
-					}
-				}
-				else
-				{
-					if (this.height > 0)
-					{
-						widget = builder.CreateTextFieldMulti (frame, DockStyle.Stacked, this.height, marshaler);
-					}
-					else
-					{
-						widget = builder.CreateTextField (frame, DockStyle.Stacked, width, marshaler);
-					}
-				}
+				Widget widget = this.createWidgetCallback (frame, builder, title, marshaler);
 
 				if ((caption != null) &&
 					(caption.HasDescription))
@@ -261,77 +248,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 			private readonly System.Delegate		getter;
 			private readonly System.Delegate		setter;
 			private readonly string					title;
-			private readonly int					width;
-			private readonly int					height;
-		}
-
-		#endregion
-
-		#region EntityIdFactory Class
-
-		/// <summary>
-		/// The <c>EntityIdFactory</c> class glues together a getter/setter with the UI.
-		/// The field is a string and gets mapped to a DRUID through the magic of the
-		/// <see cref="EnumValueController&lt;Druid&gt;"/> and the marshalers.
-		/// </summary>
-		/// <typeparam name="TSource">The type of the entity on which the getter/setter operate.</typeparam>
-		private sealed class EntityIdFactory<TSource> : DynamicFactory
-		{
-			public EntityIdFactory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title, int width, IEnumerable<Druid> entityIds)
-			{
-				this.business = business;
-				this.lambda = lambda;
-				this.sourceGetter = sourceGetter;
-				this.getter = getter;
-				this.setter = setter;
-				this.title  = title;
-				this.width  = width;
-				this.entityIds = new List<Druid> (entityIds);
-			}
-
-			private System.Func<string> CreateGetter()
-			{
-				return () => (string) this.getter.DynamicInvoke (this.sourceGetter ());
-			}
-
-			private System.Action<string> CreateSetter()
-			{
-				return x => this.setter.DynamicInvoke (this.sourceGetter (), x);
-			}
-
-			private Marshaler CreateMarshaler()
-			{
-				return new NonNullableMarshaler<string> (this.CreateGetter (), this.CreateSetter (), this.lambda);
-			}
-
-			public override object CreateUI(FrameBox frame, UIBuilder builder)
-			{
-				IEnumerable<EnumKeyValues<Druid>> possibleItems = EnumKeyValues.FromEntityIds (this.entityIds);
-
-				var tile    = frame as EditionTile;
-				var marshaler = this.CreateMarshaler ();
-				var caption = DynamicFactory.GetInputCaption (this.lambda);
-				var title   = this.title ?? DynamicFactory.GetInputTitle (caption);
-				var widget  = builder.CreateAutoCompleteTextField<Druid> (tile, this.width, title, marshaler, possibleItems);
-
-				if ((caption != null) &&
-					(caption.HasDescription))
-				{
-					ToolTip.SetToolTipCaption (widget, caption);
-				}
-
-				return widget;
-			}
-
-
-			private readonly BusinessContext business;
-			private readonly LambdaExpression lambda;
-			private readonly System.Func<TSource> sourceGetter;
-			private readonly System.Delegate getter;
-			private readonly System.Delegate setter;
-			private readonly string title;
-			private readonly int width;
-			private readonly List<Druid> entityIds;
+			private readonly CreateWidget			createWidgetCallback;
 		}
 
 		#endregion
