@@ -22,7 +22,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			wall.AddBrick (x => x)
 				.Name ("Document")
-				.Icon ("Data.Document")
 				.Title ("Informations générales")
 				.Input ()
 				  .HorizontalGroup ("N° de document (principal, externe et interne)")

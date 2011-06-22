@@ -20,13 +20,11 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			wall.AddBrick ()
 				.Name ("BusinessSettings")
-				.Icon ("Data.BusinessSettings")
 				.Title ("Réglages de l'entreprise")
 				.Text (x => x.Company.Person.GetSummary ());
 
 			wall.AddBrick (x => x.Finance.IsrDefs)
 				.Name ("IsrDefinition")
-				.Icon ("Data.IsrDefinition")
 				.Title ("Contrats BVR")
 				.Template ()
 				 .Text (x => x.GetSummary ())
@@ -34,7 +32,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			wall.AddBrick (x => x.Finance.PaymentReminderDefs)
 				.Name ("PaymentReminderDefinition")
-				.Icon ("Data.PaymentReminderDefinition")
 				.Title ("Rappels")
 				.Attribute (BrickMode.AutoGroup)
 				.Template ()

@@ -14,9 +14,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		protected override void CreateBricks(Bricks.BrickWall<RelationEntity> wall)
 		{
 			wall.AddBrick ()
-				.Name ("Relation")
-				.Icon ("Data.Relation")
-				.Title ("Relation")
 				.Input ()
 				  .Field (x => x.FirstContactDate).Width (90)
 				.End ()

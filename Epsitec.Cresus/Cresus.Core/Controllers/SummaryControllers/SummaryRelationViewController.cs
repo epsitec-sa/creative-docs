@@ -20,7 +20,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			wall.AddBrick ()
 				.Name ("Customer")
-				.Icon ("Data.Customer")
 				.Title (TextFormatter.FormatText ("Client"));
 
 			wall.AddBrick (x => x.Person.Contacts)
