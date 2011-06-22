@@ -215,9 +215,9 @@
     <Content Include="app.ico" />
     <EmbeddedResource Include="Images\Settings.icon" />
     <EmbeddedResource Include="Images\Preview.icon" />
-    <EmbeddedResource Include="Images\Base.ArticleDefinitions.icon" />
+    <EmbeddedResource Include="Images\Base.ArticleDefinition.icon" />
     <EmbeddedResource Include="Images\Data.ArticleDefinition.icon" />
-    <EmbeddedResource Include="Images\Base.InvoiceDocuments.icon" />
+    <EmbeddedResource Include="Images\Base.InvoiceDocument.icon" />
     <EmbeddedResource Include="Images\Data.ArticleDocumentItem.icon" />
     <EmbeddedResource Include="Images\Data.ArticleQuantity.icon" />
     <EmbeddedResource Include="Images\Data.BillingDetails.icon" />
@@ -349,7 +349,7 @@
     <EmbeddedResource Include="Images\History.NavigatePrev.icon" />
     <EmbeddedResource Include="Images\Base.BillIn.icon" />
     <EmbeddedResource Include="Images\Base.BillOut.icon" />
-    <EmbeddedResource Include="Images\Base.Customers.icon" />
+    <EmbeddedResource Include="Images\Base.Customer.icon" />
     <EmbeddedResource Include="Images\Base.Items.icon" />
     <EmbeddedResource Include="Images\Base.Suppliers.icon" />
     <Content Include="Resources\Cresus.Core\Captions.00.resource">
@@ -387,11 +387,11 @@
     <EmbeddedResource Include="Images\Data.IsrDefinition.icon" />
     <EmbeddedResource Include="Images\Data.PaymentReminderDefinition.icon" />
     <EmbeddedResource Include="Resources\OCR_BB.tff" />
-    <EmbeddedResource Include="Images\Base.Images.icon" />
+    <EmbeddedResource Include="Images\Base.Image.icon" />
     <EmbeddedResource Include="Images\Data.Image.icon" />
-    <EmbeddedResource Include="Images\Base.WorkflowDefinitions.icon" />
+    <EmbeddedResource Include="Images\Base.WorkflowDefinition.icon" />
     <EmbeddedResource Include="Images\Data.ImageBlob.icon" />
-    <EmbeddedResource Include="Images\Base.ImageBlobs.icon" />
+    <EmbeddedResource Include="Images\Base.ImageBlob.icon" />
     <EmbeddedResource Include="Images\Base.PriceCalculator.icon" />
     <EmbeddedResource Include="Images\Data.PriceCalculator.icon" />
     <EmbeddedResource Include="Images\Export.icon" />
@@ -415,7 +415,6 @@
     <EmbeddedResource Include="Images\Data.DocumentPrintingUnits.icon" />
     <EmbeddedResource Include="Images\Base.DocumentCategoryMapping.icon" />
     <EmbeddedResource Include="Images\Data.DocumentCategoryMapping.icon" />
-    <EmbeddedResource Include="Images\Base.GeneratorDefinitions.icon" />
     <EmbeddedResource Include="Images\Base.Currency.icon" />
     <EmbeddedResource Include="Images\Data.DocumentMetadata.icon" />
     <EmbeddedResource Include="Images\Data.BusinessDocument.icon" />

@@ -23,13 +23,13 @@ namespace Epsitec.Cresus.Core
 				}
 				
 				//	designer:cap/L0AMC
-				public static readonly global::Epsitec.Common.Widgets.Command ShowArticleDefinitions = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 406));
+				public static readonly global::Epsitec.Common.Widgets.Command ShowArticleDefinition = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 406));
 				//	designer:cap/L0KH
 				public static readonly global::Epsitec.Common.Widgets.Command ShowBusinessSettings = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 17));
 				//	designer:cap/L0K61
 				public static readonly global::Epsitec.Common.Widgets.Command ShowCurrency = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 38));
 				//	designer:cap/L0A23
-				public static readonly global::Epsitec.Common.Widgets.Command ShowCustomers = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 98));
+				public static readonly global::Epsitec.Common.Widgets.Command ShowCustomer = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 98));
 				//	designer:cap/L0KS
 				public static readonly global::Epsitec.Common.Widgets.Command ShowDocumentCategory = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 28));
 				//	designer:cap/L0K51
@@ -41,17 +41,17 @@ namespace Epsitec.Cresus.Core
 				//	designer:cap/L0K41
 				public static readonly global::Epsitec.Common.Widgets.Command ShowDocumentPrintingUnits = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 36));
 				//	designer:cap/L0AAL
-				public static readonly global::Epsitec.Common.Widgets.Command ShowGeneratorDefinitions = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 682));
-				//	designer:cap/L0KJ
-				public static readonly global::Epsitec.Common.Widgets.Command ShowImageBlobs = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 19));
+				public static readonly global::Epsitec.Common.Widgets.Command ShowGeneratorDefinition = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 682));
 				//	designer:cap/L0KI
-				public static readonly global::Epsitec.Common.Widgets.Command ShowImages = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 18));
+				public static readonly global::Epsitec.Common.Widgets.Command ShowImage = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 18));
+				//	designer:cap/L0KJ
+				public static readonly global::Epsitec.Common.Widgets.Command ShowImageBlob = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 19));
 				//	designer:cap/L0K4
-				public static readonly global::Epsitec.Common.Widgets.Command ShowInvoiceDocuments = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 4));
+				public static readonly global::Epsitec.Common.Widgets.Command ShowInvoiceDocument = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 4));
 				//	designer:cap/L0KM
-				public static readonly global::Epsitec.Common.Widgets.Command ShowPriceCalculators = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 22));
+				public static readonly global::Epsitec.Common.Widgets.Command ShowPriceCalculator = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 22));
 				//	designer:cap/L0A9L
-				public static readonly global::Epsitec.Common.Widgets.Command ShowWorkflowDefinitions = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 681));
+				public static readonly global::Epsitec.Common.Widgets.Command ShowWorkflowDefinition = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 681));
 			}
 			
 			public static class Clipboard
@@ -144,13 +144,13 @@ namespace Epsitec.Cresus.Core
 				}
 				
 				//	designer:cap/L0AMC
-				public const long ShowArticleDefinitions = 0x150000A000196L;
+				public const long ShowArticleDefinition = 0x150000A000196L;
 				//	designer:cap/L0KH
 				public const long ShowBusinessSettings = 0x1500014000011L;
 				//	designer:cap/L0K61
 				public const long ShowCurrency = 0x1500014000026L;
 				//	designer:cap/L0A23
-				public const long ShowCustomers = 0x150000A000062L;
+				public const long ShowCustomer = 0x150000A000062L;
 				//	designer:cap/L0KS
 				public const long ShowDocumentCategory = 0x150001400001CL;
 				//	designer:cap/L0K51
@@ -162,17 +162,17 @@ namespace Epsitec.Cresus.Core
 				//	designer:cap/L0K41
 				public const long ShowDocumentPrintingUnits = 0x1500014000024L;
 				//	designer:cap/L0AAL
-				public const long ShowGeneratorDefinitions = 0x150000A0002AAL;
-				//	designer:cap/L0KJ
-				public const long ShowImageBlobs = 0x1500014000013L;
+				public const long ShowGeneratorDefinition = 0x150000A0002AAL;
 				//	designer:cap/L0KI
-				public const long ShowImages = 0x1500014000012L;
+				public const long ShowImage = 0x1500014000012L;
+				//	designer:cap/L0KJ
+				public const long ShowImageBlob = 0x1500014000013L;
 				//	designer:cap/L0K4
-				public const long ShowInvoiceDocuments = 0x1500014000004L;
+				public const long ShowInvoiceDocument = 0x1500014000004L;
 				//	designer:cap/L0KM
-				public const long ShowPriceCalculators = 0x1500014000016L;
+				public const long ShowPriceCalculator = 0x1500014000016L;
 				//	designer:cap/L0A9L
-				public const long ShowWorkflowDefinitions = 0x150000A0002A9L;
+				public const long ShowWorkflowDefinition = 0x150000A0002A9L;
 			}
 			
 			public static class Clipboard

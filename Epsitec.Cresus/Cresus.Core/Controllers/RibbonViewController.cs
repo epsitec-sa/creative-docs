@@ -291,8 +291,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			};
 
 			//	Place les boutons pour les bases de données les plus courantes.
-			section.Children.Add (this.CreateButton (Res.Commands.Base.ShowCustomers));
-			section.Children.Add (this.CreateButton (Res.Commands.Base.ShowArticleDefinitions));
+			section.Children.Add (this.CreateButton (Res.Commands.Base.ShowCustomer));
+			section.Children.Add (this.CreateButton (Res.Commands.Base.ShowArticleDefinition));
 			section.Children.Add (this.CreateButton (Res.Commands.Base.ShowDocumentMetadata));
 
 			this.CreateRibbonDatabaseSectionMenuButton (section);
@@ -585,19 +585,19 @@ namespace Epsitec.Cresus.Core.Controllers
 				yield return Res.Commands.Base.ShowDocumentOptions;
 				yield return Res.Commands.Base.ShowDocumentPrintingUnits;
 				yield return Res.Commands.Base.ShowCurrency;
-				yield return Res.Commands.Base.ShowImages;
+				yield return Res.Commands.Base.ShowImage;
 			}
 
 			if (admin || devel)
 			{
-				yield return Res.Commands.Base.ShowImageBlobs;
+				yield return Res.Commands.Base.ShowImageBlob;
 				yield return Res.Commands.Base.ShowBusinessSettings;
-				yield return Res.Commands.Base.ShowGeneratorDefinitions;
+				yield return Res.Commands.Base.ShowGeneratorDefinition;
 			}
 
 			if (devel)
 			{
-				yield return Res.Commands.Base.ShowWorkflowDefinitions;
+				yield return Res.Commands.Base.ShowWorkflowDefinition;
 			}
 		}
 
