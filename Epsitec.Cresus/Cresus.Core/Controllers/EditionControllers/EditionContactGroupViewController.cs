@@ -25,7 +25,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.End ()
 				.Input ()
 				  .Field (x => x.ContactGroupType)
-				.End ();
+				.End ()
+				;
 		}
 	}
 }

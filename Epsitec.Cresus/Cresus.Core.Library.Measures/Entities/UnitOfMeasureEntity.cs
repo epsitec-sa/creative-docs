@@ -19,7 +19,6 @@ namespace Epsitec.Cresus.Core.Entities
 			return TextFormatter.FormatText
 				(
 					"Nom: ", this.Name, "\n",
-					"Code: ", this.Code, "\n",
 					"Catégorie: ", UnitOfMeasureEntity.GetCategory (this), "\n",
 					"Valeurs: ", UnitOfMeasureEntity.GetFactors (this)
 				);
@@ -27,7 +26,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.Name, "(", this.Code, ")");
+			return TextFormatter.FormatText (this.Name);
 		}
 
 		public override string[] GetEntityKeywords()

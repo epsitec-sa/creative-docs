@@ -16,6 +16,25 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionCountryViewController : EditionViewController<Entities.CountryEntity>
 	{
+#if true
+		protected override void CreateBricks(Bricks.BrickWall<CountryEntity> wall)
+		{
+			wall.AddBrick ()
+				//.Name ("Country")
+				//.Icon ("Data.Country")
+				.Title ("Pays")
+				.GlobalWarning ()
+				.Input ()
+				  .Title ("Pays")
+				  .Field (x => x.Name)
+				  .Title ("Code ISO à deux lettres")
+				  .Field (x => x.CountryCode).Width (60)
+				.End ()
+				;
+		}
+#endif
+
+#if false
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -37,5 +56,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField (tile,  0, "Pays",                    Marshaler.Create (() => this.Entity.Name, x => this.Entity.Name = x));
 			builder.CreateTextField (tile, 80, "Code ISO à deux lettres", Marshaler.Create (() => this.Entity.CountryCode, x => this.Entity.CountryCode = x));
 		}
+#endif
 	}
 }
