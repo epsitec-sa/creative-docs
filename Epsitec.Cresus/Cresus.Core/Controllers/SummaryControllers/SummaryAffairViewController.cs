@@ -33,10 +33,11 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				  .Title (x => x.GetCompactSummary ())
 				  .Text (x => x.GetSummary ())
 				  .TextCompact (x => x.GetCompactSummary ())
-				.End ();
-
+				.End ()
+				;
 			wall.AddBrick (x => x.Comments)
-				.Template ();
+				.Template ()
+				;
 		}
 	}
 }

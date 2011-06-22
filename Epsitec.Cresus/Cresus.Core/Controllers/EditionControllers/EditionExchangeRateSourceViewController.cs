@@ -16,7 +16,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Input ()
 				  .Field (x => x.Type)
 				  .Field (x => x.Originator)
-				.End ();
+				.End ()
+				;
 		}
 	}
 }

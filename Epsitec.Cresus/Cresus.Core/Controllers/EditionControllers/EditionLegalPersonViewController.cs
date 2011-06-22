@@ -27,7 +27,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Separator ()
 				.Input ()
 				 .Field (x => x.Complement)
-				.End ();
+				.End ()
+				;
 			
 			base.CreateBricks (wall);
 		}

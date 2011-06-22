@@ -29,7 +29,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .Field (x => x.VatCode)
 				  .Title ("Taux appliqué")
 				  .Field (x => x.Rate)
-				.End ();
+				.End ()
+				;
 		}
 	}
 }

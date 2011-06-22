@@ -23,7 +23,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .Field (x => x.TaxMode)
 				  .Field (x => x.DefaultCurrencyCode)
 				.End ()
-				.Include (x => x.Person);
+				.Include (x => x.Person)
+				;
 		}
 	}
 }

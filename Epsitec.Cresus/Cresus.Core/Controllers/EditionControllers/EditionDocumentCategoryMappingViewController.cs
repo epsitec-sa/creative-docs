@@ -29,7 +29,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Input ()
 				  .Field (x => x.PrintableEntity).PickFromCollection (AbstractPrinter.GetPrintableEntityIds ())
 				  .Field (x => x.DocumentCategories)
-				.End ();
+				.End ()
+				;
 		}
 #if false
 	

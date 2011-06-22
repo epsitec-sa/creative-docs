@@ -26,31 +26,32 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				 .Title (x => x.GetTitle ())
 				 .Text (x => x.GetSummary ())
 				 .TextCompact (x => x.GetCompactSummary ())
-				.End ();
-
+				.End ()
+				;
 			wall.AddBrick (x => x.Relation.Person.Contacts)
 				.AsType<TelecomContactEntity> ()
 				.Attribute (BrickMode.AutoGroup)
 				.Template ()
 				 .Text (x => x.GetSummary ())
 				 .TextCompact (x => x.GetCompactSummary ())
-				.End ();
-
+				.End ()
+				;
 			wall.AddBrick (x => x.Relation.Person.Contacts)
 				.AsType<UriContactEntity> ()
 				.Attribute (BrickMode.AutoGroup)
 				.Template ()
 				 .Text (x => x.GetSummary ())
 				 .TextCompact (x => x.GetCompactSummary ())
-				.End ();
-
+				.End ()
+				;
 			wall.AddBrick (x => x.Affairs)
 				.Attribute (BrickMode.DefaultToSummarySubview)
 				.Attribute (BrickMode.HideAddButton)
 				.Template ()
 				 .Text (x => x.GetSummary ())
 				 .TextCompact (x => TextFormatter.FormatText (x.IdA))
-				.End ();
+				.End ()
+				;
 		}
 
 		protected override IEnumerable<AbstractEntity> GetMasterEntities()

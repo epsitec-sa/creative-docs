@@ -45,7 +45,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.End ()
 				.Input ()
 				 .Field (x => x.Pictures)
-				.End ();
+				.End ()
+				;
 		}
 	}
 }

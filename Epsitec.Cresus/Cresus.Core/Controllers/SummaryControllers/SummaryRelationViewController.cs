@@ -20,31 +20,32 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			wall.AddBrick ()
 				.Name ("Customer")
-				.Title (TextFormatter.FormatText ("Client"));
-
+				.Title (TextFormatter.FormatText ("Client"))
+				;
 			wall.AddBrick (x => x.Person.Contacts)
 				.AsType<MailContactEntity> ()
 				.Template ()
 				 .Title (x => x.GetTitle ())
 				 .Text (x => x.GetSummary ())
 				 .TextCompact (x => x.GetCompactSummary ())
-				.End ();
-
+				.End ()
+				;
 			wall.AddBrick (x => x.Person.Contacts)
 				.AsType<TelecomContactEntity> ()
 				.Attribute (BrickMode.AutoGroup)
 				.Template ()
 				 .Text (x => x.GetSummary ())
 				 .TextCompact (x => x.GetCompactSummary ())
-				.End ();
-
+				.End ()
+				;
 			wall.AddBrick (x => x.Person.Contacts)
 				.AsType<UriContactEntity> ()
 				.Attribute (BrickMode.AutoGroup)
 				.Template ()
 				 .Text (x => x.GetSummary ())
 				 .TextCompact (x => x.GetCompactSummary ())
-				.End ();
+				.End ()
+				;
 		}
 	}
 }

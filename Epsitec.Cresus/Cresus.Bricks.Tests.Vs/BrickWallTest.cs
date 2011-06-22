@@ -67,7 +67,8 @@ namespace Epsitec.Cresus.Bricks
 					.Template ()
 					.Title ("template title")
 					.Text ("template text")
-					.End ();
+					.End ()
+					;
 
 				wall.AddBrick (x => x.Bars)
 					.Name ("name")
@@ -78,7 +79,8 @@ namespace Epsitec.Cresus.Bricks
 					.Title (x => string.Format ("{0}", x.Value))
 					.Title (x => x.Value)
 					.Text ("template text")
-					.End ();
+					.End ()
+					;
 
 				wall.AddBrick ()
 					.Title ("Article")
@@ -94,7 +96,8 @@ namespace Epsitec.Cresus.Bricks
 					.Input ()
 					 .Title ("Nom de l'article")
 					 .Field (x => x.Name)
-					.End ();
+					.End ()
+					;
 				
 				if (i < 0)
 				{

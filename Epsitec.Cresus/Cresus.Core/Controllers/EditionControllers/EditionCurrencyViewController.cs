@@ -20,7 +20,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .Field (x => x.ExchangeRateBase)
 				  .Field (x => x.ExchangeRate)
 				  .Field (x => x.ExchangeRateSource)
-				.End ();
+				.End ()
+				;
 		}
 	}
 }

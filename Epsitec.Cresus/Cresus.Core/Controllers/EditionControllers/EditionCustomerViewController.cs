@@ -26,7 +26,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .Title ("Compte débiteur pour la comptabilisation")
 				  .Field (x => x.DefaultDebtorBookAccount)  // TODO: comment utiliser UIBuilder.CreateAccountEditor ?
 				.End ()
-				.Include (x => x.Relation);
+				.Include (x => x.Relation)
+				;
 		}
 	}
 }

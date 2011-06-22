@@ -25,8 +25,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 //				.TitleCompact (TextFormatter.FormatText ("Personne"))
 //				.Text (x => x.GetSummary ())
 //				.TextCompact (x => x.GetCompactSummary ())
-			;
-
+				;
 			wall.AddBrick (x => x.Contacts)
 				.AsType<MailContactEntity> ()
 //				.Name ("MailContact")
@@ -40,8 +39,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				 .Title (x => x.GetTitle ())
 				 .Text (x => x.GetSummary ())
 				 .TextCompact (x => x.GetCompactSummary ())
-				.End ();
-
+				.End ()
+				;
 			wall.AddBrick (x => x.Contacts)
 				.AsType<TelecomContactEntity> ()
 				.Attribute (BrickMode.AutoGroup)
@@ -54,8 +53,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				.Template ()
 				 .Text (x => x.GetSummary ())
 				 .TextCompact (x => x.GetCompactSummary ())
-				.End ();
-
+				.End ()
+				;
 			wall.AddBrick (x => x.Contacts)
 				.AsType<UriContactEntity> ()
 				.Attribute (BrickMode.AutoGroup)
@@ -68,8 +67,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				.Template ()
 				 .Text (x => x.GetSummary ())
 				 .TextCompact (x => x.GetCompactSummary ())
-				.End ();
-
+				.End ()
+				;
 		}
 	}
 }
