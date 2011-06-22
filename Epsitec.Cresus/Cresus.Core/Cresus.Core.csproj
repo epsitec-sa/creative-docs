@@ -418,6 +418,7 @@
     <EmbeddedResource Include="Images\Data.DocumentCategoryMapping.icon" />
     <EmbeddedResource Include="Images\Base.GeneratorDefinitions.icon" />
     <EmbeddedResource Include="Images\Base.Currency.icon" />
+    <EmbeddedResource Include="Images\Data.DocumentMetadata.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
