@@ -428,7 +428,7 @@
     <EmbeddedResource Include="Images\Base.GeneratorDefinition.icon" />
     <EmbeddedResource Include="Images\Base.ImageCategory.icon" />
     <EmbeddedResource Include="Images\Base.ImageGroup.icon" />
-    <None Include="Images\Base.IsrDefinition.icon" />
+    <EmbeddedResource Include="Images\Base.IsrDefinition.icon" />
     <EmbeddedResource Include="Images\Base.Language.icon" />
     <EmbeddedResource Include="Images\Base.LegalPersonType.icon" />
     <EmbeddedResource Include="Images\Base.Location.icon" />

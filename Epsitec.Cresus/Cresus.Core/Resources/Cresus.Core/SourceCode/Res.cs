@@ -22,10 +22,18 @@ namespace Epsitec.Cresus.Core
 				{
 				}
 				
+				//	designer:cap/L0K71
+				public static readonly global::Epsitec.Common.Widgets.Command ShowArticleCategory = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 39));
 				//	designer:cap/L0AMC
 				public static readonly global::Epsitec.Common.Widgets.Command ShowArticleDefinition = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 406));
+				//	designer:cap/L0K81
+				public static readonly global::Epsitec.Common.Widgets.Command ShowArticleGroup = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 40));
 				//	designer:cap/L0KH
 				public static readonly global::Epsitec.Common.Widgets.Command ShowBusinessSettings = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 17));
+				//	designer:cap/L0K91
+				public static readonly global::Epsitec.Common.Widgets.Command ShowContactGroup = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 41));
+				//	designer:cap/L0KA1
+				public static readonly global::Epsitec.Common.Widgets.Command ShowCountry = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 42));
 				//	designer:cap/L0K61
 				public static readonly global::Epsitec.Common.Widgets.Command ShowCurrency = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 38));
 				//	designer:cap/L0A23
@@ -40,16 +48,54 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Widgets.Command ShowDocumentOptions = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 29));
 				//	designer:cap/L0K41
 				public static readonly global::Epsitec.Common.Widgets.Command ShowDocumentPrintingUnits = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 36));
+				//	designer:cap/L0KB1
+				public static readonly global::Epsitec.Common.Widgets.Command ShowExchangeRateSource = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 43));
 				//	designer:cap/L0AAL
 				public static readonly global::Epsitec.Common.Widgets.Command ShowGeneratorDefinition = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 682));
 				//	designer:cap/L0KI
 				public static readonly global::Epsitec.Common.Widgets.Command ShowImage = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 18));
 				//	designer:cap/L0KJ
 				public static readonly global::Epsitec.Common.Widgets.Command ShowImageBlob = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 19));
+				//	designer:cap/L0KC1
+				public static readonly global::Epsitec.Common.Widgets.Command ShowImageCategory = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 44));
+				//	designer:cap/L0KD1
+				public static readonly global::Epsitec.Common.Widgets.Command ShowImageGroup = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 45));
 				//	designer:cap/L0K4
 				public static readonly global::Epsitec.Common.Widgets.Command ShowInvoiceDocument = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 4));
+				//	designer:cap/L0KE1
+				public static readonly global::Epsitec.Common.Widgets.Command ShowIsrDefinition = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 46));
+				//	designer:cap/L0KF1
+				public static readonly global::Epsitec.Common.Widgets.Command ShowLanguage = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 47));
+				//	designer:cap/L0KG1
+				public static readonly global::Epsitec.Common.Widgets.Command ShowLegalPersonType = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 48));
+				//	designer:cap/L0KH1
+				public static readonly global::Epsitec.Common.Widgets.Command ShowLocation = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 49));
+				//	designer:cap/L0KI1
+				public static readonly global::Epsitec.Common.Widgets.Command ShowPaymentMode = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 50));
+				//	designer:cap/L0KJ1
+				public static readonly global::Epsitec.Common.Widgets.Command ShowPaymentReminderDefinition = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 51));
+				//	designer:cap/L0KK1
+				public static readonly global::Epsitec.Common.Widgets.Command ShowPersonGender = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 52));
+				//	designer:cap/L0KL1
+				public static readonly global::Epsitec.Common.Widgets.Command ShowPersonTitle = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 53));
 				//	designer:cap/L0KM
 				public static readonly global::Epsitec.Common.Widgets.Command ShowPriceCalculator = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 22));
+				//	designer:cap/L0KM1
+				public static readonly global::Epsitec.Common.Widgets.Command ShowPriceRoundingMode = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 54));
+				//	designer:cap/L0KN1
+				public static readonly global::Epsitec.Common.Widgets.Command ShowSoftwareUserGroup = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 55));
+				//	designer:cap/L0KO1
+				public static readonly global::Epsitec.Common.Widgets.Command ShowSoftwareUserRole = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 56));
+				//	designer:cap/L0KP1
+				public static readonly global::Epsitec.Common.Widgets.Command ShowStateProvinceCounty = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 57));
+				//	designer:cap/L0KQ1
+				public static readonly global::Epsitec.Common.Widgets.Command ShowTelecomType = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 58));
+				//	designer:cap/L0KR1
+				public static readonly global::Epsitec.Common.Widgets.Command ShowUnitOfMeasure = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 59));
+				//	designer:cap/L0KS1
+				public static readonly global::Epsitec.Common.Widgets.Command ShowUriType = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 60));
+				//	designer:cap/L0KT1
+				public static readonly global::Epsitec.Common.Widgets.Command ShowVatDefinition = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 61));
 				//	designer:cap/L0A9L
 				public static readonly global::Epsitec.Common.Widgets.Command ShowWorkflowDefinition = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 681));
 			}
@@ -143,10 +189,18 @@ namespace Epsitec.Cresus.Core
 				{
 				}
 				
+				//	designer:cap/L0K71
+				public const long ShowArticleCategory = 0x1500014000027L;
 				//	designer:cap/L0AMC
 				public const long ShowArticleDefinition = 0x150000A000196L;
+				//	designer:cap/L0K81
+				public const long ShowArticleGroup = 0x1500014000028L;
 				//	designer:cap/L0KH
 				public const long ShowBusinessSettings = 0x1500014000011L;
+				//	designer:cap/L0K91
+				public const long ShowContactGroup = 0x1500014000029L;
+				//	designer:cap/L0KA1
+				public const long ShowCountry = 0x150001400002AL;
 				//	designer:cap/L0K61
 				public const long ShowCurrency = 0x1500014000026L;
 				//	designer:cap/L0A23
@@ -161,16 +215,54 @@ namespace Epsitec.Cresus.Core
 				public const long ShowDocumentOptions = 0x150001400001DL;
 				//	designer:cap/L0K41
 				public const long ShowDocumentPrintingUnits = 0x1500014000024L;
+				//	designer:cap/L0KB1
+				public const long ShowExchangeRateSource = 0x150001400002BL;
 				//	designer:cap/L0AAL
 				public const long ShowGeneratorDefinition = 0x150000A0002AAL;
 				//	designer:cap/L0KI
 				public const long ShowImage = 0x1500014000012L;
 				//	designer:cap/L0KJ
 				public const long ShowImageBlob = 0x1500014000013L;
+				//	designer:cap/L0KC1
+				public const long ShowImageCategory = 0x150001400002CL;
+				//	designer:cap/L0KD1
+				public const long ShowImageGroup = 0x150001400002DL;
 				//	designer:cap/L0K4
 				public const long ShowInvoiceDocument = 0x1500014000004L;
+				//	designer:cap/L0KE1
+				public const long ShowIsrDefinition = 0x150001400002EL;
+				//	designer:cap/L0KF1
+				public const long ShowLanguage = 0x150001400002FL;
+				//	designer:cap/L0KG1
+				public const long ShowLegalPersonType = 0x1500014000030L;
+				//	designer:cap/L0KH1
+				public const long ShowLocation = 0x1500014000031L;
+				//	designer:cap/L0KI1
+				public const long ShowPaymentMode = 0x1500014000032L;
+				//	designer:cap/L0KJ1
+				public const long ShowPaymentReminderDefinition = 0x1500014000033L;
+				//	designer:cap/L0KK1
+				public const long ShowPersonGender = 0x1500014000034L;
+				//	designer:cap/L0KL1
+				public const long ShowPersonTitle = 0x1500014000035L;
 				//	designer:cap/L0KM
 				public const long ShowPriceCalculator = 0x1500014000016L;
+				//	designer:cap/L0KM1
+				public const long ShowPriceRoundingMode = 0x1500014000036L;
+				//	designer:cap/L0KN1
+				public const long ShowSoftwareUserGroup = 0x1500014000037L;
+				//	designer:cap/L0KO1
+				public const long ShowSoftwareUserRole = 0x1500014000038L;
+				//	designer:cap/L0KP1
+				public const long ShowStateProvinceCounty = 0x1500014000039L;
+				//	designer:cap/L0KQ1
+				public const long ShowTelecomType = 0x150001400003AL;
+				//	designer:cap/L0KR1
+				public const long ShowUnitOfMeasure = 0x150001400003BL;
+				//	designer:cap/L0KS1
+				public const long ShowUriType = 0x150001400003CL;
+				//	designer:cap/L0KT1
+				public const long ShowVatDefinition = 0x150001400003DL;
 				//	designer:cap/L0A9L
 				public const long ShowWorkflowDefinition = 0x150000A0002A9L;
 			}
