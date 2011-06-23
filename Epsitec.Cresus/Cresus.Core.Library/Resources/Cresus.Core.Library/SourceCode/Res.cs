@@ -81,6 +81,10 @@ namespace Epsitec.Cresus.Core.Library
 			
 			//	designer:cap/EVA
 			public static readonly Epsitec.Common.Types.EnumType EnumValueCardinality = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
+			//	designer:cap/EVA9
+			public static readonly Epsitec.Common.Types.EnumType TileEditionMode = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 9));
+			//	designer:cap/EVAD
+			public static readonly Epsitec.Common.Types.EnumType TileVisibilityMode = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 13));
 		}
 		
 		public static class Values
@@ -125,6 +129,78 @@ namespace Epsitec.Cresus.Core.Library
 					get
 					{
 						return global::Epsitec.Cresus.Core.Library.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 1));
+					}
+				}
+			}
+			
+			public static class TileEditionMode
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/EVAC
+				public static global::Epsitec.Common.Types.Caption ReadOnly
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 12));
+					}
+				}
+				//	designer:cap/EVAB
+				public static global::Epsitec.Common.Types.Caption ReadWrite
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 11));
+					}
+				}
+				//	designer:cap/EVAA
+				public static global::Epsitec.Common.Types.Caption Undefined
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10));
+					}
+				}
+			}
+			
+			public static class TileVisibilityMode
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/EVAG
+				public static global::Epsitec.Common.Types.Caption Hidden
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 16));
+					}
+				}
+				//	designer:cap/EVAH
+				public static global::Epsitec.Common.Types.Caption NeverVisible
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 17));
+					}
+				}
+				//	designer:cap/EVAE
+				public static global::Epsitec.Common.Types.Caption Undefined
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 14));
+					}
+				}
+				//	designer:cap/EVAF
+				public static global::Epsitec.Common.Types.Caption Visible
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 15));
 					}
 				}
 			}
@@ -189,6 +265,8 @@ namespace Epsitec.Cresus.Core.Library
 			Types._Initialize ();
 			Values._Initialize ();
 			Values.EnumValueCardinality._Initialize ();
+			Values.TileEditionMode._Initialize ();
+			Values.TileVisibilityMode._Initialize ();
 		}
 		
 		public static void Initialize()
