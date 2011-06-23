@@ -99,6 +99,9 @@
     <Compile Include="CommandHandlers\NavigationCommandHandler.cs" />
     <Compile Include="Controllers\ComplexControllers\ChartsOfAccountsController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationCustomerViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionPersonTitleViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionPersonGenderViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionLegalPersonTypeViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionStateProvinceCountyViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionLanguageViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionCurrencyViewController.cs" />
@@ -117,6 +120,9 @@
     <Compile Include="Controllers\EditionControllers\EditionPriceCalculatorViewControllerTableDesigner.cs" />
     <Compile Include="Controllers\EditionControllers\EditionVatDefinitionViewController.cs" />
     <Compile Include="Controllers\RibbonViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryPersonTitleViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryPersonGenderViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryLegalPersonTypeViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryStateProvinceCountyViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryIsrDefinitionViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryContactGroupViewController.cs" />
@@ -192,7 +198,6 @@
     <Compile Include="Controllers\CreationControllers\CreationRelationViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionRelationViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDefaultAddressViewController.cs" />
-    <Compile Include="Controllers\EditionControllers\EditionTitleViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionLocationViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionCountryViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionUriContactViewController.cs" />
@@ -206,7 +211,6 @@
     <Compile Include="Controllers\SummaryControllers\SummaryBusinessDocumentViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleDefinitionViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryRelationViewController.cs" />
-    <Compile Include="Controllers\SummaryControllers\SummaryTitleViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryLocationViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryCountryViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryLegalPersonViewController.cs" />
@@ -379,7 +383,6 @@
     <EmbeddedResource Include="Images\Edition.NewRecord.icon" />
     <EmbeddedResource Include="Images\Data.Country.icon" />
     <EmbeddedResource Include="Images\Data.Location.icon" />
-    <EmbeddedResource Include="Images\Data.Title.icon" />
     <EmbeddedResource Include="Images\Data.Affair.icon" />
     <EmbeddedResource Include="Images\Data.Case.icon" />
     <EmbeddedResource Include="Images\Data.Comment.icon" />

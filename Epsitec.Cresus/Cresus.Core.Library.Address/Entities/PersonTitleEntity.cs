@@ -15,8 +15,8 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return TextFormatter.FormatText
 				(
-					"Abrégé: ", this.ShortName, "\n",
-					"Complet: ", this.Name
+					"Complet: ", this.Name, "\n",
+					"Abrégé: ",  this.ShortName
 				);
 		}
 
