@@ -20,6 +20,21 @@ namespace Epsitec.Cresus.Core.Library.Features
 			public static readonly Epsitec.Common.Types.StructuredType ProductFeature = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
 		}
 		
+		public static class Fields
+		{
+			public static class ProductFeature
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/JVA2
+				public static readonly global::Epsitec.Common.Support.Druid DisabledEntitySettings = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 2);
+				//	designer:cap/JVA1
+				public static readonly global::Epsitec.Common.Support.Druid EnabledEntitySettings = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 1);
+			}
+		}
+		
 		//	Code mapping for 'String' resources
 		
 		public static class Strings
@@ -70,6 +85,7 @@ namespace Epsitec.Cresus.Core.Library.Features
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Cresus.Core.Library.Features");
 			Types._Initialize ();
+			Fields.ProductFeature._Initialize ();
 		}
 		
 		public static void Initialize()
