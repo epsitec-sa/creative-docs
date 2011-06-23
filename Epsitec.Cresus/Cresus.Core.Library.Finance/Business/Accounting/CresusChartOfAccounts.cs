@@ -65,9 +65,9 @@ namespace Epsitec.Cresus.Core.Business.Accounting
 		}
 
 
-		public XElement SerializeToXml(string xmlNodeName)
+		public XElement Save(string xmlNodeName)
 		{
-			var accounts = this.items.Select (item => item.SerializeToXml (Xml.Account));
+			var accounts = this.items.Select (item => item.Save (Xml.Account));
 
 			return new XElement (xmlNodeName,
 				new XAttribute (Xml.Title, this.Title.ToSimpleText ()),
@@ -78,23 +78,25 @@ namespace Epsitec.Cresus.Core.Business.Accounting
 				accounts);
 		}
 
-		public static CresusChartOfAccounts DeserializeFromXml(XElement xml)
+		public static CresusChartOfAccounts Restore(XElement xml)
 		{
-			var chartOfAccounts = new CresusChartOfAccounts ();
-
 			string title      = (string) xml.Attribute (Xml.Title);
 			string path       = (string) xml.Attribute (Xml.Path);
 			string beginDate  = (string) xml.Attribute (Xml.BeginDate);
 			string endDate    = (string) xml.Attribute (Xml.EndDate);
 			string id         = (string) xml.Attribute (Xml.Id);
 			
-			var accounts = xml.Elements (Xml.Account).Select (element => BookAccountDefinition.DeserializeFromXml (element));
+			var accounts = xml.Elements (Xml.Account).Select (element => BookAccountDefinition.Restore (element));
 
-			chartOfAccounts.Title     = FormattedText.FromSimpleText (title);
-			chartOfAccounts.Path      = MachineFilePath.Parse (path);
-			chartOfAccounts.BeginDate = DateConverter.Invariant.ConvertFromString (beginDate).Value;
-			chartOfAccounts.EndDate   = DateConverter.Invariant.ConvertFromString (endDate).Value;
-			chartOfAccounts.Id        = ItemCodeGenerator.ToGuid (id);
+			var chartOfAccounts = new CresusChartOfAccounts ()
+			{
+				Title     = FormattedText.FromSimpleText (title),
+				Path      = MachineFilePath.Parse (path),
+				BeginDate = DateConverter.Invariant.ConvertFromString (beginDate).Value,
+				EndDate   = DateConverter.Invariant.ConvertFromString (endDate).Value,
+				Id        = ItemCodeGenerator.ToGuid (id),
+			};
+
 			chartOfAccounts.Items.AddRange (accounts);
 
 			return chartOfAccounts;

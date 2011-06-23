@@ -45,14 +45,14 @@ namespace Epsitec.Cresus.Core.Business.Accounting
 		}
 
 
-		public XElement SerializeToXml(string xmlNodeName)
+		public XElement Save(string xmlNodeName)
 		{
 			return new XElement (xmlNodeName,
 				new XAttribute (Xml.Number, this.accountNumber),
 				new XAttribute (Xml.Caption, this.caption.ToSimpleText ()));
 		}
 
-		public static BookAccountDefinition DeserializeFromXml(XElement xml)
+		public static BookAccountDefinition Restore(XElement xml)
 		{
 			string number  = (string) xml.Attribute (Xml.Number);
 			string caption = (string) xml.Attribute (Xml.Caption);

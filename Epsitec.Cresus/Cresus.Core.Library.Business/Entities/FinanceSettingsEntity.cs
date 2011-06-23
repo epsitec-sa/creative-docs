@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Core.Entities
 			this.DeserializeChartsOfAccountsIfNeeded ();
 
 			var chartId  = chart.Id;
-			var chartXml = chart.SerializeToXml ("chartOfAccounts");
+			var chartXml = chart.Save ("chartOfAccounts");
 
 			var xmlBlob = businessContext.CreateEntity<XmlBlobEntity> ();
 			
@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Core.Entities
 			if (this.NeedsDeserialization)
 			{
 				var xmlBlobs = this.SerializedChartsOfAccounts;
-				var deserializedChartsOfAccounts = xmlBlobs.Select (blob => CresusChartOfAccounts.DeserializeFromXml (blob.XmlData));
+				var deserializedChartsOfAccounts = xmlBlobs.Select (blob => CresusChartOfAccounts.Restore (blob.XmlData));
 
 				this.chartsOfAccounts.Clear ();
 				this.chartsOfAccounts.AddRange (deserializedChartsOfAccounts);
