@@ -122,6 +122,7 @@
     <Compile Include="Controllers\EditionControllers\EditionPriceCalculatorViewControllerTableDesigner.cs" />
     <Compile Include="Controllers\EditionControllers\EditionVatDefinitionViewController.cs" />
     <Compile Include="Controllers\RibbonViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryVatDefinitionViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryPaymentReminderDefinitionViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryUriTypeViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryTelecomTypeViewController.cs" />
