@@ -1,35 +1,18 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Types;
-
-using Epsitec.Cresus.Core.Widgets;
-using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Controllers.DataAccessors;
+using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
-	public class SummaryLocationViewController : SummaryViewController<Entities.LocationEntity>
+	public class SummaryLocationViewController : SummaryViewController<LocationEntity>
 	{
-		protected override void CreateUI()
+		protected override void CreateBricks(Bricks.BrickWall<LocationEntity> wall)
 		{
-			using (var data = TileContainerController.Setup (this))
-			{
-				data.Add (
-					new TileDataItem
-					{
-						Name				= "Location",
-						IconUri				= "Data.Location",
-						Title				= TextFormatter.FormatText ("Ville"),
-						CompactTitle		= TextFormatter.FormatText ("Ville"),
-						TextAccessor		= this.CreateAccessor (x => x.GetSummary ()),
-						CompactTextAccessor = this.CreateAccessor (x => x.GetCompactSummary ()),
-						EntityMarshaler		= this.CreateEntityMarshaler (),
-					});
-			}
+			wall.AddBrick (x => x);
 		}
 	}
 }
