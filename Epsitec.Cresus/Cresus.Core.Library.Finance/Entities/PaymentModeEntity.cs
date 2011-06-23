@@ -15,7 +15,6 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return TextFormatter.FormatText
 				(
-					"Code: ",        this.Code,        "\n",
 					"Résumé: ",      this.Name,        "\n",
 					"Description: ", this.Description, "\n",
 					"Compte: ",      this.BookAccount

@@ -24,9 +24,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		protected override void CreateBricks(Bricks.BrickWall<PaymentReminderDefinitionEntity> wall)
 		{
 			wall.AddBrick ()
-				//.Name ("PaymentReminderDefinition")
-				//.Icon ("Data.PaymentReminderDefinition")
-				//.Title ("PaymentReminderDefinition")
 				.Input ()
 				  .Field (x => x.Name)
 				  .Field (x => x.Description)
