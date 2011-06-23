@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .Field (x => x.DefaultInputVatCode)
 				  .Field (x => x.DefaultOutputVatCode)
 				  .Field (x => x.VatNumber)
-				  .Field (x => x.DefaultAccounting)  // TODO: n'apparaît pas !
+				  //.Field (x => x.DefaultAccounting)  // TODO: n'apparaît pas !
 				  .Field (x => x.DefaultRoundingMode)
 				  .Field (x => x.NeverApplyDiscount)
 				  .Field (x => x.ArticleType)

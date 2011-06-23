@@ -14,6 +14,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		protected override void CreateBricks(Bricks.BrickWall<ArticleCategoryEntity> wall)
 		{
 			wall.AddBrick (x => x);
+			wall.AddBrick (x => x.DefaultAccounting);
 		}
 #else
 		public class SummaryArticleCategoryViewController : SummaryViewController<Entities.ArticleCategoryEntity>
