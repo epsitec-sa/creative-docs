@@ -99,6 +99,8 @@
     <Compile Include="CommandHandlers\NavigationCommandHandler.cs" />
     <Compile Include="Controllers\ComplexControllers\ChartsOfAccountsController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationCustomerViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionUriTypeViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionTelecomTypeViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPersonTitleViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPersonGenderViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionLegalPersonTypeViewController.cs" />
@@ -120,6 +122,8 @@
     <Compile Include="Controllers\EditionControllers\EditionPriceCalculatorViewControllerTableDesigner.cs" />
     <Compile Include="Controllers\EditionControllers\EditionVatDefinitionViewController.cs" />
     <Compile Include="Controllers\RibbonViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryUriTypeViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryTelecomTypeViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryPersonTitleViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryPersonGenderViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryLegalPersonTypeViewController.cs" />
