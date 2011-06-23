@@ -12,7 +12,16 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(Bricks.BrickWall<LanguageEntity> wall)
 		{
-			wall.AddBrick (x => x);
+			wall.AddBrick ()
+				.Input ()
+				  .Field (x => x.Name)
+				  .Field (x => x.Description)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.IsoLanguageCode).Width (60)
+				.End ()
+				;
 		}
 	}
 }

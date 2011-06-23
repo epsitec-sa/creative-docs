@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Core.Entities
 			{
 				a.Accumulate (this.Name.GetEntityStatus ());
 				a.Accumulate (this.Description.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.IsoLanguageCode.GetEntityStatus ());
 
 				return a.EntityStatus;
 			}
