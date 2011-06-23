@@ -11,10 +11,10 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	[DesignerVisible]
 	public enum TileUserCategory
 	{
-		Undefined,
+		Any			= 0,
 
-		User  = 0,
-		Group = 1,
-		Role  = 2,
+		User		= 1,
+		Group		= 2,
+		Role		= 3,
 	}
 }

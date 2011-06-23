@@ -191,6 +191,14 @@ namespace Epsitec.Cresus.Core.Library
 						return global::Epsitec.Cresus.Core.Library.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 24));
 					}
 				}
+				//	designer:cap/EVAR
+				public static global::Epsitec.Common.Types.Caption Override
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 27));
+					}
+				}
 			}
 			
 			public static class TileUserCategory
@@ -199,6 +207,14 @@ namespace Epsitec.Cresus.Core.Library
 				{
 				}
 				
+				//	designer:cap/EVAQ
+				public static global::Epsitec.Common.Types.Caption Any
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 26));
+					}
+				}
 				//	designer:cap/EVAL
 				public static global::Epsitec.Common.Types.Caption Group
 				{

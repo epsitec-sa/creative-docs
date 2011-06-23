@@ -86,17 +86,18 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			/*
 			 * <xx>
-			 *  <fields>
+			 *  <F>
 			 *   <f id="[ABC]">
-			 *    <settings>
-			 *     <s cat="n" uid="xxx" m="n"><f vis="n" edit="n"/></s>
-			 *     <s cat="n" uid="yyy" m="n"><f vis="n" edit="n"/></s>
-			 *    </settings>
+			 *    <S>
+			 *     <s cat="n" uid="xxx" m="n"><f v="n" e="n" /></s>		//	field settings (full)
+			 *     <s m="n"><f v="n" e="n" /></s>						//	field settings, specific, without user
+			 *     <s><f v="n" e="n" /></s>								//	field settings, inclusive, without user
+			 *    </S>
 			 *   </f>
 			 *   <f id="[DEF]">
 			 *    ...
 			 *   </f>
-			 *  </fields>
+			 *  </F>
 			 * </xx>
 			 * 
 			 */
@@ -131,10 +132,10 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		private static class Xml
 		{
-			public const string FieldList		= "fields";
+			public const string FieldList		= "F";
 			public const string FieldItem		= "f";
 			public const string FieldId			= "id";
-			public const string SettingsList	= "settings";
+			public const string SettingsList	= "S";
 			public const string SettingsItem	= "s";
 		}
 

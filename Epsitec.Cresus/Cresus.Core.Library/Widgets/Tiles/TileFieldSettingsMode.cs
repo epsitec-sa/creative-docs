@@ -11,7 +11,8 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	[DesignerVisible]
 	public enum TileFieldSettingsMode
 	{
-		Inclusive = 0,
-		Exclusive = 1,
+		Inclusive	= 0,
+		Exclusive	= 1,
+		Override	= 2,
 	}
 }

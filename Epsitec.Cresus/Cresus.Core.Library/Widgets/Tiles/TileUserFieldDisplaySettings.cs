@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			set;
 		}
 
-		public TileFieldDisplaySettings			Field
+		public TileFieldDisplaySettings			FieldSettings
 		{
 			get;
 			set;
@@ -44,26 +44,55 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		public XElement Save(string xmlNodeName)
 		{
 			return new XElement (xmlNodeName,
-				new XAttribute (Xml.UserCategory, (int) this.UserCategory),
-				new XAttribute (Xml.UserIdentity, this.UserIdentity),
-				new XAttribute (Xml.FieldSettingsMode, (int) this.FieldSettingsMode),
-				this.Field.Save (Xml.Field));
+				this.GetXmlAttributes (),
+				this.FieldSettings.Save (Xml.FieldSettings));
 		}
 
 		public static TileUserFieldDisplaySettings Restore(XElement xml)
 		{
-			var userCategory = (int) xml.Attribute (Xml.UserCategory);
+			var userCategory = (int?)   xml.Attribute (Xml.UserCategory);
 			var userIdentity = (string) xml.Attribute (Xml.UserIdentity);
-			var settingsMode = (int) xml.Attribute (Xml.FieldSettingsMode);
-			var field        = TileFieldDisplaySettings.Restore (xml.Element (Xml.Field));
+			var settingsMode = (int?)   xml.Attribute (Xml.FieldSettingsMode);
+			var field        = TileFieldDisplaySettings.Restore (xml.Element (Xml.FieldSettings));
 
 			return new TileUserFieldDisplaySettings ()
 			{
-				UserCategory = (TileUserCategory) userCategory,
+				UserCategory = (TileUserCategory) userCategory.GetValueOrDefault (),
 				UserIdentity = userIdentity,
-				FieldSettingsMode = (TileFieldSettingsMode) settingsMode,
-				Field = field
+				FieldSettingsMode = (TileFieldSettingsMode) settingsMode.GetValueOrDefault (),
+				FieldSettings = field
 			};
+		}
+
+
+		public static TileFieldDisplaySettings Combine(TileFieldDisplaySettings a, TileFieldDisplaySettings b, TileFieldSettingsMode mode)
+		{
+			switch (mode)
+			{
+				case TileFieldSettingsMode.Inclusive:	return a + b;
+				case TileFieldSettingsMode.Exclusive:	return a - b;
+				case TileFieldSettingsMode.Override:	return b;
+
+				default:
+					throw new System.NotSupportedException (string.Format ("Mode {0} not supported", mode));
+			}
+		}
+
+		
+		private IEnumerable<XAttribute> GetXmlAttributes()
+		{
+			if (this.UserCategory != TileUserCategory.Any)
+			{
+				yield return new XAttribute (Xml.UserCategory, (int) this.UserCategory);
+			}
+			if (!string.IsNullOrEmpty (this.UserIdentity))
+			{
+				yield return new XAttribute (Xml.UserIdentity, this.UserIdentity);
+			}
+			if (this.FieldSettingsMode != TileFieldSettingsMode.Inclusive)
+			{
+				yield return new XAttribute (Xml.FieldSettingsMode, (int) this.FieldSettingsMode);
+			}
 		}
 
 
@@ -72,7 +101,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			public const string UserCategory = "cat";
 			public const string UserIdentity = "uid";
 			public const string FieldSettingsMode = "m";
-			public const string Field = "f";
+			public const string FieldSettings = "f";
 		}
 	}
 }

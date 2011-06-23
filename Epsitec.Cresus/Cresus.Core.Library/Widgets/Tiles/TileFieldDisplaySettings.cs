@@ -89,8 +89,8 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		
 		private static class Xml
 		{
-			public const string FieldVisibilityMode	= "vis";
-			public const string FieldEditionMode	= "edit";
+			public const string FieldVisibilityMode	= "v";
+			public const string FieldEditionMode	= "e";
 		}
 
 
