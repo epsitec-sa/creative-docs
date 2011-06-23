@@ -99,6 +99,7 @@
     <Compile Include="CommandHandlers\NavigationCommandHandler.cs" />
     <Compile Include="Controllers\ComplexControllers\ChartsOfAccountsController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationCustomerViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionStateProvinceCountyViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionLanguageViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionCurrencyViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionCustomerViewController.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="Controllers\EditionControllers\EditionPriceCalculatorViewControllerTableDesigner.cs" />
     <Compile Include="Controllers\EditionControllers\EditionVatDefinitionViewController.cs" />
     <Compile Include="Controllers\RibbonViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryStateProvinceCountyViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryIsrDefinitionViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryContactGroupViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryLanguageViewController.cs" />
