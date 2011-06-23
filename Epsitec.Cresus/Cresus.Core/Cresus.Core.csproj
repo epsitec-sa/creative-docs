@@ -469,7 +469,7 @@
     <EmbeddedResource Include="Images\Base.UnitOfMeasure.icon" />
     <EmbeddedResource Include="Images\Base.UriType.icon" />
     <EmbeddedResource Include="Images\Base.VatDefinition.icon" />
-    <None Include="Images\Data.ArticleCategory.icon" />
+    <EmbeddedResource Include="Images\Data.ArticleCategory.icon" />
     <EmbeddedResource Include="Images\Data.ArticleGroup.icon" />
     <EmbeddedResource Include="Images\Data.ArticleStockLocation.icon" />
     <EmbeddedResource Include="Images\Data.ArticleSupply.icon" />

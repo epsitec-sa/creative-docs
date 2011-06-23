@@ -1,24 +1,38 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Common.Types;
-using Epsitec.Common.Types.Converters;
-
-using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Widgets;
-using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Core.Business.Finance;
-using Epsitec.Cresus.Core.Library;
-using Epsitec.Cresus.Core.Business;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionArticleCategoryViewController : EditionViewController<Entities.ArticleCategoryEntity>
 	{
+#if true
+		protected override void CreateBricks(Bricks.BrickWall<ArticleCategoryEntity> wall)
+		{
+			wall.AddBrick ()
+				.Input ()
+				  .Field (x => x.Name)
+				  .Field (x => x.Description)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.DefaultBillingUnit)
+				  .Field (x => x.DefaultPictures)
+				  .Field (x => x.DefaultInputVatCode)
+				  .Field (x => x.DefaultOutputVatCode)
+				  .Field (x => x.VatNumber)
+				  .Field (x => x.DefaultAccounting)  // TODO: n'apparaît pas !
+				  .Field (x => x.DefaultRoundingMode)
+				  .Field (x => x.NeverApplyDiscount)
+				  .Field (x => x.ArticleType)
+				.End ()
+				;
+		}
+#else
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -43,5 +57,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField             (tile, 0, "Numéro TVA",             Marshaler.Create (() => this.Entity.VatNumber,            x => this.Entity.VatNumber = x));
 			builder.CreateAutoCompleteTextField (tile, 0, "Type d'article",         Marshaler.Create (() => this.Entity.ArticleType,          x => this.Entity.ArticleType = x),          EnumKeyValues.FromEnum<ArticleType> ());
 		}
+#endif
 	}
 }
