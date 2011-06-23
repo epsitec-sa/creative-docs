@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				this.Field.Save (Xml.Field));
 		}
 
-		public TileUserFieldDisplaySettings Restore(XElement xml)
+		public static TileUserFieldDisplaySettings Restore(XElement xml)
 		{
 			var userCategory = (int) xml.Attribute (Xml.UserCategory);
 			var userIdentity = (string) xml.Attribute (Xml.UserIdentity);
@@ -69,10 +69,10 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		private static class Xml
 		{
-			public const string UserCategory = "c";
-			public const string UserIdentity = "u";
-			public const string Field = "f";
+			public const string UserCategory = "cat";
+			public const string UserIdentity = "uid";
 			public const string FieldSettingsMode = "m";
+			public const string Field = "f";
 		}
 	}
 }

@@ -5,6 +5,7 @@ using Epsitec.Common.Support;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Widgets.Tiles
 {
@@ -27,6 +28,19 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 
 			list.Add (settings);
+		}
+
+		public void AddRange(Druid field, IEnumerable<TileUserFieldDisplaySettings> settings)
+		{
+			List<TileUserFieldDisplaySettings> list;
+
+			if (this.fields.TryGetValue (field, out list) == false)
+			{
+				list = new List<TileUserFieldDisplaySettings> ();
+				this.fields[field] = list;
+			}
+
+			list.AddRange (settings);
 		}
 
 		public bool Remove(Druid field, TileUserFieldDisplaySettings settings)
@@ -68,8 +82,63 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 
+		public XElement Save(string xmlNodeName)
+		{
+			/*
+			 * <xx>
+			 *  <fields>
+			 *   <f id="[ABC]">
+			 *    <settings>
+			 *     <s cat="n" uid="xxx" m="n"><f vis="n" edit="n"/></s>
+			 *     <s cat="n" uid="yyy" m="n"><f vis="n" edit="n"/></s>
+			 *    </settings>
+			 *   </f>
+			 *   <f id="[DEF]">
+			 *    ...
+			 *   </f>
+			 *  </fields>
+			 * </xx>
+			 * 
+			 */
+			
+			return new XElement (xmlNodeName,
+				new XElement (Xml.FieldList,
+					this.fields.Keys.OrderBy (x => x).Select (x => 
+						new XElement (Xml.FieldItem,
+							new XAttribute (Xml.FieldId, x.ToString ()),
+							new XElement (Xml.SettingsList,
+								this.fields[x].Select (s => s.Save (Xml.SettingsItem)))))));
+		}
+
+		public static TileEntityDisplaySettings Restore(XElement xml)
+		{
+			var entitySettings = new TileEntityDisplaySettings ();
+
+			var xmlFieldList  = xml.Element (Xml.FieldList);
+			var xmlFieldItems = xmlFieldList.Elements (Xml.FieldItem);
+
+			foreach (var xmlFieldItem in xmlFieldItems)
+			{
+				var field    = Druid.Parse ((string) xmlFieldItem.Attribute (Xml.FieldId));
+				var settings = xmlFieldItem.Element (Xml.SettingsList).Elements (Xml.SettingsItem).Select (x => TileUserFieldDisplaySettings.Restore (x));
+
+				entitySettings.AddRange (field, settings);
+			}
+
+			return entitySettings;
+		}
 
 
+		private static class Xml
+		{
+			public const string FieldList		= "fields";
+			public const string FieldItem		= "f";
+			public const string FieldId			= "id";
+			public const string SettingsList	= "settings";
+			public const string SettingsItem	= "s";
+		}
+
+		
 		private readonly Dictionary<Druid, List<TileUserFieldDisplaySettings>> fields;
 	}
 }

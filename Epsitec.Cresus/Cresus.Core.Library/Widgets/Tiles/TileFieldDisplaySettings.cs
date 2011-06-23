@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			this.edition    = edition;
 		}
 
-		public TileVisibilityMode FieldVisibilityMode
+		public TileVisibilityMode				FieldVisibilityMode
 		{
 			get
 			{
@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		public TileEditionMode FieldEditionMode
+		public TileEditionMode					FieldEditionMode
 		{
 			get
 			{
@@ -86,14 +86,15 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		#endregion
 
+		
 		private static class Xml
 		{
-			public const string FieldVisibilityMode	= "v";
-			public const string FieldEditionMode	= "e";
+			public const string FieldVisibilityMode	= "vis";
+			public const string FieldEditionMode	= "edit";
 		}
 
 
-		private readonly TileVisibilityMode visibility;
-		private readonly TileEditionMode edition;
+		private readonly TileVisibilityMode		visibility;
+		private readonly TileEditionMode		edition;
 	}
 }

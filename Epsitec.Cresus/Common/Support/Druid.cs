@@ -23,7 +23,7 @@ namespace Epsitec.Common.Support
 	[Types.SerializationConverter (typeof (Druid.SerializationConverter))]
 	[System.Diagnostics.DebuggerStepThrough]
 
-	public struct Druid : System.IEquatable<Druid>, INullable
+	public struct Druid : System.IEquatable<Druid>, System.IComparable<Druid>, INullable
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:Druid"/> structure.
@@ -1021,6 +1021,42 @@ namespace Epsitec.Common.Support
 		public bool Equals(Druid other)
 		{
 			return this == other;
+		}
+
+		#endregion
+
+		#region IComparable<Druid> Members
+
+		public int CompareTo(Druid other)
+		{
+			if (this.module < other.module)
+			{
+				return -1;
+			}
+			else if (this.module > other.module)
+			{
+				return 1;
+			}
+			else if (this.developer < other.developer)
+			{
+				return -1;
+			}
+			else if (this.developer > other.developer)
+			{
+				return 1;
+			}
+			else if (this.local < other.local)
+			{
+				return -1;
+			}
+			else if (this.local > other.local)
+			{
+				return 1;
+			}
+			else
+			{
+				return 0;
+			}
 		}
 
 		#endregion
