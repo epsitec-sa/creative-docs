@@ -31,6 +31,11 @@ namespace Epsitec.Cresus.Core.Entities
 			return sign * value;
 		}
 
+		public override FormattedText GetSummary()
+		{
+			return this.GetCompactSummary ();
+		}
+
 		public override FormattedText GetCompactSummary()
 		{
 			return TextFormatter.FormatText (this.Name, "~, ", "(x", "+", this.AddBeforeModulo, ")", "modulo", this.Modulo);

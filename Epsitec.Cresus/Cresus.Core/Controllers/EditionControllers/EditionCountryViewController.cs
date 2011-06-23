@@ -22,9 +22,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			wall.AddBrick ()
 				.GlobalWarning ()
 				.Input ()
-				  .Title ("Pays")
 				  .Field (x => x.Name)
-				  .Title ("Code ISO à deux lettres")
 				  .Field (x => x.CountryCode).Width (60)
 				.End ()
 				;

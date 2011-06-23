@@ -19,6 +19,34 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionIsrDefinitionViewController : EditionViewController<Entities.IsrDefinitionEntity>
 	{
+#if true
+		protected override void CreateBricks(Bricks.BrickWall<IsrDefinitionEntity> wall)
+		{
+			wall.AddBrick ()
+				.Input ()
+				  .Field (x => x.Name)
+				  .Field (x => x.Description)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.SubscriberNumber).Width (150)
+				  .Field (x => x.SubscriberAddress)
+				  .Field (x => x.Currency).Width (150)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.BankReferenceNumberPrefix).Width (150)
+				  .Field (x => x.BankAddressLine1)
+				  .Field (x => x.BankAddressLine2)
+				  .Field (x => x.BankAccount).Width (150)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.IncomingBookAccount)
+				.End ()
+				;
+		}
+#else
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -52,5 +80,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateAccountEditor (tile, "Compte entrant pour la comptabilisation", Marshaler.Create (() => this.Entity.IncomingBookAccount, x => this.Entity.IncomingBookAccount = x));
 		}
+#endif
 	}
 }
