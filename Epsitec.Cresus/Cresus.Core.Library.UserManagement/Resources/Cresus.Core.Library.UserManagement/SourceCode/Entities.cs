@@ -7,6 +7,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[AVA]", typeof (Epsitec.Cresus.Core.Entities.SoftwareUserEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[AVA1]", typeof (Epsitec.Cresus.Core.Entities.SoftwareUserGroupEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[AVA2]", typeof (Epsitec.Cresus.Core.Entities.SoftwareUserRoleEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[AVAR]", typeof (Epsitec.Cresus.Core.Entities.EntityEditionSettingsEntity))]
 #region Epsitec.Cresus.Core.SoftwareUser Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -551,6 +552,106 @@ namespace Epsitec.Cresus.Core.Entities
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<SoftwareUserRoleEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Immutable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.EntityEditionSettings Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>EntityEditionSettings</c> entity.
+	///	designer:cap/AVAR
+	///	</summary>
+	public partial class EntityEditionSettingsEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime
+	{
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/AVAR/8VA3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>EntityId</c> field.
+		///	designer:fld/AVAR/AVAS
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[AVAS]")]
+		public global::Epsitec.Common.Support.Druid EntityId
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Support.Druid> ("[AVAS]");
+			}
+			set
+			{
+				global::Epsitec.Common.Support.Druid oldValue = this.EntityId;
+				if (oldValue != value || !this.IsFieldDefined("[AVAS]"))
+				{
+					this.OnEntityIdChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Support.Druid> ("[AVAS]", oldValue, value);
+					this.OnEntityIdChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>SerializedSettings</c> field.
+		///	designer:fld/AVAR/AVAT
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[AVAT]")]
+		public global::Epsitec.Cresus.Core.Entities.XmlBlobEntity SerializedSettings
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.XmlBlobEntity> ("[AVAT]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue = this.SerializedSettings;
+				if (oldValue != value || !this.IsFieldDefined("[AVAT]"))
+				{
+					this.OnSerializedSettingsChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.XmlBlobEntity> ("[AVAT]", oldValue, value);
+					this.OnSerializedSettingsChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnEntityIdChanging(global::Epsitec.Common.Support.Druid oldValue, global::Epsitec.Common.Support.Druid newValue);
+		partial void OnEntityIdChanged(global::Epsitec.Common.Support.Druid oldValue, global::Epsitec.Common.Support.Druid newValue);
+		partial void OnSerializedSettingsChanging(global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue, global::Epsitec.Cresus.Core.Entities.XmlBlobEntity newValue);
+		partial void OnSerializedSettingsChanged(global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue, global::Epsitec.Cresus.Core.Entities.XmlBlobEntity newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.EntityEditionSettingsEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.EntityEditionSettingsEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1002, 10, 27);	// [AVAR]
+		public static readonly string EntityStructuredTypeKey = "[AVAR]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<EntityEditionSettingsEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{
 			}
 		}

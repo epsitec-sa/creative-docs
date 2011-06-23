@@ -20,6 +20,8 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 			public static readonly Epsitec.Common.Types.EnumType UserAuthenticationMethod = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 22));
 			//	designer:cap/AVAE
 			public static readonly Epsitec.Common.Types.EnumType UserPowerLevel = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 14));
+			//	designer:cap/AVAR
+			public static readonly Epsitec.Common.Types.StructuredType EntityEditionSettings = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 27));
 			//	designer:cap/AVA
 			public static readonly Epsitec.Common.Types.StructuredType SoftwareUser = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
 			//	designer:cap/AVA1
@@ -142,6 +144,18 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 		
 		public static class Fields
 		{
+			public static class EntityEditionSettings
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/AVAS
+				public static readonly global::Epsitec.Common.Support.Druid EntityId = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 28);
+				//	designer:cap/AVAT
+				public static readonly global::Epsitec.Common.Support.Druid SerializedSettings = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 29);
+			}
+			
 			public static class SoftwareUser
 			{
 				internal static void _Initialize()
@@ -234,6 +248,7 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 			Values._Initialize ();
 			Values.UserAuthenticationMethod._Initialize ();
 			Values.UserPowerLevel._Initialize ();
+			Fields.EntityEditionSettings._Initialize ();
 			Fields.SoftwareUser._Initialize ();
 			Fields.SoftwareUserGroup._Initialize ();
 		}
