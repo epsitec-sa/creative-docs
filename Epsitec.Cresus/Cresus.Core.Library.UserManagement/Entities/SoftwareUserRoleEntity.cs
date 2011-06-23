@@ -11,6 +11,16 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class SoftwareUserRoleEntity
 	{
+		public override FormattedText GetSummary()
+		{
+			return TextFormatter.FormatText (this.Name);
+		}
+
+		public override FormattedText GetCompactSummary()
+		{
+			return TextFormatter.FormatText (this.Name);
+		}
+
 		public override EntityStatus GetEntityStatus()
 		{
 			using (var a = new EntityStatusAccumulator ())
