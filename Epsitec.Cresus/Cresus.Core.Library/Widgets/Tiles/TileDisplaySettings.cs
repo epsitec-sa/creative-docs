@@ -1,6 +1,8 @@
 //	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -15,18 +17,24 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		public TileDisplaySettings(TileDisplaySettings other)
 		{
-			this.VisibilityMode = other.VisibilityMode;
-			this.EditionMode    = other.EditionMode;
+			this.FieldVisibilityMode = other.FieldVisibilityMode;
+			this.FieldEditionMode    = other.FieldEditionMode;
 		}
 
 
-		public TileVisibilityMode				VisibilityMode
+		public TileVisibilityMode				FieldVisibilityMode
 		{
 			get;
 			set;
 		}
 
-		public TileEditionMode					EditionMode
+		public TileEditionMode					FieldEditionMode
+		{
+			get;
+			set;
+		}
+
+		public Druid							FieldId
 		{
 			get;
 			set;
@@ -36,16 +44,22 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		public XElement Save(string xmlNodeName)
 		{
 			return new XElement (xmlNodeName,
-				new XAttribute (Xml.VisibilityMode, (int) this.VisibilityMode),
-				new XAttribute (Xml.EditionMode, (int) this.EditionMode));
+				new XAttribute (Xml.FieldVisibilityMode, (int) this.FieldVisibilityMode),
+				new XAttribute (Xml.FieldEditionMode, (int) this.FieldEditionMode),
+				new XAttribute (Xml.FieldId, this.FieldId.ToString ()));
 		}
 
 		public static TileDisplaySettings Restore(XElement xml)
 		{
+			var fieldVisibilityMode = (int) xml.Attribute (Xml.FieldVisibilityMode);
+			var fieldEditionMode    = (int) xml.Attribute (Xml.FieldEditionMode);
+			var fieldId             = (string) xml.Attribute (Xml.FieldId);
+			
 			return new TileDisplaySettings ()
 			{
-				VisibilityMode = (TileVisibilityMode)(int)xml.Attribute (Xml.VisibilityMode),
-				EditionMode    = (TileEditionMode)   (int)xml.Attribute (Xml.EditionMode)
+				FieldVisibilityMode = (TileVisibilityMode) fieldVisibilityMode,
+				FieldEditionMode    = (TileEditionMode) fieldEditionMode,
+				FieldId             = Druid.Parse (fieldId),
 			};
 		}
 		
@@ -70,8 +84,8 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			{
 				return new TileDisplaySettings ()
 				{
-					VisibilityMode = a.VisibilityMode | b.VisibilityMode,
-					EditionMode    = a.EditionMode    | b.EditionMode,
+					FieldVisibilityMode = a.FieldVisibilityMode | b.FieldVisibilityMode,
+					FieldEditionMode    = a.FieldEditionMode    | b.FieldEditionMode,
 				};
 			}
 		}
@@ -86,8 +100,8 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 			else
 			{
-				return this.VisibilityMode.Simplify () == other.VisibilityMode.Simplify ()
-					&& this.EditionMode.Simplify ()    == other.EditionMode.Simplify ();
+				return this.FieldVisibilityMode.Simplify () == other.FieldVisibilityMode.Simplify ()
+					&& this.FieldEditionMode.Simplify ()    == other.FieldEditionMode.Simplify ();
 			}
 		}
 
@@ -95,8 +109,9 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		
 		private static class Xml
 		{
-			public const string VisibilityMode	= "vis";
-			public const string EditionMode		= "ed";
+			public const string FieldId				= "id";
+			public const string FieldVisibilityMode	= "vis";
+			public const string FieldEditionMode	= "ed";
 		}
 	}
 }
