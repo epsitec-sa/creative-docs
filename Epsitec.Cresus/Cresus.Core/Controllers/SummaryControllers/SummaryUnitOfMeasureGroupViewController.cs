@@ -1,21 +1,21 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Common.Types;
-
-using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Controllers.DataAccessors;
-using Epsitec.Cresus.Core.Business;
 
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
-	public class SummaryUnitOfMeasureGroupViewController : SummaryViewController<Entities.UnitOfMeasureGroupEntity>
+	public class SummaryUnitOfMeasureGroupViewController : SummaryViewController<UnitOfMeasureGroupEntity>
 	{
+#if true
+		protected override void CreateBricks(Bricks.BrickWall<UnitOfMeasureGroupEntity> wall)
+		{
+			wall.AddBrick (x => x);
+		}
+#else
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -63,5 +63,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			data.Add (this.CreateCollectionAccessor (template, x => x.Units));
 		}
+#endif
 	}
 }

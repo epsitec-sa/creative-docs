@@ -19,6 +19,22 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionUnitOfMeasureGroupViewController : EditionViewController<Entities.UnitOfMeasureGroupEntity>
 	{
+#if true
+		protected override void CreateBricks(Bricks.BrickWall<UnitOfMeasureGroupEntity> wall)
+		{
+			wall.AddBrick ()
+				.GlobalWarning ()
+				.Input ()
+				  .Field (x => x.Name)
+				  .Field (x => x.Description)
+				  .Field (x => x.Category).Width (100)
+				  .Field (x => x.Units)
+				.End ()
+				;
+		}
+#endif
+
+#if false
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -49,5 +65,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextFieldMulti        (tile,  70, "Description du groupe", Marshaler.Create (() => this.Entity.Description, x => this.Entity.Description = x));
 			builder.CreateAutoCompleteTextField (tile, 100, "Catégorie du groupe",   Marshaler.Create (() => this.Entity.Category,    x => this.Entity.Category = x), EnumKeyValues.FromEnum<UnitOfMeasureCategory> ());
 		}
+#endif
 	}
 }
