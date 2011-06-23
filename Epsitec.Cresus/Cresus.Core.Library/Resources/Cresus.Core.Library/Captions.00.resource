@@ -18,4 +18,12 @@
   <data name="Val.TileVisibilityMode.Hidden" id="AG">&lt;s:data id="_0" f:Name="Hidden" f:Labels="{Collection {Text 'Caché'}}" /&gt;</data>
   <data name="Val.TileVisibilityMode.NeverVisible" id="AH">&lt;s:data id="_0" f:Name="NeverVisible" f:Labels="{Collection {Text 'Jamais visible'}}" /&gt;</data>
   <data name="Typ.TileVisibilityMode" id="AD">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="TileVisibilityMode" f:Description="Visibilité de la tuile" f:_1.SystemType="E:Epsitec.Cresus.Core.Widgets.Tiles.TileVisibilityMode, Cresus.Core.Library" f:_2.EnumValues="{Collection {Text '0 [EVAE]'}, {Text '1 [EVAF]'}, {Text '2 [EVAG]'}, {Text '3 [EVAH]'}}" f:Labels="{Collection {Text 'Visibilité'}}" /&gt;</data>
+  <data name="Val.TileUserCategory.Undefined" id="AJ">&lt;s:data id="_0" f:Name="Undefined" f:Labels="{Collection {Text '—'}}" /&gt;</data>
+  <data name="Val.TileUserCategory.User" id="AK">&lt;s:data id="_0" f:Name="User" f:Labels="{Collection {Text 'Utilisateur'}}" /&gt;</data>
+  <data name="Val.TileUserCategory.Group" id="AL">&lt;s:data id="_0" f:Name="Group" f:Labels="{Collection {Text 'Groupe'}}" /&gt;</data>
+  <data name="Val.TileUserCategory.Role" id="AM">&lt;s:data id="_0" f:Name="Role" f:Labels="{Collection {Text 'Rôle'}}" /&gt;</data>
+  <data name="Typ.TileUserCategory" id="AI">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="TileUserCategory" f:_1.SystemType="E:Epsitec.Cresus.Core.Widgets.Tiles.TileUserCategory, Cresus.Core.Library" f:_2.EnumValues="{Collection {Text '0 [EVAJ]'}, {Text '1 [EVAK]'}, {Text '2 [EVAL]'}, {Text '3 [EVAM]'}}" f:Labels="{Collection {Text 'Catégorie d&amp;amp;apos;utilisateurs'}}" /&gt;</data>
+  <data name="Val.TileFieldSettingsMode.Inclusive" id="AO">&lt;s:data id="_0" f:Name="Inclusive" f:Labels="{Collection {Text 'Inclusif'}}" /&gt;</data>
+  <data name="Val.TileFieldSettingsMode.Exclusive" id="AP">&lt;s:data id="_0" f:Name="Exclusive" f:Labels="{Collection {Text 'Exclusif'}}" /&gt;</data>
+  <data name="Typ.TileFieldSettingsMode" id="AN">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="TileFieldSettingsMode" f:_1.SystemType="E:Epsitec.Cresus.Core.Widgets.Tiles.TileFieldSettingsMode, Cresus.Core.Library" f:_2.EnumValues="{Collection {Text '0 [EVAO]'}, {Text '1 [EVAP]'}}" f:Labels="{Collection {Text 'Mode des réglages'}}" /&gt;</data>
 </bundle>
