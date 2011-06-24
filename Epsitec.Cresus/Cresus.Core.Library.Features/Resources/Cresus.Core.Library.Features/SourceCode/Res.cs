@@ -16,12 +16,24 @@ namespace Epsitec.Cresus.Core.Library.Features
 			{
 			}
 			
+			//	designer:cap/JVA3
+			public static readonly Epsitec.Common.Types.StructuredType ProductCustomization = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 3));
 			//	designer:cap/JVA
 			public static readonly Epsitec.Common.Types.StructuredType ProductFeature = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
 		}
 		
 		public static class Fields
 		{
+			public static class ProductCustomization
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/JVA4
+				public static readonly global::Epsitec.Common.Support.Druid Settings = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 4);
+			}
+			
 			public static class ProductFeature
 			{
 				internal static void _Initialize()
@@ -29,9 +41,9 @@ namespace Epsitec.Cresus.Core.Library.Features
 				}
 				
 				//	designer:cap/JVA2
-				public static readonly global::Epsitec.Common.Support.Druid DisabledEntitySettings = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 2);
+				public static readonly global::Epsitec.Common.Support.Druid DisabledSettings = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 2);
 				//	designer:cap/JVA1
-				public static readonly global::Epsitec.Common.Support.Druid EnabledEntitySettings = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 1);
+				public static readonly global::Epsitec.Common.Support.Druid EnabledSettings = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 1);
 			}
 		}
 		
@@ -85,6 +97,7 @@ namespace Epsitec.Cresus.Core.Library.Features
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Cresus.Core.Library.Features");
 			Types._Initialize ();
+			Fields.ProductCustomization._Initialize ();
 			Fields.ProductFeature._Initialize ();
 		}
 		

@@ -8,6 +8,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[AVA1]", typeof (Epsitec.Cresus.Core.Entities.SoftwareUserGroupEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[AVA2]", typeof (Epsitec.Cresus.Core.Entities.SoftwareUserRoleEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[AVAR]", typeof (Epsitec.Cresus.Core.Entities.EntityEditionSettingsEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[AVAU]", typeof (Epsitec.Cresus.Core.Entities.SoftwareEditionSettingsEntity))]
 #region Epsitec.Cresus.Core.SoftwareUser Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -567,26 +568,8 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>EntityEditionSettings</c> entity.
 	///	designer:cap/AVAR
 	///	</summary>
-	public partial class EntityEditionSettingsEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime
+	public partial class EntityEditionSettingsEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
-		#region ILifetime Members
-		///	<summary>
-		///	The <c>IsArchive</c> field.
-		///	designer:fld/AVAR/8VA3
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
-		public bool IsArchive
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
-			}
-		}
-		#endregion
 		///	<summary>
 		///	The <c>EntityId</c> field.
 		///	designer:fld/AVAR/AVAS
@@ -650,6 +633,52 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<EntityEditionSettingsEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.SoftwareEditionSettings Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>SoftwareEditionSettings</c> entity.
+	///	designer:cap/AVAU
+	///	</summary>
+	public partial class SoftwareEditionSettingsEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>EntityEditionSettings</c> field.
+		///	designer:fld/AVAU/AVAV
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[AVAV]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.EntityEditionSettingsEntity> EntityEditionSettings
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.EntityEditionSettingsEntity> ("[AVAV]");
+			}
+		}
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.SoftwareEditionSettingsEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.SoftwareEditionSettingsEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1002, 10, 30);	// [AVAU]
+		public static readonly string EntityStructuredTypeKey = "[AVAU]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<SoftwareEditionSettingsEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{
