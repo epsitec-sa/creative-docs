@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -26,6 +26,11 @@ namespace Epsitec.Cresus.Core.Data
 		public static System.Guid ToGuid(string code)
 		{
 			return Epsitec.Common.IO.Ascii85.DecodeGuid (Epsitec.Common.IO.Ascii85.MapXmlTransparentToEncodedString (code));
+		}
+
+		public static System.Guid? ToGuidOrNull(string code)
+		{
+			return Epsitec.Common.IO.Ascii85.DecodeGuidOrNull (Epsitec.Common.IO.Ascii85.MapXmlTransparentToEncodedString (code));
 		}
 
 		public static string FromGuid(System.Guid guid)

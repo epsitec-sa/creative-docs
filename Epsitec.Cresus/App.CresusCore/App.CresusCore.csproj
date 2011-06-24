@@ -87,6 +87,10 @@
       <Project>{F2955C92-B208-498B-8ED4-E7B033AD284B}</Project>
       <Name>Cresus.Core.Library.Documents</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Features\Cresus.Core.Library.Features.csproj">
+      <Project>{B29C4379-B4F0-4B94-A0CD-48E72AFCC540}</Project>
+      <Name>Cresus.Core.Library.Features</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library.Finance\Cresus.Core.Library.Finance.csproj">
       <Project>{608DCEB5-9004-44C6-B221-755E9D95FBB2}</Project>
       <Name>Cresus.Core.Library.Finance</Name>

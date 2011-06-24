@@ -18,6 +18,11 @@ namespace Epsitec.Cresus.Core.Data
 		{
 		}
 
+		public ItemCode(System.Guid? guid)
+			: this (guid.HasValue ? ItemCodeGenerator.FromGuid (guid.Value) : "")
+		{
+		}
+
 
 		public static explicit operator string(ItemCode code)
 		{
@@ -33,22 +38,39 @@ namespace Epsitec.Cresus.Core.Data
 			}
 		}
 
+		public bool								IsGuid
+		{
+			get
+			{
+				if ((this.code == null) ||
+					(this.code.Length != 16) ||
+					(this.code[0] == Strings.NamePrefix[0]))
+				{
+					return false;
+				}
+				else
+				{
+					return true;
+				}
+			}
+		}
+
 		
 		public System.Guid? ToGuid()
 		{
-			if (this.code.StartsWith ("x"))
+			if (this.code.StartsWith (Strings.NamePrefix))
 			{
 				return null;
 			}
 			else
 			{
-				return ItemCodeGenerator.ToGuid (this.code);
+				return ItemCodeGenerator.ToGuidOrNull (this.code);
 			}
 		}
 
 		public string ToName()
 		{
-			if (this.code.StartsWith ("x"))
+			if (this.code.StartsWith (Strings.NamePrefix))
 			{
 				return this.code.Substring (1);
 			}
@@ -60,7 +82,7 @@ namespace Epsitec.Cresus.Core.Data
 
 		public static ItemCode Create(string name)
 		{
-			return new ItemCode ("x" + name);
+			return new ItemCode (Strings.NamePrefix + name);
 		}
 
 		#region IComparable<ItemCode> Members
@@ -103,6 +125,12 @@ namespace Epsitec.Cresus.Core.Data
 			return this.code.GetHashCode ();
 		}
 
+
+		private static class Strings
+		{
+			public const string NamePrefix = "x";				//	'x' will never show up in encoded ASCII-85 string
+		}
+		
 		private readonly string code;
 	}
 }

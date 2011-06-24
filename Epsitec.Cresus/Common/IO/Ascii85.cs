@@ -1,4 +1,4 @@
-//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 //	This file is based on work from Jeff Atwood :
@@ -48,6 +48,11 @@ namespace Epsitec.Common.IO
 
 		public static string MapEncodedStringToXmlTransparent(string data)
 		{
+			if (data == null)
+			{
+				return null;
+			}
+			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder (data.Length);
 
 			foreach (char c in data)
@@ -85,6 +90,11 @@ namespace Epsitec.Common.IO
 
 		public static string MapXmlTransparentToEncodedString(string data)
 		{
+			if (data == null)
+			{
+				return null;
+			}
+
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder (data.Length);
 
 			foreach (char c in data)
@@ -128,6 +138,23 @@ namespace Epsitec.Common.IO
 		public static System.Guid DecodeGuid(string value)
 		{
 			return new System.Guid (Ascii85.Decode (value, enforceMarks: false));
+		}
+
+		public static System.Guid? DecodeGuidOrNull(string value)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return null;
+			}
+
+			byte[] data =Ascii85.Decode (value, enforceMarks: false);
+
+			if (data.Length != 16)
+			{
+				return null;
+			}
+
+			return new System.Guid (data);
 		}
 
 		#region Engine Class

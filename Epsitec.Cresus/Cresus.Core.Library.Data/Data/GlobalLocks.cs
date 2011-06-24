@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -12,6 +12,7 @@ namespace Epsitec.Cresus.Core.Data
 	/// </summary>
 	public static class GlobalLocks
 	{
-		public static readonly GlobalLock UserManagement = new GlobalLock ("Global:UserManagement");
+		public static readonly GlobalLock UserManagement	= new GlobalLock ("Global:UserManagement");
+		public static readonly GlobalLock FeatureManagement = new GlobalLock ("Global:FeatureManagement");
 	}
 }
