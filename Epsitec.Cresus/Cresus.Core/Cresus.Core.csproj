@@ -100,6 +100,8 @@
     <Compile Include="Controllers\ComplexControllers\ChartsOfAccountsController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationCustomerViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionArticleStockLocationViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionArticleSupplyViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionSoftwareUserRoleViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionSoftwareUserGroupViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPriceRoundingModeViewController.cs" />
@@ -126,6 +128,8 @@
     <Compile Include="Controllers\EditionControllers\EditionPriceCalculatorViewControllerTableDesigner.cs" />
     <Compile Include="Controllers\EditionControllers\EditionVatDefinitionViewController.cs" />
     <Compile Include="Controllers\RibbonViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryArticleStockLocationViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryArticleSupplyViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryEnumValueArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryFreeTextValueArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryNumericValueArticleParameterDefinitionViewController.cs" />
@@ -513,6 +517,7 @@
     <EmbeddedResource Include="Images\Data.AbstractArticleParameterDefinition.icon" />
     <EmbeddedResource Include="Images\Base.AbstractArticleParameterDefinition.icon" />
     <EmbeddedResource Include="Images\Data.EnumValueArticleParameterDefinition.icon" />
+    <EmbeddedResource Include="Images\Base.ArticleStockLocation.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

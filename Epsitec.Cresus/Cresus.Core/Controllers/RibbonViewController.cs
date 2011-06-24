@@ -639,6 +639,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				yield return Res.Commands.Base.ShowArticleCategory;
 				yield return Res.Commands.Base.ShowArticleGroup;
 				yield return Res.Commands.Base.ShowAbstractArticleParameterDefinition;
+				yield return Res.Commands.Base.ShowArticleStockLocation;
 				yield return null;
 
 				yield return Res.Commands.Base.ShowBusinessSettings;

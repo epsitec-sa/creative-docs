@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Separator ()
 				.Input ()
 				  .Field (x => x.Cardinality)
-				  .Field (x => x.Options)
+				  .Field (x => x.Options)  // TODO: Plante !
 				.End ()
 				;
 		}
