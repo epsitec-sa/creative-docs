@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.Core
 
 
 
-		public ConfirmationButton CreateCreationButton<T>(CreationViewController<T> controller, string title, string description, System.Action<BusinessContext, T> initializer = null)
+		public ConfirmationButton CreateCreationButtonWithInitializer<T>(CreationViewController<T> controller, string title, string description, System.Action<BusinessContext, T> initializer = null)
 			where T : AbstractEntity, new ()
 		{
 			var button = new ConfirmationButton
@@ -192,6 +192,26 @@ namespace Epsitec.Cresus.Core
 			button.Clicked += delegate
 			{
 				controller.CreateRealEntity (initializer);
+			};
+
+			this.Add (button);
+
+			return button;
+		}
+
+		public ConfirmationButton CreateCreationButton<T, TDerived>(CreationViewController<T> controller, string title, string description, System.Action<BusinessContext, TDerived> initializer = null)
+			where T : AbstractEntity, new ()
+			where TDerived : T, new ()
+		{
+			var button = new ConfirmationButton
+			{
+				Text = ConfirmationButton.FormatContent (title, description),
+				PreferredHeight = 52,
+			};
+
+			button.Clicked += delegate
+			{
+				controller.CreateRealEntity<TDerived> (initializer);
 			};
 
 			this.Add (button);

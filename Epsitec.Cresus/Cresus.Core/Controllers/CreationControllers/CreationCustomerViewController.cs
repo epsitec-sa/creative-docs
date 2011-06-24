@@ -26,12 +26,12 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 
 		private void CreateUINewNaturalPersonButton(UIBuilder builder)
 		{
-			builder.CreateCreationButton<CustomerEntity> (this, "Personne privée", "Crée un client de type personne privée", this.SetupNaturalPersonCustomer);
+			builder.CreateCreationButtonWithInitializer<CustomerEntity> (this, "Personne privée", "Crée un client de type personne privée", this.SetupNaturalPersonCustomer);
 		}
 
 		private void CreateUINewLegalPersonButton(UIBuilder builder)
 		{
-			builder.CreateCreationButton<CustomerEntity> (this, "Entreprise", "Crée un client de type entreprise", this.SetupLegalPersonCustomer);
+			builder.CreateCreationButtonWithInitializer<CustomerEntity> (this, "Entreprise", "Crée un client de type entreprise", this.SetupLegalPersonCustomer);
 		}
 
 		private void SetupNaturalPersonCustomer(BusinessContext context, CustomerEntity customer)

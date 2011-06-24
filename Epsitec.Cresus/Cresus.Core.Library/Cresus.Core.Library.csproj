@@ -136,6 +136,7 @@
     <Compile Include="Widgets\Tiles\ArrowedTileFrame.cs" />
     <Compile Include="Widgets\Tiles\ArrowedTileTabPageButton.cs" />
     <Compile Include="Widgets\Tiles\TileEntityEditionSettings.cs" />
+    <Compile Include="Widgets\Tiles\TileEntityMergedSettings.cs" />
     <Compile Include="Widgets\Tiles\TileFieldEditionSettings.cs" />
     <Compile Include="Widgets\Tiles\Tile.cs" />
     <Compile Include="Widgets\Tiles\TileArrow.cs" />
@@ -167,6 +168,7 @@
     </None>
     <Content Include="Resources\Cresus.Core.Library\Captions.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Resources\Cresus.Core.Library\module.info">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

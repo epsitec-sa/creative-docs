@@ -10,6 +10,8 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 {
+	using EntityCreatorFunction	= System.Func<System.Func<BusinessContext, AbstractEntity>, System.Action<BusinessContext, AbstractEntity>, AbstractEntity>;
+
 	/// <summary>
 	/// The <c>ICreationController</c> interface is used to identify view
 	/// controllers used to create new entities.
@@ -17,6 +19,6 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 	public interface ICreationController
 	{
 		void RegisterDisposeAction(System.Action disposeAction);
-		void RegisterEntityCreator(System.Func<System.Action<BusinessContext, AbstractEntity>, AbstractEntity> entityCreator);
+		void RegisterEntityCreator(EntityCreatorFunction entityCreator);
 	}
 }

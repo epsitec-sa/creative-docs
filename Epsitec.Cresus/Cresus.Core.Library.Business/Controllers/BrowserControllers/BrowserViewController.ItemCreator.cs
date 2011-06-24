@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 					//	which will add it to the browser list, then make it active (which will in
 					//	turn create the controller needed to view/edit it).
 
-					this.CreateRealEntity (null);
+					this.CreateRealEntity (null, null);
 				}
 				else
 				{
@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 					//	will be used to bootstrap the entity creation...
 
 					creator.RegisterDisposeAction (() => this.DisposeDummyEntity (dummyEntity));
-					creator.RegisterEntityCreator (initializer => this.CreateRealEntity (initializer));
+					creator.RegisterEntityCreator ((creatorFunc, initAction) => this.CreateRealEntity (creatorFunc, initAction));
 				}
 				
 				return controller;
@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				data.DisposeDummyEntity (entity);
 			}
 
-			private AbstractEntity CreateRealEntity(System.Action<BusinessContext, AbstractEntity> initializer)
+			private AbstractEntity CreateRealEntity(System.Func<BusinessContext, AbstractEntity> creator, System.Action<BusinessContext, AbstractEntity> initializer)
 			{
 				var rootEntityId = this.GetRootEntityId ();
 				
@@ -134,8 +134,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				//	Create a real entity which will immediately be persisted to the database,
 				//	so that it has an entity key. Saving an empty entity would do nothing, so
 				//	we have to specify that we want to save all entities, even empty ones...
-				
-				var entity = context.CreateEntity (rootEntityId);
+
+				var entity = creator == null ? context.CreateEntity (rootEntityId) : creator (context);
 
 				EntityContext.InitializeDefaultValues (entity);
 

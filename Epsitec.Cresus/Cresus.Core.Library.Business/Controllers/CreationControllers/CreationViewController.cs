@@ -17,7 +17,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 {
 	using InitializerAction		= System.Action<BusinessContext, AbstractEntity>;
-	using EntityCreatorFunction	= System.Func<System.Action<BusinessContext, AbstractEntity>, AbstractEntity>;
+	using EntityCreatorFunction	= System.Func<System.Func<BusinessContext, AbstractEntity>, System.Action<BusinessContext, AbstractEntity>, AbstractEntity>;
 
 	public abstract class CreationViewController<T> : EntityViewController<T>, ICreationController
 		where T : AbstractEntity, new ()
@@ -48,7 +48,22 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 		{
 			var initAction = CreationViewController<T>.GetCompatibleInitializer (initializer);
 			
-			this.CreateEntityUsingEntityCreator (initAction);
+			this.CreateEntityUsingEntityCreator<T> (initAction);
+
+			//	The simple fact of creating the real entity is sufficient to update
+			//	the user interface; usually, the entity creator is tightly related
+			//	to the BrowserViewController class. Creating an item will therefore
+			//	update the selected item in the browser and trigger the UI updates.
+
+			System.Diagnostics.Debug.Assert (this.IsDisposed);
+		}
+
+		internal void CreateRealEntity<TDerived>(System.Action<BusinessContext, TDerived> initializer = null)
+			where TDerived : T, new ()
+		{
+			var initAction = CreationViewController<TDerived>.GetCompatibleInitializer (initializer);
+
+			this.CreateEntityUsingEntityCreator<TDerived> (initAction);
 
 			//	The simple fact of creating the real entity is sufficient to update
 			//	the user interface; usually, the entity creator is tightly related
@@ -74,14 +89,15 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 			}
 		}
 
-		private T CreateEntityUsingEntityCreator(InitializerAction initializer)
+		private T CreateEntityUsingEntityCreator<TDerived>(InitializerAction initializer)
+			where TDerived : T, new ()
 		{
 			if (this.entityCreator == null)
 			{
 				throw new System.InvalidOperationException ("Cannot create entity in CreationViewController without an entity creator");
 			}
 
-			return this.entityCreator (initializer) as T;
+			return this.entityCreator (context => context.CreateEntity<TDerived> (), initializer) as T;
 		}
 
 		protected override void Dispose(bool disposing)

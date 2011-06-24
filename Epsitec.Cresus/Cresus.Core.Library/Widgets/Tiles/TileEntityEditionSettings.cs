@@ -82,6 +82,19 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 
+		public IEnumerable<System.Tuple<Druid, IEnumerable<TileUserFieldEditionSettings>>> GetAllFieldSettings(System.Predicate<TileUserFieldEditionSettings> match = null)
+		{
+			if (match == null)
+			{
+				return this.fields.Select (x => new System.Tuple<Druid, IEnumerable<TileUserFieldEditionSettings>> (x.Key, x.Value));
+			}
+			else
+			{
+				return this.fields.Select (x => new System.Tuple<Druid, IEnumerable<TileUserFieldEditionSettings>> (x.Key, x.Value.Where (s => match (s))));
+			}
+		}
+		
+		
 		public XElement Save(string xmlNodeName)
 		{
 			/*

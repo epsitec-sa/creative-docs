@@ -20,6 +20,8 @@ namespace Epsitec.Cresus.Core.Library.Features
 			public static readonly Epsitec.Common.Types.StructuredType ProductCustomization = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 3));
 			//	designer:cap/JVA
 			public static readonly Epsitec.Common.Types.StructuredType ProductFeature = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
+			//	designer:cap/JVA5
+			public static readonly Epsitec.Common.Types.StructuredType ProductSettings = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 5));
 		}
 		
 		public static class Fields
@@ -44,6 +46,16 @@ namespace Epsitec.Cresus.Core.Library.Features
 				public static readonly global::Epsitec.Common.Support.Druid DisabledSettings = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 2);
 				//	designer:cap/JVA1
 				public static readonly global::Epsitec.Common.Support.Druid EnabledSettings = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 1);
+			}
+			
+			public static class ProductSettings
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/JVA6
+				public static readonly global::Epsitec.Common.Support.Druid LicensedFeatures = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 6);
 			}
 		}
 		
@@ -99,6 +111,7 @@ namespace Epsitec.Cresus.Core.Library.Features
 			Types._Initialize ();
 			Fields.ProductCustomization._Initialize ();
 			Fields.ProductFeature._Initialize ();
+			Fields.ProductSettings._Initialize ();
 		}
 		
 		public static void Initialize()

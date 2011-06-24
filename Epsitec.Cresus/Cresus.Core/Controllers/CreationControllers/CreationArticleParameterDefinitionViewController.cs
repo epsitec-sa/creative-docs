@@ -34,47 +34,25 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 		private void CreateUINewEnumButton(UIBuilder builder)
 		{
 			var help = "Crée un paramètre qui permettra par exemple de choisir une couleur parmi rouge, vert et bleu.";
-			builder.CreateCreationButton<AbstractArticleParameterDefinitionEntity> (this, "Enumération", help, this.SetupEnum);
+			builder.CreateCreationButton<AbstractArticleParameterDefinitionEntity, EnumValueArticleParameterDefinitionEntity> (this, "Enumération", help);
 		}
 
 		private void CreateUINewOptionButton(UIBuilder builder)
 		{
 			var help = "Crée un paramètre qui permettra par exemple de déterminer de la présence ou non d'une option.";
-			builder.CreateCreationButton<AbstractArticleParameterDefinitionEntity> (this, "Option", help, this.SetupOption);
+			builder.CreateCreationButton<AbstractArticleParameterDefinitionEntity, OptionValueArticleParameterDefinitionEntity> (this, "Option", help);
 		}
 
 		private void CreateUINewNumericButton(UIBuilder builder)
 		{
 			var help = "Crée un paramètre qui permettra par exemple de spécifier une dimension.";
-			builder.CreateCreationButton<AbstractArticleParameterDefinitionEntity> (this, "Numérique", help, this.SetupNumeric);
+			builder.CreateCreationButton<AbstractArticleParameterDefinitionEntity, NumericValueArticleParameterDefinitionEntity> (this, "Numérique", help);
 		}
 
 		private void CreateUINewFreeTextButton(UIBuilder builder)
 		{
 			var help = "Crée un paramètre qui permettra d'entrer un texte libre.";
-			builder.CreateCreationButton<AbstractArticleParameterDefinitionEntity> (this, "Texte libre", help, this.SetupFreeText);
+			builder.CreateCreationButton<AbstractArticleParameterDefinitionEntity, FreeTextValueArticleParameterDefinitionEntity> (this, "Texte libre", help);
 		}
-
-
-		private void SetupEnum(BusinessContext context, AbstractArticleParameterDefinitionEntity param)
-		{
-			//?param = context.CreateEntity<EnumValueArticleParameterDefinitionEntity> ();
-		}
-
-		private void SetupOption(BusinessContext context, AbstractArticleParameterDefinitionEntity param)
-		{
-			//?param = context.CreateEntity<OptionValueArticleParameterDefinitionEntity> ();
-		}
-
-		private void SetupNumeric(BusinessContext context, AbstractArticleParameterDefinitionEntity param)
-		{
-			//?param = context.CreateEntity<NumericValueArticleParameterDefinitionEntity> ();
-		}
-
-		private void SetupFreeText(BusinessContext context, AbstractArticleParameterDefinitionEntity param)
-		{
-			//?param = context.CreateEntity<FreeTextValueArticleParameterDefinitionEntity> ();
-		}
-
 	}
 }
