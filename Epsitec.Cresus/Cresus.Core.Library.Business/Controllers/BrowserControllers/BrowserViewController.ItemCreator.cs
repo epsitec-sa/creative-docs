@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -126,8 +126,13 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			private AbstractEntity CreateRealEntity(System.Func<BusinessContext, AbstractEntity> creator, System.Action<BusinessContext, AbstractEntity> initializer)
 			{
-				var rootEntityId = this.GetRootEntityId ();
-				
+				if (creator == null)
+				{
+					//	Use a default creator for the root entity :
+
+					creator = (BusinessContext bc) => bc.CreateEntity (this.GetRootEntityId ());
+				}
+
 				CoreData        data    = this.orchestrator.Data;
 				BusinessContext context = new BusinessContext (data);
 
@@ -135,7 +140,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				//	so that it has an entity key. Saving an empty entity would do nothing, so
 				//	we have to specify that we want to save all entities, even empty ones...
 
-				var entity = creator == null ? context.CreateEntity (rootEntityId) : creator (context);
+				var entity = creator (context);
 
 				EntityContext.InitializeDefaultValues (entity);
 

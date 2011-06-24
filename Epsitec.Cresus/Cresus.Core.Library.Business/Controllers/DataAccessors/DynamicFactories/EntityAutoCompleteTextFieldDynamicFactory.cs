@@ -13,34 +13,48 @@ using Epsitec.Cresus.DataLayer.Context;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Epsitec.Cresus.Core.Resolvers;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 {
 	internal static class EntityAutoCompleteTextFieldDynamicFactory
 	{
-		public static DynamicFactory Create<T>(BusinessContext business, LambdaExpression lambda, System.Func<T> entityGetter, string title, System.Collections.IEnumerable collection)
+		public static DynamicFactory Create<T>(BusinessContext business, LambdaExpression lambda, System.Func<T> entityGetter, string title, System.Collections.IEnumerable collection, int? specialController)
 		{
 			var fieldType    = lambda.ReturnType;
 			var sourceType   = lambda.Parameters[0].Type;
-			var lambdaMember = (MemberExpression) lambda.Body;
+			var lambdaMember = lambda.Body as MemberExpression;
 
 			var sourceParameterExpression = Expression.Parameter (sourceType, "source");
 			var valueParameterExpression  = Expression.Parameter (fieldType, "value");
 
-			var expressionBlock =
+			System.Delegate getterFunc;
+			System.Delegate setterFunc;
+
+			if (lambdaMember == null)
+			{
+				var getterLambda = lambda;
+
+				getterFunc   = getterLambda.Compile ();
+				setterFunc   = null;
+			}
+			else
+			{
+				var expressionBlock =
 					Expression.Block (
-					Expression.Assign (
-						Expression.Property (sourceParameterExpression, lambdaMember.Member.Name),
-						valueParameterExpression));
+						Expression.Assign (
+							Expression.Property (sourceParameterExpression, lambdaMember.Member.Name),
+							valueParameterExpression));
 
-			var getterLambda = lambda;
-			var setterLambda = Expression.Lambda (expressionBlock, sourceParameterExpression, valueParameterExpression);
+				var getterLambda = lambda;
+				var setterLambda = Expression.Lambda (expressionBlock, sourceParameterExpression, valueParameterExpression);
 
-			var getterFunc   = getterLambda.Compile ();
-			var setterFunc   = setterLambda.Compile ();
+				getterFunc   = getterLambda.Compile ();
+				setterFunc   = setterLambda.Compile ();
+			}
 
 			var factoryType = typeof (Factory<,>).MakeGenericType (sourceType, fieldType);
-			var instance    = System.Activator.CreateInstance (factoryType, business, lambda, entityGetter, getterFunc, setterFunc, title, collection);
+			var instance    = System.Activator.CreateInstance (factoryType, business, lambda, entityGetter, getterFunc, setterFunc, title, collection, specialController);
 
 			return (DynamicFactory) instance;
 		}
@@ -50,7 +64,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 		private sealed class Factory<TSource, TField> : DynamicFactory
 			where TField : AbstractEntity, new ()
 		{
-			public Factory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title, System.Collections.IEnumerable collection)
+			public Factory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title, System.Collections.IEnumerable collection, int? specialController)
 			{
 				this.business = business;
 				this.lambda = lambda;
@@ -59,6 +73,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 				this.setter = setter;
 				this.title  = title;
 				this.collection = collection == null ? null : collection.OfType<TField> ();
+				this.specialController = specialController;
 			}
 
 			private System.Func<TField> CreateGetter()
@@ -68,8 +83,21 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 
 			private System.Action<TField> CreateSetter()
 			{
-				return x => this.setter.DynamicInvoke (this.sourceGetter (), x);
+				if (this.setter == null)
+				{
+					return x => NOOP ();
+				}
+				else
+				{
+					return x => this.setter.DynamicInvoke (this.sourceGetter (), x);
+				}
 			}
+
+			private static void NOOP()
+			{
+				throw new System.InvalidOperationException ("No setter provided");
+			}
+
 
 			private System.Func<AbstractEntity> CreateGenericGetter()
 			{
@@ -100,26 +128,40 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 
 			public override object CreateUI(FrameBox frame, UIBuilder builder)
 			{
-				var sel = new SelectionController<TField> (this.business)
+				if (this.specialController.HasValue)
 				{
-					ValueGetter = this.CreateGetter (),
-					ValueSetter = this.CreateSetter (),
-					ReferenceController = this.CreateReferenceController (),
-					PossibleItemsGetter = this.CreatePossibleItemsGetter (),
-				};
+					var fieldGetter = this.CreateGetter ();
+					var entity      = fieldGetter ();
+					var mode        = this.specialController.Value;
+					var controller  = EntitySpecialControllerResolver.Create (builder.TileContainer, entity, mode);
 
-				var tile    = frame as EditionTile;
-				var caption = DynamicFactory.GetInputCaption (this.lambda);
-				var title   = this.title ?? DynamicFactory.GetInputTitle (caption);
-				var widget  = builder.CreateAutoCompleteTextField<TField> (tile, title, sel);
-
-				if ((caption != null) &&
-					(caption.HasDescription))
-				{
-					ToolTip.SetToolTipCaption (widget, caption);
+					controller.CreateUI (frame, false);
+					
+					return null;
 				}
+				else
+				{
+					var sel = new SelectionController<TField> (this.business)
+					{
+						ValueGetter = this.CreateGetter (),
+						ValueSetter = this.CreateSetter (),
+						ReferenceController = this.CreateReferenceController (),
+						PossibleItemsGetter = this.CreatePossibleItemsGetter (),
+					};
 
-				return widget;
+					var caption = DynamicFactory.GetInputCaption (this.lambda);
+					var title   = this.title ?? DynamicFactory.GetInputTitle (caption);
+					var tile    = frame as EditionTile;
+					var widget  = builder.CreateAutoCompleteTextField<TField> (tile, title, sel);
+
+					if ((caption != null) &&
+						(caption.HasDescription))
+					{
+						ToolTip.SetToolTipCaption (widget, caption);
+					}
+
+					return widget;
+				}
 			}
 
 
@@ -130,6 +172,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 			private readonly System.Delegate setter;
 			private readonly string title;
 			private readonly IEnumerable<TField> collection;
+			private readonly int? specialController;
 		}
 
 		#endregion

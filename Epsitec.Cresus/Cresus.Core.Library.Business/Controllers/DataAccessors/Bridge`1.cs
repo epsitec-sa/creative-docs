@@ -301,12 +301,13 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				string title  = InputProcessor.GetInputTitle (fieldProperties);
 				
 				System.Collections.IEnumerable collection = InputProcessor.GetInputCollection (fieldProperties);
+				int? specialController = InputProcessor.GetSpecialController (fieldProperties);
 
 				if (fieldType.IsEntity ())
 				{
 					//	The field is an entity : use an AutoCompleteTextField for it.
 
-					var factory = DynamicFactories.EntityAutoCompleteTextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, collection);
+					var factory = DynamicFactories.EntityAutoCompleteTextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, collection, specialController);
 					this.actions.Add ((tile, builder) => factory.CreateUI (tile, builder));
 
 					return;
@@ -443,6 +444,20 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				if (property.HasValue)
 				{
 					return property.Value.StringValue;
+				}
+				else
+				{
+					return null;
+				}
+			}
+
+			private static int? GetSpecialController(BrickPropertyCollection properties)
+			{
+				var property = properties.PeekAfter (BrickPropertyKey.SpecialController, -1);
+
+				if (property.HasValue)
+				{
+					return property.Value.IntValue;
 				}
 				else
 				{

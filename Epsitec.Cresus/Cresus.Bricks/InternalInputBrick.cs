@@ -43,6 +43,12 @@ namespace Epsitec.Cresus.Bricks
 			return this as TSelf;
 		}
 
+		public TSelf WithSpecialController(int mode = 0)
+		{
+			this.AddProperty (new BrickProperty (BrickPropertyKey.SpecialController, mode));
+			return this as TSelf;
+		}
+
 		public TSelf Width(int value)
 		{
 			this.AddProperty (new BrickProperty (BrickPropertyKey.Width, value));

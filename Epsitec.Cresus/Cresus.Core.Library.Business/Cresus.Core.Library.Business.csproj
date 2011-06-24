@@ -127,6 +127,7 @@
     <Compile Include="Controllers\EntityViewController.cs" />
     <Compile Include="Controllers\EntityViewController`1.cs" />
     <Compile Include="Controllers\IClickSimulator.cs" />
+    <Compile Include="Controllers\IEntitySpecialController.cs" />
     <Compile Include="Controllers\IGroupedItem.cs" />
     <Compile Include="Controllers\IGroupedItemPosition.cs" />
     <Compile Include="Controllers\ITileController.cs" />
@@ -136,7 +137,9 @@
     <Compile Include="Entities\ArticleStockLocationEntity.cs" />
     <Compile Include="Entities\FinanceSettingsEntity.cs" />
     <Compile Include="Entities\PaymentReminderDefinitionEntity.cs" />
+    <Compile Include="Factories\DefaultEntitySpecialControllerFactory.cs" />
     <Compile Include="Factories\DefaultViewControllerComponentFactory.cs" />
+    <Compile Include="Factories\IEntitySpecialControllerFactory.cs" />
     <Compile Include="Library\ViewControllerComponent.cs" />
     <Compile Include="Library\ViewControllerComponent`1.cs" />
     <Compile Include="Controllers\MainWindowController.cs" />
@@ -194,6 +197,7 @@
     <Compile Include="Orchestrators\Navigation\NavigationPathElement.cs" />
     <Compile Include="Orchestrators\Navigation\TileNavigationPathElement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resolvers\EntitySpecialControllerResolver.cs" />
     <Compile Include="Resolvers\EntityViewControllerResolver.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Business\SourceCode\Entities.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Business\SourceCode\Res.cs" />

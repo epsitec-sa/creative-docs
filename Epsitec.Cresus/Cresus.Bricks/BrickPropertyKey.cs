@@ -31,6 +31,7 @@ namespace Epsitec.Cresus.Bricks
 		Separator,
 		HorizontalGroup,
 		FromCollection,
+		SpecialController,
 		GlobalWarning,
 
 		CollectionAnnotation,

@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Separator ()
 				.Input ()
 				  .Field (x => x.Cardinality)
-				//.Field (x => x.Enum)  // TODO: Permettre d'accéder à ArticleParameterControllers.ArticleParameterListEnumValuesController !
+				  .Field (x => x).WithSpecialController ()
 				.End ()
 				;
 		}

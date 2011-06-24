@@ -17,13 +17,14 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Factories;
 
 namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 {
 	/// <summary>
 	/// Ce contrôleur gère la définition des paramètres d'un article.
 	/// </summary>
-	public class ArticleParameterListEnumValuesController
+	public class ArticleParameterListEnumValuesController : IEntitySpecialController
 	{
 		public ArticleParameterListEnumValuesController(TileContainer tileContainer, EnumValueArticleParameterDefinitionEntity parameterEntity)
 		{
@@ -34,7 +35,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		}
 
 
-		public void CreateUI(FrameBox parent, bool isReadOnly)
+		public void CreateUI(Widget parent, bool isReadOnly)
 		{
 			this.isReadOnly = isReadOnly;
 
@@ -404,6 +405,16 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			return new EnumValue ();
 		}
 		#endregion
+
+
+		private class Factory : DefaultEntitySpecialControllerFactory<EnumValueArticleParameterDefinitionEntity>
+		{
+			protected override IEntitySpecialController Create(TileContainer container, EnumValueArticleParameterDefinitionEntity entity, int mode)
+			{
+				return new ArticleParameterListEnumValuesController (container, entity);
+			}
+		}
+
 
 	
 		private readonly TileContainer tileContainer;

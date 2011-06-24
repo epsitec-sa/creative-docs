@@ -63,7 +63,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 				var tile      = frame as EditionTile;
 				var caption = DynamicFactory.GetInputCaption (this.lambda);
 				var title   = this.title ?? DynamicFactory.GetInputTitle (caption);
-				var widget  = builder.CreateEditionDetailedItemPicker (tile, "Pictures", this.sourceGetter (), title, controller, EnumValueCardinality.Any, ViewControllerMode.Summary, 6);
+				/// TODO: prévoir option avec controllerSubType
+				var widget  = builder.CreateEditionDetailedItemPicker (tile, "Pictures", this.sourceGetter (), title, controller, EnumValueCardinality.Any, ViewControllerMode.Summary, 0);
 				
 				if ((caption != null) &&
 					(caption.HasDescription))
