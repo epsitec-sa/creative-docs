@@ -8,9 +8,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
-	public class SummaryArticleParameterDefinitionViewController : SummaryViewController<AbstractArticleParameterDefinitionEntity>
+	public class SummaryNumericValueArticleParameterDefinitionViewController : SummaryViewController<NumericValueArticleParameterDefinitionEntity>
 	{
-		protected override void CreateBricks(Bricks.BrickWall<AbstractArticleParameterDefinitionEntity> wall)
+		protected override void CreateBricks(Bricks.BrickWall<NumericValueArticleParameterDefinitionEntity> wall)
 		{
 			wall.AddBrick (x => x);
 		}

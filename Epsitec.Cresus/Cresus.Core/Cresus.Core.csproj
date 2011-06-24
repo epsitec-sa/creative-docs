@@ -126,9 +126,11 @@
     <Compile Include="Controllers\EditionControllers\EditionPriceCalculatorViewControllerTableDesigner.cs" />
     <Compile Include="Controllers\EditionControllers\EditionVatDefinitionViewController.cs" />
     <Compile Include="Controllers\RibbonViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryEnumValueArticleParameterDefinitionViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryFreeTextValueArticleParameterDefinitionViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryNumericValueArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryOptionValueViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryOptionValueArticleParameterDefinitionViewController.cs" />
-    <Compile Include="Controllers\SummaryControllers\SummaryArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummarySoftwareUserRoleViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummarySoftwareUserGroupViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryPriceRoundingModeViewController.cs" />
@@ -510,6 +512,7 @@
     <EmbeddedResource Include="Images\Base.ArticleParameterDefinition.icon" />
     <EmbeddedResource Include="Images\Data.AbstractArticleParameterDefinition.icon" />
     <EmbeddedResource Include="Images\Base.AbstractArticleParameterDefinition.icon" />
+    <EmbeddedResource Include="Images\Data.EnumValueArticleParameterDefinition.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
