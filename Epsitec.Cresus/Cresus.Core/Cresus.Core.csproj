@@ -126,6 +126,7 @@
     <Compile Include="Controllers\EditionControllers\EditionPriceCalculatorViewControllerTableDesigner.cs" />
     <Compile Include="Controllers\EditionControllers\EditionVatDefinitionViewController.cs" />
     <Compile Include="Controllers\RibbonViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummarySoftwareUserRoleViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummarySoftwareUserGroupViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryPriceRoundingModeViewController.cs" />
@@ -504,7 +505,7 @@
     <EmbeddedResource Include="Images\Data.UriType.icon" />
     <EmbeddedResource Include="Images\Data.VatDefinition.icon" />
     <EmbeddedResource Include="Images\Data.GeneratorDefinition.icon" />
-    <EmbeddedResource Include="Images\Base.AbstractArticleParameterDefinition.icon" />
+    <EmbeddedResource Include="Images\Base.ArticleParameterDefinition.icon" />
     <EmbeddedResource Include="Images\Data.AbstractArticleParameterDefinition.icon" />
   </ItemGroup>
   <ItemGroup>
