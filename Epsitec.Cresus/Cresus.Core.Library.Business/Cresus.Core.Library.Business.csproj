@@ -132,6 +132,8 @@
     <Compile Include="Controllers\ITileController.cs" />
     <Compile Include="Controllers\ListController.cs" />
     <Compile Include="Controllers\MainViewController.cs" />
+    <Compile Include="Entities\ArticleSupplyEntity.cs" />
+    <Compile Include="Entities\ArticleStockLocationEntity.cs" />
     <Compile Include="Entities\FinanceSettingsEntity.cs" />
     <Compile Include="Entities\PaymentReminderDefinitionEntity.cs" />
     <Compile Include="Factories\DefaultViewControllerComponentFactory.cs" />
