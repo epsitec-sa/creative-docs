@@ -126,6 +126,7 @@
     <Compile Include="Controllers\EditionControllers\EditionPriceCalculatorViewControllerTableDesigner.cs" />
     <Compile Include="Controllers\EditionControllers\EditionVatDefinitionViewController.cs" />
     <Compile Include="Controllers\RibbonViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryOptionValueArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummarySoftwareUserRoleViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummarySoftwareUserGroupViewController.cs" />
@@ -507,6 +508,7 @@
     <EmbeddedResource Include="Images\Data.GeneratorDefinition.icon" />
     <EmbeddedResource Include="Images\Base.ArticleParameterDefinition.icon" />
     <EmbeddedResource Include="Images\Data.AbstractArticleParameterDefinition.icon" />
+    <EmbeddedResource Include="Images\Base.AbstractArticleParameterDefinition.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
