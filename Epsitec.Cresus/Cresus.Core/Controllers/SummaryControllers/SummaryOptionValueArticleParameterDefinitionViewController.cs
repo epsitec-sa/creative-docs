@@ -13,6 +13,13 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		protected override void CreateBricks(Bricks.BrickWall<OptionValueArticleParameterDefinitionEntity> wall)
 		{
 			wall.AddBrick (x => x);
+
+			wall.AddBrick (x => x.Options)
+				.Template ()
+				  .Text (x => x.GetSummary ())
+				  .TextCompact (x => x.GetCompactSummary ())
+				.End ()
+				;
 		}
 	}
 }
