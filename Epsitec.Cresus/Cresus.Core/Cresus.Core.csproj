@@ -503,6 +503,8 @@
     <EmbeddedResource Include="Images\Data.UriType.icon" />
     <EmbeddedResource Include="Images\Data.VatDefinition.icon" />
     <EmbeddedResource Include="Images\Data.GeneratorDefinition.icon" />
+    <EmbeddedResource Include="Images\Base.ArticleParameterDefinition.icon" />
+    <EmbeddedResource Include="Images\Data.ArticleParameterDefinition.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
