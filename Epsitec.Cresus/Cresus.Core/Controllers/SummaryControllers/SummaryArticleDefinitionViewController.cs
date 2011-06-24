@@ -1,13 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Types;
-using Epsitec.Common.Support.EntityEngine;
-
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Controllers.DataAccessors;
-using Epsitec.Cresus.Core.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +10,43 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryArticleDefinitionViewController : SummaryViewController<Entities.ArticleDefinitionEntity>
 	{
+#if true
+		protected override void CreateBricks(Bricks.BrickWall<ArticleDefinitionEntity> wall)
+		{
+			wall.AddBrick ()
+				;
+			wall.AddBrick (x => x.ArticleParameterDefinitions)  // TODO: pas correct !
+				.Template ()
+				  .Text (x => x.GetSummary ())
+				  .TextCompact (x => x.GetCompactSummary ())
+				.End ()
+				;
+			wall.AddBrick (x => x.ArticlePrices)
+				.Template ()
+				  .Text (x => x.GetSummary ())
+				  .TextCompact (x => x.GetCompactSummary ())
+				.End ()
+				;
+			wall.AddBrick (x => x.Accounting)
+				.Template ()
+				  .Text (x => x.GetSummary ())
+				  .TextCompact (x => x.GetCompactSummary ())
+				.End ()
+				;
+			wall.AddBrick (x => x.ArticleSupplies)
+				.Template ()
+				  .Text (x => x.GetSummary ())
+				  .TextCompact (x => x.GetCompactSummary ())
+				.End ()
+				;
+			wall.AddBrick (x => x.Comments)
+				.Template ()
+				  .Text (x => x.GetSummary ())
+				  .TextCompact (x => x.GetCompactSummary ())
+				.End ()
+				;
+		}
+#else
 		protected override void CreateUI()
 		{
 			using (var data = TileContainerController.Setup (this))
@@ -111,5 +142,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			SummaryControllers.Common.CreateUIComments (this.BusinessContext, data, this.EntityGetter, x => x.Comments);
 		}
+#endif
 	}
 }
