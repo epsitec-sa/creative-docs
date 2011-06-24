@@ -9,43 +9,43 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Widgets.Tiles
 {
-	public sealed class TileEntityDisplaySettings
+	public sealed class TileEntityEditionSettings
 	{
-		public TileEntityDisplaySettings()
+		public TileEntityEditionSettings()
 		{
-			this.fields = new Dictionary<Druid, List<TileUserFieldDisplaySettings>> ();
+			this.fields = new Dictionary<Druid, List<TileUserFieldEditionSettings>> ();
 		}
 
 
-		public void Add(Druid field, TileUserFieldDisplaySettings settings)
+		public void Add(Druid field, TileUserFieldEditionSettings settings)
 		{
-			List<TileUserFieldDisplaySettings> list;
+			List<TileUserFieldEditionSettings> list;
 
 			if (this.fields.TryGetValue (field, out list) == false)
 			{
-				list = new List<TileUserFieldDisplaySettings> ();
+				list = new List<TileUserFieldEditionSettings> ();
 				this.fields[field] = list;
 			}
 
 			list.Add (settings);
 		}
 
-		public void AddRange(Druid field, IEnumerable<TileUserFieldDisplaySettings> settings)
+		public void AddRange(Druid field, IEnumerable<TileUserFieldEditionSettings> settings)
 		{
-			List<TileUserFieldDisplaySettings> list;
+			List<TileUserFieldEditionSettings> list;
 
 			if (this.fields.TryGetValue (field, out list) == false)
 			{
-				list = new List<TileUserFieldDisplaySettings> ();
+				list = new List<TileUserFieldEditionSettings> ();
 				this.fields[field] = list;
 			}
 
 			list.AddRange (settings);
 		}
 
-		public bool Remove(Druid field, TileUserFieldDisplaySettings settings)
+		public bool Remove(Druid field, TileUserFieldEditionSettings settings)
 		{
-			List<TileUserFieldDisplaySettings> list;
+			List<TileUserFieldEditionSettings> list;
 
 			if (this.fields.TryGetValue (field, out list))
 			{
@@ -63,9 +63,9 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			return false;
 		}
 
-		public int RemoveAll(Druid field, System.Predicate<TileUserFieldDisplaySettings> match)
+		public int RemoveAll(Druid field, System.Predicate<TileUserFieldEditionSettings> match)
 		{
-			List<TileUserFieldDisplaySettings> list;
+			List<TileUserFieldEditionSettings> list;
 			int count = 0;
 
 			if (this.fields.TryGetValue (field, out list))
@@ -111,9 +111,9 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 								this.fields[x].Select (s => s.Save (Xml.SettingsItem)))))));
 		}
 
-		public static TileEntityDisplaySettings Restore(XElement xml)
+		public static TileEntityEditionSettings Restore(XElement xml)
 		{
-			var entitySettings = new TileEntityDisplaySettings ();
+			var entitySettings = new TileEntityEditionSettings ();
 
 			var xmlFieldList  = xml.Element (Xml.FieldList);
 			var xmlFieldItems = xmlFieldList.Elements (Xml.FieldItem);
@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			foreach (var xmlFieldItem in xmlFieldItems)
 			{
 				var field    = Druid.Parse ((string) xmlFieldItem.Attribute (Xml.FieldId));
-				var settings = xmlFieldItem.Element (Xml.SettingsList).Elements (Xml.SettingsItem).Select (x => TileUserFieldDisplaySettings.Restore (x));
+				var settings = xmlFieldItem.Element (Xml.SettingsList).Elements (Xml.SettingsItem).Select (x => TileUserFieldEditionSettings.Restore (x));
 
 				entitySettings.AddRange (field, settings);
 			}
@@ -140,6 +140,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 		
-		private readonly Dictionary<Druid, List<TileUserFieldDisplaySettings>> fields;
+		private readonly Dictionary<Druid, List<TileUserFieldEditionSettings>> fields;
 	}
 }

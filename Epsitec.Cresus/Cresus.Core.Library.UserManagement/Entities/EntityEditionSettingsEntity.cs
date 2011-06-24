@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.Entities
 		/// for the first time.
 		/// </summary>
 		[System.Diagnostics.DebuggerBrowsable (System.Diagnostics.DebuggerBrowsableState.Never)]
-		public TileEntityDisplaySettings DisplaySettings
+		public TileEntityEditionSettings DisplaySettings
 		{
 			get
 			{
@@ -49,11 +49,11 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			if (this.settings == null)
 			{
-				this.settings = TileEntityDisplaySettings.Restore (this.SerializedSettings.XmlData);
+				this.settings = TileEntityEditionSettings.Restore (this.SerializedSettings.XmlData);
 			}
 		}
 
 
-		private TileEntityDisplaySettings settings;
+		private TileEntityEditionSettings settings;
 	}
 }

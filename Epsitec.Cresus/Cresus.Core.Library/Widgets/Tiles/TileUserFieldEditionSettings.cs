@@ -9,9 +9,9 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Widgets.Tiles
 {
-	public sealed class TileUserFieldDisplaySettings
+	public sealed class TileUserFieldEditionSettings
 	{
-		public TileUserFieldDisplaySettings()
+		public TileUserFieldEditionSettings()
 		{
 		}
 
@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			set;
 		}
 
-		public TileFieldDisplaySettings			FieldSettings
+		public TileFieldEditionSettings			FieldSettings
 		{
 			get;
 			set;
@@ -48,14 +48,14 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				this.FieldSettings.Save (Xml.FieldSettings));
 		}
 
-		public static TileUserFieldDisplaySettings Restore(XElement xml)
+		public static TileUserFieldEditionSettings Restore(XElement xml)
 		{
 			var userCategory = (int?)   xml.Attribute (Xml.UserCategory);
 			var userIdentity = (string) xml.Attribute (Xml.UserIdentity);
 			var settingsMode = (int?)   xml.Attribute (Xml.FieldSettingsMode);
-			var field        = TileFieldDisplaySettings.Restore (xml.Element (Xml.FieldSettings));
+			var field        = TileFieldEditionSettings.Restore (xml.Element (Xml.FieldSettings));
 
-			return new TileUserFieldDisplaySettings ()
+			return new TileUserFieldEditionSettings ()
 			{
 				UserCategory = (TileUserCategory) userCategory.GetValueOrDefault (),
 				UserIdentity = userIdentity,
@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 
-		public static TileFieldDisplaySettings Combine(TileFieldDisplaySettings a, TileFieldDisplaySettings b, TileFieldSettingsMode mode)
+		public static TileFieldEditionSettings Combine(TileFieldEditionSettings a, TileFieldEditionSettings b, TileFieldSettingsMode mode)
 		{
 			switch (mode)
 			{

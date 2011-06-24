@@ -135,8 +135,8 @@
     <Compile Include="Widgets\StaticGlyph.cs" />
     <Compile Include="Widgets\Tiles\ArrowedTileFrame.cs" />
     <Compile Include="Widgets\Tiles\ArrowedTileTabPageButton.cs" />
-    <Compile Include="Widgets\Tiles\TileEntityDisplaySettings.cs" />
-    <Compile Include="Widgets\Tiles\TileFieldDisplaySettings.cs" />
+    <Compile Include="Widgets\Tiles\TileEntityEditionSettings.cs" />
+    <Compile Include="Widgets\Tiles\TileFieldEditionSettings.cs" />
     <Compile Include="Widgets\Tiles\Tile.cs" />
     <Compile Include="Widgets\Tiles\TileArrow.cs" />
     <Compile Include="Widgets\Tiles\TileArrowMode.cs" />
@@ -145,7 +145,7 @@
     <Compile Include="Widgets\Tiles\TileExtensions.cs" />
     <Compile Include="Widgets\Tiles\TileFieldSettingsMode.cs" />
     <Compile Include="Widgets\Tiles\TileUserCategory.cs" />
-    <Compile Include="Widgets\Tiles\TileUserFieldDisplaySettings.cs" />
+    <Compile Include="Widgets\Tiles\TileUserFieldEditionSettings.cs" />
     <Compile Include="Widgets\Tiles\TileVisibilityMode.cs" />
     <Compile Include="Widgets\TileTabBook.cs" />
     <Compile Include="Widgets\TileTabBook`1.cs" />

@@ -7,9 +7,9 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Widgets.Tiles
 {
-	public struct TileFieldDisplaySettings : System.IEquatable<TileFieldDisplaySettings>
+	public struct TileFieldEditionSettings : System.IEquatable<TileFieldEditionSettings>
 	{
-		public TileFieldDisplaySettings(TileVisibilityMode visibility, TileEditionMode edition)
+		public TileFieldEditionSettings(TileVisibilityMode visibility, TileEditionMode edition)
 		{
 			this.visibility = visibility;
 			this.edition    = edition;
@@ -39,31 +39,31 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				new XAttribute (Xml.FieldEditionMode, (int) this.FieldEditionMode));
 		}
 
-		public static TileFieldDisplaySettings Restore(XElement xml)
+		public static TileFieldEditionSettings Restore(XElement xml)
 		{
 			var fieldVisibilityMode = (int) xml.Attribute (Xml.FieldVisibilityMode);
 			var fieldEditionMode    = (int) xml.Attribute (Xml.FieldEditionMode);
 							
-			return new TileFieldDisplaySettings ((TileVisibilityMode) fieldVisibilityMode, (TileEditionMode) fieldEditionMode);
+			return new TileFieldEditionSettings ((TileVisibilityMode) fieldVisibilityMode, (TileEditionMode) fieldEditionMode);
 		}
 
 
-		public static TileFieldDisplaySettings operator+(TileFieldDisplaySettings a, TileFieldDisplaySettings b)
+		public static TileFieldEditionSettings operator+(TileFieldEditionSettings a, TileFieldEditionSettings b)
 		{
-			return new TileFieldDisplaySettings (a.FieldVisibilityMode | b.FieldVisibilityMode, a.FieldEditionMode | b.FieldEditionMode);
+			return new TileFieldEditionSettings (a.FieldVisibilityMode | b.FieldVisibilityMode, a.FieldEditionMode | b.FieldEditionMode);
 		}
 
-		public static TileFieldDisplaySettings operator-(TileFieldDisplaySettings a, TileFieldDisplaySettings b)
+		public static TileFieldEditionSettings operator-(TileFieldEditionSettings a, TileFieldEditionSettings b)
 		{
-			return new TileFieldDisplaySettings (a.FieldVisibilityMode & ~b.FieldVisibilityMode, a.FieldEditionMode & ~b.FieldEditionMode);
+			return new TileFieldEditionSettings (a.FieldVisibilityMode & ~b.FieldVisibilityMode, a.FieldEditionMode & ~b.FieldEditionMode);
 		}
 
 
 		public override bool Equals(object obj)
 		{
-			if (obj is TileFieldDisplaySettings)
+			if (obj is TileFieldEditionSettings)
 			{
-				return this.Equals ((TileFieldDisplaySettings) obj);
+				return this.Equals ((TileFieldEditionSettings) obj);
 			}
 			else
 			{
@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		#region IEquatable<FieldDisplaySettings> Members
 
-		public bool Equals(TileFieldDisplaySettings other)
+		public bool Equals(TileFieldEditionSettings other)
 		{
 			return this.visibility.Simplify () == other.visibility.Simplify ()
 								&& this.edition.Simplify ()    == other.edition.Simplify ();
