@@ -1,20 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Types;
-using Epsitec.Common.Types.Converters;
-using Epsitec.Common.Widgets;
-
-using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Controllers.TabIds;
-using Epsitec.Cresus.Core.Widgets;
-using Epsitec.Cresus.Core.Widgets.Tiles;
-using Epsitec.Cresus.Core.Helpers;
-
-using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +10,30 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionNumericValueArticleParameterDefinitionViewController : EditionViewController<Entities.NumericValueArticleParameterDefinitionEntity>
 	{
+#if true
+		protected override void CreateBricks(Bricks.BrickWall<NumericValueArticleParameterDefinitionEntity> wall)
+		{
+			wall.AddBrick ()
+				.Input ()
+				  .Field (x => x.Name)
+				  .Field (x => x.Description)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.UnitOfMeasure)
+				  .Field (x => x.MinValue).Width (100)
+				  .Field (x => x.MaxValue).Width (100)
+				  .Field (x => x.DefaultValue).Width (100)
+				  .Field (x => x.PreferredValues)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.Modulo).Width (100)
+				  .Field (x => x.AddBeforeModulo).Width (100)
+				.End ()
+				;
+		}
+#else
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -115,5 +126,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 
 		private ArticleParameterControllers.ArticleParameterListPreferredValuesController		parameterController;
+#endif
 	}
 }

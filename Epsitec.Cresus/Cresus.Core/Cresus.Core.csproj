@@ -126,6 +126,7 @@
     <Compile Include="Controllers\EditionControllers\EditionPriceCalculatorViewControllerTableDesigner.cs" />
     <Compile Include="Controllers\EditionControllers\EditionVatDefinitionViewController.cs" />
     <Compile Include="Controllers\RibbonViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryOptionValueViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryOptionValueArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummarySoftwareUserRoleViewController.cs" />

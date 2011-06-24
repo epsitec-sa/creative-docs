@@ -1,19 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Types;
-using Epsitec.Common.Types.Converters;
-
-using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Controllers.TabIds;
-using Epsitec.Cresus.Core.Widgets;
-using Epsitec.Cresus.Core.Widgets.Tiles;
-using Epsitec.Cresus.Core.Helpers;
-
-using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +10,22 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionFreeTextValueArticleParameterDefinitionViewController : EditionViewController<Entities.FreeTextValueArticleParameterDefinitionEntity>
 	{
+#if true
+		protected override void CreateBricks(Bricks.BrickWall<FreeTextValueArticleParameterDefinitionEntity> wall)
+		{
+			wall.AddBrick ()
+				.Input ()
+				  .Field (x => x.Name)
+				  .Field (x => x.Description)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.ShortText)
+				  .Field (x => x.LongText)
+				.End ()
+				;
+		}
+#else
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -55,5 +59,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField      (tile,  0, "Texte court", Marshaler.Create (() => this.Entity.ShortText, x => this.Entity.ShortText = x));
 			builder.CreateTextFieldMulti (tile, 52, "Texte long",  Marshaler.Create (() => this.Entity.LongText,  x => this.Entity.LongText = x));
 		}
+#endif
 	}
 }
