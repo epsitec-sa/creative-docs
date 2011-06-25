@@ -17,9 +17,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Input ()
 				  .Field (x => x.Name)
 				  .Field (x => x.Description)
-				.End ()
-				.Separator ()
-				.Input ()
 				  .Field (x => x.Cardinality)
 				.End ()
 				;

@@ -17,10 +17,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Input ()
 				  .Field (x => x.Name)
 				  .Field (x => x.Description)
+				  .Field (x => x.Cardinality)
 				.End ()
 				.Separator ()
 				.Input ()
-				  .Field (x => x.Cardinality)
 				  .Field (x => x).WithSpecialController ()
 				.End ()
 				;

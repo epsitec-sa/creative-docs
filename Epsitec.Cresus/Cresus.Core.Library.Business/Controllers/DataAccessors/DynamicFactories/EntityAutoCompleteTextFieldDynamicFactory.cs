@@ -134,8 +134,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 					var entity      = fieldGetter ();
 					var mode        = this.specialController.Value;
 					var controller  = EntitySpecialControllerResolver.Create (builder.TileContainer, entity, mode);
+					var tile        = frame as EditionTile;
 
-					controller.CreateUI (frame, false);
+					controller.CreateUI (tile.Container, false);
 					
 					return null;
 				}
