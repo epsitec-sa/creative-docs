@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 		}
 
 
-		public void Accumulate(Druid field, IEnumerable<TileUserFieldEditionSettings> settings)
+		public void Accumulate(Druid field, IEnumerable<UserFieldEditionSettings> settings)
 		{
 			foreach (var item in settings)
 			{
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 			}
 		}
 
-		public void Accumulate(Druid field, TileUserFieldEditionSettings settings)
+		public void Accumulate(Druid field, UserFieldEditionSettings settings)
 		{
 			this.Accumulate (field, settings.FieldSettings, settings.MergeSettingsMode);
 		}
@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 			TileFieldEditionSettings current;
 
 			this.settings.TryGetValue (field, out current);
-			this.settings[field] = TileUserFieldEditionSettings.Combine (current, settings, mode);
+			this.settings[field] = UserFieldEditionSettings.Combine (current, settings, mode);
 		}
 
 

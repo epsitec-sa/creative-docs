@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.Core.Features
 		}
 
 
-		private static bool Matches(TileUserFieldEditionSettings settings, UserSummary user)
+		private static bool Matches(UserFieldEditionSettings settings, UserSummary user)
 		{
 			switch (settings.UserCategory)
 			{

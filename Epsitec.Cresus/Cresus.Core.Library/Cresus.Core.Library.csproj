@@ -147,7 +147,7 @@
     <Compile Include="Library\Settings\Extensions.cs" />
     <Compile Include="Library\Settings\MergeSettingsMode.cs" />
     <Compile Include="Library\Settings\TileUserCategory.cs" />
-    <Compile Include="Library\Settings\TileUserFieldEditionSettings.cs" />
+    <Compile Include="Library\Settings\UserFieldEditionSettings.cs" />
     <Compile Include="Library\Settings\TileVisibilityMode.cs" />
     <Compile Include="Widgets\TileTabBook.cs" />
     <Compile Include="Widgets\TileTabBook`1.cs" />

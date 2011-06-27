@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 			set;
 		}
 
-		public MergeSettingsMode			MergeSettingsMode
+		public MergeSettingsMode				MergeSettingsMode
 		{
 			get;
 			set;
@@ -52,13 +52,14 @@ namespace Epsitec.Cresus.Core.Library.Settings
 			var userCategory = (int?)   xml.Attribute (Xml.UserCategory);
 			var userIdentity = (string) xml.Attribute (Xml.UserIdentity);
 			var settingsMode = (int?)   xml.Attribute (Xml.MergeSettingsMode);
-			var field        = TileFieldEditionSettings.Restore (xml.Element (Xml.FieldSettings));
+			var commandId    = (string) xml.Attribute (Xml.CommandId);
 
 			return new UserCommandSettings ()
 			{
 				UserCategory = (TileUserCategory) userCategory.GetValueOrDefault (),
 				UserIdentity = userIdentity,
-				MergeSettingsMode = (MergeSettingsMode) settingsMode.GetValueOrDefault ()
+				MergeSettingsMode = (MergeSettingsMode) settingsMode.GetValueOrDefault (),
+				CommandId = Druid.Parse (commandId)
 			};
 		}
 
@@ -77,6 +78,10 @@ namespace Epsitec.Cresus.Core.Library.Settings
 			{
 				yield return new XAttribute (Xml.MergeSettingsMode, (int) this.MergeSettingsMode);
 			}
+			if (this.CommandId.IsValid)
+			{
+				yield return new XAttribute (Xml.CommandId, this.CommandId.ToString ());
+			}
 		}
 
 
@@ -85,7 +90,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 			public const string UserCategory = "cat";
 			public const string UserIdentity = "uid";
 			public const string MergeSettingsMode = "m";
-			public const string FieldSettings = "f";
+			public const string CommandId = "c";
 		}
 	}
 }

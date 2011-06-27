@@ -9,9 +9,9 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Library.Settings
 {
-	public sealed class TileUserFieldEditionSettings
+	public sealed class UserFieldEditionSettings
 	{
-		public TileUserFieldEditionSettings()
+		public UserFieldEditionSettings()
 		{
 		}
 
@@ -48,14 +48,14 @@ namespace Epsitec.Cresus.Core.Library.Settings
 				this.FieldSettings.Save (Xml.FieldSettings));
 		}
 
-		public static TileUserFieldEditionSettings Restore(XElement xml)
+		public static UserFieldEditionSettings Restore(XElement xml)
 		{
 			var userCategory = (int?)   xml.Attribute (Xml.UserCategory);
 			var userIdentity = (string) xml.Attribute (Xml.UserIdentity);
 			var settingsMode = (int?)   xml.Attribute (Xml.MergeSettingsMode);
 			var field        = TileFieldEditionSettings.Restore (xml.Element (Xml.FieldSettings));
 
-			return new TileUserFieldEditionSettings ()
+			return new UserFieldEditionSettings ()
 			{
 				UserCategory = (TileUserCategory) userCategory.GetValueOrDefault (),
 				UserIdentity = userIdentity,
