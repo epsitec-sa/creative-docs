@@ -1,4 +1,4 @@
-//	Copyright © 2007-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2007-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -296,6 +296,12 @@ namespace Epsitec.Common.Support.EntityEngine
 			return entity is SearchEntity;
 		}
 
+		/// <summary>
+		/// Creates an empty entity based on the entity ID. If the entity ID cannot be resolved
+		/// to a known entity, use the <see cref="GenericEntity"/> instead.
+		/// </summary>
+		/// <param name="entityId">The entity ID.</param>
+		/// <returns>An empty entity.</returns>
 		public AbstractEntity CreateEmptyEntity(Druid entityId)
 		{
 			AbstractEntity entity = EntityClassFactory.CreateEmptyEntity (entityId);
@@ -310,6 +316,12 @@ namespace Epsitec.Common.Support.EntityEngine
 			return entity;
 		}
 
+		/// <summary>
+		/// Creates the empty entity of the specified type. This will assign the entity to
+		/// this entity context.
+		/// </summary>
+		/// <typeparam name="T">The type of the entity.</typeparam>
+		/// <returns>The entity of the specified type.</returns>
 		public T CreateEmptyEntity<T>()
 			where T : AbstractEntity, new ()
 		{
@@ -338,6 +350,13 @@ namespace Epsitec.Common.Support.EntityEngine
             }
 		}
 
+		/// <summary>
+		/// Creates the entity based on the entity ID and initializes the graph of child
+		/// entities to empty entities.
+		/// *** OBSOLETE ? ***
+		/// </summary>
+		/// <param name="entityId">The entity id.</param>
+		/// <returns>The entity.</returns>
 		public AbstractEntity CreateEntity(Druid entityId)
 		{
 			AbstractEntity entity = this.CreateEmptyEntity (entityId);

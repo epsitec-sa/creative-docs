@@ -337,6 +337,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 				if (fieldType.IsGenericIListOfEntities ())
 				{
+					//	Produce an item picker for the list of entities. The field type is a collection
+					//	of entities represented as [ Field ]--->>* Entity in the Designer.
+
 					var factory = DynamicFactories.ItemPickerDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, specialController);
 					this.actions.Add ((tile, builder) => factory.CreateUI (tile, builder));
 

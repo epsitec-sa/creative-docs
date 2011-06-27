@@ -1,8 +1,9 @@
-﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2009-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Graph;
 using Epsitec.Common.Graph.Data;
+using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -185,7 +186,7 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 					var type = pair.Value;
 					var conv = System.Activator.CreateInstance (type, args) as AbstractImportConverter;
 
-					conv.Priority = ImportConverter.GetImporterAttributes (type).First ().Priority;
+					conv.Priority = type.GetCustomAttributes<ImporterAttribute> ().First ().Priority;
 					
 					ImportConverter.converters[pair.Key] = conv;
 				}
@@ -197,15 +198,10 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 		private static IEnumerable<KeyValuePair<string, System.Type>> GetConverterTypes(System.Reflection.Assembly assembly)
 		{
 			return from type in assembly.GetTypes ()
-				   from attr in ImportConverter.GetImporterAttributes (type)
+				   from attr in type.GetCustomAttributes<ImporterAttribute> ()
 				   select new KeyValuePair<string, System.Type> (attr.Name, type);
 		}
 
-
-		private static IEnumerable<ImporterAttribute> GetImporterAttributes(System.Type type)
-		{
-			return type.GetCustomAttributes (typeof (ImporterAttribute), false).Cast<ImporterAttribute> ();
-		}
 
 		private static Dictionary<string, AbstractImportConverter> converters;
 	}

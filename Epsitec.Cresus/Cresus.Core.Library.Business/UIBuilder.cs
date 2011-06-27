@@ -1264,8 +1264,7 @@ namespace Epsitec.Cresus.Core
 			};
 
 			var rootController = this.GetRootController ();
-			//?var fullName = string.Format (System.Globalization.CultureInfo.InstalledUICulture, "{0}.{1}", name, this.titleTile.Items.Count);
-			var fullName = string.Format (System.Globalization.CultureInfo.InstalledUICulture, "{0}", name);  // TODO: NE FONCTIONNE PLUS !!!
+			var fullName       = string.Format (System.Globalization.CultureInfo.InstalledUICulture, "{0}", name);
 			var clickSimulator = new TileButtonClickSimulator (tileButton, this.controller, fullName);
 
 			tile.Controller = new SummaryTileController<T1> (entity, fullName, mode, controllerSubType);

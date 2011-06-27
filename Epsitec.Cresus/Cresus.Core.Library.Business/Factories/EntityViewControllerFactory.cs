@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types.Converters;
@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Core.Factories
 		/// <returns>The <see cref="EntityViewController"/> if one could be found.</returns>
 		/// <exception cref="System.InvalidOperationException">Throws <see cref="System.InvalidOperationException"/> if no controller could be found.</exception>
 		public static EntityViewController Create(string name, AbstractEntity entity, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator,
-			int                   controllerSubTypeId   = -1,
+			int?                  controllerSubTypeId   = null,
 			NavigationPathElement navigationPathElement = null,
 			ResolutionMode        resolutionMode        = ResolutionMode.ThrowOnError)
 		{
@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Core.Factories
 				set;
 			}
 
-			public int							ControllerSubTypeId
+			public int?							ControllerSubTypeId
 			{
 				get;
 				set;

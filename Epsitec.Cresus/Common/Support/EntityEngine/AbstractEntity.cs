@@ -37,14 +37,14 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// IStructuredData and of IValueStore are not thread safe.
 		/// 
 		/// All members that should throw an exception when called on a readonly entity are not
-		/// thread safe. Hummm not totally true. That is how you should consider them because in the
+		/// thread safe. Hmmm, not totally true. That is how you should consider them because in the
 		/// case where we want thread safety, the entity is in readonly mode and thus is not
 		/// supposed to be modified. So in theory you shouldn't be calling these method in the first
 		/// place. However, I made some of them thread safe in order to ensure that whatever the
 		/// case, we throw if we must throw the ReadOnlyException or we proceed if we are in the
 		/// special mode with readonly checks disabled. I believe that the complete thread safety on
-		/// these memebers is overkill, but I felt not confident enought to leave them without some
-		/// locking mechanisme that will ensure that we will do the right thing. I hope that by
+		/// these members is overkill, but I felt not confident enough to leave them without some
+		/// locking mechanism that will ensure that we will do the right thing. I hope that by
 		/// doing this, I will make it easier to maintain this already hard to maintain code with
 		/// regard to thread safety.
 		/// 

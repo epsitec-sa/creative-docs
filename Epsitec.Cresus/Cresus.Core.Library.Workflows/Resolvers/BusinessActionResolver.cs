@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Business;
 
@@ -86,15 +87,15 @@ namespace Epsitec.Cresus.Core.Resolvers
 
 				foreach (var method in methods.Where (x => (x.GetParameters ().Length == 0) && (x.ReturnType == typeof (void))))
 				{
-					var attributes = method.GetCustomAttributes (typeof (ActionAttribute), inherit: false);
+					var attributes = method.GetCustomAttributes<ActionAttribute> ();
 
-					if (attributes.Length == 0)
+					if (attributes.IsEmpty ())
 					{
 						yield return new ActionVerb (method);
 					}
 					else
 					{
-						yield return new ActionVerb (((ActionAttribute)(attributes[0])).PublishedName, method);
+						yield return new ActionVerb (attributes.First ().PublishedName, method);
 					}
 				}
 			}

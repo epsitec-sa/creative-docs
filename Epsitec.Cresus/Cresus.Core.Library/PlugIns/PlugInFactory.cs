@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Library;
 
@@ -64,7 +65,7 @@ namespace Epsitec.Cresus.Core.PlugIns
 
 			var records = from assembly in assemblies
 						  from type in assembly.GetTypes ()
-						  where type.IsClass && !type.IsAbstract && type.GetInterfaces ().Contains (typeof (ICorePlugIn)) && type.GetConstructor (constructorArgumentTypes) != null && type.GetCustomAttributes (typeof (PlugInAttribute), false).Length == 1
+						  where type.IsClass && !type.IsAbstract && type.GetInterfaces ().Contains (typeof (ICorePlugIn)) && type.GetConstructor (constructorArgumentTypes) != null && type.GetCustomAttributes<PlugInAttribute> ().Any ()
 						  select new PlugInRecord (type);
 
 			this.records.AddRange (records);
@@ -79,7 +80,7 @@ namespace Epsitec.Cresus.Core.PlugIns
 			{
 				this.type = type;
 				this.allocator = DynamicCodeFactory.CreateAllocator<ICorePlugIn, PlugInFactory> (type);
-				this.attribute = this.type.GetCustomAttributes (typeof (PlugInAttribute), false)[0] as PlugInAttribute;
+				this.attribute = this.type.GetCustomAttributes<PlugInAttribute> (false).First ();
 			}
 			
 			public PlugInAttribute Attribute

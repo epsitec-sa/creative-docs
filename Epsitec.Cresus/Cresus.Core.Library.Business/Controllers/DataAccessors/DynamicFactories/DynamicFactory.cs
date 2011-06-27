@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 		{
 			if (caption == null)
 			{
-				return "x";
+				throw new System.ArgumentNullException ("Caption not defined");
 			}
 			else
 			{

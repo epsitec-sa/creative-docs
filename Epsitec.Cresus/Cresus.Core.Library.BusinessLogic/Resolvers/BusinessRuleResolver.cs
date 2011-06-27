@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 			var candidates = new HashSet<TypeRank> (BusinessRuleResolver.GetBaseTypesAndInterfaces (entityType));
 
 			var types = from type in TypeEnumerator.Instance.GetAllTypes ()
-						where type.IsClass && !type.IsAbstract && type.GetCustomAttributes (typeof (BusinessRuleAttribute), false).Length > 0
+						where type.IsClass && !type.IsAbstract && type.GetCustomAttributes<BusinessRuleAttribute> ().Any ()
 						let baseType = type.BaseType
 						where baseType.IsGenericType && baseType.Name.StartsWith (baseTypeName)
 						let genericType = baseType.GetGenericArguments ()[0]

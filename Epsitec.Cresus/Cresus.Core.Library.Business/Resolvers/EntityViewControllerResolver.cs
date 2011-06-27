@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Orchestrators;
@@ -19,7 +20,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 	/// </summary>
 	internal static class EntityViewControllerResolver
 	{
-		public static EntityViewController Resolve(ViewControllerMode mode, int controllerSubTypeId, ResolutionMode resolutionMode)
+		public static EntityViewController Resolve(ViewControllerMode mode, int? controllerSubTypeId, ResolutionMode resolutionMode)
 		{
 			var name   = EntityViewControllerFactory.Default.ControllerName;
 			var entity = EntityViewControllerFactory.Default.Entity;
@@ -73,7 +74,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 			}
 		}
 
-		private static System.Type FindViewControllerType(System.Type entityType, ViewControllerMode mode, int controllerSubTypeId)
+		private static System.Type FindViewControllerType(System.Type entityType, ViewControllerMode mode, int? controllerSubTypeId)
 		{
 			System.Type match;
 
@@ -153,19 +154,21 @@ namespace Epsitec.Cresus.Core.Resolvers
 			return match;
 		}
 
-		private static IEnumerable<System.Type> FilterTypes(int controllerSubTypeId, IEnumerable<System.Type> types)
+		private static IEnumerable<System.Type> FilterTypes(int? controllerSubTypeId, IEnumerable<System.Type> types)
 		{
-			if (controllerSubTypeId < 0)
+			int id = controllerSubTypeId.GetValueOrDefault (-1);
+			
+			if (id >= 0)
 			{
-				return types.Where (type => type.GetCustomAttributes (typeof (ControllerSubTypeAttribute), false).Length == 0);
+				return types.Where (type => type.GetCustomAttributes<ControllerSubTypeAttribute> ().Any (attribute => attribute.Id == id));
 			}
 			else
 			{
-				return types.Where (type => type.GetCustomAttributes (typeof (ControllerSubTypeAttribute), false).Cast<ControllerSubTypeAttribute> ().Any (attribute => attribute.Id == controllerSubTypeId));
+				return types.Where (type => type.GetCustomAttributes<ControllerSubTypeAttribute> ().IsEmpty ());
 			}
 		}
 
-		private static System.Type ResolveEntityViewController(System.Type entityType, ViewControllerMode mode, int controllerSubTypeId)
+		private static System.Type ResolveEntityViewController(System.Type entityType, ViewControllerMode mode, int? controllerSubTypeId)
 		{
 			if (mode == ViewControllerMode.None)
 			{

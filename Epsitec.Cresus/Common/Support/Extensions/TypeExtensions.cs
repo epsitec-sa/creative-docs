@@ -61,5 +61,18 @@ namespace Epsitec.Common.Support.Extensions
 				return null;
 			}
 		}
+
+		/// <summary>
+		/// Gets the custom attributes of the specified type.
+		/// </summary>
+		/// <typeparam name="T">The type of the attributes.</typeparam>
+		/// <param name="type">The type.</param>
+		/// <param name="inherit">if set to <c>true</c>, the attributes will be inherited from the base types too; default to no inheritance.</param>
+		/// <returns>The collection of custom attributes of the specified type.</returns>
+		public static IEnumerable<T> GetCustomAttributes<T>(this System.Type type, bool inherit = false)
+			where T : System.Attribute
+		{
+			return type.GetCustomAttributes (typeof (T), inherit).Cast<T> ();
+		}
 	}
 }

@@ -2,6 +2,7 @@
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
+
 using System.Collections.Generic;
 
 namespace Epsitec.Common.Document.PDF

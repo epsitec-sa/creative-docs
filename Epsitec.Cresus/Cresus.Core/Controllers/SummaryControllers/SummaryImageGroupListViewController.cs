@@ -15,6 +15,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
+#if false
 	[ControllerSubType (6)]
 	public class SummaryImageGroupListViewController : SummaryViewController<NaturalPersonEntity>
 	{
@@ -48,4 +49,5 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			data.Add (this.CreateCollectionAccessor (template));
 		}
 	}
+#endif
 }

@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -20,6 +20,12 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
+	/// <summary>
+	/// The <c>EntityViewController</c> class is the base class for all view controllers
+	/// (such as the summary view controller, edition view controller and creation view
+	/// controller). The view controller is bound to an entity of type <c>T</c>.
+	/// </summary>
+	/// <typeparam name="T">The type of the entity.</typeparam>
 	public abstract class EntityViewController<T> : EntityViewController
 		where T : AbstractEntity, new ()
 	{
@@ -35,7 +41,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			EntityNullReferenceVirtualizer.PatchNullReferences (this.entity);
 		}
 
-		public T Entity
+		
+		public T								Entity
 		{
 			get
 			{
@@ -43,12 +50,18 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public System.Func<T> EntityGetter
+		public System.Func<T>					EntityGetter
 		{
 			get
 			{
 				return () => this.entity;
 			}
+		}
+
+
+		public sealed override AbstractEntity GetEntity()
+		{
+			return this.Entity;
 		}
 
 		public override IEnumerable<CoreController> GetSubControllers()
@@ -69,25 +82,13 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		protected override void CreateUI()
-		{
-		}
-
-		public void AddUIController(EntityViewController controller)
+		
+		internal void AddUIController(EntityViewController controller)
 		{
 			this.uiControllers.Add (controller);
 			controller.CreateBridgeAndBuildBricks ();
 		}
-
-		protected EntityViewController CreateEditionSubController<TField>(Expression<System.Func<T, TField>> entityGetter)
-			where TField : AbstractEntity
-		{
-			var name = EntityInfo.GetFieldCaption (entityGetter).Name;
-			var func = entityGetter.Compile ();
-
-			return EntityViewControllerFactory.Create (this.Name + name, func (this.Entity), ViewControllerMode.Edition, this.Orchestrator);
-		}
-
+		
 		internal sealed override Bridge CreateBridgeAndBuildBricks()
 		{
 			var bridge = BridgeContext.Instance.CreateBridge<T> (this);
@@ -98,13 +99,13 @@ namespace Epsitec.Cresus.Core.Controllers
 			return bridge;
 		}
 
-		protected virtual void CreateBricks(Bricks.BrickWall<T> wall)
+		
+		protected override void CreateUI()
 		{
 		}
 
-		public sealed override AbstractEntity GetEntity()
+		protected virtual void CreateBricks(Bricks.BrickWall<T> wall)
 		{
-			return this.Entity;
 		}
 
 
@@ -190,7 +191,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.UpdateEmptyEntityStatus (context, isEmpty);
 		}
 
-		protected void UpdateEmptyEntityStatus(DataContext context, bool isEmpty)
+		private void UpdateEmptyEntityStatus(DataContext context, bool isEmpty)
 		{
 			var entity = this.Entity;
 
