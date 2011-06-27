@@ -79,8 +79,21 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			else if (Brick.ContainsProperty (brick, BrickPropertyKey.Template))
 			{
 				//	Don't produce default text properties for bricks which contain AsType
-				//	or Template bricks.
+				//	or Template bricks. Instead, specify the default empty text.
 
+				var templateBrick = Brick.GetProperty (brick, BrickPropertyKey.Template).Brick;
+
+				System.Diagnostics.Debug.Assert (templateBrick != null);
+
+				if ((!Brick.ContainsProperty (templateBrick, BrickPropertyKey.Title)) &&
+					(!Brick.ContainsProperty (templateBrick, BrickPropertyKey.TitleCompact)) &&
+					(!Brick.ContainsProperty (templateBrick, BrickPropertyKey.Text)) &&
+					(!Brick.ContainsProperty (templateBrick, BrickPropertyKey.TextCompact)))
+				{
+					Bridge.CreateDefaultTitleProperties (templateBrick);
+					Bridge.CreateDefaultTextProperties (templateBrick);
+				}
+				
 				if (!Brick.ContainsProperty (brick, BrickPropertyKey.Text))
 				{
 					Brick.AddProperty (brick, new BrickProperty (BrickPropertyKey.Text, CollectionTemplate.DefaultEmptyText));
@@ -120,33 +133,35 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				brick = asTypeBrick;
 				goto again;
 			}
-
-			Brick templateBrick = Brick.GetProperty (brick, BrickPropertyKey.Template).Brick;
-
-			if (templateBrick != null)
-			{
-				data.Add (item);
-				this.ProcessTemplate (data, item, root, templateBrick);
-			}
-			else if (Brick.ContainsProperty (brick, BrickPropertyKey.Input))
-			{
-				var processor = new InputProcessor (this.controller, data, item, brick);
-				
-				processor.ProcessInputs ();
-			}
 			else
 			{
-				item.EntityMarshaler = this.controller.CreateEntityMarshaler ();
+				var templateBrick = Brick.GetProperty (brick, BrickPropertyKey.Template).Brick;
 
-				if (brick.GetFieldType () == typeof (T))
+				if (templateBrick != null)
 				{
-					//	Type already ok.
+					data.Add (item);
+					this.ProcessTemplate (data, item, root, templateBrick);
+				}
+				else if (Brick.ContainsProperty (brick, BrickPropertyKey.Input))
+				{
+					var processor = new InputProcessor (this.controller, data, item, brick);
+
+					processor.ProcessInputs ();
 				}
 				else
 				{
-					item.SetEntityConverter<T> (brick.GetResolver (brick.GetFieldType ()));
+					item.EntityMarshaler = this.controller.CreateEntityMarshaler ();
+
+					if (brick.GetFieldType () == typeof (T))
+					{
+						//	Type already ok.
+					}
+					else
+					{
+						item.SetEntityConverter<T> (brick.GetResolver (brick.GetFieldType ()));
+					}
+					data.Add (item);
 				}
-				data.Add (item);
 			}
 
 			return item;

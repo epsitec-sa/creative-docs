@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			var typeInfo = EntityInfo.GetStructuredType (type) as StructuredType;
 
 			if ((typeInfo == null) ||
-						(typeInfo.Caption == null))
+				(typeInfo.Caption == null))
 			{
 				return;
 			}
@@ -76,6 +76,58 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				Expression<System.Func<AbstractEntity, FormattedText>> expression = x => x.GetCompactSummary ();
 				Brick.AddProperty (brick, new BrickProperty (BrickPropertyKey.TextCompact, expression));
 			}
+		}
+
+		protected static void CreateDefaultTitleProperties(Brick brick)
+		{
+			Invoker invoker = System.Activator.CreateInstance (typeof (Invoker<>).MakeGenericType (brick.GetFieldType ())) as Invoker;
+
+			if ((!Brick.ContainsProperty (brick, BrickPropertyKey.Title)) &&
+				(invoker.IsValid))
+			{
+				invoker.Bind (brick);
+			}
+		}
+
+		private abstract class Invoker
+		{
+			public void Bind(Brick brick)
+			{
+				Expression<System.Func<AbstractEntity, FormattedText>> expression = x => this.Invoke (x);
+				Brick.AddProperty (brick, new BrickProperty (BrickPropertyKey.Title, expression));
+			}
+			
+			public abstract FormattedText Invoke(AbstractEntity entity);
+			
+			public abstract bool IsValid
+			{
+				get;
+			}
+			
+			protected static readonly object[] EmptyArgs = new object[0];
+		}
+
+		private class Invoker<T> : Invoker
+		{
+			public Invoker()
+			{
+				this.getTitleMethodInfo = typeof (T).GetMethod ("GetTitle");
+			}
+
+			public override bool IsValid
+			{
+				get
+				{
+					return this.getTitleMethodInfo != null;
+				}
+			}
+
+			public override FormattedText Invoke(AbstractEntity entity)
+			{
+				return (FormattedText) this.getTitleMethodInfo.Invoke (entity, Invoker.EmptyArgs);
+			}
+
+			private readonly System.Reflection.MethodInfo getTitleMethodInfo;
 		}
 
 		protected static void CreateLabelProperty(Brick brick, IList<string> labels, int i, BrickPropertyKey key)
