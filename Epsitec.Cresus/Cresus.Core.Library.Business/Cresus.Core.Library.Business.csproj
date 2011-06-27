@@ -121,6 +121,7 @@
     <Compile Include="Controllers\DataAccessors\ICollectionAccessor.cs" />
     <Compile Include="Controllers\DataAccessors\IndirectAccessor.cs" />
     <Compile Include="Controllers\DataAccessors\IndirectAccessor`2.cs" />
+    <Compile Include="Controllers\DataAccessors\DynamicFactories\Invoker.cs" />
     <Compile Include="Controllers\DataAccessors\TileDataItem.cs" />
     <Compile Include="Controllers\DataAccessors\TileDataItems.cs" />
     <Compile Include="Controllers\DataAccessors\TileDataType.cs" />
@@ -311,7 +312,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CommandHandlers\" />
-    <Folder Include="Controllers\DataAccessors\DynamicFactories\Helpers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

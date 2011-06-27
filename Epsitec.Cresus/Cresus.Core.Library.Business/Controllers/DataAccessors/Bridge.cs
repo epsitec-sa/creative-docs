@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			this.controller = controller;
 		}
 
+		
 		public EntityViewController Controller
 		{
 			get
@@ -80,54 +81,18 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		protected static void CreateDefaultTitleProperties(Brick brick)
 		{
-			Invoker invoker = System.Activator.CreateInstance (typeof (Invoker<>).MakeGenericType (brick.GetFieldType ())) as Invoker;
-
-			if ((!Brick.ContainsProperty (brick, BrickPropertyKey.Title)) &&
-				(invoker.IsValid))
+			if (Brick.ContainsProperty (brick, BrickPropertyKey.Title))
 			{
-				invoker.Bind (brick);
-			}
-		}
-
-		private abstract class Invoker
-		{
-			public void Bind(Brick brick)
-			{
-				Expression<System.Func<AbstractEntity, FormattedText>> expression = x => this.Invoke (x);
-				Brick.AddProperty (brick, new BrickProperty (BrickPropertyKey.Title, expression));
-			}
-			
-			public abstract FormattedText Invoke(AbstractEntity entity);
-			
-			public abstract bool IsValid
-			{
-				get;
-			}
-			
-			protected static readonly object[] EmptyArgs = new object[0];
-		}
-
-		private class Invoker<T> : Invoker
-		{
-			public Invoker()
-			{
-				this.getTitleMethodInfo = typeof (T).GetMethod ("GetTitle");
+				return;
 			}
 
-			public override bool IsValid
-			{
-				get
-				{
-					return this.getTitleMethodInfo != null;
-				}
-			}
+			var fieldType = brick.GetFieldType ();
+			var invoker   = Invoker.GetInvoker (fieldType, "GetTitle");
 
-			public override FormattedText Invoke(AbstractEntity entity)
+			if (invoker.IsValid)
 			{
-				return (FormattedText) this.getTitleMethodInfo.Invoke (entity, Invoker.EmptyArgs);
+				invoker.Bind (brick, BrickPropertyKey.Title);
 			}
-
-			private readonly System.Reflection.MethodInfo getTitleMethodInfo;
 		}
 
 		protected static void CreateLabelProperty(Brick brick, IList<string> labels, int i, BrickPropertyKey key)
