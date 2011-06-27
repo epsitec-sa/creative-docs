@@ -9,9 +9,9 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Library.Settings
 {
-	public sealed class TileUserFieldEditionSettings
+	public sealed class UserCommandSettings
 	{
-		public TileUserFieldEditionSettings()
+		public UserCommandSettings()
 		{
 		}
 
@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 			set;
 		}
 
-		public TileFieldEditionSettings			FieldSettings
+		public Druid							CommandId
 		{
 			get;
 			set;
@@ -44,41 +44,25 @@ namespace Epsitec.Cresus.Core.Library.Settings
 		public XElement Save(string xmlNodeName)
 		{
 			return new XElement (xmlNodeName,
-				this.GetXmlAttributes (),
-				this.FieldSettings.Save (Xml.FieldSettings));
+				this.GetXmlAttributes ());
 		}
 
-		public static TileUserFieldEditionSettings Restore(XElement xml)
+		public static UserCommandSettings Restore(XElement xml)
 		{
 			var userCategory = (int?)   xml.Attribute (Xml.UserCategory);
 			var userIdentity = (string) xml.Attribute (Xml.UserIdentity);
 			var settingsMode = (int?)   xml.Attribute (Xml.MergeSettingsMode);
 			var field        = TileFieldEditionSettings.Restore (xml.Element (Xml.FieldSettings));
 
-			return new TileUserFieldEditionSettings ()
+			return new UserCommandSettings ()
 			{
 				UserCategory = (TileUserCategory) userCategory.GetValueOrDefault (),
 				UserIdentity = userIdentity,
-				MergeSettingsMode = (MergeSettingsMode) settingsMode.GetValueOrDefault (),
-				FieldSettings = field
+				MergeSettingsMode = (MergeSettingsMode) settingsMode.GetValueOrDefault ()
 			};
 		}
 
 
-		public static TileFieldEditionSettings Combine(TileFieldEditionSettings a, TileFieldEditionSettings b, MergeSettingsMode mode)
-		{
-			switch (mode)
-			{
-				case MergeSettingsMode.Inclusive:	return a + b;
-				case MergeSettingsMode.Exclusive:	return a - b;
-				case MergeSettingsMode.Override:	return b;
-
-				default:
-					throw new System.NotSupportedException (string.Format ("Mode {0} not supported", mode));
-			}
-		}
-
-		
 		private IEnumerable<XAttribute> GetXmlAttributes()
 		{
 			if (this.UserCategory != TileUserCategory.Any)

@@ -40,16 +40,16 @@ namespace Epsitec.Cresus.Core.Library.Settings
 		{
 			foreach (var item in settings)
 			{
-				this.Accumulate (field, item.FieldSettings, item.FieldSettingsMode);
+				this.Accumulate (field, item.FieldSettings, item.MergeSettingsMode);
 			}
 		}
 
 		public void Accumulate(Druid field, TileUserFieldEditionSettings settings)
 		{
-			this.Accumulate (field, settings.FieldSettings, settings.FieldSettingsMode);
+			this.Accumulate (field, settings.FieldSettings, settings.MergeSettingsMode);
 		}
 
-		public void Accumulate(Druid field, TileFieldEditionSettings settings, TileFieldSettingsMode mode)
+		public void Accumulate(Druid field, TileFieldEditionSettings settings, MergeSettingsMode mode)
 		{
 			TileFieldEditionSettings current;
 

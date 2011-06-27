@@ -11,7 +11,7 @@ using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Extensions;
 using Epsitec.Cresus.Core.Library;
-using Epsitec.Cresus.Core.Widgets.Tiles;
+using Epsitec.Cresus.Core.Library.Settings;
 
 using Epsitec.Cresus.DataLayer.Context;
 

@@ -71,6 +71,7 @@
     <Compile Include="Library\ICoreComponent`2.cs" />
     <Compile Include="Library\ITextFormatterConverter.cs" />
     <Compile Include="Library\Numeric.cs" />
+    <Compile Include="Library\Settings\UserCommandSettings.cs" />
     <Compile Include="Library\TextFormatterConverter.cs" />
     <Compile Include="Library\SettingsCollection.cs" />
     <Compile Include="Library\SettingsManager.cs" />
@@ -144,7 +145,7 @@
     <Compile Include="Widgets\Tiles\TileColors.cs" />
     <Compile Include="Library\Settings\TileEditionMode.cs" />
     <Compile Include="Library\Settings\Extensions.cs" />
-    <Compile Include="Library\Settings\TileFieldSettingsMode.cs" />
+    <Compile Include="Library\Settings\MergeSettingsMode.cs" />
     <Compile Include="Library\Settings\TileUserCategory.cs" />
     <Compile Include="Library\Settings\TileUserFieldEditionSettings.cs" />
     <Compile Include="Library\Settings\TileVisibilityMode.cs" />

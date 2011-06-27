@@ -9,7 +9,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Library.Settings
 {
 	[DesignerVisible]
-	public enum TileFieldSettingsMode
+	public enum MergeSettingsMode
 	{
 		Inclusive	= 0,
 		Exclusive	= 1,
