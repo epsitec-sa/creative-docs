@@ -1,35 +1,19 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Common.Types;
-
-using Epsitec.Cresus.Core.Widgets;
+using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Controllers.DataAccessors;
 
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
-	public class SummaryDocumentCategoryViewController : SummaryViewController<Entities.DocumentCategoryEntity>
+	public class SummaryDocumentCategoryViewController : SummaryViewController<DocumentCategoryEntity>
 	{
-		protected override void CreateUI()
+		protected override void CreateBricks(Bricks.BrickWall<DocumentCategoryEntity> wall)
 		{
-			using (var data = TileContainerController.Setup (this))
-			{
-				data.Add (
-					new TileDataItem
-					{
-						Name				= "DocumentCategory",
-						IconUri				= "Data.DocumentCategory",
-						Title				= TextFormatter.FormatText ("Catégorie de document"),
-						CompactTitle		= TextFormatter.FormatText ("Catégorie"),
-						TextAccessor		= this.CreateAccessor (x => x.GetSummary ()),
-						CompactTextAccessor = this.CreateAccessor (x => x.GetCompactSummary ()),
-						EntityMarshaler		= this.CreateEntityMarshaler (),
-					});
-			}
+			wall.AddBrick ();
 		}
 	}
 }
