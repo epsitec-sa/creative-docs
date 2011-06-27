@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -87,8 +87,11 @@ namespace Epsitec.Cresus.Core.Resolvers
 			var controllerTypes = from type in Epsitec.Common.Types.TypeEnumerator.Instance.GetAllTypes ()
 								  where type.IsClass && !type.IsAbstract && type.BaseType != null
 								     && type.BaseType.IsGenericType && type.BaseType.Name.StartsWith (baseTypeName)
-								  let baseEntityType = type.BaseType.GetGenericArguments ()[0]
-								  select new { Type = type, BaseEntityType = baseEntityType };
+								  select new
+								  {
+									  Type = type,
+									  BaseEntityType = type.BaseType.GetGenericArguments ()[0]
+								  };
 
 			var types = from type in controllerTypes
 						where type.BaseEntityType == entityType
@@ -120,8 +123,15 @@ namespace Epsitec.Cresus.Core.Resolvers
 
 			if (entityType.IsGenericType)
 			{
+				//	The caller is asking for a controller operating on Entity<T>. Try to find
+				//	a generic controller Controller<T> operating on Entity<T>.
+
 				var entityTypeName  = entityType.GetGenericTypeDefinition ().ToString ();
 				var genericTypeArgs = entityType.GetGenericArguments ();
+
+				//	We cannot use type equality, as the base entity type's FullName is null,
+				//	while the entity type's FullName is not. Fortunately, comparing the type
+				//	ToString() results is OK:
 				
 				types = from type in controllerTypes
 						where type.BaseEntityType.ToString () == entityTypeName
@@ -132,6 +142,10 @@ namespace Epsitec.Cresus.Core.Resolvers
 
 				if (match != null)
 				{
+					//	We cannot return the generic Controller<> type as it could not be
+					//	instantiated -- inject the type arguments of Entity<T> to build a
+					//	fully defined generic type:
+
 					match = match.MakeGenericType (genericTypeArgs);
 				}
 			}
