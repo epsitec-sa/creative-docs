@@ -23,17 +23,35 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			wall.AddBrick (x => x);
 
-			wall.AddBrick (x => x.Lines)  // TODO: ArticleLines
+			wall.AddBrick (x => x.Lines)
+				.AsType<ArticleDocumentItemEntity> ()
+				.Attribute (BrickMode.AutoGroup)
 				.Template ()
+				.End ()
 				;
-			wall.AddBrick (x => x.Lines)  // TODO: FreightAndTaxLines
+			wall.AddBrick (x => x.Lines)
+				.AsType<TextDocumentItemEntity> ()
+				.Attribute (BrickMode.AutoGroup)
 				.Template ()
+				.End ()
 				;
-			wall.AddBrick (x => x.Lines)  // TODO: TotalSummary
+			wall.AddBrick (x => x.Lines)
+				.AsType<SubTotalDocumentItemEntity> ()
+				.Attribute (BrickMode.AutoGroup)
 				.Template ()
+				.End ()
 				;
 			wall.AddBrick (x => x.Lines)  // TODO: VatLines
+				.AsType<TaxDocumentItemEntity> ()
+				.Attribute (BrickMode.AutoGroup)
 				.Template ()
+				.End ()
+				;
+			wall.AddBrick (x => x.Lines)  // TODO: VatLines
+				.AsType<EndTotalDocumentItemEntity> ()
+				.Attribute (BrickMode.AutoGroup)
+				.Template ()
+				.End ()
 				;
 
 			var metadata = this.BusinessContext.GetMasterEntity<DocumentMetadataEntity> ();
