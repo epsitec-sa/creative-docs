@@ -569,7 +569,14 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		public StructuredType GetStructuredType(Druid entityTypeId)
 		{
-			return this.resourceResolver.GetStructuredType (entityTypeId);
+			if (entityTypeId.IsEmpty)
+			{
+				return null;
+			}
+			else
+			{
+				return this.resourceResolver.GetStructuredType (entityTypeId);
+			}
 		}
 
 		public StructuredType GetStructuredType(AbstractEntity entity)

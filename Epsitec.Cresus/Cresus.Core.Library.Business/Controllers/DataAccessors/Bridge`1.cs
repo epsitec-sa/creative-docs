@@ -337,7 +337,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 				if (fieldType.IsGenericIListOfEntities ())
 				{
-					var factory = DynamicFactories.ItemPickerDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title);
+					var factory = DynamicFactories.ItemPickerDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, specialController);
 					this.actions.Add ((tile, builder) => factory.CreateUI (tile, builder));
 
 					return;

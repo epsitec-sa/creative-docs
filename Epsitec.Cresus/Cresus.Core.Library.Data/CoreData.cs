@@ -327,6 +327,12 @@ namespace Epsitec.Cresus.Core
 			return this.independentEntityContext.CreateEmptyEntity (entityId);
 		}
 
+		public T CreateDummyEntity<T>()
+			where T : AbstractEntity, new ()
+		{
+			return this.independentEntityContext.CreateEmptyEntity<T> ();
+		}
+
 		public void DisposeDummyEntity(AbstractEntity entity)
 		{
 			System.Diagnostics.Debug.Assert (this.IsDummyEntity (entity));

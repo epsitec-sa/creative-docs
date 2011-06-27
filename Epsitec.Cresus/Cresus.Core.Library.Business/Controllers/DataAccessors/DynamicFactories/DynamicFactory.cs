@@ -63,6 +63,20 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 				?? TextFormatter.FormatText (caption.Name).ApplyFontColor (DynamicFactory.RedColor).ToString ();
 		}
 
+		/// <summary>
+		/// </summary>
+		/// <param name="caption">The caption.</param>
+		public static string GetInputName(Caption caption)
+		{
+			if (caption == null)
+			{
+				return "x";
+			}
+			else
+			{
+				return caption.Name;
+			}
+		}
 
 		private static readonly Color RedColor = Color.FromName ("Red");
 	}

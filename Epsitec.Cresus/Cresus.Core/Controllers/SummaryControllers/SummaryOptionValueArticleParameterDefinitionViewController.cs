@@ -22,4 +22,5 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				;
 		}
 	}
+	
 }

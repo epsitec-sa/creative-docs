@@ -113,6 +113,29 @@ namespace Epsitec.Cresus.Core.Resolvers
 			types = EntityViewControllerResolver.FilterTypes (controllerSubTypeId, types);
 			match = types.FirstOrDefault ();
 
+			if (match != null)
+			{
+				return match;
+			}
+
+			if (entityType.IsGenericType)
+			{
+				var entityTypeName  = entityType.GetGenericTypeDefinition ().ToString ();
+				var genericTypeArgs = entityType.GetGenericArguments ();
+				
+				types = from type in controllerTypes
+						where type.BaseEntityType.ToString () == entityTypeName
+						select type.Type;
+
+				types = EntityViewControllerResolver.FilterTypes (controllerSubTypeId, types);
+				match = types.FirstOrDefault ();
+
+				if (match != null)
+				{
+					match = match.MakeGenericType (genericTypeArgs);
+				}
+			}
+
 			return match;
 		}
 
