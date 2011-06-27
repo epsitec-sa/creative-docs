@@ -16,8 +16,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			wall.AddBrick (x => x.Options)
 				.Template ()
-				  .Text (x => x.GetSummary ())
-				  .TextCompact (x => x.GetCompactSummary ())
 				.End ()
 				;
 		}

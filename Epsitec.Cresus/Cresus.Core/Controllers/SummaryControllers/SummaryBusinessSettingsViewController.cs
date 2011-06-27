@@ -25,26 +25,20 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			wall.AddBrick (x => x.Finance.IsrDefs)
 				.Name ("IsrDefinition")
 				.Template ()
-				 .Text (x => x.GetSummary ())
 				.End ()
 				;
 			wall.AddBrick (x => x.Finance.PaymentReminderDefs)
 				.Name ("PaymentReminderDefinition")
 				.Attribute (BrickMode.AutoGroup)
 				.Template ()
-				 .Text (x => x.GetSummary ())
 				.End ()
 				;
 			wall.AddBrick (x => x.Tax.VatDefinitions)
 				.Template ()
-				 .Text (x => x.GetSummary ())
-				 .TextCompact (x => x.GetCompactSummary ())
 				.End ()
 				;
 			wall.AddBrick (x => x.Generators)
 				.Template ()
-				 .Text (x => x.GetSummary ())
-				 .TextCompact (x => x.GetCompactSummary ())
 				.End ()
 				;
 		}

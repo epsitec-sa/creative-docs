@@ -37,8 +37,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				
 				.Template ()
 				 .Title (x => x.GetTitle ())
-				 .Text (x => x.GetSummary ())
-				 .TextCompact (x => x.GetCompactSummary ())
+//				 .Text (x => x.GetSummary ())
+//				 .TextCompact (x => x.GetCompactSummary ())
 				.End ()
 				;
 			wall.AddBrick (x => x.Contacts)
@@ -51,8 +51,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 //				.Text (CollectionTemplate.DefaultEmptyText)
 				
 				.Template ()
-				 .Text (x => x.GetSummary ())
-				 .TextCompact (x => x.GetCompactSummary ())
+//				 .Text (x => x.GetSummary ())
+//				 .TextCompact (x => x.GetCompactSummary ())
 				.End ()
 				;
 			wall.AddBrick (x => x.Contacts)
@@ -65,8 +65,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 //				.Text (CollectionTemplate.DefaultEmptyText)
 				
 				.Template ()
-				 .Text (x => x.GetSummary ())
-				 .TextCompact (x => x.GetCompactSummary ())
+//				 .Text (x => x.GetSummary ())
+//				 .TextCompact (x => x.GetCompactSummary ())
 				.End ()
 				;
 		}

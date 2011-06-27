@@ -18,32 +18,22 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				;
 			wall.AddBrick (x => x.ArticleParameterDefinitions)  // TODO: pas correct !
 				.Template ()
-				  .Text (x => x.GetSummary ())
-				  .TextCompact (x => x.GetCompactSummary ())
 				.End ()
 				;
 			wall.AddBrick (x => x.ArticlePrices)
 				.Template ()
-				  .Text (x => x.GetSummary ())
-				  .TextCompact (x => x.GetCompactSummary ())
 				.End ()
 				;
 			wall.AddBrick (x => x.Accounting)
 				.Template ()
-				  .Text (x => x.GetSummary ())
-				  .TextCompact (x => x.GetCompactSummary ())
 				.End ()
 				;
 			wall.AddBrick (x => x.ArticleSupplies)
 				.Template ()
-				  .Text (x => x.GetSummary ())
-				  .TextCompact (x => x.GetCompactSummary ())
 				.End ()
 				;
 			wall.AddBrick (x => x.Comments)
 				.Template ()
-				  .Text (x => x.GetSummary ())
-				  .TextCompact (x => x.GetCompactSummary ())
 				.End ()
 				;
 		}
