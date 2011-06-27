@@ -18,6 +18,38 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryBusinessDocumentViewController : SummaryViewController<BusinessDocumentEntity>
 	{
+#if true
+		protected override void CreateBricks(Bricks.BrickWall<BusinessDocumentEntity> wall)
+		{
+			wall.AddBrick (x => x);
+
+			wall.AddBrick (x => x.Lines)  // TODO: ArticleLines
+				.Template ()
+				;
+			wall.AddBrick (x => x.Lines)  // TODO: FreightAndTaxLines
+				.Template ()
+				;
+			wall.AddBrick (x => x.Lines)  // TODO: TotalSummary
+				.Template ()
+				;
+			wall.AddBrick (x => x.Lines)  // TODO: VatLines
+				.Template ()
+				;
+
+			var metadata = this.BusinessContext.GetMasterEntity<DocumentMetadataEntity> ();
+			if (metadata != null)
+			{
+				if (metadata.DocumentCategory.DocumentType == Business.DocumentType.Invoice)
+				{
+					wall.AddBrick (x => x.BillingDetails)
+						.Template ()
+						;
+				}
+			}
+
+			// TODO: Créer le PreviewPanel
+		}
+#else
 		protected override void CreateUI()
 		{
 			using (var data = TileContainerController.Setup (this))
@@ -373,5 +405,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 
 		private ContinuousController		 previewController;
+#endif
 	}
 }
