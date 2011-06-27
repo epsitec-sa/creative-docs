@@ -37,6 +37,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				;
 			wall.AddBrick (x => x.Comments)
 				.Template ()
+				.End ()
 				;
 		}
 	}

@@ -41,13 +41,13 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				.Template ()
 				.End ()
 				;
-			wall.AddBrick (x => x.Lines)  // TODO: VatLines
+			wall.AddBrick (x => x.Lines)
 				.AsType<TaxDocumentItemEntity> ()
 				.Attribute (BrickMode.AutoGroup)
 				.Template ()
 				.End ()
 				;
-			wall.AddBrick (x => x.Lines)  // TODO: VatLines
+			wall.AddBrick (x => x.Lines)
 				.AsType<EndTotalDocumentItemEntity> ()
 				.Attribute (BrickMode.AutoGroup)
 				.Template ()
@@ -61,6 +61,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				{
 					wall.AddBrick (x => x.BillingDetails)
 						.Template ()
+						.End ()
 						;
 				}
 			}
