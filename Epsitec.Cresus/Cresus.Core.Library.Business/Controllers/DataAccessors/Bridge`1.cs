@@ -4,19 +4,21 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Bricks;
+
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Widgets.Tiles;
+
+using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
 using System.Linq.Expressions;
-using Epsitec.Cresus.Core.Business;
-using Epsitec.Cresus.DataLayer.Context;
-using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Core.Factories;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
@@ -36,7 +38,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 
-		public override bool ContainsBricks
+		public override bool					ContainsBricks
 		{
 			get
 			{
@@ -204,6 +206,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 			this.controller.AddUIController (sub);
 		}
+
 
 		#region InputProcessor Class
 

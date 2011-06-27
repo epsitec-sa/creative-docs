@@ -7,6 +7,10 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Bricks
 {
+	/// <summary>
+	/// The <c>Brick</c> class is the base class of the <see cref="Brick&lt;T&gt;"/> class,
+	/// which provides the mechanisms required to transform bricks into a real UI.
+	/// </summary>
 	public abstract class Brick
 	{
 		protected Brick()
@@ -15,7 +19,7 @@ namespace Epsitec.Cresus.Bricks
 		}
 
 
-		internal BrickWall BrickWall
+		internal BrickWall						BrickWall
 		{
 			get
 			{
@@ -23,6 +27,7 @@ namespace Epsitec.Cresus.Bricks
 			}
 		}
 
+		
 		public abstract System.Type GetFieldType();
 
 		public System.Delegate GetResolver(System.Type expectedReturnType)
@@ -54,23 +59,8 @@ namespace Epsitec.Cresus.Bricks
 			return lambda.Compile ();
 #endif
 		}
-
-#if false
-		class Zzz<T, TResult, TReal>
-			where TReal : TResult
-		{
-			public Zzz()
-			{
-			}
-			public System.Func<T, IList<TResult>> CreateFunction(LambdaExpression expression)
-			{
-				var source = Expression.Lambda<System.Func<T, IList<TReal>>> (expression.Body, expression.Parameters).Compile ();
-				System.Func<T, IList<TResult>> output = x => source (x);
-				return output;
-			}
-		}
-#endif
-
+		
+		
 		internal void AddProperty(BrickProperty property, bool notify = true)
 		{
 			this.properties.Add (property);
@@ -135,8 +125,8 @@ namespace Epsitec.Cresus.Bricks
 
 
 
-		private readonly List<BrickProperty> properties;
-		private BrickWall brickWall;
-		private Expression resolver;
+		private readonly List<BrickProperty>	properties;
+		private BrickWall						brickWall;
+		private Expression						resolver;
 	}
 }
