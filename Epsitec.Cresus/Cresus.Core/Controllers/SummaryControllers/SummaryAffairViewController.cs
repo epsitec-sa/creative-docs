@@ -30,9 +30,9 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				.Title ("Document lié")
 				.TitleCompact ("Documents liés")
 				.Template ()
-				  .Title (x => x.GetCompactSummary ())			// TODO: il est normal que cette ligne doivent rester
-				  .Text (x => x.GetSummary ())					// TODO: mais pas celle-çi..
-				  .TextCompact (x => x.GetCompactSummary ())	// TODO: ..ni celle-çi !
+				  //.Title (x => x.GetCompactSummary ())			// TODO: il est normal que cette ligne doivent rester
+				  //.Text (x => x.GetSummary ())					// TODO: mais pas celle-çi..
+				  //.TextCompact (x => x.GetCompactSummary ())	// TODO: ..ni celle-çi !
 				.End ()
 				;
 			wall.AddBrick (x => x.Comments)

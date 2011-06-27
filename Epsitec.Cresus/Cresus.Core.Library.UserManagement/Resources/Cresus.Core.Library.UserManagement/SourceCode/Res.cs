@@ -166,6 +166,8 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 				
 				//	designer:cap/AVAV
 				public static readonly global::Epsitec.Common.Support.Druid EntityEditionSettings = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 31);
+				//	designer:cap/AVA01
+				public static readonly global::Epsitec.Common.Support.Druid SerializedCommandSettings = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 32);
 			}
 			
 			public static class SoftwareUser
