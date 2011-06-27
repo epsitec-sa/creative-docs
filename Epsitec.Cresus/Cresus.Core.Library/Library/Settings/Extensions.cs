@@ -3,7 +3,7 @@
 
 namespace Epsitec.Cresus.Core.Library.Settings
 {
-	public static class TileExtensions
+	public static class Extensions
 	{
 		/// <summary>
 		/// Simplifies the specified visibility mode by selecting the most meaningful value.
