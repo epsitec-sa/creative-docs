@@ -187,7 +187,7 @@ namespace Epsitec.Cresus.Core.Features
 
 			if (entity == null)
 			{
-				//	TODO: protest if there is no valid product settings !
+				//	TODO: protest if there is no valid product settings ! for now, we create an empty product settings entity
 
 				entity = context.CreateEntity<ProductSettingsEntity> ();
 			}

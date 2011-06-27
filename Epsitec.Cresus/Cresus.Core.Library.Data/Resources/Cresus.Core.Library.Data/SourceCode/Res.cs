@@ -63,6 +63,8 @@ namespace Epsitec.Cresus.Core.Library.Data
 					{
 					}
 					
+					//	designer:cap/8VAG1
+					public static readonly Epsitec.Common.Types.StringType CommandId = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 48));
 					//	designer:cap/8VAF1
 					public static readonly Epsitec.Common.Types.StringType EntityId = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 47));
 					//	designer:cap/8VA81

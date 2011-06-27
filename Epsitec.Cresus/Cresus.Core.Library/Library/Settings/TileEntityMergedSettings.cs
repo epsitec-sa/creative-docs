@@ -6,7 +6,7 @@ using Epsitec.Common.Support;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Widgets.Tiles
+namespace Epsitec.Cresus.Core.Library.Settings
 {
 	public sealed class TileEntityMergedSettings
 	{

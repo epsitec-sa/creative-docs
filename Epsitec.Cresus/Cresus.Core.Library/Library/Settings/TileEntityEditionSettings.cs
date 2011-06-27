@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace Epsitec.Cresus.Core.Widgets.Tiles
+namespace Epsitec.Cresus.Core.Library.Settings
 {
 	public sealed class TileEntityEditionSettings
 	{

@@ -589,6 +589,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private IEnumerable<Command> GetDatabaseMenuCommands()
 		{
 			//	Retourne null lorsque le menu doit contenir un séparateur.
+			
 			bool admin = this.userManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.Administrator);
 			bool devel = this.userManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.Developer);
 			bool power = this.userManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.PowerUser);

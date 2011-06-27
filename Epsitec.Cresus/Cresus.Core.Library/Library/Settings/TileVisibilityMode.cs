@@ -3,7 +3,7 @@
 
 using Epsitec.Common.Types;
 
-namespace Epsitec.Cresus.Core.Widgets.Tiles
+namespace Epsitec.Cresus.Core.Library.Settings
 {
 	/// <summary>
 	/// The <c>TileVisibilityMode</c> enumeration defines how tiles should be displayed.

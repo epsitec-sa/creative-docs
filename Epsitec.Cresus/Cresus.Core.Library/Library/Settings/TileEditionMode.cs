@@ -3,7 +3,7 @@
 
 using Epsitec.Common.Types;
 
-namespace Epsitec.Cresus.Core.Widgets.Tiles
+namespace Epsitec.Cresus.Core.Library.Settings
 {
 	/// <summary>
 	/// THe <c>TileEditionMode</c> enumeration defines how tiles should be edited.
