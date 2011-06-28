@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
@@ -17,6 +18,7 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Features
 {
@@ -67,6 +69,13 @@ namespace Epsitec.Cresus.Core.Features
 			}
 		}
 
+
+		public void EnableGodMode()
+		{
+			this.overrideCommandEnable = true;
+		}
+
+		
 		/// <summary>
 		/// Saves changes done to the features and customizations.
 		/// </summary>
@@ -91,6 +100,33 @@ namespace Epsitec.Cresus.Core.Features
 			}
 		}
 
+		public bool IsFieldEnabled<T>(LambdaExpression lambda, UserSummary user = null)
+			where T : AbstractEntity, new ()
+		{
+			if (user == null)
+			{
+				user = this.userManager.GetUserSummary ();
+			}
+			Druid entityId = EntityInfo<T>.GetTypeId ();
+			/*
+			var customEntitySettings  = this.Customizations.Settings.EntityEditionSettings.Where (x => x.EntityId == entityId);
+			var featureEntitySettings = this.ProductSettings.LicensedFeatures.SelectMany (x => x.EnabledSettings.EntityEditionSettings).Where (x => x.EntityId == entityId);
+
+			var allSettings = featureEntitySettings.Concat (customEntitySettings).ToList ();
+
+			if (allSettings.Count == 0)
+			{
+				return true;
+			}
+			*/
+			var lambdaMember = (MemberExpression) lambda.Body;
+			var propertyInfo = lambdaMember.Member as System.Reflection.PropertyInfo;
+			var typeField    = EntityInfo.GetStructuredTypeField (propertyInfo);
+
+			var entitySettings = this.GetSettings (entityId, user);
+
+			return true;
+		}
 
 		public bool IsCommandEnabled(Druid commandId, UserSummary user = null)
 		{
@@ -128,9 +164,9 @@ namespace Epsitec.Cresus.Core.Features
 		{
 			string entityId = entity.ToString ();
 
-			var entityEditionSettings = this.GetAllSoftwareEditionSettings ().SelectMany (x => x.EntityEditionSettings).Where (x => x.EntityId == entityId);
-			var tileEntityEditionSettings = entityEditionSettings.Select (x => x.DisplaySettings);
-			var fieldEditionSettings = tileEntityEditionSettings.SelectMany (x => x.GetAllFieldSettings (s => user.Matches (s)));
+			var customEditionSettings     = this.GetAllSoftwareEditionSettings ().SelectMany (x => x.EntityEditionSettings).Where (x => x.EntityId == entityId);
+			var tileEntityEditionSettings = customEditionSettings.Select (x => x.DisplaySettings);
+			var fieldEditionSettings      = tileEntityEditionSettings.SelectMany (x => x.GetAllFieldSettings (s => user.Matches (s)));
 
 			var result = new TileEntityMergedSettings (entity);
 
@@ -141,6 +177,7 @@ namespace Epsitec.Cresus.Core.Features
 
 			return result;
 		}
+
 
 		#region IDisposable Members
 
@@ -155,6 +192,12 @@ namespace Epsitec.Cresus.Core.Features
 		private IEnumerable<SoftwareEditionSettingsEntity> GetAllSoftwareEditionSettings()
 		{
 			yield return this.Customizations.Settings;
+
+			foreach (var feature in this.ProductSettings.LicensedFeatures)
+			{
+				yield return feature.EnabledSettings;
+			}
+
 		}
 		
 		private void DisposeBusinessContext()
@@ -228,6 +271,7 @@ namespace Epsitec.Cresus.Core.Features
 			//	TODO: check validity of entity using the hash
 			return true;
 		}
+
 
 		#region Factory Class
 

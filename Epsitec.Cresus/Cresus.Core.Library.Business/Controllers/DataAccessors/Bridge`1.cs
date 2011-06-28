@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
 using System.Linq.Expressions;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
@@ -30,8 +31,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 	public class Bridge<T> : Bridge
 		where T : AbstractEntity, new ()
 	{
-		public Bridge(EntityViewController<T> controller)
-			: base (controller)
+		public Bridge(BridgeContext bridgeContext, EntityViewController<T> controller)
+			: base (bridgeContext, controller)
 		{
 			this.controller = controller;
 			this.walls = new List<BrickWall<T>> ();
@@ -149,7 +150,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				}
 				else if (Brick.ContainsProperty (brick, BrickPropertyKey.Input))
 				{
-					var processor = new InputProcessor (this.controller, data, item, brick);
+					var processor = new InputProcessor (this, data, item, brick);
 
 					processor.ProcessInputs ();
 				}
@@ -215,9 +216,10 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		private class InputProcessor
 		{
-			public InputProcessor(EntityViewController<T> controller, TileDataItems data, TileDataItem item, Brick root)
+			public InputProcessor(Bridge<T> bridge, TileDataItems data, TileDataItem item, Brick root)
 			{
-				this.controller = controller;
+				this.bridge    = bridge;
+				this.controller = this.bridge.controller;
 				this.business = this.controller.BusinessContext;
 				this.data  = data;
 				this.item  = item;
@@ -305,6 +307,11 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				this.actions.Add (groupAction);
 			}
 
+			private bool CheckField(LambdaExpression lambda)
+			{
+				return this.bridge.bridgeContext.FeatureManager.IsFieldEnabled<T> (lambda);
+			}
+
 			private void CreateActionForInputField(Expression expression, BrickPropertyCollection fieldProperties)
 			{
 				LambdaExpression lambda = expression as LambdaExpression;
@@ -315,7 +322,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				}
 
 				var fieldType  = lambda.ReturnType;
-				var entityType = typeof (AbstractEntity);
+				var entityType = typeof (T);
+
+				if (this.CheckField (lambda) == false)
+				{
+					return;
+				}
 
 				int    width  = InputProcessor.GetInputWidth (fieldProperties);
 				int    height = InputProcessor.GetInputHeight (fieldProperties);
@@ -503,6 +515,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				}
 			}
 
+			private readonly Bridge<T> bridge;
 			private readonly EntityViewController<T> controller;
 			private readonly BusinessContext business;
 			private readonly TileDataItems data;

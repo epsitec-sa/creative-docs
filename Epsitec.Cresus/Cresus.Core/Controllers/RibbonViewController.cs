@@ -39,6 +39,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.persistenceManager = app.PersistenceManager;
 			this.userManager        = userManager;
 			this.featureManager     = featureManager;
+
+			this.featureManager.EnableGodMode ();
 		}
 
 		

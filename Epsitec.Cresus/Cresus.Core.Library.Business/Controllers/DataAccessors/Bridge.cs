@@ -17,8 +17,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 	/// </summary>
 	public abstract class Bridge
 	{
-		protected Bridge(EntityViewController controller)
+		protected Bridge(BridgeContext bridgeContext, EntityViewController controller)
 		{
+			this.bridgeContext = bridgeContext;
 			this.controller = controller;
 		}
 
@@ -171,6 +172,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 
-		private readonly EntityViewController controller;
+		protected readonly BridgeContext		bridgeContext;
+		private readonly EntityViewController	controller;
 	}
 }

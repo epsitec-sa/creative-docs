@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Core.Features;
 using Epsitec.Cresus.Core.Widgets;
 
 using System.Collections.Generic;
@@ -21,7 +22,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 			this.bridges    = new List<Bridge> ();
 			this.controller = controller;
-			
+			this.features   = this.controller.Data.Host.FindComponent<FeatureManager> ();
+
 			BridgeContext.instance = this;
 		}
 
@@ -33,10 +35,19 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
+		public FeatureManager				FeatureManager
+		{
+			get
+			{
+				return this.features;
+			}
+		}
+
+
 		public Bridge<T> CreateBridge<T>(EntityViewController<T> controller)
 			where T : AbstractEntity, new ()
 		{
-			var bridge = new Bridge<T> (controller);
+			var bridge = new Bridge<T> (this, controller);
 
 			this.bridges.Add (bridge);
 
@@ -88,5 +99,6 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		private readonly List<Bridge>			bridges;
 		private readonly EntityViewController	controller;
+		private readonly FeatureManager			features;
 	}
 }
