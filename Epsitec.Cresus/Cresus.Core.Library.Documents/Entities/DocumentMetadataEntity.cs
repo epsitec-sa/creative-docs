@@ -36,6 +36,12 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
+		public FormattedText GetTitle()
+		{
+			return this.GetCompactSummary ();
+		}
+
+
 		public override EntityStatus GetEntityStatus()
 		{
 			using (var a = new EntityStatusAccumulator ())
