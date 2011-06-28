@@ -447,6 +447,11 @@ namespace Epsitec.Common.Drawing.Platform
 		
 		public static NativeBitmap Load(byte[] buffer, string path = null)
 		{
+			if (buffer == null)
+			{
+				return null;
+			}
+
 			try
 			{
 				using (var imageStreamSource = new System.IO.MemoryStream (buffer))

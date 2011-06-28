@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Core.Factories;
 
-namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
+namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 {
 	/// <summary>
 	/// Ce contrôleur gère la définition des paramètres d'un article.

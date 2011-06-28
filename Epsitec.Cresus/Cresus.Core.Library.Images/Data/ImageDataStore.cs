@@ -230,7 +230,7 @@ namespace Epsitec.Cresus.Core.Data
 					continue;
                 }
 
-				var thumbnailImage = nativeImage.MakeThumbnail (size);
+				var thumbnailImage = nativeImage == null ? null : nativeImage.MakeThumbnail (size);
 				var thumbnailBlob  = this.CreateThumbnailImageBlob (imageBlob, thumbnailImage, size);
 
 				this.PersistImageBlob (thumbnailBlob);
@@ -269,7 +269,7 @@ namespace Epsitec.Cresus.Core.Data
 
 		private ImageBlobEntity CreateThumbnailImageBlob(ImageBlobEntity fullSizeImageBlob, NativeBitmap bitmap, int thumbnailSize)
 		{
-			byte[] data = bitmap.SaveToMemory (BitmapFileType.Png);
+			byte[] data = bitmap == null ? null : bitmap.SaveToMemory (BitmapFileType.Png);
 		
 			var blob = this.DataContext.CreateEntity<ImageBlobEntity> ();
 
@@ -288,13 +288,16 @@ namespace Epsitec.Cresus.Core.Data
 
 		private static void FillBlobMetadata(NativeBitmap bitmap, ImageBlobEntity blob, int thumbnailSize = 0)
 		{
-			blob.PixelWidth    = bitmap.Width;
-			blob.PixelHeight   = bitmap.Height;
-			blob.ThumbnailSize = thumbnailSize;
-			blob.BitsPerPixel  = bitmap.BitsPerPixel;
-			blob.Dpi           = ((decimal) System.Math.Round (1000 * (bitmap.DpiX + bitmap.DpiY) / 2)) / 1000M;
+			if (bitmap != null)
+			{
+				blob.PixelWidth    = bitmap.Width;
+				blob.PixelHeight   = bitmap.Height;
+				blob.ThumbnailSize = thumbnailSize;
+				blob.BitsPerPixel  = bitmap.BitsPerPixel;
+				blob.Dpi           = ((decimal) System.Math.Round (1000 * (bitmap.DpiX + bitmap.DpiY) / 2)) / 1000M;
 
-			blob.SetHashes (blob.Data);
+				blob.SetHashes (blob.Data);
+			}
 		}
 
 		private ImageBlobEntity FindSimilarImageBlob(ImageBlobEntity imageBlob)

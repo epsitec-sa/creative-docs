@@ -86,7 +86,7 @@
     <Compile Include="Controllers\ArticleParameterControllers\NumericValueArticleParameterController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\OptionValueArticleParameterController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\ValuesArticleParameterController.cs" />
-    <Compile Include="Controllers\ArticleParameterListEnumValuesController.cs" />
+    <Compile Include="Controllers\SpecialControllers\ArticleParameterListEnumValuesController.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserList.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserListItem.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserSettingsController.cs" />
@@ -95,7 +95,7 @@
     <Compile Include="Controllers\BrowserControllers\BrowserViewController.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserViewController.ItemCreator.cs" />
     <Compile Include="Controllers\ControllerSubTypeAttribute.cs" />
-    <Compile Include="Controllers\ImageMiniatureController.cs" />
+    <Compile Include="Controllers\SpecialControllers\ImageMiniatureController.cs" />
     <Compile Include="Controllers\CoreController.cs" />
     <Compile Include="Controllers\CoreViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationViewController.cs" />

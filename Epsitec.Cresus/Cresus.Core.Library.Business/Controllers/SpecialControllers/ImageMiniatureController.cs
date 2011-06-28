@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Core.Factories;
 
-namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
+namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 {
 	/// <summary>
 	/// Ce contrôleur affiche une miniature d'une image bitmap.
@@ -46,9 +46,8 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				System.Diagnostics.Debug.Assert (store != null);
 				
 				var data = store.GetImageData (this.imageBlobEntity.Code, 300);
-				System.Diagnostics.Debug.Assert (data != null);
 				
-				Image image = data.GetImage ();
+				Image image = data == null ? null : data.GetImage ();
 
 				var box = new FrameBox
 				{
