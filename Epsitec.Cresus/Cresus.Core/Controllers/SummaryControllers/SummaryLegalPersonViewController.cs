@@ -16,6 +16,33 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryLegalPersonViewController : SummaryViewController<Entities.LegalPersonEntity>
 	{
+#if true
+		protected override void CreateBricks(Bricks.BrickWall<LegalPersonEntity> wall)
+		{
+			wall.AddBrick ()
+				.Name ("Customer")
+				.Title ("Personne morale")
+				.Icon ("Data.LegalPerson")
+				;
+			wall.AddBrick (x => x.Contacts)
+				.AsType<MailContactEntity> ()
+				.Template ()
+				.End ()
+				;
+			wall.AddBrick (x => x.Contacts)
+				.AsType<TelecomContactEntity> ()
+				.Attribute (BrickMode.AutoGroup)
+				.Template ()
+				.End ()
+				;
+			wall.AddBrick (x => x.Contacts)
+				.AsType<UriContactEntity> ()
+				.Attribute (BrickMode.AutoGroup)
+				.Template ()
+				.End ()
+				;
+		}
+#else
 		protected override void CreateUI()
 		{
 			using (var data = TileContainerController.Setup (this))
@@ -57,5 +84,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			Common.CreateUIUriContacts (this.BusinessContext, data, this.EntityGetter, x => x.Contacts);
 		}
+#endif
 	}
 }

@@ -16,6 +16,12 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryMailContactViewController : SummaryViewController<Entities.MailContactEntity>
 	{
+#if true
+		protected override void CreateBricks(Bricks.BrickWall<MailContactEntity> wall)
+		{
+			wall.AddBrick (x => x);
+		}
+#else
 		protected override void CreateUI()
 		{
 			using (var data = TileContainerController.Setup (this))
@@ -38,5 +44,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					EntityMarshaler		= this.CreateEntityMarshaler (),
 				});
 		}
+#endif
 	}
 }
