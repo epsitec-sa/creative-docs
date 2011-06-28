@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Features
 			{
 				if (this.businessContext == null)
 				{
-					this.businessContext = Resolvers.InterfaceImplementationResolver<IBusinessContext>.CreateInstance (this.Host);
+					this.businessContext = Resolvers.InterfaceImplementationResolver<IBusinessContext>.CreateInstance (this.data);
 					this.businessContext.GlobalLock = GlobalLocks.FeatureManagement;
 				}
 

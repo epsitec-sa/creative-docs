@@ -74,5 +74,18 @@ namespace Epsitec.Common.Support.Extensions
 		{
 			return type.GetCustomAttributes (typeof (T), inherit).Cast<T> ();
 		}
+
+		/// <summary>
+		/// Determines whether the type contains the specified interface.
+		/// </summary>
+		/// <typeparam name="T">The type of the interface.</typeparam>
+		/// <param name="type">The type.</param>
+		/// <returns>
+		///   <c>true</c> if the type contains the specified interface; otherwise, <c>false</c>.
+		/// </returns>
+		public static bool ContainsInterface<T>(this System.Type type)
+		{
+			return type.GetInterfaces ().Contains (typeof (T));
+		}
 	}
 }

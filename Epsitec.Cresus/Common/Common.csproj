@@ -349,6 +349,7 @@
     <Compile Include="Support\AppDomainStarter.cs" />
     <Compile Include="Support\ArrayEqualityComparer.cs" />
     <Compile Include="Support\AssemblyLoader.cs" />
+    <Compile Include="Support\AssemblyLoadMode.cs" />
     <Compile Include="Support\AutoCache.cs" />
     <Compile Include="Support\CacheManager.cs" />
     <Compile Include="Support\DisposableWraper.cs" />

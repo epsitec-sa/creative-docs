@@ -54,6 +54,7 @@
     <Compile Include="Controllers\EnumController.cs" />
     <Compile Include="Controllers\EnumValueController.cs" />
     <Compile Include="Dialogs\CoreDialog.cs" />
+    <Compile Include="Factories\CoreComponentFactory`1.cs" />
     <Compile Include="Factories\CoreAppComponentFactory.cs" />
     <Compile Include="Factories\CoreComponentFactory.cs" />
     <Compile Include="Factories\DefaultCoreAppComponentFactory.cs" />

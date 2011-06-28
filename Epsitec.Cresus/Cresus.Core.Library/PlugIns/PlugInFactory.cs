@@ -55,8 +55,8 @@ namespace Epsitec.Cresus.Core.PlugIns
 
 		private void DiscoverPlugIns()
 		{
-			System.Type[] constructorArgumentTypes = new System.Type[] { typeof (PlugInFactory) };
-			var assemblies = AssemblyLoader.LoadMatching ("*", System.IO.SearchOption.TopDirectoryOnly, "plugins");
+			var constructorArgumentTypes = new System.Type[] { typeof (PlugInFactory) };
+			var assemblies = AssemblyLoader.LoadMatching ("*", System.IO.SearchOption.TopDirectoryOnly, loadMode: AssemblyLoadMode.LoadOnlyEpsitecSigned, subfolder: "plugins");
 
 			if (assemblies.Count == 0)
 			{
@@ -65,7 +65,11 @@ namespace Epsitec.Cresus.Core.PlugIns
 
 			var records = from assembly in assemblies
 						  from type in assembly.GetTypes ()
-						  where type.IsClass && !type.IsAbstract && type.GetInterfaces ().Contains (typeof (ICorePlugIn)) && type.GetConstructor (constructorArgumentTypes) != null && type.GetCustomAttributes<PlugInAttribute> ().Any ()
+						  where type.IsClass
+						     && !type.IsAbstract
+							 && type.ContainsInterface<ICorePlugIn> ()
+							 && type.GetConstructor (constructorArgumentTypes) != null
+							 && type.GetCustomAttributes<PlugInAttribute> ().Any ()
 						  select new PlugInRecord (type);
 
 			this.records.AddRange (records);

@@ -1,7 +1,10 @@
 //	Copyright © 2004-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Types;
+
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Epsitec.Common.Support
 {
@@ -19,7 +22,7 @@ namespace Epsitec.Common.Support
 		/// <returns>
 		/// The assembly if it could be found; otherwise, <c>null</c>.
 		/// </returns>
-		public static System.Reflection.Assembly Load(string name, string subfolder = null)
+		public static Assembly Load(string name, string subfolder = null)
 		{
 			string loadPath = AssemblyLoader.GetAssemblyLoadPath ();
 
@@ -42,7 +45,7 @@ namespace Epsitec.Common.Support
 		/// <returns>
 		/// The assembly if it could be found; otherwise, <c>null</c>.
 		/// </returns>
-		public static System.Reflection.Assembly LoadFromPath(string name, string loadPath, bool loadDependencies = false)
+		public static Assembly LoadFromPath(string name, string loadPath, bool loadDependencies = false)
 		{
 			if (System.IO.Directory.Exists (loadPath))
 			{
@@ -54,7 +57,7 @@ namespace Epsitec.Common.Support
 					{
 						try
 						{
-							var assembly = System.Reflection.Assembly.LoadFrom (fullName);
+							var assembly = Assembly.LoadFrom (fullName);
 
 							if (assembly != null)
 							{
@@ -78,14 +81,18 @@ namespace Epsitec.Common.Support
 
 			return null;
 		}
+
 		/// <summary>
 		/// Loads all assemblies which match the specified pattern.
 		/// </summary>
 		/// <param name="pattern">The assembly name pattern.</param>
 		/// <param name="searchOption">The search option.</param>
+		/// <param name="loadMode">The load mode.</param>
 		/// <param name="subfolder">The optional sub-folder.</param>
-		/// <returns>The assemblies which could be found.</returns>
-		public static IList<System.Reflection.Assembly> LoadMatching(string pattern, System.IO.SearchOption searchOption, string subfolder = null)
+		/// <returns>
+		/// The assemblies which could be found.
+		/// </returns>
+		public static IList<Assembly> LoadMatching(string pattern, System.IO.SearchOption searchOption, AssemblyLoadMode loadMode = AssemblyLoadMode.LoadOnlyEpsitecSigned, string subfolder = null)
 		{
 			string loadPath = AssemblyLoader.GetAssemblyLoadPath ();
 
@@ -94,7 +101,7 @@ namespace Epsitec.Common.Support
 				loadPath = System.IO.Path.Combine (loadPath, subfolder);
 			}
 
-			List<System.Reflection.Assembly> assemblies = new List<System.Reflection.Assembly> ();
+			var assemblies  = new List<Assembly> ();
 
 			if (System.IO.Directory.Exists (loadPath))
 			{
@@ -104,7 +111,10 @@ namespace Epsitec.Common.Support
 
 					foreach (string path in System.IO.Directory.GetFiles (loadPath, filePattern, searchOption))
 					{
-						assemblies.Add (System.Reflection.Assembly.LoadFrom (path));
+						if (AssemblyLoader.CheckAssemblyName (path, loadMode))
+						{
+							assemblies.Add (Assembly.LoadFrom (path));
+						}
 					}
 				}
 			}			
@@ -121,9 +131,7 @@ namespace Epsitec.Common.Support
 		{
 			string loadPath = Globals.Directories.Executable;
 
-			System.Reflection.Assembly current = System.Reflection.Assembly.GetAssembly (typeof (AssemblyLoader));
-
-			string loadName = current.CodeBase;
+			string loadName = AssemblyLoader.CurrentAssembly.CodeBase;
 			string filePrefix = "file:///";
 
 			if (loadName.StartsWith (filePrefix))
@@ -152,7 +160,37 @@ namespace Epsitec.Common.Support
 			return loadPath;
 		}
 
+
+		/// <summary>
+		/// Checks the assembly name to see if it is compatible with the load mode.
+		/// </summary>
+		/// <param name="path">The path to the assembly DLL.</param>
+		/// <param name="loadMode">The load mode.</param>
+		/// <returns><c>true</c> if the assembly is compatible; otherwise, <c>false</c>.</returns>
+		private static bool CheckAssemblyName(string path, AssemblyLoadMode loadMode)
+		{
+			AssemblyName assemblyName = AssemblyName.GetAssemblyName (path);
+			byte[] publicKey = assemblyName.GetPublicKey ();
+
+			switch (loadMode)
+			{
+				case AssemblyLoadMode.LoadAny:
+					return true;
+
+				case AssemblyLoadMode.LoadOnlySigned:
+					return publicKey != null;
+
+				case AssemblyLoadMode.LoadOnlyEpsitecSigned:
+					return Comparer.EqualValues (AssemblyLoader.EpsitecPublicKey, publicKey);
+
+				default:
+					throw new System.NotSupportedException (string.Format ("AssemblyLoadMode.{0} not supported", loadMode));
+			}
+		}
+		
 		
 		private static int						loadPathDifferences;
+		private static Assembly					CurrentAssembly  = typeof (AssemblyLoader).Assembly;
+		private static readonly byte[]			EpsitecPublicKey = AssemblyLoader.CurrentAssembly.GetName ().GetPublicKey ();
 	}
 }

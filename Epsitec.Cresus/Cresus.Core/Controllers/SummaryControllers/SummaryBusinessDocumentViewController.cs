@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryBusinessDocumentViewController : SummaryViewController<BusinessDocumentEntity>
 	{
-#if true
+#if false
 		protected override void CreateBricks(Bricks.BrickWall<BusinessDocumentEntity> wall)
 		{
 			wall.AddBrick (x => x);
