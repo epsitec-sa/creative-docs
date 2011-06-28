@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Core.Entities
 					"Ordinateur :  ",   builder.Host, "\n",
 					"Dossier :  ",      directory, "\n",
 					"Fichier :  ",      filename, "\n",
-					"Code :  ",         Common.Widgets.TextLayout.ConvertToTaggedText (this.Code), "\n",
+					//"Code :  ",         Common.Widgets.TextLayout.ConvertToTaggedText (this.Code), "\n",
 					"—\n",
 					"Dimensions :  ", this.PixelWidth.ToString (), "×", this.PixelHeight.ToString (), " pixels\n",
 					"Résolution :  ",   dpi.ToString (), " dpi\n",

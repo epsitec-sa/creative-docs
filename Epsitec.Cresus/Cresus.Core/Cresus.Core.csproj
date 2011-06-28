@@ -518,6 +518,7 @@
     <EmbeddedResource Include="Images\Base.AbstractArticleParameterDefinition.icon" />
     <EmbeddedResource Include="Images\Data.EnumValueArticleParameterDefinition.icon" />
     <EmbeddedResource Include="Images\Base.ArticleStockLocation.icon" />
+    <EmbeddedResource Include="Images\Data.ImageMiniature.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

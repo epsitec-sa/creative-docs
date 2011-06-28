@@ -16,6 +16,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			wall.AddBrick (x => x);
 
 			wall.AddBrick ()
+				.Icon ("Data.ImageMiniature")
+				.Title ("Miniature")
 				.Input ()
 				  .Field (x => x.ImageBlob).WithSpecialController ()
 				.End ()
