@@ -848,11 +848,16 @@ namespace Epsitec.Cresus.Core
 
 		public TextFieldEx CreateTextField(EditionTile tile, double width, string label, Marshaler marshaler)
 		{
+			return this.CreateTextField(tile.Container, width, label, marshaler);
+		}
+
+		public TextFieldEx CreateTextField(FrameBox parent, double width, string label, Marshaler marshaler)
+		{
 			if (!string.IsNullOrEmpty (label))
 			{
 				var staticText = new StaticText
 				{
-					Parent = tile.Container,
+					Parent = parent,
 					Text = string.Concat (label, " :"),
 					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 					Dock = DockStyle.Stacked,
@@ -862,7 +867,7 @@ namespace Epsitec.Cresus.Core
 				this.ContentListAdd (staticText);
 			}
 
-			return this.CreateTextField (tile.Container, DockStyle.Stacked, width, marshaler);
+			return this.CreateTextField (parent, DockStyle.Stacked, width, marshaler);
 		}
 
 		public TextFieldEx CreateTextField(FrameBox parent, DockStyle dockStyle, double width, Marshaler marshaler)
@@ -895,14 +900,19 @@ namespace Epsitec.Cresus.Core
 
 			return textField;
 		}
-		
+
 		public TextFieldMultiEx CreateTextFieldMulti(EditionTile tile, double height, string label, Marshaler marshaler)
+		{
+			return this.CreateTextFieldMulti (tile.Container, height, label, marshaler);
+		}
+
+		public TextFieldMultiEx CreateTextFieldMulti(FrameBox parent, double height, string label, Marshaler marshaler)
 		{
 			if (!string.IsNullOrEmpty (label))
 			{
 				var staticText = new StaticText
 				{
-					Parent = tile.Container,
+					Parent = parent,
 					Text = string.Concat (label, " :"),
 					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 					Dock = DockStyle.Stacked,
@@ -912,7 +922,7 @@ namespace Epsitec.Cresus.Core
 				this.ContentListAdd (staticText);
 			}
 
-			return this.CreateTextFieldMulti (tile.Container, DockStyle.Stacked, height, marshaler);
+			return this.CreateTextFieldMulti (parent, DockStyle.Stacked, height, marshaler);
 		}
 
 		public TextFieldMultiEx CreateTextFieldMulti(FrameBox container, DockStyle dockStyle, double height, Marshaler marshaler)

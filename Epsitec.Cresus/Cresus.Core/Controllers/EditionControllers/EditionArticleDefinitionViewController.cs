@@ -51,14 +51,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .Field (x => x.BillingUnit)
 				  .Field (x => x.Units)
 				.End ()
-				.Separator ()
-				.Input ()
-				  .Field (x => x.Accounting)
-				.End ()
-				.Separator ()
-				.Input ()
-				  .Field (x => x.Comments)
-				.End ()
 				;
 		}
 #else
