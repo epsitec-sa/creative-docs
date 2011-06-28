@@ -37,24 +37,26 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 
 		public void CreateUI(Widget parent, UIBuilder builder, bool isReadOnly)
 		{
-			System.Diagnostics.Debug.Assert (parent is FrameBox);
 			this.isReadOnly = isReadOnly;
+
+			var frameBox = parent as FrameBox;
+			System.Diagnostics.Debug.Assert (frameBox != null);
 
 			if (this.mode == 0)  // description courte ?
 			{
 				var toolbarController = new ArticleParameterControllers.ArticleParameterToolbarController (this.tileContainer);
-				toolbarController.CreateUI (parent as FrameBox, "Description courte");
+				toolbarController.CreateUI (frameBox, "Description courte");
 
-				var textField = builder.CreateTextField (parent as FrameBox, 0, null, Marshaler.Create (() => this.articleEntity.Name, x => this.articleEntity.Name = x));
+				var textField = builder.CreateTextField (frameBox, 0, null, Marshaler.Create (() => this.articleEntity.Name, x => this.articleEntity.Name = x));
 				toolbarController.UpdateUI (this.articleEntity, textField);
 			}
 
 			if (this.mode == 1)  // description longue ?
 			{
 				var toolbarController = new ArticleParameterControllers.ArticleParameterToolbarController (this.tileContainer);
-				toolbarController.CreateUI (parent as FrameBox, "Description longue");
+				toolbarController.CreateUI (frameBox, "Description longue");
 
-				var textField = builder.CreateTextFieldMulti (parent as FrameBox, 68, null, Marshaler.Create (() => this.articleEntity.Description, x => this.articleEntity.Description = x));
+				var textField = builder.CreateTextFieldMulti (frameBox, 68, null, Marshaler.Create (() => this.articleEntity.Description, x => this.articleEntity.Description = x));
 				toolbarController.UpdateUI (this.articleEntity, textField);
 			}
 		}
