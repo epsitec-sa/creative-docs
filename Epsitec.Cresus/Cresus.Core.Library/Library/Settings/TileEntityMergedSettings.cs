@@ -24,7 +24,15 @@ namespace Epsitec.Cresus.Core.Library.Settings
 				return this.entityId;
 			}
 		}
-		
+
+		public bool IsEmpty
+		{
+			get
+			{
+				return this.settings.Count == 0;
+			}
+		}
+
 		public TileFieldEditionSettings this[Druid fieldId]
 		{
 			get
@@ -35,6 +43,11 @@ namespace Epsitec.Cresus.Core.Library.Settings
 			}
 		}
 
+
+		public bool Contains(Druid fieldId)
+		{
+			return this.settings.ContainsKey (fieldId);
+		}
 
 		public void Accumulate(Druid field, IEnumerable<UserFieldEditionSettings> settings)
 		{

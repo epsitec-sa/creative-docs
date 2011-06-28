@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			if (this.settings == null)
 			{
-				var xml = this.SerializedSettings.XmlData;
+				var xml = this.SerializedSettings.IsNull () ? null : this.SerializedSettings.XmlData;
 
 				if (xml == null)
 				{

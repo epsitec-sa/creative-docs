@@ -100,32 +100,31 @@ namespace Epsitec.Cresus.Core.Features
 			}
 		}
 
-		public bool IsFieldEnabled<T>(LambdaExpression lambda, UserSummary user = null)
+		public TileFieldEditionSettings GetFieldEditionSettings<T>(LambdaExpression lambda, UserSummary user = null)
 			where T : AbstractEntity, new ()
 		{
 			if (user == null)
 			{
 				user = this.userManager.GetUserSummary ();
 			}
+
 			Druid entityId = EntityInfo<T>.GetTypeId ();
-			/*
-			var customEntitySettings  = this.Customizations.Settings.EntityEditionSettings.Where (x => x.EntityId == entityId);
-			var featureEntitySettings = this.ProductSettings.LicensedFeatures.SelectMany (x => x.EnabledSettings.EntityEditionSettings).Where (x => x.EntityId == entityId);
-
-			var allSettings = featureEntitySettings.Concat (customEntitySettings).ToList ();
-
-			if (allSettings.Count == 0)
-			{
-				return true;
-			}
-			*/
+			
 			var lambdaMember = (MemberExpression) lambda.Body;
 			var propertyInfo = lambdaMember.Member as System.Reflection.PropertyInfo;
 			var typeField    = EntityInfo.GetStructuredTypeField (propertyInfo);
 
 			var entitySettings = this.GetSettings (entityId, user);
 
-			return true;
+			if (entitySettings.IsEmpty)
+			{
+				return new TileFieldEditionSettings (TileVisibilityMode.Visible, TileEditionMode.ReadWrite);
+			}
+			else
+			{
+				var fieldSettings = entitySettings[typeField.CaptionId];
+				return new TileFieldEditionSettings (fieldSettings.FieldVisibilityMode.Simplify (), fieldSettings.FieldEditionMode.Simplify ());
+			}
 		}
 
 		public bool IsCommandEnabled(Druid commandId, UserSummary user = null)

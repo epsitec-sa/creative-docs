@@ -11,6 +11,7 @@ using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Factories;
+using Epsitec.Cresus.Core.Library.Settings;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using Epsitec.Cresus.DataLayer.Context;
@@ -224,7 +225,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				this.data  = data;
 				this.item  = item;
 				this.root  = root;
-				this.actions = new List<System.Action<FrameBox, UIBuilder>> ();
+				this.actions = new List<UIAction> ();
 				this.inputProperties = Brick.GetProperties (this.root, BrickPropertyKey.Input);
 			}
 			
@@ -283,7 +284,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 				this.CreateActionsForInput (property.Brick, null);
 
-				var actions = new List<System.Action<FrameBox, UIBuilder>> ();
+				var actions = new List<UIAction> ();
 
 				while (index < this.actions.Count)
 				{
@@ -296,20 +297,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 					return;
 				}
 
-				System.Action<FrameBox, UIBuilder> groupAction =
-					(tile, builder) =>
-					{
-						var group = builder.CreateGroup (tile as EditionTile, title);
-						group.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
-						actions.ForEach (x => x (group, builder));
-					};
-
-				this.actions.Add (groupAction);
+				this.actions.Add (new UIGroupAction (actions, title));
 			}
 
-			private bool CheckField(LambdaExpression lambda)
+			private TileFieldEditionSettings GetFieldEditionSettings(LambdaExpression lambda)
 			{
-				return this.bridge.bridgeContext.FeatureManager.IsFieldEnabled<T> (lambda);
+				return this.bridge.bridgeContext.FeatureManager.GetFieldEditionSettings<T> (lambda);
 			}
 
 			private void CreateActionForInputField(Expression expression, BrickPropertyCollection fieldProperties)
@@ -323,11 +316,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 				var fieldType  = lambda.ReturnType;
 				var entityType = typeof (T);
-
-				if (this.CheckField (lambda) == false)
-				{
-					return;
-				}
+				var fieldMode  = this.GetFieldEditionSettings (lambda);
 
 				int    width  = InputProcessor.GetInputWidth (fieldProperties);
 				int    height = InputProcessor.GetInputHeight (fieldProperties);
@@ -341,7 +330,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 					//	The field is an entity : use an AutoCompleteTextField for it.
 
 					var factory = DynamicFactories.EntityAutoCompleteTextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, collection, specialController);
-					this.actions.Add ((tile, builder) => factory.CreateUI (tile, builder));
+					this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder)) { Mode = fieldMode });
 
 					return;
 				}
@@ -363,7 +352,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 					//	based on the real type being edited.
 
 					var factory = DynamicFactories.TextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, width, height, collection);
-					this.actions.Add ((tile, builder) => factory.CreateUI (tile, builder));
+					this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder)) { Mode = fieldMode });
 
 					return;
 				}
@@ -374,7 +363,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 					//	of entities represented as [ Field ]--->>* Entity in the Designer.
 
 					var factory = DynamicFactories.ItemPickerDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, specialController);
-					this.actions.Add ((tile, builder) => factory.CreateUI (tile, builder));
+					this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder)) { Mode = fieldMode });
 
 					return;
 				}
@@ -387,7 +376,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 					//	The field is an enumeration : use an AutoCompleteTextField for it.
 
 					var factory = DynamicFactories.EnumAutoCompleteTextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, width);
-					this.actions.Add ((tile, builder) => factory.CreateUI (tile, builder));
+					this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder)) { Mode = fieldMode });
 
 					return;
 				}
@@ -399,12 +388,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 			private void CreateActionForSeparator()
 			{
-				this.actions.Add ((tile, builder) => builder.CreateMargin (tile as EditionTile, horizontalSeparator: true));
+				this.actions.Add (new UIAction ((tile, builder) => builder.CreateMargin (tile as EditionTile, horizontalSeparator: true)));
 			}
 
 			private void CreateActionForGlobalWarning()
 			{
-				this.actions.Add ((tile, builder) => builder.CreateWarning (tile as EditionTile));
+				this.actions.Add (new UIAction ((tile, builder) => builder.CreateWarning (tile as EditionTile)));
 			}
 
 			private void RecordActions()
@@ -420,20 +409,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 					if (this.actions.Count == 1)
 					{
 						var singleAction = this.actions[0];
-						this.item.CreateEditionUI = (tile, builder) => singleAction (tile, builder);
+						this.item.CreateEditionUI = singleAction.Execute;
 					}
 					else
 					{
-						var multiActions = this.actions.ToArray ();
-						
-						this.item.CreateEditionUI = (tile, builder) =>
-							{
-								foreach (var action in multiActions)
-								{
-									var subTile = builder.CreateEditionTile (tile);
-									action (subTile, builder);
-								}
-							};
+						var multiActions = new UIMultiAction (this.actions);
+						this.item.CreateEditionUI = multiActions.Execute;
 					}
 				}
 
@@ -520,13 +501,92 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			private readonly BusinessContext business;
 			private readonly TileDataItems data;
 			private readonly Brick root;
-			private readonly List<System.Action<FrameBox, UIBuilder>> actions;
+			private readonly List<UIAction> actions;
 			private readonly BrickPropertyCollection inputProperties;
 			
 			private TileDataItem item;
 		}
 
 		#endregion
+		
+		private class UIGroupAction : UIAction
+		{
+			public UIGroupAction(IEnumerable<UIAction> actions, string title)
+				: base (null)
+			{
+				this.actions = new List<UIAction> (actions);
+				this.title = title;
+			}
+
+			protected override void InternalExecute(FrameBox frame, UIBuilder builder)
+			{
+				var group = builder.CreateGroup (frame as EditionTile, this.title);
+				group.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+				this.actions.ForEach (x => x.Execute (group, builder));
+			}
+
+			private readonly List<UIAction> actions;
+			private readonly string title;
+		}
+
+
+		private class UIMultiAction : UIAction
+		{
+			public UIMultiAction(IEnumerable<UIAction> actions) :
+				base (null)
+			{
+				this.actions = new List<UIAction> (actions);
+			}
+
+			protected override void InternalExecute(FrameBox frame, UIBuilder builder)
+			{
+				foreach (var action in this.actions)
+				{
+					var subTile = builder.CreateEditionTile (frame as EditionTile);
+					action.Execute (subTile, builder);
+				}
+				
+			}
+
+			private readonly List<UIAction> actions;
+		}
+
+		private class UIAction
+		{
+			public UIAction(System.Action<FrameBox, UIBuilder> action)
+			{
+				this.action = action;
+				this.mode   = new TileFieldEditionSettings (TileVisibilityMode.Visible, TileEditionMode.ReadWrite);
+			}
+
+			public void Execute(FrameBox frame, UIBuilder builder)
+			{
+				if (this.mode.FieldVisibilityMode == TileVisibilityMode.Visible)
+				{
+					this.InternalExecute (frame, builder);
+				}
+			}
+
+			public TileFieldEditionSettings Mode
+			{
+				get
+				{
+					return this.mode;
+				}
+				set
+				{
+					this.mode = value;
+				}
+			}
+			
+			protected virtual void InternalExecute(FrameBox frame, UIBuilder builder)
+			{
+				this.action (frame, builder);
+			}
+
+			private readonly System.Action<FrameBox, UIBuilder> action;
+			private TileFieldEditionSettings mode;
+		}
 
 		
 		private void ProcessTemplate(TileDataItems data, TileDataItem item, Brick root, Brick templateBrick)
