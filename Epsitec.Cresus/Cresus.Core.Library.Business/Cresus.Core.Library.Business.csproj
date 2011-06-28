@@ -95,6 +95,7 @@
     <Compile Include="Controllers\BrowserControllers\BrowserViewController.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserViewController.ItemCreator.cs" />
     <Compile Include="Controllers\ControllerSubTypeAttribute.cs" />
+    <Compile Include="Controllers\SpecialControllers\ArticleDefinitionController.cs" />
     <Compile Include="Controllers\SpecialControllers\ImageMiniatureController.cs" />
     <Compile Include="Controllers\CoreController.cs" />
     <Compile Include="Controllers\CoreViewController.cs" />

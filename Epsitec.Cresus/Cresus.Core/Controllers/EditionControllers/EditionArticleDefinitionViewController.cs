@@ -25,6 +25,43 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionArticleDefinitionViewController : EditionViewController<Entities.ArticleDefinitionEntity>
 	{
+#if true
+		protected override void CreateBricks(Bricks.BrickWall<ArticleDefinitionEntity> wall)
+		{
+			wall.AddBrick ()
+				.Input ()
+				  .HorizontalGroup ("N° de l'affaire (principal, externe et interne)")
+					.Field (x => x.IdA).Width (72)
+					.Field (x => x.IdB).Width (72)
+					.Field (x => x.IdC).Width (72)
+				  .End ()
+				  .Field (x => x).WithSpecialController (0)  // description courte
+				  .Field (x => x).WithSpecialController (1)  // description longue
+				  .Field (x => x.Pictures)
+				  .Field (x => x.ArticleGroups)
+				  .Field (x => x.ArticleCategory)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.InputVatCode)
+				  .Field (x => x.OutputVatCode)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.BillingUnit)
+				  .Field (x => x.Units)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.Accounting)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.Comments)
+				.End ()
+				;
+		}
+#else
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -145,5 +182,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			return context.CreateEntityAndRegisterAsEmpty<ArticleCategoryEntity> ();
 		}
+#endif
 	}
 }
