@@ -665,11 +665,11 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>SerializedCommandSettings</c> field.
+		///	The <c>SerializedCommandSetSettings</c> field.
 		///	designer:fld/AVAU/AVA01
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[AVA01]")]
-		public global::Epsitec.Cresus.Core.Entities.XmlBlobEntity SerializedCommandSettings
+		public global::Epsitec.Cresus.Core.Entities.XmlBlobEntity SerializedCommandSetSettings
 		{
 			get
 			{
@@ -677,18 +677,18 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue = this.SerializedCommandSettings;
+				global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue = this.SerializedCommandSetSettings;
 				if (oldValue != value || !this.IsFieldDefined("[AVA01]"))
 				{
-					this.OnSerializedCommandSettingsChanging (oldValue, value);
+					this.OnSerializedCommandSetSettingsChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.XmlBlobEntity> ("[AVA01]", oldValue, value);
-					this.OnSerializedCommandSettingsChanged (oldValue, value);
+					this.OnSerializedCommandSetSettingsChanged (oldValue, value);
 				}
 			}
 		}
 		
-		partial void OnSerializedCommandSettingsChanging(global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue, global::Epsitec.Cresus.Core.Entities.XmlBlobEntity newValue);
-		partial void OnSerializedCommandSettingsChanged(global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue, global::Epsitec.Cresus.Core.Entities.XmlBlobEntity newValue);
+		partial void OnSerializedCommandSetSettingsChanging(global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue, global::Epsitec.Cresus.Core.Entities.XmlBlobEntity newValue);
+		partial void OnSerializedCommandSetSettingsChanged(global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue, global::Epsitec.Cresus.Core.Entities.XmlBlobEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

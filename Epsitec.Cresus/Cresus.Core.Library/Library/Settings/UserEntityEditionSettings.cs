@@ -9,16 +9,17 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Library.Settings
 {
-	public sealed class TileEntityEditionSettings
+	public sealed class UserEntityEditionSettings
 	{
-		public TileEntityEditionSettings()
+		public UserEntityEditionSettings()
 		{
 			this.fields = new Dictionary<Druid, List<UserFieldEditionSettings>> ();
 		}
 
 
-		public void Add(Druid field, UserFieldEditionSettings settings)
+		public void Add(UserFieldEditionSettings settings)
 		{
+			Druid field = settings.FieldId;
 			List<UserFieldEditionSettings> list;
 
 			if (this.fields.TryGetValue (field, out list) == false)
@@ -30,30 +31,26 @@ namespace Epsitec.Cresus.Core.Library.Settings
 			list.Add (settings);
 		}
 
-		public void AddRange(Druid field, IEnumerable<UserFieldEditionSettings> settings)
+		public void AddRange(IEnumerable<UserFieldEditionSettings> settings)
 		{
-			List<UserFieldEditionSettings> list;
-
-			if (this.fields.TryGetValue (field, out list) == false)
+			foreach (var item in settings)
 			{
-				list = new List<UserFieldEditionSettings> ();
-				this.fields[field] = list;
+				this.Add (item);
 			}
-
-			list.AddRange (settings);
 		}
 
-		public bool Remove(Druid field, UserFieldEditionSettings settings)
+		public bool Remove(UserFieldEditionSettings settings)
 		{
+			Druid fieldId = settings.FieldId;
 			List<UserFieldEditionSettings> list;
 
-			if (this.fields.TryGetValue (field, out list))
+			if (this.fields.TryGetValue (fieldId, out list))
 			{
 				if (list.Remove (settings))
 				{
 					if (list.Count == 0)
 					{
-						this.fields.Remove (field);
+						this.fields.Remove (fieldId);
 					}
 
 					return true;
@@ -124,9 +121,9 @@ namespace Epsitec.Cresus.Core.Library.Settings
 								this.fields[x].Select (s => s.Save (Xml.SettingsItem)))))));
 		}
 
-		public static TileEntityEditionSettings Restore(XElement xml)
+		public static UserEntityEditionSettings Restore(XElement xml)
 		{
-			var entitySettings = new TileEntityEditionSettings ();
+			var entitySettings = new UserEntityEditionSettings ();
 
 			var xmlFieldList  = xml.Element (Xml.FieldList);
 			var xmlFieldItems = xmlFieldList.Elements (Xml.FieldItem);
@@ -134,9 +131,9 @@ namespace Epsitec.Cresus.Core.Library.Settings
 			foreach (var xmlFieldItem in xmlFieldItems)
 			{
 				var field    = Druid.Parse ((string) xmlFieldItem.Attribute (Xml.FieldId));
-				var settings = xmlFieldItem.Element (Xml.SettingsList).Elements (Xml.SettingsItem).Select (x => UserFieldEditionSettings.Restore (x));
+				var settings = xmlFieldItem.Element (Xml.SettingsList).Elements (Xml.SettingsItem).Select (x => UserFieldEditionSettings.Restore (field, x));
 
-				entitySettings.AddRange (field, settings);
+				entitySettings.AddRange (settings);
 			}
 
 			return entitySettings;

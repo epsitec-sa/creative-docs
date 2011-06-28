@@ -9,10 +9,11 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Library.Settings
 {
-	public sealed class UserFieldEditionSettings
+	public sealed class UserFieldEditionSettings : System.IEquatable<UserFieldEditionSettings>
 	{
-		public UserFieldEditionSettings()
+		public UserFieldEditionSettings(Druid fieldId)
 		{
+			this.fieldId = fieldId;
 		}
 
 		
@@ -34,10 +35,18 @@ namespace Epsitec.Cresus.Core.Library.Settings
 			set;
 		}
 
-		public MergeSettingsMode			MergeSettingsMode
+		public MergeSettingsMode				MergeSettingsMode
 		{
 			get;
 			set;
+		}
+
+		public Druid							FieldId
+		{
+			get
+			{
+				return this.fieldId;
+			}
 		}
 
 
@@ -48,14 +57,14 @@ namespace Epsitec.Cresus.Core.Library.Settings
 				this.FieldSettings.Save (Xml.FieldSettings));
 		}
 
-		public static UserFieldEditionSettings Restore(XElement xml)
+		public static UserFieldEditionSettings Restore(Druid fieldId, XElement xml)
 		{
 			var userCategory = (int?)   xml.Attribute (Xml.UserCategory);
 			var userIdentity = (string) xml.Attribute (Xml.UserIdentity);
 			var settingsMode = (int?)   xml.Attribute (Xml.MergeSettingsMode);
 			var field        = TileFieldEditionSettings.Restore (xml.Element (Xml.FieldSettings));
 
-			return new UserFieldEditionSettings ()
+			return new UserFieldEditionSettings (fieldId)
 			{
 				UserCategory = (TileUserCategory) userCategory.GetValueOrDefault (),
 				UserIdentity = userIdentity,
@@ -78,6 +87,29 @@ namespace Epsitec.Cresus.Core.Library.Settings
 			}
 		}
 
+
+		public override bool Equals(object obj)
+		{
+			return this.Equals (obj as UserFieldEditionSettings);
+		}
+
+		#region IEquatable<UserFieldEditionSettings> Members
+
+		public bool Equals(UserFieldEditionSettings other)
+		{
+			if (other == null)
+			{
+				return false;
+			}
+
+			return this.UserCategory == other.UserCategory
+				&& this.UserIdentity == other.UserIdentity
+				&& this.FieldSettings.Equals (other.FieldSettings)
+				&& this.MergeSettingsMode == other.MergeSettingsMode
+				&& this.FieldId == other.FieldId;
+		}
+
+		#endregion
 		
 		private IEnumerable<XAttribute> GetXmlAttributes()
 		{
@@ -103,5 +135,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 			public const string MergeSettingsMode = "m";
 			public const string FieldSettings = "f";
 		}
+
+		private readonly Druid fieldId;
 	}
 }

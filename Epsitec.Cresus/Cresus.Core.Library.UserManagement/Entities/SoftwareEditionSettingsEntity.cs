@@ -12,33 +12,35 @@ namespace Epsitec.Cresus.Core.Entities
 	partial class SoftwareEditionSettingsEntity
 	{
 		/// <summary>
-		/// Gets the display settings. This will deserialize the settings when accessed
+		/// Gets the command set settings. This will deserialize the settings when accessed
 		/// for the first time.
 		/// </summary>
 		[System.Diagnostics.DebuggerBrowsable (System.Diagnostics.DebuggerBrowsableState.Never)]
-		public UserCommandSettings UserCommandSettings
+		public UserCommandSetSettings UserCommandSetSettings
 		{
 			get
 			{
 				this.DeserializeSettingsIfNeeded ();
 
-				return this.settings;
+				return this.commandSetSettings;
 			}
 		}
 
 		private void SerializeSettings()
 		{
 			var xml = new XElement (Xml.Settings,
-				this.settings.Save (Xml.UserCommands));
+				this.commandSetSettings.Save (Xml.UserCommands));
 
-			this.SerializedCommandSettings.XmlData = xml;
+			this.SerializedCommandSetSettings.XmlData = xml;
 		}
 
 		private void DeserializeSettingsIfNeeded()
 		{
-			if (this.settings == null)
+			if (this.commandSetSettings == null)
 			{
-				this.settings = UserCommandSettings.Restore (this.SerializedCommandSettings.XmlData);
+				var xml = this.SerializedCommandSetSettings.XmlData;
+				
+				this.commandSetSettings = UserCommandSetSettings.Restore (xml.Element (Xml.UserCommands));
 			}
 		}
 
@@ -49,6 +51,6 @@ namespace Epsitec.Cresus.Core.Entities
 			public const string UserCommands = "cmds";
 		}
 
-		private UserCommandSettings settings;
+		private UserCommandSetSettings commandSetSettings;
 	}
 }

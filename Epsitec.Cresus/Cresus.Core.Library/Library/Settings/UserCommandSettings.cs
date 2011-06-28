@@ -9,10 +9,15 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Library.Settings
 {
-	public sealed class UserCommandSettings
+	/// <summary>
+	/// The <c>UserCommandSettings</c> class stores enable/disable information related
+	/// to a command for a given user/group/role.
+	/// </summary>
+	public sealed class UserCommandSettings : System.IEquatable<UserCommandSettings>
 	{
-		public UserCommandSettings()
+		public UserCommandSettings(Druid commandId)
 		{
+			this.commandId = commandId;
 		}
 
 		
@@ -28,18 +33,19 @@ namespace Epsitec.Cresus.Core.Library.Settings
 			set;
 		}
 
+		/// <summary>
+		/// Gets or sets the command id (which is not serialized as part of the settings).
+		/// </summary>
+		/// <value>
+		/// The command id.
+		/// </value>
 		public Druid							CommandId
 		{
-			get;
-			set;
+			get
+			{
+				return this.commandId;
+			}
 		}
-
-		public MergeSettingsMode				MergeSettingsMode
-		{
-			get;
-			set;
-		}
-
 
 		public XElement Save(string xmlNodeName)
 		{
@@ -47,22 +53,39 @@ namespace Epsitec.Cresus.Core.Library.Settings
 				this.GetXmlAttributes ());
 		}
 
-		public static UserCommandSettings Restore(XElement xml)
+		public static UserCommandSettings Restore(Druid commandId, XElement xml)
 		{
 			var userCategory = (int?)   xml.Attribute (Xml.UserCategory);
 			var userIdentity = (string) xml.Attribute (Xml.UserIdentity);
-			var settingsMode = (int?)   xml.Attribute (Xml.MergeSettingsMode);
-			var commandId    = (string) xml.Attribute (Xml.CommandId);
 
-			return new UserCommandSettings ()
+			return new UserCommandSettings (commandId)
 			{
 				UserCategory = (TileUserCategory) userCategory.GetValueOrDefault (),
 				UserIdentity = userIdentity,
-				MergeSettingsMode = (MergeSettingsMode) settingsMode.GetValueOrDefault (),
-				CommandId = Druid.Parse (commandId)
 			};
 		}
 
+
+		public override bool Equals(object obj)
+		{
+			return this.Equals (obj as UserCommandSettings);
+		}
+
+		#region IEquatable<UserCommandSettings> Members
+
+		public bool Equals(UserCommandSettings other)
+		{
+			if (other == null)
+			{
+				return false;
+			}
+
+			return this.UserCategory == other.UserCategory
+				&& this.UserIdentity == other.UserIdentity
+				&& this.CommandId == other.CommandId;
+		}
+
+		#endregion
 
 		private IEnumerable<XAttribute> GetXmlAttributes()
 		{
@@ -74,14 +97,6 @@ namespace Epsitec.Cresus.Core.Library.Settings
 			{
 				yield return new XAttribute (Xml.UserIdentity, this.UserIdentity);
 			}
-			if (this.MergeSettingsMode != MergeSettingsMode.Inclusive)
-			{
-				yield return new XAttribute (Xml.MergeSettingsMode, (int) this.MergeSettingsMode);
-			}
-			if (this.CommandId.IsValid)
-			{
-				yield return new XAttribute (Xml.CommandId, this.CommandId.ToString ());
-			}
 		}
 
 
@@ -89,8 +104,8 @@ namespace Epsitec.Cresus.Core.Library.Settings
 		{
 			public const string UserCategory = "cat";
 			public const string UserIdentity = "uid";
-			public const string MergeSettingsMode = "m";
-			public const string CommandId = "c";
 		}
+
+		private readonly Druid commandId;
 	}
 }

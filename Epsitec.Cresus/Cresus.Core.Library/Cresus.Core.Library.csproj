@@ -71,6 +71,7 @@
     <Compile Include="Library\ICoreComponent`2.cs" />
     <Compile Include="Library\ITextFormatterConverter.cs" />
     <Compile Include="Library\Numeric.cs" />
+    <Compile Include="Library\Settings\UserCommandSetSettings.cs" />
     <Compile Include="Library\Settings\UserCommandSettings.cs" />
     <Compile Include="Library\TextFormatterConverter.cs" />
     <Compile Include="Library\SettingsCollection.cs" />
@@ -136,7 +137,7 @@
     <Compile Include="Widgets\StaticGlyph.cs" />
     <Compile Include="Widgets\Tiles\ArrowedTileFrame.cs" />
     <Compile Include="Widgets\Tiles\ArrowedTileTabPageButton.cs" />
-    <Compile Include="Library\Settings\TileEntityEditionSettings.cs" />
+    <Compile Include="Library\Settings\UserEntityEditionSettings.cs" />
     <Compile Include="Library\Settings\TileEntityMergedSettings.cs" />
     <Compile Include="Library\Settings\TileFieldEditionSettings.cs" />
     <Compile Include="Widgets\Tiles\Tile.cs" />
