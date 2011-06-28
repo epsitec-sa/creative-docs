@@ -100,6 +100,7 @@
     <Compile Include="Controllers\ComplexControllers\ChartsOfAccountsController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationCustomerViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionPriceGroupViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticleStockLocationViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticleSupplyViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionSoftwareUserRoleViewController.cs" />
@@ -128,6 +129,7 @@
     <Compile Include="Controllers\EditionControllers\EditionPriceCalculatorViewControllerTableDesigner.cs" />
     <Compile Include="Controllers\EditionControllers\EditionVatDefinitionViewController.cs" />
     <Compile Include="Controllers\RibbonViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryPriceGroupViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleStockLocationViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleSupplyViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryEnumValueArticleParameterDefinitionViewController.cs" />
@@ -519,6 +521,7 @@
     <EmbeddedResource Include="Images\Data.EnumValueArticleParameterDefinition.icon" />
     <EmbeddedResource Include="Images\Base.ArticleStockLocation.icon" />
     <EmbeddedResource Include="Images\Data.ImageMiniature.icon" />
+    <EmbeddedResource Include="Images\Base.PriceGroup.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

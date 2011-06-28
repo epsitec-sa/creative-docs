@@ -23,9 +23,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Input ()
 				 .Field (x => x.Name)
 				 .Field (x => x.ShortName)
-				.End ()
-				.Separator ()
-				.Input ()
+				 .Field (x => x.LegalPersonType)
 				 .Field (x => x.Complement)
 				.End ()
 				;

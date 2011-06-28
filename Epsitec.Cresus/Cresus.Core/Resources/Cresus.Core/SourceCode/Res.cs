@@ -84,6 +84,8 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Widgets.Command ShowPersonTitle = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 53));
 				//	designer:cap/L0KM
 				public static readonly global::Epsitec.Common.Widgets.Command ShowPriceCalculator = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 22));
+				//	designer:cap/L0K02
+				public static readonly global::Epsitec.Common.Widgets.Command ShowPriceGroup = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 64));
 				//	designer:cap/L0KM1
 				public static readonly global::Epsitec.Common.Widgets.Command ShowPriceRoundingMode = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 54));
 				//	designer:cap/L0KN1
@@ -255,6 +257,8 @@ namespace Epsitec.Cresus.Core
 				public const long ShowPersonTitle = 0x1500014000035L;
 				//	designer:cap/L0KM
 				public const long ShowPriceCalculator = 0x1500014000016L;
+				//	designer:cap/L0K02
+				public const long ShowPriceGroup = 0x1500014000040L;
 				//	designer:cap/L0KM1
 				public const long ShowPriceRoundingMode = 0x1500014000036L;
 				//	designer:cap/L0KN1

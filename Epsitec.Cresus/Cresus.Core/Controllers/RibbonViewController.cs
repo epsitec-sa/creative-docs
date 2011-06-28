@@ -605,6 +605,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				yield return Res.Commands.Base.ShowCurrency;
 				yield return Res.Commands.Base.ShowExchangeRateSource;
 				yield return Res.Commands.Base.ShowVatDefinition;
+				yield return Res.Commands.Base.ShowPriceGroup;
 				yield return Res.Commands.Base.ShowPriceRoundingMode;
 				yield return Res.Commands.Base.ShowIsrDefinition;
 				yield return Res.Commands.Base.ShowPaymentMode;
