@@ -88,11 +88,14 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				System.Diagnostics.Debug.Assert (templateBrick != null);
 
 				if ((!Brick.ContainsProperty (templateBrick, BrickPropertyKey.Title)) &&
-					(!Brick.ContainsProperty (templateBrick, BrickPropertyKey.TitleCompact)) &&
-					(!Brick.ContainsProperty (templateBrick, BrickPropertyKey.Text)) &&
-					(!Brick.ContainsProperty (templateBrick, BrickPropertyKey.TextCompact)))
+					(!Brick.ContainsProperty (templateBrick, BrickPropertyKey.TitleCompact)))
 				{
 					Bridge.CreateDefaultTitleProperties (templateBrick);
+				}
+
+				if ((!Brick.ContainsProperty (templateBrick, BrickPropertyKey.Text)) &&
+					(!Brick.ContainsProperty (templateBrick, BrickPropertyKey.TextCompact)))
+				{
 					Bridge.CreateDefaultTextProperties (templateBrick);
 				}
 				
