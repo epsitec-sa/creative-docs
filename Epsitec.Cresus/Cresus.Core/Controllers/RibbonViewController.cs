@@ -499,7 +499,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void UpdateDatabaseMenu()
 		{
 			//	Met à jour les boutons pour les bases de données d'usage peu fréquent, après un changement d'utilisateur.
-			var list  = this.GetDatabaseMenuCommands ().Where (x => x != null).ToList ();
+			var list  = this.GetDatabaseMenuCommands ().Where (x => x.Command != null).ToList ();
 			int count = list.Count;
 
 			this.databaseButton.Visibility     = (count > 0);
@@ -507,7 +507,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (count > 0)
 			{
-				this.databaseButton.CommandObject = list[0];
+				this.databaseButton.CommandObject = list[0].Command;
 				this.UpdateDatabaseButton ();
 			}
 		}
@@ -516,18 +516,30 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			//	Construit puis affiche le menu des bases de données d'usage peu fréquent.
 			var menu = new VMenu ();
-			var commands = this.GetDatabaseMenuCommands ().ToArray ();
 
-			for (int i=0; i<commands.Length; i++)
+			foreach (var type in this.GetSubMenuTypes ())
 			{
-				var command = commands[i];
+				var commands = this.GetDatabaseMenuCommands ().Where (x => x.Type == type).ToArray ();
 
-				if (i == commands.Length-1 && command == null)
+				if (commands.Length > 0)
 				{
-					break;
-				}
+					menu.Items.Add (new MenuItem (type.ToString (), "", RibbonViewController.GetSubMenuName (type), ""));
+					var subMenu = new VMenu ();
 
-				RibbonViewController.AddDatabaseToMenu (menu, command);
+					for (int i=0; i<commands.Length; i++)
+					{
+						var command = commands[i];
+
+						if (i == commands.Length-1 && command.Command == null)  // séparateur à la fin ?
+						{
+							break;
+						}
+
+						RibbonViewController.AddDatabaseToMenu (subMenu, command.Command);
+					}
+
+					menu.Items[menu.Items.Count-1].Submenu = subMenu;
+				}
 			}
 
 			TextFieldCombo.AdjustComboSize (parentButton, menu, false);
@@ -579,7 +591,16 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private Command GetDatabaseCommand(string name)
 		{
-			return this.GetDatabaseMenuCommands ().Where (x => x != null && x.Name == name).FirstOrDefault ();
+			var item = this.GetDatabaseMenuCommands ().Where (x => x.Command != null && x.Command.Name == name).FirstOrDefault ();
+
+			if (item == null)
+			{
+				return null;
+			}
+			else
+			{
+				return item.Command;
+			}
 		}
 
 		private CommandHandlers.DatabaseCommandHandler GetDatabaseCommandHandler()
@@ -591,11 +612,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			return handlers.First ();
 		}
 
-		private IEnumerable<Command> GetDatabaseMenuCommands()
+		private IEnumerable<SubMenuItem> GetDatabaseMenuCommands()
 		{
-			return this.GetDatabaseMenuCommands1 ().Where (x => x == null || this.featureManager.IsCommandEnabled (x.Caption.Id));
+			return this.GetDatabaseMenuCommands1 ().Where (x => x.Command == null || this.featureManager.IsCommandEnabled (x.Command.Caption.Id));
 		}
-		private IEnumerable<Command> GetDatabaseMenuCommands1()
+		private IEnumerable<SubMenuItem> GetDatabaseMenuCommands1()
 		{
 			//	Retourne null lorsque le menu doit contenir un séparateur.
 			
@@ -605,73 +626,134 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (admin || devel || power)
 			{
-				yield return Res.Commands.Base.ShowDocumentCategoryMapping;
-				yield return Res.Commands.Base.ShowDocumentCategory;
-				yield return Res.Commands.Base.ShowDocumentOptions;
-				yield return Res.Commands.Base.ShowDocumentPrintingUnits;
-				yield return null;
+				yield return new SubMenuItem (Res.Commands.Base.ShowDocumentCategoryMapping, SubMenuType.Printing);
+				yield return new SubMenuItem (Res.Commands.Base.ShowDocumentCategory,        SubMenuType.Printing);
+				yield return new SubMenuItem (Res.Commands.Base.ShowDocumentOptions,         SubMenuType.Printing);
+				yield return new SubMenuItem (Res.Commands.Base.ShowDocumentPrintingUnits,   SubMenuType.Printing);
 
-				yield return Res.Commands.Base.ShowCurrency;
-				yield return Res.Commands.Base.ShowExchangeRateSource;
-				yield return Res.Commands.Base.ShowVatDefinition;
-				yield return Res.Commands.Base.ShowPriceGroup;
-				yield return Res.Commands.Base.ShowPriceRoundingMode;
-				yield return Res.Commands.Base.ShowIsrDefinition;
-				yield return Res.Commands.Base.ShowPaymentMode;
-				yield return Res.Commands.Base.ShowPaymentReminderDefinition;
-				yield return Res.Commands.Base.ShowUnitOfMeasure;
-				yield return null;
+				yield return new SubMenuItem (Res.Commands.Base.ShowCurrency,                  SubMenuType.Finance);
+				yield return new SubMenuItem (Res.Commands.Base.ShowExchangeRateSource,        SubMenuType.Finance);
+				yield return new SubMenuItem (Res.Commands.Base.ShowVatDefinition,             SubMenuType.Finance);
+				yield return new SubMenuItem (Res.Commands.Base.ShowPriceGroup,                SubMenuType.Finance);
+				yield return new SubMenuItem (Res.Commands.Base.ShowPriceRoundingMode,         SubMenuType.Finance);
+				yield return new SubMenuItem (Res.Commands.Base.ShowIsrDefinition,             SubMenuType.Finance);
+				yield return new SubMenuItem (Res.Commands.Base.ShowPaymentMode,               SubMenuType.Finance);
+				yield return new SubMenuItem (Res.Commands.Base.ShowPaymentReminderDefinition, SubMenuType.Finance);
 
-				yield return Res.Commands.Base.ShowImage;
+				yield return new SubMenuItem (Res.Commands.Base.ShowImage, SubMenuType.Images);
 
 				if (admin || devel)
 				{
-					yield return Res.Commands.Base.ShowImageBlob;
-					yield return Res.Commands.Base.ShowImageCategory;
-					yield return Res.Commands.Base.ShowImageGroup;
+					yield return new SubMenuItem (Res.Commands.Base.ShowImageBlob,     SubMenuType.Images);
+					yield return new SubMenuItem (null,                                SubMenuType.Images);
+					yield return new SubMenuItem (Res.Commands.Base.ShowImageCategory, SubMenuType.Images);
+					yield return new SubMenuItem (Res.Commands.Base.ShowImageGroup,    SubMenuType.Images);
 				}
-
-				yield return null;
 			}
 
 			if (admin || devel)
 			{
-				yield return Res.Commands.Base.ShowPersonGender;
-				yield return Res.Commands.Base.ShowPersonTitle;
-				yield return Res.Commands.Base.ShowLegalPersonType;
-				yield return Res.Commands.Base.ShowContactGroup;
-				yield return Res.Commands.Base.ShowTelecomType;
-				yield return Res.Commands.Base.ShowUriType;
-				yield return Res.Commands.Base.ShowStateProvinceCounty;
-				yield return Res.Commands.Base.ShowLocation;
-				yield return Res.Commands.Base.ShowCountry;
-				yield return null;
+				yield return new SubMenuItem (Res.Commands.Base.ShowPersonGender,        SubMenuType.Customers);
+				yield return new SubMenuItem (Res.Commands.Base.ShowPersonTitle,         SubMenuType.Customers);
+				yield return new SubMenuItem (Res.Commands.Base.ShowLegalPersonType,     SubMenuType.Customers);
+				yield return new SubMenuItem (Res.Commands.Base.ShowContactGroup,        SubMenuType.Customers);
+				yield return new SubMenuItem (null,                                      SubMenuType.Customers);
+				yield return new SubMenuItem (Res.Commands.Base.ShowTelecomType,         SubMenuType.Customers);
+				yield return new SubMenuItem (Res.Commands.Base.ShowUriType,             SubMenuType.Customers);
+				yield return new SubMenuItem (null,                                      SubMenuType.Customers);
+				yield return new SubMenuItem (Res.Commands.Base.ShowStateProvinceCounty, SubMenuType.Customers);
+				yield return new SubMenuItem (Res.Commands.Base.ShowLocation,            SubMenuType.Customers);
+				yield return new SubMenuItem (Res.Commands.Base.ShowCountry,             SubMenuType.Customers);
 
-				yield return Res.Commands.Base.ShowArticleCategory;
-				yield return Res.Commands.Base.ShowArticleGroup;
-				yield return Res.Commands.Base.ShowAbstractArticleParameterDefinition;
-				yield return Res.Commands.Base.ShowArticleStockLocation;
-				yield return null;
+				yield return new SubMenuItem (Res.Commands.Base.ShowArticleCategory,                    SubMenuType.Articles);
+				yield return new SubMenuItem (Res.Commands.Base.ShowArticleGroup,                       SubMenuType.Articles);
+				yield return new SubMenuItem (Res.Commands.Base.ShowAbstractArticleParameterDefinition, SubMenuType.Articles);
+				yield return new SubMenuItem (Res.Commands.Base.ShowArticleStockLocation,               SubMenuType.Articles);
+				yield return new SubMenuItem (Res.Commands.Base.ShowUnitOfMeasure,                      SubMenuType.Articles);
 
-				yield return Res.Commands.Base.ShowBusinessSettings;
-				yield return Res.Commands.Base.ShowGeneratorDefinition;
-				yield return null;
+				yield return new SubMenuItem (Res.Commands.Base.ShowBusinessSettings,    SubMenuType.Misc);
+				yield return new SubMenuItem (Res.Commands.Base.ShowGeneratorDefinition, SubMenuType.Misc);
+				yield return new SubMenuItem (null,                                      SubMenuType.Misc);
 			}
 
 			if (devel)
 			{
-				yield return Res.Commands.Base.ShowLanguage;
-				yield return null;
-
-				yield return Res.Commands.Base.ShowSoftwareUserGroup;
-				yield return Res.Commands.Base.ShowSoftwareUserRole;
-				yield return null;
-				
-				yield return Res.Commands.Base.ShowWorkflowDefinition;
-				yield return null;
+				yield return new SubMenuItem (Res.Commands.Base.ShowLanguage,           SubMenuType.Misc);
+				yield return new SubMenuItem (null,                                     SubMenuType.Misc);
+				yield return new SubMenuItem (Res.Commands.Base.ShowSoftwareUserGroup,  SubMenuType.Misc);
+				yield return new SubMenuItem (Res.Commands.Base.ShowSoftwareUserRole,   SubMenuType.Misc);
+				yield return new SubMenuItem (null,                                     SubMenuType.Misc);
+				yield return new SubMenuItem (Res.Commands.Base.ShowWorkflowDefinition, SubMenuType.Misc);
 			}
 		}
 
+		private IEnumerable<SubMenuType> GetSubMenuTypes()
+		{
+			yield return SubMenuType.Printing;
+			yield return SubMenuType.Customers;
+			yield return SubMenuType.Articles;
+			yield return SubMenuType.Finance;
+			yield return SubMenuType.Images;
+			yield return SubMenuType.Misc;
+		}
+
+		private class SubMenuItem
+		{
+			public SubMenuItem(Command command, SubMenuType type)
+			{
+				this.Command = command;
+				this.Type = type;
+			}
+
+			public Command Command
+			{
+				get;
+				private set;
+			}
+
+			public SubMenuType Type
+			{
+				get;
+				private set;
+			}
+		}
+
+		private static string GetSubMenuName(SubMenuType type)
+		{
+			switch (type)
+			{
+				case SubMenuType.Printing:
+					return "Impression";
+
+				case SubMenuType.Finance:
+					return "Finances";
+
+				case SubMenuType.Images:
+					return "Images";
+
+				case SubMenuType.Customers:
+					return "Clients";
+
+				case SubMenuType.Articles:
+					return "Articles";
+
+				case SubMenuType.Misc:
+					return "Divers";
+
+				default:
+					return null;
+			}
+		}
+
+		private enum SubMenuType
+		{
+			Printing,
+			Finance,
+			Images,
+			Customers,
+			Articles,
+			Misc,
+		}
 
 
 		private void HandleAuthenticatedUserChanged(object sender)
