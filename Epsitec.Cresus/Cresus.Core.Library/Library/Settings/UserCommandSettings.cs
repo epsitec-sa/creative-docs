@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 	/// The <c>UserCommandSettings</c> class stores enable/disable information related
 	/// to a command for a given user/group/role.
 	/// </summary>
-	public sealed class UserCommandSettings : System.IEquatable<UserCommandSettings>
+	public sealed class UserCommandSettings : System.IEquatable<UserCommandSettings>, IUserIdentity
 	{
 		public UserCommandSettings(Druid commandId)
 		{
@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 		}
 
 		
-		public TileUserCategory					UserCategory
+		public UserCategory						UserCategory
 		{
 			get;
 			set;
@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 
 			return new UserCommandSettings (commandId)
 			{
-				UserCategory = (TileUserCategory) userCategory.GetValueOrDefault (),
+				UserCategory = (UserCategory) userCategory.GetValueOrDefault (),
 				UserIdentity = userIdentity,
 			};
 		}
@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 
 		private IEnumerable<XAttribute> GetXmlAttributes()
 		{
-			if (this.UserCategory != TileUserCategory.Any)
+			if (this.UserCategory != UserCategory.Any)
 			{
 				yield return new XAttribute (Xml.UserCategory, (int) this.UserCategory);
 			}

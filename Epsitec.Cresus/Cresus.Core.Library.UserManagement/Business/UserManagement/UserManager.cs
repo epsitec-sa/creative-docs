@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			//	Si on est dans le dialogue initial (celui qui s'affiche à l'exécution du logiciel),
 			//	et que l'utilisateur correspond à celui de la session Windows, on effectue le login
 			//	sans afficher le dialogue.
-			if (softwareStartup && user != null && user == this.FindActiveUser ())
+			if (softwareStartup && user != null && user == this.FindActiveSystemUser ())
 			{
 				this.OnAuthenticatedUserChanging ();
 				this.authenticatedUser = user;
@@ -226,7 +226,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		/// Finds the active user, based on the user currently logged in to Windows.
 		/// </summary>
 		/// <returns>The user or <c>null</c>.</returns>
-		public SoftwareUserEntity FindActiveUser()
+		public SoftwareUserEntity FindActiveSystemUser()
 		{
 			var users = this.GetActiveUsers ().Where (user => user.Disabled == false && user.AuthenticationMethod == UserAuthenticationMethod.System);
 			var login = System.Environment.UserName;
@@ -244,6 +244,14 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			return this.FindActiveUser (userCode.Code);
 		}
 
+
+		public UserSummary GetUserSummary()
+		{
+			return new UserSummary (this.AuthenticatedUser);
+		}
+
+		
+		
 		private SoftwareUserEntity FindActiveUser(string userCode)
 		{
 			return this.GetActiveUsers ().FirstOrDefault (user => user.Code == userCode);

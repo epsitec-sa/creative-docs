@@ -591,6 +591,10 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private IEnumerable<Command> GetDatabaseMenuCommands()
 		{
+			return this.GetDatabaseMenuCommands1 ().Where (x => x == null || this.featureManager.IsCommandEnabled (x.Caption.Id));
+		}
+		private IEnumerable<Command> GetDatabaseMenuCommands1()
+		{
 			//	Retourne null lorsque le menu doit contenir un séparateur.
 			
 			bool admin = this.userManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.Administrator);

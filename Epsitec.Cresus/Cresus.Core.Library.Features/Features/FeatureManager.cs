@@ -20,7 +20,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Features
 {
-	public class FeatureManager : CoreAppComponent
+	public class FeatureManager : CoreAppComponent, System.IDisposable
 	{
 		public FeatureManager(CoreApp app)
 			: base (app)
@@ -91,17 +91,36 @@ namespace Epsitec.Cresus.Core.Features
 			}
 		}
 
-		
-		public bool IsCommandEnabled(Druid commandId, UserSummary userSummary)
+
+		public bool IsCommandEnabled(Druid commandId, UserSummary user = null)
 		{
 			if (this.overrideCommandEnable)
 			{
 				return true;
 			}
 
-//			this.Customizations.Settings.UserCommandSetSettings.GetEnabledCommands (commandId);
-//			this.ProductSettings.LicensedFeatures.Select (x => x.
-			return false;
+			if (user == null)
+			{
+				user = this.userManager.GetUserSummary ();
+			}
+
+			var customCommandSettings  = this.Customizations.Settings.UserCommandSetSettings;
+			var featureCommandSettings = this.ProductSettings.LicensedFeatures.Select (x => x.EnabledSettings.UserCommandSetSettings);
+
+			var customDisabledCommands  = customCommandSettings.GetDisabledCommands (commandId);
+			var featureDisabledCommands = featureCommandSettings.SelectMany (x => x.GetDisabledCommands (commandId));
+			var featureEnabledCommands  = featureCommandSettings.SelectMany (x => x.GetEnabledCommands (commandId));
+
+			bool anyDisabled = customDisabledCommands.Concat (featureDisabledCommands).Where (x => user.Matches (x)).Any ();
+
+			if (anyDisabled)
+			{
+				return false;
+			}
+
+			bool anyEnabled = featureEnabledCommands.Where (x => user.Matches (x)).Any ();
+
+			return anyEnabled;
 		}
 
 
@@ -111,7 +130,7 @@ namespace Epsitec.Cresus.Core.Features
 
 			var entityEditionSettings = this.GetAllSoftwareEditionSettings ().SelectMany (x => x.EntityEditionSettings).Where (x => x.EntityId == entityId);
 			var tileEntityEditionSettings = entityEditionSettings.Select (x => x.DisplaySettings);
-			var fieldEditionSettings = tileEntityEditionSettings.SelectMany (x => x.GetAllFieldSettings (s => FeatureManager.Matches (s, user)));
+			var fieldEditionSettings = tileEntityEditionSettings.SelectMany (x => x.GetAllFieldSettings (s => user.Matches (s)));
 
 			var result = new TileEntityMergedSettings (entity);
 
@@ -123,27 +142,14 @@ namespace Epsitec.Cresus.Core.Features
 			return result;
 		}
 
+		#region IDisposable Members
 
-		private static bool Matches(UserFieldEditionSettings settings, UserSummary user)
+		public void Dispose()
 		{
-			switch (settings.UserCategory)
-			{
-				case TileUserCategory.Any:
-					return true;
-
-				case TileUserCategory.User:
-					return user.UserCode == settings.UserIdentity;
-
-				case TileUserCategory.Group:
-					return user.HasPowerLevel ((UserPowerLevel) InvariantConverter.ToInt (settings.UserIdentity));
-
-				case TileUserCategory.Role:
-					return user.HasRole (settings.UserIdentity);
-
-				default:
-					throw new System.NotSupportedException (string.Format ("UserCategory.{0} not supported", settings.UserCategory));
-			}
+			this.DisposeBusinessContext ();
 		}
+
+		#endregion
 
 
 		private IEnumerable<SoftwareEditionSettingsEntity> GetAllSoftwareEditionSettings()
@@ -153,9 +159,12 @@ namespace Epsitec.Cresus.Core.Features
 		
 		private void DisposeBusinessContext()
 		{
-			this.businessContext.Dispose ();
+			if (this.businessContext != null)
+			{
+				this.businessContext.Dispose ();
+				this.businessContext     = null;
+			}
 			
-			this.businessContext     = null;
 			this.activeCustomizations = null;
 		}
 

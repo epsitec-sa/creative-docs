@@ -9,7 +9,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Library.Settings
 {
 	[DesignerVisible]
-	public enum TileUserCategory
+	public enum UserCategory
 	{
 		Any			= 0,
 

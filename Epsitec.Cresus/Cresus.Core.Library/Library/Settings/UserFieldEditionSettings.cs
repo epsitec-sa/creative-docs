@@ -9,7 +9,7 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Library.Settings
 {
-	public sealed class UserFieldEditionSettings : System.IEquatable<UserFieldEditionSettings>
+	public sealed class UserFieldEditionSettings : System.IEquatable<UserFieldEditionSettings>, IUserIdentity
 	{
 		public UserFieldEditionSettings(Druid fieldId)
 		{
@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 		}
 
 		
-		public TileUserCategory					UserCategory
+		public UserCategory						UserCategory
 		{
 			get;
 			set;
@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 
 			return new UserFieldEditionSettings (fieldId)
 			{
-				UserCategory = (TileUserCategory) userCategory.GetValueOrDefault (),
+				UserCategory = (UserCategory) userCategory.GetValueOrDefault (),
 				UserIdentity = userIdentity,
 				MergeSettingsMode = (MergeSettingsMode) settingsMode.GetValueOrDefault (),
 				FieldSettings = field
@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 		
 		private IEnumerable<XAttribute> GetXmlAttributes()
 		{
-			if (this.UserCategory != TileUserCategory.Any)
+			if (this.UserCategory != UserCategory.Any)
 			{
 				yield return new XAttribute (Xml.UserCategory, (int) this.UserCategory);
 			}

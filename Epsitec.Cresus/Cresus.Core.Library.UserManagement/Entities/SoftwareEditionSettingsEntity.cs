@@ -39,8 +39,15 @@ namespace Epsitec.Cresus.Core.Entities
 			if (this.commandSetSettings == null)
 			{
 				var xml = this.SerializedCommandSetSettings.XmlData;
-				
-				this.commandSetSettings = UserCommandSetSettings.Restore (xml.Element (Xml.UserCommands));
+
+				if (xml == null)
+				{
+					this.commandSetSettings = new UserCommandSetSettings ();
+				}
+				else
+				{
+					this.commandSetSettings = UserCommandSetSettings.Restore (xml.Element (Xml.UserCommands));
+				}
 			}
 		}
 

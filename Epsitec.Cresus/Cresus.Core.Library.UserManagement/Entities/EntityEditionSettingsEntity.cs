@@ -50,7 +50,16 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			if (this.settings == null)
 			{
-				this.settings = UserEntityEditionSettings.Restore (this.SerializedSettings.XmlData);
+				var xml = this.SerializedSettings.XmlData;
+
+				if (xml == null)
+				{
+					this.settings = new UserEntityEditionSettings ();
+				}
+				else
+				{
+					this.settings = UserEntityEditionSettings.Restore (xml);
+				}
 			}
 		}
 
