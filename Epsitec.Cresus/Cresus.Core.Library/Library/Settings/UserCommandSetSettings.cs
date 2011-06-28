@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Types.Collections;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -68,15 +69,44 @@ namespace Epsitec.Cresus.Core.Library.Settings
 			return false;
 		}
 
-		public IEnumerable<UserCommandSettings> GetEnableCommands()
+		public IEnumerable<UserCommandSettings> GetEnabledCommands()
 		{
 			return this.commands.OrderBy (x => x.Key).SelectMany (x => x.Value.EnabledCommands);
 		}
 
-		public IEnumerable<UserCommandSettings> GetDisableCommands()
+		public IEnumerable<UserCommandSettings> GetEnabledCommands(Druid commandId)
+		{
+			Records records;
+			
+			if (this.commands.TryGetValue (commandId, out records))
+			{
+				return records.EnabledCommands;
+			}
+			else
+			{
+				return EmptyEnumerable<UserCommandSettings>.Instance;
+			}
+		}
+
+		public IEnumerable<UserCommandSettings> GetDisabledCommands()
 		{
 			return this.commands.OrderBy (x => x.Key).SelectMany (x => x.Value.DisabledCommands);
 		}
+		
+		public IEnumerable<UserCommandSettings> GetDisabledCommands(Druid commandId)
+		{
+			Records records;
+
+			if (this.commands.TryGetValue (commandId, out records))
+			{
+				return records.DisabledCommands;
+			}
+			else
+			{
+				return EmptyEnumerable<UserCommandSettings>.Instance;
+			}
+		}
+
 
 
 		public XElement Save(string xmlNodeName)

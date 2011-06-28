@@ -23,6 +23,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			this.roles = new HashSet<string> (user.UserGroups.SelectMany (x => x.Roles).Select (x => x.Code));
 		}
 
+		
 		public string							UserCode
 		{
 			get

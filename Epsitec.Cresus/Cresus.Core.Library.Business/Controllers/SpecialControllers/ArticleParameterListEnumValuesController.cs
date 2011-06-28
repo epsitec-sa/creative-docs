@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 		}
 
 
-		public void CreateUI(Widget parent, bool isReadOnly)
+		public void CreateUI(Widget parent, UIBuilder builder, bool isReadOnly)
 		{
 			this.isReadOnly = isReadOnly;
 

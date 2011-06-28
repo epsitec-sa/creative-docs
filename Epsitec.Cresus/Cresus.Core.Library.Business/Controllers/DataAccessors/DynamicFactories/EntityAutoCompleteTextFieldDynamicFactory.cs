@@ -136,7 +136,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 					var controller  = EntitySpecialControllerResolver.Create (builder.TileContainer, entity, mode);
 					var tile        = frame as EditionTile;
 
-					controller.CreateUI (tile.Container, false);
+					controller.CreateUI (tile.Container, builder, false);
 					
 					return null;
 				}

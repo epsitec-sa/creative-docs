@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Orchestrators;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Features;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.UserManagement;
 
@@ -26,9 +27,10 @@ namespace Epsitec.Cresus.Core.Controllers
 		private RibbonViewController(DataViewOrchestrator orchestrator)
 			: base (orchestrator)
 		{
-			var app         = orchestrator.Host;
-			var coreData    = app.FindComponent<CoreData> ();
-			var userManager = coreData.GetComponent<UserManager> ();
+			var app            = orchestrator.Host;
+			var coreData       = app.FindComponent<CoreData> ();
+			var featureManager = app.FindComponent<FeatureManager> ();
+			var userManager    = coreData.GetComponent<UserManager> ();
 
 			userManager.AuthenticatedUserChanged += this.HandleAuthenticatedUserChanged;
 
@@ -36,6 +38,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.coreCommandDispatcher = app.GetComponent<CoreCommandDispatcher> ();
 			this.persistenceManager = app.PersistenceManager;
 			this.userManager        = userManager;
+			this.featureManager     = featureManager;
 		}
 
 		
@@ -754,6 +757,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly CommandDispatcher		commandDispatcher;
 		private readonly PersistenceManager		persistenceManager;
 		private readonly UserManager			userManager;
+		private readonly FeatureManager			featureManager;
 		private readonly CoreCommandDispatcher	coreCommandDispatcher;
 		
 		private RibbonBook						ribbonBook;

@@ -91,6 +91,19 @@ namespace Epsitec.Cresus.Core.Features
 			}
 		}
 
+		
+		public bool IsCommandEnabled(Druid commandId, UserSummary userSummary)
+		{
+			if (this.overrideCommandEnable)
+			{
+				return true;
+			}
+
+//			this.Customizations.Settings.UserCommandSetSettings.GetEnabledCommands (commandId);
+//			this.ProductSettings.LicensedFeatures.Select (x => x.
+			return false;
+		}
+
 
 		public TileEntityMergedSettings GetSettings(Druid entity, UserSummary user)
 		{
@@ -222,6 +235,8 @@ namespace Epsitec.Cresus.Core.Features
 
 		private readonly CoreData				data;
 		private readonly UserManager			userManager;
+
+		private bool							overrideCommandEnable;
 
 		private IBusinessContext				businessContext;
 		private ProductCustomizationEntity		activeCustomizations;
