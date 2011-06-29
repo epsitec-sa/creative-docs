@@ -897,6 +897,28 @@ namespace Epsitec.Cresus.Core.Entities
 	public partial class BusinessDocumentEntity : global::Epsitec.Cresus.Core.Entities.AbstractDocumentEntity
 	{
 		///	<summary>
+		///	The <c>BaseDocumentCode</c> field.
+		///	designer:fld/GVAT/GVAK6
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVAK6]")]
+		public string BaseDocumentCode
+		{
+			get
+			{
+				return this.GetField<string> ("[GVAK6]");
+			}
+			set
+			{
+				string oldValue = this.BaseDocumentCode;
+				if (oldValue != value || !this.IsFieldDefined("[GVAK6]"))
+				{
+					this.OnBaseDocumentCodeChanging (oldValue, value);
+					this.SetField<string> ("[GVAK6]", oldValue, value);
+					this.OnBaseDocumentCodeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>BillToMailContact</c> field.
 		///	designer:fld/GVAT/GVAU
 		///	</summary>
@@ -1163,6 +1185,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
+		partial void OnBaseDocumentCodeChanging(string oldValue, string newValue);
+		partial void OnBaseDocumentCodeChanged(string oldValue, string newValue);
 		partial void OnBillToMailContactChanging(global::Epsitec.Cresus.Core.Entities.MailContactEntity oldValue, global::Epsitec.Cresus.Core.Entities.MailContactEntity newValue);
 		partial void OnBillToMailContactChanged(global::Epsitec.Cresus.Core.Entities.MailContactEntity oldValue, global::Epsitec.Cresus.Core.Entities.MailContactEntity newValue);
 		partial void OnShipToMailContactChanging(global::Epsitec.Cresus.Core.Entities.MailContactEntity oldValue, global::Epsitec.Cresus.Core.Entities.MailContactEntity newValue);

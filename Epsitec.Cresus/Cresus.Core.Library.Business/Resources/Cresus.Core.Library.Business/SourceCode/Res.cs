@@ -476,6 +476,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				{
 				}
 				
+				//	designer:cap/GVAK6
+				public static readonly global::Epsitec.Common.Support.Druid BaseDocumentCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 212);
 				//	designer:cap/GVA71
 				public static readonly global::Epsitec.Common.Support.Druid BillingDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 39);
 				//	designer:cap/GVA51
