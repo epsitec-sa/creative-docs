@@ -2395,8 +2395,42 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>ArticleQuantity</c> entity.
 	///	designer:cap/GVAP1
 	///	</summary>
-	public partial class ArticleQuantityEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	public partial class ArticleQuantityEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IDateRange
 	{
+		#region IDateRange Members
+		///	<summary>
+		///	The <c>BeginDate</c> field.
+		///	designer:fld/GVAP1/8VAO
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAO]")]
+		public global::Epsitec.Common.Types.Date? BeginDate
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.GetBeginDate (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.SetBeginDate (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>EndDate</c> field.
+		///	designer:fld/GVAP1/8VAP
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAP]")]
+		public global::Epsitec.Common.Types.Date? EndDate
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.GetEndDate (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.SetEndDate (this, value);
+			}
+		}
+		#endregion
 		///	<summary>
 		///	The <c>Quantity</c> field.
 		///	designer:fld/GVAP1/GVAQ1
@@ -2464,28 +2498,6 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>ExpectedDate</c> field.
-		///	designer:fld/GVAP1/GVAS1
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVAS1]")]
-		public global::Epsitec.Common.Types.Date? ExpectedDate
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Common.Types.Date?> ("[GVAS1]");
-			}
-			set
-			{
-				global::Epsitec.Common.Types.Date? oldValue = this.ExpectedDate;
-				if (oldValue != value || !this.IsFieldDefined("[GVAS1]"))
-				{
-					this.OnExpectedDateChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.Date?> ("[GVAS1]", oldValue, value);
-					this.OnExpectedDateChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>ExpectedDateFormat</c> field.
 		///	designer:fld/GVAP1/GVAT1
 		///	</summary>
@@ -2536,8 +2548,6 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnQuantityTypeChanged(global::Epsitec.Cresus.Core.Business.ArticleQuantityType oldValue, global::Epsitec.Cresus.Core.Business.ArticleQuantityType newValue);
 		partial void OnUnitChanging(global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity oldValue, global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity newValue);
 		partial void OnUnitChanged(global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity oldValue, global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity newValue);
-		partial void OnExpectedDateChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
-		partial void OnExpectedDateChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		partial void OnExpectedDateFormatChanging(string oldValue, string newValue);
 		partial void OnExpectedDateFormatChanged(string oldValue, string newValue);
 		partial void OnColumnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);

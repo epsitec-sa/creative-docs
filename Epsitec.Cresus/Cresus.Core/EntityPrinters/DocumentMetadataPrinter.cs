@@ -788,9 +788,9 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				{
 					q2.AppendLine (Misc.FormatUnit (quantity.Quantity, quantity.Unit.Code));
 
-					if (quantity.ExpectedDate.HasValue)
+					if (quantity.BeginDate.HasValue)
 					{
-						date.AppendLine (quantity.ExpectedDate.Value.ToString ());
+						date.AppendLine (quantity.BeginDate.Value.ToString ());
 					}
 				}
 			}

@@ -28,8 +28,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Input ()
 				  .Title ("Type")
 				  .Field (x => x.QuantityType)  // TODO: Comment faire pour utiliser UIBuilder.CreateEditionDetailedItemPicker et avoir des boutons radio ?
-				  .Title ("Date prévue")
-				  .Field (x => x.ExpectedDate)
+				  .HorizontalGroup ("Date prévue (début et fin si connus)")
+				    .Field (x => x.BeginDate)
+					.Field (x => x.EndDate)
+				  .End ()
 				.End ()
 				.Separator ()
 				.Input ()

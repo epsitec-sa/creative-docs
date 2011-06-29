@@ -420,8 +420,6 @@ namespace Epsitec.Cresus.Core.Library.Business
 				
 				//	designer:cap/GVAU1
 				public static readonly global::Epsitec.Common.Support.Druid ColumnName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 62);
-				//	designer:cap/GVAS1
-				public static readonly global::Epsitec.Common.Support.Druid ExpectedDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 60);
 				//	designer:cap/GVAT1
 				public static readonly global::Epsitec.Common.Support.Druid ExpectedDateFormat = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 61);
 				//	designer:cap/GVAQ1
