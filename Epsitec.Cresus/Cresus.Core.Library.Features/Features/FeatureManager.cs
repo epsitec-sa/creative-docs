@@ -190,10 +190,30 @@ namespace Epsitec.Cresus.Core.Features
 		
 		private static Druid GetTypeIdFromLambda(LambdaExpression lambda)
 		{
-			var lambdaMember = (MemberExpression) lambda.Body;
+			switch (lambda.Body.NodeType)
+			{
+				case ExpressionType.MemberAccess:
+					return FeatureManager.GetTypeIdFromMemberAccess (lambda.Body as MemberExpression);
+				
+				case ExpressionType.Parameter:
+					return Druid.Empty;
+
+				default:
+					return Druid.Empty;
+			}
+		}
+
+		private static Druid GetTypeIdFromMemberAccess(MemberExpression lambdaMember)
+		{
+			if (lambdaMember == null)
+			{
+				return Druid.Empty;
+			}
+
 			var propertyInfo = lambdaMember.Member as System.Reflection.PropertyInfo;
 			var typeField    = EntityInfo.GetStructuredTypeField (propertyInfo);
 			var fieldId      = typeField.CaptionId;
+			
 			return fieldId;
 		}
 		

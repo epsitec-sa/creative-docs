@@ -901,6 +901,44 @@ namespace Epsitec.Cresus.Core
 			return textField;
 		}
 
+		public CheckButton CreateCheckButton(EditionTile tile, double width, string label, Marshaler marshaler)
+		{
+			return this.CreateCheckButton (tile.Container, DockStyle.Stacked, width, label, marshaler);
+		}
+
+		public CheckButton CreateCheckButton(FrameBox parent, DockStyle dockStyle, double width, string label, Marshaler marshaler)
+		{
+			var checkButton = new CheckButton
+			{
+				Parent = parent,
+				Enable = (this.ReadOnly || marshaler.IsReadOnly) ? false : true,
+				PreferredHeight = 20,
+				Text = label ?? "???",
+				Dock = dockStyle,
+				Margins = new Margins (0, Library.UI.RightMargin, 0, Library.UI.MarginUnderTextField),
+				TabIndex = ++this.tabIndex,
+			};
+
+			this.RegisterCheckButton (checkButton);
+			this.ContentListAdd (checkButton);
+
+			if (width > 0)
+			{
+				checkButton.HorizontalAlignment = HorizontalAlignment.Left;
+				checkButton.PreferredWidth = width;
+			}
+
+			//	TODO: link together check button and marshaler...
+
+			/*
+			var valueController = new TextValueController (marshaler);
+			valueController.Attach (checkButton);
+			this.container.Add (valueController);
+			 */
+
+			return checkButton;
+		}
+
 		public TextFieldMultiEx CreateTextFieldMulti(EditionTile tile, double height, string label, Marshaler marshaler)
 		{
 			return this.CreateTextFieldMulti (tile.Container, height, label, marshaler);
@@ -961,6 +999,20 @@ namespace Epsitec.Cresus.Core
 					if (!this.businessContext.AcquireLock ())
 					{
 						textField.RejectEdition ();
+					}
+				};
+			}
+		}
+
+		private void RegisterCheckButton(CheckButton button)
+		{
+			if (this.businessContext != null && this.ReadOnly == false)
+			{
+				button.ActiveStateChanged += delegate
+				{
+					if (!this.businessContext.AcquireLock ())
+					{
+						//	...
 					}
 				};
 			}

@@ -35,8 +35,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					.Field (x => x.IdB).Width (72)
 					.Field (x => x.IdC).Width (72)
 				  .End ()
-				  .Field (x => x).WithSpecialController (0)  // description courte
-				  .Field (x => x).WithSpecialController (1)  // description longue
+
+				  // TODO: ne pas utiliser un 'special controller' pour ça !
+
+				  .Field (x => x).WithSpecialController (0)  // description courte (x => x.Name)
+				  .Field (x => x).WithSpecialController (1)  // description longue (x => x.Description)
 				  .Field (x => x.Pictures)
 				  .Field (x => x.ArticleGroups)
 				  .Field (x => x.ArticleCategory)

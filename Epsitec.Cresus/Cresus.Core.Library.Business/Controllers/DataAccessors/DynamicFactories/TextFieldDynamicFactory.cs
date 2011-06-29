@@ -87,6 +87,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 						height = 60;
 					}
 				}
+
+				if ((fieldType == typeof (bool)) ||
+					(fieldType == typeof (bool?)))
+				{
+					callback = (frame, builder, caption, marshaler) => builder.CreateCheckButton (frame as EditionTile, width, caption, marshaler);
+				}
 			}
 
 			if (callback == null)

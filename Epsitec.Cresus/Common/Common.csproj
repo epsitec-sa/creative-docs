@@ -794,6 +794,7 @@
     <Compile Include="Types\Converters\AutomaticValueConverter.cs" />
     <Compile Include="Types\Converters\ByteArrayConverter.cs" />
     <Compile Include="Types\Converters\ConversionResult.cs" />
+    <Compile Include="Types\Converters\BooleanConverter.cs" />
     <Compile Include="Types\Converters\DateConverter.cs" />
     <Compile Include="Types\Converters\DateTimeConverter.cs" />
     <Compile Include="Types\Converters\DecimalConverter.cs" />

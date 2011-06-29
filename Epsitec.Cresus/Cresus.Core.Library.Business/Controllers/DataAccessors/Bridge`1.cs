@@ -346,7 +346,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 					(fieldType == typeof (decimal)) ||
 					(fieldType == typeof (decimal?)) ||
 					(fieldType == typeof (int)) ||
-					(fieldType == typeof (int?)) )
+					(fieldType == typeof (int?)) ||
+					(fieldType == typeof (bool)) ||
+					(fieldType == typeof (bool?)))
 				{
 					//	Produce either a text field or a variation of such a widget (pull-down list, etc.)
 					//	based on the real type being edited.
