@@ -36,6 +36,8 @@ namespace Epsitec.Cresus.Core.Business
 
 		bool AcquireLock(out IList<Data.LockOwner> foreignLockOwners);
 
+		bool ReleaseLock();
+
 		T CreateEntity<T>()
 			where T : AbstractEntity, new ();
 

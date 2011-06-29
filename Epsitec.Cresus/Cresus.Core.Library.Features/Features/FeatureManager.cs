@@ -103,18 +103,12 @@ namespace Epsitec.Cresus.Core.Features
 		public TileFieldEditionSettings GetFieldEditionSettings<T>(LambdaExpression lambda, UserSummary user = null)
 			where T : AbstractEntity, new ()
 		{
-			if (user == null)
-			{
-				user = this.userManager.GetUserSummary ();
-			}
+			user = this.GetUserSummary (user);
 
-			Druid entityId = EntityInfo<T>.GetTypeId ();
-			
-			var lambdaMember = (MemberExpression) lambda.Body;
-			var propertyInfo = lambdaMember.Member as System.Reflection.PropertyInfo;
-			var typeField    = EntityInfo.GetStructuredTypeField (propertyInfo);
+			Druid entityId = FeatureManager.GetEntityId<T> ();
+			Druid fieldId  = FeatureManager.GetTypeIdFromLambda (lambda);
 
-			var entitySettings = this.GetSettings (entityId, user);
+			var entitySettings = this.GetEntityMergedSettings (entityId, user);
 
 			if (entitySettings.IsEmpty)
 			{
@@ -122,7 +116,7 @@ namespace Epsitec.Cresus.Core.Features
 			}
 			else
 			{
-				var fieldSettings = entitySettings[typeField.CaptionId];
+				var fieldSettings = entitySettings[fieldId];
 				return new TileFieldEditionSettings (fieldSettings.FieldVisibilityMode.Simplify (), fieldSettings.FieldEditionMode.Simplify ());
 			}
 		}
@@ -134,10 +128,7 @@ namespace Epsitec.Cresus.Core.Features
 				return true;
 			}
 
-			if (user == null)
-			{
-				user = this.userManager.GetUserSummary ();
-			}
+			user = this.GetUserSummary (user);
 
 			var customCommandSettings  = this.Customizations.Settings.UserCommandSetSettings;
 			var featureCommandSettings = this.ProductSettings.LicensedFeatures.Select (x => x.EnabledSettings.UserCommandSetSettings);
@@ -158,8 +149,17 @@ namespace Epsitec.Cresus.Core.Features
 			return anyEnabled;
 		}
 
+		#region IDisposable Members
 
-		public TileEntityMergedSettings GetSettings(Druid entity, UserSummary user)
+		public void Dispose()
+		{
+			this.DisposeBusinessContext ();
+		}
+
+		#endregion
+
+		
+		private TileEntityMergedSettings GetEntityMergedSettings(Druid entity, UserSummary user)
 		{
 			string entityId = entity.ToString ();
 
@@ -177,17 +177,26 @@ namespace Epsitec.Cresus.Core.Features
 			return result;
 		}
 
-
-		#region IDisposable Members
-
-		public void Dispose()
+		private UserSummary GetUserSummary(UserSummary user)
 		{
-			this.DisposeBusinessContext ();
+			return user ?? this.userManager.GetUserSummary ();
 		}
-
-		#endregion
-
-
+		
+		private static Druid GetEntityId<T>()
+			where T : AbstractEntity, new ()
+		{
+			return EntityInfo<T>.GetTypeId ();
+		}
+		
+		private static Druid GetTypeIdFromLambda(LambdaExpression lambda)
+		{
+			var lambdaMember = (MemberExpression) lambda.Body;
+			var propertyInfo = lambdaMember.Member as System.Reflection.PropertyInfo;
+			var typeField    = EntityInfo.GetStructuredTypeField (propertyInfo);
+			var fieldId      = typeField.CaptionId;
+			return fieldId;
+		}
+		
 		private IEnumerable<SoftwareEditionSettingsEntity> GetAllSoftwareEditionSettings()
 		{
 			yield return this.Customizations.Settings;
@@ -204,7 +213,7 @@ namespace Epsitec.Cresus.Core.Features
 			if (this.businessContext != null)
 			{
 				this.businessContext.Dispose ();
-				this.businessContext     = null;
+				this.businessContext = null;
 			}
 			
 			this.activeCustomizations = null;
@@ -230,6 +239,9 @@ namespace Epsitec.Cresus.Core.Features
 			if (entity == null)
 			{
 				entity = context.CreateEntity<ProductCustomizationEntity> ();
+				
+				context.SaveChanges ();
+				context.ReleaseLock ();
 			}
 
 			this.activeCustomizations = entity;
@@ -254,6 +266,9 @@ namespace Epsitec.Cresus.Core.Features
 				//	TODO: protest if there is no valid product settings ! for now, we create an empty product settings entity
 
 				entity = context.CreateEntity<ProductSettingsEntity> ();
+				
+				context.SaveChanges ();
+				context.ReleaseLock ();
 			}
 
 			this.activeProductSettings = entity;
