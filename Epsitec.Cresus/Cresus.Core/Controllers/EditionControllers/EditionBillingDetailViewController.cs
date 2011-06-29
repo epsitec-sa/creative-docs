@@ -29,8 +29,15 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.End ()
 				.Separator ()
 				.Input ()
-				  //.Title ("Rang de la mensualité")
-				  //.Field (x => x.InstalmentRankForTile).Width (100)  // TODO: les Bricks ne permettent pas ceci
+				  .Field (x => x.AmountDue.PaymentType)
+				  .Field (x => x.AmountDue.PaymentMode)
+				  .Field (x => x.AmountDue.Amount).Width (100)
+				  .Field (x => x.AmountDue.Currency)
+				  .Field (x => x.AmountDue.Date)
+				  .Field (x => x.AmountDue.PaymentData)
+				.End ()
+				.Separator ()
+				.Input ()
 				  .Field (x => x.InstalmentRank).Width (100)
 				  .Field (x => x.InstalmentName)
 				.End ()
@@ -41,10 +48,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .Field (x => x.IsrDefinition)
 				.End ()
 				;
-//			wall.AddBrick (x => x.AmountDue)
-//				.Template ()
-//				.End ()
-//				;
 		}
 #else
 		protected override void CreateUI()
