@@ -33,13 +33,13 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 			var fieldType    = lambda.ReturnType;
 			var sourceType   = lambda.Parameters[0].Type;
 
-			var sourceParameterExpression = Expression.Parameter (sourceType, "source");
+			var sourceParameterExpression = lambda.Parameters[0]; // Expression.Parameter (sourceType, "source");
 			var valueParameterExpression  = Expression.Parameter (fieldType, "value");
 
 			var expressionBlock =
 				Expression.Block (
 					Expression.Assign (
-						Expression.Property (sourceParameterExpression, lambdaMember.Member.Name),
+						Expression.Property (lambdaMember.Expression, lambdaMember.Member.Name),
 						valueParameterExpression));
 
 			var getterLambda = lambda;

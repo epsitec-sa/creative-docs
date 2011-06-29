@@ -86,6 +86,7 @@
     <Compile Include="Controllers\ArticleParameterControllers\NumericValueArticleParameterController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\OptionValueArticleParameterController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\ValuesArticleParameterController.cs" />
+    <Compile Include="Controllers\DataAccessors\FieldInfo.cs" />
     <Compile Include="Controllers\SpecialControllers\ArticleParameterListEnumValuesController.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserList.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserListItem.cs" />

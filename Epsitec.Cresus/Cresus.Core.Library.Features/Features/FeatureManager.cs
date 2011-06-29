@@ -100,13 +100,9 @@ namespace Epsitec.Cresus.Core.Features
 			}
 		}
 
-		public TileFieldEditionSettings GetFieldEditionSettings<T>(LambdaExpression lambda, UserSummary user = null)
-			where T : AbstractEntity, new ()
+		public TileFieldEditionSettings GetFieldEditionSettings(Druid entityId, Druid fieldId, UserSummary user = null)
 		{
 			user = this.GetUserSummary (user);
-
-			Druid entityId = FeatureManager.GetEntityId<T> ();
-			Druid fieldId  = FeatureManager.GetTypeIdFromLambda (lambda);
 
 			var entitySettings = this.GetEntityMergedSettings (entityId, user);
 
@@ -186,35 +182,6 @@ namespace Epsitec.Cresus.Core.Features
 			where T : AbstractEntity, new ()
 		{
 			return EntityInfo<T>.GetTypeId ();
-		}
-		
-		private static Druid GetTypeIdFromLambda(LambdaExpression lambda)
-		{
-			switch (lambda.Body.NodeType)
-			{
-				case ExpressionType.MemberAccess:
-					return FeatureManager.GetTypeIdFromMemberAccess (lambda.Body as MemberExpression);
-				
-				case ExpressionType.Parameter:
-					return Druid.Empty;
-
-				default:
-					return Druid.Empty;
-			}
-		}
-
-		private static Druid GetTypeIdFromMemberAccess(MemberExpression lambdaMember)
-		{
-			if (lambdaMember == null)
-			{
-				return Druid.Empty;
-			}
-
-			var propertyInfo = lambdaMember.Member as System.Reflection.PropertyInfo;
-			var typeField    = EntityInfo.GetStructuredTypeField (propertyInfo);
-			var fieldId      = typeField.CaptionId;
-			
-			return fieldId;
 		}
 		
 		private IEnumerable<SoftwareEditionSettingsEntity> GetAllSoftwareEditionSettings()

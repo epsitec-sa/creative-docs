@@ -300,9 +300,11 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				this.actions.Add (new UIGroupAction (actions, title));
 			}
 
-			private TileFieldEditionSettings GetFieldEditionSettings(LambdaExpression lambda)
+			private FieldInfo GetFieldEditionSettings(LambdaExpression lambda)
 			{
-				return this.bridge.bridgeContext.FeatureManager.GetFieldEditionSettings<T> (lambda);
+				FieldInfo info = new FieldInfo (EntityInfo<T>.GetTypeId (), lambda);
+				info.Settings = this.bridge.bridgeContext.FeatureManager.GetFieldEditionSettings (info.EntityId, info.FieldId);
+				return info;
 			}
 
 			private void CreateActionForInputField(Expression expression, BrickPropertyCollection fieldProperties)
@@ -330,7 +332,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 					//	The field is an entity : use an AutoCompleteTextField for it.
 
 					var factory = DynamicFactories.EntityAutoCompleteTextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, collection, specialController);
-					this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder)) { Mode = fieldMode });
+					this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder)) { FieldInfo = fieldMode });
 
 					return;
 				}
@@ -354,7 +356,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 					//	based on the real type being edited.
 
 					var factory = DynamicFactories.TextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, width, height, collection);
-					this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder)) { Mode = fieldMode });
+					this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder)) { FieldInfo = fieldMode });
 
 					return;
 				}
@@ -365,7 +367,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 					//	of entities represented as [ Field ]--->>* Entity in the Designer.
 
 					var factory = DynamicFactories.ItemPickerDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, specialController);
-					this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder)) { Mode = fieldMode });
+					this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder)) { FieldInfo = fieldMode });
 
 					return;
 				}
@@ -378,7 +380,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 					//	The field is an enumeration : use an AutoCompleteTextField for it.
 
 					var factory = DynamicFactories.EnumAutoCompleteTextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, width);
-					this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder)) { Mode = fieldMode });
+					this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder)) { FieldInfo = fieldMode });
 
 					return;
 				}
@@ -558,26 +560,27 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			public UIAction(System.Action<FrameBox, UIBuilder> action)
 			{
 				this.action = action;
-				this.mode   = new TileFieldEditionSettings (TileVisibilityMode.Visible, TileEditionMode.ReadWrite);
+				this.fieldInfo   = null;
 			}
 
 			public void Execute(FrameBox frame, UIBuilder builder)
 			{
-				if (this.mode.FieldVisibilityMode == TileVisibilityMode.Visible)
+				if ((this.fieldInfo == null) ||
+					(this.fieldInfo.Settings.FieldVisibilityMode == TileVisibilityMode.Visible))
 				{
 					this.InternalExecute (frame, builder);
 				}
 			}
 
-			public TileFieldEditionSettings Mode
+			public FieldInfo FieldInfo
 			{
 				get
 				{
-					return this.mode;
+					return this.fieldInfo;
 				}
 				set
 				{
-					this.mode = value;
+					this.fieldInfo = value;
 				}
 			}
 			
@@ -587,7 +590,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 
 			private readonly System.Action<FrameBox, UIBuilder> action;
-			private TileFieldEditionSettings mode;
+			private FieldInfo fieldInfo;
 		}
 
 		
