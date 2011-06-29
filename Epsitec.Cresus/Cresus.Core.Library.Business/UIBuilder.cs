@@ -928,13 +928,9 @@ namespace Epsitec.Cresus.Core
 				checkButton.PreferredWidth = width;
 			}
 
-			//	TODO: link together check button and marshaler...
-
-			/*
 			var valueController = new TextValueController (marshaler);
 			valueController.Attach (checkButton);
 			this.container.Add (valueController);
-			 */
 
 			return checkButton;
 		}

@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -92,6 +92,15 @@ namespace Epsitec.Cresus.Core.Controllers
 			widget.EditionAccepted += this.HandleEditionAccepted;
 		}
 
+		public void Attach(CheckButton widget)
+		{
+			this.widget = widget;
+
+			this.UpdateWidgetForMultilingualText ();
+
+			widget.ActiveStateChanged += this.HandleButtonChanged;
+		}
+
 		private void SetupFieldBinder()
 		{
 			INamedType fieldType = this.GetFieldType ();
@@ -114,6 +123,24 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			string text = this.GetWidgetText ();
 			this.SetMarshalerText (text);
+		}
+
+		private void HandleButtonChanged(object sender)
+		{
+			switch (this.widget.ActiveState)
+			{
+				case ActiveState.Maybe:
+					this.SetMarshalerText (null);
+					break;
+
+				case ActiveState.Yes:
+					this.SetMarshalerText ("true");
+					break;
+
+				case ActiveState.No:
+					this.SetMarshalerText ("false");
+					break;
+			}
 		}
 
 
@@ -294,6 +321,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			if (this.widget != null)
 			{
 				var textField = this.widget as AbstractTextField;
+				var button    = this.widget as CheckButton;
 
 				if (textField != null)
 				{
@@ -310,6 +338,27 @@ namespace Epsitec.Cresus.Core.Controllers
 				}
 
 				string text = this.GetMarshalerText ();
+				
+				if (button != null)
+				{
+					switch (text.ToLowerInvariant ())
+					{
+						case "true":
+							button.ActiveState = ActiveState.Yes;
+							break;
+
+						case "false":
+							button.ActiveState = ActiveState.No;
+							break;
+
+						default:
+							button.ActiveState = ActiveState.Maybe;
+							break;
+					}
+
+					return;
+				}
+
 				this.SetWidgetText (text);
 			}
 		}
