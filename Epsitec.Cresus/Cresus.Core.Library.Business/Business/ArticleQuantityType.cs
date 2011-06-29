@@ -13,6 +13,7 @@ namespace Epsitec.Cresus.Core.Business
 		Ordered				= 10,
 		Billed				= 20,
 		Delayed				= 30,
+		Expected			= 32,
 		Shipped				= 40,
 		ShippedPreviously	= 42,
 

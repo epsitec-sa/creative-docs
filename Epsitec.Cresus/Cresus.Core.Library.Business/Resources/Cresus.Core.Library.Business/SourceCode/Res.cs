@@ -112,6 +112,14 @@ namespace Epsitec.Cresus.Core.Library.Business
 						return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 165));
 					}
 				}
+				//	designer:cap/GVAJ6
+				public static global::Epsitec.Common.Types.Caption Expected
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 211));
+					}
+				}
 				//	designer:cap/GVA65
 				public static global::Epsitec.Common.Types.Caption Information
 				{
