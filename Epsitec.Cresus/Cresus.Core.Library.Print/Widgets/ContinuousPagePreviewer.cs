@@ -276,12 +276,21 @@ namespace Epsitec.Cresus.Core.Widgets
 			get
 			{
 				var bounds = this.Client.Bounds;
-				bounds.Scale (this.ScreenToDocumentScale);
 
-				double h = bounds.Width * this.documentSize.Height / this.documentSize.Width;
-				bounds.Height = System.Math.Min (bounds.Height, h);
+				if (bounds.IsEmpty)
+				{
+					return Rectangle.Zero;
+				}
+				else
+				{
+					bounds = Rectangle.Scale (bounds, this.ScreenToDocumentScale);
 
-				return bounds;
+					double aspectRatio = this.documentSize.Height / this.documentSize.Width;
+					double width  = bounds.Width;
+					double height = System.Math.Min (bounds.Height, bounds.Width * aspectRatio);
+					
+					return new Rectangle (bounds.X, bounds.Y, width, height);
+				}
 			}
 		}
 

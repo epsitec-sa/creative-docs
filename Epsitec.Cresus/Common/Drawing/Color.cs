@@ -1,4 +1,4 @@
-﻿//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
@@ -16,7 +16,6 @@ namespace Epsitec.Common.Drawing
 			this.g = color.G / 255.0;
 			this.b = color.B / 255.0;
 			this.a = color.A / 255.0;
-			this.isEmpty = color.IsEmpty;
 		}
 		
 		public Color(double a, double r, double g, double b)
@@ -25,7 +24,6 @@ namespace Epsitec.Common.Drawing
 			this.g = g;
 			this.b = b;
 			this.a = a;
-			this.isEmpty = false;
 		}
 		
 		public Color(double r, double g, double b)
@@ -34,7 +32,6 @@ namespace Epsitec.Common.Drawing
 			this.g = g;
 			this.b = b;
 			this.a = 1.0;
-			this.isEmpty = false;
 		}
 		
 		public Color(double brightness)
@@ -43,62 +40,53 @@ namespace Epsitec.Common.Drawing
 			this.g = brightness;
 			this.b = brightness;
 			this.a = 1.0;
-			this.isEmpty = false;
 		}
 		
 		
-		//[XmlAttribute]
 		public double			R
 		{
 			get { return this.r; }
-		//	set { this.r = value; }
 		}
 		
-		//[XmlAttribute]
 		public double			G
 		{
 			get { return this.g; }
-		//	set { this.g = value; }
 		}
 		
-		//[XmlAttribute]
 		public double			B
 		{
 			get { return this.b; }
-		//	set { this.b = value; }
 		}
 		
-		//[XmlAttribute]
 		public double			A
 		{
 			get { return this.a; }
-		//	set { this.a = value; }
 		}
 		
 		
 		public bool								IsEmpty
 		{
-			get { return this.isEmpty; }
+			get { return double.IsNaN (this.a); }
 		}
 		
 		public bool								IsValid
 		{
-			get { return !this.isEmpty; }
+			get { return !this.IsEmpty; }
 		}
 		
 		public bool								IsTransparent
 		{
-			get { return !this.isEmpty && (this.a == 0.0); }
+			get { return !this.IsEmpty && (this.a == 0.0); }
 		}
 		
 		public bool								IsOpaque
 		{
-			get { return !this.isEmpty && (this.a == 1.0); }
+			get { return !this.IsEmpty && (this.a == 1.0); }
 		}
 		
 		public bool								IsVisible
 		{
-			get { return !this.isEmpty && (this.a != 0.0); }
+			get { return !this.IsEmpty && (this.a != 0.0); }
 		}
 		
 		public bool								IsInRange
@@ -112,15 +100,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		public static Color						Empty
-		{
-			get
-			{
-				Color c = new Color ();
-				c.isEmpty = true;
-				return c;
-			}
-		}
+		public static readonly Color			Empty = new Color (double.NaN, 0, 0, 0);
 		
 		public static Color						Transparent
 		{
@@ -196,14 +176,12 @@ namespace Epsitec.Common.Drawing
 		
 		public Color ClipToRange()
 		{
-			Color color = new Color ();
+			double r = Epsitec.Common.Math.Clip (this.r);
+			double g = Epsitec.Common.Math.Clip (this.g);
+			double b = Epsitec.Common.Math.Clip (this.b);
+			double a = Epsitec.Common.Math.Clip (this.a);
 			
-			color.r = Epsitec.Common.Math.Clip (this.r);
-			color.g = Epsitec.Common.Math.Clip (this.g);
-			color.b = Epsitec.Common.Math.Clip (this.b);
-			color.a = Epsitec.Common.Math.Clip (this.a);
-			
-			return color;
+			return new Color(a, r, g, b);
 		}
 		
 		public double GetBrightness()
@@ -482,11 +460,11 @@ namespace Epsitec.Common.Drawing
 		
 		public static bool operator==(Color a, Color b)
 		{
-			if (a.isEmpty && b.isEmpty)
+			if (a.IsEmpty && b.IsEmpty)
 			{
 				return true;
 			}
-			if (a.isEmpty || b.isEmpty)
+			if (a.IsEmpty || b.IsEmpty)
 			{
 				return false;
 			}
@@ -499,11 +477,11 @@ namespace Epsitec.Common.Drawing
 		
 		public static bool operator!=(Color a, Color b)
 		{
-			if (a.isEmpty && b.isEmpty)
+			if (a.IsEmpty && b.IsEmpty)
 			{
 				return false;
 			}
-			if (a.isEmpty || b.isEmpty)
+			if (a.IsEmpty || b.IsEmpty)
 			{
 				return true;
 			}
@@ -595,29 +573,11 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		#endregion
-		
+
 		public static readonly int				ColorComponentDigits = 4;
 		public static readonly double			ColorComponentDelta  = (1.0 / 65535.0) / 2.0;
 
-		private double							r, g, b;
-		private double							a;
-		private bool isEmpty
-		{
-			get
-			{
-				return double.IsNaN (this.a);
-			}
-			set
-			{
-				if (value)
-				{
-					this.a = double.NaN;
-				}
-				else
-				{
-					System.Diagnostics.Debug.Assert (this.isEmpty == false);
-				}
-			}
-		}
+		private readonly double					r, g, b;
+		private readonly double					a;
 	}
 }

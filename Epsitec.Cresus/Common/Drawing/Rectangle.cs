@@ -50,8 +50,8 @@ namespace Epsitec.Common.Drawing
 			this.x2 = r.Right;
 			this.y2 = r.Top;
 		}
-		
-		
+
+		public static readonly Rectangle		Zero     = new Rectangle (0, 0, 0, 0);
 		public static readonly Rectangle		Empty    = new Rectangle (0, 0, -1, -1);
 		public static readonly Rectangle		MaxValue = new Rectangle (-1000000000, -1000000000, 2000000000, 2000000000);
 		

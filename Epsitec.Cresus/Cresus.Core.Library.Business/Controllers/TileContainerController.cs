@@ -407,7 +407,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				return;
 			}
 
-			if (item.DataType == TileDataType.EmptyItem)
+			if ((item.DataType == TileDataType.EmptyItem) &&
+				(item.AddNewItem != null))
 			{
 				string itemName = item.Name;
 #if true
