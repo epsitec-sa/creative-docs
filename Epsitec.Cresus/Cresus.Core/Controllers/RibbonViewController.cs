@@ -523,7 +523,9 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				if (commands.Length > 0)
 				{
-					menu.Items.Add (new MenuItem (type.ToString (), "", RibbonViewController.GetSubMenuName (type), ""));
+					var icon = string.Format ("manifest:Epsitec.Cresus.Core.Images.{0}.icon", RibbonViewController.GetSubMenuIcon (type));
+					menu.Items.Add (new MenuItem (type.ToString (), icon, RibbonViewController.GetSubMenuName (type), ""));
+
 					var subMenu = new VMenu ();
 
 					for (int i=0; i<commands.Length; i++)
@@ -739,6 +741,33 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				case SubMenuType.Misc:
 					return "Divers";
+
+				default:
+					return null;
+			}
+		}
+
+		private static string GetSubMenuIcon(SubMenuType type)
+		{
+			switch (type)
+			{
+				case SubMenuType.Printing:
+					return "Base.DocumentPrintingUnits";
+
+				case SubMenuType.Finance:
+					return "Base.PaymentMode";
+
+				case SubMenuType.Images:
+					return "Base.Image";
+
+				case SubMenuType.Customers:
+					return "Base.Customer";
+
+				case SubMenuType.Articles:
+					return "Base.ArticleDefinition";
+
+				case SubMenuType.Misc:
+					return "Base.BusinessSettings";
 
 				default:
 					return null;
