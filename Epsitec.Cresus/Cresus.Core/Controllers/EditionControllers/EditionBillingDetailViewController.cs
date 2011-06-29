@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .Field (x => x.AmountDue.PaymentMode)
 				  .Field (x => x.AmountDue.Amount).Width (100)
 				  .Field (x => x.AmountDue.Currency)
-				  .Field (x => x.AmountDue.Date)
+				  .Field (x => x.AmountDue.Date).Width (150)
 				  .Field (x => x.AmountDue.PaymentData)
 				.End ()
 				.Separator ()
