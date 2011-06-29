@@ -19,64 +19,32 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionArticlePriceViewController : EditionViewController<Entities.ArticlePriceEntity>
 	{
-#if false
-		protected override void CreateUI()
+#if true
+		protected override void CreateBricks(Bricks.BrickWall<ArticlePriceEntity> wall)
 		{
-			using (var builder = new UIBuilder (this))
-			{
-				builder.CreateHeaderEditorTile ();
-				builder.CreateEditionTitleTile ("Data.ArticlePrice", "Prix");
-
-				this.CreateUIMain (builder);
-
-				using (var data = TileContainerController.Setup (this))
-				{
-					this.CreateUIPriceCalculators (data);
-				}
-
-				builder.CreateFooterEditorTile ();
-			}
-		}
-
-
-		private void CreateUIMain(Epsitec.Cresus.Core.UIBuilder builder)
-		{
-			var tile = builder.CreateEditionTile ();
-
-			builder.CreateTextField (tile, 150, "Du", Marshaler.Create (() => this.Entity.BeginDate, x => this.Entity.BeginDate = x));
-			builder.CreateTextField (tile, 150, "Au", Marshaler.Create (() => this.Entity.EndDate,   x => this.Entity.EndDate   = x));
-
-			builder.CreateMargin (tile, horizontalSeparator: true);
-
-			builder.CreateTextField (tile, 80, "Quantité minimale", Marshaler.Create (() => this.Entity.MinQuantity, x => this.Entity.MinQuantity = x));
-			builder.CreateTextField (tile, 80, "Quantité maximale", Marshaler.Create (() => this.Entity.MaxQuantity, x => this.Entity.MaxQuantity = x));
-
-			builder.CreateMargin (tile, horizontalSeparator: true);
-			
-			//	TODO: gérer le HT/TTC selon this.Entity.ValueIncludesTaxes
-			builder.CreateTextField (tile, 150, "Prix HT", Marshaler.Create (() => this.Entity.Value, x => this.Entity.Value = x));
-			builder.CreateAutoCompleteTextField (tile, 150-Library.UI.ComboButtonWidth+1, "Monnaie", Marshaler.Create (() => this.Entity.CurrencyCode, x => this.Entity.CurrencyCode = x), EnumKeyValues.FromEnum<CurrencyCode> ());
-		}
-
-		private void CreateUIPriceCalculators(TileDataItems data)
-		{
-			data.Add (
-				new TileDataItem
-				{
-					AutoGroup    = true,
-					Name		 = "PriceCalculator",
-					IconUri		 = "Data.PriceCalculator",
-					Title		 = TextFormatter.FormatText ("Calculateurs de prix"),
-					CompactTitle = TextFormatter.FormatText ("Calculateurs de prix"),
-					Text		 = CollectionTemplate.DefaultEmptyText,
-				});
-
-			var template = new CollectionTemplate<PriceCalculatorEntity> ("PriceCalculator", this.BusinessContext);
-
-			template.DefineText        (x => x.GetSummary ());
-			template.DefineCompactText (x => x.GetSummary ());
-
-			data.Add (this.CreateCollectionAccessor (template, x => x.PriceCalculators));
+			wall.AddBrick ()
+				.Input ()
+				  .Field (x => x.BeginDate).Width (150)
+				  .Field (x => x.EndDate).Width (150)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.MinQuantity).Width (100)
+				  .Field (x => x.MaxQuantity).Width (100)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.ValueIncludesTaxes)
+				  .Field (x => x.ValueOverridesPriceGroup)
+				  .Field (x => x.Value).Width (100)
+				  .Field (x => x.CurrencyCode)
+				  .Field (x => x.PriceGroups)
+				.End ()
+				;
+			wall.AddBrick (x => x.PriceCalculators)
+				.Template ()
+				.End ()
+				;
 		}
 #else
 		protected override void CreateUI()
