@@ -29,7 +29,33 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
-		public override EntityStatus GetEntityStatus ()
+		public int? InstalmentRankForTile
+		{
+			get
+			{
+				if (this.InstalmentRank == null)
+				{
+					return null;
+				}
+				else
+				{
+					return this.InstalmentRank+1;
+				}
+			}
+			set
+			{
+				if (value == null)
+				{
+					this.InstalmentRank = null;
+				}
+				else
+				{
+					this.InstalmentRank = value-1;
+				}
+			}
+		}
+
+		public override EntityStatus GetEntityStatus()
 		{
 			using (var a = new EntityStatusAccumulator ())
 			{

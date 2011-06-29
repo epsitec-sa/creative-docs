@@ -20,6 +20,33 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionBillingDetailViewController : EditionViewController<Entities.BillingDetailEntity>
 	{
+#if true
+		protected override void CreateBricks(Bricks.BrickWall<BillingDetailEntity> wall)
+		{
+			wall.AddBrick ()
+				.Input ()
+				  .Field (x => x.Text)
+				.End ()
+				.Separator ()
+				.Input ()
+				  //.Title ("Rang de la mensualité")
+				  //.Field (x => x.InstalmentRankForTile).Width (100)  // TODO: les Bricks ne permettent pas ceci
+				  .Field (x => x.InstalmentRank).Width (100)
+				  .Field (x => x.InstalmentName)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.TransactionId)
+				  .Field (x => x.IsrReferenceNumber)
+				  .Field (x => x.IsrDefinition)
+				.End ()
+				;
+//			wall.AddBrick (x => x.AmountDue)
+//				.Template ()
+//				.End ()
+//				;
+		}
+#else
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -130,5 +157,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				this.TileContainer.UpdateAllWidgets ();
 			}
 		}
+#endif
 	}
 }
