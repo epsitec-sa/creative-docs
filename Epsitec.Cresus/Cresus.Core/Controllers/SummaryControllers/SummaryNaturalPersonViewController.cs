@@ -22,54 +22,23 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<NaturalPersonEntity> wall)
 		{
 			wall.AddBrick ()
-//				.Name ("NaturalPerson")
-//				.Icon ("Data.NaturalPerson")
-//				.Title (TextFormatter.FormatText ("Personne physique"))
-//				.TitleCompact (TextFormatter.FormatText ("Personne"))
-//				.Text (x => x.GetSummary ())
-//				.TextCompact (x => x.GetCompactSummary ())
 				;
 			wall.AddBrick (x => x.Contacts)
 				.AsType<MailContactEntity> ()
-//				.Name ("MailContact")
-//				.Icon ("Data.MailContact")
-				
-//				.Title ("Adresses")
-//				.TitleCompact ("Adresses")
-//				.Text (CollectionTemplate.DefaultEmptyText)
-				
 				.Template ()
-				 .Title (x => x.GetTitle ())
-//				 .Text (x => x.GetSummary ())
-//				 .TextCompact (x => x.GetCompactSummary ())
+				  .Title (x => x.GetTitle ())
 				.End ()
 				;
 			wall.AddBrick (x => x.Contacts)
 				.AsType<TelecomContactEntity> ()
 				.Attribute (BrickMode.AutoGroup)
-//				.Name ("TelecomContact")
-//				.Icon ("Data.TelecomContact")
-//				.Title ("Téléphones")
-//				.TitleCompact ("Téléphones")
-//				.Text (CollectionTemplate.DefaultEmptyText)
-				
 				.Template ()
-//				 .Text (x => x.GetSummary ())
-//				 .TextCompact (x => x.GetCompactSummary ())
 				.End ()
 				;
 			wall.AddBrick (x => x.Contacts)
 				.AsType<UriContactEntity> ()
 				.Attribute (BrickMode.AutoGroup)
-//				.Name ("UriContact")
-//				.Icon ("Data.UriContact")
-//				.Title ("E-mails")
-//				.TitleCompact ("E-mails")
-//				.Text (CollectionTemplate.DefaultEmptyText)
-				
 				.Template ()
-//				 .Text (x => x.GetSummary ())
-//				 .TextCompact (x => x.GetCompactSummary ())
 				.End ()
 				;
 		}

@@ -29,7 +29,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				.Attribute (BrickMode.HideAddButton)
 				.Attribute (BrickMode.HideRemoveButton)
 				.Attribute (BrickMode.DefaultToSummarySubview)
-				.Name ("DocMetadata")
 				.Title ("Document lié")
 				.TitleCompact ("Documents liés")
 				.Template ()

@@ -22,7 +22,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<RelationEntity> wall)
 		{
 			wall.AddBrick ()
-				.Name ("Customer")
 				.Title (TextFormatter.FormatText ("Client"))
 				;
 			wall.AddBrick (x => x.Person.Contacts)

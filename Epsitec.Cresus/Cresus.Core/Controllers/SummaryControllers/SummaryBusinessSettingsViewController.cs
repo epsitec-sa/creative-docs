@@ -22,17 +22,14 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<BusinessSettingsEntity> wall)
 		{
 			wall.AddBrick ()
-				.Name ("BusinessSettings")
 				.Text (x => x.Company.Person.GetSummary ())
 				;
 			wall.AddBrick (x => x.Finance.IsrDefs)
-				.Name ("IsrDefinition")
 				.Attribute (BrickMode.AutoGroup)
 				.Template ()
 				.End ()
 				;
 			wall.AddBrick (x => x.Finance.PaymentReminderDefs)
-				.Name ("PaymentReminderDefinition")
 				.Attribute (BrickMode.AutoGroup)
 				.Template ()
 				.End ()

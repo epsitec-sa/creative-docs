@@ -23,7 +23,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		protected override void CreateBricks(BrickWall<DocumentMetadataEntity> wall)
 		{
 			wall.AddBrick (x => x)
-				.Name ("Document")
 				.Title ("Informations générales")
 				.Input ()
 				  .HorizontalGroup ("N° de document (principal, externe et interne)")
