@@ -4,6 +4,8 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
+using Epsitec.Cresus.Bricks;
+
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Widgets;
@@ -17,7 +19,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 	public class EditionArticleGroupViewController : EditionViewController<Entities.ArticleGroupEntity>
 	{
 #if true
-		protected override void CreateBricks(Bricks.BrickWall<ArticleGroupEntity> wall)
+		protected override void CreateBricks(BrickWall<ArticleGroupEntity> wall)
 		{
 			wall.AddBrick ()
 				.GlobalWarning ()

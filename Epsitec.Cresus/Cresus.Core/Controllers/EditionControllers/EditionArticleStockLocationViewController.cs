@@ -5,12 +5,13 @@ using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Bricks;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionArticleStockLocationViewController : EditionViewController<ArticleStockLocationEntity>
 	{
-		protected override void CreateBricks(Bricks.BrickWall<ArticleStockLocationEntity> wall)
+		protected override void CreateBricks(BrickWall<ArticleStockLocationEntity> wall)
 		{
 			wall.AddBrick ()
 				.Input ()

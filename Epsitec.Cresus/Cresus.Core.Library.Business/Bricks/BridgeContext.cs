@@ -3,13 +3,15 @@
 
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Features;
 using Epsitec.Cresus.Core.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Controllers.DataAccessors
+namespace Epsitec.Cresus.Core.Bricks
 {
 	public class BridgeContext : System.IDisposable
 	{

@@ -8,6 +8,7 @@ using Epsitec.Common.Types.Converters.Marshalers;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Resolvers;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
@@ -17,7 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
+namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 {
 	internal static class EntityAutoCompleteTextFieldDynamicFactory
 	{

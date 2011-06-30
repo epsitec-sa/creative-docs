@@ -17,13 +17,14 @@ using Epsitec.Cresus.Core.Widgets.Tiles;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.Bricks;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionAffairViewController : EditionViewController<Entities.AffairEntity>
 	{
 #if true
-		protected override void CreateBricks(Bricks.BrickWall<AffairEntity> wall)
+		protected override void CreateBricks(BrickWall<AffairEntity> wall)
 		{
 			wall.AddBrick ()
 				.Input ()

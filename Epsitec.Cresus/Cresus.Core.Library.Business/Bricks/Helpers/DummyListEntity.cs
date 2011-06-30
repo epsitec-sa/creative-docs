@@ -6,7 +6,7 @@ using Epsitec.Common.Support.EntityEngine;
 
 using System.Collections.Generic;
 
-namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories.Helpers
+namespace Epsitec.Cresus.Core.Bricks.Helpers
 {
 	/// <summary>
 	/// The <c>DummyListEntity</c> generic class provides an <c>Items</c> property which

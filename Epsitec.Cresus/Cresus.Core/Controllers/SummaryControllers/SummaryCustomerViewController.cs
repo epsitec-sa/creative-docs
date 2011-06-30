@@ -4,6 +4,9 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Bricks;
+
+using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
@@ -16,7 +19,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryCustomerViewController : SummaryViewController<CustomerEntity>
 	{
-		protected override void CreateBricks(Bricks.BrickWall<CustomerEntity> wall)
+		protected override void CreateBricks(BrickWall<CustomerEntity> wall)
 		{
 			wall.AddBrick (x => x);
 

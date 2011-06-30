@@ -3,13 +3,18 @@
 
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
+
 using Epsitec.Cresus.Bricks;
+
+using Epsitec.Cresus.Core.Bricks.Helpers;
+using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Controllers.DataAccessors;
 
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Epsitec.Cresus.Core.Controllers.DataAccessors
+namespace Epsitec.Cresus.Core.Bricks
 {
 	/// <summary>
 	/// The <c>Bridge</c> class is used to transform <see cref="Brick"/> definitions into

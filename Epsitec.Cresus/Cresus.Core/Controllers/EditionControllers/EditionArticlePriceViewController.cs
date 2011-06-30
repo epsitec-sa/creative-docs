@@ -14,13 +14,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Business.Finance;
+using Epsitec.Cresus.Bricks;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionArticlePriceViewController : EditionViewController<Entities.ArticlePriceEntity>
 	{
 #if true
-		protected override void CreateBricks(Bricks.BrickWall<ArticlePriceEntity> wall)
+		protected override void CreateBricks(BrickWall<ArticlePriceEntity> wall)
 		{
 			wall.AddBrick ()
 				.Input ()

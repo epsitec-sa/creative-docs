@@ -4,6 +4,8 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
+using Epsitec.Cresus.Bricks;
+
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
@@ -20,7 +22,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 	public class EditionIsrDefinitionViewController : EditionViewController<Entities.IsrDefinitionEntity>
 	{
 #if true
-		protected override void CreateBricks(Bricks.BrickWall<IsrDefinitionEntity> wall)
+		protected override void CreateBricks(BrickWall<IsrDefinitionEntity> wall)
 		{
 			wall.AddBrick ()
 				.Input ()

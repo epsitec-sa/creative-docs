@@ -15,13 +15,14 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Bricks;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionBillingDetailViewController : EditionViewController<Entities.BillingDetailEntity>
 	{
 #if true
-		protected override void CreateBricks(Bricks.BrickWall<BillingDetailEntity> wall)
+		protected override void CreateBricks(BrickWall<BillingDetailEntity> wall)
 		{
 			wall.AddBrick ()
 				.Input ()

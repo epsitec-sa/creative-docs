@@ -6,6 +6,8 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Bricks;
+
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
@@ -24,7 +26,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionBusinessDocumentViewController : EditionViewController<BusinessDocumentEntity>
 	{
-		protected override void CreateBricks(Bricks.BrickWall<BusinessDocumentEntity> wall)
+		protected override void CreateBricks(BrickWall<BusinessDocumentEntity> wall)
 		{
 			wall.AddBrick ()
 				.Input ()

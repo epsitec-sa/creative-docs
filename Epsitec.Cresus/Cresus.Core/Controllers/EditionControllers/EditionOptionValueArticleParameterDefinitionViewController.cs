@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
+using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 	public class EditionOptionValueArticleParameterDefinitionViewController : EditionViewController<Entities.OptionValueArticleParameterDefinitionEntity>
 	{
 #if true
-		protected override void CreateBricks(Bricks.BrickWall<OptionValueArticleParameterDefinitionEntity> wall)
+		protected override void CreateBricks(BrickWall<OptionValueArticleParameterDefinitionEntity> wall)
 		{
 			wall.AddBrick ()
 				.Input ()

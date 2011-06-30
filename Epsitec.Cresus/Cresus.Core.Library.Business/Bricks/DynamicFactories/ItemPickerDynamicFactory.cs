@@ -4,16 +4,19 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core.Bricks.Helpers;
 using Epsitec.Cresus.Core.Business;
-using Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories.Helpers;
+using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Widgets.Tiles;
+
 using Epsitec.Cresus.DataLayer.Context;
 
 using System.Linq.Expressions;
 using System.Collections.Generic;
 
-namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
+namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 {
 	internal static class ItemPickerDynamicFactory
 	{

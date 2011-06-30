@@ -4,6 +4,9 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Bricks;
+
+using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
@@ -16,7 +19,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryNaturalPersonViewController : SummaryViewController<NaturalPersonEntity>
 	{
-		protected override void CreateBricks(Bricks.BrickWall<NaturalPersonEntity> wall)
+		protected override void CreateBricks(BrickWall<NaturalPersonEntity> wall)
 		{
 			wall.AddBrick ()
 //				.Name ("NaturalPerson")

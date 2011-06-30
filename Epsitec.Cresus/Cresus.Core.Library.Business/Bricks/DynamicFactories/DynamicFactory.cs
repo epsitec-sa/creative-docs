@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
+namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 {
 	/// <summary>
 	/// The <c>DynamicFactory</c> class is used to dynamically create a piece of user

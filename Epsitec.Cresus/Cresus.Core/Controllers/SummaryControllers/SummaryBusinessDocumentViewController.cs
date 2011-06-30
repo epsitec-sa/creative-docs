@@ -3,6 +3,8 @@
 
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Bricks;
+
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
@@ -19,7 +21,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 	public class SummaryBusinessDocumentViewController : SummaryViewController<BusinessDocumentEntity>
 	{
 #if false
-		protected override void CreateBricks(Bricks.BrickWall<BusinessDocumentEntity> wall)
+		protected override void CreateBricks(BrickWall<BusinessDocumentEntity> wall)
 		{
 			wall.AddBrick (x => x);
 

@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Epsitec.Cresus.Core.Controllers.DataAccessors
+namespace Epsitec.Cresus.Core.Bricks.Helpers
 {
 	using TypeAndMethodName = System.Tuple<System.Type, string>;
 

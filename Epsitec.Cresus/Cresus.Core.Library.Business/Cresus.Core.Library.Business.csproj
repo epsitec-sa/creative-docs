@@ -86,7 +86,7 @@
     <Compile Include="Controllers\ArticleParameterControllers\NumericValueArticleParameterController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\OptionValueArticleParameterController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\ValuesArticleParameterController.cs" />
-    <Compile Include="Controllers\DataAccessors\FieldInfo.cs" />
+    <Compile Include="Bricks\FieldInfo.cs" />
     <Compile Include="Controllers\SpecialControllers\ArticleParameterListEnumValuesController.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserList.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserListItem.cs" />
@@ -102,10 +102,10 @@
     <Compile Include="Controllers\CoreViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationViewController.cs" />
     <Compile Include="Controllers\CreationControllers\ICreationController.cs" />
-    <Compile Include="Controllers\DataAccessors\BrickMode.cs" />
-    <Compile Include="Controllers\DataAccessors\Bridge.cs" />
-    <Compile Include="Controllers\DataAccessors\BridgeContext.cs" />
-    <Compile Include="Controllers\DataAccessors\Bridge`1.cs" />
+    <Compile Include="Bricks\BrickMode.cs" />
+    <Compile Include="Bricks\Bridge.cs" />
+    <Compile Include="Bricks\BridgeContext.cs" />
+    <Compile Include="Bricks\Bridge`1.cs" />
     <Compile Include="Controllers\DataAccessors\CollectionAccessor.cs" />
     <Compile Include="Controllers\DataAccessors\CollectionAccessor`3.cs" />
     <Compile Include="Controllers\DataAccessors\CollectionTemplate.cs" />
@@ -113,18 +113,18 @@
     <Compile Include="Controllers\DataAccessors\CollectionTemplate`1.cs" />
     <Compile Include="Controllers\DataAccessors\DynamicAccessorFactory.cs" />
     <Compile Include="Controllers\DataAccessors\DynamicAccessorFactory`3.cs" />
-    <Compile Include="Controllers\DataAccessors\DynamicFactories\DummyListEntity.cs" />
-    <Compile Include="Controllers\DataAccessors\DynamicFactories\EntityAutoCompleteTextFieldDynamicFactory.cs" />
-    <Compile Include="Controllers\DataAccessors\DynamicFactories\EnumAutoCompleteTextFieldDynamicFactory.cs" />
-    <Compile Include="Controllers\DataAccessors\DynamicFactories\DynamicFactory.cs" />
-    <Compile Include="Controllers\DataAccessors\DynamicFactories\ItemPickerDynamicFactory.cs" />
-    <Compile Include="Controllers\DataAccessors\DynamicFactories\SummaryDummyListEntityViewController.cs" />
-    <Compile Include="Controllers\DataAccessors\DynamicFactories\TextFieldDynamicFactory.cs" />
+    <Compile Include="Bricks\Helpers\DummyListEntity.cs" />
+    <Compile Include="Bricks\DynamicFactories\EntityAutoCompleteTextFieldDynamicFactory.cs" />
+    <Compile Include="Bricks\DynamicFactories\EnumAutoCompleteTextFieldDynamicFactory.cs" />
+    <Compile Include="Bricks\DynamicFactories\DynamicFactory.cs" />
+    <Compile Include="Bricks\DynamicFactories\ItemPickerDynamicFactory.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryDummyListEntityViewController.cs" />
+    <Compile Include="Bricks\DynamicFactories\TextFieldDynamicFactory.cs" />
     <Compile Include="Controllers\DataAccessors\GroupedItemController.cs" />
     <Compile Include="Controllers\DataAccessors\ICollectionAccessor.cs" />
     <Compile Include="Controllers\DataAccessors\IndirectAccessor.cs" />
     <Compile Include="Controllers\DataAccessors\IndirectAccessor`2.cs" />
-    <Compile Include="Controllers\DataAccessors\DynamicFactories\Invoker.cs" />
+    <Compile Include="Bricks\Helpers\Invoker.cs" />
     <Compile Include="Controllers\DataAccessors\TileDataItem.cs" />
     <Compile Include="Controllers\DataAccessors\TileDataItems.cs" />
     <Compile Include="Controllers\DataAccessors\TileDataType.cs" />
@@ -315,6 +315,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CommandHandlers\" />
+    <Folder Include="Controllers\DataAccessors\DynamicFactories\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

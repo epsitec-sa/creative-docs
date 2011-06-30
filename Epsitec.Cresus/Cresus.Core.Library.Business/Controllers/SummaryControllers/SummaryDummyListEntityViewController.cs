@@ -3,11 +3,14 @@
 
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Bricks;
+
+using Epsitec.Cresus.Core.Bricks.Helpers;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 
 using System.Collections.Generic;
 
-namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories.Helpers
+namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	/// <summary>
 	/// The <c>SummaryDummyListEntityViewController</c> generic class is used to represent a
@@ -18,7 +21,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories.Helpers
 	public class SummaryDummyListEntityViewController<T> : SummaryViewController<DummyListEntity<T>>
 			where T : AbstractEntity
 	{
-		protected override void CreateBricks(Bricks.BrickWall<DummyListEntity<T>> wall)
+		protected override void CreateBricks(BrickWall<DummyListEntity<T>> wall)
 		{
 			wall.AddBrick (x => x.Items)
 				.Template ()

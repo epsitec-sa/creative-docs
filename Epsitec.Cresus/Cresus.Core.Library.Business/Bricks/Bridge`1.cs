@@ -9,6 +9,8 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Library.Settings;
@@ -22,7 +24,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Epsitec.Common.Support;
 
-namespace Epsitec.Cresus.Core.Controllers.DataAccessors
+namespace Epsitec.Cresus.Core.Bricks
 {
 	/// <summary>
 	/// The <c>Bridge</c> class is used to transform <see cref="Brick"/> definitions into

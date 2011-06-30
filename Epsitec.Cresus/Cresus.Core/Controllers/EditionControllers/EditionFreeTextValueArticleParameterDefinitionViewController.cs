@@ -1,6 +1,8 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
+using Epsitec.Cresus.Bricks;
+
 using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
@@ -11,7 +13,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 	public class EditionFreeTextValueArticleParameterDefinitionViewController : EditionViewController<Entities.FreeTextValueArticleParameterDefinitionEntity>
 	{
 #if true
-		protected override void CreateBricks(Bricks.BrickWall<FreeTextValueArticleParameterDefinitionEntity> wall)
+		protected override void CreateBricks(BrickWall<FreeTextValueArticleParameterDefinitionEntity> wall)
 		{
 			wall.AddBrick ()
 				.Input ()

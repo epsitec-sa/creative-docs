@@ -9,12 +9,13 @@ using Epsitec.Cresus.Core.Factories;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Bricks;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionCustomerViewController : EditionViewController<CustomerEntity>
 	{
-		protected override void CreateBricks(Bricks.BrickWall<CustomerEntity> wall)
+		protected override void CreateBricks(BrickWall<CustomerEntity> wall)
 		{
 			wall.AddBrick ()
 				.Input ()

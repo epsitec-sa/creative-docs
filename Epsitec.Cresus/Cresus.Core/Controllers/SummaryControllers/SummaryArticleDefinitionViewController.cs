@@ -1,18 +1,18 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Core.Controllers.DataAccessors;
 
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryArticleDefinitionViewController : SummaryViewController<Entities.ArticleDefinitionEntity>
 	{
 #if true
-		protected override void CreateBricks(Bricks.BrickWall<ArticleDefinitionEntity> wall)
+		protected override void CreateBricks(BrickWall<ArticleDefinitionEntity> wall)
 		{
 			wall.AddBrick ()
 				;

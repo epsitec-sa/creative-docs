@@ -1,6 +1,7 @@
 //	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionCurrencyViewController : EditionViewController<CurrencyEntity>
 	{
-		protected override void CreateBricks(Bricks.BrickWall<CurrencyEntity> wall)
+		protected override void CreateBricks(BrickWall<CurrencyEntity> wall)
 		{
 			wall.AddBrick ()
 				.Input ()

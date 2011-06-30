@@ -7,6 +7,9 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Bricks;
+
+using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Widgets;
@@ -104,7 +107,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 		}
 
-		protected virtual void CreateBricks(Bricks.BrickWall<T> wall)
+		protected virtual void CreateBricks(BrickWall<T> wall)
 		{
 		}
 

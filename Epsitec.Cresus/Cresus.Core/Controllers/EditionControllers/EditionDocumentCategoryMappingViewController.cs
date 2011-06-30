@@ -6,6 +6,8 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
+using Epsitec.Cresus.Bricks;
+
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
@@ -23,7 +25,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionDocumentCategoryMappingViewController : EditionViewController<DocumentCategoryMappingEntity>
 	{
-		protected override void CreateBricks(Bricks.BrickWall<DocumentCategoryMappingEntity> wall)
+		protected override void CreateBricks(BrickWall<DocumentCategoryMappingEntity> wall)
 		{
 			wall.AddBrick ()
 				.Input ()

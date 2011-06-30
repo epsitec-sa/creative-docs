@@ -11,13 +11,14 @@ using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Bricks;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionCountryViewController : EditionViewController<Entities.CountryEntity>
 	{
 #if true
-		protected override void CreateBricks(Bricks.BrickWall<CountryEntity> wall)
+		protected override void CreateBricks(BrickWall<CountryEntity> wall)
 		{
 			wall.AddBrick ()
 				.GlobalWarning ()

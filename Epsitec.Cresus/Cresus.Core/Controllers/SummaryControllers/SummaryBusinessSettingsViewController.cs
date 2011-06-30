@@ -4,6 +4,9 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Bricks;
+
+using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Controllers;
@@ -16,7 +19,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryBusinessSettingsViewController : SummaryViewController<Entities.BusinessSettingsEntity>
 	{
-		protected override void CreateBricks(Bricks.BrickWall<BusinessSettingsEntity> wall)
+		protected override void CreateBricks(BrickWall<BusinessSettingsEntity> wall)
 		{
 			wall.AddBrick ()
 				.Name ("BusinessSettings")

@@ -1,6 +1,8 @@
 //	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Cresus.Bricks;
+
 using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
@@ -10,7 +12,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionGeneratorDefinitionViewController : EditionViewController<GeneratorDefinitionEntity>
 	{
-		protected override void CreateBricks(Bricks.BrickWall<GeneratorDefinitionEntity> wall)
+		protected override void CreateBricks(BrickWall<GeneratorDefinitionEntity> wall)
 		{
 			wall.AddBrick ()
 				.Input ()

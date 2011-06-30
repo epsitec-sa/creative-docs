@@ -5,6 +5,8 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Support;
 
+using Epsitec.Cresus.Bricks;
+
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
@@ -21,7 +23,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionPaymentReminderDefinitionViewController : EditionViewController<Entities.PaymentReminderDefinitionEntity>
 	{
-		protected override void CreateBricks(Bricks.BrickWall<PaymentReminderDefinitionEntity> wall)
+		protected override void CreateBricks(BrickWall<PaymentReminderDefinitionEntity> wall)
 		{
 			wall.AddBrick ()
 				.Input ()

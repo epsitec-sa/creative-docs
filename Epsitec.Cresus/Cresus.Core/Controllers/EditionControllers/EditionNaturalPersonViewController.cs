@@ -4,6 +4,8 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types.Converters;
 
+using Epsitec.Cresus.Bricks;
+
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Library;
@@ -21,7 +23,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionNaturalPersonViewController : EditionViewController<NaturalPersonEntity>
 	{
-		protected override void CreateBricks(Bricks.BrickWall<NaturalPersonEntity> wall)
+		protected override void CreateBricks(BrickWall<NaturalPersonEntity> wall)
 		{
 			wall.AddBrick ()
 				.Input ()

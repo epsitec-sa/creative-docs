@@ -16,7 +16,7 @@ using Epsitec.Cresus.Core.Widgets.Tiles;
 using System.Linq.Expressions;
 using System.Collections.Generic;
 
-namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
+namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 {
 	/// <summary>
 	/// The <c>TextFieldDynamicFactory</c> creates a <see cref="DynamicFactory"/> for

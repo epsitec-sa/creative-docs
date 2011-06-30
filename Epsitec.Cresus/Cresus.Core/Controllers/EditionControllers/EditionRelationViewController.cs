@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
+using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 
@@ -11,7 +12,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionRelationViewController : EditionViewController<RelationEntity>
 	{
-		protected override void CreateBricks(Bricks.BrickWall<RelationEntity> wall)
+		protected override void CreateBricks(BrickWall<RelationEntity> wall)
 		{
 			wall.AddBrick ()
 				.Input ()

@@ -12,13 +12,14 @@ using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Bricks;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionCommentViewController : EditionViewController<Entities.CommentEntity>
 	{
 #if true
-		protected override void CreateBricks(Bricks.BrickWall<CommentEntity> wall)
+		protected override void CreateBricks(BrickWall<CommentEntity> wall)
 		{
 			wall.AddBrick ()
 				.Input ()

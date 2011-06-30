@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
+using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 	public class SummaryUnitOfMeasureViewController : SummaryViewController<UnitOfMeasureEntity>
 	{
 #if true
-		protected override void CreateBricks(Bricks.BrickWall<UnitOfMeasureEntity> wall)
+		protected override void CreateBricks(BrickWall<UnitOfMeasureEntity> wall)
 		{
 			wall.AddBrick (x => x);
 		}
