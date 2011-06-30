@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 			var sourceType   = lambda.Parameters[0].Type;
 
 			var getterFunc   = getterLambda.Compile ();
-			var setterFunc   = setterLambda.Compile ();
+			var setterFunc   = setterLambda == null ? null : setterLambda.Compile ();
 
 			var factoryType = typeof (Factory<,>).MakeGenericType (sourceType, fieldType);
 			var instance    = System.Activator.CreateInstance (factoryType, business, lambda, entityGetter, getterFunc, setterFunc, title, collection, specialController);

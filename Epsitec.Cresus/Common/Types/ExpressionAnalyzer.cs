@@ -40,6 +40,11 @@ namespace Epsitec.Common.Types
 		/// <returns>The corresponding setter expression.</returns>
 		public static LambdaExpression CreateSetter(LambdaExpression getterExpression)
 		{
+			if (getterExpression.Body.NodeType == ExpressionType.Parameter)
+			{
+				return null;
+			}
+			
 			var lambdaMember = (MemberExpression) getterExpression.Body;
 			var propertyInfo = lambdaMember.Member as System.Reflection.PropertyInfo;
 

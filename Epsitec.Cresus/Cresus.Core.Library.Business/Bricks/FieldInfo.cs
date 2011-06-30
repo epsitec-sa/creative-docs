@@ -12,7 +12,7 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Bricks
 {
-	public class FieldInfo
+	public sealed class FieldInfo
 	{
 		public FieldInfo(Druid entityId, LambdaExpression lambda)
 		{
@@ -51,6 +51,7 @@ namespace Epsitec.Cresus.Core.Bricks
 			set;
 		}
 
+		
 		private static Druid GetTypeIdFromLambda(LambdaExpression lambda)
 		{
 			switch (lambda.Body.NodeType)
