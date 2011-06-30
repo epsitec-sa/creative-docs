@@ -16,11 +16,32 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Core.Business.Finance;
 using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Bricks;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionBusinessSettingsViewController : EditionViewController<BusinessSettingsEntity>
 	{
+#if true
+		protected override void CreateBricks(BrickWall<BusinessSettingsEntity> wall)
+		{
+			wall.AddBrick ()
+				.Input ()
+				  .Field (x => x.Company)
+				  .Field (x => x.CompanyLogo)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.Tax.VatNumber)
+				  .Field (x => x.Tax.TaxMode)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.Finance).WithSpecialController ()
+				.End ()
+				;
+		}
+#else
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -96,5 +117,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 
 		private ComplexControllers.ChartsOfAccountsController chartsOfAccountsController;
+#endif
 	}
 }

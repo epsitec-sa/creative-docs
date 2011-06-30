@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				;
 			wall.AddBrick (x => x.Finance.IsrDefs)
 				.Name ("IsrDefinition")
+				.Attribute (BrickMode.AutoGroup)
 				.Template ()
 				.End ()
 				;
@@ -37,10 +38,12 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				.End ()
 				;
 			wall.AddBrick (x => x.Tax.VatDefinitions)
+				.Attribute (BrickMode.AutoGroup)
 				.Template ()
 				.End ()
 				;
 			wall.AddBrick (x => x.Generators)
+				.Attribute (BrickMode.AutoGroup)
 				.Template ()
 				.End ()
 				;

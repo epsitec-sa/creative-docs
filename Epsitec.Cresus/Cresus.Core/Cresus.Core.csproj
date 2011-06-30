@@ -97,7 +97,6 @@
     <Compile Include="CommandHandlers\CoreCommandHandler.cs" />
     <Compile Include="CommandHandlers\DatabaseCommandHandler.cs" />
     <Compile Include="CommandHandlers\NavigationCommandHandler.cs" />
-    <Compile Include="Controllers\ComplexControllers\ChartsOfAccountsController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationCustomerViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPaymentDatailViewController.cs" />
