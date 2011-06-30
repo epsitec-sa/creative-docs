@@ -2,18 +2,20 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Types.Converters.Marshalers;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Resolvers;
 using Epsitec.Cresus.Core.Widgets.Tiles;
+
 using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Epsitec.Cresus.Core.Resolvers;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 {
@@ -21,37 +23,14 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 	{
 		public static DynamicFactory Create<T>(BusinessContext business, LambdaExpression lambda, System.Func<T> entityGetter, string title, System.Collections.IEnumerable collection, int? specialController)
 		{
+			var getterLambda = lambda;
+			var setterLambda = ExpressionAnalyzer.CreateSetter (getterLambda);
+
 			var fieldType    = lambda.ReturnType;
 			var sourceType   = lambda.Parameters[0].Type;
-			var lambdaMember = lambda.Body as MemberExpression;
 
-			var sourceParameterExpression = lambda.Parameters[0]; // Expression.Parameter (sourceType, "source");
-			var valueParameterExpression  = Expression.Parameter (fieldType, "value");
-
-			System.Delegate getterFunc;
-			System.Delegate setterFunc;
-
-			if (lambdaMember == null)
-			{
-				var getterLambda = lambda;
-
-				getterFunc   = getterLambda.Compile ();
-				setterFunc   = null;
-			}
-			else
-			{
-				var expressionBlock =
-					Expression.Block (
-						Expression.Assign (
-							Expression.Property (lambdaMember.Expression, lambdaMember.Member.Name),
-							valueParameterExpression));
-
-				var getterLambda = lambda;
-				var setterLambda = Expression.Lambda (expressionBlock, sourceParameterExpression, valueParameterExpression);
-
-				getterFunc   = getterLambda.Compile ();
-				setterFunc   = setterLambda.Compile ();
-			}
+			var getterFunc   = getterLambda.Compile ();
+			var setterFunc   = setterLambda.Compile ();
 
 			var factoryType = typeof (Factory<,>).MakeGenericType (sourceType, fieldType);
 			var instance    = System.Activator.CreateInstance (factoryType, business, lambda, entityGetter, getterFunc, setterFunc, title, collection, specialController);

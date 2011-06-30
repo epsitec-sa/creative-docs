@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -33,6 +33,34 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Creates a setter expression based on a getter expression.
+		/// </summary>
+		/// <param name="getterExpression">The getter expression.</param>
+		/// <returns>The corresponding setter expression.</returns>
+		public static LambdaExpression CreateSetter(LambdaExpression getterExpression)
+		{
+			var lambdaMember = (MemberExpression) getterExpression.Body;
+			var propertyInfo = lambdaMember.Member as System.Reflection.PropertyInfo;
+
+			var fieldType    = getterExpression.ReturnType;
+			var sourceType   = getterExpression.Parameters[0].Type;
+
+			var sourceParameterExpression = getterExpression.Parameters[0];
+			var valueParameterExpression  = Expression.Parameter (fieldType, "value");
+
+			var expressionBlock =
+				Expression.Block (
+					Expression.Assign (
+						Expression.Property (lambdaMember.Expression, lambdaMember.Member.Name),
+						valueParameterExpression));
+
+			var setterLambda = Expression.Lambda (expressionBlock, sourceParameterExpression, valueParameterExpression);
+
+			return setterLambda;
+		}
+		
+		
 		private static PropertyInfo GetLambdaPropertyInfo(LambdaExpression expression)
 		{
 			var body = expression.Body;

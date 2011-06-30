@@ -26,29 +26,19 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors.DynamicFactories
 	{
 		public static DynamicFactory Create<T>(BusinessContext business, LambdaExpression lambda, System.Func<T> entityGetter, string title, int width, int height, System.Collections.IEnumerable collection)
 		{
+			var getterLambda = lambda;
+			var setterLambda = ExpressionAnalyzer.CreateSetter (getterLambda);
+
 			var lambdaMember = (MemberExpression) lambda.Body;
 			var propertyInfo = lambdaMember.Member as System.Reflection.PropertyInfo;
 			var typeField    = EntityInfo.GetStructuredTypeField (propertyInfo);
-
 			var fieldType    = lambda.ReturnType;
 			var sourceType   = lambda.Parameters[0].Type;
-
-			var sourceParameterExpression = lambda.Parameters[0]; // Expression.Parameter (sourceType, "source");
-			var valueParameterExpression  = Expression.Parameter (fieldType, "value");
-
-			var expressionBlock =
-				Expression.Block (
-					Expression.Assign (
-						Expression.Property (lambdaMember.Expression, lambdaMember.Member.Name),
-						valueParameterExpression));
-
-			var getterLambda = lambda;
-			var setterLambda = Expression.Lambda (expressionBlock, sourceParameterExpression, valueParameterExpression);
+			
+			bool nullable    = fieldType.IsNullable ();
 
 			var getterFunc   = getterLambda.Compile ();
 			var setterFunc   = setterLambda.Compile ();
-
-			bool nullable    = fieldType.IsNullable ();
 
 			if (nullable)
 			{
