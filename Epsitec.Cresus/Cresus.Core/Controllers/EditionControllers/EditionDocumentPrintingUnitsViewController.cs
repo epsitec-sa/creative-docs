@@ -10,11 +10,27 @@ using Epsitec.Cresus.Core.Print.Controllers;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Bricks;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionDocumentPrintingUnitsViewController : EditionViewController<DocumentPrintingUnitsEntity>
 	{
+#if true
+		protected override void CreateBricks(BrickWall<DocumentPrintingUnitsEntity> wall)
+		{
+			wall.AddBrick ()
+				.Input ()
+				  .Field (x => x.Name)
+				  .Field (x => x.Description)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x).WithSpecialController ()
+				.End ()
+				;
+		}
+#else
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -41,5 +57,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var controller = new PageTypesController (this.Entity);
 			controller.CreateUI (tile.Container);
 		}
+#endif
 	}
 }

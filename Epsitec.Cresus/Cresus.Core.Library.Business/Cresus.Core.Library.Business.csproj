@@ -120,6 +120,7 @@
     <Compile Include="Bricks\DynamicFactories\EnumAutoCompleteTextFieldDynamicFactory.cs" />
     <Compile Include="Bricks\DynamicFactories\DynamicFactory.cs" />
     <Compile Include="Bricks\DynamicFactories\ItemPickerDynamicFactory.cs" />
+    <Compile Include="Controllers\SpecialControllers\PageTypesController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryDummyListEntityViewController.cs" />
     <Compile Include="Bricks\DynamicFactories\TextFieldDynamicFactory.cs" />
     <Compile Include="Controllers\DataAccessors\GroupedItemController.cs" />

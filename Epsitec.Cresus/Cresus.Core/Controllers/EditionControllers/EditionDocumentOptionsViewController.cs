@@ -14,11 +14,27 @@ using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Bricks;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionDocumentOptionsViewController : EditionViewController<DocumentOptionsEntity>
 	{
+#if true
+		protected override void CreateBricks(BrickWall<DocumentOptionsEntity> wall)
+		{
+			wall.AddBrick ()
+				.Input ()
+				  .Field (x => x.Name)
+				  .Field (x => x.Description)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x).WithSpecialController ()
+				.End ()
+				;
+		}
+#else
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -44,5 +60,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateButtonOpeningSubviewController ("DocumentOptionsEditor", TextFormatter.FormatText ("Voir les options &gt;"), this.Entity, ViewControllerMode.Edition, 2);
 		}
+#endif
 	}
 }

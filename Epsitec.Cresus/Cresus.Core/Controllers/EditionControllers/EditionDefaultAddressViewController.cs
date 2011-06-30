@@ -7,14 +7,38 @@ using Epsitec.Common.Types.Converters;
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
+using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Bricks;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
+	// TODO: Vérifier si ce contrôleur a encore une utilité. Je ne trouve pas où il pourrait être utilisé.
+	// TODO: De plus, ne devrait-il pas s'appeler EditionAddressViewController !?
 	public class EditionDefaultAddressViewController : EditionViewController<Entities.AddressEntity>
 	{
+#if true
+		protected override void CreateBricks(BrickWall<AddressEntity> wall)
+		{
+			wall.AddBrick ()
+				.Input ()
+				  .Field (x => x.Location.Country)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.Street.StreetName)
+				  .Field (x => x.Street.Complement)
+				  .Field (x => x.PostBox.Number)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.Location)
+				.End ()
+				;
+		}
+#else
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -72,5 +96,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateAutoCompleteTextField ("Numéro postal et ville", controller);
 		}
+#endif
 	}
 }

@@ -16,11 +16,31 @@ using Epsitec.Cresus.Core.Widgets.Tiles;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Bricks;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionDocumentCategoryViewController : EditionViewController<Entities.DocumentCategoryEntity>
 	{
+#if true
+		protected override void CreateBricks(BrickWall<DocumentCategoryEntity> wall)
+		{
+			wall.AddBrick ()
+				.Input ()
+				  .Field (x => x.Name)
+				  .Field (x => x.Description)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.DocumentType)
+				  .Field (x => x.DocumentSource)
+				  .Field (x => x.DocumentFlowDirection)
+				  .Field (x => x.DocumentOptions)
+				  .Field (x => x.DocumentPrintingUnits)
+				.End ()
+				;
+		}
+#else
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -72,5 +92,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateEditionDetailedItemPicker ("DocumentPrintingUnits", this.Entity, "Unités d'impression du document", controller, EnumValueCardinality.Any, ViewControllerMode.Summary);
 		}
+#endif
 	}
 }
