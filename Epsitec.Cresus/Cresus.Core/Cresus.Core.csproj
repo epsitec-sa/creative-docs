@@ -222,7 +222,6 @@
     <Compile Include="Controllers\EditionControllers\EditionAffairViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationRelationViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionRelationViewController.cs" />
-    <Compile Include="Controllers\EditionControllers\EditionDefaultAddressViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionLocationViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionCountryViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionUriContactViewController.cs" />
