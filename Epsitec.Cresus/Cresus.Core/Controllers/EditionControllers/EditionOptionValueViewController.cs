@@ -20,10 +20,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionOptionValueViewController : EditionViewController<Entities.OptionValueEntity>
+	public class EditionOptionValueViewController : EditionViewController<OptionValueEntity>
 	{
 #if true
-		protected override void CreateBricks(BrickWall<Entities.OptionValueEntity> wall)
+		protected override void CreateBricks(BrickWall<OptionValueEntity> wall)
 		{
 			wall.AddBrick ()
 				.GlobalWarning ()
