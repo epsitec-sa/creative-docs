@@ -60,7 +60,10 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			}
 
 			// Montre ou cache la tuile parente.
-			this.editionTile.Visibility = article.ArticleDefinition.ArticleParameterDefinitions.Count != 0;
+			if (this.editionTile != null)
+			{
+				this.editionTile.Visibility = article.ArticleDefinition.ArticleParameterDefinitions.Count != 0;
+			}
 		}
 
 		private void CreateParameterUI(FrameBox parent, IArticleDefinitionParameters article, int index)

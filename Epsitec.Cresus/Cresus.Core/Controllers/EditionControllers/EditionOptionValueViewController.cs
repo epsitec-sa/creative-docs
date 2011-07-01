@@ -11,6 +11,7 @@ using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.TableDesigner;
+using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -21,6 +22,24 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionOptionValueViewController : EditionViewController<Entities.OptionValueEntity>
 	{
+#if true
+		protected override void CreateBricks(BrickWall<Entities.OptionValueEntity> wall)
+		{
+			wall.AddBrick ()
+				.GlobalWarning ()
+				.Input ()
+				  .Field (x => x.Name)
+				  .Field (x => x.Description)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.Quantity)
+				  .Field (x => x.ArticleDefinition)
+				  .Field (x => x).WithSpecialController ()
+				.End ()
+				;
+		}
+#else
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -78,5 +97,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 
 		private ArticleParameterControllers.ValuesArticleParameterController	parameterController;
+#endif
 	}
 }
