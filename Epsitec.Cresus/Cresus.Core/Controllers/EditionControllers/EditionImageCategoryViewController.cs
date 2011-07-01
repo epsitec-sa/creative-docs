@@ -8,6 +8,7 @@ using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
+using Epsitec.Cresus.Bricks;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,17 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionImageCategoryViewController : EditionViewController<Entities.ImageCategoryEntity>
 	{
+#if true
+		protected override void CreateBricks(BrickWall<ImageCategoryEntity> wall)
+		{
+			wall.AddBrick ()
+				.Input ()
+				  .Field (x => x.Name)
+				  .Field (x => x.Description)
+				.End ()
+				;
+		}
+#else
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -37,5 +49,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField      (tile,   0, "Nom",         Marshaler.Create (() => this.Entity.Name,        x => this.Entity.Name = x));
 			builder.CreateTextFieldMulti (tile, 100, "Description", Marshaler.Create (() => this.Entity.Description, x => this.Entity.Description = x));
 		}
+#endif
 	}
 }

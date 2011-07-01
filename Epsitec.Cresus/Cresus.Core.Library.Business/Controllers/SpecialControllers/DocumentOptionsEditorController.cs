@@ -22,7 +22,7 @@ using Epsitec.Cresus.Core.Factories;
 namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 {
 	/// <summary>
-	/// Ce contrôleur affiche une miniature d'une image bitmap.
+	/// Ce contrôleur permet de choisir les options d'impression à éditer, et de les éditer.
 	/// </summary>
 	public class DocumentOptionsEditorController : IEntitySpecialController
 	{

@@ -14,6 +14,7 @@ using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.Helpers;
+using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Loader;
@@ -25,6 +26,23 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public sealed class EditionImageViewController : EditionViewController<Entities.ImageEntity>
 	{
+#if true
+		protected override void CreateBricks(BrickWall<ImageEntity> wall)
+		{
+			wall.AddBrick ()
+				.Input ()
+				  .Field (x => x).WithSpecialController ()
+				  .Field (x => x.Name)
+				  .Field (x => x.Description)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.ImageGroups)
+				  .Field (x => x.ImageCategory)
+				.End ()
+				;
+		}
+#else
 		private EditionImageViewController()
 		{
 		}
@@ -211,5 +229,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				this.Entity.Name = System.IO.Path.GetFileNameWithoutExtension (this.Entity.ImageBlob.FileName);
 			}
 		}
+#endif
 	}
 }

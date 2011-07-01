@@ -623,11 +623,16 @@ namespace Epsitec.Cresus.Core
 
 		public Button CreateButton(EditionTile tile, double width, string label, string buttonText)
 		{
+			return this.CreateButton (tile.Container, width, label, buttonText);
+		}
+
+		public Button CreateButton(FrameBox parent, double width, string label, string buttonText)
+		{
 			if (!string.IsNullOrEmpty (label))
 			{
 				var staticText = new StaticText
 				{
-					Parent = tile.Container,
+					Parent = parent,
 					Text = string.Concat (label, " :"),
 					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 					Dock = DockStyle.Stacked,
@@ -637,7 +642,7 @@ namespace Epsitec.Cresus.Core
 				this.ContentListAdd (staticText);
 			}
 
-			return this.CreateButton (tile.Container, DockStyle.Stacked, width, buttonText);
+			return this.CreateButton (parent, DockStyle.Stacked, width, buttonText);
 		}
 
 		public Button CreateButton(FrameBox parent, DockStyle dockStyle, double width, string buttonText)
