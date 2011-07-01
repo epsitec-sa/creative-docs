@@ -32,9 +32,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.End ()
 				.Separator ()
 				.Input ()
-				  .Title ("Terme (nombre de jours)")
 				  .Field (x => x.ExtraPaymentTerm).Width (80)
-				  .Title ("Article \"frais de rappel\"")
 				  .Field (x => x.AdministrativeTaxArticle).PickFromCollection (this.GetAdminArticles ())
 				.End ()
 				;

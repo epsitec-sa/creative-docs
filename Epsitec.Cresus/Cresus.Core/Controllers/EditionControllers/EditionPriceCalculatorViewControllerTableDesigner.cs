@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.TableDesigner;
+using Epsitec.Cresus.Bricks;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,16 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			return base.GetPreferredWidth (columnIndex, columnCount) * 3;
 		}
 
+#if true
+		protected override void CreateBricks(BrickWall<PriceCalculatorEntity> wall)
+		{
+			wall.AddBrick ()
+				.Input ()
+				  .Field (x => x).WithSpecialController ()
+				.End ()
+				;
+		}
+#else
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -53,5 +64,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			tableDesigner.CreateUI (box);
 		}
+#endif
 	}
 }

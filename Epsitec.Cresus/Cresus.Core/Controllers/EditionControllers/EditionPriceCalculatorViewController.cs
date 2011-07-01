@@ -6,6 +6,7 @@ using Epsitec.Common.Types.Converters;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Bricks;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,21 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionPriceCalculatorViewController : EditionViewController<PriceCalculatorEntity>
 	{
+#if false
+		protected override void CreateBricks(BrickWall<PriceCalculatorEntity> wall)
+		{
+			wall.AddBrick ()
+				.Input ()
+				  .Field (x => x.Name)
+				  .Field (x => x.Description)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x).WithSpecialController ()  // TODO: On ne peut pas encore faire un bouton !
+				.End ()
+				;
+		}
+#else
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -39,5 +55,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateButtonOpeningSubviewController ("TableDesigner", TextFormatter.FormatText ("Voir la tabelle de prix &gt;"), this.Entity, ViewControllerMode.Edition, 1);
 		}
+#endif
 	}
 }
