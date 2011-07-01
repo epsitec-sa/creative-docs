@@ -41,11 +41,6 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 		{
 			this.isReadOnly = isReadOnly;
 
-			var controller = this.tileContainer.Controller as EntityViewController;
-			this.businessContext = controller.BusinessContext;
-			this.dataContext = controller.DataContext;
-			this.coreData = controller.Data;
-
 			var frameBox = parent as FrameBox;
 			System.Diagnostics.Debug.Assert (frameBox != null);
 
@@ -68,8 +63,5 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 		private readonly OptionValueEntity optionValueEntity;
 
 		private bool isReadOnly;
-		private BusinessContext businessContext;
-		private DataContext dataContext;
-		private CoreData coreData;
 	}
 }
