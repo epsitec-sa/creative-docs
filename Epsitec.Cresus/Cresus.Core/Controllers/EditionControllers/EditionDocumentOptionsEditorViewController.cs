@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.DocumentOptionsEditor;
+using Epsitec.Cresus.Bricks;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,16 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			return 640;
 		}
 
+#if true
+		protected override void CreateBricks(BrickWall<DocumentOptionsEntity> wall)
+		{
+			wall.AddBrick ()
+				.Input ()
+				  .Field (x => x).WithSpecialController ()
+				.End ()
+				;
+		}
+#else
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -51,5 +62,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			editor.CreateUI (box);
 		}
+#endif
 	}
 }

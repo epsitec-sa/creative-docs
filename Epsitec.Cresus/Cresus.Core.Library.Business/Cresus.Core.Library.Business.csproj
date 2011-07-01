@@ -99,6 +99,7 @@
     <Compile Include="Controllers\ControllerSubTypeAttribute.cs" />
     <Compile Include="Controllers\SpecialControllers\ArticleDefinitionController.cs" />
     <Compile Include="Controllers\SpecialControllers\ChartsOfAccountsController.cs" />
+    <Compile Include="Controllers\SpecialControllers\DocumentOptionsEditorController.cs" />
     <Compile Include="Controllers\SpecialControllers\ImageMiniatureController.cs" />
     <Compile Include="Controllers\CoreController.cs" />
     <Compile Include="Controllers\CoreViewController.cs" />

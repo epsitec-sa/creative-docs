@@ -11,16 +11,16 @@ using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
+using Epsitec.Cresus.Bricks;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Bricks;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionDocumentOptionsViewController : EditionViewController<DocumentOptionsEntity>
 	{
-#if true
+#if false
 		protected override void CreateBricks(BrickWall<DocumentOptionsEntity> wall)
 		{
 			wall.AddBrick ()
@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.End ()
 				.Separator ()
 				.Input ()
-				  .Field (x => x).WithSpecialController ()
+				  .Field (x => x).WithSpecialController ()  // TODO: On ne peut pas encore faire un bouton !
 				.End ()
 				;
 		}
