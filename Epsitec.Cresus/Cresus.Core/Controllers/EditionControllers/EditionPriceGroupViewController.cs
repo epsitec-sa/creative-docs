@@ -21,8 +21,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Separator ()
 				.Input ()
 				  .Field (x => x.NeverApplyDiscount)
-				  .Field (x => x.DefaultDivideRatio).Width (100)
-				  .Field (x => x.DefaultMultiplyRatio).Width (100)
+				  .Field (x => x.DefaultDivideRatio)
+				  .Field (x => x.DefaultMultiplyRatio)
 				  .Field (x => x.DefaultRoundingMode)
 				.End ()
 				;

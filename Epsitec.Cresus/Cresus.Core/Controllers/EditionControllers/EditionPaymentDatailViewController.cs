@@ -18,9 +18,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .Field (x => x.PaymentType)
 				  .Field (x => x.PaymentMode)
 				  .Field (x => x.PaymentData)
-				  .Field (x => x.Amount).Width (100)
+				  .Field (x => x.Amount)
 				  .Field (x => x.Currency)
-				  .Field (x => x.Date).Width (150)
+				  .Field (x => x.Date)
 				.End ()
 				;
 		}

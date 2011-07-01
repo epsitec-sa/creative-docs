@@ -10,6 +10,7 @@ using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
+using Epsitec.Cresus.Bricks;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -18,49 +19,19 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionUriContactViewController : EditionViewController<Entities.UriContactEntity>
 	{
-#if false
-		protected override void CreateUI()
+#if true
+		protected override void CreateBricks(BrickWall<UriContactEntity> wall)
 		{
-			using (var builder = new UIBuilder (this))
-			{
-				builder.CreateHeaderEditorTile ();
-				builder.CreateEditionTitleTile ("Data.UriContact", "Email");
-
-				this.CreateUIRoles (builder);
-				this.CreateUIMail (builder);
-
-				builder.CreateFooterEditorTile ();
-			}
-
-			//	Summary:
-			using (var data = TileContainerController.Setup (this))
-			{
-				this.CreateUIComments (data);
-			}
-		}
-
-
-		private void CreateUIRoles(Epsitec.Cresus.Core.UIBuilder builder)
-		{
-			var controller = new SelectionController<Entities.ContactGroupEntity> (this.BusinessContext)
-			{
-				CollectionValueGetter    = () => this.Entity.ContactGroups,
-				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
-			};
-
-			builder.CreateEditionDetailedItemPicker ("ContactGroups", this.Entity, "Rôles souhaités", controller, Business.EnumValueCardinality.Any, ViewControllerMode.Summary, 3);
-		}
-
-		private void CreateUIMail(Epsitec.Cresus.Core.UIBuilder builder)
-		{
-			var tile = builder.CreateEditionTile ();
-			builder.CreateTextField (tile, 0, "Adresse mail", Marshaler.Create (() => this.Entity.Uri, x => this.Entity.Uri = x));
-		}
-
-
-		private void CreateUIComments(TileDataItems data)
-		{
-			SummaryControllers.Common.CreateUIComments (this.BusinessContext, data, this.EntityGetter, x => x.Comments);
+			wall.AddBrick ()
+				.Input ()
+				  .Field (x => x.ContactGroups)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.Uri)
+				  .Field (x => x.UriType)
+				.End ()
+				;
 		}
 #else
 		protected override void CreateUI()

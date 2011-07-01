@@ -339,21 +339,57 @@ namespace Epsitec.Cresus.Core.Bricks
 					return;
 				}
 
-				if ((fieldType == typeof (string)) ||
-					(fieldType == typeof (FormattedText)) ||
-					(fieldType == typeof (System.DateTime)) ||
-					(fieldType == typeof (System.DateTime?)) ||
-					(fieldType == typeof (Date)) ||
-					(fieldType == typeof (Date?)) ||
-					(fieldType == typeof (long)) ||
-					(fieldType == typeof (long?)) ||
-					(fieldType == typeof (decimal)) ||
-					(fieldType == typeof (decimal?)) ||
-					(fieldType == typeof (int)) ||
-					(fieldType == typeof (int?)) ||
-					(fieldType == typeof (bool)) ||
-					(fieldType == typeof (bool?)))
+				if (fieldType == typeof (string) ||
+					fieldType == typeof (FormattedText) ||
+					fieldType == typeof (System.DateTime) ||
+					fieldType == typeof (System.DateTime?) ||
+					fieldType == typeof (Date) ||
+					fieldType == typeof (Date?) ||
+					fieldType == typeof (long) ||
+					fieldType == typeof (long?) ||
+					fieldType == typeof (decimal) ||
+					fieldType == typeof (decimal?) ||
+					fieldType == typeof (int) ||
+					fieldType == typeof (int?) ||
+					fieldType == typeof (bool) ||
+					fieldType == typeof (bool?))
 				{
+					//	Si une largeur spécifique n'a pas été donnée, utilise une largeur standard adaptée
+					//	au type de base.
+
+					if (width == 0)  // largeur non spécifiée avec un .Width (n) ?
+					{
+						if (fieldType == typeof (System.DateTime) ||
+							fieldType == typeof (System.DateTime?))  // date et heure ?
+						{
+							width = 150;
+						}
+
+						if (fieldType == typeof (Date) ||
+							fieldType == typeof (Date?))  // date seule ?
+						{
+							width = 100;
+						}
+
+						if (fieldType == typeof (long) ||
+							fieldType == typeof (long?))
+						{
+							width = 100;
+						}
+
+						if (fieldType == typeof (decimal) ||
+							fieldType == typeof (decimal?))
+						{
+							width = 100;
+						}
+
+						if (fieldType == typeof (int) ||
+							fieldType == typeof (int?))
+						{
+							width = 70;
+						}
+					}
+
 					//	Produce either a text field or a variation of such a widget (pull-down list, etc.)
 					//	based on the real type being edited.
 

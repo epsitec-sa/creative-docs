@@ -13,11 +13,11 @@ using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Orchestrators.Navigation;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
+using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.Bricks;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.DataLayer.Context;
-using Epsitec.Cresus.Bricks;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
@@ -37,9 +37,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.End ()
 				;
 		}
-#endif
-
-#if false
+#else
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

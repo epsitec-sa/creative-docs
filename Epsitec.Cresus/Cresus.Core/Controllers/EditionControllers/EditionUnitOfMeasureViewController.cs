@@ -30,9 +30,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .Field (x => x.Name)
 				  .Field (x => x.Description)
 				  .Field (x => x.Category).Width (100)
-				  .Field (x => x.DivideRatio).Width (50)
-				  .Field (x => x.MultiplyRatio).Width (50)
-				  .Field (x => x.SmallestIncrement).Width (50)
+				  .Field (x => x.DivideRatio)
+				  .Field (x => x.MultiplyRatio)
+				  .Field (x => x.SmallestIncrement)
 				.End ()
 				;
 		}

@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Separator ()
 				.Input ()
 				  .Field (x => x.BookAccount)
-				  .Field (x => x.StandardPaymentTerm).Width (80)
+				  .Field (x => x.StandardPaymentTerm)
 				.End ()
 				;
 		}

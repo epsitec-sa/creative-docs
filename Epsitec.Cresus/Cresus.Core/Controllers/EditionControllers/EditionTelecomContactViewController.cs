@@ -10,6 +10,7 @@ using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
+using Epsitec.Cresus.Bricks;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -18,64 +19,20 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionTelecomContactViewController : EditionViewController<Entities.TelecomContactEntity>
 	{
-#if false
-		protected override void CreateUI()
+#if true
+		protected override void CreateBricks(BrickWall<TelecomContactEntity> wall)
 		{
-			using (var builder = new UIBuilder (this))
-			{
-				builder.CreateHeaderEditorTile ();
-				builder.CreateEditionTitleTile ("Data.TelecomContact", "Téléphone");
-
-				this.CreateUIRoles (builder);
-				this.CreateUITelecomType (builder);
-				this.CreateUIPhoneNumber (builder);
-
-				builder.CreateFooterEditorTile ();
-			}
-
-			//	Summary:
-			using (var data = TileContainerController.Setup (this))
-			{
-				this.CreateUIComments (data);
-			}
-		}
-
-
-		private void CreateUIRoles(Epsitec.Cresus.Core.UIBuilder builder)
-		{
-			var controller = new SelectionController<Entities.ContactGroupEntity> (this.BusinessContext)
-			{
-				CollectionValueGetter    = () => this.Entity.ContactGroups,
-				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
-			};
-
-			builder.CreateEditionDetailedItemPicker ("ContactGroups", this.Entity, "Rôles souhaités", controller, Business.EnumValueCardinality.Any, ViewControllerMode.Summary, 3);
-		}
-		
-		private void CreateUITelecomType(Epsitec.Cresus.Core.UIBuilder builder)
-		{
-			var controller = new SelectionController<Entities.TelecomTypeEntity> (this.BusinessContext)
-			{
-				ValueGetter              = () => this.Entity.TelecomType,
-				ValueSetter              = x => this.Entity.TelecomType = x,
-				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
-			};
-
-			builder.CreateEditionDetailedItemPicker ("Type du numéro de téléphone", controller, Business.EnumValueCardinality.ExactlyOne);
-		}
-		
-		private void CreateUIPhoneNumber(Epsitec.Cresus.Core.UIBuilder builder)
-		{
-			var tile = builder.CreateEditionTile ();
-
-			builder.CreateTextField (tile, 150, "Numéro de téléphone", Marshaler.Create (() => this.Entity.Number,    x => this.Entity.Number = x));
-			builder.CreateTextField (tile, 100, "Numéro interne",      Marshaler.Create (() => this.Entity.Extension, x => this.Entity.Extension = x));
-		}
-
-
-		private void CreateUIComments(TileDataItems data)
-		{
-			SummaryControllers.Common.CreateUIComments (this.BusinessContext, data, this.EntityGetter, x => x.Comments);
+			wall.AddBrick ()
+				.Input ()
+				  .Field (x => x.ContactGroups)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.TelecomType)
+				  .Field (x => x.Number)
+				  .Field (x => x.Extension)
+				.End ()
+				;
 		}
 #else
 		protected override void CreateUI()

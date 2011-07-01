@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Separator ()
 				.Input ()
 				  .Field (x => x.Gender)
-				  .Field (x => x.DateOfBirth).Width (90)
+				  .Field (x => x.DateOfBirth)
 				.End ()
 				.Input ()
 				  .Field (x => x.Pictures)

@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.End ()
 				.Separator ()
 				.Input ()
-				  .Field (x => x.ExtraPaymentTerm).Width (80)
+				  .Field (x => x.ExtraPaymentTerm)
 				  .Field (x => x.AdministrativeTaxArticle).PickFromCollection (this.GetAdminArticles ())
 				.End ()
 				;

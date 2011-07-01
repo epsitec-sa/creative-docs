@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			wall.AddBrick ()
 				.Input ()
-				  .Field (x => x.FirstContactDate).Width (90)
+				  .Field (x => x.FirstContactDate)
 				.End ()
 				.Separator ()
 				.Input ()
