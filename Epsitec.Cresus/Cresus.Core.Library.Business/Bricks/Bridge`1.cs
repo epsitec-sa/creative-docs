@@ -196,6 +196,13 @@ namespace Epsitec.Cresus.Core.Bricks
 				case BrickMode.HideRemoveButton:
 					item.HideRemoveButton = true;
 					break;
+
+				case BrickMode.SpecialController0:
+				case BrickMode.SpecialController1:
+				case BrickMode.SpecialController2:
+				case BrickMode.SpecialController3:
+					item.ControllerSubTypeId = (int) (value - BrickMode.SpecialController0);
+					break;
 			}
 		}
 

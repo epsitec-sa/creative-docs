@@ -238,6 +238,11 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			set;
 		}
 
+		public int?								ControllerSubTypeId
+		{
+			get;
+			set;
+		}
 
 		public System.Action<EditionTile, UIBuilder> CreateEditionUI
 		{
@@ -491,8 +496,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				}
 
 				navigationPathElement = new TileNavigationPathElement (this.Name);
-				
-				var controller = EntityViewControllerFactory.Create ("ViewController", entity, mode, orchestrator, navigationPathElement: navigationPathElement);
+
+				var controller = EntityViewControllerFactory.Create ("ViewController", entity, mode, orchestrator, controllerSubTypeId: this.ControllerSubTypeId, navigationPathElement: navigationPathElement);
 
 				return controller;
 			}

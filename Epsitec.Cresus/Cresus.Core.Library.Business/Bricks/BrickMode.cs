@@ -23,5 +23,10 @@ namespace Epsitec.Cresus.Core.Bricks
 
 		HideAddButton,
 		HideRemoveButton,
+
+		SpecialController0,
+		SpecialController1,
+		SpecialController2,
+		SpecialController3,
 	}
 }
