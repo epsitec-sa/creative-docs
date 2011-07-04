@@ -380,7 +380,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 		
 		private decimal GetQuantity(ArticleQuantityEntity quantity, InclusionMode inclusionMode)
 		{
-			switch (quantity.QuantityType)
+			switch (quantity.QuantityColumn.QuantityType)
 			{
 				case ArticleQuantityType.Billed:
 					return this.ConvertToBillingUnit (quantity.Quantity, quantity.Unit);
@@ -396,7 +396,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 					return 0M;
 
 				default:
-					throw new System.NotSupportedException (string.Format ("ArticleQuantityType.{0} not supported", quantity.QuantityType));
+					throw new System.NotSupportedException (string.Format ("ArticleQuantityType.{0} not supported", quantity.QuantityColumn.QuantityType));
 			}
 		}
 

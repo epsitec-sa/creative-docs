@@ -40,6 +40,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 			public static readonly Epsitec.Common.Types.StructuredType ArticlePrice = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 106));
 			//	designer:cap/GVAP1
 			public static readonly Epsitec.Common.Types.StructuredType ArticleQuantity = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 57));
+			//	designer:cap/GVAL6
+			public static readonly Epsitec.Common.Types.StructuredType ArticleQuantityColumn = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 213));
 			//	designer:cap/GVA93
 			public static readonly Epsitec.Common.Types.StructuredType ArticleStockLocation = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 105));
 			//	designer:cap/GVA83
@@ -432,10 +434,20 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid ExpectedDateFormat = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 61);
 				//	designer:cap/GVAQ1
 				public static readonly global::Epsitec.Common.Support.Druid Quantity = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 58);
-				//	designer:cap/GVA75
-				public static readonly global::Epsitec.Common.Support.Druid QuantityType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 167);
+				//	designer:cap/GVAN6
+				public static readonly global::Epsitec.Common.Support.Druid QuantityColumn = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 215);
 				//	designer:cap/GVAR1
 				public static readonly global::Epsitec.Common.Support.Druid Unit = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 59);
+			}
+			
+			public static class ArticleQuantityColumn
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/GVAM6
+				public static readonly global::Epsitec.Common.Support.Druid QuantityType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 214);
 			}
 			
 			public static class ArticleSupply
@@ -836,6 +848,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			Fields.ArticleDocumentItem._Initialize ();
 			Fields.ArticlePrice._Initialize ();
 			Fields.ArticleQuantity._Initialize ();
+			Fields.ArticleQuantityColumn._Initialize ();
 			Fields.ArticleSupply._Initialize ();
 			Fields.ArticleTraceabilityDetail._Initialize ();
 			Fields.BusinessDocument._Initialize ();

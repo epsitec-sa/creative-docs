@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Core.Helpers
 
 			foreach (var quantity in article.ArticleQuantities)
 			{
-				if (quantity.QuantityType == Business.ArticleQuantityType.Billed)
+				if (quantity.QuantityColumn.QuantityType == Business.ArticleQuantityType.Billed)
 				{
 					return Misc.FormatUnit (quantity.Quantity, quantity.Unit.Code);
 				}
@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Core.Helpers
 		{
 			foreach (var quantity in article.ArticleQuantities)
 			{
-				if (quantity.QuantityType == Business.ArticleQuantityType.Billed)
+				if (quantity.QuantityColumn.QuantityType == Business.ArticleQuantityType.Billed)
 				{
 					return quantity.Quantity;
 				}

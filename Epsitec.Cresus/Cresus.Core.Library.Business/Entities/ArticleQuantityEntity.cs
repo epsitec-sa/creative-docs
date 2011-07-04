@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 			foreach (var q in EnumKeyValues.FromEnum<ArticleQuantityType> ())
 			{
-				if (q.Key == this.QuantityType)
+				if (q.Key == this.QuantityColumn.QuantityType)
 				{
 					type = q.Values[0];
 					break;

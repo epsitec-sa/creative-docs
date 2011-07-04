@@ -128,14 +128,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			template.DefineText        (x => x.GetCompactSummary ());
 			template.DefineCompactText (x => x.GetCompactSummary ());
-			template.DefineSetupItem   (EditionArticleDocumentItemViewController.SetupArticleQuantity);
+			template.DefineSetupItem   (this.SetupArticleQuantity);
 
 			data.Add (this.CreateCollectionAccessor (template, x => x.ArticleQuantities));
 		}
 
-		private static void SetupArticleQuantity(ArticleQuantityEntity quantity)
+		private void SetupArticleQuantity(ArticleQuantityEntity quantity)
 		{
-			quantity.QuantityType = Business.ArticleQuantityType.Billed;
+			quantity.QuantityColumn = this.BusinessContext.GetAllEntities<ArticleQuantityColumnEntity> ().FirstOrDefault (x => x.QuantityType == Business.ArticleQuantityType.Billed);
 			quantity.Quantity = 1;
 		}
 

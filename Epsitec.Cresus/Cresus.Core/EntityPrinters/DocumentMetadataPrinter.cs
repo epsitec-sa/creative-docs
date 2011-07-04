@@ -669,14 +669,14 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			foreach (var quantity in line.ArticleQuantities)
 			{
-				if (quantity.QuantityType == Business.ArticleQuantityType.Billed)
+				if (quantity.QuantityColumn.QuantityType == Business.ArticleQuantityType.Billed)
 				{
 					this.tableColumns[TableColumnKeys.Quantity ].Visible = true;
 					this.tableColumns[TableColumnKeys.UnitPrice].Visible = true;
 					this.tableColumns[TableColumnKeys.LinePrice].Visible = true;
 				}
 
-				if (quantity.QuantityType == Business.ArticleQuantityType.Delayed)
+				if (quantity.QuantityColumn.QuantityType == Business.ArticleQuantityType.Delayed)
 				{
 					this.tableColumns[TableColumnKeys.DelayedQuantity].Visible = true;
 					this.tableColumns[TableColumnKeys.DelayedDate    ].Visible = true;
@@ -779,12 +779,12 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			foreach (var quantity in line.ArticleQuantities)
 			{
-				if (quantity.QuantityType == Business.ArticleQuantityType.Billed)
+				if (quantity.QuantityColumn.QuantityType == Business.ArticleQuantityType.Billed)
 				{
 					q1 = Misc.FormatUnit (quantity.Quantity, quantity.Unit.Code);
 				}
 
-				if (quantity.QuantityType == Business.ArticleQuantityType.Delayed)
+				if (quantity.QuantityColumn.QuantityType == Business.ArticleQuantityType.Delayed)
 				{
 					q2.AppendLine (Misc.FormatUnit (quantity.Quantity, quantity.Unit.Code));
 
@@ -1048,7 +1048,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			{
 				foreach (var quantity in line.ArticleQuantities)
 				{
-					if (quantity.QuantityType == Business.ArticleQuantityType.Billed)
+					if (quantity.QuantityColumn.QuantityType == Business.ArticleQuantityType.Billed)
 					{
 						return true;
 					}
