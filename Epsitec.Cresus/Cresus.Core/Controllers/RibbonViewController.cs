@@ -669,6 +669,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				yield return new SubMenuItem (Res.Commands.Base.ShowArticleCategory,                    SubMenuType.Articles);
 				yield return new SubMenuItem (Res.Commands.Base.ShowArticleGroup,                       SubMenuType.Articles);
+				yield return new SubMenuItem (Res.Commands.Base.ShowArticleQuantityColumn,              SubMenuType.Articles);
 				yield return new SubMenuItem (Res.Commands.Base.ShowAbstractArticleParameterDefinition, SubMenuType.Articles);
 				yield return new SubMenuItem (Res.Commands.Base.ShowArticleStockLocation,               SubMenuType.Articles);
 				yield return new SubMenuItem (Res.Commands.Base.ShowUnitOfMeasure,                      SubMenuType.Articles);
