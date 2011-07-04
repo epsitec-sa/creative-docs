@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				.AsType<BusinessDocumentEntity> ()
 				.Attribute (BrickMode.SpecialController0)
 				.Title ("Lignes du document")
-				.Icon ("Data.ArticleDocumentItem")
+				.Icon ("Data.DocumentItems")
 				.Text (x => SummaryDocumentMetadataViewController.GetArticlesSummary (x, 10))
 				.TextCompact (x => SummaryDocumentMetadataViewController.GetArticlesSummary (x, 10))
 				;
