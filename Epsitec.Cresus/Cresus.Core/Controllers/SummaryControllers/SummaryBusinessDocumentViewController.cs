@@ -10,6 +10,7 @@ using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Helpers;
 using Epsitec.Cresus.Core.Print.Controllers;
+using Epsitec.Cresus.Core.Bricks;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -26,47 +27,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			wall.AddBrick (x => x);
 
 			wall.AddBrick (x => x.Lines)
-				.AsType<ArticleDocumentItemEntity> ()
 				.Attribute (BrickMode.AutoGroup)
 				.Template ()
 				.End ()
 				;
-			wall.AddBrick (x => x.Lines)
-				.AsType<TextDocumentItemEntity> ()
-				.Attribute (BrickMode.AutoGroup)
-				.Template ()
-				.End ()
-				;
-			wall.AddBrick (x => x.Lines)
-				.AsType<SubTotalDocumentItemEntity> ()
-				.Attribute (BrickMode.AutoGroup)
-				.Template ()
-				.End ()
-				;
-			wall.AddBrick (x => x.Lines)
-				.AsType<TaxDocumentItemEntity> ()
-				.Attribute (BrickMode.AutoGroup)
-				.Template ()
-				.End ()
-				;
-			wall.AddBrick (x => x.Lines)
-				.AsType<EndTotalDocumentItemEntity> ()
-				.Attribute (BrickMode.AutoGroup)
-				.Template ()
-				.End ()
-				;
-
-			var metadata = this.BusinessContext.GetMasterEntity<DocumentMetadataEntity> ();
-			if (metadata != null)
-			{
-				if (metadata.DocumentCategory.DocumentType == Business.DocumentType.Invoice)
-				{
-					wall.AddBrick (x => x.BillingDetails)
-						.Template ()
-						.End ()
-						;
-				}
-			}
 
 			// TODO: Créer le PreviewPanel
 		}

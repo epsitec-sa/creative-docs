@@ -13,6 +13,11 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class BillingDetailEntity
 	{
+		public override FormattedText GetSummary()
+		{
+			return this.GetCompactSummary ();
+		}
+
 		public override FormattedText GetCompactSummary()
 		{
 			string amount = Misc.PriceToString (this.AmountDue.Amount);

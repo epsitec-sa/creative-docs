@@ -30,16 +30,62 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				.Text (x => x.GetSummary ())
 				.TextCompact (x => x.GetCompactSummary ())
 				;
+
 			wall.AddBrick (x => x.BusinessDocument)
 				.AsType<BusinessDocumentEntity> ()
 				.Attribute (BrickMode.DefaultToSummarySubview)
 				.Text (x => x.GetSummary ())
 				.TextCompact (x => x.GetCompactSummary ())
 				;
+
+			wall.AddBrick (x => x.BusinessDocument)
+				.AsType<BusinessDocumentEntity> ()
+				.Title ("Lignes du document")
+				.Icon ("Data.ArticleDocumentItem")
+				.Text (x => SummaryDocumentMetadataViewController.GetArticlesSummary (x))
+				.TextCompact (x => SummaryDocumentMetadataViewController.GetArticlesSummary (x))
+				;
+
+			if (this.Entity.BusinessDocument is BusinessDocumentEntity)
+			{
+				if (this.Entity.DocumentCategory.DocumentType == Business.DocumentType.Invoice)
+				{
+					wall.AddBrick (x => SummaryDocumentMetadataViewController.GetBillingDetailEntities (x))
+						.Attribute (BrickMode.AutoGroup)
+						.Template ()
+						.End ()
+						;
+				}
+			}
+			
 			wall.AddBrick (x => x.Comments)
 				.Template ()
 				.End ()
 				;
+		}
+
+
+		private static FormattedText GetArticlesSummary(BusinessDocumentEntity businessDocumentEntity)
+		{
+			FormattedText summary = new FormattedText ();
+
+			foreach (var line in businessDocumentEntity.Lines)
+			{
+				summary = summary.AppendLine (line.GetCompactSummary ());
+			}
+
+			return summary;
+		}
+
+		private static IList<BillingDetailEntity> GetBillingDetailEntities(DocumentMetadataEntity documentMetadataEntity)
+		{
+			if (documentMetadataEntity.BusinessDocument is BusinessDocumentEntity)
+			{
+				var businessDocumentEntity = documentMetadataEntity.BusinessDocument as BusinessDocumentEntity;
+				return businessDocumentEntity.BillingDetails;
+			}
+
+			return null;
 		}
 	}
 }

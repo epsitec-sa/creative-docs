@@ -130,6 +130,7 @@
     <Compile Include="Controllers\EditionControllers\EditionPriceCalculatorViewControllerTableDesigner.cs" />
     <Compile Include="Controllers\EditionControllers\EditionVatDefinitionViewController.cs" />
     <Compile Include="Controllers\RibbonViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryBillingDetailViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleQuantityColumnViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryPaymentDatailViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryPriceGroupViewController.cs" />
@@ -526,6 +527,7 @@
     <EmbeddedResource Include="Images\Base.PriceGroup.icon" />
     <EmbeddedResource Include="Images\Data.ArticleQuantityColumn.icon" />
     <EmbeddedResource Include="Images\Base.ArticleQuantityColumn.icon" />
+    <EmbeddedResource Include="Images\Data.BillingDetail.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
