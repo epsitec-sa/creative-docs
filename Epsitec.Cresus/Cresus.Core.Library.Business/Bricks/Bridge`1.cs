@@ -354,42 +354,8 @@ namespace Epsitec.Cresus.Core.Bricks
 					fieldType == typeof (bool) ||
 					fieldType == typeof (bool?))
 				{
-					//	Si une largeur spécifique n'a pas été donnée, utilise une largeur standard adaptée
-					//	au type de base.
-
-					if (width == 0)  // largeur non spécifiée avec un .Width (n) ?
-					{
-						if (fieldType == typeof (System.DateTime) ||
-							fieldType == typeof (System.DateTime?))  // date et heure ?
-						{
-							width = 150;
-						}
-
-						if (fieldType == typeof (Date) ||
-							fieldType == typeof (Date?))  // date seule ?
-						{
-							width = 100;
-						}
-
-						if (fieldType == typeof (long) ||
-							fieldType == typeof (long?))
-						{
-							width = 100;
-						}
-
-						if (fieldType == typeof (decimal) ||
-							fieldType == typeof (decimal?))
-						{
-							width = 100;
-						}
-
-						if (fieldType == typeof (int) ||
-							fieldType == typeof (int?))
-						{
-							width = 70;
-						}
-					}
-
+					width = InputProcessor.GetDefaultFieldWidth (fieldType, width);
+					
 					//	Produce either a text field or a variation of such a widget (pull-down list, etc.)
 					//	based on the real type being edited.
 
@@ -426,6 +392,44 @@ namespace Epsitec.Cresus.Core.Bricks
 				System.Diagnostics.Debug.WriteLine (
 					string.Format ("*** Field {0} of type {1} : no automatic binding implemented in Bridge<{2}>",
 						lambda.ToString (), fieldType.FullName, typeof (T).Name));
+			}
+
+			private static int GetDefaultFieldWidth(System.Type fieldType, int width)
+			{
+				if (width == 0)  // width not specified by an explicit .Width (n) ?
+				{
+					if ((fieldType == typeof (System.DateTime)) ||
+						(fieldType == typeof (System.DateTime?)))
+					{
+						return 150;
+					}
+
+					if ((fieldType == typeof (Date)) ||
+						(fieldType == typeof (Date?)))
+					{
+						return 100;
+					}
+
+					if ((fieldType == typeof (long)) ||
+						(fieldType == typeof (long?)))
+					{
+						return 100;
+					}
+
+					if ((fieldType == typeof (decimal)) ||
+						(fieldType == typeof (decimal?)))
+					{
+						return 100;
+					}
+
+					if ((fieldType == typeof (int)) ||
+						(fieldType == typeof (int?)))
+					{
+						return 70;
+					}
+				}
+
+				return width;
 			}
 
 			private void CreateActionForSeparator()
