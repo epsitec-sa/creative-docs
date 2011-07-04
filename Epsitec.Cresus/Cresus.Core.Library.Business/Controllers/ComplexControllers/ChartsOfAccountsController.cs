@@ -90,7 +90,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 				};
 
 				ToolTip.Default.SetToolTip (this.addButton,    "Ajoute un plan comptable");
-				ToolTip.Default.SetToolTip (this.removeButton, "Supprime le un plan comptable sélectionné");
+				ToolTip.Default.SetToolTip (this.removeButton, "Supprime le plan comptable sélectionné");
 			}
 
 			{

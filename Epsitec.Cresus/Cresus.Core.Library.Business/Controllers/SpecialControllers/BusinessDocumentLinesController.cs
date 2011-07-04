@@ -45,6 +45,9 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 			this.businessContext = controller.BusinessContext;
 			this.dataContext = controller.DataContext;
 			this.coreData = controller.Data;
+
+			var documentMetadataEntity = this.businessContext.GetMasterEntity<DocumentMetadataEntity> ();
+			System.Diagnostics.Debug.Assert (documentMetadataEntity != null);
 	
 			var frameBox = parent as FrameBox;
 			System.Diagnostics.Debug.Assert (frameBox != null);
@@ -52,20 +55,15 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 			var box = new FrameBox
 			{
 				Parent = parent,
-				PreferredHeight = 300,
-				Padding = new Margins (10),
-				DrawFrameState = FrameState.Bottom,
+				PreferredHeight = 400,
+				Padding = new Margins (0, 0, 10, 10),
 				Dock = DockStyle.Top,
 				Margins = Widgets.Tiles.TileArrow.GetContainerPadding (Direction.Right),
 			};
 
-			var w = new StaticText
-			{
-				Parent = box,
-				Dock = DockStyle.Fill,
-				Text = "Coucou",
-				BackColor = Color.FromName ("Gold"),
-			};
+			var c = new BusinessDocumentControllers.BusinessDocumentLinesController (documentMetadataEntity, this.businessDocumentEntity);
+			c.CreateUI (box);
+			c.UpdateUI ();
 		}
 
 
