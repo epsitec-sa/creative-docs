@@ -28,7 +28,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			wall.AddBrick ()
 				.Input ()
-				  .Title ("Type")
 				  .Field (x => x.QuantityColumn)  // TODO: Comment faire pour utiliser UIBuilder.CreateEditionDetailedItemPicker et avoir des boutons radio ?
 				  .HorizontalGroup ("Date prévue (début et fin si connus)")
 				    .Field (x => x.BeginDate)
@@ -37,9 +36,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.End ()
 				.Separator ()
 				.Input ()
-				  .Title ("Quantité")
 				  .Field (x => x.Quantity)
-				  .Title ("Unité")
 				  .Field (x => x.Unit)  // TODO: Comment faire pour avoir des boutons radio ?
 				.End ()
 				;

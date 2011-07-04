@@ -99,6 +99,7 @@
     <Compile Include="CommandHandlers\NavigationCommandHandler.cs" />
     <Compile Include="Controllers\CreationControllers\CreationArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationCustomerViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionArticleQuantityColumnViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPaymentDatailViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPriceGroupViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticleStockLocationViewController.cs" />
@@ -129,6 +130,7 @@
     <Compile Include="Controllers\EditionControllers\EditionPriceCalculatorViewControllerTableDesigner.cs" />
     <Compile Include="Controllers\EditionControllers\EditionVatDefinitionViewController.cs" />
     <Compile Include="Controllers\RibbonViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryArticleQuantityColumnViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryPaymentDatailViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryPriceGroupViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleStockLocationViewController.cs" />
