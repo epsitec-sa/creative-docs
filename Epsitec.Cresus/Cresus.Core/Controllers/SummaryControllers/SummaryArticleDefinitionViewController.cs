@@ -16,10 +16,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			wall.AddBrick ()
 				;
-			wall.AddBrick (x => x.ArticleParameterDefinitions)  // TODO: pas correct !
-				.Template ()
-				.End ()
-				;
+			//wall.AddBrick (x => x.ArticleParameterDefinitions)  // TODO: pas correct !
+			//    .Template ()
+			//    .End ()
+			//    ;
 			wall.AddBrick (x => x.ArticlePrices)
 				.Template ()
 				.End ()
