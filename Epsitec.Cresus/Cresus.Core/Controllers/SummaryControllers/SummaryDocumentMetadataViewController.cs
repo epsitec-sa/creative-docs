@@ -43,8 +43,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				.Attribute (BrickMode.SpecialController0)
 				.Title ("Lignes du document")
 				.Icon ("Data.ArticleDocumentItem")
-				.Text (x => SummaryDocumentMetadataViewController.GetArticlesSummary (x))
-				.TextCompact (x => SummaryDocumentMetadataViewController.GetArticlesSummary (x))
+				.Text (x => SummaryDocumentMetadataViewController.GetArticlesSummary (x, 10))
+				.TextCompact (x => SummaryDocumentMetadataViewController.GetArticlesSummary (x, 10))
 				;
 
 			if (this.Entity.BusinessDocument is BusinessDocumentEntity)
@@ -66,13 +66,29 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
-		private static FormattedText GetArticlesSummary(BusinessDocumentEntity businessDocumentEntity)
+		private static FormattedText GetArticlesSummary(BusinessDocumentEntity businessDocumentEntity, int limit)
 		{
+			//	Retourne un texte qui résume toutes les lignes du document.
+			//	Le paramètre 'limit' donne le nombre maximum de lignes à inclure, sans compter les 2 lignes
+			//	"..." et le grand total.
 			FormattedText summary = new FormattedText ();
 
-			foreach (var line in businessDocumentEntity.Lines)
+			for (int i=0; i<businessDocumentEntity.Lines.Count-1; i++)  // toutes les lignes, sauf le grand total
 			{
+				if (i >= limit)
+				{
+					summary = summary.AppendLine ("...");
+					break;
+				}
+
+				var line = businessDocumentEntity.Lines[i];
 				summary = summary.AppendLine (line.GetCompactSummary ());
+			}
+
+			if (businessDocumentEntity.Lines.Count > 1)
+			{
+				var line = businessDocumentEntity.Lines[businessDocumentEntity.Lines.Count-1];
+				summary = summary.AppendLine (line.GetCompactSummary ());  // ajoute le grand total
 			}
 
 			return summary;
