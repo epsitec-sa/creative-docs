@@ -184,6 +184,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private IEnumerable<ColumnType> ColumnTypes
 		{
+			//	Retourne les colonnes visibles dans la table, de gauche à droite.
 			get
 			{
 				yield return ColumnType.Group;
@@ -271,14 +272,125 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			var line = this.businessDocumentEntity.Lines[row];
 
+			if (columnType == ColumnType.Quantity)
+			{
+				var quantity = BusinessDocumentLinesController.GetArticleQuantity (line as ArticleDocumentItemEntity);
+
+				if (quantity != null)
+				{
+					return quantity.ToString ();
+				}
+			}
+
 			if (columnType == ColumnType.Description)
 			{
-				return line.GetCompactSummary ();
+				return BusinessDocumentLinesController.GetArticleDescription (line);
+			}
+
+			if (columnType == ColumnType.Price)
+			{
+				var price = BusinessDocumentLinesController.GetArticlePrice (line as ArticleDocumentItemEntity);
+
+				if (price != null)
+				{
+					return  Misc.PriceToString (price);
+				}
 			}
 
 			return null;
 		}
 
+
+		#region ArticleDocumentItemEntity extensions
+		private static decimal? GetArticleQuantity(AbstractDocumentItemEntity line)
+		{
+			if (line is ArticleDocumentItemEntity)
+			{
+				var article = line as ArticleDocumentItemEntity;
+
+				decimal quantity = 0;
+
+				foreach (var articleQuantity in article.ArticleQuantities)
+				{
+					quantity += articleQuantity.Quantity;
+				}
+
+				return quantity;
+			}
+
+			return null;
+		}
+
+		private static FormattedText GetArticleDescription(AbstractDocumentItemEntity line)
+		{
+			if (line is ArticleDocumentItemEntity)
+			{
+				var article = line as ArticleDocumentItemEntity;
+				return Helpers.ArticleDocumentItemHelper.GetArticleDescription (article, replaceTags: true, shortDescription: true);
+			}
+
+			if (line is TextDocumentItemEntity)
+			{
+				var text = line as TextDocumentItemEntity;
+				return text.Text;
+			}
+
+			if (line is TaxDocumentItemEntity)
+			{
+				var tax = line as TaxDocumentItemEntity;
+
+				if (tax.Text.IsNullOrEmpty)
+				{
+					return "TVA";
+				}
+				else
+				{
+					return tax.Text;
+				}
+			}
+
+			if (line is SubTotalDocumentItemEntity)
+			{
+				return "Sous-total";
+			}
+
+			if (line is EndTotalDocumentItemEntity)
+			{
+				return "Grand total";
+			}
+
+			return null;
+		}
+
+		private static decimal? GetArticlePrice(AbstractDocumentItemEntity line)
+		{
+			if (line is ArticleDocumentItemEntity)
+			{
+				var article = line as ArticleDocumentItemEntity;
+				return article.PrimaryLinePriceBeforeTax;
+			}
+
+			if (line is TaxDocumentItemEntity)
+			{
+				var tax = line as TaxDocumentItemEntity;
+				return tax.ResultingTax;
+			}
+
+			if (line is SubTotalDocumentItemEntity)
+			{
+				var total = line as SubTotalDocumentItemEntity;
+				return total.FinalPriceBeforeTax;
+			}
+
+			if (line is EndTotalDocumentItemEntity)
+			{
+				var total = line as EndTotalDocumentItemEntity;
+				return total.PriceAfterTax;
+			}
+
+			return null;
+		}
+		#endregion
 
 
 		private readonly DocumentMetadataEntity documentMetadataEntity;
