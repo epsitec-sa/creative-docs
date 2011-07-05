@@ -61,9 +61,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				toolbar.Children.Add (BusinessDocumentLinesController.CreateSeparator ());
 				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.Group));
 				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.Ungroup));
-				toolbar.Children.Add (BusinessDocumentLinesController.CreateSeparator ());
-				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.Ok));
-				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.Cancel));
+
+				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.Cancel, DockStyle.Right));
+				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.Ok, DockStyle.Right));
 			}
 
 			{
@@ -89,9 +89,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
-		private static IconButton CreateButton(Command command = null, bool large = true, bool isActivable = false)
+		private static IconButton CreateButton(Command command = null, DockStyle dockStyle = DockStyle.Left, bool large = true, bool isActivable = false)
 		{
-			double buttonWidth = large ? Library.UI.ButtonLargeWidth : Library.UI.ButtonSmallWidth;
+			//?double buttonWidth = large ? Library.UI.ButtonLargeWidth : Library.UI.ButtonSmallWidth;
+			double buttonWidth = large ? Library.UI.IconLargeWidth+4 : Library.UI.IconSmallWidth+3;
 			double iconWidth   = large ? Library.UI.IconLargeWidth : Library.UI.IconSmallWidth;
 
 			if (isActivable)
@@ -101,7 +102,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					CommandObject       = command,
 					PreferredIconSize   = new Size (iconWidth, iconWidth),
 					PreferredSize       = new Size (buttonWidth, buttonWidth),
-					Dock                = DockStyle.Left,
+					Dock                = dockStyle,
 					Name                = (command == null) ? null : command.Name,
 					VerticalAlignment   = VerticalAlignment.Top,
 					HorizontalAlignment = HorizontalAlignment.Center,
@@ -115,7 +116,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					CommandObject       = command,
 					PreferredIconSize   = new Size (iconWidth, iconWidth),
 					PreferredSize       = new Size (buttonWidth, buttonWidth),
-					Dock                = DockStyle.Left,
+					Dock                = dockStyle,
 					Name                = (command == null) ? null : command.Name,
 					VerticalAlignment   = VerticalAlignment.Top,
 					HorizontalAlignment = HorizontalAlignment.Center,
