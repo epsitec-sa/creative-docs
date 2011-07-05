@@ -529,6 +529,18 @@
     <EmbeddedResource Include="Images\Data.ArticleQuantityColumn.icon" />
     <EmbeddedResource Include="Images\Base.ArticleQuantityColumn.icon" />
     <EmbeddedResource Include="Images\Data.BillingDetail.icon" />
+    <EmbeddedResource Include="Images\Lines.Cancel.icon" />
+    <EmbeddedResource Include="Images\Lines.CreateArticle.icon" />
+    <EmbeddedResource Include="Images\Lines.CreateDiscount.icon" />
+    <EmbeddedResource Include="Images\Lines.CreateGroup.icon" />
+    <EmbeddedResource Include="Images\Lines.CreateTax.icon" />
+    <EmbeddedResource Include="Images\Lines.CreateText.icon" />
+    <EmbeddedResource Include="Images\Lines.CreateTitle.icon" />
+    <EmbeddedResource Include="Images\Lines.Delete.icon" />
+    <EmbeddedResource Include="Images\Lines.Duplicate.icon" />
+    <EmbeddedResource Include="Images\Lines.Group.icon" />
+    <EmbeddedResource Include="Images\Lines.Ok.icon" />
+    <EmbeddedResource Include="Images\Lines.Ungroup.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

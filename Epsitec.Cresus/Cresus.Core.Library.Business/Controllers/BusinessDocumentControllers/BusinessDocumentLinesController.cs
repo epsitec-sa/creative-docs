@@ -42,35 +42,28 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			{
 				//	Crée la toolbar.
-				double buttonSize = Library.UI.TinyButtonSize;
+				double buttonSize = Library.UI.ButtonLargeWidth;
 
 				var toolbar = UIBuilder.CreateMiniToolbar (frame, buttonSize);
 				toolbar.Dock = DockStyle.Top;
 				toolbar.Margins = new Margins (0, 0, 0, -1);
 				toolbar.TabIndex = tabIndex++;
 
-				this.addButton = new GlyphButton
-				{
-					Parent = toolbar,
-					PreferredSize = new Size (buttonSize*2+1, buttonSize),
-					GlyphShape = GlyphShape.Plus,
-					Margins = new Margins (0, 0, 0, 0),
-					Dock = DockStyle.Left,
-					TabIndex = tabIndex++,
-				};
-
-				this.removeButton = new GlyphButton
-				{
-					Parent = toolbar,
-					PreferredSize = new Size (buttonSize, buttonSize),
-					GlyphShape = GlyphShape.Minus,
-					Margins = new Margins (1, 0, 0, 0),
-					Dock = DockStyle.Left,
-					TabIndex = tabIndex++,
-				};
-
-				ToolTip.Default.SetToolTip (this.addButton, "Ajoute une ligne");
-				ToolTip.Default.SetToolTip (this.removeButton, "Supprime la ligne sélectionnée");
+				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.CreateArticle));
+				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.CreateText));
+				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.CreateTitle));
+				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.CreateDiscount));
+				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.CreateTax));
+				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.CreateGroup));
+				toolbar.Children.Add (BusinessDocumentLinesController.CreateSeparator ());
+				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.Duplicate));
+				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.Delete));
+				toolbar.Children.Add (BusinessDocumentLinesController.CreateSeparator ());
+				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.Group));
+				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.Ungroup));
+				toolbar.Children.Add (BusinessDocumentLinesController.CreateSeparator ());
+				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.Ok));
+				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.Cancel));
 			}
 
 			{
@@ -94,6 +87,51 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					TabIndex = tabIndex++,
 				};
 			}
+		}
+
+		private static IconButton CreateButton(Command command = null, bool large = true, bool isActivable = false)
+		{
+			double buttonWidth = large ? Library.UI.ButtonLargeWidth : Library.UI.ButtonSmallWidth;
+			double iconWidth   = large ? Library.UI.IconLargeWidth : Library.UI.IconSmallWidth;
+
+			if (isActivable)
+			{
+				return new IconButton
+				{
+					CommandObject       = command,
+					PreferredIconSize   = new Size (iconWidth, iconWidth),
+					PreferredSize       = new Size (buttonWidth, buttonWidth),
+					Dock                = DockStyle.Left,
+					Name                = (command == null) ? null : command.Name,
+					VerticalAlignment   = VerticalAlignment.Top,
+					HorizontalAlignment = HorizontalAlignment.Center,
+					AutoFocus           = false,
+				};
+			}
+			else
+			{
+				return new RibbonIconButton
+				{
+					CommandObject       = command,
+					PreferredIconSize   = new Size (iconWidth, iconWidth),
+					PreferredSize       = new Size (buttonWidth, buttonWidth),
+					Dock                = DockStyle.Left,
+					Name                = (command == null) ? null : command.Name,
+					VerticalAlignment   = VerticalAlignment.Top,
+					HorizontalAlignment = HorizontalAlignment.Center,
+					AutoFocus           = false,
+				};
+			}
+		}
+
+		private static Separator CreateSeparator(double width = 10)
+		{
+			return new Separator
+			{
+				IsVerticalLine = true,
+				PreferredWidth = width,
+				Dock = DockStyle.Left,
+			};
 		}
 
 		public void UpdateUI(int? sel = null)
@@ -396,8 +434,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private readonly DocumentMetadataEntity documentMetadataEntity;
 		private readonly BusinessDocumentEntity businessDocumentEntity;
 
-		private GlyphButton								addButton;
-		private GlyphButton								removeButton;
 		private CellTable								table;
 	}
 }

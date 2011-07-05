@@ -10,6 +10,85 @@ namespace Epsitec.Cresus.Core.Library.Business
 	{
 		//	Code mapping for 'Caption' resources
 		
+		public static class Commands
+		{
+			internal static void _Initialize()
+			{
+			}
+			
+			public static class Lines
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/GVK1
+				public static readonly global::Epsitec.Common.Widgets.Command Cancel = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 1));
+				//	designer:cap/GVK
+				public static readonly global::Epsitec.Common.Widgets.Command CreateArticle = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 0));
+				//	designer:cap/GVK2
+				public static readonly global::Epsitec.Common.Widgets.Command CreateDiscount = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 2));
+				//	designer:cap/GVK3
+				public static readonly global::Epsitec.Common.Widgets.Command CreateGroup = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 3));
+				//	designer:cap/GVK4
+				public static readonly global::Epsitec.Common.Widgets.Command CreateTax = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 4));
+				//	designer:cap/GVK5
+				public static readonly global::Epsitec.Common.Widgets.Command CreateText = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 5));
+				//	designer:cap/GVK6
+				public static readonly global::Epsitec.Common.Widgets.Command CreateTitle = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 6));
+				//	designer:cap/GVK7
+				public static readonly global::Epsitec.Common.Widgets.Command Delete = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 7));
+				//	designer:cap/GVK8
+				public static readonly global::Epsitec.Common.Widgets.Command Duplicate = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 8));
+				//	designer:cap/GVK9
+				public static readonly global::Epsitec.Common.Widgets.Command Group = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 9));
+				//	designer:cap/GVKA
+				public static readonly global::Epsitec.Common.Widgets.Command Ok = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 10));
+				//	designer:cap/GVKB
+				public static readonly global::Epsitec.Common.Widgets.Command Ungroup = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 11));
+			}
+		}
+		
+		public static class CommandIds
+		{
+			internal static void _Initialize()
+			{
+			}
+			
+			public static class Lines
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/GVK1
+				public const long Cancel = 0x3F000014000001L;
+				//	designer:cap/GVK
+				public const long CreateArticle = 0x3F000014000000L;
+				//	designer:cap/GVK2
+				public const long CreateDiscount = 0x3F000014000002L;
+				//	designer:cap/GVK3
+				public const long CreateGroup = 0x3F000014000003L;
+				//	designer:cap/GVK4
+				public const long CreateTax = 0x3F000014000004L;
+				//	designer:cap/GVK5
+				public const long CreateText = 0x3F000014000005L;
+				//	designer:cap/GVK6
+				public const long CreateTitle = 0x3F000014000006L;
+				//	designer:cap/GVK7
+				public const long Delete = 0x3F000014000007L;
+				//	designer:cap/GVK8
+				public const long Duplicate = 0x3F000014000008L;
+				//	designer:cap/GVK9
+				public const long Group = 0x3F000014000009L;
+				//	designer:cap/GVKA
+				public const long Ok = 0x3F00001400000AL;
+				//	designer:cap/GVKB
+				public const long Ungroup = 0x3F00001400000BL;
+			}
+			
+		}
+		
 		public static class Types
 		{
 			internal static void _Initialize()
@@ -836,6 +915,10 @@ namespace Epsitec.Cresus.Core.Library.Business
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Cresus.Core.Library.Business");
+			Commands._Initialize ();
+			Commands.Lines._Initialize ();
+			CommandIds._Initialize ();
+			CommandIds.Lines._Initialize ();
 			Types._Initialize ();
 			Values._Initialize ();
 			Values.ArticleQuantityType._Initialize ();

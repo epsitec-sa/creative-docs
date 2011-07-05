@@ -174,6 +174,38 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Widgets.Command NavigateForward = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 494));
 			}
 			
+			public static class Lines
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/L0KD2
+				public static readonly global::Epsitec.Common.Widgets.Command Cancel = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 77));
+				//	designer:cap/L0K22
+				public static readonly global::Epsitec.Common.Widgets.Command CreateArticle = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 66));
+				//	designer:cap/L0K32
+				public static readonly global::Epsitec.Common.Widgets.Command CreateDiscount = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 67));
+				//	designer:cap/L0K42
+				public static readonly global::Epsitec.Common.Widgets.Command CreateGroup = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 68));
+				//	designer:cap/L0K52
+				public static readonly global::Epsitec.Common.Widgets.Command CreateTax = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 69));
+				//	designer:cap/L0K62
+				public static readonly global::Epsitec.Common.Widgets.Command CreateText = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 70));
+				//	designer:cap/L0K72
+				public static readonly global::Epsitec.Common.Widgets.Command CreateTitle = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 71));
+				//	designer:cap/L0K82
+				public static readonly global::Epsitec.Common.Widgets.Command Delete = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 72));
+				//	designer:cap/L0K92
+				public static readonly global::Epsitec.Common.Widgets.Command Duplicate = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 73));
+				//	designer:cap/L0KA2
+				public static readonly global::Epsitec.Common.Widgets.Command Group = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 74));
+				//	designer:cap/L0KB2
+				public static readonly global::Epsitec.Common.Widgets.Command Ok = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 75));
+				//	designer:cap/L0KC2
+				public static readonly global::Epsitec.Common.Widgets.Command Ungroup = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 76));
+			}
+			
 			public static class Test
 			{
 				internal static void _Initialize()
@@ -349,6 +381,38 @@ namespace Epsitec.Cresus.Core
 				public const long NavigateForward = 0x150000A0001EEL;
 			}
 			
+			public static class Lines
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/L0KD2
+				public const long Cancel = 0x150001400004DL;
+				//	designer:cap/L0K22
+				public const long CreateArticle = 0x1500014000042L;
+				//	designer:cap/L0K32
+				public const long CreateDiscount = 0x1500014000043L;
+				//	designer:cap/L0K42
+				public const long CreateGroup = 0x1500014000044L;
+				//	designer:cap/L0K52
+				public const long CreateTax = 0x1500014000045L;
+				//	designer:cap/L0K62
+				public const long CreateText = 0x1500014000046L;
+				//	designer:cap/L0K72
+				public const long CreateTitle = 0x1500014000047L;
+				//	designer:cap/L0K82
+				public const long Delete = 0x1500014000048L;
+				//	designer:cap/L0K92
+				public const long Duplicate = 0x1500014000049L;
+				//	designer:cap/L0KA2
+				public const long Group = 0x150001400004AL;
+				//	designer:cap/L0KB2
+				public const long Ok = 0x150001400004BL;
+				//	designer:cap/L0KC2
+				public const long Ungroup = 0x150001400004CL;
+			}
+			
 			public static class Test
 			{
 				internal static void _Initialize()
@@ -476,6 +540,7 @@ namespace Epsitec.Cresus.Core
 			Commands.File._Initialize ();
 			Commands.Global._Initialize ();
 			Commands.History._Initialize ();
+			Commands.Lines._Initialize ();
 			Commands.Test._Initialize ();
 			CommandIds._Initialize ();
 			CommandIds.Base._Initialize ();
@@ -484,6 +549,7 @@ namespace Epsitec.Cresus.Core
 			CommandIds.File._Initialize ();
 			CommandIds.Global._Initialize ();
 			CommandIds.History._Initialize ();
+			CommandIds.Lines._Initialize ();
 			CommandIds.Test._Initialize ();
 		}
 		
