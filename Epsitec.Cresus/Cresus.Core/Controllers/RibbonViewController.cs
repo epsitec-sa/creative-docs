@@ -127,6 +127,30 @@ namespace Epsitec.Cresus.Core.Controllers
 				xml => this.DatabaseMenuDefaultCommandName = xml.Attribute ("name").Value);
 		}
 
+		private void CreateRibbonHomePage()
+		{
+			this.ribbonPageHome     = RibbonViewController.CreateRibbonPage (this.ribbonBook, "Home", "Principal");
+			this.ribbonPageBusiness = RibbonViewController.CreateRibbonPage (this.ribbonBook, "Business", "Documents commerciaux");
+
+			this.ribbonBook.ActivePage = this.ribbonPageHome;
+
+			//	Home ribbon:
+			this.CreateRibbonUserSection ();
+			this.CreateRibbonEditSection ();
+			this.CreateRibbonClipboardSection ();
+			this.CreateRibbonFontSection ();
+			this.CreateRibbonDatabaseSection ();
+			this.CreateRibbonStateSection ();
+			this.CreateRibbonSettingsSection ();
+			this.CreateRibbonNavigationSection ();
+
+			//	Business ribbon:
+			this.CreateRibbonBusinessActionSection ();
+			this.CreateRibbonBusinessCreateSection ();
+			this.CreateRibbonBusinessOperSection ();
+			this.CreateRibbonBusinessGroupSection ();
+		}
+
 		private static RibbonPage CreateRibbonPage(RibbonBook book, string name, string title)
 		{
 			return new RibbonPage (book)
@@ -137,20 +161,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			};
 		}
 
-		private void CreateRibbonHomePage()
-		{
-			this.ribbonPageHome = RibbonViewController.CreateRibbonPage (this.ribbonBook, "Home", "Principal");
-
-			this.CreateRibbonUserSection ();
-			this.CreateRibbonEditSection ();
-			this.CreateRibbonClipboardSection ();
-			this.CreateRibbonFontSection ();
-			this.CreateRibbonDatabaseSection ();
-			this.CreateRibbonStateSection ();
-			this.CreateRibbonSettingsSection ();
-			this.CreateRibbonNavigationSection ();
-		}
-
+		#region Create home ribbon sections
 		private void CreateRibbonUserSection()
 		{
 			var section = new RibbonSection (this.ribbonPageHome)
@@ -493,9 +504,76 @@ namespace Epsitec.Cresus.Core.Controllers
 			section.Children.Add (this.CreateButton (Res.Commands.Global.ShowSettings));
 			section.Children.Add (this.CreateButton (Res.Commands.Global.ShowDebug));
 		}
+		#endregion
+
+		#region Create business ribbon sections
+		private void CreateRibbonBusinessCreateSection()
+		{
+			var section = new RibbonSection (this.ribbonPageBusiness)
+			{
+				Name = "Create",
+				Title = "Insertion",
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				PreferredWidth = Library.UI.ButtonLargeWidth * 1,
+			};
+
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateArticle));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateText));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateTitle));
+			section.Children.Add (this.CreateSeparator ());
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateDiscount));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateTax));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateQuantity));
+			section.Children.Add (this.CreateSeparator ());
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateGroup));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateGroupSeparator));
+		}
+
+		private void CreateRibbonBusinessOperSection()
+		{
+			var section = new RibbonSection (this.ribbonPageBusiness)
+			{
+				Name = "Oper",
+				Title = "Opérations",
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				PreferredWidth = Library.UI.ButtonLargeWidth * 1,
+			};
+
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Duplicate));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Delete));
+		}
+
+		private void CreateRibbonBusinessGroupSection()
+		{
+			var section = new RibbonSection (this.ribbonPageBusiness)
+			{
+				Name = "Group",
+				Title = "Groupes",
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				PreferredWidth = Library.UI.ButtonLargeWidth * 1,
+			};
+
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Group));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Ungroup));
+		}
+
+		private void CreateRibbonBusinessActionSection()
+		{
+			var section = new RibbonSection (this.ribbonPageBusiness)
+			{
+				Name = "Action",
+				Title = "Actions",
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				PreferredWidth = Library.UI.ButtonLargeWidth * 1,
+			};
+
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Ok));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Cancel));
+		}
+		#endregion
 
 
-		
+
 		private void UpdateDatabaseMenu()
 		{
 			//	Met à jour les boutons pour les bases de données d'usage peu fréquent, après un changement d'utilisateur.
@@ -832,6 +910,16 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		private Separator CreateSeparator(DockStyle dockStyle = DockStyle.StackBegin)
+		{
+			return new Separator
+			{
+				IsVerticalLine = true,
+				Dock           = dockStyle,
+				PreferredWidth = 10,
+			};
+		}
+
 		private static IconOrImageButton CreateIconOrImageButton(Command command)
 		{
 			double buttonWidth = Library.UI.ButtonLargeWidth;
@@ -880,6 +968,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		
 		private RibbonBook						ribbonBook;
 		private RibbonPage						ribbonPageHome;
+		private RibbonPage						ribbonPageBusiness;
 
 		private IconButton						databaseButton;
 		private GlyphButton						databaseMenuButton;

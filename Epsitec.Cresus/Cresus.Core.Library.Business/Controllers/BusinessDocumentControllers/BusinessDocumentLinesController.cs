@@ -4,6 +4,7 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
+using Epsitec.Common.Support;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
@@ -454,6 +455,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
+#if false
+		[Command (Library.Business.Res.Commands.Lines.CreateArticle)]
+		public void ProcessCreateArticle(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+		}
+#endif
+
+	
 		#region ArticleDocumentItemEntity extensions
 		private static decimal? GetArticleQuantity(AbstractDocumentItemEntity line)
 		{
