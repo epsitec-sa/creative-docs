@@ -21,6 +21,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
+	/// <summary>
+	/// Liste de lignes d'articles (AbstractDocumentItemEntity).
+	/// </summary>
 	public class ArticleLinesController
 	{
 		public ArticleLinesController(DocumentMetadataEntity documentMetadataEntity, BusinessDocumentEntity businessDocumentEntity)

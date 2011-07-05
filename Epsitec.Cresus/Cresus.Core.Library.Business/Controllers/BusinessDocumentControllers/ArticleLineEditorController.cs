@@ -23,6 +23,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
 	public class ArticleLineEditorController
 	{
+		/// <summary>
+		/// Editeur permettant de créer/modifier une ligne d'article (AbstractDocumentItemEntity).
+		/// </summary>
 		public ArticleLineEditorController(DocumentMetadataEntity documentMetadataEntity, BusinessDocumentEntity businessDocumentEntity)
 		{
 			this.documentMetadataEntity = documentMetadataEntity;

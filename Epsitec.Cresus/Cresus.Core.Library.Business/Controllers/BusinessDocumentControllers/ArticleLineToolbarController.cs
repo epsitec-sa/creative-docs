@@ -21,6 +21,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
+	/// <summary>
+	/// Barre d'icône permettant de gérer une liste de lignes d'articles (AbstractDocumentItemEntity).
+	/// </summary>
 	public class ArticleLineToolbarController
 	{
 		public ArticleLineToolbarController(DocumentMetadataEntity documentMetadataEntity, BusinessDocumentEntity businessDocumentEntity)
@@ -62,7 +65,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private static IconButton CreateButton(Command command = null, DockStyle dockStyle = DockStyle.Left, bool large = true, bool isActivable = false)
 		{
 			//?double buttonWidth = large ? Library.UI.ButtonLargeWidth : Library.UI.ButtonSmallWidth;
-			double buttonWidth = large ? Library.UI.IconLargeWidth+4 : Library.UI.IconSmallWidth+3;
+			double buttonWidth = large ? Library.UI.IconLargeWidth+2 : Library.UI.IconSmallWidth+2;
 			double iconWidth   = large ? Library.UI.IconLargeWidth : Library.UI.IconSmallWidth;
 
 			if (isActivable)
