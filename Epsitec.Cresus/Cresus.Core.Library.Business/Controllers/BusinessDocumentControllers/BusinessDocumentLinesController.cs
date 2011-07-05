@@ -27,6 +27,35 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			this.documentMetadataEntity = documentMetadataEntity;
 			this.businessDocumentEntity = businessDocumentEntity;
+
+			this.articleLineInformations = new List<ArticleLineInformations> ();
+			this.UpdateArticleLineInformations ();
+		}
+
+		private void UpdateArticleLineInformations()
+		{
+			this.articleLineInformations.Clear ();
+
+			for (int i = 0; i < this.businessDocumentEntity.Lines.Count; i++)
+			{
+				var line = this.businessDocumentEntity.Lines[i];
+
+				if (line is ArticleDocumentItemEntity)
+				{
+					var article = line as ArticleDocumentItemEntity;
+
+					for (int j = 0; j < article.ArticleQuantities.Count; j++)
+					{
+						var quantity = article.ArticleQuantities[j];
+
+						this.articleLineInformations.Add (new ArticleLineInformations (line, quantity, i, j));
+					}
+				}
+				else
+				{
+					this.articleLineInformations.Add (new ArticleLineInformations (line, null, i, 0));
+				}
+			}
 		}
 
 
@@ -53,37 +82,60 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public void UpdateUI(int? sel = null)
 		{
-			this.articleLinesController.UpdateUI (this.GetCellContent, sel);
+			this.articleLinesController.UpdateUI (this.articleLineInformations.Count, this.GetCellContent, sel);
 		}
 
-		private FormattedText GetCellContent(int row, ColumnType columnType)
+		private FormattedText GetCellContent(int index, ColumnType columnType)
 		{
 			//	Retourne le contenu permettant de peupler une cellule du tableau.
-			var line = this.businessDocumentEntity.Lines[row];
+			var info = this.articleLineInformations[index];
 
-			if (columnType == ColumnType.Quantity)
+			var line     = info.AbstractDocumentItemEntity;
+			var quantity = info.ArticleQuantityEntity;
+
+			if (quantity != null)
 			{
-				var quantity = BusinessDocumentLinesController.GetArticleQuantity (line as ArticleDocumentItemEntity);
-
-				if (quantity != null)
+				if (columnType == ColumnType.Quantity)
 				{
-					return quantity.ToString ();
+					var value = BusinessDocumentLinesController.GetArticleQuantity (quantity);
+
+					if (value != null)
+					{
+						return value.ToString ();
+					}
+				}
+
+				if (columnType == ColumnType.Unit)
+				{
+					return BusinessDocumentLinesController.GetArticleUnit (quantity);
+				}
+
+				if (columnType == ColumnType.Type)
+				{
+					return BusinessDocumentLinesController.GetArticleType (quantity);
 				}
 			}
 
-			if (columnType == ColumnType.Description)
+			if (info.QuantityIndex == 0)
 			{
-				return BusinessDocumentLinesController.GetArticleDescription (line);
-			}
-
-			if (columnType == ColumnType.Price)
-			{
-				var price = BusinessDocumentLinesController.GetArticlePrice (line as ArticleDocumentItemEntity);
-
-				if (price != null)
+				if (columnType == ColumnType.Description)
 				{
-					return  Misc.PriceToString (price);
+					return BusinessDocumentLinesController.GetArticleDescription (line);
 				}
+
+				if (columnType == ColumnType.Price)
+				{
+					var price = BusinessDocumentLinesController.GetArticlePrice (line as ArticleDocumentItemEntity);
+
+					if (price != null)
+					{
+						return Misc.PriceToString (price);
+					}
+				}
+			}
+			else
+			{
+				return "     \"";  // pour indiquer que c'est identique à la première ligne
 			}
 
 			return null;
@@ -99,23 +151,19 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 	
 		#region ArticleDocumentItemEntity extensions
-		private static decimal? GetArticleQuantity(AbstractDocumentItemEntity line)
+		private static decimal? GetArticleQuantity(ArticleQuantityEntity quantity)
 		{
-			if (line is ArticleDocumentItemEntity)
-			{
-				var article = line as ArticleDocumentItemEntity;
+			return quantity.Quantity;
+		}
 
-				decimal quantity = 0;
+		private static FormattedText GetArticleUnit(ArticleQuantityEntity quantity)
+		{
+			return quantity.Unit.Name;
+		}
 
-				foreach (var articleQuantity in article.ArticleQuantities)
-				{
-					quantity += articleQuantity.Quantity;
-				}
-
-				return quantity;
-			}
-
-			return null;
+		private static FormattedText GetArticleType(ArticleQuantityEntity quantity)
+		{
+			return quantity.QuantityColumn.Name;
 		}
 
 		private static FormattedText GetArticleDescription(AbstractDocumentItemEntity line)
@@ -192,11 +240,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private static readonly double lineHeight = 17;
 
-		private readonly DocumentMetadataEntity		documentMetadataEntity;
-		private readonly BusinessDocumentEntity		businessDocumentEntity;
+		private readonly DocumentMetadataEntity			documentMetadataEntity;
+		private readonly BusinessDocumentEntity			businessDocumentEntity;
+		private readonly List<ArticleLineInformations>	articleLineInformations;
 
-		private ArticleLineToolbarController		articleLineToolbarController;
-		private ArticleLinesController				articleLinesController;
-		private ArticleLineEditorController			editionArticleLineController;
+		private ArticleLineToolbarController			articleLineToolbarController;
+		private ArticleLinesController					articleLinesController;
+		private ArticleLineEditorController				editionArticleLineController;
 	}
 }

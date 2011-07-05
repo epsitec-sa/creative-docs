@@ -92,6 +92,7 @@
     <Compile Include="Controllers\BusinessDocumentControllers\ArticleLinesController.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\ArticleLineEditorController.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\ArticleLineToolbarController.cs" />
+    <Compile Include="Controllers\BusinessDocumentControllers\ArticleLineInformations.cs" />
     <Compile Include="Controllers\ComplexControllers\ChartsOfAccountsController.cs" />
     <Compile Include="Controllers\SpecialControllers\ArticleParameterListEnumValuesController.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserList.cs" />

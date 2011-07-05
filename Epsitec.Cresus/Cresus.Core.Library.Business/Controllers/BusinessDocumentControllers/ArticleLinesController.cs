@@ -53,14 +53,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			};
 		}
 
-		public void UpdateUI(System.Func<int, ColumnType, FormattedText> getCellContent, int? sel = null)
+		public void UpdateUI(int lineCount, System.Func<int, ColumnType, FormattedText> getCellContent, int? sel = null)
 		{
 			this.getCellContent = getCellContent;
 
-			int rows = this.businessDocumentEntity.Lines.Count;
 			int columns = this.ColumnTypes.Count ();
 
-			this.table.SetArraySize (columns, rows);
+			this.table.SetArraySize (columns, lineCount);
 
 			int column = 0;
 			foreach (var columnType in this.ColumnTypes)
@@ -76,13 +75,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				sel = this.table.SelectedRow;
 			}
 
-			for (int row=0; row<rows; row++)
+			for (int row=0; row<lineCount; row++)
 			{
 				this.TableFillRow (row);
 				this.TableUpdateRow (row);
 			}
 
-			sel = System.Math.Min (sel.Value, rows-1);
+			sel = System.Math.Min (sel.Value, lineCount-1);
 			if (sel != -1)
 			{
 				this.table.SelectRow (sel.Value, true);
@@ -233,8 +232,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 	
 		private static readonly double lineHeight = 17;
 
-		private readonly DocumentMetadataEntity documentMetadataEntity;
-		private readonly BusinessDocumentEntity businessDocumentEntity;
+		private readonly DocumentMetadataEntity					documentMetadataEntity;
+		private readonly BusinessDocumentEntity					businessDocumentEntity;
 
 		private CellTable										table;
 		private System.Func<int, ColumnType, FormattedText>		getCellContent;
