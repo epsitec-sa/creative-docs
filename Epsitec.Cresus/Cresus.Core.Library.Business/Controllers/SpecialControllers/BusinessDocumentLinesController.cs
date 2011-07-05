@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 			var box = new FrameBox
 			{
 				Parent = parent,
-				PreferredHeight = 400,
+				PreferredHeight = 500,
 				Padding = new Margins (0, 0, 10, 10),
 				Dock = DockStyle.Top,
 				Margins = Widgets.Tiles.TileArrow.GetContainerPadding (Direction.Right),

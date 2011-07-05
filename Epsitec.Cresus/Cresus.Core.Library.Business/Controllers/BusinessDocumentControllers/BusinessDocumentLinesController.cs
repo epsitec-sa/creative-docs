@@ -54,16 +54,20 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.CreateTitle));
 				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.CreateDiscount));
 				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.CreateTax));
+				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.CreateQuantity));
 				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.CreateGroup));
+				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.CreateGroupSeparator));
 				toolbar.Children.Add (BusinessDocumentLinesController.CreateSeparator ());
 				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.Duplicate));
 				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.Delete));
 				toolbar.Children.Add (BusinessDocumentLinesController.CreateSeparator ());
 				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.Group));
 				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.Ungroup));
+				toolbar.Children.Add (BusinessDocumentLinesController.CreateSeparator ());
 
 				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.Cancel, DockStyle.Right));
 				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.Ok, DockStyle.Right));
+				toolbar.Children.Add (BusinessDocumentLinesController.CreateSeparator (DockStyle.Right));
 			}
 
 			{
@@ -81,10 +85,105 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					Parent = tile,
 					StyleH = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.Header,
 					StyleV = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine,
-					//DefHeight = 24,
+					DefHeight = BusinessDocumentLinesController.lineHeight,
 					Margins = new Margins (2),
 					Dock = DockStyle.Fill,
 					TabIndex = tabIndex++,
+				};
+			}
+
+			{
+				//	Crée le pied éditable.
+				var footer = new FrameBox
+				{
+					Parent = frame,
+					PreferredHeight = 50,
+					Margins = new Margins (0, 0, 10, 0),
+					Dock = DockStyle.Bottom,
+					TabIndex = tabIndex++,
+				};
+
+				var line1 = new FrameBox
+				{
+					Parent = footer,
+					Dock = DockStyle.Top,
+					TabIndex = tabIndex++,
+				};
+
+				var line2 = new FrameBox
+				{
+					Parent = footer,
+					Margins = new Margins (0, 0, 5, 0),
+					Dock = DockStyle.Top,
+					TabIndex = tabIndex++,
+				};
+
+				new StaticText
+				{
+					Text = "Article",
+					ContentAlignment = Common.Drawing.ContentAlignment.MiddleRight,
+					PreferredWidth = 50,
+					Margins = new Margins (0, 5, 0, 0),
+					Parent = line1,
+					Dock = DockStyle.Left,
+				};
+
+				new TextFieldCombo
+				{
+					Parent = line1,
+					PreferredWidth = 100,
+					Dock = DockStyle.Left,
+				};
+
+				new StaticText
+				{
+					Text = "Prix unitaire",
+					ContentAlignment = Common.Drawing.ContentAlignment.MiddleRight,
+					PreferredWidth = 100,
+					Margins = new Margins (0, 5, 0, 0),
+					Parent = line1,
+					Dock = DockStyle.Left,
+				};
+
+				new TextField
+				{
+					Parent = line1,
+					PreferredWidth = 70,
+					Dock = DockStyle.Left,
+				};
+
+				new StaticText
+				{
+					Text = "Quantité",
+					ContentAlignment = Common.Drawing.ContentAlignment.MiddleRight,
+					PreferredWidth = 50,
+					Margins = new Margins (0, 5, 0, 0),
+					Parent = line2,
+					Dock = DockStyle.Left,
+				};
+
+				new TextField
+				{
+					Parent = line2,
+					PreferredWidth = 50,
+					Dock = DockStyle.Left,
+				};
+
+				new StaticText
+				{
+					Text = "Unité",
+					ContentAlignment = Common.Drawing.ContentAlignment.MiddleRight,
+					PreferredWidth = 60,
+					Margins = new Margins (0, 5, 0, 0),
+					Parent = line2,
+					Dock = DockStyle.Left,
+				};
+
+				new TextFieldCombo
+				{
+					Parent = line2,
+					PreferredWidth = 60,
+					Dock = DockStyle.Left,
 				};
 			}
 		}
@@ -125,13 +224,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
-		private static Separator CreateSeparator(double width = 10)
+		private static Separator CreateSeparator(DockStyle dockStyle = DockStyle.Left, double width = 10)
 		{
 			return new Separator
 			{
 				IsVerticalLine = true,
 				PreferredWidth = width,
-				Dock = DockStyle.Left,
+				Dock = dockStyle,
 			};
 		}
 
@@ -185,6 +284,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					{
 						var text = new StaticText
 						{
+							PreferredHeight = BusinessDocumentLinesController.lineHeight,
 							ContentAlignment = this.GetRowColumnContentAlignment (row, columnType),
 							Dock = DockStyle.Fill,
 							Margins = new Margins (4, 4, 0, 0),
@@ -227,22 +327,26 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			get
 			{
 				yield return ColumnType.Group;
+				yield return ColumnType.Id;
+				yield return ColumnType.Description;
 				yield return ColumnType.Quantity;
 				yield return ColumnType.Unit;
 				yield return ColumnType.Type;
-				yield return ColumnType.Description;
 				yield return ColumnType.Price;
+				yield return ColumnType.Total;
 			}
 		}
 
 		private enum ColumnType
 		{
 			Group,
+			Id,
 			Quantity,
 			Unit,
 			Type,
 			Description,
 			Price,
+			Total,
 		}
 
 		private int GetColumnWidth(ColumnType columnType)
@@ -250,22 +354,26 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			switch (columnType)
 			{
 				case ColumnType.Group:
-					return 40;
+					return 30;
 
 				case ColumnType.Quantity:
-					return 50;
+					return 40;
 
 				case ColumnType.Unit:
 					return 50;
 
 				case ColumnType.Type:
-					return 60;
+					return 70;
+
+				case ColumnType.Id:
+					return 50;
 
 				case ColumnType.Description:
-					return 234;
+					return 180;
 
 				case ColumnType.Price:
-					return 90;
+				case ColumnType.Total:
+					return 70;
 
 				default:
 					return 100;
@@ -285,11 +393,17 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				case ColumnType.Type:
 					return "Type";
 
+				case ColumnType.Id:
+					return "N°";
+
 				case ColumnType.Description:
 					return "Désignation";
 
 				case ColumnType.Price:
 					return "Prix";
+
+				case ColumnType.Total:
+					return "Total";
 
 				default:
 					return null;
@@ -431,6 +545,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 		#endregion
 
+
+		private static readonly double lineHeight = 17;
 
 		private readonly DocumentMetadataEntity documentMetadataEntity;
 		private readonly BusinessDocumentEntity businessDocumentEntity;

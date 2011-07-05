@@ -30,6 +30,10 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Widgets.Command CreateDiscount = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 2));
 				//	designer:cap/GVK3
 				public static readonly global::Epsitec.Common.Widgets.Command CreateGroup = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 3));
+				//	designer:cap/GVKC
+				public static readonly global::Epsitec.Common.Widgets.Command CreateGroupSeparator = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 12));
+				//	designer:cap/GVKD
+				public static readonly global::Epsitec.Common.Widgets.Command CreateQuantity = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 13));
 				//	designer:cap/GVK4
 				public static readonly global::Epsitec.Common.Widgets.Command CreateTax = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 4));
 				//	designer:cap/GVK5
@@ -69,6 +73,10 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public const long CreateDiscount = 0x3F000014000002L;
 				//	designer:cap/GVK3
 				public const long CreateGroup = 0x3F000014000003L;
+				//	designer:cap/GVKC
+				public const long CreateGroupSeparator = 0x3F00001400000CL;
+				//	designer:cap/GVKD
+				public const long CreateQuantity = 0x3F00001400000DL;
 				//	designer:cap/GVK4
 				public const long CreateTax = 0x3F000014000004L;
 				//	designer:cap/GVK5
