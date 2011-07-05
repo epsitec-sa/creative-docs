@@ -38,87 +38,17 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Dock = DockStyle.Fill,
 			};
 
-			{
-				//	Crée la toolbar.
-				double buttonSize = Library.UI.ButtonLargeWidth;
-
-				var toolbar = UIBuilder.CreateMiniToolbar (frame, buttonSize);
-				toolbar.Dock = DockStyle.Top;
-				toolbar.Margins = new Margins (0, 0, 0, -1);
-
-				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.CreateArticle));
-				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.CreateText));
-				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.CreateTitle));
-				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.CreateDiscount));
-				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.CreateTax));
-				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.CreateQuantity));
-				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.CreateGroup));
-				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.CreateGroupSeparator));
-				toolbar.Children.Add (BusinessDocumentLinesController.CreateSeparator ());
-				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.Duplicate));
-				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.Delete));
-				toolbar.Children.Add (BusinessDocumentLinesController.CreateSeparator ());
-				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.Group));
-				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.Ungroup));
-				toolbar.Children.Add (BusinessDocumentLinesController.CreateSeparator ());
-
-				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.Cancel, DockStyle.Right));
-				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.Ok, DockStyle.Right));
-				toolbar.Children.Add (BusinessDocumentLinesController.CreateSeparator (DockStyle.Right));
-			}
+			//	Crée la toolbar.
+			this.articleLineToolbarController = new ArticleLineToolbarController (this.documentMetadataEntity, this.businessDocumentEntity);
+			this.articleLineToolbarController.CreateUI (frame);
 
 			//	Crée la liste.
 			this.articleLinesController = new ArticleLinesController (this.documentMetadataEntity, this.businessDocumentEntity);
 			this.articleLinesController.CreateUI (frame);
 
-			this.editionArticleLineController = new EditionArticleLineController (this.documentMetadataEntity, this.businessDocumentEntity);
+			//	Crée l'éditeur pour une ligne.
+			this.editionArticleLineController = new ArticleLineEditorController (this.documentMetadataEntity, this.businessDocumentEntity);
 			this.editionArticleLineController.CreateUI (frame);
-		}
-
-		private static IconButton CreateButton(Command command = null, DockStyle dockStyle = DockStyle.Left, bool large = true, bool isActivable = false)
-		{
-			//?double buttonWidth = large ? Library.UI.ButtonLargeWidth : Library.UI.ButtonSmallWidth;
-			double buttonWidth = large ? Library.UI.IconLargeWidth+4 : Library.UI.IconSmallWidth+3;
-			double iconWidth   = large ? Library.UI.IconLargeWidth : Library.UI.IconSmallWidth;
-
-			if (isActivable)
-			{
-				return new IconButton
-				{
-					CommandObject       = command,
-					PreferredIconSize   = new Size (iconWidth, iconWidth),
-					PreferredSize       = new Size (buttonWidth, buttonWidth),
-					Dock                = dockStyle,
-					Name                = (command == null) ? null : command.Name,
-					VerticalAlignment   = VerticalAlignment.Top,
-					HorizontalAlignment = HorizontalAlignment.Center,
-					AutoFocus           = false,
-				};
-			}
-			else
-			{
-				return new RibbonIconButton
-				{
-					CommandObject       = command,
-					PreferredIconSize   = new Size (iconWidth, iconWidth),
-					PreferredSize       = new Size (buttonWidth, buttonWidth),
-					Dock                = dockStyle,
-					Name                = (command == null) ? null : command.Name,
-					VerticalAlignment   = VerticalAlignment.Top,
-					HorizontalAlignment = HorizontalAlignment.Center,
-					AutoFocus           = false,
-				};
-			}
-		}
-
-		private static Separator CreateSeparator(DockStyle dockStyle = DockStyle.Left, double width = 10)
-		{
-			return new Separator
-			{
-				IsVerticalLine = true,
-				PreferredWidth = width,
-				Dock = dockStyle,
-			};
 		}
 
 		public void UpdateUI(int? sel = null)
@@ -262,10 +192,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private static readonly double lineHeight = 17;
 
-		private readonly DocumentMetadataEntity documentMetadataEntity;
-		private readonly BusinessDocumentEntity businessDocumentEntity;
+		private readonly DocumentMetadataEntity		documentMetadataEntity;
+		private readonly BusinessDocumentEntity		businessDocumentEntity;
 
-		private ArticleLinesController articleLinesController;
-		private EditionArticleLineController editionArticleLineController;
+		private ArticleLineToolbarController		articleLineToolbarController;
+		private ArticleLinesController				articleLinesController;
+		private ArticleLineEditorController			editionArticleLineController;
 	}
 }

@@ -21,9 +21,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
-	public class EditionArticleLineController
+	public class ArticleLineEditorController
 	{
-		public EditionArticleLineController(DocumentMetadataEntity documentMetadataEntity, BusinessDocumentEntity businessDocumentEntity)
+		public ArticleLineEditorController(DocumentMetadataEntity documentMetadataEntity, BusinessDocumentEntity businessDocumentEntity)
 		{
 			this.documentMetadataEntity = documentMetadataEntity;
 			this.businessDocumentEntity = businessDocumentEntity;
