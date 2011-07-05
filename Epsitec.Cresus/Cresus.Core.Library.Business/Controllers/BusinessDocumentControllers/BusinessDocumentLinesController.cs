@@ -32,13 +32,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public void CreateUI(Widget parent)
 		{
-			int tabIndex = 0;
-
 			var frame = new FrameBox
 			{
 				Parent = parent,
 				Dock = DockStyle.Fill,
-				TabIndex = tabIndex++,
 			};
 
 			{
@@ -48,7 +45,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				var toolbar = UIBuilder.CreateMiniToolbar (frame, buttonSize);
 				toolbar.Dock = DockStyle.Top;
 				toolbar.Margins = new Margins (0, 0, 0, -1);
-				toolbar.TabIndex = tabIndex++;
 
 				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.CreateArticle));
 				toolbar.Children.Add (BusinessDocumentLinesController.CreateButton (Library.Business.Res.Commands.Lines.CreateText));
@@ -71,106 +67,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				toolbar.Children.Add (BusinessDocumentLinesController.CreateSeparator (DockStyle.Right));
 			}
 
-			{
-				//	Crée la liste.
-				this.articleLinesController = new ArticleLinesController (this.documentMetadataEntity, this.businessDocumentEntity);
-				this.articleLinesController.CreateUI (frame);
-			}
+			//	Crée la liste.
+			this.articleLinesController = new ArticleLinesController (this.documentMetadataEntity, this.businessDocumentEntity);
+			this.articleLinesController.CreateUI (frame);
 
-			{
-				//	Crée le pied éditable.
-				var footer = new FrameBox
-				{
-					Parent = frame,
-					PreferredHeight = 50,
-					Margins = new Margins (0, 0, 10, 0),
-					Dock = DockStyle.Bottom,
-					TabIndex = tabIndex++,
-				};
-
-				var line1 = new FrameBox
-				{
-					Parent = footer,
-					Dock = DockStyle.Top,
-					TabIndex = tabIndex++,
-				};
-
-				var line2 = new FrameBox
-				{
-					Parent = footer,
-					Margins = new Margins (0, 0, 5, 0),
-					Dock = DockStyle.Top,
-					TabIndex = tabIndex++,
-				};
-
-				new StaticText
-				{
-					Text = "Article",
-					ContentAlignment = Common.Drawing.ContentAlignment.MiddleRight,
-					PreferredWidth = 50,
-					Margins = new Margins (0, 5, 0, 0),
-					Parent = line1,
-					Dock = DockStyle.Left,
-				};
-
-				new TextFieldCombo
-				{
-					Parent = line1,
-					PreferredWidth = 100,
-					Dock = DockStyle.Left,
-				};
-
-				new StaticText
-				{
-					Text = "Prix unitaire",
-					ContentAlignment = Common.Drawing.ContentAlignment.MiddleRight,
-					PreferredWidth = 100,
-					Margins = new Margins (0, 5, 0, 0),
-					Parent = line1,
-					Dock = DockStyle.Left,
-				};
-
-				new TextField
-				{
-					Parent = line1,
-					PreferredWidth = 70,
-					Dock = DockStyle.Left,
-				};
-
-				new StaticText
-				{
-					Text = "Quantité",
-					ContentAlignment = Common.Drawing.ContentAlignment.MiddleRight,
-					PreferredWidth = 50,
-					Margins = new Margins (0, 5, 0, 0),
-					Parent = line2,
-					Dock = DockStyle.Left,
-				};
-
-				new TextField
-				{
-					Parent = line2,
-					PreferredWidth = 50,
-					Dock = DockStyle.Left,
-				};
-
-				new StaticText
-				{
-					Text = "Unité",
-					ContentAlignment = Common.Drawing.ContentAlignment.MiddleRight,
-					PreferredWidth = 60,
-					Margins = new Margins (0, 5, 0, 0),
-					Parent = line2,
-					Dock = DockStyle.Left,
-				};
-
-				new TextFieldCombo
-				{
-					Parent = line2,
-					PreferredWidth = 60,
-					Dock = DockStyle.Left,
-				};
-			}
+			this.editionArticleLineController = new EditionArticleLineController (this.documentMetadataEntity, this.businessDocumentEntity);
+			this.editionArticleLineController.CreateUI (frame);
 		}
 
 		private static IconButton CreateButton(Command command = null, DockStyle dockStyle = DockStyle.Left, bool large = true, bool isActivable = false)
@@ -224,8 +126,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.articleLinesController.UpdateUI (this.GetCellContent, sel);
 		}
 
-		public FormattedText GetCellContent(int row, ColumnType columnType)
+		private FormattedText GetCellContent(int row, ColumnType columnType)
 		{
+			//	Retourne le contenu permettant de peupler une cellule du tableau.
 			var line = this.businessDocumentEntity.Lines[row];
 
 			if (columnType == ColumnType.Quantity)
@@ -363,5 +266,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private readonly BusinessDocumentEntity businessDocumentEntity;
 
 		private ArticleLinesController articleLinesController;
+		private EditionArticleLineController editionArticleLineController;
 	}
 }

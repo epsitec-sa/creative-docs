@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 					if (text != null)
 					{
-						text.FormattedText = this.GetRowColumnText (row, columnType);
+						text.FormattedText = this.getCellContent (row, columnType);
 					}
 				}
 
@@ -226,43 +226,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			return ContentAlignment.MiddleLeft;
 		}
-
-		private FormattedText GetRowColumnText(int row, ColumnType columnType)
-		{
-			return this.getCellContent (row, columnType);
-
-#if false
-			var line = this.businessDocumentEntity.Lines[row];
-
-			if (columnType == ColumnType.Quantity)
-			{
-				var quantity = ArticleLinesController.GetArticleQuantity (line as ArticleDocumentItemEntity);
-
-				if (quantity != null)
-				{
-					return quantity.ToString ();
-				}
-			}
-
-			if (columnType == ColumnType.Description)
-			{
-				return ArticleLinesController.GetArticleDescription (line);
-			}
-
-			if (columnType == ColumnType.Price)
-			{
-				var price = ArticleLinesController.GetArticlePrice (line as ArticleDocumentItemEntity);
-
-				if (price != null)
-				{
-					return  Misc.PriceToString (price);
-				}
-			}
-
-			return null;
-#endif
-		}
-
 
 	
 		private static readonly double lineHeight = 17;
