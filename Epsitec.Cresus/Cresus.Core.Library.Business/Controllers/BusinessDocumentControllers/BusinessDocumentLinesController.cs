@@ -60,7 +60,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public void UpdateUI(int? sel = null)
 		{
 			this.articleLinesController.UpdateUI (this.articleLineInformations.Count, this.CallbackGetCellContent, sel);
-			this.CallbackSelectionChanged ();
 		}
 
 

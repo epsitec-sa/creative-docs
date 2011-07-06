@@ -37,6 +37,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public void CreateUI(Widget parent, System.Func<bool> selectionChanged)
 		{
+			this.selectionChanged = selectionChanged;
+
 			var tile = new FrameBox
 			{
 				Parent = parent,
@@ -56,7 +58,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			this.table.SelectionChanged += delegate
 			{
-				selectionChanged();
+				this.selectionChanged();
 			};
 		}
 
@@ -94,6 +96,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				this.table.SelectRow (sel.Value, true);
 				this.table.ShowSelect ();
 			}
+
+			this.selectionChanged ();
 		}
 
 
@@ -343,6 +347,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private readonly BusinessDocumentEntity					businessDocumentEntity;
 
 		private CellTable										table;
+		private System.Func<bool>								selectionChanged;
 		private System.Func<int, ColumnType, FormattedText>		getCellContent;
 		private bool											showAllColumns;
 	}
