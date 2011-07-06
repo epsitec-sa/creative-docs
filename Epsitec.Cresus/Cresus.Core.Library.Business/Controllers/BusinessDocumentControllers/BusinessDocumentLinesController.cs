@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			//	Crée la toolbar.
 			this.articleLineToolbarController = new ArticleLineToolbarController (this.documentMetadataEntity, this.businessDocumentEntity);
-			this.articleLineToolbarController.CreateUI (frame);
+			this.articleLineToolbarController.CreateUI (frame, this.Action);
 
 			//	Crée la liste.
 			this.articleLinesController = new ArticleLinesController (this.documentMetadataEntity, this.businessDocumentEntity);
@@ -143,6 +143,129 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			return null;
 		}
 
+
+		private void Action(string commandName)
+		{
+			switch (commandName)
+			{
+				case "Lines.CreateArticle":
+					this.ActionCreateArticle ();
+					break;
+
+				case "Lines.CreateText":
+					this.ActionCreateText ();
+					break;
+
+				case "Lines.CreateTitle":
+					this.ActionCreateTitle ();
+					break;
+
+				case "Lines.CreateDiscount":
+					this.ActionCreateDiscount ();
+					break;
+
+				case "Lines.CreateTax":
+					this.ActionCreateTax ();
+					break;
+
+				case "Lines.CreateQuantity":
+					this.ActionCreateQuantity ();
+					break;
+
+				case "Lines.CreateGroup":
+					this.ActionCreateGroup ();
+					break;
+
+				case "Lines.CreateGroupSeparator":
+					this.ActionCreateGroupSeparator ();
+					break;
+
+				case "Lines.Duplicate":
+					this.ActionDuplicate ();
+					break;
+
+				case "Lines.Delete":
+					this.ActionDelete();
+					break;
+
+				case "Lines.Group":
+					this.ActionGroup ();
+					break;
+
+				case "Lines.Ungroup":
+					this.ActionUngroup ();
+					break;
+
+				case "Lines.Cancel":
+					this.ActionCancel ();
+					break;
+
+				case "Lines.Ok":
+					this.ActionOk ();
+					break;
+
+			}
+		}
+
+		private void ActionCreateArticle()
+		{
+		}
+
+		private void ActionCreateText()
+		{
+		}
+
+		private void ActionCreateTitle()
+		{
+		}
+
+		private void ActionCreateDiscount()
+		{
+		}
+
+		private void ActionCreateTax()
+		{
+		}
+
+		private void ActionCreateQuantity()
+		{
+		}
+
+		private void ActionCreateGroup()
+		{
+		}
+
+		private void ActionCreateGroupSeparator()
+		{
+		}
+
+		private void ActionDuplicate()
+		{
+		}
+
+		private void ActionDelete()
+		{
+		}
+
+		private void ActionCreateUngroup()
+		{
+		}
+
+		private void ActionGroup()
+		{
+		}
+
+		private void ActionUngroup()
+		{
+		}
+
+		private void ActionCancel()
+		{
+		}
+
+		private void ActionOk()
+		{
+		}
 
 #if false
 		[Command (Library.Business.Res.Commands.Lines.CreateArticle)]

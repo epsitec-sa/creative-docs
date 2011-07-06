@@ -33,44 +33,48 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		public void CreateUI(Widget parent)
+		public void CreateUI(Widget parent, System.Action<string> action)
 		{
+			this.action = action;
+
 			double buttonSize = Library.UI.ButtonLargeWidth;
 
 			var toolbar = UIBuilder.CreateMiniToolbar (parent, buttonSize);
 			toolbar.Dock = DockStyle.Top;
 			toolbar.Margins = new Margins (0, 0, 0, -1);
 
-			toolbar.Children.Add (ArticleLineToolbarController.CreateButton (Library.Business.Res.Commands.Lines.CreateArticle));
-			toolbar.Children.Add (ArticleLineToolbarController.CreateButton (Library.Business.Res.Commands.Lines.CreateText));
-			toolbar.Children.Add (ArticleLineToolbarController.CreateButton (Library.Business.Res.Commands.Lines.CreateTitle));
-			toolbar.Children.Add (ArticleLineToolbarController.CreateButton (Library.Business.Res.Commands.Lines.CreateDiscount));
-			toolbar.Children.Add (ArticleLineToolbarController.CreateButton (Library.Business.Res.Commands.Lines.CreateTax));
-			toolbar.Children.Add (ArticleLineToolbarController.CreateButton (Library.Business.Res.Commands.Lines.CreateQuantity));
-			toolbar.Children.Add (ArticleLineToolbarController.CreateButton (Library.Business.Res.Commands.Lines.CreateGroup));
-			toolbar.Children.Add (ArticleLineToolbarController.CreateButton (Library.Business.Res.Commands.Lines.CreateGroupSeparator));
-			toolbar.Children.Add (ArticleLineToolbarController.CreateSeparator ());
-			toolbar.Children.Add (ArticleLineToolbarController.CreateButton (Library.Business.Res.Commands.Lines.Duplicate));
-			toolbar.Children.Add (ArticleLineToolbarController.CreateButton (Library.Business.Res.Commands.Lines.Delete));
-			toolbar.Children.Add (ArticleLineToolbarController.CreateSeparator ());
-			toolbar.Children.Add (ArticleLineToolbarController.CreateButton (Library.Business.Res.Commands.Lines.Group));
-			toolbar.Children.Add (ArticleLineToolbarController.CreateButton (Library.Business.Res.Commands.Lines.Ungroup));
-			toolbar.Children.Add (ArticleLineToolbarController.CreateSeparator ());
+			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateArticle));
+			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateText));
+			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateTitle));
+			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateDiscount));
+			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateTax));
+			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateQuantity));
+			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateGroup));
+			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateGroupSeparator));
+			toolbar.Children.Add (this.CreateSeparator ());
+			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Duplicate));
+			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Delete));
+			toolbar.Children.Add (this.CreateSeparator ());
+			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Group));
+			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Ungroup));
+			toolbar.Children.Add (this.CreateSeparator ());
 
-			toolbar.Children.Add (ArticleLineToolbarController.CreateButton (Library.Business.Res.Commands.Lines.Cancel, DockStyle.Right));
-			toolbar.Children.Add (ArticleLineToolbarController.CreateButton (Library.Business.Res.Commands.Lines.Ok, DockStyle.Right));
-			toolbar.Children.Add (ArticleLineToolbarController.CreateSeparator (DockStyle.Right));
+			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Cancel, DockStyle.Right));
+			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Ok, DockStyle.Right));
+			toolbar.Children.Add (this.CreateSeparator (DockStyle.Right));
 		}
 
-		private static IconButton CreateButton(Command command = null, DockStyle dockStyle = DockStyle.Left, bool large = true, bool isActivable = false)
+		private IconButton CreateButton(Command command = null, DockStyle dockStyle = DockStyle.Left, bool large = true, bool isActivable = false)
 		{
 			//?double buttonWidth = large ? Library.UI.ButtonLargeWidth : Library.UI.ButtonSmallWidth;
 			double buttonWidth = large ? Library.UI.IconLargeWidth+2 : Library.UI.IconSmallWidth+2;
 			double iconWidth   = large ? Library.UI.IconLargeWidth : Library.UI.IconSmallWidth;
 
+			IconButton button;
+
 			if (isActivable)
 			{
-				return new IconButton
+				button = new IconButton
 				{
 					CommandObject       = command,
 					PreferredIconSize   = new Size (iconWidth, iconWidth),
@@ -84,7 +88,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 			else
 			{
-				return new RibbonIconButton
+				button = new RibbonIconButton
 				{
 					CommandObject       = command,
 					PreferredIconSize   = new Size (iconWidth, iconWidth),
@@ -96,9 +100,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					AutoFocus           = false,
 				};
 			}
+
+			button.Clicked += delegate
+			{
+				this.action (button.Name);
+			};
+
+			return button;
 		}
 
-		private static Separator CreateSeparator(DockStyle dockStyle = DockStyle.Left, double width = 10)
+		private Separator CreateSeparator(DockStyle dockStyle = DockStyle.Left, double width = 10)
 		{
 			return new Separator
 			{
@@ -111,5 +122,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 	
 		private readonly DocumentMetadataEntity documentMetadataEntity;
 		private readonly BusinessDocumentEntity businessDocumentEntity;
+
+		private System.Action<string> action;
 	}
 }
