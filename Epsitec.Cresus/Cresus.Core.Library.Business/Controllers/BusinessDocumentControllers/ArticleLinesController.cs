@@ -148,20 +148,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Retourne les colonnes visibles dans la table, de gauche à droite.
 			get
 			{
-				yield return ColumnType.Group;
-
 				if (this.showAllColumns)
 				{
+					yield return ColumnType.Group;
+
 					yield return ColumnType.ArticleId;
-				}
+					yield return ColumnType.ArticleDescription;
 
-				yield return ColumnType.ArticleDescription;
+					yield return ColumnType.QuantityAndUnit;
+					yield return ColumnType.Type;
 
-				yield return ColumnType.QuantityAndUnit;
-				yield return ColumnType.Type;
-
-				if (this.showAllColumns)
-				{
 					yield return ColumnType.UnitPrice;
 					yield return ColumnType.Discount;
 					yield return ColumnType.LinePrice;
@@ -170,7 +166,15 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				}
 				else
 				{
+					yield return ColumnType.Group;
+
+					yield return ColumnType.ArticleDescription;
+
+					yield return ColumnType.QuantityAndUnit;
+					yield return ColumnType.Type;
+
 					yield return ColumnType.UnitPrice;
+					yield return ColumnType.LinePrice;
 					yield return ColumnType.Total;
 				}
 			}

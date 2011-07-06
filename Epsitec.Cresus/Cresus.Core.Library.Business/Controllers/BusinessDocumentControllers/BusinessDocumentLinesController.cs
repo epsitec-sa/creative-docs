@@ -95,59 +95,48 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			if (quantity != null)
 			{
-				if (columnType == ColumnType.QuantityAndUnit)
+				switch (columnType)
 				{
-					return BusinessDocumentLinesController.GetArticleQuantityAndUnit (quantity);
-				}
+					case ColumnType.QuantityAndUnit:
+						return BusinessDocumentLinesController.GetArticleQuantityAndUnit (quantity);
 
-				if (columnType == ColumnType.Type)
-				{
-					return BusinessDocumentLinesController.GetArticleType (quantity);
+					case ColumnType.Type:
+						return BusinessDocumentLinesController.GetArticleType (quantity);
 				}
 			}
 
 			if (info.QuantityIndex == 0)  // premère ligne ?
 			{
-				if (columnType == ColumnType.ArticleId)
+				switch (columnType)
 				{
-					return BusinessDocumentLinesController.GetArticleId (line);
-				}
+					case ColumnType.ArticleId:
+						return BusinessDocumentLinesController.GetArticleId (line);
 
-				if (columnType == ColumnType.ArticleDescription)
-				{
-					return BusinessDocumentLinesController.GetArticleDescription (line);
-				}
+					case ColumnType.ArticleDescription:
+						return BusinessDocumentLinesController.GetArticleDescription (line);
 
-				if (columnType == ColumnType.Discount)
-				{
-					return BusinessDocumentLinesController.GetArticleDiscount (line as ArticleDocumentItemEntity);
-				}
+					case ColumnType.Discount:
+						return BusinessDocumentLinesController.GetArticleDiscount (line as ArticleDocumentItemEntity);
 
-				if (columnType == ColumnType.UnitPrice)
-				{
-					return BusinessDocumentLinesController.GetArticleUnitPrice (line as ArticleDocumentItemEntity);
-				}
+					case ColumnType.UnitPrice:
+						return BusinessDocumentLinesController.GetArticleUnitPrice (line as ArticleDocumentItemEntity);
 
-				if (columnType == ColumnType.LinePrice)
-				{
-					return  BusinessDocumentLinesController.GetArticleLinePrice (line as ArticleDocumentItemEntity);
-				}
+					case ColumnType.LinePrice:
+						return BusinessDocumentLinesController.GetArticleLinePrice (line as ArticleDocumentItemEntity);
 
-				if (columnType == ColumnType.Vat)
-				{
-					return BusinessDocumentLinesController.GetArticleVat (line as ArticleDocumentItemEntity);
-				}
+					case ColumnType.Vat:
+						return BusinessDocumentLinesController.GetArticleVat (line as ArticleDocumentItemEntity);
 
-				if (columnType == ColumnType.Total)
-				{
-					return BusinessDocumentLinesController.GetArticleTotal (line as ArticleDocumentItemEntity);
+					case ColumnType.Total:
+						return BusinessDocumentLinesController.GetArticleTotal (line as ArticleDocumentItemEntity);
 				}
 			}
 			else  // ligne suivante ?
 			{
-				if (columnType == ColumnType.ArticleDescription)
+				switch (columnType)
 				{
-					return "     \"";  // pour indiquer que c'est identique à la première ligne
+					case ColumnType.ArticleDescription:
+						return "     \"";  // pour indiquer que c'est identique à la première ligne
 				}
 			}
 
@@ -164,6 +153,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 	
 		#region AbstractDocumentItemEntity extensions
+		// Toute cette partie de code doit être en accord avec Epsitec.Cresus.Core.EntityPrinters.DocumentMetadataPrinter, méthodes BuildXxxLine !
+		// TODO: Un jour, il faudrait en extraire le code commun.
+
 		private static FormattedText GetArticleQuantityAndUnit(ArticleQuantityEntity quantity)
 		{
 			return Misc.FormatUnit (quantity.Quantity, quantity.Unit.Code);
