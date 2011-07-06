@@ -24,12 +24,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 	/// <summary>
 	/// Liste de lignes d'articles (AbstractDocumentItemEntity).
 	/// </summary>
-	public class ArticleLinesController
+	public class LinesController
 	{
-		public ArticleLinesController(DocumentMetadataEntity documentMetadataEntity, BusinessDocumentEntity businessDocumentEntity)
+		public LinesController(AccessData accessData)
 		{
-			this.documentMetadataEntity = documentMetadataEntity;
-			this.businessDocumentEntity = businessDocumentEntity;
+			this.accessData = accessData;
 
 			this.showAllColumns = true;
 		}
@@ -51,7 +50,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Parent = tile,
 				StyleH = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.Header,
 				StyleV = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine | CellArrayStyles.SelectMulti,
-				DefHeight = ArticleLinesController.lineHeight,
+				DefHeight = LinesController.lineHeight,
 				Margins = new Margins (2),
 				Dock = DockStyle.Fill,
 			};
@@ -177,7 +176,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					{
 						var text = new StaticText
 						{
-							PreferredHeight = ArticleLinesController.lineHeight,
+							PreferredHeight = LinesController.lineHeight,
 							ContentAlignment = this.GetRowColumnContentAlignment (row, columnType),
 							Dock = DockStyle.Fill,
 							Margins = new Margins (4, 4, 0, 0),
@@ -343,8 +342,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 	
 		private static readonly double lineHeight = 17;
 
-		private readonly DocumentMetadataEntity					documentMetadataEntity;
-		private readonly BusinessDocumentEntity					businessDocumentEntity;
+		private readonly AccessData								accessData;
 
 		private CellTable										table;
 		private System.Func<bool>								selectionChanged;

@@ -24,46 +24,28 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
-	public class ArticleLineEditorController : AbstractLineEditorController
+	public abstract class AbstractLineEditorController
 	{
-		public ArticleLineEditorController(AccessData accessData)
-			: base (accessData)
+		public AbstractLineEditorController(AccessData accessData)
+		{
+			this.accessData = accessData;
+		}
+
+		public virtual void CreateUI(FrameBox parent, AbstractEntity entity)
 		{
 		}
 
-		public override void CreateUI(FrameBox parent, AbstractEntity entity)
-		{
-			this.entity = entity;
-
-			var box = new FrameBox
-			{
-				Parent = parent,
-				Dock = DockStyle.Fill,
-			};
-
-			var line1 = new FrameBox
-			{
-				Parent = box,
-				Dock = DockStyle.Top,
-			};
-
-		}
-
-		public override FormattedText TitleTile
+		public virtual FormattedText TitleTile
 		{
 			get
 			{
-				return "Article";
+				return null;
 			}
 		}
 
 
-		private ArticleDocumentItemEntity Entity
-		{
-			get
-			{
-				return this.entity as ArticleDocumentItemEntity;
-			}
-		}
+		protected readonly AccessData					accessData;
+
+		protected AbstractEntity						entity;
 	}
 }

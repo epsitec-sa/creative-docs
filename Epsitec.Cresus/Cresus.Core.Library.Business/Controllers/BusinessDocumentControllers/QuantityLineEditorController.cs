@@ -24,9 +24,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
-	public class ArticleLineEditorController : AbstractLineEditorController
+	public class QuantityLineEditorController : AbstractLineEditorController
 	{
-		public ArticleLineEditorController(AccessData accessData)
+		public QuantityLineEditorController(AccessData accessData)
 			: base (accessData)
 		{
 		}
@@ -53,16 +53,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return "Article";
+				return "Quantité";
 			}
 		}
 
 
-		private ArticleDocumentItemEntity Entity
+		private ArticleQuantityEntity Entity
 		{
 			get
 			{
-				return this.entity as ArticleDocumentItemEntity;
+				return this.entity as ArticleQuantityEntity;
 			}
 		}
 	}

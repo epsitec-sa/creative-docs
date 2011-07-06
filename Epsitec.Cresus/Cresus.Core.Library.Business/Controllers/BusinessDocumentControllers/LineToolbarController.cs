@@ -24,9 +24,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 	/// <summary>
 	/// Barre d'icône permettant de gérer une liste de lignes d'articles (AbstractDocumentItemEntity).
 	/// </summary>
-	public class ArticleLineToolbarController
+	public class LineToolbarController
 	{
-		public ArticleLineToolbarController(DocumentMetadataEntity documentMetadataEntity, BusinessDocumentEntity businessDocumentEntity)
+		public LineToolbarController(DocumentMetadataEntity documentMetadataEntity, BusinessDocumentEntity businessDocumentEntity)
 		{
 			this.documentMetadataEntity = documentMetadataEntity;
 			this.businessDocumentEntity = businessDocumentEntity;

@@ -5,9 +5,9 @@ using Epsitec.Cresus.Core.Entities;
 
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
-	public class ArticleLineInformations
+	public class LineInformations
 	{
-		public ArticleLineInformations(AbstractDocumentItemEntity abstractDocumentItemEntity, ArticleQuantityEntity articleQuantityEntity, int lineIndex, int quantityIndex)
+		public LineInformations(AbstractDocumentItemEntity abstractDocumentItemEntity, ArticleQuantityEntity articleQuantityEntity, int lineIndex, int quantityIndex)
 		{
 			this.AbstractDocumentItemEntity = abstractDocumentItemEntity;
 			this.ArticleQuantityEntity      = articleQuantityEntity;

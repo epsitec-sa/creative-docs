@@ -55,13 +55,21 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 			var box = new FrameBox
 			{
 				Parent = parent,
-				PreferredHeight = 500,
+				PreferredHeight = 500,  // TODO: Comment occuper toute la hauteur ?
 				Padding = new Margins (0, 0, 10, 10),
 				Dock = DockStyle.Top,
 				Margins = Widgets.Tiles.TileArrow.GetContainerPadding (Direction.Right),
 			};
 
-			var c = new BusinessDocumentControllers.BusinessDocumentLinesController (this.businessContext, this.dataContext, this.coreData, documentMetadataEntity, this.businessDocumentEntity);
+			var access = new BusinessDocumentControllers.AccessData ();
+			access.UIBuilder              = builder;
+			access.BusinessContext        = this.businessContext;
+			access.DataContext            = this.dataContext;
+			access.CoreData               = this.coreData;
+			access.DocumentMetadataEntity = documentMetadataEntity;
+			access.BusinessDocumentEntity = this.businessDocumentEntity;
+
+			var c = new BusinessDocumentControllers.BusinessDocumentLinesController (access);
 			c.CreateUI (box);
 			c.UpdateUI ();
 		}

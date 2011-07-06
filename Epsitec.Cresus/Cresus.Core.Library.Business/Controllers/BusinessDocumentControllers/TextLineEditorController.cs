@@ -24,9 +24,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
-	public class ArticleLineEditorController : AbstractLineEditorController
+	public class TextLineEditorController : AbstractLineEditorController
 	{
-		public ArticleLineEditorController(AccessData accessData)
+		public TextLineEditorController(AccessData accessData)
 			: base (accessData)
 		{
 		}
@@ -47,22 +47,34 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Dock = DockStyle.Top,
 			};
 
+			new StaticText
+			{
+				Text = "Texte",
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleRight,
+				PreferredWidth = 50,
+				Margins = new Margins (0, 5, 0, 0),
+				Parent = line1,
+				Dock = DockStyle.Left,
+			};
+
+			var textField = this.accessData.UIBuilder.CreateTextFieldMulti (line1, DockStyle.Left, 40, Marshaler.Create (() => this.Entity.Text, x => this.Entity.Text = x));
+			textField.PreferredWidth = 400;
 		}
 
 		public override FormattedText TitleTile
 		{
 			get
 			{
-				return "Article";
+				return "Texte";
 			}
 		}
 
 
-		private ArticleDocumentItemEntity Entity
+		private TextDocumentItemEntity Entity
 		{
 			get
 			{
-				return this.entity as ArticleDocumentItemEntity;
+				return this.entity as TextDocumentItemEntity;
 			}
 		}
 	}

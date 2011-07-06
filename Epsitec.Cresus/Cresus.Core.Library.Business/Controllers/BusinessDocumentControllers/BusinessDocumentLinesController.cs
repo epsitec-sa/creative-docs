@@ -24,15 +24,15 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
 	public class BusinessDocumentLinesController
 	{
-		public BusinessDocumentLinesController(BusinessContext businessContext, DataContext dataContext, CoreData coreData, DocumentMetadataEntity documentMetadataEntity, BusinessDocumentEntity businessDocumentEntity)
+		public BusinessDocumentLinesController(AccessData accessData)
 		{
-			this.businessContext        = businessContext;
-			this.dataContext            = dataContext;
-			this.coreData               = coreData;
-			this.documentMetadataEntity = documentMetadataEntity;
-			this.businessDocumentEntity = businessDocumentEntity;
+			this.accessData = accessData;
 
-			this.articleLineInformations = new List<ArticleLineInformations> ();
+			this.commandContext = new CommandContext ("BusinessDocumentLinesController");
+			this.commandDispatcher = new CommandDispatcher ("BusinessDocumentLinesController", CommandDispatcherLevel.Secondary);
+			this.commandDispatcher.RegisterController (this);
+
+			this.lineInformations = new List<LineInformations> ();
 			this.UpdateArticleLineInformations ();
 		}
 
@@ -44,29 +44,34 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Dock = DockStyle.Fill,
 			};
 
+			CommandContext.SetContext (frame, this.commandContext);
+			CommandDispatcher.SetDispatcher (frame, this.commandDispatcher);
+
+			this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.CreateArticle).Enable = false;  // exemple !!!
+
 			//	Crée la toolbar.
-			this.articleLineToolbarController = new ArticleLineToolbarController (this.documentMetadataEntity, this.businessDocumentEntity);
-			this.articleLineToolbarController.CreateUI (frame, this.Action);
+			this.lineToolbarController = new LineToolbarController (this.accessData.DocumentMetadataEntity, this.accessData.BusinessDocumentEntity);
+			this.lineToolbarController.CreateUI (frame, this.Action);
 
 			//	Crée la liste.
-			this.articleLinesController = new ArticleLinesController (this.documentMetadataEntity, this.businessDocumentEntity);
-			this.articleLinesController.CreateUI (frame, this.CallbackSelectionChanged);
+			this.linesController = new LinesController (this.accessData);
+			this.linesController.CreateUI (frame, this.CallbackSelectionChanged);
 
 			//	Crée l'éditeur pour une ligne.
-			this.editionArticleLineController = new ArticleLineEditorController (this.documentMetadataEntity, this.businessDocumentEntity);
-			this.editionArticleLineController.CreateUI (frame);
+			this.lineEditorController = new LineEditorController (this.accessData);
+			this.lineEditorController.CreateUI (frame);
 		}
 
 		public void UpdateUI(int? sel = null)
 		{
-			this.articleLinesController.UpdateUI (this.articleLineInformations.Count, this.CallbackGetCellContent, sel);
+			this.linesController.UpdateUI (this.lineInformations.Count, this.CallbackGetCellContent, sel);
 		}
 
 
 		private FormattedText CallbackGetCellContent(int index, ColumnType columnType)
 		{
 			//	Retourne le contenu permettant de peupler une cellule du tableau.
-			var info = this.articleLineInformations[index];
+			var info = this.lineInformations[index];
 
 			var line     = info.AbstractDocumentItemEntity;
 			var quantity = info.ArticleQuantityEntity;
@@ -127,16 +132,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private bool CallbackSelectionChanged()
 		{
 			//	Appelé lorsque la sélection dans la liste a changé.
-			if (this.articleLinesController.HasSingleSelection)
+			if (this.linesController.HasSingleSelection)
 			{
-				int? sel = this.articleLinesController.LastSelection;
-				var info = this.articleLineInformations[sel.Value];
+				int? sel = this.linesController.LastSelection;
+				var info = this.lineInformations[sel.Value];
 
-				this.editionArticleLineController.UpdateUI (info);
+				this.lineEditorController.UpdateUI (info);
 			}
 			else
 			{
-				this.editionArticleLineController.UpdateUI (null);
+				this.lineEditorController.UpdateUI (null);
 			}
 
 			return true;
@@ -210,15 +215,15 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private void ActionCreateArticle()
 		{
 			//	Insère une nouvelle ligne d'article.
-			int? sel = this.articleLinesController.LastSelection;
+			int? sel = this.linesController.LastSelection;
 
 			if (sel != null)
 			{
-				var info = this.articleLineInformations[sel.Value];
+				var info = this.lineInformations[sel.Value];
 
-				var newLine = this.businessContext.CreateEntity<ArticleDocumentItemEntity> ();
+				var newLine = this.accessData.BusinessContext.CreateEntity<ArticleDocumentItemEntity> ();
 
-				this.businessDocumentEntity.Lines.Insert (info.LineIndex+1, newLine);
+				this.accessData.BusinessDocumentEntity.Lines.Insert (info.LineIndex+1, newLine);
 
 				this.UpdateAfterChange (newLine, null);
 			}
@@ -227,16 +232,17 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private void ActionCreateText()
 		{
 			//	Insère une nouvelle ligne de texte.
-			int? sel = this.articleLinesController.LastSelection;
+			int? sel = this.linesController.LastSelection;
 
 			if (sel != null)
 			{
-				var info = this.articleLineInformations[sel.Value];
+				var info = this.lineInformations[sel.Value];
 
-				var newLine = this.businessContext.CreateEntity<TextDocumentItemEntity> ();
+				var newLine = this.accessData.BusinessContext.CreateEntity<TextDocumentItemEntity> ();
 				newLine.Text = "Coucou !!!";
+				newLine.GroupLevel = 1;
 
-				this.businessDocumentEntity.Lines.Insert (info.LineIndex+1, newLine);
+				this.accessData.BusinessDocumentEntity.Lines.Insert (info.LineIndex+1, newLine);
 
 				this.UpdateAfterChange (newLine, null);
 			}
@@ -245,16 +251,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private void ActionCreateTitle()
 		{
 			//	Insère une nouvelle ligne de titre.
-			int? sel = this.articleLinesController.LastSelection;
+			int? sel = this.linesController.LastSelection;
 
 			if (sel != null)
 			{
-				var info = this.articleLineInformations[sel.Value];
+				var info = this.lineInformations[sel.Value];
 
-				var newLine = this.businessContext.CreateEntity<TextDocumentItemEntity> ();
+				var newLine = this.accessData.BusinessContext.CreateEntity<TextDocumentItemEntity> ();
 				newLine.Text = "Titre !!!";
 
-				this.businessDocumentEntity.Lines.Insert (info.LineIndex+1, newLine);
+				this.accessData.BusinessDocumentEntity.Lines.Insert (info.LineIndex+1, newLine);
 
 				this.UpdateAfterChange (newLine, null);
 			}
@@ -272,19 +278,19 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private void ActionCreateQuantity()
 		{
-			int? sel = this.articleLinesController.LastSelection;
+			int? sel = this.linesController.LastSelection;
 
 			if (sel != null)
 			{
-				var info = this.articleLineInformations[sel.Value];
-				var line = this.businessDocumentEntity.Lines.ElementAt (info.LineIndex);
+				var info = this.lineInformations[sel.Value];
+				var line = this.accessData.BusinessDocumentEntity.Lines.ElementAt (info.LineIndex);
 
 				if (line is ArticleDocumentItemEntity)
 				{
 					var article = line as ArticleDocumentItemEntity;
 					var quantity = article.ArticleQuantities[info.QuantityIndex];
 
-					var newQuantity = this.businessContext.CreateEntity<ArticleQuantityEntity> ();
+					var newQuantity = this.accessData.BusinessContext.CreateEntity<ArticleQuantityEntity> ();
 					newQuantity.Quantity = 1;
 					newQuantity.Unit = quantity.Unit;
 					newQuantity.QuantityColumn = this.SearchArticleQuantityColumnEntity (ArticleQuantityType.Delayed);
@@ -351,12 +357,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			var example = new ArticleQuantityColumnEntity ();
 			example.QuantityType = type;
 
-			return this.businessContext.DataContext.GetByExample (example).FirstOrDefault ();
+			return this.accessData.BusinessContext.DataContext.GetByExample (example).FirstOrDefault ();
 		}
 
 
 #if false
-		[Command (Library.Business.Res.Commands.Lines.CreateArticle)]
+		[Command (Library.Business.Res.CommandIds.Lines.CreateArticle)]
 		public void ProcessCreateArticle(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 		}
@@ -365,9 +371,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private int? GetArticleLineInformationsIndex(AbstractDocumentItemEntity line, ArticleQuantityEntity quantity)
 		{
-			for (int i = 0; i < this.articleLineInformations.Count; i++)
+			for (int i = 0; i < this.lineInformations.Count; i++)
 			{
-				var info = this.articleLineInformations[i];
+				var info = this.lineInformations[i];
 
 				if (quantity == null)
 				{
@@ -391,11 +397,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private void UpdateArticleLineInformations()
 		{
-			this.articleLineInformations.Clear ();
+			this.lineInformations.Clear ();
 
-			for (int i = 0; i < this.businessDocumentEntity.Lines.Count; i++)
+			for (int i = 0; i < this.accessData.BusinessDocumentEntity.Lines.Count; i++)
 			{
-				var line = this.businessDocumentEntity.Lines[i];
+				var line = this.accessData.BusinessDocumentEntity.Lines[i];
 
 				if (line is ArticleDocumentItemEntity)
 				{
@@ -405,12 +411,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					{
 						var quantity = article.ArticleQuantities[j];
 
-						this.articleLineInformations.Add (new ArticleLineInformations (line, quantity, i, j));
+						this.lineInformations.Add (new LineInformations (line, quantity, i, j));
 					}
 				}
 				else
 				{
-					this.articleLineInformations.Add (new ArticleLineInformations (line, null, i, 0));
+					this.lineInformations.Add (new LineInformations (line, null, i, 0));
 				}
 			}
 		}
@@ -696,15 +702,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		#endregion
 
 
-		private readonly BusinessContext				businessContext;
-		private readonly DataContext					dataContext;
-		private readonly CoreData						coreData;
-		private readonly DocumentMetadataEntity			documentMetadataEntity;
-		private readonly BusinessDocumentEntity			businessDocumentEntity;
-		private readonly List<ArticleLineInformations>	articleLineInformations;
+		private readonly AccessData						accessData;
+		private readonly List<LineInformations>			lineInformations;
+		private readonly CommandContext					commandContext;
+		private readonly CommandDispatcher				commandDispatcher;
 
-		private ArticleLineToolbarController			articleLineToolbarController;
-		private ArticleLinesController					articleLinesController;
-		private ArticleLineEditorController				editionArticleLineController;
+		private LineToolbarController					lineToolbarController;
+		private LinesController							linesController;
+		private LineEditorController					lineEditorController;
 	}
 }
