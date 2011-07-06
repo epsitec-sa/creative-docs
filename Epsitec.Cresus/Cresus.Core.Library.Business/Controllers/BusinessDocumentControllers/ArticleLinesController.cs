@@ -87,6 +87,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			if (sel != -1)
 			{
 				this.table.SelectRow (sel.Value, true);
+				this.table.ShowSelect ();
 			}
 		}
 
@@ -202,6 +203,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 					yield return ColumnType.QuantityAndUnit;
 					yield return ColumnType.Type;
+					yield return ColumnType.Date;
 
 					yield return ColumnType.UnitPrice;
 					yield return ColumnType.Discount;
@@ -236,6 +238,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					return 60;
 
 				case ColumnType.Type:
+					return 60;
+
+				case ColumnType.Date:
 					return 70;
 
 				case ColumnType.ArticleId:
@@ -265,6 +270,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				case ColumnType.Type:
 					return "Type";
+
+				case ColumnType.Date:
+					return "Date";
 
 				case ColumnType.ArticleId:
 					return "Article";

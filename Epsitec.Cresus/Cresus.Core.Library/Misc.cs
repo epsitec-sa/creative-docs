@@ -164,6 +164,25 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public static string GetDateShortDescription(Date? from, Date? to)
+		{
+			if (from == null)
+			{
+				return null;
+			}
+			else
+			{
+				if (to == null)
+				{
+					return Misc.GetDateShortDescription (from);
+				}
+				else
+				{
+					return string.Concat (Misc.GetDateShortDescription (from), " au ", Misc.GetDateShortDescription (to));
+				}
+			}
+		}
+
 		public static string GetDateShortDescription(Date? date)
 		{
 			if (date == null)

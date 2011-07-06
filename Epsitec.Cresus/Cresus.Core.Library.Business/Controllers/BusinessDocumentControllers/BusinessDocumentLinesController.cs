@@ -80,6 +80,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 					case ColumnType.Type:
 						return BusinessDocumentLinesController.GetArticleType (quantity);
+
+					case ColumnType.Date:
+						return BusinessDocumentLinesController.GetArticleDate (quantity);
 				}
 			}
 
@@ -188,6 +191,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private void ActionCreateArticle()
 		{
+			//	Insère une nouvelle ligne d'article.
 			int? sel = this.articleLinesController.LastSelection;
 
 			if (sel != null)
@@ -204,6 +208,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private void ActionCreateText()
 		{
+			//	Insère une nouvelle ligne de texte.
 			int? sel = this.articleLinesController.LastSelection;
 
 			if (sel != null)
@@ -221,6 +226,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private void ActionCreateTitle()
 		{
+			//	Insère une nouvelle ligne de titre.
 			int? sel = this.articleLinesController.LastSelection;
 
 			if (sel != null)
@@ -238,10 +244,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private void ActionCreateDiscount()
 		{
+			//	Insère une nouvelle ligne de rabais.
 		}
 
 		private void ActionCreateTax()
 		{
+			//	Insère une nouvelle ligne de taxe.
 		}
 
 		private void ActionCreateQuantity()
@@ -256,9 +264,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				if (line is ArticleDocumentItemEntity)
 				{
 					var article = line as ArticleDocumentItemEntity;
+					var quantity = article.ArticleQuantities[info.QuantityIndex];
 
 					var newQuantity = this.businessContext.CreateEntity<ArticleQuantityEntity> ();
 					newQuantity.Quantity = 1;
+					newQuantity.Unit = quantity.Unit;
+					newQuantity.QuantityColumn = this.SearchArticleQuantityColumnEntity (ArticleQuantityType.Delayed);
+					newQuantity.BeginDate = new Date (Date.Today.Ticks + Time.TicksPerDay*7);  // arbitrairement dans une semaine !
 
 					article.ArticleQuantities.Add (newQuantity);
 
@@ -269,38 +281,42 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private void ActionCreateGroup()
 		{
+			//	Insère un nouveau groupe.
 		}
 
 		private void ActionCreateGroupSeparator()
 		{
+			//	Insère un nouveau groupe après le groupe en cours (donc au même niveau).
 		}
 
 		private void ActionDuplicate()
 		{
+			//	Duplique la ligne sélectionnée.
 		}
 
 		private void ActionDelete()
 		{
-		}
-
-		private void ActionCreateUngroup()
-		{
+			//	Supprime la ligne sélectionnée.
 		}
 
 		private void ActionGroup()
 		{
+			//	Groupe toutes les lignes sélectionnées.
 		}
 
 		private void ActionUngroup()
 		{
+			//	Défait le groupe sélectionné.
 		}
 
 		private void ActionCancel()
 		{
+			//	Annule la modification en cours.
 		}
 
 		private void ActionOk()
 		{
+			//	Valide la modification en cours.
 		}
 
 
@@ -310,6 +326,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			int? sel = this.GetArticleLineInformationsIndex (line, quantity);
 			this.UpdateUI (sel);
+		}
+
+		private ArticleQuantityColumnEntity SearchArticleQuantityColumnEntity(ArticleQuantityType type)
+		{
+			var example = new ArticleQuantityColumnEntity ();
+			example.QuantityType = type;
+
+			return this.businessContext.DataContext.GetByExample (example).FirstOrDefault ();
 		}
 
 
@@ -387,6 +411,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private static FormattedText GetArticleType(ArticleQuantityEntity quantity)
 		{
 			return quantity.QuantityColumn.Name;
+		}
+
+		private static FormattedText GetArticleDate(ArticleQuantityEntity quantity)
+		{
+			return Misc.GetDateShortDescription (quantity.BeginDate, quantity.EndDate);
 		}
 
 		private static FormattedText GetArticleId(AbstractDocumentItemEntity item)

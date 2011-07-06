@@ -10,6 +10,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		ArticleDescription,
 		QuantityAndUnit,
 		Type,
+		Date,
 		Discount,
 		UnitPrice,
 		LinePrice,
