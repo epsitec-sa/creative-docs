@@ -30,6 +30,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			this.documentMetadataEntity = documentMetadataEntity;
 			this.businessDocumentEntity = businessDocumentEntity;
+
+			this.showAllColumns = true;
 		}
 
 
@@ -147,13 +149,30 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			get
 			{
 				yield return ColumnType.Group;
-				yield return ColumnType.Id;
-				yield return ColumnType.Description;
-				yield return ColumnType.Quantity;
-				yield return ColumnType.Unit;
+
+				if (this.showAllColumns)
+				{
+					yield return ColumnType.ArticleId;
+				}
+
+				yield return ColumnType.ArticleDescription;
+
+				yield return ColumnType.QuantityAndUnit;
 				yield return ColumnType.Type;
-				yield return ColumnType.Price;
-				yield return ColumnType.Total;
+
+				if (this.showAllColumns)
+				{
+					yield return ColumnType.UnitPrice;
+					yield return ColumnType.Discount;
+					yield return ColumnType.LinePrice;
+					yield return ColumnType.Vat;
+					yield return ColumnType.Total;
+				}
+				else
+				{
+					yield return ColumnType.UnitPrice;
+					yield return ColumnType.Total;
+				}
 			}
 		}
 
@@ -164,22 +183,22 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				case ColumnType.Group:
 					return 30;
 
-				case ColumnType.Quantity:
-					return 40;
-
-				case ColumnType.Unit:
-					return 50;
+				case ColumnType.QuantityAndUnit:
+					return 60;
 
 				case ColumnType.Type:
 					return 70;
 
-				case ColumnType.Id:
+				case ColumnType.ArticleId:
 					return 50;
 
-				case ColumnType.Description:
+				case ColumnType.ArticleDescription:
 					return 180;
 
-				case ColumnType.Price:
+				case ColumnType.Discount:
+				case ColumnType.UnitPrice:
+				case ColumnType.LinePrice:
+				case ColumnType.Vat:
 				case ColumnType.Total:
 					return 70;
 
@@ -192,26 +211,32 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			switch (columnType)
 			{
-				case ColumnType.Quantity:
-					return "Nb";
-
-				case ColumnType.Unit:
-					return "Unité";
+				case ColumnType.QuantityAndUnit:
+					return "Quantité";
 
 				case ColumnType.Type:
 					return "Type";
 
-				case ColumnType.Id:
-					return "N°";
+				case ColumnType.ArticleId:
+					return "Article";
 
-				case ColumnType.Description:
+				case ColumnType.ArticleDescription:
 					return "Désignation";
 
-				case ColumnType.Price:
-					return "Prix";
+				case ColumnType.Discount:
+					return "Rabais";
+
+				case ColumnType.UnitPrice:
+					return "p.u. HT";
+
+				case ColumnType.LinePrice:
+					return "Prix HT";
+
+				case ColumnType.Vat:
+					return "TVA";
 
 				case ColumnType.Total:
-					return "Total";
+					return "Prix TTC";
 
 				default:
 					return null;
@@ -220,8 +245,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private ContentAlignment GetRowColumnContentAlignment(int row, ColumnType columnType)
 		{
-			if (columnType == ColumnType.Quantity ||
-				columnType == ColumnType.Price)
+			if (columnType == ColumnType.QuantityAndUnit ||
+				columnType == ColumnType.Discount ||
+				columnType == ColumnType.UnitPrice ||
+				columnType == ColumnType.LinePrice ||
+				columnType == ColumnType.Vat ||
+				columnType == ColumnType.Total)
 			{
 				return ContentAlignment.MiddleRight;
 			}
@@ -237,5 +266,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private CellTable										table;
 		private System.Func<int, ColumnType, FormattedText>		getCellContent;
+		private bool											showAllColumns;
 	}
 }

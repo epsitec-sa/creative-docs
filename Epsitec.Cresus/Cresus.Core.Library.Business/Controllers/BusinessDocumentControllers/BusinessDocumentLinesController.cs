@@ -95,19 +95,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			if (quantity != null)
 			{
-				if (columnType == ColumnType.Quantity)
+				if (columnType == ColumnType.QuantityAndUnit)
 				{
-					var value = BusinessDocumentLinesController.GetArticleQuantity (quantity);
-
-					if (value != null)
-					{
-						return value.ToString ();
-					}
-				}
-
-				if (columnType == ColumnType.Unit)
-				{
-					return BusinessDocumentLinesController.GetArticleUnit (quantity);
+					return BusinessDocumentLinesController.GetArticleQuantityAndUnit (quantity);
 				}
 
 				if (columnType == ColumnType.Type)
@@ -116,26 +106,49 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				}
 			}
 
-			if (info.QuantityIndex == 0)
+			if (info.QuantityIndex == 0)  // premère ligne ?
 			{
-				if (columnType == ColumnType.Description)
+				if (columnType == ColumnType.ArticleId)
+				{
+					return BusinessDocumentLinesController.GetArticleId (line);
+				}
+
+				if (columnType == ColumnType.ArticleDescription)
 				{
 					return BusinessDocumentLinesController.GetArticleDescription (line);
 				}
 
-				if (columnType == ColumnType.Price)
+				if (columnType == ColumnType.Discount)
 				{
-					var price = BusinessDocumentLinesController.GetArticlePrice (line as ArticleDocumentItemEntity);
+					return BusinessDocumentLinesController.GetArticleDiscount (line as ArticleDocumentItemEntity);
+				}
 
-					if (price != null)
-					{
-						return Misc.PriceToString (price);
-					}
+				if (columnType == ColumnType.UnitPrice)
+				{
+					return BusinessDocumentLinesController.GetArticleUnitPrice (line as ArticleDocumentItemEntity);
+				}
+
+				if (columnType == ColumnType.LinePrice)
+				{
+					return  BusinessDocumentLinesController.GetArticleLinePrice (line as ArticleDocumentItemEntity);
+				}
+
+				if (columnType == ColumnType.Vat)
+				{
+					return BusinessDocumentLinesController.GetArticleVat (line as ArticleDocumentItemEntity);
+				}
+
+				if (columnType == ColumnType.Total)
+				{
+					return BusinessDocumentLinesController.GetArticleTotal (line as ArticleDocumentItemEntity);
 				}
 			}
-			else
+			else  // ligne suivante ?
 			{
-				return "     \"";  // pour indiquer que c'est identique à la première ligne
+				if (columnType == ColumnType.ArticleDescription)
+				{
+					return "     \"";  // pour indiquer que c'est identique à la première ligne
+				}
 			}
 
 			return null;
@@ -150,15 +163,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 #endif
 
 	
-		#region ArticleDocumentItemEntity extensions
-		private static decimal? GetArticleQuantity(ArticleQuantityEntity quantity)
+		#region AbstractDocumentItemEntity extensions
+		private static FormattedText GetArticleQuantityAndUnit(ArticleQuantityEntity quantity)
 		{
-			return quantity.Quantity;
-		}
-
-		private static FormattedText GetArticleUnit(ArticleQuantityEntity quantity)
-		{
-			return quantity.Unit.Name;
+			return Misc.FormatUnit (quantity.Quantity, quantity.Unit.Code);
 		}
 
 		private static FormattedText GetArticleType(ArticleQuantityEntity quantity)
@@ -166,71 +174,259 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			return quantity.QuantityColumn.Name;
 		}
 
-		private static FormattedText GetArticleDescription(AbstractDocumentItemEntity line)
+		private static FormattedText GetArticleId(AbstractDocumentItemEntity item)
 		{
-			if (line is ArticleDocumentItemEntity)
+			if (item is ArticleDocumentItemEntity)
 			{
-				var article = line as ArticleDocumentItemEntity;
-				return Helpers.ArticleDocumentItemHelper.GetArticleDescription (article, replaceTags: true, shortDescription: true);
-			}
+				var line = item as ArticleDocumentItemEntity;
 
-			if (line is TextDocumentItemEntity)
-			{
-				var text = line as TextDocumentItemEntity;
-				return text.Text;
-			}
-
-			if (line is TaxDocumentItemEntity)
-			{
-				var tax = line as TaxDocumentItemEntity;
-
-				if (tax.Text.IsNullOrEmpty)
-				{
-					return "TVA";
-				}
-				else
-				{
-					return tax.Text;
-				}
-			}
-
-			if (line is SubTotalDocumentItemEntity)
-			{
-				return "Sous-total";
-			}
-
-			if (line is EndTotalDocumentItemEntity)
-			{
-				return "Grand total";
+				return ArticleDocumentItemHelper.GetArticleId (line);
 			}
 
 			return null;
 		}
 
-		private static decimal? GetArticlePrice(AbstractDocumentItemEntity line)
+		private static FormattedText GetArticleDescription(AbstractDocumentItemEntity item)
 		{
-			if (line is ArticleDocumentItemEntity)
+			if (item is ArticleDocumentItemEntity)
 			{
-				var article = line as ArticleDocumentItemEntity;
-				return article.PrimaryLinePriceBeforeTax;
+				var line = item as ArticleDocumentItemEntity;
+
+				return Helpers.ArticleDocumentItemHelper.GetArticleDescription (line, replaceTags: true, shortDescription: true);
 			}
 
-			if (line is TaxDocumentItemEntity)
+			if (item is TextDocumentItemEntity)
 			{
-				var tax = line as TaxDocumentItemEntity;
-				return tax.ResultingTax;
+				var line = item as TextDocumentItemEntity;
+
+				return line.Text;
 			}
 
-			if (line is SubTotalDocumentItemEntity)
+			if (item is TaxDocumentItemEntity)
 			{
-				var total = line as SubTotalDocumentItemEntity;
-				return total.FinalPriceBeforeTax;
+				var line = item as TaxDocumentItemEntity;
+
+				return FormattedText.Concat (line.Text, " (", Misc.PriceToString (line.BaseAmount), ")");
 			}
 
-			if (line is EndTotalDocumentItemEntity)
+			if (item is SubTotalDocumentItemEntity)
 			{
-				var total = line as EndTotalDocumentItemEntity;
-				return total.PriceAfterTax;
+				var line = item as SubTotalDocumentItemEntity;
+
+				string discount = InvoiceDocumentHelper.GetAmount (line);
+
+				if (line.Discount.DiscountRate.HasValue)
+				{
+					return FormattedText.Concat ("Rabais ", discount);  // Rabais 20.0%
+				}
+				else
+				{
+					return "Rabais";
+				}
+			}
+
+			if (item is EndTotalDocumentItemEntity)
+			{
+				var line = item as EndTotalDocumentItemEntity;
+
+				if (line.PriceBeforeTax.HasValue)  // ligne de total HT ?
+				{
+					return line.TextForPrice;
+				}
+				else if (line.FixedPriceAfterTax.HasValue)
+				{
+					return FormattedText.Join (FormattedText.HtmlBreak, line.TextForPrice, line.TextForFixedPrice);
+				}
+				else
+				{
+					return line.TextForPrice;
+				}
+			}
+
+			return null;
+		}
+
+		private static string GetArticleDiscount(AbstractDocumentItemEntity item)
+		{
+			if (item is ArticleDocumentItemEntity)
+			{
+				var line = item as ArticleDocumentItemEntity;
+
+				if (line.Discounts.Count != 0)
+				{
+					if (line.Discounts[0].DiscountRate.HasValue)
+					{
+						return Misc.PercentToString (line.Discounts[0].DiscountRate.Value);
+					}
+
+					if (line.Discounts[0].Value.HasValue)
+					{
+						return Misc.PriceToString (line.Discounts[0].Value.Value);
+					}
+				}
+			}
+
+			return null;
+		}
+
+		private static string GetArticleUnitPrice(AbstractDocumentItemEntity item)
+		{
+			if (item is ArticleDocumentItemEntity)
+			{
+				var line = item as ArticleDocumentItemEntity;
+
+				return Misc.PriceToString (line.PrimaryUnitPriceBeforeTax);
+			}
+
+			return null;
+		}
+
+		private static string GetArticleLinePrice(AbstractDocumentItemEntity item)
+		{
+			if (item is ArticleDocumentItemEntity)
+			{
+				var line = item as ArticleDocumentItemEntity;
+
+				if (line.ResultingLinePriceBeforeTax.HasValue && line.ResultingLineTax1.HasValue)
+				{
+					return Misc.PriceToString (line.ResultingLinePriceBeforeTax);
+				}
+			}
+
+			if (item is TaxDocumentItemEntity)
+			{
+				var line = item as TaxDocumentItemEntity;
+
+				return Misc.PriceToString (line.ResultingTax);
+			}
+
+			if (item is SubTotalDocumentItemEntity)
+			{
+				var line = item as SubTotalDocumentItemEntity;
+
+				string discount = InvoiceDocumentHelper.GetAmount (line);
+
+				if (discount == null)
+				{
+					decimal v1 = line.ResultingPriceBeforeTax.GetValueOrDefault (0);
+					return Misc.PriceToString (v1);
+				}
+				else
+				{
+					decimal v1 = line.PrimaryPriceBeforeTax.GetValueOrDefault (0);
+					decimal v3 = line.ResultingPriceBeforeTax.GetValueOrDefault (0);
+
+					string p1 = Misc.PriceToString (v1);
+					string p2 = Misc.PriceToString (v3 - v1);
+					string p3 = Misc.PriceToString (v3);
+
+					return p2;
+				}
+			}
+
+			if (item is EndTotalDocumentItemEntity)
+			{
+				var line = item as EndTotalDocumentItemEntity;
+
+				if (line.PriceBeforeTax.HasValue)  // ligne de total HT ?
+				{
+					return Misc.PriceToString (line.PriceBeforeTax);
+				}
+			}
+
+			return null;
+		}
+
+		private static string GetArticleVat(AbstractDocumentItemEntity item)
+		{
+			if (item is ArticleDocumentItemEntity)
+			{
+				var line = item as ArticleDocumentItemEntity;
+
+				if (line.ResultingLinePriceBeforeTax.HasValue && line.ResultingLineTax1.HasValue)
+				{
+					return Misc.PriceToString (line.ResultingLineTax1);
+				}
+			}
+
+			if (item is SubTotalDocumentItemEntity)
+			{
+				var line = item as SubTotalDocumentItemEntity;
+
+				string discount = InvoiceDocumentHelper.GetAmount (line);
+
+				if (discount == null)
+				{
+					decimal v1 = line.ResultingTax.GetValueOrDefault (0);
+					return Misc.PriceToString (v1);
+				}
+				else
+				{
+					decimal v1 = line.PrimaryTax.GetValueOrDefault (0);
+					decimal v3 = line.ResultingTax.GetValueOrDefault (0);
+
+					string p1 = Misc.PriceToString (v1);
+					string p2 = Misc.PriceToString (v3 - v1);
+					string p3 = Misc.PriceToString (v3);
+
+					return p2;
+				}
+			}
+
+			return null;
+		}
+
+		private static string GetArticleTotal(AbstractDocumentItemEntity item)
+		{
+			if (item is ArticleDocumentItemEntity)
+			{
+				var line = item as ArticleDocumentItemEntity;
+
+				if (line.ResultingLinePriceBeforeTax.HasValue && line.ResultingLineTax1.HasValue)
+				{
+					return Misc.PriceToString (line.ResultingLinePriceBeforeTax + line.ResultingLineTax1);
+				}
+			}
+
+			if (item is SubTotalDocumentItemEntity)
+			{
+				var line = item as SubTotalDocumentItemEntity;
+
+				string discount = InvoiceDocumentHelper.GetAmount (line);
+
+				if (discount == null)
+				{
+					decimal v1 = line.ResultingPriceBeforeTax.GetValueOrDefault (0) + line.ResultingTax.GetValueOrDefault (0);
+					return Misc.PriceToString (v1);
+				}
+				else
+				{
+					decimal v1 = line.PrimaryPriceBeforeTax.GetValueOrDefault (0) + line.PrimaryTax.GetValueOrDefault (0);
+					decimal v3 = line.ResultingPriceBeforeTax.GetValueOrDefault (0) + line.ResultingTax.GetValueOrDefault (0);
+
+					string p1 = Misc.PriceToString (v1);
+					string p2 = Misc.PriceToString (v3 - v1);
+					string p3 = Misc.PriceToString (v3);
+
+					return p2;
+				}
+			}
+
+			if (item is EndTotalDocumentItemEntity)
+			{
+				var line = item as EndTotalDocumentItemEntity;
+
+				if (line.PriceBeforeTax.HasValue)  // ligne de total HT ?
+				{
+				}
+				else if (line.FixedPriceAfterTax.HasValue)
+				{
+					return Misc.PriceToString (line.FixedPriceAfterTax);
+				}
+				else
+				{
+					return Misc.PriceToString (line.PriceAfterTax);
+				}
 			}
 
 			return null;

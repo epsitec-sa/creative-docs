@@ -6,12 +6,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 	public enum ColumnType
 	{
 		Group,
-		Id,
-		Quantity,
-		Unit,
+		ArticleId,
+		ArticleDescription,
+		QuantityAndUnit,
 		Type,
-		Description,
-		Price,
+		Discount,
+		UnitPrice,
+		LinePrice,
+		Vat,
 		Total,
 	}
 }
