@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			//	Crée la liste.
 			this.articleLinesController = new ArticleLinesController (this.documentMetadataEntity, this.businessDocumentEntity);
-			this.articleLinesController.CreateUI (frame);
+			this.articleLinesController.CreateUI (frame, this.CallbackSelectionChanged);
 
 			//	Crée l'éditeur pour une ligne.
 			this.editionArticleLineController = new ArticleLineEditorController (this.documentMetadataEntity, this.businessDocumentEntity);
@@ -59,11 +59,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public void UpdateUI(int? sel = null)
 		{
-			this.articleLinesController.UpdateUI (this.articleLineInformations.Count, this.GetCellContent, sel);
+			this.articleLinesController.UpdateUI (this.articleLineInformations.Count, this.CallbackGetCellContent, sel);
+			this.CallbackSelectionChanged ();
 		}
 
 
-		private FormattedText GetCellContent(int index, ColumnType columnType)
+		private FormattedText CallbackGetCellContent(int index, ColumnType columnType)
 		{
 			//	Retourne le contenu permettant de peupler une cellule du tableau.
 			var info = this.articleLineInformations[index];
@@ -122,6 +123,24 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			return null;
+		}
+
+		private bool CallbackSelectionChanged()
+		{
+			//	Appelé lorsque la sélection dans la liste a changé.
+			if (this.articleLinesController.HasSingleSelection)
+			{
+				int? sel = this.articleLinesController.LastSelection;
+				var info = this.articleLineInformations[sel.Value];
+
+				this.editionArticleLineController.UpdateUI (info);
+			}
+			else
+			{
+				this.editionArticleLineController.UpdateUI (null);
+			}
+
+			return true;
 		}
 
 

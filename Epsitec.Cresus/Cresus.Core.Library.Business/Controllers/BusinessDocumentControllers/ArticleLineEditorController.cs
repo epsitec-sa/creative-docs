@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			var tile = new FrameBox
 			{
-				PreferredHeight = 50,
+				PreferredHeight = 60,
 				Margins = new Margins (0, 0, 10, 0),
 				Padding = new Margins (5),
 				Parent = parent,
@@ -45,15 +45,28 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				DrawFullFrame = true,
 			};
 
+			this.articleEditor = this.CreateArticleEditor (tile);
+			this.textEditor    = this.CreateTextEditor (tile);
+		}
+
+		private FrameBox CreateArticleEditor(Widget parent)
+		{
+			var box = new FrameBox
+			{
+				Parent = parent,
+				Dock = DockStyle.Fill,
+				Visibility = false,
+			};
+
 			var line1 = new FrameBox
 			{
-				Parent = tile,
+				Parent = box,
 				Dock = DockStyle.Top,
 			};
 
 			var line2 = new FrameBox
 			{
-				Parent = tile,
+				Parent = box,
 				Margins = new Margins (0, 0, 5, 0),
 				Dock = DockStyle.Top,
 			};
@@ -125,10 +138,74 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				PreferredWidth = 60,
 				Dock = DockStyle.Left,
 			};
+
+			return box;
+		}
+
+		private FrameBox CreateTextEditor(Widget parent)
+		{
+			var box = new FrameBox
+			{
+				Parent = parent,
+				Dock = DockStyle.Fill,
+				Visibility = false,
+			};
+
+			var line1 = new FrameBox
+			{
+				Parent = box,
+				Dock = DockStyle.Top,
+			};
+
+			new StaticText
+			{
+				Text = "Texte",
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleRight,
+				PreferredWidth = 50,
+				Margins = new Margins (0, 5, 0, 0),
+				Parent = line1,
+				Dock = DockStyle.Left,
+			};
+
+			new TextField
+			{
+				Parent = line1,
+				PreferredWidth = 400,
+				Dock = DockStyle.Left,
+			};
+
+			return box;
+		}
+
+
+		public void UpdateUI(ArticleLineInformations info)
+		{
+			//	Met à jour l'éditeur en fonction de la sélection en cours.
+			bool showArticleEditor = false;
+			bool showTextEditor = false;
+
+			if (info != null)
+			{
+				if (info.AbstractDocumentItemEntity is ArticleDocumentItemEntity)
+				{
+					showArticleEditor = true;
+				}
+
+				if (info.AbstractDocumentItemEntity is TextDocumentItemEntity)
+				{
+					showTextEditor = true;
+				}
+			}
+
+			this.articleEditor.Visibility = showArticleEditor;
+			this.textEditor.Visibility = showTextEditor;
 		}
 
 	
 		private readonly DocumentMetadataEntity documentMetadataEntity;
 		private readonly BusinessDocumentEntity businessDocumentEntity;
+
+		private FrameBox	articleEditor;
+		private FrameBox	textEditor;
 	}
 }

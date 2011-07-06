@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		public void CreateUI(Widget parent)
+		public void CreateUI(Widget parent, System.Func<bool> selectionChanged)
 		{
 			var tile = new FrameBox
 			{
@@ -52,6 +52,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				DefHeight = ArticleLinesController.lineHeight,
 				Margins = new Margins (2),
 				Dock = DockStyle.Fill,
+			};
+
+			this.table.SelectionChanged += delegate
+			{
+				selectionChanged();
 			};
 		}
 
@@ -97,6 +102,22 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			get
 			{
 				return this.Selection.Count != 0;
+			}
+		}
+
+		public bool HasSingleSelection
+		{
+			get
+			{
+				return this.Selection.Count == 1;
+			}
+		}
+
+		public bool HasMultiSelection
+		{
+			get
+			{
+				return this.Selection.Count > 1;
 			}
 		}
 
@@ -309,7 +330,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				columnType == ColumnType.Vat ||
 				columnType == ColumnType.Total)
 			{
-				return ContentAlignment.MiddleRight;
+				return ContentAlignment.MiddleRight;  // les chiffres sont alignés à droite
 			}
 
 			return ContentAlignment.MiddleLeft;
