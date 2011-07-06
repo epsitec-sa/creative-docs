@@ -135,20 +135,24 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.ribbonBook.ActivePage = this.ribbonPageHome;
 
 			//	Home ribbon:
-			this.CreateRibbonUserSection ();
-			this.CreateRibbonEditSection ();
-			this.CreateRibbonClipboardSection ();
-			this.CreateRibbonFontSection ();
-			this.CreateRibbonDatabaseSection ();
-			this.CreateRibbonStateSection ();
-			this.CreateRibbonSettingsSection ();
-			this.CreateRibbonNavigationSection ();
+			this.CreateRibbonUserSection (this.ribbonPageHome);
+			this.CreateRibbonEditSection (this.ribbonPageHome);
+
+			this.CreateRibbonClipboardSection (this.ribbonPageHome);
+			this.CreateRibbonFontSection (this.ribbonPageHome);
+			this.CreateRibbonDatabaseSection (this.ribbonPageHome);
+			this.CreateRibbonStateSection (this.ribbonPageHome);
+			this.CreateRibbonSettingsSection (this.ribbonPageHome);
+			this.CreateRibbonNavigationSection (this.ribbonPageHome);
 
 			//	Business ribbon:
-			this.CreateRibbonBusinessActionSection ();
-			this.CreateRibbonBusinessCreateSection ();
-			this.CreateRibbonBusinessOperSection ();
-			this.CreateRibbonBusinessGroupSection ();
+			this.CreateRibbonUserSection (this.ribbonPageBusiness);
+			this.CreateRibbonEditSection (this.ribbonPageBusiness);
+
+			//?this.CreateRibbonBusinessActionSection (this.ribbonPageBusiness);
+			this.CreateRibbonBusinessCreateSection (this.ribbonPageBusiness);
+			this.CreateRibbonBusinessOperSection (this.ribbonPageBusiness);
+			this.CreateRibbonBusinessGroupSection (this.ribbonPageBusiness);
 		}
 
 		private static RibbonPage CreateRibbonPage(RibbonBook book, string name, string title)
@@ -162,9 +166,9 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		#region Create home ribbon sections
-		private void CreateRibbonUserSection()
+		private void CreateRibbonUserSection(RibbonPage page)
 		{
-			var section = new RibbonSection (this.ribbonPageHome)
+			var section = new RibbonSection (page)
 			{
 				Name = "User",
 				Title = "Identité",
@@ -202,9 +206,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private void CreateRibbonEditSection()
+		private void CreateRibbonEditSection(RibbonPage page)
 		{
-			var section = new RibbonSection (this.ribbonPageHome)
+			var section = new RibbonSection (page)
 			{
 				Name = "Edit",
 				Title = "Édition",
@@ -229,9 +233,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			frame.Children.Add (this.CreateButton (Res.Commands.File.ImportV11, large: false));
 		}
 
-		private void CreateRibbonClipboardSection()
+		private void CreateRibbonClipboardSection(RibbonPage page)
 		{
-			var section = new RibbonSection (this.ribbonPageHome)
+			var section = new RibbonSection (page)
 			{
 				Name = "Clipboard",
 				Title = "Presse-papier",
@@ -253,9 +257,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			section.Children.Add (this.CreateButton (ApplicationCommands.Paste));
 		}
 
-		private void CreateRibbonFontSection()
+		private void CreateRibbonFontSection(RibbonPage page)
 		{
-			var section = new RibbonSection (this.ribbonPageHome)
+			var section = new RibbonSection (page)
 			{
 				Name = "Font",
 				Title = "Police",
@@ -295,9 +299,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			//?bottomFrame.Children.Add (this.CreateButton (ApplicationCommands.Superscript, large: false, isActivable: true));
 		}
 
-		private void CreateRibbonDatabaseSection()
+		private void CreateRibbonDatabaseSection(RibbonPage page)
 		{
-			var section = new RibbonSection (this.ribbonPageHome)
+			var section = new RibbonSection (page)
 			{
 				Name = "Database",
 				Title = "Bases de données",
@@ -371,11 +375,11 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.UpdateDatabaseMenu ();
 		}
-		
-		private void CreateRibbonStateSection()
+
+		private void CreateRibbonStateSection(RibbonPage page)
 		{
 #if false
-			var section = new RibbonSection (this.ribbonPageHome)
+			var section = new RibbonSection (page)
 			{
 				Name = "State",
 				Title = "États",
@@ -385,9 +389,9 @@ namespace Epsitec.Cresus.Core.Controllers
 #endif
 		}
 
-		private void CreateRibbonNavigationSection()
+		private void CreateRibbonNavigationSection(RibbonPage page)
 		{
-			var section = new RibbonSection (this.ribbonPageHome)
+			var section = new RibbonSection (page)
 			{
 				Name = "Navigation",
 				Title = "Navigation",
@@ -400,9 +404,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			section.Children.Add (this.CreateButton (Res.Commands.History.NavigateForward));
 		}
 
-		private void CreateRibbonSettingsSection()
+		private void CreateRibbonSettingsSection(RibbonPage page)
 		{
-			var section = new RibbonSection (this.ribbonPageHome)
+			var section = new RibbonSection (page)
 			{
 				Name = "Settings",
 				Title = "Réglages",
@@ -507,9 +511,9 @@ namespace Epsitec.Cresus.Core.Controllers
 		#endregion
 
 		#region Create business ribbon sections
-		private void CreateRibbonBusinessCreateSection()
+		private void CreateRibbonBusinessCreateSection(RibbonPage page)
 		{
-			var section = new RibbonSection (this.ribbonPageBusiness)
+			var section = new RibbonSection (page)
 			{
 				Name = "Create",
 				Title = "Insertion",
@@ -529,9 +533,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateGroupSeparator));
 		}
 
-		private void CreateRibbonBusinessOperSection()
+		private void CreateRibbonBusinessOperSection(RibbonPage page)
 		{
-			var section = new RibbonSection (this.ribbonPageBusiness)
+			var section = new RibbonSection (page)
 			{
 				Name = "Oper",
 				Title = "Opérations",
@@ -543,9 +547,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Delete));
 		}
 
-		private void CreateRibbonBusinessGroupSection()
+		private void CreateRibbonBusinessGroupSection(RibbonPage page)
 		{
-			var section = new RibbonSection (this.ribbonPageBusiness)
+			var section = new RibbonSection (page)
 			{
 				Name = "Group",
 				Title = "Groupes",
@@ -557,9 +561,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Ungroup));
 		}
 
-		private void CreateRibbonBusinessActionSection()
+		private void CreateRibbonBusinessActionSection(RibbonPage page)
 		{
-			var section = new RibbonSection (this.ribbonPageBusiness)
+			var section = new RibbonSection (page)
 			{
 				Name = "Action",
 				Title = "Actions",

@@ -41,24 +41,18 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Dock = DockStyle.Fill,
 			};
 
-			var line1 = new FrameBox
-			{
-				Parent = box,
-				Dock = DockStyle.Top,
-			};
-
 			new StaticText
 			{
 				Text = "Texte",
-				ContentAlignment = Common.Drawing.ContentAlignment.MiddleRight,
+				ContentAlignment = Common.Drawing.ContentAlignment.TopRight,
 				PreferredWidth = 50,
-				Margins = new Margins (0, 5, 0, 0),
-				Parent = line1,
+				Margins = new Margins (0, 5, 3, 0),
+				Parent = box,
 				Dock = DockStyle.Left,
 			};
 
-			var textField = this.accessData.UIBuilder.CreateTextFieldMulti (line1, DockStyle.Left, 40, Marshaler.Create (() => this.Entity.Text, x => this.Entity.Text = x));
-			textField.PreferredWidth = 400;
+			var textField = this.accessData.UIBuilder.CreateTextFieldMulti (box, DockStyle.Left, 40, Marshaler.Create (() => this.Entity.Text, x => this.Entity.Text = x));
+			textField.Dock = DockStyle.Fill;
 		}
 
 		public override FormattedText TitleTile
