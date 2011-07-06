@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.commandDispatcher.RegisterController (this);
 
 			this.lineInformations = new List<LineInformations> ();
-			this.UpdateArticleLineInformations ();
+			this.UpdateLineInformations ();
 		}
 
 		public void CreateUI(Widget parent)
@@ -47,11 +47,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			CommandContext.SetContext (frame, this.commandContext);
 			CommandDispatcher.SetDispatcher (frame, this.commandDispatcher);
 
-			this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.CreateArticle).Enable = false;  // exemple !!!
-
 			//	Crée la toolbar.
-			//?this.lineToolbarController = new LineToolbarController (this.accessData.DocumentMetadataEntity, this.accessData.BusinessDocumentEntity);
-			//?this.lineToolbarController.CreateUI (frame, this.Action);
+			this.lineToolbarController = new LineToolbarController (this.accessData.DocumentMetadataEntity, this.accessData.BusinessDocumentEntity);
+			this.lineToolbarController.CreateUI (frame);
 
 			//	Crée la liste.
 			this.linesController = new LinesController (this.accessData);
@@ -65,6 +63,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public void UpdateUI(int? sel = null)
 		{
 			this.linesController.UpdateUI (this.lineInformations.Count, this.CallbackGetCellContent, sel);
+			this.UpdateCommands ();
 		}
 
 
@@ -143,6 +142,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				this.lineEditorController.UpdateUI (null);
 			}
+
+			this.UpdateCommands ();
 
 			return true;
 		}
@@ -232,71 +233,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.ActionCancel ();
 		}
 
-		private void Action(string commandName)
-		{
-			//	Câblage très provisoire des commandes !
-#if false
-			switch (commandName)
-			{
-				case "Lines.CreateArticle":
-					this.ActionCreateArticle ();
-					break;
-
-				case "Lines.CreateText":
-					this.ActionCreateText ();
-					break;
-
-				case "Lines.CreateTitle":
-					this.ActionCreateTitle ();
-					break;
-
-				case "Lines.CreateDiscount":
-					this.ActionCreateDiscount ();
-					break;
-
-				case "Lines.CreateTax":
-					this.ActionCreateTax ();
-					break;
-
-				case "Lines.CreateQuantity":
-					this.ActionCreateQuantity ();
-					break;
-
-				case "Lines.CreateGroup":
-					this.ActionCreateGroup ();
-					break;
-
-				case "Lines.CreateGroupSeparator":
-					this.ActionCreateGroupSeparator ();
-					break;
-
-				case "Lines.Duplicate":
-					this.ActionDuplicate ();
-					break;
-
-				case "Lines.Delete":
-					this.ActionDelete();
-					break;
-
-				case "Lines.Group":
-					this.ActionGroup ();
-					break;
-
-				case "Lines.Ungroup":
-					this.ActionUngroup ();
-					break;
-
-				case "Lines.Cancel":
-					this.ActionCancel ();
-					break;
-
-				case "Lines.Ok":
-					this.ActionOk ();
-					break;
-
-			}
-#endif
-		}
 
 		private void ActionCreateArticle()
 		{
@@ -407,6 +343,25 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private void ActionDelete()
 		{
 			//	Supprime la ligne sélectionnée.
+			int? sel = this.linesController.LastSelection;
+
+			if (sel != null)
+			{
+				var info = this.lineInformations[sel.Value];
+				var line = this.accessData.BusinessDocumentEntity.Lines.ElementAt (info.LineIndex);
+
+				if (line is ArticleDocumentItemEntity && info.QuantityIndex > 0)  // quantité ?
+				{
+					var article = line as ArticleDocumentItemEntity;
+					article.ArticleQuantities.RemoveAt (info.QuantityIndex);
+				}
+				else
+				{
+					this.accessData.BusinessDocumentEntity.Lines.RemoveAt (info.LineIndex);
+				}
+				
+				this.UpdateAfterChange (line, null);
+			}
 		}
 
 		private void ActionGroup()
@@ -432,9 +387,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private void UpdateAfterChange(AbstractDocumentItemEntity line, ArticleQuantityEntity quantity)
 		{
-			this.UpdateArticleLineInformations ();
+			this.UpdateLineInformations ();
 
-			int? sel = this.GetArticleLineInformationsIndex (line, quantity);
+			int? sel = this.GetLineInformationsIndex (line, quantity);
 			this.UpdateUI (sel);
 		}
 
@@ -447,7 +402,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		private int? GetArticleLineInformationsIndex(AbstractDocumentItemEntity line, ArticleQuantityEntity quantity)
+		private int? GetLineInformationsIndex(AbstractDocumentItemEntity line, ArticleQuantityEntity quantity)
 		{
 			for (int i = 0; i < this.lineInformations.Count; i++)
 			{
@@ -473,7 +428,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			return null;
 		}
 
-		private void UpdateArticleLineInformations()
+		private void UpdateLineInformations()
 		{
 			this.lineInformations.Clear ();
 
@@ -497,6 +452,31 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					this.lineInformations.Add (new LineInformations (line, null, i, 0));
 				}
 			}
+		}
+
+
+		private void UpdateCommands()
+		{
+			var selection     = this.linesController.Selection;
+			var lastSelection = this.linesController.LastSelection;
+
+			LineInformations info = null;
+			if (lastSelection != null)
+			{
+				info = this.lineInformations[lastSelection.Value];
+			}
+
+			bool isArticle  = info != null && info.AbstractDocumentItemEntity is ArticleDocumentItemEntity;
+			bool isEndTotal = info != null && info.AbstractDocumentItemEntity is EndTotalDocumentItemEntity;
+
+			this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.CreateQuantity).Enable = isArticle;
+			this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.CreateGroupSeparator).Enable = false;
+
+			this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.Duplicate).Enable = selection.Count != 0 && !isEndTotal;
+			this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.Delete).Enable = selection.Count != 0 && !isEndTotal;
+
+			this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.Group).Enable = selection.Count != 0 && !isEndTotal;
+			this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.Ungroup).Enable = selection.Count != 0 && !isEndTotal;
 		}
 
 

@@ -883,7 +883,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			double buttonWidth = large ? Library.UI.ButtonLargeWidth : Library.UI.ButtonSmallWidth;
 			double iconWidth   = large ? Library.UI.IconLargeWidth : Library.UI.IconSmallWidth;
-			
+
 			if (isActivable)
 			{
 				return new IconButton

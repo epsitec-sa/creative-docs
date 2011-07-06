@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public override void CreateUI(FrameBox parent, AbstractEntity entity)
 		{
-			this.entity = entity;
+			base.CreateUI (parent, entity);
 
 			var box = new FrameBox
 			{

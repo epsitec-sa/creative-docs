@@ -33,6 +33,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public virtual void CreateUI(FrameBox parent, AbstractEntity entity)
 		{
+			this.entity = entity;
 		}
 
 		public virtual FormattedText TitleTile

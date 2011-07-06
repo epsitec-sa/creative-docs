@@ -33,10 +33,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		public void CreateUI(Widget parent, System.Action<string> action)
+		public void CreateUI(Widget parent)
 		{
-			this.action = action;
-
 			double buttonSize = Library.UI.ButtonLargeWidth;
 
 			var toolbar = UIBuilder.CreateMiniToolbar (parent, buttonSize);
@@ -57,11 +55,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			toolbar.Children.Add (this.CreateSeparator ());
 			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Group));
 			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Ungroup));
-			toolbar.Children.Add (this.CreateSeparator ());
+			//?toolbar.Children.Add (this.CreateSeparator ());
 
-			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Cancel, DockStyle.Right));
-			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Ok, DockStyle.Right));
-			toolbar.Children.Add (this.CreateSeparator (DockStyle.Right));
+			//?toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Cancel, DockStyle.Right));
+			//?toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Ok, DockStyle.Right));
+			//?toolbar.Children.Add (this.CreateSeparator (DockStyle.Right));
 		}
 
 		private IconButton CreateButton(Command command = null, DockStyle dockStyle = DockStyle.Left, bool large = true, bool isActivable = false)
@@ -70,11 +68,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			double buttonWidth = large ? Library.UI.IconLargeWidth+2 : Library.UI.IconSmallWidth+2;
 			double iconWidth   = large ? Library.UI.IconLargeWidth : Library.UI.IconSmallWidth;
 
-			IconButton button;
-
 			if (isActivable)
 			{
-				button = new IconButton
+				return new IconButton
 				{
 					CommandObject       = command,
 					PreferredIconSize   = new Size (iconWidth, iconWidth),
@@ -88,7 +84,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 			else
 			{
-				button = new RibbonIconButton
+				return new RibbonIconButton
 				{
 					CommandObject       = command,
 					PreferredIconSize   = new Size (iconWidth, iconWidth),
@@ -100,14 +96,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					AutoFocus           = false,
 				};
 			}
-
-			//	Câblage très provisoire des commandes !
-			button.Clicked += delegate
-			{
-				this.action (button.Name);
-			};
-
-			return button;
 		}
 
 		private Separator CreateSeparator(DockStyle dockStyle = DockStyle.Left, double width = 10)
@@ -123,7 +111,5 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 	
 		private readonly DocumentMetadataEntity documentMetadataEntity;
 		private readonly BusinessDocumentEntity businessDocumentEntity;
-
-		private System.Action<string> action;
 	}
 }
