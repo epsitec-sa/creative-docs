@@ -25,18 +25,18 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				.Title (TextFormatter.FormatText ("Client"))
 				;
 			wall.AddBrick (x => x.Person.Contacts)
-				.AsType<MailContactEntity> ()
+				.OfType<MailContactEntity> ()
 				.Template ()
 				.End ()
 				;
 			wall.AddBrick (x => x.Person.Contacts)
-				.AsType<TelecomContactEntity> ()
+				.OfType<TelecomContactEntity> ()
 				.Attribute (BrickMode.AutoGroup)
 				.Template ()
 				.End ()
 				;
 			wall.AddBrick (x => x.Person.Contacts)
-				.AsType<UriContactEntity> ()
+				.OfType<UriContactEntity> ()
 				.Attribute (BrickMode.AutoGroup)
 				.Template ()
 				.End ()

@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Bricks
 			parent.AddProperty (new BrickProperty (BrickPropertyKey.AsType, this));
 		}
 
-		public SimpleBrick<TOutput, TOutput> AsType<TOutput>()
+		public SimpleBrick<TOutput, TOutput> OfType<TOutput>()
 		{
 			var brick = new SimpleBrick<TOutput, TOutput> (this);
 
