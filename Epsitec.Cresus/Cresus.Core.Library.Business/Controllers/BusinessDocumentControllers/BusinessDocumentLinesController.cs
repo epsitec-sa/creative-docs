@@ -13,6 +13,7 @@ using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.Helpers;
+using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -23,41 +24,17 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
 	public class BusinessDocumentLinesController
 	{
-		public BusinessDocumentLinesController(DocumentMetadataEntity documentMetadataEntity, BusinessDocumentEntity businessDocumentEntity)
+		public BusinessDocumentLinesController(BusinessContext businessContext, DataContext dataContext, CoreData coreData, DocumentMetadataEntity documentMetadataEntity, BusinessDocumentEntity businessDocumentEntity)
 		{
+			this.businessContext        = businessContext;
+			this.dataContext            = dataContext;
+			this.coreData               = coreData;
 			this.documentMetadataEntity = documentMetadataEntity;
 			this.businessDocumentEntity = businessDocumentEntity;
 
 			this.articleLineInformations = new List<ArticleLineInformations> ();
 			this.UpdateArticleLineInformations ();
 		}
-
-		private void UpdateArticleLineInformations()
-		{
-			this.articleLineInformations.Clear ();
-
-			for (int i = 0; i < this.businessDocumentEntity.Lines.Count; i++)
-			{
-				var line = this.businessDocumentEntity.Lines[i];
-
-				if (line is ArticleDocumentItemEntity)
-				{
-					var article = line as ArticleDocumentItemEntity;
-
-					for (int j = 0; j < article.ArticleQuantities.Count; j++)
-					{
-						var quantity = article.ArticleQuantities[j];
-
-						this.articleLineInformations.Add (new ArticleLineInformations (line, quantity, i, j));
-					}
-				}
-				else
-				{
-					this.articleLineInformations.Add (new ArticleLineInformations (line, null, i, 0));
-				}
-			}
-		}
-
 
 		public void CreateUI(Widget parent)
 		{
@@ -84,6 +61,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			this.articleLinesController.UpdateUI (this.articleLineInformations.Count, this.GetCellContent, sel);
 		}
+
 
 		private FormattedText GetCellContent(int index, ColumnType columnType)
 		{
@@ -146,6 +124,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private void Action(string commandName)
 		{
+			//	Câblage très provisoire des commandes !
 			switch (commandName)
 			{
 				case "Lines.CreateArticle":
@@ -209,14 +188,52 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private void ActionCreateArticle()
 		{
+			int? sel = this.articleLinesController.LastSelection;
+
+			if (sel != null)
+			{
+				var info = this.articleLineInformations[sel.Value];
+
+				var newLine = this.businessContext.CreateEntity<ArticleDocumentItemEntity> ();
+
+				this.businessDocumentEntity.Lines.Insert (info.LineIndex+1, newLine);
+
+				this.UpdateAfterChange (newLine, null);
+			}
 		}
 
 		private void ActionCreateText()
 		{
+			int? sel = this.articleLinesController.LastSelection;
+
+			if (sel != null)
+			{
+				var info = this.articleLineInformations[sel.Value];
+
+				var newLine = this.businessContext.CreateEntity<TextDocumentItemEntity> ();
+				newLine.Text = "Coucou !!!";
+
+				this.businessDocumentEntity.Lines.Insert (info.LineIndex+1, newLine);
+
+				this.UpdateAfterChange (newLine, null);
+			}
 		}
 
 		private void ActionCreateTitle()
 		{
+			int? sel = this.articleLinesController.LastSelection;
+
+			if (sel != null)
+			{
+				var info = this.articleLineInformations[sel.Value];
+
+				var newLine = this.businessContext.CreateEntity<TextDocumentItemEntity> ();
+				newLine.Text = "Titre !!!";
+
+				this.businessDocumentEntity.Lines.Insert (info.LineIndex+1, newLine);
+
+				this.UpdateAfterChange (newLine, null);
+			}
 		}
 
 		private void ActionCreateDiscount()
@@ -229,6 +246,25 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private void ActionCreateQuantity()
 		{
+			int? sel = this.articleLinesController.LastSelection;
+
+			if (sel != null)
+			{
+				var info = this.articleLineInformations[sel.Value];
+				var line = this.businessDocumentEntity.Lines.ElementAt (info.LineIndex);
+
+				if (line is ArticleDocumentItemEntity)
+				{
+					var article = line as ArticleDocumentItemEntity;
+
+					var newQuantity = this.businessContext.CreateEntity<ArticleQuantityEntity> ();
+					newQuantity.Quantity = 1;
+
+					article.ArticleQuantities.Add (newQuantity);
+
+					this.UpdateAfterChange (line, newQuantity);
+				}
+			}
 		}
 
 		private void ActionCreateGroup()
@@ -267,12 +303,76 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 		}
 
+
+		private void UpdateAfterChange(AbstractDocumentItemEntity line, ArticleQuantityEntity quantity)
+		{
+			this.UpdateArticleLineInformations ();
+
+			int? sel = this.GetArticleLineInformationsIndex (line, quantity);
+			this.UpdateUI (sel);
+		}
+
+
 #if false
 		[Command (Library.Business.Res.Commands.Lines.CreateArticle)]
 		public void ProcessCreateArticle(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 		}
 #endif
+
+
+		private int? GetArticleLineInformationsIndex(AbstractDocumentItemEntity line, ArticleQuantityEntity quantity)
+		{
+			for (int i = 0; i < this.articleLineInformations.Count; i++)
+			{
+				var info = this.articleLineInformations[i];
+
+				if (quantity == null)
+				{
+					if (info.AbstractDocumentItemEntity == line)
+					{
+						return i;
+					}
+				}
+				else
+				{
+					if (info.AbstractDocumentItemEntity == line &&
+						info.ArticleQuantityEntity == quantity)
+					{
+						return i;
+					}
+				}
+			}
+
+			return null;
+		}
+
+		private void UpdateArticleLineInformations()
+		{
+			this.articleLineInformations.Clear ();
+
+			for (int i = 0; i < this.businessDocumentEntity.Lines.Count; i++)
+			{
+				var line = this.businessDocumentEntity.Lines[i];
+
+				if (line is ArticleDocumentItemEntity)
+				{
+					var article = line as ArticleDocumentItemEntity;
+
+					for (int j = 0; j < article.ArticleQuantities.Count; j++)
+					{
+						var quantity = article.ArticleQuantities[j];
+
+						this.articleLineInformations.Add (new ArticleLineInformations (line, quantity, i, j));
+					}
+				}
+				else
+				{
+					this.articleLineInformations.Add (new ArticleLineInformations (line, null, i, 0));
+				}
+			}
+		}
+
 
 	
 		#region AbstractDocumentItemEntity extensions
@@ -549,8 +649,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		#endregion
 
 
-		private static readonly double lineHeight = 17;
-
+		private readonly BusinessContext				businessContext;
+		private readonly DataContext					dataContext;
+		private readonly CoreData						coreData;
 		private readonly DocumentMetadataEntity			documentMetadataEntity;
 		private readonly BusinessDocumentEntity			businessDocumentEntity;
 		private readonly List<ArticleLineInformations>	articleLineInformations;

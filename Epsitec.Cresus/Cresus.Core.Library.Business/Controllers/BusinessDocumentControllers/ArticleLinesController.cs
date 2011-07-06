@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				Parent = tile,
 				StyleH = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.Header,
-				StyleV = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine,
+				StyleV = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine | CellArrayStyles.SelectMulti,
 				DefHeight = ArticleLinesController.lineHeight,
 				Margins = new Margins (2),
 				Dock = DockStyle.Fill,
@@ -89,6 +89,51 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				this.table.SelectRow (sel.Value, true);
 			}
 		}
+
+
+		public bool HasSelection
+		{
+			get
+			{
+				return this.Selection.Count != 0;
+			}
+		}
+
+		public int? LastSelection
+		{
+			get
+			{
+				var selection = this.Selection;
+
+				if (selection.Count == 0)
+				{
+					return null;
+				}
+				else
+				{
+					return selection.Last ();
+				}
+			}
+		}
+
+		public List<int> Selection
+		{
+			get
+			{
+				var list = new List<int> ();
+
+				for (int i = 0; i < this.table.Rows; i++)
+				{
+					if (this.table.IsCellSelected (i, 0))
+					{
+						list.Add (i);
+					}
+				}
+
+				return list;
+			}
+		}
+
 
 		private void TableFillRow(int row)
 		{

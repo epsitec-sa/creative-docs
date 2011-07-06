@@ -101,6 +101,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				};
 			}
 
+			//	Câblage très provisoire des commandes !
 			button.Clicked += delegate
 			{
 				this.action (button.Name);

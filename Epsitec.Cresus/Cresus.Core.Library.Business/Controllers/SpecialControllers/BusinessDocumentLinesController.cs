@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 				Margins = Widgets.Tiles.TileArrow.GetContainerPadding (Direction.Right),
 			};
 
-			var c = new BusinessDocumentControllers.BusinessDocumentLinesController (documentMetadataEntity, this.businessDocumentEntity);
+			var c = new BusinessDocumentControllers.BusinessDocumentLinesController (this.businessContext, this.dataContext, this.coreData, documentMetadataEntity, this.businessDocumentEntity);
 			c.CreateUI (box);
 			c.UpdateUI ();
 		}
