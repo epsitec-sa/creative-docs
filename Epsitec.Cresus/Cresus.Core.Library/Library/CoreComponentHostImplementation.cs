@@ -101,7 +101,21 @@ namespace Epsitec.Cresus.Core.Library
 
 		public bool ContainsComponent(System.Type type)
 		{
-			return this.components.ContainsKey (type.FullName);
+			if (this.components.ContainsKey (type.FullName))
+			{
+				return true;
+			}
+			
+			if ((type.IsInterface) ||
+				(type.IsClass))
+			{
+				//	We are requesting a component which implements the specified interface or
+				//	derives from a base class; search for it sequentially :
+
+				return this.registeredComponents.Any (x => type.IsAssignableFrom (x.GetType ()));
+			}
+
+			return false;
 		}
 
 		public void RegisterComponent(System.Type type, TComponent component)

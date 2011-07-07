@@ -26,6 +26,12 @@ namespace Epsitec.Cresus.Core.Factories
 			CoreComponentFactory.Setup ();
 		}
 
+		/// <summary>
+		/// Registers the components with their host. This will find all components which
+		/// have a factory based on <see cref="TFactory"/>. It will then instantiate the
+		/// components in the appropriate order.
+		/// </summary>
+		/// <param name="host">The host.</param>
 		public static void RegisterComponents(THost host)
 		{
 			var factories = CoreComponentFactoryResolver<TFactory>.Resolve ();
@@ -54,6 +60,12 @@ namespace Epsitec.Cresus.Core.Factories
 			}
 		}
 
+		/// <summary>
+		/// Initializes the components. The components must have been registered previously
+		/// with method <see cref="RegisterComponents"/>. The order in which the components
+		/// get set up is determined by the components themselves.
+		/// </summary>
+		/// <param name="componentCollection">The component collection.</param>
 		public static void SetupComponents(IEnumerable<TComponent> componentCollection)
 		{
 			var components = componentCollection.ToList ();

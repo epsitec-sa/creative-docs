@@ -15,8 +15,9 @@ namespace Epsitec.Cresus.Core.Library
 		where TComponent : class, ICoreComponent
 	{
 		/// <summary>
-		/// Gets the component of the specified type. This should throw an exception
-		/// if the component cannot be found.
+		/// Gets the component of the specified type, or the component which implements the
+		/// specified interface or derives from the specified class. This should throw an
+		/// exception if the component cannot be found.
 		/// </summary>
 		/// <typeparam name="T">The specific type of the component.</typeparam>
 		/// <returns></returns>
@@ -32,7 +33,8 @@ namespace Epsitec.Cresus.Core.Library
 		IEnumerable<TComponent> GetComponents();
 
 		/// <summary>
-		/// Determines whether this host contains the specified component.
+		/// Determines whether this host contains the specified component, or a component which
+		/// implements the specified interface or derives from the specified class.
 		/// </summary>
 		/// <typeparam name="T">The specific type of the component.</typeparam>
 		/// <returns>

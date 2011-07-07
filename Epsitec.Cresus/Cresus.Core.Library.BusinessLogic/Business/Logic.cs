@@ -105,12 +105,14 @@ namespace Epsitec.Cresus.Core.Business
 
 		#region ICoreComponentHost<ICoreComponent> Members
 
-		public bool ContainsComponent<T>() where T : ICoreManualComponent
+		public bool ContainsComponent<T>()
+			where T : ICoreManualComponent
 		{
 			return this.components.ContainsComponent<T> ();
 		}
 
-		public T GetComponent<T>() where T : ICoreManualComponent
+		public T GetComponent<T>()
+			where T : ICoreManualComponent
 		{
 			return this.components.GetComponent<T> ();
 		}
