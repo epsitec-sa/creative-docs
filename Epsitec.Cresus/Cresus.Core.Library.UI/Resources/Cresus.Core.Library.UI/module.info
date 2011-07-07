@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ModuleInfo id="1012" name="Cresus.Core.Library.UI" layer="A" textMode="FormattedText" namespace="Epsitec.Cresus.Core" namespaceRes="Epsitec.Cresus.Core.Library.UI">
+  <Versions>
+    <Version id="1" build="1" date="2011-07-07T04:46:07.0603573Z" />
+  </Versions>
+</ModuleInfo>

@@ -149,6 +149,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Document.ExportEngin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Library.Features", "Cresus.Core.Library.Features\Cresus.Core.Library.Features.csproj", "{B29C4379-B4F0-4B94-A0CD-48E72AFCC540}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Library.UI", "Cresus.Core.Library.UI\Cresus.Core.Library.UI.csproj", "{F33C234B-2DD9-420D-9793-FD22B601D061}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Epsitec.Cresus1.vsmdi
@@ -1241,6 +1243,24 @@ Global
 		{B29C4379-B4F0-4B94-A0CD-48E72AFCC540}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{B29C4379-B4F0-4B94-A0CD-48E72AFCC540}.Release|Win32.ActiveCfg = Release|Any CPU
 		{B29C4379-B4F0-4B94-A0CD-48E72AFCC540}.Release|x86.ActiveCfg = Release|Any CPU
+		{F33C234B-2DD9-420D-9793-FD22B601D061}.Debug .NET 2.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{F33C234B-2DD9-420D-9793-FD22B601D061}.Debug .NET 2.0|Any CPU.Build.0 = Debug|Any CPU
+		{F33C234B-2DD9-420D-9793-FD22B601D061}.Debug .NET 2.0|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{F33C234B-2DD9-420D-9793-FD22B601D061}.Debug .NET 2.0|Mixed Platforms.Build.0 = Debug|Any CPU
+		{F33C234B-2DD9-420D-9793-FD22B601D061}.Debug .NET 2.0|Win32.ActiveCfg = Debug|Any CPU
+		{F33C234B-2DD9-420D-9793-FD22B601D061}.Debug .NET 2.0|x86.ActiveCfg = Debug|Any CPU
+		{F33C234B-2DD9-420D-9793-FD22B601D061}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F33C234B-2DD9-420D-9793-FD22B601D061}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F33C234B-2DD9-420D-9793-FD22B601D061}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{F33C234B-2DD9-420D-9793-FD22B601D061}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{F33C234B-2DD9-420D-9793-FD22B601D061}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{F33C234B-2DD9-420D-9793-FD22B601D061}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F33C234B-2DD9-420D-9793-FD22B601D061}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F33C234B-2DD9-420D-9793-FD22B601D061}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F33C234B-2DD9-420D-9793-FD22B601D061}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{F33C234B-2DD9-420D-9793-FD22B601D061}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{F33C234B-2DD9-420D-9793-FD22B601D061}.Release|Win32.ActiveCfg = Release|Any CPU
+		{F33C234B-2DD9-420D-9793-FD22B601D061}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
