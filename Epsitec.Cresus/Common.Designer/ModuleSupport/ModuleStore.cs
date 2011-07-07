@@ -79,7 +79,8 @@ namespace Epsitec.Common.Designer.ModuleSupport
 
 				modulePath = this.pool.GetRootAbsolutePath (modulePath);
 
-				if (System.IO.Directory.Exists (modulePath))
+				if ((System.IO.Directory.Exists (modulePath)) &&
+					(System.IO.Directory.GetFiles (modulePath, "*.info").Length > 0))
 				{
 					this.service.RecycleModuleId (moduleId, identity.UserName);
 					return null;
