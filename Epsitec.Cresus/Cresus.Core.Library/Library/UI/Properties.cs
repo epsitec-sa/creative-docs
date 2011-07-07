@@ -8,13 +8,10 @@ using System.Linq;
 
 [assembly: DependencyClass (typeof (Epsitec.Cresus.Core.Library.UI.Properties))]
 
-namespace Epsitec.Cresus.Core.Library
+namespace Epsitec.Cresus.Core.Library.UI
 {
-	public static partial class UI
+	internal sealed class Properties : DependencyObject
 	{
-		internal sealed class Properties : DependencyObject
-		{
-			public static readonly DependencyProperty		IsWindowPositionSaverActiveProperty	= DependencyProperty<Properties>.RegisterAttached ("isWindowPositionSaverActive", typeof (bool));
-		}
+		public static readonly DependencyProperty		IsWindowPositionSaverActiveProperty	= DependencyProperty<Properties>.RegisterAttached ("isWindowPositionSaverActive", typeof (bool));
 	}
 }

@@ -160,14 +160,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Parent = rightFrame,
 					Text = desc,
 					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, UI.MarginUnderLabel),
+					Margins = new Margins (0, 0, 0, Library.UI.Constants.MarginUnderLabel),
 				};
 
 				var line = new FrameBox
 				{
 					Parent = rightFrame,
 					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, UI.MarginUnderTextField),
+					Margins = new Margins (0, 0, 0, Library.UI.Constants.MarginUnderTextField),
 					TabIndex = tabIndex++,
 				};
 
@@ -462,12 +462,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private static bool IsCurrentLanguage (string languageId)
 		{
-			if (languageId == UI.Settings.CultureForData.LanguageId)
+			if (languageId == Library.UI.Services.Settings.CultureForData.LanguageId)
 			{
 				return true;
 			}
 
-			if (MultilingualText.DefaultLanguageId == languageId && !UI.Settings.CultureForData.HasLanguageId)
+			if (MultilingualText.DefaultLanguageId == languageId && !Library.UI.Services.Settings.CultureForData.HasLanguageId)
 			{
 				return true;
 			}

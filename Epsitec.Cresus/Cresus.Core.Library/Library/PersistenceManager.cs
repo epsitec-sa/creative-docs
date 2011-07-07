@@ -166,8 +166,8 @@ namespace Epsitec.Cresus.Core.Library
 		{
 			window.WindowPlacementChanged += this.NotifyChange;
 			
-			UI.RegisterWindowPositionSaver (window);
-			return UI.RestoreWindowPosition (window);
+			UI.Services.RegisterWindowPositionSaver (window);
+			return UI.Services.RestoreWindowPosition (window);
 		}
 
 		/// <summary>
@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.Core.Library
 		public void Unregister(Window window)
 		{
 			window.WindowPlacementChanged -= this.NotifyChange;
-			UI.SaveWindowPosition (window);
+			UI.Services.SaveWindowPosition (window);
 		}
 
 		public void Unregister(DependencyObject element)

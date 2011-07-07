@@ -3,6 +3,7 @@
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Library.UI;
 
 namespace Epsitec.Cresus.Graph
 {
@@ -25,7 +26,7 @@ namespace Epsitec.Cresus.Graph
 		{
 			Epsitec.Common.Debug.GeneralExceptionCatcher.Setup ();
 
-			UI.Initialize ();
+			Services.Initialize ();
 
 			//Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookBlue");
 
@@ -48,7 +49,7 @@ namespace Epsitec.Cresus.Graph
 			GraphProgram.Application.Window.Show ();
 			GraphProgram.Application.Window.Run ();
 
-			UI.ShutDown ();
+			Services.ShutDown ();
 
 			GraphProgram.Application.Dispose ();
 			GraphProgram.Application = null;

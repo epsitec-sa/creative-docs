@@ -11,6 +11,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Library.UI;
 using Epsitec.Cresus.Graph.Widgets;
 
 using System.Collections.Generic;
@@ -983,8 +984,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 					window.Dispose ();
 				};
 
-			UI.RegisterWindowPositionSaver (window);
-			UI.RestoreWindowPosition (window);
+			Services.RegisterWindowPositionSaver (window);
+			Services.RestoreWindowPosition (window);
 
 			//	Associate the window with the snapshot : there is at most one window for
 			//	a given snapshot.

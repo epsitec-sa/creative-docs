@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core
 	{
 		public CoreApplication()
 		{
-			UI.SetApplication (this);
+			Library.UI.Services.SetApplication (this);
 			
 			this.plugIns = new List<PlugIns.ICorePlugIn> ();
 
@@ -213,7 +213,7 @@ namespace Epsitec.Cresus.Core
 					new XComment ("Saved on " + timeStamp),
 					new XElement ("store",
 					//-						this.StateManager.SaveStates ("stateManager"),
-						UI.SaveWindowPositions ("windowPositions"),
+						Library.UI.Services.SaveWindowPositions ("windowPositions"),
 						this.PersistenceManager.Save ("uiSettings"),
 						this.SettingsManager.Save ("appSettings")));
 
@@ -232,7 +232,7 @@ namespace Epsitec.Cresus.Core
 				XElement store = doc.Element ("store");
 
 //-				this.stateManager.RestoreStates (store.Element ("stateManager"));
-				UI.RestoreWindowPositions (store.Element ("windowPositions"));
+				Library.UI.Services.RestoreWindowPositions (store.Element ("windowPositions"));
 				persistenceManager.Restore (store.Element ("uiSettings"));
 				this.SettingsManager.Restore (store.Element ("appSettings"));
 			}

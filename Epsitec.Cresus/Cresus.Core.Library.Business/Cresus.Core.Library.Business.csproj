@@ -312,6 +312,10 @@
       <Project>{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}</Project>
       <Name>Cresus.Core.Library.Print</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.UI\Cresus.Core.Library.UI.csproj">
+      <Project>{F33C234B-2DD9-420D-9793-FD22B601D061}</Project>
+      <Name>Cresus.Core.Library.UI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library.UserManagement\Cresus.Core.Library.UserManagement.csproj">
       <Project>{F5EA8D13-3119-4563-BC77-9E9D6CE94148}</Project>
       <Name>Cresus.Core.Library.UserManagement</Name>

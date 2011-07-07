@@ -1,7 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
-using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Library.UI;
 
 using Epsitec.Cresus.Graph.Splash;
 using Epsitec.Common.Debug;
@@ -42,7 +42,7 @@ namespace Epsitec.App.BanquePiguet
 			try
 			{
 				Program.SetupExceptionHandlers ();
-				UI.Initialize ();
+				Services.Initialize ();
 
 				bool adminMode = args.Contains ("-admin");
 
@@ -52,7 +52,7 @@ namespace Epsitec.App.BanquePiguet
 					splashScreen.NotifyIsRunning ();
 					application.Window.Run ();
 				}
-				UI.ShutDown ();
+				Services.ShutDown ();
 			}
 			catch (System.Exception e)
 			{

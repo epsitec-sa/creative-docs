@@ -133,7 +133,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				//	Crée la toolbar.
 				double buttonSize = 19;
 
-				this.toolbar = UI.Toolkit.CreateMiniToolbar (leftPane, buttonSize);
+				this.toolbar = Library.UI.Toolkit.CreateMiniToolbar (leftPane, buttonSize);
 				this.toolbar.Margins = Widgets.Tiles.TileArrow.GetContainerPadding (Direction.Right) + new Margins (0, 0, 0, -1);
 				this.toolbar.TabIndex = tabIndex++;
 
@@ -172,7 +172,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.table = new CellTable
 				{
 					Parent = tile,
-					DefHeight = Library.UI.ButtonLargeWidth + 1,
+					DefHeight = Library.UI.Constants.ButtonLargeWidth + 1,
 					StyleH = CellArrayStyles.Separator,
 					StyleV = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine,
 					Dock = DockStyle.Fill,
@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				};
 
 				this.table.SetArraySize (2, 0);
-				this.table.SetWidthColumn (0, Library.UI.ButtonLargeWidth + 1);
+				this.table.SetWidthColumn (0, Library.UI.Constants.ButtonLargeWidth + 1);
 				this.table.SetWidthColumn (1, 400);
 			}
 
@@ -206,7 +206,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Parent = this.userBox,
 					Text = "Nom du compte :",
 					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, UI.MarginUnderLabel),
+					Margins = new Margins (0, 0, 0, Library.UI.Constants.MarginUnderLabel),
 				};
 
 				this.loginNameField = new TextFieldEx
@@ -228,7 +228,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Parent = this.userBox,
 					Text = "Nom complet de l'utilisateur :",
 					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, UI.MarginUnderLabel),
+					Margins = new Margins (0, 0, 0, Library.UI.Constants.MarginUnderLabel),
 				};
 
 				this.displayNameField = new TextFieldEx
@@ -250,7 +250,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Parent = this.userBox,
 					Text = "Personne physique correspondante :",
 					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, UI.MarginUnderLabel),
+					Margins = new Margins (0, 0, 0, Library.UI.Constants.MarginUnderLabel),
 				};
 
 				this.personField = new TextFieldCombo
@@ -295,7 +295,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Parent = this.userBox,
 					Text = "Dates de début et de fin de validité du compte :",
 					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, UI.MarginUnderLabel),
+					Margins = new Margins (0, 0, 0, Library.UI.Constants.MarginUnderLabel),
 				};
 
 				{
@@ -341,7 +341,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Parent = this.userBox,
 					Text = "L'utilisateur fait partie des groupes suivants :",
 					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, UI.MarginUnderLabel+2),
+					Margins = new Margins (0, 0, 0, Library.UI.Constants.MarginUnderLabel+2),
 				};
 
 				double scrollableHeight = 15 * System.Math.Min (this.groups.Count, 5);
@@ -380,7 +380,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Parent = this.userBox,
 					Text = "Pour changer le mot de passe :",
 					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 10, UI.MarginUnderLabel),
+					Margins = new Margins (0, 0, 10, Library.UI.Constants.MarginUnderLabel),
 				};
 
 				this.newPasswordField1 = new TextFieldEx
@@ -800,7 +800,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				var button = new IconOrImageButton
 				{
 					CoreData = this.data,
-					PreferredSize = new Size (Library.UI.ButtonLargeWidth, Library.UI.ButtonLargeWidth),
+					PreferredSize = new Size (Library.UI.Constants.ButtonLargeWidth, Library.UI.Constants.ButtonLargeWidth),
 					IconUri = Misc.GetResourceIconUri ("UserManager"),
 					IconPreferredSize = new Size (31, 31),
 					Enable = false,

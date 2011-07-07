@@ -301,7 +301,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				Parent = box,
 				FormattedText = FormattedText.Concat (topText, " :"),
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, Library.UI.MarginUnderLabel),
+				Margins = new Margins (0, 0, 0, Library.UI.Constants.MarginUnderLabel),
 			};
 
 			field = new TextFieldCombo
@@ -309,7 +309,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				IsReadOnly = true,
 				Parent = box,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, Library.UI.MarginUnderTextField),
+				Margins = new Margins (0, 0, 0, Library.UI.Constants.MarginUnderTextField),
 				TabIndex = ++tabIndex,
 			};
 		}
@@ -328,14 +328,14 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				Parent = box,
 				FormattedText = FormattedText.Concat (topText, " :"),
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, Library.UI.MarginUnderLabel),
+				Margins = new Margins (0, 0, 0, Library.UI.Constants.MarginUnderLabel),
 			};
 
 			var line = new FrameBox
 			{
 				Parent = box,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, Library.UI.MarginUnderTextField),
+				Margins = new Margins (0, 0, 0, Library.UI.Constants.MarginUnderTextField),
 			};
 
 			field = new TextFieldEx

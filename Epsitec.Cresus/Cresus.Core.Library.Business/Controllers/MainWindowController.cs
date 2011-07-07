@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			
 			this.mainViewController = this.Orchestrator.MainViewController;
 
-			Library.UI.UpdateRequested += sender => this.Update ();
+			Library.UI.Services.UpdateRequested += sender => this.Update ();
 		}
 
 

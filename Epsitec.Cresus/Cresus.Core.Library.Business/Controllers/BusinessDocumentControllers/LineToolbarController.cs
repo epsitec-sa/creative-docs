@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public void CreateUI(Widget parent)
 		{
-			double buttonSize = Library.UI.ButtonLargeWidth;
+			double buttonSize = Library.UI.Constants.ButtonLargeWidth;
 
 			var toolbar = UIBuilder.CreateMiniToolbar (parent, buttonSize);
 			toolbar.Dock = DockStyle.Top;
@@ -65,8 +65,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private IconButton CreateButton(Command command = null, DockStyle dockStyle = DockStyle.Left, bool large = true, bool isActivable = false)
 		{
 			//?double buttonWidth = large ? Library.UI.ButtonLargeWidth : Library.UI.ButtonSmallWidth;
-			double buttonWidth = large ? Library.UI.IconLargeWidth+2 : Library.UI.IconSmallWidth+2;
-			double iconWidth   = large ? Library.UI.IconLargeWidth : Library.UI.IconSmallWidth;
+			double buttonWidth = large ? Library.UI.Constants.IconLargeWidth+2 : Library.UI.Constants.IconSmallWidth+2;
+			double iconWidth   = large ? Library.UI.Constants.IconLargeWidth : Library.UI.Constants.IconSmallWidth;
 
 			if (isActivable)
 			{

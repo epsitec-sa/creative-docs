@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Core.Data
 			}
 			catch (System.Exception ex)
 			{
-				UI.ShowErrorMessage
+				Library.UI.Services.ShowErrorMessage
 				(
 					Epsitec.Cresus.Core.Library.Data.Res.Strings.Error.CannotConnectToLocalDatabase,
 					Epsitec.Cresus.Core.Library.Data.Res.Strings.Hint.Error.CannotConnectToLocalDatabase,

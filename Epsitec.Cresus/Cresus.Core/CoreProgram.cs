@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Core
 //-			Data.Test.Example1 ();
 			
 			GeneralExceptionCatcher.Setup ();
-			UI.Initialize ();
+			Library.UI.Services.Initialize ();
 
 			using (var app = new CoreApplication ())
 			{
@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Core
 					app.Window.Run ();
 				}
 
-				UI.ShutDown ();
+				Library.UI.Services.ShutDown ();
 			}
 		}
 	}

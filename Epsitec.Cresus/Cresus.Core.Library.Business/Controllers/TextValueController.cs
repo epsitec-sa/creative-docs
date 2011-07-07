@@ -48,9 +48,9 @@ namespace Epsitec.Cresus.Core.Controllers
 					return this.languageId;
 				}
 
-				if (UI.Settings.CultureForData.HasLanguageId)
+				if (Library.UI.Services.Settings.CultureForData.HasLanguageId)
 				{
-					return UI.Settings.CultureForData.LanguageId;
+					return Library.UI.Services.Settings.CultureForData.LanguageId;
 				}
 
 				return null;
@@ -373,11 +373,11 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					if (multilingualText == null)
 					{
-						textField.SetUndefinedLanguage (UI.Settings.CultureForData.HasLanguageId);
+						textField.SetUndefinedLanguage (Library.UI.Services.Settings.CultureForData.HasLanguageId);
 					}
 					else
 					{
-						textField.SetUndefinedLanguage (UI.Settings.CultureForData.HasLanguageId && !multilingualText.ContainsLanguage (UI.Settings.CultureForData.LanguageId));
+						textField.SetUndefinedLanguage (Library.UI.Services.Settings.CultureForData.HasLanguageId && !multilingualText.ContainsLanguage (Library.UI.Services.Settings.CultureForData.LanguageId));
 					}
 				}
 			}

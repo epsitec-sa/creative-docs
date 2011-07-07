@@ -38,6 +38,8 @@ namespace Epsitec.Cresus.Core.Business
 
 		bool ReleaseLock();
 
+		AbstractEntity CreateEntity(Druid entityId);
+
 		T CreateEntity<T>()
 			where T : AbstractEntity, new ();
 

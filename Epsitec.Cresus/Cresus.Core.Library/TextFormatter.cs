@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Core
 		{
 			get
 			{
-				UI.CultureSettings culture = UI.Settings.CultureForData;
+				Library.UI.CultureSettings culture = Library.UI.Services.Settings.CultureForData;
 				return culture.LanguageId;
 			}
 		}
@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core
 		{
 			get
 			{
-				return TextFormatter.cultureOverride ?? UI.Settings.CultureForData.CultureInfo;
+				return TextFormatter.cultureOverride ?? Library.UI.Services.Settings.CultureForData.CultureInfo;
 			}
 		}
 

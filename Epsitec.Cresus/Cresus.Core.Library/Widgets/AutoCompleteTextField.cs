@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			this.HintEditorMode = Widgets.HintEditorMode.DisplayMenuForSmallList;
 			this.HintEditorSmallListLimit = 100;
-			this.MenuButtonWidth = Library.UI.ComboButtonWidth-1;
+			this.MenuButtonWidth = Library.UI.Constants.ComboButtonWidth-1;
 
 			this.TextDisplayMode = TextFieldDisplayMode.ActiveHint;
 			this.DefocusAction = Common.Widgets.DefocusAction.AcceptEdition;

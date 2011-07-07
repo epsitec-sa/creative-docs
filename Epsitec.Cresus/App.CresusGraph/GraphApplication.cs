@@ -7,6 +7,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Library.UI;
 using Epsitec.Cresus.Graph.ImportConverters;
 
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace Epsitec.Cresus.Graph
 	{
 		public GraphApplication()
 		{
-			UI.SetApplication (this);
+			Services.SetApplication (this);
 
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookRoyale");
 
@@ -339,7 +340,7 @@ namespace Epsitec.Cresus.Graph
 						}
 					}
 					
-					UI.RestoreWindowPositions (store.Element ("windowPositions"));
+					Services.RestoreWindowPositions (store.Element ("windowPositions"));
 					this.persistenceManager.Restore (store.Element ("uiSettings"));
 				}
 			}
@@ -363,7 +364,7 @@ namespace Epsitec.Cresus.Graph
 						new XAttribute ("status", saveStatus ? "done" : "open"),
 //						this.StateManager.SaveStates ("stateManager"),
 						this.SaveOpenDocumentSettings ("documents"),
-						UI.SaveWindowPositions ("windowPositions"),
+						Services.SaveWindowPositions ("windowPositions"),
 						this.persistenceManager.Save ("uiSettings")));
 
 				doc.Save (GraphApplication.Paths.SettingsPath);

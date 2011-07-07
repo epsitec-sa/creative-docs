@@ -43,13 +43,13 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 					Text = string.Concat (label, " :"),
 					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 					Dock = DockStyle.Stacked,
-					Margins = new Margins (0, Library.UI.RightMargin, 0, Library.UI.MarginUnderLabel),
+					Margins = new Margins (0, Library.UI.Constants.RightMargin, 0, Library.UI.Constants.MarginUnderLabel),
 				};
 			}
 
-			this.toolbar = UIBuilder.CreateMiniToolbar (parent, Library.UI.TinyButtonSize);
+			this.toolbar = UIBuilder.CreateMiniToolbar (parent, Library.UI.Constants.TinyButtonSize);
 			this.toolbar.Dock = DockStyle.Stacked;
-			this.toolbar.Margins = new Margins (0, Library.UI.RightMargin, 0, -1);
+			this.toolbar.Margins = new Margins (0, Library.UI.Constants.RightMargin, 0, -1);
 		}
 
 		public void UpdateUI(ArticleDefinitionEntity articleDefinition, AbstractTextField textField)
@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 					AutoFocus = false,
 					Name = parameter.Name.ToString (),
 					Text = parameter.Name.ToString (),
-					PreferredHeight = Library.UI.TinyButtonSize,
+					PreferredHeight = Library.UI.Constants.TinyButtonSize,
 					Margins = new Margins (0, 1, 0, 0),
 					Dock = DockStyle.Left,
 				};

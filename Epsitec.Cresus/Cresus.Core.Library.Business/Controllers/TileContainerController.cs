@@ -51,8 +51,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.refreshTimer.TimeElapsed += this.HandleTimerTimeElapsed;
 			this.parent.SizeChanged += this.HandleContainerSizeChanged;
 
-			this.controller.ActivateNextSubView = cyclic => UI.ExecuteWithDirectSetFocus  (() => this.ActivateNextGenericTile (this.GetCyclicGenericTiles (cyclic)));
-			this.controller.ActivatePrevSubView = cyclic => UI.ExecuteWithReverseSetFocus (() => this.ActivateNextGenericTile (this.GetCyclicGenericTiles (cyclic).Reverse ()));
+			this.controller.ActivateNextSubView = cyclic => Library.UI.Services.ExecuteWithDirectSetFocus (() => this.ActivateNextGenericTile (this.GetCyclicGenericTiles (cyclic)));
+			this.controller.ActivatePrevSubView = cyclic => Library.UI.Services.ExecuteWithReverseSetFocus (() => this.ActivateNextGenericTile (this.GetCyclicGenericTiles (cyclic).Reverse ()));
 
 			this.controller.Disposing += this.HandleControllerDisposing;
 			this.dataContext.EntityChanged += this.HandleEntityChanged;

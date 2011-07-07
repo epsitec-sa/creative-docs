@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace Epsitec.Cresus.Core.Library
+namespace Epsitec.Cresus.Core.Library.UI
 {
 	using FormResourceAccessor=Epsitec.Common.Support.ResourceAccessors.FormResourceAccessor;
 
@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Core.Library
 	/// The <c>UI</c> static class provides central support for user interface
 	/// related tasks.
 	/// </summary>
-	public static partial class UI
+	public static partial class Services
 	{
 		/// <summary>
 		/// Initializes everything on application startup so that the user
@@ -26,13 +26,13 @@ namespace Epsitec.Cresus.Core.Library
 		/// </summary>
 		public static void Initialize()
 		{
-			UI.SetupResourceManagerPool ();
-			UI.SetupWidgetInfrastructure ();
+			Services.SetupResourceManagerPool ();
+			Services.SetupWidgetInfrastructure ();
 		}
 
 		public static void SetApplication(Application application)
 		{
-			UI.data = new PrivateData (application);
+			Services.data = new PrivateData (application);
 		}
 
 		/// <summary>
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.Library
 			{
 				get
 				{
-					return UI.data.CultureSettings;
+					return Services.data.CultureSettings;
 				}
 			}
 		}
@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Core.Library
 		{
 			get
 			{
-				return UI.data.WindowPlacementHints;
+				return Services.data.WindowPlacementHints;
 			}
 		}
 
@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Core.Library
 		/// <param name="xml">The XML tree.</param>
 		public static void RestoreWindowPositions(XElement xml)
 		{
-			UI.WindowPlacementHints.Clear ();
+			Services.WindowPlacementHints.Clear ();
 
 			foreach (XElement element in xml.Elements ("window"))
 			{
@@ -96,10 +96,10 @@ namespace Epsitec.Cresus.Core.Library
 
 				WindowPlacement wp = WindowPlacement.Parse (placement);
 
-				UI.WindowPlacementHints.Add (new WindowPlacementHint (name, title, wp));
+				Services.WindowPlacementHints.Add (new WindowPlacementHint (name, title, wp));
 			}
 
-			UI.RestoreWindowPositionsOfExistingWindows ();
+			Services.RestoreWindowPositionsOfExistingWindows ();
 		}
 
 		/// <summary>
@@ -108,14 +108,14 @@ namespace Epsitec.Cresus.Core.Library
 		/// <param name="window">The window.</param>
 		public static void SaveWindowPosition(Window window)
 		{
-			var hint = UI.FindBestPlacement (window);
+			var hint = Services.FindBestPlacement (window);
 
 			if (hint.IsEmpty == false)
             {
-				UI.WindowPlacementHints.Remove (hint);
+				Services.WindowPlacementHints.Remove (hint);
             }
 
-			UI.WindowPlacementHints.Add (new WindowPlacementHint (window.Name, window.Text, window.WindowPlacement));
+			Services.WindowPlacementHints.Add (new WindowPlacementHint (window.Name, window.Text, window.WindowPlacement));
 		}
 		
 		/// <summary>
@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.Core.Library
 		/// <returns><c>true</c> if the window placement was restored; otherwise, <c>false</c>.</returns>
 		public static bool RestoreWindowPosition(Window window)
 		{
-			var hint = UI.FindBestPlacement (window);
+			var hint = Services.FindBestPlacement (window);
 
 			if (hint.IsEmpty)
 			{
@@ -156,13 +156,13 @@ namespace Epsitec.Cresus.Core.Library
 			//	find out if we already registered the position saver, or not.
 			
 			bool defined;
-			window.TryGetLocalValue (UI.Properties.IsWindowPositionSaverActiveProperty, out defined);
+			window.TryGetLocalValue (Properties.IsWindowPositionSaverActiveProperty, out defined);
 
 			if (!defined)
 			{
-				window.SetLocalValue (UI.Properties.IsWindowPositionSaverActiveProperty, true);
-				window.WindowFocused      += sender => UI.SaveWindowPosition (window);
-				window.WindowCloseClicked += sender => UI.SaveWindowPosition (window);
+				window.SetLocalValue (Properties.IsWindowPositionSaverActiveProperty, true);
+				window.WindowFocused      += sender => Services.SaveWindowPosition (window);
+				window.WindowCloseClicked += sender => Services.SaveWindowPosition (window);
 			}
 		}
 
@@ -178,25 +178,25 @@ namespace Epsitec.Cresus.Core.Library
 		public static void ShowErrorMessage(FormattedText message, FormattedText hint, System.Exception ex)
 		{
 			string exMessage   = ex == null ? "" : ex.Message;
-			string fullMessage = string.Format (message.ToString (), UI.GetShortWindowTitle (), exMessage);
+			string fullMessage = string.Format (message.ToString (), Services.GetShortWindowTitle (), exMessage);
 			FormattedText formattedMessage;
 
 			if (hint.IsNullOrEmpty)
 			{
-				formattedMessage = new FormattedText (string.Concat (UI.StringMessageFontElement, fullMessage, UI.StringEndFontElement));
+				formattedMessage = new FormattedText (string.Concat (Services.StringMessageFontElement, fullMessage, Services.StringEndFontElement));
 			}
 			else
 			{
 				formattedMessage = new FormattedText (string.Concat (
-					UI.StringMessageFontElement,
+					Services.StringMessageFontElement,
 					fullMessage,
-					UI.StringEndFontElement,
+					Services.StringEndFontElement,
 					@"<br/><br/>",
-					string.Format (hint.ToString (), UI.GetShortWindowTitle (), exMessage),
+					string.Format (hint.ToString (), Services.GetShortWindowTitle (), exMessage),
 					@"<br/>&#160;"));
 			}
 
-			MessageDialog.ShowError (formattedMessage, UI.GetShortWindowTitle (), null);
+			MessageDialog.ShowError (formattedMessage, Services.GetShortWindowTitle (), null);
 		}
 
 
@@ -210,7 +210,7 @@ namespace Epsitec.Cresus.Core.Library
 		{
 			IEnumerable<Visual> children = container.Children;
 
-			if (UI.data.ReverseSetFocus)
+			if (Services.data.ReverseSetFocus)
 			{
 				//	We are called as a result to ExecuteWithReverseSetFocus, which means
 				//	that we should start looking for the widgets in reverse order:
@@ -232,7 +232,7 @@ namespace Epsitec.Cresus.Core.Library
 
 				if (widget.HasChildren)
 				{
-					if (UI.SetInitialFocus (widget))
+					if (Services.SetInitialFocus (widget))
 					{
 						return true;
 					}
@@ -251,7 +251,7 @@ namespace Epsitec.Cresus.Core.Library
 		/// <returns>The value returned by the action.</returns>
 		public static T ExecuteWithDirectSetFocus<T>(System.Func<T> action)
 		{
-			return UI.ExecuteWithSpecifiedSetFocus (action, reverseSetFocus: false);
+			return Services.ExecuteWithSpecifiedSetFocus (action, reverseSetFocus: false);
 		}
 
 		/// <summary>
@@ -262,15 +262,15 @@ namespace Epsitec.Cresus.Core.Library
 		/// <returns>The value returned by the action.</returns>
 		public static T ExecuteWithReverseSetFocus<T>(System.Func<T> action)
 		{
-			return UI.ExecuteWithSpecifiedSetFocus (action, reverseSetFocus: true);
+			return Services.ExecuteWithSpecifiedSetFocus (action, reverseSetFocus: true);
 		}
 
 		
 		private static T ExecuteWithSpecifiedSetFocus<T>(System.Func<T> action, bool reverseSetFocus)
 		{
-			bool focus = UI.data.ReverseSetFocus;
-			
-			UI.data.ReverseSetFocus = reverseSetFocus;
+			bool focus = Services.data.ReverseSetFocus;
+
+			Services.data.ReverseSetFocus = reverseSetFocus;
 			
 			try
 			{
@@ -278,19 +278,19 @@ namespace Epsitec.Cresus.Core.Library
 			}
 			finally
 			{
-				UI.data.ReverseSetFocus = focus;
+				Services.data.ReverseSetFocus = focus;
 			}
 		}
 
 		private static string GetShortWindowTitle()
 		{
-			if (UI.data == null)
+			if (Services.data == null)
 			{
 				return null;
 			}
 			else
 			{
-				return UI.data.Application.ShortWindowTitle;
+				return Services.data.Application.ShortWindowTitle;
 			}
 		}
 
@@ -356,18 +356,18 @@ namespace Epsitec.Cresus.Core.Library
 		private static void RestoreWindowPositionsOfExistingWindows()
 		{
 			var windows = new List<Window> (Window.GetAllLiveWindows ());
-			var hints   = UI.WindowPlacementHints.ToArray ();
+			var hints   = Services.WindowPlacementHints.ToArray ();
 
 			foreach (var hint in hints)
 			{
-				Window window = UI.FindBestWindowMatch (windows, hint.Name, hint.Title);
+				Window window = Services.FindBestWindowMatch (windows, hint.Name, hint.Title);
 
 				if (window == null)
 				{
 					continue;
 				}
 
-				UI.RegisterWindowPositionSaver (window);
+				Services.RegisterWindowPositionSaver (window);
 
 				if (window.IsVisible)
 				{
@@ -388,7 +388,7 @@ namespace Epsitec.Cresus.Core.Library
 			string title = window.Text ?? "";
 
 			//	First, try to find an exact match : name + title
-			foreach (var hint in UI.WindowPlacementHints)
+			foreach (var hint in Services.WindowPlacementHints)
 			{
 				if ((hint.Name == name) &&
 					(hint.Title == title))
@@ -398,7 +398,7 @@ namespace Epsitec.Cresus.Core.Library
 			}
 
 			//	Second, try to find a match based only on the name
-			foreach (var hint in UI.WindowPlacementHints)
+			foreach (var hint in Services.WindowPlacementHints)
 			{
 				if (hint.Name == name)
 				{
@@ -409,20 +409,20 @@ namespace Epsitec.Cresus.Core.Library
 			return WindowPlacementHint.Empty;
 		}
 
-		private static void NotifyUpdateRequested(object sender)
+		internal static void NotifyUpdateRequested(object sender)
 		{
-			UI.data.NotifyUpdateRequested (sender);
+			Services.data.NotifyUpdateRequested (sender);
 		}
 
 		public static event EventHandler					UpdateRequested
 		{
 			add
 			{
-				UI.data.UpdateRequested += value;
+				Services.data.UpdateRequested += value;
 			}
 			remove
 			{
-				UI.data.UpdateRequested -= value;
+				Services.data.UpdateRequested -= value;
 			}
 		}
 

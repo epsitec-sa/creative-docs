@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 				Parent = parent,
 				PreferredHeight = 200,  // hauteur arbitraire permettant de voir environ 5 plans comptables sans scrolling
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, Library.UI.RightMargin, 0, 0),
+				Margins = new Margins (0, Library.UI.Constants.RightMargin, 0, 0),
 				TabIndex = tabIndex++,
 			};
 
@@ -57,12 +57,12 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 				Parent = frame,
 				Dock = DockStyle.Top,
 				Text = "Liste des plans comptables :",
-				Margins = new Margins (0, Library.UI.RightMargin, 0, Library.UI.MarginUnderLabel),
+				Margins = new Margins (0, Library.UI.Constants.RightMargin, 0, Library.UI.Constants.MarginUnderLabel),
 			};
 
 			{
 				//	Crée la toolbar.
-				double buttonSize = Library.UI.TinyButtonSize;
+				double buttonSize = Library.UI.Constants.TinyButtonSize;
 
 				var toolbar = UIBuilder.CreateMiniToolbar (frame, buttonSize);
 				toolbar.Dock = DockStyle.Top;
