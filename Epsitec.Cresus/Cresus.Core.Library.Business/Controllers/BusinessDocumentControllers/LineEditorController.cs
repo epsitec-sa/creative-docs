@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				if (info.AbstractDocumentItemEntity is ArticleDocumentItemEntity)
 				{
-					if (info.QuantityIndex == 0)
+					if (info.SublineIndex == 0)
 					{
 						this.lineEditorController = new ArticleLineEditorController (this.accessData);
 						this.lineEditorController.CreateUI (this.editorTile, info.AbstractDocumentItemEntity);

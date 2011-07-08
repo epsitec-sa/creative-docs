@@ -14,6 +14,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		UniqueUnit,
 		UniqueBeginDate,
 		UniqueEndDate,
+		UniqueType,
 
 		OrderedQuantity,				// quantité commandée
 		OrderedUnit,

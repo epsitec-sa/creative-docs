@@ -960,10 +960,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				table.SetText (this.tableColumns[TableColumnKeys.Total             ].Rank, row+i, total,                                                                  this.FontSize);
 			}
 
-			for (int i = 0; i < accessor.RowsCount-1; i++)
-			{
-				table.SetUnbreakableRow (row+i, true);
-			}
+			this.TableMakeBlock (table, row, accessor.RowsCount);
 
 			if (this.IsWithFrame)
 			{

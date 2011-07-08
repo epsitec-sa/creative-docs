@@ -209,6 +209,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				column++;
 			}
 
+			// TODO: Colorer de façon similaire les groupes.
+
 			this.table.SelectRow (row, false);
 		}
 

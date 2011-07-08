@@ -14,6 +14,7 @@ using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.Helpers;
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Library.Business.ContentAccessors;
 
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -74,57 +75,37 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Retourne le contenu permettant de peupler une cellule du tableau.
 			var info = this.lineInformations[index];
 
-			var line     = info.AbstractDocumentItemEntity;
-			var quantity = info.ArticleQuantityEntity;
-
-			if (quantity != null)
+			switch (columnType)
 			{
-				switch (columnType)
-				{
-					case ColumnType.QuantityAndUnit:
-						return BusinessDocumentLinesController.GetArticleQuantityAndUnit (quantity);
+				case ColumnType.QuantityAndUnit:
+					return info.GetColumnContent (DocumentItemAccessorColumn.UniqueQuantity);
 
-					case ColumnType.Type:
-						return BusinessDocumentLinesController.GetArticleType (quantity);
+				case ColumnType.Type:
+					return info.GetColumnContent (DocumentItemAccessorColumn.UniqueType);
 
-					case ColumnType.Date:
-						return BusinessDocumentLinesController.GetArticleDate (quantity);
-				}
-			}
+				case ColumnType.Date:
+					return info.GetColumnContent (DocumentItemAccessorColumn.UniqueBeginDate);
 
-			if (info.QuantityIndex == 0)  // premère ligne ?
-			{
-				switch (columnType)
-				{
-					case ColumnType.ArticleId:
-						return BusinessDocumentLinesController.GetArticleId (line);
+				case ColumnType.ArticleId:
+					return info.GetColumnContent (DocumentItemAccessorColumn.ArticleId);
 
-					case ColumnType.ArticleDescription:
-						return BusinessDocumentLinesController.GetArticleDescription (line);
+				case ColumnType.ArticleDescription:
+					return info.GetColumnContent (DocumentItemAccessorColumn.ArticleDescription);
 
-					case ColumnType.Discount:
-						return BusinessDocumentLinesController.GetArticleDiscount (line as ArticleDocumentItemEntity);
+				case ColumnType.Discount:
+					return info.GetColumnContent (DocumentItemAccessorColumn.Discount);
 
-					case ColumnType.UnitPrice:
-						return BusinessDocumentLinesController.GetArticleUnitPrice (line as ArticleDocumentItemEntity);
+				case ColumnType.UnitPrice:
+					return info.GetColumnContent (DocumentItemAccessorColumn.UnitPrice);
 
-					case ColumnType.LinePrice:
-						return BusinessDocumentLinesController.GetArticleLinePrice (line as ArticleDocumentItemEntity);
+				case ColumnType.LinePrice:
+					return info.GetColumnContent (DocumentItemAccessorColumn.LinePrice);
 
-					case ColumnType.Vat:
-						return BusinessDocumentLinesController.GetArticleVat (line as ArticleDocumentItemEntity);
+				case ColumnType.Vat:
+					return info.GetColumnContent (DocumentItemAccessorColumn.Vat);
 
-					case ColumnType.Total:
-						return BusinessDocumentLinesController.GetArticleTotal (line as ArticleDocumentItemEntity);
-				}
-			}
-			else  // ligne suivante ?
-			{
-				switch (columnType)
-				{
-					case ColumnType.ArticleDescription:
-						return "     \"";  // pour indiquer que c'est identique à la première ligne
-				}
+				case ColumnType.Total:
+					return info.GetColumnContent (DocumentItemAccessorColumn.Total);
 			}
 
 			return null;
@@ -312,7 +293,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				if (line is ArticleDocumentItemEntity)
 				{
 					var article = line as ArticleDocumentItemEntity;
-					var quantity = article.ArticleQuantities[info.QuantityIndex];
+					var quantity = article.ArticleQuantities[info.SublineIndex];
 
 					var newQuantity = this.accessData.BusinessContext.CreateEntity<ArticleQuantityEntity> ();
 					newQuantity.Quantity = 1;
@@ -352,10 +333,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				var info = this.lineInformations[sel.Value];
 				var line = this.accessData.BusinessDocumentEntity.Lines.ElementAt (info.LineIndex);
 
-				if (line is ArticleDocumentItemEntity && info.QuantityIndex > 0)  // quantité ?
+				if (line is ArticleDocumentItemEntity && info.SublineIndex > 0)  // quantité ?
 				{
 					var article = line as ArticleDocumentItemEntity;
-					article.ArticleQuantities.RemoveAt (info.QuantityIndex);
+					article.ArticleQuantities.RemoveAt (info.SublineIndex);
 				}
 				else
 				{
@@ -438,20 +419,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				var line = this.accessData.BusinessDocumentEntity.Lines[i];
 
-				if (line is ArticleDocumentItemEntity)
-				{
-					var article = line as ArticleDocumentItemEntity;
+				var accessor = new DocumentItemAccessor ();
+				accessor.BuildContent (line, this.accessData.DocumentMetadataEntity.DocumentCategory.DocumentType, DocumentItemAccessorMode.ForceAllLines|DocumentItemAccessorMode.SpecialQuantitiesToDistinctLines);
 
-					for (int j = 0; j < article.ArticleQuantities.Count; j++)
-					{
-						var quantity = article.ArticleQuantities[j];
-
-						this.lineInformations.Add (new LineInformations (line, quantity, i, j));
-					}
-				}
-				else
+				for (int row = 0; row < accessor.RowsCount; row++)
 				{
-					this.lineInformations.Add (new LineInformations (line, null, i, 0));
+					this.lineInformations.Add (new LineInformations (line, accessor, i, row));
 				}
 			}
 		}
@@ -483,6 +456,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 
 	
+#if false
 		#region AbstractDocumentItemEntity extensions
 		// Toute cette partie de code doit être en accord avec Epsitec.Cresus.Core.EntityPrinters.DocumentMetadataPrinter, méthodes BuildXxxLine !
 		// TODO: Un jour, il faudrait en extraire le code commun.
@@ -760,6 +734,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			return null;
 		}
 		#endregion
+#endif
 
 
 		private readonly AccessData						accessData;

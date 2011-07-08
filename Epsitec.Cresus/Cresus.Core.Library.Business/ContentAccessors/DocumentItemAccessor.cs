@@ -25,6 +25,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		public DocumentItemAccessor()
 		{
 			this.content = new Dictionary<int, FormattedText> ();
+			this.articleQuantityEntities = new List<ArticleQuantityEntity> ();
 		}
 
 		public void BuildContent(AbstractDocumentItemEntity item, DocumentType type, DocumentItemAccessorMode mode)
@@ -93,6 +94,18 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			if (this.content.ContainsKey (key))
 			{
 				return this.content[key];
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public ArticleQuantityEntity GetArticleQuantityEntity(int row)
+		{
+			if (row < this.articleQuantityEntities.Count)
+			{
+				return this.articleQuantityEntities[row];
 			}
 			else
 			{
@@ -178,6 +191,8 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 				foreach (var quantity in line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == types[i]))
 				{
+					this.articleQuantityEntities.Add (quantity);
+
 					DocumentItemAccessorColumn quantityColumn, unitColumn, beginDateColumn, endDateColumn;
 
 					if ((this.mode & DocumentItemAccessorMode.SpecialQuantitiesToDistinctLines) == 0)  // colonnes distinctes ?
@@ -189,6 +204,8 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 					}
 					else  // lignes distinctes ?
 					{
+						this.SetContent (row, DocumentItemAccessorColumn.UniqueType, quantity.QuantityColumn.Name);
+
 						quantityColumn  = DocumentItemAccessorColumn.UniqueQuantity;
 						unitColumn      = DocumentItemAccessorColumn.UniqueUnit;
 						beginDateColumn = DocumentItemAccessorColumn.UniqueBeginDate;
@@ -252,7 +269,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 		private void BuildSubTotalItem(SubTotalDocumentItemEntity line)
 		{
-			//	Ligne "sous-total".
+			//	1) Ligne "sous-total".
 			FormattedText primaryText = line.TextForPrimaryPrice;
 
 			if (primaryText.IsNullOrEmpty)
@@ -263,7 +280,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			decimal primaryPrice = line.PrimaryPriceBeforeTax.GetValueOrDefault (0);
 			decimal primaryVat   = line.PrimaryTax.GetValueOrDefault (0);
 
-			//	Ligne "rabais".
+			//	2) Ligne "rabais".
 			bool existingDiscount = false;
 			FormattedText discountText = "";
 
@@ -271,9 +288,6 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			{
 				discountText = "Rabais";
 			}
-
-			decimal discountPrice = 0;
-			decimal discountVat   = 0;
 
 			if (line.Discount.DiscountRate.HasValue)
 			{
@@ -286,8 +300,6 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				}
 
 				discountText = FormattedText.Concat (discountText, " (", Misc.PercentToString (line.Discount.DiscountRate), ")");
-
-				discountPrice = primaryPrice * line.Discount.DiscountRate.Value;
 			}
 
 			if (line.Discount.Value.HasValue)
@@ -299,47 +311,16 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				{
 					discountText = "Rabais";
 				}
-
-				discountPrice = line.Discount.Value.Value;
 			}
 
-			//	Ligne "total après rabais".
+			decimal discountPrice = line.PrimaryPriceBeforeTax.Value - line.ResultingPriceBeforeTax.Value;
+			decimal discountVat   = line.PrimaryTax.Value            - line.ResultingTax.Value;
+
+			//	3) Ligne "total après rabais".
 			FormattedText sumText = "Total après rabais";
 
-			decimal sumPrice = primaryPrice - discountPrice;
-			decimal sumVat   = primaryVat   - discountVat;
-
-			//	Ligne "total arrêté".
-			bool existingFinal = false;
-			FormattedText finalText = line.TextForFixedPrice;
-
-			if (finalText.IsNullOrEmpty)
-			{
-				finalText = "Total arrêté";
-			}
-
-			decimal finalPrice, finalVat;
-
-			if (line.FixedPrice.HasValue)
-			{
-				existingFinal = true;
-
-				if (line.FixedPriceIncludesTaxes)
-				{
-					finalPrice = line.FixedPrice.GetValueOrDefault (0) - line.ResultingTax.GetValueOrDefault (0);
-					finalVat   = line.ResultingTax.GetValueOrDefault (0);
-				}
-				else
-				{
-					finalPrice = line.FixedPrice.GetValueOrDefault (0);
-					finalVat   = line.ResultingTax.GetValueOrDefault (0);
-				}
-			}
-			else
-			{
-				finalPrice = sumPrice;
-				finalVat   = sumVat;
-			}
+			decimal sumPrice = line.ResultingPriceBeforeTax.Value;
+			decimal sumVat   = line.ResultingTax.Value;
 
 			//	Génère les lignes.
 			int row = 0;
@@ -362,15 +343,6 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				this.SetContent (row, DocumentItemAccessorColumn.LinePrice,          Misc.PriceToString (sumPrice));
 				this.SetContent (row, DocumentItemAccessorColumn.Vat,                Misc.PriceToString (sumVat));
 				this.SetContent (row, DocumentItemAccessorColumn.Total,              Misc.PriceToString (sumPrice + sumVat));
-				row++;
-			}
-
-			if (existingFinal || (this.mode & DocumentItemAccessorMode.ForceAllLines) != 0)
-			{
-				this.SetContent (row, DocumentItemAccessorColumn.ArticleDescription, finalText);
-				this.SetContent (row, DocumentItemAccessorColumn.LinePrice,          Misc.PriceToString (finalPrice));
-				this.SetContent (row, DocumentItemAccessorColumn.Vat,                Misc.PriceToString (finalVat));
-				this.SetContent (row, DocumentItemAccessorColumn.Total,              Misc.PriceToString (finalPrice + finalVat));
 				row++;
 			}
 	
@@ -502,6 +474,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		private DocumentType						type;
 		private DocumentItemAccessorMode			mode;
 		private Dictionary<int, FormattedText>		content;
+		private List<ArticleQuantityEntity>			articleQuantityEntities;
 		private int									rowsCount;
 	}
 }

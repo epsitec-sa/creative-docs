@@ -1,18 +1,20 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
+using Epsitec.Common.Types;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Library.Business.ContentAccessors;
 
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
 	public class LineInformations
 	{
-		public LineInformations(AbstractDocumentItemEntity abstractDocumentItemEntity, ArticleQuantityEntity articleQuantityEntity, int lineIndex, int quantityIndex)
+		public LineInformations(AbstractDocumentItemEntity abstractDocumentItemEntity, DocumentItemAccessor documentItemAccessor, int lineIndex, int sublineIndex)
 		{
 			this.AbstractDocumentItemEntity = abstractDocumentItemEntity;
-			this.ArticleQuantityEntity      = articleQuantityEntity;
+			this.DocumentItemAccessor       = documentItemAccessor;
 			this.LineIndex                  = lineIndex;
-			this.QuantityIndex              = quantityIndex;
+			this.SublineIndex               = sublineIndex;
 		}
 
 		public AbstractDocumentItemEntity AbstractDocumentItemEntity
@@ -21,10 +23,23 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			internal set;
 		}
 
-		public ArticleQuantityEntity ArticleQuantityEntity
+		public DocumentItemAccessor DocumentItemAccessor
 		{
 			get;
 			internal set;
+		}
+
+		public ArticleQuantityEntity ArticleQuantityEntity
+		{
+			get
+			{
+				return this.DocumentItemAccessor.GetArticleQuantityEntity (this.SublineIndex);
+			}
+		}
+
+		public FormattedText GetColumnContent(DocumentItemAccessorColumn column)
+		{
+			return this.DocumentItemAccessor.GetContent (this.SublineIndex, column);
 		}
 
 		public int LineIndex
@@ -33,7 +48,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			internal set;
 		}
 
-		public int QuantityIndex
+		public int SublineIndex
 		{
 			get;
 			internal set;
