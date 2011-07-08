@@ -77,6 +77,9 @@
     <Compile Include="Business\Rules\OptionValueBusinessRules.cs" />
     <Compile Include="Business\Rules\RelationBusinessRules.cs" />
     <Compile Include="Business\Rules\TaxSettingsBusinessRules.cs" />
+    <Compile Include="ContentAccessors\DocumentItemAccessorColumn.cs" />
+    <Compile Include="ContentAccessors\DocumentItemAccessor.cs" />
+    <Compile Include="ContentAccessors\DocumentItemAccessorMode.cs" />
     <Compile Include="Controllers\ActionViewController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\AbstractArticleParameterController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\ArticleParameterListPreferredValuesController.cs" />

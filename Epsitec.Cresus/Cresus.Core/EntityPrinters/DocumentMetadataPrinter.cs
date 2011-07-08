@@ -753,7 +753,10 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		private int BuildTextLine(TableBand table, int row, TextDocumentItemEntity line)
 		{
 			//	Retourne le nombre de lignes à utiliser dans le tableau.
-			var text = FormattedText.Concat ("<b>", line.Text, "</b>");
+			var accessor = new Epsitec.Cresus.Core.Library.Business.ContentAccessors.DocumentItemAccessor ();
+			accessor.BuildContent (line, this.DocumentType, Library.Business.ContentAccessors.DocumentItemAccessorMode.None);
+
+			var text = accessor.GetContent (0, Library.Business.ContentAccessors.DocumentItemAccessorColumn.ArticleDescription).ApplyBold ();
 			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, text, this.FontSize);
 
 			return 1;
