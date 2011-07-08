@@ -345,7 +345,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			var key = DocumentItemAccessor.GetKey (row, column);
 			this.content[key] = text;
 
-			this.rowsCount = System.Math.Max (this.rowsCount, row);
+			this.rowsCount = System.Math.Max (this.rowsCount, row+1);
 		}
 
 

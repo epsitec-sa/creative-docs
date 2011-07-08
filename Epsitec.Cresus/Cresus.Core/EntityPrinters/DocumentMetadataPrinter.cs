@@ -20,6 +20,7 @@ using Epsitec.Cresus.Core.Print.Bands;
 using Epsitec.Cresus.Core.Print.Containers;
 using Epsitec.Cresus.Core.Print.EntityPrinters;
 using Epsitec.Cresus.Core.Resolvers;
+using Epsitec.Cresus.Core.Library.Business.ContentAccessors;
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -753,13 +754,13 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		private int BuildTextLine(TableBand table, int row, TextDocumentItemEntity line)
 		{
 			//	Retourne le nombre de lignes à utiliser dans le tableau.
-			var accessor = new Epsitec.Cresus.Core.Library.Business.ContentAccessors.DocumentItemAccessor ();
-			accessor.BuildContent (line, this.DocumentType, Library.Business.ContentAccessors.DocumentItemAccessorMode.None);
+			var accessor = new DocumentItemAccessor ();
+			accessor.BuildContent (line, this.DocumentType, DocumentItemAccessorMode.None);
 
-			var text = accessor.GetContent (0, Library.Business.ContentAccessors.DocumentItemAccessorColumn.ArticleDescription).ApplyBold ();
+			var text = accessor.GetContent (0, DocumentItemAccessorColumn.ArticleDescription).ApplyBold ();
 			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, text, this.FontSize);
 
-			return 1;
+			return accessor.RowsCount;
 		}
 
 		private int BuildArticleLine(TableBand table, int row, ArticleDocumentItemEntity line, ArticleGroupEntity group)
@@ -780,73 +781,67 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				return 0;
 			}
 
-			FormattedText q1   = FormattedText.Null;
-			FormattedText q2   = FormattedText.Null;
-			FormattedText date = FormattedText.Null;
+			var accessor = new DocumentItemAccessor ();
+			accessor.BuildContent (line, this.DocumentType, DocumentItemAccessorMode.None);
 
-			foreach (var quantity in line.ArticleQuantities)
+			for (int i = 0; i < accessor.RowsCount; i++)
 			{
-				if (quantity.QuantityColumn.QuantityType == Business.ArticleQuantityType.Billed)
-				{
-					q1 = Misc.FormatUnit (quantity.Quantity, quantity.Unit.Code);
-				}
-
-				if (quantity.QuantityColumn.QuantityType == Business.ArticleQuantityType.Delayed)
-				{
-					q2.AppendLine (Misc.FormatUnit (quantity.Quantity, quantity.Unit.Code));
-
-					if (quantity.BeginDate.HasValue)
-					{
-						date.AppendLine (quantity.BeginDate.Value.ToString ());
-					}
-				}
+				table.SetText (this.tableColumns[TableColumnKeys.Quantity       ].Rank, row+i, DocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.BilledQuantity,  DocumentItemAccessorColumn.BilledUnit),  this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.DelayedQuantity].Rank, row+i, DocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.DelayedQuantity, DocumentItemAccessorColumn.DelayedUnit), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.DelayedDate    ].Rank, row+i, accessor.GetContent (i, DocumentItemAccessorColumn.DelayedBeginDate), this.FontSize);
 			}
-
-			FormattedText description = ArticleDocumentItemHelper.GetArticleDescription (line, replaceTags: true, shortDescription: this.DocumentType == Business.DocumentType.ProductionOrder);
-
-			if (q1 != null)
-			{
-				table.SetText (this.tableColumns[TableColumnKeys.Quantity].Rank, row, q1, this.FontSize);
-			}
-
-			if (q2 != null)
-			{
-				table.SetText (this.tableColumns[TableColumnKeys.DelayedQuantity].Rank, row, q2, this.FontSize);
-			}
-
-			if (date != null)
-			{
-				table.SetText (this.tableColumns[TableColumnKeys.DelayedDate].Rank, row, date, this.FontSize);
-			}
-
-			table.SetText (this.tableColumns[TableColumnKeys.ArticleId         ].Rank, row, ArticleDocumentItemHelper.GetArticleId (line),       this.FontSize);
-			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, description,                                         this.FontSize);
-			table.SetText (this.tableColumns[TableColumnKeys.UnitPrice         ].Rank, row, Misc.PriceToString (line.PrimaryUnitPriceBeforeTax), this.FontSize);
+			
+			table.SetText (this.tableColumns[TableColumnKeys.ArticleId         ].Rank, row, accessor.GetContent (0, DocumentItemAccessorColumn.ArticleId),          this.FontSize);
+			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, accessor.GetContent (0, DocumentItemAccessorColumn.ArticleDescription), this.FontSize);
+			table.SetText (this.tableColumns[TableColumnKeys.UnitPrice         ].Rank, row, accessor.GetContent (0, DocumentItemAccessorColumn.UnitPrice),          this.FontSize);
 
 			if (line.ResultingLinePriceBeforeTax.HasValue && line.ResultingLineTax1.HasValue)
 			{
 				decimal beforeTax = line.ResultingLinePriceBeforeTax.Value;
 				decimal tax =       line.ResultingLineTax1.Value;
 
-				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, row, Misc.PriceToString (beforeTax),     this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.Vat      ].Rank, row, Misc.PriceToString (tax),           this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.Total    ].Rank, row, Misc.PriceToString (beforeTax+tax), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, row, accessor.GetContent (0, DocumentItemAccessorColumn.LinePrice), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.Vat      ].Rank, row, accessor.GetContent (0, DocumentItemAccessorColumn.Vat),       this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.Total    ].Rank, row, accessor.GetContent (0, DocumentItemAccessorColumn.Total),     this.FontSize);
 			}
 
 			if (line.Discounts.Count != 0)
 			{
-				if (line.Discounts[0].DiscountRate.HasValue)
+				if (line.Discounts[0].DiscountRate.HasValue || line.Discounts[0].Value.HasValue)
 				{
-					table.SetText (this.tableColumns[TableColumnKeys.Discount].Rank, row, Misc.PercentToString (line.Discounts[0].DiscountRate.Value), this.FontSize);
-				}
-
-				if (line.Discounts[0].Value.HasValue)
-				{
-					table.SetText (this.tableColumns[TableColumnKeys.Discount].Rank, row, Misc.PriceToString (line.Discounts[0].Value.Value), this.FontSize);
+					table.SetText (this.tableColumns[TableColumnKeys.Discount].Rank, row, accessor.GetContent (0, DocumentItemAccessorColumn.Discount), this.FontSize);
 				}
 			}
 
-			return 1;
+			for (int i = 0; i < accessor.RowsCount-1; i++)
+			{
+				table.SetUnbreakableRow (row+i, true);
+				table.SetCellBorder (row+i, this.GetCellBorder (bottomLess: true));  // pas de trait horizontal entre les 2 fausses lignes
+				table.SetCellMargins (row+i, this.GetCellMargins (bottomForce: 0.5));
+			}
+
+			for (int i = 1; i < accessor.RowsCount; i++)
+			{
+				table.SetCellBorder (row+i, this.GetCellBorder (topLess: true, bottomBold: true));
+				table.SetCellMargins (row+i, this.GetCellMargins (topForce: 0.5));  // un demi-espace entre les 2 fausses lignes
+			}
+
+			return accessor.RowsCount;
+		}
+
+		private static FormattedText GetQuantityAndUnit(DocumentItemAccessor accessor, int row, DocumentItemAccessorColumn quantity, DocumentItemAccessorColumn unit)
+		{
+			var q = accessor.GetContent (row, quantity).ToString ();
+			var u = accessor.GetContent (row, unit).ToString ();
+
+			if (string.IsNullOrEmpty (q))
+			{
+				return null;
+			}
+			else
+			{
+				return Misc.FormatUnit (decimal.Parse (q), u);
+			}
 		}
 
 		private int BuildPriceLine(TableBand table, int row, SubTotalDocumentItemEntity line)
@@ -860,109 +855,38 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				return 0;
 			}
 
-			string discount = InvoiceDocumentHelper.GetAmount (line);
+			var accessor = new DocumentItemAccessor ();
+			accessor.BuildContent (line, this.DocumentType, DocumentItemAccessorMode.None);
 
-			//	Colonne "Désignation":
-			if (discount == null)
+			for (int i = 0; i < accessor.RowsCount; i++)
 			{
-				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, line.TextForResultingPrice, this.FontSize);
-			}
-			else
-			{
-				FormattedText rabais;
-				if (line.Discount.DiscountRate.HasValue)
-				{
-					rabais = FormattedText.Concat ("Rabais ", discount);  // Rabais 20.0%
-				}
-				else
-				{
-					rabais = "Rabais";
-				}
-
-				FormattedText text = FormattedText.Concat (line.TextForPrimaryPrice, FormattedText.HtmlBreak, rabais);
-				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row+0, text,                       this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row+1, line.TextForResultingPrice, this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row+i, accessor.GetContent (i, DocumentItemAccessorColumn.ArticleDescription), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.LinePrice         ].Rank, row+i, accessor.GetContent (i, DocumentItemAccessorColumn.LinePrice),          this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.Vat               ].Rank, row+i, accessor.GetContent (i, DocumentItemAccessorColumn.Vat),                this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.Total             ].Rank, row+i, accessor.GetContent (i, DocumentItemAccessorColumn.Total),              this.FontSize);
 			}
 
-			//	Colonne "Prix HT":
-			if (discount == null)
-			{
-				decimal v1 = line.ResultingPriceBeforeTax.GetValueOrDefault (0);
-				string p1 = Misc.PriceToString (v1);
-
-				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, row, p1, this.FontSize);
-			}
-			else
-			{
-				decimal v1 = line.PrimaryPriceBeforeTax.GetValueOrDefault (0);
-				decimal v3 = line.ResultingPriceBeforeTax.GetValueOrDefault (0);
-
-				string p1 = Misc.PriceToString (v1);
-				string p2 = Misc.PriceToString (v3 - v1);
-				string p3 = Misc.PriceToString (v3);
-
-				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, row+0, FormattedText.Concat (p1, FormattedText.HtmlBreak, p2), this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, row+1, p3,                                                     this.FontSize);
-			}
-
-			//	Colonne "TVA":
-			if (discount == null)
-			{
-				decimal v1 = line.ResultingTax.GetValueOrDefault (0);
-				string p1 = Misc.PriceToString (v1);
-
-				table.SetText (this.tableColumns[TableColumnKeys.Vat].Rank, row, p1, this.FontSize);
-			}
-			else
-			{
-				decimal v1 = line.PrimaryTax.GetValueOrDefault (0);
-				decimal v3 = line.ResultingTax.GetValueOrDefault (0);
-
-				string p1 = Misc.PriceToString (v1);
-				string p2 = Misc.PriceToString (v3 - v1);
-				string p3 = Misc.PriceToString (v3);
-
-				table.SetText (this.tableColumns[TableColumnKeys.Vat].Rank, row+0, FormattedText.Concat (p1, FormattedText.HtmlBreak, p2), this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.Vat].Rank, row+1, p3,                                                     this.FontSize);
-			}
-
-			//	Colonne "Prix TTC":
-			if (discount == null)
-			{
-				decimal v1 = line.ResultingPriceBeforeTax.GetValueOrDefault (0) + line.ResultingTax.GetValueOrDefault (0);
-				string p1 = Misc.PriceToString (v1);
-
-				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row, p1, this.FontSize);
-			}
-			else
-			{
-				decimal v1 = line.PrimaryPriceBeforeTax.GetValueOrDefault (0) + line.PrimaryTax.GetValueOrDefault (0);
-				decimal v3 = line.ResultingPriceBeforeTax.GetValueOrDefault (0) + line.ResultingTax.GetValueOrDefault (0);
-
-				string p1 = Misc.PriceToString (v1);
-				string p2 = Misc.PriceToString (v3 - v1);
-				string p3 = Misc.PriceToString (v3);
-
-				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row+0, FormattedText.Concat (p1, FormattedText.HtmlBreak, p2), this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row+1, p3,                                                     this.FontSize);
-			}
-
-			if (discount == null)
+			if (accessor.RowsCount == 1)
 			{
 				table.SetCellBorder (row, this.GetCellBorder (bottomBold: true));
 			}
 			else
 			{
-				table.SetUnbreakableRow (row, true);
+				for (int i = 0; i < accessor.RowsCount-1; i++)
+				{
+					table.SetUnbreakableRow (row+i, true);
+					table.SetCellBorder (row+i, this.GetCellBorder (bottomLess: true));  // pas de trait horizontal entre les 2 fausses lignes
+					table.SetCellMargins (row+i, this.GetCellMargins (bottomForce: 0.5));
+				}
 
-				table.SetCellBorder (row+0, this.GetCellBorder (bottomLess: true));  // pas de trait horizontal entre les 2 fausses lignes
-				table.SetCellBorder (row+1, this.GetCellBorder (topLess: true, bottomBold: true));
-
-				table.SetCellMargins (row+0, this.GetCellMargins (bottomForce: 0.5));
-				table.SetCellMargins (row+1, this.GetCellMargins (topForce:    0.5));  // un demi-espace entre les 2 fausses lignes
+				for (int i = 1; i < accessor.RowsCount; i++)
+				{
+					table.SetCellBorder (row+i, this.GetCellBorder (topLess: true, bottomBold: true));
+					table.SetCellMargins (row+i, this.GetCellMargins (topForce: 0.5));  // un demi-espace entre les 2 fausses lignes
+				}
 			}
 
-			return InvoiceDocumentHelper.HasAmount (line) ? 2 : 1;  // 2 fausses lignes s'il y a un rabais
+			return accessor.RowsCount;
 		}
 
 		private int BuildTaxLine(TableBand table, int row, TaxDocumentItemEntity line, bool firstTax, bool lastTax)
@@ -973,10 +897,11 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				return 0;
 			}
 
-			FormattedText text = FormattedText.Concat (line.Text, " (", Misc.PriceToString (line.BaseAmount), ")");
+			var accessor = new DocumentItemAccessor ();
+			accessor.BuildContent (line, this.DocumentType, DocumentItemAccessorMode.None);
 
-			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, text,                                   this.FontSize);
-			table.SetText (this.tableColumns[TableColumnKeys.LinePrice         ].Rank, row, Misc.PriceToString (line.ResultingTax), this.FontSize);
+			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, accessor.GetContent (0, DocumentItemAccessorColumn.ArticleDescription), this.FontSize);
+			table.SetText (this.tableColumns[TableColumnKeys.LinePrice         ].Rank, row, accessor.GetContent (0, DocumentItemAccessorColumn.LinePrice),          this.FontSize);
 
 			table.SetCellBorder (row, this.GetCellBorder (bottomLess: true, topLess: true));
 
@@ -1001,7 +926,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				table.SetCellMargins (row, margins);
 			}
 
-			return 1;
+			return accessor.RowsCount;
 		}
 
 		private int BuildTotalLine(TableBand table, int row, EndTotalDocumentItemEntity line)
@@ -1012,28 +937,28 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				return 0;
 			}
 
-			if (line.PriceBeforeTax.HasValue)  // ligne de total HT ?
-			{
-				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, line.TextForPrice,                        this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.LinePrice         ].Rank, row, Misc.PriceToString (line.PriceBeforeTax), this.FontSize);
-			}
-			else if (line.FixedPriceAfterTax.HasValue)
-			{
-				FormattedText text = FormattedText.Join (FormattedText.HtmlBreak, line.TextForPrice, line.TextForFixedPrice);
-				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, text, this.FontSize);
+			var accessor = new DocumentItemAccessor ();
+			accessor.BuildContent (line, this.DocumentType, DocumentItemAccessorMode.None);
 
-				FormattedText total = FormattedText.Concat ("<b>", Misc.PriceToString (line.PriceAfterTax), "</b><br/><b><i>", Misc.PriceToString (line.FixedPriceAfterTax), "</i></b>");
-				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row, total, this.FontSize);
-			}
-			else
+			for (int i = 0; i < accessor.RowsCount; i++)
 			{
-				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, line.TextForPrice, this.FontSize);
+				var total = accessor.GetContent (i, DocumentItemAccessorColumn.Total);
 
-				FormattedText total = FormattedText.Concat ("<b>", Misc.PriceToString (line.PriceAfterTax), "</b>");
-				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row, total, this.FontSize);
+				if (i == accessor.RowsCount-1 && total != null)  // dernière ligne ?
+				{
+					total = total.ApplyBold ();
+				}
+
+				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row+i, accessor.GetContent (i, DocumentItemAccessorColumn.ArticleDescription), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.LinePrice         ].Rank, row+i, accessor.GetContent (i, DocumentItemAccessorColumn.LinePrice),          this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.Vat               ].Rank, row+i, accessor.GetContent (i, DocumentItemAccessorColumn.Vat),                this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.Total             ].Rank, row+i, total,                                                                  this.FontSize);
 			}
 
-			table.SetUnbreakableRow (row, true);
+			for (int i = 0; i < accessor.RowsCount-1; i++)
+			{
+				table.SetUnbreakableRow (row+i, true);
+			}
 
 			if (this.IsWithFrame)
 			{
@@ -1045,7 +970,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				table.SetCellBorder (row, this.GetCellBorder (bottomBold: true, topLess: true));
 			}
 
-			return 1;
+			return accessor.RowsCount;
 		}
 
 

@@ -11,6 +11,6 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 	public enum DocumentItemAccessorMode
 	{
 		None								= 0,
-		SpecialQuantitiesToDistinctLines	= 0x00000001,	// met toutes les quantités dans les colonnes DocumentItemAccessorColumn.Unique*
+		SpecialQuantitiesToDistinctLines	= 0x00000001,	// met toutes les quantités dans les mêmes colonnes DocumentItemAccessorColumn.Unique*
 	}
 }
