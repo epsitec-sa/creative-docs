@@ -70,6 +70,21 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			}
 		}
 
+		public bool IsEmptyRow(int row)
+		{
+			//	Retourne true si une ligne est entièrement vide.
+			foreach (var column in System.Enum.GetValues (typeof (DocumentItemAccessorColumn)))
+			{
+				var key = DocumentItemAccessor.GetKey (row, (DocumentItemAccessorColumn) column);
+				if (this.content.ContainsKey (key))
+				{
+					return false;  // la ligne n'est pas vide
+				}
+			}
+
+			return true;  // ligne entièrement vide
+		}
+
 		public FormattedText GetContent(int row, DocumentItemAccessorColumn column)
 		{
 			//	Retourne le contenu d'une cellule.
@@ -181,7 +196,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 					}
 
 					this.SetContent (row, quantityColumn, quantity.Quantity.ToString ());
-					this.SetContent (row, unitColumn, quantity.Unit.Code);
+					this.SetContent (row, unitColumn, quantity.Unit.Name);
 
 					if (quantity.BeginDate.HasValue)
 					{
@@ -237,6 +252,129 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 		private void BuildSubTotalItem(SubTotalDocumentItemEntity line)
 		{
+			//	Ligne "sous-total".
+			FormattedText primaryText = line.TextForPrimaryPrice;
+
+			if (primaryText.IsNullOrEmpty)
+			{
+				primaryText = "Sous-total";
+			}
+
+			decimal primaryPrice = line.PrimaryPriceBeforeTax.GetValueOrDefault (0);
+			decimal primaryVat   = line.PrimaryTax.GetValueOrDefault (0);
+
+			//	Ligne "rabais".
+			bool existingDiscount = false;
+			FormattedText discountText = "";
+
+			if (discountText.IsNullOrEmpty)
+			{
+				discountText = "Rabais";
+			}
+
+			decimal discountPrice = 0;
+			decimal discountVat   = 0;
+
+			if (line.Discount.DiscountRate.HasValue)
+			{
+				existingDiscount = true;
+				discountText = line.Discount.Text;
+
+				if (discountText.IsNullOrEmpty)
+				{
+					discountText = "Rabais";
+				}
+
+				discountText = FormattedText.Concat (discountText, " (", Misc.PercentToString (line.Discount.DiscountRate), ")");
+
+				discountPrice = primaryPrice * line.Discount.DiscountRate.Value;
+			}
+
+			if (line.Discount.Value.HasValue)
+			{
+				existingDiscount = true;
+				discountText = line.Discount.Text;
+
+				if (discountText.IsNullOrEmpty)
+				{
+					discountText = "Rabais";
+				}
+
+				discountPrice = line.Discount.Value.Value;
+			}
+
+			//	Ligne "total après rabais".
+			FormattedText sumText = "Total après rabais";
+
+			decimal sumPrice = primaryPrice - discountPrice;
+			decimal sumVat   = primaryVat   - discountVat;
+
+			//	Ligne "total arrêté".
+			bool existingFinal = false;
+			FormattedText finalText = line.TextForFixedPrice;
+
+			if (finalText.IsNullOrEmpty)
+			{
+				finalText = "Total arrêté";
+			}
+
+			decimal finalPrice, finalVat;
+
+			if (line.FixedPrice.HasValue)
+			{
+				existingFinal = true;
+
+				if (line.FixedPriceIncludesTaxes)
+				{
+					finalPrice = line.FixedPrice.GetValueOrDefault (0) - line.ResultingTax.GetValueOrDefault (0);
+					finalVat   = line.ResultingTax.GetValueOrDefault (0);
+				}
+				else
+				{
+					finalPrice = line.FixedPrice.GetValueOrDefault (0);
+					finalVat   = line.ResultingTax.GetValueOrDefault (0);
+				}
+			}
+			else
+			{
+				finalPrice = sumPrice;
+				finalVat   = sumVat;
+			}
+
+			//	Génère les lignes.
+			int row = 0;
+
+			this.SetContent (row, DocumentItemAccessorColumn.ArticleDescription, primaryText);
+			this.SetContent (row, DocumentItemAccessorColumn.LinePrice,          Misc.PriceToString (primaryPrice));
+			this.SetContent (row, DocumentItemAccessorColumn.Vat,                Misc.PriceToString (primaryVat));
+			this.SetContent (row, DocumentItemAccessorColumn.Total,              Misc.PriceToString (primaryPrice + primaryVat));
+			row++;
+
+			if (existingDiscount || (this.mode & DocumentItemAccessorMode.ForceAllLines) != 0)
+			{
+				this.SetContent (row, DocumentItemAccessorColumn.ArticleDescription, discountText);
+				this.SetContent (row, DocumentItemAccessorColumn.LinePrice,          Misc.PriceToString (discountPrice));
+				this.SetContent (row, DocumentItemAccessorColumn.Vat,                Misc.PriceToString (discountVat));
+				this.SetContent (row, DocumentItemAccessorColumn.Total,              Misc.PriceToString (discountPrice + discountVat));
+				row++;
+	
+				this.SetContent (row, DocumentItemAccessorColumn.ArticleDescription, sumText);
+				this.SetContent (row, DocumentItemAccessorColumn.LinePrice,          Misc.PriceToString (sumPrice));
+				this.SetContent (row, DocumentItemAccessorColumn.Vat,                Misc.PriceToString (sumVat));
+				this.SetContent (row, DocumentItemAccessorColumn.Total,              Misc.PriceToString (sumPrice + sumVat));
+				row++;
+			}
+
+			if (existingFinal || (this.mode & DocumentItemAccessorMode.ForceAllLines) != 0)
+			{
+				this.SetContent (row, DocumentItemAccessorColumn.ArticleDescription, finalText);
+				this.SetContent (row, DocumentItemAccessorColumn.LinePrice,          Misc.PriceToString (finalPrice));
+				this.SetContent (row, DocumentItemAccessorColumn.Vat,                Misc.PriceToString (finalVat));
+				this.SetContent (row, DocumentItemAccessorColumn.Total,              Misc.PriceToString (finalPrice + finalVat));
+				row++;
+			}
+	
+#if false
 			string discount = InvoiceDocumentHelper.GetAmount (line);
 
 			//	Colonne "Désignation":
@@ -256,9 +394,9 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 					rabais = "Rabais";
 				}
 
-				FormattedText text = FormattedText.Concat (line.TextForPrimaryPrice, FormattedText.HtmlBreak, rabais);
-				this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, text);
-				this.SetContent (1, DocumentItemAccessorColumn.ArticleDescription, line.TextForResultingPrice);
+				this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, line.TextForPrimaryPrice);
+				this.SetContent (1, DocumentItemAccessorColumn.ArticleDescription, rabais);
+				this.SetContent (2, DocumentItemAccessorColumn.ArticleDescription, line.TextForResultingPrice);
 			}
 
 			//	Colonne "Prix HT":
@@ -314,6 +452,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				this.SetContent (1, DocumentItemAccessorColumn.Total, Misc.PriceToString (v3 - v1));
 				this.SetContent (2, DocumentItemAccessorColumn.Total, Misc.PriceToString (v3));
 			}
+#endif
 		}
 
 		private void BuildEndTotalItem(EndTotalDocumentItemEntity line)
@@ -342,10 +481,13 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		private void SetContent(int row, DocumentItemAccessorColumn column, FormattedText text)
 		{
 			//	Modifie le contenu d'une cellule.
-			var key = DocumentItemAccessor.GetKey (row, column);
-			this.content[key] = text;
+			if (text != null && !text.IsNullOrEmpty)
+			{
+				var key = DocumentItemAccessor.GetKey (row, column);
+				this.content[key] = text;
 
-			this.rowsCount = System.Math.Max (this.rowsCount, row+1);
+				this.rowsCount = System.Math.Max (this.rowsCount, row+1);
+			}
 		}
 
 
