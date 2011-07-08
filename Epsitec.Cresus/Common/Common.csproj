@@ -1116,6 +1116,7 @@
     <Compile Include="Widgets\CommandCache.cs" />
     <Compile Include="Widgets\CommandContext.cs" />
     <Compile Include="Widgets\CommandContextChain.cs" />
+    <Compile Include="Widgets\CommandContextOptions.cs" />
     <Compile Include="Widgets\CommandDispatcher.cs" />
     <Compile Include="Widgets\CommandDispatcherChain.cs" />
     <Compile Include="Widgets\CommandDispatcherLevel.cs" />

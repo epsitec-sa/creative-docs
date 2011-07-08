@@ -28,8 +28,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			this.accessData = accessData;
 
-			this.commandContext = new CommandContext ("BusinessDocumentLinesController");
+			this.commandContext = new CommandContext ("BusinessDocumentLinesController", CommandContextOptions.ActivateWithoutFocus);
+			
 			this.commandDispatcher = new CommandDispatcher ("BusinessDocumentLinesController", CommandDispatcherLevel.Secondary);
+			this.commandDispatcher.AutoForwardCommands = true;
 			this.commandDispatcher.RegisterController (this);
 
 			this.lineInformations = new List<LineInformations> ();

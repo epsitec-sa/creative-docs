@@ -1351,7 +1351,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 		private void CreateCommandController()
 		{
 			var dispatcher = new CommandDispatcher ("WorkflowDesigner.Editor", CommandDispatcherLevel.Secondary);
-			var context    = new CommandContext (fence: false);
+			var context    = new CommandContext ("WorkflowDesigner.Editor");
 
 			CommandDispatcher.SetDispatcher (this, dispatcher);
 			CommandContext.SetContext (this, context);

@@ -995,20 +995,23 @@ namespace Epsitec.Common.Widgets
 			return this.visualSerialId;
 		}
 
-		public IEnumerable<Visual> GetAllChildren()
+		public IEnumerable<Visual> GetAllChildren(System.Predicate<Visual> predicate = null)
 		{
 			if (this.HasChildren)
 			{
 				foreach (Visual child in this.children)
 				{
-					if (child.HasChildren)
+					if ((predicate == null) || (predicate (child)))
 					{
-						foreach (Visual subChild in child.GetAllChildren ())
+						if (child.HasChildren)
 						{
-							yield return subChild;
+							foreach (Visual subChild in child.GetAllChildren (predicate))
+							{
+								yield return subChild;
+							}
 						}
+						yield return child;
 					}
-					yield return child;
 				}
 			}
 		}

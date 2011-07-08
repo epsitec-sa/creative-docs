@@ -1283,7 +1283,7 @@ namespace Epsitec.Common.Widgets
 		private void CreateCommandController()
 		{
 			var dispatcher = new CommandDispatcher ("TextField", CommandDispatcherLevel.Secondary);
-			var context    = new CommandContext (fence: false);
+			var context    = new CommandContext ();
 
 			CommandDispatcher.SetDispatcher (this, dispatcher);
 			CommandContext.SetContext (this, context);

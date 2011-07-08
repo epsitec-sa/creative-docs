@@ -1,4 +1,4 @@
-//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -8,6 +8,7 @@ using System.Linq;
 
 namespace Epsitec.Common.Widgets
 {
+
 	/// <summary>
 	/// The <c>CommandContext</c> class is used to locally disable commands
 	/// defined by <c>Command</c>.
@@ -15,61 +16,22 @@ namespace Epsitec.Common.Widgets
 	public class CommandContext : DependencyObject
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="T:CommandContext"/> class.
+		/// Initializes a new instance of the <see cref="CommandContext"/> class.
 		/// </summary>
-		public CommandContext()
+		/// <param name="name">The name of the command context (for debugging purposes).</param>
+		/// <param name="options">The command context options.</param>
+		public CommandContext(string name = null, CommandContextOptions options = CommandContextOptions.None)
 		{
 			this.localDisables = new HashSet<int> ();
 			this.groupDisables = new Dictionary<string, int> ();
 			this.validations = new Dictionary<long, Validation> ();
 			this.states = new Dictionary<long, CommandState> ();
 			this.commandHandlers = new HashSet<ICommandHandler> ();
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CommandContext"/> class.
-		/// </summary>
-		/// <param name="fence">If set to <c>true</c>, this command context will
-		/// be handled as a fence.</param>
-		public CommandContext(bool fence)
-			: this ()
-		{
-			this.fence = fence;
-		}
-
-		public CommandContext(string name)
-			: this ()
-		{
+			
 			this.name = name;
+			this.options = options;
 		}
 
-		public CommandContext(string name, bool fence)
-			: this (fence)
-		{
-			this.name = name;
-		}
-
-#if false
-		/// <summary>
-		/// Gets the dispatchers in the dispatcher chain associated with this
-		/// command context.
-		/// </summary>
-		/// <value>The dispatchers.</value>
-		public IEnumerable<CommandDispatcher>	Dispatchers
-		{
-			get
-			{
-				if (this.dispatcherChain == null)
-				{
-					return Collections.EmptyEnumerable<CommandDispatcher>.Instance;
-				}
-				else
-				{
-					return this.dispatcherChain.Dispatchers;
-				}
-			}
-		}
-#endif
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="CommandContext"/> is
@@ -83,7 +45,24 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.fence;
+				return this.options.HasFlag (CommandContextOptions.Fence);
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="CommandContext"/>, when
+		/// attached to a <see cref="Visual"/>, will be visible in the <see cref="CommandContextChain"/>
+		/// even if the visual does not have the focus.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this command context should be active in a window, even if the attached
+		///   visual does not have the focus; otherwise, <c>false</c>.
+		/// </value>
+		public bool ActiveWithoutFocus
+		{
+			get
+			{
+				return this.options.HasFlag (CommandContextOptions.ActivateWithoutFocus);
 			}
 		}
 
@@ -485,7 +464,7 @@ namespace Epsitec.Common.Widgets
 		readonly Dictionary<string, int>		groupDisables;
 		readonly Dictionary<long, Validation>	validations;
 		readonly Dictionary<long, CommandState>	states;
-		readonly bool							fence;
+		readonly CommandContextOptions			options;
 		readonly string							name;
 		readonly HashSet<ICommandHandler>		commandHandlers;
 	}

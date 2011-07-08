@@ -22,7 +22,7 @@ namespace Epsitec.Common.Widgets
 		/// </summary>
 		private CommandContextChain()
 		{
-			this.chain = new List<Weak<CommandContext>> ();
+			this.list = new List<Weak<CommandContext>> ();
 		}
 
 		/// <summary>
@@ -33,9 +33,9 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if (this.chain.Count > 0)
+				if (this.list.Count > 0)
 				{
-					Weak<CommandContext>[] chain = this.chain.ToArray ();
+					Weak<CommandContext>[] chain = this.list.ToArray ();
 
 					for (int i = 0; i < chain.Length; i++)
 					{
@@ -43,7 +43,7 @@ namespace Epsitec.Common.Widgets
 
 						if (context == null)
 						{
-							this.chain.Remove (chain[i]);
+							this.list.Remove (chain[i]);
 						}
 						else
 						{
@@ -74,7 +74,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.chain.Any (x => x.IsAlive) ? false : true;
+				return this.list.Any (x => x.IsAlive) ? false : true;
 			}
 		}
 
@@ -113,13 +113,11 @@ namespace Epsitec.Common.Widgets
 
 			var window = visual.Window;
 
-#if true
-			if ((window != null) &&
-				(window.FocusedWidget != null))
+			if (window != null)
 			{
 				CommandContextChain.BuildChain (window.FocusedWidget, ref that);
+				CommandContextChain.BuildChainBasedOnChildren (window.Root, ref that, c => c.ActiveWithoutFocus);
 			}
-#endif
 
 			CommandContextChain.BuildChain (visual, ref that);
 			CommandContextChain.BuildChain (window, ref that);
@@ -237,47 +235,21 @@ namespace Epsitec.Common.Widgets
 				CommandContextChain.BuildChain (visual, ref chain);
 				return chain;
 			}
+			
 			if (window != null)
 			{
 				CommandContextChain.BuildChain (window, ref chain);
 				return chain;
 			}
 
-			CommandContextChain that = null;
-
-			if (obj != null)
-			{
-				CommandContext context = CommandContext.GetContext (obj);
-
-				if (context != null)
-				{
-					if (that == null)
-					{
-						that = new CommandContextChain ();
-					}
-
-					that.chain.Add (new Weak<CommandContext> (context));
-				}
-			}
-
-			return that;
+			return CommandContextChain.AddItemBoundCommandContextToChain (obj);
 		}
 
 		private static void BuildChain(Visual visual, ref CommandContextChain that)
 		{
 			while (visual != null)
 			{
-				CommandContext context = CommandContext.GetContext (visual);
-
-				if (context != null)
-				{
-					if (that == null)
-					{
-						that = new CommandContextChain ();
-					}
-
-					that.chain.Add (new Weak<CommandContext> (context));
-				}
+				that = CommandContextChain.AddItemBoundCommandContextToChain (visual, that);
 
 				AbstractMenu menu = visual as AbstractMenu;
 
@@ -290,21 +262,30 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		private static void BuildChainBasedOnChildren(Visual visual, ref CommandContextChain chain, System.Predicate<CommandContext> predicate)
+		{
+			if (visual != null)
+			{
+				var visibleChildren = visual.GetAllChildren (x => x.IsVisible);
+				var activeContexts  = visibleChildren.Select (x => CommandContext.GetContext (x)).Where (x => (x != null) && predicate (x));
+				
+				foreach (var context in activeContexts)
+				{
+					if (chain == null)
+					{
+						chain = new CommandContextChain ();
+					}
+
+					chain.list.Add (new Weak<CommandContext> (context));
+				}
+			}
+		}
+
 		private static void BuildChain(Window window, ref CommandContextChain that)
 		{
 			while (window != null)
 			{
-				CommandContext context = CommandContext.GetContext (window);
-
-				if (context != null)
-				{
-					if (that == null)
-					{
-						that = new CommandContextChain ();
-					}
-
-					that.chain.Add (new Weak<CommandContext> (context));
-				}
+				that = CommandContextChain.AddItemBoundCommandContextToChain (window, that);
 
 				window = window.Owner ?? window.Parent;
 			}
@@ -312,6 +293,28 @@ namespace Epsitec.Common.Widgets
 			//	TODO: ajouter ici la notion d'application/module/document
 		}
 
-		readonly List<Weak<CommandContext>>		chain;
+		private static CommandContextChain AddItemBoundCommandContextToChain(DependencyObject item, CommandContextChain chain = null)
+		{
+			if (item == null)
+			{
+				return chain;
+			}
+
+			CommandContext context = CommandContext.GetContext (item);
+
+			if (context != null)
+			{
+				if (chain == null)
+				{
+					chain = new CommandContextChain ();
+				}
+
+				chain.list.Add (new Weak<CommandContext> (context));
+			}
+
+			return chain;
+		}
+
+		readonly List<Weak<CommandContext>>		list;
 	}
 }

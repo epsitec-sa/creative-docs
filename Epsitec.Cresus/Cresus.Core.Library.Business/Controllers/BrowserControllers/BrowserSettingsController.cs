@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.commandDispatcher = new CommandDispatcher ("BrowserSettings", CommandDispatcherLevel.Primary);
 			this.commandDispatcher.AutoForwardCommands = true;
 
-			this.commandContext    = new CommandContext ("BrowserSettings", false);
+			this.commandContext    = new CommandContext ("BrowserSettings");
 
 			CommandDispatcher.SetDispatcher (container, this.commandDispatcher);
 			CommandContext.SetContext (container, this.commandContext);
