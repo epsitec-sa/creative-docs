@@ -33,6 +33,10 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+#if DOTNET35
+/* Nothing */
+#else
+
 		/// <summary>
 		/// Creates a setter expression based on a getter expression.
 		/// </summary>
@@ -64,8 +68,8 @@ namespace Epsitec.Common.Types
 
 			return setterLambda;
 		}
-		
-		
+#endif
+
 		private static PropertyInfo GetLambdaPropertyInfo(LambdaExpression expression)
 		{
 			var body = expression.Body;
