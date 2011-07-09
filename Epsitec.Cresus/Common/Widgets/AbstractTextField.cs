@@ -1282,7 +1282,7 @@ namespace Epsitec.Common.Widgets
 
 		private void CreateCommandController()
 		{
-			var dispatcher = new CommandDispatcher ("TextField", CommandDispatcherLevel.Secondary);
+			var dispatcher = new CommandDispatcher ("TextField", CommandDispatcherLevel.Secondary, CommandDispatcherOptions.AutoForwardCommands);
 			var context    = new CommandContext ();
 
 			CommandDispatcher.SetDispatcher (this, dispatcher);
@@ -1290,7 +1290,6 @@ namespace Epsitec.Common.Widgets
 
 			this.commandController = new CommandController (this);
 
-			dispatcher.AutoForwardCommands = true;
 			dispatcher.RegisterController (this.commandController);
 		}
 

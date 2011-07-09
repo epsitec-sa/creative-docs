@@ -35,9 +35,7 @@ namespace Epsitec.Common.Widgets
 			this.navigator.TextChanged += this.HandleTextChanged;
 			this.navigator.CursorMoved += this.HandleCursorMoved;
 
-			CommandDispatcher dispatcher = new CommandDispatcher ("TextFrame", CommandDispatcherLevel.Secondary);
-
-			dispatcher.AutoForwardCommands = true;
+			CommandDispatcher dispatcher = new CommandDispatcher ("TextFrame", CommandDispatcherLevel.Secondary, CommandDispatcherOptions.AutoForwardCommands);
 			dispatcher.OpletQueue = this.opletQueue;
 
 			CommandDispatcher.SetDispatcher (this, dispatcher);
@@ -75,9 +73,8 @@ namespace Epsitec.Common.Widgets
 			this.navigator.TextChanged += this.HandleTextChanged;
 			this.navigator.CursorMoved += this.HandleCursorMoved;
 
-			CommandDispatcher dispatcher = new CommandDispatcher ("TextFrame", CommandDispatcherLevel.Secondary);
+			CommandDispatcher dispatcher = new CommandDispatcher ("TextFrame", CommandDispatcherLevel.Secondary, CommandDispatcherOptions.AutoForwardCommands);
 			
-			dispatcher.AutoForwardCommands = true;
 			dispatcher.OpletQueue = this.opletQueue;
 
 			CommandDispatcher.SetDispatcher (this, dispatcher);

@@ -22,7 +22,7 @@ namespace Epsitec.Common.Widgets
 		/// </summary>
 		private CommandContextChain()
 		{
-			this.list = new List<Weak<CommandContext>> ();
+			this.contexts = new List<Weak<CommandContext>> ();
 		}
 
 		/// <summary>
@@ -33,9 +33,9 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if (this.list.Count > 0)
+				if (this.contexts.Count > 0)
 				{
-					Weak<CommandContext>[] chain = this.list.ToArray ();
+					Weak<CommandContext>[] chain = this.contexts.ToArray ();
 
 					for (int i = 0; i < chain.Length; i++)
 					{
@@ -43,7 +43,7 @@ namespace Epsitec.Common.Widgets
 
 						if (context == null)
 						{
-							this.list.Remove (chain[i]);
+							this.contexts.Remove (chain[i]);
 						}
 						else
 						{
@@ -74,7 +74,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.list.Any (x => x.IsAlive) ? false : true;
+				return this.contexts.Any (x => x.IsAlive) ? false : true;
 			}
 		}
 
@@ -276,7 +276,7 @@ namespace Epsitec.Common.Widgets
 						chain = new CommandContextChain ();
 					}
 
-					chain.list.Add (new Weak<CommandContext> (context));
+					chain.contexts.Add (new Weak<CommandContext> (context));
 				}
 			}
 		}
@@ -309,12 +309,12 @@ namespace Epsitec.Common.Widgets
 					chain = new CommandContextChain ();
 				}
 
-				chain.list.Add (new Weak<CommandContext> (context));
+				chain.contexts.Add (new Weak<CommandContext> (context));
 			}
 
 			return chain;
 		}
 
-		readonly List<Weak<CommandContext>>		list;
+		private readonly List<Weak<CommandContext>>		contexts;
 	}
 }

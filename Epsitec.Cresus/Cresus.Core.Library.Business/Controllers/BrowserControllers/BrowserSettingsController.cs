@@ -39,9 +39,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private void CreateCommandInfrastructure(Widget container)
 		{
-			this.commandDispatcher = new CommandDispatcher ("BrowserSettings", CommandDispatcherLevel.Primary);
-			this.commandDispatcher.AutoForwardCommands = true;
-
+			this.commandDispatcher = new CommandDispatcher ("BrowserSettings", CommandDispatcherLevel.Primary, CommandDispatcherOptions.AutoForwardCommands);
 			this.commandContext    = new CommandContext ("BrowserSettings");
 
 			CommandDispatcher.SetDispatcher (container, this.commandDispatcher);

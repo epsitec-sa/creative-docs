@@ -126,10 +126,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			if (this.IsStandalone)
 			{
-				var dispatcher = new CommandDispatcher ("chart view", CommandDispatcherLevel.Secondary)
-				{
-					AutoForwardCommands = true,
-				};
+				var dispatcher = new CommandDispatcher ("chart view", CommandDispatcherLevel.Secondary, CommandDispatcherOptions.AutoForwardCommands);
 				
 				CommandDispatcher.SetDispatcher (this.container.Window, dispatcher);
 				

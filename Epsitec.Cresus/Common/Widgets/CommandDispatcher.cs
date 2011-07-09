@@ -1,4 +1,4 @@
-//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -19,22 +19,17 @@ namespace Epsitec.Common.Widgets
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CommandDispatcher"/> class.
 		/// </summary>
-		public CommandDispatcher() : this ("anonymous", CommandDispatcherLevel.Secondary)
-		{
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CommandDispatcher"/> class.
-		/// </summary>
-		/// <param name="name">The dispatcher name.</param>
-		/// <param name="level">The dispatcher level.</param>
-		public CommandDispatcher(string name, CommandDispatcherLevel level)
+		/// <param name="name">The dispatcher name (defaults to <c>"anonymous"</c>).</param>
+		/// <param name="level">The dispatcher level (defaults to <c>Secondary</c>).</param>
+		/// <param name="options">The dispatcher options (defaults to <c>None</c>).</param>
+		public CommandDispatcher(string name = "anonymous", CommandDispatcherLevel level = CommandDispatcherLevel.Secondary, CommandDispatcherOptions options = CommandDispatcherOptions.None)
 		{
 			lock (CommandDispatcher.exclusion)
 			{
-				this.name  = name;
-				this.level = level;
-				this.id    = System.Threading.Interlocked.Increment (ref CommandDispatcher.nextId);
+				this.name    = name;
+				this.level   = level;
+				this.options = options;
+				this.id      = System.Threading.Interlocked.Increment (ref CommandDispatcher.nextId);
 				
 				switch (level)
 				{
@@ -114,11 +109,24 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.autoForwardCommands;
+				return this.options.HasFlag (CommandDispatcherOptions.AutoForwardCommands);
 			}
-			set
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this dispatcher, when attached to a <see cref="Visual"/>,
+		/// will be visible in the <see cref="CommandDispatcherChain"/> even if the visual does
+		/// not have the focus.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this command dispatcher should be active in a window, even if the
+		///   attached visual does not have the focus; otherwise, <c>false</c>.
+		/// </value>
+		public bool ActiveWithoutFocus
+		{
+			get
 			{
-				this.autoForwardCommands = value;
+				return this.options.HasFlag (CommandDispatcherOptions.ActivateWithoutFocus);
 			}
 		}
 
@@ -747,7 +755,7 @@ namespace Epsitec.Common.Widgets
 		private readonly string					name;
 		private readonly CommandDispatcherLevel	level;
 		private readonly long					id;
-		private bool							autoForwardCommands;
+		private CommandDispatcherOptions		options;
 
 		private Dictionary<Command, EventSlot>	eventHandlers = new Dictionary<Command, EventSlot> ();
 		

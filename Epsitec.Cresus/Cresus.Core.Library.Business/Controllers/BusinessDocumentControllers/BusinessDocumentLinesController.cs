@@ -29,11 +29,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			this.accessData = accessData;
 
-			this.commandContext = new CommandContext ("BusinessDocumentLinesController", CommandContextOptions.ActivateWithoutFocus);
-			
-			this.commandDispatcher = new CommandDispatcher ("BusinessDocumentLinesController", CommandDispatcherLevel.Secondary);
-			this.commandDispatcher.AutoForwardCommands = true;
+			this.commandDispatcher = new CommandDispatcher ("BusinessDocumentLinesController", CommandDispatcherLevel.Secondary, CommandDispatcherOptions.AutoForwardCommands);
 			this.commandDispatcher.RegisterController (this);
+
+			this.commandContext = new CommandContext ("BusinessDocumentLinesController", CommandContextOptions.ActivateWithoutFocus);
 
 			this.lineInformations = new List<LineInformations> ();
 			this.UpdateLineInformations ();
@@ -47,8 +46,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Dock = DockStyle.Fill,
 			};
 
-			CommandContext.SetContext (frame, this.commandContext);
 			CommandDispatcher.SetDispatcher (frame, this.commandDispatcher);
+			CommandContext.SetContext (frame, this.commandContext);
 
 			//	Crée la toolbar.
 			this.lineToolbarController = new LineToolbarController (this.accessData.DocumentMetadataEntity, this.accessData.BusinessDocumentEntity);

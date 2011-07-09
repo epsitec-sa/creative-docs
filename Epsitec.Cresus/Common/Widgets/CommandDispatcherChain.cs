@@ -1,4 +1,4 @@
-//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -137,10 +137,10 @@ namespace Epsitec.Common.Widgets
 
 			var window = visual.Window;
 
-			if ((window != null) &&
-				(window.FocusedWidget != null))
+			if (window != null)
 			{
 				chain.BuildPartialChain (window.FocusedWidget);
+				chain.BuildPartialChainBasedOnChildren (window.Root, c => c.ActiveWithoutFocus);
 			}
 
 			chain.BuildPartialChain (visual);
@@ -236,6 +236,20 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		private void BuildPartialChainBasedOnChildren(Visual visual, System.Predicate<CommandDispatcher> predicate)
+		{
+			if (visual != null)
+			{
+				var visibleChildren   = visual.GetAllChildren (x => x.IsVisible);
+				var activeDispatchers = visibleChildren.Select (x => CommandDispatcher.GetDispatcher (x)).Where (x => (x != null) && predicate (x));
+
+				foreach (var dispatcher in activeDispatchers)
+				{
+					this.dispatchers.Add (new Weak<CommandDispatcher> (dispatcher));
+				}
+			}
+		}
+
 		private void BuildPartialChain(Window window)
 		{
 			while (window != null)
@@ -284,6 +298,6 @@ namespace Epsitec.Common.Widgets
 
 		#endregion
 
-		readonly List<Weak<CommandDispatcher>>	dispatchers;
+		private readonly List<Weak<CommandDispatcher>>	dispatchers;
 	}
 }

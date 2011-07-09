@@ -67,6 +67,25 @@ namespace Epsitec.Common.Widgets
 		}
 
 		/// <summary>
+		/// Gets or sets the attached command dispatcher, if any. This can be useful when some
+		/// piece of UI has to provide a dispatcher within a specific context.
+		/// </summary>
+		/// <value>
+		/// The attached command dispatcher.
+		/// </value>
+		public CommandDispatcher AttachedDispatcher
+		{
+			get
+			{
+				return this.attachedDispatcher;
+			}
+			set
+			{
+				this.attachedDispatcher = value;
+			}
+		}
+
+		/// <summary>
 		/// Sets the local enable state of the specified command.
 		/// </summary>
 		/// <param name="command">The command.</param>
@@ -467,5 +486,7 @@ namespace Epsitec.Common.Widgets
 		readonly CommandContextOptions			options;
 		readonly string							name;
 		readonly HashSet<ICommandHandler>		commandHandlers;
+
+		private CommandDispatcher				attachedDispatcher;
 	}
 }
