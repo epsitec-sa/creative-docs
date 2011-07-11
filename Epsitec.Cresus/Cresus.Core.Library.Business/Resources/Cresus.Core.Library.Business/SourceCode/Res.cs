@@ -451,6 +451,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid ArticleShortDescriptionCache = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 78);
 				//	designer:cap/GVAO1
 				public static readonly global::Epsitec.Common.Support.Druid ArticleTraceabilityDetails = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 56);
+				//	designer:cap/GVAS6
+				public static readonly global::Epsitec.Common.Support.Druid BillingUnitPriceBeforeTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 220);
 				//	designer:cap/GVA52
 				public static readonly global::Epsitec.Common.Support.Druid Discounts = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 69);
 				//	designer:cap/GVAD2
@@ -463,10 +465,10 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid NeverApplyDiscount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 68);
 				//	designer:cap/GVA32
 				public static readonly global::Epsitec.Common.Support.Druid PrimaryLinePriceAfterTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 67);
-				//	designer:cap/GVA22
-				public static readonly global::Epsitec.Common.Support.Druid PrimaryLinePriceBeforeTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 66);
-				//	designer:cap/GVA12
-				public static readonly global::Epsitec.Common.Support.Druid PrimaryUnitPriceBeforeTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 65);
+				//	designer:cap/GVAR6
+				public static readonly global::Epsitec.Common.Support.Druid PrimaryLinePriceBeforeTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 219);
+				//	designer:cap/GVAQ6
+				public static readonly global::Epsitec.Common.Support.Druid PrimaryUnitPriceBeforeTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 218);
 				//	designer:cap/GVAG2
 				public static readonly global::Epsitec.Common.Support.Druid ReplacementText = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 80);
 				//	designer:cap/GVAA2

@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
 			builder.CreateTextField (tile, 80, "Rabais (pourcent ou montant)", Marshaler.Create (() => this.GetDiscount (), this.SetDiscount));
-
+/*
 			FrameBox group1 = builder.CreateGroup (tile, "Prix unitaire HT et total HT avant rabais");
 			builder.CreateTextField (group1, DockStyle.Left, 80, Marshaler.Create (() => this.Entity.PrimaryUnitPriceBeforeTax));
 			builder.CreateTextField (group1, DockStyle.Left, 80, Marshaler.Create (() => this.Entity.PrimaryLinePriceBeforeTax));
@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			FrameBox group3 = builder.CreateGroup (tile, "Prix unitaire TTC et total TTC après rabais");
 			builder.CreateTextField (group3, DockStyle.Left, 80, Marshaler.Create (() => this.Entity.ResultingUnitPriceAfterTax));
 			builder.CreateTextField (group3, DockStyle.Left, 80, Marshaler.Create (() => this.Entity.ResultingLinePriceAfterTax));
-		}
+	*/	}
 
 		private void CreateUIQuantities(TileDataItems data)
 		{

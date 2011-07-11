@@ -24,17 +24,18 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
-		public decimal BillingUnitQuantity
+		/*
+		private decimal BillingUnitQuantity
 		{
 			get
 			{
-				if (this.PrimaryUnitPriceBeforeTax == 0)
+				if (this.PrimaryUnitPriceBeforeTax.GetValueOrDefault () == 0)
 				{
 					return 0;
 				}
 				else
 				{
-					return this.PrimaryLinePriceBeforeTax / this.PrimaryUnitPriceBeforeTax;
+					return this.PrimaryLinePriceBeforeTax.GetValueOrDefault () / this.PrimaryUnitPriceBeforeTax.Value;
 				}
 			}
 		}
@@ -95,6 +96,7 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		*/
 
 		public override FormattedText GetCompactSummary()
 		{

@@ -202,7 +202,7 @@ namespace Epsitec.Cresus.Core.Helpers
 			return false;
 		}
 
-
+/*
 		public static void UpdatePrices(BusinessDocumentEntity document, ArticleDocumentItemEntity article)
 		{
 			//	Recalcule une ligne d'une facture.
@@ -228,7 +228,7 @@ namespace Epsitec.Cresus.Core.Helpers
 
 				article.PrimaryLinePriceBeforeTax   = total;
 				article.ResultingLinePriceBeforeTax = (int) total;  // arrondi au franc inférieur, pourquoi pas ?
-				article.ResultingLineTax1           = /* Misc.PriceConstrain */ (article.ResultingLinePriceBeforeTax.Value * vatRate);
+				article.ResultingLineTax1           = (article.ResultingLinePriceBeforeTax.Value * vatRate);
 			}
 			else
 			{
@@ -237,7 +237,7 @@ namespace Epsitec.Cresus.Core.Helpers
 				article.ResultingLineTax1           = null;
 			}
 		}
-
+*/
 
 	}
 }
