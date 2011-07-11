@@ -6,6 +6,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 {
+	/// <summary>
+	/// The <c>State</c> is used inside the price calculators to remember which
+	/// type of lines are currently being processed.
+	/// </summary>
 	internal enum State
 	{
 		None,

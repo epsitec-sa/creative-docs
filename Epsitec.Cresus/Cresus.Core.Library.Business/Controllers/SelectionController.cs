@@ -269,7 +269,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				return;
 			}
 			
-			using (this.SuspendNotifications (selectedItems))
+			using (selectedItems.SuspendNotifications ())
 			{
 				selectedItems.Clear ();
 				selectedItems.AddRange (newSelection);
@@ -279,20 +279,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void HandleSingleSelectionChanged(object sender)
 		{
 			this.SetValue (this.widgetItems.GetValue<T> (this.attachedPicker.SelectedItemIndex));
-		}
-
-		private System.IDisposable SuspendNotifications(IList<T> list)
-		{
-			var suspendCollection = list as ISuspendCollectionChanged;
-			
-			if (suspendCollection != null)
-			{
-				return suspendCollection.SuspendNotifications ();
-			}
-			else
-			{
-				return null;
-			}
 		}
 
 		private FormattedText ConvertHintValueToDescription(object value)

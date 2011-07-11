@@ -8,6 +8,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 {
+	/// <summary>
+	/// The <c>LineTreeAnalyzer</c> class is used to analyze the lines of a business document
+	/// and possibily add or remove sub-total lines, as required.
+	/// </summary>
 	internal sealed class LineTreeAnalyzer
 	{
 		private LineTreeAnalyzer(IBusinessContext context, IList<AbstractDocumentItemEntity> lines)
@@ -17,12 +21,21 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			this.stack = new Stack<State> ();
 		}
 
+
+		/// <summary>
+		/// Fixes the sub-totals, by either adding or removing them on a group by group
+		/// base.
+		/// </summary>
+		/// <param name="context">The business context.</param>
+		/// <param name="lines">The collection of lines which has to be fixed.</param>
 		public static void FixSubTotals(IBusinessContext context, IList<AbstractDocumentItemEntity> lines)
 		{
 			var analyzer = new LineTreeAnalyzer (context, lines);
+			
 			analyzer.FixSubTotals ();
 		}
 
+		
 		private void FixSubTotals()
 		{
 			this.state = State.None;
@@ -133,6 +146,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			}
 		}
 
+		
 		private static int GetCommonLevel(int groupA, int groupB)
 		{
 			int level = 0;
@@ -147,15 +161,16 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			return level;
 		}
 
-		private readonly IBusinessContext context;
+		
+		private readonly IBusinessContext		context;
 		private readonly IList<AbstractDocumentItemEntity> lines;
-		private readonly Stack<State> stack;
+		private readonly Stack<State>			stack;
 
-		private State state;
-		private int lineIndex;
-		private int activeGroupIndex;
-		private int activeGroupLevel;
-		private int currentGroupIndex;
-		private int currentGroupLevel;
+		private State							state;
+		private int								lineIndex;
+		private int								activeGroupIndex;
+		private int								activeGroupLevel;
+		private int								currentGroupIndex;
+		private int								currentGroupLevel;
 	}
 }

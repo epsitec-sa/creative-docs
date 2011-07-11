@@ -1,7 +1,9 @@
 //	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Types;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -21,14 +23,16 @@ namespace Epsitec.Common.Support.Extensions
 		public static System.IDisposable SuspendNotifications<T>(this IList<T> list)
 			where T : AbstractEntity, new()
 		{
-			IEntityCollection collection = list as IEntityCollection;
+			ISuspendCollectionChanged collection = list as ISuspendCollectionChanged;
 
 			if (collection == null)
 			{
-				throw new System.ArgumentException ("Cannot cast the list to an IEntityCollection");
+				return null;
 			}
-
-			return collection.SuspendNotifications ();
+			else
+			{
+				return collection.SuspendNotifications ();
+			}
 		}
 
 		/// <summary>

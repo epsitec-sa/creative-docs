@@ -1,16 +1,12 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
-using Epsitec.Common.Types.Collections;
 
 using Epsitec.Cresus.Core.Business.Finance;
 using Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalculators;
 using Epsitec.Cresus.Core.Entities;
-
-using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +21,8 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DocumentPriceCalculator"/> class.
+		/// This must be used in a <c>using</c> block, or else the events on the document
+		/// entity won't ever be re-enabled.
 		/// </summary>
 		/// <param name="context">The business context.</param>
 		/// <param name="document">The business document to work on.</param>
@@ -47,17 +45,14 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		/// </summary>
 		public void UpdatePrices()
 		{
-			using (this.document.Lines.SuspendNotifications ())
-			{
-				this.SortLinesAndFixSubTotals ();
-				this.ComputeLinePrices ();
+			this.SortLinesAndFixSubTotals ();
+			this.ComputeLinePrices ();
 
-				var group = this.GetLastGroup ();
-				var taxes = Tax.Combine (group.TaxDiscountable, group.TaxNotDiscountable) ?? new Tax ();
+			var group = this.GetLastGroup ();
+			var taxes = Tax.Combine (group.TaxDiscountable, group.TaxNotDiscountable) ?? new Tax ();
 
-				this.ReplaceTaxesAndEndTotal (taxes);
-				this.ComputeFinalPrices (group, taxes);
-			}
+			this.ReplaceTaxesAndEndTotal (taxes);
+			this.ComputeFinalPrices (group, taxes);
 		}
 
 		
@@ -95,6 +90,11 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			this.RecordCurrentGroup ();
 		}
 
+		private void ComputeFinalPrices(GroupItemPriceCalculator group, Tax taxTotals)
+		{
+			group.AdjustFinalPrices (taxTotals.TotalAmount);
+		}
+
 		private void Reset()
 		{
 			this.currentState = State.None;
@@ -116,11 +116,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			taxReservoir.DeleteUnused ();
 			totalReservoir.DeleteUnused ();
-		}
-
-		private void ComputeFinalPrices(GroupItemPriceCalculator group, Tax taxTotals)
-		{
-			group.AdjustFinalPrices (taxTotals.TotalAmount);
 		}
 
 		private void ReplaceTaxLines(Reservoir<TaxDocumentItemEntity> reservoir, IOrderedEnumerable<TaxRateAmount> taxInfos, CurrencyCode currency)
@@ -163,7 +158,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			this.document.Lines.Insert (index++, totalLine);
 		}
 
-
 		private int GetRootGroupInsertionIndex()
 		{
 			int index = this.document.Lines.Count ();
@@ -191,6 +185,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			return index;
 		}
+
 
 		#region IDocumentPriceCalculator Members
 
@@ -274,6 +269,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		#endregion
 
+
 		private void RecordCurrentGroup()
 		{
 			if (this.currentGroup != null)
@@ -303,13 +299,14 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			}
 		}
 		
-		private readonly IBusinessContext				context;
-		private readonly BusinessDocumentEntity			document;
+
+		private readonly IBusinessContext		context;
+		private readonly BusinessDocumentEntity	document;
 		private readonly List<AbstractItemPriceCalculator>	calculators;
 		private readonly Stack<GroupItemPriceCalculator>	groups;
-		private readonly System.IDisposable				suspender;
+		private readonly System.IDisposable		suspender;
 
-		private GroupItemPriceCalculator			currentGroup;
+		private GroupItemPriceCalculator		currentGroup;
 		private State							currentState;
 	}
 }

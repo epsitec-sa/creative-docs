@@ -40,10 +40,22 @@ namespace Epsitec.Cresus.Core.Entities
 		public virtual void Process(IDocumentPriceCalculator priceCalculator)
 		{
 		}
-		
+
+
+		/// <summary>
+		/// Gets the group level based on an index. For instance <c>01</c> is of level <c>1</c>,
+		/// <c>0101</c> of level <c>2</c>, etc.
+		/// </summary>
+		/// <param name="index">The group index.</param>
+		/// <returns>The group level.</returns>
 		public static int GetGroupLevel(int index)
 		{
-			if (index == 0)
+			if ((index < 0) ||
+				(index > 99999999))
+			{
+				throw new System.ArgumentOutOfRangeException ("index", "The index must lie between 0 and 99999999)");
+			}
+			else if (index == 0)
 			{
 				return 0;
 			}
