@@ -1,5 +1,7 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Support.EntityEngine;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +16,19 @@ namespace Epsitec.Common.Support.Extensions
 			{
 				list.Add (item);
 			}
+		}
+
+		public static System.IDisposable SuspendNotifications<T>(this IList<T> list)
+			where T : AbstractEntity, new()
+		{
+			IEntityCollection collection = list as IEntityCollection;
+
+			if (collection == null)
+			{
+				throw new System.ArgumentException ("Cannot cast the list to an IEntityCollection");
+			}
+
+			return collection.SuspendNotifications ();
 		}
 
 		/// <summary>

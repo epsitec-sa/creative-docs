@@ -152,7 +152,23 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 					this.items = new List<Item> ();
 				}
 
-				this.items.Add (new Item (group));
+				int indexOfFollowingGroupItem = this.items.Count;
+				int bestMatch = System.Int32.MaxValue;
+
+				for (int i = indexOfFollowingGroupItem-1; i >= 0; i--)
+				{
+					var item = this.items[i];
+					
+					if ((item.IsGroup) &&
+						(item.Group.groupIndex > truncIndex) &&
+						(item.Group.groupIndex < bestMatch))
+					{
+						indexOfFollowingGroupItem = i;
+						bestMatch = item.Group.groupIndex;
+					}
+				}
+
+				this.items.Insert (indexOfFollowingGroupItem, new Item (group));
 				this.subGroups.Add (truncIndex, group);
 			}
 
@@ -211,7 +227,15 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 				}
 			}
 
-			public AbstractDocumentItemEntity Line
+			public LineTreeNode					Group
+			{
+				get
+				{
+					return this.group;
+				}
+			}
+			
+			public AbstractDocumentItemEntity	Line
 			{
 				get
 				{
