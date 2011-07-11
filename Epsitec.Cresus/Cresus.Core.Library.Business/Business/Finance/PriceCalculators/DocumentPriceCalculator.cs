@@ -60,11 +60,10 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		
 		private void SortLines()
 		{
-			List<AbstractDocumentItemEntity> lines = new List<AbstractDocumentItemEntity> ();
+			var lines = new List<AbstractDocumentItemEntity> ();
 			
-			lines.AddRange (LineTreeSorter.Sort (this.document.Lines));
-
-			this.FixSubTotals (lines);
+			LineTreeSorter.Sort (this.document.Lines, lines);
+			LineTreeAnalyzer.FixSubTotals (this.context, lines);
 
 			if (!Comparer.EqualObjects (lines, this.document.Lines))
 			{
@@ -74,11 +73,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 
-
-		private void FixSubTotals(IList<AbstractDocumentItemEntity> lines)
-		{
-			LineTreeAnalyzer.FixSubTotals (this.context, lines);
-		}
 
 		private void ComputeLinePrices()
 		{
