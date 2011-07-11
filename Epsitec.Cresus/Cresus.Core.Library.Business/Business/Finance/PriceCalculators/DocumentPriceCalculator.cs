@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 				var group = this.GetLastGroup ();
 				var taxes = Tax.Combine (group.TaxDiscountable, group.TaxNotDiscountable) ?? new Tax ();
 
-				this.ComputeTaxesAndEndTotal (group, taxes);
+				this.ReplaceTaxesAndEndTotal (taxes);
 				this.ComputeFinalPrices (group, taxes);
 			}
 		}
@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			this.groups.Clear ();
 		}
 
-		private void ComputeTaxesAndEndTotal(GroupItemPriceCalculator group, Tax taxTotals)
+		private void ReplaceTaxesAndEndTotal(Tax taxTotals)
 		{
 			var dataContext    = this.context.DataContext;
 			var taxReservoir   = new Reservoir<TaxDocumentItemEntity> (dataContext, this.document.Lines.OfType<TaxDocumentItemEntity> ());
@@ -111,8 +111,8 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			var taxInfos = taxTotals.RateAmounts.OrderBy (x => x.CodeRate);
 			var currency = this.document.CurrencyCode;
 
-			this.GenerateVatLines (taxReservoir, taxInfos, currency);
-			this.GenerateEndTotalLine (totalReservoir, taxTotals, currency);
+			this.ReplaceTaxLines (taxReservoir, taxInfos, currency);
+			this.ReplaceEndTotalLine (totalReservoir, taxTotals, currency);
 		}
 
 		private void ComputeFinalPrices(GroupItemPriceCalculator group, Tax taxTotals)
@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			group.AdjustFinalPrices (taxTotals.TotalAmount);
 		}
 
-		private void GenerateVatLines(Reservoir<TaxDocumentItemEntity> reservoir, IOrderedEnumerable<TaxRateAmount> taxInfos, CurrencyCode currency)
+		private void ReplaceTaxLines(Reservoir<TaxDocumentItemEntity> reservoir, IOrderedEnumerable<TaxRateAmount> taxInfos, CurrencyCode currency)
 		{
 			reservoir.Pool.ForEach (line => this.document.Lines.Remove (line));
 
@@ -143,7 +143,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			}
 		}
 
-		private void GenerateEndTotalLine(Reservoir<EndTotalDocumentItemEntity> reservoir, Tax taxTotals, CurrencyCode currency)
+		private void ReplaceEndTotalLine(Reservoir<EndTotalDocumentItemEntity> reservoir, Tax taxTotals, CurrencyCode currency)
 		{
 			reservoir.Pool.ForEach (line => this.document.Lines.Remove (line));
 
@@ -159,6 +159,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			this.document.Lines.Insert (index++, totalLine);
 		}
+
 
 		private int GetRootGroupInsertionIndex()
 		{

@@ -115,11 +115,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			if (this.groupIndex == groupIndex)
 			{
-				if (this.items == null)
-				{
-					this.items = new List<Item> ();
-				}
-
+				this.EnsureItems ();
 				this.items.Add (new Item (line));
 			}
 			else
@@ -147,28 +143,9 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			{
 				group = new LineTreeNode (truncIndex);
 
-				if (this.items == null)
-				{
-					this.items = new List<Item> ();
-				}
+				this.EnsureItems ();
+				this.items.Insert (this.GetGroupItemInsertionIndex (truncIndex), new Item (group));
 
-				int indexOfFollowingGroupItem = this.items.Count;
-				int bestMatch = System.Int32.MaxValue;
-
-				for (int i = indexOfFollowingGroupItem-1; i >= 0; i--)
-				{
-					var item = this.items[i];
-					
-					if ((item.IsGroup) &&
-						(item.Group.groupIndex > truncIndex) &&
-						(item.Group.groupIndex < bestMatch))
-					{
-						indexOfFollowingGroupItem = i;
-						bestMatch = item.Group.groupIndex;
-					}
-				}
-
-				this.items.Insert (indexOfFollowingGroupItem, new Item (group));
 				this.subGroups.Add (truncIndex, group);
 			}
 
@@ -176,6 +153,39 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		}
 
+		private void EnsureItems()
+		{
+			if (this.items == null)
+			{
+				this.items = new List<Item> ();
+			}
+		}
+		
+		private int GetGroupItemInsertionIndex(int truncIndex)
+		{
+			//	Find the insertion point in the items list, so that the group will be
+			//	at the end of the list, if possible, or else just before the next group
+			//	based on their indexes.
+
+			int indexOfFollowingGroupItem = this.items.Count;
+			int bestMatch = System.Int32.MaxValue;
+
+			for (int i = indexOfFollowingGroupItem-1; i >= 0; i--)
+			{
+				var item = this.items[i];
+
+				if ((item.IsGroup) &&
+					(item.Group.groupIndex > truncIndex) &&
+					(item.Group.groupIndex < bestMatch))
+				{
+					indexOfFollowingGroupItem = i;
+					bestMatch = item.Group.groupIndex;
+				}
+			}
+			
+			return indexOfFollowingGroupItem;
+		}
+		
 		private static int GetTruncatedIndex(int groupIndex, int groupLevel)
 		{
 			switch (groupLevel)
