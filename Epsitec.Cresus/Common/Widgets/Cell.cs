@@ -127,9 +127,7 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetPaintState       state = this.GetPaintState ();
-			
-			adorner.PaintCellBackground(graphics, rect, state);
+			WidgetPaintState state = this.GetPaintState ();
 
 			if (!this.BackColor.IsEmpty)
 			{
@@ -149,6 +147,8 @@ namespace Epsitec.Common.Widgets
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(color);
 			}
+
+			adorner.PaintCellBackground (graphics, rect, state);
 		}
 		
 		
