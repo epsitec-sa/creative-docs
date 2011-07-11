@@ -55,9 +55,10 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 			var box = new FrameBox
 			{
 				Parent = parent,
-				PreferredHeight = 500,  // TODO: Comment occuper toute la hauteur ?
+				//?PreferredHeight = 500,  // TODO: Comment occuper toute la hauteur ?
 				Padding = new Margins (0, 0, 10, 10),
-				Dock = DockStyle.Top,
+				//?Dock = DockStyle.Top,
+				Dock = DockStyle.Fill,
 				Margins = Widgets.Tiles.TileArrow.GetContainerPadding (Direction.Right),
 			};
 

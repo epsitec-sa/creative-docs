@@ -505,6 +505,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			var tile = new EditionTile
 			{
 				Controller = item,
+				FullHeightStretch = item.FullHeightStretch,
 			};
 
 			item.CreateEditionUI (tile, builder);  // peuple la tuile
@@ -751,7 +752,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			foreach (var titleTile in titleTiles)
 			{
 				titleTile.Parent  = parent;
-				titleTile.Dock    = DockStyle.Stacked;
+				titleTile.Dock    = titleTile.FullHeightStretch ? DockStyle.StackFill : DockStyle.Stacked;
 				titleTile.Margins = new Margins (0, 0, 0, -1);
 			}
 

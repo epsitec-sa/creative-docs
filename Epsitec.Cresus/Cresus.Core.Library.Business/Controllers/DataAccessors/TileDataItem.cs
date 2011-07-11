@@ -42,6 +42,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				this.hideRemoveButton         = template.hideRemoveButton;
 				this.Frameless                = template.Frameless;
 				this.InitialVisibility        = template.InitialVisibility;
+				this.FullHeightStretch        = template.FullHeightStretch;
 				this.DataType                 = template.DataType;
 				this.Title                    = template.Title;
 				this.CompactTitle             = template.CompactTitle;
@@ -136,6 +137,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 		public bool								InitialVisibility
+		{
+			get;
+			set;
+		}
+
+		public bool								FullHeightStretch
 		{
 			get;
 			set;

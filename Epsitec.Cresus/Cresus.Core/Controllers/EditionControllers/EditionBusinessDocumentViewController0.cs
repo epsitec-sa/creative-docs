@@ -32,6 +32,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			return 640;
 		}
 
+		public override bool FullHeightStretch
+		{
+			get
+			{
+				return true;
+			}
+		}
+
 		protected override void CreateBricks(BrickWall<BusinessDocumentEntity> wall)
 		{
 			wall.AddBrick ()
