@@ -33,5 +33,10 @@ namespace Epsitec.Cresus.Core.Entities
 				return a.EntityStatus;
 			}
 		}
+
+		public override string[] GetEntityKeywords()
+		{
+			return new string[] { this.Name.ToSimpleText (), this.Description.ToSimpleText (), this.QuantityType.ToString () };
+		}
 	}
 }
