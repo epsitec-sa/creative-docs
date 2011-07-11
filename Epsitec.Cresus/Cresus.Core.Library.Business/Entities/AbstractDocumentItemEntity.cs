@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class AbstractDocumentItemEntity
 	{
-		public virtual DocumentItemTabId TabId
+		public virtual DocumentItemTabId		TabId
 		{
 			get
 			{
@@ -19,6 +19,31 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
+		/// <summary>
+		/// Gets the group level based on the <see cref="GroupIndex"/>. The level will be zero
+		/// if the index is zero, index <c>nn</c> will map to level <c>1</c>, <c>nnnn</c> to
+		/// level <c>2</c>, etc.
+		/// </summary>
+		public int								GroupLevel
+		{
+			get
+			{
+				int index = this.GroupIndex;
+
+				if (index == 0)
+				{
+					return 0;
+				}
+				else
+				{
+					//	Log10 (0001..0099) --> 0..1.995635 --> trunc/2 = 0
+					//	Log10 (0100..9999) --> 2..3.999957 --> trunc/2 = 1
+					//	etc.
+
+					return 1 + (int) System.Math.Truncate (System.Math.Log10 (index) / 2);
+				}
+			}
+		}
 
 		public virtual void Process(IDocumentPriceCalculator priceCalculator)
 		{

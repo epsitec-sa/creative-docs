@@ -223,7 +223,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		void IDocumentPriceCalculator.Process(ArticleItemPriceCalculator calculator)
 		{
 			//	TODO: groupLevel is ...
-			int groupLevel = 0; //calculator.ArticleItem.GroupLevel;
+			int groupLevel = calculator.ArticleItem.GroupLevel;
 
 			if (this.currentState != State.Article)
 			{
