@@ -50,20 +50,79 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 					{
 						if (this.groupIndex == 0)
 						{
+							//	Root group: first emit all groups 01..nn, then emit the articles, sub-total
+							//	taxes and end total :
+
 							foreach (var line in this.items.Where (x => x.IsGroup).SelectMany (x => x.Lines))
 							{
 								yield return line;
 							}
-							foreach (var line in this.items.Where (x => x.IsLine).SelectMany (x => x.Lines))
+
+							var lines = this.items.Where (x => x.IsLine).Select (x => x.Line).ToList ();
+
+							foreach (var line in lines.OfType<ArticleDocumentItemEntity> ())
+							{
+								yield return line;
+							}
+							foreach (var line in lines.OfType<SubTotalDocumentItemEntity> ())
+							{
+								yield return line;
+							}
+							foreach (var line in lines.OfType<TaxDocumentItemEntity> ())
+							{
+								yield return line;
+							}
+							foreach (var line in lines.OfType<EndTotalDocumentItemEntity> ())
+							{
+								yield return line;
+							}
+							foreach (var line in lines.OfType<TextDocumentItemEntity> ())
 							{
 								yield return line;
 							}
 						}
 						else
 						{
-							foreach (var line in this.items.SelectMany (x => x.Lines))
+							bool emitSubTotals = false;
+
+							foreach (var item in this.items)
 							{
-								yield return line;
+								if (item.IsLine)
+								{
+									var line = item.Line;
+
+									if (line is SubTotalDocumentItemEntity)
+									{
+										emitSubTotals = true;
+									}
+									else
+									{
+										yield return line;
+									}
+								}
+								if (item.IsGroup)
+								{
+									foreach (var line in item.Lines)
+									{
+										yield return line;
+									}
+								}
+							}
+
+							if (emitSubTotals)
+							{
+								foreach (var item in this.items)
+								{
+									if (item.IsLine)
+									{
+										var line = item.Line;
+
+										if (line is SubTotalDocumentItemEntity)
+										{
+											yield return line;
+										}
+									}
+								}
 							}
 						}
 					}
@@ -179,6 +238,14 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 					get
 					{
 						return this.line != null;
+					}
+				}
+
+				public AbstractDocumentItemEntity Line
+				{
+					get
+					{
+						return this.line;
 					}
 				}
 
