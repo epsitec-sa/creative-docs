@@ -137,91 +137,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 
 		[Command (Library.Business.Res.CommandIds.Lines.CreateArticle)]
-		public void ProcessCreateArticle(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.ActionCreateArticle ();
-		}
-
-		[Command (Library.Business.Res.CommandIds.Lines.CreateText)]
-		public void ProcessCreateText(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.ActionCreateText ();
-		}
-
-		[Command (Library.Business.Res.CommandIds.Lines.CreateTitle)]
-		public void ProcessCreateTitle(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.ActionCreateTitle ();
-		}
-
-		[Command (Library.Business.Res.CommandIds.Lines.CreateDiscount)]
-		public void ProcessCreateDiscount(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.ActionCreateDiscount ();
-		}
-
-		[Command (Library.Business.Res.CommandIds.Lines.CreateTax)]
-		public void ProcessCreateTax(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.ActionCreateTax ();
-		}
-
-		[Command (Library.Business.Res.CommandIds.Lines.CreateQuantity)]
-		public void ProcessCreateQuantity(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.ActionCreateQuantity ();
-		}
-
-		[Command (Library.Business.Res.CommandIds.Lines.CreateGroup)]
-		public void ProcessCreateGroup(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.ActionCreateGroup ();
-		}
-
-		[Command (Library.Business.Res.CommandIds.Lines.CreateGroupSeparator)]
-		public void ProcessCreateGroupSeparator(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.ActionCreateGroupSeparator ();
-		}
-
-		[Command (Library.Business.Res.CommandIds.Lines.Duplicate)]
-		public void ProcessDuplicate(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.ActionDuplicate ();
-		}
-
-		[Command (Library.Business.Res.CommandIds.Lines.Delete)]
-		public void ProcessDelete(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.ActionDelete ();
-		}
-
-		[Command (Library.Business.Res.CommandIds.Lines.Group)]
-		public void ProcessGroup(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.ActionGroup ();
-		}
-
-		[Command (Library.Business.Res.CommandIds.Lines.Ungroup)]
-		public void ProcessUngroup(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.ActionUngroup ();
-		}
-
-		[Command (Library.Business.Res.CommandIds.Lines.Ok)]
-		public void ProcessOk(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.ActionOk ();
-		}
-
-		[Command (Library.Business.Res.CommandIds.Lines.Cancel)]
-		public void ProcessCancel(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.ActionCancel ();
-		}
-
-
-		private void ActionCreateArticle()
+		public void ProcessCreateArticle()
 		{
 			//	Insère une nouvelle ligne d'article.
 			int? sel = this.linesController.LastSelection;
@@ -239,7 +155,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
-		private void ActionCreateText()
+		[Command (Library.Business.Res.CommandIds.Lines.CreateText)]
+		public void ProcessCreateText()
 		{
 			//	Insère une nouvelle ligne de texte.
 			int? sel = this.linesController.LastSelection;
@@ -258,7 +175,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
-		private void ActionCreateTitle()
+		[Command (Library.Business.Res.CommandIds.Lines.CreateTitle)]
+		public void ProcessCreateTitle()
 		{
 			//	Insère une nouvelle ligne de titre.
 			int? sel = this.linesController.LastSelection;
@@ -279,18 +197,22 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.UpdateAfterChange (newLine, null);
 		}
 
-		private void ActionCreateDiscount()
+		[Command (Library.Business.Res.CommandIds.Lines.CreateDiscount)]
+		public void ProcessCreateDiscount()
 		{
 			//	Insère une nouvelle ligne de rabais.
 		}
 
-		private void ActionCreateTax()
+		[Command (Library.Business.Res.CommandIds.Lines.CreateTax)]
+		public void ProcessCreateTax()
 		{
 			//	Insère une nouvelle ligne de taxe.
 		}
 
-		private void ActionCreateQuantity()
+		[Command (Library.Business.Res.CommandIds.Lines.CreateQuantity)]
+		public void ProcessCreateQuantity()
 		{
+			//	Insère une nouvelle quantité.
 			int? sel = this.linesController.LastSelection;
 
 			if (sel != null)
@@ -316,22 +238,26 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
-		private void ActionCreateGroup()
+		[Command (Library.Business.Res.CommandIds.Lines.CreateGroup)]
+		public void ProcessCreateGroup()
 		{
 			//	Insère un nouveau groupe.
 		}
 
-		private void ActionCreateGroupSeparator()
+		[Command (Library.Business.Res.CommandIds.Lines.CreateGroupSeparator)]
+		public void ProcessCreateGroupSeparator()
 		{
 			//	Insère un nouveau groupe après le groupe en cours (donc au même niveau).
 		}
 
-		private void ActionDuplicate()
+		[Command (Library.Business.Res.CommandIds.Lines.Duplicate)]
+		public void ProcessDuplicate()
 		{
 			//	Duplique la ligne sélectionnée.
 		}
 
-		private void ActionDelete()
+		[Command (Library.Business.Res.CommandIds.Lines.Delete)]
+		public void ProcessDelete()
 		{
 			//	Supprime la ligne sélectionnée.
 			int? sel = this.linesController.LastSelection;
@@ -350,29 +276,21 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				{
 					this.accessData.BusinessDocumentEntity.Lines.RemoveAt (info.LineIndex);
 				}
-				
+
 				this.UpdateAfterChange (line, null);
 			}
 		}
 
-		private void ActionGroup()
+		[Command (Library.Business.Res.CommandIds.Lines.Group)]
+		public void ProcessGroup()
 		{
 			//	Groupe toutes les lignes sélectionnées.
 		}
 
-		private void ActionUngroup()
+		[Command (Library.Business.Res.CommandIds.Lines.Ungroup)]
+		public void ProcessUngroup()
 		{
 			//	Défait le groupe sélectionné.
-		}
-
-		private void ActionCancel()
-		{
-			//	Annule la modification en cours.
-		}
-
-		private void ActionOk()
-		{
-			//	Valide la modification en cours.
 		}
 
 
