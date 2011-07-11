@@ -121,75 +121,15 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 		private void BuildArticleItem(ArticleDocumentItemEntity line)
 		{
-			ArticleQuantityType[] types =
-			{
-				ArticleQuantityType.Ordered,
-				ArticleQuantityType.Billed,
-				ArticleQuantityType.Delayed,
-				ArticleQuantityType.Expected,
-				ArticleQuantityType.Shipped,
-				ArticleQuantityType.ShippedPreviously,
-				ArticleQuantityType.Information,
-			};
-
-			DocumentItemAccessorColumn[] quantityColumns =
-			{
-				DocumentItemAccessorColumn.OrderedQuantity,
-				DocumentItemAccessorColumn.BilledQuantity,
-				DocumentItemAccessorColumn.DelayedQuantity,
-				DocumentItemAccessorColumn.ExpectedQuantity,
-				DocumentItemAccessorColumn.ShippedQuantity,
-				DocumentItemAccessorColumn.ShippedPreviouslyQuantity,
-				DocumentItemAccessorColumn.InformationQuantity,
-			};
-
-			DocumentItemAccessorColumn[] unitColumns =
-			{
-				DocumentItemAccessorColumn.OrderedUnit,
-				DocumentItemAccessorColumn.BilledUnit,
-				DocumentItemAccessorColumn.DelayedUnit,
-				DocumentItemAccessorColumn.ExpectedUnit,
-				DocumentItemAccessorColumn.ShippedUnit,
-				DocumentItemAccessorColumn.ShippedPreviouslyUnit,
-				DocumentItemAccessorColumn.InformationUnit,
-			};
-
-			DocumentItemAccessorColumn[] beginDateColumns =
-			{
-				DocumentItemAccessorColumn.OrderedBeginDate,
-				DocumentItemAccessorColumn.BilledBeginDate,
-				DocumentItemAccessorColumn.DelayedBeginDate,
-				DocumentItemAccessorColumn.ExpectedBeginDate,
-				DocumentItemAccessorColumn.ShippedBeginDate,
-				DocumentItemAccessorColumn.ShippedPreviouslyBeginDate,
-				DocumentItemAccessorColumn.InformationBeginDate,
-			};
-
-			DocumentItemAccessorColumn[] endDateColumns =
-			{
-				DocumentItemAccessorColumn.OrderedEndDate,
-				DocumentItemAccessorColumn.BilledEndDate,
-				DocumentItemAccessorColumn.DelayedEndDate,
-				DocumentItemAccessorColumn.ExpectedEndDate,
-				DocumentItemAccessorColumn.ShippedEndDate,
-				DocumentItemAccessorColumn.ShippedPreviouslyEndDate,
-				DocumentItemAccessorColumn.InformationEndDate,
-			};
-
-			System.Diagnostics.Debug.Assert (types.Length == quantityColumns.Length);
-			System.Diagnostics.Debug.Assert (types.Length == unitColumns.Length);
-			System.Diagnostics.Debug.Assert (types.Length == beginDateColumns.Length);
-			System.Diagnostics.Debug.Assert (types.Length == endDateColumns.Length);
-
 			int row = 0;
-			for (int i = 0; i < types.Length; i++)
+			for (int i = 0; i < DocumentItemAccessor.articleItemTypes.Length; i++)
 			{
 				if ((this.mode & DocumentItemAccessorMode.SpecialQuantitiesToDistinctLines) == 0)  // colonnes distinctes ?
 				{
 					row = 0;
 				}
 
-				foreach (var quantity in line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == types[i]))
+				foreach (var quantity in line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == DocumentItemAccessor.articleItemTypes[i]))
 				{
 					this.articleQuantityEntities.Add (quantity);
 
@@ -197,10 +137,10 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 					if ((this.mode & DocumentItemAccessorMode.SpecialQuantitiesToDistinctLines) == 0)  // colonnes distinctes ?
 					{
-						quantityColumn  = quantityColumns[i];
-						unitColumn      = unitColumns[i];
-						beginDateColumn = beginDateColumns[i];
-						endDateColumn   = endDateColumns[i];
+						quantityColumn  = DocumentItemAccessor.articleItemQuantityColumns[i];
+						unitColumn      = DocumentItemAccessor.articleItemUnitColumns[i];
+						beginDateColumn = DocumentItemAccessor.articleItemBeginDateColumns[i];
+						endDateColumn   = DocumentItemAccessor.articleItemEndDateColumns[i];
 					}
 					else  // lignes distinctes ?
 					{
@@ -258,6 +198,74 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				}
 			}
 		}
+
+		static DocumentItemAccessor()
+		{
+			System.Diagnostics.Debug.Assert (DocumentItemAccessor.articleItemTypes.Length == DocumentItemAccessor.articleItemQuantityColumns.Length);
+			System.Diagnostics.Debug.Assert (DocumentItemAccessor.articleItemTypes.Length == DocumentItemAccessor.articleItemUnitColumns.Length);
+			System.Diagnostics.Debug.Assert (DocumentItemAccessor.articleItemTypes.Length == DocumentItemAccessor.articleItemBeginDateColumns.Length);
+			System.Diagnostics.Debug.Assert (DocumentItemAccessor.articleItemTypes.Length == DocumentItemAccessor.articleItemEndDateColumns.Length);
+		}
+
+		static ArticleQuantityType[] articleItemTypes =
+			{
+				ArticleQuantityType.None,
+				ArticleQuantityType.Ordered,
+				ArticleQuantityType.Billed,
+				ArticleQuantityType.Delayed,
+				ArticleQuantityType.Expected,
+				ArticleQuantityType.Shipped,
+				ArticleQuantityType.ShippedPreviously,
+				ArticleQuantityType.Information,
+			};
+
+		static DocumentItemAccessorColumn[] articleItemQuantityColumns =
+			{
+				DocumentItemAccessorColumn.UniqueQuantity,
+				DocumentItemAccessorColumn.OrderedQuantity,
+				DocumentItemAccessorColumn.BilledQuantity,
+				DocumentItemAccessorColumn.DelayedQuantity,
+				DocumentItemAccessorColumn.ExpectedQuantity,
+				DocumentItemAccessorColumn.ShippedQuantity,
+				DocumentItemAccessorColumn.ShippedPreviouslyQuantity,
+				DocumentItemAccessorColumn.InformationQuantity,
+			};
+
+		static DocumentItemAccessorColumn[] articleItemUnitColumns =
+			{
+				DocumentItemAccessorColumn.UniqueUnit,
+				DocumentItemAccessorColumn.OrderedUnit,
+				DocumentItemAccessorColumn.BilledUnit,
+				DocumentItemAccessorColumn.DelayedUnit,
+				DocumentItemAccessorColumn.ExpectedUnit,
+				DocumentItemAccessorColumn.ShippedUnit,
+				DocumentItemAccessorColumn.ShippedPreviouslyUnit,
+				DocumentItemAccessorColumn.InformationUnit,
+			};
+
+		static DocumentItemAccessorColumn[] articleItemBeginDateColumns =
+			{
+				DocumentItemAccessorColumn.UniqueBeginDate,
+				DocumentItemAccessorColumn.OrderedBeginDate,
+				DocumentItemAccessorColumn.BilledBeginDate,
+				DocumentItemAccessorColumn.DelayedBeginDate,
+				DocumentItemAccessorColumn.ExpectedBeginDate,
+				DocumentItemAccessorColumn.ShippedBeginDate,
+				DocumentItemAccessorColumn.ShippedPreviouslyBeginDate,
+				DocumentItemAccessorColumn.InformationBeginDate,
+			};
+
+		static DocumentItemAccessorColumn[] articleItemEndDateColumns =
+			{
+				DocumentItemAccessorColumn.UniqueEndDate,
+				DocumentItemAccessorColumn.OrderedEndDate,
+				DocumentItemAccessorColumn.BilledEndDate,
+				DocumentItemAccessorColumn.DelayedEndDate,
+				DocumentItemAccessorColumn.ExpectedEndDate,
+				DocumentItemAccessorColumn.ShippedEndDate,
+				DocumentItemAccessorColumn.ShippedPreviouslyEndDate,
+				DocumentItemAccessorColumn.InformationEndDate,
+			};
 
 		private void BuildTaxItem(TaxDocumentItemEntity line)
 		{

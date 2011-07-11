@@ -235,12 +235,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					}
 				}
 
+				// TODO: Colorer de façon similaire les groupes.
 				//?this.table[column, row].BackColor = Color.FromBrightness ((this.documentItemIndex%2 == 0) ? 0.95 : 0.90);
 
 				column++;
 			}
-
-			// TODO: Colorer de façon similaire les groupes.
 
 			this.table.SelectRow (row, false);
 		}
