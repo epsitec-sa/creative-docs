@@ -113,6 +113,9 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			this.ReplaceTaxLines (taxReservoir, taxInfos, currency);
 			this.ReplaceEndTotalLine (totalReservoir, taxTotals, currency);
+
+			taxReservoir.DeleteUnused ();
+			totalReservoir.DeleteUnused ();
 		}
 
 		private void ComputeFinalPrices(GroupItemPriceCalculator group, Tax taxTotals)
@@ -208,6 +211,11 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 				}
 			}
 
+			/// <summary>
+			/// Pulls an instance of the expected type <typeparamref name="T"/>. If there is
+			/// no more any existing instance available, create a new one.
+			/// </summary>
+			/// <returns></returns>
 			public T Pull()
 			{
 				if (this.pool.Count > 0)
@@ -217,6 +225,17 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 				else
 				{
 					return this.context.CreateEntity<T> ();
+				}
+			}
+
+			/// <summary>
+			/// Deletes the unused entities.
+			/// </summary>
+			public void DeleteUnused()
+			{
+				while (this.pool.Count > 0)
+				{
+					this.context.DeleteEntity (this.pool.Dequeue ());
 				}
 			}
 
