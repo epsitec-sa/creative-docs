@@ -226,6 +226,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				var info = this.lineInformations[sel.Value];
 
 				var newLine = this.accessData.BusinessContext.CreateEntity<ArticleDocumentItemEntity> ();
+				newLine.GroupIndex = 1;
 
 				this.accessData.BusinessDocumentEntity.Lines.Insert (info.LineIndex+1, newLine);
 
@@ -244,7 +245,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				var newLine = this.accessData.BusinessContext.CreateEntity<TextDocumentItemEntity> ();
 				newLine.Text = "Coucou !!!";
-				newLine.GroupLevel = 1;
+				newLine.GroupIndex = 1;
 
 				this.accessData.BusinessDocumentEntity.Lines.Insert (info.LineIndex+1, newLine);
 
@@ -263,6 +264,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				var newLine = this.accessData.BusinessContext.CreateEntity<TextDocumentItemEntity> ();
 				newLine.Text = "Titre !!!";
+				newLine.GroupIndex = 1;
 
 				this.accessData.BusinessDocumentEntity.Lines.Insert (info.LineIndex+1, newLine);
 
