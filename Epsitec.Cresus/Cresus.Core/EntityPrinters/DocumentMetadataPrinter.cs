@@ -394,6 +394,17 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				this.tableColumns.Add (TableColumnKeys.Total,              new TableColumn ("Prix TTC",    priceWidth,   ContentAlignment.MiddleRight));
 			}
 
+			//	Construit une fois pour toutes les accesseurs au contenu.
+			var accessors = new List<DocumentItemAccessor> ();
+
+			for (int i = 0; i < this.Entity.Lines.Count; i++)
+			{
+				var accessor = new DocumentItemAccessor ();
+				accessor.BuildContent (this.Entity.Lines[i], this.DocumentType, DocumentItemAccessorMode.ForceAllLines);
+
+				accessors.Add (accessor);
+			}
+
 			//	Première passe pour déterminer le nombre le lignes du tableau de la facture
 			//	ainsi que les colonnes visibles.
 			int firstLine = onlyTotal ? this.Entity.Lines.Count-1 : 0;
@@ -409,27 +420,27 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 					if (line is TextDocumentItemEntity)
 					{
-						rowUsed = this.InitializeColumnTextLine (line as TextDocumentItemEntity);
+						rowUsed = this.InitializeColumnTextLine (accessors[i], line as TextDocumentItemEntity);
 					}
 
 					if (line is ArticleDocumentItemEntity)
 					{
-						rowUsed = this.InitializeColumnArticleLine (line as ArticleDocumentItemEntity, group);
+						rowUsed = this.InitializeColumnArticleLine (accessors[i], line as ArticleDocumentItemEntity, group);
 					}
 
 					if (line is SubTotalDocumentItemEntity)
 					{
-						rowUsed = this.InitializeColumnSubTotalLine (line as SubTotalDocumentItemEntity);
+						rowUsed = this.InitializeColumnSubTotalLine (accessors[i], line as SubTotalDocumentItemEntity);
 					}
 
 					if (line is TaxDocumentItemEntity)
 					{
-						rowUsed = this.InitializeColumnTaxLine (line as TaxDocumentItemEntity);
+						rowUsed = this.InitializeColumnTaxLine (accessors[i], line as TaxDocumentItemEntity);
 					}
 
 					if (line is EndTotalDocumentItemEntity)
 					{
-						rowUsed = this.InitializeColumnEndTotalLine (line as EndTotalDocumentItemEntity);
+						rowUsed = this.InitializeColumnEndTotalLine (accessors[i], line as EndTotalDocumentItemEntity);
 					}
 
 					rowCount += rowUsed;
@@ -525,17 +536,17 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 					if (line is TextDocumentItemEntity)
 					{
-						rowUsed = this.BuildTextLine (this.table, row, line as TextDocumentItemEntity);
+						rowUsed = this.BuildTextLine (this.table, row, accessors[i], line as TextDocumentItemEntity);
 					}
 
 					if (line is ArticleDocumentItemEntity)
 					{
-						rowUsed = this.BuildArticleLine (this.table, row, line as ArticleDocumentItemEntity, group);
+						rowUsed = this.BuildArticleLine (this.table, row, accessors[i], line as ArticleDocumentItemEntity, group);
 					}
 
 					if (line is SubTotalDocumentItemEntity)
 					{
-						rowUsed = this.BuildSubTotalLine (this.table, row, line as SubTotalDocumentItemEntity);
+						rowUsed = this.BuildSubTotalLine (this.table, row, accessors[i], line as SubTotalDocumentItemEntity);
 					}
 
 					if (line is TaxDocumentItemEntity)
@@ -543,12 +554,12 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 						bool firstTax = (i > 0                         && !(this.Entity.Lines[i-1] is TaxDocumentItemEntity));
 						bool lastTax  = (i < this.Entity.Lines.Count-1 && !(this.Entity.Lines[i+1] is TaxDocumentItemEntity));
 
-						rowUsed = this.BuildTaxLine (this.table, row, line as TaxDocumentItemEntity, firstTax, lastTax);
+						rowUsed = this.BuildTaxLine (this.table, row, accessors[i], line as TaxDocumentItemEntity, firstTax, lastTax);
 					}
 
 					if (line is EndTotalDocumentItemEntity)
 					{
-						rowUsed = this.BuildEndTotalLine (this.table, row, line as EndTotalDocumentItemEntity);
+						rowUsed = this.BuildEndTotalLine (this.table, row, accessors[i], line as EndTotalDocumentItemEntity);
 					}
 
 					if (rowUsed != 0)
@@ -632,17 +643,15 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
-		private int InitializeColumnTextLine(TextDocumentItemEntity line)
+		private int InitializeColumnTextLine(DocumentItemAccessor accessor, TextDocumentItemEntity line)
 		{
 			//	Retourne le nombre de lignes à utiliser dans le tableau.
 			this.tableColumns[TableColumnKeys.ArticleDescription].Visible = true;
 
-			var accessor = new DocumentItemAccessor ();
-			accessor.BuildContent (line, this.DocumentType, DocumentItemAccessorMode.ForceAllLines);
 			return accessor.RowsCount;
 		}
 
-		private int InitializeColumnArticleLine(ArticleDocumentItemEntity line, ArticleGroupEntity group)
+		private int InitializeColumnArticleLine(DocumentItemAccessor accessor, ArticleDocumentItemEntity line, ArticleGroupEntity group)
 		{
 			//	Retourne le nombre de lignes à utiliser dans le tableau.
 			if (this.DocumentType == Business.DocumentType.DeliveryNote && !ArticleDocumentItemHelper.IsArticleForBL (line))
@@ -692,12 +701,10 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				this.tableColumns[TableColumnKeys.Discount].Visible = true;
 			}
 
-			var accessor = new DocumentItemAccessor ();
-			accessor.BuildContent (line, this.DocumentType, DocumentItemAccessorMode.ForceAllLines);
 			return accessor.RowsCount;
 		}
 
-		private int InitializeColumnSubTotalLine(SubTotalDocumentItemEntity line)
+		private int InitializeColumnSubTotalLine(DocumentItemAccessor accessor, SubTotalDocumentItemEntity line)
 		{
 			//	Retourne le nombre de lignes à utiliser dans le tableau.
 			if (this.IsDocumentWithoutPrice)
@@ -710,12 +717,10 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			this.tableColumns[TableColumnKeys.Vat               ].Visible = true;
 			this.tableColumns[TableColumnKeys.Total             ].Visible = true;
 
-			var accessor = new DocumentItemAccessor ();
-			accessor.BuildContent (line, this.DocumentType, DocumentItemAccessorMode.ForceAllLines);
 			return accessor.RowsCount;
 		}
 
-		private int InitializeColumnTaxLine(TaxDocumentItemEntity line)
+		private int InitializeColumnTaxLine(DocumentItemAccessor accessor, TaxDocumentItemEntity line)
 		{
 			//	Retourne le nombre de lignes à utiliser dans le tableau.
 			if (this.IsDocumentWithoutPrice)
@@ -728,12 +733,10 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			this.tableColumns[TableColumnKeys.Vat               ].Visible = true;
 			this.tableColumns[TableColumnKeys.Total             ].Visible = true;
 
-			var accessor = new DocumentItemAccessor ();
-			accessor.BuildContent (line, this.DocumentType, DocumentItemAccessorMode.ForceAllLines);
 			return accessor.RowsCount;
 		}
 
-		private int InitializeColumnEndTotalLine(EndTotalDocumentItemEntity line)
+		private int InitializeColumnEndTotalLine(DocumentItemAccessor accessor, EndTotalDocumentItemEntity line)
 		{
 			//	Retourne le nombre de lignes à utiliser dans le tableau.
 			if (this.IsDocumentWithoutPrice)
@@ -752,25 +755,20 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				this.tableColumns[TableColumnKeys.Total].Visible = true;
 			}
 
-			var accessor = new DocumentItemAccessor ();
-			accessor.BuildContent (line, this.DocumentType, DocumentItemAccessorMode.ForceAllLines);
 			return accessor.RowsCount;
 		}
 
 
-		private int BuildTextLine(TableBand table, int row, TextDocumentItemEntity line)
+		private int BuildTextLine(TableBand table, int row, DocumentItemAccessor accessor, TextDocumentItemEntity line)
 		{
 			//	Retourne le nombre de lignes à utiliser dans le tableau.
-			var accessor = new DocumentItemAccessor ();
-			accessor.BuildContent (line, this.DocumentType, DocumentItemAccessorMode.ForceAllLines);
-
 			var text = accessor.GetContent (0, DocumentItemAccessorColumn.ArticleDescription).ApplyBold ();
 			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, text, this.FontSize);
 
 			return accessor.RowsCount;
 		}
 
-		private int BuildArticleLine(TableBand table, int row, ArticleDocumentItemEntity line, ArticleGroupEntity group)
+		private int BuildArticleLine(TableBand table, int row, DocumentItemAccessor accessor, ArticleDocumentItemEntity line, ArticleGroupEntity group)
 		{
 			//	Retourne le nombre de lignes à utiliser dans le tableau.
 			if (this.DocumentType == Business.DocumentType.DeliveryNote && !ArticleDocumentItemHelper.IsArticleForBL (line))
@@ -787,9 +785,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			{
 				return 0;
 			}
-
-			var accessor = new DocumentItemAccessor ();
-			accessor.BuildContent (line, this.DocumentType, DocumentItemAccessorMode.ForceAllLines);
 
 			for (int i = 0; i < accessor.RowsCount; i++)
 			{
@@ -863,7 +858,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-		private int BuildSubTotalLine(TableBand table, int row, SubTotalDocumentItemEntity line)
+		private int BuildSubTotalLine(TableBand table, int row, DocumentItemAccessor accessor, SubTotalDocumentItemEntity line)
 		{
 			//	Retourne le nombre de lignes à utiliser dans le tableau.
 			//  Une ligne de sous-total PriceDocumentItemEntity peut occuper 2 lignes physiques du tableau,
@@ -873,9 +868,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			{
 				return 0;
 			}
-
-			var accessor = new DocumentItemAccessor ();
-			accessor.BuildContent (line, this.DocumentType, DocumentItemAccessorMode.ForceAllLines);
 
 			for (int i = 0; i < accessor.RowsCount; i++)
 			{
@@ -890,16 +882,13 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			return accessor.RowsCount;
 		}
 
-		private int BuildTaxLine(TableBand table, int row, TaxDocumentItemEntity line, bool firstTax, bool lastTax)
+		private int BuildTaxLine(TableBand table, int row, DocumentItemAccessor accessor, TaxDocumentItemEntity line, bool firstTax, bool lastTax)
 		{
 			//	Retourne le nombre de lignes à utiliser dans le tableau.
 			if (this.IsDocumentWithoutPrice)
 			{
 				return 0;
 			}
-
-			var accessor = new DocumentItemAccessor ();
-			accessor.BuildContent (line, this.DocumentType, DocumentItemAccessorMode.ForceAllLines);
 
 			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, accessor.GetContent (0, DocumentItemAccessorColumn.ArticleDescription), this.FontSize);
 			table.SetText (this.tableColumns[TableColumnKeys.LinePrice         ].Rank, row, accessor.GetContent (0, DocumentItemAccessorColumn.LinePrice),          this.FontSize);
@@ -930,16 +919,13 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			return accessor.RowsCount;
 		}
 
-		private int BuildEndTotalLine(TableBand table, int row, EndTotalDocumentItemEntity line)
+		private int BuildEndTotalLine(TableBand table, int row, DocumentItemAccessor accessor, EndTotalDocumentItemEntity line)
 		{
 			//	Retourne le nombre de lignes à utiliser dans le tableau.
 			if (this.IsDocumentWithoutPrice)
 			{
 				return 0;
 			}
-
-			var accessor = new DocumentItemAccessor ();
-			accessor.BuildContent (line, this.DocumentType, DocumentItemAccessorMode.ForceAllLines);
 
 			for (int i = 0; i < accessor.RowsCount; i++)
 			{

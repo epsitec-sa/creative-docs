@@ -199,6 +199,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			}
 		}
 
+		#region Static tables
 		static DocumentItemAccessor()
 		{
 			System.Diagnostics.Debug.Assert (DocumentItemAccessor.articleItemTypes.Length == DocumentItemAccessor.articleItemQuantityColumns.Length);
@@ -266,6 +267,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				DocumentItemAccessorColumn.ShippedPreviouslyEndDate,
 				DocumentItemAccessorColumn.InformationEndDate,
 			};
+		#endregion
 
 		private void BuildTaxItem(TaxDocumentItemEntity line)
 		{
