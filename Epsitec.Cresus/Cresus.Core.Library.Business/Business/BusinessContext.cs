@@ -175,14 +175,26 @@ namespace Epsitec.Cresus.Core.Business
 
 
 		/// <summary>
-		/// Gets the cached business settings (<see cref="BusinessSettingsEntity"/>).
-		/// Warning: the entity does not belong to this context and will be read-only.
+		/// Gets the cached entity.
+		/// Warning: the entity might not belong to this context and will be read-only.
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>The cached entity.</returns>
+		public T GetCached<T>()
+			where T : AbstractEntity, new ()
+		{
+			return this.GetAllEntities<T> ().FirstOrDefault ()
+				?? this.dataContext.CreateNullEntity<T> (freeze: true);
+		
+		}
+
+		/// <summary>
+		/// Gets the cached business settings (<see cref="BusinessSettingsEntity"/>).
+		/// Warning: the entity might not belong to this context and will be read-only.
+		/// </summary>
+		/// <returns>The cached business settings.</returns>
 		public BusinessSettingsEntity GetCachedBusinessSettings()
 		{
-			return this.GetAllEntities<BusinessSettingsEntity> ().FirstOrDefault ()
-				?? this.dataContext.CreateNullEntity<BusinessSettingsEntity> (freeze:true);
+			return this.GetCached<BusinessSettingsEntity> ();
 		}
 
 		public void AssignIds<T>(T entity, RefIdGeneratorPool generatorPool)

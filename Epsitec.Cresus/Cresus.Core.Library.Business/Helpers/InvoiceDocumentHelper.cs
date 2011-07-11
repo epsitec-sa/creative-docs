@@ -416,11 +416,6 @@ namespace Epsitec.Cresus.Core.Helpers
 				return true;
 			}
 
-			if (price.FixedPrice.HasValue)
-			{
-				return true;
-			}
-
 			return false;
 		}
 
@@ -434,11 +429,6 @@ namespace Epsitec.Cresus.Core.Helpers
 			if (price.Discount.Value.HasValue)
 			{
 				return Misc.PriceToString (price.Discount.Value);
-			}
-
-			if (price.FixedPrice.HasValue)
-			{
-				return Misc.PriceToString (price.PrimaryPriceBeforeTax.GetValueOrDefault (0) - price.ResultingPriceBeforeTax.GetValueOrDefault (0));
 			}
 
 			return null;

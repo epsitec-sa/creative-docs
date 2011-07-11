@@ -51,7 +51,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateTextField  (tile, 80, "Rabais (pourcent ou montant)", Marshaler.Create (() => this.GetDiscount (), this.SetDiscount));
 			builder.CreateStaticText (tile, 16, "<b>— ou —</b>");
-			builder.CreateTextField  (tile, 80, "Sous-total arrêté TTC",        Marshaler.Create (() => this.GetFixedPriceAfterTax (), this.SetFixedPriceAfterTax));
 		}
 
 
@@ -104,30 +103,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					this.Entity.Discount.DiscountRate = null;
 					this.Entity.Discount.Value = v;
 				}
-			}
-
-			if (this.Entity.Discount.DiscountRate.HasValue || this.Entity.Discount.Value.HasValue)
-			{
-				this.Entity.FixedPrice = null;
-			}
-
-			this.UpdatePrices ();
-		}
-
-
-		private string GetFixedPriceAfterTax()
-		{
-			return Misc.PriceToString (this.Entity.FixedPrice);
-		}
-
-		private void SetFixedPriceAfterTax(string value)
-		{
-			this.Entity.FixedPrice = Misc.StringToDecimal (value);
-
-			if (this.Entity.FixedPrice.HasValue)
-			{
-				this.Entity.Discount.DiscountRate   = null;
-				this.Entity.Discount.Value = null;
 			}
 
 			this.UpdatePrices ();

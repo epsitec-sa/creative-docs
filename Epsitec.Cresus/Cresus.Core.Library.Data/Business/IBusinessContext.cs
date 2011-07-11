@@ -53,7 +53,10 @@ namespace Epsitec.Cresus.Core.Business
 		void RemoveMasterEntity(AbstractEntity masterEntity);
 
 		IEnumerable<T> GetAllEntities<T>()
-					where T : AbstractEntity, new ();
+			where T : AbstractEntity, new ();
+
+		T GetCached<T>()
+			where T : AbstractEntity, new ();
 		
 		T GetLocalEntity<T>(T entity)
 			where T : AbstractEntity, new ();

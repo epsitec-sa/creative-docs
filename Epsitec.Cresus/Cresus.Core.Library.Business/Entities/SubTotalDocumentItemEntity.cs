@@ -38,10 +38,6 @@ namespace Epsitec.Cresus.Core.Entities
 			{
 				builder.Append (" (après rabais en francs)");
 			}
-			else if (this.FixedPrice.HasValue)
-			{
-				builder.Append (" (montant arrêté)");
-			}
 
 			return builder.ToFormattedText ();
 		}

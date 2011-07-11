@@ -14,30 +14,37 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalculators
 {
+	/// <summary>
+	/// The <c>ArticleItemPriceCalculator</c> class computes the price of an article line.
+	/// </summary>
 	public class ArticleItemPriceCalculator : AbstractItemPriceCalculator
 	{
 		public ArticleItemPriceCalculator(IDocumentPriceCalculator priceCalculator, ArticleDocumentItemEntity articleItem)
-			: this (priceCalculator.Data, priceCalculator.Document, articleItem)
+			: this (priceCalculator.Data, priceCalculator.BusinessContext, priceCalculator.Document, priceCalculator.Metadata, articleItem)
 		{
 		}
-
-		public ArticleItemPriceCalculator(CoreData data, BusinessDocumentEntity document, ArticleDocumentItemEntity articleItem)
+		
+		private ArticleItemPriceCalculator(CoreData data, IBusinessContext businessContext, BusinessDocumentEntity document, DocumentMetadataEntity metadata, ArticleDocumentItemEntity articleItem)
 		{
-			this.data = data;
-			this.document     = document;
-			this.articleItem  = articleItem;
-			this.articleDef   = this.articleItem.ArticleDefinition;
-			this.currencyCode = this.document.CurrencyCode;
-			this.priceGroup   = this.document.PriceGroup.UnwrapNullEntity ();
-			this.date         = this.document.PriceRefDate.GetValueOrDefault (Date.Today).ToDateTime ();
-
-			this.notDiscountable = this.articleDef.ArticleCategory.IsNotNull () && this.articleDef.ArticleCategory.NeverApplyDiscount;
+			this.data            = data;
+			this.businessContext = businessContext;
+			this.document        = document;
+			this.metadata        = metadata;
+			this.articleItem     = articleItem;
+			this.articleDef      = this.articleItem.ArticleDefinition;
+			this.currencyCode    = this.document.CurrencyCode;
+			this.priceGroup      = this.document.PriceGroup.UnwrapNullEntity ();
+			this.date            = this.document.PriceRefDate.GetValueOrDefault (Date.Today).ToDateTime ();
 
 			if ((this.priceGroup.IsNotNull ()) &&
 				(this.priceGroup.NeverApplyDiscount))
-            {
+			{
 				this.notDiscountable = true;
-            }
+			}
+			else
+			{
+				this.notDiscountable = this.articleDef.ArticleCategory.IsNotNull () && this.articleDef.ArticleCategory.NeverApplyDiscount;
+			}
 
 			if ((this.priceGroup.IsNotNull ()) &&
 				(this.priceGroup.DefaultRoundingMode.IsNotNull ()))
@@ -46,19 +53,28 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 			}
 			else
 			{
-				//	TODO: use rounding mode found in the settings...
+				var settings = this.businessContext.GetCached<BusinessSettingsEntity> ();
 
-				this.priceRoundingMode = new PriceRoundingModeEntity ()
+				if ((settings.IsNull ()) ||
+					(settings.Finance.IsNull ()) ||
+					(settings.Finance.DefaultBillingRoundingMode.IsNull ()))
 				{
-					Modulo = 0.05M,
-					AddBeforeModulo = 0.025M,
-					RoundingPolicy = RoundingPolicy.OnFinalPriceAfterTax,
-				};
+					this.priceRoundingMode = new PriceRoundingModeEntity ()
+					{
+						Modulo = 0.05M,
+						AddBeforeModulo = 0.025M,
+						RoundingPolicy = RoundingPolicy.OnFinalPriceAfterTax,
+					};
+				}
+				else
+				{
+					this.priceRoundingMode = settings.Finance.DefaultBillingRoundingMode;
+				}
 			}
 		}
 
 
-		public ArticleDocumentItemEntity	ArticleItem
+		public ArticleDocumentItemEntity		ArticleItem
 		{
 			get
 			{
@@ -66,7 +82,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 			}
 		}
 
-		public Tax							Tax
+		public Tax								Tax
 		{
 			get
 			{
@@ -74,7 +90,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 			}
 		}
 
-		public bool							NotDiscountable
+		public bool								NotDiscountable
 		{
 			get
 			{
@@ -85,14 +101,15 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 		
 		public void ComputePrice()
 		{
-			var roundingPolicy = this.priceRoundingMode.RoundingPolicy;
-			var quantity       = this.GetTotalQuantity ();
-			var articlePrice   = this.GetArticlePrices (quantity).FirstOrDefault ();
+			var roundingPolicy    = this.priceRoundingMode.RoundingPolicy;
+			var unitPriceQuantity = this.GetUnitPriceQuantity ();
+			var realPriceQuantity = this.GetRealPriceQuantity ();
+			var articlePrice      = this.GetArticlePrices (unitPriceQuantity).FirstOrDefault ();
 
 			//	TODO: apply PriceGroup to price if articlePrice.ValueOverridesPriceGroup is set to false
 
 			decimal primaryUnitPriceBeforeTax   = this.ComputePrimaryUnitPriceBeforeTax (roundingPolicy, articlePrice);
-			decimal primaryLinePriceBeforeTax   = this.ComputePrimaryLinePriceBeforeTax (roundingPolicy, primaryUnitPriceBeforeTax, quantity);
+			decimal primaryLinePriceBeforeTax   = this.ComputePrimaryLinePriceBeforeTax (roundingPolicy, primaryUnitPriceBeforeTax, realPriceQuantity);
 			decimal resultingLinePriceBeforeTax = this.ComputeResultingLinePriceBeforeTax (roundingPolicy, primaryLinePriceBeforeTax);
 
 			decimal primaryLineTax = this.ComputeTaxTotal (primaryLinePriceBeforeTax);
@@ -185,17 +202,22 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 			}
 		}
 
-		public decimal GetTotalQuantity()
+		public decimal GetRealPriceQuantity()
 		{
-			InclusionMode inclusionMode = this.IsRealBill () ? InclusionMode.Billed : InclusionMode.Ordered;
-			return this.articleItem.ArticleQuantities.Sum (x => this.GetQuantity (x, inclusionMode));
+			switch (this.metadata.DocumentCategory.DocumentType)
+			{
+				case DocumentType.Invoice:
+				case DocumentType.InvoiceProForma:
+					return this.articleItem.ArticleQuantities.Sum (x => this.FilterPriceQuantity (x, ArticleQuantityType.Billed));
+
+				default:
+					return this.articleItem.ArticleQuantities.Sum (x => this.FilterPriceQuantity (x, ArticleQuantityType.Ordered));
+			}
 		}
 
-		private enum InclusionMode
+		public decimal GetUnitPriceQuantity()
 		{
-			All,
-			Billed,
-			Ordered,
+			return this.articleItem.ArticleQuantities.Sum (x => this.FilterPriceQuantity (x, ArticleQuantityType.Ordered));
 		}
 
 		private decimal ComputePrimaryUnitPriceBeforeTax(RoundingPolicy roundingPolicy, ArticlePriceEntity articlePrice)
@@ -377,47 +399,19 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 
 			return tax;
 		}
+
+		private decimal FilterPriceQuantity(ArticleQuantityEntity quantity, ArticleQuantityType type)
+		{
+			if (quantity.QuantityColumn.QuantityType == type)
+			{
+				return this.ConvertToBillingUnit (quantity.Quantity, quantity.Unit);
+			}
+			else
+			{
+				return 0;
+			}
+		}
 		
-		private decimal GetQuantity(ArticleQuantityEntity quantity, InclusionMode inclusionMode)
-		{
-			switch (quantity.QuantityColumn.QuantityType)
-			{
-				case ArticleQuantityType.Billed:
-					return this.ConvertToBillingUnit (quantity.Quantity, quantity.Unit);
-
-				case ArticleQuantityType.Delayed:
-				case ArticleQuantityType.Ordered:
-					return (inclusionMode == InclusionMode.Billed) ? 0M : this.ConvertToBillingUnit (quantity.Quantity, quantity.Unit);
-
-				case ArticleQuantityType.Information:
-					return (inclusionMode != InclusionMode.All) ? 0M : this.ConvertToBillingUnit (quantity.Quantity, quantity.Unit);
-				
-				case ArticleQuantityType.None:
-					return 0M;
-
-				default:
-					throw new System.NotSupportedException (string.Format ("ArticleQuantityType.{0} not supported", quantity.QuantityColumn.QuantityType));
-			}
-		}
-
-		private bool IsRealBill()
-		{
-			switch (this.document.BillingStatus)
-			{
-				case BillingStatus.CreditorBillOpen:
-				case BillingStatus.CreditorBillClosed:
-				case BillingStatus.DebtorBillOpen:
-				case BillingStatus.DebtorBillClosed:
-					return true;
-
-				case BillingStatus.None:
-				case BillingStatus.NotAnInvoice:
-					return false;
-
-				default:
-					throw new System.NotSupportedException (string.Format ("BillingStatus.{0} not supported", this.document.BillingStatus));
-			}
-		}
 
 		private decimal ConvertToBillingUnit(decimal value, UnitOfMeasureEntity unit)
 		{
@@ -454,6 +448,8 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 		}
 
 		private readonly CoreData					data;
+		private readonly IBusinessContext			businessContext;
+		private readonly DocumentMetadataEntity		metadata;
 		private readonly BusinessDocumentEntity		document;
 		private readonly ArticleDocumentItemEntity	articleItem;
 		private readonly ArticleDefinitionEntity	articleDef;

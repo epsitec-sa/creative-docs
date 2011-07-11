@@ -685,6 +685,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				{
 				}
 				
+				//	designer:cap/GVAP6
+				public static readonly global::Epsitec.Common.Support.Druid DefaultBillingRoundingMode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 217);
 				//	designer:cap/GVA96
 				public static readonly global::Epsitec.Common.Support.Druid IsrDefs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 201);
 				//	designer:cap/GVAB6
@@ -823,10 +825,6 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid DisplayModes = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 144);
 				//	designer:cap/GVAQ4
 				public static readonly global::Epsitec.Common.Support.Druid FinalPriceBeforeTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 154);
-				//	designer:cap/GVAN4
-				public static readonly global::Epsitec.Common.Support.Druid FixedPrice = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 151);
-				//	designer:cap/GVAO4
-				public static readonly global::Epsitec.Common.Support.Druid FixedPriceIncludesTaxes = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 152);
 				//	designer:cap/GVAK4
 				public static readonly global::Epsitec.Common.Support.Druid PrimaryPriceBeforeTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 148);
 				//	designer:cap/GVAL4
@@ -835,8 +833,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid ResultingPriceBeforeTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 153);
 				//	designer:cap/GVAU5
 				public static readonly global::Epsitec.Common.Support.Druid ResultingTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 190);
-				//	designer:cap/GVAJ4
-				public static readonly global::Epsitec.Common.Support.Druid TextForFixedPrice = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 147);
+				//	designer:cap/GVAO6
+				public static readonly global::Epsitec.Common.Support.Druid TextForDiscount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 216);
 				//	designer:cap/GVAH4
 				public static readonly global::Epsitec.Common.Support.Druid TextForPrimaryPrice = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 145);
 				//	designer:cap/GVAI4

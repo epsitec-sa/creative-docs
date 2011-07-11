@@ -4077,24 +4077,24 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>TextForFixedPrice</c> field.
-		///	designer:fld/GVAF4/GVAJ4
+		///	The <c>TextForDiscount</c> field.
+		///	designer:fld/GVAF4/GVAO6
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVAJ4]")]
-		public global::Epsitec.Common.Types.FormattedText TextForFixedPrice
+		[global::Epsitec.Common.Support.EntityField ("[GVAO6]")]
+		public global::Epsitec.Common.Types.FormattedText TextForDiscount
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[GVAJ4]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[GVAO6]");
 			}
 			set
 			{
-				global::Epsitec.Common.Types.FormattedText oldValue = this.TextForFixedPrice;
-				if (oldValue != value || !this.IsFieldDefined("[GVAJ4]"))
+				global::Epsitec.Common.Types.FormattedText oldValue = this.TextForDiscount;
+				if (oldValue != value || !this.IsFieldDefined("[GVAO6]"))
 				{
-					this.OnTextForFixedPriceChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[GVAJ4]", oldValue, value);
-					this.OnTextForFixedPriceChanged (oldValue, value);
+					this.OnTextForDiscountChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[GVAO6]", oldValue, value);
+					this.OnTextForDiscountChanged (oldValue, value);
 				}
 			}
 		}
@@ -4161,50 +4161,6 @@ namespace Epsitec.Cresus.Core.Entities
 					this.OnDiscountChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.PriceDiscountEntity> ("[GVAM4]", oldValue, value);
 					this.OnDiscountChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>FixedPrice</c> field.
-		///	designer:fld/GVAF4/GVAN4
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVAN4]")]
-		public global::System.Decimal? FixedPrice
-		{
-			get
-			{
-				return this.GetField<global::System.Decimal?> ("[GVAN4]");
-			}
-			set
-			{
-				global::System.Decimal? oldValue = this.FixedPrice;
-				if (oldValue != value || !this.IsFieldDefined("[GVAN4]"))
-				{
-					this.OnFixedPriceChanging (oldValue, value);
-					this.SetField<global::System.Decimal?> ("[GVAN4]", oldValue, value);
-					this.OnFixedPriceChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>FixedPriceIncludesTaxes</c> field.
-		///	designer:fld/GVAF4/GVAO4
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVAO4]")]
-		public bool FixedPriceIncludesTaxes
-		{
-			get
-			{
-				return this.GetField<bool> ("[GVAO4]");
-			}
-			set
-			{
-				bool oldValue = this.FixedPriceIncludesTaxes;
-				if (oldValue != value || !this.IsFieldDefined("[GVAO4]"))
-				{
-					this.OnFixedPriceIncludesTaxesChanging (oldValue, value);
-					this.SetField<bool> ("[GVAO4]", oldValue, value);
-					this.OnFixedPriceIncludesTaxesChanged (oldValue, value);
 				}
 			}
 		}
@@ -4281,18 +4237,14 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnTextForPrimaryPriceChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnTextForResultingPriceChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnTextForResultingPriceChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnTextForFixedPriceChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnTextForFixedPriceChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnTextForDiscountChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnTextForDiscountChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnPrimaryPriceBeforeTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnPrimaryPriceBeforeTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnPrimaryTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnPrimaryTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnDiscountChanging(global::Epsitec.Cresus.Core.Entities.PriceDiscountEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceDiscountEntity newValue);
 		partial void OnDiscountChanged(global::Epsitec.Cresus.Core.Entities.PriceDiscountEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceDiscountEntity newValue);
-		partial void OnFixedPriceChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnFixedPriceChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnFixedPriceIncludesTaxesChanging(bool oldValue, bool newValue);
-		partial void OnFixedPriceIncludesTaxesChanged(bool oldValue, bool newValue);
 		partial void OnResultingTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnResultingTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnResultingPriceBeforeTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
@@ -5498,6 +5450,28 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>DefaultBillingRoundingMode</c> field.
+		///	designer:fld/GVA76/GVAP6
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVAP6]")]
+		public global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity DefaultBillingRoundingMode
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity> ("[GVAP6]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue = this.DefaultBillingRoundingMode;
+				if (oldValue != value || !this.IsFieldDefined("[GVAP6]"))
+				{
+					this.OnDefaultBillingRoundingModeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity> ("[GVAP6]", oldValue, value);
+					this.OnDefaultBillingRoundingModeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>SerializedChartsOfAccounts</c> field.
 		///	designer:fld/GVA76/GVAC6
 		///	</summary>
@@ -5510,6 +5484,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
+		partial void OnDefaultBillingRoundingModeChanging(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
+		partial void OnDefaultBillingRoundingModeChanged(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

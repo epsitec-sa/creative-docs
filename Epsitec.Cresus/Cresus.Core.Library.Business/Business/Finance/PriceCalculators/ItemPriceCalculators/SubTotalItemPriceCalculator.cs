@@ -63,7 +63,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 			decimal resultingTax            = primaryTax;
 
 			this.ApplyDiscount (ref resultingPriceBeforeTax, ref resultingTax);
-			this.ApplyFixedPrice (ref resultingPriceBeforeTax, ref resultingTax);
 
 			decimal resultingPriceAfterTax  = resultingPriceBeforeTax + resultingTax;
 
@@ -90,15 +89,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 
 			this.totalItem.FinalPriceBeforeTax = PriceCalculator.ClipPriceValue (adjustedTotal, this.currencyCode);
 			this.group.AdjustFinalPrices (adjustedTotal);
-		}
-
-		private void ApplyFixedPrice(ref decimal priceBeforeTax, ref decimal tax)
-		{
-			if (this.totalItem.FixedPrice.HasValue)
-			{
-				bool computeIncludingTaxes = this.totalItem.FixedPriceIncludesTaxes;
-				this.ApplyFixedDiscount (this.totalItem.FixedPrice.Value, ref priceBeforeTax, ref tax, computeIncludingTaxes);
-			}
 		}
 
 		private void ApplyDiscount(ref decimal priceBeforeTax, ref decimal tax)

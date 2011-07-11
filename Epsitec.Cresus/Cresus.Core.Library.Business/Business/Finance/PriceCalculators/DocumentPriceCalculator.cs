@@ -26,15 +26,15 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		/// </summary>
 		/// <param name="context">The business context.</param>
 		/// <param name="document">The business document to work on.</param>
-		public DocumentPriceCalculator(IBusinessContext context, BusinessDocumentEntity document)
+		public DocumentPriceCalculator(IBusinessContext context, BusinessDocumentEntity document, DocumentMetadataEntity metadata)
 		{
 			this.context     = context;
 			this.document    = document;
+			this.metadata    = metadata;
 			this.calculators = new List<AbstractItemPriceCalculator> ();
 			this.groups      = new Stack<GroupItemPriceCalculator> ();
 			this.suspender   = this.document.DisableEvents ();
 		}
-
 
 
 		/// <summary>
@@ -197,11 +197,27 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			}
 		}
 
+		public DocumentMetadataEntity			Metadata
+		{
+			get
+			{
+				return this.metadata;
+			}
+		}
+
 		public CoreData							Data
 		{
 			get
 			{
 				return this.context.Data;
+			}
+		}
+
+		public IBusinessContext					BusinessContext
+		{
+			get
+			{
+				return this.context;
 			}
 		}
 
@@ -302,6 +318,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		private readonly IBusinessContext		context;
 		private readonly BusinessDocumentEntity	document;
+		private readonly DocumentMetadataEntity	metadata;
 		private readonly List<AbstractItemPriceCalculator>	calculators;
 		private readonly Stack<GroupItemPriceCalculator>	groups;
 		private readonly System.IDisposable		suspender;
