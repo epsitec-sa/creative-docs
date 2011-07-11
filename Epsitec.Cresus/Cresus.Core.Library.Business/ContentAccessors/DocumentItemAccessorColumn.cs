@@ -53,6 +53,9 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 		ArticleId,						// numéro d'article
 		ArticleDescription,				// description de l'article
+
+		VatCode,						// code de TVA
+		VatRate,						// taux de TVA
 		
 		Discount,						// rabais
 		UnitPrice,						// prix unitaire HT

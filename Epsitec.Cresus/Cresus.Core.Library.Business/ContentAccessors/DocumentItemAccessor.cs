@@ -210,7 +210,6 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 		static ArticleQuantityType[] articleItemTypes =
 			{
-				ArticleQuantityType.None,
 				ArticleQuantityType.Ordered,
 				ArticleQuantityType.Billed,
 				ArticleQuantityType.Delayed,
@@ -222,7 +221,6 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 		static DocumentItemAccessorColumn[] articleItemQuantityColumns =
 			{
-				DocumentItemAccessorColumn.UniqueQuantity,
 				DocumentItemAccessorColumn.OrderedQuantity,
 				DocumentItemAccessorColumn.BilledQuantity,
 				DocumentItemAccessorColumn.DelayedQuantity,
@@ -234,7 +232,6 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 		static DocumentItemAccessorColumn[] articleItemUnitColumns =
 			{
-				DocumentItemAccessorColumn.UniqueUnit,
 				DocumentItemAccessorColumn.OrderedUnit,
 				DocumentItemAccessorColumn.BilledUnit,
 				DocumentItemAccessorColumn.DelayedUnit,
@@ -246,7 +243,6 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 		static DocumentItemAccessorColumn[] articleItemBeginDateColumns =
 			{
-				DocumentItemAccessorColumn.UniqueBeginDate,
 				DocumentItemAccessorColumn.OrderedBeginDate,
 				DocumentItemAccessorColumn.BilledBeginDate,
 				DocumentItemAccessorColumn.DelayedBeginDate,
@@ -258,7 +254,6 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 		static DocumentItemAccessorColumn[] articleItemEndDateColumns =
 			{
-				DocumentItemAccessorColumn.UniqueEndDate,
 				DocumentItemAccessorColumn.OrderedEndDate,
 				DocumentItemAccessorColumn.BilledEndDate,
 				DocumentItemAccessorColumn.DelayedEndDate,

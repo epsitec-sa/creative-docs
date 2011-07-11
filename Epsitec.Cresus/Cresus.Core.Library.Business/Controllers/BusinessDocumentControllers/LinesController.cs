@@ -294,7 +294,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					return 60;
 
 				case ColumnType.Type:
-					return 60;
+					return 70;
 
 				case ColumnType.Date:
 					return 70;

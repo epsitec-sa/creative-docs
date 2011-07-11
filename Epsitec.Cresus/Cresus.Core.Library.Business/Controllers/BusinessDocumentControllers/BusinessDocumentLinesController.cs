@@ -50,8 +50,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			CommandContext.SetContext (frame, this.commandContext);
 
 			//	Crée la toolbar.
-			this.lineToolbarController = new LineToolbarController (this.accessData.DocumentMetadataEntity, this.accessData.BusinessDocumentEntity);
-			this.lineToolbarController.CreateUI (frame);
+			//?this.lineToolbarController = new LineToolbarController (this.accessData.DocumentMetadataEntity, this.accessData.BusinessDocumentEntity);
+			//?this.lineToolbarController.CreateUI (frame);
 
 			//	Crée la liste.
 			this.linesController = new LinesController (this.accessData);
