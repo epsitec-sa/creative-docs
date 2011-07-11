@@ -758,10 +758,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
-		// Toute cette partie de code doit être en accord avec Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers.BusinessDocumentLinesController,
-		// méthodes GetArticleXxx !
-		// TODO: Un jour, il faudrait en extraire le code commun.
-
 		private int BuildTextLine(TableBand table, int row, TextDocumentItemEntity line)
 		{
 			//	Retourne le nombre de lignes à utiliser dans le tableau.
