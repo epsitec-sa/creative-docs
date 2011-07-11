@@ -193,6 +193,10 @@ namespace Epsitec.Cresus.Core.Bricks
 					item.HideAddButton = true;
 					break;
 
+				case BrickMode.FullHeightStretch:
+					item.FullHeightStretch = true;
+					break;
+
 				case BrickMode.HideRemoveButton:
 					item.HideRemoveButton = true;
 					break;

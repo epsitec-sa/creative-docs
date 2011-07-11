@@ -155,14 +155,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			return 300;
 		}
 
-		public virtual bool FullHeightStretch
-		{
-			get
-			{
-				return false;
-			}
-		}
-
 		public bool Matches(CoreViewController controller)
 		{
 			return (this == controller)

@@ -9,6 +9,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
@@ -32,19 +33,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			return 640;
 		}
 
-		public override bool FullHeightStretch
-		{
-			get
-			{
-				return true;
-			}
-		}
-
 		protected override void CreateBricks(BrickWall<BusinessDocumentEntity> wall)
 		{
 			wall.AddBrick ()
 				.Title ("Lignes du document")
 				.Icon ("Data.DocumentItems")
+				.Attribute (BrickMode.FullHeightStretch)
 				.Input ()
 				  .Field (x => x).WithSpecialController ()
 				.End ()

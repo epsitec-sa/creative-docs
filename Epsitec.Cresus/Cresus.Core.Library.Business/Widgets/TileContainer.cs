@@ -54,15 +54,6 @@ namespace Epsitec.Cresus.Core.Widgets
 			return this.controller.GetPreferredWidth (columnCount, columnCount);
 		}
 
-		public bool FullHeightStretch
-		{
-			get
-			{
-				return this.controller.FullHeightStretch;
-			}
-		}
-
-
 		public void SetTileVisibility(string name, bool visibility)
 		{
 			//	Montre ou cache une tuile d'après son nom.

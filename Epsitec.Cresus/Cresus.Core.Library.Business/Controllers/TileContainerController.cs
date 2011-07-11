@@ -534,6 +534,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			item.TitleTile.IsReadOnly = (item.DataType != TileDataType.EditableItem);  // fond bleuté si tuile d'édition
 			item.TitleTile.Frameless = item.Frameless;
+			item.TitleTile.FullHeightStretch = item.FullHeightStretch;
 
 			this.CreateTitleTileClickHandler (item, item.TitleTile);
 		}

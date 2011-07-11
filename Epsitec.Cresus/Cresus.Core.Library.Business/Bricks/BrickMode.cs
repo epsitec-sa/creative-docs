@@ -28,5 +28,7 @@ namespace Epsitec.Cresus.Core.Bricks
 		SpecialController1,
 		SpecialController2,
 		SpecialController3,
+
+		FullHeightStretch,
 	}
 }
