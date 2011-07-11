@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -11,7 +11,7 @@ using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class ArticleQuantityEntity
+	public partial class ArticleQuantityEntity : ICloneable<ArticleQuantityEntity>
 	{
 		public override FormattedText GetSummary()
 		{
@@ -51,5 +51,20 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return EntityStatus.Valid;
 		}
+
+		#region ICloneable<ArticleQuantityEntity> Members
+
+		void ICloneable<ArticleQuantityEntity>.CopyTo(IBusinessContext businessContext, ArticleQuantityEntity copy)
+		{
+			copy.BeginDate          = this.BeginDate;
+			copy.EndDate            = this.EndDate;
+			copy.Quantity           = this.Quantity;
+			copy.QuantityColumn     = this.QuantityColumn;
+			copy.Unit               = this.Unit;
+			copy.ExpectedDateFormat = this.ExpectedDateFormat;
+			copy.ColumnName         = this.ColumnName;
+		}
+
+		#endregion
 	}
 }

@@ -79,6 +79,7 @@
     <Compile Include="Entities\IsrDefinitionEntity.cs" />
     <Compile Include="Entities\PaymentModeEntity.cs" />
     <Compile Include="Entities\PriceCalculatorEntity.cs" />
+    <Compile Include="Entities\PriceDiscountEntity.cs" />
     <Compile Include="Entities\PriceGroupEntity.cs" />
     <Compile Include="Entities\PriceRoundingModeEntity.cs" />
     <Compile Include="Entities\TaxSettingsEntity.cs" />

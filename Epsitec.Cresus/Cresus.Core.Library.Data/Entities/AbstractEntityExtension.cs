@@ -4,6 +4,8 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Core.Business;
+
 using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
@@ -25,6 +27,71 @@ namespace Epsitec.Cresus.Core.Entities
 		public static bool IsNotNull(this AbstractEntity entity)
 		{
 			return entity.UnwrapNullEntity () != null;
+		}
+
+		public static T CloneEntity<T>(this T entity, IBusinessContext businessContext)
+			where T : AbstractEntity, new ()
+		{
+			if (entity.IsNull ())
+			{
+				return null;
+			}
+
+			var type=entity.GetType ();
+            
+			if (type == typeof (T))
+			{
+				return new EntityCopier<T> ().Clone (businessContext, entity) as T;
+			}
+			else
+			{
+				if (AbstractEntityExtensions.copiers == null)
+				{
+					AbstractEntityExtensions.copiers = new Dictionary<System.Type, EntityCopier> ();
+				}
+
+				EntityCopier copier;
+
+				if (AbstractEntityExtensions.copiers.TryGetValue (type, out copier) == false)
+				{
+					copier = System.Activator.CreateInstance (typeof (EntityCopier<>).MakeGenericType (type)) as EntityCopier;
+					AbstractEntityExtensions.copiers[type] = copier;
+				}
+
+				return copier.Clone (businessContext, entity) as T;
+			}
+		}
+
+		[System.ThreadStatic]
+		private static Dictionary<System.Type, EntityCopier> copiers;
+
+		private abstract class EntityCopier
+		{
+			public abstract AbstractEntity Clone(IBusinessContext businessContext, AbstractEntity entity);
+		}
+
+		private class EntityCopier<T> : EntityCopier
+			where T : AbstractEntity, new ()
+		{
+			public EntityCopier()
+			{
+			}
+
+			public override AbstractEntity Clone(IBusinessContext businessContext, AbstractEntity entity)
+			{
+				var cloneable = entity as ICloneable<T>;
+
+				if (cloneable == null)
+				{
+					throw new System.InvalidOperationException ("Cannot clone entity");
+				}
+
+				var copy = businessContext.CreateEntity<T> ();
+
+				cloneable.CopyTo (businessContext, copy);
+
+				return copy;
+			}
 		}
 
 		public static DataContext GetDataContext(this AbstractEntity entity)

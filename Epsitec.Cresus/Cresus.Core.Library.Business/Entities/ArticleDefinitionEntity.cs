@@ -117,5 +117,13 @@ namespace Epsitec.Cresus.Core.Entities
 				return match;
 			}
 		}
+
+		public decimal ConvertToBillingUnit(decimal quantity, UnitOfMeasureEntity unitOfMeasure)
+		{
+			//	TODO: conversion d'unités
+
+			return quantity;
+		}
+
 	}
 }

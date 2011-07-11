@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 		public void ComputePrice()
 		{
 			var roundingPolicy    = this.priceRoundingMode.RoundingPolicy;
-			var unitPriceQuantity = this.GetUnitPriceQuantity ();
+			var unitPriceQuantity = this.articleItem.GetOrderedQuantity ();
 			var realPriceQuantity = this.GetRealPriceQuantity ();
 			var articlePrice      = this.GetArticlePrices (unitPriceQuantity).FirstOrDefault ();
 
@@ -208,16 +208,11 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 			{
 				case DocumentType.Invoice:
 				case DocumentType.InvoiceProForma:
-					return this.articleItem.ArticleQuantities.Sum (x => this.FilterPriceQuantity (x, ArticleQuantityType.Billed));
+					return this.articleItem.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == ArticleQuantityType.Billed).Sum (x => this.articleDef.ConvertToBillingUnit (x.Quantity, x.Unit));
 
 				default:
-					return this.articleItem.ArticleQuantities.Sum (x => this.FilterPriceQuantity (x, ArticleQuantityType.Ordered));
+					return this.articleItem.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == ArticleQuantityType.Ordered).Sum (x => this.articleDef.ConvertToBillingUnit (x.Quantity, x.Unit));
 			}
-		}
-
-		public decimal GetUnitPriceQuantity()
-		{
-			return this.articleItem.ArticleQuantities.Sum (x => this.FilterPriceQuantity (x, ArticleQuantityType.Ordered));
 		}
 
 		private decimal ComputePrimaryUnitPriceBeforeTax(RoundingPolicy roundingPolicy, ArticlePriceEntity articlePrice)
@@ -405,24 +400,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 			return tax;
 		}
 
-		private decimal FilterPriceQuantity(ArticleQuantityEntity quantity, ArticleQuantityType type)
-		{
-			if (quantity.QuantityColumn.QuantityType == type)
-			{
-				return this.ConvertToBillingUnit (quantity.Quantity, quantity.Unit);
-			}
-			else
-			{
-				return 0;
-			}
-		}
-		
-
-		private decimal ConvertToBillingUnit(decimal value, UnitOfMeasureEntity unit)
-		{
-			//	TODO: convertir en unités de facturation selon ArticleDefinition.BillingUnit
-			return value;
-		}
 
 		public IEnumerable<ArticlePriceEntity> GetArticlePrices(decimal quantity)
 		{

@@ -262,19 +262,21 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			//	Insère une nouvelle ligne de titre.
 			int? sel = this.linesController.LastSelection;
+			int index = 0;
 
 			if (sel != null)
 			{
 				var info = this.lineInformations[sel.Value];
-
-				var newLine = this.accessData.BusinessContext.CreateEntity<TextDocumentItemEntity> ();
-				newLine.Text = "Titre !!!";
-				newLine.GroupIndex = 1;
-
-				this.accessData.BusinessDocumentEntity.Lines.Insert (info.LineIndex+1, newLine);
-
-				this.UpdateAfterChange (newLine, null);
+				index = info.LineIndex+1;
 			}
+
+
+			var newLine = this.accessData.BusinessContext.CreateEntity<TextDocumentItemEntity> ();
+			newLine.Text = "Titre !!!";
+			newLine.GroupIndex = 1;
+
+			this.accessData.BusinessDocumentEntity.Lines.Insert (index, newLine);
+			this.UpdateAfterChange (newLine, null);
 		}
 
 		private void ActionCreateDiscount()

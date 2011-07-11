@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 		{
 			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
 
+			entity.Code = (string) ItemCodeGenerator.NewCode ();
 			entity.CurrencyCode = Finance.CurrencyCode.Chf;
 			entity.BillingDate = Date.Today;
 			entity.BillingStatus = Finance.BillingStatus.NotAnInvoice;
