@@ -204,7 +204,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			article.Visibility = true;
 			article.BeginDate  = this.Entity.BillingDate;
 			article.EndDate    = this.Entity.BillingDate;
-			article.GroupLevel = 0;
+			article.GroupIndex = 0;
 
 			return article;
 		}
@@ -217,7 +217,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			article.Visibility = true;
 			article.BeginDate  = this.Entity.BillingDate;
 			article.EndDate    = this.Entity.BillingDate;
-			article.GroupLevel = 1;
+			article.GroupIndex = 1;
 
 			return article;
 		}

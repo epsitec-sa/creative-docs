@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					{
 						var text = controller.BusinessContext.CreateEntityAndRegisterAsEmpty<TextDocumentItemEntity> ();
 
-						text.GroupLevel = 1;
+						text.GroupIndex = 1;
 						
 						newEntity = text;
 					}
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 						article.BeginDate  = invoiceDocument.BillingDate;
 						article.EndDate    = invoiceDocument.BillingDate;
-						article.GroupLevel = 1;
+						article.GroupIndex = 1;
 
 						newEntity = article;
 					}
@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 						price.TextForPrimaryPrice   = TextFormatter.FormatText ("Sous-total avant rabais");
 						price.TextForResultingPrice = TextFormatter.FormatText ("Sous-total");
-						price.GroupLevel            = 1;
+						price.GroupIndex            = 1;
 
 						newEntity = price;
 					}

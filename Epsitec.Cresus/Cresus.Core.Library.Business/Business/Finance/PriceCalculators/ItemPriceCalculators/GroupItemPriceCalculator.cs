@@ -116,6 +116,11 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 		}
 
 
+		public void IncludeSubGroups(DocumentPriceCalculator calculator, int level)
+		{
+			calculator.IncludeSubGroups (this, level);
+		}
+
 		public void Add(GroupItemPriceCalculator calculator)
 		{
 			calculator.Members.OfType<ArticleItemPriceCalculator> ().ForEach (x => this.Add (x));
