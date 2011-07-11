@@ -75,21 +75,39 @@ namespace Epsitec.Common.Widgets
 		
 		public Drawing.Color HiliteColor
 		{
-			get { return this.hiliteColor; }
-			set { this.hiliteColor = value; }
+			get
+			{
+				return this.hiliteColor;
+			}
+			set
+			{
+				this.hiliteColor = value;
+			}
 		}
 
 		public bool IsFlyOverHilite
 		{
-			get { return this.isFlyOverHilite; }
-			set { this.isFlyOverHilite = value; }
+			get
+			{
+				return this.isFlyOverHilite;
+			}
+			set
+			{
+				this.isFlyOverHilite = value;
+			}
 		}
 
 		public double AlphaSeparator
 		{
 			//	Composante A de la couleur des traits de séparations horizontaux et verticaux.
-			get { return this.alphaSeparator; }
-			set { this.alphaSeparator = value; }
+			get
+			{
+				return this.alphaSeparator;
+			}
+			set
+			{
+				this.alphaSeparator = value;
+			}
 		}
 
 
@@ -136,6 +154,20 @@ namespace Epsitec.Common.Widgets
 					this.styleV = value;
 					this.MarkAsDirty();
 				}
+			}
+		}
+
+		public bool IsCompactStyle
+		{
+			//	Le style 'compact' permet d'avoir des cellules  bord à bord, sans espaces intermédiaires.
+			//	Cela est nécessaire lorsque certains traits de séparation sont omis.
+			get
+			{
+				return this.isCompactStyle;
+			}
+			set
+			{
+				this.isCompactStyle = value;
 			}
 		}
 
@@ -1714,9 +1746,13 @@ namespace Epsitec.Common.Widgets
 					if ( cRect.Right > 0 && cRect.Left   < rect.Width  &&
 						 cRect.Top   > 0 && cRect.Bottom < rect.Height )
 					{
-						cRect.Left += 1;
-						cRect.Top  -= 1;  // laisse la place pour la grille
-						this.array[x, y].SetManualBounds(cRect);
+						if (!this.isCompactStyle)
+						{
+							cRect.Left += 1;
+							cRect.Top  -= 1;  // laisse la place pour la grille
+						}
+
+						this.array[x,y].SetManualBounds(cRect);
 						this.array[x,y].SetParent(this.container);
 						this.array[x,y].Visibility = true;
 						this.array[x,y].SetArrayRank(this, x, y);
@@ -2059,9 +2095,11 @@ namespace Epsitec.Common.Widgets
 				for ( int i=0 ; i<this.maxRows ; i++ )
 				{
 					y -= this.RetHeightRow(i);
-					if ( y < rect.Bottom || y > rect.Top )  continue;
-					graphics.AddLine(x1, y, x2, y);
-					graphics.RenderSolid(separatorColor);
+					if (y >= rect.Bottom && y <= rect.Top && this.HasBottomSeparator(i))
+					{
+						graphics.AddLine (x1, y, x2, y);
+						graphics.RenderSolid (separatorColor);
+					}
 				}
 			}
 
@@ -2080,15 +2118,49 @@ namespace Epsitec.Common.Widgets
 				for ( int i=0 ; i<this.maxColumns ; i++ )
 				{
 					x += this.RetWidthColumn(i);
-					if ( x < rect.Left || x > rect.Right )  continue;
-					graphics.AddLine(x, y1, x, y2);
-					graphics.RenderSolid(separatorColor);
+					if (x >= rect.Left && x <= rect.Right && this.HasRightSeparator(i))
+					{
+						graphics.AddLine (x, y1, x, y2);
+						graphics.RenderSolid (separatorColor);
+					}
 				}
 			}
 			
 			//	Dessine le cadre du tableau.
 			rect = this.Client.Bounds;
 			adorner.PaintArrayForeground(graphics, rect, state);
+		}
+
+		private bool HasBottomSeparator(int row)
+		{
+			if (row != this.maxRows-1)  // pas la dernière ligne ?
+			{
+				for (int column = 0; column < this.maxColumns; column++)
+				{
+					if (this.array[column, row].HasBottomSeparator == false)
+					{
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
+
+		private bool HasRightSeparator(int column)
+		{
+			if (column != this.maxColumns-1)  // pas la dernière colonne ?
+			{
+				for (int row = 0; row < this.maxRows; row++)
+				{
+					if (this.array[column, row].HasRightSeparator == false)
+					{
+						return false;
+					}
+				}
+			}
+
+			return true;
 		}
 		
 
@@ -2146,6 +2218,7 @@ namespace Epsitec.Common.Widgets
 		protected bool							mouseState;
 		protected CellArrayStyles				styleH;
 		protected CellArrayStyles				styleV;
+		protected bool							isCompactStyle;
 		protected int							maxColumns;		// nb total de colonnes
 		protected int							maxRows;		// nb total de lignes
 		protected int							visibleColumns;	// nb de colonnes visibles

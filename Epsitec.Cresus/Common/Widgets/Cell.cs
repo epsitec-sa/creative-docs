@@ -9,6 +9,8 @@ namespace Epsitec.Common.Widgets
 		public Cell()
 		{
 			this.InheritsParentFocus = true;
+			this.hasBottomSeparator = true;
+			this.hasRightSeparator = true;
 		}
 		
 		public Cell(Widget embedder) : this()
@@ -113,6 +115,44 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public bool						HasBottomSeparator
+		{
+			//	Il suffit qu'une seule cellule dise ne pas avoir de séparateur pour que toute la ligne
+			//	horizontale de séparation soit omise.
+			get
+			{
+				return this.hasBottomSeparator;
+			}
+			
+			set
+			{
+				if (this.hasBottomSeparator != value)
+				{
+					this.hasBottomSeparator = value;
+					this.Invalidate();
+				}
+			}
+		}
+		
+		public bool						HasRightSeparator
+		{
+			//	Il suffit qu'une seule cellule dise ne pas avoir de séparateur pour que toute la ligne
+			//	verticale de séparation soit omise.
+			get
+			{
+				return this.hasRightSeparator;
+			}
+			
+			set
+			{
+				if (this.hasRightSeparator != value)
+				{
+					this.hasRightSeparator = value;
+					this.Invalidate();
+				}
+			}
+		}
+		
 		
 		internal void SetArrayRank(AbstractCellArray array, int column, int row)
 		{
@@ -135,13 +175,13 @@ namespace Epsitec.Common.Widgets
 				graphics.RenderSolid (this.BackColor);
 			}
 
-			if ( this.isHilite )
+			if (this.isHilite)
 			{
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(this.cellArray.HiliteColor);
 			}
 
-			if ( this.isFlyOver )
+			if (this.isFlyOver)
 			{
 				Drawing.Color color = Drawing.Color.FromAlphaColor(0.2, adorner.ColorCaption);
 				graphics.AddFilledRectangle(rect);
@@ -157,5 +197,7 @@ namespace Epsitec.Common.Widgets
 		protected int					rankRow;
 		protected bool					isHilite;
 		protected bool					isFlyOver;
+		protected bool					hasBottomSeparator;
+		protected bool					hasRightSeparator;
 	}
 }
