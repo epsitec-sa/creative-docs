@@ -62,6 +62,7 @@
     <Compile Include="Business\Finance\PriceCalculators\LineTreeAnalyzer.cs" />
     <Compile Include="Business\Finance\PriceCalculators\LineTreeNode.cs" />
     <Compile Include="Business\Finance\PriceCalculators\LineTreeSorter.cs" />
+    <Compile Include="Business\Finance\PriceCalculators\Reservoir.cs" />
     <Compile Include="Business\Finance\PriceCalculators\State.cs" />
     <Compile Include="Business\ReferenceNumberFormatters\DocumentInAffairReferenceNumberFormatter.cs" />
     <Compile Include="Business\Rules\AddressBusinessRules.cs" />

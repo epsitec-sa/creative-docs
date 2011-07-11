@@ -192,60 +192,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			return index;
 		}
 
-		#region Reservoir Class
-
-		class Reservoir<T>
-			where T : AbstractEntity, new ()
-		{
-			public Reservoir(DataContext context, IEnumerable<T> source)
-			{
-				this.context = context;
-				this.pool = new Queue<T> (source);
-			}
-
-			public IEnumerable<T> Pool
-			{
-				get
-				{
-					return this.pool;
-				}
-			}
-
-			/// <summary>
-			/// Pulls an instance of the expected type <typeparamref name="T"/>. If there is
-			/// no more any existing instance available, create a new one.
-			/// </summary>
-			/// <returns></returns>
-			public T Pull()
-			{
-				if (this.pool.Count > 0)
-				{
-					return this.pool.Dequeue ();
-				}
-				else
-				{
-					return this.context.CreateEntity<T> ();
-				}
-			}
-
-			/// <summary>
-			/// Deletes the unused entities.
-			/// </summary>
-			public void DeleteUnused()
-			{
-				while (this.pool.Count > 0)
-				{
-					this.context.DeleteEntity (this.pool.Dequeue ());
-				}
-			}
-
-
-			private readonly Queue<T> pool;
-			private readonly DataContext context;
-		}
-
-		#endregion
-
 		#region IDocumentPriceCalculator Members
 
 		public BusinessDocumentEntity			Document
