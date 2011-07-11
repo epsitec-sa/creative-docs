@@ -61,7 +61,7 @@ namespace Epsitec.Common.Widgets
 		protected override double GetBaseLineVerticalOffset()
 		{
 			//	Remonte l'icône pour faire de la place au texte dessous.
-			return 8.0;
+			return 8.0;  // TODO: Généraliser le calcul de la géométrie !
 		}
 
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
@@ -101,7 +101,8 @@ namespace Epsitec.Common.Widgets
 			}
 
 			//	Dessine le texte sous l'icône.
-			var textRect = new Drawing.Rectangle (rect.Left, rect.Bottom, rect.Width, 20);
+			// TODO: Il est ridicule de réinitialiser le TextLayout à chaque fois, mais je ne sais pas comment faire autrement.
+			var textRect = new Drawing.Rectangle (rect.Left, rect.Bottom, rect.Width, 20);  // TODO: Généraliser le calcul de la géométrie !
 			this.textLayout.LayoutSize = textRect.Size;
 			this.textLayout.Text = this.CommandObject.Caption.DefaultLabel;
 			adorner.PaintGeneralTextLayout (graphics, textRect, textRect.BottomLeft, this.textLayout, state, PaintTextStyle.StaticText, TextFieldDisplayMode.Default, Drawing.Color.Empty);
