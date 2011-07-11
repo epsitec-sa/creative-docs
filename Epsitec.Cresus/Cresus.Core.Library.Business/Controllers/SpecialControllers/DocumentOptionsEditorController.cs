@@ -40,8 +40,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 			var box = new FrameBox
 			{
 				Parent = parent,
-				PreferredHeight = 500,  // TODO: Comment mettre un mode "full height" ?
-				Dock = DockStyle.Top,
+				Dock = DockStyle.Fill,
 			};
 
 			var controller = this.tileContainer.Controller as EntityViewController;

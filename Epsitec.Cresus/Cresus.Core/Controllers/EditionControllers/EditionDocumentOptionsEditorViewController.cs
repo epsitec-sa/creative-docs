@@ -5,6 +5,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
@@ -28,6 +29,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		protected override void CreateBricks(BrickWall<DocumentOptionsEntity> wall)
 		{
 			wall.AddBrick ()
+				.Attribute (BrickMode.FullHeightStretch)
 				.Input ()
 				  .Field (x => x).WithSpecialController ()
 				.End ()

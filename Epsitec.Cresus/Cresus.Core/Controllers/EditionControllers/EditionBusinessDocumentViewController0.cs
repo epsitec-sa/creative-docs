@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 	{
 		public override double GetPreferredWidth(int columnIndex, int columnCount)
 		{
-			return 640;
+			return 800;
 		}
 
 		protected override void CreateBricks(BrickWall<BusinessDocumentEntity> wall)
