@@ -50,6 +50,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Parent = tile,
 				StyleH = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.Header,
 				StyleV = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine | CellArrayStyles.SelectMulti,
+				IsCompactStyle = true,
 				DefHeight = LinesController.lineHeight,
 				Margins = new Margins (2),
 				Dock = DockStyle.Fill,
@@ -61,9 +62,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			};
 		}
 
-		public void UpdateUI(int lineCount, System.Func<int, ColumnType, FormattedText> getCellContent, int? sel = null)
+		public void UpdateUI(int lineCount, System.Func<int, LineInformations> getLineInformations, System.Func<int, ColumnType, FormattedText> getCellContent, int? sel = null)
 		{
-			this.getCellContent = getCellContent;
+			this.getLineInformations = getLineInformations;
+			this.getCellContent      = getCellContent;
 
 			int columns = this.ColumnTypes.Count ();
 
@@ -82,6 +84,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				sel = this.table.SelectedRow;
 			}
+
+			this.lastDocumentItemEntity = null;
+			this.documentItemIndex = -1;
 
 			for (int row=0; row<lineCount; row++)
 			{
@@ -193,6 +198,30 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private void TableUpdateRow(int row)
 		{
 			//	Met à jour le contenu d'une ligne de la table.
+			var info = this.getLineInformations (row);
+
+			if (this.lastDocumentItemEntity != info.AbstractDocumentItemEntity)
+			{
+				this.lastDocumentItemEntity = info.AbstractDocumentItemEntity;
+				this.documentItemIndex++;
+			}
+
+			//	Détermine s'il faut dessiner la ligne horizontale de séparation.
+			bool separator = true;
+
+			if (row < this.table.Rows-1)
+			{
+				var nextInfo = this.getLineInformations (row+1);
+
+				if (info.SublineIndex == nextInfo.SublineIndex-1)  // est-ce que la ligne suivante fait partie de la même entité ?
+				{
+					separator = false;
+				}
+			}
+
+			this.table[0, row].HasBottomSeparator = separator;
+
+			//	Met à jour les contenus des cellules.
 			int column = 0;
 			foreach (var columnType in this.ColumnTypes)
 			{
@@ -205,6 +234,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 						text.FormattedText = this.getCellContent (row, columnType);
 					}
 				}
+
+				//?this.table[column, row].BackColor = Color.FromBrightness ((this.documentItemIndex%2 == 0) ? 0.95 : 0.90);
 
 				column++;
 			}
@@ -348,7 +379,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private CellTable										table;
 		private System.Func<bool>								selectionChanged;
+		private System.Func<int, LineInformations>				getLineInformations;
 		private System.Func<int, ColumnType, FormattedText>		getCellContent;
 		private bool											showAllColumns;
+
+		private AbstractDocumentItemEntity						lastDocumentItemEntity;
+		private int												documentItemIndex;
 	}
 }

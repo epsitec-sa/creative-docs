@@ -64,10 +64,15 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public void UpdateUI(int? sel = null)
 		{
-			this.linesController.UpdateUI (this.lineInformations.Count, this.CallbackGetCellContent, sel);
+			this.linesController.UpdateUI (this.lineInformations.Count, this.CallbackGetLineInformations, this.CallbackGetCellContent, sel);
 			this.UpdateCommands ();
 		}
 
+
+		private LineInformations CallbackGetLineInformations(int index)
+		{
+			return this.lineInformations[index];
+		}
 
 		private FormattedText CallbackGetCellContent(int index, ColumnType columnType)
 		{

@@ -521,16 +521,16 @@ namespace Epsitec.Cresus.Core.Controllers
 				PreferredWidth = Library.UI.Constants.ButtonLargeWidth * 1,
 			};
 
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateArticle));
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateText));
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateTitle));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateArticle, isWithText: true));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateText, isWithText: true));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateTitle, isWithText: true));
 			section.Children.Add (this.CreateSeparator ());
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateDiscount));
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateTax));
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateQuantity));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateDiscount, isWithText: true));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateTax, isWithText: true));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateQuantity, isWithText: true));
 			section.Children.Add (this.CreateSeparator ());
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateGroup));
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateGroupSeparator));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateGroup, isWithText: true));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateGroupSeparator, isWithText: true));
 		}
 
 		private void CreateRibbonBusinessOperSection(RibbonPage page)
@@ -543,8 +543,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				PreferredWidth = Library.UI.Constants.ButtonLargeWidth * 1,
 			};
 
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Duplicate));
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Delete));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Duplicate, isWithText: true));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Delete, isWithText: true));
 		}
 
 		private void CreateRibbonBusinessGroupSection(RibbonPage page)
@@ -557,8 +557,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				PreferredWidth = Library.UI.Constants.ButtonLargeWidth * 1,
 			};
 
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Group));
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Ungroup));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Group, isWithText: true));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Ungroup, isWithText: true));
 		}
 
 		private void CreateRibbonBusinessActionSection(RibbonPage page)
@@ -571,8 +571,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				PreferredWidth = Library.UI.Constants.ButtonLargeWidth * 1,
 			};
 
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Ok));
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Cancel));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Ok, isWithText: true));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Cancel, isWithText: true));
 		}
 		#endregion
 
@@ -874,7 +874,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		private IconButton CreateButton(Command command = null, DockStyle dockStyle = DockStyle.StackBegin, CommandEventHandler handler = null, bool large = true, bool isActivable = false)
+		private IconButton CreateButton(Command command = null, DockStyle dockStyle = DockStyle.StackBegin, CommandEventHandler handler = null, bool large = true, bool isActivable = false, bool isWithText = false)
 		{
 			if (handler != null)
 			{
@@ -891,6 +891,20 @@ namespace Epsitec.Cresus.Core.Controllers
 					CommandObject       = command,
 					PreferredIconSize   = new Size (iconWidth, iconWidth),
 					PreferredSize       = new Size (buttonWidth, buttonWidth),
+					Dock                = dockStyle,
+					Name                = (command == null) ? null : command.Name,
+					VerticalAlignment   = VerticalAlignment.Top,
+					HorizontalAlignment = HorizontalAlignment.Center,
+					AutoFocus           = false,
+				};
+			}
+			else if (isWithText)
+			{
+				return new IconButtonWithText
+				{
+					CommandObject       = command,
+					PreferredIconSize   = new Size (iconWidth, iconWidth),
+					PreferredSize       = new Size (buttonWidth, buttonWidth+10),
 					Dock                = dockStyle,
 					Name                = (command == null) ? null : command.Name,
 					VerticalAlignment   = VerticalAlignment.Top,

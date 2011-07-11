@@ -1129,6 +1129,7 @@
     <Compile Include="Widgets\ConfirmationButton.cs" />
     <Compile Include="Widgets\ConfirmationStaticText.cs" />
     <Compile Include="Widgets\ContainerLayoutMode.cs" />
+    <Compile Include="Widgets\IconButtonWithText.cs" />
     <Compile Include="Widgets\DefocusAction.cs" />
     <Compile Include="Widgets\Direction.cs" />
     <Compile Include="Widgets\DockStyle.cs" />
