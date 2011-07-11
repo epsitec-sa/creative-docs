@@ -295,7 +295,12 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 
 		private decimal GetUnitPriceBeforeTax(ArticlePriceEntity articlePrice)
 		{
-			if (articlePrice == null)
+			if (this.articleItem.BillingUnitPriceBeforeTax.HasValue)
+			{
+				return this.articleItem.BillingUnitPriceBeforeTax.Value;
+			}
+
+			if (articlePrice.IsNull ())
 			{
 				return 0;
 			}
