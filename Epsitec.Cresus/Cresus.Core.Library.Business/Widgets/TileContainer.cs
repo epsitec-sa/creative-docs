@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public void Update()
 		{
-			foreach (var updater in this.widgetUpdaters)
+			foreach (var updater in this.widgetUpdaters.ToArray ())
 			{
 				updater.Update ();
 			}

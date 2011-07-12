@@ -433,7 +433,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			return null;
 		}
 
-		private void UpdateLineInformations()
+		public void UpdateLineInformations()
 		{
 			this.lineInformations.Clear ();
 

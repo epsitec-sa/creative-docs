@@ -23,10 +23,15 @@ namespace Epsitec.Cresus.Core.Factories
 		{
 			var controller = this.Create (container, entity as T, mode);
 			var disposable = controller as System.IDisposable;
+			var autoUpdate = controller as IWidgetUpdater;
 
 			if (disposable != null)
 			{
 				container.Disposed += x => disposable.Dispose ();
+			}
+			if (autoUpdate != null)
+			{
+				container.Add (autoUpdate);
 			}
 
 			return controller;
