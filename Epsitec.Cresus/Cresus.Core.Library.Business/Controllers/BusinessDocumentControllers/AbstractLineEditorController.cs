@@ -43,15 +43,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Dock = DockStyle.Fill,
 			};
 
-#if false
-			var builder = this.accessData.UIBuilder;
-			this.CreateUI (builder);
-#else
 			using (var builder = new UIBuilder (controller))
 			{
 				this.CreateUI (builder);
 			}
-#endif
 		}
 
 		protected abstract void CreateUI(UIBuilder builder);

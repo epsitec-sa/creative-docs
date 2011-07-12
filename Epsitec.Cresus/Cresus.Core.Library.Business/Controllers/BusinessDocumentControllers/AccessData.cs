@@ -14,7 +14,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 	public class AccessData
 	{
 		public EntityViewController			ViewController;
-		public UIBuilder					UIBuilder;
 		public BusinessContext				BusinessContext;
 		public DataContext					DataContext;
 		public CoreData						CoreData;
