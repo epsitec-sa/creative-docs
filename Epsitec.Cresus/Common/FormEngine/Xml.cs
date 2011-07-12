@@ -25,7 +25,7 @@ namespace Epsitec.Common.FormEngine
 		public const string RowsRequired		= "RR";
 		public const string BoxLayoutType		= "BLT";
 		public const string BoxPaddingType		= "BPT";
-		public const string BoxFrameState		= "BFS";
+		public const string BoxFrameEdges		= "BFS";
 		public const string BoxFrameWidth		= "BFW";
 		public const string LineWidth			= "LW";
 		public const string PreferredWidth		= "PW";

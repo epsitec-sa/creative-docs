@@ -102,7 +102,7 @@ namespace Epsitec.Common.Designer.Proxies
 			{
 				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBoxLayout,     Res.Captions.Form.BoxLayout,     Res.Types.FieldDescription.BoxLayoutType);
 				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBoxPadding,    Res.Captions.Form.BoxPadding,    Res.Types.FieldDescription.BoxPaddingType);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBoxFrameState, Res.Captions.Form.BoxFrameState, Res.Types.FieldDescription.FrameState);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBoxFrameEdges, Res.Captions.Form.BoxFrameEdges, Res.Types.FieldDescription.FrameEdges);
 				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBoxFrameWidth, Res.Captions.Form.BoxFrameWidth, 1, 5, 1, 1);
 			}
 
@@ -218,8 +218,8 @@ namespace Epsitec.Common.Designer.Proxies
 						value.Value = this.ObjectModifier.GetBoxPadding(selectedObject);
 						break;
 
-					case AbstractProxy.Type.FormBoxFrameState:
-						value.Value = this.ObjectModifier.GetBoxFrameState(selectedObject);
+					case AbstractProxy.Type.FormBoxFrameEdges:
+						value.Value = this.ObjectModifier.GetBoxFrameEdges(selectedObject);
 						break;
 
 					case AbstractProxy.Type.FormBoxFrameWidth:
@@ -320,8 +320,8 @@ namespace Epsitec.Common.Designer.Proxies
 							this.ObjectModifier.SetBoxPadding(selectedObject, (FormEngine.FieldDescription.BoxPaddingType) value.Value);
 							break;
 
-						case AbstractProxy.Type.FormBoxFrameState:
-							this.ObjectModifier.SetBoxFrameState(selectedObject, (FrameState) value.Value);
+						case AbstractProxy.Type.FormBoxFrameEdges:
+							this.ObjectModifier.SetBoxFrameEdges(selectedObject, (FrameEdges) value.Value);
 							break;
 
 						case AbstractProxy.Type.FormBoxFrameWidth:

@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2005-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -456,6 +456,7 @@ namespace Epsitec.Common.Widgets
 		
 		#endregion
 
+
 		/// <summary>
 		/// Queue an asynchronous command cache synchronisation. This will
 		///	happen when the application returns into the event loop: <see cref="Window"/>
@@ -492,7 +493,7 @@ namespace Epsitec.Common.Widgets
 					//	Visual. This requires a command context chain walk :
 					
 					CommandContext context;
-					CommandState state = chain.GetCommandState (command, out context);
+					CommandState   state = chain.GetCommandState (command, out context);
 
 					if ((state != null) &&
 						(context != null))

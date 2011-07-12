@@ -124,10 +124,14 @@ namespace Epsitec.Common.Widgets
 		}
 
 		/// <summary>
-		/// Gets the local enable state of the command.
+		/// Gets the local enable state of the command (which will default to <c>null</c>
+		/// if <see cref="SetLocalEnable"/> was never called in this context for this
+		/// command).
 		/// </summary>
 		/// <param name="command">The command.</param>
-		/// <returns><c>false</c> if the command is disabled locally, <c>true</c> otherwise.</returns>
+		/// <returns>
+		/// <c>false</c> if the command is disabled locally, <c>true</c> if it is
+		/// enabled locally; otherwise, <c>null</c>.</returns>
 		public bool? GetLocalEnable(Command command)
 		{
 			if (this.localDisables.Contains (command.SerialId))

@@ -42,7 +42,7 @@ namespace Epsitec.Common.Designer.Proxies
 				case Panel.FormBox:
 					yield return Type.FormBoxLayout;
 					yield return Type.FormBoxPadding;
-					yield return Type.FormBoxFrameState;
+					yield return Type.FormBoxFrameEdges;
 					yield return Type.FormBoxFrameWidth;
 					break;
 

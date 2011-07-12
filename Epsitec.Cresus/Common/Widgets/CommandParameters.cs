@@ -13,7 +13,7 @@ namespace Epsitec.Common.Widgets
 	/// the associated widgets.
 	/// Well known parameters are "ButtonClass", "ButtonStyle" and "Level".
 	/// </summary>
-	public class CommandParameters : Dictionary<string, string>
+	public sealed class CommandParameters : Dictionary<string, string>
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CommandParameters"/> class.
@@ -47,6 +47,7 @@ namespace Epsitec.Common.Widgets
 
 		}
 
+		
 		/// <summary>
 		/// Gets or sets the value for the specified key. Setting to <c>null</c>
 		/// clears the value. Querying for a missing key returns <c>null</c>.
@@ -78,18 +79,35 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		
+		/// <summary>
+		/// Sets the specified value as a command parameter.
+		/// </summary>
+		/// <typeparam name="TEnum">The type of the enumeration.</typeparam>
+		/// <param name="value">The value.</param>
 		public void Set<TEnum>(TEnum value)
 			where TEnum : struct
 		{
 			this[typeof (TEnum).Name] = value.ToString ();
 		}
 
+		/// <summary>
+		/// Clears the specified value from the command parameter.
+		/// </summary>
+		/// <typeparam name="TEnum">The type of the enumeration.</typeparam>
 		public void Clear<TEnum>()
 			where TEnum : struct
 		{
 			this[typeof (TEnum).Name] = null;
 		}
 
+		/// <summary>
+		/// Gets the value of the command parameter, or the default value if
+		/// the value is currently undefined.
+		/// </summary>
+		/// <typeparam name="TEnum">The type of the enumeration.</typeparam>
+		/// <param name="defaultValue">The default value.</param>
+		/// <returns>The value of the command parameter.</returns>
 		public TEnum GetValueOrDefault<TEnum>(TEnum defaultValue = default (TEnum))
 			where TEnum : struct
 		{
@@ -105,8 +123,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-
-
+		
 		/// <summary>
 		/// Parses the specified serialized source for the parameters.
 		/// </summary>
@@ -143,6 +160,7 @@ namespace Epsitec.Common.Widgets
 			return buffer.ToString ();
 		}
 
+		
 		private static string Escape(string text)
 		{
 			if (string.IsNullOrEmpty (text))

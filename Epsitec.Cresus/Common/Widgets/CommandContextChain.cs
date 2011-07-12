@@ -1,4 +1,4 @@
-//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -81,10 +81,11 @@ namespace Epsitec.Common.Widgets
 		/// <summary>
 		/// Gets the local enable state of the command. This walks all command
 		/// contexts until either a local disable is found or a fence context
-		/// is reached.
+		/// is reached. If no local enable was found, use the default enable
+		/// mode for the command.
 		/// </summary>
 		/// <param name="command">The command.</param>
-		/// <returns><c>false</c> if the command is disabled locally, <c>true</c> otherwise.</returns>
+		/// <returns><c>false</c> if the command is disabled locally; otherwise, <c>true</c>.</returns>
 		public bool GetLocalEnable(Command command)
 		{
 			bool defined = false;
@@ -92,7 +93,7 @@ namespace Epsitec.Common.Widgets
 			foreach (CommandContext context in this.Contexts)
 			{
 				bool? enable = context.GetLocalEnable (command);
-				
+
 				if (enable == false)
 				{
 					return false;
@@ -114,7 +115,12 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				return command.CommandParameters.GetValueOrDefault (CommandDefaultEnableMode.Enabled) != CommandDefaultEnableMode.Disabled;
+				//	If the command was neither disabled nor enabled in any of the contexts,
+				//	use the command's default enable mode:
+
+				var defaultEnableMode = command.CommandParameters.GetValueOrDefault (CommandDefaultEnableMode.Enabled);
+
+				return defaultEnableMode != CommandDefaultEnableMode.Disabled;
 			}
 		}
 

@@ -1128,7 +1128,7 @@ namespace Epsitec.Common.Designer
 			this.objectTextState = this.CreateCommandState("ObjectText", KeyCode.AlphaT);
 			this.objectStaticState = this.CreateCommandState("ObjectStatic");
 			this.objectGroupState = this.CreateCommandState("ObjectGroup");
-			this.objectGroupFrameState = this.CreateCommandState("ObjectGroupFrame");
+			this.objectGroupFrameEdges = this.CreateCommandState("ObjectGroupFrame");
 			this.objectGroupBoxState = this.CreateCommandState("ObjectGroupBox");
 			this.objectPanelState = this.CreateCommandState("ObjectPanel");
 			
@@ -3079,7 +3079,7 @@ namespace Epsitec.Common.Designer
 		private CommandState					objectTextState;
 		private CommandState					objectStaticState;
 		private CommandState					objectGroupState;
-		private CommandState					objectGroupFrameState;
+		private CommandState					objectGroupFrameEdges;
 		private CommandState					objectGroupBoxState;
 		private CommandState					objectPanelState;
 		private CommandState					panelDeselectAllState;

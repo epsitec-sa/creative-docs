@@ -649,10 +649,10 @@ namespace Epsitec.Common.FormEngine
 				}
 			}
 
-			double mLeft   = ((field.BoxFrameState & FrameState.Left  ) == 0) ? 0 : (field.BoxFrameWidth-1)/2;
-			double mRight  = ((field.BoxFrameState & FrameState.Right ) == 0) ? 0 : (field.BoxFrameWidth-1)/2;
-			double mTop    = ((field.BoxFrameState & FrameState.Top   ) == 0) ? 0 : (field.BoxFrameWidth-1)/2;
-			double mBottom = ((field.BoxFrameState & FrameState.Bottom) == 0) ? 0 : (field.BoxFrameWidth-1)/2;
+			double mLeft   = ((field.BoxFrameEdges & FrameEdges.Left  ) == 0) ? 0 : (field.BoxFrameWidth-1)/2;
+			double mRight  = ((field.BoxFrameEdges & FrameEdges.Right ) == 0) ? 0 : (field.BoxFrameWidth-1)/2;
+			double mTop    = ((field.BoxFrameEdges & FrameEdges.Top   ) == 0) ? 0 : (field.BoxFrameWidth-1)/2;
+			double mBottom = ((field.BoxFrameEdges & FrameEdges.Bottom) == 0) ? 0 : (field.BoxFrameWidth-1)/2;
 
 			Margins padding = FieldDescription.GetRealBoxPadding(field.BoxPadding);
 			
@@ -661,10 +661,10 @@ namespace Epsitec.Common.FormEngine
 			padding.Top    += mTop;
 			padding.Bottom += mBottom;
 
-			box.DrawFrameState = FrameState.All;
+			box.DrawFrameEdges = FrameEdges.All;
 			box.Padding = padding;
 			box.BackColor = FieldDescription.GetRealBackColor(field.BackColor);
-			box.DrawFrameState = field.BoxFrameState;
+			box.DrawFrameEdges = field.BoxFrameEdges;
 			box.DrawFrameWidth = field.BoxFrameWidth;
 			box.PreferredWidth = field.PreferredWidth;
 			box.Margins = new Margins(mLeft, mRight, mTop, mBottom);

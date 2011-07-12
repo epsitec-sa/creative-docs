@@ -586,21 +586,21 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
-		public FrameState GetBoxFrameState(Widget obj)
+		public FrameEdges GetBoxFrameEdges(Widget obj)
 		{
 			//	Retourne le type du cadre d'une boîte.
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
-				return FrameState.None;
+				return FrameEdges.None;
 			}
 			else
 			{
-				return field.BoxFrameState;
+				return field.BoxFrameEdges;
 			}
 		}
 
-		public void SetBoxFrameState(Widget obj, FrameState state)
+		public void SetBoxFrameEdges(Widget obj, FrameEdges state)
 		{
 			//	Choix du type du cadre d'une boîte.
 			if (this.IsReadonly)
@@ -611,8 +611,8 @@ namespace Epsitec.Common.Designer.FormEditor
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
-				this.UndoMemorize(Res.Strings.Undo.Action.BoxFrameState);
-				field.BoxFrameState = state;
+				this.UndoMemorize (Res.Strings.Undo.Action.BoxFrameEdges);
+				field.BoxFrameEdges = state;
 				this.DeltaUpdate(field);
 			}
 		}

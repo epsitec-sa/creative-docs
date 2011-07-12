@@ -65,7 +65,7 @@ namespace Epsitec.Common.Widgets
 			//	la surface à redessiner pour ce widget.
 			double width = this.DrawFrameWidth;
 
-			if (width <= 1 || this.DrawFrameState == FrameState.None)
+			if (width <= 1 || this.DrawFrameEdges == FrameEdges.None)
 			{
 				return base.GetShapeMargins ();
 			}
@@ -106,29 +106,29 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			if (this.DrawFrameState != FrameState.None)
+			if (this.DrawFrameEdges != FrameEdges.None)
 			{
 				using (Path path = new Path ())
 				{
-					if ((this.DrawFrameState & FrameState.Left) != 0)
+					if ((this.DrawFrameEdges & FrameEdges.Left) != 0)
 					{
 						path.MoveTo(rect.BottomLeft);
 						path.LineTo(rect.TopLeft);
 					}
 
-					if ((this.DrawFrameState & FrameState.Right) != 0)
+					if ((this.DrawFrameEdges & FrameEdges.Right) != 0)
 					{
 						path.MoveTo(rect.BottomRight);
 						path.LineTo(rect.TopRight);
 					}
 
-					if ((this.DrawFrameState & FrameState.Top) != 0)
+					if ((this.DrawFrameEdges & FrameEdges.Top) != 0)
 					{
 						path.MoveTo(rect.TopLeft);
 						path.LineTo(rect.TopRight);
 					}
 
-					if ((this.DrawFrameState & FrameState.Bottom) != 0)
+					if ((this.DrawFrameEdges & FrameEdges.Bottom) != 0)
 					{
 						path.MoveTo(rect.BottomLeft);
 						path.LineTo(rect.BottomRight);

@@ -523,7 +523,7 @@
   <data name="Undo.Action.FieldFontStyle" id="K11">Style de la police du champ</data>
   <data name="Undo.Action.LabelFontSize" id="K21">Taille de la police de l&amp;apos;étiquette</data>
   <data name="Undo.Action.FieldFontSize" id="K31">Taille de la police du champ</data>
-  <data name="Undo.Action.BoxFrameState" id="K41">Type du cadre</data>
+  <data name="Undo.Action.BoxFrameEdges" id="K41">Type du cadre</data>
   <data name="Undo.Action.BoxFrameWidth" id="K51">Epaisseur du cadre</data>
   <data name="Viewers.Forms.TableContent.Hide" id="K61"> (caché)</data>
   <data name="Undo.Action.DefaultSize" id="K71">Taille préférentielle</data>

@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			base.PaintBackgroundImplementation (graphics, clipRect);
 
-			if ((this.DrawFrameState & FrameState.Right) != 0)
+			if ((this.DrawFrameEdges & FrameEdges.Right) != 0)
 			{
 				var adorner = Common.Widgets.Adorners.Factory.Active;
 				var gradientRect = new Rectangle (this.Client.Bounds.Right-Tiles.TileArrow.Breadth, this.Client.Bounds.Bottom, Tiles.TileArrow.Breadth*0.5, this.Client.Bounds.Height);

@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			var column = new TileContainer (controller)
 			{
 				Name = string.Format ("Column{0}", this.ColumnCount),
-				DrawFrameState = FrameState.Left | FrameState.Right,
+				DrawFrameEdges = FrameEdges.Left | FrameEdges.Right,
 			};
 
 			this.columns.Push (column);

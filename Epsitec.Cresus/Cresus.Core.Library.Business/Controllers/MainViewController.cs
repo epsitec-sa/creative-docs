@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Parent = container,
 				Dock = DockStyle.Fill,
 				DrawFullFrame = false,
-				DrawFrameState = FrameState.None
+				DrawFrameEdges = FrameEdges.None
 			};
 			
 			this.CreateUITopPanel ();

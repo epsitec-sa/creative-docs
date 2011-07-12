@@ -1,5 +1,5 @@
-//	Copyright © 2005-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2005-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
@@ -15,18 +15,6 @@ namespace Epsitec.Common.Widgets
 	using PropertyChangedEventHandler=EventHandler<DependencyPropertyChangedEventArgs>;
 	using FlatChildrenCollection=Collections.FlatChildrenCollection;
 	using ContentAlignment=Drawing.ContentAlignment;
-	
-	[System.Flags]
-	[DesignerVisible]
-	public enum FrameState : uint
-	{
-		[Hidden]	None	= 0,
-					Left	= 0x00000001,
-					Right	= 0x00000002,
-					Top		= 0x00000004,
-					Bottom	= 0x00000008,
-		[Hidden]	All		= 0x0000000F,
-	}
 
 	/// <summary>
 	/// Visual.
@@ -914,16 +902,16 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public FrameState						DrawFrameState
+		public FrameEdges						DrawFrameEdges
 		{
 			//	Détermine s'il faut dessiner un cadre dans les quatre bords du widget.
 			get
 			{
-				return (FrameState) this.GetValue (Visual.DrawFrameStateProperty);
+				return (FrameEdges) this.GetValue (Visual.DrawFrameEdgesProperty);
 			}
 			set
 			{
-				this.SetValue (Visual.DrawFrameStateProperty, value);
+				this.SetValue (Visual.DrawFrameEdgesProperty, value);
 			}
 		}
 
@@ -2190,7 +2178,7 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty InheritsParentFocusProperty	= DependencyProperty.Register ("InheritsParentFocus", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, Visual.SetInheritsParentFocus, VisualPropertyMetadataOptions.None));
 
 		public static readonly DependencyProperty DrawDesignerFrameProperty		= DependencyProperty.Register ("DrawDesignerFrame", typeof(bool), typeof(Visual), new VisualPropertyMetadata(false, VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.AffectsDisplay).MakeNotSerializable());
-		public static readonly DependencyProperty DrawFrameStateProperty		= DependencyProperty.Register ("DrawFrameState", typeof (FrameState), typeof (Visual), new VisualPropertyMetadata (FrameState.None, VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty DrawFrameEdgesProperty		= DependencyProperty.Register ("DrawFrameEdges", typeof (FrameEdges), typeof (Visual), new VisualPropertyMetadata (FrameEdges.None, VisualPropertyMetadataOptions.AffectsDisplay));
 		public static readonly DependencyProperty DrawFrameWidthProperty		= DependencyProperty.Register ("DrawFrameWidth", typeof (double), typeof (Visual), new VisualPropertyMetadata (1.0, VisualPropertyMetadataOptions.AffectsDisplay));
 		
 		public static readonly DependencyProperty IsVisibleProperty				= DependencyProperty.RegisterReadOnly ("IsVisible", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.AffectsArrange | VisualPropertyMetadataOptions.AffectsDisplay));

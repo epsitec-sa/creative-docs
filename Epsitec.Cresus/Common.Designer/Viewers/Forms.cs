@@ -1803,7 +1803,7 @@ namespace Epsitec.Common.Designer.Viewers
 			int index = first;
 
 			FieldDescription box = new FieldDescription(FieldDescription.FieldType.BoxBegin);
-			box.BoxFrameState = FrameState.All;
+			box.BoxFrameEdges = FrameEdges.All;
 			this.workingForm.Fields.Insert(index++, box);
 
 			foreach (FieldDescription field in content)
@@ -1950,7 +1950,7 @@ namespace Epsitec.Common.Designer.Viewers
 					}
 
 					field = new FieldDescription(FieldDescription.FieldType.SubForm);
-					field.BoxFrameState = FrameState.All;
+					field.BoxFrameEdges = FrameEdges.All;
 					field.SetFields(item.DruidsPath);
 					field.SubFormId = formId;
 				}

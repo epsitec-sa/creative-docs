@@ -153,7 +153,7 @@ namespace Epsitec.Common.FormEngine
 			this.rowsRequired = model.rowsRequired;
 			this.boxLayoutType = model.boxLayoutType;
 			this.boxPaddingType = model.boxPaddingType;
-			this.boxFrameState = model.boxFrameState;
+			this.boxFrameEdges = model.boxFrameEdges;
 			this.boxFrameWidth = model.boxFrameWidth;
 			this.lineWidth = model.lineWidth;
 			this.preferredWidth = model.preferredWidth;
@@ -194,7 +194,7 @@ namespace Epsitec.Common.FormEngine
 			this.rowsRequired = 1;
 			this.boxLayoutType = BoxLayoutType.Grid;
 			this.boxPaddingType = BoxPaddingType.Normal;
-			this.boxFrameState = FrameState.None;
+			this.boxFrameEdges = FrameEdges.None;
 			this.boxFrameWidth = 1;
 			this.lineWidth = 1;
 			this.preferredWidth = 100;
@@ -649,17 +649,17 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		public FrameState BoxFrameState
+		public FrameEdges BoxFrameEdges
 		{
 			//	Bordures d'une boîte.
 			get
 			{
-				return this.boxFrameState;
+				return this.boxFrameEdges;
 			}
 			set
 			{
 				System.Diagnostics.Debug.Assert(this.type == FieldType.BoxBegin || this.type == FieldType.SubForm);
-				this.boxFrameState = value;
+				this.boxFrameEdges = value;
 			}
 		}
 
@@ -932,7 +932,7 @@ namespace Epsitec.Common.FormEngine
 				a.rowsRequired != b.rowsRequired ||
 				a.boxLayoutType != b.boxLayoutType ||
 				a.boxPaddingType != b.boxPaddingType ||
-				a.boxFrameState != b.boxFrameState ||
+				a.boxFrameEdges != b.boxFrameEdges ||
 				a.boxFrameWidth != b.boxFrameWidth ||
 				a.lineWidth != b.lineWidth ||
 				a.preferredWidth != b.preferredWidth ||
@@ -1052,7 +1052,7 @@ namespace Epsitec.Common.FormEngine
 
 			writer.WriteElementString(Xml.BoxLayoutType, this.boxLayoutType.ToString());
 			writer.WriteElementString(Xml.BoxPaddingType, this.boxPaddingType.ToString());
-			writer.WriteElementString(Xml.BoxFrameState, this.boxFrameState.ToString());
+			writer.WriteElementString(Xml.BoxFrameEdges, this.boxFrameEdges.ToString());
 			writer.WriteElementString(Xml.BoxFrameWidth, this.boxFrameWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
 			writer.WriteElementString(Xml.LineWidth, this.lineWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
 			writer.WriteElementString(Xml.PreferredWidth, this.preferredWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
@@ -1210,9 +1210,9 @@ namespace Epsitec.Common.FormEngine
 						{
 							this.boxPaddingType = (BoxPaddingType) System.Enum.Parse(typeof(BoxPaddingType), element);
 						}
-						else if (name == Xml.BoxFrameState)
+						else if (name == Xml.BoxFrameEdges)
 						{
-							this.boxFrameState = (FrameState) System.Enum.Parse(typeof(FrameState), element);
+							this.boxFrameEdges = (FrameEdges) System.Enum.Parse(typeof(FrameEdges), element);
 						}
 						else if (name == Xml.BoxFrameWidth)
 						{
@@ -1441,7 +1441,7 @@ namespace Epsitec.Common.FormEngine
 		private int							rowsRequired;
 		private BoxLayoutType				boxLayoutType;
 		private BoxPaddingType				boxPaddingType;
-		private FrameState					boxFrameState;
+		private FrameEdges					boxFrameEdges;
 		private double						boxFrameWidth;
 		private double						lineWidth;
 		private double						preferredWidth;

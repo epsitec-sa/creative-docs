@@ -42,7 +42,7 @@ namespace Epsitec.Common.Designer.Proxies
 			//	FormBox
 			FormBoxLayout,
 			FormBoxPadding,
-			FormBoxFrameState,
+			FormBoxFrameEdges,
 			FormBoxFrameWidth,
 
 			//	FormFontLabel

@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 					Parent = parent,
 					PreferredHeight = 300,
 					Padding = new Margins (10),
-					DrawFrameState = FrameState.Bottom,
+					DrawFrameEdges = FrameEdges.Bottom,
 					Dock = DockStyle.Top,
 					Margins = Widgets.Tiles.TileArrow.GetContainerPadding (Direction.Right),
 				};

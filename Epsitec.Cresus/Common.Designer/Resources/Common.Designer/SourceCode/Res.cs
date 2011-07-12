@@ -412,7 +412,7 @@ namespace Epsitec.Common.Designer
 					}
 				}
 				//	designer:cap/30271
-				public static global::Epsitec.Common.Types.Caption BoxFrameState
+				public static global::Epsitec.Common.Types.Caption BoxFrameEdges
 				{
 					get
 					{
@@ -1207,7 +1207,7 @@ namespace Epsitec.Common.Designer
 				//	designer:cap/302G
 				public static readonly global::Epsitec.Common.Support.Druid BackColor = new global::Epsitec.Common.Support.Druid (_moduleId, 2, 16);
 				//	designer:cap/30271
-				public static readonly global::Epsitec.Common.Support.Druid BoxFrameState = new global::Epsitec.Common.Support.Druid (_moduleId, 2, 39);
+				public static readonly global::Epsitec.Common.Support.Druid BoxFrameEdges = new global::Epsitec.Common.Support.Druid (_moduleId, 2, 39);
 				//	designer:cap/30291
 				public static readonly global::Epsitec.Common.Support.Druid BoxFrameWidth = new global::Epsitec.Common.Support.Druid (_moduleId, 2, 41);
 				//	designer:cap/30K81
@@ -1437,7 +1437,7 @@ namespace Epsitec.Common.Designer
 				//	designer:cap/30K5
 				public static readonly Epsitec.Common.Types.EnumType FontStyleType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 5));
 				//	designer:cap/302V
-				public static readonly Epsitec.Common.Types.EnumType FrameState = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 31));
+				public static readonly Epsitec.Common.Types.EnumType FrameEdges = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 31));
 				//	designer:cap/3023
 				public static readonly Epsitec.Common.Types.EnumType SeparatorType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 3));
 				//	designer:cap/30KD1
@@ -1826,8 +1826,8 @@ namespace Epsitec.Common.Designer
 						}
 					}
 				}
-				
-				public static class FrameState
+
+				public static class FrameEdges
 				{
 					internal static void _Initialize()
 					{
@@ -6015,7 +6015,7 @@ namespace Epsitec.Common.Designer
 						}
 					}
 					//	designer:str/30K41
-					public static global::System.String BoxFrameState
+					public static global::System.String BoxFrameEdges
 					{
 						get
 						{
@@ -7694,7 +7694,7 @@ namespace Epsitec.Common.Designer
 			Values.FieldDescription.FontFaceType._Initialize ();
 			Values.FieldDescription.FontSizeType._Initialize ();
 			Values.FieldDescription.FontStyleType._Initialize ();
-			Values.FieldDescription.FrameState._Initialize ();
+			Values.FieldDescription.FrameEdges._Initialize ();
 			Values.FieldDescription.SeparatorType._Initialize ();
 			Values.FieldDescription.Verbosity._Initialize ();
 			Values.ObjectModifier.AnchoredHorizontalAttachment._Initialize ();

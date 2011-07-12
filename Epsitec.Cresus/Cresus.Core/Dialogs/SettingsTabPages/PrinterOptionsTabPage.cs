@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			{
 				Parent = frame,
 				DrawFullFrame = true,
-				DrawFrameState = FrameState.All,
+				DrawFrameEdges = FrameEdges.All,
 				DrawFrameWidth = 1,
 				PreferredWidth = PrinterOptionsTabPage.panelWidth,
 				Dock = DockStyle.Left,
