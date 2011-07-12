@@ -21,7 +21,15 @@ namespace Epsitec.Cresus.Core.Factories
 
 		IEntitySpecialController IEntitySpecialControllerFactory.Create(TileContainer container, AbstractEntity entity, int mode)
 		{
-			return this.Create (container, entity as T, mode);
+			var controller = this.Create (container, entity as T, mode);
+			var disposable = controller as System.IDisposable;
+
+			if (disposable != null)
+			{
+				container.Disposed += x => disposable.Dispose ();
+			}
+
+			return controller;
 		}
 
 		#endregion
