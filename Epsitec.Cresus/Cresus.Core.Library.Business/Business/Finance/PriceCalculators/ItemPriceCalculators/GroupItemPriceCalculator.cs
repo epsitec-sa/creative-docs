@@ -30,14 +30,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 			}
 		}
 
-		public IList<AbstractItemPriceCalculator>	Members
-		{
-			get
-			{
-				return this.members.AsReadOnly ();
-			}
-		}
-
 		public decimal							TotalPriceBeforeTax
 		{
 			get
@@ -123,8 +115,8 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 
 		public void Add(GroupItemPriceCalculator calculator)
 		{
-			calculator.Members.OfType<ArticleItemPriceCalculator> ().ForEach (x => this.Add (x));
-			calculator.Members.OfType<SubTotalItemPriceCalculator> ().ForEach (x => this.Add (x));
+			calculator.members.OfType<ArticleItemPriceCalculator> ().ForEach (x => this.Add (x));
+			calculator.members.OfType<SubTotalItemPriceCalculator> ().ForEach (x => this.Add (x));
 		}
 
 		public void Add(ArticleItemPriceCalculator calculator)

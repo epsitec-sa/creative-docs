@@ -3,6 +3,8 @@
 
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.Business.Finance;
+using Epsitec.Cresus.Core.Business.Finance.PriceCalculators;
 using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Entities;
 
@@ -30,9 +32,9 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
 			var documentMetadata = businessContext.GetMasterEntity<DocumentMetadataEntity> ();
 
-			using (var calculator = new Epsitec.Cresus.Core.Business.Finance.PriceCalculators.DocumentPriceCalculator (businessContext, entity, documentMetadata))
+			using (var calculator = new DocumentPriceCalculator (businessContext, entity, documentMetadata))
 			{
-				Epsitec.Cresus.Core.Business.Finance.PriceCalculator.UpdatePrices (calculator);
+				PriceCalculator.UpdatePrices (calculator);
 			}
 		}
 	}
