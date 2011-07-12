@@ -68,14 +68,23 @@ namespace Epsitec.Common.Designer.Viewers
 			leftResetBox.IsPatch = this.module.IsPatch;
 			leftResetBox.Dock = DockStyle.Fill;
 
-			this.primaryStatefull = new CheckButton(leftResetBox.GroupBox);
+			this.primaryStatefull = new CheckButton (leftResetBox.GroupBox);
 			this.primaryStatefull.Text = Res.Strings.Viewers.Commands.Statefull.CheckButton;
 			this.primaryStatefull.PreferredWidth = 250;
-			this.primaryStatefull.Margins = new Margins(40, 0, 0, 0);
-			this.primaryStatefull.Dock = DockStyle.Left;
+			this.primaryStatefull.Margins = new Margins (40, 0, 0, 0);
+			this.primaryStatefull.Dock = DockStyle.Top;
 			this.primaryStatefull.Pressed += this.HandleStatefullPressed;
 			this.primaryStatefull.TabIndex = this.tabIndex++;
 			this.primaryStatefull.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
+			this.primaryEnableMode = new CheckButton (leftResetBox.GroupBox);
+			this.primaryEnableMode.Text = "Activation initiale"; //Res.Strings.Viewers.Commands.EnableMode.CheckButton;
+			this.primaryEnableMode.PreferredWidth = 250;
+			this.primaryEnableMode.Margins = new Margins (40, 0, 0, 0);
+			this.primaryEnableMode.Dock = DockStyle.Top;
+			this.primaryEnableMode.Pressed += this.HandleEnableModePressed;
+			this.primaryEnableMode.TabIndex = this.tabIndex++;
+			this.primaryEnableMode.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			//	Shortcuts.
 			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Commands.Shortcut.Title, BandMode.SuiteView, GlyphShape.None, false, 0.1);
@@ -179,6 +188,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.primaryAspectDialog.Clicked -= this.HandlePrimaryAspectClicked;
 				this.primaryAspectFlat.Clicked -= this.HandlePrimaryAspectClicked;
 				this.primaryStatefull.Pressed -= this.HandleStatefullPressed;
+				this.primaryEnableMode.Pressed -= this.HandleEnableModePressed;
 
 				this.primaryShortcut1.EditedShortcutChanged -= this.HandleShortcutEditedShortcutChanged;
 				this.primaryShortcut2.EditedShortcutChanged -= this.HandleShortcutEditedShortcutChanged;
@@ -215,6 +225,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryAspectDialog.Enable = !this.designerApplication.IsReadonly;
 			this.primaryAspectRichDialog.Enable = !this.designerApplication.IsReadonly;
 			this.primaryStatefull.Enable = !this.designerApplication.IsReadonly;
+			this.primaryEnableMode.Enable = !this.designerApplication.IsReadonly;
 			this.primaryGroup.Enable = !this.designerApplication.IsReadonly;
 
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
@@ -232,26 +243,34 @@ namespace Epsitec.Common.Designer.Viewers
 				this.primaryAspectDialog.ActiveState = ActiveState.No;
 				this.primaryAspectRichDialog.ActiveState = ActiveState.No;
 				this.primaryStatefull.ActiveState = ActiveState.No;
+				this.primaryEnableMode.ActiveState = ActiveState.No;
 				this.SetShortcut (this.primaryShortcut1, this.primaryShortcut2, null);
 				this.primaryGroup.Text = "";
 			}
 			else
 			{
 				string dp = data.GetValue (Support.Res.Fields.ResourceCommand.DefaultParameter) as string;
-				CommandParameters cp = new CommandParameters (dp);
+				var cp = new CommandParameters (dp);
 				var aspect = cp.GetValueOrDefault (ButtonClass.FlatButton);
 
 				this.primaryAspectFlat.ActiveState       = (aspect == ButtonClass.FlatButton)       ? ActiveState.Yes : ActiveState.No;
 				this.primaryAspectDialog.ActiveState     = (aspect == ButtonClass.DialogButton)     ? ActiveState.Yes : ActiveState.No;
 				this.primaryAspectRichDialog.ActiveState = (aspect == ButtonClass.RichDialogButton) ? ActiveState.Yes : ActiveState.No;
 
-				bool statefull = false;
-				object value = data.GetValue (Support.Res.Fields.ResourceCommand.Statefull);
-				if (!UndefinedValue.IsUndefinedValue (value))
 				{
-					statefull = (bool) value;
+					bool statefull = false;
+					object value = data.GetValue (Support.Res.Fields.ResourceCommand.Statefull);
+					if (!UndefinedValue.IsUndefinedValue (value))
+					{
+						statefull = (bool) value;
+					}
+					this.primaryStatefull.ActiveState = statefull ? ActiveState.Yes : ActiveState.No;
 				}
-				this.primaryStatefull.ActiveState = statefull ? ActiveState.Yes : ActiveState.No;
+
+				{
+					var enableMode = cp.GetValueOrDefault (CommandDefaultEnableMode.Enabled);
+					this.primaryEnableMode.ActiveState = (enableMode == CommandDefaultEnableMode.Disabled) ? ActiveState.No : ActiveState.Yes;
+				}
 
 				shortcuts = data.GetValue (Support.Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
 				this.SetShortcut (this.primaryShortcut1, this.primaryShortcut2, shortcuts);
@@ -402,7 +421,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
 			string defaultParameter = data.GetValue(Support.Res.Fields.ResourceCommand.DefaultParameter) as string;
-			CommandParameters commandParameters = new CommandParameters(defaultParameter);
+			var commandParameters = new CommandParameters(defaultParameter);
 			
 			if (sender == this.primaryAspectDialog)
 			{
@@ -443,11 +462,47 @@ namespace Epsitec.Common.Designer.Viewers
 				return;
 			}
 
-			StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
-			data.SetValue(Support.Res.Fields.ResourceCommand.Statefull, statefull);
+			StructuredData data = item.GetCultureData (this.GetTwoLetters (0));
+			data.SetValue (Support.Res.Fields.ResourceCommand.Statefull, statefull);
 
-			this.access.SetLocalDirty();
-			this.UpdateColor();
+			this.access.SetLocalDirty ();
+			this.UpdateColor ();
+		}
+
+		private void HandleEnableModePressed(object sender, MessageEventArgs e)
+		{
+			//	Bouton à cocher 'EnableMode' pressé.
+			if (this.ignoreChange)
+			{
+				return;
+			}
+
+			bool enableMode = (this.primaryEnableMode.ActiveState == ActiveState.No);
+
+			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+			if (item == null)
+			{
+				return;
+			}
+
+			StructuredData data = item.GetCultureData (this.GetTwoLetters (0));
+			string defaultParameter = data.GetValue (Support.Res.Fields.ResourceCommand.DefaultParameter) as string;
+			var commandParameters = new CommandParameters (defaultParameter);
+
+			if (enableMode)
+			{
+				commandParameters.Clear<CommandDefaultEnableMode> ();
+			}
+			else
+			{
+				commandParameters.Set (CommandDefaultEnableMode.Disabled);
+			}
+
+			defaultParameter = commandParameters.ToString ();
+			data.SetValue (Support.Res.Fields.ResourceCommand.DefaultParameter, defaultParameter);
+
+			this.access.SetLocalDirty ();
+			this.UpdateColor ();
 		}
 
 		private void HandleShortcutEditedShortcutChanged(object sender)
@@ -615,6 +670,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected IconButton					primaryAspectDialog;
 		protected IconButton					primaryAspectRichDialog;
 		protected CheckButton					primaryStatefull;
+		protected CheckButton					primaryEnableMode;
 		protected ShortcutEditor				primaryShortcut1;
 		protected ShortcutEditor				primaryShortcut2;
 		protected ShortcutEditor				secondaryShortcut1;
