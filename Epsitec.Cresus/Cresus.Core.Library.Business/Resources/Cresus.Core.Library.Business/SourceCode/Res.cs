@@ -22,8 +22,6 @@ namespace Epsitec.Cresus.Core.Library.Business
 				{
 				}
 				
-				//	designer:cap/GVK1
-				public static readonly global::Epsitec.Common.Widgets.Command Cancel = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 1));
 				//	designer:cap/GVK
 				public static readonly global::Epsitec.Common.Widgets.Command CreateArticle = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 0));
 				//	designer:cap/GVK2
@@ -50,8 +48,6 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Widgets.Command MoveDown = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 15));
 				//	designer:cap/GVKE
 				public static readonly global::Epsitec.Common.Widgets.Command MoveUp = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 14));
-				//	designer:cap/GVKA
-				public static readonly global::Epsitec.Common.Widgets.Command Ok = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 10));
 				//	designer:cap/GVKB
 				public static readonly global::Epsitec.Common.Widgets.Command Ungroup = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 11));
 			}
@@ -69,8 +65,6 @@ namespace Epsitec.Cresus.Core.Library.Business
 				{
 				}
 				
-				//	designer:cap/GVK1
-				public const long Cancel = 0x3F000014000001L;
 				//	designer:cap/GVK
 				public const long CreateArticle = 0x3F000014000000L;
 				//	designer:cap/GVK2
@@ -97,8 +91,6 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public const long MoveDown = 0x3F00001400000FL;
 				//	designer:cap/GVKE
 				public const long MoveUp = 0x3F00001400000EL;
-				//	designer:cap/GVKA
-				public const long Ok = 0x3F00001400000AL;
 				//	designer:cap/GVKB
 				public const long Ungroup = 0x3F00001400000BL;
 			}

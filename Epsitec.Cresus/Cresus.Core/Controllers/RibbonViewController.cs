@@ -149,7 +149,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.CreateRibbonUserSection (this.ribbonPageBusiness);
 			this.CreateRibbonEditSection (this.ribbonPageBusiness);
 
-			//?this.CreateRibbonBusinessActionSection (this.ribbonPageBusiness);
 			this.CreateRibbonBusinessCreateSection (this.ribbonPageBusiness);
 			this.CreateRibbonBusinessOperSection (this.ribbonPageBusiness);
 			this.CreateRibbonBusinessGroupSection (this.ribbonPageBusiness);
@@ -561,20 +560,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Group, isWithText: true));
 			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Ungroup, isWithText: true));
-		}
-
-		private void CreateRibbonBusinessActionSection(RibbonPage page)
-		{
-			var section = new RibbonSection (page)
-			{
-				Name = "Action",
-				Title = "Actions",
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = Library.UI.Constants.ButtonLargeWidth * 1,
-			};
-
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Ok, isWithText: true));
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Cancel, isWithText: true));
 		}
 		#endregion
 
