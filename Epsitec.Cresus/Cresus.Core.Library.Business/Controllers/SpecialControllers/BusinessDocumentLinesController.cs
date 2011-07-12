@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 			};
 
 			var access = new BusinessDocumentControllers.AccessData ();
-			access.CoreViewController     = this.tileContainer.Controller;
+			access.ViewController         = this.tileContainer.Controller as EntityViewController;
 			access.UIBuilder              = builder;
 			access.BusinessContext        = this.businessContext;
 			access.DataContext            = this.dataContext;

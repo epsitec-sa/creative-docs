@@ -35,26 +35,26 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			this.entity = entity;
 
-			this.tileContainer = new TileContainer (this.accessData.CoreViewController)
+			var controller = this.accessData.ViewController;
+			
+			this.tileContainer = new TileContainer (controller)
 			{
 				Parent = parent,
 				Dock = DockStyle.Fill,
 			};
 
-#if true
+#if false
 			var builder = this.accessData.UIBuilder;
 			this.CreateUI (builder);
 #else
-			using (var builder = new UIBuilder (this))  // TODO: Comment trouver un EntityViewController !?
+			using (var builder = new UIBuilder (controller))
 			{
 				this.CreateUI (builder);
 			}
 #endif
 		}
 
-		protected virtual void CreateUI(UIBuilder builder)
-		{
-		}
+		protected abstract void CreateUI(UIBuilder builder);
 
 		public virtual FormattedText TitleTile
 		{
