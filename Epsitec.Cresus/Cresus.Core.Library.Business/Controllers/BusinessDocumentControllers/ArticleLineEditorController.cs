@@ -92,8 +92,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			var line3 = new FrameBox
 			{
 				Parent = this.tileContainer,
-				Dock = DockStyle.Top,
-				PreferredHeight = 80,
+				Dock = DockStyle.Fill,
 			};
 
 			{

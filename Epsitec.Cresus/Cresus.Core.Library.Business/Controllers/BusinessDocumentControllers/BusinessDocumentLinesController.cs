@@ -60,6 +60,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Crée l'éditeur pour une ligne.
 			this.lineEditorController = new LineEditorController (this.accessData);
 			this.lineEditorController.CreateUI (frame);
+
+			var splitter = new HSplitter
+			{
+				Parent = frame,
+				Dock = DockStyle.Bottom,
+				Margins = new Margins (0, 0, 5, 5),
+			};
 		}
 
 		public void UpdateUI(int? sel = null)

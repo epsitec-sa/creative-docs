@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.accessData = accessData;
 		}
 
-		public void CreateUI(FrameBox parent, AbstractEntity entity)
+		public void CreateUI(Widget parent, AbstractEntity entity)
 		{
 			this.entity = entity;
 

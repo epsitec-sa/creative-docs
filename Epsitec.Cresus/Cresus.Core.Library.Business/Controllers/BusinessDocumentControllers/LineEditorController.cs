@@ -37,22 +37,19 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public void CreateUI(Widget parent)
 		{
-			this.editorTile = new FrameBox
+			var box = new FrameBox
 			{
-				PreferredHeight = 150,
-				Margins = new Margins (0, 0, 0, 0),
-				Padding = new Margins (5),
 				Parent = parent,
 				Dock = DockStyle.Bottom,
-				DrawFullFrame = true,
+				PreferredHeight = 200,
 			};
 
 			var titleFrame = new FrameBox
 			{
 				PreferredHeight = 28,
-				Margins = new Margins (0, 0, 10, -1),
-				Parent = parent,
-				Dock = DockStyle.Bottom,
+				Margins = new Margins (0, 0, 0, -1),
+				Parent = box,
+				Dock = DockStyle.Top,
 				DrawFullFrame = true,
 				BackColor = Color.FromName ("White"),
 			};
@@ -63,6 +60,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Dock = DockStyle.Fill,
 				ContentAlignment = ContentAlignment.MiddleLeft,
 				Margins = new Margins (10, 10, 0, 0),
+			};
+
+			this.editorTile = new FrameBox
+			{
+				Parent = box,
+				Dock = DockStyle.Fill,
+				Padding = new Margins (5),
+				DrawFullFrame = true,
 			};
 		}
 
