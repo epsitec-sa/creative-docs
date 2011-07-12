@@ -23,8 +23,10 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 	/// </summary>
 	public class DocumentItemAccessor
 	{
-		public DocumentItemAccessor()
+		public DocumentItemAccessor(BusinessDocumentEntity businessDocumentEntity)
 		{
+			this.businessDocumentEntity = businessDocumentEntity;
+
 			this.content = new Dictionary<int, FormattedText> ();
 			this.articleQuantityEntities = new List<ArticleQuantityEntity> ();
 		}
@@ -388,7 +390,15 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				return null;
 			}
 
-			price = PriceCalculator.RoundToCents (price.Value);
+			if (this.businessDocumentEntity == null)
+			{
+				price = PriceCalculator.RoundToCents (price.Value);
+			}
+			else
+			{
+				price = PriceCalculator.ClipPriceValue (price.Value, this.businessDocumentEntity.CurrencyCode);
+			}
+
 			return Misc.PriceToString (price);
 		}
 
@@ -425,10 +435,12 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		}
 
 
-		private DocumentType						type;
-		private DocumentItemAccessorMode			mode;
-		private Dictionary<int, FormattedText>		content;
-		private List<ArticleQuantityEntity>			articleQuantityEntities;
-		private int									rowsCount;
+		private readonly BusinessDocumentEntity			businessDocumentEntity;
+		private readonly Dictionary<int, FormattedText>	content;
+		private readonly List<ArticleQuantityEntity>	articleQuantityEntities;
+
+		private DocumentType							type;
+		private DocumentItemAccessorMode				mode;
+		private int										rowsCount;
 	}
 }

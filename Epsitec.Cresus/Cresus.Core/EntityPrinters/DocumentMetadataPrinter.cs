@@ -399,7 +399,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			for (int i = 0; i < this.Entity.Lines.Count; i++)
 			{
-				var accessor = new DocumentItemAccessor ();
+				var accessor = new DocumentItemAccessor (this.Entity);
 				accessor.BuildContent (this.Entity.Lines[i], this.DocumentType, DocumentItemAccessorMode.ForceAllLines);
 
 				accessors.Add (accessor);
