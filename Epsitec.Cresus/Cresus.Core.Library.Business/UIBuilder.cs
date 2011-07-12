@@ -1451,6 +1451,75 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public Widgets.AutoCompleteTextField CreateAutoCompleteTextField(FrameBox parent, string label, System.Action<AbstractEntity> valueSetter, ReferenceController referenceController)
+		{
+			System.Diagnostics.Debug.Assert (referenceController != null, "ReferenceController may not be null");
+
+			if (!string.IsNullOrEmpty (label))
+			{
+				var staticText = new StaticText
+				{
+					Parent = parent,
+					Text = string.Concat (label, " :"),
+					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
+					Dock = DockStyle.Stacked,
+					Margins = new Margins (0, Library.UI.Constants.RightMargin, 0, Library.UI.Constants.MarginUnderLabel),
+				};
+
+				this.ContentListAdd (staticText);
+			}
+
+			var container = new FrameBox
+			{
+				Parent = parent,
+				Dock = DockStyle.Stacked,
+				Margins = new Margins (0, Library.UI.Constants.RightMargin, 0, Library.UI.Constants.MarginUnderTextField),
+				TabIndex = ++this.tabIndex,
+			};
+
+			var editor = new Widgets.AutoCompleteTextField
+			{
+				Parent = container,
+				IsReadOnly = this.ReadOnly,
+				MenuButtonWidth = Library.UI.Constants.ComboButtonWidth-1,
+				PreferredHeight = 20,
+				Dock = DockStyle.Fill,
+				Margins = new Margins (0, 0, 0, 0),
+				HintEditorMode = Widgets.HintEditorMode.DisplayMenuForSmallList,
+				HintEditorSmallListLimit = 100,
+				TabIndex = ++this.tabIndex,
+				SwallowEscapeOnRejectEdition = true,
+				SwallowReturnOnAcceptEdition = true,
+			};
+
+			//	Ce bouton vient juste après (et tout contre) la ligne éditable.
+			var menuButton = new GlyphButton
+			{
+				Parent = container,
+				Enable = !this.ReadOnly,
+				ButtonStyle = Common.Widgets.ButtonStyle.Combo,
+				GlyphShape = GlyphShape.Menu,
+				PreferredWidth = Library.UI.Constants.ComboButtonWidth,
+				PreferredHeight = 20,
+				Dock = DockStyle.Right,
+				Margins = new Margins (-1, 0, 0, 0),
+				AutoFocus = false,
+				TabIndex = ++this.tabIndex,
+			};
+
+			this.RegisterTextField (editor);
+			this.ContentListAdd (container);
+
+			menuButton.Clicked += delegate
+			{
+				editor.SelectAll ();
+				editor.Focus ();
+				editor.OpenComboMenu ();
+			};
+
+			return editor;
+		}
+
 		private Widgets.AutoCompleteTextField CreateAutoCompleteTextField(EditionTile tile, string label, System.Action<AbstractEntity> valueSetter, ReferenceController referenceController)
 		{
 			System.Diagnostics.Debug.Assert (referenceController != null, "ReferenceController may not be null");

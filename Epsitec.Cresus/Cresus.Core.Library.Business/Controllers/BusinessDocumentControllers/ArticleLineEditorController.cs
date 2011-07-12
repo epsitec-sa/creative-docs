@@ -16,6 +16,7 @@ using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.Helpers;
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Library;
 
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -47,6 +48,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Dock = DockStyle.Top,
 			};
 
+			// TODO: Ne fonctionne pas, pfff...
+			var referenceController = new ReferenceController (() => this.Entity.ArticleDefinition);
+			this.accessData.UIBuilder.CreateAutoCompleteTextField (parent, "Article", x => this.Entity.ArticleDefinition = x as ArticleDefinitionEntity, referenceController);
 		}
 
 		public override FormattedText TitleTile
