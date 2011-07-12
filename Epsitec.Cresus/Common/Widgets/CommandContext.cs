@@ -99,8 +99,17 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			bool oldValue = this.localDisables.Contains (command.SerialId) ? false : true;
-			bool newValue = value;
+			bool? oldValue = null;
+			bool  newValue = value;
+
+			if (this.localDisables.Contains (command.SerialId))
+			{
+				oldValue = false;
+			}
+			else if (this.localEnables.Contains (command.SerialId))
+			{
+				oldValue = true;
+			}
 
 			if (newValue != oldValue)
 			{
