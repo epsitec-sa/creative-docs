@@ -1,6 +1,7 @@
 //	Copyright © 2005-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -256,10 +257,12 @@ namespace Epsitec.Common.Widgets
 			//	a visual or a window.
 
 			int count = 0;
-			
+			var ids = new HashSet<int> (context.GetLocalEnableSerialIds ());
+
 			for (int i = 0; i < this.records.Length; i++)
 			{
-				if (this.records[i].CommandContext == context)
+				if ((this.records[i].CommandContext == context) ||
+					(ids.Contains (this.records[i].SerialId)))
 				{
 					if (this.records[i].ClearCommandState ())
 					{
@@ -318,9 +321,10 @@ namespace Epsitec.Common.Widgets
 			/// <param name="visual">The visual.</param>
 			public Record(Visual visual)
 			{
-				this.visual  = new Types.Weak<Visual> (visual);
-				this.state   = null;
-				this.command = visual.CommandObject;
+				this.visual   = new Types.Weak<Visual> (visual);
+				this.state    = null;
+				this.command  = visual.CommandObject;
+				this.serialId = this.command == null ? -1 : this.command.SerialId;
 			}
 
 
@@ -389,7 +393,8 @@ namespace Epsitec.Common.Widgets
 				}
 				set
 				{
-					this.command = value;
+					this.command  = value;
+					this.serialId = value == null ? -1 : value.SerialId;
 				}
 			}
 
@@ -423,13 +428,26 @@ namespace Epsitec.Common.Widgets
 			}
 
 			/// <summary>
+			/// Gets the serial id of the associated command.
+			/// </summary>
+			public int							SerialId
+			{
+				get
+				{
+					return this.serialId;
+				}
+			}
+
+
+			/// <summary>
 			/// Clears this instance.
 			/// </summary>
 			public void Clear()
 			{
-				this.visual  = null;
-				this.state   = null;
-				this.command = null;
+				this.visual   = null;
+				this.state    = null;
+				this.command  = null;
+				this.serialId = -1;
 			}
 
 			/// <summary>
@@ -452,6 +470,7 @@ namespace Epsitec.Common.Widgets
 			private Types.Weak<Visual>			visual;
 			private CommandState				state;
 			private Command						command;
+			private int							serialId;
 		}
 		
 		#endregion

@@ -11,7 +11,7 @@ namespace Epsitec.Common.Widgets
 	{
 		None = 0,
 		
-		Fence				= 0x0001,
+		Fence					= 0x0001,
 		ActivateWithoutFocus	= 0x0002,
 	}
 }

@@ -255,6 +255,10 @@ namespace Epsitec.Common.Widgets
 			this.SetCommandState (command, null);
 		}
 
+		public IEnumerable<int> GetLocalEnableSerialIds()
+		{
+			return this.localDisables.Concat (this.localEnables);
+		}
 
 
 		/// <summary>
@@ -300,6 +304,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+
+		protected override void Dispose(bool disposing)
+		{
+			CommandCache.Instance.InvalidateContext (this);
+
+			base.Dispose (disposing);
+		}
 
 		
 		#region Internal Methods
