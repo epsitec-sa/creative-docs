@@ -357,6 +357,7 @@
     <Compile Include="Support\EntityEngine\SafeResourceResolver.cs" />
     <Compile Include="Support\EntityEngine\ThreadSafeReadOnlyListProxy.cs" />
     <Compile Include="Support\EntityEngine\ThreadSafeReadOnlyListProxy`1.cs" />
+    <Compile Include="Support\Extensions\EnumExtensions.cs" />
     <Compile Include="Support\Extensions\MemberInfoExtensions.cs" />
     <Compile Include="Support\Extensions\TypeExtensions.cs" />
     <Compile Include="Support\Extensions\EventHandlerExtensions.cs" />
