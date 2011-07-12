@@ -72,6 +72,7 @@
     <Compile Include="Data\LockTransaction.cs" />
     <Compile Include="Entities\AbstractEntityExtension.cs" />
     <Compile Include="Entities\CommentEntity.cs" />
+    <Compile Include="Entities\EntityClonerExtensions.cs" />
     <Compile Include="Entities\LanguageEntity.cs" />
     <Compile Include="Entities\Extensions.cs" />
     <Compile Include="Entities\GeneratorDefinitionEntity.cs" />
