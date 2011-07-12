@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 	/// The <c>BrowserSettingsController</c> class manages the settings associated
 	/// with a <see cref="BrowserViewController"/>, such as the search criteria.
 	/// </summary>
-	class BrowserSettingsController : CoreViewController
+	public sealed class BrowserSettingsController : CoreViewController
 	{
 		public BrowserSettingsController(BrowserViewController browser)
 			: base ("BrowserSettings", browser.Orchestrator)
@@ -35,6 +35,10 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			this.CreateCommandInfrastructure (container);
 			this.CreateUINewItemIconButton (container);
+		}
+
+		internal void NotifyBrowserSettingsModeChanged(BrowserSettingsMode mode)
+		{
 		}
 
 		private void CreateCommandInfrastructure(Widget container)

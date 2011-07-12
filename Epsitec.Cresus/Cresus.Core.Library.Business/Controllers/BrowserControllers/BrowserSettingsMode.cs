@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -13,9 +13,10 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 	public enum BrowserSettingsMode
 	{
 		/// <summary>
-		/// Undefined; don't use this mode.
+		/// Disabled; usually don't use this mode (this mode is only active when
+		/// the browser cannot display anything because no data set is defined).
 		/// </summary>
-		Undefined,
+		Disabled,
 
 		/// <summary>
 		/// Hide the settings.

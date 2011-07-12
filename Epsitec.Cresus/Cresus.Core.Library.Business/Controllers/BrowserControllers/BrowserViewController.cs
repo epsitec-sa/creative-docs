@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -6,10 +6,12 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
-using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Controllers.CreationControllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
+using Epsitec.Cresus.Core.Data;
+using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Factories;
+using Epsitec.Cresus.Core.Orchestrators;
 using Epsitec.Cresus.Core.Widgets;
 
 using Epsitec.Cresus.DataLayer;
@@ -17,8 +19,6 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Core.Orchestrators;
-using Epsitec.Cresus.Core.Data;
 
 namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 	/// </summary>
 	public sealed partial class BrowserViewController : CoreViewController, INotifyCurrentChanged, IWidgetUpdater
 	{
-		public BrowserViewController(Orchestrators.DataViewOrchestrator orchestrator)
+		public BrowserViewController(DataViewOrchestrator orchestrator)
 			: base ("Browser", orchestrator)
 		{
 			this.data = orchestrator.Data;
@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.browserDataContext = this.data.CreateDataContext (string.Format ("Browser.DataSet={0}", this.DataSetName));
 			this.collection         = new BrowserList (this.browserDataContext);
 
-			this.scrollList.Items.ValueConverter   = this.collection.ValueConverterFunction;
+			this.scrollList.Items.ValueConverter   = this.collection.ConvertBrowserListItemToString;
 			this.browserDataContext.EntityChanged += this.HandleDataContextEntityChanged;
 		}
 
@@ -262,13 +262,13 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				return;
 			}
 
-			this.collection.DefineEntities (this.GetCollectionEntities ());
+			this.collection.ClearAndAddRange (this.GetCollectionEntities ());
 			this.RefreshScrollList (reset: true);
 		}
 
 		private void InsertIntoCollection(AbstractEntity entity)
 		{
-			this.collection.Insert (entity);
+			this.collection.Add (entity);
 //-			this.RefreshScrollList (reset: true);
 		}
 

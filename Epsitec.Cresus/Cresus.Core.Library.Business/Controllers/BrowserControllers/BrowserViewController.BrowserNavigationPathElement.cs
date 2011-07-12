@@ -1,5 +1,8 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Cresus.Core.Orchestrators;
+using Epsitec.Cresus.Core.Orchestrators.Navigation;
 
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -12,7 +15,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 	{
 		#region BrowserNavigationPathElement Class
 
-		private class BrowserNavigationPathElement : Epsitec.Cresus.Core.Orchestrators.Navigation.NavigationPathElement
+		private sealed class BrowserNavigationPathElement : NavigationPathElement
 		{
 			public BrowserNavigationPathElement(BrowserViewController controller, EntityKey entityKey)
 			{
@@ -20,7 +23,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				this.entityKey   = entityKey;
 			}
 
-			public override bool Navigate(Orchestrators.NavigationOrchestrator navigator)
+			public override bool Navigate(NavigationOrchestrator navigator)
 			{
 				var browserViewController = navigator.BrowserViewController;
 
@@ -37,8 +40,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 
 
-			private readonly string dataSetName;
-			private readonly EntityKey entityKey;
+			private readonly string				dataSetName;
+			private readonly EntityKey			entityKey;
 		}
 
 		#endregion

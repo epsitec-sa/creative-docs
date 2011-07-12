@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
-	public class BrowserList : IEnumerable<BrowserListItem>, System.IDisposable
+	public sealed class BrowserList : IEnumerable<BrowserListItem>, System.IDisposable
 	{
 		public BrowserList(DataContext context)
 		{
@@ -29,13 +29,13 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		}
 
 		
-		public void DefineEntities(IEnumerable<AbstractEntity> entities)
+		public void ClearAndAddRange(IEnumerable<AbstractEntity> entities)
 		{
 			this.list.Clear ();
 			this.list.AddRange (entities.Select (x => new BrowserListItem (x)));
 		}
 
-		public void Insert(AbstractEntity entity)
+		public void Add(AbstractEntity entity)
 		{
 			this.list.Add (new BrowserListItem (entity));
 		}
@@ -101,7 +101,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			return key.Value;
 		}
 
-		internal string ValueConverterFunction(object value)
+		internal string ConvertBrowserListItemToString(object value)
 		{
 			BrowserListItem item = value as BrowserListItem;
 
@@ -142,6 +142,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		}
 
 		#endregion
+		
 		
 		private readonly List<BrowserListItem>	list;
 		private readonly DataContext			context;

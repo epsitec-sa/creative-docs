@@ -17,7 +17,7 @@ using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public class MainViewController : ViewControllerComponent<MainViewController>, ICommandHandler
+	public sealed class MainViewController : ViewControllerComponent<MainViewController>, ICommandHandler
 	{
 		public MainViewController(DataViewOrchestrator orchestrator)
 			: base (orchestrator)
@@ -30,6 +30,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.previewViewController     = new PreviewViewController (this.Orchestrator);
 			this.browserViewController     = new BrowserViewController (this.Orchestrator);
 			this.browserSettingsController = new BrowserSettingsController (this.browserViewController);
+
+			this.browserViewController.DataSetSelected += this.HandleBrowserViewControllerDataSetSelected;
 			
 			
 			//	TODO: check if following code is still meaningful
@@ -260,8 +262,16 @@ namespace Epsitec.Cresus.Core.Controllers
 			var expandedPanel = this.topPanel;
 			var compactPanel  = this.browserViewController.SettingsPanel;
 
-			switch (this.browserSettingsMode)
+			var mode = this.browserSettingsMode;
+
+			if (string.IsNullOrEmpty (this.browserViewController.DataSetName))
 			{
+				mode = BrowserSettingsMode.Disabled;
+			}
+
+			switch (mode)
+			{
+				case BrowserSettingsMode.Disabled:
 				case BrowserSettingsMode.Hidden:
 					expandedPanel.Visibility = false;
 					compactPanel.Visibility  = false;
@@ -281,8 +291,10 @@ namespace Epsitec.Cresus.Core.Controllers
 					break;
 
 				default:
-					throw new System.NotSupportedException (string.Format ("BrowserSettingsMode.{0} not supported", this.browserSettingsMode));
+					throw new System.NotSupportedException (string.Format ("BrowserSettingsMode.{0} not supported", mode));
 			}
+
+			this.browserSettingsController.NotifyBrowserSettingsModeChanged (mode);
 		}
 
 
@@ -363,6 +375,12 @@ namespace Epsitec.Cresus.Core.Controllers
 					}
 				}
 			}
+		}
+
+
+		private void HandleBrowserViewControllerDataSetSelected(object sender)
+		{
+			this.UpdateBrowserSettingsPanel ();
 		}
 
 		#region ICommandHandler Members
