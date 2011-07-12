@@ -31,19 +31,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 		}
 
-		public override void CreateUI(FrameBox parent, AbstractEntity entity)
+		protected override void CreateUI(UIBuilder builder)
 		{
-			base.CreateUI (parent, entity);
-
-			var box = new FrameBox
-			{
-				Parent = parent,
-				Dock = DockStyle.Fill,
-			};
-
 			var line1 = new FrameBox
 			{
-				Parent = box,
+				Parent = this.tileContainer,
 				Dock = DockStyle.Top,
 				PreferredHeight = 20,
 				Margins = new Margins (0, 0, 0, 5),
@@ -51,14 +43,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			var line2 = new FrameBox
 			{
-				Parent = box,
+				Parent = this.tileContainer,
 				Dock = DockStyle.Top,
 				PreferredHeight = 20,
 				Margins = new Margins (0, 0, 0, 5),
 			};
 
 			//	Quantité.
-			var quantityField = this.accessData.UIBuilder.CreateTextField (box, 0, null, Marshaler.Create (() => this.Entity.Quantity, x => this.Entity.Quantity = x));
+			var quantityField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.Quantity, x => this.Entity.Quantity = x));
 			this.PlaceLabelAndField (line1, 50, 80, "Quantité", quantityField);
 
 			//	Unité.
@@ -69,7 +61,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				ReferenceController = new ReferenceController (() => this.Entity.Unit),
 			};
 
-			var unitField = this.accessData.UIBuilder.CreateCompactAutoCompleteTextField (parent, "", unitController);
+			var unitField = builder.CreateCompactAutoCompleteTextField (null, "", unitController);
 			this.PlaceLabelAndField (line1, 25, 80, "Unité", unitField.Parent);
 
 			//	Type.
@@ -80,11 +72,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				ReferenceController = new ReferenceController (() => this.Entity.QuantityColumn),
 			};
 
-			var typeField = this.accessData.UIBuilder.CreateCompactAutoCompleteTextField (parent, "", typeController);
+			var typeField = builder.CreateCompactAutoCompleteTextField (null, "", typeController);
 			this.PlaceLabelAndField (line1, 60, 100, "Type", typeField.Parent);
 
 			//	Date.
-			var dateField = this.accessData.UIBuilder.CreateTextField (box, 0, null, Marshaler.Create (() => this.Entity.BeginDate, x => this.Entity.BeginDate = x));
+			var dateField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.BeginDate, x => this.Entity.BeginDate = x));
 			this.PlaceLabelAndField (line1, 25, 100, "Date", dateField);
 		}
 

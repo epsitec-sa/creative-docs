@@ -31,22 +31,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 		}
 
-		public override void CreateUI(FrameBox parent, AbstractEntity entity)
+		protected override void CreateUI(UIBuilder builder)
 		{
-			base.CreateUI (parent, entity);
-
-			var box = new FrameBox
-			{
-				Parent = parent,
-				Dock = DockStyle.Fill,
-			};
-
-			var line1 = new FrameBox
-			{
-				Parent = box,
-				Dock = DockStyle.Top,
-			};
-
 		}
 
 		public override FormattedText TitleTile
