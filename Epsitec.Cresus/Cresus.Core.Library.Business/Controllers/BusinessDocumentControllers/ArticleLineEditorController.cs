@@ -51,9 +51,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			};
 
 			// TODO: Ne fonctionne pas, pfff...
-			var referenceController = new ReferenceController (() => this.Entity.ArticleDefinition);
-			var field = this.accessData.UIBuilder.CreateAutoCompleteTextField (parent, null, x => this.Entity.ArticleDefinition = x as ArticleDefinitionEntity, referenceController);
-			this.PlaceLabelAndField (line1, 50, 400, "Article", field.Parent);
+			//var referenceController = new ReferenceController (() => this.Entity.ArticleDefinition);
+			//var field = this.accessData.UIBuilder.CreateAutoCompleteTextField (parent, null, x => this.Entity.ArticleDefinition = x as ArticleDefinitionEntity, referenceController);
+			//this.PlaceLabelAndField (line1, 50, 400, "Article", field.Parent);
 		}
 
 		public override FormattedText TitleTile

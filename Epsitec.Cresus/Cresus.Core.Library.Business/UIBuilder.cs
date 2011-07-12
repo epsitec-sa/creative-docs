@@ -1254,6 +1254,17 @@ namespace Epsitec.Cresus.Core
 			return autoCompleteTextField;
 		}
 
+		public Widgets.AutoCompleteTextField CreateCompactAutoCompleteTextField<T>(FrameBox frame, string label, SelectionController<T> controller)
+			where T : AbstractEntity, new ()
+		{
+			var autoCompleteTextField = this.CreateCompactAutoCompleteTextField (frame, label);
+
+			controller.Attach (autoCompleteTextField);
+			this.container.Add (controller);
+
+			return autoCompleteTextField;
+		}
+
 		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T>(string label, EnumController<T> controller)
 			where T : struct
 		{
@@ -1451,10 +1462,8 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public Widgets.AutoCompleteTextField CreateAutoCompleteTextField(FrameBox parent, string label, System.Action<AbstractEntity> valueSetter, ReferenceController referenceController)
+		private Widgets.AutoCompleteTextField CreateCompactAutoCompleteTextField(FrameBox parent, string label)
 		{
-			System.Diagnostics.Debug.Assert (referenceController != null, "ReferenceController may not be null");
-
 			if (!string.IsNullOrEmpty (label))
 			{
 				var staticText = new StaticText
@@ -1493,7 +1502,7 @@ namespace Epsitec.Cresus.Core
 			};
 
 			//	Ce bouton vient juste après (et tout contre) la ligne éditable.
-			var menuButton = new GlyphButton
+			var pullDownButton = new GlyphButton
 			{
 				Parent = container,
 				Enable = !this.ReadOnly,
@@ -1507,15 +1516,15 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 
-			this.RegisterTextField (editor);
-			this.ContentListAdd (container);
-
-			menuButton.Clicked += delegate
+			pullDownButton.Clicked += delegate
 			{
 				editor.SelectAll ();
 				editor.Focus ();
 				editor.OpenComboMenu ();
 			};
+
+			this.RegisterTextField (editor);
+			this.ContentListAdd (container);
 
 			return editor;
 		}
