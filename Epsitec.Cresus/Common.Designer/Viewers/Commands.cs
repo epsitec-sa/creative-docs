@@ -232,31 +232,31 @@ namespace Epsitec.Common.Designer.Viewers
 				this.primaryAspectDialog.ActiveState = ActiveState.No;
 				this.primaryAspectRichDialog.ActiveState = ActiveState.No;
 				this.primaryStatefull.ActiveState = ActiveState.No;
-				this.SetShortcut(this.primaryShortcut1, this.primaryShortcut2, null);
+				this.SetShortcut (this.primaryShortcut1, this.primaryShortcut2, null);
 				this.primaryGroup.Text = "";
 			}
 			else
 			{
-				string dp = data.GetValue(Support.Res.Fields.ResourceCommand.DefaultParameter) as string;
-				CommandParameters cp = new CommandParameters(dp);
-				string aspect = cp["ButtonClass"];
-				
-				this.primaryAspectFlat.ActiveState = (aspect == "FlatButton" || string.IsNullOrEmpty(aspect)) ? ActiveState.Yes : ActiveState.No;
-				this.primaryAspectDialog.ActiveState = (aspect == "DialogButton") ? ActiveState.Yes : ActiveState.No;
-				this.primaryAspectRichDialog.ActiveState = (dp == "RichDialogButton") ? ActiveState.Yes : ActiveState.No;
+				string dp = data.GetValue (Support.Res.Fields.ResourceCommand.DefaultParameter) as string;
+				CommandParameters cp = new CommandParameters (dp);
+				var aspect = cp.GetValueOrDefault (ButtonClass.FlatButton);
+
+				this.primaryAspectFlat.ActiveState       = (aspect == ButtonClass.FlatButton)       ? ActiveState.Yes : ActiveState.No;
+				this.primaryAspectDialog.ActiveState     = (aspect == ButtonClass.DialogButton)     ? ActiveState.Yes : ActiveState.No;
+				this.primaryAspectRichDialog.ActiveState = (aspect == ButtonClass.RichDialogButton) ? ActiveState.Yes : ActiveState.No;
 
 				bool statefull = false;
-				object value = data.GetValue(Support.Res.Fields.ResourceCommand.Statefull);
-				if (!UndefinedValue.IsUndefinedValue(value))
+				object value = data.GetValue (Support.Res.Fields.ResourceCommand.Statefull);
+				if (!UndefinedValue.IsUndefinedValue (value))
 				{
 					statefull = (bool) value;
 				}
 				this.primaryStatefull.ActiveState = statefull ? ActiveState.Yes : ActiveState.No;
 
-				shortcuts = data.GetValue(Support.Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
-				this.SetShortcut(this.primaryShortcut1, this.primaryShortcut2, shortcuts);
+				shortcuts = data.GetValue (Support.Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
+				this.SetShortcut (this.primaryShortcut1, this.primaryShortcut2, shortcuts);
 
-				string group = data.GetValue(Support.Res.Fields.ResourceCommand.Group) as string;
+				string group = data.GetValue (Support.Res.Fields.ResourceCommand.Group) as string;
 				this.primaryGroup.Text = group;
 			}
 
@@ -406,17 +406,17 @@ namespace Epsitec.Common.Designer.Viewers
 			
 			if (sender == this.primaryAspectDialog)
 			{
-				commandParameters["ButtonClass"] = "DialogButton";
+				commandParameters.Set (ButtonClass.DialogButton);
 			}
 			
 			if (sender == this.primaryAspectRichDialog)
 			{
-				defaultParameter = "RichDialogButton";
+				commandParameters.Set (ButtonClass.RichDialogButton);
 			}
 
 			if (sender == this.primaryAspectFlat)
 			{
-				commandParameters["ButtonClass"] = "FlatButton";
+				commandParameters.Set (ButtonClass.FlatButton);
 			}
 
 			defaultParameter = commandParameters.ToString();

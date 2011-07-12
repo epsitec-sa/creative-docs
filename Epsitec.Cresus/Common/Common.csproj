@@ -1122,6 +1122,7 @@
     <Compile Include="Widgets\CommandDispatcherChain.cs" />
     <Compile Include="Widgets\CommandDispatcherLevel.cs" />
     <Compile Include="Widgets\CommandDispatcherOptions.cs" />
+    <Compile Include="Widgets\CommandDefaultEnableMode.cs" />
     <Compile Include="Widgets\CommandEventArgs.cs" />
     <Compile Include="Widgets\CommandHandlerPair.cs" />
     <Compile Include="Widgets\CommandParameters.cs" />

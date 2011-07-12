@@ -1,5 +1,7 @@
-//	Copyright © 2008-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2008-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Types;
 
 using System.Collections.Generic;
 
@@ -76,6 +78,35 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public void Set<TEnum>(TEnum value)
+			where TEnum : struct
+		{
+			this[typeof (TEnum).Name] = value.ToString ();
+		}
+
+		public void Clear<TEnum>()
+			where TEnum : struct
+		{
+			this[typeof (TEnum).Name] = null;
+		}
+
+		public TEnum GetValueOrDefault<TEnum>(TEnum defaultValue = default (TEnum))
+			where TEnum : struct
+		{
+			string value = this[typeof (TEnum).Name];
+
+			if (string.IsNullOrEmpty (value))
+			{
+				return defaultValue;
+			}
+			else
+			{
+				return value.ToEnum<TEnum> ();
+			}
+		}
+
+
+
 		/// <summary>
 		/// Parses the specified serialized source for the parameters.
 		/// </summary>
@@ -142,6 +173,5 @@ namespace Epsitec.Common.Widgets
 
 			return text;
 		}
-
 	}
 }

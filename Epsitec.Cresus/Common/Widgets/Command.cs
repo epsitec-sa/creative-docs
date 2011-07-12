@@ -26,11 +26,6 @@ namespace Epsitec.Common.Widgets
 			CommandPool.RegisterCommand (this);
 		}
 
-		private Command(string id)
-			: this (id, Epsitec.Common.Support.Resources.DefaultManager)
-		{
-		}
-
 		private Command(string id, ICaptionResolver manager)
 			: this ()
 		{
@@ -39,26 +34,7 @@ namespace Epsitec.Common.Widgets
 				throw new System.ArgumentNullException ("id");
 			}
 
-			this.InitializeCommandId (id, manager);
-		}
-
-		private Command(string id, params Shortcut[] shortcuts)
-			: this (id)
-		{
-			this.Shortcuts.AddRange (shortcuts);
-		}
-
-		private Command(Druid druid)
-			: this (druid, Epsitec.Common.Support.Resources.DefaultManager)
-		{
-		}
-
-		private Command(Druid druid, ICaptionResolver manager)
-			: this ()
-		{
-			string id = druid.ToResourceId ();
-			
-			this.InitializeCommandId (id, manager);
+			this.InitializeCommandId (id, manager ?? Epsitec.Common.Support.Resources.DefaultManager);
 		}
 
 		private Command(Caption caption, ICaptionResolver manager)
@@ -518,11 +494,6 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (commandId) == false);
 			System.Diagnostics.Debug.Assert (this.commandId == null);
-
-			if (manager == null)
-			{
-				manager = Epsitec.Common.Support.Resources.DefaultManager;
-			}
 
 			if (this.uniqueId == 0)
 			{

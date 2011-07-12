@@ -286,17 +286,7 @@ namespace Epsitec.Common.UI
 			if ((command != null) &&
 				(!this.ContainsValue (MetaButton.ButtonClassProperty)))
 			{
-				string buttonClassParam = command.CommandParameters["ButtonClass"];
-
-				if (string.IsNullOrEmpty (buttonClassParam))
-				{
-					this.cachedButtonClass = ButtonClass.FlatButton;
-				}
-				else
-				{
-					this.cachedButtonClass = buttonClassParam.ToEnum<ButtonClass> ();
-				}
-
+				this.cachedButtonClass = command.CommandParameters.GetValueOrDefault (ButtonClass.FlatButton);
 				this.UpdateButtonClass (this.cachedButtonClass);
 			}
 		}
