@@ -254,7 +254,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				{
 					yield return ColumnType.Group;
 
-					yield return ColumnType.ArticleId;
 					yield return ColumnType.ArticleDescription;
 
 					yield return ColumnType.QuantityAndUnit;
@@ -291,10 +290,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					return 30;
 
 				case ColumnType.QuantityAndUnit:
-					return 60;
+					return 50;
 
 				case ColumnType.Type:
-					return 70;
+					return 65;
 
 				case ColumnType.Date:
 					return 70;
@@ -303,14 +302,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					return 50;
 
 				case ColumnType.ArticleDescription:
-					return 180;
+					return 206;
 
 				case ColumnType.Discount:
 				case ColumnType.UnitPrice:
 				case ColumnType.LinePrice:
 				case ColumnType.Vat:
 				case ColumnType.Total:
-					return 70;
+					return 60;
 
 				default:
 					return 100;
@@ -322,7 +321,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			switch (columnType)
 			{
 				case ColumnType.QuantityAndUnit:
-					return "Quantité";
+					return "Nb";
 
 				case ColumnType.Type:
 					return "Type";

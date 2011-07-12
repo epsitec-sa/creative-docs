@@ -239,37 +239,60 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.CreateGroup)]
-		public void ProcessCreateGroup()
+		private void ProcessCreateGroup()
 		{
 			//	Insère un nouveau groupe.
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.CreateGroupSeparator)]
-		public void ProcessCreateGroupSeparator()
+		private void ProcessCreateGroupSeparator()
 		{
 			//	Insère un nouveau groupe après le groupe en cours (donc au même niveau).
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.MoveUp)]
-		public void ProcessMoveUp()
+		private void ProcessMoveUp()
 		{
 			//	Monte la ligne sélectionnée.
+			this.ProcessMove (-1);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.MoveDown)]
-		public void ProcessoveDown()
+		private void ProcessMoveDown()
 		{
 			//	Descend la ligne sélectionnée.
+			this.ProcessMove (1);
+		}
+
+		private void ProcessMove(int direction)
+		{
+			//	Monte ou descend la ligne sélectionnée.
+			int? sel = this.linesController.LastSelection;
+
+			if (sel != null)
+			{
+				var info = this.lineInformations[sel.Value];
+				var line = this.accessData.BusinessDocumentEntity.Lines.ElementAt (info.LineIndex);
+				var index = info.LineIndex;
+
+				if (index+direction >= 0 && index+direction < this.accessData.BusinessDocumentEntity.Lines.Count)
+				{
+					this.accessData.BusinessDocumentEntity.Lines.RemoveAt (index);
+					this.accessData.BusinessDocumentEntity.Lines.Insert (index+direction, line);
+
+					this.UpdateAfterChange (line, null);
+				}
+			}
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.Duplicate)]
-		public void ProcessDuplicate()
+		private void ProcessDuplicate()
 		{
 			//	Duplique la ligne sélectionnée.
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.Delete)]
-		public void ProcessDelete()
+		private void ProcessDelete()
 		{
 			//	Supprime la ligne sélectionnée.
 			int? sel = this.linesController.LastSelection;
@@ -294,13 +317,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.Group)]
-		public void ProcessGroup()
+		private void ProcessGroup()
 		{
 			//	Groupe toutes les lignes sélectionnées.
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.Ungroup)]
-		public void ProcessUngroup()
+		private void ProcessUngroup()
 		{
 			//	Défait le groupe sélectionné.
 		}
@@ -380,15 +403,21 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			bool isArticle  = info != null && info.AbstractDocumentItemEntity is ArticleDocumentItemEntity;
+			bool isText     = info != null && info.AbstractDocumentItemEntity is TextDocumentItemEntity;
+			bool isTax      = info != null && info.AbstractDocumentItemEntity is TaxDocumentItemEntity;
+			bool isSubTotal = info != null && info.AbstractDocumentItemEntity is SubTotalDocumentItemEntity;
 			bool isEndTotal = info != null && info.AbstractDocumentItemEntity is EndTotalDocumentItemEntity;
 
 			this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.CreateQuantity).Enable = isArticle;
 			this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.CreateGroupSeparator).Enable = false;
 
-			this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.Duplicate).Enable = selection.Count != 0 && !isEndTotal;
-			this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.Delete).Enable = selection.Count != 0 && !isEndTotal;
+			this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.MoveUp).Enable   = selection.Count == 1 && (isArticle || isText || isSubTotal);
+			this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.MoveDown).Enable = selection.Count == 1 && (isArticle || isText || isSubTotal);
 
-			this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.Group).Enable = selection.Count != 0 && !isEndTotal;
+			this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.Duplicate).Enable = selection.Count != 0 && !isEndTotal;
+			this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.Delete).Enable    = selection.Count != 0 && !isEndTotal;
+
+			this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.Group).Enable   = selection.Count != 0 && !isEndTotal;
 			this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.Ungroup).Enable = selection.Count != 0 && !isEndTotal;
 		}
 
