@@ -37,6 +37,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.End ()
 				.Separator ()
 				.Input ()
+				  .Field (x => x.Finance.DefaultBillingRoundingMode)
+				.End ()
+				.Separator ()
+				.Input ()
 				  .Field (x => x.Finance).WithSpecialController ()
 				.End ()
 				;
