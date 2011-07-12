@@ -29,17 +29,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				builder.CreateHeaderEditorTile ();
 				builder.CreateEditionTitleTile ("Data.PriceDocumentItem", "Ligne de sous-total");
 
-				this.CreateTabBook (builder);
 				this.CreateUIMain (builder);
 
 				builder.CreateFooterEditorTile ();
 			}
-		}
-
-
-		private void CreateTabBook(UIBuilder builder)
-		{
-			Common.CreateDocumentItemTabBook (builder, this, DocumentItemTabId.Price);
 		}
 
 

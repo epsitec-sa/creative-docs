@@ -18,14 +18,6 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class ArticleDocumentItemEntity : ICopyableEntity<ArticleDocumentItemEntity>
 	{
-		public override DocumentItemTabId TabId
-		{
-			get
-			{
-				return DocumentItemTabId.Article;
-			}
-		}
-
 		public decimal GetOrderedQuantity()
 		{
 			var quantities = this.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == ArticleQuantityType.Ordered);

@@ -32,8 +32,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				builder.CreateHeaderEditorTile ();
 				builder.CreateEditionTitleTile ("Data.ArticleDocumentItem", "Ligne d'article");
 
-				this.CreateTabBook (builder);
-
 				this.CreateUIArticleDefinition  (builder);
 				this.CreateUIParameter          (builder);
 				this.CreateUIArticleDescription (builder);
@@ -46,12 +44,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				
 				builder.CreateFooterEditorTile ();
 			}
-		}
-
-
-		private void CreateTabBook(UIBuilder builder)
-		{
-			Common.CreateDocumentItemTabBook (builder, this, DocumentItemTabId.Article);
 		}
 
 

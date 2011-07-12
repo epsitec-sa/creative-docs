@@ -15,14 +15,6 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class TextDocumentItemEntity : ICopyableEntity<TextDocumentItemEntity>
 	{
-		public override DocumentItemTabId TabId
-		{
-			get
-			{
-				return DocumentItemTabId.Text;
-			}
-		}
-
 		public override FormattedText GetCompactSummary()
 		{
 			if (this.Text.IsNullOrEmpty)

@@ -17,14 +17,6 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class SubTotalDocumentItemEntity : ICopyableEntity<SubTotalDocumentItemEntity>
 	{
-		public override DocumentItemTabId TabId
-		{
-			get
-			{
-				return DocumentItemTabId.Price;
-			}
-		}
-
 		public override FormattedText GetCompactSummary()
 		{
 			var builder = new TextBuilder ();

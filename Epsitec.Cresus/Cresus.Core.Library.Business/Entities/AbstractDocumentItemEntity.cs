@@ -17,14 +17,6 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 		}
 
-		public virtual DocumentItemTabId		TabId
-		{
-			get
-			{
-				return DocumentItemTabId.None;
-			}
-		}
-
 		/// <summary>
 		/// Gets the group level based on the <see cref="GroupIndex"/>. The level will be zero
 		/// if the index is zero, index <c>nn</c> will map to level <c>1</c>, <c>nnnn</c> to
