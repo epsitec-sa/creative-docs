@@ -3,7 +3,9 @@
 
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Helpers;
 
 using System.Collections.Generic;
@@ -11,7 +13,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class BusinessDocumentEntity
+	public partial class BusinessDocumentEntity : ICopyableEntity<BusinessDocumentEntity>
 	{
 		public override FormattedText GetSummary()
 		{
@@ -71,5 +73,31 @@ namespace Epsitec.Cresus.Core.Entities
 				return a.EntityStatus;
 			}
 		}
+
+		#region ICopyableEntity<BusinessDocumentEntity> Members
+
+		void ICopyableEntity<BusinessDocumentEntity>.CopyTo(IBusinessContext businessContext, BusinessDocumentEntity copy)
+		{
+			copy.BaseDocumentCode      = this.Code;
+			copy.BillToMailContact     = this.BillToMailContact;
+			copy.ShipToMailContact     = this.ShipToMailContact;
+			copy.OtherPartyRelation    = this.OtherPartyRelation;
+			copy.OtherPartyBillingMode = this.OtherPartyBillingMode;
+			copy.OtherPartyTaxMode     = this.OtherPartyTaxMode;
+			
+			copy.Lines.AddRange (this.Lines.Select (x => x.CloneEntity (businessContext)));
+
+			//	BillingDetails is not copied, since it is really specific to one invoice, and
+			//	should not be shared between different invoices.
+
+			copy.BillingStatus         = this.BillingStatus;
+			copy.BillingDate           = this.BillingDate;
+			copy.CurrencyCode          = this.CurrencyCode;
+			copy.PriceRefDate          = this.PriceRefDate;
+			copy.PriceGroup            = this.PriceGroup;
+			copy.DebtorBookAccount     = this.DebtorBookAccount;
+		}
+
+		#endregion
 	}
 }

@@ -38,54 +38,43 @@ namespace Epsitec.Cresus.Core.Business.Actions
 
 		public static void CreateInvoice()
 		{
-			AffairActions.CreateDocument (DocumentType.OrderConfirmation, DocumentType.Invoice, AffairActions.CopyInvoice);
+			AffairActions.CreateDocument (DocumentType.OrderConfirmation, DocumentType.Invoice);
 		}
 
 
-
-		private static BusinessDocumentEntity CopyInvoice(IBusinessContext businessContext, DocumentMetadataEntity metadata)
+		private static BusinessDocumentEntity CloneBusinessDocument(IBusinessContext businessContext, DocumentMetadataEntity metadata)
 		{
-			var invoice  = businessContext.CreateEntity<BusinessDocumentEntity> ();
 			var template = metadata.BusinessDocument as BusinessDocumentEntity;
+			var document = template.CloneEntity (businessContext);
 
-			invoice.BaseDocumentCode      = template.Code;
-			invoice.BillToMailContact     = template.BillToMailContact;
-			invoice.ShipToMailContact     = template.ShipToMailContact;
-			invoice.OtherPartyRelation    = template.OtherPartyRelation;
-			invoice.OtherPartyBillingMode = template.OtherPartyBillingMode;
-			invoice.OtherPartyTaxMode     = template.OtherPartyTaxMode;
-			invoice.BillingStatus         = Finance.BillingStatus.DebtorBillOpen;
-			invoice.BillingDate           = Date.Today;
-			invoice.CurrencyCode          = template.CurrencyCode;
-			invoice.PriceRefDate          = template.PriceRefDate;
-			invoice.PriceGroup            = template.PriceGroup;
-			invoice.DebtorBookAccount     = template.DebtorBookAccount;
+			switch (metadata.DocumentCategory.DocumentType)
+			{
+				case DocumentType.InvoiceProForma:
+				case DocumentType.Invoice:
+					AffairActions.SetupInvoice (document);
+					break;
+			}
 
-			var copy = template.Lines.Select (x => x.CloneEntity (businessContext));
-
-			invoice.Lines.AddRange (copy);
-
-			invoice.Lines.OfType<ArticleDocumentItemEntity> ().ForEach (x => AffairActions.UpdateBillingArticleLine (x));
-
-			return invoice;
+			return document;
 		}
 
-		private static void UpdateBillingArticleLine(ArticleDocumentItemEntity line)
+		private static void SetupInvoice(BusinessDocumentEntity document)
+		{
+			document.BillingStatus         = Finance.BillingStatus.DebtorBillOpen;
+			document.BillingDate           = Date.Today;
+			
+			document.Lines.OfType<ArticleDocumentItemEntity> ().ForEach (x => AffairActions.SetupInvoiceArticleDocumentItem (x));
+		}
+
+
+		private static void SetupInvoiceArticleDocumentItem(ArticleDocumentItemEntity line)
 		{
 			var ordered = line.GetOrderedQuantity ();
-
-			if (ordered == 0)
-			{
-				line.BillingUnitPriceBeforeTax = null;
-			}
-			else
-			{
-				line.BillingUnitPriceBeforeTax = line.ResultingLinePriceBeforeTax / ordered;
-			}
+			line.BillingUnitPriceBeforeTax = (ordered == 0) ? null : line.ResultingLinePriceBeforeTax / ordered;
 		}
 
 
-		private static void CreateDocument(DocumentType docTypeOld, DocumentType docTypeNew, System.Func<IBusinessContext, DocumentMetadataEntity, BusinessDocumentEntity> businessDocumentResolver = null)
+		private static void CreateDocument(DocumentType docTypeOld, DocumentType docTypeNew)
 		{
 			var workflowEngine  = WorkflowExecutionEngine.Current;
 			var businessContext = workflowEngine.BusinessContext;
@@ -100,7 +89,7 @@ namespace Epsitec.Cresus.Core.Business.Actions
 				var documentMetadata = businessContext.CreateEntity<DocumentMetadataEntity> ();
 
 				documentMetadata.DocumentCategory = categoryRepo.Find (docTypeNew).First ();
-				documentMetadata.BusinessDocument = businessDocumentResolver == null ? currentDocument.BusinessDocument : businessDocumentResolver (businessContext, currentDocument);
+				documentMetadata.BusinessDocument = AffairActions.CloneBusinessDocument (businessContext, currentDocument);
 
 				currentAffair.Documents.Add (documentMetadata);
 				
