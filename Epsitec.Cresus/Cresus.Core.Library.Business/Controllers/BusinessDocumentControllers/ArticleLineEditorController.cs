@@ -42,36 +42,73 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Margins = new Margins (0, 0, 0, 5),
 			};
 
+			//	Article.
+			{
+				var articleController = new SelectionController<ArticleDefinitionEntity> (this.accessData.BusinessContext)
+				{
+					ValueGetter         = () => this.Entity.ArticleDefinition,
+					ValueSetter         = x => this.Entity.ArticleDefinition = x,
+					ReferenceController = new ReferenceController (() => this.Entity.ArticleDefinition),
+				};
+
+				var articleField = builder.CreateCompactAutoCompleteTextField (null, "", articleController);
+				this.PlaceLabelAndField (line1, 70, 400, "Article", articleField.Parent);
+			}
+
+			if (this.Quantity != null)
+			{
+				//	Quantité.
+				var quantityField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Quantity.Quantity, x => this.Quantity.Quantity = x));
+				this.PlaceLabelAndField (line1, 50, 80, "Quantité", quantityField);
+
+				//	Unité.
+				var unitController = new SelectionController<UnitOfMeasureEntity> (this.accessData.BusinessContext)
+				{
+					ValueGetter         = () => this.Quantity.Unit,
+					ValueSetter         = x => this.Quantity.Unit = x,
+					ReferenceController = new ReferenceController (() => this.Quantity.Unit),
+				};
+
+				var unitField = builder.CreateCompactAutoCompleteTextField (null, "", unitController);
+				this.PlaceLabelAndField (line1, 25, 80, "Unité", unitField.Parent);
+			}
+
+			//	Choix des paramètres.
 			var line2 = new FrameBox
+			{
+				Parent = this.tileContainer,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 259, 0, 0),  // TODO: dépend de la largeur totale (800) et de la largeur des widgets éditables (400) !
+			};
+
+			{
+				this.parameterController = new ArticleParameterControllers.ValuesArticleParameterController (this.tileContainer, null);
+				this.parameterController.CallbackParameterChanged = this.ParameterChanged;
+				this.parameterController.CreateUI (line2);
+				this.parameterController.UpdateUI (this.Entity);
+			}
+
+			//	Texte de remplacement.
+			var line3 = new FrameBox
 			{
 				Parent = this.tileContainer,
 				Dock = DockStyle.Top,
 				PreferredHeight = 80,
 			};
 
-			//	Article.
-			var articleController = new SelectionController<ArticleDefinitionEntity> (this.accessData.BusinessContext)
 			{
-				ValueGetter         = () => this.Entity.ArticleDefinition,
-				ValueSetter         = x => this.Entity.ArticleDefinition = x,
-				ReferenceController = new ReferenceController (() => this.Entity.ArticleDefinition),
-			};
+				var replacementBox = new FrameBox ();
 
-			var unitField = builder.CreateCompactAutoCompleteTextField (null, "", articleController);
-			this.PlaceLabelAndField (line1, 60, 400, "Article", unitField.Parent);
+				this.toolbarController = new ArticleParameterControllers.ArticleParameterToolbarController (this.tileContainer);
+				this.toolbarController.CreateUI (replacementBox, null);
 
-			//	Texte de remplacement.
-			var replacementBox = new FrameBox ();
+				this.articleDescriptionTextField = builder.CreateTextFieldMulti (replacementBox, DockStyle.None, 0, Marshaler.Create (() => this.GetArticleDescription (), this.SetArticleDescription));
+				this.articleDescriptionTextField.Dock = DockStyle.StackFill;
 
-			var toolbarController = new ArticleParameterControllers.ArticleParameterToolbarController (this.tileContainer);
-			toolbarController.CreateUI (replacementBox, null);
+				this.toolbarController.UpdateUI (this.Entity, this.articleDescriptionTextField);
 
-			var dateField = builder.CreateTextFieldMulti (replacementBox, DockStyle.None, 0, Marshaler.Create (() => this.GetArticleDescription (), this.SetArticleDescription));
-			dateField.Dock = DockStyle.StackFill;
-
-			toolbarController.UpdateUI (this.Entity, dateField);
-
-			this.PlaceLabelAndField (line2, 60, 400, "Désignation", replacementBox);
+				this.PlaceLabelAndField (line3, 70, 400, "Désignation", replacementBox);
+			}
 		}
 
 		public override FormattedText TitleTile
@@ -110,7 +147,29 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
+
+		private void ParameterChanged(AbstractArticleParameterDefinitionEntity parameterDefinitionEntity)
+		{
+			//	Cette méthode est appelée lorsqu'un paramètre a été changé.
+			ArticleParameterControllers.ArticleParameterToolbarController.UpdateTextFieldParameter (this.Entity, this.articleDescriptionTextField);
+		}
+
 	
+		private ArticleQuantityEntity Quantity
+		{
+			get
+			{
+				if (this.Entity.ArticleQuantities.Count == 0)
+				{
+					return null;
+				}
+				else
+				{
+					return this.Entity.ArticleQuantities[0];
+				}
+			}
+		}
+
 		private ArticleDocumentItemEntity Entity
 		{
 			get
@@ -118,5 +177,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				return this.entity as ArticleDocumentItemEntity;
 			}
 		}
+
+
+		private ArticleParameterControllers.ValuesArticleParameterController	parameterController;
+		private ArticleParameterControllers.ArticleParameterToolbarController	toolbarController;
+		private TextFieldMultiEx												articleDescriptionTextField;
 	}
 }
