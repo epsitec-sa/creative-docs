@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -11,7 +11,6 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Orchestrators;
-using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
@@ -494,6 +493,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			else
 			{
 				var tile = new SummaryTile ();
+
 				item.Tile = tile;
 			}
 			
@@ -502,39 +502,40 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void CreateEditionTile(TileDataItem item, UIBuilder builder)
 		{
-			var tile = new EditionTile
-			{
-				Controller = item,
-				FullHeightStretch = item.FullHeightStretch,
-			};
-
-			item.CreateEditionUI (tile, builder);  // peuple la tuile
+			var tile = TileContainerController.CreateEditionTile (item);
+			item.CreateEditionUI (tile, builder);
 			item.Tile = tile;
 		}
 
 		private void CreateCustomizedTile(TileDataItem item, UIBuilder builder)
 		{
-			var tile = new EditionTile
-			{
-				Controller = item,
-			};
-
-			item.CreateCustomizedUI (tile, builder);  // peuple la tuile
+			var tile = TileContainerController.CreateEditionTile (item);
+			item.CreateCustomizedUI (tile, builder);
 			item.Tile = tile;
 		}
 
+		private static EditionTile CreateEditionTile(TileDataItem item)
+		{
+			return new EditionTile
+			{
+				Controller = item,
+			};
+		}
+		
 		private void CreateTitleTile(TileDataItem item)
 		{
 			//	Crée la tuile de titre, parente des SummaryTile et EditionTile.
 			System.Diagnostics.Debug.Assert (item.TitleTile == null);
 			System.Diagnostics.Debug.Assert (item.Tile != null);
 
-			item.TitleTile = new TitleTile ();  // item.TitleTile aura item.Tile dans sa collection Items !
-			System.Diagnostics.Debug.Assert (item.TitleTile.Items.Contains (item.Tile));
+			item.TitleTile = new TitleTile ()  // item.TitleTile aura item.Tile dans sa collection Items !
+			{
+				IsReadOnly = (item.DataType != TileDataType.EditableItem),  // fond bleuté si tuile d'édition
+				Frameless  = item.Frameless,
+				Dock = item.FullHeightStretch ? DockStyle.StackFill : DockStyle.Stacked,
+			};
 
-			item.TitleTile.IsReadOnly = (item.DataType != TileDataType.EditableItem);  // fond bleuté si tuile d'édition
-			item.TitleTile.Frameless = item.Frameless;
-			item.TitleTile.FullHeightStretch = item.FullHeightStretch;
+			System.Diagnostics.Debug.Assert (item.TitleTile.Items.Contains (item.Tile));
 
 			this.CreateTitleTileClickHandler (item, item.TitleTile);
 		}
@@ -753,7 +754,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			foreach (var titleTile in titleTiles)
 			{
 				titleTile.Parent  = parent;
-				titleTile.Dock    = titleTile.FullHeightStretch ? DockStyle.StackFill : DockStyle.Stacked;
 				titleTile.Margins = new Margins (0, 0, 0, -1);
 			}
 

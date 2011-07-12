@@ -62,12 +62,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			set;
 		}
 
-		public bool								FullHeightStretch
-		{
-			get;
-			set;
-		}
-
 		/// <summary>
 		/// Gets the container padding, which excludes the space used by the arrow.
 		/// </summary>

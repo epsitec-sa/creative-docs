@@ -332,7 +332,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		void Common.Widgets.Collections.IWidgetCollectionHost<GenericTile>.NotifyInsertion(GenericTile widget)
 		{
-			widget.Dock   = widget.FullHeightStretch ? DockStyle.StackFill : DockStyle.Stacked;
+			widget.Dock   = this.Dock;
 			widget.Parent = this.mainPanel;
 
 			this.AttachEventHandlers (widget);
