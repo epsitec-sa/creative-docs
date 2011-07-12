@@ -121,11 +121,8 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 
 		public void Add(ArticleItemPriceCalculator calculator)
 		{
-			var item  = calculator.ArticleItem;
-			var tax   = calculator.Tax;
-
 			this.members.Add (calculator);
-			this.Accumulate (tax, calculator.NotDiscountable);
+			this.Accumulate (calculator.Tax, calculator.NotDiscountable);
 		}
 
 		public void Add(SubTotalItemPriceCalculator calculator)
