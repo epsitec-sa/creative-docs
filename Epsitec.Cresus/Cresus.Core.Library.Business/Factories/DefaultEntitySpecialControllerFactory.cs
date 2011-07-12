@@ -9,6 +9,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Factories
 {
+	/// <summary>
+	/// The <c>DefaultEntitySpecialControllerFactory&lt;T&gt;</c> class is the base class
+	/// for all special controller factories.
+	/// </summary>
+	/// <typeparam name="T">The type of the entity.</typeparam>
 	public abstract class DefaultEntitySpecialControllerFactory<T> : IEntitySpecialControllerFactory
 			where T : AbstractEntity
 	{
@@ -23,15 +28,21 @@ namespace Epsitec.Cresus.Core.Factories
 		{
 			var controller = this.Create (container, entity as T, mode);
 			var disposable = controller as System.IDisposable;
-			var autoUpdate = controller as IWidgetUpdater;
+			var updater    = controller as IWidgetUpdater;
 
 			if (disposable != null)
 			{
+				//	Make sure we dispose the controller when the container gets deleted:
+
 				container.Disposed += x => disposable.Dispose ();
 			}
-			if (autoUpdate != null)
+
+			if (updater != null)
 			{
-				container.Add (autoUpdate);
+				//	Automatically update the controller when something changes in the
+				//	business context :
+
+				container.Add (updater);
 			}
 
 			return controller;

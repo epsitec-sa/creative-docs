@@ -651,7 +651,7 @@ namespace Epsitec.Common.Widgets
 				index++;
 			}
 			
-			this.freeCount                  = free;
+			this.freeCount               = free;
 			this.bunchOfFreeIndexesCount = count;
 			
 			System.Diagnostics.Debug.Assert (this.bunchOfFreeIndexesCount == System.Math.Min (this.bunchOfFreeIndexes.Length, this.freeCount));
