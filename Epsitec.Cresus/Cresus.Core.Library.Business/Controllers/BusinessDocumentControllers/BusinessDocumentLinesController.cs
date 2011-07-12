@@ -142,18 +142,19 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			//	Insère une nouvelle ligne d'article.
 			int? sel = this.linesController.LastSelection;
+			int index = 0;
 
 			if (sel != null)
 			{
 				var info = this.lineInformations[sel.Value];
-
-				var newLine = this.accessData.BusinessContext.CreateEntity<ArticleDocumentItemEntity> ();
-				newLine.GroupIndex = 1;
-
-				this.accessData.BusinessDocumentEntity.Lines.Insert (info.LineIndex+1, newLine);
-
-				this.UpdateAfterChange (newLine, null);
+				index = info.LineIndex+1;
 			}
+
+			var newLine = this.accessData.BusinessContext.CreateEntity<ArticleDocumentItemEntity> ();
+			newLine.GroupIndex = 1;
+
+			this.accessData.BusinessDocumentEntity.Lines.Insert (index, newLine);
+			this.UpdateAfterChange (newLine, null);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.CreateText)]
@@ -161,19 +162,20 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			//	Insère une nouvelle ligne de texte.
 			int? sel = this.linesController.LastSelection;
+			int index = 0;
 
 			if (sel != null)
 			{
 				var info = this.lineInformations[sel.Value];
-
-				var newLine = this.accessData.BusinessContext.CreateEntity<TextDocumentItemEntity> ();
-				newLine.Text = "Coucou !!!";
-				newLine.GroupIndex = 1;
-
-				this.accessData.BusinessDocumentEntity.Lines.Insert (info.LineIndex+1, newLine);
-
-				this.UpdateAfterChange (newLine, null);
+				index = info.LineIndex+1;
 			}
+
+			var newLine = this.accessData.BusinessContext.CreateEntity<TextDocumentItemEntity> ();
+			newLine.Text = "Coucou !!!";
+			newLine.GroupIndex = 1;
+
+			this.accessData.BusinessDocumentEntity.Lines.Insert (index, newLine);
+			this.UpdateAfterChange (newLine, null);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.CreateTitle)]
@@ -189,7 +191,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				index = info.LineIndex+1;
 			}
 
-
 			var newLine = this.accessData.BusinessContext.CreateEntity<TextDocumentItemEntity> ();
 			newLine.Text = "Titre !!!";
 			newLine.GroupIndex = 1;
@@ -202,12 +203,40 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public void ProcessCreateDiscount()
 		{
 			//	Insère une nouvelle ligne de rabais.
+			int? sel = this.linesController.LastSelection;
+			int index = 0;
+
+			if (sel != null)
+			{
+				var info = this.lineInformations[sel.Value];
+				index = info.LineIndex+1;
+			}
+
+			var newLine = this.accessData.BusinessContext.CreateEntity<SubTotalDocumentItemEntity> ();
+			newLine.GroupIndex = 1;
+
+			this.accessData.BusinessDocumentEntity.Lines.Insert (index, newLine);
+			this.UpdateAfterChange (newLine, null);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.CreateTax)]
 		public void ProcessCreateTax()
 		{
 			//	Insère une nouvelle ligne de taxe.
+			int? sel = this.linesController.LastSelection;
+			int index = 0;
+
+			if (sel != null)
+			{
+				var info = this.lineInformations[sel.Value];
+				index = info.LineIndex+1;
+			}
+
+			var newLine = this.accessData.BusinessContext.CreateEntity<TaxDocumentItemEntity> ();
+			newLine.GroupIndex = 1;
+
+			this.accessData.BusinessDocumentEntity.Lines.Insert (index, newLine);
+			this.UpdateAfterChange (newLine, null);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.CreateQuantity)]
@@ -223,18 +252,23 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				if (line is ArticleDocumentItemEntity)
 				{
-					var article = line as ArticleDocumentItemEntity;
-					var quantity = article.ArticleQuantities[info.SublineIndex];
+					var quantityColumnEntity = this.SearchArticleQuantityColumnEntity (ArticleQuantityType.Delayed);
 
-					var newQuantity = this.accessData.BusinessContext.CreateEntity<ArticleQuantityEntity> ();
-					newQuantity.Quantity = 1;
-					newQuantity.Unit = quantity.Unit;
-					newQuantity.QuantityColumn = this.SearchArticleQuantityColumnEntity (ArticleQuantityType.Delayed);
-					newQuantity.BeginDate = new Date (Date.Today.Ticks + Time.TicksPerDay*7);  // arbitrairement dans une semaine !
+					if (quantityColumnEntity != null)
+					{
+						var article = line as ArticleDocumentItemEntity;
+						var quantity = article.ArticleQuantities[info.SublineIndex];
 
-					article.ArticleQuantities.Add (newQuantity);
+						var newQuantity = this.accessData.BusinessContext.CreateEntity<ArticleQuantityEntity> ();
+						newQuantity.Quantity = 1;
+						newQuantity.Unit = quantity.Unit;
+						newQuantity.QuantityColumn = quantityColumnEntity;
+						newQuantity.BeginDate = new Date (Date.Today.Ticks + Time.TicksPerDay*7);  // arbitrairement dans une semaine !
 
-					this.UpdateAfterChange (line, newQuantity);
+						article.ArticleQuantities.Add (newQuantity);
+
+						this.UpdateAfterChange (line, newQuantity);
+					}
 				}
 			}
 		}
