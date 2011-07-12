@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				Parent = parent,
 				Dock = DockStyle.Left,
-				PreferredWidth = labelWidth + 5 + fieldWidth + 10,
+				PreferredWidth = labelWidth + 5 + fieldWidth,
 			};
 
 			var label = new StaticText
@@ -66,7 +66,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			field.Parent = box;
 			field.Dock = DockStyle.Fill;
-			field.Margins = new Margins (0, 10, 0, 0);
 
 			return box;
 		}
