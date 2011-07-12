@@ -57,11 +57,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Margins = new Margins (0, 0, 0, 5),
 			};
 
+			//	Quantité.
 			var quantityField = this.accessData.UIBuilder.CreateTextField (box, 0, null, Marshaler.Create (() => this.Entity.Quantity, x => this.Entity.Quantity = x));
 			this.PlaceLabelAndField (line1, 50, 80, "Quantité", quantityField);
 
-			// TODO: Ne fonctionne pas, pfff...
-
+			//	Unité.
 			var unitController = new SelectionController<UnitOfMeasureEntity> (this.accessData.BusinessContext)
 			{
 				ValueGetter         = () => this.Entity.Unit,
@@ -72,11 +72,18 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			var unitField = this.accessData.UIBuilder.CreateCompactAutoCompleteTextField (parent, "", unitController);
 			this.PlaceLabelAndField (line1, 25, 80, "Unité", unitField.Parent);
 
-			// TODO: Ne fonctionne pas, pfff...
-			//var typeController = new ReferenceController (() => this.Entity.QuantityColumn);
-			//var typeField = this.accessData.UIBuilder.CreateAutoCompleteTextField (parent, null, x => this.Entity.QuantityColumn = x as ArticleQuantityColumnEntity, typeController);
-			//this.PlaceLabelAndField (line1, 60, 100, "Type", typeField.Parent);
+			//	Type.
+			var typeController = new SelectionController<ArticleQuantityColumnEntity> (this.accessData.BusinessContext)
+			{
+				ValueGetter         = () => this.Entity.QuantityColumn,
+				ValueSetter         = x => this.Entity.QuantityColumn = x,
+				ReferenceController = new ReferenceController (() => this.Entity.QuantityColumn),
+			};
 
+			var typeField = this.accessData.UIBuilder.CreateCompactAutoCompleteTextField (parent, "", typeController);
+			this.PlaceLabelAndField (line1, 60, 100, "Type", typeField.Parent);
+
+			//	Date.
 			var dateField = this.accessData.UIBuilder.CreateTextField (box, 0, null, Marshaler.Create (() => this.Entity.BeginDate, x => this.Entity.BeginDate = x));
 			this.PlaceLabelAndField (line1, 25, 100, "Date", dateField);
 		}

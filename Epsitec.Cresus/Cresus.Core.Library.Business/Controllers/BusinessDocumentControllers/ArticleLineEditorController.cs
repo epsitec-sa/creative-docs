@@ -50,10 +50,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Margins = new Margins (0, 0, 0, 5),
 			};
 
-			// TODO: Ne fonctionne pas, pfff...
-			//var referenceController = new ReferenceController (() => this.Entity.ArticleDefinition);
-			//var field = this.accessData.UIBuilder.CreateAutoCompleteTextField (parent, null, x => this.Entity.ArticleDefinition = x as ArticleDefinitionEntity, referenceController);
-			//this.PlaceLabelAndField (line1, 50, 400, "Article", field.Parent);
+			//	Article.
+			var articleController = new SelectionController<ArticleDefinitionEntity> (this.accessData.BusinessContext)
+			{
+				ValueGetter         = () => this.Entity.ArticleDefinition,
+				ValueSetter         = x => this.Entity.ArticleDefinition = x,
+				ReferenceController = new ReferenceController (() => this.Entity.ArticleDefinition),
+			};
+
+			var unitField = this.accessData.UIBuilder.CreateCompactAutoCompleteTextField (parent, "", articleController);
+			this.PlaceLabelAndField (line1, 50, 400, "Article", unitField.Parent);
 		}
 
 		public override FormattedText TitleTile
