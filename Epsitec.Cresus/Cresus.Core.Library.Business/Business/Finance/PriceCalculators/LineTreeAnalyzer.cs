@@ -33,9 +33,14 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			var analyzer = new LineTreeAnalyzer (context, lines);
 			
 			analyzer.FixSubTotals ();
+			analyzer.FixFooterSection ();
 		}
 
-		
+
+		/// <summary>
+		/// Fixes the sub-totals found in the various line groups, but don't touch the
+		/// footer (group zero) which needs some special consideration.
+		/// </summary>
 		private void FixSubTotals()
 		{
 			this.state = State.None;
@@ -52,12 +57,65 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 					this.SwitchGroups ();
 				}
 
+				if (this.currentGroupIndex == 0)
+				{
+					break;
+				}
+
 				this.UpdateStateAndRemoveUselessSubTotals (line);
 			}
 
 			System.Diagnostics.Debug.Assert (this.activeGroupLevel == 0);
 			System.Diagnostics.Debug.Assert (this.activeGroupIndex == 0);
 			System.Diagnostics.Debug.Assert (this.stack.Count == 0);
+		}
+
+		/// <summary>
+		/// Fixes the footer section by adding/removing sub-totals in group zero.
+		/// </summary>
+		private void FixFooterSection()
+		{
+			bool foundArticle  = false;
+			bool foundSubTotal = false;
+
+			for (this.lineIndex = 0; this.lineIndex < this.lines.Count; this.lineIndex++)
+			{
+				var line = lines[this.lineIndex];
+
+				foundArticle = foundArticle || (line is ArticleDocumentItemEntity);
+				
+				if (line.GroupIndex == 0)
+				{
+					if (line is SubTotalDocumentItemEntity)
+					{
+						//	If there are any articles in the document, then we will have to
+						//	make sure that there is at least on terminal sub-total; if there
+						//	are no articles at all, remove any sub-total...
+
+						if (foundArticle)
+						{
+							foundSubTotal = true;
+						}
+						else
+						{
+							this.lines.RemoveAt (this.lineIndex--);
+						}
+					}
+					else if (line is TaxDocumentItemEntity)
+					{
+						//	If we reach the VAT lines without having found a sub-total, add
+						//	one, or else we won't have a properly formatted invoice.
+
+						if ((foundSubTotal == false) &&
+							(foundArticle))
+						{
+							this.AddFooterSubTotal ();
+						}
+
+						break;
+					}
+				}
+			}
 		}
 
 		private void SwitchGroups()
@@ -112,7 +170,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			this.activeGroupIndex = this.currentGroupIndex;
 		}
-		
+
 		private void AddMissingSubTotal(int groupIndex)
 		{
 			var line = this.context.CreateEntity<SubTotalDocumentItemEntity> ();
@@ -120,6 +178,17 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			line.GroupIndex = groupIndex;
 			line.TextForPrimaryPrice   = "Sous-total avant rabais";
 			line.TextForResultingPrice = "Sous-total";
+
+			this.lines.Insert (this.lineIndex++, line);
+		}
+
+		private void AddFooterSubTotal()
+		{
+			var line = this.context.CreateEntity<SubTotalDocumentItemEntity> ();
+
+			line.GroupIndex = 0;
+			line.TextForPrimaryPrice   = "Total avant rabais";
+			line.TextForResultingPrice = "Total";
 
 			this.lines.Insert (this.lineIndex++, line);
 		}

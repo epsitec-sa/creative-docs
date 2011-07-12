@@ -322,7 +322,12 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			decimal discountVat   = line.PrimaryTax.Value            - line.ResultingTax.Value;
 
 			//	3) Ligne "total après rabais".
-			FormattedText sumText = "Total après rabais";
+			FormattedText sumText = line.TextForResultingPrice;
+			
+			if (sumText.IsNullOrEmpty)
+			{
+				sumText = "Total après rabais";
+			}
 
 			decimal sumPrice = line.ResultingPriceBeforeTax.Value;
 			decimal sumVat   = line.ResultingTax.Value;
