@@ -23,7 +23,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
-	public class BusinessDocumentLinesController
+	public sealed class BusinessDocumentLinesController : System.IDisposable
 	{
 		public BusinessDocumentLinesController(AccessData accessData)
 		{
@@ -67,6 +67,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.linesController.UpdateUI (this.lineInformations.Count, this.CallbackGetLineInformations, this.CallbackGetCellContent, sel);
 			this.UpdateCommands ();
 		}
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			this.commandContext.Dispose ();
+			this.commandDispatcher.Dispose ();
+		}
+
+		#endregion
 
 
 		private LineInformations CallbackGetLineInformations(int index)

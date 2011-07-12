@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 	/// <summary>
 	/// Ce contrôleur gère la définition de la description courte ou longue d'un article.
 	/// </summary>
-	public class BusinessDocumentLinesController : IEntitySpecialController
+	public class BusinessDocumentLinesController : IEntitySpecialController, System.IDisposable
 	{
 		public BusinessDocumentLinesController(TileContainer tileContainer, BusinessDocumentEntity businessDocumentEntity, int mode)
 		{
@@ -68,10 +68,23 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 			access.DocumentMetadataEntity = documentMetadataEntity;
 			access.BusinessDocumentEntity = this.businessDocumentEntity;
 
-			var c = new BusinessDocumentControllers.BusinessDocumentLinesController (access);
-			c.CreateUI (box);
-			c.UpdateUI ();
+			this.controller = new BusinessDocumentControllers.BusinessDocumentLinesController (access);
+			this.controller.CreateUI (box);
+			this.controller.UpdateUI ();
 		}
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			if (this.controller != null)
+			{
+				this.controller.Dispose ();
+				this.controller = null;
+			}
+		}
+
+		#endregion
 
 
 		private class Factory : DefaultEntitySpecialControllerFactory<BusinessDocumentEntity>
@@ -91,5 +104,6 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 		private BusinessContext businessContext;
 		private DataContext dataContext;
 		private CoreData coreData;
+		private BusinessDocumentControllers.BusinessDocumentLinesController controller;
 	}
 }
