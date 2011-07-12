@@ -71,6 +71,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private LineInformations CallbackGetLineInformations(int index)
 		{
+			//	Retourne les informations sur l'état d'une ligne du tableau.
 			return this.lineInformations[index];
 		}
 
@@ -289,6 +290,22 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private void ProcessDuplicate()
 		{
 			//	Duplique la ligne sélectionnée.
+			int? sel = this.linesController.LastSelection;
+
+			if (sel != null)
+			{
+				var info = this.lineInformations[sel.Value];
+				var line = this.accessData.BusinessDocumentEntity.Lines.ElementAt (info.LineIndex);
+				var index = info.LineIndex;
+
+				if (index+1 < this.accessData.BusinessDocumentEntity.Lines.Count)
+				{
+					var copy = line.CloneEntity (this.accessData.BusinessContext);
+					this.accessData.BusinessDocumentEntity.Lines.Insert (index+1, copy);
+
+					this.UpdateAfterChange (copy, null);
+				}
+			}
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.Delete)]
@@ -414,7 +431,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.MoveUp).Enable   = selection.Count == 1 && (isArticle || isText || isSubTotal);
 			this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.MoveDown).Enable = selection.Count == 1 && (isArticle || isText || isSubTotal);
 
-			this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.Duplicate).Enable = selection.Count != 0 && !isEndTotal;
+			this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.Duplicate).Enable = selection.Count == 1 && !isEndTotal;
 			this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.Delete).Enable    = selection.Count != 0 && !isEndTotal;
 
 			this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.Group).Enable   = selection.Count != 0 && !isEndTotal;
