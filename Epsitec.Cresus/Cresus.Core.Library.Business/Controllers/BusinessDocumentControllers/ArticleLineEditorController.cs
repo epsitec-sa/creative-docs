@@ -42,6 +42,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Margins = new Margins (0, 0, 0, 5),
 			};
 
+			var line2 = new FrameBox
+			{
+				Parent = this.tileContainer,
+				Dock = DockStyle.Top,
+				PreferredHeight = 80,
+			};
+
 			//	Article.
 			var articleController = new SelectionController<ArticleDefinitionEntity> (this.accessData.BusinessContext)
 			{
@@ -51,7 +58,20 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			};
 
 			var unitField = builder.CreateCompactAutoCompleteTextField (null, "", articleController);
-			this.PlaceLabelAndField (line1, 50, 400, "Article", unitField.Parent);
+			this.PlaceLabelAndField (line1, 60, 400, "Article", unitField.Parent);
+
+			//	Texte de remplacement.
+			var replacementBox = new FrameBox ();
+
+			var toolbarController = new ArticleParameterControllers.ArticleParameterToolbarController (this.tileContainer);
+			toolbarController.CreateUI (replacementBox, null);
+
+			var dateField = builder.CreateTextFieldMulti (replacementBox, DockStyle.None, 0, Marshaler.Create (() => this.GetArticleDescription (), this.SetArticleDescription));
+			dateField.Dock = DockStyle.StackFill;
+
+			toolbarController.UpdateUI (this.Entity, dateField);
+
+			this.PlaceLabelAndField (line2, 60, 400, "Désignation", replacementBox);
 		}
 
 		public override FormattedText TitleTile
@@ -63,6 +83,34 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
+		private FormattedText GetArticleDescription()
+		{
+			return ArticleDocumentItemHelper.GetArticleDescription (this.Entity);
+		}
+
+		private void SetArticleDescription(FormattedText value)
+		{
+			//	The replacement text of the article item might be defined in several different
+			//	languages; compare and replace only the text for the active language :
+
+			string articleDescription = value.IsNull ? null : TextFormatter.ConvertToText (value);
+			string defaultDescription = TextFormatter.ConvertToText (this.Entity.ArticleDefinition.Description);
+			string currentReplacement = this.Entity.ReplacementText.IsNull ? null : TextFormatter.ConvertToText (this.Entity.ReplacementText);
+
+			if (articleDescription == defaultDescription)  // description standard ?
+			{
+				articleDescription = null;
+			}
+
+			if (currentReplacement != articleDescription)
+			{
+				MultilingualText text = new MultilingualText (this.Entity.ReplacementText);
+				text.SetText (TextFormatter.CurrentLanguageId, articleDescription);
+				this.Entity.ReplacementText = text.GetGlobalText ();
+			}
+		}
+
+	
 		private ArticleDocumentItemEntity Entity
 		{
 			get
