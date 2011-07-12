@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 			public override AbstractEntity Clone(IBusinessContext businessContext, AbstractEntity entity)
 			{
-				var cloneable = entity as ICloneable<T>;
+				var cloneable = entity as ICopyableEntity<T>;
 
 				if (cloneable == null)
 				{

@@ -11,7 +11,7 @@ using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class ArticleQuantityEntity : ICloneable<ArticleQuantityEntity>
+	public partial class ArticleQuantityEntity : ICopyableEntity<ArticleQuantityEntity>
 	{
 		public override FormattedText GetSummary()
 		{
@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		#region ICloneable<ArticleQuantityEntity> Members
 
-		void ICloneable<ArticleQuantityEntity>.CopyTo(IBusinessContext businessContext, ArticleQuantityEntity copy)
+		void ICopyableEntity<ArticleQuantityEntity>.CopyTo(IBusinessContext businessContext, ArticleQuantityEntity copy)
 		{
 			copy.BeginDate          = this.BeginDate;
 			copy.EndDate            = this.EndDate;

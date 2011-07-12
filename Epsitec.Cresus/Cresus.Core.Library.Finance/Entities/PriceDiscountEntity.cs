@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class PriceDiscountEntity : ICloneable<PriceDiscountEntity>
+	public partial class PriceDiscountEntity : ICopyableEntity<PriceDiscountEntity>
 	{
 		public override FormattedText GetSummary()
 		{
@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		#region ICloneable<PriceDiscountEntity> Members
 
-		void ICloneable<PriceDiscountEntity>.CopyTo(IBusinessContext businessContext, PriceDiscountEntity copy)
+		void ICopyableEntity<PriceDiscountEntity>.CopyTo(IBusinessContext businessContext, PriceDiscountEntity copy)
 		{
 			copy.Text               = this.Text;
 			copy.DiscountRate       = this.DiscountRate;
