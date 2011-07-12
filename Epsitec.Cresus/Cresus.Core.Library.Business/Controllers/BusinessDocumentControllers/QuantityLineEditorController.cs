@@ -45,8 +45,20 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				Parent = box,
 				Dock = DockStyle.Top,
+				PreferredHeight = 20,
+				Margins = new Margins (0, 0, 0, 5),
 			};
 
+			var line2 = new FrameBox
+			{
+				Parent = box,
+				Dock = DockStyle.Top,
+				PreferredHeight = 20,
+				Margins = new Margins (0, 0, 0, 5),
+			};
+
+			var quantityField = this.accessData.UIBuilder.CreateTextFieldMulti (box, DockStyle.Left, 40, Marshaler.Create (() => this.Entity.Quantity, x => this.Entity.Quantity = x));
+			this.PlaceLabelAndField (line1, 50, 80, "Quantité", quantityField);
 		}
 
 		public override FormattedText TitleTile

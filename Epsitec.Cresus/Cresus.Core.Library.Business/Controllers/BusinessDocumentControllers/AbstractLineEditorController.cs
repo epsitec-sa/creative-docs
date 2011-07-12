@@ -45,6 +45,33 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
+		protected FrameBox PlaceLabelAndField(Widget parent, int labelWidth, int fieldWidth, FormattedText labelText, Widget field)
+		{
+			var box = new FrameBox
+			{
+				Parent = parent,
+				Dock = DockStyle.Left,
+				PreferredWidth = labelWidth + 5 + fieldWidth + 10,
+			};
+
+			var label = new StaticText
+			{
+				FormattedText = labelText,
+				ContentAlignment = Common.Drawing.ContentAlignment.TopRight,
+				Parent = box,
+				Dock = DockStyle.Left,
+				PreferredWidth = labelWidth + 5,
+				Margins = new Margins (0, 5, 2, 0),
+			};
+
+			field.Parent = box;
+			field.Dock = DockStyle.Fill;
+			field.Margins = new Margins (0, 10, 0, 0);
+
+			return box;
+		}
+
+
 		protected readonly AccessData					accessData;
 
 		protected AbstractEntity						entity;

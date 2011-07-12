@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			this.editorTile = new FrameBox
 			{
-				PreferredHeight = 60,
+				PreferredHeight = 100,
 				Margins = new Margins (0, 0, 0, 0),
 				Padding = new Margins (5),
 				Parent = parent,

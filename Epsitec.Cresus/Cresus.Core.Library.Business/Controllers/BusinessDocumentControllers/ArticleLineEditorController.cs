@@ -46,11 +46,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				Parent = box,
 				Dock = DockStyle.Top,
+				PreferredHeight = 20,
+				Margins = new Margins (0, 0, 0, 5),
 			};
 
 			// TODO: Ne fonctionne pas, pfff...
 			var referenceController = new ReferenceController (() => this.Entity.ArticleDefinition);
-			this.accessData.UIBuilder.CreateAutoCompleteTextField (parent, "Article", x => this.Entity.ArticleDefinition = x as ArticleDefinitionEntity, referenceController);
+			var field = this.accessData.UIBuilder.CreateAutoCompleteTextField (parent, null, x => this.Entity.ArticleDefinition = x as ArticleDefinitionEntity, referenceController);
+			this.PlaceLabelAndField (line1, 50, 400, "Article", field.Parent);
 		}
 
 		public override FormattedText TitleTile
