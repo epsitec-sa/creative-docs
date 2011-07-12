@@ -409,7 +409,7 @@ namespace Epsitec.Common.Dialogs
 			CommandContext.SetContext (this.window, this.context);
 		}
 
-		private CommandState RegisterCommand(Command command, SimpleCallback handler)
+		private CommandState RegisterCommand(Command command, System.Action handler)
 		{
 			this.dispatcher.Register (command, handler);
 			return this.context.GetCommandState (command);

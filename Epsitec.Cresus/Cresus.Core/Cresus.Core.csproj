@@ -545,6 +545,9 @@
     <EmbeddedResource Include="Images\Lines.CreateQuantity.icon" />
     <EmbeddedResource Include="Images\Lines.MoveDown.icon" />
     <EmbeddedResource Include="Images\Lines.MoveUp.icon" />
+    <EmbeddedResource Include="Images\Edition.DeleteRecord.icon" />
+    <EmbeddedResource Include="Images\Edition.DeleteRecord.Overlay.icon" />
+    <EmbeddedResource Include="Images\Edition.NewRecord.Overlay.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

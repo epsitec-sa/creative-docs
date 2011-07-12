@@ -100,6 +100,47 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
+		public void RemoveActiveEntity()
+		{
+			int active = this.scrollList.SelectedItemIndex;
+			var entity = this.collection.RemoveAt (active);
+
+			if (entity != null)
+			{
+				this.scrollList.Items.RemoveAt (active);
+
+				var lifetime = entity as ILifetime;
+
+				if (lifetime != null)
+				{
+					lifetime.IsArchive = true;
+				}
+				else
+				{
+					this.browserDataContext.DeleteEntity (entity);
+				}
+				
+				this.browserDataContext.SaveChanges ();
+
+				if (active >= this.collection.Count)
+				{
+					active = this.collection.Count-1;
+				}
+
+				if (active >= 0)
+				{
+					this.activeEntityKey = this.collection.GetEntityKey (active);
+					this.scrollList.SelectedItemIndex = active;
+				}
+				else
+				{
+					this.activeEntityKey = null;
+					this.scrollList.SelectedItemIndex = -1;
+				}
+
+				this.SelectActiveEntity ();
+			}
+		}
 		
 		public override IEnumerable<CoreController> GetSubControllers()
 		{

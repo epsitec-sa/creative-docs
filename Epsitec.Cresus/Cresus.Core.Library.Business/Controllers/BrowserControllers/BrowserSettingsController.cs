@@ -34,7 +34,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			base.CreateUI (container);
 
 			this.CreateCommandInfrastructure (container);
-			this.CreateUINewItemIconButton (container);
+
+			this.CreateUIButtonNewCommand (container);
+			this.CreateUIButtonDeleteCommand (container);
 		}
 
 		internal void NotifyBrowserSettingsModeChanged(BrowserSettingsMode mode)
@@ -55,19 +57,34 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private void RegisterCommandHandlers()
 		{
 			this.commandDispatcher.Register (ApplicationCommands.New, this.ExecuteNewCommand);
+			this.commandDispatcher.Register (ApplicationCommands.Delete, this.ExecuteDeleteCommand);
 		}
 
-		private void CreateUINewItemIconButton(Widget container)
+		private void CreateUIButtonNewCommand(Widget container)
 		{
 			this.newItemIconButton = new LayeredIconButton
 			{
 				CommandObject = ApplicationCommands.New,
 				Name = "CreateNewItem",
 				Parent = container,
-				PreferredSize = new Size (28, 28),
-				PreferredIconSize = new Size (24, 24),
+				PreferredSize = new Size (40, 28),
+				PreferredIconSize = new Size (32, 24),
 				Dock = DockStyle.Left,
 				IconUri = Misc.GetResourceIconUri ("Edition.NewRecord"),
+			};
+		}
+
+		private void CreateUIButtonDeleteCommand(Widget container)
+		{
+			this.deleteItemIconButton = new LayeredIconButton
+			{
+				CommandObject = ApplicationCommands.Delete,
+				Name = "DeleteItem",
+				Parent = container,
+				PreferredSize = new Size (40, 28),
+				PreferredIconSize = new Size (32, 24),
+				Dock = DockStyle.Left,
+				IconUri = Misc.GetResourceIconUri ("Edition.DeleteRecord"),
 			};
 		}
 
@@ -77,9 +94,14 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.UpdateNewItemIconButton ();
 		}
 
-		private void ExecuteNewCommand(object sender, CommandEventArgs e)
+		private void ExecuteNewCommand()
 		{
 			this.browser.AddNewEntity ();
+		}
+
+		private void ExecuteDeleteCommand()
+		{
+			this.browser.RemoveActiveEntity ();
 		}
 
 		private void UpdateNewItemIconButton()
@@ -88,12 +110,18 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			this.newItemIconButton.ClearOverlays ();
 			this.newItemIconButton.AddOverlay (Misc.GetResourceIconUri (name), new Size (20, 20));
+			this.newItemIconButton.AddOverlay (Misc.GetResourceIconUri ("Edition.NewRecord.Overlay"), new Size (32, 24));
+
+			this.deleteItemIconButton.ClearOverlays ();
+			this.deleteItemIconButton.AddOverlay (Misc.GetResourceIconUri (name), new Size (20, 20));
+			this.deleteItemIconButton.AddOverlay (Misc.GetResourceIconUri ("Edition.DeleteRecord.Overlay"), new Size (32, 24));
 		}
 
 		private readonly BrowserViewController browser;
 
-		private LayeredIconButton newItemIconButton;
-		private CommandDispatcher commandDispatcher;
-		private CommandContext    commandContext;
+		private LayeredIconButton	newItemIconButton;
+		private LayeredIconButton	deleteItemIconButton;
+		private CommandDispatcher	commandDispatcher;
+		private CommandContext		commandContext;
 	}
 }

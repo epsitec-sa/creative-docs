@@ -40,6 +40,21 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.list.Add (new BrowserListItem (entity));
 		}
 
+		public AbstractEntity RemoveAt(int index)
+		{
+			if ((index < 0) ||
+				(index >= this.list.Count))
+			{
+				return null;
+			}
+			else
+			{
+				var entity = this.list[index].Entity;
+				this.list.RemoveAt (index);
+				return entity;
+			}
+		}
+
 		public void Invalidate()
 		{
 			this.list.ForEach (x => x.ClearCachedDisplayText ());

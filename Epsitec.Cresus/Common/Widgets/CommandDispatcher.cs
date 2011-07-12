@@ -183,7 +183,7 @@ namespace Epsitec.Common.Widgets
 		/// </summary>
 		/// <param name="command">The command.</param>
 		/// <param name="handler">The command handler.</param>
-		public void Register(Command command, Support.SimpleCallback handler)
+		public void Register(Command command, System.Action handler)
 		{
 			this.Register (command, delegate (CommandDispatcher d, CommandEventArgs e) { handler (); });
 		}
