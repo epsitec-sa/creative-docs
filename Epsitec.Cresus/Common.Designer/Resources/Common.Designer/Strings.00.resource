@@ -58,7 +58,7 @@
   <data name="Viewers.Captions.Icon.Title" id="0D5" mod="1">Icône</data>
   <data name="Viewers.Captions.About.Title" id="0B5" mod="1">Commentaires</data>
   <data name="Viewers.Commands.Statefull.Title" id="0O5" mod="1">Type</data>
-  <data name="Viewers.Commands.Statefull.CheckButton" id="0P5" mod="1">Reflète un état activé ou désactivé</data>
+  <data name="Viewers.Commands.Statefull.CheckButton" id="0P5" mod="1">Reflète un état activé ou désactivé (Command.Statefull = true)</data>
   <data name="Viewers.Commands.Shortcut.Title" id="0Q5" mod="1">Raccourcis clavier</data>
   <data name="Viewers.Commands.Shortcut.Main" id="0R5" mod="1">Principal</data>
   <data name="Viewers.Commands.Shortcut.Suppl" id="0S5" mod="1">Supplémentaire</data>
