@@ -2,7 +2,7 @@
 <ModuleInfo id="1008" name="Cresus.Core.Library.Business" layer="s" textMode="FormattedText" assemblies="Cresus.Core.Library.Business" namespace="Epsitec.Cresus.Core" namespaceRes="Epsitec.Cresus.Core.Library.Business">
   <Versions>
     <Version id="8" build="2" date="2011-04-26T08:11:03.0669676Z" />
-    <Version id="2" build="37" date="2011-07-11T10:02:37.5861521Z" />
     <Version id="1" build="120" date="2011-07-11T13:56:56.5679359Z" />
+    <Version id="2" build="39" date="2011-07-12T05:18:26.2571225Z" />
   </Versions>
 </ModuleInfo>

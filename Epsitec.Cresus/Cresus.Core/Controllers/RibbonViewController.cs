@@ -543,6 +543,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				PreferredWidth = Library.UI.Constants.ButtonLargeWidth * 1,
 			};
 
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.MoveUp, isWithText: true));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.MoveDown, isWithText: true));
 			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Duplicate, isWithText: true));
 			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Delete, isWithText: true));
 		}

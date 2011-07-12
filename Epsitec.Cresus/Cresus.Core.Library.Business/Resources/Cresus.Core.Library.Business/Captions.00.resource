@@ -220,4 +220,6 @@
   <data name="Fld.ArticleDocumentItem.PrimaryUnitPriceBeforeTax" id="AQ6">&lt;s:data id="_0" f:Name="PrimaryUnitPriceBeforeTax" /&gt;</data>
   <data name="Fld.ArticleDocumentItem.PrimaryLinePriceBeforeTax" id="AR6">&lt;s:data id="_0" f:Name="PrimaryLinePriceBeforeTax" /&gt;</data>
   <data name="Fld.ArticleDocumentItem.BillingUnitPriceBeforeTax" id="AS6">&lt;s:data id="_0" f:Name="BillingUnitPriceBeforeTax" /&gt;</data>
+  <data name="Cmd.Lines.MoveUp" id="KE">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Lines.MoveUp" f:Description="Monte la ligne sélectionnée" f:Icon="manifest:Epsitec.Cresus.Core.Images.Lines.MoveUp.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Monte'}}" /&gt;</data>
+  <data name="Cmd.Lines.MoveDown" id="KF">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Lines.MoveDown" f:Description="Descend la ligne sélectionnée" f:Icon="manifest:Epsitec.Cresus.Core.Images.Lines.MoveDown.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Descend'}}" /&gt;</data>
 </bundle>

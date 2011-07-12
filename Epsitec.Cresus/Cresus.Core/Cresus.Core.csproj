@@ -543,6 +543,8 @@
     <EmbeddedResource Include="Images\Lines.Ungroup.icon" />
     <EmbeddedResource Include="Images\Lines.CreateGroupSerarator.icon" />
     <EmbeddedResource Include="Images\Lines.CreateQuantity.icon" />
+    <EmbeddedResource Include="Images\Lines.MoveDown.icon" />
+    <EmbeddedResource Include="Images\Lines.MoveUp.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

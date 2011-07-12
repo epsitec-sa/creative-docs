@@ -250,6 +250,18 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Insère un nouveau groupe après le groupe en cours (donc au même niveau).
 		}
 
+		[Command (Library.Business.Res.CommandIds.Lines.MoveUp)]
+		public void ProcessMoveUp()
+		{
+			//	Monte la ligne sélectionnée.
+		}
+
+		[Command (Library.Business.Res.CommandIds.Lines.MoveDown)]
+		public void ProcessoveDown()
+		{
+			//	Descend la ligne sélectionnée.
+		}
+
 		[Command (Library.Business.Res.CommandIds.Lines.Duplicate)]
 		public void ProcessDuplicate()
 		{
