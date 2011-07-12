@@ -85,7 +85,14 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				return;
 			}
 
-			this.scrollList.SelectedItemIndex = this.collection.GetIndex (this.data.FindEntityKey (entity));
+			//	The specified entity does most probably not belong to our data context,
+			//	therefore we would not find it in the collection. Look for it based on
+			//	its key :
+
+			var entityKey = this.data.FindEntityKey (entity);
+			int index     = this.collection.GetIndex (entityKey);
+
+			this.scrollList.SelectedItemIndex = index;
 		}
 
 		/// <summary>
@@ -100,6 +107,10 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
+		/// <summary>
+		/// Removes the active entity from the list. This will either archive the entity
+		/// or delete it from the database, if it does not implement <see cref="ILifetime"/>.
+		/// </summary>
 		public void RemoveActiveEntity()
 		{
 			int active = this.scrollList.SelectedItemIndex;
@@ -107,7 +118,17 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			if (entity != null)
 			{
+				//	Remove the entity from the scroll-list now that we have removed it from
+				//	our internal collection; make sure nobody is still using it by clearing
+				//	the active entity :
+
+				this.suspendUpdates++;
 				this.scrollList.Items.RemoveAt (active);
+				this.Orchestrator.ClearActiveEntity ();
+				this.suspendUpdates--;
+
+				//	Archive or delete the entity, depending on the presence of a ILifetime
+				//	implementation :
 
 				var lifetime = entity as ILifetime;
 
@@ -122,23 +143,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				
 				this.browserDataContext.SaveChanges ();
 
-				if (active >= this.collection.Count)
-				{
-					active = this.collection.Count-1;
-				}
-
-				if (active >= 0)
-				{
-					this.activeEntityKey = this.collection.GetEntityKey (active);
-					this.scrollList.SelectedItemIndex = active;
-				}
-				else
-				{
-					this.activeEntityKey = null;
-					this.scrollList.SelectedItemIndex = -1;
-				}
-
-				this.SelectActiveEntity ();
+				this.SelectItem (active);
 			}
 		}
 		
@@ -150,19 +155,30 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		public override void CreateUI(Widget container)
 		{
 			base.CreateUI (container);
+
 			var frame = new FrameBox ()
 			{
 				Parent = container,
 				Dock = DockStyle.Fill,
 			};
 
+			this.CreateUISettingsPanel (frame);
+			this.CreateUIScrollList (frame);
+		}
+
+
+		private void CreateUISettingsPanel(FrameBox frame)
+		{
 			this.settingsPanel = new FrameBox
 			{
 				Parent = frame,
 				Dock = DockStyle.Top,
 				PreferredHeight = 28,
 			};
-
+		}
+		
+		private void CreateUIScrollList(FrameBox frame)
+		{
 			var listFrame = new FrameBox
 			{
 				Parent = frame,
@@ -178,11 +194,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			};
 
 			this.scrollList.SelectedItemChanged += this.HandleScrollListSelectedItemChanged;
-
-			this.RefreshScrollList ();
 		}
-
-
+		
+		
 		private void CreateBrowserDataContext()
 		{
 			this.browserDataContext = this.data.CreateDataContext (string.Format ("Browser.DataSet={0}", this.DataSetName));
@@ -207,6 +221,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
+		
 		private void HandleDataContextEntityChanged(object sender, EntityChangedEventArgs e)
 		{
 			if ((this.collection != null) &&
@@ -227,6 +242,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
+		
 		private void SelectContentsBasedOnDataSet()
 		{
 			var component = this.data.GetComponent<DataSetGetter> ();
@@ -323,6 +339,26 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.SetActiveEntityKey (entityKey);
 		}
 
+		private void SelectItem(int index)
+		{
+			if (index >= this.collection.Count)
+			{
+				index = this.collection.Count-1;
+			}
+
+			if (index < 0)
+			{
+				this.SetActiveEntityKey (null);
+				this.scrollList.SelectedItemIndex = -1;
+			}
+			else
+			{
+				this.SetActiveEntityKey (this.collection.GetEntityKey (index));
+				this.scrollList.SelectedItemIndex = index;
+			}
+
+			this.SelectActiveEntity ();
+		}
 
 		private void SetActiveEntityKey(EntityKey? entityKey)
 		{

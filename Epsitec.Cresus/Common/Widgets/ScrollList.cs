@@ -1,4 +1,4 @@
-//	Copyright © 2003-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -844,22 +844,21 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				//	-1 => pas de ligne sélectionnée
-				
+
 				return this.selectedRow;
 			}
-
 			set
 			{
-				if ( value != -1 )
+				if (value != -1)
 				{
-					value = System.Math.Max(value, 0);
-					value = System.Math.Min(value, this.items.Count-1);
+					value = System.Math.Max (value, 0);
+					value = System.Math.Min (value, this.items.Count-1);
 				}
-				if ( value != this.selectedRow )
+				if (value != this.selectedRow)
 				{
 					this.OnSelectedItemChanging ();
 					this.selectedRow = value;
-					this.SetDirty();
+					this.SetDirty ();
 					this.OnSelectedItemChanged ();
 				}
 			}
@@ -870,13 +869,19 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				int index = this.SelectedItemIndex;
-				if ( index < 0 )  return null;
-				return this.Items[index];
+				
+				if (index < 0)
+				{
+					return null;
+				}
+				else
+				{
+					return this.Items[index];
+				}
 			}
-			
 			set
 			{
-				this.SelectedItemIndex = this.Items.IndexOf(value);
+				this.SelectedItemIndex = this.Items.IndexOf (value);
 			}
 		}
 		
