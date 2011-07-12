@@ -24,6 +24,7 @@ namespace Epsitec.Common.Widgets
 		public CommandContext(string name = null, CommandContextOptions options = CommandContextOptions.None)
 		{
 			this.localDisables = new HashSet<int> ();
+			this.localEnables  = new HashSet<int> ();
 			this.groupDisables = new Dictionary<string, int> ();
 			this.validations = new Dictionary<long, Validation> ();
 			this.states = new Dictionary<long, CommandState> ();
@@ -110,10 +111,12 @@ namespace Epsitec.Common.Widgets
 				if (newValue)
 				{
 					this.localDisables.Remove (command.SerialId);
+					this.localEnables.Add (command.SerialId);
 				}
 				else
 				{
 					this.localDisables.Add (command.SerialId);
+					this.localEnables.Remove (command.SerialId);
 				}
 
 				this.NotifyCommandEnableChanged (command);
@@ -125,7 +128,7 @@ namespace Epsitec.Common.Widgets
 		/// </summary>
 		/// <param name="command">The command.</param>
 		/// <returns><c>false</c> if the command is disabled locally, <c>true</c> otherwise.</returns>
-		public bool GetLocalEnable(Command command)
+		public bool? GetLocalEnable(Command command)
 		{
 			if (this.localDisables.Contains (command.SerialId))
 			{
@@ -143,11 +146,14 @@ namespace Epsitec.Common.Widgets
 
 					return false;
 				}
-				else
-				{
-					return true;
-				}
 			}
+
+			if (this.localEnables.Contains (command.SerialId))
+			{
+				return true;
+			}
+
+			return null;
 		}
 
 		/// <summary>
@@ -479,8 +485,9 @@ namespace Epsitec.Common.Widgets
 
 		public static readonly DependencyProperty ContextProperty = DependencyProperty<CommandContext>.RegisterAttached ("Context", typeof (CommandContext), new DependencyPropertyMetadata ().MakeNotSerializable ());
 
-		
+
 		readonly HashSet<int>					localDisables;
+		readonly HashSet<int>					localEnables;
 		readonly Dictionary<string, int>		groupDisables;
 		readonly Dictionary<long, Validation>	validations;
 		readonly Dictionary<long, CommandState>	states;

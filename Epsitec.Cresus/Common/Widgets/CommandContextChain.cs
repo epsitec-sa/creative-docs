@@ -87,19 +87,35 @@ namespace Epsitec.Common.Widgets
 		/// <returns><c>false</c> if the command is disabled locally, <c>true</c> otherwise.</returns>
 		public bool GetLocalEnable(Command command)
 		{
+			bool defined = false;
+
 			foreach (CommandContext context in this.Contexts)
 			{
-				if (context.GetLocalEnable (command) == false)
+				bool? enable = context.GetLocalEnable (command);
+				
+				if (enable == false)
 				{
 					return false;
 				}
+				else if (enable.HasValue)
+				{
+					defined = true;
+				}
+
 				if (context.Fence)
 				{
-					return true;
+					break;
 				}
 			}
 
-			return true;
+			if (defined)
+			{
+				return true;
+			}
+			else
+			{
+				return command.CommandParameters.GetValueOrDefault (CommandDefaultEnableMode.Enabled) != CommandDefaultEnableMode.Disabled;
+			}
 		}
 
 		/// <summary>
