@@ -94,6 +94,24 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					this.lineEditorController = new TextLineEditorController (this.accessData);
 					this.lineEditorController.CreateUI (this.editorTile, info.AbstractDocumentItemEntity);
 				}
+
+				if (info.AbstractDocumentItemEntity is TaxDocumentItemEntity)
+				{
+					this.lineEditorController = new TaxLineEditorController (this.accessData);
+					this.lineEditorController.CreateUI (this.editorTile, info.AbstractDocumentItemEntity);
+				}
+
+				if (info.AbstractDocumentItemEntity is SubTotalDocumentItemEntity)
+				{
+					this.lineEditorController = new SubTotalLineEditorController (this.accessData);
+					this.lineEditorController.CreateUI (this.editorTile, info.AbstractDocumentItemEntity);
+				}
+
+				if (info.AbstractDocumentItemEntity is EndTotalDocumentItemEntity)
+				{
+					this.lineEditorController = new EndTotalLineEditorController (this.accessData);
+					this.lineEditorController.CreateUI (this.editorTile, info.AbstractDocumentItemEntity);
+				}
 			}
 
 			this.UpdateTitle ();

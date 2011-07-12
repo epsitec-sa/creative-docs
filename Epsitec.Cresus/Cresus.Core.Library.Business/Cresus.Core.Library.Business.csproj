@@ -99,6 +99,9 @@
     <Compile Include="Controllers\BusinessDocumentControllers\ColumnType.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\ArticleLineEditorController.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\AccessData.cs" />
+    <Compile Include="Controllers\BusinessDocumentControllers\EndTotalLineEditorController.cs" />
+    <Compile Include="Controllers\BusinessDocumentControllers\SubTotalLineEditorController.cs" />
+    <Compile Include="Controllers\BusinessDocumentControllers\TaxLineEditorController.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\QuantityLineEditorController.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\TextLineEditorController.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\LinesController.cs" />
