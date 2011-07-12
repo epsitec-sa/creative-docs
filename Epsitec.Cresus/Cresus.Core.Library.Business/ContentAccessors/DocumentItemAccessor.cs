@@ -6,6 +6,7 @@ using Epsitec.Common.Types;
 
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Business.Finance;
 using Epsitec.Cresus.Core.Documents;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Helpers;
@@ -173,28 +174,28 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 			this.SetContent (0, DocumentItemAccessorColumn.ArticleId,          ArticleDocumentItemHelper.GetArticleId (line));
 			this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, description);
-			this.SetContent (0, DocumentItemAccessorColumn.UnitPrice,          Misc.PriceToString (line.PrimaryUnitPriceBeforeTax));
+			this.SetContent (0, DocumentItemAccessorColumn.UnitPrice,          this.GetFormattedPrice (line.PrimaryUnitPriceBeforeTax));
 
 			if (line.ResultingLinePriceBeforeTax.HasValue && line.ResultingLineTax1.HasValue)
 			{
 				decimal beforeTax = line.ResultingLinePriceBeforeTax.Value;
 				decimal tax =       line.ResultingLineTax1.Value;
 
-				this.SetContent (0, DocumentItemAccessorColumn.LinePrice, Misc.PriceToString (beforeTax));
-				this.SetContent (0, DocumentItemAccessorColumn.Vat,       Misc.PriceToString (tax));
-				this.SetContent (0, DocumentItemAccessorColumn.Total,     Misc.PriceToString (beforeTax+tax));
+				this.SetContent (0, DocumentItemAccessorColumn.LinePrice, this.GetFormattedPrice (beforeTax));
+				this.SetContent (0, DocumentItemAccessorColumn.Vat,       this.GetFormattedPrice (tax));
+				this.SetContent (0, DocumentItemAccessorColumn.Total,     this.GetFormattedPrice (beforeTax+tax));
 			}
 
 			if (line.Discounts.Count != 0)
 			{
 				if (line.Discounts[0].DiscountRate.HasValue)
 				{
-					this.SetContent (0, DocumentItemAccessorColumn.Discount, Misc.PercentToString (line.Discounts[0].DiscountRate.Value));
+					this.SetContent (0, DocumentItemAccessorColumn.Discount, this.GetFormattedPercent (line.Discounts[0].DiscountRate.Value));
 				}
 
 				if (line.Discounts[0].Value.HasValue)
 				{
-					this.SetContent (0, DocumentItemAccessorColumn.Discount, Misc.PriceToString (line.Discounts[0].Value.Value));
+					this.SetContent (0, DocumentItemAccessorColumn.Discount, this.GetFormattedPrice (line.Discounts[0].Value.Value));
 				}
 			}
 		}
@@ -266,10 +267,10 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 		private void BuildTaxItem(TaxDocumentItemEntity line)
 		{
-			FormattedText text = FormattedText.Concat (line.Text, " (", Misc.PriceToString (line.BaseAmount), ")");
+			FormattedText text = FormattedText.Concat (line.Text, " (", this.GetFormattedPrice (line.BaseAmount), ")");
 
 			this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, text);
-			this.SetContent (0, DocumentItemAccessorColumn.LinePrice, Misc.PriceToString (line.ResultingTax));
+			this.SetContent (0, DocumentItemAccessorColumn.LinePrice, this.GetFormattedPrice (line.ResultingTax));
 		}
 
 		private void BuildSubTotalItem(SubTotalDocumentItemEntity line)
@@ -336,105 +337,25 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			int row = 0;
 
 			this.SetContent (row, DocumentItemAccessorColumn.ArticleDescription, primaryText);
-			this.SetContent (row, DocumentItemAccessorColumn.LinePrice,          Misc.PriceToString (primaryPrice));
-			this.SetContent (row, DocumentItemAccessorColumn.Vat,                Misc.PriceToString (primaryVat));
-			this.SetContent (row, DocumentItemAccessorColumn.Total,              Misc.PriceToString (primaryPrice + primaryVat));
+			this.SetContent (row, DocumentItemAccessorColumn.LinePrice,          this.GetFormattedPrice (primaryPrice));
+			this.SetContent (row, DocumentItemAccessorColumn.Vat,                this.GetFormattedPrice (primaryVat));
+			this.SetContent (row, DocumentItemAccessorColumn.Total,              this.GetFormattedPrice (primaryPrice + primaryVat));
 			row++;
 
 			if (existingDiscount || (this.mode & DocumentItemAccessorMode.ForceAllLines) != 0)
 			{
 				this.SetContent (row, DocumentItemAccessorColumn.ArticleDescription, discountText);
-				this.SetContent (row, DocumentItemAccessorColumn.LinePrice,          Misc.PriceToString (discountPrice));
-				this.SetContent (row, DocumentItemAccessorColumn.Vat,                Misc.PriceToString (discountVat));
-				this.SetContent (row, DocumentItemAccessorColumn.Total,              Misc.PriceToString (discountPrice + discountVat));
+				this.SetContent (row, DocumentItemAccessorColumn.LinePrice,          this.GetFormattedPrice (discountPrice));
+				this.SetContent (row, DocumentItemAccessorColumn.Vat,                this.GetFormattedPrice (discountVat));
+				this.SetContent (row, DocumentItemAccessorColumn.Total,              this.GetFormattedPrice (discountPrice + discountVat));
 				row++;
 	
 				this.SetContent (row, DocumentItemAccessorColumn.ArticleDescription, sumText);
-				this.SetContent (row, DocumentItemAccessorColumn.LinePrice,          Misc.PriceToString (sumPrice));
-				this.SetContent (row, DocumentItemAccessorColumn.Vat,                Misc.PriceToString (sumVat));
-				this.SetContent (row, DocumentItemAccessorColumn.Total,              Misc.PriceToString (sumPrice + sumVat));
+				this.SetContent (row, DocumentItemAccessorColumn.LinePrice,          this.GetFormattedPrice (sumPrice));
+				this.SetContent (row, DocumentItemAccessorColumn.Vat,                this.GetFormattedPrice (sumVat));
+				this.SetContent (row, DocumentItemAccessorColumn.Total,              this.GetFormattedPrice (sumPrice + sumVat));
 				row++;
 			}
-	
-#if false
-			string discount = InvoiceDocumentHelper.GetAmount (line);
-
-			//	Colonne "Désignation":
-			if (discount == null)
-			{
-				this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, line.TextForResultingPrice);
-			}
-			else
-			{
-				FormattedText rabais;
-				if (line.Discount.DiscountRate.HasValue)
-				{
-					rabais = FormattedText.Concat ("Rabais ", discount);  // Rabais 20.0%
-				}
-				else
-				{
-					rabais = "Rabais";
-				}
-
-				this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, line.TextForPrimaryPrice);
-				this.SetContent (1, DocumentItemAccessorColumn.ArticleDescription, rabais);
-				this.SetContent (2, DocumentItemAccessorColumn.ArticleDescription, line.TextForResultingPrice);
-			}
-
-			//	Colonne "Prix HT":
-			if (discount == null)
-			{
-				decimal v1 = line.ResultingPriceBeforeTax.GetValueOrDefault (0);
-				string p1 = Misc.PriceToString (v1);
-
-				this.SetContent (0, DocumentItemAccessorColumn.LinePrice, p1);
-			}
-			else
-			{
-				decimal v1 = line.PrimaryPriceBeforeTax.GetValueOrDefault (0);
-				decimal v3 = line.ResultingPriceBeforeTax.GetValueOrDefault (0);
-
-				this.SetContent (0, DocumentItemAccessorColumn.LinePrice, Misc.PriceToString (v1));
-				this.SetContent (1, DocumentItemAccessorColumn.LinePrice, Misc.PriceToString (v3 - v1));
-				this.SetContent (2, DocumentItemAccessorColumn.LinePrice, Misc.PriceToString (v3));
-			}
-
-			//	Colonne "TVA":
-			if (discount == null)
-			{
-				decimal v1 = line.ResultingTax.GetValueOrDefault (0);
-				string p1 = Misc.PriceToString (v1);
-
-				this.SetContent (0, DocumentItemAccessorColumn.Vat, p1);
-			}
-			else
-			{
-				decimal v1 = line.PrimaryTax.GetValueOrDefault (0);
-				decimal v3 = line.ResultingTax.GetValueOrDefault (0);
-
-				this.SetContent (0, DocumentItemAccessorColumn.Vat, Misc.PriceToString (v1));
-				this.SetContent (1, DocumentItemAccessorColumn.Vat, Misc.PriceToString (v3 - v1));
-				this.SetContent (2, DocumentItemAccessorColumn.Vat, Misc.PriceToString (v3));
-			}
-
-			//	Colonne "Prix TTC":
-			if (discount == null)
-			{
-				decimal v1 = line.ResultingPriceBeforeTax.GetValueOrDefault (0) + line.ResultingTax.GetValueOrDefault (0);
-				string p1 = Misc.PriceToString (v1);
-
-				this.SetContent (0, DocumentItemAccessorColumn.Total, p1);
-			}
-			else
-			{
-				decimal v1 = line.PrimaryPriceBeforeTax.GetValueOrDefault (0) + line.PrimaryTax.GetValueOrDefault (0);
-				decimal v3 = line.ResultingPriceBeforeTax.GetValueOrDefault (0) + line.ResultingTax.GetValueOrDefault (0);
-
-				this.SetContent (0, DocumentItemAccessorColumn.Total, Misc.PriceToString (v1));
-				this.SetContent (1, DocumentItemAccessorColumn.Total, Misc.PriceToString (v3 - v1));
-				this.SetContent (2, DocumentItemAccessorColumn.Total, Misc.PriceToString (v3));
-			}
-#endif
 		}
 
 		private void BuildEndTotalItem(EndTotalDocumentItemEntity line)
@@ -442,21 +363,44 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			if (line.PriceBeforeTax.HasValue)  // ligne de total HT ?
 			{
 				this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, line.TextForPrice);
-				this.SetContent (0, DocumentItemAccessorColumn.LinePrice, Misc.PriceToString (line.PriceBeforeTax));
+				this.SetContent (0, DocumentItemAccessorColumn.LinePrice, this.GetFormattedPrice (line.PriceBeforeTax));
 			}
 			else if (line.FixedPriceAfterTax.HasValue)
 			{
 				this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, line.TextForPrice);
 				this.SetContent (1, DocumentItemAccessorColumn.ArticleDescription, line.TextForFixedPrice);
 
-				this.SetContent (0, DocumentItemAccessorColumn.Total, Misc.PriceToString (line.PriceAfterTax));
-				this.SetContent (1, DocumentItemAccessorColumn.Total, Misc.PriceToString (line.FixedPriceAfterTax));
+				this.SetContent (0, DocumentItemAccessorColumn.Total, this.GetFormattedPrice (line.PriceAfterTax));
+				this.SetContent (1, DocumentItemAccessorColumn.Total, this.GetFormattedPrice (line.FixedPriceAfterTax));
 			}
 			else
 			{
 				this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, line.TextForPrice);
-				this.SetContent (0, DocumentItemAccessorColumn.Total, Misc.PriceToString (line.PriceAfterTax));
+				this.SetContent (0, DocumentItemAccessorColumn.Total, this.GetFormattedPrice (line.PriceAfterTax));
 			}
+		}
+
+
+		private FormattedText GetFormattedPrice(decimal? price)
+		{
+			if (price == null)
+			{
+				return null;
+			}
+
+			price = PriceCalculator.RoundToCents (price.Value);
+			return Misc.PriceToString (price);
+		}
+
+		private FormattedText GetFormattedPercent(decimal? percent)
+		{
+			if (percent == null)
+			{
+				return null;
+			}
+
+			percent = PriceCalculator.ClipTaxRateValue (percent.Value);
+			return Misc.PercentToString (percent);
 		}
 
 
