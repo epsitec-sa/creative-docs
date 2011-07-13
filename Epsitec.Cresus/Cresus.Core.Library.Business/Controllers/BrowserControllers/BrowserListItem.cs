@@ -63,8 +63,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			this.text = list.GenerateEntityDisplayText (this.entity);
 
-			if ((this.text == null) ||
-				(this.text.Value.IsNullOrEmpty))
+			if (this.text.Value.IsNullOrEmpty)
 			{
 				this.text = CollectionTemplate.DefaultEmptyText;
 			}
