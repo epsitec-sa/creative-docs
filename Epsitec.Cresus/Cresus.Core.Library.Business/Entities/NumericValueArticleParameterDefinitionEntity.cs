@@ -21,6 +21,19 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
+		public string PreferredValuesForEdition
+		{
+			get
+			{
+				return EnumValueArticleParameterDefinitionEntity.EnumInternalToSingleLine (this.PreferredValues);
+			}
+			set
+			{
+				this.PreferredValues = EnumValueArticleParameterDefinitionEntity.EnumSingleLineToInternal (value);
+			}
+		}
+
+
 		public override EntityStatus GetEntityStatus()
 		{
 			using (var a = new EntityStatusAccumulator ())
