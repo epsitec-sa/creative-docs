@@ -25,10 +25,10 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 	/// </summary>
 	public class ValuesArticleParameterController
 	{
-		public ValuesArticleParameterController(TileContainer tileContainer, EditionTile editionTile)
+		public ValuesArticleParameterController(TileContainer tileContainer, FrameBox parent)
 		{
 			this.tileContainer = tileContainer;
-			this.editionTile = editionTile;
+			this.parent = parent;
 		}
 
 
@@ -40,8 +40,11 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		}
 
 
-		public FrameBox CreateUI(FrameBox parent)
+		public FrameBox CreateUI(FrameBox parent, int labelWidth = 80, bool labelToRight = false)
 		{
+			this.labelWidth = labelWidth;
+			this.labelToRight = labelToRight;
+
 			this.frameBox = new FrameBox ()
 			{
 				Parent = parent,
@@ -62,9 +65,9 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			}
 
 			// Montre ou cache la tuile parente.
-			if (this.editionTile != null)
+			if (this.parent != null)
 			{
-				this.editionTile.Visibility = article.ArticleDefinition.ArticleParameterDefinitions.Count != 0;
+				this.parent.Visibility = article.ArticleDefinition.ArticleParameterDefinitions.Count != 0;
 			}
 		}
 
@@ -89,9 +92,15 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			{
 				Parent = box,
 				FormattedText = TextFormatter.ConvertToText (article.ArticleDefinition.ArticleParameterDefinitions[index].Description),
-				PreferredWidth = 80,
+				PreferredWidth = this.labelWidth,
 				Dock = DockStyle.Left,
 			};
+
+			if (this.labelToRight)
+			{
+				label.ContentAlignment = Common.Drawing.ContentAlignment.MiddleRight;
+				label.Margins = new Margins (0, 5, 0, 0);
+			}
 
 			if (parameter is NumericValueArticleParameterDefinitionEntity)
 			{
@@ -128,8 +137,10 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 
 		private readonly TileContainer		tileContainer;
-		private readonly EditionTile		editionTile;
+		private readonly FrameBox			parent;
 
 		private FrameBox					frameBox;
+		private int							labelWidth;
+		private bool						labelToRight;
 	}
 }

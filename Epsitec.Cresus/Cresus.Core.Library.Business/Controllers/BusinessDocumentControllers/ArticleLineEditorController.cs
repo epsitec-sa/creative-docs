@@ -53,6 +53,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private void CreateUILeftFrame(UIBuilder builder, FrameBox parent)
 		{
+			int labelWidth = 75;
+
 			//	Article.
 			{
 				var line = new FrameBox
@@ -71,7 +73,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				};
 
 				var articleField = builder.CreateCompactAutoCompleteTextField (null, "", articleController);
-				this.PlaceLabelAndField (line, 75, 0, "Article", articleField.Parent);
+				this.PlaceLabelAndField (line, labelWidth, 0, "Article", articleField.Parent);
 			}
 
 			//	Choix des paramètres.
@@ -83,9 +85,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					Margins = new Margins (0, 0, 0, 5),
 				};
 
-				this.parameterController = new ArticleParameterControllers.ValuesArticleParameterController (this.tileContainer, null);
+				this.parameterController = new ArticleParameterControllers.ValuesArticleParameterController (this.tileContainer, line);
 				this.parameterController.CallbackParameterChanged = this.ParameterChanged;
-				var box = this.parameterController.CreateUI (line);
+				var box = this.parameterController.CreateUI (line, labelWidth: labelWidth, labelToRight: true);
 				box.Margins = new Margins (0);
 
 				this.parameterController.UpdateUI (this.Entity);
@@ -111,7 +113,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				this.toolbarController.UpdateUI (this.Entity, this.articleDescriptionTextField);
 
-				this.PlaceLabelAndField (line, 75, 0, "Désignation", replacementBox);
+				this.PlaceLabelAndField (line, labelWidth, 0, "Désignation", replacementBox);
 			}
 		}
 
