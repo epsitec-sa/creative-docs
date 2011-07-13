@@ -89,21 +89,21 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Rabais.
 			{
 				var field = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.DiscountText, x => this.DiscountText = x));
-				this.PlaceLabelAndField (line1, 170, 100, "Rabais en % ou en francs", field);
+				this.PlaceLabelAndField (line1, 200, 100, "Rabais en % ou en francs", field);
 			}
 
 			//	Textes.
 			{
 				var field = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.TextForPrimaryPrice, x => this.Entity.TextForPrimaryPrice = x));
-				this.PlaceLabelAndField (line2, 170, 400, "Texte pour sous-total avant rabais", field);
+				this.PlaceLabelAndField (line2, 200, 400, "Texte pour sous-total avant rabais", field);
 			}
 			{
 				var field = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.TextForDiscount, x => this.Entity.TextForDiscount = x));
-				this.PlaceLabelAndField (line3, 170, 400, "Texte pour le rabais", field);
+				this.PlaceLabelAndField (line3, 200, 400, "Texte pour le rabais", field);
 			}
 			{
 				var field = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.TextForResultingPrice, x => this.Entity.TextForResultingPrice = x));
-				this.PlaceLabelAndField (line4, 170, 400, "Texte pour sous-total après rabais", field);
+				this.PlaceLabelAndField (line4, 200, 400, "Texte pour sous-total après rabais", field);
 			}
 		}
 

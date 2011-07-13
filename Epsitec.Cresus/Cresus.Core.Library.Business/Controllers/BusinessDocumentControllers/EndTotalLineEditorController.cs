@@ -33,13 +33,63 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		protected override void CreateUI(UIBuilder builder)
 		{
+			var box = new FrameBox
+			{
+				Parent = this.tileContainer,
+				Dock = DockStyle.Fill,
+				Padding = new Margins (10),
+				TabIndex = this.NextTabIndex,
+			};
+
+			var line1 = new FrameBox
+			{
+				Parent = box,
+				Dock = DockStyle.Top,
+				PreferredHeight = 20,
+				Margins = new Margins (0, 0, 0, 20),
+				TabIndex = this.NextTabIndex,
+			};
+
+			var line2 = new FrameBox
+			{
+				Parent = box,
+				Dock = DockStyle.Top,
+				PreferredHeight = 20,
+				Margins = new Margins (0, 0, 0, 5),
+				TabIndex = this.NextTabIndex,
+			};
+
+			var line3 = new FrameBox
+			{
+				Parent = box,
+				Dock = DockStyle.Top,
+				PreferredHeight = 20,
+				Margins = new Margins (0, 0, 0, 5),
+				TabIndex = this.NextTabIndex,
+			};
+
+			//	Total arrêté.
+			{
+				var field = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.FixedPriceAfterTax, x => this.Entity.FixedPriceAfterTax = x));
+				this.PlaceLabelAndField (line1, 200, 100, "Grand total arrêté", field);
+			}
+
+			//	Textes.
+			{
+				var field = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.TextForPrice, x => this.Entity.TextForPrice = x));
+				this.PlaceLabelAndField (line2, 200, 400, "Texte pour le grand total", field);
+			}
+			{
+				var field = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.TextForFixedPrice, x => this.Entity.TextForFixedPrice = x));
+				this.PlaceLabelAndField (line3, 200, 400, "Texte pour le grand total arrêté", field);
+			}
 		}
 
 		public override FormattedText TitleTile
 		{
 			get
 			{
-				return "Total";
+				return "Grand total";
 			}
 		}
 

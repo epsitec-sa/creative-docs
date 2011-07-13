@@ -348,23 +348,30 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 		private void BuildEndTotalItem(EndTotalDocumentItemEntity line)
 		{
-			if (line.PriceBeforeTax.HasValue)  // ligne de total HT ?
 			{
-				this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, line.TextForPrice);
-				this.SetContent (0, DocumentItemAccessorColumn.LinePrice, this.GetFormattedPrice (line.PriceBeforeTax));
-			}
-			else if (line.FixedPriceAfterTax.HasValue)
-			{
-				this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, line.TextForPrice);
-				this.SetContent (1, DocumentItemAccessorColumn.ArticleDescription, line.TextForFixedPrice);
+				var text = line.TextForPrice;
 
+				if (text.IsNullOrEmpty)
+				{
+					text = "Grand total";
+				}
+
+				this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, text);
+				this.SetContent (0, DocumentItemAccessorColumn.LinePrice, this.GetFormattedPrice (line.PriceBeforeTax));
 				this.SetContent (0, DocumentItemAccessorColumn.Total, this.GetFormattedPrice (line.PriceAfterTax));
-				this.SetContent (1, DocumentItemAccessorColumn.Total, this.GetFormattedPrice (line.FixedPriceAfterTax));
 			}
-			else
+
+			if (line.FixedPriceAfterTax.HasValue)
 			{
-				this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, line.TextForPrice);
-				this.SetContent (0, DocumentItemAccessorColumn.Total, this.GetFormattedPrice (line.PriceAfterTax));
+				var text = line.TextForFixedPrice;
+
+				if (text.IsNullOrEmpty)
+				{
+					text = "Grand total arrêté";
+				}
+
+				this.SetContent (1, DocumentItemAccessorColumn.ArticleDescription, text);
+				this.SetContent (1, DocumentItemAccessorColumn.Total, this.GetFormattedPrice (line.FixedPriceAfterTax));
 			}
 		}
 
