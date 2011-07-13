@@ -47,19 +47,19 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				var articleController = new SelectionController<ArticleDefinitionEntity> (this.accessData.BusinessContext)
 				{
 					ValueGetter         = () => this.Entity.ArticleDefinition,
-					ValueSetter         = x => this.Entity.ArticleDefinition = x,
+					ValueSetter         = x => this.ResetArticleDefinition (x),
 					ReferenceController = new ReferenceController (() => this.Entity.ArticleDefinition),
 				};
 
 				var articleField = builder.CreateCompactAutoCompleteTextField (null, "", articleController);
-				this.PlaceLabelAndField (line1, 70, 400, "Article", articleField.Parent);
+				this.PlaceLabelAndField (line1, 75, 300, "Article", articleField.Parent);
 			}
 
 			if (this.Quantity != null)
 			{
 				//	Quantité.
 				var quantityField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Quantity.Quantity, x => this.Quantity.Quantity = x));
-				this.PlaceLabelAndField (line1, 50, 80, "Quantité", quantityField);
+				this.PlaceLabelAndField (line1, 55, 80, "Quantité", quantityField);
 
 				//	Unité.
 				var unitController = new SelectionController<UnitOfMeasureEntity> (this.accessData.BusinessContext)
@@ -70,7 +70,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				};
 
 				var unitField = builder.CreateCompactAutoCompleteTextField (null, "", unitController);
-				this.PlaceLabelAndField (line1, 25, 80, "Unité", unitField.Parent);
+				this.PlaceLabelAndField (line1, 30, 80, "Unité", unitField.Parent);
+
+				this.CreateStaticText (line1, 50, "(commandé)");
 			}
 
 			//	Choix des paramètres.
@@ -78,7 +80,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				Parent = this.tileContainer,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 259, 0, 0),  // TODO: dépend de la largeur totale (800) et de la largeur des widgets éditables (400) !
+				Margins = new Margins (0, 354, 0, 0),  // TODO: dépend de la largeur totale (800) et de la largeur des widgets éditables (300) !
 			};
 
 			{
@@ -106,7 +108,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				this.toolbarController.UpdateUI (this.Entity, this.articleDescriptionTextField);
 
-				this.PlaceLabelAndField (line3, 70, 400, "Désignation", replacementBox);
+				this.PlaceLabelAndField (line3, 75, 300, "Désignation", replacementBox);
 			}
 		}
 
@@ -118,6 +120,37 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
+
+		private void ResetArticleDefinition(ArticleDefinitionEntity value)
+		{
+			if (this.Entity.ArticleDefinition.RefEquals (value))
+			{
+				return;
+			}
+
+			var item = this.Entity;
+
+			item.ArticleDefinition = value;
+			item.ArticleParameters = null;
+			item.VatCode = value.GetOutputVatCode ();
+			item.NeverApplyDiscount = false;
+			item.TaxRate1 = null;
+			item.TaxRate2 = null;
+			item.FixedLinePrice = null;
+			item.FixedLinePriceIncludesTaxes = false;
+			item.ResultingLinePriceBeforeTax = null;
+			item.ResultingLineTax1 = null;
+			item.ResultingLineTax2 = null;
+			item.FinalLinePriceBeforeTax = null;
+			item.ArticleShortDescriptionCache = null;
+			item.ArticleLongDescriptionCache = null;
+			item.ReplacementText = null;
+
+			this.SetArticleDescription (this.GetArticleDescription ());
+
+			this.parameterController.UpdateUI (this.Entity);
+			this.toolbarController.UpdateUI (this.Entity, this.articleDescriptionTextField);
+		}
 
 		private FormattedText GetArticleDescription()
 		{

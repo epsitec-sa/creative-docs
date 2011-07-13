@@ -167,11 +167,21 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				index = info.LineIndex+1;
 			}
 
-			var newLine = this.accessData.BusinessContext.CreateEntity<ArticleDocumentItemEntity> ();
-			newLine.GroupIndex = 1;
+			var quantityColumnEntity = this.SearchArticleQuantityColumnEntity (ArticleQuantityType.Ordered);
 
-			this.accessData.BusinessDocumentEntity.Lines.Insert (index, newLine);
-			this.UpdateAfterChange (newLine, null);
+			if (quantityColumnEntity != null)
+			{
+				var newQuantity = this.accessData.BusinessContext.CreateEntity<ArticleQuantityEntity> ();
+				newQuantity.Quantity = 1;
+				newQuantity.QuantityColumn = quantityColumnEntity;
+
+				var newLine = this.accessData.BusinessContext.CreateEntity<ArticleDocumentItemEntity> ();
+				newLine.GroupIndex = 1;
+				newLine.ArticleQuantities.Add (newQuantity);
+
+				this.accessData.BusinessDocumentEntity.Lines.Insert (index, newLine);
+				this.UpdateAfterChange (newLine, null);
+			}
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.CreateText)]

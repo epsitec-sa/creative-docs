@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			//	Quantité.
 			var quantityField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.Quantity, x => this.Entity.Quantity = x));
-			this.PlaceLabelAndField (line1, 50, 80, "Quantité", quantityField);
+			this.PlaceLabelAndField (line1, 55, 80, "Quantité", quantityField);
 
 			//	Unité.
 			var unitController = new SelectionController<UnitOfMeasureEntity> (this.accessData.BusinessContext)
@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			};
 
 			var unitField = builder.CreateCompactAutoCompleteTextField (null, "", unitController);
-			this.PlaceLabelAndField (line1, 25, 80, "Unité", unitField.Parent);
+			this.PlaceLabelAndField (line1, 30, 80, "Unité", unitField.Parent);
 
 			//	Type.
 			var typeController = new SelectionController<ArticleQuantityColumnEntity> (this.accessData.BusinessContext)
@@ -73,11 +73,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			};
 
 			var typeField = builder.CreateCompactAutoCompleteTextField (null, "", typeController);
-			this.PlaceLabelAndField (line1, 60, 100, "Type", typeField.Parent);
+			this.PlaceLabelAndField (line1, 65, 100, "Type", typeField.Parent);
 
 			//	Date.
 			var dateField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.BeginDate, x => this.Entity.BeginDate = x));
-			this.PlaceLabelAndField (line1, 25, 100, "Date", dateField);
+			this.PlaceLabelAndField (line1, 30, 100, "Date", dateField);
 		}
 
 		public override FormattedText TitleTile

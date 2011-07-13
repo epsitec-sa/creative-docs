@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private void UpdateTitle()
 		{
-			//	Met à jour le ttre de l'éditeur.
+			//	Met à jour le titre de l'éditeur.
 			FormattedText text = "";
 
 			if (this.lineEditorController != null)

@@ -72,10 +72,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			var label = new StaticText
 			{
 				FormattedText = labelText,
-				ContentAlignment = Common.Drawing.ContentAlignment.TopRight,
+				ContentAlignment = ContentAlignment.TopRight,
 				Parent = box,
 				Dock = DockStyle.Left,
-				PreferredWidth = labelWidth + 5,
+				PreferredWidth = labelWidth,
 				Margins = new Margins (0, 5, 2, 0),
 			};
 
@@ -83,6 +83,21 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			field.Dock = DockStyle.Fill;
 
 			return box;
+		}
+
+		protected StaticText CreateStaticText(Widget parent, int labelWidth, FormattedText labelText)
+		{
+			var label = new StaticText
+			{
+				FormattedText = labelText,
+				ContentAlignment = ContentAlignment.TopLeft,
+				Parent = parent,
+				Dock = DockStyle.Left,
+				PreferredWidth = labelWidth,
+				Margins = new Margins (0, 5, 2, 0),
+			};
+
+			return label;
 		}
 
 
