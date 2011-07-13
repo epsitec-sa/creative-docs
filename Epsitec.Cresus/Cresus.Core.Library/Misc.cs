@@ -246,9 +246,16 @@ namespace Epsitec.Cresus.Core
 			{
 				//	Si l'unité a 1 ou 2 caractères, on n'y touche pas ("m", "cm", "m2", "kg", "t", etc.).
 				//	TODO: Faire mieux et gérer les pluriels en "x" !
-				if (System.Math.Abs (quantity) >= 2 && unit.Length > 2)
+				if (unit.Length > 2)
 				{
-					unit = string.Concat (unit.ToLower(), "s");
+					if (System.Math.Abs (quantity) < 2)
+					{
+						unit = unit.ToLower ();
+					}
+					else
+					{
+						unit = string.Concat (unit.ToLower (), "s");
+					}
 				}
 
 				return string.Concat (quantity.ToString (), " ", unit);

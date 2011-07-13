@@ -192,18 +192,18 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		private void ResetArticleDefinition(ArticleDefinitionEntity value)
+		private void ResetArticleDefinition(ArticleDefinitionEntity article)
 		{
-			if (this.Entity.ArticleDefinition.RefEquals (value))
+			if (this.Entity.ArticleDefinition.RefEquals (article))
 			{
 				return;
 			}
 
 			var item = this.Entity;
 
-			item.ArticleDefinition = value;
+			item.ArticleDefinition = article;
 			item.ArticleParameters = null;
-			item.VatCode = value.GetOutputVatCode ();
+			item.VatCode = article.GetOutputVatCode ();
 			item.NeverApplyDiscount = false;
 			item.TaxRate1 = null;
 			item.TaxRate2 = null;
@@ -217,12 +217,32 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			item.ArticleLongDescriptionCache = null;
 			item.ReplacementText = null;
 
-			if (value.ArticlePrices.Count != 0)
+			//	Initialise la description de l'article.
+			this.SetArticleDescription (this.GetArticleDescription ());
+
+			//	Initialise le prix de base de l'article.
+			if (article.ArticlePrices.Count != 0)
 			{
-				item.PrimaryUnitPriceBeforeTax = value.ArticlePrices[0].Value;  // initialise le prix de base de l'article
+				item.PrimaryUnitPriceBeforeTax = article.ArticlePrices[0].Value;
 			}
 
-			this.SetArticleDescription (this.GetArticleDescription ());
+			//	Initialise l'unité par défaut.
+			UnitOfMeasureEntity unit = null;
+
+			if (unit == null && article.Units != null && article.Units.Units.Count != 0)
+			{
+				unit = article.Units.Units[0];
+			}
+
+			if (unit == null && article.BillingUnit != null)
+			{
+				unit = article.BillingUnit;
+			}
+
+			if (unit != null && item.ArticleQuantities.Count != 0)
+			{
+				item.ArticleQuantities[0].Unit = unit;
+			}
 
 			this.parameterController.UpdateUI (this.Entity);
 			this.toolbarController.UpdateUI (this.Entity, this.articleDescriptionTextField);

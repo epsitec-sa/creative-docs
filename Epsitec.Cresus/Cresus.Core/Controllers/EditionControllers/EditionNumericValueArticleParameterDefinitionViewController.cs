@@ -25,8 +25,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .Field (x => x.MinValue)
 				  .Field (x => x.MaxValue)
 				  .Field (x => x.DefaultValue)
-//				  .Field (x => x.PreferredValues)
-				  .Field (x => x.PreferredValuesForEdition)  // TODO: Les bricks ne s'en sortent pas !
+				  .Field (x => x.PreferredValuesForEdition)
 				.End ()
 				.Separator ()
 				.Input ()

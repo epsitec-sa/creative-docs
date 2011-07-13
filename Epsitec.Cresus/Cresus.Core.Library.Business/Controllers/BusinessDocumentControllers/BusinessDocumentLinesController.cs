@@ -170,9 +170,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			//	Insère une nouvelle ligne d'article.
 			int? sel = this.linesController.LastSelection;
-			int index = 0;
+			int index;
 
-			if (sel != null)
+			if (sel == null)
+			{
+				index = this.GetLDefaultArticleInsertionIndex ();
+			}
+			else
 			{
 				var info = this.lineInformations[sel.Value];
 				index = info.LineIndex+1;
@@ -200,9 +204,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			//	Insère une nouvelle ligne de texte.
 			int? sel = this.linesController.LastSelection;
-			int index = 0;
+			int index;
 
-			if (sel != null)
+			if (sel == null)
+			{
+				index = this.GetLDefaultArticleInsertionIndex ();
+			}
+			else
 			{
 				var info = this.lineInformations[sel.Value];
 				index = info.LineIndex+1;
@@ -221,9 +229,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			//	Insère une nouvelle ligne de titre.
 			int? sel = this.linesController.LastSelection;
-			int index = 0;
+			int index;
 
-			if (sel != null)
+			if (sel == null)
+			{
+				index = this.GetLDefaultArticleInsertionIndex ();
+			}
+			else
 			{
 				var info = this.lineInformations[sel.Value];
 				index = info.LineIndex+1;
@@ -242,9 +254,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			//	Insère une nouvelle ligne de rabais.
 			int? sel = this.linesController.LastSelection;
-			int index = 0;
+			int index;
 
-			if (sel != null)
+			if (sel == null)
+			{
+				index = this.GetLDefaultArticleInsertionIndex ();
+			}
+			else
 			{
 				var info = this.lineInformations[sel.Value];
 				index = info.LineIndex+1;
@@ -262,9 +278,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			//	Insère une nouvelle ligne de taxe.
 			int? sel = this.linesController.LastSelection;
-			int index = 0;
+			int index;
 
-			if (sel != null)
+			if (sel == null)
+			{
+				index = this.GetLDefaultArticleInsertionIndex ();
+			}
+			else
 			{
 				var info = this.lineInformations[sel.Value];
 				index = info.LineIndex+1;
@@ -459,6 +479,22 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			return null;
+		}
+
+		private int GetLDefaultArticleInsertionIndex()
+		{
+			for (int i = this.lineInformations.Count-1; i >= 0; i--)
+			{
+				var info = this.lineInformations[i];
+
+				if (info.AbstractDocumentItemEntity is ArticleDocumentItemEntity ||
+					info.AbstractDocumentItemEntity is TextDocumentItemEntity)
+				{
+					return info.LineIndex+1;
+				}
+			}
+
+			return 0;
 		}
 
 		public void UpdateLineInformations()
