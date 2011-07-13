@@ -134,6 +134,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private void CreateUIRightFrame(UIBuilder builder, FrameBox parent)
 		{
+			//	Première ligne à droite.
 			if (this.Quantity != null)
 			{
 				var line = new FrameBox
@@ -161,6 +162,22 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				this.PlaceLabelAndField (line, 35, 80, "Unité", unitField.Parent);
 
 				this.CreateStaticText (line, 70, "   (commandé)");
+			}
+
+			//	Deuxième ligne à droite.
+			{
+				var line = new FrameBox
+				{
+					Parent = parent,
+					Dock = DockStyle.Top,
+					PreferredHeight = 20,
+					Margins = new Margins (0, 0, 0, 5),
+					TabIndex = this.NextTabIndex,
+				};
+
+				//	Prix unitaire.
+				var quantityField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.PrimaryUnitPriceBeforeTax, x => this.Entity.PrimaryUnitPriceBeforeTax = x));
+				this.PlaceLabelAndField (line, 80, 100, "Prix unitaire HT", quantityField);
 			}
 		}
 
@@ -198,6 +215,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			item.ArticleShortDescriptionCache = null;
 			item.ArticleLongDescriptionCache = null;
 			item.ReplacementText = null;
+
+			if (value.ArticlePrices.Count != 0)
+			{
+				item.PrimaryUnitPriceBeforeTax = value.ArticlePrices[0].Value;  // initialise le prix de base de l'article
+			}
 
 			this.SetArticleDescription (this.GetArticleDescription ());
 

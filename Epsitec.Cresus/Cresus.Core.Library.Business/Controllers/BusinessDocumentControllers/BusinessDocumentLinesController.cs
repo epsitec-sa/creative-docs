@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				Parent = frame,
 				Dock = DockStyle.Bottom,
-				Margins = new Margins (0, 0, 5, 5),
+				Margins = new Margins (0, 0, 5, 0),
 			};
 		}
 
