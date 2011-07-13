@@ -33,8 +33,15 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		protected override void CreateUI(UIBuilder builder)
 		{
+			var box = new FrameBox
+			{
+				Parent = this.tileContainer,
+				Dock = DockStyle.Fill,
+				Padding = new Margins (5),
+			};
+
 			var textField = builder.CreateTextFieldMulti (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.Text, x => this.Entity.Text = x));
-			this.PlaceLabelAndField (this.tileContainer, 55, 500, "Texte", textField);
+			this.PlaceLabelAndField (box, 50, 400, "Texte", textField);
 		}
 
 		public override FormattedText TitleTile

@@ -61,6 +61,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.lineEditorController = new LineEditorController (this.accessData);
 			this.lineEditorController.CreateUI (frame);
 
+			//	Crée un splitter juste au-dessus de l'éditeur de ligne.
 			var splitter = new HSplitter
 			{
 				Parent = frame,

@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				Parent = parent,
 				Dock = DockStyle.Bottom,
-				PreferredHeight = 200,
+				PreferredHeight = 200,  // hauteur par défaut pour tous les éditeurs de lignes
 			};
 
 			var titleFrame = new FrameBox
@@ -66,7 +66,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				Parent = box,
 				Dock = DockStyle.Fill,
-				Padding = new Margins (5),
 				DrawFullFrame = true,
 			};
 		}

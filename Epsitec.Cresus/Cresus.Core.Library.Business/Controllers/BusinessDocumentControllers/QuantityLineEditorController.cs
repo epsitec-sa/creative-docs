@@ -33,9 +33,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		protected override void CreateUI(UIBuilder builder)
 		{
-			var line1 = new FrameBox
+			var box = new FrameBox
 			{
 				Parent = this.tileContainer,
+				Dock = DockStyle.Fill,
+				Padding = new Margins (5),
+			};
+
+			var line1 = new FrameBox
+			{
+				Parent = box,
 				Dock = DockStyle.Top,
 				PreferredHeight = 20,
 				Margins = new Margins (0, 0, 0, 5),
@@ -43,7 +50,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			var line2 = new FrameBox
 			{
-				Parent = this.tileContainer,
+				Parent = box,
 				Dock = DockStyle.Top,
 				PreferredHeight = 20,
 				Margins = new Margins (0, 0, 0, 5),
