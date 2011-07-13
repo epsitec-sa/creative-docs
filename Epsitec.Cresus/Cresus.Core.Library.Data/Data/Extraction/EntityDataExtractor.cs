@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +11,12 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 {
 	public sealed class EntityDataExtractor
 	{
-		public EntityDataExtractor()
+		public EntityDataExtractor(EntityDataMetadata metadata)
 		{
 			this.rows = new List<EntityDataRow> ();
 			this.collections = new List<EntityDataCollection> ();
+
+			this.metadata = metadata;
 		}
 
 		
@@ -49,6 +52,20 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 			{
 				throw new System.ArgumentException ("Cannot delete the collection: it doesn't belong to this extractor");
 			}
+		}
+
+
+		public void Fill(IEnumerable<AbstractEntity> entities)
+		{
+			this.Fill (entities.Select (x => new EntityDataRow (this.metadata, x)));
+		}
+
+		public void Fill(IEnumerable<EntityDataRow> rows)
+		{
+			this.rows.Clear ();
+			this.rows.AddRange (rows);
+
+			this.collections.ForEach (x => x.Fill (this.rows));
 		}
 
 		

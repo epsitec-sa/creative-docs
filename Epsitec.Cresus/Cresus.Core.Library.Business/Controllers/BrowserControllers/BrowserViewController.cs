@@ -19,6 +19,7 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Data.Extraction;
 
 namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
@@ -68,7 +69,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				this.dataSetName = dataSetName;
 				this.CreateBrowserDataContext ();
 
-				this.SelectContentsBasedOnDataSet ();
+				this.SetContentsBasedOnDataSet ();
 				this.OnDataSetSelected ();
 			}
 		}
@@ -227,10 +228,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			if ((this.collection != null) &&
 				(this.scrollList != null))
 			{
-				if (this.scrollList.InvalidateTextLayouts ())
-				{
-					this.collection.Invalidate ();
-				}
+				this.UpdateCollection (reset: false);
 			}
 		}
 
@@ -243,14 +241,15 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		}
 
 		
-		private void SelectContentsBasedOnDataSet()
+		private void SetContentsBasedOnDataSet()
 		{
 			var component = this.data.GetComponent<DataSetGetter> ();
 			var getter = component.ResolveDataSet (this.dataSetName);
-			this.SetContents (getter);
+			
+			this.SetContents (getter, component.GetRootEntityId (this.dataSetName));
 		}
 
-		private void SetContents(DataSetCollectionGetter collectionGetter)
+		private void SetContents(DataSetCollectionGetter collectionGetter, Druid entityId)
 		{
 			//	When switching to some other contents, the browser first has to ensure that the
 			//	UI no longer has an actively selected entity; clearing the active entity will
@@ -258,8 +257,24 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			this.Orchestrator.ClearActiveEntity ();
 
-			this.collectionGetter = collectionGetter;
-//-			this.data.SetupDataContext (this.Orchestrator.DefaultDataContext);
+			this.collectionGetter    = collectionGetter;
+			this.collectionEntityId  = entityId;
+			this.extractor           = null;
+			this.extractedCollection = null;
+
+			if (EntityInfo<CustomerEntity>.GetTypeId () == entityId)
+			{
+				this.extractor =
+					new EntityDataExtractor (
+						new EntityDataMetadataRecorder<CustomerEntity> ()
+							.Column (x => x.Relation.DefaultAddress.Location.PostalCode)
+							.Column (x => x.Relation.DefaultAddress.Location.Name)
+							.Column (x => x.Relation.DefaultAddress.Street.StreetName)
+						.GetMetadata ());
+
+				this.extractedCollection = this.extractor.CreateCollection (EntityDataRowComparer.Instance);
+			}
+
 			this.UpdateCollection ();
 		}
 
@@ -312,15 +327,24 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
-		private void UpdateCollection()
+		private void UpdateCollection(bool reset = true)
 		{
 			if (this.collectionGetter == null)
 			{
 				return;
 			}
 
-			this.collection.ClearAndAddRange (this.GetCollectionEntities ());
-			this.RefreshScrollList (reset: true);
+			if (this.extractedCollection != null)
+			{
+				this.extractor.Fill (this.GetCollectionEntities ());
+				this.collection.ClearAndAddRange (this.extractedCollection.Rows.Select (x => x.Entity));
+			}
+			else
+			{
+				this.collection.ClearAndAddRange (this.GetCollectionEntities ());
+			}
+
+			this.RefreshScrollList (reset);
 		}
 
 		private void InsertIntoCollection(AbstractEntity entity)
@@ -431,8 +455,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			if (this.collection != null)
 			{
-				this.collection.Invalidate ();
-				this.RefreshScrollList ();
+//				this.collection.Invalidate ();
+//				this.RefreshScrollList ();
 			}
 		}
 
@@ -455,7 +479,11 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private string							dataSetName;
 		private DataContext						browserDataContext;
 
+		private EntityDataExtractor             extractor;
+		private EntityDataCollection			extractedCollection;
+
 		private DataSetCollectionGetter			collectionGetter;
+		private Druid							collectionEntityId;
 		private int								suspendUpdates;
 
 		private ScrollList						scrollList;

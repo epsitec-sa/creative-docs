@@ -28,12 +28,12 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 				if (column.IsNumeric)
 				{
 					column.Index        = index;
-					column.NumericIndex = -1;
+					column.NumericIndex = numericIndex++;
 				}
 				else
 				{
 					column.Index        = index;
-					column.NumericIndex = numericIndex++;
+					column.NumericIndex = -1;
 				}
 			}
 

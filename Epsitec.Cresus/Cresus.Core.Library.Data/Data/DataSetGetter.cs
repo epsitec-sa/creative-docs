@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Data
 	/// The <c>DataSetGetter</c> class resolves a data set name to the data
 	///	set itself.
 	/// </summary>
-	public class DataSetGetter : CoreDataComponent
+	public sealed class DataSetGetter : CoreDataComponent
 	{
 		public DataSetGetter(CoreData data)
 			: base (data)
@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Data
 
 		public DataSetCollectionGetter ResolveDataSet(string dataSetName)
 		{
-			var entityId   = DataSetGetter.FindEntityId (dataSetName);
+			var entityId   = this.GetRootEntityId (dataSetName);
 			var entityType = EntityInfo.GetType (entityId);
 
 			return Resolver.ResolveGetter (entityType, this.Host);
