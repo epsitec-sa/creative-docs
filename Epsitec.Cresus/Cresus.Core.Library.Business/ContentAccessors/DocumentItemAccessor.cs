@@ -276,12 +276,49 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				text = "TVA ({total} à {taux})";
 			}
 
-			text = text.ToString ().Replace ("{total}", this.GetFormattedPrice (line.BaseAmount).ToString ());
-			text = text.ToString ().Replace ("{taux}", Misc.PercentToString (line.Rate).ToString ());
+			foreach (var pattern in DocumentItemAccessor.baseAmountList)
+			{
+				text = text.ToString ().Replace (pattern, this.GetFormattedPrice (line.BaseAmount).ToString ());
+			}
+
+			foreach (var pattern in DocumentItemAccessor.rateList)
+			{
+				text = text.ToString ().Replace (pattern, Misc.PercentToString (line.Rate).ToString ());
+			}
 
 			this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, text);
 			this.SetContent (0, DocumentItemAccessorColumn.Vat, this.GetFormattedPrice (line.ResultingTax));
 		}
+
+		private static string[] baseAmountList =
+		{
+			"{total}",
+			"{Total}",
+			"{prix}",
+			"{Prix}",
+			"{price}",
+			"{Price}",
+			"{base}",
+			"{Base}",
+			"{amount}",
+			"{Amount}",
+			"{baseamount}",
+			"{BaseAmount}",
+		};
+
+		private static string[] rateList =
+		{
+			"{taux}",
+			"{Taux}",
+			"{tva}",
+			"{Tva}",
+			"{TVA}",
+			"{rate}",
+			"{Rate}",
+			"{vat}",
+			"{Vat}",
+			"{VAT}",
+		};
 
 		private void BuildSubTotalItem(SubTotalDocumentItemEntity line)
 		{
