@@ -65,9 +65,17 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			var box = new FrameBox
 			{
 				Parent = parent,
-				Dock = DockStyle.Left,
-				PreferredWidth = labelWidth + 5 + fieldWidth,
 			};
+
+			if (fieldWidth == 0)
+			{
+				box.Dock = DockStyle.Fill;
+			}
+			else
+			{
+				box.Dock = DockStyle.Left;
+				box.PreferredWidth = labelWidth + 5 + fieldWidth;
+			}
 
 			var label = new StaticText
 			{

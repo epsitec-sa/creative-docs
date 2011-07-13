@@ -34,16 +34,29 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		protected override void CreateUI(UIBuilder builder)
 		{
-			var line1 = new FrameBox
+			var leftFrame = new FrameBox
 			{
 				Parent = this.tileContainer,
-				Dock = DockStyle.Top,
-				PreferredHeight = 20,
-				Margins = new Margins (0, 0, 0, 5),
+				Dock = DockStyle.Fill,
+			};
+
+			var rightFrame = new FrameBox
+			{
+				Parent = this.tileContainer,
+				Dock = DockStyle.Right,
+				PreferredWidth = 350,
 			};
 
 			//	Article.
 			{
+				var line = new FrameBox
+				{
+					Parent = leftFrame,
+					Dock = DockStyle.Top,
+					PreferredHeight = 20,
+					Margins = new Margins (0, 0, 0, 5),
+				};
+
 				var articleController = new SelectionController<ArticleDefinitionEntity> (this.accessData.BusinessContext)
 				{
 					ValueGetter         = () => this.Entity.ArticleDefinition,
@@ -52,52 +65,32 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				};
 
 				var articleField = builder.CreateCompactAutoCompleteTextField (null, "", articleController);
-				this.PlaceLabelAndField (line1, 75, 300, "Article", articleField.Parent);
-			}
-
-			if (this.Quantity != null)
-			{
-				//	Quantité.
-				var quantityField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Quantity.Quantity, x => this.Quantity.Quantity = x));
-				this.PlaceLabelAndField (line1, 55, 80, "Quantité", quantityField);
-
-				//	Unité.
-				var unitController = new SelectionController<UnitOfMeasureEntity> (this.accessData.BusinessContext)
-				{
-					ValueGetter         = () => this.Quantity.Unit,
-					ValueSetter         = x => this.Quantity.Unit = x,
-					ReferenceController = new ReferenceController (() => this.Quantity.Unit),
-				};
-
-				var unitField = builder.CreateCompactAutoCompleteTextField (null, "", unitController);
-				this.PlaceLabelAndField (line1, 30, 80, "Unité", unitField.Parent);
-
-				this.CreateStaticText (line1, 50, "(commandé)");
+				this.PlaceLabelAndField (line, 75, 0, "Article", articleField.Parent);
 			}
 
 			//	Choix des paramètres.
-			var line2 = new FrameBox
 			{
-				Parent = this.tileContainer,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 354, 0, 0),  // TODO: dépend de la largeur totale (800) et de la largeur des widgets éditables (300) !
-			};
+				var line = new FrameBox
+				{
+					Parent = leftFrame,
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, 0, 0, 2),
+				};
 
-			{
 				this.parameterController = new ArticleParameterControllers.ValuesArticleParameterController (this.tileContainer, null);
 				this.parameterController.CallbackParameterChanged = this.ParameterChanged;
-				this.parameterController.CreateUI (line2);
+				this.parameterController.CreateUI (line);
 				this.parameterController.UpdateUI (this.Entity);
 			}
 
 			//	Texte de remplacement.
-			var line3 = new FrameBox
 			{
-				Parent = this.tileContainer,
-				Dock = DockStyle.Fill,
-			};
+				var line = new FrameBox
+				{
+					Parent = leftFrame,
+					Dock = DockStyle.Fill,
+				};
 
-			{
 				var replacementBox = new FrameBox ();
 
 				this.toolbarController = new ArticleParameterControllers.ArticleParameterToolbarController (this.tileContainer);
@@ -108,7 +101,35 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				this.toolbarController.UpdateUI (this.Entity, this.articleDescriptionTextField);
 
-				this.PlaceLabelAndField (line3, 75, 300, "Désignation", replacementBox);
+				this.PlaceLabelAndField (line, 75, 0, "Désignation", replacementBox);
+			}
+
+			if (this.Quantity != null)
+			{
+				var line = new FrameBox
+				{
+					Parent = rightFrame,
+					Dock = DockStyle.Top,
+					PreferredHeight = 20,
+					Margins = new Margins (0, 0, 0, 5),
+				};
+
+				//	Quantité.
+				var quantityField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Quantity.Quantity, x => this.Quantity.Quantity = x));
+				this.PlaceLabelAndField (line, 50, 80, "Quantité", quantityField);
+
+				//	Unité.
+				var unitController = new SelectionController<UnitOfMeasureEntity> (this.accessData.BusinessContext)
+				{
+					ValueGetter         = () => this.Quantity.Unit,
+					ValueSetter         = x => this.Quantity.Unit = x,
+					ReferenceController = new ReferenceController (() => this.Quantity.Unit),
+				};
+
+				var unitField = builder.CreateCompactAutoCompleteTextField (null, "", unitController);
+				this.PlaceLabelAndField (line, 30, 80, "Unité", unitField.Parent);
+
+				this.CreateStaticText (line, 70, "(commandé)");
 			}
 		}
 
