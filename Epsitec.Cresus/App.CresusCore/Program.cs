@@ -15,16 +15,25 @@ namespace Epsitec.Cresus.Core
 		[System.STAThread]
 		static void Main()
 		{
-			using (var splash = new SplashScreen ("logo.png"))
+			var args = System.Environment.GetCommandLineArgs ();
+
+			if (args.Length > 0)
 			{
-				Program.ExecuteCoreProgram (splash);
+				Program.ExecuteCoreProgram (args, null);
+			}
+			else
+			{
+				using (var splash = new SplashScreen ("logo.png"))
+				{
+					Program.ExecuteCoreProgram (args, splash);
+				}
 			}
 		}
 
 
-		static void ExecuteCoreProgram(SplashScreen splash)
+		static void ExecuteCoreProgram(string[] args, SplashScreen splash)
 		{
-			Epsitec.Cresus.Core.CoreProgram.Main (System.Environment.GetCommandLineArgs ());
+			Epsitec.Cresus.Core.CoreProgram.Main (args);
 		}
 	}
 }

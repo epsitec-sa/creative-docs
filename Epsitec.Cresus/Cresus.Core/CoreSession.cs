@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core
 		{
 			get
 			{
-				throw new System.NotImplementedException ();
+				return "CoreSession";
 			}
 		}
 

@@ -26,6 +26,9 @@ namespace Epsitec.Cresus.Core
 
 				System.Diagnostics.Debug.WriteLine (string.Format ("Attempt {0}: fetching EditionController took {1} μs", i+1, 1000L*1000L * watch.ElapsedTicks / System.Diagnostics.Stopwatch.Frequency));
 			}
+
+
+//			CoreSession session = new CoreSession ();
 		}
 	}
 }
