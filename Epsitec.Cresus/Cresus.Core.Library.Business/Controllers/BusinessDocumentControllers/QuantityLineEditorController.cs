@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			};
 
 			var unitField = builder.CreateCompactAutoCompleteTextField (null, "", unitController);
-			this.PlaceLabelAndField (line1, 30, 80, "Unité", unitField.Parent);
+			this.PlaceLabelAndField (line1, 35, 80, "Unité", unitField.Parent);
 
 			//	Type.
 			var typeController = new SelectionController<ArticleQuantityColumnEntity> (this.accessData.BusinessContext)
@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			//	Date.
 			var dateField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.BeginDate, x => this.Entity.BeginDate = x));
-			this.PlaceLabelAndField (line1, 30, 100, "Date", dateField);
+			this.PlaceLabelAndField (line1, 35, 100, "Date", dateField);
 		}
 
 		public override FormattedText TitleTile

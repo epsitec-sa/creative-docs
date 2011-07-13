@@ -89,6 +89,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			field.Parent = box;
 			field.Dock = DockStyle.Fill;
+			field.Margins = new Margins (0);
 
 			return box;
 		}

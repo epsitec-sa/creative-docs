@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		}
 
 
-		public void CreateUI(FrameBox parent, string label)
+		public FrameBox CreateUI(FrameBox parent, string label)
 		{
 			//	Crée l'interface, c'est-à-dire la toolbar vide.
 			if (!string.IsNullOrEmpty (label))
@@ -50,6 +50,8 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			this.toolbar = UIBuilder.CreateMiniToolbar (parent, Library.UI.Constants.TinyButtonSize);
 			this.toolbar.Dock = DockStyle.Stacked;
 			this.toolbar.Margins = new Margins (0, Library.UI.Constants.RightMargin, 0, -1);
+
+			return this.toolbar;
 		}
 
 		public void UpdateUI(ArticleDefinitionEntity articleDefinition, AbstractTextField textField)

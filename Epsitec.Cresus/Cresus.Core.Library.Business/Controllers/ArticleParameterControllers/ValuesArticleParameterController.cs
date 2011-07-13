@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		}
 
 
-		public void CreateUI(FrameBox parent)
+		public FrameBox CreateUI(FrameBox parent)
 		{
 			this.frameBox = new FrameBox ()
 			{
@@ -48,6 +48,8 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 10, 1, 0),
 			};
+
+			return this.frameBox;
 		}
 
 		public void UpdateUI(IArticleDefinitionParameters article)

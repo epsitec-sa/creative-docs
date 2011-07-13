@@ -47,14 +47,20 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				PreferredWidth = 350,
 			};
 
+			this.CreateUILeftFrame (builder, leftFrame);
+			this.CreateUIRightFrame (builder, rightFrame);
+		}
+
+		private void CreateUILeftFrame(UIBuilder builder, FrameBox parent)
+		{
 			//	Article.
 			{
 				var line = new FrameBox
 				{
-					Parent = leftFrame,
+					Parent = parent,
 					Dock = DockStyle.Top,
 					PreferredHeight = 20,
-					Margins = new Margins (0, 0, 0, 5),
+					Margins = new Margins (0, 0, 0, 10),
 				};
 
 				var articleController = new SelectionController<ArticleDefinitionEntity> (this.accessData.BusinessContext)
@@ -72,14 +78,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				var line = new FrameBox
 				{
-					Parent = leftFrame,
+					Parent = parent,
 					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, 2),
+					Margins = new Margins (0, 0, 0, 5),
 				};
 
 				this.parameterController = new ArticleParameterControllers.ValuesArticleParameterController (this.tileContainer, null);
 				this.parameterController.CallbackParameterChanged = this.ParameterChanged;
-				this.parameterController.CreateUI (line);
+				var box = this.parameterController.CreateUI (line);
+				box.Margins = new Margins (0);
+
 				this.parameterController.UpdateUI (this.Entity);
 			}
 
@@ -87,28 +95,33 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				var line = new FrameBox
 				{
-					Parent = leftFrame,
+					Parent = parent,
 					Dock = DockStyle.Fill,
 				};
 
 				var replacementBox = new FrameBox ();
 
 				this.toolbarController = new ArticleParameterControllers.ArticleParameterToolbarController (this.tileContainer);
-				this.toolbarController.CreateUI (replacementBox, null);
+				var toolbar = this.toolbarController.CreateUI (replacementBox, null);
+				toolbar.Margins = new Margins (0, 0, 0, -1);
 
 				this.articleDescriptionTextField = builder.CreateTextFieldMulti (replacementBox, DockStyle.None, 0, Marshaler.Create (() => this.GetArticleDescription (), this.SetArticleDescription));
 				this.articleDescriptionTextField.Dock = DockStyle.StackFill;
+				this.articleDescriptionTextField.Margins = new Margins (0);
 
 				this.toolbarController.UpdateUI (this.Entity, this.articleDescriptionTextField);
 
 				this.PlaceLabelAndField (line, 75, 0, "Désignation", replacementBox);
 			}
+		}
 
+		private void CreateUIRightFrame(UIBuilder builder, FrameBox parent)
+		{
 			if (this.Quantity != null)
 			{
 				var line = new FrameBox
 				{
-					Parent = rightFrame,
+					Parent = parent,
 					Dock = DockStyle.Top,
 					PreferredHeight = 20,
 					Margins = new Margins (0, 0, 0, 5),
@@ -116,7 +129,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				//	Quantité.
 				var quantityField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Quantity.Quantity, x => this.Quantity.Quantity = x));
-				this.PlaceLabelAndField (line, 50, 80, "Quantité", quantityField);
+				this.PlaceLabelAndField (line, 55, 80, "Quantité", quantityField);
 
 				//	Unité.
 				var unitController = new SelectionController<UnitOfMeasureEntity> (this.accessData.BusinessContext)
@@ -127,11 +140,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				};
 
 				var unitField = builder.CreateCompactAutoCompleteTextField (null, "", unitController);
-				this.PlaceLabelAndField (line, 30, 80, "Unité", unitField.Parent);
+				this.PlaceLabelAndField (line, 35, 80, "Unité", unitField.Parent);
 
-				this.CreateStaticText (line, 70, "(commandé)");
+				this.CreateStaticText (line, 70, "   (commandé)");
 			}
 		}
+
 
 		public override FormattedText TitleTile
 		{
