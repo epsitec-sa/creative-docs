@@ -38,6 +38,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				Parent = this.tileContainer,
 				Dock = DockStyle.Fill,
+				TabIndex = this.NextTabIndex,
 			};
 
 			var rightFrame = new FrameBox
@@ -45,6 +46,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Parent = this.tileContainer,
 				Dock = DockStyle.Right,
 				PreferredWidth = 350,
+				TabIndex = this.NextTabIndex,
+			};
+
+			var separator = new Separator
+			{
+				IsVerticalLine = true,
+				PreferredWidth = 1,
+				Parent = this.tileContainer,
+				Dock = DockStyle.Right,
+				Margins = new Margins (10, 10, 0, 0),
 			};
 
 			this.CreateUILeftFrame (builder, leftFrame);
@@ -63,6 +74,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					Dock = DockStyle.Top,
 					PreferredHeight = 20,
 					Margins = new Margins (0, 0, 0, 10),
+					TabIndex = this.NextTabIndex,
 				};
 
 				var articleController = new SelectionController<ArticleDefinitionEntity> (this.accessData.BusinessContext)
@@ -83,12 +95,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					Parent = parent,
 					Dock = DockStyle.Top,
 					Margins = new Margins (0, 0, 0, 5),
+					TabIndex = this.NextTabIndex,
 				};
 
 				this.parameterController = new ArticleParameterControllers.ValuesArticleParameterController (this.tileContainer, line);
 				this.parameterController.CallbackParameterChanged = this.ParameterChanged;
 				var box = this.parameterController.CreateUI (line, labelWidth: labelWidth, labelToRight: true);
 				box.Margins = new Margins (0);
+				box.TabIndex = this.NextTabIndex;
 
 				this.parameterController.UpdateUI (this.Entity);
 			}
@@ -99,6 +113,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				{
 					Parent = parent,
 					Dock = DockStyle.Fill,
+					TabIndex = this.NextTabIndex,
 				};
 
 				var replacementBox = new FrameBox ();
@@ -127,11 +142,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					Dock = DockStyle.Top,
 					PreferredHeight = 20,
 					Margins = new Margins (0, 0, 0, 5),
+					TabIndex = this.NextTabIndex,
 				};
 
 				//	Quantité.
 				var quantityField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Quantity.Quantity, x => this.Quantity.Quantity = x));
-				this.PlaceLabelAndField (line, 55, 80, "Quantité", quantityField);
+				this.PlaceLabelAndField (line, 50, 80, "Quantité", quantityField);
 
 				//	Unité.
 				var unitController = new SelectionController<UnitOfMeasureEntity> (this.accessData.BusinessContext)

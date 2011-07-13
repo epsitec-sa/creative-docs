@@ -29,6 +29,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public AbstractLineEditorController(AccessData accessData)
 		{
 			this.accessData = accessData;
+			this.tabIndex = 1;
 		}
 
 		public void CreateUI(Widget parent, AbstractEntity entity)
@@ -65,6 +66,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			var box = new FrameBox
 			{
 				Parent = parent,
+				TabIndex = this.NextTabIndex,
 			};
 
 			if (fieldWidth == 0)
@@ -90,6 +92,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			field.Parent = box;
 			field.Dock = DockStyle.Fill;
 			field.Margins = new Margins (0);
+			field.TabIndex = this.NextTabIndex;
 
 			return box;
 		}
@@ -109,10 +112,19 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			return label;
 		}
 
+		protected int NextTabIndex
+		{
+			get
+			{
+				return this.tabIndex++;
+			}
+		}
+
 
 		protected readonly AccessData					accessData;
 
 		protected AbstractEntity						entity;
 		protected TileContainer							tileContainer;
+		private int										tabIndex;
 	}
 }
