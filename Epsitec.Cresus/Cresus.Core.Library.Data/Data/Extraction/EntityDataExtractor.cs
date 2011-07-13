@@ -54,6 +54,10 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 			}
 		}
 
+		public void Insert(AbstractEntity entity)
+		{
+			this.Insert (new EntityDataRow (this.metadata, entity));
+		}
 
 		public void Fill(IEnumerable<AbstractEntity> entities)
 		{

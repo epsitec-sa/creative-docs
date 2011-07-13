@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using System.Collections.Generic;
@@ -104,6 +105,12 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 
 			var fieldAttribute = propertyInfo.GetCustomAttributes (true).OfType<EntityFieldAttribute> ().FirstOrDefault ();
+
+			if ((fieldAttribute == null) &&
+				(propertyInfo.Name.EndsWith ("ForEdition")))
+			{
+				return EntityInfo.GetFieldCaption (propertyInfo.DeclaringType.GetProperty (propertyInfo.Name.StripSuffix ("ForEdition")));
+			}
 
 			if ((fieldAttribute == null) ||
 				(fieldAttribute.FieldId == null))

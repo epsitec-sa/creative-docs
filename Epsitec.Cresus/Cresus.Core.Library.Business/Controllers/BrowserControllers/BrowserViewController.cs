@@ -350,7 +350,11 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private void InsertIntoCollection(AbstractEntity entity)
 		{
 			this.collection.Add (entity);
-//-			this.RefreshScrollList (reset: true);
+
+			if (this.extractor != null)
+			{
+				this.extractor.Insert (entity);
+			}
 		}
 
 		private void NotifySelectedItemChange()

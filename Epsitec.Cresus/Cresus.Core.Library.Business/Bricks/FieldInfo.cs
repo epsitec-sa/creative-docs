@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Library.Settings;
 
@@ -75,10 +76,16 @@ namespace Epsitec.Cresus.Core.Bricks
 			}
 
 			var propertyInfo = lambdaMember.Member as System.Reflection.PropertyInfo;
-			var typeField    = EntityInfo.GetStructuredTypeField (propertyInfo);
-			var fieldId      = typeField.CaptionId;
+			var caption      = EntityInfo.GetFieldCaption (propertyInfo);
 
-			return fieldId;
+			if (caption == null)
+			{
+				return Druid.Empty;
+			}
+			else
+			{
+				return caption.Id;
+			}
 		}
 		
 
