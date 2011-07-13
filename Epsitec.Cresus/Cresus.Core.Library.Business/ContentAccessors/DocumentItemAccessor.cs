@@ -269,10 +269,18 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 		private void BuildTaxItem(TaxDocumentItemEntity line)
 		{
-			FormattedText text = FormattedText.Concat (line.Text, " (", this.GetFormattedPrice (line.BaseAmount), ")");
+			var text = line.Text;
+
+			if (text.IsNullOrEmpty)
+			{
+				text = "TVA ({total} à {taux})";
+			}
+
+			text = text.ToString ().Replace ("{total}", this.GetFormattedPrice (line.BaseAmount).ToString ());
+			text = text.ToString ().Replace ("{taux}", Misc.PercentToString (line.Rate).ToString ());
 
 			this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, text);
-			this.SetContent (0, DocumentItemAccessorColumn.LinePrice, this.GetFormattedPrice (line.ResultingTax));
+			this.SetContent (0, DocumentItemAccessorColumn.Vat, this.GetFormattedPrice (line.ResultingTax));
 		}
 
 		private void BuildSubTotalItem(SubTotalDocumentItemEntity line)
