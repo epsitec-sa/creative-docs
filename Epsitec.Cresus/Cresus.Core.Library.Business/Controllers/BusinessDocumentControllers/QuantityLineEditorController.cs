@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				Parent = this.tileContainer,
 				Dock = DockStyle.Fill,
-				Padding = new Margins (5),
+				Padding = new Margins (10),
 			};
 
 			var line1 = new FrameBox

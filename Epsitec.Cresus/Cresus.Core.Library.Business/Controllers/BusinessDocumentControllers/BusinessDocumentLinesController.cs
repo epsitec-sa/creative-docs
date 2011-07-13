@@ -101,7 +101,17 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			switch (columnType)
 			{
 				case ColumnType.QuantityAndUnit:
-					return info.GetColumnContent (DocumentItemAccessorColumn.UniqueQuantity);
+					var q = info.GetColumnContent (DocumentItemAccessorColumn.UniqueQuantity).ToString ();
+					var u = info.GetColumnContent (DocumentItemAccessorColumn.UniqueUnit).ToString ();
+
+					if (string.IsNullOrEmpty (q))
+					{
+						return null;
+					}
+					else
+					{
+						return Misc.FormatUnit (decimal.Parse (q), u);
+					}
 
 				case ColumnType.Type:
 					return info.GetColumnContent (DocumentItemAccessorColumn.UniqueType);

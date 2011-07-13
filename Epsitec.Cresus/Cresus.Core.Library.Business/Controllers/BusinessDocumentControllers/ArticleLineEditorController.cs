@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				Parent = this.tileContainer,
 				Dock = DockStyle.Fill,
-				Padding = new Margins (5),
+				Padding = new Margins (10),
 				TabIndex = this.NextTabIndex,
 			};
 
@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Parent = this.tileContainer,
 				Dock = DockStyle.Right,
 				PreferredWidth = 350,
-				Padding = new Margins (5),
+				Padding = new Margins (10),
 				TabIndex = this.NextTabIndex,
 			};
 
@@ -57,7 +57,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				PreferredWidth = 1,
 				Parent = this.tileContainer,
 				Dock = DockStyle.Right,
-				Margins = new Margins (5, 5, 0, 0),
 			};
 
 			this.CreateUILeftFrame (builder, leftFrame);

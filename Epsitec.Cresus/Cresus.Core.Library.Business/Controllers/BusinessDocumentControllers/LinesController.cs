@@ -299,7 +299,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					return 30;
 
 				case ColumnType.QuantityAndUnit:
-					return 50;
+					return 60;
 
 				case ColumnType.Type:
 					return 65;
@@ -311,7 +311,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					return 50;
 
 				case ColumnType.ArticleDescription:
-					return 206;
+					return 196;
 
 				case ColumnType.Discount:
 				case ColumnType.UnitPrice:
@@ -330,7 +330,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			switch (columnType)
 			{
 				case ColumnType.QuantityAndUnit:
-					return "Nb";
+					return "Quantité";
 
 				case ColumnType.Type:
 					return "Type";
