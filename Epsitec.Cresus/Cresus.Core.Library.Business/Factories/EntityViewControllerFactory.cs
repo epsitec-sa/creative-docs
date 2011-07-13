@@ -51,12 +51,10 @@ namespace Epsitec.Cresus.Core.Factories
 			NavigationPathElement navigationPathElement = null,
 			ResolutionMode        resolutionMode        = ResolutionMode.ThrowOnError)
 		{
-			if (entity == null)
+			if (entity.IsNull ())
 			{
 				return null;
 			}
-
-			System.Diagnostics.Debug.Assert (entity.IsNotNull ());
 
 			var callerDefaults = EntityViewControllerFactory.defaults;
 
@@ -69,6 +67,7 @@ namespace Epsitec.Cresus.Core.Factories
 					ControllerSubTypeId = controllerSubTypeId,
 					NavigationPathElement = navigationPathElement,
 					ControllerName = name,
+					ResolutionMode = resolutionMode,
 					Entity = entity,
 				};
 
@@ -121,6 +120,12 @@ namespace Epsitec.Cresus.Core.Factories
 			}
 
 			public AbstractEntity				Entity
+			{
+				get;
+				set;
+			}
+
+			public ResolutionMode				ResolutionMode
 			{
 				get;
 				set;

@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			wall.AddBrick (x => x.Relation.Person.Contacts)
 				.OfType<MailContactEntity> ()
 				.Template ()
-				.End ()
+				.End ();
 				;
 			wall.AddBrick (x => x.Relation.Person.Contacts)
 				.OfType<TelecomContactEntity> ()

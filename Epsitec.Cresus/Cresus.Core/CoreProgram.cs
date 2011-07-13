@@ -31,8 +31,6 @@ namespace Epsitec.Cresus.Core
 		
         private static void ExecuteCoreProgram()
 		{
-//-			Data.Test.Example1 ();
-			
 			GeneralExceptionCatcher.Setup ();
 			Library.UI.Services.Initialize ();
 

@@ -37,6 +37,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 			else
 			{
+				if (EntityViewControllerFactory.Default.ResolutionMode == Resolvers.ResolutionMode.InspectOnly)
+				{
+					return;
+				}
+
 				this.orchestrator          = EntityViewControllerFactory.Default.Orchestrator;
 				this.viewControllerMode    = EntityViewControllerFactory.Default.Mode;
 				this.navigationPathElement = EntityViewControllerFactory.Default.NavigationPathElement;

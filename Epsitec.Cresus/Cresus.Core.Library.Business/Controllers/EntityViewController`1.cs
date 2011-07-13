@@ -35,6 +35,11 @@ namespace Epsitec.Cresus.Core.Controllers
 		protected EntityViewController()
 			: base (EntityViewControllerFactory.Default.ControllerName)
 		{
+			if (EntityViewControllerFactory.Default.ResolutionMode == Resolvers.ResolutionMode.InspectOnly)
+			{
+				return;
+			}
+
 			this.uiControllers = new List<EntityViewController> ();
 			this.entity        = EntityViewControllerFactory.Default.Entity as T;
 
@@ -100,6 +105,15 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.CreateBricks (wall);
 
 			return bridge;
+		}
+
+		public sealed override BrickWall CreateBrickWallForInspection()
+		{
+			var wall = new BrickWall<T> ();
+
+			this.CreateBricks (wall);
+			
+			return wall;
 		}
 
 		

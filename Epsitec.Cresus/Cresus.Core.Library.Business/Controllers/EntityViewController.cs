@@ -20,6 +20,7 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Bricks;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -58,6 +59,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		internal abstract Bridge CreateBridgeAndBuildBricks();
+
+		public abstract BrickWall CreateBrickWallForInspection();
 
 		public T NotifyChildItemCreated<T>(T entity)
 			where T : AbstractEntity
