@@ -100,6 +100,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			switch (columnType)
 			{
+				case ColumnType.Group:
+					return info.AbstractDocumentItemEntity.GroupIndex.ToString ();  // TODO: provisoire (pour le debug)
+
 				case ColumnType.QuantityAndUnit:
 					var q = info.GetColumnContent (DocumentItemAccessorColumn.UniqueQuantity).ToString ();
 					var u = info.GetColumnContent (DocumentItemAccessorColumn.UniqueUnit).ToString ();

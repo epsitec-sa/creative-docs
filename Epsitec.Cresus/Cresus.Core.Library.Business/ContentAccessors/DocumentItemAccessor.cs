@@ -290,35 +290,21 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 			//	2) Ligne "rabais".
 			bool existingDiscount = false;
-			FormattedText discountText = "";
+			FormattedText discountText = line.TextForDiscount;
 
 			if (discountText.IsNullOrEmpty)
 			{
 				discountText = "Rabais";
 			}
 
-			if (line.Discount.DiscountRate.HasValue)
+			if (line.Discount.DiscountRate.HasValue && line.Discount.DiscountRate.Value != 0)
 			{
 				existingDiscount = true;
-				discountText = line.Discount.Text;
-
-				if (discountText.IsNullOrEmpty)
-				{
-					discountText = "Rabais";
-				}
-
-				discountText = FormattedText.Concat (discountText, " (", Misc.PercentToString (line.Discount.DiscountRate), ")");
+				discountText = FormattedText.Concat (discountText, " (", this.GetFormattedPercent (line.Discount.DiscountRate), ")");
 			}
-
-			if (line.Discount.Value.HasValue)
+			else if (line.Discount.Value.HasValue && line.Discount.Value != 0)
 			{
 				existingDiscount = true;
-				discountText = line.Discount.Text;
-
-				if (discountText.IsNullOrEmpty)
-				{
-					discountText = "Rabais";
-				}
 			}
 
 			decimal discountPrice = line.PrimaryPriceBeforeTax.Value - line.ResultingPriceBeforeTax.Value;

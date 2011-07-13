@@ -171,7 +171,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			int column = 0;
 			foreach (var columnType in this.ColumnTypes)
 			{
-				if (columnType == ColumnType.Group)
+				//?if (columnType == ColumnType.Group)
+				if (false)
 				{
 					// TODO: ...
 				}

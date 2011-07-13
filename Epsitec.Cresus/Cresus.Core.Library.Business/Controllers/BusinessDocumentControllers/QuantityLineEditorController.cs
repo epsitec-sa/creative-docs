@@ -38,6 +38,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Parent = this.tileContainer,
 				Dock = DockStyle.Fill,
 				Padding = new Margins (10),
+				TabIndex = this.NextTabIndex,
 			};
 
 			var line1 = new FrameBox
@@ -46,6 +47,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Dock = DockStyle.Top,
 				PreferredHeight = 20,
 				Margins = new Margins (0, 0, 0, 5),
+				TabIndex = this.NextTabIndex,
 			};
 
 			var line2 = new FrameBox
@@ -54,6 +56,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Dock = DockStyle.Top,
 				PreferredHeight = 20,
 				Margins = new Margins (0, 0, 0, 5),
+				TabIndex = this.NextTabIndex,
 			};
 
 			//	Quantité.
