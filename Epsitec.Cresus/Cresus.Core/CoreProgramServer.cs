@@ -8,6 +8,9 @@ using System.Linq.Expressions;
 using Epsitec.Common.Types;
 using System.Collections.Generic;
 using System.Linq;
+using System;
+using System.Reflection;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Cresus.Core
 {
@@ -36,9 +39,9 @@ namespace Epsitec.Cresus.Core
 			//			CoreSession session = new CoreSession ();
 
 			BuildControllers (new Epsitec.Cresus.Core.Entities.CustomerEntity (), Controllers.ViewControllerMode.Summary);
-			//BuildControllers (new Epsitec.Cresus.Core.Entities.CustomerEntity (), Controllers.ViewControllerMode.Edition);
-			//BuildControllers (new Epsitec.Cresus.Core.Entities.MailContactEntity (), Controllers.ViewControllerMode.Summary);
-			//BuildControllers (new Epsitec.Cresus.Core.Entities.AffairEntity (), Controllers.ViewControllerMode.Summary);
+			BuildControllers (new Epsitec.Cresus.Core.Entities.CustomerEntity (), Controllers.ViewControllerMode.Edition);
+			BuildControllers (new Epsitec.Cresus.Core.Entities.MailContactEntity (), Controllers.ViewControllerMode.Summary);
+			BuildControllers (new Epsitec.Cresus.Core.Entities.AffairEntity (), Controllers.ViewControllerMode.Summary);
 		}
 
 		private static void BuildControllers(AbstractEntity entity, ViewControllerMode mode)
@@ -46,22 +49,13 @@ namespace Epsitec.Cresus.Core
 			var customerSummaryWall = CoreSession.GetBrickWall (entity, mode);
 			var name = GetControllerName (entity, mode);
 
-			var filename = "web/" + name.Replace ('.', '/') + ".js";
+			var filename = string.Format ("web/js/{0}.js", name.Replace ('.', '/'));
 
 			var jscontent = "Ext.define('";
 			jscontent += name;
 			jscontent += "', {";
-			jscontent += "extend: 'Ext.Panel',";
-			jscontent += "title: '" + name + "',";
-			jscontent += "flex: 1,";
-			jscontent += "layout: {";
-			jscontent += "type: 'vbox',";
-			jscontent += "align: 'stretch'";
-			jscontent += "},";
-			jscontent += "margin: 3,";
-			jscontent += "defaults: {";
-			jscontent += "border: false";
-			jscontent += "},";
+			jscontent += "extend: 'Epsitec.Cresus.Core.Static.SummaryPanel',";
+			jscontent += string.Format ("title: '{0}',", name);
 			jscontent += "items: [";
 
 			// Do something with the bricks
@@ -87,20 +81,7 @@ namespace Epsitec.Cresus.Core
 
 				CreateDefaultTextProperties (brick);
 
-				jscontent += "{";
-				jscontent += "xtype: 'panel',";
-				jscontent += "title: '";
-				jscontent += Brick.GetProperty (brick, BrickPropertyKey.Title).StringValue;
-				jscontent += "',";
-				jscontent += "html: [";
-
-				jscontent += "'";
-				jscontent += Brick.GetProperty (brick, BrickPropertyKey.Text).StringValue;
-				jscontent += "<br/><b>plop</b>',";
-
-				jscontent += "],";
-				jscontent += "flex: 1,";
-				jscontent += "},";
+				jscontent += CreatePanelContent (brick);
 			}
 
 
@@ -108,6 +89,65 @@ namespace Epsitec.Cresus.Core
 			jscontent += "});";
 			System.IO.File.WriteAllText (filename, jscontent);
 
+		}
+
+		private static string CreateIcon(Brick brick)
+		{
+			if (!Brick.ContainsProperty (brick, BrickPropertyKey.Icon))
+			{
+				return null;
+			}
+
+			var iconRes = Brick.GetProperty (brick, BrickPropertyKey.Icon).StringValue;
+
+			if (iconRes.IndexOf ("manifest:") == 0)
+			{
+				iconRes = iconRes.Substring (9);
+			}
+
+			Epsitec.Common.Document.Engine.Initialize ();
+			var icon = Bitmap.FromManifestResource (iconRes, Assembly.GetExecutingAssembly ());
+
+			if (icon == null)
+			{
+				return null;
+			}
+
+			var bitmap = icon.BitmapImage;
+
+			var bytes = bitmap.Save (ImageFormat.Png);
+			string filename = string.Format ("web/images/{0}.png", iconRes.Replace ('.', '/'));
+			System.IO.File.WriteAllBytes (filename, bytes);
+
+			return filename;
+		}
+
+
+		private static object CreatePanelContent(Brick brick)
+		{
+			var jscontent = "Ext.create('Epsitec.Cresus.Core.Static.TilePanel', {";
+
+			jscontent += "title: '";
+			jscontent += Brick.GetProperty (brick, BrickPropertyKey.Title).StringValue;
+			jscontent += "',";
+			jscontent += "html: [";
+
+			jscontent += "'";
+			jscontent += Brick.GetProperty (brick, BrickPropertyKey.Text).StringValue;
+			jscontent += "<br/><b>plop</b>',";
+
+			jscontent += "],";
+
+			var icon = CreateIcon (brick);
+			if (icon != null)
+			{
+				jscontent += string.Format ("icon: '{0}',", icon);
+			}
+
+
+			jscontent += "}),";
+
+			return jscontent;
 		}
 
 		private static string GetControllerName(AbstractEntity entity, ViewControllerMode mode)
@@ -129,5 +169,35 @@ namespace Epsitec.Cresus.Core
 				Brick.AddProperty (brick, new BrickProperty (BrickPropertyKey.TextCompact, expression));
 			}
 		}
+
+		/*
+		public enum BrickPropertyKey
+		{
+			Name,
+			Icon,
+			Title,
+			TitleCompact,
+			Text,
+			TextCompact,
+
+			Attribute,
+
+			Template,
+			AsType,
+
+			Input,
+			Field,
+			Width,
+			Height,
+			Separator,
+			HorizontalGroup,
+			FromCollection,
+			SpecialController,
+			GlobalWarning,
+
+			CollectionAnnotation,
+			Include,
+		}
+		 */
 	}
 }
