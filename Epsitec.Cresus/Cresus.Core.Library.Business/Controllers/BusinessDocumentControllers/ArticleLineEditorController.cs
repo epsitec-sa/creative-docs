@@ -32,6 +32,26 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 		}
 
+		public EditMode CurrentEditMode
+		{
+			get
+			{
+				return this.editMode;
+			}
+			set
+			{
+				this.editMode = value;
+			}
+		}
+
+		private bool IsShortDescription
+		{
+			get
+			{
+				return this.editMode == EditMode.ShortDescription;
+			}
+		}
+
 		protected override void CreateUI(UIBuilder builder)
 		{
 			var leftFrame = new FrameBox
@@ -129,7 +149,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				this.toolbarController.UpdateUI (this.Entity, this.articleDescriptionTextField);
 
-				this.PlaceLabelAndField (line, labelWidth, 0, "Désignation", replacementBox);
+				var text = this.IsShortDescription ? "Désign. courte" : "Désignation";
+				this.PlaceLabelAndField (line, labelWidth, 0, text, replacementBox);
 			}
 		}
 
@@ -282,7 +303,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private FormattedText GetArticleDescription()
 		{
-			return ArticleDocumentItemHelper.GetArticleDescription (this.Entity);
+			return ArticleDocumentItemHelper.GetArticleDescription (this.Entity, shortDescription: this.IsShortDescription);
 		}
 
 		private void SetArticleDescription(FormattedText value)
@@ -431,6 +452,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
+		private EditMode														editMode;
 		private ArticleParameterControllers.ValuesArticleParameterController	parameterController;
 		private ArticleParameterControllers.ArticleParameterToolbarController	toolbarController;
 		private TextFieldMultiEx												articleDescriptionTextField;

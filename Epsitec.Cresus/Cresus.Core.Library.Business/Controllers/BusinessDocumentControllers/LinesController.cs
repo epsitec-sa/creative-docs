@@ -30,8 +30,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public LinesController(AccessData accessData)
 		{
 			this.accessData = accessData;
-
-			this.showAllColumns = true;
 		}
 
 
@@ -63,8 +61,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			};
 		}
 
-		public void UpdateUI(int lineCount, System.Func<int, LineInformations> getLineInformations, System.Func<int, ColumnType, FormattedText> getCellContent, int? sel = null)
+		public void UpdateUI(ViewMode viewMode, int lineCount, System.Func<int, LineInformations> getLineInformations, System.Func<int, ColumnType, FormattedText> getCellContent, int? sel = null)
 		{
+			this.viewMode            = viewMode;
 			this.getLineInformations = getLineInformations;
 			this.getCellContent      = getCellContent;
 
@@ -191,6 +190,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 						this.table[column, row].Insert (text);
 					}
+					else
+					{
+						var text = this.table[column, row].Children[0] as StaticText;
+						text.ContentAlignment = this.GetRowColumnContentAlignment (row, columnType);
+					}
 				}
 
 				column++;
@@ -265,7 +269,19 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Retourne les colonnes visibles dans la table, de gauche à droite.
 			get
 			{
-				if (this.showAllColumns)
+				if (this.viewMode == ViewMode.Compact)
+				{
+					yield return ColumnType.Group;
+
+					yield return ColumnType.ArticleDescription;
+
+					yield return ColumnType.QuantityAndUnit;
+					yield return ColumnType.Type;
+
+					yield return ColumnType.UnitPrice;
+					yield return ColumnType.Total;
+				}
+				else if (this.viewMode == ViewMode.Default)
 				{
 					yield return ColumnType.Group;
 
@@ -285,13 +301,17 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				{
 					yield return ColumnType.Group;
 
+					yield return ColumnType.ArticleId;
 					yield return ColumnType.ArticleDescription;
 
 					yield return ColumnType.QuantityAndUnit;
 					yield return ColumnType.Type;
+					yield return ColumnType.Date;
 
 					yield return ColumnType.UnitPrice;
+					yield return ColumnType.Discount;
 					yield return ColumnType.LinePrice;
+					yield return ColumnType.Vat;
 					yield return ColumnType.Total;
 				}
 			}
@@ -299,13 +319,50 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private int GetColumnWidth(ColumnType columnType)
 		{
+			if (this.viewMode == ViewMode.Compact)
+			{
+				switch (columnType)
+				{
+					case ColumnType.ArticleDescription:
+						return 426;
+
+					case ColumnType.QuantityAndUnit:
+						return 80;
+				}
+			}
+			else if (this.viewMode == ViewMode.Default)
+			{
+				switch (columnType)
+				{
+					case ColumnType.ArticleId:
+						return 50;
+
+					case ColumnType.ArticleDescription:
+						return 196;
+
+					case ColumnType.QuantityAndUnit:
+						return 60;
+				}
+			}
+			else
+			{
+				switch (columnType)
+				{
+					case ColumnType.ArticleId:
+						return 80;
+
+					case ColumnType.ArticleDescription:
+						return 250;
+
+					case ColumnType.QuantityAndUnit:
+						return 80;
+				}
+			}
+
 			switch (columnType)
 			{
 				case ColumnType.Group:
 					return 30;
-
-				case ColumnType.QuantityAndUnit:
-					return 60;
 
 				case ColumnType.Type:
 					return 65;
@@ -313,14 +370,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				case ColumnType.Date:
 					return 70;
 
-				case ColumnType.ArticleId:
-					return 50;
-
-				case ColumnType.ArticleDescription:
-					return 196;
-
-				case ColumnType.Discount:
 				case ColumnType.UnitPrice:
+				case ColumnType.Discount:
 				case ColumnType.LinePrice:
 				case ColumnType.Vat:
 				case ColumnType.Total:
@@ -395,7 +446,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private System.Func<bool>								selectionChanged;
 		private System.Func<int, LineInformations>				getLineInformations;
 		private System.Func<int, ColumnType, FormattedText>		getCellContent;
-		private bool											showAllColumns;
+		private ViewMode										viewMode;
 
 		private AbstractDocumentItemEntity						lastDocumentItemEntity;
 		private int												documentItemIndex;

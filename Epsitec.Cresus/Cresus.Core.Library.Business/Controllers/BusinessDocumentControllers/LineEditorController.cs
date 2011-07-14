@@ -71,9 +71,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		public void UpdateUI(LineInformations info)
+		public void UpdateUI(EditMode editMode, LineInformations info)
 		{
 			//	Met à jour l'éditeur en fonction de la sélection en cours.
+			this.editMode = editMode;
+
 			this.lineEditorController = null;
 			this.editorTile.Children.Clear ();
 
@@ -84,6 +86,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					if (info.SublineIndex == 0)
 					{
 						this.lineEditorController = new ArticleLineEditorController (this.accessData);
+						(this.lineEditorController as ArticleLineEditorController).CurrentEditMode = this.editMode;
 						this.lineEditorController.CreateUI (this.editorTile, info.AbstractDocumentItemEntity);
 					}
 					else
@@ -137,6 +140,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private readonly AccessData						accessData;
 
+		private EditMode								editMode;
 		private StaticText								titleText;
 		private FrameBox								editorTile;
 		private AbstractLineEditorController			lineEditorController;

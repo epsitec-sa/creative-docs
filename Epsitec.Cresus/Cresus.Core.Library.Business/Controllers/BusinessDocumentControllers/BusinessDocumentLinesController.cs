@@ -34,6 +34,17 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			this.commandContext = new CommandContext ("BusinessDocumentLinesController", CommandContextOptions.ActivateWithoutFocus);
 
+			//	Si les états ne sont pas définis, met les valeurs par défaut.
+			if (this.CurrentViewMode == ViewMode.Unknown)
+			{
+				this.CurrentViewMode = ViewMode.Default;
+			}
+
+			if (this.CurrentEditMode == EditMode.Unknown)
+			{
+				this.CurrentEditMode = EditMode.LongDescription;
+			}
+
 			this.lineInformations = new List<LineInformations> ();
 			this.UpdateLineInformations ();
 		}
@@ -155,11 +166,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				int? sel = this.linesController.LastSelection;
 				var info = this.lineInformations[sel.Value];
 
-				this.lineEditorController.UpdateUI (info);
+				this.lineEditorController.UpdateUI (this.CurrentEditMode, info);
 			}
 			else
 			{
-				this.lineEditorController.UpdateUI (null);
+				this.lineEditorController.UpdateUI (this.CurrentEditMode, null);
 			}
 
 			this.UpdateCommands ();
@@ -171,26 +182,36 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		[Command (Library.Business.Res.CommandIds.Lines.ViewCompact)]
 		public void ProcessViewCompact()
 		{
+			this.CurrentViewMode = ViewMode.Compact;
+			this.UpdateAfterChange ();
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.ViewDefault)]
 		public void ProcessViewDefault()
 		{
+			this.CurrentViewMode = ViewMode.Default;
+			this.UpdateAfterChange ();
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.ViewFull)]
 		public void ProcessViewFull()
 		{
+			this.CurrentViewMode = ViewMode.Full;
+			this.UpdateAfterChange ();
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.EditShort)]
 		public void ProcessEditShort()
 		{
+			this.CurrentEditMode = EditMode.ShortDescription;
+			this.CallbackSelectionChanged ();
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.EditLong)]
 		public void ProcessEditLong()
 		{
+			this.CurrentEditMode = EditMode.LongDescription;
+			this.CallbackSelectionChanged ();
 		}
 
 
@@ -555,7 +576,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.UpdateLineInformations ();
 
 			int? sel = this.GetLineInformationsIndex (line, quantity);
-			this.linesController.UpdateUI (this.lineInformations.Count, this.CallbackGetLineInformations, this.CallbackGetCellContent, sel);
+			this.linesController.UpdateUI (this.CurrentViewMode, this.lineInformations.Count, this.CallbackGetLineInformations, this.CallbackGetCellContent, sel);
 			this.UpdateCommands ();
 		}
 
@@ -731,6 +752,59 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				}
 
 				return true;
+			}
+		}
+
+
+		private ViewMode CurrentViewMode
+		{
+			get
+			{
+				if (this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.ViewCompact).ActiveState == ActiveState.Yes)
+				{
+					return ViewMode.Compact;
+				}
+
+				if (this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.ViewDefault).ActiveState == ActiveState.Yes)
+				{
+					return ViewMode.Default;
+				}
+
+				if (this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.ViewFull).ActiveState == ActiveState.Yes)
+				{
+					return ViewMode.Full;
+				}
+
+				return ViewMode.Unknown;
+			}
+			set
+			{
+				this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.ViewCompact).ActiveState = (value == ViewMode.Compact) ? ActiveState.Yes : ActiveState.No;
+				this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.ViewDefault).ActiveState = (value == ViewMode.Default) ? ActiveState.Yes : ActiveState.No;
+				this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.ViewFull   ).ActiveState = (value == ViewMode.Full   ) ? ActiveState.Yes : ActiveState.No;
+			}
+		}
+
+		private EditMode CurrentEditMode
+		{
+			get
+			{
+				if (this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.EditShort).ActiveState == ActiveState.Yes)
+				{
+					return EditMode.ShortDescription;
+				}
+
+				if (this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.EditLong).ActiveState == ActiveState.Yes)
+				{
+					return EditMode.LongDescription;
+				}
+
+				return EditMode.Unknown;
+			}
+			set
+			{
+				this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.EditShort).ActiveState = (value == EditMode.ShortDescription) ? ActiveState.Yes : ActiveState.No;
+				this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.EditLong ).ActiveState = (value == EditMode.LongDescription ) ? ActiveState.Yes : ActiveState.No;
 			}
 		}
 
