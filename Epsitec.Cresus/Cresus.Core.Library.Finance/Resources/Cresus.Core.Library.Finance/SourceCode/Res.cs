@@ -16,10 +16,24 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			{
 			}
 			
-			//	designer:cap/CVAF
-			public static readonly Epsitec.Common.Types.StringType IsrBankOrRefNumber = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 15));
-			//	designer:cap/CVAA
-			public static readonly Epsitec.Common.Types.StringType PostFinanceAccount = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10));
+			public static class Decimal
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/CVAL4
+				public static readonly Epsitec.Common.Types.DecimalType ExchangeRate = (global::Epsitec.Common.Types.DecimalType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 149));
+				//	designer:cap/CVAM4
+				public static readonly Epsitec.Common.Types.DecimalType ExchangeRateBase = (global::Epsitec.Common.Types.DecimalType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 150));
+				//	designer:cap/CVAI4
+				public static readonly Epsitec.Common.Types.DecimalType MonetaryAmount = (global::Epsitec.Common.Types.DecimalType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 146));
+				//	designer:cap/CVAK4
+				public static readonly Epsitec.Common.Types.DecimalType Percentage = (global::Epsitec.Common.Types.DecimalType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 148));
+				//	designer:cap/CVAJ4
+				public static readonly Epsitec.Common.Types.DecimalType VatRate = (global::Epsitec.Common.Types.DecimalType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 147));
+			}
+			
 			public static class Finance
 			{
 				internal static void _Initialize()
@@ -30,8 +44,6 @@ namespace Epsitec.Cresus.Core.Library.Finance
 				public static readonly Epsitec.Common.Types.EnumType BillingMode = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 94));
 				//	designer:cap/CVA23
 				public static readonly Epsitec.Common.Types.EnumType BillingStatus = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 98));
-				//	designer:cap/CVAK
-				public static readonly Epsitec.Common.Types.StringType BookAccount = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 20));
 				//	designer:cap/CVAP1
 				public static readonly Epsitec.Common.Types.EnumType CurrencyCode = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 57));
 				//	designer:cap/CVAF1
@@ -46,6 +58,20 @@ namespace Epsitec.Cresus.Core.Library.Finance
 				public static readonly Epsitec.Common.Types.EnumType TaxMode = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 113));
 				//	designer:cap/CVA52
 				public static readonly Epsitec.Common.Types.EnumType VatCode = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 69));
+			}
+			
+			public static class String
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/CVAK
+				public static readonly Epsitec.Common.Types.StringType BookAccount = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 20));
+				//	designer:cap/CVAF
+				public static readonly Epsitec.Common.Types.StringType IsrBankOrRefNumber = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 15));
+				//	designer:cap/CVAA
+				public static readonly Epsitec.Common.Types.StringType PostFinanceAccount = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10));
 			}
 			
 			//	designer:cap/CVAL
@@ -643,10 +669,10 @@ namespace Epsitec.Cresus.Core.Library.Finance
 				
 				//	designer:cap/CVA91
 				public static readonly global::Epsitec.Common.Support.Druid CurrencyCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 41);
-				//	designer:cap/CVAB1
-				public static readonly global::Epsitec.Common.Support.Druid ExchangeRate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 43);
-				//	designer:cap/CVAA1
-				public static readonly global::Epsitec.Common.Support.Druid ExchangeRateBase = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 42);
+				//	designer:cap/CVAN4
+				public static readonly global::Epsitec.Common.Support.Druid ExchangeRate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 151);
+				//	designer:cap/CVAO4
+				public static readonly global::Epsitec.Common.Support.Druid ExchangeRateBase = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 152);
 				//	designer:cap/CVAC1
 				public static readonly global::Epsitec.Common.Support.Druid ExchangeRateSource = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 44);
 			}
@@ -721,8 +747,8 @@ namespace Epsitec.Cresus.Core.Library.Finance
 				{
 				}
 				
-				//	designer:cap/CVA61
-				public static readonly global::Epsitec.Common.Support.Druid Amount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 38);
+				//	designer:cap/CVAP4
+				public static readonly global::Epsitec.Common.Support.Druid Amount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 153);
 				//	designer:cap/CVA71
 				public static readonly global::Epsitec.Common.Support.Druid Currency = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 39);
 				//	designer:cap/CVA81
@@ -777,14 +803,14 @@ namespace Epsitec.Cresus.Core.Library.Finance
 				{
 				}
 				
-				//	designer:cap/CVA64
-				public static readonly global::Epsitec.Common.Support.Druid DiscountRate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 134);
+				//	designer:cap/CVAQ4
+				public static readonly global::Epsitec.Common.Support.Druid DiscountRate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 154);
 				//	designer:cap/CVA94
 				public static readonly global::Epsitec.Common.Support.Druid RoundingMode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 137);
 				//	designer:cap/CVA54
 				public static readonly global::Epsitec.Common.Support.Druid Text = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 133);
-				//	designer:cap/CVA74
-				public static readonly global::Epsitec.Common.Support.Druid Value = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 135);
+				//	designer:cap/CVAR4
+				public static readonly global::Epsitec.Common.Support.Druid Value = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 155);
 				//	designer:cap/CVA84
 				public static readonly global::Epsitec.Common.Support.Druid ValueIncludesTaxes = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 136);
 			}
@@ -835,8 +861,8 @@ namespace Epsitec.Cresus.Core.Library.Finance
 				{
 				}
 				
-				//	designer:cap/CVAT2
-				public static readonly global::Epsitec.Common.Support.Druid Rate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 93);
+				//	designer:cap/CVAS4
+				public static readonly global::Epsitec.Common.Support.Druid Rate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 156);
 				//	designer:cap/CVAS2
 				public static readonly global::Epsitec.Common.Support.Druid VatCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 92);
 			}
@@ -892,7 +918,9 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Cresus.Core.Library.Finance");
 			Types._Initialize ();
+			Types.Decimal._Initialize ();
 			Types.Finance._Initialize ();
+			Types.String._Initialize ();
 			Values._Initialize ();
 			Values.Finance.BillingMode._Initialize ();
 			Values.Finance.BillingStatus._Initialize ();

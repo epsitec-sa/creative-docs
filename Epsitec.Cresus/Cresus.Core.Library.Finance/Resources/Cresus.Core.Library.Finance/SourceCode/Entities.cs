@@ -581,44 +581,44 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		///	<summary>
 		///	The <c>ExchangeRateBase</c> field.
-		///	designer:fld/CVAT/CVAA1
+		///	designer:fld/CVAT/CVAO4
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[CVAA1]")]
+		[global::Epsitec.Common.Support.EntityField ("[CVAO4]")]
 		public global::System.Decimal ExchangeRateBase
 		{
 			get
 			{
-				return this.GetField<global::System.Decimal> ("[CVAA1]");
+				return this.GetField<global::System.Decimal> ("[CVAO4]");
 			}
 			set
 			{
 				global::System.Decimal oldValue = this.ExchangeRateBase;
-				if (oldValue != value || !this.IsFieldDefined("[CVAA1]"))
+				if (oldValue != value || !this.IsFieldDefined("[CVAO4]"))
 				{
 					this.OnExchangeRateBaseChanging (oldValue, value);
-					this.SetField<global::System.Decimal> ("[CVAA1]", oldValue, value);
+					this.SetField<global::System.Decimal> ("[CVAO4]", oldValue, value);
 					this.OnExchangeRateBaseChanged (oldValue, value);
 				}
 			}
 		}
 		///	<summary>
 		///	The <c>ExchangeRate</c> field.
-		///	designer:fld/CVAT/CVAB1
+		///	designer:fld/CVAT/CVAN4
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[CVAB1]")]
+		[global::Epsitec.Common.Support.EntityField ("[CVAN4]")]
 		public global::System.Decimal ExchangeRate
 		{
 			get
 			{
-				return this.GetField<global::System.Decimal> ("[CVAB1]");
+				return this.GetField<global::System.Decimal> ("[CVAN4]");
 			}
 			set
 			{
 				global::System.Decimal oldValue = this.ExchangeRate;
-				if (oldValue != value || !this.IsFieldDefined("[CVAB1]"))
+				if (oldValue != value || !this.IsFieldDefined("[CVAN4]"))
 				{
 					this.OnExchangeRateChanging (oldValue, value);
-					this.SetField<global::System.Decimal> ("[CVAB1]", oldValue, value);
+					this.SetField<global::System.Decimal> ("[CVAN4]", oldValue, value);
 					this.OnExchangeRateChanged (oldValue, value);
 				}
 			}
@@ -1025,22 +1025,22 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		///	<summary>
 		///	The <c>Amount</c> field.
-		///	designer:fld/CVA21/CVA61
+		///	designer:fld/CVA21/CVAP4
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[CVA61]")]
+		[global::Epsitec.Common.Support.EntityField ("[CVAP4]")]
 		public global::System.Decimal Amount
 		{
 			get
 			{
-				return this.GetField<global::System.Decimal> ("[CVA61]");
+				return this.GetField<global::System.Decimal> ("[CVAP4]");
 			}
 			set
 			{
 				global::System.Decimal oldValue = this.Amount;
-				if (oldValue != value || !this.IsFieldDefined("[CVA61]"))
+				if (oldValue != value || !this.IsFieldDefined("[CVAP4]"))
 				{
 					this.OnAmountChanging (oldValue, value);
-					this.SetField<global::System.Decimal> ("[CVA61]", oldValue, value);
+					this.SetField<global::System.Decimal> ("[CVAP4]", oldValue, value);
 					this.OnAmountChanged (oldValue, value);
 				}
 			}
@@ -1267,22 +1267,22 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		///	<summary>
 		///	The <c>Rate</c> field.
-		///	designer:fld/CVAR2/CVAT2
+		///	designer:fld/CVAR2/CVAS4
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[CVAT2]")]
+		[global::Epsitec.Common.Support.EntityField ("[CVAS4]")]
 		public global::System.Decimal Rate
 		{
 			get
 			{
-				return this.GetField<global::System.Decimal> ("[CVAT2]");
+				return this.GetField<global::System.Decimal> ("[CVAS4]");
 			}
 			set
 			{
 				global::System.Decimal oldValue = this.Rate;
-				if (oldValue != value || !this.IsFieldDefined("[CVAT2]"))
+				if (oldValue != value || !this.IsFieldDefined("[CVAS4]"))
 				{
 					this.OnRateChanging (oldValue, value);
-					this.SetField<global::System.Decimal> ("[CVAT2]", oldValue, value);
+					this.SetField<global::System.Decimal> ("[CVAS4]", oldValue, value);
 					this.OnRateChanged (oldValue, value);
 				}
 			}
@@ -1645,44 +1645,44 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		///	<summary>
 		///	The <c>DiscountRate</c> field.
-		///	designer:fld/CVA44/CVA64
+		///	designer:fld/CVA44/CVAQ4
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[CVA64]")]
+		[global::Epsitec.Common.Support.EntityField ("[CVAQ4]")]
 		public global::System.Decimal? DiscountRate
 		{
 			get
 			{
-				return this.GetField<global::System.Decimal?> ("[CVA64]");
+				return this.GetField<global::System.Decimal?> ("[CVAQ4]");
 			}
 			set
 			{
 				global::System.Decimal? oldValue = this.DiscountRate;
-				if (oldValue != value || !this.IsFieldDefined("[CVA64]"))
+				if (oldValue != value || !this.IsFieldDefined("[CVAQ4]"))
 				{
 					this.OnDiscountRateChanging (oldValue, value);
-					this.SetField<global::System.Decimal?> ("[CVA64]", oldValue, value);
+					this.SetField<global::System.Decimal?> ("[CVAQ4]", oldValue, value);
 					this.OnDiscountRateChanged (oldValue, value);
 				}
 			}
 		}
 		///	<summary>
 		///	The <c>Value</c> field.
-		///	designer:fld/CVA44/CVA74
+		///	designer:fld/CVA44/CVAR4
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[CVA74]")]
+		[global::Epsitec.Common.Support.EntityField ("[CVAR4]")]
 		public global::System.Decimal? Value
 		{
 			get
 			{
-				return this.GetField<global::System.Decimal?> ("[CVA74]");
+				return this.GetField<global::System.Decimal?> ("[CVAR4]");
 			}
 			set
 			{
 				global::System.Decimal? oldValue = this.Value;
-				if (oldValue != value || !this.IsFieldDefined("[CVA74]"))
+				if (oldValue != value || !this.IsFieldDefined("[CVAR4]"))
 				{
 					this.OnValueChanging (oldValue, value);
-					this.SetField<global::System.Decimal?> ("[CVA74]", oldValue, value);
+					this.SetField<global::System.Decimal?> ("[CVAR4]", oldValue, value);
 					this.OnValueChanged (oldValue, value);
 				}
 			}
