@@ -477,9 +477,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			var list = BusinessDocumentLinesController.GroupIndexSplit (line.GroupIndex);
 			var level = list.Count-1;
 
-			//	TODO: remplacer le '5' ici par une constante MaxGroupingDepth qui vaudra 4.
-
-			if (list[level]+increment == 0 || list[level]+increment >= 5)  // faut pas pousser (valeur arbitraire de 5 imbrications) !
+			if (list[level]+increment == 0 || list[level]+increment >= BusinessDocumentLinesController.maxGroupingDepth)
 			{
 				return false;
 			}
@@ -712,6 +710,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public static readonly string titlePrefixTags  = "<font size=\"150%\"><b>";
 		public static readonly string titlePostfixTags = "</b></font>";
+
+		private static readonly int maxGroupingDepth = 4;
 
 		private readonly AccessData						accessData;
 		private readonly List<LineInformations>			lineInformations;
