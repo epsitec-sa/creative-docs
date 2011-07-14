@@ -550,6 +550,8 @@
     <EmbeddedResource Include="Images\Edition.DeleteRecord.icon" />
     <EmbeddedResource Include="Images\Edition.DeleteRecord.Overlay.icon" />
     <EmbeddedResource Include="Images\Edition.NewRecord.Overlay.icon" />
+    <EmbeddedResource Include="Images\Lines.Combine.icon" />
+    <EmbeddedResource Include="Images\Lines.Split.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

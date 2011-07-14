@@ -22,6 +22,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				{
 				}
 				
+				//	designer:cap/GVKH
+				public static readonly global::Epsitec.Common.Widgets.Command Combine = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 17));
 				//	designer:cap/GVK
 				public static readonly global::Epsitec.Common.Widgets.Command CreateArticle = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 0));
 				//	designer:cap/GVK2
@@ -48,6 +50,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Widgets.Command MoveDown = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 15));
 				//	designer:cap/GVKE
 				public static readonly global::Epsitec.Common.Widgets.Command MoveUp = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 14));
+				//	designer:cap/GVKG
+				public static readonly global::Epsitec.Common.Widgets.Command Split = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 16));
 				//	designer:cap/GVKB
 				public static readonly global::Epsitec.Common.Widgets.Command Ungroup = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 11));
 			}
@@ -65,6 +69,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				{
 				}
 				
+				//	designer:cap/GVKH
+				public const long Combine = 0x3F000014000011L;
 				//	designer:cap/GVK
 				public const long CreateArticle = 0x3F000014000000L;
 				//	designer:cap/GVK2
@@ -91,6 +97,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public const long MoveDown = 0x3F00001400000FL;
 				//	designer:cap/GVKE
 				public const long MoveUp = 0x3F00001400000EL;
+				//	designer:cap/GVKG
+				public const long Split = 0x3F000014000010L;
 				//	designer:cap/GVKB
 				public const long Ungroup = 0x3F00001400000BL;
 			}

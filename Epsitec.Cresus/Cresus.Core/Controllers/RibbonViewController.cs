@@ -560,6 +560,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Group,   isWithText: true));
 			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Ungroup, isWithText: true));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Split,   isWithText: true));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Combine, isWithText: true));
 		}
 		#endregion
 

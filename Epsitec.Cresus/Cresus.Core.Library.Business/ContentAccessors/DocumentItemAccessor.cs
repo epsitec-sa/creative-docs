@@ -290,8 +290,9 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			this.SetContent (0, DocumentItemAccessorColumn.Vat, this.GetFormattedPrice (line.ResultingTax));
 		}
 
-		private static string[] baseAmountList =
+		private readonly static string[] baseAmountList =
 		{
+			"{0}",
 			"{total}",
 			"{Total}",
 			"{prix}",
@@ -306,8 +307,9 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			"{BaseAmount}",
 		};
 
-		private static string[] rateList =
+		private readonly static string[] rateList =
 		{
+			"{1}",
 			"{taux}",
 			"{Taux}",
 			"{tva}",
