@@ -477,7 +477,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			var list = BusinessDocumentLinesController.GroupIndexSplit (line.GroupIndex);
 			var level = list.Count-1;
 
-			if (list[level]+increment == 0 || list[level]+increment >= BusinessDocumentLinesController.maxGroupingDepth)
+			if (list[level]+increment == 0 ||
+				list[level]+increment >= BusinessDocumentLinesController.maxGroupingDepth)
 			{
 				return false;
 			}

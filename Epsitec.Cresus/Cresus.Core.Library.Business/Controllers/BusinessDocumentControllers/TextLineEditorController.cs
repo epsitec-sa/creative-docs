@@ -72,7 +72,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				}
 				else
 				{
-					this.Entity.Text = FormattedText.Concat (BusinessDocumentLinesController.titlePrefixTags, value, BusinessDocumentLinesController.titlePostfixTags);
+					if (this.IsTitle)
+					{
+						this.Entity.Text = FormattedText.Concat (BusinessDocumentLinesController.titlePrefixTags, value, BusinessDocumentLinesController.titlePostfixTags);
+					}
+					else
+					{
+						this.Entity.Text = value;
+					}
 				}
 			}
 		}
