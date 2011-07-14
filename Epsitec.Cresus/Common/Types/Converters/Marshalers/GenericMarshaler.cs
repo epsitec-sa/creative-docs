@@ -35,7 +35,7 @@ namespace Epsitec.Common.Types.Converters.Marshalers
 		{
 			get
 			{
-				return GenericMarshaler<T1, T2>.converter;
+				return this.customConverter ?? GenericMarshaler<T1, T2>.converter;
 			}
 		}
 
@@ -86,7 +86,22 @@ namespace Epsitec.Common.Types.Converters.Marshalers
 			}
 		}
 
+		public override GenericConverter GetConverter()
+		{
+			return this.Converter;
+		}
+
+		public override void CustomizeConverter()
+		{
+			if (this.customConverter == null)
+			{
+				this.customConverter = System.Activator.CreateInstance (this.Converter.GetType ()) as GenericConverter<T2>;
+			}
+		}
+
 		private static readonly bool usesNullableType = typeof (T1).IsGenericType && typeof (T1).FullName.StartsWith ("System.Nullable`1");
 		private static readonly GenericConverter<T2> converter = GenericConverter.GetConverter<T2> ();
+
+		private GenericConverter<T2>	customConverter;
 	}
 }

@@ -43,6 +43,16 @@ namespace Epsitec.Common.Types.Converters
 		}
 
 
+		public virtual GenericConverter GetConverter()
+		{
+			return null;
+		}
+
+		public virtual void CustomizeConverter()
+		{
+		}
+
+
 		/// <summary>
 		/// Creates a marshaler compatible with the specified getter and setter.
 		/// </summary>

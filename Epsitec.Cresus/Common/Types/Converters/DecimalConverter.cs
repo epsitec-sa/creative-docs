@@ -27,15 +27,49 @@ namespace Epsitec.Common.Types.Converters
 		public DecimalConverter(System.Globalization.CultureInfo culture)
 			: base (culture)
 		{
+			this.Multiplier = 1;
+		}
+
+
+		public string Format
+		{
+			get;
+			set;
+		}
+
+		public decimal Multiplier
+		{
+			get;
+			set;
+		}
+
+		public System.Func<string, string> Filter
+		{
+			get;
+			set;
 		}
 
 		public override string ConvertToString(decimal value)
 		{
-			return value.ToString (this.GetCurrentCulture ());
+			value *= this.Multiplier;
+
+			if (string.IsNullOrEmpty (this.Format))
+			{
+				return value.ToString (this.GetCurrentCulture ());
+			}
+			else
+			{
+				return string.Format (this.GetCurrentCulture (), this.Format, value);
+			}
 		}
 
 		public override ConversionResult<decimal> ConvertFromString(string text)
 		{
+			if (this.Filter != null)
+			{
+				text = this.Filter (text);
+			}
+
 			if (text.IsNullOrWhiteSpace ())
 			{
 				return new ConversionResult<decimal>
@@ -51,7 +85,7 @@ namespace Epsitec.Common.Types.Converters
 				return new ConversionResult<decimal>
 				{
 					IsNull = false,
-					Value = result,
+					Value = result / this.Multiplier,
 				};
 			}
 			else
@@ -65,6 +99,11 @@ namespace Epsitec.Common.Types.Converters
 
 		public override bool CanConvertFromString(string text)
 		{
+			if (this.Filter != null)
+			{
+				text = this.Filter (text);
+			}
+			
 			decimal result;
 
 			if (decimal.TryParse (text, System.Globalization.NumberStyles.Number, this.GetCurrentCulture (), out result))
