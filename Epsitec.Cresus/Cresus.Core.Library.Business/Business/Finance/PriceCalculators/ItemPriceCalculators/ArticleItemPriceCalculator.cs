@@ -165,13 +165,13 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 
 			if (discount.DiscountRate.HasValue)
 			{
-				decimal discountRatio = 1.00M - discount.DiscountRate.Value;
+				decimal discountRatio = 1.00M - System.Math.Abs (discount.DiscountRate.Value);
 				return this.ApplyDiscountRatio (discount, price, tax, discountRatio);
 			}
 			
 			if (discount.Value.HasValue)
 			{
-				decimal discountAmount = discount.Value.Value;
+				decimal discountAmount = System.Math.Abs (discount.Value.Value);
 				return this.ApplyDiscountFixed (discount, price, tax, discountAmount);
 			}
 			
@@ -181,6 +181,11 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 
 		private decimal ApplyDiscountRatio(PriceDiscountEntity discount, decimal priceBeforeTax, decimal tax, decimal discountRatio)
 		{
+			if (discountRatio < 0)
+			{
+				discountRatio = 0;
+			}
+
 			if (discount.ValueIncludesTaxes)
 			{
 				decimal priceAfterTax = priceBeforeTax + tax;
@@ -202,11 +207,11 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 				decimal priceAfterTax  = priceBeforeTax + tax;
 				decimal taxRatio       = (priceAfterTax == 0) ? 0 : priceBeforeTax / priceAfterTax;
 				
-				return taxRatio * (priceAfterTax - discountAmount);
+				return System.Math.Max (0, taxRatio * (priceAfterTax - discountAmount));
 			}
 			else
 			{
-				return price - discountAmount;
+				return System.Math.Max (0, price - discountAmount);
 			}
 		}
 

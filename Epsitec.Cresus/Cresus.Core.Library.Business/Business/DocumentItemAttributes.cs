@@ -32,5 +32,12 @@ namespace Epsitec.Cresus.Core.Business
 		/// The line is only for information; it won't be summed by the price calculator.
 		/// </summary>
 		ProFormaOnly	= 0x0004,
+
+
+		/// <summary>
+		/// The line should never be sent to the customer; it is just for the user's own
+		/// consumption (e.g. to be printed on a production bill).
+		/// </summary>
+		MyEyesOnly		= 0x0010,
 	}
 }
