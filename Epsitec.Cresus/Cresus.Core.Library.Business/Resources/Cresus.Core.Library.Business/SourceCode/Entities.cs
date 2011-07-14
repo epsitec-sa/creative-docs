@@ -2434,22 +2434,22 @@ namespace Epsitec.Cresus.Core.Entities
 		#endregion
 		///	<summary>
 		///	The <c>Quantity</c> field.
-		///	designer:fld/GVAP1/GVAQ1
+		///	designer:fld/GVAP1/GVA57
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVAQ1]")]
+		[global::Epsitec.Common.Support.EntityField ("[GVA57]")]
 		public global::System.Decimal Quantity
 		{
 			get
 			{
-				return this.GetField<global::System.Decimal> ("[GVAQ1]");
+				return this.GetField<global::System.Decimal> ("[GVA57]");
 			}
 			set
 			{
 				global::System.Decimal oldValue = this.Quantity;
-				if (oldValue != value || !this.IsFieldDefined("[GVAQ1]"))
+				if (oldValue != value || !this.IsFieldDefined("[GVA57]"))
 				{
 					this.OnQuantityChanging (oldValue, value);
-					this.SetField<global::System.Decimal> ("[GVAQ1]", oldValue, value);
+					this.SetField<global::System.Decimal> ("[GVA57]", oldValue, value);
 					this.OnQuantityChanged (oldValue, value);
 				}
 			}
