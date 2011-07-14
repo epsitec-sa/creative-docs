@@ -62,6 +62,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public abstract BrickWall CreateBrickWallForInspection();
 
+		public abstract void BuildBricksForInspection(BrickWall wall);
+
 		public T NotifyChildItemCreated<T>(T entity)
 			where T : AbstractEntity
 		{
