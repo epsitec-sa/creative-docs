@@ -1835,12 +1835,12 @@ namespace Epsitec.Common.UI
 					message.Handled = true;
 					break;
 
-				case KeyCode.Add:
+				case KeyCode.NumericAdd:
 					this.ProcessExpandKey (true);
 					message.Handled = true;
 					break;
 
-				case KeyCode.Substract:
+				case KeyCode.NumericSubstract:
 					this.ProcessExpandKey (false);
 					message.Handled = true;
 					break;

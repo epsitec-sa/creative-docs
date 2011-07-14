@@ -90,27 +90,32 @@ namespace Epsitec.Common.Widgets
 		ControlKeyLeft	= 162,
 		ControlKeyRight	= 163,
 		
-		Decimal			= 110,
 		Delete			= 46,
-		Divide			= 111,
 		End				= 35,
 		Escape			= 27,
 		Home			= 36,
 		Insert			= 45,
-		Multiply		= 106,
 		PageDown		= 34,
 		PageUp			= 33,
 		Pause			= 19,
 		Return			= 13,
-		
+
+		NumericMultiply		= 106,
+		NumericAdd			= 107,
+		NumericSubstract	= 109,
+		NumericDecimal		= 110,
+		NumericDivide		= 111,
+
 		ShiftKey		= 16,
 		ShiftKeyLeft	= 160,
 		ShiftKeyRight	= 161,
 		
 		Space			= 32,
-		Add				= 107,
-		Substract		= 109,
 		Tab				= 9,
+		
+		Comma			= 188,
+		Dash			= 189,
+		Dot				= 190,
 		
 		ContextualMenu	= 93,
 		

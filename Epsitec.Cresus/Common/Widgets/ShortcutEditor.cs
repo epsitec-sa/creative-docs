@@ -215,11 +215,11 @@ namespace Epsitec.Common.Widgets
 			this.ComboAddCode(KeyCode.ArrowUp);
 			this.ComboAddCode(KeyCode.ArrowDown);
 
-			this.ComboAddCode(KeyCode.Divide);
-			this.ComboAddCode(KeyCode.Multiply);
-			this.ComboAddCode(KeyCode.Substract);
-			this.ComboAddCode(KeyCode.Add);
-			this.ComboAddCode(KeyCode.Decimal);
+			this.ComboAddCode(KeyCode.NumericDivide);
+			this.ComboAddCode(KeyCode.NumericMultiply);
+			this.ComboAddCode(KeyCode.NumericSubstract);
+			this.ComboAddCode(KeyCode.NumericAdd);
+			this.ComboAddCode(KeyCode.NumericDecimal);
 		}
 
 		protected void ComboAddModifier(KeyCode code)

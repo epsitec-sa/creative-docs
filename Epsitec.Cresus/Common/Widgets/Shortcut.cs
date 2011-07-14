@@ -257,11 +257,11 @@ namespace Epsitec.Common.Widgets
 						case KeyCode.Digit9:
 							break;
 
-						case KeyCode.Add:
-						case KeyCode.Substract:
-						case KeyCode.Multiply:
-						case KeyCode.Divide:
-						case KeyCode.Decimal:
+						case KeyCode.NumericAdd:
+						case KeyCode.NumericSubstract:
+						case KeyCode.NumericMultiply:
+						case KeyCode.NumericDivide:
+						case KeyCode.NumericDecimal:
 						case KeyCode.NumLock:
 							break;
 

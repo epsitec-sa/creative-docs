@@ -539,8 +539,8 @@ namespace Epsitec.Common.Document.Objects
 					spacing -= 20;
 				}
 
-				if (message.KeyCode == Epsitec.Common.Widgets.KeyCode.Multiply||
-					message.KeyCode == Epsitec.Common.Widgets.KeyCode.Decimal )
+				if (message.KeyCode == Epsitec.Common.Widgets.KeyCode.NumericMultiply||
+					message.KeyCode == Epsitec.Common.Widgets.KeyCode.NumericDecimal )
 				{
 					spacing = 200;
 				}

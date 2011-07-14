@@ -7,13 +7,8 @@ namespace Epsitec.Common.Text
 	/// La classe Unicode encapsule certaines informations au sujet des
 	/// caractères codés en UTF-32.
 	/// </summary>
-	public sealed class Unicode
+	public static class Unicode
 	{
-		private Unicode()
-		{
-		}
-		
-		
 		#region Bits Class
 		public class Bits
 		{
@@ -317,7 +312,20 @@ namespace Epsitec.Common.Text
 			Kashida				= 4,
 		}
 		#endregion
-		
+
+
+		public static string ToString(params Code[] codes)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+			for (int i = 0; i < codes.Length; i++)
+			{
+				buffer.Append ((char) codes[i]);
+			}
+
+			return buffer.ToString ();
+		}
+
 		public static bool IsWordStart(char c, char cBefore)
 		{
 			//	Retourne true si une frontière de mot se trouve entre les caractères

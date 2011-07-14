@@ -1623,6 +1623,12 @@ namespace Epsitec.Common.Widgets
 			return (length+ins.Length <= context.MaxLength);
 		}
 
+		public bool InsertCharacters(TextLayoutContext context, string text)
+		{
+			//	Insère un ou plusieurs caractères.
+			return this.ReplaceSelection (context, TextLayout.ConvertToTaggedText (text));
+		}
+
 		public bool InsertCharacter(TextLayoutContext context, char character)
 		{
 			//	Insère un caractère.

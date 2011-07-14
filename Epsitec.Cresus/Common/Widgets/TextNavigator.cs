@@ -2,6 +2,7 @@
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Text;
 
 namespace Epsitec.Common.Widgets
 {
@@ -501,7 +502,12 @@ namespace Epsitec.Common.Widgets
 				switch (message.MessageType)
 				{
 					case MessageType.KeyDown:
-						if (message.IsAltPressed && !message.IsControlPressed)
+						if (this.ProcessSpecialCharacters (message))
+						{
+							message.Swallowed = true;
+							return true;
+						}
+						else if (message.IsAltPressed && !message.IsControlPressed)
 						{
 						}
 						else if (this.ProcessKeyDown (message.KeyCode, message.IsShiftPressed, message.IsControlPressed))
@@ -709,6 +715,34 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 
+		private bool ProcessSpecialCharacters(Message message)
+		{
+			string text = TextNavigator.MapKeyToSpecialCharacter (message);
+
+			if (text != null)
+			{
+				bool replaced = this.textLayout.HasSelection (this.context);
+
+				this.UndoMemorize (UndoType.Insert);
+				this.textLayout.InsertCharacters (this.context, text);
+
+				if (replaced)
+				{
+					this.OnTextDeleted (true);
+					this.OnTextInserted (true);
+				}
+				else
+				{
+					this.OnTextInserted (false);
+				}
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
 		private bool ProcessKeyPress(int key)
 		{
 			//	Gestion d'une touche pressée avec KeyPress dans le texte.
@@ -720,7 +754,7 @@ namespace Epsitec.Common.Widgets
 				bool replaced = this.textLayout.HasSelection(this.context);
 				
 				this.UndoMemorize(UndoType.Insert);
-				this.textLayout.InsertCharacter(this.context, (char)key);
+				this.textLayout.InsertCharacter (this.context, (char) key);
 				
 				if ( replaced )
 				{
@@ -736,6 +770,45 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			return false;
+		}
+
+		private static string MapKeyToSpecialCharacter(Message message)
+		{
+			if ((message.IsControlPressed) ||
+				(message.IsAltPressed))
+			{
+				System.Diagnostics.Debug.WriteLine (message.ToString ());
+				
+				if (message.IsControlPressed && message.IsAltPressed && !message.IsShiftPressed)
+				{
+					switch (message.KeyCode)
+					{
+						case KeyCode.NumericSubstract:
+							return Unicode.ToString (Unicode.Code.EmDash);
+					}
+				}
+				else if (message.IsControlPressed && !message.IsAltPressed && !message.IsShiftPressed)
+				{
+					switch (message.KeyCode)
+					{
+						case KeyCode.NumericSubstract:
+							return Unicode.ToString (Unicode.Code.EnDash);
+
+						case KeyCode.Dash:
+							return Unicode.ToString (Unicode.Code.NonBreakingHyphen);
+					}
+				}
+				else if (message.IsControlPressed && !message.IsAltPressed && message.IsShiftPressed)
+				{
+					switch (message.KeyCode)
+					{
+						case KeyCode.Space:
+							return Unicode.ToString (Unicode.Code.NoBreakSpace);
+					}
+				}
+			}
+			
+			return null;
 		}
 
 		private bool ProcessMouseDown(Drawing.Point pos)
