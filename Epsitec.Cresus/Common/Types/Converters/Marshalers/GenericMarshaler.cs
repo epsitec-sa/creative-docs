@@ -86,11 +86,22 @@ namespace Epsitec.Common.Types.Converters.Marshalers
 			}
 		}
 
+
+		/// <summary>
+		/// Gets the associated converter.
+		/// </summary>
+		/// <returns>
+		/// The associated converter.
+		/// </returns>
 		public override GenericConverter GetConverter()
 		{
 			return this.Converter;
 		}
 
+		/// <summary>
+		/// Customizes the converter: this will create a local copy of the converter, so
+		/// that it may be customized by setting specific parameters.
+		/// </summary>
 		public override void CustomizeConverter()
 		{
 			if (this.customConverter == null)
@@ -99,6 +110,7 @@ namespace Epsitec.Common.Types.Converters.Marshalers
 			}
 		}
 
+		
 		private static readonly bool usesNullableType = typeof (T1).IsGenericType && typeof (T1).FullName.StartsWith ("System.Nullable`1");
 		private static readonly GenericConverter<T2> converter = GenericConverter.GetConverter<T2> ();
 

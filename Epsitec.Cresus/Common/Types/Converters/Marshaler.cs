@@ -43,11 +43,20 @@ namespace Epsitec.Common.Types.Converters
 		}
 
 
+		/// <summary>
+		/// Gets the associated converter. This is implemented in <see cref="GenericMarshaler&lt;T1, T2&gt;"/>.
+		/// </summary>
+		/// <returns>The associated converter or <c>null</c>.</returns>
 		public virtual GenericConverter GetConverter()
 		{
 			return null;
 		}
 
+		/// <summary>
+		/// Customizes the converter: this will create a local copy of the converter, so
+		/// that it may be customized by setting specific parameters. This is implemented
+		/// in <see cref="GenericMarshaler&lt;T1, T2&gt;"/>.
+		/// </summary>
 		public virtual void CustomizeConverter()
 		{
 		}
