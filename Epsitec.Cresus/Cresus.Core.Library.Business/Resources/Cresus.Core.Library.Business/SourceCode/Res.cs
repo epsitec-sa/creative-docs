@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 				//	designer:cap/GVKI
 				public static readonly global::Epsitec.Common.Widgets.Command ViewCompact = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 18));
 				//	designer:cap/GVKJ
-				public static readonly global::Epsitec.Common.Widgets.Command ViewDefalut = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 19));
+				public static readonly global::Epsitec.Common.Widgets.Command ViewDefault = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 19));
 				//	designer:cap/GVKK
 				public static readonly global::Epsitec.Common.Widgets.Command ViewFull = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 20));
 			}
@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 				//	designer:cap/GVKI
 				public const long ViewCompact = 0x3F000014000012L;
 				//	designer:cap/GVKJ
-				public const long ViewDefalut = 0x3F000014000013L;
+				public const long ViewDefault = 0x3F000014000013L;
 				//	designer:cap/GVKK
 				public const long ViewFull = 0x3F000014000014L;
 			}

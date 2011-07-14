@@ -168,6 +168,32 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
+		[Command (Library.Business.Res.CommandIds.Lines.ViewCompact)]
+		public void ProcessViewCompact()
+		{
+		}
+
+		[Command (Library.Business.Res.CommandIds.Lines.ViewDefault)]
+		public void ProcessViewDefault()
+		{
+		}
+
+		[Command (Library.Business.Res.CommandIds.Lines.ViewFull)]
+		public void ProcessViewFull()
+		{
+		}
+
+		[Command (Library.Business.Res.CommandIds.Lines.EditShort)]
+		public void ProcessEditShort()
+		{
+		}
+
+		[Command (Library.Business.Res.CommandIds.Lines.EditLong)]
+		public void ProcessEditLong()
+		{
+		}
+
+
 		[Command (Library.Business.Res.CommandIds.Lines.CreateArticle)]
 		public void ProcessCreateArticle()
 		{
