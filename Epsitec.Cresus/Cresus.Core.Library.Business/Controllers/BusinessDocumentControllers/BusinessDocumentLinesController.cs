@@ -477,24 +477,29 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			var list = BusinessDocumentLinesController.GroupIndexSplit (line.GroupIndex);
 			var level = list.Count-1;
 
+			//	TODO: remplacer le '5' ici par une constante MaxGroupingDepth qui vaudra 4.
+
 			if (list[level]+increment == 0 || list[level]+increment >= 5)  // faut pas pousser (valeur arbitraire de 5 imbrications) !
 			{
 				return false;
 			}
 
-			for (int i = index; i < this.accessData.BusinessDocumentEntity.Lines.Count; i++)
+			using (this.accessData.BusinessContext.SuspendUpdates ())
 			{
-				var item = this.accessData.BusinessDocumentEntity.Lines[i];
-
-				list = BusinessDocumentLinesController.GroupIndexSplit (item.GroupIndex);
-
-				if (list.Count < level+1)
+				for (int i = index; i < this.accessData.BusinessDocumentEntity.Lines.Count; i++)
 				{
-					break;
-				}
+					var item = this.accessData.BusinessDocumentEntity.Lines[i];
 
-				list[level] += increment;
-				item.GroupIndex = BusinessDocumentLinesController.GroupIndexCombine (list);
+					list = BusinessDocumentLinesController.GroupIndexSplit (item.GroupIndex);
+
+					if (list.Count < level+1)
+					{
+						break;
+					}
+
+					list[level] += increment;
+					item.GroupIndex = BusinessDocumentLinesController.GroupIndexCombine (list);
+				}
 			}
 
 			this.UpdateAfterChange (line, null);

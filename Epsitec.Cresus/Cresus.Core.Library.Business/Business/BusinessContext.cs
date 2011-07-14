@@ -34,6 +34,7 @@ namespace Epsitec.Cresus.Core.Business
 			this.pool.Add (this);
 			this.entityRecords = new List<EntityRecord> ();
 			this.masterEntities = new List<AbstractEntity> ();
+			this.delayedUpdates = new Stack<DelayedUpdate> ();
 
 			this.data = this.pool.Host;
 			this.dataContext = this.pool.CreateDataContext (this);
@@ -755,6 +756,51 @@ namespace Epsitec.Cresus.Core.Business
 			return this.DataContext.DeleteEntity (entity);
 		}
 
+
+		public System.IDisposable SuspendUpdates()
+		{
+			var helper = new DelayedUpdate (this);
+			this.delayedUpdates.Push (helper);
+			return helper;
+		}
+
+
+		class DelayedUpdate : System.IDisposable
+		{
+			public DelayedUpdate(BusinessContext context)
+			{
+				this.context = context;
+				this.records = new HashSet<EntityRecord> ();
+			}
+
+			public void Enqueue(IEnumerable<EntityRecord> records)
+			{
+				this.records.AddRange (records);
+			}
+
+			#region IDisposable Members
+
+			void System.IDisposable.Dispose()
+			{
+				var helper = this.context.delayedUpdates.Pop ();
+
+				System.Diagnostics.Debug.Assert (helper == this);
+
+				foreach (var record in this.records)
+				{
+					record.Logic.ApplyRule (RuleType.Update, record.Entity);
+				}
+			}
+
+			#endregion
+
+			private readonly BusinessContext context;
+			private readonly HashSet<EntityRecord> records;
+		}
+
+		
+
+
 		#region IDisposable Members
 
 		public void Dispose()
@@ -884,7 +930,14 @@ namespace Epsitec.Cresus.Core.Business
 
 					if (Logic.Current == null)
 					{
-						this.ApplyRulesToRegisteredEntities (RuleType.Update);
+						if (this.delayedUpdates.Count > 0)
+						{
+							this.delayedUpdates.Peek ().Enqueue (this.entityRecords);
+						}
+						else
+						{
+							this.ApplyRulesToRegisteredEntities (RuleType.Update);
+						}
 					}
 				}
 
@@ -970,7 +1023,7 @@ namespace Epsitec.Cresus.Core.Business
 		private readonly List<AbstractEntity>	masterEntities;
 		private readonly Locker					locker;
 		private readonly CoreData				data;
-
+		private readonly Stack<DelayedUpdate>	delayedUpdates;
 		private int								dataChangedCounter;
 		private bool							dataContextDirty;
 		private bool							dataContextDiscarded;
