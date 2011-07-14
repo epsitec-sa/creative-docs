@@ -130,13 +130,17 @@ namespace Epsitec.Cresus.Core
 			jscontent += "title: '";
 			jscontent += Brick.GetProperty (brick, BrickPropertyKey.Title).StringValue;
 			jscontent += "',";
-			jscontent += "html: [";
 
-			jscontent += "'";
-			jscontent += Brick.GetProperty (brick, BrickPropertyKey.Text).StringValue;
-			jscontent += "<br/><b>plop</b>',";
+			jscontent += "data: { name: 'Jonas' },";
 
-			jscontent += "],";
+
+			//jscontent += "html: [";
+
+			//jscontent += "'";
+			//jscontent += Brick.GetProperty (brick, BrickPropertyKey.Text).StringValue;
+			//jscontent += "<br/><b>plop</b>',";
+
+			//jscontent += "],";
 
 			var icon = CreateIcon (brick);
 			if (icon != null)

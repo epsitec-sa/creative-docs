@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		protected static void HandleBrickWallBrickAdded(object sender, BrickAddedEventArgs e)
+		private static void HandleBrickWallBrickAdded(object sender, BrickAddedEventArgs e)
 		{
 			var brick = e.Brick;
 			var type  = e.FieldType;
@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Core
 			CreateDefaultProperties (brick, type);
 		}
 
-		protected static void HandleBrickWallBrickPropertyAdded(object sender, BrickPropertyAddedEventArgs e)
+		private static void HandleBrickWallBrickPropertyAdded(object sender, BrickPropertyAddedEventArgs e)
 		{
 			var brick    = e.Brick;
 			var property = e.Property;
