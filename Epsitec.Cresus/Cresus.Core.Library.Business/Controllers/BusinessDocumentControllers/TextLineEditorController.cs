@@ -40,15 +40,54 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Padding = new Margins (10),
 			};
 
-			var textField = builder.CreateTextFieldMulti (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.Text, x => this.Entity.Text = x));
-			this.PlaceLabelAndField (box, 50, 400, "Texte", textField);
+			var textField = builder.CreateTextFieldMulti (null, DockStyle.None, 0, Marshaler.Create (() => this.SimpleText, x => this.SimpleText = x));
+			this.PlaceLabelAndField (box, 50, 400, this.TitleTile, textField);
 		}
 
 		public override FormattedText TitleTile
 		{
 			get
 			{
-				return "Texte";
+				return this.IsTitle ? "Titre" : "Texte";
+			}
+		}
+
+
+		private FormattedText SimpleText
+		{
+			get
+			{
+				var text = this.Entity.Text.ToString ();
+
+				text = text.Replace (BusinessDocumentLinesController.titlePrefixTags,  "");
+				text = text.Replace (BusinessDocumentLinesController.titlePostfixTags, "");
+
+				return text;
+			}
+			set
+			{
+				if (value.IsNullOrEmpty)
+				{
+					this.Entity.Text = null;
+				}
+				else
+				{
+					this.Entity.Text = FormattedText.Concat (BusinessDocumentLinesController.titlePrefixTags, value, BusinessDocumentLinesController.titlePostfixTags);
+				}
+			}
+		}
+
+		private bool IsTitle
+		{
+			get
+			{
+				if (this.Entity.Text.IsNullOrEmpty)
+				{
+					return false;
+				}
+
+				var text = this.Entity.Text.ToString ();
+				return text.Contains (BusinessDocumentLinesController.titlePrefixTags);
 			}
 		}
 

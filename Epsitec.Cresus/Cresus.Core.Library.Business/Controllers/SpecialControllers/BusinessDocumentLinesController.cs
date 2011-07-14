@@ -90,7 +90,6 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 
 		void IWidgetUpdater.Update()
 		{
-			this.controller.UpdateLineInformations ();
 			this.controller.UpdateUI ();
 		}
 

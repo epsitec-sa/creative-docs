@@ -70,9 +70,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			};
 		}
 
-		public void UpdateUI(int? sel = null)
+		public void UpdateUI()
 		{
-			this.linesController.UpdateUI (this.lineInformations.Count, this.CallbackGetLineInformations, this.CallbackGetCellContent, sel);
+			this.UpdateAfterChange ();
 			this.UpdateCommands ();
 		}
 
@@ -189,115 +189,19 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			if (quantityColumnEntity != null)
 			{
+				var model = this.accessData.BusinessDocumentEntity.Lines[index-1];
+
 				var newQuantity = this.accessData.BusinessContext.CreateEntity<ArticleQuantityEntity> ();
 				newQuantity.Quantity = 1;
 				newQuantity.QuantityColumn = quantityColumnEntity;
 
 				var newLine = this.accessData.BusinessContext.CreateEntity<ArticleDocumentItemEntity> ();
-				newLine.GroupIndex = 1;
+				newLine.GroupIndex = model.GroupIndex;
 				newLine.ArticleQuantities.Add (newQuantity);
 
 				this.accessData.BusinessDocumentEntity.Lines.Insert (index, newLine);
 				this.UpdateAfterChange (newLine, null);
 			}
-		}
-
-		[Command (Library.Business.Res.CommandIds.Lines.CreateText)]
-		public void ProcessCreateText()
-		{
-			//	Insère une nouvelle ligne de texte.
-			int? sel = this.linesController.LastSelection;
-			int index;
-
-			if (sel == null)
-			{
-				index = this.GetLDefaultArticleInsertionIndex ();
-			}
-			else
-			{
-				var info = this.lineInformations[sel.Value];
-				index = info.LineIndex+1;
-			}
-
-			var newLine = this.accessData.BusinessContext.CreateEntity<TextDocumentItemEntity> ();
-			newLine.Text = "Coucou !!!";
-			newLine.GroupIndex = 1;
-
-			this.accessData.BusinessDocumentEntity.Lines.Insert (index, newLine);
-			this.UpdateAfterChange (newLine, null);
-		}
-
-		[Command (Library.Business.Res.CommandIds.Lines.CreateTitle)]
-		public void ProcessCreateTitle()
-		{
-			//	Insère une nouvelle ligne de titre.
-			int? sel = this.linesController.LastSelection;
-			int index;
-
-			if (sel == null)
-			{
-				index = this.GetLDefaultArticleInsertionIndex ();
-			}
-			else
-			{
-				var info = this.lineInformations[sel.Value];
-				index = info.LineIndex+1;
-			}
-
-			var newLine = this.accessData.BusinessContext.CreateEntity<TextDocumentItemEntity> ();
-			newLine.Text = "Titre !!!";
-			newLine.GroupIndex = 1;
-
-			this.accessData.BusinessDocumentEntity.Lines.Insert (index, newLine);
-			this.UpdateAfterChange (newLine, null);
-		}
-
-		[Command (Library.Business.Res.CommandIds.Lines.CreateDiscount)]
-		public void ProcessCreateDiscount()
-		{
-			//	Insère une nouvelle ligne de rabais.
-			int? sel = this.linesController.LastSelection;
-			int index;
-
-			if (sel == null)
-			{
-				index = this.GetLDefaultArticleInsertionIndex ();
-			}
-			else
-			{
-				var info = this.lineInformations[sel.Value];
-				index = info.LineIndex+1;
-			}
-
-			var newLine = this.accessData.BusinessContext.CreateEntity<SubTotalDocumentItemEntity> ();
-			newLine.GroupIndex = 1;
-
-			this.accessData.BusinessDocumentEntity.Lines.Insert (index, newLine);
-			this.UpdateAfterChange (newLine, null);
-		}
-
-		[Command (Library.Business.Res.CommandIds.Lines.CreateTax)]
-		public void ProcessCreateTax()
-		{
-			//	Insère une nouvelle ligne de taxe.
-			int? sel = this.linesController.LastSelection;
-			int index;
-
-			if (sel == null)
-			{
-				index = this.GetLDefaultArticleInsertionIndex ();
-			}
-			else
-			{
-				var info = this.lineInformations[sel.Value];
-				index = info.LineIndex+1;
-			}
-
-			var newLine = this.accessData.BusinessContext.CreateEntity<TaxDocumentItemEntity> ();
-			newLine.GroupIndex = 1;
-
-			this.accessData.BusinessDocumentEntity.Lines.Insert (index, newLine);
-			this.UpdateAfterChange (newLine, null);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.CreateQuantity)]
@@ -309,7 +213,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			if (sel != null)
 			{
 				var info = this.lineInformations[sel.Value];
-				var line = this.accessData.BusinessDocumentEntity.Lines.ElementAt (info.LineIndex);
+				var line = this.accessData.BusinessDocumentEntity.Lines[info.LineIndex];
 
 				if (line is ArticleDocumentItemEntity)
 				{
@@ -332,6 +236,109 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					}
 				}
 			}
+		}
+
+		[Command (Library.Business.Res.CommandIds.Lines.CreateText)]
+		public void ProcessCreateText()
+		{
+			//	Insère une nouvelle ligne de texte.
+			int? sel = this.linesController.LastSelection;
+			int index;
+
+			if (sel == null)
+			{
+				index = this.GetLDefaultArticleInsertionIndex ();
+			}
+			else
+			{
+				var info = this.lineInformations[sel.Value];
+				index = info.LineIndex+1;
+			}
+
+			var model = this.accessData.BusinessDocumentEntity.Lines[index-1];
+
+			var newLine = this.accessData.BusinessContext.CreateEntity<TextDocumentItemEntity> ();
+			newLine.GroupIndex = model.GroupIndex;
+
+			this.accessData.BusinessDocumentEntity.Lines.Insert (index, newLine);
+			this.UpdateAfterChange (newLine, null);
+		}
+
+		[Command (Library.Business.Res.CommandIds.Lines.CreateTitle)]
+		public void ProcessCreateTitle()
+		{
+			//	Insère une nouvelle ligne de titre.
+			int? sel = this.linesController.LastSelection;
+			int index;
+
+			if (sel == null)
+			{
+				index = this.GetLDefaultArticleInsertionIndex ();
+			}
+			else
+			{
+				var info = this.lineInformations[sel.Value];
+				index = info.LineIndex+1;
+			}
+
+			var model = this.accessData.BusinessDocumentEntity.Lines[index-1];
+
+			var newLine = this.accessData.BusinessContext.CreateEntity<TextDocumentItemEntity> ();
+			newLine.Text = string.Concat (BusinessDocumentLinesController.titlePrefixTags, BusinessDocumentLinesController.titlePostfixTags);
+			newLine.GroupIndex = model.GroupIndex;
+
+			this.accessData.BusinessDocumentEntity.Lines.Insert (index, newLine);
+			this.UpdateAfterChange (newLine, null);
+		}
+
+		[Command (Library.Business.Res.CommandIds.Lines.CreateDiscount)]
+		public void ProcessCreateDiscount()
+		{
+			//	Insère une nouvelle ligne de rabais.
+			int? sel = this.linesController.LastSelection;
+			int index;
+
+			if (sel == null)
+			{
+				index = this.GetLDefaultArticleInsertionIndex ();
+			}
+			else
+			{
+				var info = this.lineInformations[sel.Value];
+				index = info.LineIndex+1;
+			}
+
+			var model = this.accessData.BusinessDocumentEntity.Lines[index-1];
+
+			var newLine = this.accessData.BusinessContext.CreateEntity<SubTotalDocumentItemEntity> ();
+			newLine.GroupIndex = model.GroupIndex;
+
+			this.accessData.BusinessDocumentEntity.Lines.Insert (index, newLine);
+			this.UpdateAfterChange (newLine, null);
+		}
+
+		[Command (Library.Business.Res.CommandIds.Lines.CreateTax)]
+		public void ProcessCreateTax()
+		{
+			//	Insère une nouvelle ligne de frais.
+			int? sel = this.linesController.LastSelection;
+			int index;
+
+			if (sel == null)
+			{
+				index = this.GetLDefaultArticleInsertionIndex ();
+			}
+			else
+			{
+				var info = this.lineInformations[sel.Value];
+				index = info.LineIndex+1;
+			}
+
+			var newLine = this.accessData.BusinessContext.CreateEntity<ArticleDocumentItemEntity> ();
+			newLine.GroupIndex = 0;
+
+			this.accessData.BusinessDocumentEntity.Lines.Insert (index, newLine);
+			this.UpdateAfterChange (newLine, null);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.CreateGroup)]
@@ -368,7 +375,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			if (sel != null)
 			{
 				var info = this.lineInformations[sel.Value];
-				var line = this.accessData.BusinessDocumentEntity.Lines.ElementAt (info.LineIndex);
+				var line = this.accessData.BusinessDocumentEntity.Lines[info.LineIndex];
 				var index = info.LineIndex;
 
 				if (index+direction >= 0 && index+direction < this.accessData.BusinessDocumentEntity.Lines.Count)
@@ -390,7 +397,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			if (sel != null)
 			{
 				var info = this.lineInformations[sel.Value];
-				var line = this.accessData.BusinessDocumentEntity.Lines.ElementAt (info.LineIndex);
+				var line = this.accessData.BusinessDocumentEntity.Lines[info.LineIndex];
 				var index = info.LineIndex;
 
 				if (index+1 < this.accessData.BusinessDocumentEntity.Lines.Count)
@@ -412,7 +419,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			if (sel != null)
 			{
 				var info = this.lineInformations[sel.Value];
-				var line = this.accessData.BusinessDocumentEntity.Lines.ElementAt (info.LineIndex);
+				var line = this.accessData.BusinessDocumentEntity.Lines[info.LineIndex];
 
 				if (line is ArticleDocumentItemEntity && info.SublineIndex > 0)  // quantité ?
 				{
@@ -444,21 +451,82 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private void ProcessSplit()
 		{
 			//	Sépare la ligne d'avec la précédente.
+			this.ProcessIndexAdd (1);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.Combine)]
 		private void ProcessCombine()
 		{
 			//	Soude la ligne avec la précédente.
+			this.ProcessIndexAdd (-1);
 		}
 
+		private bool ProcessIndexAdd(int increment)
+		{
+			int? sel = this.linesController.LastSelection;
+
+			if (sel == null)
+			{
+				return false;
+			}
+
+			var info = this.lineInformations[sel.Value];
+			var index = info.LineIndex;
+			var line = this.accessData.BusinessDocumentEntity.Lines[index];
+
+			var list = BusinessDocumentLinesController.GroupIndexSplit (line.GroupIndex);
+			var level = list.Count-1;
+
+			if (list[level]+increment == 0 || list[level]+increment >= 5)  // faut pas pousser (valeur arbitraire de 5 imbrications) !
+			{
+				return false;
+			}
+
+			for (int i = index; i < this.accessData.BusinessDocumentEntity.Lines.Count; i++)
+			{
+				var item = this.accessData.BusinessDocumentEntity.Lines[i];
+
+				list = BusinessDocumentLinesController.GroupIndexSplit (item.GroupIndex);
+
+				if (list.Count < level+1)
+				{
+					break;
+				}
+
+				list[level] += increment;
+				item.GroupIndex = BusinessDocumentLinesController.GroupIndexCombine (list);
+			}
+
+			this.UpdateAfterChange (line, null);
+			return true;
+		}
+
+
+
+		private void UpdateAfterChange()
+		{
+			int? sel = this.linesController.LastSelection;
+			AbstractDocumentItemEntity line = null;
+			ArticleQuantityEntity quantity = null;
+
+			if (sel != null)
+			{
+				var info = this.lineInformations[sel.Value];
+
+				line     = info.AbstractDocumentItemEntity;
+				quantity = info.ArticleQuantityEntity;
+			}
+
+			this.UpdateAfterChange (line, quantity);
+		}
 
 		private void UpdateAfterChange(AbstractDocumentItemEntity line, ArticleQuantityEntity quantity)
 		{
 			this.UpdateLineInformations ();
 
 			int? sel = this.GetLineInformationsIndex (line, quantity);
-			this.UpdateUI (sel);
+			this.linesController.UpdateUI (this.lineInformations.Count, this.CallbackGetLineInformations, this.CallbackGetCellContent, sel);
+			this.UpdateCommands ();
 		}
 
 		private ArticleQuantityColumnEntity SearchArticleQuantityColumnEntity(ArticleQuantityType type)
@@ -512,7 +580,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			return 0;
 		}
 
-		public void UpdateLineInformations()
+		private void UpdateLineInformations()
 		{
 			this.lineInformations.Clear ();
 
@@ -531,10 +599,42 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
+		private static List<int> GroupIndexSplit(int groupIndex)
+		{
+			//	30201 retourne la liste 1,2,3.
+			var list = new List<int> ();
+
+			while (groupIndex != 0)
+			{
+				list.Add (groupIndex%100);
+				groupIndex /= 100;
+			}
+
+
+			return list;
+		}
+
+		private static int GroupIndexCombine(List<int> list)
+		{
+			//	La liste 1,2,3 retourne 30201.
+			int groupIndex = 0;
+			int factor = 1;
+
+			foreach (var n in list)
+			{
+				groupIndex += factor * n;
+				factor *= 100;
+			}
+
+			return groupIndex;
+		}
+
+
 		private void UpdateCommands()
 		{
 			var selection     = this.linesController.Selection;
 			var lastSelection = this.linesController.LastSelection;
+			var isCoherentSelection = this.IsCoherentSelection;
 
 			LineInformations info = null;
 			bool autoGenerated = false;
@@ -565,13 +665,49 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Duplicate, selection.Count == 1 && !autoGenerated);
 			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Delete,    selection.Count == 1 && !autoGenerated);
 
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Group,     selection.Count != 0 && !autoGenerated);
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Ungroup,   selection.Count != 0 && !autoGenerated);
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Split,     selection.Count == 1 && !autoGenerated);
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Combine,   selection.Count == 1 && !autoGenerated);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Group,     isCoherentSelection  && !autoGenerated);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Ungroup,   isCoherentSelection  && !autoGenerated);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Split,     selection.Count == 1 && !autoGenerated && lastSelection != 0);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Combine,   selection.Count == 1 && !autoGenerated && lastSelection != 0);
 		}
 
-	
+		private bool IsCoherentSelection
+		{
+			get
+			{
+				var selection = this.linesController.Selection;
+
+				if (selection.Count == 0)
+				{
+					return false;
+				}
+
+				var groupIndex = -1;
+				foreach (var sel in selection)
+				{
+					var info = this.lineInformations[sel];
+
+					if (groupIndex == -1)
+					{
+						groupIndex = info.AbstractDocumentItemEntity.GroupIndex;
+					}
+					else
+					{
+						if (groupIndex != info.AbstractDocumentItemEntity.GroupIndex)
+						{
+							return false;
+						}
+					}
+				}
+
+				return true;
+			}
+		}
+
+
+		public static readonly string titlePrefixTags  = "<font size=\"150%\"><b>";
+		public static readonly string titlePostfixTags = "</b></font>";
+
 		private readonly AccessData						accessData;
 		private readonly List<LineInformations>			lineInformations;
 		private readonly CommandContext					commandContext;

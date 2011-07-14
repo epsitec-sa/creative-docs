@@ -119,7 +119,14 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 		private void BuildTextItem(TextDocumentItemEntity line)
 		{
-			this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, line.Text);
+			var text = line.Text;
+
+			if (text.IsNullOrEmpty)
+			{
+				text = " ";  // pour que le contenu de la ligne existe, même si le texte n'existe pas encore !
+			}
+
+			this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, text);
 		}
 
 		private void BuildArticleItem(ArticleDocumentItemEntity line)
@@ -371,26 +378,26 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			//	Génère les lignes.
 			int row = 0;
 
-			this.SetContent (row, DocumentItemAccessorColumn.ArticleDescription, primaryText);
-			this.SetContent (row, DocumentItemAccessorColumn.LinePrice,          this.GetFormattedPrice (primaryPrice));
-			this.SetContent (row, DocumentItemAccessorColumn.Vat,                this.GetFormattedPrice (primaryVat));
-			this.SetContent (row, DocumentItemAccessorColumn.Total,              this.GetFormattedPrice (primaryPrice + primaryVat));
-			row++;
-
-			if (existingDiscount || (this.mode & DocumentItemAccessorMode.ForceAllLines) != 0)
+			if (existingDiscount)
 			{
+				this.SetContent (row, DocumentItemAccessorColumn.ArticleDescription, primaryText);
+				this.SetContent (row, DocumentItemAccessorColumn.LinePrice,          this.GetFormattedPrice (primaryPrice));
+				this.SetContent (row, DocumentItemAccessorColumn.Vat,                this.GetFormattedPrice (primaryVat));
+				this.SetContent (row, DocumentItemAccessorColumn.Total,              this.GetFormattedPrice (primaryPrice + primaryVat));
+				row++;
+
 				this.SetContent (row, DocumentItemAccessorColumn.ArticleDescription, discountText);
 				this.SetContent (row, DocumentItemAccessorColumn.LinePrice,          this.GetFormattedPrice (discountPrice));
 				this.SetContent (row, DocumentItemAccessorColumn.Vat,                this.GetFormattedPrice (discountVat));
 				this.SetContent (row, DocumentItemAccessorColumn.Total,              this.GetFormattedPrice (discountPrice + discountVat));
 				row++;
-	
-				this.SetContent (row, DocumentItemAccessorColumn.ArticleDescription, sumText);
-				this.SetContent (row, DocumentItemAccessorColumn.LinePrice,          this.GetFormattedPrice (sumPrice));
-				this.SetContent (row, DocumentItemAccessorColumn.Vat,                this.GetFormattedPrice (sumVat));
-				this.SetContent (row, DocumentItemAccessorColumn.Total,              this.GetFormattedPrice (sumPrice + sumVat));
-				row++;
 			}
+
+			this.SetContent (row, DocumentItemAccessorColumn.ArticleDescription, sumText);
+			this.SetContent (row, DocumentItemAccessorColumn.LinePrice,          this.GetFormattedPrice (sumPrice));
+			this.SetContent (row, DocumentItemAccessorColumn.Vat,                this.GetFormattedPrice (sumVat));
+			this.SetContent (row, DocumentItemAccessorColumn.Total,              this.GetFormattedPrice (sumPrice + sumVat));
+			row++;
 		}
 
 		private void BuildEndTotalItem(EndTotalDocumentItemEntity line)

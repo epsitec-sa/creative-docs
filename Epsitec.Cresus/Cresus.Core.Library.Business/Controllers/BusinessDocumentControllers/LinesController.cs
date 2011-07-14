@@ -233,7 +233,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 					if (text != null)
 					{
-						text.FormattedText = this.getCellContent (row, columnType);
+						text.FormattedText = this.getCellContent (row, columnType).ToSimpleText ();
 					}
 				}
 
@@ -372,7 +372,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private ContentAlignment GetRowColumnContentAlignment(int row, ColumnType columnType)
 		{
-			if (columnType == ColumnType.QuantityAndUnit ||
+			if (columnType == ColumnType.Group ||
+				columnType == ColumnType.QuantityAndUnit ||
 				columnType == ColumnType.Discount ||
 				columnType == ColumnType.UnitPrice ||
 				columnType == ColumnType.LinePrice ||

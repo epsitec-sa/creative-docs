@@ -250,7 +250,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				PreferredWidth = Library.UI.Constants.ButtonSmallWidth,
 			};
 
-			frame.Children.Add (this.CreateButton (ApplicationCommands.Cut, large: false));
+			frame.Children.Add (this.CreateButton (ApplicationCommands.Cut,  large: false));
 			frame.Children.Add (this.CreateButton (ApplicationCommands.Copy, large: false));
 
 			section.Children.Add (this.CreateButton (ApplicationCommands.Paste));
@@ -290,8 +290,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				PreferredWidth = section.PreferredWidth,
 			};
 
-			topFrame.Children.Add (this.CreateButton (ApplicationCommands.Bold, large: false, isActivable: true));
-			topFrame.Children.Add (this.CreateButton (ApplicationCommands.Italic, large: false, isActivable: true));
+			topFrame.Children.Add (this.CreateButton (ApplicationCommands.Bold,       large: false, isActivable: true));
+			topFrame.Children.Add (this.CreateButton (ApplicationCommands.Italic,     large: false, isActivable: true));
 			topFrame.Children.Add (this.CreateButton (ApplicationCommands.Underlined, large: false, isActivable: true));
 
 			//?bottomFrame.Children.Add (this.CreateButton (ApplicationCommands.Subscript,   large: false, isActivable: true));
@@ -521,12 +521,13 @@ namespace Epsitec.Cresus.Core.Controllers
 			};
 
 			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateArticle,        isWithText: true));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateQuantity,       isWithText: true));
+			section.Children.Add (this.CreateSeparator ());
 			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateText,           isWithText: true));
 			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateTitle,          isWithText: true));
 			section.Children.Add (this.CreateSeparator ());
 			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateDiscount,       isWithText: true));
 			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateTax,            isWithText: true));
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateQuantity,       isWithText: true));
 			section.Children.Add (this.CreateSeparator ());
 			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateGroup,          isWithText: true));
 			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateGroupSeparator, isWithText: true));
