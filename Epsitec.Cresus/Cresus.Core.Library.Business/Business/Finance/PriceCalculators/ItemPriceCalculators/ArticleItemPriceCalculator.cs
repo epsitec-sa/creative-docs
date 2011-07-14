@@ -202,7 +202,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 				decimal priceAfterTax  = priceBeforeTax + tax;
 				decimal taxRatio       = (priceAfterTax == 0) ? 0 : priceBeforeTax / priceAfterTax;
 				
-				return taxRatio * (priceAfterTax + discountAmount);
+				return taxRatio * (priceAfterTax - discountAmount);
 			}
 			else
 			{
