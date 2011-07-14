@@ -337,7 +337,6 @@ namespace Epsitec.Cresus.Core.Helpers
 				for (int i = 0; i < requiredTotal-currentTotal; i++)
 				{
 					var tax = dataContext.CreateEntity<TaxDocumentItemEntity> ();
-					tax.Visibility = true;
 
 					x.Lines.Insert (x.Lines.Count-1, tax);  // insère juste avant le total final
 				}
@@ -366,7 +365,6 @@ namespace Epsitec.Cresus.Core.Helpers
 
 			// Crée la dernière ligne de total.
 			var lastPrice = dataContext.CreateEntity<EndTotalDocumentItemEntity> ();
-			lastPrice.Visibility = true;
 
 			x.Lines.Add (lastPrice);
 		}
@@ -382,7 +380,6 @@ namespace Epsitec.Cresus.Core.Helpers
 
 			// Crée la ligne de total.
 			var lastPrice = dataContext.CreateEntity<EndTotalDocumentItemEntity> ();
-			lastPrice.Visibility = true;
 
 			int index = x.Lines.Count-2;  // avant la ligne de total TTC
 

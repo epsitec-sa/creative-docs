@@ -201,7 +201,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			var article = this.DataContext.CreateEntityAndRegisterAsEmpty<ArticleDocumentItemEntity> ();
 
-			article.Visibility = true;
 			article.BeginDate  = this.Entity.BillingDate;
 			article.EndDate    = this.Entity.BillingDate;
 			article.GroupIndex = 0;
@@ -214,7 +213,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			//	Crée un nouvelle ligne dans la facture du type le plus courant, c'est-à-dire ArticleDocumentItemEntity.
 			var article = this.DataContext.CreateEntityAndRegisterAsEmpty<ArticleDocumentItemEntity> ();
 
-			article.Visibility = true;
 			article.BeginDate  = this.Entity.BillingDate;
 			article.EndDate    = this.Entity.BillingDate;
 			article.GroupIndex = 1;

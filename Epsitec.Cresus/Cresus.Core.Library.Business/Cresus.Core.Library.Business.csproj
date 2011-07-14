@@ -51,6 +51,7 @@
     <Compile Include="Business\ArticleType.cs" />
     <Compile Include="Business\BusinessContext.cs" />
     <Compile Include="Business\BusinessContextPool.cs" />
+    <Compile Include="Business\DocumentItemAttributes.cs" />
     <Compile Include="Business\EntitySaveMode.cs" />
     <Compile Include="Business\Enumerations.cs" />
     <Compile Include="Business\Finance\PriceCalculators\ItemPriceCalculators\AbstractItemPriceCalculator.cs" />

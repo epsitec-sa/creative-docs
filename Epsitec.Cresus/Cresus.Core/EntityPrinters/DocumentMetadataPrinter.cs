@@ -414,7 +414,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			{
 				var line = this.Entity.Lines[i];
 
-				if (line.Visibility)
+				if (line.Attributes.HasFlag (DocumentItemAttributes.Hidden) == false)
 				{
 					int rowUsed = 0;
 
@@ -530,7 +530,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			{
 				var line = this.Entity.Lines[i];
 
-				if (line.Visibility)
+				if (line.Attributes.HasFlag (DocumentItemAttributes.Hidden) == false)
 				{
 					int rowUsed = 0;
 
