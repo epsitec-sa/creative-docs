@@ -143,7 +143,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					Parent = parent,
 					Dock = DockStyle.Top,
 					PreferredHeight = 20,
-					Margins = new Margins (0, 0, 0, 5),
+					Margins = new Margins (0, 0, 0, 20),
 					TabIndex = this.NextTabIndex,
 				};
 
@@ -178,7 +178,23 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				//	Prix unitaire.
 				var quantityField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.PrimaryUnitPriceBeforeTax, x => this.Entity.PrimaryUnitPriceBeforeTax = x));
-				this.PlaceLabelAndField (line, 80, 100, "Prix unitaire HT", quantityField);
+				this.PlaceLabelAndField (line, 130, 100, "Prix unitaire HT", quantityField);
+			}
+
+			//	Troisième ligne à droite.
+			{
+				var line = new FrameBox
+				{
+					Parent = parent,
+					Dock = DockStyle.Top,
+					PreferredHeight = 20,
+					Margins = new Margins (0, 0, 0, 5),
+					TabIndex = this.NextTabIndex,
+				};
+
+				//	Rabais.
+				var discountField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.DiscountText, x => this.DiscountText = x));
+				this.PlaceLabelAndField (line, 130, 100, "Rabais en % ou en francs", discountField);
 			}
 		}
 
@@ -294,6 +310,68 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				else
 				{
 					return this.Entity.ArticleQuantities[0];
+				}
+			}
+		}
+
+		private string DiscountText
+		{
+			get
+			{
+				if (this.Entity.Discounts.Count != 0)
+				{
+					var discount = this.Entity.Discounts[0];
+
+					if (discount.DiscountRate.HasValue && discount.DiscountRate.Value != 0)
+					{
+						return Misc.PercentToString (discount.DiscountRate);
+					}
+
+					if (discount.Value.HasValue && discount.Value.Value != 0)
+					{
+						return Misc.PriceToString (discount.Value);
+					}
+				}
+
+				return null;
+			}
+			set
+			{
+				if (this.Entity.Discounts.Count == 0)
+				{
+					var newDiscount = this.accessData.BusinessContext.CreateEntity<PriceDiscountEntity> ();
+					this.Entity.Discounts.Add (newDiscount);
+				}
+
+				var discount = this.Entity.Discounts[0];
+
+				if (string.IsNullOrEmpty (value))
+				{
+					discount.DiscountRate = null;
+					discount.Value = null;
+				}
+				else
+				{
+					if (value.Contains ("%"))
+					{
+						value = value.Replace ("%", "");
+
+						decimal d;
+						if (decimal.TryParse (value, out d))
+						{
+							discount.DiscountRate = d/100;
+							discount.Value = null;
+						}
+					}
+					else
+					{
+						decimal d;
+						if (decimal.TryParse (value, out d))
+						{
+							discount.DiscountRate = null;
+							discount.Value = d;
+						}
+					}
 				}
 			}
 		}
