@@ -50,8 +50,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			CommandContext.SetContext (frame, this.commandContext);
 
 			//	Crée la toolbar.
-			//?this.lineToolbarController = new LineToolbarController (this.accessData.DocumentMetadataEntity, this.accessData.BusinessDocumentEntity);
-			//?this.lineToolbarController.CreateUI (frame);
+			this.lineToolbarController = new LineToolbarController (this.accessData.DocumentMetadataEntity, this.accessData.BusinessDocumentEntity);
+			this.lineToolbarController.CreateUI (frame);
 
 			//	Crée la liste.
 			this.linesController = new LinesController (this.accessData);
@@ -478,7 +478,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			var level = list.Count-1;
 
 			if (list[level]+increment == 0 ||
-				list[level]+increment >= BusinessDocumentLinesController.maxGroupingDepth)
+				list[level]+increment >= 99)
 			{
 				return false;
 			}
@@ -491,7 +491,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 					list = BusinessDocumentLinesController.GroupIndexSplit (item.GroupIndex);
 
-					if (list.Count < level+1)
+					if (list.Count < level+1)  // TODO; finir... !!!
 					{
 						break;
 					}

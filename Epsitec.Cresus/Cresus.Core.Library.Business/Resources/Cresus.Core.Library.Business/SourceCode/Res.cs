@@ -44,6 +44,10 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Widgets.Command Delete = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 7));
 				//	designer:cap/GVK8
 				public static readonly global::Epsitec.Common.Widgets.Command Duplicate = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 8));
+				//	designer:cap/GVKM
+				public static readonly global::Epsitec.Common.Widgets.Command EditLong = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 22));
+				//	designer:cap/GVKL
+				public static readonly global::Epsitec.Common.Widgets.Command EditShort = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 21));
 				//	designer:cap/GVK9
 				public static readonly global::Epsitec.Common.Widgets.Command Group = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 9));
 				//	designer:cap/GVKF
@@ -54,6 +58,12 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Widgets.Command Split = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 16));
 				//	designer:cap/GVKB
 				public static readonly global::Epsitec.Common.Widgets.Command Ungroup = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 11));
+				//	designer:cap/GVKI
+				public static readonly global::Epsitec.Common.Widgets.Command ViewCompact = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 18));
+				//	designer:cap/GVKJ
+				public static readonly global::Epsitec.Common.Widgets.Command ViewDefalut = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 19));
+				//	designer:cap/GVKK
+				public static readonly global::Epsitec.Common.Widgets.Command ViewFull = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 20));
 			}
 		}
 		
@@ -91,6 +101,10 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public const long Delete = 0x3F000014000007L;
 				//	designer:cap/GVK8
 				public const long Duplicate = 0x3F000014000008L;
+				//	designer:cap/GVKM
+				public const long EditLong = 0x3F000014000016L;
+				//	designer:cap/GVKL
+				public const long EditShort = 0x3F000014000015L;
 				//	designer:cap/GVK9
 				public const long Group = 0x3F000014000009L;
 				//	designer:cap/GVKF
@@ -101,6 +115,12 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public const long Split = 0x3F000014000010L;
 				//	designer:cap/GVKB
 				public const long Ungroup = 0x3F00001400000BL;
+				//	designer:cap/GVKI
+				public const long ViewCompact = 0x3F000014000012L;
+				//	designer:cap/GVKJ
+				public const long ViewDefalut = 0x3F000014000013L;
+				//	designer:cap/GVKK
+				public const long ViewFull = 0x3F000014000014L;
 			}
 			
 		}
