@@ -98,6 +98,14 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 			}
 		}
 
+		public bool								ProFormaOnly
+		{
+			get
+			{
+				return this.articleItem.Attributes.HasFlag (DocumentItemAttributes.ProFormaOnly);
+			}
+		}
+
 		
 		public void ComputePrice()
 		{

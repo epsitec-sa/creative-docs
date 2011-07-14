@@ -82,11 +82,11 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			{
 				var line = lines[this.lineIndex];
 
-				foundArticle = foundArticle || (line is ArticleDocumentItemEntity);
+				foundArticle = foundArticle || LineTreeAnalyzer.IsArticle (line);
 				
 				if (line.GroupIndex == 0)
 				{
-					if (line is SubTotalDocumentItemEntity)
+					if (LineTreeAnalyzer.IsSubTotal (line))
 					{
 						//	If there are any articles in the document, then we will have to
 						//	make sure that there is at least on terminal sub-total; if there
@@ -101,7 +101,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 							this.lines.RemoveAt (this.lineIndex--);
 						}
 					}
-					else if (line is TaxDocumentItemEntity)
+					else if (LineTreeAnalyzer.IsTax (line))
 					{
 						//	If we reach the VAT lines without having found a sub-total, add
 						//	one, or else we won't have a properly formatted invoice.
@@ -195,11 +195,11 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		private void UpdateStateAndRemoveUselessSubTotals(AbstractDocumentItemEntity line)
 		{
-			if (line is ArticleDocumentItemEntity)
+			if (LineTreeAnalyzer.IsArticle (line))
 			{
 				this.state = State.Article;
 			}
-			else if (line is SubTotalDocumentItemEntity)
+			else if (LineTreeAnalyzer.IsSubTotal (line))
 			{
 				if (this.state == State.None)
 				{
@@ -215,7 +215,22 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			}
 		}
 
-		
+		private static bool IsSubTotal(AbstractDocumentItemEntity line)
+		{
+			return (line is SubTotalDocumentItemEntity);
+		}
+
+		private static bool IsTax(AbstractDocumentItemEntity line)
+		{
+			return (line is TaxDocumentItemEntity);
+		}
+
+		private static bool IsArticle(AbstractDocumentItemEntity line)
+		{
+			return (line is ArticleDocumentItemEntity)
+				&& (line.Attributes.HasFlag (DocumentItemAttributes.ProFormaOnly) == false);
+		}
+
 		private static int GetCommonLevel(int groupA, int groupB)
 		{
 			int level = 0;

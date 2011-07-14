@@ -219,6 +219,12 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		void IDocumentPriceCalculator.Process(ArticleItemPriceCalculator calculator)
 		{
+			if (calculator.ProFormaOnly)
+			{
+				calculator.ComputePrice ();
+				return;
+			}
+
 			int groupLevel = calculator.ArticleItem.GroupLevel;
 
 			if (this.currentState != State.Article)
