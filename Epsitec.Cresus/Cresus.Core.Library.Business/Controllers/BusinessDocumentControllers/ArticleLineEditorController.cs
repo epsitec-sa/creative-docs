@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				Parent = this.tileContainer,
 				Dock = DockStyle.Right,
-				PreferredWidth = 350,
+				PreferredWidth = 360,
 				Padding = new Margins (10),
 				TabIndex = this.NextTabIndex,
 			};
@@ -193,8 +193,24 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				};
 
 				//	Rabais.
-				var discountField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.DiscountText, x => this.DiscountText = x));
+				var discountField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.DiscountValue, x => this.DiscountValue = x));
 				this.PlaceLabelAndField (line, 130, 100, "Rabais en % ou en francs", discountField);
+			}
+
+			//	Quatrième ligne à droite.
+			{
+				var line = new FrameBox
+				{
+					Parent = parent,
+					Dock = DockStyle.Top,
+					PreferredHeight = 20,
+					Margins = new Margins (0, 0, 0, 5),
+					TabIndex = this.NextTabIndex,
+				};
+
+				//	Rabais.
+				var discountField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.DiscountText, x => this.DiscountText = x));
+				this.PlaceLabelAndField (line, 130, 200, "Description du rabais", discountField);
 			}
 		}
 
@@ -314,7 +330,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
-		private string DiscountText
+		private string DiscountValue
 		{
 			get
 			{
@@ -337,12 +353,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 			set
 			{
-				if (this.Entity.Discounts.Count == 0)
-				{
-					var newDiscount = this.accessData.BusinessContext.CreateEntity<PriceDiscountEntity> ();
-					this.Entity.Discounts.Add (newDiscount);
-				}
-
+				this.CreateDefaultDiscount ();
 				var discount = this.Entity.Discounts[0];
 
 				if (string.IsNullOrEmpty (value))
@@ -375,6 +386,41 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				}
 			}
 		}
+
+		private FormattedText DiscountText
+		{
+			get
+			{
+				if (this.Entity.Discounts.Count != 0)
+				{
+					var discount = this.Entity.Discounts[0];
+
+					return discount.Text;
+				}
+
+				return null;
+			}
+			set
+			{
+				this.CreateDefaultDiscount ();
+				var discount = this.Entity.Discounts[0];
+
+				discount.Text = value;
+			}
+		}
+
+		private void CreateDefaultDiscount()
+		{
+			//	S'il n'existe aucun rabais, crée les entités requises.
+			if (this.Entity.Discounts.Count == 0)
+			{
+				var newDiscount = this.accessData.BusinessContext.CreateEntity<PriceDiscountEntity> ();
+				this.Entity.Discounts.Add (newDiscount);
+
+				// TODO: faut-il créer PriceRoundingModeEntity, et si oui comment ?
+			}
+		}
+
 
 		private ArticleDocumentItemEntity Entity
 		{

@@ -88,7 +88,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			//	Rabais.
 			{
-				var field = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.DiscountText, x => this.DiscountText = x));
+				var field = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.DiscountValue, x => this.DiscountValue = x));
 				this.PlaceLabelAndField (line1, 200, 100, "Rabais en % ou en francs", field);
 			}
 
@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		private string DiscountText
+		private string DiscountValue
 		{
 			get
 			{
