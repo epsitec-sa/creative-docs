@@ -7,7 +7,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 	{
 		Unknown,
 
-		InternalDescription,
-		PublicDescription,
+		Name,
+		Description,
 	}
 }

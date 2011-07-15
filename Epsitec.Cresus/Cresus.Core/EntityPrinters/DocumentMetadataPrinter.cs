@@ -399,11 +399,15 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			var mode = DocumentItemAccessorMode.ForceAllLines;
 
-			if (this.DocumentType == Business.DocumentType.ProductionOrder)
+			if (this.DocumentType == Business.DocumentType.ProductionOrder   ||
+				this.DocumentType == Business.DocumentType.DeliveryNote      ||
+				this.DocumentType == Business.DocumentType.ShipmentChecklist ||
+				this.DocumentType == Business.DocumentType.Invoice           ||
+				this.DocumentType == Business.DocumentType.InvoiceProForma   )
 			{
 				//	Les ordres de productions doivent utiliser les descriptions courtes des articles.
 				//	C'est une demande de Monsieur "M" !
-				mode |= DocumentItemAccessorMode.UseArticleInternalDescriptions;
+				mode |= DocumentItemAccessorMode.UseArticleName;
 			}
 
 			for (int i = 0; i < this.Entity.Lines.Count; i++)

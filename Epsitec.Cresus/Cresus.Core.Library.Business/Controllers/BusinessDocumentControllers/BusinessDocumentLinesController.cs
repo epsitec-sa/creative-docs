@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			if (this.CurrentEditMode == EditMode.Unknown)
 			{
-				this.CurrentEditMode = EditMode.PublicDescription;
+				this.CurrentEditMode = EditMode.Description;
 			}
 
 			this.lineInformations = new List<LineInformations> ();
@@ -200,18 +200,18 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.UpdateAfterChange ();
 		}
 
-		[Command (Library.Business.Res.CommandIds.Lines.EditInternal)]
-		public void ProcessEditInternal()
+		[Command (Library.Business.Res.CommandIds.Lines.EditName)]
+		public void ProcessEditName()
 		{
-			this.CurrentEditMode = EditMode.InternalDescription;
+			this.CurrentEditMode = EditMode.Name;
 			this.UpdateAfterChange ();
 			this.CallbackSelectionChanged ();
 		}
 
-		[Command (Library.Business.Res.CommandIds.Lines.EditPublic)]
-		public void ProcessEditPublic()
+		[Command (Library.Business.Res.CommandIds.Lines.EditDescription)]
+		public void ProcessEditDescription()
 		{
-			this.CurrentEditMode = EditMode.PublicDescription;
+			this.CurrentEditMode = EditMode.Description;
 			this.UpdateAfterChange ();
 			this.CallbackSelectionChanged ();
 		}
@@ -687,9 +687,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			var mode = DocumentItemAccessorMode.ForceAllLines | DocumentItemAccessorMode.SpecialQuantitiesToDistinctLines;
 
-			if (this.CurrentEditMode == EditMode.InternalDescription)
+			if (this.CurrentEditMode == EditMode.Name)
 			{
-				mode |= DocumentItemAccessorMode.UseArticleInternalDescriptions;
+				mode |= DocumentItemAccessorMode.UseArticleName;
 			}
 
 			for (int i = 0; i < this.accessData.BusinessDocumentEntity.Lines.Count; i++)
@@ -864,22 +864,22 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				if (this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.EditInternal).ActiveState == ActiveState.Yes)
+				if (this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.EditName).ActiveState == ActiveState.Yes)
 				{
-					return EditMode.InternalDescription;
+					return EditMode.Name;
 				}
 
-				if (this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.EditPublic).ActiveState == ActiveState.Yes)
+				if (this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.EditDescription).ActiveState == ActiveState.Yes)
 				{
-					return EditMode.PublicDescription;
+					return EditMode.Description;
 				}
 
 				return EditMode.Unknown;
 			}
 			set
 			{
-				this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.EditInternal).ActiveState = (value == EditMode.InternalDescription) ? ActiveState.Yes : ActiveState.No;
-				this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.EditPublic  ).ActiveState = (value == EditMode.PublicDescription  ) ? ActiveState.Yes : ActiveState.No;
+				this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.EditName       ).ActiveState = (value == EditMode.Name       ) ? ActiveState.Yes : ActiveState.No;
+				this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.EditDescription).ActiveState = (value == EditMode.Description) ? ActiveState.Yes : ActiveState.No;
 			}
 		}
 

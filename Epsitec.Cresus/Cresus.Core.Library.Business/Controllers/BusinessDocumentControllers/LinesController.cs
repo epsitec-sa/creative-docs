@@ -456,7 +456,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					return 40;
 
 				case ColumnType.GroupIndex:
-					return 60;
+					return 70;
 
 				case ColumnType.Type:
 					return 65;
@@ -496,7 +496,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					return "Article";
 
 				case ColumnType.ArticleDescription:
-					return (this.editMode == EditMode.InternalDescription) ? "Désignation interne" : "Désignation pour le client";
+					return (this.editMode == EditMode.Name) ? "Désignation courte" : "Désignation longue";
 
 				case ColumnType.Discount:
 					return "Rabais";

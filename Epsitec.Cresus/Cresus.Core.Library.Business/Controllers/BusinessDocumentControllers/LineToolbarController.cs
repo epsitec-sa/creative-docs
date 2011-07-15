@@ -41,12 +41,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			toolbar.Dock = DockStyle.Top;
 			toolbar.Margins = new Margins (0, 0, 0, -1);
 
-			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.ViewCompact,  large: false, isActivable: true));
-			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.ViewDefault,  large: false, isActivable: true));
-			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.ViewFull,     large: false, isActivable: true));
+			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.ViewCompact,     large: false, isActivable: true));
+			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.ViewDefault,     large: false, isActivable: true));
+			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.ViewFull,        large: false, isActivable: true));
 			toolbar.Children.Add (this.CreateSeparator ());
-			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.EditInternal, large: false, isActivable: true));
-			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.EditPublic,   large: false, isActivable: true));
+			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.EditName,        large: false, isActivable: true));
+			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.EditDescription, large: false, isActivable: true));
 		}
 
 		private IconButton CreateButton(Command command = null, DockStyle dockStyle = DockStyle.Left, bool large = true, bool isActivable = false)

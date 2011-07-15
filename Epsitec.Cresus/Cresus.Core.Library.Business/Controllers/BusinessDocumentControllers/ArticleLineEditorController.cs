@@ -44,11 +44,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
-		private bool IsInternalDescription
+		private bool IsEditName
 		{
 			get
 			{
-				return this.editMode == EditMode.InternalDescription;
+				return this.editMode == EditMode.Name;
 			}
 		}
 
@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				this.toolbarController.UpdateUI (this.Entity, this.articleDescriptionTextField);
 
-				var text = this.IsInternalDescription ? "Désignation interne" : "Désignation pour le client";
+				var text = this.IsEditName ? "Désignation courte" : "Désignation longue";
 				this.PlaceLabelAndField (line, labelWidth, 0, text, replacementBox);
 
 				var icon = new StaticText
@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					Anchor = AnchorStyles.BottomLeft,
 					PreferredSize = new Size (41, 41),
 					Margins = new Margins (30, 0, 0, 10),
-					Text = Misc.GetResourceIconImageTag(this.IsInternalDescription ? "Lines.EditInternal" : "Lines.EditPublic", 0, new Size (31, 31)),
+					Text = Misc.GetResourceIconImageTag(this.IsEditName ? "Lines.EditName" : "Lines.EditDescription", 0, new Size (31, 31)),
 				};
 			}
 		}
@@ -313,14 +313,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private FormattedText GetArticleDescription()
 		{
-			return ArticleDocumentItemHelper.GetArticleDescription (this.Entity, shortDescription: this.IsInternalDescription);
+			return ArticleDocumentItemHelper.GetArticleDescription (this.Entity, shortDescription: this.IsEditName);
 		}
 
 		private void SetArticleDescription(FormattedText value)
 		{
 			//	The replacement text of the article item might be defined in several different
 			//	languages; compare and replace only the text for the active language :
-			var replacementText = this.IsInternalDescription ? this.Entity.ReplacementName : this.Entity.ReplacementDescription;
+			var replacementText = this.IsEditName ? this.Entity.ReplacementName : this.Entity.ReplacementDescription;
 
 			string articleDescription = value.IsNull ? null : TextFormatter.ConvertToText (value);
 			string defaultDescription = TextFormatter.ConvertToText (this.Entity.ArticleDefinition.Description);
@@ -336,7 +336,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				MultilingualText text = new MultilingualText (replacementText);
 				text.SetText (TextFormatter.CurrentLanguageId, articleDescription);
 
-				if (this.IsInternalDescription)
+				if (this.IsEditName)
 				{
 					this.Entity.ReplacementName = text.GetGlobalText ();
 					this.Entity.ArticleNameCache = ArticleDocumentItemHelper.GetArticleDescription (this.Entity, replaceTags: true, shortDescription: true);
