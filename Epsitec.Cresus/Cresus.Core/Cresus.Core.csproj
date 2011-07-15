@@ -550,8 +550,8 @@
     <EmbeddedResource Include="Images\Edition.NewRecord.Overlay.icon" />
     <EmbeddedResource Include="Images\Lines.Combine.icon" />
     <EmbeddedResource Include="Images\Lines.Split.icon" />
-    <EmbeddedResource Include="Images\Lines.EditLong.icon" />
-    <EmbeddedResource Include="Images\Lines.EditShort.icon" />
+    <EmbeddedResource Include="Images\Lines.EditPublic.icon" />
+    <EmbeddedResource Include="Images\Lines.EditInternal.icon" />
     <EmbeddedResource Include="Images\Lines.ViewCompact.icon" />
     <EmbeddedResource Include="Images\Lines.ViewDefault.icon" />
     <EmbeddedResource Include="Images\Lines.ViewFull.icon" />

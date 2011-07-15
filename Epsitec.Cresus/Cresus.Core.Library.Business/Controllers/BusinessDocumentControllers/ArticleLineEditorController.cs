@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return this.editMode == EditMode.ShortDescription;
+				return this.editMode == EditMode.InternalDescription;
 			}
 		}
 
@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					Anchor = AnchorStyles.BottomLeft,
 					PreferredSize = new Size (41, 41),
 					Margins = new Margins (30, 0, 0, 10),
-					Text = Misc.GetResourceIconImageTag(this.IsShortDescription ? "Lines.EditShort" : "Lines.EditLong", 0, new Size (31, 31)),
+					Text = Misc.GetResourceIconImageTag(this.IsShortDescription ? "Lines.EditInternal" : "Lines.EditPublic", 0, new Size (31, 31)),
 				};
 			}
 		}

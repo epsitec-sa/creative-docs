@@ -400,7 +400,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					return "Article";
 
 				case ColumnType.ArticleDescription:
-					return (this.editMode == EditMode.ShortDescription) ? "Désignation interne" : "Désignation pour le client";
+					return (this.editMode == EditMode.InternalDescription) ? "Désignation interne" : "Désignation pour le client";
 
 				case ColumnType.Discount:
 					return "Rabais";
