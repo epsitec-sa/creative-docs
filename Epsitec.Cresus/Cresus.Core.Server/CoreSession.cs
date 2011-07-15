@@ -17,17 +17,19 @@ namespace Epsitec.Cresus.Core.Server
 {
 	public sealed class CoreSession : CoreApp
 	{
-		public static BrickWall GetBrickWall(AbstractEntity entity, ViewControllerMode mode)
+		public CoreSession(string id)
 		{
-			var controller = EntityViewControllerFactory.Create ("js", entity, mode, null, resolutionMode: Resolvers.ResolutionMode.InspectOnly);
-			var brickWall  = controller.CreateBrickWallForInspection ();
+			this.id = id;
+			this.creationDateTime = System.DateTime.UtcNow;
+		}
 
-			brickWall.BrickAdded += HandleBrickWallBrickAdded;
-			brickWall.BrickPropertyAdded += HandleBrickWallBrickPropertyAdded;
 
-			controller.BuildBricksForInspection (brickWall);
-
-			return brickWall;
+		public string Id
+		{
+			get
+			{
+				return this.id;
+			}
 		}
 
 		public override string ApplicationIdentifier
@@ -46,6 +48,29 @@ namespace Epsitec.Cresus.Core.Server
 			}
 		}
 
+
+		public static BrickWall GetBrickWall(AbstractEntity entity, ViewControllerMode mode)
+		{
+			var controller = EntityViewControllerFactory.Create ("js", entity, mode, null, resolutionMode: Resolvers.ResolutionMode.InspectOnly);
+			var brickWall  = controller.CreateBrickWallForInspection ();
+
+			brickWall.BrickAdded += HandleBrickWallBrickAdded;
+			brickWall.BrickPropertyAdded += HandleBrickWallBrickPropertyAdded;
+
+			controller.BuildBricksForInspection (brickWall);
+
+			return brickWall;
+		}
+
+		
+		protected override void Dispose(bool disposing)
+		{
+			this.isDisposed = true;
+
+			base.Dispose (disposing);
+		}
+
+		
 		private static void HandleBrickWallBrickAdded(object sender, BrickAddedEventArgs e)
 		{
 			var brick = e.Brick;
@@ -100,5 +125,10 @@ namespace Epsitec.Cresus.Core.Server
 				Brick.AddProperty (brick, property);
 			}
 		}
+
+
+		private readonly string id;
+		private readonly System.DateTime creationDateTime;
+		private bool isDisposed;
 	}
 }

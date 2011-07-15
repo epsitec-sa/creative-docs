@@ -70,10 +70,7 @@ namespace Epsitec.Cresus.Core
 
 		private static void ExecuteJsServer()
 		{
-			var objectHandle = System.Activator.CreateInstance (CoreProgramOperations.CoreServerAssembly, CoreProgramOperations.CoreServerProgram);
-
-			dynamic program = objectHandle.Unwrap ();
-			program.ExecuteServer ();
+			System.Activator.CreateInstance (CoreProgramOperations.CoreServerAssembly, CoreProgramOperations.CoreServerProgram);
 		}
 
 		private static void ExecuteCreateEpsitecDatabase(string path)

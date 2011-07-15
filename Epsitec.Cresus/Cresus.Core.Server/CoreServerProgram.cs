@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Debugging;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
@@ -19,31 +20,37 @@ namespace Epsitec.Cresus.Core.Server
 	{
 		public CoreServerProgram()
 		{
-
+			this.ExperimentalProfiling ();
+			this.ExperimentalCode ();
 		}
 
-		public void ExecuteServer()
+		private void ExperimentalProfiling()
 		{
-			//	Pour Jonas : obtenir un "brick wall" à partir d'une entité, même vide :
+			var server = new CoreServer ();
 
-			//var customerSummaryWall = CoreSession.GetBrickWall (new Epsitec.Cresus.Core.Entities.CustomerEntity (), Controllers.ViewControllerMode.Summary);
+			for (int i = 0; i < 3; i++)
+			{
+				long time;
+				var session = Profiler.ElapsedMilliseconds (server.CreateSession, out time);
 
-			//	...et pour mesurer le temps pris, une fois que tout est "chaud" :
-
-			//var watch = new System.Diagnostics.Stopwatch ();
-
-			//for (int i = 0; i < 10; i++)
-			//{
-			//    watch.Restart ();
-			//    CoreSession.GetBrickWall (new Epsitec.Cresus.Core.Entities.CustomerEntity (), Controllers.ViewControllerMode.Edition);
-			//    watch.Stop ();
-
-			//    System.Diagnostics.Debug.WriteLine (string.Format ("Attempt {0}: fetching EditionController took {1} μs", i+1, 1000L*1000L * watch.ElapsedTicks / System.Diagnostics.Stopwatch.Frequency));
-			//}
+				System.Diagnostics.Debug.WriteLine (string.Format ("Attempt {0}, creating session took {1} ms", i+1, time));
+				
+				server.DeleteSession (session.Id);
+			}
 
 
-			//			CoreSession session = new CoreSession ();
+			Profiler.ElapsedMicroseconds (() => CoreSession.GetBrickWall (new Epsitec.Cresus.Core.Entities.CustomerEntity (), Controllers.ViewControllerMode.Summary));
 
+			for (int i = 0; i < 10; i++)
+			{
+			    long time = Profiler.ElapsedMicroseconds (() => CoreSession.GetBrickWall (new Epsitec.Cresus.Core.Entities.CustomerEntity (), Controllers.ViewControllerMode.Edition));
+
+			    System.Diagnostics.Debug.WriteLine (string.Format ("Attempt {0}: fetching EditionController took {1} μs", i+1, time));
+			}
+		}
+
+		private void ExperimentalCode()
+		{
 			BuildControllers (new Epsitec.Cresus.Core.Entities.CustomerEntity (), Controllers.ViewControllerMode.Summary);
 			BuildControllers (new Epsitec.Cresus.Core.Entities.CustomerEntity (), Controllers.ViewControllerMode.Edition);
 			BuildControllers (new Epsitec.Cresus.Core.Entities.MailContactEntity (), Controllers.ViewControllerMode.Summary);
