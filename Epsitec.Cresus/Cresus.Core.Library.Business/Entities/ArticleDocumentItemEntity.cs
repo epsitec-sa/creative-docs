@@ -26,80 +26,6 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
-		/*
-		private decimal BillingUnitQuantity
-		{
-			get
-			{
-				if (this.PrimaryUnitPriceBeforeTax.GetValueOrDefault () == 0)
-				{
-					return 0;
-				}
-				else
-				{
-					return this.PrimaryLinePriceBeforeTax.GetValueOrDefault () / this.PrimaryUnitPriceBeforeTax.Value;
-				}
-			}
-		}
-
-		public decimal? PrimaryUnitPriceAfterTax
-		{
-			get
-			{
-				if (this.BillingUnitQuantity == 0)
-				{
-					return null;
-				}
-
-				if (this.PrimaryLinePriceAfterTax.HasValue)
-				{
-					return PriceCalculator.ClipPriceValue (this.PrimaryLinePriceAfterTax.Value / this.BillingUnitQuantity, CurrencyCode.None);
-				}
-				else
-				{
-					return null;
-				}
-			}
-		}
-
-		public decimal? ResultingUnitPriceAfterTax
-		{
-			get
-			{
-				if (this.BillingUnitQuantity == 0)
-				{
-					return null;
-				}
-
-				if (this.ResultingLinePriceAfterTax.HasValue)
-				{
-					return PriceCalculator.ClipPriceValue (this.ResultingLinePriceAfterTax.Value / this.BillingUnitQuantity, CurrencyCode.None);
-				}
-				else
-				{
-					return null;
-				}
-			}
-		}
-
-		public decimal? ResultingLinePriceAfterTax
-		{
-			get
-			{
-				if (this.ResultingLinePriceBeforeTax.HasValue)
-				{
-					return this.ResultingLinePriceBeforeTax.Value
-						+ this.ResultingLineTax1.GetValueOrDefault ()
-						+ this.ResultingLineTax2.GetValueOrDefault ();
-				}
-				else
-				{
-					return null;
-				}
-			}
-		}
-		*/
-
 		public override FormattedText GetCompactSummary()
 		{
 			if (this.GetEntityStatus () == EntityStatus.Empty)
@@ -108,8 +34,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 
 			var quantity = Helpers.ArticleDocumentItemHelper.GetArticleQuantityAndUnit (this);
-			var desc = Helpers.ArticleDocumentItemHelper.GetArticleDescription (this, shortDescription: true).Lines.FirstOrDefault ();
-			var price = Misc.PriceToString (this.PrimaryLinePriceBeforeTax);
+			var desc     = this.ArticlePublicDescriptionCache.Lines.FirstOrDefault ().ToSimpleText ();
+			var price    = Misc.PriceToString (this.PrimaryLinePriceBeforeTax);
 
 			FormattedText text = TextFormatter.FormatText (quantity, desc, price);
 

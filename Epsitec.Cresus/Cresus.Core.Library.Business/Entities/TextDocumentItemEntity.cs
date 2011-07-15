@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			else
 			{
-				return this.Text;
+				return this.Text.Lines.FirstOrDefault ().ToSimpleText ();
 			}
 		}
 

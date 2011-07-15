@@ -19,12 +19,14 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			var desc = this.TextForPrice;
 
-			string total;
-			if (this.PriceBeforeTax.HasValue)
+			if (desc.IsNullOrEmpty)
 			{
-				total = Misc.PriceToString (this.PriceBeforeTax);
+				desc = "Grand total";
 			}
-			else if (this.FixedPriceAfterTax.HasValue)
+
+			string total;
+
+			if (this.FixedPriceAfterTax.HasValue)
 			{
 				total = Misc.PriceToString (this.FixedPriceAfterTax);
 			}
@@ -37,7 +39,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 			if (text.IsNullOrEmpty)
 			{
-				return "<i>Total</i>";
+				return "<i>Grand total</i>";
 			}
 			else
 			{

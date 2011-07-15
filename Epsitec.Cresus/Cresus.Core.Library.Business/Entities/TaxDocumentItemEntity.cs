@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			else
 			{
-				return TextFormatter.FormatText (string.Format ("{0:0.0%} :", this.Rate), text);
+				return TextFormatter.FormatText (string.Format ("TVA {0:0.0%} :", this.Rate), text);
 			}
 		}
 
