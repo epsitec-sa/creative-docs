@@ -24,11 +24,13 @@ namespace Epsitec.Cresus.Core.Server
 		{
 			Epsitec.Common.Document.Engine.Initialize ();
 
-			//this.ExperimentalProfiling ();
-			PanelBuilder.ExperimentalCode ();
-
 			var server = new CoreServer ();
 			var session = server.CreateSession ();
+
+			PanelBuilder.Session = session;
+
+			//this.ExperimentalProfiling ();
+			PanelBuilder.ExperimentalCode ();
 
 			//this.ExperimentalEntityManipulations (session);
 
