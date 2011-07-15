@@ -110,6 +110,19 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public int ColumnsToSkipFromLeftForSeparator
+		{
+			//	Nombre de colonnes à sauter depuis la gauche pour afficher les lignes de séparation horizontales.
+			get
+			{
+				return this.columnsToSkipFromLeftForSeparator;
+			}
+			set
+			{
+				this.columnsToSkipFromLeftForSeparator = value;
+			}
+		}
+
 
 		public CellArrayStyles StyleH
 		{
@@ -2090,10 +2103,18 @@ namespace Epsitec.Common.Widgets
 				}
 				limit = limit-this.offsetH+rect.Left;
 				double x1 = rect.Left;
+				if (this.columnsToSkipFromLeftForSeparator > 0)
+				{
+					x1 += this.widthColumns[this.columnsToSkipFromLeftForSeparator-1];
+				}
 				double x2 = System.Math.Min(rect.Right, limit);
 				double y  = rect.Top+this.offsetV;
 				for ( int i=0 ; i<this.maxRows ; i++ )
 				{
+					if (i == this.maxRows-1)  // dernière ligne ?
+					{
+						x1 = rect.Left;
+					}
 					y -= this.RetHeightRow(i);
 					if (y >= rect.Bottom && y <= rect.Top && this.HasBottomSeparator(i))
 					{
@@ -2261,6 +2282,7 @@ namespace Epsitec.Common.Widgets
 		protected Drawing.Color					hiliteColor = Drawing.Color.Empty;
 		protected bool							isFlyOverHilite = false;
 		protected double						alphaSeparator = 1.0;
+		protected int							columnsToSkipFromLeftForSeparator;
 		
 		protected bool							isDraggingSlider;
 		protected double						savedTotalWidth;

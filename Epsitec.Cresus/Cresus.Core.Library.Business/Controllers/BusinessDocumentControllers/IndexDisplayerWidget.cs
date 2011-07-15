@@ -33,6 +33,30 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
+		public List<int> TopGroupIndexList
+		{
+			set;
+			internal get;
+		}
+
+		public List<int> CurrentGroupIndexList
+		{
+			set;
+			internal get;
+		}
+
+		public List<int> BottomGroupIndexList
+		{
+			set;
+			internal get;
+		}
+
+		public bool DrawTopSeparator
+		{
+			set;
+			get;
+		}
+
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
@@ -42,23 +66,50 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			int bandWidth = (int) rect.Width / IndexDisplayerWidget.maxDeep;
 			int count = System.Math.Min (colors.Count, IndexDisplayerWidget.maxDeep);
 
-			//	Dessine les surface colorée.
 			for (int i = 0; i < count; i++)
 			{
-				Rectangle band = new Rectangle (rect.Left+bandWidth*i, rect.Bottom, rect.Width-bandWidth*i, rect.Height);
+				int x = 2 + bandWidth*i;
+				Rectangle band = new Rectangle (rect.Left+x, rect.Bottom, rect.Width-x, rect.Height);
 
+				//	Dessine la surface colorée.
 				graphics.AddFilledRectangle (band);
 				graphics.RenderSolid (this.colors[i]);
-			}
 
-			//	Dessine les traits verticaux de séparation.
-			for (int i = 1; i < count; i++)
-			{
-				Rectangle band = new Rectangle (rect.Left+bandWidth*i, rect.Bottom, rect.Width-bandWidth*i, rect.Height);
-
+				//	Dessine le trait vertical de séparation.
 				graphics.AddLine (band.Left+0.5, band.Bottom, band.Left+0.5, band.Top);
 				graphics.RenderSolid (adorner.ColorBorder);
 			}
+
+			if (this.DrawTopSeparator)
+			{
+				//	Dessine le trait horizontal supérieur.
+				int shift = IndexDisplayerWidget.GetShift (this.TopGroupIndexList, this.CurrentGroupIndexList);
+				double x = 2 + bandWidth*shift + 0.5;
+
+				graphics.AddLine (rect.Left+x, rect.Top-0.5, rect.Right, rect.Top-0.5);
+				graphics.RenderSolid (adorner.ColorBorder);
+			}
+		}
+
+		private static int GetShift(List<int> topList, List<int> currentList)
+		{
+			int i = 0;
+
+			while (true)
+			{
+				if (topList     != null && i < topList.Count     &&
+					currentList != null && i < currentList.Count &&
+					topList[i] == currentList[i])
+				{
+					i++;
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			return i;
 		}
 
 

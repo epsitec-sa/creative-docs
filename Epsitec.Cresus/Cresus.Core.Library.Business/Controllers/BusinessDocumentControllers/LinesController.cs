@@ -51,6 +51,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Parent = tile,
 				StyleH = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.Header,
 				StyleV = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine | CellArrayStyles.SelectMulti,
+				ColumnsToSkipFromLeftForSeparator = 1,
 				IsCompactStyle = true,
 				DefHeight = LinesController.lineHeight,
 				Margins = new Margins (2),
@@ -67,12 +68,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			this.viewMode            = viewMode;
 			this.editMode            = editMode;
+			this.lineCount           = lineCount;
 			this.getLineInformations = getLineInformations;
 			this.getCellContent      = getCellContent;
 
 			int columns = this.ColumnTypes.Count ();
 
-			this.table.SetArraySize (columns, lineCount);
+			this.table.SetArraySize (columns, this.lineCount);
 
 			int column = 0;
 			foreach (var columnType in this.ColumnTypes)
@@ -93,13 +95,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.lastDocumentItemEntity = null;
 			this.documentItemIndex = -1;
 
-			for (int row=0; row<lineCount; row++)
+			for (int row=0; row<this.lineCount; row++)
 			{
 				this.TableFillRow (row);
 				this.TableUpdateRow (row);
 			}
 
-			sel = System.Math.Min (sel.Value, lineCount-1);
+			sel = System.Math.Min (sel.Value, this.lineCount-1);
 			if (sel != -1)
 			{
 				this.table.SelectRow (sel.Value, true);
@@ -251,7 +253,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 						if (displayer != null)
 						{
-							this.UpdateIndexDisplayerWidget (displayer, info.AbstractDocumentItemEntity.GroupIndex);
+							this.UpdateIndexDisplayerWidget (displayer, row, info.AbstractDocumentItemEntity.GroupIndex);
 						}
 					}
 				}
@@ -293,8 +295,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.table.SelectRow (row, false);
 		}
 
-		private void UpdateIndexDisplayerWidget(IndexDisplayerWidget displayer, int groupIndex)
+		private void UpdateIndexDisplayerWidget(IndexDisplayerWidget displayer, int row, int groupIndex)
 		{
+			displayer.DrawTopSeparator = (row == 0) ? false : this.table[0, row-1].HasBottomSeparator;
+
+			//	Initialise les couleurs à utiliser.
 			displayer.Colors.Clear ();
 
 			var list = BusinessDocumentLinesController.GroupIndexSplit (groupIndex);
@@ -319,6 +324,29 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					var color = this.GetNiceBackgroundColor (groupLevel);
 					displayer.Colors.Add (color);
 				}
+			}
+
+			//	
+			displayer.CurrentGroupIndexList = list;
+
+			if (row == 0)
+			{
+				displayer.TopGroupIndexList = null;
+			}
+			else
+			{
+				var info = this.getLineInformations (row-1);
+				displayer.TopGroupIndexList = BusinessDocumentLinesController.GroupIndexSplit (info.AbstractDocumentItemEntity.GroupIndex);
+			}
+
+			if (row >= this.lineCount-1)
+			{
+				displayer.BottomGroupIndexList = null;
+			}
+			else
+			{
+				var info = this.getLineInformations (row+1);
+				displayer.BottomGroupIndexList = BusinessDocumentLinesController.GroupIndexSplit (info.AbstractDocumentItemEntity.GroupIndex);
 			}
 
 			displayer.Invalidate ();
@@ -566,6 +594,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private System.Func<int, ColumnType, FormattedText>		getCellContent;
 		private ViewMode										viewMode;
 		private EditMode										editMode;
+		private int												lineCount;
 
 		private AbstractDocumentItemEntity						lastDocumentItemEntity;
 		private int												documentItemIndex;
