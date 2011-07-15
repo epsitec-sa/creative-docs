@@ -111,9 +111,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			switch (columnType)
 			{
-				case ColumnType.Group:
-					return info.AbstractDocumentItemEntity.GroupIndex.ToString ();  // TODO: provisoire (pour le debug)
-
 				case ColumnType.QuantityAndUnit:
 					var q = info.GetColumnContent (DocumentItemAccessorColumn.UniqueQuantity).ToString ();
 					var u = info.GetColumnContent (DocumentItemAccessorColumn.UniqueUnit).ToString ();
@@ -153,6 +150,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				case ColumnType.Total:
 					return info.GetColumnContent (DocumentItemAccessorColumn.Total);
+
+				case ColumnType.GroupIndex:
+					return info.AbstractDocumentItemEntity.GroupIndex.ToString ();
 			}
 
 			return null;
@@ -725,7 +725,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			return true;
 		}
 
-		private static List<int> GroupIndexSplit(int groupIndex)
+		public static List<int> GroupIndexSplit(int groupIndex)
 		{
 			//	30201 retourne la liste 1,2,3.
 			var list = new List<int> ();
@@ -740,7 +740,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			return list;
 		}
 
-		private static int GroupIndexCombine(List<int> list)
+		public static int GroupIndexCombine(List<int> list)
 		{
 			//	La liste 1,2,3 retourne 30201.
 			int groupIndex = 0;

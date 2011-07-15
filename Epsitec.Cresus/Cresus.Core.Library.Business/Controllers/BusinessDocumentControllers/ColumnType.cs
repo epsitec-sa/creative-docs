@@ -16,5 +16,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		LinePrice,
 		Vat,
 		Total,
+		GroupIndex,		// pour le debug
 	}
 }
