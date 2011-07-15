@@ -122,6 +122,7 @@ namespace Epsitec.Cresus.Core.Server
 		private static void ExperimentalCode()
 		{
 			// Recrée un fichier CSS vide
+			CoreServerProgram.EnsureDirectoryStructureExists (CoreServerProgram.cssFilename);
 			System.IO.File.Create (CoreServerProgram.cssFilename).Close ();
 
 			BuildController (new CustomerEntity (), Controllers.ViewControllerMode.Summary);
@@ -272,7 +273,7 @@ namespace Epsitec.Cresus.Core.Server
 			// CSS n'aime pas les "."
 			var cssClass = iconName.Replace ('.', '-').ToLower ();
 			var css = string.Format (".{0} {{ ", cssClass);
-			css += string.Format ("background-image: url({0}) !important;", path.Replace ("web", ".."));
+			css += string.Format ("background-image: url({0}) !important;", path.Replace ("web", "../.."));
 			css += "background-size: 16px 16px;";
 			css += "} ";
 
@@ -331,7 +332,7 @@ namespace Epsitec.Cresus.Core.Server
 		}
 
 		// Nom des fichiers générés
-		private static readonly string cssFilename = "web/css/generated.css";
+		private static readonly string cssFilename = "web/css/generated/style.css";
 		private static readonly string jsFilename = "web/js/{0}.js";
 		private static readonly string imagesFilename = "web/images/{0}.png";
 
