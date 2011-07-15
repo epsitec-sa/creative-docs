@@ -357,8 +357,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					yield return ColumnType.LinePrice;
 					yield return ColumnType.Vat;
 					yield return ColumnType.Total;
-
-					yield return ColumnType.GroupIndex;  // TODO: provisoire, pour le debug
 				}
 				else
 				{
@@ -376,6 +374,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					yield return ColumnType.LinePrice;
 					yield return ColumnType.Vat;
 					yield return ColumnType.Total;
+
+					yield return ColumnType.GroupIndex;  // TODO: provisoire, pour le debug
 				}
 			}
 		}

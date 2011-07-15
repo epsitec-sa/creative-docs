@@ -40,8 +40,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			Rectangle rect = this.Client.Bounds;
 
 			int bandWidth = (int) rect.Width / IndexDisplayerWidget.maxDeep;
+			int count = System.Math.Min (colors.Count, IndexDisplayerWidget.maxDeep);
 
-			for (int i = 0; i < colors.Count; i++)
+			//	Dessine les surface colorée.
+			for (int i = 0; i < count; i++)
 			{
 				Rectangle band = new Rectangle (rect.Left+bandWidth*i, rect.Bottom, rect.Width-bandWidth*i, rect.Height);
 
@@ -49,7 +51,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				graphics.RenderSolid (this.colors[i]);
 			}
 
-			for (int i = 1; i < colors.Count; i++)
+			//	Dessine les traits verticaux de séparation.
+			for (int i = 1; i < count; i++)
 			{
 				Rectangle band = new Rectangle (rect.Left+bandWidth*i, rect.Bottom, rect.Width-bandWidth*i, rect.Height);
 
