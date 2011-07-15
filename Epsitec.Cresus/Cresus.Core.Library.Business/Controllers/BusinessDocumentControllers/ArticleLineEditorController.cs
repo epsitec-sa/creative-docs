@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				this.toolbarController.UpdateUI (this.Entity, this.articleDescriptionTextField);
 
-				var text = this.IsShortDescription ? "Désign. courte" : "Désignation";
+				var text = this.IsShortDescription ? "Désign. courte" : "Désign. longue";
 				this.PlaceLabelAndField (line, labelWidth, 0, text, replacementBox);
 			}
 		}
@@ -330,10 +330,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				if (this.IsShortDescription)
 				{
 					this.Entity.ShortReplacementText = text.GetGlobalText ();
+					this.Entity.ArticleShortDescriptionCache = ArticleDocumentItemHelper.GetArticleDescription (this.Entity, replaceTags: true, shortDescription: true);
 				}
 				else
 				{
 					this.Entity.LongReplacementText = text.GetGlobalText ();
+					this.Entity.ArticleLongDescriptionCache = ArticleDocumentItemHelper.GetArticleDescription (this.Entity, replaceTags: true, shortDescription: false);
 				}
 			}
 		}

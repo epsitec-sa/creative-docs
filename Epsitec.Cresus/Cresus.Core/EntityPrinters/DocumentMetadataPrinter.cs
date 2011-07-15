@@ -397,10 +397,19 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			//	Construit une fois pour toutes les accesseurs au contenu.
 			var accessors = new List<DocumentItemAccessor> ();
 
+			var mode = DocumentItemAccessorMode.ForceAllLines;
+
+			if (this.DocumentType == Business.DocumentType.ProductionOrder)
+			{
+				//	Les ordres de productions doivent utiliser les descriptions courtes des articles.
+				//	C'est une demande de Monsieur "M" !
+				mode |= DocumentItemAccessorMode.UseArticleShortDescriptions;
+			}
+
 			for (int i = 0; i < this.Entity.Lines.Count; i++)
 			{
 				var accessor = new DocumentItemAccessor (this.Entity);
-				accessor.BuildContent (this.Entity.Lines[i], this.DocumentType, DocumentItemAccessorMode.ForceAllLines);
+				accessor.BuildContent (this.Entity.Lines[i], this.DocumentType, mode);
 
 				accessors.Add (accessor);
 			}

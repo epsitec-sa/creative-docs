@@ -204,6 +204,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public void ProcessEditShort()
 		{
 			this.CurrentEditMode = EditMode.ShortDescription;
+			this.UpdateAfterChange ();
 			this.CallbackSelectionChanged ();
 		}
 
@@ -211,6 +212,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public void ProcessEditLong()
 		{
 			this.CurrentEditMode = EditMode.LongDescription;
+			this.UpdateAfterChange ();
 			this.CallbackSelectionChanged ();
 		}
 
@@ -638,12 +640,19 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			this.lineInformations.Clear ();
 
+			var mode = DocumentItemAccessorMode.ForceAllLines | DocumentItemAccessorMode.SpecialQuantitiesToDistinctLines;
+
+			if (this.CurrentEditMode == EditMode.ShortDescription)
+			{
+				mode |= DocumentItemAccessorMode.UseArticleShortDescriptions;
+			}
+
 			for (int i = 0; i < this.accessData.BusinessDocumentEntity.Lines.Count; i++)
 			{
 				var line = this.accessData.BusinessDocumentEntity.Lines[i];
 
 				var accessor = new DocumentItemAccessor (this.accessData.BusinessDocumentEntity);
-				accessor.BuildContent (line, this.accessData.DocumentMetadataEntity.DocumentCategory.DocumentType, DocumentItemAccessorMode.ForceAllLines|DocumentItemAccessorMode.SpecialQuantitiesToDistinctLines);
+				accessor.BuildContent (line, this.accessData.DocumentMetadataEntity.DocumentCategory.DocumentType, mode);
 
 				for (int row = 0; row < accessor.RowsCount; row++)
 				{
