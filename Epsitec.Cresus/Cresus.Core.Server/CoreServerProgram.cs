@@ -32,6 +32,8 @@ namespace Epsitec.Cresus.Core.Server
 			//this.ExperimentalProfiling ();
 			PanelBuilder.ExperimentalCode ();
 
+			this.ExperimentalJSON (session);
+
 			//this.ExperimentalEntityManipulations (session);
 
 			session.DisposeBusinessContext ();
@@ -119,6 +121,34 @@ namespace Epsitec.Cresus.Core.Server
 
 				System.Diagnostics.Debug.WriteLine (string.Format ("Attempt {0}: fetching EditionController took {1} μs", i+1, time));
 			}
+		}
+
+		private void ExperimentalJSON(CoreSession session)
+		{
+			var context = session.GetBusinessContext ();
+
+			var customer = (from x in context.GetAllEntities<CustomerEntity> ()
+							where x.Relation.Person is NaturalPersonEntity
+							let person = x.Relation.Person as NaturalPersonEntity
+							where person.Lastname == "Arnaud"
+							select x).FirstOrDefault ();
+
+			var writer = new JsonFx.Json.JsonWriter ();
+
+			// Stackoverflow
+			//var json = writer.Write (customer);
+
+			var p = customer.Relation.Person as NaturalPersonEntity;
+
+			var obj = new
+			{
+				name = p.Firstname
+			};
+
+			var json = writer.Write (obj);
+
+			System.IO.File.WriteAllText ("web/data/person.json", json);
+
 		}
 	}
 }
