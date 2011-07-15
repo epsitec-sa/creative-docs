@@ -70,6 +70,7 @@ namespace Epsitec.Cresus.Core
 
 		private static void ExecuteJsServer()
 		{
+			Library.CoreContext.StartAsServer ();
 			System.Activator.CreateInstance (CoreProgramOperations.CoreServerAssembly, CoreProgramOperations.CoreServerProgram);
 		}
 

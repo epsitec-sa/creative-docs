@@ -77,7 +77,23 @@
 			}
 		}
 
-
+		public static void WhenTrueThrow<T>(this bool condition, params string[] args)
+			where T : System.Exception, new ()
+		{
+			if (condition)
+			{
+				throw System.Activator.CreateInstance (typeof (T), args) as T;
+			}
+		}
+		
+		public static void WhenFalseThrow<T>(this bool condition, params string[] args)
+			where T : System.Exception, new ()
+		{
+			if (!condition)
+			{
+				throw System.Activator.CreateInstance (typeof (T), args) as T;
+			}
+		}
 	}
 
 

@@ -32,6 +32,7 @@ namespace Epsitec.Cresus.Core.Server
 			}
 		}
 
+		
 		public override string ApplicationIdentifier
 		{
 			get
@@ -129,6 +130,7 @@ namespace Epsitec.Cresus.Core.Server
 
 		private readonly string id;
 		private readonly System.DateTime creationDateTime;
+		
 		private bool isDisposed;
 	}
 }

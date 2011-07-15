@@ -25,6 +25,11 @@ namespace Epsitec.Cresus.Core.Server
 
 //-			this.ExperimentalProfiling ();
 			this.ExperimentalCode ();
+
+			var server = new CoreServer ();
+			var session = server.CreateSession ();
+
+			//	TODO: wait until the server shuts down...
 		}
 
 		private void ExperimentalProfiling()
