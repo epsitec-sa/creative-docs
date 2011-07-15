@@ -268,7 +268,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			item.FinalLinePriceBeforeTax = null;
 			item.ArticleShortDescriptionCache = null;
 			item.ArticleLongDescriptionCache = null;
-			item.ReplacementText = null;
+			item.ShortReplacementText = null;
+			item.LongReplacementText = null;
 
 			//	Initialise la description de l'article.
 			this.SetArticleDescription (this.GetArticleDescription ());
@@ -310,10 +311,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			//	The replacement text of the article item might be defined in several different
 			//	languages; compare and replace only the text for the active language :
+			var replacementText = this.IsShortDescription ? this.Entity.ShortReplacementText : this.Entity.LongReplacementText;
 
 			string articleDescription = value.IsNull ? null : TextFormatter.ConvertToText (value);
 			string defaultDescription = TextFormatter.ConvertToText (this.Entity.ArticleDefinition.Description);
-			string currentReplacement = this.Entity.ReplacementText.IsNull ? null : TextFormatter.ConvertToText (this.Entity.ReplacementText);
+			string currentReplacement = replacementText.IsNull ? null : TextFormatter.ConvertToText (replacementText);
 
 			if (articleDescription == defaultDescription)  // description standard ?
 			{
@@ -322,9 +324,17 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			if (currentReplacement != articleDescription)
 			{
-				MultilingualText text = new MultilingualText (this.Entity.ReplacementText);
+				MultilingualText text = new MultilingualText (replacementText);
 				text.SetText (TextFormatter.CurrentLanguageId, articleDescription);
-				this.Entity.ReplacementText = text.GetGlobalText ();
+
+				if (this.IsShortDescription)
+				{
+					this.Entity.ShortReplacementText = text.GetGlobalText ();
+				}
+				else
+				{
+					this.Entity.LongReplacementText = text.GetGlobalText ();
+				}
 			}
 		}
 

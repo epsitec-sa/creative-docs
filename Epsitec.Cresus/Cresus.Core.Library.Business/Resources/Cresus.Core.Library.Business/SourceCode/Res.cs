@@ -562,6 +562,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid FixedLinePrice = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 72);
 				//	designer:cap/GVA92
 				public static readonly global::Epsitec.Common.Support.Druid FixedLinePriceIncludesTaxes = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 73);
+				//	designer:cap/GVAG2
+				public static readonly global::Epsitec.Common.Support.Druid LongReplacementText = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 80);
 				//	designer:cap/GVA42
 				public static readonly global::Epsitec.Common.Support.Druid NeverApplyDiscount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 68);
 				//	designer:cap/GVA32
@@ -570,14 +572,14 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid PrimaryLinePriceBeforeTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 219);
 				//	designer:cap/GVAQ6
 				public static readonly global::Epsitec.Common.Support.Druid PrimaryUnitPriceBeforeTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 218);
-				//	designer:cap/GVAG2
-				public static readonly global::Epsitec.Common.Support.Druid ReplacementText = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 80);
 				//	designer:cap/GVAA2
 				public static readonly global::Epsitec.Common.Support.Druid ResultingLinePriceBeforeTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 74);
 				//	designer:cap/GVAB2
 				public static readonly global::Epsitec.Common.Support.Druid ResultingLineTax1 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 75);
 				//	designer:cap/GVAC2
 				public static readonly global::Epsitec.Common.Support.Druid ResultingLineTax2 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 76);
+				//	designer:cap/GVKN
+				public static readonly global::Epsitec.Common.Support.Druid ShortReplacementText = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 23);
 				//	designer:cap/GVA62
 				public static readonly global::Epsitec.Common.Support.Druid TaxRate1 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 70);
 				//	designer:cap/GVA72

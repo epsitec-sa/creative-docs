@@ -174,7 +174,8 @@ namespace Epsitec.Cresus.Core.Entities
 			copy.FinalLinePriceBeforeTax      = this.FinalLinePriceBeforeTax;
 			copy.ArticleShortDescriptionCache = this.ArticleShortDescriptionCache;
 			copy.ArticleLongDescriptionCache  = this.ArticleLongDescriptionCache;
-			copy.ReplacementText              = this.ReplacementText;
+			copy.ShortReplacementText         = this.ShortReplacementText;
+			copy.LongReplacementText          = this.LongReplacementText;
 		}
 
 		#endregion

@@ -113,13 +113,14 @@ namespace Epsitec.Cresus.Core.Helpers
 		{
 			FormattedText description = FormattedText.Null;
 
-			string replacementTextInCurrentLanguage = TextFormatter.ConvertToText (article.ReplacementText);
+			string shortReplacementTextInCurrentLanguage = TextFormatter.ConvertToText (article.ShortReplacementText);
+			string longReplacementTextInCurrentLanguage  = TextFormatter.ConvertToText (article.LongReplacementText);
 
 			if (shortDescription)  // description courte prioritaire ?
 			{
-				if (!string.IsNullOrEmpty (replacementTextInCurrentLanguage))
+				if (!string.IsNullOrEmpty (shortReplacementTextInCurrentLanguage))
 				{
-					description = article.ReplacementText;
+					description = article.ShortReplacementText;
 				}
 				else if (!article.ArticleDefinition.Name.IsNullOrEmpty)
 				{
@@ -132,9 +133,9 @@ namespace Epsitec.Cresus.Core.Helpers
 			}
 			else  // description longue prioritaire ?
 			{
-				if (!string.IsNullOrEmpty (replacementTextInCurrentLanguage))
+				if (!string.IsNullOrEmpty (longReplacementTextInCurrentLanguage))
 				{
-					description = article.ReplacementText;
+					description = article.LongReplacementText;
 				}
 				else if (!article.ArticleDefinition.Description.IsNullOrEmpty)
 				{
@@ -165,7 +166,8 @@ namespace Epsitec.Cresus.Core.Helpers
 				article.ArticleDefinition.ArticleCategory.IsNotNull ())
 			{
 				return article.ArticleDefinition.ArticleCategory.ArticleType == Business.ArticleType.Freight ||
-					   article.ArticleDefinition.ArticleCategory.ArticleType == Business.ArticleType.Tax;
+					   article.ArticleDefinition.ArticleCategory.ArticleType == Business.ArticleType.Tax ||
+					   article.ArticleDefinition.ArticleCategory.ArticleType == Business.ArticleType.Admin;
 			}
 
 			return false;
@@ -201,43 +203,5 @@ namespace Epsitec.Cresus.Core.Helpers
 
 			return false;
 		}
-
-/*
-		public static void UpdatePrices(BusinessDocumentEntity document, ArticleDocumentItemEntity article)
-		{
-			//	Recalcule une ligne d'une facture.
-			var vatRate  = ArticleDocumentItemHelper.GetArticleVatRate (document, article).GetValueOrDefault (0);
-			var quantity = ArticleDocumentItemHelper.GetArticleQuantity (article);
-
-			if (quantity.HasValue)
-			{
-				decimal total = Misc.PriceConstrain (article.PrimaryUnitPriceBeforeTax * quantity.Value);
-
-				if (article.NeverApplyDiscount == false &&
-					article.Discounts.Count != 0)  // y a-t-il un rabais de ligne ?
-				{
-					if (article.Discounts[0].DiscountRate.HasValue)  // rabais en % ?
-					{
-						total = Misc.PriceConstrain (total * (1.0M - article.Discounts[0].DiscountRate.Value));
-					}
-					else if (article.Discounts[0].Value.HasValue)  // rabais en francs ?
-					{
-						total = Misc.PriceConstrain (total - article.Discounts[0].Value.Value);
-					}
-				}
-
-				article.PrimaryLinePriceBeforeTax   = total;
-				article.ResultingLinePriceBeforeTax = (int) total;  // arrondi au franc inférieur, pourquoi pas ?
-				article.ResultingLineTax1           = (article.ResultingLinePriceBeforeTax.Value * vatRate);
-			}
-			else
-			{
-				article.PrimaryLinePriceBeforeTax   = 0;
-				article.ResultingLinePriceBeforeTax = null;
-				article.ResultingLineTax1           = null;
-			}
-		}
-*/
-
 	}
 }

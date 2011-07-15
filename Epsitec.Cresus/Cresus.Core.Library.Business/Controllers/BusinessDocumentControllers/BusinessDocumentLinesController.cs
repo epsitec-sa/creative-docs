@@ -521,11 +521,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			var index = info.LineIndex;
 			var line = this.accessData.BusinessDocumentEntity.Lines[index];
 
-			var list = BusinessDocumentLinesController.GroupIndexSplit (line.GroupIndex);
-			var level = list.Count-1;
+			var initialList = BusinessDocumentLinesController.GroupIndexSplit (line.GroupIndex);
+			var level = initialList.Count-1;
 
-			if (list[level]+increment == 0 ||
-				list[level]+increment >= 99)
+			if (initialList[level]+increment == 0 ||
+				initialList[level]+increment >= 99)
 			{
 				return false;
 			}
@@ -536,15 +536,18 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				{
 					var item = this.accessData.BusinessDocumentEntity.Lines[i];
 
-					list = BusinessDocumentLinesController.GroupIndexSplit (item.GroupIndex);
+					var list = BusinessDocumentLinesController.GroupIndexSplit (item.GroupIndex);
 
-					if (list.Count < level+1)  // TODO; finir... !!!
+					if (!BusinessDocumentLinesController.GroupIndexCompare (list, initialList, level))
 					{
 						break;
 					}
 
-					list[level] += increment;
-					item.GroupIndex = BusinessDocumentLinesController.GroupIndexCombine (list);
+					if (level < list.Count)
+					{
+						list[level] += increment;
+						item.GroupIndex = BusinessDocumentLinesController.GroupIndexCombine (list);
+					}
 				}
 			}
 
@@ -649,6 +652,24 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
+
+		private static bool GroupIndexCompare(List<int> list1, List<int> list2, int deep)
+		{
+			if (list1.Count < deep || list2.Count < deep)
+			{
+				return false;
+			}
+
+			for (int i = 0; i < deep; i++)
+			{
+				if (list1[i] != list2[i])
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
 
 		private static List<int> GroupIndexSplit(int groupIndex)
 		{
