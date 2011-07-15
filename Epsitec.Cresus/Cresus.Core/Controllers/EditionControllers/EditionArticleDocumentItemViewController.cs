@@ -155,10 +155,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			item.ResultingLineTax1 = null;
 			item.ResultingLineTax2 = null;
 			item.FinalLinePriceBeforeTax = null;
-			item.ArticleInternalDescriptionCache = null;
-			item.ArticlePublicDescriptionCache = null;
-			item.InternalReplacementText = null;
-			item.PublicReplacementText = null;
+			item.ArticleNameCache = null;
+			item.ArticleDescriptionCache = null;
+			item.ReplacementName = null;
+			item.ReplacementDescription = null;
 
 			this.SetArticleDescription (this.GetArticleDescription ());
 
@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			string articleDescription = value.IsNull ? null : TextFormatter.ConvertToText (value);
 			string defaultDescription = TextFormatter.ConvertToText (this.Entity.ArticleDefinition.Description);
-			string currentReplacement = this.Entity.PublicReplacementText.IsNull ? null : TextFormatter.ConvertToText (this.Entity.PublicReplacementText);
+			string currentReplacement = this.Entity.ReplacementDescription.IsNull ? null : TextFormatter.ConvertToText (this.Entity.ReplacementDescription);
 			
 			if (articleDescription == defaultDescription)  // description standard ?
 			{
@@ -189,9 +189,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			if (currentReplacement != articleDescription)
 			{
-				MultilingualText text = new MultilingualText (this.Entity.PublicReplacementText);
+				MultilingualText text = new MultilingualText (this.Entity.ReplacementDescription);
 				text.SetText (TextFormatter.CurrentLanguageId, articleDescription);
-				this.Entity.PublicReplacementText = text.GetGlobalText ();
+				this.Entity.ReplacementDescription = text.GetGlobalText ();
 			}
 		}
 

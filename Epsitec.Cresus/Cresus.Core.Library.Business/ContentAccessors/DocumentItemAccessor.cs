@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			}
 
 			//?FormattedText description = ArticleDocumentItemHelper.GetArticleDescription (line, replaceTags: true, shortDescription: this.type == DocumentType.ProductionOrder);
-			FormattedText description = (this.mode & DocumentItemAccessorMode.UseArticleInternalDescriptions) != 0 ? line.ArticleInternalDescriptionCache : line.ArticlePublicDescriptionCache;
+			FormattedText description = (this.mode & DocumentItemAccessorMode.UseArticleInternalDescriptions) != 0 ? line.ArticleNameCache : line.ArticleDescriptionCache;
 
 			this.SetContent (0, DocumentItemAccessorColumn.ArticleId,          ArticleDocumentItemHelper.GetArticleId (line));
 			this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, description);

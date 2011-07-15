@@ -1742,11 +1742,11 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>ArticleInternalDescriptionCache</c> field.
+		///	The <c>ArticleNameCache</c> field.
 		///	designer:fld/GVAC1/GVAE2
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[GVAE2]")]
-		public global::Epsitec.Common.Types.FormattedText ArticleInternalDescriptionCache
+		public global::Epsitec.Common.Types.FormattedText ArticleNameCache
 		{
 			get
 			{
@@ -1754,21 +1754,21 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				global::Epsitec.Common.Types.FormattedText oldValue = this.ArticleInternalDescriptionCache;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.ArticleNameCache;
 				if (oldValue != value || !this.IsFieldDefined("[GVAE2]"))
 				{
-					this.OnArticleInternalDescriptionCacheChanging (oldValue, value);
+					this.OnArticleNameCacheChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[GVAE2]", oldValue, value);
-					this.OnArticleInternalDescriptionCacheChanged (oldValue, value);
+					this.OnArticleNameCacheChanged (oldValue, value);
 				}
 			}
 		}
 		///	<summary>
-		///	The <c>ArticlePublicDescriptionCache</c> field.
+		///	The <c>ArticleDescriptionCache</c> field.
 		///	designer:fld/GVAC1/GVAF2
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[GVAF2]")]
-		public global::Epsitec.Common.Types.FormattedText ArticlePublicDescriptionCache
+		public global::Epsitec.Common.Types.FormattedText ArticleDescriptionCache
 		{
 			get
 			{
@@ -1776,21 +1776,21 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				global::Epsitec.Common.Types.FormattedText oldValue = this.ArticlePublicDescriptionCache;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.ArticleDescriptionCache;
 				if (oldValue != value || !this.IsFieldDefined("[GVAF2]"))
 				{
-					this.OnArticlePublicDescriptionCacheChanging (oldValue, value);
+					this.OnArticleDescriptionCacheChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[GVAF2]", oldValue, value);
-					this.OnArticlePublicDescriptionCacheChanged (oldValue, value);
+					this.OnArticleDescriptionCacheChanged (oldValue, value);
 				}
 			}
 		}
 		///	<summary>
-		///	The <c>InternalReplacementText</c> field.
+		///	The <c>ReplacementName</c> field.
 		///	designer:fld/GVAC1/GVKN
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[GVKN]")]
-		public global::Epsitec.Common.Types.FormattedText InternalReplacementText
+		public global::Epsitec.Common.Types.FormattedText ReplacementName
 		{
 			get
 			{
@@ -1798,21 +1798,21 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				global::Epsitec.Common.Types.FormattedText oldValue = this.InternalReplacementText;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.ReplacementName;
 				if (oldValue != value || !this.IsFieldDefined("[GVKN]"))
 				{
-					this.OnInternalReplacementTextChanging (oldValue, value);
+					this.OnReplacementNameChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[GVKN]", oldValue, value);
-					this.OnInternalReplacementTextChanged (oldValue, value);
+					this.OnReplacementNameChanged (oldValue, value);
 				}
 			}
 		}
 		///	<summary>
-		///	The <c>PublicReplacementText</c> field.
+		///	The <c>ReplacementDescription</c> field.
 		///	designer:fld/GVAC1/GVAG2
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[GVAG2]")]
-		public global::Epsitec.Common.Types.FormattedText PublicReplacementText
+		public global::Epsitec.Common.Types.FormattedText ReplacementDescription
 		{
 			get
 			{
@@ -1820,12 +1820,12 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				global::Epsitec.Common.Types.FormattedText oldValue = this.PublicReplacementText;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.ReplacementDescription;
 				if (oldValue != value || !this.IsFieldDefined("[GVAG2]"))
 				{
-					this.OnPublicReplacementTextChanging (oldValue, value);
+					this.OnReplacementDescriptionChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[GVAG2]", oldValue, value);
-					this.OnPublicReplacementTextChanged (oldValue, value);
+					this.OnReplacementDescriptionChanged (oldValue, value);
 				}
 			}
 		}
@@ -1858,14 +1858,14 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnResultingLineTax2Changed(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnFinalLinePriceBeforeTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnFinalLinePriceBeforeTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnArticleInternalDescriptionCacheChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnArticleInternalDescriptionCacheChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnArticlePublicDescriptionCacheChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnArticlePublicDescriptionCacheChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnInternalReplacementTextChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnInternalReplacementTextChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnPublicReplacementTextChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnPublicReplacementTextChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnArticleNameCacheChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnArticleNameCacheChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnArticleDescriptionCacheChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnArticleDescriptionCacheChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnReplacementNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnReplacementNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnReplacementDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnReplacementDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

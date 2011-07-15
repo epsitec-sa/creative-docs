@@ -113,14 +113,14 @@ namespace Epsitec.Cresus.Core.Helpers
 		{
 			FormattedText description = FormattedText.Null;
 
-			string shortReplacementTextInCurrentLanguage = TextFormatter.ConvertToText (article.InternalReplacementText);
-			string longReplacementTextInCurrentLanguage  = TextFormatter.ConvertToText (article.PublicReplacementText);
+			string shortReplacementTextInCurrentLanguage = TextFormatter.ConvertToText (article.ReplacementName);
+			string longReplacementTextInCurrentLanguage  = TextFormatter.ConvertToText (article.ReplacementDescription);
 
 			if (shortDescription)  // description courte prioritaire ?
 			{
 				if (!string.IsNullOrEmpty (shortReplacementTextInCurrentLanguage))
 				{
-					description = article.InternalReplacementText;
+					description = article.ReplacementName;
 				}
 				else if (!article.ArticleDefinition.Name.IsNullOrEmpty)
 				{
@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Core.Helpers
 			{
 				if (!string.IsNullOrEmpty (longReplacementTextInCurrentLanguage))
 				{
-					description = article.PublicReplacementText;
+					description = article.ReplacementDescription;
 				}
 				else if (!article.ArticleDefinition.Description.IsNullOrEmpty)
 				{

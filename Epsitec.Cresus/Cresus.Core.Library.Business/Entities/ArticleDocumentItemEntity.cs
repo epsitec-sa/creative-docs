@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 
 			var quantity = Helpers.ArticleDocumentItemHelper.GetArticleQuantityAndUnit (this);
-			var desc     = this.ArticlePublicDescriptionCache.Lines.FirstOrDefault ().ToSimpleText ();
+			var desc     = this.ArticleDescriptionCache.Lines.FirstOrDefault ().ToSimpleText ();
 			var price    = Misc.PriceToString (this.PrimaryLinePriceBeforeTax);
 
 			FormattedText text = TextFormatter.FormatText (quantity, desc, price);
@@ -98,10 +98,10 @@ namespace Epsitec.Cresus.Core.Entities
 			copy.ResultingLineTax1               = this.ResultingLineTax1;
 			copy.ResultingLineTax2               = this.ResultingLineTax2;
 			copy.FinalLinePriceBeforeTax         = this.FinalLinePriceBeforeTax;
-			copy.ArticleInternalDescriptionCache = this.ArticleInternalDescriptionCache;
-			copy.ArticlePublicDescriptionCache   = this.ArticlePublicDescriptionCache;
-			copy.InternalReplacementText         = this.InternalReplacementText;
-			copy.PublicReplacementText           = this.PublicReplacementText;
+			copy.ArticleNameCache                = this.ArticleNameCache;
+			copy.ArticleDescriptionCache         = this.ArticleDescriptionCache;
+			copy.ReplacementName                 = this.ReplacementName;
+			copy.ReplacementDescription          = this.ReplacementDescription;
 		}
 
 		#endregion

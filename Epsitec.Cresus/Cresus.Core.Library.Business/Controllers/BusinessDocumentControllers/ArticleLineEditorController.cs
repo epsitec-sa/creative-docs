@@ -275,10 +275,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			item.ResultingLineTax1 = null;
 			item.ResultingLineTax2 = null;
 			item.FinalLinePriceBeforeTax = null;
-			item.ArticleInternalDescriptionCache = null;
-			item.ArticlePublicDescriptionCache = null;
-			item.InternalReplacementText = null;
-			item.PublicReplacementText = null;
+			item.ArticleNameCache = null;
+			item.ArticleDescriptionCache = null;
+			item.ReplacementName = null;
+			item.ReplacementDescription = null;
 
 			//	Initialise la description de l'article.
 			this.SetArticleDescription (this.GetArticleDescription ());
@@ -320,7 +320,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			//	The replacement text of the article item might be defined in several different
 			//	languages; compare and replace only the text for the active language :
-			var replacementText = this.IsInternalDescription ? this.Entity.InternalReplacementText : this.Entity.PublicReplacementText;
+			var replacementText = this.IsInternalDescription ? this.Entity.ReplacementName : this.Entity.ReplacementDescription;
 
 			string articleDescription = value.IsNull ? null : TextFormatter.ConvertToText (value);
 			string defaultDescription = TextFormatter.ConvertToText (this.Entity.ArticleDefinition.Description);
@@ -338,13 +338,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				if (this.IsInternalDescription)
 				{
-					this.Entity.InternalReplacementText = text.GetGlobalText ();
-					this.Entity.ArticleInternalDescriptionCache = ArticleDocumentItemHelper.GetArticleDescription (this.Entity, replaceTags: true, shortDescription: true);
+					this.Entity.ReplacementName = text.GetGlobalText ();
+					this.Entity.ArticleNameCache = ArticleDocumentItemHelper.GetArticleDescription (this.Entity, replaceTags: true, shortDescription: true);
 				}
 				else
 				{
-					this.Entity.PublicReplacementText = text.GetGlobalText ();
-					this.Entity.ArticlePublicDescriptionCache = ArticleDocumentItemHelper.GetArticleDescription (this.Entity, replaceTags: true, shortDescription: false);
+					this.Entity.ReplacementDescription = text.GetGlobalText ();
+					this.Entity.ArticleDescriptionCache = ArticleDocumentItemHelper.GetArticleDescription (this.Entity, replaceTags: true, shortDescription: false);
 				}
 			}
 		}
