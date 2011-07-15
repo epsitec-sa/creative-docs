@@ -4,12 +4,13 @@
 using Epsitec.Common.Debugging;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Entities;
 
-using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -29,6 +30,56 @@ namespace Epsitec.Cresus.Core.Server
 			var server = new CoreServer ();
 			var session = server.CreateSession ();
 
+			var context = session.GetBusinessContext ();
+
+			var customer = (from x in context.GetAllEntities<CustomerEntity> ()
+						    where x.Relation.Person is NaturalPersonEntity
+						    let person = x.Relation.Person as NaturalPersonEntity
+						    where person.Lastname == "Schmid"
+						    select x).FirstOrDefault ();
+
+			//	Jonas: utiliser IsNull() pour savoir si une entité est 'null' ou pas; en effet, un mécanisme
+			//	appelé le NullEntityReferenceVirtualizer crée parfois des entités vides à la volée, pour ne
+			//	pas avoir besoin de tester si chaque champ est nul, dans un accès du type 'customer.Relation.Person.Contacts'
+			//	En plus, le système est assez futé pour créer des entités manquantes si on fait un accès en écriture...
+			//	mais faudrait éviter, parce que ça ne peut pas initialiser proprement les entités et dans le cas de
+			//	customer.Relation.Person la création d'une entité personne aboutirait (à tort) à la fabrication d'une
+			//	entité 'AbstractPerson'.
+
+			if (customer.IsNull ())
+			{
+				var titleRepo = context.GetRepository<PersonTitleEntity> ();
+
+				//	Le repository permet de retrouver des données dans la base à partir d'exemples :
+
+				var title  = titleRepo.GetByExample (new PersonTitleEntity () { Name = "Monsieur" }).FirstOrDefault ();
+		
+				//	Crée une personne dans le contexte
+				
+				var person = context.CreateEntity<NaturalPersonEntity> ();
+				
+				person.Firstname = "Jonas";
+				person.Lastname = "Schmid";
+				person.Title = title;
+
+				customer = context.CreateEntity<CustomerEntity> ();
+				
+				//	NB : ici, le client a déjà été initialisé (customer.IdA contient un n° de client)
+				
+				customer.Relation = context.CreateEntity<RelationEntity> ();
+				customer.Relation.Person = person;
+			}
+
+			context.SetActiveEntity (customer);
+			
+			
+//			context.Discard ();
+			context.SaveChanges ();
+
+			session.DisposeBusinessContext ();
+			server.DeleteSession (session.Id);
+
+
 			//	TODO: wait until the server shuts down...
 		}
 
@@ -47,11 +98,11 @@ namespace Epsitec.Cresus.Core.Server
 			}
 
 
-			Profiler.ElapsedMicroseconds (() => CoreSession.GetBrickWall (new Epsitec.Cresus.Core.Entities.CustomerEntity (), Controllers.ViewControllerMode.Summary));
+			Profiler.ElapsedMicroseconds (() => CoreSession.GetBrickWall (new CustomerEntity (), Controllers.ViewControllerMode.Summary));
 
 			for (int i = 0; i < 10; i++)
 			{
-			    long time = Profiler.ElapsedMicroseconds (() => CoreSession.GetBrickWall (new Epsitec.Cresus.Core.Entities.CustomerEntity (), Controllers.ViewControllerMode.Edition));
+			    long time = Profiler.ElapsedMicroseconds (() => CoreSession.GetBrickWall (new CustomerEntity (), Controllers.ViewControllerMode.Edition));
 
 			    System.Diagnostics.Debug.WriteLine (string.Format ("Attempt {0}: fetching EditionController took {1} μs", i+1, time));
 			}
@@ -59,10 +110,10 @@ namespace Epsitec.Cresus.Core.Server
 
 		private void ExperimentalCode()
 		{
-			BuildControllers (new Epsitec.Cresus.Core.Entities.CustomerEntity (), Controllers.ViewControllerMode.Summary);
-			BuildControllers (new Epsitec.Cresus.Core.Entities.CustomerEntity (), Controllers.ViewControllerMode.Edition);
-			BuildControllers (new Epsitec.Cresus.Core.Entities.MailContactEntity (), Controllers.ViewControllerMode.Summary);
-			BuildControllers (new Epsitec.Cresus.Core.Entities.AffairEntity (), Controllers.ViewControllerMode.Summary);
+			BuildControllers (new CustomerEntity (), Controllers.ViewControllerMode.Summary);
+			BuildControllers (new CustomerEntity (), Controllers.ViewControllerMode.Edition);
+			BuildControllers (new MailContactEntity (), Controllers.ViewControllerMode.Summary);
+			BuildControllers (new AffairEntity (), Controllers.ViewControllerMode.Summary);
 		}
 
 		private static void BuildControllers(AbstractEntity entity, ViewControllerMode mode)

@@ -1,17 +1,18 @@
-﻿//	Copyright © 2008-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Bricks;
 
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Library;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Server
 {
@@ -21,10 +22,11 @@ namespace Epsitec.Cresus.Core.Server
 		{
 			this.id = id;
 			this.creationDateTime = System.DateTime.UtcNow;
+			this.coreData = this.GetComponent<CoreData> ();
 		}
 
 
-		public string Id
+		public string							Id
 		{
 			get
 			{
@@ -32,6 +34,21 @@ namespace Epsitec.Cresus.Core.Server
 			}
 		}
 
+		public bool								IsDisposed
+		{
+			get
+			{
+				return this.isDisposed;
+			}
+		}
+
+		public CoreData							CoreData
+		{
+			get
+			{
+				return this.coreData;
+			}
+		}
 		
 		public override string ApplicationIdentifier
 		{
@@ -63,12 +80,35 @@ namespace Epsitec.Cresus.Core.Server
 			return brickWall;
 		}
 
+
+		public BusinessContext GetBusinessContext()
+		{
+			if (this.businessContext == null)
+			{
+				this.businessContext = new BusinessContext (this.coreData);
+			}
+
+			return this.businessContext;
+		}
+
+		public void DisposeBusinessContext()
+		{
+			if (this.businessContext != null)
+			{
+				this.businessContext.Dispose ();
+				this.businessContext = null;
+			}
+		}
+
 		
 		protected override void Dispose(bool disposing)
 		{
-			this.isDisposed = true;
-
-			base.Dispose (disposing);
+			if (this.isDisposed == false)
+			{
+				this.DisposeBusinessContext ();
+				this.isDisposed = true;
+				base.Dispose (disposing);
+			}
 		}
 
 		
@@ -130,7 +170,10 @@ namespace Epsitec.Cresus.Core.Server
 
 		private readonly string id;
 		private readonly System.DateTime creationDateTime;
+
+		private readonly CoreData coreData;
 		
 		private bool isDisposed;
+		private BusinessContext businessContext;
 	}
 }
