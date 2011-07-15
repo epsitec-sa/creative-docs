@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
-		private bool IsShortDescription
+		private bool IsInternalDescription
 		{
 			get
 			{
@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				this.toolbarController.UpdateUI (this.Entity, this.articleDescriptionTextField);
 
-				var text = this.IsShortDescription ? "Désignation interne" : "Désignation pour le client";
+				var text = this.IsInternalDescription ? "Désignation interne" : "Désignation pour le client";
 				this.PlaceLabelAndField (line, labelWidth, 0, text, replacementBox);
 
 				var icon = new StaticText
@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					Anchor = AnchorStyles.BottomLeft,
 					PreferredSize = new Size (41, 41),
 					Margins = new Margins (30, 0, 0, 10),
-					Text = Misc.GetResourceIconImageTag(this.IsShortDescription ? "Lines.EditInternal" : "Lines.EditPublic", 0, new Size (31, 31)),
+					Text = Misc.GetResourceIconImageTag(this.IsInternalDescription ? "Lines.EditInternal" : "Lines.EditPublic", 0, new Size (31, 31)),
 				};
 			}
 		}
@@ -275,10 +275,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			item.ResultingLineTax1 = null;
 			item.ResultingLineTax2 = null;
 			item.FinalLinePriceBeforeTax = null;
-			item.ArticleShortDescriptionCache = null;
-			item.ArticleLongDescriptionCache = null;
-			item.ShortReplacementText = null;
-			item.LongReplacementText = null;
+			item.ArticleInternalDescriptionCache = null;
+			item.ArticlePublicDescriptionCache = null;
+			item.InternalReplacementText = null;
+			item.PublicReplacementText = null;
 
 			//	Initialise la description de l'article.
 			this.SetArticleDescription (this.GetArticleDescription ());
@@ -313,14 +313,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private FormattedText GetArticleDescription()
 		{
-			return ArticleDocumentItemHelper.GetArticleDescription (this.Entity, shortDescription: this.IsShortDescription);
+			return ArticleDocumentItemHelper.GetArticleDescription (this.Entity, shortDescription: this.IsInternalDescription);
 		}
 
 		private void SetArticleDescription(FormattedText value)
 		{
 			//	The replacement text of the article item might be defined in several different
 			//	languages; compare and replace only the text for the active language :
-			var replacementText = this.IsShortDescription ? this.Entity.ShortReplacementText : this.Entity.LongReplacementText;
+			var replacementText = this.IsInternalDescription ? this.Entity.InternalReplacementText : this.Entity.PublicReplacementText;
 
 			string articleDescription = value.IsNull ? null : TextFormatter.ConvertToText (value);
 			string defaultDescription = TextFormatter.ConvertToText (this.Entity.ArticleDefinition.Description);
@@ -336,15 +336,15 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				MultilingualText text = new MultilingualText (replacementText);
 				text.SetText (TextFormatter.CurrentLanguageId, articleDescription);
 
-				if (this.IsShortDescription)
+				if (this.IsInternalDescription)
 				{
-					this.Entity.ShortReplacementText = text.GetGlobalText ();
-					this.Entity.ArticleShortDescriptionCache = ArticleDocumentItemHelper.GetArticleDescription (this.Entity, replaceTags: true, shortDescription: true);
+					this.Entity.InternalReplacementText = text.GetGlobalText ();
+					this.Entity.ArticleInternalDescriptionCache = ArticleDocumentItemHelper.GetArticleDescription (this.Entity, replaceTags: true, shortDescription: true);
 				}
 				else
 				{
-					this.Entity.LongReplacementText = text.GetGlobalText ();
-					this.Entity.ArticleLongDescriptionCache = ArticleDocumentItemHelper.GetArticleDescription (this.Entity, replaceTags: true, shortDescription: false);
+					this.Entity.PublicReplacementText = text.GetGlobalText ();
+					this.Entity.ArticlePublicDescriptionCache = ArticleDocumentItemHelper.GetArticleDescription (this.Entity, replaceTags: true, shortDescription: false);
 				}
 			}
 		}

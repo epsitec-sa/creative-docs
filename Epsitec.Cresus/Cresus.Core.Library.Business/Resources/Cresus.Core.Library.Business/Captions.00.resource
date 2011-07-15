@@ -64,9 +64,9 @@
   <data name="Fld.ArticleDocumentItem.ResultingLineTax1" id="AB2">&lt;s:data id="_0" f:Name="ResultingLineTax1" /&gt;</data>
   <data name="Fld.ArticleDocumentItem.ResultingLineTax2" id="AC2">&lt;s:data id="_0" f:Name="ResultingLineTax2" /&gt;</data>
   <data name="Fld.ArticleDocumentItem.FinalLinePriceBeforeTax" id="AD2">&lt;s:data id="_0" f:Name="FinalLinePriceBeforeTax" /&gt;</data>
-  <data name="Fld.ArticleDocumentItem.ArticleShortDescriptionCache" id="AE2">&lt;s:data id="_0" f:Name="ArticleShortDescriptionCache" /&gt;</data>
-  <data name="Fld.ArticleDocumentItem.ArticleLongDescriptionCache" id="AF2">&lt;s:data id="_0" f:Name="ArticleLongDescriptionCache" /&gt;</data>
-  <data name="Fld.ArticleDocumentItem.LongReplacementText" id="AG2">&lt;s:data id="_0" f:Name="LongReplacementText" /&gt;</data>
+  <data name="Fld.ArticleDocumentItem.ArticleInternalDescriptionCache" id="AE2">&lt;s:data id="_0" f:Name="ArticleInternalDescriptionCache" /&gt;</data>
+  <data name="Fld.ArticleDocumentItem.ArticlePublicDescriptionCache" id="AF2">&lt;s:data id="_0" f:Name="ArticlePublicDescriptionCache" /&gt;</data>
+  <data name="Fld.ArticleDocumentItem.PublicReplacementText" id="AG2">&lt;s:data id="_0" f:Name="PublicReplacementText" /&gt;</data>
   <data name="Fld.ArticleDefinition.Pictures" id="AH2">&lt;s:data id="_0" f:Name="Pictures" f:Labels="{Collection {Text 'Images'}}" /&gt;</data>
   <data name="Fld.ArticleDefinition.InputVatCode" id="AI2">&lt;s:data id="_0" f:Name="InputVatCode" f:Labels="{Collection {Text 'Mode de TVA (acquisition)'}}" /&gt;</data>
   <data name="Fld.ArticleDefinition.OutputVatCode" id="AJ2">&lt;s:data id="_0" f:Name="OutputVatCode" f:Labels="{Collection {Text 'Mode de TVA (vente)'}}" /&gt;</data>
@@ -233,5 +233,5 @@
   <data name="Val.Enum.DocumentItemAttributes.MyEyesOnly" id="A37">&lt;s:data id="_0" f:Name="MyEyesOnly" f:Description="Ligne destinée à un usage interne uniquement (pas intéressante pour le client)" f:Labels="{Collection {Text 'Usage interne'}}" /&gt;</data>
   <data name="Typ.Decimal.ArticleQuantity" id="A47">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*aNT" /&gt;&lt;s:data id="_0" f:Name="Decimal.ArticleQuantity" f:_1.SystemType="V:System.Decimal" f:_2.Range="-1000000 1000000 0.000001" f:_2.PreferredRange="0 100 0.01" f:_2.SmallStep="1" f:_2.LargeStep="10" f:Labels="{Collection {Text 'Quantité'}}" /&gt;</data>
   <data name="Fld.ArticleQuantity.Quantity" id="A57">&lt;s:data id="_0" f:Name="Quantity" /&gt;</data>
-  <data name="Fld.ArticleDocumentItem.ShortReplacementText" id="KN">&lt;s:data id="_0" f:Name="ShortReplacementText" /&gt;</data>
+  <data name="Fld.ArticleDocumentItem.InternalReplacementText" id="KN">&lt;s:data id="_0" f:Name="InternalReplacementText" /&gt;</data>
 </bundle>

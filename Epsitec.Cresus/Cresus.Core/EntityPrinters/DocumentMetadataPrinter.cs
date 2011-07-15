@@ -403,7 +403,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			{
 				//	Les ordres de productions doivent utiliser les descriptions courtes des articles.
 				//	C'est une demande de Monsieur "M" !
-				mode |= DocumentItemAccessorMode.UseArticleShortDescriptions;
+				mode |= DocumentItemAccessorMode.UseArticleInternalDescriptions;
 			}
 
 			for (int i = 0; i < this.Entity.Lines.Count; i++)

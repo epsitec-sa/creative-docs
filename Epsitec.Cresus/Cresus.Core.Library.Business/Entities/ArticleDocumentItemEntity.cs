@@ -144,38 +144,38 @@ namespace Epsitec.Cresus.Core.Entities
 
 		void ICopyableEntity<ArticleDocumentItemEntity>.CopyTo(IBusinessContext businessContext, ArticleDocumentItemEntity copy)
 		{
-			copy.Attributes                   = this.Attributes;
-			copy.GroupIndex                   = this.GroupIndex;
-
-			copy.BeginDate                    = this.BeginDate;
-			copy.EndDate                      = this.EndDate;
-			copy.ArticleDefinition            = this.ArticleDefinition;
-			copy.ArticleParameters            = this.ArticleParameters;
+			copy.Attributes                      = this.Attributes;
+			copy.GroupIndex                      = this.GroupIndex;
+			
+			copy.BeginDate                       = this.BeginDate;
+			copy.EndDate                         = this.EndDate;
+			copy.ArticleDefinition               = this.ArticleDefinition;
+			copy.ArticleParameters               = this.ArticleParameters;
 
 			//	TODO: clone ArticleTraceabilityDetails
 
-			copy.VatCode                      = this.VatCode;
-			copy.BillingUnitPriceBeforeTax    = this.BillingUnitPriceBeforeTax;
-			copy.PrimaryUnitPriceBeforeTax    = this.PrimaryUnitPriceBeforeTax;
-			copy.PrimaryLinePriceBeforeTax    = this.PrimaryLinePriceBeforeTax;
-			copy.PrimaryLinePriceAfterTax     = this.PrimaryLinePriceAfterTax;
-			copy.NeverApplyDiscount           = this.NeverApplyDiscount;
+			copy.VatCode                         = this.VatCode;
+			copy.BillingUnitPriceBeforeTax       = this.BillingUnitPriceBeforeTax;
+			copy.PrimaryUnitPriceBeforeTax       = this.PrimaryUnitPriceBeforeTax;
+			copy.PrimaryLinePriceBeforeTax       = this.PrimaryLinePriceBeforeTax;
+			copy.PrimaryLinePriceAfterTax        = this.PrimaryLinePriceAfterTax;
+			copy.NeverApplyDiscount              = this.NeverApplyDiscount;
 
 			copy.ArticleQuantities.AddRange (this.ArticleQuantities.Select (x => x.CloneEntity (businessContext)));
 			copy.Discounts.AddRange (this.Discounts.Select (x => x.CloneEntity (businessContext)));
 
-			copy.TaxRate1                     = this.TaxRate1;
-			copy.TaxRate2                     = this.TaxRate2;
-			copy.FixedLinePrice               = this.FixedLinePrice;
-			copy.FixedLinePriceIncludesTaxes  = this.FixedLinePriceIncludesTaxes;
-			copy.ResultingLinePriceBeforeTax  = this.ResultingLinePriceBeforeTax;
-			copy.ResultingLineTax1            = this.ResultingLineTax1;
-			copy.ResultingLineTax2            = this.ResultingLineTax2;
-			copy.FinalLinePriceBeforeTax      = this.FinalLinePriceBeforeTax;
-			copy.ArticleShortDescriptionCache = this.ArticleShortDescriptionCache;
-			copy.ArticleLongDescriptionCache  = this.ArticleLongDescriptionCache;
-			copy.ShortReplacementText         = this.ShortReplacementText;
-			copy.LongReplacementText          = this.LongReplacementText;
+			copy.TaxRate1                        = this.TaxRate1;
+			copy.TaxRate2                        = this.TaxRate2;
+			copy.FixedLinePrice                  = this.FixedLinePrice;
+			copy.FixedLinePriceIncludesTaxes     = this.FixedLinePriceIncludesTaxes;
+			copy.ResultingLinePriceBeforeTax     = this.ResultingLinePriceBeforeTax;
+			copy.ResultingLineTax1               = this.ResultingLineTax1;
+			copy.ResultingLineTax2               = this.ResultingLineTax2;
+			copy.FinalLinePriceBeforeTax         = this.FinalLinePriceBeforeTax;
+			copy.ArticleInternalDescriptionCache = this.ArticleInternalDescriptionCache;
+			copy.ArticlePublicDescriptionCache   = this.ArticlePublicDescriptionCache;
+			copy.InternalReplacementText         = this.InternalReplacementText;
+			copy.PublicReplacementText           = this.PublicReplacementText;
 		}
 
 		#endregion

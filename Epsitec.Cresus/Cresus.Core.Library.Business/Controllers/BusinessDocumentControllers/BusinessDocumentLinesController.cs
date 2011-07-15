@@ -644,7 +644,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			if (this.CurrentEditMode == EditMode.InternalDescription)
 			{
-				mode |= DocumentItemAccessorMode.UseArticleShortDescriptions;
+				mode |= DocumentItemAccessorMode.UseArticleInternalDescriptions;
 			}
 
 			for (int i = 0; i < this.accessData.BusinessDocumentEntity.Lines.Count; i++)
