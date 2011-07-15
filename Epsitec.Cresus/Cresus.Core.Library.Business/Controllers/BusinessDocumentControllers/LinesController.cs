@@ -61,9 +61,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			};
 		}
 
-		public void UpdateUI(ViewMode viewMode, int lineCount, System.Func<int, LineInformations> getLineInformations, System.Func<int, ColumnType, FormattedText> getCellContent, int? sel = null)
+		public void UpdateUI(ViewMode viewMode, EditMode editMode, int lineCount, System.Func<int, LineInformations> getLineInformations, System.Func<int, ColumnType, FormattedText> getCellContent, int? sel = null)
 		{
 			this.viewMode            = viewMode;
+			this.editMode            = editMode;
 			this.getLineInformations = getLineInformations;
 			this.getCellContent      = getCellContent;
 
@@ -399,7 +400,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					return "Article";
 
 				case ColumnType.ArticleDescription:
-					return "Désignation";
+					return (this.editMode == EditMode.ShortDescription) ? "Désignation interne" : "Désignation pour le client";
 
 				case ColumnType.Discount:
 					return "Rabais";
@@ -447,6 +448,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private System.Func<int, LineInformations>				getLineInformations;
 		private System.Func<int, ColumnType, FormattedText>		getCellContent;
 		private ViewMode										viewMode;
+		private EditMode										editMode;
 
 		private AbstractDocumentItemEntity						lastDocumentItemEntity;
 		private int												documentItemIndex;

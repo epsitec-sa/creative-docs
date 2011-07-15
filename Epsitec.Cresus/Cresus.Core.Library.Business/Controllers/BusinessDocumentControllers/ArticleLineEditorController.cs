@@ -149,8 +149,17 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				this.toolbarController.UpdateUI (this.Entity, this.articleDescriptionTextField);
 
-				var text = this.IsShortDescription ? "Désign. courte" : "Désign. longue";
+				var text = this.IsShortDescription ? "Désignation interne" : "Désignation pour le client";
 				this.PlaceLabelAndField (line, labelWidth, 0, text, replacementBox);
+
+				var icon = new StaticText
+				{
+					Parent = line,
+					Anchor = AnchorStyles.BottomLeft,
+					PreferredSize = new Size (41, 41),
+					Margins = new Margins (30, 0, 0, 10),
+					Text = Misc.GetResourceIconImageTag(this.IsShortDescription ? "Lines.EditShort" : "Lines.EditLong", 0, new Size (31, 31)),
+				};
 			}
 		}
 

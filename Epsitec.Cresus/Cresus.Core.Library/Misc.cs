@@ -284,6 +284,17 @@ namespace Epsitec.Cresus.Core
 		}
 
 		/// <summary>
+		/// Retourne le tag permettant de mettre une icône sous forme d'image dans un texte html.
+		/// </summary>
+		/// <param name="icon">Nom brut de l'icône, sans extension.</param>
+		/// <param name="verticalOffset">Offset vertical.</param>
+		/// <returns></returns>
+		public static string GetResourceIconImageTag(string icon, double verticalOffset, Size iconSize)
+		{
+			return string.Format (@"<img src=""{0}"" voff=""{1}"" dx=""{2}"" dy=""{3}""/>", Misc.GetResourceIconUri (icon), verticalOffset.ToString (System.Globalization.CultureInfo.InvariantCulture), iconSize.Width.ToString (System.Globalization.CultureInfo.InvariantCulture), iconSize.Height.ToString (System.Globalization.CultureInfo.InvariantCulture));
+		}
+
+		/// <summary>
 		/// Retourne le nom complet d'une icône, à utiliser pour la propriété IconButton.IconUri.
 		/// </summary>
 		/// <param name="icon">Nom brut de l'icône, sans extension; accepte aussi un nom complet avec procole et extension.</param>

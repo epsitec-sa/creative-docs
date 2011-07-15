@@ -581,7 +581,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.UpdateLineInformations ();
 
 			int? sel = this.GetLineInformationsIndex (line, quantity);
-			this.linesController.UpdateUI (this.CurrentViewMode, this.lineInformations.Count, this.CallbackGetLineInformations, this.CallbackGetCellContent, sel);
+			this.linesController.UpdateUI (this.CurrentViewMode, this.CurrentEditMode, this.lineInformations.Count, this.CallbackGetLineInformations, this.CallbackGetCellContent, sel);
 			this.UpdateCommands ();
 		}
 
