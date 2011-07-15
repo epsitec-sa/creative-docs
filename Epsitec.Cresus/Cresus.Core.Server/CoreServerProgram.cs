@@ -13,6 +13,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Core.Server
 {
@@ -20,7 +21,9 @@ namespace Epsitec.Cresus.Core.Server
 	{
 		public CoreServerProgram()
 		{
-			this.ExperimentalProfiling ();
+			Epsitec.Common.Document.Engine.Initialize ();
+
+//-			this.ExperimentalProfiling ();
 			this.ExperimentalCode ();
 		}
 
@@ -107,14 +110,25 @@ namespace Epsitec.Cresus.Core.Server
 		private static string GetJsFilePath(string name)
 		{
 			var path = string.Format ("web/js/{0}.js", name.Replace ('.', '/'));
+			CoreServerProgram.EnsureDirectoryStructureExists (path);
+			return path;
+		}
+
+		private static string GetImageFilePath(string name)
+		{
+			var path = string.Format ("web/images/{0}.png", name.Replace ('.', '/'));
+			CoreServerProgram.EnsureDirectoryStructureExists (path);
+			return path;
+		}
+
+		private static void EnsureDirectoryStructureExists(string path)
+		{
 			var dir  = System.IO.Path.GetDirectoryName (path);
 
 			if (System.IO.Directory.Exists (dir) == false)
 			{
 				System.IO.Directory.CreateDirectory (dir);
 			}
-
-			return path;
 		}
 		private static string CreateIcon(Brick brick)
 		{
@@ -124,14 +138,14 @@ namespace Epsitec.Cresus.Core.Server
 			}
 
 			var iconRes = Brick.GetProperty (brick, BrickPropertyKey.Icon).StringValue;
+			var iconName = iconRes;
 
-			if (iconRes.IndexOf ("manifest:") == 0)
+			if (iconName.StartsWith ("manifest:"))
 			{
-				iconRes = iconRes.Substring (9);
+				iconName = iconName.Substring (9);
 			}
 
-			Epsitec.Common.Document.Engine.Initialize ();
-			var icon = Bitmap.FromManifestResource (iconRes, Assembly.GetExecutingAssembly ());
+			var icon = ImageProvider.Default.GetImage (iconRes, Resources.DefaultManager);
 
 			if (icon == null)
 			{
@@ -141,10 +155,10 @@ namespace Epsitec.Cresus.Core.Server
 			var bitmap = icon.BitmapImage;
 
 			var bytes = bitmap.Save (ImageFormat.Png);
-			string filename = string.Format ("web/images/{0}.png", iconRes.Replace ('.', '/'));
-			System.IO.File.WriteAllBytes (filename, bytes);
+			string path = CoreServerProgram.GetImageFilePath (iconName);
+			System.IO.File.WriteAllBytes (path, bytes);
 
-			return filename;
+			return path;
 		}
 
 
