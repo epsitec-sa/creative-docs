@@ -30,13 +30,24 @@ namespace Epsitec.Cresus.Core.Server
 			var server = new CoreServer ();
 			var session = server.CreateSession ();
 
+			this.ExperimentalEntityManipulations (session);
+
+			session.DisposeBusinessContext ();
+			server.DeleteSession (session.Id);
+
+
+			//	TODO: wait until the server shuts down...
+		}
+
+		private void ExperimentalEntityManipulations(CoreSession session)
+		{
 			var context = session.GetBusinessContext ();
 
 			var customer = (from x in context.GetAllEntities<CustomerEntity> ()
-						    where x.Relation.Person is NaturalPersonEntity
-						    let person = x.Relation.Person as NaturalPersonEntity
-						    where person.Lastname == "Schmid"
-						    select x).FirstOrDefault ();
+							where x.Relation.Person is NaturalPersonEntity
+							let person = x.Relation.Person as NaturalPersonEntity
+							where person.Lastname == "Schmid"
+							select x).FirstOrDefault ();
 
 			//	Jonas: utiliser IsNull() pour savoir si une entité est 'null' ou pas; en effet, un mécanisme
 			//	appelé le NullEntityReferenceVirtualizer crée parfois des entités vides à la volée, pour ne
@@ -52,35 +63,35 @@ namespace Epsitec.Cresus.Core.Server
 
 				//	Le repository permet de retrouver des données dans la base à partir d'exemples :
 
-				var title  = titleRepo.GetByExample (new PersonTitleEntity () { Name = "Monsieur" }).FirstOrDefault ();
-		
+				var title  = titleRepo.GetByExample (new PersonTitleEntity ()
+				{
+					Name = "Monsieur"
+				}).FirstOrDefault ();
+
 				//	Crée une personne dans le contexte
-				
+
 				var person = context.CreateEntity<NaturalPersonEntity> ();
-				
+
 				person.Firstname = "Jonas";
 				person.Lastname = "Schmid";
 				person.Title = title;
 
 				customer = context.CreateEntity<CustomerEntity> ();
-				
+
 				//	NB : ici, le client a déjà été initialisé (customer.IdA contient un n° de client)
-				
+
 				customer.Relation = context.CreateEntity<RelationEntity> ();
 				customer.Relation.Person = person;
 			}
 
 			context.SetActiveEntity (customer);
-			
-			
+
+			//	A partir d'ici, tu peux travailler avec le client...
+
+			customer.IdB = System.DateTime.Now.ToShortTimeString ();
+
 //			context.Discard ();
 			context.SaveChanges ();
-
-			session.DisposeBusinessContext ();
-			server.DeleteSession (session.Id);
-
-
-			//	TODO: wait until the server shuts down...
 		}
 
 		private void ExperimentalProfiling()
