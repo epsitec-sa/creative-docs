@@ -82,7 +82,11 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				}
 
 				var line = businessDocumentEntity.Lines[i];
-				summary = summary.AppendLine (line.GetCompactSummary ());
+
+				var text = line.GetCompactSummary ();
+				text = SummaryDocumentMetadataViewController.GetIndentedText (text, line.GroupLevel);
+
+				summary = summary.AppendLine (text);
 			}
 
 			if (businessDocumentEntity.Lines.Count > 1)
@@ -92,6 +96,17 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			}
 
 			return summary;
+		}
+
+		private static FormattedText GetIndentedText(FormattedText text, int level)
+		{
+			//	Code expérimental pour mettre en évidence l'indentation des lignes d'un document commercial.
+			for (int i = 0; i < level; i++)
+			{
+				text = FormattedText.Concat ("|  ", text);
+			}
+
+			return text;
 		}
 
 		private static IList<BillingDetailEntity> GetBillingDetailEntities(DocumentMetadataEntity documentMetadataEntity)

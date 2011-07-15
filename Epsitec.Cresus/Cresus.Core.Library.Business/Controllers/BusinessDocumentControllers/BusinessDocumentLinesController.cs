@@ -262,7 +262,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			if (sel != null)
 			{
 				var info = this.lineInformations[sel.Value];
-				var line = this.accessData.BusinessDocumentEntity.Lines[info.LineIndex];
+				var line = info.AbstractDocumentItemEntity;
 
 				if (line is ArticleDocumentItemEntity)
 				{
@@ -424,7 +424,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			if (sel != null)
 			{
 				var info = this.lineInformations[sel.Value];
-				var line = this.accessData.BusinessDocumentEntity.Lines[info.LineIndex];
+				var line = info.AbstractDocumentItemEntity;
 				var index = info.LineIndex;
 
 				if (index+direction >= 0 && index+direction < this.accessData.BusinessDocumentEntity.Lines.Count)
@@ -446,7 +446,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			if (sel != null)
 			{
 				var info = this.lineInformations[sel.Value];
-				var line = this.accessData.BusinessDocumentEntity.Lines[info.LineIndex];
+				var line = info.AbstractDocumentItemEntity;
 				var index = info.LineIndex;
 
 				if (index+1 < this.accessData.BusinessDocumentEntity.Lines.Count)
@@ -468,7 +468,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			if (sel != null)
 			{
 				var info = this.lineInformations[sel.Value];
-				var line = this.accessData.BusinessDocumentEntity.Lines[info.LineIndex];
+				var line = info.AbstractDocumentItemEntity;
 
 				if (line is ArticleDocumentItemEntity && info.SublineIndex > 0)  // quantité ?
 				{
@@ -488,12 +488,57 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private void ProcessGroup()
 		{
 			//	Groupe toutes les lignes sélectionnées.
+			var selection = this.linesController.Selection;
+
+			if (selection.Count == 0)
+			{
+				return;
+			}
+
+			var firstLine = this.lineInformations[selection[0]].AbstractDocumentItemEntity;
+
+			if (firstLine.GroupLevel >= BusinessDocumentLinesController.maxGroupingDepth)
+			{
+				return;
+			}
+
+			foreach (var sel in selection)
+			{
+				var info = this.lineInformations[sel];
+				var line = info.AbstractDocumentItemEntity;
+
+				var list = BusinessDocumentLinesController.GroupIndexSplit (line.GroupIndex);
+				list.Add (1);
+				line.GroupIndex = BusinessDocumentLinesController.GroupIndexCombine (list);
+			}
+
+			this.UpdateAfterChange (firstLine, null);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.Ungroup)]
 		private void ProcessUngroup()
 		{
 			//	Défait le groupe sélectionné.
+			var selection = this.linesController.Selection;
+
+			if (selection.Count == 0)
+			{
+				return;
+			}
+
+			var firstLine = this.lineInformations[selection[0]].AbstractDocumentItemEntity;
+
+			foreach (var sel in selection)
+			{
+				var info = this.lineInformations[sel];
+				var line = info.AbstractDocumentItemEntity;
+
+				var list = BusinessDocumentLinesController.GroupIndexSplit (line.GroupIndex);
+				list.RemoveAt (list.Count-1);
+				line.GroupIndex = BusinessDocumentLinesController.GroupIndexCombine (list);
+			}
+
+			this.UpdateAfterChange (firstLine, null);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.Split)]
@@ -520,8 +565,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			var info = this.lineInformations[sel.Value];
+			var line = info.AbstractDocumentItemEntity;
 			var index = info.LineIndex;
-			var line = this.accessData.BusinessDocumentEntity.Lines[index];
 
 			var initialList = BusinessDocumentLinesController.GroupIndexSplit (line.GroupIndex);
 			var level = initialList.Count-1;

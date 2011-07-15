@@ -30,6 +30,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public LinesController(AccessData accessData)
 		{
 			this.accessData = accessData;
+
+			this.colorIndexes = new List<int> ();
 		}
 
 
@@ -252,7 +254,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				}
 				else
 				{
-					this.table[column, row].BackColor = Color.FromBrightness (1.0);
+					var color = this.GetNiceBackgroundColor (info.AbstractDocumentItemEntity.GroupIndex);
+					this.table[column, row].BackColor = color;
 				}
 
 				// TODO: Colorer de façon similaire les groupes.
@@ -438,10 +441,42 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			return ContentAlignment.MiddleLeft;
 		}
 
+
+		private Color GetNiceBackgroundColor(int groupIndex)
+		{
+			//	Attribue une couleur spécifique unique à chaque groupe, dans la mesure
+			//	du possible (8 couleurs pastels sont disponibles). Une fois l'attribution
+			//	effectuée, ne change plus, afin d'éviter qu'un groupe existant change
+			//	brusquement parce qu'on a modifié un autre groupe ailleurs.
+			int index = this.colorIndexes.IndexOf (groupIndex);
+
+			if (index == -1)  // couleur pas encore attribuée ?
+			{
+				this.colorIndexes.Add (groupIndex);
+				index = this.colorIndexes.Count-1;
+			}
+
+			return LinesController.niceBackgroundColors[index % LinesController.niceBackgroundColors.Length];
+		}
+
+		private static readonly Color[] niceBackgroundColors =
+		{
+			//	Arc-en-ciel de couleurs pastels, bleu-violet-rouge-jaune-vert.
+			Color.FromHsv (180.0, 0.12, 1.0),
+			Color.FromHsv (216.0, 0.12, 1.0),
+			Color.FromHsv (252.0, 0.12, 1.0),
+			Color.FromHsv (288.0, 0.12, 1.0),
+			Color.FromHsv (  0.0, 0.12, 1.0),
+			Color.FromHsv ( 36.0, 0.12, 1.0),
+			Color.FromHsv ( 80.0, 0.12, 1.0),
+			Color.FromHsv (120.0, 0.12, 1.0),
+		};
+
 	
 		private static readonly double lineHeight = 17;
 
 		private readonly AccessData								accessData;
+		private readonly List<int>								colorIndexes;
 
 		private CellTable										table;
 		private System.Func<bool>								selectionChanged;
