@@ -256,16 +256,30 @@ namespace Epsitec.Cresus.Core.Server
 
 			// Get the ressources from the icon name
 			var iconRes = Brick.GetProperty (brick, BrickPropertyKey.Icon).StringValue;
+			iconRes = "manifest:Epsitec.Cresus.Core.Images.UserManager.icon"; // pour les tests seulement
 			var iconName = iconRes;
 			if (iconName.StartsWith ("manifest:"))
 			{
 				iconName = iconName.Substring (9);
 			}
-			var icon = ImageProvider.Default.GetImage (iconRes, Resources.DefaultManager);
+			var icon = ImageProvider.Default.GetImage (iconRes, Resources.DefaultManager) as Canvas;
+
 			if (icon == null)
 			{
 				return default (KeyValuePair<string, string>);
 			}
+
+#if true
+			Canvas.IconKey key = new Canvas.IconKey ();
+
+			key.Size.Width  = 20;	//	variante 20x20 existe parfois, en plus de la version 31x31
+			key.Size.Height = 20;
+
+			icon = icon.GetImageForIconKey (key) as Canvas;
+			icon = icon.GetImageForPaintStyle (GlyphPaintStyle.Normal) as Canvas;
+			icon.DefineZoom (10);	//	pour rire 10x plus gros
+#endif
+
 			var bitmap = icon.BitmapImage;
 
 			// Save the image
