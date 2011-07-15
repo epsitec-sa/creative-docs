@@ -12,6 +12,11 @@ namespace Epsitec.Common.Support
 	{
 		public SafeCounter()
 		{
+			//	NB: the SafeCounter must be a class in order for this to work; turning it into
+			//	a struct might be tempting, but doing so will prevent Enter/Release to work
+			//	correctly, as they will operate on copies of the SafeCounter, rather than on
+			//	the original.
+
 			this.value = 0;
 		}
 

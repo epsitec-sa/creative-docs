@@ -36,5 +36,8 @@ namespace Epsitec.Cresus.Core.Factories
 
 			AssemblyLoader.LoadMatching ("Cresus.Core.Library.*", System.IO.SearchOption.TopDirectoryOnly, loadMode: AssemblyLoadMode.LoadOnlyEpsitecSigned);
 		}
+
+		[System.ThreadStatic]
+		protected static SafeCounter		registerRecursionCount;
 	}
 }

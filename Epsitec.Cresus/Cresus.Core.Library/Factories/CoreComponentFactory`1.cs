@@ -1,6 +1,8 @@
 //	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Resolvers;
 
@@ -34,27 +36,42 @@ namespace Epsitec.Cresus.Core.Factories
 		/// <param name="host">The host.</param>
 		public static void RegisterComponents(THost host)
 		{
+			if (CoreComponentFactory.registerRecursionCount == null)
+			{
+				CoreComponentFactory.registerRecursionCount = new SafeCounter ();
+			}
+
 			var factories = CoreComponentFactoryResolver<TFactory>.Resolve ();
 
-			bool again = true;
-
-			while (again)
+			using (CoreComponentFactory.registerRecursionCount.Enter ())
 			{
-				again = false;
+				bool again = true;
 
-				foreach (var factory in factories)
+				while (again)
 				{
-					var type = factory.GetComponentType ();
+					again = false;
 
-					if (host.ContainsComponent (type))
+					foreach (var factory in factories)
 					{
-						continue;
-					}
+						var type = factory.GetComponentType ();
 
-					if (factory.CanCreate (host))
-					{
-						host.RegisterComponent (type, factory.Create (host));
-						again = true;
+						if (host.ContainsComponent (type))
+						{
+							continue;
+						}
+
+						if (factory.CanCreate (host))
+						{
+							long ms = Epsitec.Common.Debugging.Profiler.ElapsedMilliseconds (() => host.RegisterComponent (type, factory.Create (host)));
+
+							if (ms > 10)
+							{
+								int recursion = CoreComponentFactory.registerRecursionCount.Value;
+								System.Diagnostics.Debug.WriteLine (string.Format ("WARNING {2} slow component; {0} took {1}ms to register", type.FullName, ms, new string ('>', recursion)));
+							}
+
+							again = true;
+						}
 					}
 				}
 			}
