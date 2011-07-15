@@ -38,10 +38,8 @@ namespace Epsitec.Cresus.Core.Server
 			PanelBuilder.EnsureDirectoryStructureExists (PanelBuilder.cssFilename);
 			System.IO.File.Create (PanelBuilder.cssFilename).Close ();
 
-			//BuildController (new CustomerEntity (), Controllers.ViewControllerMode.Summary);
-			//BuildController (new CustomerEntity (), Controllers.ViewControllerMode.Edition);
-			//BuildController (new MailContactEntity (), Controllers.ViewControllerMode.Summary);
-			//BuildController (new AffairEntity (), Controllers.ViewControllerMode.Summary);
+			BuildController (new MailContactEntity (), Controllers.ViewControllerMode.Summary);
+			BuildController (new AffairEntity (), Controllers.ViewControllerMode.Summary);
 
 			var context = PanelBuilder.Session.GetBusinessContext ();
 
@@ -89,7 +87,7 @@ namespace Epsitec.Cresus.Core.Server
 			var jscontent = "Ext.define('";
 			jscontent += name;
 			jscontent += "', {";
-			jscontent += "extend: 'Epsitec.Cresus.Core.Static.SummaryPanel',";
+			jscontent += "extend: 'Epsitec.Cresus.Core.Static.WallPanel',";
 			jscontent += string.Format ("title: '{0}',", name);
 			jscontent += "defferedItems: [";
 
@@ -161,7 +159,7 @@ namespace Epsitec.Cresus.Core.Server
 		/// <returns>Javascript code to create the panel</returns>
 		private string CreatePanelContent(Brick brick)
 		{
-			var jscontent = "{ name: 'Epsitec.Cresus.Core.Static.TilePanel',";
+			var jscontent = "{ name: 'Epsitec.Cresus.Core.Static.WallPanel',";
 			jscontent += "options: {";
 
 			jscontent += "title: '";
