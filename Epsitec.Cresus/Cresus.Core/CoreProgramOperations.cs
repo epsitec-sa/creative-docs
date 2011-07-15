@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core
 					break;
 
 				case "-js-server":
-					CoreProgramServer.ExecuteServer ();
+					CoreProgramOperations.ExecuteJsServer ();
 					break;
 			}
 		}
@@ -66,6 +66,14 @@ namespace Epsitec.Cresus.Core
 					CoreProgramOperations.ExecuteDatabaseRestore (arg1);
 					break;
 			}
+		}
+
+		private static void ExecuteJsServer()
+		{
+			var objectHandle = System.Activator.CreateInstance (CoreProgramOperations.CoreServerAssembly, CoreProgramOperations.CoreServerProgram);
+
+			dynamic program = objectHandle.Unwrap ();
+			program.ExecuteServer ();
 		}
 
 		private static void ExecuteCreateEpsitecDatabase(string path)
@@ -120,5 +128,8 @@ namespace Epsitec.Cresus.Core
 
 			Data.Infrastructure.DropDatabase (dbAccess);
 		}
+		
+		private const string					CoreServerProgram	= "Epsitec.Cresus.Core.Server.CoreServerProgram";
+		private const string					CoreServerAssembly	= "Cresus.Core.Server";
 	}
 }

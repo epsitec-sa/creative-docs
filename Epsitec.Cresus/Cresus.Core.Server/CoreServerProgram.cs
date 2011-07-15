@@ -1,22 +1,28 @@
 ﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Bricks;
-using System.Linq.Expressions;
 using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Bricks;
+using Epsitec.Cresus.Core.Controllers;
+
+using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
-using System;
-using System.Reflection;
-using Epsitec.Common.Drawing;
+using System.Linq.Expressions;
 
-namespace Epsitec.Cresus.Core
+namespace Epsitec.Cresus.Core.Server
 {
-	internal static class CoreProgramServer
+	public sealed class CoreServerProgram
 	{
-		public static void ExecuteServer()
+		public CoreServerProgram()
+		{
+
+		}
+
+		public void ExecuteServer()
 		{
 			//	Pour Jonas : obtenir un "brick wall" à partir d'une entité, même vide :
 
@@ -47,9 +53,9 @@ namespace Epsitec.Cresus.Core
 		private static void BuildControllers(AbstractEntity entity, ViewControllerMode mode)
 		{
 			var customerSummaryWall = CoreSession.GetBrickWall (entity, mode);
-			var name = GetControllerName (entity, mode);
-
-			var filename = string.Format ("web/js/{0}.js", name.Replace ('.', '/'));
+			
+			var name = CoreServerProgram.GetControllerName (entity, mode);
+			var path = CoreServerProgram.GetJsFilePath (name);
 
 			var jscontent = "Ext.define('";
 			jscontent += name;
@@ -87,10 +93,22 @@ namespace Epsitec.Cresus.Core
 
 			jscontent += "]";
 			jscontent += "});";
-			System.IO.File.WriteAllText (filename, jscontent);
+			System.IO.File.WriteAllText (path, jscontent);
 
 		}
 
+		private static string GetJsFilePath(string name)
+		{
+			var path = string.Format ("web/js/{0}.js", name.Replace ('.', '/'));
+			var dir  = System.IO.Path.GetDirectoryName (path);
+
+			if (System.IO.Directory.Exists (dir) == false)
+			{
+				System.IO.Directory.CreateDirectory (dir);
+			}
+
+			return path;
+		}
 		private static string CreateIcon(Brick brick)
 		{
 			if (!Brick.ContainsProperty (brick, BrickPropertyKey.Icon))

@@ -2,20 +2,18 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{3401E72C-6D2B-49AF-BD88-4178B370D33F}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <ProjectGuid>{E85C5738-4267-4F95-B6B0-A30B47B76D01}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Epsitec.Cresus.Core</RootNamespace>
-    <AssemblyName>App.CresusCore</AssemblyName>
+    <RootNamespace>Epsitec.Cresus.Core.Server</RootNamespace>
+    <AssemblyName>Cresus.Core.Server</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,10 +21,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -42,13 +38,26 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="Program.cs" />
+    <Compile Include="CoreServerProgram.cs" />
+    <Compile Include="CoreServer.cs" />
+    <Compile Include="CoreSession.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Solution Items\Epsitec.Cresus.snk">
+      <Link>Properties\Epsitec.Cresus.snk</Link>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Epsitec\dot.net\Epsitec.ShellPE\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj">
@@ -59,13 +68,13 @@
       <Project>{B324896E-2CDE-45B8-91CE-B476687EA384}</Project>
       <Name>Common.Document</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common.Splash\Common.Splash.csproj">
-      <Project>{28FBE9C0-881E-4BF0-BDFA-4F8BB9E31083}</Project>
-      <Name>Common.Splash</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Bricks\Cresus.Bricks.csproj">
+      <Project>{AE911461-2EFC-435D-B7AD-1F0DE07EE251}</Project>
+      <Name>Cresus.Bricks</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library.Address\Cresus.Core.Library.Address.csproj">
       <Project>{5D9704AF-69C1-4E71-8DF3-4455DC41D731}</Project>
@@ -107,6 +116,10 @@
       <Project>{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}</Project>
       <Name>Cresus.Core.Library.Print</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.UI\Cresus.Core.Library.UI.csproj">
+      <Project>{F33C234B-2DD9-420D-9793-FD22B601D061}</Project>
+      <Name>Cresus.Core.Library.UI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library.UserManagement\Cresus.Core.Library.UserManagement.csproj">
       <Project>{F5EA8D13-3119-4563-BC77-9E9D6CE94148}</Project>
       <Name>Cresus.Core.Library.UserManagement</Name>
@@ -118,10 +131,6 @@
     <ProjectReference Include="..\Cresus.Core.Library\Cresus.Core.Library.csproj">
       <Project>{91DA0241-F084-40C5-B76E-0240884D1841}</Project>
       <Name>Cresus.Core.Library</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Server\Cresus.Core.Server.csproj">
-      <Project>{E85C5738-4267-4F95-B6B0-A30B47B76D01}</Project>
-      <Name>Cresus.Core.Server</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Core\Cresus.Core.csproj">
       <Project>{543293D0-CAFB-4431-8202-6C6D5FF5403A}</Project>
@@ -139,20 +148,6 @@
       <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>
       <Name>Cresus.DataLayer</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Solution Items\Epsitec.Cresus.snk">
-      <Link>Properties\Epsitec.Cresus.snk</Link>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\Cresus.CorePlugIn.WorkflowDesigner\bin\Debug\Cresus.CorePlugIn.WorkflowDesigner.dll">
-      <Link>plugins\Cresus.CorePlugIn.WorkflowDesigner.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="app.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

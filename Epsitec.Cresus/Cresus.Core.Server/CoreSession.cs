@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Types;
 
-namespace Epsitec.Cresus.Core
+namespace Epsitec.Cresus.Core.Server
 {
 	public sealed class CoreSession : CoreApp
 	{
