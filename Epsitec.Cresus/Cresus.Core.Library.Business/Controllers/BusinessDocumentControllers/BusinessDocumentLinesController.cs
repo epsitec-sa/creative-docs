@@ -257,7 +257,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			if (created != null)
 			{
-				this.UpdateAfterChange (created.AbstractDocumentItemEntity, null);
+				var selection = new List<LineInformations> ();
+				selection.Add (created);
+
+				this.UpdateAfterChange (selection);
 			}
 #endif
 		}
@@ -497,7 +500,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private void ProcessGroup()
 		{
 			//	Groupe toutes les lignes sélectionnées.
-			var selection = this.linesController.Selection;
+			var selection = this.linesController.GetSelection ();
 
 			if (selection.Count == 0)
 			{
@@ -528,7 +531,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private void ProcessUngroup()
 		{
 			//	Défait le groupe sélectionné.
-			var selection = this.linesController.Selection;
+			var selection = this.linesController.GetSelection ();
 
 			if (selection.Count == 0)
 			{
@@ -615,27 +618,24 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private void UpdateAfterChange()
 		{
-			int? sel = this.linesController.LastSelection;
-			AbstractDocumentItemEntity line = null;
-			ArticleQuantityEntity quantity = null;
-
-			if (sel != null)
-			{
-				var info = this.lineInformations[sel.Value];
-
-				line     = info.AbstractDocumentItemEntity;
-				quantity = info.ArticleQuantityEntity;
-			}
-
-			this.UpdateAfterChange (line, quantity);
+			this.UpdateAfterChange (this.GetSelection ());
 		}
 
-		private void UpdateAfterChange(AbstractDocumentItemEntity line, ArticleQuantityEntity quantity)
+		private void UpdateAfterChange(List<LineInformations> selection)
 		{
 			this.UpdateLineInformations ();
 
-			int? sel = this.GetLineInformationsIndex (line, quantity);
-			this.linesController.UpdateUI (this.CurrentViewMode, this.CurrentEditMode, this.lineInformations.Count, this.CallbackGetLineInformations, this.CallbackGetCellContent, sel);
+			this.linesController.UpdateUI (this.CurrentViewMode, this.CurrentEditMode, this.lineInformations.Count, this.CallbackGetLineInformations, this.CallbackGetCellContent);
+			this.SetSelection (selection);
+
+			this.UpdateCommands ();
+		}
+
+		private void UpdateAfterChange(AbstractDocumentItemEntity line, ArticleQuantityEntity quantity)  // TODO: obsolète
+		{
+			this.UpdateLineInformations ();
+
+			this.linesController.UpdateUI (this.CurrentViewMode, this.CurrentEditMode, this.lineInformations.Count, this.CallbackGetLineInformations, this.CallbackGetCellContent);
 			this.UpdateCommands ();
 		}
 
@@ -714,7 +714,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				for (int row = 0; row < accessor.RowsCount; row++)
 				{
-					this.lineInformations.Add (new LineInformations (accessor, line, i, row));
+					var quantity = accessor.GetArticleQuantityEntity (row);
+					this.lineInformations.Add (new LineInformations (accessor, line, quantity, i, row));
 				}
 			}
 		}
@@ -771,7 +772,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private void UpdateCommands()
 		{
-			var selection     = this.linesController.Selection;
+			var selection     = this.linesController.GetSelection ();
 			var lastSelection = this.linesController.LastSelection;
 			var isCoherentSelection = this.IsCoherentSelection;
 
@@ -814,7 +815,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				var selection = this.linesController.Selection;
+				var selection = this.linesController.GetSelection ();
 
 				if (selection.Count == 0)
 				{
@@ -848,7 +849,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			var list = new List<LineInformations> ();
 
-			foreach (var selection in this.linesController.Selection)
+			foreach (var selection in this.linesController.GetSelection ())
 			{
 				var info = this.lineInformations[selection];
 				list.Add (info);
@@ -857,8 +858,50 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			return list;
 		}
 
-		private void SetSelection(List<LineInformations> list)
+		private void SetSelection(List<LineInformations> selection)
 		{
+			var list = new List<int> ();
+
+			foreach (var info in selection)
+			{
+				int i = this.IndexOfLineInformations (info);
+
+				if (i != -1)
+				{
+					list.Add (i);
+				}
+			}
+
+			this.linesController.SetSelection (list);
+		}
+
+		private int IndexOfLineInformations(LineInformations info)
+		{
+			if (info.ArticleQuantityEntity != null)  // cherche une quantité précise ?
+			{
+				for (int i = 0; i < this.lineInformations.Count; i++)
+				{
+					var nextInfo = this.lineInformations[i];
+
+					if (nextInfo.AbstractDocumentItemEntity == info.AbstractDocumentItemEntity &&
+						nextInfo.ArticleQuantityEntity      == info.ArticleQuantityEntity      )
+					{
+						return i;
+					}
+				}
+			}
+
+			for (int i = 0; i < this.lineInformations.Count; i++)
+			{
+				var nextInfo = this.lineInformations[i];
+
+				if (nextInfo.AbstractDocumentItemEntity == info.AbstractDocumentItemEntity)
+				{
+					return i;
+				}
+			}
+
+			return -1;
 		}
 
 

@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			businessDocumentEntity.Lines.Insert (index, newLine);
 
-			return new LineInformations (null, newLine, 0, 0);
+			return new LineInformations (null, newLine, null, 0, 0);
 		}
 
 		public static bool Delete(BusinessContext businessContext, BusinessDocumentEntity businessDocumentEntity, List<LineInformations> selection)
@@ -57,12 +57,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				foreach (var info in selection)
 				{
-					var line = info.AbstractDocumentItemEntity;
+					var line     = info.AbstractDocumentItemEntity;
+					var quantity = info.ArticleQuantityEntity;
 
-					if (line is ArticleDocumentItemEntity && info.SublineIndex > 0)  // quantité ?
+					if (line is ArticleDocumentItemEntity && quantity != null && info.SublineIndex > 0)  // quantité ?
 					{
 						var article = line as ArticleDocumentItemEntity;
-						article.ArticleQuantities.RemoveAt (info.SublineIndex);
+						article.ArticleQuantities.Remove (quantity);
 					}
 					else
 					{

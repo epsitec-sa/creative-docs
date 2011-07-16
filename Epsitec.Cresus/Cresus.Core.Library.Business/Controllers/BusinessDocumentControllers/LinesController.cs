@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			};
 		}
 
-		public void UpdateUI(ViewMode viewMode, EditMode editMode, int lineCount, System.Func<int, LineInformations> getLineInformations, System.Func<int, ColumnType, FormattedText> getCellContent, int? sel = null)
+		public void UpdateUI(ViewMode viewMode, EditMode editMode, int lineCount, System.Func<int, LineInformations> getLineInformations, System.Func<int, ColumnType, FormattedText> getCellContent)
 		{
 			this.viewMode            = viewMode;
 			this.editMode            = editMode;
@@ -88,11 +88,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			this.table[0, 0].HasRightSeparator = false;
 
-			if (sel == null)
-			{
-				sel = this.table.SelectedRow;
-			}
-
 			this.lastDocumentItemEntity = null;
 			this.documentItemIndex = -1;
 
@@ -103,15 +98,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				this.TableFillRow (row);
 				this.TableUpdateRow (row);
 			}
-
-			sel = System.Math.Min (sel.Value, this.lineCount-1);
-			if (sel != -1)
-			{
-				this.table.SelectRow (sel.Value, true);
-				this.table.ShowSelect ();
-			}
-
-			this.selectionChanged ();
 		}
 
 
@@ -119,7 +105,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return this.Selection.Count != 0;
+				return this.GetSelection ().Count != 0;
 			}
 		}
 
@@ -127,7 +113,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return this.Selection.Count == 1;
+				return this.GetSelection ().Count == 1;
 			}
 		}
 
@@ -135,7 +121,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return this.Selection.Count > 1;
+				return this.GetSelection ().Count > 1;
 			}
 		}
 
@@ -143,7 +129,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				var selection = this.Selection;
+				var selection = this.GetSelection ();
 
 				if (selection.Count == 0)
 				{
@@ -156,21 +142,52 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
-		public List<int> Selection
+		public List<int> GetSelection()
 		{
-			get
-			{
-				var list = new List<int> ();
+			var list = new List<int> ();
 
-				for (int i = 0; i < this.table.Rows; i++)
+			for (int i = 0; i < this.table.Rows; i++)
+			{
+				if (this.table.IsCellSelected (i, 0))
 				{
-					if (this.table.IsCellSelected (i, 0))
-					{
-						list.Add (i);
-					}
+					list.Add (i);
+				}
+			}
+
+			return list;
+		}
+
+		public void SetSelection(List<int> selection)
+		{
+			bool existing = false;
+			bool changing = false;
+
+			for (int row = 0; row < this.table.Rows; row++)
+			{
+				bool newSel = selection.Contains (row);
+				bool oldSel = this.table.IsCellSelected (row, 0);
+
+				if (newSel)
+				{
+					existing = true;
 				}
 
-				return list;
+				if (newSel != oldSel)
+				{
+					changing = true;
+				}
+
+				this.table.SelectRow (row, newSel);
+			}
+
+			if (existing)
+			{
+				this.table.ShowSelect ();  // montre la sélection
+			}
+
+			if (changing)
+			{
+				this.selectionChanged ();
 			}
 		}
 
