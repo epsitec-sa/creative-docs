@@ -47,6 +47,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			this.lineInformations = new List<LineInformations> ();
 			this.UpdateLineInformations ();
+
+			this.linesHelper = new LinesHelper (this.accessData.BusinessContext, this.accessData.BusinessDocumentEntity);
 		}
 
 		public void CreateUI(Widget parent)
@@ -220,55 +222,19 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		[Command (Library.Business.Res.CommandIds.Lines.CreateArticle)]
 		public void ProcessCreateArticle()
 		{
-#if false
-			//	Insère une nouvelle ligne d'article.
-			int? sel = this.linesController.LastSelection;
-			int index;
+			var selection = this.linesHelper.CreateArticle (this.Selection);
 
-			if (sel == null)
+			if (selection != null)
 			{
-				index = this.GetLDefaultArticleInsertionIndex ();
-			}
-			else
-			{
-				var info = this.lineInformations[sel.Value];
-				index = info.LineIndex+1;
-			}
-
-			var quantityColumnEntity = this.SearchArticleQuantityColumnEntity (ArticleQuantityType.Ordered);
-
-			if (quantityColumnEntity != null)
-			{
-				var model = this.accessData.BusinessDocumentEntity.Lines[index-1];
-
-				var newQuantity = this.accessData.BusinessContext.CreateEntity<ArticleQuantityEntity> ();
-				newQuantity.Quantity = 1;
-				newQuantity.QuantityColumn = quantityColumnEntity;
-
-				var newLine = this.accessData.BusinessContext.CreateEntity<ArticleDocumentItemEntity> ();
-				newLine.GroupIndex = model.GroupIndex;
-				newLine.ArticleQuantities.Add (newQuantity);
-
-				this.accessData.BusinessDocumentEntity.Lines.Insert (index, newLine);
-				this.UpdateAfterChange (newLine, null);
-			}
-#else
-			var created = LinesHelper.CreateArticle (this.accessData.BusinessContext, this.accessData.BusinessDocumentEntity, this.GetSelection ());
-
-			if (created != null)
-			{
-				var selection = new List<LineInformations> ();
-				selection.Add (created);
-
 				this.UpdateAfterChange (selection);
 			}
-#endif
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.CreateQuantity)]
 		public void ProcessCreateQuantity()
 		{
 			//	Insère une nouvelle quantité.
+#if false
 			int? sel = this.linesController.LastSelection;
 
 			if (sel != null)
@@ -297,65 +263,39 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					}
 				}
 			}
+#endif
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.CreateText)]
 		public void ProcessCreateText()
 		{
 			//	Insère une nouvelle ligne de texte.
-			int? sel = this.linesController.LastSelection;
-			int index;
+			var selection = this.linesHelper.CreateText (this.Selection, null);
 
-			if (sel == null)
+			if (selection != null)
 			{
-				index = this.GetLDefaultArticleInsertionIndex ();
+				this.UpdateAfterChange (selection);
 			}
-			else
-			{
-				var info = this.lineInformations[sel.Value];
-				index = info.LineIndex+1;
-			}
-
-			var model = this.accessData.BusinessDocumentEntity.Lines[index-1];
-
-			var newLine = this.accessData.BusinessContext.CreateEntity<TextDocumentItemEntity> ();
-			newLine.GroupIndex = model.GroupIndex;
-
-			this.accessData.BusinessDocumentEntity.Lines.Insert (index, newLine);
-			this.UpdateAfterChange (newLine, null);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.CreateTitle)]
 		public void ProcessCreateTitle()
 		{
 			//	Insère une nouvelle ligne de titre.
-			int? sel = this.linesController.LastSelection;
-			int index;
+			var initialContent = string.Concat (BusinessDocumentLinesController.titlePrefixTags, BusinessDocumentLinesController.titlePostfixTags);
+			var selection = this.linesHelper.CreateText (this.Selection, initialContent);
 
-			if (sel == null)
+			if (selection != null)
 			{
-				index = this.GetLDefaultArticleInsertionIndex ();
+				this.UpdateAfterChange (selection);
 			}
-			else
-			{
-				var info = this.lineInformations[sel.Value];
-				index = info.LineIndex+1;
-			}
-
-			var model = this.accessData.BusinessDocumentEntity.Lines[index-1];
-
-			var newLine = this.accessData.BusinessContext.CreateEntity<TextDocumentItemEntity> ();
-			newLine.Text = string.Concat (BusinessDocumentLinesController.titlePrefixTags, BusinessDocumentLinesController.titlePostfixTags);
-			newLine.GroupIndex = model.GroupIndex;
-
-			this.accessData.BusinessDocumentEntity.Lines.Insert (index, newLine);
-			this.UpdateAfterChange (newLine, null);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.CreateDiscount)]
 		public void ProcessCreateDiscount()
 		{
 			//	Insère une nouvelle ligne de rabais.
+#if false
 			int? sel = this.linesController.LastSelection;
 			int index;
 
@@ -376,12 +316,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			this.accessData.BusinessDocumentEntity.Lines.Insert (index, newLine);
 			this.UpdateAfterChange (newLine, null);
+#endif
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.CreateTax)]
 		public void ProcessCreateTax()
 		{
 			//	Insère une nouvelle ligne de frais.
+#if false
 			int? sel = this.linesController.LastSelection;
 			int index;
 
@@ -400,6 +342,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			this.accessData.BusinessDocumentEntity.Lines.Insert (index, newLine);
 			this.UpdateAfterChange (newLine, null);
+#endif
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.CreateGroup)]
@@ -418,207 +361,86 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private void ProcessMoveUp()
 		{
 			//	Monte la ligne sélectionnée.
-			this.ProcessMove (-1);
+			this.linesHelper.Move (this.Selection, -1);
+			this.UpdateAfterChange (this.linesHelper.LastError);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.MoveDown)]
 		private void ProcessMoveDown()
 		{
-			//	Descend la ligne sélectionnée.
-			this.ProcessMove (1);
-		}
-
-		private void ProcessMove(int direction)
-		{
-			//	Monte ou descend la ligne sélectionnée.
-			int? sel = this.linesController.LastSelection;
-
-			if (sel != null)
-			{
-				var info = this.lineInformations[sel.Value];
-				var line = info.AbstractDocumentItemEntity;
-				var index = info.LineIndex;
-
-				if (index+direction >= 0 && index+direction < this.accessData.BusinessDocumentEntity.Lines.Count)
-				{
-					this.accessData.BusinessDocumentEntity.Lines.RemoveAt (index);
-					this.accessData.BusinessDocumentEntity.Lines.Insert (index+direction, line);
-
-					this.UpdateAfterChange (line, null);
-				}
-			}
+			this.linesHelper.Move (this.Selection, 1);
+			this.UpdateAfterChange (this.linesHelper.LastError);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.Duplicate)]
 		private void ProcessDuplicate()
 		{
 			//	Duplique la ligne sélectionnée.
-			int? sel = this.linesController.LastSelection;
-
-			if (sel != null)
-			{
-				var info = this.lineInformations[sel.Value];
-				var line = info.AbstractDocumentItemEntity;
-				var index = info.LineIndex;
-
-				if (index+1 < this.accessData.BusinessDocumentEntity.Lines.Count)
-				{
-					var copy = line.CloneEntity (this.accessData.BusinessContext);
-					this.accessData.BusinessDocumentEntity.Lines.Insert (index+1, copy);
-
-					this.UpdateAfterChange (copy, null);
-				}
-			}
+			var selection = this.linesHelper.Duplicate (this.Selection);
+			this.UpdateAfterChange (this.linesHelper.LastError, selection);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.Delete)]
 		private void ProcessDelete()
 		{
 			//	Supprime la ligne sélectionnée.
-			int? sel = this.linesController.LastSelection;
-
-			if (sel != null)
-			{
-				var info = this.lineInformations[sel.Value];
-				var line = info.AbstractDocumentItemEntity;
-
-				if (line is ArticleDocumentItemEntity && info.SublineIndex > 0)  // quantité ?
-				{
-					var article = line as ArticleDocumentItemEntity;
-					article.ArticleQuantities.RemoveAt (info.SublineIndex);
-				}
-				else
-				{
-					this.accessData.BusinessDocumentEntity.Lines.RemoveAt (info.LineIndex);
-				}
-
-				this.UpdateAfterChange (line, null);
-			}
+			var selection = this.linesHelper.Delete (this.Selection);
+			this.UpdateAfterChange (this.linesHelper.LastError, selection);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.Group)]
 		private void ProcessGroup()
 		{
 			//	Groupe toutes les lignes sélectionnées.
-			var selection = this.linesController.GetSelection ();
-
-			if (selection.Count == 0)
-			{
-				return;
-			}
-
-			var firstLine = this.lineInformations[selection[0]].AbstractDocumentItemEntity;
-
-			if (firstLine.GroupLevel >= BusinessDocumentLinesController.maxGroupingDepth)
-			{
-				return;
-			}
-
-			foreach (var sel in selection)
-			{
-				var info = this.lineInformations[sel];
-				var line = info.AbstractDocumentItemEntity;
-
-				var list = BusinessDocumentLinesController.GroupIndexSplit (line.GroupIndex);
-				list.Add (1);
-				line.GroupIndex = BusinessDocumentLinesController.GroupIndexCombine (list);
-			}
-
-			this.UpdateAfterChange (firstLine, null);
+			this.linesHelper.MakeGroup (this.Selection, true);
+			this.UpdateAfterChange (this.linesHelper.LastError);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.Ungroup)]
 		private void ProcessUngroup()
 		{
 			//	Défait le groupe sélectionné.
-			var selection = this.linesController.GetSelection ();
-
-			if (selection.Count == 0)
-			{
-				return;
-			}
-
-			var firstLine = this.lineInformations[selection[0]].AbstractDocumentItemEntity;
-
-			foreach (var sel in selection)
-			{
-				var info = this.lineInformations[sel];
-				var line = info.AbstractDocumentItemEntity;
-
-				var list = BusinessDocumentLinesController.GroupIndexSplit (line.GroupIndex);
-				list.RemoveAt (list.Count-1);
-				line.GroupIndex = BusinessDocumentLinesController.GroupIndexCombine (list);
-			}
-
-			this.UpdateAfterChange (firstLine, null);
+			this.linesHelper.MakeGroup (this.Selection, false);
+			this.UpdateAfterChange (this.linesHelper.LastError);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.Split)]
 		private void ProcessSplit()
 		{
 			//	Sépare la ligne d'avec la précédente.
-			this.ProcessIndexAdd (1);
+			this.linesHelper.ShiftGroup (this.Selection, 1);
+			this.UpdateAfterChange (this.linesHelper.LastError);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.Combine)]
 		private void ProcessCombine()
 		{
 			//	Soude la ligne avec la précédente.
-			this.ProcessIndexAdd (-1);
+			this.linesHelper.ShiftGroup (this.Selection, -1);
+			this.UpdateAfterChange (this.linesHelper.LastError);
 		}
 
-		private bool ProcessIndexAdd(int increment)
+
+		private void UpdateAfterChange(LinesError error)
 		{
-			int? sel = this.linesController.LastSelection;
-
-			if (sel == null)
-			{
-				return false;
-			}
-
-			var info = this.lineInformations[sel.Value];
-			var line = info.AbstractDocumentItemEntity;
-			var index = info.LineIndex;
-
-			var initialList = BusinessDocumentLinesController.GroupIndexSplit (line.GroupIndex);
-			var level = initialList.Count-1;
-
-			if (initialList[level]+increment == 0 ||
-				initialList[level]+increment >= 99)
-			{
-				return false;
-			}
-
-			using (this.accessData.BusinessContext.SuspendUpdates ())
-			{
-				for (int i = index; i < this.accessData.BusinessDocumentEntity.Lines.Count; i++)
-				{
-					var item = this.accessData.BusinessDocumentEntity.Lines[i];
-
-					var list = BusinessDocumentLinesController.GroupIndexSplit (item.GroupIndex);
-
-					if (!BusinessDocumentLinesController.GroupIndexCompare (list, initialList, level))
-					{
-						break;
-					}
-
-					if (level < list.Count)
-					{
-						list[level] += increment;
-						item.GroupIndex = BusinessDocumentLinesController.GroupIndexCombine (list);
-					}
-				}
-			}
-
-			this.UpdateAfterChange (line, null);
-			return true;
+			this.UpdateAfterChange (error, this.Selection);
 		}
 
-
+		private void UpdateAfterChange(LinesError error, List<LineInformations> selection)
+		{
+			if (error == LinesError.OK)
+			{
+				this.UpdateAfterChange (selection);
+			}
+			else
+			{
+				// TODO: Afficher l'erreur...
+			}
+		}
 
 		private void UpdateAfterChange()
 		{
-			this.UpdateAfterChange (this.GetSelection ());
+			this.UpdateAfterChange (this.Selection);
 		}
 
 		private void UpdateAfterChange(List<LineInformations> selection)
@@ -626,69 +448,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.UpdateLineInformations ();
 
 			this.linesController.UpdateUI (this.CurrentViewMode, this.CurrentEditMode, this.lineInformations.Count, this.CallbackGetLineInformations, this.CallbackGetCellContent);
-			this.SetSelection (selection);
+			this.Selection = selection;
 
 			this.UpdateCommands ();
 		}
 
-		private void UpdateAfterChange(AbstractDocumentItemEntity line, ArticleQuantityEntity quantity)  // TODO: obsolète
-		{
-			this.UpdateLineInformations ();
-
-			this.linesController.UpdateUI (this.CurrentViewMode, this.CurrentEditMode, this.lineInformations.Count, this.CallbackGetLineInformations, this.CallbackGetCellContent);
-			this.UpdateCommands ();
-		}
-
-		private ArticleQuantityColumnEntity SearchArticleQuantityColumnEntity(ArticleQuantityType type)
-		{
-			var example = new ArticleQuantityColumnEntity ();
-			example.QuantityType = type;
-
-			return this.accessData.BusinessContext.DataContext.GetByExample (example).FirstOrDefault ();
-		}
-
-
-		private int? GetLineInformationsIndex(AbstractDocumentItemEntity line, ArticleQuantityEntity quantity)
-		{
-			for (int i = 0; i < this.lineInformations.Count; i++)
-			{
-				var info = this.lineInformations[i];
-
-				if (quantity == null)
-				{
-					if (info.AbstractDocumentItemEntity == line)
-					{
-						return i;
-					}
-				}
-				else
-				{
-					if (info.AbstractDocumentItemEntity == line &&
-						info.ArticleQuantityEntity == quantity)
-					{
-						return i;
-					}
-				}
-			}
-
-			return null;
-		}
-
-		private int GetLDefaultArticleInsertionIndex()
-		{
-			for (int i = this.lineInformations.Count-1; i >= 0; i--)
-			{
-				var info = this.lineInformations[i];
-
-				if (info.AbstractDocumentItemEntity is ArticleDocumentItemEntity ||
-					info.AbstractDocumentItemEntity is TextDocumentItemEntity)
-				{
-					return info.LineIndex+1;
-				}
-			}
-
-			return 0;
-		}
 
 		private void UpdateLineInformations()
 		{
@@ -721,58 +485,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		private static bool GroupIndexCompare(List<int> list1, List<int> list2, int deep)
-		{
-			if (list1.Count < deep || list2.Count < deep)
-			{
-				return false;
-			}
-
-			for (int i = 0; i < deep; i++)
-			{
-				if (list1[i] != list2[i])
-				{
-					return false;
-				}
-			}
-
-			return true;
-		}
-
-		public static List<int> GroupIndexSplit(int groupIndex)
-		{
-			//	30201 retourne la liste 1,2,3.
-			var list = new List<int> ();
-
-			while (groupIndex != 0)
-			{
-				list.Add (groupIndex%100);
-				groupIndex /= 100;
-			}
-
-
-			return list;
-		}
-
-		public static int GroupIndexCombine(List<int> list)
-		{
-			//	La liste 1,2,3 retourne 30201.
-			int groupIndex = 0;
-			int factor = 1;
-
-			foreach (var n in list)
-			{
-				groupIndex += factor * n;
-				factor *= 100;
-			}
-
-			return groupIndex;
-		}
-
-
 		private void UpdateCommands()
 		{
-			var selection     = this.linesController.GetSelection ();
+			var selection     = this.linesController.Selection;
 			var lastSelection = this.linesController.LastSelection;
 			var isCoherentSelection = this.IsCoherentSelection;
 
@@ -803,7 +518,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.MoveUp,    selection.Count == 1 && !autoGenerated);
 			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.MoveDown,  selection.Count == 1 && !autoGenerated);
 			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Duplicate, selection.Count == 1 && !autoGenerated);
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Delete,    selection.Count == 1 && !autoGenerated);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Delete,    selection.Count >= 1 && !autoGenerated);
 
 			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Group,     isCoherentSelection  && !autoGenerated);
 			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Ungroup,   isCoherentSelection  && !autoGenerated);
@@ -815,7 +530,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				var selection = this.linesController.GetSelection ();
+				var selection = this.linesController.Selection;
 
 				if (selection.Count == 0)
 				{
@@ -845,34 +560,36 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		private List<LineInformations> GetSelection()
+		private List<LineInformations> Selection
 		{
-			var list = new List<LineInformations> ();
-
-			foreach (var selection in this.linesController.GetSelection ())
+			get
 			{
-				var info = this.lineInformations[selection];
-				list.Add (info);
-			}
+				var list = new List<LineInformations> ();
 
-			return list;
-		}
-
-		private void SetSelection(List<LineInformations> selection)
-		{
-			var list = new List<int> ();
-
-			foreach (var info in selection)
-			{
-				int i = this.IndexOfLineInformations (info);
-
-				if (i != -1)
+				foreach (var selection in this.linesController.Selection)
 				{
-					list.Add (i);
+					var info = this.lineInformations[selection];
+					list.Add (info);
 				}
-			}
 
-			this.linesController.SetSelection (list);
+				return list;
+			}
+			set
+			{
+				var list = new List<int> ();
+
+				foreach (var info in value)
+				{
+					int i = this.IndexOfLineInformations (info);
+
+					if (i != -1)
+					{
+						list.Add (i);
+					}
+				}
+
+				this.linesController.Selection = list;
+			}
 		}
 
 		private int IndexOfLineInformations(LineInformations info)
@@ -967,6 +684,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private readonly List<LineInformations>			lineInformations;
 		private readonly CommandContext					commandContext;
 		private readonly CommandDispatcher				commandDispatcher;
+		private readonly LinesHelper					linesHelper;
 
 		private LineToolbarController					lineToolbarController;
 		private LinesController							linesController;

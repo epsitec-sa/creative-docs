@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return this.GetSelection ().Count != 0;
+				return this.Selection.Count != 0;
 			}
 		}
 
@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return this.GetSelection ().Count == 1;
+				return this.Selection.Count == 1;
 			}
 		}
 
@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return this.GetSelection ().Count > 1;
+				return this.Selection.Count > 1;
 			}
 		}
 
@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				var selection = this.GetSelection ();
+				var selection = this.Selection;
 
 				if (selection.Count == 0)
 				{
@@ -142,52 +142,54 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
-		public List<int> GetSelection()
+		public List<int> Selection
 		{
-			var list = new List<int> ();
-
-			for (int i = 0; i < this.table.Rows; i++)
+			get
 			{
-				if (this.table.IsCellSelected (i, 0))
+				var list = new List<int> ();
+
+				for (int i = 0; i < this.table.Rows; i++)
 				{
-					list.Add (i);
-				}
-			}
-
-			return list;
-		}
-
-		public void SetSelection(List<int> selection)
-		{
-			bool existing = false;
-			bool changing = false;
-
-			for (int row = 0; row < this.table.Rows; row++)
-			{
-				bool newSel = selection.Contains (row);
-				bool oldSel = this.table.IsCellSelected (row, 0);
-
-				if (newSel)
-				{
-					existing = true;
+					if (this.table.IsCellSelected (i, 0))
+					{
+						list.Add (i);
+					}
 				}
 
-				if (newSel != oldSel)
+				return list;
+			}
+			set
+			{
+				bool existing = false;
+				bool changing = false;
+
+				for (int row = 0; row < this.table.Rows; row++)
 				{
-					changing = true;
+					bool newSel = value.Contains (row);
+					bool oldSel = this.table.IsCellSelected (row, 0);
+
+					if (newSel)
+					{
+						existing = true;
+					}
+
+					if (newSel != oldSel)
+					{
+						changing = true;
+					}
+
+					this.table.SelectRow (row, newSel);
 				}
 
-				this.table.SelectRow (row, newSel);
-			}
+				if (existing)
+				{
+					this.table.ShowSelect ();  // montre la sélection
+				}
 
-			if (existing)
-			{
-				this.table.ShowSelect ();  // montre la sélection
-			}
-
-			if (changing)
-			{
-				this.selectionChanged ();
+				if (changing)
+				{
+					this.selectionChanged ();
+				}
 			}
 		}
 
@@ -322,7 +324,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Initialise les couleurs à utiliser.
 			displayer.Colors.Clear ();
 
-			var list = BusinessDocumentLinesController.GroupIndexSplit (groupIndex);
+			var list = LinesHelper.GroupIndexSplit (groupIndex);
 
 			if (list.Count == 0)
 			{
@@ -340,7 +342,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 						partialList.Add (list[j]);
 					}
 
-					int groupLevel = BusinessDocumentLinesController.GroupIndexCombine (partialList);
+					int groupLevel = LinesHelper.GroupIndexCombine (partialList);
 					var color = this.GetNiceBackgroundColor (groupLevel);
 					displayer.Colors.Add (color);
 				}
@@ -356,7 +358,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			else
 			{
 				var info = this.getLineInformations (row-1);
-				displayer.TopGroupIndexList = BusinessDocumentLinesController.GroupIndexSplit (info.AbstractDocumentItemEntity.GroupIndex);
+				displayer.TopGroupIndexList = LinesHelper.GroupIndexSplit (info.AbstractDocumentItemEntity.GroupIndex);
 			}
 
 			if (row >= this.lineCount-1)
@@ -366,7 +368,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			else
 			{
 				var info = this.getLineInformations (row+1);
-				displayer.BottomGroupIndexList = BusinessDocumentLinesController.GroupIndexSplit (info.AbstractDocumentItemEntity.GroupIndex);
+				displayer.BottomGroupIndexList = LinesHelper.GroupIndexSplit (info.AbstractDocumentItemEntity.GroupIndex);
 			}
 
 			displayer.Invalidate ();

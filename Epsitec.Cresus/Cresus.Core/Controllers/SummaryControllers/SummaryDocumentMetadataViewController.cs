@@ -101,7 +101,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private static FormattedText GetIndentedText(FormattedText text, int level)
 		{
 			//	Code expérimental pour mettre en évidence l'indentation des lignes d'un document commercial.
-			for (int i = 0; i < level; i++)
+			for (int i = 0; i < level-1; i++)
 			{
 				text = FormattedText.Concat ("|  ", text);
 			}
