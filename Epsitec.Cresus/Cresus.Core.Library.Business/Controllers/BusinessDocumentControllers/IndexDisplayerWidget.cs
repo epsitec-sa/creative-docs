@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			for (int i = 0; i < count; i++)
 			{
-				int x = 2 + bandWidth*i;
+				int x = bandWidth*i;
 				Rectangle band = new Rectangle (rect.Left+x, rect.Bottom, rect.Width-x, rect.Height);
 
 				//	Dessine la surface colorée.
@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				//	Dessine le trait horizontal supérieur.
 				int shift = IndexDisplayerWidget.GetShift (this.TopGroupIndexList, this.CurrentGroupIndexList);
-				double x = 2 + bandWidth*shift + 0.5;
+				double x = bandWidth*shift + 0.5;
 
 				graphics.AddLine (rect.Left+x, rect.Top-0.5, rect.Right, rect.Top-0.5);
 				graphics.RenderSolid (adorner.ColorBorder);

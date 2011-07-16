@@ -53,6 +53,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				StyleV = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine | CellArrayStyles.SelectMulti,
 				ColumnsToSkipFromLeftForSeparator = 1,
 				IsCompactStyle = true,
+				DrawHiliteFocus = false,
 				DefHeight = LinesController.lineHeight,
 				Margins = new Margins (2),
 				Dock = DockStyle.Fill,
@@ -94,6 +95,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			this.lastDocumentItemEntity = null;
 			this.documentItemIndex = -1;
+
+			this.colorIndexes.Clear ();
 
 			for (int row=0; row<this.lineCount; row++)
 			{
@@ -543,7 +546,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	brusquement parce qu'on a modifié un autre groupe ailleurs.
 			if (groupIndex == 0)
 			{
-				return Color.FromBrightness (0.95);  // gris très clair
+				return Color.FromBrightness (0.75);  // gris
 			}
 
 			int index = this.colorIndexes.IndexOf (groupIndex);
@@ -569,7 +572,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			Color.FromHsv ( 36.0, 0.12, 1.0),
 			Color.FromHsv ( 80.0, 0.12, 1.0),
 			Color.FromHsv (120.0, 0.12, 1.0),
-#else
+#endif
+#if false
 			//	Couleurs pastels disjointes.
 			Color.FromHsv (180.0, 0.12, 1.0),
 			Color.FromHsv (  0.0, 0.12, 1.0),
@@ -579,6 +583,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			Color.FromHsv (252.0, 0.12, 1.0),
 			Color.FromHsv ( 80.0, 0.12, 1.0),
 			Color.FromHsv (288.0, 0.12, 1.0),
+#endif
+#if true
+			//	Gris clairs en dégradés.
+			Color.FromBrightness (1.00),
+			Color.FromBrightness (0.95),
+			Color.FromBrightness (0.90),
+			Color.FromBrightness (0.85),
+			Color.FromBrightness (0.80),
 #endif
 		};
 

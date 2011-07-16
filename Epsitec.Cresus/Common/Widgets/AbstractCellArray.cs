@@ -72,7 +72,19 @@ namespace Epsitec.Common.Widgets
 			
 			base.Dispose(disposing);
 		}
-		
+
+		public bool DrawHiliteFocus
+		{
+			get
+			{
+				return this.drawHiliteFocus;
+			}
+			set
+			{
+				this.drawHiliteFocus = value;
+			}
+		}
+
 		public Drawing.Color HiliteColor
 		{
 			get
@@ -2148,8 +2160,11 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			//	Dessine le cadre du tableau.
-			rect = this.Client.Bounds;
-			adorner.PaintArrayForeground(graphics, rect, state);
+			if (this.drawHiliteFocus)
+			{
+				rect = this.Client.Bounds;
+				adorner.PaintArrayForeground (graphics, rect, state);
+			}
 		}
 
 		private bool HasBottomSeparator(int row)
@@ -2283,6 +2298,7 @@ namespace Epsitec.Common.Widgets
 		protected bool							isFlyOverHilite = false;
 		protected double						alphaSeparator = 1.0;
 		protected int							columnsToSkipFromLeftForSeparator;
+		protected bool							drawHiliteFocus = true;
 		
 		protected bool							isDraggingSlider;
 		protected double						savedTotalWidth;
