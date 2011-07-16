@@ -73,6 +73,53 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			return LinesEngine.MakeSingleSelection (new LineInformations (null, newLine, null, 0, 0));
 		}
 
+		public List<LineInformations> CreateQuantity(List<LineInformations> selection, ArticleQuantityType quantityType, int daysToAdd)
+		{
+			//	Crée une nouvelle quantité pour un article existant.
+			if (selection.Count == 0)
+			{
+				this.lastError = LinesError.EmptySelection;
+				return null;
+			}
+
+			if (selection.Count != 1)
+			{
+				this.lastError = LinesError.InvalidSelection;
+				return null;
+			}
+
+			var info = selection[0];
+			var line = info.AbstractDocumentItemEntity;
+
+			if (!(line is ArticleDocumentItemEntity))
+			{
+				this.lastError = LinesError.InvalidSelection;
+				return null;
+			}
+
+			var quantityColumnEntity = this.SearchArticleQuantityColumnEntity (quantityType);
+
+			if (quantityColumnEntity == null)
+			{
+				this.lastError = LinesError.InvalidQuantity;
+				return null;
+			}
+
+			var article = line as ArticleDocumentItemEntity;
+			var quantity = article.ArticleQuantities[info.SublineIndex];
+
+			var newQuantity = this.businessContext.CreateEntity<ArticleQuantityEntity> ();
+			newQuantity.Quantity = 1;
+			newQuantity.Unit = quantity.Unit;
+			newQuantity.QuantityColumn = quantityColumnEntity;
+			newQuantity.BeginDate = new Date (Date.Today.Ticks + Time.TicksPerDay*daysToAdd);  // n jours plus tard
+
+			article.ArticleQuantities.Add (newQuantity);
+
+			this.lastError = LinesError.OK;
+			return LinesEngine.MakeSingleSelection (new LineInformations (null, line, newQuantity, 0, 0));
+		}
+
 		public List<LineInformations> CreateText(List<LineInformations> selection, FormattedText initialContent)
 		{
 			//	Crée une nouvelle ligne de texte ou de titre.
@@ -347,7 +394,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					return "Aucune ligne n'est sélectionnée.";
 
 				case LinesError.InvalidQuantity:
-					return "La quantité à créer n'est pas définie.";
+					return "La quantité à créer n'est pas définie dans les réglages globaux.";
 
 				case LinesError.AlreadyOnTop:
 					return "La ligne est déjà au sommet.";

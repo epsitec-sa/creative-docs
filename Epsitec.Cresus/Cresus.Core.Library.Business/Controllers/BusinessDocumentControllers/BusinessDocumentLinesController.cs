@@ -224,47 +224,15 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public void ProcessCreateArticle()
 		{
 			var selection = this.linesEngine.CreateArticle (this.Selection);
-
-			if (selection != null)
-			{
-				this.UpdateAfterChange (selection);
-			}
+			this.UpdateAfterChange (this.linesEngine.LastError, selection);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.CreateQuantity)]
 		public void ProcessCreateQuantity()
 		{
 			//	Insère une nouvelle quantité.
-#if false
-			int? sel = this.linesController.LastSelection;
-
-			if (sel != null)
-			{
-				var info = this.lineInformations[sel.Value];
-				var line = info.AbstractDocumentItemEntity;
-
-				if (line is ArticleDocumentItemEntity)
-				{
-					var quantityColumnEntity = this.SearchArticleQuantityColumnEntity (ArticleQuantityType.Delayed);
-
-					if (quantityColumnEntity != null)
-					{
-						var article = line as ArticleDocumentItemEntity;
-						var quantity = article.ArticleQuantities[info.SublineIndex];
-
-						var newQuantity = this.accessData.BusinessContext.CreateEntity<ArticleQuantityEntity> ();
-						newQuantity.Quantity = 1;
-						newQuantity.Unit = quantity.Unit;
-						newQuantity.QuantityColumn = quantityColumnEntity;
-						newQuantity.BeginDate = new Date (Date.Today.Ticks + Time.TicksPerDay*7);  // arbitrairement dans une semaine !
-
-						article.ArticleQuantities.Add (newQuantity);
-
-						this.UpdateAfterChange (line, newQuantity);
-					}
-				}
-			}
-#endif
+			var selection = this.linesEngine.CreateQuantity (this.Selection, ArticleQuantityType.Delayed, 7);
+			this.UpdateAfterChange (this.linesEngine.LastError, selection);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.CreateText)]
@@ -272,11 +240,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			//	Insère une nouvelle ligne de texte.
 			var selection = this.linesEngine.CreateText (this.Selection, null);
-
-			if (selection != null)
-			{
-				this.UpdateAfterChange (selection);
-			}
+			this.UpdateAfterChange (this.linesEngine.LastError, selection);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.CreateTitle)]
@@ -285,11 +249,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Insère une nouvelle ligne de titre.
 			var initialContent = string.Concat (BusinessDocumentLinesController.titlePrefixTags, BusinessDocumentLinesController.titlePostfixTags);
 			var selection = this.linesEngine.CreateText (this.Selection, initialContent);
-
-			if (selection != null)
-			{
-				this.UpdateAfterChange (selection);
-			}
+			this.UpdateAfterChange (selection);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.CreateDiscount)]
@@ -549,13 +509,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				var list = new List<int> ();
 
-				foreach (var info in value)
+				if (value != null)
 				{
-					int i = this.IndexOfLineInformations (info);
-
-					if (i != -1)
+					foreach (var info in value)
 					{
-						list.Add (i);
+						int i = this.IndexOfLineInformations (info);
+
+						if (i != -1)
+						{
+							list.Add (i);
+						}
 					}
 				}
 
