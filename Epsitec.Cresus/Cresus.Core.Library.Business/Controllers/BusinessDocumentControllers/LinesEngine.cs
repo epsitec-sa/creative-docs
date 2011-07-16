@@ -281,6 +281,29 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				return;
 			}
 
+			{
+				var info = selection[0];
+				var line = info.AbstractDocumentItemEntity;
+				var list = LinesEngine.GroupIndexSplit (line.GroupIndex);
+
+				if (group)  // groupe ?
+				{
+					if (list.Count >= LinesEngine.maxGroupingDepth)
+					{
+						this.lastError = LinesError.MaxDeep;
+						return;
+					}
+				}
+				else  // sépare ?
+				{
+					if (list.Count <= 1)
+					{
+						this.lastError = LinesError.MinDeep;
+						return;
+					}
+				}
+			}
+
 			using (this.businessContext.SuspendUpdates ())
 			{
 				foreach (var info in selection)
@@ -406,6 +429,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				case LinesError.AlreadyOnBottom:
 					return "La ligne est déjà à la fin.";
+
+				case LinesError.MinDeep:
+					return "Le groupe est déjà défait.";
+
+				case LinesError.MaxDeep:
+					return "Il n'est pas possible d'imbriquer plus profondément les lignes sélectionnées.";
 
 				default:
 					return null;

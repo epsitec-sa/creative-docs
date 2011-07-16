@@ -12,5 +12,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		AlreadyOnTop,
 		AlreadyOnBottom,
 		InvalidQuantity,
+		MinDeep,
+		MaxDeep,
 	}
 }
