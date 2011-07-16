@@ -14,6 +14,6 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		SpecialQuantitiesToDistinctLines	= 0x00000001,	// met toutes les quantités dans les mêmes colonnes DocumentItemAccessorColumn.Unique*
 		ForceAllLines						= 0x00000002,	// force toutes les lignes, même si elles sont vides
 		IncludeTaxes						= 0x00000004,	// 
-		UseArticleName						= 0x00000008,	// utilise les descriptions courte des articles
+		UseArticleName						= 0x00000008,	// utilise les descriptions courtes des articles
 	}
 }
