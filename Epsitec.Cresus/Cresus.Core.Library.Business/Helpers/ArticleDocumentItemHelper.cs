@@ -109,15 +109,15 @@ namespace Epsitec.Cresus.Core.Helpers
 			return TextFormatter.FormatText (x.IdA, "/~", x.IdB, "/~", x.IdC).ToSimpleText ();
 		}
 
-		public static FormattedText GetArticleDescription(ArticleDocumentItemEntity article, bool replaceTags=false, bool shortDescription=false)
+		public static FormattedText GetArticleText(ArticleDocumentItemEntity article, bool replaceTags=false, bool shortDescription=false)
 		{
+			//	Retourne la désignation courte ou longue d'un article.
 			FormattedText description = FormattedText.Null;
 
-			string shortReplacementTextInCurrentLanguage = TextFormatter.ConvertToText (article.ReplacementName);
-			string longReplacementTextInCurrentLanguage  = TextFormatter.ConvertToText (article.ReplacementDescription);
-
-			if (shortDescription)  // description courte prioritaire ?
+			if (shortDescription)  // description courte ?
 			{
+				string shortReplacementTextInCurrentLanguage = TextFormatter.ConvertToText (article.ReplacementName);
+
 				if (!string.IsNullOrEmpty (shortReplacementTextInCurrentLanguage))
 				{
 					description = article.ReplacementName;
@@ -126,13 +126,11 @@ namespace Epsitec.Cresus.Core.Helpers
 				{
 					description = article.ArticleDefinition.Name;
 				}
-				else if (!article.ArticleDefinition.Description.IsNullOrEmpty)
-				{
-					description = article.ArticleDefinition.Description;
-				}
 			}
-			else  // description longue prioritaire ?
+			else  // description longue ?
 			{
+				string longReplacementTextInCurrentLanguage  = TextFormatter.ConvertToText (article.ReplacementDescription);
+
 				if (!string.IsNullOrEmpty (longReplacementTextInCurrentLanguage))
 				{
 					description = article.ReplacementDescription;
@@ -140,10 +138,6 @@ namespace Epsitec.Cresus.Core.Helpers
 				else if (!article.ArticleDefinition.Description.IsNullOrEmpty)
 				{
 					description = article.ArticleDefinition.Description;
-				}
-				else if (!article.ArticleDefinition.Name.IsNullOrEmpty)
-				{
-					description = article.ArticleDefinition.Name;
 				}
 			}
 

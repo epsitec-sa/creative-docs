@@ -13,6 +13,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
 	public class IndexDisplayerWidget : Widget
 	{
+		/// <summary>
+		/// Widget très spécialisé qui s'affiche dans la première colonne du tableau CellTable, pour
+		/// mettre en évidence les groupes de lignes à plusieurs niveaux.
+		/// </summary>
 		public IndexDisplayerWidget()
 		{
 			this.colors = new List<Color> ();

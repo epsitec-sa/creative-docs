@@ -149,8 +149,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			item.NeverApplyDiscount = false;
 			item.TaxRate1 = null;
 			item.TaxRate2 = null;
-			item.FixedLinePrice = null;
-			item.FixedLinePriceIncludesTaxes = false;
+			item.FixedLinePrice = false;
 			item.ResultingLinePriceBeforeTax = null;
 			item.ResultingLineTax1 = null;
 			item.ResultingLineTax2 = null;
@@ -170,7 +169,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private FormattedText GetArticleDescription()
 		{
-			return ArticleDocumentItemHelper.GetArticleDescription (this.Entity);
+			return ArticleDocumentItemHelper.GetArticleText (this.Entity);
 		}
 
 		private void SetArticleDescription(FormattedText value)

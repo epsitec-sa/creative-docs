@@ -143,7 +143,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				var toolbar = this.toolbarController.CreateUI (replacementBox, null);
 				toolbar.Margins = new Margins (0, 0, 0, -1);
 
-				this.articleDescriptionTextField = builder.CreateTextFieldMulti (replacementBox, DockStyle.None, 0, Marshaler.Create (() => this.GetArticleDescription (), this.SetArticleDescription));
+				this.articleDescriptionTextField = builder.CreateTextFieldMulti (replacementBox, DockStyle.None, 0, Marshaler.Create (() => this.GetArticleDescription (this.IsEditName), x => this.SetArticleDescription (x, this.IsEditName)));
 				this.articleDescriptionTextField.Dock = DockStyle.StackFill;
 				this.articleDescriptionTextField.Margins = new Margins (0);
 
@@ -280,7 +280,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			item.ReplacementDescription = null;
 
 			//	Initialise la description de l'article.
-			this.SetArticleDescription (this.GetArticleDescription ());
+			this.SetArticleDescription (this.GetArticleDescription (true), true);
+			this.SetArticleDescription (this.GetArticleDescription (false), false);
 
 			//	Initialise le prix de base de l'article.
 			if (article.ArticlePrices.Count != 0)
@@ -310,41 +311,49 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.toolbarController.UpdateUI (this.Entity, this.articleDescriptionTextField);
 		}
 
-		private FormattedText GetArticleDescription()
+		private FormattedText GetArticleDescription(bool shortDescription)
 		{
-			return ArticleDocumentItemHelper.GetArticleDescription (this.Entity, shortDescription: this.IsEditName);
+			return ArticleDocumentItemHelper.GetArticleText (this.Entity, shortDescription: shortDescription);
 		}
 
-		private void SetArticleDescription(FormattedText value)
+		private void SetArticleDescription(FormattedText value, bool shortDescription)
 		{
 			//	The replacement text of the article item might be defined in several different
 			//	languages; compare and replace only the text for the active language :
-			var replacementText = this.IsEditName ? this.Entity.ReplacementName : this.Entity.ReplacementDescription;
+			var replacementText = shortDescription ? this.Entity.ReplacementName : this.Entity.ReplacementDescription;
 
-			string articleDescription = value.IsNull ? null : TextFormatter.ConvertToText (value);
-			string defaultDescription = TextFormatter.ConvertToText (this.Entity.ArticleDefinition.Description);
+			string articleText = value.IsNull ? null : TextFormatter.ConvertToText (value);
+			string defaultText = TextFormatter.ConvertToText (shortDescription ? this.Entity.ArticleDefinition.Name : this.Entity.ArticleDefinition.Description);
 			string currentReplacement = replacementText.IsNull ? null : TextFormatter.ConvertToText (replacementText);
 
-			if (articleDescription == defaultDescription)  // description standard ?
+			if (articleText == defaultText)  // texte standard ?
 			{
-				articleDescription = null;
+				articleText = null;
 			}
 
-			if (currentReplacement != articleDescription)
+			if (currentReplacement != articleText)
 			{
 				MultilingualText text = new MultilingualText (replacementText);
-				text.SetText (TextFormatter.CurrentLanguageId, articleDescription);
+				text.SetText (TextFormatter.CurrentLanguageId, articleText);
 
-				if (this.IsEditName)
+				if (shortDescription)
 				{
 					this.Entity.ReplacementName = text.GetGlobalText ();
-					this.Entity.ArticleNameCache = ArticleDocumentItemHelper.GetArticleDescription (this.Entity, replaceTags: true, shortDescription: true);
 				}
 				else
 				{
 					this.Entity.ReplacementDescription = text.GetGlobalText ();
-					this.Entity.ArticleDescriptionCache = ArticleDocumentItemHelper.GetArticleDescription (this.Entity, replaceTags: true, shortDescription: false);
 				}
+			}
+
+			//	Met à jour le texte du cache.
+			if (shortDescription)
+			{
+				this.Entity.ArticleNameCache = ArticleDocumentItemHelper.GetArticleText (this.Entity, replaceTags: true, shortDescription: true);
+			}
+			else
+			{
+				this.Entity.ArticleDescriptionCache = ArticleDocumentItemHelper.GetArticleText (this.Entity, replaceTags: true, shortDescription: false);
 			}
 		}
 

@@ -689,7 +689,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			if (this.CurrentEditMode == EditMode.Name)
 			{
-				mode |= DocumentItemAccessorMode.UseArticleName;
+				mode |= DocumentItemAccessorMode.EditArticleName;
+			}
+			else
+			{
+				mode |= DocumentItemAccessorMode.EditArticleDescription;
 			}
 
 			for (int i = 0; i < this.accessData.BusinessDocumentEntity.Lines.Count; i++)

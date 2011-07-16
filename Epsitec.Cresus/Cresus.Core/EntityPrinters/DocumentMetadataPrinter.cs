@@ -403,11 +403,15 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				this.DocumentType == Business.DocumentType.DeliveryNote      ||
 				this.DocumentType == Business.DocumentType.ShipmentChecklist ||
 				this.DocumentType == Business.DocumentType.Invoice           ||
-				this.DocumentType == Business.DocumentType.InvoiceProForma   )
+				this.DocumentType == Business.DocumentType.InvoiceProForma)
 			{
 				//	Les ordres de productions doivent utiliser les descriptions courtes des articles.
 				//	C'est une demande de Monsieur "M" !
 				mode |= DocumentItemAccessorMode.UseArticleName;
+			}
+			else
+			{
+				mode |= DocumentItemAccessorMode.UseArticleBoth;
 			}
 
 			for (int i = 0; i < this.Entity.Lines.Count; i++)

@@ -586,11 +586,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 #endif
 #if true
 			//	Gris clairs en dégradés.
-			Color.FromBrightness (1.00),
 			Color.FromBrightness (0.95),
 			Color.FromBrightness (0.90),
 			Color.FromBrightness (0.85),
 			Color.FromBrightness (0.80),
+			Color.FromBrightness (0.85),
+			Color.FromBrightness (0.90),
+			Color.FromBrightness (0.95),
+			Color.FromBrightness (1.00),
 #endif
 		};
 
