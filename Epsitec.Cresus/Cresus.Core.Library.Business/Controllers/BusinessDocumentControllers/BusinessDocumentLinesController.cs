@@ -5,6 +5,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 using Epsitec.Common.Support;
+using Epsitec.Common.Dialogs;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
@@ -48,7 +49,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.lineInformations = new List<LineInformations> ();
 			this.UpdateLineInformations ();
 
-			this.linesHelper = new LinesHelper (this.accessData.BusinessContext, this.accessData.BusinessDocumentEntity);
+			this.linesEngine = new LinesEngine (this.accessData.BusinessContext, this.accessData.BusinessDocumentEntity);
 		}
 
 		public void CreateUI(Widget parent)
@@ -222,7 +223,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		[Command (Library.Business.Res.CommandIds.Lines.CreateArticle)]
 		public void ProcessCreateArticle()
 		{
-			var selection = this.linesHelper.CreateArticle (this.Selection);
+			var selection = this.linesEngine.CreateArticle (this.Selection);
 
 			if (selection != null)
 			{
@@ -270,7 +271,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public void ProcessCreateText()
 		{
 			//	Insère une nouvelle ligne de texte.
-			var selection = this.linesHelper.CreateText (this.Selection, null);
+			var selection = this.linesEngine.CreateText (this.Selection, null);
 
 			if (selection != null)
 			{
@@ -283,7 +284,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			//	Insère une nouvelle ligne de titre.
 			var initialContent = string.Concat (BusinessDocumentLinesController.titlePrefixTags, BusinessDocumentLinesController.titlePostfixTags);
-			var selection = this.linesHelper.CreateText (this.Selection, initialContent);
+			var selection = this.linesEngine.CreateText (this.Selection, initialContent);
 
 			if (selection != null)
 			{
@@ -361,63 +362,63 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private void ProcessMoveUp()
 		{
 			//	Monte la ligne sélectionnée.
-			this.linesHelper.Move (this.Selection, -1);
-			this.UpdateAfterChange (this.linesHelper.LastError);
+			this.linesEngine.Move (this.Selection, -1);
+			this.UpdateAfterChange (this.linesEngine.LastError);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.MoveDown)]
 		private void ProcessMoveDown()
 		{
-			this.linesHelper.Move (this.Selection, 1);
-			this.UpdateAfterChange (this.linesHelper.LastError);
+			this.linesEngine.Move (this.Selection, 1);
+			this.UpdateAfterChange (this.linesEngine.LastError);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.Duplicate)]
 		private void ProcessDuplicate()
 		{
 			//	Duplique la ligne sélectionnée.
-			var selection = this.linesHelper.Duplicate (this.Selection);
-			this.UpdateAfterChange (this.linesHelper.LastError, selection);
+			var selection = this.linesEngine.Duplicate (this.Selection);
+			this.UpdateAfterChange (this.linesEngine.LastError, selection);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.Delete)]
 		private void ProcessDelete()
 		{
 			//	Supprime la ligne sélectionnée.
-			var selection = this.linesHelper.Delete (this.Selection);
-			this.UpdateAfterChange (this.linesHelper.LastError, selection);
+			var selection = this.linesEngine.Delete (this.Selection);
+			this.UpdateAfterChange (this.linesEngine.LastError, selection);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.Group)]
 		private void ProcessGroup()
 		{
 			//	Groupe toutes les lignes sélectionnées.
-			this.linesHelper.MakeGroup (this.Selection, true);
-			this.UpdateAfterChange (this.linesHelper.LastError);
+			this.linesEngine.MakeGroup (this.Selection, true);
+			this.UpdateAfterChange (this.linesEngine.LastError);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.Ungroup)]
 		private void ProcessUngroup()
 		{
 			//	Défait le groupe sélectionné.
-			this.linesHelper.MakeGroup (this.Selection, false);
-			this.UpdateAfterChange (this.linesHelper.LastError);
+			this.linesEngine.MakeGroup (this.Selection, false);
+			this.UpdateAfterChange (this.linesEngine.LastError);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.Split)]
 		private void ProcessSplit()
 		{
 			//	Sépare la ligne d'avec la précédente.
-			this.linesHelper.ShiftGroup (this.Selection, 1);
-			this.UpdateAfterChange (this.linesHelper.LastError);
+			this.linesEngine.ShiftGroup (this.Selection, 1);
+			this.UpdateAfterChange (this.linesEngine.LastError);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.Combine)]
 		private void ProcessCombine()
 		{
 			//	Soude la ligne avec la précédente.
-			this.linesHelper.ShiftGroup (this.Selection, -1);
-			this.UpdateAfterChange (this.linesHelper.LastError);
+			this.linesEngine.ShiftGroup (this.Selection, -1);
+			this.UpdateAfterChange (this.linesEngine.LastError);
 		}
 
 
@@ -434,7 +435,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 			else
 			{
-				// TODO: Afficher l'erreur...
+				var message = linesEngine.GetError (error);
+				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, message.ToString ()).OpenDialog ();
 			}
 		}
 
@@ -489,7 +491,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			var selection     = this.linesController.Selection;
 			var lastSelection = this.linesController.LastSelection;
-			var isCoherentSelection = this.IsCoherentSelection;
+			var isCoherentSelection = this.linesEngine.IsCoherentSelection (this.Selection);
 
 			LineInformations info = null;
 			bool autoGenerated = false;
@@ -526,42 +528,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Combine,   selection.Count == 1 && !autoGenerated && lastSelection != 0);
 		}
 
-		private bool IsCoherentSelection
-		{
-			get
-			{
-				var selection = this.linesController.Selection;
-
-				if (selection.Count == 0)
-				{
-					return false;
-				}
-
-				var groupIndex = -1;
-				foreach (var sel in selection)
-				{
-					var info = this.lineInformations[sel];
-
-					if (groupIndex == -1)
-					{
-						groupIndex = info.AbstractDocumentItemEntity.GroupIndex;
-					}
-					else
-					{
-						if (groupIndex != info.AbstractDocumentItemEntity.GroupIndex)
-						{
-							return false;
-						}
-					}
-				}
-
-				return true;
-			}
-		}
-
 
 		private List<LineInformations> Selection
 		{
+			// Le getter retourne la liste des lignes sélectionnées.
+			// Le setter sélectionne les lignes données dans la liste.
 			get
 			{
 				var list = new List<LineInformations> ();
@@ -684,7 +655,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private readonly List<LineInformations>			lineInformations;
 		private readonly CommandContext					commandContext;
 		private readonly CommandDispatcher				commandDispatcher;
-		private readonly LinesHelper					linesHelper;
+		private readonly LinesEngine					linesEngine;
 
 		private LineToolbarController					lineToolbarController;
 		private LinesController							linesController;

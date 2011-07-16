@@ -144,6 +144,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public List<int> Selection
 		{
+			// Le getter retourne la liste des lignes sélectionnées.
+			// Le setter sélectionne les lignes données dans la liste.
 			get
 			{
 				var list = new List<int> ();
@@ -324,7 +326,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Initialise les couleurs à utiliser.
 			displayer.Colors.Clear ();
 
-			var list = LinesHelper.GroupIndexSplit (groupIndex);
+			var list = LinesEngine.GroupIndexSplit (groupIndex);
 
 			if (list.Count == 0)
 			{
@@ -342,7 +344,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 						partialList.Add (list[j]);
 					}
 
-					int groupLevel = LinesHelper.GroupIndexCombine (partialList);
+					int groupLevel = LinesEngine.GroupIndexCombine (partialList);
 					var color = this.GetNiceBackgroundColor (groupLevel);
 					displayer.Colors.Add (color);
 				}
@@ -358,7 +360,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			else
 			{
 				var info = this.getLineInformations (row-1);
-				displayer.TopGroupIndexList = LinesHelper.GroupIndexSplit (info.AbstractDocumentItemEntity.GroupIndex);
+				displayer.TopGroupIndexList = LinesEngine.GroupIndexSplit (info.AbstractDocumentItemEntity.GroupIndex);
 			}
 
 			if (row >= this.lineCount-1)
@@ -368,7 +370,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			else
 			{
 				var info = this.getLineInformations (row+1);
-				displayer.BottomGroupIndexList = LinesHelper.GroupIndexSplit (info.AbstractDocumentItemEntity.GroupIndex);
+				displayer.BottomGroupIndexList = LinesEngine.GroupIndexSplit (info.AbstractDocumentItemEntity.GroupIndex);
 			}
 
 			displayer.Invalidate ();

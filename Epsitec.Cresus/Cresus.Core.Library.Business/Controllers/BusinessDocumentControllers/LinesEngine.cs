@@ -16,9 +16,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 	/// <summary>
 	/// C'est ici qu'est concentré toutes les opérations ayant trait aux lignes d'un document commercial.
 	/// </summary>
-	public class LinesHelper
+	public class LinesEngine
 	{
-		public LinesHelper(BusinessContext businessContext, BusinessDocumentEntity businessDocumentEntity)
+		public LinesEngine(BusinessContext businessContext, BusinessDocumentEntity businessDocumentEntity)
 		{
 			this.businessContext        = businessContext;
 			this.businessDocumentEntity = businessDocumentEntity;
@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			if (selection.Count == 0)
 			{
-				index = this.GetLDefaultArticleInsertionIndex ();
+				index = this.GetDefaultArticleInsertionIndex ();
 			}
 			else
 			{
@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.businessDocumentEntity.Lines.Insert (index, newLine);
 
 			this.lastError = LinesError.OK;
-			return LinesHelper.MakeSingleSelection (new LineInformations (null, newLine, null, 0, 0));
+			return LinesEngine.MakeSingleSelection (new LineInformations (null, newLine, null, 0, 0));
 		}
 
 		public List<LineInformations> CreateText(List<LineInformations> selection, FormattedText initialContent)
@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			if (selection.Count == 0)
 			{
-				index = this.GetLDefaultArticleInsertionIndex ();
+				index = this.GetDefaultArticleInsertionIndex ();
 			}
 			else
 			{
@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.businessDocumentEntity.Lines.Insert (index, newLine);
 
 			this.lastError = LinesError.OK;
-			return LinesHelper.MakeSingleSelection (new LineInformations (null, newLine, null, 0, 0));
+			return LinesEngine.MakeSingleSelection (new LineInformations (null, newLine, null, 0, 0));
 		}
 
 		public void Move(List<LineInformations> selection, int direction)
@@ -166,7 +166,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			last = System.Math.Min (last, this.businessDocumentEntity.Lines.Count-1);
 			var lineToSelect = this.businessDocumentEntity.Lines[last];
-			return LinesHelper.MakeSingleSelection (new LineInformations (null, lineToSelect, null, 0, 0));
+			return LinesEngine.MakeSingleSelection (new LineInformations (null, lineToSelect, null, 0, 0));
 		}
 
 		public List<LineInformations> Duplicate(List<LineInformations> selection)
@@ -203,7 +203,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.businessDocumentEntity.Lines.Insert (index+1, copy);
 
 			this.lastError = LinesError.OK;
-			return LinesHelper.MakeSingleSelection (new LineInformations (null, copy, null, 0, 0));
+			return LinesEngine.MakeSingleSelection (new LineInformations (null, copy, null, 0, 0));
 		}
 
 
@@ -221,7 +221,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				{
 					var line = info.AbstractDocumentItemEntity;
 
-					var list = LinesHelper.GroupIndexSplit (line.GroupIndex);
+					var list = LinesEngine.GroupIndexSplit (line.GroupIndex);
 
 					if (group)
 					{
@@ -232,7 +232,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 						list.RemoveAt (list.Count-1);
 					}
 
-					line.GroupIndex = LinesHelper.GroupIndexCombine (list);
+					line.GroupIndex = LinesEngine.GroupIndexCombine (list);
 				}
 			}
 
@@ -257,7 +257,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				return;
 			}
 
-			var initialList = LinesHelper.GroupIndexSplit (line.GroupIndex);
+			var initialList = LinesEngine.GroupIndexSplit (line.GroupIndex);
 			var level = initialList.Count-1;
 
 			if (initialList[level]+increment == 0 ||
@@ -273,9 +273,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				{
 					var item = this.businessDocumentEntity.Lines[i];
 
-					var list = LinesHelper.GroupIndexSplit (item.GroupIndex);
+					var list = LinesEngine.GroupIndexSplit (item.GroupIndex);
 
-					if (!LinesHelper.GroupIndexCompare (list, initialList, level))
+					if (!LinesEngine.GroupIndexCompare (list, initialList, level))
 					{
 						break;
 					}
@@ -283,12 +283,64 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					if (level < list.Count)
 					{
 						list[level] += increment;
-						item.GroupIndex = LinesHelper.GroupIndexCombine (list);
+						item.GroupIndex = LinesEngine.GroupIndexCombine (list);
 					}
 				}
 			}
 
 			this.lastError = LinesError.OK;
+		}
+
+
+		public bool IsCoherentSelection(List<LineInformations> selection)
+		{
+			if (selection.Count == 0)
+			{
+				return false;
+			}
+
+			var groupIndex = -1;
+			foreach (var info in selection)
+			{
+				if (groupIndex == -1)
+				{
+					groupIndex = info.AbstractDocumentItemEntity.GroupIndex;
+				}
+				else
+				{
+					if (groupIndex != info.AbstractDocumentItemEntity.GroupIndex)
+					{
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
+
+	
+		public FormattedText GetError(LinesError error)
+		{
+			switch (error)
+			{
+				case LinesError.InvalidSelection:
+					return "L'opération est impossible avec les lignes sélectionnées.";
+
+				case LinesError.EmptySelection:
+					return "Aucune ligne n'est sélectionnée.";
+
+				case LinesError.InvalidQuantity:
+					return "La quantité à créer n'est pas définie.";
+
+				case LinesError.AlreadyOnTop:
+					return "La ligne est déjà au sommet.";
+
+				case LinesError.AlreadyOnBottom:
+					return "La ligne est déjà à la fin.";
+
+				default:
+					return null;
+			}
 		}
 
 
@@ -343,7 +395,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		#endregion
 
 
-		private int GetLDefaultArticleInsertionIndex()
+		private int GetDefaultArticleInsertionIndex()
 		{
 			for (int i = this.businessDocumentEntity.Lines.Count-1; i >= 0; i--)
 			{
