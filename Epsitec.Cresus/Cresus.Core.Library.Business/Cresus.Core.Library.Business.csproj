@@ -47,6 +47,7 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="Binders\PostFinanceAccountFieldBinder.cs" />
+    <Compile Include="Business\ArticleDocumentItemAttributes.cs" />
     <Compile Include="Business\ArticleQuantityType.cs" />
     <Compile Include="Business\ArticleType.cs" />
     <Compile Include="Business\BusinessContext.cs" />

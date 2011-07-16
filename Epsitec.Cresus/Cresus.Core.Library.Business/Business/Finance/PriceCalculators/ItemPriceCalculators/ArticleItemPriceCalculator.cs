@@ -36,15 +36,34 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 			this.priceGroup      = this.document.PriceGroup.UnwrapNullEntity ();
 			this.date            = this.document.PriceRefDate.GetValueOrDefault (Date.Today).ToDateTime ();
 
-			if ((this.priceGroup.IsNotNull ()) &&
-				(this.priceGroup.NeverApplyDiscount))
+			if (this.articleItem.ArticleAttributes.HasFlag (ArticleDocumentItemAttributes.DirtyArticleNotDiscountable))
 			{
-				this.notDiscountable = true;
+				bool articleNotDiscountable = false;
+
+				if ((this.priceGroup.IsNotNull ()) &&
+					(this.priceGroup.NeverApplyDiscount))
+				{
+					articleNotDiscountable = true;
+				}
+				else
+				{
+					articleNotDiscountable = this.articleDef.IsNotNull () && this.articleDef.ArticleCategory.IsNotNull () && this.articleDef.ArticleCategory.NeverApplyDiscount;
+				}
+
+				if (articleNotDiscountable)
+				{
+					this.articleItem.ArticleAttributes |=  ArticleDocumentItemAttributes.ArticleNotDiscountable;
+					this.articleItem.ArticleAttributes &= ~ArticleDocumentItemAttributes.DirtyArticleNotDiscountable;
+				}
+				else
+				{
+					this.articleItem.ArticleAttributes &= ~ArticleDocumentItemAttributes.ArticleNotDiscountable;
+					this.articleItem.ArticleAttributes &= ~ArticleDocumentItemAttributes.DirtyArticleNotDiscountable;
+				}
 			}
-			else
-			{
-				this.notDiscountable = this.articleDef.ArticleCategory.IsNotNull () && this.articleDef.ArticleCategory.NeverApplyDiscount;
-			}
+			
+			this.notDiscountable = this.articleItem.ArticleAttributes.HasFlag (ArticleDocumentItemAttributes.ArticleNotDiscountable)
+								|| this.articleItem.ArticleAttributes.HasFlag (ArticleDocumentItemAttributes.NeverApplyDiscount);
 
 			if ((this.priceGroup.IsNotNull ()) &&
 				(this.priceGroup.DefaultRoundingMode.IsNotNull ()))
@@ -109,32 +128,42 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 		
 		public void ComputePrice()
 		{
-			var roundingPolicy    = this.priceRoundingMode.RoundingPolicy;
-			var unitPriceQuantity = this.articleItem.GetOrderedQuantity ();
-			var realPriceQuantity = this.GetRealPriceQuantity ();
-			var articlePrice      = this.GetArticlePrices (unitPriceQuantity).FirstOrDefault ();
+			if ((this.articleItem.ArticleAttributes.HasFlag (ArticleDocumentItemAttributes.ArticlePricesFrozen)) &&
+				(this.articleItem.ResultingLinePriceBeforeTax.HasValue))
+			{
+				this.tax = this.ComputeTax (this.articleItem.ResultingLinePriceBeforeTax.Value);
+			}
+			else
+			{
+				var roundingPolicy    = this.priceRoundingMode.RoundingPolicy;
+				var unitPriceQuantity = this.articleItem.GetOrderedQuantity ();
+				var realPriceQuantity = this.GetRealPriceQuantity ();
+				var articlePrice      = this.GetArticlePrices (unitPriceQuantity).FirstOrDefault ();
 
-			//	TODO: apply PriceGroup to price if articlePrice.ValueOverridesPriceGroup is set to false
+				//	TODO: apply PriceGroup to price if articlePrice.ValueOverridesPriceGroup is set to false
 
-			decimal primaryUnitPriceBeforeTax   = this.ComputePrimaryUnitPriceBeforeTax (roundingPolicy, articlePrice);
-			decimal primaryLinePriceBeforeTax   = this.ComputePrimaryLinePriceBeforeTax (roundingPolicy, primaryUnitPriceBeforeTax, realPriceQuantity);
-			decimal resultingLinePriceBeforeTax = this.ComputeResultingLinePriceBeforeTax (roundingPolicy, primaryLinePriceBeforeTax);
+				decimal primaryUnitPriceBeforeTax   = this.ComputePrimaryUnitPriceBeforeTax (roundingPolicy, articlePrice);
+				decimal primaryLinePriceBeforeTax   = this.ComputePrimaryLinePriceBeforeTax (roundingPolicy, primaryUnitPriceBeforeTax, realPriceQuantity);
+				decimal resultingLinePriceBeforeTax = this.ComputeResultingLinePriceBeforeTax (roundingPolicy, primaryLinePriceBeforeTax);
 
-			decimal primaryLineTax = this.ComputeTaxTotal (primaryLinePriceBeforeTax);
-			
-			this.tax = this.ComputeTax (resultingLinePriceBeforeTax);
+				decimal primaryLineTax = this.ComputeTaxTotal (primaryLinePriceBeforeTax);
 
-			this.articleItem.PrimaryUnitPriceBeforeTax   = PriceCalculator.ClipPriceValue (primaryUnitPriceBeforeTax, this.currencyCode);
-			this.articleItem.PrimaryLinePriceBeforeTax   = PriceCalculator.ClipPriceValue (primaryLinePriceBeforeTax, this.currencyCode);
-			this.articleItem.PrimaryLinePriceAfterTax    = PriceCalculator.ClipPriceValue (primaryLinePriceBeforeTax + primaryLineTax, this.currencyCode);
-			this.articleItem.ResultingLinePriceBeforeTax = PriceCalculator.ClipPriceValue (resultingLinePriceBeforeTax, this.currencyCode);
-			this.articleItem.ResultingLineTax1 = PriceCalculator.ClipPriceValue (this.tax.GetTax (0), this.currencyCode);
-			this.articleItem.ResultingLineTax2 = PriceCalculator.ClipPriceValue (this.tax.GetTax (1), this.currencyCode);
-			
-			this.articleItem.FinalLinePriceBeforeTax = null;
+				this.tax = this.ComputeTax (resultingLinePriceBeforeTax);
 
-			this.articleItem.TaxRate1 = PriceCalculator.ClipTaxRateValue (this.tax.GetTaxRate (0));
-			this.articleItem.TaxRate2 = PriceCalculator.ClipTaxRateValue (this.tax.GetTaxRate (1));
+				this.articleItem.PrimaryUnitPriceBeforeTax   = PriceCalculator.ClipPriceValue (primaryUnitPriceBeforeTax, this.currencyCode);
+				this.articleItem.PrimaryLinePriceBeforeTax   = PriceCalculator.ClipPriceValue (primaryLinePriceBeforeTax, this.currencyCode);
+				this.articleItem.PrimaryLinePriceAfterTax    = PriceCalculator.ClipPriceValue (primaryLinePriceBeforeTax + primaryLineTax, this.currencyCode);
+				this.articleItem.ResultingLinePriceBeforeTax = PriceCalculator.ClipPriceValue (resultingLinePriceBeforeTax, this.currencyCode);
+				this.articleItem.ResultingLineTax1 = PriceCalculator.ClipPriceValue (this.tax.GetTax (0), this.currencyCode);
+				this.articleItem.ResultingLineTax2 = PriceCalculator.ClipPriceValue (this.tax.GetTax (1), this.currencyCode);
+
+				this.articleItem.FinalLinePriceBeforeTax = null;
+
+				this.articleItem.TaxRate1 = PriceCalculator.ClipTaxRateValue (this.tax.GetTaxRate (0));
+				this.articleItem.TaxRate2 = PriceCalculator.ClipTaxRateValue (this.tax.GetTaxRate (1));
+
+				this.articleItem.ArticleAttributes &= ~ArticleDocumentItemAttributes.DirtyArticlePrices;
+			}
 		}
 
 		private decimal ComputeTaxTotal(decimal price)
@@ -259,11 +288,12 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 		{
 			Tax tax = this.ComputeTax (linePriceBeforeTax);
 			
-			if (this.articleItem.FixedLinePrice.HasValue)
+			if ((this.articleItem.FixedPrice.HasValue) &&
+				(this.articleItem.ArticleAttributes.HasFlag (ArticleDocumentItemAttributes.FixedLinePrice)))
 			{
-				decimal fixedLinePrice = this.articleItem.FixedLinePrice.Value;
+				decimal fixedLinePrice = this.articleItem.FixedPrice.Value;
 
-				if (this.articleItem.FixedLinePriceIncludesTaxes)
+				if (this.articleItem.FixedPriceIncludesTaxes)
 				{
 					return tax.ComputeAmountBeforeTax (fixedLinePrice);
 				}
@@ -303,9 +333,37 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 
 		private decimal GetUnitPriceBeforeTax(ArticlePriceEntity articlePrice)
 		{
-			if (this.articleItem.BillingUnitPriceBeforeTax.HasValue)
+			decimal unitPrice;
+			
+			//	If the user specified a fixed unit price, use it as the base for all of our
+			//	calculations :
+			
+			if ((this.articleItem.FixedPrice.HasValue) &&
+				(this.articleItem.ArticleAttributes.HasFlag (ArticleDocumentItemAttributes.FixedUnitPrice)))
 			{
-				return this.articleItem.BillingUnitPriceBeforeTax.Value;
+				unitPrice = this.articleItem.FixedPrice.Value;
+
+				if (this.articleItem.FixedPriceIncludesTaxes)
+				{
+					//	Use a dummy amount to compute the taxes, just so that we can have the
+					//	mean rate if the VAT is split over two years with different rates for
+					//	the same code :
+
+					Tax tax = this.ComputeTax (1000);
+					return tax.ComputeAmountBeforeTax (unitPrice);
+				}
+				else
+				{
+					return unitPrice;
+				}
+			}
+
+			//	If the business logic provides a reference unit price, then use it instead
+			//	of what could be computed based on the article definition :
+
+			if (this.articleItem.ReferenceUnitPriceBeforeTax.HasValue)
+			{
+				return this.articleItem.ReferenceUnitPriceBeforeTax.Value;
 			}
 
 			if (articlePrice.IsNull ())
@@ -313,7 +371,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 				return 0;
 			}
 
-			decimal unitPrice = this.ComputeTotalUnitPriceBeforeTax (articlePrice);
+			unitPrice = this.ComputeTotalUnitPriceBeforeTax (articlePrice);
 
 			if (articlePrice.ValueIncludesTaxes)
 			{

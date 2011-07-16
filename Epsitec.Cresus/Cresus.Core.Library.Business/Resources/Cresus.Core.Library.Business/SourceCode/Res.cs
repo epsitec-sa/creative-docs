@@ -137,6 +137,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				{
 				}
 				
+				//	designer:cap/GVA67
+				public static readonly Epsitec.Common.Types.EnumType ArticleDocumentItemAttributes = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 230));
 				//	designer:cap/GVA47
 				public static readonly Epsitec.Common.Types.DecimalType ArticleQuantity = (global::Epsitec.Common.Types.DecimalType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 228));
 			}
@@ -225,6 +227,93 @@ namespace Epsitec.Cresus.Core.Library.Business
 		{
 			internal static void _Initialize()
 			{
+			}
+			
+			public static class Decimal
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				public static class ArticleDocumentItemAttributes
+				{
+					internal static void _Initialize()
+					{
+					}
+					
+					//	designer:cap/GVAE7
+					public static global::Epsitec.Common.Types.Caption ArticleNotDiscountable
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 238));
+						}
+					}
+					//	designer:cap/GVAF7
+					public static global::Epsitec.Common.Types.Caption ArticlePricesFrozen
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 239));
+						}
+					}
+					//	designer:cap/GVAG7
+					public static global::Epsitec.Common.Types.Caption DirtyArticleNotDiscountable
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 240));
+						}
+					}
+					//	designer:cap/GVAB7
+					public static global::Epsitec.Common.Types.Caption DirtyArticlePrices
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 235));
+						}
+					}
+					//	designer:cap/GVAA7
+					public static global::Epsitec.Common.Types.Caption FixedLinePrice
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 234));
+						}
+					}
+					//	designer:cap/GVAH7
+					public static global::Epsitec.Common.Types.Caption FixedPriceIncludesTaxes
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 241));
+						}
+					}
+					//	designer:cap/GVA97
+					public static global::Epsitec.Common.Types.Caption FixedUnitPrice
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 233));
+						}
+					}
+					//	designer:cap/GVA87
+					public static global::Epsitec.Common.Types.Caption NeverApplyDiscount
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 232));
+						}
+					}
+					//	designer:cap/GVA77
+					public static global::Epsitec.Common.Types.Caption None
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 231));
+						}
+					}
+				}
 			}
 			
 			public static class Enum
@@ -544,6 +633,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				{
 				}
 				
+				//	designer:cap/GVAC7
+				public static readonly global::Epsitec.Common.Support.Druid ArticleAttributes = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 236);
 				//	designer:cap/GVAF2
 				public static readonly global::Epsitec.Common.Support.Druid ArticleDescriptionCache = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 79);
 				//	designer:cap/GVAE2
@@ -552,24 +643,20 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid ArticleQuantities = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 63);
 				//	designer:cap/GVAO1
 				public static readonly global::Epsitec.Common.Support.Druid ArticleTraceabilityDetails = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 56);
-				//	designer:cap/GVAS6
-				public static readonly global::Epsitec.Common.Support.Druid BillingUnitPriceBeforeTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 220);
 				//	designer:cap/GVA52
 				public static readonly global::Epsitec.Common.Support.Druid Discounts = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 69);
 				//	designer:cap/GVAD2
 				public static readonly global::Epsitec.Common.Support.Druid FinalLinePriceBeforeTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 77);
 				//	designer:cap/GVA82
-				public static readonly global::Epsitec.Common.Support.Druid FixedLinePrice = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 72);
-				//	designer:cap/GVA92
-				public static readonly global::Epsitec.Common.Support.Druid FixedLinePriceIncludesTaxes = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 73);
-				//	designer:cap/GVA42
-				public static readonly global::Epsitec.Common.Support.Druid NeverApplyDiscount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 68);
+				public static readonly global::Epsitec.Common.Support.Druid FixedPrice = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 72);
 				//	designer:cap/GVA32
 				public static readonly global::Epsitec.Common.Support.Druid PrimaryLinePriceAfterTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 67);
 				//	designer:cap/GVAR6
 				public static readonly global::Epsitec.Common.Support.Druid PrimaryLinePriceBeforeTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 219);
 				//	designer:cap/GVAQ6
 				public static readonly global::Epsitec.Common.Support.Druid PrimaryUnitPriceBeforeTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 218);
+				//	designer:cap/GVAS6
+				public static readonly global::Epsitec.Common.Support.Druid ReferenceUnitPriceBeforeTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 220);
 				//	designer:cap/GVAG2
 				public static readonly global::Epsitec.Common.Support.Druid ReplacementDescription = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 80);
 				//	designer:cap/GVKN
@@ -1032,6 +1119,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			Types.Decimal._Initialize ();
 			Types.Enum._Initialize ();
 			Values._Initialize ();
+			Values.Decimal.ArticleDocumentItemAttributes._Initialize ();
 			Values.Enum.ArticleQuantityType._Initialize ();
 			Values.Enum.ArticleType._Initialize ();
 			Values.Enum.DocumentItemAttributes._Initialize ();

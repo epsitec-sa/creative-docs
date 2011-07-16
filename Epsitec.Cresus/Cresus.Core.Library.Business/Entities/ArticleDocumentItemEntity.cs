@@ -26,6 +26,107 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
+		public bool FixedPriceIncludesTaxes
+		{
+			get
+			{
+				return this.ArticleAttributes.HasFlag (ArticleDocumentItemAttributes.FixedPriceIncludesTaxes);
+			}
+			set
+			{
+				if (value)
+				{
+					this.ArticleAttributes = this.ArticleAttributes | ArticleDocumentItemAttributes.FixedPriceIncludesTaxes;
+				}
+				else
+				{
+					this.ArticleAttributes = this.ArticleAttributes & ~ArticleDocumentItemAttributes.FixedPriceIncludesTaxes;
+				}
+			}
+		}
+
+		public bool FixedLinePrice
+		{
+			get
+			{
+				return this.ArticleAttributes.HasFlag (ArticleDocumentItemAttributes.FixedLinePrice);
+			}
+			set
+			{
+				if (value)
+				{
+					this.ArticleAttributes = this.ArticleAttributes | ArticleDocumentItemAttributes.FixedLinePrice;
+					this.ArticleAttributes = this.ArticleAttributes & ~ArticleDocumentItemAttributes.FixedUnitPrice;
+				}
+				else
+				{
+					this.ArticleAttributes = this.ArticleAttributes & ~ArticleDocumentItemAttributes.FixedLinePrice;
+				}
+			}
+		}
+
+		public bool FixedUnitPrice
+		{
+			get
+			{
+				return this.ArticleAttributes.HasFlag (ArticleDocumentItemAttributes.FixedUnitPrice);
+			}
+			set
+			{
+				if (value)
+				{
+					this.ArticleAttributes = this.ArticleAttributes | ArticleDocumentItemAttributes.FixedUnitPrice;
+					this.ArticleAttributes = this.ArticleAttributes & ~ArticleDocumentItemAttributes.FixedLinePrice;
+				}
+				else
+				{
+					this.ArticleAttributes = this.ArticleAttributes & ~ArticleDocumentItemAttributes.FixedUnitPrice;
+				}
+			}
+		}
+
+		public bool NeverApplyDiscount
+		{
+			get
+			{
+				return this.ArticleAttributes.HasFlag (ArticleDocumentItemAttributes.NeverApplyDiscount);
+			}
+			set
+			{
+				if (value)
+				{
+					this.ArticleAttributes = this.ArticleAttributes | ArticleDocumentItemAttributes.NeverApplyDiscount;
+				}
+				else
+				{
+					this.ArticleAttributes = this.ArticleAttributes & ~ArticleDocumentItemAttributes.NeverApplyDiscount;
+				}
+			}
+		}
+
+		public bool IsDiscountable
+		{
+			get
+			{
+				if ((this.ArticleAttributes.HasFlag (ArticleDocumentItemAttributes.NeverApplyDiscount)) ||
+					(this.ArticleAttributes.HasFlag (ArticleDocumentItemAttributes.ArticleNotDiscountable)))
+				{
+					return false;
+				}
+				else
+				{
+					return true;
+				}
+			}
+		}
+
+
+		public void FreezePrices()
+		{
+			this.ArticleAttributes |= ArticleDocumentItemAttributes.ArticlePricesFrozen;
+		}
+
+
 		public override FormattedText GetCompactSummary()
 		{
 			if (this.GetEntityStatus () == EntityStatus.Empty)
@@ -77,23 +178,22 @@ namespace Epsitec.Cresus.Core.Entities
 			copy.EndDate                         = this.EndDate;
 			copy.ArticleDefinition               = this.ArticleDefinition;
 			copy.ArticleParameters               = this.ArticleParameters;
+			copy.ArticleAttributes               = this.ArticleAttributes;
 
 			//	TODO: clone ArticleTraceabilityDetails
 
 			copy.VatCode                         = this.VatCode;
-			copy.BillingUnitPriceBeforeTax       = this.BillingUnitPriceBeforeTax;
+			copy.ReferenceUnitPriceBeforeTax     = this.ReferenceUnitPriceBeforeTax;
 			copy.PrimaryUnitPriceBeforeTax       = this.PrimaryUnitPriceBeforeTax;
 			copy.PrimaryLinePriceBeforeTax       = this.PrimaryLinePriceBeforeTax;
 			copy.PrimaryLinePriceAfterTax        = this.PrimaryLinePriceAfterTax;
-			copy.NeverApplyDiscount              = this.NeverApplyDiscount;
 
 			copy.ArticleQuantities.AddRange (this.ArticleQuantities.Select (x => x.CloneEntity (businessContext)));
 			copy.Discounts.AddRange (this.Discounts.Select (x => x.CloneEntity (businessContext)));
 
 			copy.TaxRate1                        = this.TaxRate1;
 			copy.TaxRate2                        = this.TaxRate2;
-			copy.FixedLinePrice                  = this.FixedLinePrice;
-			copy.FixedLinePriceIncludesTaxes     = this.FixedLinePriceIncludesTaxes;
+			copy.FixedPrice                      = this.FixedPrice;
 			copy.ResultingLinePriceBeforeTax     = this.ResultingLinePriceBeforeTax;
 			copy.ResultingLineTax1               = this.ResultingLineTax1;
 			copy.ResultingLineTax2               = this.ResultingLineTax2;

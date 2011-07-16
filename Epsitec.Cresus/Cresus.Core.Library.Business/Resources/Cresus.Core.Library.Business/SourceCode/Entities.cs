@@ -1398,6 +1398,28 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		#endregion
 		///	<summary>
+		///	The <c>ArticleAttributes</c> field.
+		///	designer:fld/GVAC1/GVAC7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVAC7]")]
+		public global::Epsitec.Cresus.Core.Business.ArticleDocumentItemAttributes ArticleAttributes
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Business.ArticleDocumentItemAttributes> ("[GVAC7]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Business.ArticleDocumentItemAttributes oldValue = this.ArticleAttributes;
+				if (oldValue != value || !this.IsFieldDefined("[GVAC7]"))
+				{
+					this.OnArticleAttributesChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.ArticleDocumentItemAttributes> ("[GVAC7]", oldValue, value);
+					this.OnArticleAttributesChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>ArticleTraceabilityDetails</c> field.
 		///	designer:fld/GVAC1/GVAO1
 		///	</summary>
@@ -1444,11 +1466,11 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>BillingUnitPriceBeforeTax</c> field.
+		///	The <c>ReferenceUnitPriceBeforeTax</c> field.
 		///	designer:fld/GVAC1/GVAS6
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[GVAS6]")]
-		public global::System.Decimal? BillingUnitPriceBeforeTax
+		public global::System.Decimal? ReferenceUnitPriceBeforeTax
 		{
 			get
 			{
@@ -1456,12 +1478,12 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				global::System.Decimal? oldValue = this.BillingUnitPriceBeforeTax;
+				global::System.Decimal? oldValue = this.ReferenceUnitPriceBeforeTax;
 				if (oldValue != value || !this.IsFieldDefined("[GVAS6]"))
 				{
-					this.OnBillingUnitPriceBeforeTaxChanging (oldValue, value);
+					this.OnReferenceUnitPriceBeforeTaxChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[GVAS6]", oldValue, value);
-					this.OnBillingUnitPriceBeforeTaxChanged (oldValue, value);
+					this.OnReferenceUnitPriceBeforeTaxChanged (oldValue, value);
 				}
 			}
 		}
@@ -1532,28 +1554,6 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>NeverApplyDiscount</c> field.
-		///	designer:fld/GVAC1/GVA42
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVA42]")]
-		public bool NeverApplyDiscount
-		{
-			get
-			{
-				return this.GetField<bool> ("[GVA42]");
-			}
-			set
-			{
-				bool oldValue = this.NeverApplyDiscount;
-				if (oldValue != value || !this.IsFieldDefined("[GVA42]"))
-				{
-					this.OnNeverApplyDiscountChanging (oldValue, value);
-					this.SetField<bool> ("[GVA42]", oldValue, value);
-					this.OnNeverApplyDiscountChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>Discounts</c> field.
 		///	designer:fld/GVAC1/GVA52
 		///	</summary>
@@ -1610,11 +1610,11 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>FixedLinePrice</c> field.
+		///	The <c>FixedPrice</c> field.
 		///	designer:fld/GVAC1/GVA82
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[GVA82]")]
-		public global::System.Decimal? FixedLinePrice
+		public global::System.Decimal? FixedPrice
 		{
 			get
 			{
@@ -1622,34 +1622,12 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				global::System.Decimal? oldValue = this.FixedLinePrice;
+				global::System.Decimal? oldValue = this.FixedPrice;
 				if (oldValue != value || !this.IsFieldDefined("[GVA82]"))
 				{
-					this.OnFixedLinePriceChanging (oldValue, value);
+					this.OnFixedPriceChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[GVA82]", oldValue, value);
-					this.OnFixedLinePriceChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>FixedLinePriceIncludesTaxes</c> field.
-		///	designer:fld/GVAC1/GVA92
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVA92]")]
-		public bool FixedLinePriceIncludesTaxes
-		{
-			get
-			{
-				return this.GetField<bool> ("[GVA92]");
-			}
-			set
-			{
-				bool oldValue = this.FixedLinePriceIncludesTaxes;
-				if (oldValue != value || !this.IsFieldDefined("[GVA92]"))
-				{
-					this.OnFixedLinePriceIncludesTaxesChanging (oldValue, value);
-					this.SetField<bool> ("[GVA92]", oldValue, value);
-					this.OnFixedLinePriceIncludesTaxesChanged (oldValue, value);
+					this.OnFixedPriceChanged (oldValue, value);
 				}
 			}
 		}
@@ -1830,26 +1808,24 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
+		partial void OnArticleAttributesChanging(global::Epsitec.Cresus.Core.Business.ArticleDocumentItemAttributes oldValue, global::Epsitec.Cresus.Core.Business.ArticleDocumentItemAttributes newValue);
+		partial void OnArticleAttributesChanged(global::Epsitec.Cresus.Core.Business.ArticleDocumentItemAttributes oldValue, global::Epsitec.Cresus.Core.Business.ArticleDocumentItemAttributes newValue);
 		partial void OnVatCodeChanging(global::Epsitec.Cresus.Core.Business.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.VatCode newValue);
 		partial void OnVatCodeChanged(global::Epsitec.Cresus.Core.Business.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.VatCode newValue);
-		partial void OnBillingUnitPriceBeforeTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnBillingUnitPriceBeforeTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnReferenceUnitPriceBeforeTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnReferenceUnitPriceBeforeTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnPrimaryUnitPriceBeforeTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnPrimaryUnitPriceBeforeTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnPrimaryLinePriceBeforeTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnPrimaryLinePriceBeforeTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnPrimaryLinePriceAfterTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnPrimaryLinePriceAfterTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnNeverApplyDiscountChanging(bool oldValue, bool newValue);
-		partial void OnNeverApplyDiscountChanged(bool oldValue, bool newValue);
 		partial void OnTaxRate1Changing(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnTaxRate1Changed(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnTaxRate2Changing(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnTaxRate2Changed(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnFixedLinePriceChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnFixedLinePriceChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnFixedLinePriceIncludesTaxesChanging(bool oldValue, bool newValue);
-		partial void OnFixedLinePriceIncludesTaxesChanged(bool oldValue, bool newValue);
+		partial void OnFixedPriceChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnFixedPriceChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnResultingLinePriceBeforeTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnResultingLinePriceBeforeTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnResultingLineTax1Changing(global::System.Decimal? oldValue, global::System.Decimal? newValue);

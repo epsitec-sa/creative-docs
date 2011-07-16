@@ -263,14 +263,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			var item = this.Entity;
 
+			item.ArticleAttributes |= ArticleDocumentItemAttributes.DirtyArticlePrices | ArticleDocumentItemAttributes.DirtyArticleNotDiscountable;
 			item.ArticleDefinition = article;
 			item.ArticleParameters = null;
 			item.VatCode = article.GetOutputVatCode ();
-			item.NeverApplyDiscount = false;
 			item.TaxRate1 = null;
 			item.TaxRate2 = null;
-			item.FixedLinePrice = null;
-			item.FixedLinePriceIncludesTaxes = false;
+			item.FixedPrice = null;
 			item.ResultingLinePriceBeforeTax = null;
 			item.ResultingLineTax1 = null;
 			item.ResultingLineTax2 = null;

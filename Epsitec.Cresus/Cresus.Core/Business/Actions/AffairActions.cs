@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Core.Business.Actions
 		private static void SetupInvoiceArticleDocumentItem(ArticleDocumentItemEntity line)
 		{
 			var ordered = line.GetOrderedQuantity ();
-			line.BillingUnitPriceBeforeTax = (ordered == 0) ? null : line.ResultingLinePriceBeforeTax / ordered;
+			line.ReferenceUnitPriceBeforeTax = (ordered == 0) ? null : line.ResultingLinePriceBeforeTax / ordered;
 		}
 
 
