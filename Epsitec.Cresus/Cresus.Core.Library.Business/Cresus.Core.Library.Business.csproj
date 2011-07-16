@@ -101,6 +101,7 @@
     <Compile Include="Controllers\BusinessDocumentControllers\ColumnType.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\ArticleLineEditorController.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\AccessData.cs" />
+    <Compile Include="Controllers\BusinessDocumentControllers\LinesHelper.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\EditMode.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\IndexDisplayerWidget.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\ViewMode.cs" />

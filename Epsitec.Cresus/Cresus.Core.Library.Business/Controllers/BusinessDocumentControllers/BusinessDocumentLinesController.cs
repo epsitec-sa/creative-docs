@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			if (this.CurrentEditMode == EditMode.Unknown)
 			{
-				this.CurrentEditMode = EditMode.Description;
+				this.CurrentEditMode = EditMode.Name;
 			}
 
 			this.lineInformations = new List<LineInformations> ();
@@ -220,6 +220,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		[Command (Library.Business.Res.CommandIds.Lines.CreateArticle)]
 		public void ProcessCreateArticle()
 		{
+#if false
 			//	Insère une nouvelle ligne d'article.
 			int? sel = this.linesController.LastSelection;
 			int index;
@@ -251,6 +252,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				this.accessData.BusinessDocumentEntity.Lines.Insert (index, newLine);
 				this.UpdateAfterChange (newLine, null);
 			}
+#else
+			var created = LinesHelper.CreateArticle (this.accessData.BusinessContext, this.accessData.BusinessDocumentEntity, this.GetSelection ());
+
+			if (created != null)
+			{
+				this.UpdateAfterChange (created.AbstractDocumentItemEntity, null);
+			}
+#endif
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.CreateQuantity)]
@@ -705,7 +714,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				for (int row = 0; row < accessor.RowsCount; row++)
 				{
-					this.lineInformations.Add (new LineInformations (line, accessor, i, row));
+					this.lineInformations.Add (new LineInformations (accessor, line, i, row));
 				}
 			}
 		}
@@ -832,6 +841,24 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				return true;
 			}
+		}
+
+
+		private List<LineInformations> GetSelection()
+		{
+			var list = new List<LineInformations> ();
+
+			foreach (var selection in this.linesController.Selection)
+			{
+				var info = this.lineInformations[selection];
+				list.Add (info);
+			}
+
+			return list;
+		}
+
+		private void SetSelection(List<LineInformations> list)
+		{
 		}
 
 

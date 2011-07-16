@@ -9,10 +9,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
 	public class LineInformations
 	{
-		public LineInformations(AbstractDocumentItemEntity abstractDocumentItemEntity, DocumentItemAccessor documentItemAccessor, int lineIndex, int sublineIndex)
+		public LineInformations(DocumentItemAccessor documentItemAccessor, AbstractDocumentItemEntity abstractDocumentItemEntity, int lineIndex, int sublineIndex)
 		{
-			this.AbstractDocumentItemEntity = abstractDocumentItemEntity;
 			this.DocumentItemAccessor       = documentItemAccessor;
+			this.AbstractDocumentItemEntity = abstractDocumentItemEntity;
 			this.LineIndex                  = lineIndex;
 			this.SublineIndex               = sublineIndex;
 		}
@@ -39,7 +39,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public FormattedText GetColumnContent(DocumentItemAccessorColumn column)
 		{
-			return this.DocumentItemAccessor.GetContent (this.SublineIndex, column);
+			if (this.DocumentItemAccessor == null)
+			{
+				return null;
+			}
+			else
+			{
+				return this.DocumentItemAccessor.GetContent (this.SublineIndex, column);
+			}
 		}
 
 		public int LineIndex
