@@ -335,7 +335,7 @@ namespace Epsitec.Cresus.Database
 				   let b = item.Item2
 				   where a.CaptionId != b.CaptionId
 					|| !string.Equals (a.Name, b.Name)
-					|| !string.Equals (a.Comment, b.Comment)
+//-					|| !string.Equals (a.Comment, b.Comment) ### HACK
 					|| !((a.Table == null && b.Table == null) || (string.Equals (a.Table.Name, b.Table.Name) && a.Table.CaptionId == b.Table.CaptionId))
 					|| !string.Equals (a.TargetTableName, b.TargetTableName)
 					|| !string.Equals (a.TargetColumnName, b.TargetColumnName)
@@ -414,12 +414,14 @@ namespace Epsitec.Cresus.Database
 
 				case DbRawType.SmallDecimal:
 					return a == DbRawType.Int16
-						|| a == DbRawType.Int32;
+						|| a == DbRawType.Int32
+						|| a == DbRawType.SmallDecimal;
 
 				case DbRawType.LargeDecimal:
 					return a == DbRawType.Int16
 						|| a == DbRawType.Int32
-						|| a == DbRawType.SmallDecimal;
+						|| a == DbRawType.SmallDecimal
+						|| a == DbRawType.LargeDecimal;
 
 				default:
 					throw new System.NotImplementedException ();
