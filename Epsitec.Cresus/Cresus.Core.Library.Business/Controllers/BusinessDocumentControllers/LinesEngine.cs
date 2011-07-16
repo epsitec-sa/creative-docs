@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public LinesError LastError
 		{
+			//	Retourne la dernière erreur occasionnée par une action.
 			get
 			{
 				return this.lastError;
@@ -36,6 +37,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public List<LineInformations> CreateArticle(List<LineInformations> selection)
 		{
+			//	Crée un nouvel article.
 			int index;
 
 			if (selection.Count == 0)
@@ -73,6 +75,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public List<LineInformations> CreateText(List<LineInformations> selection, FormattedText initialContent)
 		{
+			//	Crée une nouvelle ligne de texte ou de titre.
 			int index;
 
 			if (selection.Count == 0)
@@ -98,6 +101,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public void Move(List<LineInformations> selection, int direction)
 		{
+			//	Déplace une ligne vers le haut ou vers le bas.
+			//	C'est un mécanisme primitif, qui devra être remplacé par du drag & drop un jour !
 			if (selection.Count == 0)
 			{
 				this.lastError = LinesError.EmptySelection;
@@ -134,6 +139,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public List<LineInformations> Delete(List<LineInformations> selection)
 		{
+			//	Supprime les lignes sélectionnées.
 			if (selection.Count == 0)
 			{
 				this.lastError = LinesError.EmptySelection;
@@ -171,6 +177,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public List<LineInformations> Duplicate(List<LineInformations> selection)
 		{
+			//	Duplique la ligne sélectionnée.
 			if (selection.Count == 0)
 			{
 				this.lastError = LinesError.EmptySelection;
@@ -209,9 +216,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public void MakeGroup(List<LineInformations> selection, bool group)
 		{
+			//	Fait ou défait un groupe.
 			if (selection.Count == 0)
 			{
 				this.lastError = LinesError.EmptySelection;
+				return;
+			}
+
+			if (!this.IsCoherentSelection (selection))
+			{
+				this.lastError = LinesError.InvalidSelection;
 				return;
 			}
 
@@ -241,6 +255,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public void ShiftGroup(List<LineInformations> selection, int increment)
 		{
+			//	Sépare la ligne sélectionnée d'avec la précédente.
 			if (selection.Count == 0)
 			{
 				this.lastError = LinesError.EmptySelection;
@@ -294,6 +309,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public bool IsCoherentSelection(List<LineInformations> selection)
 		{
+			//	Retourne true si toutes les lignes sélectionnées font partie du même groupe.
 			if (selection.Count == 0)
 			{
 				return false;
@@ -321,6 +337,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 	
 		public FormattedText GetError(LinesError error)
 		{
+			//	Retourne le texte en clair correspondant à une erreur.
 			switch (error)
 			{
 				case LinesError.InvalidSelection:
