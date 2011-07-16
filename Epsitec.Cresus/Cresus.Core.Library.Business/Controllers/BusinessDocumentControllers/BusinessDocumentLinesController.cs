@@ -239,7 +239,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public void ProcessCreateText()
 		{
 			//	Insère une nouvelle ligne de texte.
-			var selection = this.linesEngine.CreateText (this.Selection, null);
+			var selection = this.linesEngine.CreateText (this.Selection, isTitle: false);
 			this.UpdateAfterChange (this.linesEngine.LastError, selection);
 		}
 
@@ -247,8 +247,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public void ProcessCreateTitle()
 		{
 			//	Insère une nouvelle ligne de titre.
-			var initialContent = string.Concat (BusinessDocumentLinesController.titlePrefixTags, BusinessDocumentLinesController.titlePostfixTags);
-			var selection = this.linesEngine.CreateText (this.Selection, initialContent);
+			var selection = this.linesEngine.CreateText (this.Selection, isTitle: true);
 			this.UpdateAfterChange (selection);
 		}
 
@@ -608,11 +607,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
-
-		public static readonly string titlePrefixTags  = "<font size=\"150%\"><b>";
-		public static readonly string titlePostfixTags = "</b></font>";
-
-		private static readonly int maxGroupingDepth = 4;
 
 		private readonly AccessData						accessData;
 		private readonly List<LineInformations>			lineInformations;

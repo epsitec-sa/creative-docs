@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			return LinesEngine.MakeSingleSelection (new LineInformations (null, line, newQuantity, 0, 0));
 		}
 
-		public List<LineInformations> CreateText(List<LineInformations> selection, FormattedText initialContent)
+		public List<LineInformations> CreateText(List<LineInformations> selection, bool isTitle)
 		{
 			//	Crée une nouvelle ligne de texte ou de titre.
 			int index;
@@ -137,7 +137,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			var model = this.businessDocumentEntity.Lines[index-1];
 
 			var newLine = this.businessContext.CreateEntity<TextDocumentItemEntity> ();
-			newLine.Text = initialContent;
+
+			if (isTitle)
+			{
+				newLine.Text = string.Concat (LinesEngine.titlePrefixTags, LinesEngine.titlePostfixTags);
+			}
+
 			newLine.GroupIndex = model.GroupIndex;
 
 			this.businessDocumentEntity.Lines.Insert (index, newLine);
@@ -408,6 +413,39 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
+		#region Title manager
+		public static FormattedText TitleToSimpleText(FormattedText text)
+		{
+			if (text.IsNullOrEmpty)
+			{
+				return null;
+			}
+
+			string s = text.ToString ();
+
+			s = s.Replace (LinesEngine.titlePrefixTags, "");
+			s = s.Replace (LinesEngine.titlePostfixTags, "");
+
+			return s;
+		}
+
+		public static FormattedText SimpleTextToTitle(FormattedText text)
+		{
+			return FormattedText.Concat (LinesEngine.titlePrefixTags, text, LinesEngine.titlePostfixTags);
+		}
+
+		public static bool IsTitle(FormattedText text)
+		{
+			if (text.IsNullOrEmpty)
+			{
+				return false;
+			}
+
+			return text.ToString ().Contains (LinesEngine.titlePrefixTags);
+		}
+		#endregion
+
+
 		#region Group index list manager
 		private static bool GroupIndexCompare(List<int> list1, List<int> list2, int deep)
 		{
@@ -492,6 +530,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			return list;
 		}
 
+
+		private static readonly string titlePrefixTags  = "<font size=\"150%\"><b>";
+		private static readonly string titlePostfixTags = "</b></font>";
+
+		private static readonly int maxGroupingDepth = 4;
 
 		private readonly BusinessContext				businessContext;
 		private readonly BusinessDocumentEntity			businessDocumentEntity;

@@ -57,12 +57,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				var text = this.Entity.Text.ToString ();
-
-				text = text.Replace (BusinessDocumentLinesController.titlePrefixTags,  "");
-				text = text.Replace (BusinessDocumentLinesController.titlePostfixTags, "");
-
-				return text;
+				return LinesEngine.TitleToSimpleText (this.Entity.Text);
 			}
 			set
 			{
@@ -74,7 +69,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				{
 					if (this.IsTitle)
 					{
-						this.Entity.Text = FormattedText.Concat (BusinessDocumentLinesController.titlePrefixTags, value, BusinessDocumentLinesController.titlePostfixTags);
+						this.Entity.Text = LinesEngine.SimpleTextToTitle (value);
 					}
 					else
 					{
@@ -88,13 +83,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				if (this.Entity.Text.IsNullOrEmpty)
-				{
-					return false;
-				}
-
-				var text = this.Entity.Text.ToString ();
-				return text.Contains (BusinessDocumentLinesController.titlePrefixTags);
+				return LinesEngine.IsTitle (this.Entity.Text);
 			}
 		}
 
