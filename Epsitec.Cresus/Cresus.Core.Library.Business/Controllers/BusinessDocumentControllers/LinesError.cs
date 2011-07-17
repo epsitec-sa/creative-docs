@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		InvalidQuantity,
 		MinDeep,
 		MaxDeep,
-		AlreadySplit,
-		AlreadyCombine,
+		AlreadySplited,
+		AlreadyCombined,
 	}
 }

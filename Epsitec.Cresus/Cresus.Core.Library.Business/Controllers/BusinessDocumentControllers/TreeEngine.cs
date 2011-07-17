@@ -1,20 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Common.Drawing;
-using Epsitec.Common.Widgets;
-using Epsitec.Common.Types;
-using Epsitec.Common.Support;
-
-using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Controllers.DataAccessors;
-using Epsitec.Cresus.Core.Widgets;
-using Epsitec.Cresus.Core.Widgets.Tiles;
-using Epsitec.Cresus.Core.Helpers;
-
-using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -22,24 +9,22 @@ using Epsitec.Cresus.Core.Business;
 
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
+	/// <summary>
+	/// Pour effectuer une opération complexe sur les lignes d’un document commercial (grouper, dégrouper,
+	/// séparer ou souder), un arbre intermédiaire est créé :
+	/// 1.	Les lignes sont converties dans un arbre qui reflète exactement la structure des groupes.
+	/// 2.	Il est alors facile de travailler dans l’arbre pour effectuer une opération complexe.
+	/// 3.	L’arbre est remis à plat en régénérant les « GroupIndex ».
+	/// Ainsi, la numérotation est toujours parfaite et optimale (sans trous).
+	/// Les phases 1 et 3 sont communes à toute les opérations. Pendant la phase numéro 2, on peut travailler
+	/// sur une structure propre et claire, en oubliant complètement les « GroupIndex ».
+	/// </summary>
 	public class TreeEngine
 	{
-		public TreeEngine()
+		public TreeEngine(IList<AbstractDocumentItemEntity> lines)
 		{
+			//	Construit l'arbre à partir des lignes du document comercial.
 			this.root = new TreeNode ();
-		}
-
-		public TreeNode Root
-		{
-			get
-			{
-				return this.root;
-			}
-		}
-
-		public void Create(IList<AbstractDocumentItemEntity> lines)
-		{
-			this.root.Childrens.Clear ();
 
 			foreach (var line in lines)
 			{
@@ -47,8 +32,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
-		public TreeNode Search(AbstractDocumentItemEntity line)
+		public TreeNode Search(AbstractDocumentItemEntity entity)
 		{
+			//	Cherche la feuille correspondant à une entité.
 			this.InitialiseForDeepNext ();
 
 			var current = this.root;
@@ -61,7 +47,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					break;
 				}
 
-				if (current.Entity == line)
+				if (current.Entity == entity)
 				{
 					return current;
 				}
@@ -70,8 +56,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			return null;
 		}
 
-		public void RegenerateGroupIndexes()
+		public void RegenerateAllGroupIndex()
 		{
+			//	Régénère tous les GroupIndex des noeuds et des feuilles.
 			this.InitialiseForDeepNext ();
 
 			var current = this.root;
@@ -90,7 +77,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private static void RegenerateGroupIndex(TreeNode node)
 		{
-			if (node.Entity == null)
+			//	Régénère le GroupIndex d'un noeud ou d'une feuille.
+			if (node.Entity == null)  // noeud ?
 			{
 				var regeneratedNode = node;
 				int regeneratedGroupIndex = 0;
@@ -114,11 +102,17 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					node = parent;
 				}
 
-				regeneratedNode.FullGroupIndex = regeneratedGroupIndex;
+				regeneratedNode.GroupIndex = regeneratedGroupIndex;
 			}
-			else
+			else  // feuille ?
 			{
-				node.Entity.GroupIndex = node.Parent.FullGroupIndex;
+				//	ATTENTION:
+				//	La propriété Entity.GroupIndex d'une feuille n'a pas la même signification que la
+				//	propriété GroupIndex d'un noeud. Alors que cette dernière contient le chemin complet,
+				//	Entity.GroupIndex occulte les 2 derniers digits. Si par exemple un noeud contient
+				//	GroupIndex = 0502, sa première feuille devrait contenir Entity.GroupIndex = 010502,
+				//	alors qu'en réalité elle ne contient que 0502 (comme le noeud parent) !
+				node.Entity.GroupIndex = node.Parent.GroupIndex;
 			}
 		}
 
@@ -155,7 +149,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				int rank = LinesEngine.LevelExtract (entity.GroupIndex, i);
 				progressGroupIndex = LinesEngine.LevelReplace (progressGroupIndex, i, rank);
 
-				var next = parent.Childrens.Where (x => x.FullGroupIndex == progressGroupIndex).FirstOrDefault ();
+				var next = parent.Childrens.Where (x => x.Entity == null && x.GroupIndex == progressGroupIndex).FirstOrDefault ();
 
 				if (next == null)
 				{
@@ -191,6 +185,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private static TreeNode DeepNext(TreeNode node)
 		{
+			//	Retourne le noeud/feuille suivant, en parcourant l'arbre en profondeur.
 			if (node.Childrens.Count == 0)
 			{
 				while (true)

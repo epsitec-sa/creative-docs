@@ -1,20 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Common.Drawing;
-using Epsitec.Common.Widgets;
-using Epsitec.Common.Types;
-using Epsitec.Common.Support;
-
-using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Controllers.DataAccessors;
-using Epsitec.Cresus.Core.Widgets;
-using Epsitec.Cresus.Core.Widgets.Tiles;
-using Epsitec.Cresus.Core.Helpers;
-
-using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -33,25 +20,34 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public TreeNode(int groupIndex)
 		{
 			//	Crée un noeud sans entité, juste avec un GroupIndex.
-			this.FullGroupIndex = groupIndex;
+			this.GroupIndex = groupIndex;
 
 			this.childrens = new List<TreeNode> ();
 		}
 
 		public TreeNode(AbstractDocumentItemEntity entity)
 		{
-			//	Crée un noeud avec entité et GroupIndex.
+			//	Crée une feuille avec entité et sans GroupIndex.
+			//	Cette feuille n'aura jamais d'enfants.
 			this.Entity = entity;
-			this.FullGroupIndex = -1;
 
 			this.childrens = new List<TreeNode> ();
 		}
 
 
-		public int FullGroupIndex
+		public int GroupIndex
 		{
-			get;
-			set;
+			//	Chemin complet du noeud (contrairement à Entity.GroupIndex d'une feuille), seulement pour les noeuds.
+			get
+			{
+				System.Diagnostics.Debug.Assert (this.Entity == null);  // bien un noeud ?
+				return this.groupIndex;
+			}
+			set
+			{
+				System.Diagnostics.Debug.Assert (this.Entity == null);  // bien un noeud ?
+				this.groupIndex = value;
+			}
 		}
 
 		public AbstractDocumentItemEntity Entity
@@ -76,11 +72,18 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
+				if (this.Entity != null)  // feuille ?
+				{
+					//	Une feuille ne peut jamais avoir d'enfants.
+					System.Diagnostics.Debug.Assert (this.childrens.Count == 0);
+				}
+
 				return this.childrens;
 			}
 		}
 
 
 		private readonly List<TreeNode>	childrens;
+		private int groupIndex;
 	}
 }

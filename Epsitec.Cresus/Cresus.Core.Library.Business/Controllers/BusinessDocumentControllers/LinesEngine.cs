@@ -281,16 +281,24 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				return;
 			}
 
-			var tree = new TreeEngine ();
-			tree.Create (this.businessDocumentEntity.Lines);
+			if (LinesEngine.GetLevel (selection[0].AbstractDocumentItemEntity.GroupIndex) >= LinesEngine.maxGroupingDepth)
+			{
+				this.lastError = LinesError.MaxDeep;
+				return;
+			}
 
+			//	Crée l'arbre à partie des lignes du document.
+			var tree = new TreeEngine (this.businessDocumentEntity.Lines);
+
+			//	Crée le nouveau noeud qui regroupera les lignes sélectionnées.
 			var group = new TreeNode ();
 
 			var firstNode = tree.Search (selection[0].AbstractDocumentItemEntity);
 			var parent = firstNode.Parent;
 			int index = parent.Childrens.IndexOf (firstNode);
-			parent.Childrens.Insert (index, group);
+			parent.Childrens.Insert (index, group);  // insère le groupe à sa place
 
+			//	Déplace les lignes dans le nouveau noeud du groupe.
 			foreach (var info in selection)
 			{
 				var node = tree.Search (info.AbstractDocumentItemEntity);
@@ -299,9 +307,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				group.Childrens.Add (node);
 			}
 
+			//	Régénère tous les GroupIndex selon le nouvel arbre.
 			using (this.businessContext.SuspendUpdates ())
 			{
-				tree.RegenerateGroupIndexes ();
+				tree.RegenerateAllGroupIndex ();
 			}
 
 			this.lastError = LinesError.OK;
@@ -322,14 +331,21 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				return;
 			}
 
-			var tree = new TreeEngine ();
-			tree.Create (this.businessDocumentEntity.Lines);
+			if (LinesEngine.GetLevel (selection[0].AbstractDocumentItemEntity.GroupIndex) <= 1)
+			{
+				this.lastError = LinesError.MinDeep;
+				return;
+			}
+
+			//	Crée l'arbre à partie des lignes du document.
+			var tree = new TreeEngine (this.businessDocumentEntity.Lines);
 
 			var firstNode = tree.Search (selection[0].AbstractDocumentItemEntity);
 			var group = firstNode.Parent;
 			var parent = group.Parent;
 			int index = parent.Childrens.IndexOf (group);
 
+			//	Déplace le lignes sélectionnées hors du groupe.
 			foreach (var info in selection)
 			{
 				var node = tree.Search (info.AbstractDocumentItemEntity);
@@ -338,14 +354,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				parent.Childrens.Insert (++index, node);
 			}
 
+			//	Si le groupe est vide, supprime-le.
 			if (group.Childrens.Count == 0)
 			{
 				parent.Childrens.Remove (group);
 			}
 
+			//	Régénère tous les GroupIndex selon le nouvel arbre.
 			using (this.businessContext.SuspendUpdates ())
 			{
-				tree.RegenerateGroupIndexes ();
+				tree.RegenerateAllGroupIndex ();
 			}
 
 			this.lastError = LinesError.OK;
@@ -367,8 +385,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				return;
 			}
 
-			var tree = new TreeEngine ();
-			tree.Create (this.businessDocumentEntity.Lines);
+			//	Crée l'arbre à partie des lignes du document.
+			var tree = new TreeEngine (this.businessDocumentEntity.Lines);
 
 			var firstNode = tree.Search (selection[0].AbstractDocumentItemEntity);
 			var group = firstNode.Parent;
@@ -376,14 +394,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			if (group.Childrens.IndexOf (firstNode) == 0)  // déjà séparé ?
 			{
-				this.lastError = LinesError.AlreadySplit;
+				this.lastError = LinesError.AlreadySplited;
 				return;
 			}
 
+			//	Crée le nouveau groupe juste après l'actuel.
 			int index = parent.Childrens.IndexOf (group);
 			var newGroup = new TreeNode ();
 			parent.Childrens.Insert (index+1, newGroup);
 
+			//	Déplace la ligne sélectionnée et les suivantes du même groupe dans le nouveau groupe.
 			int start = group.Childrens.IndexOf (firstNode);
 			while (start < group.Childrens.Count)
 			{
@@ -392,9 +412,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				newGroup.Childrens.Add (node);
 			}
 
+			//	Régénère tous les GroupIndex selon le nouvel arbre.
 			using (this.businessContext.SuspendUpdates ())
 			{
-				tree.RegenerateGroupIndexes ();
+				tree.RegenerateAllGroupIndex ();
 			}
 
 			this.lastError = LinesError.OK;
@@ -415,8 +436,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				return;
 			}
 
-			var tree = new TreeEngine ();
-			tree.Create (this.businessDocumentEntity.Lines);
+			//	Crée l'arbre à partie des lignes du document.
+			var tree = new TreeEngine (this.businessDocumentEntity.Lines);
 
 			var firstNode = tree.Search (selection[0].AbstractDocumentItemEntity);
 			var group = firstNode.Parent;
@@ -425,19 +446,20 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			int index = group.Childrens.IndexOf (firstNode);
 			if (index != 0)  // déjà soudé ?
 			{
-				this.lastError = LinesError.AlreadyCombine;
+				this.lastError = LinesError.AlreadyCombined;
 				return;
 			}
 
 			index = parent.Childrens.IndexOf (group);
 			if (index == 0)  // déjà soudé ?
 			{
-				this.lastError = LinesError.AlreadyCombine;
+				this.lastError = LinesError.AlreadyCombined;
 				return;
 			}
 
 			var prevGroup = parent.Childrens[index-1];
 
+			//	Déplace les lignes du groupe dans le groupe précédent.
 			while (group.Childrens.Count != 0)
 			{
 				var node = group.Childrens[0];
@@ -445,9 +467,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				prevGroup.Childrens.Add (node);
 			}
 
+			//	Régénère tous les GroupIndex selon le nouvel arbre.
 			using (this.businessContext.SuspendUpdates ())
 			{
-				tree.RegenerateGroupIndexes ();
+				tree.RegenerateAllGroupIndex ();
 			}
 
 			this.lastError = LinesError.OK;
@@ -508,10 +531,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				case LinesError.MaxDeep:
 					return "Il n'est pas possible d'imbriquer plus profondément les lignes sélectionnées.";
 
-				case LinesError.AlreadySplit:
+				case LinesError.AlreadySplited:
 					return "La ligne est déjà séparée de la précédente.";
 
-				case LinesError.AlreadyCombine:
+				case LinesError.AlreadyCombined:
 					return "La ligne est déjà soudée à la précédente.";
 
 				default:
