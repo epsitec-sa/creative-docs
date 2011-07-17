@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.businessDocumentEntity.Lines.Insert (index, newLine);
 
 			this.lastError = LinesError.OK;
-			return LinesEngine.MakeSingleSelection (new LineInformations (null, newLine, null, 0, 0));
+			return LinesEngine.MakeSingleSelection (new LineInformations (null, newLine, null, 0));
 		}
 
 		public List<LineInformations> CreateQuantity(List<LineInformations> selection, ArticleQuantityType quantityType, int daysToAdd)
@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			article.ArticleQuantities.Add (newQuantity);
 
 			this.lastError = LinesError.OK;
-			return LinesEngine.MakeSingleSelection (new LineInformations (null, line, newQuantity, 0, 0));
+			return LinesEngine.MakeSingleSelection (new LineInformations (null, line, newQuantity, 0));
 		}
 
 		public List<LineInformations> CreateText(List<LineInformations> selection, bool isTitle)
@@ -148,7 +148,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.businessDocumentEntity.Lines.Insert (index, newLine);
 
 			this.lastError = LinesError.OK;
-			return LinesEngine.MakeSingleSelection (new LineInformations (null, newLine, null, 0, 0));
+			return LinesEngine.MakeSingleSelection (new LineInformations (null, newLine, null, 0));
 		}
 
 		public void Move(List<LineInformations> selection, int direction)
@@ -224,7 +224,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			last = System.Math.Min (last, this.businessDocumentEntity.Lines.Count-1);
 			var lineToSelect = this.businessDocumentEntity.Lines[last];
-			return LinesEngine.MakeSingleSelection (new LineInformations (null, lineToSelect, null, 0, 0));
+			return LinesEngine.MakeSingleSelection (new LineInformations (null, lineToSelect, null, 0));
 		}
 
 		public List<LineInformations> Duplicate(List<LineInformations> selection)
@@ -262,7 +262,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.businessDocumentEntity.Lines.Insert (index+1, copy);
 
 			this.lastError = LinesError.OK;
-			return LinesEngine.MakeSingleSelection (new LineInformations (null, copy, null, 0, 0));
+			return LinesEngine.MakeSingleSelection (new LineInformations (null, copy, null, 0));
 		}
 
 
@@ -284,11 +284,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				var info = selection[0];
 				var line = info.AbstractDocumentItemEntity;
-				var list = LinesEngine.GroupIndexSplit (line.GroupIndex);
+				int level = LinesEngine.GetLevel (line.GroupIndex);
 
 				if (group)  // groupe ?
 				{
-					if (list.Count >= LinesEngine.maxGroupingDepth)
+					if (level >= LinesEngine.maxGroupingDepth)
 					{
 						this.lastError = LinesError.MaxDeep;
 						return;
@@ -296,7 +296,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				}
 				else  // sépare ?
 				{
-					if (list.Count <= 1)
+					if (level <= 1)
 					{
 						this.lastError = LinesError.MinDeep;
 						return;
@@ -310,18 +310,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				{
 					var line = info.AbstractDocumentItemEntity;
 
-					var list = LinesEngine.GroupIndexSplit (line.GroupIndex);
+					int level = LinesEngine.GetLevel (line.GroupIndex);
 
 					if (group)
 					{
-						list.Add (1);
+						line.GroupIndex = LinesEngine.LevelReplace (line.GroupIndex, level, 1);
 					}
 					else
 					{
-						list.RemoveAt (list.Count-1);
+						line.GroupIndex = LinesEngine.LevelReplace (line.GroupIndex, level-1, 0);
 					}
-
-					line.GroupIndex = LinesEngine.GroupIndexCombine (list);
 				}
 			}
 
@@ -347,14 +345,18 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				return;
 			}
 
-			var initialList = LinesEngine.GroupIndexSplit (line.GroupIndex);
-			var level = initialList.Count-1;
+			var initialGroupIndex = line.GroupIndex;
+			var level = LinesEngine.GetLevel (initialGroupIndex) - 1;
 
-			if (initialList[level]+increment == 0 ||
-				initialList[level]+increment >= 99)
 			{
-				this.lastError = LinesError.InvalidSelection;
-				return;
+				int rank = LinesEngine.LevelExtract (initialGroupIndex, level);
+
+				if (rank+increment == 0 ||
+					rank+increment >= 99)
+				{
+					this.lastError = LinesError.InvalidSelection;
+					return;
+				}
 			}
 
 			using (this.businessContext.SuspendUpdates ())
@@ -363,17 +365,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				{
 					var item = this.businessDocumentEntity.Lines[i];
 
-					var list = LinesEngine.GroupIndexSplit (item.GroupIndex);
-
-					if (!LinesEngine.GroupIndexCompare (list, initialList, level))
+					if (!LinesEngine.GroupIndexCompare (initialGroupIndex, item.GroupIndex, level))
 					{
 						break;
 					}
 
-					if (level < list.Count)
+					int rank = LinesEngine.LevelExtract (item.GroupIndex, level);
+
+					if (rank != 0)
 					{
-						list[level] += increment;
-						item.GroupIndex = LinesEngine.GroupIndexCombine (list);
+						item.GroupIndex = LinesEngine.LevelReplace (item.GroupIndex, level, rank+increment);
 					}
 				}
 			}
@@ -476,16 +477,19 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 
 		#region Group index list manager
-		private static bool GroupIndexCompare(List<int> list1, List<int> list2, int deep)
+		private static bool GroupIndexCompare(int groupIndex1, int groupIndex2, int deep)
 		{
-			if (list1.Count < deep || list2.Count < deep)
+			if (LinesEngine.GetLevel (groupIndex1) < deep || LinesEngine.GetLevel (groupIndex2) < deep)
 			{
 				return false;
 			}
 
 			for (int i = 0; i < deep; i++)
 			{
-				if (list1[i] != list2[i])
+				int rank1 = LinesEngine.LevelExtract (groupIndex1, i);
+				int rank2 = LinesEngine.LevelExtract (groupIndex2, i);
+
+				if (rank1 != rank2)
 				{
 					return false;
 				}
@@ -494,34 +498,83 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			return true;
 		}
 
-		public static List<int> GroupIndexSplit(int groupIndex)
+		public static int LevelReplace(int groupIndex, int level, int rank)
 		{
-			//	30201 retourne la liste 1,2,3.
-			var list = new List<int> ();
+			//	Remplace une paire de digits d'un niveau quelconque.
+			//	groupIndex = 665544, level = 0, rank = 88 ->   665588
+			//	groupIndex = 665544, level = 1, rank = 88 ->   668844
+			//	groupIndex = 665544, level = 2, rank = 88 ->   885544
+			//	groupIndex = 665544, level = 3, rank = 88 -> 88665544
+			System.Diagnostics.Debug.Assert (groupIndex >= 0);
+			System.Diagnostics.Debug.Assert (groupIndex <= 99999999);
 
-			while (groupIndex != 0)
+			System.Diagnostics.Debug.Assert (level >= 0);
+			System.Diagnostics.Debug.Assert (level < LinesEngine.maxGroupingDepth);
+
+			System.Diagnostics.Debug.Assert (rank >= 0);
+			System.Diagnostics.Debug.Assert (rank <= 99);
+
+			int result = 0;
+			int f = 1;
+
+			for (int i = 0; i < LinesEngine.maxGroupingDepth; i++)
 			{
-				list.Add (groupIndex%100);
-				groupIndex /= 100;
+				if (i == level)
+				{
+					result += f * rank;
+				}
+				else
+				{
+					result += f * LinesEngine.LevelExtract (groupIndex, i);
+				}
+
+				f *= 100;
 			}
 
+			System.Diagnostics.Debug.Assert (result >= 0);
+			System.Diagnostics.Debug.Assert (result <= 99999999);
 
-			return list;
+			return result;
 		}
 
-		public static int GroupIndexCombine(List<int> list)
+		public static int LevelExtract(int groupIndex, int level)
 		{
-			//	La liste 1,2,3 retourne 30201.
-			int groupIndex = 0;
-			int factor = 1;
+			//	Extrait une paire de digits.
+			//	Retourne 0 si le niveau n'existe pas.
+			//	groupIndex = 665544, level = 0 -> 44
+			//	groupIndex = 665544, level = 1 -> 55
+			//	groupIndex = 665544, level = 2 -> 66
+			//	groupIndex = 665544, level = 3 ->  0
+			//	groupIndex = 665544, level = 4 ->  0
+			System.Diagnostics.Debug.Assert (groupIndex >= 0);
+			System.Diagnostics.Debug.Assert (groupIndex <= 99999999);
 
-			foreach (var n in list)
+			System.Diagnostics.Debug.Assert (level >= 0);
+
+			if (level >= LinesEngine.maxGroupingDepth)
 			{
-				groupIndex += factor * n;
-				factor *= 100;
+				return 0;
 			}
+			else
+			{
+				int f = (int) System.Math.Pow (100, level);  // f = 1, 100, 10000 ou 1000000
+				return (groupIndex/f) % 100;
+			}
+		}
 
-			return groupIndex;
+		public static int GetLevel(int groupIndex)
+		{
+			//	Retourne le niveau, compris entre 0 et 4.
+			//	       0 -> 0
+			//	       4 -> 1
+			//	      44 -> 1
+			//	     544 -> 2
+			//	    5544 -> 2
+			//	   65544 -> 3
+			//	  665544 -> 3
+			//	 8665544 -> 4
+			//	88665544 -> 4
+			return AbstractDocumentItemEntity.GetGroupLevel (groupIndex);
 		}
 		#endregion
 
@@ -563,7 +616,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private static readonly string titlePrefixTags  = "<font size=\"150%\"><b>";
 		private static readonly string titlePostfixTags = "</b></font>";
 
-		private static readonly int maxGroupingDepth = 4;
+		public static readonly int maxGroupingDepth = 4;
 
 		private readonly BusinessContext				businessContext;
 		private readonly BusinessDocumentEntity			businessDocumentEntity;

@@ -9,12 +9,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
 	public class LineInformations
 	{
-		public LineInformations(DocumentItemAccessor documentItemAccessor, AbstractDocumentItemEntity abstractDocumentItemEntity, ArticleQuantityEntity articleQuantityEntity, int lineIndex, int sublineIndex)
+		public LineInformations(DocumentItemAccessor documentItemAccessor, AbstractDocumentItemEntity abstractDocumentItemEntity, ArticleQuantityEntity articleQuantityEntity, int sublineIndex)
 		{
 			this.DocumentItemAccessor       = documentItemAccessor;
 			this.AbstractDocumentItemEntity = abstractDocumentItemEntity;
 			this.ArticleQuantityEntity      = articleQuantityEntity;
-			this.LineIndex                  = lineIndex;
 			this.SublineIndex               = sublineIndex;
 		}
 
@@ -46,12 +45,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				return this.DocumentItemAccessor.GetContent (this.SublineIndex, column);
 			}
-		}
-
-		public int LineIndex
-		{
-			get;
-			internal set;
 		}
 
 		public int SublineIndex

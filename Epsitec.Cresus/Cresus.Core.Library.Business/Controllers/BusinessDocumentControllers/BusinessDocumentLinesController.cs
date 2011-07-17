@@ -440,7 +440,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				for (int row = 0; row < accessor.RowsCount; row++)
 				{
 					var quantity = accessor.GetArticleQuantityEntity (row);
-					this.lineInformations.Add (new LineInformations (accessor, line, quantity, i, row));
+					this.lineInformations.Add (new LineInformations (accessor, line, quantity, row));
 				}
 			}
 		}

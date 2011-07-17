@@ -37,19 +37,19 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
-		public List<int> TopGroupIndexList
+		public int TopGroupIndex
 		{
 			set;
 			internal get;
 		}
 
-		public List<int> CurrentGroupIndexList
+		public int CurrentGroupIndex
 		{
 			set;
 			internal get;
 		}
 
-		public List<int> BottomGroupIndexList
+		public int BottomGroupIndex
 		{
 			set;
 			internal get;
@@ -67,8 +67,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Rectangle rect = this.Client.Bounds;
 
-			int bandWidth = (int) rect.Width / IndexDisplayerWidget.maxDeep;
-			int count = System.Math.Min (colors.Count, IndexDisplayerWidget.maxDeep);
+			int bandWidth = (int) rect.Width / LinesEngine.maxGroupingDepth;
+			int count = System.Math.Min (colors.Count, LinesEngine.maxGroupingDepth);
 
 			for (int i = 0; i < count; i++)
 			{
@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			if (this.DrawTopSeparator)
 			{
 				//	Dessine le trait horizontal supérieur.
-				int shift = IndexDisplayerWidget.GetShift (this.TopGroupIndexList, this.CurrentGroupIndexList);
+				int shift = IndexDisplayerWidget.GetShift (this.TopGroupIndex, this.CurrentGroupIndex);
 				double x = bandWidth*shift + 0.5;
 
 				graphics.AddLine (rect.Left+x, rect.Top-0.5, rect.Right, rect.Top-0.5);
@@ -95,15 +95,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
-		private static int GetShift(List<int> topList, List<int> currentList)
+		private static int GetShift(int groupIndex1, int groupIndex2)
 		{
 			int i = 0;
 
 			while (true)
 			{
-				if (topList     != null && i < topList.Count     &&
-					currentList != null && i < currentList.Count &&
-					topList[i] == currentList[i])
+				int r1 = LinesEngine.LevelExtract (groupIndex1, i);
+				int r2 = LinesEngine.LevelExtract (groupIndex2, i);
+
+				if (r1 != 0 && r1 == r2)
 				{
 					i++;
 				}
@@ -116,8 +117,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			return i;
 		}
 
-
-		private static readonly int maxDeep = 4;
 
 		private readonly List<Color>			colors;
 	}
