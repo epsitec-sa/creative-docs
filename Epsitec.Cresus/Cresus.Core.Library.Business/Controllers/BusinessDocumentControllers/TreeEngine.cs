@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 	{
 		public TreeEngine()
 		{
-			this.root = new TreeNode (0, 0);
+			this.root = new TreeNode ();
 		}
 
 		public TreeNode Root
@@ -40,8 +40,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public void Create(IList<AbstractDocumentItemEntity> lines)
 		{
 			this.root.Childrens.Clear ();
-
-			this.debugRank = 1;
 
 			foreach (var line in lines)
 			{
@@ -70,36 +68,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			return null;
-		}
-
-		public string DebugTreeContent()
-		{
-			var builder = new System.Text.StringBuilder ();
-
-			this.InitialiseForDeepNext ();
-
-			var current = this.root;
-			while (true)
-			{
-				current = TreeEngine.DeepNext (current);
-
-				if (current == null)
-				{
-					break;
-				}
-
-				builder.Append (current.DebugNodeContent ());
-			}
-
-			var result = builder.ToString ();
-
-			var lines = result.Split (new string[] { "\r\n" }, System.StringSplitOptions.None);
-			foreach (var line in lines)
-			{
-				System.Diagnostics.Debug.WriteLine (line);
-			}
-
-			return result;
 		}
 
 		public void RegenerateGroupIndexes()
@@ -191,14 +159,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				if (next == null)
 				{
-					next = new TreeNode (this.debugRank++, progressGroupIndex);
+					next = new TreeNode (progressGroupIndex);
 					parent.Childrens.Add (next);
 				}
 
 				parent = next;
 			}
 
-			parent.Childrens.Add (new TreeNode (this.debugRank++, entity));
+			parent.Childrens.Add (new TreeNode (entity));
 		}
 
 
@@ -251,6 +219,5 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 
 		private readonly TreeNode root;
-		private int debugRank;
 	}
 }

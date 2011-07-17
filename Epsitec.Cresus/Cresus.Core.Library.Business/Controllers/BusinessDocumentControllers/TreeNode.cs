@@ -30,19 +30,17 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.childrens = new List<TreeNode> ();
 		}
 
-		public TreeNode(int debugRank, int groupIndex)
+		public TreeNode(int groupIndex)
 		{
 			//	Crée un noeud sans entité, juste avec un GroupIndex.
-			this.DebugRank = debugRank;
 			this.FullGroupIndex = groupIndex;
 
 			this.childrens = new List<TreeNode> ();
 		}
 
-		public TreeNode(int debugRank, AbstractDocumentItemEntity entity)
+		public TreeNode(AbstractDocumentItemEntity entity)
 		{
 			//	Crée un noeud avec entité et GroupIndex.
-			this.DebugRank = debugRank;
 			this.Entity = entity;
 			this.FullGroupIndex = -1;
 
@@ -74,30 +72,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			set;
 		}
 
-		public int DebugRank
-		{
-			get;
-			private set;
-		}
-
 		public List<TreeNode> Childrens
 		{
 			get
 			{
 				return this.childrens;
-			}
-		}
-
-
-		public string DebugNodeContent()
-		{
-			if (this.Entity == null)
-			{
-				return string.Format ("Empty node: DebugRank={0} Deep={1} GroupIndex={2} Childrens={3}\r\n", this.DebugRank, this.Deep, this.FullGroupIndex, this.childrens.Count);
-			}
-			else
-			{
-				return string.Format ("Entity node: DebugRank={0} Deep={1} GroupIndex={2} Type={3}\r\n", this.DebugRank, this.Deep, this.Entity.GroupIndex, this.Entity.GetType ().ToString ());
 			}
 		}
 

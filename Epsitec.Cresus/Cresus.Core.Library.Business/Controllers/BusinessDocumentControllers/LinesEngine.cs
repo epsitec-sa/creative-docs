@@ -75,23 +75,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public List<LineInformations> CreateQuantity(List<LineInformations> selection, ArticleQuantityType quantityType, int daysToAdd)
 		{
-			///////////////////////////////////////////////
-			var tree = new TreeEngine ();
-			tree.Create (this.businessDocumentEntity.Lines);
-
-			tree.DebugTreeContent ();
-
-			using (this.businessContext.SuspendUpdates ())
-			{
-				tree.RegenerateGroupIndexes ();
-			}
-
-			tree.DebugTreeContent ();
-
-			this.lastError = LinesError.OK;
-			return null;
-			///////////////////////////////////////////////
-
 			//	Crée une nouvelle quantité pour un article existant.
 			if (selection.Count == 0)
 			{
@@ -300,7 +283,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			var tree = new TreeEngine ();
 			tree.Create (this.businessDocumentEntity.Lines);
-			tree.DebugTreeContent ();
 
 			var group = new TreeNode ();
 
