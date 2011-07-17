@@ -75,6 +75,23 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public List<LineInformations> CreateQuantity(List<LineInformations> selection, ArticleQuantityType quantityType, int daysToAdd)
 		{
+			///////////////////////////////////////////////
+			var tree = new TreeEngine ();
+			tree.Create (this.businessDocumentEntity.Lines);
+
+			tree.DebugTreeContent ();
+
+			using (this.businessContext.SuspendUpdates ())
+			{
+				tree.RegenerateGroupIndexes ();
+			}
+
+			tree.DebugTreeContent ();
+
+			this.lastError = LinesError.OK;
+			return null;
+			///////////////////////////////////////////////
+
 			//	Crée une nouvelle quantité pour un article existant.
 			if (selection.Count == 0)
 			{
@@ -266,9 +283,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		public void MakeGroup(List<LineInformations> selection, bool group)
+		public void MakeGroup(List<LineInformations> selection)
 		{
-			//	Fait ou défait un groupe.
+			//	Fait un groupe.
 			if (selection.Count == 0)
 			{
 				this.lastError = LinesError.EmptySelection;
@@ -281,52 +298,79 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				return;
 			}
 
-			{
-				var info = selection[0];
-				var line = info.AbstractDocumentItemEntity;
-				int level = LinesEngine.GetLevel (line.GroupIndex);
+			var tree = new TreeEngine ();
+			tree.Create (this.businessDocumentEntity.Lines);
+			tree.DebugTreeContent ();
 
-				if (group)  // groupe ?
-				{
-					if (level >= LinesEngine.maxGroupingDepth)
-					{
-						this.lastError = LinesError.MaxDeep;
-						return;
-					}
-				}
-				else  // sépare ?
-				{
-					if (level <= 1)
-					{
-						this.lastError = LinesError.MinDeep;
-						return;
-					}
-				}
+			var group = new TreeNode ();
+
+			var firstNode = tree.Search (selection[0].AbstractDocumentItemEntity);
+			var parent = firstNode.Parent;
+			int index = parent.Childrens.IndexOf (firstNode);
+			parent.Childrens.Insert (index, group);
+
+			foreach (var info in selection)
+			{
+				var node = tree.Search (info.AbstractDocumentItemEntity);
+
+				node.Parent.Childrens.Remove (node);
+				group.Childrens.Add (node);
 			}
 
 			using (this.businessContext.SuspendUpdates ())
 			{
-				foreach (var info in selection)
-				{
-					var line = info.AbstractDocumentItemEntity;
-
-					int level = LinesEngine.GetLevel (line.GroupIndex);
-
-					if (group)
-					{
-						line.GroupIndex = LinesEngine.LevelReplace (line.GroupIndex, level, 1);
-					}
-					else
-					{
-						line.GroupIndex = LinesEngine.LevelReplace (line.GroupIndex, level-1, 0);
-					}
-				}
+				tree.RegenerateGroupIndexes ();
 			}
 
 			this.lastError = LinesError.OK;
 		}
 
-		public void ShiftGroup(List<LineInformations> selection, int increment)
+		public void MakeUngroup(List<LineInformations> selection)
+		{
+			//	Défait un groupe.
+			if (selection.Count == 0)
+			{
+				this.lastError = LinesError.EmptySelection;
+				return;
+			}
+
+			if (!this.IsCoherentSelection (selection))
+			{
+				this.lastError = LinesError.InvalidSelection;
+				return;
+			}
+
+			var tree = new TreeEngine ();
+			tree.Create (this.businessDocumentEntity.Lines);
+
+			var firstNode = tree.Search (selection[0].AbstractDocumentItemEntity);
+			var group = firstNode.Parent;
+			var parent = group.Parent;
+			int index = parent.Childrens.IndexOf (group);
+
+			foreach (var info in selection)
+			{
+				var node = tree.Search (info.AbstractDocumentItemEntity);
+
+				group.Childrens.Remove (node);
+				parent.Childrens.Insert (++index, node);
+			}
+
+			if (group.Childrens.Count == 0)
+			{
+				parent.Childrens.Remove (group);
+			}
+
+			using (this.businessContext.SuspendUpdates ())
+			{
+				tree.RegenerateGroupIndexes ();
+			}
+
+			this.lastError = LinesError.OK;
+		}
+
+
+		public void MakeSplit(List<LineInformations> selection)
 		{
 			//	Sépare la ligne sélectionnée d'avec la précédente.
 			if (selection.Count == 0)
@@ -335,48 +379,93 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				return;
 			}
 
-			var info = selection[0];
-			var line = info.AbstractDocumentItemEntity;
-			var index = this.businessDocumentEntity.Lines.IndexOf (line);
-
-			if (index == -1)
+			if (selection.Count != 1)
 			{
 				this.lastError = LinesError.InvalidSelection;
 				return;
 			}
 
-			var initialGroupIndex = line.GroupIndex;
-			var level = LinesEngine.GetLevel (initialGroupIndex) - 1;
+			var tree = new TreeEngine ();
+			tree.Create (this.businessDocumentEntity.Lines);
 
+			var firstNode = tree.Search (selection[0].AbstractDocumentItemEntity);
+			var group = firstNode.Parent;
+			var parent = group.Parent;
+
+			if (group.Childrens.IndexOf (firstNode) == 0)  // déjà séparé ?
 			{
-				int rank = LinesEngine.LevelExtract (initialGroupIndex, level);
+				this.lastError = LinesError.AlreadySplit;
+				return;
+			}
 
-				if (rank+increment == 0 ||
-					rank+increment >= 99)
-				{
-					this.lastError = LinesError.InvalidSelection;
-					return;
-				}
+			int index = parent.Childrens.IndexOf (group);
+			var newGroup = new TreeNode ();
+			parent.Childrens.Insert (index+1, newGroup);
+
+			int start = group.Childrens.IndexOf (firstNode);
+			while (start < group.Childrens.Count)
+			{
+				var node = group.Childrens[start];
+				group.Childrens.RemoveAt (start);
+				newGroup.Childrens.Add (node);
 			}
 
 			using (this.businessContext.SuspendUpdates ())
 			{
-				for (int i = index; i < this.businessDocumentEntity.Lines.Count; i++)
-				{
-					var item = this.businessDocumentEntity.Lines[i];
+				tree.RegenerateGroupIndexes ();
+			}
 
-					if (!LinesEngine.GroupIndexCompare (initialGroupIndex, item.GroupIndex, level))
-					{
-						break;
-					}
+			this.lastError = LinesError.OK;
+		}
 
-					int rank = LinesEngine.LevelExtract (item.GroupIndex, level);
+		public void MakeCombine(List<LineInformations> selection)
+		{
+			//	Soude la ligne sélectionnée avec la précédente.
+			if (selection.Count == 0)
+			{
+				this.lastError = LinesError.EmptySelection;
+				return;
+			}
 
-					if (rank != 0)
-					{
-						item.GroupIndex = LinesEngine.LevelReplace (item.GroupIndex, level, rank+increment);
-					}
-				}
+			if (selection.Count != 1)
+			{
+				this.lastError = LinesError.InvalidSelection;
+				return;
+			}
+
+			var tree = new TreeEngine ();
+			tree.Create (this.businessDocumentEntity.Lines);
+
+			var firstNode = tree.Search (selection[0].AbstractDocumentItemEntity);
+			var group = firstNode.Parent;
+			var parent = group.Parent;
+
+			int index = group.Childrens.IndexOf (firstNode);
+			if (index != 0)  // déjà soudé ?
+			{
+				this.lastError = LinesError.AlreadyCombine;
+				return;
+			}
+
+			index = parent.Childrens.IndexOf (group);
+			if (index == 0)  // déjà soudé ?
+			{
+				this.lastError = LinesError.AlreadyCombine;
+				return;
+			}
+
+			var prevGroup = parent.Childrens[index-1];
+
+			while (group.Childrens.Count != 0)
+			{
+				var node = group.Childrens[0];
+				group.Childrens.RemoveAt (0);
+				prevGroup.Childrens.Add (node);
+			}
+
+			using (this.businessContext.SuspendUpdates ())
+			{
+				tree.RegenerateGroupIndexes ();
 			}
 
 			this.lastError = LinesError.OK;
@@ -437,6 +526,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				case LinesError.MaxDeep:
 					return "Il n'est pas possible d'imbriquer plus profondément les lignes sélectionnées.";
 
+				case LinesError.AlreadySplit:
+					return "La ligne est déjà séparée de la précédente.";
+
+				case LinesError.AlreadyCombine:
+					return "La ligne est déjà soudée à la précédente.";
+
 				default:
 					return null;
 			}
@@ -476,20 +571,15 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		#endregion
 
 
-		#region Group index list manager
-		private static bool GroupIndexCompare(int groupIndex1, int groupIndex2, int deep)
+		#region GroupIndex operations
+		public static bool LevelCompare(int groupIndex1, int groupIndex2, int levelCount)
 		{
-			if (LinesEngine.GetLevel (groupIndex1) < deep || LinesEngine.GetLevel (groupIndex2) < deep)
+			for (int i = 0; i < levelCount; i++)
 			{
-				return false;
-			}
+				int n1 = LinesEngine.LevelExtract (groupIndex1, i);
+				int n2 = LinesEngine.LevelExtract (groupIndex2, i);
 
-			for (int i = 0; i < deep; i++)
-			{
-				int rank1 = LinesEngine.LevelExtract (groupIndex1, i);
-				int rank2 = LinesEngine.LevelExtract (groupIndex2, i);
-
-				if (rank1 != rank2)
+				if (n1 != n2)
 				{
 					return false;
 				}

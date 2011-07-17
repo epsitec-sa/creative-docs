@@ -352,7 +352,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private void ProcessGroup()
 		{
 			//	Groupe toutes les lignes sélectionnées.
-			this.linesEngine.MakeGroup (this.Selection, true);
+			this.linesEngine.MakeGroup (this.Selection);
 			this.UpdateAfterChange (this.linesEngine.LastError);
 		}
 
@@ -360,7 +360,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private void ProcessUngroup()
 		{
 			//	Défait le groupe sélectionné.
-			this.linesEngine.MakeGroup (this.Selection, false);
+			this.linesEngine.MakeUngroup (this.Selection);
 			this.UpdateAfterChange (this.linesEngine.LastError);
 		}
 
@@ -368,7 +368,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private void ProcessSplit()
 		{
 			//	Sépare la ligne d'avec la précédente.
-			this.linesEngine.ShiftGroup (this.Selection, 1);
+			this.linesEngine.MakeSplit (this.Selection);
 			this.UpdateAfterChange (this.linesEngine.LastError);
 		}
 
@@ -376,7 +376,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private void ProcessCombine()
 		{
 			//	Soude la ligne avec la précédente.
-			this.linesEngine.ShiftGroup (this.Selection, -1);
+			this.linesEngine.MakeCombine (this.Selection);
 			this.UpdateAfterChange (this.linesEngine.LastError);
 		}
 
