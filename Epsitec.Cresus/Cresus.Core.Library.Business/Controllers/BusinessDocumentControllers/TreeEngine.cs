@@ -38,15 +38,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.InitialiseForDeepNext ();
 
 			var current = this.root;
-			while (true)
+			while ((current = TreeEngine.DeepNext (current)) != null)
 			{
-				current = TreeEngine.DeepNext (current);
-
-				if (current == null)
-				{
-					break;
-				}
-
 				if (current.Entity == entity)
 				{
 					return current;
@@ -61,17 +54,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Régénère tous les GroupIndex des noeuds et des feuilles.
 			this.InitialiseForDeepNext ();
 
-			//	Première passe.
+			//	Première passe pour les noeuds.
 			var current = this.root;
-			while (true)
+			while ((current = TreeEngine.DeepNext (current)) != null)
 			{
-				current = TreeEngine.DeepNext (current);
-
-				if (current == null)
-				{
-					break;
-				}
-
 				var error = TreeEngine.RegenerateGroupIndexStep1 (current);
 
 				if (error != LinesError.OK)
@@ -80,17 +66,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				}
 			}
 
-			//	Deuxième passe.
+			//	Deuxième passe pour les feuilles.
 			current = this.root;
-			while (true)
+			while ((current = TreeEngine.DeepNext (current)) != null)
 			{
-				current = TreeEngine.DeepNext (current);
-
-				if (current == null)
-				{
-					break;
-				}
-
 				TreeEngine.RegenerateGroupIndexStep2 (current);
 			}
 
@@ -99,30 +78,24 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private static LinesError RegenerateGroupIndexStep1(TreeNode node)
 		{
-			//	Régénère le GroupIndex d'un noeud ou d'une feuille.
+			//	Régénère le GroupIndex d'un noeud.
 			if (node.Entity == null)  // noeud ?
 			{
 				var regeneratedNode = node;
 				int regeneratedGroupIndex = 0;
 
-				while (true)
+				TreeNode parent;
+				while ((parent = node.Parent) != null)
 				{
-					var parent = node.Parent;
-
-					if (parent == null)
-					{
-						break;
-					}
-
 					int i = TreeEngine.GetIndex (parent, node);
-
-					if (i+1 > 99)
-					{
-						return LinesError.Overflow;
-					}
 
 					if (parent.Deep >= 0 && i != -1)
 					{
+						if (i+1 > 99)
+						{
+							return LinesError.Overflow;
+						}
+
 						regeneratedGroupIndex = LinesEngine.LevelReplace (regeneratedGroupIndex, parent.Deep, i+1);
 					}
 
@@ -222,13 +195,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Retourne le noeud/feuille suivant, en parcourant l'arbre en profondeur.
 			if (node.Childrens.Count == 0)
 			{
-				while (true)
+				while (node.Parent != null)
 				{
-					if (node.Parent == null)
-					{
-						return null;
-					}
-
 					var parent = node.Parent;
 					int index = parent.Childrens.IndexOf (node) + 1;
 
@@ -239,6 +207,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 					node = parent;
 				}
+
+				return null;
 			}
 			else
 			{

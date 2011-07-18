@@ -308,13 +308,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			//	Régénère tous les GroupIndex selon le nouvel arbre.
-			LinesError error;
-			using (this.businessContext.SuspendUpdates ())
-			{
-				error = tree.RegenerateAllGroupIndex ();
-			}
-
-			this.lastError = error;
+			this.RegenerateAllGroupIndex (tree);
 		}
 
 		public void MakeUngroup(List<LineInformations> selection)
@@ -362,13 +356,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			//	Régénère tous les GroupIndex selon le nouvel arbre.
-			LinesError error;
-			using (this.businessContext.SuspendUpdates ())
-			{
-				error = tree.RegenerateAllGroupIndex ();
-			}
-
-			this.lastError = error;
+			this.RegenerateAllGroupIndex (tree);
 		}
 
 
@@ -415,13 +403,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			//	Régénère tous les GroupIndex selon le nouvel arbre.
-			LinesError error;
-			using (this.businessContext.SuspendUpdates ())
-			{
-				error = tree.RegenerateAllGroupIndex ();
-			}
-
-			this.lastError = error;
+			this.RegenerateAllGroupIndex (tree);
 		}
 
 		public void MakeCombine(List<LineInformations> selection)
@@ -471,13 +453,17 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			//	Régénère tous les GroupIndex selon le nouvel arbre.
-			LinesError error;
+			this.RegenerateAllGroupIndex (tree);
+		}
+
+
+		private void RegenerateAllGroupIndex(TreeEngine tree)
+		{
+			//	Régénère tous les GroupIndex selon le nouvel arbre.
 			using (this.businessContext.SuspendUpdates ())
 			{
-				error = tree.RegenerateAllGroupIndex ();
+				this.lastError = tree.RegenerateAllGroupIndex ();
 			}
-
-			this.lastError = error;
 		}
 
 
