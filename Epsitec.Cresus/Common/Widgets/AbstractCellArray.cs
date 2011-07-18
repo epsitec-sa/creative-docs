@@ -2113,8 +2113,8 @@ namespace Epsitec.Common.Widgets
 				{
 					limit += this.RetWidthColumn(i);
 				}
-				limit = limit-this.offsetH+rect.Left;
-				double x1 = rect.Left;
+				limit = rect.Left-this.offsetH+limit;
+				double x1 = rect.Left-this.offsetH;
 				if (this.columnsToSkipFromLeftForSeparator > 0)
 				{
 					x1 += this.widthColumns[this.columnsToSkipFromLeftForSeparator-1];
