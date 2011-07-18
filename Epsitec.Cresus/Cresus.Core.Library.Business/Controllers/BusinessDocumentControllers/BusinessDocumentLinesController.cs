@@ -223,7 +223,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		[Command (Library.Business.Res.CommandIds.Lines.CreateArticle)]
 		public void ProcessCreateArticle()
 		{
-			var selection = this.linesEngine.CreateArticle (this.Selection);
+			var selection = this.linesEngine.CreateArticle (this.Selection, isTax: false);
 			this.UpdateAfterChange (this.linesEngine.LastError, selection);
 		}
 
@@ -255,6 +255,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public void ProcessCreateDiscount()
 		{
 			//	Insère une nouvelle ligne de rabais.
+			var selection = this.linesEngine.CreateDiscount (this.Selection);
+			this.UpdateAfterChange (this.linesEngine.LastError, selection);
 #if false
 			int? sel = this.linesController.LastSelection;
 			int index;
@@ -283,6 +285,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public void ProcessCreateTax()
 		{
 			//	Insère une nouvelle ligne de frais.
+			var selection = this.linesEngine.CreateArticle (this.Selection, isTax: true);
+			this.UpdateAfterChange (this.linesEngine.LastError, selection);
 #if false
 			int? sel = this.linesController.LastSelection;
 			int index;

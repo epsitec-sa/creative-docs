@@ -156,16 +156,29 @@ namespace Epsitec.Cresus.Core.Helpers
 		{
 			//	Retourne true s'il s'agit d'un article de taxe (par exemple des frais de port).
 			if (article != null &&
-				article.ArticleDefinition.IsNotNull () &&
-				article.ArticleDefinition.ArticleCategory.IsNotNull ())
+				article.ArticleDefinition.IsNotNull ())
 			{
-				return article.ArticleDefinition.ArticleCategory.ArticleType == Business.ArticleType.Freight ||
-					   article.ArticleDefinition.ArticleCategory.ArticleType == Business.ArticleType.Tax ||
-					   article.ArticleDefinition.ArticleCategory.ArticleType == Business.ArticleType.Admin;
+				return ArticleDocumentItemHelper.IsFixedTax (article.ArticleDefinition);
 			}
 
 			return false;
 		}
+
+		public static bool IsFixedTax(ArticleDefinitionEntity article)
+		{
+			//	Retourne true s'il s'agit d'un article de taxe (par exemple des frais de port).
+			if (article != null &&
+				article.IsNotNull () &&
+				article.ArticleCategory.IsNotNull ())
+			{
+				return article.ArticleCategory.ArticleType == Business.ArticleType.Freight ||
+					   article.ArticleCategory.ArticleType == Business.ArticleType.Tax ||
+					   article.ArticleCategory.ArticleType == Business.ArticleType.Admin;
+			}
+
+			return false;
+		}
+
 
 		public static bool IsArticleForBL(ArticleDocumentItemEntity article)
 		{

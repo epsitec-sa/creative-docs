@@ -73,6 +73,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				ActiveState = myEyesOnly ? ActiveState.Yes : ActiveState.No,
 				Parent = rightFrame,
 				Dock = DockStyle.Top,
+				TabIndex = this.NextTabIndex,
 			};
 
 			check.ActiveStateChanged += delegate

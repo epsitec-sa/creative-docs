@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		public List<LineInformations> CreateArticle(List<LineInformations> selection)
+		public List<LineInformations> CreateArticle(List<LineInformations> selection, bool isTax)
 		{
 			//	Crée un nouvel article.
 			int index;
@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			newQuantity.QuantityColumn = quantityColumnEntity;
 
 			var newLine = this.businessContext.CreateEntity<ArticleDocumentItemEntity> ();
-			newLine.GroupIndex = model.GroupIndex;
+			newLine.GroupIndex = isTax ? 0 : model.GroupIndex;
 			newLine.ArticleQuantities.Add (newQuantity);
 
 			this.businessDocumentEntity.Lines.Insert (index, newLine);
@@ -150,6 +150,31 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				newLine.Text = string.Concat (LinesEngine.titlePrefixTags, LinesEngine.titlePostfixTags);
 			}
 
+			newLine.GroupIndex = model.GroupIndex;
+
+			this.businessDocumentEntity.Lines.Insert (index, newLine);
+
+			this.lastError = LinesError.OK;
+			return LinesEngine.MakeSingleSelection (new LineInformations (null, newLine, null, 0));
+		}
+
+		public List<LineInformations> CreateDiscount(List<LineInformations> selection)
+		{
+			//	Crée une nouvelle ligne de rabais.
+			int index;
+			AbstractDocumentItemEntity model;
+
+			if (selection.Count == 0)
+			{
+				index = this.GetDefaultArticleInsertionIndex (out model);
+			}
+			else
+			{
+				index = this.businessDocumentEntity.Lines.IndexOf (selection.Last ().AbstractDocumentItemEntity) + 1;
+				model = this.businessDocumentEntity.Lines[index-1];
+			}
+
+			var newLine = this.businessContext.CreateEntity<SubTotalDocumentItemEntity> ();
 			newLine.GroupIndex = model.GroupIndex;
 
 			this.businessDocumentEntity.Lines.Insert (index, newLine);

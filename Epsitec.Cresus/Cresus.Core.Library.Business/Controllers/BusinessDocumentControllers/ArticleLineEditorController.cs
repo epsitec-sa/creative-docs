@@ -102,11 +102,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				{
 					ValueGetter         = () => this.Entity.ArticleDefinition,
 					ValueSetter         = x => this.ResetArticleDefinition (x),
-					ReferenceController = new ReferenceController (() => this.Entity.ArticleDefinition),
+					PossibleItemsFilter = x => this.ArticleFilter (x),
 				};
 
 				var articleField = builder.CreateCompactAutoCompleteTextField (null, "", articleController);
-				this.PlaceLabelAndField (line, labelWidth, 0, "Article", articleField.Parent);
+				this.PlaceLabelAndField (line, labelWidth, 0, this.IsTax ? "Frais" : "Article", articleField.Parent);
 
 				this.firstFocusedWidget = articleField;
 			}
@@ -251,7 +251,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return "Article";
+				return this.IsTax ? "Frais" : "Article";
 			}
 		}
 
@@ -356,6 +356,18 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			else
 			{
 				this.Entity.ArticleDescriptionCache = ArticleDocumentItemHelper.GetArticleText (this.Entity, replaceTags: true, shortDescription: false);
+			}
+		}
+
+		private bool ArticleFilter(ArticleDefinitionEntity article)
+		{
+			if (this.IsTax)
+			{
+				return ArticleDocumentItemHelper.IsFixedTax (article);
+			}
+			else
+			{
+				return true;
 			}
 		}
 
@@ -470,6 +482,15 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				this.Entity.Discounts.Add (newDiscount);
 
 				// TODO: faut-il créer PriceRoundingModeEntity, et si oui comment ?
+			}
+		}
+
+
+		private bool IsTax
+		{
+			get
+			{
+				return this.Entity.GroupIndex == 0;
 			}
 		}
 
