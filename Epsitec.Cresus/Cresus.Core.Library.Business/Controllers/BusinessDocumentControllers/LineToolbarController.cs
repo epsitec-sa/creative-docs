@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		public void CreateUI(Widget parent)
+		public Widget CreateUI(Widget parent)
 		{
 			double buttonSize = Library.UI.Constants.ButtonSmallWidth;
 
@@ -47,6 +47,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			toolbar.Children.Add (this.CreateSeparator ());
 			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.EditName,        large: false, isActivable: true));
 			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.EditDescription, large: false, isActivable: true));
+
+			return toolbar;
 		}
 
 		private IconButton CreateButton(Command command = null, DockStyle dockStyle = DockStyle.Left, bool large = true, bool isActivable = false)

@@ -38,12 +38,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Si les états ne sont pas définis, met les valeurs par défaut.
 			if (this.CurrentViewMode == ViewMode.Unknown)
 			{
-				this.CurrentViewMode = ViewMode.Default;
+				this.CurrentViewMode = BusinessDocumentLinesController.persistantViewMode;
 			}
 
 			if (this.CurrentEditMode == EditMode.Unknown)
 			{
-				this.CurrentEditMode = EditMode.Name;
+				this.CurrentEditMode = BusinessDocumentLinesController.persistantEditMode;
 			}
 
 			this.lineInformations = new List<LineInformations> ();
@@ -65,7 +65,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			//	Crée la toolbar.
 			this.lineToolbarController = new LineToolbarController (this.accessData.DocumentMetadataEntity, this.accessData.BusinessDocumentEntity);
-			this.lineToolbarController.CreateUI (frame);
+			var toolbarWidget = this.lineToolbarController.CreateUI (frame);
+			toolbarWidget.Visibility = BusinessDocumentLinesController.persistantShowToolbar;
 
 			//	Crée la liste.
 			this.linesController = new LinesController (this.accessData);
@@ -81,6 +82,26 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Parent = frame,
 				Dock = DockStyle.Bottom,
 				Margins = new Margins (0, 0, 5, 0),
+			};
+
+			//	Crée le bouton 'v'.
+			var showToolbarButton = new GlyphButton
+			{
+				Parent = frame,
+				Anchor = AnchorStyles.TopRight,
+				PreferredSize = new Size (16, 16),
+				Margins = new Margins (0, 2, 2, 0),
+				GlyphShape = BusinessDocumentLinesController.persistantShowToolbar ? GlyphShape.TriangleUp : GlyphShape.TriangleDown,
+				ButtonStyle = ButtonStyle.Slider,
+			};
+
+			ToolTip.Default.SetToolTip (showToolbarButton, "Montre ou cache la barre d'icônes");
+
+			showToolbarButton.Clicked += delegate
+			{
+				toolbarWidget.Visibility = !toolbarWidget.Visibility;
+				showToolbarButton.GlyphShape = toolbarWidget.Visibility ? GlyphShape.TriangleUp : GlyphShape.TriangleDown;
+				BusinessDocumentLinesController.persistantShowToolbar = toolbarWidget.Visibility;
 			};
 		}
 
@@ -257,28 +278,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Insère une nouvelle ligne de rabais.
 			var selection = this.linesEngine.CreateDiscount (this.Selection);
 			this.UpdateAfterChange (this.linesEngine.LastError, selection);
-#if false
-			int? sel = this.linesController.LastSelection;
-			int index;
-
-			if (sel == null)
-			{
-				index = this.GetLDefaultArticleInsertionIndex ();
-			}
-			else
-			{
-				var info = this.lineInformations[sel.Value];
-				index = info.LineIndex+1;
-			}
-
-			var model = this.accessData.BusinessDocumentEntity.Lines[index-1];
-
-			var newLine = this.accessData.BusinessContext.CreateEntity<SubTotalDocumentItemEntity> ();
-			newLine.GroupIndex = model.GroupIndex;
-
-			this.accessData.BusinessDocumentEntity.Lines.Insert (index, newLine);
-			this.UpdateAfterChange (newLine, null);
-#endif
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.CreateTax)]
@@ -287,38 +286,22 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Insère une nouvelle ligne de frais.
 			var selection = this.linesEngine.CreateArticle (this.Selection, isTax: true);
 			this.UpdateAfterChange (this.linesEngine.LastError, selection);
-#if false
-			int? sel = this.linesController.LastSelection;
-			int index;
-
-			if (sel == null)
-			{
-				index = this.GetLDefaultArticleInsertionIndex ();
-			}
-			else
-			{
-				var info = this.lineInformations[sel.Value];
-				index = info.LineIndex+1;
-			}
-
-			var newLine = this.accessData.BusinessContext.CreateEntity<ArticleDocumentItemEntity> ();
-			newLine.GroupIndex = 0;
-
-			this.accessData.BusinessDocumentEntity.Lines.Insert (index, newLine);
-			this.UpdateAfterChange (newLine, null);
-#endif
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.CreateGroup)]
 		private void ProcessCreateGroup()
 		{
 			//	Insère un nouveau groupe.
+			var selection = this.linesEngine.CreateGroup (this.Selection);
+			this.UpdateAfterChange (this.linesEngine.LastError, selection);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.CreateGroupSeparator)]
 		private void ProcessCreateGroupSeparator()
 		{
 			//	Insère un nouveau groupe après le groupe en cours (donc au même niveau).
+			var selection = this.linesEngine.CreateGroupSeparator (this.Selection);
+			this.UpdateAfterChange (this.linesEngine.LastError, selection);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.MoveUp)]
@@ -587,6 +570,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.ViewCompact).ActiveState = (value == ViewMode.Compact) ? ActiveState.Yes : ActiveState.No;
 				this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.ViewDefault).ActiveState = (value == ViewMode.Default) ? ActiveState.Yes : ActiveState.No;
 				this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.ViewFull   ).ActiveState = (value == ViewMode.Full   ) ? ActiveState.Yes : ActiveState.No;
+
+				BusinessDocumentLinesController.persistantViewMode = value;
 			}
 		}
 
@@ -610,9 +595,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.EditName       ).ActiveState = (value == EditMode.Name       ) ? ActiveState.Yes : ActiveState.No;
 				this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.EditDescription).ActiveState = (value == EditMode.Description) ? ActiveState.Yes : ActiveState.No;
+
+				BusinessDocumentLinesController.persistantEditMode = value;
 			}
 		}
 
+
+		// TODO: Il faudra un jour que ces variables survivent à l'extinction de l'application !
+		private static ViewMode							persistantViewMode = ViewMode.Default;
+		private static EditMode							persistantEditMode = EditMode.Name;
+		private static bool								persistantShowToolbar = false;
 
 		private readonly AccessData						accessData;
 		private readonly List<LineInformations>			lineInformations;

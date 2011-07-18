@@ -184,6 +184,21 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
+		public List<LineInformations> CreateGroup(List<LineInformations> selection)
+		{
+			//	Insère un nouveau groupe.
+			this.lastError = LinesError.InvalidSelection;
+			return null;
+		}
+
+		public List<LineInformations> CreateGroupSeparator(List<LineInformations> selection)
+		{
+			//	Insère un nouveau groupe après le groupe en cours (donc au même niveau).
+			this.lastError = LinesError.InvalidSelection;
+			return null;
+		}
+
+
 		public void Move(List<LineInformations> selection, int direction)
 		{
 			//	Déplace une ligne vers le haut ou vers le bas.

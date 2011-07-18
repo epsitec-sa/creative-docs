@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private void CreateUILeftFrame(UIBuilder builder, FrameBox parent)
 		{
-			int labelWidth = 75;
+			int labelWidth = 80;
 
 			//	Article.
 			{
@@ -154,6 +154,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				var text = this.IsEditName ? "Désignation courte" : "Désignation longue";
 				this.PlaceLabelAndField (line, labelWidth, 0, text, replacementBox);
 
+#if false
 				var icon = new StaticText
 				{
 					Parent = line,
@@ -162,6 +163,32 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					Margins = new Margins (30, 0, 0, 10),
 					Text = Misc.GetResourceIconImageTag(this.IsEditName ? "Lines.EditName" : "Lines.EditDescription", 0, new Size (31, 31)),
 				};
+#else
+				double buttonWidth = Library.UI.Constants.ButtonLargeWidth;
+				double iconWidth   = Library.UI.Constants.IconLargeWidth;
+
+				new IconButton
+				{
+					Parent            = line,
+					CommandObject     = Library.Business.Res.Commands.Lines.EditName,
+					PreferredIconSize = new Size (iconWidth, iconWidth),
+					PreferredSize     = new Size (buttonWidth, buttonWidth),
+					Margins           = new Margins (0, 0, 0, 0),
+					Anchor            = AnchorStyles.BottomLeft,
+					AutoFocus         = false,
+				};
+
+				new IconButton
+				{
+					Parent            = line,
+					CommandObject     = Library.Business.Res.Commands.Lines.EditDescription,
+					PreferredIconSize = new Size (iconWidth, iconWidth),
+					PreferredSize     = new Size (buttonWidth, buttonWidth),
+					Margins           = new Margins (buttonWidth, 0, 0, 0),
+					Anchor            = AnchorStyles.BottomLeft,
+					AutoFocus         = false,
+				};
+#endif
 			}
 		}
 
