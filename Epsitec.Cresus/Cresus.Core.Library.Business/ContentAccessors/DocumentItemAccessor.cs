@@ -39,6 +39,12 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 			this.content.Clear ();
 
+			if ((this.mode & DocumentItemAccessorMode.ShowMyEyesOnly) == 0 &&
+				item.Attributes.HasFlag (DocumentItemAttributes.MyEyesOnly))
+			{
+				return;
+			}
+
 			if (item is TextDocumentItemEntity)
 			{
 				this.BuildTextItem (item as TextDocumentItemEntity);

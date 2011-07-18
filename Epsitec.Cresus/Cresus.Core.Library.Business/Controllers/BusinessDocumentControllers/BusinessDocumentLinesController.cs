@@ -423,7 +423,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			this.lineInformations.Clear ();
 
-			var mode = DocumentItemAccessorMode.ForceAllLines | DocumentItemAccessorMode.SpecialQuantitiesToDistinctLines;
+			var mode = DocumentItemAccessorMode.ForceAllLines |
+					   DocumentItemAccessorMode.ShowMyEyesOnly |
+					   DocumentItemAccessorMode.SpecialQuantitiesToDistinctLines;
 
 			if (this.CurrentEditMode == EditMode.Name)
 			{

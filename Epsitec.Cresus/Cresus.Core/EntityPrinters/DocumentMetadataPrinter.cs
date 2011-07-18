@@ -403,7 +403,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				this.DocumentType == Business.DocumentType.DeliveryNote      ||
 				this.DocumentType == Business.DocumentType.ShipmentChecklist ||
 				this.DocumentType == Business.DocumentType.Invoice           ||
-				this.DocumentType == Business.DocumentType.InvoiceProForma)
+				this.DocumentType == Business.DocumentType.InvoiceProForma   )
 			{
 				//	Les ordres de productions doivent utiliser les descriptions courtes des articles.
 				//	C'est une demande de Monsieur "M" !
@@ -412,6 +412,14 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			else
 			{
 				mode |= DocumentItemAccessorMode.UseArticleBoth;
+			}
+
+			if (this.DocumentType == Business.DocumentType.ProductionOrder     ||
+				this.DocumentType == Business.DocumentType.ProductionChecklist ||
+				this.DocumentType == Business.DocumentType.ShipmentChecklist   )
+			{
+				//	Seuls les documents à usage interne incluent les lignes 'MyEyesOnly'.
+				mode |= DocumentItemAccessorMode.ShowMyEyesOnly;
 			}
 
 			for (int i = 0; i < this.Entity.Lines.Count; i++)
