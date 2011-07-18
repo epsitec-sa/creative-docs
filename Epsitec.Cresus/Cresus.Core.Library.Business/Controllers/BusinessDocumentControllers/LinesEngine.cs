@@ -171,17 +171,17 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Crée l'arbre à partie des lignes du document.
 			var tree = new TreeEngine (this.businessDocumentEntity);
 
-			var node = tree.Search (selection[0].AbstractDocumentItemEntity);
+			var leaf = tree.Search (selection[0].AbstractDocumentItemEntity);
 			var flat = tree.FlatLeafs;
-			var index = flat.IndexOf (node);
+			var index = flat.IndexOf (leaf);
 
-			if (LinesEngine.IsFixed (node.Entity))
+			if (LinesEngine.IsFixed (leaf.Entity))
 			{
 				this.lastError = LinesError.Fixed;
 				return;
 			}
 
-			TreeNode attachNode;
+			TreeNode attachLeaf;
 			int attachIndex = index;
 
 			while (true)
@@ -201,50 +201,50 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					return;
 				}
 
-				attachNode = flat[attachIndex];
+				attachLeaf = flat[attachIndex];
 
-				if (!LinesEngine.IsFixed (attachNode.Entity))
+				if (!LinesEngine.IsFixed (attachLeaf.Entity))
 				{
 					break;
 				}
 			}
 
-			//	Met une copie du noeud à sa nouvelle place.
-			var newNode = new TreeNode (node.Entity);
+			//	Met une copie de la feuille à sa nouvelle place.
+			var newLeaf = new TreeNode (leaf.Entity);
 
 			if (direction < 0)
 			{
-				int i = attachNode.Parent.Childrens.IndexOf (attachNode);
+				int i = attachLeaf.Parent.Childrens.IndexOf (attachLeaf);
 
-				//	Si le noeud original n'a pas le même parent, il faut insérer après.
-				if (attachNode.Parent.Childrens.Contains (node) == false)
+				//	Si la feuille originale n'a pas le même parent, il faut insérer après.
+				if (attachLeaf.Parent.Childrens.Contains (leaf) == false)
 				{
 					i++;
 				}
 
-				attachNode.Parent.Childrens.Insert (i, newNode);
+				attachLeaf.Parent.Childrens.Insert (i, newLeaf);
 			}
 			else
 			{
-				int i = attachNode.Parent.Childrens.IndexOf (attachNode);
+				int i = attachLeaf.Parent.Childrens.IndexOf (attachLeaf);
 
-				//	Si le noeud original a le même parent, il faut insérer après.
-				if (attachNode.Parent.Childrens.Contains (node) == true)
+				//	Si la feuille originale a le même parent, il faut insérer après.
+				if (attachLeaf.Parent.Childrens.Contains (leaf) == true)
 				{
 					i++;
 				}
 
-				attachNode.Parent.Childrens.Insert (i, newNode);
+				attachLeaf.Parent.Childrens.Insert (i, newLeaf);
 			}
 
-			//	Supprime le noeud initial.
-			node.Parent.Childrens.Remove (node);
+			//	Supprime la feuille initiale.
+			leaf.Parent.Childrens.Remove (leaf);
 
-			while ((node = node.Parent) != null)
+			while ((leaf = leaf.Parent) != null)
 			{
-				if (node.Childrens.Count == 0 && node.Parent != null)
+				if (leaf.Childrens.Count == 0 && leaf.Parent != null)
 				{
-					node.Parent.Childrens.Remove (node);
+					leaf.Parent.Childrens.Remove (leaf);
 				}
 				else
 				{
@@ -379,18 +379,18 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Crée le nouveau noeud qui regroupera les lignes sélectionnées.
 			var group = new TreeNode ();
 
-			var firstNode = tree.Search (selection[0].AbstractDocumentItemEntity);
-			var parent = firstNode.Parent;
-			int index = parent.Childrens.IndexOf (firstNode);
+			var firstLeaf = tree.Search (selection[0].AbstractDocumentItemEntity);
+			var parent = firstLeaf.Parent;
+			int index = parent.Childrens.IndexOf (firstLeaf);
 			parent.Childrens.Insert (index, group);  // insère le groupe à sa place
 
 			//	Déplace les lignes dans le nouveau noeud du groupe.
 			foreach (var info in selection)
 			{
-				var node = tree.Search (info.AbstractDocumentItemEntity);
+				var leaf = tree.Search (info.AbstractDocumentItemEntity);
 
-				node.Parent.Childrens.Remove (node);
-				group.Childrens.Add (node);
+				leaf.Parent.Childrens.Remove (leaf);
+				group.Childrens.Add (leaf);
 			}
 
 			//	Régénère toutes les lignes selon le nouvel arbre.
@@ -421,18 +421,18 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Crée l'arbre à partie des lignes du document.
 			var tree = new TreeEngine (this.businessDocumentEntity);
 
-			var firstNode = tree.Search (selection[0].AbstractDocumentItemEntity);
-			var group = firstNode.Parent;
+			var firstLeaf = tree.Search (selection[0].AbstractDocumentItemEntity);
+			var group = firstLeaf.Parent;
 			var parent = group.Parent;
 			int index = parent.Childrens.IndexOf (group);
 
 			//	Déplace le lignes sélectionnées hors du groupe.
 			foreach (var info in selection)
 			{
-				var node = tree.Search (info.AbstractDocumentItemEntity);
+				var leaf = tree.Search (info.AbstractDocumentItemEntity);
 
-				group.Childrens.Remove (node);
-				parent.Childrens.Insert (++index, node);
+				group.Childrens.Remove (leaf);
+				parent.Childrens.Insert (++index, leaf);
 			}
 
 			//	Si le groupe est vide, supprime-le.
@@ -464,11 +464,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Crée l'arbre à partie des lignes du document.
 			var tree = new TreeEngine (this.businessDocumentEntity);
 
-			var firstNode = tree.Search (selection[0].AbstractDocumentItemEntity);
-			var group = firstNode.Parent;
+			var firstLeaf = tree.Search (selection[0].AbstractDocumentItemEntity);
+			var group = firstLeaf.Parent;
 			var parent = group.Parent;
 
-			if (group.Childrens.IndexOf (firstNode) == 0)  // déjà séparé ?
+			if (group.Childrens.IndexOf (firstLeaf) == 0)  // déjà séparé ?
 			{
 				this.lastError = LinesError.AlreadySplited;
 				return;
@@ -480,7 +480,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			parent.Childrens.Insert (index+1, newGroup);
 
 			//	Déplace la ligne sélectionnée et les suivantes du même groupe dans le nouveau groupe.
-			int start = group.Childrens.IndexOf (firstNode);
+			int start = group.Childrens.IndexOf (firstLeaf);
 			while (start < group.Childrens.Count)
 			{
 				var node = group.Childrens[start];
@@ -510,11 +510,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Crée l'arbre à partie des lignes du document.
 			var tree = new TreeEngine (this.businessDocumentEntity);
 
-			var firstNode = tree.Search (selection[0].AbstractDocumentItemEntity);
-			var group = firstNode.Parent;
+			var firstLeaf = tree.Search (selection[0].AbstractDocumentItemEntity);
+			var group = firstLeaf.Parent;
 			var parent = group.Parent;
 
-			int index = group.Childrens.IndexOf (firstNode);
+			int index = group.Childrens.IndexOf (firstLeaf);
 			if (index != 0)  // déjà soudé ?
 			{
 				this.lastError = LinesError.AlreadyCombined;
