@@ -230,6 +230,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			//	Quatrième ligne à droite.
+#if false  // on ne peut pas saisir la description du rabais, car on ne sait pas où la faire figurer !
 			{
 				var line = new FrameBox
 				{
@@ -244,6 +245,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				var discountField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.DiscountText, x => this.DiscountText = x));
 				this.PlaceLabelAndField (line, 130, 200, "Description du rabais", discountField);
 			}
+#endif
 		}
 
 
