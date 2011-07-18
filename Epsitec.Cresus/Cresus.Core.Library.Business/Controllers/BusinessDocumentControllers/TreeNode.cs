@@ -40,13 +40,29 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Chemin complet du noeud (contrairement à Entity.GroupIndex d'une feuille), seulement pour les noeuds.
 			get
 			{
-				System.Diagnostics.Debug.Assert (this.Entity == null);  // bien un noeud ?
+				System.Diagnostics.Debug.Assert (this.IsNode);  // bien un noeud ?
 				return this.groupIndex;
 			}
 			set
 			{
-				System.Diagnostics.Debug.Assert (this.Entity == null);  // bien un noeud ?
+				System.Diagnostics.Debug.Assert (this.IsNode);  // bien un noeud ?
 				this.groupIndex = value;
+			}
+		}
+
+		public bool IsNode
+		{
+			get
+			{
+				return this.Entity == null;
+			}
+		}
+
+		public bool IsLeaf
+		{
+			get
+			{
+				return this.Entity != null;
 			}
 		}
 
@@ -72,7 +88,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				if (this.Entity != null)  // feuille ?
+				if (this.IsLeaf)  // feuille ?
 				{
 					//	Une feuille ne peut jamais avoir d'enfants.
 					System.Diagnostics.Debug.Assert (this.childrens.Count == 0);
