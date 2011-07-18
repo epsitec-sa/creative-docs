@@ -16,5 +16,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		MaxDeep,
 		AlreadySplited,
 		AlreadyCombined,
+		Overflow,
 	}
 }

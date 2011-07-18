@@ -308,12 +308,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			//	Régénère tous les GroupIndex selon le nouvel arbre.
+			LinesError error;
 			using (this.businessContext.SuspendUpdates ())
 			{
-				tree.RegenerateAllGroupIndex ();
+				error = tree.RegenerateAllGroupIndex ();
 			}
 
-			this.lastError = LinesError.OK;
+			this.lastError = error;
 		}
 
 		public void MakeUngroup(List<LineInformations> selection)
@@ -361,12 +362,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			//	Régénère tous les GroupIndex selon le nouvel arbre.
+			LinesError error;
 			using (this.businessContext.SuspendUpdates ())
 			{
-				tree.RegenerateAllGroupIndex ();
+				error = tree.RegenerateAllGroupIndex ();
 			}
 
-			this.lastError = LinesError.OK;
+			this.lastError = error;
 		}
 
 
@@ -413,12 +415,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			//	Régénère tous les GroupIndex selon le nouvel arbre.
+			LinesError error;
 			using (this.businessContext.SuspendUpdates ())
 			{
-				tree.RegenerateAllGroupIndex ();
+				error = tree.RegenerateAllGroupIndex ();
 			}
 
-			this.lastError = LinesError.OK;
+			this.lastError = error;
 		}
 
 		public void MakeCombine(List<LineInformations> selection)
@@ -468,12 +471,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			//	Régénère tous les GroupIndex selon le nouvel arbre.
+			LinesError error;
 			using (this.businessContext.SuspendUpdates ())
 			{
-				tree.RegenerateAllGroupIndex ();
+				error = tree.RegenerateAllGroupIndex ();
 			}
 
-			this.lastError = LinesError.OK;
+			this.lastError = error;
 		}
 
 
@@ -536,6 +540,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				case LinesError.AlreadyCombined:
 					return "La ligne est déjà soudée à la précédente.";
+
+				case LinesError.Overflow:
+					return "Il y a plus de 99 groupes successifs.";
 
 				default:
 					return null;
