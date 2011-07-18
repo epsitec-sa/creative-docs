@@ -39,14 +39,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			//	Crée un nouvel article.
 			int index;
+			AbstractDocumentItemEntity model;
 
 			if (selection.Count == 0)
 			{
-				index = this.GetDefaultArticleInsertionIndex ();
+				index = this.GetDefaultArticleInsertionIndex (out model);
 			}
 			else
 			{
 				index = this.businessDocumentEntity.Lines.IndexOf (selection.Last ().AbstractDocumentItemEntity) + 1;
+				model = this.businessDocumentEntity.Lines[index-1];
 			}
 
 			var quantityColumnEntity = this.SearchArticleQuantityColumnEntity (ArticleQuantityType.Ordered);
@@ -56,8 +58,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				this.lastError = LinesError.InvalidQuantity;
 				return null;
 			}
-
-			var model = this.businessDocumentEntity.Lines[index-1];
 
 			var newQuantity = this.businessContext.CreateEntity<ArticleQuantityEntity> ();
 			newQuantity.Quantity = 1;
@@ -124,17 +124,24 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			//	Crée une nouvelle ligne de texte ou de titre.
 			int index;
+			AbstractDocumentItemEntity model;
 
 			if (selection.Count == 0)
 			{
-				index = this.GetDefaultArticleInsertionIndex ();
+				if (isTitle)
+				{
+					index = this.GetDefaultTitleInsertionIndex (out model);
+				}
+				else
+				{
+					index = this.GetDefaultArticleInsertionIndex (out model);
+				}
 			}
 			else
 			{
 				index = this.businessDocumentEntity.Lines.IndexOf (selection.Last ().AbstractDocumentItemEntity) + 1;
+				model = this.businessDocumentEntity.Lines[index-1];
 			}
-
-			var model = this.businessDocumentEntity.Lines[index-1];
 
 			var newLine = this.businessContext.CreateEntity<TextDocumentItemEntity> ();
 
@@ -756,7 +763,29 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		#endregion
 
 
-		private int GetDefaultArticleInsertionIndex()
+		private int GetDefaultTitleInsertionIndex(out AbstractDocumentItemEntity model)
+		{
+			int i = this.GetDefaultArticleInsertionIndex (out model);
+
+			if (i == 0)
+			{
+				return 0;
+			}
+
+			i--;
+			var g = this.businessDocumentEntity.Lines[i].GroupIndex;
+
+			while (i >= 0 && g == this.businessDocumentEntity.Lines[i].GroupIndex)
+			{
+				i--;
+			}
+
+			i++;
+			model = this.businessDocumentEntity.Lines[i];
+			return i;
+		}
+
+		private int GetDefaultArticleInsertionIndex(out AbstractDocumentItemEntity model)
 		{
 			for (int i = this.businessDocumentEntity.Lines.Count-1; i >= 0; i--)
 			{
@@ -765,12 +794,15 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				if (line is ArticleDocumentItemEntity ||
 					line is TextDocumentItemEntity)
 				{
+					model = this.businessDocumentEntity.Lines[i];
 					return i+1;
 				}
 			}
 
+			model = this.businessDocumentEntity.Lines[0];
 			return 0;
 		}
+
 
 		private ArticleQuantityColumnEntity SearchArticleQuantityColumnEntity(ArticleQuantityType type)
 		{
