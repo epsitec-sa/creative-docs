@@ -33,17 +33,59 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		protected override void CreateUI(UIBuilder builder)
 		{
-			var box = new FrameBox
+			var leftFrame = new FrameBox
 			{
 				Parent = this.tileContainer,
 				Dock = DockStyle.Fill,
 				Padding = new Margins (10),
+				TabIndex = this.NextTabIndex,
 			};
 
+			var rightFrame = new FrameBox
+			{
+				Parent = this.tileContainer,
+				Dock = DockStyle.Right,
+				PreferredWidth = 300,
+				Padding = new Margins (10),
+				TabIndex = this.NextTabIndex,
+			};
+
+			var separator = new Separator
+			{
+				IsVerticalLine = true,
+				PreferredWidth = 1,
+				Parent = this.tileContainer,
+				Dock = DockStyle.Right,
+			};
+
+			//	Partie gauche.
 			var textField = builder.CreateTextFieldMulti (null, DockStyle.None, 0, Marshaler.Create (() => this.SimpleText, x => this.SimpleText = x));
-			this.PlaceLabelAndField (box, 50, 400, this.TitleTile, textField);
+			this.PlaceLabelAndField (leftFrame, 50, 0, this.TitleTile, textField);
 
 			this.firstFocusedWidget = textField;
+
+			//	Partie droite.
+			bool myEyesOnly = this.Entity.Attributes.HasFlag (DocumentItemAttributes.MyEyesOnly);
+
+			var check = new CheckButton
+			{
+				Text = "Uniquement sur les documents internes",
+				ActiveState = myEyesOnly ? ActiveState.Yes : ActiveState.No,
+				Parent = rightFrame,
+				Dock = DockStyle.Top,
+			};
+
+			check.ActiveStateChanged += delegate
+			{
+				if (check.ActiveState == ActiveState.Yes)
+				{
+					this.Entity.Attributes = DocumentItemAttributes.MyEyesOnly;
+				}
+				else
+				{
+					this.Entity.Attributes = DocumentItemAttributes.None;
+				}
+			};
 		}
 
 		public override FormattedText TitleTile

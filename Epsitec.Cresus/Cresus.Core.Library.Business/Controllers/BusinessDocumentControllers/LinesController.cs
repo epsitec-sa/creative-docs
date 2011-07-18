@@ -510,7 +510,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					return "Date";
 
 				case ColumnType.ArticleId:
-					return "Article";
+					return "N° d'article";
 
 				case ColumnType.ArticleDescription:
 					return (this.editMode == EditMode.Name) ? "Désignation courte" : "Désignation longue";
