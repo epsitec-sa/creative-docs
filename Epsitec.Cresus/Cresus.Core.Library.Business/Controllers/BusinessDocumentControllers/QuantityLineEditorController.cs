@@ -63,6 +63,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			var quantityField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.Quantity, x => this.Entity.Quantity = x));
 			this.PlaceLabelAndField (line1, 55, 80, "Quantité", quantityField);
 
+			this.firstFocusedWidget = quantityField;
+
 			//	Unité.
 			var unitController = new SelectionController<UnitOfMeasureEntity> (this.accessData.BusinessContext)
 			{

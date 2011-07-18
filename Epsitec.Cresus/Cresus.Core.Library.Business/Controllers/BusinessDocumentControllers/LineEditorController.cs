@@ -119,6 +119,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					this.lineEditorController = new EndTotalLineEditorController (this.accessData);
 					this.lineEditorController.CreateUI (this.editorTile, info.AbstractDocumentItemEntity);
 				}
+
+				if (this.lineEditorController != null)
+				{
+					this.lineEditorController.SetInitialFocus ();
+				}
 			}
 
 			this.UpdateTitle ();

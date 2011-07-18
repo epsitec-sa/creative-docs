@@ -220,7 +220,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private void InitialiseForDeepNext()
 		{
-			//	Initialise les propriétés Parent de tous les noeuds et feuilles de l'arbre.
+			//	Initialise les propriétés Parent et Deep de tous les noeuds et feuilles de l'arbre.
 			//	Cela est indispensable avant de pouvoir utiliser DeepNext.
 			this.root.Deep = 0;
 			TreeEngine.InitialiseForDeepNext (this.root);

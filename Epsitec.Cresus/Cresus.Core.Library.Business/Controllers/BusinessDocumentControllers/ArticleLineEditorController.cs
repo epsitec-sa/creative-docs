@@ -107,6 +107,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				var articleField = builder.CreateCompactAutoCompleteTextField (null, "", articleController);
 				this.PlaceLabelAndField (line, labelWidth, 0, "Article", articleField.Parent);
+
+				this.firstFocusedWidget = articleField;
 			}
 
 			//	Choix des paramètres.

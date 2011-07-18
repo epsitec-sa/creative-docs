@@ -90,6 +90,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				var field = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.DiscountValue, x => this.DiscountValue = x));
 				this.PlaceLabelAndField (line1, 200, 100, "Rabais en % ou en francs", field);
+
+				this.firstFocusedWidget = field;
 			}
 
 			//	Textes.

@@ -60,6 +60,20 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
+		public void SetInitialFocus()
+		{
+			if (this.firstFocusedWidget != null)
+			{
+				this.firstFocusedWidget.Focus ();
+
+				if (this.firstFocusedWidget is AbstractTextField)
+				{
+					var textField = this.firstFocusedWidget as AbstractTextField;
+					textField.SelectAll ();
+				}
+			}
+		}
+
 
 		protected FrameBox PlaceLabelAndField(Widget parent, int labelWidth, int fieldWidth, FormattedText labelText, Widget field)
 		{
@@ -125,6 +139,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		protected AbstractEntity						entity;
 		protected TileContainer							tileContainer;
+		protected Widget								firstFocusedWidget;
 		private int										tabIndex;
 	}
 }

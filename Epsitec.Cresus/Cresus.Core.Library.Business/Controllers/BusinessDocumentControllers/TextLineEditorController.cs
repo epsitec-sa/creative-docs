@@ -42,6 +42,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			var textField = builder.CreateTextFieldMulti (null, DockStyle.None, 0, Marshaler.Create (() => this.SimpleText, x => this.SimpleText = x));
 			this.PlaceLabelAndField (box, 50, 400, this.TitleTile, textField);
+
+			this.firstFocusedWidget = textField;
 		}
 
 		public override FormattedText TitleTile
