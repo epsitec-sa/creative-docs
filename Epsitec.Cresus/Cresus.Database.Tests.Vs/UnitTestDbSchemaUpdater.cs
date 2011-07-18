@@ -743,6 +743,68 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 
 		[TestMethod]
+		public void AlterTableCommentTest()
+		{
+			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table1 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2, DbElementCat.ManagedUserData);
+				DbTable table2 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2, DbElementCat.ManagedUserData);
+
+				table1.Comment = "old comment";
+				table2.Comment = "new comment";
+
+				dbInfrastructure1.AddTable (table1);
+				dbInfrastructure1.ClearCaches ();
+				dbInfrastructure2.ClearCaches ();
+
+				List<DbTable> tables = new List<DbTable> ()
+				{
+					table2,
+				};
+
+				DbSchemaUpdater.UpdateSchema (dbInfrastructure2, tables);
+
+				Assert.IsTrue (DbSchemaChecker.CheckSchema (dbInfrastructure1, tables));
+				Assert.IsTrue (DbSchemaChecker.CheckSchema (dbInfrastructure2, tables));
+			}
+
+			this.CheckCoreAndServiceTables ();
+		}
+
+
+		[TestMethod]
+		public void AlterColumnCommentTest()
+		{
+			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table1 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2, DbElementCat.ManagedUserData);
+				DbTable table2 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2, DbElementCat.ManagedUserData);
+
+				table1.Columns["myNewColumn1"].Comment = "old comment";
+				table2.Columns["myNewColumn1"].Comment = "new comment";
+
+				dbInfrastructure1.AddTable (table1);
+				dbInfrastructure1.ClearCaches ();
+				dbInfrastructure2.ClearCaches ();
+
+				List<DbTable> tables = new List<DbTable> ()
+				{
+					table2,
+				};
+
+				DbSchemaUpdater.UpdateSchema (dbInfrastructure2, tables);
+
+				Assert.IsTrue (DbSchemaChecker.CheckSchema (dbInfrastructure1, tables));
+				Assert.IsTrue (DbSchemaChecker.CheckSchema (dbInfrastructure2, tables));
+			}
+
+			this.CheckCoreAndServiceTables ();
+		}
+
+
+		[TestMethod]
 		public void ComplexTest()
 		{
 			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())

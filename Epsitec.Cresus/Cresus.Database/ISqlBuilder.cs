@@ -153,6 +153,8 @@ namespace Epsitec.Cresus.Database
 		/// <param name="index">The index to create.</param>
 		void CreateIndex(string tableName, SqlIndex index);
 
+		void SetTableComment(string tableName, string comment);
+
 		/// <summary>
 		/// Resets an index, that is, does whatever it takes to clean it in order to make it more
 		/// efficient.

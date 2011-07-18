@@ -863,6 +863,15 @@ namespace Epsitec.Cresus.Database
 			this.RemoveFromCache (internalTable);
 		}
 
+		public void SetTableComment(DbTransaction transaction, DbTable table, string comment)
+		{
+			DbTable internalTable = this.ResolveDbTable (transaction, table.Name);
+
+			this.SetTableCommentInternal (transaction, internalTable, comment);
+
+			this.RemoveFromCache (internalTable);
+		}
+
 		private void CheckUnexistingIndex(DbTable table, DbIndex index)
 		{
 			// TODO Implement this method.
@@ -874,7 +883,6 @@ namespace Epsitec.Cresus.Database
 			// TODO Implement this method.
 			// Marc
 		}
-
 
 		public void SetColumnAutoIncrementValue(DbTable table, DbColumn column, long value)
 		{
@@ -1100,6 +1108,14 @@ namespace Epsitec.Cresus.Database
 			this.DropIndex (transaction, sqlIndex);
 		}
 
+		private void SetTableCommentInternal(DbTransaction transaction, DbTable table, string comment)
+		{
+			table.Comment = comment;
+
+			this.UpdateTableDefRow (transaction, table);
+			this.SetTableComment (transaction, table);
+		}
+
 		private void RegisterTable(DbTransaction transaction, DbTable table)
 		{
 			table.UpdatePrimaryKeyInfo ();
@@ -1304,6 +1320,15 @@ namespace Epsitec.Cresus.Database
 			string newColumnName = columnWithNewName.GetSqlName ();
 
 			transaction.SqlBuilder.RenameTableColumn (tableName, oldColumnName, newColumnName);
+			this.ExecuteSilent (transaction);
+		}
+
+		private void SetTableComment(DbTransaction transaction, DbTable table)
+		{
+			string tableName = table.GetSqlName ();
+			string comment = table.Comment;
+
+			transaction.SqlBuilder.SetTableComment (tableName, comment);
 			this.ExecuteSilent (transaction);
 		}
 

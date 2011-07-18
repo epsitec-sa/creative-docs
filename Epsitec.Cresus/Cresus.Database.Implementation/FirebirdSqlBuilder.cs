@@ -222,33 +222,46 @@ namespace Epsitec.Cresus.Database.Implementation
 
 			if (!string.IsNullOrEmpty (table.Comment))
 			{
-				this.commandCount++;
-
-				string escapedComment = table.Comment.Replace ("'", "''");
-
-				string query = string.Format ("COMMENT ON TABLE {0} IS '{1}';\n", table.Name, escapedComment);
-
-				this.Append (query);
+				this.BuildSetTableCommentSqlCommand (table.Name, table.Comment);
 			}
 
 			foreach (SqlColumn column in table.Columns)
 			{
-				this.BuildSetColumnCommentSqlCommand (table.Name, column);
+				if (!string.IsNullOrEmpty (column.Comment))
+				{
+					this.BuildSetColumnCommentSqlCommand (table.Name, column.Name, column.Comment);
+				}
 			}
 		}
 
-		private void BuildSetColumnCommentSqlCommand(string tableName, SqlColumn column)
+		public void SetTableComment(string tableName, string comment)
 		{
-			if (!string.IsNullOrEmpty (column.Comment))
-			{
-				this.commandCount++;
+			this.PrepareCommand ();
 
-				string escapedComment = column.Comment.Replace ("'", "''");
+			this.commandType = DbCommandType.Silent;
 
-				string query = string.Format ("COMMENT ON COLUMN {0}.{1} IS '{2}';\n", tableName, column.Name, escapedComment);
+			this.BuildSetTableCommentSqlCommand (tableName, comment);
+		}
 
-				this.Append (query);
-			}
+		private void BuildSetTableCommentSqlCommand(string tableName, string comment)
+		{
+			this.BuildSetCommentSqlCommand ("TABLE", tableName, comment);
+		}
+
+		private void BuildSetColumnCommentSqlCommand(string tableName, string columnName, string comment)
+		{
+			this.BuildSetCommentSqlCommand ("COLUMN", tableName + "." + columnName, comment);
+		}
+
+		private void BuildSetCommentSqlCommand(string objectType, string objectName, string comment)
+		{
+			this.commandCount++;
+
+			string escapedComment = comment.Replace ("'", "''");
+
+			string query = "COMMENT ON " + objectType + " " + objectName + " IS '" + escapedComment + "';\n";
+
+			this.Append (query);
 		}
 
 		public void RemoveTable(SqlTable table)
@@ -298,7 +311,10 @@ namespace Epsitec.Cresus.Database.Implementation
 				this.Append (this.GetSqlColumnAttributes (column));
 				this.Append (";\n");
 
-				this.BuildSetColumnCommentSqlCommand (tableName, column);
+				if (!string.IsNullOrEmpty (column.Comment))
+				{
+					this.BuildSetColumnCommentSqlCommand (tableName, column.Name, column.Comment);
+				}
 			}
 		}
 

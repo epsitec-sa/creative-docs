@@ -17,8 +17,8 @@ namespace Epsitec.Cresus.Database
 	public static class DbSchemaUpdater
 	{
 
-
-		public static void UpdateSchema(DbInfrastructure dbInfrastructure, IEnumerable<DbTable> newSchema)
+        
+        public static void UpdateSchema(DbInfrastructure dbInfrastructure, IEnumerable<DbTable> newSchema)
 		{
 			// TODO We could have problems here if in the tables, there are two types that share the
 			// same name but have different values. Only one will be used. Should we check for that
@@ -50,6 +50,7 @@ namespace Epsitec.Cresus.Database
 			List<System.Tuple<DbColumn, DbColumn>> dbColumnsToAlter;
 			List<DbColumn> dbColumnsToRemove;
 
+			List<System.Tuple<DbTable, DbTable>> dbTablesWithInvalidDefinitionDifference;
 			List<System.Tuple<DbColumn, DbColumn>> dbColumnsWithInvalidAlterations;
 
 
@@ -80,6 +81,7 @@ namespace Epsitec.Cresus.Database
 				dbColumnsToAlter = DbSchemaUpdater.GetDbColumnsToAlter (dbTablesWithColumnDifference).ToList ();
 				dbColumnsToRemove = DbSchemaUpdater.GetDbColumnsToRemove (dbTablesWithColumnDifference).ToList ();
 
+				dbTablesWithInvalidDefinitionDifference = DbSchemaUpdater.GetDbTablesWithInvalidDefinitionDifference (dbTablesWithDefititionDifference).ToList ();
 				dbColumnsWithInvalidAlterations = DbSchemaUpdater.GetDbColumnsWithInvalidDifference (dbColumnsToAlter).ToList ();
 			}
 
@@ -88,7 +90,7 @@ namespace Epsitec.Cresus.Database
 				throw new System.InvalidOperationException ("Cannot alter a type definition");
 			}
 
-			if (dbTablesWithDefititionDifference.Any ())
+			if (dbTablesWithInvalidDefinitionDifference.Any ())
 			{
 				throw new System.InvalidOperationException ("Cannot alter a table definition");
 			}
@@ -111,6 +113,8 @@ namespace Epsitec.Cresus.Database
 				DbSchemaUpdater.RemoveOldIndexes (dbInfrastructure, dbTransaction, dbIndexesToRemove);
 
 				DbSchemaUpdater.AlterIndexes (dbInfrastructure, dbTransaction, dbIndexesToAlter);
+
+				DbSchemaUpdater.AlterTableDefinitions (dbInfrastructure, dbTransaction, dbTablesWithDefititionDifference);
 
 				DbSchemaUpdater.AddNewIndexes (dbInfrastructure, dbTransaction, dbIndexesToAdd);
 
@@ -328,6 +332,32 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		private static IEnumerable<System.Tuple<DbTable, DbTable>> GetDbTablesWithInvalidDefinitionDifference(IList<System.Tuple<DbTable, DbTable>> tables)
+		{
+			return from item in tables
+				   let a = item.Item1
+				   let b = item.Item2
+				   where DbSchemaUpdater.IsDbTableDefinitionDifferenceInvalid (a, b)
+				   select item;
+		}
+
+
+		private static bool IsDbTableDefinitionDifferenceInvalid(DbTable a, DbTable b)
+		{
+			bool valid = a.CaptionId == b.CaptionId
+				&& string.Equals (a.Name, b.Name)
+				&& a.Category == b.Category;
+
+			if (valid && a.Category == DbElementCat.Relation)
+			{
+				valid = string.Equals (a.RelationSourceTableName, b.RelationSourceTableName)
+			            && string.Equals (a.RelationTargetTableName, b.RelationTargetTableName);
+			}
+
+			return !valid;
+		}
+
+
 		private static IEnumerable<System.Tuple<DbColumn, DbColumn>> GetDbColumnsWithInvalidDifference(IList<System.Tuple<DbColumn, DbColumn>> columns)
 		{
 			return from item in columns
@@ -335,7 +365,6 @@ namespace Epsitec.Cresus.Database
 				   let b = item.Item2
 				   where a.CaptionId != b.CaptionId
 					|| !string.Equals (a.Name, b.Name)
-//-					|| !string.Equals (a.Comment, b.Comment) ### HACK
 					|| !((a.Table == null && b.Table == null) || (string.Equals (a.Table.Name, b.Table.Name) && a.Table.CaptionId == b.Table.CaptionId))
 					|| !string.Equals (a.TargetTableName, b.TargetTableName)
 					|| !string.Equals (a.TargetColumnName, b.TargetColumnName)
@@ -547,6 +576,18 @@ namespace Epsitec.Cresus.Database
 				DbIndex index = item.Item2;
 
 				dbInfrastructure.RemoveIndexFromTable (dbTransaction, table, index);
+			}
+		}
+
+
+		private static void AlterTableDefinitions(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, List<System.Tuple<DbTable, DbTable>> dbTablesWithDefititionDifference)
+		{
+			foreach (var item in dbTablesWithDefititionDifference)
+			{
+				DbTable table = item.Item2;
+				string comment = table.Comment;
+
+				dbInfrastructure.SetTableComment (dbTransaction, table, comment);
 			}
 		}
 
