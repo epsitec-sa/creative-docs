@@ -48,6 +48,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Widgets.Command EditDescription = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 22));
 				//	designer:cap/GVKL
 				public static readonly global::Epsitec.Common.Widgets.Command EditName = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 21));
+				//	designer:cap/GVKO
+				public static readonly global::Epsitec.Common.Widgets.Command Flat = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 24));
 				//	designer:cap/GVK9
 				public static readonly global::Epsitec.Common.Widgets.Command Group = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 9));
 				//	designer:cap/GVKF
@@ -105,6 +107,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public const long EditDescription = 0x3F000014000016L;
 				//	designer:cap/GVKL
 				public const long EditName = 0x3F000014000015L;
+				//	designer:cap/GVKO
+				public const long Flat = 0x3F000014000018L;
 				//	designer:cap/GVK9
 				public const long Group = 0x3F000014000009L;
 				//	designer:cap/GVKF

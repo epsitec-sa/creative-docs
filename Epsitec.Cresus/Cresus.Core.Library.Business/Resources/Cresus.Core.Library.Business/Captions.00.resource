@@ -243,4 +243,5 @@
   <data name="Val.Decimal.ArticleDocumentItemAttributes.ArticlePricesFrozen" id="AF7">&lt;s:data id="_0" f:Name="ArticlePricesFrozen" f:Labels="{Collection {Text 'Prix gelés'}}" /&gt;</data>
   <data name="Val.Decimal.ArticleDocumentItemAttributes.DirtyArticleNotDiscountable" id="AG7">&lt;s:data id="_0" f:Name="DirtyArticleNotDiscountable" f:Labels="{Collection {Text 'Article sans rabais à rafraîchir'}}" /&gt;</data>
   <data name="Val.Decimal.ArticleDocumentItemAttributes.FixedPriceIncludesTaxes" id="AH7">&lt;s:data id="_0" f:Name="FixedPriceIncludesTaxes" f:Labels="{Collection {Text 'Prix imposé TTC'}}" /&gt;</data>
+  <data name="Cmd.Lines.Flat" id="KO">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Lines.Flat" f:Description="Remet toutes les lignes à plat" f:Icon="manifest:Epsitec.Cresus.Core.Images.Lines.Flat.icon" f:_1.Statefull="False" f:_1.DefaultParameter="CommandDefaultEnableMode=Disabled" f:Labels="{Collection {Text 'Plat'}}" /&gt;</data>
 </bundle>

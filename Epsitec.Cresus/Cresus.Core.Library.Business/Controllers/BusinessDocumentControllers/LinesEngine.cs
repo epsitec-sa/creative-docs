@@ -589,6 +589,33 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.Regenerate (tree);
 		}
 
+		public void MakeFlat(List<LineInformations> selection)
+		{
+			//	Remet à plat toutes les lignes.
+			bool make = false;
+
+			using (this.businessContext.SuspendUpdates ())
+			{
+				foreach (var line in this.businessDocumentEntity.Lines)
+				{
+					if (line.GroupIndex > 1)
+					{
+						line.GroupIndex = 1;
+						make = true;
+					}
+				}
+			}
+
+			if (make)
+			{
+				this.lastError = LinesError.OK;
+			}
+			else
+			{
+				this.lastError = LinesError.AlreadyFlat;
+			}
+		}
+
 
 		private void Regenerate(TreeEngine tree)
 		{
@@ -659,6 +686,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				case LinesError.AlreadyCombined:
 					return "La ligne est déjà soudée à la précédente.";
+
+				case LinesError.AlreadyFlat:
+					return "Les lignes sont déjà à plat.";
 
 				case LinesError.Overflow:
 					return "Il y a plus de 99 groupes successifs.";
