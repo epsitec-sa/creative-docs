@@ -772,33 +772,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			return rootEntity;
 		}
 
-		private bool IsCoherentSelection(List<LineInformations> selection)
-		{
-			//	Retourne true si toutes les lignes sélectionnées font partie du même groupe.
-			if (selection.Count == 0)
-			{
-				return false;
-			}
-
-			var groupIndex = -1;
-			foreach (var info in selection)
-			{
-				if (groupIndex == -1)
-				{
-					groupIndex = info.AbstractDocumentItemEntity.GroupIndex;
-				}
-				else
-				{
-					if (groupIndex != info.AbstractDocumentItemEntity.GroupIndex)
-					{
-						return false;
-					}
-				}
-			}
-
-			return true;
-		}
-
 		public bool IsCreateQuantityEnabled(List<LineInformations> selection)
 		{
 			this.CreateQuantity (selection, ArticleQuantityType.Delayed, 7, simulation: true);

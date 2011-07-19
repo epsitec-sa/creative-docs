@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		protected override void CreateUI(UIBuilder builder)
 		{
-			var box = new FrameBox
+			var leftFrame = new FrameBox
 			{
 				Parent = this.tileContainer,
 				Dock = DockStyle.Fill,
@@ -41,55 +41,78 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				TabIndex = this.NextTabIndex,
 			};
 
-			var line1 = new FrameBox
+			var rightFrame = new FrameBox
 			{
-				Parent = box,
-				Dock = DockStyle.Top,
-				PreferredHeight = 20,
-				Margins = new Margins (0, 0, 0, 5),
+				Parent = this.tileContainer,
+				Dock = DockStyle.Right,
+				PreferredWidth = 360,
+				Padding = new Margins (10),
 				TabIndex = this.NextTabIndex,
 			};
 
-			var line2 = new FrameBox
+			var separator = new Separator
 			{
-				Parent = box,
-				Dock = DockStyle.Top,
-				PreferredHeight = 20,
-				Margins = new Margins (0, 0, 0, 5),
-				TabIndex = this.NextTabIndex,
+				IsVerticalLine = true,
+				PreferredWidth = 1,
+				Parent = this.tileContainer,
+				Dock = DockStyle.Right,
 			};
 
-			//	Quantité.
-			var quantityField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.Quantity, x => this.Entity.Quantity = x));
-			this.PlaceLabelAndField (line1, 55, 80, "Quantité", quantityField);
-
-			this.firstFocusedWidget = quantityField;
-
-			//	Unité.
-			var unitController = new SelectionController<UnitOfMeasureEntity> (this.accessData.BusinessContext)
+			//	Première ligne.
 			{
-				ValueGetter         = () => this.Entity.Unit,
-				ValueSetter         = x => this.Entity.Unit = x,
-				ReferenceController = new ReferenceController (() => this.Entity.Unit),
-			};
+				var line = new FrameBox
+				{
+					Parent = rightFrame,
+					Dock = DockStyle.Top,
+					PreferredHeight = 20,
+					Margins = new Margins (0, 0, 0, 20),
+					TabIndex = this.NextTabIndex,
+				};
 
-			var unitField = builder.CreateCompactAutoCompleteTextField (null, "", unitController);
-			this.PlaceLabelAndField (line1, 35, 80, "Unité", unitField.Parent);
+				//	Quantité.
+				var quantityField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.Quantity, x => this.Entity.Quantity = x));
+				this.PlaceLabelAndField (line, 50, 80, "Quantité", quantityField);
 
-			//	Type.
-			var typeController = new SelectionController<ArticleQuantityColumnEntity> (this.accessData.BusinessContext)
+				this.firstFocusedWidget = quantityField;
+
+				//	Unité.
+				var unitController = new SelectionController<UnitOfMeasureEntity> (this.accessData.BusinessContext)
+				{
+					ValueGetter         = () => this.Entity.Unit,
+					ValueSetter         = x => this.Entity.Unit = x,
+					ReferenceController = new ReferenceController (() => this.Entity.Unit),
+				};
+
+				var unitField = builder.CreateCompactAutoCompleteTextField (null, "", unitController);
+				this.PlaceLabelAndField (line, 35, 80, "Unité", unitField.Parent);
+			}
+
+			//	Deuxième ligne.
 			{
-				ValueGetter         = () => this.Entity.QuantityColumn,
-				ValueSetter         = x => this.Entity.QuantityColumn = x,
-				ReferenceController = new ReferenceController (() => this.Entity.QuantityColumn),
-			};
+				var line = new FrameBox
+				{
+					Parent = rightFrame,
+					Dock = DockStyle.Top,
+					PreferredHeight = 20,
+					Margins = new Margins (0, 0, 0, 20),
+					TabIndex = this.NextTabIndex,
+				};
 
-			var typeField = builder.CreateCompactAutoCompleteTextField (null, "", typeController);
-			this.PlaceLabelAndField (line1, 65, 100, "Type", typeField.Parent);
+				//	Type.
+				var typeController = new SelectionController<ArticleQuantityColumnEntity> (this.accessData.BusinessContext)
+				{
+					ValueGetter         = () => this.Entity.QuantityColumn,
+					ValueSetter         = x => this.Entity.QuantityColumn = x,
+					ReferenceController = new ReferenceController (() => this.Entity.QuantityColumn),
+				};
 
-			//	Date.
-			var dateField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.BeginDate, x => this.Entity.BeginDate = x));
-			this.PlaceLabelAndField (line1, 35, 100, "Date", dateField);
+				var typeField = builder.CreateCompactAutoCompleteTextField (null, "", typeController);
+				this.PlaceLabelAndField (line, 50, 80, "Type", typeField.Parent);
+
+				//	Date.
+				var dateField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.BeginDate, x => this.Entity.BeginDate = x));
+				this.PlaceLabelAndField (line, 35, 100, "Date", dateField);
+			}
 		}
 
 		public override FormattedText TitleTile
