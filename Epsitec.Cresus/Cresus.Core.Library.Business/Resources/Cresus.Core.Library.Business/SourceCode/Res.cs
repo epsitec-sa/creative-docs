@@ -30,8 +30,6 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Widgets.Command CreateDiscount = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 2));
 				//	designer:cap/GVK3
 				public static readonly global::Epsitec.Common.Widgets.Command CreateGroup = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 3));
-				//	designer:cap/GVKC
-				public static readonly global::Epsitec.Common.Widgets.Command CreateGroupSeparator = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 12));
 				//	designer:cap/GVKD
 				public static readonly global::Epsitec.Common.Widgets.Command CreateQuantity = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 13));
 				//	designer:cap/GVK4
@@ -42,6 +40,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Widgets.Command CreateTitle = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 6));
 				//	designer:cap/GVK7
 				public static readonly global::Epsitec.Common.Widgets.Command Delete = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 7));
+				//	designer:cap/GVKP
+				public static readonly global::Epsitec.Common.Widgets.Command Deselect = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 25));
 				//	designer:cap/GVK8
 				public static readonly global::Epsitec.Common.Widgets.Command Duplicate = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 8));
 				//	designer:cap/GVKM
@@ -89,8 +89,6 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public const long CreateDiscount = 0x3F000014000002L;
 				//	designer:cap/GVK3
 				public const long CreateGroup = 0x3F000014000003L;
-				//	designer:cap/GVKC
-				public const long CreateGroupSeparator = 0x3F00001400000CL;
 				//	designer:cap/GVKD
 				public const long CreateQuantity = 0x3F00001400000DL;
 				//	designer:cap/GVK4
@@ -101,6 +99,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public const long CreateTitle = 0x3F000014000006L;
 				//	designer:cap/GVK7
 				public const long Delete = 0x3F000014000007L;
+				//	designer:cap/GVKP
+				public const long Deselect = 0x3F000014000019L;
 				//	designer:cap/GVK8
 				public const long Duplicate = 0x3F000014000008L;
 				//	designer:cap/GVKM

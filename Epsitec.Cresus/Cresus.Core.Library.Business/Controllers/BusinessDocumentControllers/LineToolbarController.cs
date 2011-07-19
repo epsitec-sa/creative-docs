@@ -41,6 +41,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			toolbar.Dock = DockStyle.Top;
 			toolbar.Margins = new Margins (0, 0, 0, -1);
 
+			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Deselect,        large: false, isActivable: false));
+			toolbar.Children.Add (this.CreateSeparator ());
 			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.ViewCompact,     large: false, isActivable: true));
 			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.ViewDefault,     large: false, isActivable: true));
 			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.ViewFull,        large: false, isActivable: true));

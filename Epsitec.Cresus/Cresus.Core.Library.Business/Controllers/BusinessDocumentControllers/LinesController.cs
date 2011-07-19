@@ -101,6 +101,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
+		public void Deselect()
+		{
+			this.Selection = null;
+		}
+
+
 		public bool HasSelection
 		{
 			get
@@ -129,16 +135,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				var selection = this.Selection;
-
-				if (selection.Count == 0)
-				{
-					return null;
-				}
-				else
-				{
-					return selection.Last ();
-				}
+				return this.Selection.LastOrDefault ();
 			}
 		}
 
@@ -167,7 +164,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				for (int row = 0; row < this.table.Rows; row++)
 				{
-					bool newSel = value.Contains (row);
+					bool newSel = (value == null) ? false : value.Contains (row);
 					bool oldSel = this.table.IsCellSelected (row, 0);
 
 					if (newSel)

@@ -186,16 +186,42 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public List<LineInformations> CreateGroup(List<LineInformations> selection)
 		{
-			//	Insère un nouveau groupe.
-			this.lastError = LinesError.InvalidSelection;
-			return null;
-		}
+			//	Insère un nouveau groupe contenant un titre.
+			int index;
 
-		public List<LineInformations> CreateGroupSeparator(List<LineInformations> selection)
-		{
-			//	Insère un nouveau groupe après le groupe en cours (donc au même niveau).
-			this.lastError = LinesError.InvalidSelection;
-			return null;
+			if (selection.Count == 0)
+			{
+				AbstractDocumentItemEntity model;
+				index = this.GetDefaultArticleInsertionIndex (out model);
+			}
+			else
+			{
+				index = this.businessDocumentEntity.Lines.IndexOf (selection.Last ().AbstractDocumentItemEntity) + 1;
+			}
+
+			var line = this.businessDocumentEntity.Lines[index];
+
+			//	Crée l'arbre à partie des lignes du document.
+			var tree = new TreeEngine (this.businessDocumentEntity);
+
+			//	Crée le nouveau noeud qui contiendra le titre.
+			var group = new TreeNode ();
+
+			var leaf = tree.Search (line);
+			var parent = leaf.Parent;
+			index = parent.Childrens.IndexOf (leaf);
+			parent.Childrens.Insert (index, group);  // insère le groupe à sa place
+
+			//	Crée le titre.
+			var title = this.businessContext.CreateEntity<TextDocumentItemEntity> ();
+			title.Text = string.Concat (LinesEngine.titlePrefixTags, LinesEngine.titlePostfixTags);
+			group.Childrens.Add (new TreeNode (title));
+
+			//	Régénère toutes les lignes selon le nouvel arbre.
+			this.Regenerate (tree);
+
+			this.lastError = LinesError.OK;
+			return LinesEngine.MakeSingleSelection (new LineInformations (null, title, null, 0));
 		}
 
 

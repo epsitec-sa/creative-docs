@@ -53,10 +53,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public List<TreeNode> FlatLeafs
 		{
-			//	Retourne toute les feuilles mises à plat.
+			//	Retourne toutes les feuilles mises à plat.
 			get
 			{
 				var flat = new List<TreeNode> ();
+
+				this.InitialiseForDeepNext ();
 
 				var current = this.root;
 				while ((current = TreeEngine.DeepNext (current)) != null)

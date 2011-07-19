@@ -558,6 +558,7 @@
     <EmbeddedResource Include="Images\Lines.EditDescription.icon" />
     <EmbeddedResource Include="Images\Lines.EditName.icon" />
     <EmbeddedResource Include="Images\Lines.Flat.icon" />
+    <EmbeddedResource Include="Images\Lines.Deselect.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

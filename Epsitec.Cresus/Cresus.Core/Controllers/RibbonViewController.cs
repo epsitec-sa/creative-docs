@@ -520,17 +520,15 @@ namespace Epsitec.Cresus.Core.Controllers
 				PreferredWidth = Library.UI.Constants.ButtonLargeWidth * 1,
 			};
 
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateArticle,        isWithText: true));
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateQuantity,       isWithText: true));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateArticle,  isWithText: true));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateQuantity, isWithText: true));
 			section.Children.Add (this.CreateSeparator ());
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateText,           isWithText: true));
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateTitle,          isWithText: true));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateText,     isWithText: true));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateTitle,    isWithText: true));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateGroup,    isWithText: true));
 			section.Children.Add (this.CreateSeparator ());
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateDiscount,       isWithText: true));
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateTax,            isWithText: true));
-			section.Children.Add (this.CreateSeparator ());
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateGroup,          isWithText: true));
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateGroupSeparator, isWithText: true));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateDiscount, isWithText: true));
+			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateTax,      isWithText: true));
 		}
 
 		private void CreateRibbonBusinessOperSection(RibbonPage page)
@@ -545,6 +543,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.MoveUp,    isWithText: true));
 			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.MoveDown,  isWithText: true));
+			section.Children.Add (this.CreateSeparator ());
 			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Duplicate, isWithText: true));
 			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Delete,    isWithText: true));
 		}
@@ -561,8 +560,10 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Group,   isWithText: true));
 			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Ungroup, isWithText: true));
+			section.Children.Add (this.CreateSeparator ());
 			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Split,   isWithText: true));
 			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Combine, isWithText: true));
+			section.Children.Add (this.CreateSeparator ());
 			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Flat,    isWithText: true));
 		}
 		#endregion
