@@ -54,5 +54,15 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			get;
 			internal set;
 		}
+
+		public bool IsQuantity
+		{
+			get
+			{
+				return this.AbstractDocumentItemEntity is ArticleDocumentItemEntity &&
+					   this.ArticleQuantityEntity != null &&
+					   this.SublineIndex > 0;
+			}
+		}
 	}
 }

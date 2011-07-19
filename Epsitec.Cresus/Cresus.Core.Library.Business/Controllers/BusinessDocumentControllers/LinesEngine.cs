@@ -194,7 +194,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			//	Insère un nouveau groupe contenant un titre.
 			int index;
-
 			if (selection.Count == 0)
 			{
 				AbstractDocumentItemEntity model;
@@ -428,7 +427,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 					last = this.businessDocumentEntity.Lines.IndexOf (line);
 
-					if (line is ArticleDocumentItemEntity && quantity != null && info.SublineIndex > 0)  // quantité ?
+					if (info.IsQuantity)  // quantité ?
 					{
 						var article = line as ArticleDocumentItemEntity;
 						article.ArticleQuantities.Remove (quantity);
@@ -451,6 +450,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public void MakeGroup(List<LineInformations> selection, bool simulation = false)
 		{
 			//	Fait un groupe.
+			selection = LinesEngine.PurgeSelection (selection);
+
 			if (selection.Count == 0)
 			{
 				this.lastError = LinesError.EmptySelection;
@@ -502,6 +503,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public void MakeUngroup(List<LineInformations> selection, bool simulation = false)
 		{
 			//	Défait un groupe.
+			selection = LinesEngine.PurgeSelection (selection);
+
 			if (selection.Count == 0)
 			{
 				this.lastError = LinesError.EmptySelection;
@@ -700,7 +703,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		public bool IsCoherentSelection(List<LineInformations> selection)
+		private bool IsCoherentSelection(List<LineInformations> selection)
 		{
 			//	Retourne true si toutes les lignes sélectionnées font partie du même groupe.
 			if (selection.Count == 0)
@@ -844,7 +847,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 	
 		public FormattedText GetError(LinesError error)
 		{
-			//	Retourne le texte en clair correspondant à une erreur.
+			//	Retourne le texte en clair d'une erreur.
 			switch (error)
 			{
 				case LinesError.InvalidSelection:
@@ -889,7 +892,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		#region Title manager
+		#region Static title manager
 		public static FormattedText TitleToSimpleText(FormattedText text)
 		{
 			if (text.IsNullOrEmpty)
@@ -922,7 +925,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		#endregion
 
 
-		#region GroupIndex operations
+		#region Static GroupIndex operations
 		public static bool LevelCompare(int groupIndex1, int groupIndex2, int levelCount)
 		{
 			for (int i = 0; i < levelCount; i++)
@@ -1018,6 +1021,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			return AbstractDocumentItemEntity.GetGroupLevel (groupIndex);
 		}
 		#endregion
+
+
+		private static List<LineInformations> PurgeSelection(List<LineInformations> selection)
+		{
+			return selection.Where (x => !x.IsQuantity).ToList ();
+		}
 
 
 		private int GetDefaultTitleInsertionIndex(out AbstractDocumentItemEntity model)

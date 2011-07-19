@@ -595,7 +595,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			Color.FromHsv ( 80.0, 0.12, 1.0),
 			Color.FromHsv (288.0, 0.12, 1.0),
 #endif
-#if true
+#if false
 			//	Gris clairs en dégradés.
 			Color.FromBrightness (0.95),
 			Color.FromBrightness (0.90),
@@ -604,6 +604,17 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			Color.FromBrightness (0.85),
 			Color.FromBrightness (0.90),
 			Color.FromBrightness (0.95),
+			Color.FromBrightness (1.00),
+#endif
+#if true
+			//	Gris clairs en dégradés.
+			Color.FromBrightness (0.94),
+			Color.FromBrightness (0.89),
+			Color.FromBrightness (0.84),
+			Color.FromBrightness (0.80),
+			Color.FromBrightness (0.86),
+			Color.FromBrightness (0.91),
+			Color.FromBrightness (0.96),
 			Color.FromBrightness (1.00),
 #endif
 		};

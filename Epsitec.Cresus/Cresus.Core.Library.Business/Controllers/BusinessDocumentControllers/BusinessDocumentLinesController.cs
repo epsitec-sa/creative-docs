@@ -215,17 +215,25 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			//	Sélectionne toutes les lignes du groupe.
 			var selection = this.Selection;
+
 			if (selection.Count == 0)
 			{
 				return;
 			}
 
 			int groupIndex = selection[0].AbstractDocumentItemEntity.GroupIndex;
+			int level = LinesEngine.GetLevel (groupIndex);
+
+			if (level == 0)
+			{
+				return;
+			}
+
 			selection = new List<LineInformations> ();
 
 			foreach (var info in this.lineInformations)
 			{
-				if (info.AbstractDocumentItemEntity.GroupIndex == groupIndex)
+				if (LinesEngine.LevelCompare (groupIndex, info.AbstractDocumentItemEntity.GroupIndex, level))
 				{
 					selection.Add (info);
 				}
