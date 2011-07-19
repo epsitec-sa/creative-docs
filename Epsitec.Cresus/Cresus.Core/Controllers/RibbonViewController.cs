@@ -897,6 +897,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					CommandObject       = command,
 					PreferredIconSize   = new Size (iconWidth, iconWidth),
 					PreferredSize       = new Size (buttonWidth, buttonWidth+10),
+					MaxAdditionnalWidth = 20,	// après CommandObject et PreferredSize !
 					Dock                = dockStyle,
 					Name                = (command == null) ? null : command.Name,
 					VerticalAlignment   = VerticalAlignment.Top,

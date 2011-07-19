@@ -58,6 +58,40 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		public int MaxAdditionnalWidth
+		{
+			//	Largeur maximale autorisée, si le texte est trop grand.
+			//	C'est un peu du bricolage, dans la mesure où cette propriété doit être appelée
+			//	après avoir donné la commande (CommandObject, qui détermine le texte à afficher)
+			//	et après avoir donné la taille préférencielle (PreferredSize).
+			get
+			{
+				return this.maxAdditionnalWidth;
+			}
+			set
+			{
+				if (this.maxAdditionnalWidth != value)
+				{
+					this.maxAdditionnalWidth = value;
+					this.ComputeWidth ();
+					this.Invalidate ();
+				}
+			}
+		}
+
+		private void ComputeWidth()
+		{
+			this.textLayout.Text = this.CommandObject.Caption.DefaultLabel;
+			double hopeWidth = System.Math.Floor (this.textLayout.SingleLineSize.Width + 4);
+
+			if (hopeWidth >  this.PreferredSize.Width &&
+				hopeWidth <= this.PreferredSize.Width+this.maxAdditionnalWidth)
+			{
+				this.PreferredSize = new Drawing.Size (hopeWidth, this.PreferredSize.Height);
+			}
+		}
+
+
 		protected override double GetBaseLineVerticalOffset()
 		{
 			//	Remonte l'icône pour faire de la place au texte dessous.
@@ -110,5 +144,6 @@ namespace Epsitec.Common.Widgets
 
 
 		private TextLayout textLayout;
+		private int maxAdditionnalWidth;
 	}
 }
