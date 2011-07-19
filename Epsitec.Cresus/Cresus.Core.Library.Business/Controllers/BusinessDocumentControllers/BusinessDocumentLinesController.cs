@@ -206,7 +206,32 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		[Command (Library.Business.Res.CommandIds.Lines.Deselect)]
 		public void ProcessDeselect()
 		{
+			//	Désélectionne toutes les lignes.
 			this.linesController.Deselect ();
+		}
+
+		[Command (Library.Business.Res.CommandIds.Lines.GroupSelect)]
+		public void ProcessGroupSelect()
+		{
+			//	Sélectionne toutes les lignes du groupe.
+			var selection = this.Selection;
+			if (selection.Count == 0)
+			{
+				return;
+			}
+
+			int groupIndex = selection[0].AbstractDocumentItemEntity.GroupIndex;
+			selection = new List<LineInformations> ();
+
+			foreach (var info in this.lineInformations)
+			{
+				if (info.AbstractDocumentItemEntity.GroupIndex == groupIndex)
+				{
+					selection.Add (info);
+				}
+			}
+
+			this.Selection = selection;
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.ViewCompact)]
@@ -444,6 +469,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private void UpdateCommands()
 		{
+#if false
 			var selection     = this.linesController.Selection;
 			var lastSelection = this.linesController.LastSelection;
 			var isCoherentSelection = this.linesEngine.IsCoherentSelection (this.Selection);
@@ -479,6 +505,31 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Flat,           this.linesEngine.IsFlatEnabled);
 
 			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Deselect,       selection.Count != 0);
+#else
+			var selection = this.Selection;
+
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateArticle,  true);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateQuantity, this.linesEngine.IsCreateQuantityEnabled (selection));
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateText,     true);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateTitle,    true);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateGroup,    true);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateDiscount, true);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateTax,      true);
+
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.MoveUp,         this.linesEngine.IsMoveEnabled (selection, -1));
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.MoveDown,       this.linesEngine.IsMoveEnabled (selection, 1));
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Duplicate,      this.linesEngine.IsDuplicateEnabled (selection));
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Delete,         this.linesEngine.IsDeleteEnabled (selection));
+
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Group,          this.linesEngine.IsGroupEnabled (selection));
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Ungroup,        this.linesEngine.IsUngroupEnabled (selection));
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Split,          this.linesEngine.IsSplitEnabled (selection));
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Combine,        this.linesEngine.IsCombineEnabled (selection));
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Flat,           this.linesEngine.IsFlatEnabled);
+
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Deselect,       selection.Count != 0);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.GroupSelect,    selection.Count != 0);
+#endif
 		}
 
 

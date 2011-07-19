@@ -73,10 +73,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
-		public LinesError Regenerate()
+		public LinesError Regenerate(bool simulation = false)
 		{
 			//	Régénère la liste des lignes du document commercial.
-			var error = this.RegenerateAllGroupIndex ();
+			var error = this.RegenerateAllGroupIndex (simulation);
 
 			if (error != LinesError.OK)
 			{
@@ -84,18 +84,21 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			//	Refait toutes les lignes, pour tenir compte des permutations et déplacements effectués.
-			var flat = this.FlatLeafs;
-			this.businessDocumentEntity.Lines.Clear ();
-
-			foreach (var leaf in flat)
+			if (!simulation)
 			{
-				this.businessDocumentEntity.Lines.Add (leaf.Entity);
+				var flat = this.FlatLeafs;
+				this.businessDocumentEntity.Lines.Clear ();
+
+				foreach (var leaf in flat)
+				{
+					this.businessDocumentEntity.Lines.Add (leaf.Entity);
+				}
 			}
 
 			return LinesError.OK;
 		}
 
-		private LinesError RegenerateAllGroupIndex()
+		private LinesError RegenerateAllGroupIndex(bool simulation)
 		{
 			//	Régénère tous les GroupIndex des noeuds et des feuilles.
 			this.InitialiseForDeepNext ();
@@ -113,10 +116,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			//	Deuxième passe pour les feuilles, toujours OK.
-			current = this.root;
-			while ((current = TreeEngine.DeepNext (current)) != null)
+			if (!simulation)
 			{
-				TreeEngine.RegenerateGroupIndexStep2 (current);
+				current = this.root;
+				while ((current = TreeEngine.DeepNext (current)) != null)
+				{
+					TreeEngine.RegenerateGroupIndexStep2 (current);
+				}
 			}
 
 			return LinesError.OK;

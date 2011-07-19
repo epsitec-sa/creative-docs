@@ -52,6 +52,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Widgets.Command Flat = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 24));
 				//	designer:cap/GVK9
 				public static readonly global::Epsitec.Common.Widgets.Command Group = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 9));
+				//	designer:cap/GVKQ
+				public static readonly global::Epsitec.Common.Widgets.Command GroupSelect = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 26));
 				//	designer:cap/GVKF
 				public static readonly global::Epsitec.Common.Widgets.Command MoveDown = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 15));
 				//	designer:cap/GVKE
@@ -111,6 +113,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public const long Flat = 0x3F000014000018L;
 				//	designer:cap/GVK9
 				public const long Group = 0x3F000014000009L;
+				//	designer:cap/GVKQ
+				public const long GroupSelect = 0x3F00001400001AL;
 				//	designer:cap/GVKF
 				public const long MoveDown = 0x3F00001400000FL;
 				//	designer:cap/GVKE

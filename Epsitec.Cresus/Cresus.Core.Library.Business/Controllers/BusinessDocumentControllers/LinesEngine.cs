@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			return LinesEngine.MakeSingleSelection (new LineInformations (null, newLine, null, 0));
 		}
 
-		public List<LineInformations> CreateQuantity(List<LineInformations> selection, ArticleQuantityType quantityType, int daysToAdd)
+		public List<LineInformations> CreateQuantity(List<LineInformations> selection, ArticleQuantityType quantityType, int daysToAdd, bool simulation = false)
 		{
 			//	Crée une nouvelle quantité pour un article existant.
 			if (selection.Count == 0)
@@ -102,6 +102,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			if (quantityColumnEntity == null)
 			{
 				this.lastError = LinesError.InvalidQuantity;
+				return null;
+			}
+
+			if (simulation)
+			{
+				this.lastError = LinesError.OK;
 				return null;
 			}
 
@@ -224,7 +230,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		public void Move(List<LineInformations> selection, int direction)
+		public void Move(List<LineInformations> selection, int direction, bool simulation = false)
 		{
 			//	Déplace une ligne vers le haut ou vers le bas.
 			//	C'est un mécanisme primitif, qui devra être remplacé par du drag & drop un jour !
@@ -281,6 +287,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				}
 			}
 
+			if (simulation)
+			{
+				this.lastError = LinesError.OK;
+				return;
+			}
+
 			//	Met une copie de la feuille à sa nouvelle place.
 			var newLeaf = new TreeNode (leaf.Entity);
 
@@ -325,7 +337,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			//	Régénère toutes les lignes selon le nouvel arbre.
-			this.Regenerate (tree);
+			this.Regenerate (tree, simulation: simulation);
 		}
 
 		private static bool IsFixed(AbstractDocumentItemEntity entity)
@@ -347,7 +359,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		public List<LineInformations> Duplicate(List<LineInformations> selection)
+		public List<LineInformations> Duplicate(List<LineInformations> selection, bool simulation = false)
 		{
 			//	Duplique la ligne sélectionnée.
 			if (selection.Count == 0)
@@ -359,6 +371,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			if (selection.Count != 1)
 			{
 				this.lastError = LinesError.InvalidSelection;
+				return null;
+			}
+
+			if (simulation)
+			{
+				this.lastError = LinesError.OK;
 				return null;
 			}
 
@@ -385,12 +403,18 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			return LinesEngine.MakeSingleSelection (new LineInformations (null, copy, null, 0));
 		}
 
-		public List<LineInformations> Delete(List<LineInformations> selection)
+		public List<LineInformations> Delete(List<LineInformations> selection, bool simulation = false)
 		{
 			//	Supprime les lignes sélectionnées.
 			if (selection.Count == 0)
 			{
 				this.lastError = LinesError.EmptySelection;
+				return null;
+			}
+
+			if (simulation)
+			{
+				this.lastError = LinesError.OK;
 				return null;
 			}
 
@@ -424,7 +448,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		public void MakeGroup(List<LineInformations> selection)
+		public void MakeGroup(List<LineInformations> selection, bool simulation = false)
 		{
 			//	Fait un groupe.
 			if (selection.Count == 0)
@@ -442,6 +466,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			if (LinesEngine.GetLevel (selection[0].AbstractDocumentItemEntity.GroupIndex) >= LinesEngine.maxGroupingDepth)
 			{
 				this.lastError = LinesError.MaxDeep;
+				return;
+			}
+
+			if (simulation)
+			{
+				this.lastError = LinesError.OK;
 				return;
 			}
 
@@ -466,10 +496,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			//	Régénère toutes les lignes selon le nouvel arbre.
-			this.Regenerate (tree);
+			this.Regenerate (tree, simulation: simulation);
 		}
 
-		public void MakeUngroup(List<LineInformations> selection)
+		public void MakeUngroup(List<LineInformations> selection, bool simulation = false)
 		{
 			//	Défait un groupe.
 			if (selection.Count == 0)
@@ -487,6 +517,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			if (LinesEngine.GetLevel (selection[0].AbstractDocumentItemEntity.GroupIndex) <= 1)
 			{
 				this.lastError = LinesError.MinDeep;
+				return;
+			}
+
+			if (simulation)
+			{
+				this.lastError = LinesError.OK;
 				return;
 			}
 
@@ -514,11 +550,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			//	Régénère toutes les lignes selon le nouvel arbre.
-			this.Regenerate (tree);
+			this.Regenerate (tree, simulation: simulation);
 		}
 
 
-		public void MakeSplit(List<LineInformations> selection)
+		public void MakeSplit(List<LineInformations> selection, bool simulation = false)
 		{
 			//	Sépare la ligne sélectionnée d'avec la précédente.
 			if (selection.Count == 0)
@@ -546,6 +582,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				return;
 			}
 
+			if (simulation)
+			{
+				this.lastError = LinesError.OK;
+				return;
+			}
+
 			//	Crée le nouveau groupe juste après l'actuel.
 			int index = parent.Childrens.IndexOf (group);
 			var newGroup = new TreeNode ();
@@ -561,10 +603,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			//	Régénère toutes les lignes selon le nouvel arbre.
-			this.Regenerate (tree);
+			this.Regenerate (tree, simulation: simulation);
 		}
 
-		public void MakeCombine(List<LineInformations> selection)
+		public void MakeCombine(List<LineInformations> selection, bool simulation = false)
 		{
 			//	Soude la ligne sélectionnée avec la précédente.
 			if (selection.Count == 0)
@@ -600,6 +642,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				return;
 			}
 
+			if (simulation)
+			{
+				this.lastError = LinesError.OK;
+				return;
+			}
+
 			var prevGroup = parent.Childrens[index-1];
 
 			//	Déplace les lignes du groupe dans le groupe précédent.
@@ -611,7 +659,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			//	Régénère toutes les lignes selon le nouvel arbre.
-			this.Regenerate (tree);
+			this.Regenerate (tree, simulation: simulation);
 		}
 
 		public void MakeFlat(List<LineInformations> selection)
@@ -642,12 +690,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		private void Regenerate(TreeEngine tree)
+		private void Regenerate(TreeEngine tree, bool simulation = false)
 		{
 			//	Régénère la liste des lignes du document commercial selon le nouvel arbre.
 			using (this.businessContext.SuspendUpdates ())
 			{
-				this.lastError = tree.Regenerate ();
+				this.lastError = tree.Regenerate (simulation: simulation);
 			}
 		}
 
@@ -679,8 +727,47 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			return true;
 		}
 
+		public bool IsCreateQuantityEnabled(List<LineInformations> selection)
+		{
+			this.CreateQuantity (selection, ArticleQuantityType.Delayed, 7, simulation: true);
+			return this.lastError == LinesError.OK;
+		}
+
+		public bool IsMoveEnabled(List<LineInformations> selection, int direction)
+		{
+			this.Move (selection, direction, simulation: true);
+			return this.lastError == LinesError.OK;
+		}
+
+		public bool IsDuplicateEnabled(List<LineInformations> selection)
+		{
+			this.Duplicate (selection, simulation: true);
+			return this.lastError == LinesError.OK;
+		}
+
+		public bool IsDeleteEnabled(List<LineInformations> selection)
+		{
+			this.Delete (selection, simulation: true);
+			return this.lastError == LinesError.OK;
+		}
+
+		public bool IsGroupEnabled(List<LineInformations> selection)
+		{
+			this.MakeGroup (selection, simulation: true);
+			return this.lastError == LinesError.OK;
+		}
+
+		public bool IsUngroupEnabled(List<LineInformations> selection)
+		{
+			this.MakeUngroup (selection, simulation: true);
+			return this.lastError == LinesError.OK;
+		}
+
 		public bool IsSplitEnabled(List<LineInformations> selection)
 		{
+			this.MakeSplit (selection, simulation: true);
+			return this.lastError == LinesError.OK;
+
 			//	Retourne true si la commande Split est active.
 			if (selection.Count != 1)
 			{
@@ -707,6 +794,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public bool IsCombineEnabled(List<LineInformations> selection)
 		{
+			this.MakeCombine (selection, simulation: true);
+			return this.lastError == LinesError.OK;
+
 			//	Retourne true si la commande Combine est active.
 			if (selection.Count != 1)
 			{
