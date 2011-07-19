@@ -458,16 +458,20 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				return;
 			}
 
-			if (!this.IsCoherentSelection (selection))
+			var rootEntity = this.GetRootEntity (selection);
+			if (rootEntity == null)
 			{
 				this.lastError = LinesError.InvalidSelection;
 				return;
 			}
 
-			if (LinesEngine.GetLevel (selection[0].AbstractDocumentItemEntity.GroupIndex) >= LinesEngine.maxGroupingDepth)
+			foreach (var info in selection)
 			{
-				this.lastError = LinesError.MaxDeep;
-				return;
+				if (LinesEngine.GetLevel (info.AbstractDocumentItemEntity.GroupIndex) >= LinesEngine.maxGroupingDepth)
+				{
+					this.lastError = LinesError.MaxDeep;
+					return;
+				}
 			}
 
 			if (simulation)
@@ -482,18 +486,33 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Crée le nouveau noeud qui regroupera les lignes sélectionnées.
 			var group = new TreeNode ();
 
-			var firstLeaf = tree.Search (selection[0].AbstractDocumentItemEntity);
+			var firstLeaf = tree.Search (rootEntity);
 			var parent = firstLeaf.Parent;
 			int index = parent.Childrens.IndexOf (firstLeaf);
 			parent.Childrens.Insert (index, group);  // insère le groupe à sa place
 
-			//	Déplace les lignes dans le nouveau noeud du groupe.
+			//	Cherche tous les frères à grouper.
+			var brothers = new List<TreeNode> ();
 			foreach (var info in selection)
 			{
-				var leaf = tree.Search (info.AbstractDocumentItemEntity);
+				var node = tree.Search (info.AbstractDocumentItemEntity);
 
-				leaf.Parent.Childrens.Remove (leaf);
-				group.Childrens.Add (leaf);
+				while (node.Parent != firstLeaf.Parent)
+				{
+					node = node.Parent;
+				}
+
+				if (!brothers.Contains (node))
+				{
+					brothers.Add (node);
+				}
+			}
+
+			//	Déplace les lignes dans le nouveau noeud du groupe.
+			foreach (var brother in brothers)
+			{
+				brother.Parent.Childrens.Remove (brother);
+				group.Childrens.Add (brother);
 			}
 
 			//	Régénère toutes les lignes selon le nouvel arbre.
@@ -511,13 +530,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				return;
 			}
 
-			if (!this.IsCoherentSelection (selection))
+			var rootEntity = this.GetRootEntity (selection);
+			if (rootEntity == null)
 			{
 				this.lastError = LinesError.InvalidSelection;
 				return;
 			}
 
-			if (LinesEngine.GetLevel (selection[0].AbstractDocumentItemEntity.GroupIndex) <= 1)
+			if (LinesEngine.GetLevel (rootEntity.GroupIndex) <= 1)
 			{
 				this.lastError = LinesError.MinDeep;
 				return;
@@ -532,18 +552,33 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Crée l'arbre à partie des lignes du document.
 			var tree = new TreeEngine (this.businessDocumentEntity);
 
-			var firstLeaf = tree.Search (selection[0].AbstractDocumentItemEntity);
+			var firstLeaf = tree.Search (rootEntity);
 			var group = firstLeaf.Parent;
 			var parent = group.Parent;
 			int index = parent.Childrens.IndexOf (group);
 
-			//	Déplace le lignes sélectionnées hors du groupe.
+			//	Cherche tous les frères à grouper.
+			var brothers = new List<TreeNode> ();
 			foreach (var info in selection)
 			{
-				var leaf = tree.Search (info.AbstractDocumentItemEntity);
+				var node = tree.Search (info.AbstractDocumentItemEntity);
 
-				group.Childrens.Remove (leaf);
-				parent.Childrens.Insert (++index, leaf);
+				while (node.Parent != firstLeaf.Parent)
+				{
+					node = node.Parent;
+				}
+
+				if (!brothers.Contains (node))
+				{
+					brothers.Add (node);
+				}
+			}
+
+			//	Déplace le lignes sélectionnées hors du groupe.
+			foreach (var brother in brothers)
+			{
+				group.Childrens.Remove (brother);
+				parent.Childrens.Insert (++index, brother);
 			}
 
 			//	Si le groupe est vide, supprime-le.
@@ -702,6 +737,40 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
+
+		private AbstractDocumentItemEntity GetRootEntity(List<LineInformations> selection)
+		{
+			//	Cherche le GroupIndex le plus petit.
+			int minGroupIndex = int.MaxValue;
+			AbstractDocumentItemEntity rootEntity = null;
+
+			foreach (var info in selection)
+			{
+				if (minGroupIndex > info.AbstractDocumentItemEntity.GroupIndex)
+				{
+					minGroupIndex = info.AbstractDocumentItemEntity.GroupIndex;
+					rootEntity = info.AbstractDocumentItemEntity;
+				}
+			}
+
+			if (minGroupIndex == 0 || rootEntity == null)
+			{
+				return null;
+			}
+
+			//	Vérifie la cohérence.
+			int level = LinesEngine.GetLevel (minGroupIndex);
+
+			foreach (var info in selection)
+			{
+				if (!LinesEngine.LevelCompare (minGroupIndex, info.AbstractDocumentItemEntity.GroupIndex, level))
+				{
+					return null;
+				}
+			}
+
+			return rootEntity;
+		}
 
 		private bool IsCoherentSelection(List<LineInformations> selection)
 		{
