@@ -970,6 +970,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		#region Static GroupIndex operations
 		public static bool LevelCompare(int groupIndex1, int groupIndex2, int levelCount)
 		{
+			//	Compare deux GroupIndex jusqu'à une profondeur donnée.
+			//	groupIndex1 = 665544, groupIndex2 = 775544, levelCount = 1 -> true
+			//	groupIndex1 = 665544, groupIndex2 = 775544, levelCount = 2 -> true
+			//	groupIndex1 = 665544, groupIndex2 = 775544, levelCount = 3 -> false
+			//	groupIndex1 = 665544, groupIndex2 = 775544, levelCount = 4 -> false
 			for (int i = 0; i < levelCount; i++)
 			{
 				int n1 = LinesEngine.LevelExtract (groupIndex1, i);
@@ -1067,12 +1072,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private static List<LineInformations> PurgeSelection(List<LineInformations> selection)
 		{
+			//	Purge les lignes "quantité pour un article" d'une sélection.
 			return selection.Where (x => !x.IsQuantity).ToList ();
 		}
 
 
 		private int GetDefaultTitleInsertionIndex(out AbstractDocumentItemEntity model)
 		{
+			//	Retourne l'index par défaut où insérer un titre.
 			int i = this.GetDefaultArticleInsertionIndex (out model);
 
 			if (i == 0)
@@ -1095,6 +1102,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private int GetDefaultArticleInsertionIndex(out AbstractDocumentItemEntity model)
 		{
+			//	Retourne l'index par défaut où insérer un article.
 			for (int i = this.businessDocumentEntity.Lines.Count-1; i >= 0; i--)
 			{
 				var line = this.businessDocumentEntity.Lines[i];
@@ -1123,6 +1131,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private static List<LineInformations> MakeSingleSelection(LineInformations info)
 		{
+			//	Retourne une sélection constituée d'une seule ligne.
 			var list = new List<LineInformations> ();
 			list.Add (info);
 

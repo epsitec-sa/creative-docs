@@ -14,14 +14,15 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		SpecialQuantitiesToDistinctLines	= 0x00000001,	// met toutes les quantités dans les mêmes colonnes DocumentItemAccessorColumn.Unique*
 		ForceAllLines						= 0x00000002,	// force toutes les lignes, même si elles sont vides
 		ShowMyEyesOnly						= 0x00000004,	// inclu les lignes avant l'attribut MyEyesOnly
+		DescriptionIndented					= 0x00000008,	// indente les descriptions des articles selon les groupes
 
-		IncludeTaxes						= 0x00000010,	// 
-		ExclideTaxes						= 0x00000020,	// 
+		IncludeTaxes						= 0x00001000,	// 
+		ExclideTaxes						= 0x00002000,	// 
 
 															// Ces 4 modes ne sont pas cumulables:
-		EditArticleName						= 0x00000100,	// édite les descriptions courtes des articles
-		EditArticleDescription				= 0x00000200,	// édite les descriptions longues des articles
-		UseArticleName						= 0x00000400,	// utilise les descriptions courtes des articles
-		UseArticleBoth						= 0x00000800,	// utilise les descriptions courtes + longues des articles
+		EditArticleName						= 0x00010000,	// édite les descriptions courtes des articles
+		EditArticleDescription				= 0x00020000,	// édite les descriptions longues des articles
+		UseArticleName						= 0x00040000,	// utilise les descriptions courtes des articles
+		UseArticleBoth						= 0x00080000,	// utilise les descriptions courtes + longues des articles
 	}
 }

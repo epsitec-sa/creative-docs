@@ -132,7 +132,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				text = " ";  // pour que le contenu de la ligne existe, même si le texte n'existe pas encore !
 			}
 
-			this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, text);
+			this.SetContent (line, 0, DocumentItemAccessorColumn.ArticleDescription, text);
 		}
 
 		private void BuildArticleItem(ArticleDocumentItemEntity line)
@@ -160,7 +160,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 					}
 					else  // lignes distinctes ?
 					{
-						this.SetContent (row, DocumentItemAccessorColumn.UniqueType, quantity.QuantityColumn.Name);
+						this.SetContent (line, row, DocumentItemAccessorColumn.UniqueType, quantity.QuantityColumn.Name);
 
 						quantityColumn  = DocumentItemAccessorColumn.UniqueQuantity;
 						unitColumn      = DocumentItemAccessorColumn.UniqueUnit;
@@ -168,17 +168,17 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 						endDateColumn   = DocumentItemAccessorColumn.UniqueEndDate;
 					}
 
-					this.SetContent (row, quantityColumn, quantity.Quantity.ToString ());
-					this.SetContent (row, unitColumn, quantity.Unit.Name);
+					this.SetContent (line, row, quantityColumn, quantity.Quantity.ToString ());
+					this.SetContent (line, row, unitColumn, quantity.Unit.Name);
 
 					if (quantity.BeginDate.HasValue)
 					{
-						this.SetContent (row, beginDateColumn, quantity.BeginDate.Value.ToString ());
+						this.SetContent (line, row, beginDateColumn, quantity.BeginDate.Value.ToString ());
 					}
 
 					if (quantity.EndDate.HasValue)
 					{
-						this.SetContent (row, endDateColumn, quantity.EndDate.Value.ToString ());
+						this.SetContent (line, row, endDateColumn, quantity.EndDate.Value.ToString ());
 					}
 
 					row++;
@@ -220,30 +220,30 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				}
 			}
 
-			this.SetContent (0, DocumentItemAccessorColumn.ArticleId,          ArticleDocumentItemHelper.GetArticleId (line));
-			this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, description);
-			this.SetContent (0, DocumentItemAccessorColumn.UnitPrice,          this.GetFormattedPrice (line.PrimaryUnitPriceBeforeTax));
+			this.SetContent (line, 0, DocumentItemAccessorColumn.ArticleId,          ArticleDocumentItemHelper.GetArticleId (line));
+			this.SetContent (line, 0, DocumentItemAccessorColumn.ArticleDescription, description);
+			this.SetContent (line, 0, DocumentItemAccessorColumn.UnitPrice,          this.GetFormattedPrice (line.PrimaryUnitPriceBeforeTax));
 
 			if (line.ResultingLinePriceBeforeTax.HasValue && line.ResultingLineTax1.HasValue)
 			{
 				decimal beforeTax = line.ResultingLinePriceBeforeTax.Value;
 				decimal tax =       line.ResultingLineTax1.Value;
 
-				this.SetContent (0, DocumentItemAccessorColumn.LinePrice, this.GetFormattedPrice (beforeTax));
-				this.SetContent (0, DocumentItemAccessorColumn.Vat,       this.GetFormattedPrice (tax));
-				this.SetContent (0, DocumentItemAccessorColumn.Total,     this.GetFormattedPrice (beforeTax+tax));
+				this.SetContent (line, 0, DocumentItemAccessorColumn.LinePrice, this.GetFormattedPrice (beforeTax));
+				this.SetContent (line, 0, DocumentItemAccessorColumn.Vat,       this.GetFormattedPrice (tax));
+				this.SetContent (line, 0, DocumentItemAccessorColumn.Total,     this.GetFormattedPrice (beforeTax+tax));
 			}
 
 			if (line.Discounts.Count != 0)
 			{
 				if (line.Discounts[0].DiscountRate.HasValue)
 				{
-					this.SetContent (0, DocumentItemAccessorColumn.Discount, this.GetFormattedPercent (line.Discounts[0].DiscountRate.Value));
+					this.SetContent (line, 0, DocumentItemAccessorColumn.Discount, this.GetFormattedPercent (line.Discounts[0].DiscountRate.Value));
 				}
 
 				if (line.Discounts[0].Value.HasValue)
 				{
-					this.SetContent (0, DocumentItemAccessorColumn.Discount, this.GetFormattedPrice (line.Discounts[0].Value.Value));
+					this.SetContent (line, 0, DocumentItemAccessorColumn.Discount, this.GetFormattedPrice (line.Discounts[0].Value.Value));
 				}
 			}
 		}
@@ -332,8 +332,8 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				text = text.ToString ().Replace (pattern, Misc.PercentToString (line.Rate).ToString ());
 			}
 
-			this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, text);
-			this.SetContent (0, DocumentItemAccessorColumn.Vat, this.GetFormattedPrice (line.ResultingTax));
+			this.SetContent (line, 0, DocumentItemAccessorColumn.ArticleDescription, text);
+			this.SetContent (line, 0, DocumentItemAccessorColumn.Vat, this.GetFormattedPrice (line.ResultingTax));
 		}
 
 		private readonly static string[] baseAmountList =
@@ -419,23 +419,23 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 			if (existingDiscount)
 			{
-				this.SetContent (row, DocumentItemAccessorColumn.ArticleDescription, primaryText);
-				this.SetContent (row, DocumentItemAccessorColumn.LinePrice,          this.GetFormattedPrice (primaryPrice));
-				this.SetContent (row, DocumentItemAccessorColumn.Vat,                this.GetFormattedPrice (primaryVat));
-				this.SetContent (row, DocumentItemAccessorColumn.Total,              this.GetFormattedPrice (primaryPrice + primaryVat));
+				this.SetContent (line, row, DocumentItemAccessorColumn.ArticleDescription, primaryText);
+				this.SetContent (line, row, DocumentItemAccessorColumn.LinePrice,          this.GetFormattedPrice (primaryPrice));
+				this.SetContent (line, row, DocumentItemAccessorColumn.Vat,                this.GetFormattedPrice (primaryVat));
+				this.SetContent (line, row, DocumentItemAccessorColumn.Total,              this.GetFormattedPrice (primaryPrice + primaryVat));
 				row++;
 
-				this.SetContent (row, DocumentItemAccessorColumn.ArticleDescription, discountText);
-				this.SetContent (row, DocumentItemAccessorColumn.LinePrice,          this.GetFormattedPrice (discountPrice));
-				this.SetContent (row, DocumentItemAccessorColumn.Vat,                this.GetFormattedPrice (discountVat));
-				this.SetContent (row, DocumentItemAccessorColumn.Total,              this.GetFormattedPrice (discountPrice + discountVat));
+				this.SetContent (line, row, DocumentItemAccessorColumn.ArticleDescription, discountText);
+				this.SetContent (line, row, DocumentItemAccessorColumn.LinePrice,          this.GetFormattedPrice (discountPrice));
+				this.SetContent (line, row, DocumentItemAccessorColumn.Vat,                this.GetFormattedPrice (discountVat));
+				this.SetContent (line, row, DocumentItemAccessorColumn.Total,              this.GetFormattedPrice (discountPrice + discountVat));
 				row++;
 			}
 
-			this.SetContent (row, DocumentItemAccessorColumn.ArticleDescription, sumText);
-			this.SetContent (row, DocumentItemAccessorColumn.LinePrice,          this.GetFormattedPrice (sumPrice));
-			this.SetContent (row, DocumentItemAccessorColumn.Vat,                this.GetFormattedPrice (sumVat));
-			this.SetContent (row, DocumentItemAccessorColumn.Total,              this.GetFormattedPrice (sumPrice + sumVat));
+			this.SetContent (line, row, DocumentItemAccessorColumn.ArticleDescription, sumText);
+			this.SetContent (line, row, DocumentItemAccessorColumn.LinePrice,          this.GetFormattedPrice (sumPrice));
+			this.SetContent (line, row, DocumentItemAccessorColumn.Vat,                this.GetFormattedPrice (sumVat));
+			this.SetContent (line, row, DocumentItemAccessorColumn.Total,              this.GetFormattedPrice (sumPrice + sumVat));
 			row++;
 		}
 
@@ -449,9 +449,9 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 					text = "Grand total";
 				}
 
-				this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, text);
-				this.SetContent (0, DocumentItemAccessorColumn.LinePrice, this.GetFormattedPrice (line.PriceBeforeTax));
-				this.SetContent (0, DocumentItemAccessorColumn.Total, this.GetFormattedPrice (line.PriceAfterTax));
+				this.SetContent (line, 0, DocumentItemAccessorColumn.ArticleDescription, text);
+				this.SetContent (line, 0, DocumentItemAccessorColumn.LinePrice, this.GetFormattedPrice (line.PriceBeforeTax));
+				this.SetContent (line, 0, DocumentItemAccessorColumn.Total, this.GetFormattedPrice (line.PriceAfterTax));
 			}
 
 			if (line.FixedPriceAfterTax.HasValue)
@@ -463,8 +463,8 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 					text = "Grand total arrêté";
 				}
 
-				this.SetContent (1, DocumentItemAccessorColumn.ArticleDescription, text);
-				this.SetContent (1, DocumentItemAccessorColumn.Total, this.GetFormattedPrice (line.FixedPriceAfterTax));
+				this.SetContent (line, 1, DocumentItemAccessorColumn.ArticleDescription, text);
+				this.SetContent (line, 1, DocumentItemAccessorColumn.Total, this.GetFormattedPrice (line.FixedPriceAfterTax));
 			}
 		}
 
@@ -500,6 +500,27 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		}
 
 
+		private void SetContent(AbstractDocumentItemEntity item, int row, DocumentItemAccessorColumn column, FormattedText text)
+		{
+			//	Modifie le contenu d'une cellule.
+			if (text != null && !text.IsNullOrEmpty)
+			{
+				if (column == DocumentItemAccessorColumn.ArticleDescription &&
+					(this.mode & DocumentItemAccessorMode.DescriptionIndented) != 0)
+				{
+					int level = System.Math.Max (AbstractDocumentItemEntity.GetGroupLevel (item.GroupIndex)-1, 0);
+
+					if (level != 0)
+					{
+						var prefix = new string (' ', level*DocumentItemAccessor.identSpacePerLevel);
+						text = FormattedText.Concat (prefix, text);
+					}
+				}
+
+				this.SetContent (row, column, text);
+			}
+		}
+
 		private void SetContent(int row, DocumentItemAccessorColumn column, FormattedText text)
 		{
 			//	Modifie le contenu d'une cellule.
@@ -520,6 +541,8 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			return row*1000 + (int) column;
 		}
 
+
+		private static readonly int identSpacePerLevel = 3;
 
 		private readonly BusinessDocumentEntity			businessDocumentEntity;
 		private readonly Dictionary<int, FormattedText>	content;

@@ -397,7 +397,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			//	Construit une fois pour toutes les accesseurs au contenu.
 			var accessors = new List<DocumentItemAccessor> ();
 
-			var mode = DocumentItemAccessorMode.ForceAllLines;
+			var mode = DocumentItemAccessorMode.ForceAllLines |
+					   DocumentItemAccessorMode.DescriptionIndented;
 
 			if (this.DocumentType == Business.DocumentType.ProductionOrder   ||
 				this.DocumentType == Business.DocumentType.DeliveryNote      ||
