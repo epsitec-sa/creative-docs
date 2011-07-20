@@ -404,8 +404,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				{
 					yield return ColumnType.Group;
 
-					yield return ColumnType.GroupNumber;
-					yield return ColumnType.LineNumber;
+					yield return ColumnType.FullNumber;
 
 					yield return ColumnType.ArticleId;
 					yield return ColumnType.ArticleDescription;
@@ -472,11 +471,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				case ColumnType.Group:
 					return 40;
 
-				case ColumnType.GroupNumber:
-					return 70;
-
-				case ColumnType.LineNumber:
-					return 50;
+				case ColumnType.FullNumber:
+					return 80;
 
 				case ColumnType.GroupIndex:
 					return 70;
@@ -506,11 +502,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				case ColumnType.GroupIndex:
 					return "Debug";
 
-				case ColumnType.GroupNumber:
-					return "N° groupe";
-
-				case ColumnType.LineNumber:
-					return "Ligne";
+				case ColumnType.FullNumber:
+					return "N° ligne";
 
 				case ColumnType.QuantityAndUnit:
 					return "Quantité";
@@ -549,8 +542,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private ContentAlignment GetRowColumnContentAlignment(int row, ColumnType columnType)
 		{
-			if (columnType == ColumnType.LineNumber ||
-				columnType == ColumnType.GroupIndex ||
+			if (columnType == ColumnType.GroupIndex ||
 				columnType == ColumnType.QuantityAndUnit ||
 				columnType == ColumnType.Discount ||
 				columnType == ColumnType.UnitPrice ||

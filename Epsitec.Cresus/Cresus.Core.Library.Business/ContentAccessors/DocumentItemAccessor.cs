@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			this.articleQuantityEntities = new List<ArticleQuantityEntity> ();
 		}
 
-		public void BuildContent(AbstractDocumentItemEntity item, int lineNumber, DocumentType type, DocumentItemAccessorMode mode)
+		public void BuildContent(DocumentItemAccessor previousAccessor, AbstractDocumentItemEntity item, int lineNumber, DocumentType type, DocumentItemAccessorMode mode)
 		{
 			//	Construit tout le contenu.
 			this.type = type;
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				this.BuildEndTotalItem (item as EndTotalDocumentItemEntity);
 			}
 
-			this.BuildCommonItem (item, lineNumber);
+			this.BuildCommonItem (previousAccessor, item, lineNumber);
 		}
 
 		public int RowsCount
@@ -479,12 +479,30 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			}
 		}
 
-		private void BuildCommonItem(AbstractDocumentItemEntity line, int lineNumber)
+		private void BuildCommonItem(DocumentItemAccessor previousAccessor, AbstractDocumentItemEntity line, int lineNumber)
 		{
 			string text = DocumentItemAccessor.GetFormattedGroupIndex (line.GroupIndex);
 			this.SetContent (line, 0, DocumentItemAccessorColumn.GroupNumber, text);
 
 			this.SetContent (line, 0, DocumentItemAccessorColumn.LineNumber, (lineNumber+1).ToString ());
+
+			if (previousAccessor != null && previousAccessor.GroupIndex == this.groupIndex)
+			{
+				this.relativeLineNumber = previousAccessor.relativeLineNumber;
+			}
+
+			this.relativeLineNumber++;
+
+			if (string.IsNullOrEmpty (text))
+			{
+				text = (this.relativeLineNumber.ToString ());
+			}
+			else
+			{
+				text = string.Concat (text, ".", (this.relativeLineNumber.ToString ()));
+			}
+
+			this.SetContent (line, 0, DocumentItemAccessorColumn.FullNumber, text);
 		}
 
 
@@ -598,5 +616,6 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		private DocumentItemAccessorMode				mode;
 		private int										rowsCount;
 		private int										groupIndex;
+		private int										relativeLineNumber;
 	}
 }

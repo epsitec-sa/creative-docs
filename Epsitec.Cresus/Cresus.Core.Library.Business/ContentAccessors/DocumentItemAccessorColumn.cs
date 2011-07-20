@@ -53,6 +53,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 		GroupNumber,					// numéro de groupe
 		LineNumber,						// numéro de ligne
+		FullNumber,						// numéro de groupe et de ligne
 
 		ArticleId,						// numéro d'article
 		ArticleDescription,				// description de l'article

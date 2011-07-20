@@ -135,11 +135,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			switch (columnType)
 			{
-				case ColumnType.GroupNumber:
-					return info.GetColumnContent (DocumentItemAccessorColumn.GroupNumber);
-
-				case ColumnType.LineNumber:
-					return info.GetColumnContent (DocumentItemAccessorColumn.LineNumber);
+				case ColumnType.FullNumber:
+					return info.GetColumnContent (DocumentItemAccessorColumn.FullNumber);
 
 				case ColumnType.QuantityAndUnit:
 					var q = info.GetColumnContent (DocumentItemAccessorColumn.UniqueQuantity).ToString ();
@@ -465,18 +462,21 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				mode |= DocumentItemAccessorMode.EditArticleDescription;
 			}
 
+			DocumentItemAccessor previousAccessor = null;
 			for (int i = 0; i < this.accessData.BusinessDocumentEntity.Lines.Count; i++)
 			{
 				var line = this.accessData.BusinessDocumentEntity.Lines[i];
 
 				var accessor = new DocumentItemAccessor (this.accessData.BusinessDocumentEntity);
-				accessor.BuildContent (line, i, this.accessData.DocumentMetadataEntity.DocumentCategory.DocumentType, mode);
+				accessor.BuildContent (previousAccessor, line, i, this.accessData.DocumentMetadataEntity.DocumentCategory.DocumentType, mode);
 
 				for (int row = 0; row < accessor.RowsCount; row++)
 				{
 					var quantity = accessor.GetArticleQuantityEntity (row);
 					this.lineInformations.Add (new LineInformations (accessor, line, quantity, row));
 				}
+
+				previousAccessor = accessor;
 			}
 		}
 
