@@ -468,7 +468,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				var line = this.accessData.BusinessDocumentEntity.Lines[i];
 
 				var accessor = new DocumentItemAccessor (this.accessData.BusinessDocumentEntity);
-				accessor.BuildContent (previousAccessor, line, i, this.accessData.DocumentMetadataEntity.DocumentCategory.DocumentType, mode);
+				accessor.BuildContent (previousAccessor, line, this.accessData.DocumentMetadataEntity.DocumentCategory.DocumentType, mode);
 
 				for (int row = 0; row < accessor.RowsCount; row++)
 				{

@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			this.articleQuantityEntities = new List<ArticleQuantityEntity> ();
 		}
 
-		public void BuildContent(DocumentItemAccessor previousAccessor, AbstractDocumentItemEntity item, int lineNumber, DocumentType type, DocumentItemAccessorMode mode)
+		public void BuildContent(DocumentItemAccessor previousAccessor, AbstractDocumentItemEntity item, DocumentType type, DocumentItemAccessorMode mode)
 		{
 			//	Construit tout le contenu.
 			this.type = type;
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				this.BuildEndTotalItem (item as EndTotalDocumentItemEntity);
 			}
 
-			this.BuildCommonItem (previousAccessor, item, lineNumber);
+			this.BuildCommonItem (previousAccessor, item);
 		}
 
 		public int RowsCount
@@ -479,19 +479,24 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			}
 		}
 
-		private void BuildCommonItem(DocumentItemAccessor previousAccessor, AbstractDocumentItemEntity line, int lineNumber)
+		private void BuildCommonItem(DocumentItemAccessor previousAccessor, AbstractDocumentItemEntity line)
 		{
 			string text = DocumentItemAccessor.GetFormattedGroupIndex (line.GroupIndex);
 			this.SetContent (line, 0, DocumentItemAccessorColumn.GroupNumber, text);
 
-			this.SetContent (line, 0, DocumentItemAccessorColumn.LineNumber, (lineNumber+1).ToString ());
-
-			if (previousAccessor != null && previousAccessor.GroupIndex == this.groupIndex)
+			if (previousAccessor != null)
 			{
-				this.relativeLineNumber = previousAccessor.relativeLineNumber;
+				this.lineNumber = previousAccessor.lineNumber+1;
+
+				if (previousAccessor.GroupIndex == this.groupIndex)
+				{
+					this.relativeLineNumber = previousAccessor.relativeLineNumber;
+				}
 			}
 
 			this.relativeLineNumber++;
+
+			this.SetContent (line, 0, DocumentItemAccessorColumn.LineNumber, (this.lineNumber+1).ToString ());
 
 			if (string.IsNullOrEmpty (text))
 			{
@@ -616,6 +621,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		private DocumentItemAccessorMode				mode;
 		private int										rowsCount;
 		private int										groupIndex;
+		private int										lineNumber;
 		private int										relativeLineNumber;
 	}
 }

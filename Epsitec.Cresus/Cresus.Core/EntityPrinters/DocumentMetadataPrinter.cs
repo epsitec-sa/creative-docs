@@ -429,7 +429,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				var line = this.Entity.Lines[i];
 
 				var accessor = new DocumentItemAccessor (this.Entity);
-				accessor.BuildContent (previousAccessor, line, i, this.DocumentType, mode);
+				accessor.BuildContent (previousAccessor, line, this.DocumentType, mode);
 
 				accessors.Add (accessor);
 				previousAccessor = accessor;
