@@ -13,6 +13,7 @@ using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.Helpers;
+using Epsitec.Cresus.Core.Business.UserManagement;
 
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -26,16 +27,20 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 	/// </summary>
 	public class LineToolbarController
 	{
-		public LineToolbarController(DocumentMetadataEntity documentMetadataEntity, BusinessDocumentEntity businessDocumentEntity)
+		public LineToolbarController(CoreData coreData, DocumentMetadataEntity documentMetadataEntity, BusinessDocumentEntity businessDocumentEntity)
 		{
+			this.coreData               = coreData;
 			this.documentMetadataEntity = documentMetadataEntity;
 			this.businessDocumentEntity = businessDocumentEntity;
+
+			this.userManager = coreData.GetComponent<UserManager> ();
 		}
 
 
 		public Widget CreateUI(Widget parent)
 		{
 			double buttonSize = Library.UI.Constants.ButtonSmallWidth;
+			bool developer = this.userManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.Developer);
 
 			var toolbar = UIBuilder.CreateMiniToolbar (parent, buttonSize);
 			toolbar.Dock = DockStyle.Top;
@@ -43,12 +48,19 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Deselect,        large: false, isActivable: false));
 			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.GroupSelect,     large: false, isActivable: false));
+
 			toolbar.Children.Add (this.CreateSeparator ());
+			
 			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.ViewCompact,     large: false, isActivable: true));
 			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.ViewDefault,     large: false, isActivable: true));
 			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.ViewFull,        large: false, isActivable: true));
-			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.ViewDebug,       large: false, isActivable: true));
+			if (developer)
+			{
+				toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.ViewDebug,   large: false, isActivable: true));
+			}
+			
 			toolbar.Children.Add (this.CreateSeparator ());
+			
 			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.EditName,        large: false, isActivable: true));
 			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.EditDescription, large: false, isActivable: true));
 
@@ -99,8 +111,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			};
 		}
 
-	
-		private readonly DocumentMetadataEntity documentMetadataEntity;
-		private readonly BusinessDocumentEntity businessDocumentEntity;
+
+		private readonly CoreData					coreData;
+		private readonly DocumentMetadataEntity		documentMetadataEntity;
+		private readonly BusinessDocumentEntity		businessDocumentEntity;
+		private readonly UserManager				userManager;
 	}
 }

@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			CommandContext.SetContext (frame, this.commandContext);
 
 			//	Crée la toolbar.
-			this.lineToolbarController = new LineToolbarController (this.accessData.DocumentMetadataEntity, this.accessData.BusinessDocumentEntity);
+			this.lineToolbarController = new LineToolbarController (this.accessData.CoreData, this.accessData.DocumentMetadataEntity, this.accessData.BusinessDocumentEntity);
 			var toolbarWidget = this.lineToolbarController.CreateUI (frame);
 			toolbarWidget.Visibility = BusinessDocumentLinesController.persistantShowToolbar;
 

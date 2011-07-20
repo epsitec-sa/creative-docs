@@ -511,10 +511,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					return 60;
 
 				case ColumnType.LineNumber:
-					return 40;
+					return 30;
 
 				case ColumnType.FullNumber:
-					return 80;
+					return 60;
 
 				case ColumnType.GroupIndex:
 					return 70;
@@ -551,7 +551,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					return "N°";
 
 				case ColumnType.FullNumber:
-					return "N°";
+					return "Complet";
 
 				case ColumnType.QuantityAndUnit:
 					return "Quantité";
