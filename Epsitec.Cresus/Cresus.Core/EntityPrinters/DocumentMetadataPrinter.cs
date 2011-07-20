@@ -21,6 +21,7 @@ using Epsitec.Cresus.Core.Print.Containers;
 using Epsitec.Cresus.Core.Print.EntityPrinters;
 using Epsitec.Cresus.Core.Resolvers;
 using Epsitec.Cresus.Core.Library.Business.ContentAccessors;
+using Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers;
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -425,20 +426,16 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				mode |= DocumentItemAccessorMode.ShowMyEyesOnly;
 			}
 
-			DocumentItemAccessor previousAccessor = null;
+			var numberGenerator = new IncrementalNumberGenerator ();
+
 			for (int i = 0; i < this.Entity.Lines.Count; i++)
 			{
 				var line = this.Entity.Lines[i];
 
-				var accessor = new DocumentItemAccessor (this.Entity);
-				bool show = accessor.BuildContent (previousAccessor, line, this.DocumentType, mode);
+				var accessor = new DocumentItemAccessor (this.Entity, numberGenerator);
+				accessor.BuildContent (line, this.DocumentType, mode);
 
 				accessors.Add (accessor);
-
-				if (show)
-				{
-					previousAccessor = accessor;
-				}
 			}
 
 			//	Première passe pour déterminer le nombre le lignes du tableau de la facture

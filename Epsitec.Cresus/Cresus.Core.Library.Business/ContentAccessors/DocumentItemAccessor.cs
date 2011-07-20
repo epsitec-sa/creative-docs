@@ -10,6 +10,7 @@ using Epsitec.Cresus.Core.Business.Finance;
 using Epsitec.Cresus.Core.Documents;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Helpers;
+using Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers;
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -23,15 +24,16 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 	/// </summary>
 	public class DocumentItemAccessor
 	{
-		public DocumentItemAccessor(BusinessDocumentEntity businessDocumentEntity)
+		public DocumentItemAccessor(BusinessDocumentEntity businessDocumentEntity, IncrementalNumberGenerator numberGenerator)
 		{
 			this.businessDocumentEntity = businessDocumentEntity;
+			this.numberGenerator = numberGenerator;
 
 			this.content = new Dictionary<int, FormattedText> ();
 			this.articleQuantityEntities = new List<ArticleQuantityEntity> ();
 		}
 
-		public bool BuildContent(DocumentItemAccessor previousAccessor, AbstractDocumentItemEntity item, DocumentType type, DocumentItemAccessorMode mode)
+		public bool BuildContent(AbstractDocumentItemEntity item, DocumentType type, DocumentItemAccessorMode mode)
 		{
 			//	Construit tout le contenu.
 			//	Retourne false si le contenu est entièrement caché.
@@ -72,7 +74,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				this.BuildEndTotalItem (item as EndTotalDocumentItemEntity);
 			}
 
-			this.BuildCommonItem (previousAccessor, item);
+			this.BuildCommonItem (item);
 			return true;
 		}
 
@@ -481,44 +483,13 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			}
 		}
 
-		private void BuildCommonItem(DocumentItemAccessor previousAccessor, AbstractDocumentItemEntity line)
+		private void BuildCommonItem(AbstractDocumentItemEntity line)
 		{
-			int previousGroupIndex = 0;
+			this.numberGenerator.PutNext (line.GroupIndex);
 
-			if (previousAccessor != null)
-			{
-				previousGroupIndex = previousAccessor.GroupIndex;
-				this.lineNumber = previousAccessor.lineNumber+1;
-
-				if (previousGroupIndex == this.groupIndex)
-				{
-					this.relativeLineNumber = previousAccessor.relativeLineNumber;
-				}
-			}
-
-			this.relativeLineNumber++;
-
-			this.groupText = DocumentItemAccessor.GetFormattedGroupIndex (line.GroupIndex);
-
-			int level = AbstractDocumentItemEntity.GetGroupLevel (this.groupIndex);
-			if (!AbstractDocumentItemEntity.GroupCompare (this.groupIndex, previousGroupIndex, level))
-			{
-				this.SetContent (line, 0, DocumentItemAccessorColumn.GroupNumber, this.groupText);
-			}
-
-			this.SetContent (line, 0, DocumentItemAccessorColumn.LineNumber, (this.lineNumber+1).ToString ());
-
-			string group = this.groupText;
-			if (string.IsNullOrEmpty (group))
-			{
-				group = (this.relativeLineNumber.ToString ());
-			}
-			else
-			{
-				group = string.Concat (group, ".", (this.relativeLineNumber.ToString ()));
-			}
-
-			this.SetContent (line, 0, DocumentItemAccessorColumn.FullNumber, group);
+			this.SetContent (line, 0, DocumentItemAccessorColumn.GroupNumber, this.numberGenerator.GroupNumber);
+			this.SetContent (line, 0, DocumentItemAccessorColumn.LineNumber,  this.numberGenerator.SimpleNumber);
+			this.SetContent (line, 0, DocumentItemAccessorColumn.FullNumber,  this.numberGenerator.FullNumber);
 		}
 
 
@@ -587,33 +558,6 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		}
 
 
-		private static string GetFormattedGroupIndex(int groupIndex)
-		{
-			//	Formate un GroupIndex pour l'homme.
-			//	    0 -> rien
-			//	    1 -> 1
-			//	  201 -> 1.2
-			//	30201 -> 1.2.3
-			var builder = new System.Text.StringBuilder();
-
-			bool first = true;
-
-			while (groupIndex != 0)
-			{
-				if (!first)
-				{
-					builder.Append (".");
-				}
-
-				builder.Append ((groupIndex%100).ToString ());
-				groupIndex /= 100;
-				first = false;
-			}
-
-			return builder.ToString();
-		}
-
-
 		private static int GetKey(int row, DocumentItemAccessorColumn column)
 		{
 			//	Retourne une clé unique qui mixe la ligne et la colonne.
@@ -625,6 +569,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		private static readonly int identSpacePerLevel = 3;
 
 		private readonly BusinessDocumentEntity			businessDocumentEntity;
+		private readonly IncrementalNumberGenerator		numberGenerator;
 		private readonly Dictionary<int, FormattedText>	content;
 		private readonly List<ArticleQuantityEntity>	articleQuantityEntities;
 

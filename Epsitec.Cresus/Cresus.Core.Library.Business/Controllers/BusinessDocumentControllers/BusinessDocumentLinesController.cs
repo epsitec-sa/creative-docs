@@ -475,23 +475,19 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				mode |= DocumentItemAccessorMode.EditArticleDescription;
 			}
 
-			DocumentItemAccessor previousAccessor = null;
+			var numberGenerator = new IncrementalNumberGenerator ();
+
 			for (int i = 0; i < this.accessData.BusinessDocumentEntity.Lines.Count; i++)
 			{
 				var line = this.accessData.BusinessDocumentEntity.Lines[i];
 
-				var accessor = new DocumentItemAccessor (this.accessData.BusinessDocumentEntity);
-				bool show = accessor.BuildContent (previousAccessor, line, this.accessData.DocumentMetadataEntity.DocumentCategory.DocumentType, mode);
+				var accessor = new DocumentItemAccessor (this.accessData.BusinessDocumentEntity, numberGenerator);
+				accessor.BuildContent (line, this.accessData.DocumentMetadataEntity.DocumentCategory.DocumentType, mode);
 
 				for (int row = 0; row < accessor.RowsCount; row++)
 				{
 					var quantity = accessor.GetArticleQuantityEntity (row);
 					this.lineInformations.Add (new LineInformations (accessor, line, quantity, row));
-				}
-
-				if (show)
-				{
-					previousAccessor = accessor;
 				}
 			}
 		}
