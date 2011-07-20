@@ -81,13 +81,16 @@ namespace Epsitec.Common.Widgets
 
 		private void ComputeWidth()
 		{
-			this.textLayout.Text = this.CommandObject.Caption.DefaultLabel;
-			double hopeWidth = System.Math.Floor (this.textLayout.SingleLineSize.Width + 4);
-
-			if (hopeWidth >  this.PreferredSize.Width &&
-				hopeWidth <= this.PreferredSize.Width+this.maxAdditionnalWidth)
+			if (this.CommandObject != null)
 			{
-				this.PreferredSize = new Drawing.Size (hopeWidth, this.PreferredSize.Height);
+				this.textLayout.Text = this.CommandObject.Caption.DefaultLabel;
+				double hopeWidth = System.Math.Floor (this.textLayout.SingleLineSize.Width + 4);
+
+				if (hopeWidth >  this.PreferredSize.Width &&
+				hopeWidth <= this.PreferredSize.Width+this.maxAdditionnalWidth)
+				{
+					this.PreferredSize = new Drawing.Size (hopeWidth, this.PreferredSize.Height);
+				}
 			}
 		}
 

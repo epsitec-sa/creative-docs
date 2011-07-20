@@ -4,6 +4,7 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Orchestrators;
@@ -33,6 +34,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			var userManager    = coreData.GetComponent<UserManager> ();
 
 			userManager.AuthenticatedUserChanged += this.HandleAuthenticatedUserChanged;
+
+			this.authenticateUserButtons = new List<IconOrImageButton> ();
+			this.authenticateUserWidgets = new List<StaticText> ();
 
 			this.commandDispatcher  = app.CommandDispatcher;
 			this.coreCommandDispatcher = app.GetComponent<CoreCommandDispatcher> ();
@@ -86,24 +90,31 @@ namespace Epsitec.Cresus.Core.Controllers
 			//	Met à jour le nom de l'utilisateur dans le ruban.
 			var user = this.userManager.AuthenticatedUser;
 
-			if (user.IsNull ())
+			for (int i = 0; i < this.authenticateUserButtons.Count; i++)
 			{
-				this.authenticateUserButton.ImageEntity = null;
-				this.authenticateUserWidget.Text = null;
+				var authenticateUserButton = this.authenticateUserButtons[i];
+				var authenticateUserWidget = this.authenticateUserWidgets[i];
 
-				ToolTip.Default.HideToolTipForWidget (this.authenticateUserButton);
-				ToolTip.Default.HideToolTipForWidget (this.authenticateUserWidget);
-			}
-			else
-			{
+				if (user.IsNull ())
+				{
+					authenticateUserButton.ImageEntity = null;
+					authenticateUserWidget.Text = null;
+
+					ToolTip.Default.HideToolTipForWidget (authenticateUserButton);
+					ToolTip.Default.HideToolTipForWidget (authenticateUserWidget);
+				}
+				else
+				{
 #if false
-				throw new System.NotImplementedException ();
-				this.authenticateUserButton.ImageEntity = user.Person.Pictures.FirstOrDefault ();
+					throw new System.NotImplementedException ();
+					this.authenticateUserButton.ImageEntity = user.Person.Pictures.FirstOrDefault ();
 #endif
-				this.authenticateUserWidget.Text = string.Concat ("<font size=\"9\">", user.LoginName, "</font>");
+					FormattedText text = user.LoginName;
+					authenticateUserWidget.FormattedText = text.ApplyFontSize (9.0);
 
-				ToolTip.Default.SetToolTip (this.authenticateUserButton, user.ShortDescription);
-				ToolTip.Default.SetToolTip (this.authenticateUserWidget, user.ShortDescription);
+					ToolTip.Default.SetToolTip (authenticateUserButton, user.ShortDescription);
+					ToolTip.Default.SetToolTip (authenticateUserWidget, user.ShortDescription);
+				}
 			}
 
 			this.UpdateDatabaseMenu ();
@@ -184,24 +195,26 @@ namespace Epsitec.Cresus.Core.Controllers
 					PreferredWidth = Library.UI.Constants.ButtonLargeWidth,
 				};
 
-				this.authenticateUserButton = RibbonViewController.CreateIconOrImageButton (Res.Commands.Global.ShowUserManager);
-				this.authenticateUserButton.CoreData = this.Orchestrator.Data;
-				this.authenticateUserButton.IconUri = Misc.GetResourceIconUri ("UserManager");
-				this.authenticateUserButton.IconPreferredSize = new Size (31, 31);
+				var authenticateUserButton = RibbonViewController.CreateIconOrImageButton (Res.Commands.Global.ShowUserManager);
+				authenticateUserButton.CoreData = this.Orchestrator.Data;
+				authenticateUserButton.IconUri = Misc.GetResourceIconUri ("UserManager");
+				authenticateUserButton.IconPreferredSize = new Size (31, 31);
 
-				frame.Children.Add (this.authenticateUserButton);
+				frame.Children.Add (authenticateUserButton);
 
 				//	Le widget 'authenticateUserWidget' déborde volontairement sur le bas du bouton 'ShowUserManager',
 				//	pour permettre d'afficher un nom d'utilisateur lisible.
-				this.authenticateUserWidget = new StaticText
+				var authenticateUserWidget = new StaticText
 				{
 					Parent = frame,
 					ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
-					PreferredHeight = 12,
-					PreferredWidth = Library.UI.Constants.ButtonLargeWidth,
-					Dock = DockStyle.Stacked,
-					Margins = new Margins (0, 0, -2, 0),
+					PreferredHeight = 14,
+					Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom,
+					Margins = new Margins (0, 0, 0, 0),
 				};
+
+				this.authenticateUserButtons.Add (authenticateUserButton);
+				this.authenticateUserWidgets.Add (authenticateUserWidget);
 			}
 		}
 
@@ -985,7 +998,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private GlyphButton						databaseMenuButton;
 		private string							databaseMenuDefaultCommandName;
 
-		private IconOrImageButton				authenticateUserButton;
-		private StaticText						authenticateUserWidget;
+		private List<IconOrImageButton>			authenticateUserButtons;
+		private List<StaticText>				authenticateUserWidgets;
 	}
 }
