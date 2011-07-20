@@ -51,6 +51,9 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		InformationBeginDate,
 		InformationEndDate,
 
+		GroupNumber,					// numéro de groupe
+		LineNumber,						// numéro de ligne
+
 		ArticleId,						// numéro d'article
 		ArticleDescription,				// description de l'article
 

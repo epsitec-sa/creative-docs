@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			this.articleQuantityEntities = new List<ArticleQuantityEntity> ();
 		}
 
-		public void BuildContent(AbstractDocumentItemEntity item, DocumentType type, DocumentItemAccessorMode mode)
+		public void BuildContent(AbstractDocumentItemEntity item, int lineNumber, DocumentType type, DocumentItemAccessorMode mode)
 		{
 			//	Construit tout le contenu.
 			this.type = type;
@@ -70,6 +70,8 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			{
 				this.BuildEndTotalItem (item as EndTotalDocumentItemEntity);
 			}
+
+			this.BuildCommonItem (item, lineNumber);
 		}
 
 		public int RowsCount
@@ -477,6 +479,14 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			}
 		}
 
+		private void BuildCommonItem(AbstractDocumentItemEntity line, int lineNumber)
+		{
+			string text = DocumentItemAccessor.GetFormattedGroupIndex (line.GroupIndex);
+			this.SetContent (line, 0, DocumentItemAccessorColumn.GroupNumber, text);
+
+			this.SetContent (line, 0, DocumentItemAccessorColumn.LineNumber, (lineNumber+1).ToString ());
+		}
+
 
 		private FormattedText GetFormattedPrice(decimal? price)
 		{
@@ -540,6 +550,33 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 				this.rowsCount = System.Math.Max (this.rowsCount, row+1);
 			}
+		}
+
+
+		private static string GetFormattedGroupIndex(int groupIndex)
+		{
+			//	Formate un GroupIndex pour l'homme.
+			//	    0 -> rien
+			//	    1 -> 1
+			//	  201 -> 1.2
+			//	30201 -> 1.2.3
+			var builder = new System.Text.StringBuilder();
+
+			bool first = true;
+
+			while (groupIndex != 0)
+			{
+				if (!first)
+				{
+					builder.Append (".");
+				}
+
+				builder.Append ((groupIndex%100).ToString ());
+				groupIndex /= 100;
+				first = false;
+			}
+
+			return builder.ToString();
 		}
 
 
