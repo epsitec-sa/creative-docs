@@ -64,6 +64,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Widgets.Command Ungroup = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 11));
 				//	designer:cap/GVKI
 				public static readonly global::Epsitec.Common.Widgets.Command ViewCompact = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 18));
+				//	designer:cap/GVKR
+				public static readonly global::Epsitec.Common.Widgets.Command ViewDebug = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 27));
 				//	designer:cap/GVKJ
 				public static readonly global::Epsitec.Common.Widgets.Command ViewDefault = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 19));
 				//	designer:cap/GVKK
@@ -125,6 +127,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public const long Ungroup = 0x3F00001400000BL;
 				//	designer:cap/GVKI
 				public const long ViewCompact = 0x3F000014000012L;
+				//	designer:cap/GVKR
+				public const long ViewDebug = 0x3F00001400001BL;
 				//	designer:cap/GVKJ
 				public const long ViewDefault = 0x3F000014000013L;
 				//	designer:cap/GVKK

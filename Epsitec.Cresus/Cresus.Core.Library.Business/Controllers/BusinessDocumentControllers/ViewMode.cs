@@ -10,5 +10,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		Compact,
 		Default,
 		Full,
+		Debug,
 	}
 }

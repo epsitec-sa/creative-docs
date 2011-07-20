@@ -86,7 +86,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				column++;
 			}
 
-			this.table[0, 0].HasRightSeparator = false;
+			if (this.table.Rows > 0)
+			{
+				this.table[0, 0].HasRightSeparator = false;
+			}
 
 			this.lastDocumentItemEntity = null;
 			this.documentItemIndex = -1;
@@ -400,12 +403,31 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					yield return ColumnType.Vat;
 					yield return ColumnType.Total;
 				}
-				else
+				else if (this.viewMode == ViewMode.Full)
+				{
+					yield return ColumnType.Group;
+					yield return ColumnType.GroupNumber;
+
+					yield return ColumnType.ArticleId;
+					yield return ColumnType.ArticleDescription;
+
+					yield return ColumnType.QuantityAndUnit;
+					yield return ColumnType.Type;
+					yield return ColumnType.Date;
+
+					yield return ColumnType.UnitPrice;
+					yield return ColumnType.Discount;
+					yield return ColumnType.LinePrice;
+					yield return ColumnType.Vat;
+					yield return ColumnType.Total;
+				}
+				else if (this.viewMode == ViewMode.Debug)
 				{
 					yield return ColumnType.Group;
 
-					yield return ColumnType.GroupNumber;  // TODO: provisoire, pour le debug
-					yield return ColumnType.LineNumber;  // TODO: provisoire, pour le debug
+					yield return ColumnType.GroupIndex;
+					yield return ColumnType.GroupNumber;
+					yield return ColumnType.LineNumber;
 					yield return ColumnType.FullNumber;
 
 					yield return ColumnType.ArticleId;
@@ -420,8 +442,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					yield return ColumnType.LinePrice;
 					yield return ColumnType.Vat;
 					yield return ColumnType.Total;
-
-					yield return ColumnType.GroupIndex;  // TODO: provisoire, pour le debug
 				}
 			}
 		}
@@ -453,7 +473,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 						return 60;
 				}
 			}
-			else
+			else if (this.viewMode == ViewMode.Full)
 			{
 				switch (columnType)
 				{
@@ -467,6 +487,20 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 						return 80;
 				}
 			}
+			else
+			{
+				switch (columnType)
+				{
+					case ColumnType.ArticleId:
+						return 50;
+
+					case ColumnType.ArticleDescription:
+						return 200;
+
+					case ColumnType.QuantityAndUnit:
+						return 80;
+				}
+			}
 
 			switch (columnType)
 			{
@@ -474,7 +508,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					return 40;
 
 				case ColumnType.GroupNumber:
-					return 70;
+					return 60;
 
 				case ColumnType.LineNumber:
 					return 40;
