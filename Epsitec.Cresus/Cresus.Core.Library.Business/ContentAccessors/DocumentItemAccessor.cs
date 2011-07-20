@@ -36,6 +36,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			//	Construit tout le contenu.
 			this.type = type;
 			this.mode = mode;
+			this.groupIndex = item.GroupIndex;
 
 			this.content.Clear ();
 
@@ -119,6 +120,14 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			else
 			{
 				return null;
+			}
+		}
+
+		public int GroupIndex
+		{
+			get
+			{
+				return this.groupIndex;
 			}
 		}
 
@@ -551,5 +560,6 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		private DocumentType							type;
 		private DocumentItemAccessorMode				mode;
 		private int										rowsCount;
+		private int										groupIndex;
 	}
 }
