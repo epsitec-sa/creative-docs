@@ -331,8 +331,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 					for (int j = 0; j <= i; j++)
 					{
-						int rank = AbstractDocumentItemEntity.LevelExtract (groupIndex, j);
-						partialGroupIndex = AbstractDocumentItemEntity.LevelReplace (partialGroupIndex, j, rank);
+						int rank = AbstractDocumentItemEntity.GroupExtract (groupIndex, j);
+						partialGroupIndex = AbstractDocumentItemEntity.GroupReplace (partialGroupIndex, j, rank);
 					}
 
 					var color = this.GetNiceBackgroundColor (partialGroupIndex);

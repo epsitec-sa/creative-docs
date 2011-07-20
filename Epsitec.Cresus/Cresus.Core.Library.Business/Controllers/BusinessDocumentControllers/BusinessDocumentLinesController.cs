@@ -242,7 +242,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			foreach (var info in this.lineInformations)
 			{
-				if (AbstractDocumentItemEntity.LevelCompare (groupIndex, info.AbstractDocumentItemEntity.GroupIndex, level))
+				if (AbstractDocumentItemEntity.GroupCompare (groupIndex, info.AbstractDocumentItemEntity.GroupIndex, level))
 				{
 					selection.Add (info);
 				}

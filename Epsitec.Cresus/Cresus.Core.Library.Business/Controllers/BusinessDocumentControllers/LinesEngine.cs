@@ -763,7 +763,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			foreach (var info in selection)
 			{
-				if (!AbstractDocumentItemEntity.LevelCompare (minGroupIndex, info.AbstractDocumentItemEntity.GroupIndex, level))
+				if (!AbstractDocumentItemEntity.GroupCompare (minGroupIndex, info.AbstractDocumentItemEntity.GroupIndex, level))
 				{
 					return null;
 				}

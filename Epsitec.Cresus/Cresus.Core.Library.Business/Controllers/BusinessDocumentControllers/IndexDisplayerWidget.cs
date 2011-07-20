@@ -103,8 +103,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			while (true)
 			{
-				int r1 = AbstractDocumentItemEntity.LevelExtract (groupIndex1, i);
-				int r2 = AbstractDocumentItemEntity.LevelExtract (groupIndex2, i);
+				int r1 = AbstractDocumentItemEntity.GroupExtract (groupIndex1, i);
+				int r2 = AbstractDocumentItemEntity.GroupExtract (groupIndex2, i);
 
 				if (r1 != 0 && r1 == r2)
 				{

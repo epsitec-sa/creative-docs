@@ -148,7 +148,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 							return LinesError.Overflow;
 						}
 
-						regeneratedGroupIndex = AbstractDocumentItemEntity.LevelReplace (regeneratedGroupIndex, parent.Deep, i+1);
+						regeneratedGroupIndex = AbstractDocumentItemEntity.GroupReplace (regeneratedGroupIndex, parent.Deep, i+1);
 					}
 
 					node = parent;
@@ -208,8 +208,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			for (int i = 0; i < level; i++)
 			{
-				int rank = AbstractDocumentItemEntity.LevelExtract (entity.GroupIndex, i);
-				progressGroupIndex = AbstractDocumentItemEntity.LevelReplace (progressGroupIndex, i, rank);
+				int rank = AbstractDocumentItemEntity.GroupExtract (entity.GroupIndex, i);
+				progressGroupIndex = AbstractDocumentItemEntity.GroupReplace (progressGroupIndex, i, rank);
 
 				var next = parent.Childrens.Where (x => x.IsNode && x.GroupIndex == progressGroupIndex).FirstOrDefault ();
 

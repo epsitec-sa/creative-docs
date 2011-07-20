@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 
 		#region Static GroupIndex operations
-		public static bool LevelCompare(int groupIndex1, int groupIndex2, int levelCount)
+		public static bool GroupCompare(int groupIndex1, int groupIndex2, int levelCount)
 		{
 			//	Compare deux GroupIndex jusqu'à une profondeur donnée.
 			//	groupIndex1 = 665544, groupIndex2 = 775544, levelCount = 1 -> true
@@ -46,8 +46,8 @@ namespace Epsitec.Cresus.Core.Entities
 			//	groupIndex1 = 665544, groupIndex2 = 775544, levelCount = 4 -> false
 			for (int i = 0; i < levelCount; i++)
 			{
-				int n1 = AbstractDocumentItemEntity.LevelExtract (groupIndex1, i);
-				int n2 = AbstractDocumentItemEntity.LevelExtract (groupIndex2, i);
+				int n1 = AbstractDocumentItemEntity.GroupExtract (groupIndex1, i);
+				int n2 = AbstractDocumentItemEntity.GroupExtract (groupIndex2, i);
 
 				if (n1 != n2)
 				{
@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Core.Entities
 			return true;
 		}
 
-		public static int LevelReplace(int groupIndex, int level, int rank)
+		public static int GroupReplace(int groupIndex, int level, int rank)
 		{
 			//	Remplace une paire de digits d'un niveau quelconque.
 			//	groupIndex = 665544, level = 0, rank = 88 ->   665588
@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 				else
 				{
-					result += f * AbstractDocumentItemEntity.LevelExtract (groupIndex, i);
+					result += f * AbstractDocumentItemEntity.GroupExtract (groupIndex, i);
 				}
 
 				f *= 100;
@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Core.Entities
 			return result;
 		}
 
-		public static int LevelExtract(int groupIndex, int level)
+		public static int GroupExtract(int groupIndex, int level)
 		{
 			//	Extrait une paire de digits.
 			//	Retourne 0 si le niveau n'existe pas.
@@ -126,9 +126,9 @@ namespace Epsitec.Cresus.Core.Entities
 		/// Gets the group level based on an index. For instance <c>01</c> is of level <c>1</c>,
 		/// <c>0101</c> of level <c>2</c>, etc.
 		/// </summary>
-		/// <param name="index">The group index.</param>
+		/// <param name="groupIndex">The group index.</param>
 		/// <returns>The group level.</returns>
-		public static int GetGroupLevel(int index)
+		public static int GetGroupLevel(int groupIndex)
 		{
 			//	Retourne le niveau, compris entre 0 et 4.
 			//	       0 -> 0
@@ -140,12 +140,11 @@ namespace Epsitec.Cresus.Core.Entities
 			//	  665544 -> 3
 			//	 8665544 -> 4
 			//	88665544 -> 4
-			if (index < 0 ||
-				index > 99999999)
+			if (groupIndex < 0 || groupIndex > 99999999)
 			{
 				throw new System.ArgumentOutOfRangeException ("index", "The index must lie between 0 and 99999999)");
 			}
-			else if (index == 0)
+			else if (groupIndex == 0)
 			{
 				return 0;
 			}
@@ -155,7 +154,7 @@ namespace Epsitec.Cresus.Core.Entities
 				//	Log10 (0100..9999) --> 2..3.999957 --> trunc/2 = 1
 				//	etc.
 
-				return 1 + (int) System.Math.Truncate (System.Math.Log10 (index) / 2);
+				return 1 + (int) System.Math.Truncate (System.Math.Log10 (groupIndex) / 2);
 			}
 		}
 		#endregion

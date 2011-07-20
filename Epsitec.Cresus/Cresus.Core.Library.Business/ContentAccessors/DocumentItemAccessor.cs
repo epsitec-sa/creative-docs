@@ -499,7 +499,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			this.groupText = DocumentItemAccessor.GetFormattedGroupIndex (line.GroupIndex);
 
 			int level = AbstractDocumentItemEntity.GetGroupLevel (this.groupIndex);
-			if (!AbstractDocumentItemEntity.LevelCompare (this.groupIndex, previousGroupIndex, level))
+			if (!AbstractDocumentItemEntity.GroupCompare (this.groupIndex, previousGroupIndex, level))
 			{
 				this.SetContent (line, 0, DocumentItemAccessorColumn.GroupNumber, this.groupText);
 			}
