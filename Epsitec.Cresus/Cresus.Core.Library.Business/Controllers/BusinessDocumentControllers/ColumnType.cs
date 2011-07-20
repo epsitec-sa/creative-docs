@@ -6,6 +6,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 	public enum ColumnType
 	{
 		Group,
+		GroupNumber,
+		LineNumber,
 		FullNumber,
 		ArticleId,
 		ArticleDescription,

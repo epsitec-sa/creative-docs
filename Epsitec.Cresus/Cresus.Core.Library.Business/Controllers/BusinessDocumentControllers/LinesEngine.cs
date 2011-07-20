@@ -467,7 +467,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			foreach (var info in selection)
 			{
-				if (LinesEngine.GetLevel (info.AbstractDocumentItemEntity.GroupIndex) >= LinesEngine.maxGroupingDepth)
+				if (AbstractDocumentItemEntity.GetGroupLevel (info.AbstractDocumentItemEntity.GroupIndex) >= AbstractDocumentItemEntity.maxGroupingDepth)
 				{
 					this.lastError = LinesError.MaxDeep;
 					return;
@@ -537,7 +537,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				return;
 			}
 
-			if (LinesEngine.GetLevel (rootEntity.GroupIndex) <= 1)
+			if (AbstractDocumentItemEntity.GetGroupLevel (rootEntity.GroupIndex) <= 1)
 			{
 				this.lastError = LinesError.MinDeep;
 				return;
@@ -759,11 +759,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			//	Vérifie la cohérence.
-			int level = LinesEngine.GetLevel (minGroupIndex);
+			int level = AbstractDocumentItemEntity.GetGroupLevel (minGroupIndex);
 
 			foreach (var info in selection)
 			{
-				if (!LinesEngine.LevelCompare (minGroupIndex, info.AbstractDocumentItemEntity.GroupIndex, level))
+				if (!AbstractDocumentItemEntity.LevelCompare (minGroupIndex, info.AbstractDocumentItemEntity.GroupIndex, level))
 				{
 					return null;
 				}
@@ -967,109 +967,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		#endregion
 
 
-		#region Static GroupIndex operations
-		public static bool LevelCompare(int groupIndex1, int groupIndex2, int levelCount)
-		{
-			//	Compare deux GroupIndex jusqu'à une profondeur donnée.
-			//	groupIndex1 = 665544, groupIndex2 = 775544, levelCount = 1 -> true
-			//	groupIndex1 = 665544, groupIndex2 = 775544, levelCount = 2 -> true
-			//	groupIndex1 = 665544, groupIndex2 = 775544, levelCount = 3 -> false
-			//	groupIndex1 = 665544, groupIndex2 = 775544, levelCount = 4 -> false
-			for (int i = 0; i < levelCount; i++)
-			{
-				int n1 = LinesEngine.LevelExtract (groupIndex1, i);
-				int n2 = LinesEngine.LevelExtract (groupIndex2, i);
-
-				if (n1 != n2)
-				{
-					return false;
-				}
-			}
-
-			return true;
-		}
-
-		public static int LevelReplace(int groupIndex, int level, int rank)
-		{
-			//	Remplace une paire de digits d'un niveau quelconque.
-			//	groupIndex = 665544, level = 0, rank = 88 ->   665588
-			//	groupIndex = 665544, level = 1, rank = 88 ->   668844
-			//	groupIndex = 665544, level = 2, rank = 88 ->   885544
-			//	groupIndex = 665544, level = 3, rank = 88 -> 88665544
-			System.Diagnostics.Debug.Assert (groupIndex >= 0);
-			System.Diagnostics.Debug.Assert (groupIndex <= 99999999);
-
-			System.Diagnostics.Debug.Assert (level >= 0);
-			System.Diagnostics.Debug.Assert (level < LinesEngine.maxGroupingDepth);
-
-			System.Diagnostics.Debug.Assert (rank >= 0);
-			System.Diagnostics.Debug.Assert (rank <= 99);
-
-			int result = 0;
-			int f = 1;
-
-			for (int i = 0; i < LinesEngine.maxGroupingDepth; i++)
-			{
-				if (i == level)
-				{
-					result += f * rank;
-				}
-				else
-				{
-					result += f * LinesEngine.LevelExtract (groupIndex, i);
-				}
-
-				f *= 100;
-			}
-
-			System.Diagnostics.Debug.Assert (result >= 0);
-			System.Diagnostics.Debug.Assert (result <= 99999999);
-
-			return result;
-		}
-
-		public static int LevelExtract(int groupIndex, int level)
-		{
-			//	Extrait une paire de digits.
-			//	Retourne 0 si le niveau n'existe pas.
-			//	groupIndex = 665544, level = 0 -> 44
-			//	groupIndex = 665544, level = 1 -> 55
-			//	groupIndex = 665544, level = 2 -> 66
-			//	groupIndex = 665544, level = 3 ->  0
-			//	groupIndex = 665544, level = 4 ->  0
-			System.Diagnostics.Debug.Assert (groupIndex >= 0);
-			System.Diagnostics.Debug.Assert (groupIndex <= 99999999);
-
-			System.Diagnostics.Debug.Assert (level >= 0);
-
-			if (level >= LinesEngine.maxGroupingDepth)
-			{
-				return 0;
-			}
-			else
-			{
-				int f = (int) System.Math.Pow (100, level);  // f = 1, 100, 10000 ou 1000000
-				return (groupIndex/f) % 100;
-			}
-		}
-
-		public static int GetLevel(int groupIndex)
-		{
-			//	Retourne le niveau, compris entre 0 et 4.
-			//	       0 -> 0
-			//	       4 -> 1
-			//	      44 -> 1
-			//	     544 -> 2
-			//	    5544 -> 2
-			//	   65544 -> 3
-			//	  665544 -> 3
-			//	 8665544 -> 4
-			//	88665544 -> 4
-			return AbstractDocumentItemEntity.GetGroupLevel (groupIndex);
-		}
-		#endregion
-
-
 		private static List<LineInformations> PurgeSelection(List<LineInformations> selection)
 		{
 			//	Purge les lignes "quantité pour un article" d'une sélection.
@@ -1141,8 +1038,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private static readonly string titlePrefixTags  = "<font size=\"150%\"><b>";
 		private static readonly string titlePostfixTags = "</b></font>";
-
-		public static readonly int maxGroupingDepth = 4;
 
 		private readonly BusinessContext				businessContext;
 		private readonly BusinessDocumentEntity			businessDocumentEntity;

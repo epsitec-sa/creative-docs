@@ -10,6 +10,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 {
 	public enum TableColumnKeys
 	{
+		LineNumber,
 		Quantity,
 		DelayedQuantity,
 		DelayedDate,

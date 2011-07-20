@@ -36,6 +36,92 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
+		#region Static GroupIndex operations
+		public static bool LevelCompare(int groupIndex1, int groupIndex2, int levelCount)
+		{
+			//	Compare deux GroupIndex jusqu'à une profondeur donnée.
+			//	groupIndex1 = 665544, groupIndex2 = 775544, levelCount = 1 -> true
+			//	groupIndex1 = 665544, groupIndex2 = 775544, levelCount = 2 -> true
+			//	groupIndex1 = 665544, groupIndex2 = 775544, levelCount = 3 -> false
+			//	groupIndex1 = 665544, groupIndex2 = 775544, levelCount = 4 -> false
+			for (int i = 0; i < levelCount; i++)
+			{
+				int n1 = AbstractDocumentItemEntity.LevelExtract (groupIndex1, i);
+				int n2 = AbstractDocumentItemEntity.LevelExtract (groupIndex2, i);
+
+				if (n1 != n2)
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		public static int LevelReplace(int groupIndex, int level, int rank)
+		{
+			//	Remplace une paire de digits d'un niveau quelconque.
+			//	groupIndex = 665544, level = 0, rank = 88 ->   665588
+			//	groupIndex = 665544, level = 1, rank = 88 ->   668844
+			//	groupIndex = 665544, level = 2, rank = 88 ->   885544
+			//	groupIndex = 665544, level = 3, rank = 88 -> 88665544
+			System.Diagnostics.Debug.Assert (groupIndex >= 0);
+			System.Diagnostics.Debug.Assert (groupIndex <= 99999999);
+
+			System.Diagnostics.Debug.Assert (level >= 0);
+			System.Diagnostics.Debug.Assert (level < AbstractDocumentItemEntity.maxGroupingDepth);
+
+			System.Diagnostics.Debug.Assert (rank >= 0);
+			System.Diagnostics.Debug.Assert (rank <= 99);
+
+			int result = 0;
+			int f = 1;
+
+			for (int i = 0; i < AbstractDocumentItemEntity.maxGroupingDepth; i++)
+			{
+				if (i == level)
+				{
+					result += f * rank;
+				}
+				else
+				{
+					result += f * AbstractDocumentItemEntity.LevelExtract (groupIndex, i);
+				}
+
+				f *= 100;
+			}
+
+			System.Diagnostics.Debug.Assert (result >= 0);
+			System.Diagnostics.Debug.Assert (result <= 99999999);
+
+			return result;
+		}
+
+		public static int LevelExtract(int groupIndex, int level)
+		{
+			//	Extrait une paire de digits.
+			//	Retourne 0 si le niveau n'existe pas.
+			//	groupIndex = 665544, level = 0 -> 44
+			//	groupIndex = 665544, level = 1 -> 55
+			//	groupIndex = 665544, level = 2 -> 66
+			//	groupIndex = 665544, level = 3 ->  0
+			//	groupIndex = 665544, level = 4 ->  0
+			System.Diagnostics.Debug.Assert (groupIndex >= 0);
+			System.Diagnostics.Debug.Assert (groupIndex <= 99999999);
+
+			System.Diagnostics.Debug.Assert (level >= 0);
+
+			if (level >= AbstractDocumentItemEntity.maxGroupingDepth)
+			{
+				return 0;
+			}
+			else
+			{
+				int f = (int) System.Math.Pow (100, level);  // f = 1, 100, 10000 ou 1000000
+				return (groupIndex/f) % 100;
+			}
+		}
+
 		/// <summary>
 		/// Gets the group level based on an index. For instance <c>01</c> is of level <c>1</c>,
 		/// <c>0101</c> of level <c>2</c>, etc.
@@ -44,8 +130,18 @@ namespace Epsitec.Cresus.Core.Entities
 		/// <returns>The group level.</returns>
 		public static int GetGroupLevel(int index)
 		{
-			if ((index < 0) ||
-				(index > 99999999))
+			//	Retourne le niveau, compris entre 0 et 4.
+			//	       0 -> 0
+			//	       4 -> 1
+			//	      44 -> 1
+			//	     544 -> 2
+			//	    5544 -> 2
+			//	   65544 -> 3
+			//	  665544 -> 3
+			//	 8665544 -> 4
+			//	88665544 -> 4
+			if (index < 0 ||
+				index > 99999999)
 			{
 				throw new System.ArgumentOutOfRangeException ("index", "The index must lie between 0 and 99999999)");
 			}
@@ -62,5 +158,9 @@ namespace Epsitec.Cresus.Core.Entities
 				return 1 + (int) System.Math.Truncate (System.Math.Log10 (index) / 2);
 			}
 		}
+		#endregion
+
+
+		public static readonly int maxGroupingDepth = 4;
 	}
 }

@@ -135,6 +135,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			switch (columnType)
 			{
+				case ColumnType.GroupNumber:
+					return info.GetColumnContent (DocumentItemAccessorColumn.GroupNumber);
+
+				case ColumnType.LineNumber:
+					return info.GetColumnContent (DocumentItemAccessorColumn.LineNumber);
+
 				case ColumnType.FullNumber:
 					return info.GetColumnContent (DocumentItemAccessorColumn.FullNumber);
 
@@ -225,7 +231,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			int groupIndex = selection[0].AbstractDocumentItemEntity.GroupIndex;
-			int level = LinesEngine.GetLevel (groupIndex);
+			int level = AbstractDocumentItemEntity.GetGroupLevel (groupIndex);
 
 			if (level == 0)
 			{
@@ -236,7 +242,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			foreach (var info in this.lineInformations)
 			{
-				if (LinesEngine.LevelCompare (groupIndex, info.AbstractDocumentItemEntity.GroupIndex, level))
+				if (AbstractDocumentItemEntity.LevelCompare (groupIndex, info.AbstractDocumentItemEntity.GroupIndex, level))
 				{
 					selection.Add (info);
 				}

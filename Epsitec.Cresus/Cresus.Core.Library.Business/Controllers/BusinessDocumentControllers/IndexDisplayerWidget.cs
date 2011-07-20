@@ -6,6 +6,8 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 using Epsitec.Common.Support;
 
+using Epsitec.Cresus.Core.Entities;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -67,8 +69,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Rectangle rect = this.Client.Bounds;
 
-			int bandWidth = (int) rect.Width / LinesEngine.maxGroupingDepth;
-			int count = System.Math.Min (colors.Count, LinesEngine.maxGroupingDepth);
+			int bandWidth = (int) rect.Width / AbstractDocumentItemEntity.maxGroupingDepth;
+			int count = System.Math.Min (colors.Count, AbstractDocumentItemEntity.maxGroupingDepth);
 
 			for (int i = 0; i < count; i++)
 			{
@@ -101,8 +103,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			while (true)
 			{
-				int r1 = LinesEngine.LevelExtract (groupIndex1, i);
-				int r2 = LinesEngine.LevelExtract (groupIndex2, i);
+				int r1 = AbstractDocumentItemEntity.LevelExtract (groupIndex1, i);
+				int r2 = AbstractDocumentItemEntity.LevelExtract (groupIndex2, i);
 
 				if (r1 != 0 && r1 == r2)
 				{

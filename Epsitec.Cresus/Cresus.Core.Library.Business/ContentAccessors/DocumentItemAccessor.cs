@@ -481,14 +481,14 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 		private void BuildCommonItem(DocumentItemAccessor previousAccessor, AbstractDocumentItemEntity line)
 		{
-			string text = DocumentItemAccessor.GetFormattedGroupIndex (line.GroupIndex);
-			this.SetContent (line, 0, DocumentItemAccessorColumn.GroupNumber, text);
+			int previousGroupIndex = 0;
 
 			if (previousAccessor != null)
 			{
+				previousGroupIndex = previousAccessor.GroupIndex;
 				this.lineNumber = previousAccessor.lineNumber+1;
 
-				if (previousAccessor.GroupIndex == this.groupIndex)
+				if (previousGroupIndex == this.groupIndex)
 				{
 					this.relativeLineNumber = previousAccessor.relativeLineNumber;
 				}
@@ -496,18 +496,27 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 			this.relativeLineNumber++;
 
+			this.groupText = DocumentItemAccessor.GetFormattedGroupIndex (line.GroupIndex);
+
+			int level = AbstractDocumentItemEntity.GetGroupLevel (this.groupIndex);
+			if (!AbstractDocumentItemEntity.LevelCompare (this.groupIndex, previousGroupIndex, level))
+			{
+				this.SetContent (line, 0, DocumentItemAccessorColumn.GroupNumber, this.groupText);
+			}
+
 			this.SetContent (line, 0, DocumentItemAccessorColumn.LineNumber, (this.lineNumber+1).ToString ());
 
-			if (string.IsNullOrEmpty (text))
+			string group = this.groupText;
+			if (string.IsNullOrEmpty (group))
 			{
-				text = (this.relativeLineNumber.ToString ());
+				group = (this.relativeLineNumber.ToString ());
 			}
 			else
 			{
-				text = string.Concat (text, ".", (this.relativeLineNumber.ToString ()));
+				group = string.Concat (group, ".", (this.relativeLineNumber.ToString ()));
 			}
 
-			this.SetContent (line, 0, DocumentItemAccessorColumn.FullNumber, text);
+			this.SetContent (line, 0, DocumentItemAccessorColumn.FullNumber, group);
 		}
 
 
@@ -623,5 +632,6 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		private int										groupIndex;
 		private int										lineNumber;
 		private int										relativeLineNumber;
+		private string									groupText;
 	}
 }

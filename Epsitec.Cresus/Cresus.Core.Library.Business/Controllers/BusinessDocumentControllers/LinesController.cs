@@ -316,7 +316,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Initialise les couleurs à utiliser.
 			displayer.Colors.Clear ();
 
-			int level = LinesEngine.GetLevel (groupIndex);
+			int level = AbstractDocumentItemEntity.GetGroupLevel (groupIndex);
 
 			if (level == 0)
 			{
@@ -331,8 +331,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 					for (int j = 0; j <= i; j++)
 					{
-						int rank = LinesEngine.LevelExtract (groupIndex, j);
-						partialGroupIndex = LinesEngine.LevelReplace (partialGroupIndex, j, rank);
+						int rank = AbstractDocumentItemEntity.LevelExtract (groupIndex, j);
+						partialGroupIndex = AbstractDocumentItemEntity.LevelReplace (partialGroupIndex, j, rank);
 					}
 
 					var color = this.GetNiceBackgroundColor (partialGroupIndex);
@@ -404,6 +404,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				{
 					yield return ColumnType.Group;
 
+					yield return ColumnType.GroupNumber;  // TODO: provisoire, pour le debug
+					yield return ColumnType.LineNumber;  // TODO: provisoire, pour le debug
 					yield return ColumnType.FullNumber;
 
 					yield return ColumnType.ArticleId;
@@ -419,7 +421,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					yield return ColumnType.Vat;
 					yield return ColumnType.Total;
 
-					//yield return ColumnType.GroupIndex;  // TODO: provisoire, pour le debug
+					yield return ColumnType.GroupIndex;  // TODO: provisoire, pour le debug
 				}
 			}
 		}
@@ -471,6 +473,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				case ColumnType.Group:
 					return 40;
 
+				case ColumnType.GroupNumber:
+					return 70;
+
+				case ColumnType.LineNumber:
+					return 40;
+
 				case ColumnType.FullNumber:
 					return 80;
 
@@ -502,8 +510,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				case ColumnType.GroupIndex:
 					return "Debug";
 
+				case ColumnType.GroupNumber:
+					return "Groupe";
+
+				case ColumnType.LineNumber:
+					return "N°";
+
 				case ColumnType.FullNumber:
-					return "N° ligne";
+					return "N°";
 
 				case ColumnType.QuantityAndUnit:
 					return "Quantité";

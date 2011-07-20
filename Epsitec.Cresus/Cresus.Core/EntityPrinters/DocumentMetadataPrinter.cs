@@ -369,6 +369,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			if (this.IsColumnsOrderQD)
 			{
+				this.tableColumns.Add (TableColumnKeys.LineNumber,         new TableColumn ("N°",          priceWidth,   ContentAlignment.MiddleLeft));
 				this.tableColumns.Add (TableColumnKeys.Quantity,           new TableColumn ("?",           priceWidth,   ContentAlignment.MiddleLeft));  // "Quantité" ou "Livré"
 				this.tableColumns.Add (TableColumnKeys.DelayedQuantity,    new TableColumn ("Suit",        priceWidth,   ContentAlignment.MiddleLeft));
 				this.tableColumns.Add (TableColumnKeys.DelayedDate,        new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
@@ -382,6 +383,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 			else
 			{
+				this.tableColumns.Add (TableColumnKeys.LineNumber,         new TableColumn ("N°",          priceWidth,   ContentAlignment.MiddleLeft));
 				this.tableColumns.Add (TableColumnKeys.ArticleId,          new TableColumn ("Article",     priceWidth,   ContentAlignment.MiddleLeft));
 				this.tableColumns.Add (TableColumnKeys.ArticleDescription, new TableColumn ("Désignation", 0,            ContentAlignment.MiddleLeft));  // seule colonne en mode width = fill
 				this.tableColumns.Add (TableColumnKeys.Quantity,           new TableColumn ("?",           priceWidth,   ContentAlignment.MiddleLeft));  // "Quantité" ou "Livré"
@@ -476,6 +478,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					rowCount += rowUsed;
 				}
 			}
+
+			this.tableColumns[TableColumnKeys.LineNumber].Visible = !this.HasOption (DocumentOption.LineNumber, "None");
 
 			if (this.DocumentType == Business.DocumentType.DeliveryNote)
 			{
@@ -591,6 +595,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					{
 						rowUsed = this.BuildEndTotalLine (this.table, row, accessors[i], line as EndTotalDocumentItemEntity);
 					}
+
+					this.BuildCommonLine (this.table, row, accessors[i], line);
 
 					if (rowUsed != 0)
 					{
@@ -985,6 +991,31 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 
 			return accessor.RowsCount;
+		}
+
+		private void BuildCommonLine(TableBand table, int row, DocumentItemAccessor accessor, AbstractDocumentItemEntity line)
+		{
+			FormattedText text = null;
+
+			if (this.HasOption (DocumentOption.LineNumber, "Group"))
+			{
+				text = accessor.GetContent (0, DocumentItemAccessorColumn.GroupNumber);
+			}
+
+			if (this.HasOption (DocumentOption.LineNumber, "Line"))
+			{
+				text = accessor.GetContent (0, DocumentItemAccessorColumn.LineNumber);
+			}
+
+			if (this.HasOption (DocumentOption.LineNumber, "Full"))
+			{
+				text = accessor.GetContent (0, DocumentItemAccessorColumn.FullNumber);
+			}
+
+			if (!text.IsNullOrEmpty)
+			{
+				table.SetText (this.tableColumns[TableColumnKeys.LineNumber].Rank, row, text, this.FontSize);
+			}
 		}
 
 		private void TableMakeBlock(TableBand table, int row, int rowsCount)
