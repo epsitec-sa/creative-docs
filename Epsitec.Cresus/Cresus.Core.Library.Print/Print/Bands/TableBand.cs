@@ -555,6 +555,9 @@ namespace Epsitec.Cresus.Core.Print.Bands
 				bool rowEnding = true;
 				bool tooSmall = false;
 
+				TextBand firstTextBand = this.GetTextBand (0, row);
+				var topGap = firstTextBand.TableCellBorder.TopGap;
+
 				for (int column = 0; column < this.columnsCount; column++)
 				{
 					TextBand textBand = this.GetTextBand (column, row);
@@ -580,7 +583,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 					{
 						double verticalMargin = margins.Bottom + margins.Top;
 
-						bool cellEnding = textBand.JustifOneSection (ref line, height-verticalMargin);
+						bool cellEnding = textBand.JustifOneSection (ref line, height-topGap-verticalMargin);
 
 						double cellHeight = textBand.LastHeight + verticalMargin;
 
@@ -614,9 +617,11 @@ namespace Epsitec.Cresus.Core.Print.Bands
 					break;
 				}
 
+				rowInfo.TopGap = topGap;
 				rowInfo.Height = maxRowHeight;
 				newSection.RowsInfo.Add (rowInfo);
 
+				maxRowHeight += topGap;
 				rowCount++;
 				sectionHeight += maxRowHeight;
 				height -= maxRowHeight;
@@ -679,7 +684,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 				{
 					if (info.Row == row)
 					{
-						return info.Height;
+						return info.TopGap + info.Height;
 					}
 				}
 			}
@@ -727,6 +732,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 			for (int row = sectionInfo.FirstRow; row < sectionInfo.FirstRow+sectionInfo.RowCount; row++)
 			{
 				var rowInfo = sectionInfo.RowsInfo[row-sectionInfo.FirstRow];
+				y -= rowInfo.TopGap;
 
 				double x = topLeft.X;
 
@@ -840,6 +846,9 @@ namespace Epsitec.Cresus.Core.Print.Bands
 				maxHeight = System.Math.Max (maxHeight, height);
 			}
 
+			TextBand firstTextBand = this.GetTextBand (0, row);
+			maxHeight += firstTextBand.TableCellBorder.TopGap;
+
 			return maxHeight;
 		}
 
@@ -933,6 +942,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 			}
 
 			public int				Row;
+			public double			TopGap;
 			public double			Height;
 			public List<CellInfo>	CellsInfo;
 		}

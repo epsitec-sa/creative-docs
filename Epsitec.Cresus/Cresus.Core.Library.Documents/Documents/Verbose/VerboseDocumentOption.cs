@@ -188,6 +188,8 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 			d = new string[] { "Espacé, sans encadrements", "Espacé, avec des lignes de séparation", "Serré, avec des encadrements" };
 			list.Add (new VerboseDocumentOption (DocumentOption.LayoutFrame, "LayoutFrame", true, e, d, 1));
 
+			list.Add (new VerboseDocumentOption (DocumentOption.GapBeforeGroup, "LayoutFrame", true, DocumentOptionValueType.Boolean, "Interligne supplémentaire entre les groupes", "true"));
+
 			list.Add (new VerboseDocumentOption ("Numérotation", "LineNumber"));
 			e = new string[] { "None", "Group", "Line", "Full" };
 			d = new string[] { "Aucune", "Numérotation des groupes", "Numérotation des lignes", "Numérotation des groupes et des lignes" };

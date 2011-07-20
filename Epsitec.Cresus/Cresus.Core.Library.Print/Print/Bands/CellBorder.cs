@@ -19,6 +19,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 			this.rightWidth  = width;
 			this.bottomWidth = width;
 			this.topWidth    = width;
+			this.topGap      = 0;
 			this.color       = Color.FromBrightness (0);
 		}
 
@@ -28,6 +29,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 			this.rightWidth  = width;
 			this.bottomWidth = width;
 			this.topWidth    = width;
+			this.topGap      = 0;
 			this.color       = color;
 		}
 
@@ -37,6 +39,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 			this.rightWidth  = rightWidth;
 			this.bottomWidth = bottomWidth;
 			this.topWidth    = topWidth;
+			this.topGap      = 0;
 			this.color       = Color.FromBrightness (0);
 		}
 
@@ -46,6 +49,17 @@ namespace Epsitec.Cresus.Core.Print.Bands
 			this.rightWidth  = rightWidth;
 			this.bottomWidth = bottomWidth;
 			this.topWidth    = topWidth;
+			this.topGap      = 0;
+			this.color       = color;
+		}
+
+		public CellBorder(double leftWidth, double rightWidth, double bottomWidth, double topWidth, double topGap, Color color)
+		{
+			this.leftWidth   = leftWidth;
+			this.rightWidth  = rightWidth;
+			this.bottomWidth = bottomWidth;
+			this.topWidth    = topWidth;
+			this.topGap      = topGap;
 			this.color       = color;
 		}
 
@@ -120,6 +134,14 @@ namespace Epsitec.Cresus.Core.Print.Bands
 			}
 		}
 
+		public double TopGap
+		{
+			get
+			{
+				return this.topGap;
+			}
+		}
+
 		public Color Color
 		{
 			get
@@ -133,6 +155,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 		private readonly double		rightWidth;
 		private readonly double		bottomWidth;
 		private readonly double		topWidth;
+		private readonly double		topGap;
 		private readonly Color		color;
 	}
 }

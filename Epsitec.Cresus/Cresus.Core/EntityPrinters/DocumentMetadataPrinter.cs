@@ -1017,6 +1017,28 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			{
 				table.SetText (this.tableColumns[TableColumnKeys.LineNumber].Rank, row, text, this.FontSize);
 			}
+
+			var topGap = 0;  // pas d'espace supplémentaire
+
+			if (this.HasOption (DocumentOption.GapBeforeGroup))
+			{
+				bool hasTopGap = !accessor.GetContent (0, DocumentItemAccessorColumn.GroupNumber).IsNullOrEmpty;  // début d'un groupe ?
+
+				if (hasTopGap)
+				{
+					if (this.IsWithFrame)
+					{
+						topGap = 2;  // 2mm d'espace entre les groupes
+					}
+					else
+					{
+						topGap = 5;  // 5mm d'espace entre les groupes
+					}
+				}
+			}
+
+			var cellBorder = table.GetCellBorder (0, row);
+			table.SetCellBorder (0, row, new CellBorder (cellBorder.LeftWidth, cellBorder.RightWidth, cellBorder.BottomWidth, cellBorder.TopWidth, topGap, cellBorder.Color));
 		}
 
 		private void TableMakeBlock(TableBand table, int row, int rowsCount)

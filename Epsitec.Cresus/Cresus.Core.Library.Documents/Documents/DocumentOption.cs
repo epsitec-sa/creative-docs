@@ -26,6 +26,8 @@ namespace Epsitec.Cresus.Core.Documents
 		BottomMargin,		// distance
 
 		LayoutFrame,		// enum: Frameless, WithLine, WithFrame
+		GapBeforeGroup,		// bool
+
 		LineNumber,			// enum: None, Group, Line, Full
 
 		ArticleDelayed,		// bool
