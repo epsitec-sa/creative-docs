@@ -431,10 +431,14 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				var line = this.Entity.Lines[i];
 
 				var accessor = new DocumentItemAccessor (this.Entity);
-				accessor.BuildContent (previousAccessor, line, this.DocumentType, mode);
+				bool show = accessor.BuildContent (previousAccessor, line, this.DocumentType, mode);
 
 				accessors.Add (accessor);
-				previousAccessor = accessor;
+
+				if (show)
+				{
+					previousAccessor = accessor;
+				}
 			}
 
 			//	Première passe pour déterminer le nombre le lignes du tableau de la facture

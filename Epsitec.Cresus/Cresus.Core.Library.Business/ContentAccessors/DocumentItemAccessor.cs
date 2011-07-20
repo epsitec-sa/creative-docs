@@ -31,9 +31,10 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			this.articleQuantityEntities = new List<ArticleQuantityEntity> ();
 		}
 
-		public void BuildContent(DocumentItemAccessor previousAccessor, AbstractDocumentItemEntity item, DocumentType type, DocumentItemAccessorMode mode)
+		public bool BuildContent(DocumentItemAccessor previousAccessor, AbstractDocumentItemEntity item, DocumentType type, DocumentItemAccessorMode mode)
 		{
 			//	Construit tout le contenu.
+			//	Retourne false si le contenu est entièrement caché.
 			this.type = type;
 			this.mode = mode;
 			this.groupIndex = item.GroupIndex;
@@ -43,7 +44,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			if ((this.mode & DocumentItemAccessorMode.ShowMyEyesOnly) == 0 &&
 				item.Attributes.HasFlag (DocumentItemAttributes.MyEyesOnly))
 			{
-				return;
+				return false;
 			}
 
 			if (item is TextDocumentItemEntity)
@@ -72,6 +73,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			}
 
 			this.BuildCommonItem (previousAccessor, item);
+			return true;
 		}
 
 		public int RowsCount
