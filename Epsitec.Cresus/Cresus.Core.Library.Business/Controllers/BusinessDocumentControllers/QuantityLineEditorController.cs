@@ -160,7 +160,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			foreach (var e in this.accessData.BusinessLogic.ArticleQuantityTypeEditionEnabled)
 			{
-				widget.Items.Add (e.Key.ToString (), e);
+				if (e.Key != ArticleQuantityType.Ordered)
+				{
+					widget.Items.Add (e.Key.ToString (), e);
+				}
 			}
 
 			widget.ValueToDescriptionConverter = delegate (object o)

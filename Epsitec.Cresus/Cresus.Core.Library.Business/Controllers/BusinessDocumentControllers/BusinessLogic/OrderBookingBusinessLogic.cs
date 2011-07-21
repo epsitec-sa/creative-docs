@@ -67,12 +67,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		public virtual IEnumerable<ArticleQuantityType> ArticleQuantityTypeEditionEnabled
+		public override IEnumerable<ArticleQuantityType> ArticleQuantityTypeEditionEnabled
 		{
 			get
 			{
 				yield return ArticleQuantityType.Ordered;				// commandé
 				yield return ArticleQuantityType.Delayed;				// retardé
+				yield return ArticleQuantityType.Expected;				// attendu
 				yield return ArticleQuantityType.Information;			// information
 			}
 		}

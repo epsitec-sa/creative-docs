@@ -497,9 +497,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			var selection = this.Selection;
 			var edit = this.accessData.BusinessLogic.IsLinesEditionEnabled;
+			var quantity = this.accessData.BusinessLogic.IsArticleQuantityEditionEnabled;
 
 			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateArticle,  edit);
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateQuantity, edit & this.linesEngine.IsCreateQuantityEnabled (selection));
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateQuantity, quantity & this.linesEngine.IsCreateQuantityEnabled (selection));
 			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateText,     edit);
 			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateTitle,    edit);
 			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateGroup,    edit);

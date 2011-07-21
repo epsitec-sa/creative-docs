@@ -195,6 +195,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				PreferredHeight = 20,
 				Padding = new Margins (10),
 				TabIndex = this.NextTabIndex,
+				Enable = this.accessData.BusinessLogic.IsArticleQuantityTypeEditionEnabled (ArticleQuantityType.Ordered),
 			};
 
 			var separator = new Separator
@@ -249,6 +250,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					PreferredHeight = 20,
 					Margins = new Margins (0, 0, 0, 5),
 					TabIndex = this.NextTabIndex,
+					Enable = this.accessData.BusinessLogic.IsPriceEditionEnabled,
 				};
 
 				//	Prix unitaire.
@@ -265,6 +267,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					PreferredHeight = 20,
 					Margins = new Margins (0, 0, 0, 5),
 					TabIndex = this.NextTabIndex,
+					Enable = this.accessData.BusinessLogic.IsDiscountEditionEnabled,
 				};
 
 				//	Rabais.

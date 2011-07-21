@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public bool IsArticleParametersEditionEnabled
 		{
-			//	Indique s'il est possible de modifier les paramètres des articles.
+			//	Indique s'il est possibled'éditer les paramètres des articles.
 			get
 			{
 				return this.documentBusinessLogic.IsArticleParametersEditionEnabled;
@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public bool IsTextEditionEnabled
 		{
-			//	Indique s'il est possible de modifier les paramètres des articles.
+			//	Indique s'il est possible d'éditer les textes.
 			get
 			{
 				return this.documentBusinessLogic.IsTextEditionEnabled;
@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public bool IsPriceEditionEnabled
 		{
-			//	Indique s'il est possible de modifier les paramètres des articles.
+			//	Indique s'il est possible d'éditer les prix.
 			get
 			{
 				return this.documentBusinessLogic.IsPriceEditionEnabled;
@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public bool IsDiscountEditionEnabled
 		{
-			//	Indique s'il est possible de modifier les paramètres des articles.
+			//	Indique s'il est possible d'éditer les rabais.
 			get
 			{
 				return this.documentBusinessLogic.IsDiscountEditionEnabled;
@@ -158,6 +158,22 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			//	Retourne une définition de type de quantité définie dans les réglages globaux.
 			return this.articleQuantityColumnEntities.Where (x => x.QuantityType == type).FirstOrDefault ();
+		}
+
+
+		public bool IsArticleQuantityEditionEnabled
+		{
+			//	Indique s'il est possible d'éditer les quantités.
+			get
+			{
+				return this.ArticleQuantityTypeEditionEnabled.Count () != 0;
+			}
+		}
+
+		public bool IsArticleQuantityTypeEditionEnabled(ArticleQuantityType type)
+		{
+			//	Indique s'il est possible d'éditer une quantité donnée.
+			return this.ArticleQuantityTypeEditionEnabled.Where (x => x.Key == type).Any ();
 		}
 
 		public IEnumerable<EnumKeyValues<ArticleQuantityType>> ArticleQuantityTypeEditionEnabled
