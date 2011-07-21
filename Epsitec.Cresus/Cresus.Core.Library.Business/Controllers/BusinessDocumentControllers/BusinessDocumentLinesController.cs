@@ -496,28 +496,29 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private void UpdateCommands()
 		{
 			var selection = this.Selection;
+			var edit = this.accessData.BusinessLogic.IsLinesEditionPossible;
 
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateArticle,  true);
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateQuantity, this.linesEngine.IsCreateQuantityEnabled (selection));
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateText,     true);
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateTitle,    true);
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateGroup,    true);
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateDiscount, true);
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateTax,      true);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateArticle,  edit);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateQuantity, edit & this.linesEngine.IsCreateQuantityEnabled (selection));
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateText,     edit);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateTitle,    edit);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateGroup,    edit);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateDiscount, edit);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateTax,      edit);
 
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.MoveUp,         this.linesEngine.IsMoveEnabled (selection, -1));
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.MoveDown,       this.linesEngine.IsMoveEnabled (selection, 1));
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Duplicate,      this.linesEngine.IsDuplicateEnabled (selection));
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Delete,         this.linesEngine.IsDeleteEnabled (selection));
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.MoveUp,         edit & this.linesEngine.IsMoveEnabled (selection, -1));
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.MoveDown,       edit & this.linesEngine.IsMoveEnabled (selection, 1));
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Duplicate,      edit & this.linesEngine.IsDuplicateEnabled (selection));
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Delete,         edit & this.linesEngine.IsDeleteEnabled (selection));
 
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Group,          this.linesEngine.IsGroupEnabled (selection));
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Ungroup,        this.linesEngine.IsUngroupEnabled (selection));
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Split,          this.linesEngine.IsSplitEnabled (selection));
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Combine,        this.linesEngine.IsCombineEnabled (selection));
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Flat,           this.linesEngine.IsFlatEnabled);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Group,          edit & this.linesEngine.IsGroupEnabled (selection));
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Ungroup,        edit & this.linesEngine.IsUngroupEnabled (selection));
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Split,          edit & this.linesEngine.IsSplitEnabled (selection));
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Combine,        edit & this.linesEngine.IsCombineEnabled (selection));
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Flat,           edit & this.linesEngine.IsFlatEnabled);
 
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Deselect,       selection.Count != 0);
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.GroupSelect,    selection.Count != 0);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Deselect,       edit & selection.Count != 0);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.GroupSelect,    edit & selection.Count != 0);
 		}
 
 

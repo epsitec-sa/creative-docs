@@ -36,14 +36,31 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
+		public bool IsLinesEditionPossible
+		{
+			//	Indique s'il est possible d'éditer les lignes du document, c'est-à-dire s'il est possible
+			//	de créer des lignes, d'en supprimer, d'en déplacer, etc.
+			get
+			{
+				var type = this.documentMetadataEntity.DocumentCategory.DocumentType;
+
+				return type == DocumentType.SalesQuote ||
+					   type == DocumentType.QuoteRequest ||
+					   type == DocumentType.CreditMemo;
+			}
+		}
+
+
 		public ArticleQuantityColumnEntity GetArticleQuantityColumnEntity(ArticleQuantityType type)
 		{
+			//	Retourne une définition de type de quantité définie dans les réglages globaux.
 			return this.articleQuantityColumnEntities.Where (x => x.QuantityType == type).FirstOrDefault ();
 		}
 
 		public IEnumerable<EnumKeyValues<ArticleQuantityType>> PossibleValueArticleQuantityType
 		{
-			//	Retourne les types de quantité définis dans les réglages globaux.
+			//	Retourne les types de quantité définis dans les réglages globaux compatibles
+			//	avec le document en cours.
 			get
 			{
 				var possible = this.PossibleArticleQuantityType;
