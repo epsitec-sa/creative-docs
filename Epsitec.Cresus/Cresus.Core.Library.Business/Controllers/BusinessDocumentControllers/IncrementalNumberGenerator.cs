@@ -40,6 +40,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.seed = this.seeds[this.groupIndex];
 
 			this.rank++;
+			this.GenerateGroupNumber ();
+			this.GenerateFullNumber ();
 		}
 
 		public string SimpleNumber
@@ -57,16 +59,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Les lignes suivantes qui ont le même numéro retournent null.
 			get
 			{
-				if (this.groupNumberAlreadyGenerated.Contains (this.groupIndex))  // numéro déjà donné ?
-				{
-					return null;
-				}
-				else
-				{
-					this.groupNumberAlreadyGenerated.Add (this.groupIndex);
-
-					return IncrementalNumberGenerator.GetFormattedGroupIndex (this.groupIndex);
-				}
+				return this.groupNumber;
 			}
 		}
 
@@ -76,17 +69,36 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	chaque ligne. Chaque ligne aura un numéro unique.
 			get
 			{
-				var n1 = IncrementalNumberGenerator.GetFormattedGroupIndex (this.groupIndex);
-				var n2 = this.seed.ToString ();
+				return this.fullNumber;
+			}
+		}
 
-				if (string.IsNullOrEmpty (n1))
-				{
-					return n2;
-				}
-				else
-				{
-					return string.Concat (n1, ".", n2);
-				}
+
+		private void GenerateGroupNumber()
+		{
+			if (this.groupNumberAlreadyGenerated.Contains (this.groupIndex))  // numéro déjà donné ?
+			{
+				this.groupNumber = null;
+			}
+			else
+			{
+				this.groupNumberAlreadyGenerated.Add (this.groupIndex);
+				this.groupNumber = IncrementalNumberGenerator.GetFormattedGroupIndex (this.groupIndex);
+			}
+		}
+
+		private void GenerateFullNumber()
+		{
+			var n1 = IncrementalNumberGenerator.GetFormattedGroupIndex (this.groupIndex);
+			var n2 = this.seed.ToString ();
+
+			if (string.IsNullOrEmpty (n1))
+			{
+				this.fullNumber = n2;
+			}
+			else
+			{
+				this.fullNumber = string.Concat (n1, ".", n2);
 			}
 		}
 
@@ -124,5 +136,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private int								groupIndex;
 		private int								seed;
 		private int								rank;
+		private string							groupNumber;
+		private string							fullNumber;
 	}
 }

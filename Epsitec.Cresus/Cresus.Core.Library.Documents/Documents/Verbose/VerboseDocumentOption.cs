@@ -192,7 +192,7 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 
 			list.Add (new VerboseDocumentOption ("Numérotation", "LineNumber"));
 			e = new string[] { "None", "Group", "Line", "Full" };
-			d = new string[] { "Aucune", "Numérotation des groupes", "Numérotation des lignes", "Numérotation des groupes et des lignes" };
+			d = new string[] { "Aucune", "Numérotation des groupes", "Numérotation plate des lignes", "Numérotation hiérarchique des lignes" };
 			list.Add (new VerboseDocumentOption (DocumentOption.LineNumber, "LineNumber", true, e, d, 0));
 
 			//	Ajoute les options d'impression liées aux factures.
