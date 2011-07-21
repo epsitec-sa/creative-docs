@@ -157,6 +157,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				newLine.Text = string.Concat (LinesEngine.titlePrefixTags, LinesEngine.titlePostfixTags);
 			}
 
+			if (this.businessLogic.IsMyEyesOnlyEditionEnabled)
+			{
+				newLine.Attributes = DocumentItemAttributes.MyEyesOnly;
+			}
+
 			newLine.GroupIndex = model.GroupIndex;
 
 			this.businessDocumentEntity.Lines.Insert (index, newLine);
@@ -241,6 +246,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			if (selection.Count != 1)
+			{
+				this.lastError = LinesError.InvalidSelection;
+				return;
+			}
+
+			//	Vérifie si la sélection est compatible avec la logique d'entreprise.
+			if (!this.IsBusinessLogicAccepted (selection))
 			{
 				this.lastError = LinesError.InvalidSelection;
 				return;
@@ -413,19 +425,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			//	Vérifie si la sélection est compatible avec la logique d'entreprise.
-			var isEditionEnabled  = this.businessLogic.IsLinesEditionEnabled;
-			var isQuantityEnabled = this.businessLogic.IsArticleQuantityEditionEnabled;
-
-			foreach (var info in selection)
+			if (!this.IsBusinessLogicAccepted (selection))
 			{
-				if (!isEditionEnabled && isQuantityEnabled)
-				{
-					if (!info.IsQuantity)
-					{
-						this.lastError = LinesError.OnlyQuantity;
-						return null;
-					}
-				}
+				this.lastError = LinesError.InvalidSelection;
+				return null;
 			}
 
 			if (simulation)
@@ -901,6 +904,19 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				return enable;
 			}
+		}
+
+		private bool IsBusinessLogicAccepted(List<LineInformations> selection)
+		{
+			foreach (var info in selection)
+			{
+				if (!this.businessLogic.IsEditionEnabled (info))
+				{
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 	

@@ -48,6 +48,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
+		public virtual bool IsMyEyesOnlyEditionEnabled
+		{
+			get
+			{
+				return false;
+			}
+		}
+
 		public virtual bool IsPriceEditionEnabled
 		{
 			get

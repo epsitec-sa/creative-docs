@@ -39,7 +39,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Dock = DockStyle.Fill,
 				Padding = new Margins (10),
 				TabIndex = this.NextTabIndex,
-				Enable = this.accessData.BusinessLogic.IsTextEditionEnabled,
 			};
 
 			var rightFrame = new FrameBox
@@ -49,7 +48,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				PreferredWidth = 300,
 				Padding = new Margins (10),
 				TabIndex = this.NextTabIndex,
-				Enable = this.accessData.BusinessLogic.IsTextEditionEnabled,
 			};
 
 			var separator = new Separator
@@ -60,6 +58,21 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Dock = DockStyle.Right,
 			};
 
+			//	Tient compte de la logique d'entreprise.
+			bool myEyesOnly = this.Entity.Attributes.HasFlag (DocumentItemAttributes.MyEyesOnly);
+
+			if (!this.accessData.BusinessLogic.IsTextEditionEnabled)
+			{
+				leftFrame.Enable = false;
+				rightFrame.Enable = false;
+			}
+
+			if (this.accessData.BusinessLogic.IsMyEyesOnlyEditionEnabled)
+			{
+				leftFrame.Enable = myEyesOnly;
+				rightFrame.Enable = false;
+			}
+
 			//	Partie gauche.
 			var textField = builder.CreateTextFieldMulti (null, DockStyle.None, 0, Marshaler.Create (() => this.SimpleText, x => this.SimpleText = x));
 			this.PlaceLabelAndField (leftFrame, 50, 0, this.TitleTile, textField);
@@ -67,8 +80,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.firstFocusedWidget = textField;
 
 			//	Partie droite.
-			bool myEyesOnly = this.Entity.Attributes.HasFlag (DocumentItemAttributes.MyEyesOnly);
-
 			var check = new CheckButton
 			{
 				Text = "Uniquement sur les documents internes",

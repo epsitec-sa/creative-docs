@@ -46,6 +46,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
+				return false;
+			}
+		}
+
+		public override bool IsMyEyesOnlyEditionEnabled
+		{
+			get
+			{
 				return true;
 			}
 		}
@@ -71,11 +79,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				yield return ArticleQuantityType.Billed;				// facturé
-				yield return ArticleQuantityType.Delayed;				// retardé
-				yield return ArticleQuantityType.Expected;				// attendu
-				yield return ArticleQuantityType.Shipped;				// livré
-				yield return ArticleQuantityType.ShippedPreviously;		// livré ultérieurement
+				return null;
 			}
 		}
 	}

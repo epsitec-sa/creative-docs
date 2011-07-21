@@ -135,6 +135,15 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
+		public bool IsMyEyesOnlyEditionEnabled
+		{
+			//	Indique s'il est possible d'éditer pour les documents internes à l'entreprise.
+			get
+			{
+				return this.documentBusinessLogic.IsMyEyesOnlyEditionEnabled;
+			}
+		}
+
 		public bool IsPriceEditionEnabled
 		{
 			//	Indique s'il est possible d'éditer les prix.
@@ -151,6 +160,38 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				return this.documentBusinessLogic.IsDiscountEditionEnabled;
 			}
+		}
+
+
+		public bool IsEditionEnabled(LineInformations info)
+		{
+			//	Indique s'il est possible d'éditer une ligne donnée.
+			if (this.IsLinesEditionEnabled)
+			{
+				return true;
+			}
+
+			if (this.IsArticleQuantityEditionEnabled)
+			{
+				if (info.IsQuantity)
+				{
+					return true;
+				}
+			}
+
+			if (this.IsMyEyesOnlyEditionEnabled)
+			{
+				if (info.AbstractDocumentItemEntity is TextDocumentItemEntity)
+				{
+					var text = info.AbstractDocumentItemEntity as TextDocumentItemEntity;
+					if (text.Attributes.HasFlag (DocumentItemAttributes.MyEyesOnly))
+					{
+						return true;
+					}
+				}
+			}
+
+			return false;
 		}
 
 
