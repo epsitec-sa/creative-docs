@@ -29,9 +29,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.EntityPrinters
 {
-	public class DocumentMetadataPrinter : AbstractPrinter
+	public abstract class AbstractDocumentMetadataPrinter : AbstractPrinter
 	{
-		private DocumentMetadataPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
+		public AbstractDocumentMetadataPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 			: base (businessContext, entity, options, printingUnits)
 		{
 		}
@@ -66,16 +66,9 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				double topMargin    = this.GetOptionValue (DocumentOption.TopMargin,    20);
 				double bottomMargin = this.GetOptionValue (DocumentOption.BottomMargin, 20);
 
-				double h = this.IsDocumentWithoutPrice ? 0 : DocumentMetadataPrinter.reportHeight;
+				double h = this.IsDocumentWithoutPrice ? 0 : AbstractDocumentMetadataPrinter.reportHeight;
 
-				if (this.HasIsr && this.HasOption (DocumentOption.IsrPosition, "WithInside"))
-				{
-					return new Margins (leftMargin, rightMargin, topMargin+h*2, h+DocumentMetadataPrinter.marginBeforeIsr+AbstractIsrBand.DefautlSize.Height);
-				}
-				else
-				{
-					return new Margins (leftMargin, rightMargin, topMargin+h*2, h+bottomMargin);
-				}
+				return new Margins (leftMargin, rightMargin, topMargin+h*2, h+bottomMargin);
 			}
 		}
 
@@ -86,6 +79,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			this.documentContainer.Clear ();
 
+#if false
 			if (this.DocumentType == Business.DocumentType.SalesQuote)
 			{
 				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
@@ -164,49 +158,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				this.documentContainer.Ending (firstPage);
 			}
 
-			if (this.DocumentType == Business.DocumentType.Invoice ||
-				this.DocumentType == Business.DocumentType.InvoiceProForma)
-			{
-				if (!this.HasIsr || this.HasOption (DocumentOption.IsrPosition, "Without") || this.PreviewMode == Print.PreviewMode.ContinuousPreview)
-				{
-					if (this.Entity.BillingDetails.Count != 0)
-					{
-						var billingDetails = this.Entity.BillingDetails[0];
-						int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
-
-						this.BuildHeader (billingDetails);
-						this.BuildArticles ();
-						this.BuildConditions (billingDetails);
-						this.BuildPages (billingDetails, firstPage);
-						this.BuildReportHeaders (firstPage);
-						this.BuildReportFooters (firstPage);
-
-						this.documentContainer.Ending (firstPage);
-					}
-				}
-				else
-				{
-					int documentRank = 0;
-					bool onlyTotal = false;
-					foreach (var billingDetails in this.Entity.BillingDetails)
-					{
-						this.documentContainer.DocumentRank = documentRank++;
-						int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
-
-						this.BuildHeader (billingDetails);
-						this.BuildArticles (onlyTotal: onlyTotal);
-						this.BuildConditions (billingDetails);
-						this.BuildPages (billingDetails, firstPage);
-						this.BuildReportHeaders (firstPage);
-						this.BuildReportFooters (firstPage);
-						this.BuildIsrs (billingDetails, firstPage);
-
-						this.documentContainer.Ending (firstPage);
-						onlyTotal = true;
-					}
-				}
-			}
-
 			if (this.DocumentType == Business.DocumentType.PaymentReminder)
 			{
 				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
@@ -266,6 +217,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 				this.documentContainer.Ending (firstPage);
 			}
+#endif
 		}
 
 		public override void PrintBackgroundCurrentPage(IPaintPort port)
@@ -308,7 +260,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
-		private void BuildHeader(BillingDetailEntity billingDetails, ArticleGroupEntity group=null)
+		protected void BuildHeader(BillingDetailEntity billingDetails, ArticleGroupEntity group=null)
 		{
 			double leftMargin = this.GetOptionValue (DocumentOption.LeftMargin, 20);
 
@@ -434,7 +386,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-		private void BuildArticles(ArticleGroupEntity group=null, bool onlyTotal=false)
+
+		protected void BuildArticles(ArticleGroupEntity group=null, bool onlyTotal=false)
 		{
 			//	Ajoute les articles dans le document.
 			this.documentContainer.CurrentVerticalPosition = this.RequiredPageSize.Height-87;
@@ -968,33 +921,33 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					this.DocumentType == Business.DocumentType.InvoiceProForma ||
 					this.DocumentType == Business.DocumentType.PaymentReminder)
 				{
-					table.SetText (this.tableColumns[TableColumnKeys.Quantity].Rank, row+i, DocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.BilledQuantity, DocumentItemAccessorColumn.BilledUnit), this.FontSize);
+					table.SetText (this.tableColumns[TableColumnKeys.Quantity].Rank, row+i, AbstractDocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.BilledQuantity, DocumentItemAccessorColumn.BilledUnit), this.FontSize);
 				}
 				else
 				{
-					table.SetText (this.tableColumns[TableColumnKeys.Quantity].Rank, row+i, DocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.OrderedQuantity, DocumentItemAccessorColumn.OrderedUnit), this.FontSize);
+					table.SetText (this.tableColumns[TableColumnKeys.Quantity].Rank, row+i, AbstractDocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.OrderedQuantity, DocumentItemAccessorColumn.OrderedUnit), this.FontSize);
 				}
 
-				table.SetText (this.tableColumns[TableColumnKeys.OrderedQuantity].Rank, row+i, DocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.OrderedQuantity, DocumentItemAccessorColumn.OrderedUnit), this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.OrderedDate].Rank, row+i, DocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.OrderedBeginDate, DocumentItemAccessorColumn.OrderedEndDate), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.OrderedQuantity].Rank, row+i, AbstractDocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.OrderedQuantity, DocumentItemAccessorColumn.OrderedUnit), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.OrderedDate].Rank, row+i, AbstractDocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.OrderedBeginDate, DocumentItemAccessorColumn.OrderedEndDate), this.FontSize);
 
-				table.SetText (this.tableColumns[TableColumnKeys.BilledQuantity].Rank, row+i, DocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.BilledQuantity, DocumentItemAccessorColumn.BilledUnit), this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.BilledDate].Rank, row+i, DocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.BilledBeginDate, DocumentItemAccessorColumn.BilledEndDate), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.BilledQuantity].Rank, row+i, AbstractDocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.BilledQuantity, DocumentItemAccessorColumn.BilledUnit), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.BilledDate].Rank, row+i, AbstractDocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.BilledBeginDate, DocumentItemAccessorColumn.BilledEndDate), this.FontSize);
 
-				table.SetText (this.tableColumns[TableColumnKeys.DelayedQuantity].Rank, row+i, DocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.DelayedQuantity, DocumentItemAccessorColumn.DelayedUnit), this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.DelayedDate].Rank, row+i, DocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.DelayedBeginDate, DocumentItemAccessorColumn.DelayedEndDate), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.DelayedQuantity].Rank, row+i, AbstractDocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.DelayedQuantity, DocumentItemAccessorColumn.DelayedUnit), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.DelayedDate].Rank, row+i, AbstractDocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.DelayedBeginDate, DocumentItemAccessorColumn.DelayedEndDate), this.FontSize);
 
-				table.SetText (this.tableColumns[TableColumnKeys.ExpectedQuantity].Rank, row+i, DocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.ExpectedQuantity, DocumentItemAccessorColumn.ExpectedUnit), this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.ExpectedDate].Rank, row+i, DocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.ExpectedBeginDate, DocumentItemAccessorColumn.ExpectedEndDate), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.ExpectedQuantity].Rank, row+i, AbstractDocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.ExpectedQuantity, DocumentItemAccessorColumn.ExpectedUnit), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.ExpectedDate].Rank, row+i, AbstractDocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.ExpectedBeginDate, DocumentItemAccessorColumn.ExpectedEndDate), this.FontSize);
 
-				table.SetText (this.tableColumns[TableColumnKeys.ShippedQuantity].Rank, row+i, DocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.ShippedQuantity, DocumentItemAccessorColumn.ShippedUnit), this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.ShippedDate].Rank, row+i, DocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.ShippedBeginDate, DocumentItemAccessorColumn.ShippedEndDate), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.ShippedQuantity].Rank, row+i, AbstractDocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.ShippedQuantity, DocumentItemAccessorColumn.ShippedUnit), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.ShippedDate].Rank, row+i, AbstractDocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.ShippedBeginDate, DocumentItemAccessorColumn.ShippedEndDate), this.FontSize);
 
-				table.SetText (this.tableColumns[TableColumnKeys.ShippedPreviouslyQuantity].Rank, row+i, DocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.ShippedPreviouslyQuantity, DocumentItemAccessorColumn.ShippedPreviouslyUnit), this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.ShippedPreviouslyDate].Rank, row+i, DocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.ShippedPreviouslyBeginDate, DocumentItemAccessorColumn.ShippedPreviouslyEndDate), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.ShippedPreviouslyQuantity].Rank, row+i, AbstractDocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.ShippedPreviouslyQuantity, DocumentItemAccessorColumn.ShippedPreviouslyUnit), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.ShippedPreviouslyDate].Rank, row+i, AbstractDocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.ShippedPreviouslyBeginDate, DocumentItemAccessorColumn.ShippedPreviouslyEndDate), this.FontSize);
 
-				table.SetText (this.tableColumns[TableColumnKeys.InformationQuantity].Rank, row+i, DocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.InformationQuantity, DocumentItemAccessorColumn.InformationUnit), this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.InformationDate].Rank, row+i, DocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.InformationBeginDate, DocumentItemAccessorColumn.InformationEndDate), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.InformationQuantity].Rank, row+i, AbstractDocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.InformationQuantity, DocumentItemAccessorColumn.InformationUnit), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.InformationDate].Rank, row+i, AbstractDocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.InformationBeginDate, DocumentItemAccessorColumn.InformationEndDate), this.FontSize);
 			}
 			
 			table.SetText (this.tableColumns[TableColumnKeys.ArticleId         ].Rank, row, accessor.GetContent (0, DocumentItemAccessorColumn.ArticleId),          this.FontSize);
@@ -1284,26 +1237,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
-		private void BuildConditions(BillingDetailEntity billingDetails)
-		{
-			//	Met les conditions à la fin de la facture.
-			if (this.IsDocumentWithoutPrice)
-			{
-				return;
-			}
-
-			FormattedText conditions = FormattedText.Join (FormattedText.HtmlBreak, billingDetails.Text, billingDetails.AmountDue.PaymentMode.Description);
-
-			if (!conditions.IsNullOrEmpty)
-			{
-				var band = new TextBand ();
-				band.Text = conditions;
-				band.FontSize = this.FontSize;
-
-				this.documentContainer.AddFromTop (band, 0);
-			}
-		}
-
 		private void BuildFooter()
 		{
 			if (this.HasOption (DocumentOption.Signing))
@@ -1387,10 +1320,10 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-		private void BuildPages(BillingDetailEntity billingDetails, int firstPage)
+		protected void BuildPages(BillingDetailEntity billingDetails, int firstPage)
 		{
 			//	Met les numéros de page.
-			double reportHeight = this.IsDocumentWithoutPrice ? 0 : DocumentMetadataPrinter.reportHeight*2;
+			double reportHeight = this.IsDocumentWithoutPrice ? 0 : AbstractDocumentMetadataPrinter.reportHeight*2;
 
 			var leftBounds  = new Rectangle (this.PageMargins.Left, this.RequiredPageSize.Height-this.PageMargins.Top+reportHeight+1, 80, 5);
 			var rightBounds = new Rectangle (this.RequiredPageSize.Width-this.PageMargins.Right-80, this.RequiredPageSize.Height-this.PageMargins.Top+reportHeight+1, 80, 5);
@@ -1416,7 +1349,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-		private void BuildReportHeaders(int firstPage)
+		protected void BuildReportHeaders(int firstPage)
 		{
 			//	Met un report en haut des pages concernées, avec une répétition de la ligne
 			//	d'en-tête (noms des colonnes).
@@ -1469,7 +1402,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-		private void BuildReportFooters(int firstPage)
+		protected void BuildReportFooters(int firstPage)
 		{
 			//	Met un report en bas des pages concernées.
 			double width = this.RequiredPageSize.Width-this.PageMargins.Left-this.PageMargins.Right;
@@ -1550,74 +1483,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					sumTot += beforeTax+tax1+tax2;
 				}
 			}
-		}
-
-
-		private void BuildIsrs(BillingDetailEntity billingDetails, int firstPage)
-		{
-			if (this.HasOption (DocumentOption.IsrPosition, "WithInside"))
-			{
-				this.BuildInsideIsrs (billingDetails, firstPage);
-			}
-
-			if (this.HasOption (DocumentOption.IsrPosition, "WithOutside"))
-			{
-				this.BuildOutsideIsr (billingDetails, firstPage);
-			}
-		}
-
-		private void BuildInsideIsrs(BillingDetailEntity billingDetails, int firstPage)
-		{
-			//	Met un BVR orangé ou un BV rose en bas de chaque page.
-			for (int page = firstPage; page < this.documentContainer.PageCount (); page++)
-			{
-				this.documentContainer.CurrentPage = page;
-
-				this.BuildIsr (billingDetails, mackle: page != this.documentContainer.PageCount ()-1);
-			}
-		}
-
-		private void BuildOutsideIsr(BillingDetailEntity billingDetails, int firstPage)
-		{
-			//	Met un BVR orangé ou un BV rose sur une dernière page séparée.
-			var bounds = new Rectangle (Point.Zero, AbstractIsrBand.DefautlSize);
-
-			if (this.documentContainer.PageCount () - firstPage > 1 ||
-				this.documentContainer.CurrentVerticalPosition - DocumentMetadataPrinter.marginBeforeIsr < bounds.Top ||
-				this.HasPrintingUnitDefined (PageType.Single) == false)
-			{
-				//	On ne prépare pas une nouvelle page si on peut mettre la facture
-				//	et le BV sur une seule page !
-				this.documentContainer.PrepareEmptyPage (PageType.Isr);
-			}
-
-			this.BuildIsr (billingDetails);
-		}
-
-		private void BuildIsr(BillingDetailEntity billingDetails, bool mackle=false)
-		{
-			//	Met un BVR orangé ou un BV rose au bas de la page courante.
-			AbstractIsrBand isr;
-
-			if (this.HasOption (DocumentOption.IsrType, "Isr"))
-			{
-				isr = new IsrBand ();  // BVR orangé
-			}
-			else
-			{
-				isr = new IsBand ();  // BV rose
-			}
-
-			isr.PaintIsrSimulator = this.HasOption (DocumentOption.IsrFacsimile);
-			isr.From = this.Entity.BillToMailContact.GetSummary ();
-			isr.To = billingDetails.IsrDefinition.SubscriberAddress;
-			isr.Communication = InvoiceDocumentHelper.GetTitle (this.Metadata, this.Entity, billingDetails);
-
-			isr.Slip = new IsrSlip (billingDetails);
-			isr.NotForUse = mackle;  // pour imprimer "XXXXX XX" sur un faux BVR
-
-			var bounds = new Rectangle (Point.Zero, AbstractIsrBand.DefautlSize);
-			this.documentContainer.AddAbsolute (isr, bounds);
 		}
 
 
@@ -1728,39 +1593,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
-		private bool HasIsr
-		{
-			//	Indique s'il faut imprimer le BV. Pour cela, il faut que l'unité d'impression soit définie pour le type PageType.Isr.
-			//	En mode DocumentOption.IsrPosition = "WithOutside", cela évite d'imprimer à double un BV sur l'imprimante 'Blanc'.
-			get
-			{
-				if (this.HasOption (DocumentOption.IsrPosition, "WithInside"))
-				{
-					return true;
-				}
-
-				if (this.HasOption (DocumentOption.IsrPosition, "WithOutside"))
-				{
-					if (this.currentPrintingUnit != null)
-					{
-						var example = new DocumentPrintingUnitsEntity ();
-						example.Code = this.currentPrintingUnit.DocumentPrintingUnitCode;
-
-						var documentPrintingUnits = this.businessContext.DataContext.GetByExample<DocumentPrintingUnitsEntity> (example).FirstOrDefault ();
-
-						if (documentPrintingUnits != null)
-						{
-							var pageTypes = documentPrintingUnits.GetPageTypes ();
-
-							return pageTypes.Contains (PageType.Isr);
-						}
-					}
-				}
-
-				return false;
-			}
-		}
-
 
 		private DocumentType DocumentType
 		{
@@ -1777,7 +1609,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-		private BusinessDocumentEntity Entity
+		protected BusinessDocumentEntity Entity
 		{
 			get
 			{
@@ -1794,7 +1626,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-		private DocumentMetadataEntity Metadata
+		protected DocumentMetadataEntity Metadata
 		{
 			get
 			{
@@ -1821,7 +1653,15 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			public AbstractPrinter CreatePrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 			{
-				return new DocumentMetadataPrinter (businessContext, entity, options, printingUnits);
+				var documentMetadata = entity as DocumentMetadataEntity;
+
+				switch (documentMetadata.DocumentCategory.DocumentType)
+				{
+					case Business.DocumentType.Invoice:
+						return new InvoiceDocumentMetadataPrinter (businessContext, entity, options, printingUnits);
+				}
+
+				return null;
 			}
 
 			#endregion
@@ -1831,8 +1671,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 
 		private static readonly Font		font = Font.GetFont ("Arial", "Regular");
-		private static readonly double		reportHeight = 7.0;
-		private static readonly double		marginBeforeIsr = 10;
+		protected static readonly double	reportHeight = 7.0;
 
 		private TableBand					table;
 		private int							visibleColumnCount;
