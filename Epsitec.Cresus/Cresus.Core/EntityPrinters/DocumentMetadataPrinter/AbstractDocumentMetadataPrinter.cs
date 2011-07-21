@@ -392,96 +392,10 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			//	Ajoute les articles dans le document.
 			this.documentContainer.CurrentVerticalPosition = this.RequiredPageSize.Height-87;
 
-			this.tableColumns.Clear ();
-
-			double priceWidth = 13 + this.CellMargin*2;  // largeur standard pour un montant ou une quantité
-
-			if (this.IsColumnsOrderQD)
-			{
-				this.tableColumns.Add (TableColumnKeys.LineNumber,                new TableColumn ("N°",          priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.Quantity,                  new TableColumn ("Nb",          priceWidth,   ContentAlignment.MiddleLeft));
-
-				this.tableColumns.Add (TableColumnKeys.OrderedQuantity,           new TableColumn ("Comm",        priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.OrderedDate,               new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.BilledQuantity,            new TableColumn ("Fact",        priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.BilledDate,                new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.DelayedQuantity,           new TableColumn ("Suit",        priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.DelayedDate,               new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.ExpectedQuantity,          new TableColumn ("Att",         priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.ExpectedDate,              new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.ShippedQuantity,           new TableColumn ("Livré",       priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.ShippedDate,               new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.ShippedPreviouslyQuantity, new TableColumn ("Déjà",        priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.ShippedPreviouslyDate,     new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.InformationQuantity,       new TableColumn ("Info",        priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.InformationDate,           new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
-
-				this.tableColumns.Add (TableColumnKeys.ArticleId,                 new TableColumn ("Article",     priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.ArticleDescription,        new TableColumn ("Désignation", 0,            ContentAlignment.MiddleLeft));  // seule colonne en mode width = fill
-				this.tableColumns.Add (TableColumnKeys.UnitPrice,                 new TableColumn ("p.u. HT",     priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add (TableColumnKeys.Discount,                  new TableColumn ("Rabais",      priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add (TableColumnKeys.LinePrice,                 new TableColumn ("Prix HT",     priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add (TableColumnKeys.Vat,                       new TableColumn ("TVA",         priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add (TableColumnKeys.Total,                     new TableColumn ("Prix TTC",    priceWidth,   ContentAlignment.MiddleRight));
-			}
-			else
-			{
-				this.tableColumns.Add (TableColumnKeys.LineNumber,                new TableColumn ("N°",          priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.ArticleId,                 new TableColumn ("Article",     priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.ArticleDescription,        new TableColumn ("Désignation", 0,            ContentAlignment.MiddleLeft));  // seule colonne en mode width = fill
-				this.tableColumns.Add (TableColumnKeys.Quantity,                  new TableColumn ("Nb",          priceWidth,   ContentAlignment.MiddleLeft));
-
-				this.tableColumns.Add (TableColumnKeys.OrderedQuantity,           new TableColumn ("Comm",        priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.OrderedDate,               new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.BilledQuantity,            new TableColumn ("Fact",        priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.BilledDate,                new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.DelayedQuantity,           new TableColumn ("Suit",        priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.DelayedDate,               new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.ExpectedQuantity,          new TableColumn ("Att",         priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.ExpectedDate,              new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.ShippedQuantity,           new TableColumn ("Livré",       priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.ShippedDate,               new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.ShippedPreviouslyQuantity, new TableColumn ("Déjà",        priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.ShippedPreviouslyDate,     new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.InformationQuantity,       new TableColumn ("Info",        priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.InformationDate,           new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
-
-				this.tableColumns.Add (TableColumnKeys.UnitPrice,                 new TableColumn ("p.u. HT",     priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add (TableColumnKeys.Discount,                  new TableColumn ("Rabais",      priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add (TableColumnKeys.LinePrice,                 new TableColumn ("Prix HT",     priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add (TableColumnKeys.Vat,                       new TableColumn ("TVA",         priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add (TableColumnKeys.Total,                     new TableColumn ("Prix TTC",    priceWidth,   ContentAlignment.MiddleRight));
-			}
+			this.InitializeColumns ();
 
 			//	Construit une fois pour toutes les accesseurs au contenu.
 			var accessors = new List<DocumentItemAccessor> ();
-
-			var mode = DocumentItemAccessorMode.ForceAllLines |
-					   DocumentItemAccessorMode.DescriptionIndented;
-
-			if (this.DocumentType == Business.DocumentType.ProductionOrder   ||
-				this.DocumentType == Business.DocumentType.DeliveryNote      ||
-				this.DocumentType == Business.DocumentType.ShipmentChecklist ||
-				this.DocumentType == Business.DocumentType.Invoice           ||
-				this.DocumentType == Business.DocumentType.InvoiceProForma   )
-			{
-				//	Les ordres de productions doivent utiliser les descriptions courtes des articles.
-				//	C'est une demande de Monsieur "M" !
-				mode |= DocumentItemAccessorMode.UseArticleName;
-			}
-			else
-			{
-				mode |= DocumentItemAccessorMode.UseArticleBoth;
-			}
-
-			if (this.DocumentType == Business.DocumentType.ProductionOrder     ||
-				this.DocumentType == Business.DocumentType.ProductionChecklist ||
-				this.DocumentType == Business.DocumentType.ShipmentChecklist   )
-			{
-				//	Seuls les documents à usage interne incluent les lignes 'MyEyesOnly'.
-				mode |= DocumentItemAccessorMode.ShowMyEyesOnly;
-			}
-
 			var numberGenerator = new IncrementalNumberGenerator ();
 
 			for (int i = 0; i < this.Entity.Lines.Count; i++)
@@ -489,7 +403,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				var line = this.Entity.Lines[i];
 
 				var accessor = new DocumentItemAccessor (this.Entity, numberGenerator);
-				accessor.BuildContent (line, this.DocumentType, mode);
+				accessor.BuildContent (line, this.DocumentType, this.DocumentItemAccessorMode);
 
 				accessors.Add (accessor);
 			}
@@ -505,90 +419,11 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 				if (line.Attributes.HasFlag (DocumentItemAttributes.Hidden) == false)
 				{
-					int rowUsed = 0;
-
-					if (line is TextDocumentItemEntity)
-					{
-						rowUsed = this.InitializeColumnTextLine (accessors[i], line as TextDocumentItemEntity);
-					}
-
-					if (line is ArticleDocumentItemEntity)
-					{
-						rowUsed = this.InitializeColumnArticleLine (accessors[i], line as ArticleDocumentItemEntity, group);
-					}
-
-					if (line is SubTotalDocumentItemEntity)
-					{
-						rowUsed = this.InitializeColumnSubTotalLine (accessors[i], line as SubTotalDocumentItemEntity);
-					}
-
-					if (line is TaxDocumentItemEntity)
-					{
-						rowUsed = this.InitializeColumnTaxLine (accessors[i], line as TaxDocumentItemEntity);
-					}
-
-					if (line is EndTotalDocumentItemEntity)
-					{
-						rowUsed = this.InitializeColumnEndTotalLine (accessors[i], line as EndTotalDocumentItemEntity);
-					}
-
-					rowCount += rowUsed;
+					rowCount += this.InitializeLine (accessors[i], line, group);
 				}
 			}
 
 			this.tableColumns[TableColumnKeys.LineNumber].Visible = !this.HasOption (DocumentOption.LineNumber, "None");
-
-			if (this.DocumentType == Business.DocumentType.DeliveryNote)
-			{
-				this.tableColumns[TableColumnKeys.Discount].Visible = false;
-				this.tableColumns[TableColumnKeys.UnitPrice].Visible = false;
-				this.tableColumns[TableColumnKeys.LinePrice].Visible = false;
-				this.tableColumns[TableColumnKeys.Vat].Visible = false;
-				this.tableColumns[TableColumnKeys.Total].Visible = false;
-			}
-
-			if (this.DocumentType == Business.DocumentType.ProductionOrder ||
-				this.DocumentType == Business.DocumentType.ProductionChecklist)
-			{
-				this.tableColumns[TableColumnKeys.DelayedQuantity].Visible = false;
-				this.tableColumns[TableColumnKeys.DelayedDate].Visible = false;
-
-				this.tableColumns[TableColumnKeys.Discount].Visible = false;
-				this.tableColumns[TableColumnKeys.UnitPrice].Visible = false;
-				this.tableColumns[TableColumnKeys.LinePrice].Visible = false;
-				this.tableColumns[TableColumnKeys.Vat].Visible = false;
-				this.tableColumns[TableColumnKeys.Total].Visible = false;
-			}
-
-			if (this.DocumentType == Business.DocumentType.Invoice ||
-				this.DocumentType == Business.DocumentType.InvoiceProForma)
-			{
-				this.tableColumns[TableColumnKeys.OrderedQuantity].Visible = false;
-				this.tableColumns[TableColumnKeys.OrderedDate].Visible = false;
-				
-				this.tableColumns[TableColumnKeys.ShippedQuantity].Visible = false;
-				this.tableColumns[TableColumnKeys.ShippedDate].Visible = false;
-				
-				this.tableColumns[TableColumnKeys.InformationQuantity].Visible = false;
-				this.tableColumns[TableColumnKeys.InformationDate].Visible = false;
-			}
-
-			if (!this.HasOption (DocumentOption.ArticleDelayed))  // n'imprime pas les articles retardés ?
-			{
-				this.tableColumns[TableColumnKeys.DelayedQuantity].Visible = false;
-				this.tableColumns[TableColumnKeys.DelayedDate].Visible = false;
-
-				this.tableColumns[TableColumnKeys.ExpectedQuantity].Visible = false;
-				this.tableColumns[TableColumnKeys.ExpectedDate].Visible = false;
-
-				this.tableColumns[TableColumnKeys.InformationQuantity].Visible = false;
-				this.tableColumns[TableColumnKeys.InformationDate].Visible = false;
-			}
-
-			if (!this.HasOption (DocumentOption.ArticleId))  // n'imprime pas les numéros d'article ?
-			{
-				this.tableColumns[TableColumnKeys.ArticleId].Visible = false;
-			}
 
 			//	Compte et numérote les colonnes visibles.
 			this.visibleColumnCount = 0;
@@ -607,18 +442,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			this.table.RowsCount = rowCount;
 			this.table.CellBorder = this.GetCellBorder ();
 			this.table.CellMargins = new Margins (this.CellMargin);
-
-#if false
-			//	Détermine le nom de la colonne TableColumnKeys.Quantity.
-			if (this.tableColumns[TableColumnKeys.DelayedQuantity].Visible)  // colonne quantité visible ?
-			{
-				this.tableColumns[TableColumnKeys.Quantity].Title = "Livré";  // affiche "Livré", "Suit", "Date"
-			}
-			else
-			{
-				this.tableColumns[TableColumnKeys.Quantity].Title = "Quantité";  // affiche "Quantité"
-			}
-#endif
 
 			//	Génère une première ligne d'en-tête (titres des colonnes).
 			int row = 0;
@@ -646,36 +469,10 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 				if (line.Attributes.HasFlag (DocumentItemAttributes.Hidden) == false)
 				{
-					int rowUsed = 0;
+					var prevLine = (i == 0                        ) ? null : this.Entity.Lines[i-1];
+					var nextLine = (i >= this.Entity.Lines.Count-1) ? null : this.Entity.Lines[i+1];
 
-					if (line is TextDocumentItemEntity)
-					{
-						rowUsed = this.BuildTextLine (this.table, row, accessors[i], line as TextDocumentItemEntity);
-					}
-
-					if (line is ArticleDocumentItemEntity)
-					{
-						rowUsed = this.BuildArticleLine (this.table, row, accessors[i], line as ArticleDocumentItemEntity, group);
-					}
-
-					if (line is SubTotalDocumentItemEntity)
-					{
-						rowUsed = this.BuildSubTotalLine (this.table, row, accessors[i], line as SubTotalDocumentItemEntity);
-					}
-
-					if (line is TaxDocumentItemEntity)
-					{
-						bool firstTax = (i > 0                         && !(this.Entity.Lines[i-1] is TaxDocumentItemEntity));
-						bool lastTax  = (i < this.Entity.Lines.Count-1 && !(this.Entity.Lines[i+1] is TaxDocumentItemEntity));
-
-						rowUsed = this.BuildTaxLine (this.table, row, accessors[i], line as TaxDocumentItemEntity, firstTax, lastTax);
-					}
-
-					if (line is EndTotalDocumentItemEntity)
-					{
-						rowUsed = this.BuildEndTotalLine (this.table, row, accessors[i], line as EndTotalDocumentItemEntity);
-					}
-
+					int rowUsed = this.BuildLine (this.table, row, accessors[i], prevLine, line, nextLine, group);
 					this.BuildCommonLine (this.table, row, accessors[i], line);
 
 					if (rowUsed != 0)
@@ -759,6 +556,29 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
+		protected virtual void InitializeColumns()
+		{
+		}
+
+		protected virtual DocumentItemAccessorMode DocumentItemAccessorMode
+		{
+			get
+			{
+				return DocumentItemAccessorMode.None;
+			}
+		}
+
+		protected virtual int InitializeLine(DocumentItemAccessor accessor, AbstractDocumentItemEntity line, ArticleGroupEntity group)
+		{
+			return 0;
+		}
+
+		protected virtual int BuildLine(TableBand table, int row, DocumentItemAccessor accessor, AbstractDocumentItemEntity prevLine, AbstractDocumentItemEntity line, AbstractDocumentItemEntity nextLine, ArticleGroupEntity group)
+		{
+			return 0;
+		}
+
+
 		private int InitializeColumnTextLine(DocumentItemAccessor accessor, TextDocumentItemEntity line)
 		{
 			//	Retourne le nombre de lignes à utiliser dans le tableau.
@@ -767,217 +587,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			return accessor.RowsCount;
 		}
 
-		private int InitializeColumnArticleLine(DocumentItemAccessor accessor, ArticleDocumentItemEntity line, ArticleGroupEntity group)
-		{
-			//	Retourne le nombre de lignes à utiliser dans le tableau.
-			if (!this.IsPrintableArticle (line))
-			{
-				return 0;
-			}
-
-			this.tableColumns[TableColumnKeys.ArticleId].Visible = true;
-			this.tableColumns[TableColumnKeys.ArticleDescription].Visible = true;
-			this.tableColumns[TableColumnKeys.Total].Visible = true;
-
-			if (line.VatCode != Business.Finance.VatCode.None &&
-				line.VatCode != Business.Finance.VatCode.Excluded &&
-				line.VatCode != Business.Finance.VatCode.ZeroRated)
-			{
-				this.tableColumns[TableColumnKeys.Vat].Visible = true;
-			}
-
-			foreach (var quantity in line.ArticleQuantities)
-			{
-				this.tableColumns[TableColumnKeys.Quantity].Visible = true;
-				this.tableColumns[TableColumnKeys.UnitPrice].Visible = true;
-				this.tableColumns[TableColumnKeys.LinePrice].Visible = true;
-
-				if (quantity.QuantityColumn.QuantityType == Business.ArticleQuantityType.Ordered)
-				{
-					this.tableColumns[TableColumnKeys.OrderedQuantity].Visible = true;
-					this.tableColumns[TableColumnKeys.OrderedDate].Visible = true;
-				}
-
-				if (quantity.QuantityColumn.QuantityType == Business.ArticleQuantityType.Billed)
-				{
-					this.tableColumns[TableColumnKeys.BilledQuantity].Visible = true;
-					this.tableColumns[TableColumnKeys.BilledDate].Visible = true;
-				}
-
-				if (quantity.QuantityColumn.QuantityType == Business.ArticleQuantityType.Delayed)
-				{
-					this.tableColumns[TableColumnKeys.DelayedQuantity].Visible = true;
-					this.tableColumns[TableColumnKeys.DelayedDate].Visible = true;
-				}
-
-				if (quantity.QuantityColumn.QuantityType == Business.ArticleQuantityType.Expected)
-				{
-					this.tableColumns[TableColumnKeys.ExpectedQuantity].Visible = true;
-					this.tableColumns[TableColumnKeys.ExpectedDate].Visible = true;
-				}
-
-				if (quantity.QuantityColumn.QuantityType == Business.ArticleQuantityType.Shipped)
-				{
-					this.tableColumns[TableColumnKeys.ShippedQuantity].Visible = true;
-					this.tableColumns[TableColumnKeys.ShippedDate].Visible = true;
-				}
-
-				if (quantity.QuantityColumn.QuantityType == Business.ArticleQuantityType.ShippedPreviously)
-				{
-					this.tableColumns[TableColumnKeys.ShippedPreviouslyQuantity].Visible = true;
-					this.tableColumns[TableColumnKeys.ShippedPreviouslyDate].Visible = true;
-				}
-
-				if (quantity.QuantityColumn.QuantityType == Business.ArticleQuantityType.Information)
-				{
-					this.tableColumns[TableColumnKeys.InformationQuantity].Visible = true;
-					//?this.tableColumns[TableColumnKeys.InformationDate].Visible = true;
-				}
-			}
-
-			if (line.Discounts.Count != 0)
-			{
-				this.tableColumns[TableColumnKeys.Discount].Visible = true;
-			}
-
-			return accessor.RowsCount;
-		}
-
-		private int InitializeColumnSubTotalLine(DocumentItemAccessor accessor, SubTotalDocumentItemEntity line)
-		{
-			//	Retourne le nombre de lignes à utiliser dans le tableau.
-			if (this.IsDocumentWithoutPrice)
-			{
-				return 0;
-			}
-
-			this.tableColumns[TableColumnKeys.ArticleDescription].Visible = true;
-			this.tableColumns[TableColumnKeys.LinePrice         ].Visible = true;
-			this.tableColumns[TableColumnKeys.Vat               ].Visible = true;
-			this.tableColumns[TableColumnKeys.Total             ].Visible = true;
-
-			return accessor.RowsCount;
-		}
-
-		private int InitializeColumnTaxLine(DocumentItemAccessor accessor, TaxDocumentItemEntity line)
-		{
-			//	Retourne le nombre de lignes à utiliser dans le tableau.
-			if (this.IsDocumentWithoutPrice)
-			{
-				return 0;
-			}
-
-			this.tableColumns[TableColumnKeys.ArticleDescription].Visible = true;
-			this.tableColumns[TableColumnKeys.LinePrice         ].Visible = true;
-			this.tableColumns[TableColumnKeys.Vat               ].Visible = true;
-			this.tableColumns[TableColumnKeys.Total             ].Visible = true;
-
-			return accessor.RowsCount;
-		}
-
-		private int InitializeColumnEndTotalLine(DocumentItemAccessor accessor, EndTotalDocumentItemEntity line)
-		{
-			//	Retourne le nombre de lignes à utiliser dans le tableau.
-			if (this.IsDocumentWithoutPrice)
-			{
-				return 0;
-			}
-
-			this.tableColumns[TableColumnKeys.ArticleDescription].Visible = true;
-
-			if (line.PriceBeforeTax.HasValue)  // ligne de total HT ?
-			{
-				this.tableColumns[TableColumnKeys.LinePrice].Visible = true;
-			}
-			else  // ligne de total TTC ?
-			{
-				this.tableColumns[TableColumnKeys.Total].Visible = true;
-			}
-
-			return accessor.RowsCount;
-		}
-
-
-		private int BuildTextLine(TableBand table, int row, DocumentItemAccessor accessor, TextDocumentItemEntity line)
-		{
-			//	Retourne le nombre de lignes à utiliser dans le tableau.
-			var text = accessor.GetContent (0, DocumentItemAccessorColumn.ArticleDescription).ApplyBold ();
-			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, text, this.FontSize);
-
-			return accessor.RowsCount;
-		}
-
-		private int BuildArticleLine(TableBand table, int row, DocumentItemAccessor accessor, ArticleDocumentItemEntity line, ArticleGroupEntity group)
-		{
-			//	Retourne le nombre de lignes à utiliser dans le tableau.
-			if (!this.IsPrintableArticle (line))
-			{
-				return 0;
-			}
-
-			for (int i = 0; i < accessor.RowsCount; i++)
-			{
-				if (this.DocumentType == Business.DocumentType.Invoice ||
-					this.DocumentType == Business.DocumentType.InvoiceProForma ||
-					this.DocumentType == Business.DocumentType.PaymentReminder)
-				{
-					table.SetText (this.tableColumns[TableColumnKeys.Quantity].Rank, row+i, AbstractDocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.BilledQuantity, DocumentItemAccessorColumn.BilledUnit), this.FontSize);
-				}
-				else
-				{
-					table.SetText (this.tableColumns[TableColumnKeys.Quantity].Rank, row+i, AbstractDocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.OrderedQuantity, DocumentItemAccessorColumn.OrderedUnit), this.FontSize);
-				}
-
-				table.SetText (this.tableColumns[TableColumnKeys.OrderedQuantity].Rank, row+i, AbstractDocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.OrderedQuantity, DocumentItemAccessorColumn.OrderedUnit), this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.OrderedDate].Rank, row+i, AbstractDocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.OrderedBeginDate, DocumentItemAccessorColumn.OrderedEndDate), this.FontSize);
-
-				table.SetText (this.tableColumns[TableColumnKeys.BilledQuantity].Rank, row+i, AbstractDocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.BilledQuantity, DocumentItemAccessorColumn.BilledUnit), this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.BilledDate].Rank, row+i, AbstractDocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.BilledBeginDate, DocumentItemAccessorColumn.BilledEndDate), this.FontSize);
-
-				table.SetText (this.tableColumns[TableColumnKeys.DelayedQuantity].Rank, row+i, AbstractDocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.DelayedQuantity, DocumentItemAccessorColumn.DelayedUnit), this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.DelayedDate].Rank, row+i, AbstractDocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.DelayedBeginDate, DocumentItemAccessorColumn.DelayedEndDate), this.FontSize);
-
-				table.SetText (this.tableColumns[TableColumnKeys.ExpectedQuantity].Rank, row+i, AbstractDocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.ExpectedQuantity, DocumentItemAccessorColumn.ExpectedUnit), this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.ExpectedDate].Rank, row+i, AbstractDocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.ExpectedBeginDate, DocumentItemAccessorColumn.ExpectedEndDate), this.FontSize);
-
-				table.SetText (this.tableColumns[TableColumnKeys.ShippedQuantity].Rank, row+i, AbstractDocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.ShippedQuantity, DocumentItemAccessorColumn.ShippedUnit), this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.ShippedDate].Rank, row+i, AbstractDocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.ShippedBeginDate, DocumentItemAccessorColumn.ShippedEndDate), this.FontSize);
-
-				table.SetText (this.tableColumns[TableColumnKeys.ShippedPreviouslyQuantity].Rank, row+i, AbstractDocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.ShippedPreviouslyQuantity, DocumentItemAccessorColumn.ShippedPreviouslyUnit), this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.ShippedPreviouslyDate].Rank, row+i, AbstractDocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.ShippedPreviouslyBeginDate, DocumentItemAccessorColumn.ShippedPreviouslyEndDate), this.FontSize);
-
-				table.SetText (this.tableColumns[TableColumnKeys.InformationQuantity].Rank, row+i, AbstractDocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.InformationQuantity, DocumentItemAccessorColumn.InformationUnit), this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.InformationDate].Rank, row+i, AbstractDocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.InformationBeginDate, DocumentItemAccessorColumn.InformationEndDate), this.FontSize);
-			}
-			
-			table.SetText (this.tableColumns[TableColumnKeys.ArticleId         ].Rank, row, accessor.GetContent (0, DocumentItemAccessorColumn.ArticleId),          this.FontSize);
-			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, accessor.GetContent (0, DocumentItemAccessorColumn.ArticleDescription), this.FontSize);
-			table.SetText (this.tableColumns[TableColumnKeys.UnitPrice         ].Rank, row, accessor.GetContent (0, DocumentItemAccessorColumn.UnitPrice),          this.FontSize);
-
-			if (line.ResultingLinePriceBeforeTax.HasValue && line.ResultingLineTax1.HasValue)
-			{
-				decimal beforeTax = line.ResultingLinePriceBeforeTax.Value;
-				decimal tax =       line.ResultingLineTax1.Value;
-
-				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, row, accessor.GetContent (0, DocumentItemAccessorColumn.LinePrice), this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.Vat      ].Rank, row, accessor.GetContent (0, DocumentItemAccessorColumn.Vat),       this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.Total    ].Rank, row, accessor.GetContent (0, DocumentItemAccessorColumn.Total),     this.FontSize);
-			}
-
-			if (line.Discounts.Count != 0)
-			{
-				if (line.Discounts[0].DiscountRate.HasValue || line.Discounts[0].Value.HasValue)
-				{
-					table.SetText (this.tableColumns[TableColumnKeys.Discount].Rank, row, accessor.GetContent (0, DocumentItemAccessorColumn.Discount), this.FontSize);
-				}
-			}
-
-			this.TableMakeBlock (table, row, accessor.RowsCount);
-
-			return accessor.RowsCount;
-		}
-
-		private static FormattedText GetQuantityAndUnit(DocumentItemAccessor accessor, int row, DocumentItemAccessorColumn quantity, DocumentItemAccessorColumn unit)
+		protected static FormattedText GetQuantityAndUnit(DocumentItemAccessor accessor, int row, DocumentItemAccessorColumn quantity, DocumentItemAccessorColumn unit)
 		{
 			var q = accessor.GetContent (row, quantity).ToString ();
 			var u = accessor.GetContent (row, unit).ToString ();
@@ -992,7 +602,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-		private static FormattedText GetDates(DocumentItemAccessor accessor, int row, DocumentItemAccessorColumn begin, DocumentItemAccessorColumn end)
+		protected static FormattedText GetDates(DocumentItemAccessor accessor, int row, DocumentItemAccessorColumn begin, DocumentItemAccessorColumn end)
 		{
 			FormattedText b = accessor.GetContent (row, begin);
 			FormattedText e = accessor.GetContent (row, end);
@@ -1013,105 +623,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			{
 				return null;
 			}
-		}
-
-		private int BuildSubTotalLine(TableBand table, int row, DocumentItemAccessor accessor, SubTotalDocumentItemEntity line)
-		{
-			//	Retourne le nombre de lignes à utiliser dans le tableau.
-			//  Une ligne de sous-total PriceDocumentItemEntity peut occuper 2 lignes physiques du tableau,
-			//	lorsqu'il y a un rabais. Cela permet de créer un demi-espace vertical entre les lignes
-			//	'Sous-total avant rabais / Rabais' et 'Sous-total après rabais'.
-			if (this.IsDocumentWithoutPrice)
-			{
-				return 0;
-			}
-
-			for (int i = 0; i < accessor.RowsCount; i++)
-			{
-				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row+i, accessor.GetContent (i, DocumentItemAccessorColumn.ArticleDescription), this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.LinePrice         ].Rank, row+i, accessor.GetContent (i, DocumentItemAccessorColumn.LinePrice),          this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.Vat               ].Rank, row+i, accessor.GetContent (i, DocumentItemAccessorColumn.Vat),                this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.Total             ].Rank, row+i, accessor.GetContent (i, DocumentItemAccessorColumn.Total),              this.FontSize);
-			}
-
-			this.TableMakeBlock (table, row, accessor.RowsCount);
-
-			return accessor.RowsCount;
-		}
-
-		private int BuildTaxLine(TableBand table, int row, DocumentItemAccessor accessor, TaxDocumentItemEntity line, bool firstTax, bool lastTax)
-		{
-			//	Retourne le nombre de lignes à utiliser dans le tableau.
-			if (this.IsDocumentWithoutPrice)
-			{
-				return 0;
-			}
-
-			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, accessor.GetContent (0, DocumentItemAccessorColumn.ArticleDescription), this.FontSize);
-			table.SetText (this.tableColumns[TableColumnKeys.LinePrice         ].Rank, row, accessor.GetContent (0, DocumentItemAccessorColumn.LinePrice),          this.FontSize);
-
-			table.SetCellBorder (row, this.GetCellBorder (bottomLess: true, topLess: true));
-
-			// Adapte les marges comme suit:
-			// Seule la première taxe a une marge supérieure normale.
-			// Seule la dernière taxe a une marge inférieure normale.
-			// Les taxes sont donc serrées entre elles.
-			var margins = table.CellMargins;
-
-			if (!firstTax)
-			{
-				margins.Top = 0;
-			}
-
-			if (!lastTax)
-			{
-				margins.Bottom = 0;
-			}
-
-			if (!firstTax || !lastTax)
-			{
-				table.SetCellMargins (row, margins);
-			}
-
-			return accessor.RowsCount;
-		}
-
-		private int BuildEndTotalLine(TableBand table, int row, DocumentItemAccessor accessor, EndTotalDocumentItemEntity line)
-		{
-			//	Retourne le nombre de lignes à utiliser dans le tableau.
-			if (this.IsDocumentWithoutPrice)
-			{
-				return 0;
-			}
-
-			for (int i = 0; i < accessor.RowsCount; i++)
-			{
-				var total = accessor.GetContent (i, DocumentItemAccessorColumn.Total);
-
-				if (i == accessor.RowsCount-1 && total != null)  // dernière ligne ?
-				{
-					total = total.ApplyBold ();
-				}
-
-				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row+i, accessor.GetContent (i, DocumentItemAccessorColumn.ArticleDescription), this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.LinePrice         ].Rank, row+i, accessor.GetContent (i, DocumentItemAccessorColumn.LinePrice),          this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.Vat               ].Rank, row+i, accessor.GetContent (i, DocumentItemAccessorColumn.Vat),                this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.Total             ].Rank, row+i, total,                                                                  this.FontSize);
-			}
-
-			this.TableMakeBlock (table, row, accessor.RowsCount);
-
-			if (this.IsWithFrame)
-			{
-				table.SetCellBorder (row, this.GetCellBorder (topLess: true));
-				table.SetCellBorder (this.tableColumns[TableColumnKeys.Total].Rank, row, new CellBorder (CellBorder.BoldWidth));
-			}
-			else
-			{
-				table.SetCellBorder (row, this.GetCellBorder (bottomBold: true, topLess: true));
-			}
-
-			return accessor.RowsCount;
 		}
 
 		private void BuildCommonLine(TableBand table, int row, DocumentItemAccessor accessor, AbstractDocumentItemEntity line)
@@ -1161,7 +672,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			table.SetCellBorder (0, row, new CellBorder (cellBorder.LeftWidth, cellBorder.RightWidth, cellBorder.BottomWidth, cellBorder.TopWidth, topGap, cellBorder.Color));
 		}
 
-		private void TableMakeBlock(TableBand table, int row, int rowsCount)
+		protected void TableMakeBlock(TableBand table, int row, int rowsCount)
 		{
 			if (rowsCount == 1)
 			{
@@ -1497,7 +1008,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-		private bool IsColumnsOrderQD
+		protected bool IsColumnsOrderQD
 		{
 			get
 			{
@@ -1505,7 +1016,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-		private double CellMargin
+		protected double CellMargin
 		{
 			get
 			{
@@ -1531,7 +1042,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			return margins;
 		}
 
-		private CellBorder GetCellBorder(bool bottomBold = false, bool topBold = false, bool bottomLess = false, bool topLess = false)
+		protected CellBorder GetCellBorder(bool bottomBold = false, bool topBold = false, bool bottomLess = false, bool topLess = false)
 		{
 			//	Retourne les bordures à utiliser pour une ligne entière.
 			double leftWidth   = 0;
@@ -1584,7 +1095,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-		private bool IsWithFrame
+		protected bool IsWithFrame
 		{
 			get
 			{
