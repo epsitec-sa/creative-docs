@@ -101,6 +101,7 @@
     <Compile Include="Controllers\BusinessDocumentControllers\ColumnType.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\ArticleLineEditorController.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\AccessData.cs" />
+    <Compile Include="Controllers\BusinessDocumentControllers\BusinessLogic.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\IncrementalNumberGenerator.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\TreeEngine.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\TreeNode.cs" />

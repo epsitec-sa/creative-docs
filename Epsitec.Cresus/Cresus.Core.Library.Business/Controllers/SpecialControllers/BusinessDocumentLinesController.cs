@@ -10,6 +10,7 @@ using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
+using Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.Helpers;
@@ -31,9 +32,9 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 	{
 		public BusinessDocumentLinesController(TileContainer tileContainer, BusinessDocumentEntity businessDocumentEntity, int mode)
 		{
-			this.tileContainer = tileContainer;
+			this.tileContainer          = tileContainer;
 			this.businessDocumentEntity = businessDocumentEntity;
-			this.mode = mode;
+			this.mode                   = mode;
 		}
 
 
@@ -60,6 +61,8 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 				Margins = Widgets.Tiles.TileArrow.GetContainerPadding (Direction.Right),
 			};
 
+			var businessLogic = new BusinessLogic (this.businessContext, documentMetadataEntity);
+
 			var access = new BusinessDocumentControllers.AccessData ();
 			access.ViewController         = this.tileContainer.Controller as EntityViewController;
 			access.BusinessContext        = this.businessContext;
@@ -67,6 +70,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 			access.CoreData               = this.coreData;
 			access.DocumentMetadataEntity = documentMetadataEntity;
 			access.BusinessDocumentEntity = this.businessDocumentEntity;
+			access.BusinessLogic          = businessLogic;
 
 			this.controller = new BusinessDocumentControllers.BusinessDocumentLinesController (access);
 			this.controller.CreateUI (box);

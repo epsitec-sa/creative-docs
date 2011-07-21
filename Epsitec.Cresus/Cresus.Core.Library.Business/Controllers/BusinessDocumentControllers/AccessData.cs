@@ -19,5 +19,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public CoreData						CoreData;
 		public DocumentMetadataEntity		DocumentMetadataEntity;
 		public BusinessDocumentEntity		BusinessDocumentEntity;
+		public BusinessLogic				BusinessLogic;
 	}
 }
