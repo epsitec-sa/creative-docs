@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		public bool IsLinesEditionPossible
+		public bool IsLinesEditionEnabled
 		{
 			//	Indique s'il est possible d'éditer les lignes du document, c'est-à-dire s'il est possible
 			//	de créer des lignes, d'en supprimer, d'en déplacer, etc.
@@ -47,6 +47,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				return type == DocumentType.SalesQuote ||
 					   type == DocumentType.QuoteRequest ||
 					   type == DocumentType.CreditMemo;
+			}
+		}
+
+		public bool IsArticleParametersEditionEnabled
+		{
+			//	Indique s'il est possible de modifier les paramètres des articles.
+			get
+			{
+				return this.IsLinesEditionEnabled || 
+					   this.documentMetadataEntity.DocumentCategory.DocumentType == DocumentType.OrderConfiguration;
 			}
 		}
 

@@ -95,6 +95,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					PreferredHeight = 20,
 					Margins = new Margins (0, 0, 0, 10),
 					TabIndex = this.NextTabIndex,
+					Enable = this.accessData.BusinessLogic.IsLinesEditionEnabled,
 				};
 
 				var articleController = new SelectionController<ArticleDefinitionEntity> (this.accessData.BusinessContext)
@@ -118,6 +119,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					Dock = DockStyle.Top,
 					Margins = new Margins (0, 0, 0, 5),
 					TabIndex = this.NextTabIndex,
+					Enable = this.accessData.BusinessLogic.IsArticleParametersEditionEnabled,
 				};
 
 				this.parameterController = new ArticleParameterControllers.ValuesArticleParameterController (this.tileContainer, line);
@@ -136,6 +138,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					Parent = parent,
 					Dock = DockStyle.Fill,
 					TabIndex = this.NextTabIndex,
+					Enable = this.accessData.BusinessLogic.IsArticleParametersEditionEnabled,
 				};
 
 				var replacementBox = new FrameBox ();
@@ -152,13 +155,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				var text = this.IsEditName ? "Désignation courte" : "Désignation longue";
 				this.PlaceLabelAndField (line, labelWidth, 0, text, replacementBox);
+			}
 
+			//	Boutons pour choisir le mode Name/Description.
+			{
 				double buttonWidth = Library.UI.Constants.ButtonLargeWidth;
 				double iconWidth   = Library.UI.Constants.IconLargeWidth;
 
 				new IconButton
 				{
-					Parent            = line,
+					Parent            = parent,
 					CommandObject     = Library.Business.Res.Commands.Lines.EditName,
 					PreferredIconSize = new Size (iconWidth, iconWidth),
 					PreferredSize     = new Size (buttonWidth, buttonWidth),
@@ -169,7 +175,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				new IconButton
 				{
-					Parent            = line,
+					Parent            = parent,
 					CommandObject     = Library.Business.Res.Commands.Lines.EditDescription,
 					PreferredIconSize = new Size (iconWidth, iconWidth),
 					PreferredSize     = new Size (buttonWidth, buttonWidth),
