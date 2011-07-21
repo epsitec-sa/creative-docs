@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				TabIndex = this.NextTabIndex,
 			};
 
-			foreach (var e in this.accessData.BusinessLogic.PossibleValueArticleQuantityType)
+			foreach (var e in this.accessData.BusinessLogic.ArticleQuantityTypeEditionEnabled)
 			{
 				widget.Items.Add (e.Key.ToString (), e);
 			}
