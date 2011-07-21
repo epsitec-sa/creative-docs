@@ -16,6 +16,7 @@ using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.Helpers;
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Library;
 
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -29,6 +30,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public QuantityLineEditorController(AccessData accessData)
 			: base (accessData)
 		{
+			this.articleQuantityColumnEntities = this.accessData.BusinessContext.GetAllEntities<ArticleQuantityColumnEntity> ();
 		}
 
 		protected override void CreateUI(UIBuilder builder)
@@ -46,7 +48,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Parent = this.tileContainer,
 				Dock = DockStyle.Right,
 				PreferredWidth = 360,
-				Padding = new Margins (10),
 				TabIndex = this.NextTabIndex,
 			};
 
@@ -58,68 +59,162 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Dock = DockStyle.Right,
 			};
 
-			//	Première ligne.
+			this.CreateUILeftFrame (builder, leftFrame);
+			this.CreateUIRightFrame (builder, rightFrame);
+
+			this.UpdateDateLine ();
+		}
+
+		private void CreateUILeftFrame(UIBuilder builder, FrameBox parent)
+		{
+			//	Pour conserver la même disposition que ArticleLineEditorController, cette partie reste vide.
+		}
+		
+		private void CreateUIRightFrame(UIBuilder builder, FrameBox parent)
+		{
+			var topFrame = new FrameBox
 			{
-				var line = new FrameBox
-				{
-					Parent = rightFrame,
-					Dock = DockStyle.Top,
-					PreferredHeight = 20,
-					Margins = new Margins (0, 0, 0, 20),
-					TabIndex = this.NextTabIndex,
-				};
+				Parent = parent,
+				Dock = DockStyle.Top,
+				PreferredHeight = 20,
+				Padding = new Margins (10),
+				TabIndex = this.NextTabIndex,
+			};
 
-				//	Quantité.
-				var quantityField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.Quantity, x => this.Entity.Quantity = x));
-				this.PlaceLabelAndField (line, 50, 80, "Quantité", quantityField);
+			var separator = new Separator
+			{
+				IsHorizontalLine = true,
+				PreferredHeight = 1,
+				Parent = parent,
+				Dock = DockStyle.Top,
+			};
 
-				this.firstFocusedWidget = quantityField;
+			var bottomFrame = new FrameBox
+			{
+				Parent = parent,
+				Dock = DockStyle.Fill,
+				PreferredWidth = 360,
+				Padding = new Margins (10),
+				TabIndex = this.NextTabIndex,
+			};
 
-				//	Unité.
-				var unitController = new SelectionController<UnitOfMeasureEntity> (this.accessData.BusinessContext)
-				{
-					ValueGetter         = () => this.Entity.Unit,
-					ValueSetter         = x => this.Entity.Unit = x,
-					ReferenceController = new ReferenceController (() => this.Entity.Unit),
-				};
+			this.CreateUIRightTopFrame (builder, topFrame);
+			this.CreateUIRightBottomFrame (builder, bottomFrame);
+		}
 
-				var unitField = builder.CreateCompactAutoCompleteTextField (null, "", unitController);
-				this.PlaceLabelAndField (line, 35, 80, "Unité", unitField.Parent);
+		private void CreateUIRightTopFrame(UIBuilder builder, FrameBox parent)
+		{
+			//	Quantité.
+			var quantityField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.Quantity, x => this.Entity.Quantity = x));
+			this.PlaceLabelAndField (parent, 50, 80, "Quantité", quantityField);
+
+			this.firstFocusedWidget = quantityField;
+
+			//	Unité.
+			var unitController = new SelectionController<UnitOfMeasureEntity> (this.accessData.BusinessContext)
+			{
+				ValueGetter         = () => this.Entity.Unit,
+				ValueSetter         = x => this.Entity.Unit = x,
+				ReferenceController = new ReferenceController (() => this.Entity.Unit),
+			};
+
+			var unitField = builder.CreateCompactAutoCompleteTextField (null, "", unitController);
+			this.PlaceLabelAndField (parent, 35, 80, "Unité", unitField.Parent);
+		}
+
+		private void CreateUIRightBottomFrame(UIBuilder builder, FrameBox parent)
+		{
+			//	Type.
+			this.CreateTypeUI (parent);
+
+			var rightBox = new FrameBox
+			{
+				Parent = parent,
+				Dock = DockStyle.Fill,
+				TabIndex = this.NextTabIndex,
+			};
+
+			this.dateLine = new FrameBox
+			{
+				Parent = rightBox,
+				Dock = DockStyle.Top,
+				TabIndex = this.NextTabIndex,
+			};
+
+			//	Date.
+			var dateField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.BeginDate, x => this.Entity.BeginDate = x));
+			this.PlaceLabelAndField (this.dateLine, 35, 100, "Date", dateField);
+		}
+
+		private Widget CreateTypeUI(Widget parent)
+		{
+			ItemPicker widget = new ItemPicker
+			{
+				Parent = parent,
+				Dock = DockStyle.Left,
+				Margins = new Margins (10, 0, 0, 0),
+				PreferredWidth = 150,
+				TabIndex = this.NextTabIndex,
+			};
+
+			foreach (var e in this.GetAllPossibleValueArticleQuantityType ())
+			{
+				widget.Items.Add (e.Key.ToString (), e);
 			}
 
-			//	Deuxième ligne.
+			widget.ValueToDescriptionConverter = delegate (object o)
 			{
-				var line = new FrameBox
+				var e = o as EnumKeyValues<ArticleQuantityType>;
+				return e.Values[0];
+			};
+
+			widget.Cardinality = EnumValueCardinality.ExactlyOne;
+			widget.RefreshContents ();
+
+			widget.SelectedKey = this.Entity.QuantityColumn.QuantityType.ToString ();
+
+			widget.SelectedItemChanged += delegate
+			{
+				var key = widget.Items.GetValue (widget.SelectedItemIndex) as EnumKeyValues<ArticleQuantityType>;
+				var entity = this.articleQuantityColumnEntities.Where (x => x.QuantityType == key.Key).FirstOrDefault ();
+				if (entity != null)
 				{
-					Parent = rightFrame,
-					Dock = DockStyle.Top,
-					PreferredHeight = 20,
-					Margins = new Margins (0, 0, 0, 20),
-					TabIndex = this.NextTabIndex,
-				};
+					this.Entity.QuantityColumn = entity;
+					this.UpdateDateLine ();
+				}
+			};
 
-				//	Type.
-				var typeController = new SelectionController<ArticleQuantityColumnEntity> (this.accessData.BusinessContext)
-				{
-					ValueGetter         = () => this.Entity.QuantityColumn,
-					ValueSetter         = x => this.Entity.QuantityColumn = x,
-					ReferenceController = new ReferenceController (() => this.Entity.QuantityColumn),
-				};
+			return widget;
+		}
 
-				var typeField = builder.CreateCompactAutoCompleteTextField (null, "", typeController);
-				this.PlaceLabelAndField (line, 50, 80, "Type", typeField.Parent);
+		private void UpdateDateLine()
+		{
+			bool visible = (this.Entity.QuantityColumn.QuantityType != ArticleQuantityType.Ordered);
 
-				//	Date.
-				var dateField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.BeginDate, x => this.Entity.BeginDate = x));
-				this.PlaceLabelAndField (line, 35, 100, "Date", dateField);
+			this.dateLine.Visibility = visible;
+
+			if (!visible)
+			{
+				this.Entity.BeginDate = null;
+				this.Entity.EndDate   = null;
 			}
 		}
+
 
 		public override FormattedText TitleTile
 		{
 			get
 			{
 				return "Quantité";
+			}
+		}
+
+
+		private IEnumerable<EnumKeyValues<ArticleQuantityType>> GetAllPossibleValueArticleQuantityType()
+		{
+			foreach (var e in this.articleQuantityColumnEntities)
+			{
+				yield return EnumKeyValues.Create (e.QuantityType, e.Name);
 			}
 		}
 
@@ -131,5 +226,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				return this.entity as ArticleQuantityEntity;
 			}
 		}
+
+
+		private readonly IEnumerable<ArticleQuantityColumnEntity>	articleQuantityColumnEntities;
+
+		private FrameBox											dateLine;
 	}
 }
