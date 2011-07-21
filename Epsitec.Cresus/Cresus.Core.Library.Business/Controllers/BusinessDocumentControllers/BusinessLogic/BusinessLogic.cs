@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public bool IsLinesEditionEnabled
 		{
 			//	Indique s'il est possible d'éditer les lignes du document, c'est-à-dire s'il est possible
-			//	de créer des lignes, d'en supprimer, d'en déplacer, etc.
+			//	de créer des lignes, d'en supprimer, d'en déplacer ou de les modifier.
 			get
 			{
 				return this.documentBusinessLogic.IsLinesEditionEnabled;
@@ -137,7 +137,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public bool IsMyEyesOnlyEditionEnabled
 		{
-			//	Indique s'il est possible d'éditer pour les documents internes à l'entreprise.
+			//	Indique si on ne peut éditer que les textes 'MyEyesOnly', c'est-à-dire pour les documents
+			//	interne à l'entreprise.
 			get
 			{
 				return this.documentBusinessLogic.IsMyEyesOnlyEditionEnabled;
@@ -204,7 +205,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public bool IsArticleQuantityEditionEnabled
 		{
-			//	Indique s'il est possible d'éditer les quantités.
+			//	Indique s'il est possible d'éditer une ou plusieurs quantités.
 			get
 			{
 				return this.ArticleQuantityTypeEditionEnabled.Count () != 0;
@@ -219,7 +220,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public IEnumerable<EnumKeyValues<ArticleQuantityType>> ArticleQuantityTypeEditionEnabled
 		{
-			//	Retourne les types de quantité définis dans les réglages globaux compatibles
+			//	Retourne les types de quantité définis dans les réglages globaux, compatibles
 			//	avec le document en cours.
 			get
 			{

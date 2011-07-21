@@ -138,16 +138,12 @@ namespace Epsitec.Cresus.Core.Entities
 			var desc     = this.ArticleDescriptionCache.Lines.FirstOrDefault ().ToSimpleText ();
 			var price    = Misc.PriceToString (this.PrimaryLinePriceBeforeTax);
 
-			FormattedText text = TextFormatter.FormatText (quantity, desc, price);
+			if (string.IsNullOrEmpty (desc))
+			{
+				desc = "?";
+			}
 
-			if (text.IsNullOrEmpty)
-			{
-				return "<i>Article</i>";
-			}
-			else
-			{
-				return text;
-			}
+			return string.Concat (quantity, " ", desc, " ", price);
 		}
 
 		public override EntityStatus GetEntityStatus ()

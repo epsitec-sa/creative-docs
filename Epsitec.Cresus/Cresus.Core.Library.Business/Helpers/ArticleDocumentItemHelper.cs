@@ -67,13 +67,12 @@ namespace Epsitec.Cresus.Core.Helpers
 
 		public static string GetArticleQuantityAndUnit(ArticleDocumentItemEntity article)
 		{
-			//	Retourne la quantité d'un article et l'unité correspondante. Si l'article n'est pas livrable,
-			//	retourne zéro (par exemple "0 pce").
+			//	Retourne la quantité d'un article et l'unité correspondante.
 			string unit = null;
 
 			foreach (var quantity in article.ArticleQuantities)
 			{
-				if (quantity.QuantityColumn.QuantityType == Business.ArticleQuantityType.Billed)
+				if (quantity.QuantityColumn.QuantityType == Business.ArticleQuantityType.Ordered)
 				{
 					return Misc.FormatUnit (quantity.Quantity, quantity.Unit.Code);
 				}
@@ -84,19 +83,6 @@ namespace Epsitec.Cresus.Core.Helpers
 			if (unit != null)
 			{
 				return Misc.FormatUnit (0, unit);
-			}
-
-			return null;
-		}
-
-		public static decimal? GetArticleQuantity(ArticleDocumentItemEntity article)
-		{
-			foreach (var quantity in article.ArticleQuantities)
-			{
-				if (quantity.QuantityColumn.QuantityType == Business.ArticleQuantityType.Billed)
-				{
-					return quantity.Quantity;
-				}
 			}
 
 			return null;

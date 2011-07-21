@@ -147,8 +147,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private Widget CreateTypeUI(Widget parent)
 		{
-			//	Crée le widget pour choisir la type de la quantité. Les boutons ne montrent que les types
-			//	définis dans les réglages globaux (ArticleQuantityColumnEntity).
+			//	Crée le widget pour choisir le type de la quantité. Les boutons ne montrent que les types
+			//	définis dans les réglages globaux (ArticleQuantityColumnEntity) et compatibles avec
+			//	la logique d'entreprise.
 			ItemPicker widget = new ItemPicker
 			{
 				Parent = parent,
@@ -193,7 +194,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private void UpdateDateLine()
 		{
-			bool visible = (this.Entity.QuantityColumn.QuantityType != ArticleQuantityType.Ordered);
+			bool visible = (this.Entity.QuantityColumn.QuantityType != ArticleQuantityType.Ordered &&
+							this.Entity.QuantityColumn.QuantityType != ArticleQuantityType.Information);
 
 			this.dateLine.Visibility = visible;
 

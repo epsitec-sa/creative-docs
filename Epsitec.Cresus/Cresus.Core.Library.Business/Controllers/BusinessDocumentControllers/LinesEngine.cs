@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			newQuantity.QuantityColumn = quantityColumnEntity;
 
 			var newLine = this.businessContext.CreateEntity<ArticleDocumentItemEntity> ();
-			newLine.GroupIndex = isTax ? 0 : model.GroupIndex;
+			newLine.GroupIndex = isTax ? 0 : ((model == null) ? 1 : model.GroupIndex);
 			newLine.ArticleQuantities.Add (newQuantity);
 
 			this.businessDocumentEntity.Lines.Insert (index, newLine);
@@ -157,12 +157,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				newLine.Text = string.Concat (LinesEngine.titlePrefixTags, LinesEngine.titlePostfixTags);
 			}
 
+			//	Si la logique d'entreprise dit qu'on édite que les textes internes, met directement la bonne coche.
 			if (this.businessLogic.IsMyEyesOnlyEditionEnabled)
 			{
 				newLine.Attributes = DocumentItemAttributes.MyEyesOnly;
 			}
 
-			newLine.GroupIndex = model.GroupIndex;
+			newLine.GroupIndex = (model == null) ? 1 : model.GroupIndex;
 
 			this.businessDocumentEntity.Lines.Insert (index, newLine);
 
@@ -187,7 +188,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			var newLine = this.businessContext.CreateEntity<SubTotalDocumentItemEntity> ();
-			newLine.GroupIndex = model.GroupIndex;
+			newLine.GroupIndex = (model == null) ? 1 : model.GroupIndex;
 
 			this.businessDocumentEntity.Lines.Insert (index, newLine);
 
@@ -634,6 +635,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			var group = firstLeaf.Parent;
 			var parent = group.Parent;
 
+			if (parent == null)
+			{
+				this.lastError = LinesError.AlreadySplited;
+				return;
+			}
+
 			if (group.Childrens.IndexOf (firstLeaf) == 0)  // déjà séparé ?
 			{
 				this.lastError = LinesError.AlreadySplited;
@@ -685,6 +692,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			var firstLeaf = tree.Search (selection[0].AbstractDocumentItemEntity);
 			var group = firstLeaf.Parent;
 			var parent = group.Parent;
+
+			if (parent == null)
+			{
+				this.lastError = LinesError.AlreadyCombined;
+				return;
+			}
 
 			int index = group.Childrens.IndexOf (firstLeaf);
 			if (index != 0)  // déjà soudé ?
@@ -908,6 +921,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private bool IsBusinessLogicAccepted(List<LineInformations> selection)
 		{
+			//	Indique si la sélection est compatible avec les contraintes de la logique d'entreprise.
 			foreach (var info in selection)
 			{
 				if (!this.businessLogic.IsEditionEnabled (info))
@@ -1048,7 +1062,15 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				}
 			}
 
-			model = this.businessDocumentEntity.Lines[0];
+			if (this.businessDocumentEntity.Lines.Count == 0)
+			{
+				model = null;
+			}
+			else
+			{
+				model = this.businessDocumentEntity.Lines[0];
+			}
+
 			return 0;
 		}
 

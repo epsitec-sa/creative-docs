@@ -36,13 +36,26 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		protected override void CreateBricks(BrickWall<BusinessDocumentEntity> wall)
 		{
 			wall.AddBrick ()
-				.Title ("Lignes du document")
+				.Title (this.GetCustomizedTitle)
 				.Icon ("Data.DocumentItems")
 				.Attribute (BrickMode.FullHeightStretch)
 				.Input ()
 				  .Field (x => x).WithSpecialController ()
 				.End ()
 				;
+		}
+
+		private FormattedText GetCustomizedTitle
+		{
+			//	Comme l'éditeur de lignes d'un document occupe une grande largeur, les tuiles de gauche ne sont
+			//	généralement plus visibles. Il est donc très important de rappeler le nom du type du document
+			//	dans le titre (par exemple "Facture — lignes du document").
+			get
+			{
+				var documentMetadata = this.BusinessContext.GetMasterEntity<DocumentMetadataEntity> ();
+				var title = documentMetadata.GetTitle ();
+				return FormattedText.Concat (title, " — lignes du document");
+			}
 		}
 	}
 }

@@ -26,6 +26,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public virtual bool IsLinesEditionEnabled
 		{
+			//	Indique si on peut éditer librement toutes les lignes, c'est-à-dire en créer, modifier,
+			//	déplacer et supprimer.
 			get
 			{
 				return false;
@@ -34,6 +36,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public virtual bool IsArticleParametersEditionEnabled
 		{
+			//	Indique si on peut choisir ou modifier un article.
 			get
 			{
 				return false;
@@ -42,6 +45,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public virtual bool IsTextEditionEnabled
 		{
+			//	Indique si on peut éditer les textes.
 			get
 			{
 				return false;
@@ -50,6 +54,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public virtual bool IsMyEyesOnlyEditionEnabled
 		{
+			//	Indique si on ne peut éditer que les textes 'MyEyesOnly', c'est-à-dire pour les documents
+			//	interne à l'entreprise.
 			get
 			{
 				return false;
@@ -58,6 +64,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public virtual bool IsPriceEditionEnabled
 		{
+			//	Indique si on peut éditer les prix.
 			get
 			{
 				return false;
@@ -66,6 +73,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public virtual bool IsDiscountEditionEnabled
 		{
+			//	Indique si on peut éditer les rabais.
 			get
 			{
 				return false;
@@ -75,6 +83,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public virtual IEnumerable<ArticleQuantityType> ArticleQuantityTypeEditionEnabled
 		{
+			//	Retourne la liste des types de quantité éditables.
 			get
 			{
 				return null;

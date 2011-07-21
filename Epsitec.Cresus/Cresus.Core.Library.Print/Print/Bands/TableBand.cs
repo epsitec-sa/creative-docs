@@ -556,7 +556,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 				bool tooSmall = false;
 
 				TextBand firstTextBand = this.GetTextBand (0, row);
-				var topGap = firstTextBand.TableCellBorder.TopGap;
+				var topGap = (firstTextBand == null) ? 0 : firstTextBand.TableCellBorder.TopGap;
 
 				for (int column = 0; column < this.columnsCount; column++)
 				{
