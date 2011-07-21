@@ -97,7 +97,19 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				this.documentContainer.Ending (firstPage);
 			}
 
-			if (this.DocumentType == Business.DocumentType.OrderBooking)
+			if (this.DocumentType == Business.DocumentType.OrderConfiguration)
+			{
+				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
+
+				this.BuildHeader (null);
+				this.BuildArticles ();
+				this.BuildPages (null, firstPage);
+
+				this.documentContainer.Ending (firstPage);
+			}
+
+			if (this.DocumentType == Business.DocumentType.OrderBooking ||
+				this.DocumentType == Business.DocumentType.OrderConfirmation)
 			{
 				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
 
@@ -109,18 +121,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				this.documentContainer.Ending (firstPage);
 			}
 
-			if (this.DocumentType == Business.DocumentType.OrderConfirmation)
-			{
-				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
-
-				this.BuildHeader (null);
-				this.BuildArticles ();
-				this.BuildPages (null, firstPage);
-
-				this.documentContainer.Ending (firstPage);
-			}
-
-			if (this.DocumentType == Business.DocumentType.ProductionOrder)
+			if (this.DocumentType == Business.DocumentType.ProductionOrder ||
+				this.DocumentType == Business.DocumentType.ProductionChecklist)
 			{
 				int documentRank = 0;
 				var groups = this.GetProdGroups ();
@@ -138,6 +140,18 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				}
 			}
 
+			if (this.DocumentType == Business.DocumentType.ShipmentChecklist)
+			{
+				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
+
+				this.BuildHeader (null);
+				this.BuildArticles ();
+				this.BuildFooter ();
+				this.BuildPages (null, firstPage);
+
+				this.documentContainer.Ending (firstPage);
+			}
+
 			if (this.DocumentType == Business.DocumentType.DeliveryNote)
 			{
 				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
@@ -150,7 +164,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				this.documentContainer.Ending (firstPage);
 			}
 
-			if (this.DocumentType == Business.DocumentType.Invoice)
+			if (this.DocumentType == Business.DocumentType.Invoice ||
+				this.DocumentType == Business.DocumentType.InvoiceProForma)
 			{
 				if (!this.HasIsr || this.HasOption (DocumentOption.IsrPosition, "Without") || this.PreviewMode == Print.PreviewMode.ContinuousPreview)
 				{
@@ -190,6 +205,66 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 						onlyTotal = true;
 					}
 				}
+			}
+
+			if (this.DocumentType == Business.DocumentType.PaymentReminder)
+			{
+				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
+
+				this.BuildHeader (null);
+				this.BuildArticles ();
+				this.BuildFooter ();
+				this.BuildPages (null, firstPage);
+
+				this.documentContainer.Ending (firstPage);
+			}
+
+			if (this.DocumentType == Business.DocumentType.Receipt)
+			{
+				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
+
+				this.BuildHeader (null);
+				this.BuildArticles ();
+				this.BuildFooter ();
+				this.BuildPages (null, firstPage);
+
+				this.documentContainer.Ending (firstPage);
+			}
+
+			if (this.DocumentType == Business.DocumentType.CreditMemo)
+			{
+				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
+
+				this.BuildHeader (null);
+				this.BuildArticles ();
+				this.BuildFooter ();
+				this.BuildPages (null, firstPage);
+
+				this.documentContainer.Ending (firstPage);
+			}
+
+			if (this.DocumentType == Business.DocumentType.QuoteRequest)
+			{
+				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
+
+				this.BuildHeader (null);
+				this.BuildArticles ();
+				this.BuildFooter ();
+				this.BuildPages (null, firstPage);
+
+				this.documentContainer.Ending (firstPage);
+			}
+
+			if (this.DocumentType == Business.DocumentType.PurchaseOrder)
+			{
+				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
+
+				this.BuildHeader (null);
+				this.BuildArticles ();
+				this.BuildFooter ();
+				this.BuildPages (null, firstPage);
+
+				this.documentContainer.Ending (firstPage);
 			}
 		}
 
@@ -370,31 +445,59 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			if (this.IsColumnsOrderQD)
 			{
-				this.tableColumns.Add (TableColumnKeys.LineNumber,         new TableColumn ("N°",          priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.Quantity,           new TableColumn ("?",           priceWidth,   ContentAlignment.MiddleLeft));  // "Quantité" ou "Livré"
-				this.tableColumns.Add (TableColumnKeys.DelayedQuantity,    new TableColumn ("Suit",        priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.DelayedDate,        new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.ArticleId,          new TableColumn ("Article",     priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.ArticleDescription, new TableColumn ("Désignation", 0,            ContentAlignment.MiddleLeft));  // seule colonne en mode width = fill
-				this.tableColumns.Add (TableColumnKeys.UnitPrice,          new TableColumn ("p.u. HT",     priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add (TableColumnKeys.Discount,           new TableColumn ("Rabais",      priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add (TableColumnKeys.LinePrice,          new TableColumn ("Prix HT",     priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add (TableColumnKeys.Vat,                new TableColumn ("TVA",         priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add (TableColumnKeys.Total,              new TableColumn ("Prix TTC",    priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.LineNumber,                new TableColumn ("N°",          priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.Quantity,                  new TableColumn ("Nb",          priceWidth,   ContentAlignment.MiddleLeft));
+
+				this.tableColumns.Add (TableColumnKeys.OrderedQuantity,           new TableColumn ("Comm",        priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.OrderedDate,               new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.BilledQuantity,            new TableColumn ("Fact",        priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.BilledDate,                new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.DelayedQuantity,           new TableColumn ("Suit",        priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.DelayedDate,               new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.ExpectedQuantity,          new TableColumn ("Att",         priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.ExpectedDate,              new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.ShippedQuantity,           new TableColumn ("Livré",       priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.ShippedDate,               new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.ShippedPreviouslyQuantity, new TableColumn ("Déjà",        priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.ShippedPreviouslyDate,     new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.InformationQuantity,       new TableColumn ("Info",        priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.InformationDate,           new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
+
+				this.tableColumns.Add (TableColumnKeys.ArticleId,                 new TableColumn ("Article",     priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.ArticleDescription,        new TableColumn ("Désignation", 0,            ContentAlignment.MiddleLeft));  // seule colonne en mode width = fill
+				this.tableColumns.Add (TableColumnKeys.UnitPrice,                 new TableColumn ("p.u. HT",     priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.Discount,                  new TableColumn ("Rabais",      priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.LinePrice,                 new TableColumn ("Prix HT",     priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.Vat,                       new TableColumn ("TVA",         priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.Total,                     new TableColumn ("Prix TTC",    priceWidth,   ContentAlignment.MiddleRight));
 			}
 			else
 			{
-				this.tableColumns.Add (TableColumnKeys.LineNumber,         new TableColumn ("N°",          priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.ArticleId,          new TableColumn ("Article",     priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.ArticleDescription, new TableColumn ("Désignation", 0,            ContentAlignment.MiddleLeft));  // seule colonne en mode width = fill
-				this.tableColumns.Add (TableColumnKeys.Quantity,           new TableColumn ("?",           priceWidth,   ContentAlignment.MiddleLeft));  // "Quantité" ou "Livré"
-				this.tableColumns.Add (TableColumnKeys.DelayedQuantity,    new TableColumn ("Suit",        priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.DelayedDate,        new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.UnitPrice,          new TableColumn ("p.u. HT",     priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add (TableColumnKeys.Discount,           new TableColumn ("Rabais",      priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add (TableColumnKeys.LinePrice,          new TableColumn ("Prix HT",     priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add (TableColumnKeys.Vat,                new TableColumn ("TVA",         priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add (TableColumnKeys.Total,              new TableColumn ("Prix TTC",    priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.LineNumber,                new TableColumn ("N°",          priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.ArticleId,                 new TableColumn ("Article",     priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.ArticleDescription,        new TableColumn ("Désignation", 0,            ContentAlignment.MiddleLeft));  // seule colonne en mode width = fill
+				this.tableColumns.Add (TableColumnKeys.Quantity,                  new TableColumn ("Nb",          priceWidth,   ContentAlignment.MiddleLeft));
+
+				this.tableColumns.Add (TableColumnKeys.OrderedQuantity,           new TableColumn ("Comm",        priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.OrderedDate,               new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.BilledQuantity,            new TableColumn ("Fact",        priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.BilledDate,                new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.DelayedQuantity,           new TableColumn ("Suit",        priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.DelayedDate,               new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.ExpectedQuantity,          new TableColumn ("Att",         priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.ExpectedDate,              new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.ShippedQuantity,           new TableColumn ("Livré",       priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.ShippedDate,               new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.ShippedPreviouslyQuantity, new TableColumn ("Déjà",        priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.ShippedPreviouslyDate,     new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.InformationQuantity,       new TableColumn ("Info",        priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.InformationDate,           new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
+
+				this.tableColumns.Add (TableColumnKeys.UnitPrice,                 new TableColumn ("p.u. HT",     priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.Discount,                  new TableColumn ("Rabais",      priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.LinePrice,                 new TableColumn ("Prix HT",     priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.Vat,                       new TableColumn ("TVA",         priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.Total,                     new TableColumn ("Prix TTC",    priceWidth,   ContentAlignment.MiddleRight));
 			}
 
 			//	Construit une fois pour toutes les accesseurs au contenu.
@@ -484,28 +587,49 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			if (this.DocumentType == Business.DocumentType.DeliveryNote)
 			{
-				this.tableColumns[TableColumnKeys.Discount ].Visible = false;
+				this.tableColumns[TableColumnKeys.Discount].Visible = false;
 				this.tableColumns[TableColumnKeys.UnitPrice].Visible = false;
 				this.tableColumns[TableColumnKeys.LinePrice].Visible = false;
-				this.tableColumns[TableColumnKeys.Vat      ].Visible = false;
-				this.tableColumns[TableColumnKeys.Total    ].Visible = false;
+				this.tableColumns[TableColumnKeys.Vat].Visible = false;
+				this.tableColumns[TableColumnKeys.Total].Visible = false;
 			}
 
-			if (this.DocumentType == Business.DocumentType.ProductionOrder)
+			if (this.DocumentType == Business.DocumentType.ProductionOrder ||
+				this.DocumentType == Business.DocumentType.ProductionChecklist)
 			{
 				this.tableColumns[TableColumnKeys.DelayedQuantity].Visible = false;
-				this.tableColumns[TableColumnKeys.DelayedDate    ].Visible = false;
-				this.tableColumns[TableColumnKeys.Discount       ].Visible = false;
-				this.tableColumns[TableColumnKeys.UnitPrice      ].Visible = false;
-				this.tableColumns[TableColumnKeys.LinePrice      ].Visible = false;
-				this.tableColumns[TableColumnKeys.Vat            ].Visible = false;
-				this.tableColumns[TableColumnKeys.Total          ].Visible = false;
+				this.tableColumns[TableColumnKeys.DelayedDate].Visible = false;
+
+				this.tableColumns[TableColumnKeys.Discount].Visible = false;
+				this.tableColumns[TableColumnKeys.UnitPrice].Visible = false;
+				this.tableColumns[TableColumnKeys.LinePrice].Visible = false;
+				this.tableColumns[TableColumnKeys.Vat].Visible = false;
+				this.tableColumns[TableColumnKeys.Total].Visible = false;
+			}
+
+			if (this.DocumentType == Business.DocumentType.Invoice ||
+				this.DocumentType == Business.DocumentType.InvoiceProForma)
+			{
+				this.tableColumns[TableColumnKeys.OrderedQuantity].Visible = false;
+				this.tableColumns[TableColumnKeys.OrderedDate].Visible = false;
+				
+				this.tableColumns[TableColumnKeys.ShippedQuantity].Visible = false;
+				this.tableColumns[TableColumnKeys.ShippedDate].Visible = false;
+				
+				this.tableColumns[TableColumnKeys.InformationQuantity].Visible = false;
+				this.tableColumns[TableColumnKeys.InformationDate].Visible = false;
 			}
 
 			if (!this.HasOption (DocumentOption.ArticleDelayed))  // n'imprime pas les articles retardés ?
 			{
 				this.tableColumns[TableColumnKeys.DelayedQuantity].Visible = false;
-				this.tableColumns[TableColumnKeys.DelayedDate    ].Visible = false;
+				this.tableColumns[TableColumnKeys.DelayedDate].Visible = false;
+
+				this.tableColumns[TableColumnKeys.ExpectedQuantity].Visible = false;
+				this.tableColumns[TableColumnKeys.ExpectedDate].Visible = false;
+
+				this.tableColumns[TableColumnKeys.InformationQuantity].Visible = false;
+				this.tableColumns[TableColumnKeys.InformationDate].Visible = false;
 			}
 
 			if (!this.HasOption (DocumentOption.ArticleId))  // n'imprime pas les numéros d'article ?
@@ -531,6 +655,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			this.table.CellBorder = this.GetCellBorder ();
 			this.table.CellMargins = new Margins (this.CellMargin);
 
+#if false
 			//	Détermine le nom de la colonne TableColumnKeys.Quantity.
 			if (this.tableColumns[TableColumnKeys.DelayedQuantity].Visible)  // colonne quantité visible ?
 			{
@@ -540,6 +665,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			{
 				this.tableColumns[TableColumnKeys.Quantity].Title = "Quantité";  // affiche "Quantité"
 			}
+#endif
 
 			//	Génère une première ligne d'en-tête (titres des colonnes).
 			int row = 0;
@@ -691,24 +817,14 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		private int InitializeColumnArticleLine(DocumentItemAccessor accessor, ArticleDocumentItemEntity line, ArticleGroupEntity group)
 		{
 			//	Retourne le nombre de lignes à utiliser dans le tableau.
-			if (this.DocumentType == Business.DocumentType.DeliveryNote && !ArticleDocumentItemHelper.IsArticleForBL (line))
-			{
-				return 0;
-			}
-
-			if (this.DocumentType == Business.DocumentType.ProductionOrder && !ArticleDocumentItemHelper.IsArticleForProd (line, group))
-			{
-				return 0;
-			}
-
 			if (!this.IsPrintableArticle (line))
 			{
 				return 0;
 			}
 
-			this.tableColumns[TableColumnKeys.ArticleId         ].Visible = true;
+			this.tableColumns[TableColumnKeys.ArticleId].Visible = true;
 			this.tableColumns[TableColumnKeys.ArticleDescription].Visible = true;
-			this.tableColumns[TableColumnKeys.Total             ].Visible = true;
+			this.tableColumns[TableColumnKeys.Total].Visible = true;
 
 			if (line.VatCode != Business.Finance.VatCode.None &&
 				line.VatCode != Business.Finance.VatCode.Excluded &&
@@ -719,17 +835,50 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			foreach (var quantity in line.ArticleQuantities)
 			{
+				this.tableColumns[TableColumnKeys.Quantity].Visible = true;
+				this.tableColumns[TableColumnKeys.UnitPrice].Visible = true;
+				this.tableColumns[TableColumnKeys.LinePrice].Visible = true;
+
+				if (quantity.QuantityColumn.QuantityType == Business.ArticleQuantityType.Ordered)
+				{
+					this.tableColumns[TableColumnKeys.OrderedQuantity].Visible = true;
+					this.tableColumns[TableColumnKeys.OrderedDate].Visible = true;
+				}
+
 				if (quantity.QuantityColumn.QuantityType == Business.ArticleQuantityType.Billed)
 				{
-					this.tableColumns[TableColumnKeys.Quantity ].Visible = true;
-					this.tableColumns[TableColumnKeys.UnitPrice].Visible = true;
-					this.tableColumns[TableColumnKeys.LinePrice].Visible = true;
+					this.tableColumns[TableColumnKeys.BilledQuantity].Visible = true;
+					this.tableColumns[TableColumnKeys.BilledDate].Visible = true;
 				}
 
 				if (quantity.QuantityColumn.QuantityType == Business.ArticleQuantityType.Delayed)
 				{
 					this.tableColumns[TableColumnKeys.DelayedQuantity].Visible = true;
-					this.tableColumns[TableColumnKeys.DelayedDate    ].Visible = true;
+					this.tableColumns[TableColumnKeys.DelayedDate].Visible = true;
+				}
+
+				if (quantity.QuantityColumn.QuantityType == Business.ArticleQuantityType.Expected)
+				{
+					this.tableColumns[TableColumnKeys.ExpectedQuantity].Visible = true;
+					this.tableColumns[TableColumnKeys.ExpectedDate].Visible = true;
+				}
+
+				if (quantity.QuantityColumn.QuantityType == Business.ArticleQuantityType.Shipped)
+				{
+					this.tableColumns[TableColumnKeys.ShippedQuantity].Visible = true;
+					this.tableColumns[TableColumnKeys.ShippedDate].Visible = true;
+				}
+
+				if (quantity.QuantityColumn.QuantityType == Business.ArticleQuantityType.ShippedPreviously)
+				{
+					this.tableColumns[TableColumnKeys.ShippedPreviouslyQuantity].Visible = true;
+					this.tableColumns[TableColumnKeys.ShippedPreviouslyDate].Visible = true;
+				}
+
+				if (quantity.QuantityColumn.QuantityType == Business.ArticleQuantityType.Information)
+				{
+					this.tableColumns[TableColumnKeys.InformationQuantity].Visible = true;
+					//?this.tableColumns[TableColumnKeys.InformationDate].Visible = true;
 				}
 			}
 
@@ -808,16 +957,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		private int BuildArticleLine(TableBand table, int row, DocumentItemAccessor accessor, ArticleDocumentItemEntity line, ArticleGroupEntity group)
 		{
 			//	Retourne le nombre de lignes à utiliser dans le tableau.
-			if (this.DocumentType == Business.DocumentType.DeliveryNote && !ArticleDocumentItemHelper.IsArticleForBL (line))
-			{
-				return 0;
-			}
-
-			if (this.DocumentType == Business.DocumentType.ProductionOrder && !ArticleDocumentItemHelper.IsArticleForProd (line, group))
-			{
-				return 0;
-			}
-
 			if (!this.IsPrintableArticle (line))
 			{
 				return 0;
@@ -825,9 +964,37 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			for (int i = 0; i < accessor.RowsCount; i++)
 			{
-				table.SetText (this.tableColumns[TableColumnKeys.Quantity       ].Rank, row+i, DocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.BilledQuantity,  DocumentItemAccessorColumn.BilledUnit),       this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.DelayedQuantity].Rank, row+i, DocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.DelayedQuantity, DocumentItemAccessorColumn.DelayedUnit),      this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.DelayedDate    ].Rank, row+i, DocumentMetadataPrinter.GetDates           (accessor, i, DocumentItemAccessorColumn.DelayedBeginDate, DocumentItemAccessorColumn.ExpectedEndDate), this.FontSize);
+				if (this.DocumentType == Business.DocumentType.Invoice ||
+					this.DocumentType == Business.DocumentType.InvoiceProForma ||
+					this.DocumentType == Business.DocumentType.PaymentReminder)
+				{
+					table.SetText (this.tableColumns[TableColumnKeys.Quantity].Rank, row+i, DocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.BilledQuantity, DocumentItemAccessorColumn.BilledUnit), this.FontSize);
+				}
+				else
+				{
+					table.SetText (this.tableColumns[TableColumnKeys.Quantity].Rank, row+i, DocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.OrderedQuantity, DocumentItemAccessorColumn.OrderedUnit), this.FontSize);
+				}
+
+				table.SetText (this.tableColumns[TableColumnKeys.OrderedQuantity].Rank, row+i, DocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.OrderedQuantity, DocumentItemAccessorColumn.OrderedUnit), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.OrderedDate].Rank, row+i, DocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.OrderedBeginDate, DocumentItemAccessorColumn.OrderedEndDate), this.FontSize);
+
+				table.SetText (this.tableColumns[TableColumnKeys.BilledQuantity].Rank, row+i, DocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.BilledQuantity, DocumentItemAccessorColumn.BilledUnit), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.BilledDate].Rank, row+i, DocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.BilledBeginDate, DocumentItemAccessorColumn.BilledEndDate), this.FontSize);
+
+				table.SetText (this.tableColumns[TableColumnKeys.DelayedQuantity].Rank, row+i, DocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.DelayedQuantity, DocumentItemAccessorColumn.DelayedUnit), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.DelayedDate].Rank, row+i, DocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.DelayedBeginDate, DocumentItemAccessorColumn.DelayedEndDate), this.FontSize);
+
+				table.SetText (this.tableColumns[TableColumnKeys.ExpectedQuantity].Rank, row+i, DocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.ExpectedQuantity, DocumentItemAccessorColumn.ExpectedUnit), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.ExpectedDate].Rank, row+i, DocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.ExpectedBeginDate, DocumentItemAccessorColumn.ExpectedEndDate), this.FontSize);
+
+				table.SetText (this.tableColumns[TableColumnKeys.ShippedQuantity].Rank, row+i, DocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.ShippedQuantity, DocumentItemAccessorColumn.ShippedUnit), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.ShippedDate].Rank, row+i, DocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.ShippedBeginDate, DocumentItemAccessorColumn.ShippedEndDate), this.FontSize);
+
+				table.SetText (this.tableColumns[TableColumnKeys.ShippedPreviouslyQuantity].Rank, row+i, DocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.ShippedPreviouslyQuantity, DocumentItemAccessorColumn.ShippedPreviouslyUnit), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.ShippedPreviouslyDate].Rank, row+i, DocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.ShippedPreviouslyBeginDate, DocumentItemAccessorColumn.ShippedPreviouslyEndDate), this.FontSize);
+
+				table.SetText (this.tableColumns[TableColumnKeys.InformationQuantity].Rank, row+i, DocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.InformationQuantity, DocumentItemAccessorColumn.InformationUnit), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.InformationDate].Rank, row+i, DocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.InformationBeginDate, DocumentItemAccessorColumn.InformationEndDate), this.FontSize);
 			}
 			
 			table.SetText (this.tableColumns[TableColumnKeys.ArticleId         ].Rank, row, accessor.GetContent (0, DocumentItemAccessorColumn.ArticleId),          this.FontSize);
@@ -1086,6 +1253,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 		private bool IsPrintableArticle(ArticleDocumentItemEntity line)
 		{
+#if false
 			if (!this.HasOption (DocumentOption.ArticleDelayed))  // n'imprime pas les articles retardés ?
 			{
 				foreach (var quantity in line.ArticleQuantities)
@@ -1098,6 +1266,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 				return false;
 			}
+#endif
 
 			return true;
 		}
@@ -1158,7 +1327,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					this.documentContainer.AddToBottom (table, this.PageMargins.Bottom);
 				}
 
-				if (this.DocumentType == Business.DocumentType.ProductionOrder)
+				if (this.DocumentType == Business.DocumentType.ProductionOrder ||
+					this.DocumentType == Business.DocumentType.ProductionChecklist)
 				{
 					var table = new TableBand ();
 
@@ -1190,6 +1360,25 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					table.SetRelativeColumWidth (0, 60);
 					table.SetRelativeColumWidth (1, 100);
 					table.SetText (0, 0, new FormattedText ("Bon pour commande"), this.FontSize);
+					table.SetText (1, 0, new FormattedText ("Lieu et date :<br/><br/>Signature :<br/><br/><br/>"), this.FontSize);
+					table.SetUnbreakableRow (0, true);
+
+					this.documentContainer.AddToBottom (table, this.PageMargins.Bottom);
+				}
+
+				if (this.DocumentType == Business.DocumentType.OrderConfirmation)
+				{
+					var table = new TableBand ();
+
+					table.ColumnsCount = 2;
+					table.RowsCount = 1;
+					table.CellBorder = CellBorder.Default;
+					table.Font = font;
+					table.FontSize = this.FontSize;
+					table.CellMargins = new Margins (2);
+					table.SetRelativeColumWidth (0, 60);
+					table.SetRelativeColumWidth (1, 100);
+					table.SetText (0, 0, new FormattedText ("Confirmation de commande"), this.FontSize);
 					table.SetText (1, 0, new FormattedText ("Lieu et date :<br/><br/>Signature :<br/><br/><br/>"), this.FontSize);
 					table.SetUnbreakableRow (0, true);
 
@@ -1437,7 +1626,9 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			get
 			{
 				return this.DocumentType == Business.DocumentType.DeliveryNote ||
-					   this.DocumentType == Business.DocumentType.ProductionOrder;
+					   this.DocumentType == Business.DocumentType.ShipmentChecklist ||
+					   this.DocumentType == Business.DocumentType.ProductionOrder ||
+					   this.DocumentType == Business.DocumentType.ProductionChecklist;
 			}
 		}
 

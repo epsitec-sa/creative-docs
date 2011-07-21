@@ -16,7 +16,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
 	/// <summary>
-	/// Devis.
+	/// Offre, devis.
 	/// </summary>
 	public class SalesQuoteBusinessLogic : AbstractDocumentBusinessLogic
 	{

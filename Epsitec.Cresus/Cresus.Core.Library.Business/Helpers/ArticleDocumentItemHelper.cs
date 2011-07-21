@@ -138,18 +138,6 @@ namespace Epsitec.Cresus.Core.Helpers
 		}
 
 
-		public static bool IsFixedTax(ArticleDocumentItemEntity article)
-		{
-			//	Retourne true s'il s'agit d'un article de taxe (par exemple des frais de port).
-			if (article != null &&
-				article.ArticleDefinition.IsNotNull ())
-			{
-				return ArticleDocumentItemHelper.IsFixedTax (article.ArticleDefinition);
-			}
-
-			return false;
-		}
-
 		public static bool IsFixedTax(ArticleDefinitionEntity article)
 		{
 			//	Retourne true s'il s'agit d'un article de taxe (par exemple des frais de port).
@@ -160,38 +148,6 @@ namespace Epsitec.Cresus.Core.Helpers
 				return article.ArticleCategory.ArticleType == Business.ArticleType.Freight ||
 					   article.ArticleCategory.ArticleType == Business.ArticleType.Tax ||
 					   article.ArticleCategory.ArticleType == Business.ArticleType.Admin;
-			}
-
-			return false;
-		}
-
-
-		public static bool IsArticleForBL(ArticleDocumentItemEntity article)
-		{
-			//	Retourne true s'il s'agit d'un article qui doit figurer sur un BL.
-			if (article != null &&
-				article.ArticleDefinition.IsNotNull () &&
-				article.ArticleDefinition.ArticleCategory.IsNotNull ())
-			{
-				return article.ArticleDefinition.ArticleCategory.ArticleType == Business.ArticleType.Goods;  // marchandises ?
-			}
-
-			return false;
-		}
-
-		public static bool IsArticleForProd(ArticleDocumentItemEntity article, ArticleGroupEntity group)
-		{
-			//	Retourne true s'il s'agit d'un article qui doit figurer sur un ordre de production.
-			if (article != null &&
-				article.ArticleDefinition.IsNotNull () &&
-				article.ArticleDefinition.ArticleCategory.IsNotNull ())
-			{
-				if (!article.ArticleDefinition.ArticleGroups.Contains (group))
-				{
-					return false;
-				}
-
-				return article.ArticleDefinition.ArticleCategory.ArticleType == Business.ArticleType.Goods;  // marchandises ?
 			}
 
 			return false;

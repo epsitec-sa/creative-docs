@@ -12,10 +12,31 @@ namespace Epsitec.Cresus.Core.Print.Bands
 	{
 		LineNumber,
 		Quantity,
+
+		OrderedQuantity,
+		OrderedDate,
+
+		BilledQuantity,
+		BilledDate,
+
 		DelayedQuantity,
 		DelayedDate,
+
+		ExpectedQuantity,
+		ExpectedDate,
+
+		ShippedQuantity,
+		ShippedDate,
+
+		ShippedPreviouslyQuantity,
+		ShippedPreviouslyDate,
+
+		InformationQuantity,
+		InformationDate,
+
 		ArticleId,
 		ArticleDescription,
+		
 		Discount,
 		UnitPrice,
 		LinePrice,
