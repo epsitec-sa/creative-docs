@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public QuantityLineEditorController(AccessData accessData)
 			: base (accessData)
 		{
-			this.articleQuantityColumnEntities = this.accessData.BusinessContext.GetAllEntities<ArticleQuantityColumnEntity> ();
+			this.articleQuantityColumnEntities = this.accessData.BusinessContext.GetAllEntities<ArticleQuantityColumnEntity> ().OrderBy (x => x.QuantityType);
 		}
 
 		protected override void CreateUI(UIBuilder builder)
@@ -134,6 +134,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				TabIndex = this.NextTabIndex,
 			};
 
+			//	Date.
 			this.dateLine = new FrameBox
 			{
 				Parent = rightBox,
@@ -141,13 +142,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				TabIndex = this.NextTabIndex,
 			};
 
-			//	Date.
 			var dateField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.BeginDate, x => this.Entity.BeginDate = x));
 			this.PlaceLabelAndField (this.dateLine, 35, 100, "Date", dateField);
 		}
 
 		private Widget CreateTypeUI(Widget parent)
 		{
+			//	Crée le widget pour choisir la type de la quantité. Les boutons ne montrent que les types
+			//	définis dans les réglages globaux (ArticleQuantityColumnEntity).
 			ItemPicker widget = new ItemPicker
 			{
 				Parent = parent,
@@ -157,7 +159,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				TabIndex = this.NextTabIndex,
 			};
 
-			foreach (var e in this.GetAllPossibleValueArticleQuantityType ())
+			foreach (var e in this.PossibleValueArticleQuantityType)
 			{
 				widget.Items.Add (e.Key.ToString (), e);
 			}
@@ -210,11 +212,162 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		private IEnumerable<EnumKeyValues<ArticleQuantityType>> GetAllPossibleValueArticleQuantityType()
+		private IEnumerable<EnumKeyValues<ArticleQuantityType>> PossibleValueArticleQuantityType
 		{
-			foreach (var e in this.articleQuantityColumnEntities)
+			//	Retourne les types de quantité définis dans les réglages globaux.
+			get
 			{
-				yield return EnumKeyValues.Create (e.QuantityType, e.Name);
+				var possible = this.PossibleArticleQuantityType;
+
+				foreach (var e in this.articleQuantityColumnEntities)
+				{
+					if (possible.Contains (e.QuantityType))
+					{
+						yield return EnumKeyValues.Create (e.QuantityType, e.Name);
+					}
+				}
+			}
+		}
+
+		private IEnumerable<ArticleQuantityType> PossibleArticleQuantityType
+		{
+			//	Retourne les types de quantité éditable, en fonction du type du document en cours.
+			get
+			{
+				switch (this.accessData.DocumentMetadataEntity.DocumentCategory.DocumentType)
+				{
+					//	Devis :
+					case DocumentType.SalesQuote:
+						yield return ArticleQuantityType.Ordered;				// commandé
+						yield return ArticleQuantityType.Delayed;				// retardé
+						yield return ArticleQuantityType.Information;			// information
+						break;
+
+					//	Choix des options pour commande :
+					case DocumentType.OrderConfiguration:
+						yield return ArticleQuantityType.Ordered;				// commandé
+						yield return ArticleQuantityType.Delayed;				// retardé
+						yield return ArticleQuantityType.Information;			// information
+						break;
+
+					//	Bon pour commande :
+					case DocumentType.OrderBooking:
+						yield return ArticleQuantityType.Ordered;				// commandé
+						yield return ArticleQuantityType.Delayed;				// retardé
+						yield return ArticleQuantityType.Information;			// information
+						break;
+
+					//	Confirmation de commande :
+					case DocumentType.OrderConfirmation:
+						yield return ArticleQuantityType.Ordered;				// commandé
+						yield return ArticleQuantityType.Delayed;				// retardé
+						yield return ArticleQuantityType.Information;			// information
+						break;
+
+					//	Ordre de production :
+					case DocumentType.ProductionOrder:
+						break;
+
+					//	Check-list de production :
+					case DocumentType.ProductionChecklist:
+						break;
+
+					//	Check-list d'expédition :
+					case DocumentType.ShipmentChecklist:
+						yield return ArticleQuantityType.Ordered;				// commandé
+						yield return ArticleQuantityType.Delayed;				// retardé
+						yield return ArticleQuantityType.Expected;				// attendu
+						yield return ArticleQuantityType.Shipped;				// livré
+						yield return ArticleQuantityType.ShippedPreviously;		// livré ultérieurement
+						yield return ArticleQuantityType.Information;			// information
+						break;
+
+					//	Bulletin de livraison :
+					case DocumentType.DeliveryNote:
+						yield return ArticleQuantityType.Ordered;				// commandé
+						yield return ArticleQuantityType.Delayed;				// retardé
+						yield return ArticleQuantityType.Expected;				// attendu
+						yield return ArticleQuantityType.Shipped;				// livré
+						yield return ArticleQuantityType.ShippedPreviously;		// livré ultérieurement
+						yield return ArticleQuantityType.Information;			// information
+						break;
+
+					//	Facture :
+					case DocumentType.Invoice:
+						yield return ArticleQuantityType.Billed;				// facturé
+						yield return ArticleQuantityType.Delayed;				// retardé
+						yield return ArticleQuantityType.Expected;				// attendu
+						yield return ArticleQuantityType.Shipped;				// livré
+						yield return ArticleQuantityType.ShippedPreviously;		// livré ultérieurement
+						break;
+
+					//	Facture pro forma :
+					case DocumentType.InvoiceProForma:
+						yield return ArticleQuantityType.Billed;				// facturé
+						yield return ArticleQuantityType.Delayed;				// retardé
+						yield return ArticleQuantityType.Expected;				// attendu
+						yield return ArticleQuantityType.Shipped;				// livré
+						yield return ArticleQuantityType.ShippedPreviously;		// livré ultérieurement
+						break;
+
+					//	Rappel :
+					case DocumentType.PaymentReminder:
+						break;
+
+					//	Reçu :
+					case DocumentType.Receipt:
+						yield return ArticleQuantityType.Ordered;				// commandé
+						yield return ArticleQuantityType.Billed;				// facturé
+						yield return ArticleQuantityType.Delayed;				// retardé
+						yield return ArticleQuantityType.Expected;				// attendu
+						yield return ArticleQuantityType.Shipped;				// livré
+						yield return ArticleQuantityType.ShippedPreviously;		// livré ultérieurement
+						yield return ArticleQuantityType.Information;			// information
+						break;
+
+					//	Note de crédit :
+					case DocumentType.CreditMemo:
+						yield return ArticleQuantityType.Ordered;				// commandé
+						yield return ArticleQuantityType.Billed;				// facturé
+						yield return ArticleQuantityType.Delayed;				// retardé
+						yield return ArticleQuantityType.Expected;				// attendu
+						yield return ArticleQuantityType.Shipped;				// livré
+						yield return ArticleQuantityType.ShippedPreviously;		// livré ultérieurement
+						yield return ArticleQuantityType.Information;			// information
+						break;
+
+					//	Demande d'offre :
+					case DocumentType.QuoteRequest:
+						yield return ArticleQuantityType.Ordered;				// commandé
+						yield return ArticleQuantityType.Billed;				// facturé
+						yield return ArticleQuantityType.Delayed;				// retardé
+						yield return ArticleQuantityType.Expected;				// attendu
+						yield return ArticleQuantityType.Shipped;				// livré
+						yield return ArticleQuantityType.ShippedPreviously;		// livré ultérieurement
+						yield return ArticleQuantityType.Information;			// information
+						break;
+
+					//	Confirmation de commande :
+					case DocumentType.PurchaseOrder:
+						yield return ArticleQuantityType.Ordered;				// commandé
+						yield return ArticleQuantityType.Billed;				// facturé
+						yield return ArticleQuantityType.Delayed;				// retardé
+						yield return ArticleQuantityType.Expected;				// attendu
+						yield return ArticleQuantityType.Shipped;				// livré
+						yield return ArticleQuantityType.ShippedPreviously;		// livré ultérieurement
+						yield return ArticleQuantityType.Information;			// information
+						break;
+
+					default:
+						yield return ArticleQuantityType.Ordered;				// commandé
+						yield return ArticleQuantityType.Billed;				// facturé
+						yield return ArticleQuantityType.Delayed;				// retardé
+						yield return ArticleQuantityType.Expected;				// attendu
+						yield return ArticleQuantityType.Shipped;				// livré
+						yield return ArticleQuantityType.ShippedPreviously;		// livré ultérieurement
+						yield return ArticleQuantityType.Information;			// information
+						break;
+				}
 			}
 		}
 
