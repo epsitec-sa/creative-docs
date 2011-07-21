@@ -163,22 +163,6 @@ namespace Epsitec.Cresus.Core
 			this.ContentListAdd (widget);
 		}
 
-		public void CreateButton(string id, string title, string description, System.Action callback)
-		{
-			var button = new ConfirmationButton
-			{
-				Margins = new Margins (10, 16, 1, 0),
-				Name = id,
-				Text = ConfirmationButton.FormatContent (title, description),
-				PreferredHeight = 52,
-			};
-
-			this.Add (button);
-
-			button.Clicked += (sender, e) => callback ();
-		}
-
-
 
 		public ConfirmationButton CreateCreationButtonWithInitializer<T>(CreationViewController<T> controller, string title, string description, System.Action<BusinessContext, T> initializer = null)
 			where T : AbstractEntity, new ()
@@ -295,30 +279,6 @@ namespace Epsitec.Cresus.Core
 			return tile;
 		}
 
-		public SummaryTile CreateSummaryTile<T>(string name, T entity, FormattedText summary, ViewControllerMode mode = ViewControllerMode.Summary, int controllerSubType = -1)
-			where T : AbstractEntity
-		{
-			var fullName = string.Format (System.Globalization.CultureInfo.InstalledUICulture, "{0}.{1}", name, this.titleTile.Items.Count);
-
-			var tile = new SummaryTile
-			{
-				AutoHilite     = false,
-				IsReadOnly     = true,
-				TabIndex       = ++this.tabIndex,
-				Name           = fullName,
-				Margins        = new Margins (0, 0, 0, -1),
-			};
-
-			this.ContentListAdd (tile);
-			this.titleTile.Items.Add (tile);
-			this.titleTile.CanExpandSubTile = true;
-
-			tile.Controller = new SummaryTileController<T> (entity, fullName, mode, controllerSubType);
-			tile.Summary    = summary.ToString ();
-
-			return tile;
-		}
-
 		class SummaryTileController<T> : ITileController
 			where T : AbstractEntity
 		{
@@ -349,24 +309,6 @@ namespace Epsitec.Cresus.Core
 
 
 
-
-		public TileTabBook<T> CreateTabBook<T>(params TabPageDef<T>[] pageDescriptions)
-		{
-			var tile = this.titleTile.Items.Last () as EditionTile;
-
-			var tileTabBook = new TileTabBook<T> (pageDescriptions)
-			{
-				Parent = tile.Container,
-				Dock = DockStyle.Stacked,
-				Margins = new Margins (0, Library.UI.Constants.RightMargin, 0, 5),
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				TabIndex = ++this.tabIndex,
-			};
-
-			this.tileTabBook = tileTabBook;
-
-			return tileTabBook;
-		}
 
 		public TileTabBook<T> CreateTabBook<T>(EditionTile tile, TabPageDef selectedPage, params TabPageDef<T>[] pageDescriptions)
 		{

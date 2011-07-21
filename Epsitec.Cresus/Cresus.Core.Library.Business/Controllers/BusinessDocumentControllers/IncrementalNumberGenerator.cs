@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private static string GetFormattedGroupIndex(int groupIndex)
 		{
 			//	Formate un GroupIndex pour l'homme.
-			//	    0 -> rien
+			//	    0 -> 0
 			//	    1 -> 1
 			//	  201 -> 1.2
 			//	30201 -> 1.2.3
