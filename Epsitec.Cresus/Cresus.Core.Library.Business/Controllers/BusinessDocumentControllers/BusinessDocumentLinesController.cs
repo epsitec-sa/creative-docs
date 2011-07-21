@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.lineInformations = new List<LineInformations> ();
 			this.UpdateLineInformations ();
 
-			this.linesEngine = new LinesEngine (this.accessData.BusinessContext, this.accessData.BusinessDocumentEntity);
+			this.linesEngine = new LinesEngine (this.accessData.BusinessContext, this.accessData.BusinessDocumentEntity, this.accessData.BusinessLogic);
 		}
 
 		public void CreateUI(Widget parent)
@@ -496,30 +496,31 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private void UpdateCommands()
 		{
 			var selection = this.Selection;
-			var edit = this.accessData.BusinessLogic.IsLinesEditionEnabled;
-			var quantity = this.accessData.BusinessLogic.IsArticleQuantityEditionEnabled;
 
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateArticle,  edit);
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateQuantity, quantity & this.linesEngine.IsCreateQuantityEnabled (selection));
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateText,     edit);
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateTitle,    edit);
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateGroup,    edit);
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateDiscount, edit);
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateTax,      edit);
+			var isEditionEnabled  = this.accessData.BusinessLogic.IsLinesEditionEnabled;
+			var isQuantityEnabled = this.accessData.BusinessLogic.IsArticleQuantityEditionEnabled;
 
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.MoveUp,         edit & this.linesEngine.IsMoveEnabled (selection, -1));
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.MoveDown,       edit & this.linesEngine.IsMoveEnabled (selection, 1));
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Duplicate,      edit & this.linesEngine.IsDuplicateEnabled (selection));
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Delete,         edit & this.linesEngine.IsDeleteEnabled (selection));
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateArticle,  isEditionEnabled);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateQuantity, isQuantityEnabled && this.linesEngine.IsCreateQuantityEnabled (selection));
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateText,     isEditionEnabled);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateTitle,    isEditionEnabled);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateGroup,    isEditionEnabled);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateDiscount, isEditionEnabled);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateTax,      isEditionEnabled);
 
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Group,          edit & this.linesEngine.IsGroupEnabled (selection));
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Ungroup,        edit & this.linesEngine.IsUngroupEnabled (selection));
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Split,          edit & this.linesEngine.IsSplitEnabled (selection));
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Combine,        edit & this.linesEngine.IsCombineEnabled (selection));
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Flat,           edit & this.linesEngine.IsFlatEnabled);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.MoveUp,         isEditionEnabled && this.linesEngine.IsMoveEnabled (selection, -1));
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.MoveDown,       isEditionEnabled && this.linesEngine.IsMoveEnabled (selection, 1));
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Duplicate,      isEditionEnabled && this.linesEngine.IsDuplicateEnabled (selection));
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Delete,         (isEditionEnabled || isQuantityEnabled) && this.linesEngine.IsDeleteEnabled (selection));
 
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Deselect,       edit & selection.Count != 0);
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.GroupSelect,    edit & selection.Count != 0);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Group,          isEditionEnabled && this.linesEngine.IsGroupEnabled (selection));
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Ungroup,        isEditionEnabled && this.linesEngine.IsUngroupEnabled (selection));
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Split,          isEditionEnabled && this.linesEngine.IsSplitEnabled (selection));
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Combine,        isEditionEnabled && this.linesEngine.IsCombineEnabled (selection));
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Flat,           isEditionEnabled && this.linesEngine.IsFlatEnabled);
+
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Deselect,       isEditionEnabled && selection.Count != 0);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.GroupSelect,    isEditionEnabled && selection.Count != 0);
 		}
 
 

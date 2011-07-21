@@ -18,10 +18,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 	/// </summary>
 	public class LinesEngine
 	{
-		public LinesEngine(BusinessContext businessContext, BusinessDocumentEntity businessDocumentEntity)
+		public LinesEngine(BusinessContext businessContext, BusinessDocumentEntity businessDocumentEntity, BusinessLogic businessLogic)
 		{
 			this.businessContext        = businessContext;
 			this.businessDocumentEntity = businessDocumentEntity;
+			this.businessLogic          = businessLogic;
 		}
 
 
@@ -409,6 +410,22 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				this.lastError = LinesError.EmptySelection;
 				return null;
+			}
+
+			//	Vérifie si la sélection est compatible avec la logique d'entreprise.
+			var isEditionEnabled  = this.businessLogic.IsLinesEditionEnabled;
+			var isQuantityEnabled = this.businessLogic.IsArticleQuantityEditionEnabled;
+
+			foreach (var info in selection)
+			{
+				if (!isEditionEnabled && isQuantityEnabled)
+				{
+					if (!info.IsQuantity)
+					{
+						this.lastError = LinesError.OnlyQuantity;
+						return null;
+					}
+				}
 			}
 
 			if (simulation)
@@ -928,6 +945,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				case LinesError.Fixed:
 					return "Cette ligne ne peut pas être déplacée.";
 
+				case LinesError.OnlyQuantity:
+					return "On ne peut supprimer que des quantités.";
+
 				default:
 					return null;
 			}
@@ -1041,6 +1061,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private readonly BusinessContext				businessContext;
 		private readonly BusinessDocumentEntity			businessDocumentEntity;
+		private readonly BusinessLogic					businessLogic;
 
 		private LinesError								lastError;
 	}

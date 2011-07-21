@@ -19,5 +19,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		AlreadyFlat,
 		Overflow,
 		Fixed,
+		OnlyQuantity,
 	}
 }
