@@ -67,7 +67,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Parent = this.tileContainer,
 				Dock = DockStyle.Right,
 				PreferredWidth = 360,
-				Padding = new Margins (10),
 				TabIndex = this.NextTabIndex,
 			};
 
@@ -154,16 +153,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				var text = this.IsEditName ? "Désignation courte" : "Désignation longue";
 				this.PlaceLabelAndField (line, labelWidth, 0, text, replacementBox);
 
-#if false
-				var icon = new StaticText
-				{
-					Parent = line,
-					Anchor = AnchorStyles.BottomLeft,
-					PreferredSize = new Size (41, 41),
-					Margins = new Margins (30, 0, 0, 10),
-					Text = Misc.GetResourceIconImageTag(this.IsEditName ? "Lines.EditName" : "Lines.EditDescription", 0, new Size (31, 31)),
-				};
-#else
 				double buttonWidth = Library.UI.Constants.ButtonLargeWidth;
 				double iconWidth   = Library.UI.Constants.IconLargeWidth;
 
@@ -188,42 +177,63 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					Anchor            = AnchorStyles.BottomLeft,
 					AutoFocus         = false,
 				};
-#endif
 			}
 		}
 
 		private void CreateUIRightFrame(UIBuilder builder, FrameBox parent)
 		{
-			//	Première ligne à droite.
-			if (this.Quantity != null)
+			var topFrame = new FrameBox
 			{
-				var line = new FrameBox
-				{
-					Parent = parent,
-					Dock = DockStyle.Top,
-					PreferredHeight = 20,
-					Margins = new Margins (0, 0, 0, 20),
-					TabIndex = this.NextTabIndex,
-				};
+				Parent = parent,
+				Dock = DockStyle.Top,
+				PreferredHeight = 20,
+				Padding = new Margins (10),
+				TabIndex = this.NextTabIndex,
+			};
 
-				//	Quantité.
-				var quantityField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Quantity.Quantity, x => this.Quantity.Quantity = x));
-				this.PlaceLabelAndField (line, 50, 80, "Quantité", quantityField);
+			var separator = new Separator
+			{
+				IsHorizontalLine = true,
+				PreferredHeight = 1,
+				Parent = parent,
+				Dock = DockStyle.Top,
+			};
 
-				//	Unité.
-				var unitController = new SelectionController<UnitOfMeasureEntity> (this.accessData.BusinessContext)
-				{
-					ValueGetter         = () => this.Quantity.Unit,
-					ValueSetter         = x => this.Quantity.Unit = x,
-					ReferenceController = new ReferenceController (() => this.Quantity.Unit),
-				};
+			var bottomFrame = new FrameBox
+			{
+				Parent = parent,
+				Dock = DockStyle.Fill,
+				PreferredWidth = 360,
+				Padding = new Margins (10),
+				TabIndex = this.NextTabIndex,
+			};
 
-				var unitField = builder.CreateCompactAutoCompleteTextField (null, "", unitController);
-				this.PlaceLabelAndField (line, 35, 80, "Unité", unitField.Parent);
+			this.CreateUIRightTopFrame (builder, topFrame);
+			this.CreateUIRightBottomFrame (builder, bottomFrame);
+		}
 
-				this.CreateStaticText (line, 70, "   (commandé)");
-			}
+		private void CreateUIRightTopFrame(UIBuilder builder, FrameBox parent)
+		{
+			//	Quantité.
+			var quantityField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Quantity.Quantity, x => this.Quantity.Quantity = x));
+			this.PlaceLabelAndField (parent, 50, 80, "Quantité", quantityField);
 
+			//	Unité.
+			var unitController = new SelectionController<UnitOfMeasureEntity> (this.accessData.BusinessContext)
+			{
+				ValueGetter         = () => this.Quantity.Unit,
+				ValueSetter         = x => this.Quantity.Unit = x,
+				ReferenceController = new ReferenceController (() => this.Quantity.Unit),
+			};
+
+			var unitField = builder.CreateCompactAutoCompleteTextField (null, "", unitController);
+			this.PlaceLabelAndField (parent, 35, 80, "Unité", unitField.Parent);
+
+			this.CreateStaticText (parent, 70, "   (commandé)");
+		}
+
+		private void CreateUIRightBottomFrame(UIBuilder builder, FrameBox parent)
+		{
 			//	Deuxième ligne à droite.
 			{
 				var line = new FrameBox
