@@ -110,6 +110,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	    1 -> 1
 			//	  201 -> 1.2
 			//	30201 -> 1.2.3
+			if (groupIndex == 0)
+			{
+				return "0";
+			}
+
 			var builder = new System.Text.StringBuilder ();
 
 			bool first = true;
