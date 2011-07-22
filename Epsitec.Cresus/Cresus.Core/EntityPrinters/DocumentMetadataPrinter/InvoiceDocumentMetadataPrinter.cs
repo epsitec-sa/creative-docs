@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				this.tableColumns.Add (TableColumnKeys.LineNumber,                new TableColumn ("N°",          priceWidth,   ContentAlignment.MiddleLeft));
 				this.tableColumns.Add (TableColumnKeys.MainQuantity,              new TableColumn ("Facturé",     priceWidth,   ContentAlignment.MiddleRight));
 				this.tableColumns.Add (TableColumnKeys.AdditionalType,            new TableColumn ("",            priceWidth+3, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.AdditionalQuantity,        new TableColumn ("",            priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.AdditionalQuantity,        new TableColumn ("Autre",       priceWidth,   ContentAlignment.MiddleRight));
 				this.tableColumns.Add (TableColumnKeys.AdditionalDate,            new TableColumn ("",            priceWidth+3, ContentAlignment.MiddleLeft));
 				this.tableColumns.Add (TableColumnKeys.ArticleId,                 new TableColumn ("Article",     priceWidth,   ContentAlignment.MiddleLeft));
 				this.tableColumns.Add (TableColumnKeys.ArticleDescription,        new TableColumn ("Désignation", 0,            ContentAlignment.MiddleLeft));  // seule colonne en mode width = fill
@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				this.tableColumns.Add (TableColumnKeys.ArticleDescription,        new TableColumn ("Désignation", 0,            ContentAlignment.MiddleLeft));  // seule colonne en mode width = fill
 				this.tableColumns.Add (TableColumnKeys.MainQuantity,              new TableColumn ("Facturé",     priceWidth,   ContentAlignment.MiddleRight));
 				this.tableColumns.Add (TableColumnKeys.AdditionalType,            new TableColumn ("",            priceWidth+3, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.AdditionalQuantity,        new TableColumn ("",            priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.AdditionalQuantity,        new TableColumn ("Autre",       priceWidth,   ContentAlignment.MiddleRight));
 				this.tableColumns.Add (TableColumnKeys.AdditionalDate,            new TableColumn ("",            priceWidth+3, ContentAlignment.MiddleLeft));
 
 				this.tableColumns.Add (TableColumnKeys.UnitPrice,                 new TableColumn ("p.u. HT",     priceWidth,   ContentAlignment.MiddleRight));
@@ -149,28 +149,72 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 			get
 			{
-				return DocumentItemAccessorMode.UseMainColumns |
-					   DocumentItemAccessorMode.DescriptionIndented |
-					   DocumentItemAccessorMode.UseArticleName;  // le nom court suffit sur une facture
+				var mode = DocumentItemAccessorMode.UseMainColumns |
+						   DocumentItemAccessorMode.DescriptionIndented |
+						   DocumentItemAccessorMode.UseArticleName;  // le nom court suffit sur une facture
+
+				if (this.HasOption (DocumentOption.ArticleAdditionalQuantities))  // imprime les autres quantités ?
+				{
+					mode |= DocumentItemAccessorMode.AdditionalQuantities;
+				}
+
+				return mode;
 			}
 		}
 
+		protected override void HideColumns(List<DocumentItemAccessor> accessors)
+		{
+			if (this.HasOption (DocumentOption.LineNumber, "None"))
+			{
+				this.tableColumns[TableColumnKeys.LineNumber].Visible = false;
+			}
+
+			if (!this.HasOption (DocumentOption.ArticleId))
+			{
+				this.tableColumns[TableColumnKeys.ArticleId].Visible = false;
+			}
+
+			if (!this.HasOption (DocumentOption.ArticleAdditionalQuantities))
+			{
+				this.tableColumns[TableColumnKeys.AdditionalType].Visible = false;
+				this.tableColumns[TableColumnKeys.AdditionalQuantity].Visible = false;
+				this.tableColumns[TableColumnKeys.AdditionalDate].Visible = false;
+			}
+
+			if (AbstractDocumentMetadataPrinter.IsEmptyColumn (accessors, DocumentItemAccessorColumn.Discount))
+			{
+				this.tableColumns[TableColumnKeys.Discount].Visible = false;
+			}
+
+			if (AbstractDocumentMetadataPrinter.IsEmptyColumn (accessors, DocumentItemAccessorColumn.Vat))
+			{
+				this.tableColumns[TableColumnKeys.Vat].Visible = false;
+			}
+		}
 
 		protected override int BuildLine(TableBand table, int row, DocumentItemAccessor accessor, AbstractDocumentItemEntity prevLine, AbstractDocumentItemEntity line, AbstractDocumentItemEntity nextLine, ArticleGroupEntity group)
 		{
 			for (int i = 0; i < accessor.RowsCount; i++)
 			{
-				this.SetTableText (table, row+i, TableColumnKeys.LineNumber, accessor.GetContent (i, DocumentItemAccessorColumn.LineNumber));
+				if (!this.HasOption (DocumentOption.LineNumber, "None"))
+				{
+					this.SetTableText (table, row+i, TableColumnKeys.LineNumber, accessor.GetContent (i, DocumentItemAccessorColumn.LineNumber));
+				}
+
 				this.SetTableText (table, row+i, TableColumnKeys.MainQuantity, AbstractDocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.MainQuantity, DocumentItemAccessorColumn.MainUnit));
 
-				if (this.HasOption (DocumentOption.ArticleDelayed))  // imprime les articles retardés ?
+				if (this.HasOption (DocumentOption.ArticleAdditionalQuantities))  // imprime les autres quantités ?
 				{
 					this.SetTableText (table, row+i, TableColumnKeys.AdditionalType, accessor.GetContent (i, DocumentItemAccessorColumn.AdditionalType));
 					this.SetTableText (table, row+i, TableColumnKeys.AdditionalQuantity, AbstractDocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.AdditionalQuantity, DocumentItemAccessorColumn.AdditionalUnit));
 					this.SetTableText (table, row+i, TableColumnKeys.AdditionalDate, AbstractDocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.AdditionalBeginDate, DocumentItemAccessorColumn.AdditionalEndDate));
 				}
 
-				this.SetTableText (table, row+i, TableColumnKeys.ArticleId, accessor.GetContent (i, DocumentItemAccessorColumn.ArticleId));
+				if (this.HasOption (DocumentOption.ArticleId))
+				{
+					this.SetTableText (table, row+i, TableColumnKeys.ArticleId, accessor.GetContent (i, DocumentItemAccessorColumn.ArticleId));
+				}
+
 				this.SetTableText (table, row+i, TableColumnKeys.ArticleDescription, accessor.GetContent (i, DocumentItemAccessorColumn.ArticleDescription));
 
 				this.SetTableText (table, row+i, TableColumnKeys.UnitPrice, accessor.GetContent (i, DocumentItemAccessorColumn.UnitPrice));
@@ -181,6 +225,12 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 
 			return accessor.RowsCount;
+		}
+
+		protected override void BuildFinish()
+		{
+			this.RemoveRightBorder (TableColumnKeys.AdditionalType);
+			this.RemoveRightBorder (TableColumnKeys.AdditionalQuantity);
 		}
 
 

@@ -286,7 +286,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				}
 			}
 
-			this.tableColumns[TableColumnKeys.LineNumber].Visible = !this.HasOption (DocumentOption.LineNumber, "None");
+			this.HideColumns (accessors);
 
 			//	Compte et numérote les colonnes visibles.
 			this.visibleColumnCount = 0;
@@ -349,6 +349,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					}
 				}
 			}
+
+			this.BuildFinish ();
 
 			//	Détermine les largeurs des colonnes.
 			double fixedWidth = 0;
@@ -483,9 +485,17 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			return accessor.RowsCount;
 		}
 
+		protected virtual void HideColumns(List<DocumentItemAccessor> accessors)
+		{
+		}
+
 		protected virtual int BuildLine(TableBand table, int row, DocumentItemAccessor accessor, AbstractDocumentItemEntity prevLine, AbstractDocumentItemEntity line, AbstractDocumentItemEntity nextLine, ArticleGroupEntity group)
 		{
 			return 0;
+		}
+
+		protected virtual void BuildFinish()
+		{
 		}
 
 
@@ -553,48 +563,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			else
 			{
 				return null;
-			}
-		}
-
-		protected void TableMakeBlock(TableBand table, int row, int rowsCount)
-		{
-			if (rowsCount == 1)
-			{
-				table.SetCellBorder (row, this.GetCellBorder (bottomBold: true));
-			}
-			else
-			{
-				for (int i = 0; i < rowsCount; i++)
-				{
-					bool first = (i == 0);
-					bool last  = (i == rowsCount-1);
-
-					if (!last)
-					{
-						table.SetUnbreakableRow (row+i, true);
-					}
-
-					bool topBold    = first;
-					bool bottomBold = last;
-					bool topLess    = !first;
-					bool bottomLess = !last;
-
-					double? topForce    = null;
-					double? bottomForce = null;
-
-					if (!first)
-					{
-						topForce = 0.5;
-					}
-
-					if (!last)
-					{
-						bottomForce = 0.5;
-					}
-
-					table.SetCellBorder (row+i, this.GetCellBorder (bottomBold, topBold, bottomLess, topLess));
-					table.SetCellMargins (row+i, this.GetCellMargins (bottomForce, topForce));
-				}
 			}
 		}
 
@@ -970,6 +938,108 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			return new CellBorder (leftWidth, rightWidth, bottomWidth, topWidth);
 		}
+
+
+		protected void TableMakeBlock(TableBand table, int row, int rowsCount)
+		{
+			if (rowsCount == 1)
+			{
+				table.SetCellBorder (row, this.GetCellBorder (bottomBold: true));
+			}
+			else
+			{
+				for (int i = 0; i < rowsCount; i++)
+				{
+					bool first = (i == 0);
+					bool last  = (i == rowsCount-1);
+
+					if (!last)
+					{
+						table.SetUnbreakableRow (row+i, true);
+					}
+
+					bool topBold    = first;
+					bool bottomBold = last;
+					bool topLess    = !first;
+					bool bottomLess = !last;
+
+					double? topForce    = null;
+					double? bottomForce = null;
+
+					if (!first)
+					{
+						topForce = 0.5;
+					}
+
+					if (!last)
+					{
+						bottomForce = 0.5;
+					}
+
+					table.SetCellBorder (row+i, this.GetCellBorder (bottomBold, topBold, bottomLess, topLess));
+					table.SetCellMargins (row+i, this.GetCellMargins (bottomForce, topForce));
+				}
+			}
+		}
+
+		protected void RemoveRightBorder(TableColumnKeys column)
+		{
+			if (this.IsWithFrame)
+			{
+				var columns = this.tableColumns.Where (x => x.Value.Visible).ToArray ();
+
+				for (int row = 0; row < this.table.RowsCount; row++)
+				{
+					double dimmed = (row == 0) ? 0 : 0.01;  // laisse un trait hyper-fin si on n'est pas dans l'en-tête
+
+					for (int i = 0; i < columns.Count ()-1; i++)
+					{
+						if (columns[i].Key == column)
+						{
+							CellBorder b1, b2;
+
+							b1 = this.table.GetCellBorder (i, row);
+							if (b1.IsEmpty)
+							{
+								b1 = this.table.CellBorder;
+							}
+							b2 = new CellBorder (b1.LeftWidth, dimmed, b1.BottomWidth, b1.TopWidth, b1.TopGap, b1.Color);
+							this.table.SetCellBorder (i, row, b2);
+
+							b1 = this.table.GetCellBorder (i+1, row);
+							if (b1.IsEmpty)
+							{
+								b1 = this.table.CellBorder;
+							}
+							b2 = new CellBorder (0, b1.RightWidth, b1.BottomWidth, b1.TopWidth, b1.TopGap, b1.Color);
+							this.table.SetCellBorder (i+1, row, b2);
+
+							break;
+						}
+					}
+
+				}
+			}
+		}
+
+		protected static bool IsEmptyColumn(List<DocumentItemAccessor> accessors, DocumentItemAccessorColumn column)
+		{
+			foreach (var accessor in accessors)
+			{
+				for (int i = 0; i < accessor.RowsCount; i++)
+				{
+					var content = accessor.GetContent (i, column);
+
+					if (!content.IsNullOrEmpty)
+					{
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
+
 
 		private bool IsWithLine
 		{

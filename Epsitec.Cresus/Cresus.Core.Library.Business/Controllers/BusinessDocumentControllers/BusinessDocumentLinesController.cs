@@ -462,7 +462,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			this.lineInformations.Clear ();
 
-			var mode = DocumentItemAccessorMode.ForceAllLines |
+			var mode = DocumentItemAccessorMode.AdditionalQuantities |
 					   DocumentItemAccessorMode.ShowMyEyesOnly;
 
 			if (this.CurrentEditMode == EditMode.Name)

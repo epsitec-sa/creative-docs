@@ -179,28 +179,31 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			}
 
 			//	Génère les autres quantités (sans la principale).
-			int row = 0;
-			foreach (var quantityType in DocumentItemAccessor.articleQuantityTypes)
+			if ((this.mode & DocumentItemAccessorMode.AdditionalQuantities) != 0)  // met les quantités additionnelles ?
 			{
-				foreach (var quantity in line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == quantityType && x.QuantityColumn.QuantityType != mainQuantityType))
+				int row = 0;
+				foreach (var quantityType in DocumentItemAccessor.articleQuantityTypes)
 				{
-					this.articleQuantityEntities.Add (quantity);
-
-					this.SetContent (line, row, DocumentItemAccessorColumn.AdditionalType, quantity.QuantityColumn.Name);
-					this.SetContent (line, row, DocumentItemAccessorColumn.AdditionalQuantity, quantity.Quantity.ToString ());
-					this.SetContent (line, row, DocumentItemAccessorColumn.AdditionalUnit, quantity.Unit.Name);
-
-					if (quantity.BeginDate.HasValue)
+					foreach (var quantity in line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == quantityType && x.QuantityColumn.QuantityType != mainQuantityType))
 					{
-						this.SetContent (line, row, DocumentItemAccessorColumn.AdditionalBeginDate, quantity.BeginDate.Value.ToString ());
-					}
+						this.articleQuantityEntities.Add (quantity);
 
-					if (quantity.EndDate.HasValue)
-					{
-						this.SetContent (line, row, DocumentItemAccessorColumn.AdditionalEndDate, quantity.EndDate.Value.ToString ());
-					}
+						this.SetContent (line, row, DocumentItemAccessorColumn.AdditionalType, quantity.QuantityColumn.Name);
+						this.SetContent (line, row, DocumentItemAccessorColumn.AdditionalQuantity, quantity.Quantity.ToString ());
+						this.SetContent (line, row, DocumentItemAccessorColumn.AdditionalUnit, quantity.Unit.Name);
 
-					row++;
+						if (quantity.BeginDate.HasValue)
+						{
+							this.SetContent (line, row, DocumentItemAccessorColumn.AdditionalBeginDate, quantity.BeginDate.Value.ToString ());
+						}
+
+						if (quantity.EndDate.HasValue)
+						{
+							this.SetContent (line, row, DocumentItemAccessorColumn.AdditionalEndDate, quantity.EndDate.Value.ToString ());
+						}
+
+						row++;
+					}
 				}
 			}
 

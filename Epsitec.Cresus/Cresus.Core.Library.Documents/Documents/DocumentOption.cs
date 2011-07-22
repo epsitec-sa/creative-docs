@@ -13,36 +13,36 @@ namespace Epsitec.Cresus.Core.Documents
 
 		None,
 
-		Orientation,		// enum: Portrait, Landscape
+		Orientation,					// enum: Portrait, Landscape
 
-		HeaderLogo,			// bool
-		Specimen,			// bool
+		HeaderLogo,						// bool
+		Specimen,						// bool
 
-		FontSize,			// dimension: taille de la police
+		FontSize,						// dimension: taille de la police
 
-		LeftMargin,			// distance
-		RightMargin,		// distance
-		TopMargin,			// distance
-		BottomMargin,		// distance
+		LeftMargin,						// distance
+		RightMargin,					// distance
+		TopMargin,						// distance
+		BottomMargin,					// distance
 
-		LayoutFrame,		// enum: Frameless, WithLine, WithFrame
-		GapBeforeGroup,		// bool
+		LayoutFrame,					// enum: Frameless, WithLine, WithFrame
+		GapBeforeGroup,					// bool
 
-		LineNumber,			// enum: None, Group, Line, Full
+		LineNumber,						// enum: None, Group, Line, Full
 
-		ArticleDelayed,		// bool
-		ArticleId,			// bool
+		ArticleAdditionalQuantities,	// bool
+		ArticleId,						// bool
 
-		ColumnsOrder,		// enum: QD, DQ
+		ColumnsOrder,					// enum: QD, DQ
 
-		IsrPosition,		// enum: WithInside, WithOutside, Without
-		IsrType,			// enum: Isr, Is
-		IsrFacsimile,		// bool
+		IsrPosition,					// enum: WithInside, WithOutside, Without
+		IsrType,						// enum: Isr, Is
+		IsrFacsimile,					// bool
 
-		Signing,			// bool
+		Signing,						// bool
 
-		RelationMail,		// bool
-		RelationTelecom,	// bool
-		RelationUri,		// bool
+		RelationMail,					// bool
+		RelationTelecom,				// bool
+		RelationUri,					// bool
 	}
 }

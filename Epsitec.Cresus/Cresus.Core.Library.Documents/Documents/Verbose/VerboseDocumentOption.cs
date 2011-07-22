@@ -197,8 +197,8 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 
 			//	Ajoute les options d'impression liées aux factures.
 			list.Add (new VerboseDocumentOption ("Options pour les factures", "InvoiceOption"));
-			list.Add (new VerboseDocumentOption (DocumentOption.ArticleDelayed, "InvoiceOption", false, DocumentOptionValueType.Boolean, "Imprime les articles livrés ultérieurement", "true", Business.DocumentType.Invoice));
-			list.Add (new VerboseDocumentOption (DocumentOption.ArticleId,      "InvoiceOption", false, DocumentOptionValueType.Boolean, "Imprime les identificateurs d'article",      "false", Business.DocumentType.Invoice));
+			list.Add (new VerboseDocumentOption (DocumentOption.ArticleAdditionalQuantities, "InvoiceOption", false, DocumentOptionValueType.Boolean, "Imprime les autres quantités", "true", Business.DocumentType.Invoice));
+			list.Add (new VerboseDocumentOption (DocumentOption.ArticleId,                   "InvoiceOption", false, DocumentOptionValueType.Boolean, "Imprime les identificateurs d'article",      "false", Business.DocumentType.Invoice));
 
 			list.Add (new VerboseDocumentOption ("Ordre des colonnes", "ColumnsOrder"));
 			e = new string[] { "QD", "DQ" };
