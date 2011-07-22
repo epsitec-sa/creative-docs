@@ -107,13 +107,19 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
+		public bool IsDebug
+		{
+			get;
+			set;
+		}
+
 		public bool IsLinesEditionEnabled
 		{
 			//	Indique s'il est possible d'éditer les lignes du document, c'est-à-dire s'il est possible
 			//	de créer des lignes, d'en supprimer, d'en déplacer ou de les modifier.
 			get
 			{
-				return this.documentBusinessLogic.IsLinesEditionEnabled;
+				return this.IsDebug || this.documentBusinessLogic.IsLinesEditionEnabled;
 			}
 		}
 
@@ -122,7 +128,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Indique s'il est possibled'éditer les paramètres des articles.
 			get
 			{
-				return this.documentBusinessLogic.IsArticleParametersEditionEnabled;
+				return this.IsDebug || this.documentBusinessLogic.IsArticleParametersEditionEnabled;
 			}
 		}
 
@@ -131,7 +137,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Indique s'il est possible d'éditer les textes.
 			get
 			{
-				return this.documentBusinessLogic.IsTextEditionEnabled;
+				return this.IsDebug || this.documentBusinessLogic.IsTextEditionEnabled;
 			}
 		}
 
@@ -150,7 +156,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Indique s'il est possible d'éditer les prix.
 			get
 			{
-				return this.documentBusinessLogic.IsPriceEditionEnabled;
+				return this.IsDebug || this.documentBusinessLogic.IsPriceEditionEnabled;
 			}
 		}
 
@@ -159,7 +165,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Indique s'il est possible d'éditer les rabais.
 			get
 			{
-				return this.documentBusinessLogic.IsDiscountEditionEnabled;
+				return this.IsDebug || this.documentBusinessLogic.IsDiscountEditionEnabled;
 			}
 		}
 
@@ -202,7 +208,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	C'est cette quantité qui peuple la colonne "quantité".
 			get
 			{
-				return this.documentBusinessLogic.MainArticleQuantityType;
+				if (this.IsDebug)
+				{
+					return ArticleQuantityType.Ordered;
+				}
+				else
+				{
+					return this.documentBusinessLogic.MainArticleQuantityType;
+				}
 			}
 		}
 
@@ -235,7 +248,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	avec le document en cours.
 			get
 			{
-				var enabled = this.documentBusinessLogic.ArticleQuantityTypeEditionEnabled;
+				var enabled = this.IsDebug ? this.DebugArticleQuantityTypeEditionEnabled : this.documentBusinessLogic.ArticleQuantityTypeEditionEnabled;
 
 				foreach (var e in this.articleQuantityColumnEntities)
 				{
@@ -244,6 +257,21 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 						yield return EnumKeyValues.Create (e.QuantityType, e.Name);
 					}
 				}
+			}
+		}
+
+		private IEnumerable<ArticleQuantityType> DebugArticleQuantityTypeEditionEnabled
+		{
+			//	Retourne la liste des types de quantité éditables.
+			get
+			{
+				yield return ArticleQuantityType.Ordered;				// commandé
+				yield return ArticleQuantityType.Billed;				// facturé
+				yield return ArticleQuantityType.Delayed;				// retardé
+				yield return ArticleQuantityType.Expected;				// attendu
+				yield return ArticleQuantityType.Shipped;				// livré
+				yield return ArticleQuantityType.ShippedPreviously;		// livré ultérieurement
+				yield return ArticleQuantityType.Information;			// information
 			}
 		}
 

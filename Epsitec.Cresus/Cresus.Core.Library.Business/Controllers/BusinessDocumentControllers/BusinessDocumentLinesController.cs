@@ -624,6 +624,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.ViewFull   ).ActiveState = (value == ViewMode.Full   ) ? ActiveState.Yes : ActiveState.No;
 				this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.ViewDebug  ).ActiveState = (value == ViewMode.Debug  ) ? ActiveState.Yes : ActiveState.No;
 
+				this.accessData.BusinessLogic.IsDebug = (value == ViewMode.Debug);
+
 				BusinessDocumentLinesController.persistantViewMode = value;
 			}
 		}
