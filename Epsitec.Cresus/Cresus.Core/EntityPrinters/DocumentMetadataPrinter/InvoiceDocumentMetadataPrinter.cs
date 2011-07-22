@@ -192,7 +192,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-		protected override int BuildLine(TableBand table, int row, DocumentItemAccessor accessor, AbstractDocumentItemEntity prevLine, AbstractDocumentItemEntity line, AbstractDocumentItemEntity nextLine, ArticleGroupEntity group)
+		protected override int BuildLine(TableBand table, int row, DocumentItemAccessor accessor, AbstractDocumentItemEntity prevLine, AbstractDocumentItemEntity line, AbstractDocumentItemEntity nextLine)
 		{
 			for (int i = 0; i < accessor.RowsCount; i++)
 			{
@@ -221,7 +221,33 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				this.SetTableText (table, row+i, TableColumnKeys.Discount, accessor.GetContent (i, DocumentItemAccessorColumn.Discount));
 				this.SetTableText (table, row+i, TableColumnKeys.LinePrice, accessor.GetContent (i, DocumentItemAccessorColumn.LinePrice));
 				this.SetTableText (table, row+i, TableColumnKeys.Vat, accessor.GetContent (i, DocumentItemAccessorColumn.Vat));
-				this.SetTableText (table, row+i, TableColumnKeys.Total, accessor.GetContent (i, DocumentItemAccessorColumn.Total));
+
+				var total = accessor.GetContent (i, DocumentItemAccessorColumn.Total);
+				if (line is EndTotalDocumentItemEntity && i == accessor.RowsCount-1)
+				{
+					total = total.ApplyBold ();
+				}
+				this.SetTableText (table, row+i, TableColumnKeys.Total, total);
+			}
+
+			int last = row+accessor.RowsCount-1;
+
+			if (line is SubTotalDocumentItemEntity)
+			{
+				table.SetCellBorder (last, this.GetCellBorder (bottomBold: true));
+			}
+
+			if (line is EndTotalDocumentItemEntity)
+			{
+				if (this.IsWithFrame)
+				{
+					table.SetCellBorder (last, this.GetCellBorder (topLess: true));
+					table.SetCellBorder (this.tableColumns[TableColumnKeys.Total].Rank, last, new CellBorder (CellBorder.BoldWidth));
+				}
+				else
+				{
+					table.SetCellBorder (last, this.GetCellBorder (bottomBold: true, topLess: true));
+				}
 			}
 
 			return accessor.RowsCount;

@@ -335,7 +335,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					var prevLine = (i == 0) ? null : this.Entity.Lines[i-1];
 					var nextLine = (i >= this.Entity.Lines.Count-1) ? null : this.Entity.Lines[i+1];
 
-					int rowUsed = this.BuildLine (this.table, row, accessors[i], prevLine, line, nextLine, group);
+					int rowUsed = this.BuildLine (this.table, row, accessors[i], prevLine, line, nextLine);
 					this.BuildCommonLine (this.table, row, accessors[i], line);
 
 					if (rowUsed != 0)
@@ -489,7 +489,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 		}
 
-		protected virtual int BuildLine(TableBand table, int row, DocumentItemAccessor accessor, AbstractDocumentItemEntity prevLine, AbstractDocumentItemEntity line, AbstractDocumentItemEntity nextLine, ArticleGroupEntity group)
+		protected virtual int BuildLine(TableBand table, int row, DocumentItemAccessor accessor, AbstractDocumentItemEntity prevLine, AbstractDocumentItemEntity line, AbstractDocumentItemEntity nextLine)
 		{
 			return 0;
 		}
