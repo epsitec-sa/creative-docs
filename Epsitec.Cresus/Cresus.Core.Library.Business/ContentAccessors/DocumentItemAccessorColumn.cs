@@ -10,46 +10,14 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 {
 	public enum DocumentItemAccessorColumn
 	{
-		UniqueQuantity,					// toutes les quantités en vrac
-		UniqueUnit,
-		UniqueBeginDate,
-		UniqueEndDate,
-		UniqueType,
+		MainQuantity,					// quantité principale
+		MainUnit,
 
-		OrderedQuantity,				// quantité commandée
-		OrderedUnit,
-		OrderedBeginDate,
-		OrderedEndDate,
-
-		BilledQuantity,					// quantité facturée
-		BilledUnit,
-		BilledBeginDate,
-		BilledEndDate,
-
-		DelayedQuantity,				// quantité retardée
-		DelayedUnit,
-		DelayedBeginDate,
-		DelayedEndDate,
-
-		ExpectedQuantity,				// quantité attendue
-		ExpectedUnit,
-		ExpectedBeginDate,
-		ExpectedEndDate,
-
-		ShippedQuantity,				// quantité livrée
-		ShippedUnit,
-		ShippedBeginDate,
-		ShippedEndDate,
-
-		ShippedPreviouslyQuantity,		// quantité livrée précédemment
-		ShippedPreviouslyUnit,
-		ShippedPreviouslyBeginDate,
-		ShippedPreviouslyEndDate,
-
-		InformationQuantity,			// quantité pour information
-		InformationUnit,
-		InformationBeginDate,
-		InformationEndDate,
+		AdditionalQuantity,				// autres quantités
+		AdditionalUnit,
+		AdditionalBeginDate,
+		AdditionalEndDate,
+		AdditionalType,
 
 		GroupNumber,					// numéro de groupe
 		LineNumber,						// numéro de ligne

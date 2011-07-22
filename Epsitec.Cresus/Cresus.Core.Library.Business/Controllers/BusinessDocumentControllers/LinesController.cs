@@ -382,7 +382,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					yield return ColumnType.ArticleDescription;
 
 					yield return ColumnType.QuantityAndUnit;
-					yield return ColumnType.Type;
+					yield return ColumnType.AdditionalType;
 
 					yield return ColumnType.UnitPrice;
 					yield return ColumnType.Total;
@@ -394,8 +394,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					yield return ColumnType.ArticleDescription;
 
 					yield return ColumnType.QuantityAndUnit;
-					yield return ColumnType.Type;
-					yield return ColumnType.Date;
+					yield return ColumnType.AdditionalType;
+					yield return ColumnType.AdditionalDate;
 
 					yield return ColumnType.UnitPrice;
 					yield return ColumnType.Discount;
@@ -412,8 +412,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					yield return ColumnType.ArticleDescription;
 
 					yield return ColumnType.QuantityAndUnit;
-					yield return ColumnType.Type;
-					yield return ColumnType.Date;
+					yield return ColumnType.AdditionalType;
+					yield return ColumnType.AdditionalDate;
 
 					yield return ColumnType.UnitPrice;
 					yield return ColumnType.Discount;
@@ -434,8 +434,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					yield return ColumnType.ArticleDescription;
 
 					yield return ColumnType.QuantityAndUnit;
-					yield return ColumnType.Type;
-					yield return ColumnType.Date;
+					yield return ColumnType.AdditionalType;
+					yield return ColumnType.AdditionalDate;
 
 					yield return ColumnType.UnitPrice;
 					yield return ColumnType.Discount;
@@ -519,10 +519,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				case ColumnType.GroupIndex:
 					return 70;
 
-				case ColumnType.Type:
+				case ColumnType.AdditionalType:
 					return 65;
 
-				case ColumnType.Date:
+				case ColumnType.AdditionalDate:
 					return 70;
 
 				case ColumnType.UnitPrice:
@@ -556,10 +556,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				case ColumnType.QuantityAndUnit:
 					return "Quantité";
 
-				case ColumnType.Type:
+				case ColumnType.AdditionalType:
 					return "Type";
 
-				case ColumnType.Date:
+				case ColumnType.AdditionalDate:
 					return "Date";
 
 				case ColumnType.ArticleId:

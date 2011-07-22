@@ -145,8 +145,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					return info.GetColumnContent (DocumentItemAccessorColumn.FullNumber);
 
 				case ColumnType.QuantityAndUnit:
-					var q = info.GetColumnContent (DocumentItemAccessorColumn.UniqueQuantity).ToString ();
-					var u = info.GetColumnContent (DocumentItemAccessorColumn.UniqueUnit).ToString ();
+					var q = info.GetColumnContent (DocumentItemAccessorColumn.AdditionalQuantity).ToString ();
+					var u = info.GetColumnContent (DocumentItemAccessorColumn.AdditionalUnit).ToString ();
 
 					if (string.IsNullOrEmpty (q))
 					{
@@ -157,11 +157,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 						return Misc.FormatUnit (decimal.Parse (q), u);
 					}
 
-				case ColumnType.Type:
-					return info.GetColumnContent (DocumentItemAccessorColumn.UniqueType);
+				case ColumnType.AdditionalType:
+					return info.GetColumnContent (DocumentItemAccessorColumn.AdditionalType);
 
-				case ColumnType.Date:
-					return info.GetColumnContent (DocumentItemAccessorColumn.UniqueBeginDate);
+				case ColumnType.AdditionalDate:
+					return info.GetColumnContent (DocumentItemAccessorColumn.AdditionalBeginDate);
 
 				case ColumnType.ArticleId:
 					return info.GetColumnContent (DocumentItemAccessorColumn.ArticleId);
@@ -463,8 +463,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.lineInformations.Clear ();
 
 			var mode = DocumentItemAccessorMode.ForceAllLines |
-					   DocumentItemAccessorMode.ShowMyEyesOnly |
-					   DocumentItemAccessorMode.SpecialQuantitiesToDistinctLines;
+					   DocumentItemAccessorMode.ShowMyEyesOnly;
 
 			if (this.CurrentEditMode == EditMode.Name)
 			{
@@ -481,7 +480,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				var line = this.accessData.BusinessDocumentEntity.Lines[i];
 
-				var accessor = new DocumentItemAccessor (this.accessData.BusinessDocumentEntity, numberGenerator);
+				var accessor = new DocumentItemAccessor (this.accessData.BusinessDocumentEntity, this.accessData.BusinessLogic, numberGenerator);
 				accessor.BuildContent (line, this.accessData.DocumentMetadataEntity.DocumentCategory.DocumentType, mode);
 
 				for (int row = 0; row < accessor.RowsCount; row++)

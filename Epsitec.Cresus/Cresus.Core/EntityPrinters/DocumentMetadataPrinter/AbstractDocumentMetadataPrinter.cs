@@ -34,6 +34,9 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		public AbstractDocumentMetadataPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 			: base (businessContext, entity, options, printingUnits)
 		{
+			var documentMetadata = this.businessContext.GetMasterEntity<DocumentMetadataEntity> ();
+			System.Diagnostics.Debug.Assert (documentMetadata != null);
+			this.businessLogic = new BusinessLogic (this.businessContext as BusinessContext, documentMetadata);
 		}
 
 		public override string JobName
@@ -78,146 +81,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			base.BuildSections ();
 
 			this.documentContainer.Clear ();
-
-#if false
-			if (this.DocumentType == Business.DocumentType.SalesQuote)
-			{
-				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
-
-				this.BuildHeader (null);
-				this.BuildArticles ();
-				this.BuildPages (null, firstPage);
-
-				this.documentContainer.Ending (firstPage);
-			}
-
-			if (this.DocumentType == Business.DocumentType.OrderConfiguration)
-			{
-				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
-
-				this.BuildHeader (null);
-				this.BuildArticles ();
-				this.BuildPages (null, firstPage);
-
-				this.documentContainer.Ending (firstPage);
-			}
-
-			if (this.DocumentType == Business.DocumentType.OrderBooking ||
-				this.DocumentType == Business.DocumentType.OrderConfirmation)
-			{
-				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
-
-				this.BuildHeader (null);
-				this.BuildArticles ();
-				this.BuildFooter ();
-				this.BuildPages (null, firstPage);
-
-				this.documentContainer.Ending (firstPage);
-			}
-
-			if (this.DocumentType == Business.DocumentType.ProductionOrder ||
-				this.DocumentType == Business.DocumentType.ProductionChecklist)
-			{
-				int documentRank = 0;
-				var groups = this.GetProdGroups ();
-				foreach (var group in groups)
-				{
-					this.documentContainer.DocumentRank = documentRank++;
-					int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
-
-					this.BuildHeader (null, group);
-					this.BuildArticles (group);
-					this.BuildFooter ();
-					this.BuildPages (null, firstPage);
-
-					this.documentContainer.Ending (firstPage);
-				}
-			}
-
-			if (this.DocumentType == Business.DocumentType.ShipmentChecklist)
-			{
-				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
-
-				this.BuildHeader (null);
-				this.BuildArticles ();
-				this.BuildFooter ();
-				this.BuildPages (null, firstPage);
-
-				this.documentContainer.Ending (firstPage);
-			}
-
-			if (this.DocumentType == Business.DocumentType.DeliveryNote)
-			{
-				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
-
-				this.BuildHeader (null);
-				this.BuildArticles ();
-				this.BuildFooter ();
-				this.BuildPages (null, firstPage);
-
-				this.documentContainer.Ending (firstPage);
-			}
-
-			if (this.DocumentType == Business.DocumentType.PaymentReminder)
-			{
-				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
-
-				this.BuildHeader (null);
-				this.BuildArticles ();
-				this.BuildFooter ();
-				this.BuildPages (null, firstPage);
-
-				this.documentContainer.Ending (firstPage);
-			}
-
-			if (this.DocumentType == Business.DocumentType.Receipt)
-			{
-				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
-
-				this.BuildHeader (null);
-				this.BuildArticles ();
-				this.BuildFooter ();
-				this.BuildPages (null, firstPage);
-
-				this.documentContainer.Ending (firstPage);
-			}
-
-			if (this.DocumentType == Business.DocumentType.CreditMemo)
-			{
-				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
-
-				this.BuildHeader (null);
-				this.BuildArticles ();
-				this.BuildFooter ();
-				this.BuildPages (null, firstPage);
-
-				this.documentContainer.Ending (firstPage);
-			}
-
-			if (this.DocumentType == Business.DocumentType.QuoteRequest)
-			{
-				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
-
-				this.BuildHeader (null);
-				this.BuildArticles ();
-				this.BuildFooter ();
-				this.BuildPages (null, firstPage);
-
-				this.documentContainer.Ending (firstPage);
-			}
-
-			if (this.DocumentType == Business.DocumentType.PurchaseOrder)
-			{
-				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
-
-				this.BuildHeader (null);
-				this.BuildArticles ();
-				this.BuildFooter ();
-				this.BuildPages (null, firstPage);
-
-				this.documentContainer.Ending (firstPage);
-			}
-#endif
 		}
 
 		public override void PrintBackgroundCurrentPage(IPaintPort port)
@@ -402,7 +265,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			{
 				var line = this.Entity.Lines[i];
 
-				var accessor = new DocumentItemAccessor (this.Entity, numberGenerator);
+				var accessor = new DocumentItemAccessor (this.Entity, this.businessLogic, numberGenerator);
 				accessor.BuildContent (line, this.DocumentType, this.DocumentItemAccessorMode);
 
 				accessors.Add (accessor);
@@ -469,7 +332,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 				if (line.Attributes.HasFlag (DocumentItemAttributes.Hidden) == false)
 				{
-					var prevLine = (i == 0                        ) ? null : this.Entity.Lines[i-1];
+					var prevLine = (i == 0) ? null : this.Entity.Lines[i-1];
 					var nextLine = (i >= this.Entity.Lines.Count-1) ? null : this.Entity.Lines[i+1];
 
 					int rowUsed = this.BuildLine (this.table, row, accessors[i], prevLine, line, nextLine, group);
@@ -555,76 +418,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			this.lastRowForEachSection = this.table.GetLastRowForEachSection ();
 		}
 
-
-		protected virtual void InitializeColumns()
-		{
-		}
-
-		protected virtual DocumentItemAccessorMode DocumentItemAccessorMode
-		{
-			get
-			{
-				return DocumentItemAccessorMode.None;
-			}
-		}
-
-		protected virtual int InitializeLine(DocumentItemAccessor accessor, AbstractDocumentItemEntity line, ArticleGroupEntity group)
-		{
-			return 0;
-		}
-
-		protected virtual int BuildLine(TableBand table, int row, DocumentItemAccessor accessor, AbstractDocumentItemEntity prevLine, AbstractDocumentItemEntity line, AbstractDocumentItemEntity nextLine, ArticleGroupEntity group)
-		{
-			return 0;
-		}
-
-
-		private int InitializeColumnTextLine(DocumentItemAccessor accessor, TextDocumentItemEntity line)
-		{
-			//	Retourne le nombre de lignes à utiliser dans le tableau.
-			this.tableColumns[TableColumnKeys.ArticleDescription].Visible = true;
-
-			return accessor.RowsCount;
-		}
-
-		protected static FormattedText GetQuantityAndUnit(DocumentItemAccessor accessor, int row, DocumentItemAccessorColumn quantity, DocumentItemAccessorColumn unit)
-		{
-			var q = accessor.GetContent (row, quantity).ToString ();
-			var u = accessor.GetContent (row, unit).ToString ();
-
-			if (string.IsNullOrEmpty (q))
-			{
-				return null;
-			}
-			else
-			{
-				return Misc.FormatUnit (decimal.Parse (q), u);
-			}
-		}
-
-		protected static FormattedText GetDates(DocumentItemAccessor accessor, int row, DocumentItemAccessorColumn begin, DocumentItemAccessorColumn end)
-		{
-			FormattedText b = accessor.GetContent (row, begin);
-			FormattedText e = accessor.GetContent (row, end);
-
-			if (!b.IsNullOrEmpty && !e.IsNullOrEmpty)
-			{
-				return FormattedText.Concat (b, " au ", e);
-			}
-			else if (!b.IsNullOrEmpty && e.IsNullOrEmpty)
-			{
-				return b;
-			}
-			else if (b.IsNullOrEmpty && !e.IsNullOrEmpty)
-			{
-				return FormattedText.Concat ("Au ", e);
-			}
-			else
-			{
-				return null;
-			}
-		}
-
 		private void BuildCommonLine(TableBand table, int row, DocumentItemAccessor accessor, AbstractDocumentItemEntity line)
 		{
 			FormattedText text = null;
@@ -670,6 +463,97 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			var cellBorder = table.GetCellBorder (0, row);
 			table.SetCellBorder (0, row, new CellBorder (cellBorder.LeftWidth, cellBorder.RightWidth, cellBorder.BottomWidth, cellBorder.TopWidth, topGap, cellBorder.Color));
+		}
+
+
+		protected virtual void InitializeColumns()
+		{
+		}
+
+		protected virtual DocumentItemAccessorMode DocumentItemAccessorMode
+		{
+			get
+			{
+				return DocumentItemAccessorMode.None;
+			}
+		}
+
+		protected virtual int InitializeLine(DocumentItemAccessor accessor, AbstractDocumentItemEntity line, ArticleGroupEntity group)
+		{
+			return accessor.RowsCount;
+		}
+
+		protected virtual int BuildLine(TableBand table, int row, DocumentItemAccessor accessor, AbstractDocumentItemEntity prevLine, AbstractDocumentItemEntity line, AbstractDocumentItemEntity nextLine, ArticleGroupEntity group)
+		{
+			return 0;
+		}
+
+
+		protected void SetTableText(TableBand table, int row, TableColumnKeys column, FormattedText text)
+		{
+			if (this.GetColumnVisibility (column))
+			{
+				this.table.SetText (this.tableColumns[column].Rank, row, text, this.FontSize);
+			}
+		}
+
+		protected bool GetColumnVisibility(TableColumnKeys column)
+		{
+			if (this.tableColumns.ContainsKey (column))
+			{
+				return this.tableColumns[column].Visible;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		protected void SetColumnVisibility(TableColumnKeys column, bool visibility)
+		{
+			if (this.tableColumns.ContainsKey (column))
+			{
+				this.tableColumns[column].Visible = visibility;
+			}
+		}
+
+
+		protected static FormattedText GetQuantityAndUnit(DocumentItemAccessor accessor, int row, DocumentItemAccessorColumn quantity, DocumentItemAccessorColumn unit)
+		{
+			var q = accessor.GetContent (row, quantity).ToString ();
+			var u = accessor.GetContent (row, unit).ToString ();
+
+			if (string.IsNullOrEmpty (q))
+			{
+				return null;
+			}
+			else
+			{
+				return Misc.FormatUnit (decimal.Parse (q), u);
+			}
+		}
+
+		protected static FormattedText GetDates(DocumentItemAccessor accessor, int row, DocumentItemAccessorColumn begin, DocumentItemAccessorColumn end)
+		{
+			FormattedText b = accessor.GetContent (row, begin);
+			FormattedText e = accessor.GetContent (row, end);
+
+			if (!b.IsNullOrEmpty && !e.IsNullOrEmpty)
+			{
+				return FormattedText.Concat (b, " au ", e);
+			}
+			else if (!b.IsNullOrEmpty && e.IsNullOrEmpty)
+			{
+				return b;
+			}
+			else if (b.IsNullOrEmpty && !e.IsNullOrEmpty)
+			{
+				return FormattedText.Concat ("Au ", e);
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		protected void TableMakeBlock(TableBand table, int row, int rowsCount)
@@ -1183,6 +1067,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 		private static readonly Font		font = Font.GetFont ("Arial", "Regular");
 		protected static readonly double	reportHeight = 7.0;
+
+		protected readonly BusinessLogic	businessLogic;
 
 		private TableBand					table;
 		private int							visibleColumnCount;

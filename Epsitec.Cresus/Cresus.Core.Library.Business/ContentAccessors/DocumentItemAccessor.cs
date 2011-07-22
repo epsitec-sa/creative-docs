@@ -24,10 +24,11 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 	/// </summary>
 	public class DocumentItemAccessor
 	{
-		public DocumentItemAccessor(BusinessDocumentEntity businessDocumentEntity, IncrementalNumberGenerator numberGenerator)
+		public DocumentItemAccessor(BusinessDocumentEntity businessDocumentEntity, BusinessLogic businessLogic, IncrementalNumberGenerator numberGenerator)
 		{
 			this.businessDocumentEntity = businessDocumentEntity;
-			this.numberGenerator = numberGenerator;
+			this.businessLogic          = businessLogic;
+			this.numberGenerator        = numberGenerator;
 
 			this.content = new Dictionary<int, FormattedText> ();
 			this.articleQuantityEntities = new List<ArticleQuantityEntity> ();
@@ -152,54 +153,58 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 		private void BuildArticleItem(ArticleDocumentItemEntity line)
 		{
-			int row = 0;
-			for (int i = 0; i < DocumentItemAccessor.articleItemTypes.Length; i++)
-			{
-				if ((this.mode & DocumentItemAccessorMode.SpecialQuantitiesToDistinctLines) == 0)  // colonnes distinctes ?
-				{
-					row = 0;
-				}
+			var mainQuantityType = ArticleQuantityType.None;
 
-				foreach (var quantity in line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == DocumentItemAccessor.articleItemTypes[i]))
+			//	Génère la quantité principale.
+			if ((this.mode & DocumentItemAccessorMode.UseMainColumns) != 0)  // utilise les colonnes MainQuantity/MainUnit ?
+			{
+				mainQuantityType = this.businessLogic.MainArticleQuantityType;
+
+				if (mainQuantityType != ArticleQuantityType.None)
+				{
+					decimal mainQuantity = 0;
+					FormattedText mainUnit = null;
+
+					foreach (var quantity in line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == mainQuantityType))
+					{
+						//	S'il y a plusieurs quantités principales, elles sont sommées, mais cela
+						//	ne devrait pas arriver, me semble-t-il !
+						mainQuantity += quantity.Quantity;
+						mainUnit = quantity.Unit.Name;
+					}
+
+					this.SetContent (line, 0, DocumentItemAccessorColumn.MainQuantity, mainQuantity.ToString ());
+					this.SetContent (line, 0, DocumentItemAccessorColumn.MainUnit, mainUnit);
+				}
+			}
+
+			//	Génère les autres quantités (sans la principale).
+			int row = 0;
+			foreach (var quantityType in DocumentItemAccessor.articleQuantityTypes)
+			{
+				foreach (var quantity in line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == quantityType && x.QuantityColumn.QuantityType != mainQuantityType))
 				{
 					this.articleQuantityEntities.Add (quantity);
 
-					DocumentItemAccessorColumn quantityColumn, unitColumn, beginDateColumn, endDateColumn;
-
-					if ((this.mode & DocumentItemAccessorMode.SpecialQuantitiesToDistinctLines) == 0)  // colonnes distinctes ?
-					{
-						quantityColumn  = DocumentItemAccessor.articleItemQuantityColumns[i];
-						unitColumn      = DocumentItemAccessor.articleItemUnitColumns[i];
-						beginDateColumn = DocumentItemAccessor.articleItemBeginDateColumns[i];
-						endDateColumn   = DocumentItemAccessor.articleItemEndDateColumns[i];
-					}
-					else  // lignes distinctes ?
-					{
-						this.SetContent (line, row, DocumentItemAccessorColumn.UniqueType, quantity.QuantityColumn.Name);
-
-						quantityColumn  = DocumentItemAccessorColumn.UniqueQuantity;
-						unitColumn      = DocumentItemAccessorColumn.UniqueUnit;
-						beginDateColumn = DocumentItemAccessorColumn.UniqueBeginDate;
-						endDateColumn   = DocumentItemAccessorColumn.UniqueEndDate;
-					}
-
-					this.SetContent (line, row, quantityColumn, quantity.Quantity.ToString ());
-					this.SetContent (line, row, unitColumn, quantity.Unit.Name);
+					this.SetContent (line, row, DocumentItemAccessorColumn.AdditionalType, quantity.QuantityColumn.Name);
+					this.SetContent (line, row, DocumentItemAccessorColumn.AdditionalQuantity, quantity.Quantity.ToString ());
+					this.SetContent (line, row, DocumentItemAccessorColumn.AdditionalUnit, quantity.Unit.Name);
 
 					if (quantity.BeginDate.HasValue)
 					{
-						this.SetContent (line, row, beginDateColumn, quantity.BeginDate.Value.ToString ());
+						this.SetContent (line, row, DocumentItemAccessorColumn.AdditionalBeginDate, quantity.BeginDate.Value.ToString ());
 					}
 
 					if (quantity.EndDate.HasValue)
 					{
-						this.SetContent (line, row, endDateColumn, quantity.EndDate.Value.ToString ());
+						this.SetContent (line, row, DocumentItemAccessorColumn.AdditionalEndDate, quantity.EndDate.Value.ToString ());
 					}
 
 					row++;
 				}
 			}
 
+			//	Génère la description.
 			FormattedText description = "";
 
 			if ((this.mode & DocumentItemAccessorMode.EditArticleName) != 0)
@@ -263,16 +268,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			}
 		}
 
-		#region Static tables
-		static DocumentItemAccessor()
-		{
-			System.Diagnostics.Debug.Assert (DocumentItemAccessor.articleItemTypes.Length == DocumentItemAccessor.articleItemQuantityColumns.Length);
-			System.Diagnostics.Debug.Assert (DocumentItemAccessor.articleItemTypes.Length == DocumentItemAccessor.articleItemUnitColumns.Length);
-			System.Diagnostics.Debug.Assert (DocumentItemAccessor.articleItemTypes.Length == DocumentItemAccessor.articleItemBeginDateColumns.Length);
-			System.Diagnostics.Debug.Assert (DocumentItemAccessor.articleItemTypes.Length == DocumentItemAccessor.articleItemEndDateColumns.Length);
-		}
-
-		static ArticleQuantityType[] articleItemTypes =
+		static ArticleQuantityType[] articleQuantityTypes =
 			{
 				ArticleQuantityType.Ordered,
 				ArticleQuantityType.Billed,
@@ -283,50 +279,6 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				ArticleQuantityType.Information,
 			};
 
-		static DocumentItemAccessorColumn[] articleItemQuantityColumns =
-			{
-				DocumentItemAccessorColumn.OrderedQuantity,
-				DocumentItemAccessorColumn.BilledQuantity,
-				DocumentItemAccessorColumn.DelayedQuantity,
-				DocumentItemAccessorColumn.ExpectedQuantity,
-				DocumentItemAccessorColumn.ShippedQuantity,
-				DocumentItemAccessorColumn.ShippedPreviouslyQuantity,
-				DocumentItemAccessorColumn.InformationQuantity,
-			};
-
-		static DocumentItemAccessorColumn[] articleItemUnitColumns =
-			{
-				DocumentItemAccessorColumn.OrderedUnit,
-				DocumentItemAccessorColumn.BilledUnit,
-				DocumentItemAccessorColumn.DelayedUnit,
-				DocumentItemAccessorColumn.ExpectedUnit,
-				DocumentItemAccessorColumn.ShippedUnit,
-				DocumentItemAccessorColumn.ShippedPreviouslyUnit,
-				DocumentItemAccessorColumn.InformationUnit,
-			};
-
-		static DocumentItemAccessorColumn[] articleItemBeginDateColumns =
-			{
-				DocumentItemAccessorColumn.OrderedBeginDate,
-				DocumentItemAccessorColumn.BilledBeginDate,
-				DocumentItemAccessorColumn.DelayedBeginDate,
-				DocumentItemAccessorColumn.ExpectedBeginDate,
-				DocumentItemAccessorColumn.ShippedBeginDate,
-				DocumentItemAccessorColumn.ShippedPreviouslyBeginDate,
-				DocumentItemAccessorColumn.InformationBeginDate,
-			};
-
-		static DocumentItemAccessorColumn[] articleItemEndDateColumns =
-			{
-				DocumentItemAccessorColumn.OrderedEndDate,
-				DocumentItemAccessorColumn.BilledEndDate,
-				DocumentItemAccessorColumn.DelayedEndDate,
-				DocumentItemAccessorColumn.ExpectedEndDate,
-				DocumentItemAccessorColumn.ShippedEndDate,
-				DocumentItemAccessorColumn.ShippedPreviouslyEndDate,
-				DocumentItemAccessorColumn.InformationEndDate,
-			};
-		#endregion
 
 		private void BuildTaxItem(TaxDocumentItemEntity line)
 		{
@@ -569,6 +521,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		private static readonly int identSpacePerLevel = 3;
 
 		private readonly BusinessDocumentEntity			businessDocumentEntity;
+		private readonly BusinessLogic					businessLogic;
 		private readonly IncrementalNumberGenerator		numberGenerator;
 		private readonly Dictionary<int, FormattedText>	content;
 		private readonly List<ArticleQuantityEntity>	articleQuantityEntities;

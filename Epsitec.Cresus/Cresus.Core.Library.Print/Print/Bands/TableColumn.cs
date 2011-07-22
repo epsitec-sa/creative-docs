@@ -11,28 +11,11 @@ namespace Epsitec.Cresus.Core.Print.Bands
 	public enum TableColumnKeys
 	{
 		LineNumber,
-		Quantity,
+		MainQuantity,
 
-		OrderedQuantity,
-		OrderedDate,
-
-		BilledQuantity,
-		BilledDate,
-
-		DelayedQuantity,
-		DelayedDate,
-
-		ExpectedQuantity,
-		ExpectedDate,
-
-		ShippedQuantity,
-		ShippedDate,
-
-		ShippedPreviouslyQuantity,
-		ShippedPreviouslyDate,
-
-		InformationQuantity,
-		InformationDate,
+		AdditionalType,
+		AdditionalQuantity,
+		AdditionalDate,
 
 		ArticleId,
 		ArticleDescription,
@@ -57,7 +40,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 			this.Width     = width;
 			this.Alignment = alignment;
 			this.Rank      = -1;
-			this.Visible   = false;
+			this.Visible   = true;
 		}
 
 		public string			Title;

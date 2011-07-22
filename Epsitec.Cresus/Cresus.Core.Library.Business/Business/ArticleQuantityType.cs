@@ -10,13 +10,13 @@ namespace Epsitec.Cresus.Core.Business
 	{
 		None				= 0,
 
-		Ordered				= 10,
-		Billed				= 20,
-		Delayed				= 30,
-		Expected			= 32,
-		Shipped				= 40,
-		ShippedPreviously	= 42,
+		Ordered				= 10,	// commandé
+		Billed				= 20,	// facturé
+		Delayed				= 30,	// retardé, confirmée et/ou en suspens
+		Expected			= 32,	// attendu, en suspens avec date non confirmée
+		Shipped				= 40,	// livré
+		ShippedPreviously	= 42,	// livré précédemment
 
-		Information			= 100,
+		Information			= 100,	// information
 	}
 }
