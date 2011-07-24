@@ -252,7 +252,7 @@ namespace Epsitec.Cresus.Core.Print.Controllers
 				this.previewFrame.VerticalScrollerMode   = ScrollableScrollerMode.ShowAlways;
 				this.previewFrame.PaintViewportFrame = true;
 
-				this.pagePreviewers[0].PreferredSize = placer.GetZoomedSize (this.pages[this.currentPage].ParentSection.PageSize, this.currentZoom);
+				this.pagePreviewers[0].PreferredSize = placer.GetZoomedSize (this.pages[this.currentPage].ParentSectionPageSize, this.currentZoom);
 				this.pagePreviewers[0].Dock = DockStyle.Left | DockStyle.Bottom;
 			}
 			else  // 1:1 ou réduction ?
@@ -386,15 +386,8 @@ namespace Epsitec.Cresus.Core.Print.Controllers
 
 				foreach (var page in this.pages)
 				{
-					if (maxWidth < page.ParentSection.PageSize.Width)
-					{
-						maxWidth = page.ParentSection.PageSize.Width;
-					}
-
-					if (maxHeight < page.ParentSection.PageSize.Height)
-					{
-						maxHeight = page.ParentSection.PageSize.Height;
-					}
+					maxWidth  = System.Math.Max (maxWidth,  page.ParentSectionPageSize.Width);
+					maxHeight = System.Math.Max (maxHeight, page.ParentSectionPageSize.Height);
 				}
 
 				return new Size (maxWidth, maxHeight);

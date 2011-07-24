@@ -32,6 +32,21 @@ namespace Epsitec.Cresus.Core.Print
 			set;
 		}
 
+		public bool IsOK
+		{
+			get
+			{
+				if (this.sections.Count == 0)
+				{
+					return true;
+				}
+				else
+				{
+					return this.sections[0].IsOK;
+				}
+			}
+		}
+
 		public string InternalJobName
 		{
 			//	Retourne le nom interne du job de la première section.
@@ -57,7 +72,7 @@ namespace Epsitec.Cresus.Core.Print
 			//	est identique dans toutes les sections.
 			get
 			{
-				if (this.sections.Count == 0)
+				if (this.sections.Count == 0 || this.sections[0].PrintingUnit == null)
 				{
 					return null;
 				}

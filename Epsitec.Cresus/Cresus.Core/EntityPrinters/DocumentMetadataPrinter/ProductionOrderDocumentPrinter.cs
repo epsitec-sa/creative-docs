@@ -37,25 +37,38 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
-		public override void BuildSections()
+		public override FormattedText BuildSections()
 		{
 			base.BuildSections ();
 
 			this.documentRank = 0;
 
-			foreach (var group in this.ProductionGroups)
+			var groups = this.ProductionGroups;
+
+			if (groups.Count == 0)
 			{
-				this.currentGroup = group;
+				return "Les conditions suivantes doivent être remplies pour pouvoir imprimer ce document:<br/><br/>" +
+					   "1) Il doit y avoir au moins un article utilisant la catégorie \"Marchandises\".<br/>" +
+					   "2) Cet article doit faire partie d'un groupe.";
+			}
+			else
+			{
+				foreach (var group in groups)
+				{
+					this.currentGroup = group;
 
-				this.documentContainer.DocumentRank = this.documentRank++;
-				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
+					this.documentContainer.DocumentRank = this.documentRank++;
+					int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
 
-				this.BuildHeader (null);
-				this.BuildArticles ();
-				this.BuildFooter ();
-				this.BuildPages (null, firstPage);
+					this.BuildHeader (null);
+					this.BuildArticles ();
+					this.BuildFooter ();
+					this.BuildPages (null, firstPage);
 
-				this.documentContainer.Ending (firstPage);
+					this.documentContainer.Ending (firstPage);
+				}
+
+				return null;  // ok
 			}
 		}
 
@@ -201,11 +214,14 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					{
 						var article = line as ArticleDocumentItemEntity;
 
-						foreach (var group in article.ArticleDefinition.ArticleGroups)
+						if (article.ArticleDefinition.ArticleCategory.ArticleType == ArticleType.Goods)  // marchandises ?
 						{
-							if (!groups.Contains (group))
+							foreach (var group in article.ArticleDefinition.ArticleGroups)
 							{
-								groups.Add (group);
+								if (!groups.Contains (group))
+								{
+									groups.Add (group);
+								}
 							}
 						}
 					}
@@ -222,17 +238,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			{
 				var article = item as ArticleDocumentItemEntity;
 
-				if (article != null &&
-					article.ArticleDefinition.IsNotNull () &&
-					article.ArticleDefinition.ArticleCategory.IsNotNull ())
-				{
-					if (!article.ArticleDefinition.ArticleGroups.Contains (group))
-					{
-						return false;
-					}
-
-					return article.ArticleDefinition.ArticleCategory.ArticleType == Business.ArticleType.Goods;  // marchandises ?
-				}
+				return article.ArticleDefinition.ArticleGroups.Contains (group);
 			}
 
 			return false;

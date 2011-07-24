@@ -45,32 +45,48 @@ namespace Epsitec.Cresus.Core.Print.Serialization
 				{
 					var xJob = new XElement ("job");
 					xJob.Add (new XAttribute ("title", job.JobFullName));
-					xJob.Add (new XAttribute ("printer-name", job.PrinterPhysicalName));
+
+					if (string.IsNullOrEmpty (job.PrinterPhysicalName))
+					{
+						xJob.Add (new XAttribute ("printer-name", "error"));
+					}
+					else
+					{
+						xJob.Add (new XAttribute ("printer-name", job.PrinterPhysicalName));
+					}
 
 					foreach (var section in sectionsToPrint)
 					{
 						var xSection = new XElement ("section");
-						xSection.Add (new XAttribute ("printer-code",     section.PrintingUnit.DocumentPrintingUnitCode));
-						xSection.Add (new XAttribute ("printer-name",     section.PrintingUnit.GetNiceDescription(businessContext)));
-						xSection.Add (new XAttribute ("printer-tray",     section.PrintingUnit.PhysicalPrinterTray));
-						xSection.Add (new XAttribute ("printer-x-offset", section.PrintingUnit.XOffset));
-						xSection.Add (new XAttribute ("printer-y-offset", section.PrintingUnit.YOffset));
-						xSection.Add (new XAttribute ("printer-width",    section.PageSize.Width));
-						xSection.Add (new XAttribute ("printer-height",   section.PageSize.Height));
 
-						for (int page = section.FirstPage; page < section.FirstPage+section.PageCount; page++)
+						if (section.IsOK)  // ok ?
 						{
-							var xPage = new XElement ("page");
-							xPage.Add (new XAttribute ("rank", page));
+							xSection.Add (new XAttribute ("printer-code",     section.PrintingUnit.DocumentPrintingUnitCode));
+							xSection.Add (new XAttribute ("printer-name",     section.PrintingUnit.GetNiceDescription(businessContext)));
+							xSection.Add (new XAttribute ("printer-tray",     section.PrintingUnit.PhysicalPrinterTray));
+							xSection.Add (new XAttribute ("printer-x-offset", section.PrintingUnit.XOffset));
+							xSection.Add (new XAttribute ("printer-y-offset", section.PrintingUnit.YOffset));
+							xSection.Add (new XAttribute ("printer-width",    section.PageSize.Width));
+							xSection.Add (new XAttribute ("printer-height",   section.PageSize.Height));
 
-							var port = new XmlPort (xPage);
-							section.DocumentPrinter.CurrentPage = page;
-							section.DocumentPrinter.SetPrintingUnit (section.PrintingUnit, section.Options, PreviewMode.Print);
-							section.DocumentPrinter.BuildSections ();
-							section.DocumentPrinter.PrintBackgroundCurrentPage (port);
-							section.DocumentPrinter.PrintForegroundCurrentPage (port);
+							for (int page = section.FirstPage; page < section.FirstPage+section.PageCount; page++)
+							{
+								var xPage = new XElement ("page");
+								xPage.Add (new XAttribute ("rank", page));
 
-							xSection.Add (xPage);
+								var port = new XmlPort (xPage);
+								section.DocumentPrinter.CurrentPage = page;
+								section.DocumentPrinter.SetPrintingUnit (section.PrintingUnit, section.Options, PreviewMode.Print);
+								section.DocumentPrinter.BuildSections ();
+								section.DocumentPrinter.PrintBackgroundCurrentPage (port);
+								section.DocumentPrinter.PrintForegroundCurrentPage (port);
+
+								xSection.Add (xPage);
+							}
+						}
+						else  // erreur ?
+						{
+							xSection.Add (new XAttribute ("printer-error", section.Error.ToString ()));
 						}
 
 						xJob.Add (xSection);
@@ -103,30 +119,44 @@ namespace Epsitec.Cresus.Core.Print.Serialization
 
 					foreach (var xSection in xJob.Elements ())
 					{
-						string documentPrintingUnitCode = (string) xSection.Attribute ("printer-code");
-						string documentPrintingUnitName = (string) xSection.Attribute ("printer-name");
-						string printerPhysicalTray      = (string) xSection.Attribute ("printer-tray");
-						double width                    = (double) xSection.Attribute ("printer-width");
-						double height                   = (double) xSection.Attribute ("printer-height");
+						string error = (string) xSection.Attribute ("printer-error");
 
-						var section = new DeserializedSection (job, documentPrintingUnitCode, documentPrintingUnitName, printerPhysicalTray, new Size (width, height));
-
-						foreach (var xPage in xSection.Elements ())
+						if (string.IsNullOrEmpty (error))  // ok ?
 						{
-							int pageRank = (int) xPage.Attribute ("rank");
+							string documentPrintingUnitCode = (string) xSection.Attribute ("printer-code");
+							string documentPrintingUnitName = (string) xSection.Attribute ("printer-name");
+							string printerPhysicalTray      = (string) xSection.Attribute ("printer-tray");
+							double width                    = (double) xSection.Attribute ("printer-width");
+							double height                   = (double) xSection.Attribute ("printer-height");
 
-							var page = new DeserializedPage (section, pageRank, xPage);
+							var section = new DeserializedSection (job, documentPrintingUnitCode, documentPrintingUnitName, printerPhysicalTray, new Size (width, height));
 
-							if (zoom > 0)  // génère une miniature de la page ?
+							foreach (var xPage in xSection.Elements ())
 							{
-								var port = new XmlPort (xPage);
-								page.Miniature = port.Deserialize (id => PrintEngine.GetImage (businessContext, id), new Size (width, height), zoom);
+								int pageRank = (int) xPage.Attribute ("rank");
+
+								var page = new DeserializedPage (section, pageRank, xPage);
+
+								if (zoom > 0)  // génère une miniature de la page ?
+								{
+									var port = new XmlPort (xPage);
+									page.Miniature = port.Deserialize (id => PrintEngine.GetImage (businessContext, id), new Size (width, height), zoom);
+								}
+
+								section.Pages.Add (page);
 							}
 
-							section.Pages.Add (page);
+							job.Sections.Add (section);
 						}
+						else  // erreur ?
+						{
+							var section = new DeserializedSection (error);
 
-						job.Sections.Add (section);
+							var page = new DeserializedPage (error);
+							section.Pages.Add (page);
+
+							job.Sections.Add (section);
+						}
 					}
 
 					jobs.Add (job);

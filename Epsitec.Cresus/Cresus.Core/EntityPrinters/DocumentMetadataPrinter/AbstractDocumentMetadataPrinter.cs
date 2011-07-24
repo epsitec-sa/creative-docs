@@ -76,11 +76,13 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
-		public override void BuildSections()
+		public override FormattedText BuildSections()
 		{
 			base.BuildSections ();
 
 			this.documentContainer.Clear ();
+
+			return null;  // ok
 		}
 
 		public override void PrintBackgroundCurrentPage(IPaintPort port)

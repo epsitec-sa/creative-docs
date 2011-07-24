@@ -2,6 +2,8 @@
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Types;
+
 using Epsitec.Cresus.Core.Documents;
 using Epsitec.Cresus.Core.Print.EntityPrinters;
 
@@ -28,6 +30,13 @@ namespace Epsitec.Cresus.Core.Print
 			this.documentPrinter = documentPrinter;
 			this.pageSize        = pageSize;
 			this.options         = options;
+
+			this.Enable = true;
+		}
+
+		public SectionToPrint(FormattedText error)
+		{
+			this.error = error;
 
 			this.Enable = true;
 		}
@@ -115,6 +124,32 @@ namespace Epsitec.Cresus.Core.Print
 			}
 		}
 
+
+		public bool IsOK
+		{
+			get
+			{
+				return this.error.IsNullOrEmpty;
+			}
+		}
+
+		public bool IsError
+		{
+			get
+			{
+				return !this.error.IsNullOrEmpty;
+			}
+		}
+
+		public FormattedText Error
+		{
+			get
+			{
+				return this.error;
+			}
+		}
+
+
 		public override string ToString()
 		{
 			// Pratique pour le debug.
@@ -124,11 +159,23 @@ namespace Epsitec.Cresus.Core.Print
 
 		public static int CompareSectionToPrint(SectionToPrint x, SectionToPrint y)
 		{
-			//	Détermine comment regrouper les pages. On cherche à grouper les pages ansi:
+			//	Détermine comment regrouper les pages. On cherche à grouper les pages ainsi:
+			//	- par erreurs
 			//	- par jobs
 			//	- par impriante physique
 			//	- par pages croissantes
 			int result;
+
+			result = x.IsError.CompareTo (y.IsError);
+			if (result != 0)
+			{
+				return result;
+			}
+
+			if (x.IsError && y.IsError)
+			{
+				return 0;
+			}
 
 			result = string.Compare (x.InternalJobName, y.InternalJobName);
 			if (result != 0)
@@ -156,6 +203,7 @@ namespace Epsitec.Cresus.Core.Print
 		private readonly int						firstPage;
 		private readonly AbstractPrinter			documentPrinter;
 		private readonly Size						pageSize;
-		private readonly PrintingOptionDictionary			options;
+		private readonly PrintingOptionDictionary	options;
+		private readonly FormattedText				error;
 	}
 }

@@ -60,9 +60,14 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
-		public override void BuildSections()
+		public override FormattedText BuildSections()
 		{
 			base.BuildSections ();
+
+			if (this.Entity.BillingDetails.Count == 0)
+			{
+				return "Il n'y a rien à imprimer, car la facture ne contient aucune donnée de facturation.";
+			}
 
 			this.onlyTotal = false;
 
@@ -103,6 +108,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					this.onlyTotal = true;
 				}
 			}
+
+			return null;  // ok
 		}
 
 

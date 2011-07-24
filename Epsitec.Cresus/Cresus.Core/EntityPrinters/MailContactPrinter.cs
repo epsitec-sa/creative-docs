@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Documents;
 using Epsitec.Cresus.Core.Entities;
@@ -68,7 +69,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
-		public override void BuildSections()
+		public override FormattedText BuildSections()
 		{
 			base.BuildSections ();
 
@@ -80,6 +81,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				this.BuildSummary ();
 				this.documentContainer.Ending (firstPage);
 			}
+
+			return null;  // ok
 		}
 
 		public override void PrintForegroundCurrentPage(IPaintPort port)

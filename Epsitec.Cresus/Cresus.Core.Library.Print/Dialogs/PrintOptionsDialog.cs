@@ -36,8 +36,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			this.businessContext = businessContext;
 			this.entitiesToPrint = entitiesToPrint.ToList ();
-			this.entitiesPageControllers   = new List<PageController> ();
-			this.isPreview       = isPreview;
+			this.entitiesPageControllers = new List<PageController> ();
+			this.isPreview = isPreview;
 		}
 
 

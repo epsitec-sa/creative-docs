@@ -84,13 +84,21 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			this.UpdateBitmap ();
 
+			double dx, dy;
+
 			if (this.bitmap == null)
 			{
-				return;
-			}
+				double zoom, pageWidth, pageHeight;
+				this.ComputeGeometry (out zoom, out pageWidth, out pageHeight);
 
-			double dx = this.bitmap.Width;
-			double dy = this.bitmap.Height;
+				dx = System.Math.Floor (zoom*pageWidth);
+				dy = System.Math.Floor (zoom*pageHeight);
+			}
+			else
+			{
+				dx = this.bitmap.Width;
+				dy = this.bitmap.Height;
+			}
 
 			var rectTitle   = new Rectangle (0, 0, dx, XmlPrintedPagePreviewer.titleHeight+3);  // léger chevauchement avec rectPreview
 			var rectPreview = new Rectangle (0, XmlPrintedPagePreviewer.titleHeight, dx, dy);
@@ -111,12 +119,19 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.titleLayout.Paint (rectTitle.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness (1), GlyphPaintStyle.Normal);
 
 			//	Affiche le bitmap.
-			rectPreview.Deflate (1);
-			graphics.PaintImage (this.bitmap, rectPreview);
+			if (this.bitmap == null)
+			{
+				this.PaintError (graphics, rectPreview);
+			}
+			else
+			{
+				rectPreview.Deflate (1);
+				graphics.PaintImage (this.bitmap, rectPreview);
 
-			rectPreview.Inflate (0.5);
-			graphics.AddRectangle (rectPreview);
-			graphics.RenderSolid (Color.FromBrightness (0));
+				rectPreview.Inflate (0.5);
+				graphics.AddRectangle (rectPreview);
+				graphics.RenderSolid (Color.FromBrightness (0));
+			}
 		}
 
 		private void UpdateTitle()
@@ -128,24 +143,56 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private void UpdateBitmap()
 		{
-			double widgetWidth  = this.Client.Bounds.Width;
-			double widgetHeight = this.Client.Bounds.Height - XmlPrintedPagePreviewer.titleHeight;
-
-			double pageWidth  = this.page.ParentSection.PageSize.Width;
-			double pageHeight = this.page.ParentSection.PageSize.Height;
-
-			double zoomX = widgetWidth  / pageWidth;
-			double zoomY = widgetHeight / pageHeight;
-
-			double zoom = System.Math.Min (zoomX, zoomY);
+			double zoom, pageWidth, pageHeight;
+			this.ComputeGeometry (out zoom, out pageWidth, out pageHeight);
 
 			if (this.bitmap == null || this.lastZoom != zoom)
 			{
 				this.lastZoom = zoom;
 
-				var port = new XmlPort (page.XRoot);
-				this.bitmap = port.Deserialize (id => PrintEngine.GetImage (this.businessContext, id), new Size (pageWidth, pageHeight), zoom);
+				if (this.page.IsOK)
+				{
+					var port = new XmlPort (page.XRoot);
+					this.bitmap = port.Deserialize (id => PrintEngine.GetImage (this.businessContext, id), new Size (pageWidth, pageHeight), zoom);
+				}
 			}
+		}
+
+		private void PaintError(Graphics graphics, Rectangle rectPreview)
+		{
+			//	Efface le fond.
+			rectPreview.Deflate (1);
+			graphics.AddFilledRectangle (rectPreview);
+			graphics.RenderSolid (Color.FromBrightness (1));
+
+			//	Dessine le texte.
+			var textRect = rectPreview;
+			textRect.Deflate (textRect.Width*0.1);
+
+			var textLayout = new TextLayout ();
+			textLayout.LayoutSize = textRect.Size;
+			textLayout.Alignment = ContentAlignment.MiddleCenter;
+			textLayout.Text = page.Error.ToString ();
+			textLayout.Paint (textRect.BottomLeft, graphics);
+
+			//	Dessine le cadre.
+			rectPreview.Inflate (0.5);
+			graphics.AddRectangle (rectPreview);
+			graphics.RenderSolid (Color.FromBrightness (0));
+		}
+
+		private void ComputeGeometry(out double zoom, out double pageWidth, out double pageHeight)
+		{
+			double widgetWidth  = this.Client.Bounds.Width;
+			double widgetHeight = this.Client.Bounds.Height - XmlPrintedPagePreviewer.titleHeight;
+
+			pageWidth  = this.page.ParentSectionPageSize.Width;
+			pageHeight = this.page.ParentSectionPageSize.Height;
+
+			double zoomX = widgetWidth  / pageWidth;
+			double zoomY = widgetHeight / pageHeight;
+
+			zoom = System.Math.Min (zoomX, zoomY);
 		}
 
 

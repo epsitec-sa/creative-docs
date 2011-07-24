@@ -178,10 +178,12 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 			this.requiredPageSize = size;
 		}
 
-		public virtual void BuildSections()
+		public virtual FormattedText BuildSections()
 		{
 			this.documentContainer.PageSize    = this.RequiredPageSize;
 			this.documentContainer.PageMargins = this.PageMargins;
+
+			return null;  // ok
 		}
 
 		public virtual void PrintBackgroundCurrentPage(IPaintPort port)

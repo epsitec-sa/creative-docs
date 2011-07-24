@@ -2,6 +2,7 @@
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Types;
 
 using System.Xml.Linq;
 using System.Collections.Generic;
@@ -21,6 +22,13 @@ namespace Epsitec.Cresus.Core.Print.Serialization
 			this.documentPrintingUnitName = documentPrintingUnitName;
 			this.printerPhysicalTray      = printerPhysicalTray;
 			this.pageSize                 = pageSize;
+		}
+
+		public DeserializedSection(FormattedText error)
+		{
+			this.pages = new List<DeserializedPage> ();
+
+			this.error = error;
 		}
 
 
@@ -73,6 +81,31 @@ namespace Epsitec.Cresus.Core.Print.Serialization
 		}
 
 
+		public bool IsOK
+		{
+			get
+			{
+				return this.error.IsNullOrEmpty;
+			}
+		}
+
+		public bool IsError
+		{
+			get
+			{
+				return !this.error.IsNullOrEmpty;
+			}
+		}
+
+		public FormattedText Error
+		{
+			get
+			{
+				return this.error;
+			}
+		}
+
+
 		public int PrintablePagesCount
 		{
 			get
@@ -105,5 +138,6 @@ namespace Epsitec.Cresus.Core.Print.Serialization
 		private string							documentPrintingUnitName;
 		private readonly string					printerPhysicalTray;
 		private readonly Size					pageSize;
+		private readonly FormattedText			error;
 	}
 }
