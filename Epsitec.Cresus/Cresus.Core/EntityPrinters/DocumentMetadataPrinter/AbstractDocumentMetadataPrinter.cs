@@ -439,10 +439,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				text = accessor.GetContent (0, DocumentItemAccessorColumn.FullNumber);
 			}
 
-			if (!text.IsNullOrEmpty)
-			{
-				table.SetText (this.tableColumns[TableColumnKeys.LineNumber].Rank, row, text, this.FontSize);
-			}
+			table.SetText (this.tableColumns[TableColumnKeys.LineNumber].Rank, row, text, this.FontSize);
 
 			var topGap = 0;  // pas d'espace supplémentaire
 
