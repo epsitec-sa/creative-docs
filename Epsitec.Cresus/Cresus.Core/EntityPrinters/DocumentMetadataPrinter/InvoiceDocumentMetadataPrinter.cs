@@ -64,6 +64,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 			base.BuildSections ();
 
+			this.onlyTotal = false;
+
 			if (!this.HasIsr || this.HasOption (DocumentOption.IsrPosition, "Without") || this.PreviewMode == Print.PreviewMode.ContinuousPreview)
 			{
 				if (this.Entity.BillingDetails.Count != 0)
@@ -84,14 +86,13 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			else
 			{
 				int documentRank = 0;
-				bool onlyTotal = false;
 				foreach (var billingDetails in this.Entity.BillingDetails)
 				{
 					this.documentContainer.DocumentRank = documentRank++;
 					int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
 
 					this.BuildHeader (billingDetails);
-					this.BuildArticles (onlyTotal: onlyTotal);
+					this.BuildArticles ();
 					this.BuildConditions (billingDetails);
 					this.BuildPages (billingDetails, firstPage);
 					this.BuildReportHeaders (firstPage);
@@ -99,7 +100,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					this.BuildIsrs (billingDetails, firstPage);
 
 					this.documentContainer.Ending (firstPage);
-					onlyTotal = true;
+					this.onlyTotal = true;
 				}
 			}
 		}
@@ -109,9 +110,19 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 			get
 			{
-				foreach (var line in this.Entity.Lines)
+				if (this.onlyTotal)
 				{
-					yield return new ContentLine (line, line.GroupIndex);
+					//	Ne donne que la dernière ligne qui est celle du grand total.
+					var totalLine = this.Entity.Lines[this.Entity.Lines.Count-1];
+					yield return new ContentLine (totalLine, totalLine.GroupIndex);
+				}
+				else
+				{
+					//	Donne nornalement toutes les lignes.
+					foreach (var line in this.Entity.Lines)
+					{
+						yield return new ContentLine (line, line.GroupIndex);
+					}
 				}
 			}
 		}
@@ -252,7 +263,11 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			{
 				if (this.IsWithFrame)
 				{
-					table.SetCellBorder (last, this.GetCellBorder (topLess: true));
+					if (!this.onlyTotal)
+					{
+						table.SetCellBorder (last, this.GetCellBorder (topLess: true));
+					}
+
 					table.SetCellBorder (this.tableColumns[TableColumnKeys.Total].Rank, last, new CellBorder (CellBorder.BoldWidth));
 				}
 				else
@@ -390,5 +405,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 
 		private static readonly double		marginBeforeIsr = 10;
+
+		private bool						onlyTotal;
 	}
 }

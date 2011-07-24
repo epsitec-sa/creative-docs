@@ -251,7 +251,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
-		protected void BuildArticles(ArticleGroupEntity group=null, bool onlyTotal=false)
+		protected void BuildArticles(ArticleGroupEntity group=null)
 		{
 			//	Ajoute les articles dans le document.
 			this.documentContainer.CurrentVerticalPosition = this.RequiredPageSize.Height-87;
@@ -274,10 +274,9 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			//	Première passe pour déterminer le nombre le lignes du tableau aunsi que
 			//	les colonnes visibles.
-			int firstLine = onlyTotal ? this.ContentLines.Count ()-1 : 0;
 			int rowCount = 1;  // déjà 1 pour l'en-tête (titres des colonnes)
 
-			for (int i = firstLine; i < this.ContentLines.Count (); i++)
+			for (int i = 0; i < this.ContentLines.Count (); i++)
 			{
 				var contentLine = this.ContentLines.ElementAt (i);
 
@@ -327,7 +326,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			int linePage = this.documentContainer.CurrentPage;
 			double lineY = this.documentContainer.CurrentVerticalPosition;
 
-			for (int i = firstLine; i < this.ContentLines.Count (); i++)
+			for (int i = 0; i < this.ContentLines.Count (); i++)
 			{
 				var contentLine = this.ContentLines.ElementAt (i);
 
