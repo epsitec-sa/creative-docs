@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 			double leftMargin = this.GetOptionValue (DocumentOption.LeftMargin, 20);
 
-			//	Ajoute l'en-tête de la facture dans le document.
+			//	Ajoute l'en-tête dans le document.
 			if (this.HasOption (DocumentOption.HeaderLogo))
 			{
 				var context = this.businessContext as BusinessContext;
@@ -271,8 +271,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				accessors.Add (accessor);
 			}
 
-			//	Première passe pour déterminer le nombre le lignes du tableau de la facture
-			//	ainsi que les colonnes visibles.
+			//	Première passe pour déterminer le nombre le lignes du tableau aunsi que
+			//	les colonnes visibles.
 			int firstLine = onlyTotal ? this.Entity.Lines.Count-1 : 0;
 			int rowCount = 1;  // déjà 1 pour l'en-tête (titres des colonnes)
 
