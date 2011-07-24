@@ -105,6 +105,17 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
+		protected override IEnumerable<ContentLine> ContentLines
+		{
+			get
+			{
+				foreach (var line in this.Entity.Lines)
+				{
+					yield return new ContentLine (line, line.GroupIndex);
+				}
+			}
+		}
+
 		protected override void InitializeColumns()
 		{
 			this.tableColumns.Clear ();
@@ -192,7 +203,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-		protected override int BuildLine(TableBand table, int row, DocumentItemAccessor accessor, AbstractDocumentItemEntity prevLine, AbstractDocumentItemEntity line, AbstractDocumentItemEntity nextLine)
+		protected override int BuildLine(TableBand table, int row, DocumentItemAccessor accessor, ContentLine prevLine, ContentLine line, ContentLine nextLine)
 		{
 			for (int i = 0; i < accessor.RowsCount; i++)
 			{
@@ -223,7 +234,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				this.SetTableText (table, row+i, TableColumnKeys.Vat, accessor.GetContent (i, DocumentItemAccessorColumn.Vat));
 
 				var total = accessor.GetContent (i, DocumentItemAccessorColumn.Total);
-				if (line is EndTotalDocumentItemEntity && i == accessor.RowsCount-1)
+				if (line.Line is EndTotalDocumentItemEntity && i == accessor.RowsCount-1)
 				{
 					total = total.ApplyBold ();
 				}
@@ -232,12 +243,12 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			int last = row+accessor.RowsCount-1;
 
-			if (line is SubTotalDocumentItemEntity)
+			if (line.Line is SubTotalDocumentItemEntity)
 			{
 				table.SetCellBorder (last, this.GetCellBorder (bottomBold: true));
 			}
 
-			if (line is EndTotalDocumentItemEntity)
+			if (line.Line is EndTotalDocumentItemEntity)
 			{
 				if (this.IsWithFrame)
 				{

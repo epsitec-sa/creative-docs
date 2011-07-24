@@ -98,6 +98,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
+		// TODO: Supprimer !!!
 		private List<ArticleGroupEntity> GetProdGroups()
 		{
 			//	Retourne la liste des groupes des articles du document.
@@ -261,28 +262,28 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			var accessors = new List<DocumentItemAccessor> ();
 			var numberGenerator = new IncrementalNumberGenerator ();
 
-			for (int i = 0; i < this.Entity.Lines.Count; i++)
+			for (int i = 0; i < this.ContentLines.Count (); i++)
 			{
-				var line = this.Entity.Lines[i];
+				var contentLine = this.ContentLines.ElementAt (i);
 
 				var accessor = new DocumentItemAccessor (this.Entity, this.businessLogic, numberGenerator);
-				accessor.BuildContent (line, this.DocumentType, this.DocumentItemAccessorMode);
+				accessor.BuildContent (contentLine.Line, this.DocumentType, this.DocumentItemAccessorMode, contentLine.GroupIndex);
 
 				accessors.Add (accessor);
 			}
 
 			//	Première passe pour déterminer le nombre le lignes du tableau aunsi que
 			//	les colonnes visibles.
-			int firstLine = onlyTotal ? this.Entity.Lines.Count-1 : 0;
+			int firstLine = onlyTotal ? this.ContentLines.Count ()-1 : 0;
 			int rowCount = 1;  // déjà 1 pour l'en-tête (titres des colonnes)
 
-			for (int i = firstLine; i < this.Entity.Lines.Count; i++)
+			for (int i = firstLine; i < this.ContentLines.Count (); i++)
 			{
-				var line = this.Entity.Lines[i];
+				var contentLine = this.ContentLines.ElementAt (i);
 
-				if (line.Attributes.HasFlag (DocumentItemAttributes.Hidden) == false)
+				if (contentLine.Line.Attributes.HasFlag (DocumentItemAttributes.Hidden) == false)
 				{
-					rowCount += this.InitializeLine (accessors[i], line, group);
+					rowCount += this.InitializeLine (accessors[i], contentLine, group);
 				}
 			}
 
@@ -326,17 +327,17 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			int linePage = this.documentContainer.CurrentPage;
 			double lineY = this.documentContainer.CurrentVerticalPosition;
 
-			for (int i = firstLine; i < this.Entity.Lines.Count; i++)
+			for (int i = firstLine; i < this.ContentLines.Count (); i++)
 			{
-				var line = this.Entity.Lines[i];
+				var contentLine = this.ContentLines.ElementAt (i);
 
-				if (line.Attributes.HasFlag (DocumentItemAttributes.Hidden) == false)
+				if (contentLine.Line.Attributes.HasFlag (DocumentItemAttributes.Hidden) == false)
 				{
-					var prevLine = (i == 0) ? null : this.Entity.Lines[i-1];
-					var nextLine = (i >= this.Entity.Lines.Count-1) ? null : this.Entity.Lines[i+1];
+					var prevLine = (i == 0) ? null : this.ContentLines.ElementAt (i-1);
+					var nextLine = (i >= this.ContentLines.Count ()-1) ? null : this.ContentLines.ElementAt (i+1);
 
-					int rowUsed = this.BuildLine (this.table, row, accessors[i], prevLine, line, nextLine);
-					this.BuildCommonLine (this.table, row, accessors[i], line);
+					int rowUsed = this.BuildLine (this.table, row, accessors[i], prevLine, contentLine, nextLine);
+					this.BuildCommonLine (this.table, row, accessors[i], contentLine);
 
 					if (rowUsed != 0)
 					{
@@ -420,7 +421,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			this.lastRowForEachSection = this.table.GetLastRowForEachSection ();
 		}
 
-		private void BuildCommonLine(TableBand table, int row, DocumentItemAccessor accessor, AbstractDocumentItemEntity line)
+		private void BuildCommonLine(TableBand table, int row, DocumentItemAccessor accessor, ContentLine line)
 		{
 			FormattedText text = null;
 
@@ -468,6 +469,35 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
+		protected virtual IEnumerable<ContentLine> ContentLines
+		{
+			get
+			{
+				return null;
+			}
+		}
+
+		protected class ContentLine
+		{
+			public ContentLine(AbstractDocumentItemEntity line, int groupIndex)
+			{
+				this.Line = line;
+				this.GroupIndex = groupIndex;
+			}
+
+			public AbstractDocumentItemEntity Line
+			{
+				get;
+				internal set;
+			}
+
+			public int GroupIndex
+			{
+				get;
+				internal set;
+			}
+		}
+	
 		protected virtual void InitializeColumns()
 		{
 		}
@@ -480,7 +510,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-		protected virtual int InitializeLine(DocumentItemAccessor accessor, AbstractDocumentItemEntity line, ArticleGroupEntity group)
+		protected virtual int InitializeLine(DocumentItemAccessor accessor, ContentLine line, ArticleGroupEntity group)
 		{
 			return accessor.RowsCount;
 		}
@@ -489,7 +519,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 		}
 
-		protected virtual int BuildLine(TableBand table, int row, DocumentItemAccessor accessor, AbstractDocumentItemEntity prevLine, AbstractDocumentItemEntity line, AbstractDocumentItemEntity nextLine)
+		protected virtual int BuildLine(TableBand table, int row, DocumentItemAccessor accessor, ContentLine prevLine, ContentLine line, ContentLine nextLine)
 		{
 			return 0;
 		}
@@ -831,11 +861,11 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					continue;
 				}
 
-				AbstractDocumentItemEntity item = this.Entity.Lines[row-1];  // -1 à cause de l'en-tête
+				var contentLine = this.ContentLines.ElementAt (row-1);  // -1 à cause de l'en-tête
 
-				if (item is ArticleDocumentItemEntity)
+				if (contentLine.Line is ArticleDocumentItemEntity)
 				{
-					var article = item as ArticleDocumentItemEntity;
+					var article = contentLine.Line as ArticleDocumentItemEntity;
 
 					decimal beforeTax = article.ResultingLinePriceBeforeTax.GetValueOrDefault (0);
 					decimal tax1 =      article.ResultingLineTax1          .GetValueOrDefault (0);
