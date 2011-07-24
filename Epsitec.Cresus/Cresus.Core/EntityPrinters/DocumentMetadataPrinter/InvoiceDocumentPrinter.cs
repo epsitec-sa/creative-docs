@@ -29,9 +29,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.EntityPrinters
 {
-	public class InvoiceDocumentMetadataPrinter : AbstractDocumentMetadataPrinter
+	public class InvoiceDocumentPrinter : AbstractDocumentMetadataPrinter
 	{
-		public InvoiceDocumentMetadataPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
+		public InvoiceDocumentPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 			: base (businessContext, entity, options, printingUnits)
 		{
 		}
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 				if (this.HasIsr && this.HasOption (DocumentOption.IsrPosition, "WithInside"))
 				{
-					return new Margins (leftMargin, rightMargin, topMargin+h*2, h+InvoiceDocumentMetadataPrinter.marginBeforeIsr+AbstractIsrBand.DefautlSize.Height);
+					return new Margins (leftMargin, rightMargin, topMargin+h*2, h+InvoiceDocumentPrinter.marginBeforeIsr+AbstractIsrBand.DefautlSize.Height);
 				}
 				else
 				{
@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 			this.tableColumns.Clear ();
 
-			double priceWidth = 13 + this.CellMargin*2;  // largeur standard pour un montant ou une quantité
+			double priceWidth = this.PriceWidth;
 
 			if (this.IsColumnsOrderQD)
 			{
@@ -286,6 +286,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
+
 		private void BuildConditions(BillingDetailEntity billingDetails)
 		{
 			//	Met les conditions à la fin de la facture.
@@ -332,7 +333,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			var bounds = new Rectangle (Point.Zero, AbstractIsrBand.DefautlSize);
 
 			if (this.documentContainer.PageCount () - firstPage > 1 ||
-				this.documentContainer.CurrentVerticalPosition - InvoiceDocumentMetadataPrinter.marginBeforeIsr < bounds.Top ||
+				this.documentContainer.CurrentVerticalPosition - InvoiceDocumentPrinter.marginBeforeIsr < bounds.Top ||
 				this.HasPrintingUnitDefined (PageType.Single) == false)
 			{
 				//	On ne prépare pas une nouvelle page si on peut mettre la facture

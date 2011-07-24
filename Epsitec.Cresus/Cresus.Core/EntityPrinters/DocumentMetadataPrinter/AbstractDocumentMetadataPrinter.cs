@@ -97,34 +97,16 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			base.PrintForegroundCurrentPage (port);
 		}
 
-
-		// TODO: Supprimer !!!
-		private List<ArticleGroupEntity> GetProdGroups()
+		public virtual double PriceWidth
 		{
-			//	Retourne la liste des groupes des articles du document.
-			var groups = new List<ArticleGroupEntity> ();
-
-			foreach (var line in this.Entity.Lines)
+			get
 			{
-				if (line is ArticleDocumentItemEntity)
-				{
-					var article = line as ArticleDocumentItemEntity;
-
-					foreach (var group in article.ArticleDefinition.ArticleGroups)
-					{
-						if (!groups.Contains (group))
-						{
-							groups.Add (group);
-						}
-					}
-				}
+				return 13 + this.CellMargin*2;  // largeur standard pour un montant ou une quantité
 			}
-
-			return groups;
 		}
 
 
-		protected void BuildHeader(BillingDetailEntity billingDetails, ArticleGroupEntity group=null)
+		protected void BuildHeader(BillingDetailEntity billingDetails)
 		{
 			double leftMargin = this.GetOptionValue (DocumentOption.LeftMargin, 20);
 
@@ -153,7 +135,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 								//	Affiche le texte sous le logo de l'entreprise.
 								var textBand = new TextBand ();
 								textBand.Text = FormattedText.Concat ("<b>", legalPerson.Complement, "</b>");
-								textBand.Font = font;
+								textBand.Font = AbstractDocumentMetadataPrinter.font;
 								textBand.FontSize = this.FontSize*1.6;
 								this.documentContainer.AddAbsolute (textBand, new Rectangle (leftMargin, this.RequiredPageSize.Height-10-imageBand.GetSectionHeight (0)-10, 80, 10));
 							}
@@ -165,50 +147,16 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			//	Génère l'adresse du client.
 			var mailContactBand = new TextBand ();
 			mailContactBand.Text = this.Entity.BillToMailContact.GetSummary ();
-			mailContactBand.Font = font;
+			mailContactBand.Font = AbstractDocumentMetadataPrinter.font;
 			mailContactBand.FontSize = this.FontSize;
 			this.documentContainer.AddAbsolute (mailContactBand, new Rectangle (120, this.RequiredPageSize.Height-57, 80, 25));
 
 			//	Génère le groupe "concerne".
 			{
-				FormattedText title, text;
-				CellBorder    cellBorder;
-				Margins       margins;
-				Color         color;
+				var band = this.BuildConcerne ();
 
-				if (group == null)
+				if (band != null)
 				{
-					title      = "Concerne";
-					text       = TextFormatter.FormatText (this.Metadata.DocumentTitle);
-					cellBorder = CellBorder.Empty;
-					margins    = new Margins (0);
-					color      = Color.Empty;
-				}
-				else
-				{
-					var groupName = TextFormatter.FormatText (group.Name).ToSimpleText ();
-
-					title      = "Atelier";
-					text       = FormattedText.Concat ("<b>", string.IsNullOrWhiteSpace (groupName) ? group.Code : groupName, "</b>");
-					cellBorder = CellBorder.Default;
-					margins    = new Margins (1);
-					color      = Color.FromBrightness (0.9);
-				}
-
-				if (!text.IsNullOrEmpty)
-				{
-					var band = new TableBand ();
-					band.ColumnsCount = 2;
-					band.RowsCount = 1;
-					band.CellBorder = cellBorder;
-					band.Font = font;
-					band.FontSize = this.FontSize;
-					band.CellMargins = margins;
-					band.SetRelativeColumWidth (0, 15);
-					band.SetRelativeColumWidth (1, 80);
-					band.SetText (0, 0, title, this.FontSize);
-					band.SetText (1, 0, text,  this.FontSize);
-					band.SetBackground (1, 0, color);
 					this.documentContainer.AddAbsolute (band, new Rectangle (leftMargin, this.RequiredPageSize.Height-70, 100-5, 12));
 				}
 			}
@@ -251,7 +199,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
-		protected void BuildArticles(ArticleGroupEntity group=null)
+		protected void BuildArticles()
 		{
 			//	Ajoute les articles dans le document.
 			this.documentContainer.CurrentVerticalPosition = this.RequiredPageSize.Height-87;
@@ -282,7 +230,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 				if (contentLine.Line.Attributes.HasFlag (DocumentItemAttributes.Hidden) == false)
 				{
-					rowCount += this.InitializeLine (accessors[i], contentLine, group);
+					rowCount += this.InitializeLine (accessors[i], contentLine);
 				}
 			}
 
@@ -465,6 +413,34 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
+		protected virtual TableBand BuildConcerne()
+		{
+			var text = TextFormatter.FormatText (this.Metadata.DocumentTitle);
+
+			if (text.IsNullOrEmpty)
+			{
+				return null;
+			}
+			else
+			{
+				var band = new TableBand ();
+
+				band.ColumnsCount = 2;
+				band.RowsCount = 1;
+				band.CellBorder = CellBorder.Empty;
+				band.Font = AbstractDocumentMetadataPrinter.font;
+				band.FontSize = this.FontSize;
+				band.CellMargins = new Margins (0);
+				band.SetRelativeColumWidth (0, 15);
+				band.SetRelativeColumWidth (1, 80);
+				band.SetText (0, 0, "Concerne", this.FontSize);
+				band.SetText (1, 0, text, this.FontSize);
+				band.SetBackground (1, 0, Color.Empty);
+
+				return band;
+			}
+		}
+
 		protected virtual IEnumerable<ContentLine> ContentLines
 		{
 			get
@@ -518,7 +494,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-		protected virtual int InitializeLine(DocumentItemAccessor accessor, ContentLine line, ArticleGroupEntity group)
+		protected virtual int InitializeLine(DocumentItemAccessor accessor, ContentLine line)
 		{
 			return accessor.RowsCount;
 		}
@@ -637,89 +613,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-
-		private void BuildFooter()
-		{
-			if (this.HasOption (DocumentOption.Signing))
-			{
-				if (this.DocumentType == Business.DocumentType.DeliveryNote)
-				{
-					var table = new TableBand ();
-
-					table.ColumnsCount = 2;
-					table.RowsCount = 1;
-					table.CellBorder = CellBorder.Default;
-					table.Font = font;
-					table.FontSize = this.FontSize;
-					table.CellMargins = new Margins (2);
-					table.SetRelativeColumWidth (0, 60);
-					table.SetRelativeColumWidth (1, 100);
-					table.SetText (0, 0, new FormattedText ("Matériel reçu en bonne et due forme"), this.FontSize);
-					table.SetText (1, 0, new FormattedText ("Reçu le :<br/><br/>Par :<br/><br/>Signature :<br/><br/><br/>"), this.FontSize);
-					table.SetUnbreakableRow (0, true);
-
-					this.documentContainer.AddToBottom (table, this.PageMargins.Bottom);
-				}
-
-				if (this.DocumentType == Business.DocumentType.ProductionOrder ||
-					this.DocumentType == Business.DocumentType.ProductionChecklist)
-				{
-					var table = new TableBand ();
-
-					table.ColumnsCount = 2;
-					table.RowsCount = 1;
-					table.CellBorder = CellBorder.Default;
-					table.Font = font;
-					table.FontSize = this.FontSize;
-					table.CellMargins = new Margins (2);
-					table.SetRelativeColumWidth (0, 60);
-					table.SetRelativeColumWidth (1, 100);
-					table.SetText (0, 0, new FormattedText ("Matériel produit en totalité"), this.FontSize);
-					table.SetText (1, 0, new FormattedText ("Terminé le :<br/><br/>Par :<br/><br/>Signature :<br/><br/><br/>"), this.FontSize);
-					table.SetUnbreakableRow (0, true);
-
-					this.documentContainer.AddToBottom (table, this.PageMargins.Bottom);
-				}
-
-				if (this.DocumentType == Business.DocumentType.OrderBooking)
-				{
-					var table = new TableBand ();
-
-					table.ColumnsCount = 2;
-					table.RowsCount = 1;
-					table.CellBorder = CellBorder.Default;
-					table.Font = font;
-					table.FontSize = this.FontSize;
-					table.CellMargins = new Margins (2);
-					table.SetRelativeColumWidth (0, 60);
-					table.SetRelativeColumWidth (1, 100);
-					table.SetText (0, 0, new FormattedText ("Bon pour commande"), this.FontSize);
-					table.SetText (1, 0, new FormattedText ("Lieu et date :<br/><br/>Signature :<br/><br/><br/>"), this.FontSize);
-					table.SetUnbreakableRow (0, true);
-
-					this.documentContainer.AddToBottom (table, this.PageMargins.Bottom);
-				}
-
-				if (this.DocumentType == Business.DocumentType.OrderConfirmation)
-				{
-					var table = new TableBand ();
-
-					table.ColumnsCount = 2;
-					table.RowsCount = 1;
-					table.CellBorder = CellBorder.Default;
-					table.Font = font;
-					table.FontSize = this.FontSize;
-					table.CellMargins = new Margins (2);
-					table.SetRelativeColumWidth (0, 60);
-					table.SetRelativeColumWidth (1, 100);
-					table.SetText (0, 0, new FormattedText ("Confirmation de commande"), this.FontSize);
-					table.SetText (1, 0, new FormattedText ("Lieu et date :<br/><br/>Signature :<br/><br/><br/>"), this.FontSize);
-					table.SetUnbreakableRow (0, true);
-
-					this.documentContainer.AddToBottom (table, this.PageMargins.Bottom);
-				}
-			}
-		}
 
 		protected void BuildPages(BillingDetailEntity billingDetails, int firstPage)
 		{
@@ -1170,8 +1063,11 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 				switch (documentMetadata.DocumentCategory.DocumentType)
 				{
+					case Business.DocumentType.ProductionOrder:
+						return new ProductionOrderDocumentPrinter (businessContext, entity, options, printingUnits);
+
 					case Business.DocumentType.Invoice:
-						return new InvoiceDocumentMetadataPrinter (businessContext, entity, options, printingUnits);
+						return new InvoiceDocumentPrinter (businessContext, entity, options, printingUnits);
 				}
 
 				return null;
@@ -1183,7 +1079,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		#endregion
 
 
-		private static readonly Font		font = Font.GetFont ("Arial", "Regular");
+		protected static readonly Font		font = Font.GetFont ("Arial", "Regular");
 		protected static readonly double	reportHeight = 7.0;
 
 		protected readonly BusinessLogic	businessLogic;
