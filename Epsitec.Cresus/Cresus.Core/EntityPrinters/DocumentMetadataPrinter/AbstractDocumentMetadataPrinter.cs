@@ -335,7 +335,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					var prevLine = (i == 0) ? null : this.ContentLines.ElementAt (i-1);
 					var nextLine = (i >= this.ContentLines.Count ()-1) ? null : this.ContentLines.ElementAt (i+1);
 
-					int rowUsed = this.BuildLine (this.table, row, accessors[i], prevLine, contentLine, nextLine);
+					int rowUsed = this.BuildLine (row, accessors[i], prevLine, contentLine, nextLine);
 					this.BuildCommonLine (this.table, row, accessors[i], contentLine);
 
 					if (rowUsed != 0)
@@ -518,7 +518,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 		}
 
-		protected virtual int BuildLine(TableBand table, int row, DocumentItemAccessor accessor, ContentLine prevLine, ContentLine line, ContentLine nextLine)
+		protected virtual int BuildLine(int row, DocumentItemAccessor accessor, ContentLine prevLine, ContentLine line, ContentLine nextLine)
 		{
 			return 0;
 		}
@@ -528,7 +528,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
-		protected void SetTableText(TableBand table, int row, TableColumnKeys column, FormattedText text)
+		protected void SetTableText(int row, TableColumnKeys column, FormattedText text)
 		{
 			if (this.GetColumnVisibility (column))
 			{
@@ -966,6 +966,16 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 
 			return new CellBorder (leftWidth, rightWidth, bottomWidth, topWidth);
+		}
+
+		protected void SetCellBorder(int column, int row, CellBorder value)
+		{
+			this.table.SetCellBorder (column, row, value);
+		}
+
+		protected void SetCellBorder(int row, CellBorder value)
+		{
+			this.table.SetCellBorder (row, value);
 		}
 
 

@@ -214,49 +214,49 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-		protected override int BuildLine(TableBand table, int row, DocumentItemAccessor accessor, ContentLine prevLine, ContentLine line, ContentLine nextLine)
+		protected override int BuildLine(int row, DocumentItemAccessor accessor, ContentLine prevLine, ContentLine line, ContentLine nextLine)
 		{
 			for (int i = 0; i < accessor.RowsCount; i++)
 			{
 				if (!this.HasOption (DocumentOption.LineNumber, "None"))
 				{
-					this.SetTableText (table, row+i, TableColumnKeys.LineNumber, accessor.GetContent (i, DocumentItemAccessorColumn.LineNumber));
+					this.SetTableText (row+i, TableColumnKeys.LineNumber, accessor.GetContent (i, DocumentItemAccessorColumn.LineNumber));
 				}
 
-				this.SetTableText (table, row+i, TableColumnKeys.MainQuantity, AbstractDocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.MainQuantity, DocumentItemAccessorColumn.MainUnit));
+				this.SetTableText (row+i, TableColumnKeys.MainQuantity, AbstractDocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.MainQuantity, DocumentItemAccessorColumn.MainUnit));
 
 				if (this.HasOption (DocumentOption.ArticleAdditionalQuantities))  // imprime les autres quantités ?
 				{
-					this.SetTableText (table, row+i, TableColumnKeys.AdditionalType, accessor.GetContent (i, DocumentItemAccessorColumn.AdditionalType));
-					this.SetTableText (table, row+i, TableColumnKeys.AdditionalQuantity, AbstractDocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.AdditionalQuantity, DocumentItemAccessorColumn.AdditionalUnit));
-					this.SetTableText (table, row+i, TableColumnKeys.AdditionalDate, AbstractDocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.AdditionalBeginDate, DocumentItemAccessorColumn.AdditionalEndDate));
+					this.SetTableText (row+i, TableColumnKeys.AdditionalType, accessor.GetContent (i, DocumentItemAccessorColumn.AdditionalType));
+					this.SetTableText (row+i, TableColumnKeys.AdditionalQuantity, AbstractDocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.AdditionalQuantity, DocumentItemAccessorColumn.AdditionalUnit));
+					this.SetTableText (row+i, TableColumnKeys.AdditionalDate, AbstractDocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.AdditionalBeginDate, DocumentItemAccessorColumn.AdditionalEndDate));
 				}
 
 				if (this.HasOption (DocumentOption.ArticleId))
 				{
-					this.SetTableText (table, row+i, TableColumnKeys.ArticleId, accessor.GetContent (i, DocumentItemAccessorColumn.ArticleId));
+					this.SetTableText (row+i, TableColumnKeys.ArticleId, accessor.GetContent (i, DocumentItemAccessorColumn.ArticleId));
 				}
 
-				this.SetTableText (table, row+i, TableColumnKeys.ArticleDescription, accessor.GetContent (i, DocumentItemAccessorColumn.ArticleDescription));
+				this.SetTableText (row+i, TableColumnKeys.ArticleDescription, accessor.GetContent (i, DocumentItemAccessorColumn.ArticleDescription));
 
-				this.SetTableText (table, row+i, TableColumnKeys.UnitPrice, accessor.GetContent (i, DocumentItemAccessorColumn.UnitPrice));
-				this.SetTableText (table, row+i, TableColumnKeys.Discount, accessor.GetContent (i, DocumentItemAccessorColumn.Discount));
-				this.SetTableText (table, row+i, TableColumnKeys.LinePrice, accessor.GetContent (i, DocumentItemAccessorColumn.LinePrice));
-				this.SetTableText (table, row+i, TableColumnKeys.Vat, accessor.GetContent (i, DocumentItemAccessorColumn.Vat));
+				this.SetTableText (row+i, TableColumnKeys.UnitPrice, accessor.GetContent (i, DocumentItemAccessorColumn.UnitPrice));
+				this.SetTableText (row+i, TableColumnKeys.Discount, accessor.GetContent (i, DocumentItemAccessorColumn.Discount));
+				this.SetTableText (row+i, TableColumnKeys.LinePrice, accessor.GetContent (i, DocumentItemAccessorColumn.LinePrice));
+				this.SetTableText (row+i, TableColumnKeys.Vat, accessor.GetContent (i, DocumentItemAccessorColumn.Vat));
 
 				var total = accessor.GetContent (i, DocumentItemAccessorColumn.Total);
 				if (line.Line is EndTotalDocumentItemEntity && i == accessor.RowsCount-1)
 				{
 					total = total.ApplyBold ();
 				}
-				this.SetTableText (table, row+i, TableColumnKeys.Total, total);
+				this.SetTableText (row+i, TableColumnKeys.Total, total);
 			}
 
 			int last = row+accessor.RowsCount-1;
 
 			if (line.Line is SubTotalDocumentItemEntity)
 			{
-				table.SetCellBorder (last, this.GetCellBorder (bottomBold: true));
+				this.SetCellBorder (last, this.GetCellBorder (bottomBold: true));
 			}
 
 			if (line.Line is EndTotalDocumentItemEntity)
@@ -265,14 +265,14 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				{
 					if (!this.onlyTotal)
 					{
-						table.SetCellBorder (last, this.GetCellBorder (topLess: true));
+						this.SetCellBorder (last, this.GetCellBorder (topLess: true));
 					}
 
-					table.SetCellBorder (this.tableColumns[TableColumnKeys.Total].Rank, last, new CellBorder (CellBorder.BoldWidth));
+					this.SetCellBorder (this.tableColumns[TableColumnKeys.Total].Rank, last, new CellBorder (CellBorder.BoldWidth));
 				}
 				else
 				{
-					table.SetCellBorder (last, this.GetCellBorder (bottomBold: true, topLess: true));
+					this.SetCellBorder (last, this.GetCellBorder (bottomBold: true, topLess: true));
 				}
 			}
 
