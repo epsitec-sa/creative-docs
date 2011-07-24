@@ -469,12 +469,23 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 			get
 			{
-				return null;
+				//	Donne nornalement toutes les lignes.
+				foreach (var line in this.Entity.Lines)
+				{
+					yield return new ContentLine (line);
+				}
 			}
 		}
 
+		#region ContentLine
 		protected class ContentLine
 		{
+			public ContentLine(AbstractDocumentItemEntity line)
+			{
+				this.Line = line;
+				this.GroupIndex = line.GroupIndex;
+			}
+
 			public ContentLine(AbstractDocumentItemEntity line, int groupIndex)
 			{
 				this.Line = line;
@@ -493,7 +504,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				internal set;
 			}
 		}
-	
+		#endregion
+
 		protected virtual void InitializeColumns()
 		{
 		}

@@ -114,14 +114,14 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				{
 					//	Ne donne que la dernière ligne qui est celle du grand total.
 					var totalLine = this.Entity.Lines[this.Entity.Lines.Count-1];
-					yield return new ContentLine (totalLine, totalLine.GroupIndex);
+					yield return new ContentLine (totalLine);
 				}
 				else
 				{
 					//	Donne nornalement toutes les lignes.
 					foreach (var line in this.Entity.Lines)
 					{
-						yield return new ContentLine (line, line.GroupIndex);
+						yield return new ContentLine (line);
 					}
 				}
 			}
