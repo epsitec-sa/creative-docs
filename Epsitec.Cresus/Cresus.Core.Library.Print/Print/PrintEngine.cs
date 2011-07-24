@@ -256,6 +256,7 @@ namespace Epsitec.Cresus.Core.Print
 					else  // erreur ?
 					{
 						sections.Add (new SectionToPrint (err));
+						break;
 					}
 
 					documentPrinterRank++;

@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			double dx, dy;
 
-			if (this.bitmap == null)
+			if (this.bitmap == null)  // erreur ?
 			{
 				double zoom, pageWidth, pageHeight;
 				this.ComputeGeometry (out zoom, out pageWidth, out pageHeight);
@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				dx = System.Math.Floor (zoom*pageWidth);
 				dy = System.Math.Floor (zoom*pageHeight);
 			}
-			else
+			else  // ok ?
 			{
 				dx = this.bitmap.Width;
 				dy = this.bitmap.Height;
@@ -118,13 +118,14 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.titleLayout.LayoutSize = rectTitle.Size;
 			this.titleLayout.Paint (rectTitle.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness (1), GlyphPaintStyle.Normal);
 
-			//	Affiche le bitmap.
 			if (this.bitmap == null)
 			{
+				//	Affiche l'erreur.
 				this.PaintError (graphics, rectPreview);
 			}
 			else
 			{
+				//	Affiche le bitmap.
 				rectPreview.Deflate (1);
 				graphics.PaintImage (this.bitmap, rectPreview);
 
@@ -171,7 +172,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			var textLayout = new TextLayout ();
 			textLayout.LayoutSize = textRect.Size;
-			textLayout.Alignment = ContentAlignment.MiddleCenter;
+			textLayout.Alignment = ContentAlignment.MiddleLeft;
 			textLayout.Text = page.Error.ToString ();
 			textLayout.Paint (textRect.BottomLeft, graphics);
 
@@ -183,6 +184,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private void ComputeGeometry(out double zoom, out double pageWidth, out double pageHeight)
 		{
+			//	Calcule la géométrie de la page.
 			double widgetWidth  = this.Client.Bounds.Width;
 			double widgetHeight = this.Client.Bounds.Height - XmlPrintedPagePreviewer.titleHeight;
 
