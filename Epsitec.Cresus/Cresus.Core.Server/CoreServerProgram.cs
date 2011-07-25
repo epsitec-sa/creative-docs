@@ -126,28 +126,25 @@ namespace Epsitec.Cresus.Core.Server
 		private void ExperimentalJSON(CoreSession session)
 		{
 			var context = session.GetBusinessContext ();
-
-			var customer = (from x in context.GetAllEntities<CustomerEntity> ()
-							where x.Relation.Person is NaturalPersonEntity
-							let person = x.Relation.Person as NaturalPersonEntity
-							where person.Lastname == "Arnaud"
-							select x).FirstOrDefault ();
-
 			var writer = new JsonFx.Json.JsonWriter ();
+
+			var customers = from x in context.GetAllEntities<CustomerEntity> ()
+							select x;
 
 			// Stackoverflow
 			//var json = writer.Write (customer);
 
-			var p = customer.Relation.Person as NaturalPersonEntity;
+			var obj = new List<object> ();
 
-			var obj = new
+			customers.ForEach (c => obj.Add (new
 			{
-				name = p.Firstname
-			};
+				firstName = c.IdA,
+				lastName = c.IdB
+			}));
 
 			var json = writer.Write (obj);
 
-			System.IO.File.WriteAllText ("web/data/person.json", json);
+			System.IO.File.WriteAllText ("web/data/persons.json", json);
 
 		}
 	}
