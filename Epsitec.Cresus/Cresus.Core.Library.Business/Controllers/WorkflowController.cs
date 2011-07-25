@@ -2,6 +2,9 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Types;
 using Epsitec.Common.Types.Collections;
 
 using Epsitec.Cresus.Core.Business;
@@ -26,7 +29,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			this.orchestrator         = orchestrator;
 			this.mainViewController   = this.orchestrator.MainViewController;
-			this.actionViewController = this.mainViewController.ActionViewController;
 			this.data                 = this.orchestrator.Data;
 			this.businessContexts     = new List<BusinessContext> ();
 			this.activeTransitions    = new List<WorkflowTransition> ();
@@ -114,7 +116,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private bool UpdateActionButtons()
 		{
-			this.actionViewController.ClearButtons ();
+			this.ClearButtons ();
 
 			int index = 0;
 
@@ -135,7 +137,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			var description = edge.Edge.Description;
 			var action      = this.GetActionCallback (edge);
 
-			this.actionViewController.AddButton (buttonId, title, description, action);
+			this.AddButton (buttonId, title, description, action);
 		}
 
 		private System.Action GetActionCallback(WorkflowTransition transition)
@@ -244,8 +246,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private static IEnumerable<WorkflowEdgeEntity> GetEnabledEdges(WorkflowNodeEntity node)
 		{
-			if ((node.IsNull ()) ||
-				(node.Edges.Count == 0))
+			if (node.IsNull () || node.Edges.Count == 0)
 			{
 				return null;
 			}
@@ -256,15 +257,51 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		private readonly DataViewOrchestrator	orchestrator;
-		private readonly MainViewController		mainViewController;
-		private readonly ActionViewController	actionViewController;
-		private readonly CoreData				data;
-		private readonly List<BusinessContext>	businessContexts;
-		private readonly List<WorkflowTransition>		activeTransitions;
-		private readonly DataContext			dataContext;
+		private void ClearButtons()
+		{
+			//	Supprime tous les boutons dans la section Workflow du ruban.
+			var buttons = WorkflowController.ribbonWorkflowContainer.Children.OfType<Button> ().ToArray ();
 
-		private bool							isDirty;
-		private bool							isDisposed;
+			foreach (var button in buttons)
+			{
+				button.Dispose ();
+			}
+		}
+
+		private void AddButton(string id, FormattedText title, FormattedText description, System.Action callback)
+		{
+			//	Ajoute un bouton dans la section Workflow du ruban.
+			var button = new Button
+			{
+				Parent = WorkflowController.ribbonWorkflowContainer,
+				Name = id,
+				FormattedText = title,
+				ButtonStyle = ButtonStyle.Confirmation,
+				Dock = DockStyle.Stacked,
+				PreferredWidth = 120,
+				PreferredHeight = Library.UI.Constants.ButtonLargeWidth+10,
+				Margins = new Margins (0, 1, 0, 0),
+			};
+
+			if (!description.IsNullOrEmpty)
+			{
+				ToolTip.Default.SetToolTip (button, description);
+			}
+
+			button.Clicked += (sender, e) => callback ();
+		}
+
+
+		public static RibbonSection ribbonWorkflowContainer;
+
+		private readonly DataViewOrchestrator		orchestrator;
+		private readonly MainViewController			mainViewController;
+		private readonly CoreData					data;
+		private readonly List<BusinessContext>		businessContexts;
+		private readonly List<WorkflowTransition>	activeTransitions;
+		private readonly DataContext				dataContext;
+
+		private bool								isDirty;
+		private bool								isDisposed;
 	}
 }

@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				Parent = container,
 				Dock = DockStyle.Fill,
-				Name = "Ribbon"
+				Name = "Ribbon",
 			};
 
 			this.persistenceManager.Register (this.ribbonBook);
@@ -140,8 +140,9 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void CreateRibbonHomePage()
 		{
-			this.ribbonPageHome     = RibbonViewController.CreateRibbonPage (this.ribbonBook, "Home", "Principal");
-			this.ribbonPageBusiness = RibbonViewController.CreateRibbonPage (this.ribbonBook, "Business", "Documents commerciaux");
+			this.ribbonPageHome     = RibbonViewController.CreateRibbonPage (this.ribbonBook, "Home",     "Principal");
+			this.ribbonPageWorkflow = RibbonViewController.CreateRibbonPage (this.ribbonBook, "Workflow", "Flux");
+			this.ribbonPageBusiness = RibbonViewController.CreateRibbonPage (this.ribbonBook, "Business", "Document commercial");
 
 			this.ribbonBook.ActivePage = this.ribbonPageHome;
 
@@ -155,6 +156,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.CreateRibbonStateSection (this.ribbonPageHome);
 			this.CreateRibbonSettingsSection (this.ribbonPageHome);
 			this.CreateRibbonNavigationSection (this.ribbonPageHome);
+
+			//	Workflow ribbon:
+			this.CreateRibbonUserSection (this.ribbonPageWorkflow);
+			this.CreateRibbonEditSection (this.ribbonPageWorkflow);
+
+			this.CreateRibbonWorkflowContainerSection (this.ribbonPageWorkflow);
 
 			//	Business ribbon:
 			this.CreateRibbonUserSection (this.ribbonPageBusiness);
@@ -519,6 +526,32 @@ namespace Epsitec.Cresus.Core.Controllers
 			section.Children.Add (this.CreateButton (ApplicationCommands.MultilingualEdition));
 			section.Children.Add (this.CreateButton (Res.Commands.Global.ShowSettings));
 			section.Children.Add (this.CreateButton (Res.Commands.Global.ShowDebug));
+		}
+		#endregion
+
+		#region Create workflow ribbon sections
+		private void CreateRibbonWorkflowContainerSection(RibbonPage page)
+		{
+			this.workflowContainer = new RibbonSection (page)
+			{
+				Name = "Workflow.Container",
+				Title = "Nouveau document",
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				Dock = DockStyle.Fill,
+			};
+
+			//	Pour forcer la hauteur lorsque le ruban est vide.
+			//	Un simple this.workflowContainer.PreferredHeight = 78 ne fonctionne pas !
+			new StaticText
+			{
+				Parent = this.workflowContainer,
+				PreferredWidth = 1,
+				PreferredHeight = 52,
+				Dock = DockStyle.StackEnd,
+			};
+
+			// TODO: C'est un moyen bricolé pour que WorkflowController sache où placer ses boutons.
+			WorkflowController.ribbonWorkflowContainer = this.workflowContainer;
 		}
 		#endregion
 
@@ -980,8 +1013,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				handler (this);
 			}
 		}
-		
-		
+
+
 		public event EventHandler				DatabaseMenuDefaultCommandNameChanged;
 
 		private readonly CommandDispatcher		commandDispatcher;
@@ -992,6 +1025,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		
 		private RibbonBook						ribbonBook;
 		private RibbonPage						ribbonPageHome;
+		private RibbonPage						ribbonPageWorkflow;
 		private RibbonPage						ribbonPageBusiness;
 
 		private IconButton						databaseButton;
@@ -1000,5 +1034,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private List<IconOrImageButton>			authenticateUserButtons;
 		private List<StaticText>				authenticateUserWidgets;
+
+		private RibbonSection					workflowContainer;
 	}
 }

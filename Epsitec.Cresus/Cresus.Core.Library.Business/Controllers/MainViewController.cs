@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			
 			this.Orchestrator.RegisterApplicationComponent (this);
 
-			this.actionViewController      = new ActionViewController (this.Orchestrator);
+			//?this.actionViewController      = new ActionViewController (this.Orchestrator);
 			this.previewViewController     = new PreviewViewController (this.Orchestrator);
 			this.browserViewController     = new BrowserViewController (this.Orchestrator);
 			this.browserSettingsController = new BrowserSettingsController (this.browserViewController);
@@ -88,6 +88,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+#if false
 		public ActionViewController ActionViewController
 		{
 			get
@@ -95,6 +96,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				return this.actionViewController;
 			}
 		}
+#endif
 
 		public PreviewViewController PreviewViewController
 		{
@@ -109,7 +111,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			yield return this.browserViewController;
 			yield return this.browserSettingsController;
 			yield return this.DataViewController;
-			yield return this.actionViewController;
+			//?yield return this.actionViewController;
 			yield return this.previewViewController;
 		}
 
@@ -122,7 +124,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.browserSettingsController.CreateUI (this.browserSettingsPanel);
 			this.DataViewController.CreateUI (this.mainPanel);
 			this.previewViewController.CreateUI (this.rightPreviewPanel);
-			this.actionViewController.CreateUI (this.rightActionPanel);
 
 			this.BrowserSettingsMode = BrowserSettingsMode.Compact;
 		}
@@ -134,14 +135,13 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public void SetActionPanelVisibility(bool visibility)
 		{
-			this.rightActionPanel.Visibility = visibility;
-			this.rightSplitter.Visibility = this.rightActionPanel.Visibility | this.rightPreviewPanel.Visibility;
+			// TODO: Montrer la section "Workflow" du ruban.
 		}
 
 		public void SetPreviewPanelVisibility(bool visibility)
 		{
 			this.rightPreviewPanel.Visibility = visibility;
-			this.rightSplitter.Visibility = this.rightActionPanel.Visibility | this.rightPreviewPanel.Visibility;
+			this.rightSplitter.Visibility = this.rightPreviewPanel.Visibility;
 		}
 
 
@@ -220,15 +220,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void CreateUIRightPanels()
 		{
-			this.rightActionPanel = new FrameBox
-			{
-				Parent = this.frame,
-				Name = "RightActionPanel",
-				Dock = DockStyle.Right,
-				Padding = new Margins (0, 0, 0, 0),
-				Visibility = false,
-			};
-			
 			this.rightPreviewPanel = new FrameBox
 			{
 				Parent = this.frame,
@@ -403,7 +394,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly CommandContext commandContext;
 		private readonly BrowserViewController browserViewController;
 		private readonly BrowserSettingsController browserSettingsController;
-		private readonly ActionViewController actionViewController;
+		//?private readonly ActionViewController actionViewController;
 		private readonly PreviewViewController previewViewController;
 
 		private FrameBox frame;
@@ -414,7 +405,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		private VSplitter splitter;
 		private VSplitter rightSplitter;
 		private FrameBox mainPanel;
-		private FrameBox rightActionPanel;
 		private FrameBox rightPreviewPanel;
 
 		private BrowserSettingsMode browserSettingsMode;
