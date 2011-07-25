@@ -176,6 +176,7 @@
     <Content Include="lib\Nancy.dll" />
     <Content Include="lib\Nancy.Hosting.Self.dll" />
     <Content Include="lib\Nancy.Hosting.Wcf.dll" />
+    <Content Include="lib\README.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
