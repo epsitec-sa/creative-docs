@@ -152,6 +152,14 @@ namespace Epsitec.Cresus.Core.Print.Containers
 
 			band.BuildSections (width, rest, height, height);
 
+			if (band.SectionCount == 0)  // on n'a rien pu mettre ?
+			{
+				this.AddNewPage (PageType.Following);  // nouvelle page...
+
+				rest = this.currentVerticalPosition - this.pageMargins.Bottom;
+				band.BuildSections (width, rest, height, height);  // ...et on essaie à nouveau
+			}
+
 			int sectionCount = band.SectionCount;
 			for (int section = 0; section < sectionCount; section++)
 			{

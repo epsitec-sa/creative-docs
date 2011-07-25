@@ -448,8 +448,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 		/// <param name="initialHeight">Hauteur de la première section</param>
 		/// <param name="middleheight">Hauteur des sections suivantes</param>
 		/// <param name="finalHeight">Hauteur de la dernière section</param>
-		/// <returns>Retourne false s'il n'a pas été possible de mettre tout le contenu</returns>
-		public override bool BuildSections(double width, double initialHeight, double middleheight, double finalHeight)
+		public override void BuildSections(double width, double initialHeight, double middleheight, double finalHeight)
 		{
 			//	initialHeight et finalHeight doivent être plus petit ou égal à middleheight.
 			System.Diagnostics.Debug.Assert (initialHeight <= middleheight);
@@ -475,14 +474,12 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 				if (sectionCount == this.sectionsInfo.Count && !first)
 				{
-					return false;
+					return;
 				}
 
 				first = false;
 			}
 			while (!ending);
-
-			return true;
 		}
 
 		private void JustifInitialize(int row)

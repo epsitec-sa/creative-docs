@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
-		protected void BuildHeader(BillingDetailEntity billingDetails)
+		protected void BuildHeader()
 		{
 			double leftMargin = this.GetOptionValue (DocumentOption.LeftMargin, 20);
 
@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 
 			var titleBand = new TextBand ();
-			titleBand.Text = InvoiceDocumentHelper.GetTitle (this.Metadata, this.Entity, billingDetails);
+			titleBand.Text = this.Title;
 			titleBand.Font = font;
 			titleBand.FontSize = this.FontSize*1.6;
 			this.documentContainer.AddAbsolute (titleBand, new Rectangle (leftMargin, this.RequiredPageSize.Height-82, 90, 10));
@@ -201,10 +201,10 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
-		protected void BuildArticles()
+		protected void BuildArticles(double? verticalPosition = null)
 		{
 			//	Ajoute les articles dans le document.
-			this.documentContainer.CurrentVerticalPosition = this.RequiredPageSize.Height-87;
+			this.documentContainer.CurrentVerticalPosition = verticalPosition.HasValue ? verticalPosition.Value : this.RequiredPageSize.Height-87;
 
 			this.InitializeColumns ();
 
@@ -415,6 +415,14 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
+		protected virtual FormattedText Title
+		{
+			get
+			{
+				return InvoiceDocumentHelper.GetTitle (this.Metadata, this.Entity, null);
+			}
+		}
+
 		protected virtual TableBand BuildConcerne()
 		{
 			var text = TextFormatter.FormatText (this.Metadata.DocumentTitle);
@@ -616,7 +624,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
-		protected void BuildPages(BillingDetailEntity billingDetails, int firstPage)
+		protected void BuildPages(int firstPage)
 		{
 			//	Met les numéros de page.
 			double reportHeight = this.IsDocumentWithoutPrice ? 0 : AbstractDocumentMetadataPrinter.reportHeight*2;
@@ -629,7 +637,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				this.documentContainer.CurrentPage = page;
 
 				var leftHeader = new TextBand ();
-				leftHeader.Text = InvoiceDocumentHelper.GetTitle (this.Metadata, this.Entity, billingDetails);
+				leftHeader.Text = this.Title;
 				leftHeader.Alignment = ContentAlignment.BottomLeft;
 				leftHeader.Font = font;
 				leftHeader.FontSize = this.FontSize*1.3;
@@ -1065,8 +1073,14 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 				switch (documentMetadata.DocumentCategory.DocumentType)
 				{
+					case Business.DocumentType.SalesQuote:
+						return new SalesQuoteDocumentPrinter (businessContext, entity, options, printingUnits);
+
 					case Business.DocumentType.ProductionOrder:
 						return new ProductionOrderDocumentPrinter (businessContext, entity, options, printingUnits);
+
+					case Business.DocumentType.ProductionChecklist:
+						return new ProductionChecklistDocumentPrinter (businessContext, entity, options, printingUnits);
 
 					case Business.DocumentType.Invoice:
 						return new InvoiceDocumentPrinter (businessContext, entity, options, printingUnits);

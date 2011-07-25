@@ -74,8 +74,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 		/// <param name="initialHeight">Hauteur de la première section</param>
 		/// <param name="middleheight">Hauteur des sections suivantes</param>
 		/// <param name="finalHeight">Hauteur de la dernière section</param>
-		/// <returns>Retourne false s'il n'a pas été possible de mettre tout le contenu</returns>
-		public override bool BuildSections(double width, double initialHeight, double middleheight, double finalHeight)
+		public override void BuildSections(double width, double initialHeight, double middleheight, double finalHeight)
 		{
 			if (this.image == null)
 			{
@@ -89,8 +88,6 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 				this.width = this.image.Width * scale;
 			}
-
-			return true;
 		}
 
 		public override int SectionCount

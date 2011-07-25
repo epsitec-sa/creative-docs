@@ -29,34 +29,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.EntityPrinters
 {
-	public class InvoiceDocumentPrinter : AbstractDocumentMetadataPrinter
+	public class SalesQuoteDocumentPrinter : AbstractDocumentMetadataPrinter
 	{
-		public InvoiceDocumentPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
+		public SalesQuoteDocumentPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 			: base (businessContext, entity, options, printingUnits)
 		{
-		}
-
-
-		protected override Margins PageMargins
-		{
-			get
-			{
-				double leftMargin   = this.GetOptionValue (DocumentOption.LeftMargin, 20);
-				double rightMargin  = this.GetOptionValue (DocumentOption.RightMargin, 20);
-				double topMargin    = this.GetOptionValue (DocumentOption.TopMargin, 20);
-				double bottomMargin = this.GetOptionValue (DocumentOption.BottomMargin, 20);
-
-				double h = AbstractDocumentMetadataPrinter.reportHeight;
-
-				if (this.HasIsr && this.HasOption (DocumentOption.IsrPosition, "WithInside"))
-				{
-					return new Margins (leftMargin, rightMargin, topMargin+h*2, h+InvoiceDocumentPrinter.marginBeforeIsr+AbstractIsrBand.DefautlSize.Height);
-				}
-				else
-				{
-					return new Margins (leftMargin, rightMargin, topMargin+h*2, h+bottomMargin);
-				}
-			}
 		}
 
 
@@ -64,84 +41,19 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 			base.BuildSections ();
 
-			if (this.Entity.BillingDetails.Count == 0)
-			{
-				return "Il n'y a rien à imprimer, car la facture ne contient aucune donnée de facturation.";
-			}
+			int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
 
-			this.onlyTotal = false;
+			this.BuildHeader ();
+			this.BuildArticles ();
+			this.BuildPages (firstPage);
+			this.BuildReportHeaders (firstPage);
+			this.BuildReportFooters (firstPage);
 
-			if (!this.HasIsr || this.HasOption (DocumentOption.IsrPosition, "Without") || this.PreviewMode == Print.PreviewMode.ContinuousPreview)
-			{
-				if (this.Entity.BillingDetails.Count != 0)
-				{
-					this.billingDetailsEntity = this.Entity.BillingDetails[0];
-					int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
-
-					this.BuildHeader ();
-					this.BuildArticles ();
-					this.BuildConditions ();
-					this.BuildPages (firstPage);
-					this.BuildReportHeaders (firstPage);
-					this.BuildReportFooters (firstPage);
-
-					this.documentContainer.Ending (firstPage);
-				}
-			}
-			else
-			{
-				int documentRank = 0;
-				foreach (var billingDetails in this.Entity.BillingDetails)
-				{
-					this.billingDetailsEntity = billingDetails;
-					this.documentContainer.DocumentRank = documentRank++;
-					int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
-
-					this.BuildHeader ();
-					this.BuildArticles ();
-					this.BuildConditions ();
-					this.BuildPages (firstPage);
-					this.BuildReportHeaders (firstPage);
-					this.BuildReportFooters (firstPage);
-					this.BuildIsrs (firstPage);
-
-					this.documentContainer.Ending (firstPage);
-					this.onlyTotal = true;
-				}
-			}
+			this.documentContainer.Ending (firstPage);
 
 			return null;  // ok
 		}
 
-
-		protected override FormattedText Title
-		{
-			get
-			{
-				return InvoiceDocumentHelper.GetTitle (this.Metadata, this.Entity, this.billingDetailsEntity);
-			}
-		}
-
-		protected override IEnumerable<ContentLine> ContentLines
-		{
-			get
-			{
-				if (this.onlyTotal)
-				{
-					//	Ne donne que la dernière ligne qui est celle du grand total.
-					var totalLine = this.Entity.Lines[this.Entity.Lines.Count-1];
-					yield return new ContentLine (totalLine);
-				}
-				else
-				{
-					//	Donne nornalement toutes les lignes.
-					foreach (var line in this.Entity.Lines)
-					{
-						yield return new ContentLine (line);
-					}
-				}
-			}
-		}
 
 		protected override void InitializeColumns()
 		{
@@ -188,8 +100,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			get
 			{
 				var mode = DocumentItemAccessorMode.UseMainColumns |
-						   DocumentItemAccessorMode.DescriptionIndented |
-						   DocumentItemAccessorMode.UseArticleName;  // le nom court suffit sur une facture
+						   DocumentItemAccessorMode.DescriptionIndented;
 
 				if (this.HasOption (DocumentOption.ArticleAdditionalQuantities))  // imprime les autres quantités ?
 				{
@@ -279,11 +190,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			{
 				if (this.IsWithFrame)
 				{
-					if (!this.onlyTotal)
-					{
-						this.SetCellBorder (last, this.GetCellBorder (topLess: true));
-					}
-
 					this.SetCellBorder (this.tableColumns[TableColumnKeys.Total].Rank, last, new CellBorder (CellBorder.BoldWidth));
 				}
 				else
@@ -300,130 +206,5 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			this.RemoveRightBorder (TableColumnKeys.AdditionalType);
 			this.RemoveRightBorder (TableColumnKeys.AdditionalQuantity);
 		}
-
-
-
-		private void BuildConditions()
-		{
-			//	Met les conditions à la fin de la facture.
-			FormattedText conditions = FormattedText.Join (FormattedText.HtmlBreak, this.billingDetailsEntity.Text, this.billingDetailsEntity.AmountDue.PaymentMode.Description);
-
-			if (!conditions.IsNullOrEmpty)
-			{
-				var band = new TextBand ();
-				band.Text = conditions;
-				band.FontSize = this.FontSize;
-
-				this.documentContainer.AddFromTop (band, 0);
-			}
-		}
-
-
-		private void BuildIsrs(int firstPage)
-		{
-			if (this.HasOption (DocumentOption.IsrPosition, "WithInside"))
-			{
-				this.BuildInsideIsrs (firstPage);
-			}
-
-			if (this.HasOption (DocumentOption.IsrPosition, "WithOutside"))
-			{
-				this.BuildOutsideIsr (firstPage);
-			}
-		}
-
-		private void BuildInsideIsrs(int firstPage)
-		{
-			//	Met un BVR orangé ou un BV rose en bas de chaque page.
-			for (int page = firstPage; page < this.documentContainer.PageCount (); page++)
-			{
-				this.documentContainer.CurrentPage = page;
-
-				this.BuildIsr (mackle: page != this.documentContainer.PageCount ()-1);
-			}
-		}
-
-		private void BuildOutsideIsr(int firstPage)
-		{
-			//	Met un BVR orangé ou un BV rose sur une dernière page séparée.
-			var bounds = new Rectangle (Point.Zero, AbstractIsrBand.DefautlSize);
-
-			if (this.documentContainer.PageCount () - firstPage > 1 ||
-				this.documentContainer.CurrentVerticalPosition - InvoiceDocumentPrinter.marginBeforeIsr < bounds.Top ||
-				this.HasPrintingUnitDefined (PageType.Single) == false)
-			{
-				//	On ne prépare pas une nouvelle page si on peut mettre la facture
-				//	et le BV sur une seule page !
-				this.documentContainer.PrepareEmptyPage (PageType.Isr);
-			}
-
-			this.BuildIsr ();
-		}
-
-		private void BuildIsr(bool mackle=false)
-		{
-			//	Met un BVR orangé ou un BV rose au bas de la page courante.
-			AbstractIsrBand isr;
-
-			if (this.HasOption (DocumentOption.IsrType, "Isr"))
-			{
-				isr = new IsrBand ();  // BVR orangé
-			}
-			else
-			{
-				isr = new IsBand ();  // BV rose
-			}
-
-			isr.PaintIsrSimulator = this.HasOption (DocumentOption.IsrFacsimile);
-			isr.From = this.Entity.BillToMailContact.GetSummary ();
-			isr.To = this.billingDetailsEntity.IsrDefinition.SubscriberAddress;
-			isr.Communication = InvoiceDocumentHelper.GetTitle (this.Metadata, this.Entity, this.billingDetailsEntity);
-
-			isr.Slip = new IsrSlip (this.billingDetailsEntity);
-			isr.NotForUse = mackle;  // pour imprimer "XXXXX XX" sur un faux BVR
-
-			var bounds = new Rectangle (Point.Zero, AbstractIsrBand.DefautlSize);
-			this.documentContainer.AddAbsolute (isr, bounds);
-		}
-
-
-		private bool HasIsr
-		{
-			//	Indique s'il faut imprimer le BV. Pour cela, il faut que l'unité d'impression soit définie pour le type PageType.Isr.
-			//	En mode DocumentOption.IsrPosition = "WithOutside", cela évite d'imprimer à double un BV sur l'imprimante 'Blanc'.
-			get
-			{
-				if (this.HasOption (DocumentOption.IsrPosition, "WithInside"))
-				{
-					return true;
-				}
-
-				if (this.HasOption (DocumentOption.IsrPosition, "WithOutside"))
-				{
-					if (this.currentPrintingUnit != null)
-					{
-						var example = new DocumentPrintingUnitsEntity ();
-						example.Code = this.currentPrintingUnit.DocumentPrintingUnitCode;
-
-						var documentPrintingUnits = this.businessContext.DataContext.GetByExample<DocumentPrintingUnitsEntity> (example).FirstOrDefault ();
-
-						if (documentPrintingUnits != null)
-						{
-							var pageTypes = documentPrintingUnits.GetPageTypes ();
-
-							return pageTypes.Contains (PageType.Isr);
-						}
-					}
-				}
-
-				return false;
-			}
-		}
-
-
-		private static readonly double		marginBeforeIsr = 10;
-
-		private bool						onlyTotal;
-		private BillingDetailEntity			billingDetailsEntity;
 	}
 }
