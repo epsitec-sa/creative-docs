@@ -262,7 +262,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private IEnumerable<ArticleQuantityType> DebugArticleQuantityTypeEditionEnabled
 		{
-			//	Retourne la liste des types de quantité éditables.
+			//	Retourne la liste complète des types de quantité, pour le debug.
 			get
 			{
 				yield return ArticleQuantityType.Ordered;				// commandé

@@ -37,6 +37,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			var documentMetadata = this.businessContext.GetMasterEntity<DocumentMetadataEntity> ();
 			System.Diagnostics.Debug.Assert (documentMetadata != null);
 			this.businessLogic = new BusinessLogic (this.businessContext as BusinessContext, documentMetadata);
+
+			this.columnsWithoutRightBorder = new List<int> ();
 		}
 
 		public override string JobName
@@ -69,7 +71,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				double topMargin    = this.GetOptionValue (DocumentOption.TopMargin,    20);
 				double bottomMargin = this.GetOptionValue (DocumentOption.BottomMargin, 20);
 
-				double h = this.IsDocumentWithoutPrice ? 0 : AbstractDocumentMetadataPrinter.reportHeight;
+				double h = this.HasPrices ? AbstractDocumentMetadataPrinter.reportHeight : 0;
 
 				return new Margins (leftMargin, rightMargin, topMargin+h*2, h+bottomMargin);
 			}
@@ -249,6 +251,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				}
 			}
 
+			this.FinishColumns ();
+
 			//	Deuxième passe pour générer les colonnes et les lignes du tableau.
 			this.table = new TableBand ();
 			this.table.ColumnsCount = this.visibleColumnCount;
@@ -268,7 +272,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 
 			this.InitializeRowAlignment (this.table, row);
-			this.table.SetCellBorder (row, this.GetCellBorder (bottomBold: true));
+			this.SetCellBorder (row, this.GetCellBorder (bottomBold: true));
 
 			row++;
 
@@ -286,7 +290,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					var nextLine = (i >= this.ContentLines.Count ()-1) ? null : this.ContentLines.ElementAt (i+1);
 
 					int rowUsed = this.BuildLine (row, accessors[i], prevLine, contentLine, nextLine);
-					this.BuildCommonLine (this.table, row, accessors[i], contentLine);
+					this.BuildCommonLine (row, accessors[i], contentLine);
 
 					if (rowUsed != 0)
 					{
@@ -299,8 +303,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					}
 				}
 			}
-
-			this.BuildFinish ();
 
 			//	Détermine les largeurs des colonnes.
 			double fixedWidth = 0;
@@ -370,7 +372,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			this.lastRowForEachSection = this.table.GetLastRowForEachSection ();
 		}
 
-		private void BuildCommonLine(TableBand table, int row, DocumentItemAccessor accessor, ContentLine line)
+		private void BuildCommonLine(int row, DocumentItemAccessor accessor, ContentLine line)
 		{
 			FormattedText text = null;
 
@@ -389,7 +391,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				text = accessor.GetContent (0, DocumentItemAccessorColumn.FullNumber);
 			}
 
-			table.SetText (this.tableColumns[TableColumnKeys.LineNumber].Rank, row, text, this.FontSize);
+			this.table.SetText (this.tableColumns[TableColumnKeys.LineNumber].Rank, row, text, this.FontSize);
 
 			var topGap = 0;  // pas d'espace supplémentaire
 
@@ -410,10 +412,18 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				}
 			}
 
-			var cellBorder = table.GetCellBorder (0, row);
-			table.SetCellBorder (0, row, new CellBorder (cellBorder.LeftWidth, cellBorder.RightWidth, cellBorder.BottomWidth, cellBorder.TopWidth, topGap, cellBorder.Color));
+			var cellBorder = this.table.GetCellBorder (0, row);
+			this.SetCellBorder (0, row, new CellBorder (cellBorder.LeftWidth, cellBorder.RightWidth, cellBorder.BottomWidth, cellBorder.TopWidth, topGap, cellBorder.Color));
 		}
 
+
+		protected virtual bool HasPrices
+		{
+			get
+			{
+				return false;
+			}
+		}
 
 		protected virtual FormattedText Title
 		{
@@ -513,13 +523,13 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 		}
 
+		protected virtual void FinishColumns()
+		{
+		}
+
 		protected virtual int BuildLine(int row, DocumentItemAccessor accessor, ContentLine prevLine, ContentLine line, ContentLine nextLine)
 		{
 			return 0;
-		}
-
-		protected virtual void BuildFinish()
-		{
 		}
 
 
@@ -591,27 +601,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
-		private bool IsPrintableArticle(ArticleDocumentItemEntity line)
-		{
-#if false
-			if (!this.HasOption (DocumentOption.ArticleDelayed))  // n'imprime pas les articles retardés ?
-			{
-				foreach (var quantity in line.ArticleQuantities)
-				{
-					if (quantity.QuantityColumn.QuantityType == Business.ArticleQuantityType.Billed)
-					{
-						return true;
-					}
-				}
-
-				return false;
-			}
-#endif
-
-			return true;
-		}
-
-
 		private void InitializeRowAlignment(TableBand table, int row)
 		{
 			foreach (var column in this.tableColumns.Values)
@@ -627,7 +616,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		protected void BuildPages(int firstPage)
 		{
 			//	Met les numéros de page.
-			double reportHeight = this.IsDocumentWithoutPrice ? 0 : AbstractDocumentMetadataPrinter.reportHeight*2;
+			double reportHeight = this.HasPrices ? AbstractDocumentMetadataPrinter.reportHeight*2 : 0;
 
 			var leftBounds  = new Rectangle (this.PageMargins.Left, this.RequiredPageSize.Height-this.PageMargins.Top+reportHeight+1, 80, 5);
 			var rightBounds = new Rectangle (this.RequiredPageSize.Width-this.PageMargins.Right-80, this.RequiredPageSize.Height-this.PageMargins.Top+reportHeight+1, 80, 5);
@@ -673,8 +662,10 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				var table = new TableBand ();
 				table.ColumnsCount = this.visibleColumnCount;
 				table.RowsCount = 2;
-				table.CellBorder = this.GetCellBorder (bottomBold: true);
 				table.CellMargins = new Margins (this.CellMargin);
+
+				this.SetCellBorder (table, 0, this.GetCellBorder (bottomBold: true));
+				this.SetCellBorder (table, 1, this.GetCellBorder (bottomBold: true));
 
 				//	Génère une première ligne d'en-tête (titres des colonnes).
 				foreach (var column in this.tableColumns.Values)
@@ -727,8 +718,9 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				var table = new TableBand ();
 				table.ColumnsCount = this.visibleColumnCount;
 				table.RowsCount = 1;
-				table.CellBorder = this.GetCellBorder (topBold: true);
 				table.CellMargins = new Margins (this.CellMargin);
+
+				this.SetCellBorder (table, 0, this.GetCellBorder (topBold: true));
 
 				foreach (var column in this.tableColumns.Values)
 				{
@@ -789,17 +781,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-
-		private bool IsDocumentWithoutPrice
-		{
-			get
-			{
-				return this.DocumentType == Business.DocumentType.DeliveryNote ||
-					   this.DocumentType == Business.DocumentType.ShipmentChecklist ||
-					   this.DocumentType == Business.DocumentType.ProductionOrder ||
-					   this.DocumentType == Business.DocumentType.ProductionChecklist;
-			}
-		}
 
 		protected bool IsColumnsOrderQD
 		{
@@ -880,98 +861,44 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			return new CellBorder (leftWidth, rightWidth, bottomWidth, topWidth);
 		}
 
-		protected void SetCellBorder(int column, int row, CellBorder value)
-		{
-			this.table.SetCellBorder (column, row, value);
-		}
-
 		protected void SetCellBorder(int row, CellBorder value)
 		{
-			this.table.SetCellBorder (row, value);
+			this.SetCellBorder (this.table, row, value);
 		}
 
-
-		protected void TableMakeBlock(TableBand table, int row, int rowsCount)
+		protected void SetCellBorder(TableBand table, int row, CellBorder value)
 		{
-			if (rowsCount == 1)
+			for (int column = 0; column < this.table.ColumnsCount; column++)
 			{
-				table.SetCellBorder (row, this.GetCellBorder (bottomBold: true));
-			}
-			else
-			{
-				for (int i = 0; i < rowsCount; i++)
-				{
-					bool first = (i == 0);
-					bool last  = (i == rowsCount-1);
-
-					if (!last)
-					{
-						table.SetUnbreakableRow (row+i, true);
-					}
-
-					bool topBold    = first;
-					bool bottomBold = last;
-					bool topLess    = !first;
-					bool bottomLess = !last;
-
-					double? topForce    = null;
-					double? bottomForce = null;
-
-					if (!first)
-					{
-						topForce = 0.5;
-					}
-
-					if (!last)
-					{
-						bottomForce = 0.5;
-					}
-
-					table.SetCellBorder (row+i, this.GetCellBorder (bottomBold, topBold, bottomLess, topLess));
-					table.SetCellMargins (row+i, this.GetCellMargins (bottomForce, topForce));
-				}
+				this.SetCellBorder (table, column, row, value);
 			}
 		}
 
-		protected void RemoveRightBorder(TableColumnKeys column)
+		protected void SetCellBorder(int column, int row, CellBorder value)
+		{
+			this.SetCellBorder (this.table, column, row, value);
+		}
+
+		protected void SetCellBorder(TableBand table, int column, int row, CellBorder value)
 		{
 			if (this.IsWithFrame)
 			{
-				var columns = this.tableColumns.Where (x => x.Value.Visible).ToArray ();
-
-				for (int row = 0; row < this.table.RowsCount; row++)
+				if (this.columnsWithoutRightBorder.Contains (column))
 				{
-					double dimmed = (row == 0) ? 0 : 0.01;  // laisse un trait hyper-fin si on n'est pas dans l'en-tête
+					//	Plus de trait à droite.
+					value = new CellBorder (value.LeftWidth, 0, value.BottomWidth, value.TopWidth, value.TopGap, value.Color);
+				}
 
-					for (int i = 0; i < columns.Count ()-1; i++)
-					{
-						if (columns[i].Key == column)
-						{
-							CellBorder b1, b2;
-
-							b1 = this.table.GetCellBorder (i, row);
-							if (b1.IsEmpty)
-							{
-								b1 = this.table.CellBorder;
-							}
-							b2 = new CellBorder (b1.LeftWidth, dimmed, b1.BottomWidth, b1.TopWidth, b1.TopGap, b1.Color);
-							this.table.SetCellBorder (i, row, b2);
-
-							b1 = this.table.GetCellBorder (i+1, row);
-							if (b1.IsEmpty)
-							{
-								b1 = this.table.CellBorder;
-							}
-							b2 = new CellBorder (0, b1.RightWidth, b1.BottomWidth, b1.TopWidth, b1.TopGap, b1.Color);
-							this.table.SetCellBorder (i+1, row, b2);
-
-							break;
-						}
-					}
-
+				if (this.columnsWithoutRightBorder.Contains (column-1))
+				{
+					//	Plus de trait à gauche.
+					value = new CellBorder (0, value.RightWidth, value.BottomWidth, value.TopWidth, value.TopGap, value.Color);
 				}
 			}
+
+			table.SetCellBorder (column, row, value);
 		}
+
 
 		protected static bool IsEmptyColumn(List<DocumentItemAccessor> accessors, DocumentItemAccessorColumn column)
 		{
@@ -1104,14 +1031,15 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		#endregion
 
 
-		protected static readonly Font		font = Font.GetFont ("Arial", "Regular");
-		protected static readonly double	reportHeight = 7.0;
+		protected static readonly Font				font = Font.GetFont ("Arial", "Regular");
+		protected static readonly double			reportHeight = 7.0;
 
-		protected readonly BusinessLogic	businessLogic;
+		protected readonly BusinessLogic			businessLogic;
+		protected readonly List<int>				columnsWithoutRightBorder;
 
-		private TableBand					table;
-		private int							visibleColumnCount;
-		private int[]						lastRowForEachSection;
-		private List<Rectangle>				tableBounds;
+		private TableBand							table;
+		private int									visibleColumnCount;
+		private int[]								lastRowForEachSection;
+		private List<Rectangle>						tableBounds;
 	}
 }

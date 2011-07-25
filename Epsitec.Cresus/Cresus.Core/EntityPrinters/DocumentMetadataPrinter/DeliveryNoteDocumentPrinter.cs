@@ -120,6 +120,15 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
+		protected override void FinishColumns()
+		{
+			if (this.HasOption (DocumentOption.ArticleAdditionalQuantities))
+			{
+				this.columnsWithoutRightBorder.Add (this.tableColumns[TableColumnKeys.AdditionalType].Rank);
+				this.columnsWithoutRightBorder.Add (this.tableColumns[TableColumnKeys.AdditionalQuantity].Rank);
+			}
+		}
+
 		protected override int BuildLine(int row, DocumentItemAccessor accessor, ContentLine prevLine, ContentLine line, ContentLine nextLine)
 		{
 			for (int i = 0; i < accessor.RowsCount; i++)
@@ -144,6 +153,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				}
 
 				this.SetTableText (row+i, TableColumnKeys.ArticleDescription, accessor.GetContent (i, DocumentItemAccessorColumn.ArticleDescription));
+
+				this.SetCellBorder (row+i, this.GetCellBorder ());
 			}
 
 			int last = row+accessor.RowsCount-1;
@@ -155,12 +166,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 
 			return accessor.RowsCount;
-		}
-
-		protected override void BuildFinish()
-		{
-			this.RemoveRightBorder (TableColumnKeys.AdditionalType);
-			this.RemoveRightBorder (TableColumnKeys.AdditionalQuantity);
 		}
 	}
 }
