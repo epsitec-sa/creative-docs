@@ -292,7 +292,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		public static RibbonSection ribbonWorkflowContainer;
+		public static RibbonSection					ribbonWorkflowContainer;
 
 		private readonly DataViewOrchestrator		orchestrator;
 		private readonly MainViewController			mainViewController;

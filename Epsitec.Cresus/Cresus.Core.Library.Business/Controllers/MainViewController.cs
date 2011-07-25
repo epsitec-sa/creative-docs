@@ -26,7 +26,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			
 			this.Orchestrator.RegisterApplicationComponent (this);
 
-			//?this.actionViewController      = new ActionViewController (this.Orchestrator);
 			this.previewViewController     = new PreviewViewController (this.Orchestrator);
 			this.browserViewController     = new BrowserViewController (this.Orchestrator);
 			this.browserSettingsController = new BrowserSettingsController (this.browserViewController);
@@ -88,16 +87,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-#if false
-		public ActionViewController ActionViewController
-		{
-			get
-			{
-				return this.actionViewController;
-			}
-		}
-#endif
-
 		public PreviewViewController PreviewViewController
 		{
 			get
@@ -111,7 +100,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			yield return this.browserViewController;
 			yield return this.browserSettingsController;
 			yield return this.DataViewController;
-			//?yield return this.actionViewController;
 			yield return this.previewViewController;
 		}
 
@@ -391,22 +379,21 @@ namespace Epsitec.Cresus.Core.Controllers
 		#endregion
 		
 
-		private readonly CommandContext commandContext;
-		private readonly BrowserViewController browserViewController;
-		private readonly BrowserSettingsController browserSettingsController;
-		//?private readonly ActionViewController actionViewController;
-		private readonly PreviewViewController previewViewController;
+		private readonly CommandContext				commandContext;
+		private readonly BrowserViewController		browserViewController;
+		private readonly BrowserSettingsController	browserSettingsController;
+		private readonly PreviewViewController		previewViewController;
 
-		private FrameBox frame;
+		private FrameBox							frame;
 
-		private FrameBox topPanel;
-		private FrameBox browserSettingsPanel;
-		private FrameBox leftPanel;
-		private VSplitter splitter;
-		private VSplitter rightSplitter;
-		private FrameBox mainPanel;
-		private FrameBox rightPreviewPanel;
+		private FrameBox							topPanel;
+		private FrameBox							browserSettingsPanel;
+		private FrameBox							leftPanel;
+		private VSplitter							splitter;
+		private VSplitter							rightSplitter;
+		private FrameBox							mainPanel;
+		private FrameBox							rightPreviewPanel;
 
-		private BrowserSettingsMode browserSettingsMode;
+		private BrowserSettingsMode					browserSettingsMode;
 	}
 }

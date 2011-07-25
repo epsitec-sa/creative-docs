@@ -87,7 +87,6 @@
     <Compile Include="ContentAccessors\DocumentItemAccessorColumn.cs" />
     <Compile Include="ContentAccessors\DocumentItemAccessor.cs" />
     <Compile Include="ContentAccessors\DocumentItemAccessorMode.cs" />
-    <Compile Include="Controllers\ActionViewController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\AbstractArticleParameterController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\ArticleParameterListPreferredValuesController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\ArticleParameterToolbarController.cs" />
