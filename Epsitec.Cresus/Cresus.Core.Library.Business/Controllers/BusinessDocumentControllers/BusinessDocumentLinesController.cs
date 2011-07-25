@@ -103,6 +103,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				showToolbarButton.GlyphShape = toolbarWidget.Visibility ? GlyphShape.TriangleUp : GlyphShape.TriangleDown;
 				BusinessDocumentLinesController.persistantShowToolbar = toolbarWidget.Visibility;
 			};
+
+			BusinessDocumentLinesController.actionRibbonShow ("Business");
 		}
 
 		public void UpdateUI()
@@ -117,6 +119,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			this.commandContext.Dispose ();
 			this.commandDispatcher.Dispose ();
+
+			BusinessDocumentLinesController.actionRibbonShow ("Home");
 		}
 
 		#endregion
@@ -655,6 +659,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
+
+		public static System.Action<string>				actionRibbonShow;
 
 		// TODO: Il faudra un jour que ces variables survivent à l'extinction de l'application !
 		private static ViewMode							persistantViewMode = ViewMode.Default;

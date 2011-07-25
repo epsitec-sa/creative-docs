@@ -13,6 +13,7 @@ using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Features;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.UserManagement;
+using Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -120,7 +121,25 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.UpdateDatabaseMenu ();
 		}
 
-		
+
+		private void RibbonShowPage(string name)
+		{
+			switch (name)
+			{
+				case "Home":
+					this.ribbonBook.ActivePage = this.ribbonPageHome;
+					break;
+
+				case "Workflow":
+					this.ribbonBook.ActivePage = this.ribbonPageWorkflow;
+					break;
+
+				case "Business":
+					this.ribbonBook.ActivePage = this.ribbonPageBusiness;
+					break;
+			}
+		}
+
 		private void CreateRibbonBook(Widget container)
 		{
 			this.ribbonBook = new RibbonBook ()
@@ -552,6 +571,10 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			// TODO: C'est un moyen bricolé pour que WorkflowController sache où placer ses boutons.
 			WorkflowController.ribbonWorkflowContainer = this.workflowContainer;
+
+			// TODO: Et encore de la bricole !
+			MainViewController.actionRibbonShow = this.RibbonShowPage;
+			BusinessDocumentLinesController.actionRibbonShow = this.RibbonShowPage;
 		}
 		#endregion
 
