@@ -1076,11 +1076,20 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					case Business.DocumentType.SalesQuote:
 						return new SalesQuoteDocumentPrinter (businessContext, entity, options, printingUnits);
 
+					case Business.DocumentType.OrderBooking:
+						return new OrderBookingDocumentPrinter (businessContext, entity, options, printingUnits);
+
+					case Business.DocumentType.OrderConfirmation:
+						return new OrderConfirmationDocumentPrinter (businessContext, entity, options, printingUnits);
+
 					case Business.DocumentType.ProductionOrder:
 						return new ProductionOrderDocumentPrinter (businessContext, entity, options, printingUnits);
 
 					case Business.DocumentType.ProductionChecklist:
 						return new ProductionChecklistDocumentPrinter (businessContext, entity, options, printingUnits);
+
+					case Business.DocumentType.DeliveryNote:
+						return new DeliveryNoteDocumentPrinter (businessContext, entity, options, printingUnits);
 
 					case Business.DocumentType.Invoice:
 						return new InvoiceDocumentPrinter (businessContext, entity, options, printingUnits);
