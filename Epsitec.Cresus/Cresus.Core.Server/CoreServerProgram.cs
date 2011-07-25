@@ -1,24 +1,15 @@
 ﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Debugging;
-using Epsitec.Common.Drawing;
-using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Support.Extensions;
-using Epsitec.Common.Types;
-
-using Epsitec.Cresus.Bricks;
-using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Entities;
-
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using Epsitec.Common.Support;
 using System.ServiceModel;
-using Nancy.Hosting.Wcf;
 using System.ServiceModel.Web;
+using Epsitec.Common.Debugging;
+using Epsitec.Common.Support.Extensions;
+using Epsitec.Cresus.Core.Entities;
 using Nancy.Hosting.Self;
+using Nancy.Hosting.Wcf;
 
 namespace Epsitec.Cresus.Core.Server
 {
@@ -32,7 +23,7 @@ namespace Epsitec.Cresus.Core.Server
 
 			return;
 
-			var server = new CoreServer ();
+			var server = CoreServer.Instance;
 			var session = server.CreateSession ();
 
 			PanelBuilder.Session = session;
@@ -108,7 +99,7 @@ namespace Epsitec.Cresus.Core.Server
 
 		private void ExperimentalProfiling()
 		{
-			var server = new CoreServer ();
+			var server = CoreServer.Instance;
 
 			for (int i = 0; i < 3; i++)
 			{

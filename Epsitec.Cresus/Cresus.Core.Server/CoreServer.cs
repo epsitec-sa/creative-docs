@@ -8,7 +8,26 @@ namespace Epsitec.Cresus.Core.Server
 {
 	public sealed class CoreServer
 	{
-		public CoreServer()
+
+		private static CoreServer instance;
+		public static CoreServer Instance
+		{
+			get
+			{
+				if (instance == null)
+				{
+					instance = new CoreServer ();
+				}
+
+				return instance;
+			}
+			set
+			{
+				instance = value;
+			}
+		}
+
+		private CoreServer()
 		{
 			this.sessions = new Dictionary<string, CoreSession> ();
 		}
