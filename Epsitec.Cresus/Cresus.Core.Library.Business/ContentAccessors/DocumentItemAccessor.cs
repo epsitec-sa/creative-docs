@@ -509,27 +509,6 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			//	Modifie le contenu d'une cellule.
 			if (text != null && !text.IsNullOrEmpty)
 			{
-				if (column == DocumentItemAccessorColumn.ArticleDescription &&
-					(this.mode & DocumentItemAccessorMode.DescriptionIndented) != 0)
-				{
-					int level = System.Math.Max (AbstractDocumentItemEntity.GetGroupLevel (this.groupIndex)-1, 0);
-
-					if (level != 0)
-					{
-						var prefix = new string (' ', level*DocumentItemAccessor.identSpacePerLevel);
-						text = FormattedText.Concat (prefix, text);
-					}
-				}
-
-				this.SetContentBase (row, column, text);
-			}
-		}
-
-		private void SetContentBase(int row, DocumentItemAccessorColumn column, FormattedText text)
-		{
-			//	Modifie le contenu d'une cellule.
-			if (text != null && !text.IsNullOrEmpty)
-			{
 				var key = DocumentItemAccessor.GetKey (row, column);
 				this.content[key] = text;
 

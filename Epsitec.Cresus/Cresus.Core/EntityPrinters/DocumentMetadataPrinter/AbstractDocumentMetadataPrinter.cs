@@ -790,11 +790,33 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-		protected double CellMargin
+		private double CellMargin
 		{
 			get
 			{
 				return this.IsWithFrame ? 1 : 2;
+			}
+		}
+
+		protected void IndentCellMargins(int row, TableColumnKeys columnKey, int groupIndex)
+		{
+			int level = System.Math.Max (AbstractDocumentItemEntity.GetGroupLevel (groupIndex)-1, 0);
+			double indent = this.GetOptionValue (DocumentOption.IndentWidth, 3) * level;
+
+			if (indent > 0)
+			{
+				int column = this.tableColumns[columnKey].Rank;
+
+				var c = this.table.GetCellMargins (column, row);
+
+				if (c == Margins.Zero)
+				{
+					c = this.table.CellMargins;
+				}
+
+				var m = new Margins (c.Left+indent, c.Right, c.Top, c.Bottom);
+
+				this.table.SetCellMargins (column, row, m);
 			}
 		}
 

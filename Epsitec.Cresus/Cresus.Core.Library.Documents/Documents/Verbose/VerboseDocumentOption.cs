@@ -190,6 +190,8 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 
 			list.Add (new VerboseDocumentOption (DocumentOption.GapBeforeGroup, "LayoutFrame", true, DocumentOptionValueType.Boolean, "Interligne supplémentaire entre les groupes", "true"));
 
+			list.Add (new VerboseDocumentOption (DocumentOption.IndentWidth, "LayoutFrame", true, DocumentOptionValueType.Distance, "Longueur à indenter par niveau", "3"));
+
 			list.Add (new VerboseDocumentOption ("Numérotation", "LineNumber"));
 			e = new string[] { "None", "Group", "Line", "Full" };
 			d = new string[] { "Aucune", "Numérotation des groupes", "Numérotation plate des lignes", "Numérotation hiérarchique des lignes" };

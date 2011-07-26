@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Core.Documents
 
 		LayoutFrame,					// enum: Frameless, WithLine, WithFrame
 		GapBeforeGroup,					// bool
+		IndentWidth,					// distance: longueur de l'indentation par niveau
 
 		LineNumber,						// enum: None, Group, Line, Full
 

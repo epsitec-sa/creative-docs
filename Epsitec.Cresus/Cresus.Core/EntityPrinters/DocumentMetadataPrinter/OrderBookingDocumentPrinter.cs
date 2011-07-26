@@ -114,7 +114,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			get
 			{
 				var mode = DocumentItemAccessorMode.UseMainColumns |
-						   DocumentItemAccessorMode.DescriptionIndented |
 						   DocumentItemAccessorMode.UseArticleBoth;
 
 				if (this.HasOption (DocumentOption.ArticleAdditionalQuantities))  // imprime les autres quantités ?
@@ -189,6 +188,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				}
 
 				this.SetTableText (row+i, TableColumnKeys.ArticleDescription, accessor.GetContent (i, DocumentItemAccessorColumn.ArticleDescription));
+				this.IndentCellMargins (row+i, TableColumnKeys.ArticleDescription, line.GroupIndex);
 
 				this.SetTableText (row+i, TableColumnKeys.UnitPrice, accessor.GetContent (i, DocumentItemAccessorColumn.UnitPrice));
 				this.SetTableText (row+i, TableColumnKeys.Discount, accessor.GetContent (i, DocumentItemAccessorColumn.Discount));

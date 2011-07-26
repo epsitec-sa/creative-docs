@@ -14,7 +14,6 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		UseMainColumns			= 0x00000001,	// utilise les colonnes MainQuantity et MainUnit, pour les documents imprimés
 		AdditionalQuantities	= 0x00000002,	// met les quantités additionnelles
 		ShowMyEyesOnly			= 0x00000004,	// inclu les lignes avant l'attribut MyEyesOnly
-		DescriptionIndented		= 0x00000008,	// indente les descriptions des articles selon les groupes
 
 		IncludeTaxes			= 0x00001000,	// 
 		ExclideTaxes			= 0x00002000,	// 

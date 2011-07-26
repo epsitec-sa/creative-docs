@@ -144,7 +144,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			get
 			{
 				var mode = DocumentItemAccessorMode.UseMainColumns |
-						   DocumentItemAccessorMode.DescriptionIndented |
 						   DocumentItemAccessorMode.UseArticleName;  // le nom court suffit
 
 				return mode;
