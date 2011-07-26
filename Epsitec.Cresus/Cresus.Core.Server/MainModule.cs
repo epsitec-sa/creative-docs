@@ -15,12 +15,18 @@ namespace Epsitec.Cresus.Core.Server
 				return "Hello World";
 			};
 
-			Get["persons.json"] = parameters =>
+			Get["/login"] = parameters =>
 			{
-				var server = CoreServer.Instance;
-				var session = server.CreateSession ();
+				GetSession (this);
 
-				var context = session.GetBusinessContext ();
+				return "logged in";
+			};
+
+			Get["/persons.json"] = parameters =>
+			{
+				var coreSession = GetSession(this);
+
+				var context = coreSession.GetBusinessContext ();
 				var writer = new JsonFx.Json.JsonWriter ();
 
 				var customers = from x in context.GetAllEntities<CustomerEntity> ()
@@ -37,6 +43,13 @@ namespace Epsitec.Cresus.Core.Server
 					lastName = c.IdB
 				}));
 
+				obj.Add (new
+				{
+					LastUpdate = Session["last"] as string
+				});
+
+				Session["last"] = System.DateTime.Now.ToString ();
+
 				var json = writer.Write (obj);
 
 				//return json;
@@ -47,6 +60,22 @@ namespace Epsitec.Cresus.Core.Server
 				return res;
 
 			};
+		}
+
+		private static CoreSession GetSession(MainModule m)
+		{
+			var sessionId = m.Session["CoreSession"] as string;
+			var session = CoreServer.Instance.GetCoreSession (sessionId);
+
+			if (session == null)
+			{
+				var server = CoreServer.Instance;
+				session = server.CreateSession ();
+
+				m.Session["CoreSession"] = session.Id;
+			}
+
+			return session;
 		}
 	}
 }

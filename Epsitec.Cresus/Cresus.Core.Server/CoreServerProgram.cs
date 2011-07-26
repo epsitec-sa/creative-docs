@@ -164,26 +164,26 @@ namespace Epsitec.Cresus.Core.Server
 		}
 
 		// Ne fonctionne pas
-		private static void RunWcf()
-		{
-			//using (CreateAndOpenWebServiceHost ())
-			//{
-			//    System.Console.WriteLine ("Service is now running on: {0}", BaseUri);
-			//}
+		//private static void RunWcf()
+		//{
+		//    //using (CreateAndOpenWebServiceHost ())
+		//    //{
+		//    //    System.Console.WriteLine ("Service is now running on: {0}", BaseUri);
+		//    //}
 
-			CreateAndOpenWebServiceHost ();
-			System.Console.WriteLine ("Service is now running on: {0}", BaseUri);
-		}
+		//    CreateAndOpenWebServiceHost ();
+		//    System.Console.WriteLine ("Service is now running on: {0}", BaseUri);
+		//}
 
-		private static WebServiceHost CreateAndOpenWebServiceHost()
-		{
-			var host = new WebServiceHost (new NancyWcfGenericService (), BaseUri);
+		//private static WebServiceHost CreateAndOpenWebServiceHost()
+		//{
+		//    var host = new WebServiceHost (new NancyWcfGenericService (), BaseUri);
 
-			host.AddServiceEndpoint (typeof (NancyWcfGenericService), new WebHttpBinding (), "");
-			host.Open ();
+		//    host.AddServiceEndpoint (typeof (NancyWcfGenericService), new WebHttpBinding (), "");
+		//    host.Open ();
 
-			return host;
-		}
+		//    return host;
+		//}
 
 		private static readonly System.Uri BaseUri = new System.Uri ("http://localhost:12345/");
 	}
