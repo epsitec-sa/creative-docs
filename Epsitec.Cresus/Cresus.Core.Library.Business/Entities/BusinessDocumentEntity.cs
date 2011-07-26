@@ -88,10 +88,10 @@ namespace Epsitec.Cresus.Core.Entities
 
 				//	Supprime tous les sous-totaux à double.
 				int i = 0;
-				while (i < conciseLines.Count-1)
+				while (i < conciseLines.Count)
 				{
 					var line1 = conciseLines[i] as SubTotalDocumentItemEntity;
-					var line2 = conciseLines[i+1] as SubTotalDocumentItemEntity;
+					var line2 = BusinessDocumentEntity.GetNextActiveLine (conciseLines, i, 1) as SubTotalDocumentItemEntity;
 
 					if (BusinessDocumentEntity.IsSimilarSubTotals (line1, line2))
 					{
@@ -105,11 +105,11 @@ namespace Epsitec.Cresus.Core.Entities
 				//	Supprime tous les sous-totaux inutiles. Par exemple, un sous-total sans rabais
 				//	précédé d'un article unique est superflu.
 				i = 0;
-				while (i < conciseLines.Count-1)
+				while (i < conciseLines.Count)
 				{
-					var line1 = (i == 0) ? null : conciseLines[i-1];
-					var line2 = conciseLines[i];
-					var line3 = conciseLines[i+1];
+					var line1 = BusinessDocumentEntity.GetNextActiveLine (conciseLines, i, -1);
+					var line2 = BusinessDocumentEntity.GetNextActiveLine (conciseLines, i, -2);
+					var line3 = conciseLines[i];
 
 					//	Article unique suivi d'un sous-total superflu ?
 					if ((line1 == null || !(line1 is ArticleDocumentItemEntity)) &&
@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.Core.Entities
 						line3 is SubTotalDocumentItemEntity &&
 						BusinessDocumentEntity.IsMiscSubTotal (line3 as SubTotalDocumentItemEntity))
 					{
-						conciseLines.RemoveAt (i+1);  // supprime le sous-total
+						conciseLines.RemoveAt (i);  // supprime le sous-total
 						continue;
 					}
 
@@ -138,8 +138,8 @@ namespace Epsitec.Cresus.Core.Entities
 
 			return BusinessDocumentEntity.IsMiscSubTotal (line1) &&
 				   BusinessDocumentEntity.IsMiscSubTotal (line2) &&
-				   line1.ResultingPriceBeforeTax.Value == line2.ResultingPriceBeforeTax.Value &&
-				   line1.ResultingTax.Value            == line2.ResultingTax.Value;
+				   line1.ResultingPriceBeforeTax.GetValueOrDefault (0) == line2.ResultingPriceBeforeTax.GetValueOrDefault (0) &&
+				   line1.ResultingTax.GetValueOrDefault (0)            == line2.ResultingTax.GetValueOrDefault (0);
 		}
 
 		private static bool IsMiscSubTotal(SubTotalDocumentItemEntity line)
@@ -157,6 +157,26 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 
 			return true;
+		}
+
+		private static AbstractDocumentItemEntity GetNextActiveLine(IList<AbstractDocumentItemEntity> lines, int index, int direction)
+		{
+			while (true)
+			{
+				index += direction;
+
+				if (index < 0 || index >= lines.Count ())
+				{
+					return null;
+				}
+
+				var line = lines[index];
+
+				if (!(line is TextDocumentItemEntity))
+				{
+					return line;
+				}
+			}
 		}
 
 

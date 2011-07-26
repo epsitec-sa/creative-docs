@@ -406,8 +406,8 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				sumText = "Total après rabais";
 			}
 
-			decimal sumPrice = line.ResultingPriceBeforeTax.Value;
-			decimal sumVat   = line.ResultingTax.Value;
+			decimal sumPrice = line.ResultingPriceBeforeTax.GetValueOrDefault (0);
+			decimal sumVat   = line.ResultingTax.GetValueOrDefault (0);
 
 			//	Génère les lignes.
 			int row = 0;
