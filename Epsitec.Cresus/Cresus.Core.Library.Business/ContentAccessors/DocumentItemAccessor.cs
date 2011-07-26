@@ -38,6 +38,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		{
 			//	Construit tout le contenu.
 			//	Retourne false si le contenu est entièrement caché.
+			System.Diagnostics.Debug.Assert ((mode & (DocumentItemAccessorMode.EditArticleName | DocumentItemAccessorMode.EditArticleDescription | DocumentItemAccessorMode.UseArticleName | DocumentItemAccessorMode.UseArticleBoth)) != 0);
 			this.item = item;
 			this.type = type;
 			this.mode = mode;

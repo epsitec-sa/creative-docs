@@ -113,7 +113,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			get
 			{
 				var mode = DocumentItemAccessorMode.UseMainColumns |
-						   DocumentItemAccessorMode.DescriptionIndented;
+						   DocumentItemAccessorMode.DescriptionIndented |
+						   DocumentItemAccessorMode.UseArticleBoth;
 
 				if (this.HasOption (DocumentOption.ArticleAdditionalQuantities))  // imprime les autres quantités ?
 				{

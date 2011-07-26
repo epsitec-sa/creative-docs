@@ -172,10 +172,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.CreateRibbonValidateSection (this.ribbonPageHome);
 			this.CreateRibbonEditSection (this.ribbonPageHome);
 			this.CreateRibbonClipboardSection (this.ribbonPageHome);
-			this.CreateRibbonNavigationSection (this.ribbonPageHome);
 			this.CreateRibbonActionSection (this.ribbonPageHome);
-
 			this.CreateRibbonDatabaseSection (this.ribbonPageHome);
+			this.CreateRibbonNavigationSection (this.ribbonPageHome);
 
 			this.CreateRibbonUserSection (this.ribbonPageHome);
 			this.CreateRibbonSettingsSection (this.ribbonPageHome);
