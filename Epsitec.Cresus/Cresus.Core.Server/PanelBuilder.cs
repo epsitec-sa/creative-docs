@@ -166,9 +166,6 @@ namespace Epsitec.Cresus.Core.Server
 			jscontent += Brick.GetProperty (brick, BrickPropertyKey.Title).StringValue;
 			jscontent += "',";
 
-			// Test data
-			jscontent += "data: { name: 'Jonas' },";
-
 			var icon = PanelBuilder.CreateIcon (brick);
 			if (!icon.Equals (default (KeyValuePair<string, string>)))
 			{

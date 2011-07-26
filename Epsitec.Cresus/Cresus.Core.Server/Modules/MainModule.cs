@@ -17,6 +17,7 @@ namespace Epsitec.Cresus.Core.Server
 
 			Get["/login"] = parameters =>
 			{
+				// Init session
 				GetCoreSession ();
 
 				return "logged in";
@@ -25,7 +26,6 @@ namespace Epsitec.Cresus.Core.Server
 			Get["/persons.json"] = parameters =>
 			{
 				var coreSession = GetCoreSession();
-
 				var context = coreSession.GetBusinessContext ();
 
 				var customers = from x in context.GetAllEntities<CustomerEntity> ()
@@ -36,7 +36,8 @@ namespace Epsitec.Cresus.Core.Server
 				customers.ForEach (c => obj.Add (new
 				{
 					firstName = c.IdA,
-					lastName = c.IdB
+					lastName = c.IdB,
+					uniqueId = c.GetEntitySerialId ()
 				}));
 
 				obj.Add (new
@@ -50,6 +51,29 @@ namespace Epsitec.Cresus.Core.Server
 				res.Headers["Access-Control-Allow-Origin"] = "*";
 
 				return res;
+
+			};
+
+			Get["person/{id}"] = parameters =>
+			{
+				var coreSession = GetCoreSession ();
+				var context = coreSession.GetBusinessContext ();
+
+				var customer = (from x in context.GetAllEntities<CustomerEntity> ()
+								where x.GetEntitySerialId () == parameters.id
+								select x).FirstOrDefault ();
+
+				if (customer == null)
+				{
+					return new NotFoundResponse ();
+				}
+
+				var c = new
+				{
+					name = string.Format ("{0} {1} {2}", customer.IdA, customer.IdB, customer.IdC)
+				};
+
+				return Response.AsJson (c);
 
 			};
 		}

@@ -20,11 +20,13 @@ namespace Epsitec.Cresus.Core.Server
 
 			RunNancy ();
 
-			//var server = CoreServer.Instance;
-			//var session = server.CreateSession ();
+			var server = CoreServer.Instance;
+			var session = server.CreateSession ();
 
 			//this.ExperimentalProfiling ();
-			//PanelBuilder.ExperimentalCode ();
+
+			PanelBuilder.CoreSession = session;
+			PanelBuilder.ExperimentalCode ();
 
 			//this.ExperimentalEntityManipulations (session);
 
