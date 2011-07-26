@@ -107,8 +107,8 @@ namespace Epsitec.Cresus.Core.Entities
 				i = 0;
 				while (i < conciseLines.Count)
 				{
-					var line1 = BusinessDocumentEntity.GetNextActiveLine (conciseLines, i, -1);
-					var line2 = BusinessDocumentEntity.GetNextActiveLine (conciseLines, i, -2);
+					var line1 = BusinessDocumentEntity.GetNextActiveLine (conciseLines, i, -2);
+					var line2 = BusinessDocumentEntity.GetNextActiveLine (conciseLines, i, -1);
 					var line3 = conciseLines[i];
 
 					//	Article unique suivi d'un sous-total superflu ?
