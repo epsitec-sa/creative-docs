@@ -80,6 +80,8 @@ namespace Epsitec.Cresus.Core.Entities
 			//	Retourne la liste des lignes d'un document commercial expurgée de toutes les
 			//	lignes redondantes, telles que les sous-totaux inutiles.
 			//	Le résultat n'est à utiliser que pour la production de documents !
+			//	En effet, il n'est pas compatible avec la calculateur de prix, qui ajouterait
+			//	certains sous-totaux enlevés !
 			get
 			{
 				var conciseLines = new List<AbstractDocumentItemEntity> (this.Lines);
@@ -91,7 +93,7 @@ namespace Epsitec.Cresus.Core.Entities
 					var line1 = conciseLines[i] as SubTotalDocumentItemEntity;
 					var line2 = conciseLines[i+1] as SubTotalDocumentItemEntity;
 
-					if (BusinessDocumentEntity.IsSameSubTotals (line1, line2))
+					if (BusinessDocumentEntity.IsSimilarSubTotals (line1, line2))
 					{
 						conciseLines.RemoveAt (i);
 						continue;
@@ -109,12 +111,13 @@ namespace Epsitec.Cresus.Core.Entities
 					var line2 = conciseLines[i];
 					var line3 = conciseLines[i+1];
 
+					//	Article unique suivi d'un sous-total superflu ?
 					if ((line1 == null || !(line1 is ArticleDocumentItemEntity)) &&
 						line2 is ArticleDocumentItemEntity &&
 						line3 is SubTotalDocumentItemEntity &&
 						BusinessDocumentEntity.IsMiscSubTotal (line3 as SubTotalDocumentItemEntity))
 					{
-						conciseLines.RemoveAt (i+1);
+						conciseLines.RemoveAt (i+1);  // supprime le sous-total
 						continue;
 					}
 
@@ -125,7 +128,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
-		private static bool IsSameSubTotals(SubTotalDocumentItemEntity line1, SubTotalDocumentItemEntity line2)
+		private static bool IsSimilarSubTotals(SubTotalDocumentItemEntity line1, SubTotalDocumentItemEntity line2)
 		{
 			//	Retourne true si les 2 lignes de sous-totaux sont redondantes et équivalentes.
 			if (line1 == null || line2 == null)
@@ -147,8 +150,7 @@ namespace Epsitec.Cresus.Core.Entities
 				return false;
 			}
 
-			if (line.GroupIndex == 0 ||
-				line.Discount.DiscountRate.HasValue ||
+			if (line.Discount.DiscountRate.HasValue ||
 				line.Discount.Value.HasValue)
 			{
 				return false;

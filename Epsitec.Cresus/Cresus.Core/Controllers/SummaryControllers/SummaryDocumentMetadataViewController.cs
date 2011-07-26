@@ -72,8 +72,9 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			//	Le paramètre 'limit' donne le nombre maximum de lignes à inclure, sans compter les 2 lignes
 			//	"..." et le grand total.
 			FormattedText summary = new FormattedText ();
+			var lines = businessDocumentEntity.ConciseLines;
 
-			for (int i=0; i<businessDocumentEntity.Lines.Count-1; i++)  // toutes les lignes, sauf le grand total
+			for (int i=0; i<lines.Count-1; i++)  // toutes les lignes, sauf le grand total
 			{
 				if (i >= limit)
 				{
@@ -81,7 +82,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					break;
 				}
 
-				var line = businessDocumentEntity.Lines[i];
+				var line = lines[i];
 
 				var text = line.GetCompactSummary ();
 				text = SummaryDocumentMetadataViewController.GetIndentedText (text, line.GroupLevel);
@@ -89,9 +90,9 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				summary = summary.AppendLine (text);
 			}
 
-			if (businessDocumentEntity.Lines.Count > 1)
+			if (lines.Count > 1)
 			{
-				var line = businessDocumentEntity.Lines[businessDocumentEntity.Lines.Count-1];
+				var line = lines.Last ();
 				summary = summary.AppendLine (line.GetCompactSummary ());  // ajoute le grand total
 			}
 

@@ -162,7 +162,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void CreateRibbonHomePage()
 		{
-			this.ribbonPageHome     = RibbonViewController.CreateRibbonPage (this.ribbonBook, "Home",     "Principal");
+			this.ribbonPageHome     = RibbonViewController.CreateRibbonPage (this.ribbonBook, "Home",     "Accueil");
+			this.ribbonPageMisc     = RibbonViewController.CreateRibbonPage (this.ribbonBook, "Misc",     "Compléments");
 			this.ribbonPageWorkflow = RibbonViewController.CreateRibbonPage (this.ribbonBook, "Workflow", "Flux");
 			this.ribbonPageBusiness = RibbonViewController.CreateRibbonPage (this.ribbonBook, "Business", "Document commercial");
 
@@ -172,18 +173,17 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.CreateRibbonValidateSection (this.ribbonPageHome);  // communs
 			this.CreateRibbonEditSection (this.ribbonPageHome);  // communs
 			this.CreateRibbonClipboardSection (this.ribbonPageHome);
-			this.CreateRibbonActionSection (this.ribbonPageHome);
+			this.CreateRibbonPrintSection (this.ribbonPageHome);
 			this.CreateRibbonDatabaseSection (this.ribbonPageHome);
 			this.CreateRibbonNavigationSection (this.ribbonPageHome);
 
 			this.CreateRibbonUserSection (this.ribbonPageHome);  // communs
-			this.CreateRibbonSettingsSection (this.ribbonPageHome);
 
 			//	Workflow ribbon:
 			this.CreateRibbonValidateSection (this.ribbonPageWorkflow);  // communs
 			this.CreateRibbonEditSection (this.ribbonPageWorkflow);  // communs
 			this.CreateRibbonClipboardSection (this.ribbonPageWorkflow);
-			this.CreateRibbonActionSection (this.ribbonPageWorkflow);
+			this.CreateRibbonPrintSection (this.ribbonPageWorkflow);
 			this.CreateRibbonWorkflowContainerSection (this.ribbonPageWorkflow);
 
 			this.CreateRibbonUserSection (this.ribbonPageWorkflow);  // communs
@@ -197,6 +197,17 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.CreateRibbonBusinessGroupSection (this.ribbonPageBusiness);
 
 			this.CreateRibbonUserSection (this.ribbonPageBusiness);  // communs
+
+			//	Misc ribbon:
+			this.CreateRibbonValidateSection (this.ribbonPageMisc);  // communs
+			this.CreateRibbonEditSection (this.ribbonPageMisc);  // communs
+			this.CreateRibbonClipboardSection (this.ribbonPageMisc);
+			this.CreateRibbonPrintSection (this.ribbonPageMisc);
+
+			this.CreateRibbonMiscActionSection (this.ribbonPageMisc);
+
+			this.CreateRibbonUserSection (this.ribbonPageMisc);  // communs
+			this.CreateRibbonSettingsSection (this.ribbonPageMisc);
 		}
 
 		private static RibbonPage CreateRibbonPage(RibbonBook book, string name, string title)
@@ -228,6 +239,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					Dock = DockStyle.StackBegin,
 					ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 					PreferredWidth = Library.UI.Constants.ButtonLargeWidth,
+					PreferredHeight = 52,
 				};
 
 				var authenticateUserButton = RibbonViewController.CreateIconOrImageButton (Res.Commands.Global.ShowUserManager);
@@ -267,29 +279,31 @@ namespace Epsitec.Cresus.Core.Controllers
 			section.Children.Add (this.CreateButton (Library.Res.Commands.Edition.DiscardRecord));
 		}
 
-		private void CreateRibbonActionSection(RibbonPage page)
+		private void CreateRibbonPrintSection(RibbonPage page)
+		{
+			var section = new RibbonSection (page)
+			{
+				Name = "Print",
+				Title = "Impression",
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				PreferredWidth = Library.UI.Constants.ButtonLargeWidth * 2,
+			};
+
+			section.Children.Add (this.CreateButton (Res.Commands.Edition.Print));
+			section.Children.Add (this.CreateButton (Res.Commands.Edition.Preview));
+		}
+
+		private void CreateRibbonMiscActionSection(RibbonPage page)
 		{
 			var section = new RibbonSection (page)
 			{
 				Name = "Action",
 				Title = "Actions",
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = Library.UI.Constants.ButtonLargeWidth * 2 +
-								 Library.UI.Constants.ButtonSmallWidth * 1,
+				PreferredWidth = Library.UI.Constants.ButtonLargeWidth * 3,
 			};
 
-			section.Children.Add (this.CreateButton (Res.Commands.Edition.Print));
-			section.Children.Add (this.CreateButton (Res.Commands.Edition.Preview));
-
-			var frame = new FrameBox
-			{
-				Parent = section,
-				Dock = DockStyle.StackBegin,
-				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-				PreferredWidth = Library.UI.Constants.ButtonSmallWidth,
-			};
-
-			frame.Children.Add (this.CreateButton (Res.Commands.File.ImportV11, large: false));
+			section.Children.Add (this.CreateButton (Res.Commands.File.ImportV11));
 		}
 
 		private void CreateRibbonClipboardSection(RibbonPage page)
@@ -565,16 +579,6 @@ namespace Epsitec.Cresus.Core.Controllers
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				Dock = DockStyle.Left,
 				PreferredWidth = 80,
-			};
-
-			//	Pour forcer la hauteur lorsque le ruban est vide.
-			//	Un simple this.workflowContainer.PreferredHeight = 78 ne fonctionne pas !
-			new StaticText
-			{
-				Parent = this.workflowContainer,
-				PreferredWidth = 1,
-				PreferredHeight = 52,
-				Dock = DockStyle.StackEnd,
 			};
 
 			// TODO: C'est un moyen bricolé pour que WorkflowController sache où placer ses boutons.
@@ -1061,6 +1065,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private RibbonPage							ribbonPageHome;
 		private RibbonPage							ribbonPageWorkflow;
 		private RibbonPage							ribbonPageBusiness;
+		private RibbonPage							ribbonPageMisc;
 
 		private IconButton							databaseButton;
 		private GlyphButton							databaseMenuButton;
