@@ -38,6 +38,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.authenticateUserButtons = new List<IconOrImageButton> ();
 			this.authenticateUserWidgets = new List<StaticText> ();
+			this.ribbonShowPages = new Dictionary<string, bool> ();
 
 			this.commandDispatcher  = app.CommandDispatcher;
 			this.coreCommandDispatcher = app.GetComponent<CoreCommandDispatcher> ();
@@ -122,21 +123,23 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		private void RibbonShowPage(string name)
+		private void RibbonShowPage(string name, bool visibility)
 		{
-			switch (name)
+			this.ribbonShowPages[name] = visibility;
+
+			//	Montre le ruban qui semble le plus utile.
+			//	En fait, les rubans sont prioritaires, dans l'ordre Business, Workflow et finalement Home.
+			if (this.ribbonShowPages.ContainsKey ("Business") && this.ribbonShowPages["Business"] == true)
 			{
-				case "Home":
-					this.ribbonBook.ActivePage = this.ribbonPageHome;
-					break;
-
-				case "Workflow":
-					this.ribbonBook.ActivePage = this.ribbonPageWorkflow;
-					break;
-
-				case "Business":
-					this.ribbonBook.ActivePage = this.ribbonPageBusiness;
-					break;
+				this.ribbonBook.ActivePage = this.ribbonPageBusiness;
+			}
+			else if (this.ribbonShowPages.ContainsKey ("Workflow") && this.ribbonShowPages["Workflow"] == true)
+			{
+				this.ribbonBook.ActivePage = this.ribbonPageWorkflow;
+			}
+			else
+			{
+				this.ribbonBook.ActivePage = this.ribbonPageHome;
 			}
 		}
 
@@ -166,29 +169,34 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.ribbonBook.ActivePage = this.ribbonPageHome;
 
 			//	Home ribbon:
-			this.CreateRibbonUserSection (this.ribbonPageHome);
+			this.CreateRibbonValidateSection (this.ribbonPageHome);
 			this.CreateRibbonEditSection (this.ribbonPageHome);
-
 			this.CreateRibbonClipboardSection (this.ribbonPageHome);
-			this.CreateRibbonFontSection (this.ribbonPageHome);
-			this.CreateRibbonDatabaseSection (this.ribbonPageHome);
-			this.CreateRibbonStateSection (this.ribbonPageHome);
-			this.CreateRibbonSettingsSection (this.ribbonPageHome);
 			this.CreateRibbonNavigationSection (this.ribbonPageHome);
+			this.CreateRibbonActionSection (this.ribbonPageHome);
+
+			this.CreateRibbonDatabaseSection (this.ribbonPageHome);
+
+			this.CreateRibbonUserSection (this.ribbonPageHome);
+			this.CreateRibbonSettingsSection (this.ribbonPageHome);
 
 			//	Workflow ribbon:
-			this.CreateRibbonUserSection (this.ribbonPageWorkflow);
+			this.CreateRibbonValidateSection (this.ribbonPageWorkflow);
 			this.CreateRibbonEditSection (this.ribbonPageWorkflow);
 
 			this.CreateRibbonWorkflowContainerSection (this.ribbonPageWorkflow);
 
+			this.CreateRibbonUserSection (this.ribbonPageWorkflow);
+
 			//	Business ribbon:
-			this.CreateRibbonUserSection (this.ribbonPageBusiness);
+			this.CreateRibbonValidateSection (this.ribbonPageBusiness);
 			this.CreateRibbonEditSection (this.ribbonPageBusiness);
 
 			this.CreateRibbonBusinessCreateSection (this.ribbonPageBusiness);
 			this.CreateRibbonBusinessOperSection (this.ribbonPageBusiness);
 			this.CreateRibbonBusinessGroupSection (this.ribbonPageBusiness);
+
+			this.CreateRibbonUserSection (this.ribbonPageBusiness);
 		}
 
 		private static RibbonPage CreateRibbonPage(RibbonBook book, string name, string title)
@@ -208,8 +216,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				Name = "User",
 				Title = "Identité",
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				PreferredWidth = Library.UI.Constants.ButtonLargeWidth * 1,
+				Dock = DockStyle.Right,
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 			};
 
 			{
@@ -244,19 +253,31 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private void CreateRibbonEditSection(RibbonPage page)
+		private void CreateRibbonValidateSection(RibbonPage page)
 		{
 			var section = new RibbonSection (page)
 			{
-				Name = "Edit",
-				Title = "Édition",
+				Name = "Validate",
+				Title = "Validation",
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = Library.UI.Constants.ButtonLargeWidth * 4 +
-								 Library.UI.Constants.ButtonSmallWidth * 1,
+				PreferredWidth = Library.UI.Constants.ButtonLargeWidth * 2,
 			};
 
 			section.Children.Add (this.CreateButton (Library.Res.Commands.Edition.SaveRecord));
 			section.Children.Add (this.CreateButton (Library.Res.Commands.Edition.DiscardRecord));
+		}
+
+		private void CreateRibbonActionSection(RibbonPage page)
+		{
+			var section = new RibbonSection (page)
+			{
+				Name = "Action",
+				Title = "Actions",
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				PreferredWidth = Library.UI.Constants.ButtonLargeWidth * 2 +
+								 Library.UI.Constants.ButtonSmallWidth * 1,
+			};
+
 			section.Children.Add (this.CreateButton (Res.Commands.Edition.Print));
 			section.Children.Add (this.CreateButton (Res.Commands.Edition.Preview));
 
@@ -295,14 +316,13 @@ namespace Epsitec.Cresus.Core.Controllers
 			section.Children.Add (this.CreateButton (ApplicationCommands.Paste));
 		}
 
-		private void CreateRibbonFontSection(RibbonPage page)
+		private void CreateRibbonEditSection(RibbonPage page)
 		{
 			var section = new RibbonSection (page)
 			{
-				Name = "Font",
-				Title = "Police",
+				Name = "Edit",
+				Title = "Edition",
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = Library.UI.Constants.ButtonSmallWidth * 3,
 			};
 
 			var frame = new FrameBox
@@ -335,123 +355,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			//?bottomFrame.Children.Add (this.CreateButton (ApplicationCommands.Subscript,   large: false, isActivable: true));
 			//?bottomFrame.Children.Add (this.CreateButton (ApplicationCommands.Superscript, large: false, isActivable: true));
-		}
-
-		private void CreateRibbonDatabaseSection(RibbonPage page)
-		{
-			var section = new RibbonSection (page)
-			{
-				Name = "Database",
-				Title = "Bases de données",
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = Library.UI.Constants.ButtonLargeWidth * 3,
-				Dock = DockStyle.Fill,
-			};
-
-			//	Place les boutons pour les bases de données les plus courantes.
-			section.Children.Add (this.CreateButton (Res.Commands.Base.ShowCustomer));
-			section.Children.Add (this.CreateButton (Res.Commands.Base.ShowArticleDefinition));
-			section.Children.Add (this.CreateButton (Res.Commands.Base.ShowDocumentMetadata));
-
-			this.CreateRibbonDatabaseSectionMenuButton (section);
-		}
-
-		private void CreateRibbonDatabaseSectionMenuButton(RibbonSection section)
-		{
-			//	Place le bouton 'magique' qui donne accès aux bases de données d'usage moins fréquent.
-			double buttonWidth = Library.UI.Constants.ButtonLargeWidth;
-
-			var group = new FrameBox ()
-			{
-				Parent = section,
-				PreferredSize = new Size (buttonWidth, buttonWidth+11-1),
-				Dock = DockStyle.StackBegin,
-				VerticalAlignment = VerticalAlignment.Top,
-				HorizontalAlignment = HorizontalAlignment.Center,
-			};
-
-			this.databaseMenuButton = new GlyphButton ()
-			{
-				Parent = group,
-				ButtonStyle = ButtonStyle.ComboItem,
-				GlyphShape = GlyphShape.Menu,
-				AutoFocus = false,
-				PreferredSize = new Size (buttonWidth, 11),
-				Dock = DockStyle.Bottom,
-				Margins = new Margins (0, 0, -1, 0),
-			};
-
-			ToolTip.Default.SetToolTip (this.databaseMenuButton, "Montre une autre base de données...");
-
-			this.databaseButton = this.CreateButton ();
-			this.databaseButton.Parent = group;
-			this.databaseButton.PreferredSize = new Size (buttonWidth, buttonWidth);
-			this.databaseButton.Dock = DockStyle.Fill;
-
-			
-			this.databaseMenuButton.Clicked += delegate
-			{
-				this.ShowDatabaseSelectionMenu (this.databaseMenuButton);
-			};
-
-			this.databaseMenuButton.Entered += delegate
-			{
-				this.databaseButton.ButtonStyle = ButtonStyle.Combo;
-			};
-
-			this.databaseMenuButton.Exited += delegate
-			{
-				this.databaseButton.ButtonStyle = ButtonStyle.ToolItem;
-			};
-
-			var databaseCommandHandler = this.GetDatabaseCommandHandler ();
-
-			databaseCommandHandler.Changed += delegate
-			{
-				this.UpdateDatabaseButton ();
-			};
-
-			this.UpdateDatabaseMenu ();
-		}
-
-		private void CreateRibbonStateSection(RibbonPage page)
-		{
-#if false
-			var section = new RibbonSection (page)
-			{
-				Name = "State",
-				Title = "États",
-				Dock = DockStyle.Fill,
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow
-			};
-#endif
-		}
-
-		private void CreateRibbonNavigationSection(RibbonPage page)
-		{
-			var section = new RibbonSection (page)
-			{
-				Name = "Navigation",
-				Title = "Navigation",
-				PreferredWidth = Library.UI.Constants.ButtonLargeWidth * 2,
-				Dock = DockStyle.Right,
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow
-			};
-
-			section.Children.Add (this.CreateButton (Res.Commands.History.NavigateBackward));
-			section.Children.Add (this.CreateButton (Res.Commands.History.NavigateForward));
-		}
-
-		private void CreateRibbonSettingsSection(RibbonPage page)
-		{
-			var section = new RibbonSection (page)
-			{
-				Name = "Settings",
-				Title = "Réglages",
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				Dock = DockStyle.Right,
-				PreferredWidth = Library.UI.Constants.ButtonLargeWidth * 4,
-			};
 
 			{
 				var frame1 = new FrameBox
@@ -543,6 +446,110 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 
 			section.Children.Add (this.CreateButton (ApplicationCommands.MultilingualEdition));
+		}
+
+		private void CreateRibbonDatabaseSection(RibbonPage page)
+		{
+			var section = new RibbonSection (page)
+			{
+				Name = "Database",
+				Title = "Bases de données",
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				Dock = DockStyle.Left,
+			};
+
+			//	Place les boutons pour les bases de données les plus courantes.
+			section.Children.Add (this.CreateButton (Res.Commands.Base.ShowCustomer));
+			section.Children.Add (this.CreateButton (Res.Commands.Base.ShowArticleDefinition));
+			section.Children.Add (this.CreateButton (Res.Commands.Base.ShowDocumentMetadata));
+
+			this.CreateRibbonDatabaseSectionMenuButton (section);
+		}
+
+		private void CreateRibbonDatabaseSectionMenuButton(RibbonSection section)
+		{
+			//	Place le bouton 'magique' qui donne accès aux bases de données d'usage moins fréquent.
+			double buttonWidth = Library.UI.Constants.ButtonLargeWidth;
+
+			var group = new FrameBox ()
+			{
+				Parent = section,
+				PreferredSize = new Size (buttonWidth, buttonWidth+11-1),
+				Dock = DockStyle.StackBegin,
+				VerticalAlignment = VerticalAlignment.Top,
+				HorizontalAlignment = HorizontalAlignment.Center,
+			};
+
+			this.databaseMenuButton = new GlyphButton ()
+			{
+				Parent = group,
+				ButtonStyle = ButtonStyle.ComboItem,
+				GlyphShape = GlyphShape.Menu,
+				AutoFocus = false,
+				PreferredSize = new Size (buttonWidth, 11),
+				Dock = DockStyle.Bottom,
+				Margins = new Margins (0, 0, -1, 0),
+			};
+
+			ToolTip.Default.SetToolTip (this.databaseMenuButton, "Montre une autre base de données...");
+
+			this.databaseButton = this.CreateButton ();
+			this.databaseButton.Parent = group;
+			this.databaseButton.PreferredSize = new Size (buttonWidth, buttonWidth);
+			this.databaseButton.Dock = DockStyle.Fill;
+
+			
+			this.databaseMenuButton.Clicked += delegate
+			{
+				this.ShowDatabaseSelectionMenu (this.databaseMenuButton);
+			};
+
+			this.databaseMenuButton.Entered += delegate
+			{
+				this.databaseButton.ButtonStyle = ButtonStyle.Combo;
+			};
+
+			this.databaseMenuButton.Exited += delegate
+			{
+				this.databaseButton.ButtonStyle = ButtonStyle.ToolItem;
+			};
+
+			var databaseCommandHandler = this.GetDatabaseCommandHandler ();
+
+			databaseCommandHandler.Changed += delegate
+			{
+				this.UpdateDatabaseButton ();
+			};
+
+			this.UpdateDatabaseMenu ();
+		}
+
+		private void CreateRibbonNavigationSection(RibbonPage page)
+		{
+			var section = new RibbonSection (page)
+			{
+				Name = "Navigation",
+				Title = "Navigation",
+				PreferredWidth = Library.UI.Constants.ButtonLargeWidth * 2,
+				Dock = DockStyle.Left,
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+			};
+
+			section.Children.Add (this.CreateButton (Res.Commands.History.NavigateBackward));
+			section.Children.Add (this.CreateButton (Res.Commands.History.NavigateForward));
+		}
+
+		private void CreateRibbonSettingsSection(RibbonPage page)
+		{
+			var section = new RibbonSection (page)
+			{
+				Name = "Settings",
+				Title = "Réglages",
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				Dock = DockStyle.Right,
+				PreferredWidth = Library.UI.Constants.ButtonLargeWidth * 2,
+			};
+
 			section.Children.Add (this.CreateButton (Res.Commands.Global.ShowSettings));
 			section.Children.Add (this.CreateButton (Res.Commands.Global.ShowDebug));
 		}
@@ -554,9 +561,10 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.workflowContainer = new RibbonSection (page)
 			{
 				Name = "Workflow.Container",
-				Title = "Nouveau document",
+				Title = "Actions",
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				Dock = DockStyle.Fill,
+				Dock = DockStyle.Left,
+				PreferredWidth = 80,
 			};
 
 			//	Pour forcer la hauteur lorsque le ruban est vide.
@@ -1038,26 +1046,26 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		public event EventHandler				DatabaseMenuDefaultCommandNameChanged;
+		public event EventHandler					DatabaseMenuDefaultCommandNameChanged;
 
-		private readonly CommandDispatcher		commandDispatcher;
-		private readonly PersistenceManager		persistenceManager;
-		private readonly UserManager			userManager;
-		private readonly FeatureManager			featureManager;
-		private readonly CoreCommandDispatcher	coreCommandDispatcher;
+		private readonly CommandDispatcher			commandDispatcher;
+		private readonly PersistenceManager			persistenceManager;
+		private readonly UserManager				userManager;
+		private readonly FeatureManager				featureManager;
+		private readonly CoreCommandDispatcher		coreCommandDispatcher;
+		private readonly List<IconOrImageButton>	authenticateUserButtons;
+		private readonly List<StaticText>			authenticateUserWidgets;
+		private readonly Dictionary<string, bool>	ribbonShowPages;
 		
-		private RibbonBook						ribbonBook;
-		private RibbonPage						ribbonPageHome;
-		private RibbonPage						ribbonPageWorkflow;
-		private RibbonPage						ribbonPageBusiness;
+		private RibbonBook							ribbonBook;
+		private RibbonPage							ribbonPageHome;
+		private RibbonPage							ribbonPageWorkflow;
+		private RibbonPage							ribbonPageBusiness;
 
-		private IconButton						databaseButton;
-		private GlyphButton						databaseMenuButton;
-		private string							databaseMenuDefaultCommandName;
+		private IconButton							databaseButton;
+		private GlyphButton							databaseMenuButton;
+		private string								databaseMenuDefaultCommandName;
 
-		private List<IconOrImageButton>			authenticateUserButtons;
-		private List<StaticText>				authenticateUserWidgets;
-
-		private RibbonSection					workflowContainer;
+		private RibbonSection						workflowContainer;
 	}
 }

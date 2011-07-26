@@ -260,17 +260,33 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void ClearButtons()
 		{
 			//	Supprime tous les boutons dans la section Workflow du ruban.
-			var buttons = WorkflowController.ribbonWorkflowContainer.Children.OfType<Button> ().ToArray ();
+			var widgets = WorkflowController.ribbonWorkflowContainer.Children.OfType<Widget> ().ToArray ();
 
-			foreach (var button in buttons)
+			foreach (var widget in widgets)
 			{
-				button.Dispose ();
+				if (widget is Button   ||
+					widget is Separator)
+				{
+					widget.Dispose ();
+				}
 			}
 		}
 
 		private void AddButton(string id, FormattedText title, FormattedText description, System.Action callback)
 		{
 			//	Ajoute un bouton dans la section Workflow du ruban.
+			if (WorkflowController.ribbonWorkflowContainer.Children.OfType<Button> ().Any ())
+			{
+				new Separator
+				{
+					Parent = WorkflowController.ribbonWorkflowContainer,
+					IsVerticalLine = true,
+					Dock = DockStyle.Stacked,
+					PreferredWidth = 1,
+					Margins = new Margins (1, 1, 0, 0),
+				};
+			}
+
 			var button = new Button
 			{
 				Parent = WorkflowController.ribbonWorkflowContainer,
@@ -278,9 +294,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				FormattedText = title,
 				ButtonStyle = ButtonStyle.Confirmation,
 				Dock = DockStyle.Stacked,
-				PreferredWidth = 120,
+				PreferredWidth = 100,
 				PreferredHeight = Library.UI.Constants.ButtonLargeWidth+10,
-				Margins = new Margins (0, 1, 0, 0),
 			};
 
 			if (!description.IsNullOrEmpty)

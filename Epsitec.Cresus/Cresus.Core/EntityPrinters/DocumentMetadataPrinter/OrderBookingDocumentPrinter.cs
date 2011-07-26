@@ -41,6 +41,11 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 			base.BuildSections ();
 
+			if (this.ContentLines.Count () == 0)
+			{
+				return "Il n'y a rien à imprimer, car le document ne contient aucune ligne.";
+			}
+
 			int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
 
 			this.BuildHeader ();
