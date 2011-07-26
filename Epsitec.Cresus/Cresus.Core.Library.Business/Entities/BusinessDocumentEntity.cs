@@ -74,6 +74,90 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
+
+		public IList<AbstractDocumentItemEntity> ConciseLines
+		{
+			//	Retourne la liste des lignes d'un document commercial expurgée de toutes les
+			//	lignes redondantes, telles que les sous-totaux inutiles.
+			//	Le résultat n'est à utiliser que pour la production de documents !
+			get
+			{
+				var conciseLines = new List<AbstractDocumentItemEntity> (this.Lines);
+
+				//	Supprime tous les sous-totaux à double.
+				int i = 0;
+				while (i < conciseLines.Count-1)
+				{
+					var line1 = conciseLines[i] as SubTotalDocumentItemEntity;
+					var line2 = conciseLines[i+1] as SubTotalDocumentItemEntity;
+
+					if (BusinessDocumentEntity.IsSameSubTotals (line1, line2))
+					{
+						conciseLines.RemoveAt (i);
+						continue;
+					}
+
+					i++;
+				}
+
+				//	Supprime tous les sous-totaux inutiles. Par exemple, un sous-total sans rabais
+				//	précédé d'un article unique est superflu.
+				i = 0;
+				while (i < conciseLines.Count-1)
+				{
+					var line1 = (i == 0) ? null : conciseLines[i-1];
+					var line2 = conciseLines[i];
+					var line3 = conciseLines[i+1];
+
+					if ((line1 == null || !(line1 is ArticleDocumentItemEntity)) &&
+						line2 is ArticleDocumentItemEntity &&
+						line3 is SubTotalDocumentItemEntity &&
+						BusinessDocumentEntity.IsMiscSubTotal (line3 as SubTotalDocumentItemEntity))
+					{
+						conciseLines.RemoveAt (i+1);
+						continue;
+					}
+
+					i++;
+				}
+
+				return conciseLines;
+			}
+		}
+
+		private static bool IsSameSubTotals(SubTotalDocumentItemEntity line1, SubTotalDocumentItemEntity line2)
+		{
+			//	Retourne true si les 2 lignes de sous-totaux sont redondantes et équivalentes.
+			if (line1 == null || line2 == null)
+			{
+				return false;
+			}
+
+			return BusinessDocumentEntity.IsMiscSubTotal (line1) &&
+				   BusinessDocumentEntity.IsMiscSubTotal (line2) &&
+				   line1.ResultingPriceBeforeTax.Value == line2.ResultingPriceBeforeTax.Value &&
+				   line1.ResultingTax.Value            == line2.ResultingTax.Value;
+		}
+
+		private static bool IsMiscSubTotal(SubTotalDocumentItemEntity line)
+		{
+			//	Retourne true si la ligne de sous-total est redondante, c'est-à-dire si elle n'a pas de rabais.
+			if (line == null)
+			{
+				return false;
+			}
+
+			if (line.GroupIndex == 0 ||
+				line.Discount.DiscountRate.HasValue ||
+				line.Discount.Value.HasValue)
+			{
+				return false;
+			}
+
+			return true;
+		}
+
+
 		#region ICopyableEntity<BusinessDocumentEntity> Members
 
 		void ICopyableEntity<BusinessDocumentEntity>.CopyTo(IBusinessContext businessContext, BusinessDocumentEntity copy)

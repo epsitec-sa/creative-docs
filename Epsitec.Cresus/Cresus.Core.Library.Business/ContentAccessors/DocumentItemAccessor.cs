@@ -38,7 +38,22 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		{
 			//	Construit tout le contenu.
 			//	Retourne false si le contenu est entièrement caché.
-			System.Diagnostics.Debug.Assert ((mode & (DocumentItemAccessorMode.EditArticleName | DocumentItemAccessorMode.EditArticleDescription | DocumentItemAccessorMode.UseArticleName | DocumentItemAccessorMode.UseArticleBoth)) != 0);
+			int count = 0;
+
+			if ((mode & DocumentItemAccessorMode.EditArticleName       ) != 0)  count++;
+			if ((mode & DocumentItemAccessorMode.EditArticleDescription) != 0)  count++;
+			if ((mode & DocumentItemAccessorMode.UseArticleName        ) != 0)  count++;
+			if ((mode & DocumentItemAccessorMode.UseArticleBoth        ) != 0)  count++;
+			
+			if (count == 0)
+			{
+				throw new System.Exception ("At least one mode must be present.");
+			}
+			if (count > 1)
+			{
+				throw new System.Exception ("These simultaneous modes are invalid.");
+			}
+
 			this.item = item;
 			this.type = type;
 			this.mode = mode;

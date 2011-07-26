@@ -466,7 +466,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			get
 			{
 				//	Donne nornalement toutes les lignes.
-				foreach (var line in this.Entity.Lines)
+				foreach (var line in this.Entity.ConciseLines)
 				{
 					yield return new ContentLine (line);
 				}

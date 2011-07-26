@@ -169,33 +169,34 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.ribbonBook.ActivePage = this.ribbonPageHome;
 
 			//	Home ribbon:
-			this.CreateRibbonValidateSection (this.ribbonPageHome);
-			this.CreateRibbonEditSection (this.ribbonPageHome);
+			this.CreateRibbonValidateSection (this.ribbonPageHome);  // communs
+			this.CreateRibbonEditSection (this.ribbonPageHome);  // communs
 			this.CreateRibbonClipboardSection (this.ribbonPageHome);
 			this.CreateRibbonActionSection (this.ribbonPageHome);
 			this.CreateRibbonDatabaseSection (this.ribbonPageHome);
 			this.CreateRibbonNavigationSection (this.ribbonPageHome);
 
-			this.CreateRibbonUserSection (this.ribbonPageHome);
+			this.CreateRibbonUserSection (this.ribbonPageHome);  // communs
 			this.CreateRibbonSettingsSection (this.ribbonPageHome);
 
 			//	Workflow ribbon:
-			this.CreateRibbonValidateSection (this.ribbonPageWorkflow);
-			this.CreateRibbonEditSection (this.ribbonPageWorkflow);
-
+			this.CreateRibbonValidateSection (this.ribbonPageWorkflow);  // communs
+			this.CreateRibbonEditSection (this.ribbonPageWorkflow);  // communs
+			this.CreateRibbonClipboardSection (this.ribbonPageWorkflow);
+			this.CreateRibbonActionSection (this.ribbonPageWorkflow);
 			this.CreateRibbonWorkflowContainerSection (this.ribbonPageWorkflow);
 
-			this.CreateRibbonUserSection (this.ribbonPageWorkflow);
+			this.CreateRibbonUserSection (this.ribbonPageWorkflow);  // communs
 
 			//	Business ribbon:
-			this.CreateRibbonValidateSection (this.ribbonPageBusiness);
-			this.CreateRibbonEditSection (this.ribbonPageBusiness);
+			this.CreateRibbonValidateSection (this.ribbonPageBusiness);  // communs
+			this.CreateRibbonEditSection (this.ribbonPageBusiness);  // communs
 
 			this.CreateRibbonBusinessCreateSection (this.ribbonPageBusiness);
 			this.CreateRibbonBusinessOperSection (this.ribbonPageBusiness);
 			this.CreateRibbonBusinessGroupSection (this.ribbonPageBusiness);
 
-			this.CreateRibbonUserSection (this.ribbonPageBusiness);
+			this.CreateRibbonUserSection (this.ribbonPageBusiness);  // communs
 		}
 
 		private static RibbonPage CreateRibbonPage(RibbonBook book, string name, string title)
