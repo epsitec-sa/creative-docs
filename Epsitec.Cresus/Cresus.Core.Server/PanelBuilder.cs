@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Server
 	{
 		// TODO Maybe we don't want the session to be there
 		// Only here for testing purposes
-		public static CoreSession Session
+		public static CoreSession CoreSession
 		{
 			get;
 			set;
@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Core.Server
 			BuildController (new MailContactEntity (), Controllers.ViewControllerMode.Summary);
 			BuildController (new AffairEntity (), Controllers.ViewControllerMode.Summary);
 
-			var context = PanelBuilder.Session.GetBusinessContext ();
+			var context = PanelBuilder.CoreSession.GetBusinessContext ();
 
 			var customer = (from x in context.GetAllEntities<CustomerEntity> ()
 							where x.Relation.Person is NaturalPersonEntity

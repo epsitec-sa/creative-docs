@@ -20,22 +20,16 @@ namespace Epsitec.Cresus.Core.Server
 
 			RunNancy ();
 
-			return;
-
-			var server = CoreServer.Instance;
-			var session = server.CreateSession ();
-
-			PanelBuilder.Session = session;
+			//var server = CoreServer.Instance;
+			//var session = server.CreateSession ();
 
 			//this.ExperimentalProfiling ();
 			//PanelBuilder.ExperimentalCode ();
 
-			this.ExperimentalJSON (session);
-
 			//this.ExperimentalEntityManipulations (session);
 
-			session.DisposeBusinessContext ();
-			server.DeleteSession (session.Id);
+			//session.DisposeBusinessContext ();
+			//server.DeleteSession (session.Id);
 
 
 			//	TODO: wait until the server shuts down...
@@ -119,31 +113,6 @@ namespace Epsitec.Cresus.Core.Server
 
 				System.Diagnostics.Debug.WriteLine (string.Format ("Attempt {0}: fetching EditionController took {1} μs", i+1, time));
 			}
-		}
-
-		private void ExperimentalJSON(CoreSession session)
-		{
-			var context = session.GetBusinessContext ();
-			var writer = new JsonFx.Json.JsonWriter ();
-
-			var customers = from x in context.GetAllEntities<CustomerEntity> ()
-							select x;
-
-			// Stackoverflow
-			//var json = writer.Write (customer);
-
-			var obj = new List<object> ();
-
-			customers.ForEach (c => obj.Add (new
-			{
-				firstName = c.IdA,
-				lastName = c.IdB
-			}));
-
-			var json = writer.Write (obj);
-
-			System.IO.File.WriteAllText ("web/data/persons.json", json);
-
 		}
 
 		private static void RunNancy()

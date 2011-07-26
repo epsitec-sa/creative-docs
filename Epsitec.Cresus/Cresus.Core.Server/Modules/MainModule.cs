@@ -27,13 +27,9 @@ namespace Epsitec.Cresus.Core.Server
 				var coreSession = GetCoreSession();
 
 				var context = coreSession.GetBusinessContext ();
-				var writer = new JsonFx.Json.JsonWriter ();
 
 				var customers = from x in context.GetAllEntities<CustomerEntity> ()
 								select x;
-
-				// Stackoverflow
-				//var json = writer.Write (customer);
 
 				var obj = new List<object> ();
 
@@ -49,10 +45,6 @@ namespace Epsitec.Cresus.Core.Server
 				});
 
 				DebugSession.Session["last"] = System.DateTime.Now.ToString ();
-
-				var json = writer.Write (obj);
-
-				//return json;
 
 				var res = Response.AsJson (obj);
 				res.Headers["Access-Control-Allow-Origin"] = "*";
@@ -71,6 +63,7 @@ namespace Epsitec.Cresus.Core.Server
 			{
 				var server = CoreServer.Instance;
 				session = server.CreateSession ();
+				PanelBuilder.CoreSession = session;
 
 				DebugSession.Session["CoreSession"] = session.Id;
 			}
