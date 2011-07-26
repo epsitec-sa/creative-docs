@@ -158,8 +158,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 			if (this.HasOption (DocumentOption.ArticleAdditionalQuantities))
 			{
-				this.columnsWithoutRightBorder.Add (this.tableColumns[TableColumnKeys.AdditionalType].Rank);
-				this.columnsWithoutRightBorder.Add (this.tableColumns[TableColumnKeys.AdditionalQuantity].Rank);
+				this.columnsWithoutRightBorder.Add (TableColumnKeys.AdditionalType);
+				this.columnsWithoutRightBorder.Add (TableColumnKeys.AdditionalQuantity);
 			}
 		}
 
@@ -215,7 +215,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			{
 				if (this.IsWithFrame)
 				{
-					this.SetCellBorder (this.tableColumns[TableColumnKeys.Total].Rank, last, new CellBorder (CellBorder.BoldWidth));
+					this.SetCellBorder (TableColumnKeys.Total, last, new CellBorder (CellBorder.BoldWidth));
 				}
 				else
 				{

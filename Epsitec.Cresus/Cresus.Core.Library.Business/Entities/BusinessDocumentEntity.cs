@@ -75,12 +75,13 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
+		#region Concise lines algorithm
 		public IList<AbstractDocumentItemEntity> ConciseLines
 		{
 			//	Retourne la liste des lignes d'un document commercial expurgée de toutes les
 			//	lignes redondantes, telles que les sous-totaux inutiles.
 			//	Le résultat n'est à utiliser que pour la production de documents !
-			//	En effet, il n'est pas compatible avec la calculateur de prix, qui ajouterait
+			//	En effet, il n'est pas compatible avec la calculateur de prix, qui rajouterait
 			//	certains sous-totaux enlevés !
 			get
 			{
@@ -90,10 +91,10 @@ namespace Epsitec.Cresus.Core.Entities
 				int i = 0;
 				while (i < conciseLines.Count)
 				{
-					var line1 = conciseLines[i] as SubTotalDocumentItemEntity;
-					var line2 = BusinessDocumentEntity.GetNextActiveLine (conciseLines, i, 1) as SubTotalDocumentItemEntity;
+					var line0 = conciseLines[i] as SubTotalDocumentItemEntity;
+					var line1 = BusinessDocumentEntity.GetNextActiveLine (conciseLines, i, 1) as SubTotalDocumentItemEntity;
 
-					if (BusinessDocumentEntity.IsSimilarSubTotals (line1, line2))
+					if (BusinessDocumentEntity.IsSimilarSubTotals (line0, line1))
 					{
 						conciseLines.RemoveAt (i);
 						continue;
@@ -107,15 +108,15 @@ namespace Epsitec.Cresus.Core.Entities
 				i = 0;
 				while (i < conciseLines.Count)
 				{
-					var line1 = BusinessDocumentEntity.GetNextActiveLine (conciseLines, i, -2);
-					var line2 = BusinessDocumentEntity.GetNextActiveLine (conciseLines, i, -1);
-					var line3 = conciseLines[i];
+					var line2 = BusinessDocumentEntity.GetNextActiveLine (conciseLines, i, -2);
+					var line1 = BusinessDocumentEntity.GetNextActiveLine (conciseLines, i, -1);
+					var line0 = conciseLines[i];
 
 					//	Article unique suivi d'un sous-total superflu ?
-					if ((line1 == null || !(line1 is ArticleDocumentItemEntity)) &&
-						line2 is ArticleDocumentItemEntity &&
-						line3 is SubTotalDocumentItemEntity &&
-						BusinessDocumentEntity.IsMiscSubTotal (line3 as SubTotalDocumentItemEntity))
+					if ((line2 == null || !(line2 is ArticleDocumentItemEntity)) &&
+						line1 is ArticleDocumentItemEntity &&
+						line0 is SubTotalDocumentItemEntity &&
+						BusinessDocumentEntity.IsMiscSubTotal (line0 as SubTotalDocumentItemEntity))
 					{
 						conciseLines.RemoveAt (i);  // supprime le sous-total
 						continue;
@@ -125,6 +126,27 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 
 				return conciseLines;
+			}
+		}
+
+		private static AbstractDocumentItemEntity GetNextActiveLine(IList<AbstractDocumentItemEntity> lines, int index, int direction)
+		{
+			//	Cherche une ligne en avant ou en arrière, en ignorant les lignes de texte.
+			while (true)
+			{
+				index += direction;
+
+				if (index < 0 || index >= lines.Count ())
+				{
+					return null;
+				}
+
+				var line = lines[index];
+
+				if (!(line is TextDocumentItemEntity))
+				{
+					return line;
+				}
 			}
 		}
 
@@ -158,26 +180,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 			return true;
 		}
-
-		private static AbstractDocumentItemEntity GetNextActiveLine(IList<AbstractDocumentItemEntity> lines, int index, int direction)
-		{
-			while (true)
-			{
-				index += direction;
-
-				if (index < 0 || index >= lines.Count ())
-				{
-					return null;
-				}
-
-				var line = lines[index];
-
-				if (!(line is TextDocumentItemEntity))
-				{
-					return line;
-				}
-			}
-		}
+		#endregion
 
 
 		#region ICopyableEntity<BusinessDocumentEntity> Members

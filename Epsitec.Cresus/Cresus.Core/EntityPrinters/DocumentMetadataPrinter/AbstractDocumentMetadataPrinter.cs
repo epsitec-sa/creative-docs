@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			System.Diagnostics.Debug.Assert (documentMetadata != null);
 			this.businessLogic = new BusinessLogic (this.businessContext as BusinessContext, documentMetadata);
 
-			this.columnsWithoutRightBorder = new List<int> ();
+			this.columnsWithoutRightBorder = new List<TableColumnKeys> ();
 		}
 
 		public override string JobName
@@ -412,8 +412,9 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				}
 			}
 
+
 			var cellBorder = this.table.GetCellBorder (0, row);
-			this.SetCellBorder (0, row, new CellBorder (cellBorder.LeftWidth, cellBorder.RightWidth, cellBorder.BottomWidth, cellBorder.TopWidth, topGap, cellBorder.Color));
+			this.table.SetCellBorder (0, row, new CellBorder (cellBorder.LeftWidth, cellBorder.RightWidth, cellBorder.BottomWidth, cellBorder.TopWidth, topGap, cellBorder.Color));
 		}
 
 
@@ -466,6 +467,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			get
 			{
 				//	Donne nornalement toutes les lignes.
+				//	Les versions dans les classes dérivées peuvent ne donner que certaines lignes,
+				//	dans un ordre spécial, etc.
 				foreach (var line in this.Entity.ConciseLines)
 				{
 					yield return new ContentLine (line);
@@ -533,19 +536,19 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
-		protected void SetTableText(int row, TableColumnKeys column, FormattedText text)
+		protected void SetTableText(int row, TableColumnKeys columnKey, FormattedText text)
 		{
-			if (this.GetColumnVisibility (column))
+			if (this.GetColumnVisibility (columnKey))
 			{
-				this.table.SetText (this.tableColumns[column].Rank, row, text, this.FontSize);
+				this.table.SetText (this.tableColumns[columnKey].Rank, row, text, this.FontSize);
 			}
 		}
 
-		protected bool GetColumnVisibility(TableColumnKeys column)
+		protected bool GetColumnVisibility(TableColumnKeys columnKey)
 		{
-			if (this.tableColumns.ContainsKey (column))
+			if (this.tableColumns.ContainsKey (columnKey))
 			{
-				return this.tableColumns[column].Visible;
+				return this.tableColumns[columnKey].Visible;
 			}
 			else
 			{
@@ -553,11 +556,11 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-		protected void SetColumnVisibility(TableColumnKeys column, bool visibility)
+		protected void SetColumnVisibility(TableColumnKeys columnKey, bool visibility)
 		{
-			if (this.tableColumns.ContainsKey (column))
+			if (this.tableColumns.ContainsKey (columnKey))
 			{
-				this.tableColumns[column].Visible = visibility;
+				this.tableColumns[columnKey].Visible = visibility;
 			}
 		}
 
@@ -800,6 +803,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 		protected void IndentCellMargins(int row, TableColumnKeys columnKey, int groupIndex)
 		{
+			//	Indente une cellule, en augmentant sa marge gauche.
 			int level = System.Math.Max (AbstractDocumentItemEntity.GetGroupLevel (groupIndex)-1, 0);
 			double indent = this.GetOptionValue (DocumentOption.IndentWidth, 3) * level;
 
@@ -890,35 +894,38 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 		protected void SetCellBorder(TableBand table, int row, CellBorder value)
 		{
-			for (int column = 0; column < this.table.ColumnsCount; column++)
+			foreach (var pair in this.tableColumns)
 			{
-				this.SetCellBorder (table, column, row, value);
+				if (pair.Value.Visible)
+				{
+					this.SetCellBorder (table, pair.Key, row, value);
+				}
 			}
 		}
 
-		protected void SetCellBorder(int column, int row, CellBorder value)
+		protected void SetCellBorder(TableColumnKeys columnKey, int row, CellBorder value)
 		{
-			this.SetCellBorder (this.table, column, row, value);
+			this.SetCellBorder (this.table, columnKey, row, value);
 		}
 
-		protected void SetCellBorder(TableBand table, int column, int row, CellBorder value)
+		protected void SetCellBorder(TableBand table, TableColumnKeys columnKey, int row, CellBorder value)
 		{
 			if (this.IsWithFrame)
 			{
-				if (this.columnsWithoutRightBorder.Contains (column))
+				if (this.columnsWithoutRightBorder.Contains (columnKey))
 				{
 					//	Plus de trait à droite.
 					value = new CellBorder (value.LeftWidth, 0, value.BottomWidth, value.TopWidth, value.TopGap, value.Color);
 				}
 
-				if (this.columnsWithoutRightBorder.Contains (column-1))
+				if (this.columnsWithoutRightBorder.Contains (columnKey-1))
 				{
 					//	Plus de trait à gauche.
 					value = new CellBorder (0, value.RightWidth, value.BottomWidth, value.TopWidth, value.TopGap, value.Color);
 				}
 			}
 
-			table.SetCellBorder (column, row, value);
+			table.SetCellBorder (this.tableColumns[columnKey].Rank, row, value);
 		}
 
 
@@ -1057,7 +1064,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		protected static readonly double			reportHeight = 7.0;
 
 		protected readonly BusinessLogic			businessLogic;
-		protected readonly List<int>				columnsWithoutRightBorder;
+		protected readonly List<TableColumnKeys>	columnsWithoutRightBorder;
 
 		private TableBand							table;
 		private int									visibleColumnCount;
