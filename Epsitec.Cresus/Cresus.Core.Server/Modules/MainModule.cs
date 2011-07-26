@@ -17,14 +17,14 @@ namespace Epsitec.Cresus.Core.Server
 
 			Get["/login"] = parameters =>
 			{
-				GetSession (this);
+				GetCoreSession ();
 
 				return "logged in";
 			};
 
 			Get["/persons.json"] = parameters =>
 			{
-				var coreSession = GetSession(this);
+				var coreSession = GetCoreSession();
 
 				var context = coreSession.GetBusinessContext ();
 				var writer = new JsonFx.Json.JsonWriter ();
@@ -45,10 +45,10 @@ namespace Epsitec.Cresus.Core.Server
 
 				obj.Add (new
 				{
-					LastUpdate = Session["last"] as string
+					LastUpdate = DebugSession.Session["last"] as string
 				});
 
-				Session["last"] = System.DateTime.Now.ToString ();
+				DebugSession.Session["last"] = System.DateTime.Now.ToString ();
 
 				var json = writer.Write (obj);
 
@@ -62,9 +62,9 @@ namespace Epsitec.Cresus.Core.Server
 			};
 		}
 
-		private static CoreSession GetSession(MainModule m)
+		private CoreSession GetCoreSession()
 		{
-			var sessionId = m.Session["CoreSession"] as string;
+			var sessionId = DebugSession.Session["CoreSession"] as string;
 			var session = CoreServer.Instance.GetCoreSession (sessionId);
 
 			if (session == null)
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Core.Server
 				var server = CoreServer.Instance;
 				session = server.CreateSession ();
 
-				m.Session["CoreSession"] = session.Id;
+				DebugSession.Session["CoreSession"] = session.Id;
 			}
 
 			return session;

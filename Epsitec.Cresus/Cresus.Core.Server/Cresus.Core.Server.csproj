@@ -63,7 +63,8 @@
     <Compile Include="CoreServerProgram.cs" />
     <Compile Include="CoreServer.cs" />
     <Compile Include="CoreSession.cs" />
-    <Compile Include="MainModule.cs" />
+    <Compile Include="DebugSession.cs" />
+    <Compile Include="Modules\MainModule.cs" />
     <Compile Include="Nancy\CoreHost.cs" />
     <Compile Include="Nancy\FileSystemRootPathProvider.cs" />
     <Compile Include="PanelBuilder.cs" />
