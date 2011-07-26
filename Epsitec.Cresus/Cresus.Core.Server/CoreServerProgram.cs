@@ -8,8 +8,7 @@ using System.ServiceModel.Web;
 using Epsitec.Common.Debugging;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Cresus.Core.Entities;
-using Nancy.Hosting.Self;
-using Nancy.Hosting.Wcf;
+using Epsitec.Cresus.Core.Server.Nancy;
 
 namespace Epsitec.Cresus.Core.Server
 {
@@ -155,12 +154,12 @@ namespace Epsitec.Cresus.Core.Server
 
 		private static void RunSelf()
 		{
-			var nancyHost = new NancyHost (BaseUri);
-			nancyHost.Start ();
+			var coreHost = new CoreHost (BaseUri);
+			coreHost.Start ();
 
-			System.Console.WriteLine ("Nancy now listening - navigate to {0}. Press enter to stop", BaseUri);
+			System.Console.WriteLine ("Nancy now listening - navigate to {0}", BaseUri);
 
-			//nancyHost.Stop ();
+			//coreHost.Stop ();
 		}
 
 		// Ne fonctionne pas

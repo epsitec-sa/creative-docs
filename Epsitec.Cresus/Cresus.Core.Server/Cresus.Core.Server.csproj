@@ -41,17 +41,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\JsonFx.dll</HintPath>
     </Reference>
-    <Reference Include="Nancy, Version=0.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Nancy, Version=0.0.0.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\Nancy.dll</HintPath>
-    </Reference>
-    <Reference Include="Nancy.Hosting.Self, Version=0.6.0.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\Nancy.Hosting.Self.dll</HintPath>
-    </Reference>
-    <Reference Include="Nancy.Hosting.Wcf, Version=0.6.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\Nancy.Hosting.Wcf.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -67,10 +59,13 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="CoreServerBootstrapper.cs" />
     <Compile Include="CoreServerProgram.cs" />
     <Compile Include="CoreServer.cs" />
     <Compile Include="CoreSession.cs" />
     <Compile Include="MainModule.cs" />
+    <Compile Include="Nancy\CoreHost.cs" />
+    <Compile Include="Nancy\FileSystemRootPathProvider.cs" />
     <Compile Include="PanelBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -174,8 +169,6 @@
     <Content Include="lib\JsonFx.dll" />
     <Content Include="lib\JsonFx.xml" />
     <Content Include="lib\Nancy.dll" />
-    <Content Include="lib\Nancy.Hosting.Self.dll" />
-    <Content Include="lib\Nancy.Hosting.Wcf.dll" />
     <Content Include="lib\README.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

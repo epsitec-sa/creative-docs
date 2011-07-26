@@ -9,7 +9,8 @@ namespace Epsitec.Cresus.Core.Server
 		{
 			base.InitialiseInternal (container);
 
-			CookieBasedSessions.Enable (this, "MyPassPhrase", "MySaltIsReallyGood", "MyHmacPassphrase");
+			//CookieBasedSessions.Enable (this, "MyPassPhrase", "MySaltIsReallyGood", "MyHmacPassphrase");
+			CookieBasedSessions.Enable (this);
 		}
 	}
 }
