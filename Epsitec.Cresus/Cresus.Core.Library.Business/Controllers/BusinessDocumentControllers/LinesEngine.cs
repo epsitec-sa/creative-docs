@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			return LinesEngine.MakeSingleSelection (new LineInformations (null, newLine, null, 0));
 		}
 
-		public List<LineInformations> CreateQuantity(List<LineInformations> selection, ArticleQuantityType quantityType, int daysToAdd, bool simulation = false)
+		public List<LineInformations> CreateQuantity(List<LineInformations> selection, bool simulation = false)
 		{
 			//	Crée une nouvelle quantité pour un article existant.
 			if (selection.Count == 0)
@@ -98,6 +98,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				return null;
 			}
 
+			//	Utilise le premier type de la liste de BusinessLogic, mais pas Ordered, puisque ce dernier
+			//	et toujours édité dans ArticleLineEditorController, et jamais dans QuantityLineEditorController.
+			ArticleQuantityType quantityType = this.businessLogic.ArticleQuantityTypeEditionEnabled.Select (x => x.Key).Where (x => x != ArticleQuantityType.Ordered).FirstOrDefault ();
 			var quantityColumnEntity = this.SearchArticleQuantityColumnEntity (quantityType);
 
 			if (quantityColumnEntity == null)
@@ -119,7 +122,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			newQuantity.Quantity = 1;
 			newQuantity.Unit = quantity.Unit;
 			newQuantity.QuantityColumn = quantityColumnEntity;
-			newQuantity.BeginDate = new Date (Date.Today.Ticks + Time.TicksPerDay*daysToAdd);  // n jours plus tard
+			newQuantity.BeginDate = new Date (Date.Today.Ticks + Time.TicksPerDay*7);  // 7 jours plus tard, arbitrairement
 
 			article.ArticleQuantities.Add (newQuantity);
 
@@ -807,7 +810,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public bool IsCreateQuantityEnabled(List<LineInformations> selection)
 		{
-			this.CreateQuantity (selection, ArticleQuantityType.Delayed, 7, simulation: true);
+			this.CreateQuantity (selection, simulation: true);
 			return this.lastError == LinesError.OK;
 		}
 

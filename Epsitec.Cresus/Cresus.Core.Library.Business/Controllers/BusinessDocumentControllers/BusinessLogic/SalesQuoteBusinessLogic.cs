@@ -67,16 +67,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		public override ArticleQuantityType MainArticleQuantityType
-		{
-			//	Retourne le type de la quantité "principale" en fonction du type du document en cours.
-			//	C'est cette quantité qui peuple la colonne "quantité".
-			get
-			{
-				return ArticleQuantityType.Ordered;
-			}
-		}
-
 		public override IEnumerable<ArticleQuantityType> ArticleQuantityTypeEditionEnabled
 		{
 			get

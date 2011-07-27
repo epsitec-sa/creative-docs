@@ -202,24 +202,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		public ArticleQuantityType MainArticleQuantityType
-		{
-			//	Retourne le type de la quantité "principale" en fonction du type du document en cours.
-			//	C'est cette quantité qui peuple la colonne "quantité".
-			get
-			{
-				if (this.IsDebug)
-				{
-					return ArticleQuantityType.Ordered;
-				}
-				else
-				{
-					return this.documentBusinessLogic.MainArticleQuantityType;
-				}
-			}
-		}
-
-
 		public ArticleQuantityColumnEntity GetArticleQuantityColumnEntity(ArticleQuantityType type)
 		{
 			//	Retourne une définition de type de quantité définie dans les réglages globaux.
@@ -246,6 +228,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			//	Retourne les types de quantité définis dans les réglages globaux, compatibles
 			//	avec le document en cours.
+			//	Le premier de la liste est considéré comme "principal".
 			get
 			{
 				var enabled = this.IsDebug ? this.DebugArticleQuantityTypeEditionEnabled : this.documentBusinessLogic.ArticleQuantityTypeEditionEnabled;

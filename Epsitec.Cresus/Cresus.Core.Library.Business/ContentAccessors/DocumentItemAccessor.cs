@@ -209,31 +209,6 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 		private void BuildArticleItem(ArticleDocumentItemEntity line)
 		{
-			var mainQuantityType = ArticleQuantityType.None;
-
-			//	Génère la quantité principale.
-			if ((this.mode & DocumentItemAccessorMode.UseMainColumns) != 0)  // utilise les colonnes MainQuantity/MainUnit ?
-			{
-				mainQuantityType = this.businessLogic.MainArticleQuantityType;
-
-				if (mainQuantityType != ArticleQuantityType.None)
-				{
-					decimal mainQuantity = 0;
-					FormattedText mainUnit = null;
-
-					foreach (var quantity in line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == mainQuantityType))
-					{
-						//	S'il y a plusieurs quantités principales, elles sont sommées, mais cela
-						//	ne devrait pas arriver, me semble-t-il !
-						mainQuantity += quantity.Quantity;
-						mainUnit = quantity.Unit.Name;
-					}
-
-					this.SetContent (0, DocumentItemAccessorColumn.MainQuantity, mainQuantity.ToString ());
-					this.SetContent (0, DocumentItemAccessorColumn.MainUnit, mainUnit);
-				}
-			}
-
 			//	Génère une éventuelle erreur sur les quantités.
 			decimal orderedQuantity = 0;
 			decimal additionalQuantity = 0;
@@ -251,7 +226,31 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			}
 
 			var quantityError = (additionalQuantity <= orderedQuantity) ? DocumentItemAccessorError.OK : DocumentItemAccessorError.AdditionalQuantitiesTooHigh;
-			this.SetError (0, DocumentItemAccessorColumn.AdditionalQuantity, quantityError);
+
+			//	Génère la quantité principale.
+			var quantityTypes = this.businessLogic.ArticleQuantityTypeEditionEnabled.Select (x => x.Key);
+			var mainQuantityType = ArticleQuantityType.None;
+
+			if ((this.mode & DocumentItemAccessorMode.UseMainColumns) != 0 &&  // utilise les colonnes MainQuantity/MainUnit (impression) ?
+				quantityTypes != null && quantityTypes.Count () != 0)
+			{
+				mainQuantityType = quantityTypes.First ();
+
+				decimal mainQuantity = 0;
+				FormattedText mainUnit = null;
+
+				foreach (var quantity in line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == mainQuantityType))
+				{
+					//	S'il y a plusieurs quantités principales, elles sont sommées, mais cela
+					//	ne devrait pas arriver, me semble-t-il !
+					mainQuantity += quantity.Quantity;
+					mainUnit = quantity.Unit.Name;
+				}
+
+				this.SetContent (0, DocumentItemAccessorColumn.MainQuantity, mainQuantity.ToString ());
+				this.SetContent (0, DocumentItemAccessorColumn.MainUnit, mainUnit);
+				this.SetError (0, DocumentItemAccessorColumn.MainQuantity, quantityError);
+			}
 
 			//	Génère les autres quantités (sans la principale).
 			if ((this.mode & DocumentItemAccessorMode.AdditionalQuantities) != 0)  // met les quantités additionnelles ?
@@ -356,9 +355,9 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		static ArticleQuantityType[] articleQuantityTypes =
 			{
 				ArticleQuantityType.Ordered,
-				ArticleQuantityType.Billed,
 				ArticleQuantityType.Delayed,
 				ArticleQuantityType.Expected,
+				ArticleQuantityType.Billed,
 				ArticleQuantityType.Shipped,
 				ArticleQuantityType.ShippedPreviously,
 				ArticleQuantityType.Information,

@@ -340,7 +340,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public void ProcessCreateQuantity()
 		{
 			//	Insère une nouvelle quantité.
-			var selection = this.linesEngine.CreateQuantity (this.Selection, ArticleQuantityType.Delayed, 7);
+			var selection = this.linesEngine.CreateQuantity (this.Selection);
 			this.UpdateAfterChange (this.linesEngine.LastError, selection);
 		}
 

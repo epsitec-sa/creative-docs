@@ -71,6 +71,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		
 		private void CreateUIRightFrame(UIBuilder builder, FrameBox parent)
 		{
+			bool enable = this.accessData.BusinessLogic.ArticleQuantityTypeEditionEnabled.Select (x => x.Key).Contains (this.Entity.QuantityColumn.QuantityType);
+
 			var topFrame = new FrameBox
 			{
 				Parent = parent,
@@ -78,6 +80,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				PreferredHeight = 20,
 				Padding = new Margins (10),
 				TabIndex = this.NextTabIndex,
+				Enable = enable,
 			};
 
 			var separator = new Separator
@@ -95,6 +98,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				PreferredWidth = 360,
 				Padding = new Margins (10),
 				TabIndex = this.NextTabIndex,
+				Enable = enable,
 			};
 
 			this.CreateUIRightTopFrame (builder, topFrame);
@@ -159,7 +163,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				TabIndex = this.NextTabIndex,
 			};
 
-			foreach (var e in this.accessData.BusinessLogic.ArticleQuantityTypeEditionEnabled)
+			foreach (var e in this.accessData.BusinessLogic.ArticleQuantityTypeEditionEnabled.Where (x => x.Key != ArticleQuantityType.Ordered))
 			{
 				if (e.Key != ArticleQuantityType.Ordered)
 				{
