@@ -201,7 +201,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			if (text.IsNullOrEmpty)
 			{
 				text = " ";  // pour que le contenu de la ligne existe, même si le texte n'existe pas encore !
-				this.SetError (0, DocumentItemAccessorColumn.ArticleDescription, DocumentItemAccessorError.TextEmpty);
+				this.SetError (0, DocumentItemAccessorColumn.ArticleDescription, DocumentItemAccessorError.TextNotDefined);
 			}
 
 			this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, text);
@@ -599,17 +599,15 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				case DocumentItemAccessorError.Unknown:
 					return "erreur";
 
-				case DocumentItemAccessorError.TextEmpty:
-					return "manquant";
-
+				case DocumentItemAccessorError.TextNotDefined:
 				case DocumentItemAccessorError.ArticleNotDefined:
-					return "indéfini";
+					return "pas encore défini";
 
 				case DocumentItemAccessorError.AdditionalQuantitiesTooHigh:
 					return "les quantités additionnelles dépassent la quantité commandée";
 
 				default:
-					return null;
+					return null;  // ok
 			}
 		}
 

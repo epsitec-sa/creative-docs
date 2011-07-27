@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			get
 			{
 				//	Donne les lignes du groupe de production en cours.
-				foreach (var line in this.Entity.Lines.Where (x => ProductionOrderDocumentPrinter.IsArticleForProduction (x, this.currentGroup)))
+				foreach (var line in this.Entity.Lines.Where (x => this.IsArticleForProduction (x, this.currentGroup)))
 				{
 					yield return new ContentLine (line, this.documentRank);
 				}
@@ -209,50 +209,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 				this.documentContainer.AddToBottom (table, this.PageMargins.Bottom);
 			}
-		}
-
-
-		private List<ArticleGroupEntity> ProductionGroups
-		{
-			//	Retourne la liste des groupes des articles du document.
-			get
-			{
-				var groups = new List<ArticleGroupEntity> ();
-
-				foreach (var line in this.Entity.Lines)
-				{
-					if (line is ArticleDocumentItemEntity)
-					{
-						var article = line as ArticleDocumentItemEntity;
-
-						if (article.ArticleDefinition.ArticleCategory.ArticleType == ArticleType.Goods)  // marchandises ?
-						{
-							foreach (var group in article.ArticleDefinition.ArticleGroups)
-							{
-								if (!groups.Contains (group))
-								{
-									groups.Add (group);
-								}
-							}
-						}
-					}
-				}
-
-				return groups;
-			}
-		}
-
-		private static bool IsArticleForProduction(AbstractDocumentItemEntity item, ArticleGroupEntity group)
-		{
-			//	Retourne true s'il s'agit d'un article qui doit figurer sur un ordre de production.
-			if (item is ArticleDocumentItemEntity)
-			{
-				var article = item as ArticleDocumentItemEntity;
-
-				return article.ArticleDefinition.ArticleGroups.Contains (group);
-			}
-
-			return false;
 		}
 
 

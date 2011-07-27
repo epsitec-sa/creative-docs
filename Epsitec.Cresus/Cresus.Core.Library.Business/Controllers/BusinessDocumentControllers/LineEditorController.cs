@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			if (this.lineEditorController != null)
 			{
-				text = this.lineEditorController.TitleTile;
+				text = this.lineEditorController.TitleTile.ApplyBold ();
 
 				if (this.error != DocumentItemAccessorError.OK)
 				{
@@ -153,7 +153,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				}
 			}
 
-			this.titleText.FormattedText = text.ApplyBold ().ApplyFontSizePercent (120);
+			this.titleText.FormattedText = text.ApplyFontSizePercent (120);
 			this.titleFrame.BackColor = color;
 		}
 

@@ -39,6 +39,9 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			this.businessLogic = new BusinessLogic (this.businessContext as BusinessContext, documentMetadata);
 
 			this.columnsWithoutRightBorder = new List<TableColumnKeys> ();
+			this.productionTexts = new Dictionary<TextDocumentItemEntity, ArticleDocumentItemEntity> ();
+
+			this.ExtractProductionTexts ();
 		}
 
 		public override string JobName
@@ -948,6 +951,136 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
+		#region Common helpers for production documents
+		protected List<ArticleGroupEntity> ProductionGroups
+		{
+			//	Retourne la liste des groupes des articles du document.
+			get
+			{
+				var groups = new List<ArticleGroupEntity> ();
+
+				foreach (var line in this.Entity.Lines)
+				{
+					if (line is ArticleDocumentItemEntity)
+					{
+						var article = line as ArticleDocumentItemEntity;
+
+						if (article.ArticleDefinition.ArticleCategory.ArticleType == ArticleType.Goods)  // marchandises ?
+						{
+							foreach (var group in article.ArticleDefinition.ArticleGroups)
+							{
+								if (!groups.Contains (group))
+								{
+									groups.Add (group);
+								}
+							}
+						}
+					}
+				}
+
+				return groups;
+			}
+		}
+
+		protected bool IsArticleForProduction(AbstractDocumentItemEntity item, ArticleGroupEntity group)
+		{
+			//	Retourne true s'il s'agit d'une ligne qui doit figurer sur un ordre de production.
+			if (item is ArticleDocumentItemEntity)
+			{
+				//	S'il s'agit d'un article, il doit appartenir au bon groupe.
+				var article = item as ArticleDocumentItemEntity;
+
+				return article.ArticleDefinition.ArticleGroups.Contains (group);
+			}
+
+			if (item is TextDocumentItemEntity)
+			{
+				//	S'il s'agit d'un texte, il doit faire partie du même GroupIndex qu'un article appartenant au bon groupe.
+				if (item.Attributes.HasFlag (DocumentItemAttributes.MyEyesOnly))
+				{
+					ArticleDocumentItemEntity article;
+					if (this.productionTexts.TryGetValue (item as TextDocumentItemEntity, out article))
+					{
+						return article.ArticleDefinition.ArticleGroups.Contains (group);
+					}
+				}
+			}
+
+			return false;
+		}
+
+		private void ExtractProductionTexts()
+		{
+			//	Pour chaque ligne de texte 'MyEyesOnly' (TextDocumentItemEntity), essaie de trouver une ligne
+			//	d'article (ArticleDocumentItemEntity) à laquelle l'attacher.
+			this.productionTexts.Clear ();
+
+			ArticleDocumentItemEntity article;
+
+			for (int i = 0; i < this.Entity.Lines.Count; i++)
+			{
+				var line = this.Entity.Lines[i];
+
+				if (line is TextDocumentItemEntity &&
+					line.Attributes.HasFlag (DocumentItemAttributes.MyEyesOnly))
+				{
+					//	1) Cherche un article au-dessus faisant partie du même groupe.
+					article = this.GetArticleAt (i, -1);
+					if (article != null && article.GroupIndex == line.GroupIndex)
+					{
+						this.productionTexts.Add (line as TextDocumentItemEntity, article);
+						continue;
+					}
+
+					//	2) Cherche un article au-dessous faisant partie du même groupe.
+					article = this.GetArticleAt (i, 1);
+					if (article != null && article.GroupIndex == line.GroupIndex)
+					{
+						this.productionTexts.Add (line as TextDocumentItemEntity, article);
+						continue;
+					}
+
+					//	3) Cherche un article au-dessus.
+					article = this.GetArticleAt (i, -1);
+					if (article != null)
+					{
+						this.productionTexts.Add (line as TextDocumentItemEntity, article);
+						continue;
+					}
+
+					//	4) Cherche un article au-dessous.
+					article = this.GetArticleAt (i, 1);
+					if (article != null)
+					{
+						this.productionTexts.Add (line as TextDocumentItemEntity, article);
+						continue;
+					}
+				}
+			}
+		}
+
+		private ArticleDocumentItemEntity GetArticleAt(int index, int direction)
+		{
+			while (true)
+			{
+				index += direction;
+
+				if (index < 0 || index >= this.Entity.Lines.Count)
+				{
+					return null;
+				}
+
+				var article = this.Entity.Lines[index] as ArticleDocumentItemEntity;
+
+				if (article != null)
+				{
+					return article;
+				}
+			}
+		}
+		#endregion
+
+
 		private bool IsWithLine
 		{
 			get
@@ -1065,6 +1198,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 		protected readonly BusinessLogic			businessLogic;
 		protected readonly List<TableColumnKeys>	columnsWithoutRightBorder;
+		protected readonly Dictionary<TextDocumentItemEntity, ArticleDocumentItemEntity> productionTexts;
 
 		private TableBand							table;
 		private int									visibleColumnCount;

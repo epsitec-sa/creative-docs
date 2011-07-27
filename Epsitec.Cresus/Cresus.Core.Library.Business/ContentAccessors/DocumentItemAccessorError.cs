@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 	{
 		OK,
 		Unknown,
-		TextEmpty,
+		TextNotDefined,
 		ArticleNotDefined,
 		AdditionalQuantitiesTooHigh,
 	}
