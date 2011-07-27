@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Core.Server
 
 				var s = PanelBuilder.BuildController (customer, Controllers.ViewControllerMode.Summary);
 
-				return s;
+				return Response.AsJson (s);
 			};
 		}
 

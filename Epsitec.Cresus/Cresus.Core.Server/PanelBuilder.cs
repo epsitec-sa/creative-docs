@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Core.Server
 		/// <param name="entity">Entity to use to create the panelBuilder</param>
 		/// <param name="mode">Controller mode</param>
 		/// <returns></returns>
-		public static string BuildController(AbstractEntity entity, ViewControllerMode mode)
+		public static IDictionary<string, object> BuildController(AbstractEntity entity, ViewControllerMode mode)
 		{
 			var builder = new PanelBuilder (entity, mode);
 			return builder.Run ();
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Core.Server
 		/// <param name="entity"></param>
 		/// <param name="mode"></param>
 		/// <returns>Name of the generated panel</returns>
-		private string Run()
+		private IDictionary<string, object> Run()
 		{
 			var name = PanelBuilder.GetControllerName (this.entity, this.controllerMode);
 
@@ -85,15 +85,12 @@ namespace Epsitec.Cresus.Core.Server
 			var customerSummaryWall = CoreSession.GetBrickWall (this.entity, this.controllerMode);
 
 			// Open the main panel
-			//var jscontent = "Ext.define('";
-			//jscontent += name;
-			//jscontent += "', {";
-			//jscontent += "extend: 'Epsitec.Cresus.Core.Static.WallPanel',";
+			var dic = new Dictionary<string, object> ();
 
-			var jscontent = "{";
+			dic.Add ("title", name);
 
-			jscontent += string.Format ("title: '{0}',", name);
-			jscontent += "defferedItems: [";
+			var defferedItems = new List<object> ();
+			dic.Add ("defferedItems", defferedItems);
 
 			foreach (var brick in customerSummaryWall.Bricks)
 			{
@@ -106,21 +103,12 @@ namespace Epsitec.Cresus.Core.Server
 
 				PanelBuilder.CreateDefaultTextProperties (b);
 
-				jscontent += CreatePanelContent (b);
+				defferedItems.Add (CreatePanelContent (b));
 			}
-
-			// Close the main panel and write the file
-			jscontent += "]";
-			jscontent += "}";
-			//jscontent += ");";
-
-			//var path = PanelBuilder.GetJsFilePath (name);
-			//System.IO.File.WriteAllText (path, jscontent);
 
 			PanelBuilder.constructedPanels.Add (name);
 
-			//return name;
-			return jscontent;
+			return dic;
 		}
 
 		/// <summary>
@@ -129,14 +117,14 @@ namespace Epsitec.Cresus.Core.Server
 		/// </summary>
 		/// <param name="brick"></param>
 		/// <returns></returns>
-		private List<string> CreateChildren(Brick brick)
+		private List<IDictionary<string, object>> CreateChildren(Brick brick)
 		{
 			if (!Brick.ContainsProperty (brick, BrickPropertyKey.Include))
 			{
 				return null;
 			}
 
-			var list = new List<string> ();
+			var list = new List<IDictionary<string, object>> ();
 
 			var includes = Brick.GetProperties (brick, BrickPropertyKey.Include);
 
@@ -165,17 +153,19 @@ namespace Epsitec.Cresus.Core.Server
 		/// </summary>
 		/// <param name="brick">Brick to use</param>
 		/// <returns>Javascript code to create the panel</returns>
-		private string CreatePanelContent(Brick brick)
+		private IDictionary<string, object> CreatePanelContent(Brick brick)
 		{
 
-			var jscontent = "{ name: 'Epsitec.Cresus.Core.Static.WallPanel',";
-			jscontent += "options: {";
+			var dic = new Dictionary<string, object> ();
 
-			jscontent += "title: '";
-			jscontent += Brick.GetProperty (brick, BrickPropertyKey.Title).StringValue + "  6";
-			jscontent += "',";
+			dic.Add ("name", "Epsitec.Cresus.Core.Static.WallPanel");
+			var options = new Dictionary<string, object> ();
+			dic.Add ("options", options);
 
-			jscontent += "data: {name: '";
+			options.Add ("title", Brick.GetProperty (brick, BrickPropertyKey.Title).StringValue + "  6");
+
+			var data = new Dictionary<string, object> ();
+			options.Add("data", data);
 
 			var brickType = brick.GetFieldType ();
 			var resolver = brick.GetResolver (brickType);
@@ -189,11 +179,11 @@ namespace Epsitec.Cresus.Core.Server
 
 				if (col != null && col.Count () > 0)
 				{
-					jscontent += col.First ().ToString () + " * " + col.Count ();
+					data.Add ("name", col.First ().ToString () + " * " + col.Count ());
 				}
 				else
 				{
-					jscontent += "empty";
+					data.Add ("name", "empty");
 				}
 
 				//var entities = obj as EntityCollectionProxy<AbstractContactEntity>;
@@ -225,31 +215,36 @@ namespace Epsitec.Cresus.Core.Server
 			{
 				var entity = resolver.DynamicInvoke (this.entity) as AbstractEntity;
 
-				jscontent += entity.IsNotNull () ? entity.GetEntitySerialId ().ToString () : "empty";
+				data.Add ("name", entity.IsNotNull () ? entity.GetEntitySerialId ().ToString () : "empty");
 			}
 
-			jscontent += "'},";
 
 			var icon = PanelBuilder.CreateIcon (brick);
 			if (!icon.Equals (default (KeyValuePair<string, string>)))
 			{
 				var iconCls = PanelBuilder.CreateCssFromIcon (icon.Key, icon.Value);
-				jscontent += string.Format ("iconCls: '{0}',", iconCls);
+				options.Add ("iconCls", iconCls);
 			}
 
 
-			var children = CreateChildren (brick);
-			if (children != null && children.Count > 0)
-			{
-				jscontent += "defferedItems: [";
-				children.ForEach (c => jscontent += string.Format ("{{name: '{0}'}},", c));
-				jscontent += "],";
-			}
+			//var children = CreateChildren (brick);
+			//if (children != null && children.Count > 0)
+			//{
+			//    jscontent += "defferedItems: [";
+			//    children.ForEach (c => jscontent += string.Format ("{{name: '{0}'}},", c));
+			//    jscontent += "],";
+			//}
 
-			// Close the panel
-			jscontent += "}},";
+			// TODO check
+			//var children = CreateChildren (brick);
+			//if (children != null && children.Count > 0)
+			//{
+			//    var ch = new Dictionary<string, object> ();
+			//    children.ForEach (c => jscontent += string.Format ("{{name: '{0}'}},", c));
+			//    options.Add ("defferedItems", ch);
+			//}
 
-			return jscontent;
+			return dic;
 		}
 
 
