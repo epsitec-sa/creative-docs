@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	C'est cette quantité qui peuple la colonne "quantité".
 			get
 			{
-				return ArticleQuantityType.Ordered;
+				return ArticleQuantityType.Shipped;
 			}
 		}
 

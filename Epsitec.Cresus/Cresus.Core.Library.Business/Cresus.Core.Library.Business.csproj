@@ -84,6 +84,7 @@
     <Compile Include="Business\Rules\OptionValueBusinessRules.cs" />
     <Compile Include="Business\Rules\RelationBusinessRules.cs" />
     <Compile Include="Business\Rules\TaxSettingsBusinessRules.cs" />
+    <Compile Include="ContentAccessors\DocumentItemAccessorError.cs" />
     <Compile Include="ContentAccessors\DocumentItemAccessorColumn.cs" />
     <Compile Include="ContentAccessors\DocumentItemAccessor.cs" />
     <Compile Include="ContentAccessors\DocumentItemAccessorMode.cs" />
@@ -117,6 +118,7 @@
     <Compile Include="Controllers\BusinessDocumentControllers\ArticleLineEditorController.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\AccessData.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\BusinessLogic\BusinessLogic.cs" />
+    <Compile Include="Controllers\BusinessDocumentControllers\CellContent.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\IncrementalNumberGenerator.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\TreeEngine.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\TreeNode.cs" />

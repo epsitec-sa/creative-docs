@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			};
 		}
 
-		public void UpdateUI(ViewMode viewMode, EditMode editMode, int lineCount, System.Func<int, LineInformations> getLineInformations, System.Func<int, ColumnType, FormattedText> getCellContent)
+		public void UpdateUI(ViewMode viewMode, EditMode editMode, int lineCount, System.Func<int, LineInformations> getLineInformations, System.Func<int, ColumnType, CellContent> getCellContent)
 		{
 			this.viewMode            = viewMode;
 			this.editMode            = editMode;
@@ -292,17 +292,25 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				}
 				else
 				{
+					var color = this.GetNiceBackgroundColor (info.AbstractDocumentItemEntity.GroupIndex);
+
 					if (this.table[column, row].Children.Count != 0)
 					{
 						var text = this.table[column, row].Children[0] as StaticText;
 
 						if (text != null)
 						{
-							text.FormattedText = this.getCellContent (row, columnType).ToSimpleText ();
+							var cellContent = this.getCellContent (row, columnType);
+
+							text.FormattedText = (cellContent == null) ? null : cellContent.Text.ToSimpleText ();
+
+							if (cellContent != null && cellContent.Error != Library.Business.ContentAccessors.DocumentItemAccessorError.OK)
+							{
+								color = Color.FromName ("Gold");
+							}
 						}
 					}
 
-					var color = this.GetNiceBackgroundColor (info.AbstractDocumentItemEntity.GroupIndex);
 					this.table[column, row].BackColor = color;
 				}
 
@@ -684,7 +692,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private CellTable										table;
 		private System.Func<bool>								selectionChanged;
 		private System.Func<int, LineInformations>				getLineInformations;
-		private System.Func<int, ColumnType, FormattedText>		getCellContent;
+		private System.Func<int, ColumnType, CellContent>		getCellContent;
 		private ViewMode										viewMode;
 		private EditMode										editMode;
 		private int												lineCount;

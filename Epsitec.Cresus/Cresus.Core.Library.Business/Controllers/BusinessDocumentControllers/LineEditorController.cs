@@ -16,6 +16,7 @@ using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.Helpers;
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Library.Business.ContentAccessors;
 
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -44,7 +45,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				PreferredHeight = 200,  // hauteur par défaut pour tous les éditeurs de lignes
 			};
 
-			var titleFrame = new FrameBox
+			this.titleFrame = new FrameBox
 			{
 				PreferredHeight = 28,
 				Margins = new Margins (0, 0, 0, -1),
@@ -56,7 +57,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			this.titleText = new StaticText
 			{
-				Parent = titleFrame,
+				Parent = this.titleFrame,
 				Dock = DockStyle.Fill,
 				ContentAlignment = ContentAlignment.MiddleLeft,
 				Margins = new Margins (10, 10, 0, 0),
@@ -129,25 +130,41 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.UpdateTitle ();
 		}
 
+		public void SetError(DocumentItemAccessorError error)
+		{
+			this.error = error;
+			this.UpdateTitle ();
+		}
+
 		private void UpdateTitle()
 		{
 			//	Met à jour le titre de l'éditeur.
 			FormattedText text = "";
+			Color color = Color.FromName ("White");
 
 			if (this.lineEditorController != null)
 			{
 				text = this.lineEditorController.TitleTile;
+
+				if (this.error != DocumentItemAccessorError.OK)
+				{
+					text = FormattedText.Concat (text, " — ", DocumentItemAccessor.GetErrorDescription (this.error));
+					color = Color.FromName ("Gold");
+				}
 			}
 
 			this.titleText.FormattedText = text.ApplyBold ().ApplyFontSizePercent (120);
+			this.titleFrame.BackColor = color;
 		}
 
 
 		private readonly AccessData						accessData;
 
 		private EditMode								editMode;
+		private FrameBox								titleFrame;
 		private StaticText								titleText;
 		private FrameBox								editorTile;
 		private AbstractLineEditorController			lineEditorController;
+		private DocumentItemAccessorError				error;
 	}
 }

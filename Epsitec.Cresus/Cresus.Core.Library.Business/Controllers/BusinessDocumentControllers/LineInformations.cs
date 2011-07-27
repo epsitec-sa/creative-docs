@@ -11,12 +11,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
 	public class LineInformations
 	{
-		public LineInformations(DocumentItemAccessor documentItemAccessor, AbstractDocumentItemEntity abstractDocumentItemEntity, ArticleQuantityEntity articleQuantityEntity, int sublineIndex)
+		public LineInformations(DocumentItemAccessor documentItemAccessor, AbstractDocumentItemEntity abstractDocumentItemEntity, ArticleQuantityEntity articleQuantityEntity, int sublineIndex, DocumentItemAccessorError error = DocumentItemAccessorError.OK)
 		{
 			this.DocumentItemAccessor       = documentItemAccessor;
 			this.AbstractDocumentItemEntity = abstractDocumentItemEntity;
 			this.ArticleQuantityEntity      = articleQuantityEntity;
 			this.SublineIndex               = sublineIndex;
+			this.Error                      = error;
 		}
 
 		public AbstractDocumentItemEntity AbstractDocumentItemEntity
@@ -37,6 +38,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			internal set;
 		}
 
+		public DocumentItemAccessorError Error
+		{
+			get;
+			internal set;
+		}
+
 		public FormattedText GetColumnContent(DocumentItemAccessorColumn column)
 		{
 			if (this.DocumentItemAccessor == null)
@@ -46,6 +53,18 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			else
 			{
 				return this.DocumentItemAccessor.GetContent (this.SublineIndex, column).Lines.FirstOrDefault ();
+			}
+		}
+
+		public DocumentItemAccessorError GetColumnError(DocumentItemAccessorColumn column)
+		{
+			if (this.DocumentItemAccessor == null)
+			{
+				return DocumentItemAccessorError.OK;
+			}
+			else
+			{
+				return this.DocumentItemAccessor.GetError (this.SublineIndex, column);
 			}
 		}
 

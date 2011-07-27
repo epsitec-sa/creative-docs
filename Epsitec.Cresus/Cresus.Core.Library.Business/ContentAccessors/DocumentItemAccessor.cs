@@ -31,6 +31,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			this.numberGenerator        = numberGenerator;
 
 			this.content = new Dictionary<int, FormattedText> ();
+			this.errors = new Dictionary<int, DocumentItemAccessorError> ();
 			this.articleQuantityEntities = new List<ArticleQuantityEntity> ();
 		}
 
@@ -47,11 +48,11 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			
 			if (count == 0)
 			{
-				throw new System.Exception ("At least one mode must be present.");
+				throw new System.NotSupportedException ("At least one mode must be present.");
 			}
 			if (count > 1)
 			{
-				throw new System.Exception ("These simultaneous modes are invalid.");
+				throw new System.NotSupportedException ("These simultaneous modes are invalid.");
 			}
 
 			this.item = item;
@@ -143,6 +144,35 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			}
 		}
 
+		public DocumentItemAccessorError GetError(int row)
+		{
+			foreach (var column in System.Enum.GetValues (typeof (DocumentItemAccessorColumn)))
+			{
+				var error = this.GetError (row, (DocumentItemAccessorColumn) column);
+				if (error != DocumentItemAccessorError.OK)
+				{
+					return error;
+				}
+			}
+
+			return DocumentItemAccessorError.OK;
+		}
+
+		public DocumentItemAccessorError GetError(int row, DocumentItemAccessorColumn column)
+		{
+			//	Retourne l'erreurs d'une cellule.
+			var key = DocumentItemAccessor.GetKey (row, column);
+
+			if (this.errors.ContainsKey (key))
+			{
+				return this.errors[key];
+			}
+			else
+			{
+				return DocumentItemAccessorError.OK;
+			}
+		}
+
 		public ArticleQuantityEntity GetArticleQuantityEntity(int row)
 		{
 			if (row < this.articleQuantityEntities.Count)
@@ -171,6 +201,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			if (text.IsNullOrEmpty)
 			{
 				text = " ";  // pour que le contenu de la ligne existe, même si le texte n'existe pas encore !
+				this.SetError (0, DocumentItemAccessorColumn.ArticleDescription, DocumentItemAccessorError.TextEmpty);
 			}
 
 			this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, text);
@@ -203,6 +234,25 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				}
 			}
 
+			//	Génère une éventuelle erreur sur les quantités.
+			decimal orderedQuantity = 0;
+			decimal additionalQuantity = 0;
+
+			foreach (var quantity in line.ArticleQuantities)
+			{
+				if (quantity.QuantityColumn.QuantityType == ArticleQuantityType.Ordered)
+				{
+					orderedQuantity += quantity.Quantity;
+				}
+				else
+				{
+					additionalQuantity += quantity.Quantity;
+				}
+			}
+
+			var quantityError = (additionalQuantity <= orderedQuantity) ? DocumentItemAccessorError.OK : DocumentItemAccessorError.AdditionalQuantitiesTooHigh;
+			this.SetError (0, DocumentItemAccessorColumn.AdditionalQuantity, quantityError);
+
 			//	Génère les autres quantités (sans la principale).
 			if ((this.mode & DocumentItemAccessorMode.AdditionalQuantities) != 0)  // met les quantités additionnelles ?
 			{
@@ -226,6 +276,8 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 						{
 							this.SetContent (row, DocumentItemAccessorColumn.AdditionalEndDate, quantity.EndDate.Value.ToString ());
 						}
+
+						this.SetError (row, DocumentItemAccessorColumn.AdditionalQuantity, quantityError);
 
 						row++;
 					}
@@ -271,6 +323,11 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			this.SetContent (0, DocumentItemAccessorColumn.ArticleId,          ArticleDocumentItemHelper.GetArticleId (line));
 			this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, description);
 			this.SetContent (0, DocumentItemAccessorColumn.UnitPrice,          this.GetFormattedPrice (line.PrimaryUnitPriceBeforeTax));
+
+			if (description.IsNullOrEmpty)
+			{
+				this.SetError (0, DocumentItemAccessorColumn.ArticleDescription, DocumentItemAccessorError.ArticleNotDefined);
+			}
 
 			if (line.ResultingLinePriceBeforeTax.HasValue && line.ResultingLineTax1.HasValue)
 			{
@@ -516,6 +573,16 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			}
 		}
 
+		private void SetError(int row, DocumentItemAccessorColumn column, DocumentItemAccessorError error)
+		{
+			//	Modifie l'erreur d'une cellule.
+			if (error != DocumentItemAccessorError.OK)
+			{
+				var key = DocumentItemAccessor.GetKey (row, column);
+				this.errors[key] = error;
+			}
+		}
+
 
 		private static int GetKey(int row, DocumentItemAccessorColumn column)
 		{
@@ -525,21 +592,44 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		}
 
 
+		public static FormattedText GetErrorDescription(DocumentItemAccessorError error)
+		{
+			switch (error)
+			{
+				case DocumentItemAccessorError.Unknown:
+					return "erreur";
+
+				case DocumentItemAccessorError.TextEmpty:
+					return "manquant";
+
+				case DocumentItemAccessorError.ArticleNotDefined:
+					return "indéfini";
+
+				case DocumentItemAccessorError.AdditionalQuantitiesTooHigh:
+					return "les quantités additionnelles dépassent la quantité commandée";
+
+				default:
+					return null;
+			}
+		}
+
+
 		private static readonly int identSpacePerLevel = 3;
 
-		private readonly BusinessDocumentEntity			businessDocumentEntity;
-		private readonly BusinessLogic					businessLogic;
-		private readonly IncrementalNumberGenerator		numberGenerator;
-		private readonly Dictionary<int, FormattedText>	content;
-		private readonly List<ArticleQuantityEntity>	articleQuantityEntities;
+		private readonly BusinessDocumentEntity						businessDocumentEntity;
+		private readonly BusinessLogic								businessLogic;
+		private readonly IncrementalNumberGenerator					numberGenerator;
+		private readonly Dictionary<int, FormattedText>				content;
+		private readonly Dictionary<int, DocumentItemAccessorError>	errors;
+		private readonly List<ArticleQuantityEntity>				articleQuantityEntities;
 
-		private AbstractDocumentItemEntity				item;
-		private DocumentType							type;
-		private DocumentItemAccessorMode				mode;
-		private int										rowsCount;
-		private int										groupIndex;
-		private int										lineNumber;
-		private int										relativeLineNumber;
-		private string									groupText;
+		private AbstractDocumentItemEntity							item;
+		private DocumentType										type;
+		private DocumentItemAccessorMode							mode;
+		private int													rowsCount;
+		private int													groupIndex;
+		private int													lineNumber;
+		private int													relativeLineNumber;
+		private string												groupText;
 	}
 }

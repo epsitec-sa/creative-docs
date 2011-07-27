@@ -132,21 +132,33 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			return this.lineInformations[index];
 		}
 
-		private FormattedText CallbackGetCellContent(int index, ColumnType columnType)
+		private CellContent CallbackGetCellContent(int index, ColumnType columnType)
 		{
 			//	Retourne le contenu permettant de peupler une cellule du tableau.
 			var info = this.lineInformations[index];
+			FormattedText text;
+			DocumentItemAccessorError error;
 
 			switch (columnType)
 			{
+				case ColumnType.GroupIndex:
+					text = info.AbstractDocumentItemEntity.GroupIndex.ToString ();
+					return new CellContent (text);
+
 				case ColumnType.GroupNumber:
-					return info.GetColumnContent (DocumentItemAccessorColumn.GroupNumber);
+					text = info.GetColumnContent (DocumentItemAccessorColumn.GroupNumber);
+					error = info.GetColumnError (DocumentItemAccessorColumn.GroupNumber);
+					return new CellContent (text, error);
 
 				case ColumnType.LineNumber:
-					return info.GetColumnContent (DocumentItemAccessorColumn.LineNumber);
+					text = info.GetColumnContent (DocumentItemAccessorColumn.LineNumber);
+					error = info.GetColumnError (DocumentItemAccessorColumn.LineNumber);
+					return new CellContent (text, error);
 
 				case ColumnType.FullNumber:
-					return info.GetColumnContent (DocumentItemAccessorColumn.FullNumber);
+					text = info.GetColumnContent (DocumentItemAccessorColumn.FullNumber);
+					error = info.GetColumnError (DocumentItemAccessorColumn.FullNumber);
+					return new CellContent (text, error);
 
 				case ColumnType.QuantityAndUnit:
 					var q = info.GetColumnContent (DocumentItemAccessorColumn.AdditionalQuantity).ToString ();
@@ -158,38 +170,55 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					}
 					else
 					{
-						return Misc.FormatUnit (decimal.Parse (q), u);
+						text = Misc.FormatUnit (decimal.Parse (q), u);
+						error = info.GetColumnError (DocumentItemAccessorColumn.AdditionalQuantity);
+						return new CellContent (text, error);
 					}
 
 				case ColumnType.AdditionalType:
-					return info.GetColumnContent (DocumentItemAccessorColumn.AdditionalType);
+					text = info.GetColumnContent (DocumentItemAccessorColumn.AdditionalType);
+					error = info.GetColumnError (DocumentItemAccessorColumn.AdditionalType);
+					return new CellContent (text, error);
 
 				case ColumnType.AdditionalDate:
-					return info.GetColumnContent (DocumentItemAccessorColumn.AdditionalBeginDate);
+					text = info.GetColumnContent (DocumentItemAccessorColumn.AdditionalBeginDate);
+					error = info.GetColumnError (DocumentItemAccessorColumn.AdditionalBeginDate);
+					return new CellContent (text, error);
 
 				case ColumnType.ArticleId:
-					return info.GetColumnContent (DocumentItemAccessorColumn.ArticleId);
+					text = info.GetColumnContent (DocumentItemAccessorColumn.ArticleId);
+					error = info.GetColumnError (DocumentItemAccessorColumn.ArticleId);
+					return new CellContent (text, error);
 
 				case ColumnType.ArticleDescription:
-					return info.GetColumnContent (DocumentItemAccessorColumn.ArticleDescription);
+					text = info.GetColumnContent (DocumentItemAccessorColumn.ArticleDescription);
+					error = info.GetColumnError (DocumentItemAccessorColumn.ArticleDescription);
+					return new CellContent (text, error);
 
 				case ColumnType.Discount:
-					return info.GetColumnContent (DocumentItemAccessorColumn.Discount);
+					text = info.GetColumnContent (DocumentItemAccessorColumn.Discount);
+					error = info.GetColumnError (DocumentItemAccessorColumn.Discount);
+					return new CellContent (text, error);
 
 				case ColumnType.UnitPrice:
-					return info.GetColumnContent (DocumentItemAccessorColumn.UnitPrice);
+					text = info.GetColumnContent (DocumentItemAccessorColumn.UnitPrice);
+					error = info.GetColumnError (DocumentItemAccessorColumn.UnitPrice);
+					return new CellContent (text, error);
 
 				case ColumnType.LinePrice:
-					return info.GetColumnContent (DocumentItemAccessorColumn.LinePrice);
+					text = info.GetColumnContent (DocumentItemAccessorColumn.LinePrice);
+					error = info.GetColumnError (DocumentItemAccessorColumn.LinePrice);
+					return new CellContent (text, error);
 
 				case ColumnType.Vat:
-					return info.GetColumnContent (DocumentItemAccessorColumn.Vat);
+					text = info.GetColumnContent (DocumentItemAccessorColumn.Vat);
+					error = info.GetColumnError (DocumentItemAccessorColumn.Vat);
+					return new CellContent (text, error);
 
 				case ColumnType.Total:
-					return info.GetColumnContent (DocumentItemAccessorColumn.Total);
-
-				case ColumnType.GroupIndex:
-					return info.AbstractDocumentItemEntity.GroupIndex.ToString ();
+					text = info.GetColumnContent (DocumentItemAccessorColumn.Total);
+					error = info.GetColumnError (DocumentItemAccessorColumn.Total);
+					return new CellContent (text, error);
 			}
 
 			return null;
@@ -490,7 +519,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				for (int row = 0; row < accessor.RowsCount; row++)
 				{
 					var quantity = accessor.GetArticleQuantityEntity (row);
-					this.lineInformations.Add (new LineInformations (accessor, line, quantity, row));
+					var error = accessor.GetError (row);
+					this.lineInformations.Add (new LineInformations (accessor, line, quantity, row, error));
+
+					var cellError = accessor.GetError (row);
 				}
 			}
 		}
@@ -525,6 +557,15 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Deselect,       isEditionEnabled && selection.Count != 0);
 			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.GroupSelect,    isEditionEnabled && selection.Count != 0);
+
+			if (selection.Count != 1)
+			{
+				this.lineEditorController.SetError (DocumentItemAccessorError.OK);
+			}
+			else
+			{
+				this.lineEditorController.SetError (selection[0].Error);
+			}
 		}
 
 
@@ -660,21 +701,21 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		public static System.Action<string, bool>		actionRibbonShow;
+		public static System.Action<string, bool>			actionRibbonShow;
 
 		// TODO: Il faudra un jour que ces variables survivent à l'extinction de l'application !
-		private static ViewMode							persistantViewMode = ViewMode.Default;
-		private static EditMode							persistantEditMode = EditMode.Name;
-		private static bool								persistantShowToolbar = false;
+		private static ViewMode								persistantViewMode = ViewMode.Default;
+		private static EditMode								persistantEditMode = EditMode.Name;
+		private static bool									persistantShowToolbar = false;
 
-		private readonly AccessData						accessData;
-		private readonly List<LineInformations>			lineInformations;
-		private readonly CommandContext					commandContext;
-		private readonly CommandDispatcher				commandDispatcher;
-		private readonly LinesEngine					linesEngine;
+		private readonly AccessData							accessData;
+		private readonly List<LineInformations>				lineInformations;
+		private readonly CommandContext						commandContext;
+		private readonly CommandDispatcher					commandDispatcher;
+		private readonly LinesEngine						linesEngine;
 
-		private LineToolbarController					lineToolbarController;
-		private LinesController							linesController;
-		private LineEditorController					lineEditorController;
+		private LineToolbarController						lineToolbarController;
+		private LinesController								linesController;
+		private LineEditorController						lineEditorController;
 	}
 }
