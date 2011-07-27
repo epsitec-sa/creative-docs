@@ -39,9 +39,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			this.businessLogic = new BusinessLogic (this.businessContext as BusinessContext, documentMetadata);
 
 			this.columnsWithoutRightBorder = new List<TableColumnKeys> ();
-			this.productionTexts = new Dictionary<TextDocumentItemEntity, ArticleDocumentItemEntity> ();
-
-			this.ExtractProductionTexts ();
 		}
 
 		public override string JobName
@@ -998,6 +995,11 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				//	S'il s'agit d'un texte, il doit faire partie du même GroupIndex qu'un article appartenant au bon groupe.
 				if (item.Attributes.HasFlag (DocumentItemAttributes.MyEyesOnly))
 				{
+					if (this.productionTexts == null)  // ExtractProductionTexts pas encore effectué ?
+					{
+						this.ExtractProductionTexts ();
+					}
+
 					ArticleDocumentItemEntity article;
 					if (this.productionTexts.TryGetValue (item as TextDocumentItemEntity, out article))
 					{
@@ -1013,22 +1015,23 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 			//	Pour chaque ligne de texte 'MyEyesOnly' (TextDocumentItemEntity), essaie de trouver une ligne
 			//	d'article (ArticleDocumentItemEntity) à laquelle l'attacher.
-			this.productionTexts.Clear ();
+			//	Un algorithme arbitraire de priorités essaie d'attacher la ligne à l'article au-dessus en
+			//	premier lieu. Il peut arriver de ne pas trouver d'article auquel attacher une ligne !
+			this.productionTexts = new Dictionary<TextDocumentItemEntity, ArticleDocumentItemEntity> ();
 
 			ArticleDocumentItemEntity article;
 
 			for (int i = 0; i < this.Entity.Lines.Count; i++)
 			{
-				var line = this.Entity.Lines[i];
+				var line = this.Entity.Lines[i] as TextDocumentItemEntity;
 
-				if (line is TextDocumentItemEntity &&
-					line.Attributes.HasFlag (DocumentItemAttributes.MyEyesOnly))
+				if (line != null && line.Attributes.HasFlag (DocumentItemAttributes.MyEyesOnly))
 				{
 					//	1) Cherche un article au-dessus faisant partie du même groupe.
 					article = this.GetArticleAt (i, -1);
 					if (article != null && article.GroupIndex == line.GroupIndex)
 					{
-						this.productionTexts.Add (line as TextDocumentItemEntity, article);
+						this.productionTexts.Add (line, article);
 						continue;
 					}
 
@@ -1036,7 +1039,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					article = this.GetArticleAt (i, 1);
 					if (article != null && article.GroupIndex == line.GroupIndex)
 					{
-						this.productionTexts.Add (line as TextDocumentItemEntity, article);
+						this.productionTexts.Add (line, article);
 						continue;
 					}
 
@@ -1044,7 +1047,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					article = this.GetArticleAt (i, -1);
 					if (article != null)
 					{
-						this.productionTexts.Add (line as TextDocumentItemEntity, article);
+						this.productionTexts.Add (line, article);
 						continue;
 					}
 
@@ -1052,7 +1055,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					article = this.GetArticleAt (i, 1);
 					if (article != null)
 					{
-						this.productionTexts.Add (line as TextDocumentItemEntity, article);
+						this.productionTexts.Add (line, article);
 						continue;
 					}
 				}
@@ -1198,11 +1201,11 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 		protected readonly BusinessLogic			businessLogic;
 		protected readonly List<TableColumnKeys>	columnsWithoutRightBorder;
-		protected readonly Dictionary<TextDocumentItemEntity, ArticleDocumentItemEntity> productionTexts;
 
 		private TableBand							table;
 		private int									visibleColumnCount;
 		private int[]								lastRowForEachSection;
 		private List<Rectangle>						tableBounds;
+		protected Dictionary<TextDocumentItemEntity, ArticleDocumentItemEntity> productionTexts;
 	}
 }
