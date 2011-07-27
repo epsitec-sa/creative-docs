@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Epsitec.Common.Drawing;
@@ -96,14 +97,16 @@ namespace Epsitec.Cresus.Core.Server
 
 			foreach (var brick in customerSummaryWall.Bricks)
 			{
-				//// Contains AsType, we want to include the correct panel
+				var b = brick;
+
 				//if (Brick.ContainsProperty (brick, BrickPropertyKey.AsType))
 				//{
+				//    b = Brick.GetProperty (brick, BrickPropertyKey.AsType).Brick;
 				//}
 
-				PanelBuilder.CreateDefaultTextProperties (brick);
+				PanelBuilder.CreateDefaultTextProperties (b);
 
-				jscontent += CreatePanelContent (brick);
+				jscontent += CreatePanelContent (b);
 			}
 
 			// Close the main panel and write the file
@@ -164,11 +167,12 @@ namespace Epsitec.Cresus.Core.Server
 		/// <returns>Javascript code to create the panel</returns>
 		private string CreatePanelContent(Brick brick)
 		{
+
 			var jscontent = "{ name: 'Epsitec.Cresus.Core.Static.WallPanel',";
 			jscontent += "options: {";
 
 			jscontent += "title: '";
-			jscontent += Brick.GetProperty (brick, BrickPropertyKey.Title).StringValue;
+			jscontent += Brick.GetProperty (brick, BrickPropertyKey.Title).StringValue + "  6";
 			jscontent += "',";
 
 			jscontent += "data: {name: '";
@@ -180,30 +184,42 @@ namespace Epsitec.Cresus.Core.Server
 			if (Brick.ContainsProperty (brick, BrickPropertyKey.CollectionAnnotation))
 			{
 				var obj = resolver.DynamicInvoke (this.entity);
-				var entities = obj as EntityCollectionProxy<AbstractContactEntity>;
-				if (entities == null)
+
+				var col = (obj as IEnumerable).Cast<AbstractEntity> ();
+
+				if (col != null && col.Count () > 0)
 				{
-					var entities2 = obj as EntityCollectionProxy<AffairEntity>;
-					if (entities2 != null && entities2.Count > 0)
-					{
-						jscontent += entities2.First ().BusinessCodeVector;
-					}
-					else
-					{
-						jscontent += "empty";
-					}
+					jscontent += col.First ().ToString () + " * " + col.Count ();
 				}
 				else
 				{
-					if (entities != null && entities.Count > 0)
-					{
-						jscontent += entities.First ().NaturalPerson.DateOfBirth;
-					}
-					else
-					{
-						jscontent += "empty";
-					}
+					jscontent += "empty";
 				}
+
+				//var entities = obj as EntityCollectionProxy<AbstractContactEntity>;
+				//if (entities == null)
+				//{
+				//    var entities2 = obj as EntityCollectionProxy<AffairEntity>;
+				//    if (entities2 != null && entities2.Count > 0)
+				//    {
+				//        jscontent += entities2.First ().BusinessCodeVector;
+				//    }
+				//    else
+				//    {
+				//        jscontent += "empty";
+				//    }
+				//}
+				//else
+				//{
+				//    if (entities != null && entities.Count > 0)
+				//    {
+				//        jscontent += entities.First ().NaturalPerson.DateOfBirth;
+				//    }
+				//    else
+				//    {
+				//        jscontent += "empty";
+				//    }
+				//}
 			}
 			else
 			{
