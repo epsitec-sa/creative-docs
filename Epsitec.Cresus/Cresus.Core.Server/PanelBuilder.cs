@@ -76,18 +76,21 @@ namespace Epsitec.Cresus.Core.Server
 			var name = PanelBuilder.GetControllerName (this.entity, this.controllerMode);
 
 			// The panel already exists
-			if (PanelBuilder.constructedPanels.Contains (name))
-			{
-				return name;
-			}
+			//if (PanelBuilder.constructedPanels.Contains (name))
+			//{
+			//    return name;
+			//}
 
 			var customerSummaryWall = CoreSession.GetBrickWall (this.entity, this.controllerMode);
 
 			// Open the main panel
-			var jscontent = "Ext.define('";
-			jscontent += name;
-			jscontent += "', {";
-			jscontent += "extend: 'Epsitec.Cresus.Core.Static.WallPanel',";
+			//var jscontent = "Ext.define('";
+			//jscontent += name;
+			//jscontent += "', {";
+			//jscontent += "extend: 'Epsitec.Cresus.Core.Static.WallPanel',";
+
+			var jscontent = "{";
+
 			jscontent += string.Format ("title: '{0}',", name);
 			jscontent += "defferedItems: [";
 
@@ -105,14 +108,16 @@ namespace Epsitec.Cresus.Core.Server
 
 			// Close the main panel and write the file
 			jscontent += "]";
-			jscontent += "});";
+			jscontent += "}";
+			//jscontent += ");";
 
-			var path = PanelBuilder.GetJsFilePath (name);
-			System.IO.File.WriteAllText (path, jscontent);
+			//var path = PanelBuilder.GetJsFilePath (name);
+			//System.IO.File.WriteAllText (path, jscontent);
 
 			PanelBuilder.constructedPanels.Add (name);
 
-			return name;
+			//return name;
+			return jscontent;
 		}
 
 		/// <summary>
@@ -165,6 +170,49 @@ namespace Epsitec.Cresus.Core.Server
 			jscontent += "title: '";
 			jscontent += Brick.GetProperty (brick, BrickPropertyKey.Title).StringValue;
 			jscontent += "',";
+
+			jscontent += "data: {name: '";
+
+			var brickType = brick.GetFieldType ();
+			var resolver = brick.GetResolver (brickType);
+
+
+			if (Brick.ContainsProperty (brick, BrickPropertyKey.CollectionAnnotation))
+			{
+				var obj = resolver.DynamicInvoke (this.entity);
+				var entities = obj as EntityCollectionProxy<AbstractContactEntity>;
+				if (entities == null)
+				{
+					var entities2 = obj as EntityCollectionProxy<AffairEntity>;
+					if (entities2 != null && entities2.Count > 0)
+					{
+						jscontent += entities2.First ().BusinessCodeVector;
+					}
+					else
+					{
+						jscontent += "empty";
+					}
+				}
+				else
+				{
+					if (entities != null && entities.Count > 0)
+					{
+						jscontent += entities.First ().NaturalPerson.DateOfBirth;
+					}
+					else
+					{
+						jscontent += "empty";
+					}
+				}
+			}
+			else
+			{
+				var entity = resolver.DynamicInvoke (this.entity) as AbstractEntity;
+
+				jscontent += entity.IsNotNull () ? entity.GetEntitySerialId ().ToString () : "empty";
+			}
+
+			jscontent += "'},";
 
 			var icon = PanelBuilder.CreateIcon (brick);
 			if (!icon.Equals (default (KeyValuePair<string, string>)))
