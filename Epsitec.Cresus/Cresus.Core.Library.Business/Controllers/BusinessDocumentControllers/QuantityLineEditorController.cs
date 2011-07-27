@@ -163,12 +163,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				TabIndex = this.NextTabIndex,
 			};
 
+			//	Met des boutons radio pour tous les types, sauf Ordered qui est toujours édité par ArticleLineEditorController.
 			foreach (var e in this.accessData.BusinessLogic.ArticleQuantityTypeEditionEnabled.Where (x => x.Key != ArticleQuantityType.Ordered))
 			{
-				if (e.Key != ArticleQuantityType.Ordered)
-				{
-					widget.Items.Add (e.Key.ToString (), e);
-				}
+				widget.Items.Add (e.Key.ToString (), e);
 			}
 
 			widget.ValueToDescriptionConverter = delegate (object o)

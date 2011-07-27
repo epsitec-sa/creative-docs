@@ -214,7 +214,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Indique s'il est possible d'éditer une ou plusieurs quantités.
 			get
 			{
-				return this.ArticleQuantityTypeEditionEnabled.Count () != 0;
+				return this.ArticleQuantityTypeEditionEnabled.Any ();
 			}
 		}
 
