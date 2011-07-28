@@ -152,12 +152,14 @@ namespace Epsitec.Cresus.Core.Controllers
 				Name = "Ribbon",
 			};
 
+#if false
 			this.persistenceManager.Register (this.ribbonBook);
 			this.persistenceManager.Register (this, this.ribbonBook.FullPathName + ".DatabaseMenu.DefaultCommand",
 				x => this.DatabaseMenuDefaultCommandNameChanged += x,
 				x => this.DatabaseMenuDefaultCommandNameChanged -= x,
 				xml => xml.Add (new XAttribute ("name", this.DatabaseMenuDefaultCommandName)),
 				xml => this.DatabaseMenuDefaultCommandName = xml.Attribute ("name").Value);
+#endif
 		}
 
 		private void CreateRibbonHomePage()

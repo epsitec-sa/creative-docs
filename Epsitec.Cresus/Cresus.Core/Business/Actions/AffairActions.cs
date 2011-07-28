@@ -36,41 +36,14 @@ namespace Epsitec.Cresus.Core.Business.Actions
 			AffairActions.CreateDocument (DocumentType.ProductionOrder, DocumentType.ProductionChecklist);
 		}
 
+		public static void CreateDeliveryNote()
+		{
+			AffairActions.CreateDocument (DocumentType.OrderConfirmation, DocumentType.DeliveryNote);
+		}
+
 		public static void CreateInvoice()
 		{
 			AffairActions.CreateDocument (DocumentType.OrderConfirmation, DocumentType.Invoice);
-		}
-
-
-		private static BusinessDocumentEntity CloneBusinessDocument(IBusinessContext businessContext, DocumentMetadataEntity metadata)
-		{
-			var template = metadata.BusinessDocument as BusinessDocumentEntity;
-			var document = template.CloneEntity (businessContext);
-
-			switch (metadata.DocumentCategory.DocumentType)
-			{
-				case DocumentType.InvoiceProForma:
-				case DocumentType.Invoice:
-					AffairActions.SetupInvoice (document);
-					break;
-			}
-
-			return document;
-		}
-
-		private static void SetupInvoice(BusinessDocumentEntity document)
-		{
-			document.BillingStatus         = Finance.BillingStatus.DebtorBillOpen;
-			document.BillingDate           = Date.Today;
-			
-			document.Lines.OfType<ArticleDocumentItemEntity> ().ForEach (x => AffairActions.SetupInvoiceArticleDocumentItem (x));
-		}
-
-
-		private static void SetupInvoiceArticleDocumentItem(ArticleDocumentItemEntity line)
-		{
-			var ordered = line.GetOrderedQuantity ();
-			line.ReferenceUnitPriceBeforeTax = (ordered == 0) ? null : line.ResultingLinePriceBeforeTax / ordered;
 		}
 
 
@@ -89,12 +62,122 @@ namespace Epsitec.Cresus.Core.Business.Actions
 				var documentMetadata = businessContext.CreateEntity<DocumentMetadataEntity> ();
 
 				documentMetadata.DocumentCategory = categoryRepo.Find (docTypeNew).First ();
-				documentMetadata.BusinessDocument = AffairActions.CloneBusinessDocument (businessContext, currentDocument);
+				documentMetadata.BusinessDocument = AffairActions.CloneBusinessDocument (businessContext, currentDocument, docTypeNew);
 
 				currentAffair.Documents.Add (documentMetadata);
-				
+
 				currentDocument.DocumentState = DocumentState.Frozen;
 			}
+		}
+
+		private static BusinessDocumentEntity CloneBusinessDocument(IBusinessContext businessContext, DocumentMetadataEntity metadata, DocumentType docTypeNew)
+		{
+			var template = metadata.BusinessDocument as BusinessDocumentEntity;
+			var document = template.CloneEntity (businessContext);
+
+			switch (docTypeNew)
+			{
+				case DocumentType.DeliveryNote:
+					AffairActions.SetupDeliveryNote (businessContext, document);
+					break;
+
+				case DocumentType.InvoiceProForma:
+				case DocumentType.Invoice:
+					AffairActions.SetupInvoice (businessContext, document);
+					break;
+			}
+
+			return document;
+		}
+
+
+		#region DeliveryNote
+		private static void SetupDeliveryNote(IBusinessContext businessContext, BusinessDocumentEntity document)
+		{
+			document.Lines.OfType<ArticleDocumentItemEntity> ().ForEach (x => AffairActions.SetupDeliveryNoteArticleDocumentItem (businessContext, x));
+		}
+
+		private static void SetupDeliveryNoteArticleDocumentItem(IBusinessContext businessContext, ArticleDocumentItemEntity line)
+		{
+			//	Cherche la quantité à livrer la plus probable.
+			decimal shippedQuantity = 0;
+
+			foreach (var quantity in line.ArticleQuantities)
+			{
+				if (quantity.QuantityColumn.QuantityType == ArticleQuantityType.Ordered)
+				{
+					shippedQuantity += quantity.Quantity;
+				}
+
+				if (quantity.QuantityColumn.QuantityType == ArticleQuantityType.Delayed ||
+					quantity.QuantityColumn.QuantityType == ArticleQuantityType.Delayed ||
+					quantity.QuantityColumn.QuantityType == ArticleQuantityType.Expected)
+				{
+					shippedQuantity -= quantity.Quantity;
+				}
+			}
+
+			//	Crée la quantité à livrer.
+			var quantityColumnEntity = AffairActions.SearchArticleQuantityColumnEntity (businessContext, ArticleQuantityType.Shipped);
+			if (quantityColumnEntity != null)
+			{
+				var newQuantity = businessContext.CreateEntity<ArticleQuantityEntity> ();
+				newQuantity.Quantity = shippedQuantity;
+				newQuantity.QuantityColumn = quantityColumnEntity;
+				newQuantity.BeginDate = new Date (Date.Today.Ticks);
+
+				line.ArticleQuantities.Add (newQuantity);
+			}
+		}
+		#endregion
+
+
+		#region Invoice
+		private static void SetupInvoice(IBusinessContext businessContext, BusinessDocumentEntity document)
+		{
+			document.BillingStatus = Finance.BillingStatus.DebtorBillOpen;
+			document.BillingDate   = Date.Today;
+
+			document.Lines.OfType<ArticleDocumentItemEntity> ().ForEach (x => AffairActions.SetupInvoiceArticleDocumentItem (businessContext, x));
+		}
+
+		private static void SetupInvoiceArticleDocumentItem(IBusinessContext businessContext, ArticleDocumentItemEntity line)
+		{
+			var ordered = line.GetOrderedQuantity ();
+			line.ReferenceUnitPriceBeforeTax = (ordered == 0) ? null : line.ResultingLinePriceBeforeTax / ordered;
+
+			//	Cherche la quantité à facturer la plus probable.
+			decimal billedQuantity = 0;
+
+			foreach (var quantity in line.ArticleQuantities)
+			{
+				if (quantity.QuantityColumn.QuantityType == ArticleQuantityType.Shipped)
+				{
+					billedQuantity += quantity.Quantity;
+				}
+			}
+
+			//	Crée la quantité à facturer.
+			var quantityColumnEntity = AffairActions.SearchArticleQuantityColumnEntity (businessContext, ArticleQuantityType.Billed);
+			if (quantityColumnEntity != null)
+			{
+				var newQuantity = businessContext.CreateEntity<ArticleQuantityEntity> ();
+				newQuantity.Quantity = billedQuantity;
+				newQuantity.QuantityColumn = quantityColumnEntity;
+				newQuantity.BeginDate = new Date (Date.Today.Ticks);
+
+				line.ArticleQuantities.Add (newQuantity);
+			}
+		}
+		#endregion
+
+
+		private static ArticleQuantityColumnEntity SearchArticleQuantityColumnEntity(IBusinessContext businessContext, ArticleQuantityType type)
+		{
+			var example = new ArticleQuantityColumnEntity ();
+			example.QuantityType = type;
+
+			return businessContext.DataContext.GetByExample (example).FirstOrDefault ();
 		}
 	}
 }
