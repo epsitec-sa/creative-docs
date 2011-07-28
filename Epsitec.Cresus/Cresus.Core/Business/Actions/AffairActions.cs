@@ -47,26 +47,27 @@ namespace Epsitec.Cresus.Core.Business.Actions
 		}
 
 
-		private static void CreateDocument(DocumentType docTypeOld, DocumentType docTypeNew)
+		private static void CreateDocument(DocumentType sourceDocumentType, DocumentType newDocumentType)
 		{
 			var workflowEngine  = WorkflowExecutionEngine.Current;
 			var businessContext = workflowEngine.BusinessContext;
 			var categoryRepo    = businessContext.GetSpecificRepository<DocumentCategoryEntity.Repository> ();
 			var currentAffair   = businessContext.GetMasterEntity<AffairEntity> ();
-			var currentDocument = currentAffair.Documents.LastOrDefault (x => x.DocumentCategory.DocumentType == docTypeOld);
+			var currentDocument = currentAffair.Documents.LastOrDefault (x => x.DocumentCategory.DocumentType == sourceDocumentType);
 
-			System.Diagnostics.Debug.Assert (currentDocument.IsNotNull (), string.Format ("{0} document can be found", docTypeOld));
+			System.Diagnostics.Debug.Assert (currentDocument.IsNotNull (), string.Format ("{0} document can be found", sourceDocumentType));
 
 			if (currentDocument.IsNotNull ())
 			{
 				var documentMetadata = businessContext.CreateEntity<DocumentMetadataEntity> ();
 
-				documentMetadata.DocumentCategory = categoryRepo.Find (docTypeNew).First ();
-				documentMetadata.BusinessDocument = AffairActions.CloneBusinessDocument (businessContext, currentAffair, currentDocument, docTypeNew);
+				documentMetadata.DocumentCategory = categoryRepo.Find (newDocumentType).First ();
+				documentMetadata.BusinessDocument = AffairActions.CloneBusinessDocument (businessContext, currentAffair, currentDocument, newDocumentType);
 
 				currentAffair.Documents.Add (documentMetadata);
 
 				// TODO: Ce n'est pas suffisant de geler le document "source" !
+				// Une facture n'est pas exemple jamais gelée, puisqu'elle ne sert jamais de source.
 				currentDocument.DocumentState = DocumentState.Frozen;
 			}
 		}
@@ -118,6 +119,10 @@ namespace Epsitec.Cresus.Core.Business.Actions
 		private static decimal SetupDeliveryNoteShipped(DocumentMetadataEntity deliveryNote, int i)
 		{
 			//	Retourne la quantité livrée d'un article donné dans un bulletin de livraison.
+			//	Ceci est très glissant et suppose que les lignes sont exactement les mêmes entre tous les bulletins
+			//	de livraison. En principe, l'édition des lignes d'un bulletin de livraison est interdite, donc
+			//	cela devrait jouer, mais bon...
+			//	TODO: Ajouter un garde-fou !
 			decimal shipped = 0;
 
 			var businessDocument = deliveryNote.BusinessDocument as BusinessDocumentEntity;
