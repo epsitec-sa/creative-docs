@@ -555,8 +555,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Combine,        isEditionEnabled && this.linesEngine.IsCombineEnabled (selection));
 			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Flat,           isEditionEnabled && this.linesEngine.IsFlatEnabled);
 
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Deselect,       isEditionEnabled && selection.Count != 0);
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.GroupSelect,    isEditionEnabled && selection.Count != 0);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Deselect,       selection.Count != 0);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.GroupSelect,    selection.Count != 0);
 
 			if (selection.Count != 1)
 			{

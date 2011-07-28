@@ -119,7 +119,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	de créer des lignes, d'en supprimer, d'en déplacer ou de les modifier.
 			get
 			{
-				return this.IsDebug || this.documentBusinessLogic.IsLinesEditionEnabled;
+				return this.IsDebug || 
+					(this.documentMetadataEntity.DocumentState != DocumentState.Frozen && this.documentBusinessLogic.IsLinesEditionEnabled);
 			}
 		}
 
@@ -128,7 +129,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Indique s'il est possibled'éditer les paramètres des articles.
 			get
 			{
-				return this.IsDebug || this.documentBusinessLogic.IsArticleParametersEditionEnabled;
+				return this.IsDebug ||
+					(this.documentMetadataEntity.DocumentState != DocumentState.Frozen && this.documentBusinessLogic.IsArticleParametersEditionEnabled);
 			}
 		}
 
@@ -137,7 +139,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Indique s'il est possible d'éditer les textes.
 			get
 			{
-				return this.IsDebug || this.documentBusinessLogic.IsTextEditionEnabled;
+				return this.IsDebug ||
+					(this.documentMetadataEntity.DocumentState != DocumentState.Frozen && this.documentBusinessLogic.IsTextEditionEnabled);
 			}
 		}
 
@@ -147,7 +150,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	interne à l'entreprise.
 			get
 			{
-				return this.documentBusinessLogic.IsMyEyesOnlyEditionEnabled;
+				return this.documentMetadataEntity.DocumentState != DocumentState.Frozen && this.documentBusinessLogic.IsMyEyesOnlyEditionEnabled;
 			}
 		}
 
@@ -156,7 +159,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Indique s'il est possible d'éditer les prix.
 			get
 			{
-				return this.IsDebug || this.documentBusinessLogic.IsPriceEditionEnabled;
+				return this.IsDebug ||
+					(this.documentMetadataEntity.DocumentState != DocumentState.Frozen && this.documentBusinessLogic.IsPriceEditionEnabled);
 			}
 		}
 
@@ -165,7 +169,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Indique s'il est possible d'éditer les rabais.
 			get
 			{
-				return this.IsDebug || this.documentBusinessLogic.IsDiscountEditionEnabled;
+				return this.IsDebug ||
+					(this.documentMetadataEntity.DocumentState != DocumentState.Frozen && this.documentBusinessLogic.IsDiscountEditionEnabled);
 			}
 		}
 
@@ -173,6 +178,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public bool IsEditionEnabled(LineInformations info)
 		{
 			//	Indique s'il est possible d'éditer une ligne donnée.
+			if (this.documentMetadataEntity.DocumentState == DocumentState.Frozen)
+			{
+				return false;
+			}
+
 			if (this.IsLinesEditionEnabled)
 			{
 				return true;
@@ -214,14 +224,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Indique s'il est possible d'éditer une ou plusieurs quantités.
 			get
 			{
-				return this.ArticleQuantityTypeEditionEnabled.Any ();
+				return this.documentMetadataEntity.DocumentState != DocumentState.Frozen &&
+					   this.ArticleQuantityTypeEditionEnabled.Any ();
 			}
 		}
 
 		public bool IsArticleQuantityTypeEditionEnabled(ArticleQuantityType type)
 		{
 			//	Indique s'il est possible d'éditer une quantité donnée.
-			return this.ArticleQuantityTypeEditionEnabled.Where (x => x == type).Any ();
+			return this.documentMetadataEntity.DocumentState != DocumentState.Frozen &&
+				   this.ArticleQuantityTypeEditionEnabled.Where (x => x == type).Any ();
 		}
 
 		public IEnumerable<ArticleQuantityType> ArticleQuantityTypeEditionEnabled
@@ -231,7 +243,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Le premier de la liste est considéré comme "principal".
 			get
 			{
-				return this.IsDebug ? this.DebugArticleQuantityTypeEditionEnabled : this.documentBusinessLogic.ArticleQuantityTypeEditionEnabled;
+				var list = this.IsDebug ? this.DebugArticleQuantityTypeEditionEnabled : this.documentBusinessLogic.ArticleQuantityTypeEditionEnabled;
+
+				if (list == null)
+				{
+					list = new List<ArticleQuantityType> ();
+				}
+
+				return list;
 			}
 		}
 

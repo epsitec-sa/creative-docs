@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Core.Business.Actions
 				var documentMetadata = businessContext.CreateEntity<DocumentMetadataEntity> ();
 
 				documentMetadata.DocumentCategory = categoryRepo.Find (docTypeNew).First ();
-				documentMetadata.BusinessDocument = AffairActions.CloneBusinessDocument (businessContext, currentDocument, docTypeNew);
+				documentMetadata.BusinessDocument = AffairActions.CloneBusinessDocument (businessContext, currentAffair, currentDocument, docTypeNew);
 
 				currentAffair.Documents.Add (documentMetadata);
 
@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Core.Business.Actions
 			}
 		}
 
-		private static BusinessDocumentEntity CloneBusinessDocument(IBusinessContext businessContext, DocumentMetadataEntity metadata, DocumentType docTypeNew)
+		private static BusinessDocumentEntity CloneBusinessDocument(IBusinessContext businessContext, AffairEntity affair, DocumentMetadataEntity metadata, DocumentType docTypeNew)
 		{
 			var template = metadata.BusinessDocument as BusinessDocumentEntity;
 			var document = template.CloneEntity (businessContext);
@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.Core.Business.Actions
 			switch (docTypeNew)
 			{
 				case DocumentType.DeliveryNote:
-					AffairActions.SetupDeliveryNote (businessContext, document);
+					AffairActions.SetupDeliveryNote (businessContext, affair, document);
 					break;
 
 				case DocumentType.InvoiceProForma:
@@ -92,12 +92,55 @@ namespace Epsitec.Cresus.Core.Business.Actions
 
 
 		#region DeliveryNote
-		private static void SetupDeliveryNote(IBusinessContext businessContext, BusinessDocumentEntity document)
+		private static void SetupDeliveryNote(IBusinessContext businessContext, AffairEntity affair, BusinessDocumentEntity document)
 		{
-			document.Lines.OfType<ArticleDocumentItemEntity> ().ForEach (x => AffairActions.SetupDeliveryNoteArticleDocumentItem (businessContext, x));
+			var deliveryNotes = affair.Documents.Where (x => x.BusinessDocument != document && x.DocumentCategory.DocumentType == DocumentType.DeliveryNote);
+
+			for (int i = 0; i < document.Lines.Count; i++)
+			{
+				var article = document.Lines[i] as ArticleDocumentItemEntity;
+
+				if (article != null)
+				{
+					//	Passe en revue toutes les quantités déjà livrées dans les bulletins de livraison existants.
+					decimal shippedPreviously = 0;
+					foreach (var deliveryNote in deliveryNotes)
+					{
+						shippedPreviously += AffairActions.SetupDeliveryNoteShipped (deliveryNote, i);
+					}
+
+					AffairActions.SetupDeliveryNoteArticleDocumentItem (businessContext, article, shippedPreviously);
+				}
+			}
 		}
 
-		private static void SetupDeliveryNoteArticleDocumentItem(IBusinessContext businessContext, ArticleDocumentItemEntity line)
+		private static decimal SetupDeliveryNoteShipped(DocumentMetadataEntity deliveryNote, int i)
+		{
+			//	Retourne la quantité livrée d'un article donné dans un bulletin de livraison.
+			decimal shipped = 0;
+
+			var businessDocument = deliveryNote.BusinessDocument as BusinessDocumentEntity;
+
+			if (i < businessDocument.Lines.Count)
+			{
+				var article = businessDocument.Lines[i] as ArticleDocumentItemEntity;
+
+				if (article != null)
+				{
+					foreach (var quantity in article.ArticleQuantities)
+					{
+						if (quantity.QuantityColumn.QuantityType == ArticleQuantityType.Shipped)
+						{
+							shipped += quantity.Quantity;
+						}
+					}
+				}
+			}
+
+			return shipped;
+		}
+
+		private static void SetupDeliveryNoteArticleDocumentItem(IBusinessContext businessContext, ArticleDocumentItemEntity line, decimal shippedPreviously)
 		{
 			//	Cherche la quantité à livrer la plus probable.
 			decimal shippedQuantity = 0;
@@ -125,6 +168,17 @@ namespace Epsitec.Cresus.Core.Business.Actions
 				newQuantity.Quantity = shippedQuantity;
 				newQuantity.QuantityColumn = quantityColumnEntity;
 				newQuantity.BeginDate = new Date (Date.Today.Ticks);
+
+				line.ArticleQuantities.Add (newQuantity);
+			}
+
+			//	Crée la quantité livrée précédemment.
+			quantityColumnEntity = AffairActions.SearchArticleQuantityColumnEntity (businessContext, ArticleQuantityType.ShippedPreviously);
+			if (quantityColumnEntity != null)
+			{
+				var newQuantity = businessContext.CreateEntity<ArticleQuantityEntity> ();
+				newQuantity.Quantity = shippedPreviously;
+				newQuantity.QuantityColumn = quantityColumnEntity;
 
 				line.ArticleQuantities.Add (newQuantity);
 			}
