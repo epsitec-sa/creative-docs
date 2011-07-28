@@ -87,6 +87,15 @@ namespace Epsitec.Cresus.Core.Print.Bands
 			set;
 		}
 
+		public int TableCellColumnSpan
+		{
+			//	Cette propriété n'est pas exploitée directement pas TextBand, mais par TableBand !
+			//	Si elle n'a jamais été initialisée et qu'elle vaut 0, cela signifie qu'il
+			//	faut utiliser la valeur par défaut 1.
+			get;
+			set;
+		}
+
 		public bool DebugPaintFrame
 		{
 			get;

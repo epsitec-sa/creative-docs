@@ -363,6 +363,31 @@ namespace Epsitec.Cresus.Core.Print.Bands
 		}
 
 
+		public int GetColumnSpan(int column, int row)
+		{
+			TextBand textBand = this.GetTextBand (column, row);
+
+			if (textBand == null)
+			{
+				return 1;
+			}
+			else
+			{
+				return textBand.TableCellColumnSpan;
+			}
+		}
+
+		public void SetColumnSpan(int column, int row, int span)
+		{
+			TextBand textBand = this.GetTextBand (column, row);
+
+			if (textBand != null)
+			{
+				textBand.TableCellColumnSpan = span;
+			}
+		}
+
+
 		public TextBreakMode GetBreakMode(int column, int row)
 		{
 			TextBand textBand = this.GetTextBand (column, row);
@@ -487,7 +512,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 			for (int column = 0; column < this.columnsCount; column++)
 			{
 				TextBand textBand = this.GetTextBand (column, row);
-				double width = this.GetAbsoluteColumnWidth (column);
+				double width = this.GetAbsoluteSpanedColumnWidth (column, row);
 				var margins = this.GetMargins (textBand);
 
 				textBand.JustifInitialize (width - margins.Left - margins.Right);
@@ -736,7 +761,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 				for (int column = 0; column < this.columnsCount; column++)
 				{
 					var cellInfo = rowInfo.CellsInfo[column];
-					double width = this.GetAbsoluteColumnWidth (column);
+					double width = this.GetAbsoluteSpanedColumnWidth (column, row);
 					Rectangle cellBounds = new Rectangle (x, y-rowInfo.Height, width, rowInfo.Height);
 
 					CellBorder cellBorder = CellBorder.Empty;
@@ -832,7 +857,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 				TextBand textBand = this.GetTextBand (column, row);
 				var margins = this.GetMargins (textBand);
 
-				double width = this.GetAbsoluteColumnWidth (column);
+				double width = this.GetAbsoluteSpanedColumnWidth (column, row);
 				width -= margins.Left;
 				width -= margins.Right;
 
@@ -847,6 +872,22 @@ namespace Epsitec.Cresus.Core.Print.Bands
 			maxHeight += firstTextBand.TableCellBorder.TopGap;
 
 			return maxHeight;
+		}
+
+		private double GetAbsoluteSpanedColumnWidth(int column, int row)
+		{
+			double width = this.GetAbsoluteColumnWidth (column);
+
+			int span = this.GetColumnSpan (column, row);
+			if (span > 1)
+			{
+				for (int i = 1; i < span; i++)
+				{
+					width += this.GetAbsoluteColumnWidth (column+i);
+				}
+			}
+
+			return width;
 		}
 
 		private double GetAbsoluteColumnWidth(int column)
