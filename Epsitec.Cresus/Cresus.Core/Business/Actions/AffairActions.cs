@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core.Business.Actions
 
 		public static void CreateInvoice()
 		{
-			AffairActions.CreateDocument (DocumentType.OrderConfirmation, DocumentType.Invoice);
+			AffairActions.CreateDocument (DocumentType.DeliveryNote, DocumentType.Invoice);
 		}
 
 
