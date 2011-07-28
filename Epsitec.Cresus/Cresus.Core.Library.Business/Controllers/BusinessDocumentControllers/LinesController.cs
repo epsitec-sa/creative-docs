@@ -222,6 +222,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 						{
 							PreferredHeight = LinesController.lineHeight,
 							ContentAlignment = this.GetRowColumnContentAlignment (row, columnType),
+							TextBreakMode = Common.Drawing.TextBreakMode.SingleLine | TextBreakMode.Split | TextBreakMode.Ellipsis,
 							Dock = DockStyle.Fill,
 							Margins = new Margins (4, 4, 0, 0),
 						};

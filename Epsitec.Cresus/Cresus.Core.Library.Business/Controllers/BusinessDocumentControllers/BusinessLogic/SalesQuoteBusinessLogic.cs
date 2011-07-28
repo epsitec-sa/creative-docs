@@ -74,7 +74,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				yield return ArticleQuantityType.Ordered;				// commandé
 				yield return ArticleQuantityType.Delayed;				// retardé
 				yield return ArticleQuantityType.Expected;				// attendu
-				yield return ArticleQuantityType.Information;			// information
 			}
 		}
 	}

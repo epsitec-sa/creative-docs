@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Core.Business.Actions
 			var currentAffair   = businessContext.GetMasterEntity<AffairEntity> ();
 			var currentDocument = currentAffair.Documents.LastOrDefault (x => x.DocumentCategory.DocumentType == docTypeOld);
 
-			System.Diagnostics.Debug.Assert (currentDocument.IsNotNull (), string.Format ("No {0} document can be found", docTypeOld));
+			System.Diagnostics.Debug.Assert (currentDocument.IsNotNull (), string.Format ("{0} document can be found", docTypeOld));
 
 			if (currentDocument.IsNotNull ())
 			{
@@ -66,6 +66,7 @@ namespace Epsitec.Cresus.Core.Business.Actions
 
 				currentAffair.Documents.Add (documentMetadata);
 
+				// TODO: Ce n'est pas suffisant de geler le document "source" !
 				currentDocument.DocumentState = DocumentState.Frozen;
 			}
 		}
@@ -153,7 +154,6 @@ namespace Epsitec.Cresus.Core.Business.Actions
 				}
 
 				if (quantity.QuantityColumn.QuantityType == ArticleQuantityType.Delayed ||
-					quantity.QuantityColumn.QuantityType == ArticleQuantityType.Delayed ||
 					quantity.QuantityColumn.QuantityType == ArticleQuantityType.Expected)
 				{
 					shippedQuantity -= quantity.Quantity;
@@ -165,7 +165,7 @@ namespace Epsitec.Cresus.Core.Business.Actions
 			if (quantityColumnEntity != null)
 			{
 				var newQuantity = businessContext.CreateEntity<ArticleQuantityEntity> ();
-				newQuantity.Quantity = shippedQuantity;
+				newQuantity.Quantity = shippedQuantity - shippedPreviously;
 				newQuantity.QuantityColumn = quantityColumnEntity;
 				newQuantity.BeginDate = new Date (Date.Today.Ticks);
 
@@ -173,14 +173,23 @@ namespace Epsitec.Cresus.Core.Business.Actions
 			}
 
 			//	Crée la quantité livrée précédemment.
-			quantityColumnEntity = AffairActions.SearchArticleQuantityColumnEntity (businessContext, ArticleQuantityType.ShippedPreviously);
-			if (quantityColumnEntity != null)
-			{
-				var newQuantity = businessContext.CreateEntity<ArticleQuantityEntity> ();
-				newQuantity.Quantity = shippedPreviously;
-				newQuantity.QuantityColumn = quantityColumnEntity;
+			var existingPreviously = line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == ArticleQuantityType.ShippedPreviously).FirstOrDefault ();
 
-				line.ArticleQuantities.Add (newQuantity);
+			if (existingPreviously == null)
+			{
+				quantityColumnEntity = AffairActions.SearchArticleQuantityColumnEntity (businessContext, ArticleQuantityType.ShippedPreviously);
+				if (quantityColumnEntity != null)
+				{
+					var newQuantity = businessContext.CreateEntity<ArticleQuantityEntity> ();
+					newQuantity.Quantity = shippedPreviously;
+					newQuantity.QuantityColumn = quantityColumnEntity;
+
+					line.ArticleQuantities.Add (newQuantity);
+				}
+			}
+			else
+			{
+				existingPreviously.Quantity = shippedPreviously;
 			}
 		}
 		#endregion
@@ -200,7 +209,7 @@ namespace Epsitec.Cresus.Core.Business.Actions
 			var ordered = line.GetOrderedQuantity ();
 			line.ReferenceUnitPriceBeforeTax = (ordered == 0) ? null : line.ResultingLinePriceBeforeTax / ordered;
 
-			//	Cherche la quantité à facturer la plus probable.
+			//	Cherche la quantité à facturer.
 			decimal billedQuantity = 0;
 
 			foreach (var quantity in line.ArticleQuantities)
