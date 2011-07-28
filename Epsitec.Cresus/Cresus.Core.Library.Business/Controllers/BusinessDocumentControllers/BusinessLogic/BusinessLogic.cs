@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.businessContext        = businessContext;
 			this.documentMetadataEntity = documentMetadataEntity;
 
-			this.articleQuantityColumnEntities = this.businessContext.GetAllEntities<ArticleQuantityColumnEntity> ().OrderBy (x => x.QuantityType);
+			this.articleQuantityColumnEntities = this.businessContext.GetAllEntities<ArticleQuantityColumnEntity> ();
 
 			this.CreateDocumentBusinessLogic ();
 		}
@@ -221,30 +221,17 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public bool IsArticleQuantityTypeEditionEnabled(ArticleQuantityType type)
 		{
 			//	Indique s'il est possible d'éditer une quantité donnée.
-			return this.ArticleQuantityTypeEditionEnabled.Where (x => x.Key == type).Any ();
+			return this.ArticleQuantityTypeEditionEnabled.Where (x => x == type).Any ();
 		}
 
-		public IEnumerable<EnumKeyValues<ArticleQuantityType>> ArticleQuantityTypeEditionEnabled
+		public IEnumerable<ArticleQuantityType> ArticleQuantityTypeEditionEnabled
 		{
 			//	Retourne les types de quantité définis dans les réglages globaux, compatibles
 			//	avec le document en cours.
 			//	Le premier de la liste est considéré comme "principal".
 			get
 			{
-				var types = this.IsDebug ? this.DebugArticleQuantityTypeEditionEnabled : this.documentBusinessLogic.ArticleQuantityTypeEditionEnabled;
-
-				if (types != null)
-				{
-					foreach (var type in types)
-					{
-						var entity = this.articleQuantityColumnEntities.Where (x => x.QuantityType == type).FirstOrDefault ();
-
-						if (entity != null)
-						{
-							yield return EnumKeyValues.Create (entity.QuantityType, entity.Name);
-						}
-					}
-				}
+				return this.IsDebug ? this.DebugArticleQuantityTypeEditionEnabled : this.documentBusinessLogic.ArticleQuantityTypeEditionEnabled;
 			}
 		}
 

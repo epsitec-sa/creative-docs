@@ -210,7 +210,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		private void BuildArticleItem(ArticleDocumentItemEntity line)
 		{
 			//	Génère la quantité principale.
-			var quantityTypes = this.businessLogic.ArticleQuantityTypeEditionEnabled.Select (x => x.Key);
+			var quantityTypes = this.businessLogic.ArticleQuantityTypeEditionEnabled;
 			var mainQuantityType = ArticleQuantityType.None;
 
 			if ((this.mode & DocumentItemAccessorMode.UseMainColumns) != 0 &&  // utilise les colonnes MainQuantity/MainUnit (impression) ?

@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			//	Utilise le premier type de la liste de BusinessLogic, mais pas Ordered, puisque ce dernier
 			//	et toujours édité dans ArticleLineEditorController, et jamais dans QuantityLineEditorController.
-			ArticleQuantityType quantityType = this.businessLogic.ArticleQuantityTypeEditionEnabled.Select (x => x.Key).Where (x => x != ArticleQuantityType.Ordered).FirstOrDefault ();
+			ArticleQuantityType quantityType = this.businessLogic.ArticleQuantityTypeEditionEnabled.Where (x => x != ArticleQuantityType.Ordered).FirstOrDefault ();
 			var quantityColumnEntity = this.SearchArticleQuantityColumnEntity (quantityType);
 
 			if (quantityColumnEntity == null)

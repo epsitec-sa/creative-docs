@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		
 		private void CreateUIRightFrame(UIBuilder builder, FrameBox parent)
 		{
-			bool enable = this.accessData.BusinessLogic.ArticleQuantityTypeEditionEnabled.Select (x => x.Key).Contains (this.Entity.QuantityColumn.QuantityType);
+			bool enable = this.accessData.BusinessLogic.ArticleQuantityTypeEditionEnabled.Contains (this.Entity.QuantityColumn.QuantityType);
 
 			var topFrame = new FrameBox
 			{
@@ -164,9 +164,15 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			};
 
 			//	Met des boutons radio pour tous les types, sauf Ordered qui est toujours édité par ArticleLineEditorController.
-			foreach (var e in this.accessData.BusinessLogic.ArticleQuantityTypeEditionEnabled.Where (x => x.Key != ArticleQuantityType.Ordered))
+			foreach (var type in this.accessData.BusinessLogic.ArticleQuantityTypeEditionEnabled.Where (x => x != ArticleQuantityType.Ordered))
 			{
-				widget.Items.Add (e.Key.ToString (), e);
+				var entity = this.accessData.BusinessLogic.GetArticleQuantityColumnEntity (type);
+
+				if (entity != null)
+				{
+					var e = EnumKeyValues.Create (entity.QuantityType, entity.Name);
+					widget.Items.Add (e.Key.ToString (), e);
+				}
 			}
 
 			widget.ValueToDescriptionConverter = delegate (object o)
