@@ -15,5 +15,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		TextNotDefined,
 		ArticleNotDefined,
 		AdditionalQuantitiesTooHigh,
+		ShippedQuantitiesTooHigh,
+		BilledQuantitiesTooHigh,
 	}
 }

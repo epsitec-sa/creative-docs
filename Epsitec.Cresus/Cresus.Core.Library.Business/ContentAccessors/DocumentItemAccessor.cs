@@ -209,24 +209,6 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 		private void BuildArticleItem(ArticleDocumentItemEntity line)
 		{
-			//	Génère une éventuelle erreur sur les quantités.
-			decimal orderedQuantity = 0;
-			decimal additionalQuantity = 0;
-
-			foreach (var quantity in line.ArticleQuantities)
-			{
-				if (quantity.QuantityColumn.QuantityType == ArticleQuantityType.Ordered)
-				{
-					orderedQuantity += quantity.Quantity;
-				}
-				else
-				{
-					additionalQuantity += quantity.Quantity;
-				}
-			}
-
-			var quantityError = (additionalQuantity <= orderedQuantity) ? DocumentItemAccessorError.OK : DocumentItemAccessorError.AdditionalQuantitiesTooHigh;
-
 			//	Génère la quantité principale.
 			var quantityTypes = this.businessLogic.ArticleQuantityTypeEditionEnabled.Select (x => x.Key);
 			var mainQuantityType = ArticleQuantityType.None;
@@ -249,7 +231,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 				this.SetContent (0, DocumentItemAccessorColumn.MainQuantity, mainQuantity.ToString ());
 				this.SetContent (0, DocumentItemAccessorColumn.MainUnit, mainUnit);
-				this.SetError (0, DocumentItemAccessorColumn.MainQuantity, quantityError);
+				this.SetError (0, DocumentItemAccessorColumn.MainQuantity, this.GetQuantityError (line, mainQuantityType));
 			}
 
 			//	Génère les autres quantités (sans la principale).
@@ -276,7 +258,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 							this.SetContent (row, DocumentItemAccessorColumn.AdditionalEndDate, quantity.EndDate.Value.ToString ());
 						}
 
-						this.SetError (row, DocumentItemAccessorColumn.AdditionalQuantity, quantityError);
+						this.SetError (row, DocumentItemAccessorColumn.AdditionalQuantity, this.GetQuantityError (line, quantityType));
 
 						row++;
 					}
@@ -352,14 +334,86 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			}
 		}
 
+		private DocumentItemAccessorError GetQuantityError(ArticleDocumentItemEntity line, ArticleQuantityType quantityType)
+		{
+			//	Génère une éventuelle erreur sur les quantités.
+			decimal orderedQuantity = 0;
+			decimal delayedQuantity = 0;
+			decimal expectedQuantity = 0;
+			decimal shippedQuantity = 0;
+			decimal shippedPreviouslyQuantity = 0;
+			decimal billedQuantity = 0;
+
+			foreach (var quantity in line.ArticleQuantities)
+			{
+				switch (quantity.QuantityColumn.QuantityType)
+				{
+					case ArticleQuantityType.Ordered:
+						orderedQuantity += quantity.Quantity;
+						break;
+
+					case ArticleQuantityType.Delayed:
+						delayedQuantity += quantity.Quantity;
+						break;
+
+					case ArticleQuantityType.Expected:
+						expectedQuantity += quantity.Quantity;
+						break;
+
+					case ArticleQuantityType.Shipped:
+						shippedQuantity += quantity.Quantity;
+						break;
+
+					case ArticleQuantityType.ShippedPreviously:
+						shippedPreviouslyQuantity += quantity.Quantity;
+						break;
+
+					case ArticleQuantityType.Billed:
+						billedQuantity += quantity.Quantity;
+						break;
+				}
+			}
+
+			switch (quantityType)
+			{
+				case ArticleQuantityType.Ordered:
+				case ArticleQuantityType.Delayed:
+				case ArticleQuantityType.Expected:
+					if (orderedQuantity < delayedQuantity+expectedQuantity)
+					{
+						return DocumentItemAccessorError.AdditionalQuantitiesTooHigh;
+					}
+					break;
+
+				case ArticleQuantityType.Shipped:
+					if (shippedQuantity > orderedQuantity-delayedQuantity-expectedQuantity-shippedPreviouslyQuantity)
+					{
+						return DocumentItemAccessorError.ShippedQuantitiesTooHigh;
+					}
+					break;
+
+				case ArticleQuantityType.ShippedPreviously:
+					break;
+
+				case ArticleQuantityType.Billed:
+					if (billedQuantity > shippedQuantity)
+					{
+						return DocumentItemAccessorError.BilledQuantitiesTooHigh;
+					}
+					break;
+			}
+
+			return DocumentItemAccessorError.OK;
+		}
+
 		static ArticleQuantityType[] articleQuantityTypes =
 			{
 				ArticleQuantityType.Ordered,
 				ArticleQuantityType.Delayed,
 				ArticleQuantityType.Expected,
-				ArticleQuantityType.Billed,
 				ArticleQuantityType.Shipped,
 				ArticleQuantityType.ShippedPreviously,
+				ArticleQuantityType.Billed,
 				ArticleQuantityType.Information,
 			};
 
@@ -604,6 +658,12 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 				case DocumentItemAccessorError.AdditionalQuantitiesTooHigh:
 					return "les quantités additionnelles dépassent la quantité commandée";
+
+				case DocumentItemAccessorError.ShippedQuantitiesTooHigh:
+					return "la quantité livrée est trop grande";
+
+				case DocumentItemAccessorError.BilledQuantitiesTooHigh:
+					return "la quantité facturée est trop grande";
 
 				default:
 					return null;  // ok

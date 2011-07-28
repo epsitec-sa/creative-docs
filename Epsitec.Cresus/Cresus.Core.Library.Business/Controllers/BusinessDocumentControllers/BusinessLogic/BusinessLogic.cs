@@ -231,13 +231,18 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Le premier de la liste est considéré comme "principal".
 			get
 			{
-				var enabled = this.IsDebug ? this.DebugArticleQuantityTypeEditionEnabled : this.documentBusinessLogic.ArticleQuantityTypeEditionEnabled;
+				var types = this.IsDebug ? this.DebugArticleQuantityTypeEditionEnabled : this.documentBusinessLogic.ArticleQuantityTypeEditionEnabled;
 
-				foreach (var e in this.articleQuantityColumnEntities)
+				if (types != null)
 				{
-					if (enabled != null && enabled.Contains (e.QuantityType))
+					foreach (var type in types)
 					{
-						yield return EnumKeyValues.Create (e.QuantityType, e.Name);
+						var entity = this.articleQuantityColumnEntities.Where (x => x.QuantityType == type).FirstOrDefault ();
+
+						if (entity != null)
+						{
+							yield return EnumKeyValues.Create (entity.QuantityType, entity.Name);
+						}
 					}
 				}
 			}
