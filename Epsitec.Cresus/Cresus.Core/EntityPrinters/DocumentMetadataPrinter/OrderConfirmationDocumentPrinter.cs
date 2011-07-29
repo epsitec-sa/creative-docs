@@ -165,6 +165,11 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 		protected override int BuildLine(int row, DocumentItemAccessor accessor, ContentLine prevLine, ContentLine line, ContentLine nextLine)
 		{
+			if (this.BuildTitleLine (row, accessor, line))
+			{
+				return accessor.RowsCount;
+			}
+
 			for (int i = 0; i < accessor.RowsCount; i++)
 			{
 				if (!this.HasOption (DocumentOption.LineNumber, "None"))

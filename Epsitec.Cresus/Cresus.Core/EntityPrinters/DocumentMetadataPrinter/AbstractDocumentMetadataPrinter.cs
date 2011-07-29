@@ -101,14 +101,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			base.PrintForegroundCurrentPage (port);
 		}
 
-		public virtual double PriceWidth
-		{
-			get
-			{
-				return 13 + this.CellMargin*2;  // largeur standard pour un montant ou une quantité
-			}
-		}
-
 
 		protected void BuildHeader()
 		{
@@ -263,23 +255,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			//	Génère une première ligne d'en-tête (titres des colonnes).
 			int row = 0;
 
-			foreach (var pair in this.tableColumns)
-			{
-				var column = pair.Value;
-				
-				if (column.Visible)
-				{
-					//	Les 3 colonnes AdditionalType, AdditionalQuantity et AdditionalDate forment
-					//	toujours un bloc dans l'en-tête.
-					if (pair.Key == TableColumnKeys.AdditionalType)
-					{
-						this.table.SetColumnSpan (column.Rank, row, 3);
-					}
-
-					this.table.SetText (column.Rank, row, column.Title, this.FontSize);
-				}
-			}
-
+			this.BuildHeaderTableText (this.table, row);
 			this.InitializeRowAlignment (this.table, row);
 			this.SetCellBorder (row, this.GetCellBorder (bottomBold: true));
 
@@ -426,6 +402,51 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			this.table.SetCellBorder (0, row, new CellBorder (cellBorder.LeftWidth, cellBorder.RightWidth, cellBorder.BottomWidth, cellBorder.TopWidth, topGap, cellBorder.Color));
 		}
 
+		protected bool BuildTitleLine(int row, DocumentItemAccessor accessor, ContentLine line)
+		{
+			//	S'il s'agit d'une ligne de texte contenant un titre, elle est générée de façon très spéciale,
+			//	en occupant toutes les colonnes (avec ColumnSpan), sauf l'éventuelle première qui contient le
+			//	numéro de ligne.
+			//	Retourne true s'il s'agissait d'une ligne de texte contenant un titre et qu'elle a été gérée.
+			if (line.Line is TextDocumentItemEntity)
+			{
+				var text = line.Line as TextDocumentItemEntity;
+
+				if (LinesEngine.IsTitle (text.Text))
+				{
+					TableColumnKeys firstColumn = TableColumnKeys.LineNumber;
+					int span = 0;
+					foreach (var pair in this.tableColumns)
+					{
+						var column = pair.Value;
+
+						if (pair.Key != TableColumnKeys.LineNumber && column.Visible)
+						{
+							if (span == 0)
+							{
+								firstColumn = pair.Key;
+							}
+
+							span++;
+						}
+					}
+
+					if (!this.HasOption (DocumentOption.LineNumber, "None"))
+					{
+						this.SetTableText (row, TableColumnKeys.LineNumber, accessor.GetContent (0, DocumentItemAccessorColumn.LineNumber));
+					}
+
+					this.table.SetAlignment (this.tableColumns[firstColumn].Rank, row, ContentAlignment.MiddleLeft);
+					this.SetTableText (row, firstColumn, accessor.GetContent (0, DocumentItemAccessorColumn.ArticleDescription));
+					this.SetColumnSpan (row, firstColumn, span);
+
+					return true;
+				}
+			}
+
+			return false;
+		}
+
 
 		protected virtual bool HasPrices
 		{
@@ -545,35 +566,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
-		protected void SetTableText(int row, TableColumnKeys columnKey, FormattedText text)
-		{
-			if (this.GetColumnVisibility (columnKey))
-			{
-				this.table.SetText (this.tableColumns[columnKey].Rank, row, text, this.FontSize);
-			}
-		}
-
-		protected bool GetColumnVisibility(TableColumnKeys columnKey)
-		{
-			if (this.tableColumns.ContainsKey (columnKey))
-			{
-				return this.tableColumns[columnKey].Visible;
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-		protected void SetColumnVisibility(TableColumnKeys columnKey, bool visibility)
-		{
-			if (this.tableColumns.ContainsKey (columnKey))
-			{
-				this.tableColumns[columnKey].Visible = visibility;
-			}
-		}
-
-
 		protected static FormattedText GetQuantityAndUnit(DocumentItemAccessor accessor, int row, DocumentItemAccessorColumn quantity, DocumentItemAccessorColumn unit)
 		{
 			var q = accessor.GetContent (row, quantity).ToString ();
@@ -619,7 +611,12 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			{
 				if (column.Visible)
 				{
-					table.SetAlignment (column.Rank, row, column.Alignment);
+					//	Initialise l'alignement seulement s'il n'y a pas de ColumnSpan.
+					//	En effet, dans ce cas l'alignement a déjà été spécifié spécialement.
+					if (table.GetColumnSpan(column.Rank, row) < 2)
+					{
+						table.SetAlignment (column.Rank, row, column.Alignment);
+					}
 				}
 			}
 		}
@@ -680,14 +677,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				this.SetCellBorder (table, 1, this.GetCellBorder (bottomBold: true));
 
 				//	Génère une première ligne d'en-tête (titres des colonnes).
-				foreach (var column in this.tableColumns.Values)
-				{
-					if (column.Visible)
-					{
-						table.SetRelativeColumWidth (column.Rank, this.table.GetRelativeColumnWidth (column.Rank));
-						table.SetText (column.Rank, 0, column.Title, this.FontSize);
-					}
-				}
+				this.BuildHeaderTableWidth (table);
+				this.BuildHeaderTableText (table, 0);
 
 				//	Génère une deuxième ligne avec les montants à reporter.
 				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, 1, "Report", this.FontSize);
@@ -733,14 +724,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				table.CellMargins = new Margins (this.CellMargin);
 
 				this.SetCellBorder (table, 0, this.GetCellBorder (topBold: true));
-
-				foreach (var column in this.tableColumns.Values)
-				{
-					if (column.Visible)
-					{
-						table.SetRelativeColumWidth (column.Rank, this.table.GetRelativeColumnWidth (column.Rank));
-					}
-				}
+				this.BuildHeaderTableWidth (table);
 
 				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, 0, "à reporter", this.FontSize);
 
@@ -794,21 +778,81 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
-		protected bool IsColumnsOrderQD
+		private void BuildHeaderTableText(TableBand table, int row)
 		{
-			get
+			//	Génère les textes dans la première ligne d'en-tête d'un tableau.
+			for (int i = 0; i < this.tableColumns.Count; i++)
 			{
-				return this.HasOption (DocumentOption.ColumnsOrder, "QD");
+				var pair = this.tableColumns.ElementAt (i);
+				var column = pair.Value;
+
+				if (column.Visible)
+				{
+					//	Les 3 colonnes AdditionalType, AdditionalQuantity et AdditionalDate forment
+					//	toujours un bloc dans l'en-tête.
+					if (i <= this.tableColumns.Count-3                                              &&
+						pair.Key                              == TableColumnKeys.AdditionalType     &&
+						this.tableColumns.ElementAt (i+1).Key == TableColumnKeys.AdditionalQuantity &&
+						this.tableColumns.ElementAt (i+2).Key == TableColumnKeys.AdditionalDate     )
+					{
+						table.SetColumnSpan (column.Rank, row, 3);
+					}
+
+					table.SetText (column.Rank, row, column.Title, this.FontSize);
+				}
 			}
 		}
 
-		private double CellMargin
+		private void BuildHeaderTableWidth(TableBand table)
 		{
-			get
+			//	Initialise les largeurs d'une table quelconque d'après la table principale.
+			foreach (var column in this.tableColumns.Values)
 			{
-				return this.IsWithFrame ? 1 : 2;
+				if (column.Visible)
+				{
+					table.SetRelativeColumWidth (column.Rank, this.table.GetRelativeColumnWidth (column.Rank));
+				}
 			}
 		}
+
+
+		#region TableBand helpers
+		protected void SetTableText(int row, TableColumnKeys columnKey, FormattedText text)
+		{
+			if (this.GetColumnVisibility (columnKey))
+			{
+				this.table.SetText (this.tableColumns[columnKey].Rank, row, text, this.FontSize);
+			}
+		}
+
+		protected bool GetColumnVisibility(TableColumnKeys columnKey)
+		{
+			if (this.tableColumns.ContainsKey (columnKey))
+			{
+				return this.tableColumns[columnKey].Visible;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		protected void SetColumnVisibility(TableColumnKeys columnKey, bool visibility)
+		{
+			if (this.tableColumns.ContainsKey (columnKey))
+			{
+				this.tableColumns[columnKey].Visible = visibility;
+			}
+		}
+
+		protected void SetColumnSpan(int row, TableColumnKeys columnKey, int span)
+		{
+			if (this.tableColumns.ContainsKey (columnKey))
+			{
+				this.table.SetColumnSpan (this.tableColumns[columnKey].Rank, row, span);
+			}
+		}
+
 
 		protected void IndentCellMargins(int row, TableColumnKeys columnKey, int groupIndex)
 		{
@@ -955,6 +999,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			return true;
 		}
+		#endregion
 
 
 		#region Common helpers for production documents
@@ -1092,6 +1137,31 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 		#endregion
 
+
+		protected double PriceWidth
+		{
+			get
+			{
+				return 13 + this.CellMargin*2;  // largeur standard pour un montant ou une quantité
+			}
+		}
+
+		private double CellMargin
+		{
+			get
+			{
+				return this.IsWithFrame ? 1 : 2;
+			}
+		}
+
+
+		protected bool IsColumnsOrderQD
+		{
+			get
+			{
+				return this.HasOption (DocumentOption.ColumnsOrder, "QD");
+			}
+		}
 
 		private bool IsWithLine
 		{
