@@ -141,11 +141,13 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 
 			//	Génère l'adresse du client.
+			double m = this.RequiredPageSize.Width-10-80;
+
 			var mailContactBand = new TextBand ();
 			mailContactBand.Text = this.Entity.BillToMailContact.GetSummary ();
 			mailContactBand.Font = AbstractDocumentMetadataPrinter.font;
 			mailContactBand.FontSize = this.FontSize;
-			this.documentContainer.AddAbsolute (mailContactBand, new Rectangle (120, this.RequiredPageSize.Height-57, 80, 25));
+			this.documentContainer.AddAbsolute (mailContactBand, new Rectangle (m, this.RequiredPageSize.Height-57, 80, 25));
 
 			//	Génère le groupe "concerne".
 			{
@@ -153,23 +155,26 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 				if (band != null)
 				{
-					this.documentContainer.AddAbsolute (band, new Rectangle (leftMargin, this.RequiredPageSize.Height-70, 100-5, 12));
+					this.documentContainer.AddAbsolute (band, new Rectangle (leftMargin, this.RequiredPageSize.Height-70, m-leftMargin-10, 12));
 				}
 			}
 
+			//	Génère le groupe "numéro de facture".
 			var titleBand = new TextBand ();
 			titleBand.Text = this.Title;
+			titleBand.BreakMode = TextBreakMode.SingleLine | TextBreakMode.Split | TextBreakMode.Ellipsis;
 			titleBand.Font = font;
 			titleBand.FontSize = this.FontSize*1.6;
-			this.documentContainer.AddAbsolute (titleBand, new Rectangle (leftMargin, this.RequiredPageSize.Height-82, 90, 10));
+			this.documentContainer.AddAbsolute (titleBand, new Rectangle (leftMargin, this.RequiredPageSize.Height-82, m-leftMargin-2, 10));
 
+			//	Génère le groupe "localité et date".
 			string date = Misc.GetDateShortDescription (this.Entity.BillingDate);
 			var location = this.DefaultLocation;
 			var dateBand = new TextBand ();
 			dateBand.Text = (location == null) ? FormattedText.Concat ("Le ", date) : FormattedText.Concat (location, ", le ", date);
 			dateBand.Font = font;
 			dateBand.FontSize = this.FontSize;
-			this.documentContainer.AddAbsolute (dateBand, new Rectangle (120, this.RequiredPageSize.Height-82, 80, 10-2));
+			this.documentContainer.AddAbsolute (dateBand, new Rectangle (m, this.RequiredPageSize.Height-82, 80, 10-2));
 		}
 
 		private FormattedText DefaultLocation
@@ -439,6 +444,12 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					this.table.SetAlignment (this.tableColumns[firstColumn].Rank, row, ContentAlignment.MiddleLeft);
 					this.SetTableText (row, firstColumn, text);
 					this.SetColumnSpan (row, firstColumn, span);
+
+					if (this.IsWithFrame)
+					{
+						var c = this.table.GetCellBorder (0, row);
+						this.SetCellBorder (row, new CellBorder (0, 0, 0, 0, c.TopGap, c.Color));
+					}
 
 					return true;
 				}
