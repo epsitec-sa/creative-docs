@@ -193,6 +193,11 @@ namespace Epsitec.Cresus.Core.Print.Bands
 		{
 			//	Essaie de mettre un maximum de lignes sur une section donnée.
 			//	Retourne true s'il y a assez de place pour tout mettre (donc jusqu'à la fin).
+			if (this.heights == null)  // contenu inutilisé par ColumnSpan ?
+			{
+				return true;
+			}
+
 			if (maxHeight <= 0)
 			{
 				return false;  // il reste encore des données

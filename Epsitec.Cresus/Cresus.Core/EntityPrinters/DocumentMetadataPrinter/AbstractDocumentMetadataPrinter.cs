@@ -263,10 +263,19 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			//	Génère une première ligne d'en-tête (titres des colonnes).
 			int row = 0;
 
-			foreach (var column in this.tableColumns.Values)
+			foreach (var pair in this.tableColumns)
 			{
+				var column = pair.Value;
+				
 				if (column.Visible)
 				{
+					//	Les 3 colonnes AdditionalType, AdditionalQuantity et AdditionalDate forment
+					//	toujours un bloc dans l'en-tête.
+					if (pair.Key == TableColumnKeys.AdditionalType)
+					{
+						this.table.SetColumnSpan (column.Rank, row, 3);
+					}
+
 					this.table.SetText (column.Rank, row, column.Title, this.FontSize);
 				}
 			}

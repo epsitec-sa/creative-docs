@@ -512,7 +512,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 			for (int column = 0; column < this.columnsCount; column++)
 			{
 				TextBand textBand = this.GetTextBand (column, row);
-				double width = this.GetAbsoluteSpanedColumnWidth (column, row);
+				double width = this.GetAbsoluteSpanedColumnWidth (ref column, row);
 				var margins = this.GetMargins (textBand);
 
 				textBand.JustifInitialize (width - margins.Left - margins.Right);
@@ -760,15 +760,16 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 				for (int column = 0; column < this.columnsCount; column++)
 				{
+					int c = column;
 					var cellInfo = rowInfo.CellsInfo[column];
-					double width = this.GetAbsoluteSpanedColumnWidth (column, row);
+					double width = this.GetAbsoluteSpanedColumnWidth (ref column, row);
 					Rectangle cellBounds = new Rectangle (x, y-rowInfo.Height, width, rowInfo.Height);
 
 					CellBorder cellBorder = CellBorder.Empty;
 
 					if (cellInfo.FirstLine != -1)
 					{
-						TextBand textBand = this.GetTextBand (column, row);
+						TextBand textBand = this.GetTextBand (c, row);
 
 						if (textBand.TableCellBackground.IsValid)
 						{
@@ -857,7 +858,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 				TextBand textBand = this.GetTextBand (column, row);
 				var margins = this.GetMargins (textBand);
 
-				double width = this.GetAbsoluteSpanedColumnWidth (column, row);
+				double width = this.GetAbsoluteSpanedColumnWidth (ref column, row);
 				width -= margins.Left;
 				width -= margins.Right;
 
@@ -874,7 +875,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 			return maxHeight;
 		}
 
-		private double GetAbsoluteSpanedColumnWidth(int column, int row)
+		private double GetAbsoluteSpanedColumnWidth(ref int column, int row)
 		{
 			double width = this.GetAbsoluteColumnWidth (column);
 
@@ -885,6 +886,8 @@ namespace Epsitec.Cresus.Core.Print.Bands
 				{
 					width += this.GetAbsoluteColumnWidth (column+i);
 				}
+
+				column += span-1;
 			}
 
 			return width;

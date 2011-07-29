@@ -159,35 +159,35 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			if (this.IsColumnsOrderQD)
 			{
-				this.tableColumns.Add (TableColumnKeys.LineNumber,         new TableColumn ("N°",          priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.MainQuantity,       new TableColumn ("Facturé",     priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add (TableColumnKeys.AdditionalType,     new TableColumn ("",            priceWidth+3, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.AdditionalQuantity, new TableColumn ("Autre",       priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add (TableColumnKeys.AdditionalDate,     new TableColumn ("",            priceWidth+3, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.ArticleId,          new TableColumn ("Article",     priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.ArticleDescription, new TableColumn ("Désignation", 0,            ContentAlignment.MiddleLeft));  // seule colonne en mode width = fill
-
-				this.tableColumns.Add (TableColumnKeys.UnitPrice,          new TableColumn ("p.u. HT",     priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add (TableColumnKeys.Discount,           new TableColumn ("Rabais",      priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add (TableColumnKeys.LinePrice,          new TableColumn ("Prix HT",     priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add (TableColumnKeys.Vat,                new TableColumn ("TVA",         priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add (TableColumnKeys.Total,              new TableColumn ("Prix TTC",    priceWidth,   ContentAlignment.MiddleRight));
-			}
-			else
-			{
-				this.tableColumns.Add (TableColumnKeys.LineNumber,         new TableColumn ("N°",          priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.ArticleId,          new TableColumn ("Article",     priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.ArticleDescription, new TableColumn ("Désignation", 0,            ContentAlignment.MiddleLeft));  // seule colonne en mode width = fill
-				this.tableColumns.Add (TableColumnKeys.MainQuantity,       new TableColumn ("Facturé",     priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add (TableColumnKeys.AdditionalType,     new TableColumn ("",            priceWidth+3, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.AdditionalQuantity, new TableColumn ("Autre",       priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add (TableColumnKeys.AdditionalDate,     new TableColumn ("",            priceWidth+3, ContentAlignment.MiddleLeft));
-
-				this.tableColumns.Add (TableColumnKeys.UnitPrice,          new TableColumn ("p.u. HT",     priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add (TableColumnKeys.Discount,           new TableColumn ("Rabais",      priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add (TableColumnKeys.LinePrice,          new TableColumn ("Prix HT",     priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add (TableColumnKeys.Vat,                new TableColumn ("TVA",         priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add (TableColumnKeys.Total,              new TableColumn ("Prix TTC",    priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.LineNumber,         new TableColumn ("N°",               priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.MainQuantity,       new TableColumn ("Facturé",          priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.AdditionalType,     new TableColumn ("Autres quantités", priceWidth+3, ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.AdditionalQuantity, new TableColumn ("",                 priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.AdditionalDate,     new TableColumn ("",                 priceWidth+3, ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.ArticleId,          new TableColumn ("Article",          priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.ArticleDescription, new TableColumn ("Désignation",      0,            ContentAlignment.MiddleLeft));  // seule colonne en mode width = fill
+																										        
+				this.tableColumns.Add (TableColumnKeys.UnitPrice,          new TableColumn ("p.u. HT",          priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.Discount,           new TableColumn ("Rabais",           priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.LinePrice,          new TableColumn ("Prix HT",          priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.Vat,                new TableColumn ("TVA",              priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.Total,              new TableColumn ("Prix TTC",         priceWidth,   ContentAlignment.MiddleRight));
+			}																							        
+			else																						        
+			{																							        
+				this.tableColumns.Add (TableColumnKeys.LineNumber,         new TableColumn ("N°",               priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.ArticleId,          new TableColumn ("Article",          priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.ArticleDescription, new TableColumn ("Désignation",      0,            ContentAlignment.MiddleLeft));  // seule colonne en mode width = fill
+				this.tableColumns.Add (TableColumnKeys.MainQuantity,       new TableColumn ("Facturé",          priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.AdditionalType,     new TableColumn ("Autres quantités", priceWidth+3, ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.AdditionalQuantity, new TableColumn ("",                 priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.AdditionalDate,     new TableColumn ("",                 priceWidth+3, ContentAlignment.MiddleLeft));
+																										        
+				this.tableColumns.Add (TableColumnKeys.UnitPrice,          new TableColumn ("p.u. HT",          priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.Discount,           new TableColumn ("Rabais",           priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.LinePrice,          new TableColumn ("Prix HT",          priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.Vat,                new TableColumn ("TVA",              priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.Total,              new TableColumn ("Prix TTC",         priceWidth,   ContentAlignment.MiddleRight));
 			}
 		}
 
