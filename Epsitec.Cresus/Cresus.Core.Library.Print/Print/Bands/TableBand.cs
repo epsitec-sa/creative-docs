@@ -887,6 +887,8 @@ namespace Epsitec.Cresus.Core.Print.Bands
 					width += this.GetAbsoluteColumnWidth (column+i);
 				}
 
+				//	Saute les colonnes "spannées". Comme j'utilise une boucle "for" avec
+				//	déjà un incrément "i++", il faut en compter une de moins !
 				column += span-1;
 			}
 

@@ -255,7 +255,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			//	Génère une première ligne d'en-tête (titres des colonnes).
 			int row = 0;
 
-			this.BuildHeaderTableText (this.table, row);
+			this.InitializeHeaderTableText (this.table, row);
 			this.InitializeRowAlignment (this.table, row);
 			this.SetCellBorder (row, this.GetCellBorder (bottomBold: true));
 
@@ -410,9 +410,9 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			//	Retourne true s'il s'agissait d'une ligne de texte contenant un titre et qu'elle a été gérée.
 			if (line.Line is TextDocumentItemEntity)
 			{
-				var text = line.Line as TextDocumentItemEntity;
+				var text = accessor.GetContent (0, DocumentItemAccessorColumn.ArticleDescription);
 
-				if (LinesEngine.IsTitle (text.Text))
+				if (LinesEngine.IsTitle (text))
 				{
 					TableColumnKeys firstColumn = TableColumnKeys.LineNumber;
 					int span = 0;
@@ -437,7 +437,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					}
 
 					this.table.SetAlignment (this.tableColumns[firstColumn].Rank, row, ContentAlignment.MiddleLeft);
-					this.SetTableText (row, firstColumn, accessor.GetContent (0, DocumentItemAccessorColumn.ArticleDescription));
+					this.SetTableText (row, firstColumn, text);
 					this.SetColumnSpan (row, firstColumn, span);
 
 					return true;
@@ -605,23 +605,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
-		private void InitializeRowAlignment(TableBand table, int row)
-		{
-			foreach (var column in this.tableColumns.Values)
-			{
-				if (column.Visible)
-				{
-					//	Initialise l'alignement seulement s'il n'y a pas de ColumnSpan.
-					//	En effet, dans ce cas l'alignement a déjà été spécifié spécialement.
-					if (table.GetColumnSpan(column.Rank, row) < 2)
-					{
-						table.SetAlignment (column.Rank, row, column.Alignment);
-					}
-				}
-			}
-		}
-
-
 		protected void BuildPages(int firstPage)
 		{
 			//	Met les numéros de page.
@@ -673,12 +656,13 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				table.RowsCount = 2;
 				table.CellMargins = new Margins (this.CellMargin);
 
+				this.CloneColumnWidth (table);
 				this.SetCellBorder (table, 0, this.GetCellBorder (bottomBold: true));
 				this.SetCellBorder (table, 1, this.GetCellBorder (bottomBold: true));
 
 				//	Génère une première ligne d'en-tête (titres des colonnes).
-				this.BuildHeaderTableWidth (table);
-				this.BuildHeaderTableText (table, 0);
+				this.InitializeHeaderTableText (table, 0);
+				this.InitializeRowAlignment (table, 0);
 
 				//	Génère une deuxième ligne avec les montants à reporter.
 				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, 1, "Report", this.FontSize);
@@ -688,8 +672,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, 1, Misc.PriceToString (sumPT),  this.FontSize);
 				table.SetText (this.tableColumns[TableColumnKeys.Vat      ].Rank, 1, Misc.PriceToString (sumTva), this.FontSize);
 				table.SetText (this.tableColumns[TableColumnKeys.Total    ].Rank, 1, Misc.PriceToString (sumTot), this.FontSize);
-
-				this.InitializeRowAlignment (table, 0);
 				this.InitializeRowAlignment (table, 1);
 
 				var tableBound = this.tableBounds[relativePage];
@@ -723,8 +705,9 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				table.RowsCount = 1;
 				table.CellMargins = new Margins (this.CellMargin);
 
+				this.CloneColumnWidth (table);
 				this.SetCellBorder (table, 0, this.GetCellBorder (topBold: true));
-				this.BuildHeaderTableWidth (table);
+				this.InitializeRowAlignment (table, 0);
 
 				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, 0, "à reporter", this.FontSize);
 
@@ -733,8 +716,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, 0, Misc.PriceToString (sumPT),  this.FontSize);
 				table.SetText (this.tableColumns[TableColumnKeys.Vat      ].Rank, 0, Misc.PriceToString (sumTva), this.FontSize);
 				table.SetText (this.tableColumns[TableColumnKeys.Total    ].Rank, 0, Misc.PriceToString (sumTot), this.FontSize);
-
-				this.InitializeRowAlignment (table, 0);
 
 				var tableBound = this.tableBounds[relativePage];
 				double h = table.RequiredHeight (width);
@@ -778,7 +759,23 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
-		private void BuildHeaderTableText(TableBand table, int row)
+		private void InitializeRowAlignment(TableBand table, int row)
+		{
+			foreach (var column in this.tableColumns.Values)
+			{
+				if (column.Visible)
+				{
+					//	Initialise l'alignement seulement s'il n'y a pas de ColumnSpan.
+					//	En effet, dans ce cas l'alignement a déjà été spécifié manuellement.
+					if (table.GetColumnSpan (column.Rank, row) < 2)
+					{
+						table.SetAlignment (column.Rank, row, column.Alignment);
+					}
+				}
+			}
+		}
+
+		private void InitializeHeaderTableText(TableBand table, int row)
 		{
 			//	Génère les textes dans la première ligne d'en-tête d'un tableau.
 			for (int i = 0; i < this.tableColumns.Count; i++)
@@ -803,7 +800,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-		private void BuildHeaderTableWidth(TableBand table)
+		private void CloneColumnWidth(TableBand table)
 		{
 			//	Initialise les largeurs d'une table quelconque d'après la table principale.
 			foreach (var column in this.tableColumns.Values)
