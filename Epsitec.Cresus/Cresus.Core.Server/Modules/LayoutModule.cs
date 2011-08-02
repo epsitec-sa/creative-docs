@@ -3,7 +3,7 @@
 //using Nancy;
 
 
-//namespace Epsitec.Cresus.Core.Server
+//namespace Epsitec.Cresus.Core.Server.Modules
 //{
 //    public class LayoutModule : CoreModule
 //    {

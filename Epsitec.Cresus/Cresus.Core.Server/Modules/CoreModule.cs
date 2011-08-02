@@ -1,6 +1,6 @@
 ﻿//using Nancy;
 
-//namespace Epsitec.Cresus.Core.Server
+//namespace Epsitec.Cresus.Core.Server.Modules
 //{
 //    public abstract class CoreModule : NancyModule
 //    {

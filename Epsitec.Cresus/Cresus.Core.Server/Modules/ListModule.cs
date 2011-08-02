@@ -4,7 +4,7 @@
 //using Epsitec.Cresus.Core.Entities;
 //using Nancy;
 
-//namespace Epsitec.Cresus.Core.Server
+//namespace Epsitec.Cresus.Core.Server.Modules
 //{
 //    public class ListModule : CoreModule
 //    {
