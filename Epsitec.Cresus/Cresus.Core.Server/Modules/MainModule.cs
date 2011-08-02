@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 using Nancy;
 
@@ -69,14 +71,41 @@ namespace Epsitec.Cresus.Core.Server
 				return Response.AsJson (s);
 			};
 
-			Get["/layout/affair/{id}"] = parameters =>
+			//Get["/layout/affair/{id}"] = parameters =>
+			//{
+			//    var coreSession = MainModule.GetCoreSession ();
+			//    var context = coreSession.GetBusinessContext ();
+
+			//    var affair = (from x in context.GetAllEntities<AffairEntity> ()
+			//                  where x.GetEntitySerialId () == parameters.id
+			//                  select x).FirstOrDefault ();
+
+			//    if (affair == null)
+			//    {
+			//        return new NotFoundResponse ();
+			//    }
+
+			//    var s = PanelBuilder.BuildController (affair, Controllers.ViewControllerMode.Summary);
+
+			//    return Response.AsJson (s);
+			//};
+
+			Get["/layout/{name}/{id}"] = parameters =>
 			{
 				var coreSession = MainModule.GetCoreSession ();
 				var context = coreSession.GetBusinessContext ();
 
-				var affair = (from x in context.GetAllEntities<AffairEntity> ()
-							  where x.GetEntitySerialId () == parameters.id
-							  select x).FirstOrDefault ();
+				var e = new AffairEntity ();
+
+				var type = System.Type.GetType ("Epsitec.Cresus.Core.Entities.AffairEntity");
+				type = e.GetType ();
+				var method = typeof(BusinessContext).GetMethod ("GetAllEntities");
+				var m = method.MakeGenericMethod (type);
+				var o = m.Invoke (context, new object [] {});
+
+				var i = o as IEnumerable<AbstractEntity>;
+
+				var affair = i.Where (x => x.GetEntitySerialId () == parameters.id).FirstOrDefault ();
 
 				if (affair == null)
 				{
