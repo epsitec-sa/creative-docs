@@ -52,69 +52,38 @@ namespace Epsitec.Cresus.Core.Server
 
 			};
 
-			Get["/layout/person/{id}"] = parameters =>
-			{
-				var coreSession = MainModule.GetCoreSession ();
-				var context = coreSession.GetBusinessContext ();
-
-				var customer = (from x in context.GetAllEntities<CustomerEntity> ()
-								where x.GetEntitySerialId () == parameters.id
-								select x).FirstOrDefault ();
-
-				if (customer == null)
-				{
-					return new NotFoundResponse ();
-				}
-
-				var s = PanelBuilder.BuildController (customer, Controllers.ViewControllerMode.Summary);
-
-				return Response.AsJson (s);
-			};
-
-			//Get["/layout/affair/{id}"] = parameters =>
-			//{
-			//    var coreSession = MainModule.GetCoreSession ();
-			//    var context = coreSession.GetBusinessContext ();
-
-			//    var affair = (from x in context.GetAllEntities<AffairEntity> ()
-			//                  where x.GetEntitySerialId () == parameters.id
-			//                  select x).FirstOrDefault ();
-
-			//    if (affair == null)
-			//    {
-			//        return new NotFoundResponse ();
-			//    }
-
-			//    var s = PanelBuilder.BuildController (affair, Controllers.ViewControllerMode.Summary);
-
-			//    return Response.AsJson (s);
-			//};
-
 			Get["/layout/{name}/{id}"] = parameters =>
 			{
-				var coreSession = MainModule.GetCoreSession ();
-				var context = coreSession.GetBusinessContext ();
+			    var coreSession = MainModule.GetCoreSession ();
+			    var context = coreSession.GetBusinessContext ();
 
-				var e = new AffairEntity ();
+				//var type = System.Type.GetType ("Epsitec.Cresus.Core.Entities.AffairEntity");
+				//var e = new AffairEntity ();
 
-				var type = System.Type.GetType ("Epsitec.Cresus.Core.Entities.AffairEntity");
-				type = e.GetType ();
-				var method = typeof(BusinessContext).GetMethod ("GetAllEntities");
-				var m = method.MakeGenericMethod (type);
-				var o = m.Invoke (context, new object [] {});
+				var typeName = string.Format("Epsitec.Cresus.Core.Entities.{0}", parameters.name);
+				var e = System.Activator.CreateInstance ("Cresus.Core.Library.Business", typeName);
+			    var type = e.Unwrap ().GetType ();
+			    var method = typeof(BusinessContext).GetMethod ("GetAllEntities");
+			    var m = method.MakeGenericMethod (type);
+			    var o = m.Invoke (context, new object [] {});
 
 				var i = o as IEnumerable<AbstractEntity>;
 
-				var affair = i.Where (x => x.GetEntitySerialId () == parameters.id).FirstOrDefault ();
-
-				if (affair == null)
+				if (i == null)
 				{
 					return new NotFoundResponse ();
 				}
 
-				var s = PanelBuilder.BuildController (affair, Controllers.ViewControllerMode.Summary);
+			    var entity = i.Where (x => x.GetEntitySerialId () == parameters.id).FirstOrDefault ();
 
-				return Response.AsJson (s);
+			    if (entity == null)
+			    {
+			        return new NotFoundResponse ();
+			    }
+
+			    var s = PanelBuilder.BuildController (entity, Controllers.ViewControllerMode.Summary);
+
+			    return Response.AsJson (s);
 			};
 		}
 

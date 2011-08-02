@@ -258,9 +258,10 @@ namespace Epsitec.Cresus.Core.Server
 			//var summary = entity.GetSummary ();
 
 			data.Add ("name", entity.IsNotNull () ? entity.GetEntitySerialId ().ToString () + " " + entity.GetType () : "empty");
-			
-			
+
+
 			options.Add ("entityId", entity.GetEntitySerialId ());
+			options.Add ("type", entity.GetType ().Name);
 
 			var icon = PanelBuilder.CreateIcon (item);
 			if (!icon.Equals (default (KeyValuePair<string, string>)))
