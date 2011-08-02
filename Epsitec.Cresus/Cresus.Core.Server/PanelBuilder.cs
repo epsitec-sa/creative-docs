@@ -9,6 +9,8 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Bricks;
+using Epsitec.Cresus.Core.Controllers.DataAccessors;
 
 namespace Epsitec.Cresus.Core.Server
 {
@@ -100,10 +102,62 @@ namespace Epsitec.Cresus.Core.Server
 				//{
 				//    b = Brick.GetProperty (brick, BrickPropertyKey.AsType).Brick;
 				//}
+				//else
+				//{
+				//PanelBuilder.CreateDefaultTextProperties (b);
+				//}
 
-				PanelBuilder.CreateDefaultTextProperties (b);
+				var item = new Epsitec.Cresus.Core.Controllers.DataAccessors.TileDataItem ();
+				var root = brick;
 
-				defferedItems.Add (CreatePanelContent (b));
+				Brick oldBrick;
+				do
+				{
+
+					if (Brick.ContainsProperty (b, BrickPropertyKey.AsType))
+					{
+
+					}
+					else
+					{
+						PanelBuilder.CreateDefaultTextProperties (b);
+					}
+
+					this.ProcessProperty (b, BrickPropertyKey.Name, x => item.Name = x);
+					this.ProcessProperty (b, BrickPropertyKey.Icon, x => item.IconUri = x);
+
+					this.ProcessProperty (b, BrickPropertyKey.Title, x => item.Title = x);
+					this.ProcessProperty (b, BrickPropertyKey.TitleCompact, x => item.CompactTitle = x);
+					this.ProcessProperty (b, BrickPropertyKey.Text, x => item.Text = x);
+					this.ProcessProperty (b, BrickPropertyKey.TextCompact, x => item.CompactText = x);
+
+					//this.ProcessProperty (b, BrickPropertyKey.Attribute, x => this.ProcessAttribute (item, x));
+					//this.ProcessProperty (b, BrickPropertyKey.Include, x => this.ProcessInclusion (x));
+
+					if ((!item.Title.IsNullOrEmpty) && (item.CompactTitle.IsNull))
+					{
+						item.CompactTitle = item.Title;
+					}
+
+					this.ProcessProperty (b, BrickPropertyKey.Title, x => item.TitleAccessor = x);
+					this.ProcessProperty (b, BrickPropertyKey.TitleCompact, x => item.CompactTitleAccessor = x);
+					this.ProcessProperty (b, BrickPropertyKey.Text, x => item.TextAccessor = x);
+					this.ProcessProperty (b, BrickPropertyKey.TextCompact, x => item.CompactTextAccessor = x);
+
+
+					if (Brick.ContainsProperty (brick, BrickPropertyKey.CollectionAnnotation))
+					{
+						item.DataType = TileDataType.CollectionItem;
+					}
+
+
+					oldBrick = b;
+					b = Brick.GetProperty (b, BrickPropertyKey.AsType).Brick;
+				} while (b != null);
+
+				b = oldBrick;
+
+				defferedItems.Add (CreatePanelContent (b, item));
 			}
 
 			PanelBuilder.constructedPanels.Add (name);
@@ -153,25 +207,23 @@ namespace Epsitec.Cresus.Core.Server
 		/// </summary>
 		/// <param name="brick">Brick to use</param>
 		/// <returns>Javascript code to create the panel</returns>
-		private IDictionary<string, object> CreatePanelContent(Brick brick)
+		private IDictionary<string, object> CreatePanelContent(Brick brick, TileDataItem item)
 		{
-
 			var dic = new Dictionary<string, object> ();
 
 			dic.Add ("name", "Epsitec.Cresus.Core.Static.WallPanel");
 			var options = new Dictionary<string, object> ();
 			dic.Add ("options", options);
 
-			options.Add ("title", Brick.GetProperty (brick, BrickPropertyKey.Title).StringValue + "  6");
+			options.Add ("title", item.Title + "  6");
 
 			var data = new Dictionary<string, object> ();
-			options.Add("data", data);
+			options.Add ("data", data);
 
 			var brickType = brick.GetFieldType ();
 			var resolver = brick.GetResolver (brickType);
 
-
-			if (Brick.ContainsProperty (brick, BrickPropertyKey.CollectionAnnotation))
+			if (item.DataType != null && item.DataType == TileDataType.CollectionItem)
 			{
 				var obj = resolver.DynamicInvoke (this.entity);
 
@@ -179,7 +231,7 @@ namespace Epsitec.Cresus.Core.Server
 
 				if (col != null && col.Count () > 0)
 				{
-					data.Add ("name", col.First ().ToString () + " * " + col.Count ());
+					data.Add ("name", string.Format ("{0} * {1} - {2}", col.First (), col.Count (), item.Text));
 				}
 				else
 				{
@@ -215,11 +267,11 @@ namespace Epsitec.Cresus.Core.Server
 			{
 				var entity = resolver.DynamicInvoke (this.entity) as AbstractEntity;
 
-				data.Add ("name", entity.IsNotNull () ? entity.GetEntitySerialId ().ToString () : "empty");
+				data.Add ("name", entity.IsNotNull () ? entity.GetEntitySerialId ().ToString () + entity.GetType () : "empty");
 			}
 
 
-			var icon = PanelBuilder.CreateIcon (brick);
+			var icon = PanelBuilder.CreateIcon (item);
 			if (!icon.Equals (default (KeyValuePair<string, string>)))
 			{
 				var iconCls = PanelBuilder.CreateCssFromIcon (icon.Key, icon.Value);
@@ -302,16 +354,16 @@ namespace Epsitec.Cresus.Core.Server
 		/// </summary>
 		/// <param name="brick">Brick to use</param>
 		/// <returns>Key/value pair with the icon name and the filename</returns>
-		private static KeyValuePair<string, string> CreateIcon(Brick brick)
+		private static KeyValuePair<string, string> CreateIcon(TileDataItem item)
 		{
 			// No icon for this brick
-			if (!Brick.ContainsProperty (brick, BrickPropertyKey.Icon))
+			if (item.IconUri.Length <= 0)
 			{
 				return default (KeyValuePair<string, string>);
 			}
 
 			// Get the ressources from the icon name
-			var iconRes = Brick.GetProperty (brick, BrickPropertyKey.Icon).StringValue;
+			var iconRes = item.IconUri;
 			var iconName = iconRes;
 			if (iconName.StartsWith ("manifest:"))
 			{
@@ -374,6 +426,57 @@ namespace Epsitec.Cresus.Core.Server
 			{
 				Expression<System.Func<AbstractEntity, FormattedText>> expression = x => x.GetCompactSummary ();
 				Brick.AddProperty (brick, new BrickProperty (BrickPropertyKey.TextCompact, expression));
+			}
+		}
+
+		protected void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<bool> setter)
+		{
+			if (Brick.ContainsProperty (brick, key))
+			{
+				setter (true);
+			}
+		}
+
+		protected void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<string> setter)
+		{
+			var value = Brick.GetProperty (brick, key).StringValue;
+
+			if (value != null)
+			{
+				setter (value);
+			}
+		}
+
+		private void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<BrickMode> setter)
+		{
+			foreach (var attributeValue in Brick.GetProperties (brick, key).Select (x => x.AttributeValue))
+			{
+				if ((attributeValue != null) &&
+					(attributeValue.ContainsValue<BrickMode> ()))
+				{
+					setter (attributeValue.GetValue<BrickMode> ());
+				}
+			}
+		}
+
+		private void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<Accessor<FormattedText>> setter)
+		{
+			//var formatter = this.ToAccessor (brick, Brick.GetProperty (brick, key));
+			Accessor<FormattedText> formatter = null;
+
+			if (formatter != null)
+			{
+				setter (formatter);
+			}
+		}
+
+		protected void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<Expression> setter)
+		{
+			var value = Brick.GetProperty (brick, key).ExpressionValue;
+
+			if (value != null)
+			{
+				setter (value);
 			}
 		}
 
