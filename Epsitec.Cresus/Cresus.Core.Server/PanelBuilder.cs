@@ -245,7 +245,7 @@ namespace Epsitec.Cresus.Core.Server
 		{
 			var dic = new Dictionary<string, object> ();
 
-			dic.Add ("name", "Epsitec.Cresus.Core.Static.WallPanel");
+			dic.Add ("name", "Epsitec.Cresus.Core.Static.SummaryWallPanel");
 			var options = new Dictionary<string, object> ();
 			dic.Add ("options", options);
 
@@ -258,7 +258,9 @@ namespace Epsitec.Cresus.Core.Server
 			//var summary = entity.GetSummary ();
 
 			data.Add ("name", entity.IsNotNull () ? entity.GetEntitySerialId ().ToString () + " " + entity.GetType () : "empty");
-
+			
+			
+			options.Add ("entityId", entity.GetEntitySerialId ());
 
 			var icon = PanelBuilder.CreateIcon (item);
 			if (!icon.Equals (default (KeyValuePair<string, string>)))

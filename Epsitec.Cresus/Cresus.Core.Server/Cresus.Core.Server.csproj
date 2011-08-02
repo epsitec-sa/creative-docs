@@ -60,6 +60,9 @@
     <Compile Include="CoreServer.cs" />
     <Compile Include="CoreSession.cs" />
     <Compile Include="DebugSession.cs" />
+    <Compile Include="Modules\CoreModule.cs" />
+    <Compile Include="Modules\LayoutModule.cs" />
+    <Compile Include="Modules\ListModule.cs" />
     <Compile Include="Modules\MainModule.cs" />
     <Compile Include="Nancy\CoreHost.cs" />
     <Compile Include="Nancy\FileSystemRootPathProvider.cs" />
