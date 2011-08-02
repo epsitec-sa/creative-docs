@@ -145,7 +145,7 @@ namespace Epsitec.Cresus.Core.Server
 					this.ProcessProperty (b, BrickPropertyKey.TextCompact, x => item.CompactTextAccessor = x);
 
 
-					if (Brick.ContainsProperty (brick, BrickPropertyKey.CollectionAnnotation))
+					if (Brick.ContainsProperty (b, BrickPropertyKey.CollectionAnnotation))
 					{
 						item.DataType = TileDataType.CollectionItem;
 					}
@@ -157,7 +157,8 @@ namespace Epsitec.Cresus.Core.Server
 
 				b = oldBrick;
 
-				defferedItems.Add (CreatePanelContent (b, item));
+				// Add all items from this brick
+				defferedItems.AddRange (CreatePanelContent (b, item));
 			}
 
 			PanelBuilder.constructedPanels.Add (name);
@@ -207,7 +208,40 @@ namespace Epsitec.Cresus.Core.Server
 		/// </summary>
 		/// <param name="brick">Brick to use</param>
 		/// <returns>Javascript code to create the panel</returns>
-		private IDictionary<string, object> CreatePanelContent(Brick brick, TileDataItem item)
+		private List<Dictionary<string, object>> CreatePanelContent(Brick brick, TileDataItem item)
+		{
+
+			var list = new List<Dictionary<string, object>> ();
+
+			var brickType = brick.GetFieldType ();
+			var resolver = brick.GetResolver (brickType);
+
+			if (item.DataType == TileDataType.CollectionItem)
+			{
+				var obj = resolver.DynamicInvoke (this.entity);
+
+				var col = (obj as IEnumerable).Cast<AbstractEntity> ().Where (c => c.GetType() == brickType);
+
+				if (col != null && col.Any())
+				{
+					//col.ForEach (e => PanelBuilder.CreatePanelForEntity (brick, item, e));
+					foreach (var e in col)
+					{
+						list.Add (PanelBuilder.CreatePanelForEntity (brick, item, e));
+					}
+				}
+			}
+			else
+			{
+				var entity = resolver.DynamicInvoke (this.entity) as AbstractEntity;
+
+				list.Add (PanelBuilder.CreatePanelForEntity (brick, item, entity));
+			}
+
+			return list;
+		}
+
+		private static Dictionary<string, object> CreatePanelForEntity(Brick brick, TileDataItem item, AbstractEntity entity)
 		{
 			var dic = new Dictionary<string, object> ();
 
@@ -215,60 +249,15 @@ namespace Epsitec.Cresus.Core.Server
 			var options = new Dictionary<string, object> ();
 			dic.Add ("options", options);
 
-			options.Add ("title", item.Title + "  6");
+			//options.Add ("title", item.Title);
+			options.Add ("title", item.ToString ());
 
 			var data = new Dictionary<string, object> ();
 			options.Add ("data", data);
 
-			var brickType = brick.GetFieldType ();
-			var resolver = brick.GetResolver (brickType);
+			//var summary = entity.GetSummary ();
 
-			if (item.DataType != null && item.DataType == TileDataType.CollectionItem)
-			{
-				var obj = resolver.DynamicInvoke (this.entity);
-
-				var col = (obj as IEnumerable).Cast<AbstractEntity> ();
-
-				if (col != null && col.Count () > 0)
-				{
-					data.Add ("name", string.Format ("{0} * {1} - {2}", col.First (), col.Count (), item.Text));
-				}
-				else
-				{
-					data.Add ("name", "empty");
-				}
-
-				//var entities = obj as EntityCollectionProxy<AbstractContactEntity>;
-				//if (entities == null)
-				//{
-				//    var entities2 = obj as EntityCollectionProxy<AffairEntity>;
-				//    if (entities2 != null && entities2.Count > 0)
-				//    {
-				//        jscontent += entities2.First ().BusinessCodeVector;
-				//    }
-				//    else
-				//    {
-				//        jscontent += "empty";
-				//    }
-				//}
-				//else
-				//{
-				//    if (entities != null && entities.Count > 0)
-				//    {
-				//        jscontent += entities.First ().NaturalPerson.DateOfBirth;
-				//    }
-				//    else
-				//    {
-				//        jscontent += "empty";
-				//    }
-				//}
-			}
-			else
-			{
-				var entity = resolver.DynamicInvoke (this.entity) as AbstractEntity;
-
-				data.Add ("name", entity.IsNotNull () ? entity.GetEntitySerialId ().ToString () + entity.GetType () : "empty");
-			}
+			data.Add ("name", entity.IsNotNull () ? entity.GetEntitySerialId ().ToString () + " " + entity.GetType () : "empty");
 
 
 			var icon = PanelBuilder.CreateIcon (item);
