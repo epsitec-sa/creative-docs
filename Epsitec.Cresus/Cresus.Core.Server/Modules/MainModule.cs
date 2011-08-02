@@ -61,7 +61,16 @@ namespace Epsitec.Cresus.Core.Server
 				//var e = new AffairEntity ();
 
 				var typeName = string.Format("Epsitec.Cresus.Core.Entities.{0}", parameters.name);
-				var e = System.Activator.CreateInstance ("Cresus.Core.Library.Business", typeName);
+				System.Runtime.Remoting.ObjectHandle e;
+				try
+				{
+					e = System.Activator.CreateInstance ("Cresus.Core.Library.Business", typeName);
+				}
+				catch (System.TypeLoadException)
+				{
+					e = System.Activator.CreateInstance ("Cresus.Core.Library.Address", typeName);
+				}
+				
 			    var type = e.Unwrap ().GetType ();
 			    var method = typeof(BusinessContext).GetMethod ("GetAllEntities");
 			    var m = method.MakeGenericMethod (type);
