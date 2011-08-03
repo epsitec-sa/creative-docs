@@ -27,6 +27,25 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 		}
 
+		public static IEnumerable<DocumentOption> UsedDocumentOptions
+		{
+			get
+			{
+				yield return DocumentOption.Orientation;
+				yield return DocumentOption.HeaderLogo;
+				yield return DocumentOption.Specimen;
+				yield return DocumentOption.FontSize;
+
+				yield return DocumentOption.LeftMargin;
+				yield return DocumentOption.RightMargin;
+				yield return DocumentOption.TopMargin;
+				yield return DocumentOption.TopMargin;
+
+				yield return DocumentOption.LayoutFrame;
+			}
+		}
+
+
 		public override string JobName
 		{
 			get
@@ -132,6 +151,11 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				return new MailContactPrinter (businessContext, entity, options, printingUnits);
 			}
 
+			public IEnumerable<DocumentOption> GetUsedDocumentOptions(AbstractEntity entity)
+			{
+				return MailContactPrinter.UsedDocumentOptions;
+			}
+            
 			#endregion
 		}
 	}

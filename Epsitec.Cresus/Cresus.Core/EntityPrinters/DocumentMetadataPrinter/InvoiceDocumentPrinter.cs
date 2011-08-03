@@ -37,6 +37,36 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
+		public static IEnumerable<DocumentOption> UsedDocumentOptions
+		{
+			get
+			{
+				yield return DocumentOption.Orientation;
+				yield return DocumentOption.HeaderLogo;
+				yield return DocumentOption.Specimen;
+				yield return DocumentOption.FontSize;
+
+				yield return DocumentOption.LeftMargin;
+				yield return DocumentOption.RightMargin;
+				yield return DocumentOption.TopMargin;
+				yield return DocumentOption.TopMargin;
+
+				yield return DocumentOption.LayoutFrame;
+				yield return DocumentOption.GapBeforeGroup;
+				yield return DocumentOption.IndentWidth;
+
+				yield return DocumentOption.LineNumber;
+				yield return DocumentOption.ArticleAdditionalQuantities;
+				yield return DocumentOption.ArticleId;
+				yield return DocumentOption.ColumnsOrder;
+
+				yield return DocumentOption.IsrPosition;
+				yield return DocumentOption.IsrType;
+				yield return DocumentOption.IsrFacsimile;
+			}
+		}
+
+
 		protected override Margins PageMargins
 		{
 			get
@@ -44,7 +74,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				double leftMargin   = this.GetOptionValue (DocumentOption.LeftMargin, 20);
 				double rightMargin  = this.GetOptionValue (DocumentOption.RightMargin, 20);
 				double topMargin    = this.GetOptionValue (DocumentOption.TopMargin, 20);
-				double bottomMargin = this.GetOptionValue (DocumentOption.BottomMargin, 20);
+				double bottomMargin = this.GetOptionValue (DocumentOption.TopMargin, 20);
 
 				double h = AbstractDocumentMetadataPrinter.reportHeight;
 

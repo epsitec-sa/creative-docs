@@ -256,6 +256,11 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 			return EntityPrinterFactoryResolver.Resolve ().FirstOrDefault (x => x.CanPrint (entity, options));
 		}
 
+		private static IEnumerable<DocumentOption> GetUsedDocumentOptions(AbstractEntity entity)
+		{
+			return EntityPrinterFactoryResolver.Resolve ().FirstOrDefault ().GetUsedDocumentOptions (entity);
+		}
+
 
 		#region Options reader
 		protected double FontSize

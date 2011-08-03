@@ -1277,6 +1277,37 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				return null;
 			}
 
+			public IEnumerable<DocumentOption> GetUsedDocumentOptions(AbstractEntity entity)
+			{
+				var documentMetadata = entity as DocumentMetadataEntity;
+
+				switch (documentMetadata.DocumentCategory.DocumentType)
+				{
+					case Business.DocumentType.SalesQuote:
+						return SalesQuoteDocumentPrinter.UsedDocumentOptions;
+
+					case Business.DocumentType.OrderBooking:
+						return OrderBookingDocumentPrinter.UsedDocumentOptions;
+
+					case Business.DocumentType.OrderConfirmation:
+						return OrderConfirmationDocumentPrinter.UsedDocumentOptions;
+
+					case Business.DocumentType.ProductionOrder:
+						return ProductionOrderDocumentPrinter.UsedDocumentOptions;
+
+					case Business.DocumentType.ProductionChecklist:
+						return ProductionChecklistDocumentPrinter.UsedDocumentOptions;
+
+					case Business.DocumentType.DeliveryNote:
+						return DeliveryNoteDocumentPrinter.UsedDocumentOptions;
+
+					case Business.DocumentType.Invoice:
+						return InvoiceDocumentPrinter.UsedDocumentOptions;
+				}
+
+				return null;
+			}
+
 			#endregion
 		}
 
