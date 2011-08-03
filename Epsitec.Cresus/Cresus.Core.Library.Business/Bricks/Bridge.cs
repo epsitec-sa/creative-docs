@@ -123,7 +123,7 @@ namespace Epsitec.Cresus.Core.Bricks
 			var brick    = e.Brick;
 			var property = e.Property;
 
-			if (property.Key == BrickPropertyKey.AsType)
+			if (property.Key == BrickPropertyKey.OfType)
 			{
 				var type = property.Brick.GetFieldType ();
 				Bridge.CreateDefaultProperties (brick, type);

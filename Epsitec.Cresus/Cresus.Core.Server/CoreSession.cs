@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.Core.Server
 			var brick    = e.Brick;
 			var property = e.Property;
 
-			if (property.Key == BrickPropertyKey.AsType)
+			if (property.Key == BrickPropertyKey.OfType)
 			{
 				var type = property.Brick.GetFieldType ();
 				CreateDefaultProperties (brick, type);

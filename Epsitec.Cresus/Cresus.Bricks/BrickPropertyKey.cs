@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Bricks
 		Attribute,
 
 		Template,
-		AsType,
+		OfType,
 
 		Input,
 		Field,

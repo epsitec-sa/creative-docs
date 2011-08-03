@@ -114,7 +114,7 @@ namespace Epsitec.Cresus.Core.Server
 				do
 				{
 
-					if (Brick.ContainsProperty (b, BrickPropertyKey.AsType))
+					if (Brick.ContainsProperty (b, BrickPropertyKey.OfType))
 					{
 
 					}
@@ -152,7 +152,7 @@ namespace Epsitec.Cresus.Core.Server
 
 
 					oldBrick = b;
-					b = Brick.GetProperty (b, BrickPropertyKey.AsType).Brick;
+					b = Brick.GetProperty (b, BrickPropertyKey.OfType).Brick;
 				} while (b != null);
 
 				b = oldBrick;
