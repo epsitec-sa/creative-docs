@@ -24,8 +24,7 @@ namespace Epsitec.Cresus.Core.Server.Modules
 
 				customers.ForEach (c => obj.Add (new
 				{
-					firstName = c.IdA,
-					lastName = c.IdB,
+					name = c.GetCompactSummary ().ToSimpleText (),
 					uniqueId = coreSession.GetBusinessContext ().DataContext.GetNormalizedEntityKey (c).Value.ToString ()
 				}));
 
