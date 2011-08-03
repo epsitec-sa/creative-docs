@@ -15,12 +15,12 @@ using Epsitec.Cresus.Core.Documents;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Print.Bands;
 using Epsitec.Cresus.Core.Print.Containers;
+using Epsitec.Cresus.Core.Resolvers;
+using Epsitec.Cresus.Core.Business;
 
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Epsitec.Cresus.Core.Resolvers;
-using Epsitec.Cresus.Core.Business;
 
 namespace Epsitec.Cresus.Core.Print.EntityPrinters
 {
