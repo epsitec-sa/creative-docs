@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 		}
 
-		public static IEnumerable<DocumentOption> UsedDocumentOptions
+		public static IEnumerable<DocumentOption> RequiredDocumentOptions
 		{
 			get
 			{
@@ -460,9 +460,9 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				return new RelationPrinter (businessContext, entity, options, printingUnits);
 			}
 
-			public IEnumerable<DocumentOption> GetUsedDocumentOptions(AbstractEntity entity)
+			public IEnumerable<DocumentOption> GetRequiredDocumentOptions(AbstractEntity entity)
 			{
-				return RelationPrinter.UsedDocumentOptions;
+				return RelationPrinter.RequiredDocumentOptions;
 			}
 
 			#endregion

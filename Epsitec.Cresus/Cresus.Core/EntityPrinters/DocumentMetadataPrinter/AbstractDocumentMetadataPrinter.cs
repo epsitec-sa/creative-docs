@@ -1277,32 +1277,32 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				return null;
 			}
 
-			public IEnumerable<DocumentOption> GetUsedDocumentOptions(AbstractEntity entity)
+			public IEnumerable<DocumentOption> GetRequiredDocumentOptions(AbstractEntity entity)
 			{
 				var documentMetadata = entity as DocumentMetadataEntity;
 
 				switch (documentMetadata.DocumentCategory.DocumentType)
 				{
 					case Business.DocumentType.SalesQuote:
-						return SalesQuoteDocumentPrinter.UsedDocumentOptions;
+						return SalesQuoteDocumentPrinter.RequiredDocumentOptions;
 
 					case Business.DocumentType.OrderBooking:
-						return OrderBookingDocumentPrinter.UsedDocumentOptions;
+						return OrderBookingDocumentPrinter.RequiredDocumentOptions;
 
 					case Business.DocumentType.OrderConfirmation:
-						return OrderConfirmationDocumentPrinter.UsedDocumentOptions;
+						return OrderConfirmationDocumentPrinter.RequiredDocumentOptions;
 
 					case Business.DocumentType.ProductionOrder:
-						return ProductionOrderDocumentPrinter.UsedDocumentOptions;
+						return ProductionOrderDocumentPrinter.RequiredDocumentOptions;
 
 					case Business.DocumentType.ProductionChecklist:
-						return ProductionChecklistDocumentPrinter.UsedDocumentOptions;
+						return ProductionChecklistDocumentPrinter.RequiredDocumentOptions;
 
 					case Business.DocumentType.DeliveryNote:
-						return DeliveryNoteDocumentPrinter.UsedDocumentOptions;
+						return DeliveryNoteDocumentPrinter.RequiredDocumentOptions;
 
 					case Business.DocumentType.Invoice:
-						return InvoiceDocumentPrinter.UsedDocumentOptions;
+						return InvoiceDocumentPrinter.RequiredDocumentOptions;
 				}
 
 				return null;

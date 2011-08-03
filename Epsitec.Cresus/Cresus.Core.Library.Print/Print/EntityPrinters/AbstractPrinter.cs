@@ -256,9 +256,9 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 			return EntityPrinterFactoryResolver.Resolve ().FirstOrDefault (x => x.CanPrint (entity, options));
 		}
 
-		private static IEnumerable<DocumentOption> GetUsedDocumentOptions(AbstractEntity entity)
+		private static IEnumerable<DocumentOption> GetRequiredDocumentOptions(AbstractEntity entity)
 		{
-			return EntityPrinterFactoryResolver.Resolve ().FirstOrDefault ().GetUsedDocumentOptions (entity);
+			return EntityPrinterFactoryResolver.Resolve ().FirstOrDefault ().GetRequiredDocumentOptions (entity);
 		}
 
 

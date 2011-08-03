@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
-		public static IEnumerable<DocumentOption> UsedDocumentOptions
+		public static IEnumerable<DocumentOption> RequiredDocumentOptions
 		{
 			get
 			{
