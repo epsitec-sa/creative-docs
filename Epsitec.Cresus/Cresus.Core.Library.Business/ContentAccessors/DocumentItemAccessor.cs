@@ -212,6 +212,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			//	Génère la quantité principale.
 			var quantityTypes = this.businessLogic.ArticleQuantityTypeEditionEnabled;
 			var mainQuantityType = ArticleQuantityType.None;
+			bool firstLineOccupied = false;
 
 			if ((this.mode & DocumentItemAccessorMode.UseMainColumns) != 0 &&  // utilise les colonnes MainQuantity/MainUnit (impression) ?
 				quantityTypes != null && quantityTypes.Count () != 0)
@@ -232,12 +233,15 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				this.SetContent (0, DocumentItemAccessorColumn.MainQuantity, mainQuantity.ToString ());
 				this.SetContent (0, DocumentItemAccessorColumn.MainUnit, mainUnit);
 				this.SetError (0, DocumentItemAccessorColumn.MainQuantity, this.GetQuantityError (line, mainQuantityType));
+
+				firstLineOccupied = true;
 			}
 
 			//	Génère les autres quantités (sans la principale).
 			if ((this.mode & DocumentItemAccessorMode.AdditionalQuantities) != 0)  // met les quantités additionnelles ?
 			{
-				int row = 0;
+				// Sur un document imprimé, les autres quantités sont toujours sur des lignes à part.
+				int row = firstLineOccupied ? 1 : 0;
 				foreach (var quantityType in DocumentItemAccessor.articleQuantityTypes)
 				{
 					foreach (var quantity in line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == quantityType && x.QuantityColumn.QuantityType != mainQuantityType))
