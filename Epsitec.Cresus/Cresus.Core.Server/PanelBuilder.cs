@@ -348,11 +348,7 @@ namespace Epsitec.Cresus.Core.Server
 
 			// Get the ressources from the icon name
 			var iconRes = Misc.GetResourceIconUri (item.IconUri);
-			var iconName = iconRes;
-			if (iconName.StartsWith ("manifest:"))
-			{
-				iconName = iconName.Substring (9);
-			}
+			var iconName = iconRes.Substring (9);
 			var icon = ImageProvider.Default.GetImage (iconRes, Resources.DefaultManager) as Canvas;
 
 			if (icon == null)
