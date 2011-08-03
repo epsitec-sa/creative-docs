@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private void CreateUIRightBottomFrame(UIBuilder builder, FrameBox parent)
 		{
 			//	Type.
-			this.CreateTypeUI (parent);
+			var typeWidget = this.CreateTypeUI (parent);
 
 			var rightBox = new FrameBox
 			{
@@ -146,10 +146,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			};
 
 			var dateField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.BeginDate, x => this.Entity.BeginDate = x));
-			this.PlaceLabelAndField (this.dateLine, 35, 100, "Date", dateField);
+			var dateBox = this.PlaceLabelAndField (this.dateLine, 35, 100, "Date", dateField);
+			dateBox.Visibility = (typeWidget.Items.Count != 0);
 		}
 
-		private Widget CreateTypeUI(Widget parent)
+		private ItemPicker CreateTypeUI(Widget parent)
 		{
 			//	Crée le widget pour choisir le type de la quantité. Les boutons ne montrent que les types
 			//	définis dans les réglages globaux (ArticleQuantityColumnEntity) et compatibles avec

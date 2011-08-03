@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return null;
+				yield return ArticleQuantityType.Billed;				// facturé
 			}
 		}
 	}
