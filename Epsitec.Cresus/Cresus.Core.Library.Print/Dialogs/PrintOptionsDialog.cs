@@ -320,7 +320,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					this.modifiedOptions.MergeWith (this.categoryOptions);
 					this.modifiedOptions.Remove (this.GetForcingOptions (this.entityToPrint.PrintingUnits));
 
-					var controller = new DocumentOptionsEditor.OptionsController (this.modifiedOptions);
+					var controller = new DocumentOptionsEditor.OptionsController (this.entityToPrint.Entity, this.modifiedOptions);
 					controller.CreateUI (this.optionsFrame.Viewport, this.OnOptionsChanged);
 				}
 			}

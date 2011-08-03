@@ -9,8 +9,8 @@ using Epsitec.Common.Printing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
-
 using Epsitec.Common.Support.EntityEngine;
+
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Documents;
 using Epsitec.Cresus.Core.Entities;

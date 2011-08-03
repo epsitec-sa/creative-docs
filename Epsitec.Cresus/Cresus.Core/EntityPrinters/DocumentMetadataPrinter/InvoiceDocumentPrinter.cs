@@ -71,10 +71,10 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 			get
 			{
-				double leftMargin   = this.GetOptionValue (DocumentOption.LeftMargin, 20);
-				double rightMargin  = this.GetOptionValue (DocumentOption.RightMargin, 20);
-				double topMargin    = this.GetOptionValue (DocumentOption.TopMargin, 20);
-				double bottomMargin = this.GetOptionValue (DocumentOption.TopMargin, 20);
+				double leftMargin   = this.GetOptionValue (DocumentOption.LeftMargin,   20);
+				double rightMargin  = this.GetOptionValue (DocumentOption.RightMargin,  20);
+				double topMargin    = this.GetOptionValue (DocumentOption.TopMargin,    20);
+				double bottomMargin = this.GetOptionValue (DocumentOption.BottomMargin, 20);
 
 				double h = AbstractDocumentMetadataPrinter.reportHeight;
 

@@ -188,6 +188,7 @@
     <Compile Include="Dialogs\SettingsTabPages\PrinterOptionsTabPage.cs" />
     <Compile Include="Dialogs\SettingsTabPages\QueryAccessor.cs" />
     <Compile Include="Dialogs\SettingsTabPages\SearchMode.cs" />
+    <Compile Include="EntityPrinters\EntityToDocumentTypeConverter.cs" />
     <Compile Include="EntityPrinters\DocumentMetadataPrinter\DeliveryNoteDocumentPrinter.cs" />
     <Compile Include="EntityPrinters\DocumentMetadataPrinter\OrderConfirmationDocumentPrinter.cs" />
     <Compile Include="EntityPrinters\DocumentMetadataPrinter\OrderBookingDocumentPrinter.cs" />

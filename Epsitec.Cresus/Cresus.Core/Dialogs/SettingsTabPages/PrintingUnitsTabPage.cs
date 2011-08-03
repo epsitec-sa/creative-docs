@@ -585,7 +585,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			{
 				var optionsValues = printingUnit.Options;
 
-				var controller = new DocumentOptionsEditor.OptionsController (optionsKeys, optionsValues, true);
+				var controller = new DocumentOptionsEditor.OptionsController (null, optionsKeys, optionsValues, true);
 				controller.CreateUI (this.optionsBox.Viewport, null);
 			}
 		}
