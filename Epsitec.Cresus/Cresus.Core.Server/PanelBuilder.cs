@@ -228,7 +228,15 @@ namespace Epsitec.Cresus.Core.Server
 			}
 			else
 			{
-				var entity = resolver.DynamicInvoke (this.entity) as AbstractEntity;
+				AbstractEntity entity;
+				if (resolver != null)
+				{
+					entity = resolver.DynamicInvoke (this.entity) as AbstractEntity;
+				}
+				else
+				{
+					entity = this.entity;
+				}
 
 				list.Add (CreatePanelForEntity (brick, item, entity));
 			}

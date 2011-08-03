@@ -1,6 +1,8 @@
 ﻿using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.DataLayer.Context;
 using Nancy;
+using Epsitec.Cresus.Core.Controllers;
+using System.Collections.Generic;
 
 
 namespace Epsitec.Cresus.Core.Server.Modules
@@ -10,7 +12,7 @@ namespace Epsitec.Cresus.Core.Server.Modules
 		public LayoutModule()
 			: base ("/layout")
 		{
-			Get["/{id}"] = parameters =>
+			Get["/{mode}/{id}"] = parameters =>
 			{
 				var coreSession = MainModule.GetCoreSession ();
 				var context = coreSession.GetBusinessContext ();
@@ -18,10 +20,17 @@ namespace Epsitec.Cresus.Core.Server.Modules
 				var entityKey = EntityKey.Parse (parameters.id);
 				AbstractEntity entity = context.DataContext.ResolveEntity (entityKey);
 
-				var s = PanelBuilder.BuildController (entity, Controllers.ViewControllerMode.Summary, coreSession);
+				ViewControllerMode mode = LayoutModule.GetMode (parameters.mode);
+
+				var s = PanelBuilder.BuildController (entity, mode, coreSession);
 
 				return Response.AsJson (s);
 			};
+		}
+
+		private static ViewControllerMode GetMode(string mode)
+		{
+			return (ViewControllerMode) System.Enum.Parse (typeof (ViewControllerMode), mode, true);
 		}
 	}
 }
