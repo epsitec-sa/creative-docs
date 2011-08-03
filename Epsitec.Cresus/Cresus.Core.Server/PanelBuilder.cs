@@ -249,8 +249,7 @@ namespace Epsitec.Cresus.Core.Server
 			var options = new Dictionary<string, object> ();
 			dic.Add ("options", options);
 
-			//options.Add ("title", item.Title);
-			options.Add ("title", item.ToString ());
+			options.Add ("title", item.Title.ToSimpleText ());
 
 			var data = new Dictionary<string, object> ();
 			options.Add ("data", data);

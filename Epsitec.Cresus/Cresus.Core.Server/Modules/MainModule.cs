@@ -12,10 +12,11 @@ namespace Epsitec.Cresus.Core.Server
 	{
 		public MainModule()
 		{
+			#region MainModule
 			Get["/"] = parameters =>
-			{
-				return "Hello World";
-			};
+				{
+					return "Hello World";
+				};
 
 			Get["/login"] = parameters =>
 			{
@@ -27,73 +28,78 @@ namespace Epsitec.Cresus.Core.Server
 
 				//var res = Response.AsJson (obj);
 				//res.Headers["Access-Control-Allow-Origin"] = "*";
-			};
+			}; 
+			#endregion
 
+			#region ListModule
 			Get["/list/persons"] = parameters =>
-			{
-				var coreSession = GetCoreSession ();
-				var context = coreSession.GetBusinessContext ();
-
-				var customers = from x in context.GetAllEntities<CustomerEntity> ()
-								select x;
-
-				var obj = new List<object> ();
-
-				customers.ForEach (c => obj.Add (new
 				{
-					firstName = c.IdA,
-					lastName = c.IdB,
-					uniqueId = c.GetEntitySerialId ()
-				}));
+					var coreSession = GetCoreSession ();
+					var context = coreSession.GetBusinessContext ();
 
-				var res = Response.AsJson (obj);
+					var customers = from x in context.GetAllEntities<CustomerEntity> ()
+									select x;
 
-				return res;
+					var obj = new List<object> ();
 
-			};
+					customers.ForEach (c => obj.Add (new
+					{
+						firstName = c.IdA,
+						lastName = c.IdB,
+						uniqueId = c.GetEntitySerialId ()
+					}));
 
+					var res = Response.AsJson (obj);
+
+					return res;
+
+				};
+			#endregion
+
+			#region LayoutModule
 			Get["/layout/{name}/{id}"] = parameters =>
-			{
-			    var coreSession = MainModule.GetCoreSession ();
-			    var context = coreSession.GetBusinessContext ();
-
-				//var type = System.Type.GetType ("Epsitec.Cresus.Core.Entities.AffairEntity");
-				//var e = new AffairEntity ();
-
-				var typeName = string.Format("Epsitec.Cresus.Core.Entities.{0}", parameters.name);
-				System.Runtime.Remoting.ObjectHandle e;
-				try
 				{
-					e = System.Activator.CreateInstance ("Cresus.Core.Library.Business", typeName);
-				}
-				catch (System.TypeLoadException)
-				{
-					e = System.Activator.CreateInstance ("Cresus.Core.Library.Address", typeName);
-				}
-				
-			    var type = e.Unwrap ().GetType ();
-			    var method = typeof(BusinessContext).GetMethod ("GetAllEntities");
-			    var m = method.MakeGenericMethod (type);
-			    var o = m.Invoke (context, new object [] {});
+					var coreSession = MainModule.GetCoreSession ();
+					var context = coreSession.GetBusinessContext ();
 
-				var i = o as IEnumerable<AbstractEntity>;
+					//var type = System.Type.GetType ("Epsitec.Cresus.Core.Entities.AffairEntity");
+					//var e = new AffairEntity ();
 
-				if (i == null)
-				{
-					return new NotFoundResponse ();
-				}
+					var typeName = string.Format ("Epsitec.Cresus.Core.Entities.{0}", parameters.name);
+					System.Runtime.Remoting.ObjectHandle e;
+					try
+					{
+						e = System.Activator.CreateInstance ("Cresus.Core.Library.Business", typeName);
+					}
+					catch (System.TypeLoadException)
+					{
+						e = System.Activator.CreateInstance ("Cresus.Core.Library.Address", typeName);
+					}
 
-			    var entity = i.Where (x => x.GetEntitySerialId () == parameters.id).FirstOrDefault ();
+					var type = e.Unwrap ().GetType ();
+					var method = typeof (BusinessContext).GetMethod ("GetAllEntities");
+					var m = method.MakeGenericMethod (type);
+					var o = m.Invoke (context, new object[] { });
 
-			    if (entity == null)
-			    {
-			        return new NotFoundResponse ();
-			    }
+					var i = o as IEnumerable<AbstractEntity>;
 
-			    var s = PanelBuilder.BuildController (entity, Controllers.ViewControllerMode.Summary);
+					if (i == null)
+					{
+						return new NotFoundResponse ();
+					}
 
-			    return Response.AsJson (s);
-			};
+					var entity = i.Where (x => x.GetEntitySerialId () == parameters.id).FirstOrDefault ();
+
+					if (entity == null)
+					{
+						return new NotFoundResponse ();
+					}
+
+					var s = PanelBuilder.BuildController (entity, Controllers.ViewControllerMode.Summary);
+
+					return Response.AsJson (s);
+				};
+			#endregion
 		}
 
 		internal static CoreSession GetCoreSession()
