@@ -78,20 +78,10 @@ namespace Epsitec.Cresus.Core.Server
 		/// <returns>Name of the generated panel</returns>
 		private IDictionary<string, object> Run()
 		{
-			var name = PanelBuilder.GetControllerName (this.entity, this.controllerMode);
-
-			// The panel already exists
-			//if (PanelBuilder.constructedPanels.Contains (name))
-			//{
-			//    return name;
-			//}
-
 			var customerSummaryWall = CoreSession.GetBrickWall (this.entity, this.controllerMode);
 
 			// Open the main panel
 			var dic = new Dictionary<string, object> ();
-
-			//dic.Add ("title", name);
 
 			var deferredItems = new List<object> ();
 			dic.Add ("deferredItems", deferredItems);
@@ -100,17 +90,7 @@ namespace Epsitec.Cresus.Core.Server
 			{
 				var b = brick;
 
-				//if (Brick.ContainsProperty (brick, BrickPropertyKey.AsType))
-				//{
-				//    b = Brick.GetProperty (brick, BrickPropertyKey.AsType).Brick;
-				//}
-				//else
-				//{
-				//PanelBuilder.CreateDefaultTextProperties (b);
-				//}
-
-				var item = new Epsitec.Cresus.Core.Controllers.DataAccessors.TileDataItem ();
-				var root = brick;
+				var item = new TileDataItem ();
 
 				Brick oldBrick;
 				do
@@ -133,7 +113,7 @@ namespace Epsitec.Cresus.Core.Server
 					this.ProcessProperty (b, BrickPropertyKey.Text, x => item.Text = x);
 					this.ProcessProperty (b, BrickPropertyKey.TextCompact, x => item.CompactText = x);
 
-					//this.ProcessProperty (b, BrickPropertyKey.Attribute, x => this.ProcessAttribute (item, x));
+					this.ProcessProperty (b, BrickPropertyKey.Attribute, x => this.ProcessAttribute (item, x));
 					//this.ProcessProperty (b, BrickPropertyKey.Include, x => this.ProcessInclusion (x));
 
 					if ((!item.Title.IsNullOrEmpty) && (item.CompactTitle.IsNull))
@@ -162,8 +142,6 @@ namespace Epsitec.Cresus.Core.Server
 				// Add all items from this brick
 				deferredItems.AddRange (CreatePanelContent (b, item));
 			}
-
-			PanelBuilder.constructedPanels.Add (name);
 
 			return dic;
 		}
@@ -254,11 +232,8 @@ namespace Epsitec.Cresus.Core.Server
 
 			options.Add ("title", item.Title.ToSimpleText ());
 
-			var data = new Dictionary<string, object> ();
-			options.Add ("data", data);
-
 			var summary = entity.GetSummary ().ToString ();
-			data.Add ("name", summary);
+			options.Add ("html", summary);
 
 			var entityKey = this.coreSession.GetBusinessContext ().DataContext.GetNormalizedEntityKey (entity).Value.ToString ();
 			options.Add ("entityId", entityKey);
@@ -270,47 +245,21 @@ namespace Epsitec.Cresus.Core.Server
 				options.Add ("iconCls", iconCls);
 			}
 
-
-			//var children = CreateChildren (brick);
-			//if (children != null && children.Count > 0)
-			//{
-			//    jscontent += "deferredItems: [";
-			//    children.ForEach (c => jscontent += string.Format ("{{name: '{0}'}},", c));
-			//    jscontent += "],";
-			//}
-
-			// TODO check
 			var children = CreateChildren (brick);
 			if (children != null && children.Count > 0)
 			{
 				options.Add ("includedItems", children);
 			}
 
+
+			var items = new List<object> ();
+			options.Add ("items", items);
+			var item1 = new Dictionary<string, object> ();
+			item1.Add ("fieldLabel", "Time");
+			item1.Add ("xtype", "datefield");
+			items.Add (item1);
+
 			return dic;
-		}
-
-
-		/// <summary>
-		/// Returns a name for a javascript controller 
-		/// </summary>
-		/// <param name="entity"></param>
-		/// <param name="mode"></param>
-		/// <returns></returns>
-		private static string GetControllerName(AbstractEntity entity, ViewControllerMode mode)
-		{
-			return string.Format ("Epsitec.Cresus.Core.Controllers.{0}Controllers.{1}", mode, entity.GetType ().Name);
-		}
-
-		/// <summary>
-		/// Get the filename of a controller
-		/// </summary>
-		/// <param name="name"></param>
-		/// <returns></returns>
-		private static string GetJsFilePath(string name)
-		{
-			var path = string.Format (PanelBuilder.jsFilename, name.Replace ('.', '/'));
-			PanelBuilder.EnsureDirectoryStructureExists (path);
-			return path;
 		}
 
 		/// <summary>
@@ -466,12 +415,42 @@ namespace Epsitec.Cresus.Core.Server
 			}
 		}
 
+		private void ProcessAttribute(TileDataItem item, BrickMode value)
+		{
+			switch (value)
+			{
+				case BrickMode.AutoGroup:
+					item.AutoGroup = true;
+					break;
+
+				case BrickMode.DefaultToSummarySubview:
+					item.DefaultMode = ViewControllerMode.Summary;
+					break;
+
+				case BrickMode.HideAddButton:
+					item.HideAddButton = true;
+					break;
+
+				case BrickMode.FullHeightStretch:
+					item.FullHeightStretch = true;
+					break;
+
+				case BrickMode.HideRemoveButton:
+					item.HideRemoveButton = true;
+					break;
+
+				case BrickMode.SpecialController0:
+				case BrickMode.SpecialController1:
+				case BrickMode.SpecialController2:
+				case BrickMode.SpecialController3:
+					item.ControllerSubTypeId = (int) (value - BrickMode.SpecialController0);
+					break;
+			}
+		}
+
 		// Generated files filenames
 		private readonly static string cssFilename = "web/css/generated/style.css";
-		private readonly static string jsFilename = "web/js/{0}.js";
 		private readonly static string imagesFilename = "web/images/{0}.png";
-
-		private readonly static List<string> constructedPanels = new List<string> ();
 
 		private readonly AbstractEntity entity;
 		private readonly ViewControllerMode controllerMode;
@@ -480,17 +459,17 @@ namespace Epsitec.Cresus.Core.Server
 		/*
 		public enum BrickPropertyKey
 		{
-			Name,
-			Icon,
-			Title,
-			TitleCompact,
-			Text,
-			TextCompact,
+			-Name,
+			-Icon,
+			-Title,
+			-TitleCompact,
+			-Text,
+			-TextCompact,
 
 			Attribute,
 
 			Template,
-			OfType,
+			-OfType,
 
 			Input,
 			Field,
@@ -502,8 +481,8 @@ namespace Epsitec.Cresus.Core.Server
 			SpecialController,
 			GlobalWarning,
 
-			CollectionAnnotation,
-			Include,
+			-CollectionAnnotation,
+			-Include,
 		}
 		 */
 	}
