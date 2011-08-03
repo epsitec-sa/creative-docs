@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Cresus.Bricks;
@@ -222,14 +223,11 @@ namespace Epsitec.Cresus.Core.Server
 
 				var col = (obj as IEnumerable).Cast<AbstractEntity> ().Where (c => c.GetType() == brickType);
 
-				if (col != null && col.Any())
-				{
-					//col.ForEach (e => PanelBuilder.CreatePanelForEntity (brick, item, e));
-					foreach (var e in col)
-					{
-						list.Add (PanelBuilder.CreatePanelForEntity (brick, item, e));
-					}
-				}
+				col.ForEach (e => PanelBuilder.CreatePanelForEntity (brick, item, e));
+				//foreach (var e in col)
+				//{
+				//    list.Add (PanelBuilder.CreatePanelForEntity (brick, item, e));
+				//}
 			}
 			else
 			{
