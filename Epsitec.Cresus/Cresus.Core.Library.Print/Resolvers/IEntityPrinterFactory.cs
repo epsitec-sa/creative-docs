@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 		/// </returns>
 		bool CanPrint(AbstractEntity entity, PrintingOptionDictionary options);
 
-		IEnumerable<DocumentOption> GetRequiredDocumentOptions(AbstractEntity entity);
+		IEnumerable<DocumentOption> GetRequiredDocumentOptions(DocumentType documentType);
 
 		/// <summary>
 		/// Creates the <see cref="AbstractPrinter"/> instance needed to print the specified

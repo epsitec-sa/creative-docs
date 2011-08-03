@@ -460,7 +460,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				return new RelationPrinter (businessContext, entity, options, printingUnits);
 			}
 
-			public IEnumerable<DocumentOption> GetRequiredDocumentOptions(AbstractEntity entity)
+			public IEnumerable<DocumentOption> GetRequiredDocumentOptions(DocumentType documentType)
 			{
 				return RelationPrinter.RequiredDocumentOptions;
 			}

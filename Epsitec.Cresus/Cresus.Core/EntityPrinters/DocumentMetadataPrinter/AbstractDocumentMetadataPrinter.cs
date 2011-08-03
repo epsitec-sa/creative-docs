@@ -1252,56 +1252,54 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 				switch (documentMetadata.DocumentCategory.DocumentType)
 				{
-					case Business.DocumentType.SalesQuote:
+					case DocumentType.SalesQuote:
 						return new SalesQuoteDocumentPrinter (businessContext, entity, options, printingUnits);
 
-					case Business.DocumentType.OrderBooking:
+					case DocumentType.OrderBooking:
 						return new OrderBookingDocumentPrinter (businessContext, entity, options, printingUnits);
 
-					case Business.DocumentType.OrderConfirmation:
+					case DocumentType.OrderConfirmation:
 						return new OrderConfirmationDocumentPrinter (businessContext, entity, options, printingUnits);
 
-					case Business.DocumentType.ProductionOrder:
+					case DocumentType.ProductionOrder:
 						return new ProductionOrderDocumentPrinter (businessContext, entity, options, printingUnits);
 
-					case Business.DocumentType.ProductionChecklist:
+					case DocumentType.ProductionChecklist:
 						return new ProductionChecklistDocumentPrinter (businessContext, entity, options, printingUnits);
 
-					case Business.DocumentType.DeliveryNote:
+					case DocumentType.DeliveryNote:
 						return new DeliveryNoteDocumentPrinter (businessContext, entity, options, printingUnits);
 
-					case Business.DocumentType.Invoice:
+					case DocumentType.Invoice:
 						return new InvoiceDocumentPrinter (businessContext, entity, options, printingUnits);
 				}
 
 				return null;
 			}
 
-			public IEnumerable<DocumentOption> GetRequiredDocumentOptions(AbstractEntity entity)
+			public IEnumerable<DocumentOption> GetRequiredDocumentOptions(DocumentType documentType)
 			{
-				var documentMetadata = entity as DocumentMetadataEntity;
-
-				switch (documentMetadata.DocumentCategory.DocumentType)
+				switch (documentType)
 				{
-					case Business.DocumentType.SalesQuote:
+					case DocumentType.SalesQuote:
 						return SalesQuoteDocumentPrinter.RequiredDocumentOptions;
 
-					case Business.DocumentType.OrderBooking:
+					case DocumentType.OrderBooking:
 						return OrderBookingDocumentPrinter.RequiredDocumentOptions;
 
-					case Business.DocumentType.OrderConfirmation:
+					case DocumentType.OrderConfirmation:
 						return OrderConfirmationDocumentPrinter.RequiredDocumentOptions;
 
-					case Business.DocumentType.ProductionOrder:
+					case DocumentType.ProductionOrder:
 						return ProductionOrderDocumentPrinter.RequiredDocumentOptions;
 
-					case Business.DocumentType.ProductionChecklist:
+					case DocumentType.ProductionChecklist:
 						return ProductionChecklistDocumentPrinter.RequiredDocumentOptions;
 
-					case Business.DocumentType.DeliveryNote:
+					case DocumentType.DeliveryNote:
 						return DeliveryNoteDocumentPrinter.RequiredDocumentOptions;
 
-					case Business.DocumentType.Invoice:
+					case DocumentType.Invoice:
 						return InvoiceDocumentPrinter.RequiredDocumentOptions;
 				}
 
