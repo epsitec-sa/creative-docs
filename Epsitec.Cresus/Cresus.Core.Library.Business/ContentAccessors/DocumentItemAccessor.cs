@@ -244,7 +244,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				int row = firstLineOccupied ? 1 : 0;
 				foreach (var quantityType in DocumentItemAccessor.articleQuantityTypes)
 				{
-					foreach (var quantity in line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == quantityType && x.QuantityColumn.QuantityType != mainQuantityType))
+					foreach (var quantity in line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == quantityType && x.QuantityColumn.QuantityType != mainQuantityType).OrderBy (x => x.BeginDate))
 					{
 						this.articleQuantityEntities.Add (quantity);
 
