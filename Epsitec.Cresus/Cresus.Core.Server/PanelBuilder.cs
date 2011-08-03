@@ -170,7 +170,7 @@ namespace Epsitec.Cresus.Core.Server
 
 		/// <summary>
 		/// Create "leaves" for a panel. 
-		/// Uses the "Include" property from the Entity
+		/// Uses the "Include" property from the Brick
 		/// </summary>
 		/// <param name="brick"></param>
 		/// <returns></returns>
@@ -197,8 +197,8 @@ namespace Epsitec.Cresus.Core.Server
 				}
 
 				// Recursively build the panels
-				var name = BuildController (child, this.controllerMode, this.coreSession);
-				list.Add (name);
+				var childPanel = PanelBuilder.BuildController (child, this.controllerMode, this.coreSession);
+				list.Add (childPanel);
 			}
 
 			return list;
@@ -222,7 +222,7 @@ namespace Epsitec.Cresus.Core.Server
 			{
 				var obj = resolver.DynamicInvoke (this.entity);
 
-				var col = (obj as IEnumerable).Cast<AbstractEntity> ().Where (c => c.GetType() == brickType);
+				var col = (obj as IEnumerable).Cast<AbstractEntity> ().Where (c => c.GetType () == brickType);
 
 				col.ForEach (e => list.Add (CreatePanelForEntity (brick, item, e)));
 			}
@@ -280,13 +280,11 @@ namespace Epsitec.Cresus.Core.Server
 			//}
 
 			// TODO check
-			//var children = CreateChildren (brick);
-			//if (children != null && children.Count > 0)
-			//{
-			//    var ch = new Dictionary<string, object> ();
-			//    children.ForEach (c => jscontent += string.Format ("{{name: '{0}'}},", c));
-			//    options.Add ("deferredItems", ch);
-			//}
+			var children = CreateChildren (brick);
+			if (children != null && children.Count > 0)
+			{
+				options.Add ("includedItems", children);
+			}
 
 			return dic;
 		}
