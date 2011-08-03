@@ -9,6 +9,7 @@ using Epsitec.Common.Debugging;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Server.Nancy;
+using Nancy.Hosting.Wcf;
 
 namespace Epsitec.Cresus.Core.Server
 {
@@ -121,6 +122,7 @@ namespace Epsitec.Cresus.Core.Server
 		{
 			CoreServerProgram.RunSelf ();
 			//CoreServerProgram.RunWcf ();
+			//System.Threading.Thread.Sleep (60*1000);
 		}
 
 		private static void RunSelf()
@@ -131,29 +133,30 @@ namespace Epsitec.Cresus.Core.Server
 			System.Console.WriteLine ("Nancy now listening - navigate to {0}", BaseUri);
 
 			//coreHost.Stop ();
+			coreHost.Join ();
 		}
 
 		// Ne fonctionne pas
-		//private static void RunWcf()
-		//{
-		//    //using (CreateAndOpenWebServiceHost ())
-		//    //{
-		//    //    System.Console.WriteLine ("Service is now running on: {0}", BaseUri);
-		//    //}
+		private static void RunWcf()
+		{
+		    using (CreateAndOpenWebServiceHost ())
+		    {
+		        System.Console.WriteLine ("Service is now running on: {0}", BaseUri);
+		    }
 
 		//    CreateAndOpenWebServiceHost ();
 		//    System.Console.WriteLine ("Service is now running on: {0}", BaseUri);
-		//}
+		}
 
-		//private static WebServiceHost CreateAndOpenWebServiceHost()
-		//{
-		//    var host = new WebServiceHost (new NancyWcfGenericService (), BaseUri);
+		private static WebServiceHost CreateAndOpenWebServiceHost()
+		{
+			var host = new WebServiceHost (new NancyWcfGenericService (), BaseUri);
 
-		//    host.AddServiceEndpoint (typeof (NancyWcfGenericService), new WebHttpBinding (), "");
-		//    host.Open ();
+			host.AddServiceEndpoint (typeof (NancyWcfGenericService), new WebHttpBinding (), "");
+			host.Open ();
 
-		//    return host;
-		//}
+			return host;
+		}
 
 		private static readonly System.Uri BaseUri = new System.Uri ("http://localhost:12345/");
 	}

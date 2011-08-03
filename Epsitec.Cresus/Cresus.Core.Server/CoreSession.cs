@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Core.Server
 			this.id = id;
 			this.creationDateTime = System.DateTime.UtcNow;
 			this.coreData = this.GetComponent<CoreData> ();
-			//Library.UI.Services.SetApplication (this);
+			Library.UI.Services.SetApplication (this);
 		}
 
 

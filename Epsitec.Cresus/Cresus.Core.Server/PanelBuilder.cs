@@ -8,10 +8,10 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Cresus.Bricks;
-using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Bricks;
+using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
+using Epsitec.Cresus.Core.Entities;
 
 namespace Epsitec.Cresus.Core.Server
 {
@@ -29,10 +29,11 @@ namespace Epsitec.Cresus.Core.Server
 			set;
 		}
 
-		private PanelBuilder(AbstractEntity entity, ViewControllerMode mode)
+		private PanelBuilder(AbstractEntity entity, ViewControllerMode mode, CoreSession coreSession)
 		{
 			this.entity = entity;
 			this.controllerMode = mode;
+			this.coreSession = coreSession;
 		}
 
 
@@ -42,19 +43,19 @@ namespace Epsitec.Cresus.Core.Server
 			PanelBuilder.EnsureDirectoryStructureExists (PanelBuilder.cssFilename);
 			System.IO.File.Create (PanelBuilder.cssFilename).Close ();
 
-			BuildController (new MailContactEntity (), Controllers.ViewControllerMode.Summary);
-			BuildController (new AffairEntity (), Controllers.ViewControllerMode.Summary);
+			//BuildController (new MailContactEntity (), Controllers.ViewControllerMode.Summary);
+			//BuildController (new AffairEntity (), Controllers.ViewControllerMode.Summary);
 
-			var context = PanelBuilder.CoreSession.GetBusinessContext ();
+			//var context = PanelBuilder.CoreSession.GetBusinessContext ();
 
-			var customer = (from x in context.GetAllEntities<CustomerEntity> ()
-							where x.Relation.Person is NaturalPersonEntity
-							let person = x.Relation.Person as NaturalPersonEntity
-							where person.Lastname == "Arnaud"
-							select x).FirstOrDefault ();
+			//var customer = (from x in context.GetAllEntities<CustomerEntity> ()
+			//                where x.Relation.Person is NaturalPersonEntity
+			//                let person = x.Relation.Person as NaturalPersonEntity
+			//                where person.Lastname == "Arnaud"
+			//                select x).FirstOrDefault ();
 
-			BuildController (customer, Controllers.ViewControllerMode.Summary);
-			BuildController (customer, Controllers.ViewControllerMode.Edition);
+			//BuildController (customer, Controllers.ViewControllerMode.Summary);
+			//BuildController (customer, Controllers.ViewControllerMode.Edition);
 		}
 
 		/// <summary>
@@ -63,9 +64,9 @@ namespace Epsitec.Cresus.Core.Server
 		/// <param name="entity">Entity to use to create the panelBuilder</param>
 		/// <param name="mode">Controller mode</param>
 		/// <returns></returns>
-		public static IDictionary<string, object> BuildController(AbstractEntity entity, ViewControllerMode mode)
+		public static IDictionary<string, object> BuildController(AbstractEntity entity, ViewControllerMode mode, CoreSession coreSession)
 		{
-			var builder = new PanelBuilder (entity, mode);
+			var builder = new PanelBuilder (entity, mode, coreSession);
 			return builder.Run ();
 		}
 
@@ -90,7 +91,7 @@ namespace Epsitec.Cresus.Core.Server
 			// Open the main panel
 			var dic = new Dictionary<string, object> ();
 
-			dic.Add ("title", name);
+			//dic.Add ("title", name);
 
 			var defferedItems = new List<object> ();
 			dic.Add ("defferedItems", defferedItems);
@@ -196,7 +197,7 @@ namespace Epsitec.Cresus.Core.Server
 				}
 
 				// Recursively build the panels
-				var name = PanelBuilder.BuildController (child, this.controllerMode);
+				var name = BuildController (child, this.controllerMode, this.coreSession);
 				list.Add (name);
 			}
 
@@ -223,23 +224,19 @@ namespace Epsitec.Cresus.Core.Server
 
 				var col = (obj as IEnumerable).Cast<AbstractEntity> ().Where (c => c.GetType() == brickType);
 
-				col.ForEach (e => PanelBuilder.CreatePanelForEntity (brick, item, e));
-				//foreach (var e in col)
-				//{
-				//    list.Add (PanelBuilder.CreatePanelForEntity (brick, item, e));
-				//}
+				col.ForEach (e => list.Add (CreatePanelForEntity (brick, item, e)));
 			}
 			else
 			{
 				var entity = resolver.DynamicInvoke (this.entity) as AbstractEntity;
 
-				list.Add (PanelBuilder.CreatePanelForEntity (brick, item, entity));
+				list.Add (CreatePanelForEntity (brick, item, entity));
 			}
 
 			return list;
 		}
 
-		private static Dictionary<string, object> CreatePanelForEntity(Brick brick, TileDataItem item, AbstractEntity entity)
+		private Dictionary<string, object> CreatePanelForEntity(Brick brick, TileDataItem item, AbstractEntity entity)
 		{
 			var dic = new Dictionary<string, object> ();
 
@@ -252,13 +249,11 @@ namespace Epsitec.Cresus.Core.Server
 			var data = new Dictionary<string, object> ();
 			options.Add ("data", data);
 
-			//var summary = entity.GetSummary ();
+			var summary = entity.GetSummary ().ToString ();
+			data.Add ("name", summary);
 
-			data.Add ("name", entity.IsNotNull () ? entity.GetEntitySerialId ().ToString () + " " + entity.GetType () : "empty");
-
-
-			options.Add ("entityId", entity.GetEntitySerialId ());
-			options.Add ("type", entity.GetType ().Name);
+			var entityKey = this.coreSession.GetBusinessContext ().DataContext.GetNormalizedEntityKey (entity).Value.ToString ();
+			options.Add ("entityId", entityKey);
 
 			var icon = PanelBuilder.CreateIcon (item);
 			if (!icon.Equals (default (KeyValuePair<string, string>)))
@@ -352,7 +347,7 @@ namespace Epsitec.Cresus.Core.Server
 			}
 
 			// Get the ressources from the icon name
-			var iconRes = item.IconUri;
+			var iconRes = Misc.GetResourceIconUri (item.IconUri);
 			var iconName = iconRes;
 			if (iconName.StartsWith ("manifest:"))
 			{
@@ -478,6 +473,7 @@ namespace Epsitec.Cresus.Core.Server
 
 		private readonly AbstractEntity entity;
 		private readonly ViewControllerMode controllerMode;
+		private readonly CoreSession coreSession;
 
 		/*
 		public enum BrickPropertyKey
@@ -492,7 +488,7 @@ namespace Epsitec.Cresus.Core.Server
 			Attribute,
 
 			Template,
-			AsType,
+			OfType,
 
 			Input,
 			Field,

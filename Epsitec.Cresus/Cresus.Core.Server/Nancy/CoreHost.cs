@@ -50,6 +50,12 @@ namespace Epsitec.Cresus.Core.Server.Nancy
 			listener.Stop ();
 		}
 
+		public void Join()
+		{
+			this.thread.Join ();
+		}
+
+
 		private void Listen()
 		{
 			while (shouldContinue)
