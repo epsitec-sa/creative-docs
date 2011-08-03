@@ -93,8 +93,8 @@ namespace Epsitec.Cresus.Core.Server
 
 			//dic.Add ("title", name);
 
-			var defferedItems = new List<object> ();
-			dic.Add ("defferedItems", defferedItems);
+			var deferredItems = new List<object> ();
+			dic.Add ("deferredItems", deferredItems);
 
 			foreach (var brick in customerSummaryWall.Bricks)
 			{
@@ -160,7 +160,7 @@ namespace Epsitec.Cresus.Core.Server
 				b = oldBrick;
 
 				// Add all items from this brick
-				defferedItems.AddRange (CreatePanelContent (b, item));
+				deferredItems.AddRange (CreatePanelContent (b, item));
 			}
 
 			PanelBuilder.constructedPanels.Add (name);
@@ -266,7 +266,7 @@ namespace Epsitec.Cresus.Core.Server
 			//var children = CreateChildren (brick);
 			//if (children != null && children.Count > 0)
 			//{
-			//    jscontent += "defferedItems: [";
+			//    jscontent += "deferredItems: [";
 			//    children.ForEach (c => jscontent += string.Format ("{{name: '{0}'}},", c));
 			//    jscontent += "],";
 			//}
@@ -277,7 +277,7 @@ namespace Epsitec.Cresus.Core.Server
 			//{
 			//    var ch = new Dictionary<string, object> ();
 			//    children.ForEach (c => jscontent += string.Format ("{{name: '{0}'}},", c));
-			//    options.Add ("defferedItems", ch);
+			//    options.Add ("deferredItems", ch);
 			//}
 
 			return dic;
