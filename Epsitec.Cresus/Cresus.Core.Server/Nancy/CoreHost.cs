@@ -146,9 +146,16 @@ namespace Epsitec.Cresus.Core.Server.Nancy
 			response.ContentType = nancyResponse.ContentType;
 			response.StatusCode = (int) nancyResponse.StatusCode;
 
-			using (var output = response.OutputStream)
+			try
 			{
-				nancyResponse.Contents.Invoke (output);
+				using (var output = response.OutputStream)
+				{
+					nancyResponse.Contents.Invoke (output);
+				}
+			}
+			catch (System.Net.HttpListenerException)
+			{
+				// TODO Do something? 
 			}
 		}
 
