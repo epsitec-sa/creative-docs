@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Core.Server
 
 			dic.Add ("title", this.entity.GetType ().ToString ());
 
-			var deferredItems = new List<object> ();
+			var deferredItems = new List<Dictionary<string, object>> ();
 			dic.Add ("deferredItems", deferredItems);
 
 			foreach (var brick in customerSummaryWall.Bricks)
@@ -148,46 +148,8 @@ namespace Epsitec.Cresus.Core.Server
 				b = Brick.GetProperty (b, BrickPropertyKey.OfType).Brick;
 			} while (b != null);
 
-			b = oldBrick;
-
-			var panels = CreatePanelContent (b, item);
+			var panels = CreatePanelContent (oldBrick, item);
 			return panels;
-		}
-		/// <summary>
-		/// Create "leaves" for a panel. 
-		/// Uses the "Include" property from the Brick
-		/// </summary>
-		/// <param name="brick"></param>
-		/// <returns></returns>
-		private List<IDictionary<string, object>> CreateChildren(Brick brick)
-		{
-			if (!Brick.ContainsProperty (brick, BrickPropertyKey.Include))
-			{
-				return null;
-			}
-
-			var list = new List<IDictionary<string, object>> ();
-
-			var includes = Brick.GetProperties (brick, BrickPropertyKey.Include);
-
-			foreach (var include in includes)
-			{
-				var lambda = include.ExpressionValue as LambdaExpression;
-				var func   = lambda.Compile ();
-				var child = func.DynamicInvoke (this.entity) as AbstractEntity;
-
-				if (child.IsNull ())
-				{
-					continue;
-				}
-
-				// Recursively build the panels
-				var childPanel = PanelBuilder.BuildController (child, this.controllerMode, this.coreSession);
-				list.Add (childPanel);
-			}
-
-			return list;
-
 		}
 
 		/// <summary>
@@ -209,7 +171,7 @@ namespace Epsitec.Cresus.Core.Server
 
 				var col = (obj as IEnumerable).Cast<AbstractEntity> ().Where (c => c.GetType () == brickType);
 
-				col.ForEach (e => list.Add (CreatePanelForEntity (brick, item, e)));
+				col.ForEach (e => list.AddRange (CreatePanelsForEntity (brick, item, e)));
 			}
 			else
 			{
@@ -223,19 +185,19 @@ namespace Epsitec.Cresus.Core.Server
 					entity = this.entity;
 				}
 
-				list.Add (CreatePanelForEntity (brick, item, entity));
+				list.AddRange (CreatePanelsForEntity (brick, item, entity));
 			}
 
 			return list;
 		}
 
-		private Dictionary<string, object> CreatePanelForEntity(Brick brick, TileDataItem item, AbstractEntity entity)
+		private List<Dictionary<string, object>> CreatePanelsForEntity(Brick brick, TileDataItem item, AbstractEntity entity)
 		{
-			var dic = new Dictionary<string, object> ();
+			var parent = new Dictionary<string, object> ();
 
-			dic.Add ("name", "Epsitec.Cresus.Core.Static.SummaryWallPanel");
+			parent.Add ("name", "Epsitec.Cresus.Core.Static.SummaryWallPanel");
 			var options = new Dictionary<string, object> ();
-			dic.Add ("options", options);
+			parent.Add ("options", options);
 
 			options.Add ("title", item.Title.ToSimpleText ());
 
@@ -253,10 +215,6 @@ namespace Epsitec.Cresus.Core.Server
 			}
 
 			var children = CreateChildren (brick);
-			if (children != null && children.Count > 0)
-			{
-				options.Add ("includedItems", children);
-			}
 
 
 			var items = new List<object> ();
@@ -266,7 +224,53 @@ namespace Epsitec.Cresus.Core.Server
 			item1.Add ("xtype", "datefield");
 			items.Add (item1);
 
-			return dic;
+
+			var list = new List<Dictionary<string, object>> ();
+			list.Add (parent);
+			if (children != null && children.Any ())
+			{
+				list.AddRange (children);
+			}
+
+			return list;
+		}
+
+
+		/// <summary>
+		/// Create "leaves" for a panel. 
+		/// Uses the "Include" property from the Brick
+		/// </summary>
+		/// <param name="brick"></param>
+		/// <returns></returns>
+		private List<Dictionary<string, object>> CreateChildren(Brick brick)
+		{
+			if (!Brick.ContainsProperty (brick, BrickPropertyKey.Include))
+			{
+				return null;
+			}
+
+			var list = new List<Dictionary<string, object>> ();
+
+			var includes = Brick.GetProperties (brick, BrickPropertyKey.Include);
+
+			foreach (var include in includes)
+			{
+				var lambda = include.ExpressionValue as LambdaExpression;
+				var func   = lambda.Compile ();
+				var child = func.DynamicInvoke (this.entity) as AbstractEntity;
+
+				if (child.IsNull ())
+				{
+					continue;
+				}
+
+				// Recursively build the panels
+				var childPanel = PanelBuilder.BuildController (child, this.controllerMode, this.coreSession);
+				list.AddRange (childPanel["deferredItems"] as List<Dictionary<string, object>>);
+			}
+
+			return list;
+
 		}
 
 		/// <summary>
