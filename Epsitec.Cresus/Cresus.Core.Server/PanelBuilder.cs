@@ -83,6 +83,8 @@ namespace Epsitec.Cresus.Core.Server
 			// Open the main panel
 			var dic = new Dictionary<string, object> ();
 
+			dic.Add ("title", this.entity.GetType ().ToString ());
+
 			var deferredItems = new List<object> ();
 			dic.Add ("deferredItems", deferredItems);
 
@@ -253,7 +255,7 @@ namespace Epsitec.Cresus.Core.Server
 
 
 			var items = new List<object> ();
-			options.Add ("items", items);
+			//options.Add ("items", items);
 			var item1 = new Dictionary<string, object> ();
 			item1.Add ("fieldLabel", "Time");
 			item1.Add ("xtype", "datefield");
