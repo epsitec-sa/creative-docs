@@ -7,6 +7,7 @@ using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Documents;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.PlugIns;
 
@@ -17,13 +18,14 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 {
 	public sealed class DocumentOptionsEditorController : System.IDisposable
 	{
-		public DocumentOptionsEditorController(IBusinessContext businessContext, DocumentOptionsEntity documentOptionsEntity)
+		public DocumentOptionsEditorController(IBusinessContext businessContext, DocumentOptionsEntity documentOptionsEntity, System.Func<DocumentType, IEnumerable<DocumentOption>> getRequiredDocumentOptions)
 		{
 			System.Diagnostics.Debug.Assert (businessContext != null);
 			System.Diagnostics.Debug.Assert (documentOptionsEntity.IsNotNull ());
 
-			this.businessContext         = businessContext;
-			this.documentOptionsEntity   = documentOptionsEntity;
+			this.businessContext            = businessContext;
+			this.documentOptionsEntity      = documentOptionsEntity;
+			this.getRequiredDocumentOptions = getRequiredDocumentOptions;
 			
 			this.businessContext.SavingChanges += this.HandleBusinessContextSavingChanges;
 		}
@@ -39,7 +41,7 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 				Padding = new Margins (5),
 			};
 
-			this.mainController = new MainController (this.businessContext, this.documentOptionsEntity);
+			this.mainController = new MainController (this.businessContext, this.documentOptionsEntity, this.getRequiredDocumentOptions);
 			this.mainController.CreateUI (box);
 		}
 
@@ -71,6 +73,7 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 
 		private readonly IBusinessContext					businessContext;
 		private readonly DocumentOptionsEntity				documentOptionsEntity;
+		private readonly System.Func<DocumentType, IEnumerable<DocumentOption>> getRequiredDocumentOptions;
 
 		private MainController								mainController;
 	}

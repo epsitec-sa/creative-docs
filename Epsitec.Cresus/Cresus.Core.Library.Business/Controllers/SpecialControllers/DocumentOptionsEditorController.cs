@@ -7,6 +7,8 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Documents;
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Widgets;
@@ -46,8 +48,14 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 			var controller = this.tileContainer.Controller as EntityViewController;
 			var businessContext = controller.BusinessContext;
 
-			var c = new Epsitec.Cresus.Core.DocumentOptionsEditor.DocumentOptionsEditorController (businessContext, this.documentOptionsEntity);
+			var c = new DocumentOptionsEditor.DocumentOptionsEditorController (businessContext, this.documentOptionsEntity, this.GetRequiredDocumentOptions);
 			c.CreateUI (box);
+		}
+
+		private IEnumerable<DocumentOption> GetRequiredDocumentOptions(DocumentType documentType)
+		{
+			// TODO: à finir...
+			return Epsitec.Cresus.Core.Print.EntityPrinters.AbstractPrinter.GetRequiredDocumentOptions (null, null);
 		}
 
 

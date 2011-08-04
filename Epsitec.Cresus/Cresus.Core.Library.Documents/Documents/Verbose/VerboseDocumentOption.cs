@@ -193,7 +193,7 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 			var list = new List<VerboseDocumentOption> ();
 			string[] e, d;
 
-			//	Ajoute les options d'impression liées à l'orientation portrait/paysage.
+			//	Ajoute les options d'impression liées au papier.
 			list.Add (new VerboseDocumentOption ("Papier", "Paper"));
 
 			e = new string[] { "Portrait", "Landscape" };
@@ -252,7 +252,7 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 			list.Add (new VerboseDocumentOption (DocumentOption.IsrFacsimile, "Invoice.3", true, DocumentOptionValueType.Boolean, "Fac-similé complet du BV", "true"));
 
 			//	Ajoute les options pour les clients.
-			list.Add (new VerboseDocumentOption ("Résumé d'un client", "Relation"));
+			list.Add (new VerboseDocumentOption ("Fiche résumée d'un client", "Relation"));
 
 			list.Add (new VerboseDocumentOption (DocumentOption.RelationMail,    "Relation.1", false, DocumentOptionValueType.Boolean,  "Inclure les adresses",   "true"));
 			list.Add (new VerboseDocumentOption (DocumentOption.RelationTelecom, "Relation.1", false, DocumentOptionValueType.Boolean,  "Inclure les téléphones", "true"));
