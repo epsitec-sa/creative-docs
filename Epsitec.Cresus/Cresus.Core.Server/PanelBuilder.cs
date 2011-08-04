@@ -90,64 +90,69 @@ namespace Epsitec.Cresus.Core.Server
 
 			foreach (var brick in customerSummaryWall.Bricks)
 			{
-				var b = brick;
-
-				var item = new TileDataItem ();
-
-				Brick oldBrick;
-				do
-				{
-
-					if (Brick.ContainsProperty (b, BrickPropertyKey.OfType))
-					{
-
-					}
-					else
-					{
-						PanelBuilder.CreateDefaultTextProperties (b);
-					}
-
-					this.ProcessProperty (b, BrickPropertyKey.Name, x => item.Name = x);
-					this.ProcessProperty (b, BrickPropertyKey.Icon, x => item.IconUri = x);
-
-					this.ProcessProperty (b, BrickPropertyKey.Title, x => item.Title = x);
-					this.ProcessProperty (b, BrickPropertyKey.TitleCompact, x => item.CompactTitle = x);
-					this.ProcessProperty (b, BrickPropertyKey.Text, x => item.Text = x);
-					this.ProcessProperty (b, BrickPropertyKey.TextCompact, x => item.CompactText = x);
-
-					this.ProcessProperty (b, BrickPropertyKey.Attribute, x => this.ProcessAttribute (item, x));
-					//this.ProcessProperty (b, BrickPropertyKey.Include, x => this.ProcessInclusion (x));
-
-					if ((!item.Title.IsNullOrEmpty) && (item.CompactTitle.IsNull))
-					{
-						item.CompactTitle = item.Title;
-					}
-
-					this.ProcessProperty (b, BrickPropertyKey.Title, x => item.TitleAccessor = x);
-					this.ProcessProperty (b, BrickPropertyKey.TitleCompact, x => item.CompactTitleAccessor = x);
-					this.ProcessProperty (b, BrickPropertyKey.Text, x => item.TextAccessor = x);
-					this.ProcessProperty (b, BrickPropertyKey.TextCompact, x => item.CompactTextAccessor = x);
-
-
-					if (Brick.ContainsProperty (b, BrickPropertyKey.CollectionAnnotation))
-					{
-						item.DataType = TileDataType.CollectionItem;
-					}
-
-
-					oldBrick = b;
-					b = Brick.GetProperty (b, BrickPropertyKey.OfType).Brick;
-				} while (b != null);
-
-				b = oldBrick;
-
-				// Add all items from this brick
-				deferredItems.AddRange (CreatePanelContent (b, item));
+				var panels = GetPanels (brick);
+				deferredItems.AddRange (panels);
 			}
 
 			return dic;
 		}
 
+		private List<Dictionary<string, object>> GetPanels(Brick brick)
+		{
+			var b = brick;
+
+			var item = new TileDataItem ();
+
+			Brick oldBrick;
+			do
+			{
+
+				if (Brick.ContainsProperty (b, BrickPropertyKey.OfType))
+				{
+
+				}
+				else
+				{
+					PanelBuilder.CreateDefaultTextProperties (b);
+				}
+
+				this.ProcessProperty (b, BrickPropertyKey.Name, x => item.Name = x);
+				this.ProcessProperty (b, BrickPropertyKey.Icon, x => item.IconUri = x);
+
+				this.ProcessProperty (b, BrickPropertyKey.Title, x => item.Title = x);
+				this.ProcessProperty (b, BrickPropertyKey.TitleCompact, x => item.CompactTitle = x);
+				this.ProcessProperty (b, BrickPropertyKey.Text, x => item.Text = x);
+				this.ProcessProperty (b, BrickPropertyKey.TextCompact, x => item.CompactText = x);
+
+				this.ProcessProperty (b, BrickPropertyKey.Attribute, x => this.ProcessAttribute (item, x));
+				//this.ProcessProperty (b, BrickPropertyKey.Include, x => this.ProcessInclusion (x));
+
+				if ((!item.Title.IsNullOrEmpty) && (item.CompactTitle.IsNull))
+				{
+					item.CompactTitle = item.Title;
+				}
+
+				this.ProcessProperty (b, BrickPropertyKey.Title, x => item.TitleAccessor = x);
+				this.ProcessProperty (b, BrickPropertyKey.TitleCompact, x => item.CompactTitleAccessor = x);
+				this.ProcessProperty (b, BrickPropertyKey.Text, x => item.TextAccessor = x);
+				this.ProcessProperty (b, BrickPropertyKey.TextCompact, x => item.CompactTextAccessor = x);
+
+
+				if (Brick.ContainsProperty (b, BrickPropertyKey.CollectionAnnotation))
+				{
+					item.DataType = TileDataType.CollectionItem;
+				}
+
+
+				oldBrick = b;
+				b = Brick.GetProperty (b, BrickPropertyKey.OfType).Brick;
+			} while (b != null);
+
+			b = oldBrick;
+
+			var panels = CreatePanelContent (b, item);
+			return panels;
+		}
 		/// <summary>
 		/// Create "leaves" for a panel. 
 		/// Uses the "Include" property from the Brick
