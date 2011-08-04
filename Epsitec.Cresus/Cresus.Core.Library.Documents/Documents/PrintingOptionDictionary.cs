@@ -113,6 +113,28 @@ namespace Epsitec.Cresus.Core.Documents
 			}
 		}
 
+		public void Keep(IEnumerable<DocumentOption> list)
+		{
+			//	Ne garde que les options contenues dans la liste.
+			if (list != null && list.Count () != 0)
+			{
+				var toRemove = new List<DocumentOption> ();
+
+				foreach (var option in this.dictionary.Keys)
+				{
+					if (!list.Contains (option))
+					{
+						toRemove.Add (option);
+					}
+				}
+
+				foreach (var option in toRemove)
+				{
+					this.dictionary.Remove (option);
+				}
+			}
+		}
+
 
 		public string GetSerializedData()
 		{

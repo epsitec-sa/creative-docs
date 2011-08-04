@@ -1,32 +1,18 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Common.Debug;
-using Epsitec.Common.Dialogs;
-using Epsitec.Common.Drawing;
-using Epsitec.Common.IO;
-using Epsitec.Common.Printing;
-using Epsitec.Common.Support;
-using Epsitec.Common.Types;
-using Epsitec.Common.Widgets;
-
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Helpers;
-using Epsitec.Cresus.Core.Print.Bands;
-using Epsitec.Cresus.Core.Print.Containers;
+using Epsitec.Cresus.Core.Documents;
+using Epsitec.Cresus.Core.Business;
 
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Epsitec.Cresus.Core.Resolvers;
-using Epsitec.Cresus.Core.Documents;
-using Epsitec.Cresus.Core.Print.EntityPrinters;
-using Epsitec.Cresus.Core.Business;
 
-namespace Epsitec.Cresus.Core.EntityPrinters
+namespace Epsitec.Cresus.Core.Helpers
 {
-	public static class EntityToDocumentTypeConverter
+	public static class EntityToDocumentTypeHelper
 	{
 		private static DocumentType GetDocumentType(AbstractEntity entity)
 		{

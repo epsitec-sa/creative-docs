@@ -225,6 +225,20 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 		}
 
 
+		public static IEnumerable<DocumentOption> GetRequiredDocumentOptions(AbstractEntity entity, PrintingOptionDictionary options)
+		{
+			var factory = AbstractPrinter.FindPrinterFactory (entity, options);
+
+			if (factory == null)
+			{
+				return null;
+			}
+			else
+			{
+				return factory.GetRequiredDocumentOptions (entity, options);
+			}
+		}
+
 		public static AbstractPrinter CreateDocumentPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 		{
 			//	Crée le XxxPrinter adapté à un type d'entité.
@@ -254,11 +268,6 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 		private static IEntityPrinterFactory FindPrinterFactory(AbstractEntity entity, PrintingOptionDictionary options)
 		{
 			return EntityPrinterFactoryResolver.Resolve ().FirstOrDefault (x => x.CanPrint (entity, options));
-		}
-
-		private static IEnumerable<DocumentOption> GetRequiredDocumentOptions(DocumentType documentType)
-		{
-			return EntityPrinterFactoryResolver.Resolve ().FirstOrDefault ().GetRequiredDocumentOptions (documentType);
 		}
 
 

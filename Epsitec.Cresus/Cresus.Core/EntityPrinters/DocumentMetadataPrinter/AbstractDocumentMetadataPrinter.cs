@@ -1277,9 +1277,11 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				return null;
 			}
 
-			public IEnumerable<DocumentOption> GetRequiredDocumentOptions(DocumentType documentType)
+			public IEnumerable<DocumentOption> GetRequiredDocumentOptions(AbstractEntity entity, PrintingOptionDictionary options)
 			{
-				switch (documentType)
+				var documentMetadata = entity as DocumentMetadataEntity;
+
+				switch (documentMetadata.DocumentCategory.DocumentType)
 				{
 					case DocumentType.SalesQuote:
 						return SalesQuoteDocumentPrinter.RequiredDocumentOptions;

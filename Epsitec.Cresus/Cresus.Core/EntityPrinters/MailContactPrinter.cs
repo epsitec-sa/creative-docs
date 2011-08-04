@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				return new MailContactPrinter (businessContext, entity, options, printingUnits);
 			}
 
-			public IEnumerable<DocumentOption> GetRequiredDocumentOptions(DocumentType documentType)
+			public IEnumerable<DocumentOption> GetRequiredDocumentOptions(AbstractEntity entity, PrintingOptionDictionary options)
 			{
 				return MailContactPrinter.RequiredDocumentOptions;
 			}

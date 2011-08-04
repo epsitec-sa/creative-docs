@@ -205,6 +205,7 @@
     <Compile Include="Factories\DefaultEntitySpecialControllerFactory.cs" />
     <Compile Include="Factories\DefaultViewControllerComponentFactory.cs" />
     <Compile Include="Factories\IEntitySpecialControllerFactory.cs" />
+    <Compile Include="Helpers\EntityToDocumentTypeHelper.cs" />
     <Compile Include="Library\ViewControllerComponent.cs" />
     <Compile Include="Library\ViewControllerComponent`1.cs" />
     <Compile Include="Controllers\MainWindowController.cs" />
