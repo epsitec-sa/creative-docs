@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 			this.DefaultValue  = defaultValue;
 		}
 
-		private VerboseDocumentOption(DocumentOption option, string group, bool isGlobal, IEnumerable<string> enumeration, IEnumerable<string> enumerationDescription, int defaultIndex)
+		private VerboseDocumentOption(DocumentOption option, string group, bool isGlobal, IEnumerable<string> enumeration, IEnumerable<string> enumerationDescription, string description, int defaultIndex)
 		{
 			System.Diagnostics.Debug.Assert (enumeration != null && enumerationDescription != null);
 			System.Diagnostics.Debug.Assert (enumeration.Count () == enumerationDescription.Count ());
@@ -46,6 +46,7 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 			this.Type                   = DocumentOptionValueType.Enumeration;
 			this.Enumeration            = enumeration;
 			this.EnumerationDescription = enumerationDescription;
+			this.Description            = description;
 			this.DefaultValue           = enumeration.ElementAt (defaultIndex);
 		}
 
@@ -193,67 +194,69 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 			string[] e, d;
 
 			//	Ajoute les options d'impression liées à l'orientation portrait/paysage.
-			list.Add (new VerboseDocumentOption ("Orientation du papier", "Orientation"));
+			list.Add (new VerboseDocumentOption ("Papier", "Paper"));
+
 			e = new string[] { "Portrait", "Landscape" };
 			d = new string[] { "Portrait", "Paysage" };
-			list.Add (new VerboseDocumentOption (DocumentOption.Orientation, "Orientation", true, e, d, 0));
+			list.Add (new VerboseDocumentOption (DocumentOption.Orientation, "Paper.1", true, e, d, "Orientation", 0));
+
+			list.Add (new VerboseDocumentOption (DocumentOption.LeftMargin,   "Paper.2", true, DocumentOptionValueType.Distance, "Marge gauche",     "20"));
+			list.Add (new VerboseDocumentOption (DocumentOption.RightMargin,  "Paper.2", true, DocumentOptionValueType.Distance, "Marge droite",     "20"));
+			list.Add (new VerboseDocumentOption (DocumentOption.TopMargin,    "Paper.2", true, DocumentOptionValueType.Distance, "Marge supérieure", "20"));
+			list.Add (new VerboseDocumentOption (DocumentOption.BottomMargin, "Paper.2", true, DocumentOptionValueType.Distance, "Marge inférieure", "20"));
 
 			//	Ajoute les options d'impression générales.
 			list.Add (new VerboseDocumentOption ("Options générales", "Global"));
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLogo, "Global", true, DocumentOptionValueType.Boolean, "Imprime le logo de l'entreprise",    "true"));
-			list.Add (new VerboseDocumentOption (DocumentOption.Specimen,   "Global", true, DocumentOptionValueType.Boolean, "Incruste la mention SPECIMEN",       "false"));
-			list.Add (new VerboseDocumentOption (DocumentOption.Signing,    "Global", true, DocumentOptionValueType.Boolean, "Cartouche pour visa avec signature", "true"));
 
-			list.Add (new VerboseDocumentOption (DocumentOption.FontSize, "Global", true, DocumentOptionValueType.Size, "Taille de la police", "3"));
+			list.Add (new VerboseDocumentOption (DocumentOption.FontSize, "Global.1", true, DocumentOptionValueType.Size, "Taille de la police", "3"));
 
-			list.Add (new VerboseDocumentOption (DocumentOption.LeftMargin,   "Global", true, DocumentOptionValueType.Distance, "Marge gauche",     "20"));
-			list.Add (new VerboseDocumentOption (DocumentOption.RightMargin,  "Global", true, DocumentOptionValueType.Distance, "Marge droite",     "20"));
-			list.Add (new VerboseDocumentOption (DocumentOption.TopMargin,    "Global", true, DocumentOptionValueType.Distance, "Marge supérieure", "20"));
-			list.Add (new VerboseDocumentOption (DocumentOption.BottomMargin, "Global", true, DocumentOptionValueType.Distance, "Marge inférieure", "20"));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLogo, "Global.2", true, DocumentOptionValueType.Boolean, "Imprime le logo de l'entreprise",    "true"));
+			list.Add (new VerboseDocumentOption (DocumentOption.Specimen,   "Global.2", true, DocumentOptionValueType.Boolean, "Incruste la mention SPECIMEN",       "false"));
+			list.Add (new VerboseDocumentOption (DocumentOption.Signing,    "Global.2", true, DocumentOptionValueType.Boolean, "Cartouche pour visa avec signature", "true"));
 
 			list.Add (new VerboseDocumentOption ("Aspect des listes", "LayoutFrame"));
+
 			e = new string[] { "Frameless", "WithLine", "WithFrame" };
 			d = new string[] { "Espacé, sans encadrements", "Espacé, avec des lignes de séparation", "Serré, avec des encadrements" };
-			list.Add (new VerboseDocumentOption (DocumentOption.LayoutFrame, "LayoutFrame", true, e, d, 1));
+			list.Add (new VerboseDocumentOption (DocumentOption.LayoutFrame, "LayoutFrame.1", true, e, d, "Cadre", 1));
 
-			list.Add (new VerboseDocumentOption (DocumentOption.GapBeforeGroup, "LayoutFrame", true, DocumentOptionValueType.Boolean, "Interligne supplémentaire entre les groupes", "true"));
+			list.Add (new VerboseDocumentOption (DocumentOption.GapBeforeGroup, "LayoutFrame.2", true, DocumentOptionValueType.Boolean, "Interligne supplémentaire entre les groupes", "true"));
 
-			list.Add (new VerboseDocumentOption (DocumentOption.IndentWidth, "LayoutFrame", true, DocumentOptionValueType.Distance, "Longueur à indenter par niveau", "3"));
+			list.Add (new VerboseDocumentOption (DocumentOption.IndentWidth, "LayoutFrame.3", true, DocumentOptionValueType.Distance, "Longueur à indenter par niveau", "3"));
 
-			list.Add (new VerboseDocumentOption ("Numérotation", "LineNumber"));
+			//	Ajoute les options d'impression pour les documents commerciaux.
+			list.Add (new VerboseDocumentOption ("Options pour les documents commerciaux", "BusinessDocument"));
+
 			e = new string[] { "None", "Group", "Line", "Full" };
-			d = new string[] { "Aucune", "Numérotation des groupes", "Numérotation plate des lignes", "Numérotation hiérarchique des lignes" };
-			list.Add (new VerboseDocumentOption (DocumentOption.LineNumber, "LineNumber", true, e, d, 0));
+			d = new string[] { "Pas de numérotation", "Numérotation des groupes", "Numérotation plate des lignes", "Numérotation hiérarchique des lignes" };
+			list.Add (new VerboseDocumentOption (DocumentOption.LineNumber, "BusinessDocument.1", true, e, d, "Numérotation", 0));
 
-			//	Ajoute les options d'impression liées aux factures.
-			list.Add (new VerboseDocumentOption ("Options pour les factures", "InvoiceOption"));
-			list.Add (new VerboseDocumentOption (DocumentOption.ArticleAdditionalQuantities, "InvoiceOption", false, DocumentOptionValueType.Boolean, "Imprime les autres quantités", "true"));
-			list.Add (new VerboseDocumentOption (DocumentOption.ArticleId,                   "InvoiceOption", false, DocumentOptionValueType.Boolean, "Imprime les identificateurs d'article", "false"));
+			list.Add (new VerboseDocumentOption (DocumentOption.ArticleAdditionalQuantities, "BusinessDocument.2", false, DocumentOptionValueType.Boolean, "Imprime les autres quantités", "true"));
+			list.Add (new VerboseDocumentOption (DocumentOption.ArticleId,                   "BusinessDocument.2", false, DocumentOptionValueType.Boolean, "Imprime les identificateurs d'article", "false"));
 
-			list.Add (new VerboseDocumentOption ("Ordre des colonnes", "ColumnsOrder"));
 			e = new string[] { "QD", "DQ" };
 			d = new string[] { "Quantité, Désignation, Prix", "Désignation, Quantité, Prix" };
-			list.Add (new VerboseDocumentOption (DocumentOption.ColumnsOrder, "ColumnsOrder", false, e, d, 0));
+			list.Add (new VerboseDocumentOption (DocumentOption.ColumnsOrder, "BusinessDocument.3", false, e, d, "Ordre des colonnes", 0));
 
-			//	Ajoute les options d'impression liées aux BV.
-			list.Add (new VerboseDocumentOption ("Type de la facture", "IsrPosition"));
+			//	Ajoute les options d'impression pour les factures.
+			list.Add (new VerboseDocumentOption ("Options pour les factures", "Invoice"));
+
 			e = new string[] { "Without", "WithInside", "WithOutside" };
 			d = new string[] { "Facture sans BV", "Facture avec BV intégré", "Facture avec BV séparé" };
-			list.Add (new VerboseDocumentOption (DocumentOption.IsrPosition, "IsrPosition", false, e, d, 0));
+			list.Add (new VerboseDocumentOption (DocumentOption.IsrPosition, "Invoice.1", false, e, d, "Type de la facture", 0));
 
-			list.Add (new VerboseDocumentOption ("Type de bulletin de versement", "IsrType"));
 			e = new string[] { "Isr", "Is" };
 			d = new string[] { "BV orange", "BV rose" };
-			list.Add (new VerboseDocumentOption (DocumentOption.IsrType, "IsrType", false, e, d, 0));
+			list.Add (new VerboseDocumentOption (DocumentOption.IsrType, "Invoice.2", false, e, d, "Type de bulletin de versement", 0));
 
-			list.Add (new VerboseDocumentOption ("Mode d'impression du BV", "InvoiceIsrMode"));
-			list.Add (new VerboseDocumentOption (DocumentOption.IsrFacsimile, "InvoiceIsrMode", true, DocumentOptionValueType.Boolean, "Fac-similé complet du BV", "true"));
+			list.Add (new VerboseDocumentOption (DocumentOption.IsrFacsimile, "Invoice.3", true, DocumentOptionValueType.Boolean, "Fac-similé complet du BV", "true"));
 
 			//	Ajoute les options pour les clients.
-			list.Add (new VerboseDocumentOption ("Données du client à inclure", "Relation"));
-			list.Add (new VerboseDocumentOption (DocumentOption.RelationMail,    "Relation", false, DocumentOptionValueType.Boolean,  "Adresses",   "true"));
-			list.Add (new VerboseDocumentOption (DocumentOption.RelationTelecom, "Relation", false, DocumentOptionValueType.Boolean,  "Téléphones", "true"));
-			list.Add (new VerboseDocumentOption (DocumentOption.RelationUri,     "Relation", false, DocumentOptionValueType.Boolean,  "Emails",     "true"));
+			list.Add (new VerboseDocumentOption ("Résumé d'un client", "Relation"));
+
+			list.Add (new VerboseDocumentOption (DocumentOption.RelationMail,    "Relation.1", false, DocumentOptionValueType.Boolean,  "Inclure les adresses",   "true"));
+			list.Add (new VerboseDocumentOption (DocumentOption.RelationTelecom, "Relation.1", false, DocumentOptionValueType.Boolean,  "Inclure les téléphones", "true"));
+			list.Add (new VerboseDocumentOption (DocumentOption.RelationUri,     "Relation.1", false, DocumentOptionValueType.Boolean,  "Inclure les emails",     "true"));
 
 			VerboseDocumentOption.allOptions = list;
 		}
