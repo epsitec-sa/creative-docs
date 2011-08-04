@@ -85,13 +85,13 @@ namespace Epsitec.Cresus.Core.Server
 
 			dic.Add ("title", this.entity.GetType ().ToString ());
 
-			var deferredItems = new List<Dictionary<string, object>> ();
-			dic.Add ("deferredItems", deferredItems);
+			var items = new List<Dictionary<string, object>> ();
+			dic.Add ("items", items);
 
 			foreach (var brick in customerSummaryWall.Bricks)
 			{
 				var panels = GetPanels (brick);
-				deferredItems.AddRange (panels);
+				items.AddRange (panels);
 			}
 
 			return dic;
@@ -193,11 +193,10 @@ namespace Epsitec.Cresus.Core.Server
 
 		private List<Dictionary<string, object>> CreatePanelsForEntity(Brick brick, TileDataItem item, AbstractEntity entity)
 		{
-			var parent = new Dictionary<string, object> ();
-
-			parent.Add ("name", "Epsitec.Cresus.Core.Static.SummaryWallPanel");
 			var options = new Dictionary<string, object> ();
-			parent.Add ("options", options);
+
+			var controllerName = GetControllerName (this.controllerMode);
+			options.Add ("xtype", controllerName);
 
 			options.Add ("title", item.Title.ToSimpleText ());
 
@@ -226,7 +225,7 @@ namespace Epsitec.Cresus.Core.Server
 
 
 			var list = new List<Dictionary<string, object>> ();
-			list.Add (parent);
+			list.Add (options);
 			if (children != null && children.Any ())
 			{
 				list.AddRange (children);
@@ -266,13 +265,17 @@ namespace Epsitec.Cresus.Core.Server
 
 				// Recursively build the panels
 				var childPanel = PanelBuilder.BuildController (child, this.controllerMode, this.coreSession);
-				list.AddRange (childPanel["deferredItems"] as List<Dictionary<string, object>>);
+				list.AddRange (childPanel["items"] as List<Dictionary<string, object>>);
 			}
 
 			return list;
 
 		}
 
+		private string GetControllerName(ViewControllerMode mode)
+		{
+			return this.controllerMode.ToString ().ToLower ();
+		}
 		/// <summary>
 		/// Get the filename of an image
 		/// </summary>
