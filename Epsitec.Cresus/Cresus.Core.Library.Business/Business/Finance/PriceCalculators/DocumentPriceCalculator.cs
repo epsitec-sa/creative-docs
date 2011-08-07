@@ -240,7 +240,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			System.Diagnostics.Debug.Assert (this.currentGroup != null);
 			// TODO: [DR] Pour une raison que j'ignore, cet Assert arrive fréquemment !
-			//?System.Diagnostics.Debug.Assert (this.currentGroup.GroupLevel == groupLevel);
+			System.Diagnostics.Debug.Assert (this.currentGroup.GroupLevel == groupLevel);
 
 			this.calculators.Add (calculator);
 			
