@@ -212,6 +212,11 @@ namespace Epsitec.Cresus.Core.Server
 				parent["iconCls"] = iconCls;
 			}
 
+			if (item.DefaultMode == ViewControllerMode.Summary)
+			{
+				parent["clickToEdit"] = false;
+			}
+
 
 
 			var summary = GetContent (entity);
