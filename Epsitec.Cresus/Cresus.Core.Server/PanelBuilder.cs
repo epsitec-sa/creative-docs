@@ -325,6 +325,9 @@ namespace Epsitec.Cresus.Core.Server
 			//int    height = InputProcessor.GetInputHeight (fieldProperties);
 			string title  = PanelBuilder.GetInputTitle (fieldProperties);
 
+			var caption   = EntityInfo.GetFieldCaption (lambda);
+			title     = title ?? PanelBuilder.GetInputTitle (caption);
+
 			//System.Collections.IEnumerable collection = InputProcessor.GetInputCollection (fieldProperties);
 			//int? specialController = InputProcessor.GetSpecialController (fieldProperties);
 
@@ -390,9 +393,11 @@ namespace Epsitec.Cresus.Core.Server
 				if (obj != null)
 				{
 					var d = (obj as Date?);
-					dic["format"] = "d.n.Y";
+					dic["format"] = "d.m.Y";
 					dic["value"] = d.Value.ToString ();
 				}
+
+				return dic;
 			}
 
 			//if (fieldType.IsGenericIListOfEntities ())
@@ -409,21 +414,27 @@ namespace Epsitec.Cresus.Core.Server
 			//    return;
 			//}
 
-			//var underlyingType = fieldType.GetNullableTypeUnderlyingType ();
+			var underlyingType = fieldType.GetNullableTypeUnderlyingType ();
 
-			//if ((fieldType.IsEnum) ||
-			//        ((underlyingType != null) && (underlyingType.IsEnum)))
-			//{
-			//    //	The field is an enumeration : use an AutoCompleteTextField for it.
+			if ((fieldType.IsEnum) ||
+			        ((underlyingType != null) && (underlyingType.IsEnum)))
+			{
+				//	The field is an enumeration : use an AutoCompleteTextField for it.
 
-			//    var factory = DynamicFactories.EnumAutoCompleteTextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, width);
-			//    this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder))
-			//    {
-			//        FieldInfo = fieldMode
-			//    });
+				//var factory = DynamicFactories.EnumAutoCompleteTextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, width);
+				//this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder))
+				//{
+				//    FieldInfo = fieldMode
+				//});
 
-			//    return;
-			//}
+				//return;
+
+				dic["xtype"] = "epsitec.combo";
+				dic["value"] = obj.ToString ();
+				dic["storeUrl"] = fieldType.Name;
+
+				return dic;
+			}
 
 			//System.Diagnostics.Debug.WriteLine (
 			//    string.Format ("*** Field {0} of type {1} : no automatic binding implemented in Bridge<{2}>",
@@ -446,7 +457,14 @@ namespace Epsitec.Cresus.Core.Server
 			new List<Dictionary<string, object>> ();
 			var list = this.CreateActionsForInput (property.Brick, null);
 			// Computes the average width for each column (+ a little margin)
-			list.ForEach (l => l.Add ("columnWidth", 1.0 / (list.Count + 0.5)));
+
+			foreach (var l in list)
+			{
+				l["columnWidth"] = 1.0 / list.Count;
+				l["margin"] = "0 5 0 0";
+				l.Remove ("fieldLabel");
+			}
+
 			dic["items"] = list;
 
 			//int index = this.actions.Count ();
@@ -713,6 +731,21 @@ namespace Epsitec.Cresus.Core.Server
 			{
 				return null;
 			}
+		}
+
+		public static string GetInputTitle(Caption caption)
+		{
+			if (caption == null)
+			{
+				return null;
+			}
+
+			if (caption.HasLabels)
+			{
+				return caption.DefaultLabel;
+			}
+
+			return caption.Description ?? caption.Name;
 		}
 
 		// Generated files filenames
