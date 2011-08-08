@@ -6,6 +6,7 @@ using Epsitec.Common.Support;
 
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Documents.Verbose;
+using Epsitec.Cresus.Core.Business;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -264,6 +265,9 @@ namespace Epsitec.Cresus.Core.Documents
 				builder.Append ("● <i>Aucune</i>");
 			}
 
+			builder.Append ("<br/> <br/>Adapté aux documents suivants :<br/><font size=\"25%\"><br/></font>");
+			builder.Append (this.GetDocumentTypesSummary ());
+
 			return builder.ToString ();
 		}
 
@@ -276,6 +280,65 @@ namespace Epsitec.Cresus.Core.Documents
 			}
 		}
 
+
+		public FormattedText GetDocumentTypesSummary()
+		{
+			var types = EnumKeyValues.FromEnum<DocumentType> ();
+			var strings = new List<string> ();
+
+			foreach (DocumentType type in this.DocumentTypes)
+			{
+				var t = types.Where (x => x.Key == type).FirstOrDefault ();
+
+				if (t != null)
+				{
+					strings.Add (string.Concat ("● ", t.Values[0]));
+				}
+			}
+
+			if (strings.Count == 0)
+			{
+				strings.Add (string.Concat ("● ", "Tous"));
+			}
+
+			return string.Join ("<br/>", strings);
+		}
+
+		private IEnumerable<DocumentType> DocumentTypes
+		{
+			get
+			{
+				var list = new List<DocumentType> ();
+
+				foreach (DocumentType documentType in System.Enum.GetValues (typeof (DocumentType)))
+				{
+					if (documentType == DocumentType.None   ||
+						documentType == DocumentType.Unknown)
+					{
+						continue;
+					}
+
+					System.Diagnostics.Debug.Assert (PrintingOptionDictionary.getRequiredDocumentOptions != null);
+					var options = PrintingOptionDictionary.getRequiredDocumentOptions (documentType);
+
+					if (options != null)
+					{
+						foreach (var option in this.Options)
+						{
+							if (options.Contains (option) && !list.Contains (documentType))
+							{
+								list.Add (documentType);
+							}
+						}
+					}
+				}
+
+				return list;
+			}
+		}
+
+
+		public static System.Func<DocumentType, IEnumerable<DocumentOption>> getRequiredDocumentOptions;
 
 		private readonly Dictionary<DocumentOption, string>		dictionary;
 	}

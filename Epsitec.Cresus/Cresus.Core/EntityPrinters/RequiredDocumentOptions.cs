@@ -19,6 +19,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			Epsitec.Cresus.Core.Dialogs.PrintOptionsDialog.getRequiredDocumentOptions = RequiredDocumentOptions.GetRequiredDocumentOptions;
 			Epsitec.Cresus.Core.Documents.Verbose.VerboseDocumentOption.getRequiredDocumentOptions = RequiredDocumentOptions.GetRequiredDocumentOptions;
 			Epsitec.Cresus.Core.DocumentOptionsEditor.SelectController.getRequiredDocumentOptions = RequiredDocumentOptions.GetRequiredDocumentOptions;
+			Epsitec.Cresus.Core.Documents.PrintingOptionDictionary.getRequiredDocumentOptions = RequiredDocumentOptions.GetRequiredDocumentOptions;
 		}
 
 		public static void Initialize()
