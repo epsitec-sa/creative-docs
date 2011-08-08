@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Core.Server
 			// Open the main panel
 			var dic = new Dictionary<string, object> ();
 
-			dic.Add ("title", this.entity.GetType ().ToString ());
+			//dic.Add ("title", this.entity.GetType ().ToString ());
 
 			var items = new List<Dictionary<string, object>> ();
 			dic.Add ("items", items);
@@ -125,7 +125,6 @@ namespace Epsitec.Cresus.Core.Server
 				this.ProcessProperty (b, BrickPropertyKey.TextCompact, x => item.CompactText = x);
 
 				this.ProcessProperty (b, BrickPropertyKey.Attribute, x => this.ProcessAttribute (item, x));
-				//this.ProcessProperty (b, BrickPropertyKey.Include, x => this.ProcessInclusion (x));
 
 				if ((!item.Title.IsNullOrEmpty) && (item.CompactTitle.IsNull))
 				{
@@ -136,7 +135,6 @@ namespace Epsitec.Cresus.Core.Server
 				this.ProcessProperty (b, BrickPropertyKey.TitleCompact, x => item.CompactTitleAccessor = x);
 				this.ProcessProperty (b, BrickPropertyKey.Text, x => item.TextAccessor = x);
 				this.ProcessProperty (b, BrickPropertyKey.TextCompact, x => item.CompactTextAccessor = x);
-
 
 				if (Brick.ContainsProperty (b, BrickPropertyKey.CollectionAnnotation))
 				{
@@ -193,45 +191,286 @@ namespace Epsitec.Cresus.Core.Server
 
 		private List<Dictionary<string, object>> CreatePanelsForEntity(Brick brick, TileDataItem item, AbstractEntity entity)
 		{
-			var options = new Dictionary<string, object> ();
+
+			var list = new List<Dictionary<string, object>> ();
+			var parent = new Dictionary<string, object> ();
+			list.Add (parent);
 
 			var controllerName = GetControllerName (this.controllerMode);
-			options.Add ("xtype", controllerName);
+			parent.Add ("xtype", controllerName);
 
-			options.Add ("title", item.Title.ToSimpleText ());
-
-			var summary = entity.GetSummary ().ToString ();
-			options.Add ("html", summary);
+			string title = item.Title.ToSimpleText ();
+			parent.Add ("title", title);
 
 			var entityKey = this.coreSession.GetBusinessContext ().DataContext.GetNormalizedEntityKey (entity).Value.ToString ();
-			options.Add ("entityId", entityKey);
+			parent.Add ("entityId", entityKey);
 
 			var icon = PanelBuilder.CreateIcon (item);
 			if (!icon.Equals (default (KeyValuePair<string, string>)))
 			{
 				var iconCls = PanelBuilder.CreateCssFromIcon (icon.Key, icon.Value);
-				options.Add ("iconCls", iconCls);
+				parent.Add ("iconCls", iconCls);
+			}
+
+
+
+			var summary = GetContent (entity);
+			if (summary != null)
+			{
+				parent.Add ("html", summary);
+			}
+
+			var inputs = CreateInputs (brick);
+			if (inputs != null && inputs.Any ())
+			{
+				parent.Add ("items", inputs);
 			}
 
 			var children = CreateChildren (brick);
-
-
-			var items = new List<object> ();
-			//options.Add ("items", items);
-			var item1 = new Dictionary<string, object> ();
-			item1.Add ("fieldLabel", "Time");
-			item1.Add ("xtype", "datefield");
-			items.Add (item1);
-
-
-			var list = new List<Dictionary<string, object>> ();
-			list.Add (options);
 			if (children != null && children.Any ())
 			{
 				list.AddRange (children);
 			}
 
 			return list;
+		}
+
+		private string GetContent(AbstractEntity entity)
+		{
+			if (this.controllerMode == ViewControllerMode.Summary)
+			{
+				return entity.GetSummary ().ToString ();
+			}
+
+			return null;
+		}
+
+		private List<Dictionary<string, object>> CreateInputs(Brick brick)
+		{
+
+			if (!Brick.ContainsProperty (brick, BrickPropertyKey.Input))
+			{
+				return null;
+			}
+
+			var list = new List<Dictionary<string, object>> ();
+
+			var inputs = Brick.GetProperties (brick, BrickPropertyKey.Input);
+
+			foreach (var property in inputs)
+			{
+				list.AddRange (this.CreateActionsForInput (property.Brick, inputs));
+			}
+
+			return list;
+		}
+
+		private List<Dictionary<string, object>> CreateActionsForInput(Brick brick, BrickPropertyCollection inputProperties)
+		{
+
+			var list = new List<Dictionary<string, object>> ();
+
+			var fieldProperties = Brick.GetProperties (brick, BrickPropertyKey.Field, BrickPropertyKey.HorizontalGroup);
+
+			foreach (var property in fieldProperties)
+			{
+				switch (property.Key)
+				{
+					case BrickPropertyKey.Field:
+						list.Add (this.CreateActionForInputField (property.ExpressionValue, fieldProperties));
+						break;
+
+					case BrickPropertyKey.HorizontalGroup:
+						list.Add (this.CreateActionsForHorizontalGroup (property));
+						break;
+				}
+			}
+
+			//if (inputProperties != null)
+			//{
+			//    if (inputProperties.PeekAfter (BrickPropertyKey.Separator, -1).HasValue)
+			//    {
+			//        this.CreateActionForSeparator ();
+			//    }
+
+			//    if (inputProperties.PeekBefore (BrickPropertyKey.GlobalWarning, -1).HasValue)
+			//    {
+			//        this.CreateActionForGlobalWarning ();
+			//    }
+			//}
+
+			return list;
+		}
+
+
+		private Dictionary<string, object> CreateActionForInputField(Expression expression, BrickPropertyCollection fieldProperties)
+		{
+			var dic = new Dictionary<string, object> ();
+
+			LambdaExpression lambda = expression as LambdaExpression;
+
+			if (lambda == null)
+			{
+				throw new System.ArgumentException (string.Format ("Expression {0} for input must be a lambda", expression.ToString ()));
+			}
+
+			var func   = lambda.Compile ();
+			var obj = func.DynamicInvoke (this.entity);
+			var entity = obj as AbstractEntity;
+
+			var fieldType  = lambda.ReturnType;
+			//var fieldMode  = this.GetFieldEditionSettings (lambda);
+
+			//int    width  = InputProcessor.GetInputWidth (fieldProperties);
+			//int    height = InputProcessor.GetInputHeight (fieldProperties);
+			string title  = PanelBuilder.GetInputTitle (fieldProperties);
+
+			//System.Collections.IEnumerable collection = InputProcessor.GetInputCollection (fieldProperties);
+			//int? specialController = InputProcessor.GetSpecialController (fieldProperties);
+
+
+			dic.Add ("xtype", "textfield");
+			dic.Add ("fieldLabel", title);
+			dic.Add ("name", "first");
+			dic.Add ("allowBlank", false);
+
+			if (fieldType.IsEntity ())
+			{
+				var entityType = entity.GetType ();
+
+				//	The field is an entity : use an AutoCompleteTextField for it.
+
+				//var factory = DynamicFactories.EntityAutoCompleteTextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, collection, specialController);
+				//this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder))
+				//{
+				//    FieldInfo = fieldMode
+				//});
+
+				dic.Add ("value", entity.GetSummary ().ToString ());
+
+				return dic;
+			}
+
+			if (fieldType == typeof (string) ||
+			    fieldType == typeof (FormattedText) ||
+			    fieldType == typeof (long) ||
+			    fieldType == typeof (long?) ||
+			    fieldType == typeof (decimal) ||
+			    fieldType == typeof (decimal?) ||
+			    fieldType == typeof (int) ||
+			    fieldType == typeof (int?) ||
+			    fieldType == typeof (bool) ||
+			    fieldType == typeof (bool?))
+			{
+
+				dic.Add ("value", obj == null ? "" : obj.ToString ());
+
+				//    width = InputProcessor.GetDefaultFieldWidth (fieldType, width);
+
+				//    //	Produce either a text field or a variation of such a widget (pull-down list, etc.)
+				//    //	based on the real type being edited.
+
+				//    var factory = DynamicFactories.TextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, width, height, collection);
+				//    this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder))
+				//    {
+				//        FieldInfo = fieldMode
+				//    });
+
+				//    return;
+
+				return dic;
+			}
+
+			if (fieldType == typeof (System.DateTime) ||
+			    fieldType == typeof (System.DateTime?) ||
+			    fieldType == typeof (Date?) ||
+			    fieldType == typeof (Date?))
+			{
+				dic["xtype"] = "datefield";
+				if (obj != null)
+				{
+					var d = (obj as Date?);
+					dic.Add ("format", "d.n.Y");
+					dic.Add ("value", d.Value.ToString ());
+				}
+			}
+
+			//if (fieldType.IsGenericIListOfEntities ())
+			//{
+			//    //	Produce an item picker for the list of entities. The field type is a collection
+			//    //	of entities represented as [ Field ]--->>* Entity in the Designer.
+
+			//    var factory = DynamicFactories.ItemPickerDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, specialController);
+			//    this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder))
+			//    {
+			//        FieldInfo = fieldMode
+			//    });
+
+			//    return;
+			//}
+
+			//var underlyingType = fieldType.GetNullableTypeUnderlyingType ();
+
+			//if ((fieldType.IsEnum) ||
+			//        ((underlyingType != null) && (underlyingType.IsEnum)))
+			//{
+			//    //	The field is an enumeration : use an AutoCompleteTextField for it.
+
+			//    var factory = DynamicFactories.EnumAutoCompleteTextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, width);
+			//    this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder))
+			//    {
+			//        FieldInfo = fieldMode
+			//    });
+
+			//    return;
+			//}
+
+			//System.Diagnostics.Debug.WriteLine (
+			//    string.Format ("*** Field {0} of type {1} : no automatic binding implemented in Bridge<{2}>",
+			//        lambda.ToString (), fieldType.FullName, typeof (T).Name));
+
+			return dic;
+		}
+
+		private Dictionary<string, object> CreateActionsForHorizontalGroup(BrickProperty property)
+		{
+
+			var dic = new Dictionary<string, object> ();
+
+			dic.Add ("xtype", "fieldset");
+			dic.Add ("layout", "column");
+
+			var title = Brick.GetProperty (property.Brick, BrickPropertyKey.Title).StringValue;
+			dic.Add ("title", title);
+
+			new List<Dictionary<string, object>> ();
+			var list = this.CreateActionsForInput (property.Brick, null);
+			// Computes the average width for each column (+ a little margin)
+			list.ForEach (l => l.Add ("columnWidth", 1.0 / (list.Count + 0.5)));
+			dic.Add ("items", list);
+
+			//int index = this.actions.Count ();
+
+			//var title = Brick.GetProperty (property.Brick, BrickPropertyKey.Title).StringValue;
+
+			//this.CreateActionsForInput (property.Brick, null);
+
+			//var actions = new List<UIAction> ();
+
+			//while (index < this.actions.Count)
+			//{
+			//    actions.Add (this.actions[index]);
+			//    this.actions.RemoveAt (index);
+			//}
+
+			//if (actions.Count == 0)
+			//{
+			//    return;
+			//}
+
+			//this.actions.Add (new UIGroupAction (actions, title));
+
+			return dic;
 		}
 
 
@@ -459,6 +698,20 @@ namespace Epsitec.Cresus.Core.Server
 				case BrickMode.SpecialController3:
 					item.ControllerSubTypeId = (int) (value - BrickMode.SpecialController0);
 					break;
+			}
+		}
+
+		private static string GetInputTitle(BrickPropertyCollection properties)
+		{
+			var property = properties.PeekBefore (BrickPropertyKey.Title, -1);
+
+			if (property.HasValue)
+			{
+				return property.Value.StringValue;
+			}
+			else
+			{
+				return null;
 			}
 		}
 
