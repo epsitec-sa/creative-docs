@@ -35,6 +35,7 @@ namespace Epsitec.Cresus.Core
 		{
 			Library.CoreContext.StartAsInteractive ();
 			Library.UI.Services.Initialize ();
+			Epsitec.Cresus.Core.EntityPrinters.RequiredDocumentOptions.Initialize ();
 
 			using (var app = new CoreApplication ())
 			{

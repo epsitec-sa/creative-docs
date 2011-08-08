@@ -48,14 +48,8 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 			var controller = this.tileContainer.Controller as EntityViewController;
 			var businessContext = controller.BusinessContext;
 
-			var c = new DocumentOptionsEditor.DocumentOptionsEditorController (businessContext, this.documentOptionsEntity, this.GetRequiredDocumentOptions);
+			var c = new DocumentOptionsEditor.DocumentOptionsEditorController (businessContext, this.documentOptionsEntity);
 			c.CreateUI (box);
-		}
-
-		private IEnumerable<DocumentOption> GetRequiredDocumentOptions(DocumentType documentType)
-		{
-			// TODO: à finir...
-			return Epsitec.Cresus.Core.Print.EntityPrinters.AbstractPrinter.GetRequiredDocumentOptions (null, null);
 		}
 
 

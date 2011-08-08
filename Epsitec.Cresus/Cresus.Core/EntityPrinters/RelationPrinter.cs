@@ -38,7 +38,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			get
 			{
 				yield return DocumentOption.Orientation;
-				yield return DocumentOption.HeaderLogo;
 				yield return DocumentOption.Specimen;
 				yield return DocumentOption.FontSize;
 
@@ -458,11 +457,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				}
 
 				return new RelationPrinter (businessContext, entity, options, printingUnits);
-			}
-
-			public IEnumerable<DocumentOption> GetRequiredDocumentOptions(AbstractEntity entity, PrintingOptionDictionary options)
-			{
-				return RelationPrinter.RequiredDocumentOptions;
 			}
 
 			#endregion

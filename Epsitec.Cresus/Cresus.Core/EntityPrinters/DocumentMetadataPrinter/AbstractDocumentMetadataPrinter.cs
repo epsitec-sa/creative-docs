@@ -41,6 +41,37 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			this.columnsWithoutRightBorder = new List<TableColumnKeys> ();
 		}
 
+
+		public static IEnumerable<DocumentOption> GetRequiredDocumentOptions(DocumentType documentType)
+		{
+			switch (documentType)
+			{
+				case DocumentType.SalesQuote:
+					return SalesQuoteDocumentPrinter.RequiredDocumentOptions;
+
+				case DocumentType.OrderBooking:
+					return OrderBookingDocumentPrinter.RequiredDocumentOptions;
+
+				case DocumentType.OrderConfirmation:
+					return OrderConfirmationDocumentPrinter.RequiredDocumentOptions;
+
+				case DocumentType.ProductionOrder:
+					return ProductionOrderDocumentPrinter.RequiredDocumentOptions;
+
+				case DocumentType.ProductionChecklist:
+					return ProductionChecklistDocumentPrinter.RequiredDocumentOptions;
+
+				case DocumentType.DeliveryNote:
+					return DeliveryNoteDocumentPrinter.RequiredDocumentOptions;
+
+				case DocumentType.Invoice:
+					return InvoiceDocumentPrinter.RequiredDocumentOptions;
+			}
+
+			return null;
+		}
+
+
 		public override string JobName
 		{
 			get
@@ -1272,37 +1303,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 					case DocumentType.Invoice:
 						return new InvoiceDocumentPrinter (businessContext, entity, options, printingUnits);
-				}
-
-				return null;
-			}
-
-			public IEnumerable<DocumentOption> GetRequiredDocumentOptions(AbstractEntity entity, PrintingOptionDictionary options)
-			{
-				var documentMetadata = entity as DocumentMetadataEntity;
-
-				switch (documentMetadata.DocumentCategory.DocumentType)
-				{
-					case DocumentType.SalesQuote:
-						return SalesQuoteDocumentPrinter.RequiredDocumentOptions;
-
-					case DocumentType.OrderBooking:
-						return OrderBookingDocumentPrinter.RequiredDocumentOptions;
-
-					case DocumentType.OrderConfirmation:
-						return OrderConfirmationDocumentPrinter.RequiredDocumentOptions;
-
-					case DocumentType.ProductionOrder:
-						return ProductionOrderDocumentPrinter.RequiredDocumentOptions;
-
-					case DocumentType.ProductionChecklist:
-						return ProductionChecklistDocumentPrinter.RequiredDocumentOptions;
-
-					case DocumentType.DeliveryNote:
-						return DeliveryNoteDocumentPrinter.RequiredDocumentOptions;
-
-					case DocumentType.Invoice:
-						return InvoiceDocumentPrinter.RequiredDocumentOptions;
 				}
 
 				return null;

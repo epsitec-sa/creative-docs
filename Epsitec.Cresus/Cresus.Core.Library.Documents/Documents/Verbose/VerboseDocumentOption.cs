@@ -153,7 +153,8 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 						continue;
 					}
 
-					var options = DocumentOptionDocumentTypeGlu.GetRequiredDocumentOptions (documentType);
+					System.Diagnostics.Debug.Assert (VerboseDocumentOption.getRequiredDocumentOptions != null);
+					var options = VerboseDocumentOption.getRequiredDocumentOptions (documentType);
 
 					if (options != null && options.Contains (this.Option))
 					{
@@ -261,6 +262,8 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 			VerboseDocumentOption.allOptions = list;
 		}
 
+
+		public static System.Func<DocumentType, IEnumerable<DocumentOption>> getRequiredDocumentOptions;
 
 		private static IEnumerable<VerboseDocumentOption> allOptions;
 	}
