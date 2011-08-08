@@ -324,7 +324,7 @@ namespace Epsitec.Cresus.Core.Server
 			var entity = obj as AbstractEntity;
 
 			var fieldType  = lambda.ReturnType;
-			//var fieldMode  = this.GetFieldEditionSettings (lambda);
+			var fieldMode  = this.GetFieldEditionSettings (lambda);
 
 			//int    width  = InputProcessor.GetInputWidth (fieldProperties);
 			//int    height = InputProcessor.GetInputHeight (fieldProperties);
@@ -339,7 +339,7 @@ namespace Epsitec.Cresus.Core.Server
 
 			dic["xtype"] = "textfield";
 			dic["fieldLabel"] = title;
-			dic["name"] = "first";
+			dic["name"] = fieldMode.FieldId.ToString ().Trim ('[', ']');
 			dic["allowBlank"] = false;
 
 			if (fieldType.IsEntity ())
@@ -751,6 +751,16 @@ namespace Epsitec.Cresus.Core.Server
 			}
 
 			return caption.Description ?? caption.Name;
+		}
+
+		private FieldInfo GetFieldEditionSettings(LambdaExpression lambda)
+		{
+			//FieldInfo info = new FieldInfo (EntityInfo<T>.GetTypeId (), lambda);
+			//info.Settings = this.bridge.bridgeContext.FeatureManager.GetFieldEditionSettings (info.EntityId, info.FieldId);
+			//return info;
+
+			FieldInfo info = new FieldInfo (EntityInfo<AbstractContactEntity>.GetTypeId (), lambda);
+			return info;
 		}
 
 		// Generated files filenames
