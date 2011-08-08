@@ -83,10 +83,10 @@ namespace Epsitec.Cresus.Core.Server
 			// Open the main panel
 			var dic = new Dictionary<string, object> ();
 
-			//dic.Add ("title", this.entity.GetType ().ToString ());
+			//dic["title"] = this.entity.GetType ().ToString ();
 
 			var items = new List<Dictionary<string, object>> ();
-			dic.Add ("items", items);
+			dic["items"] = items;
 
 			foreach (var brick in customerSummaryWall.Bricks)
 			{
@@ -197,19 +197,19 @@ namespace Epsitec.Cresus.Core.Server
 			list.Add (parent);
 
 			var controllerName = GetControllerName (this.controllerMode);
-			parent.Add ("xtype", controllerName);
+			parent["xtype"] = controllerName;
 
 			string title = item.Title.ToSimpleText ();
-			parent.Add ("title", title);
+			parent["title"] = title;
 
 			var entityKey = this.coreSession.GetBusinessContext ().DataContext.GetNormalizedEntityKey (entity).Value.ToString ();
-			parent.Add ("entityId", entityKey);
+			parent["entityId"] = entityKey;
 
 			var icon = PanelBuilder.CreateIcon (item);
 			if (!icon.Equals (default (KeyValuePair<string, string>)))
 			{
 				var iconCls = PanelBuilder.CreateCssFromIcon (icon.Key, icon.Value);
-				parent.Add ("iconCls", iconCls);
+				parent["iconCls"] = iconCls;
 			}
 
 
@@ -217,13 +217,13 @@ namespace Epsitec.Cresus.Core.Server
 			var summary = GetContent (entity);
 			if (summary != null)
 			{
-				parent.Add ("html", summary);
+				parent["html"] = summary;
 			}
 
 			var inputs = CreateInputs (brick);
 			if (inputs != null && inputs.Any ())
 			{
-				parent.Add ("items", inputs);
+				parent["items"] = inputs;
 			}
 
 			var children = CreateChildren (brick);
@@ -329,10 +329,10 @@ namespace Epsitec.Cresus.Core.Server
 			//int? specialController = InputProcessor.GetSpecialController (fieldProperties);
 
 
-			dic.Add ("xtype", "textfield");
-			dic.Add ("fieldLabel", title);
-			dic.Add ("name", "first");
-			dic.Add ("allowBlank", false);
+			dic["xtype"] = "textfield";
+			dic["fieldLabel"] = title;
+			dic["name"] = "first";
+			dic["allowBlank"] = false;
 
 			if (fieldType.IsEntity ())
 			{
@@ -346,7 +346,7 @@ namespace Epsitec.Cresus.Core.Server
 				//    FieldInfo = fieldMode
 				//});
 
-				dic.Add ("value", entity.GetSummary ().ToString ());
+				dic["value"] = entity.GetSummary ().ToString ();
 
 				return dic;
 			}
@@ -363,7 +363,7 @@ namespace Epsitec.Cresus.Core.Server
 			    fieldType == typeof (bool?))
 			{
 
-				dic.Add ("value", obj == null ? "" : obj.ToString ());
+				dic["value"] = obj == null ? "" : obj.ToString ();
 
 				//    width = InputProcessor.GetDefaultFieldWidth (fieldType, width);
 
@@ -390,8 +390,8 @@ namespace Epsitec.Cresus.Core.Server
 				if (obj != null)
 				{
 					var d = (obj as Date?);
-					dic.Add ("format", "d.n.Y");
-					dic.Add ("value", d.Value.ToString ());
+					dic["format"] = "d.n.Y";
+					dic["value"] = d.Value.ToString ();
 				}
 			}
 
@@ -437,17 +437,17 @@ namespace Epsitec.Cresus.Core.Server
 
 			var dic = new Dictionary<string, object> ();
 
-			dic.Add ("xtype", "fieldset");
-			dic.Add ("layout", "column");
+			dic["xtype"] = "fieldset";
+			dic["layout"] = "column";
 
 			var title = Brick.GetProperty (property.Brick, BrickPropertyKey.Title).StringValue;
-			dic.Add ("title", title);
+			dic["title"] = title;
 
 			new List<Dictionary<string, object>> ();
 			var list = this.CreateActionsForInput (property.Brick, null);
 			// Computes the average width for each column (+ a little margin)
 			list.ForEach (l => l.Add ("columnWidth", 1.0 / (list.Count + 0.5)));
-			dic.Add ("items", list);
+			dic["items"] = list;
 
 			//int index = this.actions.Count ();
 
