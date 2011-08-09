@@ -1,6 +1,9 @@
-﻿using Epsitec.Cresus.DataLayer.Context;
-using Epsitec.Common.Support.EntityEngine;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Cresus.Core.Server.AdditionalResponses;
+using Epsitec.Cresus.DataLayer.Context;
+using Nancy;
 
 namespace Epsitec.Cresus.Core.Server.Modules
 {
@@ -17,6 +20,8 @@ namespace Epsitec.Cresus.Core.Server.Modules
 				var entityKey = EntityKey.Parse (parameters.id);
 				AbstractEntity entity = context.DataContext.ResolveEntity (entityKey);
 
+				var errors = new Dictionary<string, object> ();
+
 				foreach (var key in Request.Form.GetDynamicMemberNames ())
 				{
 					var k = string.Format ("[{0}]", key);
@@ -25,14 +30,21 @@ namespace Epsitec.Cresus.Core.Server.Modules
 					{
 						entity.SetField (k, v);
 					}
-					catch (System.Exception)
+					catch (System.Exception e)
 					{
-						// TODO Enlever à la fin des tests
+						errors.Add (key, e.ToString ());
 					}
 				}
 				context.SaveChanges ();
 
-				return "ok";
+				if (errors.Any ())
+				{
+					return Response.AsErrorExtJsForm (errors);
+				}
+				else
+				{
+					return Response.AsSuccessExtJsForm ();
+				}
 			};
 		}
 	}

@@ -1,8 +1,7 @@
 ﻿using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.DataLayer.Context;
 using Nancy;
-using Epsitec.Cresus.Core.Controllers;
-using System.Collections.Generic;
 
 
 namespace Epsitec.Cresus.Core.Server.Modules

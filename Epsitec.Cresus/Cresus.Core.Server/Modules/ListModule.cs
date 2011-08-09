@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Support.Extensions;
-using Epsitec.Cresus.Core.Entities;
-using Nancy;
-using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Business.Finance;
+using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Library;
+using Nancy;
 
 namespace Epsitec.Cresus.Core.Server.Modules
 {
