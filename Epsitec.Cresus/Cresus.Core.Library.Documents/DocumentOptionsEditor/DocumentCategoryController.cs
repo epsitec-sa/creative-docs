@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 
 		public void CreateDocumentType(Widget parent)
 		{
-			this.CreateTitle (parent, "Type du document", false);
+			this.CreateTitle (parent, "Type du document");
 
 			var combo = new TextFieldCombo
 			{
@@ -101,11 +101,12 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 				var extract = this.optionInformations.Where (x => x.Used != 0 && x.Used == x.Total);
 				if (extract.Any ())
 				{
-					this.CreateTitle (parent, "Options parfaitement adaptées", true);
+					var frame = this.CreateColorizedFrameBox (parent, Color.FromRgb (221.0/255.0, 255.0/255.0, 227.0/255.0));
+					this.CreateTitle (frame, "Options parfaitement adaptées");
 
 					foreach (var optionInformation in extract)
 					{
-						this.CreateCheckButton (parent, optionInformation);
+						this.CreateCheckButton (frame, optionInformation);
 					}
 				}
 			}
@@ -115,11 +116,12 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 				var extract = this.optionInformations.Where (x => x.Used != 0 && x.Used < x.Total);
 				if (extract.Any ())
 				{
-					this.CreateTitle (parent, "Options partiellement adaptées", true);
+					var frame = this.CreateColorizedFrameBox (parent, Color.FromRgb (255.0/255.0, 246.0/255.0, 224.0/255.0));
+					this.CreateTitle (frame, "Options partiellement adaptées");
 
 					foreach (var optionInformation in extract)
 					{
-						this.CreateCheckButton (parent, optionInformation);
+						this.CreateCheckButton (frame, optionInformation);
 					}
 				}
 			}
@@ -129,24 +131,38 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 				var extract = this.optionInformations.Where (x => x.Used == 0);
 				if (extract.Any ())
 				{
-					this.CreateTitle (parent, "Options pas adaptées", true);
+					var frame = this.CreateColorizedFrameBox (parent, Color.FromRgb (255.0/255.0, 224.0/255.0, 224.0/255.0));
+					this.CreateTitle (frame, "Options pas adaptées");
 
 					foreach (var optionInformation in extract)
 					{
-						this.CreateCheckButton (parent, optionInformation);
+						this.CreateCheckButton (frame, optionInformation);
 					}
 				}
 			}
 		}
 
-		private void CreateTitle(Widget parent, FormattedText title, bool hasTopMargin)
+		private FrameBox CreateColorizedFrameBox(Widget parent, Color color)
+		{
+			return new FrameBox
+			{
+				Parent = parent,
+				DrawFullFrame = true,
+				BackColor = color,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 5, 0),
+				Padding = new Margins (5),
+			};
+		}
+
+		private void CreateTitle(Widget parent, FormattedText title)
 		{
 			new StaticText
 			{
 				Parent = parent,
 				FormattedText = FormattedText.Concat (title, " :"),
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, hasTopMargin ? 10 : 0, 2),
+				Margins = new Margins (0, 0, 0, 2),
 			};
 		}
 
@@ -159,11 +175,18 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 				Dock = DockStyle.Top,
 			};
 
+			bool check = this.documentCategoryEntity.DocumentOptions.Contains (optionInformation.Entity);
+
 			var button = new CheckButton
 			{
 				Parent = frame,
 				FormattedText = optionInformation.Entity.Name,
+				ActiveState = check ? ActiveState.Yes : ActiveState.No,
 				Dock = DockStyle.Fill,
+			};
+
+			button.ActiveStateChanged += delegate
+			{
 			};
 
 			new StaticText
