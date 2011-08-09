@@ -29,6 +29,7 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 			this.documentCategoryEntity = documentCategoryEntity;
 
 			this.optionInformations = new List<OptionInformation> ();
+			this.optionGroups = new List<OptionGroup> ();
 			
 			this.businessContext.SavingChanges += this.HandleBusinessContextSavingChanges;
 		}
@@ -64,6 +65,7 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 				Parent = parent,
 				IsReadOnly = true,
 				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, -3, 0),
 			};
 
 			var types = EnumKeyValues.FromEnum<DocumentType> ();
@@ -94,49 +96,49 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 		{
 			parent.Children.Clear ();
 
-			this.UpdateOptionInformations ();
+			this.UpdateData ();
 
-			//	Premier choix.
+			//	Premier choix (vert).
 			{
-				var extract = this.optionInformations.Where (x => x.Used != 0 && x.Used == x.Total);
+				var extract = this.optionGroups.Where (x => x.Used != 0 && x.Used == x.Total);
 				if (extract.Any ())
 				{
-					var frame = this.CreateColorizedFrameBox (parent, Color.FromRgb (221.0/255.0, 255.0/255.0, 227.0/255.0));
-					this.CreateTitle (frame, "Options parfaitement adaptées");
+					var frame = this.CreateColorizedFrameBox (parent, Color.FromRgb (221.0/255.0, 255.0/255.0, 227.0/255.0));  // vert clair
+					this.CreateTitle (frame, "Options d'impression parfaitement adaptées");
 
-					foreach (var optionInformation in extract)
+					foreach (var group in extract)
 					{
-						this.CreateCheckButton (frame, optionInformation);
+						this.CreateCheckButton (frame, group);
 					}
 				}
 			}
 
-			//	Deuxième choix.
+			//	Deuxième choix (orange).
 			{
-				var extract = this.optionInformations.Where (x => x.Used != 0 && x.Used < x.Total);
+				var extract = this.optionGroups.Where (x => x.Used != 0 && x.Used < x.Total);
 				if (extract.Any ())
 				{
-					var frame = this.CreateColorizedFrameBox (parent, Color.FromRgb (255.0/255.0, 246.0/255.0, 224.0/255.0));
-					this.CreateTitle (frame, "Options partiellement adaptées");
+					var frame = this.CreateColorizedFrameBox (parent, Color.FromRgb (255.0/255.0, 246.0/255.0, 224.0/255.0));  // orange clair
+					this.CreateTitle (frame, "Options d'impression partiellement adaptées");
 
-					foreach (var optionInformation in extract)
+					foreach (var group in extract)
 					{
-						this.CreateCheckButton (frame, optionInformation);
+						this.CreateCheckButton (frame, group);
 					}
 				}
 			}
 
-			//	Dernier choix.
+			//	Dernier choix (rouge).
 			{
-				var extract = this.optionInformations.Where (x => x.Used == 0);
+				var extract = this.optionGroups.Where (x => x.Used == 0);
 				if (extract.Any ())
 				{
-					var frame = this.CreateColorizedFrameBox (parent, Color.FromRgb (255.0/255.0, 224.0/255.0, 224.0/255.0));
-					this.CreateTitle (frame, "Options pas adaptées");
+					var frame = this.CreateColorizedFrameBox (parent, Color.FromRgb (255.0/255.0, 224.0/255.0, 224.0/255.0));  // rouge clair
+					this.CreateTitle (frame, "Options d'impression pas adaptées");
 
-					foreach (var optionInformation in extract)
+					foreach (var group in extract)
 					{
-						this.CreateCheckButton (frame, optionInformation);
+						this.CreateCheckButton (frame, group);
 					}
 				}
 			}
@@ -162,45 +164,210 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 				Parent = parent,
 				FormattedText = FormattedText.Concat (title, " :"),
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 2),
+				Margins = new Margins (0, 0, 0, 5),
 			};
 		}
 
-		private CheckButton CreateCheckButton(Widget parent, OptionInformation optionInformation)
+		private void CreateCheckButton(Widget parent, OptionGroup group)
 		{
-			var frame = new FrameBox
+			int index = this.optionGroups.IndexOf (group);
+
+			if (group.IsRadio)
 			{
-				Parent = parent,
-				PreferredHeight = 15,
-				Dock = DockStyle.Top,
-			};
+				var frame = new FrameBox
+				{
+					Parent = parent,
+					Dock = DockStyle.Top,
+				};
 
-			bool check = this.documentCategoryEntity.DocumentOptions.Contains (optionInformation.Entity);
+				var leftFrame = new FrameBox
+				{
+					Parent = frame,
+					Dock = DockStyle.Fill,
+				};
 
-			var button = new CheckButton
+				var rightFrame = new FrameBox
+				{
+					Parent = frame,
+					PreferredWidth = 40,
+					Dock = DockStyle.Right,
+				};
+
+				new StaticText
+				{
+					Parent = rightFrame,
+					Text = string.Concat (group.Used.ToString (), "/", group.Total.ToString ()),
+					ContentAlignment = ContentAlignment.MiddleRight,
+					Dock = DockStyle.Fill,
+				};
+
+				var first = new RadioButton
+				{
+					Parent = leftFrame,
+					FormattedText = "Aucune option",
+					Name = string.Concat (index.ToString (), ".-1"),
+					Group = group.Name,
+					PreferredHeight = 15,
+					Dock = DockStyle.Top,
+				};
+
+				first.ActiveStateChanged += delegate
+				{
+					this.ButtonClicked (first);
+				};
+
+				var firstState = ActiveState.Yes;
+
+				for (int i = 0; i < group.OptionInformations.Count; i++)
+				{
+					var entity = group.OptionInformations[i].Entity;
+					bool check = this.documentCategoryEntity.DocumentOptions.Contains (entity);
+
+					if (check)
+					{
+						firstState = ActiveState.No;
+					}
+
+					var button = new RadioButton
+					{
+						Parent = leftFrame,
+						FormattedText = entity.Name,
+						Name = string.Concat (index.ToString (), ".", i.ToString ()),
+						Group = group.Name,
+						ActiveState = check ? ActiveState.Yes : ActiveState.No,
+						PreferredHeight = 15,
+						Dock = DockStyle.Top,
+						Margins = new Margins (0, 0, 0, (i == group.OptionInformations.Count-1) ? 5 : 0),
+					};
+
+					button.ActiveStateChanged += delegate
+					{
+						this.ButtonClicked (button);
+					};
+				}
+
+				first.ActiveState = firstState;
+			}
+			else
 			{
-				Parent = frame,
-				FormattedText = optionInformation.Entity.Name,
-				ActiveState = check ? ActiveState.Yes : ActiveState.No,
-				Dock = DockStyle.Fill,
-			};
+				var frame = new FrameBox
+				{
+					Parent = parent,
+					PreferredHeight = 15,
+					Dock = DockStyle.Top,
+				};
 
-			button.ActiveStateChanged += delegate
-			{
-			};
+				var entity = group.OptionInformations[0].Entity;
+				bool check = this.documentCategoryEntity.DocumentOptions.Contains (entity);
 
-			new StaticText
-			{
-				Parent = frame,
-				Text = string.Concat (optionInformation.Used.ToString (), "/", optionInformation.Total.ToString ()),
-				ContentAlignment = ContentAlignment.MiddleRight,
-				PreferredWidth = 40,
-				Dock = DockStyle.Right,
-			};
+				var button = new CheckButton
+				{
+					Parent = frame,
+					FormattedText = entity.Name,
+					Name = index.ToString (),
+					ActiveState = check ? ActiveState.Yes : ActiveState.No,
+					Dock = DockStyle.Fill,
+				};
 
-			return button;
+				button.ActiveStateChanged += delegate
+				{
+					this.ButtonClicked (button);
+				};
+
+				new StaticText
+				{
+					Parent = frame,
+					Text = string.Concat (group.Used.ToString (), "/", group.Total.ToString ()),
+					ContentAlignment = ContentAlignment.MiddleRight,
+					PreferredWidth = 40,
+					Dock = DockStyle.Right,
+				};
+			}
 		}
 
+
+		private void ButtonClicked(AbstractButton button)
+		{
+			var parts = button.Name.Split ('.');
+
+			if (parts.Length == 1 && button is CheckButton)
+			{
+				int index = int.Parse (parts[0]);
+				var entity = this.optionGroups[index].OptionInformations[0].Entity;
+
+				if (button.ActiveState == ActiveState.Yes)
+				{
+					if (!this.documentCategoryEntity.DocumentOptions.Contains (entity))
+					{
+						this.documentCategoryEntity.DocumentOptions.Add (entity);
+					}
+				}
+				else
+				{
+					if (this.documentCategoryEntity.DocumentOptions.Contains (entity))
+					{
+						this.documentCategoryEntity.DocumentOptions.Remove (entity);
+					}
+				}
+			}
+
+			if (parts.Length == 2 && button is RadioButton)
+			{
+				if (button.ActiveState == ActiveState.Yes)
+				{
+					int index = int.Parse (parts[0]);
+					int group = int.Parse (parts[1]);
+
+					for (int i = 0; i < this.optionGroups[index].OptionInformations.Count; i++)
+					{
+						var entity = this.optionGroups[index].OptionInformations[i].Entity;
+
+						if (this.documentCategoryEntity.DocumentOptions.Contains (entity))
+						{
+							this.documentCategoryEntity.DocumentOptions.Remove (entity);
+						}
+					}
+
+					if (group != -1)
+					{
+						var entity = this.optionGroups[index].OptionInformations[group].Entity;
+						this.documentCategoryEntity.DocumentOptions.Add (entity);
+					}
+				}
+			}
+		}
+
+
+		private void UpdateData()
+		{
+			this.UpdateOptionInformations ();
+			this.UpdateOptionGroup ();
+		}
+
+		private void UpdateOptionGroup()
+		{
+			this.optionGroups.Clear ();
+
+			foreach (var info in this.optionInformations)
+			{
+				if (!info.IsRadio)
+				{
+					var group = new OptionGroup (info);
+
+					foreach (var friend in this.optionInformations)
+					{
+						if (friend != info && !friend.IsRadio && friend.HasSameOptions (info))
+						{
+							info.IsRadio = true;
+							friend.IsRadio = true;
+							group.OptionInformations.Add (friend);
+						}
+					}
+
+					this.optionGroups.Add (group);
+				}
+			}
+		}
 
 		private void UpdateOptionInformations()
 		{
@@ -216,13 +383,13 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 
 		private OptionInformation GetOptionInformation(DocumentOptionsEntity optionEntity)
 		{
+			PrintingOptionDictionary printingOptionDictionary = optionEntity.GetOptions ();
+
 			int count = 0;
 			int total = 0;
 
 			if (this.documentOptions != null)
 			{
-				PrintingOptionDictionary printingOptionDictionary = optionEntity.GetOptions ();
-
 				foreach (var option in printingOptionDictionary.Options)
 				{
 					if (this.documentOptions.Contains (option))
@@ -234,16 +401,69 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 				}
 			}
 
-			return new OptionInformation (optionEntity, count, total);
+			return new OptionInformation (optionEntity, count, total, printingOptionDictionary.Options);
+		}
+
+
+		private class OptionGroup
+		{
+			public OptionGroup(OptionInformation optionInformation)
+			{
+				this.optionInformations = new List<OptionInformation> ();
+				this.optionInformations.Add (optionInformation);
+			}
+
+			public List<OptionInformation> OptionInformations
+			{
+				get
+				{
+					return this.optionInformations;
+				}
+			}
+
+			public int Used
+			{
+				get
+				{
+					return this.optionInformations[0].Used;
+				}
+			}
+
+			public int Total
+			{
+				get
+				{
+					return this.optionInformations[0].Total;
+				}
+			}
+
+			public string Name
+			{
+				get
+				{
+					return this.optionInformations[0].Entity.Name.ToString ();
+				}
+			}
+
+			public bool IsRadio
+			{
+				get
+				{
+					return this.optionInformations.Count > 1;
+				}
+			}
+
+			private readonly List<OptionInformation> optionInformations;
 		}
 
 		private class OptionInformation
 		{
-			public OptionInformation(DocumentOptionsEntity entity, int used, int total)
+			public OptionInformation(DocumentOptionsEntity entity, int used, int total, IEnumerable<DocumentOption> options)
 			{
-				this.Entity = entity;
-				this.Used   = used;
-				this.Total  = total;
+				this.Entity  = entity;
+				this.Used    = used;
+				this.Total   = total;
+				this.options = options;
 			}
 
 			public DocumentOptionsEntity Entity
@@ -263,6 +483,40 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 				get;
 				private set;
 			}
+
+			public bool IsRadio
+			{
+				get;
+				set;
+			}
+
+			public IEnumerable<DocumentOption> Options
+			{
+				get
+				{
+					return this.options;
+				}
+			}
+
+			public bool HasSameOptions(OptionInformation that)
+			{
+				if (this.options.Count () != that.options.Count ())
+				{
+					return false;
+				}
+
+				foreach (var option in this.options)
+				{
+					if (!that.options.Contains (option))
+					{
+						return false;
+					}
+				}
+
+				return true;
+			}
+
+			private readonly IEnumerable<DocumentOption> options;
 		}
 
 
@@ -286,6 +540,7 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 		private readonly IBusinessContext					businessContext;
 		private readonly DocumentCategoryEntity				documentCategoryEntity;
 		private readonly List<OptionInformation>			optionInformations;
+		private readonly List<OptionGroup>					optionGroups;
 
 		private FrameBox									checkButtonsFrame;
 		private IEnumerable<DocumentOption>					documentOptions;
