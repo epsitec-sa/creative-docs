@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Core.Server.Modules
 				foreach (var key in Request.Form.GetDynamicMemberNames ())
 				{
 					var k = string.Format ("[{0}]", key);
-					var v = Request.Form[key].ToString ();
+					var v = Request.Form[key].ToString ().Trim ();
 					try
 					{
 						entity.SetField (k, v);

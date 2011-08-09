@@ -37,6 +37,28 @@ namespace Epsitec.Cresus.Core.Server.Modules
 
 			};
 
+			Get["/articles"] = parameters =>
+			{
+				var coreSession = GetCoreSession ();
+				var context = coreSession.GetBusinessContext ();
+
+				var articles = from x in context.GetAllEntities<ArticleDefinitionEntity> ()
+								select x;
+
+				var obj = new List<object> ();
+
+				articles.ForEach (c => obj.Add (new
+				{
+					name = c.GetCompactSummary ().ToSimpleText (),
+					uniqueId = coreSession.GetBusinessContext ().DataContext.GetNormalizedEntityKey (c).Value.ToString ()
+				}));
+
+				var res = Response.AsJson (obj);
+
+				return res;
+
+			};
+
 			Get["/{name}"] = parameters =>
 			{
 

@@ -340,7 +340,6 @@ namespace Epsitec.Cresus.Core.Server
 			dic["xtype"] = "textfield";
 			dic["fieldLabel"] = title;
 			dic["name"] = fieldMode.FieldId.ToString ().Trim ('[', ']');
-			dic["allowBlank"] = false;
 
 			if (fieldType.IsEntity ())
 			{
@@ -620,7 +619,7 @@ namespace Epsitec.Cresus.Core.Server
 			css += "background-size: 16px 16px;";
 			css += "} ";
 
-			System.IO.File.AppendAllText (PanelBuilder.cssFilename, css);
+			//System.IO.File.AppendAllText (PanelBuilder.cssFilename, css);
 
 			return cssClass;
 		}
