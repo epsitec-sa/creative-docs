@@ -37,13 +37,9 @@
     <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Nancy, Version=0.0.0.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL">
+    <Reference Include="Nancy, Version=0.7.1.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\Nancy.dll</HintPath>
-    </Reference>
-    <Reference Include="Nancy.Hosting.Wcf, Version=0.0.0.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\Nancy.Hosting.Wcf.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -172,7 +168,6 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="lib\Nancy.dll" />
-    <Content Include="lib\Nancy.Hosting.Wcf.dll" />
     <Content Include="lib\README.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

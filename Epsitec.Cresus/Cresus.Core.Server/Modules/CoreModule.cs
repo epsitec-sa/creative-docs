@@ -14,7 +14,8 @@ namespace Epsitec.Cresus.Core.Server.Modules
 
 		internal CoreSession GetCoreSession()
 		{
-			var sessionId = DebugSession.Session["CoreSession"] as string;
+			//var sessionId = DebugSession.Session["CoreSession"] as string;
+			var sessionId = Session["CoreSession"] as string;
 			var session = CoreServer.Instance.GetCoreSession (sessionId);
 
 			if (session == null)
@@ -23,7 +24,8 @@ namespace Epsitec.Cresus.Core.Server.Modules
 				session = server.CreateSession ();
 				PanelBuilder.CoreSession = session;
 
-				DebugSession.Session["CoreSession"] = session.Id;
+				//DebugSession.Session["CoreSession"] = session.Id;
+				Session["CoreSession"] = session.Id;
 			}
 
 			return session;
