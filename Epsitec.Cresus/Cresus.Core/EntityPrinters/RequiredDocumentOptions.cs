@@ -16,15 +16,10 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 {
 	public static class RequiredDocumentOptions
 	{
-		static RequiredDocumentOptions()
+		public static void Initialize()
 		{
 			CresusCore.GetRequiredDocumentOptionsByEntity       = RequiredDocumentOptions.GetRequiredDocumentOptionsByEntity;
 			CresusCore.GetRequiredDocumentOptionsByDocumentType = RequiredDocumentOptions.GetRequiredDocumentOptionsByDocumentType;
-		}
-
-		public static void Initialize()
-		{
-			//	Pour forcer l'exécution du constructeur !
 		}
 
 
