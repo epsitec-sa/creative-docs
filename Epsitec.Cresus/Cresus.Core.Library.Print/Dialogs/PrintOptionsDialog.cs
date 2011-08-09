@@ -320,8 +320,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					this.modifiedOptions.MergeWith (this.categoryOptions);
 					this.modifiedOptions.Remove (this.GetForcingOptions (this.entityToPrint.PrintingUnits));
 
-					System.Diagnostics.Debug.Assert (PrintOptionsDialog.getRequiredDocumentOptions != null);
-					var visibleOptions = PrintOptionsDialog.getRequiredDocumentOptions (this.entityToPrint.Entity);
+					var visibleOptions = Documents.External.CresusCore.GetRequiredDocumentOptionsByEntity (this.entityToPrint.Entity);
 					this.modifiedOptions.Keep (visibleOptions);
 
 					var controller = new DocumentOptionsEditor.OptionsController (this.entityToPrint.Entity, this.modifiedOptions);
@@ -444,8 +443,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		#endregion
 
-
-		public static System.Func<AbstractEntity, IEnumerable<DocumentOption>> getRequiredDocumentOptions;
 
 		private readonly IBusinessContext						businessContext;
 		private readonly List<EntityToPrint>					entitiesToPrint;

@@ -2,8 +2,10 @@
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Support.EntityEngine;
+
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Documents;
+using Epsitec.Cresus.Core.Documents.External;
 using Epsitec.Cresus.Core.Business;
 
 using System.Collections.Generic;
@@ -16,10 +18,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 	{
 		static RequiredDocumentOptions()
 		{
-			Epsitec.Cresus.Core.Dialogs.PrintOptionsDialog.getRequiredDocumentOptions = RequiredDocumentOptions.GetRequiredDocumentOptions;
-			Epsitec.Cresus.Core.Documents.Verbose.VerboseDocumentOption.getRequiredDocumentOptions = RequiredDocumentOptions.GetRequiredDocumentOptions;
-			Epsitec.Cresus.Core.DocumentOptionsEditor.SelectController.getRequiredDocumentOptions = RequiredDocumentOptions.GetRequiredDocumentOptions;
-			Epsitec.Cresus.Core.Documents.PrintingOptionDictionary.getRequiredDocumentOptions = RequiredDocumentOptions.GetRequiredDocumentOptions;
+			CresusCore.GetRequiredDocumentOptionsByEntity       = RequiredDocumentOptions.GetRequiredDocumentOptionsByEntity;
+			CresusCore.GetRequiredDocumentOptionsByDocumentType = RequiredDocumentOptions.GetRequiredDocumentOptionsByDocumentType;
 		}
 
 		public static void Initialize()
@@ -28,13 +28,13 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
-		private static IEnumerable<DocumentOption> GetRequiredDocumentOptions(AbstractEntity entity)
+		private static IEnumerable<DocumentOption> GetRequiredDocumentOptionsByEntity(AbstractEntity entity)
 		{
 			var documentType = RequiredDocumentOptions.GetDocumentType (entity);
-			return RequiredDocumentOptions.GetRequiredDocumentOptions (documentType);
+			return RequiredDocumentOptions.GetRequiredDocumentOptionsByDocumentType (documentType);
 		}
 
-		private static IEnumerable<DocumentOption> GetRequiredDocumentOptions(DocumentType documentType)
+		private static IEnumerable<DocumentOption> GetRequiredDocumentOptionsByDocumentType(DocumentType documentType)
 		{
 			switch (documentType)
 			{

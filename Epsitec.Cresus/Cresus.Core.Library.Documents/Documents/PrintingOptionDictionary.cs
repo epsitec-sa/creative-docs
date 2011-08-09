@@ -318,8 +318,7 @@ namespace Epsitec.Cresus.Core.Documents
 						continue;
 					}
 
-					System.Diagnostics.Debug.Assert (PrintingOptionDictionary.getRequiredDocumentOptions != null);
-					var options = PrintingOptionDictionary.getRequiredDocumentOptions (documentType);
+					var options = External.CresusCore.GetRequiredDocumentOptionsByDocumentType (documentType);
 
 					if (options != null)
 					{
@@ -337,8 +336,6 @@ namespace Epsitec.Cresus.Core.Documents
 			}
 		}
 
-
-		public static System.Func<DocumentType, IEnumerable<DocumentOption>> getRequiredDocumentOptions;
 
 		private readonly Dictionary<DocumentOption, string>		dictionary;
 	}

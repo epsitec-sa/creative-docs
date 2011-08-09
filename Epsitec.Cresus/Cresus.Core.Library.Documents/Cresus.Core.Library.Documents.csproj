@@ -66,6 +66,7 @@
     <Compile Include="Documents\PageTypeConverter.cs" />
     <Compile Include="Documents\PrintingUnit.cs" />
     <Compile Include="Documents\PrintingUnitDictionary.cs" />
+    <Compile Include="External\CresusCore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Documents\SourceCode\Entities.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Documents\SourceCode\Res.cs" />
