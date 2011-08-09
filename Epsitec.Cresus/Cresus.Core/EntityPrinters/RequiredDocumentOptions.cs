@@ -14,6 +14,12 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.EntityPrinters
 {
+	/// <summary>
+	/// Cette classe centralise l’obtention des options d’impression pour un type de document donné.
+	/// Elle doit se trouver dans Cresus.Core, car elle utilise beaucoup de références éparpillées un
+	/// peu partout. Ensuite, elle dispatche les méthodes GetRequiredDocumentOptions* d’une façon un
+	/// peu bricolée, mais je n’ai pas trouvé mieux.
+	/// </summary>
 	public static class RequiredDocumentOptions
 	{
 		public static void Initialize()
@@ -25,12 +31,14 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 		private static IEnumerable<DocumentOption> GetRequiredDocumentOptionsByEntity(AbstractEntity entity)
 		{
+			//	Retourne la liste des options dont peut avoir besoin une entité lorsqu'elle est imprimée.
 			var documentType = RequiredDocumentOptions.GetDocumentType (entity);
 			return RequiredDocumentOptions.GetRequiredDocumentOptionsByDocumentType (documentType);
 		}
 
 		private static IEnumerable<DocumentOption> GetRequiredDocumentOptionsByDocumentType(DocumentType documentType)
 		{
+			//	Retourne la liste des options dont peut avoir besoin un type de document lorsqu'il est imprimé.
 			switch (documentType)
 			{
 				case DocumentType.MailContactLabel:

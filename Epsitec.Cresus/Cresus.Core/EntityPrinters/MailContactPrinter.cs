@@ -39,8 +39,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				yield return DocumentOption.RightMargin;
 				yield return DocumentOption.TopMargin;
 				yield return DocumentOption.BottomMargin;
-
-				yield return DocumentOption.LayoutFrame;
 			}
 		}
 
