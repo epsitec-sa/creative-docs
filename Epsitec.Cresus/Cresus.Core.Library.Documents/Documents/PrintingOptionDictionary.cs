@@ -309,6 +309,7 @@ namespace Epsitec.Cresus.Core.Documents
 			get
 			{
 				var list = new List<DocumentType> ();
+				int implementedDocumentCount = 0;
 
 				foreach (DocumentType documentType in System.Enum.GetValues (typeof (DocumentType)))
 				{
@@ -320,16 +321,26 @@ namespace Epsitec.Cresus.Core.Documents
 
 					var options = External.CresusCore.GetRequiredDocumentOptionsByDocumentType (documentType);
 
-					if (options != null)
+					if (options != null && options.Any ())
 					{
+						implementedDocumentCount++;
+
 						foreach (var option in this.Options)
 						{
-							if (options.Contains (option) && !list.Contains (documentType))
+							if (options.Contains (option))
 							{
-								list.Add (documentType);
+								if (!list.Contains (documentType))
+								{
+									list.Add (documentType);
+								}
 							}
 						}
 					}
+				}
+
+				if (list.Count == implementedDocumentCount)
+				{
+					list.Clear ();
 				}
 
 				return list;
