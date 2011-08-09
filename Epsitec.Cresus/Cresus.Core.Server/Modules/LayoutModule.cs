@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Server.Modules
 		{
 			Get["/{mode}/{id}"] = parameters =>
 			{
-				var coreSession = MainModule.GetCoreSession ();
+				var coreSession = GetCoreSession ();
 				var context = coreSession.GetBusinessContext ();
 
 				var entityKey = EntityKey.Parse (parameters.id);

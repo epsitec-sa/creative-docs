@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Core.Server.Modules
 		{
 		}
 
-		internal static CoreSession GetCoreSession()
+		internal CoreSession GetCoreSession()
 		{
 			var sessionId = DebugSession.Session["CoreSession"] as string;
 			var session = CoreServer.Instance.GetCoreSession (sessionId);
