@@ -30,6 +30,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .Field (x => x.Name)
 				  .Field (x => x.Description)
 				.End ()
+#if false
 				.Separator ()
 				.Input ()
 				  .Field (x => x.DocumentType)
@@ -37,6 +38,20 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .Field (x => x.DocumentFlowDirection)
 				  .Field (x => x.DocumentOptions)
 				  .Field (x => x.DocumentPrintingUnits)
+				.End ()
+#endif
+				.Separator ()
+				.Input ()
+				  .Field (x => x).WithSpecialController ()
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.DocumentPrintingUnits)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.DocumentSource)
+				  .Field (x => x.DocumentFlowDirection)
 				.End ()
 				;
 		}

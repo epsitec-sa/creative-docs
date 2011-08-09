@@ -150,6 +150,7 @@
     <Compile Include="Controllers\SpecialControllers\ArticleDefinitionController.cs" />
     <Compile Include="Controllers\SpecialControllers\ChartsOfAccountsController.cs" />
     <Compile Include="Controllers\SpecialControllers\BusinessDocumentLinesController.cs" />
+    <Compile Include="Controllers\SpecialControllers\DocumentCategoryController.cs" />
     <Compile Include="Controllers\SpecialControllers\ValuesArticleParameterController.cs" />
     <Compile Include="Controllers\SpecialControllers\TableDesignerController.cs" />
     <Compile Include="Controllers\SpecialControllers\ImageActionsController.cs" />

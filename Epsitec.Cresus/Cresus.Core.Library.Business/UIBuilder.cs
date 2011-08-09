@@ -1949,7 +1949,7 @@ namespace Epsitec.Cresus.Core
 		private int								tabIndex;
 		private int								recursionCount;
 		private TitleTile						titleTile;
-		private TitleTileWithVerticalLayout					panelTitleTile;
+		private TitleTileWithVerticalLayout		panelTitleTile;
 		private TileTabBook						tileTabBook;
 		private IList<Widget>					contentList;
 	}
