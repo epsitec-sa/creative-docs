@@ -323,7 +323,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					var visibleOptions = Documents.External.CresusCore.GetRequiredDocumentOptionsByEntity (this.entityToPrint.Entity);
 					this.modifiedOptions.Keep (visibleOptions);
 
-					var controller = new DocumentOptionsEditor.OptionsController (this.entityToPrint.Entity, this.modifiedOptions);
+					var controller = new DocumentOptionsController.OptionsController (this.entityToPrint.Entity, this.modifiedOptions);
 					controller.CreateUI (this.optionsFrame.Viewport, this.OnOptionsChanged);
 				}
 			}

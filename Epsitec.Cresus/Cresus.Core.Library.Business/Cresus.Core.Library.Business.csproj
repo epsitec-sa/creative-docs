@@ -154,7 +154,7 @@
     <Compile Include="Controllers\SpecialControllers\ValuesArticleParameterController.cs" />
     <Compile Include="Controllers\SpecialControllers\TableDesignerController.cs" />
     <Compile Include="Controllers\SpecialControllers\ImageActionsController.cs" />
-    <Compile Include="Controllers\SpecialControllers\DocumentOptionsEditorController.cs" />
+    <Compile Include="Controllers\SpecialControllers\DocumentOptionsController.cs" />
     <Compile Include="Controllers\SpecialControllers\ImageMiniatureController.cs" />
     <Compile Include="Controllers\CoreController.cs" />
     <Compile Include="Controllers\CoreViewController.cs" />

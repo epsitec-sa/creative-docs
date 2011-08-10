@@ -26,9 +26,9 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 	/// <summary>
 	/// Ce contrôleur permet de choisir les options d'impression à éditer, et de les éditer.
 	/// </summary>
-	public class DocumentOptionsEditorController : IEntitySpecialController
+	public class DocumentOptionsController : IEntitySpecialController
 	{
-		public DocumentOptionsEditorController(TileContainer tileContainer, DocumentOptionsEntity documentOptionsEntity)
+		public DocumentOptionsController(TileContainer tileContainer, DocumentOptionsEntity documentOptionsEntity)
 		{
 			this.tileContainer = tileContainer;
 			this.documentOptionsEntity = documentOptionsEntity;
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 			var controller = this.tileContainer.Controller as EntityViewController;
 			var businessContext = controller.BusinessContext;
 
-			var c = new DocumentOptionsEditor.DocumentOptionsEditorController (businessContext, this.documentOptionsEntity);
+			var c = new Cresus.Core.DocumentOptionsController.DocumentOptionsController (businessContext, this.documentOptionsEntity);
 			c.CreateUI (box);
 		}
 
@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 		{
 			protected override IEntitySpecialController Create(TileContainer container, DocumentOptionsEntity entity, int mode)
 			{
-				return new DocumentOptionsEditorController (container, entity);
+				return new DocumentOptionsController (container, entity);
 			}
 		}
 

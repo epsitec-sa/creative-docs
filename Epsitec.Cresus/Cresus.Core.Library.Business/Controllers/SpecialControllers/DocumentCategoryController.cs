@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 			var controller = this.tileContainer.Controller as EntityViewController;
 			var businessContext = controller.BusinessContext;
 
-			var c = new DocumentCategoryEditor.DocumentCategoryController (businessContext, this.documentCategoryEntity);
+			var c = new Cresus.Core.DocumentCategoryController.DocumentCategoryController (businessContext, this.documentCategoryEntity);
 			c.CreateUI (box);
 		}
 

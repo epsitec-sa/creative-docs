@@ -9,7 +9,7 @@ using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
-using Epsitec.Cresus.Core.DocumentOptionsEditor;
+using Epsitec.Cresus.Core.DocumentOptionsController;
 using Epsitec.Cresus.Bricks;
 
 using System.Collections.Generic;
