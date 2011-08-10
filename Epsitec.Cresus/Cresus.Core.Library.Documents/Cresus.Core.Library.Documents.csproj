@@ -56,7 +56,7 @@
     <Compile Include="Documents\PageTypeHelper.cs" />
     <Compile Include="Documents\DocumentOption.cs" />
     <Compile Include="Documents\DocumentOptionConverter.cs" />
-    <Compile Include="DocumentOptionsEditor\DocumentOptionsEditorController.cs" />
+    <Compile Include="DocumentOptionsEditor\DocumentOptionsController.cs" />
     <Compile Include="DocumentOptionsEditor\MainController.cs" />
     <Compile Include="DocumentOptionsEditor\SelectController.cs" />
     <Compile Include="DocumentOptionsEditor\ValuesController.cs" />

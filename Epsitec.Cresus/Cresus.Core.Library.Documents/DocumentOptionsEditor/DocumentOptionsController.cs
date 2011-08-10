@@ -14,11 +14,11 @@ using Epsitec.Cresus.Core.PlugIns;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.DocumentOptionsEditor
+namespace Epsitec.Cresus.Core.DocumentOptionsController
 {
-	public sealed class DocumentOptionsEditorController : System.IDisposable
+	public sealed class DocumentOptionsController : System.IDisposable
 	{
-		public DocumentOptionsEditorController(IBusinessContext businessContext, DocumentOptionsEntity documentOptionsEntity)
+		public DocumentOptionsController(IBusinessContext businessContext, DocumentOptionsEntity documentOptionsEntity)
 		{
 			System.Diagnostics.Debug.Assert (businessContext != null);
 			System.Diagnostics.Debug.Assert (documentOptionsEntity.IsNotNull ());

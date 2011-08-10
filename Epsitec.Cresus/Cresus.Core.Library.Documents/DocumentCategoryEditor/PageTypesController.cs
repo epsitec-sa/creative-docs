@@ -16,7 +16,7 @@ using Epsitec.Cresus.Core.Library;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.DocumentCategoryEditor
+namespace Epsitec.Cresus.Core.DocumentCategoryController
 {
 	public sealed class PageTypesController
 	{
