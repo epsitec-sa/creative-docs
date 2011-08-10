@@ -71,6 +71,35 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			return null;
 		}
 
+		public static IEnumerable<PageType> GetRequiredPageTypes(DocumentType documentType)
+		{
+			switch (documentType)
+			{
+				case DocumentType.SalesQuote:
+					return SalesQuoteDocumentPrinter.RequiredPageTypes;
+
+				case DocumentType.OrderBooking:
+					return OrderBookingDocumentPrinter.RequiredPageTypes;
+
+				case DocumentType.OrderConfirmation:
+					return OrderConfirmationDocumentPrinter.RequiredPageTypes;
+
+				case DocumentType.ProductionOrder:
+					return ProductionOrderDocumentPrinter.RequiredPageTypes;
+
+				case DocumentType.ProductionChecklist:
+					return ProductionChecklistDocumentPrinter.RequiredPageTypes;
+
+				case DocumentType.DeliveryNote:
+					return DeliveryNoteDocumentPrinter.RequiredPageTypes;
+
+				case DocumentType.Invoice:
+					return InvoiceDocumentPrinter.RequiredPageTypes;
+			}
+
+			return null;
+		}
+
 
 		public override string JobName
 		{

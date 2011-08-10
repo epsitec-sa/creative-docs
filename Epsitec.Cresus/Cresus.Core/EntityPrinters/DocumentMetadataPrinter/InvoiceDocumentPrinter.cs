@@ -66,6 +66,15 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
+		public static IEnumerable<PageType> RequiredPageTypes
+		{
+			get
+			{
+				yield return PageType.First;
+				yield return PageType.Isr;
+			}
+		}
+
 
 		protected override Margins PageMargins
 		{

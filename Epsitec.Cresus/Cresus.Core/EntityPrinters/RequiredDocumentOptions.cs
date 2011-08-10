@@ -26,6 +26,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 			CresusCore.GetRequiredDocumentOptionsByEntity       = RequiredDocumentOptions.GetRequiredDocumentOptionsByEntity;
 			CresusCore.GetRequiredDocumentOptionsByDocumentType = RequiredDocumentOptions.GetRequiredDocumentOptionsByDocumentType;
+			CresusCore.GetRequiredPageTypes                     = RequiredDocumentOptions.GetRequiredPageTypes;
 		}
 
 
@@ -72,6 +73,23 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 
 			return DocumentType.Unknown;
+		}
+
+
+		private static IEnumerable<PageType> GetRequiredPageTypes(DocumentType documentType)
+		{
+			//	Retourne la liste des types de page dont peut avoir besoin un type de document lorsqu'il est imprimé.
+			switch (documentType)
+			{
+				case DocumentType.MailContactLabel:
+					return MailContactPrinter.RequiredPageTypes;
+
+				case DocumentType.RelationSummary:
+					return RelationPrinter.RequiredPageTypes;
+
+				default:
+					return AbstractDocumentMetadataPrinter.GetRequiredPageTypes (documentType);
+			}
 		}
 	}
 }

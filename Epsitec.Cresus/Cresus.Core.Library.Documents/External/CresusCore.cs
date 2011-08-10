@@ -17,5 +17,6 @@ namespace Epsitec.Cresus.Core.Documents.External
 	{
 		public static System.Func<AbstractEntity, IEnumerable<DocumentOption>>	GetRequiredDocumentOptionsByEntity;
 		public static System.Func<DocumentType, IEnumerable<DocumentOption>>	GetRequiredDocumentOptionsByDocumentType;
+		public static System.Func<DocumentType, IEnumerable<PageType>>			GetRequiredPageTypes;
 	}
 }

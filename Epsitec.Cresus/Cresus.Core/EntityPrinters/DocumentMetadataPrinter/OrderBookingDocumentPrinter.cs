@@ -64,6 +64,14 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
+		public static IEnumerable<PageType> RequiredPageTypes
+		{
+			get
+			{
+				yield return PageType.First;
+			}
+		}
+
 
 		public override FormattedText BuildSections()
 		{

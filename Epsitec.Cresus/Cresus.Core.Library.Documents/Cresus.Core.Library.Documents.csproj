@@ -49,6 +49,7 @@
     <Compile Include="Business\DocumentState.cs" />
     <Compile Include="Business\DocumentType.cs" />
     <Compile Include="Business\Rules\DocumentMetadataBusinessRules.cs" />
+    <Compile Include="DocumentOptionsEditor\DocumentCategoryOptionsSubController.cs" />
     <Compile Include="DocumentOptionsEditor\DocumentCategoryController.cs" />
     <Compile Include="DocumentOptionsEditor\OptionsController.cs" />
     <Compile Include="Documents\DocumentOption.cs" />
