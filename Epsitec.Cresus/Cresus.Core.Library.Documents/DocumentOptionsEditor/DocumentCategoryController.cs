@@ -41,22 +41,29 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 			var box = new FrameBox
 			{
 				Parent = parent,
-				Dock = DockStyle.Fill,
+				PreferredHeight = 250,
+				Dock = DockStyle.Top,
 				Margins = new Margins (0, Library.UI.Constants.RightMargin, 0, 0),
 			};
 
 			this.CreateDocumentType (box);
 
-			this.checkButtonsFrame = new FrameBox
+			this.checkButtonsFrame = new Scrollable
 			{
 				Parent = box,
 				Dock = DockStyle.Fill,
+				HorizontalScrollerMode = ScrollableScrollerMode.HideAlways,
+				VerticalScrollerMode = ScrollableScrollerMode.Auto,
+				PaintViewportFrame = true,
+				Margins = new Margins (0, 0, 10, 0),
 			};
+			this.checkButtonsFrame.Viewport.IsAutoFitting = true;
+			this.checkButtonsFrame.ViewportPadding = new Margins (-1);
 
-			this.CreateCheckButtons (this.checkButtonsFrame);
+			this.CreateCheckButtons ();
 		}
 
-		public void CreateDocumentType(Widget parent)
+		private void CreateDocumentType(Widget parent)
 		{
 			this.CreateTitle (parent, "Type du document");
 
@@ -88,73 +95,52 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 				string key = combo.Items.GetKey (combo.SelectedItemIndex);
 				this.documentCategoryEntity.DocumentType = (DocumentType) System.Enum.Parse (typeof (DocumentType), key);
 
-				this.CreateCheckButtons (this.checkButtonsFrame);
+				this.CreateCheckButtons ();
 			};
 		}
 
-		public void CreateCheckButtons(Widget parent)
+		private void CreateCheckButtons()
 		{
-			parent.Children.Clear ();
-
 			this.UpdateData ();
 
-			//	Premier choix (vert).
+			var parent = this.checkButtonsFrame.Viewport;
+			parent.Children.Clear ();
+
+			this.firstGroup = true;
+			this.CreateGroup (parent, this.optionGroups.Where (x => x.Used != 0 && x.Used == x.Total), "Options parfaitement adaptées",  Color.FromRgb (221.0/255.0, 255.0/255.0, 227.0/255.0));  // vert clair
+			this.CreateGroup (parent, this.optionGroups.Where (x => x.Used != 0 && x.Used <  x.Total), "Options partiellement adaptées", Color.FromRgb (255.0/255.0, 246.0/255.0, 224.0/255.0));  // orange clair
+			this.CreateGroup (parent, this.optionGroups.Where (x => x.Used == 0                     ), "Options pas adaptées",           Color.FromRgb (255.0/255.0, 224.0/255.0, 224.0/255.0));  // rouge clair
+		}
+
+		private void CreateGroup(Widget parent, IEnumerable<OptionGroup> optionGroups, FormattedText title, Color color)
+		{
+			if (optionGroups.Any ())
 			{
-				var extract = this.optionGroups.Where (x => x.Used != 0 && x.Used == x.Total);
-				if (extract.Any ())
+				var frame = this.CreateColorizedFrameBox (parent, color);
+				this.CreateTitle (frame, title);
+
+				foreach (var group in optionGroups)
 				{
-					var frame = this.CreateColorizedFrameBox (parent, Color.FromRgb (221.0/255.0, 255.0/255.0, 227.0/255.0));  // vert clair
-					this.CreateTitle (frame, "Options d'impression parfaitement adaptées");
-
-					foreach (var group in extract)
-					{
-						this.CreateCheckButton (frame, group);
-					}
-				}
-			}
-
-			//	Deuxième choix (orange).
-			{
-				var extract = this.optionGroups.Where (x => x.Used != 0 && x.Used < x.Total);
-				if (extract.Any ())
-				{
-					var frame = this.CreateColorizedFrameBox (parent, Color.FromRgb (255.0/255.0, 246.0/255.0, 224.0/255.0));  // orange clair
-					this.CreateTitle (frame, "Options d'impression partiellement adaptées");
-
-					foreach (var group in extract)
-					{
-						this.CreateCheckButton (frame, group);
-					}
-				}
-			}
-
-			//	Dernier choix (rouge).
-			{
-				var extract = this.optionGroups.Where (x => x.Used == 0);
-				if (extract.Any ())
-				{
-					var frame = this.CreateColorizedFrameBox (parent, Color.FromRgb (255.0/255.0, 224.0/255.0, 224.0/255.0));  // rouge clair
-					this.CreateTitle (frame, "Options d'impression pas adaptées");
-
-					foreach (var group in extract)
-					{
-						this.CreateCheckButton (frame, group);
-					}
+					this.CreateCheckButton (frame, group);
 				}
 			}
 		}
 
 		private FrameBox CreateColorizedFrameBox(Widget parent, Color color)
 		{
-			return new FrameBox
+			var box = new FrameBox
 			{
 				Parent = parent,
 				DrawFullFrame = true,
 				BackColor = color,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 5, 0),
+				Margins = new Margins (0, 0, this.firstGroup ? 0 : -1, 0),
 				Padding = new Margins (5),
 			};
+
+			this.firstGroup = false;
+
+			return box;
 		}
 
 		private void CreateTitle(Widget parent, FormattedText title)
@@ -542,7 +528,8 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 		private readonly List<OptionInformation>			optionInformations;
 		private readonly List<OptionGroup>					optionGroups;
 
-		private FrameBox									checkButtonsFrame;
+		private Scrollable									checkButtonsFrame;
+		private bool										firstGroup;
 		private IEnumerable<DocumentOption>					documentOptions;
 	}
 }
