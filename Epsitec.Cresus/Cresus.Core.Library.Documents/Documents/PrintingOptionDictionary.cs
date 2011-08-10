@@ -23,6 +23,7 @@ namespace Epsitec.Cresus.Core.Documents
 		public PrintingOptionDictionary()
 		{
 			this.dictionary = new Dictionary<DocumentOption, string> ();
+			this.verboseDocumentOptions = VerboseDocumentOption.GetAll ();
 		}
 
 		
@@ -198,63 +199,17 @@ namespace Epsitec.Cresus.Core.Documents
 			builder.Append ("Options et valeurs définies :<br/><font size=\"25%\"><br/></font>");
 
 			bool first = true;
-			var all = VerboseDocumentOption.GetAll ();
 
-			foreach (var option in all)
+			foreach (var option in this.verboseDocumentOptions)
 			{
 				if (option.Option != DocumentOption.None && this.ContainsOption (option.Option))
 				{
-					var description = option.Description;
-					var value = this[option.Option];
-
-					if (option.Type == DocumentOptionValueType.Boolean)
-					{
-						switch (value)
-						{
-							case "false":
-								value = "non";
-								break;
-
-							case "true":
-								value = "oui";
-								break;
-						}
-					}
-
-					if (option.Type == DocumentOptionValueType.Enumeration)
-					{
-						description = all.Where (x => x.IsTitle && x.Group == option.Group).Select (x => x.Title).FirstOrDefault ();
-
-						for (int i = 0; i < option.Enumeration.Count (); i++)
-						{
-							if (option.Enumeration.ElementAt (i) == value)
-							{
-								value = option.EnumerationDescription.ElementAt (i);
-								break;
-							}
-						}
-					}
-
-					if (option.Type == DocumentOptionValueType.Distance ||
-						option.Type == DocumentOptionValueType.Size)
-					{
-						value = string.Concat (value, " mm");
-					}
-
-					if (string.IsNullOrEmpty (description))
-					{
-						description = option.Option.ToString ();
-					}
-
 					if (!first)  // déjà mis une option précédemment ?
 					{
 						builder.Append ("<br/>");
 					}
 
-					builder.Append ("● ");
-					builder.Append (description);
-					builder.Append (" = ");
-					builder.Append (value);
+					builder.Append (this.GetOptionDescription (option.Option));
 
 					first = false;
 				}
@@ -269,6 +224,55 @@ namespace Epsitec.Cresus.Core.Documents
 			builder.Append (this.GetDocumentTypesSummary ());
 
 			return builder.ToString ();
+		}
+
+		public FormattedText GetOptionDescription(DocumentOption documentOption)
+		{
+			var option = this.verboseDocumentOptions.Where (x => x.Option == documentOption).FirstOrDefault ();
+
+			var description = option.Description;
+			var value = this[option.Option];
+
+			if (option.Type == DocumentOptionValueType.Boolean)
+			{
+				switch (value)
+				{
+					case "false":
+						value = "non";
+						break;
+
+					case "true":
+						value = "oui";
+						break;
+				}
+			}
+
+			if (option.Type == DocumentOptionValueType.Enumeration)
+			{
+				description = option.Description;
+
+				for (int i = 0; i < option.Enumeration.Count (); i++)
+				{
+					if (option.Enumeration.ElementAt (i) == value)
+					{
+						value = option.EnumerationDescription.ElementAt (i);
+						break;
+					}
+				}
+			}
+
+			if (option.Type == DocumentOptionValueType.Distance ||
+				option.Type == DocumentOptionValueType.Size)
+			{
+				value = string.Concat (value, " mm");
+			}
+
+			if (string.IsNullOrEmpty (description))
+			{
+				description = option.Option.ToString ();
+			}
+
+			return string.Concat ("● ", description, " = ", value);
 		}
 
 
@@ -349,5 +353,6 @@ namespace Epsitec.Cresus.Core.Documents
 
 
 		private readonly Dictionary<DocumentOption, string>		dictionary;
+		private readonly IEnumerable<VerboseDocumentOption>		verboseDocumentOptions;
 	}
 }

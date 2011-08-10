@@ -226,6 +226,8 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 						Margins = new Margins (0, 0, 0, (i == group.OptionInformations.Count-1) ? 5 : 0),
 					};
 
+					this.SetTooltip (button, group.OptionInformations[i]);
+
 					button.ActiveStateChanged += delegate
 					{
 						this.ButtonClicked (button);
@@ -255,6 +257,8 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 					Dock = DockStyle.Fill,
 				};
 
+				this.SetTooltip (button, group.OptionInformations[0]);
+
 				button.ActiveStateChanged += delegate
 				{
 					this.ButtonClicked (button);
@@ -269,6 +273,32 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 					Dock = DockStyle.Right,
 				};
 			}
+		}
+
+		private void SetTooltip(Widget button, OptionInformation info)
+		{
+			var description = this.GetTooltipDescription (info);
+
+			if (!description.IsNullOrEmpty)
+			{
+				ToolTip.Default.SetToolTip (button, description);
+			}
+		}
+
+		private FormattedText GetTooltipDescription(OptionInformation info)
+		{
+			var list = new List<string> ();
+
+			foreach (var option in info.PrintingOptionDictionary.Options)
+			{
+				if (this.documentOptions.Contains (option))
+				{
+					var description = info.PrintingOptionDictionary.GetOptionDescription (option);
+					list.Add (description.ToString ());
+				}
+			}
+
+			return string.Join ("<br/>", list);
 		}
 
 
@@ -369,7 +399,7 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 
 		private OptionInformation GetOptionInformation(DocumentOptionsEntity optionEntity)
 		{
-			PrintingOptionDictionary printingOptionDictionary = optionEntity.GetOptions ();
+			var printingOptionDictionary = optionEntity.GetOptions ();
 
 			int count = 0;
 			int total = 0;
@@ -387,7 +417,7 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 				}
 			}
 
-			return new OptionInformation (optionEntity, count, total, printingOptionDictionary.Options);
+			return new OptionInformation (optionEntity, printingOptionDictionary, count, total, printingOptionDictionary.Options);
 		}
 
 
@@ -444,15 +474,22 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 
 		private class OptionInformation
 		{
-			public OptionInformation(DocumentOptionsEntity entity, int used, int total, IEnumerable<DocumentOption> options)
+			public OptionInformation(DocumentOptionsEntity entity, PrintingOptionDictionary printingOptionDictionary, int used, int total, IEnumerable<DocumentOption> options)
 			{
-				this.Entity  = entity;
-				this.Used    = used;
-				this.Total   = total;
-				this.options = options;
+				this.Entity                   = entity;
+				this.PrintingOptionDictionary = printingOptionDictionary;
+				this.Used                     = used;
+				this.Total                    = total;
+				this.options                  = options;
 			}
 
 			public DocumentOptionsEntity Entity
+			{
+				get;
+				private set;
+			}
+
+			public PrintingOptionDictionary PrintingOptionDictionary
 			{
 				get;
 				private set;
