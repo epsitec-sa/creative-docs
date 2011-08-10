@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.Server.Modules
 			: base ("/list")
 		{
 
-			Get["/persons"] = parameters =>
+			Get["/customers"] = parameters =>
 			{
 				var coreSession = GetCoreSession ();
 				var context = coreSession.GetBusinessContext ();
