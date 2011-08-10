@@ -47,6 +47,9 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 
 			this.documentCategoryOptionsSubController = new DocumentCategoryOptionsSubController (this.businessContext, this.documentCategoryEntity);
 			this.documentCategoryOptionsSubController.CreateUI (box);
+
+			this.documentCategoryTypesSubController = new DocumentCategoryPageTypesSubController (this.businessContext, this.documentCategoryEntity);
+			this.documentCategoryTypesSubController.CreateUI (box);
 		}
 
 		private void CreateDocumentType(Widget parent)
@@ -56,7 +59,7 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 				Parent = parent,
 				FormattedText = "Type du document :",
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 2),
+				Margins = new Margins (0, 0, 0, Library.UI.Constants.MarginUnderLabel),
 			};
 
 			var combo = new TextFieldCombo
@@ -64,7 +67,6 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 				Parent = parent,
 				IsReadOnly = true,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, -3, 0),
 			};
 
 			var types = EnumKeyValues.FromEnum<DocumentType> ();
@@ -88,6 +90,7 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 				this.documentCategoryEntity.DocumentType = (DocumentType) System.Enum.Parse (typeof (DocumentType), key);
 
 				this.documentCategoryOptionsSubController.UpdateAfterDocumentTypeChanged ();
+				this.documentCategoryTypesSubController.UpdateAfterDocumentTypeChanged ();
 			};
 		}
 
@@ -108,9 +111,14 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 		#endregion
 
 
+		public static readonly Color	acceptedColor  = Color.FromRgb (221.0/255.0, 255.0/255.0, 227.0/255.0);  // vert clair
+		public static readonly Color	toleratedColor = Color.FromRgb (255.0/255.0, 246.0/255.0, 224.0/255.0);  // orange clair
+		public static readonly Color	rejectedColor  = Color.FromRgb (255.0/255.0, 224.0/255.0, 224.0/255.0);  // rouge clair
+
 		private readonly IBusinessContext					businessContext;
 		private readonly DocumentCategoryEntity				documentCategoryEntity;
 
 		private DocumentCategoryOptionsSubController		documentCategoryOptionsSubController;
+		private DocumentCategoryPageTypesSubController		documentCategoryTypesSubController;
 	}
 }

@@ -323,7 +323,7 @@ namespace Epsitec.Cresus.Core.Print.Containers
 		private List<PageContainer> GetPagesForFunction(PageType printerFunctionUsed)
 		{
 			//	Retourne la liste des pages pour une unité d'impression donnée.
-			return this.pages.Where (x => Common.IsPrinterAndPageMatching (printerFunctionUsed, x.PageType)).ToList ();
+			return this.pages.Where (x => PageTypeHelper.IsPrinterAndPageMatching (printerFunctionUsed, x.PageType)).ToList ();
 		}
 
 

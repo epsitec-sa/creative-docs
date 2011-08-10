@@ -70,14 +70,21 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 
 		private void CreateWarning(Widget parent)
 		{
-			this.warning = new StaticText
+			this.warningFrame = new FrameBox
 			{
 				Parent = parent,
-				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
-				BackColor = Color.FromRgb (255.0/255.0, 147.0/255.0, 147.0/255.0),  // rouge
+				DrawFullFrame = true,
+				BackColor = Color.FromBrightness (1),
 				PreferredHeight = 20,
 				Dock = DockStyle.Bottom,
-				Margins = new Margins (0, 0, 5, 0),
+				Margins = new Margins (0, 0, -1, 0),
+			};
+
+			this.warningText = new StaticText
+			{
+				Parent = this.warningFrame,
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+				Dock = DockStyle.Fill,
 			};
 		}
 
@@ -89,9 +96,9 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 			parent.Children.Clear ();
 
 			this.firstGroup = true;
-			this.CreateGroup (parent, this.optionGroups.Where (x => x.Used != 0 && x.Used == x.Total), "Options parfaitement adaptées",  Color.FromRgb (221.0/255.0, 255.0/255.0, 227.0/255.0));  // vert clair
-			this.CreateGroup (parent, this.optionGroups.Where (x => x.Used != 0 && x.Used <  x.Total), "Options partiellement adaptées", Color.FromRgb (255.0/255.0, 246.0/255.0, 224.0/255.0));  // orange clair
-			this.CreateGroup (parent, this.optionGroups.Where (x => x.Used == 0                     ), "Options pas adaptées",           Color.FromRgb (255.0/255.0, 224.0/255.0, 224.0/255.0));  // rouge clair
+			this.CreateGroup (parent, this.optionGroups.Where (x => x.Used != 0 && x.Used == x.Total), "Options parfaitement adaptées",  DocumentCategoryController.acceptedColor);   // vert clair
+			this.CreateGroup (parent, this.optionGroups.Where (x => x.Used != 0 && x.Used <  x.Total), "Options partiellement adaptées", DocumentCategoryController.toleratedColor);  // orange clair
+			this.CreateGroup (parent, this.optionGroups.Where (x => x.Used == 0                     ), "Options inadaptées",             DocumentCategoryController.rejectedColor);   // rouge clair
 		}
 
 		private void CreateGroup(Widget parent, IEnumerable<OptionGroup> optionGroups, FormattedText title, Color color)
@@ -383,11 +390,11 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 
 			if (error == 0)
 			{
-				this.warning.Visibility = false;
+				this.warningFrame.Visibility = false;
 			}
 			else
 			{
-				this.warning.Visibility = true;
+				this.warningFrame.Visibility = true;
 
 				FormattedText message;
 				if (error == 1)
@@ -399,7 +406,7 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 					message = string.Format ("Il y a {0} options définies plusieurs fois !", error.ToString ());
 				}
 
-				this.warning.FormattedText = message.ApplyBold ();
+				this.warningText.FormattedText = message.ApplyBold ();
 			}
 		}
 
@@ -467,7 +474,7 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 				}
 			}
 
-			return new OptionInformation (optionEntity, printingOptionDictionary, count, total, printingOptionDictionary.Options);
+			return new OptionInformation (optionEntity, printingOptionDictionary, printingOptionDictionary.Options, count, total);
 		}
 
 
@@ -532,13 +539,13 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 
 		private class OptionInformation
 		{
-			public OptionInformation(DocumentOptionsEntity entity, PrintingOptionDictionary printingOptionDictionary, int used, int total, IEnumerable<DocumentOption> options)
+			public OptionInformation(DocumentOptionsEntity entity, PrintingOptionDictionary printingOptionDictionary, IEnumerable<DocumentOption> options, int used, int total)
 			{
 				this.Entity                   = entity;
 				this.PrintingOptionDictionary = printingOptionDictionary;
+				this.options                  = options;
 				this.Used                     = used;
 				this.Total                    = total;
-				this.options                  = options;
 			}
 
 			public DocumentOptionsEntity Entity
@@ -616,6 +623,7 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 		private Scrollable									checkButtonsFrame;
 		private bool										firstGroup;
 		private IEnumerable<DocumentOption>					documentOptions;
-		private StaticText									warning;
+		private FrameBox									warningFrame;
+		private StaticText									warningText;
 	}
 }

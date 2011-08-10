@@ -66,7 +66,9 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 			get
 			{
+				yield return PageType.Single;
 				yield return PageType.First;
+				yield return PageType.Following;
 			}
 		}
 
