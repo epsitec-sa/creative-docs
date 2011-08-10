@@ -242,8 +242,6 @@ namespace Epsitec.Cresus.Core.Server
 
 		private readonly HashSet<AccessorBinding>	bindings;
 
-		private TitleTile							titleTile;
-
 		private FormattedText						displayedTitle;
 		private FormattedText						displayedText;
 		private FormattedText						displayedCompactTitle;

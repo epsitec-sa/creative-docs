@@ -22,7 +22,6 @@ namespace Epsitec.Cresus.Core.Server.Modules
 			{
 				var server = CoreServer.Instance;
 				session = server.CreateSession ();
-				PanelBuilder.CoreSession = session;
 
 				//DebugSession.Session["CoreSession"] = session.Id;
 				Session["CoreSession"] = session.Id;
