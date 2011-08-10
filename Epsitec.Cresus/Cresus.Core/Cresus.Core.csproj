@@ -99,6 +99,7 @@
     <Compile Include="CommandHandlers\NavigationCommandHandler.cs" />
     <Compile Include="Controllers\CreationControllers\CreationArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationCustomerViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionDocumentCategoryViewController2.cs" />
     <Compile Include="Controllers\EditionControllers\EditionBusinessDocumentViewController0.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticleQuantityColumnViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPaymentDatailViewController.cs" />
@@ -119,7 +120,7 @@
     <Compile Include="Controllers\EditionControllers\EditionCustomerViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDocumentCategoryMappingViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDocumentPrintingUnitsViewController.cs" />
-    <Compile Include="Controllers\EditionControllers\EditionDocumentOptionsEditorViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionDocumentOptionsViewController2.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDocumentOptionsViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDocumentCategoryViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticleAccountingDefinitionViewController.cs" />

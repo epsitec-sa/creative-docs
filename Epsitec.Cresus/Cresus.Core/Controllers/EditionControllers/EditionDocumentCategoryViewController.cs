@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionDocumentCategoryViewController : EditionViewController<Entities.DocumentCategoryEntity>
 	{
-#if true
+#if false
 		protected override void CreateBricks(BrickWall<DocumentCategoryEntity> wall)
 		{
 			wall.AddBrick ()
@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.End ()
 				.Separator ()
 				.Input ()
-				  .Field (x => x).WithSpecialController ()
+				  .Field (x => x).WithSpecialController ()  // TODO: On ne peut pas encore faire un bouton !
 				  .Field (x => x.DocumentSource)
 				  .Field (x => x.DocumentFlowDirection)
 				.End ()
@@ -49,8 +49,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				builder.CreateEditionTitleTile ("Data.DocumentCategory", "Catégorie de document");
 
 				this.CreateUIMain (builder);
-				this.CreateUIOptions (builder);
-				this.CreateUIUnits (builder);
 
 				builder.CreateFooterEditorTile ();
 			}
@@ -66,9 +64,13 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
-			builder.CreateAutoCompleteTextField (tile, 0, "Type du document",  Marshaler.Create (() => this.Entity.DocumentType,          x => this.Entity.DocumentType = x),          EnumKeyValues.FromEnum<DocumentType> ());
-			builder.CreateAutoCompleteTextField (tile, 0, "Source",            Marshaler.Create (() => this.Entity.DocumentSource,        x => this.Entity.DocumentSource = x),        EnumKeyValues.FromEnum<DocumentSource> ());
+			builder.CreateAutoCompleteTextField (tile, 0, "Source", Marshaler.Create (() => this.Entity.DocumentSource, x => this.Entity.DocumentSource = x), EnumKeyValues.FromEnum<DocumentSource> ());
 			builder.CreateAutoCompleteTextField (tile, 0, "Direction du flux", Marshaler.Create (() => this.Entity.DocumentFlowDirection, x => this.Entity.DocumentFlowDirection = x), EnumKeyValues.FromEnum<DocumentFlowDirection> ());
+
+			builder.CreateMargin (tile, horizontalSeparator: true);
+			builder.CreateMargin (tile, horizontalSeparator: false);
+
+			builder.CreateButtonOpeningSubviewController ("DocumentCategoryEditor", TextFormatter.FormatText ("Accéder aux définitions &gt;"), this.Entity, ViewControllerMode.Edition, 2);
 		}
 
 		private void CreateUIOptions(UIBuilder builder)

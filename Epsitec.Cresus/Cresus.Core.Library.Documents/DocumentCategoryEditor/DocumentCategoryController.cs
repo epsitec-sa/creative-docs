@@ -35,21 +35,29 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 		public void CreateUI(Widget parent)
 		{
-			var box = new FrameBox
+			parent.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+
+			var leftFrame = new FrameBox
 			{
 				Parent = parent,
-				PreferredHeight = 400,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, Library.UI.Constants.RightMargin, 0, 0),
+				Dock = DockStyle.Fill,
+				Margins = new Margins (0, 10, 0, 10),
 			};
 
-			this.CreateDocumentType (box);
+			var rightFrame = new FrameBox
+			{
+				Parent = parent,
+				Dock = DockStyle.Fill,
+				Margins = new Margins (0, Library.UI.Constants.RightMargin, 37, 10),
+			};
+
+			this.CreateDocumentType (leftFrame);
 
 			this.documentOptionsController = new DocumentOptionsController (this.businessContext, this.documentCategoryEntity);
-			this.documentOptionsController.CreateUI (box);
+			this.documentOptionsController.CreateUI (leftFrame);
 
 			this.pageTypesController = new PageTypesController (this.businessContext, this.documentCategoryEntity);
-			this.pageTypesController.CreateUI (box);
+			this.pageTypesController.CreateUI (rightFrame);
 		}
 
 		private void CreateDocumentType(Widget parent)

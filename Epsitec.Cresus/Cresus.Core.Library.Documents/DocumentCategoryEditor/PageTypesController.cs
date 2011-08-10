@@ -37,8 +37,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			var box = new FrameBox
 			{
 				Parent = parent,
-				PreferredHeight = 150,
-				Dock = DockStyle.Bottom,
+				Dock = DockStyle.Fill,
 				Margins = new Margins (0, 0, 0, 0),
 			};
 
