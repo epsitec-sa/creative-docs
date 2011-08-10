@@ -30,6 +30,7 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 
 			this.optionInformations = new List<OptionInformation> ();
 			this.optionGroups = new List<OptionGroup> ();
+			this.warningOptions = new List<DocumentOption> ();
 			
 			this.businessContext.SavingChanges += this.HandleBusinessContextSavingChanges;
 		}
@@ -61,6 +62,9 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 			this.checkButtonsFrame.ViewportPadding = new Margins (-1);
 
 			this.CreateCheckButtons ();
+
+			this.CreateWarning (box);
+			this.UpdateWarning ();
 		}
 
 		private void CreateDocumentType(Widget parent)
@@ -96,6 +100,20 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 				this.documentCategoryEntity.DocumentType = (DocumentType) System.Enum.Parse (typeof (DocumentType), key);
 
 				this.CreateCheckButtons ();
+				this.UpdateWarning ();
+			};
+		}
+
+		private void CreateWarning(Widget parent)
+		{
+			this.warning = new StaticText
+			{
+				Parent = parent,
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+				BackColor = Color.FromRgb (255.0/255.0, 147.0/255.0, 147.0/255.0),  // rouge
+				PreferredHeight = 20,
+				Dock = DockStyle.Bottom,
+				Margins = new Margins (0, 0, 5, 0),
 			};
 		}
 
@@ -197,11 +215,6 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 					Dock = DockStyle.Top,
 				};
 
-				first.ActiveStateChanged += delegate
-				{
-					this.ButtonClicked (first);
-				};
-
 				var firstState = ActiveState.Yes;
 
 				for (int i = 0; i < group.OptionInformations.Count; i++)
@@ -226,7 +239,7 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 						Margins = new Margins (0, 0, 0, (i == group.OptionInformations.Count-1) ? 5 : 0),
 					};
 
-					this.SetTooltip (button, group.OptionInformations[i]);
+					group.OptionInformations[i].Button = button;
 
 					button.ActiveStateChanged += delegate
 					{
@@ -235,6 +248,11 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 				}
 
 				first.ActiveState = firstState;
+
+				first.ActiveStateChanged += delegate
+				{
+					this.ButtonClicked (first);
+				};
 			}
 			else
 			{
@@ -257,7 +275,7 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 					Dock = DockStyle.Fill,
 				};
 
-				this.SetTooltip (button, group.OptionInformations[0]);
+				group.OptionInformations[0].Button = button;
 
 				button.ActiveStateChanged += delegate
 				{
@@ -291,10 +309,17 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 
 			foreach (var option in Documents.Verbose.VerboseDocumentOption.GetAll ())
 			{
-				if (this.documentOptions.Contains (option.Option) &&
+				if (this.documentOptions != null &&
+					this.documentOptions.Contains (option.Option) &&
 					info.PrintingOptionDictionary.Options.Contains (option.Option))
 				{
 					var description = info.PrintingOptionDictionary.GetOptionDescription (option, hasBullet: false, hiliteValue: true);
+
+					if (this.warningOptions.Contains (option.Option))
+					{
+						description = description.ApplyFontColor (Color.FromName ("Red"));
+					}
+
 					list.Add (description.ToString ());
 				}
 			}
@@ -351,6 +376,66 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 						this.documentCategoryEntity.DocumentOptions.Add (entity);
 					}
 				}
+			}
+
+			this.UpdateWarning ();
+		}
+
+
+		private void UpdateWarning()
+		{
+			this.warningOptions.Clear ();
+			var options = new List<DocumentOption> ();
+			int error = 0;
+
+			foreach (var documentOptionEntity in this.documentCategoryEntity.DocumentOptions)
+			{
+				var info = this.optionInformations.Where (x => x.Entity == documentOptionEntity).FirstOrDefault ();
+
+				foreach (var option in info.Options)
+				{
+					if (this.documentOptions != null && this.documentOptions.Contains (option))
+					{
+						if (options.Contains (option))
+						{
+							this.warningOptions.Add (option);
+							error++;
+						}
+						else
+						{
+							options.Add (option);
+						}
+					}
+				}
+			}
+
+			foreach (var info in this.optionInformations)
+			{
+				if (info.Button != null)
+				{
+					this.SetTooltip (info.Button, info);
+				}
+			}
+
+			if (error == 0)
+			{
+				this.warning.Visibility = false;
+			}
+			else
+			{
+				this.warning.Visibility = true;
+
+				FormattedText message;
+				if (error == 1)
+				{
+					message = "Il y a une option définie à double !";
+				}
+				else
+				{
+					message = string.Format ("Il y a {0} options définies à double !", error.ToString ());
+				}
+
+				this.warning.FormattedText = message.ApplyBold ();
 			}
 		}
 
@@ -514,6 +599,12 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 				set;
 			}
 
+			public AbstractButton Button
+			{
+				get;
+				set;
+			}
+
 			public IEnumerable<DocumentOption> Options
 			{
 				get
@@ -565,9 +656,11 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 		private readonly DocumentCategoryEntity				documentCategoryEntity;
 		private readonly List<OptionInformation>			optionInformations;
 		private readonly List<OptionGroup>					optionGroups;
+		private readonly List<DocumentOption>				warningOptions;
 
 		private Scrollable									checkButtonsFrame;
 		private bool										firstGroup;
 		private IEnumerable<DocumentOption>					documentOptions;
+		private StaticText									warning;
 	}
 }
