@@ -16,11 +16,11 @@ using Epsitec.Cresus.Core.Library;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.DocumentOptionsEditor
+namespace Epsitec.Cresus.Core.DocumentCategoryEditor
 {
-	public sealed class DocumentCategoryOptionsSubController
+	public sealed class DocumentOptionsController
 	{
-		public DocumentCategoryOptionsSubController(IBusinessContext businessContext, DocumentCategoryEntity documentCategoryEntity)
+		public DocumentOptionsController(IBusinessContext businessContext, DocumentCategoryEntity documentCategoryEntity)
 		{
 			System.Diagnostics.Debug.Assert (businessContext != null);
 			System.Diagnostics.Debug.Assert (documentCategoryEntity.IsNotNull ());

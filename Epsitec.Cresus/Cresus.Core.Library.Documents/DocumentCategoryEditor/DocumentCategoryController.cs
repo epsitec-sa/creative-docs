@@ -16,7 +16,7 @@ using Epsitec.Cresus.Core.Library;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.DocumentOptionsEditor
+namespace Epsitec.Cresus.Core.DocumentCategoryEditor
 {
 	public sealed class DocumentCategoryController : System.IDisposable
 	{
@@ -45,11 +45,11 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 
 			this.CreateDocumentType (box);
 
-			this.documentCategoryOptionsSubController = new DocumentCategoryOptionsSubController (this.businessContext, this.documentCategoryEntity);
-			this.documentCategoryOptionsSubController.CreateUI (box);
+			this.documentOptionsController = new DocumentOptionsController (this.businessContext, this.documentCategoryEntity);
+			this.documentOptionsController.CreateUI (box);
 
-			this.documentCategoryTypesSubController = new DocumentCategoryPageTypesSubController (this.businessContext, this.documentCategoryEntity);
-			this.documentCategoryTypesSubController.CreateUI (box);
+			this.pageTypesController = new PageTypesController (this.businessContext, this.documentCategoryEntity);
+			this.pageTypesController.CreateUI (box);
 		}
 
 		private void CreateDocumentType(Widget parent)
@@ -89,8 +89,8 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 				string key = combo.Items.GetKey (combo.SelectedItemIndex);
 				this.documentCategoryEntity.DocumentType = (DocumentType) System.Enum.Parse (typeof (DocumentType), key);
 
-				this.documentCategoryOptionsSubController.UpdateAfterDocumentTypeChanged ();
-				this.documentCategoryTypesSubController.UpdateAfterDocumentTypeChanged ();
+				this.documentOptionsController.UpdateAfterDocumentTypeChanged ();
+				this.pageTypesController.UpdateAfterDocumentTypeChanged ();
 			};
 		}
 
@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 		private readonly IBusinessContext					businessContext;
 		private readonly DocumentCategoryEntity				documentCategoryEntity;
 
-		private DocumentCategoryOptionsSubController		documentCategoryOptionsSubController;
-		private DocumentCategoryPageTypesSubController		documentCategoryTypesSubController;
+		private DocumentOptionsController					documentOptionsController;
+		private PageTypesController							pageTypesController;
 	}
 }
