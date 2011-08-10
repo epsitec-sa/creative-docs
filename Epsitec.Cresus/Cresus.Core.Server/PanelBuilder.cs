@@ -4,8 +4,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
-using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Bricks;
@@ -101,7 +101,7 @@ namespace Epsitec.Cresus.Core.Server
 		{
 			var b = brick;
 
-			var item = new TileDataItem ();
+			var item = new WebDataItem ();
 
 			Brick oldBrick;
 			do
@@ -155,7 +155,7 @@ namespace Epsitec.Cresus.Core.Server
 		/// </summary>
 		/// <param name="brick">Brick to use</param>
 		/// <returns>Javascript code to create the panel</returns>
-		private List<Dictionary<string, object>> CreatePanelContent(Brick brick, TileDataItem item)
+		private List<Dictionary<string, object>> CreatePanelContent(Brick brick, WebDataItem item)
 		{
 
 			var list = new List<Dictionary<string, object>> ();
@@ -169,7 +169,14 @@ namespace Epsitec.Cresus.Core.Server
 
 				var col = (obj as IEnumerable).Cast<AbstractEntity> ().Where (c => c.GetType () == brickType);
 
-				col.ForEach (e => list.AddRange (CreatePanelsForEntity (brick, item, e)));
+				if ((col.Any ()))
+				{
+					col.ForEach (e => list.AddRange (CreatePanelsForEntity (brick, item, e)));
+				}
+				else
+				{
+					list.Add (CreateEmptyPanel (brick, item));
+				}
 			}
 			else
 			{
@@ -189,41 +196,22 @@ namespace Epsitec.Cresus.Core.Server
 			return list;
 		}
 
-		private List<Dictionary<string, object>> CreatePanelsForEntity(Brick brick, TileDataItem item, AbstractEntity entity)
+		private List<Dictionary<string, object>> CreatePanelsForEntity(Brick brick, WebDataItem item, AbstractEntity entity)
 		{
 
 			var list = new List<Dictionary<string, object>> ();
-			var parent = new Dictionary<string, object> ();
+			var parent = GetBasicPanelFrom (item);
 			list.Add (parent);
-
-			var controllerName = GetControllerName (this.controllerMode);
-			parent["xtype"] = controllerName;
-
-			string title = item.Title.ToSimpleText ();
-			parent["title"] = title;
 
 			var entityKey = this.coreSession.GetBusinessContext ().DataContext.GetNormalizedEntityKey (entity).Value.ToString ();
 			parent["entityId"] = entityKey;
-
-			var icon = PanelBuilder.CreateIcon (item);
-			if (!icon.Equals (default (KeyValuePair<string, string>)))
-			{
-				var iconCls = PanelBuilder.CreateCssFromIcon (icon.Key, icon.Value);
-				parent["iconCls"] = iconCls;
-			}
 
 			if (item.DefaultMode == ViewControllerMode.Summary)
 			{
 				parent["clickToEdit"] = false;
 			}
 
-
-
-			var summary = GetContent (entity);
-			if (summary != null)
-			{
-				parent["html"] = summary;
-			}
+			AddSpecificData (parent, item);
 
 			var inputs = CreateInputs (brick);
 			if (inputs != null && inputs.Any ())
@@ -240,17 +228,60 @@ namespace Epsitec.Cresus.Core.Server
 			return list;
 		}
 
-		private string GetContent(AbstractEntity entity)
+		private Dictionary<string, object> CreateEmptyPanel(Brick brick, WebDataItem item)
 		{
-			if (this.controllerMode == ViewControllerMode.Summary)
-			{
-				return entity.GetSummary ().ToString ();
-			}
+			var panel = GetBasicPanelFrom (item);
+			
+			panel["html"] = "Empty";
+			panel["hideRemoveButton"] = true;
 
-			return null;
+			return panel;
 		}
 
-		private List<Dictionary<string, object>> CreateInputs(Brick brick)
+		private Dictionary<string, object> GetBasicPanelFrom(WebDataItem item)
+		{
+			var panel = new Dictionary<string, object> ();
+
+			var controllerName = GetControllerName (this.controllerMode);
+			panel["xtype"] = controllerName;
+
+			string title = item.Title.ToSimpleText ();
+			panel["title"] = title;
+
+			var icon = PanelBuilder.CreateIcon (item);
+			if (!icon.Equals (default (KeyValuePair<string, string>)))
+			{
+				var iconCls = PanelBuilder.CreateCssFromIcon (icon.Key, icon.Value);
+				panel["iconCls"] = iconCls;
+			}
+			return panel;
+		}
+
+		private void AddSpecificData(Dictionary<string, object> parent, WebDataItem item)
+		{
+			switch (this.controllerMode)
+			{
+				case ViewControllerMode.Summary:
+					parent["html"] = entity.GetSummary ().ToString ();
+					parent["hideRemoveButton"] = item.HideRemoveButton;
+					parent["hideAddButton"] = item.HideAddButton;
+					break;
+
+				case ViewControllerMode.Edition:
+					break;
+
+				case ViewControllerMode.Creation:
+					break;
+
+				case ViewControllerMode.None:
+					break;
+
+				default:
+					throw new System.NotImplementedException ("Make sure this switch has all possible branches");
+			}
+		}
+
+        private List<Dictionary<string, object>> CreateInputs(Brick brick)
 		{
 
 			if (!Brick.ContainsProperty (brick, BrickPropertyKey.Input))
@@ -568,7 +599,7 @@ namespace Epsitec.Cresus.Core.Server
 		/// </summary>
 		/// <param name="brick">Brick to use</param>
 		/// <returns>Key/value pair with the icon name and the filename</returns>
-		private static KeyValuePair<string, string> CreateIcon(TileDataItem item)
+		private static KeyValuePair<string, string> CreateIcon(WebDataItem item)
 		{
 			// No icon for this brick
 			if (item.IconUri.Length <= 0)
@@ -690,7 +721,7 @@ namespace Epsitec.Cresus.Core.Server
 			}
 		}
 
-		private void ProcessAttribute(TileDataItem item, BrickMode value)
+		private void ProcessAttribute(WebDataItem item, BrickMode value)
 		{
 			switch (value)
 			{
@@ -712,13 +743,6 @@ namespace Epsitec.Cresus.Core.Server
 
 				case BrickMode.HideRemoveButton:
 					item.HideRemoveButton = true;
-					break;
-
-				case BrickMode.SpecialController0:
-				case BrickMode.SpecialController1:
-				case BrickMode.SpecialController2:
-				case BrickMode.SpecialController3:
-					item.ControllerSubTypeId = (int) (value - BrickMode.SpecialController0);
 					break;
 			}
 		}
@@ -799,5 +823,23 @@ namespace Epsitec.Cresus.Core.Server
 			-Include,
 		}
 		 */
+
+		/*
+		public enum BrickMode
+		{
+			AutoGroup,
+
+			DefaultToSummarySubview,
+
+			HideAddButton,
+			HideRemoveButton,
+
+			SpecialController0,
+			SpecialController1,
+			SpecialController2,
+			SpecialController3,
+
+			FullHeightStretch,
+		}*/
 	}
 }

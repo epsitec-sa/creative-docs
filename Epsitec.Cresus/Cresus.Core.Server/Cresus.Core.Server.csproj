@@ -71,6 +71,7 @@
     <Compile Include="PanelBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AdditionalResponses\ResponseExtensions.cs" />
+    <Compile Include="WebDataItem.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
