@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Server
 
 		private PanelBuilder(AbstractEntity entity, ViewControllerMode mode, CoreSession coreSession)
 		{
-			this.entity = entity;
+			this.rootEntity = entity;
 			this.controllerMode = mode;
 			this.coreSession = coreSession;
 		}
@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Core.Server
 		/// <returns>Name of the generated panel</returns>
 		private IDictionary<string, object> Run()
 		{
-			var customerSummaryWall = CoreSession.GetBrickWall (this.entity, this.controllerMode);
+			var customerSummaryWall = CoreSession.GetBrickWall (this.rootEntity, this.controllerMode);
 
 			// Open the main panel
 			var dic = new Dictionary<string, object> ();
@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Core.Server
 
 			if (item.DataType == TileDataType.CollectionItem)
 			{
-				var obj = resolver.DynamicInvoke (this.entity);
+				var obj = resolver.DynamicInvoke (this.rootEntity);
 
 				var col = (obj as IEnumerable).Cast<AbstractEntity> ().Where (c => c.GetType () == brickType);
 
@@ -153,11 +153,11 @@ namespace Epsitec.Cresus.Core.Server
 				AbstractEntity entity;
 				if (resolver != null)
 				{
-					entity = resolver.DynamicInvoke (this.entity) as AbstractEntity;
+					entity = resolver.DynamicInvoke (this.rootEntity) as AbstractEntity;
 				}
 				else
 				{
-					entity = this.entity;
+					entity = this.rootEntity;
 				}
 
 				list.AddRange (CreatePanelsForEntity (brick, item, entity));
@@ -181,7 +181,7 @@ namespace Epsitec.Cresus.Core.Server
 				parent["clickToEdit"] = false;
 			}
 
-			AddSpecificData (parent, item);
+			AddSpecificData (parent, item, entity);
 
 			var inputs = CreateInputs (brick);
 			if (inputs != null && inputs.Any ())
@@ -228,7 +228,7 @@ namespace Epsitec.Cresus.Core.Server
 			return panel;
 		}
 
-		private void AddSpecificData(Dictionary<string, object> parent, WebDataItem item)
+		private void AddSpecificData(Dictionary<string, object> parent, WebDataItem item, AbstractEntity entity)
 		{
 			switch (this.controllerMode)
 			{
@@ -320,7 +320,7 @@ namespace Epsitec.Cresus.Core.Server
 			}
 
 			var func   = lambda.Compile ();
-			var obj = func.DynamicInvoke (this.entity);
+			var obj = func.DynamicInvoke (this.rootEntity);
 			var entity = obj as AbstractEntity;
 
 			var fieldType  = lambda.ReturnType;
@@ -517,7 +517,7 @@ namespace Epsitec.Cresus.Core.Server
 			{
 				var lambda = include.ExpressionValue as LambdaExpression;
 				var func   = lambda.Compile ();
-				var child = func.DynamicInvoke (this.entity) as AbstractEntity;
+				var child = func.DynamicInvoke (this.rootEntity) as AbstractEntity;
 
 				if (child.IsNull ())
 				{
@@ -578,7 +578,7 @@ namespace Epsitec.Cresus.Core.Server
 			return info;
 		}
 
-		private readonly AbstractEntity entity;
+		private readonly AbstractEntity rootEntity;
 		private readonly ViewControllerMode controllerMode;
 		private readonly CoreSession coreSession;
 
