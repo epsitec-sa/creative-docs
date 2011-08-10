@@ -21,41 +21,12 @@ namespace Epsitec.Cresus.Core.Server
 	/// </summary>
 	class PanelBuilder
 	{
-		// TODO Maybe we don't want the session to be there
-		// Only here for testing purposes
-		public static CoreSession CoreSession
-		{
-			get;
-			set;
-		}
 
 		private PanelBuilder(AbstractEntity entity, ViewControllerMode mode, CoreSession coreSession)
 		{
 			this.entity = entity;
 			this.controllerMode = mode;
 			this.coreSession = coreSession;
-		}
-
-
-		internal static void ExperimentalCode()
-		{
-			// Recreate an empty CSS file
-			PanelBuilder.EnsureDirectoryStructureExists (PanelBuilder.cssFilename);
-			System.IO.File.Create (PanelBuilder.cssFilename).Close ();
-
-			//BuildController (new MailContactEntity (), Controllers.ViewControllerMode.Summary);
-			//BuildController (new AffairEntity (), Controllers.ViewControllerMode.Summary);
-
-			//var context = PanelBuilder.CoreSession.GetBusinessContext ();
-
-			//var customer = (from x in context.GetAllEntities<CustomerEntity> ()
-			//                where x.Relation.Person is NaturalPersonEntity
-			//                let person = x.Relation.Person as NaturalPersonEntity
-			//                where person.Lastname == "Arnaud"
-			//                select x).FirstOrDefault ();
-
-			//BuildController (customer, Controllers.ViewControllerMode.Summary);
-			//BuildController (customer, Controllers.ViewControllerMode.Edition);
 		}
 
 		/// <summary>
@@ -113,28 +84,28 @@ namespace Epsitec.Cresus.Core.Server
 				}
 				else
 				{
-					PanelBuilder.CreateDefaultTextProperties (b);
+					BrickProcessor.CreateDefaultTextProperties (b);
 				}
 
-				this.ProcessProperty (b, BrickPropertyKey.Name, x => item.Name = x);
-				this.ProcessProperty (b, BrickPropertyKey.Icon, x => item.IconUri = x);
+				BrickProcessor.ProcessProperty (b, BrickPropertyKey.Name, x => item.Name = x);
+				BrickProcessor.ProcessProperty (b, BrickPropertyKey.Icon, x => item.IconUri = x);
 
-				this.ProcessProperty (b, BrickPropertyKey.Title, x => item.Title = x);
-				this.ProcessProperty (b, BrickPropertyKey.TitleCompact, x => item.CompactTitle = x);
-				this.ProcessProperty (b, BrickPropertyKey.Text, x => item.Text = x);
-				this.ProcessProperty (b, BrickPropertyKey.TextCompact, x => item.CompactText = x);
+				BrickProcessor.ProcessProperty (b, BrickPropertyKey.Title, x => item.Title = x);
+				BrickProcessor.ProcessProperty (b, BrickPropertyKey.TitleCompact, x => item.CompactTitle = x);
+				BrickProcessor.ProcessProperty (b, BrickPropertyKey.Text, x => item.Text = x);
+				BrickProcessor.ProcessProperty (b, BrickPropertyKey.TextCompact, x => item.CompactText = x);
 
-				this.ProcessProperty (b, BrickPropertyKey.Attribute, x => this.ProcessAttribute (item, x));
+				BrickProcessor.ProcessProperty (b, BrickPropertyKey.Attribute, x => BrickProcessor.ProcessAttribute (item, x));
 
 				if ((!item.Title.IsNullOrEmpty) && (item.CompactTitle.IsNull))
 				{
 					item.CompactTitle = item.Title;
 				}
 
-				this.ProcessProperty (b, BrickPropertyKey.Title, x => item.TitleAccessor = x);
-				this.ProcessProperty (b, BrickPropertyKey.TitleCompact, x => item.CompactTitleAccessor = x);
-				this.ProcessProperty (b, BrickPropertyKey.Text, x => item.TextAccessor = x);
-				this.ProcessProperty (b, BrickPropertyKey.TextCompact, x => item.CompactTextAccessor = x);
+				BrickProcessor.ProcessProperty (b, BrickPropertyKey.Title, x => item.TitleAccessor = x);
+				BrickProcessor.ProcessProperty (b, BrickPropertyKey.TitleCompact, x => item.CompactTitleAccessor = x);
+				BrickProcessor.ProcessProperty (b, BrickPropertyKey.Text, x => item.TextAccessor = x);
+				BrickProcessor.ProcessProperty (b, BrickPropertyKey.TextCompact, x => item.CompactTextAccessor = x);
 
 				if (Brick.ContainsProperty (b, BrickPropertyKey.CollectionAnnotation))
 				{
@@ -157,7 +128,6 @@ namespace Epsitec.Cresus.Core.Server
 		/// <returns>Javascript code to create the panel</returns>
 		private List<Dictionary<string, object>> CreatePanelContent(Brick brick, WebDataItem item)
 		{
-
 			var list = new List<Dictionary<string, object>> ();
 
 			var brickType = brick.GetFieldType ();
@@ -231,7 +201,7 @@ namespace Epsitec.Cresus.Core.Server
 		private Dictionary<string, object> CreateEmptyPanel(Brick brick, WebDataItem item)
 		{
 			var panel = GetBasicPanelFrom (item);
-			
+
 			panel["html"] = "Empty";
 			panel["hideRemoveButton"] = true;
 
@@ -254,6 +224,7 @@ namespace Epsitec.Cresus.Core.Server
 				var iconCls = PanelBuilder.CreateCssFromIcon (icon.Key, icon.Value);
 				panel["iconCls"] = iconCls;
 			}
+
 			return panel;
 		}
 
@@ -283,7 +254,6 @@ namespace Epsitec.Cresus.Core.Server
 
         private List<Dictionary<string, object>> CreateInputs(Brick brick)
 		{
-
 			if (!Brick.ContainsProperty (brick, BrickPropertyKey.Input))
 			{
 				return null;
@@ -303,7 +273,6 @@ namespace Epsitec.Cresus.Core.Server
 
 		private List<Dictionary<string, object>> CreateActionsForInput(Brick brick, BrickPropertyCollection inputProperties)
 		{
-
 			var list = new List<Dictionary<string, object>> ();
 
 			var fieldProperties = Brick.GetProperties (brick, BrickPropertyKey.Field, BrickPropertyKey.HorizontalGroup);
@@ -355,7 +324,7 @@ namespace Epsitec.Cresus.Core.Server
 			var entity = obj as AbstractEntity;
 
 			var fieldType  = lambda.ReturnType;
-			var fieldMode  = this.GetFieldEditionSettings (lambda);
+			var fieldMode  = PanelBuilder.GetFieldEditionSettings (lambda);
 
 			//int    width  = InputProcessor.GetInputWidth (fieldProperties);
 			//int    height = InputProcessor.GetInputHeight (fieldProperties);
@@ -568,32 +537,52 @@ namespace Epsitec.Cresus.Core.Server
 		{
 			return this.controllerMode.ToString ().ToLower ();
 		}
-		/// <summary>
-		/// Get the filename of an image
-		/// </summary>
-		/// <param name="name"></param>
-		/// <returns></returns>
-		private static string GetImageFilePath(string name)
-		{
-			var path = string.Format (PanelBuilder.imagesFilename, name.Replace ('.', '/'));
-			PanelBuilder.EnsureDirectoryStructureExists (path);
-			return path;
-		}
 
-		/// <summary>
-		/// checks if the folder exists, otherwise creates it
-		/// </summary>
-		/// <param name="path"></param>
-		private static void EnsureDirectoryStructureExists(string path)
-		{
-			var dir  = System.IO.Path.GetDirectoryName (path);
 
-			if (System.IO.Directory.Exists (dir) == false)
+		private static string GetInputTitle(BrickPropertyCollection properties)
+		{
+			var property = properties.PeekBefore (BrickPropertyKey.Title, -1);
+
+			if (property.HasValue)
 			{
-				System.IO.Directory.CreateDirectory (dir);
+				return property.Value.StringValue;
+			}
+			else
+			{
+				return null;
 			}
 		}
 
+		public static string GetInputTitle(Caption caption)
+		{
+			if (caption == null)
+			{
+				return null;
+			}
+
+			if (caption.HasLabels)
+			{
+				return caption.DefaultLabel;
+			}
+
+			return caption.Description ?? caption.Name;
+		}
+
+		private static FieldInfo GetFieldEditionSettings(LambdaExpression lambda)
+		{
+			//FieldInfo info = new FieldInfo (EntityInfo<T>.GetTypeId (), lambda);
+			//info.Settings = this.bridge.bridgeContext.FeatureManager.GetFieldEditionSettings (info.EntityId, info.FieldId);
+			//return info;
+
+			FieldInfo info = new FieldInfo (EntityInfo<AbstractContactEntity>.GetTypeId (), lambda);
+			return info;
+		}
+
+		private readonly AbstractEntity entity;
+		private readonly ViewControllerMode controllerMode;
+		private readonly CoreSession coreSession;
+
+		#region To Remove
 		/// <summary>
 		/// Create an image using a brick
 		/// </summary>
@@ -654,145 +643,38 @@ namespace Epsitec.Cresus.Core.Server
 
 			return cssClass;
 		}
-
-		private static void CreateDefaultTextProperties(Brick brick)
+		/// <summary>
+		/// Get the filename of an image
+		/// </summary>
+		/// <param name="name"></param>
+		/// <returns></returns>
+		private static string GetImageFilePath(string name)
 		{
-			if (!Brick.ContainsProperty (brick, BrickPropertyKey.Text))
-			{
-				Expression<System.Func<AbstractEntity, FormattedText>> expression = x => x.GetSummary ();
-				Brick.AddProperty (brick, new BrickProperty (BrickPropertyKey.Text, expression));
-			}
+			var path = string.Format (PanelBuilder.imagesFilename, name.Replace ('.', '/'));
+			PanelBuilder.EnsureDirectoryStructureExists (path);
+			return path;
+		}
 
-			if (!Brick.ContainsProperty (brick, BrickPropertyKey.TextCompact))
+		/// <summary>
+		/// checks if the folder exists, otherwise creates it
+		/// </summary>
+		/// <param name="path"></param>
+		private static void EnsureDirectoryStructureExists(string path)
+		{
+			var dir  = System.IO.Path.GetDirectoryName (path);
+
+			if (System.IO.Directory.Exists (dir) == false)
 			{
-				Expression<System.Func<AbstractEntity, FormattedText>> expression = x => x.GetCompactSummary ();
-				Brick.AddProperty (brick, new BrickProperty (BrickPropertyKey.TextCompact, expression));
+				System.IO.Directory.CreateDirectory (dir);
 			}
 		}
 
-		protected void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<bool> setter)
-		{
-			if (Brick.ContainsProperty (brick, key))
-			{
-				setter (true);
-			}
-		}
-
-		protected void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<string> setter)
-		{
-			var value = Brick.GetProperty (brick, key).StringValue;
-
-			if (value != null)
-			{
-				setter (value);
-			}
-		}
-
-		private void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<BrickMode> setter)
-		{
-			foreach (var attributeValue in Brick.GetProperties (brick, key).Select (x => x.AttributeValue))
-			{
-				if ((attributeValue != null) &&
-					(attributeValue.ContainsValue<BrickMode> ()))
-				{
-					setter (attributeValue.GetValue<BrickMode> ());
-				}
-			}
-		}
-
-		private void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<Accessor<FormattedText>> setter)
-		{
-			//var formatter = this.ToAccessor (brick, Brick.GetProperty (brick, key));
-			Accessor<FormattedText> formatter = null;
-
-			if (formatter != null)
-			{
-				setter (formatter);
-			}
-		}
-
-		protected void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<Expression> setter)
-		{
-			var value = Brick.GetProperty (brick, key).ExpressionValue;
-
-			if (value != null)
-			{
-				setter (value);
-			}
-		}
-
-		private void ProcessAttribute(WebDataItem item, BrickMode value)
-		{
-			switch (value)
-			{
-				case BrickMode.AutoGroup:
-					item.AutoGroup = true;
-					break;
-
-				case BrickMode.DefaultToSummarySubview:
-					item.DefaultMode = ViewControllerMode.Summary;
-					break;
-
-				case BrickMode.HideAddButton:
-					item.HideAddButton = true;
-					break;
-
-				case BrickMode.FullHeightStretch:
-					item.FullHeightStretch = true;
-					break;
-
-				case BrickMode.HideRemoveButton:
-					item.HideRemoveButton = true;
-					break;
-			}
-		}
-
-		private static string GetInputTitle(BrickPropertyCollection properties)
-		{
-			var property = properties.PeekBefore (BrickPropertyKey.Title, -1);
-
-			if (property.HasValue)
-			{
-				return property.Value.StringValue;
-			}
-			else
-			{
-				return null;
-			}
-		}
-
-		public static string GetInputTitle(Caption caption)
-		{
-			if (caption == null)
-			{
-				return null;
-			}
-
-			if (caption.HasLabels)
-			{
-				return caption.DefaultLabel;
-			}
-
-			return caption.Description ?? caption.Name;
-		}
-
-		private FieldInfo GetFieldEditionSettings(LambdaExpression lambda)
-		{
-			//FieldInfo info = new FieldInfo (EntityInfo<T>.GetTypeId (), lambda);
-			//info.Settings = this.bridge.bridgeContext.FeatureManager.GetFieldEditionSettings (info.EntityId, info.FieldId);
-			//return info;
-
-			FieldInfo info = new FieldInfo (EntityInfo<AbstractContactEntity>.GetTypeId (), lambda);
-			return info;
-		}
 
 		// Generated files filenames
 		private readonly static string cssFilename = "web/css/generated/style.css";
 		private readonly static string imagesFilename = "web/images/{0}.png";
+		#endregion
 
-		private readonly AbstractEntity entity;
-		private readonly ViewControllerMode controllerMode;
-		private readonly CoreSession coreSession;
 
 		/*
 		public enum BrickPropertyKey
