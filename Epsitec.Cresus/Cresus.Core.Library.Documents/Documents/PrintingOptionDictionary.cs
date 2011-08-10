@@ -23,7 +23,6 @@ namespace Epsitec.Cresus.Core.Documents
 		public PrintingOptionDictionary()
 		{
 			this.dictionary = new Dictionary<DocumentOption, string> ();
-			this.verboseDocumentOptions = VerboseDocumentOption.GetAll ();
 		}
 
 		
@@ -200,7 +199,7 @@ namespace Epsitec.Cresus.Core.Documents
 
 			bool first = true;
 
-			foreach (var option in this.verboseDocumentOptions)
+			foreach (var option in VerboseDocumentOption.GetAll ())
 			{
 				if (option.Option != DocumentOption.None && this.ContainsOption (option.Option))
 				{
@@ -209,7 +208,7 @@ namespace Epsitec.Cresus.Core.Documents
 						builder.Append ("<br/>");
 					}
 
-					builder.Append (this.GetOptionDescription (option.Option));
+					builder.Append (this.GetOptionDescription (option, hasBullet: true, hiliteValue: false));
 
 					first = false;
 				}
@@ -226,24 +225,21 @@ namespace Epsitec.Cresus.Core.Documents
 			return builder.ToString ();
 		}
 
-		public FormattedText GetOptionDescription(DocumentOption documentOption)
+		public FormattedText GetOptionDescription(VerboseDocumentOption option, bool hasBullet, bool hiliteValue)
 		{
-			var option = this.verboseDocumentOptions.Where (x => x.Option == documentOption).FirstOrDefault ();
-
-			var description = option.Description;
-			var value = this[option.Option];
+			FormattedText description = option.Description;
+			FormattedText value = this[option.Option];
 
 			if (option.Type == DocumentOptionValueType.Boolean)
 			{
-				switch (value)
+				if (value == "false")
 				{
-					case "false":
-						value = "non";
-						break;
+					value = "non";
+				}
 
-					case "true":
-						value = "oui";
-						break;
+				if (value == "true")
+				{
+					value = "oui";
 				}
 			}
 
@@ -267,12 +263,19 @@ namespace Epsitec.Cresus.Core.Documents
 				value = string.Concat (value, " mm");
 			}
 
-			if (string.IsNullOrEmpty (description))
+			if (description.IsNullOrEmpty)
 			{
-				description = option.Option.ToString ();
+				description = option.Option.ToString ();  // faute de mieux !
 			}
 
-			return string.Concat ("● ", description, " = ", value);
+			FormattedText bullet = hasBullet ? "● " : "";
+
+			if (hiliteValue)
+			{
+				value = value.ApplyBold ();
+			}
+
+			return FormattedText.Concat (bullet, description, " = ", value);
 		}
 
 
@@ -353,6 +356,5 @@ namespace Epsitec.Cresus.Core.Documents
 
 
 		private readonly Dictionary<DocumentOption, string>		dictionary;
-		private readonly IEnumerable<VerboseDocumentOption>		verboseDocumentOptions;
 	}
 }

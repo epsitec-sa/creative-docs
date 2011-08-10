@@ -289,11 +289,12 @@ namespace Epsitec.Cresus.Core.DocumentOptionsEditor
 		{
 			var list = new List<string> ();
 
-			foreach (var option in info.PrintingOptionDictionary.Options)
+			foreach (var option in Documents.Verbose.VerboseDocumentOption.GetAll ())
 			{
-				if (this.documentOptions.Contains (option))
+				if (this.documentOptions.Contains (option.Option) &&
+					info.PrintingOptionDictionary.Options.Contains (option.Option))
 				{
-					var description = info.PrintingOptionDictionary.GetOptionDescription (option);
+					var description = info.PrintingOptionDictionary.GetOptionDescription (option, hasBullet: false, hiliteValue: true);
 					list.Add (description.ToString ());
 				}
 			}
