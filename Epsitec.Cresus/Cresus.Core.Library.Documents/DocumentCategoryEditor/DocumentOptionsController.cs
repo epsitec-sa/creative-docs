@@ -671,6 +671,11 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				overflowTooltip = this.GetTooltipDescription (overflowOptions);
 			}
 
+			if (this.documentCategoryEntity.DocumentOptions.Count == 0)
+			{
+				missingMessage = "Aucune option d'impression n'est choisie";
+			}
+
 			if (errorMessage.IsNullOrEmpty)
 			{
 				this.errorFrame.Visibility = false;

@@ -54,13 +54,38 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			this.checkButtonsFrame.ViewportPadding = new Margins (-1);
 
 			this.CreateCheckButtons ();
+
+			this.CreateError (box);
+			this.UpdateError ();
 		}
 
 		public void UpdateAfterDocumentTypeChanged()
 		{
 			this.CreateCheckButtons ();
+			this.UpdateError ();
 		}
 
+
+		private void CreateError(Widget parent)
+		{
+			this.errorFrame = new FrameBox
+			{
+				Parent = parent,
+				DrawFullFrame = true,
+				BackColor = Color.FromBrightness (1),
+				PreferredHeight = 24,
+				Dock = DockStyle.Bottom,
+				Margins = new Margins (0, 0, -1, 0),
+			};
+
+			this.errorText = new StaticText
+			{
+				Parent = this.errorFrame,
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleLeft,
+				Dock = DockStyle.Fill,
+				Margins = new Margins (5+12, 0, 0, 0),
+			};
+		}
 
 		private void CreateCheckButtons()
 		{
@@ -158,8 +183,37 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					this.documentCategoryEntity.DocumentPrintingUnits.Remove (entity);
 				}
 			}
+
+			this.UpdateError ();
 		}
 
+
+		private void UpdateError()
+		{
+			FormattedText errorMessage = null;
+
+			int accepted = this.pageTypeInformations.Where (x =>  x.Match).Where (x => this.documentCategoryEntity.DocumentPrintingUnits.Contains (x.Entity)).Count ();
+			int rejected = this.pageTypeInformations.Where (x => !x.Match).Where (x => this.documentCategoryEntity.DocumentPrintingUnits.Contains (x.Entity)).Count ();
+
+			if (rejected != 0)
+			{
+				errorMessage = "Il y a une page imprimable inadaptée";
+			}
+			else if (accepted == 0)
+			{
+				errorMessage = "Aucune page imprimable n'est choisie";
+			}
+
+			if (errorMessage.IsNullOrEmpty)
+			{
+				this.errorFrame.Visibility = false;
+			}
+			else
+			{
+				this.errorFrame.Visibility = true;
+				this.errorText.FormattedText = errorMessage;
+			}
+		}
 
 		private void UpdateData()
 		{
@@ -239,5 +293,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 		private Scrollable									checkButtonsFrame;
 		private bool										firstGroup;
 		private IEnumerable<PageType>						requiredPageTypes;
+		private FrameBox									errorFrame;
+		private StaticText									errorText;
 	}
 }
