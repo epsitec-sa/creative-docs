@@ -70,54 +70,10 @@ namespace Epsitec.Cresus.Core.Server
 
 		private List<Dictionary<string, object>> GetPanels(Brick brick)
 		{
-			var b = brick;
-
 			var item = new WebDataItem ();
+			Brick processedBrick = BrickProcessor.ProcessBrick (brick, item);
 
-			Brick oldBrick;
-			do
-			{
-
-				if (Brick.ContainsProperty (b, BrickPropertyKey.OfType))
-				{
-
-				}
-				else
-				{
-					BrickProcessor.CreateDefaultTextProperties (b);
-				}
-
-				BrickProcessor.ProcessProperty (b, BrickPropertyKey.Name, x => item.Name = x);
-				BrickProcessor.ProcessProperty (b, BrickPropertyKey.Icon, x => item.IconUri = x);
-
-				BrickProcessor.ProcessProperty (b, BrickPropertyKey.Title, x => item.Title = x);
-				BrickProcessor.ProcessProperty (b, BrickPropertyKey.TitleCompact, x => item.CompactTitle = x);
-				BrickProcessor.ProcessProperty (b, BrickPropertyKey.Text, x => item.Text = x);
-				BrickProcessor.ProcessProperty (b, BrickPropertyKey.TextCompact, x => item.CompactText = x);
-
-				BrickProcessor.ProcessProperty (b, BrickPropertyKey.Attribute, x => BrickProcessor.ProcessAttribute (item, x));
-
-				if ((!item.Title.IsNullOrEmpty) && (item.CompactTitle.IsNull))
-				{
-					item.CompactTitle = item.Title;
-				}
-
-				BrickProcessor.ProcessProperty (b, BrickPropertyKey.Title, x => item.TitleAccessor = x);
-				BrickProcessor.ProcessProperty (b, BrickPropertyKey.TitleCompact, x => item.CompactTitleAccessor = x);
-				BrickProcessor.ProcessProperty (b, BrickPropertyKey.Text, x => item.TextAccessor = x);
-				BrickProcessor.ProcessProperty (b, BrickPropertyKey.TextCompact, x => item.CompactTextAccessor = x);
-
-				if (Brick.ContainsProperty (b, BrickPropertyKey.CollectionAnnotation))
-				{
-					item.DataType = TileDataType.CollectionItem;
-				}
-
-
-				oldBrick = b;
-				b = Brick.GetProperty (b, BrickPropertyKey.OfType).Brick;
-			} while (b != null);
-
-			var panels = CreatePanelContent (oldBrick, item);
+			var panels = CreatePanelContent (processedBrick, item);
 			return panels;
 		}
 

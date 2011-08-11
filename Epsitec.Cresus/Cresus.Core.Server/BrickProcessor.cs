@@ -5,11 +5,59 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Controllers.DataAccessors;
 
 namespace Epsitec.Cresus.Core.Server
 {
 	class BrickProcessor
 	{
+		internal static Brick ProcessBrick(Brick brick, WebDataItem item)
+		{
+			Brick oldBrick;
+			do
+			{
+
+				if (Brick.ContainsProperty (brick, BrickPropertyKey.OfType))
+				{
+
+				}
+				else
+				{
+					BrickProcessor.CreateDefaultTextProperties (brick);
+				}
+
+				BrickProcessor.ProcessProperty (brick, BrickPropertyKey.Name, x => item.Name = x);
+				BrickProcessor.ProcessProperty (brick, BrickPropertyKey.Icon, x => item.IconUri = x);
+
+				BrickProcessor.ProcessProperty (brick, BrickPropertyKey.Title, x => item.Title = x);
+				BrickProcessor.ProcessProperty (brick, BrickPropertyKey.TitleCompact, x => item.CompactTitle = x);
+				BrickProcessor.ProcessProperty (brick, BrickPropertyKey.Text, x => item.Text = x);
+				BrickProcessor.ProcessProperty (brick, BrickPropertyKey.TextCompact, x => item.CompactText = x);
+
+				BrickProcessor.ProcessProperty (brick, BrickPropertyKey.Attribute, x => BrickProcessor.ProcessAttribute (item, x));
+
+				if ((!item.Title.IsNullOrEmpty) && (item.CompactTitle.IsNull))
+				{
+					item.CompactTitle = item.Title;
+				}
+
+				BrickProcessor.ProcessProperty (brick, BrickPropertyKey.Title, x => item.TitleAccessor = x);
+				BrickProcessor.ProcessProperty (brick, BrickPropertyKey.TitleCompact, x => item.CompactTitleAccessor = x);
+				BrickProcessor.ProcessProperty (brick, BrickPropertyKey.Text, x => item.TextAccessor = x);
+				BrickProcessor.ProcessProperty (brick, BrickPropertyKey.TextCompact, x => item.CompactTextAccessor = x);
+
+				if (Brick.ContainsProperty (brick, BrickPropertyKey.CollectionAnnotation))
+				{
+					item.DataType = TileDataType.CollectionItem;
+				}
+
+
+				oldBrick = brick;
+				brick = Brick.GetProperty (brick, BrickPropertyKey.OfType).Brick;
+			} while (brick != null);
+
+			return oldBrick;
+		}
 
 		internal static void CreateDefaultTextProperties(Brick brick)
 		{
