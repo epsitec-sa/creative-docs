@@ -1,4 +1,4 @@
-//	Copyright � 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -15,13 +15,56 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Name);
+			return FormattedText.Concat
+				(
+					this.Name,
+					"<br/> <br/>Options d'impression :<br/><font size=\"25%\"><br/></font>", this.GetDocumentOptionsSummary (),
+					"<br/> <br/>Unités d'impression :<br/><font size=\"25%\"><br/></font>", this.GetPrintingUnitsSummary ());
 		}
 
 		public override FormattedText GetCompactSummary()
 		{
 			return TextFormatter.FormatText (this.Name);
 		}
+
+		private FormattedText GetDocumentOptionsSummary()
+		{
+			var list = new List<string> ();
+
+			foreach (var option in this.DocumentOptions)
+			{
+				list.Add (string.Concat ("● ", option.Name.ToString ()));
+			}
+
+			if (list.Count == 0)
+			{
+				return "● <i>Aucune</i>";
+			}
+			else
+			{
+				return string.Join ("<br/>", list);
+			}
+		}
+
+		private FormattedText GetPrintingUnitsSummary()
+		{
+			var list = new List<string> ();
+
+			foreach (var option in this.DocumentPrintingUnits)
+			{
+				list.Add (string.Concat ("● ", option.Name.ToString ()));
+			}
+
+			if (list.Count == 0)
+			{
+				return "● <i>Aucune</i>";
+			}
+			else
+			{
+				return string.Join ("<br/>", list);
+			}
+		}
+
 
 		public override EntityStatus GetEntityStatus()
 		{

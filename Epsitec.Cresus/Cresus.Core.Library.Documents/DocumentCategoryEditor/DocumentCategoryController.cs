@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 		#endregion
 
 
-		public readonly int		lineHeight = 15;
+		public readonly int		lineHeight  = 15;
 		public readonly int		errorHeight = 24;
 
 		public readonly Color	acceptedColor  = Color.FromRgb (221.0/255.0, 255.0/255.0, 227.0/255.0);  // vert clair

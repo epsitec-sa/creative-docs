@@ -201,7 +201,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				var errorFrame = new FrameBox
 				{
 					Parent = frame,
-					PreferredWidth = 10,
+					PreferredWidth = DocumentOptionsController.errorBulletWidth,
 					Dock = DockStyle.Left,
 					Margins = new Margins (0, 0, this.documentCategoryController.lineHeight-2, 0),
 				};
@@ -209,7 +209,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				var overflowFrame = new FrameBox
 				{
 					Parent = frame,
-					PreferredWidth = 10,
+					PreferredWidth = DocumentOptionsController.errorBulletWidth,
 					Dock = DockStyle.Left,
 					Margins = new Margins (0, 0, this.documentCategoryController.lineHeight-2, 0),
 				};
@@ -223,7 +223,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				var rightFrame = new FrameBox
 				{
 					Parent = frame,
-					PreferredWidth = 40,
+					PreferredWidth = DocumentOptionsController.ratioWidth,
 					Dock = DockStyle.Right,
 				};
 
@@ -253,7 +253,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					{
 						Parent = errorFrame,
 						ContentAlignment = ContentAlignment.MiddleLeft,
-						PreferredWidth = 10,
+						PreferredWidth = DocumentOptionsController.errorBulletWidth,
 						PreferredHeight = this.documentCategoryController.lineHeight,
 						Dock = DockStyle.Top,
 					};
@@ -265,7 +265,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					{
 						Parent = overflowFrame,
 						ContentAlignment = ContentAlignment.MiddleLeft,
-						PreferredWidth = 10,
+						PreferredWidth = DocumentOptionsController.errorBulletWidth,
 						PreferredHeight = this.documentCategoryController.lineHeight,
 						Dock = DockStyle.Top,
 					};
@@ -321,7 +321,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				{
 					Parent = frame,
 					ContentAlignment = ContentAlignment.MiddleLeft,
-					PreferredWidth = 10,
+					PreferredWidth = DocumentOptionsController.errorBulletWidth,
 					PreferredHeight = this.documentCategoryController.lineHeight-3,
 					Dock = DockStyle.Left,
 					Margins = new Margins (0, 0, 0, 3),
@@ -334,7 +334,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				{
 					Parent = frame,
 					ContentAlignment = ContentAlignment.MiddleLeft,
-					PreferredWidth = 10,
+					PreferredWidth = DocumentOptionsController.errorBulletWidth,
 					PreferredHeight = this.documentCategoryController.lineHeight-3,
 					Dock = DockStyle.Left,
 					Margins = new Margins (0, 0, 0, 3),
@@ -367,7 +367,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					Parent = frame,
 					Text = group.Ratio,
 					ContentAlignment = ContentAlignment.MiddleRight,
-					PreferredWidth = 40,
+					PreferredWidth = DocumentOptionsController.ratioWidth,
 					Dock = DockStyle.Right,
 				};
 			}
@@ -953,6 +953,9 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			private readonly IEnumerable<DocumentOption> options;
 		}
 
+
+		private static readonly int		errorBulletWidth = 10;
+		private static readonly int		ratioWidth       = 40;
 
 		private readonly IBusinessContext					businessContext;
 		private readonly DocumentCategoryEntity				documentCategoryEntity;
