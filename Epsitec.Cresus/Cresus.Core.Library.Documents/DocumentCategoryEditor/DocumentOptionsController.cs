@@ -9,6 +9,7 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Documents;
+using Epsitec.Cresus.Core.Documents.Verbose;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.PlugIns;
 using Epsitec.Cresus.Core.Library;
@@ -26,6 +27,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			this.businessContext            = this.documentCategoryController.BusinessContext;
 			this.documentCategoryEntity     = this.documentCategoryController.DocumentCategoryEntity;
 
+			this.verboseDocumentOptions = VerboseDocumentOption.GetAll ().Where (x => x.Option != DocumentOption.None);
 			this.optionInformations = new List<OptionInformation> ();
 			this.optionGroups = new List<OptionGroup> ();
 			this.errorOptions = new List<DocumentOption> ();
@@ -151,6 +153,8 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				var frame = this.CreateColorizedFrameBox (parent, color);
 				this.CreateTitle (frame, title);
 
+				this.lastButton = '-';
+
 				foreach (var group in optionGroups)
 				{
 					this.CreateCheckButton (frame, group);
@@ -188,6 +192,19 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 		private void CreateCheckButton(Widget parent, OptionGroup group)
 		{
+			if (this.lastButton == 'r' || (group.IsRadio && this.lastButton != '-'))
+			{
+				//	Met une petite séparation.
+				new FrameBox
+				{
+					Parent = parent,
+					PreferredHeight = 5,
+					Dock = DockStyle.Top,
+				};
+			}
+
+			this.lastButton = group.IsRadio ? 'r' : 'c';
+
 			int index = this.optionGroups.IndexOf (group);
 
 			if (group.IsRadio)
@@ -227,7 +244,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					Dock = DockStyle.Right,
 				};
 
-				new StaticText
+				var ratio = new StaticText
 				{
 					Parent = rightFrame,
 					Text = group.Ratio,
@@ -290,7 +307,6 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 						ActiveState = check ? ActiveState.Yes : ActiveState.No,
 						PreferredHeight = this.documentCategoryController.lineHeight,
 						Dock = DockStyle.Top,
-						Margins = new Margins (0, 0, 0, (i == group.OptionInformations.Count-1) ? 5 : 0),
 					};
 
 					group.OptionInformations[i].Button = button;
@@ -362,7 +378,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					this.ButtonClicked (button);
 				};
 
-				new StaticText
+				var ratio = new StaticText
 				{
 					Parent = frame,
 					Text = group.Ratio,
@@ -386,32 +402,98 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 		private FormattedText GetTooltipDescription(OptionInformation info)
 		{
 			//	Retourne le contenu pour un tooltip, avec les valeurs.
-			var list = new List<string> ();
+			bool active = this.documentCategoryEntity.DocumentOptions.Contains (info.Entity);  // option cochée ?
 
-			foreach (var option in Documents.Verbose.VerboseDocumentOption.GetAll ().Where (x => x.Option != DocumentOption.None))
+			if (active)
 			{
-				if (info.PrintingOptionDictionary.Options.Contains (option.Option))
+				//	Construit les lignes, une par option.
+				var list = new List<string> ();
+
+				int correctCount = 0;
+				int errorCount   = 0;
+				int inutileCount = 0;
+
+				foreach (var verboseOption in this.verboseDocumentOptions)
 				{
-					var description = info.PrintingOptionDictionary.GetOptionDescription (option, hasBullet: false, hiliteValue: true);
-
-					if (this.errorOptions.Contains (option.Option))
+					if (info.PrintingOptionDictionary.Options.Contains (verboseOption.Option))
 					{
-						description = description.ApplyFontColor (Color.FromName ("Red"));
-					}
+						var description = info.PrintingOptionDictionary.GetOptionDescription (verboseOption, hasBullet: true, hiliteValue: true);
 
-					if (!this.RequiredDocumentOptionsContains (option.Option))
-					{
-						description = description.ApplyFontColor (Color.FromName ("Blue"));
-					}
+						if (this.errorOptions.Contains (verboseOption.Option))
+						{
+							description = description.ApplyFontColor (Color.FromName ("Blue"));
+							errorCount++;
+						}
+						else if (!this.RequiredDocumentOptionsContains (verboseOption.Option))
+						{
+							description = description.ApplyFontColor (Color.FromName ("Red"));
+							inutileCount++;
+						}
+						else
+						{
+							correctCount++;
+						}
 
-					list.Add (description.ToString ());
+						list.Add (description.ToString ());
+					}
+				}
+
+				//	Génère les textes.
+				string correctText = "";
+				string errorText   = "";
+				string inutileText = "";
+
+				if (correctCount == 1)
+				{
+					correctText = "Une option est définie correctement (noir)<br/>";
+				}
+				if (correctCount > 1)
+				{
+					correctText = string.Format ("{0} options sont définies correctement (noir)<br/>", correctCount.ToString ());
+				}
+
+				if (errorCount == 1)
+				{
+					errorText = "Une option est définie plusieurs fois (bleu)<br/>";
+				}
+				if (errorCount > 1)
+				{
+					errorText = string.Format ("{0} options sont définies plusieurs fois (bleu)<br/>", errorCount.ToString ());
+				}
+
+				if (inutileCount == 1)
+				{
+					inutileText = "Une option est définie inutilement (rouge)<br/>";
+				}
+				if (inutileCount > 1)
+				{
+					inutileText = string.Format ("{0} options sont définies inutilement (rouge)<br/>", inutileCount.ToString ());
+				}
+
+				//	Génère le texte final.
+				var hline = new string ('_', 80);
+				var separator = string.Concat ("<font size=\"40%\">", hline, "<br/> <br/></font>");
+
+				return string.Concat (correctText, errorText, inutileText, separator, string.Join ("<br/>", list));
+			}
+			else  // option non cochée ?
+			{
+				if (info.Used == 0)
+				{
+					return "Ce bouton n'est pas adapté";
+				}
+				else if (info.Used == 1)
+				{
+					return "Une option sera ajoutée aux définitions";
+				}
+				else
+				{
+					return string.Format ("{0} options seront ajoutées aux définitions", info.Used.ToString ());
 				}
 			}
-
-			return string.Join ("<br/>", list);
 		}
 
-		private FormattedText GetDeltaTooltipDescription(List<DocumentOption> usedOptions, bool exist)
+		private FormattedText GetMissingTooltipDescription(List<DocumentOption> usedOptions)
 		{
 			var list = new List<DocumentOption> ();
 
@@ -419,7 +501,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			{
 				foreach (var option in this.requiredDocumentOptions)
 				{
-					if (usedOptions.Contains (option) == exist)
+					if (!usedOptions.Contains (option))
 					{
 						list.Add (option);
 					}
@@ -434,11 +516,11 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			//	Retourne le contenu pour un tooltip, sans les valeurs.
 			var list = new List<string> ();
 
-			foreach (var option in Documents.Verbose.VerboseDocumentOption.GetAll ().Where (x => x.Option != DocumentOption.None))
+			foreach (var verboseOption in this.verboseDocumentOptions)
 			{
-				if (options.Contains (option.Option))
+				if (options.Contains (verboseOption.Option))
 				{
-					var description = option.Description;
+					var description = verboseOption.Description;
 					list.Add (description.ToString ());
 				}
 			}
@@ -512,8 +594,8 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			int missing  = 0;
 			int overflow = 0;
 
-			FormattedText errorBullet    = new FormattedText ("●").ApplyFontColor (Color.FromName ("Red")).ApplyFontSize (14);
-			FormattedText overflowBullet = new FormattedText ("●").ApplyFontColor (Color.FromName ("Blue")).ApplyFontSize (14);
+			FormattedText errorBullet    = new FormattedText ("●").ApplyFontColor (Color.FromName ("Blue")).ApplyFontSize (14);
+			FormattedText overflowBullet = new FormattedText ("●").ApplyFontColor (Color.FromName ("Red")).ApplyFontSize (14);
 
 			foreach (var documentOptionEntity in this.documentCategoryEntity.DocumentOptions)
 			{
@@ -636,7 +718,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 				errorMessage = FormattedText.Concat (errorBullet, " ", errorMessage.ApplyBold ());
 
-				errorTooltip = this.GetTooltipDescription (this.errorOptions);
+				errorTooltip = this.GetTooltipDescription (this.errorOptions).ApplyFontColor (Color.FromName ("Blue"));
 			}
 
 			if (missing != 0)
@@ -650,7 +732,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					missingMessage = string.Format ("Il y a {0} options indéfinies", missing.ToString ());
 				}
 
-				missingTooltip = this.GetDeltaTooltipDescription (usedOptions, false);
+				missingTooltip = this.GetMissingTooltipDescription (usedOptions);
 			}
 
 			if (overflow != 0)
@@ -666,7 +748,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 				overflowMessage = FormattedText.Concat (overflowBullet, " ", overflowMessage);
 
-				overflowTooltip = this.GetTooltipDescription (overflowOptions);
+				overflowTooltip = this.GetTooltipDescription (overflowOptions).ApplyFontColor (Color.FromName ("Red"));
 			}
 
 			if (this.documentCategoryEntity.DocumentOptions.Count == 0)
@@ -746,9 +828,10 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 		private void UpdateOptionInformations()
 		{
 			this.requiredDocumentOptions = Epsitec.Cresus.Core.Documents.External.CresusCore.GetRequiredDocumentOptionsByDocumentType (this.documentCategoryEntity.DocumentType);
+			
 			this.optionInformations.Clear ();
 
-			var optionEntities = this.businessContext.GetAllEntities<DocumentOptionsEntity> ();
+			var optionEntities = this.businessContext.GetAllEntities<DocumentOptionsEntity> ().OrderBy (x => x.Name);
 			foreach (var optionEntity in optionEntities)
 			{
 				this.optionInformations.Add (this.GetOptionInformation (optionEntity));
@@ -800,6 +883,14 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			{
 				this.optionInformations = new List<OptionInformation> ();
 				this.optionInformations.Add (optionInformation);
+			}
+
+			public DocumentOptionsEntity Entity
+			{
+				get
+				{
+					return this.optionInformations[0].Entity;
+				}
 			}
 
 			public List<OptionInformation> OptionInformations
@@ -874,6 +965,51 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			{
 				get;
 				private set;
+			}
+
+			public string RatioDescription
+			{
+				get
+				{
+					if (this.Used == this.Total && this.Used != 0)
+					{
+						if (this.Used == 1)
+						{
+							return "L'option est utile pour ce type de document";
+						}
+						else
+						{
+							return string.Format ("Les {0} options sont toutes utiles pour ce type de document", this.Used.ToString ());
+						}
+					}
+					else
+					{
+						int overflowCount = this.Total - this.Used;
+						string overflowText = "";
+
+						if (overflowCount <= 1)
+						{
+							overflowText = "Une option est définie inutilement (rouge)";
+						}
+						else
+						{
+							overflowText = string.Format ("{0} options sont définies inutilement (rouge)", overflowCount.ToString ());
+						}
+
+						if (this.Used == 0)
+						{
+							return string.Format ("Aucune option utile pour ce type de document, sur un total de {0}", this.Total.ToString ());
+						}
+						else if (this.Used == 1)
+						{
+							return string.Format ("Une option utile pour ce type de document, sur un total de {0} (noir ou bleu)<br/>{1}", this.Total.ToString (), overflowText);
+						}
+						else
+						{
+							return string.Format ("{0} options utiles pour ce type de document, sur un total de {1} (noir et bleu)<br/>{2}", this.Used.ToString (), this.Total.ToString (), overflowText);
+						}
+					}
+				}
 			}
 
 			public int Used
@@ -960,12 +1096,14 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 		private readonly IBusinessContext					businessContext;
 		private readonly DocumentCategoryEntity				documentCategoryEntity;
 		private readonly DocumentCategoryController			documentCategoryController;
+		private readonly IEnumerable<VerboseDocumentOption>	verboseDocumentOptions;
 		private readonly List<OptionInformation>			optionInformations;
 		private readonly List<OptionGroup>					optionGroups;
 		private readonly List<DocumentOption>				errorOptions;
 
 		private Scrollable									checkButtonsFrame;
 		private bool										firstGroup;
+		private char										lastButton;
 		private IEnumerable<DocumentOption>					requiredDocumentOptions;
 		private FrameBox									errorFrame;
 		private StaticText									errorText;

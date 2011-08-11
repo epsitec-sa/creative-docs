@@ -216,9 +216,10 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 		private void UpdateData()
 		{
 			this.requiredPageTypes = Epsitec.Cresus.Core.Documents.External.CresusCore.GetRequiredPageTypes (this.documentCategoryEntity.DocumentType);
+
 			this.pageTypeInformations.Clear ();
 
-			var printingUnitEntities = this.businessContext.GetAllEntities<DocumentPrintingUnitsEntity> ();
+			var printingUnitEntities = this.businessContext.GetAllEntities<DocumentPrintingUnitsEntity> ().OrderBy (x => x.Name);
 			foreach (var printingUnitEntity in printingUnitEntities)
 			{
 				this.pageTypeInformations.Add (this.GetPageType (printingUnitEntity));
