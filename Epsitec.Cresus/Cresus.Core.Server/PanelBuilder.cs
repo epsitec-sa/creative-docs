@@ -54,7 +54,8 @@ namespace Epsitec.Cresus.Core.Server
 			// Open the main panel
 			var dic = new Dictionary<string, object> ();
 
-			//dic["title"] = this.entity.GetType ().ToString ();
+			//dic["title"] = this.rootEntity.GetType ().ToString ();
+			dic["parentEntity"] = GetEntityKey (this.rootEntity);
 
 			var items = new List<Dictionary<string, object>> ();
 			dic["items"] = items;
@@ -131,7 +132,7 @@ namespace Epsitec.Cresus.Core.Server
 			var parent = GetBasicPanelFrom (item);
 			list.Add (parent);
 
-			var entityKey = this.coreSession.GetBusinessContext ().DataContext.GetNormalizedEntityKey (entity).Value.ToString ();
+			var entityKey = GetEntityKey (entity);
 			parent["entityId"] = entityKey;
 
 			if (item.DefaultMode == ViewControllerMode.Summary)
@@ -533,6 +534,11 @@ namespace Epsitec.Cresus.Core.Server
 
 			FieldInfo info = new FieldInfo (EntityInfo<AbstractContactEntity>.GetTypeId (), lambda);
 			return info;
+		}
+
+		private string GetEntityKey(AbstractEntity entity)
+		{
+			return this.coreSession.GetBusinessContext ().DataContext.GetNormalizedEntityKey (entity).Value.ToString ();
 		}
 
 		private readonly AbstractEntity rootEntity;

@@ -63,6 +63,7 @@
     <Compile Include="CoreSession.cs" />
     <Compile Include="DebugSession.cs" />
     <Compile Include="Modules\CoreModule.cs" />
+    <Compile Include="Modules\CreatorModule.cs" />
     <Compile Include="Modules\EntityModule.cs" />
     <Compile Include="Modules\LayoutModule.cs" />
     <Compile Include="Modules\ListModule.cs" />
