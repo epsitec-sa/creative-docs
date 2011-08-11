@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 			this.optionInformations = new List<OptionInformation> ();
 			this.optionGroups = new List<OptionGroup> ();
-			this.warningOptions = new List<DocumentOption> ();
+			this.errorOptions = new List<DocumentOption> ();
 		}
 
 
@@ -57,20 +57,22 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 			this.CreateCheckButtons ();
 
-			this.CreateWarning (box);
-			this.UpdateWarning ();
+			this.CreateMissing (box);
+			this.CreateOverflow (box);
+			this.CreateError (box);
+			this.UpdateErrorAndWarning ();
 		}
 
 		public void UpdateAfterDocumentTypeChanged()
 		{
 			this.CreateCheckButtons ();
-			this.UpdateWarning ();
+			this.UpdateErrorAndWarning ();
 		}
 
 
-		private void CreateWarning(Widget parent)
+		private void CreateError(Widget parent)
 		{
-			this.warningFrame = new FrameBox
+			this.errorFrame = new FrameBox
 			{
 				Parent = parent,
 				DrawFullFrame = true,
@@ -80,12 +82,54 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				Margins = new Margins (0, 0, -1, 0),
 			};
 
-			this.warningText = new StaticText
+			this.errorText = new StaticText
 			{
-				Parent = this.warningFrame,
+				Parent = this.errorFrame,
 				ContentAlignment = Common.Drawing.ContentAlignment.MiddleLeft,
 				Dock = DockStyle.Fill,
 				Margins = new Margins (5, 0, 0, 0),
+			};
+		}
+
+		private void CreateOverflow(Widget parent)
+		{
+			this.overflowFrame = new FrameBox
+			{
+				Parent = parent,
+				DrawFullFrame = true,
+				BackColor = Color.FromBrightness (1),
+				PreferredHeight = 24,
+				Dock = DockStyle.Bottom,
+				Margins = new Margins (0, 0, -1, 0),
+			};
+
+			this.overflowText = new StaticText
+			{
+				Parent = this.overflowFrame,
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleLeft,
+				Dock = DockStyle.Fill,
+				Margins = new Margins (5, 0, 0, 0),
+			};
+		}
+
+		private void CreateMissing(Widget parent)
+		{
+			this.missingFrame = new FrameBox
+			{
+				Parent = parent,
+				DrawFullFrame = true,
+				BackColor = Color.FromBrightness (1),
+				PreferredHeight = 24,
+				Dock = DockStyle.Bottom,
+				Margins = new Margins (0, 0, -1, 0),
+			};
+
+			this.missingText = new StaticText
+			{
+				Parent = this.missingFrame,
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleLeft,
+				Dock = DockStyle.Fill,
+				Margins = new Margins (5+12, 0, 0, 0),
 			};
 		}
 
@@ -156,7 +200,15 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					Dock = DockStyle.Top,
 				};
 
-				var warningFrame = new FrameBox
+				var errorFrame = new FrameBox
+				{
+					Parent = frame,
+					PreferredWidth = 10,
+					Dock = DockStyle.Left,
+					Margins = new Margins (0, 0, 15-2, 0),
+				};
+
+				var overflowFrame = new FrameBox
 				{
 					Parent = frame,
 					PreferredWidth = 10,
@@ -199,17 +251,29 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 				for (int i = 0; i < group.OptionInformations.Count; i++)
 				{
-					var warning = new StaticText
+					var error = new StaticText
 					{
-						Parent = warningFrame,
+						Parent = errorFrame,
 						ContentAlignment = ContentAlignment.MiddleLeft,
 						PreferredWidth = 10,
 						PreferredHeight = 15,
 						Dock = DockStyle.Top,
 					};
 
-					group.OptionInformations[i].WarningVisibility = warningFrame;
-					group.OptionInformations[i].WarningText = warning;
+					group.OptionInformations[i].ErrorVisibility = errorFrame;
+					group.OptionInformations[i].ErrorText = error;
+
+					var overflow = new StaticText
+					{
+						Parent = overflowFrame,
+						ContentAlignment = ContentAlignment.MiddleLeft,
+						PreferredWidth = 10,
+						PreferredHeight = 15,
+						Dock = DockStyle.Top,
+					};
+
+					group.OptionInformations[i].OverflowVisibility = overflowFrame;
+					group.OptionInformations[i].OverflowText = overflow;
 
 					var entity = group.OptionInformations[i].Entity;
 					bool check = this.documentCategoryEntity.DocumentOptions.Contains (entity);
@@ -255,7 +319,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					Dock = DockStyle.Top,
 				};
 
-				var warning = new StaticText
+				var error = new StaticText
 				{
 					Parent = frame,
 					ContentAlignment = ContentAlignment.MiddleLeft,
@@ -265,8 +329,21 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					Margins = new Margins (0, 0, 0, 3),
 				};
 
-				group.OptionInformations[0].WarningVisibility = warning;
-				group.OptionInformations[0].WarningText = warning;
+				group.OptionInformations[0].ErrorVisibility = error;
+				group.OptionInformations[0].ErrorText = error;
+
+				var overflow = new StaticText
+				{
+					Parent = frame,
+					ContentAlignment = ContentAlignment.MiddleLeft,
+					PreferredWidth = 10,
+					PreferredHeight = 15-3,
+					Dock = DockStyle.Left,
+					Margins = new Margins (0, 0, 0, 3),
+				};
+
+				group.OptionInformations[0].OverflowVisibility = overflow;
+				group.OptionInformations[0].OverflowText = overflow;
 
 				var entity = group.OptionInformations[0].Entity;
 				bool check = this.documentCategoryEntity.DocumentOptions.Contains (entity);
@@ -310,21 +387,60 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 		private FormattedText GetTooltipDescription(OptionInformation info)
 		{
+			//	Retourne le contenu pour un tooltip, avec les valeurs.
 			var list = new List<string> ();
 
-			foreach (var option in Documents.Verbose.VerboseDocumentOption.GetAll ())
+			foreach (var option in Documents.Verbose.VerboseDocumentOption.GetAll ().Where (x => x.Option != DocumentOption.None))
 			{
-				if (this.documentOptions != null &&
-					this.documentOptions.Contains (option.Option) &&
-					info.PrintingOptionDictionary.Options.Contains (option.Option))
+				if (info.PrintingOptionDictionary.Options.Contains (option.Option))
 				{
 					var description = info.PrintingOptionDictionary.GetOptionDescription (option, hasBullet: false, hiliteValue: true);
 
-					if (this.warningOptions.Contains (option.Option))
+					if (this.errorOptions.Contains (option.Option))
 					{
 						description = description.ApplyFontColor (Color.FromName ("Red"));
 					}
 
+					if (!this.RequiredDocumentOptionsContains (option.Option))
+					{
+						description = description.ApplyFontColor (Color.FromName ("Blue"));
+					}
+
+					list.Add (description.ToString ());
+				}
+			}
+
+			return string.Join ("<br/>", list);
+		}
+
+		private FormattedText GetDeltaTooltipDescription(List<DocumentOption> usedOptions, bool exist)
+		{
+			var list = new List<DocumentOption> ();
+
+			if (this.requiredDocumentOptions != null)
+			{
+				foreach (var option in this.requiredDocumentOptions)
+				{
+					if (usedOptions.Contains (option) == exist)
+					{
+						list.Add (option);
+					}
+				}
+			}
+
+			return this.GetTooltipDescription (list);
+		}
+
+		private FormattedText GetTooltipDescription(List<DocumentOption> options)
+		{
+			//	Retourne le contenu pour un tooltip, sans les valeurs.
+			var list = new List<string> ();
+
+			foreach (var option in Documents.Verbose.VerboseDocumentOption.GetAll ().Where (x => x.Option != DocumentOption.None))
+			{
+				if (options.Contains (option.Option))
+				{
+					var description = option.Description;
 					list.Add (description.ToString ());
 				}
 			}
@@ -383,17 +499,23 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				}
 			}
 
-			this.UpdateWarning ();
+			this.UpdateErrorAndWarning ();
 		}
 
 
-		private void UpdateWarning()
+		private void UpdateErrorAndWarning()
 		{
-			this.warningOptions.Clear ();
-			var options = new List<DocumentOption> ();
-			int error = 0;
+			this.errorOptions.Clear ();
 
-			FormattedText warningBullet = new FormattedText ("●").ApplyFontColor (Color.FromName ("Red")).ApplyFontSize (14);
+			var usedOptions     = new List<DocumentOption> ();
+			var overflowOptions = new List<DocumentOption> ();
+
+			int error    = 0;
+			int missing  = 0;
+			int overflow = 0;
+
+			FormattedText errorBullet    = new FormattedText ("●").ApplyFontColor (Color.FromName ("Red")).ApplyFontSize (14);
+			FormattedText overflowBullet = new FormattedText ("●").ApplyFontColor (Color.FromName ("Blue")).ApplyFontSize (14);
 
 			foreach (var documentOptionEntity in this.documentCategoryEntity.DocumentOptions)
 			{
@@ -401,45 +523,92 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 				foreach (var option in info.Options)
 				{
-					if (this.documentOptions != null && this.documentOptions.Contains (option))
+					if (this.RequiredDocumentOptionsContains (option))
 					{
-						if (options.Contains (option))
+						if (usedOptions.Contains (option))
 						{
-							this.warningOptions.Add (option);
-							error++;
+							if (!this.errorOptions.Contains (option))
+							{
+								this.errorOptions.Add (option);
+								error++;
+							}
 						}
 						else
 						{
-							options.Add (option);
+							usedOptions.Add (option);
+						}
+					}
+					else
+					{
+						if (!overflowOptions.Contains (option))
+						{
+							overflowOptions.Add (option);
 						}
 					}
 				}
 			}
 
+			int required = this.RequiredDocumentOptionsCount;
+
+			if (usedOptions.Count < required)
+			{
+				missing = required - usedOptions.Count;
+			}
+
+			overflow = overflowOptions.Count;
+
 			foreach (var info in this.optionInformations)
 			{
-				if (info.WarningText != null)
+				if (info.ErrorText != null)
 				{
 					if (error == 0)
 					{
-						info.WarningVisibility.Visibility = false;
+						info.ErrorVisibility.Visibility = false;
 					}
 					else
 					{
-						info.WarningVisibility.Visibility = true;
+						info.ErrorVisibility.Visibility = true;
 
 						FormattedText text = null;
 
 						foreach (var option in info.Options)
 						{
-							if (this.warningOptions.Contains (option))
+							if (this.errorOptions.Contains (option))
 							{
-								text = warningBullet;
+								text = errorBullet;
 								break;
 							}
 						}
 
-						info.WarningText.FormattedText = text;
+						info.ErrorText.FormattedText = text;
+					}
+				}
+
+				if (info.OverflowText != null)
+				{
+					if (overflow == 0)
+					{
+						info.OverflowVisibility.Visibility = false;
+					}
+					else
+					{
+						info.OverflowVisibility.Visibility = true;
+
+						FormattedText text = null;
+
+						if (this.documentCategoryEntity.DocumentOptions.Contains (info.Entity))
+						{
+							foreach (var option in info.Options)
+							{
+								if (overflowOptions.Contains (option))
+								{
+									text = overflowBullet;
+									break;
+								}
+							}
+						}
+
+						info.OverflowText.FormattedText = text;
 					}
 				}
 
@@ -449,25 +618,93 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				}
 			}
 
-			if (error == 0)
-			{
-				this.warningFrame.Visibility = false;
-			}
-			else
-			{
-				this.warningFrame.Visibility = true;
+			FormattedText errorMessage    = null;
+			FormattedText errorTooltip    = null;
+			FormattedText overflowMessage = null;
+			FormattedText overflowTooltip = null;
+			FormattedText missingMessage  = null;
+			FormattedText missingTooltip  = null;
 
-				FormattedText message;
+			if (error != 0)
+			{
 				if (error == 1)
 				{
-					message = "Il y a une option définie plusieurs fois !";
+					errorMessage = "Il y a une option définie plusieurs fois";
 				}
 				else
 				{
-					message = string.Format ("Il y a {0} options définies plusieurs fois !", error.ToString ());
+					errorMessage = string.Format ("Il y a {0} options définies plusieurs fois", error.ToString ());
 				}
 
-				this.warningText.FormattedText = FormattedText.Concat (warningBullet, " ", message.ApplyBold ());
+				errorMessage = FormattedText.Concat (errorBullet, " ", errorMessage.ApplyBold ());
+
+				errorTooltip = this.GetTooltipDescription (this.errorOptions);
+			}
+
+			if (missing != 0)
+			{
+				if (missing == 1)
+				{
+					missingMessage = "Il y a une option indéfinie";
+				}
+				else
+				{
+					missingMessage = string.Format ("Il y a {0} options indéfinies", missing.ToString ());
+				}
+
+				missingTooltip = this.GetDeltaTooltipDescription (usedOptions, false);
+			}
+
+			if (overflow != 0)
+			{
+				if (overflow == 1)
+				{
+					overflowMessage = "Il y a une option définie inutilement";
+				}
+				else
+				{
+					overflowMessage = string.Format ("Il y a {0} options définies inutilement", overflow.ToString ());
+				}
+
+				overflowMessage = FormattedText.Concat (overflowBullet, " ", overflowMessage);
+
+				overflowTooltip = this.GetTooltipDescription (overflowOptions);
+			}
+
+			if (errorMessage.IsNullOrEmpty)
+			{
+				this.errorFrame.Visibility = false;
+			}
+			else
+			{
+				this.errorFrame.Visibility = true;
+				this.errorText.FormattedText = errorMessage;
+
+				ToolTip.Default.SetToolTip (this.errorFrame, errorTooltip);
+			}
+
+			if (overflowMessage.IsNullOrEmpty)
+			{
+				this.overflowFrame.Visibility = false;
+			}
+			else
+			{
+				this.overflowFrame.Visibility = true;
+				this.overflowText.FormattedText = overflowMessage;
+
+				ToolTip.Default.SetToolTip (this.overflowFrame, overflowTooltip);
+			}
+
+			if (missingMessage.IsNullOrEmpty)
+			{
+				this.missingFrame.Visibility = false;
+			}
+			else
+			{
+				this.missingFrame.Visibility = true;
+				this.missingText.FormattedText = missingMessage;
+
+				ToolTip.Default.SetToolTip (this.missingFrame, missingTooltip);
 			}
 		}
 
@@ -505,7 +742,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 		private void UpdateOptionInformations()
 		{
-			this.documentOptions = Epsitec.Cresus.Core.Documents.External.CresusCore.GetRequiredDocumentOptionsByDocumentType (this.documentCategoryEntity.DocumentType);
+			this.requiredDocumentOptions = Epsitec.Cresus.Core.Documents.External.CresusCore.GetRequiredDocumentOptionsByDocumentType (this.documentCategoryEntity.DocumentType);
 			this.optionInformations.Clear ();
 
 			var optionEntities = this.businessContext.GetAllEntities<DocumentOptionsEntity> ();
@@ -518,15 +755,16 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 		private OptionInformation GetOptionInformation(DocumentOptionsEntity optionEntity)
 		{
 			var printingOptionDictionary = optionEntity.GetOptions ();
+			var options = printingOptionDictionary.Options.Where (x => x != DocumentOption.None);
 
 			int count = 0;
 			int total = 0;
 
-			if (this.documentOptions != null)
+			if (this.requiredDocumentOptions != null)
 			{
-				foreach (var option in printingOptionDictionary.Options)
+				foreach (var option in options)
 				{
-					if (this.documentOptions.Contains (option))
+					if (this.RequiredDocumentOptionsContains (option))
 					{
 						count++;
 					}
@@ -535,7 +773,21 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				}
 			}
 
-			return new OptionInformation (optionEntity, printingOptionDictionary, printingOptionDictionary.Options, count, total);
+			return new OptionInformation (optionEntity, printingOptionDictionary, options, count, total);
+		}
+
+
+		private bool RequiredDocumentOptionsContains(DocumentOption option)
+		{
+			return this.requiredDocumentOptions != null && this.requiredDocumentOptions.Contains (option);
+		}
+
+		private int RequiredDocumentOptionsCount
+		{
+			get
+			{
+				return (this.requiredDocumentOptions == null) ? 0 : this.requiredDocumentOptions.Count ();
+			}
 		}
 
 
@@ -639,13 +891,25 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				set;
 			}
 
-			public Widget WarningVisibility
+			public Widget ErrorVisibility
 			{
 				get;
 				set;
 			}
 
-			public StaticText WarningText
+			public StaticText ErrorText
+			{
+				get;
+				set;
+			}
+
+			public Widget OverflowVisibility
+			{
+				get;
+				set;
+			}
+
+			public StaticText OverflowText
 			{
 				get;
 				set;
@@ -691,12 +955,16 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 		private readonly DocumentCategoryEntity				documentCategoryEntity;
 		private readonly List<OptionInformation>			optionInformations;
 		private readonly List<OptionGroup>					optionGroups;
-		private readonly List<DocumentOption>				warningOptions;
+		private readonly List<DocumentOption>				errorOptions;
 
 		private Scrollable									checkButtonsFrame;
 		private bool										firstGroup;
-		private IEnumerable<DocumentOption>					documentOptions;
-		private FrameBox									warningFrame;
-		private StaticText									warningText;
+		private IEnumerable<DocumentOption>					requiredDocumentOptions;
+		private FrameBox									errorFrame;
+		private StaticText									errorText;
+		private FrameBox									overflowFrame;
+		private StaticText									overflowText;
+		private FrameBox									missingFrame;
+		private StaticText									missingText;
 	}
 }
