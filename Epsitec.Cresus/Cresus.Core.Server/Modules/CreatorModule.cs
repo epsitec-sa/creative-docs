@@ -45,7 +45,47 @@ namespace Epsitec.Cresus.Core.Server.Modules
 
 			Post["/create"] = parameters =>
 			{
-				return Response.AsSuccessExtJsForm ();
+				var coreSession = GetCoreSession ();
+				var context = coreSession.GetBusinessContext ();
+
+				string parentEntity = Request.Form.parentEntity;
+				var parentKey = EntityKey.Parse (parentEntity);
+				AbstractEntity entity = context.DataContext.ResolveEntity (parentKey);
+
+				var customer = entity as CustomerEntity;
+				var contacts = customer.Relation.Person.Contacts;
+
+				var phone = context.CreateEntity<TelecomContactEntity> ();
+				phone.Number = new System.Random ().NextDouble ().ToString ();
+				
+				contacts.Add (phone);
+
+				context.SaveChanges ();
+
+
+				//return Response.AsSuccessExtJsForm ();
+
+				var key = context.DataContext.GetNormalizedEntityKey (phone).ToString ();
+				return key;
+
+
+
+				//var address = new MailContactEntity
+				//{
+				//    Complement = "Complement",
+				//    Address = new AddressEntity
+				//    {
+				//        Street = new StreetEntity
+				//        {
+				//            StreetName = "Street"
+				//        },
+				//        Location = new LocationEntity
+				//        {
+				//            Name = "Location"
+				//        }
+				//    }
+				//};
+				//contacts.Add (address);
 			};
 
 
