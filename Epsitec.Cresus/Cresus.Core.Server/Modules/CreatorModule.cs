@@ -15,14 +15,6 @@ namespace Epsitec.Cresus.Core.Server.Modules
 		{
 			Post["/delete"] = parameters =>
 			{
-				var dic = new Dictionary<string, object> ();
-				foreach (var key in Request.Form.GetDynamicMemberNames ())
-				{
-					var v = Request.Form[key].ToString ().Trim ();
-
-					dic.Add (key, v);
-				}
-
 				var coreSession = GetCoreSession ();
 				var context = coreSession.GetBusinessContext ();
 
@@ -37,7 +29,6 @@ namespace Epsitec.Cresus.Core.Server.Modules
 				var contacts = customer.Relation.Person.Contacts;
 				//var collection = customer.GetFieldCollection<AbstractEntity> ("[FVA2]");
 
-
 				var toDelete = contacts.Where (c => context.DataContext.GetNormalizedEntityKey (c).Equals (deleteKey));
 
 				if (toDelete.Any ())
@@ -48,7 +39,7 @@ namespace Epsitec.Cresus.Core.Server.Modules
 				// TODO activate when not in debug
 				//context.SaveChanges ();
 
-				return Response.AsErrorExtJsForm (dic);
+				return Response.AsSuccessExtJsForm ();
 			};
 
 
