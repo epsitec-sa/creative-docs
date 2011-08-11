@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Core.Server
 		/// Create a panel according to a brick
 		/// </summary>
 		/// <param name="brick">Brick to use</param>
-		/// <returns>Javascript code to create the panel</returns>
+		/// <returns></returns>
 		private List<Dictionary<string, object>> CreatePanelContent(Brick brick, WebDataItem item)
 		{
 			var list = new List<Dictionary<string, object>> ();
@@ -101,6 +101,8 @@ namespace Epsitec.Cresus.Core.Server
 				}
 				else
 				{
+					// This collection is empty, but we want to show its panel
+					// so the user will be able to add one.
 					list.Add (CreateEmptyPanel (brick, item));
 				}
 			}
@@ -158,8 +160,7 @@ namespace Epsitec.Cresus.Core.Server
 		{
 			var panel = GetBasicPanelFrom (item);
 
-			panel["html"] = "Empty";
-			panel["hideRemoveButton"] = true;
+			panel["xtype"] = "emptysummary";
 
 			return panel;
 		}

@@ -46,11 +46,7 @@ namespace Epsitec.Cresus.Core.Server
 				BrickProcessor.ProcessProperty (brick, BrickPropertyKey.Text, x => item.TextAccessor = x);
 				BrickProcessor.ProcessProperty (brick, BrickPropertyKey.TextCompact, x => item.CompactTextAccessor = x);
 
-				if (Brick.ContainsProperty (brick, BrickPropertyKey.CollectionAnnotation))
-				{
-					item.DataType = TileDataType.CollectionItem;
-				}
-
+				AddSpecificData (brick, item);
 
 				oldBrick = brick;
 				brick = Brick.GetProperty (brick, BrickPropertyKey.OfType).Brick;
@@ -59,7 +55,15 @@ namespace Epsitec.Cresus.Core.Server
 			return oldBrick;
 		}
 
-		internal static void CreateDefaultTextProperties(Brick brick)
+		private static void AddSpecificData(Brick brick, WebDataItem item)
+		{
+			if (Brick.ContainsProperty (brick, BrickPropertyKey.CollectionAnnotation))
+			{
+				item.DataType = TileDataType.CollectionItem;
+			}
+		}
+
+		private static void CreateDefaultTextProperties(Brick brick)
 		{
 			if (!Brick.ContainsProperty (brick, BrickPropertyKey.Text))
 			{
@@ -74,7 +78,7 @@ namespace Epsitec.Cresus.Core.Server
 			}
 		}
 
-		internal static void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<bool> setter)
+		private static void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<bool> setter)
 		{
 			if (Brick.ContainsProperty (brick, key))
 			{
@@ -82,7 +86,7 @@ namespace Epsitec.Cresus.Core.Server
 			}
 		}
 
-		internal static void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<string> setter)
+		private static void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<string> setter)
 		{
 			var value = Brick.GetProperty (brick, key).StringValue;
 
@@ -92,7 +96,7 @@ namespace Epsitec.Cresus.Core.Server
 			}
 		}
 
-		internal static void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<BrickMode> setter)
+		private static void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<BrickMode> setter)
 		{
 			foreach (var attributeValue in Brick.GetProperties (brick, key).Select (x => x.AttributeValue))
 			{
@@ -104,7 +108,7 @@ namespace Epsitec.Cresus.Core.Server
 			}
 		}
 
-		internal static void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<Accessor<FormattedText>> setter)
+		private static void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<Accessor<FormattedText>> setter)
 		{
 			//var formatter = this.ToAccessor (brick, Brick.GetProperty (brick, key));
 			Accessor<FormattedText> formatter = null;
@@ -115,7 +119,7 @@ namespace Epsitec.Cresus.Core.Server
 			}
 		}
 
-		internal static void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<Expression> setter)
+		private static void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<Expression> setter)
 		{
 			var value = Brick.GetProperty (brick, key).ExpressionValue;
 
@@ -125,7 +129,7 @@ namespace Epsitec.Cresus.Core.Server
 			}
 		}
 
-		internal static void ProcessAttribute(WebDataItem item, BrickMode value)
+		private static void ProcessAttribute(WebDataItem item, BrickMode value)
 		{
 			switch (value)
 			{
