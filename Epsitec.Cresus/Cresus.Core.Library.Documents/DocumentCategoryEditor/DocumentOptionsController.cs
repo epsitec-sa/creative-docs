@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				Parent = parent,
 				DrawFullFrame = true,
 				BackColor = Color.FromBrightness (1),
-				PreferredHeight = 20,
+				PreferredHeight = 24,
 				Dock = DockStyle.Bottom,
 				Margins = new Margins (0, 0, -1, 0),
 			};
@@ -83,8 +83,9 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			this.warningText = new StaticText
 			{
 				Parent = this.warningFrame,
-				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleLeft,
 				Dock = DockStyle.Fill,
+				Margins = new Margins (5, 0, 0, 0),
 			};
 		}
 
@@ -155,6 +156,14 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					Dock = DockStyle.Top,
 				};
 
+				var warningFrame = new FrameBox
+				{
+					Parent = frame,
+					PreferredWidth = 10,
+					Dock = DockStyle.Left,
+					Margins = new Margins (0, 0, 15-2, 0),
+				};
+
 				var leftFrame = new FrameBox
 				{
 					Parent = frame,
@@ -190,6 +199,18 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 				for (int i = 0; i < group.OptionInformations.Count; i++)
 				{
+					var warning = new StaticText
+					{
+						Parent = warningFrame,
+						ContentAlignment = ContentAlignment.MiddleLeft,
+						PreferredWidth = 10,
+						PreferredHeight = 15,
+						Dock = DockStyle.Top,
+					};
+
+					group.OptionInformations[i].WarningVisibility = warningFrame;
+					group.OptionInformations[i].WarningText = warning;
+
 					var entity = group.OptionInformations[i].Entity;
 					bool check = this.documentCategoryEntity.DocumentOptions.Contains (entity);
 
@@ -233,6 +254,19 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					PreferredHeight = 15,
 					Dock = DockStyle.Top,
 				};
+
+				var warning = new StaticText
+				{
+					Parent = frame,
+					ContentAlignment = ContentAlignment.MiddleLeft,
+					PreferredWidth = 10,
+					PreferredHeight = 15-3,
+					Dock = DockStyle.Left,
+					Margins = new Margins (0, 0, 0, 3),
+				};
+
+				group.OptionInformations[0].WarningVisibility = warning;
+				group.OptionInformations[0].WarningText = warning;
 
 				var entity = group.OptionInformations[0].Entity;
 				bool check = this.documentCategoryEntity.DocumentOptions.Contains (entity);
@@ -359,6 +393,8 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			var options = new List<DocumentOption> ();
 			int error = 0;
 
+			FormattedText warningBullet = new FormattedText ("●").ApplyFontColor (Color.FromName ("Red")).ApplyFontSize (14);
+
 			foreach (var documentOptionEntity in this.documentCategoryEntity.DocumentOptions)
 			{
 				var info = this.optionInformations.Where (x => x.Entity == documentOptionEntity).FirstOrDefault ();
@@ -382,6 +418,31 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 			foreach (var info in this.optionInformations)
 			{
+				if (info.WarningText != null)
+				{
+					if (error == 0)
+					{
+						info.WarningVisibility.Visibility = false;
+					}
+					else
+					{
+						info.WarningVisibility.Visibility = true;
+
+						FormattedText text = null;
+
+						foreach (var option in info.Options)
+						{
+							if (this.warningOptions.Contains (option))
+							{
+								text = warningBullet;
+								break;
+							}
+						}
+
+						info.WarningText.FormattedText = text;
+					}
+				}
+
 				if (info.Button != null)
 				{
 					this.SetTooltip (info.Button, info);
@@ -406,7 +467,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					message = string.Format ("Il y a {0} options définies plusieurs fois !", error.ToString ());
 				}
 
-				this.warningText.FormattedText = message.ApplyBold ();
+				this.warningText.FormattedText = FormattedText.Concat (warningBullet, " ", message.ApplyBold ());
 			}
 		}
 
@@ -573,6 +634,18 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			}
 
 			public bool IsRadio
+			{
+				get;
+				set;
+			}
+
+			public Widget WarningVisibility
+			{
+				get;
+				set;
+			}
+
+			public StaticText WarningText
 			{
 				get;
 				set;
