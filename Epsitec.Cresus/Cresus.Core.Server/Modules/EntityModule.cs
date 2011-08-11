@@ -35,14 +35,15 @@ namespace Epsitec.Cresus.Core.Server.Modules
 						errors.Add (key, e.ToString ());
 					}
 				}
-				context.SaveChanges ();
 
 				if (errors.Any ())
 				{
+					context.Discard (); // TODO check this
 					return Response.AsErrorExtJsForm (errors);
 				}
 				else
 				{
+					context.SaveChanges ();
 					return Response.AsSuccessExtJsForm ();
 				}
 			};

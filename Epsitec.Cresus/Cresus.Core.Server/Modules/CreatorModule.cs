@@ -33,7 +33,9 @@ namespace Epsitec.Cresus.Core.Server.Modules
 
 				if (toDelete.Any ())
 				{
-					contacts.Remove (toDelete.First ());
+					var d = toDelete.First ();
+					contacts.Remove (d);
+					context.DeleteEntity (d);
 				}
 
 				// TODO activate when not in debug

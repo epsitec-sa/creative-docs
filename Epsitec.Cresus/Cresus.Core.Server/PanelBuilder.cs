@@ -22,13 +22,6 @@ namespace Epsitec.Cresus.Core.Server
 	class PanelBuilder
 	{
 
-		private PanelBuilder(AbstractEntity entity, ViewControllerMode mode, CoreSession coreSession)
-		{
-			this.rootEntity = entity;
-			this.controllerMode = mode;
-			this.coreSession = coreSession;
-		}
-
 		/// <summary>
 		/// Create use a builder to create a panel
 		/// </summary>
@@ -39,6 +32,13 @@ namespace Epsitec.Cresus.Core.Server
 		{
 			var builder = new PanelBuilder (entity, mode, coreSession);
 			return builder.Run ();
+		}
+
+		private PanelBuilder(AbstractEntity entity, ViewControllerMode mode, CoreSession coreSession)
+		{
+			this.rootEntity = entity;
+			this.controllerMode = mode;
+			this.coreSession = coreSession;
 		}
 
 		/// <summary>
@@ -210,7 +210,7 @@ namespace Epsitec.Cresus.Core.Server
 			}
 		}
 
-        private List<Dictionary<string, object>> CreateInputs(Brick brick)
+		private List<Dictionary<string, object>> CreateInputs(Brick brick)
 		{
 			if (!Brick.ContainsProperty (brick, BrickPropertyKey.Input))
 			{
