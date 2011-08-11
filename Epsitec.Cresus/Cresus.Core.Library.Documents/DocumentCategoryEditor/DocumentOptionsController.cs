@@ -20,13 +20,11 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 {
 	public sealed class DocumentOptionsController
 	{
-		public DocumentOptionsController(IBusinessContext businessContext, DocumentCategoryEntity documentCategoryEntity)
+		public DocumentOptionsController(DocumentCategoryController documentCategoryController)
 		{
-			System.Diagnostics.Debug.Assert (businessContext != null);
-			System.Diagnostics.Debug.Assert (documentCategoryEntity.IsNotNull ());
-
-			this.businessContext        = businessContext;
-			this.documentCategoryEntity = documentCategoryEntity;
+			this.documentCategoryController = documentCategoryController;
+			this.businessContext            = this.documentCategoryController.BusinessContext;
+			this.documentCategoryEntity     = this.documentCategoryController.DocumentCategoryEntity;
 
 			this.optionInformations = new List<OptionInformation> ();
 			this.optionGroups = new List<OptionGroup> ();
@@ -77,7 +75,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				Parent = parent,
 				DrawFullFrame = true,
 				BackColor = Color.FromBrightness (1),
-				PreferredHeight = 24,
+				PreferredHeight = this.documentCategoryController.errorHeight,
 				Dock = DockStyle.Bottom,
 				Margins = new Margins (0, 0, -1, 0),
 			};
@@ -98,7 +96,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				Parent = parent,
 				DrawFullFrame = true,
 				BackColor = Color.FromBrightness (1),
-				PreferredHeight = 24,
+				PreferredHeight = this.documentCategoryController.errorHeight,
 				Dock = DockStyle.Bottom,
 				Margins = new Margins (0, 0, -1, 0),
 			};
@@ -119,7 +117,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				Parent = parent,
 				DrawFullFrame = true,
 				BackColor = Color.FromBrightness (1),
-				PreferredHeight = 24,
+				PreferredHeight = this.documentCategoryController.errorHeight,
 				Dock = DockStyle.Bottom,
 				Margins = new Margins (0, 0, -1, 0),
 			};
@@ -141,9 +139,9 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			parent.Children.Clear ();
 
 			this.firstGroup = true;
-			this.CreateGroup (parent, this.optionGroups.Where (x => x.Used != 0 && x.Used == x.Total), "Options parfaitement adaptées",  DocumentCategoryController.acceptedColor);   // vert clair
-			this.CreateGroup (parent, this.optionGroups.Where (x => x.Used != 0 && x.Used <  x.Total), "Options partiellement adaptées", DocumentCategoryController.toleratedColor);  // orange clair
-			this.CreateGroup (parent, this.optionGroups.Where (x => x.Used == 0                     ), "Options inadaptées",             DocumentCategoryController.rejectedColor);   // rouge clair
+			this.CreateGroup (parent, this.optionGroups.Where (x => x.Used != 0 && x.Used == x.Total), "Options parfaitement adaptées",  this.documentCategoryController.acceptedColor);   // vert clair
+			this.CreateGroup (parent, this.optionGroups.Where (x => x.Used != 0 && x.Used <  x.Total), "Options partiellement adaptées", this.documentCategoryController.toleratedColor);  // orange clair
+			this.CreateGroup (parent, this.optionGroups.Where (x => x.Used == 0                     ), "Options inadaptées",             this.documentCategoryController.rejectedColor);   // rouge clair
 		}
 
 		private void CreateGroup(Widget parent, IEnumerable<OptionGroup> optionGroups, FormattedText title, Color color)
@@ -205,7 +203,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					Parent = frame,
 					PreferredWidth = 10,
 					Dock = DockStyle.Left,
-					Margins = new Margins (0, 0, 15-2, 0),
+					Margins = new Margins (0, 0, this.documentCategoryController.lineHeight-2, 0),
 				};
 
 				var overflowFrame = new FrameBox
@@ -213,7 +211,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					Parent = frame,
 					PreferredWidth = 10,
 					Dock = DockStyle.Left,
-					Margins = new Margins (0, 0, 15-2, 0),
+					Margins = new Margins (0, 0, this.documentCategoryController.lineHeight-2, 0),
 				};
 
 				var leftFrame = new FrameBox
@@ -243,7 +241,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					FormattedText = "Aucune option",
 					Name = string.Concat (index.ToString (), ".-1"),
 					Group = group.Name,
-					PreferredHeight = 15,
+					PreferredHeight = this.documentCategoryController.lineHeight,
 					Dock = DockStyle.Top,
 				};
 
@@ -256,7 +254,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 						Parent = errorFrame,
 						ContentAlignment = ContentAlignment.MiddleLeft,
 						PreferredWidth = 10,
-						PreferredHeight = 15,
+						PreferredHeight = this.documentCategoryController.lineHeight,
 						Dock = DockStyle.Top,
 					};
 
@@ -268,7 +266,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 						Parent = overflowFrame,
 						ContentAlignment = ContentAlignment.MiddleLeft,
 						PreferredWidth = 10,
-						PreferredHeight = 15,
+						PreferredHeight = this.documentCategoryController.lineHeight,
 						Dock = DockStyle.Top,
 					};
 
@@ -290,7 +288,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 						Name = string.Concat (index.ToString (), ".", i.ToString ()),
 						Group = group.Name,
 						ActiveState = check ? ActiveState.Yes : ActiveState.No,
-						PreferredHeight = 15,
+						PreferredHeight = this.documentCategoryController.lineHeight,
 						Dock = DockStyle.Top,
 						Margins = new Margins (0, 0, 0, (i == group.OptionInformations.Count-1) ? 5 : 0),
 					};
@@ -315,7 +313,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				var frame = new FrameBox
 				{
 					Parent = parent,
-					PreferredHeight = 15,
+					PreferredHeight = this.documentCategoryController.lineHeight,
 					Dock = DockStyle.Top,
 				};
 
@@ -324,7 +322,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					Parent = frame,
 					ContentAlignment = ContentAlignment.MiddleLeft,
 					PreferredWidth = 10,
-					PreferredHeight = 15-3,
+					PreferredHeight = this.documentCategoryController.lineHeight-3,
 					Dock = DockStyle.Left,
 					Margins = new Margins (0, 0, 0, 3),
 				};
@@ -337,7 +335,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					Parent = frame,
 					ContentAlignment = ContentAlignment.MiddleLeft,
 					PreferredWidth = 10,
-					PreferredHeight = 15-3,
+					PreferredHeight = this.documentCategoryController.lineHeight-3,
 					Dock = DockStyle.Left,
 					Margins = new Margins (0, 0, 0, 3),
 				};
@@ -958,6 +956,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 		private readonly IBusinessContext					businessContext;
 		private readonly DocumentCategoryEntity				documentCategoryEntity;
+		private readonly DocumentCategoryController			documentCategoryController;
 		private readonly List<OptionInformation>			optionInformations;
 		private readonly List<OptionGroup>					optionGroups;
 		private readonly List<DocumentOption>				errorOptions;

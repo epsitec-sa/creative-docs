@@ -32,7 +32,6 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 		}
 
 
-
 		public void CreateUI(Widget parent)
 		{
 			parent.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
@@ -53,10 +52,10 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 			this.CreateDocumentType (leftFrame);
 
-			this.documentOptionsController = new DocumentOptionsController (this.businessContext, this.documentCategoryEntity);
+			this.documentOptionsController = new DocumentOptionsController (this);
 			this.documentOptionsController.CreateUI (leftFrame);
 
-			this.pageTypesController = new PageTypesController (this.businessContext, this.documentCategoryEntity);
+			this.pageTypesController = new PageTypesController (this);
 			this.pageTypesController.CreateUI (rightFrame);
 		}
 
@@ -103,7 +102,23 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 		}
 
 
+		public IBusinessContext BusinessContext
+		{
+			get
+			{
+				return this.businessContext;
+			}
+		}
 
+		public DocumentCategoryEntity DocumentCategoryEntity
+		{
+			get
+			{
+				return this.documentCategoryEntity;
+			}
+		}
+
+		
 		private void HandleBusinessContextSavingChanges(object sender, CancelEventArgs e)
 		{
 		}
@@ -119,9 +134,12 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 		#endregion
 
 
-		public static readonly Color	acceptedColor  = Color.FromRgb (221.0/255.0, 255.0/255.0, 227.0/255.0);  // vert clair
-		public static readonly Color	toleratedColor = Color.FromRgb (255.0/255.0, 246.0/255.0, 224.0/255.0);  // orange clair
-		public static readonly Color	rejectedColor  = Color.FromRgb (255.0/255.0, 224.0/255.0, 224.0/255.0);  // rouge clair
+		public readonly int		lineHeight = 15;
+		public readonly int		errorHeight = 24;
+
+		public readonly Color	acceptedColor  = Color.FromRgb (221.0/255.0, 255.0/255.0, 227.0/255.0);  // vert clair
+		public readonly Color	toleratedColor = Color.FromRgb (255.0/255.0, 246.0/255.0, 224.0/255.0);  // orange clair
+		public readonly Color	rejectedColor  = Color.FromRgb (255.0/255.0, 224.0/255.0, 224.0/255.0);  // rouge clair
 
 		private readonly IBusinessContext					businessContext;
 		private readonly DocumentCategoryEntity				documentCategoryEntity;

@@ -20,13 +20,11 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 {
 	public sealed class PageTypesController
 	{
-		public PageTypesController(IBusinessContext businessContext, DocumentCategoryEntity documentCategoryEntity)
+		public PageTypesController(DocumentCategoryController documentCategoryController)
 		{
-			System.Diagnostics.Debug.Assert (businessContext != null);
-			System.Diagnostics.Debug.Assert (documentCategoryEntity.IsNotNull ());
-
-			this.businessContext        = businessContext;
-			this.documentCategoryEntity = documentCategoryEntity;
+			this.documentCategoryController = documentCategoryController;
+			this.businessContext            = this.documentCategoryController.BusinessContext;
+			this.documentCategoryEntity     = this.documentCategoryController.DocumentCategoryEntity;
 
 			this.pageTypeInformations = new List<PageTypeInformation> ();
 		}
@@ -73,7 +71,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				Parent = parent,
 				DrawFullFrame = true,
 				BackColor = Color.FromBrightness (1),
-				PreferredHeight = 24,
+				PreferredHeight = this.documentCategoryController.errorHeight,
 				Dock = DockStyle.Bottom,
 				Margins = new Margins (0, 0, -1, 0),
 			};
@@ -95,8 +93,8 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			parent.Children.Clear ();
 
 			this.firstGroup = true;
-			this.CreateGroup (parent, this.pageTypeInformations.Where (x =>  x.Match), "Pages imprimables adaptées",   DocumentCategoryController.acceptedColor);  // vert clair
-			this.CreateGroup (parent, this.pageTypeInformations.Where (x => !x.Match), "Pages imprimables inadaptées", DocumentCategoryController.rejectedColor);  // rouge clair
+			this.CreateGroup (parent, this.pageTypeInformations.Where (x =>  x.Match), "Pages imprimables adaptées",   this.documentCategoryController.acceptedColor);  // vert clair
+			this.CreateGroup (parent, this.pageTypeInformations.Where (x => !x.Match), "Pages imprimables inadaptées", this.documentCategoryController.rejectedColor);  // rouge clair
 		}
 
 		private void CreateGroup(Widget parent, IEnumerable<PageTypeInformation> pageTypeInformations, FormattedText title, Color color)
@@ -288,6 +286,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 		private readonly IBusinessContext					businessContext;
 		private readonly DocumentCategoryEntity				documentCategoryEntity;
+		private readonly DocumentCategoryController			documentCategoryController;
 		private readonly List<PageTypeInformation>			pageTypeInformations;
 
 		private Scrollable									checkButtonsFrame;
