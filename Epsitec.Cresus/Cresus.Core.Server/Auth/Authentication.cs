@@ -56,6 +56,6 @@ namespace Epsitec.Cresus.Core.Server.Auth
 			return form.username == "jonas";
 		}
 
-		private static const string LoggedInName = "LOGGED_IN";
+		private static readonly string LoggedInName = "LOGGED_IN";
 	}
 }
