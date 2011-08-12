@@ -1,5 +1,6 @@
 ﻿using Nancy;
 using Nancy.Security;
+using Nancy.Extensions;
 
 namespace Epsitec.Cresus.Core.Server.Modules
 {
@@ -7,30 +8,44 @@ namespace Epsitec.Cresus.Core.Server.Modules
 	{
 		protected CoreModule()
 		{
-			this.RequiresAuthentication ();
+			this.CheckIsLoggedIn ();
 		}
 
 		protected CoreModule(string modulePath) : base (modulePath)
 		{
-			this.RequiresAuthentication ();
+			this.CheckIsLoggedIn ();
 		}
 
 		internal CoreSession GetCoreSession()
 		{
-			//var sessionId = DebugSession.Session["CoreSession"] as string;
 			var sessionId = Session["CoreSession"] as string;
 			var session = CoreServer.Instance.GetCoreSession (sessionId);
 
 			if (session == null)
 			{
-				var server = CoreServer.Instance;
-				session = server.CreateSession ();
-
-				//DebugSession.Session["CoreSession"] = session.Id;
-				Session["CoreSession"] = session.Id;
+				throw new System.Exception ("CoreSession not found");
 			}
 
 			return session;
+		}
+
+		private void CheckIsLoggedIn()
+		{
+			this.Before.AddItemToEndOfPipeline (RequiresAuthentication);
+		}
+
+		private static Response RequiresAuthentication(NancyContext context)
+		{
+			var s = context.Request.Session;
+
+			var l = s["loggedin"];
+
+			if (l != null && l.GetType () == typeof(bool) && (bool) l)
+			{
+				return null;
+			}
+
+			return context.GetRedirect ("~/log");
 		}
 	}
 }

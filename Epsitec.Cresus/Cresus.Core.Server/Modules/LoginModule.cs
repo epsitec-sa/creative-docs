@@ -1,5 +1,4 @@
-﻿using Nancy.Authentication.Forms;
-using Nancy.Extensions;
+﻿using Epsitec.Cresus.Core.Server.AdditionalResponses;
 using Nancy;
 
 namespace Epsitec.Cresus.Core.Server.Modules
@@ -21,29 +20,18 @@ namespace Epsitec.Cresus.Core.Server.Modules
 
 			Post["/in"] = parameters =>
 			{
+				Session["loggedin"] = true;
+				var session = CoreServer.Instance.CreateSession ();
 
-				//GetCoreSession ();
+				Session["CoreSession"] = session.Id;
 
-				//var userGuid = UserDatabase.ValidateUser ((string) this.Request.Form.Username, (string) this.Request.Form.Password);
-				var userGuid = UserDatabase.ValidateUser ("admin", "password");
-
-				if (userGuid == null)
-				{
-					return Context.GetRedirect ("~/log");
-				}
-
-				System.DateTime? expiry = null;
-				if (this.Request.Form.RememberMe.HasValue)
-				{
-					expiry = System.DateTime.Now.AddDays (7);
-				}
-
-				return this.LoginAndRedirect (userGuid.Value, expiry);
+				return Response.AsSuccessExtJsForm ();
 			};
 
 			Get["/out"] = parameters =>
 			{
-				return this.LogoutAndRedirect ("~/");
+				Session["loggedin"] = false;
+				return "logout";
 			};
 		}
 	}

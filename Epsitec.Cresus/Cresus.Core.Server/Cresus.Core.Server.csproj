@@ -41,10 +41,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\Nancy.dll</HintPath>
     </Reference>
-    <Reference Include="Nancy.Authentication.Forms, Version=0.7.1.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\Nancy.Authentication.Forms.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.ServiceModel" />
@@ -60,6 +56,7 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="AdditionalResponses\ExtJsForm.cs" />
+    <Compile Include="Auth\Authentication.cs" />
     <Compile Include="BrickProcessor.cs" />
     <Compile Include="CoreServerBootstrapper.cs" />
     <Compile Include="CoreServerProgram.cs" />
@@ -78,7 +75,6 @@
     <Compile Include="PanelBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AdditionalResponses\ResponseExtensions.cs" />
-    <Compile Include="UserDatabase.cs" />
     <Compile Include="WebDataItem.cs" />
   </ItemGroup>
   <ItemGroup>
