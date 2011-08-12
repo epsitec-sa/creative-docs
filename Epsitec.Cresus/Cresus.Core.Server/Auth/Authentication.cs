@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Core.Server.Auth
 			{
 				var session = CoreServer.Instance.CreateSession ();
 
-				module.Session["loggedin"] = true;
+				module.Session[Authentication.LoggedInName] = true;
 				module.Session["CoreSession"] = session.Id;
 
 				return module.Response.AsSuccessExtJsForm ();
@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Server.Auth
 
         public static Response Logout(this NancyModule module)
 		{
-			module.Session["loggedin"] = false;
+			module.Session[Authentication.LoggedInName] = false;
 			return "logout";
 		}
 
@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Core.Server.Auth
 		{
 			var s = context.Request.Session;
 
-			var l = s["loggedin"];
+			var l = s[Authentication.LoggedInName];
 
 			if (l != null && l.GetType () == typeof (bool) && (bool) l)
 			{
@@ -55,5 +55,7 @@ namespace Epsitec.Cresus.Core.Server.Auth
 		{
 			return form.username == "jonas";
 		}
+
+		private static const string LoggedInName = "LOGGED_IN";
 	}
 }
