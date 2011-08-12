@@ -1,4 +1,5 @@
 ﻿using Nancy;
+using Nancy.Security;
 
 namespace Epsitec.Cresus.Core.Server.Modules
 {
@@ -6,10 +7,12 @@ namespace Epsitec.Cresus.Core.Server.Modules
 	{
 		protected CoreModule()
 		{
+			this.RequiresAuthentication ();
 		}
 
 		protected CoreModule(string modulePath) : base (modulePath)
 		{
+			this.RequiresAuthentication ();
 		}
 
 		internal CoreSession GetCoreSession()
