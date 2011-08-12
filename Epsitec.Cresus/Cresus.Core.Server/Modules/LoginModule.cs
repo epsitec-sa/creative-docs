@@ -1,4 +1,4 @@
-﻿using Epsitec.Cresus.Core.Server.AdditionalResponses;
+﻿using Epsitec.Cresus.Core.Server.Auth;
 using Nancy;
 
 namespace Epsitec.Cresus.Core.Server.Modules
@@ -20,18 +20,12 @@ namespace Epsitec.Cresus.Core.Server.Modules
 
 			Post["/in"] = parameters =>
 			{
-				Session["loggedin"] = true;
-				var session = CoreServer.Instance.CreateSession ();
-
-				Session["CoreSession"] = session.Id;
-
-				return Response.AsSuccessExtJsForm ();
+				return this.Login ();
 			};
 
 			Get["/out"] = parameters =>
 			{
-				Session["loggedin"] = false;
-				return "logout";
+				return this.Logout ();
 			};
 		}
 	}

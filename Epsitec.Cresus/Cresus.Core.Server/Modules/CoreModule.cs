@@ -1,6 +1,5 @@
-﻿using Nancy;
-using Nancy.Security;
-using Nancy.Extensions;
+﻿using Epsitec.Cresus.Core.Server.Auth;
+using Nancy;
 
 namespace Epsitec.Cresus.Core.Server.Modules
 {
@@ -27,25 +26,6 @@ namespace Epsitec.Cresus.Core.Server.Modules
 			}
 
 			return session;
-		}
-
-		private void CheckIsLoggedIn()
-		{
-			this.Before.AddItemToEndOfPipeline (RequiresAuthentication);
-		}
-
-		private static Response RequiresAuthentication(NancyContext context)
-		{
-			var s = context.Request.Session;
-
-			var l = s["loggedin"];
-
-			if (l != null && l.GetType () == typeof(bool) && (bool) l)
-			{
-				return null;
-			}
-
-			return context.GetRedirect ("~/log");
 		}
 	}
 }

@@ -3,7 +3,6 @@ using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.DataLayer.Context;
 using Nancy;
 
-
 namespace Epsitec.Cresus.Core.Server.Modules
 {
 	public class LayoutModule : CoreModule
