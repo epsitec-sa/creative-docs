@@ -570,6 +570,10 @@
     <EmbeddedResource Include="Images\Lines.Deselect.icon" />
     <EmbeddedResource Include="Images\Lines.GroupSelect.icon" />
     <EmbeddedResource Include="Images\Lines.ViewDebug.icon" />
+    <EmbeddedResource Include="Images\DocumentOptions.Error.icon" />
+    <EmbeddedResource Include="Images\DocumentOptions.Missing.icon" />
+    <EmbeddedResource Include="Images\DocumentOptions.Overflow.icon" />
+    <EmbeddedResource Include="Images\DocumentOptions.Normal.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

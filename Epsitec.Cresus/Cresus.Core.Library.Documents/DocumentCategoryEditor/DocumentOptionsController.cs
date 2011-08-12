@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				Parent = this.missingFrame,
 				ContentAlignment = Common.Drawing.ContentAlignment.MiddleLeft,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (5+12, 0, 0, 0),
+				Margins = new Margins (5, 0, 0, 0),
 			};
 		}
 
@@ -220,7 +220,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					Parent = frame,
 					PreferredWidth = DocumentOptionsController.errorBulletWidth,
 					Dock = DockStyle.Left,
-					Margins = new Margins (0, 0, this.documentCategoryController.lineHeight-2, 0),
+					Margins = new Margins (0, 0, this.documentCategoryController.lineHeight, 0),
 				};
 
 				var overflowFrame = new FrameBox
@@ -228,7 +228,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					Parent = frame,
 					PreferredWidth = DocumentOptionsController.errorBulletWidth,
 					Dock = DockStyle.Left,
-					Margins = new Margins (0, 0, this.documentCategoryController.lineHeight-2, 0),
+					Margins = new Margins (0, 0, this.documentCategoryController.lineHeight, 0),
 				};
 
 				var leftFrame = new FrameBox
@@ -338,9 +338,8 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					Parent = frame,
 					ContentAlignment = ContentAlignment.MiddleLeft,
 					PreferredWidth = DocumentOptionsController.errorBulletWidth,
-					PreferredHeight = this.documentCategoryController.lineHeight-3,
+					PreferredHeight = this.documentCategoryController.lineHeight,
 					Dock = DockStyle.Left,
-					Margins = new Margins (0, 0, 0, 3),
 				};
 
 				group.OptionInformations[0].ErrorVisibility = error;
@@ -351,9 +350,8 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					Parent = frame,
 					ContentAlignment = ContentAlignment.MiddleLeft,
 					PreferredWidth = DocumentOptionsController.errorBulletWidth,
-					PreferredHeight = this.documentCategoryController.lineHeight-3,
+					PreferredHeight = this.documentCategoryController.lineHeight,
 					Dock = DockStyle.Left,
-					Margins = new Margins (0, 0, 0, 3),
 				};
 
 				group.OptionInformations[0].OverflowVisibility = overflow;
@@ -417,20 +415,21 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				{
 					if (info.PrintingOptionDictionary.Options.Contains (verboseOption.Option))
 					{
-						var description = info.PrintingOptionDictionary.GetOptionDescription (verboseOption, hasBullet: true, hiliteValue: true);
+						var description = info.PrintingOptionDictionary.GetOptionDescription (verboseOption, hasBullet: false, hiliteValue: true);
 
 						if (this.errorOptions.Contains (verboseOption.Option))
 						{
-							description = description.ApplyFontColor (Color.FromName ("Blue"));
+							description = string.Concat (DocumentOptionsController.errorBullet, "  ", description.ApplyFontColor (DocumentOptionsController.errorColor));
 							errorCount++;
 						}
 						else if (!this.RequiredDocumentOptionsContains (verboseOption.Option))
 						{
-							description = description.ApplyFontColor (Color.FromName ("Red"));
+							description = string.Concat (DocumentOptionsController.overflowBullet, "  ", description.ApplyFontColor (DocumentOptionsController.overflowColor));
 							inutileCount++;
 						}
 						else
 						{
+							description = string.Concat (DocumentOptionsController.normalBullet, "  ", description);
 							correctCount++;
 						}
 
@@ -445,29 +444,29 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 				if (correctCount == 1)
 				{
-					correctText = "Une option est définie correctement (noir)<br/>";
+					correctText = string.Format ("{0}  Une option est définie correctement<br/>", DocumentOptionsController.normalBullet);
 				}
 				if (correctCount > 1)
 				{
-					correctText = string.Format ("{0} options sont définies correctement (noir)<br/>", correctCount.ToString ());
+					correctText = string.Format ("{0}  {1} options sont définies correctement<br/>", DocumentOptionsController.normalBullet, correctCount.ToString ());
 				}
 
 				if (errorCount == 1)
 				{
-					errorText = "Une option est définie plusieurs fois (bleu)<br/>";
+					errorText = string.Format ("{0}  Une option est définie plusieurs fois<br/>", DocumentOptionsController.errorBullet);
 				}
 				if (errorCount > 1)
 				{
-					errorText = string.Format ("{0} options sont définies plusieurs fois (bleu)<br/>", errorCount.ToString ());
+					errorText = string.Format ("{0}  {1} options sont définies plusieurs fois<br/>", DocumentOptionsController.errorBullet, errorCount.ToString ());
 				}
 
 				if (inutileCount == 1)
 				{
-					inutileText = "Une option est définie inutilement (rouge)<br/>";
+					inutileText = string.Format ("{0}  Une option est définie inutilement<br/>", DocumentOptionsController.overflowBullet);
 				}
 				if (inutileCount > 1)
 				{
-					inutileText = string.Format ("{0} options sont définies inutilement (rouge)<br/>", inutileCount.ToString ());
+					inutileText = string.Format ("{0}  {1} options sont définies inutilement<br/>", DocumentOptionsController.overflowBullet, inutileCount.ToString ());
 				}
 
 				//	Génère le texte final.
@@ -594,9 +593,6 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			int missing  = 0;
 			int overflow = 0;
 
-			FormattedText errorBullet    = new FormattedText ("●").ApplyFontColor (Color.FromName ("Blue")).ApplyFontSize (14);
-			FormattedText overflowBullet = new FormattedText ("●").ApplyFontColor (Color.FromName ("Red")).ApplyFontSize (14);
-
 			foreach (var documentOptionEntity in this.documentCategoryEntity.DocumentOptions)
 			{
 				var info = this.optionInformations.Where (x => x.Entity == documentOptionEntity).FirstOrDefault ();
@@ -655,7 +651,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 						{
 							if (this.errorOptions.Contains (option))
 							{
-								text = errorBullet;
+								text = DocumentOptionsController.errorBullet;
 								break;
 							}
 						}
@@ -682,7 +678,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 							{
 								if (overflowOptions.Contains (option))
 								{
-									text = overflowBullet;
+									text = DocumentOptionsController.overflowBullet;
 									break;
 								}
 							}
@@ -716,9 +712,9 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					errorMessage = string.Format ("Il y a {0} options définies plusieurs fois", error.ToString ());
 				}
 
-				errorMessage = FormattedText.Concat (errorBullet, " ", errorMessage.ApplyBold ());
+				errorMessage = FormattedText.Concat (DocumentOptionsController.errorBullet, "  ", errorMessage.ApplyBold ());
 
-				errorTooltip = this.GetTooltipDescription (this.errorOptions).ApplyFontColor (Color.FromName ("Blue"));
+				errorTooltip = this.GetTooltipDescription (this.errorOptions).ApplyFontColor (DocumentOptionsController.errorColor);
 			}
 
 			if (missing != 0)
@@ -731,6 +727,8 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				{
 					missingMessage = string.Format ("Il y a {0} options indéfinies", missing.ToString ());
 				}
+
+				missingMessage = FormattedText.Concat (DocumentOptionsController.missingBullet, "  ", missingMessage);
 
 				missingTooltip = this.GetMissingTooltipDescription (usedOptions);
 			}
@@ -746,9 +744,9 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					overflowMessage = string.Format ("Il y a {0} options définies inutilement", overflow.ToString ());
 				}
 
-				overflowMessage = FormattedText.Concat (overflowBullet, " ", overflowMessage);
+				overflowMessage = FormattedText.Concat (DocumentOptionsController.overflowBullet, "  ", overflowMessage);
 
-				overflowTooltip = this.GetTooltipDescription (overflowOptions).ApplyFontColor (Color.FromName ("Red"));
+				overflowTooltip = this.GetTooltipDescription (overflowOptions).ApplyFontColor (DocumentOptionsController.overflowColor);
 			}
 
 			if (this.documentCategoryEntity.DocumentOptions.Count == 0)
@@ -1090,8 +1088,16 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 		}
 
 
-		private static readonly int		errorBulletWidth = 10;
+		private static readonly int		errorBulletWidth = 15;
 		private static readonly int		ratioWidth       = 40;
+
+		private static readonly Color	errorColor    = Color.FromRgb (242.0/255.0, 145.0/255.0,   0.0/255.0);  // orange
+		private static readonly Color	overflowColor = Color.FromRgb (203.0/255.0,   0.0/255.0,   0.0/255.0);  // rouge
+
+		private static FormattedText	normalBullet   = Misc.GetResourceIconImageTag ("DocumentOptions.Normal",   -2, new Size (13, 13));
+		private static FormattedText	errorBullet    = Misc.GetResourceIconImageTag ("DocumentOptions.Error",    -2, new Size (13, 13));
+		private static FormattedText	overflowBullet = Misc.GetResourceIconImageTag ("DocumentOptions.Overflow", -2, new Size (13, 13));
+		private static FormattedText	missingBullet  = Misc.GetResourceIconImageTag ("DocumentOptions.Missing",  -2, new Size (13, 13));
 
 		private readonly IBusinessContext					businessContext;
 		private readonly DocumentCategoryEntity				documentCategoryEntity;
