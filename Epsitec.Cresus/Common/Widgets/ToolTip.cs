@@ -154,7 +154,7 @@ namespace Epsitec.Common.Widgets
 				{
 					this.refreshedCaption = this.hostProvidedCaption;
 					this.ShowToolTip ();
-					this.RestartTimer (SystemInformation.ToolTipAutoCloseDelay);
+					this.RestartTimer (ToolTip.GetTooltipAutoCloseDelay (widget));
 				}
 			}
 		}
@@ -337,7 +337,7 @@ namespace Epsitec.Common.Widgets
 				{
 					Drawing.Point mouse = Helpers.VisualTree.MapVisualToScreen (this.widget, pos);
 					this.ShowToolTip (mouse, caption, ToolTip.GetDefaultToolTipColor (this.widget));
-					this.RestartTimer (SystemInformation.ToolTipAutoCloseDelay);
+					this.RestartTimer (ToolTip.GetTooltipAutoCloseDelay (this.widget));
 				}
 				
 				return true;
@@ -449,7 +449,7 @@ namespace Epsitec.Common.Widgets
 			else
 			{
 				this.ShowToolTip ();
-				this.RestartTimer (SystemInformation.ToolTipAutoCloseDelay);
+				this.RestartTimer (ToolTip.GetTooltipAutoCloseDelay (this.widget));
 			}
 		}
 		
@@ -748,7 +748,34 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public static readonly DependencyProperty ToolTipTextProperty    = DependencyProperty<ToolTip>.RegisterAttached ("ToolTipText",    typeof (string), PrivateDependencyPropertyMetadata.Default);
+
+		private static double GetTooltipAutoCloseDelay(DependencyObject obj)
+		{
+			//	Retourne le délai de fermeture pour le tooltip, en se basant sur une vitesse de lecture
+			//	de 40 caractères/seconde. Le délai est toujours compris entre 5 et 20 secondes.
+			//	Si le tooltip n'est pas défini avec un texte (par exemple un Caption ou un Widget), le délai
+			//	est de 5 secondes.
+			int length = ToolTip.GetTooltipTextLength (obj);
+			return System.Math.Min (System.Math.Max (length/40, SystemInformation.ToolTipAutoCloseDelay), SystemInformation.ToolTipAutoCloseDelay*4);
+		}
+
+		private static int GetTooltipTextLength(DependencyObject obj)
+		{
+			//	Retourne le nombre de caractères du texte, ou zéro si ce n'est pas un texte.
+			string text = ToolTip.GetToolTipText (obj);
+
+			if (string.IsNullOrEmpty (text))
+			{
+				return 0;
+			}
+			else
+			{
+				return text.Length;
+			}
+		}
+
+
+		public static readonly DependencyProperty ToolTipTextProperty    = DependencyProperty<ToolTip>.RegisterAttached ("ToolTipText", typeof (string), PrivateDependencyPropertyMetadata.Default);
 		public static readonly DependencyProperty ToolTipWidgetProperty  = DependencyProperty<ToolTip>.RegisterAttached ("ToolTipWidget",  typeof (Widget), PrivateDependencyPropertyMetadata.Default);
 		public static readonly DependencyProperty ToolTipCaptionProperty = DependencyProperty<ToolTip>.RegisterAttached ("ToolTipCaption", typeof (Caption), PrivateDependencyPropertyMetadata.Default);
 		public static readonly DependencyProperty ToolTipColorProperty   = DependencyProperty<ToolTip>.RegisterAttached ("ToolTipColor",   typeof (Color), PrivateDependencyPropertyMetadata.Default);
