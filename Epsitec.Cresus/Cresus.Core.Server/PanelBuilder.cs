@@ -12,6 +12,7 @@ using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.DataLayer.Context;
 
 namespace Epsitec.Cresus.Core.Server
 {
@@ -129,7 +130,7 @@ namespace Epsitec.Cresus.Core.Server
 		{
 
 			var list = new List<Dictionary<string, object>> ();
-			var parent = GetBasicPanelFrom (item);
+			var parent = GetBasicPanelForm (item);
 			list.Add (parent);
 
 			var entityKey = GetEntityKey (entity);
@@ -157,16 +158,7 @@ namespace Epsitec.Cresus.Core.Server
 			return list;
 		}
 
-		private Dictionary<string, object> CreateEmptyPanel(Brick brick, WebDataItem item)
-		{
-			var panel = GetBasicPanelFrom (item);
-
-			panel["xtype"] = "emptysummary";
-
-			return panel;
-		}
-
-		private Dictionary<string, object> GetBasicPanelFrom(WebDataItem item)
+		private Dictionary<string, object> GetBasicPanelForm(WebDataItem item)
 		{
 			var panel = new Dictionary<string, object> ();
 
@@ -182,6 +174,15 @@ namespace Epsitec.Cresus.Core.Server
 				var iconCls = PanelBuilder.CreateCssFromIcon (icon.Key, icon.Value);
 				panel["iconCls"] = iconCls;
 			}
+
+			return panel;
+		}
+
+		private Dictionary<string, object> CreateEmptyPanel(Brick brick, WebDataItem item)
+		{
+			var panel = GetBasicPanelForm (item);
+
+			panel["xtype"] = "emptysummary";
 
 			return panel;
 		}
@@ -249,18 +250,19 @@ namespace Epsitec.Cresus.Core.Server
 				}
 			}
 
-			//if (inputProperties != null)
-			//{
-			//    if (inputProperties.PeekAfter (BrickPropertyKey.Separator, -1).HasValue)
-			//    {
-			//        this.CreateActionForSeparator ();
-			//    }
+			if (inputProperties != null)
+			{
+				if (inputProperties.PeekAfter (BrickPropertyKey.Separator, -1).HasValue)
+				{
+					list.Add (PanelBuilder.GetSeparator ());
+				}
 
-			//    if (inputProperties.PeekBefore (BrickPropertyKey.GlobalWarning, -1).HasValue)
-			//    {
-			//        this.CreateActionForGlobalWarning ();
-			//    }
-			//}
+				// /!\ Caution! Hot code! /!\
+				if (inputProperties.PeekBefore (BrickPropertyKey.GlobalWarning, -1).HasValue)
+				{
+					list.Add (PanelBuilder.GetGlobalWarning ());
+				}
+			}
 
 			return list;
 		}
@@ -302,6 +304,12 @@ namespace Epsitec.Cresus.Core.Server
 			if (fieldType.IsEntity ())
 			{
 				var entityType = entity.GetType ();
+				dic["value"] = entity.GetSummary ().ToString ();
+
+				if (entityType != typeof (PersonTitleEntity))
+				{
+					return dic;
+				}
 
 				//	The field is an entity : use an AutoCompleteTextField for it.
 
@@ -311,7 +319,28 @@ namespace Epsitec.Cresus.Core.Server
 				//    FieldInfo = fieldMode
 				//});
 
-				dic["value"] = entity.GetSummary ().ToString ();
+				var request = new DataLayer.Loader.Request
+				{
+					RootEntity = entity
+				};
+				//var titles = this.coreSession.GetBusinessContext ().DataContext.GetByRequest<PersonTitleEntity> (request);
+
+				var mi = typeof(DataContext).GetMethod ("GetByRequest");
+				var m = mi.MakeGenericMethod (entityType);
+
+				var titles = m.Invoke(this.DataContext, new []{request}) as IEnumerable;
+
+				var t = titles.Cast<PersonTitleEntity> ();
+
+				dic["xtype"] = "combo";
+
+				var data = new List<string> ();
+				dic["store"] = data;
+
+				foreach (var item in t)
+				{
+					data.Add (item.Name.ToSimpleText ());
+				}
 
 				return dic;
 			}
@@ -418,7 +447,6 @@ namespace Epsitec.Cresus.Core.Server
 
 			new List<Dictionary<string, object>> ();
 			var list = this.CreateActionsForInput (property.Brick, null);
-			// Computes the average width for each column (+ a little margin)
 
 			foreach (var l in list)
 			{
@@ -538,7 +566,39 @@ namespace Epsitec.Cresus.Core.Server
 
 		private string GetEntityKey(AbstractEntity entity)
 		{
-			return this.coreSession.GetBusinessContext ().DataContext.GetNormalizedEntityKey (entity).Value.ToString ();
+			return this.DataContext.GetNormalizedEntityKey (entity).Value.ToString ();
+		}
+
+		private static Dictionary<string, object> GetSeparator()
+		{
+			var dic = new Dictionary<string, object> ();
+			var autoEl = new Dictionary<string, string> ();
+
+			dic["xtype"] = "box";
+			dic["margin"] = "10 0";
+			dic["autoEl"] = autoEl;
+			autoEl["tag"] = "hr";
+
+			return dic;
+		}
+
+		private static Dictionary<string, object> GetGlobalWarning()
+		{
+			var dic = new Dictionary<string, object> ();
+
+			dic["xtype"] = "displayfield";
+			dic["value"] = "<i><b>ATTENTION:</b> Les modifications effectuées ici seront répercutées dans tous les enregistrements.</i>";
+			dic["cls"] = "global-warning";
+
+			return dic;
+		}
+
+		private DataContext DataContext
+		{
+			get
+			{
+				return this.coreSession.GetBusinessContext ().DataContext;
+			}
 		}
 
 		private readonly AbstractEntity rootEntity;
