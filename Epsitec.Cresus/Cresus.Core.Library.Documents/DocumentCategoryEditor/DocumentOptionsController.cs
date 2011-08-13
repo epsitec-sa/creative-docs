@@ -262,6 +262,9 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					Dock = DockStyle.Top,
 				};
 
+				string firstTooltip = (group.Used <= 1) ? "Enlève une option aux définitions" : string.Format ("Enlève {0} options aux définitions", group.Used.ToString ());
+				ToolTip.Default.SetToolTip (first, firstTooltip);
+
 				var firstState = ActiveState.Yes;
 
 				for (int i = 0; i < group.OptionInformations.Count; i++)
@@ -542,11 +545,11 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				}
 				else if (info.Used == 1)
 				{
-					return "Une option sera ajoutée aux définitions";
+					return "Ajoute une option aux définitions";
 				}
 				else
 				{
-					return string.Format ("{0} options seront ajoutées aux définitions", info.Used.ToString ());
+					return string.Format ("Ajoute {0} options aux définitions", info.Used.ToString ());
 				}
 			}
 		}

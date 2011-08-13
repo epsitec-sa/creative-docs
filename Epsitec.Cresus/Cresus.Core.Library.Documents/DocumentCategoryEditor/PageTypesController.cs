@@ -93,8 +93,8 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			parent.Children.Clear ();
 
 			this.firstGroup = true;
-			this.CreateGroup (parent, this.pageTypeInformations.Where (x =>  x.Match), "Pages imprimables adaptées",   this.documentCategoryController.acceptedColor);  // vert clair
-			this.CreateGroup (parent, this.pageTypeInformations.Where (x => !x.Match), "Pages imprimables inadaptées", this.documentCategoryController.rejectedColor);  // rouge clair
+			this.CreateGroup (parent, this.pageTypeInformations.Where (x =>  x.Match), "Pages imprimables adaptées",   this.documentCategoryController.acceptedColor);
+			this.CreateGroup (parent, this.pageTypeInformations.Where (x => !x.Match), "Pages imprimables inadaptées", this.documentCategoryController.rejectedColor);
 		}
 
 		private void CreateGroup(Widget parent, IEnumerable<PageTypeInformation> pageTypeInformations, FormattedText title, Color color)
