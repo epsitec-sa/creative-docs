@@ -572,7 +572,7 @@
     <EmbeddedResource Include="Images\Lines.ViewDebug.icon" />
     <EmbeddedResource Include="Images\DocumentOptions.Error.icon" />
     <EmbeddedResource Include="Images\DocumentOptions.Missing.icon" />
-    <EmbeddedResource Include="Images\DocumentOptions.Overflow.icon" />
+    <EmbeddedResource Include="Images\DocumentOptions.Useless.icon" />
     <EmbeddedResource Include="Images\DocumentOptions.Normal.icon" />
   </ItemGroup>
   <ItemGroup>

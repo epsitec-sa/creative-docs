@@ -137,9 +137,9 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 		public readonly int		lineHeight  = 15;
 		public readonly int		errorHeight = 24;
 
-		public readonly Color	acceptedColor  = Color.FromRgb (221.0/255.0, 255.0/255.0, 227.0/255.0);  // vert clair
-		public readonly Color	toleratedColor = Color.FromRgb (255.0/255.0, 246.0/255.0, 224.0/255.0);  // orange clair
-		public readonly Color	rejectedColor  = Color.FromRgb (255.0/255.0, 224.0/255.0, 224.0/255.0);  // rouge clair
+		public readonly Color	acceptedColor  = Color.FromBrightness (1.0);
+		public readonly Color	toleratedColor = Color.FromBrightness (0.9);
+		public readonly Color	rejectedColor  = Color.FromBrightness (0.8);
 
 		private readonly IBusinessContext					businessContext;
 		private readonly DocumentCategoryEntity				documentCategoryEntity;
