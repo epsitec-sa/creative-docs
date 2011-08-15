@@ -356,7 +356,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				//	Rabais.
 				var discountField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.DiscountValue, x => this.DiscountValue = x));
-				this.PlaceLabelAndField (line, 130, 100, "Rabais en % ou en francs", discountField);
+				this.discountBox = this.PlaceLabelAndField (line, 130, 100, "Rabais en % ou en francs", discountField);
 
 				var neverButton = new CheckButton
 				{
@@ -370,6 +370,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				neverButton.ActiveStateChanged += delegate
 				{
 					this.Entity.NeverApplyDiscount = (neverButton.ActiveState == ActiveState.Yes);
+					this.UpdateDiscountBox ();
 				};
 			}
 
@@ -392,6 +393,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 #endif
 
 			this.UpdateQuantityBox ();
+			this.UpdateDiscountBox ();
 		}
 
 		private void UpdateQuantityBox()
@@ -431,6 +433,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			this.quantityBox.Visibility = this.Entity.FixedUnitPrice || this.Entity.FixedLinePrice;
 			this.ttcButton.Visibility = this.Entity.FixedUnitPrice || this.Entity.FixedLinePrice;
+		}
+
+		private void UpdateDiscountBox()
+		{
+			this.discountBox.Enable = !this.Entity.NeverApplyDiscount;
 		}
 
 
@@ -697,5 +704,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private TextFieldMultiEx												articleDescriptionTextField;
 		private FrameBox														quantityBox;
 		private CheckButton														ttcButton;
+		private FrameBox														discountBox;
 	}
 }
