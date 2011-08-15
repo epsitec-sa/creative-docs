@@ -1042,15 +1042,15 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>BillingDetails</c> field.
+		///	The <c>PaymentTransactions</c> field.
 		///	designer:fld/GVAT/GVA51
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[GVA51]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.BillingDetailEntity> BillingDetails
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.PaymentTransactionEntity> PaymentTransactions
 		{
 			get
 			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.BillingDetailEntity> ("[GVA51]");
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.PaymentTransactionEntity> ("[GVA51]");
 			}
 		}
 		///	<summary>

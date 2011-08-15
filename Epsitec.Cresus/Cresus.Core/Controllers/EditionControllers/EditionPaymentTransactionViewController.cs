@@ -19,10 +19,10 @@ using Epsitec.Cresus.Bricks;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionBillingDetailViewController : EditionViewController<Entities.BillingDetailEntity>
+	public class EditionPaymentTransactionViewController : EditionViewController<Entities.PaymentTransactionEntity>
 	{
 #if true
-		protected override void CreateBricks(BrickWall<BillingDetailEntity> wall)
+		protected override void CreateBricks(BrickWall<PaymentTransactionEntity> wall)
 		{
 			wall.AddBrick ()
 				.Input ()
@@ -30,12 +30,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.End ()
 				.Separator ()
 				.Input ()
-				  .Field (x => x.AmountDue.PaymentType)
-				  .Field (x => x.AmountDue.PaymentMode)
-				  .Field (x => x.AmountDue.Amount)
-				  .Field (x => x.AmountDue.Currency)
-				  .Field (x => x.AmountDue.Date)
-				  .Field (x => x.AmountDue.PaymentData)
+				  .Field (x => x.PaymentDetail.PaymentType)
+				  .Field (x => x.PaymentDetail.PaymentMode)
+				  .Field (x => x.PaymentDetail.Amount)
+				  .Field (x => x.PaymentDetail.Currency)
+				  .Field (x => x.PaymentDetail.Date)
+				  .Field (x => x.PaymentDetail.PaymentData)
 				.End ()
 				.Separator ()
 				.Input ()
@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			using (var builder = new UIBuilder (this))
 			{
 				builder.CreateHeaderEditorTile ();
-				builder.CreateEditionTitleTile ("Data.BillingDetails", "Facturation");
+				builder.CreateEditionTitleTile ("Data.PaymentTransactions", "Facturation");
 
 				this.CreateUIMain (builder);
 				this.CreateUIPaymentMode (builder);
@@ -150,7 +150,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				this.Entity.AmountDue.Amount = 0;
 				decimal amountDue = 0;
 
-				foreach (var billing in invoiceDocument.BillingDetails)
+				foreach (var billing in invoiceDocument.PaymentTransactions)
 				{
 					amountDue += billing.AmountDue.Amount;
 				}

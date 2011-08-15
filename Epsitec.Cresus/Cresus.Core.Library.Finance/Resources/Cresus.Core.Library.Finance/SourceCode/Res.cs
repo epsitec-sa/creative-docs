@@ -74,8 +74,6 @@ namespace Epsitec.Cresus.Core.Library.Finance
 				public static readonly Epsitec.Common.Types.StringType PostFinanceAccount = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10));
 			}
 			
-			//	designer:cap/CVAL
-			public static readonly Epsitec.Common.Types.StructuredType BillingDetail = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 21));
 			//	designer:cap/CVAT
 			public static readonly Epsitec.Common.Types.StructuredType Currency = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 29));
 			//	designer:cap/CVAU
@@ -88,6 +86,8 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			public static readonly Epsitec.Common.Types.StructuredType PaymentDetail = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 34));
 			//	designer:cap/CVAV
 			public static readonly Epsitec.Common.Types.StructuredType PaymentMode = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 31));
+			//	designer:cap/CVAL
+			public static readonly Epsitec.Common.Types.StructuredType PaymentTransaction = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 21));
 			//	designer:cap/CVAF4
 			public static readonly Epsitec.Common.Types.StructuredType PriceCalculator = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 143));
 			//	designer:cap/CVA44
@@ -639,28 +639,6 @@ namespace Epsitec.Cresus.Core.Library.Finance
 		
 		public static class Fields
 		{
-			public static class BillingDetail
-			{
-				internal static void _Initialize()
-				{
-				}
-				
-				//	designer:cap/CVAN
-				public static readonly global::Epsitec.Common.Support.Druid AmountDue = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 23);
-				//	designer:cap/CVAS
-				public static readonly global::Epsitec.Common.Support.Druid InstalmentName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 28);
-				//	designer:cap/CVAR
-				public static readonly global::Epsitec.Common.Support.Druid InstalmentRank = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 27);
-				//	designer:cap/CVAP
-				public static readonly global::Epsitec.Common.Support.Druid IsrDefinition = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 25);
-				//	designer:cap/CVAQ
-				public static readonly global::Epsitec.Common.Support.Druid IsrReferenceNumber = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 26);
-				//	designer:cap/CVAM
-				public static readonly global::Epsitec.Common.Support.Druid Text = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 22);
-				//	designer:cap/CVAO
-				public static readonly global::Epsitec.Common.Support.Druid TransactionId = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 24);
-			}
-			
 			public static class Currency
 			{
 				internal static void _Initialize()
@@ -783,6 +761,28 @@ namespace Epsitec.Cresus.Core.Library.Finance
 				public static readonly global::Epsitec.Common.Support.Druid AdministrativeTaxCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 68);
 				//	designer:cap/CVA32
 				public static readonly global::Epsitec.Common.Support.Druid ExtraPaymentTerm = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 67);
+			}
+			
+			public static class PaymentTransaction
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/CVAS
+				public static readonly global::Epsitec.Common.Support.Druid InstalmentName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 28);
+				//	designer:cap/CVAR
+				public static readonly global::Epsitec.Common.Support.Druid InstalmentRank = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 27);
+				//	designer:cap/CVAP
+				public static readonly global::Epsitec.Common.Support.Druid IsrDefinition = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 25);
+				//	designer:cap/CVAQ
+				public static readonly global::Epsitec.Common.Support.Druid IsrReferenceNumber = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 26);
+				//	designer:cap/CVAN
+				public static readonly global::Epsitec.Common.Support.Druid PaymentDetail = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 23);
+				//	designer:cap/CVAM
+				public static readonly global::Epsitec.Common.Support.Druid Text = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 22);
+				//	designer:cap/CVAO
+				public static readonly global::Epsitec.Common.Support.Druid TransactionId = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 24);
 			}
 			
 			public static class PriceCalculator
@@ -931,7 +931,6 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			Values.Finance.RoundingPolicy._Initialize ();
 			Values.Finance.TaxMode._Initialize ();
 			Values.Finance.VatCode._Initialize ();
-			Fields.BillingDetail._Initialize ();
 			Fields.Currency._Initialize ();
 			Fields.ExchangeRateSource._Initialize ();
 			Fields.FinanceSettings._Initialize ();
@@ -940,6 +939,7 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			Fields.PaymentDetail._Initialize ();
 			Fields.PaymentMode._Initialize ();
 			Fields.PaymentReminderDefinition._Initialize ();
+			Fields.PaymentTransaction._Initialize ();
 			Fields.PriceCalculator._Initialize ();
 			Fields.PriceDiscount._Initialize ();
 			Fields.PriceGroup._Initialize ();

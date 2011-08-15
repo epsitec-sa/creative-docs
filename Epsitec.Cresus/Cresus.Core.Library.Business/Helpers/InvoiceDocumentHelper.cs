@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Core.Helpers
 {
 	public static class InvoiceDocumentHelper
 	{
-		public static FormattedText GetTitle(DocumentMetadataEntity metadata, BusinessDocumentEntity x, BillingDetailEntity billingDetails)
+		public static FormattedText GetTitle(DocumentMetadataEntity metadata, BusinessDocumentEntity x, PaymentTransactionEntity billingDetails)
 		{
 			//	Retourne le titre du document imprimé.
 			//	Par exemple "Facture 10256", "Offre 10257" ou "Bon pour commande 10258".
@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Core.Helpers
 			}
 		}
 
-		public static FormattedText GetInstalmentName(BusinessDocumentEntity x, BillingDetailEntity billingDetails, bool parenthesis)
+		public static FormattedText GetInstalmentName(BusinessDocumentEntity x, PaymentTransactionEntity billingDetails, bool parenthesis)
 		{
 			//	Retourne la description d'une mensualité. Si aucun texte n'est défini, il est généré automatiquement,
 			//	sur le modèle "n/t", où n est le rang de la mensualité et t le nombre total.
@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Core.Helpers
 				}
 			}
 
-			int count = x.BillingDetails.Count (y => y.InstalmentRank != null);  // compte les mensualités
+			int count = x.PaymentTransactions.Count (y => y.InstalmentRank != null);  // compte les mensualités
 
 			if (parenthesis)
 			{

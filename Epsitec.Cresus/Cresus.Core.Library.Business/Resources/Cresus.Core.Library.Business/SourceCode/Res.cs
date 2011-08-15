@@ -783,8 +783,6 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid BaseDocumentCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 212);
 				//	designer:cap/GVA71
 				public static readonly global::Epsitec.Common.Support.Druid BillingDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 39);
-				//	designer:cap/GVA51
-				public static readonly global::Epsitec.Common.Support.Druid BillingDetails = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 37);
 				//	designer:cap/GVA61
 				public static readonly global::Epsitec.Common.Support.Druid BillingStatus = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 38);
 				//	designer:cap/GVAU
@@ -801,6 +799,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid OtherPartyRelation = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 32);
 				//	designer:cap/GVA21
 				public static readonly global::Epsitec.Common.Support.Druid OtherPartyTaxMode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 34);
+				//	designer:cap/GVA51
+				public static readonly global::Epsitec.Common.Support.Druid PaymentTransactions = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 37);
 				//	designer:cap/GVAA1
 				public static readonly global::Epsitec.Common.Support.Druid PriceGroup = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 42);
 				//	designer:cap/GVA91

@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class BillingDetailEntity
+	public partial class PaymentTransactionEntity
 	{
 		public override FormattedText GetSummary()
 		{
@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override FormattedText GetCompactSummary()
 		{
-			string amount = Misc.PriceToString (this.AmountDue.Amount);
+			string amount = Misc.PriceToString (this.PaymentDetail.Amount);
 			FormattedText title = this.Text.Lines.FirstOrDefault ();
 			FormattedText ratio = FormattedText.Empty; //Helpers.InvoiceDocumentHelper.GetInstalmentName (invoiceDocument, this, true);
 

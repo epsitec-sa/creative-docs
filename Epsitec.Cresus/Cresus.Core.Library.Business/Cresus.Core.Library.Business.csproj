@@ -71,7 +71,7 @@
     <Compile Include="Business\Rules\AffairBusinessRules.cs" />
     <Compile Include="Business\Rules\ArticleGroupBusinessRules.cs" />
     <Compile Include="Business\Rules\ArticlePriceBusinessRules.cs" />
-    <Compile Include="Business\Rules\BillingDetailBusinessRules.cs" />
+    <Compile Include="Business\Rules\PaymentTransactionBusinessRules.cs" />
     <Compile Include="Business\Rules\BusinessDocumentBusinessRules.cs" />
     <Compile Include="Business\Rules\BusinessSettingsBusinessRules.cs" />
     <Compile Include="Business\Rules\CustomerBusinessRules.cs" />
@@ -299,6 +299,7 @@
     </None>
     <Content Include="Resources\Cresus.Core.Library.Business\Captions.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Resources\Cresus.Core.Library.Business\module.info">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

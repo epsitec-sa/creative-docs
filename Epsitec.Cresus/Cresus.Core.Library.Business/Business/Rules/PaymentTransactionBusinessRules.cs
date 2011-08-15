@@ -13,9 +13,9 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Business.Rules
 {
 	[BusinessRule]
-	internal class BillingDetailBusinessRules : GenericBusinessRule<BillingDetailEntity>
+	internal class PaymentTransactionBusinessRules : GenericBusinessRule<PaymentTransactionEntity>
 	{
-		public override void ApplySetupRule(BillingDetailEntity billingDetails)
+		public override void ApplySetupRule(PaymentTransactionEntity billingDetails)
 		{
 			var context      = Logic.Current.GetComponent<BusinessContext> ();
 			var dueDate      = Date.Today;
@@ -39,15 +39,15 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			var currencyEntity = context.GetAllEntities<CurrencyEntity> ().FirstOrDefault (x => x.CurrencyCode == currencyCode);
 			var paymentMode    = settings.Finance.PaymentModes.FirstOrDefault ();
 
-			billingDetails.AmountDue = context.CreateEntity<PaymentDetailEntity> ();
-			billingDetails.AmountDue.PaymentType = Business.Finance.PaymentDetailType.AmountDue;
-			billingDetails.AmountDue.PaymentMode = context.GetLocalEntity (paymentMode);
-			billingDetails.AmountDue.Currency    = context.GetLocalEntity (currencyEntity);
+			billingDetails.PaymentDetail = context.CreateEntity<PaymentDetailEntity> ();
+			billingDetails.PaymentDetail.PaymentType = Business.Finance.PaymentDetailType.AmountDue;
+			billingDetails.PaymentDetail.PaymentMode = context.GetLocalEntity (paymentMode);
+			billingDetails.PaymentDetail.Currency    = context.GetLocalEntity (currencyEntity);
 
-			paymentTerm = billingDetails.AmountDue.PaymentMode.StandardPaymentTerm.GetValueOrDefault (30);
+			paymentTerm = billingDetails.PaymentDetail.PaymentMode.StandardPaymentTerm.GetValueOrDefault (30);
 			dueDate     = dueDate.AddDays (paymentTerm);
 
-			billingDetails.AmountDue.Date = dueDate;
+			billingDetails.PaymentDetail.Date = dueDate;
 			billingDetails.Text = string.Format ("Payable net au {0}", Misc.GetDateTimeDescription (dueDate));
 
 			var isrDef = settings.Finance.IsrDefs.FirstOrDefault (x => x.Currency == currencyCode);

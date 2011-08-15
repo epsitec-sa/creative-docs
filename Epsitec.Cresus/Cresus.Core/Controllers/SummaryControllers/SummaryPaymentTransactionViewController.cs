@@ -9,9 +9,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
-	public class SummaryBillingDetailViewController : SummaryViewController<BillingDetailEntity>
+	public class SummaryPaymentTransactionViewController : SummaryViewController<PaymentTransactionEntity>
 	{
-		protected override void CreateBricks(BrickWall<BillingDetailEntity> wall)
+		protected override void CreateBricks(BrickWall<PaymentTransactionEntity> wall)
 		{
 			wall.AddBrick (x => x);
 		}

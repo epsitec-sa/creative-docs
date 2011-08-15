@@ -196,7 +196,7 @@ namespace Epsitec.Cresus.Core.Entities
 			
 			copy.Lines.AddRange (this.Lines.Select (x => x.CloneEntity (businessContext)));
 
-			//	BillingDetails is not copied, since it is really specific to one invoice, and
+			//	PaymentTransactions is not copied, since it is really specific to one invoice, and
 			//	should not be shared between different invoices.
 
 			copy.BillingStatus         = this.BillingStatus;

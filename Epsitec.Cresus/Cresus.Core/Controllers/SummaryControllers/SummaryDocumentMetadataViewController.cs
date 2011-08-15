@@ -51,14 +51,14 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			{
 				if (this.Entity.DocumentCategory.DocumentType == Business.DocumentType.Invoice)
 				{
-					wall.AddBrick (x => SummaryDocumentMetadataViewController.GetBillingDetailEntities (x))
+					wall.AddBrick (x => SummaryDocumentMetadataViewController.GetPaymentTransactionEntities (x))
 						.Attribute (BrickMode.AutoGroup)
 						.Template ()
 						.End ()
 						;
 				}
 			}
-			
+
 			wall.AddBrick (x => x.Comments)
 				.Template ()
 				.End ()
@@ -110,12 +110,12 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			return text;
 		}
 
-		private static IList<BillingDetailEntity> GetBillingDetailEntities(DocumentMetadataEntity documentMetadataEntity)
+		private static IList<PaymentTransactionEntity> GetPaymentTransactionEntities(DocumentMetadataEntity documentMetadataEntity)
 		{
 			if (documentMetadataEntity.BusinessDocument is BusinessDocumentEntity)
 			{
 				var businessDocumentEntity = documentMetadataEntity.BusinessDocument as BusinessDocumentEntity;
-				return businessDocumentEntity.BillingDetails;
+				return businessDocumentEntity.PaymentTransactions;
 			}
 
 			return null;

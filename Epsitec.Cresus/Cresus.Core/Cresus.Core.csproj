@@ -132,7 +132,7 @@
     <Compile Include="Controllers\EditionControllers\EditionPriceCalculatorViewControllerTableDesigner.cs" />
     <Compile Include="Controllers\EditionControllers\EditionVatDefinitionViewController.cs" />
     <Compile Include="Controllers\RibbonViewController.cs" />
-    <Compile Include="Controllers\SummaryControllers\SummaryBillingDetailViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryPaymentTransactionViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleQuantityColumnViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryPaymentDatailViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryPriceGroupViewController.cs" />
@@ -224,7 +224,7 @@
     <Compile Include="Controllers\SummaryControllers\SummaryMailContactViewController.cs" />
     <Compile Include="Controllers\EditionControllers\Common.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPaymentModeViewController.cs" />
-    <Compile Include="Controllers\EditionControllers\EditionBillingDetailViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionPaymentTransactionViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionUnitOfMeasureViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPriceDocumentItemViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionTextDocumentItemViewController.cs" />
@@ -267,7 +267,7 @@
     <EmbeddedResource Include="Images\Base.InvoiceDocument.icon" />
     <EmbeddedResource Include="Images\Data.ArticleDocumentItem.icon" />
     <EmbeddedResource Include="Images\Data.ArticleQuantity.icon" />
-    <EmbeddedResource Include="Images\Data.BillingDetails.icon" />
+    <EmbeddedResource Include="Images\Data.PaymentTransactions.icon" />
     <EmbeddedResource Include="Images\Data.Currency.icon" />
     <EmbeddedResource Include="Images\Data.InvoiceDocument.icon" />
     <EmbeddedResource Include="Images\Data.PaymentDetail.icon" />
@@ -537,7 +537,7 @@
     <EmbeddedResource Include="Images\Base.PriceGroup.icon" />
     <EmbeddedResource Include="Images\Data.ArticleQuantityColumn.icon" />
     <EmbeddedResource Include="Images\Base.ArticleQuantityColumn.icon" />
-    <EmbeddedResource Include="Images\Data.BillingDetail.icon" />
+    <EmbeddedResource Include="Images\Data.PaymentTransaction.icon" />
     <EmbeddedResource Include="Images\Lines.Cancel.icon" />
     <EmbeddedResource Include="Images\Lines.CreateArticle.icon" />
     <EmbeddedResource Include="Images\Lines.CreateDiscount.icon" />

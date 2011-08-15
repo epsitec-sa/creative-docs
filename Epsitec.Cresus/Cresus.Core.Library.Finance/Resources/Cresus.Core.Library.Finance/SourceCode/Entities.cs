@@ -5,7 +5,7 @@
 //  --------------------------------------------------------------------------- 
 
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVA9]", typeof (Epsitec.Cresus.Core.Entities.IsrDefinitionEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[CVAL]", typeof (Epsitec.Cresus.Core.Entities.BillingDetailEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[CVAL]", typeof (Epsitec.Cresus.Core.Entities.PaymentTransactionEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVAT]", typeof (Epsitec.Cresus.Core.Entities.CurrencyEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVAU]", typeof (Epsitec.Cresus.Core.Entities.ExchangeRateSourceEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVAV]", typeof (Epsitec.Cresus.Core.Entities.PaymentModeEntity))]
@@ -294,14 +294,14 @@ namespace Epsitec.Cresus.Core.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.Core.BillingDetail Entity
+#region Epsitec.Cresus.Core.PaymentTransaction Entity
 namespace Epsitec.Cresus.Core.Entities
 {
 	///	<summary>
-	///	The <c>BillingDetail</c> entity.
+	///	The <c>PaymentTransaction</c> entity.
 	///	designer:cap/CVAL
 	///	</summary>
-	public partial class BillingDetailEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	public partial class PaymentTransactionEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
 		///	<summary>
 		///	The <c>Text</c> field.
@@ -326,11 +326,11 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>AmountDue</c> field.
+		///	The <c>PaymentDetail</c> field.
 		///	designer:fld/CVAL/CVAN
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[CVAN]")]
-		public global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity AmountDue
+		public global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity PaymentDetail
 		{
 			get
 			{
@@ -338,12 +338,12 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity oldValue = this.AmountDue;
+				global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity oldValue = this.PaymentDetail;
 				if (oldValue != value || !this.IsFieldDefined("[CVAN]"))
 				{
-					this.OnAmountDueChanging (oldValue, value);
+					this.OnPaymentDetailChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity> ("[CVAN]", oldValue, value);
-					this.OnAmountDueChanged (oldValue, value);
+					this.OnPaymentDetailChanged (oldValue, value);
 				}
 			}
 		}
@@ -460,8 +460,8 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnTextChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnTextChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnAmountDueChanging(global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity oldValue, global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity newValue);
-		partial void OnAmountDueChanged(global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity oldValue, global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity newValue);
+		partial void OnPaymentDetailChanging(global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity oldValue, global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity newValue);
+		partial void OnPaymentDetailChanged(global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity oldValue, global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity newValue);
 		partial void OnTransactionIdChanging(string oldValue, string newValue);
 		partial void OnTransactionIdChanged(string oldValue, string newValue);
 		partial void OnIsrDefinitionChanging(global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity newValue);
@@ -475,17 +475,17 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.Core.Entities.BillingDetailEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.Core.Entities.PaymentTransactionEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.Core.Entities.BillingDetailEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.Core.Entities.PaymentTransactionEntity.EntityStructuredTypeKey;
 		}
 		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 21);	// [CVAL]
 		public static readonly string EntityStructuredTypeKey = "[CVAL]";
 		
 		#region Repository Class
-		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<BillingDetailEntity>
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<PaymentTransactionEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Volatile)
 			{

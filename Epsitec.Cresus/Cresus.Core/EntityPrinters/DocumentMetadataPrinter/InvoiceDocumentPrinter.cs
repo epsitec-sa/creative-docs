@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 			base.BuildSections ();
 
-			if (this.Entity.BillingDetails.Count == 0)
+			if (this.Entity.PaymentTransactions.Count == 0)
 			{
 				return "Il n'y a rien à imprimer, car la facture ne contient aucune donnée de facturation.";
 			}
@@ -115,9 +115,9 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			if (!this.HasIsr || this.HasOption (DocumentOption.IsrPosition, "Without") || this.PreviewMode == Print.PreviewMode.ContinuousPreview)
 			{
-				if (this.Entity.BillingDetails.Count != 0)
+				if (this.Entity.PaymentTransactions.Count != 0)
 				{
-					this.billingDetailsEntity = this.Entity.BillingDetails[0];
+					this.billingDetailsEntity = this.Entity.PaymentTransactions[0];
 					int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
 
 					this.BuildHeader ();
@@ -133,7 +133,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			else
 			{
 				int documentRank = 0;
-				foreach (var billingDetails in this.Entity.BillingDetails)
+				foreach (var billingDetails in this.Entity.PaymentTransactions)
 				{
 					this.billingDetailsEntity = billingDetails;
 					this.documentContainer.DocumentRank = documentRank++;
@@ -365,7 +365,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		private void BuildConditions()
 		{
 			//	Met les conditions à la fin de la facture.
-			FormattedText conditions = FormattedText.Join (FormattedText.HtmlBreak, this.billingDetailsEntity.Text, this.billingDetailsEntity.AmountDue.PaymentMode.Description);
+			FormattedText conditions = FormattedText.Join (FormattedText.HtmlBreak, this.billingDetailsEntity.Text, this.billingDetailsEntity.PaymentDetail.PaymentMode.Description);
 
 			if (!conditions.IsNullOrEmpty)
 			{
@@ -483,6 +483,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		private static readonly double		marginBeforeIsr = 10;
 
 		private bool						onlyTotal;
-		private BillingDetailEntity			billingDetailsEntity;
+		private PaymentTransactionEntity			billingDetailsEntity;
 	}
 }

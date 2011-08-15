@@ -174,8 +174,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			var tileDataItem = new TileDataItem
 			{
 				AutoGroup    = true,
-				Name		 = "BillingDetails",
-				IconUri		 = "Data.BillingDetails",
+				Name		 = "PaymentTransactions",
+				IconUri		 = "Data.PaymentTransactions",
 				Title		 = TextFormatter.FormatText ("Facturation"),
 				CompactTitle = TextFormatter.FormatText ("Facturation"),
 				Text		 = CollectionTemplate.DefaultEmptyText,
@@ -183,12 +183,12 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			data.Add (tileDataItem);
 
-			var template = new CollectionTemplate<BillingDetailEntity> ("BillingDetails", this.BusinessContext);
+			var template = new CollectionTemplate<PaymentTransactionEntity> ("PaymentTransactions", this.BusinessContext);
 
 			template.DefineText        (x => x.GetCompactSummary ());
 			template.DefineCompactText (x => x.GetCompactSummary ());
 
-			data.Add (this.CreateCollectionAccessor (template, x => x.BillingDetails));
+			data.Add (this.CreateCollectionAccessor (template, x => x.PaymentTransactions));
 		}
 
 		private void CreateUIComments(TileDataItems data)
