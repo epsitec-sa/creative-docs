@@ -67,6 +67,9 @@ namespace Epsitec.Cresus.Core.Server
 				items.AddRange (panels);
 			}
 
+			// The very first item is the root
+			items.First ()["isRoot"] = true;
+
 			return dic;
 		}
 
@@ -141,7 +144,7 @@ namespace Epsitec.Cresus.Core.Server
 				parent["clickToEdit"] = false;
 			}
 
-			AddSpecificData (parent, item, entity);
+			AddControllerSpecificData (parent, item, entity);
 
 			var inputs = CreateInputs (brick);
 			if (inputs != null && inputs.Any ())
@@ -187,7 +190,7 @@ namespace Epsitec.Cresus.Core.Server
 			return panel;
 		}
 
-		private void AddSpecificData(Dictionary<string, object> parent, WebDataItem item, AbstractEntity entity)
+		private void AddControllerSpecificData(Dictionary<string, object> parent, WebDataItem item, AbstractEntity entity)
 		{
 			switch (this.controllerMode)
 			{
@@ -698,51 +701,60 @@ namespace Epsitec.Cresus.Core.Server
 		private readonly static string imagesFilename = "web/images/{0}.png";
 		#endregion
 
+		/*
+		 * 
+		 * Code:
+		 * + : Complete
+		 * - : Does not apply here
+		 * ~ : To check
+		 *   : TODO
+		 * 
+		 * */
 
 		/*
 		public enum BrickPropertyKey
 		{
-			-Name,
-			-Icon,
-			-Title,
-			-TitleCompact,
-			-Text,
-			-TextCompact,
+			+Name,
+			+Icon,
+			+Title,
+			+TitleCompact,
+			+Text,
+			+TextCompact,
 
-			Attribute,
+			~Attribute,
 
-			Template,
+			~Template,
 			-OfType,
 
 			Input,
 			Field,
-			Width,
-			Height,
-			Separator,
-			HorizontalGroup,
+			-Width,
+			-Height,
+			+Separator,
+			+HorizontalGroup,
 			FromCollection,
 			SpecialController,
-			GlobalWarning,
+			+GlobalWarning,
 
-			-CollectionAnnotation,
-			-Include,
+			CollectionAnnotation,
+			+Include,
 		}
 		 */
 
 		/*
 		public enum BrickMode
 		{
-			AutoGroup,
+			-AutoGroup,
 
-			DefaultToSummarySubview,
+			+DefaultToSummarySubview,
 
-			HideAddButton,
-			HideRemoveButton,
+			+HideAddButton,
+			+HideRemoveButton,
 
-			SpecialController0,
-			SpecialController1,
-			SpecialController2,
-			SpecialController3,
+			-SpecialController0,
+			-SpecialController1,
+			-SpecialController2,
+			-SpecialController3,
 
 			FullHeightStretch,
 		}*/
