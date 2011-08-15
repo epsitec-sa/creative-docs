@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Server
 		/// <param name="entity">Entity to use to create the panelBuilder</param>
 		/// <param name="mode">Controller mode</param>
 		/// <returns></returns>
-		public static IDictionary<string, object> BuildController(AbstractEntity entity, ViewControllerMode mode, CoreSession coreSession)
+		public static Dictionary<string, object> BuildController(AbstractEntity entity, ViewControllerMode mode, CoreSession coreSession)
 		{
 			var builder = new PanelBuilder (entity, mode, coreSession);
 			return builder.Run ();
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Core.Server
 		/// <param name="entity"></param>
 		/// <param name="mode"></param>
 		/// <returns>Name of the generated panel</returns>
-		private IDictionary<string, object> Run()
+		private Dictionary<string, object> Run()
 		{
 			var customerSummaryWall = CoreSession.GetBrickWall (this.rootEntity, this.controllerMode);
 

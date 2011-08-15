@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Core.Server.NancyComponents
 	{
 		public void Handle(HttpStatusCode statusCode, NancyContext context)
 		{
-			context.Response = ExtJsForm.Error();
+			context.Response = CoreResponse.Error();
 			context.Response.StatusCode = statusCode;
 		}
 

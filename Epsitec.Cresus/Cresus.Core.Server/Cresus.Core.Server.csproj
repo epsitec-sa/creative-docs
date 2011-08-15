@@ -55,7 +55,7 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="AdditionalResponses\ExtJsForm.cs" />
+    <Compile Include="AdditionalResponses\CoreResponse.cs" />
     <Compile Include="Auth\Authentication.cs" />
     <Compile Include="BrickProcessor.cs" />
     <Compile Include="NancyComponents\CoreErrorHandler.cs" />

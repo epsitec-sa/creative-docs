@@ -5,14 +5,24 @@ namespace Epsitec.Cresus.Core.Server.AdditionalResponses
 {
 	public static class ResponseExtensions
 	{
-		public static Response AsErrorExtJsForm(this IResponseFormatter formatter, Dictionary<string, object> dic)
+		public static Response AsCoreError(this IResponseFormatter formatter)
 		{
-			return ExtJsForm.Error (dic);
+			return CoreResponse.Error ();
 		}
 
-		public static Response AsSuccessExtJsForm(this IResponseFormatter formatter)
+		public static Response AsCoreError(this IResponseFormatter formatter, object dic)
 		{
-			return ExtJsForm.Success ();
+			return CoreResponse.Error (dic);
+		}
+
+		public static Response AsCoreSuccess(this IResponseFormatter formatter)
+		{
+			return CoreResponse.Success ();
+		}
+
+		public static Response AsCoreSuccess(this IResponseFormatter formatter, object dic)
+		{
+			return CoreResponse.Success (dic);
 		}
 	}
 }

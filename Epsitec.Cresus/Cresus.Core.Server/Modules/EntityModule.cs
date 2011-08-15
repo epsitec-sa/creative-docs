@@ -39,12 +39,12 @@ namespace Epsitec.Cresus.Core.Server.Modules
 				if (errors.Any ())
 				{
 					context.Discard (); // TODO check this
-					return Response.AsErrorExtJsForm (errors);
+					return Response.AsCoreError (errors);
 				}
 				else
 				{
 					context.SaveChanges ();
-					return Response.AsSuccessExtJsForm ();
+					return Response.AsCoreSuccess ();
 				}
 			};
 		}

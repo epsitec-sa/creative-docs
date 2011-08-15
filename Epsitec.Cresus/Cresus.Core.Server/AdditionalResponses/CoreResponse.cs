@@ -4,16 +4,15 @@ using Nancy.Responses;
 
 namespace Epsitec.Cresus.Core.Server.AdditionalResponses
 {
-	internal class ExtJsForm
+	internal class CoreResponse
 	{
 		public static Response Error()
 		{
 			var errors = new Dictionary<string, object> ();
-
-			return Error (errors);
+			return CoreResponse.Error (errors);
 		}
 
-		public static Response Error(Dictionary<string, object> errors)
+		public static Response Error(object errors)
 		{
 			var parent = new Dictionary<string, object> ();
 			parent["success"] = false;
@@ -27,8 +26,15 @@ namespace Epsitec.Cresus.Core.Server.AdditionalResponses
 
 		public static Response Success()
 		{
+			var content = new Dictionary<string, object> ();
+			return CoreResponse.Success (content);
+		}
+
+		public static Response Success(object content)
+		{
 			var parent = new Dictionary<string, object> ();
 			parent["success"] = true;
+			parent["content"] = content;
 
 			return new JsonResponse (parent);
 		}

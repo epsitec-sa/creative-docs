@@ -2,6 +2,7 @@
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.DataLayer.Context;
 using Nancy;
+using Epsitec.Cresus.Core.Server.AdditionalResponses;
 
 namespace Epsitec.Cresus.Core.Server.Modules
 {
@@ -22,7 +23,7 @@ namespace Epsitec.Cresus.Core.Server.Modules
 
 				var s = PanelBuilder.BuildController (entity, mode, coreSession);
 
-				return Response.AsJson (s);
+				return Response.AsCoreSuccess (s);
 			};
 		}
 

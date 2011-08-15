@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Core.Server.Modules
 				// TODO activate when not in debug
 				//context.SaveChanges ();
 
-				return Response.AsSuccessExtJsForm ();
+				return Response.AsCoreSuccess ();
 			};
 
 

@@ -15,14 +15,14 @@ namespace Epsitec.Cresus.Core.Server.Auth
 				module.Session[Authentication.LoggedInName] = true;
 				module.Session["CoreSession"] = session.Id;
 
-				return module.Response.AsSuccessExtJsForm ();
+				return module.Response.AsCoreSuccess ();
 			}
 			else
 			{
 				var dic = new System.Collections.Generic.Dictionary<string, object> ();
 				dic["username"] = "Incorrect username";
 
-				return module.Response.AsErrorExtJsForm (dic);
+				return module.Response.AsCoreError (dic);
 			}
 		}
 

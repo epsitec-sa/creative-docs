@@ -4,6 +4,7 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Cresus.Core.Business.Finance;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Server.AdditionalResponses;
 using Nancy;
 
 namespace Epsitec.Cresus.Core.Server.Modules
@@ -23,15 +24,15 @@ namespace Epsitec.Cresus.Core.Server.Modules
 				var customers = from x in context.GetAllEntities<CustomerEntity> ()
 								select x;
 
-				var obj = new List<object> ();
+				var list = new List<object> ();
 
-				customers.ForEach (c => obj.Add (new
+				customers.ForEach (c => list.Add (new
 				{
 					name = c.GetCompactSummary ().ToSimpleText (),
 					uniqueId = coreSession.GetBusinessContext ().DataContext.GetNormalizedEntityKey (c).Value.ToString ()
 				}));
 
-				var res = Response.AsJson (obj);
+				var res = Response.AsJson (list);
 
 				return res;
 
@@ -45,15 +46,15 @@ namespace Epsitec.Cresus.Core.Server.Modules
 				var articles = from x in context.GetAllEntities<ArticleDefinitionEntity> ()
 								select x;
 
-				var obj = new List<object> ();
+				var list = new List<object> ();
 
-				articles.ForEach (c => obj.Add (new
+				articles.ForEach (c => list.Add (new
 				{
 					name = c.GetCompactSummary ().ToSimpleText (),
 					uniqueId = coreSession.GetBusinessContext ().DataContext.GetNormalizedEntityKey (c).Value.ToString ()
 				}));
 
-				var res = Response.AsJson (obj);
+				var res = Response.AsJson (list);
 
 				return res;
 
@@ -77,13 +78,13 @@ namespace Epsitec.Cresus.Core.Server.Modules
 
 				IEnumerable<EnumKeyValues<TaxMode>> possibleItems = EnumKeyValues.FromEnum<TaxMode> ();
 
-				var obj = new List<object> ();
+				var list = new List<object> ();
 
 				possibleItems.ForEach (c =>
 				{
 					c.Values.ForEach (v =>
 					{
-						obj.Add (new
+						list.Add (new
 						{
 							id = c.Key.ToString (),
 							name = v.ToString ()
@@ -91,7 +92,7 @@ namespace Epsitec.Cresus.Core.Server.Modules
 					});
 				});
 
-				var res = Response.AsJson (obj);
+				var res = Response.AsJson (list);
 
 				return res;
 			};
