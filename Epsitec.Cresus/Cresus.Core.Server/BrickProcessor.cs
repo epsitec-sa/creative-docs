@@ -14,12 +14,39 @@ namespace Epsitec.Cresus.Core.Server
 		internal static Brick ProcessBrick(Brick brick, WebDataItem item)
 		{
 			Brick oldBrick;
+
 			do
 			{
 
 				if (Brick.ContainsProperty (brick, BrickPropertyKey.OfType))
 				{
 
+				}
+				else if (Brick.ContainsProperty (brick, BrickPropertyKey.Template))
+				{
+					//	Don't produce default text properties for bricks which contain AsType
+					//	or Template bricks. Instead, specify the default empty text.
+
+					var templateBrick = Brick.GetProperty (brick, BrickPropertyKey.Template).Brick;
+
+					System.Diagnostics.Debug.Assert (templateBrick != null);
+
+					if ((!Brick.ContainsProperty (templateBrick, BrickPropertyKey.Title)) &&
+					(!Brick.ContainsProperty (templateBrick, BrickPropertyKey.TitleCompact)))
+					{
+						BrickProcessor.CreateDefaultTitleProperties (templateBrick);
+					}
+
+					if ((!Brick.ContainsProperty (templateBrick, BrickPropertyKey.Text)) &&
+					(!Brick.ContainsProperty (templateBrick, BrickPropertyKey.TextCompact)))
+					{
+						BrickProcessor.CreateDefaultTextProperties (templateBrick);
+					}
+
+					if (!Brick.ContainsProperty (brick, BrickPropertyKey.Text))
+					{
+						Brick.AddProperty (brick, new BrickProperty (BrickPropertyKey.Text, CollectionTemplate.DefaultEmptyText));
+					}
 				}
 				else
 				{
@@ -78,7 +105,21 @@ namespace Epsitec.Cresus.Core.Server
 			}
 		}
 
-		private static void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<bool> setter)
+		protected static void CreateDefaultTitleProperties(Brick brick)
+		{
+			if (Brick.ContainsProperty (brick, BrickPropertyKey.Title))
+			{
+				return;
+			}
+
+			var fieldType = brick.GetFieldType ();
+			var methodInfo = fieldType.GetMethod ("GetTitle");
+
+			Expression<System.Func<AbstractEntity, FormattedText>> expression = x => (FormattedText) methodInfo.Invoke (x, new object[0]);
+			Brick.AddProperty (brick, new BrickProperty (BrickPropertyKey.Title, expression));
+		}
+
+        private static void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<bool> setter)
 		{
 			if (Brick.ContainsProperty (brick, key))
 			{
