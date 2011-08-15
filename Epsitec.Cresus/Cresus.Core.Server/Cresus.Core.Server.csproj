@@ -59,6 +59,7 @@
     <Compile Include="Auth\Authentication.cs" />
     <Compile Include="BrickProcessor.cs" />
     <Compile Include="IconsBuilder.cs" />
+    <Compile Include="Modules\EnumModule.cs" />
     <Compile Include="NancyComponents\CoreErrorHandler.cs" />
     <Compile Include="NancyComponents\CoreServerBootstrapper.cs" />
     <Compile Include="CoreServerProgram.cs" />
@@ -68,7 +69,7 @@
     <Compile Include="Modules\CreatorModule.cs" />
     <Compile Include="Modules\EntityModule.cs" />
     <Compile Include="Modules\LayoutModule.cs" />
-    <Compile Include="Modules\ListModule.cs" />
+    <Compile Include="Modules\DatabaseModule.cs" />
     <Compile Include="Modules\LoginModule.cs" />
     <Compile Include="Modules\MainModule.cs" />
     <Compile Include="NancyComponents\CoreHost.cs" />

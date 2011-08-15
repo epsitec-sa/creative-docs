@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Epsitec.Common.Drawing;
-using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
@@ -146,7 +144,7 @@ namespace Epsitec.Cresus.Core.Server
 
 			AddControllerSpecificData (parent, item, entity);
 
-			var inputs = CreateInputs (brick);
+			var inputs = HandleInputs (brick);
 			if (inputs != null && inputs.Any ())
 			{
 				parent["items"] = inputs;
@@ -213,7 +211,7 @@ namespace Epsitec.Cresus.Core.Server
 			}
 		}
 
-		private List<Dictionary<string, object>> CreateInputs(Brick brick)
+		private List<Dictionary<string, object>> HandleInputs(Brick brick)
 		{
 			if (!Brick.ContainsProperty (brick, BrickPropertyKey.Input))
 			{
@@ -226,13 +224,13 @@ namespace Epsitec.Cresus.Core.Server
 
 			foreach (var property in inputs)
 			{
-				list.AddRange (this.CreateActionsForInput (property.Brick, inputs));
+				list.AddRange (this.CreateInput (property.Brick, inputs));
 			}
 
 			return list;
 		}
 
-		private List<Dictionary<string, object>> CreateActionsForInput(Brick brick, BrickPropertyCollection inputProperties)
+		private List<Dictionary<string, object>> CreateInput(Brick brick, BrickPropertyCollection inputProperties)
 		{
 			var list = new List<Dictionary<string, object>> ();
 
@@ -243,11 +241,11 @@ namespace Epsitec.Cresus.Core.Server
 				switch (property.Key)
 				{
 					case BrickPropertyKey.Field:
-						list.Add (this.CreateActionForInputField (property.ExpressionValue, fieldProperties));
+						list.Add (this.CreateInputField (property.ExpressionValue, fieldProperties));
 						break;
 
 					case BrickPropertyKey.HorizontalGroup:
-						list.Add (this.CreateActionsForHorizontalGroup (property));
+						list.Add (this.CreateHorizontalGroup (property));
 						break;
 				}
 			}
@@ -270,7 +268,7 @@ namespace Epsitec.Cresus.Core.Server
 		}
 
 
-		private Dictionary<string, object> CreateActionForInputField(Expression expression, BrickPropertyCollection fieldProperties)
+		private Dictionary<string, object> CreateInputField(Expression expression, BrickPropertyCollection fieldProperties)
 		{
 			var dic = new Dictionary<string, object> ();
 
@@ -436,7 +434,7 @@ namespace Epsitec.Cresus.Core.Server
 			return dic;
 		}
 
-		private Dictionary<string, object> CreateActionsForHorizontalGroup(BrickProperty property)
+		private Dictionary<string, object> CreateHorizontalGroup(BrickProperty property)
 		{
 
 			var dic = new Dictionary<string, object> ();
@@ -448,7 +446,7 @@ namespace Epsitec.Cresus.Core.Server
 			dic["title"] = title;
 
 			new List<Dictionary<string, object>> ();
-			var list = this.CreateActionsForInput (property.Brick, null);
+			var list = this.CreateInput (property.Brick, null);
 
 			foreach (var l in list)
 			{
@@ -483,6 +481,68 @@ namespace Epsitec.Cresus.Core.Server
 			return dic;
 		}
 
+		private static string GetInputTitle(BrickPropertyCollection properties)
+		{
+			var property = properties.PeekBefore (BrickPropertyKey.Title, -1);
+
+			if (property.HasValue)
+			{
+				return property.Value.StringValue;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public static string GetInputTitle(Caption caption)
+		{
+			if (caption == null)
+			{
+				return null;
+			}
+
+			if (caption.HasLabels)
+			{
+				return caption.DefaultLabel;
+			}
+
+			return caption.Description ?? caption.Name;
+		}
+
+		private static FieldInfo GetFieldEditionSettings(LambdaExpression lambda)
+		{
+			//FieldInfo info = new FieldInfo (EntityInfo<T>.GetTypeId (), lambda);
+			//info.Settings = this.bridge.bridgeContext.FeatureManager.GetFieldEditionSettings (info.EntityId, info.FieldId);
+			//return info;
+
+			FieldInfo info = new FieldInfo (EntityInfo<AbstractContactEntity>.GetTypeId (), lambda);
+			return info;
+		}
+
+		private static Dictionary<string, object> GetSeparator()
+		{
+			var dic = new Dictionary<string, object> ();
+			var autoEl = new Dictionary<string, string> ();
+
+			dic["xtype"] = "box";
+			dic["margin"] = "10 0";
+			dic["autoEl"] = autoEl;
+			autoEl["tag"] = "hr";
+
+			return dic;
+		}
+
+		private static Dictionary<string, object> GetGlobalWarning()
+		{
+			var dic = new Dictionary<string, object> ();
+
+			dic["xtype"] = "displayfield";
+			dic["value"] = "<i><b>ATTENTION:</b> Les modifications effectuées ici seront répercutées dans tous les enregistrements.</i>";
+			dic["cls"] = "global-warning";
+
+			return dic;
+		}
 
 		/// <summary>
 		/// Create "leaves" for a panel. 
@@ -526,73 +586,9 @@ namespace Epsitec.Cresus.Core.Server
 			return this.controllerMode.ToString ().ToLower ();
 		}
 
-
-		private static string GetInputTitle(BrickPropertyCollection properties)
-		{
-			var property = properties.PeekBefore (BrickPropertyKey.Title, -1);
-
-			if (property.HasValue)
-			{
-				return property.Value.StringValue;
-			}
-			else
-			{
-				return null;
-			}
-		}
-
-		public static string GetInputTitle(Caption caption)
-		{
-			if (caption == null)
-			{
-				return null;
-			}
-
-			if (caption.HasLabels)
-			{
-				return caption.DefaultLabel;
-			}
-
-			return caption.Description ?? caption.Name;
-		}
-
-		private static FieldInfo GetFieldEditionSettings(LambdaExpression lambda)
-		{
-			//FieldInfo info = new FieldInfo (EntityInfo<T>.GetTypeId (), lambda);
-			//info.Settings = this.bridge.bridgeContext.FeatureManager.GetFieldEditionSettings (info.EntityId, info.FieldId);
-			//return info;
-
-			FieldInfo info = new FieldInfo (EntityInfo<AbstractContactEntity>.GetTypeId (), lambda);
-			return info;
-		}
-
 		private string GetEntityKey(AbstractEntity entity)
 		{
 			return this.DataContext.GetNormalizedEntityKey (entity).Value.ToString ();
-		}
-
-		private static Dictionary<string, object> GetSeparator()
-		{
-			var dic = new Dictionary<string, object> ();
-			var autoEl = new Dictionary<string, string> ();
-
-			dic["xtype"] = "box";
-			dic["margin"] = "10 0";
-			dic["autoEl"] = autoEl;
-			autoEl["tag"] = "hr";
-
-			return dic;
-		}
-
-		private static Dictionary<string, object> GetGlobalWarning()
-		{
-			var dic = new Dictionary<string, object> ();
-
-			dic["xtype"] = "displayfield";
-			dic["value"] = "<i><b>ATTENTION:</b> Les modifications effectuées ici seront répercutées dans tous les enregistrements.</i>";
-			dic["cls"] = "global-warning";
-
-			return dic;
 		}
 
 		private DataContext DataContext

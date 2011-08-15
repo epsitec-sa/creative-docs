@@ -64,34 +64,9 @@ namespace Epsitec.Cresus.Core.Server.Modules
 
 				context.SaveChanges ();
 
-
-				//return Response.AsSuccessExtJsForm ();
-
 				var key = context.DataContext.GetNormalizedEntityKey (phone).ToString ();
-				return key;
-
-
-
-				//var address = new MailContactEntity
-				//{
-				//    Complement = "Complement",
-				//    Address = new AddressEntity
-				//    {
-				//        Street = new StreetEntity
-				//        {
-				//            StreetName = "Street"
-				//        },
-				//        Location = new LocationEntity
-				//        {
-				//            Name = "Location"
-				//        }
-				//    }
-				//};
-				//contacts.Add (address);
+				return Response.AsCoreSuccess(key);
 			};
-
-
-
 		}
 	}
 }
