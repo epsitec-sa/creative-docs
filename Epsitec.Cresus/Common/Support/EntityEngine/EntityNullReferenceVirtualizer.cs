@@ -317,7 +317,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			{
 				object value = this.realReadStore.GetValue (id);
 
-				if (UndefinedValue.IsUndefinedValue (value) || value == null)
+				if (UndefinedValue.IsUndefinedValue (value))
 				{
 					object outValue;
 

@@ -489,20 +489,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 					dataContext.SaveChanges ();
 
-					// NOTE Here what happens is that when we call SaveChanges() we assign the
-					// modified values to the original values. This action "resets" the original
-					// value store for the modified fields, which implies that we forget that we
-					// set the field to null explicitely. So the next time that we access it, we
-					// create a "null" entity on the fly, as usual. But in this case, it is wrong.
-					// I suspect that there are also other problems with this, because when assigning
-					// the modified values to the original store, we call the TransformInLiveEntity
-					// method of the NullEntityReferenceVirtualizer, which I think might cause troubles
-					// in some special cases. In the normal case it shouldn't because if there are
-					// modified values, and the entity has been "null", it shouldn't be "null"
-					// anymore, because we assigned a value to one of its field. But it doesn't seem
-					// right to me that we make that call.
-					// Marc
-
 					Assert.IsNull (gertrude.PreferredLanguage);
 				}
 
@@ -556,20 +542,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					Assert.IsNull (gertrude.PreferredLanguage);
 
 					dataContext.SaveChanges ();
-
-					// NOTE Here what happens is that when we call SaveChanges() we assign the
-					// modified values to the original values. This action "resets" the original
-					// value store for the modified fields, which implies that we forget that we
-					// set the field to null explicitely. So the next time that we access it, we
-					// create a "null" entity on the fly, as usual. But in this case, it is wrong.
-					// I suspect that there are also other problems with this, because when assigning
-					// the modified values to the original store, we call the TransformInLiveEntity
-					// method of the NullEntityReferenceVirtualizer, which I think might cause troubles
-					// in some special cases. In the normal case it shouldn't because if there are
-					// modified values, and the entity has been "null", it shouldn't be "null"
-					// anymore, because we assigned a value to one of its field. But it doesn't seem
-					// right to me that we make that call.
-					// Marc
 
 					Assert.IsNull (gertrude.PreferredLanguage);
 				}
