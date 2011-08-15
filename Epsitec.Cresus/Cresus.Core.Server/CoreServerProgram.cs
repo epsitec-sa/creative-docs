@@ -8,7 +8,7 @@ using System.ServiceModel.Web;
 using Epsitec.Common.Debugging;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Server.Nancy;
+using Epsitec.Cresus.Core.Server.NancyComponents;
 
 namespace Epsitec.Cresus.Core.Server
 {

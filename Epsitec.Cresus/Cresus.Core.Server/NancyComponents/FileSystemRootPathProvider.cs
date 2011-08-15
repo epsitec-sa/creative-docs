@@ -1,7 +1,7 @@
 ﻿using Nancy;
 using System.Reflection;
 
-namespace Epsitec.Cresus.Core.Server.Nancy
+namespace Epsitec.Cresus.Core.Server.NancyComponents
 {
 	public class FileSystemRootPathProvider : IRootPathProvider
 	{

@@ -10,7 +10,7 @@ using Nancy.Extensions;
 using Nancy;
 using Nancy.IO;
 
-namespace Epsitec.Cresus.Core.Server.Nancy
+namespace Epsitec.Cresus.Core.Server.NancyComponents
 {
 	internal class CoreHost
 	{
