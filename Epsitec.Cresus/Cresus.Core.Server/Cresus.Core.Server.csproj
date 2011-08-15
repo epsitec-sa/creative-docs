@@ -58,6 +58,7 @@
     <Compile Include="AdditionalResponses\CoreResponse.cs" />
     <Compile Include="Auth\Authentication.cs" />
     <Compile Include="BrickProcessor.cs" />
+    <Compile Include="IconsBuilder.cs" />
     <Compile Include="NancyComponents\CoreErrorHandler.cs" />
     <Compile Include="NancyComponents\CoreServerBootstrapper.cs" />
     <Compile Include="CoreServerProgram.cs" />

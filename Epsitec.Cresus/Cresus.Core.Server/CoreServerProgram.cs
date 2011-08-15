@@ -16,17 +16,11 @@ namespace Epsitec.Cresus.Core.Server
 	{
 		public CoreServerProgram()
 		{
-			Epsitec.Common.Document.Engine.Initialize ();
+			IconsBuilder.BuildIcons ();
 
 			RunNancy ();
 
-			//var server = CoreServer.Instance;
-			//var session = server.CreateSession ();
-
 			//this.ExperimentalProfiling ();
-
-			//PanelBuilder.CoreSession = session;
-			//PanelBuilder.ExperimentalCode ();
 
 			//this.ExperimentalEntityManipulations (session);
 

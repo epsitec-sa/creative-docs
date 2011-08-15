@@ -171,11 +171,10 @@ namespace Epsitec.Cresus.Core.Server
 			string title = item.Title.ToSimpleText ();
 			panel["title"] = title;
 
-			var icon = PanelBuilder.CreateIcon (item);
-			if (!icon.Equals (default (KeyValuePair<string, string>)))
+			var icon = IconsBuilder.GetCSSName (item.IconUri);
+			if (icon != null)
 			{
-				var iconCls = PanelBuilder.CreateCssFromIcon (icon.Key, icon.Value);
-				panel["iconCls"] = iconCls;
+				panel["iconCls"] = icon;
 			}
 
 			return panel;
@@ -608,98 +607,6 @@ namespace Epsitec.Cresus.Core.Server
 		private readonly ViewControllerMode controllerMode;
 		private readonly CoreSession coreSession;
 
-		#region To Remove
-		/// <summary>
-		/// Create an image using a brick
-		/// </summary>
-		/// <param name="brick">Brick to use</param>
-		/// <returns>Key/value pair with the icon name and the filename</returns>
-		private static KeyValuePair<string, string> CreateIcon(WebDataItem item)
-		{
-			// No icon for this brick
-			if (item.IconUri.Length <= 0)
-			{
-				return default (KeyValuePair<string, string>);
-			}
-
-			// Get the ressources from the icon name
-			var iconRes = Misc.GetResourceIconUri (item.IconUri);
-			var iconName = iconRes.Substring (9);
-			var icon = ImageProvider.Default.GetImage (iconRes, Resources.DefaultManager) as Canvas;
-
-			if (icon == null)
-			{
-				return default (KeyValuePair<string, string>);
-			}
-
-			Canvas.IconKey key = new Canvas.IconKey ();
-
-			key.Size.Width  = 32;
-			key.Size.Height = 32;
-
-			icon = icon.GetImageForIconKey (key) as Canvas;
-			icon.DefineZoom (0.5);
-
-			var bitmap = icon.BitmapImage;
-
-			// Save the image
-			var bytes = bitmap.Save (ImageFormat.Png);
-			string path = PanelBuilder.GetImageFilePath (iconName);
-			System.IO.File.WriteAllBytes (path, bytes);
-
-			return new KeyValuePair<string, string> (iconName, path);
-		}
-
-		/// <summary>
-		/// Create CSS content to be able to call an icon from the HTML code
-		/// </summary>
-		/// <param name="iconName">Name of the icon (ressource)</param>
-		/// <param name="path">Icon filename</param>
-		/// <returns>CSS classname</returns>
-		private static string CreateCssFromIcon(string iconName, string path)
-		{
-			// CSS does not like "."
-			var cssClass = iconName.Replace ('.', '-').ToLower ();
-			var css = string.Format (".{0} {{ ", cssClass);
-			css += string.Format ("background-image: url({0}) !important;", path.Replace ("web", "../.."));
-			css += "background-size: 16px 16px;";
-			css += "} ";
-
-			//System.IO.File.AppendAllText (PanelBuilder.cssFilename, css);
-
-			return cssClass;
-		}
-		/// <summary>
-		/// Get the filename of an image
-		/// </summary>
-		/// <param name="name"></param>
-		/// <returns></returns>
-		private static string GetImageFilePath(string name)
-		{
-			var path = string.Format (PanelBuilder.imagesFilename, name.Replace ('.', '/'));
-			PanelBuilder.EnsureDirectoryStructureExists (path);
-			return path;
-		}
-
-		/// <summary>
-		/// checks if the folder exists, otherwise creates it
-		/// </summary>
-		/// <param name="path"></param>
-		private static void EnsureDirectoryStructureExists(string path)
-		{
-			var dir  = System.IO.Path.GetDirectoryName (path);
-
-			if (System.IO.Directory.Exists (dir) == false)
-			{
-				System.IO.Directory.CreateDirectory (dir);
-			}
-		}
-
-
-		// Generated files filenames
-		private readonly static string cssFilename = "web/css/generated/style.css";
-		private readonly static string imagesFilename = "web/images/{0}.png";
-		#endregion
 
 		/*
 		 * 
