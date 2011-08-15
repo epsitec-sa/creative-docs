@@ -135,11 +135,11 @@ namespace Epsitec.Cresus.Core.Bricks
 			this.ProcessProperty (brick, BrickPropertyKey.Text, x => item.TextAccessor = x);
 			this.ProcessProperty (brick, BrickPropertyKey.TextCompact, x => item.CompactTextAccessor = x);
 
-			Brick asTypeBrick = Brick.GetProperty (brick, BrickPropertyKey.OfType).Brick;
+			Brick ofTypeBrick = Brick.GetProperty (brick, BrickPropertyKey.OfType).Brick;
 
-			if (asTypeBrick != null)
+			if (ofTypeBrick != null)
 			{
-				brick = asTypeBrick;
+				brick = ofTypeBrick;
 				goto again;
 			}
 			else
