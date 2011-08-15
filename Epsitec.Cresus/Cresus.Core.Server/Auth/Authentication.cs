@@ -28,6 +28,7 @@ namespace Epsitec.Cresus.Core.Server.Auth
 
         public static Response Logout(this NancyModule module)
 		{
+			CoreServer.Instance.DeleteSession (module.Session["CoreSession"] as string);
 			module.Session[Authentication.LoggedInName] = false;
 			return "logout";
 		}
