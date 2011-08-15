@@ -193,7 +193,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Parent = parent,
 				Dock = DockStyle.Top,
 				PreferredHeight = 20,
-				Padding = new Margins (10),
+				Padding = new Margins (0, 0, 10, 10),
 				TabIndex = this.NextTabIndex,
 				Enable = this.accessData.BusinessLogic.IsArticleQuantityTypeEditionEnabled (ArticleQuantityType.Ordered),
 			};
@@ -211,7 +211,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Parent = parent,
 				Dock = DockStyle.Fill,
 				PreferredWidth = 360,
-				Padding = new Margins (10),
+				Padding = new Margins (0, 0, 10, 10),
 				TabIndex = this.NextTabIndex,
 			};
 
@@ -253,9 +253,93 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					Enable = this.accessData.BusinessLogic.IsPriceEditionEnabled,
 				};
 
+				var fixedNoneButton = new RadioButton
+				{
+					Parent = line,
+					Text = "Prix catalogue",
+					PreferredWidth = 100,
+					Margins = new Margins (10, 0, 0, 0),
+					ActiveState = this.Entity.FixedUnitPrice || this.Entity.FixedLinePrice ? ActiveState.No : ActiveState.Yes,
+					Dock = DockStyle.Left,
+				};
+
+				var fixedUnitButton = new RadioButton
+				{
+					Parent = line,
+					Text = "Prix unitaire",
+					PreferredWidth = 90,
+					ActiveState = this.Entity.FixedUnitPrice ? ActiveState.Yes : ActiveState.No,
+					Dock = DockStyle.Left,
+				};
+
+				var fixedLineButton = new RadioButton
+				{
+					Parent = line,
+					Text = "Prix de ligne",
+					PreferredWidth = 90,
+					ActiveState = this.Entity.FixedLinePrice ? ActiveState.Yes : ActiveState.No,
+					Dock = DockStyle.Left,
+				};
+
+				fixedNoneButton.ActiveStateChanged += delegate
+				{
+					if (fixedNoneButton.ActiveState == ActiveState.Yes)
+					{
+						this.Entity.FixedUnitPrice = false;
+						this.Entity.FixedLinePrice = false;
+						this.UpdateQuantityBox ();
+					}
+				};
+
+				fixedUnitButton.ActiveStateChanged += delegate
+				{
+					if (fixedUnitButton.ActiveState == ActiveState.Yes)
+					{
+						this.Entity.FixedUnitPrice = true;
+						this.UpdateQuantityBox ();
+					}
+				};
+
+				fixedLineButton.ActiveStateChanged += delegate
+				{
+					if (fixedLineButton.ActiveState == ActiveState.Yes)
+					{
+						this.Entity.FixedLinePrice = true;
+						this.UpdateQuantityBox ();
+					}
+				};
+			}
+
+			//	Deuxième ligne à droite.
+			{
+				var line = new FrameBox
+				{
+					Parent = parent,
+					Dock = DockStyle.Top,
+					PreferredHeight = 20,
+					Margins = new Margins (0, 0, 0, 5),
+					TabIndex = this.NextTabIndex,
+					Enable = this.accessData.BusinessLogic.IsPriceEditionEnabled,
+				};
+
 				//	Prix unitaire.
-				var quantityField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.PrimaryUnitPriceBeforeTax, x => this.Entity.PrimaryUnitPriceBeforeTax = x));
-				this.PlaceLabelAndField (line, 130, 100, "Prix unitaire HT", quantityField);
+				var quantityField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.FixedPrice, x => this.Entity.FixedPrice = x));
+				this.quantityBox = this.PlaceLabelAndField (line, 130, 100, "", quantityField);
+
+				this.ttcButton = new CheckButton
+				{
+					Parent = line,
+					Text = "Prix TTC",
+					ActiveState = this.Entity.FixedPriceIncludesTaxes ? ActiveState.Yes : ActiveState.No,
+					Dock = DockStyle.Fill,
+					Margins = new Margins (10, 0, 0, 0),
+				};
+
+				this.ttcButton.ActiveStateChanged += delegate
+				{
+					this.Entity.FixedPriceIncludesTaxes = (this.ttcButton.ActiveState == ActiveState.Yes);
+					this.UpdateQuantityBox ();
+				};
 			}
 
 			//	Troisième ligne à droite.
@@ -273,6 +357,20 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				//	Rabais.
 				var discountField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.DiscountValue, x => this.DiscountValue = x));
 				this.PlaceLabelAndField (line, 130, 100, "Rabais en % ou en francs", discountField);
+
+				var neverButton = new CheckButton
+				{
+					Parent = line,
+					Text = "Jamais de rabais",
+					ActiveState = this.Entity.NeverApplyDiscount ? ActiveState.Yes : ActiveState.No,
+					Dock = DockStyle.Fill,
+					Margins = new Margins (10, 0, 0, 0),
+				};
+
+				neverButton.ActiveStateChanged += delegate
+				{
+					this.Entity.NeverApplyDiscount = (neverButton.ActiveState == ActiveState.Yes);
+				};
 			}
 
 			//	Quatrième ligne à droite.
@@ -292,6 +390,47 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				this.PlaceLabelAndField (line, 130, 200, "Description du rabais", discountField);
 			}
 #endif
+
+			this.UpdateQuantityBox ();
+		}
+
+		private void UpdateQuantityBox()
+		{
+			var label = this.quantityBox.Children.OfType<StaticText> ().FirstOrDefault ();
+
+			if (this.Entity.FixedPriceIncludesTaxes)  // TTC ?
+			{
+				if (this.Entity.FixedUnitPrice)
+				{
+					label.Text = "Prix unitaire TTC";
+				}
+				else if (this.Entity.FixedLinePrice)
+				{
+					label.Text = "Prix de ligne TTC";
+				}
+				else
+				{
+					label.Text = "Prix TTC";
+				}
+			}
+			else  // HT ?
+			{
+				if (this.Entity.FixedUnitPrice)
+				{
+					label.Text = "Prix unitaire HT";
+				}
+				else if (this.Entity.FixedLinePrice)
+				{
+					label.Text = "Prix de ligne HT";
+				}
+				else
+				{
+					label.Text = "Prix HT";
+				}
+			}
+
+			this.quantityBox.Visibility = this.Entity.FixedUnitPrice || this.Entity.FixedLinePrice;
+			this.ttcButton.Visibility = this.Entity.FixedUnitPrice || this.Entity.FixedLinePrice;
 		}
 
 
@@ -556,5 +695,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private ArticleParameterControllers.ValuesArticleParameterController	parameterController;
 		private ArticleParameterControllers.ArticleParameterToolbarController	toolbarController;
 		private TextFieldMultiEx												articleDescriptionTextField;
+		private FrameBox														quantityBox;
+		private CheckButton														ttcButton;
 	}
 }

@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Parent = parent,
 				Dock = DockStyle.Top,
 				PreferredHeight = 20,
-				Padding = new Margins (10),
+				Padding = new Margins (0, 10, 10, 10),
 				TabIndex = this.NextTabIndex,
 				Enable = enable,
 			};
@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Parent = parent,
 				Dock = DockStyle.Fill,
 				PreferredWidth = 360,
-				Padding = new Margins (10),
+				Padding = new Margins (0, 10, 10, 10),
 				TabIndex = this.NextTabIndex,
 				Enable = enable,
 			};
