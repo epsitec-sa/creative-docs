@@ -1510,6 +1510,28 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>PrimaryUnitPriceAfterTax</c> field.
+		///	designer:fld/GVAC1/GVAI7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVAI7]")]
+		public global::System.Decimal? PrimaryUnitPriceAfterTax
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[GVAI7]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.PrimaryUnitPriceAfterTax;
+				if (oldValue != value || !this.IsFieldDefined("[GVAI7]"))
+				{
+					this.OnPrimaryUnitPriceAfterTaxChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[GVAI7]", oldValue, value);
+					this.OnPrimaryUnitPriceAfterTaxChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>PrimaryLinePriceBeforeTax</c> field.
 		///	designer:fld/GVAC1/GVAR6
 		///	</summary>
@@ -1816,6 +1838,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnReferenceUnitPriceBeforeTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnPrimaryUnitPriceBeforeTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnPrimaryUnitPriceBeforeTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnPrimaryUnitPriceAfterTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnPrimaryUnitPriceAfterTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnPrimaryLinePriceBeforeTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnPrimaryLinePriceBeforeTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnPrimaryLinePriceAfterTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);

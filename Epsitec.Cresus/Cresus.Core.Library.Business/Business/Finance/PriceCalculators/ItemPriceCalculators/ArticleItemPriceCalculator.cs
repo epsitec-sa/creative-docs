@@ -151,6 +151,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 				this.tax = this.ComputeTax (resultingLinePriceBeforeTax);
 
 				this.articleItem.PrimaryUnitPriceBeforeTax   = PriceCalculator.ClipPriceValue (primaryUnitPriceBeforeTax, this.currencyCode);
+				this.articleItem.PrimaryUnitPriceAfterTax    = PriceCalculator.ClipPriceValue (this.primaryUnitPriceAfterTax, this.currencyCode);
 				this.articleItem.PrimaryLinePriceBeforeTax   = PriceCalculator.ClipPriceValue (primaryLinePriceBeforeTax, this.currencyCode);
 				this.articleItem.PrimaryLinePriceAfterTax    = PriceCalculator.ClipPriceValue (primaryLinePriceBeforeTax + primaryLineTax, this.currencyCode);
 				this.articleItem.ResultingLinePriceBeforeTax = PriceCalculator.ClipPriceValue (resultingLinePriceBeforeTax, this.currencyCode);
@@ -265,8 +266,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 			{
 				unitPriceBeforeTax = this.priceRoundingMode.Round (unitPriceBeforeTax);
 			}
-
-			if (roundingPolicy == RoundingPolicy.OnUnitPriceAfterTax)
+			else if (roundingPolicy == RoundingPolicy.OnUnitPriceAfterTax)
 			{
 				Tax tax = this.ComputeTax (unitPriceBeforeTax);
 
@@ -289,7 +289,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 			Tax tax = this.ComputeTax (linePriceBeforeTax);
 			
 			if ((this.articleItem.FixedPrice.HasValue) &&
-				(this.articleItem.ArticleAttributes.HasFlag (ArticleDocumentItemAttributes.FixedLinePrice)))
+				(this.articleItem.FixedLinePrice))
 			{
 				decimal fixedLinePrice = this.articleItem.FixedPrice.Value;
 
@@ -334,26 +334,29 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 		private decimal GetUnitPriceBeforeTax(ArticlePriceEntity articlePrice)
 		{
 			decimal unitPrice;
-			
+
+			//	Use a dummy amount to compute the taxes, just so that we can have the
+			//	mean rate if the VAT is split over two years with different rates for
+			//	the same code :
+
+			Tax tax = this.ComputeTax (1000);
+
 			//	If the user specified a fixed unit price, use it as the base for all of our
 			//	calculations :
 			
 			if ((this.articleItem.FixedPrice.HasValue) &&
-				(this.articleItem.ArticleAttributes.HasFlag (ArticleDocumentItemAttributes.FixedUnitPrice)))
+				(this.articleItem.FixedUnitPrice))
 			{
 				unitPrice = this.articleItem.FixedPrice.Value;
 
 				if (this.articleItem.FixedPriceIncludesTaxes)
 				{
-					//	Use a dummy amount to compute the taxes, just so that we can have the
-					//	mean rate if the VAT is split over two years with different rates for
-					//	the same code :
-
-					Tax tax = this.ComputeTax (1000);
+					this.primaryUnitPriceAfterTax = unitPrice;
 					return tax.ComputeAmountBeforeTax (unitPrice);
 				}
 				else
 				{
+					this.primaryUnitPriceAfterTax = tax.ComputeAmountAfterTax (unitPrice);
 					return unitPrice;
 				}
 			}
@@ -363,11 +366,14 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 
 			if (this.articleItem.ReferenceUnitPriceBeforeTax.HasValue)
 			{
-				return this.articleItem.ReferenceUnitPriceBeforeTax.Value;
+				unitPrice = this.articleItem.ReferenceUnitPriceBeforeTax.Value;
+				this.primaryUnitPriceAfterTax = tax.ComputeAmountAfterTax (unitPrice);
+				return unitPrice;
 			}
 
 			if (articlePrice.IsNull ())
 			{
+				this.primaryUnitPriceAfterTax = null;
 				return 0;
 			}
 
@@ -375,15 +381,12 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 
 			if (articlePrice.ValueIncludesTaxes)
 			{
-				//	Use a dummy amount to compute the taxes, just so that we can have the
-				//	mean rate if the VAT is split over two years with different rates for
-				//	the same code :
-
-				Tax tax = this.ComputeTax (1000);
+				this.primaryUnitPriceAfterTax = unitPrice;
 				return tax.ComputeAmountBeforeTax (unitPrice);
 			}
 			else
 			{
+				this.primaryUnitPriceAfterTax = tax.ComputeAmountAfterTax (unitPrice);
 				return unitPrice;
 			}
 		}
@@ -514,5 +517,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 		
 		private Tax									tax;
 		private bool								notDiscountable;
+		private decimal?							primaryUnitPriceAfterTax;
 	}
 }

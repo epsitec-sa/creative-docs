@@ -665,6 +665,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid PrimaryLinePriceAfterTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 67);
 				//	designer:cap/GVAR6
 				public static readonly global::Epsitec.Common.Support.Druid PrimaryLinePriceBeforeTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 219);
+				//	designer:cap/GVAI7
+				public static readonly global::Epsitec.Common.Support.Druid PrimaryUnitPriceAfterTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 242);
 				//	designer:cap/GVAQ6
 				public static readonly global::Epsitec.Common.Support.Druid PrimaryUnitPriceBeforeTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 218);
 				//	designer:cap/GVAS6

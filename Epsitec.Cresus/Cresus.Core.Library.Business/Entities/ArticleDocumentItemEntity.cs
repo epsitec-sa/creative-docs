@@ -126,7 +126,6 @@ namespace Epsitec.Cresus.Core.Entities
 			this.ArticleAttributes |= ArticleDocumentItemAttributes.ArticlePricesFrozen;
 		}
 
-
 		public override FormattedText GetCompactSummary()
 		{
 			if (this.GetEntityStatus () == EntityStatus.Empty)
@@ -180,6 +179,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 			copy.VatCode                         = this.VatCode;
 			copy.ReferenceUnitPriceBeforeTax     = this.ReferenceUnitPriceBeforeTax;
+			copy.PrimaryUnitPriceAfterTax        = this.PrimaryUnitPriceAfterTax;
 			copy.PrimaryUnitPriceBeforeTax       = this.PrimaryUnitPriceBeforeTax;
 			copy.PrimaryLinePriceBeforeTax       = this.PrimaryLinePriceBeforeTax;
 			copy.PrimaryLinePriceAfterTax        = this.PrimaryLinePriceAfterTax;

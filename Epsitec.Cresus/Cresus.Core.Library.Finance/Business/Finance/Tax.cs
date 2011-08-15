@@ -87,6 +87,20 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			}
 		}
 
+		public decimal ComputeAmountAfterTax(decimal amountBeforeTax)
+		{
+			if (this.TotalTaxRate == 0)
+			{
+				return amountBeforeTax;
+			}
+			else
+			{
+				decimal directRate  = 1.0M + this.TotalTaxRate;
+
+				return PriceCalculator.RoundToCents (amountBeforeTax * directRate);
+			}
+		}
+
 		public decimal? GetTax(int index)
 		{
 			if ((index < 0) ||
