@@ -1293,37 +1293,6 @@ namespace Epsitec.Cresus.Core
 			return picker;
 		}
 
-		public Button CreateButtonOpeningSubviewController<T>(string name, FormattedText buttonText, T entity, ViewControllerMode mode = ViewControllerMode.Summary, int controllerSubType = -1)
-			where T : AbstractEntity
-		{
-			var tile = this.CreateEditionTile ();
-
-			Button tileButton = this.CreateButton (tile, 0, null, buttonText.ToString ());
-
-			tileButton.Entered += delegate
-			{
-				tile.Hilite = true;
-			};
-
-			tileButton.Exited += delegate
-			{
-				tile.Hilite = false;
-			};
-
-			var rootController = this.GetRootController ();
-			var fullName = string.Format (System.Globalization.CultureInfo.InstalledUICulture, "{0}.{1}", name, this.titleTile.Items.Count);
-			var clickSimulator = new TileButtonClickSimulator (tileButton, this.controller, fullName);
-
-			tile.Controller = new SummaryTileController<T> (entity, fullName, mode, controllerSubType);
-
-			tileButton.Clicked += delegate
-			{
-				tile.ToggleSubView (rootController.Orchestrator, rootController, new TileNavigationPathElement (clickSimulator.Name));
-			};
-
-			return tileButton;
-		}
-
 		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T>(string label, SelectionController<T> controller, EnumValueCardinality cardinality)
 			where T : AbstractEntity, new ()
 		{

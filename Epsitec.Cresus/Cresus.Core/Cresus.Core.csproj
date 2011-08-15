@@ -574,6 +574,7 @@
     <EmbeddedResource Include="Images\DocumentOptions.Missing.icon" />
     <EmbeddedResource Include="Images\DocumentOptions.Useless.icon" />
     <EmbeddedResource Include="Images\DocumentOptions.Normal.icon" />
+    <EmbeddedResource Include="Images\Data.SpecialController.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
