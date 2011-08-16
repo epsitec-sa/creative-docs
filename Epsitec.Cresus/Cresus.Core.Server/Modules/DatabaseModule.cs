@@ -2,45 +2,63 @@
 using System.Linq;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Server.AdditionalResponses;
 using Nancy;
+using Epsitec.Cresus.Core.Business;
+using Epsitec.Common.Support.EntityEngine;
 
 namespace Epsitec.Cresus.Core.Server.Modules
 {
 	public class DatabasesModule : CoreModule
 	{
 
+		static DatabasesModule()
+		{
+			DatabasesModule.databases = new Dictionary<string, Database> ();
+
+			DatabasesModule.databases["customers"] = new Database<CustomerEntity>
+			{
+				Title = "Clients",
+				DatabaseName = "customers",
+				CSSClass = "customer"
+			};
+
+			DatabasesModule.databases["articles"] = new Database<ArticleDefinitionEntity>
+			{
+				Title = "Articles",
+				DatabaseName = "articles",
+				CSSClass = "article"
+			};
+		}
+
 		public DatabasesModule()
 			: base ("/database")
 		{
 
-			Get["/customers"] = parameters =>
+			Get["/list"] = parameters =>
 			{
-				var coreSession = GetCoreSession ();
-				var context = coreSession.GetBusinessContext ();
-
-				var customers = from x in context.GetAllEntities<CustomerEntity> ()
-								select x;
-
 				var list = new List<object> ();
 
-				customers.ForEach (c => list.Add (new
-				{
-					name = c.GetCompactSummary ().ToSimpleText (),
-					uniqueId = coreSession.GetBusinessContext ().DataContext.GetNormalizedEntityKey (c).Value.ToString ()
-				}));
+				DatabasesModule.databases.ForEach (o => list.Add (o.Value));
 
-				var res = Response.AsJson (list);
-
-				return res;
-
+				return Response.AsCoreSuccess (list);
 			};
 
-			Get["/articles"] = parameters =>
+			Get["/{name}"] = parameters =>
 			{
 				var coreSession = GetCoreSession ();
 				var context = coreSession.GetBusinessContext ();
 
-				var articles = from x in context.GetAllEntities<ArticleDefinitionEntity> ()
+				string name = parameters.name;
+
+				var type = DatabasesModule.databases[name].GetDatabaseType ();
+				var method = typeof (BusinessContext).GetMethod ("GetAllEntities");
+				var m = method.MakeGenericMethod (type);
+				var o = m.Invoke (context, new object[0]);
+
+				var enumerable = o as IEnumerable<AbstractEntity>;
+
+				var articles = from x in enumerable
 							   select x;
 
 				var list = new List<object> ();
@@ -56,6 +74,27 @@ namespace Epsitec.Cresus.Core.Server.Modules
 				return res;
 
 			};
+
+		}
+
+		private readonly static Dictionary<string, Database> databases;
+	}
+
+	abstract class Database
+	{
+		public abstract System.Type GetDatabaseType();
+	}
+
+	sealed class Database<T> : Database
+		where T : AbstractEntity
+	{
+		public string Title;
+		public string DatabaseName;
+		public string CSSClass;
+
+		public override System.Type GetDatabaseType()
+		{
+			return typeof (T);
 		}
 	}
 }
