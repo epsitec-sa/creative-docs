@@ -11,6 +11,8 @@ using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Common.Types.Converters;
+using Epsitec.Common.Types.Converters.Marshalers;
 
 namespace Epsitec.Cresus.Core.Server
 {
@@ -267,7 +269,6 @@ namespace Epsitec.Cresus.Core.Server
 			return list;
 		}
 
-
 		private Dictionary<string, object> CreateInputField(Expression expression, BrickPropertyCollection fieldProperties)
 		{
 			var dic = new Dictionary<string, object> ();
@@ -296,7 +297,9 @@ namespace Epsitec.Cresus.Core.Server
 			//System.Collections.IEnumerable collection = InputProcessor.GetInputCollection (fieldProperties);
 			//int? specialController = InputProcessor.GetSpecialController (fieldProperties);
 
+			var accessor = this.coreSession.GetPanelFieldAccessor (lambda);
 
+			dic["lambda"] = accessor.Id.ToString ();
 			dic["xtype"] = "textfield";
 			dic["fieldLabel"] = title;
 			dic["name"] = fieldMode.FieldId.ToString ().Trim ('[', ']');

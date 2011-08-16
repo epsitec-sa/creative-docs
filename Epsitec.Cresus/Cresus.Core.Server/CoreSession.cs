@@ -13,6 +13,7 @@ using Epsitec.Cresus.Core.Library;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Server
 {
@@ -23,6 +24,9 @@ namespace Epsitec.Cresus.Core.Server
 			this.id = id;
 			this.creationDateTime = System.DateTime.UtcNow;
 			this.coreData = this.GetComponent<CoreData> ();
+			this.panelFieldAccessors = new Dictionary<string, PanelFieldAccessor> ();
+			this.panelFieldAccessorsById = new Dictionary<int, PanelFieldAccessor> ();
+
 			Library.UI.Services.SetApplication (this);
 		}
 
@@ -101,6 +105,43 @@ namespace Epsitec.Cresus.Core.Server
 			}
 		}
 
+
+		public PanelFieldAccessor GetPanelFieldAccessor(LambdaExpression lambda)
+		{
+			PanelFieldAccessor accessor;
+			string key = PanelFieldAccessor.GetLambdaFootprint (lambda);
+
+			if (this.panelFieldAccessors.TryGetValue (key, out accessor))
+			{
+				return accessor;
+			}
+			else
+			{
+				int id = this.panelFieldAccessors.Count;
+
+				accessor = new PanelFieldAccessor (lambda, id);
+
+				this.panelFieldAccessors[key] = accessor;
+				this.panelFieldAccessorsById[id] = accessor;
+				
+				return accessor;
+			}
+		}
+
+		public PanelFieldAccessor GetPanelFieldAccessor(int id)
+		{
+			PanelFieldAccessor accessor;
+
+			if (this.panelFieldAccessorsById.TryGetValue (id, out accessor))
+			{
+				return accessor;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
 		
 		protected override void Dispose(bool disposing)
 		{
@@ -173,6 +214,8 @@ namespace Epsitec.Cresus.Core.Server
 		private readonly System.DateTime creationDateTime;
 
 		private readonly CoreData coreData;
+		private readonly Dictionary<string, PanelFieldAccessor> panelFieldAccessors;
+		private readonly Dictionary<int, PanelFieldAccessor> panelFieldAccessorsById;
 		
 		private bool isDisposed;
 		private BusinessContext businessContext;

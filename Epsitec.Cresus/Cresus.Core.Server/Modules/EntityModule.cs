@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Types;
 using Epsitec.Cresus.Core.Server.AdditionalResponses;
 using Epsitec.Cresus.DataLayer.Context;
 using Nancy;
@@ -17,7 +18,12 @@ namespace Epsitec.Cresus.Core.Server.Modules
 				var coreSession = GetCoreSession ();
 				var context = coreSession.GetBusinessContext ();
 
-				var entityKey = EntityKey.Parse (parameters.id);
+				string paramEntityKey = (string) parameters.id;
+//				string paramLambdaId  = (string) parameters.lambda;
+
+//				var accessor = coreSession.GetPanelFieldAccessor (InvariantConverter.ToInt (paramLambdaId));
+
+				var entityKey = EntityKey.Parse (paramEntityKey);
 				AbstractEntity entity = context.DataContext.ResolveEntity (entityKey);
 
 				var errors = new Dictionary<string, object> ();
