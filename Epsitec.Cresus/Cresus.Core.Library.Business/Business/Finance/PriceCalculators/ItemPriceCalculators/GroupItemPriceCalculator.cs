@@ -245,6 +245,10 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 
 				return null;
 			}
+			else if (this.taxDiscountable == null)
+			{
+				return null;
+			}
 			else
 			{
 				decimal ratio = after / before;
