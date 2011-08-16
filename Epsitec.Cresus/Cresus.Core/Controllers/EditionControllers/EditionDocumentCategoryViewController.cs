@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.End ()
 				;
 			wall.AddBrick ()
-				.Attribute (BrickMode.SpecialController2)
+				.Attribute (BrickMode.SpecialController0)
 				.Icon ("Data.SpecialController")
 				.Title ("Réglages")
 				.Text ("Accéder aux réglages de la catégorie du document")

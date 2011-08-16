@@ -16,15 +16,14 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	[ControllerSubType (2)]
-	public class EditionDocumentOptionsViewController2 : EditionViewController<DocumentOptionsEntity>
+	[ControllerSubType (0)]
+	public class EditionDocumentOptionsViewController0 : EditionViewController<DocumentOptionsEntity>
 	{
 		public override double GetPreferredWidth(int columnIndex, int columnCount)
 		{
 			return 640;
 		}
 
-#if true
 		protected override void CreateBricks(BrickWall<DocumentOptionsEntity> wall)
 		{
 			wall.AddBrick ()
@@ -34,35 +33,5 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.End ()
 				;
 		}
-#else
-		protected override void CreateUI()
-		{
-			using (var builder = new UIBuilder (this))
-			{
-				builder.CreateHeaderEditorTile ();
-				builder.CreateEditionTitleTile ("Data.DocumentOptions", "Options d'impression pour un document");
-
-				this.CreateUIMain (builder);
-
-				builder.CreateFooterEditorTile ();
-			}
-		}
-
-		private void CreateUIMain(UIBuilder builder)
-		{
-			var tile = builder.CreateEditionTile ();
-
-			var box = new FrameBox
-			{
-				Parent = tile.Container,
-				PreferredHeight = 500,  // TODO: Comment mettre un mode "full height" ?
-				Dock = DockStyle.Top,
-			};
-
-			var editor = new DocumentOptionsEditorController (this.BusinessContext, this.Entity);
-
-			editor.CreateUI (box);
-		}
-#endif
 	}
 }

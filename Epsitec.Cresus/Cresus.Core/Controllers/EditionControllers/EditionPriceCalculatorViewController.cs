@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.End ()
 				;
 			wall.AddBrick ()
-				.Attribute (BrickMode.SpecialController1)
+				.Attribute (BrickMode.SpecialController0)
 				.Icon ("Data.SpecialController")
 				.Title ("Réglages")
 				.Text ("Accéder aux réglages du calculateur de prix")

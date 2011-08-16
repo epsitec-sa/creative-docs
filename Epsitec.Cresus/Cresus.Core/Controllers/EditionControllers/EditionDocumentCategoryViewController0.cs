@@ -16,8 +16,8 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	[ControllerSubType (2)]
-	public class EditionDocumentCategoryViewController2 : EditionViewController<DocumentCategoryEntity>
+	[ControllerSubType (0)]
+	public class EditionDocumentCategoryViewController0 : EditionViewController<DocumentCategoryEntity>
 	{
 		public override double GetPreferredWidth(int columnIndex, int columnCount)
 		{
