@@ -6,6 +6,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Common.Support.Extensions;
 using System.Linq;
+using Epsitec.Cresus.Core.Business;
 
 namespace Epsitec.Cresus.Core.Server.Modules
 {
@@ -58,11 +59,11 @@ namespace Epsitec.Cresus.Core.Server.Modules
 				var contacts = customer.Relation.Person.Contacts;
 
 				var phone = context.CreateEntity<TelecomContactEntity> ();
-				phone.Number = new System.Random ().NextDouble ().ToString ();
+				//phone.Number = new System.Random ().NextDouble ().ToString ();
 				
 				contacts.Add (phone);
 
-				context.SaveChanges ();
+				context.SaveChanges (EntitySaveMode.IncludeEmpty);
 
 				var key = context.DataContext.GetNormalizedEntityKey (phone).ToString ();
 				return Response.AsCoreSuccess(key);
