@@ -13,6 +13,17 @@ namespace Epsitec.Cresus.Core.Business.Actions
 	{
 		public static void CreateAffairAndSalesQuote()
 		{
+			CustomerActions.CreateAffairAndFirstDocument (DocumentType.SalesQuote);
+		}
+
+		public static void CreateAffairAndInvoice()
+		{
+			CustomerActions.CreateAffairAndFirstDocument (DocumentType.Invoice);
+		}
+
+
+		private static void CreateAffairAndFirstDocument(DocumentType documentType)
+		{
 			var workflowEngine  = WorkflowExecutionEngine.Current;
 			var businessContext = workflowEngine.BusinessContext;
 			var currentCustomer = businessContext.GetMasterEntity<CustomerEntity> ();
@@ -26,7 +37,7 @@ namespace Epsitec.Cresus.Core.Business.Actions
 			var businessDocument = businessContext.CreateMasterEntity<BusinessDocumentEntity> ();
 
 			CustomerActions.SetupBusinessDocument (businessContext, businessDocument, currentCustomer);
-			CustomerActions.SetupDocumentMetadata (businessContext, documentMetadata, businessDocument);
+			CustomerActions.SetupDocumentMetadata (businessContext, documentMetadata, businessDocument, documentType);
 
 			affair.Customer = currentCustomer;
 			affair.Workflow = WorkflowFactory.CreateDefaultWorkflow<AffairEntity> (businessContext);
@@ -43,11 +54,11 @@ namespace Epsitec.Cresus.Core.Business.Actions
 			businessContext.RemoveMasterEntity (documentMetadata);
 			businessContext.RemoveMasterEntity (affair);
 		}
-		
-		private static void SetupDocumentMetadata(IBusinessContext businessContext, DocumentMetadataEntity documentMetadata, BusinessDocumentEntity businessDocument)
+
+		private static void SetupDocumentMetadata(IBusinessContext businessContext, DocumentMetadataEntity documentMetadata, BusinessDocumentEntity businessDocument, DocumentType documentType)
 		{
 			var categoryRepo     = businessContext.GetSpecificRepository<DocumentCategoryEntity.Repository> ();
-			var documentCategory = categoryRepo.Find (DocumentType.SalesQuote).First ();
+			var documentCategory = categoryRepo.Find (documentType).First ();
 
 			documentMetadata.DocumentCategory = documentCategory;
 			documentMetadata.DocumentTitle    = documentCategory.Name;
