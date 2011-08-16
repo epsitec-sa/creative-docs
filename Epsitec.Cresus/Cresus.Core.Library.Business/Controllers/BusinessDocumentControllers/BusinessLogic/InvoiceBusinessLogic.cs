@@ -23,6 +23,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public InvoiceBusinessLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
 			: base (businessContext, documentMetadataEntity)
 		{
+			this.masterEntitiesDirty = true;
 		}
 
 
@@ -30,7 +31,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return false;
+				return this.IsSoloInvoice;
 			}
 		}
 
@@ -38,7 +39,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return false;
+				return this.IsSoloInvoice;
 			}
 		}
 
@@ -46,7 +47,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return false;
+				return this.IsSoloInvoice;
 			}
 		}
 
@@ -54,7 +55,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return false;
+				return this.IsSoloInvoice;
 			}
 		}
 
@@ -62,7 +63,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return false;
+				return this.IsSoloInvoice;
 			}
 		}
 
@@ -71,8 +72,49 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				yield return ArticleQuantityType.Billed;				// facturé
+				if (this.IsSoloInvoice)
+				{
+					yield return ArticleQuantityType.Ordered;
+				}
+				else
+				{
+					yield return ArticleQuantityType.Billed;				// facturé
+				}
 			}
 		}
+
+
+		private bool IsSoloInvoice
+		{
+			get
+			{
+				return this.MasterEntity == null;
+			}
+		}
+
+		private AbstractEntity MasterEntity
+		{
+			get
+			{
+				if (this.masterEntitiesDirty)
+				{
+					this.masterEntities = this.businessContext.GetMasterEntities ();
+					this.masterEntitiesDirty = false;
+				}
+
+				if (this.masterEntities.Count () == 1)
+				{
+					return this.masterEntities.First ();
+				}
+				else
+				{
+					return null;
+				}
+			}
+		}
+
+
+		private bool							masterEntitiesDirty;
+		private IEnumerable<AbstractEntity>		masterEntities;
 	}
 }
