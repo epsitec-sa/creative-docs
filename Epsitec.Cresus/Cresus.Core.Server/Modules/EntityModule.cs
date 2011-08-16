@@ -32,6 +32,7 @@ namespace Epsitec.Cresus.Core.Server.Modules
 				{
 					var k = string.Format ("[{0}]", key);
 					var v = Request.Form[key].ToString ().Trim ();
+					var lambda = Request.Form["lambda_" + key].ToString ().Trim ();
 					try
 					{
 						entity.SetField (k, v);

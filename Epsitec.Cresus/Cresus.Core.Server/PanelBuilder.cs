@@ -243,7 +243,7 @@ namespace Epsitec.Cresus.Core.Server
 				switch (property.Key)
 				{
 					case BrickPropertyKey.Field:
-						list.Add (this.CreateInputField (property.ExpressionValue, fieldProperties));
+						list.AddRange (this.CreateInputField (property.ExpressionValue, fieldProperties));
 						break;
 
 					case BrickPropertyKey.HorizontalGroup:
@@ -269,9 +269,13 @@ namespace Epsitec.Cresus.Core.Server
 			return list;
 		}
 
-		private Dictionary<string, object> CreateInputField(Expression expression, BrickPropertyCollection fieldProperties)
+		private List<Dictionary<string, object>> CreateInputField(Expression expression, BrickPropertyCollection fieldProperties)
 		{
-			var dic = new Dictionary<string, object> ();
+			var list = new List<Dictionary<string, object>> ();
+			var entityDictionnary = new Dictionary<string, object> ();
+			var lambdaDictionnary = new Dictionary<string, object> ();
+			list.Add (entityDictionnary);
+			list.Add (lambdaDictionnary);
 
 			LambdaExpression lambda = expression as LambdaExpression;
 
@@ -297,21 +301,27 @@ namespace Epsitec.Cresus.Core.Server
 			//System.Collections.IEnumerable collection = InputProcessor.GetInputCollection (fieldProperties);
 			//int? specialController = InputProcessor.GetSpecialController (fieldProperties);
 
-			var accessor = this.coreSession.GetPanelFieldAccessor (lambda);
 
-			dic["lambda"] = accessor.Id.ToString ();
-			dic["xtype"] = "textfield";
-			dic["fieldLabel"] = title;
-			dic["name"] = fieldMode.FieldId.ToString ().Trim ('[', ']');
+			string fieldName = fieldMode.FieldId.ToString ().Trim ('[', ']');
+
+			lambdaDictionnary["xtype"] = "hiddenfield";
+			lambdaDictionnary["name"] = "lambda_" + fieldName;
+			//var accessor = this.coreSession.GetPanelFieldAccessor (lambda);
+			//lambdaDictionnary["value"] = accessor.Id.ToString ();
+			lambdaDictionnary["value"] = "x => x";
+
+			entityDictionnary["xtype"] = "textfield";
+			entityDictionnary["fieldLabel"] = title;
+            entityDictionnary["name"] = fieldName;
 
 			if (fieldType.IsEntity ())
 			{
 				var entityType = entity.GetType ();
-				dic["value"] = entity.GetSummary ().ToString ();
+				entityDictionnary["value"] = entity.GetSummary ().ToString ();
 
 				if (entityType != typeof (PersonTitleEntity))
 				{
-					return dic;
+					return list;
 				}
 
 				//	The field is an entity : use an AutoCompleteTextField for it.
@@ -335,17 +345,17 @@ namespace Epsitec.Cresus.Core.Server
 
 				var t = titles.Cast<PersonTitleEntity> ();
 
-				dic["xtype"] = "combo";
+				entityDictionnary["xtype"] = "combo";
 
 				var data = new List<string> ();
-				dic["store"] = data;
+				entityDictionnary["store"] = data;
 
 				foreach (var item in t)
 				{
 					data.Add (item.Name.ToSimpleText ());
 				}
 
-				return dic;
+				return list;
 			}
 
 			if (fieldType == typeof (string) ||
@@ -360,7 +370,7 @@ namespace Epsitec.Cresus.Core.Server
 			    fieldType == typeof (bool?))
 			{
 
-				dic["value"] = obj == null ? "" : obj.ToString ();
+				entityDictionnary["value"] = obj == null ? "" : obj.ToString ();
 
 				//    width = InputProcessor.GetDefaultFieldWidth (fieldType, width);
 
@@ -375,7 +385,7 @@ namespace Epsitec.Cresus.Core.Server
 
 				//    return;
 
-				return dic;
+				return list;
 			}
 
 			if (fieldType == typeof (System.DateTime) ||
@@ -383,15 +393,15 @@ namespace Epsitec.Cresus.Core.Server
 			    fieldType == typeof (Date?) ||
 			    fieldType == typeof (Date?))
 			{
-				dic["xtype"] = "datefield";
+				entityDictionnary["xtype"] = "datefield";
 				if (obj != null)
 				{
 					var d = (obj as Date?);
-					dic["format"] = "d.m.Y";
-					dic["value"] = d.Value.ToString ();
+					entityDictionnary["format"] = "d.m.Y";
+					entityDictionnary["value"] = d.Value.ToString ();
 				}
 
-				return dic;
+				return list;
 			}
 
 			//if (fieldType.IsGenericIListOfEntities ())
@@ -423,18 +433,18 @@ namespace Epsitec.Cresus.Core.Server
 
 				//return;
 
-				dic["xtype"] = "epsitec.combo";
-				dic["value"] = obj.ToString ();
-				dic["storeUrl"] = fieldType.Name;
+				entityDictionnary["xtype"] = "epsitec.combo";
+				entityDictionnary["value"] = obj.ToString ();
+				entityDictionnary["storeUrl"] = fieldType.AssemblyQualifiedName;
 
-				return dic;
+				return list;
 			}
 
 			//System.Diagnostics.Debug.WriteLine (
 			//    string.Format ("*** Field {0} of type {1} : no automatic binding implemented in Bridge<{2}>",
 			//        lambda.ToString (), fieldType.FullName, typeof (T).Name));
 
-			return dic;
+			return list;
 		}
 
 		private Dictionary<string, object> CreateHorizontalGroup(BrickProperty property)
@@ -453,7 +463,7 @@ namespace Epsitec.Cresus.Core.Server
 
 			foreach (var l in list)
 			{
-				l["columnWidth"] = 1.0 / list.Count;
+				l["columnWidth"] = 1.0 / list.Count(input => (string) input["xtype"] != "hiddenfield");
 				l["margin"] = "0 5 0 0";
 				l.Remove ("fieldLabel");
 			}
