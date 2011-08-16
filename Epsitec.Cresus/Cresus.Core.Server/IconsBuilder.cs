@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Core.Server
 
 		public static void BuildIcons()
 		{
-
+			var list = ImageProvider.Default.GetImageNames ("manifest", null);
 #if BUILD_ICONS
 
 			Epsitec.Common.Document.Engine.Initialize ();
