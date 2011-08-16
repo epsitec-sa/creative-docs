@@ -28,6 +28,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		protected override void CreateBricks(BrickWall<PriceCalculatorEntity> wall)
 		{
 			wall.AddBrick ()
+				.Icon ("Data.SpecialController")
 				.Title (this.CustomizedTitle)
 				.Attribute (BrickMode.FullHeightStretch)
 				.Input ()
