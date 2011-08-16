@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.Core.Server
 			string title = item.Title.ToSimpleText ();
 			panel["title"] = title;
 
-			var icon = IconsBuilder.GetCSSName (item.IconUri);
+			var icon = IconsBuilder.GetCSSClassName (item.IconUri, IconSize.Sixteen);
 			if (icon != null)
 			{
 				panel["iconCls"] = icon;

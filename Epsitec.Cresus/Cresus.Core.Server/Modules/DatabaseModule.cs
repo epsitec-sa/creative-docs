@@ -20,21 +20,21 @@ namespace Epsitec.Cresus.Core.Server.Modules
 			{
 				Title = "Clients",
 				DatabaseName = "customers",
-				CSSClass = "customer"
+				CSSClass = IconsBuilder.GetCSSClassName("Base.Customer", IconSize.ThirtyTwo)
 			};
 
 			DatabasesModule.databases["articles"] = new Database<ArticleDefinitionEntity>
 			{
 				Title = "Articles",
 				DatabaseName = "articles",
-				CSSClass = "article"
+				CSSClass = IconsBuilder.GetCSSClassName ("Base.ArticleDefinition", IconSize.ThirtyTwo)
 			};
 
 			DatabasesModule.databases["genders"] = new Database<PersonGenderEntity>
 			{
 				Title = "Genres",
 				DatabaseName = "genders",
-				CSSClass = "gender"
+				CSSClass = IconsBuilder.GetCSSClassName ("Base.PersonGender", IconSize.ThirtyTwo)
 			};
 		}
 
