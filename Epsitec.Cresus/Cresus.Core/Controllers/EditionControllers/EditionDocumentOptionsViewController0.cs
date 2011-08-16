@@ -2,7 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Widgets;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Bricks;
@@ -27,11 +27,21 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		protected override void CreateBricks(BrickWall<DocumentOptionsEntity> wall)
 		{
 			wall.AddBrick ()
+				.Title (this.CustomizedTitle)
 				.Attribute (BrickMode.FullHeightStretch)
 				.Input ()
 				  .Field (x => x).WithSpecialController ()
 				.End ()
 				;
+		}
+
+		private FormattedText CustomizedTitle
+		{
+			get
+			{
+				var title = "Options d'impression du document";  // TODO: Comment obtenir le titre original ???
+				return FormattedText.Concat (title, " — réglages");
+			}
 		}
 	}
 }

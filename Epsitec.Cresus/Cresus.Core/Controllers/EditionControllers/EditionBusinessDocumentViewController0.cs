@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		protected override void CreateBricks(BrickWall<BusinessDocumentEntity> wall)
 		{
 			wall.AddBrick ()
-				.Title (this.GetCustomizedTitle)
+				.Title (this.CustomizedTitle)
 				.Icon ("Data.DocumentItems")
 				.Attribute (BrickMode.FullHeightStretch)
 				.Input ()
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				;
 		}
 
-		private FormattedText GetCustomizedTitle
+		private FormattedText CustomizedTitle
 		{
 			//	Comme l'éditeur de lignes d'un document occupe une grande largeur, les tuiles de gauche ne sont
 			//	généralement plus visibles. Il est donc très important de rappeler le nom du type du document
