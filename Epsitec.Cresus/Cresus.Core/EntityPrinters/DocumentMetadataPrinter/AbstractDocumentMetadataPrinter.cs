@@ -65,6 +65,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					return DeliveryNoteDocumentPrinter.RequiredDocumentOptions;
 
 				case DocumentType.Invoice:
+				case DocumentType.DirectInvoice:
 					return InvoiceDocumentPrinter.RequiredDocumentOptions;
 			}
 
@@ -94,6 +95,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					return DeliveryNoteDocumentPrinter.RequiredPageTypes;
 
 				case DocumentType.Invoice:
+				case DocumentType.DirectInvoice:
 					return InvoiceDocumentPrinter.RequiredPageTypes;
 			}
 
@@ -1331,6 +1333,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 						return new DeliveryNoteDocumentPrinter (businessContext, entity, options, printingUnits);
 
 					case DocumentType.Invoice:
+					case DocumentType.DirectInvoice:
 						return new InvoiceDocumentPrinter (businessContext, entity, options, printingUnits);
 				}
 

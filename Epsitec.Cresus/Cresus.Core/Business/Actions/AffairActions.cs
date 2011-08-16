@@ -84,6 +84,7 @@ namespace Epsitec.Cresus.Core.Business.Actions
 					break;
 
 				case DocumentType.InvoiceProForma:
+				case DocumentType.DirectInvoice:
 				case DocumentType.Invoice:
 					AffairActions.SetupInvoice (businessContext, document);
 					break;

@@ -18,9 +18,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 	/// <summary>
 	/// Facture.
 	/// </summary>
-	public class InvoiceBusinessLogic : AbstractDocumentBusinessLogic
+	public class DirectInvoiceBusinessLogic : AbstractDocumentBusinessLogic
 	{
-		public InvoiceBusinessLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
+		public DirectInvoiceBusinessLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
 			: base (businessContext, documentMetadataEntity)
 		{
 		}
@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return false;
+				return true;
 			}
 		}
 
@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return false;
+				return true;
 			}
 		}
 
@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return false;
+				return true;
 			}
 		}
 
@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return false;
+				return true;
 			}
 		}
 
@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return false;
+				return true;
 			}
 		}
 

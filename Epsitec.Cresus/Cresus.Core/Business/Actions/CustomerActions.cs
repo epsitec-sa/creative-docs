@@ -16,9 +16,9 @@ namespace Epsitec.Cresus.Core.Business.Actions
 			CustomerActions.CreateAffairAndFirstDocument (DocumentType.SalesQuote);
 		}
 
-		public static void CreateAffairAndInvoice()
+		public static void CreateAffairAndDirectInvoice()
 		{
-			CustomerActions.CreateAffairAndFirstDocument (DocumentType.Invoice);
+			CustomerActions.CreateAffairAndFirstDocument (DocumentType.DirectInvoice);
 		}
 
 

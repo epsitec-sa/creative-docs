@@ -250,6 +250,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 			switch (this.metadata.DocumentCategory.DocumentType)
 			{
 				case DocumentType.Invoice:
+				case DocumentType.DirectInvoice:
 				case DocumentType.InvoiceProForma:
 					return this.articleItem.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == ArticleQuantityType.Billed).Sum (x => this.articleDef.ConvertToBillingUnit (x.Quantity, x.Unit));
 
