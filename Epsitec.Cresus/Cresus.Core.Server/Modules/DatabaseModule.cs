@@ -29,6 +29,13 @@ namespace Epsitec.Cresus.Core.Server.Modules
 				DatabaseName = "articles",
 				CSSClass = "article"
 			};
+
+			DatabasesModule.databases["genders"] = new Database<PersonGenderEntity>
+			{
+				Title = "Genres",
+				DatabaseName = "genders",
+				CSSClass = "gender"
+			};
 		}
 
 		public DatabasesModule()
