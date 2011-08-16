@@ -139,10 +139,16 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 
 			decimal ratio = GroupItemPriceCalculator.GetRatio (discountableBefore, discountableAfter);
 
-			Tax discountedTax = new Tax (group.TaxDiscountable.RateAmounts.Select (tax => new TaxRateAmount (tax.Amount * ratio, tax.Code, tax.Rate)));
-			
-			this.Accumulate (discountedTax, neverApplyDiscount: false);
-			this.Accumulate (group.TaxNotDiscountable, neverApplyDiscount: true);
+			if (group.TaxDiscountable != null)
+			{
+				Tax discountedTax = new Tax (group.TaxDiscountable.RateAmounts.Select (tax => new TaxRateAmount (tax.Amount * ratio, tax.Code, tax.Rate)));
+
+				this.Accumulate (discountedTax, neverApplyDiscount: false);
+			}
+			if (group.TaxNotDiscountable != null)
+			{
+				this.Accumulate (group.TaxNotDiscountable, neverApplyDiscount: true);
+			}
 		}
 
 
