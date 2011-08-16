@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.Server.Modules
 
 			Get["/in"] = parameters =>
 			{
-				return "<form method=post><input type=submit></form>";
+				return "<form method=post><input type=hidden name=username value=jonas><input type=hidden name=password value=password><input type=submit></form>";
 			};
 
 			Post["/in"] = parameters =>
