@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		
 		private void CreateUIRightFrame(UIBuilder builder, FrameBox parent)
 		{
-			bool enable = this.accessData.BusinessLogic.ArticleQuantityTypeEditionEnabled.Contains (this.Entity.QuantityColumn.QuantityType);
+			bool enable = this.accessData.BusinessLogic.IsArticleQuantityTypeEditionEnabled (this.Entity.QuantityColumn.QuantityType);
 
 			var topFrame = new FrameBox
 			{
@@ -164,8 +164,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				TabIndex = this.NextTabIndex,
 			};
 
-			//	Met des boutons radio pour tous les types, sauf Ordered qui est toujours édité par ArticleLineEditorController.
-			foreach (var type in this.accessData.BusinessLogic.ArticleQuantityTypeEditionEnabled.Where (x => x != ArticleQuantityType.Ordered))
+			//	Met des boutons radio pour tous les types.
+			foreach (var type in this.accessData.BusinessLogic.EnabledArticleQuantityTypes)
 			{
 				var entity = this.accessData.BusinessLogic.GetArticleQuantityColumnEntity (type);
 

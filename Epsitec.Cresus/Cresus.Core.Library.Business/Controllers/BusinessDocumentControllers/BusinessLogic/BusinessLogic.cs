@@ -225,7 +225,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			get
 			{
 				return this.documentMetadataEntity.DocumentState != DocumentState.Frozen &&
-					   this.ArticleQuantityTypeEditionEnabled.Any ();
+					   this.EnabledArticleQuantityTypes.Any ();
 			}
 		}
 
@@ -233,17 +233,32 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			//	Indique s'il est possible d'éditer une quantité donnée.
 			return this.documentMetadataEntity.DocumentState != DocumentState.Frozen &&
-				   this.ArticleQuantityTypeEditionEnabled.Where (x => x == type).Any ();
+				   this.EnabledArticleQuantityTypes.Where (x => x == type).Any ();
 		}
 
-		public IEnumerable<ArticleQuantityType> ArticleQuantityTypeEditionEnabled
+		public ArticleQuantityType MainArticleQuantityType
+		{
+			//	Retourne le type de quantité principal, c'est-à-dire celui qui est édité avec l'article.
+			get
+			{
+				if (this.IsDebug)
+				{
+					return ArticleQuantityType.Ordered;
+				}
+				else
+				{
+					return this.documentBusinessLogic.MainArticleQuantityType;
+				}
+			}
+		}
+
+		public IEnumerable<ArticleQuantityType> EnabledArticleQuantityTypes
 		{
 			//	Retourne les types de quantité définis dans les réglages globaux, compatibles
 			//	avec le document en cours.
-			//	Le premier de la liste est considéré comme "principal".
 			get
 			{
-				var list = this.IsDebug ? this.DebugArticleQuantityTypeEditionEnabled : this.documentBusinessLogic.ArticleQuantityTypeEditionEnabled;
+				var list = this.IsDebug ? this.DebugArticleQuantityTypeEditionEnabled : this.documentBusinessLogic.EnabledArticleQuantityTypes;
 
 				if (list == null)
 				{
@@ -259,7 +274,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Retourne la liste complète des types de quantité, pour le debug.
 			get
 			{
-				yield return ArticleQuantityType.Ordered;				// commandé
 				yield return ArticleQuantityType.Billed;				// facturé
 				yield return ArticleQuantityType.Delayed;				// retardé
 				yield return ArticleQuantityType.Expected;				// attendu

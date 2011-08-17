@@ -81,7 +81,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		public virtual IEnumerable<ArticleQuantityType> ArticleQuantityTypeEditionEnabled
+		public virtual ArticleQuantityType MainArticleQuantityType
+		{
+			//	Retourne le type de quantité principal, c'est-à-dire celui qui est édité avec l'article.
+			get
+			{
+				return ArticleQuantityType.None;
+			}
+		}
+
+		public virtual IEnumerable<ArticleQuantityType> EnabledArticleQuantityTypes
 		{
 			//	Retourne la liste des types de quantité éditables.
 			get

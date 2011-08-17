@@ -195,7 +195,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				PreferredHeight = 20,
 				Padding = new Margins (0, 0, 10, 10),
 				TabIndex = this.NextTabIndex,
-				Enable = this.accessData.BusinessLogic.IsArticleQuantityTypeEditionEnabled (ArticleQuantityType.Ordered),
+				Enable = this.accessData.BusinessLogic.MainArticleQuantityType != ArticleQuantityType.None,
 			};
 
 			var separator = new Separator
@@ -221,22 +221,31 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private void CreateUIRightTopFrame(UIBuilder builder, FrameBox parent)
 		{
-			//	Quantité.
-			var quantityField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Quantity.Quantity, x => this.Quantity.Quantity = x));
-			this.PlaceLabelAndField (parent, 50, 80, "Quantité", quantityField);
-
-			//	Unité.
-			var unitController = new SelectionController<UnitOfMeasureEntity> (this.accessData.BusinessContext)
+			if (this.Quantity != null)
 			{
-				ValueGetter         = () => this.Quantity.Unit,
-				ValueSetter         = x => this.Quantity.Unit = x,
-				ReferenceController = new ReferenceController (() => this.Quantity.Unit),
-			};
+				//	Quantité.
+				var quantityField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Quantity.Quantity, x => this.Quantity.Quantity = x));
+				this.PlaceLabelAndField (parent, 50, 80, "Quantité", quantityField);
 
-			var unitField = builder.CreateCompactAutoCompleteTextField (null, "", unitController);
-			this.PlaceLabelAndField (parent, 35, 80, "Unité", unitField.Parent);
+				//	Unité.
+				var unitController = new SelectionController<UnitOfMeasureEntity> (this.accessData.BusinessContext)
+				{
+					ValueGetter         = () => this.Quantity.Unit,
+					ValueSetter         = x => this.Quantity.Unit = x,
+					ReferenceController = new ReferenceController (() => this.Quantity.Unit),
+				};
 
-			this.CreateStaticText (parent, 70, "   (commandé)");
+				var unitField = builder.CreateCompactAutoCompleteTextField (null, "", unitController);
+				this.PlaceLabelAndField (parent, 35, 80, "Unité", unitField.Parent);
+
+				if (this.accessData.BusinessLogic.MainArticleQuantityType != ArticleQuantityType.None)
+				{
+					var quantityEntity = this.accessData.BusinessLogic.GetArticleQuantityColumnEntity (this.accessData.BusinessLogic.MainArticleQuantityType);
+
+					var text = FormattedText.Concat ("   ", quantityEntity.Name);
+					this.CreateStaticText (parent, 70, text);
+				}
+			}
 		}
 
 		private void CreateUIRightBottomFrame(UIBuilder builder, FrameBox parent)
@@ -583,7 +592,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				}
 				else
 				{
-					return this.Entity.ArticleQuantities[0];
+					return this.Entity.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == this.accessData.BusinessLogic.MainArticleQuantityType).FirstOrDefault ();
 				}
 			}
 		}

@@ -67,7 +67,15 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		public override IEnumerable<ArticleQuantityType> ArticleQuantityTypeEditionEnabled
+		public override ArticleQuantityType MainArticleQuantityType
+		{
+			get
+			{
+				return ArticleQuantityType.None;
+			}
+		}
+
+		public override IEnumerable<ArticleQuantityType> EnabledArticleQuantityTypes
 		{
 			get
 			{

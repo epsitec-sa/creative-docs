@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return this.IsDirectInvoice;
+				return InvoiceBusinessLogic.IsDirectInvoice (this.documentMetadataEntity);
 			}
 		}
 
@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return this.IsDirectInvoice;
+				return InvoiceBusinessLogic.IsDirectInvoice (this.documentMetadataEntity);
 			}
 		}
 
@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return this.IsDirectInvoice;
+				return InvoiceBusinessLogic.IsDirectInvoice (this.documentMetadataEntity);
 			}
 		}
 
@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return this.IsDirectInvoice;
+				return InvoiceBusinessLogic.IsDirectInvoice (this.documentMetadataEntity);
 			}
 		}
 
@@ -62,34 +62,58 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return this.IsDirectInvoice;
+				return InvoiceBusinessLogic.IsDirectInvoice (this.documentMetadataEntity);
 			}
 		}
 
 
-		public override IEnumerable<ArticleQuantityType> ArticleQuantityTypeEditionEnabled
+		public override ArticleQuantityType MainArticleQuantityType
 		{
 			get
 			{
-				yield return ArticleQuantityType.Billed;				// facturé
-			}
-		}
-
-
-		private bool IsDirectInvoice
-		{
-			get
-			{
-				BusinessDocumentEntity document = this.documentMetadataEntity.BusinessDocument as BusinessDocumentEntity;
-
-				if (document == null)
+				if (InvoiceBusinessLogic.IsDirectInvoice (this.documentMetadataEntity))
 				{
-					return false;
+					return ArticleQuantityType.Billed;  // facturé
 				}
 				else
 				{
-					return string.IsNullOrEmpty (document.BaseDocumentCode);
+					return ArticleQuantityType.None;
 				}
+			}
+		}
+
+		public override IEnumerable<ArticleQuantityType> EnabledArticleQuantityTypes
+		{
+			get
+			{
+				if (InvoiceBusinessLogic.IsDirectInvoice (this.documentMetadataEntity))
+				{
+					// rien
+				}
+				else
+				{
+					yield return ArticleQuantityType.Billed;				// facturé
+				}
+			}
+		}
+
+
+		public static bool IsDirectInvoice(DocumentMetadataEntity documentMetadata)
+		{
+			if (documentMetadata.DocumentCategory.DocumentType != DocumentType.Invoice)
+			{
+				return false;
+			}
+
+			BusinessDocumentEntity document = documentMetadata.BusinessDocument as BusinessDocumentEntity;
+
+			if (document == null)
+			{
+				return false;
+			}
+			else
+			{
+				return string.IsNullOrEmpty (document.BaseDocumentCode);
 			}
 		}
 	}
