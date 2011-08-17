@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return false;
+				return this.IsDirectInvoice;
 			}
 		}
 
@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return false;
+				return this.IsDirectInvoice;
 			}
 		}
 
@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return false;
+				return this.IsDirectInvoice;
 			}
 		}
 
@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return false;
+				return this.IsDirectInvoice;
 			}
 		}
 
@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return false;
+				return this.IsDirectInvoice;
 			}
 		}
 
@@ -72,6 +72,24 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			get
 			{
 				yield return ArticleQuantityType.Billed;				// facturé
+			}
+		}
+
+
+		private bool IsDirectInvoice
+		{
+			get
+			{
+				BusinessDocumentEntity document = this.documentMetadataEntity.BusinessDocument as BusinessDocumentEntity;
+
+				if (document == null)
+				{
+					return false;
+				}
+				else
+				{
+					return string.IsNullOrEmpty (document.BaseDocumentCode);
+				}
 			}
 		}
 	}

@@ -26,8 +26,10 @@ namespace Epsitec.Cresus.Core.Business
 
 		Invoice						= 1000,				//	facture
 		InvoiceProForma				= 1010,				//	facture pro forma
-		DirectInvoice				= 1020,				//	facture directe
 
+		// TODO: à supprimer plus tard, car la base actuelle plante sans cette définition !
+		DirectInvoice				= 1020,				//	facture directe
+		
 		PaymentReminder				= 1100,				//	rappel
 
 		Receipt						= 1200,				//	reçu

@@ -78,10 +78,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					this.documentBusinessLogic = new InvoiceBusinessLogic (this.businessContext, this.documentMetadataEntity);
 					break;
 
-				case DocumentType.DirectInvoice:
-					this.documentBusinessLogic = new DirectInvoiceBusinessLogic (this.businessContext, this.documentMetadataEntity);
-					break;
-
 				case DocumentType.InvoiceProForma:
 					this.documentBusinessLogic = new InvoiceProFormaBusinessLogic (this.businessContext, this.documentMetadataEntity);
 					break;

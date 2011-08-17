@@ -49,8 +49,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 				if (metadata != null)
 				{
-					if (metadata.DocumentCategory.DocumentType == Business.DocumentType.Invoice ||
-						metadata.DocumentCategory.DocumentType == Business.DocumentType.DirectInvoice)
+					if (metadata.DocumentCategory.DocumentType == Business.DocumentType.Invoice)
 					{
 						this.CreateUIBillings (data);
 					}

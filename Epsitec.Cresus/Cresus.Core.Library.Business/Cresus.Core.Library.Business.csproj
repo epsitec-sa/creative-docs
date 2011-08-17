@@ -99,7 +99,6 @@
     <Compile Include="Bricks\FieldInfo.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\BusinessDocumentLinesController.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\BusinessLogic\AbstractDocumentBusinessLogic.cs" />
-    <Compile Include="Controllers\BusinessDocumentControllers\BusinessLogic\DirectInvoiceBusinessLogic.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\BusinessLogic\PurchaseOrderBusinessLogic.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\BusinessLogic\QuoteRequestBusinessLogic.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\BusinessLogic\CreditMemoBusinessLogic.cs" />

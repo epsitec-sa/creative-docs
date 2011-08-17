@@ -49,8 +49,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			if (this.Entity.BusinessDocument is BusinessDocumentEntity)
 			{
-				if (this.Entity.DocumentCategory.DocumentType == Business.DocumentType.Invoice ||
-					this.Entity.DocumentCategory.DocumentType == Business.DocumentType.DirectInvoice)
+				if (this.Entity.DocumentCategory.DocumentType == Business.DocumentType.Invoice)
 				{
 					wall.AddBrick (x => SummaryDocumentMetadataViewController.GetPaymentTransactionEntities (x))
 						.Attribute (BrickMode.AutoGroup)
