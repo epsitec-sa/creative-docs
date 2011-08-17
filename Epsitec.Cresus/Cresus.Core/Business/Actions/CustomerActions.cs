@@ -18,11 +18,11 @@ namespace Epsitec.Cresus.Core.Business.Actions
 
 		public static void CreateAffairAndDirectInvoice()
 		{
-			CustomerActions.CreateAffairAndFirstDocument (DocumentType.DirectInvoice);
+			CustomerActions.CreateAffairAndFirstDocument (DocumentType.DirectInvoice, "DirectInvoiceWorkflow");
 		}
 
 
-		private static void CreateAffairAndFirstDocument(DocumentType documentType)
+		private static void CreateAffairAndFirstDocument(DocumentType documentType, string workflowName = null)
 		{
 			var workflowEngine  = WorkflowExecutionEngine.Current;
 			var businessContext = workflowEngine.BusinessContext;
@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Core.Business.Actions
 				CustomerActions.SetupBusinessDocument (businessContext, businessDocument, currentCustomer);
 
 				affair.Customer = currentCustomer;
-				affair.Workflow = WorkflowFactory.CreateDefaultWorkflow<AffairEntity> (businessContext);
+				affair.Workflow = WorkflowFactory.CreateDefaultWorkflow<AffairEntity> (businessContext, workflowName);
 
 				affair.Documents.Add (documentMetadata);
 
