@@ -368,7 +368,22 @@ namespace Epsitec.Cresus.Core.Server
 				var items = businessContext.Data.GetAllEntities (accessor.CollectionItemType, DataExtractionMode.Sorted, businessContext.DataContext);
 				var found = accessor.GetCollection (this.rootEntity).Cast<AbstractEntity> ();
 
-				//	TODO: create a collection of checkboxes to pick one or more items from the list...
+				entityDictionnary["xtype"]  = "fieldcontainer";
+				entityDictionnary["defaultType"] = "checkboxfield";
+				entityDictionnary["labelAlign"] = "left";
+				var checkboxes = new List<object> ();
+				entityDictionnary["items"]  = checkboxes;
+
+				foreach (var item in items)
+				{
+					var dic = new Dictionary<string, object> ();
+					checkboxes.Add (dic);
+
+					dic["boxLabel"] = item.GetSummary ().ToSimpleText ();
+					dic["name"] = entityDictionnary["name"] + "[]"; // Copy the parent's ID
+					dic["inputValue"] = this.GetEntityKey (item);
+					dic["checked"] = found.Contains(item);
+				}
 
 				return list;
 			}

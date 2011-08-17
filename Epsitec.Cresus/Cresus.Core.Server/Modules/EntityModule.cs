@@ -43,6 +43,11 @@ namespace Epsitec.Cresus.Core.Server.Modules
 								//	TODO: retrouver la liste des entités sélectionnées
 
 								List<AbstractEntity> entities = new List<AbstractEntity> ();
+
+								foreach (var item in value)
+								{
+									System.Console.WriteLine (item);
+								}
 								
 								accessor.SetCollection (entity, entities);
 							}
