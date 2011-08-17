@@ -315,6 +315,8 @@ namespace Epsitec.Cresus.Core.Server
 
 			if (fieldType.IsEntity ())
 			{
+				System.Diagnostics.Debug.Assert (accessor.IsEntityType);
+
 				var items = this.coreSession.GetBusinessContext ().Data.GetAllEntities (fieldType, DataExtractionMode.Sorted);
 				var data  = new List<string> (items.Select (x => x.GetCompactSummary ().ToString ()));
 

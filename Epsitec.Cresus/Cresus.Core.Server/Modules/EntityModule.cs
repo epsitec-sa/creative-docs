@@ -36,9 +36,22 @@ namespace Epsitec.Cresus.Core.Server.Modules
 
 						if (lambda.HasValue)
 						{
-							var accessor = coreSession.GetPanelFieldAccessor (InvariantConverter.ToInt (lambda.Value));
+							var accessor = coreSession.GetPanelFieldAccessor (InvariantConverter.ToInt ((string) lambda.Value));
 
-							if (value.HasValue)
+							if (accessor.CanWrite == false)
+							{
+								errors.Add (memberKey, "The field cannot be written to.");
+							}
+							else if (accessor.IsEntityType)
+							{
+								//	TODO: retrouver la véritable entité qu'il faut assigner au champ
+								
+								EntityKey      valueEntityKey = EntityKey.Empty;
+								AbstractEntity valueEntity    = context.DataContext.ResolveEntity (valueEntityKey);
+
+								accessor.SetEntityValue (entity, valueEntity);
+							}
+							else if (value.HasValue)
 							{
 								accessor.SetStringValue (entity, value.Value);
 							}

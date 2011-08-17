@@ -28,9 +28,6 @@ namespace Epsitec.Cresus.Core.Server
 
 			bool nullable    = fieldType.IsNullable ();
 
-			this.getterFunc   = getterLambda == null ? null : getterLambda.Compile ();
-			this.setterFunc   = setterLambda == null ? null : setterLambda.Compile ();
-
 			if (nullable)
 			{
 				fieldType = fieldType.GetNullableTypeUnderlyingType ();
@@ -38,9 +35,12 @@ namespace Epsitec.Cresus.Core.Server
 
 			var factoryType = (nullable ? typeof (NullableFactory<,>) : typeof (NonNullableFactory<,>)).MakeGenericType (sourceType, fieldType);
 
-			this.id = id;
-			this.lambda   = lambda;
+			this.id               = id;
+			this.lambda           = lambda;
+			this.getterFunc       = getterLambda == null ? null : getterLambda.Compile ();
+			this.setterFunc       = setterLambda == null ? null : setterLambda.Compile ();
 			this.marshalerFactory = System.Activator.CreateInstance (factoryType, this) as DynamicFactory;
+			this.isEntityType     = fieldType.IsEntity ();
 		}
 
 
@@ -52,10 +52,34 @@ namespace Epsitec.Cresus.Core.Server
 			}
 		}
 
+		public bool IsEntityType
+		{
+			get
+			{
+				return this.isEntityType;
+			}
+		}
+
+		public bool CanWrite
+		{
+			get
+			{
+				return this.setterFunc != null;
+			}
+		}
+		
 		public void SetStringValue(AbstractEntity entity, string value)
 		{
 			var marshaler = this.marshalerFactory.CreateMarshaler (entity);
 			marshaler.SetStringValue (value);
+		}
+
+		public void SetEntityValue(AbstractEntity entity, AbstractEntity value)
+		{
+			if (this.setterFunc != null)
+			{
+				this.setterFunc.DynamicInvoke (entity, value);
+			}
 		}
 
 		public string GetStringValue(AbstractEntity entity)
@@ -140,5 +164,6 @@ namespace Epsitec.Cresus.Core.Server
 		private readonly System.Delegate		getterFunc;
 		private readonly System.Delegate		setterFunc;
 		private readonly DynamicFactory			marshalerFactory;
+		private readonly bool					isEntityType;
 	}
 }
