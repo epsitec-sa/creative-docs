@@ -210,12 +210,12 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		private void BuildArticleItem(ArticleDocumentItemEntity line)
 		{
 			//	Génère les quantités.
-			if ((this.mode & DocumentItemAccessorMode.UseMainColumns) != 0)  // utilise les colonnes MainQuantity/MainUnit (impression) ?
+			if ((this.mode & DocumentItemAccessorMode.Print) != 0)  // impression (utilise les colonnes MainQuantity/MainUnit) ?
 			{
 				//	Génère la quantité principale.
 				var quantityTypes = this.businessLogic.PrintableArticleQuantityTypes;
 				var mainQuantityType = ArticleQuantityType.None;
-				bool firstLineOccupied = false;
+				int row = 0;
 
 				if (quantityTypes.Count () != 0)
 				{
@@ -232,27 +232,26 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 						mainUnit = quantity.Unit.Name;
 					}
 
-					this.SetContent (0, DocumentItemAccessorColumn.MainQuantity, mainQuantity.ToString ());
-					this.SetContent (0, DocumentItemAccessorColumn.MainUnit, mainUnit);
-					this.SetError (0, DocumentItemAccessorColumn.MainQuantity, this.GetQuantityError (line, mainQuantityType));
+					this.SetContent (row, DocumentItemAccessorColumn.MainQuantity, mainQuantity.ToString ());
+					this.SetContent (row, DocumentItemAccessorColumn.MainUnit,     mainUnit);
+					this.SetError   (row, DocumentItemAccessorColumn.MainQuantity, this.GetQuantityError (line, mainQuantityType));
 
-					firstLineOccupied = true;
+					row++;
 				}
 
 				//	Génère les autres quantités (sans la principale).
 				if ((this.mode & DocumentItemAccessorMode.AdditionalQuantities) != 0)  // met les quantités additionnelles ?
 				{
 					// Sur un document imprimé, les autres quantités sont toujours sur des lignes à part.
-					int row = firstLineOccupied ? 1 : 0;
 					foreach (var quantityType in DocumentItemAccessor.articleQuantityTypes)
 					{
 						foreach (var quantity in line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == quantityType && x.QuantityColumn.QuantityType != mainQuantityType && quantityTypes.Contains (x.QuantityColumn.QuantityType)).OrderBy (x => x.BeginDate))
 						{
 							this.articleQuantityEntities.Add (quantity);
 
-							this.SetContent (row, DocumentItemAccessorColumn.AdditionalType, quantity.QuantityColumn.Name);
+							this.SetContent (row, DocumentItemAccessorColumn.AdditionalType,     quantity.QuantityColumn.Name);
 							this.SetContent (row, DocumentItemAccessorColumn.AdditionalQuantity, quantity.Quantity.ToString ());
-							this.SetContent (row, DocumentItemAccessorColumn.AdditionalUnit, quantity.Unit.Name);
+							this.SetContent (row, DocumentItemAccessorColumn.AdditionalUnit,     quantity.Unit.Name);
 
 							if (quantity.BeginDate.HasValue)
 							{
@@ -274,15 +273,16 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			else  // édition ?
 			{
 				int row = 0;
+
 				foreach (var quantityType in DocumentItemAccessor.articleQuantityTypes)
 				{
 					foreach (var quantity in line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == quantityType).OrderBy (x => x.BeginDate))
 					{
 						this.articleQuantityEntities.Add (quantity);
 
-						this.SetContent (row, DocumentItemAccessorColumn.AdditionalType, quantity.QuantityColumn.Name);
+						this.SetContent (row, DocumentItemAccessorColumn.AdditionalType,     quantity.QuantityColumn.Name);
 						this.SetContent (row, DocumentItemAccessorColumn.AdditionalQuantity, quantity.Quantity.ToString ());
-						this.SetContent (row, DocumentItemAccessorColumn.AdditionalUnit, quantity.Unit.Name);
+						this.SetContent (row, DocumentItemAccessorColumn.AdditionalUnit,     quantity.Unit.Name);
 
 						if (quantity.BeginDate.HasValue)
 						{

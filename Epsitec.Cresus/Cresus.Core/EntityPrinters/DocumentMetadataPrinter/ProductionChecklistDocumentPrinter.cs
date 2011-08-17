@@ -162,7 +162,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 			get
 			{
-				var mode = DocumentItemAccessorMode.UseMainColumns |
+				var mode = DocumentItemAccessorMode.Print |
 						   DocumentItemAccessorMode.ShowMyEyesOnly |
 						   DocumentItemAccessorMode.UseArticleName;  // le nom court suffit
 

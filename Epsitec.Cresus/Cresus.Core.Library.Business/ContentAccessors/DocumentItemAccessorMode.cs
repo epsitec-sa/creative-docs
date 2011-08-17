@@ -11,8 +11,8 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 	public enum DocumentItemAccessorMode
 	{
 		None					= 0,
-		UseMainColumns			= 0x00000001,	// utilise les colonnes MainQuantity et MainUnit, pour les documents imprimés
-		AdditionalQuantities	= 0x00000002,	// met les quantités additionnelles
+		Print					= 0x00000001,	// impression (utilise les colonnes MainQuantity et MainUnit)
+		AdditionalQuantities	= 0x00000002,	// met les quantités additionnelles (si impression)
 		ShowMyEyesOnly			= 0x00000004,	// inclu les lignes avant l'attribut MyEyesOnly
 
 		IncludeTaxes			= 0x00001000,	// 

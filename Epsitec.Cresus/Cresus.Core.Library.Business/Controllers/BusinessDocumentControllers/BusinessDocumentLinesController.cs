@@ -495,8 +495,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			this.lineInformations.Clear ();
 
-			var mode = DocumentItemAccessorMode.AdditionalQuantities |
-					   DocumentItemAccessorMode.ShowMyEyesOnly;
+			var mode = DocumentItemAccessorMode.ShowMyEyesOnly;
 
 			if (this.CurrentEditMode == EditMode.Name)
 			{

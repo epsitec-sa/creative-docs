@@ -237,7 +237,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 			get
 			{
-				var mode = DocumentItemAccessorMode.UseMainColumns |
+				var mode = DocumentItemAccessorMode.Print |
 						   DocumentItemAccessorMode.UseArticleName;  // le nom court suffit sur une facture
 
 				if (this.HasOption (DocumentOption.ArticleAdditionalQuantities))  // imprime les autres quantités ?
