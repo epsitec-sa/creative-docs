@@ -51,9 +51,12 @@ namespace Epsitec.Common.Types
 			
 			var lambdaMember = (MemberExpression) getterExpression.Body;
 			var propertyInfo = lambdaMember.Member as System.Reflection.PropertyInfo;
-
 			var fieldType    = getterExpression.ReturnType;
-			var sourceType   = getterExpression.Parameters[0].Type;
+
+			if (propertyInfo.CanWrite == false)
+			{
+				return null;
+			}
 
 			var sourceParameterExpression = getterExpression.Parameters[0];
 			var valueParameterExpression  = Expression.Parameter (fieldType, "value");
@@ -61,7 +64,7 @@ namespace Epsitec.Common.Types
 			var expressionBlock =
 				Expression.Block (
 					Expression.Assign (
-						Expression.Property (lambdaMember.Expression, lambdaMember.Member.Name),
+						Expression.Property (lambdaMember.Expression, propertyInfo.Name),
 						valueParameterExpression));
 
 			var setterLambda = Expression.Lambda (expressionBlock, sourceParameterExpression, valueParameterExpression);
