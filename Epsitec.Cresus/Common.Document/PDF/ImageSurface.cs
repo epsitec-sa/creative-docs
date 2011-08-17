@@ -175,6 +175,12 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
+		
+		internal string GetDebugInformation()
+		{
+			return ImageSurface.Serialize (this);
+		}
+
 
 		public void Update(string source)
 		{

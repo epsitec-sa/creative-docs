@@ -1934,14 +1934,18 @@ namespace Epsitec.Common.Document.PDF
 			int dy;
 
 			fi = Export.LoadImage (image);
+
+			System.Diagnostics.Debug.WriteLine (string.Format ("PrepareImage: before crop and resizing, ColorType={0}", fi == null ? "<null>" : fi.ColorType.ToString ()));
+			
 			fi = Export.CropImage (image, fi);
 			fi = Export.ResizeImage (image, fi, imageMinDpi, imageMaxDpi, out dx, out dy);
 
-			image.ColorType = fi.ColorType;
-			image.IsTransparent = fi.IsTransparent;
+			System.Diagnostics.Debug.WriteLine (string.Format ("PrepareImage: after crop/resize, Size={0}x{1}, ColorType={2}", dx, dy, fi == null ? "<null>" : fi.ColorType.ToString ()));
 
-			image.DX = dx;
-			image.DY = dy;
+			image.ColorType     = fi.ColorType;
+			image.IsTransparent = fi.IsTransparent;
+			image.DX            = dx;
+			image.DY            = dy;
 
 			return fi;
 		}
@@ -1953,8 +1957,18 @@ namespace Epsitec.Common.Document.PDF
 			image.SurfaceType      = baseType;
 			image.ImageCompression = compression;
 
+			System.Diagnostics.Debug.WriteLine (string.Format ("ProcessImageAndCreatePdfStream> SurfaceType={0}, ImageCompression={1}, ColorConversion={2}, Quality={3}", baseType, compression, this.colorConversion, this.jpegQuality));
+
 #if true
-			return Export.LaunchProcessImageAndCreatePdfStream (image);
+			image = Export.LaunchProcessImageAndCreatePdfStream (image);
+
+			var source = ImageSurface.Serialize (image);
+			
+			System.Diagnostics.Debug.WriteLine ("----------------------------------------------------------------------");
+			System.Diagnostics.Debug.WriteLine (source);
+			System.Diagnostics.Debug.WriteLine ("----------------------------------------------------------------------");
+			
+			return image;
 #else
 			Export.ExecuteProcessImageAndCreatePdfStream (image);
 			return image;
@@ -2000,10 +2014,13 @@ namespace Epsitec.Common.Document.PDF
 
 		private static void InternalProcessImageAndCreatePdfStream(ImageSurface image)
 		{
-			PdfComplexSurfaceType baseType = image.SurfaceType;
-			ImageCompression compression = image.ImageCompression;
-			ColorConversion colorConversion = image.ColorConversion;
+			PdfComplexSurfaceType baseType        = image.SurfaceType;
+			ImageCompression      compression     = image.ImageCompression;
+			ColorConversion       colorConversion = image.ColorConversion;
+			
 			double jpegQuality = image.JpegQuality;
+
+			System.Diagnostics.Debug.WriteLine (string.Format ("ProcessImageAndCreatePdfStream: SurfaceType={0}, ImageCompression={1}, ColorConversion={2}, Quality={3}", baseType, compression, colorConversion, jpegQuality));
 
 			using (NativeBitmap fi = Export.PrepareImage (image))
 			{
@@ -2026,6 +2043,8 @@ namespace Epsitec.Common.Document.PDF
 			//	Génération de l'en-tête.
 			writer.WriteObjectDef (Export.GetComplexSurfaceName (image.Id, baseType));
 			writer.WriteString ("<< /Subtype /Image ");
+
+			System.Diagnostics.Debug.WriteLine (string.Format ("EmitHeader: {0} XML={1}", baseType, image.GetDebugInformation ()));
 
 			if (baseType == PdfComplexSurfaceType.XObject)
 			{
@@ -2064,7 +2083,7 @@ namespace Epsitec.Common.Document.PDF
 							break;
 
 						default:
-							throw new System.InvalidOperationException ();
+							throw new System.InvalidOperationException (string.Format ("ColorType.{0} not recognized", image.ColorType));
 					}
 				}
 			}

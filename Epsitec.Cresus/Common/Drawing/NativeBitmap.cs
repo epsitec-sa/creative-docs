@@ -178,6 +178,15 @@ namespace Epsitec.Common.Drawing.Platform
 					return BitmapColorType.Cmyk;
 				}
 
+				try
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("ColorType: Format {0} could not be mapped to any type -- {1} bpp / Masks={2}", format.ToString (), format.BitsPerPixel, string.Join ("-", format.Masks.SelectMany (x => x.Mask).Select (x => x.ToString ("x")).ToArray ())));
+				}
+				catch (System.Exception ex)
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("ColorType: Exception {0}", ex.Message));
+				}
+
 				return BitmapColorType.Unsupported;
 			}
 		}
