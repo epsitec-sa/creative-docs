@@ -11,24 +11,9 @@ namespace Epsitec.Cresus.Core.Server.Modules
 		public EnumModule()
 			: base ("/enum")
 		{
-
-
-			Get["/{name}"] = parameters =>
+			Post["/"] = parameters =>
 			{
-
-				//var typeName = string.Format ("Epsitec.Cresus.Core.Business.Finance.{0}", parameters.name);
-				//System.Runtime.Remoting.ObjectHandle e = System.Activator.CreateInstance ("Cresus.Core.Library.Finance", typeName);
-
-				//var type = e.Unwrap ().GetType ();
-				//var method = typeof (EnumKeyValues).GetMethod ("FromEnum");
-				//var m = method.MakeGenericMethod (type);
-				//var o = m.Invoke (new
-				//{
-				//}, new object[] { });
-
-				//var possibleItems = o as IEnumerable<EnumKeyValues<TaxMode>>;
-
-				string typeName = typeof (TaxMode).AssemblyQualifiedName;
+				string typeName = (string) Request.Form.name;
 				var type = System.Type.GetType (typeName);
 				var fetcherType = typeof (Fetcher<>).MakeGenericType (type);
 				var fetcherInst = System.Activator.CreateInstance (fetcherType) as Fetcher;

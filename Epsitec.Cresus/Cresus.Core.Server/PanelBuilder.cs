@@ -378,19 +378,9 @@ namespace Epsitec.Cresus.Core.Server
 			if ((fieldType.IsEnum) ||
 			        ((underlyingType != null) && (underlyingType.IsEnum)))
 			{
-				//	The field is an enumeration : use an AutoCompleteTextField for it.
-
-				//var factory = DynamicFactories.EnumAutoCompleteTextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, width);
-				//this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder))
-				//{
-				//    FieldInfo = fieldMode
-				//});
-
-				//return;
-
 				entityDictionnary["xtype"] = "epsitec.enumcombo";
 				entityDictionnary["value"] = obj.ToString ();
-				entityDictionnary["storeUrl"] = fieldType.AssemblyQualifiedName;
+				entityDictionnary["storeClass"] = fieldType.AssemblyQualifiedName;
 
 				return list;
 			}
