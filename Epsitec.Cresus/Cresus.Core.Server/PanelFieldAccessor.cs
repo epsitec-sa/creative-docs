@@ -37,10 +37,12 @@ namespace Epsitec.Cresus.Core.Server
 
 			this.id               = id;
 			this.lambda           = lambda;
+			this.fieldType        = fieldType;
 			this.getterFunc       = getterLambda == null ? null : getterLambda.Compile ();
 			this.setterFunc       = setterLambda == null ? null : setterLambda.Compile ();
 			this.marshalerFactory = System.Activator.CreateInstance (factoryType, this) as DynamicFactory;
 			this.isEntityType     = fieldType.IsEntity ();
+			this.isCollectionType = fieldType.IsGenericIListOfEntities ();
 		}
 
 
@@ -57,6 +59,29 @@ namespace Epsitec.Cresus.Core.Server
 			get
 			{
 				return this.isEntityType;
+			}
+		}
+
+		public bool IsCollectionType
+		{
+			get
+			{
+				return this.isCollectionType;
+			}
+		}
+
+		public System.Type CollectionItemType
+		{
+			get
+			{
+				if (this.IsCollectionType)
+				{
+					return this.fieldType.GetGenericArguments ()[0];
+				}
+				else
+				{
+					return null;
+				}
 			}
 		}
 
@@ -161,9 +186,11 @@ namespace Epsitec.Cresus.Core.Server
 
 		private readonly int					id;
 		private readonly LambdaExpression		lambda;
+		private readonly System.Type			fieldType;
 		private readonly System.Delegate		getterFunc;
 		private readonly System.Delegate		setterFunc;
 		private readonly DynamicFactory			marshalerFactory;
 		private readonly bool					isEntityType;
+		private readonly bool					isCollectionType;
 	}
 }

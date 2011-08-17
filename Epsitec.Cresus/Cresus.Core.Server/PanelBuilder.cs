@@ -311,13 +311,13 @@ namespace Epsitec.Cresus.Core.Server
 
 			entityDictionnary["xtype"] = "textfield";
 			entityDictionnary["fieldLabel"] = title;
-            entityDictionnary["name"] = fieldName;
+			entityDictionnary["name"] = fieldName;
 
-			if (fieldType.IsEntity ())
+			var businessContext = this.coreSession.GetBusinessContext ();
+
+			if (accessor.IsEntityType)
 			{
-				System.Diagnostics.Debug.Assert (accessor.IsEntityType);
-
-				var items = this.coreSession.GetBusinessContext ().Data.GetAllEntities (fieldType, DataExtractionMode.Sorted);
+				var items = businessContext.Data.GetAllEntities (fieldType, DataExtractionMode.Sorted);
 				var data  = new List<string> (items.Select (x => x.GetCompactSummary ().ToString ()));
 
 				entityDictionnary["value"] = entity.GetCompactSummary ().ToString ();
@@ -341,7 +341,7 @@ namespace Epsitec.Cresus.Core.Server
 				entityDictionnary["value"] = accessor.GetStringValue (this.rootEntity);
 				return list;
 			}
-			
+
 			if (fieldType == typeof (System.DateTime) ||
 			    fieldType == typeof (System.DateTime?))
 			{
@@ -358,16 +358,12 @@ namespace Epsitec.Cresus.Core.Server
 				return list;
 			}
 
-			if (fieldType.IsGenericIListOfEntities ())
+			if (accessor.IsCollectionType)
 			{
-				//	Produce an item picker for the list of entities. The field type is a collection
-				//	of entities represented as [ Field ]--->>* Entity in the Designer.
+				var items = businessContext.Data.GetAllEntities (accessor.CollectionItemType, DataExtractionMode.Sorted, businessContext.DataContext);
+				var data  = new List<string> (items.Select (x => x.GetCompactSummary ().ToString ()));
 
-				//var factory = DynamicFactories.ItemPickerDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, specialController);
-				//this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder))
-				//{
-				//    FieldInfo = fieldMode
-				//});
+				//	TODO: create a collection of checkboxes to pick one or more items from the list...
 
 				return list;
 			}
