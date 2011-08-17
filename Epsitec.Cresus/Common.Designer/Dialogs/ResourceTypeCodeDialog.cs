@@ -187,7 +187,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			button.Index = this.index++;
 			button.TabIndex = this.tabIndex;
 			button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			button.Clicked += new EventHandler<MessageEventArgs> (this.HandleRadioButtonClicked);
+			button.ActiveStateChanged += this.HandleRadioButtonActiveStateChanged;
 
 			this.radioButtons.Add(button);
 		}
@@ -306,18 +306,21 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		private void HandleRadioButtonClicked(object sender, MessageEventArgs e)
+		private void HandleRadioButtonActiveStateChanged(object sender)
 		{
-			//	Bouton radio cliqué.
+			//	Bouton radio activé ?
 			RadioButton button = sender as RadioButton;
 
-			string name = button.Name;
-			name = name.Substring (name.LastIndexOf ('.')+1);  // enlève "Res.Captions.Types.Type."
-			this.typeEdited = ResourceAccess.NameToTypeCode (name);
+			if (button.ActiveState == ActiveState.Yes)
+			{
+				string name = button.Name;
+				name = name.Substring (name.LastIndexOf ('.')+1);  // enlève "Res.Captions.Types.Type."
+				this.typeEdited = ResourceAccess.NameToTypeCode (name);
 
-			this.UpdateRadios ();
-			this.UpdateExtended ();
-			this.UpdateButtons ();
+				this.UpdateRadios ();
+				this.UpdateExtended ();
+				this.UpdateButtons ();
+			}
 		}
 
 		private void HandleCheckNativeActiveStateChanged(object sender)
