@@ -361,7 +361,7 @@ namespace Epsitec.Cresus.Core.Server
 			if (accessor.IsCollectionType)
 			{
 				var items = businessContext.Data.GetAllEntities (accessor.CollectionItemType, DataExtractionMode.Sorted, businessContext.DataContext);
-				var data  = new List<string> (items.Select (x => x.GetCompactSummary ().ToString ()));
+				var found = accessor.GetCollection (this.rootEntity).Cast<AbstractEntity> ();
 
 				//	TODO: create a collection of checkboxes to pick one or more items from the list...
 

@@ -20,6 +20,29 @@ namespace Epsitec.Common.Support.Extensions
 			}
 		}
 
+		public static void AddRange(this System.Collections.IList list, System.Collections.IEnumerable collection)
+		{
+			foreach (object item in collection)
+			{
+				list.Add (item);
+			}
+		}
+
+		public static System.IDisposable SuspendNotifications(this System.Collections.IList list)
+		{
+			ISuspendCollectionChanged collection = list as ISuspendCollectionChanged;
+
+			if (collection == null)
+			{
+				return null;
+			}
+			else
+			{
+				return collection.SuspendNotifications ();
+			}
+		}
+
+
 		public static System.IDisposable SuspendNotifications<T>(this IList<T> list)
 			where T : AbstractEntity, new()
 		{

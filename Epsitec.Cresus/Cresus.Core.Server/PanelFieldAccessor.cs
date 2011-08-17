@@ -85,6 +85,29 @@ namespace Epsitec.Cresus.Core.Server
 			}
 		}
 
+		public System.Collections.IList GetCollection(AbstractEntity entity)
+		{
+			if (this.IsCollectionType)
+			{
+				return this.getterFunc.DynamicInvoke (entity) as System.Collections.IList;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public void SetCollection(AbstractEntity entity, IEnumerable<AbstractEntity> collection)
+		{
+			var source = this.GetCollection (entity);
+			
+			using (source.SuspendNotifications ())
+			{
+				source.Clear ();
+				source.AddRange (collection);
+			}
+		}
+
 		public bool CanWrite
 		{
 			get

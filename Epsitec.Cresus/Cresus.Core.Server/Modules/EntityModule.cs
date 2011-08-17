@@ -38,7 +38,15 @@ namespace Epsitec.Cresus.Core.Server.Modules
 						{
 							var accessor = coreSession.GetPanelFieldAccessor (InvariantConverter.ToInt ((string) lambda.Value));
 
-							if (accessor.CanWrite == false)
+							if (accessor.IsCollectionType)
+							{
+								//	TODO: retrouver la liste des entités sélectionnées
+
+								List<AbstractEntity> entities = new List<AbstractEntity> ();
+								
+								accessor.SetCollection (entity, entities);
+							}
+							else if (accessor.CanWrite == false)
 							{
 								errors.Add (memberKey, "The field cannot be written to.");
 							}
