@@ -49,11 +49,11 @@ namespace Epsitec.Cresus.Core.Business.Actions
 
 		private static void CreateDocument(DocumentType sourceDocumentType, DocumentType newDocumentType)
 		{
-			var workflowEngine  = WorkflowExecutionEngine.Current;
-			var businessContext = workflowEngine.BusinessContext;
-			var categoryRepo    = businessContext.GetSpecificRepository<DocumentCategoryEntity.Repository> ();
-			var currentAffair   = businessContext.GetMasterEntity<AffairEntity> ();
-			var currentDocument = currentAffair.Documents.LastOrDefault (x => x.DocumentCategory.DocumentType == sourceDocumentType);
+			var workflowEngine     = WorkflowExecutionEngine.Current;
+			var businessContext    = workflowEngine.BusinessContext;
+			var categoryRepository = businessContext.GetSpecificRepository<DocumentCategoryEntity.Repository> ();
+			var currentAffair      = businessContext.GetMasterEntity<AffairEntity> ();
+			var currentDocument    = currentAffair.Documents.LastOrDefault (x => x.DocumentCategory.DocumentType == sourceDocumentType);
 
 			System.Diagnostics.Debug.Assert (currentDocument.IsNotNull (), string.Format ("{0} document can be found", sourceDocumentType));
 
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Core.Business.Actions
 			{
 				var documentMetadata = businessContext.CreateEntity<DocumentMetadataEntity> ();
 
-				documentMetadata.DocumentCategory = categoryRepo.Find (newDocumentType).First ();
+				documentMetadata.DocumentCategory = categoryRepository.Find (newDocumentType).First ();
 				documentMetadata.BusinessDocument = AffairActions.CloneBusinessDocument (businessContext, currentAffair, currentDocument, newDocumentType);
 
 				currentAffair.Documents.Add (documentMetadata);

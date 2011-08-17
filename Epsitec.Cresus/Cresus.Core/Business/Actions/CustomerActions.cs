@@ -36,15 +36,17 @@ namespace Epsitec.Cresus.Core.Business.Actions
 			var documentMetadata = businessContext.CreateMasterEntity<DocumentMetadataEntity> ();
 			var businessDocument = businessContext.CreateMasterEntity<BusinessDocumentEntity> ();
 
-			CustomerActions.SetupBusinessDocument (businessContext, businessDocument, currentCustomer);
-			CustomerActions.SetupDocumentMetadata (businessContext, documentMetadata, businessDocument, documentType);
+			if (CustomerActions.SetupDocumentMetadata (businessContext, documentMetadata, businessDocument, documentType))
+			{
+				CustomerActions.SetupBusinessDocument (businessContext, businessDocument, currentCustomer);
 
-			affair.Customer = currentCustomer;
-			affair.Workflow = WorkflowFactory.CreateDefaultWorkflow<AffairEntity> (businessContext);
+				affair.Customer = currentCustomer;
+				affair.Workflow = WorkflowFactory.CreateDefaultWorkflow<AffairEntity> (businessContext);
 
-			affair.Documents.Add (documentMetadata);
+				affair.Documents.Add (documentMetadata);
 
-			currentCustomer.Affairs.Add (affair);
+				currentCustomer.Affairs.Add (affair);
+			}
 
 			//	Now that everything has been properly set up, we can remove the entities from
 			//	the list of master entities. They will be registered appropriately when the
@@ -55,15 +57,26 @@ namespace Epsitec.Cresus.Core.Business.Actions
 			businessContext.RemoveMasterEntity (affair);
 		}
 
-		private static void SetupDocumentMetadata(IBusinessContext businessContext, DocumentMetadataEntity documentMetadata, BusinessDocumentEntity businessDocument, DocumentType documentType)
+		private static bool SetupDocumentMetadata(IBusinessContext businessContext, DocumentMetadataEntity documentMetadata, BusinessDocumentEntity businessDocument, DocumentType documentType)
 		{
-			var categoryRepo     = businessContext.GetSpecificRepository<DocumentCategoryEntity.Repository> ();
-			var documentCategory = categoryRepo.Find (documentType).First ();
+			var categoryRepository = businessContext.GetSpecificRepository<DocumentCategoryEntity.Repository> ();
+			var documentCategories = categoryRepository.Find (documentType);
 
-			documentMetadata.DocumentCategory = documentCategory;
-			documentMetadata.DocumentTitle    = documentCategory.Name;
-			documentMetadata.BusinessDocument = businessDocument;
-			documentMetadata.DocumentState    = DocumentState.Active;
+			if (documentCategories == null || documentCategories.Count () == 0)
+			{
+				return false;
+			}
+			else
+			{
+				var documentCategory = documentCategories.First ();
+
+				documentMetadata.DocumentCategory = documentCategory;
+				documentMetadata.DocumentTitle    = documentCategory.Name;
+				documentMetadata.BusinessDocument = businessDocument;
+				documentMetadata.DocumentState    = DocumentState.Active;
+
+				return true;
+			}
 		}
 
 		private static void SetupBusinessDocument(IBusinessContext businessContext, BusinessDocumentEntity businessDocument, CustomerEntity currentCustomer)
