@@ -52,9 +52,7 @@ namespace Epsitec.Cresus.Core.Server.Modules
 							}
 							else if (accessor.IsEntityType)
 							{
-								//	TODO: retrouver la véritable entité qu'il faut assigner au champ
-								
-								EntityKey      valueEntityKey = EntityKey.Empty;
+								EntityKey      valueEntityKey = EntityKey.Parse (value);
 								AbstractEntity valueEntity    = context.DataContext.ResolveEntity (valueEntityKey);
 
 								accessor.SetEntityValue (entity, valueEntity);

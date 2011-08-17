@@ -317,11 +317,16 @@ namespace Epsitec.Cresus.Core.Server
 
 			if (accessor.IsEntityType)
 			{
-				var items = businessContext.Data.GetAllEntities (fieldType, DataExtractionMode.Sorted);
-				var data  = new List<string> (items.Select (x => x.GetCompactSummary ().ToString ()));
+				var items = businessContext.Data.GetAllEntities (fieldType, DataExtractionMode.Sorted, this.DataContext);
+				var data = from item in items
+						   select new object[]
+						   {
+							   this.GetEntityKey (item),
+							   item.GetCompactSummary ().ToString ()
+						   };
 
-				entityDictionnary["value"] = entity.GetCompactSummary ().ToString ();
-				entityDictionnary["xtype"] = "combo";
+				entityDictionnary["value"] = this.GetEntityKey (entity);
+				entityDictionnary["xtype"] = "epsitec.entitycombo";
 				entityDictionnary["store"] = data;
 
 				return list;
@@ -383,7 +388,7 @@ namespace Epsitec.Cresus.Core.Server
 
 				//return;
 
-				entityDictionnary["xtype"] = "epsitec.combo";
+				entityDictionnary["xtype"] = "epsitec.enumcombo";
 				entityDictionnary["value"] = obj.ToString ();
 				entityDictionnary["storeUrl"] = fieldType.AssemblyQualifiedName;
 
@@ -413,7 +418,7 @@ namespace Epsitec.Cresus.Core.Server
 
 			foreach (var l in list)
 			{
-				l["columnWidth"] = 1.0 / list.Count(input => (string) input["xtype"] != "hiddenfield");
+				l["columnWidth"] = 1.0 / list.Count (input => (string) input["xtype"] != "hiddenfield");
 				l["margin"] = "0 5 0 0";
 				l.Remove ("fieldLabel");
 			}
@@ -551,7 +556,19 @@ namespace Epsitec.Cresus.Core.Server
 
 		private string GetEntityKey(AbstractEntity entity)
 		{
-			return this.DataContext.GetNormalizedEntityKey (entity).Value.ToString ();
+			if (entity == null)
+			{
+				return null;
+			}
+
+			var key = this.DataContext.GetNormalizedEntityKey (entity);
+
+			if (!key.HasValue)
+			{
+				return null;
+			}
+
+			return key.Value.ToString ();
 		}
 
 		private DataContext DataContext
