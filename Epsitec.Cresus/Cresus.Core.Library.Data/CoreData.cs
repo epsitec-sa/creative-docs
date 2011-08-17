@@ -265,6 +265,28 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public IEnumerable<AbstractEntity> GetAllEntities(System.Type entityType, DataExtractionMode extraction = DataExtractionMode.Default, DataContext dataContext = null)
+		{
+			GetAllEntitiesHelper helper = System.Activator.CreateInstance (typeof (GetAllEntitiesHelper<>).MakeGenericType (entityType)) as GetAllEntitiesHelper;
+			return helper.Query (this, extraction, dataContext);
+		}
+
+		abstract class GetAllEntitiesHelper
+		{
+			public abstract IEnumerable<AbstractEntity> Query(CoreData host, DataExtractionMode extraction, DataContext dataContext);
+		}
+		sealed class GetAllEntitiesHelper<TEntity> : GetAllEntitiesHelper
+			where TEntity : AbstractEntity, new ()
+		{
+			public override IEnumerable<AbstractEntity> Query(CoreData host, DataExtractionMode extraction, DataContext dataContext)
+			{
+				return host.GetAllEntities<TEntity> (extraction, dataContext).Cast<AbstractEntity> ();
+			}
+		}
+
+		
+		
+		
 		public T GetSpecificRepository<T>(DataContext dataContext = null)
 			where T : Repositories.Repository
 		{

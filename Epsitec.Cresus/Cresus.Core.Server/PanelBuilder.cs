@@ -315,44 +315,12 @@ namespace Epsitec.Cresus.Core.Server
 
 			if (fieldType.IsEntity ())
 			{
-				var entityType = entity.GetType ();
-				entityDictionnary["value"] = entity.GetSummary ().ToString ();
+				var items = this.coreSession.GetBusinessContext ().Data.GetAllEntities (fieldType, DataExtractionMode.Sorted);
+				var data  = new List<string> (items.Select (x => x.GetCompactSummary ().ToString ()));
 
-				if (entityType != typeof (PersonTitleEntity))
-				{
-					return list;
-				}
-
-				//	The field is an entity : use an AutoCompleteTextField for it.
-
-				//var factory = DynamicFactories.EntityAutoCompleteTextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, collection, specialController);
-				//this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder))
-				//{
-				//    FieldInfo = fieldMode
-				//});
-
-				var request = new DataLayer.Loader.Request
-				{
-					RootEntity = entity
-				};
-				//var titles = this.coreSession.GetBusinessContext ().DataContext.GetByRequest<PersonTitleEntity> (request);
-
-				var mi = typeof(DataContext).GetMethod ("GetByRequest");
-				var m = mi.MakeGenericMethod (entityType);
-
-				var titles = m.Invoke(this.DataContext, new []{request}) as IEnumerable;
-
-				var t = titles.Cast<PersonTitleEntity> ();
-
+				entityDictionnary["value"] = entity.GetCompactSummary ().ToString ();
 				entityDictionnary["xtype"] = "combo";
-
-				var data = new List<string> ();
 				entityDictionnary["store"] = data;
-
-				foreach (var item in t)
-				{
-					data.Add (item.Name.ToSimpleText ());
-				}
 
 				return list;
 			}
@@ -368,54 +336,39 @@ namespace Epsitec.Cresus.Core.Server
 			    fieldType == typeof (bool) ||
 			    fieldType == typeof (bool?))
 			{
-
-				entityDictionnary["value"] = obj == null ? "" : obj.ToString ();
-
-				//    width = InputProcessor.GetDefaultFieldWidth (fieldType, width);
-
-				//    //	Produce either a text field or a variation of such a widget (pull-down list, etc.)
-				//    //	based on the real type being edited.
-
-				//    var factory = DynamicFactories.TextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, width, height, collection);
-				//    this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder))
-				//    {
-				//        FieldInfo = fieldMode
-				//    });
-
-				//    return;
-
+				entityDictionnary["value"] = accessor.GetStringValue (this.rootEntity);
 				return list;
 			}
-
+			
 			if (fieldType == typeof (System.DateTime) ||
-			    fieldType == typeof (System.DateTime?) ||
-			    fieldType == typeof (Date?) ||
+			    fieldType == typeof (System.DateTime?))
+			{
+				//	TODO: handle date & time
+			}
+
+			if (fieldType == typeof (Date) ||
 			    fieldType == typeof (Date?))
 			{
-				entityDictionnary["xtype"] = "datefield";
-				if (obj != null)
-				{
-					var d = (obj as Date?);
-					entityDictionnary["format"] = "d.m.Y";
-					entityDictionnary["value"] = d.Value.ToString ();
-				}
+				entityDictionnary["xtype"]  = "datefield";
+				entityDictionnary["format"] = "d.m.Y";
+				entityDictionnary["value"]  = accessor.GetStringValue (this.rootEntity);
 
 				return list;
 			}
 
-			//if (fieldType.IsGenericIListOfEntities ())
-			//{
-			//    //	Produce an item picker for the list of entities. The field type is a collection
-			//    //	of entities represented as [ Field ]--->>* Entity in the Designer.
+			if (fieldType.IsGenericIListOfEntities ())
+			{
+				//	Produce an item picker for the list of entities. The field type is a collection
+				//	of entities represented as [ Field ]--->>* Entity in the Designer.
 
-			//    var factory = DynamicFactories.ItemPickerDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, specialController);
-			//    this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder))
-			//    {
-			//        FieldInfo = fieldMode
-			//    });
+				//var factory = DynamicFactories.ItemPickerDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, specialController);
+				//this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder))
+				//{
+				//    FieldInfo = fieldMode
+				//});
 
-			//    return;
-			//}
+				return list;
+			}
 
 			var underlyingType = fieldType.GetNullableTypeUnderlyingType ();
 

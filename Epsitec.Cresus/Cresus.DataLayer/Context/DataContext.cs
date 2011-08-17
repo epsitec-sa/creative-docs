@@ -1089,6 +1089,25 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}
 
+		public IEnumerable<AbstractEntity> GetByRequest(System.Type entityType, Request request)
+		{
+			GetByRequestHelper helper = System.Activator.CreateInstance (typeof (GetByRequestHelper<>).MakeGenericType (entityType)) as GetByRequestHelper;
+			return helper.Query (this, request);
+		}
+
+		abstract class GetByRequestHelper
+		{
+			public abstract IEnumerable<AbstractEntity> Query(DataContext context, Request request);
+		}
+		sealed class GetByRequestHelper<TEntity> : GetByRequestHelper
+			where TEntity : AbstractEntity
+		{
+			public override IEnumerable<AbstractEntity> Query(DataContext context, Request request)
+			{
+				return context.GetByRequest<TEntity> (request).Cast<AbstractEntity> ();
+			}
+		}
+
 
 		/// <summary>
 		/// Queries the database to retrieve all the <see cref="AbstractEntity"/> which correspond
