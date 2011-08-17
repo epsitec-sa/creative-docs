@@ -57,11 +57,14 @@ namespace Epsitec.Cresus.Core.Business.Actions
 
 			System.Diagnostics.Debug.Assert (currentDocument.IsNotNull (), string.Format ("{0} document can be found", sourceDocumentType));
 
-			if (currentDocument.IsNotNull ())
+			var documentCategories = categoryRepository.Find (newDocumentType);
+
+			if (currentDocument.IsNotNull () &&
+				documentCategories != null && documentCategories.Count () != 0)
 			{
 				var documentMetadata = businessContext.CreateEntity<DocumentMetadataEntity> ();
 
-				documentMetadata.DocumentCategory = categoryRepository.Find (newDocumentType).First ();
+				documentMetadata.DocumentCategory = documentCategories.First ();
 				documentMetadata.BusinessDocument = AffairActions.CloneBusinessDocument (businessContext, currentAffair, currentDocument, newDocumentType);
 
 				currentAffair.Documents.Add (documentMetadata);

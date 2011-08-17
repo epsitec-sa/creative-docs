@@ -269,6 +269,23 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
+		public IEnumerable<ArticleQuantityType> PrintableArticleQuantityTypes
+		{
+			//	Retourne la liste des types de quantité imprimables.
+			//	La première est la quantité principale.
+			get
+			{
+				var list = this.documentBusinessLogic.PrintableArticleQuantityTypes;
+
+				if (list == null)
+				{
+					list = new List<ArticleQuantityType> ();
+				}
+
+				return list;
+			}
+		}
+
 		private IEnumerable<ArticleQuantityType> DebugArticleQuantityTypeEditionEnabled
 		{
 			//	Retourne la liste complète des types de quantité, pour le debug.

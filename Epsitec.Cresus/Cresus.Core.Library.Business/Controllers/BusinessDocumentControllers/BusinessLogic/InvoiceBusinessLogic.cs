@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return InvoiceBusinessLogic.IsDirectInvoice (this.documentMetadataEntity);
+				return this.IsDirect;
 			}
 		}
 
@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return InvoiceBusinessLogic.IsDirectInvoice (this.documentMetadataEntity);
+				return this.IsDirect;
 			}
 		}
 
@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return InvoiceBusinessLogic.IsDirectInvoice (this.documentMetadataEntity);
+				return this.IsDirect;
 			}
 		}
 
@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return InvoiceBusinessLogic.IsDirectInvoice (this.documentMetadataEntity);
+				return this.IsDirect;
 			}
 		}
 
@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return InvoiceBusinessLogic.IsDirectInvoice (this.documentMetadataEntity);
+				return this.IsDirect;
 			}
 		}
 
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				if (InvoiceBusinessLogic.IsDirectInvoice (this.documentMetadataEntity))
+				if (this.IsDirect)
 				{
 					return ArticleQuantityType.Billed;  // facturé
 				}
@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				if (InvoiceBusinessLogic.IsDirectInvoice (this.documentMetadataEntity))
+				if (this.IsDirect)
 				{
 					// rien
 				}
@@ -97,6 +97,26 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
+		public override IEnumerable<ArticleQuantityType> PrintableArticleQuantityTypes
+		{
+			get
+			{
+				yield return ArticleQuantityType.Billed;				// facturé
+				yield return ArticleQuantityType.Delayed;				// retardé
+				yield return ArticleQuantityType.Expected;				// attendu
+				yield return ArticleQuantityType.Shipped;				// livré
+				yield return ArticleQuantityType.ShippedPreviously;		// livré ultérieurement
+			}
+		}
+
+
+		private bool IsDirect
+		{
+			get
+			{
+				return InvoiceBusinessLogic.IsDirectInvoice (this.documentMetadataEntity);
+			}
+		}
 
 		public static bool IsDirectInvoice(DocumentMetadataEntity documentMetadata)
 		{

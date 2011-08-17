@@ -807,7 +807,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			for (int row = 0; row <= lastRow; row++)
 			{
-				if (row == 0)  // en-tête ?
+				if (row == 0 ||  // en-tête ?
+					row-1 >= this.ContentLines.Count ())
 				{
 					continue;
 				}

@@ -192,7 +192,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				Parent = parent,
 				Dock = DockStyle.Top,
-				PreferredHeight = 20,
+				PreferredHeight = 10+20+10,
 				Padding = new Margins (0, 0, 10, 10),
 				TabIndex = this.NextTabIndex,
 				Enable = this.accessData.BusinessLogic.MainArticleQuantityType != ArticleQuantityType.None,

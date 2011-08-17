@@ -99,6 +99,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
+		public virtual IEnumerable<ArticleQuantityType> PrintableArticleQuantityTypes
+		{
+			//	Retourne la liste des types de quantité imprimables.
+			//	La première est la quantité principale.
+			get
+			{
+				return null;
+			}
+		}
+
 
 		protected readonly BusinessContext						businessContext;
 		protected readonly DocumentMetadataEntity				documentMetadataEntity;

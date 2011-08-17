@@ -82,5 +82,17 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				yield return ArticleQuantityType.Billed;				// facturé
 			}
 		}
+
+		public override IEnumerable<ArticleQuantityType> PrintableArticleQuantityTypes
+		{
+			get
+			{
+				yield return ArticleQuantityType.Billed;				// facturé
+				yield return ArticleQuantityType.Delayed;				// retardé
+				yield return ArticleQuantityType.Expected;				// attendu
+				yield return ArticleQuantityType.Shipped;				// livré
+				yield return ArticleQuantityType.ShippedPreviously;		// livré ultérieurement
+			}
+		}
 	}
 }

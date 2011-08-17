@@ -209,43 +209,74 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 		private void BuildArticleItem(ArticleDocumentItemEntity line)
 		{
-			//	Génère la quantité principale.
-			var mainQuantityType = this.businessLogic.MainArticleQuantityType;
-			bool firstLineOccupied = false;
-
-			if ((this.mode & DocumentItemAccessorMode.UseMainColumns) != 0 &&  // utilise les colonnes MainQuantity/MainUnit (impression) ?
-				mainQuantityType != ArticleQuantityType.None)
+			//	Génère les quantités.
+			if ((this.mode & DocumentItemAccessorMode.UseMainColumns) != 0)  // utilise les colonnes MainQuantity/MainUnit (impression) ?
 			{
-				decimal mainQuantity = 0;
-				FormattedText mainUnit = null;
+				//	Génère la quantité principale.
+				var quantityTypes = this.businessLogic.PrintableArticleQuantityTypes;
+				var mainQuantityType = ArticleQuantityType.None;
+				bool firstLineOccupied = false;
 
-				foreach (var quantity in line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == mainQuantityType))
+				if (quantityTypes.Count () != 0)
 				{
-					//	S'il y a plusieurs quantités principales, elles sont sommées, mais cela
-					//	ne devrait pas arriver, me semble-t-il !
-					mainQuantity += quantity.Quantity;
-					mainUnit = quantity.Unit.Name;
+					mainQuantityType = quantityTypes.First ();
+
+					decimal mainQuantity = 0;
+					FormattedText mainUnit = null;
+
+					foreach (var quantity in line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == mainQuantityType))
+					{
+						//	S'il y a plusieurs quantités principales, elles sont sommées, mais cela
+						//	ne devrait pas arriver, me semble-t-il !
+						mainQuantity += quantity.Quantity;
+						mainUnit = quantity.Unit.Name;
+					}
+
+					this.SetContent (0, DocumentItemAccessorColumn.MainQuantity, mainQuantity.ToString ());
+					this.SetContent (0, DocumentItemAccessorColumn.MainUnit, mainUnit);
+					this.SetError (0, DocumentItemAccessorColumn.MainQuantity, this.GetQuantityError (line, mainQuantityType));
+
+					firstLineOccupied = true;
 				}
 
-				this.SetContent (0, DocumentItemAccessorColumn.MainQuantity, mainQuantity.ToString ());
-				this.SetContent (0, DocumentItemAccessorColumn.MainUnit, mainUnit);
-				this.SetError (0, DocumentItemAccessorColumn.MainQuantity, this.GetQuantityError (line, mainQuantityType));
+				//	Génère les autres quantités (sans la principale).
+				if ((this.mode & DocumentItemAccessorMode.AdditionalQuantities) != 0)  // met les quantités additionnelles ?
+				{
+					// Sur un document imprimé, les autres quantités sont toujours sur des lignes à part.
+					int row = firstLineOccupied ? 1 : 0;
+					foreach (var quantityType in DocumentItemAccessor.articleQuantityTypes)
+					{
+						foreach (var quantity in line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == quantityType && x.QuantityColumn.QuantityType != mainQuantityType && quantityTypes.Contains (x.QuantityColumn.QuantityType)).OrderBy (x => x.BeginDate))
+						{
+							this.articleQuantityEntities.Add (quantity);
 
-				firstLineOccupied = true;
-			}
-			else
-			{
-				mainQuantityType = ArticleQuantityType.None;
-			}
+							this.SetContent (row, DocumentItemAccessorColumn.AdditionalType, quantity.QuantityColumn.Name);
+							this.SetContent (row, DocumentItemAccessorColumn.AdditionalQuantity, quantity.Quantity.ToString ());
+							this.SetContent (row, DocumentItemAccessorColumn.AdditionalUnit, quantity.Unit.Name);
 
-			//	Génère les autres quantités (sans la principale).
-			if ((this.mode & DocumentItemAccessorMode.AdditionalQuantities) != 0)  // met les quantités additionnelles ?
+							if (quantity.BeginDate.HasValue)
+							{
+								this.SetContent (row, DocumentItemAccessorColumn.AdditionalBeginDate, quantity.BeginDate.Value.ToString ());
+							}
+
+							if (quantity.EndDate.HasValue)
+							{
+								this.SetContent (row, DocumentItemAccessorColumn.AdditionalEndDate, quantity.EndDate.Value.ToString ());
+							}
+
+							this.SetError (row, DocumentItemAccessorColumn.AdditionalQuantity, this.GetQuantityError (line, quantityType));
+
+							row++;
+						}
+					}
+				}
+			}
+			else  // édition ?
 			{
-				// Sur un document imprimé, les autres quantités sont toujours sur des lignes à part.
-				int row = firstLineOccupied ? 1 : 0;
+				int row = 0;
 				foreach (var quantityType in DocumentItemAccessor.articleQuantityTypes)
 				{
-					foreach (var quantity in line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == quantityType && x.QuantityColumn.QuantityType != mainQuantityType).OrderBy (x => x.BeginDate))
+					foreach (var quantity in line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == quantityType).OrderBy (x => x.BeginDate))
 					{
 						this.articleQuantityEntities.Add (quantity);
 
