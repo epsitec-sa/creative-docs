@@ -15,31 +15,46 @@ namespace Epsitec.Cresus.Core.Server.Modules
 		{
 			Post["/{id}"] = parameters =>
 			{
-				var coreSession = GetCoreSession ();
+				var coreSession = this.GetCoreSession ();
 				var context = coreSession.GetBusinessContext ();
 
 				string paramEntityKey = (string) parameters.id;
-//				string paramLambdaId  = (string) parameters.lambda;
-
-//				var accessor = coreSession.GetPanelFieldAccessor (InvariantConverter.ToInt (paramLambdaId));
 
 				var entityKey = EntityKey.Parse (paramEntityKey);
 				AbstractEntity entity = context.DataContext.ResolveEntity (entityKey);
 
 				var errors = new Dictionary<string, object> ();
+				var memberNames = (IEnumerable<string>) Request.Form.GetDynamicMemberNames ();
+				var memberKeys  = memberNames.Where (x => !x.Contains ('_')).ToArray ();
 
-				foreach (var key in Request.Form.GetDynamicMemberNames ())
+				foreach (var memberKey in memberKeys)
 				{
-					var k = string.Format ("[{0}]", key);
-					var v = Request.Form[key].ToString ().Trim ();
-					var lambda = Request.Form["lambda_" + key].ToString ().Trim ();
 					try
 					{
-						entity.SetField (k, v);
+						var value  = Request.Form[memberKey];
+						var lambda = Request.Form[string.Concat ("lambda_", (string) memberKey)];
+
+						if (lambda.HasValue)
+						{
+							var accessor = coreSession.GetPanelFieldAccessor (InvariantConverter.ToInt (lambda.Value));
+
+							if (value.HasValue)
+							{
+								accessor.SetStringValue (entity, value.Value);
+							}
+							else
+							{
+								accessor.SetStringValue (entity, null);
+							}
+						}
+						else
+						{
+							System.Diagnostics.Debug.WriteLine (string.Format ("Error: /entity/{0} cannot resolve member {1}", paramEntityKey, memberKey));
+						}
 					}
 					catch (System.Exception e)
 					{
-						errors.Add (key, e.ToString ());
+						errors.Add (memberKey, e.ToString ());
 					}
 				}
 

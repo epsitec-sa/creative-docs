@@ -306,9 +306,8 @@ namespace Epsitec.Cresus.Core.Server
 
 			lambdaDictionnary["xtype"] = "hiddenfield";
 			lambdaDictionnary["name"] = "lambda_" + fieldName;
-			//var accessor = this.coreSession.GetPanelFieldAccessor (lambda);
-			//lambdaDictionnary["value"] = accessor.Id.ToString ();
-			lambdaDictionnary["value"] = "x => x";
+			var accessor = this.coreSession.GetPanelFieldAccessor (lambda);
+			lambdaDictionnary["value"] = accessor == null ? "-1" : accessor.Id.ToString ();
 
 			entityDictionnary["xtype"] = "textfield";
 			entityDictionnary["fieldLabel"] = title;

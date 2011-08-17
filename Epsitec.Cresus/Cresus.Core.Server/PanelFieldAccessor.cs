@@ -28,8 +28,8 @@ namespace Epsitec.Cresus.Core.Server
 
 			bool nullable    = fieldType.IsNullable ();
 
-			this.getterFunc   = getterLambda.Compile ();
-			this.setterFunc   = setterLambda.Compile ();
+			this.getterFunc   = getterLambda == null ? null : getterLambda.Compile ();
+			this.setterFunc   = setterLambda == null ? null : setterLambda.Compile ();
 
 			if (nullable)
 			{
@@ -52,6 +52,18 @@ namespace Epsitec.Cresus.Core.Server
 			}
 		}
 
+		public void SetStringValue(AbstractEntity entity, string value)
+		{
+			var marshaler = this.marshalerFactory.CreateMarshaler (entity);
+			marshaler.SetStringValue (value);
+		}
+
+		public string GetStringValue(AbstractEntity entity)
+		{
+			var marshaler = this.marshalerFactory.CreateMarshaler (entity);
+			return marshaler.GetStringValue ();
+		}
+
 
 		public static string GetLambdaFootprint(LambdaExpression lambda)
 		{
@@ -60,7 +72,7 @@ namespace Epsitec.Cresus.Core.Server
 								  lambda.Parameters[0].Type.FullName);
 		}
 
-		abstract class DynamicFactory
+		private abstract class DynamicFactory
 		{
 			public DynamicFactory(PanelFieldAccessor accessor)
 			{
@@ -72,7 +84,7 @@ namespace Epsitec.Cresus.Core.Server
 			protected readonly PanelFieldAccessor accessor;
 		}
 
-		sealed class NullableFactory<TSource, TField> : DynamicFactory
+		private sealed class NullableFactory<TSource, TField> : DynamicFactory
 			where TField : struct
 			where TSource : AbstractEntity
 		{
@@ -98,7 +110,7 @@ namespace Epsitec.Cresus.Core.Server
 			}
 		}
 
-		sealed class NonNullableFactory<TSource, TField> : DynamicFactory
+		private sealed class NonNullableFactory<TSource, TField> : DynamicFactory
 			where TSource : AbstractEntity
 		{
 			public NonNullableFactory(PanelFieldAccessor accessor)

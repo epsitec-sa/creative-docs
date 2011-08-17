@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.Core.Server
 			{
 				int id = this.panelFieldAccessors.Count;
 
-				accessor = new PanelFieldAccessor (lambda, id);
+				accessor = CoreSession.CreatePanelFieldAccessor (lambda, id);
 
 				this.panelFieldAccessors[key] = accessor;
 				this.panelFieldAccessorsById[id] = accessor;
@@ -142,7 +142,19 @@ namespace Epsitec.Cresus.Core.Server
 			}
 		}
 
-		
+
+		private static PanelFieldAccessor CreatePanelFieldAccessor(LambdaExpression lambda, int id)
+		{
+			try
+			{
+				return new PanelFieldAccessor (lambda, id);
+			}
+			catch
+			{
+				return null;
+			}
+		}
+
 		protected override void Dispose(bool disposing)
 		{
 			if (this.isDisposed == false)
