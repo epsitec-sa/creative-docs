@@ -1205,24 +1205,32 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public static void RefreshEnteredWidgets()
+		/// <summary>
+		/// Refreshes the focused widget. In some edge cases, a widget which lost its parent
+		/// (and possibly got it back) might no longer be properly focused. Calling this
+		/// method fixes these issues.
+		/// </summary>
+		public void RefreshFocusedWidget()
 		{
-			var message = Message.GetLastMessage ();
-
-			if (message == null)
+			if ((this.focusedWidget != null) &&
+				(this.focusedWidget.KeyboardFocus == false))
 			{
-				return;
+				if (this.focusedWidget.Window != this)
+				{
+					this.ClearFocusedWidget ();
+				}
+				else
+				{
+					this.focusedWidget.SetFocused (true);
+				}
 			}
-
-			if ((message.WindowRoot == null) ||
-				(message.WindowRoot.Window == null))
-            {
-				return;
-            }
-
-			message.WindowRoot.Window.RefreshEnteredWidgets (message);
 		}
-		
+
+		public void RefreshEnteredWidgets()
+		{
+			this.RefreshEnteredWidgets (Message.GetLastMessage ());
+		}
+
 		public void RefreshEnteredWidgets(Message message)
 		{
 			this.ForceLayout ();

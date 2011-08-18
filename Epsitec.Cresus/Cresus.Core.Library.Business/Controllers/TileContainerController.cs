@@ -282,7 +282,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.RefreshTitleTiles ();
 			this.RefreshTitleTilesFreezeMode ();
 			this.RefreshLayout ();
-			this.SetDataTilesParent (this.parent);
+			this.SetDataTilesParent ();
 			this.SetCloseButtonVisibility ();
 		}
 
@@ -740,12 +740,23 @@ namespace Epsitec.Cresus.Core.Controllers
 			return height;
 		}
 		
-		private void SetDataTilesParent(Widget parent)
+		private void SetDataTilesParent()
 		{
-			var titleTiles = this.GetTitleTiles ();
+			this.ResetTitleTilesOrder (this.GetTitleTiles ());
 
-			//	Si un TitleTile a déjà un parent, il faut tous les remettre à null, afin
-			//	de respecter l'ordre vertical voulu dans Summary/Edition..ViewController !
+			var window = this.parent.Window;
+			
+			window.RefreshFocusedWidget ();
+			window.RefreshEnteredWidgets ();
+		}
+
+		/// <summary>
+		/// Resets the order of the title tiles within the container, by making sure the
+		/// parent's children are in the right order.
+		/// </summary>
+		/// <param name="titleTiles">The title tiles.</param>
+		private void ResetTitleTilesOrder(IEnumerable<TitleTile> titleTiles)
+		{
 			if (titleTiles.Any (x => x.Parent == null))
 			{
 				titleTiles.ForEach (x => x.Parent = null);
@@ -753,11 +764,9 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			foreach (var titleTile in titleTiles)
 			{
-				titleTile.Parent  = parent;
+				titleTile.Parent  = this.parent;
 				titleTile.Margins = new Margins (0, 0, 0, -1);
 			}
-
-			Window.RefreshEnteredWidgets ();
 		}
 
 		private void SetCloseButtonVisibility()
