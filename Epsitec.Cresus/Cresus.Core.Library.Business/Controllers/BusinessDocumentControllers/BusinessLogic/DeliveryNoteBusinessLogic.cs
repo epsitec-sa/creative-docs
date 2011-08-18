@@ -90,6 +90,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			get
 			{
 				yield return ArticleQuantityType.Shipped;				// livré
+
 				yield return ArticleQuantityType.ShippedPreviously;		// livré ultérieurement
 				yield return ArticleQuantityType.Delayed;				// retardé
 				yield return ArticleQuantityType.Expected;				// attendu

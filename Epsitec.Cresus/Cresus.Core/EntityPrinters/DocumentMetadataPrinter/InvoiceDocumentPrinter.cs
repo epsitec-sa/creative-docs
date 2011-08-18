@@ -306,9 +306,9 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 				if (this.HasOption (DocumentOption.ArticleAdditionalQuantities))  // imprime les autres quantités ?
 				{
-					this.SetTableText (row+i, TableColumnKeys.AdditionalType, accessor.GetContent (i, DocumentItemAccessorColumn.AdditionalType));
+					this.SetTableText (row+i, TableColumnKeys.AdditionalType,     accessor.GetContent (i, DocumentItemAccessorColumn.AdditionalType));
 					this.SetTableText (row+i, TableColumnKeys.AdditionalQuantity, AbstractDocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.AdditionalQuantity, DocumentItemAccessorColumn.AdditionalUnit));
-					this.SetTableText (row+i, TableColumnKeys.AdditionalDate, AbstractDocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.AdditionalBeginDate, DocumentItemAccessorColumn.AdditionalEndDate));
+					this.SetTableText (row+i, TableColumnKeys.AdditionalDate,     AbstractDocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.AdditionalBeginDate, DocumentItemAccessorColumn.AdditionalEndDate));
 				}
 
 				if (this.HasOption (DocumentOption.ArticleId))
@@ -319,9 +319,9 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				this.SetTableText (row+i, TableColumnKeys.ArticleDescription, accessor.GetContent (i, DocumentItemAccessorColumn.ArticleDescription));
 
 				this.SetTableText (row+i, TableColumnKeys.UnitPrice, accessor.GetContent (i, DocumentItemAccessorColumn.UnitPrice));
-				this.SetTableText (row+i, TableColumnKeys.Discount, accessor.GetContent (i, DocumentItemAccessorColumn.Discount));
+				this.SetTableText (row+i, TableColumnKeys.Discount,  accessor.GetContent (i, DocumentItemAccessorColumn.Discount));
 				this.SetTableText (row+i, TableColumnKeys.LinePrice, accessor.GetContent (i, DocumentItemAccessorColumn.LinePrice));
-				this.SetTableText (row+i, TableColumnKeys.Vat, accessor.GetContent (i, DocumentItemAccessorColumn.Vat));
+				this.SetTableText (row+i, TableColumnKeys.Vat,       accessor.GetContent (i, DocumentItemAccessorColumn.Vat));
 
 				var total = accessor.GetContent (i, DocumentItemAccessorColumn.Total);
 				if (line.Line is EndTotalDocumentItemEntity && i == accessor.RowsCount-1)
@@ -483,6 +483,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		private static readonly double		marginBeforeIsr = 10;
 
 		private bool						onlyTotal;
-		private PaymentTransactionEntity			billingDetailsEntity;
+		private PaymentTransactionEntity	billingDetailsEntity;
 	}
 }

@@ -371,7 +371,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				}
 			}
 
-			if (fixedWidth < this.documentContainer.CurrentWidth - 50)  // reste au moins 5cm pour la colonne 'fill' ?
+			if (fixedWidth < this.documentContainer.CurrentWidth - 10)  // reste au moins 1cm pour la colonne 'fill' ?
 			{
 				//	Initialise les largeurs en fonction des contenus réels des colonnes.
 				foreach (var column in this.tableColumns.Values)
