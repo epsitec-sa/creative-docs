@@ -100,5 +100,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				yield return ArticleQuantityType.ShippedPreviously;		// livré précédemment
 			}
 		}
+
+
+		public override IEnumerable<DocumentType> ProcessParentDocumentTypes
+		{
+			get
+			{
+				return null;
+			}
+		}
 	}
 }

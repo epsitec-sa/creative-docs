@@ -94,5 +94,15 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				yield return ArticleQuantityType.Expected;				// attendu
 			}
 		}
+
+
+		public override IEnumerable<DocumentType> ProcessParentDocumentTypes
+		{
+			get
+			{
+				yield return DocumentType.SalesQuote;
+				yield return DocumentType.OrderBooking;
+			}
+		}
 	}
 }

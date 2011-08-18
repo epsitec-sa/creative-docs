@@ -110,6 +110,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
+		public virtual IEnumerable<DocumentType> ProcessParentDocumentTypes
+		{
+			//	Retourne la liste des types de document qui peuvent servir de parent.
+			get
+			{
+				return null;
+			}
+		}
+
+
 		protected readonly BusinessContext						businessContext;
 		protected readonly DocumentMetadataEntity				documentMetadataEntity;
 	}

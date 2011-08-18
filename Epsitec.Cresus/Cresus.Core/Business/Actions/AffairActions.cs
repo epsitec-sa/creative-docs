@@ -5,6 +5,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Repositories;
 
@@ -50,40 +51,44 @@ namespace Epsitec.Cresus.Core.Business.Actions
 		private static void CreateDocument(DocumentType newDocumentType, params DocumentType[] sourceDocumentTypes)
 		{
 			var workflowEngine     = WorkflowExecutionEngine.Current;
-			var businessContext    = workflowEngine.BusinessContext;
+			var businessContext    = workflowEngine.BusinessContext as BusinessContext;
 			var categoryRepository = businessContext.GetSpecificRepository<DocumentCategoryEntity.Repository> ();
 			var currentAffair      = businessContext.GetMasterEntity<AffairEntity> ();
 
-			//	Cherche le document source à utiliser comme modèle.
-			DocumentMetadataEntity currentDocument = null;
-
-			foreach (var sourceDocumentType in sourceDocumentTypes)
-			{
-				currentDocument = currentAffair.Documents.LastOrDefault (x => x.DocumentCategory.DocumentType == sourceDocumentType);
-
-				if (currentDocument != null)
-				{
-					break;
-				}
-			}
-
-			System.Diagnostics.Debug.Assert (currentDocument.IsNotNull (), "Document can be found");
-
 			var documentCategories = categoryRepository.Find (newDocumentType);
 
-			if (currentDocument.IsNotNull () &&
-				documentCategories != null && documentCategories.Count () != 0)
+			if (documentCategories != null && documentCategories.Count () != 0)
 			{
+				//	Crée le nouveau document.
 				var documentMetadata = businessContext.CreateEntity<DocumentMetadataEntity> ();
-
 				documentMetadata.DocumentCategory = documentCategories.First ();
-				documentMetadata.BusinessDocument = AffairActions.CloneBusinessDocument (businessContext, currentAffair, currentDocument, newDocumentType);
+
+				var businessLogic = new BusinessLogic (businessContext, documentMetadata);
+				var documentTypes = businessLogic.ProcessParentDocumentTypes;
+
+				//	Cherche le document source à utiliser comme modèle.
+				DocumentMetadataEntity sourceDocument = null;
+
+				foreach (var documentType in documentTypes)
+				{
+					sourceDocument = currentAffair.Documents.LastOrDefault (x => x.DocumentCategory.DocumentType == documentType);
+
+					if (sourceDocument != null)
+					{
+						break;
+					}
+				}
+
+				System.Diagnostics.Debug.Assert (sourceDocument.IsNotNull (), "Document can be found");
+
+				//	Le nouveau document devient un clone du document source.
+				documentMetadata.BusinessDocument = AffairActions.CloneBusinessDocument (businessContext, currentAffair, sourceDocument, newDocumentType);
 
 				currentAffair.Documents.Add (documentMetadata);
 
 				// TODO: Ce n'est pas suffisant de geler le document "source" !
 				// Une facture n'est pas exemple jamais gelée, puisqu'elle ne sert jamais de source.
-				currentDocument.DocumentState = DocumentState.Frozen;
+				sourceDocument.DocumentState = DocumentState.Frozen;
 			}
 		}
 

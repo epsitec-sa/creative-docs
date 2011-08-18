@@ -301,6 +301,33 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
+		public IEnumerable<DocumentType> ProcessParentDocumentTypes
+		{
+			//	Retourne la liste des types de document qui peuvent servir de parent.
+			//	On part de l'idée que le workflow génère les documents suivants, et dans cet
+			//	ordre. En cas de changement, toutes les propriétés ProcessParentDocumentTypes
+			//	doivent être adaptées.
+			//		DocumentType.SalesQuote
+			//		DocumentType.OrderBooking
+			//		DocumentType.OrderConfirmation
+			//		DocumentType.ProductionOrder
+			//		DocumentType.ProductionChecklist
+			//		DocumentType.DeliveryNote
+			//		DocumentType.Invoice
+			get
+			{
+				var list = this.documentBusinessLogic.ProcessParentDocumentTypes;
+
+				if (list == null)
+				{
+					list = new List<DocumentType> ();
+				}
+
+				return list;
+			}
+		}
+
+
 		private readonly BusinessContext							businessContext;
 		private readonly DocumentMetadataEntity						documentMetadataEntity;
 		private readonly IEnumerable<ArticleQuantityColumnEntity>	articleQuantityColumnEntities;
