@@ -56,6 +56,12 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				throw new System.NotSupportedException ("These simultaneous modes are invalid.");
 			}
 
+			if ((mode & DocumentItemAccessorMode.Print               ) == 0 &&
+				(mode & DocumentItemAccessorMode.AdditionalQuantities) != 0)
+			{
+				throw new System.NotSupportedException ("Invalid mode.");
+			}
+
 			this.item = item;
 			this.type = type;
 			this.mode = mode;
