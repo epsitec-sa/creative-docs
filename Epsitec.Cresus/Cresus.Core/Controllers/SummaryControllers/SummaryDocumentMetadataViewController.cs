@@ -31,12 +31,14 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				.TextCompact (x => x.GetCompactSummary ())
 				;
 
+#if false
 			wall.AddBrick (x => x.BusinessDocument)
 				.OfType<BusinessDocumentEntity> ()
 				.Attribute (BrickMode.DefaultToSummarySubview)
 				.Text (x => x.GetSummary ())
 				.TextCompact (x => x.GetCompactSummary ())
 				;
+#endif
 
 			wall.AddBrick (x => x.BusinessDocument)
 				.OfType<BusinessDocumentEntity> ()
