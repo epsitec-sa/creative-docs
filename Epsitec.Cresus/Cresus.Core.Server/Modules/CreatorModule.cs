@@ -38,14 +38,15 @@ namespace Epsitec.Cresus.Core.Server.Modules
 
 				var toDelete = collection.Cast<AbstractEntity> ().Where (c => context.DataContext.GetNormalizedEntityKey (c).Equals (deleteKey));
 
-				if (toDelete.Any ())
+				if (toDelete.IsEmpty ())
 				{
-					var d = toDelete.First ();
-					collection.Remove (d);
-					context.DeleteEntity (d);
+					return Response.AsCoreError ();
 				}
 
-				//context.SaveChanges ();
+				var d = toDelete.First ();
+				collection.Remove (d);
+				context.DeleteEntity (d);
+				context.SaveChanges ();
 
 				return Response.AsCoreSuccess ();
 			};
@@ -60,18 +61,27 @@ namespace Epsitec.Cresus.Core.Server.Modules
 				var parentKey = EntityKey.Parse (parentEntity);
 				AbstractEntity entity = context.DataContext.ResolveEntity (parentKey);
 
-				var customer = entity as CustomerEntity;
-				var contacts = customer.Relation.Person.Contacts;
+				string typeName = Request.Form.entityType;
+				var type = System.Type.GetType (typeName);
+				var method = typeof (BusinessContext).GetMethod ("CreateEntity", new System.Type[0]);
+				var m = method.MakeGenericMethod (type);
+				var o = m.Invoke (context, new object[0]);
+				var newEntity = o as AbstractEntity;
 
-				var phone = context.CreateEntity<TelecomContactEntity> ();
-				//phone.Number = new System.Random ().NextDouble ().ToString ();
-				
-				contacts.Add (phone);
+				var accessor = coreSession.GetPanelFieldAccessor (InvariantConverter.ToInt ((string) Request.Form.lambda));
+
+				if (!accessor.IsCollectionType)
+				{
+					return Response.AsCoreError ();
+				}
+
+				var collection = accessor.GetCollection (entity);
+				collection.Add (newEntity);
 
 				context.SaveChanges (EntitySaveMode.IncludeEmpty);
 
-				var key = context.DataContext.GetNormalizedEntityKey (phone).ToString ();
-				return Response.AsCoreSuccess(key);
+				var key = context.DataContext.GetNormalizedEntityKey (newEntity).ToString ();
+				return Response.AsCoreSuccess (key);
 			};
 		}
 	}

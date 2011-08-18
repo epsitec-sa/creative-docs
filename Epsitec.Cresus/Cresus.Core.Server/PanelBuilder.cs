@@ -113,6 +113,7 @@ namespace Epsitec.Cresus.Core.Server
 						var accessor = this.coreSession.GetPanelFieldAccessor (lambda);
 
 						panels.ForEach (p => p["lambda"] = accessor.Id.ToString ());
+						panels.ForEach (p => p["entityType"] = brickType.AssemblyQualifiedName);
 						list.AddRange (panels);
 					}
 				}
