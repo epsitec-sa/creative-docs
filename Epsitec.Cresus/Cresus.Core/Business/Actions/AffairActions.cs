@@ -18,44 +18,56 @@ namespace Epsitec.Cresus.Core.Business.Actions
 	{
 		public static void CreateOrderBooking()
 		{
-			AffairActions.CreateDocument (DocumentType.SalesQuote, DocumentType.OrderBooking);
+			AffairActions.CreateDocument (DocumentType.OrderBooking, DocumentType.SalesQuote);
 		}
 
 		public static void CreateOrderConfirmation()
 		{
-			AffairActions.CreateDocument (DocumentType.OrderBooking, DocumentType.OrderConfirmation);
+			AffairActions.CreateDocument (DocumentType.OrderConfirmation, DocumentType.OrderBooking);
 		}
 
 		public static void CreateProductionOrder()
 		{
-			AffairActions.CreateDocument (DocumentType.OrderConfirmation, DocumentType.ProductionOrder);
+			AffairActions.CreateDocument (DocumentType.ProductionOrder, DocumentType.OrderConfirmation);
 		}
 
 		public static void CreateProductionCheckList()
 		{
-			AffairActions.CreateDocument (DocumentType.ProductionOrder, DocumentType.ProductionChecklist);
+			AffairActions.CreateDocument (DocumentType.ProductionChecklist, DocumentType.ProductionOrder);
 		}
 
 		public static void CreateDeliveryNote()
 		{
-			AffairActions.CreateDocument (DocumentType.OrderConfirmation, DocumentType.DeliveryNote);
+			AffairActions.CreateDocument (DocumentType.DeliveryNote, DocumentType.OrderConfirmation, DocumentType.OrderBooking, DocumentType.SalesQuote);
 		}
 
 		public static void CreateInvoice()
 		{
-			AffairActions.CreateDocument (DocumentType.DeliveryNote, DocumentType.Invoice);
+			AffairActions.CreateDocument (DocumentType.Invoice, DocumentType.DeliveryNote);
 		}
 
 
-		private static void CreateDocument(DocumentType sourceDocumentType, DocumentType newDocumentType)
+		private static void CreateDocument(DocumentType newDocumentType, params DocumentType[] sourceDocumentTypes)
 		{
 			var workflowEngine     = WorkflowExecutionEngine.Current;
 			var businessContext    = workflowEngine.BusinessContext;
 			var categoryRepository = businessContext.GetSpecificRepository<DocumentCategoryEntity.Repository> ();
 			var currentAffair      = businessContext.GetMasterEntity<AffairEntity> ();
-			var currentDocument    = currentAffair.Documents.LastOrDefault (x => x.DocumentCategory.DocumentType == sourceDocumentType);
 
-			System.Diagnostics.Debug.Assert (currentDocument.IsNotNull (), string.Format ("{0} document can be found", sourceDocumentType));
+			//	Cherche le document source à utiliser comme modèle.
+			DocumentMetadataEntity currentDocument = null;
+
+			foreach (var sourceDocumentType in sourceDocumentTypes)
+			{
+				currentDocument = currentAffair.Documents.LastOrDefault (x => x.DocumentCategory.DocumentType == sourceDocumentType);
+
+				if (currentDocument != null)
+				{
+					break;
+				}
+			}
+
+			System.Diagnostics.Debug.Assert (currentDocument.IsNotNull (), "Document can be found");
 
 			var documentCategories = categoryRepository.Find (newDocumentType);
 
