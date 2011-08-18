@@ -38,6 +38,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			protected set;
 		}
 
+		public override void Focus()
+		{
+			Epsitec.Cresus.Core.Library.UI.Services.SetInitialFocus (this.TileContainer);
+		}
+
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
 			yield break;

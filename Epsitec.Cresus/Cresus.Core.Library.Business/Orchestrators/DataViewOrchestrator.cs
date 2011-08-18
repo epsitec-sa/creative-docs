@@ -222,6 +222,8 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		{
 			this.DataViewController.PopViewControllersUntil (viewController);
 			this.DataViewController.PushViewController (subViewController);
+
+			subViewController.Focus ();
 		}
 
 		/// <summary>

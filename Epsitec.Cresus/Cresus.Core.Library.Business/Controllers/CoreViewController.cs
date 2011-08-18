@@ -155,6 +155,10 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		public virtual void Focus()
+		{
+		}
+
 		public virtual double GetPreferredWidth(int columnIndex, int columnCount)
 		{
 			return 300;
