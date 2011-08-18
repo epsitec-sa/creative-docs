@@ -745,9 +745,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.ResetTitleTilesOrder (this.GetTitleTiles ());
 
 			var window = this.parent.Window;
-			
-			window.RefreshFocusedWidget ();
-			window.RefreshEnteredWidgets ();
+
+			if (window != null)
+			{
+				window.RefreshFocusedWidget ();
+				window.RefreshEnteredWidgets ();
+			}
 		}
 
 		/// <summary>
