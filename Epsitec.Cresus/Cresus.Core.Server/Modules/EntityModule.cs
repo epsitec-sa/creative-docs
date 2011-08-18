@@ -3,9 +3,9 @@ using System.Linq;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Cresus.Core.Server.AdditionalResponses;
+using Epsitec.Cresus.Core.Server.NancyComponents;
 using Epsitec.Cresus.DataLayer.Context;
 using Nancy;
-using Epsitec.Cresus.Core.Server.NancyComponents;
 
 namespace Epsitec.Cresus.Core.Server.Modules
 {
@@ -44,14 +44,11 @@ namespace Epsitec.Cresus.Core.Server.Modules
 							if (accessor.IsCollectionType)
 							{
 								List<AbstractEntity> entities = new List<AbstractEntity> ();
-
-								var collectionItems = value.Value;
-								var collectionNames = (IEnumerable<string>) collectionItems.GetDynamicMemberNames ();
-								var notNullNames = collectionNames.Where (x => !string.IsNullOrEmpty (x) && !string.IsNullOrEmpty (collectionItems[x]));
-
-								foreach (string item in notNullNames)
+								var collection = ((List<string>) value.Value).Where (x => !string.IsNullOrWhiteSpace (x));
+								
+								foreach (string item in collection)
 								{
-									EntityKey tmpKey = EntityKey.Parse (collectionItems[item]);
+									EntityKey? tmpKey = EntityKey.Parse (item);
 									AbstractEntity tmpEntity = context.DataContext.ResolveEntity (tmpKey);
 									entities.Add (tmpEntity);
 								}

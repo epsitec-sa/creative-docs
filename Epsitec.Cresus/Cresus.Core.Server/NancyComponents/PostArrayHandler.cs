@@ -1,8 +1,6 @@
-﻿using Nancy.Session;
-using Nancy.Bootstrapper;
-using Nancy;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using Nancy;
 
 namespace Epsitec.Cresus.Core.Server.NancyComponents
 {
@@ -22,23 +20,15 @@ namespace Epsitec.Cresus.Core.Server.NancyComponents
 				if (match.Success)
 				{
 					string arrayName = match.Groups[1].Value;
-					string arrayKey = match.Groups[2].Value;
 
-					DynamicDictionary array = newDictionnary[arrayName].Value;
-					if (array == null)
+					List<string> list = newDictionnary[arrayName].Value;
+					if (list == null)
 					{
-						array = new DynamicDictionary ();
-						newDictionnary[arrayName] = array;
+						list = new List<string> ();
+						newDictionnary[arrayName] = list;
 					}
 
-					if (arrayKey != null)
-					{
-						array[arrayKey] = value;
-					}
-					else
-					{
-
-					}
+					list.Add (value);
 				}
 				else
 				{
@@ -49,6 +39,6 @@ namespace Epsitec.Cresus.Core.Server.NancyComponents
 			return newDictionnary;
 		}
 
-        private static readonly Regex reg = new Regex (@"^([^\[]+)\[([^\]]?)\]$");
+		private static readonly Regex reg = new Regex (@"^([^\[]+)\[[^\]]?\]$");
 	}
 }
