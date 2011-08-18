@@ -103,15 +103,24 @@ namespace Epsitec.Cresus.Core.Server
 
 				var col = (obj as IEnumerable).Cast<AbstractEntity> ().Where (c => c.GetType () == brickType);
 
-				if ((col.Any ()))
+				if (col.Any ())
 				{
-					col.ForEach (e => list.AddRange (CreatePanelsForEntity (brick, item, e)));
+					foreach (var e in col)
+					{
+						var panels = CreatePanelsForEntity (brick, item, e);
+
+						LambdaExpression lambda = brick.GetLambda ();
+						var accessor = this.coreSession.GetPanelFieldAccessor (lambda);
+
+						panels.ForEach (p => p["lambda"] = accessor.Id.ToString ());
+						list.AddRange (panels);
+					}
 				}
 				else
 				{
 					// This collection is empty, but we want to show its panel
 					// so the user will be able to add one.
-					list.Add (CreateEmptyPanel (brick, item));
+					list.Add (CreateEmptyPanel (item));
 				}
 			}
 			else
@@ -147,13 +156,7 @@ namespace Epsitec.Cresus.Core.Server
 				parent["clickToEdit"] = false;
 			}
 
-			AddControllerSpecificData (parent, item, entity);
-
-			var inputs = HandleInputs (brick);
-			if (inputs != null && inputs.Any ())
-			{
-				parent["items"] = inputs;
-			}
+			AddControllerSpecificData (parent, brick, item, entity);
 
 			var children = CreateChildren (brick);
 			if (children != null && children.Any ())
@@ -162,6 +165,15 @@ namespace Epsitec.Cresus.Core.Server
 			}
 
 			return list;
+		}
+
+		private Dictionary<string, object> CreateEmptyPanel(WebDataItem item)
+		{
+			var panel = GetBasicPanelForm (item);
+
+			panel["xtype"] = "emptysummary";
+
+			return panel;
 		}
 
 		private Dictionary<string, object> GetBasicPanelForm(WebDataItem item)
@@ -183,26 +195,16 @@ namespace Epsitec.Cresus.Core.Server
 			return panel;
 		}
 
-		private Dictionary<string, object> CreateEmptyPanel(Brick brick, WebDataItem item)
-		{
-			var panel = GetBasicPanelForm (item);
-
-			panel["xtype"] = "emptysummary";
-
-			return panel;
-		}
-
-		private void AddControllerSpecificData(Dictionary<string, object> parent, WebDataItem item, AbstractEntity entity)
+		private void AddControllerSpecificData(Dictionary<string, object> parent, Brick brick, WebDataItem item, AbstractEntity entity)
 		{
 			switch (this.controllerMode)
 			{
 				case ViewControllerMode.Summary:
-					parent["html"] = entity.GetSummary ().ToString ();
-					parent["hideRemoveButton"] = item.HideRemoveButton;
-					parent["hideAddButton"] = item.HideAddButton;
+					AddControllerSpecificSummaryData (parent, brick, item, entity);
 					break;
 
 				case ViewControllerMode.Edition:
+					AddControllerSpecificEditionData (parent, brick);
 					break;
 
 				case ViewControllerMode.Creation:
@@ -213,6 +215,23 @@ namespace Epsitec.Cresus.Core.Server
 
 				default:
 					throw new System.NotImplementedException ("Make sure this switch has all possible branches");
+			}
+		}
+
+		private static void AddControllerSpecificSummaryData(Dictionary<string, object> parent, Brick brick, WebDataItem item, AbstractEntity entity)
+		{
+			parent["html"] = entity.GetSummary ().ToString ();
+			parent["hideRemoveButton"] = item.HideRemoveButton;
+			parent["hideAddButton"] = item.HideAddButton;
+
+		}
+
+		private void AddControllerSpecificEditionData(Dictionary<string, object> parent, Brick brick)
+		{
+			var inputs = HandleInputs (brick);
+			if (inputs != null && inputs.Any ())
+			{
+				parent["items"] = inputs;
 			}
 		}
 
@@ -373,7 +392,7 @@ namespace Epsitec.Cresus.Core.Server
 					dic["boxLabel"] = item.GetSummary ().ToSimpleText ();
 					dic["name"] = entityDictionnary["name"] + "[]"; // Copy the parent's ID
 					dic["inputValue"] = this.GetEntityKey (item);
-					dic["checked"] = found.Contains(item);
+					dic["checked"] = found.Contains (item);
 					dic["uncheckedValue"] = ""; // We want to return "nothing" when nothing is checked (but we want to return something)
 				}
 

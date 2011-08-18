@@ -59,6 +59,11 @@ namespace Epsitec.Cresus.Bricks
 			return lambda.Compile ();
 #endif
 		}
+
+		public LambdaExpression GetLambda()
+		{
+			return this.resolver as LambdaExpression;
+		}
 		
 		
 		internal void AddProperty(BrickProperty property, bool notify = true)

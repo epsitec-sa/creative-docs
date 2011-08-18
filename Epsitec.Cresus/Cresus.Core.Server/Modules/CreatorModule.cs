@@ -7,6 +7,7 @@ using Epsitec.Cresus.Core.Entities;
 using Epsitec.Common.Support.Extensions;
 using System.Linq;
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Server.Modules
 {
@@ -26,20 +27,24 @@ namespace Epsitec.Cresus.Core.Server.Modules
 				string deleteEntity = Request.Form.deleteEntity;
 				var deleteKey = EntityKey.Parse (deleteEntity);
 
-				var customer = entity as CustomerEntity;
-				var contacts = customer.Relation.Person.Contacts;
-				//var collection = customer.GetFieldCollection<AbstractEntity> ("[FVA2]");
+				var accessor = coreSession.GetPanelFieldAccessor (InvariantConverter.ToInt ((string) Request.Form.lambda));
 
-				var toDelete = contacts.Where (c => context.DataContext.GetNormalizedEntityKey (c).Equals (deleteKey));
+				if (!accessor.IsCollectionType)
+				{
+					return Response.AsCoreError ();
+				}
+
+				var collection = accessor.GetCollection (entity);
+
+				var toDelete = collection.Cast<AbstractEntity> ().Where (c => context.DataContext.GetNormalizedEntityKey (c).Equals (deleteKey));
 
 				if (toDelete.Any ())
 				{
 					var d = toDelete.First ();
-					contacts.Remove (d);
+					collection.Remove (d);
 					context.DeleteEntity (d);
 				}
 
-				// TODO activate when not in debug
 				//context.SaveChanges ();
 
 				return Response.AsCoreSuccess ();
