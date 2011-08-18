@@ -3014,7 +3014,21 @@ namespace Epsitec.Common.Widgets
 				if (x == y) return 0;
 				if (x == null) return -1;
 				if (y == null) return 1;
-				return (x.TabIndex == y.TabIndex) ? x.Index - y.Index : x.TabIndex - y.TabIndex;
+
+				if (x.TabIndex != y.TabIndex)
+				{
+					return x.TabIndex - y.TabIndex;
+				}
+				if (x.Index != y.Index)
+				{
+					return x.Index - y.Index;
+				}
+				if (x.ZOrder != y.ZOrder)
+				{
+					return -(x.ZOrder - y.ZOrder);
+				}
+
+				return 0;
 			}
 		}
 		
