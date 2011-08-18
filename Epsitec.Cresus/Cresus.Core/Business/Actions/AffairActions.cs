@@ -19,36 +19,36 @@ namespace Epsitec.Cresus.Core.Business.Actions
 	{
 		public static void CreateOrderBooking()
 		{
-			AffairActions.CreateDocument (DocumentType.OrderBooking, DocumentType.SalesQuote);
+			AffairActions.CreateDocument (DocumentType.OrderBooking);
 		}
 
 		public static void CreateOrderConfirmation()
 		{
-			AffairActions.CreateDocument (DocumentType.OrderConfirmation, DocumentType.OrderBooking);
+			AffairActions.CreateDocument (DocumentType.OrderConfirmation);
 		}
 
 		public static void CreateProductionOrder()
 		{
-			AffairActions.CreateDocument (DocumentType.ProductionOrder, DocumentType.OrderConfirmation);
+			AffairActions.CreateDocument (DocumentType.ProductionOrder);
 		}
 
 		public static void CreateProductionCheckList()
 		{
-			AffairActions.CreateDocument (DocumentType.ProductionChecklist, DocumentType.ProductionOrder);
+			AffairActions.CreateDocument (DocumentType.ProductionChecklist);
 		}
 
 		public static void CreateDeliveryNote()
 		{
-			AffairActions.CreateDocument (DocumentType.DeliveryNote, DocumentType.OrderConfirmation, DocumentType.OrderBooking, DocumentType.SalesQuote);
+			AffairActions.CreateDocument (DocumentType.DeliveryNote);
 		}
 
 		public static void CreateInvoice()
 		{
-			AffairActions.CreateDocument (DocumentType.Invoice, DocumentType.DeliveryNote);
+			AffairActions.CreateDocument (DocumentType.Invoice);
 		}
 
 
-		private static void CreateDocument(DocumentType newDocumentType, params DocumentType[] sourceDocumentTypes)
+		private static void CreateDocument(DocumentType newDocumentType)
 		{
 			var workflowEngine     = WorkflowExecutionEngine.Current;
 			var businessContext    = workflowEngine.BusinessContext as BusinessContext;
