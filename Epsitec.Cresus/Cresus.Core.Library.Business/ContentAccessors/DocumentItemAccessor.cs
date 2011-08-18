@@ -243,10 +243,16 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				if ((this.mode & DocumentItemAccessorMode.AdditionalQuantities) != 0)  // met les quantités additionnelles ?
 				{
 					// Sur un document imprimé, les autres quantités sont toujours sur des lignes à part.
-					foreach (var quantityType in DocumentItemAccessor.articleQuantityTypes)
+					foreach (var quantityType in quantityTypes)
 					{
-						foreach (var quantity in line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == quantityType && x.QuantityColumn.QuantityType != mainQuantityType && quantityTypes.Contains (x.QuantityColumn.QuantityType)).OrderBy (x => x.BeginDate))
+						foreach (var quantity in line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == quantityType && x.QuantityColumn.QuantityType != mainQuantityType).OrderBy (x => x.BeginDate))
 						{
+							//	Une ligne "déjà livré" avec une quantité nulle est omise.
+							if (quantityType == ArticleQuantityType.ShippedPreviously && quantity.Quantity == 0)
+							{
+								continue;
+							}
+
 							this.articleQuantityEntities.Add (quantity);
 
 							this.SetContent (row, DocumentItemAccessorColumn.AdditionalType,     quantity.QuantityColumn.Name);

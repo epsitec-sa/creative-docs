@@ -457,9 +457,13 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 			for (int row = 0; row < this.rowsCount; row++)
 			{
-				TextBand textBand = this.GetTextBand (column, row);
+				int span = this.GetColumnSpan (column, row);
+				if (span <= 1)
+				{
+					TextBand textBand = this.GetTextBand (column, row);
 
-				width = System.Math.Max (width, textBand.RequiredWidth ());
+					width = System.Math.Max (width, textBand.RequiredWidth ());
+				}
 			}
 
 			return width;
