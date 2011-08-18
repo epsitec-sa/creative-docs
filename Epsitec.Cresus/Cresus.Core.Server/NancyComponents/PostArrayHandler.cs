@@ -1,0 +1,54 @@
+﻿using Nancy.Session;
+using Nancy.Bootstrapper;
+using Nancy;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+
+namespace Epsitec.Cresus.Core.Server.NancyComponents
+{
+	public class PostArrayHandler
+	{
+		public static object GetFormWithArrays(dynamic form)
+		{
+			var newDictionnary = new DynamicDictionary ();
+
+			var memberNames = (IEnumerable<string>) form.GetDynamicMemberNames ();
+
+			foreach (var key in memberNames)
+			{
+				string value = form[key];
+
+				var match = PostArrayHandler.reg.Match (key);
+				if (match.Success)
+				{
+					string arrayName = match.Groups[1].Value;
+					string arrayKey = match.Groups[2].Value;
+
+					DynamicDictionary array = newDictionnary[arrayName].Value;
+					if (array == null)
+					{
+						array = new DynamicDictionary ();
+						newDictionnary[arrayName] = array;
+					}
+
+					if (arrayKey != null)
+					{
+						array[arrayKey] = value;
+					}
+					else
+					{
+
+					}
+				}
+				else
+				{
+					newDictionnary[key] = value;
+				}
+			}
+
+			return newDictionnary;
+		}
+
+        private static readonly Regex reg = new Regex (@"^([^\[]+)\[([^\]]?)\]$");
+	}
+}

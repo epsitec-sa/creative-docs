@@ -35,6 +35,11 @@ namespace Epsitec.Cresus.Core.Server
 			return builder.Run ();
 		}
 
+		public static string GetLambdaFieldName(string entityKey)
+		{
+			return string.Concat ("lambda_", entityKey);
+		}
+
 		private PanelBuilder(AbstractEntity entity, ViewControllerMode mode, CoreSession coreSession)
 		{
 			this.rootEntity = entity;
@@ -305,7 +310,7 @@ namespace Epsitec.Cresus.Core.Server
 			string fieldName = fieldMode.FieldId.ToString ().Trim ('[', ']');
 
 			lambdaDictionnary["xtype"] = "hiddenfield";
-			lambdaDictionnary["name"] = "lambda_" + fieldName;
+			lambdaDictionnary["name"] = PanelBuilder.GetLambdaFieldName (fieldName);
 			var accessor = this.coreSession.GetPanelFieldAccessor (lambda);
 			lambdaDictionnary["value"] = accessor == null ? "-1" : accessor.Id.ToString ();
 
@@ -383,6 +388,7 @@ namespace Epsitec.Cresus.Core.Server
 					dic["name"] = entityDictionnary["name"] + "[]"; // Copy the parent's ID
 					dic["inputValue"] = this.GetEntityKey (item);
 					dic["checked"] = found.Contains(item);
+					dic["uncheckedValue"] = ""; // We want to return "nothing" when nothing is checked (but we want to return something)
 				}
 
 				return list;
@@ -468,7 +474,7 @@ namespace Epsitec.Cresus.Core.Server
 			}
 		}
 
-		public static string GetInputTitle(Caption caption)
+		private static string GetInputTitle(Caption caption)
 		{
 			if (caption == null)
 			{

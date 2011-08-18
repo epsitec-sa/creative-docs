@@ -5,6 +5,7 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Core.Server.AdditionalResponses;
 using Epsitec.Cresus.DataLayer.Context;
 using Nancy;
+using Epsitec.Cresus.Core.Server.NancyComponents;
 
 namespace Epsitec.Cresus.Core.Server.Modules
 {
@@ -20,19 +21,21 @@ namespace Epsitec.Cresus.Core.Server.Modules
 
 				string paramEntityKey = (string) parameters.id;
 
+				var formData = PostArrayHandler.GetFormWithArrays (Request.Form);
+
 				var entityKey = EntityKey.Parse (paramEntityKey);
 				AbstractEntity entity = context.DataContext.ResolveEntity (entityKey);
 
 				var errors = new Dictionary<string, object> ();
-				var memberNames = (IEnumerable<string>) Request.Form.GetDynamicMemberNames ();
+				var memberNames = (IEnumerable<string>) formData.GetDynamicMemberNames ();
 				var memberKeys  = memberNames.Where (x => !x.Contains ('_')).ToArray ();
 
 				foreach (var memberKey in memberKeys)
 				{
 					try
 					{
-						var value  = Request.Form[memberKey];
-						var lambda = Request.Form[string.Concat ("lambda_", (string) memberKey)];
+						var value  = formData[memberKey];
+						var lambda = formData[PanelBuilder.GetLambdaFieldName ((string) memberKey)];
 
 						if (lambda.HasValue)
 						{
@@ -40,15 +43,19 @@ namespace Epsitec.Cresus.Core.Server.Modules
 
 							if (accessor.IsCollectionType)
 							{
-								//	TODO: retrouver la liste des entités sélectionnées
-
 								List<AbstractEntity> entities = new List<AbstractEntity> ();
 
-								foreach (var item in value)
+								var collectionItems = value.Value;
+								var collectionNames = (IEnumerable<string>) collectionItems.GetDynamicMemberNames ();
+								var notNullNames = collectionNames.Where (x => !string.IsNullOrEmpty (x) && !string.IsNullOrEmpty (collectionItems[x]));
+
+								foreach (string item in notNullNames)
 								{
-									System.Console.WriteLine (item);
+									EntityKey tmpKey = EntityKey.Parse (collectionItems[item]);
+									AbstractEntity tmpEntity = context.DataContext.ResolveEntity (tmpKey);
+									entities.Add (tmpEntity);
 								}
-								
+
 								accessor.SetCollection (entity, entities);
 							}
 							else if (accessor.CanWrite == false)

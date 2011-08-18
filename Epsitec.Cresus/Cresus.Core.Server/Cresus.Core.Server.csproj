@@ -74,6 +74,7 @@
     <Compile Include="Modules\MainModule.cs" />
     <Compile Include="NancyComponents\CoreHost.cs" />
     <Compile Include="NancyComponents\FileSystemRootPathProvider.cs" />
+    <Compile Include="NancyComponents\PostArrayHandler.cs" />
     <Compile Include="PanelBuilder.cs" />
     <Compile Include="PanelFieldAccessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -177,7 +178,6 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="lib\Nancy.Authentication.Forms.dll" />
     <Content Include="lib\Nancy.dll" />
     <Content Include="lib\README.txt" />
   </ItemGroup>
