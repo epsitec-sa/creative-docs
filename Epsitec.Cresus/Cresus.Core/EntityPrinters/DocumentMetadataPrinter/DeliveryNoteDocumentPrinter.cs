@@ -152,7 +152,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				this.tableColumns[TableColumnKeys.ArticleId].Visible = false;
 			}
 
-			if (!this.HasOption (DocumentOption.ArticleAdditionalQuantities))
+			if (!this.HasOption (DocumentOption.ArticleAdditionalQuantities) ||
+				AbstractDocumentMetadataPrinter.IsEmptyColumn (accessors, DocumentItemAccessorColumn.AdditionalQuantity))
 			{
 				this.tableColumns[TableColumnKeys.AdditionalType].Visible = false;
 				this.tableColumns[TableColumnKeys.AdditionalQuantity].Visible = false;

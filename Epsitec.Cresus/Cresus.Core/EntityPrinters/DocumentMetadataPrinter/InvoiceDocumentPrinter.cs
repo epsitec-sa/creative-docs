@@ -184,7 +184,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				}
 				else
 				{
-					//	Donne nornalement toutes les lignes.
+					//	Donne normalement toutes les lignes.
 					foreach (var line in this.Entity.ConciseLines)
 					{
 						yield return new ContentLine (line);
@@ -261,7 +261,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				this.tableColumns[TableColumnKeys.ArticleId].Visible = false;
 			}
 
-			if (!this.HasOption (DocumentOption.ArticleAdditionalQuantities))
+			if (!this.HasOption (DocumentOption.ArticleAdditionalQuantities) ||
+				AbstractDocumentMetadataPrinter.IsEmptyColumn (accessors, DocumentItemAccessorColumn.AdditionalQuantity))
 			{
 				this.tableColumns[TableColumnKeys.AdditionalType].Visible = false;
 				this.tableColumns[TableColumnKeys.AdditionalQuantity].Visible = false;

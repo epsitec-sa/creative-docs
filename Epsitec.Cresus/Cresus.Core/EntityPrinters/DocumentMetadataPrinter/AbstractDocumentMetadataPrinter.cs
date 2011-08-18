@@ -281,7 +281,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				accessors.Add (accessor);
 			}
 
-			//	Première passe pour déterminer le nombre le lignes du tableau aunsi que
+			//	Première passe pour déterminer le nombre le lignes du tableau ainsi que
 			//	les colonnes visibles.
 			int rowCount = 1;  // déjà 1 pour l'en-tête (titres des colonnes)
 
