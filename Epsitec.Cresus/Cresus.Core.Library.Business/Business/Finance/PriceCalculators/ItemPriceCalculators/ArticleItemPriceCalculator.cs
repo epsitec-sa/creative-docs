@@ -138,7 +138,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 				var roundingPolicy    = this.priceRoundingMode.RoundingPolicy;
 				var unitPriceQuantity = this.articleItem.GetOrderedQuantity ();
 				var realPriceQuantity = this.GetRealPriceQuantity ();
-				var articlePrice      = this.GetArticlePrices (unitPriceQuantity).FirstOrDefault ();
+				var articlePrice      = this.GetArticlePrices (unitPriceQuantity, realPriceQuantity).FirstOrDefault ();
 
 				//	TODO: apply PriceGroup to price if articlePrice.ValueOverridesPriceGroup is set to false
 
@@ -157,6 +157,9 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 				this.articleItem.ResultingLinePriceBeforeTax = PriceCalculator.ClipPriceValue (resultingLinePriceBeforeTax, this.currencyCode);
 				this.articleItem.ResultingLineTax1 = PriceCalculator.ClipPriceValue (this.tax.GetTax (0), this.currencyCode);
 				this.articleItem.ResultingLineTax2 = PriceCalculator.ClipPriceValue (this.tax.GetTax (1), this.currencyCode);
+
+				decimal resultingLineTax  = this.articleItem.ResultingLineTax1.GetValueOrDefault () + this.articleItem.ResultingLineTax2.GetValueOrDefault ();
+				decimal resultingTaxDelta = resultingLineTax - this.tax.TotalTax;
 
 				this.articleItem.FinalLinePriceBeforeTax = null;
 
@@ -475,8 +478,13 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 		}
 
 
-		public IEnumerable<ArticlePriceEntity> GetArticlePrices(decimal quantity)
+		public IEnumerable<ArticlePriceEntity> GetArticlePrices(decimal quantity, decimal fallbackQuantity)
 		{
+			if (quantity == 0)
+			{
+				quantity = fallbackQuantity == 0 ? 1 : fallbackQuantity;
+			}
+
 			return this.articleDef.GetArticlePrices (quantity, this.date, this.currencyCode, this.priceGroup);
 		}
 

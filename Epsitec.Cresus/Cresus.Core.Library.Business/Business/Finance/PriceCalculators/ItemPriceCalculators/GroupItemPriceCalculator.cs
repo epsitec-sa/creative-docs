@@ -182,14 +182,14 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 			}
 		}
 
-		public void AccumulateDiscountable(Tax tax)
+		private void AccumulateDiscountable(Tax tax)
 		{
 			this.totalPriceBeforeTaxDiscountable += tax.TotalAmount;
 			this.totalTaxDiscountable += tax.TotalTax;
 			this.taxDiscountable = Tax.Combine (tax, this.taxDiscountable);
 		}
 
-		public void AccumulateNotDiscountable(Tax tax)
+		private void AccumulateNotDiscountable(Tax tax)
 		{
 			this.totalPriceBeforeTaxNotDiscountable += tax.TotalAmount;
 			this.totalTaxNotDiscountable += tax.TotalTax;
