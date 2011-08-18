@@ -1,13 +1,14 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// L'énumération KeyCode liste tous les codes de touches connus et supportés
-	/// par le système de gestion des événements.
+	/// The <c>KeyCode</c> enumeration lists all currently used key codes
+	/// produced by the keyboard.
 	/// </summary>
-	[System.Flags] public enum KeyCode
+	[System.Flags]
+	public enum KeyCode
 	{
 		None			= 0,
 		
@@ -102,6 +103,7 @@ namespace Epsitec.Common.Widgets
 
 		NumericMultiply		= 106,
 		NumericAdd			= 107,
+//?		NumericSeparator	= 108,
 		NumericSubstract	= 109,
 		NumericDecimal		= 110,
 		NumericDivide		= 111,
@@ -128,6 +130,11 @@ namespace Epsitec.Common.Widgets
 		
 		ModifierShift	= (int) ModifierKeys.Shift,
 		ModifierControl	= (int) ModifierKeys.Control,
-		ModifierAlt		= (int) ModifierKeys.Alt
+		ModifierAlt		= (int) ModifierKeys.Alt,
+
+		//	Special, virtual key codes defined internally (usually extended keys which map to other key codes) :
+		
+		ExtendedKeys		= 0x1000,
+		NumericEnter		= ExtendedKeys + 0,
 	}
 }

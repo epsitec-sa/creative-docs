@@ -308,6 +308,7 @@ namespace Epsitec.Common.Widgets
 						dir  = TabNavigationDir.Forwards;
 						break;
 					
+					case KeyCode.NumericEnter:
 					case KeyCode.Return:
 						if (window != null)
 						{

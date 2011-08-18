@@ -92,11 +92,26 @@ namespace Epsitec.Common.Widgets
 			{
 				switch (message.KeyCodeOnly)
 				{
-					case KeyCode.Return:	processed = this.ProcessReturnKey (message);	break;
-					case KeyCode.Tab:		processed = this.ProcessTabKey (message);		break;
-					case KeyCode.Back:		processed = this.ProcessBackKey (message);		break;
-					case KeyCode.Delete:	processed = this.ProcessDeleteKey (message);	break;
-					case KeyCode.Space:	    processed = this.ProcessSpaceKey (message);	    break;
+					case KeyCode.NumericEnter:
+					case KeyCode.Return:
+						processed = this.ProcessReturnKey (message);
+						break;
+					
+					case KeyCode.Tab:
+						processed = this.ProcessTabKey (message);
+						break;
+					
+					case KeyCode.Back:
+						processed = this.ProcessBackKey (message);
+						break;
+					
+					case KeyCode.Delete:
+						processed = this.ProcessDeleteKey (message);
+						break;
+					
+					case KeyCode.Space:
+						processed = this.ProcessSpaceKey (message);
+						break;
 				}
 			}
 			

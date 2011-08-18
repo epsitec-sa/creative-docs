@@ -1033,13 +1033,13 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 
 					if (this.IsEditing)  // édition en cours ?
 					{
-						if (message.KeyCode == KeyCode.Return)
+						if (Epsitec.Common.Widgets.Feel.Factory.Active.TestAcceptKey (message))
 						{
 							this.editingObject.AcceptEdition ();
 							message.Consumer = this;
 							message.Swallowed = true;
 						}
-						if (message.KeyCode == KeyCode.Escape)
+						else if (Epsitec.Common.Widgets.Feel.Factory.Active.TestCancelKey (message))
 						{
 							this.editingObject.CancelEdition ();
 							message.Consumer = this;

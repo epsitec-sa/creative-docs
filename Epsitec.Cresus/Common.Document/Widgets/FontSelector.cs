@@ -299,6 +299,7 @@ namespace Epsitec.Common.Document.Widgets
 						ok = false;
 						break;
 
+					case KeyCode.NumericEnter:
 					case KeyCode.Return:
 						if ( this.selectedList == null && this.selectedLine != -1 )  // sélection unique ?
 						{

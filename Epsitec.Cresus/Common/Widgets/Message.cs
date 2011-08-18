@@ -861,15 +861,34 @@ namespace Epsitec.Common.Widgets
 			{
 				message.modifiers |= ModifierKeys.Control;
 			}
+
+			int     rawKeyChar = (int) wParam;
+			KeyCode rawKeyCode = (KeyCode) rawKeyChar;
+			int     rawLParam  = (int) lParam;
+
+			if ((rawLParam & (1 << 24)) != 0)
+			{
+				//	This is an extended key which might require some remapping to get the real.
+
+				switch (rawKeyCode)
+				{
+					case KeyCode.Return:
+						rawKeyCode = KeyCode.NumericEnter;
+						break;
+					
+					default:
+						break;
+				}
+			}
 			
 			if (message.messageType == MessageType.KeyPress)
 			{
 				message.keyCode = Message.lastCode;
-				message.keyChar = (int) wParam;
+				message.keyChar = rawKeyChar;
 			}
 			else
 			{
-				Message.lastCode = (KeyCode) (int) wParam;
+				Message.lastCode = rawKeyCode;
 				message.keyCode  = Message.lastCode;
 			}
 			
@@ -1066,6 +1085,18 @@ namespace Epsitec.Common.Widgets
 		private static string GetSimpleKeyName(KeyCode code)
 		{
 			string name;
+
+			if (code >= KeyCode.ExtendedKeys)
+			{
+				switch (code)
+				{
+					case KeyCode.NumericEnter:
+						return "Enter";
+
+					default:
+						break;
+				}
+			}
 			
 			if (Win32Api.GetKeyName (code, out name))
 			{

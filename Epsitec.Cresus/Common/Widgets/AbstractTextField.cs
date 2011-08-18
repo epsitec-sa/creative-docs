@@ -1190,6 +1190,7 @@ namespace Epsitec.Common.Widgets
 								break;
 
 							case KeyCode.Return:
+							case KeyCode.NumericEnter:
 								if (message.IsNoModifierPressed)
 								{
 									if (this.AcceptEdition () && this.SwallowReturnOnAcceptEdition)

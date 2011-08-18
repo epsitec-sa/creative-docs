@@ -1,4 +1,4 @@
-//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Widgets
 		/// Gets or sets the key code for this shortcut.
 		/// </summary>
 		/// <value>The key code.</value>
-		public KeyCode KeyCode
+		public KeyCode					KeyCode
 		{
 			get
 			{

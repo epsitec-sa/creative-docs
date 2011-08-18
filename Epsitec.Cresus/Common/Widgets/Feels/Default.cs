@@ -18,7 +18,12 @@ namespace Epsitec.Common.Widgets.Feel
 				(message.IsControlPressed == false) &&
 				(message.IsAltPressed == false))
 			{
-				return (message.KeyCode == KeyCode.Return);
+				switch (message.KeyCode)
+				{
+					case KeyCode.Return:
+					case KeyCode.NumericEnter:
+						return true;
+				}
 			}
 			
 			return false;
@@ -35,10 +40,8 @@ namespace Epsitec.Common.Widgets.Feel
 				{
 					case KeyCode.Space:
 					case KeyCode.Return:
+					case KeyCode.NumericEnter:
 						return true;
-				
-					default:
-						return false;
 				}
 			}
 			

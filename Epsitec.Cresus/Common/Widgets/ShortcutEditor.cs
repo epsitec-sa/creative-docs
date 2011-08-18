@@ -220,6 +220,7 @@ namespace Epsitec.Common.Widgets
 			this.ComboAddCode(KeyCode.NumericSubstract);
 			this.ComboAddCode(KeyCode.NumericAdd);
 			this.ComboAddCode(KeyCode.NumericDecimal);
+			this.ComboAddCode(KeyCode.NumericEnter);
 		}
 
 		protected void ComboAddModifier(KeyCode code)
