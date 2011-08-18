@@ -275,7 +275,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			{
 				var contentLine = this.ContentLines.ElementAt (i);
 
-				var accessor = new DocumentItemAccessor (this.Entity, this.businessLogic, numberGenerator);
+				var accessor = new DocumentItemAccessor (this.Metadata, this.businessLogic, numberGenerator);
 				accessor.BuildContent (contentLine.Line, this.DocumentType, this.DocumentItemAccessorMode, contentLine.GroupIndex);
 
 				accessors.Add (accessor);

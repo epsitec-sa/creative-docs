@@ -24,9 +24,10 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 	/// </summary>
 	public class DocumentItemAccessor
 	{
-		public DocumentItemAccessor(BusinessDocumentEntity businessDocumentEntity, BusinessLogic businessLogic, IncrementalNumberGenerator numberGenerator)
+		public DocumentItemAccessor(DocumentMetadataEntity documentMetadataEntity, BusinessLogic businessLogic, IncrementalNumberGenerator numberGenerator)
 		{
-			this.businessDocumentEntity = businessDocumentEntity;
+			this.documentMetadataEntity = documentMetadataEntity;
+			this.businessDocumentEntity = documentMetadataEntity.BusinessDocument as BusinessDocumentEntity;
 			this.businessLogic          = businessLogic;
 			this.numberGenerator        = numberGenerator;
 
@@ -438,7 +439,8 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 					break;
 
 				case ArticleQuantityType.Billed:
-					if (billedQuantity > shippedQuantity)
+					if (!Controllers.BusinessDocumentControllers.InvoiceBusinessLogic.IsDirectInvoice(this.documentMetadataEntity) &&
+						billedQuantity > shippedQuantity)
 					{
 						return DocumentItemAccessorError.BilledQuantitiesTooHigh;
 					}
@@ -715,6 +717,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 		private static readonly int identSpacePerLevel = 3;
 
+		private readonly DocumentMetadataEntity						documentMetadataEntity;
 		private readonly BusinessDocumentEntity						businessDocumentEntity;
 		private readonly BusinessLogic								businessLogic;
 		private readonly IncrementalNumberGenerator					numberGenerator;
