@@ -275,6 +275,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void AddButton(string id, FormattedText title, FormattedText description, System.Action callback)
 		{
 			//	Ajoute un bouton dans la section Workflow du ruban.
+#if false
 			if (WorkflowController.ribbonWorkflowContainer.Children.OfType<Button> ().Any ())
 			{
 				new Separator
@@ -286,12 +287,14 @@ namespace Epsitec.Cresus.Core.Controllers
 					Margins = new Margins (1, 1, 0, 0),
 				};
 			}
+#endif
 
 			var button = new Button
 			{
 				Parent = WorkflowController.ribbonWorkflowContainer,
 				Name = id,
 				FormattedText = title,
+				Padding = new Margins (5, 5, 2, 2),  // le texte ne doit pas toucher les bords du bouton
 				ButtonStyle = ButtonStyle.Confirmation,
 				Dock = DockStyle.Stacked,
 				PreferredWidth = 100,
