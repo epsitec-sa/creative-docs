@@ -6,13 +6,11 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Cresus.Bricks;
-using Epsitec.Cresus.Core.Bricks;
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.DataLayer.Context;
-using Epsitec.Common.Types.Converters;
-using Epsitec.Common.Types.Converters.Marshalers;
 
 namespace Epsitec.Cresus.Core.Server
 {
@@ -264,7 +262,7 @@ namespace Epsitec.Cresus.Core.Server
 					list.Add (PanelBuilder.GetSeparator ());
 				}
 
-				// /!\ Caution! Hot code! /!\
+				// /!\ Caution! Glaciers are melting! /!\
 				if (inputProperties.PeekBefore (BrickPropertyKey.GlobalWarning, -1).HasValue)
 				{
 					list.Add (PanelBuilder.GetGlobalWarning ());
@@ -293,36 +291,24 @@ namespace Epsitec.Cresus.Core.Server
 			var obj = func.DynamicInvoke (this.rootEntity);
 			var entity = obj as AbstractEntity;
 
+			var accessor = this.coreSession.GetPanelFieldAccessor (lambda);
 			var fieldType  = lambda.ReturnType;
-			var fieldMode  = PanelBuilder.GetFieldEditionSettings (lambda);
-
-			//int    width  = InputProcessor.GetInputWidth (fieldProperties);
-			//int    height = InputProcessor.GetInputHeight (fieldProperties);
-			string title  = PanelBuilder.GetInputTitle (fieldProperties);
 
 			var caption   = EntityInfo.GetFieldCaption (lambda);
-			title     = title ?? PanelBuilder.GetInputTitle (caption);
-
-			//System.Collections.IEnumerable collection = InputProcessor.GetInputCollection (fieldProperties);
-			//int? specialController = InputProcessor.GetSpecialController (fieldProperties);
-
-
-			string fieldName = fieldMode.FieldId.ToString ().Trim ('[', ']');
+			string title  = PanelBuilder.GetInputTitle (fieldProperties) ?? PanelBuilder.GetInputTitle (caption);
+			string fieldName = caption.Id.ToString ().Trim ('[', ']');
 
 			lambdaDictionnary["xtype"] = "hiddenfield";
 			lambdaDictionnary["name"] = PanelBuilder.GetLambdaFieldName (fieldName);
-			var accessor = this.coreSession.GetPanelFieldAccessor (lambda);
 			lambdaDictionnary["value"] = accessor == null ? "-1" : accessor.Id.ToString ();
 
 			entityDictionnary["xtype"] = "textfield";
 			entityDictionnary["fieldLabel"] = title;
 			entityDictionnary["name"] = fieldName;
 
-			var businessContext = this.coreSession.GetBusinessContext ();
-
 			if (accessor.IsEntityType)
 			{
-				var items = businessContext.Data.GetAllEntities (fieldType, DataExtractionMode.Sorted, this.DataContext);
+				var items = this.BusinessContext.Data.GetAllEntities (fieldType, DataExtractionMode.Sorted, this.DataContext);
 				var data = from item in items
 						   select new object[]
 						   {
@@ -370,7 +356,7 @@ namespace Epsitec.Cresus.Core.Server
 
 			if (accessor.IsCollectionType)
 			{
-				var items = businessContext.Data.GetAllEntities (accessor.CollectionItemType, DataExtractionMode.Sorted, businessContext.DataContext);
+				var items = this.BusinessContext.Data.GetAllEntities (accessor.CollectionItemType, DataExtractionMode.Sorted, this.DataContext);
 				var found = accessor.GetCollection (this.rootEntity).Cast<AbstractEntity> ();
 
 				entityDictionnary["xtype"]  = "fieldcontainer";
@@ -406,9 +392,9 @@ namespace Epsitec.Cresus.Core.Server
 				return list;
 			}
 
-			//System.Diagnostics.Debug.WriteLine (
-			//    string.Format ("*** Field {0} of type {1} : no automatic binding implemented in Bridge<{2}>",
-			//        lambda.ToString (), fieldType.FullName, typeof (T).Name));
+			System.Diagnostics.Debug.WriteLine (
+				string.Format ("*** Field {0} of type {1} : no automatic binding implemented in PanelBuilder",
+					lambda.ToString (), fieldType.FullName));
 
 			return list;
 		}
@@ -435,27 +421,6 @@ namespace Epsitec.Cresus.Core.Server
 			}
 
 			dic["items"] = list;
-
-			//int index = this.actions.Count ();
-
-			//var title = Brick.GetProperty (property.Brick, BrickPropertyKey.Title).StringValue;
-
-			//this.CreateActionsForInput (property.Brick, null);
-
-			//var actions = new List<UIAction> ();
-
-			//while (index < this.actions.Count)
-			//{
-			//    actions.Add (this.actions[index]);
-			//    this.actions.RemoveAt (index);
-			//}
-
-			//if (actions.Count == 0)
-			//{
-			//    return;
-			//}
-
-			//this.actions.Add (new UIGroupAction (actions, title));
 
 			return dic;
 		}
@@ -487,16 +452,6 @@ namespace Epsitec.Cresus.Core.Server
 			}
 
 			return caption.Description ?? caption.Name;
-		}
-
-		private static FieldInfo GetFieldEditionSettings(LambdaExpression lambda)
-		{
-			//FieldInfo info = new FieldInfo (EntityInfo<T>.GetTypeId (), lambda);
-			//info.Settings = this.bridge.bridgeContext.FeatureManager.GetFieldEditionSettings (info.EntityId, info.FieldId);
-			//return info;
-
-			FieldInfo info = new FieldInfo (EntityInfo<AbstractContactEntity>.GetTypeId (), lambda);
-			return info;
 		}
 
 		private static Dictionary<string, object> GetSeparator()
@@ -586,7 +541,15 @@ namespace Epsitec.Cresus.Core.Server
 		{
 			get
 			{
-				return this.coreSession.GetBusinessContext ().DataContext;
+				return this.BusinessContext.DataContext;
+			}
+		}
+
+		private BusinessContext BusinessContext
+		{
+			get
+			{
+				return this.coreSession.GetBusinessContext ();
 			}
 		}
 
