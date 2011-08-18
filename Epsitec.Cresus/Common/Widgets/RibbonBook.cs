@@ -10,22 +10,22 @@ namespace Epsitec.Common.Widgets
 	{
 		public RibbonBook()
 		{
-			this.pageItems = new RibbonPageCollection(this);
+			this.pageItems = new RibbonPageCollection (this);
 			this.buttonItems = new ButtonCollection (this);
-			
+
 			this.InternalState &= ~WidgetInternalState.PossibleContainer;
 
 			this.TabNavigationMode = TabNavigationMode.ForwardTabActive;
 
 			//	Partie inférieure, qui contiendra les pages.
-			this.pages = new Widget(this);
+			this.pages = new Widget (this);
 			this.pages.Dock = DockStyle.Fill;
 
 			//	Partie supérieure, qui contiendra les boutons et les commandes rapides.
 			//	Créé en deuxième, pour dessiner les boutons par-dessus les pages !
-			this.buttons = new Widget(this);
-			this.buttons.Margins = new Margins(0, 0, 0, -1);  // -1 -> un pixel de chevauchement avec this.pages
-			this.buttons.Padding = new Margins(12, 0, RibbonBook.TopMargin, 0);
+			this.buttons = new Widget (this);
+			this.buttons.Margins = new Margins (0, 0, 0, -1);  // -1 -> un pixel de chevauchement avec this.pages
+			this.buttons.Padding = new Margins (12, 0, RibbonBook.TopMargin, 0);
 			this.buttons.Dock = DockStyle.Top;
 		}
 		
@@ -47,25 +47,25 @@ namespace Epsitec.Common.Widgets
 
 		protected override void Dispose(bool disposing)
 		{
-			if ( disposing )
+			if (disposing)
 			{
-				RibbonPage[] pages = this.Pages.ToArray ();
-				Button[] buttons = this.Buttons.ToArray ();
-				
+				var pages = this.Pages.ToArray ();
+				var buttons = this.Buttons.ToArray ();
+
+				this.pageItems.Clear ();
+				this.buttonItems.Clear ();
+
 				foreach (RibbonPage page in pages)
 				{
-					page.Dispose();
+					page.Dispose ();
 				}
 				foreach (Button button in buttons)
 				{
 					button.Dispose ();
 				}
-				
-				this.pageItems = null;
-				this.buttonItems = null;
 			}
-			
-			base.Dispose(disposing);
+
+			base.Dispose (disposing);
 		}
 
 
@@ -484,8 +484,8 @@ namespace Epsitec.Common.Widgets
 
 		protected Widget					buttons;
 		protected Widget					pages;
-		protected RibbonPageCollection		pageItems;
-		protected ButtonCollection			buttonItems;
+		private readonly RibbonPageCollection		pageItems;
+		private readonly ButtonCollection			buttonItems;
 		protected RibbonPage				activePage;
 	}
 }
