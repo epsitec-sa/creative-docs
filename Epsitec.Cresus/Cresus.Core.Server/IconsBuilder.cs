@@ -1,6 +1,6 @@
 ﻿
 // Uncomment to regenerate all icons
-#define BUILD_ICONS
+//#define BUILD_ICONS
 
 using System.Linq;
 using Epsitec.Common.Drawing;
