@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Server
 	{
 		public CoreServerProgram()
 		{
-			IconsBuilder.BuildIcons ();
+			IconsBuilder.BuildIcons (@"S:\Epsitec\experimental-js\webcore\");
 
 			RunNancy ();
 
