@@ -20,6 +20,19 @@ namespace Epsitec.Cresus.Core.Server
 #endif
 		}
 
+		public static string GetCSSClassName(string iconUri, IconSize size)
+		{
+			if (iconUri == null)
+			{
+				return null;
+			}
+
+			var iconRes = Misc.GetResourceIconUri (iconUri);
+			var iconName = iconRes.Substring (9);
+
+			return string.Format (IconsBuilder.cssClassName, iconName.Replace ('.', '-').ToLower (), size);
+		}
+
 		private IconsBuilder(string rootfolder)
 		{
 			this.cssFilename = string.Concat (rootfolder, IconsBuilder.baseCssFilename);
@@ -35,19 +48,6 @@ namespace Epsitec.Cresus.Core.Server
 			var list = ImageProvider.Default.GetImageNames ("manifest", null);
 
 			list.ToList ().ForEach (CreateIcons);
-		}
-
-		public static string GetCSSClassName(string iconUri, IconSize size)
-		{
-			if (iconUri == null)
-			{
-				return null;
-			}
-
-			var iconRes = Misc.GetResourceIconUri (iconUri);
-			var iconName = iconRes.Substring (9);
-
-			return string.Format (IconsBuilder.cssClassName, iconName.Replace ('.', '-').ToLower (), size);
 		}
 		/// <summary>
 		/// Create an image using a brick
