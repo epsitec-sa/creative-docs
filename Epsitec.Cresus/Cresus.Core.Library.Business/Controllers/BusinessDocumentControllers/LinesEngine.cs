@@ -854,7 +854,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			this.MakeSplit (selection, simulation: true);
 			return this.lastError == LinesError.OK;
-
+#if false
 			//	Retourne true si la commande Split est active.
 			if (selection.Count != 1)
 			{
@@ -877,13 +877,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			return true;
+#endif
 		}
 
 		public bool IsCombineEnabled(List<LineInformations> selection)
 		{
 			this.MakeCombine (selection, simulation: true);
 			return this.lastError == LinesError.OK;
-
+#if false
 			//	Retourne true si la commande Combine est active.
 			if (selection.Count != 1)
 			{
@@ -906,6 +907,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			return true;
+#endif
 		}
 
 		public bool IsFlatEnabled
