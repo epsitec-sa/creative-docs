@@ -117,14 +117,6 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public TileTabBook CurrentTileTabBook
-		{
-			get
-			{
-				return this.tileTabBook;
-			}
-		}
-
 
 		public bool ReadOnly
 		{
@@ -132,27 +124,6 @@ namespace Epsitec.Cresus.Core
 			get;
 			set;
 		}
-
-
-		public void BeginTileTabPage(int index)
-		{
-			this.contentList = this.tileTabBook.Items.ElementAt (index).PageWidgets;
-		}
-
-		public void BeginTileTabPage<T>(T id)
-		{
-			var book = this.tileTabBook as TileTabBook<T>;
-			var item = book.Items.Where (x => x.Id.Equals (id)).First ();
-			
-			this.contentList = item.PageWidgets;
-		}
-
-
-		public void EndTileTabPage()
-		{
-			this.contentList = null;
-		}
-
 
 		public void Add(Widget widget)
 		{
@@ -1690,10 +1661,6 @@ namespace Epsitec.Cresus.Core
 
 		private void ContentListAdd(Widget widget)
 		{
-			if (this.contentList != null)
-			{
-				this.contentList.Add (widget);
-			}
 		}
 
 		private CoreViewController GetRootController()
@@ -1919,7 +1886,5 @@ namespace Epsitec.Cresus.Core
 		private int								recursionCount;
 		private TitleTile						titleTile;
 		private TitleTileWithVerticalLayout		panelTitleTile;
-		private TileTabBook						tileTabBook;
-		private IList<Widget>					contentList;
 	}
 }
