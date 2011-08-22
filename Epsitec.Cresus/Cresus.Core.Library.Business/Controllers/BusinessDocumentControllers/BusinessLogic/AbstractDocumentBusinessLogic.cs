@@ -90,33 +90,24 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
-		public virtual IEnumerable<ArticleQuantityType> EnabledArticleQuantityTypes
+		public abstract IEnumerable<ArticleQuantityType> EnabledArticleQuantityTypes
 		{
 			//	Retourne la liste des types de quantité éditables.
-			get
-			{
-				return null;
-			}
+			get;
 		}
 
-		public virtual IEnumerable<ArticleQuantityType> PrintableArticleQuantityTypes
+		public abstract IEnumerable<ArticleQuantityType> PrintableArticleQuantityTypes
 		{
 			//	Retourne la liste des types de quantité imprimables.
 			//	La première est la quantité principale.
-			get
-			{
-				return null;
-			}
+			get;
 		}
 
 
-		public virtual IEnumerable<DocumentType> ProcessParentDocumentTypes
+		public abstract IEnumerable<DocumentType> ProcessParentDocumentTypes
 		{
 			//	Retourne la liste des types de document qui peuvent servir de parent.
-			get
-			{
-				return null;
-			}
+			get;
 		}
 
 

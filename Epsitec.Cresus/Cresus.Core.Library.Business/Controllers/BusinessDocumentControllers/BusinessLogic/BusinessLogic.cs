@@ -27,9 +27,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
 	public class BusinessLogic
 	{
-		public BusinessLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
+		public BusinessLogic(IBusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
 		{
-			this.businessContext        = businessContext;
+			this.businessContext        = businessContext as BusinessContext;
 			this.documentMetadataEntity = documentMetadataEntity;
 
 			this.articleQuantityColumnEntities = this.businessContext.GetAllEntities<ArticleQuantityColumnEntity> ();
@@ -259,11 +259,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			get
 			{
 				var list = this.IsDebug ? this.DebugArticleQuantityTypeEditionEnabled : this.documentBusinessLogic.EnabledArticleQuantityTypes;
-
-				if (list == null)
-				{
-					list = new List<ArticleQuantityType> ();
-				}
+				
+				System.Diagnostics.Debug.Assert (list != null);
 
 				return list;
 			}
@@ -277,10 +274,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				var list = this.documentBusinessLogic.PrintableArticleQuantityTypes;
 
-				if (list == null)
-				{
-					list = new List<ArticleQuantityType> ();
-				}
+				System.Diagnostics.Debug.Assert (list != null);
 
 				return list;
 			}
@@ -318,10 +312,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				var list = this.documentBusinessLogic.ProcessParentDocumentTypes;
 
-				if (list == null)
-				{
-					list = new List<DocumentType> ();
-				}
+				System.Diagnostics.Debug.Assert (list != null);
 
 				return list;
 			}
