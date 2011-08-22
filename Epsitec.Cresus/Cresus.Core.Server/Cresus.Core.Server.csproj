@@ -60,6 +60,7 @@
     <Compile Include="BrickProcessor.cs" />
     <Compile Include="IconsBuilder.cs" />
     <Compile Include="Modules\EnumModule.cs" />
+    <Compile Include="Modules\PageModule.cs" />
     <Compile Include="NancyComponents\CoreErrorHandler.cs" />
     <Compile Include="NancyComponents\CoreServerBootstrapper.cs" />
     <Compile Include="CoreServerProgram.cs" />
@@ -180,6 +181,9 @@
   <ItemGroup>
     <Content Include="lib\Nancy.dll" />
     <Content Include="lib\README.txt" />
+    <Content Include="Views\about.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
