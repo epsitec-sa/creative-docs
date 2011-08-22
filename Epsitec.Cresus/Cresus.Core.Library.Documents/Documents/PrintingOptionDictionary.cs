@@ -227,8 +227,23 @@ namespace Epsitec.Cresus.Core.Documents
 
 		public FormattedText GetOptionDescription(VerboseDocumentOption option, bool hasBullet, bool hiliteValue)
 		{
-			FormattedText description = option.Description;
-			FormattedText value = this[option.Option];
+			FormattedText description, value;
+			this.GetOptionDescription (option, false, out description, out value);
+
+			FormattedText bullet = hasBullet ? "● " : "";
+
+			if (hiliteValue)
+			{
+				value = value.ApplyBold ();
+			}
+
+			return FormattedText.Concat (bullet, description, " = ", value);
+		}
+
+		public void GetOptionDescription(VerboseDocumentOption option, bool useDefaultValue, out FormattedText description, out FormattedText value)
+		{
+			description = option.Description;
+			value = useDefaultValue ? option.DefaultValue : this[option.Option];
 
 			if (option.Type == DocumentOptionValueType.Boolean)
 			{
@@ -267,15 +282,6 @@ namespace Epsitec.Cresus.Core.Documents
 			{
 				description = option.Option.ToString ();  // faute de mieux !
 			}
-
-			FormattedText bullet = hasBullet ? "● " : "";
-
-			if (hiliteValue)
-			{
-				value = value.ApplyBold ();
-			}
-
-			return FormattedText.Concat (bullet, description, " = ", value);
 		}
 
 

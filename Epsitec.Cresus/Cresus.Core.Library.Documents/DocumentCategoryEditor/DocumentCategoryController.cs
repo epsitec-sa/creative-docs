@@ -43,6 +43,13 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				Margins = new Margins (0, 10, 0, 10),
 			};
 
+			var centerFrame = new FrameBox
+			{
+				Parent = parent,
+				Dock = DockStyle.Fill,
+				Margins = new Margins (0, Library.UI.Constants.RightMargin, 37, 10),
+			};
+
 			var rightFrame = new FrameBox
 			{
 				Parent = parent,
@@ -54,6 +61,9 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 			this.documentOptionsController = new DocumentOptionsController (this);
 			this.documentOptionsController.CreateUI (leftFrame);
+
+			this.summaryController = new SummaryController (this);
+			this.summaryController.CreateUI (centerFrame);
 
 			this.pageTypesController = new PageTypesController (this);
 			this.pageTypesController.CreateUI (rightFrame);
@@ -98,6 +108,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 				this.documentOptionsController.UpdateAfterDocumentTypeChanged ();
 				this.pageTypesController.UpdateAfterDocumentTypeChanged ();
+				this.summaryController.UpdateAfterDocumentTypeChanged ();
 			};
 		}
 
@@ -116,6 +127,19 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			{
 				return this.documentCategoryEntity;
 			}
+		}
+
+		public DocumentOptionsController DocumentOptionsController
+		{
+			get
+			{
+				return this.documentOptionsController;
+			}
+		}
+
+		public void UpdateAfterOptionChanged()
+		{
+			this.summaryController.UpdateAfterOptionChanged ();
 		}
 
 		
@@ -146,5 +170,6 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 		private DocumentOptionsController					documentOptionsController;
 		private PageTypesController							pageTypesController;
+		private SummaryController							summaryController;
 	}
 }
