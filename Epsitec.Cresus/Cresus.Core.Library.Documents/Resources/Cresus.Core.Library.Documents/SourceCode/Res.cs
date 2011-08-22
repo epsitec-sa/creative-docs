@@ -192,6 +192,14 @@ namespace Epsitec.Cresus.Core.Library.Documents
 						return global::Epsitec.Cresus.Core.Library.Documents.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 39));
 					}
 				}
+				//	designer:cap/HVA22
+				public static global::Epsitec.Common.Types.Caption DirectInvoice
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Documents.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 66));
+					}
+				}
 				//	designer:cap/HVA81
 				public static global::Epsitec.Common.Types.Caption Invoice
 				{
@@ -454,6 +462,16 @@ namespace Epsitec.Cresus.Core.Library.Documents
 		
 		public static class Fields
 		{
+			public static class AbstractDocument
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/HVA42
+				public static readonly global::Epsitec.Common.Support.Druid VariantId = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 68);
+			}
+			
 			public static class DocumentCategory
 			{
 				internal static void _Initialize()
@@ -590,6 +608,7 @@ namespace Epsitec.Cresus.Core.Library.Documents
 			Values.DocumentType._Initialize ();
 			Values.PageType._Initialize ();
 			Values.PrintableEntities._Initialize ();
+			Fields.AbstractDocument._Initialize ();
 			Fields.DocumentCategory._Initialize ();
 			Fields.DocumentCategoryMapping._Initialize ();
 			Fields.DocumentMetadata._Initialize ();

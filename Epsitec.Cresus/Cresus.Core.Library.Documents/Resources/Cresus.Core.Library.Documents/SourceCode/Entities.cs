@@ -880,7 +880,31 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		#endregion
+		///	<summary>
+		///	The <c>VariantId</c> field.
+		///	designer:fld/HVA4/HVA42
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[HVA42]")]
+		public int? VariantId
+		{
+			get
+			{
+				return this.GetField<int?> ("[HVA42]");
+			}
+			set
+			{
+				int? oldValue = this.VariantId;
+				if (oldValue != value || !this.IsFieldDefined("[HVA42]"))
+				{
+					this.OnVariantIdChanging (oldValue, value);
+					this.SetField<int?> ("[HVA42]", oldValue, value);
+					this.OnVariantIdChanged (oldValue, value);
+				}
+			}
+		}
 		
+		partial void OnVariantIdChanging(int? oldValue, int? newValue);
+		partial void OnVariantIdChanged(int? oldValue, int? newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

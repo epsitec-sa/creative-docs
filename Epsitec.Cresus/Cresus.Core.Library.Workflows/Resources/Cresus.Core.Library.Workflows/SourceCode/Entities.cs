@@ -134,11 +134,35 @@ namespace Epsitec.Cresus.Core.Entities
 				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.WorkflowCallEntity> ("[DVAJ]");
 			}
 		}
+		///	<summary>
+		///	The <c>SerializedArgs</c> field.
+		///	designer:fld/DVA1/DVAB1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[DVAB1]")]
+		public global::Epsitec.Cresus.Core.Entities.XmlBlobEntity SerializedArgs
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.XmlBlobEntity> ("[DVAB1]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue = this.SerializedArgs;
+				if (oldValue != value || !this.IsFieldDefined("[DVAB1]"))
+				{
+					this.OnSerializedArgsChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.XmlBlobEntity> ("[DVAB1]", oldValue, value);
+					this.OnSerializedArgsChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnStatusChanging(global::Epsitec.Cresus.Core.Business.WorkflowStatus oldValue, global::Epsitec.Cresus.Core.Business.WorkflowStatus newValue);
 		partial void OnStatusChanged(global::Epsitec.Cresus.Core.Business.WorkflowStatus oldValue, global::Epsitec.Cresus.Core.Business.WorkflowStatus newValue);
 		partial void OnDefinitionChanging(global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity newValue);
 		partial void OnDefinitionChanged(global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity newValue);
+		partial void OnSerializedArgsChanging(global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue, global::Epsitec.Cresus.Core.Entities.XmlBlobEntity newValue);
+		partial void OnSerializedArgsChanged(global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue, global::Epsitec.Cresus.Core.Entities.XmlBlobEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

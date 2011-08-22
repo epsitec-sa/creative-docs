@@ -57,6 +57,16 @@ namespace Epsitec.Cresus.Core.Library.Data
 				{
 				}
 				
+				public static class Numeric
+				{
+					internal static void _Initialize()
+					{
+					}
+					
+					//	designer:cap/8VAH1
+					public static readonly Epsitec.Common.Types.IntegerType Variant = (global::Epsitec.Common.Types.IntegerType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 49));
+				}
+				
 				public static class String
 				{
 					internal static void _Initialize()
@@ -383,6 +393,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			CommandIds._Initialize ();
 			CommandIds.Base._Initialize ();
 			Types._Initialize ();
+			Types.Data.Numeric._Initialize ();
 			Types.Data.String._Initialize ();
 			Fields.Comment._Initialize ();
 			Fields.GeneratorDefinition._Initialize ();
