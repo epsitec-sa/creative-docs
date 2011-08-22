@@ -6,6 +6,7 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Library;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -17,15 +18,32 @@ namespace Epsitec.Cresus.Core.Controllers
 		public static WorkflowEntity CreateDefaultWorkflow<T>(IBusinessContext businessContext, string workflowName = null)
 			where T : AbstractEntity, new ()
 		{
-			var workflow  = businessContext.CreateEntity<WorkflowEntity> ();
-			var thread    = businessContext.CreateEntity<WorkflowThreadEntity> ();
-
-			thread.Status     = WorkflowStatus.Pending;
-			thread.Definition = businessContext.GetLocalEntity (WorkflowFactory.FindDefaultWorkflowDefinition<T> (businessContext.Data, workflowName));
+			var definition = businessContext.GetLocalEntity (WorkflowFactory.FindDefaultWorkflowDefinition<T> (businessContext, workflowName));
+			var workflow   = businessContext.CreateEntity<WorkflowEntity> ();
+			var thread     = WorkflowFactory.CreateWorkflowThread (businessContext, definition);
 
 			workflow.Threads.Add (thread);
 			
 			return workflow;
+		}
+
+		public static WorkflowThreadEntity CreateWorkflowThread(IBusinessContext businessContext, WorkflowDefinitionEntity definition, SettingsCollection settings = null)
+		{
+			WorkflowThreadEntity thread = businessContext.CreateEntity<WorkflowThreadEntity> ();
+			XmlBlobEntity        args   = null;
+
+			if ((settings != null) &&
+				(settings.Count > 0))
+			{
+				args = businessContext.CreateEntity<XmlBlobEntity> ();
+				args.SetSettings (settings);
+			}
+
+			thread.Status		  = WorkflowStatus.Pending;
+			thread.Definition	  = definition;
+			thread.SerializedArgs = args;
+
+			return thread;
 		}
 
 		/// <summary>
@@ -33,14 +51,15 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// type.
 		/// </summary>
 		/// <typeparam name="T">The type of the entity.</typeparam>
-		/// <param name="data">The core data.</param>
+		/// <param name="businessContext">The business context.</param>
 		/// <param name="workflowName">Optional name of the workflow.</param>
 		/// <returns>
 		/// The default workflow definition associated with the specified entity type.
 		/// </returns>
-		public static WorkflowDefinitionEntity FindDefaultWorkflowDefinition<T>(CoreData data, string workflowName = null)
+		public static WorkflowDefinitionEntity FindDefaultWorkflowDefinition<T>(IBusinessContext businessContext, string workflowName = null)
 			where T : AbstractEntity, new ()
 		{
+			var data = businessContext.Data;
 			var repository = data.GetRepository<WorkflowDefinitionEntity> ();
 			var example = repository.CreateExample ();
 

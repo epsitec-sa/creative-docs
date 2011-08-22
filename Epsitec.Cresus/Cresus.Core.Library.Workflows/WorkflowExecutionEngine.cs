@@ -187,7 +187,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					break;
 				
 				case WorkflowTransitionType.Fork:
-					this.StartNewThread (arc);
+					this.StartNewThread (thread, arc);
 					return true;
 
 				default:
@@ -248,12 +248,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			return node;
 		}
 
-		private void StartNewThread(Arc arc)
+		private void StartNewThread(WorkflowThreadEntity runningThread, Arc arc)
 		{
-			WorkflowThreadEntity thread = this.businessContext.CreateEntity<WorkflowThreadEntity> ();
-
-			thread.Status     = WorkflowStatus.Pending;
-			thread.Definition = null;
+			var thread = WorkflowFactory.CreateWorkflowThread (this.businessContext, runningThread.Definition);
 
 			this.AddThreadToWorkflow (thread);
 			this.AddStepToThreadHistory (thread, arc.Edge, this.ResolveForeignNode (arc.Edge.NextNode));
