@@ -103,15 +103,14 @@ namespace Epsitec.Cresus.Core.Server
 
 				var col = (obj as IEnumerable).Cast<AbstractEntity> ().Where (c => c.GetType () == brickType);
 
+				LambdaExpression lambda = brick.GetLambda ();
+				var accessor = this.coreSession.GetPanelFieldAccessor (lambda);
+
 				if (col.Any ())
 				{
 					foreach (var e in col)
 					{
 						var panels = CreatePanelsForEntity (brick, item, e);
-
-						LambdaExpression lambda = brick.GetLambda ();
-						var accessor = this.coreSession.GetPanelFieldAccessor (lambda);
-
 						panels.ForEach (p => p["lambda"] = accessor.Id.ToString ());
 						panels.ForEach (p => p["entityType"] = brickType.AssemblyQualifiedName);
 						list.AddRange (panels);
@@ -121,7 +120,10 @@ namespace Epsitec.Cresus.Core.Server
 				{
 					// This collection is empty, but we want to show its panel
 					// so the user will be able to add one.
-					list.Add (CreateEmptyPanel (item));
+					var panel = CreateEmptyPanel (item);
+					panel["lambda"] = accessor.Id.ToString ();
+					panel["entityType"] = brickType.AssemblyQualifiedName;
+					list.Add (panel);
 				}
 			}
 			else
