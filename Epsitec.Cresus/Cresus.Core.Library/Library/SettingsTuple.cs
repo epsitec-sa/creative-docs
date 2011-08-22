@@ -5,6 +5,10 @@ using Epsitec.Common.Support.Extensions;
 
 namespace Epsitec.Cresus.Core.Library
 {
+	/// <summary>
+	/// The <c>SettingsTuple</c> structure stores a key/value pair used to define
+	/// settings, as stored by the <see cref="SettingsCollection"/>.
+	/// </summary>
 	public struct SettingsTuple : System.IEquatable<SettingsTuple>
 	{
 		public SettingsTuple(string key, string value)

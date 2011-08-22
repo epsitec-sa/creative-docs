@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -40,12 +41,19 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				string content = value.ToString ();
-
-				if (content != this.xmlSourceCache)
+				if (value == null)
 				{
-					this.Data = XmlBlobEntity.StringToByteArray (content);
-					this.xmlSourceCache = content;
+					this.Data = null;
+				}
+				else
+				{
+					string content = value.ToString ();
+
+					if (content != this.xmlSourceCache)
+					{
+						this.Data = XmlBlobEntity.StringToByteArray (content);
+						this.xmlSourceCache = content;
+					}
 				}
 			}
 		}
@@ -78,6 +86,38 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
+
+		public SettingsCollection GetSettings()
+		{
+			XElement xml = this.XmlData;
+
+			if ((xml == null) ||
+				(xml.Name != Xml.Settings))
+			{
+				return new SettingsCollection ();
+			}
+
+			var settings = new SettingsCollection ();
+
+			settings.Restore (xml);
+
+			return settings;
+		}
+
+		public void SetSettings(SettingsCollection settings)
+		{
+			if ((settings == null) ||
+				(settings.Count == 0))
+			{
+				this.XmlData = null;
+			}
+			else
+			{
+				this.XmlData = settings.Save (Xml.Settings);
+			}
+		}
+
+
 		partial void OnDataChanged(byte[] oldValue, byte[] newValue)
 		{
 			this.xmlCache       = null;
@@ -94,6 +134,11 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			var encoding = new System.Text.UTF8Encoding ();
 			return encoding.GetString (data);
+		}
+
+		private static class Xml
+		{
+			public const string Settings = "settings";
 		}
 
 		private XElement xmlCache;

@@ -2,8 +2,11 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
+
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
+using System;
 
 namespace Epsitec.Cresus.Core.Library
 {
@@ -12,7 +15,7 @@ namespace Epsitec.Cresus.Core.Library
 	/// a dictionary of key/values tuples, stored as <see cref="SettingsTuple"/>s. The
 	/// order of the tuples will be preserved.
 	/// </summary>
-	public class SettingsCollection : IEnumerable<SettingsTuple>
+	public sealed class SettingsCollection : IEnumerable<SettingsTuple>
 	{
 		public SettingsCollection()
 		{
@@ -122,6 +125,56 @@ namespace Epsitec.Cresus.Core.Library
 			return changed;
 		}
 
+		public bool RemoveAllStartingWith(string prefix)
+		{
+			var items = from setting in this.tuples
+						let key = setting.Key
+						where key.StartsWith (prefix)
+						select key;
+
+			var remove = items.ToArray ();
+
+			if (remove.Length > 0)
+			{
+				remove.ForEach (key => this.Remove (key));
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+        public XElement Save(string xmlNodeName)
+		{
+			var nodes = this.tuples.Select (x =>
+				new XElement (Xml.Tuple,
+					new XAttribute (Xml.Key, x.Key),
+					new XAttribute (Xml.Value, x.Value)));
+
+			return new XElement (xmlNodeName, nodes);
+		}
+
+		public void Restore(XElement xml)
+		{
+			this.Clear ();
+
+			if (xml == null)
+			{
+				return;
+			}
+
+			foreach (XElement node in xml.Elements ())
+			{
+				System.Diagnostics.Debug.Assert (node.Name == Xml.Tuple);
+
+				string key   = (string) node.Attribute (Xml.Key);
+				string value = (string) node.Attribute (Xml.Value);
+
+				this[key] = value;
+			}
+		}
+
 		#region IEnumerable<SettingTuple> Members
 
 		public IEnumerator<SettingsTuple> GetEnumerator()
@@ -136,6 +189,17 @@ namespace Epsitec.Cresus.Core.Library
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
 			return this.tuples.GetEnumerator ();
+		}
+
+		#endregion
+
+		#region Xml Constants
+
+		private static class Xml
+		{
+			public const string					Tuple	= "tuple";
+			public const string					Key		= "k";
+			public const string					Value	= "v";
 		}
 
 		#endregion

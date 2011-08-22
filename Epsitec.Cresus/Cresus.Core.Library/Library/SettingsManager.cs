@@ -58,50 +58,17 @@ namespace Epsitec.Cresus.Core.Library
 
 		private bool RemoveSettings(string startKey)
 		{
-			var remove = (from setting in this.settings
-						  let key = setting.Key
-						  where key.StartsWith (startKey)
-						  select key).ToArray ();
-
-			if (remove.Length > 0)
-			{
-				remove.ForEach (key => this.settings.Remove (key));
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			return this.settings.RemoveAllStartingWith (startKey);
 		}
 
 		public XElement Save(string xmlNodeName)
 		{
-			var nodes = this.settings.Select (x =>
-				new XElement ("tuple",
-					new XAttribute ("k", x.Key),
-					new XAttribute ("v", x.Value)));
-
-			return new XElement (xmlNodeName, nodes);
+			return this.settings.Save (xmlNodeName);
 		}
 
 		public void Restore(XElement xml)
 		{
-			this.settings.Clear ();
-
-			if (xml == null)
-			{
-				return;
-			}
-
-			foreach (XElement node in xml.Elements ())
-			{
-				System.Diagnostics.Debug.Assert (node.Name == "tuple");
-
-				string key   = (string) node.Attribute ("k");
-				string value = (string) node.Attribute ("v");
-
-				this.settings[key] = value;
-			}
+			this.settings.Restore (xml);
 		}
 
 		private void OnSettingsChanged()
