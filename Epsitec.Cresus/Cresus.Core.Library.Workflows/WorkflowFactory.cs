@@ -15,33 +15,27 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public static class WorkflowFactory
 	{
-		public static WorkflowEntity CreateDefaultWorkflow<T>(IBusinessContext businessContext, string workflowName = null)
+		public static WorkflowEntity CreateDefaultWorkflow<T>(IBusinessContext businessContext, string workflowName = null, SettingsCollection settings = null)
 			where T : AbstractEntity, new ()
 		{
 			var definition = businessContext.GetLocalEntity (WorkflowFactory.FindDefaultWorkflowDefinition<T> (businessContext, workflowName));
 			var workflow   = businessContext.CreateEntity<WorkflowEntity> ();
-			var thread     = WorkflowFactory.CreateWorkflowThread (businessContext, definition);
+			var thread     = WorkflowFactory.CreateWorkflowThread (businessContext, definition, settings);
 
 			workflow.Threads.Add (thread);
 			
 			return workflow;
 		}
 
-		public static WorkflowThreadEntity CreateWorkflowThread(IBusinessContext businessContext, WorkflowDefinitionEntity definition, SettingsCollection settings = null)
+		public static WorkflowThreadEntity CreateWorkflowThread(IBusinessContext businessContext, WorkflowDefinitionEntity definition, SettingsCollection settings)
 		{
+			System.Diagnostics.Debug.Assert (definition.IsNotNull ());
+
 			WorkflowThreadEntity thread = businessContext.CreateEntity<WorkflowThreadEntity> ();
-			XmlBlobEntity        args   = null;
 
-			if ((settings != null) &&
-				(settings.Count > 0))
-			{
-				args = businessContext.CreateEntity<XmlBlobEntity> ();
-				args.SetSettings (settings);
-			}
-
-			thread.Status		  = WorkflowStatus.Pending;
-			thread.Definition	  = definition;
-			thread.SerializedArgs = args;
+			thread.Status	  = WorkflowStatus.Pending;
+			thread.Definition = definition;
+			thread.SetSettings (businessContext, settings);
 
 			return thread;
 		}

@@ -10,6 +10,7 @@ using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -250,7 +251,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void StartNewThread(WorkflowThreadEntity runningThread, Arc arc)
 		{
-			var thread = WorkflowFactory.CreateWorkflowThread (this.businessContext, runningThread.Definition);
+			var settings = runningThread.GetSettings ();			
+			var thread   = WorkflowFactory.CreateWorkflowThread (this.businessContext, runningThread.Definition, settings);
 
 			this.AddThreadToWorkflow (thread);
 			this.AddStepToThreadHistory (thread, arc.Edge, this.ResolveForeignNode (arc.Edge.NextNode));
