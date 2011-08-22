@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Solution Items\AssemblyInfo.Dolphin.cs = Solution Items\AssemblyInfo.Dolphin.cs
 		Solution Items\AssemblyInfo.Solution.cs = Solution Items\AssemblyInfo.Solution.cs
 		Solution Items\Epsitec.Cresus.snk = Solution Items\Epsitec.Cresus.snk
-		Epsitec.Cresus1.vsmdi = Epsitec.Cresus1.vsmdi
+		Epsitec.Cresus1.vsmdi = Epsitec.Cresus.vsmdi
 		Local.testsettings = Local.testsettings
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection
