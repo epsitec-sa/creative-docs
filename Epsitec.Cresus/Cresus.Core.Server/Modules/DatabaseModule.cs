@@ -62,15 +62,11 @@ namespace Epsitec.Cresus.Core.Server.Modules
 				var method = typeof (BusinessContext).GetMethod ("GetAllEntities");
 				var m = method.MakeGenericMethod (type);
 				var o = m.Invoke (context, new object[0]);
-
 				var enumerable = o as IEnumerable<AbstractEntity>;
-
-				var articles = from x in enumerable
-							   select x;
 
 				var list = new List<object> ();
 
-				articles.ForEach (c => list.Add (new
+				enumerable.ForEach (c => list.Add (new
 				{
 					name = c.GetCompactSummary ().ToSimpleText (),
 					uniqueId = coreSession.GetBusinessContext ().DataContext.GetNormalizedEntityKey (c).Value.ToString ()

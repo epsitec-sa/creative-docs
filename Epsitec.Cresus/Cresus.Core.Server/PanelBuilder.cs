@@ -339,7 +339,7 @@ namespace Epsitec.Cresus.Core.Server
 						   };
 
 				entityDictionnary["value"] = this.GetEntityKey (entity);
-				entityDictionnary["xtype"] = "epsitec.entitycombo";
+				entityDictionnary["xtype"] = "epsitec.entity";
 				entityDictionnary["store"] = data;
 
 				return list;
@@ -407,7 +407,7 @@ namespace Epsitec.Cresus.Core.Server
 			if ((fieldType.IsEnum) ||
 			        ((underlyingType != null) && (underlyingType.IsEnum)))
 			{
-				entityDictionnary["xtype"] = "epsitec.enumcombo";
+				entityDictionnary["xtype"] = "epsitec.enum";
 				entityDictionnary["value"] = obj.ToString ();
 				entityDictionnary["storeClass"] = fieldType.AssemblyQualifiedName;
 
