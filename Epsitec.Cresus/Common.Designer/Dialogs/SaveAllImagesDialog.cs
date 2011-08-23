@@ -218,6 +218,14 @@ namespace Epsitec.Common.Designer.Dialogs
 				Margins = new Margins (0, 1, 0, 0),
 			};
 
+			this.button2Box = new Button
+			{
+				Parent = footer,
+				Text = "Plusieurs boîtes",
+				Dock = DockStyle.Fill,
+				Margins = new Margins (1, 1, 0, 0),
+			};
+
 			this.buttonMajor = new Button
 			{
 				Parent = footer,
@@ -237,6 +245,21 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.buttonClear.Clicked += delegate
 			{
 				this.selectedEntityNames.Clear ();
+
+				this.UpdateButtons ();
+				this.UpdateEntities ();
+			};
+
+			this.button2Box.Clicked += delegate
+			{
+				this.selectedEntityNames.Clear ();
+				foreach (var sample in this.entitySamples)
+				{
+					if (sample.BoxCount > 1)
+					{
+						this.selectedEntityNames.Add (sample.Name);
+					}
+				}
 
 				this.UpdateButtons ();
 				this.UpdateEntities ();
@@ -542,6 +565,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.fieldFolder.Text = this.Folder;
 
 			this.buttonClear.Enable = (this.selectedEntityNames.Count != 0);
+			this.button2Box.Enable = !this.Is2Box;
 			this.buttonMajor.Enable = !this.IsMajor;
 			this.buttonAll.Enable = (this.selectedEntityNames.Count != this.entitySamples.Count);
 
@@ -602,6 +626,29 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.result = System.Windows.Forms.DialogResult.OK;
 		}
 
+
+		private bool Is2Box
+		{
+			get
+			{
+				int count = 0;
+
+				foreach (var sample in this.entitySamples)
+				{
+					if (sample.BoxCount > 1)
+					{
+						if (!this.selectedEntityNames.Contains (sample.Name))
+						{
+							return false;
+						}
+
+						count++;
+					}
+				}
+
+				return this.selectedEntityNames.Count == count;
+			}
+		}
 
 		private bool IsMajor
 		{
@@ -670,6 +717,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		private TextField							fieldFolder;
 
 		private Button								buttonClear;
+		private Button								button2Box;
 		private Button								buttonMajor;
 		private Button								buttonAll;
 

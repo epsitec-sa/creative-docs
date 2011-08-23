@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 	{
 		public override double GetPreferredWidth(int columnIndex, int columnCount)
 		{
-			return 54+250*3;
+			return 54+250*3;  // 250 est la largeur approximative qu'auront chacun des 3 panneaux inclus
 		}
 
 		protected override void CreateBricks(BrickWall<DocumentCategoryEntity> wall)
