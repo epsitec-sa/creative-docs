@@ -161,7 +161,10 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 					}
 					else
 					{
-						all = false;
+						if (options != null && options.Count () != 0)  // document implémenté ?
+						{
+							all = false;
+						}
 					}
 				}
 
