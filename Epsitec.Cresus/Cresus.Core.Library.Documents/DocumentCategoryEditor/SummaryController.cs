@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			{
 				Parent = parent,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (0, 0, 0, 0),
+				BackColor = DocumentCategoryController.backColor,
 			};
 
 			this.summaryFrame = new Scrollable
@@ -48,7 +48,6 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				HorizontalScrollerMode = ScrollableScrollerMode.HideAlways,
 				VerticalScrollerMode = ScrollableScrollerMode.Auto,
 				PaintViewportFrame = true,
-				Margins = new Margins (0, 0, 0, 0),
 			};
 			this.summaryFrame.Viewport.IsAutoFitting = true;
 			this.summaryFrame.ViewportPadding = new Margins (-1);
@@ -84,7 +83,8 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 			foreach (var verboseOption in this.verboseDocumentOptions)
 			{
-				FormattedText icon = null, description = null, value = null;
+				FormattedText icon = null, iconTooltip = null, description = null, value = null, valueTooltip = null;
+				Color color = Color.FromBrightness (0);
 
 				if (options.Options.Contains (verboseOption.Option))
 				{
@@ -94,17 +94,17 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					if (this.documentOptionsController.ErrorOptions.Contains (verboseOption.Option))
 					{
 						icon = DocumentCategoryController.errorBullet;
-
-						description = description.ApplyFontColor (DocumentCategoryController.errorColor);
-						value       = value.ApplyFontColor (DocumentCategoryController.errorColor);
+						iconTooltip = "Option définie plusieurs fois dont <b>la valeur est aléatoire</b>";
+						valueTooltip = "<b>valeur aléatoire</b>";
+						color = DocumentCategoryController.errorColor;
 					}
 
 					if (!this.documentOptionsController.RequiredDocumentOptionsContains (verboseOption.Option))
 					{
 						icon = DocumentCategoryController.uselessBullet;
-
-						description = description.ApplyFontColor (DocumentCategoryController.uselessColor);
-						value       = value.ApplyFontColor (DocumentCategoryController.uselessColor);
+						iconTooltip = "Option définie inutilement";
+						valueTooltip = "valeur inutile";
+						color = DocumentCategoryController.uselessColor;
 					}
 				}
 				else
@@ -114,15 +114,15 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 						options.GetOptionDescription (verboseOption, true, out description, out value);
 
 						icon = DocumentCategoryController.missingBullet;
-
-						description = description.ApplyFontColor (DocumentCategoryController.missingColor);
-						value       = value.ApplyFontColor (DocumentCategoryController.missingColor);
+						iconTooltip = "Option indéfinie qui prend la valeur par défaut";
+						valueTooltip = "valeur par défaut";
+						color = DocumentCategoryController.missingColor;
 					}
 				}
 
 				if (icon != null)
 				{
-					this.CreateLine (frame, icon, description, value);
+					this.CreateLine (frame, icon, iconTooltip, description, value, valueTooltip, color);
 				}
 			}
 		}
@@ -135,7 +135,6 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				DrawFullFrame = true,
 				BackColor = color,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 0),
 				Padding = new Margins (5),
 			};
 
@@ -153,7 +152,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			};
 		}
 
-		private void CreateLine(Widget parent, FormattedText icon, FormattedText description, FormattedText value)
+		private void CreateLine(Widget parent, FormattedText icon, FormattedText iconTooltip, FormattedText description, FormattedText value, FormattedText valueTooltip, Color color)
 		{
 			var line = new FrameBox
 			{
@@ -162,7 +161,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				Dock = DockStyle.Top,
 			};
 
-			new StaticText
+			var staticIcon = new StaticText
 			{
 				Parent = line,
 				FormattedText = icon,
@@ -171,10 +170,15 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				Dock = DockStyle.Left,
 			};
 
+			if (!iconTooltip.IsNullOrEmpty)
+			{
+				ToolTip.Default.SetToolTip (staticIcon, iconTooltip);
+			}
+
 			var staticDescription = new StaticText
 			{
 				Parent = line,
-				FormattedText = description,
+				FormattedText = description.ApplyFontColor (color),
 				ContentAlignment = ContentAlignment.MiddleLeft,
 				TextBreakMode = TextBreakMode.SingleLine | TextBreakMode.Ellipsis | TextBreakMode.Split,
 				Margins = new Margins (5, 0, 0, 0),
@@ -186,7 +190,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			var staticValue = new StaticText
 			{
 				Parent = line,
-				FormattedText = value,
+				FormattedText = value.ApplyFontColor (color),
 				PreferredWidth = 70,
 				ContentAlignment = ContentAlignment.MiddleRight,
 				TextBreakMode = TextBreakMode.SingleLine | TextBreakMode.Ellipsis | TextBreakMode.Split,
@@ -194,7 +198,14 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				Dock = DockStyle.Right,
 			};
 
-			ToolTip.Default.SetToolTip (staticValue, value);
+			if (valueTooltip.IsNullOrEmpty)
+			{
+				ToolTip.Default.SetToolTip (staticValue, value);
+			}
+			else
+			{
+				ToolTip.Default.SetToolTip (staticValue, FormattedText.Concat (value, " (", valueTooltip, ")"));
+			}
 		}
 
 

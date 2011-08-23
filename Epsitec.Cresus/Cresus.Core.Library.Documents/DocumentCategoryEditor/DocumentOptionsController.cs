@@ -551,10 +551,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				}
 
 				//	Génère le texte final.
-				var hline = new string ('_', 80);
-				var separator = string.Concat ("<font size=\"40%\">", hline, "<br/> <br/></font>");
-
-				return string.Concat (correctText, errorText, uselessText, separator, string.Join ("<br/>", list));
+				return string.Concat (correctText, errorText, uselessText, DocumentOptionsController.MenuSeparator, string.Join ("<br/>", list));
 			}
 			else  // option non cochée ?
 			{
@@ -573,7 +570,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			}
 		}
 
-		private FormattedText GetMissingTooltipDescription(List<DocumentOption> usedOptions)
+		private FormattedText GetMissingTooltipDescription(FormattedText fix, List<DocumentOption> usedOptions)
 		{
 			var list = new List<DocumentOption> ();
 
@@ -588,10 +585,10 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				}
 			}
 
-			return this.GetTooltipDescription (list);
+			return this.GetTooltipDescription (fix, list, DocumentCategoryController.missingColor);
 		}
 
-		private FormattedText GetTooltipDescription(List<DocumentOption> options)
+		private FormattedText GetTooltipDescription(FormattedText fix, List<DocumentOption> options, Color color)
 		{
 			//	Retourne le contenu pour un tooltip, sans les valeurs.
 			var list = new List<string> ();
@@ -605,7 +602,18 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				}
 			}
 
-			return string.Join ("<br/>", list);
+			FormattedText x = string.Join ("<br/>", list);
+
+			return FormattedText.Concat (fix, " :<br/>", DocumentOptionsController.MenuSeparator, x.ApplyFontColor (color));
+		}
+
+		private static string MenuSeparator
+		{
+			get
+			{
+				var hline = new string ('_', 80);
+				return string.Concat ("<font size=\"40%\">", hline, "<br/> <br/></font>");
+			}
 		}
 
 
@@ -739,6 +747,15 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 						}
 
 						info.ErrorText.FormattedText = text;
+
+						if (text.IsNullOrEmpty)
+						{
+							ToolTip.Default.HideToolTipForWidget (info.ErrorText);
+						}
+						else
+						{
+							ToolTip.Default.SetToolTip (info.ErrorText, "Contient des options définies plusieurs fois dont <b>les valeurs sont aléatoires</b>");
+						}
 					}
 				}
 
@@ -767,6 +784,15 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 						}
 
 						info.UselessText.FormattedText = text;
+
+						if (text.IsNullOrEmpty)
+						{
+							ToolTip.Default.HideToolTipForWidget (info.UselessText);
+						}
+						else
+						{
+							ToolTip.Default.SetToolTip (info.UselessText, "Contient des options définies inutilement");
+						}
 					}
 				}
 
@@ -788,15 +814,15 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				if (error == 1)
 				{
 					errorMessage = "Il y a une option définie plusieurs fois";
+					errorTooltip = this.GetTooltipDescription ("L'option suivante est définie plusieurs fois<br/>et a une <b>valeur aléatoire</b>", this.errorOptions, DocumentCategoryController.errorColor);
 				}
 				else
 				{
 					errorMessage = string.Format ("Il y a {0} options définies plusieurs fois", error.ToString ());
+					errorTooltip = this.GetTooltipDescription ("Les options suivantes sont définies plusieurs fois<br/>et ont des <b>valeurs aléatoires</b>", this.errorOptions, DocumentCategoryController.errorColor);
 				}
 
 				errorMessage = FormattedText.Concat (DocumentCategoryController.errorBullet, "  ", errorMessage.ApplyBold ());
-
-				errorTooltip = this.GetTooltipDescription (this.errorOptions).ApplyFontColor (DocumentCategoryController.errorColor);
 			}
 
 			if (missing != 0)
@@ -804,15 +830,15 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				if (missing == 1)
 				{
 					missingMessage = "Il y a une option indéfinie";
+					missingTooltip = this.GetMissingTooltipDescription ("L'option suivante est indéfinie<br/>et prend la valeur par défaut", usedOptions);
 				}
 				else
 				{
 					missingMessage = string.Format ("Il y a {0} options indéfinies", missing.ToString ());
+					missingTooltip = this.GetMissingTooltipDescription ("Les options suivantes sont indéfinies<br/>et prennent les valeurs par défaut", usedOptions);
 				}
 
 				missingMessage = FormattedText.Concat (DocumentCategoryController.missingBullet, "  ", missingMessage);
-
-				missingTooltip = this.GetMissingTooltipDescription (usedOptions);
 			}
 
 			if (useless != 0)
@@ -820,15 +846,15 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				if (useless == 1)
 				{
 					uselessMessage = "Il y a une option définie inutilement";
+					uselessTooltip = this.GetTooltipDescription ("L'options suivante est définie inutilement", uselessOptions, DocumentCategoryController.uselessColor);
 				}
 				else
 				{
 					uselessMessage = string.Format ("Il y a {0} options définies inutilement", useless.ToString ());
+					uselessTooltip = this.GetTooltipDescription ("Les options suivantes sont définies inutilement", uselessOptions, DocumentCategoryController.uselessColor);
 				}
 
 				uselessMessage = FormattedText.Concat (DocumentCategoryController.uselessBullet, "  ", uselessMessage);
-
-				uselessTooltip = this.GetTooltipDescription (uselessOptions).ApplyFontColor (DocumentCategoryController.uselessColor);
 			}
 
 			if (this.documentCategoryEntity.DocumentOptions.Count == 0)
