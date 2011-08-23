@@ -162,24 +162,22 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 		#endregion
 
 
-		public static readonly int		lineHeight       = 15;
-		public static readonly int		errorHeight      = 20;
-		public static readonly int		errorBulletWidth = 15;
+		public static readonly int				lineHeight       = 15;
+		public static readonly int				errorHeight      = 20;
+		public static readonly int				errorBulletWidth = 15;
 
-		public static readonly Color	acceptedColor  = Color.FromBrightness (1.0);
-		public static readonly Color	toleratedColor = Color.FromBrightness (0.9);
-		public static readonly Color	rejectedColor  = Color.FromBrightness (0.8);
+		public static readonly Color			acceptedColor  = Color.FromBrightness (1.0);  // blanc
+		public static readonly Color			toleratedColor = Color.FromBrightness (0.9);  // gris très clair
+		public static readonly Color			rejectedColor  = Color.FromBrightness (0.8);  // gris clair
 
-		public static readonly Color	errorColor     = Color.FromRgb (230.0/255.0,   0.0/255.0,   0.0/255.0);  // rouge
-		public static readonly Color	uselessColor   = Color.FromRgb (153.0/255.0, 153.0/255.0, 153.0/255.0);  // gris
-		public static readonly Color	missingColor   = Color.FromRgb (  0.0/255.0,   0.0/255.0, 216.0/255.0);  // bleu
+		public static readonly Color			errorColor     = Color.FromHexa ("e60000");  // rouge, selon l'icône DocumentOptions.Error
+		public static readonly Color			uselessColor   = Color.FromHexa ("999999");  // gris,  selon l'icône DocumentOptions.Useless
+		public static readonly Color			missingColor   = Color.FromHexa ("0000d8");  // bleu,  selon l'icône DocumentOptions.Missing
 
-		public static readonly Color	backColor      = Color.FromHexa ("f3f8ff");  // bleu très clair
-
-		public static FormattedText	normalBullet  = Misc.GetResourceIconImageTag ("DocumentOptions.Normal",  -2, new Size (13, 13));
-		public static FormattedText	errorBullet   = Misc.GetResourceIconImageTag ("DocumentOptions.Error",   -2, new Size (13, 13));
-		public static FormattedText	uselessBullet = Misc.GetResourceIconImageTag ("DocumentOptions.Useless", -2, new Size (13, 13));
-		public static FormattedText	missingBullet = Misc.GetResourceIconImageTag ("DocumentOptions.Missing", -2, new Size (13, 13));
+		public static readonly FormattedText	normalBullet  = Misc.GetResourceIconImageTag ("DocumentOptions.Normal",  -2, new Size (13, 13));
+		public static readonly FormattedText	errorBullet   = Misc.GetResourceIconImageTag ("DocumentOptions.Error",   -2, new Size (13, 13));
+		public static readonly FormattedText	uselessBullet = Misc.GetResourceIconImageTag ("DocumentOptions.Useless", -2, new Size (13, 13));
+		public static readonly FormattedText	missingBullet = Misc.GetResourceIconImageTag ("DocumentOptions.Missing", -2, new Size (13, 13));
 
 		private readonly IBusinessContext					businessContext;
 		private readonly DocumentCategoryEntity				documentCategoryEntity;

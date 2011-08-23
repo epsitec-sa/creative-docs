@@ -13,6 +13,7 @@ using Epsitec.Cresus.Core.Documents.Verbose;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.PlugIns;
 using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +39,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			{
 				Parent = parent,
 				Dock = DockStyle.Fill,
-				BackColor = DocumentCategoryController.backColor,
+				BackColor = TileColors.SurfaceDefaultColors.First (),
 			};
 
 			this.summaryFrame = new Scrollable

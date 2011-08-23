@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			{
 				Parent = tile,
 				Dock = DockStyle.Fill,
-				BackColor = DocumentCategoryController.backColor,
+				BackColor = TileColors.SurfaceDefaultColors.First (),
 			};
 
 			this.checkButtonsFrame = new Scrollable
