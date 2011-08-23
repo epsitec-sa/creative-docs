@@ -6,6 +6,7 @@ using Epsitec.Cresus.Core.Server.AdditionalResponses;
 using Nancy;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Cresus.DataLayer.Context;
 
 namespace Epsitec.Cresus.Core.Server.Modules
 {
@@ -75,7 +76,23 @@ namespace Epsitec.Cresus.Core.Server.Modules
 				var res = Response.AsJson (list);
 
 				return res;
+			};
 
+			Post["/delete"] = parameters =>
+			{
+				var coreSession = this.GetCoreSession ();
+				var context = coreSession.GetBusinessContext ();
+
+				string paramEntityKey = (string) Request.Form.entityId;
+
+				var entityKey = EntityKey.Parse (paramEntityKey);
+				AbstractEntity entity = context.DataContext.ResolveEntity (entityKey);
+
+				var ok = context.DeleteEntity (entity);
+
+				context.SaveChanges ();
+
+				return Response.AsCoreBoolean (ok);
 			};
 
 		}

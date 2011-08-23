@@ -24,5 +24,10 @@ namespace Epsitec.Cresus.Core.Server.AdditionalResponses
 		{
 			return CoreResponse.Success (dic);
 		}
+
+		public static Response AsCoreBoolean(this IResponseFormatter formatter, bool success)
+		{
+			return success ? CoreResponse.Success () : CoreResponse.Error ();
+		}
 	}
 }
