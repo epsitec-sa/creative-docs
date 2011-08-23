@@ -106,7 +106,7 @@ namespace Epsitec.Common.Designer
 				this.dlgEntityExpression = new Dialogs.EntityExpressionDialog(this);
 				this.dlgInitialMessage   = new Dialogs.InitialMessageDialog (this);
 				this.dlgModuleInfo       = new Dialogs.ModuleInfoDialog (this);
-				this.dlgSaveAllImages    = new Dialogs.SaveAllImagesDialog (this);
+				this.dlgSaveAllBitmaps    = new Dialogs.SaveAllBitmapsDialog (this);
 
 				this.dlgGlyphs.Closed         += this.HandleDlgClosed;
 				this.dlgSearch.Closed         += this.HandleDlgClosed;
@@ -610,6 +610,15 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		[Command ("SaveAllBitmaps")]
+		void CommandSaveAllBitmaps(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			foreach (ModuleInfo info in this.moduleInfoList)
+			{
+				info.Module.SaveAllBitmaps ();
+			}
+		}
+
 		[Command("Check")]
 		void CommandCheck(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -1072,6 +1081,7 @@ namespace Epsitec.Common.Designer
 		{
 			this.newState = this.CreateCommandState("New", KeyCode.ModifierControl|KeyCode.AlphaN);
 			this.recycleState = this.CreateCommandState("Recycle");
+			this.saveAllBitmapsState = this.CreateCommandState("SaveAllBitmaps");
 			this.openState = this.CreateCommandState("Open", KeyCode.ModifierControl|KeyCode.AlphaO);
 			this.saveState = this.CreateCommandState("Save", KeyCode.ModifierControl|KeyCode.AlphaS);
 			this.saveAsState = this.CreateCommandState("SaveAs");
@@ -2262,11 +2272,13 @@ namespace Epsitec.Common.Designer
 				this.CurrentModule.Modifier.ActiveViewer.UpdateWhenModuleUsed();
 
 				this.recycleState.Enable = true;
+				this.saveAllBitmapsState.Enable = true;
 				this.checkState.Enable = true;
 			}
 			else
 			{
 				this.recycleState.Enable = false;
+				this.saveAllBitmapsState.Enable = false;
 				this.saveState.Enable = false;
 				this.saveAsState.Enable = false;
 				this.checkState.Enable = false;
@@ -2773,29 +2785,29 @@ namespace Epsitec.Common.Designer
 			return this.dlgModuleInfo.IsEditOk;
 		}
 
-		public System.Windows.Forms.DialogResult DlgSaveAllImages(List<EntitiesEditor.EntitySample> entitySamples, List<string> selectedEntityNames, ref string folder, ref string extension, ref EntitiesEditor.BitmapParameters bitmapParameters)
+		public System.Windows.Forms.DialogResult DlgSaveAllBitmaps(List<EntitiesEditor.EntitySample> entitySamples, List<string> selectedEntityNames, ref string folder, ref string extension, ref EntitiesEditor.BitmapParameters bitmapParameters)
 		{
 			//	Ouvre le dialogue pour éditer les informations d'un module.
-			this.dlgSaveAllImages.EntitySamples.Clear ();
-			this.dlgSaveAllImages.EntitySamples.AddRange (entitySamples);
+			this.dlgSaveAllBitmaps.EntitySamples.Clear ();
+			this.dlgSaveAllBitmaps.EntitySamples.AddRange (entitySamples);
 
-			this.dlgSaveAllImages.SelectedEntityNames.Clear ();
-			this.dlgSaveAllImages.SelectedEntityNames.AddRange (selectedEntityNames);
+			this.dlgSaveAllBitmaps.SelectedEntityNames.Clear ();
+			this.dlgSaveAllBitmaps.SelectedEntityNames.AddRange (selectedEntityNames);
 
-			this.dlgSaveAllImages.Folder = folder;
-			this.dlgSaveAllImages.Extension = extension;
-			this.dlgSaveAllImages.BitmapParameters = bitmapParameters;
+			this.dlgSaveAllBitmaps.Folder = folder;
+			this.dlgSaveAllBitmaps.Extension = extension;
+			this.dlgSaveAllBitmaps.BitmapParameters = bitmapParameters;
 
-			this.dlgSaveAllImages.Show ();
+			this.dlgSaveAllBitmaps.Show ();
 
-			folder = this.dlgSaveAllImages.Folder;
-			extension = this.dlgSaveAllImages.Extension;
-			bitmapParameters = this.dlgSaveAllImages.BitmapParameters;
+			folder = this.dlgSaveAllBitmaps.Folder;
+			extension = this.dlgSaveAllBitmaps.Extension;
+			bitmapParameters = this.dlgSaveAllBitmaps.BitmapParameters;
 
 			selectedEntityNames.Clear ();
-			selectedEntityNames.AddRange (this.dlgSaveAllImages.SelectedEntityNames);
+			selectedEntityNames.AddRange (this.dlgSaveAllBitmaps.SelectedEntityNames);
 			
-			return this.dlgSaveAllImages.Result;
+			return this.dlgSaveAllBitmaps.Result;
 		}
 
 		public Dialogs.SearchDialog DialogSearch
@@ -3009,7 +3021,7 @@ namespace Epsitec.Common.Designer
 		private Dialogs.EntityExpressionDialog	dlgEntityExpression;
 		private Dialogs.InitialMessageDialog	dlgInitialMessage;
 		private Dialogs.ModuleInfoDialog		dlgModuleInfo;
-		private Dialogs.SaveAllImagesDialog		dlgSaveAllImages;
+		private Dialogs.SaveAllBitmapsDialog	dlgSaveAllBitmaps;
 		private PanelsContext					context;
 		private DisplayMode						displayMode;
 		private Window							viewersWindow;
@@ -3031,6 +3043,7 @@ namespace Epsitec.Common.Designer
 
 		private CommandState					newState;
 		private CommandState					recycleState;
+		private CommandState					saveAllBitmapsState;
 		private CommandState					openState;
 		private CommandState					saveState;
 		private CommandState					saveAsState;

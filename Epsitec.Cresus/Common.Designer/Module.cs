@@ -401,15 +401,27 @@ namespace Epsitec.Common.Designer
 		public void Save()
 		{
 			//	Enregistre toutes les ressources et met à jour le fichier module.info.
-			this.SaveResources();
+			this.SaveResources ();
 
+#if false
 			var entitiesViewer = this.modifier.EntitiesViewer;
 			if (entitiesViewer != null)
 			{
-				entitiesViewer.SaveAllImages ();
+				entitiesViewer.SaveAllBitmaps ();
 			}
+#endif
 
-			this.UpdateManifest();
+			this.UpdateManifest ();
+		}
+
+		public void SaveAllBitmaps()
+		{
+			//	Enregistre toutes les images bitmap.
+			var entitiesViewer = this.modifier.EntitiesViewer;
+			if (entitiesViewer != null)
+			{
+				entitiesViewer.SaveAllBitmaps ();
+			}
 		}
 
 		public string CheckMessage()

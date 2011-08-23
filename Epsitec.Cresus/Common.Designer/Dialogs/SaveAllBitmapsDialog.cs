@@ -8,9 +8,9 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// <summary>
 	/// Dialogue permettant d'éditer les informations d'un module.
 	/// </summary>
-	public class SaveAllImagesDialog : AbstractDialog
+	public class SaveAllBitmapsDialog : AbstractDialog
 	{
-		public SaveAllImagesDialog(DesignerApplication designerApplication)
+		public SaveAllBitmapsDialog(DesignerApplication designerApplication)
 			: base (designerApplication)
 		{
 			this.entitySamples = new List<EntitiesEditor.EntitySample> ();
@@ -26,8 +26,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.Icon = this.designerApplication.Icon;
 				this.window.MakeSecondaryWindow ();
 				this.window.PreventAutoClose = true;
-				this.WindowInit ("SaveAllImages", 700, 402, true);
-				this.window.Text = "Génération en série d'images bitmap";  // Res.Strings.Dialog.SaveAllImages.Title;
+				this.WindowInit ("SaveAllBitmaps", 700, 402, true);
+				this.window.Text = "Génération en série d'images bitmap";  // Res.Strings.Dialog.SaveAllBitmaps.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
@@ -218,7 +218,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				Margins = new Margins (0, 1, 0, 0),
 			};
 
-			this.button2Box = new Button
+			this.buttonBoxes = new Button
 			{
 				Parent = footer,
 				Text = "Plusieurs boîtes",
@@ -250,7 +250,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.UpdateEntities ();
 			};
 
-			this.button2Box.Clicked += delegate
+			this.buttonBoxes.Clicked += delegate
 			{
 				this.selectedEntityNames.Clear ();
 				foreach (var sample in this.entitySamples)
@@ -565,7 +565,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.fieldFolder.Text = this.Folder;
 
 			this.buttonClear.Enable = (this.selectedEntityNames.Count != 0);
-			this.button2Box.Enable = !this.Is2Box;
+			this.buttonBoxes.Enable = !this.IsBoxes;
 			this.buttonMajor.Enable = !this.IsMajor;
 			this.buttonAll.Enable = (this.selectedEntityNames.Count != this.entitySamples.Count);
 
@@ -627,7 +627,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		private bool Is2Box
+		private bool IsBoxes
 		{
 			get
 			{
@@ -717,7 +717,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		private TextField							fieldFolder;
 
 		private Button								buttonClear;
-		private Button								button2Box;
+		private Button								buttonBoxes;
 		private Button								buttonMajor;
 		private Button								buttonAll;
 

@@ -61,7 +61,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public string GetSaveAllImagesData(string moduleName)
+		public string GetSaveAllBitmapsData(string moduleName)
 		{
 			if (this.saveAllImageParameters.ContainsKey (moduleName))
 			{
@@ -73,7 +73,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void SetSaveAllImagesData(string moduleName, string data)
+		public void SetSaveAllBitmapsData(string moduleName, string data)
 		{
 			this.saveAllImageParameters[moduleName] = data;
 		}

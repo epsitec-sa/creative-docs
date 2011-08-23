@@ -601,4 +601,5 @@
   <data name="Dialog.ModuleInfo.Radio.TextMode.FormattedText" id="KL3">Textes riches (FormattedText)</data>
   <data name="Controller.Filter.Label" id="KM3">Filtrer</data>
   <data name="Viewers.Column.Source" id="KN3">Source</data>
+  <data name="Action.SaveAllBitmaps" id="KO3">Exporte toutes les images des entités selon les réglages de chaque module</data>
 </bundle>

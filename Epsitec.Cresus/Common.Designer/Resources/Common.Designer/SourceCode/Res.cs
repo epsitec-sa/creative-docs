@@ -1826,7 +1826,7 @@ namespace Epsitec.Common.Designer
 						}
 					}
 				}
-
+				
 				public static class FrameEdges
 				{
 					internal static void _Initialize()
@@ -2992,6 +2992,14 @@ namespace Epsitec.Common.Designer
 					get
 					{
 						return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (34));
+					}
+				}
+				//	designer:str/30KO3
+				public static global::System.String SaveAllBitmaps
+				{
+					get
+					{
+						return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544440));
 					}
 				}
 				//	designer:str/30031
