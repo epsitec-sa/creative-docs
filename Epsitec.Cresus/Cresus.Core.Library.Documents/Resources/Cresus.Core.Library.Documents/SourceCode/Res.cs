@@ -136,20 +136,28 @@ namespace Epsitec.Cresus.Core.Library.Documents
 				{
 				}
 				
-				//	designer:cap/HVAR
+				//	designer:cap/HVAS
 				public static global::Epsitec.Common.Types.Caption Active
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Documents.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 28));
+					}
+				}
+				//	designer:cap/HVAR
+				public static global::Epsitec.Common.Types.Caption Draft
 				{
 					get
 					{
 						return global::Epsitec.Cresus.Core.Library.Documents.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 27));
 					}
 				}
-				//	designer:cap/HVAS
-				public static global::Epsitec.Common.Types.Caption Frozen
+				//	designer:cap/HVA52
+				public static global::Epsitec.Common.Types.Caption Inactive
 				{
 					get
 					{
-						return global::Epsitec.Cresus.Core.Library.Documents.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 28));
+						return global::Epsitec.Cresus.Core.Library.Documents.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 69));
 					}
 				}
 				//	designer:cap/HVAQ

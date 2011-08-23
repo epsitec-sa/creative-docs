@@ -624,8 +624,26 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>Comment</c> entity.
 	///	designer:cap/8VAQ
 	///	</summary>
-	public partial class CommentEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	public partial class CommentEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime
 	{
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/8VAQ/8VA3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
 		///	<summary>
 		///	The <c>Text</c> field.
 		///	designer:fld/8VAQ/8VAR
@@ -1225,6 +1243,78 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.IItemCodeUniversalReference Interface
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>IItemCodeUniversalReference</c> entity.
+	///	designer:cap/8VAI1
+	///	</summary>
+	public interface IItemCodeUniversalReference
+	{
+		///	<summary>
+		///	The <c>RefCode</c> field.
+		///	designer:fld/8VAI1/8VAJ1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAJ1]")]
+		string RefCode
+		{
+			get;
+			set;
+		}
+		///	<summary>
+		///	The <c>RefEntityId</c> field.
+		///	designer:fld/8VAI1/8VAK1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAK1]")]
+		string RefEntityId
+		{
+			get;
+			set;
+		}
+	}
+	public static partial class IItemCodeUniversalReferenceInterfaceImplementation
+	{
+		public static string GetRefCode(global::Epsitec.Cresus.Core.Entities.IItemCodeUniversalReference obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<string> ("[8VAJ1]");
+		}
+		public static void SetRefCode(global::Epsitec.Cresus.Core.Entities.IItemCodeUniversalReference obj, string value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			string oldValue = obj.RefCode;
+			if (oldValue != value || !entity.IsFieldDefined("[8VAJ1]"))
+			{
+				IItemCodeUniversalReferenceInterfaceImplementation.OnRefCodeChanging (obj, oldValue, value);
+				entity.SetField<string> ("[8VAJ1]", oldValue, value);
+				IItemCodeUniversalReferenceInterfaceImplementation.OnRefCodeChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnRefCodeChanged(global::Epsitec.Cresus.Core.Entities.IItemCodeUniversalReference obj, string oldValue, string newValue);
+		static partial void OnRefCodeChanging(global::Epsitec.Cresus.Core.Entities.IItemCodeUniversalReference obj, string oldValue, string newValue);
+		public static string GetRefEntityId(global::Epsitec.Cresus.Core.Entities.IItemCodeUniversalReference obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<string> ("[8VAK1]");
+		}
+		public static void SetRefEntityId(global::Epsitec.Cresus.Core.Entities.IItemCodeUniversalReference obj, string value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			string oldValue = obj.RefEntityId;
+			if (oldValue != value || !entity.IsFieldDefined("[8VAK1]"))
+			{
+				IItemCodeUniversalReferenceInterfaceImplementation.OnRefEntityIdChanging (obj, oldValue, value);
+				entity.SetField<string> ("[8VAK1]", oldValue, value);
+				IItemCodeUniversalReferenceInterfaceImplementation.OnRefEntityIdChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnRefEntityIdChanged(global::Epsitec.Cresus.Core.Entities.IItemCodeUniversalReference obj, string oldValue, string newValue);
+		static partial void OnRefEntityIdChanging(global::Epsitec.Cresus.Core.Entities.IItemCodeUniversalReference obj, string oldValue, string newValue);
 	}
 }
 #endregion

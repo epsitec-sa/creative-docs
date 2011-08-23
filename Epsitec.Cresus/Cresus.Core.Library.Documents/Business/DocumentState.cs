@@ -9,8 +9,9 @@ namespace Epsitec.Cresus.Core.Business
 	public enum DocumentState
 	{
 		None					= 0,
-		
-		Active					= 1,
-		Frozen					= 2,
+
+		Draft					= 1,
+		Active					= 2,
+		Inactive				= 3,
 	}
 }

@@ -104,6 +104,8 @@ namespace Epsitec.Cresus.Core.Library.Data
 			public static readonly Epsitec.Common.Types.StructuredType IFileMetadata = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10));
 			//	designer:cap/8VA4
 			public static readonly Epsitec.Common.Types.StructuredType IItemCode = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 4));
+			//	designer:cap/8VAI1
+			public static readonly Epsitec.Common.Types.StructuredType IItemCodeUniversalReference = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 50));
 			//	designer:cap/8VA
 			public static readonly Epsitec.Common.Types.StructuredType IItemRank = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
 			//	designer:cap/8VA2
@@ -228,6 +230,18 @@ namespace Epsitec.Cresus.Core.Library.Data
 				
 				//	designer:cap/8VA5
 				public static readonly global::Epsitec.Common.Support.Druid Code = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 5);
+			}
+			
+			public static class IItemCodeUniversalReference
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/8VAJ1
+				public static readonly global::Epsitec.Common.Support.Druid RefCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 51);
+				//	designer:cap/8VAK1
+				public static readonly global::Epsitec.Common.Support.Druid RefEntityId = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 52);
 			}
 			
 			public static class IItemRank
@@ -404,6 +418,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			Fields.IDateTimeRange._Initialize ();
 			Fields.IFileMetadata._Initialize ();
 			Fields.IItemCode._Initialize ();
+			Fields.IItemCodeUniversalReference._Initialize ();
 			Fields.IItemRank._Initialize ();
 			Fields.ILifetime._Initialize ();
 			Fields.INameDescription._Initialize ();

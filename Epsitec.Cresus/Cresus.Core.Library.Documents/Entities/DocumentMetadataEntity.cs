@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			get
 			{
-				return this.DocumentState == Business.DocumentState.Frozen;
+				return this.DocumentState == Business.DocumentState.Inactive;
 			}
 		}
 

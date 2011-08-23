@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			get
 			{
 				return this.IsDebug || 
-					(this.documentMetadataEntity.DocumentState != DocumentState.Frozen && this.documentBusinessLogic.IsLinesEditionEnabled);
+					(this.documentMetadataEntity.DocumentState != DocumentState.Inactive && this.documentBusinessLogic.IsLinesEditionEnabled);
 			}
 		}
 
@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			get
 			{
 				return this.IsDebug ||
-					(this.documentMetadataEntity.DocumentState != DocumentState.Frozen && this.documentBusinessLogic.IsArticleParametersEditionEnabled);
+					(this.documentMetadataEntity.DocumentState != DocumentState.Inactive && this.documentBusinessLogic.IsArticleParametersEditionEnabled);
 			}
 		}
 
@@ -140,7 +140,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			get
 			{
 				return this.IsDebug ||
-					(this.documentMetadataEntity.DocumentState != DocumentState.Frozen && this.documentBusinessLogic.IsTextEditionEnabled);
+					(this.documentMetadataEntity.DocumentState != DocumentState.Inactive && this.documentBusinessLogic.IsTextEditionEnabled);
 			}
 		}
 
@@ -150,7 +150,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	interne à l'entreprise.
 			get
 			{
-				return this.documentMetadataEntity.DocumentState != DocumentState.Frozen && this.documentBusinessLogic.IsMyEyesOnlyEditionEnabled;
+				return this.documentMetadataEntity.DocumentState != DocumentState.Inactive && this.documentBusinessLogic.IsMyEyesOnlyEditionEnabled;
 			}
 		}
 
@@ -160,7 +160,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			get
 			{
 				return this.IsDebug ||
-					(this.documentMetadataEntity.DocumentState != DocumentState.Frozen && this.documentBusinessLogic.IsPriceEditionEnabled);
+					(this.documentMetadataEntity.DocumentState != DocumentState.Inactive && this.documentBusinessLogic.IsPriceEditionEnabled);
 			}
 		}
 
@@ -170,7 +170,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			get
 			{
 				return this.IsDebug ||
-					(this.documentMetadataEntity.DocumentState != DocumentState.Frozen && this.documentBusinessLogic.IsDiscountEditionEnabled);
+					(this.documentMetadataEntity.DocumentState != DocumentState.Inactive && this.documentBusinessLogic.IsDiscountEditionEnabled);
 			}
 		}
 
@@ -178,7 +178,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public bool IsEditionEnabled(LineInformations info)
 		{
 			//	Indique s'il est possible d'éditer une ligne donnée.
-			if (this.documentMetadataEntity.DocumentState == DocumentState.Frozen)
+			if (this.documentMetadataEntity.DocumentState == DocumentState.Inactive)
 			{
 				return false;
 			}
@@ -224,7 +224,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Indique s'il est possible d'éditer une ou plusieurs quantités.
 			get
 			{
-				return this.documentMetadataEntity.DocumentState != DocumentState.Frozen &&
+				return this.documentMetadataEntity.DocumentState != DocumentState.Inactive &&
 					   this.EnabledArticleQuantityTypes.Any ();
 			}
 		}
@@ -232,7 +232,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public bool IsArticleQuantityTypeEditionEnabled(ArticleQuantityType type)
 		{
 			//	Indique s'il est possible d'éditer une quantité donnée.
-			return this.documentMetadataEntity.DocumentState != DocumentState.Frozen &&
+			return this.documentMetadataEntity.DocumentState != DocumentState.Inactive &&
 				   this.EnabledArticleQuantityTypes.Where (x => x == type).Any ();
 		}
 

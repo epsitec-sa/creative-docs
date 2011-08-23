@@ -57,8 +57,8 @@ namespace Epsitec.Cresus.Core.Business.Rules
 					documentMetadata.BusinessDocument = BusinessDocumentBusinessRules.CloneBusinessDocument (businessContext, currentAffair, sourceDocument, documentType);
 
 					// TODO: Ce n'est pas suffisant de geler le document "source" !
-					// Une facture n'est pas exemple jamais gelée, puisqu'elle ne sert jamais de source.
-					sourceDocument.DocumentState = DocumentState.Frozen;
+					// Une facture n'est pas exnicolasemple jamais gelée, puisqu'elle ne sert jamais de source.
+					sourceDocument.DocumentState = DocumentState.Inactive;
 				}
 				
 				currentAffair.Documents.Add (documentMetadata);
