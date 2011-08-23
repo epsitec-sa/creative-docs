@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				HorizontalScrollerMode = ScrollableScrollerMode.HideAlways,
 				VerticalScrollerMode = ScrollableScrollerMode.Auto,
 				PaintViewportFrame = true,
-				Margins = new Margins (0, 0, 10, 0),
+				Margins = new Margins (0, 0, 0, 0),
 			};
 			this.summaryFrame.Viewport.IsAutoFitting = true;
 			this.summaryFrame.ViewportPadding = new Margins (-1);
@@ -89,22 +89,22 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				if (options.Options.Contains (verboseOption.Option))
 				{
 					options.GetOptionDescription (verboseOption, false, out description, out value);
-					icon = DocumentOptionsController.normalBullet;
+					icon = DocumentCategoryController.normalBullet;
 
 					if (this.documentOptionsController.ErrorOptions.Contains (verboseOption.Option))
 					{
-						icon = DocumentOptionsController.errorBullet;
+						icon = DocumentCategoryController.errorBullet;
 
-						description = description.ApplyFontColor (DocumentOptionsController.errorColor);
-						value       = value.ApplyFontColor (DocumentOptionsController.errorColor);
+						description = description.ApplyFontColor (DocumentCategoryController.errorColor);
+						value       = value.ApplyFontColor (DocumentCategoryController.errorColor);
 					}
 
 					if (!this.documentOptionsController.RequiredDocumentOptionsContains (verboseOption.Option))
 					{
-						icon = DocumentOptionsController.uselessBullet;
+						icon = DocumentCategoryController.uselessBullet;
 
-						description = description.ApplyFontColor (DocumentOptionsController.uselessColor);
-						value       = value.ApplyFontColor (DocumentOptionsController.uselessColor);
+						description = description.ApplyFontColor (DocumentCategoryController.uselessColor);
+						value       = value.ApplyFontColor (DocumentCategoryController.uselessColor);
 					}
 				}
 				else
@@ -113,10 +113,10 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					{
 						options.GetOptionDescription (verboseOption, true, out description, out value);
 
-						icon = DocumentOptionsController.missingBullet;
+						icon = DocumentCategoryController.missingBullet;
 
-						description = description.ApplyFontColor (DocumentOptionsController.missingColor);
-						value       = value.ApplyFontColor (DocumentOptionsController.missingColor);
+						description = description.ApplyFontColor (DocumentCategoryController.missingColor);
+						value       = value.ApplyFontColor (DocumentCategoryController.missingColor);
 					}
 				}
 
@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				Parent = parent,
 				FormattedText = FormattedText.Concat (title, " :"),
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 5),
+				Margins = new Margins (0, 0, Library.UI.Constants.TileInternalPadding, 5),
 			};
 		}
 
@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			var line = new FrameBox
 			{
 				Parent = parent,
-				PreferredHeight = this.documentCategoryController.lineHeight,
+				PreferredHeight = DocumentCategoryController.lineHeight,
 				Dock = DockStyle.Top,
 			};
 
@@ -166,7 +166,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			{
 				Parent = line,
 				FormattedText = icon,
-				PreferredWidth = DocumentOptionsController.errorBulletWidth,
+				PreferredWidth = DocumentCategoryController.errorBulletWidth,
 				ContentAlignment = ContentAlignment.MiddleLeft,
 				Dock = DockStyle.Left,
 			};

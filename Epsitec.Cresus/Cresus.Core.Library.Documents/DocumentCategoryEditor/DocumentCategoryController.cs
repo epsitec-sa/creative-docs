@@ -12,6 +12,7 @@ using Epsitec.Cresus.Core.Documents;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.PlugIns;
 using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -39,22 +40,24 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			var leftFrame = new FrameBox
 			{
 				Parent = parent,
-				Dock = DockStyle.Fill,
-				Margins = new Margins (0, 10, 0, 10),
+				PreferredWidth = 250,
+				Dock = DockStyle.Left,
+				Margins = new Margins (0, 2, 0, 10),
 			};
 
 			var centerFrame = new FrameBox
 			{
 				Parent = parent,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (0, Library.UI.Constants.RightMargin, 37, 10),
+				Margins = new Margins (0, Library.UI.Constants.RightMargin, 47, 10),
 			};
 
 			var rightFrame = new FrameBox
 			{
 				Parent = parent,
-				Dock = DockStyle.Fill,
-				Margins = new Margins (0, Library.UI.Constants.RightMargin, 37, 10),
+				PreferredWidth = 240,
+				Dock = DockStyle.Right,
+				Margins = new Margins (0, Library.UI.Constants.RightMargin, 47, 10),
 			};
 
 			this.CreateDocumentType (leftFrame);
@@ -84,6 +87,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				Parent = parent,
 				IsReadOnly = true,
 				Dock = DockStyle.Top,
+				Margins = new Margins (0, TileArrow.Breadth, 0, 0),
 			};
 
 			var types = EnumKeyValues.FromEnum<DocumentType> ();
@@ -158,12 +162,24 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 		#endregion
 
 
-		public readonly int		lineHeight  = 15;
-		public readonly int		errorHeight = 20;
+		public static readonly int		lineHeight       = 15;
+		public static readonly int		errorHeight      = 20;
+		public static readonly int		errorBulletWidth = 15;
 
-		public readonly Color	acceptedColor  = Color.FromBrightness (1.0);
-		public readonly Color	toleratedColor = Color.FromBrightness (0.9);
-		public readonly Color	rejectedColor  = Color.FromBrightness (0.8);
+		public static readonly Color	acceptedColor  = Color.FromBrightness (1.0);
+		public static readonly Color	toleratedColor = Color.FromBrightness (0.9);
+		public static readonly Color	rejectedColor  = Color.FromBrightness (0.8);
+
+		public static readonly Color	errorColor     = Color.FromRgb (230.0/255.0,   0.0/255.0,   0.0/255.0);  // rouge
+		public static readonly Color	uselessColor   = Color.FromRgb (153.0/255.0, 153.0/255.0, 153.0/255.0);  // gris
+		public static readonly Color	missingColor   = Color.FromRgb (  0.0/255.0,   0.0/255.0, 216.0/255.0);  // bleu
+
+		public static readonly Color	backColor      = Color.FromHexa ("f3f8ff");  // bleu très clair
+
+		public static FormattedText	normalBullet  = Misc.GetResourceIconImageTag ("DocumentOptions.Normal",  -2, new Size (13, 13));
+		public static FormattedText	errorBullet   = Misc.GetResourceIconImageTag ("DocumentOptions.Error",   -2, new Size (13, 13));
+		public static FormattedText	uselessBullet = Misc.GetResourceIconImageTag ("DocumentOptions.Useless", -2, new Size (13, 13));
+		public static FormattedText	missingBullet = Misc.GetResourceIconImageTag ("DocumentOptions.Missing", -2, new Size (13, 13));
 
 		private readonly IBusinessContext					businessContext;
 		private readonly DocumentCategoryEntity				documentCategoryEntity;

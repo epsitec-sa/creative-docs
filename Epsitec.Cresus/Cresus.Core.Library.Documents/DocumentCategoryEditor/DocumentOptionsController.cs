@@ -13,6 +13,7 @@ using Epsitec.Cresus.Core.Documents.Verbose;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.PlugIns;
 using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -36,11 +37,21 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 		public void CreateUI(Widget parent)
 		{
-			var box = new FrameBox
+			var tile = new ArrowedTileFrame (Direction.Right)
 			{
 				Parent = parent,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (0, 0, 0, 0),
+				Margins = new Margins (0, 0, 10, 0),
+				Padding = TileArrow.GetContainerPadding (Direction.Right) + new Margins (Library.UI.Constants.TileInternalPadding),
+			};
+
+			tile.SetSelected (true);  // conteneur orange
+
+			var box = new FrameBox
+			{
+				Parent = tile,
+				Dock = DockStyle.Fill,
+				BackColor = DocumentCategoryController.backColor,
 			};
 
 			this.checkButtonsFrame = new Scrollable
@@ -50,7 +61,6 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				HorizontalScrollerMode = ScrollableScrollerMode.HideAlways,
 				VerticalScrollerMode = ScrollableScrollerMode.Auto,
 				PaintViewportFrame = true,
-				Margins = new Margins (0, 0, 10, 0),
 			};
 			this.checkButtonsFrame.Viewport.IsAutoFitting = true;
 			this.checkButtonsFrame.ViewportPadding = new Margins (-1);
@@ -86,7 +96,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				Parent = parent,
 				DrawFullFrame = true,
 				BackColor = Color.FromBrightness (1),
-				PreferredHeight = this.documentCategoryController.errorHeight,
+				PreferredHeight = DocumentCategoryController.errorHeight,
 				Dock = DockStyle.Bottom,
 				Margins = new Margins (0, 0, -1, 0),
 			};
@@ -107,7 +117,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				Parent = parent,
 				DrawFullFrame = true,
 				BackColor = Color.FromBrightness (1),
-				PreferredHeight = this.documentCategoryController.errorHeight,
+				PreferredHeight = DocumentCategoryController.errorHeight,
 				Dock = DockStyle.Bottom,
 				Margins = new Margins (0, 0, -1, 0),
 			};
@@ -128,7 +138,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				Parent = parent,
 				DrawFullFrame = true,
 				BackColor = Color.FromBrightness (1),
-				PreferredHeight = this.documentCategoryController.errorHeight,
+				PreferredHeight = DocumentCategoryController.errorHeight,
 				Dock = DockStyle.Bottom,
 				Margins = new Margins (0, 0, -1, 0),
 			};
@@ -150,9 +160,9 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			parent.Children.Clear ();
 
 			this.firstGroup = true;
-			this.CreateGroup (parent, this.optionGroups.Where (x => x.Used != 0 && x.Used == x.Total), "Options parfaitement adaptées",  this.documentCategoryController.acceptedColor);
-			this.CreateGroup (parent, this.optionGroups.Where (x => x.Used != 0 && x.Used <  x.Total), "Options partiellement adaptées", this.documentCategoryController.toleratedColor);
-			this.CreateGroup (parent, this.optionGroups.Where (x => x.Used == 0                     ), "Options inadaptées",             this.documentCategoryController.rejectedColor);
+			this.CreateGroup (parent, this.optionGroups.Where (x => x.Used != 0 && x.Used == x.Total), "Options parfaitement adaptées",  DocumentCategoryController.acceptedColor);
+			this.CreateGroup (parent, this.optionGroups.Where (x => x.Used != 0 && x.Used <  x.Total), "Options partiellement adaptées", DocumentCategoryController.toleratedColor);
+			this.CreateGroup (parent, this.optionGroups.Where (x => x.Used == 0                     ), "Options inadaptées",             DocumentCategoryController.rejectedColor);
 		}
 
 		private void CreateGroup(Widget parent, IEnumerable<OptionGroup> optionGroups, FormattedText title, Color color)
@@ -227,17 +237,17 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				var errorFrame = new FrameBox
 				{
 					Parent = frame,
-					PreferredWidth = DocumentOptionsController.errorBulletWidth,
+					PreferredWidth = DocumentCategoryController.errorBulletWidth,
 					Dock = DockStyle.Left,
-					Margins = new Margins (0, 0, this.documentCategoryController.lineHeight, 0),
+					Margins = new Margins (0, 0, DocumentCategoryController.lineHeight, 0),
 				};
 
 				var uselessFrame = new FrameBox
 				{
 					Parent = frame,
-					PreferredWidth = DocumentOptionsController.errorBulletWidth,
+					PreferredWidth = DocumentCategoryController.errorBulletWidth,
 					Dock = DockStyle.Left,
-					Margins = new Margins (0, 0, this.documentCategoryController.lineHeight, 0),
+					Margins = new Margins (0, 0, DocumentCategoryController.lineHeight, 0),
 				};
 
 				var leftFrame = new FrameBox
@@ -267,7 +277,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					FormattedText = "Aucune option",
 					Name = string.Concat (index.ToString (), ".-1"),
 					Group = group.Name,
-					PreferredHeight = this.documentCategoryController.lineHeight,
+					PreferredHeight = DocumentCategoryController.lineHeight,
 					Dock = DockStyle.Top,
 				};
 
@@ -282,8 +292,8 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					{
 						Parent = errorFrame,
 						ContentAlignment = ContentAlignment.MiddleLeft,
-						PreferredWidth = DocumentOptionsController.errorBulletWidth,
-						PreferredHeight = this.documentCategoryController.lineHeight,
+						PreferredWidth = DocumentCategoryController.errorBulletWidth,
+						PreferredHeight = DocumentCategoryController.lineHeight,
 						Dock = DockStyle.Top,
 					};
 
@@ -294,8 +304,8 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					{
 						Parent = uselessFrame,
 						ContentAlignment = ContentAlignment.MiddleLeft,
-						PreferredWidth = DocumentOptionsController.errorBulletWidth,
-						PreferredHeight = this.documentCategoryController.lineHeight,
+						PreferredWidth = DocumentCategoryController.errorBulletWidth,
+						PreferredHeight = DocumentCategoryController.lineHeight,
 						Dock = DockStyle.Top,
 					};
 
@@ -317,7 +327,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 						Name = string.Concat (index.ToString (), ".", i.ToString ()),
 						Group = group.Name,
 						ActiveState = check ? ActiveState.Yes : ActiveState.No,
-						PreferredHeight = this.documentCategoryController.lineHeight,
+						PreferredHeight = DocumentCategoryController.lineHeight,
 						Dock = DockStyle.Top,
 					};
 
@@ -341,7 +351,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				var frame = new FrameBox
 				{
 					Parent = parent,
-					PreferredHeight = this.documentCategoryController.lineHeight,
+					PreferredHeight = DocumentCategoryController.lineHeight,
 					Dock = DockStyle.Top,
 				};
 
@@ -349,8 +359,8 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				{
 					Parent = frame,
 					ContentAlignment = ContentAlignment.MiddleLeft,
-					PreferredWidth = DocumentOptionsController.errorBulletWidth,
-					PreferredHeight = this.documentCategoryController.lineHeight,
+					PreferredWidth = DocumentCategoryController.errorBulletWidth,
+					PreferredHeight = DocumentCategoryController.lineHeight,
 					Dock = DockStyle.Left,
 				};
 
@@ -361,8 +371,8 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				{
 					Parent = frame,
 					ContentAlignment = ContentAlignment.MiddleLeft,
-					PreferredWidth = DocumentOptionsController.errorBulletWidth,
-					PreferredHeight = this.documentCategoryController.lineHeight,
+					PreferredWidth = DocumentCategoryController.errorBulletWidth,
+					PreferredHeight = DocumentCategoryController.lineHeight,
 					Dock = DockStyle.Left,
 				};
 
@@ -446,22 +456,22 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 						if (this.errorOptions.Contains (verboseOption.Option))
 						{
-							description = description.ApplyFontColor (DocumentOptionsController.errorColor);
+							description = description.ApplyFontColor (DocumentCategoryController.errorColor);
 
 							if (hasBullet)
 							{
-								description = FormattedText.Concat (DocumentOptionsController.errorBullet, "  ", description);
+								description = FormattedText.Concat (DocumentCategoryController.errorBullet, "  ", description);
 							}
 
 							errorCount++;
 						}
 						else if (!this.RequiredDocumentOptionsContains (verboseOption.Option))
 						{
-							description = description.ApplyFontColor (DocumentOptionsController.uselessColor);
+							description = description.ApplyFontColor (DocumentCategoryController.uselessColor);
 
 							if (hasBullet)
 							{
-								description = FormattedText.Concat (DocumentOptionsController.uselessBullet, "  ", description);
+								description = FormattedText.Concat (DocumentCategoryController.uselessBullet, "  ", description);
 							}
 
 							uselessCount++;
@@ -470,7 +480,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 						{
 							if (hasBullet)
 							{
-								description = FormattedText.Concat (DocumentOptionsController.normalBullet, "  ", description);
+								description = FormattedText.Concat (DocumentCategoryController.normalBullet, "  ", description);
 							}
 
 							correctCount++;
@@ -498,7 +508,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 					if (hasBullet)
 					{
-						correctText = FormattedText.Concat (DocumentOptionsController.normalBullet, "  ", correctText);
+						correctText = FormattedText.Concat (DocumentCategoryController.normalBullet, "  ", correctText);
 					}
 				}
 
@@ -515,10 +525,10 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 					if (hasBullet)
 					{
-						errorText = FormattedText.Concat (DocumentOptionsController.errorBullet, "  ", errorText);
+						errorText = FormattedText.Concat (DocumentCategoryController.errorBullet, "  ", errorText);
 					}
 
-					errorText = errorText.ApplyFontColor (DocumentOptionsController.errorColor);
+					errorText = errorText.ApplyFontColor (DocumentCategoryController.errorColor);
 				}
 
 				if (uselessCount != 0)
@@ -534,10 +544,10 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 					if (hasBullet)
 					{
-						uselessText = FormattedText.Concat (DocumentOptionsController.uselessBullet, "  ", uselessText);
+						uselessText = FormattedText.Concat (DocumentCategoryController.uselessBullet, "  ", uselessText);
 					}
 
-					uselessText = uselessText.ApplyFontColor (DocumentOptionsController.uselessColor);
+					uselessText = uselessText.ApplyFontColor (DocumentCategoryController.uselessColor);
 				}
 
 				//	Génère le texte final.
@@ -723,7 +733,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 						{
 							if (this.errorOptions.Contains (option))
 							{
-								text = DocumentOptionsController.errorBullet;
+								text = DocumentCategoryController.errorBullet;
 								break;
 							}
 						}
@@ -750,7 +760,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 							{
 								if (uselessOptions.Contains (option))
 								{
-									text = DocumentOptionsController.uselessBullet;
+									text = DocumentCategoryController.uselessBullet;
 									break;
 								}
 							}
@@ -784,9 +794,9 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					errorMessage = string.Format ("Il y a {0} options définies plusieurs fois", error.ToString ());
 				}
 
-				errorMessage = FormattedText.Concat (DocumentOptionsController.errorBullet, "  ", errorMessage.ApplyBold ());
+				errorMessage = FormattedText.Concat (DocumentCategoryController.errorBullet, "  ", errorMessage.ApplyBold ());
 
-				errorTooltip = this.GetTooltipDescription (this.errorOptions).ApplyFontColor (DocumentOptionsController.errorColor);
+				errorTooltip = this.GetTooltipDescription (this.errorOptions).ApplyFontColor (DocumentCategoryController.errorColor);
 			}
 
 			if (missing != 0)
@@ -800,7 +810,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					missingMessage = string.Format ("Il y a {0} options indéfinies", missing.ToString ());
 				}
 
-				missingMessage = FormattedText.Concat (DocumentOptionsController.missingBullet, "  ", missingMessage);
+				missingMessage = FormattedText.Concat (DocumentCategoryController.missingBullet, "  ", missingMessage);
 
 				missingTooltip = this.GetMissingTooltipDescription (usedOptions);
 			}
@@ -816,9 +826,9 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					uselessMessage = string.Format ("Il y a {0} options définies inutilement", useless.ToString ());
 				}
 
-				uselessMessage = FormattedText.Concat (DocumentOptionsController.uselessBullet, "  ", uselessMessage);
+				uselessMessage = FormattedText.Concat (DocumentCategoryController.uselessBullet, "  ", uselessMessage);
 
-				uselessTooltip = this.GetTooltipDescription (uselessOptions).ApplyFontColor (DocumentOptionsController.uselessColor);
+				uselessTooltip = this.GetTooltipDescription (uselessOptions).ApplyFontColor (DocumentCategoryController.uselessColor);
 			}
 
 			if (this.documentCategoryEntity.DocumentOptions.Count == 0)
@@ -1160,17 +1170,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 		}
 
 
-		public static readonly int		errorBulletWidth = 15;
-		private static readonly int		ratioWidth       = 40;
-
-		public static readonly Color	errorColor   = Color.FromRgb (230.0/255.0,   0.0/255.0,   0.0/255.0);  // rouge
-		public static readonly Color	uselessColor = Color.FromRgb (153.0/255.0, 153.0/255.0, 153.0/255.0);  // gris
-		public static readonly Color	missingColor = Color.FromRgb (  0.0/255.0,   0.0/255.0, 216.0/255.0);  // bleu
-
-		public static FormattedText	normalBullet  = Misc.GetResourceIconImageTag ("DocumentOptions.Normal",  -2, new Size (13, 13));
-		public static FormattedText	errorBullet   = Misc.GetResourceIconImageTag ("DocumentOptions.Error",   -2, new Size (13, 13));
-		public static FormattedText	uselessBullet = Misc.GetResourceIconImageTag ("DocumentOptions.Useless", -2, new Size (13, 13));
-		public static FormattedText	missingBullet = Misc.GetResourceIconImageTag ("DocumentOptions.Missing", -2, new Size (13, 13));
+		private static readonly int ratioWidth = 40;
 
 		private readonly IBusinessContext					businessContext;
 		private readonly DocumentCategoryEntity				documentCategoryEntity;

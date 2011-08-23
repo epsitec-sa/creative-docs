@@ -12,6 +12,7 @@ using Epsitec.Cresus.Core.Documents;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.PlugIns;
 using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -32,11 +33,20 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 		public void CreateUI(Widget parent)
 		{
-			var box = new FrameBox
+			var tile = new FrameBox
 			{
 				Parent = parent,
+				DrawFullFrame = true,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (0, 0, 0, 0),
+				Padding = new Margins (Library.UI.Constants.TileInternalPadding),
+				BackColor = TileColors.SurfaceSelectedContainerColors.First (),
+			};
+
+			var box = new FrameBox
+			{
+				Parent = tile,
+				Dock = DockStyle.Fill,
+				BackColor = DocumentCategoryController.backColor,
 			};
 
 			this.checkButtonsFrame = new Scrollable
@@ -46,7 +56,6 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				HorizontalScrollerMode = ScrollableScrollerMode.HideAlways,
 				VerticalScrollerMode = ScrollableScrollerMode.Auto,
 				PaintViewportFrame = true,
-				Margins = new Margins (0, 0, 10, 0),
 			};
 			this.checkButtonsFrame.Viewport.IsAutoFitting = true;
 			this.checkButtonsFrame.ViewportPadding = new Margins (-1);
@@ -71,7 +80,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				Parent = parent,
 				DrawFullFrame = true,
 				BackColor = Color.FromBrightness (1),
-				PreferredHeight = this.documentCategoryController.errorHeight,
+				PreferredHeight = DocumentCategoryController.errorHeight,
 				Dock = DockStyle.Bottom,
 				Margins = new Margins (0, 0, -1, 0),
 			};
@@ -93,8 +102,8 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			parent.Children.Clear ();
 
 			this.firstGroup = true;
-			this.CreateGroup (parent, this.pageTypeInformations.Where (x =>  x.Match), "Pages imprimables adaptées",   this.documentCategoryController.acceptedColor);
-			this.CreateGroup (parent, this.pageTypeInformations.Where (x => !x.Match), "Pages imprimables inadaptées", this.documentCategoryController.rejectedColor);
+			this.CreateGroup (parent, this.pageTypeInformations.Where (x =>  x.Match), "Pages imprimables adaptées",   DocumentCategoryController.acceptedColor);
+			this.CreateGroup (parent, this.pageTypeInformations.Where (x => !x.Match), "Pages imprimables inadaptées", DocumentCategoryController.rejectedColor);
 		}
 
 		private void CreateGroup(Widget parent, IEnumerable<PageTypeInformation> pageTypeInformations, FormattedText title, Color color)
