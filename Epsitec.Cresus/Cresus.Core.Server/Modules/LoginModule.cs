@@ -8,16 +8,6 @@ namespace Epsitec.Cresus.Core.Server.Modules
 		public LoginModule()
 			: base ("/log")
 		{
-			Get["/"] = parameters =>
-			{
-				return Response.AsRedirect ("/log/in");
-			};
-
-			Get["/in"] = parameters =>
-			{
-				return "<form method=post><input type=hidden name=username value=jonas><input type=hidden name=password value=password><input type=submit></form>";
-			};
-
 			Post["/in"] = parameters =>
 			{
 				return this.Login ();

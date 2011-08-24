@@ -72,7 +72,6 @@
     <Compile Include="Modules\LayoutModule.cs" />
     <Compile Include="Modules\DatabaseModule.cs" />
     <Compile Include="Modules\LoginModule.cs" />
-    <Compile Include="Modules\MainModule.cs" />
     <Compile Include="NancyComponents\CoreHost.cs" />
     <Compile Include="NancyComponents\FileSystemRootPathProvider.cs" />
     <Compile Include="NancyComponents\PostArrayHandler.cs" />
