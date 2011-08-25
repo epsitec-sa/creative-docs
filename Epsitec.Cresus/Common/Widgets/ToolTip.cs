@@ -198,8 +198,9 @@ namespace Epsitec.Common.Widgets
 			{
 				this.UnregisterWidget (widget);
 			}
-			
-			if (caption == null)
+
+			if ((caption == null) ||
+				(string.IsNullOrEmpty (caption.ToString ())))
 			{
 				return;
 			}
