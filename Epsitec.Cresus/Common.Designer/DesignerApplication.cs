@@ -613,9 +613,41 @@ namespace Epsitec.Common.Designer
 		[Command ("SaveAllBitmaps")]
 		void CommandSaveAllBitmaps(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			int counter = 0;
+			int module = 0;
+
 			foreach (ModuleInfo info in this.moduleInfoList)
 			{
-				info.Module.SaveAllBitmaps ();
+				ResourceAccess.Type type = ResourceAccess.Type.Entities;
+				var entities = new Viewers.Entities (info.Module, this.context, info.Module.GetAccess (type), this);
+
+				int total = entities.SaveAllBitmaps ();
+
+				if (total != 0)
+				{
+					counter += total;
+					module++;
+				}
+			}
+
+			if (counter == 0)
+			{
+				this.DialogError ("Aucune image n'a été exportée.");
+			}
+			else
+			{
+				string message;
+
+				if (counter == 1)
+				{
+					message = "Une image a été exportée avec succès.";
+				}
+				else
+				{
+					message = string.Format ("{0} images de {1} modules ont été exportées avec succès.", counter.ToString (), module.ToString ());
+				}
+
+				this.DialogMessage (message);
 			}
 		}
 

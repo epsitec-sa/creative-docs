@@ -13,21 +13,21 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Designer.Dialogs
 {
-	public class FileSaveImageDialog : AbstractFileDialog
+	public class FileSaveBitmapDialog : AbstractFileDialog
 	{
-		public FileSaveImageDialog(DesignerApplication designerApplication)
+		public FileSaveBitmapDialog(DesignerApplication designerApplication)
 		{
 			this.designerApplication = designerApplication;
 
-			this.InitialDirectory = FileSaveImageDialog.initialDirectory;
-			this.InitialFileName  = FileSaveImageDialog.initialFilename;
+			this.InitialDirectory = FileSaveBitmapDialog.initialDirectory;
+			this.InitialFileName  = FileSaveBitmapDialog.initialFilename;
 			this.FileFilterPattern = "*.png|*.tif|*.bmp|*.jpg";
 			this.enableNavigation = true;
 			this.enableMultipleSelection = false;
 		}
 
 
-		public Size ImageSize
+		public Size BitmapSize
 		{
 			get;
 			set;
@@ -37,25 +37,25 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			get
 			{
-				return FileSaveImageDialog.bitmapParameters;
+				return FileSaveBitmapDialog.bitmapParameters;
 			}
 			set
 			{
-				FileSaveImageDialog.bitmapParameters = value;
+				FileSaveBitmapDialog.bitmapParameters = value;
 				this.UpdateZoom ();
 			}
 		}
 
 		public void PathMemorize()
 		{
-			FileSaveImageDialog.initialDirectory = System.IO.Path.GetDirectoryName (this.FileName);
-			FileSaveImageDialog.initialFilename  = System.IO.Path.GetFileName (this.FileName);
+			FileSaveBitmapDialog.initialDirectory = System.IO.Path.GetDirectoryName (this.FileName);
+			FileSaveBitmapDialog.initialFilename  = System.IO.Path.GetFileName (this.FileName);
 		}
 
 
 		protected override void CreateWindow()
 		{
-			this.CreateUserInterface ("FileSaveImage", new Size (720, 480), Res.Strings.Entities.Action.SaveBitmap, 20, this.designerApplication.Window);
+			this.CreateUserInterface ("FileSaveBitmap", new Size (720, 480), Res.Strings.Entities.Action.SaveBitmap, 20, this.designerApplication.Window);
 		}
 
 		protected override FileDialogType FileDialogType
@@ -95,7 +95,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			get
 			{
-				return FileSaveImageDialog.settings;
+				return FileSaveBitmapDialog.settings;
 			}
 		}
 
@@ -106,7 +106,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.optionsContainer.Margins = new Margins (0, 0, 8, 0);
 			this.optionsContainer.Dock = DockStyle.Bottom;
 			this.optionsContainer.TabNavigationMode = TabNavigationMode.None;
-			this.optionsContainer.Visibility = FileSaveImageDialog.showOptions;
+			this.optionsContainer.Visibility = FileSaveBitmapDialog.showOptions;
 			this.optionsContainer.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			this.optionsContainer.Name = "OptionsContainer";
 
@@ -170,8 +170,8 @@ namespace Epsitec.Common.Designer.Dialogs
 		private string GetZoomDescription(double zoom)
 		{
 			string z = System.Math.Floor (zoom*100).ToString ();
-			string x = System.Math.Floor (this.ImageSize.Width*zoom).ToString ();
-			string y = System.Math.Floor (this.ImageSize.Height*zoom).ToString ();
+			string x = System.Math.Floor (this.BitmapSize.Width*zoom).ToString ();
+			string y = System.Math.Floor (this.BitmapSize.Height*zoom).ToString ();
 
 			return string.Format ("{0}% ({1} × {2} pixels)", z, x, y);
 		}
@@ -220,7 +220,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		private void HandleOptionsExtendClicked(object sender, MessageEventArgs e)
 		{
 			this.optionsContainer.Visibility = !this.optionsContainer.Visibility;
-			FileSaveImageDialog.showOptions = this.optionsContainer.Visibility;
+			FileSaveBitmapDialog.showOptions = this.optionsContainer.Visibility;
 
 			this.UpdateOptions();
 		}

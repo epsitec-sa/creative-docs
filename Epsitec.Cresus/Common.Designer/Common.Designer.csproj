@@ -96,7 +96,7 @@
     <Compile Include="Dialogs\ModuleInfoDialog.cs" />
     <Compile Include="Dialogs\EntityCreationDialog.cs" />
     <Compile Include="Dialogs\EntityParametersDialog.cs" />
-    <Compile Include="Dialogs\FileSaveImageDialog.cs" />
+    <Compile Include="Dialogs\FileSaveBitmapDialog.cs" />
     <Compile Include="Dialogs\LabelReplacementDialog.cs" />
     <Compile Include="Dialogs\EntityFieldDialog.cs" />
     <Compile Include="Dialogs\InitialMessageDialog.cs" />

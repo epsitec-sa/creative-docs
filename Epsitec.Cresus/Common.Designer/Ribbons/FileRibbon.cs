@@ -12,15 +12,15 @@ namespace Epsitec.Common.Designer.Ribbons
 		public FileRibbon(DesignerApplication designerApplication) : base(designerApplication)
 		{
 			this.Title = Res.Strings.Ribbon.Section.File;
-			this.PreferredWidth = 8 + 22*1.5*4 + 4 + 22*2;
+			this.PreferredWidth = 8 + 22*1.5*5 + 4 + 22*1;
 
 			this.buttonOpen           = this.CreateIconButton ("Open", "Large");
 			this.buttonInitialMessage = this.CreateIconButton ("InitialMessage", "Large");
 			this.buttonCheck          = this.CreateIconButton ("Check", "Large");
 			this.buttonSave           = this.CreateIconButton ("Save", "Large");
+			this.buttonSaveAllBitmaps = this.CreateIconButton ("SaveAllBitmaps", "Large");
 			this.buttonNew            = this.CreateIconButton ("New");
 			this.buttonRecycle        = this.CreateIconButton ("Recycle");
-			this.buttonSaveAllBitmaps = this.CreateIconButton ("SaveAllBitmaps");
 			
 			this.UpdateClientGeometry();
 		}
@@ -56,13 +56,13 @@ namespace Epsitec.Common.Designer.Ribbons
 			this.buttonCheck.SetManualBounds (rect);
 			rect.Offset (dx*1.5, 0);
 			this.buttonSave.SetManualBounds (rect);
+			rect.Offset (dx*1.5, 0);
+			this.buttonSaveAllBitmaps.SetManualBounds (rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			rect.Offset (dx*1.5*4+4, dy+5);
-			this.buttonSaveAllBitmaps.SetManualBounds (rect);
-			rect.Offset (dx, 0);
+			rect.Offset (dx*1.5*5+4, dy+5);
 			this.buttonNew.SetManualBounds (rect);
 			rect.Offset (0, -dx-5);
 			this.buttonRecycle.SetManualBounds (rect);

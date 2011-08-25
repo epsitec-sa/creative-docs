@@ -414,13 +414,18 @@ namespace Epsitec.Common.Designer
 			this.UpdateManifest ();
 		}
 
-		public void SaveAllBitmaps()
+		public int SaveAllBitmaps()
 		{
 			//	Enregistre toutes les images bitmap.
 			var entitiesViewer = this.modifier.EntitiesViewer;
-			if (entitiesViewer != null)
+
+			if (entitiesViewer == null)
 			{
-				entitiesViewer.SaveAllBitmaps ();
+				return 0;
+			}
+			else
+			{
+				return entitiesViewer.SaveAllBitmaps ();
 			}
 		}
 
