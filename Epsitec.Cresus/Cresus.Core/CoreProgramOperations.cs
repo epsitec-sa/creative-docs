@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Core
 					CoreProgramOperations.ExecuteDatabaseDelete ();
 					break;
 
-				case "-js-server":
+				case "-server":
 					CoreProgramOperations.ExecuteJsServer ();
 					break;
 			}
