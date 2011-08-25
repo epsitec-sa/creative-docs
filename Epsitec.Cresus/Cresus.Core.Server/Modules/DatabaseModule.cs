@@ -1,15 +1,25 @@
-﻿using System.Collections.Generic;
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Jonas Schmid, Maintainer: -
+
+using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Server.AdditionalResponses;
-using Nancy;
-using Epsitec.Cresus.Core.Business;
-using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.DataLayer.Context;
+using Nancy;
 
 namespace Epsitec.Cresus.Core.Server.Modules
 {
+	/// <summary>
+	/// Used to populate the left list and the header menu.
+	/// A list of available databases is populated when the module is loaded, 
+	/// and it is able to the the Javascript which menu to show.
+	/// It is then able to retrieve a list of entities based on the request.
+	/// It is also able to add or delete an entity within the selected database.
+	/// </summary>
 	public class DatabasesModule : CoreModule
 	{
 
@@ -57,9 +67,10 @@ namespace Epsitec.Cresus.Core.Server.Modules
 				var coreSession = GetCoreSession ();
 				var context = coreSession.GetBusinessContext ();
 
-				string name = parameters.name;
+				string databaseName = parameters.name;
 
-				var type = DatabasesModule.databases[name].GetDatabaseType ();
+				// Get all entites from the current Type
+				var type = DatabasesModule.databases[databaseName].GetDatabaseType ();
 				var method = typeof (BusinessContext).GetMethod ("GetAllEntities");
 				var m = method.MakeGenericMethod (type);
 				var o = m.Invoke (context, new object[0]);
@@ -76,6 +87,8 @@ namespace Epsitec.Cresus.Core.Server.Modules
 							   name = summary,
 							   uniqueId = coreSession.GetBusinessContext ().DataContext.GetNormalizedEntityKey (c).Value.ToString ()
 						   };
+
+				// Only take a subset of all the entities
 				var subset = list.Skip (start).Take (limit);
 
 				var dic = new Dictionary<string, object> ();
@@ -102,6 +115,17 @@ namespace Epsitec.Cresus.Core.Server.Modules
 				context.SaveChanges ();
 
 				return Response.AsCoreBoolean (ok);
+			};
+
+			Post["/create"] = parameters =>
+			{
+				var coreSession = this.GetCoreSession ();
+				var context = coreSession.GetBusinessContext ();
+
+				// TODO Being able to create an entity 
+				// (problems with the AbstractPerson)
+
+				return Response.AsCoreError ();
 			};
 
 		}

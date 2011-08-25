@@ -1,11 +1,16 @@
-﻿using System.Collections.Generic;
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Jonas Schmid, Maintainer: -
+
+using System.Collections.Generic;
 using Epsitec.Common.Support.Extensions;
-using Epsitec.Cresus.Core.Business.Finance;
 using Epsitec.Cresus.Core.Library;
 using Nancy;
 
 namespace Epsitec.Cresus.Core.Server.Modules
 {
+	/// <summary>
+	/// Used to provide Enum values to the ExtJS store
+	/// </summary>
 	public class EnumModule : CoreModule
 	{
 		public EnumModule()

@@ -1,4 +1,7 @@
-﻿using System.Collections;
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Jonas Schmid, Maintainer: -
+
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -58,7 +61,6 @@ namespace Epsitec.Cresus.Core.Server
 			// Open the main panel
 			var dic = new Dictionary<string, object> ();
 
-			//dic["title"] = this.rootEntity.GetType ().ToString ();
 			dic["parentEntity"] = GetEntityKey (this.rootEntity);
 
 			var items = new List<Dictionary<string, object>> ();
@@ -76,6 +78,10 @@ namespace Epsitec.Cresus.Core.Server
 			return dic;
 		}
 
+		/// <summary>
+		/// Get the panel from a brick
+		/// </summary>
+		/// <returns></returns>
 		private List<Dictionary<string, object>> GetPanels(Brick brick)
 		{
 			var item = new WebDataItem ();
@@ -118,7 +124,7 @@ namespace Epsitec.Cresus.Core.Server
 				}
 				else
 				{
-					// This collection is empty, but we want to show its panel
+					// This collection is empty, but we want to show its empty panel
 					// so the user will be able to add one.
 					var panel = CreateEmptyPanel (item);
 					panel["lambda"] = accessor.Id.ToString ();
@@ -173,7 +179,6 @@ namespace Epsitec.Cresus.Core.Server
 		private Dictionary<string, object> CreateEmptyPanel(WebDataItem item)
 		{
 			var panel = GetBasicPanelForm (item);
-
 			panel["xtype"] = "emptysummary";
 
 			return panel;
@@ -606,14 +611,14 @@ namespace Epsitec.Cresus.Core.Server
 			~Template,
 			-OfType,
 
-			Input,
-			Field,
+			+Input,
+			+Field,
 			-Width,
 			-Height,
 			+Separator,
 			+HorizontalGroup,
-			FromCollection,
-			SpecialController,
+			~FromCollection,
+			-SpecialController,
 			+GlobalWarning,
 
 			CollectionAnnotation,
@@ -636,7 +641,7 @@ namespace Epsitec.Cresus.Core.Server
 			-SpecialController2,
 			-SpecialController3,
 
-			FullHeightStretch,
+			-FullHeightStretch,
 		}*/
 	}
 }

@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Jonas Schmid, Maintainer: -
+
+using System.Linq;
 using System.Linq.Expressions;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
@@ -9,6 +12,9 @@ using Epsitec.Cresus.Core.Controllers.DataAccessors;
 
 namespace Epsitec.Cresus.Core.Server
 {
+	/// <summary>
+	/// Used to fetched information comming from the entity using the information in the brick
+	/// </summary>
 	class BrickProcessor
 	{
 		internal static Brick ProcessBrick(Brick brick, WebDataItem item)
@@ -67,11 +73,6 @@ namespace Epsitec.Cresus.Core.Server
 				{
 					item.CompactTitle = item.Title;
 				}
-
-				BrickProcessor.ProcessProperty (brick, BrickPropertyKey.Title, x => item.TitleAccessor = x);
-				BrickProcessor.ProcessProperty (brick, BrickPropertyKey.TitleCompact, x => item.CompactTitleAccessor = x);
-				BrickProcessor.ProcessProperty (brick, BrickPropertyKey.Text, x => item.TextAccessor = x);
-				BrickProcessor.ProcessProperty (brick, BrickPropertyKey.TextCompact, x => item.CompactTextAccessor = x);
 
 				AddSpecificData (brick, item);
 
@@ -149,16 +150,6 @@ namespace Epsitec.Cresus.Core.Server
 			}
 		}
 
-		private static void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<Accessor<FormattedText>> setter)
-		{
-			//var formatter = this.ToAccessor (brick, Brick.GetProperty (brick, key));
-			Accessor<FormattedText> formatter = null;
-
-			if (formatter != null)
-			{
-				setter (formatter);
-			}
-		}
 
 		private static void ProcessProperty(Brick brick, BrickPropertyKey key, System.Action<Expression> setter)
 		{

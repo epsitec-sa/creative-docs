@@ -1,5 +1,8 @@
-﻿using Nancy;
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Jonas Schmid, Maintainer: -
+
 using System.Reflection;
+using Nancy;
 
 namespace Epsitec.Cresus.Core.Server.NancyComponents
 {

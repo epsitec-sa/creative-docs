@@ -1,28 +1,32 @@
-﻿using System.Collections.Generic;
-using Epsitec.Cresus.Core.Server.AdditionalResponses;
-using Nancy;
-using Epsitec.Cresus.DataLayer.Context;
-using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Cresus.Core.Entities;
-using Epsitec.Common.Support.Extensions;
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Jonas Schmid, Maintainer: -
+
 using System.Linq;
-using Epsitec.Cresus.Core.Business;
+using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
+using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Server.AdditionalResponses;
+using Epsitec.Cresus.DataLayer.Context;
+using Nancy;
 
 namespace Epsitec.Cresus.Core.Server.Modules
 {
-	public class CreatorModule : CoreModule
+	/// <summary>
+	/// Allows to add or delete an entity within a collection
+	/// </summary>
+	public class CollectionManagerModule : CoreModule
 	{
-		public CreatorModule()
+		public CollectionManagerModule() : base("/collection")
 		{
 			Post["/delete"] = parameters =>
 			{
 				var coreSession = GetCoreSession ();
 				var context = coreSession.GetBusinessContext ();
 
-				string parentEntity = Request.Form.parentEntity;
-				var parentKey = EntityKey.Parse (parentEntity);
-				AbstractEntity entity = context.DataContext.ResolveEntity (parentKey);
+				string parentEntityId = Request.Form.parentEntity;
+				var parentKey = EntityKey.Parse (parentEntityId);
+				AbstractEntity parentEntity = context.DataContext.ResolveEntity (parentKey);
 
 				string deleteEntity = Request.Form.deleteEntity;
 				var deleteKey = EntityKey.Parse (deleteEntity);
@@ -34,7 +38,7 @@ namespace Epsitec.Cresus.Core.Server.Modules
 					return Response.AsCoreError ();
 				}
 
-				var collection = accessor.GetCollection (entity);
+				var collection = accessor.GetCollection (parentEntity);
 
 				var toDelete = collection.Cast<AbstractEntity> ().Where (c => context.DataContext.GetNormalizedEntityKey (c).Equals (deleteKey));
 
@@ -57,9 +61,9 @@ namespace Epsitec.Cresus.Core.Server.Modules
 				var coreSession = GetCoreSession ();
 				var context = coreSession.GetBusinessContext ();
 
-				string parentEntity = Request.Form.parentEntity;
-				var parentKey = EntityKey.Parse (parentEntity);
-				AbstractEntity entity = context.DataContext.ResolveEntity (parentKey);
+				string parentEntityId = Request.Form.parentEntity;
+				var parentKey = EntityKey.Parse (parentEntityId);
+				AbstractEntity parentEntity = context.DataContext.ResolveEntity (parentKey);
 
 				string typeName = Request.Form.entityType;
 				var type = System.Type.GetType (typeName);
@@ -75,7 +79,7 @@ namespace Epsitec.Cresus.Core.Server.Modules
 					return Response.AsCoreError ();
 				}
 
-				var collection = accessor.GetCollection (entity);
+				var collection = accessor.GetCollection (parentEntity);
 				collection.Add (newEntity);
 
 				context.SaveChanges (EntitySaveMode.IncludeEmpty);

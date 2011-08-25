@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Jonas Schmid, Maintainer: -
+
+using System.Collections.Generic;
 using Epsitec.Common.Types;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
-using Epsitec.Cresus.Core.Widgets.Tiles;
 
 namespace Epsitec.Cresus.Core.Server
 {
@@ -180,60 +182,11 @@ namespace Epsitec.Cresus.Core.Server
 			}
 		}
 
-
 		public ViewControllerMode DefaultMode
 		{
 			get;
 			set;
 		}
-
-
-
-		public Accessor<FormattedText> TitleAccessor
-		{
-			set
-			{
-				if (value != null)
-				{
-					this.bindings.Add (AccessorBinding.Create (value, () => this.DisplayedTitle, x => this.displayedTitle = x));
-				}
-			}
-		}
-
-		public Accessor<FormattedText> TextAccessor
-		{
-			set
-			{
-				if (value != null)
-				{
-					this.bindings.Add (AccessorBinding.Create (value, () => this.DisplayedText, x => this.displayedText = x));
-				}
-			}
-		}
-
-		public Accessor<FormattedText> CompactTitleAccessor
-		{
-			set
-			{
-				if (value != null)
-				{
-					this.bindings.Add (AccessorBinding.Create (value, () => this.DisplayedCompactTitle, x => this.displayedCompactTitle = x));
-				}
-			}
-		}
-
-		public Accessor<FormattedText> CompactTextAccessor
-		{
-			set
-			{
-				if (value != null)
-				{
-					this.bindings.Add (AccessorBinding.Create (value, () => this.DisplayedCompactText, x => this.displayedCompactText = x));
-				}
-			}
-		}
-
-
 
 		public static string BuildName(string prefix, int index)
 		{

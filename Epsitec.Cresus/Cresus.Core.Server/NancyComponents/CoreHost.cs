@@ -1,17 +1,26 @@
-﻿using System;
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Jonas Schmid, Maintainer: -
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Net;
 using System.Threading;
-using System.Linq;
+using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Cookies;
 using Nancy.Extensions;
-using Nancy;
 using Nancy.IO;
 
 namespace Epsitec.Cresus.Core.Server.NancyComponents
 {
+	/// <summary>
+	/// Really really bad host that gets requests from the users and passes them to Nancy.
+	/// It is sequential and is not able to handle more than one request at a time.
+	/// Copied from https://github.com/NancyFx/Nancy/blob/09a5c3f8f79d5986a04973b0371e52f4f596a600/src/Nancy.Hosting.Self/NancyHost.cs
+	/// The next updates from this file don't work, due to some kind a threading problem within the Core application.
+	/// </summary>
 	internal class CoreHost
 	{
 		private readonly Uri baseUri;

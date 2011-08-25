@@ -2,7 +2,6 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Epsitec.Cresus.Core.Server
 {
@@ -82,6 +81,7 @@ namespace Epsitec.Cresus.Core.Server
 				this.sessions.Remove (id);
 			}
 
+			session.DisposeBusinessContext ();
 			session.Dispose ();
 
 			return true;

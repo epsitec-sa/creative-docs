@@ -1,4 +1,6 @@
-﻿
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Jonas Schmid, Maintainer: -
+
 // Uncomment to regenerate all icons
 //#define BUILD_ICONS
 
@@ -8,6 +10,13 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Core.Server
 {
+	/// <summary>
+	/// Used to write every available *.icon into their PNG equivalent so that they are available
+	/// through the web server.
+	/// It also creates a CSS file to be able to call the icons in the JS code.
+	/// Uncomment the "define" to regenerate all icons at server startup.
+	/// It takes time !
+	/// </summary>
 	internal class IconsBuilder
 	{
 

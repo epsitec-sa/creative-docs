@@ -1,10 +1,16 @@
-﻿using System.Collections.Generic;
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Jonas Schmid, Maintainer: -
+
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Nancy;
 
 namespace Epsitec.Cresus.Core.Server.NancyComponents
 {
-	public class PostArrayHandler
+	/// <summary>
+	/// This is used when we get a form with arrays, like a collection type in an entity
+	/// </summary>
+	public static class PostArrayHandler
 	{
 		public static object GetFormWithArrays(dynamic form)
 		{

@@ -67,7 +67,7 @@
     <Compile Include="CoreServer.cs" />
     <Compile Include="CoreSession.cs" />
     <Compile Include="Modules\CoreModule.cs" />
-    <Compile Include="Modules\CreatorModule.cs" />
+    <Compile Include="Modules\CollectionManagerModule.cs" />
     <Compile Include="Modules\EntityModule.cs" />
     <Compile Include="Modules\LayoutModule.cs" />
     <Compile Include="Modules\DatabaseModule.cs" />
@@ -183,6 +183,7 @@
     <Content Include="Views\about.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\README.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

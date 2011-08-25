@@ -1,8 +1,13 @@
-﻿using System.Collections.Generic;
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Jonas Schmid, Maintainer: -
+
 using Nancy;
 
 namespace Epsitec.Cresus.Core.Server.AdditionalResponses
 {
+	/// <summary>
+	/// Extensions to be able to easily call our custom responses.
+	/// </summary>
 	public static class ResponseExtensions
 	{
 		public static Response AsCoreError(this IResponseFormatter formatter)

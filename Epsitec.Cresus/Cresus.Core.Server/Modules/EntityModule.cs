@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Jonas Schmid, Maintainer: -
+
+using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
@@ -9,6 +12,9 @@ using Nancy;
 
 namespace Epsitec.Cresus.Core.Server.Modules
 {
+	/// <summary>
+	/// Used to update value of an existing entity
+	/// </summary>
 	public class EntityModule : CoreModule
 	{
 		public EntityModule()
@@ -28,7 +34,7 @@ namespace Epsitec.Cresus.Core.Server.Modules
 
 				var errors = new Dictionary<string, object> ();
 				var memberNames = (IEnumerable<string>) formData.GetDynamicMemberNames ();
-				var memberKeys  = memberNames.Where (x => !x.Contains ('_')).ToArray ();
+				var memberKeys  = memberNames.Where (x => !x.Contains ('_')).ToArray (); // We don't want the "lambda_" keys
 
 				foreach (var memberKey in memberKeys)
 				{
@@ -88,7 +94,7 @@ namespace Epsitec.Cresus.Core.Server.Modules
 
 				if (errors.Any ())
 				{
-					context.Discard (); // TODO check this
+					context.Discard ();
 					return Response.AsCoreError (errors);
 				}
 				else

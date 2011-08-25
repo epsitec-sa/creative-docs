@@ -1,8 +1,15 @@
-﻿using Epsitec.Cresus.Core.Server.Auth;
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Jonas Schmid, Maintainer: -
+
+using Epsitec.Cresus.Core.Server.Auth;
 using Nancy;
 
 namespace Epsitec.Cresus.Core.Server.Modules
 {
+	/// <summary>
+	/// Base module thats allows to easly get the CoreSession for a defined user,
+	/// and that requires the user to be logged in.
+	/// </summary>
 	public abstract class CoreModule : NancyModule
 	{
 		protected CoreModule()

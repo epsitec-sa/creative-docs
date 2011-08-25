@@ -1,9 +1,17 @@
-﻿using System.Collections.Generic;
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Jonas Schmid, Maintainer: -
+
+using System.Collections.Generic;
 using Nancy;
 using Nancy.Responses;
 
 namespace Epsitec.Cresus.Core.Server.AdditionalResponses
 {
+	/// <summary>
+	/// Responses that are sent to the ExtJS client.
+	/// Every response should be one of them, because ExtJS or the global JS
+	/// use the "success" field to know what to do with the data.
+	/// </summary>
 	internal class CoreResponse
 	{
 		public static Response Error()
