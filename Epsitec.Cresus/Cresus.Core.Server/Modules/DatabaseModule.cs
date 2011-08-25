@@ -66,6 +66,7 @@ namespace Epsitec.Cresus.Core.Server.Modules
 			{
 				var coreSession = GetCoreSession ();
 				var context = coreSession.GetBusinessContext ();
+				var dataContext = context.DataContext;
 
 				string databaseName = parameters.name;
 
@@ -85,7 +86,7 @@ namespace Epsitec.Cresus.Core.Server.Modules
 						   select new
 						   {
 							   name = summary,
-							   uniqueId = coreSession.GetBusinessContext ().DataContext.GetNormalizedEntityKey (c).Value.ToString ()
+							   uniqueId = dataContext.GetNormalizedEntityKey (c).Value.ToString ()
 						   };
 
 				// Only take a subset of all the entities
