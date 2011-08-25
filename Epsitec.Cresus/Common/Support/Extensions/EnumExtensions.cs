@@ -4,11 +4,11 @@
 using System.Collections.Generic;
 using System.Linq;
 
-#if DOTNET35
 namespace Epsitec.Common.Support.Extensions
 {
 	public static class EnumExtensions
 	{
+#if DOTNET35
 		public static bool HasFlag(this System.Enum value, System.Enum mask)
 		{
 			int enumValue = (int) (object) value;
@@ -22,6 +22,15 @@ namespace Epsitec.Common.Support.Extensions
 				return true;
 			}
 		}
+#endif
+
+		public static string GetQualifiedName(this System.Enum value)
+		{
+			var type = value.GetType ();
+			var name = type.Name;
+			var symbols = System.Enum.Format (type, value, "f").Split (',').Select (x => string.Concat (name, ".", x.TrimStart ())).ToArray ();
+
+			return string.Join (" | ", symbols);
+		}
 	}
 }
-#endif

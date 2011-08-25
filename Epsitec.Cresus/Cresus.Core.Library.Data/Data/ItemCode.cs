@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -23,10 +23,9 @@ namespace Epsitec.Cresus.Core.Data
 		{
 		}
 
-
-		public static explicit operator string(ItemCode code)
+		public static explicit operator string(ItemCode item)
 		{
-			return code.code;
+			return (item == null) ? null : item.code;
 		}
 
 

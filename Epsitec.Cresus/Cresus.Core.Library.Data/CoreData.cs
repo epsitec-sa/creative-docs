@@ -381,7 +381,7 @@ namespace Epsitec.Cresus.Core
 			this.activeUserCode = code == null ? null : code.Code;
 		}
 		
-		internal ItemCode GetActiveUserItemCode()
+		public ItemCode GetActiveUserItemCode()
 		{
 			if (this.activeUserCode == null)
 			{

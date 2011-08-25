@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					using (this.businessContext.AutoLock (workflow))
 					{
-						WorkflowExecutionEngine.ChangeThreadStatus (thread, WorkflowStatus.Cancelled);
+						WorkflowExecutionEngine.ChangeThreadStatus (thread, WorkflowState.Cancelled);
 						this.businessContext.SaveChanges ();
 					}
 					
@@ -162,7 +162,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private bool FollowThreadWorkflowEdge(WorkflowThreadEntity thread, Queue<Arc> arcs, System.Func<Arc, bool> executor)
 		{
-			WorkflowExecutionEngine.ChangeThreadStatus (thread, WorkflowStatus.Active);
+			WorkflowExecutionEngine.ChangeThreadStatus (thread, WorkflowState.Active);
 
 			var arc  = arcs.Dequeue ();
 			var edge = arc.Edge;
@@ -280,7 +280,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				//	We have reached the end of the graph...
 
-				WorkflowExecutionEngine.ChangeThreadStatus (thread, WorkflowStatus.Done);
+				WorkflowExecutionEngine.ChangeThreadStatus (thread, WorkflowState.Done);
 			}
 			else
 			{
@@ -294,18 +294,15 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			var step = this.businessContext.CreateEntity<WorkflowStepEntity> ();
 
-			step.Edge  = edge;
-			step.Node  = node;
-			step.Date  = System.DateTime.UtcNow;
-//			step.User  = null; // TODO: ...
-//			step.Owner = null; // TODO: ...
-//			step.RelationContact = null; // TODO: ...
-//			step.RelationPerson  = null; // TODO: ...
+			step.Edge			   = edge;
+			step.Node			   = node;
+			step.Date			   = System.DateTime.UtcNow;
+			step.ExecutingUserCode = (string) this.data.GetActiveUserItemCode ();
 
 			thread.History.Add (step);
 		}
 
-		private static void ChangeThreadStatus(WorkflowThreadEntity thread, WorkflowStatus status)
+		private static void ChangeThreadStatus(WorkflowThreadEntity thread, WorkflowState status)
 		{
 			thread.Status = status;
 		}

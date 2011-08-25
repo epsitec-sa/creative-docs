@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
@@ -185,22 +186,22 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private static bool IsActiveThread(WorkflowThreadEntity thread)
 		{
-			WorkflowStatus status = thread.Status;
+			WorkflowState status = thread.Status;
 
 			switch (status)
 			{
-				case WorkflowStatus.None:
-				case WorkflowStatus.Active:
-				case WorkflowStatus.Pending:
+				case WorkflowState.None:
+				case WorkflowState.Active:
+				case WorkflowState.Pending:
 					return true;
 
-				case WorkflowStatus.Done:
-				case WorkflowStatus.Cancelled:
-				case WorkflowStatus.TimedOut:
+				case WorkflowState.Done:
+				case WorkflowState.Cancelled:
+				case WorkflowState.TimedOut:
 					return false;
 
 				default:
-					throw new System.NotImplementedException (string.Format ("WorkflowStatus.{0} not implemented", status));
+					throw new System.NotImplementedException (string.Format ("{0} not implemented", status.GetQualifiedName ()));
 			}
 		}
 

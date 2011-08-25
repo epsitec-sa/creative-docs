@@ -6,10 +6,10 @@ using Epsitec.Common.Types;
 namespace Epsitec.Cresus.Core.Business
 {
 	/// <summary>
-	/// The <c>WorkflowStatus</c> enumeration defines the states in which a workflow can be.
+	/// The <c>WorkflowState</c> enumeration defines the states in which a workflow can be.
 	/// </summary>
 	[DesignerVisible]
-	public enum WorkflowStatus
+	public enum WorkflowState
 	{
 		None			= 0,
 
@@ -20,6 +20,6 @@ namespace Epsitec.Cresus.Core.Business
 		Cancelled		= 4,
 		TimedOut		= 5,
 
-		Suspended		= 6,
+		Restricted		= 6,
 	}
 }

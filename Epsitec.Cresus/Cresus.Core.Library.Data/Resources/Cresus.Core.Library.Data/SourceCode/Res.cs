@@ -367,11 +367,11 @@ namespace Epsitec.Cresus.Core.Library.Data
 				//	designer:cap/8VAN1
 				public static readonly global::Epsitec.Common.Support.Druid CreationDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 55);
 				//	designer:cap/8VAM1
-				public static readonly global::Epsitec.Common.Support.Druid CreationUser = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 54);
+				public static readonly global::Epsitec.Common.Support.Druid CreationUserCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 54);
 				//	designer:cap/8VAU1
-				public static readonly global::Epsitec.Common.Support.Druid TargetUser = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 62);
+				public static readonly global::Epsitec.Common.Support.Druid TargetUserCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 62);
 				//	designer:cap/8VAV1
-				public static readonly global::Epsitec.Common.Support.Druid TargetUserGroup = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 63);
+				public static readonly global::Epsitec.Common.Support.Druid TargetUserGroupCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 63);
 				//	designer:cap/8VA32
 				public static readonly global::Epsitec.Common.Support.Druid WorkflowThreadCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 67);
 			}

@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 			}
 			
 			//	designer:cap/DVA41
-			public static readonly Epsitec.Common.Types.EnumType WorkflowStatus = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 36));
+			public static readonly Epsitec.Common.Types.EnumType WorkflowState = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 36));
 			//	designer:cap/DVAU
 			public static readonly Epsitec.Common.Types.EnumType WorkflowTransitionType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 30));
 			//	designer:cap/DVA21
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 			{
 			}
 			
-			public static class WorkflowStatus
+			public static class WorkflowState
 			{
 				internal static void _Initialize()
 				{
@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 					}
 				}
 				//	designer:cap/DVAC1
-				public static global::Epsitec.Common.Types.Caption Suspended
+				public static global::Epsitec.Common.Types.Caption Restricted
 				{
 					get
 					{
@@ -232,12 +232,10 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 				public static readonly global::Epsitec.Common.Support.Druid Date = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 27);
 				//	designer:cap/DVAP
 				public static readonly global::Epsitec.Common.Support.Druid Edge = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 25);
+				//	designer:cap/DVAS
+				public static readonly global::Epsitec.Common.Support.Druid ExecutingUserCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 28);
 				//	designer:cap/DVAQ
 				public static readonly global::Epsitec.Common.Support.Druid Node = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 26);
-				//	designer:cap/DVAT
-				public static readonly global::Epsitec.Common.Support.Druid OwnerCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 29);
-				//	designer:cap/DVAS
-				public static readonly global::Epsitec.Common.Support.Druid UserCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 28);
 			}
 			
 			public static class WorkflowThread
@@ -252,6 +250,8 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 				public static readonly global::Epsitec.Common.Support.Druid Definition = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 17);
 				//	designer:cap/DVAI
 				public static readonly global::Epsitec.Common.Support.Druid History = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 18);
+				//	designer:cap/DVAD1
+				public static readonly global::Epsitec.Common.Support.Druid RestrictedUserCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 45);
 				//	designer:cap/DVAB1
 				public static readonly global::Epsitec.Common.Support.Druid SerializedArgs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 43);
 				//	designer:cap/DVAG
@@ -310,7 +310,7 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 			Res._manager.DefineDefaultModuleName ("Cresus.Core.Library.Workflows");
 			Types._Initialize ();
 			Values._Initialize ();
-			Values.WorkflowStatus._Initialize ();
+			Values.WorkflowState._Initialize ();
 			Values.WorkflowTransitionType._Initialize ();
 			Fields.IWorkflowHost._Initialize ();
 			Fields.Workflow._Initialize ();

@@ -107,19 +107,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/DVA1/DVAG
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[DVAG]")]
-		public global::Epsitec.Cresus.Core.Business.WorkflowStatus Status
+		public global::Epsitec.Cresus.Core.Business.WorkflowState Status
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Business.WorkflowStatus> ("[DVAG]");
+				return this.GetField<global::Epsitec.Cresus.Core.Business.WorkflowState> ("[DVAG]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Business.WorkflowStatus oldValue = this.Status;
+				global::Epsitec.Cresus.Core.Business.WorkflowState oldValue = this.Status;
 				if (oldValue != value || !this.IsFieldDefined("[DVAG]"))
 				{
 					this.OnStatusChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Business.WorkflowStatus> ("[DVAG]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.WorkflowState> ("[DVAG]", oldValue, value);
 					this.OnStatusChanged (oldValue, value);
 				}
 			}
@@ -171,6 +171,28 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>RestrictedUserCode</c> field.
+		///	designer:fld/DVA1/DVAD1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[DVAD1]")]
+		public string RestrictedUserCode
+		{
+			get
+			{
+				return this.GetField<string> ("[DVAD1]");
+			}
+			set
+			{
+				string oldValue = this.RestrictedUserCode;
+				if (oldValue != value || !this.IsFieldDefined("[DVAD1]"))
+				{
+					this.OnRestrictedUserCodeChanging (oldValue, value);
+					this.SetField<string> ("[DVAD1]", oldValue, value);
+					this.OnRestrictedUserCodeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>SerializedArgs</c> field.
 		///	designer:fld/DVA1/DVAB1
 		///	</summary>
@@ -193,10 +215,12 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnStatusChanging(global::Epsitec.Cresus.Core.Business.WorkflowStatus oldValue, global::Epsitec.Cresus.Core.Business.WorkflowStatus newValue);
-		partial void OnStatusChanged(global::Epsitec.Cresus.Core.Business.WorkflowStatus oldValue, global::Epsitec.Cresus.Core.Business.WorkflowStatus newValue);
+		partial void OnStatusChanging(global::Epsitec.Cresus.Core.Business.WorkflowState oldValue, global::Epsitec.Cresus.Core.Business.WorkflowState newValue);
+		partial void OnStatusChanged(global::Epsitec.Cresus.Core.Business.WorkflowState oldValue, global::Epsitec.Cresus.Core.Business.WorkflowState newValue);
 		partial void OnDefinitionChanging(global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity newValue);
 		partial void OnDefinitionChanged(global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity newValue);
+		partial void OnRestrictedUserCodeChanging(string oldValue, string newValue);
+		partial void OnRestrictedUserCodeChanged(string oldValue, string newValue);
 		partial void OnSerializedArgsChanging(global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue, global::Epsitec.Cresus.Core.Entities.XmlBlobEntity newValue);
 		partial void OnSerializedArgsChanged(global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue, global::Epsitec.Cresus.Core.Entities.XmlBlobEntity newValue);
 		
@@ -687,11 +711,11 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>UserCode</c> field.
+		///	The <c>ExecutingUserCode</c> field.
 		///	designer:fld/DVA4/DVAS
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[DVAS]")]
-		public string UserCode
+		public string ExecutingUserCode
 		{
 			get
 			{
@@ -699,34 +723,12 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				string oldValue = this.UserCode;
+				string oldValue = this.ExecutingUserCode;
 				if (oldValue != value || !this.IsFieldDefined("[DVAS]"))
 				{
-					this.OnUserCodeChanging (oldValue, value);
+					this.OnExecutingUserCodeChanging (oldValue, value);
 					this.SetField<string> ("[DVAS]", oldValue, value);
-					this.OnUserCodeChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>OwnerCode</c> field.
-		///	designer:fld/DVA4/DVAT
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[DVAT]")]
-		public string OwnerCode
-		{
-			get
-			{
-				return this.GetField<string> ("[DVAT]");
-			}
-			set
-			{
-				string oldValue = this.OwnerCode;
-				if (oldValue != value || !this.IsFieldDefined("[DVAT]"))
-				{
-					this.OnOwnerCodeChanging (oldValue, value);
-					this.SetField<string> ("[DVAT]", oldValue, value);
-					this.OnOwnerCodeChanged (oldValue, value);
+					this.OnExecutingUserCodeChanged (oldValue, value);
 				}
 			}
 		}
@@ -737,10 +739,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnNodeChanged(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
 		partial void OnDateChanging(global::System.DateTime oldValue, global::System.DateTime newValue);
 		partial void OnDateChanged(global::System.DateTime oldValue, global::System.DateTime newValue);
-		partial void OnUserCodeChanging(string oldValue, string newValue);
-		partial void OnUserCodeChanged(string oldValue, string newValue);
-		partial void OnOwnerCodeChanging(string oldValue, string newValue);
-		partial void OnOwnerCodeChanged(string oldValue, string newValue);
+		partial void OnExecutingUserCodeChanging(string oldValue, string newValue);
+		partial void OnExecutingUserCodeChanged(string oldValue, string newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

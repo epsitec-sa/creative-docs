@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			WorkflowThreadEntity thread = businessContext.CreateEntity<WorkflowThreadEntity> ();
 
-			thread.Status	  = WorkflowStatus.Pending;
+			thread.Status	  = WorkflowState.Pending;
 			thread.Definition = definition;
 			thread.SetSettings (businessContext, settings);
 
