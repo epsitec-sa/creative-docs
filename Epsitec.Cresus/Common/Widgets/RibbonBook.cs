@@ -479,13 +479,13 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected static readonly double	TopMargin = 3;
-		protected static readonly double	TabHeight = RibbonBook.TopMargin + RibbonButton.DefaultHeight - 1;
+		protected static readonly double		TopMargin = 3;
+		protected static readonly double		TabHeight = RibbonBook.TopMargin + RibbonButton.DefaultHeight - 1;
 
-		protected Widget					buttons;
-		protected Widget					pages;
-		private readonly RibbonPageCollection		pageItems;
-		private readonly ButtonCollection			buttonItems;
-		protected RibbonPage				activePage;
+		protected Widget						buttons;
+		protected Widget						pages;
+		private readonly RibbonPageCollection	pageItems;
+		private readonly ButtonCollection		buttonItems;
+		protected RibbonPage					activePage;
 	}
 }

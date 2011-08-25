@@ -22,7 +22,7 @@
   <data id="0V4">of</data>
   <data id="005">Extract</data>
   <data id="015">of</data>
-  <data id="04">File</data>
+  <data id="04">Module</data>
   <data id="05">Clipboard</data>
   <data id="06">Selection</data>
   <data id="07">Character</data>
@@ -257,5 +257,5 @@
   <data id="2P3">Type</data>
   <data id="KO3">Save</data>
   <data id="KP3">Save all</data>
-  <data id="KQ3">Global</data>
+  <data id="KQ3">All modules</data>
 </bundle>

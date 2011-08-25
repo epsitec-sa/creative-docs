@@ -4,7 +4,7 @@
   <data name="Ribbon.Main" id="01">Principal</data>
   <data name="Ribbon.Oper" id="02">Opérations</data>
   <data name="Ribbon.Text" id="03">Texte</data>
-  <data name="Ribbon.Section.File" id="04">Fichier</data>
+  <data name="Ribbon.Section.File" id="04">Module</data>
   <data name="Ribbon.Section.Display" id="09A">Affichage</data>
   <data name="Ribbon.Section.Clipboard" id="05">Presse-papiers</data>
   <data name="Ribbon.Section.Edit" id="06">Edition</data>
@@ -603,5 +603,5 @@
   <data name="Viewers.Column.Source" id="KN3">Source</data>
   <data name="Action.SaveAllBitmaps" id="KO3">Exporte toutes les images des entités selon les réglages de chaque module</data>
   <data name="Action.SaveAll" id="KP3">Enregistrer tout</data>
-  <data name="Ribbon.Section.Global" id="KQ3">Global</data>
+  <data name="Ribbon.Section.Global" id="KQ3">Tous les modules</data>
 </bundle>
