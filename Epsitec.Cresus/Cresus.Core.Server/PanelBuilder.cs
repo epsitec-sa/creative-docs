@@ -387,13 +387,14 @@ namespace Epsitec.Cresus.Core.Server
 				var checkboxes = new List<object> ();
 				entityDictionnary["items"]  = checkboxes;
 
+				int i = 0;
 				foreach (var item in items)
 				{
 					var dic = new Dictionary<string, object> ();
 					checkboxes.Add (dic);
 
 					dic["boxLabel"] = item.GetSummary ().ToSimpleText ();
-					dic["name"] = entityDictionnary["name"] + "[]"; // Copy the parent's ID
+					dic["name"] = string.Format ("{0}[{1}]", entityDictionnary["name"], i++); // Copy the parent's ID
 					dic["inputValue"] = this.GetEntityKey (item);
 					dic["checked"] = found.Contains (item);
 					dic["uncheckedValue"] = ""; // We want to return "nothing" when nothing is checked (but we want to return something)
