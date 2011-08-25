@@ -11,11 +11,33 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class DocumentMetadataEntity
 	{
-		public bool IsFrozen
+		/// <summary>
+		/// Gets a value indicating whether this document is frozen. This is related to
+		/// the document's state; currently, only the <see cref="DocumentState.Draft"/>
+		/// is considered to be not frozen (i.e. editable).
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this document is frozen; otherwise, <c>false</c>.
+		/// </value>
+		public bool								IsFrozen
 		{
 			get
 			{
-				return this.DocumentState == Business.DocumentState.Inactive;
+				switch (this.DocumentState)
+				{
+					case Business.DocumentState.None:
+						return true;
+
+					case Business.DocumentState.Draft:
+						return false;
+					
+					case Business.DocumentState.Inactive:
+					case Business.DocumentState.Active:
+						return true;
+
+					default:
+						throw new System.NotSupportedException (string.Format ("DocumentState.{0} not supported", this.DocumentState));
+				}
 			}
 		}
 
