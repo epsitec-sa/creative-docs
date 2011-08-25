@@ -1381,11 +1381,11 @@ namespace Epsitec.Cresus.Core.Entities
 			set;
 		}
 		///	<summary>
-		///	The <c>WorkflowCode</c> field.
+		///	The <c>WorkflowThreadCode</c> field.
 		///	designer:fld/8VAL1/8VA32
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[8VA32]")]
-		string WorkflowCode
+		string WorkflowThreadCode
 		{
 			get;
 			set;
@@ -1483,24 +1483,24 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		static partial void OnTargetUserGroupChanged(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj, string oldValue, string newValue);
 		static partial void OnTargetUserGroupChanging(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj, string oldValue, string newValue);
-		public static string GetWorkflowCode(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj)
+		public static string GetWorkflowThreadCode(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj)
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			return entity.GetField<string> ("[8VA32]");
 		}
-		public static void SetWorkflowCode(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj, string value)
+		public static void SetWorkflowThreadCode(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj, string value)
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
-			string oldValue = obj.WorkflowCode;
+			string oldValue = obj.WorkflowThreadCode;
 			if (oldValue != value || !entity.IsFieldDefined("[8VA32]"))
 			{
-				IEntityAttributeInterfaceImplementation.OnWorkflowCodeChanging (obj, oldValue, value);
+				IEntityAttributeInterfaceImplementation.OnWorkflowThreadCodeChanging (obj, oldValue, value);
 				entity.SetField<string> ("[8VA32]", oldValue, value);
-				IEntityAttributeInterfaceImplementation.OnWorkflowCodeChanged (obj, oldValue, value);
+				IEntityAttributeInterfaceImplementation.OnWorkflowThreadCodeChanged (obj, oldValue, value);
 			}
 		}
-		static partial void OnWorkflowCodeChanged(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj, string oldValue, string newValue);
-		static partial void OnWorkflowCodeChanging(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj, string oldValue, string newValue);
+		static partial void OnWorkflowThreadCodeChanged(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj, string oldValue, string newValue);
+		static partial void OnWorkflowThreadCodeChanging(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj, string oldValue, string newValue);
 	}
 }
 #endregion
@@ -1686,19 +1686,19 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>WorkflowCode</c> field.
+		///	The <c>WorkflowThreadCode</c> field.
 		///	designer:fld/8VA02/8VA32
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[8VA32]")]
-		public string WorkflowCode
+		public string WorkflowThreadCode
 		{
 			get
 			{
-				return global::Epsitec.Cresus.Core.Entities.IEntityAttributeInterfaceImplementation.GetWorkflowCode (this);
+				return global::Epsitec.Cresus.Core.Entities.IEntityAttributeInterfaceImplementation.GetWorkflowThreadCode (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.IEntityAttributeInterfaceImplementation.SetWorkflowCode (this, value);
+				global::Epsitec.Cresus.Core.Entities.IEntityAttributeInterfaceImplementation.SetWorkflowThreadCode (this, value);
 			}
 		}
 		#endregion

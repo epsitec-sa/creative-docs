@@ -313,7 +313,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 				//	designer:cap/8VAV1
 				public static readonly global::Epsitec.Common.Support.Druid TargetUserGroup = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 63);
 				//	designer:cap/8VA32
-				public static readonly global::Epsitec.Common.Support.Druid WorkflowCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 67);
+				public static readonly global::Epsitec.Common.Support.Druid WorkflowThreadCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 67);
 			}
 			
 			public static class IFileMetadata
