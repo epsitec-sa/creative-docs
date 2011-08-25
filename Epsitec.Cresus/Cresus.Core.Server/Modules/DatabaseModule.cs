@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.Server.Modules
 			{
 				Title = "Clients",
 				DatabaseName = "customers",
-				CSSClass = IconsBuilder.GetCSSClassName("Base.Customer", IconSize.ThirtyTwo)
+				CSSClass = IconsBuilder.GetCSSClassName ("Base.Customer", IconSize.ThirtyTwo)
 			};
 
 			DatabasesModule.databases["articles"] = new Database<ArticleDefinitionEntity>
@@ -49,28 +49,6 @@ namespace Epsitec.Cresus.Core.Server.Modules
 
 				DatabasesModule.databases.ForEach (o => list.Add (o.Value));
 
-				if (false)
-				{
-
-					var coreSession = GetCoreSession ();
-					var context = coreSession.GetBusinessContext ();
-
-					var rand = new System.Random ();
-
-					for (int i = 0; i < 500; ++i)
-					{
-
-						var customer = context.CreateEntity<CustomerEntity> ();
-						customer.Relation = context.CreateEntity<RelationEntity> ();
-						var person = context.CreateEntity<NaturalPersonEntity> ();
-						person.Firstname = rand.Next ().ToString ();
-						person.Lastname = rand.Next ().ToString ();
-						customer.Relation.Person = person;
-					}
-
-					context.SaveChanges ();
-				}
-
 				return Response.AsCoreSuccess (list);
 			};
 
@@ -87,22 +65,22 @@ namespace Epsitec.Cresus.Core.Server.Modules
 				var o = m.Invoke (context, new object[0]);
 				var enumerable = o as IEnumerable<AbstractEntity>;
 
-				var list = new List<object> ();
-
 				var start = (int) Request.Query.start;
 				var limit = (int) Request.Query.limit;
-				//var subset = enumerable.Skip (start).Take (limit); 
-				var subset = enumerable.OrderBy (c => c.GetCompactSummary ().ToSimpleText ()).Skip (start).Take (limit);
 
-				subset.ForEach (c => list.Add (new
-				{
-					name = c.GetCompactSummary ().ToSimpleText (),
-					uniqueId = coreSession.GetBusinessContext ().DataContext.GetNormalizedEntityKey (c).Value.ToString ()
-				}));
+				var list = from c in enumerable
+						   let summary = c.GetCompactSummary ().ToSimpleText ()
+						   // orderby summary // TODO Awefully slow !
+						   select new
+						   {
+							   name = summary,
+							   uniqueId = coreSession.GetBusinessContext ().DataContext.GetNormalizedEntityKey (c).Value.ToString ()
+						   };
+				var subset = list.Skip (start).Take (limit);
 
 				var dic = new Dictionary<string, object> ();
 				dic["total"] = enumerable.Count (); // For ExtJS
-				dic["entities"] = list;
+				dic["entities"] = subset;
 
 				var res = Response.AsJson (dic);
 
