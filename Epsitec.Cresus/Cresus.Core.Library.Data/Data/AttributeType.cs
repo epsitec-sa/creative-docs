@@ -9,13 +9,15 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Data
 {
 	[DesignerVisible]
-	public enum AttributeState
+	public enum AttributeType
 	{
-		None = 0,
+		Unknown		= -1,
+		None		= 0,
 
-		Draft = 1,
+		Flag		= 100,
 
-		Active = 2,
-		Inactive = 3,
+		Event		= 200,
+
+		Task		= 300,
 	}
 }

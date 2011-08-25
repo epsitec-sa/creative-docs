@@ -65,6 +65,8 @@ namespace Epsitec.Cresus.Core.Library.Data
 					
 					//	designer:cap/8VAO1
 					public static readonly Epsitec.Common.Types.EnumType AttributeState = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 56));
+					//	designer:cap/8VA42
+					public static readonly Epsitec.Common.Types.EnumType AttributeType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 68));
 				}
 				
 				public static class Numeric
@@ -193,6 +195,54 @@ namespace Epsitec.Cresus.Core.Library.Data
 							}
 						}
 					}
+					
+					public static class AttributeType
+					{
+						internal static void _Initialize()
+						{
+						}
+						
+						//	designer:cap/8VA82
+						public static global::Epsitec.Common.Types.Caption Event
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Core.Library.Data.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 72));
+							}
+						}
+						//	designer:cap/8VA72
+						public static global::Epsitec.Common.Types.Caption Flag
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Core.Library.Data.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 71));
+							}
+						}
+						//	designer:cap/8VA62
+						public static global::Epsitec.Common.Types.Caption None
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Core.Library.Data.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 70));
+							}
+						}
+						//	designer:cap/8VA92
+						public static global::Epsitec.Common.Types.Caption Task
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Core.Library.Data.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 73));
+							}
+						}
+						//	designer:cap/8VA52
+						public static global::Epsitec.Common.Types.Caption Unknown
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Core.Library.Data.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 69));
+							}
+						}
+					}
 				}
 			}
 			
@@ -218,6 +268,16 @@ namespace Epsitec.Cresus.Core.Library.Data
 				
 				//	designer:cap/8VA22
 				public static readonly global::Epsitec.Common.Support.Druid AttributeCategory = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 66);
+			}
+			
+			public static class EntityAttributeCategory
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/8VAA2
+				public static readonly global::Epsitec.Common.Support.Druid AttributeType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 74);
 			}
 			
 			public static class GeneratorDefinition
@@ -520,8 +580,10 @@ namespace Epsitec.Cresus.Core.Library.Data
 			Types.Data.String._Initialize ();
 			Values._Initialize ();
 			Values.Data.Enum.AttributeState._Initialize ();
+			Values.Data.Enum.AttributeType._Initialize ();
 			Fields.Comment._Initialize ();
 			Fields.EntityAttribute._Initialize ();
+			Fields.EntityAttributeCategory._Initialize ();
 			Fields.GeneratorDefinition._Initialize ();
 			Fields.IComments._Initialize ();
 			Fields.IDataHash._Initialize ();

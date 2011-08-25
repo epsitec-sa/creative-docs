@@ -1830,7 +1830,31 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		#endregion
+		///	<summary>
+		///	The <c>AttributeType</c> field.
+		///	designer:fld/8VA12/8VAA2
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAA2]")]
+		public global::Epsitec.Cresus.Core.Data.AttributeType AttributeType
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Data.AttributeType> ("[8VAA2]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Data.AttributeType oldValue = this.AttributeType;
+				if (oldValue != value || !this.IsFieldDefined("[8VAA2]"))
+				{
+					this.OnAttributeTypeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Data.AttributeType> ("[8VAA2]", oldValue, value);
+					this.OnAttributeTypeChanged (oldValue, value);
+				}
+			}
+		}
 		
+		partial void OnAttributeTypeChanging(global::Epsitec.Cresus.Core.Data.AttributeType oldValue, global::Epsitec.Cresus.Core.Data.AttributeType newValue);
+		partial void OnAttributeTypeChanged(global::Epsitec.Cresus.Core.Data.AttributeType oldValue, global::Epsitec.Cresus.Core.Data.AttributeType newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
