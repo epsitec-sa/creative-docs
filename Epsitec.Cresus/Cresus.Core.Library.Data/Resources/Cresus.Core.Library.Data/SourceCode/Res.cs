@@ -57,6 +57,16 @@ namespace Epsitec.Cresus.Core.Library.Data
 				{
 				}
 				
+				public static class Enum
+				{
+					internal static void _Initialize()
+					{
+					}
+					
+					//	designer:cap/8VAO1
+					public static readonly Epsitec.Common.Types.EnumType AttributeState = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 56));
+				}
+				
 				public static class Numeric
 				{
 					internal static void _Initialize()
@@ -86,6 +96,10 @@ namespace Epsitec.Cresus.Core.Library.Data
 			public static readonly Epsitec.Common.Types.StructuredType Comment = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 26));
 			//	designer:cap/8VA61
 			public static readonly Epsitec.Common.Types.StructuredType DateRange = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 38));
+			//	designer:cap/8VA02
+			public static readonly Epsitec.Common.Types.StructuredType EntityAttribute = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 64));
+			//	designer:cap/8VA12
+			public static readonly Epsitec.Common.Types.StructuredType EntityAttributeCategory = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 65));
 			//	designer:cap/8VA91
 			public static readonly Epsitec.Common.Types.StructuredType GeneratorDefinition = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 41));
 			//	designer:cap/8VAM
@@ -100,6 +114,8 @@ namespace Epsitec.Cresus.Core.Library.Data
 			public static readonly Epsitec.Common.Types.StructuredType IDateRange = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 23));
 			//	designer:cap/8VAJ
 			public static readonly Epsitec.Common.Types.StructuredType IDateTimeRange = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 19));
+			//	designer:cap/8VAL1
+			public static readonly Epsitec.Common.Types.StructuredType IEntityAttribute = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 53));
 			//	designer:cap/8VAA
 			public static readonly Epsitec.Common.Types.StructuredType IFileMetadata = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10));
 			//	designer:cap/8VA4
@@ -120,6 +136,68 @@ namespace Epsitec.Cresus.Core.Library.Data
 			public static readonly Epsitec.Common.Types.StructuredType XmlBlob = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 36));
 		}
 		
+		public static class Values
+		{
+			internal static void _Initialize()
+			{
+			}
+			
+			public static class Data
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				public static class Enum
+				{
+					internal static void _Initialize()
+					{
+					}
+					
+					public static class AttributeState
+					{
+						internal static void _Initialize()
+						{
+						}
+						
+						//	designer:cap/8VAR1
+						public static global::Epsitec.Common.Types.Caption Active
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Core.Library.Data.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 59));
+							}
+						}
+						//	designer:cap/8VAQ1
+						public static global::Epsitec.Common.Types.Caption Draft
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Core.Library.Data.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 58));
+							}
+						}
+						//	designer:cap/8VAS1
+						public static global::Epsitec.Common.Types.Caption Inactive
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Core.Library.Data.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 60));
+							}
+						}
+						//	designer:cap/8VAP1
+						public static global::Epsitec.Common.Types.Caption None
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Core.Library.Data.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 57));
+							}
+						}
+					}
+				}
+			}
+			
+		}
+		
 		public static class Fields
 		{
 			public static class Comment
@@ -130,6 +208,16 @@ namespace Epsitec.Cresus.Core.Library.Data
 				
 				//	designer:cap/8VAR
 				public static readonly global::Epsitec.Common.Support.Druid Text = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 27);
+			}
+			
+			public static class EntityAttribute
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/8VA22
+				public static readonly global::Epsitec.Common.Support.Druid AttributeCategory = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 66);
 			}
 			
 			public static class GeneratorDefinition
@@ -206,6 +294,26 @@ namespace Epsitec.Cresus.Core.Library.Data
 				public static readonly global::Epsitec.Common.Support.Druid BeginDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 20);
 				//	designer:cap/8VAL
 				public static readonly global::Epsitec.Common.Support.Druid EndDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 21);
+			}
+			
+			public static class IEntityAttribute
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/8VAT1
+				public static readonly global::Epsitec.Common.Support.Druid AttributeState = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 61);
+				//	designer:cap/8VAN1
+				public static readonly global::Epsitec.Common.Support.Druid CreationDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 55);
+				//	designer:cap/8VAM1
+				public static readonly global::Epsitec.Common.Support.Druid CreationUser = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 54);
+				//	designer:cap/8VAU1
+				public static readonly global::Epsitec.Common.Support.Druid TargetUser = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 62);
+				//	designer:cap/8VAV1
+				public static readonly global::Epsitec.Common.Support.Druid TargetUserGroup = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 63);
+				//	designer:cap/8VA32
+				public static readonly global::Epsitec.Common.Support.Druid WorkflowCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 67);
 			}
 			
 			public static class IFileMetadata
@@ -407,15 +515,20 @@ namespace Epsitec.Cresus.Core.Library.Data
 			CommandIds._Initialize ();
 			CommandIds.Base._Initialize ();
 			Types._Initialize ();
+			Types.Data.Enum._Initialize ();
 			Types.Data.Numeric._Initialize ();
 			Types.Data.String._Initialize ();
+			Values._Initialize ();
+			Values.Data.Enum.AttributeState._Initialize ();
 			Fields.Comment._Initialize ();
+			Fields.EntityAttribute._Initialize ();
 			Fields.GeneratorDefinition._Initialize ();
 			Fields.IComments._Initialize ();
 			Fields.IDataHash._Initialize ();
 			Fields.IDateMetadata._Initialize ();
 			Fields.IDateRange._Initialize ();
 			Fields.IDateTimeRange._Initialize ();
+			Fields.IEntityAttribute._Initialize ();
 			Fields.IFileMetadata._Initialize ();
 			Fields.IItemCode._Initialize ();
 			Fields.IItemCodeUniversalReference._Initialize ();

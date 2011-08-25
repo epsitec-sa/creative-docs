@@ -90,6 +90,14 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 						return global::Epsitec.Cresus.Core.Library.Workflows.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 38));
 					}
 				}
+				//	designer:cap/DVAC1
+				public static global::Epsitec.Common.Types.Caption Suspended
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Workflows.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 44));
+					}
+				}
 				//	designer:cap/DVAA1
 				public static global::Epsitec.Common.Types.Caption TimedOut
 				{

@@ -9,6 +9,8 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[8VA41]", typeof (Epsitec.Cresus.Core.Entities.XmlBlobEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[8VA61]", typeof (Epsitec.Cresus.Core.Entities.DateRangeEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[8VA91]", typeof (Epsitec.Cresus.Core.Entities.GeneratorDefinitionEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[8VA02]", typeof (Epsitec.Cresus.Core.Entities.EntityAttributeEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[8VA12]", typeof (Epsitec.Cresus.Core.Entities.EntityAttributeCategoryEntity))]
 #region Epsitec.Cresus.Core.IItemRank Interface
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -1315,6 +1317,540 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		static partial void OnRefEntityIdChanged(global::Epsitec.Cresus.Core.Entities.IItemCodeUniversalReference obj, string oldValue, string newValue);
 		static partial void OnRefEntityIdChanging(global::Epsitec.Cresus.Core.Entities.IItemCodeUniversalReference obj, string oldValue, string newValue);
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.IEntityAttribute Interface
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>IEntityAttribute</c> entity.
+	///	designer:cap/8VAL1
+	///	</summary>
+	public interface IEntityAttribute : global::Epsitec.Cresus.Core.Entities.IDateTimeRange, global::Epsitec.Cresus.Core.Entities.IItemCodeUniversalReference
+	{
+		///	<summary>
+		///	The <c>CreationUser</c> field.
+		///	designer:fld/8VAL1/8VAM1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAM1]")]
+		string CreationUser
+		{
+			get;
+			set;
+		}
+		///	<summary>
+		///	The <c>CreationDate</c> field.
+		///	designer:fld/8VAL1/8VAN1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAN1]")]
+		global::System.DateTime? CreationDate
+		{
+			get;
+			set;
+		}
+		///	<summary>
+		///	The <c>AttributeState</c> field.
+		///	designer:fld/8VAL1/8VAT1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAT1]")]
+		global::Epsitec.Cresus.Core.Data.AttributeState AttributeState
+		{
+			get;
+			set;
+		}
+		///	<summary>
+		///	The <c>TargetUser</c> field.
+		///	designer:fld/8VAL1/8VAU1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAU1]")]
+		string TargetUser
+		{
+			get;
+			set;
+		}
+		///	<summary>
+		///	The <c>TargetUserGroup</c> field.
+		///	designer:fld/8VAL1/8VAV1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAV1]")]
+		string TargetUserGroup
+		{
+			get;
+			set;
+		}
+		///	<summary>
+		///	The <c>WorkflowCode</c> field.
+		///	designer:fld/8VAL1/8VA32
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA32]")]
+		string WorkflowCode
+		{
+			get;
+			set;
+		}
+	}
+	public static partial class IEntityAttributeInterfaceImplementation
+	{
+		public static string GetCreationUser(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<string> ("[8VAM1]");
+		}
+		public static void SetCreationUser(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj, string value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			string oldValue = obj.CreationUser;
+			if (oldValue != value || !entity.IsFieldDefined("[8VAM1]"))
+			{
+				IEntityAttributeInterfaceImplementation.OnCreationUserChanging (obj, oldValue, value);
+				entity.SetField<string> ("[8VAM1]", oldValue, value);
+				IEntityAttributeInterfaceImplementation.OnCreationUserChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnCreationUserChanged(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj, string oldValue, string newValue);
+		static partial void OnCreationUserChanging(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj, string oldValue, string newValue);
+		public static global::System.DateTime? GetCreationDate(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<global::System.DateTime?> ("[8VAN1]");
+		}
+		public static void SetCreationDate(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj, global::System.DateTime? value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			global::System.DateTime? oldValue = obj.CreationDate;
+			if (oldValue != value || !entity.IsFieldDefined("[8VAN1]"))
+			{
+				IEntityAttributeInterfaceImplementation.OnCreationDateChanging (obj, oldValue, value);
+				entity.SetField<global::System.DateTime?> ("[8VAN1]", oldValue, value);
+				IEntityAttributeInterfaceImplementation.OnCreationDateChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnCreationDateChanged(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj, global::System.DateTime? oldValue, global::System.DateTime? newValue);
+		static partial void OnCreationDateChanging(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj, global::System.DateTime? oldValue, global::System.DateTime? newValue);
+		public static global::Epsitec.Cresus.Core.Data.AttributeState GetAttributeState(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<global::Epsitec.Cresus.Core.Data.AttributeState> ("[8VAT1]");
+		}
+		public static void SetAttributeState(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj, global::Epsitec.Cresus.Core.Data.AttributeState value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			global::Epsitec.Cresus.Core.Data.AttributeState oldValue = obj.AttributeState;
+			if (oldValue != value || !entity.IsFieldDefined("[8VAT1]"))
+			{
+				IEntityAttributeInterfaceImplementation.OnAttributeStateChanging (obj, oldValue, value);
+				entity.SetField<global::Epsitec.Cresus.Core.Data.AttributeState> ("[8VAT1]", oldValue, value);
+				IEntityAttributeInterfaceImplementation.OnAttributeStateChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnAttributeStateChanged(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj, global::Epsitec.Cresus.Core.Data.AttributeState oldValue, global::Epsitec.Cresus.Core.Data.AttributeState newValue);
+		static partial void OnAttributeStateChanging(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj, global::Epsitec.Cresus.Core.Data.AttributeState oldValue, global::Epsitec.Cresus.Core.Data.AttributeState newValue);
+		public static string GetTargetUser(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<string> ("[8VAU1]");
+		}
+		public static void SetTargetUser(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj, string value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			string oldValue = obj.TargetUser;
+			if (oldValue != value || !entity.IsFieldDefined("[8VAU1]"))
+			{
+				IEntityAttributeInterfaceImplementation.OnTargetUserChanging (obj, oldValue, value);
+				entity.SetField<string> ("[8VAU1]", oldValue, value);
+				IEntityAttributeInterfaceImplementation.OnTargetUserChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnTargetUserChanged(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj, string oldValue, string newValue);
+		static partial void OnTargetUserChanging(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj, string oldValue, string newValue);
+		public static string GetTargetUserGroup(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<string> ("[8VAV1]");
+		}
+		public static void SetTargetUserGroup(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj, string value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			string oldValue = obj.TargetUserGroup;
+			if (oldValue != value || !entity.IsFieldDefined("[8VAV1]"))
+			{
+				IEntityAttributeInterfaceImplementation.OnTargetUserGroupChanging (obj, oldValue, value);
+				entity.SetField<string> ("[8VAV1]", oldValue, value);
+				IEntityAttributeInterfaceImplementation.OnTargetUserGroupChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnTargetUserGroupChanged(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj, string oldValue, string newValue);
+		static partial void OnTargetUserGroupChanging(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj, string oldValue, string newValue);
+		public static string GetWorkflowCode(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<string> ("[8VA32]");
+		}
+		public static void SetWorkflowCode(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj, string value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			string oldValue = obj.WorkflowCode;
+			if (oldValue != value || !entity.IsFieldDefined("[8VA32]"))
+			{
+				IEntityAttributeInterfaceImplementation.OnWorkflowCodeChanging (obj, oldValue, value);
+				entity.SetField<string> ("[8VA32]", oldValue, value);
+				IEntityAttributeInterfaceImplementation.OnWorkflowCodeChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnWorkflowCodeChanged(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj, string oldValue, string newValue);
+		static partial void OnWorkflowCodeChanging(global::Epsitec.Cresus.Core.Entities.IEntityAttribute obj, string oldValue, string newValue);
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.EntityAttribute Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>EntityAttribute</c> entity.
+	///	designer:cap/8VA02
+	///	</summary>
+	public partial class EntityAttributeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IEntityAttribute
+	{
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/8VA02/8VA3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region IItemCodeUniversalReference Members
+		///	<summary>
+		///	The <c>RefCode</c> field.
+		///	designer:fld/8VA02/8VAJ1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAJ1]")]
+		public string RefCode
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeUniversalReferenceInterfaceImplementation.GetRefCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeUniversalReferenceInterfaceImplementation.SetRefCode (this, value);
+			}
+		}
+		#endregion
+		#region IDateTimeRange Members
+		///	<summary>
+		///	The <c>BeginDate</c> field.
+		///	designer:fld/8VA02/8VAK
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAK]")]
+		public global::System.DateTime? BeginDate
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IDateTimeRangeInterfaceImplementation.GetBeginDate (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IDateTimeRangeInterfaceImplementation.SetBeginDate (this, value);
+			}
+		}
+		#endregion
+		#region IItemCodeUniversalReference Members
+		///	<summary>
+		///	The <c>RefEntityId</c> field.
+		///	designer:fld/8VA02/8VAK1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAK1]")]
+		public string RefEntityId
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeUniversalReferenceInterfaceImplementation.GetRefEntityId (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeUniversalReferenceInterfaceImplementation.SetRefEntityId (this, value);
+			}
+		}
+		#endregion
+		#region IDateTimeRange Members
+		///	<summary>
+		///	The <c>EndDate</c> field.
+		///	designer:fld/8VA02/8VAL
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAL]")]
+		public global::System.DateTime? EndDate
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IDateTimeRangeInterfaceImplementation.GetEndDate (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IDateTimeRangeInterfaceImplementation.SetEndDate (this, value);
+			}
+		}
+		#endregion
+		#region IEntityAttribute Members
+		///	<summary>
+		///	The <c>CreationUser</c> field.
+		///	designer:fld/8VA02/8VAM1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAM1]")]
+		public string CreationUser
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IEntityAttributeInterfaceImplementation.GetCreationUser (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IEntityAttributeInterfaceImplementation.SetCreationUser (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>CreationDate</c> field.
+		///	designer:fld/8VA02/8VAN1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAN1]")]
+		public global::System.DateTime? CreationDate
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IEntityAttributeInterfaceImplementation.GetCreationDate (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IEntityAttributeInterfaceImplementation.SetCreationDate (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>AttributeState</c> field.
+		///	designer:fld/8VA02/8VAT1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAT1]")]
+		public global::Epsitec.Cresus.Core.Data.AttributeState AttributeState
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IEntityAttributeInterfaceImplementation.GetAttributeState (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IEntityAttributeInterfaceImplementation.SetAttributeState (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>TargetUser</c> field.
+		///	designer:fld/8VA02/8VAU1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAU1]")]
+		public string TargetUser
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IEntityAttributeInterfaceImplementation.GetTargetUser (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IEntityAttributeInterfaceImplementation.SetTargetUser (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>TargetUserGroup</c> field.
+		///	designer:fld/8VA02/8VAV1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAV1]")]
+		public string TargetUserGroup
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IEntityAttributeInterfaceImplementation.GetTargetUserGroup (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IEntityAttributeInterfaceImplementation.SetTargetUserGroup (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>WorkflowCode</c> field.
+		///	designer:fld/8VA02/8VA32
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA32]")]
+		public string WorkflowCode
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IEntityAttributeInterfaceImplementation.GetWorkflowCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IEntityAttributeInterfaceImplementation.SetWorkflowCode (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>AttributeCategory</c> field.
+		///	designer:fld/8VA02/8VA22
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA22]")]
+		public global::Epsitec.Cresus.Core.Entities.EntityAttributeCategoryEntity AttributeCategory
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.EntityAttributeCategoryEntity> ("[8VA22]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.EntityAttributeCategoryEntity oldValue = this.AttributeCategory;
+				if (oldValue != value || !this.IsFieldDefined("[8VA22]"))
+				{
+					this.OnAttributeCategoryChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.EntityAttributeCategoryEntity> ("[8VA22]", oldValue, value);
+					this.OnAttributeCategoryChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnAttributeCategoryChanging(global::Epsitec.Cresus.Core.Entities.EntityAttributeCategoryEntity oldValue, global::Epsitec.Cresus.Core.Entities.EntityAttributeCategoryEntity newValue);
+		partial void OnAttributeCategoryChanged(global::Epsitec.Cresus.Core.Entities.EntityAttributeCategoryEntity oldValue, global::Epsitec.Cresus.Core.Entities.EntityAttributeCategoryEntity newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.EntityAttributeEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.EntityAttributeEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 10, 64);	// [8VA02]
+		public static readonly string EntityStructuredTypeKey = "[8VA02]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<EntityAttributeEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.EntityAttributeCategory Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>EntityAttributeCategory</c> entity.
+	///	designer:cap/8VA12
+	///	</summary>
+	public partial class EntityAttributeCategoryEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ICategory
+	{
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/8VA12/8VA3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/8VA12/8VA5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA5]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+			}
+		}
+		#endregion
+		#region INameDescription Members
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/8VA12/8VA7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA7]")]
+		public global::Epsitec.Common.Types.FormattedText Name
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetName (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/8VA12/8VA8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA8]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetDescription (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetDescription (this, value);
+			}
+		}
+		#endregion
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.EntityAttributeCategoryEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.EntityAttributeCategoryEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 10, 65);	// [8VA12]
+		public static readonly string EntityStructuredTypeKey = "[8VA12]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<EntityAttributeCategoryEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
 	}
 }
 #endregion

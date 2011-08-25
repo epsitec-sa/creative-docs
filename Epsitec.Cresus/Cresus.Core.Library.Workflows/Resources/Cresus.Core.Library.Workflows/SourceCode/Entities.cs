@@ -18,8 +18,26 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>Workflow</c> entity.
 	///	designer:cap/DVA
 	///	</summary>
-	public partial class WorkflowEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	public partial class WorkflowEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemCode
 	{
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/DVA/8VA5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA5]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+			}
+		}
+		#endregion
 		///	<summary>
 		///	The <c>Threads</c> field.
 		///	designer:fld/DVA/DVAO
@@ -64,8 +82,26 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>WorkflowThread</c> entity.
 	///	designer:cap/DVA1
 	///	</summary>
-	public partial class WorkflowThreadEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	public partial class WorkflowThreadEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemCode
 	{
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/DVA1/8VA5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA5]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+			}
+		}
+		#endregion
 		///	<summary>
 		///	The <c>Status</c> field.
 		///	designer:fld/DVA1/DVAG

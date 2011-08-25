@@ -53,6 +53,7 @@
     <Compile Include="Business\RefIdGeneratorPool.cs" />
     <Compile Include="Business\Rules\IItemCodeBusinessRules.cs" />
     <Compile Include="CoreData.cs" />
+    <Compile Include="Data\AttributeState.cs" />
     <Compile Include="Data\DataSetCollectionGetter.cs" />
     <Compile Include="Data\DataSetGetter.cs" />
     <Compile Include="Data\Extraction\EntityDataCollection.cs" />

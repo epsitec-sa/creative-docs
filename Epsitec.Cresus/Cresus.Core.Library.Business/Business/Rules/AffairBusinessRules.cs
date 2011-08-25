@@ -20,6 +20,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 
 			businessContext.AssignIds (affair, generatorPool);
 
+			affair.Code = (string) ItemCodeGenerator.NewCode ();
 			affair.Workflow = WorkflowFactory.CreateDefaultWorkflow<AffairEntity> (businessContext);
 
 			//	TODO: ...compléter...

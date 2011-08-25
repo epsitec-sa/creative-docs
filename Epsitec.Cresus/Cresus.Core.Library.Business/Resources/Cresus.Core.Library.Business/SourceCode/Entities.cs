@@ -251,7 +251,7 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>Affair</c> entity.
 	///	designer:cap/GVA1
 	///	</summary>
-	public partial class AffairEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IReferenceNumber, global::Epsitec.Cresus.Core.Entities.IWorkflowHost, global::Epsitec.Cresus.Core.Entities.IBusinessLink, global::Epsitec.Cresus.Core.Entities.INameDescription, global::Epsitec.Cresus.Core.Entities.IComments
+	public partial class AffairEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IReferenceNumber, global::Epsitec.Cresus.Core.Entities.IWorkflowHost, global::Epsitec.Cresus.Core.Entities.IBusinessLink, global::Epsitec.Cresus.Core.Entities.INameDescription, global::Epsitec.Cresus.Core.Entities.IComments, global::Epsitec.Cresus.Core.Entities.IItemCode
 	{
 		#region IReferenceNumber Members
 		///	<summary>
@@ -286,6 +286,24 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/GVA1/8VA5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA5]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
 			}
 		}
 		#endregion
@@ -5151,7 +5169,7 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>Customer</c> entity.
 	///	designer:cap/GVAV5
 	///	</summary>
-	public partial class CustomerEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IReferenceNumber, global::Epsitec.Cresus.Core.Entities.IBusinessLink, global::Epsitec.Cresus.Core.Entities.IWorkflowHost
+	public partial class CustomerEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IReferenceNumber, global::Epsitec.Cresus.Core.Entities.IBusinessLink, global::Epsitec.Cresus.Core.Entities.IWorkflowHost, global::Epsitec.Cresus.Core.Entities.IItemCode
 	{
 		#region IReferenceNumber Members
 		///	<summary>
@@ -5186,6 +5204,24 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/GVAV5/8VA5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA5]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
 			}
 		}
 		#endregion

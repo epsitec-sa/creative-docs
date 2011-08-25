@@ -19,5 +19,7 @@ namespace Epsitec.Cresus.Core.Business
 
 		Cancelled		= 4,
 		TimedOut		= 5,
+
+		Suspended		= 6,
 	}
 }

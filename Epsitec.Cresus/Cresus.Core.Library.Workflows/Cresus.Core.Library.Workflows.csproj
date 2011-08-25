@@ -49,6 +49,7 @@
     <Compile Include="ActionAttribute.cs" />
     <Compile Include="ActionVerb.cs" />
     <Compile Include="Business\Rules\WorkflowBusinessRules.cs" />
+    <Compile Include="Business\Rules\WorkflowThreadBusinessRules.cs" />
     <Compile Include="Entities\WorkflowDefinitionEntity.cs" />
     <Compile Include="Entities\WorkflowEdgeEntity.cs" />
     <Compile Include="Entities\WorkflowNodeEntity.cs" />

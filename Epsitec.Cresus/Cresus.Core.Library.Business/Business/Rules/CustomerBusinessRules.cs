@@ -5,6 +5,7 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Entities;
 
 namespace Epsitec.Cresus.Core.Business.Rules
@@ -30,7 +31,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			customer.IdA = string.Format ("{0:000000}", nextId);
 			customer.DefaultBillingMode  = Business.Finance.BillingMode.IncludingTax;
 			customer.Workflow = WorkflowFactory.CreateDefaultWorkflow<CustomerEntity> (businessContext);
-
+			customer.Code = (string) ItemCodeGenerator.NewCode ();
 		}
 
 		public override void ApplyUpdateRule(CustomerEntity customer)
