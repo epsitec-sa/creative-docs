@@ -256,4 +256,6 @@
   <data id="2Q3">Enum</data>
   <data id="2P3">Type</data>
   <data id="KO3">Save</data>
+  <data id="KP3">Save all</data>
+  <data id="KQ3">Global</data>
 </bundle>

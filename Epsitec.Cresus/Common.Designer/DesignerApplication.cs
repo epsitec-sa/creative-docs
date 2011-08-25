@@ -122,6 +122,8 @@ namespace Epsitec.Common.Designer
 			this.ReadSettings();
 			this.Window.Show();
 
+			this.UpdateSaveAllState ();
+
 			this.UpdateInitialMessage();
 			this.ShowInitialMessage();  // s'il existe, affiche le message initial
 		}
@@ -242,7 +244,8 @@ namespace Epsitec.Common.Designer
 			this.ribbonBook.Pages.Add(this.ribbonMain);
 
 			this.ribbonMain.Items.Add(new Ribbons.IdentityRibbon(this));
-			this.ribbonMain.Items.Add(new Ribbons.FileRibbon(this));
+			this.ribbonMain.Items.Add (new Ribbons.FileRibbon (this));
+			this.ribbonMain.Items.Add (new Ribbons.GlobalRibbon (this));
 			this.ribbonMain.Items.Add(new Ribbons.ClipboardRibbon(this));
 			if (this.mode == DesignerMode.Build)
 			{
@@ -551,63 +554,35 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		[Command("Recycle")]
-		void CommandRecycle(CommandDispatcher dispatcher, CommandEventArgs e)
+		[Command ("Save")]
+		void CommandSave(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CloseInitialMessage();
-
-			if (!this.HasCurrentModule || !this.Terminate())
+			if (!this.Terminate ())
 			{
 				return;
 			}
 
-			string name = this.CurrentModuleInfo.Module.ModuleId.Name;
-			string question = string.Format(Res.Strings.Dialog.Recycle.Question, name);
-			if (this.DialogQuestion(question) == Common.Dialogs.DialogResult.Yes)
+			this.CurrentModule.Save ();
+			this.UpdateSaveAllState ();
+		}
+
+		[Command ("SaveAll")]
+		void CommandSaveAll(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if (!this.Terminate ())
 			{
-				ModuleSupport.ModuleStore store = new ModuleSupport.ModuleStore(this.resourceManagerPool);
-				ResourceModuleInfo info = this.CurrentModuleInfo.Module.ResourceManager.DefaultModuleInfo;
+				return;
+			}
 
-				bool ok = false;
-				
-				try
+			foreach (ModuleInfo info in this.moduleInfoList)
+			{
+				if (info.Module.IsGlobalDirty)
 				{
-					FileOperationMode mode = new FileOperationMode(this.Window);
-
-					if (FileManager.DeleteFile(mode, info.FullId.Path))
-					{
-						if (info != null && (info.IsPatchModule || info.PatchDepth > 0))
-						{
-							ok = true;
-						}
-						else
-						{
-							Common.Dialogs.WorkInProgressDialog.Execute(Res.Strings.Dialog.Recycle.Progress.Title, ProgressIndicatorStyle.UnknownDuration,
-								progress =>
-								{
-									ok = store.RecycleModule(info, this.settings.IdentityCard);
-								},
-								this.Window);
-						}
-					}
-				}
-				catch
-				{
-				}
-				
-				if (ok)
-				{
-					string message = string.Format(Res.Strings.Dialog.Recycle.Message.Ok, name);
-					this.DialogMessage(message);
-
-					this.CloseModule();  // ferme le module qu'on vient de recycler
-				}
-				else
-				{
-					string message = string.Format(Res.Strings.Dialog.Recycle.Error.Recycle, name);
-					this.DialogError(message);
+					info.Module.Save ();
 				}
 			}
+
+			this.UpdateSaveAllState ();
 		}
 
 		[Command ("SaveAllBitmaps")]
@@ -618,8 +593,7 @@ namespace Epsitec.Common.Designer
 
 			foreach (ModuleInfo info in this.moduleInfoList)
 			{
-				ResourceAccess.Type type = ResourceAccess.Type.Entities;
-				var entities = new Viewers.Entities (info.Module, this.context, info.Module.GetAccess (type), this);
+				var entities = new Viewers.Entities (info.Module, this.context, info.Module.GetAccess (ResourceAccess.Type.Entities), this);
 
 				int total = entities.SaveAllBitmaps ();
 
@@ -668,17 +642,6 @@ namespace Epsitec.Common.Designer
 			this.ShowInitialMessage();
 		}
 
-		[Command("Save")]
-		void CommandSave(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			if (!this.Terminate())
-			{
-				return;
-			}
-
-			this.CurrentModule.Save();
-		}
-
 		[Command("Close")]
 		void CommandClose(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -698,7 +661,66 @@ namespace Epsitec.Common.Designer
 			this.UpdateAfterTypeChanged();
 		}
 
-		[Command(ApplicationCommands.Id.Quit)]
+		[Command ("Recycle")]
+		void CommandRecycle(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CloseInitialMessage ();
+
+			if (!this.HasCurrentModule || !this.Terminate ())
+			{
+				return;
+			}
+
+			string name = this.CurrentModuleInfo.Module.ModuleId.Name;
+			string question = string.Format (Res.Strings.Dialog.Recycle.Question, name);
+			if (this.DialogQuestion (question) == Common.Dialogs.DialogResult.Yes)
+			{
+				ModuleSupport.ModuleStore store = new ModuleSupport.ModuleStore (this.resourceManagerPool);
+				ResourceModuleInfo info = this.CurrentModuleInfo.Module.ResourceManager.DefaultModuleInfo;
+
+				bool ok = false;
+
+				try
+				{
+					FileOperationMode mode = new FileOperationMode (this.Window);
+
+					if (FileManager.DeleteFile (mode, info.FullId.Path))
+					{
+						if (info != null && (info.IsPatchModule || info.PatchDepth > 0))
+						{
+							ok = true;
+						}
+						else
+						{
+							Common.Dialogs.WorkInProgressDialog.Execute (Res.Strings.Dialog.Recycle.Progress.Title, ProgressIndicatorStyle.UnknownDuration,
+								progress =>
+								{
+									ok = store.RecycleModule (info, this.settings.IdentityCard);
+								},
+								this.Window);
+						}
+					}
+				}
+				catch
+				{
+				}
+
+				if (ok)
+				{
+					string message = string.Format (Res.Strings.Dialog.Recycle.Message.Ok, name);
+					this.DialogMessage (message);
+
+					this.CloseModule ();  // ferme le module qu'on vient de recycler
+				}
+				else
+				{
+					string message = string.Format (Res.Strings.Dialog.Recycle.Error.Recycle, name);
+					this.DialogError (message);
+				}
+			}
+		}
+
+		[Command (ApplicationCommands.Id.Quit)]
 		[Command("QuitApplication")]
 		void CommandQuitApplication(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -1115,7 +1137,8 @@ namespace Epsitec.Common.Designer
 			this.recycleState = this.CreateCommandState("Recycle");
 			this.saveAllBitmapsState = this.CreateCommandState("SaveAllBitmaps");
 			this.openState = this.CreateCommandState("Open", KeyCode.ModifierControl|KeyCode.AlphaO);
-			this.saveState = this.CreateCommandState("Save", KeyCode.ModifierControl|KeyCode.AlphaS);
+			this.saveState = this.CreateCommandState ("Save", KeyCode.ModifierControl|KeyCode.AlphaS);
+			this.saveAllState = this.CreateCommandState ("SaveAll");
 			this.saveAsState = this.CreateCommandState("SaveAs");
 			this.initialMessageState = this.CreateCommandState("InitialMessage");
 			this.checkState = this.CreateCommandState ("Check");
@@ -1367,6 +1390,33 @@ namespace Epsitec.Common.Designer
 			{
 				this.viewersWindow.Root.Children.Clear();  // vide tout le contenu
 				this.viewersWindow.Text = "";  // plus de titre
+			}
+		}
+		#endregion
+
+
+		#region Save all
+		private void UpdateSaveAllState()
+		{
+			this.saveAllState.Enable = this.IsSaveAllEnable;
+		}
+
+		private bool IsSaveAllEnable
+		{
+			get
+			{
+				bool dirty = false;
+
+				List<Module> modules = this.OpeningListModule;
+				foreach (Module module in modules)
+				{
+					if (module.IsGlobalDirty)  // message initial existe ?
+					{
+						dirty = true;
+					}
+				}
+
+				return dirty;
 			}
 		}
 		#endregion
@@ -2312,6 +2362,7 @@ namespace Epsitec.Common.Designer
 				this.recycleState.Enable = false;
 				this.saveAllBitmapsState.Enable = false;
 				this.saveState.Enable = false;
+				this.saveAllState.Enable = false;
 				this.saveAsState.Enable = false;
 				this.checkState.Enable = false;
 				this.cutState.Enable = false;
@@ -3078,6 +3129,7 @@ namespace Epsitec.Common.Designer
 		private CommandState					saveAllBitmapsState;
 		private CommandState					openState;
 		private CommandState					saveState;
+		private CommandState					saveAllState;
 		private CommandState					saveAsState;
 		private CommandState					initialMessageState;
 		private CommandState					checkState;

@@ -1461,6 +1461,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("Save").Enable = this.module.IsGlobalDirty;
 			this.GetCommandState("SaveAs").Enable = true;
 
+			if (this.module.IsGlobalDirty)
+			{
+				this.GetCommandState ("SaveAll").Enable = true;
+			}
+
 			if (this.designerApplication.IsReadonly || this is Panels || this is Forms)
 			{
 				this.GetCommandState("NewCulture").Enable = false;

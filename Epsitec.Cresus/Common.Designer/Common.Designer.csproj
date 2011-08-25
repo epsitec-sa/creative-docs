@@ -132,6 +132,7 @@
     <Compile Include="Proxies\ProxyManager.cs" />
     <Compile Include="Proxies\ValueNumeric.cs" />
     <Compile Include="Resources\Common.Designer\SourceCode\Res.cs" />
+    <Compile Include="Ribbons\GlobalRibbon.cs" />
     <Compile Include="Ribbons\UndoRibbon.cs" />
     <Compile Include="Ribbons\IdentityRibbon.cs" />
     <Compile Include="Settings.cs" />

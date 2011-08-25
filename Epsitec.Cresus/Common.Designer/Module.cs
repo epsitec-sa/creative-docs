@@ -1084,6 +1084,12 @@ namespace Epsitec.Common.Designer
 				this.designerApplication.GetCommandState("Save").Enable = this.IsGlobalDirty;
 				this.designerApplication.GetCommandState("EditOk").Enable = this.IsLocalDirty;
 				this.designerApplication.GetCommandState("EditCancel").Enable = this.IsLocalDirty;
+
+				if (this.IsGlobalDirty)
+				{
+					this.designerApplication.GetCommandState ("SaveAll").Enable = true;
+				}
+
 				this.designerApplication.UpdateBookModules();
 			}
 		}
