@@ -581,11 +581,11 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>TransitionAction</c> field.
+		///	The <c>TransitionActions</c> field.
 		///	designer:fld/DVA3/DVAE
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[DVAE]")]
-		public string TransitionAction
+		public string TransitionActions
 		{
 			get
 			{
@@ -593,12 +593,12 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				string oldValue = this.TransitionAction;
+				string oldValue = this.TransitionActions;
 				if (oldValue != value || !this.IsFieldDefined("[DVAE]"))
 				{
-					this.OnTransitionActionChanging (oldValue, value);
+					this.OnTransitionActionsChanging (oldValue, value);
 					this.SetField<string> ("[DVAE]", oldValue, value);
-					this.OnTransitionActionChanged (oldValue, value);
+					this.OnTransitionActionsChanged (oldValue, value);
 				}
 			}
 		}
@@ -609,8 +609,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnContinuationChanged(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
 		partial void OnTransitionTypeChanging(global::Epsitec.Cresus.Core.Business.WorkflowTransitionType oldValue, global::Epsitec.Cresus.Core.Business.WorkflowTransitionType newValue);
 		partial void OnTransitionTypeChanged(global::Epsitec.Cresus.Core.Business.WorkflowTransitionType oldValue, global::Epsitec.Cresus.Core.Business.WorkflowTransitionType newValue);
-		partial void OnTransitionActionChanging(string oldValue, string newValue);
-		partial void OnTransitionActionChanged(string oldValue, string newValue);
+		partial void OnTransitionActionsChanging(string oldValue, string newValue);
+		partial void OnTransitionActionsChanged(string oldValue, string newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

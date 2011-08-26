@@ -201,7 +201,7 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 				//	designer:cap/DVAB
 				public static readonly global::Epsitec.Common.Support.Druid NextNode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 11);
 				//	designer:cap/DVAE
-				public static readonly global::Epsitec.Common.Support.Druid TransitionAction = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 14);
+				public static readonly global::Epsitec.Common.Support.Druid TransitionActions = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 14);
 				//	designer:cap/DVAD
 				public static readonly global::Epsitec.Common.Support.Druid TransitionType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 13);
 			}

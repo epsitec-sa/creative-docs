@@ -480,8 +480,8 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 		{
 			if (this.editingElement == ActiveElement.EdgeHeader)
 			{
-				this.Entity.Name             = this.editingTextField1.Text;
-				this.Entity.TransitionAction = ObjectEdge.GetTransitionAction (this.editingTextField2 as TextFieldCombo);
+				this.Entity.Name              = this.editingTextField1.Text;
+				this.Entity.TransitionActions = ObjectEdge.GetTransitionAction (this.editingTextField2 as TextFieldCombo);
 				this.UpdateTitle ();
 				this.UpdateSubtitle ();
 			}
@@ -518,7 +518,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				rect.Deflate (-4, 6);
 
 				text1 = this.Entity.Name.ToString ();
-				text2 = (this.Entity.TransitionAction == null) ? "" : this.Entity.TransitionAction;
+				text2 = (this.Entity.TransitionActions == null) ? "" : this.Entity.TransitionActions;
 
 				this.editingTextField1 = new TextField ();
 				this.editingTextField2 = new TextFieldCombo ();
@@ -1186,7 +1186,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 		private void UpdateSubtitle()
 		{
 			//	Met à jour le sous-titre du noeud.
-			this.Subtitle = this.Entity.TransitionAction;
+			this.Subtitle = this.Entity.TransitionActions;
 		}
 
 		private void UpdateDescription()
