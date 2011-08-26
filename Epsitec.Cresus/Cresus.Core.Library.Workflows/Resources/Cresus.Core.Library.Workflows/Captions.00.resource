@@ -16,7 +16,7 @@
   <data name="Fld.WorkflowEdge.TransitionType" id="AD">&lt;s:data id="_0" f:Name="TransitionType" /&gt;</data>
   <data name="Fld.WorkflowEdge.TransitionAction" id="AE">&lt;s:data id="_0" f:Name="TransitionAction" /&gt;</data>
   <data name="Fld.WorkflowCall.Continuation" id="AF">&lt;s:data id="_0" f:Name="Continuation" /&gt;</data>
-  <data name="Fld.WorkflowThread.Status" id="AG">&lt;s:data id="_0" f:Name="Status" /&gt;</data>
+  <data name="Fld.WorkflowThread.State" id="AG">&lt;s:data id="_0" f:Name="State" /&gt;</data>
   <data name="Fld.WorkflowThread.Definition" id="AH">&lt;s:data id="_0" f:Name="Definition" /&gt;</data>
   <data name="Fld.WorkflowThread.History" id="AI">&lt;s:data id="_0" f:Name="History" /&gt;</data>
   <data name="Fld.WorkflowThread.CallGraph" id="AJ">&lt;s:data id="_0" f:Name="CallGraph" /&gt;</data>

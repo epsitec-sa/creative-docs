@@ -33,6 +33,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.data                 = this.orchestrator.Data;
 			this.businessContexts     = new List<BusinessContext> ();
 			this.activeTransitions    = new List<WorkflowTransition> ();
+			this.actionButtonInfos    = new List<ActionButtonInfo> ();
 			this.dataContext          = this.data.CreateDataContext ("WorkflowController");
 		}
 
@@ -50,6 +51,16 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			this.UpdateEnabledTransitions ();
 			this.isDirty = false;
+		}
+
+
+		/// <summary>
+		/// Gets the executing user's <see cref="IItemCode"/> code.
+		/// </summary>
+		/// <returns>The user's code.</returns>
+		public string GetActiveUserCode()
+		{
+			return (string) this.data.GetActiveUserItemCode ();
 		}
 
 		
@@ -117,7 +128,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private bool UpdateActionButtons()
 		{
-			this.ClearButtons ();
+			this.ClearActionButtons ();
 
 			int index = 0;
 
@@ -131,21 +142,39 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.mainViewController.SetActionPanelVisibility (panelVisibility);
 		}
 
-		private void CreateActionButton(WorkflowTransition edge, int index)
+		private void CreateActionButton(WorkflowTransition transition, int uniqueId)
 		{
-			var buttonId    = WorkflowController.GetActionButtonId (index);
-			var title       = edge.Edge.Name;
-			var description = edge.Edge.Description;
-			var action      = this.GetActionCallback (edge);
+			var buttonId    = WorkflowController.GetActionButtonId (uniqueId);
+			var title       = transition.Edge.Name;
+			var description = transition.Edge.Description;
+			var callback    = this.CreateActionCallback (transition);
+			var button      = this.CreateActionButton (buttonId, title, description, callback);
 
-			this.AddButton (buttonId, title, description, action);
+			this.AddActionButtonInfo (button, transition);
 		}
 
-		private System.Action GetActionCallback(WorkflowTransition transition)
+		private void ClearActionButtons()
+		{
+			foreach (var button in this.actionButtonInfos.Select (x => x.Button))
+			{
+				button.Dispose ();
+			}
+
+			this.actionButtonInfos.Clear ();
+		}
+
+		private System.Action CreateActionCallback(WorkflowTransition transition)
 		{
 			return () => this.ExecuteAction (transition);
 		}
 
+		private void AddActionButtonInfo(Button button, WorkflowTransition transition)
+		{
+			var actionInfo  = new ActionButtonInfo (button, transition);
+
+			this.actionButtonInfos.Add (actionInfo);
+		}
+		
 		private static string GetActionButtonId(int index)
 		{
 			return string.Format ("WorkflowEdge.{0}", index);
@@ -168,25 +197,27 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private IEnumerable<WorkflowTransition> GetEnabledTransitions()
 		{
+			string activeUserCode = this.GetActiveUserCode ();
+
 			return from context in this.businessContexts
-				   from edge in WorkflowController.GetEnabledTransitions (context)
+				   from edge in WorkflowController.GetEnabledTransitions (context, activeUserCode)
 				   select edge;
 		}
 
-		
-		private static IEnumerable<WorkflowTransition> GetEnabledTransitions(BusinessContext context)
+
+		private static IEnumerable<WorkflowTransition> GetEnabledTransitions(BusinessContext context, string activeUserCode)
 		{
 			return from workflow in WorkflowController.GetEnabledWorkflows (context).Distinct ()
 				   from thread in workflow.Threads
-				   where WorkflowController.IsActiveThread (thread)
+				   where WorkflowController.IsActiveThread (thread, activeUserCode)
 				   let  node = WorkflowController.GetCurrentNode (thread)
 				   from edge in WorkflowController.GetEnabledEdges (thread, node)
 				   select new WorkflowTransition (context, workflow, thread, node, edge);
 		}
 
-		private static bool IsActiveThread(WorkflowThreadEntity thread)
+		private static bool IsActiveThread(WorkflowThreadEntity thread, string activeUserCode)
 		{
-			WorkflowState status = thread.Status;
+			WorkflowState status = thread.State;
 
 			switch (status)
 			{
@@ -199,6 +230,9 @@ namespace Epsitec.Cresus.Core.Controllers
 				case WorkflowState.Cancelled:
 				case WorkflowState.TimedOut:
 					return false;
+
+				case WorkflowState.Restricted:
+					return thread.RestrictedUserCode == activeUserCode;
 
 				default:
 					throw new System.NotImplementedException (string.Format ("{0} not implemented", status.GetQualifiedName ()));
@@ -258,41 +292,16 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		private void ClearButtons()
+		private static IEnumerable<Widget> GetAllButtons()
 		{
-			//	Supprime tous les boutons dans la section Workflow du ruban.
-			var widgets = WorkflowController.ribbonWorkflowContainer.Children.OfType<Widget> ().ToArray ();
-
-			foreach (var widget in widgets)
-			{
-				if (widget is Button   ||
-					widget is Separator)
-				{
-					widget.Dispose ();
-				}
-			}
+			return WorkflowController.workflowButtonsContainer.Children.OfType<Widget> ();
 		}
 
-		private void AddButton(string id, FormattedText title, FormattedText description, System.Action callback)
+		private Button CreateActionButton(string id, FormattedText title, FormattedText description, System.Action callback)
 		{
-			//	Ajoute un bouton dans la section Workflow du ruban.
-#if false
-			if (WorkflowController.ribbonWorkflowContainer.Children.OfType<Button> ().Any ())
-			{
-				new Separator
-				{
-					Parent = WorkflowController.ribbonWorkflowContainer,
-					IsVerticalLine = true,
-					Dock = DockStyle.Stacked,
-					PreferredWidth = 1,
-					Margins = new Margins (1, 1, 0, 0),
-				};
-			}
-#endif
-
 			var button = new Button
 			{
-				Parent = WorkflowController.ribbonWorkflowContainer,
+				Parent = WorkflowController.workflowButtonsContainer,
 				Name = id,
 				FormattedText = title,
 				Padding = new Margins (5, 5, 2, 2),  // le texte ne doit pas toucher les bords du bouton
@@ -302,16 +311,79 @@ namespace Epsitec.Cresus.Core.Controllers
 				PreferredHeight = Library.UI.Constants.ButtonLargeWidth+10,
 			};
 
-			if (!description.IsNullOrEmpty)
+			if (!description.IsNullOrWhiteSpace)
 			{
 				ToolTip.Default.SetToolTip (button, description);
 			}
 
 			button.Clicked += (sender, e) => callback ();
+
+			return button;
 		}
 
 
-		public static RibbonSection					ribbonWorkflowContainer;
+		struct ActionButtonInfo : System.IEquatable<ActionButtonInfo>
+		{
+			public ActionButtonInfo(Button button, WorkflowTransition transition)
+			{
+				this.button     = button;
+				this.transition = transition;
+			}
+
+			public Button						Button
+			{
+				get
+				{
+					return this.button;
+				}
+			}
+
+			public WorkflowTransition			Transition
+			{
+				get
+				{
+					return this.transition;
+				}
+			}
+
+			#region IEquatable<ActionButtonInfo> Members
+
+			public bool Equals(ActionButtonInfo other)
+			{
+				return this.button == other.button;
+			}
+
+			#endregion
+
+			public override bool Equals(object obj)
+			{
+				if (obj is ActionButtonInfo)
+				{
+					return this.Equals ((ActionButtonInfo) obj);
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			public override int GetHashCode()
+			{
+				return this.button == null ? 0 : (int) this.button.GetVisualSerialId ();
+			}
+
+			
+			private readonly Button				button;
+			private readonly WorkflowTransition	transition;
+		}
+
+
+		public static void SetWorkflowButtonsContainer(Widget container)
+		{
+			WorkflowController.workflowButtonsContainer = container;
+		}
+
+		private static Widget						workflowButtonsContainer;
 
 		private readonly DataViewOrchestrator		orchestrator;
 		private readonly MainViewController			mainViewController;
@@ -319,6 +391,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly List<BusinessContext>		businessContexts;
 		private readonly List<WorkflowTransition>	activeTransitions;
 		private readonly DataContext				dataContext;
+		private readonly List<ActionButtonInfo>		actionButtonInfos;
 
 		private bool								isDirty;
 		private bool								isDisposed;

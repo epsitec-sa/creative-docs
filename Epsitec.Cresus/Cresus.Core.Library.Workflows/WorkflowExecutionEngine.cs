@@ -92,6 +92,15 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
+		/// <summary>
+		/// Gets the executing user's <see cref="IItemCode"/> code.
+		/// </summary>
+		/// <returns>The user's code.</returns>
+		public string GetActiveUserCode()
+		{
+			return (string) this.data.GetActiveUserItemCode ();
+		}
+
 		#region IDisposable Members
 
 		public void Dispose()
@@ -297,14 +306,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			step.Edge			   = edge;
 			step.Node			   = node;
 			step.Date			   = System.DateTime.UtcNow;
-			step.ExecutingUserCode = (string) this.data.GetActiveUserItemCode ();
+			step.ExecutingUserCode = GetActiveUserCode ();
 
 			thread.History.Add (step);
 		}
 
 		private static void ChangeThreadStatus(WorkflowThreadEntity thread, WorkflowState status)
 		{
-			thread.Status = status;
+			thread.State = status;
 		}
 
 		#region Arc Structure

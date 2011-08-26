@@ -255,7 +255,7 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 				//	designer:cap/DVAB1
 				public static readonly global::Epsitec.Common.Support.Druid SerializedArgs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 43);
 				//	designer:cap/DVAG
-				public static readonly global::Epsitec.Common.Support.Druid Status = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 16);
+				public static readonly global::Epsitec.Common.Support.Druid State = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 16);
 			}
 		}
 		

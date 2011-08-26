@@ -584,7 +584,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			};
 
 			// TODO: C'est un moyen bricolé pour que WorkflowController sache où placer ses boutons.
-			WorkflowController.ribbonWorkflowContainer = this.workflowContainer;
+			WorkflowController.SetWorkflowButtonsContainer (this.workflowContainer);
 
 			// TODO: Et encore de la bricole !
 			MainViewController.actionRibbonShow = this.RibbonShowPage;

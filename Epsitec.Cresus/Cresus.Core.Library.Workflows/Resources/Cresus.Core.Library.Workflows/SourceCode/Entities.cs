@@ -103,11 +103,11 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		#endregion
 		///	<summary>
-		///	The <c>Status</c> field.
+		///	The <c>State</c> field.
 		///	designer:fld/DVA1/DVAG
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[DVAG]")]
-		public global::Epsitec.Cresus.Core.Business.WorkflowState Status
+		public global::Epsitec.Cresus.Core.Business.WorkflowState State
 		{
 			get
 			{
@@ -115,12 +115,12 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Business.WorkflowState oldValue = this.Status;
+				global::Epsitec.Cresus.Core.Business.WorkflowState oldValue = this.State;
 				if (oldValue != value || !this.IsFieldDefined("[DVAG]"))
 				{
-					this.OnStatusChanging (oldValue, value);
+					this.OnStateChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.WorkflowState> ("[DVAG]", oldValue, value);
-					this.OnStatusChanged (oldValue, value);
+					this.OnStateChanged (oldValue, value);
 				}
 			}
 		}
@@ -215,8 +215,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnStatusChanging(global::Epsitec.Cresus.Core.Business.WorkflowState oldValue, global::Epsitec.Cresus.Core.Business.WorkflowState newValue);
-		partial void OnStatusChanged(global::Epsitec.Cresus.Core.Business.WorkflowState oldValue, global::Epsitec.Cresus.Core.Business.WorkflowState newValue);
+		partial void OnStateChanging(global::Epsitec.Cresus.Core.Business.WorkflowState oldValue, global::Epsitec.Cresus.Core.Business.WorkflowState newValue);
+		partial void OnStateChanged(global::Epsitec.Cresus.Core.Business.WorkflowState oldValue, global::Epsitec.Cresus.Core.Business.WorkflowState newValue);
 		partial void OnDefinitionChanging(global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity newValue);
 		partial void OnDefinitionChanged(global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity newValue);
 		partial void OnRestrictedUserCodeChanging(string oldValue, string newValue);
