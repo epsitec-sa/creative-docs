@@ -386,7 +386,7 @@ namespace Epsitec.Cresus.Core.Server
 				var items = this.BusinessContext.Data.GetAllEntities (accessor.CollectionItemType, DataExtractionMode.Sorted, this.DataContext);
 				var found = accessor.GetCollection (this.rootEntity).Cast<AbstractEntity> ();
 
-				entityDictionnary["xtype"]  = "fieldcontainer";
+				entityDictionnary["xtype"]  = "epsitec.checkboxes";
 				entityDictionnary["defaultType"] = "checkboxfield";
 				entityDictionnary["labelAlign"] = "left";
 				var checkboxes = new List<object> ();
