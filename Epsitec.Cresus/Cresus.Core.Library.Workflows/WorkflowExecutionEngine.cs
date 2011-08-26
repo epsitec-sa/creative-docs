@@ -136,6 +136,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.FollowWorkflowEdges (arc => this.ExecuteActions (arc.Edge.TransitionActions));
 		}
 
+		/// <summary>
+		/// Parses, compiles and executes the actions specified in source form.
+		/// </summary>
+		/// <param name="transitionActions">The transition actions.</param>
+		/// <returns><c>true</c> if the actions were successfully executed; otherwise, <c>false</c>.</returns>
 		private bool ExecuteActions(string transitionActions)
 		{
 			var action = WorkflowAction.Parse (transitionActions);
@@ -270,8 +275,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void StartNewThread(WorkflowThreadEntity runningThread, Arc arc)
 		{
-			var settings = runningThread.GetSettings ();			
-			var thread   = WorkflowFactory.CreateWorkflowThread (this.businessContext, runningThread.Definition, settings);
+			var args   = runningThread.GetArgs ();			
+			var thread = WorkflowFactory.CreateWorkflowThread (this.businessContext, runningThread.Definition, args);
 
 			this.AddThreadToWorkflow (thread);
 			this.AddStepToThreadHistory (thread, arc.Edge, this.ResolveForeignNode (arc.Edge.NextNode));

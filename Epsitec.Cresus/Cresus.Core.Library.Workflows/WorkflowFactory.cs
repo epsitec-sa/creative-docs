@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			return workflow;
 		}
 
-		public static WorkflowThreadEntity CreateWorkflowThread(IBusinessContext businessContext, WorkflowDefinitionEntity definition, SettingsCollection settings)
+		public static WorkflowThreadEntity CreateWorkflowThread(IBusinessContext businessContext, WorkflowDefinitionEntity definition, SettingsCollection args)
 		{
 			System.Diagnostics.Debug.Assert (definition.IsNotNull ());
 
@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			thread.State	  = WorkflowState.Pending;
 			thread.Definition = definition;
-			thread.SetSettings (businessContext, settings);
+			thread.SetArgs (businessContext, args);
 
 			return thread;
 		}

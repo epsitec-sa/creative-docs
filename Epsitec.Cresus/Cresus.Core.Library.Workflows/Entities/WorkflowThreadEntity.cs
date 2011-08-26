@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -39,17 +39,17 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 		/// <summary>
-		/// Gets the settings associated with this workflow thread. The returned collection
-		/// is a copy of the actual settings (see method <see cref="SetSettings"/>).
+		/// Gets the arguments associated with this workflow thread. The returned collection
+		/// is a copy of the actual arguments (see method <see cref="SetArgs"/>).
 		/// </summary>
-		/// <returns>The settings.</returns>
-		public SettingsCollection GetSettings()
+		/// <returns>The arguments.</returns>
+		public SettingsCollection GetArgs()
 		{
 			var args = this.SerializedArgs;
 
 			if (args.IsNotNull ())
 			{
-				return args.GetSettings ();
+				return args.GetSettingsCollection ();
 			}
 			else
 			{
@@ -58,17 +58,17 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 		/// <summary>
-		/// Sets the settings for this workflow thread. This will overwrite any previous
-		/// settings.
+		/// Sets the arguments for this workflow thread. This will overwrite any previous
+		/// arguments.
 		/// </summary>
 		/// <param name="businessContext">The business context.</param>
-		/// <param name="settings">The settings.</param>
-		public void SetSettings(IBusinessContext businessContext, SettingsCollection settings)
+		/// <param name="args">The arguments.</param>
+		public void SetArgs(IBusinessContext businessContext, SettingsCollection args)
 		{
 			if (this.SerializedArgs.IsNull ())
 			{
-				if ((settings == null) ||
-					(settings.Count == 0))
+				if ((args == null) ||
+					(args.Count == 0))
 				{
 					return;
 				}
@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Core.Entities
 				this.SerializedArgs = businessContext.CreateEntity<XmlBlobEntity> ();
 			}
 
-			this.SerializedArgs.SetSettings (settings);
+			this.SerializedArgs.SetSettingsCollection (args);
 		}
 	}
 }

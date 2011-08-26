@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Support.EntityEngine;
@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
-		public SettingsCollection GetSettings()
+		public SettingsCollection GetSettingsCollection()
 		{
 			XElement xml = this.XmlData;
 
@@ -96,15 +96,17 @@ namespace Epsitec.Cresus.Core.Entities
 			{
 				return new SettingsCollection ();
 			}
+			else
+			{
+				var settings = new SettingsCollection ();
 
-			var settings = new SettingsCollection ();
+				settings.Restore (xml);
 
-			settings.Restore (xml);
-
-			return settings;
+				return settings;
+			}
 		}
 
-		public void SetSettings(SettingsCollection settings)
+		public void SetSettingsCollection(SettingsCollection settings)
 		{
 			if ((settings == null) ||
 				(settings.Count == 0))

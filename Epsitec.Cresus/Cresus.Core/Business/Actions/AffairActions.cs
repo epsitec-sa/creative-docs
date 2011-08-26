@@ -48,13 +48,36 @@ namespace Epsitec.Cresus.Core.Business.Actions
 		}
 
 
+		public static void ValidateActiveDocument()
+		{
+			var currentAffair = AffairActions.GetCurrentAffair ();
+			var workflowTransition = AffairActions.GetCurrentTransition ();
+			var workflowThread     = workflowTransition.Thread;
+			var workflowArgs       = workflowThread.GetArgs ();
+		}
+
+
 		private static void CreateDocument(DocumentType newDocumentType)
+		{
+			var businessContext = WorkflowExecutionEngine.Current.BusinessContext;
+			var currentAffair   = AffairActions.GetCurrentAffair ();
+
+			Epsitec.Cresus.Core.Business.Rules.BusinessDocumentBusinessRules.CreateDocument (businessContext, currentAffair, newDocumentType);
+		}
+
+
+		private static AffairEntity GetCurrentAffair()
 		{
 			var workflowEngine  = WorkflowExecutionEngine.Current;
 			var businessContext = workflowEngine.BusinessContext as BusinessContext;
 			var currentAffair   = businessContext.GetMasterEntity<AffairEntity> ();
 
-			Epsitec.Cresus.Core.Business.Rules.BusinessDocumentBusinessRules.CreateDocument (businessContext, currentAffair, newDocumentType);
+			return currentAffair;
+		}
+
+		private static WorkflowTransition GetCurrentTransition()
+		{
+			return WorkflowExecutionEngine.Current.Transition;
 		}
 	}
 }
