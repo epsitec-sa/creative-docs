@@ -8,6 +8,7 @@ using Epsitec.Cresus.Core.Business.Rules;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Workflows;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -47,10 +48,14 @@ namespace Epsitec.Cresus.Core.Business.Actions
 			AffairActions.CreateDocument (DocumentType.Invoice);
 		}
 
+		public static void CreateOfferVariant()
+		{
+		}
+
 
 		public static void ValidateActiveDocument()
 		{
-			var currentAffair = AffairActions.GetCurrentAffair ();
+			var currentAffair = AffairActions.GetActiveAffair ();
 			var workflowTransition = AffairActions.GetCurrentTransition ();
 			var workflowThread     = workflowTransition.Thread;
 			var workflowArgs       = workflowThread.GetArgs ();
@@ -60,8 +65,9 @@ namespace Epsitec.Cresus.Core.Business.Actions
 		private static void CreateDocument(DocumentType newDocumentType)
 		{
 			var businessContext  = WorkflowExecutionEngine.Current.BusinessContext;
-			var currentAffair    = AffairActions.GetCurrentAffair ();
-			var documentMetadata = BusinessDocumentBusinessRules.CreateDocument (businessContext, currentAffair, newDocumentType);
+			var activeAffair     = AffairActions.GetActiveAffair ();
+			var activeVariantId  = WorkflowArgs.GetActiveVariantId ();
+			var documentMetadata = BusinessDocumentBusinessRules.CreateDocument (businessContext, activeAffair, activeVariantId, newDocumentType);
 
 			int? variantId = documentMetadata.BusinessDocument.VariantId;
 
@@ -69,13 +75,30 @@ namespace Epsitec.Cresus.Core.Business.Actions
 		}
 
 
-		private static AffairEntity GetCurrentAffair()
+		private static AffairEntity GetActiveAffair()
 		{
 			var workflowEngine  = WorkflowExecutionEngine.Current;
 			var businessContext = workflowEngine.BusinessContext as BusinessContext;
 			var currentAffair   = businessContext.GetMasterEntity<AffairEntity> ();
 
 			return currentAffair;
+		}
+
+
+		private static int GetNextVariantId()
+		{
+			var affair = AffairActions.GetActiveAffair ();
+
+			var variantIds = new HashSet<int> (affair.Documents.Select (x => x.BusinessDocument.VariantId.GetValueOrDefault ()));
+
+			if (variantIds.Count == 0)
+			{
+				return 0;
+			}
+			else
+			{
+				return variantIds.OrderByDescending (x => x).FirstOrDefault () + 1;
+			}
 		}
 
 		private static WorkflowTransition GetCurrentTransition()

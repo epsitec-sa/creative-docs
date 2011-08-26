@@ -2,11 +2,11 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types;
 
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using System;
 
 namespace Epsitec.Cresus.Core.Library
 {
@@ -36,6 +36,8 @@ namespace Epsitec.Cresus.Core.Library
 		/// Gets or sets the key/value tuple. If the key matches an element already
 		/// known in the collection, then it will simply be replaced. Otherwise, a
 		/// new key/value tuple will be added at the end of the collection.
+		/// When fetching a value, if the key is not found in the collection, then
+		/// a <c>null</c> string will be returned.
 		/// </summary>
 		public string this[string key]
 		{
@@ -85,6 +87,27 @@ namespace Epsitec.Cresus.Core.Library
 				return this.dict.Count;
 			}
 		}
+
+
+		public int? GetIntValue(string key)
+		{
+			string value = this[key];
+
+			if (string.IsNullOrEmpty (value))
+			{
+				return null;
+			}
+			else
+			{
+				return InvariantConverter.ParseInt (value);
+			}
+		}
+
+		public void SetIntValue(string key, int? value)
+		{
+			this[key] = value.HasValue ? InvariantConverter.ToString (value.Value) : null;
+		}
+
 
 		public void Clear()
 		{

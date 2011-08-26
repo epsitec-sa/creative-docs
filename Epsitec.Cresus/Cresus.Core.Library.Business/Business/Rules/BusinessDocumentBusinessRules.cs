@@ -42,26 +42,26 @@ namespace Epsitec.Cresus.Core.Business.Rules
 
 
 		
-		public static DocumentMetadataEntity CreateDocument(IBusinessContext businessContext, AffairEntity currentAffair, DocumentType documentType)
+		public static DocumentMetadataEntity CreateDocument(IBusinessContext businessContext, AffairEntity activeAffair, int activeVariantId, DocumentType documentType)
 		{
 			var documentCategory = BusinessDocumentBusinessRules.FindDocumentCategory (businessContext, documentType);
 
 			if (documentCategory.IsNotNull ())
 			{
 				var documentMetadata = BusinessDocumentBusinessRules.CreateDocumentMetadata (businessContext, documentCategory);
-				var sourceDocument   = BusinessDocumentBusinessRules.FindSourceDocument (businessContext, currentAffair, documentMetadata);
+				var sourceDocument   = BusinessDocumentBusinessRules.FindSourceDocument (businessContext, activeAffair, activeVariantId, documentMetadata);
 
 				if (sourceDocument.IsNotNull ())
 				{
 					//	Le nouveau document devient un clone du document source.
-					documentMetadata.BusinessDocument = BusinessDocumentBusinessRules.CloneBusinessDocument (businessContext, currentAffair, sourceDocument, documentType);
+					documentMetadata.BusinessDocument = BusinessDocumentBusinessRules.CloneBusinessDocument (businessContext, activeAffair, sourceDocument, documentType);
 
 					// TODO: Ce n'est pas suffisant de geler le document "source" !
 					// Une facture n'est pas exnicolasemple jamais gelée, puisqu'elle ne sert jamais de source.
 					sourceDocument.DocumentState = DocumentState.Inactive;
 				}
 
-				currentAffair.Documents.Add (documentMetadata);
+				activeAffair.Documents.Add (documentMetadata);
 
 				return documentMetadata;
 			}
@@ -80,16 +80,16 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			
 			return documentMetadata;
 		}
-		
-		private static DocumentMetadataEntity FindSourceDocument(IBusinessContext businessContext, AffairEntity currentAffair, DocumentMetadataEntity documentMetadata)
+
+		private static DocumentMetadataEntity FindSourceDocument(IBusinessContext businessContext, AffairEntity activeAffair, int activeVariantId, DocumentMetadataEntity documentMetadata)
 		{
 			var businessLogic = new BusinessLogic (businessContext, documentMetadata);
 			var documentTypes = businessLogic.ProcessParentDocumentTypes;
 
 			//	Cherche le document source à utiliser comme modèle.
 			var sourceDocuments = from type in documentTypes
-								  from document in currentAffair.Documents.Reverse ()
-								  where document.DocumentCategory.DocumentType == type
+								  from document in activeAffair.Documents.Reverse ()
+								  where document.DocumentCategory.DocumentType == type && document.BusinessDocument.VariantId.GetValueOrDefault () == activeVariantId
 								  select document;
 
 			return sourceDocuments.FirstOrDefault ();

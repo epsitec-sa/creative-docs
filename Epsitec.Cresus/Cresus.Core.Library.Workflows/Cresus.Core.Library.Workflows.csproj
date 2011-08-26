@@ -67,6 +67,7 @@
     <Compile Include="WorkflowExecutionEngine.cs" />
     <Compile Include="WorkflowFactory.cs" />
     <Compile Include="WorkflowState.cs" />
+    <Compile Include="Workflows\WorkflowArgs.cs" />
     <Compile Include="WorkflowTransition.cs" />
     <Compile Include="WorkflowTransitionType.cs" />
   </ItemGroup>
