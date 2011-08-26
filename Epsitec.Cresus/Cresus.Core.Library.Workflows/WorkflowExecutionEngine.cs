@@ -101,6 +101,15 @@ namespace Epsitec.Cresus.Core.Controllers
 			return (string) this.data.GetActiveUserItemCode ();
 		}
 
+		/// <summary>
+		/// Gets the current time stamp (basically UTC 'now').
+		/// </summary>
+		/// <returns>The current time stamp.</returns>
+		public static System.DateTime GetCurrentTimeStamp()
+		{
+			return System.DateTime.UtcNow;
+		}
+
 		#region IDisposable Members
 
 		public void Dispose()
@@ -305,8 +314,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			step.Edge			   = edge;
 			step.Node			   = node;
-			step.Date			   = System.DateTime.UtcNow;
-			step.ExecutingUserCode = GetActiveUserCode ();
+			step.Date			   = WorkflowExecutionEngine.GetCurrentTimeStamp ();
+			step.ExecutingUserCode = this.GetActiveUserCode ();
 
 			thread.History.Add (step);
 		}

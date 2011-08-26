@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 		
 		public static void CreateDocument(IBusinessContext businessContext, AffairEntity currentAffair, DocumentType documentType)
 		{
-			var documentCategory = BusinessDocumentBusinessRules.FindDocumentCategory (businessContext, documentType);			
+			var documentCategory = BusinessDocumentBusinessRules.FindDocumentCategory (businessContext, documentType);
 
 			if (documentCategory.IsNotNull ())
 			{
@@ -60,11 +60,13 @@ namespace Epsitec.Cresus.Core.Business.Rules
 					// Une facture n'est pas exnicolasemple jamais gelée, puisqu'elle ne sert jamais de source.
 					sourceDocument.DocumentState = DocumentState.Inactive;
 				}
-				
+
 				currentAffair.Documents.Add (documentMetadata);
 			}
-
-			throw new System.InvalidOperationException (string.Format ("Cannot create document of type {0}", documentType));
+			else
+			{
+				throw new System.InvalidOperationException (string.Format ("Cannot create document of type {0}", documentType));
+			}
 		}
 
 		
