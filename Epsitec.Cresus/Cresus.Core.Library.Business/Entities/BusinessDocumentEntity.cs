@@ -187,6 +187,8 @@ namespace Epsitec.Cresus.Core.Entities
 
 		void ICopyableEntity<BusinessDocumentEntity>.CopyTo(IBusinessContext businessContext, BusinessDocumentEntity copy)
 		{
+			copy.VariantId             = this.VariantId;
+
 			copy.BaseDocumentCode      = this.Code;
 			copy.BillToMailContact     = this.BillToMailContact;
 			copy.ShipToMailContact     = this.ShipToMailContact;

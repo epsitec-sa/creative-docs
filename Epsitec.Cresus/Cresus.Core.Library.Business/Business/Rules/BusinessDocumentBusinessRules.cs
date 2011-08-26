@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 
 
 		
-		public static void CreateDocument(IBusinessContext businessContext, AffairEntity currentAffair, DocumentType documentType)
+		public static DocumentMetadataEntity CreateDocument(IBusinessContext businessContext, AffairEntity currentAffair, DocumentType documentType)
 		{
 			var documentCategory = BusinessDocumentBusinessRules.FindDocumentCategory (businessContext, documentType);
 
@@ -62,6 +62,8 @@ namespace Epsitec.Cresus.Core.Business.Rules
 				}
 
 				currentAffair.Documents.Add (documentMetadata);
+
+				return documentMetadata;
 			}
 			else
 			{
