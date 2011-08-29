@@ -827,6 +827,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid Generators = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 210);
 				//	designer:cap/GVAR
 				public static readonly global::Epsitec.Common.Support.Druid Tax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 27);
+				//	designer:cap/GVAN7
+				public static readonly global::Epsitec.Common.Support.Druid UnassignedPaymentTransactions = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 247);
 			}
 			
 			public static class Customer
@@ -849,6 +851,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid Relation = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 192);
 				//	designer:cap/GVA16
 				public static readonly global::Epsitec.Common.Support.Druid SalesRepresentative = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 193);
+				//	designer:cap/GVAM7
+				public static readonly global::Epsitec.Common.Support.Druid UnassignedPaymentTransactions = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 246);
 			}
 			
 			public static class EndTotalDocumentItem

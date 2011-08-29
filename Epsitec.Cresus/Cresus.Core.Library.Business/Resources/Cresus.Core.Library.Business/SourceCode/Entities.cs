@@ -808,6 +808,28 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>CompanyLogo</c> field.
+		///	designer:fld/GVAO/GVAS
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVAS]")]
+		public global::Epsitec.Cresus.Core.Entities.ImageEntity CompanyLogo
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.ImageEntity> ("[GVAS]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ImageEntity oldValue = this.CompanyLogo;
+				if (oldValue != value || !this.IsFieldDefined("[GVAS]"))
+				{
+					this.OnCompanyLogoChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.ImageEntity> ("[GVAS]", oldValue, value);
+					this.OnCompanyLogoChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Finance</c> field.
 		///	designer:fld/GVAO/GVA86
 		///	</summary>
@@ -827,6 +849,30 @@ namespace Epsitec.Cresus.Core.Entities
 					this.SetField<global::Epsitec.Cresus.Core.Entities.FinanceSettingsEntity> ("[GVA86]", oldValue, value);
 					this.OnFinanceChanged (oldValue, value);
 				}
+			}
+		}
+		///	<summary>
+		///	The <c>UnassignedPaymentTransactions</c> field.
+		///	designer:fld/GVAO/GVAN7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVAN7]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.PaymentTransactionEntity> UnassignedPaymentTransactions
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.PaymentTransactionEntity> ("[GVAN7]");
+			}
+		}
+		///	<summary>
+		///	The <c>Generators</c> field.
+		///	designer:fld/GVAO/GVAI6
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVAI6]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.GeneratorDefinitionEntity> Generators
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.GeneratorDefinitionEntity> ("[GVAI6]");
 			}
 		}
 		///	<summary>
@@ -851,49 +897,15 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
-		///	<summary>
-		///	The <c>Generators</c> field.
-		///	designer:fld/GVAO/GVAI6
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVAI6]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.GeneratorDefinitionEntity> Generators
-		{
-			get
-			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.GeneratorDefinitionEntity> ("[GVAI6]");
-			}
-		}
-		///	<summary>
-		///	The <c>CompanyLogo</c> field.
-		///	designer:fld/GVAO/GVAS
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVAS]")]
-		public global::Epsitec.Cresus.Core.Entities.ImageEntity CompanyLogo
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.ImageEntity> ("[GVAS]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.ImageEntity oldValue = this.CompanyLogo;
-				if (oldValue != value || !this.IsFieldDefined("[GVAS]"))
-				{
-					this.OnCompanyLogoChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.ImageEntity> ("[GVAS]", oldValue, value);
-					this.OnCompanyLogoChanged (oldValue, value);
-				}
-			}
-		}
 		
 		partial void OnCompanyChanging(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
 		partial void OnCompanyChanged(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
+		partial void OnCompanyLogoChanging(global::Epsitec.Cresus.Core.Entities.ImageEntity oldValue, global::Epsitec.Cresus.Core.Entities.ImageEntity newValue);
+		partial void OnCompanyLogoChanged(global::Epsitec.Cresus.Core.Entities.ImageEntity oldValue, global::Epsitec.Cresus.Core.Entities.ImageEntity newValue);
 		partial void OnFinanceChanging(global::Epsitec.Cresus.Core.Entities.FinanceSettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.FinanceSettingsEntity newValue);
 		partial void OnFinanceChanged(global::Epsitec.Cresus.Core.Entities.FinanceSettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.FinanceSettingsEntity newValue);
 		partial void OnTaxChanging(global::Epsitec.Cresus.Core.Entities.TaxSettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.TaxSettingsEntity newValue);
 		partial void OnTaxChanged(global::Epsitec.Cresus.Core.Entities.TaxSettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.TaxSettingsEntity newValue);
-		partial void OnCompanyLogoChanging(global::Epsitec.Cresus.Core.Entities.ImageEntity oldValue, global::Epsitec.Cresus.Core.Entities.ImageEntity newValue);
-		partial void OnCompanyLogoChanged(global::Epsitec.Cresus.Core.Entities.ImageEntity oldValue, global::Epsitec.Cresus.Core.Entities.ImageEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -5439,6 +5451,18 @@ namespace Epsitec.Cresus.Core.Entities
 			get
 			{
 				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.PriceDiscountEntity> ("[GVA66]");
+			}
+		}
+		///	<summary>
+		///	The <c>UnassignedPaymentTransactions</c> field.
+		///	designer:fld/GVAV5/GVAM7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVAM7]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.PaymentTransactionEntity> UnassignedPaymentTransactions
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.PaymentTransactionEntity> ("[GVAM7]");
 			}
 		}
 		
