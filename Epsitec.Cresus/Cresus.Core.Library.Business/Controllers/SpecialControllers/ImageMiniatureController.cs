@@ -12,6 +12,7 @@ using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.Helpers;
+using Epsitec.Cresus.Core.Data;
 
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -42,7 +43,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 				var controller = this.tileContainer.Controller as EntityViewController;
 				System.Diagnostics.Debug.Assert (controller != null);
 
-				var store = controller.Data.GetComponent<Epsitec.Cresus.Core.Data.ImageDataStore> ();
+				var store = controller.Data.GetComponent<ImageDataStore> ();
 				System.Diagnostics.Debug.Assert (store != null);
 				
 				var data = store.GetImageData (this.imageBlobEntity.Code, 300);

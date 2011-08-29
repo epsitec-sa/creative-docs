@@ -12,6 +12,7 @@ using Epsitec.Common.Widgets;
 
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Data;
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -46,13 +47,10 @@ namespace Epsitec.Cresus.Core.Print.Bands
 			//	Associe à l'objet une image de la base de données.
 			if (imageEntity.IsNotNull ())
 			{
-				throw new System.NotImplementedException ();
-#if false
-				var store = coreData.ImageDataStore;
+				var store = coreData.GetComponent<ImageDataStore> ();
 				var data = store.GetImageData (imageEntity.ImageBlob.Code);
 				this.image = data.GetImage ();
 				this.image.Id = imageEntity.ImageBlob.Code;  // (*)
-#endif
 			}
 		}
 
