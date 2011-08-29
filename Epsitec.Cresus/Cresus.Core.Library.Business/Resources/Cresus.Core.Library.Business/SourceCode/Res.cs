@@ -893,6 +893,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				{
 				}
 				
+				//	designer:cap/GVAL7
+				public static readonly global::Epsitec.Common.Support.Druid DefaultBillingMode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 245);
 				//	designer:cap/GVAP6
 				public static readonly global::Epsitec.Common.Support.Druid DefaultBillingRoundingMode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 217);
 				//	designer:cap/GVA96

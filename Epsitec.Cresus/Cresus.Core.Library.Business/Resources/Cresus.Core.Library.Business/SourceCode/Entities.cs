@@ -5544,6 +5544,28 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>DefaultBillingMode</c> field.
+		///	designer:fld/GVA76/GVAL7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVAL7]")]
+		public global::Epsitec.Cresus.Core.Business.Finance.BillingMode DefaultBillingMode
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.BillingMode> ("[GVAL7]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Business.Finance.BillingMode oldValue = this.DefaultBillingMode;
+				if (oldValue != value || !this.IsFieldDefined("[GVAL7]"))
+				{
+					this.OnDefaultBillingModeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.BillingMode> ("[GVAL7]", oldValue, value);
+					this.OnDefaultBillingModeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>SerializedChartsOfAccounts</c> field.
 		///	designer:fld/GVA76/GVAC6
 		///	</summary>
@@ -5558,6 +5580,8 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnDefaultBillingRoundingModeChanging(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
 		partial void OnDefaultBillingRoundingModeChanged(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
+		partial void OnDefaultBillingModeChanging(global::Epsitec.Cresus.Core.Business.Finance.BillingMode oldValue, global::Epsitec.Cresus.Core.Business.Finance.BillingMode newValue);
+		partial void OnDefaultBillingModeChanged(global::Epsitec.Cresus.Core.Business.Finance.BillingMode oldValue, global::Epsitec.Cresus.Core.Business.Finance.BillingMode newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
