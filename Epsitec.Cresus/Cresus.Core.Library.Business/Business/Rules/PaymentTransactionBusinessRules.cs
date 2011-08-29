@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			var paymentCategory = settings.Finance.PaymentCategories.FirstOrDefault ();
 
 			billingDetails.PaymentDetail = context.CreateEntity<PaymentDetailEntity> ();
-			billingDetails.PaymentDetail.PaymentType = Business.Finance.PaymentDetailType.AmountDue;
+			billingDetails.PaymentDetail.PaymentType = Business.Finance.PaymentDetailType.Due;
 			billingDetails.PaymentDetail.PaymentCategory = context.GetLocalEntity (paymentCategory);
 			billingDetails.PaymentDetail.Currency    = context.GetLocalEntity (currencyEntity);
 

@@ -328,20 +328,20 @@ namespace Epsitec.Cresus.Core.Library.Finance
 					{
 					}
 					
+					//	designer:cap/CVAT4
+					public static global::Epsitec.Common.Types.Caption Discount
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 157));
+						}
+					}
 					//	designer:cap/CVAN1
-					public static global::Epsitec.Common.Types.Caption AmountDue
+					public static global::Epsitec.Common.Types.Caption Due
 					{
 						get
 						{
 							return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 55));
-						}
-					}
-					//	designer:cap/CVAO1
-					public static global::Epsitec.Common.Types.Caption AmountPaid
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 56));
 						}
 					}
 					//	designer:cap/CVAM1
@@ -350,6 +350,14 @@ namespace Epsitec.Cresus.Core.Library.Finance
 						get
 						{
 							return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 54));
+						}
+					}
+					//	designer:cap/CVAO1
+					public static global::Epsitec.Common.Types.Caption Paid
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 56));
 						}
 					}
 				}
@@ -676,7 +684,7 @@ namespace Epsitec.Cresus.Core.Library.Finance
 				//	designer:cap/CVAU3
 				public static readonly global::Epsitec.Common.Support.Druid IsrDefs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 126);
 				//	designer:cap/CVA04
-				public static readonly global::Epsitec.Common.Support.Druid PaymentModes = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 128);
+				public static readonly global::Epsitec.Common.Support.Druid PaymentCategories = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 128);
 				//	designer:cap/CVAV3
 				public static readonly global::Epsitec.Common.Support.Druid PaymentReminderDefs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 127);
 				//	designer:cap/CVA14
