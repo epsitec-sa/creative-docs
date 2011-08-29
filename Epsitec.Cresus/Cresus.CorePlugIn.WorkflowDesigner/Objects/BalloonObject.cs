@@ -153,11 +153,11 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 			Point himself = this.GetAttachHimself(mode);
 			Point other = this.GetAttachOther(mode);
 
-			double d = Point.Distance (himself, other) - ObjectEdge.frameSize.Height/2;
+			double d = Point.Distance (himself, other) - this.AttachRadius;
 
 			if (this.attachObject is LinkableObject)
 			{
-				other = Point.Move (other, himself, ObjectEdge.frameSize.Height/2);
+				other = Point.Move (other, himself, this.AttachRadius);
 			}
 			
 			Rectangle bounds = this.bounds;
@@ -385,7 +385,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				{
 					var box = this.attachObject as LinkableObject;
 					Rectangle boxBounds = box.Bounds;
-					boxBounds.Deflate (ObjectEdge.frameSize.Height/2);
+					boxBounds.Deflate (this.AttachRadius);
 
 					if (mode == AttachMode.Left || mode == AttachMode.Right)
 					{
@@ -482,7 +482,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				{
 					var box = this.attachObject as LinkableObject;
 					Rectangle boxBounds = box.Bounds;
-					boxBounds.Deflate (ObjectEdge.frameSize.Height/2);
+					boxBounds.Deflate (this.AttachRadius);
 
 					if (mode == AttachMode.BottomLeft)
 					{
@@ -580,7 +580,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 			{
 				var box = this.attachObject as LinkableObject;
 				Rectangle boxBounds = box.Bounds;
-				boxBounds.Deflate (ObjectEdge.frameSize.Height/2);
+				boxBounds.Deflate (this.AttachRadius);
 
 				if (!this.bounds.IntersectsWith(boxBounds))
 				{
@@ -675,6 +675,22 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 			}
 
 			return AttachMode.None;
+		}
+
+
+		private double AttachRadius
+		{
+			get
+			{
+				if (this.attachObject is ObjectEdge)
+				{
+					return this.attachObject.Bounds.Height/2;
+				}
+				else
+				{
+					return ObjectEdge.frameSize.Height/2;
+				}
+			}
 		}
 
 

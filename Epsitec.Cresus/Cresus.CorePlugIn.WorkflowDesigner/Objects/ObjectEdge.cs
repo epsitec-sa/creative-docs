@@ -28,15 +28,14 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 			this.title.Alignment = ContentAlignment.MiddleCenter;
 			this.title.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 
-			this.subtitle = new TextLayout ();
-			this.subtitle.DefaultFontSize = 9;
-			this.subtitle.Alignment = ContentAlignment.MiddleCenter;
-			this.subtitle.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+			this.subtitles = new List<TextLayout> ();
 
 			this.description = new TextLayout ();
 			this.description.DefaultFontSize = 9;
 			this.description.Alignment = ContentAlignment.MiddleLeft;
 			this.description.BreakMode = TextBreakMode.Hyphenate;
+
+			this.editingTextFieldCombos = new List<TextFieldCombo> ();
 
 			this.UpdateTitle ();
 			this.UpdateSubtitle ();
@@ -45,14 +44,14 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 			this.magnetConstrains.Add (new MagnetConstrain (isVertical: true));
 			this.magnetConstrains.Add (new MagnetConstrain (isVertical: false));
 
-			this.Bounds = new Rectangle (Point.Zero, ObjectEdge.frameSize);
+			this.Bounds = new Rectangle (Point.Zero, new Size (ObjectEdge.frameSize.Width, this.RequiredHeight));
 
 			//	Crée la liaison unique.
 			this.CreateInitialLinks ();
 		}
 
 
-		public string Title
+		private string Title
 		{
 			//	Titre au sommet de la boîte (nom du noeud).
 			get
@@ -69,7 +68,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 			}
 		}
 
-		public string Subtitle
+		private string Subtitle
 		{
 			//	Sous-titre au sommet de la boîte (nom de l'action).
 			get
@@ -81,12 +80,29 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				if (this.subtitleString != value)
 				{
 					this.subtitleString = value;
-					this.subtitle.Text = this.subtitleString;
+
+					this.subtitles.Clear ();
+
+					if (!string.IsNullOrEmpty (this.subtitleString))
+					{
+						var list = this.subtitleString.Split ('\n');
+
+						foreach (var part in list)
+						{
+							var subtitle = new TextLayout ();
+							subtitle.DefaultFontSize = 9;
+							subtitle.Alignment = ContentAlignment.MiddleCenter;
+							subtitle.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+							subtitle.Text = part;
+
+							this.subtitles.Add (subtitle);
+						}
+					}
 				}
 			}
 		}
 
-		public string Description
+		private string Description
 		{
 			//	Titre au sommet de la boîte (nom du noeud).
 			get
@@ -288,11 +304,12 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override void SetBoundsAtEnd(Point start, Point end)
 		{
+			double h = this.RequiredHeight;
 			double a = Point.ComputeAngleRad (start, end);
-			double d = System.Math.Abs (ObjectEdge.frameSize.Width*System.Math.Cos (a) + ObjectEdge.frameSize.Height*System.Math.Sin (a)) * 0.5;
+			double d = System.Math.Abs (ObjectEdge.frameSize.Width*System.Math.Cos (a) + h*System.Math.Sin (a)) * 0.5;
 
 			Point center = Point.Move (end, start, -d);
-			Rectangle rect = new Rectangle (center.X-ObjectEdge.frameSize.Width/2, center.Y-ObjectEdge.frameSize.Height/2, ObjectEdge.frameSize.Width, ObjectEdge.frameSize.Height);
+			Rectangle rect = new Rectangle (center.X-ObjectEdge.frameSize.Width/2, center.Y-h/2, ObjectEdge.frameSize.Width, h);
 
 			this.Bounds = rect;
 		}
@@ -333,8 +350,8 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override Vector GetLinkVector(double angle, bool isDst)
 		{
-			double xMargin = ObjectEdge.frameSize.Height/2 * (isDst ? 2.5 : 1.5);
-			double yMargin = ObjectEdge.frameSize.Height/2;
+			double xMargin = System.Math.Min (this.bounds.Height/2 * (isDst ? 2.5 : 1.5), this.bounds.Width/2);
+			double yMargin = this.bounds.Height/2;
 
 			Point c = this.bounds.Center;
 			Point p = Transform.RotatePointDeg (c, angle, new Point (c.X+this.bounds.Width+this.bounds.Height, c.Y));
@@ -391,8 +408,8 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override double GetLinkAngle(Point pos, bool isDst)
 		{
-			double xMargin = ObjectEdge.frameSize.Height/2 * (isDst ? 2.5 : 1.5);
-			double yMargin = ObjectEdge.frameSize.Height/2;
+			double xMargin = this.bounds.Height/2 * (isDst ? 2.5 : 1.5);
+			double yMargin = this.bounds.Height/2;
 
 			if (pos.Y >= this.bounds.Bottom && pos.Y <= this.bounds.Top)
 			{
@@ -480,15 +497,23 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 		{
 			if (this.editingElement == ActiveElement.EdgeHeader)
 			{
-				this.Entity.Name              = this.editingTextField1.Text;
-				this.Entity.TransitionActions = ObjectEdge.GetTransitionAction (this.editingTextField2 as TextFieldCombo);
+				this.Entity.Name              = this.editingTextField.Text;
+				this.Entity.TransitionActions = ObjectEdge.GetTransitionActions (this.editingTextFieldCombos);
 				this.UpdateTitle ();
 				this.UpdateSubtitle ();
+
+				double h = this.RequiredHeight;
+
+				if (this.bounds.Height != h)
+				{
+					this.Bounds = new Rectangle (this.bounds.Left, this.bounds.Top-h, this.bounds.Width, h);
+					this.editor.UpdateAfterGeometryChanged (this);
+				}
 			}
 
 			if (this.editingElement == ActiveElement.EdgeEditDescription)
 			{
-				this.Entity.Description = this.editingTextField1.Text;
+				this.Entity.Description = this.editingTextField.Text;
 				this.UpdateDescription ();
 			}
 
@@ -509,19 +534,23 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 		private void StartEdition(ActiveElement element)
 		{
 			Rectangle rect = Rectangle.Empty;
-			string text1 = null;
-			string text2 = null;
+			string text = null;
+			var comboTexts = new List<string> ();
 
 			if (element == ActiveElement.EdgeHeader)
 			{
 				rect = this.RectangleTitle;
-				rect.Deflate (-4, 6);
+				rect.Deflate (-4, 8);
 
-				text1 = this.Entity.Name.ToString ();
-				text2 = (this.Entity.TransitionActions == null) ? "" : this.Entity.TransitionActions;
+				text = this.Entity.Name.ToString ();
+				comboTexts = ObjectEdge.GetTransitionActions (this.Entity.TransitionActions);
 
-				this.editingTextField1 = new TextField ();
-				this.editingTextField2 = new TextFieldCombo ();
+				this.editingTextField = new TextField ();
+
+				for (int i = 0; i < comboTexts.Count; i++)
+				{
+					this.editingTextFieldCombos.Add (new TextFieldCombo ());
+				}
 			}
 
 			if (element == ActiveElement.EdgeEditDescription)
@@ -529,11 +558,11 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				rect = this.RectangleDescription;
 				rect.Inflate (6);
 
-				text1 = this.Entity.Description.ToString ();
+				text = this.Entity.Description.ToString ();
 
 				var field = new TextFieldMulti ();
 				field.ScrollerVisibility = false;
-				this.editingTextField1 = field;
+				this.editingTextField = field;
 			}
 
 			if (rect.IsEmpty)
@@ -550,23 +579,25 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 			rect = new Rectangle (new Point (p1.X, p1.Y-height), new Size (width, height));
 
-			this.editingTextField1.Parent = this.editor;
-			this.editingTextField1.SetManualBounds (rect);
-			this.editingTextField1.Text = text1;
-			this.editingTextField1.TabIndex = 1;
-			this.editingTextField1.SelectAll ();
-			this.editingTextField1.Focus ();
+			this.editingTextField.Parent = this.editor;
+			this.editingTextField.SetManualBounds (rect);
+			this.editingTextField.Text = text;
+			this.editingTextField.TabIndex = 1;
+			this.editingTextField.SelectAll ();
+			this.editingTextField.Focus ();
 
-			if (text2 != null)
+			rect.Offset (0, -2);
+
+			for (int i = 0; i < comboTexts.Count; i++)
 			{
 				rect.Offset (0, -rect.Height+1);
 
-				this.editingTextField2.Parent = this.editor;
-				this.editingTextField2.SetManualBounds (rect);
-				this.editingTextField2.IsReadOnly = true;
-				this.editingTextField2.TabIndex = 2;
+				this.editingTextFieldCombos[i].Parent = this.editor;
+				this.editingTextFieldCombos[i].SetManualBounds (rect);
+				this.editingTextFieldCombos[i].IsReadOnly = true;
+				this.editingTextFieldCombos[i].TabIndex = 2+i;
 
-				ObjectEdge.UpdateTransitionActionCombo (this.editingTextField2 as TextFieldCombo, text2);
+				this.UpdateTransitionActionCombo (this.editingTextFieldCombos[i], comboTexts[i], i);
 			}
 
 			this.editor.EditingObject = this;
@@ -576,21 +607,22 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private void StopEdition()
 		{
-			this.editor.Children.Remove (this.editingTextField1);
-			this.editingTextField1 = null;
+			this.editor.Children.Remove (this.editingTextField);
+			this.editingTextField = null;
 
-			if (this.editingTextField2 != null)
+			foreach (var combo in this.editingTextFieldCombos)
 			{
-				this.editor.Children.Remove (this.editingTextField2);
-				this.editingTextField2 = null;
+				this.editor.Children.Remove (combo);
 			}
+
+			this.editingTextFieldCombos.Clear ();
 
 			this.editor.EditingObject = null;
 			this.UpdateButtonsState ();
 		}
 
 
-		private static void UpdateTransitionActionCombo(TextFieldCombo combo, string text)
+		private void UpdateTransitionActionCombo(TextFieldCombo combo, string text, int rank)
 		{
 			//	Initialise le widget combo permettant de choisir une action.
 			combo.Items.Clear ();
@@ -608,24 +640,80 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 			if (string.IsNullOrWhiteSpace (text))
 			{
-				combo.Text = ObjectEdge.emptyTransitionAction;
+				text = ObjectEdge.emptyTransitionAction;
 			}
-			else
+
+			combo.Text = string.Format ("<b>{0})</b> {1}", (rank+1).ToString (), text);
+
+			combo.ComboClosed += delegate
 			{
-				combo.Text = text;
+				this.AcceptEdition ();
+				this.StartEdition ();
+			};
+		}
+
+		private static List<string> GetTransitionActions(string actions)
+		{
+			var list = new List<string> ();
+
+			if (!string.IsNullOrEmpty (actions))
+			{
+				list.AddRange (actions.Split (new char[] { '\n' }, System.StringSplitOptions.RemoveEmptyEntries));
+			}
+
+			list.Add("");  // pour avoir une ligne "vide"
+
+			return list;
+		}
+
+		private static string GetTransitionActions(List<TextFieldCombo> combos)
+		{
+			//	Retourne l'action choisie par les widgets combo.
+			var list = new List<string> ();
+
+			foreach (var combo in combos)
+			{
+				string text = combo.Text;
+
+				if (!string.IsNullOrEmpty (text))
+				{
+					int index = text.IndexOf (")</b> ");
+					if (index != -1)
+					{
+						text = text.Substring (index+6);  // supprime le "3) " au début
+					}
+				}
+
+				if (!string.IsNullOrWhiteSpace (text) && text != ObjectEdge.emptyTransitionAction)
+				{
+					list.Add (text);
+				}
+			}
+
+			return string.Join ("\n", list);
+		}
+
+
+		private double RequiredHeight
+		{
+			get
+			{
+				return ObjectEdge.frameSize.Height + (this.RequiredTransitionLines-1)*12;
 			}
 		}
 
-		private static string GetTransitionAction(TextFieldCombo combo)
+		private int RequiredTransitionLines
 		{
-			//	Retourne l'action choisie par le widget combo.
-			if (string.IsNullOrWhiteSpace (combo.Text) || combo.Text == ObjectEdge.emptyTransitionAction)
+			get
 			{
-				return null;
-			}
-			else
-			{
-				return combo.Text;
+				int linesCount = 1;
+
+				if (!string.IsNullOrEmpty (this.Entity.TransitionActions))
+				{
+					linesCount = this.Entity.TransitionActions.Count (x => x == '\n') + 1;
+				}
+
+				return linesCount;
 			}
 		}
 
@@ -816,7 +904,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 		public override ActiveElement MouseDetectBackground(Point pos)
 		{
 			//	Détecte l'élément actif visé par la souris.
-			if (AbstractObject.DetectRoundRectangle (this.bounds, ObjectEdge.frameSize.Height/2, pos))
+			if (AbstractObject.DetectRoundRectangle (this.bounds, this.bounds.Height/2, pos))
 			{
 				return ActiveElement.EdgeHeader;
 			}
@@ -826,7 +914,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				return ActiveElement.EdgeEditDescription;
 			}
 
-			if (AbstractObject.DetectRoundRectangle (this.ExtendedBounds, ObjectEdge.frameSize.Height/2, pos))
+			if (AbstractObject.DetectRoundRectangle (this.ExtendedBounds, this.bounds.Height/2, pos))
 			{
 				return ActiveElement.EdgeInside;
 			}
@@ -960,11 +1048,11 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				//	Dessine l'ombre.
 				rect = extendedRect;
 				rect.Offset (AbstractObject.shadowOffset, -(AbstractObject.shadowOffset));
-				this.DrawRoundShadow (graphics, rect, ObjectEdge.frameSize.Height/2, (int) AbstractObject.shadowOffset, 0.2);
+				this.DrawRoundShadow (graphics, rect, this.bounds.Height/2, (int) AbstractObject.shadowOffset, 0.2);
 
 				rect = extendedRect;
 				rect.Deflate (0.5);
-				Path extendedPath = this.PathRoundRectangle (rect, ObjectEdge.frameSize.Height/2);
+				Path extendedPath = this.PathRoundRectangle (rect, this.bounds.Height/2);
 
 				//	Dessine l'intérieur en blanc.
 				graphics.Rasterizer.AddSurface (extendedPath);
@@ -1020,8 +1108,14 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				this.title.Paint (r.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
 
 				r = new Rectangle (rect.Left, rect.Bottom, rect.Width, 20);
-				this.subtitle.LayoutSize = r.Size;
-				this.subtitle.Paint (r.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
+
+				foreach (var subtitle in this.subtitles)
+				{
+					subtitle.LayoutSize = r.Size;
+					subtitle.Paint (r.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
+
+					r.Offset (0, -12);
+				}
 			}
 
 			//	Dessine la description.
@@ -1110,10 +1204,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 		{
 			get
 			{
-				Rectangle rect = this.bounds;
-				rect.Deflate (ObjectEdge.frameSize.Height/2, 0);
-
-				return rect;
+				return new Rectangle (this.bounds.Left+ObjectEdge.frameSize.Height/2, this.bounds.Top-ObjectEdge.frameSize.Height, this.bounds.Width-ObjectEdge.frameSize.Height, ObjectEdge.frameSize.Height);
 			}
 		}
 
@@ -1313,12 +1404,12 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 		private string							titleString;
 		private TextLayout						title;
 		private string							subtitleString;
-		private TextLayout						subtitle;
+		private List<TextLayout>				subtitles;
 		private string							descriptionString;
 		private TextLayout						description;
 
 		private ActiveElement					editingElement;
-		private AbstractTextField				editingTextField1;
-		private AbstractTextField				editingTextField2;
+		private AbstractTextField				editingTextField;
+		private List<TextFieldCombo>			editingTextFieldCombos;
 	}
 }
