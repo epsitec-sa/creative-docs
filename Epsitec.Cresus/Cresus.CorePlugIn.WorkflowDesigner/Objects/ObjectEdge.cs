@@ -575,7 +575,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 			Point p1 = this.editor.ConvEditorToWidget (rect.TopLeft);
 			Point p2 = this.editor.ConvEditorToWidget (rect.BottomRight);
 			double width  = System.Math.Max (p2.X-p1.X, 150);
-			double height = System.Math.Max (p1.Y-p2.Y, 20);
+			double height = 20;
 
 			rect = new Rectangle (new Point (p1.X, p1.Y-height), new Size (width, height));
 
@@ -643,7 +643,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				text = ObjectEdge.emptyTransitionAction;
 			}
 
-			combo.Text = string.Format ("<b>{0})</b> {1}", (rank+1).ToString (), text);
+			combo.Text = string.Concat (ObjectEdge.subtitlePrefix, (rank+1).ToString (), ObjectEdge.subtitlePostfix, text);
 
 			combo.ComboClosed += delegate
 			{
@@ -661,7 +661,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				list.AddRange (actions.Split (new char[] { '\n' }, System.StringSplitOptions.RemoveEmptyEntries));
 			}
 
-			list.Add("");  // pour avoir une ligne "vide"
+			list.Add("");  // pour avoir une ligne "<vide>"
 
 			return list;
 		}
@@ -677,10 +677,10 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 				if (!string.IsNullOrEmpty (text))
 				{
-					int index = text.IndexOf (")</b> ");
+					int index = text.IndexOf (ObjectEdge.subtitlePostfix);
 					if (index != -1)
 					{
-						text = text.Substring (index+6);  // supprime le "3) " au début
+						text = text.Substring (index+ObjectEdge.subtitlePostfix.Length);  // supprime le "n) " au début
 					}
 				}
 
@@ -698,7 +698,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 		{
 			get
 			{
-				return ObjectEdge.frameSize.Height + (this.RequiredTransitionLines-1)*12;
+				return ObjectEdge.frameSize.Height + (this.RequiredTransitionLines-1)*ObjectEdge.subtitleHeight;
 			}
 		}
 
@@ -1114,7 +1114,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 					subtitle.LayoutSize = r.Size;
 					subtitle.Paint (r.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
 
-					r.Offset (0, -12);
+					r.Offset (0, -ObjectEdge.subtitleHeight);
 				}
 			}
 
@@ -1399,7 +1399,10 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public static readonly Size				frameSize = new Size (200, 36);
 		private static readonly double			extendedHeight = 80;
-		private static readonly string			emptyTransitionAction = "&lt;vide&gt;";
+		private static readonly double			subtitleHeight = 10;
+		private static readonly string			emptyTransitionAction = "<i>vide</i>";
+		private static readonly string			subtitlePrefix = "<b>";
+		private static readonly string			subtitlePostfix = ")</b> ";
 
 		private string							titleString;
 		private TextLayout						title;
