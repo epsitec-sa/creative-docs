@@ -9,9 +9,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionPaymentModeViewController : EditionViewController<PaymentModeEntity>
+	public class EditionPaymentCategoryViewController : EditionViewController<PaymentCategoryEntity>
 	{
-		protected override void CreateBricks(BrickWall<PaymentModeEntity> wall)
+		protected override void CreateBricks(BrickWall<PaymentCategoryEntity> wall)
 		{
 			wall.AddBrick ()
 				.Input ()

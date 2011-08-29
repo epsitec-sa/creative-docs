@@ -896,7 +896,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 				//	designer:cap/GVA96
 				public static readonly global::Epsitec.Common.Support.Druid IsrDefs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 201);
 				//	designer:cap/GVAB6
-				public static readonly global::Epsitec.Common.Support.Druid PaymentModes = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 203);
+				public static readonly global::Epsitec.Common.Support.Druid PaymentCategories = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 203);
 				//	designer:cap/GVAA6
 				public static readonly global::Epsitec.Common.Support.Druid PaymentReminderDefs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 202);
 				//	designer:cap/GVAC6

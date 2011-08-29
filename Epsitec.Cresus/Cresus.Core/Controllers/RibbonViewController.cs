@@ -796,7 +796,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				yield return new SubMenuItem (Res.Commands.Base.ShowPriceGroup,                SubMenuType.Finance);
 				yield return new SubMenuItem (Res.Commands.Base.ShowPriceRoundingMode,         SubMenuType.Finance);
 				yield return new SubMenuItem (Res.Commands.Base.ShowIsrDefinition,             SubMenuType.Finance);
-				yield return new SubMenuItem (Res.Commands.Base.ShowPaymentMode,               SubMenuType.Finance);
+				yield return new SubMenuItem (Res.Commands.Base.ShowPaymentCategory,           SubMenuType.Finance);
 				yield return new SubMenuItem (Res.Commands.Base.ShowPaymentReminderDefinition, SubMenuType.Finance);
 
 				yield return new SubMenuItem (Res.Commands.Base.ShowImage, SubMenuType.Images);
@@ -913,7 +913,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					return "Base.DocumentPrintingUnits";
 
 				case SubMenuType.Finance:
-					return "Base.PaymentMode";
+					return "Base.PaymentCategory";
 
 				case SubMenuType.Images:
 					return "Base.Image";

@@ -82,10 +82,10 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			public static readonly Epsitec.Common.Types.StructuredType IRoundingMode = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 118));
 			//	designer:cap/CVA9
 			public static readonly Epsitec.Common.Types.StructuredType IsrDefinition = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 9));
+			//	designer:cap/CVAV
+			public static readonly Epsitec.Common.Types.StructuredType PaymentCategory = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 31));
 			//	designer:cap/CVA21
 			public static readonly Epsitec.Common.Types.StructuredType PaymentDetail = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 34));
-			//	designer:cap/CVAV
-			public static readonly Epsitec.Common.Types.StructuredType PaymentMode = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 31));
 			//	designer:cap/CVAL
 			public static readonly Epsitec.Common.Types.StructuredType PaymentTransaction = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 21));
 			//	designer:cap/CVAF4
@@ -719,6 +719,18 @@ namespace Epsitec.Cresus.Core.Library.Finance
 				public static readonly global::Epsitec.Common.Support.Druid SubscriberNumber = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 12);
 			}
 			
+			public static class PaymentCategory
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/CVA01
+				public static readonly global::Epsitec.Common.Support.Druid BookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 32);
+				//	designer:cap/CVA11
+				public static readonly global::Epsitec.Common.Support.Druid StandardPaymentTerm = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 33);
+			}
+			
 			public static class PaymentDetail
 			{
 				internal static void _Initialize()
@@ -731,24 +743,12 @@ namespace Epsitec.Cresus.Core.Library.Finance
 				public static readonly global::Epsitec.Common.Support.Druid Currency = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 39);
 				//	designer:cap/CVA81
 				public static readonly global::Epsitec.Common.Support.Druid Date = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 40);
+				//	designer:cap/CVA41
+				public static readonly global::Epsitec.Common.Support.Druid PaymentCategory = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 36);
 				//	designer:cap/CVA51
 				public static readonly global::Epsitec.Common.Support.Druid PaymentData = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 37);
-				//	designer:cap/CVA41
-				public static readonly global::Epsitec.Common.Support.Druid PaymentMode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 36);
 				//	designer:cap/CVA31
 				public static readonly global::Epsitec.Common.Support.Druid PaymentType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 35);
-			}
-			
-			public static class PaymentMode
-			{
-				internal static void _Initialize()
-				{
-				}
-				
-				//	designer:cap/CVA01
-				public static readonly global::Epsitec.Common.Support.Druid BookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 32);
-				//	designer:cap/CVA11
-				public static readonly global::Epsitec.Common.Support.Druid StandardPaymentTerm = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 33);
 			}
 			
 			public static class PaymentReminderDefinition
@@ -936,8 +936,8 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			Fields.FinanceSettings._Initialize ();
 			Fields.IRoundingMode._Initialize ();
 			Fields.IsrDefinition._Initialize ();
+			Fields.PaymentCategory._Initialize ();
 			Fields.PaymentDetail._Initialize ();
-			Fields.PaymentMode._Initialize ();
 			Fields.PaymentReminderDefinition._Initialize ();
 			Fields.PaymentTransaction._Initialize ();
 			Fields.PriceCalculator._Initialize ();

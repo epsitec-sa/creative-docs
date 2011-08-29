@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Support.EntityEngine;
@@ -21,7 +21,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionPaymentTransactionViewController : EditionViewController<Entities.PaymentTransactionEntity>
 	{
-#if true
 		protected override void CreateBricks(BrickWall<PaymentTransactionEntity> wall)
 		{
 			wall.AddBrick ()
@@ -31,7 +30,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Separator ()
 				.Input ()
 				  .Field (x => x.PaymentDetail.PaymentType)
-				  .Field (x => x.PaymentDetail.PaymentMode)
+				  .Field (x => x.PaymentDetail.PaymentCategory)
 				  .Field (x => x.PaymentDetail.Amount)
 				  .Field (x => x.PaymentDetail.Currency)
 				  .Field (x => x.PaymentDetail.Date)
@@ -50,117 +49,5 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.End ()
 				;
 		}
-#else
-		protected override void CreateUI()
-		{
-			using (var builder = new UIBuilder (this))
-			{
-				builder.CreateHeaderEditorTile ();
-				builder.CreateEditionTitleTile ("Data.PaymentTransactions", "Facturation");
-
-				this.CreateUIMain (builder);
-				this.CreateUIPaymentMode (builder);
-
-				builder.CreateFooterEditorTile ();
-			}
-		}
-
-
-		private void CreateUIMain(UIBuilder builder)
-		{
-			var tile = builder.CreateEditionTile ();
-
-			builder.CreateTextField      (tile, 100, "Date d'échéance",                     Marshaler.Create (() => this.Entity.AmountDue.Date, x => this.Entity.AmountDue.Date = x));
-			builder.CreateTextFieldMulti (tile,  36, "Description",                         Marshaler.Create (() => this.Entity.Text, x => this.Entity.Text = x));
-			builder.CreateMargin         (tile, horizontalSeparator: true);
-			builder.CreateTextField      (tile,  50, "Rang de la mensualité",               Marshaler.Create (() => this.InstalmentRank, x => this.InstalmentRank = x));
-			builder.CreateTextField      (tile,   0, "Description de la mensualité",        Marshaler.Create (() => this.Entity.InstalmentName, x => this.Entity.InstalmentName = x));
-			builder.CreateMargin         (tile, horizontalSeparator: true);
-			builder.CreateTextField      (tile,   0, "N° de référence BVR à 27 chiffres",	Marshaler.Create (() => this.Entity.IsrReferenceNumber, x => this.Entity.IsrReferenceNumber = x));
-			builder.CreateMargin         (tile, horizontalSeparator: true);
-
-			FrameBox group = builder.CreateGroup (tile, "Montant à payer");
-			             builder.CreateTextField (group, DockStyle.Left, 80, Marshaler.Create (() => this.Entity.AmountDue.Amount, x => this.Entity.AmountDue.Amount = x));
-			var button = builder.CreateButton    (group, DockStyle.Fill, 0, "&lt; Mettre le solde");
-
-			button.Clicked += delegate
-			{
-				this.ComputeAmontDue ();
-			};
-		}
-
-		private void CreateUIPaymentMode(UIBuilder builder)
-		{
-			var controller = new SelectionController<PaymentModeEntity> (this.BusinessContext)
-			{
-				ValueGetter         = () => this.Entity.AmountDue.PaymentMode,
-				ValueSetter         = x => this.Entity.AmountDue.PaymentMode = x,
-				ReferenceController = new ReferenceController (() => this.Entity.AmountDue.PaymentMode, creator: this.CreateNewPaymentMode),
-			};
-
-			builder.CreateAutoCompleteTextField ("Mode de paiement", controller);
-		}
-
-		private NewEntityReference CreateNewPaymentMode(DataContext context)
-		{
-			var paymentMode = context.CreateEntityAndRegisterAsEmpty<PaymentModeEntity> ();
-			return paymentMode;
-		}
-
-
-		private string InstalmentRank
-		{
-			get
-			{
-				if (this.Entity.InstalmentRank == null)
-				{
-					return null;
-				}
-				else
-				{
-					return (this.Entity.InstalmentRank+1).ToString ();
-				}
-			}
-			set
-			{
-				if (!string.IsNullOrEmpty (value))
-				{
-					int n;
-					if (int.TryParse (value, out n))
-					{
-						if (n > 0)
-						{
-							this.Entity.InstalmentRank = n-1;
-							return;
-						}
-					}
-				}
-
-				this.Entity.InstalmentRank = null;
-			}
-		}
-
-
-		private void ComputeAmontDue()
-		{
-			var invoiceDocument = Common.GetParentEntity (this.TileContainer) as BusinessDocumentEntity;
-
-			if (invoiceDocument != null)
-			{
-				this.Entity.AmountDue.Amount = 0;
-				decimal amountDue = 0;
-
-				foreach (var billing in invoiceDocument.PaymentTransactions)
-				{
-					amountDue += billing.AmountDue.Amount;
-				}
-
-				decimal total = InvoiceDocumentHelper.GetTotalPriceTTC (invoiceDocument).GetValueOrDefault (0);
-				this.Entity.AmountDue.Amount = total-amountDue;
-
-				this.TileContainer.UpdateAllWidgets ();
-			}
-		}
-#endif
 	}
 }

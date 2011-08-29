@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class PaymentModeEntity
+	public partial class PaymentCategoryEntity
 	{
 		public override FormattedText GetSummary()
 		{

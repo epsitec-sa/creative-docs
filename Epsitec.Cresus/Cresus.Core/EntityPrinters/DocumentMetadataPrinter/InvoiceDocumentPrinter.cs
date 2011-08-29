@@ -366,7 +366,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		private void BuildConditions()
 		{
 			//	Met les conditions à la fin de la facture.
-			FormattedText conditions = FormattedText.Join (FormattedText.HtmlBreak, this.billingDetailsEntity.Text, this.billingDetailsEntity.PaymentDetail.PaymentMode.Description);
+			FormattedText conditions = FormattedText.Join (FormattedText.HtmlBreak, this.billingDetailsEntity.Text, this.billingDetailsEntity.PaymentDetail.PaymentCategory.Description);
 
 			if (!conditions.IsNullOrEmpty)
 			{

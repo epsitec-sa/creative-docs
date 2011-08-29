@@ -36,15 +36,15 @@ namespace Epsitec.Cresus.Core.Business.Rules
 				}
 			}
 
-			var currencyEntity = context.GetAllEntities<CurrencyEntity> ().FirstOrDefault (x => x.CurrencyCode == currencyCode);
-			var paymentMode    = settings.Finance.PaymentModes.FirstOrDefault ();
+			var currencyEntity  = context.GetAllEntities<CurrencyEntity> ().FirstOrDefault (x => x.CurrencyCode == currencyCode);
+			var paymentCategory = settings.Finance.PaymentCategories.FirstOrDefault ();
 
 			billingDetails.PaymentDetail = context.CreateEntity<PaymentDetailEntity> ();
 			billingDetails.PaymentDetail.PaymentType = Business.Finance.PaymentDetailType.AmountDue;
-			billingDetails.PaymentDetail.PaymentMode = context.GetLocalEntity (paymentMode);
+			billingDetails.PaymentDetail.PaymentCategory = context.GetLocalEntity (paymentCategory);
 			billingDetails.PaymentDetail.Currency    = context.GetLocalEntity (currencyEntity);
 
-			paymentTerm = billingDetails.PaymentDetail.PaymentMode.StandardPaymentTerm.GetValueOrDefault (30);
+			paymentTerm = billingDetails.PaymentDetail.PaymentCategory.StandardPaymentTerm.GetValueOrDefault (30);
 			dueDate     = dueDate.AddDays (paymentTerm);
 
 			billingDetails.PaymentDetail.Date = dueDate;

@@ -5498,15 +5498,15 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>PaymentModes</c> field.
+		///	The <c>PaymentCategories</c> field.
 		///	designer:fld/GVA76/GVAB6
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[GVAB6]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.PaymentModeEntity> PaymentModes
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.PaymentCategoryEntity> PaymentCategories
 		{
 			get
 			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.PaymentModeEntity> ("[GVAB6]");
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.PaymentCategoryEntity> ("[GVAB6]");
 			}
 		}
 		///	<summary>

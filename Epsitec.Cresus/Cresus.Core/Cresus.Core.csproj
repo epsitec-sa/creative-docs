@@ -223,7 +223,7 @@
     <Compile Include="Controllers\SummaryControllers\SummaryArticleCategoryViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryMailContactViewController.cs" />
     <Compile Include="Controllers\EditionControllers\Common.cs" />
-    <Compile Include="Controllers\EditionControllers\EditionPaymentModeViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionPaymentCategoryViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPaymentTransactionViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionUnitOfMeasureViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPriceDocumentItemViewController.cs" />
@@ -243,7 +243,7 @@
     <Compile Include="Controllers\EditionControllers\EditionLegalPersonViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionNaturalPersonViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\Common.cs" />
-    <Compile Include="Controllers\SummaryControllers\SummaryPaymentModeViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryPaymentCategoryViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryUnitOfMeasureViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryBusinessDocumentViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleDefinitionViewController.cs" />
@@ -271,7 +271,7 @@
     <EmbeddedResource Include="Images\Data.Currency.icon" />
     <EmbeddedResource Include="Images\Data.InvoiceDocument.icon" />
     <EmbeddedResource Include="Images\Data.PaymentDetail.icon" />
-    <EmbeddedResource Include="Images\Data.PaymentMode.icon" />
+    <EmbeddedResource Include="Images\Data.PaymentCategory.icon" />
     <EmbeddedResource Include="Images\Data.PriceDocumentItem.icon" />
     <EmbeddedResource Include="Images\Data.TextDocumentItem.icon" />
     <EmbeddedResource Include="Images\Data.DocumentItems.icon" />
@@ -482,7 +482,7 @@
     <EmbeddedResource Include="Images\Base.Language.icon" />
     <EmbeddedResource Include="Images\Base.LegalPersonType.icon" />
     <EmbeddedResource Include="Images\Base.Location.icon" />
-    <EmbeddedResource Include="Images\Base.PaymentMode.icon" />
+    <EmbeddedResource Include="Images\Base.PaymentCategory.icon" />
     <EmbeddedResource Include="Images\Base.PaymentReminderDefinition.icon" />
     <EmbeddedResource Include="Images\Base.PersonGender.icon" />
     <EmbeddedResource Include="Images\Base.PersonTitle.icon" />

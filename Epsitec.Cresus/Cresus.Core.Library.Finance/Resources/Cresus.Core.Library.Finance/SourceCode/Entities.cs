@@ -8,7 +8,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVAL]", typeof (Epsitec.Cresus.Core.Entities.PaymentTransactionEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVAT]", typeof (Epsitec.Cresus.Core.Entities.CurrencyEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVAU]", typeof (Epsitec.Cresus.Core.Entities.ExchangeRateSourceEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[CVAV]", typeof (Epsitec.Cresus.Core.Entities.PaymentModeEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[CVAV]", typeof (Epsitec.Cresus.Core.Entities.PaymentCategoryEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVA21]", typeof (Epsitec.Cresus.Core.Entities.PaymentDetailEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVAR2]", typeof (Epsitec.Cresus.Core.Entities.VatDefinitionEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVAP3]", typeof (Epsitec.Cresus.Core.Entities.TaxSettingsEntity))]
@@ -778,14 +778,14 @@ namespace Epsitec.Cresus.Core.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.Core.PaymentMode Entity
+#region Epsitec.Cresus.Core.PaymentCategory Entity
 namespace Epsitec.Cresus.Core.Entities
 {
 	///	<summary>
-	///	The <c>PaymentMode</c> entity.
+	///	The <c>PaymentCategory</c> entity.
 	///	designer:cap/CVAV
 	///	</summary>
-	public partial class PaymentModeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ICategory, global::Epsitec.Cresus.Core.Entities.IItemRank
+	public partial class PaymentCategoryEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ICategory, global::Epsitec.Cresus.Core.Entities.IItemRank
 	{
 		#region IItemRank Members
 		///	<summary>
@@ -927,17 +927,17 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.Core.Entities.PaymentModeEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.Core.Entities.PaymentCategoryEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.Core.Entities.PaymentModeEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.Core.Entities.PaymentCategoryEntity.EntityStructuredTypeKey;
 		}
 		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 31);	// [CVAV]
 		public static readonly string EntityStructuredTypeKey = "[CVAV]";
 		
 		#region Repository Class
-		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<PaymentModeEntity>
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<PaymentCategoryEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{
@@ -980,24 +980,24 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>PaymentMode</c> field.
+		///	The <c>PaymentCategory</c> field.
 		///	designer:fld/CVA21/CVA41
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[CVA41]")]
-		public global::Epsitec.Cresus.Core.Entities.PaymentModeEntity PaymentMode
+		public global::Epsitec.Cresus.Core.Entities.PaymentCategoryEntity PaymentCategory
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.PaymentModeEntity> ("[CVA41]");
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.PaymentCategoryEntity> ("[CVA41]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.PaymentModeEntity oldValue = this.PaymentMode;
+				global::Epsitec.Cresus.Core.Entities.PaymentCategoryEntity oldValue = this.PaymentCategory;
 				if (oldValue != value || !this.IsFieldDefined("[CVA41]"))
 				{
-					this.OnPaymentModeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.PaymentModeEntity> ("[CVA41]", oldValue, value);
-					this.OnPaymentModeChanged (oldValue, value);
+					this.OnPaymentCategoryChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.PaymentCategoryEntity> ("[CVA41]", oldValue, value);
+					this.OnPaymentCategoryChanged (oldValue, value);
 				}
 			}
 		}
@@ -1092,8 +1092,8 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnPaymentTypeChanging(global::Epsitec.Cresus.Core.Business.Finance.PaymentDetailType oldValue, global::Epsitec.Cresus.Core.Business.Finance.PaymentDetailType newValue);
 		partial void OnPaymentTypeChanged(global::Epsitec.Cresus.Core.Business.Finance.PaymentDetailType oldValue, global::Epsitec.Cresus.Core.Business.Finance.PaymentDetailType newValue);
-		partial void OnPaymentModeChanging(global::Epsitec.Cresus.Core.Entities.PaymentModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PaymentModeEntity newValue);
-		partial void OnPaymentModeChanged(global::Epsitec.Cresus.Core.Entities.PaymentModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PaymentModeEntity newValue);
+		partial void OnPaymentCategoryChanging(global::Epsitec.Cresus.Core.Entities.PaymentCategoryEntity oldValue, global::Epsitec.Cresus.Core.Entities.PaymentCategoryEntity newValue);
+		partial void OnPaymentCategoryChanged(global::Epsitec.Cresus.Core.Entities.PaymentCategoryEntity oldValue, global::Epsitec.Cresus.Core.Entities.PaymentCategoryEntity newValue);
 		partial void OnPaymentDataChanging(string oldValue, string newValue);
 		partial void OnPaymentDataChanged(string oldValue, string newValue);
 		partial void OnAmountChanging(global::System.Decimal oldValue, global::System.Decimal newValue);

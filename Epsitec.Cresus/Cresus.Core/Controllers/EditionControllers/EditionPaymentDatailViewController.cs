@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			wall.AddBrick ()
 				.Input ()
 				  .Field (x => x.PaymentType)
-				  .Field (x => x.PaymentMode)
+				  .Field (x => x.PaymentCategory)
 				  .Field (x => x.PaymentData)
 				  .Field (x => x.Amount)
 				  .Field (x => x.Currency)
