@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Core.Business.Actions
 		{
 			var businessContext  = WorkflowExecutionEngine.Current.BusinessContext;
 			var activeAffair     = AffairActions.GetActiveAffair ();
-			var activeVariantId  = WorkflowArgs.GetActiveVariantId ();
+			var activeVariantId  = WorkflowArgs.GetActiveVariantId ().GetValueOrDefault ();
 			var documentMetadata = BusinessDocumentBusinessRules.CreateDocument (businessContext, activeAffair, activeVariantId, newDocumentType);
 
 			int? variantId = documentMetadata.BusinessDocument.VariantId;
