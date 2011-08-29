@@ -561,6 +561,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid Documents = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10);
 				//	designer:cap/GVA9
 				public static readonly global::Epsitec.Common.Support.Druid SubAffairs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 9);
+				//	designer:cap/GVAJ7
+				public static readonly global::Epsitec.Common.Support.Druid UnassignedPaymentTransactions = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 243);
 			}
 			
 			public static class ArticleAccountingDefinition
@@ -1005,10 +1007,10 @@ namespace Epsitec.Cresus.Core.Library.Business
 				{
 				}
 				
-				//	designer:cap/GVAB
-				public static readonly global::Epsitec.Common.Support.Druid DefaultAddress = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 11);
 				//	designer:cap/GVAL
 				public static readonly global::Epsitec.Common.Support.Druid DefaultCurrencyCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 21);
+				//	designer:cap/GVAK7
+				public static readonly global::Epsitec.Common.Support.Druid DefaultMailContact = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 244);
 				//	designer:cap/GVAD
 				public static readonly global::Epsitec.Common.Support.Druid FirstContactDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 13);
 				//	designer:cap/GVA3

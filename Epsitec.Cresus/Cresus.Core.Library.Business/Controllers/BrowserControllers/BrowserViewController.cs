@@ -267,9 +267,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				this.extractor =
 					new EntityDataExtractor (
 						new EntityDataMetadataRecorder<CustomerEntity> ()
-							.Column (x => x.Relation.DefaultAddress.Location.PostalCode)
-							.Column (x => x.Relation.DefaultAddress.Location.Name)
-							.Column (x => x.Relation.DefaultAddress.Street.StreetName)
+							.Column (x => x.Relation.DefaultMailContact.Address.Location.PostalCode)
+							.Column (x => x.Relation.DefaultMailContact.Address.Location.Name)
+							.Column (x => x.Relation.DefaultMailContact.Address.Street.StreetName)
 						.GetMetadata ());
 
 				this.extractedCollection = this.extractor.CreateCollection (EntityDataRowComparer.Instance);

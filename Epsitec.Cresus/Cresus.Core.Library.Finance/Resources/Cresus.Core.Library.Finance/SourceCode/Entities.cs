@@ -939,7 +939,7 @@ namespace Epsitec.Cresus.Core.Entities
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<PaymentCategoryEntity>
 		{
-			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Immutable)
 			{
 			}
 		}

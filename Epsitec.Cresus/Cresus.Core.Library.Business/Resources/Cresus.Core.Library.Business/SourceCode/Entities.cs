@@ -98,24 +98,24 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>DefaultAddress</c> field.
-		///	designer:fld/GVA/GVAB
+		///	The <c>DefaultMailContact</c> field.
+		///	designer:fld/GVA/GVAK7
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVAB]")]
-		public global::Epsitec.Cresus.Core.Entities.AddressEntity DefaultAddress
+		[global::Epsitec.Common.Support.EntityField ("[GVAK7]")]
+		public global::Epsitec.Cresus.Core.Entities.MailContactEntity DefaultMailContact
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.AddressEntity> ("[GVAB]");
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.MailContactEntity> ("[GVAK7]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.AddressEntity oldValue = this.DefaultAddress;
-				if (oldValue != value || !this.IsFieldDefined("[GVAB]"))
+				global::Epsitec.Cresus.Core.Entities.MailContactEntity oldValue = this.DefaultMailContact;
+				if (oldValue != value || !this.IsFieldDefined("[GVAK7]"))
 				{
-					this.OnDefaultAddressChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.AddressEntity> ("[GVAB]", oldValue, value);
-					this.OnDefaultAddressChanged (oldValue, value);
+					this.OnDefaultMailContactChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.MailContactEntity> ("[GVAK7]", oldValue, value);
+					this.OnDefaultMailContactChanged (oldValue, value);
 				}
 			}
 		}
@@ -210,8 +210,8 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnPersonChanging(global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity newValue);
 		partial void OnPersonChanged(global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity newValue);
-		partial void OnDefaultAddressChanging(global::Epsitec.Cresus.Core.Entities.AddressEntity oldValue, global::Epsitec.Cresus.Core.Entities.AddressEntity newValue);
-		partial void OnDefaultAddressChanged(global::Epsitec.Cresus.Core.Entities.AddressEntity oldValue, global::Epsitec.Cresus.Core.Entities.AddressEntity newValue);
+		partial void OnDefaultMailContactChanging(global::Epsitec.Cresus.Core.Entities.MailContactEntity oldValue, global::Epsitec.Cresus.Core.Entities.MailContactEntity newValue);
+		partial void OnDefaultMailContactChanged(global::Epsitec.Cresus.Core.Entities.MailContactEntity oldValue, global::Epsitec.Cresus.Core.Entities.MailContactEntity newValue);
 		partial void OnFirstContactDateChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		partial void OnFirstContactDateChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		partial void OnVatNumberChanging(string oldValue, string newValue);
@@ -539,6 +539,18 @@ namespace Epsitec.Cresus.Core.Entities
 			get
 			{
 				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.DocumentMetadataEntity> ("[GVAA]");
+			}
+		}
+		///	<summary>
+		///	The <c>UnassignedPaymentTransactions</c> field.
+		///	designer:fld/GVA1/GVAJ7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVAJ7]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.PaymentTransactionEntity> UnassignedPaymentTransactions
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.PaymentTransactionEntity> ("[GVAJ7]");
 			}
 		}
 		

@@ -245,16 +245,17 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				var context = this.businessContext as BusinessContext;
 				var settings = context.GetCachedBusinessSettings ();
 
-				if (settings == null ||
-					settings.Company == null ||
-					settings.Company.DefaultAddress == null ||
-					settings.Company.DefaultAddress.Location == null)
+				if (settings.IsNull () ||
+					settings.Company.IsNull () ||
+					settings.Company.DefaultMailContact.IsNull () ||
+					settings.Company.DefaultMailContact.Address.IsNull () ||
+					settings.Company.DefaultMailContact.Address.Location.IsNull ())
 				{
 					return null;
 				}
 				else
 				{
-					return settings.Company.DefaultAddress.Location.Name;
+					return settings.Company.DefaultMailContact.Address.Location.Name;
 				}
 			}
 		}
