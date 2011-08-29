@@ -82,6 +82,7 @@
     <Compile Include="Business\Rules\NumericValueArticleParameterDefinitionBusinessRules.cs" />
     <Compile Include="Business\Rules\OptionValueArticleParameterDefinitionBusinessRules.cs" />
     <Compile Include="Business\Rules\OptionValueBusinessRules.cs" />
+    <Compile Include="Business\Rules\PaymentTransactionBusinessRules1.cs" />
     <Compile Include="Business\Rules\RelationBusinessRules.cs" />
     <Compile Include="Business\Rules\TaxSettingsBusinessRules.cs" />
     <Compile Include="ContentAccessors\DocumentItemAccessorError.cs" />

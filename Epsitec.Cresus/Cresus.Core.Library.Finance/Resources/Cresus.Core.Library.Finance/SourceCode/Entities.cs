@@ -301,8 +301,26 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>PaymentTransaction</c> entity.
 	///	designer:cap/CVAL
 	///	</summary>
-	public partial class PaymentTransactionEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	public partial class PaymentTransactionEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemCode
 	{
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/CVAL/8VA5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA5]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+			}
+		}
+		#endregion
 		///	<summary>
 		///	The <c>Text</c> field.
 		///	designer:fld/CVAL/CVAM
