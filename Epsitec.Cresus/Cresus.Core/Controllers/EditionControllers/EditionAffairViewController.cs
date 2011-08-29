@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				    .Field (x => x.IdB).Width (72)
 				    .Field (x => x.IdC).Width (72)
 				  .End ()
-				  .Field (x => x.DefaultDebtorBookAccount)
+				  .Field (x => x.DebtorBookAccount)
 				.End ()
 				;
 		}

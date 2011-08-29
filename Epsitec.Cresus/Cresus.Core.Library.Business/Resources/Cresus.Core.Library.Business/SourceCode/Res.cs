@@ -553,10 +553,16 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid ActiveAffairOwner = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 8);
 				//	designer:cap/GVA7
 				public static readonly global::Epsitec.Common.Support.Druid ActiveSalesRepresentative = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 7);
+				//	designer:cap/GVAR7
+				public static readonly global::Epsitec.Common.Support.Druid AmountDue = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 251);
+				//	designer:cap/GVAT7
+				public static readonly global::Epsitec.Common.Support.Druid BillingMode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 253);
+				//	designer:cap/GVAP7
+				public static readonly global::Epsitec.Common.Support.Druid CurrencyCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 249);
 				//	designer:cap/GVA2
 				public static readonly global::Epsitec.Common.Support.Druid Customer = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 2);
 				//	designer:cap/GVA6
-				public static readonly global::Epsitec.Common.Support.Druid DefaultDebtorBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 6);
+				public static readonly global::Epsitec.Common.Support.Druid DebtorBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 6);
 				//	designer:cap/GVAA
 				public static readonly global::Epsitec.Common.Support.Druid Documents = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10);
 				//	designer:cap/GVA9
@@ -903,6 +909,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid DefaultBillingRoundingMode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 217);
 				//	designer:cap/GVAO7
 				public static readonly global::Epsitec.Common.Support.Druid DefaultCurrencyCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 248);
+				//	designer:cap/GVAS7
+				public static readonly global::Epsitec.Common.Support.Druid DefaultDebtorBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 252);
 				//	designer:cap/GVA96
 				public static readonly global::Epsitec.Common.Support.Druid IsrDefs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 201);
 				//	designer:cap/GVAB6

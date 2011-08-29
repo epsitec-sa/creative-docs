@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
@@ -205,6 +205,22 @@ namespace Epsitec.Cresus.Core
 			{
 				return dateTime.Value.ToString ("dd.MM.yyyy");  // par exemple 06.03.2011
 			}
+		}
+
+		public static string GetDateTimeDescription(Date? date)
+		{
+			System.DateTime? dateTime;
+
+			if (date.HasValue)
+			{
+				dateTime = date.Value.ToDateTime ();
+			}
+			else
+			{
+				dateTime = null;
+			}
+
+			return Misc.GetDateTimeDescription (dateTime);
 		}
 
 		public static string GetDateTimeDescription(Date date)

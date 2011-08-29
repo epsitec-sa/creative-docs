@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 				a.Accumulate (this.Description.GetEntityStatus ());
 //HACK:			a.Accumulate (this.Relation.GetEntityStatus ());
-				a.Accumulate (this.DefaultDebtorBookAccount.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.DebtorBookAccount.GetEntityStatus ().TreatAsOptional ());
 				a.Accumulate (this.ActiveSalesRepresentative.GetEntityStatus ().TreatAsOptional ());
 				a.Accumulate (this.ActiveAffairOwner.GetEntityStatus ().TreatAsOptional ());
 				a.Accumulate (this.SubAffairs.Select (x => x.GetEntityStatus ()));

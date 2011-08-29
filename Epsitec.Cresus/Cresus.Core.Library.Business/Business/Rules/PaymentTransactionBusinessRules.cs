@@ -27,6 +27,49 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			payment.PaymentDetail.PaymentType = Business.Finance.PaymentDetailType.None;
 		}
 
+		
+		public static void CreatePaymentTransaction(BusinessContext businessContext, AffairEntity affair, BusinessDocumentEntity invoice, PaymentCategoryEntity paymentCategory)
+		{
+			var payment = businessContext.CreateEntity<PaymentTransactionEntity> ();
+
+			System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (payment.Code) == false);
+			System.Diagnostics.Debug.Assert (payment.PaymentDetail.IsNotNull ());
+
+			var billingDate  = Date.Today;
+			var currencyCode = affair.CurrencyCode;
+			int paymentTerm  = 0;
+
+			if (invoice.BillingDate.HasValue)
+			{
+				billingDate = invoice.BillingDate.Value;
+			}
+			if (invoice.CurrencyCode != CurrencyCode.None)
+			{
+				currencyCode = invoice.CurrencyCode;
+			}
+
+			var currencyEntity  = businessContext.GetAllEntities<CurrencyEntity> ().FirstOrDefault (x => x.CurrencyCode == currencyCode);
+
+			payment.PaymentDetail.PaymentType     = Business.Finance.PaymentDetailType.Due;
+			payment.PaymentDetail.PaymentCategory = businessContext.GetLocalEntity (paymentCategory);
+			payment.PaymentDetail.Currency        = businessContext.GetLocalEntity (currencyEntity);
+
+			paymentTerm = payment.PaymentDetail.PaymentCategory.StandardPaymentTerm.GetValueOrDefault (30);
+
+			payment.PaymentDetail.Date    = billingDate;
+			payment.PaymentDetail.DueDate = billingDate.AddDays (paymentTerm);
+
+			payment.Text = string.Format ("Payable net au {0}", Misc.GetDateTimeDescription (payment.PaymentDetail.DueDate));
+
+			var isrDef = paymentCategory.IsrDefinition;
+
+			if (isrDef.IsNotNull ())
+			{
+				payment.IsrReferenceNumber = Isr.GetNewReferenceNumber (businessContext, isrDef);
+			}
+		}
+
+#if false
 		public static void CreateInvoicePaymentTransaction(BusinessContext businessContext)
 		{
 			var payment = businessContext.CreateEntity<PaymentTransactionEntity> ();
@@ -72,5 +115,6 @@ namespace Epsitec.Cresus.Core.Business.Rules
 				payment.IsrReferenceNumber = Isr.GetNewReferenceNumber (businessContext, isrDef);
 			}
 		}
+#endif
 	}
 }

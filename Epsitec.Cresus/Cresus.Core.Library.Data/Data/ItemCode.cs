@@ -6,6 +6,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Data
 {
+	/// <summary>
+	/// The <c>ItemCode</c> class represents a GUID or a named unique ID, which is
+	/// usually stored in an <see cref="IItemCode.Code"/> field.
+	/// </summary>
 	public sealed class ItemCode : System.IEquatable<ItemCode>, System.IComparable<ItemCode>
 	{
 		public ItemCode(string code)
@@ -23,6 +27,7 @@ namespace Epsitec.Cresus.Core.Data
 		{
 		}
 
+		
 		public static explicit operator string(ItemCode item)
 		{
 			return (item == null) ? null : item.code;
@@ -84,6 +89,7 @@ namespace Epsitec.Cresus.Core.Data
 			return new ItemCode (Strings.NamePrefix + name);
 		}
 
+		
 		#region IComparable<ItemCode> Members
 
 		public int CompareTo(ItemCode other)
@@ -102,6 +108,7 @@ namespace Epsitec.Cresus.Core.Data
 
 		#endregion
 
+		
 		public override bool Equals(object obj)
 		{
 			if (obj is ItemCode)
@@ -124,12 +131,15 @@ namespace Epsitec.Cresus.Core.Data
 			return this.code.GetHashCode ();
 		}
 
+		#region Constant Strings Class
 
 		private static class Strings
 		{
 			public const string NamePrefix = "x";				//	'x' will never show up in encoded ASCII-85 string
 		}
-		
-		private readonly string code;
+
+		#endregion
+
+		private readonly string					code;
 	}
 }

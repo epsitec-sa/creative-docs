@@ -452,11 +452,77 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>DefaultDebtorBookAccount</c> field.
+		///	The <c>AmountDue</c> field.
+		///	designer:fld/GVA1/GVAR7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVAR7]")]
+		public global::System.Decimal? AmountDue
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[GVAR7]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.AmountDue;
+				if (oldValue != value || !this.IsFieldDefined("[GVAR7]"))
+				{
+					this.OnAmountDueChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[GVAR7]", oldValue, value);
+					this.OnAmountDueChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	Mode de facturation (HT ou TTC)
+		///	designer:fld/GVA1/GVAT7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVAT7]")]
+		public global::Epsitec.Cresus.Core.Business.Finance.BillingMode BillingMode
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.BillingMode> ("[GVAT7]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Business.Finance.BillingMode oldValue = this.BillingMode;
+				if (oldValue != value || !this.IsFieldDefined("[GVAT7]"))
+				{
+					this.OnBillingModeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.BillingMode> ("[GVAT7]", oldValue, value);
+					this.OnBillingModeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>CurrencyCode</c> field.
+		///	designer:fld/GVA1/GVAP7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVAP7]")]
+		public global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode CurrencyCode
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode> ("[GVAP7]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue = this.CurrencyCode;
+				if (oldValue != value || !this.IsFieldDefined("[GVAP7]"))
+				{
+					this.OnCurrencyCodeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode> ("[GVAP7]", oldValue, value);
+					this.OnCurrencyCodeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>DebtorBookAccount</c> field.
 		///	designer:fld/GVA1/GVA6
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[GVA6]")]
-		public string DefaultDebtorBookAccount
+		public string DebtorBookAccount
 		{
 			get
 			{
@@ -464,12 +530,12 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				string oldValue = this.DefaultDebtorBookAccount;
+				string oldValue = this.DebtorBookAccount;
 				if (oldValue != value || !this.IsFieldDefined("[GVA6]"))
 				{
-					this.OnDefaultDebtorBookAccountChanging (oldValue, value);
+					this.OnDebtorBookAccountChanging (oldValue, value);
 					this.SetField<string> ("[GVA6]", oldValue, value);
-					this.OnDefaultDebtorBookAccountChanged (oldValue, value);
+					this.OnDebtorBookAccountChanged (oldValue, value);
 				}
 			}
 		}
@@ -556,8 +622,14 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnCustomerChanging(global::Epsitec.Cresus.Core.Entities.CustomerEntity oldValue, global::Epsitec.Cresus.Core.Entities.CustomerEntity newValue);
 		partial void OnCustomerChanged(global::Epsitec.Cresus.Core.Entities.CustomerEntity oldValue, global::Epsitec.Cresus.Core.Entities.CustomerEntity newValue);
-		partial void OnDefaultDebtorBookAccountChanging(string oldValue, string newValue);
-		partial void OnDefaultDebtorBookAccountChanged(string oldValue, string newValue);
+		partial void OnAmountDueChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnAmountDueChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnBillingModeChanging(global::Epsitec.Cresus.Core.Business.Finance.BillingMode oldValue, global::Epsitec.Cresus.Core.Business.Finance.BillingMode newValue);
+		partial void OnBillingModeChanged(global::Epsitec.Cresus.Core.Business.Finance.BillingMode oldValue, global::Epsitec.Cresus.Core.Business.Finance.BillingMode newValue);
+		partial void OnCurrencyCodeChanging(global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode newValue);
+		partial void OnCurrencyCodeChanged(global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode newValue);
+		partial void OnDebtorBookAccountChanging(string oldValue, string newValue);
+		partial void OnDebtorBookAccountChanged(string oldValue, string newValue);
 		partial void OnActiveSalesRepresentativeChanging(global::Epsitec.Cresus.Core.Entities.PeopleEntity oldValue, global::Epsitec.Cresus.Core.Entities.PeopleEntity newValue);
 		partial void OnActiveSalesRepresentativeChanged(global::Epsitec.Cresus.Core.Entities.PeopleEntity oldValue, global::Epsitec.Cresus.Core.Entities.PeopleEntity newValue);
 		partial void OnActiveAffairOwnerChanging(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
@@ -5612,6 +5684,28 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>DefaultDebtorBookAccount</c> field.
+		///	designer:fld/GVA76/GVAS7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVAS7]")]
+		public string DefaultDebtorBookAccount
+		{
+			get
+			{
+				return this.GetField<string> ("[GVAS7]");
+			}
+			set
+			{
+				string oldValue = this.DefaultDebtorBookAccount;
+				if (oldValue != value || !this.IsFieldDefined("[GVAS7]"))
+				{
+					this.OnDefaultDebtorBookAccountChanging (oldValue, value);
+					this.SetField<string> ("[GVAS7]", oldValue, value);
+					this.OnDefaultDebtorBookAccountChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>SerializedChartsOfAccounts</c> field.
 		///	designer:fld/GVA76/GVAC6
 		///	</summary>
@@ -5630,6 +5724,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnDefaultBillingRoundingModeChanged(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
 		partial void OnDefaultBillingModeChanging(global::Epsitec.Cresus.Core.Business.Finance.BillingMode oldValue, global::Epsitec.Cresus.Core.Business.Finance.BillingMode newValue);
 		partial void OnDefaultBillingModeChanged(global::Epsitec.Cresus.Core.Business.Finance.BillingMode oldValue, global::Epsitec.Cresus.Core.Business.Finance.BillingMode newValue);
+		partial void OnDefaultDebtorBookAccountChanging(string oldValue, string newValue);
+		partial void OnDefaultDebtorBookAccountChanged(string oldValue, string newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
