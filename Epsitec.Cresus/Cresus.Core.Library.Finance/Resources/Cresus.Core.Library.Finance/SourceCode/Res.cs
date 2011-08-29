@@ -718,7 +718,7 @@ namespace Epsitec.Cresus.Core.Library.Finance
 				//	designer:cap/CVAE
 				public static readonly global::Epsitec.Common.Support.Druid BankReferenceNumberPrefix = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 14);
 				//	designer:cap/CVAB
-				public static readonly global::Epsitec.Common.Support.Druid Currency = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 11);
+				public static readonly global::Epsitec.Common.Support.Druid CurrencyCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 11);
 				//	designer:cap/CVAJ
 				public static readonly global::Epsitec.Common.Support.Druid IncomingBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 19);
 				//	designer:cap/CVAD
@@ -735,6 +735,8 @@ namespace Epsitec.Cresus.Core.Library.Finance
 				
 				//	designer:cap/CVA01
 				public static readonly global::Epsitec.Common.Support.Druid BookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 32);
+				//	designer:cap/CVAU4
+				public static readonly global::Epsitec.Common.Support.Druid IsrDefinition = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 158);
 				//	designer:cap/CVA11
 				public static readonly global::Epsitec.Common.Support.Druid StandardPaymentTerm = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 33);
 			}
@@ -751,6 +753,8 @@ namespace Epsitec.Cresus.Core.Library.Finance
 				public static readonly global::Epsitec.Common.Support.Druid Currency = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 39);
 				//	designer:cap/CVA81
 				public static readonly global::Epsitec.Common.Support.Druid Date = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 40);
+				//	designer:cap/CVAV4
+				public static readonly global::Epsitec.Common.Support.Druid DueDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 159);
 				//	designer:cap/CVA41
 				public static readonly global::Epsitec.Common.Support.Druid PaymentCategory = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 36);
 				//	designer:cap/CVA51
@@ -781,8 +785,6 @@ namespace Epsitec.Cresus.Core.Library.Finance
 				public static readonly global::Epsitec.Common.Support.Druid InstalmentName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 28);
 				//	designer:cap/CVAR
 				public static readonly global::Epsitec.Common.Support.Druid InstalmentRank = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 27);
-				//	designer:cap/CVAP
-				public static readonly global::Epsitec.Common.Support.Druid IsrDefinition = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 25);
 				//	designer:cap/CVAQ
 				public static readonly global::Epsitec.Common.Support.Druid IsrReferenceNumber = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 26);
 				//	designer:cap/CVAN

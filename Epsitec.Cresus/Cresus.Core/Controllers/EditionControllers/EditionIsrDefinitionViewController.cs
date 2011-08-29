@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Types;
@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Input ()
 				  .Field (x => x.SubscriberNumber).Width (150)
 				  .Field (x => x.SubscriberAddress)
-				  .Field (x => x.Currency).Width (150)
+				  .Field (x => x.CurrencyCode).Width (150)
 				.End ()
 				.Separator ()
 				.Input ()

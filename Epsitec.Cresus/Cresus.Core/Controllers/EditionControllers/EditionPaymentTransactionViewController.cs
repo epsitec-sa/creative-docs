@@ -45,7 +45,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Input ()
 				  .Field (x => x.TransactionId)
 				  .Field (x => x.IsrReferenceNumber)
-				  .Field (x => x.IsrDefinition)
 				.End ()
 				;
 		}

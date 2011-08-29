@@ -22,13 +22,13 @@ namespace Epsitec.Cresus.Core.Business
 	/// </remarks>
 	public class IsrSlip
 	{
-		public IsrSlip(PaymentTransactionEntity billingDetails, bool optionalAmount = false)
+		public IsrSlip(PaymentTransactionEntity payment, bool optionalAmount = false)
 		{
-			var amount   = billingDetails.PaymentDetail.Amount;
-			var currency = billingDetails.PaymentDetail.Currency.CurrencyCode;
+			var amount   = payment.PaymentDetail.Amount;
+			var currency = payment.PaymentDetail.Currency.CurrencyCode;
 
-			this.subscriberNumber = billingDetails.IsrDefinition.SubscriberNumber;
-			this.referenceNumber  = billingDetails.IsrReferenceNumber;
+			this.subscriberNumber = payment.PaymentDetail.PaymentCategory.IsrDefinition.SubscriberNumber;
+			this.referenceNumber  = payment.IsrReferenceNumber;
 			
 			this.amount   = Isr.GetRoundedAmount (amount, currency);
 			this.currency = currency;

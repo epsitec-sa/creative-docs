@@ -78,11 +78,11 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		#endregion
 		///	<summary>
-		///	The <c>Currency</c> field.
+		///	The <c>CurrencyCode</c> field.
 		///	designer:fld/CVA9/CVAB
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[CVAB]")]
-		public global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode Currency
+		public global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode CurrencyCode
 		{
 			get
 			{
@@ -90,12 +90,12 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue = this.Currency;
+				global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue = this.CurrencyCode;
 				if (oldValue != value || !this.IsFieldDefined("[CVAB]"))
 				{
-					this.OnCurrencyChanging (oldValue, value);
+					this.OnCurrencyCodeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode> ("[CVAB]", oldValue, value);
-					this.OnCurrencyChanged (oldValue, value);
+					this.OnCurrencyCodeChanged (oldValue, value);
 				}
 			}
 		}
@@ -254,8 +254,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnCurrencyChanging(global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode newValue);
-		partial void OnCurrencyChanged(global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode newValue);
+		partial void OnCurrencyCodeChanging(global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode newValue);
+		partial void OnCurrencyCodeChanged(global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode newValue);
 		partial void OnSubscriberNumberChanging(string oldValue, string newValue);
 		partial void OnSubscriberNumberChanged(string oldValue, string newValue);
 		partial void OnSubscriberAddressChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
@@ -388,28 +388,6 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>IsrDefinition</c> field.
-		///	designer:fld/CVAL/CVAP
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[CVAP]")]
-		public global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity IsrDefinition
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity> ("[CVAP]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity oldValue = this.IsrDefinition;
-				if (oldValue != value || !this.IsFieldDefined("[CVAP]"))
-				{
-					this.OnIsrDefinitionChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity> ("[CVAP]", oldValue, value);
-					this.OnIsrDefinitionChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>IsrReferenceNumber</c> field.
 		///	designer:fld/CVAL/CVAQ
 		///	</summary>
@@ -482,8 +460,6 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnPaymentDetailChanged(global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity oldValue, global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity newValue);
 		partial void OnTransactionIdChanging(string oldValue, string newValue);
 		partial void OnTransactionIdChanged(string oldValue, string newValue);
-		partial void OnIsrDefinitionChanging(global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity newValue);
-		partial void OnIsrDefinitionChanged(global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity newValue);
 		partial void OnIsrReferenceNumberChanging(string oldValue, string newValue);
 		partial void OnIsrReferenceNumberChanged(string oldValue, string newValue);
 		partial void OnInstalmentRankChanging(int? oldValue, int? newValue);
@@ -894,28 +870,6 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		#endregion
 		///	<summary>
-		///	The <c>BookAccount</c> field.
-		///	designer:fld/CVAV/CVA01
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[CVA01]")]
-		public string BookAccount
-		{
-			get
-			{
-				return this.GetField<string> ("[CVA01]");
-			}
-			set
-			{
-				string oldValue = this.BookAccount;
-				if (oldValue != value || !this.IsFieldDefined("[CVA01]"))
-				{
-					this.OnBookAccountChanging (oldValue, value);
-					this.SetField<string> ("[CVA01]", oldValue, value);
-					this.OnBookAccountChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>StandardPaymentTerm</c> field.
 		///	designer:fld/CVAV/CVA11
 		///	</summary>
@@ -937,11 +891,57 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>IsrDefinition</c> field.
+		///	designer:fld/CVAV/CVAU4
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVAU4]")]
+		public global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity IsrDefinition
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity> ("[CVAU4]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity oldValue = this.IsrDefinition;
+				if (oldValue != value || !this.IsFieldDefined("[CVAU4]"))
+				{
+					this.OnIsrDefinitionChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity> ("[CVAU4]", oldValue, value);
+					this.OnIsrDefinitionChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>BookAccount</c> field.
+		///	designer:fld/CVAV/CVA01
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVA01]")]
+		public string BookAccount
+		{
+			get
+			{
+				return this.GetField<string> ("[CVA01]");
+			}
+			set
+			{
+				string oldValue = this.BookAccount;
+				if (oldValue != value || !this.IsFieldDefined("[CVA01]"))
+				{
+					this.OnBookAccountChanging (oldValue, value);
+					this.SetField<string> ("[CVA01]", oldValue, value);
+					this.OnBookAccountChanged (oldValue, value);
+				}
+			}
+		}
 		
-		partial void OnBookAccountChanging(string oldValue, string newValue);
-		partial void OnBookAccountChanged(string oldValue, string newValue);
 		partial void OnStandardPaymentTermChanging(int? oldValue, int? newValue);
 		partial void OnStandardPaymentTermChanged(int? oldValue, int? newValue);
+		partial void OnIsrDefinitionChanging(global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity newValue);
+		partial void OnIsrDefinitionChanged(global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity newValue);
+		partial void OnBookAccountChanging(string oldValue, string newValue);
+		partial void OnBookAccountChanged(string oldValue, string newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1107,6 +1107,28 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>DueDate</c> field.
+		///	designer:fld/CVA21/CVAV4
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVAV4]")]
+		public global::Epsitec.Common.Types.Date? DueDate
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.Date?> ("[CVAV4]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.Date? oldValue = this.DueDate;
+				if (oldValue != value || !this.IsFieldDefined("[CVAV4]"))
+				{
+					this.OnDueDateChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.Date?> ("[CVAV4]", oldValue, value);
+					this.OnDueDateChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnPaymentTypeChanging(global::Epsitec.Cresus.Core.Business.Finance.PaymentDetailType oldValue, global::Epsitec.Cresus.Core.Business.Finance.PaymentDetailType newValue);
 		partial void OnPaymentTypeChanged(global::Epsitec.Cresus.Core.Business.Finance.PaymentDetailType oldValue, global::Epsitec.Cresus.Core.Business.Finance.PaymentDetailType newValue);
@@ -1120,6 +1142,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnCurrencyChanged(global::Epsitec.Cresus.Core.Entities.CurrencyEntity oldValue, global::Epsitec.Cresus.Core.Entities.CurrencyEntity newValue);
 		partial void OnDateChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		partial void OnDateChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+		partial void OnDueDateChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+		partial void OnDueDateChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

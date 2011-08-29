@@ -65,11 +65,10 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			payment.PaymentDetail.Date = dueDate;
 			payment.Text = string.Format ("Payable net au {0}", Misc.GetDateTimeDescription (dueDate));
 
-			var isrDef = settings.Finance.IsrDefs.FirstOrDefault (x => x.Currency == currencyCode);
+			var isrDef = paymentCategory.IsrDefinition;
 
 			if (isrDef.IsNotNull ())
 			{
-				payment.IsrDefinition      = businessContext.GetLocalEntity (isrDef);
 				payment.IsrReferenceNumber = Isr.GetNewReferenceNumber (businessContext, isrDef);
 			}
 		}
