@@ -29,6 +29,14 @@ namespace Epsitec.Cresus.Core.Business.Rules
 		public override void ApplyUpdateRule(AffairEntity affair)
 		{
 			var businessContext  = Logic.Current.GetComponent<BusinessContext> ();
+			
+			AffairBusinessRules.InitializeDefaults (businessContext, affair);
+		}
+
+		
+		
+		public static void InitializeDefaults(BusinessContext businessContext, AffairEntity affair)
+		{
 			var businessSettings = businessContext.GetCachedBusinessSettings ();
 			var customer         = affair.Customer;
 
@@ -47,7 +55,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 					affair.DebtorBookAccount = customer.DefaultDebtorBookAccount;
 				}
 			}
-			
+
 			if (affair.CurrencyCode == Finance.CurrencyCode.None)
 			{
 				affair.CurrencyCode = businessSettings.Finance.DefaultCurrencyCode.GetValueOrDefault (Finance.CurrencyCode.Chf);

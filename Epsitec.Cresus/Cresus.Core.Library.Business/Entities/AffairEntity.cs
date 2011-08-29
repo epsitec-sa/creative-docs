@@ -6,6 +6,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Types.Collections;
 
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Business.Rules;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -64,27 +65,43 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
+		partial void OnCustomerChanged(CustomerEntity oldEntity, CustomerEntity newEntity)
+		{
+			if (Logic.IsAvailable)
+			{
+				AffairBusinessRules.InitializeDefaults (Logic.Current.GetComponent<BusinessContext> (), this);
+			}
+		}
 
 		protected override void OnCollectionChanged(EntityCollection collection, string id, CollectionChangedEventArgs e)
 		{
-			if (e.Action != CollectionChangedAction.Add)
-			{
-				return;
-			}
-
 			if (Logic.IsNotAvailable)
 			{
 				return;
 			}
 
-			if (id == "[GVAA]")	//	this.Documents
+			var action = e.Action;
+
+			switch (id)
 			{
-				foreach (DocumentMetadataEntity document in e.NewItems)
-				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("Changed document collection : {0} type={1}", e.Action, document.DocumentCategory.DocumentType));
-					
-					this.HandleDocumentAdded (document);
-				}
+				case "[GVA9]":	//	this.SubAffairs
+					this.OnSubAffairsChanged ();
+					break;
+
+				case "[GVAA]":	//	this.Documents
+					if (action == CollectionChangedAction.Add)
+					{
+						foreach (DocumentMetadataEntity document in e.NewItems)
+						{
+							this.HandleDocumentAdded (document);
+						}
+					}
+					this.OnDocumentsChanged ();
+					break;
+
+				case "[GVAJ7]":	//	this.UnassignedPaymentTransactions
+					this.OnUnassignedPaymentTransactionsChanged ();
+					break;
 			}
 		}
 
@@ -99,6 +116,18 @@ namespace Epsitec.Cresus.Core.Entities
 
 				businessContext.AssignIds (document, generatorPool);
 			}
+		}
+
+		private void OnSubAffairsChanged()
+		{
+		}
+
+		private void OnDocumentsChanged()
+		{
+		}
+
+		private void OnUnassignedPaymentTransactionsChanged()
+		{
 		}
 	}
 }

@@ -180,6 +180,14 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
+		public static bool						IsAvailable
+		{
+			get
+			{
+				return Logic.current != null;
+			}
+		}
+
 		/// <summary>
 		/// Gets the current business logic context.
 		/// </summary>
