@@ -5546,6 +5546,28 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>DefaultCurrencyCode</c> field.
+		///	designer:fld/GVA76/GVAO7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVAO7]")]
+		public global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode? DefaultCurrencyCode
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode?> ("[GVAO7]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode? oldValue = this.DefaultCurrencyCode;
+				if (oldValue != value || !this.IsFieldDefined("[GVAO7]"))
+				{
+					this.OnDefaultCurrencyCodeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode?> ("[GVAO7]", oldValue, value);
+					this.OnDefaultCurrencyCodeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>DefaultBillingRoundingMode</c> field.
 		///	designer:fld/GVA76/GVAP6
 		///	</summary>
@@ -5602,6 +5624,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
+		partial void OnDefaultCurrencyCodeChanging(global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode? oldValue, global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode? newValue);
+		partial void OnDefaultCurrencyCodeChanged(global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode? oldValue, global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode? newValue);
 		partial void OnDefaultBillingRoundingModeChanging(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
 		partial void OnDefaultBillingRoundingModeChanged(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
 		partial void OnDefaultBillingModeChanging(global::Epsitec.Cresus.Core.Business.Finance.BillingMode oldValue, global::Epsitec.Cresus.Core.Business.Finance.BillingMode newValue);

@@ -4,6 +4,7 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Business.Finance;
 using Epsitec.Cresus.Core.Entities;
 
@@ -15,12 +16,27 @@ namespace Epsitec.Cresus.Core.Business.Rules
 	[BusinessRule]
 	internal class PaymentTransactionBusinessRules : GenericBusinessRule<PaymentTransactionEntity>
 	{
-		public override void ApplySetupRule(PaymentTransactionEntity billingDetails)
+		public override void ApplySetupRule(PaymentTransactionEntity payment)
 		{
-			var context      = Logic.Current.GetComponent<BusinessContext> ();
+			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
+			var generatorPool   = Logic.Current.GetComponent<RefIdGeneratorPool> ();
+
+			payment.Code = (string) ItemCodeGenerator.NewCode ();
+			
+			payment.PaymentDetail = businessContext.CreateEntity<PaymentDetailEntity> ();
+			payment.PaymentDetail.PaymentType = Business.Finance.PaymentDetailType.None;
+		}
+
+		public static void CreateInvoicePaymentTransaction(BusinessContext businessContext)
+		{
+			var payment = businessContext.CreateEntity<PaymentTransactionEntity> ();
+
+			System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (payment.Code) == false);
+			System.Diagnostics.Debug.Assert (payment.PaymentDetail.IsNotNull ());
+
 			var dueDate      = Date.Today;
-			var settings     = context.GetCachedBusinessSettings ();
-			var invoice      = context.GetMasterEntity<BusinessDocumentEntity> ();
+			var settings     = businessContext.GetCachedBusinessSettings ();
+			var invoice      = businessContext.GetMasterEntity<BusinessDocumentEntity> ();
 			var currencyCode = CurrencyCode.Chf;
 			int paymentTerm  = 0;
 
@@ -36,26 +52,25 @@ namespace Epsitec.Cresus.Core.Business.Rules
 				}
 			}
 
-			var currencyEntity  = context.GetAllEntities<CurrencyEntity> ().FirstOrDefault (x => x.CurrencyCode == currencyCode);
+			var currencyEntity  = businessContext.GetAllEntities<CurrencyEntity> ().FirstOrDefault (x => x.CurrencyCode == currencyCode);
 			var paymentCategory = settings.Finance.PaymentCategories.FirstOrDefault ();
 
-			billingDetails.PaymentDetail = context.CreateEntity<PaymentDetailEntity> ();
-			billingDetails.PaymentDetail.PaymentType = Business.Finance.PaymentDetailType.Due;
-			billingDetails.PaymentDetail.PaymentCategory = context.GetLocalEntity (paymentCategory);
-			billingDetails.PaymentDetail.Currency    = context.GetLocalEntity (currencyEntity);
+			payment.PaymentDetail.PaymentType     = Business.Finance.PaymentDetailType.Due;
+			payment.PaymentDetail.PaymentCategory = businessContext.GetLocalEntity (paymentCategory);
+			payment.PaymentDetail.Currency        = businessContext.GetLocalEntity (currencyEntity);
 
-			paymentTerm = billingDetails.PaymentDetail.PaymentCategory.StandardPaymentTerm.GetValueOrDefault (30);
+			paymentTerm = payment.PaymentDetail.PaymentCategory.StandardPaymentTerm.GetValueOrDefault (30);
 			dueDate     = dueDate.AddDays (paymentTerm);
 
-			billingDetails.PaymentDetail.Date = dueDate;
-			billingDetails.Text = string.Format ("Payable net au {0}", Misc.GetDateTimeDescription (dueDate));
+			payment.PaymentDetail.Date = dueDate;
+			payment.Text = string.Format ("Payable net au {0}", Misc.GetDateTimeDescription (dueDate));
 
 			var isrDef = settings.Finance.IsrDefs.FirstOrDefault (x => x.Currency == currencyCode);
 
 			if (isrDef.IsNotNull ())
 			{
-				billingDetails.IsrDefinition      = context.GetLocalEntity (isrDef);
-				billingDetails.IsrReferenceNumber = Isr.GetNewReferenceNumber (context, isrDef);
+				payment.IsrDefinition      = businessContext.GetLocalEntity (isrDef);
+				payment.IsrReferenceNumber = Isr.GetNewReferenceNumber (businessContext, isrDef);
 			}
 		}
 	}
