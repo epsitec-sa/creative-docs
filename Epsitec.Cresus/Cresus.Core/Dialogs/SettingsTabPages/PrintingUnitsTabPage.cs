@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			var column3 = new FrameBox
 			{
 				Parent = frame,
-				PreferredWidth = 250,
+				PreferredWidth = DocumentOptionsController.ValuesController.DocumentOptionsWidth,
 				Dock = DockStyle.Right,
 				Margins = new Margins (10, 0, 0, 0),
 			};
@@ -169,8 +169,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			}
 
 			//	Rempli la colonne de droite.
-			var columnTitle4 = new StaticText (column3);
-			columnTitle4.SetColumnTitle ("Options imposées");
+			var columnTitle3 = new StaticText (column3);
+			columnTitle3.SetColumnTitle ("Options imposées");
 
 			var optionsHelpBox = new FrameBox
 			{

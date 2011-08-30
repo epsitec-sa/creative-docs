@@ -15,7 +15,6 @@ namespace Epsitec.Cresus.Core.Documents
 
 		Orientation,					// enum: Portrait, Landscape
 
-		HeaderLogo,						// bool
 		Specimen,						// bool
 
 		FontSize,						// dimension: taille de la police
@@ -25,6 +24,39 @@ namespace Epsitec.Cresus.Core.Documents
 		TopMargin,						// distance
 		BottomMargin,					// distance
 
+		HeaderLogo,						// bool
+		HeaderLogoLeft,					// distance: logo
+		HeaderLogoTop,					// distance
+		HeaderLogoWidth,				// distance
+		HeaderLogoHeight,				// distance
+
+		HeaderFromLeft,					// distance: adresse de l'entreprise
+		HeaderFromTop,					// distance
+		HeaderFromWidth,				// distance
+		HeaderFromHeight,				// distance
+
+		HeaderForLeft,					// distance: concerne
+		HeaderForTop,					// distance
+		HeaderForWidth,					// distance
+		HeaderForHeight,				// distance
+
+		HeaderNumberLeft,				// distance: numéro de facture
+		HeaderNumberTop,				// distance
+		HeaderNumberWidth,				// distance
+		HeaderNumberHeight,				// distance
+
+		HeaderToLeft,					// distance: adresse destinataire
+		HeaderToTop,					// distance
+		HeaderToWidth,					// distance
+		HeaderToHeight,					// distance
+
+		HeaderLocDateLeft,				// distance: localité, le xxx
+		HeaderLocDateTop,				// distance
+		HeaderLocDateWidth,				// distance
+		HeaderLocDateHeight,			// distance
+
+		TableTopAfterHeader,			// distance
+		
 		LayoutFrame,					// enum: Frameless, WithLine, WithFrame
 		GapBeforeGroup,					// bool
 		IndentWidth,					// distance: longueur de l'indentation par niveau

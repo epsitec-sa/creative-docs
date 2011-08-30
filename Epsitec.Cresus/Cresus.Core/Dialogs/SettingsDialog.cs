@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			window.Text = "Réglages globaux";
 			window.MakeFixedSizeWindow ();
-			window.ClientSize = new Size (900, 600);
+			window.ClientSize = new Size (950, 600);
 		}
 
 		protected override void SetupWidgets(Window window)

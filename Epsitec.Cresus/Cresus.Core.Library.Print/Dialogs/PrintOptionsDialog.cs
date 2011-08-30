@@ -222,7 +222,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				{
 					Parent = mainFrame,
 					Dock = this.isPreview ? DockStyle.Left : DockStyle.Fill,
-					PreferredWidth = 300,
+					PreferredWidth = DocumentOptionsController.ValuesController.DocumentOptionsWidth,
 					Margins = new Margins (0, this.isPreview ? 10 : 0, 0, 0),
 				};
 
@@ -261,11 +261,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Dock = DockStyle.Fill,
 					HorizontalScrollerMode = ScrollableScrollerMode.HideAlways,
 					VerticalScrollerMode = ScrollableScrollerMode.Auto,
-					PaintViewportFrame = true,
+					PaintViewportFrame = false,
 					TabIndex = tabIndex++,
 				};
 				this.optionsFrame.Viewport.IsAutoFitting = true;
-				this.optionsFrame.ViewportPadding = new Margins (1);
 
 				//	Rempli la colonne de droite.
 				this.previewFrame = new FrameBox

@@ -43,6 +43,32 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			{
 				yield return DocumentOption.Orientation;
 				yield return DocumentOption.HeaderLogo;
+				yield return DocumentOption.HeaderLogoLeft;
+				yield return DocumentOption.HeaderLogoTop;
+				yield return DocumentOption.HeaderLogoWidth;
+				yield return DocumentOption.HeaderLogoHeight;
+				yield return DocumentOption.HeaderFromLeft;
+				yield return DocumentOption.HeaderFromTop;
+				yield return DocumentOption.HeaderFromWidth;
+				yield return DocumentOption.HeaderFromHeight;
+				yield return DocumentOption.HeaderForLeft;
+				yield return DocumentOption.HeaderForTop;
+				yield return DocumentOption.HeaderForWidth;
+				yield return DocumentOption.HeaderForHeight;
+				yield return DocumentOption.HeaderNumberLeft;
+				yield return DocumentOption.HeaderNumberTop;
+				yield return DocumentOption.HeaderNumberWidth;
+				yield return DocumentOption.HeaderNumberHeight;
+				yield return DocumentOption.HeaderToLeft;
+				yield return DocumentOption.HeaderToTop;
+				yield return DocumentOption.HeaderToWidth;
+				yield return DocumentOption.HeaderToHeight;
+				yield return DocumentOption.HeaderLocDateLeft;
+				yield return DocumentOption.HeaderLocDateTop;
+				yield return DocumentOption.HeaderLocDateWidth;
+				yield return DocumentOption.HeaderLocDateHeight;
+				yield return DocumentOption.TableTopAfterHeader;
+
 				yield return DocumentOption.Specimen;
 				yield return DocumentOption.FontSize;
 
@@ -119,23 +145,32 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
-		protected override TableBand BuildConcerne()
+		protected override TableBand BuildConcerne(double width)
 		{
-			var band = new TableBand ();
+			double firstColumnWidth = 16;
 
-			band.ColumnsCount = 2;
-			band.RowsCount = 1;
-			band.CellBorder = CellBorder.Default;
-			band.Font = AbstractDocumentMetadataPrinter.font;
-			band.FontSize = this.FontSize;
-			band.CellMargins = new Margins (1);
-			band.SetRelativeColumWidth (0, 15);
-			band.SetRelativeColumWidth (1, 80);
-			band.SetText (0, 0, "Atelier", this.FontSize);
-			band.SetText (1, 0, FormattedText.FromSimpleText (this.currentGroup.Name.ToSimpleText ()).ApplyBold (), this.FontSize);
-			band.SetBackground (1, 0, Color.FromBrightness (0.9));
+			if (width < firstColumnWidth+10)
+			{
+				return null;
+			}
+			else
+			{
+				var band = new TableBand ();
 
-			return band;
+				band.ColumnsCount = 2;
+				band.RowsCount = 1;
+				band.CellBorder = CellBorder.Default;
+				band.Font = AbstractDocumentMetadataPrinter.font;
+				band.FontSize = this.FontSize;
+				band.CellMargins = new Margins (1);
+				band.SetRelativeColumWidth (0, firstColumnWidth);
+				band.SetRelativeColumWidth (1, width-firstColumnWidth);
+				band.SetText (0, 0, "Atelier", this.FontSize);
+				band.SetText (1, 0, FormattedText.FromSimpleText (this.currentGroup.Name.ToSimpleText ()).ApplyBold (), this.FontSize);
+				band.SetBackground (1, 0, Color.FromBrightness (0.9));
+
+				return band;
+			}
 		}
 
 		protected override IEnumerable<ContentLine> ContentLines

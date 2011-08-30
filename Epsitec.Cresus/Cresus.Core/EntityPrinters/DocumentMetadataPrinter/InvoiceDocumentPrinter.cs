@@ -43,6 +43,32 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			{
 				yield return DocumentOption.Orientation;
 				yield return DocumentOption.HeaderLogo;
+				yield return DocumentOption.HeaderLogoLeft;
+				yield return DocumentOption.HeaderLogoTop;
+				yield return DocumentOption.HeaderLogoWidth;
+				yield return DocumentOption.HeaderLogoHeight;
+				yield return DocumentOption.HeaderFromLeft;
+				yield return DocumentOption.HeaderFromTop;
+				yield return DocumentOption.HeaderFromWidth;
+				yield return DocumentOption.HeaderFromHeight;
+				yield return DocumentOption.HeaderForLeft;
+				yield return DocumentOption.HeaderForTop;
+				yield return DocumentOption.HeaderForWidth;
+				yield return DocumentOption.HeaderForHeight;
+				yield return DocumentOption.HeaderNumberLeft;
+				yield return DocumentOption.HeaderNumberTop;
+				yield return DocumentOption.HeaderNumberWidth;
+				yield return DocumentOption.HeaderNumberHeight;
+				yield return DocumentOption.HeaderToLeft;
+				yield return DocumentOption.HeaderToTop;
+				yield return DocumentOption.HeaderToWidth;
+				yield return DocumentOption.HeaderToHeight;
+				yield return DocumentOption.HeaderLocDateLeft;
+				yield return DocumentOption.HeaderLocDateTop;
+				yield return DocumentOption.HeaderLocDateWidth;
+				yield return DocumentOption.HeaderLocDateHeight;
+				yield return DocumentOption.TableTopAfterHeader;
+
 				yield return DocumentOption.Specimen;
 				yield return DocumentOption.FontSize;
 
@@ -83,10 +109,10 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 			get
 			{
-				double leftMargin   = this.GetOptionValue (DocumentOption.LeftMargin,   20);
-				double rightMargin  = this.GetOptionValue (DocumentOption.RightMargin,  20);
-				double topMargin    = this.GetOptionValue (DocumentOption.TopMargin,    20);
-				double bottomMargin = this.GetOptionValue (DocumentOption.BottomMargin, 20);
+				double leftMargin   = this.GetOptionValue (DocumentOption.LeftMargin);
+				double rightMargin  = this.GetOptionValue (DocumentOption.RightMargin);
+				double topMargin    = this.GetOptionValue (DocumentOption.TopMargin);
+				double bottomMargin = this.GetOptionValue (DocumentOption.BottomMargin);
 
 				double h = AbstractDocumentMetadataPrinter.reportHeight;
 

@@ -7,11 +7,12 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.IO;
 using Epsitec.Common.Printing;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
-using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Documents;
+using Epsitec.Cresus.Core.Documents.Verbose;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Print.Bands;
 using Epsitec.Cresus.Core.Print.Containers;
@@ -262,7 +263,7 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 		{
 			get
 			{
-				return this.GetOptionValue (DocumentOption.FontSize, 3);
+				return this.GetOptionValue (DocumentOption.FontSize);
 			}
 		}
 
@@ -277,6 +278,20 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 				{
 					double value;
 					if (double.TryParse (s, out value))
+					{
+						return value;
+					}
+				}
+			}
+
+			if (double.IsNaN (defautlValue))
+			{
+				var defaultOption = AbstractPrinter.verboseDocumentOptions.Where (x => x.Option == option).FirstOrDefault ();
+
+				if (defaultOption != null)
+				{
+					double value;
+					if (double.TryParse (defaultOption.DefaultValue, out value))
 					{
 						return value;
 					}
@@ -308,12 +323,14 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 
 
 		private static readonly Font						specimenFont = Font.GetFont ("Arial", "Bold");
+		private static readonly IEnumerable<VerboseDocumentOption> verboseDocumentOptions = VerboseDocumentOption.GetAll ();
 		public static readonly double						ContinuousHeight = 100*1000;  // 100 mètres devraient suffire
 
 		protected readonly IBusinessContext					businessContext;
 		protected readonly CoreData							coreData;
 		protected readonly AbstractEntity					entity;
 		private readonly PrintingUnitDictionary				printingUnits;
+
 		protected PrintingUnit								currentPrintingUnit;
 		private PrintingOptionDictionary					options;
 		protected readonly DocumentContainer				documentContainer;
