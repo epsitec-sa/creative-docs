@@ -239,7 +239,7 @@ namespace Epsitec.Cresus.Core.Workflows
 			{
 				switch (ex.Cancellation)
 				{
-					case WorkflowCancellation.Nothing:
+					case WorkflowCancellation.Action:
 						return Flow.Continue;
 
 					case WorkflowCancellation.Transition:
@@ -267,12 +267,7 @@ namespace Epsitec.Cresus.Core.Workflows
 			}
 			else if (node.IsAuto)
 			{
-				var standardEdges = node.Edges.Where (x => x.TransitionType == WorkflowTransitionType.Default || x.TransitionType == WorkflowTransitionType.Call).ToList ();
-
-				if (standardEdges.Count > 1)
-				{
-					throw new System.NotSupportedException ("Auto-node cannot have more than one standard edge");
-				}
+				WorkflowExecutionEngine.EnsureAtMostOneStandardTransition (node);
 
 				foreach (var autoEdges in node.Edges)
 				{
@@ -280,6 +275,17 @@ namespace Epsitec.Cresus.Core.Workflows
 				}
 			}
 		}
+
+		private static void EnsureAtMostOneStandardTransition(WorkflowNodeEntity node)
+		{
+			var standardEdges = node.Edges.Where (x => x.TransitionType == WorkflowTransitionType.Default || x.TransitionType == WorkflowTransitionType.Call).ToList ();
+
+			if (standardEdges.Count > 1)
+			{
+				throw new System.NotSupportedException ("Auto-node cannot have more than one standard edge");
+			}
+		}
+		
 		private WorkflowNodeEntity ResolveForeignNode(WorkflowNodeEntity node)
 		{
 			if ((node.IsNotNull ()) &&

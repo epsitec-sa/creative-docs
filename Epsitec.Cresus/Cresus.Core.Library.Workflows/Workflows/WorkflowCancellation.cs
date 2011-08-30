@@ -9,10 +9,10 @@ namespace Epsitec.Cresus.Core.Workflows
 	/// </summary>
 	public enum WorkflowCancellation
 	{
-		Nothing			= 0,
+		Action			= 0,
 		Transition		= 1,
-//-		Routine			= 2,
+		Routine			= 2,
 		Thread			= 3,
-		Everything		= 4,
+		Workflow		= 4,
 	}
 }
