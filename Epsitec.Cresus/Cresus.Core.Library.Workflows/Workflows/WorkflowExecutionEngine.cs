@@ -80,12 +80,17 @@ namespace Epsitec.Cresus.Core.Workflows
 		/// </summary>
 		public void Execute()
 		{
+			this.Execute (() => this.BusinessLogic.ApplyAction (this.ExecuteInContext));
+		}
+
+		private void Execute(System.Action executor)
+		{
 			var previousExecutionEngine = WorkflowExecutionEngine.current;
 
 			try
 			{
 				WorkflowExecutionEngine.current = this;
-				this.BusinessLogic.ApplyAction (this.ExecuteInContext);
+				executor ();
 			}
 			finally
 			{
@@ -192,12 +197,20 @@ namespace Epsitec.Cresus.Core.Workflows
 
 		private Flow FollowThreadWorkflowEdge(WorkflowThreadEntity thread, Queue<Arc> arcs, System.Action<Arc> executor)
 		{
-			WorkflowExecutionEngine.ChangeThreadState (thread, WorkflowState.Active);
-
 			var arc  = arcs.Dequeue ();
 			var edge = arc.Edge;
 
-			if (WorkflowExecutionEngine.ExecuteArc (executor, arc) == Flow.Abort)
+			if (edge.TransitionType == WorkflowTransitionType.Fork)
+			{
+				//	Create a new thread and execute the actions on it, then simply continue
+				//	execution of the current thread :
+
+				this.StartNewThread (thread, arc, executor);
+				
+				return Flow.Continue;
+			}
+
+			if (WorkflowExecutionEngine.ExecuteArc (thread, executor, arc) == Flow.Abort)
 			{
 				return Flow.Abort;
 			}
@@ -211,12 +224,8 @@ namespace Epsitec.Cresus.Core.Workflows
 					this.PushNodeToThreadCallGraph (thread, edge.GetContinuationOrDefault (arc.Node));
 					break;
 				
-				case WorkflowTransitionType.Fork:
-					this.StartNewThread (thread, arc);
-					return Flow.Continue;
-
 				default:
-					throw new System.NotSupportedException (string.Format ("TransitionType {0} not supported", edge.TransitionType));
+					throw new System.NotSupportedException (string.Format ("{0} not supported", edge.TransitionType.GetQualifiedName ()));
             }
 
 			this.PrepareNextNode (thread, arcs, edge);
@@ -224,8 +233,10 @@ namespace Epsitec.Cresus.Core.Workflows
 			return Flow.Continue;
 		}
 
-		private static Flow ExecuteArc(System.Action<Arc> executor, Arc arc)
+		private static Flow ExecuteArc(WorkflowThreadEntity thread, System.Action<Arc> executor, Arc arc)
 		{
+			WorkflowExecutionEngine.ChangeThreadState (thread, WorkflowState.Active);
+			
 			try
 			{
 				if (executor != null)
@@ -310,13 +321,26 @@ namespace Epsitec.Cresus.Core.Workflows
 			return node;
 		}
 
-		private void StartNewThread(WorkflowThreadEntity runningThread, Arc arc)
+		private void StartNewThread(WorkflowThreadEntity runningThread, Arc arc, System.Action<Arc> executor)
 		{
-			var args   = runningThread.GetArgs ();			
-			var thread = WorkflowFactory.CreateWorkflowThread (this.businessContext, runningThread.Definition, args);
+			var args       = runningThread.GetArgs ();
+			var forkThread = WorkflowFactory.CreateWorkflowThread (this.businessContext, runningThread.Definition, args);
+			var transition = new WorkflowTransition (this.transition.BusinessContext, this.transition.Workflow, forkThread, arc.Node, arc.Edge);
 
-			this.AddThreadToWorkflow (thread);
-			this.AddStepToThreadHistory (thread, arc.Edge, this.ResolveForeignNode (arc.Edge.NextNode));
+			using (var engine = new WorkflowExecutionEngine (transition))
+			{
+				engine.Execute (() => WorkflowExecutionEngine.ExecuteArc (forkThread, executor, arc));
+			}
+
+			var nextNode = this.ResolveForeignNode (arc.Edge.NextNode);
+			
+			this.AddThreadToWorkflow (forkThread);
+			this.AddStepToThreadHistory (forkThread, arc.Edge, nextNode);
+
+			if (nextNode.Edges.Count == 0)
+			{
+				WorkflowExecutionEngine.ChangeThreadState (forkThread, WorkflowState.Done);
+			}
 		}
 
 		private void AddThreadToWorkflow(WorkflowThreadEntity thread)
