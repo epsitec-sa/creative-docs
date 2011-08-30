@@ -20,11 +20,7 @@ namespace Epsitec.Cresus.Core.Business.Actions
 	{
 		public static void CreateSalesQuoteVariant()
 		{
-			AffairActions.CreateAndFocusDocument (DocumentType.SalesQuote,
-				(affair, document) =>
-				{
-					document.BusinessDocument.VariantId = AffairActions.GetNextVariantId (affair);
-				});
+			AffairActions.CreateAndFocusDocument (DocumentType.SalesQuote, AffairActions.SetupVariantAndBindWithDocument);
 		}
 
 		public static void CreateOrderBooking()
@@ -60,10 +56,9 @@ namespace Epsitec.Cresus.Core.Business.Actions
 
 		public static void ValidateActiveDocument()
 		{
-			var currentAffair = AffairActions.GetActiveAffair ();
-			var workflowTransition = AffairActions.GetCurrentTransition ();
-			var workflowThread     = workflowTransition.Thread;
-			var workflowArgs       = workflowThread.GetArgs ();
+			var currentAffair  = AffairActions.GetActiveAffair ();
+			var workflowThread = WorkflowExecutionEngine.GetCurrentWorkflowThread ();
+			var workflowArgs   = workflowThread.GetArgs ();
 		}
 
 
@@ -82,6 +77,18 @@ namespace Epsitec.Cresus.Core.Business.Actions
 			WorkflowArgs.SetActiveVariantId (documentMetadata.BusinessDocument.VariantId);
 		}
 
+		private static void SetupVariantAndBindWithDocument(AffairEntity affair, DocumentMetadataEntity document)
+		{
+			var variantId = AffairActions.GetNextVariantId (affair);
+			var thread    = WorkflowExecutionEngine.GetCurrentWorkflowThread ();
+
+			document.BusinessDocument.VariantId = variantId;
+
+			var name        = TextFormatter.FormatText ("Variante", variantId);
+			var description = TextFormatter.FormatText ("Workflow associé à la variante", variantId);
+
+			WorkflowExecutionEngine.SetWorkflowThreadNameAndDescription (thread, name, description);
+		}
 
 		internal static AffairEntity GetActiveAffair()
 		{
@@ -105,11 +112,6 @@ namespace Epsitec.Cresus.Core.Business.Actions
 			{
 				return variantIds.OrderByDescending (x => x).FirstOrDefault () + 1;
 			}
-		}
-
-		private static WorkflowTransition GetCurrentTransition()
-		{
-			return WorkflowExecutionEngine.Current.Transition;
 		}
 	}
 }

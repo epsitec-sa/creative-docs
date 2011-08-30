@@ -1,6 +1,8 @@
 ﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Cresus.Core.Controllers.BrowserControllers;
+
 using Epsitec.Cresus.Core.Orchestrators;
 using Epsitec.Cresus.Core.Orchestrators.Navigation;
 
@@ -9,13 +11,15 @@ using Epsitec.Cresus.DataLayer.Context;
 using System.Collections.Generic;
 using System.Linq;
 
+[assembly: NavigationPathElementClass ("Browser", typeof (BrowserViewController.BrowserNavigationPathElement))]
+
 namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
 	public partial class BrowserViewController
 	{
 		#region BrowserNavigationPathElement Class
 
-		private sealed class BrowserNavigationPathElement : NavigationPathElement
+		internal sealed class BrowserNavigationPathElement : NavigationPathElement
 		{
 			public BrowserNavigationPathElement(BrowserViewController controller, EntityKey entityKey)
 			{

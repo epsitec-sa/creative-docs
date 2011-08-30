@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Workflows;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Workflows
 {
@@ -186,7 +187,7 @@ namespace Epsitec.Cresus.Core.Workflows
 				{
 					using (this.businessContext.AutoLock (workflow))
 					{
-						WorkflowExecutionEngine.ChangeThreadState (thread, WorkflowState.Cancelled);
+						WorkflowExecutionEngine.SetWorkflowThreadState (thread, WorkflowState.Cancelled);
 						this.businessContext.SaveChanges ();
 					}
 					
@@ -235,7 +236,7 @@ namespace Epsitec.Cresus.Core.Workflows
 
 		private static Flow ExecuteArc(WorkflowThreadEntity thread, System.Action<Arc> executor, Arc arc)
 		{
-			WorkflowExecutionEngine.ChangeThreadState (thread, WorkflowState.Active);
+			WorkflowExecutionEngine.SetWorkflowThreadState (thread, WorkflowState.Active);
 			
 			try
 			{
@@ -339,7 +340,7 @@ namespace Epsitec.Cresus.Core.Workflows
 
 			if (nextNode.Edges.Count == 0)
 			{
-				WorkflowExecutionEngine.ChangeThreadState (forkThread, WorkflowState.Done);
+				WorkflowExecutionEngine.SetWorkflowThreadState (forkThread, WorkflowState.Done);
 			}
 		}
 
@@ -365,7 +366,7 @@ namespace Epsitec.Cresus.Core.Workflows
 			{
 				//	We have reached the end of the graph...
 
-				WorkflowExecutionEngine.ChangeThreadState (thread, WorkflowState.Done);
+				WorkflowExecutionEngine.SetWorkflowThreadState (thread, WorkflowState.Done);
 			}
 			else
 			{
@@ -387,10 +388,36 @@ namespace Epsitec.Cresus.Core.Workflows
 			thread.History.Add (step);
 		}
 
-		private static void ChangeThreadState(WorkflowThreadEntity thread, WorkflowState status)
+		
+		public static void SetWorkflowThreadNameAndDescription(WorkflowThreadEntity thread, FormattedText name, FormattedText description)
 		{
-			thread.State = status;
+			if (thread.IsNotNull ())
+			{
+				thread.Name = name;
+				thread.Description = description;
+			}
 		}
+
+		public static void SetWorkflowThreadState(WorkflowThreadEntity thread, WorkflowState status)
+		{
+			if (thread.IsNotNull ())
+			{
+				thread.State = status;
+			}
+		}
+
+		
+		public static WorkflowTransition GetCurrentWorkflowTransition()
+		{
+			return WorkflowExecutionEngine.Current.Transition;
+		}
+
+		public static WorkflowThreadEntity GetCurrentWorkflowThread()
+		{
+			return WorkflowExecutionEngine.Current.Transition.Thread;
+		}
+
+
 
 		#region Arc Structure
 
