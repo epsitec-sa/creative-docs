@@ -282,9 +282,13 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private static IEnumerable<WorkflowEdgeEntity> GetEnabledEdges(WorkflowNodeEntity node)
 		{
-			if (node.IsNull () || node.Edges.Count == 0)
+			if (node.IsNull ())
 			{
 				return null;
+			}
+			else if (node.Edges.Count == 0)
+			{
+				return EmptyEnumerable<WorkflowEdgeEntity>.Instance;
 			}
 			else
 			{

@@ -100,7 +100,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return null;
+				yield return DocumentType.SalesQuote;
+				yield return DocumentType.OrderBooking;
 			}
 		}
 	}

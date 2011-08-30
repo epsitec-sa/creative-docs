@@ -310,11 +310,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//		DocumentType.Invoice
 			get
 			{
-				var list = this.documentBusinessLogic.ProcessParentDocumentTypes;
+				var collection = this.documentBusinessLogic.ProcessParentDocumentTypes;
 
-				System.Diagnostics.Debug.Assert (list != null);
+				System.Diagnostics.Debug.Assert (collection != null);
 
-				return list;
+				return collection;
 			}
 		}
 

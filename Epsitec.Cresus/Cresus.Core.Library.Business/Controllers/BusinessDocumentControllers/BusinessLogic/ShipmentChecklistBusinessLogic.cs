@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return null;
+				yield break;
 			}
 		}
 	}

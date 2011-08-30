@@ -84,12 +84,12 @@ namespace Epsitec.Cresus.Core.Business.Rules
 		private static DocumentMetadataEntity FindSourceDocument(IBusinessContext businessContext, AffairEntity activeAffair, int activeVariantId, DocumentMetadataEntity documentMetadata)
 		{
 			var businessLogic = new BusinessLogic (businessContext, documentMetadata);
-			var documentTypes = businessLogic.ProcessParentDocumentTypes;
+			var documentTypes = new HashSet<DocumentType> (businessLogic.ProcessParentDocumentTypes);
 
 			//	Cherche le document source à utiliser comme modèle.
-			var sourceDocuments = from type in documentTypes
-								  from document in activeAffair.Documents.Reverse ()
-								  where document.DocumentCategory.DocumentType == type && document.BusinessDocument.VariantId.GetValueOrDefault () == activeVariantId
+			var sourceDocuments = from document in activeAffair.Documents.Reverse ()
+								  where documentTypes.Contains (document.DocumentCategory.DocumentType) &&
+									    document.BusinessDocument.VariantId.GetValueOrDefault () == activeVariantId
 								  select document;
 
 			return sourceDocuments.FirstOrDefault ();
