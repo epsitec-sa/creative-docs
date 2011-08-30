@@ -18,38 +18,43 @@ namespace Epsitec.Cresus.Core.Business.Actions
 {
 	public static class AffairActions
 	{
+		public static void CreateSalesQuoteVariant()
+		{
+			AffairActions.CreateAndFocusDocument (DocumentType.SalesQuote,
+				(affair, document) =>
+				{
+					document.BusinessDocument.VariantId = AffairActions.GetNextVariantId (affair);
+				});
+		}
+
 		public static void CreateOrderBooking()
 		{
-			AffairActions.CreateDocument (DocumentType.OrderBooking);
+			AffairActions.CreateAndFocusDocument (DocumentType.OrderBooking);
 		}
 
 		public static void CreateOrderConfirmation()
 		{
-			AffairActions.CreateDocument (DocumentType.OrderConfirmation);
+			AffairActions.CreateAndFocusDocument (DocumentType.OrderConfirmation);
 		}
 
 		public static void CreateProductionOrder()
 		{
-			AffairActions.CreateDocument (DocumentType.ProductionOrder);
+			AffairActions.CreateAndFocusDocument (DocumentType.ProductionOrder);
 		}
 
 		public static void CreateProductionCheckList()
 		{
-			AffairActions.CreateDocument (DocumentType.ProductionChecklist);
+			AffairActions.CreateAndFocusDocument (DocumentType.ProductionChecklist);
 		}
 
 		public static void CreateDeliveryNote()
 		{
-			AffairActions.CreateDocument (DocumentType.DeliveryNote);
+			AffairActions.CreateAndFocusDocument (DocumentType.DeliveryNote);
 		}
 
 		public static void CreateInvoice()
 		{
-			AffairActions.CreateDocument (DocumentType.Invoice);
-		}
-
-		public static void CreateOfferVariant()
-		{
+			AffairActions.CreateAndFocusDocument (DocumentType.Invoice);
 		}
 
 
@@ -62,20 +67,23 @@ namespace Epsitec.Cresus.Core.Business.Actions
 		}
 
 
-		private static void CreateDocument(DocumentType newDocumentType)
+		private static void CreateAndFocusDocument(DocumentType newDocumentType, System.Action<AffairEntity, DocumentMetadataEntity> setupAction = null)
 		{
 			var businessContext  = WorkflowExecutionEngine.Current.BusinessContext;
 			var activeAffair     = AffairActions.GetActiveAffair ();
 			var activeVariantId  = WorkflowArgs.GetActiveVariantId ().GetValueOrDefault ();
 			var documentMetadata = BusinessDocumentBusinessRules.CreateDocument (businessContext, activeAffair, activeVariantId, newDocumentType);
 
-			int? variantId = documentMetadata.BusinessDocument.VariantId;
+			if (setupAction != null)
+			{
+				setupAction (activeAffair, documentMetadata);
+			}
 
-//-			System.Diagnostics.Debug.Assert (variantId.HasValue);
+			WorkflowArgs.SetActiveVariantId (documentMetadata.BusinessDocument.VariantId);
 		}
 
 
-		private static AffairEntity GetActiveAffair()
+		internal static AffairEntity GetActiveAffair()
 		{
 			var workflowEngine  = WorkflowExecutionEngine.Current;
 			var businessContext = workflowEngine.BusinessContext as BusinessContext;
@@ -85,10 +93,8 @@ namespace Epsitec.Cresus.Core.Business.Actions
 		}
 
 
-		private static int GetNextVariantId()
+		internal static int GetNextVariantId(AffairEntity affair)
 		{
-			var affair = AffairActions.GetActiveAffair ();
-
 			var variantIds = new HashSet<int> (affair.Documents.Select (x => x.BusinessDocument.VariantId.GetValueOrDefault ()));
 
 			if (variantIds.Count == 0)

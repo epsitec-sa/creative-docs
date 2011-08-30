@@ -16,6 +16,11 @@ namespace Epsitec.Cresus.Core.Workflows
 			return WorkflowArgs.GetIntValue (args, "ActiveVariant");
 		}
 
+		public static void SetActiveVariantId(int? value, SettingsCollection args = null)
+		{
+			WorkflowArgs.SetIntValue (args, "ActiveVariant", value);
+		}
+
 		public static int? GetIntValue(SettingsCollection args, string key)
 		{
 			if (args == null)
@@ -24,6 +29,24 @@ namespace Epsitec.Cresus.Core.Workflows
 			}
 
 			return args.GetIntValue (key);
+		}
+
+		public static void SetIntValue(SettingsCollection args, string key, int? value)
+		{
+			var transition      = WorkflowExecutionEngine.Current.Transition;
+			var businessContext = transition.BusinessContext;
+			var thread          = transition.Thread;
+
+			if (args == null)
+			{
+				args = thread.GetArgs ();
+				args.SetIntValue (key, value);
+				thread.SetArgs (businessContext, args);
+			}
+			else
+			{
+				args.SetIntValue (key, value);
+			}
 		}
 	}
 }

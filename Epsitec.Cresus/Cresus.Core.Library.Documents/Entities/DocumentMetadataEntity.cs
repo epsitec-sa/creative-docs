@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText ("Document n°", this.IdA);
+			return TextFormatter.FormatText ("Document n°", this.IdA, ", v. ~", this.BusinessDocument.VariantId);
 		}
 
 		public override FormattedText GetCompactSummary()
