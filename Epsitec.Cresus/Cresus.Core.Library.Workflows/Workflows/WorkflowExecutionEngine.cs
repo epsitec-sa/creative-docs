@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core;
@@ -11,8 +12,9 @@ using Epsitec.Cresus.Core.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Workflows;
 
-namespace Epsitec.Cresus.Core.Controllers
+namespace Epsitec.Cresus.Core.Workflows
 {
 	/// <summary>
 	/// The <c>WorkflowExecutionEngine</c> class manages the execution of workflow steps.
@@ -141,16 +143,20 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// </summary>
 		/// <param name="transitionActions">The transition actions.</param>
 		/// <returns><c>true</c> if the actions were successfully executed; otherwise, <c>false</c>.</returns>
-		private bool ExecuteActions(string transitionActions)
+		private void ExecuteActions(string transitionActions)
 		{
 			var action = WorkflowAction.Parse (transitionActions);
 			
 			action.Execute ();
-
-			return true;
 		}
 
-		private void FollowWorkflowEdges(System.Func<Arc, bool> executor)
+		private enum Flow
+		{
+			Continue,
+			Abort,
+		}
+
+		private void FollowWorkflowEdges(System.Action<Arc> executor)
 		{
 			WorkflowThreadEntity thread   = this.transition.Thread;
 			WorkflowEdgeEntity   edge     = this.transition.Edge;
@@ -161,9 +167,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			arcs.Enqueue (new Arc (node, edge));
 
 			int iterationCount = 0;
-			bool run = true;
+			Flow run = Flow.Continue;
 
-			while ((arcs.Count > 0) && run)
+			while ((arcs.Count > 0) && run == Flow.Continue)
 			{
 				using (this.businessContext.AutoLock (workflow))
 				{
@@ -175,7 +181,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					using (this.businessContext.AutoLock (workflow))
 					{
-						WorkflowExecutionEngine.ChangeThreadStatus (thread, WorkflowState.Cancelled);
+						WorkflowExecutionEngine.ChangeThreadState (thread, WorkflowState.Cancelled);
 						this.businessContext.SaveChanges ();
 					}
 					
@@ -184,22 +190,16 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private bool FollowThreadWorkflowEdge(WorkflowThreadEntity thread, Queue<Arc> arcs, System.Func<Arc, bool> executor)
+		private Flow FollowThreadWorkflowEdge(WorkflowThreadEntity thread, Queue<Arc> arcs, System.Action<Arc> executor)
 		{
-			WorkflowExecutionEngine.ChangeThreadStatus (thread, WorkflowState.Active);
+			WorkflowExecutionEngine.ChangeThreadState (thread, WorkflowState.Active);
 
 			var arc  = arcs.Dequeue ();
 			var edge = arc.Edge;
 
-			if (executor != null)
+			if (WorkflowExecutionEngine.ExecuteArc (executor, arc) == Flow.Abort)
 			{
-				bool result = executor (arc);
-
-				if (result == false)
-				{
-					System.Diagnostics.Debug.Assert (arcs.Count == 0);
-					return false;
-				}
+				return Flow.Abort;
 			}
 
 			switch (edge.TransitionType)
@@ -213,16 +213,50 @@ namespace Epsitec.Cresus.Core.Controllers
 				
 				case WorkflowTransitionType.Fork:
 					this.StartNewThread (thread, arc);
-					return true;
+					return Flow.Continue;
 
 				default:
 					throw new System.NotSupportedException (string.Format ("TransitionType {0} not supported", edge.TransitionType));
             }
 
+			this.PrepareNextNode (thread, arcs, edge);
+
+			return Flow.Continue;
+		}
+
+		private static Flow ExecuteArc(System.Action<Arc> executor, Arc arc)
+		{
+			try
+			{
+				if (executor != null)
+				{
+					executor (arc);
+				}
+				
+				return Flow.Continue;
+			}
+			catch (WorkflowException ex)
+			{
+				switch (ex.Cancellation)
+				{
+					case WorkflowCancellation.Nothing:
+						return Flow.Continue;
+
+					case WorkflowCancellation.Transition:
+						return Flow.Abort;
+
+					default:
+						throw new System.NotImplementedException (string.Format ("{0} not implemented", ex.Cancellation.GetQualifiedName ()));
+				}
+			}
+		}
+
+		private void PrepareNextNode(WorkflowThreadEntity thread, Queue<Arc> arcs, WorkflowEdgeEntity edge)
+		{
 			WorkflowNodeEntity node = this.ResolveForeignNode (edge.NextNode);
 
 			this.AddStepToThreadHistory (thread, edge, node);
-				
+
 			if ((node == null) ||
 				(node.Edges.Count == 0))
 			{
@@ -236,19 +270,16 @@ namespace Epsitec.Cresus.Core.Controllers
 				var standardEdges = node.Edges.Where (x => x.TransitionType == WorkflowTransitionType.Default || x.TransitionType == WorkflowTransitionType.Call).ToList ();
 
 				if (standardEdges.Count > 1)
-                {
+				{
 					throw new System.NotSupportedException ("Auto-node cannot have more than one standard edge");
-                }
+				}
 
 				foreach (var autoEdges in node.Edges)
 				{
 					arcs.Enqueue (new Arc (node, autoEdges));
 				}
 			}
-
-			return true;
 		}
-
 		private WorkflowNodeEntity ResolveForeignNode(WorkflowNodeEntity node)
 		{
 			if ((node.IsNotNull ()) &&
@@ -304,7 +335,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				//	We have reached the end of the graph...
 
-				WorkflowExecutionEngine.ChangeThreadStatus (thread, WorkflowState.Done);
+				WorkflowExecutionEngine.ChangeThreadState (thread, WorkflowState.Done);
 			}
 			else
 			{
@@ -326,7 +357,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			thread.History.Add (step);
 		}
 
-		private static void ChangeThreadStatus(WorkflowThreadEntity thread, WorkflowState status)
+		private static void ChangeThreadState(WorkflowThreadEntity thread, WorkflowState status)
 		{
 			thread.State = status;
 		}

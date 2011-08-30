@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Business
+namespace Epsitec.Cresus.Core.Workflows
 {
 	/// <summary>
 	/// The <c>ActionAttribute</c> is used to tag a method which implements

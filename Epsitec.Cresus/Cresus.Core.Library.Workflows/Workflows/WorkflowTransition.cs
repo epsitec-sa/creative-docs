@@ -7,7 +7,7 @@ using Epsitec.Cresus.Core.Entities;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Controllers
+namespace Epsitec.Cresus.Core.Workflows
 {
 	/// <summary>
 	/// The <c>WorkflowTransition</c> class captures a workflow transition (from one node

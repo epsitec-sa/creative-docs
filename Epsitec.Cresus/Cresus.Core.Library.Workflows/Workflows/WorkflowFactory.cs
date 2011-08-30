@@ -10,8 +10,9 @@ using Epsitec.Cresus.Core.Library;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Workflows;
 
-namespace Epsitec.Cresus.Core.Controllers
+namespace Epsitec.Cresus.Core.Workflows
 {
 	public static class WorkflowFactory
 	{

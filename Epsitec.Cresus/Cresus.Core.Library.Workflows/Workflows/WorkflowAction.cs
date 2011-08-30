@@ -8,7 +8,7 @@ using Epsitec.Cresus.Core.Resolvers;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Controllers
+namespace Epsitec.Cresus.Core.Workflows
 {
 	/// <summary>
 	/// The <c>WorkflowAction</c> class implements the compilation and execution
@@ -195,7 +195,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			action = 
 				delegate
 				{
-					code.ForEach (x => x.Invoke (null, WorkflowAction.emptyParams));
+					try
+					{
+						code.ForEach (x => x.Invoke (null, WorkflowAction.emptyParams));
+					}
+					catch (System.Reflection.TargetInvocationException ex)
+					{
+						throw ex.InnerException;
+					}
 				};
 
 			return true;

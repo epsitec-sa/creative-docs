@@ -3,7 +3,7 @@
 
 using Epsitec.Common.Types;
 
-namespace Epsitec.Cresus.Core.Business
+namespace Epsitec.Cresus.Core.Workflows
 {
     [DesignerVisible]
     public enum WorkflowTransitionType

@@ -6,7 +6,7 @@ using Epsitec.Common.Types;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Controllers
+namespace Epsitec.Cresus.Core.Workflows
 {
 	/// <summary>
 	/// The <c>WorkflowActionValidationResult</c> class represents the validation result

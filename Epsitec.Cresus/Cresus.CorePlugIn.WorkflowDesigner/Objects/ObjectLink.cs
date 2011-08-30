@@ -12,6 +12,7 @@ using Epsitec.Cresus.Core.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using Epsitec.Cresus.Core.Workflows;
 
 namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 {
@@ -791,7 +792,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				if (this.dstObject != null && this.dstObject is ObjectEdge)
 				{
 					var edge = this.dstObject as ObjectEdge;
-					return edge.Entity.TransitionType == Core.Business.WorkflowTransitionType.Fork;
+					return edge.Entity.TransitionType == WorkflowTransitionType.Fork;
 				}
 
 				return false;

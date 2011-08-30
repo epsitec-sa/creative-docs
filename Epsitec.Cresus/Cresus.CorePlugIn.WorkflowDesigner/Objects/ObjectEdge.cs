@@ -13,6 +13,7 @@ using Epsitec.Cresus.Core.Resolvers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using Epsitec.Cresus.Core.Workflows;
 
 namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 {
@@ -177,7 +178,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private void CreateContinuationLink()
 		{
-			if (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Call)
+			if (this.Entity.TransitionType == WorkflowTransitionType.Call)
 			{
 				if (this.objectLinks.Count == 1)
 				{
@@ -208,9 +209,9 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		public override void ContextMenu()
 		{
-			this.editor.CreateMenuItem (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Default, "Normal", "Edge.Normal");
-			this.editor.CreateMenuItem (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Call,    "Call",   "Edge.Call");
-			this.editor.CreateMenuItem (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Fork,    "Fork",   "Edge.Fork");
+			this.editor.CreateMenuItem (this.Entity.TransitionType == WorkflowTransitionType.Default, "Normal", "Edge.Normal");
+			this.editor.CreateMenuItem (this.Entity.TransitionType == WorkflowTransitionType.Call,    "Call",   "Edge.Call");
+			this.editor.CreateMenuItem (this.Entity.TransitionType == WorkflowTransitionType.Fork,    "Fork",   "Edge.Fork");
 
 			this.editor.CreateMenuSeparator ();
 			this.editor.CreateMenuItem (this.colorFactory.ColorItem == ColorItem.Yellow, "Jaune",  "Edge.ColorYellow");
@@ -240,19 +241,19 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 			switch (name)
 			{
 				case "Edge.Normal":
-					this.Entity.TransitionType = Core.Business.WorkflowTransitionType.Default;
+					this.Entity.TransitionType = WorkflowTransitionType.Default;
 					this.CreateContinuationLink ();
 					this.editor.SetLocalDirty ();
 					break;
 
 				case "Edge.Call":
-					this.Entity.TransitionType = Core.Business.WorkflowTransitionType.Call;
+					this.Entity.TransitionType = WorkflowTransitionType.Call;
 					this.CreateContinuationLink ();
 					this.editor.SetLocalDirty ();
 					break;
 
 				case "Edge.Fork":
-					this.Entity.TransitionType = Core.Business.WorkflowTransitionType.Fork;
+					this.Entity.TransitionType = WorkflowTransitionType.Fork;
 					this.CreateContinuationLink ();
 					this.editor.SetLocalDirty ();
 					break;
@@ -1132,7 +1133,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 			graphics.Rasterizer.AddOutline (path, 2);
 			graphics.RenderSolid (colorFrame);
 
-			if (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Call)
+			if (this.Entity.TransitionType == WorkflowTransitionType.Call)
 			{
 				rect = this.bounds;
 				rect.Deflate (0, 3.5);
@@ -1143,7 +1144,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				graphics.RenderSolid (colorFrame);
 			}
 
-			if (this.Entity.TransitionType == Core.Business.WorkflowTransitionType.Fork)
+			if (this.Entity.TransitionType == WorkflowTransitionType.Fork)
 			{
 				rect = this.bounds;
 				rect.Inflate (2.5);

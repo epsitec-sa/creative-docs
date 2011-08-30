@@ -3,7 +3,7 @@
 
 using Epsitec.Common.Types;
 
-namespace Epsitec.Cresus.Core.Business
+namespace Epsitec.Cresus.Core.Workflows
 {
 	/// <summary>
 	/// The <c>WorkflowState</c> enumeration defines the states in which a workflow can be.

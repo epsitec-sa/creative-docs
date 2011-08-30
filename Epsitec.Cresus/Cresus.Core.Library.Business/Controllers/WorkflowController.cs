@@ -17,6 +17,7 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Workflows;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -217,9 +218,9 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private static bool IsActiveThread(WorkflowThreadEntity thread, string activeUserCode)
 		{
-			WorkflowState status = thread.State;
+			WorkflowState state = thread.State;
 
-			switch (status)
+			switch (state)
 			{
 				case WorkflowState.None:
 				case WorkflowState.Active:
@@ -235,7 +236,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					return thread.RestrictedUserCode == activeUserCode;
 
 				default:
-					throw new System.NotImplementedException (string.Format ("{0} not implemented", status.GetQualifiedName ()));
+					throw new System.NotImplementedException (string.Format ("{0} not implemented", state.GetQualifiedName ()));
 			}
 		}
 

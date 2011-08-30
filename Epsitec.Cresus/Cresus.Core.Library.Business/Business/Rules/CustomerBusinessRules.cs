@@ -7,6 +7,7 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Workflows;
 
 namespace Epsitec.Cresus.Core.Business.Rules
 {
