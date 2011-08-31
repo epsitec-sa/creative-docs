@@ -3,7 +3,7 @@
 
 namespace Epsitec.Cresus.Core.Library.Internal
 {
-	static internal class StringBuilderExtension
+	static internal class StringBuilderExtensions
 	{
 		public static char LastCharacter(this System.Text.StringBuilder builder)
 		{

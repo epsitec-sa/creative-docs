@@ -112,8 +112,8 @@
     <Compile Include="Resolvers\TextFormatterConverterResolver.cs" />
     <Compile Include="Resolvers\ResolutionMode.cs" />
     <Compile Include="Resources\Cresus.Core.Library\SourceCode\Res.cs" />
-    <Compile Include="Library\Internal\StringBuilderExtension.cs" />
-    <Compile Include="Library\Internal\StringExtension.cs" />
+    <Compile Include="Library\Internal\StringBuilderExtensions.cs" />
+    <Compile Include="Library\Internal\StringExtensions.cs" />
     <Compile Include="TextBuilder.cs" />
     <Compile Include="TextFormatter.cs" />
     <Compile Include="Library\UI\Constants.cs" />

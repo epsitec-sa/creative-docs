@@ -1,5 +1,5 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2006-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
@@ -242,16 +242,10 @@ namespace Epsitec.Common.Support
 
 			string name = string.Concat ("DynamicCode_Allocator_", type.Name);
 
-			System.Reflection.Module module = type.Module;
-			System.Reflection.Emit.DynamicMethod allocator = new System.Reflection.Emit.DynamicMethod (name, type, System.Type.EmptyTypes, module, true);
-			System.Reflection.Emit.ILGenerator generator = allocator.GetILGenerator ();
-			System.Reflection.ConstructorInfo constructor = type.GetConstructor (System.Type.EmptyTypes);
-
-			if (constructor == null)
-			{
-				throw new System.InvalidOperationException (string.Format ("Class {0} has no constructor", type.Name));
-			}
-
+			System.Reflection.Module             module      = type.Module;
+			System.Reflection.Emit.DynamicMethod allocator   = new System.Reflection.Emit.DynamicMethod (name, type, System.Type.EmptyTypes, module, true);
+			System.Reflection.Emit.ILGenerator   generator   = allocator.GetILGenerator ();
+			System.Reflection.ConstructorInfo    constructor = DynamicCodeFactory.GetBestParameterlessConstructor (type);
 			generator.Emit (OpCodes.Newobj, constructor);
 			generator.Emit (OpCodes.Ret);
 
@@ -502,10 +496,32 @@ namespace Epsitec.Common.Support
 		}
 
 
+		private static System.Reflection.ConstructorInfo GetBestParameterlessConstructor(System.Type type)
+		{
+			//	First, try to resolve the public parameterless constructor; if this fails, look
+			//	for a private parameterless constructor...
+			
+			var constructor = type.GetConstructor (System.Type.EmptyTypes);
+
+			if (constructor == null)
+			{
+				constructor = type.GetConstructor (DynamicCodeFactory.PrivateBindingFlags, System.Type.DefaultBinder, System.Type.EmptyTypes, null);
+
+				if (constructor == null)
+				{
+					throw new System.InvalidOperationException (string.Format ("Class {0} has no parameterless constructor", type.Name));
+				}
+			}
+
+			return constructor;
+		}
+
 		[System.ThreadStatic]
 		private static Dictionary<string, PropertyGetter> getterCache = new Dictionary<string, PropertyGetter> ();
 
 		[System.ThreadStatic]
 		private static Dictionary<string, PropertySetter> setterCache = new Dictionary<string, PropertySetter> ();
+
+		private const System.Reflection.BindingFlags PrivateBindingFlags = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
 	}
 }

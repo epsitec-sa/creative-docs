@@ -5,7 +5,7 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Library.Internal
 {
-	static internal class StringExtension
+	static internal class StringExtensions
 	{
 		public static char LastCharacter(this string text)
 		{

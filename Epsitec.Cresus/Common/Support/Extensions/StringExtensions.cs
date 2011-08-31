@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD & Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -131,7 +131,27 @@ namespace Epsitec.Common.Support.Extensions
 			return value.Split (new string[] { separator }, System.StringSplitOptions.None);
 		}
 
-		public static string SplitAtFirst(this string text, string separator)
+		public static string FirstToken(this string text, string separator)
+		{
+			if ((string.IsNullOrEmpty (text)) ||
+				(string.IsNullOrEmpty (separator)))
+			{
+				return "";
+			}
+			
+			int pos = text.IndexOf (separator);
+
+			if (pos < 0)
+			{
+				return text;
+			}
+			else
+			{
+				return text.Substring (0, pos);
+			}
+		}
+
+		public static string RemoveFirstToken(this string text, string separator)
 		{
 			if ((string.IsNullOrEmpty (text)) ||
 				(string.IsNullOrEmpty (separator)))
