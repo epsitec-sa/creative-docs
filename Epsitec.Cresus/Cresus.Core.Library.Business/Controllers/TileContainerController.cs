@@ -10,6 +10,7 @@ using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
+using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Orchestrators;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
@@ -22,6 +23,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers
 {
 	using LayoutContext=Epsitec.Common.Widgets.Layouts.LayoutContext;
+	using Epsitec.Cresus.Core.Orchestrators.Navigation;
 
 	/// <summary>
 	/// The <c>TileContainerController</c> populates a <see cref="TileContainer"/>
@@ -42,7 +44,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.refreshTimer = new Timer ()
 			{
 				AutoRepeat = 0.2,
-				Delay = 0.5,
+				Delay      = 0.5,
 			};
 
 			this.closeButton = UIBuilder.CreateColumnTileCloseButton (this.container);
@@ -105,7 +107,23 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public TileDataItem FindTileData(string name)
 		{
-			return this.liveItems.Where (x => x.Name == name).FirstOrDefault ();
+			long? id = NavigationPath.GetEntitySerialIdFromTileNavigationPathElementName (name);
+
+			if (id.HasValue)
+			{
+				var items = from item in this.liveItems
+							let marshaler = item.EntityMarshaler
+							where marshaler != null
+							let entity = marshaler.GetValue<AbstractEntity> ()
+							where entity.IsNotNull () && entity.GetEntitySerialId () == id.Value
+							select item;
+							
+				return items.FirstOrDefault ();
+			}
+			else
+			{
+				return this.liveItems.Where (x => x.Name == name).FirstOrDefault ();
+			}
 		}
 
 		public void GenerateTiles()

@@ -27,6 +27,16 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				this.entityKey   = entityKey;
 			}
 
+			private BrowserNavigationPathElement (string dataSetName, string entityKey)
+			{
+				this.dataSetName = dataSetName;
+				this.entityKey   = EntityKey.Parse (entityKey).Value;
+			}
+
+			private BrowserNavigationPathElement()
+			{
+			}
+
 			public override bool Navigate(NavigationOrchestrator navigator)
 			{
 				var browserViewController = navigator.BrowserViewController;
@@ -38,11 +48,28 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				return browserViewController.ReselectActiveEntity ();
 			}
 
-			public override string ToString()
+			protected override string Serialize()
 			{
-				return string.Concat ("<Browser:", this.dataSetName, ":", this.entityKey.RowKey.ToString (), ">");
+				return string.Concat (BrowserNavigationPathElement.ClassIdPrefix, this.dataSetName, ".", this.entityKey.ToString (), ">");
 			}
 
+			protected override NavigationPathElement Deserialize(string data)
+			{
+				if (data.StartsWith (BrowserNavigationPathElement.ClassIdPrefix))
+				{
+					var text = data.Substring (BrowserNavigationPathElement.ClassIdPrefix.Length);
+					int pos  = text.IndexOf ('.');
+
+					if (pos > 0)
+					{
+						return new BrowserNavigationPathElement (text.Substring (0, pos), text.Substring (pos+1));
+					}
+				}
+				
+				throw new System.FormatException (string.Format ("Invalid format; expected '{0}DataSet.EntityKey', got '{1}'", BrowserNavigationPathElement.ClassIdPrefix, data));
+			}
+
+			private const string				ClassIdPrefix = "Browser:";
 
 			private readonly string				dataSetName;
 			private readonly EntityKey			entityKey;

@@ -25,6 +25,9 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 			this.name = name;
 		}
 
+		private TileNavigationPathElement()
+		{
+		}
 
 		/// <summary>
 		/// Navigates to this element using the specified navigator.
@@ -38,12 +41,24 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 			return navigator.GetLeafClickSimulator ().SimulateClick (this.name);
 		}
 
-		public override string ToString()
+		protected override NavigationPathElement Deserialize(string data)
 		{
-			return string.Concat ("<Tile:", this.name, ">");
+			if (data.StartsWith (TileNavigationPathElement.ClassIdPrefix))
+			{
+				return new TileNavigationPathElement (data.Substring (TileNavigationPathElement.ClassIdPrefix.Length));
+			}
+
+			throw new System.FormatException (string.Format ("Invalid format; expected prefix '{0}'", TileNavigationPathElement.ClassIdPrefix));			
 		}
 
+		protected override string Serialize()
+		{
+			return string.Concat (TileNavigationPathElement.ClassIdPrefix, this.name);
+		}
+
+
+		private const string					ClassIdPrefix = "Tile:";
 		
-		private readonly string name;
+		private readonly string					name;
 	}
 }

@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Core.Workflows
 			this.transition      = transition;
 			this.data            = this.transition.BusinessContext.Data;
 			this.businessContext = this.transition.BusinessContext;
+			this.associatedItems = new List<object> ();
 		}
 
 
@@ -73,6 +74,21 @@ namespace Epsitec.Cresus.Core.Workflows
 			}
 		}
 
+
+		public void Associate(WorkflowExecutionEngine engine)
+		{
+			this.associatedItems.AddRange (engine.associatedItems);
+		}
+
+		public void Associate(object value)
+		{
+			this.associatedItems.Add (value);
+		}
+
+		public T GetAssociated<T>()
+		{
+			return this.associatedItems.OfType<T> ().FirstOrDefault ();
+		}
 
 		/// <summary>
 		/// Executes one step in the workflow (this might include several edges/nodes, as
@@ -330,6 +346,7 @@ namespace Epsitec.Cresus.Core.Workflows
 
 			using (var engine = new WorkflowExecutionEngine (transition))
 			{
+				engine.Associate (this);
 				engine.Execute (() => WorkflowExecutionEngine.ExecuteArc (forkThread, executor, arc));
 			}
 
@@ -458,6 +475,7 @@ namespace Epsitec.Cresus.Core.Workflows
 		private readonly WorkflowTransition		transition;
 		private readonly CoreData				data;
 		private readonly IBusinessContext		businessContext;
+		private readonly List<object>			associatedItems;
 		private Logic							businessLogic;
 		private bool							isDisposed;
 	}

@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -41,5 +41,20 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 		}
 
 		#endregion
+
+		public override string ToString()
+		{
+			 return string.Concat ("<", this.Serialize (), ">");
+		}
+
+
+		internal NavigationPathElement InternalDeserialize(string value)
+		{
+			return this.Deserialize (value);
+		}
+
+		protected abstract string Serialize();
+
+		protected abstract NavigationPathElement Deserialize(string data);
 	}
 }

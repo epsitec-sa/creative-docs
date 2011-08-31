@@ -102,9 +102,9 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void MakeDirty()
 		{
 			if (this.isDirty)
-            {
+			{
 				return;
-            }
+			}
 
 			this.isDirty = true;
 			this.QueueAsyncUpdate ();
@@ -185,10 +185,16 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			using (var engine = new WorkflowExecutionEngine (transition))
 			{
+				engine.Associate (this.orchestrator.Navigator);
 				engine.Execute ();
 			}
-			
-			orchestrator.Navigator.PreserveNavigation (() => orchestrator.ClearActiveEntity ());
+
+			this.RefreshNavigation ();
+		}
+
+		private void RefreshNavigation()
+		{
+			this.orchestrator.Navigator.PreserveNavigation (() => this.orchestrator.ClearActiveEntity ());
 		}
 
 		private void HandleBusinessContextMasterEntitiesChanged(object sender)

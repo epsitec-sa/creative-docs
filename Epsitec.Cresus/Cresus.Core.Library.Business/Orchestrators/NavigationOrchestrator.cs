@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -18,6 +18,7 @@ using Epsitec.Cresus.DataLayer;
 
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace Epsitec.Cresus.Core.Orchestrators
 {
@@ -72,6 +73,20 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 
 		/// <summary>
+		/// Navigates to the tiles defined by the entities, starting from the currently
+		/// selected entity.
+		/// </summary>
+		/// <param name="entities">The entities (excluding the one selected in the browser).</param>
+		public void NavigateToTiles(params AbstractEntity[] entities)
+		{
+			var activePath = this.GetLeafNavigationPath ();
+			var activeRoot = activePath.Root;
+			var newPath    = NavigationPath.CreateTileNavigationPath (activeRoot, entities);
+
+			newPath.Navigate (this);
+		}
+
+        /// <summary>
 		/// Adds a node in the navigation history for the controller which was just
 		/// opened.
 		/// </summary>
@@ -114,9 +129,9 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			System.Diagnostics.Debug.Assert (controller != null);
 
 			if (controller.NavigationPathElement == null)
-            {
+			{
 				return;
-            }
+			}
 			
 			this.RecordStateBeforeChange ();
 			
