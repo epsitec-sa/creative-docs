@@ -8,11 +8,11 @@ using Epsitec.Cresus.Core.Business.Rules;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Orchestrators;
 using Epsitec.Cresus.Core.Workflows;
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Epsitec.Cresus.Core.Business.Actions
 {
@@ -64,7 +64,8 @@ namespace Epsitec.Cresus.Core.Business.Actions
 
 		private static void CreateAndFocusDocument(DocumentType newDocumentType, System.Action<AffairEntity, DocumentMetadataEntity> setupAction = null)
 		{
-			var businessContext  = WorkflowExecutionEngine.Current.BusinessContext;
+			var workflowEngine   = WorkflowExecutionEngine.Current;
+			var businessContext  = workflowEngine.BusinessContext;
 			var activeAffair     = AffairActions.GetActiveAffair ();
 			var activeVariantId  = WorkflowArgs.GetActiveVariantId ().GetValueOrDefault ();
 			var documentMetadata = BusinessDocumentBusinessRules.CreateDocument (businessContext, activeAffair, activeVariantId, newDocumentType);
@@ -75,6 +76,8 @@ namespace Epsitec.Cresus.Core.Business.Actions
 			}
 
 			WorkflowArgs.SetActiveVariantId (documentMetadata.BusinessDocument.VariantId);
+
+			workflowEngine.GetAssociated<NavigationOrchestrator> ().NavigateToTiles (activeAffair, documentMetadata);
 		}
 
 		private static void SetupVariantAndBindWithDocument(AffairEntity affair, DocumentMetadataEntity document)

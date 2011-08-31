@@ -3,6 +3,8 @@
 
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Orchestrators;
+using Epsitec.Cresus.Core.Orchestrators.Navigation;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -56,6 +58,8 @@ namespace Epsitec.Cresus.Core.Business.Actions
 			businessContext.RemoveMasterEntity (businessDocument);
 			businessContext.RemoveMasterEntity (documentMetadata);
 			businessContext.RemoveMasterEntity (affair);
+
+			workflowEngine.GetAssociated<NavigationOrchestrator> ().NavigateToTiles (affair, documentMetadata);
 		}
 
 		private static bool SetupDocumentMetadata(IBusinessContext businessContext, DocumentMetadataEntity documentMetadata, BusinessDocumentEntity businessDocument, DocumentType documentType)
