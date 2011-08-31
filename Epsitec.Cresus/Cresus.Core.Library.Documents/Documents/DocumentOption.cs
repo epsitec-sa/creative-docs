@@ -34,28 +34,34 @@ namespace Epsitec.Cresus.Core.Documents
 		HeaderFromTop,					// distance
 		HeaderFromWidth,				// distance
 		HeaderFromHeight,				// distance
+		HeaderFromFontSize,				// dimension: taille de la police
 
 		HeaderForLeft,					// distance: concerne
 		HeaderForTop,					// distance
 		HeaderForWidth,					// distance
 		HeaderForHeight,				// distance
+		HeaderForFontSize,				// dimension: taille de la police
 
 		HeaderNumberLeft,				// distance: numéro de facture
 		HeaderNumberTop,				// distance
 		HeaderNumberWidth,				// distance
 		HeaderNumberHeight,				// distance
+		HeaderNumberFontSize,			// dimension: taille de la police
 
 		HeaderToLeft,					// distance: adresse destinataire
 		HeaderToTop,					// distance
 		HeaderToWidth,					// distance
 		HeaderToHeight,					// distance
+		HeaderToFontSize,				// dimension: taille de la police
 
 		HeaderLocDateLeft,				// distance: localité, le xxx
 		HeaderLocDateTop,				// distance
 		HeaderLocDateWidth,				// distance
 		HeaderLocDateHeight,			// distance
+		HeaderLocDateFontSize,			// dimension: taille de la police
 
 		TableTopAfterHeader,			// distance
+		TableFontSize,					// dimension: taille de la police
 		
 		LayoutFrame,					// enum: Frameless, WithLine, WithFrame
 		GapBeforeGroup,					// bool
@@ -73,6 +79,7 @@ namespace Epsitec.Cresus.Core.Documents
 		IsrFacsimile,					// bool
 
 		Signing,						// bool
+		SigningFontSize,				// dimension: taille de la police
 
 		RelationMail,					// bool
 		RelationTelecom,				// bool

@@ -310,8 +310,15 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 		protected bool HasOption(DocumentOption option, string value)
 		{
 			//	Indique si une option de type énumération est choisie.
-			if (this.options == null)
+			if (this.options == null || !this.options.ContainsOption (option))
 			{
+				var defaultOption = AbstractPrinter.verboseDocumentOptions.Where (x => x.Option == option).FirstOrDefault ();
+
+				if (defaultOption != null)
+				{
+					return defaultOption.DefaultValue == "true";
+				}
+				
 				return false;
 			}
 			else

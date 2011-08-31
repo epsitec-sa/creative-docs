@@ -192,7 +192,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					var textBand = new TextBand ();
 					textBand.Text = settings.Company.DefaultMailContact.GetSummary ();
 					textBand.Font = AbstractDocumentMetadataPrinter.font;
-					textBand.FontSize = this.FontSize;
+					textBand.FontSize = this.GetOptionValue (DocumentOption.HeaderFromFontSize);
 					this.documentContainer.AddAbsolute (textBand, rect);
 				}
 			}
@@ -206,7 +206,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					var mailContactBand = new TextBand ();
 					mailContactBand.Text = this.Entity.BillToMailContact.GetSummary ();
 					mailContactBand.Font = AbstractDocumentMetadataPrinter.font;
-					mailContactBand.FontSize = this.FontSize;
+					mailContactBand.FontSize = this.GetOptionValue (DocumentOption.HeaderToFontSize);
 					this.documentContainer.AddAbsolute (mailContactBand, rect);
 				}
 			}
@@ -232,7 +232,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					titleBand.Text = this.Title;
 					titleBand.BreakMode = TextBreakMode.SingleLine | TextBreakMode.Split | TextBreakMode.Ellipsis;
 					titleBand.Font = font;
-					titleBand.FontSize = this.FontSize*1.6;
+					titleBand.FontSize = this.GetOptionValue (DocumentOption.HeaderNumberFontSize);
 					this.documentContainer.AddAbsolute (titleBand, rect);
 				}
 			}
@@ -248,70 +248,10 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					var dateBand = new TextBand ();
 					dateBand.Text = (location == null) ? FormattedText.Concat ("Le ", date) : FormattedText.Concat (location, ", le ", date);
 					dateBand.Font = font;
-					dateBand.FontSize = this.FontSize;
+					dateBand.FontSize = this.GetOptionValue (DocumentOption.HeaderLocDateFontSize);
 					this.documentContainer.AddAbsolute (dateBand, rect);
 				}
 			}
-
-#if false
-			if (this.HasOption (DocumentOption.HeaderLogo))
-			{
-				if (settings.CompanyLogo.IsNotNull ())
-				{
-					//	Génère l'image du logo de l'entreprise.
-					var imageBand = new ImageBand ();
-					imageBand.Load (this.coreData, settings.CompanyLogo);
-					imageBand.BuildSections (80, 40, 40, 40);
-					this.documentContainer.AddAbsolute (imageBand, new Rectangle (leftMargin, this.RequiredPageSize.Height-10-40, 80, 40));
-
-					//	Génère l'adresse de l'entreprise.
-					if (settings.Company.IsNotNull ())
-					{
-						var textBand = new TextBand ();
-						textBand.Text = settings.Company.DefaultMailContact.GetSummary ();
-						textBand.Font = AbstractDocumentMetadataPrinter.font;
-						textBand.FontSize = this.FontSize;
-						this.documentContainer.AddAbsolute (textBand, new Rectangle (leftMargin, this.RequiredPageSize.Height-10-imageBand.GetSectionHeight (0)-20, 80, 20));
-					}
-				}
-			}
-
-			//	Génère l'adresse du client.
-			double m = this.RequiredPageSize.Width-10-80;
-
-			var mailContactBand = new TextBand ();
-			mailContactBand.Text = this.Entity.BillToMailContact.GetSummary ();
-			mailContactBand.Font = AbstractDocumentMetadataPrinter.font;
-			mailContactBand.FontSize = this.FontSize;
-			this.documentContainer.AddAbsolute (mailContactBand, new Rectangle (m, this.RequiredPageSize.Height-84, 80, 35));
-
-			//	Génère le groupe "concerne".
-			{
-				var band = this.BuildConcerne ();
-
-				if (band != null)
-				{
-					this.documentContainer.AddAbsolute (band, new Rectangle (leftMargin, this.RequiredPageSize.Height-70, m-leftMargin-10, 12));
-				}
-			}
-
-			//	Génère le groupe "numéro de facture".
-			var titleBand = new TextBand ();
-			titleBand.Text = this.Title;
-			titleBand.BreakMode = TextBreakMode.SingleLine | TextBreakMode.Split | TextBreakMode.Ellipsis;
-			titleBand.Font = font;
-			titleBand.FontSize = this.FontSize*1.6;
-			this.documentContainer.AddAbsolute (titleBand, new Rectangle (leftMargin, this.RequiredPageSize.Height-82, m-leftMargin-2, 10));
-
-			//	Génère le groupe "localité et date".
-			string date = Misc.GetDateShortDescription (this.Entity.BillingDate);
-			var location = this.DefaultLocation;
-			var dateBand = new TextBand ();
-			dateBand.Text = (location == null) ? FormattedText.Concat ("Le ", date) : FormattedText.Concat (location, ", le ", date);
-			dateBand.Font = font;
-			dateBand.FontSize = this.FontSize;
-			this.documentContainer.AddAbsolute (dateBand, new Rectangle (m, this.RequiredPageSize.Height-82, 80, 10-2));
-#endif
 		}
 
 		private Rectangle GetOptionRectangle(DocumentOption firstOption)
@@ -532,7 +472,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				text = accessor.GetContent (0, DocumentItemAccessorColumn.FullNumber);
 			}
 
-			this.table.SetText (this.tableColumns[TableColumnKeys.LineNumber].Rank, row, text, this.FontSize);
+			this.table.SetText (this.tableColumns[TableColumnKeys.LineNumber].Rank, row, text, this.GetOptionValue (DocumentOption.TableFontSize));
 
 			var topGap = 0;  // pas d'espace supplémentaire
 
@@ -638,17 +578,19 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			else
 			{
 				var band = new TableBand ();
+				var fontSize = this.GetOptionValue (DocumentOption.HeaderForFontSize);
+				firstColumnWidth *= fontSize/3;
 
 				band.ColumnsCount = 2;
 				band.RowsCount = 1;
 				band.CellBorder = CellBorder.Empty;
 				band.Font = AbstractDocumentMetadataPrinter.font;
-				band.FontSize = this.FontSize;
+				band.FontSize = fontSize;
 				band.CellMargins = new Margins (0);
 				band.SetRelativeColumWidth (0, firstColumnWidth);
 				band.SetRelativeColumWidth (1, width-firstColumnWidth);
-				band.SetText (0, 0, "Concerne", this.FontSize);
-				band.SetText (1, 0, text, this.FontSize);
+				band.SetText (0, 0, "Concerne", fontSize);
+				band.SetText (1, 0, text, fontSize);
 				band.SetBackground (1, 0, Color.Empty);
 
 				return band;
@@ -828,13 +770,13 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				this.InitializeRowAlignment (table, 0);
 
 				//	Génère une deuxième ligne avec les montants à reporter.
-				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, 1, "Report", this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, 1, "Report", this.GetOptionValue (DocumentOption.TableFontSize));
 
 				decimal sumPT, sumTva, sumTot;
 				this.ComputeBottomReports (relativePage-1, out sumPT, out sumTva, out sumTot);
-				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, 1, Misc.PriceToString (sumPT),  this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.Vat      ].Rank, 1, Misc.PriceToString (sumTva), this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.Total    ].Rank, 1, Misc.PriceToString (sumTot), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, 1, Misc.PriceToString (sumPT),  this.GetOptionValue (DocumentOption.TableFontSize));
+				table.SetText (this.tableColumns[TableColumnKeys.Vat      ].Rank, 1, Misc.PriceToString (sumTva), this.GetOptionValue (DocumentOption.TableFontSize));
+				table.SetText (this.tableColumns[TableColumnKeys.Total    ].Rank, 1, Misc.PriceToString (sumTot), this.GetOptionValue (DocumentOption.TableFontSize));
 				this.InitializeRowAlignment (table, 1);
 
 				var tableBound = this.tableBounds[relativePage];
@@ -872,13 +814,13 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				this.SetCellBorder (table, 0, this.GetCellBorder (topBold: true));
 				this.InitializeRowAlignment (table, 0);
 
-				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, 0, "à reporter", this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, 0, "à reporter", this.GetOptionValue (DocumentOption.TableFontSize));
 
 				decimal sumPT, sumTva, sumTot;
 				this.ComputeBottomReports (relativePage, out sumPT, out sumTva, out sumTot);
-				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, 0, Misc.PriceToString (sumPT),  this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.Vat      ].Rank, 0, Misc.PriceToString (sumTva), this.FontSize);
-				table.SetText (this.tableColumns[TableColumnKeys.Total    ].Rank, 0, Misc.PriceToString (sumTot), this.FontSize);
+				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, 0, Misc.PriceToString (sumPT),  this.GetOptionValue (DocumentOption.TableFontSize));
+				table.SetText (this.tableColumns[TableColumnKeys.Vat      ].Rank, 0, Misc.PriceToString (sumTva), this.GetOptionValue (DocumentOption.TableFontSize));
+				table.SetText (this.tableColumns[TableColumnKeys.Total    ].Rank, 0, Misc.PriceToString (sumTot), this.GetOptionValue (DocumentOption.TableFontSize));
 
 				var tableBound = this.tableBounds[relativePage];
 				double h = table.RequiredHeight (width);
@@ -959,7 +901,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 						table.SetColumnSpan (column.Rank, row, 3);
 					}
 
-					table.SetText (column.Rank, row, column.Title, this.FontSize);
+					table.SetText (column.Rank, row, column.Title, this.GetOptionValue (DocumentOption.TableFontSize));
 				}
 			}
 		}
@@ -982,7 +924,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 			if (this.GetColumnVisibility (columnKey))
 			{
-				this.table.SetText (this.tableColumns[columnKey].Rank, row, text, this.FontSize);
+				this.table.SetText (this.tableColumns[columnKey].Rank, row, text, this.GetOptionValue (DocumentOption.TableFontSize));
 			}
 		}
 

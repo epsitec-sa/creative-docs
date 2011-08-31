@@ -51,23 +51,29 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				yield return DocumentOption.HeaderFromTop;
 				yield return DocumentOption.HeaderFromWidth;
 				yield return DocumentOption.HeaderFromHeight;
+				yield return DocumentOption.HeaderFromFontSize;
 				yield return DocumentOption.HeaderForLeft;
 				yield return DocumentOption.HeaderForTop;
 				yield return DocumentOption.HeaderForWidth;
 				yield return DocumentOption.HeaderForHeight;
+				yield return DocumentOption.HeaderForFontSize;
 				yield return DocumentOption.HeaderNumberLeft;
 				yield return DocumentOption.HeaderNumberTop;
 				yield return DocumentOption.HeaderNumberWidth;
 				yield return DocumentOption.HeaderNumberHeight;
+				yield return DocumentOption.HeaderNumberFontSize;
 				yield return DocumentOption.HeaderToLeft;
 				yield return DocumentOption.HeaderToTop;
 				yield return DocumentOption.HeaderToWidth;
 				yield return DocumentOption.HeaderToHeight;
+				yield return DocumentOption.HeaderToFontSize;
 				yield return DocumentOption.HeaderLocDateLeft;
 				yield return DocumentOption.HeaderLocDateTop;
 				yield return DocumentOption.HeaderLocDateWidth;
 				yield return DocumentOption.HeaderLocDateHeight;
+				yield return DocumentOption.HeaderLocDateFontSize;
 				yield return DocumentOption.TableTopAfterHeader;
+				yield return DocumentOption.TableFontSize;
 
 				yield return DocumentOption.Specimen;
 				yield return DocumentOption.FontSize;
@@ -84,6 +90,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				yield return DocumentOption.ColumnsOrder;
 
 				yield return DocumentOption.Signing;
+				yield return DocumentOption.SigningFontSize;
 			}
 		}
 
@@ -156,17 +163,19 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			else
 			{
 				var band = new TableBand ();
+				var fontSize = this.GetOptionValue (DocumentOption.HeaderForFontSize);
+				firstColumnWidth *= fontSize/3;
 
 				band.ColumnsCount = 2;
 				band.RowsCount = 1;
 				band.CellBorder = CellBorder.Default;
 				band.Font = AbstractDocumentMetadataPrinter.font;
-				band.FontSize = this.FontSize;
+				band.FontSize = fontSize;
 				band.CellMargins = new Margins (1);
 				band.SetRelativeColumWidth (0, firstColumnWidth);
 				band.SetRelativeColumWidth (1, width-firstColumnWidth);
-				band.SetText (0, 0, "Atelier", this.FontSize);
-				band.SetText (1, 0, FormattedText.FromSimpleText (this.currentGroup.Name.ToSimpleText ()).ApplyBold (), this.FontSize);
+				band.SetText (0, 0, "Atelier", fontSize);
+				band.SetText (1, 0, FormattedText.FromSimpleText (this.currentGroup.Name.ToSimpleText ()).ApplyBold (), fontSize);
 				band.SetBackground (1, 0, Color.FromBrightness (0.9));
 
 				return band;
@@ -264,17 +273,18 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			if (this.HasOption (DocumentOption.Signing))
 			{
 				var table = new TableBand ();
+				var fontSize = this.GetOptionValue (DocumentOption.SigningFontSize);
 
 				table.ColumnsCount = 2;
 				table.RowsCount = 1;
 				table.CellBorder = CellBorder.Default;
 				table.Font = font;
-				table.FontSize = this.FontSize;
+				table.FontSize = fontSize;
 				table.CellMargins = new Margins (2);
 				table.SetRelativeColumWidth (0, 60);
 				table.SetRelativeColumWidth (1, 100);
-				table.SetText (0, 0, new FormattedText ("Matériel produit en totalité"), this.FontSize);
-				table.SetText (1, 0, new FormattedText ("Terminé le :<br/><br/>Par :<br/><br/>Signature :<br/><br/><br/>"), this.FontSize);
+				table.SetText (0, 0, new FormattedText ("Matériel produit en totalité"), fontSize);
+				table.SetText (1, 0, new FormattedText ("Terminé le :<br/><br/>Par :<br/><br/>Signature :<br/><br/><br/>"), fontSize);
 				table.SetUnbreakableRow (0, true);
 
 				this.documentContainer.AddToBottom (table, this.PageMargins.Bottom);
