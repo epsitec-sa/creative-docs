@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			get
 			{
 				if (this.businessContext == null)
-                {
+				{
 					this.CreateNewBusinessContext ();
 				}
 
@@ -268,6 +268,11 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		}
 
 
+		/// <summary>
+		/// Registers the component with the hosting application.
+		/// </summary>
+		/// <typeparam name="T">The type of the component.</typeparam>
+		/// <param name="component">The component.</param>
 		public void RegisterApplicationComponent<T>(T component)
 			where T : ICoreManualComponent
 		{

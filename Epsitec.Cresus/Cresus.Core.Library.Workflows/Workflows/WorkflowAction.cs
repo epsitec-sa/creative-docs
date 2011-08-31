@@ -131,9 +131,9 @@ namespace Epsitec.Cresus.Core.Workflows
 			var result = action.Compile (lines);
 			
 			if (result.IsValid)
-            {
+			{
 				return action;
-            }
+			}
 
 			throw new System.FormatException ("Invalid WorkflowAction source");
 		}
@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Core.Workflows
 
 		private static bool ValidateAndCompile(string[] lines, out WorkflowActionValidationResult result, out System.Action action)
 		{
-			List<System.Reflection.MethodInfo> code = new List<System.Reflection.MethodInfo> ();
+			var methods = new List<System.Reflection.MethodInfo> ();
 
 			action = null;
 			result = new WorkflowActionValidationResult ();
@@ -168,14 +168,14 @@ namespace Epsitec.Cresus.Core.Workflows
 					if (actionType == null)
 					{
 						result.AddError (i+1, string.Concat ("cannot resolve class ", actionClass));
-                    }
+					}
 					else if (memberInfo == null)
 					{
 						result.AddError (i+1, string.Concat ("cannot resolve verb ", actionVerb, " for class ", actionClass));
 					}
 					else
 					{
-						code.Add (memberInfo);
+						methods.Add (memberInfo);
 					}
 				}
 				else
@@ -197,7 +197,7 @@ namespace Epsitec.Cresus.Core.Workflows
 				{
 					try
 					{
-						code.ForEach (x => x.Invoke (null, WorkflowAction.emptyParams));
+						methods.ForEach (x => x.Invoke (null, WorkflowAction.emptyParams));
 					}
 					catch (System.Reflection.TargetInvocationException ex)
 					{

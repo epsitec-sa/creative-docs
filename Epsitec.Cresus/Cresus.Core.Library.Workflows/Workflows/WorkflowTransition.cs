@@ -74,15 +74,6 @@ namespace Epsitec.Cresus.Core.Workflows
 		}
 
 
-		public string GetThreadTransitionId()
-		{
-			var threadCode = (string) this.thread.Code;
-			var edgeCode   = (string) this.edge.Code;
-
-			return string.Concat (threadCode ?? "<null>", " ", edgeCode ?? "<null>");
-		}
-
-		
 		private readonly IBusinessContext		businessContext;
 		private readonly WorkflowEntity			workflow;
 		private readonly WorkflowThreadEntity	thread;

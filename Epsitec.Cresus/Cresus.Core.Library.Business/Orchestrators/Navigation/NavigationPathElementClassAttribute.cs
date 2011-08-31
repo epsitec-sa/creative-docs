@@ -8,6 +8,12 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 {
+	/// <summary>
+	/// The <c>NavigationPathElementClassAttribute</c> attribute is used to
+	/// decorate classes derived from <see cref="NavigationPathElement"/>,
+	/// so that the <see cref="NavigationPathElementClassFactory"/> can
+	/// easily spot and instantiate them.
+	/// </summary>
 	[System.AttributeUsage (System.AttributeTargets.Assembly, AllowMultiple=true)]
 	public sealed class NavigationPathElementClassAttribute : System.Attribute, IPlugInAttribute<string>
 	{

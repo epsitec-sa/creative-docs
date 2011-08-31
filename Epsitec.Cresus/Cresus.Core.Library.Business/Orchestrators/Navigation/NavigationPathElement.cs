@@ -48,13 +48,28 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 		}
 
 
+		/// <summary>
+		/// Calls the overloaded, protected, deserializer.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The deserialized navigation path element.</returns>
 		internal NavigationPathElement InternalDeserialize(string value)
 		{
 			return this.Deserialize (value);
 		}
 
+		/// <summary>
+		/// Serializes this navigation path element to a string.
+		/// </summary>
+		/// <returns>The serialized navigation path element.</returns>
 		protected abstract string Serialize();
 
+		/// <summary>
+		/// Deserializes the specified string and returns a navigation path
+		/// element.
+		/// </summary>
+		/// <param name="data">The serialized data.</param>
+		/// <returns>The navigation path element.</returns>
 		protected abstract NavigationPathElement Deserialize(string data);
 	}
 }

@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			if (dir == TabNavigationDir.Backwards ||
 				dir == TabNavigationDir.Forwards  )
-            {
+			{
 				var e = new TabNavigateEventArgs (dir);
 				var window = this.Window;
 
@@ -133,7 +133,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				{
 					return result;
 				}
-            }
+			}
 			
 			return base.TabNavigate (index, dir, siblings);
 		}

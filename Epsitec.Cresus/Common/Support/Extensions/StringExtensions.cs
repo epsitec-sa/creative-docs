@@ -131,6 +131,13 @@ namespace Epsitec.Common.Support.Extensions
 			return value.Split (new string[] { separator }, System.StringSplitOptions.None);
 		}
 
+		/// <summary>
+		/// Gets the first token found in the text; the text gets split at every
+		/// occurrence of the separator.
+		/// </summary>
+		/// <param name="text">The text.</param>
+		/// <param name="separator">The separator.</param>
+		/// <returns>The first token found in the text. If the text is <c>null</c>, returns an empty string.</returns>
 		public static string FirstToken(this string text, string separator)
 		{
 			if ((string.IsNullOrEmpty (text)) ||
@@ -151,6 +158,13 @@ namespace Epsitec.Common.Support.Extensions
 			}
 		}
 
+		/// <summary>
+		/// Removes the first token in the text; the text gets split at every
+		/// occurrence of the separator.
+		/// </summary>
+		/// <param name="text">The text.</param>
+		/// <param name="separator">The separator.</param>
+		/// <returns>The text without the first token. If the text is <c>null</c>, returns an empty string.</returns>
 		public static string RemoveFirstToken(this string text, string separator)
 		{
 			if ((string.IsNullOrEmpty (text)) ||

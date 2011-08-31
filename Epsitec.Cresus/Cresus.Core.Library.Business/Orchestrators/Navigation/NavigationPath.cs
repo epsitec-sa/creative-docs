@@ -38,6 +38,9 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 		}
 
 
+		/// <summary>
+		/// Gets the root element, if any; <c>null</c> otherwise.
+		/// </summary>
 		public NavigationPathElement			Root
 		{
 			get
@@ -158,6 +161,13 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 
 		#endregion
 
+		/// <summary>
+		/// Creates a full navigation path based on a root element and several entities
+		/// which will select the appropriate tiles.
+		/// </summary>
+		/// <param name="root">The root.</param>
+		/// <param name="entities">The entities.</param>
+		/// <returns>The full navigation path.</returns>
 		public static NavigationPath CreateTileNavigationPath(NavigationPathElement root, params AbstractEntity[] entities)
 		{
 			NavigationPath path = new NavigationPath ();
@@ -199,17 +209,24 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 				return null;
 			}
 		}
-		
-		public static NavigationPathElement CreateTileNavigationPathElement(string name)
-		{
-			return NavigationPathElementClassFactory.Parse (string.Concat ("<", "Tile:", name, ">"));
-		}
-		
+
+		/// <summary>
+		/// Parses the specified value into a <see cref="NavigationPath"/>.
+		/// </summary>
+		/// <param name="value">The serialized representation of a <see cref="NavigationPath"/>.</param>
+		/// <returns>The navigation path.</returns>
 		public static NavigationPath Parse(string value)
 		{
 			string[] tokens = value.Split (" / ");
 			return new NavigationPath (tokens.Select (x => NavigationPathElementClassFactory.Parse (x)));
 		}
+
+	
+		private static NavigationPathElement CreateTileNavigationPathElement(string name)
+		{
+			return NavigationPathElementClassFactory.Parse (string.Concat ("<", "Tile:", name, ">"));
+		}
+
 
 		private readonly List<NavigationPathElement> elements;
 		private string frozen;

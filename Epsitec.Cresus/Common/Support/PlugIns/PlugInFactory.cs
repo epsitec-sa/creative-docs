@@ -27,7 +27,7 @@ namespace Epsitec.Common.Support.PlugIns
 		/// <summary>
 		/// Creates an instance of the specified class.
 		/// </summary>
-		/// <param name="id">The id of the class to instanciate.</param>
+		/// <param name="id">The id of the class to instantiate.</param>
 		/// <returns>The instance of the specified class.</returns>
 		protected static TClass CreateInstance(TId id)
 		{
@@ -41,6 +41,34 @@ namespace Epsitec.Common.Support.PlugIns
 			else
 			{
 				return default (TClass);
+			}
+		}
+
+		/// <summary>
+		/// Gets the (singleton) template instance for the specified type.
+		/// </summary>
+		/// <param name="id">The id of the class to instantiate.</param>
+		/// <returns>The instance of the specified class.</returns>
+		protected static TClass GetTemplateInstance(TId id)
+		{
+			Record record;
+
+			if (PlugInFactory<TClass, TAttribute, TId>.types.TryGetValue (id, out record))
+			{
+				if (record.Template == null)
+				{
+					lock (record)
+					{
+						var allocator = record.GetAllocator<Support.Allocator<TClass>> (type => Support.DynamicCodeFactory.CreateAllocator<TClass> (type));
+						record.Template = allocator ();
+					}
+				}
+
+				return (TClass) record.Template;
+			}
+			else
+			{
+				throw new System.InvalidOperationException (string.Format ("Cannot find class for id '{0}'", id));
 			}
 		}
 
@@ -207,6 +235,18 @@ namespace Epsitec.Common.Support.PlugIns
 				}
 			}
 
+			public object Template
+			{
+				get
+				{
+					return this.template;
+				}
+				set
+				{
+					this.template = value;
+				}
+			}
+
 			public TAlloc GetAllocator<TAlloc>(System.Func<System.Type, TAlloc> getAllocator)
 			{
 				if (this.allocator == null)
@@ -226,6 +266,7 @@ namespace Epsitec.Common.Support.PlugIns
 			private readonly object				exclusion;
 			private readonly System.Type		type;
 			private object						allocator;
+			private object						template;
 		}
 
 		#endregion

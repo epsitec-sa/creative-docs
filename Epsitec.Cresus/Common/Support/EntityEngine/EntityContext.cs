@@ -342,12 +342,12 @@ namespace Epsitec.Common.Support.EntityEngine
 			var initializer = entity as IEntityInitializer;
 
 			if (initializer != null)
-            {
+			{
 				using (entity.DefineOriginalValues ())
 				{
 					initializer.InitializeDefaultValues ();
 				}
-            }
+			}
 		}
 
 		/// <summary>

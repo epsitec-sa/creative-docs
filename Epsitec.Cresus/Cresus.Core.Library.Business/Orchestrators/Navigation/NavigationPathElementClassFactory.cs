@@ -9,8 +9,17 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 {
+	/// <summary>
+	/// The <c>NavigationPathElementClassFactory</c> class is used to instantiate
+	/// <see cref="NavigationPathElement"/> instances based on serialized values.
+	/// </summary>
 	public class NavigationPathElementClassFactory : PlugInFactory<NavigationPathElement, NavigationPathElementClassAttribute, string>
 	{
+		/// <summary>
+		/// Parses the specified value and returns a <see cref="NavigationPathElement"/>.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The navigation path element.</returns>
 		public static NavigationPathElement Parse(string value)
 		{
 			if (string.IsNullOrEmpty (value))
@@ -21,8 +30,8 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 			if ((value.StartsWith ("<")) &&
 				(value.EndsWith (">")))
 			{
-				string id = value.Substring (1, value.Length-2).FirstToken (":");
-				var template = NavigationPathElementClassFactory.CreateInstance (id);
+				var classId  = value.Substring (1, value.Length-2).FirstToken (":");
+				var template = NavigationPathElementClassFactory.GetTemplateInstance (classId);
 
 				return template.InternalDeserialize (value.Substring (1, value.Length-2));
 			}

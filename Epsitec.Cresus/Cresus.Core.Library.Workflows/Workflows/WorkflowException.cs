@@ -5,6 +5,11 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Workflows
 {
+	/// <summary>
+	/// The <c>WorkflowException</c> class is used to abort or cancel a
+	/// running workflow. A reason can be provided, so that the user can
+	/// be notified.
+	/// </summary>
 	[System.Serializable]
 
 	public sealed class WorkflowException : System.Exception

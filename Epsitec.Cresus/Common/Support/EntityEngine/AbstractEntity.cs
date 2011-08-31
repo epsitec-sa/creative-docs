@@ -386,9 +386,9 @@ namespace Epsitec.Common.Support.EntityEngine
 		private void Dump(System.Text.StringBuilder buffer, int level = 0, HashSet<AbstractEntity> history = null, System.Predicate<StructuredTypeField> filter = null, bool includeLabels = false, bool topLevelOnly = false, bool skipUndefinedFields = false)
 		{
 			if (history == null)
-            {
+			{
 				history = new HashSet<AbstractEntity> ();
-            }
+			}
 
 			string indent = new string (' ', level*2);
 			string name   = "";
@@ -986,7 +986,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 		}
 
-        #region IStructuredTypeProvider Members
+		#region IStructuredTypeProvider Members
 
 		IStructuredType IStructuredTypeProvider.GetStructuredType()
 		{
@@ -1637,7 +1637,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		private readonly long entitySerialId;
 		private readonly object eventLock;
 
-        private System.Func<System.IDisposable> readLockFunction;
+		private System.Func<System.IDisposable> readLockFunction;
 		private System.Func<System.IDisposable> writeLockFunction;
 
 		private EntityContext context;

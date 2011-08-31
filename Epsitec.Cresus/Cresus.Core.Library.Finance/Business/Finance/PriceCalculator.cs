@@ -17,14 +17,14 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		public static void UpdatePrices(IPriceCalculator calculator)
 		{
 			if (PriceCalculator.activeCalculator != null)
-            {
+			{
 				//	Calls to UpdatePrices while the document price calculator is working
 				//	should never happen, since the business rules applied when updating
 				//	an invoice cannot fire recursively. However, if this is invoked manually
 				//	in order to test the code, it can nevertheless happen.
 				
 				return;
-            }
+			}
 
 			try
 			{

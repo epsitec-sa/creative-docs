@@ -283,9 +283,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				{
 					//	Manage insertion/removal from the title tile items collection.
 					if (this.titleTile != null && this.Tile != null)
-                    {
+					{
 						this.titleTile.Items.Remove (this.Tile);
-                    }
+					}
 
 					this.titleTile = value;
 
@@ -448,9 +448,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		public static string GetNamePrefix(string name)
 		{
 			if (name == null)
-            {
+			{
 				return null;
-            }
+			}
 
 			int pos = name.LastIndexOf ('.');
 
@@ -533,16 +533,16 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			int result  = string.Compare (this.CompactTitle.ToSimpleText (), other.CompactTitle.ToSimpleText (), culture, options);
 
 			if (result == 0)
-            {
+			{
 				if (this.Rank < other.Rank)
 				{
 					return -1;
 				}
 				else if (this.Rank > other.Rank)
-                {
+				{
 					return 1;
-                }
-            }
+				}
+			}
 
 			return result;
 		}
