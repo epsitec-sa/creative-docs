@@ -173,7 +173,7 @@ namespace Epsitec.Cresus.Core
 				if ((text.StartsWith (Prefix.CommandEscape)) &&
 					(text.StartsWith (Command.Format)))
 				{
-					var format = text.SplitAtFirst (":");
+					var format = text.RemoveFirstToken (":");
 
 					if (format.Length > 0)
 					{
