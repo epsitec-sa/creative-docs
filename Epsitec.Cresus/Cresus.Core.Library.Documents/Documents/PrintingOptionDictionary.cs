@@ -188,7 +188,7 @@ namespace Epsitec.Cresus.Core.Documents
 		}
 
 
-		private FormattedText GetSummary()
+		private FormattedText GetSummary(int maxOptionLines)
 		{
 			//	Retourne un résumé complet d'un dictionnaire, composé des options et de leurs valeurs.
 
@@ -197,29 +197,30 @@ namespace Epsitec.Cresus.Core.Documents
 			var builder = new System.Text.StringBuilder ();
 			builder.Append ("Options et valeurs définies :<br/><font size=\"25%\"><br/></font>");
 
-			bool first = true;
+			var options = VerboseDocumentOption.GetAll ().Where (x => x.Option != DocumentOption.None && this.ContainsOption (x.Option));
+			var count = options.Count ();
 
-			foreach (var option in VerboseDocumentOption.GetAll ())
+			if (count == 0)
 			{
-				if (option.Option != DocumentOption.None && this.ContainsOption (option.Option))
+				builder.Append ("● <i>Aucune</i><br/>");
+			}
+			else
+			{
+				for (int i = 0; i < count; i++)
 				{
-					if (!first)  // déjà mis une option précédemment ?
+					if (i < maxOptionLines || i == count-1)  // n premières options ou dernière ?
 					{
+						builder.Append (this.GetOptionDescription (options.ElementAt (i), hasBullet: true, hiliteValue: false));
 						builder.Append ("<br/>");
 					}
-
-					builder.Append (this.GetOptionDescription (option, hasBullet: true, hiliteValue: false));
-
-					first = false;
+					else if (i == maxOptionLines)
+					{
+						builder.Append (string.Format ("● <i>{0} options diverses...</i><br/>", (count-maxOptionLines-1).ToString ()));
+					}
 				}
 			}
 
-			if (first)  // aucune option ?
-			{
-				builder.Append ("● <i>Aucune</i>");
-			}
-
-			builder.Append ("<br/> <br/>Adapté aux documents suivants :<br/><font size=\"25%\"><br/></font>");
+			builder.Append (" <br/>Adapté aux documents suivants :<br/><font size=\"25%\"><br/></font>");
 			builder.Append (this.GetDocumentTypesSummary ());
 
 			return builder.ToString ();
@@ -289,7 +290,7 @@ namespace Epsitec.Cresus.Core.Documents
 		{
 			protected override FormattedText ToFormattedText(PrintingOptionDictionary value, System.Globalization.CultureInfo culture, TextFormatterDetailLevel detailLevel)
 			{
-				return value.GetSummary ();
+				return value.GetSummary (20);
 			}
 		}
 
