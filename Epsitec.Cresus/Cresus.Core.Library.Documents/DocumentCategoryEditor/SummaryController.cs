@@ -30,6 +30,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			this.documentOptionsController  = this.documentCategoryController.DocumentOptionsController;
 
 			this.verboseDocumentOptions = VerboseDocumentOption.GetAll ().Where (x => x.Option != DocumentOption.None);
+			this.detailTexts = new List<FormattedText> ();
 		}
 
 
@@ -66,6 +67,14 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			this.CreateSummary ();
 		}
 
+		public List<FormattedText> DetailTexts
+		{
+			get
+			{
+				return this.detailTexts;
+			}
+		}
+
 
 		private void CreateSummary()
 		{
@@ -77,53 +86,98 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				return;
 			}
 
-			var frame = this.CreateColorizedFrameBox (parent, Color.FromBrightness (1));
-			this.CreateTitle (frame, "Résumé des options");
-
-			var options = this.GetOptions ();
-
-			foreach (var verboseOption in this.verboseDocumentOptions)
+			if (this.detailTexts.Count == 0)
 			{
-				FormattedText icon = null, iconTooltip = null, description = null, value = null, valueTooltip = null;
-				Color color = Color.FromBrightness (0);
+				var frame = this.CreateColorizedFrameBox (parent, Color.FromBrightness (1));
 
-				if (options.Options.Contains (verboseOption.Option))
+				this.CreateTitle (frame, "Résumé des options");
+
+				var options = this.GetOptions ();
+
+				foreach (var verboseOption in this.verboseDocumentOptions)
 				{
-					options.GetOptionDescription (verboseOption, false, out description, out value);
-					icon = DocumentCategoryController.normalBullet;
+					FormattedText icon = null, iconTooltip = null, description = null, value = null, valueTooltip = null;
+					Color color = Color.FromBrightness (0);
 
-					if (this.documentOptionsController.ErrorOptions.Contains (verboseOption.Option))
+					if (options.Options.Contains (verboseOption.Option))
 					{
-						icon = DocumentCategoryController.errorBullet;
-						iconTooltip = "Option définie plusieurs fois dont <b>la valeur est aléatoire</b>";
-						valueTooltip = "<b>valeur aléatoire</b>";
-						color = DocumentCategoryController.errorColor;
+						options.GetOptionDescription (verboseOption, false, out description, out value);
+						icon = DocumentCategoryController.normalBullet;
+
+						if (this.documentOptionsController.ErrorOptions.Contains (verboseOption.Option))
+						{
+							icon = DocumentCategoryController.errorBullet;
+							iconTooltip = "Option définie plusieurs fois dont <b>la valeur est aléatoire</b>";
+							valueTooltip = "<b>valeur aléatoire</b>";
+							color = DocumentCategoryController.errorColor;
+						}
+
+						if (!this.documentOptionsController.RequiredDocumentOptionsContains (verboseOption.Option))
+						{
+							icon = DocumentCategoryController.uselessBullet;
+							iconTooltip = "Option définie inutilement";
+							valueTooltip = "valeur inutile";
+							color = DocumentCategoryController.uselessColor;
+						}
+					}
+					else
+					{
+						if (this.documentOptionsController.RequiredDocumentOptionsContains (verboseOption.Option))
+						{
+							options.GetOptionDescription (verboseOption, true, out description, out value);
+
+							icon = DocumentCategoryController.missingBullet;
+							iconTooltip = "Option indéfinie qui prend la valeur par défaut";
+							valueTooltip = "valeur par défaut";
+							color = DocumentCategoryController.missingColor;
+						}
 					}
 
-					if (!this.documentOptionsController.RequiredDocumentOptionsContains (verboseOption.Option))
+					if (icon != null)
 					{
-						icon = DocumentCategoryController.uselessBullet;
-						iconTooltip = "Option définie inutilement";
-						valueTooltip = "valeur inutile";
-						color = DocumentCategoryController.uselessColor;
+						this.CreateLine (frame, icon, iconTooltip, description, value, valueTooltip, color);
 					}
 				}
-				else
+			}
+			else
+			{
+				var frame = this.CreateColorizedFrameBox (parent, Widgets.Tiles.TileColors.SurfaceSelectedContainerColors.First ());
+				frame.Padding = new Margins (0, 0, 5, 5);
+
+				foreach (var line in this.detailTexts)
 				{
-					if (this.documentOptionsController.RequiredDocumentOptionsContains (verboseOption.Option))
+					if (line.IsNullOrEmpty)
 					{
-						options.GetOptionDescription (verboseOption, true, out description, out value);
-
-						icon = DocumentCategoryController.missingBullet;
-						iconTooltip = "Option indéfinie qui prend la valeur par défaut";
-						valueTooltip = "valeur par défaut";
-						color = DocumentCategoryController.missingColor;
+						new Separator
+						{
+							Parent = frame,
+							PreferredHeight = 1,
+							IsHorizontalLine = true,
+							Dock = DockStyle.Top,
+							Margins = new Margins (0, 0, 5, 5),
+						};
 					}
-				}
+					else
+					{
+						double h = DocumentCategoryController.lineHeight;
 
-				if (icon != null)
-				{
-					this.CreateLine (frame, icon, iconTooltip, description, value, valueTooltip, color);
+						int additionnalLines = line.Split ("<br/>").Count () - 1;
+						h += additionnalLines*DocumentCategoryController.lineHeight;
+
+						if (line.ToString ().Contains ("<font size="))
+						{
+							h = System.Math.Floor (h*1.5);
+						}
+
+						new StaticText
+						{
+							Parent = frame,
+							FormattedText = line,
+							PreferredHeight = h,
+							Dock = DockStyle.Top,
+							Margins = new Margins (5, 5, 0, 0),
+						};
+					}
 				}
 			}
 		}
@@ -234,6 +288,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 		private readonly DocumentCategoryController			documentCategoryController;
 		private readonly DocumentOptionsController			documentOptionsController;
 		private readonly IEnumerable<VerboseDocumentOption>	verboseDocumentOptions;
+		private readonly List<FormattedText>				detailTexts;
 
 		private Scrollable									summaryFrame;
 	}

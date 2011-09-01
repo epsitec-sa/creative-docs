@@ -141,6 +141,14 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			}
 		}
 
+		public SummaryController SummaryController
+		{
+			get
+			{
+				return this.summaryController;
+			}
+		}
+
 		public void UpdateAfterOptionChanged()
 		{
 			this.summaryController.UpdateAfterOptionChanged ();
