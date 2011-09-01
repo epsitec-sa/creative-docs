@@ -15,6 +15,7 @@ namespace Epsitec.Common.Widgets.Platform
 		public const int WM_ACTIVATE		= 0x0006;
 		public const int WM_QUERYENDSESSION	= 0x0011;
 		public const int WM_ENDSESSION		= 0x0016;
+		public const int WM_SHOWWINDOW		= 0x0018;
 		public const int WM_ACTIVATEAPP		= 0x001C;
 		public const int WM_MOUSEACTIVATE	= 0x0021;
 		public const int WM_GETMINMAXINFO   = 0x0024;

@@ -4362,9 +4362,9 @@ namespace Epsitec.Cresus.Core.Entities
 				global::System.Decimal? oldValue = this.FinalPriceBeforeTax;
 				if (oldValue != value || !this.IsFieldDefined("[GVAQ4]"))
 				{
-					this.OnFinalPriceBeforeTaxChanging (oldValue, value);
+					this.OnLinePriceBeforeTaxChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[GVAQ4]", oldValue, value);
-					this.OnFinalPriceBeforeTaxChanged (oldValue, value);
+					this.OnLinePriceBeforeTaxChanged (oldValue, value);
 				}
 			}
 		}
@@ -4387,8 +4387,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnResultingTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnResultingPriceBeforeTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnResultingPriceBeforeTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnFinalPriceBeforeTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnFinalPriceBeforeTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnLinePriceBeforeTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnLinePriceBeforeTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

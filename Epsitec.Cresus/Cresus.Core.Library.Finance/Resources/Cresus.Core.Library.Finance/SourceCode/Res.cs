@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Core.Library.Finance
 				public static readonly Epsitec.Common.Types.DecimalType VatRate = (global::Epsitec.Common.Types.DecimalType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 147));
 			}
 			
-			public static class Finance
+			public static class Enum
 			{
 				internal static void _Initialize()
 				{
@@ -46,6 +46,8 @@ namespace Epsitec.Cresus.Core.Library.Finance
 				public static readonly Epsitec.Common.Types.EnumType BillingStatus = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 98));
 				//	designer:cap/CVAP1
 				public static readonly Epsitec.Common.Types.EnumType CurrencyCode = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 57));
+				//	designer:cap/CVA05
+				public static readonly Epsitec.Common.Types.EnumType DiscountPolicy = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 160));
 				//	designer:cap/CVAF1
 				public static readonly Epsitec.Common.Types.EnumType ExchangeRateSourceType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 47));
 				//	designer:cap/CVAL1
@@ -108,7 +110,7 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			{
 			}
 			
-			public static class Finance
+			public static class Enum
 			{
 				internal static void _Initialize()
 				{
@@ -270,6 +272,54 @@ namespace Epsitec.Cresus.Core.Library.Finance
 						get
 						{
 							return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 64));
+						}
+					}
+				}
+				
+				public static class DiscountPolicy
+				{
+					internal static void _Initialize()
+					{
+					}
+					
+					//	designer:cap/CVA15
+					public static global::Epsitec.Common.Types.Caption None
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 161));
+						}
+					}
+					//	designer:cap/CVA55
+					public static global::Epsitec.Common.Types.Caption OnLinePriceAfterTax
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 165));
+						}
+					}
+					//	designer:cap/CVA45
+					public static global::Epsitec.Common.Types.Caption OnLinePriceBeforeTax
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 164));
+						}
+					}
+					//	designer:cap/CVA35
+					public static global::Epsitec.Common.Types.Caption OnUnitPriceAfterTax
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 163));
+						}
+					}
+					//	designer:cap/CVA25
+					public static global::Epsitec.Common.Types.Caption OnUnitPriceBeforeTax
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 162));
 						}
 					}
 				}
@@ -441,7 +491,7 @@ namespace Epsitec.Cresus.Core.Library.Finance
 						}
 					}
 					//	designer:cap/CVAQ2
-					public static global::Epsitec.Common.Types.Caption OnFinalPriceAfterTax
+					public static global::Epsitec.Common.Types.Caption OnLinePriceAfterTax
 					{
 						get
 						{
@@ -449,7 +499,7 @@ namespace Epsitec.Cresus.Core.Library.Finance
 						}
 					}
 					//	designer:cap/CVAP2
-					public static global::Epsitec.Common.Types.Caption OnFinalPriceBeforeTax
+					public static global::Epsitec.Common.Types.Caption OnLinePriceBeforeTax
 					{
 						get
 						{
@@ -929,18 +979,19 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			Res._manager.DefineDefaultModuleName ("Cresus.Core.Library.Finance");
 			Types._Initialize ();
 			Types.Decimal._Initialize ();
-			Types.Finance._Initialize ();
+			Types.Enum._Initialize ();
 			Types.String._Initialize ();
 			Values._Initialize ();
-			Values.Finance.BillingMode._Initialize ();
-			Values.Finance.BillingStatus._Initialize ();
-			Values.Finance.CurrencyCode._Initialize ();
-			Values.Finance.ExchangeRateSourceType._Initialize ();
-			Values.Finance.PaymentDetailType._Initialize ();
-			Values.Finance.PriceDisplayModes._Initialize ();
-			Values.Finance.RoundingPolicy._Initialize ();
-			Values.Finance.TaxMode._Initialize ();
-			Values.Finance.VatCode._Initialize ();
+			Values.Enum.BillingMode._Initialize ();
+			Values.Enum.BillingStatus._Initialize ();
+			Values.Enum.CurrencyCode._Initialize ();
+			Values.Enum.DiscountPolicy._Initialize ();
+			Values.Enum.ExchangeRateSourceType._Initialize ();
+			Values.Enum.PaymentDetailType._Initialize ();
+			Values.Enum.PriceDisplayModes._Initialize ();
+			Values.Enum.RoundingPolicy._Initialize ();
+			Values.Enum.TaxMode._Initialize ();
+			Values.Enum.VatCode._Initialize ();
 			Fields.Currency._Initialize ();
 			Fields.ExchangeRateSource._Initialize ();
 			Fields.FinanceSettings._Initialize ();

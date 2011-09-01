@@ -29,6 +29,14 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		public bool IsNotZero
+		{
+			get
+			{
+				return this.value > 0;
+			}
+		}
+
 		public int Value
 		{
 			get
@@ -38,16 +46,26 @@ namespace Epsitec.Common.Support
 		}
 
 
-		public System.IDisposable Enter ()
+		public void Increment()
 		{
 			this.value++;
+		}
+
+		public void Decrement()
+		{
+			this.value--;
+		}
+		
+		public System.IDisposable Enter()
+		{
+			this.Increment ();
 
 			return DisposableWrapper.CreateDisposable (this.Release);
 		}
 
 		private void Release()
 		{
-			this.value--;
+			this.Decrement ();
 		}
 		
 		

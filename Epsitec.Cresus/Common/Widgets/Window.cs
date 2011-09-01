@@ -320,7 +320,7 @@ namespace Epsitec.Common.Widgets
 			if (this.IsVisible)
 			{
 				this.OnAboutToHideWindow ();
-				this.window.Hide ();
+				this.window.HideWindow ();
 			}
 		}
 		

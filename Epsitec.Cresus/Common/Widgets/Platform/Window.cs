@@ -58,6 +58,9 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		private Window()
 		{
+			this.isSyncPaintDisabled         = new SafeCounter ();
+			this.isSyncUpdating              = new SafeCounter ();
+			this.isWndProcHandlingRestricted = new SafeCounter ();
 		}
 		
 		
@@ -215,7 +218,16 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			this.widgetWindowDisposed = true;
 		}
-		
+
+
+		internal void HideWindow()
+		{
+			using (this.isWndProcHandlingRestricted.Enter ())
+			{
+				this.Hide ();
+			}
+		}
+
 		
 		static void DummyHandleEater(System.IntPtr handle)
 		{
@@ -353,7 +365,7 @@ namespace Epsitec.Common.Widgets.Platform
 			switch (animation)
 			{
 				case Animation.None:
-					this.Hide ();
+					this.HideWindow ();
 					return;
 				
 				case Animation.RollDown:
@@ -390,7 +402,7 @@ namespace Epsitec.Common.Widgets.Platform
 					return;
 				
 				default:
-					this.Hide ();
+					this.HideWindow ();
 					return;
 			}
 			
@@ -558,7 +570,7 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			get
 			{
-				return this.disableSyncPaint > 0;
+				return this.isSyncPaintDisabled.IsNotZero;
 			}
 		}
 		
@@ -807,46 +819,51 @@ namespace Epsitec.Common.Widgets.Platform
 				};
 
 				Win32Api.GetWindowPlacement (this.Handle, ref placement);
-				
+
 				double ox = this.MapFromWinFormsX (placement.NormalPosition.Left);
 				double oy = this.MapFromWinFormsY (placement.NormalPosition.Bottom);
 				double dx = this.MapFromWinFormsWidth (placement.NormalPosition.Right - placement.NormalPosition.Left);
 				double dy = this.MapFromWinFormsHeight (placement.NormalPosition.Bottom - placement.NormalPosition.Top);
-				
+
 				//	Attention: les coordonnées retournées par WindowPlacement sont exprimées
 				//	en "workspace coordinates" (elles tiennent compte de la présence d'une
 				//	barre "Desktop").
-				
+
 				//	Cf. http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/winui/windowsuserinterface/windowing/windows/windowreference/windowstructures/windowplacement.asp
 
-				//	La conversion entre "screen coordinates" et "workspace coordinates" est
-				//	théoriquement impossible avec les informations que fournit Windows mais
-				//	on peut s'arranger en créant une fenêtre temporaire pour déterminer son
-				//	offset par rapport à l'endroit désiré :
-				
-				System.Windows.Forms.Screen screen = System.Windows.Forms.Screen.FromPoint (new System.Drawing.Point (placement.NormalPosition.Left, placement.NormalPosition.Top));
-				
-//				System.Diagnostics.Trace.WriteLine ("WorkingArea:  " + screen.WorkingArea);
-//				System.Diagnostics.Trace.WriteLine ("ScreenBounds: " + screen.Bounds);
-				
-				if (screen.WorkingArea != screen.Bounds)
-				{
-					using (System.Windows.Forms.Form f = new System.Windows.Forms.Form ())
-					{
-						f.Hide ();
-						f.Location = new System.Drawing.Point (placement.NormalPosition.Left, placement.NormalPosition.Bottom);
-					
-						Win32Api.GetWindowPlacement (f.Handle, ref placement);
-					
-						ox -= placement.NormalPosition.Left - f.Location.X;
-						oy += placement.NormalPosition.Top - f.Location.Y;
-						
-//						System.Diagnostics.Trace.WriteLine ("Adjust X by " + (-placement.NormalPosition.Left + f.Location.X));
-//						System.Diagnostics.Trace.WriteLine ("Adjust Y by " + (placement.NormalPosition.Top - f.Location.Y));
-					}
-				}
-				
+				Window.AdjustWindowPlacementOrigin (placement, ref ox, ref oy);
+
 				return new Drawing.Rectangle (ox, oy, dx, dy);
+			}
+		}
+
+		private static void AdjustWindowPlacementOrigin(Win32Api.WindowPlacement placement, ref double ox, ref double oy)
+		{
+			//	La conversion entre "screen coordinates" et "workspace coordinates" est
+			//	théoriquement impossible avec les informations que fournit Windows mais
+			//	on peut s'arranger en créant une fenêtre temporaire pour déterminer son
+			//	offset par rapport à l'endroit désiré :
+
+			System.Windows.Forms.Screen screen = System.Windows.Forms.Screen.FromPoint (new System.Drawing.Point (placement.NormalPosition.Left, placement.NormalPosition.Top));
+
+			//				System.Diagnostics.Trace.WriteLine ("WorkingArea:  " + screen.WorkingArea);
+			//				System.Diagnostics.Trace.WriteLine ("ScreenBounds: " + screen.Bounds);
+
+			if (screen.WorkingArea != screen.Bounds)
+			{
+				using (System.Windows.Forms.Form f = new System.Windows.Forms.Form ())
+				{
+					f.Hide ();
+					f.Location = new System.Drawing.Point (placement.NormalPosition.Left, placement.NormalPosition.Bottom);
+
+					Win32Api.GetWindowPlacement (f.Handle, ref placement);
+
+					int placementOffsetX = placement.NormalPosition.Left - f.Location.X;
+					int placementOffsetY = placement.NormalPosition.Top - f.Location.Y;
+
+					ox -= placementOffsetX;
+					oy += placementOffsetY;
+				}
 			}
 		}
 
@@ -1366,9 +1383,7 @@ namespace Epsitec.Common.Widgets.Platform
 		protected override void OnSizeChanged(System.EventArgs e)
 		{
 //			System.Diagnostics.Debug.WriteLine ("OnSizeChanged");
-			this.disableSyncPaint++;
-			
-			try
+			using (this.isSyncPaintDisabled.Enter ())
 			{
 				if ((this.Created == false) &&
 					(this.formBoundsSet) &&
@@ -1394,10 +1409,6 @@ namespace Epsitec.Common.Widgets.Platform
 				}
 				
 				this.formBoundsSet = false;
-			}
-			finally
-			{
-				this.disableSyncPaint--;
 			}
 		}
 		
@@ -1614,15 +1625,9 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			if (this.dirtyRectangle.IsValid)
 			{
-				this.isSyncUpdating++;
-
-				try
+				using (this.isSyncUpdating.Enter ())
 				{
 					this.Update ();
-				}
-				finally
-				{
-					this.isSyncUpdating--;
 				}
 			}
 		}
@@ -1648,13 +1653,13 @@ namespace Epsitec.Common.Widgets.Platform
 		internal void StartSizeMove()
 		{
 			this.IsSizeMoveInProgress = true;
-			this.disableSyncPaint++;
+			this.isSyncPaintDisabled.Increment ();
 		}
 		
 		internal void StopSizeMove()
 		{
 			this.IsSizeMoveInProgress = false;
-			this.disableSyncPaint--;
+			this.isSyncPaintDisabled.Decrement ();
 		}
 		
 		
@@ -1705,11 +1710,17 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			//System.Diagnostics.Debug.WriteLine (msg.ToString ());
 
+			if (this.isWndProcHandlingRestricted.IsNotZero)
+			{
+				base.WndProc (ref msg);
+				return;
+			}
+
 			bool syncCommandCache = false;
 
 			lock (Window.dispatchWindow)
 			{
-				if (this.isSyncUpdating == 0)
+				if (this.isSyncUpdating.IsZero)
 				{
 					if (Window.isSyncRequested)
 					{
@@ -2733,12 +2744,14 @@ namespace Epsitec.Common.Widgets.Platform
 		private static int						globalWndProcDepth;
 
 		private int								wndProcDepth;
+		
 		private bool							isDispatchPending;
 		private bool							isPixmapOk;
 		private bool							isSizeMoveInProgress;
 		private bool							isLayoutInProgress;
-		private int								disableSyncPaint;
-		private int								isSyncUpdating;
+		private readonly SafeCounter			isSyncPaintDisabled;
+		private readonly SafeCounter			isSyncUpdating;
+		private readonly SafeCounter			isWndProcHandlingRestricted;
 
 		private WindowPlacement					windowPlacement;
 		
