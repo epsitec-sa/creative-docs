@@ -863,6 +863,8 @@ namespace Epsitec.Cresus.Core.Library.Finance
 				{
 				}
 				
+				//	designer:cap/CVA65
+				public static readonly global::Epsitec.Common.Support.Druid DiscountPolicy = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 166);
 				//	designer:cap/CVAQ4
 				public static readonly global::Epsitec.Common.Support.Druid DiscountRate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 154);
 				//	designer:cap/CVA94
@@ -871,8 +873,6 @@ namespace Epsitec.Cresus.Core.Library.Finance
 				public static readonly global::Epsitec.Common.Support.Druid Text = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 133);
 				//	designer:cap/CVAR4
 				public static readonly global::Epsitec.Common.Support.Druid Value = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 155);
-				//	designer:cap/CVA84
-				public static readonly global::Epsitec.Common.Support.Druid ValueIncludesTaxes = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 136);
 			}
 			
 			public static class PriceGroup

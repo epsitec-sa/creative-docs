@@ -1730,24 +1730,24 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>ValueIncludesTaxes</c> field.
-		///	designer:fld/CVA44/CVA84
+		///	The <c>DiscountPolicy</c> field.
+		///	designer:fld/CVA44/CVA65
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[CVA84]")]
-		public bool ValueIncludesTaxes
+		[global::Epsitec.Common.Support.EntityField ("[CVA65]")]
+		public global::Epsitec.Cresus.Core.Business.Finance.DiscountPolicy DiscountPolicy
 		{
 			get
 			{
-				return this.GetField<bool> ("[CVA84]");
+				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.DiscountPolicy> ("[CVA65]");
 			}
 			set
 			{
-				bool oldValue = this.ValueIncludesTaxes;
-				if (oldValue != value || !this.IsFieldDefined("[CVA84]"))
+				global::Epsitec.Cresus.Core.Business.Finance.DiscountPolicy oldValue = this.DiscountPolicy;
+				if (oldValue != value || !this.IsFieldDefined("[CVA65]"))
 				{
-					this.OnValueIncludesTaxesChanging (oldValue, value);
-					this.SetField<bool> ("[CVA84]", oldValue, value);
-					this.OnValueIncludesTaxesChanged (oldValue, value);
+					this.OnDiscountPolicyChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.DiscountPolicy> ("[CVA65]", oldValue, value);
+					this.OnDiscountPolicyChanged (oldValue, value);
 				}
 			}
 		}
@@ -1780,8 +1780,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnDiscountRateChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnValueChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnValueChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnValueIncludesTaxesChanging(bool oldValue, bool newValue);
-		partial void OnValueIncludesTaxesChanged(bool oldValue, bool newValue);
+		partial void OnDiscountPolicyChanging(global::Epsitec.Cresus.Core.Business.Finance.DiscountPolicy oldValue, global::Epsitec.Cresus.Core.Business.Finance.DiscountPolicy newValue);
+		partial void OnDiscountPolicyChanged(global::Epsitec.Cresus.Core.Business.Finance.DiscountPolicy oldValue, global::Epsitec.Cresus.Core.Business.Finance.DiscountPolicy newValue);
 		partial void OnRoundingModeChanging(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
 		partial void OnRoundingModeChanged(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
 		

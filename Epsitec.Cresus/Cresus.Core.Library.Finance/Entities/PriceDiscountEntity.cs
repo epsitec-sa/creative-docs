@@ -43,11 +43,11 @@ namespace Epsitec.Cresus.Core.Entities
 
 		void ICopyableEntity<PriceDiscountEntity>.CopyTo(IBusinessContext businessContext, PriceDiscountEntity copy)
 		{
-			copy.Text               = this.Text;
-			copy.DiscountRate       = this.DiscountRate;
-			copy.Value              = this.Value;
-			copy.ValueIncludesTaxes = this.ValueIncludesTaxes;
-			copy.RoundingMode       = this.RoundingMode;
+			copy.Text           = this.Text;
+			copy.DiscountRate   = this.DiscountRate;
+			copy.Value          = this.Value;
+			copy.DiscountPolicy = this.DiscountPolicy;
+			copy.RoundingMode   = this.RoundingMode;
 		}
 
 		#endregion

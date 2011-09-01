@@ -54,6 +54,7 @@
     <Compile Include="Business\Finance\BillingStatus.cs" />
     <Compile Include="Business\Finance\CurrencyCode.cs" />
     <Compile Include="Business\Finance\DiscountPolicy.cs" />
+    <Compile Include="Business\Finance\DiscountPolicyExtensions.cs" />
     <Compile Include="Business\Finance\ExchangeRateSourceType.cs" />
     <Compile Include="Business\Finance\IPriceCalculator.cs" />
     <Compile Include="Business\Finance\PaymentDetailType.cs" />
