@@ -34,8 +34,10 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 		}
 
 
-		public void CreateUI(Widget parent)
+		public void CreateUI(Widget parent, double width)
 		{
+			this.width = width;
+
 			var box = new FrameBox
 			{
 				Parent = parent,
@@ -159,24 +161,25 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					}
 					else
 					{
-						double h = DocumentCategoryController.lineHeight;
-
-						int additionnalLines = line.Split ("<br/>").Count () - 1;
-						h += additionnalLines*DocumentCategoryController.lineHeight;
-
-						if (line.ToString ().Contains ("<font size="))
-						{
-							h = System.Math.Floor (h*1.5);
-						}
-
-						new StaticText
+						var staticText = new StaticText
 						{
 							Parent = frame,
 							FormattedText = line,
-							PreferredHeight = h,
 							Dock = DockStyle.Top,
 							Margins = new Margins (5, 5, 0, 0),
 						};
+
+						//	Calcule la hauteur réelle du texte.
+						staticText.TextLayout.LayoutSize = new Size (this.width-2-10, 100);
+
+						double h = staticText.TextLayout.FindTextHeight ();
+						
+						if (h > DocumentCategoryController.lineHeight)  // plus d'une ligne ?
+						{
+							h += 2;  // ajoute une petite marge
+						}
+						
+						staticText.PreferredHeight  = h;
 					}
 				}
 			}
@@ -283,13 +286,14 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 		}
 
 
+		private readonly DocumentCategoryController			documentCategoryController;
 		private readonly IBusinessContext					businessContext;
 		private readonly DocumentCategoryEntity				documentCategoryEntity;
-		private readonly DocumentCategoryController			documentCategoryController;
 		private readonly DocumentOptionsController			documentOptionsController;
 		private readonly IEnumerable<VerboseDocumentOption>	verboseDocumentOptions;
 		private readonly List<FormattedText>				detailTexts;
 
+		private double										width;
 		private Scrollable									summaryFrame;
 	}
 }

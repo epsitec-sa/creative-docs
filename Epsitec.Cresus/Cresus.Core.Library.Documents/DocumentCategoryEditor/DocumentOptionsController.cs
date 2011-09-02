@@ -40,8 +40,10 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 		}
 
 
-		public void CreateUI(Widget parent)
+		public void CreateUI(Widget parent, double width)
 		{
+			this.width = width;
+
 			var tile = new ArrowedTileFrame (Direction.Right)
 			{
 				Parent = parent,
@@ -72,16 +74,21 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 			this.CreateCheckButtons ();
 
-			this.CreateMissing (box);
-			this.CreateUseless (box);
-			this.CreateError (box);
+			this.CreateError (box, "missing", out this.missingFrame, out this.missingText);
+			this.CreateError (box, "useless", out this.uselessFrame, out this.uselessText);
+			this.CreateError (box, "error",   out this.errorFrame,   out this.errorText);
+
 			this.UpdateErrorAndWarning ();
 		}
 
 		public void UpdateAfterDocumentTypeChanged()
 		{
+			this.selectedOptionInformation = null;
+			this.selectedSpecialDetail = null;
+
 			this.CreateCheckButtons ();
 			this.UpdateErrorAndWarning ();
+			this.UpdateDetailButtons ();
 		}
 
 
@@ -94,9 +101,9 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 		}
 
 
-		private void CreateError(Widget parent)
+		private void CreateError(Widget parent, string name, out FrameBox frame, out StaticText text)
 		{
-			this.errorFrame = new FrameBox
+			frame = new FrameBox
 			{
 				Parent = parent,
 				DrawFullFrame = true,
@@ -106,9 +113,9 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				Margins = new Margins (0, 0, -1, 0),
 			};
 
-			this.errorText = new StaticText
+			text = new StaticText
 			{
-				Parent = this.errorFrame,
+				Parent = frame,
 				ContentAlignment = Common.Drawing.ContentAlignment.MiddleLeft,
 				Dock = DockStyle.Fill,
 				Margins = new Margins (5, 0, 0, 0),
@@ -116,7 +123,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 			var detailButton = new GlyphButton
 			{
-				Parent = this.errorFrame,
+				Parent = frame,
 				GlyphShape = GlyphShape.TriangleRight,
 				ButtonStyle = ButtonStyle.ToolItem,
 				PreferredWidth = DocumentCategoryController.lineHeight,
@@ -124,109 +131,17 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				Dock = DockStyle.Right,
 			};
 
+			ToolTip.Default.SetToolTip (detailButton, "Montre le détail");
+
 			detailButton.Clicked += delegate
 			{
-				if (this.selectedSpecialDetail == "error")
+				if (this.selectedSpecialDetail == name)
 				{
 					this.selectedSpecialDetail = null;
 				}
 				else
 				{
-					this.selectedSpecialDetail = "error";
-				}
-
-				this.selectedOptionInformation = null;
-
-				this.UpdateDetailButtons ();
-			};
-		}
-
-		private void CreateUseless(Widget parent)
-		{
-			this.uselessFrame = new FrameBox
-			{
-				Parent = parent,
-				DrawFullFrame = true,
-				BackColor = Color.FromBrightness (1),
-				PreferredHeight = DocumentCategoryController.errorHeight,
-				Dock = DockStyle.Bottom,
-				Margins = new Margins (0, 0, -1, 0),
-			};
-
-			this.uselessText = new StaticText
-			{
-				Parent = this.uselessFrame,
-				ContentAlignment = Common.Drawing.ContentAlignment.MiddleLeft,
-				Dock = DockStyle.Fill,
-				Margins = new Margins (5, 0, 0, 0),
-			};
-
-			var detailButton = new GlyphButton
-			{
-				Parent = this.uselessText,
-				GlyphShape = GlyphShape.TriangleRight,
-				ButtonStyle = ButtonStyle.ToolItem,
-				PreferredWidth = DocumentCategoryController.lineHeight,
-				PreferredHeight = DocumentCategoryController.errorHeight,
-				Dock = DockStyle.Right,
-			};
-
-			detailButton.Clicked += delegate
-			{
-				if (this.selectedSpecialDetail == "useless")
-				{
-					this.selectedSpecialDetail = null;
-				}
-				else
-				{
-					this.selectedSpecialDetail = "useless";
-				}
-
-				this.selectedOptionInformation = null;
-
-				this.UpdateDetailButtons ();
-			};
-		}
-
-		private void CreateMissing(Widget parent)
-		{
-			this.missingFrame = new FrameBox
-			{
-				Parent = parent,
-				DrawFullFrame = true,
-				BackColor = Color.FromBrightness (1),
-				PreferredHeight = DocumentCategoryController.errorHeight,
-				Dock = DockStyle.Bottom,
-				Margins = new Margins (0, 0, -1, 0),
-			};
-
-			this.missingText = new StaticText
-			{
-				Parent = this.missingFrame,
-				ContentAlignment = Common.Drawing.ContentAlignment.MiddleLeft,
-				Dock = DockStyle.Fill,
-				Margins = new Margins (5, 0, 0, 0),
-			};
-
-			var detailButton = new GlyphButton
-			{
-				Parent = this.missingFrame,
-				GlyphShape = GlyphShape.TriangleRight,
-				ButtonStyle = ButtonStyle.ToolItem,
-				PreferredWidth = DocumentCategoryController.lineHeight,
-				PreferredHeight = DocumentCategoryController.errorHeight,
-				Dock = DockStyle.Right,
-			};
-
-			detailButton.Clicked += delegate
-			{
-				if (this.selectedSpecialDetail == "missing")
-				{
-					this.selectedSpecialDetail = null;
-				}
-				else
-				{
-					this.selectedSpecialDetail = "missing";
+					this.selectedSpecialDetail = name;
 				}
 
 				this.selectedOptionInformation = null;
@@ -245,6 +160,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			this.detailFrames.Clear ();
 			this.detailButtons.Clear ();
 			this.detailEntities.Clear ();
+
 			this.selectedOptionInformation = null;
 			this.selectedSpecialDetail = null;
 
@@ -531,6 +447,75 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			}
 		}
 
+		private void ButtonClicked(AbstractButton button)
+		{
+			var parts = button.Name.Split ('.');
+
+			if (parts.Length == 1 && button is CheckButton)
+			{
+				int index = int.Parse (parts[0]);
+				var entity = this.optionGroups[index].OptionInformations[0].Entity;
+
+				if (this.documentCategoryEntity.DocumentOptions.Contains (entity))
+				{
+					this.documentCategoryEntity.DocumentOptions.Remove (entity);
+				}
+				else
+				{
+					this.documentCategoryEntity.DocumentOptions.Add (entity);
+				}
+			}
+
+			if (parts.Length == 2 && button is RadioButton)
+			{
+				int index = int.Parse (parts[0]);
+				int group = int.Parse (parts[1]);
+
+				for (int i = 0; i < this.optionGroups[index].OptionInformations.Count; i++)
+				{
+					var entity = this.optionGroups[index].OptionInformations[i].Entity;
+
+					if (this.documentCategoryEntity.DocumentOptions.Contains (entity))
+					{
+						this.documentCategoryEntity.DocumentOptions.Remove (entity);
+					}
+				}
+
+				if (group != 0)
+				{
+					var entity = this.optionGroups[index].OptionInformations[group].Entity;
+					this.documentCategoryEntity.DocumentOptions.Add (entity);
+				}
+			}
+
+			this.selectedOptionInformation = null;
+			this.selectedSpecialDetail = null;
+
+			this.UpdateButtonStates ();
+			this.UpdateDetailButtons ();
+			this.UpdateErrorAndWarning ();
+			this.documentCategoryController.UpdateAfterOptionChanged ();
+		}
+
+		private void DetailButtonClicked(AbstractButton detailButton, OptionGroup group)
+		{
+			int i = int.Parse (detailButton.Name);
+
+			if (this.selectedOptionInformation == group.OptionInformations[i])
+			{
+				this.selectedOptionInformation = null;
+			}
+			else
+			{
+				this.selectedOptionInformation = group.OptionInformations[i];
+			}
+
+			this.selectedSpecialDetail = null;
+
+			this.UpdateDetailButtons ();
+		}
+
+
 		private List<FormattedText> GetMissingDetailDescription(FormattedText fix, List<DocumentOption> usedOptions)
 		{
 			var list = new List<DocumentOption> ();
@@ -551,7 +536,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 		private List<FormattedText> GetDetailDescription(FormattedText fix, List<DocumentOption> options, Color color)
 		{
-			//	Retourne le contenu pour un tooltip, sans les valeurs.
+			//	Retourne les lignes décrivant des options, sans les valeurs.
 			var result = new List<FormattedText> ();
 			result.Add (fix);
 			result.Add (null);  // trait de séparation
@@ -715,77 +700,9 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 		}
 
 
-		private void ButtonClicked(AbstractButton button)
-		{
-			var parts = button.Name.Split ('.');
-
-			if (parts.Length == 1 && button is CheckButton)
-			{
-				int index = int.Parse (parts[0]);
-				var entity = this.optionGroups[index].OptionInformations[0].Entity;
-
-				if (this.documentCategoryEntity.DocumentOptions.Contains (entity))
-				{
-					this.documentCategoryEntity.DocumentOptions.Remove (entity);
-				}
-				else
-				{
-					this.documentCategoryEntity.DocumentOptions.Add (entity);
-				}
-			}
-
-			if (parts.Length == 2 && button is RadioButton)
-			{
-				int index = int.Parse (parts[0]);
-				int group = int.Parse (parts[1]);
-
-				for (int i = 0; i < this.optionGroups[index].OptionInformations.Count; i++)
-				{
-					var entity = this.optionGroups[index].OptionInformations[i].Entity;
-
-					if (this.documentCategoryEntity.DocumentOptions.Contains (entity))
-					{
-						this.documentCategoryEntity.DocumentOptions.Remove (entity);
-					}
-				}
-
-				if (group != 0)
-				{
-					var entity = this.optionGroups[index].OptionInformations[group].Entity;
-					this.documentCategoryEntity.DocumentOptions.Add (entity);
-				}
-			}
-
-			this.selectedOptionInformation = null;
-			this.selectedSpecialDetail = null;
-
-			this.UpdateButtonStates ();
-			this.UpdateDetailButtons ();
-			this.UpdateErrorAndWarning ();
-			this.documentCategoryController.UpdateAfterOptionChanged ();
-		}
-
-		private void DetailButtonClicked(AbstractButton detailButton, OptionGroup group)
-		{
-			int i = int.Parse (detailButton.Name);
-
-			if (this.selectedOptionInformation == group.OptionInformations[i])
-			{
-				this.selectedOptionInformation = null;
-			}
-			else
-			{
-				this.selectedOptionInformation = group.OptionInformations[i];
-			}
-
-			this.selectedSpecialDetail = null;
-
-			this.UpdateDetailButtons ();
-		}
-
-
 		private void UpdateButtonStates()
 		{
+			//	Met à jour les états ActiveState des boutons à cocher et des boutons radio.
 			foreach (var group in this.optionGroups)
 			{
 				if (group.IsRadio)
@@ -965,15 +882,17 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 			if (error != 0)
 			{
+				var title = new FormattedText ("Erreur grave<br/>").ApplyFontSize (15).ApplyBold ();
+
 				if (error == 1)
 				{
 					errorMessage = "Il y a une option définie plusieurs fois";
-					this.errorDetails = this.GetDetailDescription ("L'option suivante est définie plusieurs fois<br/>et a une <b>valeur aléatoire</b>", this.errorOptions, DocumentCategoryController.errorColor);
+					this.errorDetails = this.GetDetailDescription (title+"L'option suivante est définie plusieurs fois et a une <b>valeur aléatoire</b>.", this.errorOptions, DocumentCategoryController.errorColor);
 				}
 				else
 				{
 					errorMessage = string.Format ("Il y a {0} options définies plusieurs fois", error.ToString ());
-					this.errorDetails = this.GetDetailDescription ("Les options suivantes sont définies plusieurs fois<br/>et ont des <b>valeurs aléatoires</b>", this.errorOptions, DocumentCategoryController.errorColor);
+					this.errorDetails = this.GetDetailDescription (title+"Les options suivantes sont définies plusieurs fois et ont des <b>valeurs aléatoires</b>.", this.errorOptions, DocumentCategoryController.errorColor);
 				}
 
 				errorMessage = FormattedText.Concat (DocumentCategoryController.errorBullet, "  ", errorMessage.ApplyBold ());
@@ -981,15 +900,17 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 			if (missing != 0)
 			{
+				var title = new FormattedText ("Information<br/>").ApplyFontSize (15);
+
 				if (missing == 1)
 				{
 					missingMessage = "Il y a une option indéfinie";
-					this.missingDetails = this.GetMissingDetailDescription ("L'option suivante est indéfinie<br/>et prend la valeur par défaut", usedOptions);
+					this.missingDetails = this.GetMissingDetailDescription (title+"L'option suivante est indéfinie et prend la valeur par défaut.", usedOptions);
 				}
 				else
 				{
 					missingMessage = string.Format ("Il y a {0} options indéfinies", missing.ToString ());
-					this.missingDetails = this.GetMissingDetailDescription ("Les options suivantes sont indéfinies<br/>et prennent les valeurs par défaut", usedOptions);
+					this.missingDetails = this.GetMissingDetailDescription (title+"Les options suivantes sont indéfinies et prennent les valeurs par défaut.", usedOptions);
 				}
 
 				missingMessage = FormattedText.Concat (DocumentCategoryController.missingBullet, "  ", missingMessage);
@@ -997,15 +918,17 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 			if (useless != 0)
 			{
+				var title = new FormattedText ("Avertissement<br/>").ApplyFontSize (15);
+
 				if (useless == 1)
 				{
 					uselessMessage = "Il y a une option définie inutilement";
-					this.uselessDetails = this.GetDetailDescription ("L'options suivante est définie inutilement", uselessOptions, DocumentCategoryController.uselessColor);
+					this.uselessDetails = this.GetDetailDescription (title+"L'options suivante est définie inutilement.", uselessOptions, DocumentCategoryController.uselessColor);
 				}
 				else
 				{
 					uselessMessage = string.Format ("Il y a {0} options définies inutilement", useless.ToString ());
-					this.uselessDetails = this.GetDetailDescription ("Les options suivantes sont définies inutilement", uselessOptions, DocumentCategoryController.uselessColor);
+					this.uselessDetails = this.GetDetailDescription (title+"Les options suivantes sont définies inutilement.", uselessOptions, DocumentCategoryController.uselessColor);
 				}
 
 				uselessMessage = FormattedText.Concat (DocumentCategoryController.uselessBullet, "  ", uselessMessage);
@@ -1063,7 +986,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				}
 			}
 
-			//	Met à jour le résumé dans la partie centrale.
+			//	Met à jour le résumé dans la partie centrale (SummaryController).
 			this.documentCategoryController.SummaryController.DetailTexts.Clear ();
 
 			this.errorFrame.BackColor   = (this.selectedSpecialDetail == "error"  ) ? Widgets.Tiles.TileColors.SurfaceSelectedContainerColors.First () : Color.Empty;
@@ -1287,51 +1210,6 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				private set;
 			}
 
-			public string RatioDescription
-			{
-				get
-				{
-					if (this.Used == this.Total && this.Used != 0)
-					{
-						if (this.Used == 1)
-						{
-							return "L'option est utile pour ce type de document";
-						}
-						else
-						{
-							return string.Format ("Les {0} options sont toutes utiles pour ce type de document", this.Used.ToString ());
-						}
-					}
-					else
-					{
-						int uselessCount = this.Total - this.Used;
-						string uselessText = "";
-
-						if (uselessCount <= 1)
-						{
-							uselessText = "Une option est définie inutilement (rouge)";
-						}
-						else
-						{
-							uselessText = string.Format ("{0} options sont définies inutilement (rouge)", uselessCount.ToString ());
-						}
-
-						if (this.Used == 0)
-						{
-							return string.Format ("Aucune option utile pour ce type de document, sur un total de {0}", this.Total.ToString ());
-						}
-						else if (this.Used == 1)
-						{
-							return string.Format ("Une option utile pour ce type de document, sur un total de {0} (noir ou bleu)<br/>{1}", this.Total.ToString (), uselessText);
-						}
-						else
-						{
-							return string.Format ("{0} options utiles pour ce type de document, sur un total de {1} (noir et bleu)<br/>{2}", this.Used.ToString (), this.Total.ToString (), uselessText);
-						}
-					}
-				}
-			}
-
 			public int Used
 			{
 				get;
@@ -1418,9 +1296,9 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 		private static readonly int ratioWidth = 40;
 
+		private readonly DocumentCategoryController			documentCategoryController;
 		private readonly IBusinessContext					businessContext;
 		private readonly DocumentCategoryEntity				documentCategoryEntity;
-		private readonly DocumentCategoryController			documentCategoryController;
 		private readonly IEnumerable<VerboseDocumentOption>	verboseDocumentOptions;
 		private readonly List<OptionInformation>			optionInformations;
 		private readonly List<OptionInformation>			additionnalOptionInformations;
@@ -1430,6 +1308,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 		private readonly List<GlyphButton>					detailButtons;
 		private readonly List<DocumentOptionsEntity>		detailEntities;
 
+		private double										width;
 		private Scrollable									checkButtonsFrame;
 		private bool										firstGroup;
 		private char										lastButton;

@@ -37,10 +37,12 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 		{
 			parent.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 
+			double standardWidth = 260;
+
 			var leftFrame = new FrameBox
 			{
 				Parent = parent,
-				PreferredWidth = 250,
+				PreferredWidth = standardWidth,
 				Dock = DockStyle.Left,
 				Margins = new Margins (0, 2, 0, 10),
 			};
@@ -48,25 +50,25 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			var centerFrame = new FrameBox
 			{
 				Parent = parent,
-				Dock = DockStyle.Fill,
+				PreferredWidth = standardWidth,
+				Dock = DockStyle.Left,
 				Margins = new Margins (0, Library.UI.Constants.RightMargin, 47, 10),
 			};
 
 			var rightFrame = new FrameBox
 			{
 				Parent = parent,
-				PreferredWidth = 240,
-				Dock = DockStyle.Right,
+				Dock = DockStyle.Fill,
 				Margins = new Margins (0, Library.UI.Constants.RightMargin, 47, 10),
 			};
 
 			this.CreateDocumentType (leftFrame);
 
 			this.documentOptionsController = new DocumentOptionsController (this);
-			this.documentOptionsController.CreateUI (leftFrame);
+			this.documentOptionsController.CreateUI (leftFrame, standardWidth);
 
 			this.summaryController = new SummaryController (this);
-			this.summaryController.CreateUI (centerFrame);
+			this.summaryController.CreateUI (centerFrame, standardWidth);
 
 			this.pageTypesController = new PageTypesController (this);
 			this.pageTypesController.CreateUI (rightFrame);
