@@ -182,6 +182,7 @@
     <Compile Include="Controllers\SummaryControllers\SummaryBusinessSettingsViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAffairViewController.cs" />
     <Compile Include="CoreProgramOperations.cs" />
+    <Compile Include="Dialogs\CreateInvoiceDialog.cs" />
     <Compile Include="Dialogs\DebugDialog.cs" />
     <Compile Include="Dialogs\SettingsDialog.cs" />
     <Compile Include="Dialogs\SettingsTabPages\AbstractSettingsTabPage.cs" />

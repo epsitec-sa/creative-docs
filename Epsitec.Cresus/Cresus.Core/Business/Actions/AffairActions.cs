@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Dialogs;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Business.Rules;
@@ -75,6 +76,19 @@ namespace Epsitec.Cresus.Core.Business.Actions
 				setupAction (activeAffair, documentMetadata);
 			}
 
+			if (newDocumentType == DocumentType.Invoice)
+			{
+				var paymentTransaction = AffairActions.CreateInvoiceDialog (businessContext);
+
+				if (paymentTransaction == null)
+				{
+					throw new WorkflowException (WorkflowCancellation.Transition);  // TODO: Cela stoppe l'exécution !!!
+				}
+
+				var businessDocument = documentMetadata.BusinessDocument as BusinessDocumentEntity;
+				businessDocument.PaymentTransactions.Add (paymentTransaction);
+			}
+
 			WorkflowArgs.SetActiveVariantId (documentMetadata.BusinessDocument.VariantId);
 
 			workflowEngine.GetAssociated<NavigationOrchestrator> ().NavigateToTiles (activeAffair, documentMetadata);
@@ -114,6 +128,26 @@ namespace Epsitec.Cresus.Core.Business.Actions
 			else
 			{
 				return variantIds.OrderByDescending (x => x).FirstOrDefault () + 1;
+			}
+		}
+
+
+		private static PaymentTransactionEntity CreateInvoiceDialog(IBusinessContext businessContext)
+		{
+			//	Choix interactif d'un moyen de paiement.
+			using (var dialog = new Dialogs.CreateInvoiceDialog (businessContext))
+			{
+				dialog.IsModal = true;
+				dialog.OpenDialog ();
+
+				if (dialog.Result == DialogResult.Accept)
+				{
+					return dialog.PaymentTransaction;
+				}
+				else
+				{
+					return null;
+				}
 			}
 		}
 	}
