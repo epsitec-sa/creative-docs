@@ -530,7 +530,20 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 				if (isIdColumn[i] && valueAsObject is long)
 				{
-					valueAsObject = ((long) valueAsObject) - EntitySchemaBuilder.AutoIncrementStartValue;
+					long oldId = (long) valueAsObject;
+					long newId = oldId - EntitySchemaBuilder.AutoIncrementStartValue;
+
+					if (newId < 1)
+					{
+						throw new System.FormatException (
+							string.Format ("Invalid source data: expected only pure user data," +
+										   "but found an invalid row ID for table '{0}'. Are you " +
+										   "trying to import data from a mixed user/template data source?\n\n" +
+										   "The active database is now in a corrupted state. Please restore " +
+										   "it from a previous backup.", this.SqlName));
+					}
+
+					valueAsObject = newId;
 				}
 
 				processedRow.Add (valueAsObject);

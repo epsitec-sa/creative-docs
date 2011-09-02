@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			}
 			catch (System.Exception ex)
 			{
-				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, ex.Message).OpenDialog (this.Container.DefaultOwnerWindow);
+				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, FormattedText.Escape (ex.Message)).OpenDialog (this.Container.DefaultOwnerWindow);
 			}
 		}
 
@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			}
 			catch (System.Exception ex)
 			{
-				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, ex.Message).OpenDialog (this.Container.DefaultOwnerWindow);
+				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, FormattedText.Escape (ex.Message)).OpenDialog (this.Container.DefaultOwnerWindow);
 			}
 		}
 
@@ -191,6 +191,36 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 				return;
 			}
 
+			this.ImportFromXmlOrZipFile (filename, fileInfo => this.Container.Data.ImportUserDatabase (fileInfo));
+		}
+
+		private void ActionCreate()
+		{
+			string filename = this.ShowImportFileDialog ();
+
+			if (string.IsNullOrEmpty (filename))
+			{
+				return;
+			}
+
+			this.ImportFromXmlOrZipFile (filename, fileInfo => this.Container.Data.CreateUserDatabase (fileInfo));
+		}
+
+		private void ActionUpdate()
+		{
+			string filename = this.ShowImportFileDialog ();
+
+			if (string.IsNullOrEmpty (filename))
+			{
+				return;
+			}
+
+			this.ImportFromXmlOrZipFile (filename, fileInfo => this.Container.Data.ImportSharedData (fileInfo));
+		}
+
+		
+		private void ImportFromXmlOrZipFile(string filename, System.Action<System.IO.FileInfo> importAction)
+		{
 			if (System.IO.Path.GetExtension (filename).ToLowerInvariant () == ".zip")
 			{
 				ZipFile zip = new ZipFile ();
@@ -204,7 +234,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					{
 						string temp = System.IO.Path.GetTempFileName ();
 						System.IO.File.WriteAllBytes (temp, zip.Entries.First ().Data);
-						this.ImportXmlFromFile (temp, () => System.IO.File.Delete (temp));
+						this.ImportFromFile (filename, importAction, () => System.IO.File.Delete (temp));
 					}
 				}
 
@@ -212,66 +242,33 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			}
 			else
 			{
-				this.ImportXmlFromFile (filename);
-			}
-		}
-
-		private void ImportXmlFromFile(string filename, System.Action beforeExit = null)
-		{
-			try
-			{
-				var fileInfo = new System.IO.FileInfo (filename);
-
-				this.Container.Data.ImportDatabase (fileInfo);
-
-				MessageDialog.CreateOk ("Importation de la base de données", DialogIcon.None, "L'importation s'est terminée correctement.<br/>L'application devra être relancée.").OpenDialog (this.Container.DefaultOwnerWindow);
-
-				if (beforeExit != null)
-				{
-					beforeExit ();
-				}
-
-				System.Environment.Exit (0);
-			}
-			catch (System.Exception ex)
-			{
-				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, ex.Message).OpenDialog (this.Container.DefaultOwnerWindow);
-			}
-			
-			if (beforeExit != null)
-			{
-				beforeExit ();
+				this.ImportFromFile (filename, importAction);
 			}
 		}
 		
-		private void ActionCreate()
+		private void ImportFromFile(string path, System.Action<System.IO.FileInfo> actionImport, System.Action actionBeforeExit = null)
 		{
-			string filename = this.ShowImportFileDialog ();
-
-			if (string.IsNullOrEmpty (filename))
+			try
 			{
-				return;
+				var fileInfo = new System.IO.FileInfo (path);
+
+				actionImport (fileInfo);
+
+				MessageDialog.CreateOk ("Importation de la base de données", DialogIcon.None, "L'importation s'est terminée correctement.<br/>L'application devra être relancée.").OpenDialog (this.Container.DefaultOwnerWindow);
 			}
-
-			var fileInfo = new System.IO.FileInfo (filename);
-
-			this.Container.Data.CreateUserDatabase (fileInfo);
-		}
-
-		private void ActionUpdate()
-		{
-			string filename = this.ShowImportFileDialog ();
-
-			if (string.IsNullOrEmpty (filename))
+			catch (System.Exception ex)
 			{
-				return;
+				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, FormattedText.Escape (ex.Message)).OpenDialog (this.Container.DefaultOwnerWindow);
 			}
-
-			var fileInfo = new System.IO.FileInfo (filename);
-
-			this.Container.Data.ImportSharedData (fileInfo);
+			
+			if (actionBeforeExit != null)
+			{
+				actionBeforeExit ();
+			}
+			
+			System.Environment.Exit (0);
 		}
-
+		
 
 		private string ShowExportFileDialog()
 		{

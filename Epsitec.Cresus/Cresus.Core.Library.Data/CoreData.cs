@@ -416,7 +416,7 @@ namespace Epsitec.Cresus.Core
 
 		#endregion
 
-		public void ImportDatabase(System.IO.FileInfo file)
+		public void ImportUserDatabase(System.IO.FileInfo file)
 		{
 			RawImportMode importMode = RawImportMode.PreserveIds;
 
@@ -430,6 +430,19 @@ namespace Epsitec.Cresus.Core
 			CoreData.CreateDatabase (file, dbAccess, importMode);
 		}
 
+		public void CreateUserDatabase(System.IO.FileInfo file)
+		{
+			this.DataInfrastructure.CloseConnection ();
+			this.DataInfrastructure.Dispose ();
+
+			DbAccess dbAccess = CoreData.GetDatabaseAccess ();
+			CoreData.CreateUserDatabase (file, dbAccess);
+		}
+
+
+		
+		
+		
 		public static void CreateUserDatabase(System.IO.FileInfo file, DbAccess dbAccess)
 		{
 			RawImportMode importMode = RawImportMode.DecrementIds;
@@ -437,12 +450,12 @@ namespace Epsitec.Cresus.Core
 			CoreData.CreateDatabase (file, dbAccess, importMode);
 		}
 
-		public void CreateUserDatabase(System.IO.FileInfo file)
-		{
-			RawImportMode importMode = RawImportMode.DecrementIds;
+		//public void CreateUserDatabase(System.IO.FileInfo file)
+		//{
+		//    RawImportMode importMode = RawImportMode.DecrementIds;
 
-			CoreData.ImportDatabase (file, this.DataInfrastructure, importMode);
-		}
+		//    CoreData.ImportDatabase (file, this.DataInfrastructure, importMode);
+		//}
 
 		private static void CreateDatabase(System.IO.FileInfo file, DbAccess dbAccess, RawImportMode importMode)
 		{
