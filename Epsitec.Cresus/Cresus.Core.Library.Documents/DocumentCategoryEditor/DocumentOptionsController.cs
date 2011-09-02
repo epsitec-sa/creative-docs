@@ -545,7 +545,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			{
 				if (options.Contains (verboseOption.Option))
 				{
-					var description = FormattedText.Concat (verboseOption.Description);
+					var description = FormattedText.Concat (verboseOption.ShortDescription);
 					result.Add (description.ApplyFontColor (color));
 				}
 			}

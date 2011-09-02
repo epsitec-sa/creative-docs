@@ -243,7 +243,7 @@ namespace Epsitec.Cresus.Core.Documents
 
 		public void GetOptionDescription(VerboseDocumentOption option, bool useDefaultValue, out FormattedText description, out FormattedText value)
 		{
-			description = option.Description;
+			description = option.ShortDescription;
 			value = useDefaultValue ? option.DefaultValue : this[option.Option];
 
 			if (option.Type == DocumentOptionValueType.Boolean)
@@ -261,7 +261,7 @@ namespace Epsitec.Cresus.Core.Documents
 
 			if (option.Type == DocumentOptionValueType.Enumeration)
 			{
-				description = option.Description;
+				description = option.ShortDescription;
 
 				for (int i = 0; i < option.Enumeration.Count (); i++)
 				{
