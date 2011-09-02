@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.Core.Business.Actions
 
 			if (newDocumentType == DocumentType.Invoice)
 			{
-				var paymentTransaction = AffairActions.CreateInvoiceDialog (businessContext);
+				var paymentTransaction = AffairActions.CreateInvoiceDialog (businessContext, documentMetadata);
 
 				if (paymentTransaction == null)
 				{
@@ -132,10 +132,10 @@ namespace Epsitec.Cresus.Core.Business.Actions
 		}
 
 
-		private static PaymentTransactionEntity CreateInvoiceDialog(IBusinessContext businessContext)
+		private static PaymentTransactionEntity CreateInvoiceDialog(IBusinessContext businessContext, DocumentMetadataEntity documentMetadata)
 		{
-			//	Choix interactif d'un moyen de paiement.
-			using (var dialog = new Dialogs.CreateInvoiceDialog (businessContext))
+			//	Choix interactif du moyen de paiement.
+			using (var dialog = new Dialogs.CreateInvoiceDialog (businessContext, documentMetadata))
 			{
 				dialog.IsModal = true;
 				dialog.OpenDialog ();

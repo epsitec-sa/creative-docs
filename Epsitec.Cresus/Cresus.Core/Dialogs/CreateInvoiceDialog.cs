@@ -7,6 +7,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Business.Finance;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Entities;
 
@@ -20,10 +21,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// </summary>
 	public class CreateInvoiceDialog : CoreDialog
 	{
-		public CreateInvoiceDialog(IBusinessContext businessContext)
+		public CreateInvoiceDialog(IBusinessContext businessContext, DocumentMetadataEntity documentMetadata)
 			: base (businessContext.Data.Host)
 		{
 			this.businessContext = businessContext;
+			this.documentMetadata = documentMetadata;
+
 			this.paymentCategoryEntities = this.businessContext.GetAllEntities<PaymentCategoryEntity> ();
 		}
 
@@ -38,8 +41,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 		protected override void SetupWindow(Window window)
 		{
 			window.Text = "Création d'une facture";
-			window.MakeFixedSizeWindow ();
-			window.ClientSize = new Size (250, 200);
+			//?window.MakeFixedSizeWindow ();
+			window.ClientSize = new Size (300, 250);
 		}
 
 		protected override void SetupWidgets(Window window)
@@ -60,6 +63,17 @@ namespace Epsitec.Cresus.Core.Dialogs
 			};
 
 			//	Crée la partie principale.
+			this.CreateUIAmountDue (frame);
+
+			new Separator
+			{
+				Parent = frame,
+				PreferredHeight = 1,
+				IsHorizontalLine = true,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, 10),
+			};
+
 			new StaticText
 			{
 				Parent = frame,
@@ -102,6 +116,34 @@ namespace Epsitec.Cresus.Core.Dialogs
 			};
 
 			this.UpdateButtons ();
+		}
+
+		private void CreateUIAmountDue(Widget parent)
+		{
+			var frame = new FrameBox
+			{
+				Parent = parent,
+				PreferredHeight = 20,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, 10),
+			};
+
+			new StaticText
+			{
+				Parent = frame,
+				Text = "Solde dû",
+				PreferredWidth = 55,
+				Dock = DockStyle.Left,
+			};
+
+			new TextField
+			{
+				Parent = frame,
+				Text = Misc.PriceToString (this.AmountDue),
+				IsReadOnly = true,
+				PreferredWidth = 80,
+				Dock = DockStyle.Left,
+			};
 		}
 
 		private void CreateUIRadioButtons(Widget parent)
@@ -149,6 +191,27 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
+		private decimal AmountDue
+		{
+			get
+			{
+				var businessDocument = this.documentMetadata.BusinessDocument as BusinessDocumentEntity;
+				var endTotal = businessDocument.Lines.OfType<EndTotalDocumentItemEntity> ().FirstOrDefault ();
+				decimal amountDue;
+
+				if (endTotal.FixedPriceAfterTax.HasValue)
+				{
+					amountDue = endTotal.FixedPriceAfterTax.Value;
+				}
+				else
+				{
+					amountDue = endTotal.PriceAfterTax.GetValueOrDefault (0);
+				}
+
+				return PriceCalculator.ClipPriceValue (amountDue, businessDocument.CurrencyCode);
+			}
+		}
+
 		private PaymentTransactionEntity MakePaymentTransaction()
 		{
 			//	Crée l'entité PaymentDetailEntity.
@@ -174,6 +237,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 
 		private readonly IBusinessContext						businessContext;
+		private readonly DocumentMetadataEntity					documentMetadata;
 		private readonly IEnumerable<PaymentCategoryEntity>		paymentCategoryEntities;
 
 		private PaymentCategoryEntity							paymentCategoryEntity;
