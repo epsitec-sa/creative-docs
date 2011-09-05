@@ -20,12 +20,15 @@ namespace Epsitec.Cresus.Core.Dialogs
 {
 	/// <summary>
 	/// Dialogue pour choisir le mode de paiement lors de la création d'une facture.
+	/// Attention, la facture n'est pas encore créée !
 	/// </summary>
 	public class CreateInvoiceDialog : CoreDialog
 	{
 		public CreateInvoiceDialog(IBusinessContext businessContext, DocumentMetadataEntity sourceDocument)
 			: base (businessContext.Data.Host)
 		{
+			//	'sourceDocument' correspond en principe au bulletin de livraison, car la facture
+			//	n'est pas encore créée.
 			this.businessContext = businessContext;
 			this.sourceDocument = sourceDocument;
 
@@ -73,6 +76,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.CreateUIRadioButtons (frame);
 			this.CreateUISeparator (frame);
 			this.CreateUIDate (frame);
+			this.CreateUIDueDate (frame);
 			this.CreateUIText (frame);
 			this.CreateUISeparator (frame, DockStyle.Bottom);
 
@@ -134,7 +138,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Parent = frame,
 				Text = Misc.PriceToString (this.AmountDue),
 				IsReadOnly = true,
-				PreferredWidth = 100,
+				PreferredWidth = CreateInvoiceDialog.fieldWidth,
 				Dock = DockStyle.Left,
 				TabIndex = ++this.tabIndex,
 			};
@@ -154,7 +158,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			new StaticText
 			{
 				Parent = frame,
-				Text = "Date",
+				Text = "Date d'émission",
 				PreferredWidth = CreateInvoiceDialog.labelWidth,
 				Dock = DockStyle.Left,
 			};
@@ -162,16 +166,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.dateField = new TextField
 			{
 				Parent = frame,
-				PreferredWidth = 100,
+				PreferredWidth = CreateInvoiceDialog.fieldWidth,
 				Dock = DockStyle.Left,
 				TabIndex = ++this.tabIndex,
-			};
-
-			this.deadline = new StaticText
-			{
-				Parent = frame,
-				Dock = DockStyle.Fill,
-				Margins = new Margins (10, 0, 0, 0),
 			};
 
 			this.Date = Common.Types.Date.Today;
@@ -179,6 +176,35 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.dateField.TextChanged += delegate
 			{
 				this.UpdateButtons ();
+			};
+		}
+
+		private void CreateUIDueDate(Widget parent)
+		{
+			var frame = new FrameBox
+			{
+				Parent = parent,
+				PreferredHeight = 20,
+				Dock = DockStyle.Top,
+				Margins = new Margins (10, 10, 0, 1),
+				TabIndex = ++this.tabIndex,
+			};
+
+			new StaticText
+			{
+				Parent = frame,
+				Text = "Date d'échéance",
+				PreferredWidth = CreateInvoiceDialog.labelWidth,
+				Dock = DockStyle.Left,
+			};
+
+			this.dueDateField = new TextField
+			{
+				Parent = frame,
+				IsReadOnly = true,
+				PreferredWidth = CreateInvoiceDialog.fieldWidth,
+				Dock = DockStyle.Left,
+				TabIndex = ++this.tabIndex,
 			};
 		}
 
@@ -195,10 +221,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 			new StaticText
 			{
 				Parent = frame,
-				Text = "Texte",
-				PreferredWidth = CreateInvoiceDialog.labelWidth,
+				Text = "Texte du pied de page",
+				PreferredWidth = CreateInvoiceDialog.labelWidth-5,
 				ContentAlignment = ContentAlignment.TopLeft,
 				Dock = DockStyle.Left,
+				Margins = new Margins (0, 5, 4, 0),
 			};
 
 			this.textField = new TextFieldMulti
@@ -279,12 +306,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			if (this.paymentCategoryEntity != null && dateOK)
 			{
-				var s = this.dateConverter.ConvertToString (this.DueDate);
-				this.deadline.Text = string.Format ("(échéance le {0})", s);
+				this.dueDateField.Text = this.dateConverter.ConvertToString (this.DueDate);
 			}
 			else
 			{
-				this.deadline.Text = null;
+				this.dueDateField.Text = null;
 			}
 
 			this.acceptButton.Enable = (this.paymentCategoryEntity != null && dateOK && textOK);
@@ -380,7 +406,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private PaymentTransactionEntity CreatePaymentTransaction()
 		{
-			//	Crée l'entité PaymentTransactionEntity.
+			//	Crée l'entité PaymentTransactionEntity, qui sera attachée plus tard au document.
 			var paymentTransaction = this.businessContext.CreateEntity<PaymentTransactionEntity> ();
 
 			paymentTransaction.Text = this.Text;
@@ -422,7 +448,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
-		private static readonly double labelWidth = 65;
+		private static readonly double labelWidth = 90;
+		private static readonly double fieldWidth = 75;
 
 		private readonly IBusinessContext						businessContext;
 		private readonly DocumentMetadataEntity					sourceDocument;
@@ -432,7 +459,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private int												tabIndex;
 		private PaymentCategoryEntity							paymentCategoryEntity;
 		private TextField										dateField;
-		private StaticText										deadline;
+		private TextField										dueDateField;
 		private TextFieldMulti									textField;
 		private Button											acceptButton;
 		private Button											cancelButton;

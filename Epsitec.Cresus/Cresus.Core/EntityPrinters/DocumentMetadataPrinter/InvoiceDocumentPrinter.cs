@@ -140,7 +140,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			if (this.Entity.PaymentTransactions.Count == 0)
 			{
-				return "Il n'y a rien à imprimer, car la facture ne contient aucune donnée de facturation.";
+				return "Il n'y a rien à imprimer, car la facture ne contient aucune information de paiement.";
 			}
 
 			this.onlyTotal = false;
