@@ -364,6 +364,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		#region Auto-test
 		static BusinessLogic()
 		{
+			System.Diagnostics.Debug.Assert (BusinessLogic.Compare (BusinessLogic.GetProcessParentDocumentTypes (DocumentType.SalesQuote)));
 			System.Diagnostics.Debug.Assert (BusinessLogic.Compare (BusinessLogic.GetProcessParentDocumentTypes (DocumentType.OrderBooking),                                                                                                                DocumentType.SalesQuote));
 			System.Diagnostics.Debug.Assert (BusinessLogic.Compare (BusinessLogic.GetProcessParentDocumentTypes (DocumentType.OrderConfirmation),                                                                                DocumentType.OrderBooking, DocumentType.SalesQuote));
 			System.Diagnostics.Debug.Assert (BusinessLogic.Compare (BusinessLogic.GetProcessParentDocumentTypes (DocumentType.ProductionOrder),                                                  DocumentType.OrderConfirmation, DocumentType.OrderBooking, DocumentType.SalesQuote));
