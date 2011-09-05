@@ -24,13 +24,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// </summary>
 	public class CreateInvoiceDialog : CoreDialog
 	{
-		public CreateInvoiceDialog(IBusinessContext businessContext, DocumentMetadataEntity sourceDocument)
+		public CreateInvoiceDialog(IBusinessContext businessContext, DocumentMetadataEntity sourceDocument, bool invoiceValidation)
 			: base (businessContext.Data.Host)
 		{
 			//	'sourceDocument' correspond en principe au bulletin de livraison, car la facture
 			//	n'est pas encore créée.
-			this.businessContext = businessContext;
-			this.sourceDocument = sourceDocument;
+			this.businessContext   = businessContext;
+			this.sourceDocument    = sourceDocument;
+			this.invoiceValidation = invoiceValidation;
 
 			this.paymentCategoryEntities = this.businessContext.GetAllEntities<PaymentCategoryEntity> ();
 			this.dateConverter = new DateConverter ();
@@ -46,7 +47,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		protected override void SetupWindow(Window window)
 		{
-			window.Text = "Création d'une facture";
+			window.Text = this.invoiceValidation ? "Validation d'une facture directe" : "Création d'une facture";
 			//?window.MakeFixedSizeWindow ();
 			window.ClientSize = new Size (400, 350);
 		}
@@ -94,7 +95,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.acceptButton = new Button ()
 			{
 				Parent = footer,
-				Text = "Créer la facture",
+				Text = this.invoiceValidation ? "Valider la facture" : "Créer la facture",
 				PreferredWidth = 120,
 				ButtonStyle = Common.Widgets.ButtonStyle.DefaultAccept,
 				Dock = DockStyle.Right,
@@ -218,7 +219,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				TabIndex = ++this.tabIndex,
 			};
 
-			new StaticText
+			new StaticText  // ce texte occupera plusieurs lignes
 			{
 				Parent = frame,
 				Text = "Texte du pied de page",
@@ -453,6 +454,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private readonly IBusinessContext						businessContext;
 		private readonly DocumentMetadataEntity					sourceDocument;
+		private readonly bool									invoiceValidation;
 		private readonly IEnumerable<PaymentCategoryEntity>		paymentCategoryEntities;
 		private readonly DateConverter							dateConverter;
 

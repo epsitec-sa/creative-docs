@@ -295,28 +295,103 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		public IEnumerable<DocumentType> ProcessParentDocumentTypes
+		#region Process parent document types
+		public static IEnumerable<DocumentType> GetProcessParentDocumentTypes(DocumentType type)
 		{
-			//	Retourne la liste des types de document qui peuvent servir de parent.
-			//	On part de l'idée que le workflow génère les documents suivants, et dans cet
-			//	ordre. En cas de changement, toutes les propriétés ProcessParentDocumentTypes
-			//	doivent être adaptées.
-			//		DocumentType.SalesQuote
-			//		DocumentType.OrderBooking
-			//		DocumentType.OrderConfirmation
-			//		DocumentType.ProductionOrder
-			//		DocumentType.ProductionChecklist
-			//		DocumentType.DeliveryNote
-			//		DocumentType.Invoice
-			get
+			//	Retourne la liste de tous les types de documents succeptibles d'être parent d'un document d'un type donné.
+			//	Par exemple:
+			//		ProductionChecklist	-> OrderBooking, SalesQuote
+			//		ProductionChecklist	-> ProductionOrder, OrderConfirmation, OrderBooking, SalesQuote
+			//		Invoice				-> DeliveryNote, OrderConfirmation, OrderBooking, SalesQuote
+			//	On remarque que bien qu'un DeliveryNote soit généralement créé après un ProductionChecklist, il n'y pas
+			//	pour parents ProductionChecklist et ProductionOrder, mais OrderConfirmation !
+			//	L'ordre complet de production des documents est:
+			//		SalesQuote
+			//		OrderBooking
+			//		OrderConfirmation
+			//		ProductionOrder
+			//		ProductionChecklist
+			//		DeliveryNote
+			//		Invoice
+			//		PaymentReminder
+			var types = BusinessLogic.ParentDocumentTypes.Where (x => x.Contains (type)).FirstOrDefault ();
+
+			if (types == null)
 			{
-				var collection = this.documentBusinessLogic.ProcessParentDocumentTypes;
+				yield break;
+			}
+			else
+			{
+				int i = types.IndexOf (type);
 
-				System.Diagnostics.Debug.Assert (collection != null);
-
-				return collection;
+				while (--i >= 0)
+				{
+					yield return types[i];
+				}
 			}
 		}
+
+		private static IEnumerable<List<DocumentType>> ParentDocumentTypes
+		{
+			get
+			{
+				yield return BusinessLogic.ParentDocumentTypes1;
+				yield return BusinessLogic.ParentDocumentTypes2;
+			}
+		}
+
+		private static List<DocumentType> ParentDocumentTypes1 = new List<DocumentType>
+		{
+			DocumentType.SalesQuote,
+			DocumentType.OrderBooking,
+			DocumentType.OrderConfirmation,
+
+			DocumentType.ProductionOrder,
+			DocumentType.ProductionChecklist,
+		};
+
+		private static List<DocumentType> ParentDocumentTypes2 = new List<DocumentType>
+		{
+			DocumentType.SalesQuote,
+			DocumentType.OrderBooking,
+			DocumentType.OrderConfirmation,
+			
+			DocumentType.DeliveryNote,
+			DocumentType.Invoice,
+			DocumentType.PaymentReminder,
+		};
+
+		#region Auto-test
+		static BusinessLogic()
+		{
+			System.Diagnostics.Debug.Assert (BusinessLogic.Compare (BusinessLogic.GetProcessParentDocumentTypes (DocumentType.OrderBooking),                                                                                                                DocumentType.SalesQuote));
+			System.Diagnostics.Debug.Assert (BusinessLogic.Compare (BusinessLogic.GetProcessParentDocumentTypes (DocumentType.OrderConfirmation),                                                                                DocumentType.OrderBooking, DocumentType.SalesQuote));
+			System.Diagnostics.Debug.Assert (BusinessLogic.Compare (BusinessLogic.GetProcessParentDocumentTypes (DocumentType.ProductionOrder),                                                  DocumentType.OrderConfirmation, DocumentType.OrderBooking, DocumentType.SalesQuote));
+			System.Diagnostics.Debug.Assert (BusinessLogic.Compare (BusinessLogic.GetProcessParentDocumentTypes (DocumentType.ProductionChecklist),                DocumentType.ProductionOrder, DocumentType.OrderConfirmation, DocumentType.OrderBooking, DocumentType.SalesQuote));
+			System.Diagnostics.Debug.Assert (BusinessLogic.Compare (BusinessLogic.GetProcessParentDocumentTypes (DocumentType.DeliveryNote),                                                     DocumentType.OrderConfirmation, DocumentType.OrderBooking, DocumentType.SalesQuote));
+			System.Diagnostics.Debug.Assert (BusinessLogic.Compare (BusinessLogic.GetProcessParentDocumentTypes (DocumentType.Invoice),                               DocumentType.DeliveryNote, DocumentType.OrderConfirmation, DocumentType.OrderBooking, DocumentType.SalesQuote));
+			System.Diagnostics.Debug.Assert (BusinessLogic.Compare (BusinessLogic.GetProcessParentDocumentTypes (DocumentType.PaymentReminder), DocumentType.Invoice, DocumentType.DeliveryNote, DocumentType.OrderConfirmation, DocumentType.OrderBooking, DocumentType.SalesQuote));
+		}
+
+		private static bool Compare(IEnumerable<DocumentType> types1, params DocumentType[] types2)
+		{
+			if (types1.Count () != types2.Count ())
+			{
+				return false;
+			}
+
+			for (int i = 0; i < types1.Count (); i++)
+			{
+				if (types1.ElementAt (i) != types2.ElementAt (i))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+		#endregion
+		#endregion
 
 
 		private readonly BusinessContext							businessContext;

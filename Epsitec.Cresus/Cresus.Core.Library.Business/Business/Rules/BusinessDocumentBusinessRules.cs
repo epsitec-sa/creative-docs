@@ -41,20 +41,22 @@ namespace Epsitec.Cresus.Core.Business.Rules
 		}
 
 
+		public static DocumentMetadataEntity GetDocument(IBusinessContext businessContext, AffairEntity activeAffair, int activeVariantId, DocumentType documentType)
+		{
+			//	Cherche le document d'un type donné.
+			var sourceDocuments = from document in activeAffair.Documents.Reverse ()
+								  where document.DocumentCategory.DocumentType == documentType &&
+									    document.BusinessDocument.VariantId.GetValueOrDefault () == activeVariantId
+								  select document;
+
+			return sourceDocuments.FirstOrDefault ();
+		}
 
 		public static DocumentMetadataEntity GetSourceDocument(IBusinessContext businessContext, AffairEntity activeAffair, int activeVariantId, DocumentType documentType)
 		{
-			var documentCategory = BusinessDocumentBusinessRules.FindDocumentCategory (businessContext, documentType);
-
-			if (documentCategory.IsNotNull ())
-			{
-				var documentMetadata = BusinessDocumentBusinessRules.CreateDocumentMetadata (businessContext, documentCategory);
-				return BusinessDocumentBusinessRules.FindSourceDocument (businessContext, activeAffair, activeVariantId, documentMetadata);
-			}
-			else
-			{
-				throw new System.InvalidOperationException (string.Format ("Cannot find document of type {0}", documentType));
-			}
+			var document = BusinessDocumentBusinessRules.FindSourceDocument (businessContext, activeAffair, activeVariantId, documentType);
+			System.Diagnostics.Debug.Assert (document != null);
+			return document;
 		}
 
 		public static DocumentMetadataEntity CreateDocument(IBusinessContext businessContext, AffairEntity activeAffair, int activeVariantId, DocumentType documentType)
@@ -64,7 +66,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			if (documentCategory.IsNotNull ())
 			{
 				var documentMetadata = BusinessDocumentBusinessRules.CreateDocumentMetadata (businessContext, documentCategory);
-				var sourceDocument   = BusinessDocumentBusinessRules.FindSourceDocument (businessContext, activeAffair, activeVariantId, documentMetadata);
+				var sourceDocument   = BusinessDocumentBusinessRules.FindSourceDocument (businessContext, activeAffair, activeVariantId, documentType);
 
 				if (sourceDocument.IsNotNull ())
 				{
@@ -96,10 +98,9 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			return documentMetadata;
 		}
 
-		private static DocumentMetadataEntity FindSourceDocument(IBusinessContext businessContext, AffairEntity activeAffair, int activeVariantId, DocumentMetadataEntity documentMetadata)
+		private static DocumentMetadataEntity FindSourceDocument(IBusinessContext businessContext, AffairEntity activeAffair, int activeVariantId, DocumentType sourceDocumentType)
 		{
-			var businessLogic = new BusinessLogic (businessContext, documentMetadata);
-			var documentTypes = new HashSet<DocumentType> (businessLogic.ProcessParentDocumentTypes);
+			var documentTypes = new HashSet<DocumentType> (BusinessLogic.GetProcessParentDocumentTypes (sourceDocumentType));
 
 			//	Cherche le document source à utiliser comme modèle.
 			var sourceDocuments = from document in activeAffair.Documents.Reverse ()

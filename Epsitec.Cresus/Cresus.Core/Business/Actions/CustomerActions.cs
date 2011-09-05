@@ -5,6 +5,7 @@ using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Orchestrators;
 using Epsitec.Cresus.Core.Orchestrators.Navigation;
+using Epsitec.Cresus.Core.Business.Rules;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,29 @@ namespace Epsitec.Cresus.Core.Business.Actions
 		public static void CreateAffairAndDirectInvoice()
 		{
 			CustomerActions.CreateAffairAndFirstDocument (DocumentType.Invoice, "DirectInvoiceWorkflow");
+		}
+
+		public static void FinishDirectInvoice()
+		{
+			var workflowEngine  = WorkflowExecutionEngine.Current;
+			var businessContext = workflowEngine.BusinessContext;
+			var activeAffair    = AffairActions.GetActiveAffair ();
+			var activeVariantId = WorkflowArgs.GetActiveVariantId ().GetValueOrDefault ();
+			var invoiceDocument = BusinessDocumentBusinessRules.GetDocument (businessContext, activeAffair, activeVariantId, DocumentType.Invoice);
+			System.Diagnostics.Debug.Assert (invoiceDocument != null);
+
+			var paymentTransaction = AffairActions.CreateInvoiceDialog (businessContext, invoiceDocument, true);
+
+			if (paymentTransaction == null)
+			{
+				throw new WorkflowException (WorkflowCancellation.Transition);
+			}
+			else
+			{
+				var businessDocument = invoiceDocument.BusinessDocument as BusinessDocumentEntity;
+				businessDocument.PaymentTransactions.Add (paymentTransaction);
+				businessDocument.BillingDate = paymentTransaction.PaymentDetail.Date;
+			}
 		}
 
 

@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			if (this.Entity.PaymentTransactions.Count == 0)
 			{
-				return "Il n'y a rien à imprimer, car la facture ne contient aucune information de paiement.";
+				return "Il n'y a rien à imprimer, car la facture ne contient aucune information de paiement. Il s'agit probablement d'une facture directe qui n'a pas été validée.";
 			}
 
 			this.onlyTotal = false;
