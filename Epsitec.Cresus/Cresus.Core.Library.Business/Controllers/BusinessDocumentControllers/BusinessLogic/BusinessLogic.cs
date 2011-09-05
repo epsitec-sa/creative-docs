@@ -364,6 +364,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		#region Auto-test
 		static BusinessLogic()
 		{
+			//	Le constructeur statique est utilisé pour effectuer un auto-test à chaque exécution !
 			System.Diagnostics.Debug.Assert (BusinessLogic.Compare (BusinessLogic.GetProcessParentDocumentTypes (DocumentType.SalesQuote)));
 			System.Diagnostics.Debug.Assert (BusinessLogic.Compare (BusinessLogic.GetProcessParentDocumentTypes (DocumentType.OrderBooking),                                                                                                                DocumentType.SalesQuote));
 			System.Diagnostics.Debug.Assert (BusinessLogic.Compare (BusinessLogic.GetProcessParentDocumentTypes (DocumentType.OrderConfirmation),                                                                                DocumentType.OrderBooking, DocumentType.SalesQuote));

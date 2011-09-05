@@ -34,17 +34,16 @@ namespace Epsitec.Cresus.Core.Business.Actions
 			var invoiceDocument = BusinessDocumentBusinessRules.GetDocument (businessContext, activeAffair, activeVariantId, DocumentType.Invoice);
 			System.Diagnostics.Debug.Assert (invoiceDocument != null);
 
+			//	Affiche le dialogue permettant de valider la facture directe en choisissant le moyen de paiement.
 			var paymentTransaction = AffairActions.CreateInvoiceDialog (businessContext, invoiceDocument, true);
 
-			if (paymentTransaction == null)
+			if (paymentTransaction == null)  // annulation de l'utilisateur dans le dialogue ?
 			{
 				throw new WorkflowException (WorkflowCancellation.Transition);
 			}
 			else
 			{
-				var businessDocument = invoiceDocument.BusinessDocument as BusinessDocumentEntity;
-				businessDocument.PaymentTransactions.Add (paymentTransaction);
-				businessDocument.BillingDate = paymentTransaction.PaymentDetail.Date;
+				BusinessDocumentBusinessRules.AddPayment (invoiceDocument, paymentTransaction);
 			}
 		}
 

@@ -75,9 +75,10 @@ namespace Epsitec.Cresus.Core.Business.Actions
 
 			if (newDocumentType == DocumentType.Invoice)
 			{
+				//	Affiche le dialogue permettant de choisir le moyen de paiement, avant de créer la facture.
 				paymentTransaction = AffairActions.CreateInvoiceDialog (businessContext, sourceDocument, false);
 
-				if (paymentTransaction == null)
+				if (paymentTransaction == null)  // annulation de l'utilisateur dans le dialogue ?
 				{
 					throw new WorkflowException (WorkflowCancellation.Transition);
 				}
@@ -90,12 +91,7 @@ namespace Epsitec.Cresus.Core.Business.Actions
 				setupAction (activeAffair, documentMetadata);
 			}
 
-			if (paymentTransaction != null)
-			{
-				var businessDocument = documentMetadata.BusinessDocument as BusinessDocumentEntity;
-				businessDocument.PaymentTransactions.Add (paymentTransaction);
-				businessDocument.BillingDate = paymentTransaction.PaymentDetail.Date;
-			}
+			BusinessDocumentBusinessRules.AddPayment (documentMetadata, paymentTransaction);
 
 			WorkflowArgs.SetActiveVariantId (documentMetadata.BusinessDocument.VariantId);
 

@@ -52,29 +52,29 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			return sourceDocuments.FirstOrDefault ();
 		}
 
-		public static DocumentMetadataEntity GetSourceDocument(IBusinessContext businessContext, AffairEntity activeAffair, int activeVariantId, DocumentType documentType)
+		public static DocumentMetadataEntity GetSourceDocument(IBusinessContext businessContext, AffairEntity activeAffair, int activeVariantId, DocumentType sourceDocumentType)
 		{
-			var document = BusinessDocumentBusinessRules.FindSourceDocument (businessContext, activeAffair, activeVariantId, documentType);
+			var document = BusinessDocumentBusinessRules.FindSourceDocument (businessContext, activeAffair, activeVariantId, sourceDocumentType);
 			System.Diagnostics.Debug.Assert (document != null);
 			return document;
 		}
 
-		public static DocumentMetadataEntity CreateDocument(IBusinessContext businessContext, AffairEntity activeAffair, int activeVariantId, DocumentType documentType)
+		public static DocumentMetadataEntity CreateDocument(IBusinessContext businessContext, AffairEntity activeAffair, int activeVariantId, DocumentType sourceDocumentType)
 		{
-			var documentCategory = BusinessDocumentBusinessRules.FindDocumentCategory (businessContext, documentType);
+			var documentCategory = BusinessDocumentBusinessRules.FindDocumentCategory (businessContext, sourceDocumentType);
 
 			if (documentCategory.IsNotNull ())
 			{
 				var documentMetadata = BusinessDocumentBusinessRules.CreateDocumentMetadata (businessContext, documentCategory);
-				var sourceDocument   = BusinessDocumentBusinessRules.FindSourceDocument (businessContext, activeAffair, activeVariantId, documentType);
+				var sourceDocument   = BusinessDocumentBusinessRules.FindSourceDocument (businessContext, activeAffair, activeVariantId, sourceDocumentType);
 
 				if (sourceDocument.IsNotNull ())
 				{
 					//	Le nouveau document devient un clone du document source.
-					documentMetadata.BusinessDocument = BusinessDocumentBusinessRules.CloneBusinessDocument (businessContext, activeAffair, sourceDocument, documentType);
+					documentMetadata.BusinessDocument = BusinessDocumentBusinessRules.CloneBusinessDocument (businessContext, activeAffair, sourceDocument, sourceDocumentType);
 
 					// TODO: Ce n'est pas suffisant de geler le document "source" !
-					// Une facture n'est pas exnicolasemple jamais gelée, puisqu'elle ne sert jamais de source.
+					// Une facture n'est jamais gelée, puisqu'elle ne sert jamais de source.
 					sourceDocument.DocumentState = DocumentState.Inactive;
 				}
 
@@ -84,7 +84,19 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			}
 			else
 			{
-				throw new System.InvalidOperationException (string.Format ("Cannot create document of type {0}", documentType));
+				throw new System.InvalidOperationException (string.Format ("Cannot create document of type {0}", sourceDocumentType));
+			}
+		}
+
+		public static void AddPayment(DocumentMetadataEntity document, PaymentTransactionEntity payment)
+		{
+			//	Ajoute un PaymentTransaction à un document commercial.
+			if (payment != null)
+			{
+				var businessDocument = document.BusinessDocument as BusinessDocumentEntity;
+
+				businessDocument.PaymentTransactions.Add (payment);
+				businessDocument.BillingDate = payment.PaymentDetail.Date;
 			}
 		}
 
