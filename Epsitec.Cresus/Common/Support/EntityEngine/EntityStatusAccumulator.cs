@@ -1,7 +1,8 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Entities;
 using Epsitec.Common.Types;
 
 using System.Collections.Generic;
@@ -10,41 +11,15 @@ using System;
 
 namespace Epsitec.Common.Support.EntityEngine
 {
-    public class EntityStatusAccumulator : IDisposable
+	public class EntityStatusAccumulator : IDisposable
 	{
 		public EntityStatusAccumulator(bool atLeastOne = false)
 		{
 			this.atLeastOne = atLeastOne;
 		}
 
-		void IDisposable.Dispose()
-		{
-		}
-
-
-		public void Accumulate(IEnumerable<EntityStatus> newStatus)
-		{
-			foreach (var s in newStatus)
-			{
-				this.Accumulate (s);
-			}
-		}
-
-		public void Accumulate(EntityStatus newStatus)
-		{
-			if (!this.currentStatusValid)
-			{
-				this.currentStatus = newStatus;
-				this.currentStatusValid = true;
-			}
-			else
-			{
-				this.currentStatus = this.CombineStatus (this.currentStatus, newStatus);
-			}
-		}
-
-
-		public EntityStatus EntityStatus
+		
+		public EntityStatus						EntityStatus
 		{
 			get
 			{
@@ -52,30 +27,105 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		
+		#region IDisposable Members
 
-		private EntityStatus CombineStatus(params EntityStatus[] newStatus)
+		void IDisposable.Dispose()
 		{
-			if (newStatus == null || newStatus.Count () == 0)
+		}
+
+		#endregion
+
+		public void Accumulate(IEnumerable<EntityStatus> newStatus)
+		{
+			EntityStatus[] values;
+
+			if (this.currentStatusDefined)
+			{
+				values = Epsitec.Common.Types.Collections.Enumerable.FromItem (this.currentStatus).Concat (newStatus).ToArray ();
+			}
+			else
+			{
+				values = newStatus.ToArray ();
+			}
+
+			if (values.Length == 0)
+			{
+				System.Diagnostics.Debug.Assert (this.currentStatusDefined == false);
+			}
+			else
+			{
+				this.currentStatus      = EntityStatusAccumulator.CombineStatus (this.atLeastOne, values);
+				this.currentStatusDefined = true;
+			}
+		}
+
+		public void Accumulate(EntityStatus newStatus)
+		{
+			if (this.currentStatusDefined)
+			{
+				this.currentStatus = EntityStatusAccumulator.CombineStatus (this.atLeastOne, this.currentStatus, newStatus);
+			}
+			else
+			{
+				this.currentStatus        = newStatus;
+				this.currentStatusDefined = true;
+			}
+		}
+
+		public void Accumulate(AbstractEntity entity, EntityStatusAccumulationMode mode = EntityStatusAccumulationMode.NoneIsEmpty)
+		{
+			var realEntity = entity.UnwrapNullEntity ();
+
+			if (realEntity == null)
+			{
+				this.Accumulate (mode == EntityStatusAccumulationMode.NoneIsEmpty ? EntityStatus.Empty : EntityStatus.None);
+			}
+			else
+			{
+				this.Accumulate (realEntity.GetEntityStatus ());
+			}
+		}
+
+		public void Accumulate(IEnumerable<AbstractEntity> entities, EntityStatusAccumulationMode mode = EntityStatusAccumulationMode.NoneIsEmpty)
+		{
+			var array = entities.ToArray ();
+
+			if (array.Length == 0)
+			{
+				this.Accumulate (mode == EntityStatusAccumulationMode.NoneIsEmpty ?	EntityStatus.Empty : EntityStatus.None);
+			}
+			else
+			{
+				this.Accumulate (entities.Select (x => x.GetEntityStatus ()));
+			}
+		}
+
+
+
+		private static EntityStatus CombineStatus(bool atLeastOne, params EntityStatus[] newStatus)
+		{
+			if (newStatus == null || newStatus.Length == 0)
 			{
 				return EntityStatus.Empty;
 			}
 
 			//	S'il existe un seul invalide, tout est considéré comme invalide.
-			if (newStatus.Any (x => (x & EntityStatus.Empty) == 0 && (x & EntityStatus.Valid) == 0))
+			if (newStatus.Any (x => x == EntityStatus.None))
 			{
 				return EntityStatus.None;  // invalide
 			}
 
 			//	Si tout est vide, on dit que c'est vide.
-			if (newStatus.All (x => (x & EntityStatus.Empty) != 0))
+			if (newStatus.All (x => x.HasFlag (EntityStatus.Empty)))
 			{
 				return EntityStatus.Empty;
 			}
 
-			if (this.atLeastOne)
+			if (atLeastOne)
 			{
 				//	Si un seul est valide, on dit que c'est valide.
-				if (newStatus.Any (x => (x & EntityStatus.Valid) != 0))
+				if (newStatus.Any (x => x.HasFlag (EntityStatus.Valid)))
 				{
 					return EntityStatus.Valid;
 				}
@@ -83,7 +133,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			else
 			{
 				//	Si tout est valide, on dit que c'est valide.
-				if (newStatus.All (x => (x & EntityStatus.Valid) != 0))
+				if (newStatus.All (x => x.HasFlag (EntityStatus.Valid)))
 				{
 					return EntityStatus.Valid;
 				}
@@ -93,9 +143,9 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
-		private readonly bool atLeastOne;
+		private readonly bool					atLeastOne;
 
-		private bool currentStatusValid;
-		private EntityStatus currentStatus;
+		private bool							currentStatusDefined;
+		private EntityStatus					currentStatus;
 	}
 }
