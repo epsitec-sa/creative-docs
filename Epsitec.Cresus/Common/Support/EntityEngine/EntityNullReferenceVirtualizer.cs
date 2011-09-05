@@ -76,9 +76,9 @@ namespace Epsitec.Common.Support.EntityEngine
 		public static bool IsPatchedEntity(AbstractEntity entity)
 		{
 			if (entity == null)
-            {
+			{
 				return false;
-            }
+			}
 			
 			if (entity.InternalGetValueStores ().Any (store => store is Store))
 			{
@@ -101,9 +101,9 @@ namespace Epsitec.Common.Support.EntityEngine
 		public static bool IsNullEntity(AbstractEntity entity)
 		{
 			if (entity == null)
-            {
+			{
 				return true;
-            }
+			}
 
 			if (entity.GetEntityContext () is EmptyEntityContext)
 			{

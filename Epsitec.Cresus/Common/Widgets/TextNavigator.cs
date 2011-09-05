@@ -588,7 +588,7 @@ namespace Epsitec.Common.Widgets
 			{
 				switch ( key )
 				{
-					case KeyCode.NumericEnter:
+//					case KeyCode.NumericEnter:
 					case KeyCode.Return:
 						if ( this.isReadOnly )  return false;
 						this.UndoMemorize(UndoType.Insert);
