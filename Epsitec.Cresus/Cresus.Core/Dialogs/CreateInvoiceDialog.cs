@@ -5,6 +5,8 @@ using Epsitec.Common.Dialogs;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Types;
+using Epsitec.Common.Types.Converters;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.Finance;
@@ -21,13 +23,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// </summary>
 	public class CreateInvoiceDialog : CoreDialog
 	{
-		public CreateInvoiceDialog(IBusinessContext businessContext, DocumentMetadataEntity documentMetadata)
+		public CreateInvoiceDialog(IBusinessContext businessContext, DocumentMetadataEntity sourceDocument)
 			: base (businessContext.Data.Host)
 		{
 			this.businessContext = businessContext;
-			this.documentMetadata = documentMetadata;
+			this.sourceDocument = sourceDocument;
 
 			this.paymentCategoryEntities = this.businessContext.GetAllEntities<PaymentCategoryEntity> ();
+			this.dateConverter = new DateConverter ();
 		}
 
 
@@ -42,7 +45,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			window.Text = "Création d'une facture";
 			//?window.MakeFixedSizeWindow ();
-			window.ClientSize = new Size (300, 250);
+			window.ClientSize = new Size (400, 350);
 		}
 
 		protected override void SetupWidgets(Window window)
@@ -51,7 +54,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				Parent = window.Root,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (10, 10, 10, 0),
+				Margins = new Margins (0, 0, 10, 0),
+				TabIndex = ++this.tabIndex,
 			};
 
 			var footer = new FrameBox
@@ -59,30 +63,18 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Parent = window.Root,
 				PreferredHeight = 20,
 				Dock = DockStyle.Bottom,
-				Margins = new Margins (10, 10, 10, 10),
+				Margins = new Margins (10),
+				TabIndex = ++this.tabIndex,
 			};
 
 			//	Crée la partie principale.
 			this.CreateUIAmountDue (frame);
-
-			new Separator
-			{
-				Parent = frame,
-				PreferredHeight = 1,
-				IsHorizontalLine = true,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 10),
-			};
-
-			new StaticText
-			{
-				Parent = frame,
-				Text = "Choix du mode de paiement :",
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 10),
-			};
-
+			this.CreateUISeparator (frame);
 			this.CreateUIRadioButtons (frame);
+			this.CreateUISeparator (frame);
+			this.CreateUIDate (frame);
+			this.CreateUIText (frame);
+			this.CreateUISeparator (frame, DockStyle.Bottom);
 
 			//	Crée le pied de page.
 			this.cancelButton = new Button ()
@@ -125,14 +117,15 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Parent = parent,
 				PreferredHeight = 20,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 10),
+				Margins = new Margins (10, 10, 0, 0),
+				TabIndex = ++this.tabIndex,
 			};
 
 			new StaticText
 			{
 				Parent = frame,
-				Text = "Solde dû",
-				PreferredWidth = 55,
+				Text = "Montant dû",
+				PreferredWidth = CreateInvoiceDialog.labelWidth,
 				Dock = DockStyle.Left,
 			};
 
@@ -141,13 +134,96 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Parent = frame,
 				Text = Misc.PriceToString (this.AmountDue),
 				IsReadOnly = true,
-				PreferredWidth = 80,
+				PreferredWidth = 100,
 				Dock = DockStyle.Left,
+				TabIndex = ++this.tabIndex,
+			};
+		}
+
+		private void CreateUIDate(Widget parent)
+		{
+			var frame = new FrameBox
+			{
+				Parent = parent,
+				PreferredHeight = 20,
+				Dock = DockStyle.Top,
+				Margins = new Margins (10, 10, 0, 1),
+				TabIndex = ++this.tabIndex,
+			};
+
+			new StaticText
+			{
+				Parent = frame,
+				Text = "Date",
+				PreferredWidth = CreateInvoiceDialog.labelWidth,
+				Dock = DockStyle.Left,
+			};
+
+			this.dateField = new TextField
+			{
+				Parent = frame,
+				PreferredWidth = 100,
+				Dock = DockStyle.Left,
+				TabIndex = ++this.tabIndex,
+			};
+
+			this.deadline = new StaticText
+			{
+				Parent = frame,
+				Dock = DockStyle.Fill,
+				Margins = new Margins (10, 0, 0, 0),
+			};
+
+			this.Date = Common.Types.Date.Today;
+
+			this.dateField.TextChanged += delegate
+			{
+				this.UpdateButtons ();
+			};
+		}
+
+		private void CreateUIText(Widget parent)
+		{
+			var frame = new FrameBox
+			{
+				Parent = parent,
+				Dock = DockStyle.Fill,
+				Margins = new Margins (10, 10, 0, 0),
+				TabIndex = ++this.tabIndex,
+			};
+
+			new StaticText
+			{
+				Parent = frame,
+				Text = "Texte",
+				PreferredWidth = CreateInvoiceDialog.labelWidth,
+				ContentAlignment = ContentAlignment.TopLeft,
+				Dock = DockStyle.Left,
+			};
+
+			this.textField = new TextFieldMulti
+			{
+				Parent = frame,
+				Dock = DockStyle.Fill,
+				TabIndex = ++this.tabIndex,
+			};
+
+			this.textField.TextChanged += delegate
+			{
+				this.UpdateButtons ();
 			};
 		}
 
 		private void CreateUIRadioButtons(Widget parent)
 		{
+			new StaticText
+			{
+				Parent = parent,
+				Text = "Choix du mode de paiement :",
+				Dock = DockStyle.Top,
+				Margins = new Margins (10, 10, 0, 5),
+			};
+
 			int index = 0;
 
 			foreach (var entity in this.paymentCategoryEntities)
@@ -158,25 +234,66 @@ namespace Epsitec.Cresus.Core.Dialogs
 					FormattedText = entity.Name,
 					Index = index++,
 					Dock = DockStyle.Top,
+					Margins = new Margins (10, 10, 0, 0),
+					TabIndex = ++this.tabIndex,
 				};
 
 				radio.Clicked += delegate
 				{
 					this.paymentCategoryEntity = this.paymentCategoryEntities.ElementAt (radio.Index);
+					this.UpdateText ();
 					this.UpdateButtons ();
 				};
 			}
 		}
 
+		private void CreateUISeparator(Widget parent, DockStyle dockStyle = DockStyle.Top)
+		{
+			new Separator
+			{
+				Parent = parent,
+				PreferredHeight = 1,
+				IsHorizontalLine = true,
+				Dock = dockStyle,
+				Margins = new Margins (0, 0, 10, (dockStyle == DockStyle.Bottom) ? 0 : 10),
+			};
+		}
+
+
+		private void UpdateText()
+		{
+			if (this.paymentCategoryEntity.Description.IsNullOrEmpty)
+			{
+				this.Text = this.paymentCategoryEntity.Name;
+			}
+			else
+			{
+				this.Text = this.paymentCategoryEntity.Description;
+			}
+		}
+
 		private void UpdateButtons()
 		{
-			this.acceptButton.Enable = (this.paymentCategoryEntity != null);
+			bool dateOK = this.dateConverter.CanConvertFromString (this.dateField.Text);
+			bool textOK = !this.textField.FormattedText.IsNullOrEmpty;
+
+			if (this.paymentCategoryEntity != null && dateOK)
+			{
+				var s = this.dateConverter.ConvertToString (this.DueDate);
+				this.deadline.Text = string.Format ("(échéance le {0})", s);
+			}
+			else
+			{
+				this.deadline.Text = null;
+			}
+
+			this.acceptButton.Enable = (this.paymentCategoryEntity != null && dateOK && textOK);
 		}
 
 
 		private void ExecuteOkCommand()
 		{
-			this.PaymentTransaction = this.MakePaymentTransaction ();
+			this.PaymentTransaction = this.CreatePaymentTransaction ();
 
 			this.Result = DialogResult.Accept;
 			this.CloseDialog ();
@@ -191,12 +308,60 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
+		private Common.Types.Date DueDate
+		{
+			get
+			{
+				int term = 30;
+
+				if (this.paymentCategoryEntity != null &&
+					this.paymentCategoryEntity.StandardPaymentTerm.HasValue)
+				{
+					term = this.paymentCategoryEntity.StandardPaymentTerm.Value;
+				}
+
+				return this.Date.AddDays (term);
+			}
+		}
+
+		private Common.Types.Date Date
+		{
+			get
+			{
+				var x = this.dateConverter.ConvertFromString (this.dateField.Text);
+
+				if (x.HasValue)
+				{
+					return x.Value;
+				}
+				else
+				{
+					return Common.Types.Date.Today;
+				}
+			}
+			set
+			{
+				this.dateField.Text = this.dateConverter.ConvertToString (value);
+			}
+		}
+
+		private FormattedText Text
+		{
+			get
+			{
+				return this.textField.FormattedText;
+			}
+			set
+			{
+				this.textField.FormattedText = value;
+			}
+		}
+
 		private decimal AmountDue
 		{
 			get
 			{
-				var businessDocument = this.documentMetadata.BusinessDocument as BusinessDocumentEntity;
-				var endTotal = businessDocument.Lines.OfType<EndTotalDocumentItemEntity> ().FirstOrDefault ();
+				var endTotal = this.BusinessDocumentEntity.Lines.OfType<EndTotalDocumentItemEntity> ().FirstOrDefault ();
 				decimal amountDue;
 
 				if (endTotal.FixedPriceAfterTax.HasValue)
@@ -208,39 +373,67 @@ namespace Epsitec.Cresus.Core.Dialogs
 					amountDue = endTotal.PriceAfterTax.GetValueOrDefault (0);
 				}
 
-				return PriceCalculator.ClipPriceValue (amountDue, businessDocument.CurrencyCode);
+				return PriceCalculator.ClipPriceValue (amountDue, this.BusinessDocumentEntity.CurrencyCode);
 			}
 		}
 
-		private PaymentTransactionEntity MakePaymentTransaction()
+
+		private PaymentTransactionEntity CreatePaymentTransaction()
 		{
-			//	Crée l'entité PaymentDetailEntity.
-			var paymentDetail = this.businessContext.CreateEntity<PaymentDetailEntity> ();
-
-			paymentDetail.PaymentType = Business.Finance.PaymentDetailType.Due;
-			paymentDetail.PaymentCategory = this.paymentCategoryEntity;
-			//?paymentDetail.Currency = ???
-
-			int term = this.paymentCategoryEntity.StandardPaymentTerm.HasValue ? this.paymentCategoryEntity.StandardPaymentTerm.Value : 30;
-			paymentDetail.Date    = Common.Types.Date.Today;
-			paymentDetail.DueDate = Common.Types.Date.Today.AddDays (term);
-
 			//	Crée l'entité PaymentTransactionEntity.
 			var paymentTransaction = this.businessContext.CreateEntity<PaymentTransactionEntity> ();
 
-			paymentTransaction.Text = this.paymentCategoryEntity.Name;  // TODO: juste ?
-			paymentTransaction.PaymentDetail = paymentDetail;
+			paymentTransaction.Text = this.Text;
+
+			if (!this.paymentCategoryEntity.IsrDefinition.IsNull ())
+			{
+				PaymentTransaction.IsrReferenceNumber = Isr.GetNewReferenceNumber (this.businessContext, this.paymentCategoryEntity.IsrDefinition);
+			}
+
+			//	Initialise le PaymentDetailEntity.
+			var paymentDetail = paymentTransaction.PaymentDetail;
+			System.Diagnostics.Debug.Assert (paymentDetail != null);
+
+			paymentDetail.PaymentType     = Business.Finance.PaymentDetailType.Due;
+			paymentDetail.PaymentCategory = this.paymentCategoryEntity;
+			paymentDetail.Amount          = this.AmountDue;
+			paymentDetail.Currency        = this.GetDocumentCurrencyEntity ();
+			paymentDetail.Date            = this.Date;
+			paymentDetail.DueDate         = this.DueDate;
 
 			return paymentTransaction;
 		}
 
+		private CurrencyEntity GetDocumentCurrencyEntity()
+		{
+			//	Retourne l'entité correspondant à la monnaie du document en cours.
+			var example = new CurrencyEntity ();
+			example.CurrencyCode = this.BusinessDocumentEntity.CurrencyCode;
 
+			return this.businessContext.DataContext.GetByExample<CurrencyEntity> (example).FirstOrDefault ();
+		}
+
+		private BusinessDocumentEntity BusinessDocumentEntity
+		{
+			get
+			{
+				return this.sourceDocument.BusinessDocument as BusinessDocumentEntity;
+			}
+		}
+
+
+		private static readonly double labelWidth = 65;
 
 		private readonly IBusinessContext						businessContext;
-		private readonly DocumentMetadataEntity					documentMetadata;
+		private readonly DocumentMetadataEntity					sourceDocument;
 		private readonly IEnumerable<PaymentCategoryEntity>		paymentCategoryEntities;
+		private readonly DateConverter							dateConverter;
 
+		private int												tabIndex;
 		private PaymentCategoryEntity							paymentCategoryEntity;
+		private TextField										dateField;
+		private StaticText										deadline;
+		private TextFieldMulti									textField;
 		private Button											acceptButton;
 		private Button											cancelButton;
 	}

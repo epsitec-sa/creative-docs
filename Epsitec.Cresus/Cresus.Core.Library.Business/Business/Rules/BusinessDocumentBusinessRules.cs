@@ -41,7 +41,22 @@ namespace Epsitec.Cresus.Core.Business.Rules
 		}
 
 
-		
+
+		public static DocumentMetadataEntity GetSourceDocument(IBusinessContext businessContext, AffairEntity activeAffair, int activeVariantId, DocumentType documentType)
+		{
+			var documentCategory = BusinessDocumentBusinessRules.FindDocumentCategory (businessContext, documentType);
+
+			if (documentCategory.IsNotNull ())
+			{
+				var documentMetadata = BusinessDocumentBusinessRules.CreateDocumentMetadata (businessContext, documentCategory);
+				return BusinessDocumentBusinessRules.FindSourceDocument (businessContext, activeAffair, activeVariantId, documentMetadata);
+			}
+			else
+			{
+				throw new System.InvalidOperationException (string.Format ("Cannot find document of type {0}", documentType));
+			}
+		}
+
 		public static DocumentMetadataEntity CreateDocument(IBusinessContext businessContext, AffairEntity activeAffair, int activeVariantId, DocumentType documentType)
 		{
 			var documentCategory = BusinessDocumentBusinessRules.FindDocumentCategory (businessContext, documentType);

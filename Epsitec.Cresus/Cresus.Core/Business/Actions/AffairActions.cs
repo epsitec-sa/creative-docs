@@ -65,10 +65,24 @@ namespace Epsitec.Cresus.Core.Business.Actions
 
 		private static void CreateAndFocusDocument(DocumentType newDocumentType, System.Action<AffairEntity, DocumentMetadataEntity> setupAction = null)
 		{
-			var workflowEngine   = WorkflowExecutionEngine.Current;
-			var businessContext  = workflowEngine.BusinessContext;
-			var activeAffair     = AffairActions.GetActiveAffair ();
-			var activeVariantId  = WorkflowArgs.GetActiveVariantId ().GetValueOrDefault ();
+			var workflowEngine  = WorkflowExecutionEngine.Current;
+			var businessContext = workflowEngine.BusinessContext;
+			var activeAffair    = AffairActions.GetActiveAffair ();
+			var activeVariantId = WorkflowArgs.GetActiveVariantId ().GetValueOrDefault ();
+			var sourceDocument  = BusinessDocumentBusinessRules.GetSourceDocument (businessContext, activeAffair, activeVariantId, newDocumentType);
+
+			PaymentTransactionEntity paymentTransaction = null;
+
+			if (newDocumentType == DocumentType.Invoice)
+			{
+				paymentTransaction = AffairActions.CreateInvoiceDialog (businessContext, sourceDocument);
+
+				if (paymentTransaction == null)
+				{
+					throw new WorkflowException (WorkflowCancellation.Transition);
+				}
+			}
+
 			var documentMetadata = BusinessDocumentBusinessRules.CreateDocument (businessContext, activeAffair, activeVariantId, newDocumentType);
 
 			if (setupAction != null)
@@ -76,17 +90,11 @@ namespace Epsitec.Cresus.Core.Business.Actions
 				setupAction (activeAffair, documentMetadata);
 			}
 
-			if (newDocumentType == DocumentType.Invoice)
+			if (paymentTransaction != null)
 			{
-				var paymentTransaction = AffairActions.CreateInvoiceDialog (businessContext, documentMetadata);
-
-				if (paymentTransaction == null)
-				{
-					throw new WorkflowException (WorkflowCancellation.Transition);  // TODO: Cela stoppe l'exécution !!!
-				}
-
 				var businessDocument = documentMetadata.BusinessDocument as BusinessDocumentEntity;
 				businessDocument.PaymentTransactions.Add (paymentTransaction);
+				businessDocument.BillingDate = paymentTransaction.PaymentDetail.Date;
 			}
 
 			WorkflowArgs.SetActiveVariantId (documentMetadata.BusinessDocument.VariantId);
