@@ -101,6 +101,49 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
+		protected static IEnumerable<DocumentOption> RequiredHeaderDocumentOptions
+		{
+			get
+			{
+				yield return DocumentOption.HeaderLogo;
+				yield return DocumentOption.HeaderLogoLeft;
+				yield return DocumentOption.HeaderLogoTop;
+				yield return DocumentOption.HeaderLogoWidth;
+				yield return DocumentOption.HeaderLogoHeight;
+
+				yield return DocumentOption.HeaderFromLeft;
+				yield return DocumentOption.HeaderFromTop;
+				yield return DocumentOption.HeaderFromWidth;
+				yield return DocumentOption.HeaderFromHeight;
+				yield return DocumentOption.HeaderFromFontSize;
+				
+				yield return DocumentOption.HeaderForLeft;
+				yield return DocumentOption.HeaderForTop;
+				yield return DocumentOption.HeaderForWidth;
+				yield return DocumentOption.HeaderForHeight;
+				yield return DocumentOption.HeaderForFontSize;
+				
+				yield return DocumentOption.HeaderNumberLeft;
+				yield return DocumentOption.HeaderNumberTop;
+				yield return DocumentOption.HeaderNumberWidth;
+				yield return DocumentOption.HeaderNumberHeight;
+				yield return DocumentOption.HeaderNumberFontSize;
+				
+				yield return DocumentOption.HeaderToLeft;
+				yield return DocumentOption.HeaderToTop;
+				yield return DocumentOption.HeaderToWidth;
+				yield return DocumentOption.HeaderToHeight;
+				yield return DocumentOption.HeaderToFontSize;
+				
+				yield return DocumentOption.HeaderLocDateLeft;
+				yield return DocumentOption.HeaderLocDateTop;
+				yield return DocumentOption.HeaderLocDateWidth;
+				yield return DocumentOption.HeaderLocDateHeight;
+				yield return DocumentOption.HeaderLocDateFontSize;
+			}
+		}
+
+
 		public override string JobName
 		{
 			get
