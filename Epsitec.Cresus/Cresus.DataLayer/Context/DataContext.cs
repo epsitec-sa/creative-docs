@@ -437,7 +437,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
-        /// <summary>
+		/// <summary>
 		/// Gets the normalized <see cref="EntityKey"/> associated with an <see cref="AbstractEntity"/>.
 		/// Normalized means that the <see cref="Druid"/> of the type is the root type of the
 		/// <see cref="AbstractEntity"/>.
@@ -640,9 +640,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 		public void UpdateEmptyEntityStatus(AbstractEntity entity, bool isEmpty)
 		{
 			if (this.IsPersistent (entity))
-            {
+			{
 				return;
-            }
+			}
 
 			if (isEmpty)
 			{
@@ -737,7 +737,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				return this.entitiesDeleted.Contains (entity) || this.entitiesToDelete.Contains (entity);
 			}
 		}
-
+		
 
 		/// <summary>
 		/// Gets the <see cref="AbstractEntity"/> managed by this instance.
@@ -1099,6 +1099,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			public abstract IEnumerable<AbstractEntity> Query(DataContext context, Request request);
 		}
+		
 		sealed class GetByRequestHelper<TEntity> : GetByRequestHelper
 			where TEntity : AbstractEntity
 		{
@@ -1732,7 +1733,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 				? TimedReaderWriterLock.LockRead (this.dataContextLock, this.lockTimeOut)
 				: null;
 		}
-
 
 		internal System.IDisposable LockWrite()
 		{

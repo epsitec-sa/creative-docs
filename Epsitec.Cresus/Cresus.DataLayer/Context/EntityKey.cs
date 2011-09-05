@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -79,6 +79,29 @@ namespace Epsitec.Cresus.DataLayer.Context
 				return this.RowKey.IsEmpty || this.EntityId.IsEmpty;
 			}
 		}
+
+		/// <summary>
+		/// Gets a value indicating whether this entity defines template data. All template
+		/// data can be replaced when the user's database gets upgraded; the user should not
+		/// be allowed to edit template data.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if the entity defines template data; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsTemplate
+		{
+			get
+			{
+				if (this.RowKey.IsEmpty)
+				{
+					return false;
+				}
+				else
+				{
+					return this.RowKey.Id < Schema.EntitySchemaBuilder.AutoIncrementStartValue;
+				}
+			}
+		}
 		
 		#region IEquatable<EntityKey> Members
 		
@@ -126,9 +149,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 		public static EntityKey? Parse(string value)
 		{
 			if (string.IsNullOrEmpty (value))
-            {
+			{
 				return null;
-            }
+			}
 
 			int separator = value.IndexOf ("]/");
 
