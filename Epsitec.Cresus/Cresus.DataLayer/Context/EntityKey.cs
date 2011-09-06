@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// Gets the <see cref="DbKey"/> of the <see cref="AbstractEntity"/> in the database.
 		/// </summary>
 		/// <value>The <see cref="DbKey"/>.</value>
-		public DbKey RowKey
+		public DbKey							RowKey
 		{
 			get
 			{
@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// Gets the <see cref="Druid"/> that represents the type of the <see cref="AbstractEntity"/>.
 		/// </summary>
 		/// <value>The <see cref="Druid"/>.</value>
-		public Druid EntityId
+		public Druid							EntityId
 		{
 			get
 			{
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// Tells whether this <see cref="EntityKey"/> is empty.
 		/// </summary>
 		/// <value><c>true</c> if this key is empty, <c>false</c> if it is not.</value>
-		public bool IsEmpty
+		public bool								IsEmpty
 		{
 			get
 			{
@@ -88,7 +88,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <value>
 		/// 	<c>true</c> if the entity defines template data; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsTemplate
+		public bool								IsTemplate
 		{
 			get
 			{
@@ -136,6 +136,13 @@ namespace Epsitec.Cresus.DataLayer.Context
 			return this.rowKey.GetHashCode () ^ this.entityId.GetHashCode ();
 		}
 
+		/// <summary>
+		/// Returns a <c>string</c> that represents this instance. Use <see cref="EntityKeyParse"/>
+		/// to convert it back into an <see cref="EntityKey"/>.
+		/// </summary>
+		/// <returns>
+		/// A <c>string</c> that represents this instance.
+		/// </returns>
 		public override string ToString()
 		{
 			return string.Concat (this.entityId.ToString (), "/", this.rowKey.Id.ToString ());
@@ -217,22 +224,24 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			return new EntityKey (entityId, rowKey).GetNormalizedEntityKey (entityTypeEngine);
 		}
+
 		
+		/// <summary>
+		/// An instance of the empty <see cref="EntityKey"/>.
+		/// </summary>
+		public static readonly EntityKey		Empty = new EntityKey ();
+		
+
 		/// <summary>
 		/// The <see cref="DbKey"/> which tells the id of the <see cref="AbstractEntity"/> represented
 		/// by this instance.
 		/// </summary>
-		private readonly DbKey rowKey;
+		private readonly DbKey					rowKey;
 
 		/// <summary>
 		/// The <see cref="Druid"/> which represents the type of the <see cref="AbstractEntity"/>
 		/// represented by this instance.
 		/// </summary>
-		private readonly Druid entityId;
-
-		/// <summary>
-		/// An instance of the empty <see cref="EntityKey"/>.
-		/// </summary>
-		public static readonly EntityKey Empty = new EntityKey ();
+		private readonly Druid					entityId;
 	}
 }
