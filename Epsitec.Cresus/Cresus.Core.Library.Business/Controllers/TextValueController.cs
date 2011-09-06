@@ -19,6 +19,10 @@ using Epsitec.Cresus.Core.Factories;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
+	/// <summary>
+	/// The <c>TextValueController</c> binds a <see cref="Marshaler"/> with a <see cref="Widget"/>
+	/// and handles validation.
+	/// </summary>
 	public class TextValueController : IWidgetUpdater
 	{
 		public TextValueController(Marshaler marshaler, IEnumerable<string[]> possibleItems = null, ValueToFormattedTextConverter<string[]> getUserText = null)
@@ -103,12 +107,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void SetupFieldBinder()
 		{
-			INamedType fieldType = this.GetFieldType ();
-
-			if (fieldType != null)
-			{
-				this.fieldBinder = FieldBinderFactory.Create (fieldType);
-			}
+			this.fieldBinder = FieldBinderFactory.Create (this.GetFieldType ());
 		}
 
 		private void AttachFieldBinder(MarshalerValidator validator)
@@ -394,15 +393,15 @@ namespace Epsitec.Cresus.Core.Controllers
 		#endregion
 
 
-		private const int KeyIndex = 0;
+		private const int						KeyIndex = 0;
 		
-		private readonly Marshaler marshaler;
-		private readonly IEnumerable<string[]> possibleItems;
+		private readonly Marshaler				marshaler;
+		private readonly IEnumerable<string[]>	possibleItems;
 		private readonly ValueToFormattedTextConverter<string[]> getUserText;
-		private readonly bool useFormattedText;
+		private readonly bool					useFormattedText;
 		
-		private Widget widget;
-		private string languageId;
-		private IFieldBinder fieldBinder;
+		private Widget							widget;
+		private string							languageId;
+		private IFieldBinder					fieldBinder;
 	}
 }

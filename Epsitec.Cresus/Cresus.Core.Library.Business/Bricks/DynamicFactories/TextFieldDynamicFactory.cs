@@ -106,6 +106,8 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 
 		private static Widget CreateDecimalEditor(FrameBox frame, UIBuilder builder, string title, Marshaler marshaler, int width, Druid typeFieldId)
 		{
+			//	TODO: replace this logic with an IFieldBinder...
+
 			var tile = frame as EditionTile;
 
 			marshaler.CustomizeConverter ();

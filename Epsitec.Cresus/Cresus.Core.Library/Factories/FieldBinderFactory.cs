@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -13,7 +13,8 @@ namespace Epsitec.Cresus.Core.Factories
 {
 	/// <summary>
 	/// The <c>FieldBinderFactory</c> class creates (or finds) a field binder for
-	/// a specified <see cref="INamedType"/> instance.
+	/// a specified <see cref="INamedType"/> instance. The type must specify a default
+	/// controller named <c>FieldBinder</c> and a non-empty controller parameter.
 	/// </summary>
 	public static class FieldBinderFactory
 	{
@@ -24,7 +25,9 @@ namespace Epsitec.Cresus.Core.Factories
 		/// <returns>A matching field binder, if one can be found; otherwise, <c>null</c>.</returns>
 		public static IFieldBinder Create(INamedType namedType)
 		{
-			if (namedType == null)
+			if ((namedType == null) ||
+				(namedType.DefaultController != "FieldBinder") ||
+				(string.IsNullOrEmpty (namedType.DefaultControllerParameters)))
 			{
 				return null;
 			}
@@ -71,9 +74,9 @@ namespace Epsitec.Cresus.Core.Factories
 
 
 		[System.ThreadStatic]
-		private static Dictionary<INamedType, IFieldBinder> binders;
+		private static Dictionary<INamedType, IFieldBinder>	binders;
 
 		[System.ThreadStatic]
-		private static List<IFieldBinderProvider> providers;
+		private static List<IFieldBinderProvider>			providers;
 	}
 }

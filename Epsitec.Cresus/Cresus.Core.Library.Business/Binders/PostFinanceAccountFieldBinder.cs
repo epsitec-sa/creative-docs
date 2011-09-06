@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -14,6 +14,8 @@ namespace Epsitec.Cresus.Core.Binders
 	/// <summary>
 	/// The <c>PostFinanceAccountFieldBinder</c> class implements field validation and conversion
 	/// for PostFinance account numbers and ISR subscriber numbers, which follow the same convention.
+	/// The type must be declared in the resources as having a <c>FieldBinder</c> controller with the
+	/// <c>PostFinanceAccount</c> controller parameter.
 	/// </summary>
 	internal sealed class PostFinanceAccountFieldBinder : IFieldBinder, IFieldBinderProvider
 	{
@@ -59,7 +61,7 @@ namespace Epsitec.Cresus.Core.Binders
 
 		public IFieldBinder GetFieldBinder(INamedType namedType)
 		{
-			if (namedType.Name == "PostFinanceAccount")
+			if (namedType.DefaultControllerParameters == "PostFinanceAccount")
 			{
 				return this;
 			}
