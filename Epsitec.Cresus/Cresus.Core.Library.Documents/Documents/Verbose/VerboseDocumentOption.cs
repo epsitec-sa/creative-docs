@@ -314,7 +314,7 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 			d = new string[] { "BV orange", "BV rose" };
 			list.Add (new VerboseDocumentOption (DocumentOption.IsrType, "Invoice.2", false, e, d, "Type de bulletin de versement", null, 0));
 
-			list.Add (new VerboseDocumentOption (DocumentOption.IsrFacsimile, "Invoice.3", true, DocumentOptionValueType.Boolean, "Fac-similé complet du BV", "Fac-similé complet du BV. Lorsqu'on utilise du papier avec BV préimprimé, cette option est inutile.", "true"));
+			list.Add (new VerboseDocumentOption (DocumentOption.IsrFacsimile, "Invoice.3", true, DocumentOptionValueType.Boolean, "Fac-similé complet du BV", "Fac-similé complet du BV. Lorsqu'on utilise du papier avec BV préimprimé, cette option ne doit pas être cochée.", "true"));
 
 			//	Ajoute les options pour les clients.
 			list.Add (new VerboseDocumentOption ("Fiche résumée d'un client", "Relation"));
