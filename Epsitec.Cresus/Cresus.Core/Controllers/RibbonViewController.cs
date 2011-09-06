@@ -793,7 +793,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				yield return new SubMenuItem (Res.Commands.Base.ShowCurrency,                  SubMenuType.Finance);
 				yield return new SubMenuItem (Res.Commands.Base.ShowExchangeRateSource,        SubMenuType.Finance);
 				yield return new SubMenuItem (Res.Commands.Base.ShowVatDefinition,             SubMenuType.Finance);
-				yield return new SubMenuItem (Res.Commands.Base.ShowPriceGroup,                SubMenuType.Finance);
+				yield return new SubMenuItem (Res.Commands.Base.ShowPriceGroup,				   SubMenuType.Finance);
 				yield return new SubMenuItem (Res.Commands.Base.ShowPriceRoundingMode,         SubMenuType.Finance);
 				yield return new SubMenuItem (Res.Commands.Base.ShowIsrDefinition,             SubMenuType.Finance);
 				yield return new SubMenuItem (Res.Commands.Base.ShowPaymentCategory,           SubMenuType.Finance);

@@ -20,9 +20,9 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 	/// The <c>UserManager</c> class is used to authenticate users, based on their name
 	/// and on their credentials (which might be a password).
 	/// </summary>
-	public class UserManager : CoreDataComponent
+	public sealed class UserManager : CoreDataComponent
 	{
-		public UserManager(CoreData data)
+		private UserManager(CoreData data)
 			: base (data)
 		{
 		}
@@ -49,10 +49,10 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			get
 			{
 				if (this.businessContext == null)
-                {
+				{
 					this.businessContext = Resolvers.InterfaceImplementationResolver<IBusinessContext>.CreateInstance (this.Host);
 					this.businessContext.GlobalLock = GlobalLocks.UserManagement;
-                }
+				}
 
 				return this.businessContext;
 			}
@@ -260,8 +260,8 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		public bool CheckUserAuthentication(SoftwareUserEntity user, string password)
 		{
 			switch (user.AuthenticationMethod)
-            {
-            	case UserAuthenticationMethod.None:
+			{
+				case UserAuthenticationMethod.None:
 					return true;
 
 				case UserAuthenticationMethod.System:
@@ -272,7 +272,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 
 				default:
 					return false;
-            }
+			}
 		}
 
 		private bool CheckSystemUserAuthentication(SoftwareUserEntity user, string password)
@@ -343,7 +343,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		#endregion
 
 		public event EventHandler AuthenticatedUserChanging;
-        public event EventHandler AuthenticatedUserChanged;
+		public event EventHandler AuthenticatedUserChanged;
 
 
 		private SoftwareUserEntity			authenticatedUser;

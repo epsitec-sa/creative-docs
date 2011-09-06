@@ -63,6 +63,7 @@
     <Compile Include="Library\CoreAppComponent.cs" />
     <Compile Include="Library\CoreComponent.cs" />
     <Compile Include="Library\CoreContext.cs" />
+    <Compile Include="Library\CoreDatabaseType.cs" />
     <Compile Include="Library\Formatters\ArgumentFormatToken.cs" />
     <Compile Include="Library\Formatters\FormatterHelper.cs" />
     <Compile Include="Library\Formatters\FormattingContext.cs" />

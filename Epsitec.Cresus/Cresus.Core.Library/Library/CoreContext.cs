@@ -31,6 +31,25 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
+		public static CoreDatabaseType DatabaseType
+		{
+			get
+			{
+				return CoreContext.databaseType;
+			}
+			set
+			{
+				if (CoreContext.databaseType == CoreDatabaseType.None)
+				{
+					CoreContext.databaseType = value;
+				}
+				else
+				{
+					throw new System.InvalidOperationException ("Cannot set database type twice");
+				}
+			}
+		}
+
 
 		public static void StartAsInteractive()
 		{
@@ -51,5 +70,6 @@ namespace Epsitec.Cresus.Core.Library
 		private static bool startupCalled;
 		private static bool isInteractive;
 		private static bool isServer;
+		private static CoreDatabaseType databaseType;
 	}
 }

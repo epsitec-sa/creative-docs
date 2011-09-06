@@ -39,12 +39,14 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public static EntityStatus TreatAsOptional(this EntityStatus status)
 		{
-			if ((status & EntityStatus.Empty) != 0)
+			if (status.HasFlag (EntityStatus.Empty))
 			{
-				status |= EntityStatus.Valid;
+				return status | EntityStatus.Valid;
 			}
-
-			return status;
+			else
+			{
+				return status;
+			}
 		}
 	}
 }

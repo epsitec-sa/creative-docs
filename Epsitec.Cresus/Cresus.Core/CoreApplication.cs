@@ -89,6 +89,8 @@ namespace Epsitec.Cresus.Core
 		{
 			base.SetupApplication ();
 
+			this.ProbeTemplateDatabase ();
+
 			var initializers = new List<System.Action> ();
 
 			this.CreateManualComponents (initializers);
@@ -98,6 +100,21 @@ namespace Epsitec.Cresus.Core
 			this.CreatePlugIns ();
 			this.SetupData ();
 			this.CreateUI (initializers);
+		}
+
+		private void ProbeTemplateDatabase()
+		{
+			var pool = this.Data.DataContextPool;
+			var allUserGroups = this.UserManager.GetAllUserGroups ();
+
+			if (allUserGroups.Any (x => pool.FindEntityKey (x).Value.IsTemplate))
+			{
+				CoreContext.DatabaseType = CoreDatabaseType.UserData;
+			}
+			else
+			{
+				CoreContext.DatabaseType = CoreDatabaseType.PureTemplateData;
+			}
 		}
 
 		public void ShutdownApplication()
@@ -176,23 +193,38 @@ namespace Epsitec.Cresus.Core
 		private void CreateUIMainWindow()
 		{
 			string path = System.IO.Path.Combine (Globals.Directories.ExecutableRoot, "app.ico");
-			
-			Window window = new Window
-			{
-				Text = this.ShortWindowTitle,
-//-				Name = "Application",
-				ClientSize = new Epsitec.Common.Drawing.Size (600, 400),
-				Icon = Epsitec.Common.Drawing.Bitmap.FromNativeIcon (path, 48, 48)
-			};
 
-			this.Window = window;
+			this.Window =
+				new Window
+				{
+					ClientSize = new Epsitec.Common.Drawing.Size (600, 400),
+					Icon       = Epsitec.Common.Drawing.Bitmap.FromNativeIcon (path, 48, 48)
+				};
+
+			if (CoreContext.DatabaseType == CoreDatabaseType.PureTemplateData)
+			{
+				this.Window.Root.BackColor = Common.Drawing.Color.FromName ("Red");
+			}
+
 			this.Window.Root.SizeChanged +=
 				delegate
 				{
-					this.Window.Text = string.Format ("{0} Alpha {1}x{2}", this.ShortWindowTitle, this.Window.ClientSize.Width, this.Window.ClientSize.Height);
+					this.UpdateWindowText ();
 				};
 
 			this.PersistenceManager.Register (this.Window);
+			this.UpdateWindowText ();
+		}
+
+		private void UpdateWindowText()
+		{
+			var text = FormattedText.FromSimpleText (
+				string.Format ("{0} Alpha {1}x{2}{3}",
+					this.ShortWindowTitle,
+					this.Window.ClientSize.Width, this.Window.ClientSize.Height,
+					CoreContext.DatabaseType == CoreDatabaseType.PureTemplateData ? " - EPSITEC" : ""));
+
+			this.Window.Text = text.ToString ();
 		}
 
 		private void CreateUIControllers(IEnumerable<System.Action> initializers)
