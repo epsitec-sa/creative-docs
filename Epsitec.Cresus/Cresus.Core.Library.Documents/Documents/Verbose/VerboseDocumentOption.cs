@@ -238,7 +238,7 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 			//	Ajoute les options pour l'en-tête.
 			list.Add (new VerboseDocumentOption ("En-tête", "Header"));
 
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLogo,            "Header.1", true, DocumentOptionValueType.Boolean, "Imprime le logo de l'entreprise", "Imprime le logo de l'entreprise en haut de chaque page", "true"));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderSender,          "Header.1", true, DocumentOptionValueType.Boolean, "Imprime le bloc de l'expéditeur", "Imprime le bloc de l'expéditeur comprenant le logo et l'adresse de l'entreprise", "true"));
 																					   
 			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLogoLeft,        "Header.2", true, DocumentOptionValueType.Distance, "Logo, pos. gauche",               "Position depuis la gauche du logo", "10"));
 			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLogoTop,         "Header.2", true, DocumentOptionValueType.Distance, "Logo, pos. sup.",                 "Position depuis le haut du logo",   "10"));

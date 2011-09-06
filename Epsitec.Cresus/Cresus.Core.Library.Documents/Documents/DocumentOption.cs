@@ -24,7 +24,9 @@ namespace Epsitec.Cresus.Core.Documents
 		TopMargin,						// distance
 		BottomMargin,					// distance
 
-		HeaderLogo,						// bool
+		HeaderSender,					// bool
+
+		HeaderLogo,						// bool (plus utilisé)
 		HeaderLogoLeft,					// distance: logo
 		HeaderLogoTop,					// distance
 		HeaderLogoWidth,				// distance

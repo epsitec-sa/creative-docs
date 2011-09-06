@@ -105,7 +105,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 			get
 			{
-				yield return DocumentOption.HeaderLogo;
+				yield return DocumentOption.HeaderSender;
+
 				yield return DocumentOption.HeaderLogoLeft;
 				yield return DocumentOption.HeaderLogoTop;
 				yield return DocumentOption.HeaderLogoWidth;
@@ -212,7 +213,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			var settings = context.GetCachedBusinessSettings ();
 
 			//	Génère l'image du logo de l'entreprise.
-			if (this.HasOption (DocumentOption.HeaderLogo) && settings.CompanyLogo.IsNotNull ())
+			if (this.HasOption (DocumentOption.HeaderSender) && settings.CompanyLogo.IsNotNull ())
 			{
 				var rect = this.GetOptionRectangle (DocumentOption.HeaderLogoLeft);
 
@@ -226,7 +227,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 
 			//	Génère l'adresse de l'entreprise.
-			if (settings.Company.IsNotNull ())
+			if (this.HasOption (DocumentOption.HeaderSender) && settings.Company.IsNotNull ())
 			{
 				var rect = this.GetOptionRectangle (DocumentOption.HeaderFromLeft);
 
