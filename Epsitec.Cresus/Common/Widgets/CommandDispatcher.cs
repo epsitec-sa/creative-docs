@@ -682,7 +682,7 @@ namespace Epsitec.Common.Widgets
 			var handler = this.OpletQueueBindingChanged;
 
 			if (handler != null)
-            {
+			{
 				handler (this);
 			}
 		}
@@ -692,9 +692,9 @@ namespace Epsitec.Common.Widgets
 			var handler = CommandDispatcher.CommandDispatching;
 
 			if (handler != null)
-            {
+			{
 				handler (this, e);
-            }
+			}
 		}
 
 

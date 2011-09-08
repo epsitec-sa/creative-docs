@@ -24,6 +24,25 @@ namespace Epsitec.Common.Support.Extensions
 		}
 #endif
 
+		public static T SetFlag<T>(this System.Enum value, T mask)
+			where T : struct
+		{
+			int enumValue = (int) (object) value;
+			int enumMask  = (int) (object) mask;
+
+			return (T) (object) (enumValue | enumMask);
+		}
+
+		public static T ClearFlag<T>(this System.Enum value, T mask)
+			where T : struct
+		{
+			int enumValue = (int) (object) value;
+			int enumMask  = (int) (object) mask;
+
+			return (T) (object) (enumValue & ~enumMask);
+		}
+
+
 		public static string GetQualifiedName(this System.Enum value)
 		{
 			var type = value.GetType ();
