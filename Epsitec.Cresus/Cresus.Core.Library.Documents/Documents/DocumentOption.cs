@@ -32,6 +32,7 @@ namespace Epsitec.Cresus.Core.Documents
 		HeaderLogoWidth,				// distance
 		HeaderLogoHeight,				// distance
 
+		HeaderFromAddress,				// texte: adresse de l'entreprise
 		HeaderFromLeft,					// distance: adresse de l'entreprise
 		HeaderFromTop,					// distance
 		HeaderFromWidth,				// distance

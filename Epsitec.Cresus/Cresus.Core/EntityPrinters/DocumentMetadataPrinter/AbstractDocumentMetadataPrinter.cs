@@ -112,6 +112,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				yield return DocumentOption.HeaderLogoWidth;
 				yield return DocumentOption.HeaderLogoHeight;
 
+				yield return DocumentOption.HeaderFromAddress;
 				yield return DocumentOption.HeaderFromLeft;
 				yield return DocumentOption.HeaderFromTop;
 				yield return DocumentOption.HeaderFromWidth;
@@ -233,8 +234,15 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 				if (!rect.IsSurfaceZero)
 				{
+					FormattedText address = this.GetOptionText (DocumentOption.HeaderFromAddress);
+
+					if (address.IsNullOrEmpty)
+					{
+						address = settings.Company.DefaultMailContact.GetSummary ();
+					}
+
 					var textBand = new TextBand ();
-					textBand.Text = settings.Company.DefaultMailContact.GetSummary ();
+					textBand.Text = address;
 					textBand.Font = AbstractDocumentMetadataPrinter.font;
 					textBand.FontSize = this.GetOptionValue (DocumentOption.HeaderFromFontSize);
 					this.documentContainer.AddAbsolute (textBand, rect);

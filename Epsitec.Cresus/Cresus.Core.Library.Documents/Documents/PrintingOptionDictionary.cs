@@ -233,6 +233,11 @@ namespace Epsitec.Cresus.Core.Documents
 
 			FormattedText bullet = hasBullet ? "● " : "";
 
+			if (!value.IsNullOrEmpty)
+			{
+				value = value.Lines.FirstOrDefault ();
+			}
+
 			if (hiliteValue)
 			{
 				value = value.ApplyBold ();

@@ -301,6 +301,29 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 			return defautlValue;
 		}
 
+		protected FormattedText GetOptionText(DocumentOption option)
+		{
+			//	Retourne la valeur d'une option de type texte.
+			if (this.options != null)
+			{
+				var s = this.options[option];
+
+				if (!string.IsNullOrEmpty (s))
+				{
+					return s;
+				}
+			}
+
+			var defaultOption = AbstractPrinter.verboseDocumentOptions.Where (x => x.Option == option).FirstOrDefault ();
+
+			if (defaultOption != null)
+			{
+				return defaultOption.DefaultValue;
+			}
+
+			return null;
+		}
+
 		protected bool HasOption(DocumentOption option)
 		{
 			//	Indique si une option de type booléen est choisie.

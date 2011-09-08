@@ -13,5 +13,7 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 		Enumeration,	// énumération libre
 		Distance,		// type 'double' correspondant à une distance en mm
 		Size,			// type 'double' correspondant à une dimension en mm
+		Text,			// texte
+		TextMultiline,	// texte multilignes
 	}
 }

@@ -231,224 +231,281 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 			this.lastButton = group.IsRadio ? 'r' : 'c';
 
-			int index = this.optionGroups.IndexOf (group);
-
 			if (group.IsRadio)  // plusieurs boutons radio ?
 			{
 				for (int i = 0; i < group.OptionInformations.Count; i++)
 				{
-					var frame = new FrameBox
-					{
-						Parent = parent,
-						PreferredHeight = DocumentCategoryController.lineHeight,
-						Dock = DockStyle.Top,
-					};
-
-					new FrameBox
-					{
-						Parent = frame,
-						PreferredWidth = 5,
-						PreferredHeight = DocumentCategoryController.lineHeight,
-						Dock = DockStyle.Left,
-					};
-
-					var error = new StaticText
-					{
-						Parent = frame,
-						ContentAlignment = ContentAlignment.MiddleLeft,
-						PreferredWidth = DocumentCategoryController.errorBulletWidth,
-						PreferredHeight = DocumentCategoryController.lineHeight,
-						Dock = DockStyle.Left,
-					};
-
-					group.OptionInformations[i].ErrorVisibility = error;
-					group.OptionInformations[i].ErrorText = error;
-
-					var useless = new StaticText
-					{
-						Parent = frame,
-						ContentAlignment = ContentAlignment.MiddleLeft,
-						PreferredWidth = DocumentCategoryController.errorBulletWidth,
-						PreferredHeight = DocumentCategoryController.lineHeight,
-						Dock = DockStyle.Left,
-					};
-
-					group.OptionInformations[i].UselessVisibility = useless;
-					group.OptionInformations[i].UselessText = useless;
-
-					FormattedText text;
-
-					if (i == 0)
-					{
-						text = "Aucune option";
-					}
-					else
-					{
-						var entity = group.OptionInformations[i].Entity;
-						text = entity.Name;
-					}
-
-					var button = new RadioButton
-					{
-						Parent = frame,
-						FormattedText = text,
-						Name = string.Concat (index.ToString (), ".", i.ToString ()),
-						AutoToggle = false,
-						PreferredHeight = DocumentCategoryController.lineHeight,
-						Dock = DockStyle.Fill,
-					};
-
-					group.OptionInformations[i].Button = button;
-
-					button.Clicked += delegate
-					{
-						this.ButtonClicked (button);
-					};
-
-					if (i == 0)
-					{
-						new FrameBox
-						{
-							Parent = frame,
-							PreferredWidth = DocumentCategoryController.lineHeight,
-							PreferredHeight = DocumentCategoryController.lineHeight,
-							Dock = DockStyle.Right,
-							Margins = new Margins (1, 0, 0, 0),
-						};
-					}
-					else
-					{
-						var detailButton = new GlyphButton
-						{
-							Parent = frame,
-							GlyphShape = GlyphShape.TriangleRight,
-							ButtonStyle = ButtonStyle.ToolItem,
-							Name = i.ToString (),
-							PreferredWidth = DocumentCategoryController.lineHeight,
-							PreferredHeight = DocumentCategoryController.lineHeight,
-							Dock = DockStyle.Right,
-							Margins = new Margins (1, 0, 0, 0),
-						};
-
-						ToolTip.Default.SetToolTip (detailButton, "Montre le détail");
-
-						this.detailFrames.Add (frame);
-						this.detailButtons.Add (detailButton);
-						this.detailEntities.Add (group.OptionInformations[i].Entity);
-
-						detailButton.Clicked += delegate
-						{
-							this.DetailButtonClicked (detailButton, group);
-						};
-					}
-
-					var ratio = new StaticText
-					{
-						Parent = frame,
-						Text = group.Ratio (i == 0),
-						ContentAlignment = ContentAlignment.MiddleRight,
-						PreferredWidth = DocumentOptionsController.ratioWidth,
-						PreferredHeight = DocumentCategoryController.lineHeight,
-						Dock = DockStyle.Right,
-						Margins = new Margins (0, 1, 0, 0),
-					};
+					this.CreateCheckButton (parent, group, i, true);
 				}
 			}
 			else  // un seul bouton à cocher ?
 			{
-				var frame = new FrameBox
-				{
-					Parent = parent,
-					PreferredHeight = DocumentCategoryController.lineHeight,
-					Dock = DockStyle.Top,
-				};
+				this.CreateCheckButton (parent, group, 0, false);
+			}
+		}
 
-				new FrameBox
+		private void CreateCheckButton(Widget parent, OptionGroup group, int i, bool isRadio)
+		{
+			var frame = new FrameBox
+			{
+				Parent = parent,
+				PreferredHeight = DocumentCategoryController.lineHeight,
+				Dock = DockStyle.Top,
+			};
+
+			new FrameBox
+			{
+				Parent = frame,
+				PreferredWidth = 5,
+				PreferredHeight = DocumentCategoryController.lineHeight,
+				Dock = DockStyle.Left,
+			};
+
+			var error = new StaticText
+			{
+				Parent = frame,
+				ContentAlignment = ContentAlignment.MiddleLeft,
+				PreferredWidth = DocumentCategoryController.errorBulletWidth,
+				PreferredHeight = DocumentCategoryController.lineHeight,
+				Dock = DockStyle.Left,
+			};
+
+			group.OptionInformations[i].ErrorVisibility = error;
+			group.OptionInformations[i].ErrorText = error;
+
+			var useless = new StaticText
+			{
+				Parent = frame,
+				ContentAlignment = ContentAlignment.MiddleLeft,
+				PreferredWidth = DocumentCategoryController.errorBulletWidth,
+				PreferredHeight = DocumentCategoryController.lineHeight,
+				Dock = DockStyle.Left,
+			};
+
+			group.OptionInformations[i].UselessVisibility = useless;
+			group.OptionInformations[i].UselessText = useless;
+
+			int index = this.optionGroups.IndexOf (group);
+
+			AbstractButton button;
+
+			if (isRadio)
+			{
+				FormattedText text;
+
+				if (i == 0)
+				{
+					text = "Aucune option";
+				}
+				else
+				{
+					var entity = group.OptionInformations[i].Entity;
+					text = entity.Name;
+				}
+
+				button = new RadioButton
 				{
 					Parent = frame,
-					PreferredWidth = 5,
+					FormattedText = text,
+					Name = string.Concat (index.ToString (), ".", i.ToString ()),
+					AutoToggle = false,
 					PreferredHeight = DocumentCategoryController.lineHeight,
-					Dock = DockStyle.Left,
+					Dock = DockStyle.Fill,
 				};
-
-				var error = new StaticText
+			}
+			else
+			{
+				button = new CheckButton
 				{
 					Parent = frame,
-					ContentAlignment = ContentAlignment.MiddleLeft,
-					PreferredWidth = DocumentCategoryController.errorBulletWidth,
-					PreferredHeight = DocumentCategoryController.lineHeight,
-					Dock = DockStyle.Left,
-				};
-
-				group.OptionInformations[0].ErrorVisibility = error;
-				group.OptionInformations[0].ErrorText = error;
-
-				var useless = new StaticText
-				{
-					Parent = frame,
-					ContentAlignment = ContentAlignment.MiddleLeft,
-					PreferredWidth = DocumentCategoryController.errorBulletWidth,
-					PreferredHeight = DocumentCategoryController.lineHeight,
-					Dock = DockStyle.Left,
-				};
-
-				group.OptionInformations[0].UselessVisibility = useless;
-				group.OptionInformations[0].UselessText = useless;
-
-				var button = new CheckButton
-				{
-					Parent = frame,
-					FormattedText = group.OptionInformations[0].Entity.Name,
+					FormattedText = group.OptionInformations[i].Entity.Name,
 					Name = index.ToString (),
 					AutoToggle = false,
 					PreferredHeight = DocumentCategoryController.lineHeight,
 					Dock = DockStyle.Fill,
 				};
+			}
 
-				group.OptionInformations[0].Button = button;
+			group.OptionInformations[i].Button = button;
 
-				button.Clicked += delegate
+			button.Clicked += delegate
+			{
+				this.ButtonClicked (button);
+			};
+
+			//	Bouton '>' pour voir les détails.
+			if (isRadio && i == 0)
+			{
+				new FrameBox
 				{
-					this.ButtonClicked (button);
+					Parent = frame,
+					PreferredWidth = DocumentCategoryController.lineHeight,
+					PreferredHeight = DocumentCategoryController.lineHeight,
+					Dock = DockStyle.Right,
 				};
-
+			}
+			else
+			{
 				var detailButton = new GlyphButton
 				{
 					Parent = frame,
 					GlyphShape = GlyphShape.TriangleRight,
 					ButtonStyle = ButtonStyle.ToolItem,
-					Name = "0",
+					Name = i.ToString (),
 					PreferredWidth = DocumentCategoryController.lineHeight,
 					PreferredHeight = DocumentCategoryController.lineHeight,
 					Dock = DockStyle.Right,
-					Margins = new Margins (1, 0, 0, 0),
 				};
 
 				ToolTip.Default.SetToolTip (detailButton, "Montre le détail");
 
 				this.detailFrames.Add (frame);
 				this.detailButtons.Add (detailButton);
-				this.detailEntities.Add (group.OptionInformations[0].Entity);
+				this.detailEntities.Add (group.OptionInformations[i].Entity);
 
 				detailButton.Clicked += delegate
 				{
 					this.DetailButtonClicked (detailButton, group);
 				};
+			}
 
-				var ratio = new StaticText
+			//	Priorité 1..n.
+			{
+				var priorityFrame = new FrameBox
 				{
 					Parent = frame,
-					Text = group.Ratio (false),
-					ContentAlignment = ContentAlignment.MiddleRight,
-					PreferredWidth = DocumentOptionsController.ratioWidth,
+					PreferredWidth = 10,
 					PreferredHeight = DocumentCategoryController.lineHeight,
 					Dock = DockStyle.Right,
+					Margins = new Margins (0, -1, 0, 0),
 				};
+
+				group.OptionInformations[i].PriorityWidget = this.CreatePriorityWidget (priorityFrame, index, i);
 			}
+
+			//	Ratio "46/51" par exemple.
+			var ratio = new StaticText
+			{
+				Parent = frame,
+				Text = group.Ratio (isRadio ? (i == 0) : false),
+				ContentAlignment = ContentAlignment.MiddleRight,
+				PreferredWidth = DocumentOptionsController.ratioWidth,
+				PreferredHeight = DocumentCategoryController.lineHeight,
+				Dock = DockStyle.Right,
+				Margins = new Margins (0, 3, 0, 0),
+			};
+		}
+
+		private FrameBox CreatePriorityWidget(Widget parent, int index, int i)
+		{
+			//	Crée le widget permettant de visualiser et de modifier la priorité.
+			var frame = new FrameBox
+			{
+				Parent = parent,
+				Name = string.Concat (index.ToString (), ".", i.ToString ()),
+				DrawFullFrame = true,
+				PreferredHeight = DocumentCategoryController.lineHeight,
+				Dock = DockStyle.Fill,
+			};
+
+			ToolTip.Default.SetToolTip (frame, "Priorité des options");
+
+			var valueField = new StaticText
+			{
+				Parent = frame,
+				ContentAlignment = ContentAlignment.MiddleCenter,
+				Dock = DockStyle.Fill,
+			};
+
+			frame.Clicked += delegate
+			{
+				this.PriorityClicked (frame);
+			};
+
+			return frame;
+		}
+
+		private void SetPriorityValue(FrameBox priorityWidget, int value)
+		{
+			//	Initialise la valeur de la priorité dans le widget ad-hoc.
+			if (value == -1)
+			{
+				priorityWidget.Visibility = false;
+			}
+			else
+			{
+				priorityWidget.Visibility = true;
+
+				int count = this.documentCategoryEntity.DocumentOptions.Count;
+				int display = count-value;  // 1..n inversé
+
+				var valueField = priorityWidget.Children.OfType<StaticText> ().FirstOrDefault ();
+				valueField.Text = display.ToString ();
+			}
+		}
+
+		private void PriorityClicked(FrameBox button)
+		{
+			//	Affiche le menu permettant de choisir la priorité.
+			var parts = button.Name.Split ('.');
+			int index = int.Parse (parts[0]);
+			int group = int.Parse (parts[1]);
+
+			var entity = this.optionGroups[index].OptionInformations[group].Entity;
+
+			int count = this.documentCategoryEntity.DocumentOptions.Count;
+			index = this.documentCategoryEntity.DocumentOptions.IndexOf (entity);
+
+			if (count > 1)  // au moins 2 choix ?
+			{
+				var menu = new VMenu ();
+
+				for (int i = count-1; i >= 0; i--)
+				{
+					string icon = Misc.GetResourceIconUri ((i == index) ? "Button.RadioYes" : "Button.RadioNo");
+					string text = string.Format ("Priorité {0}", (count-i).ToString ());
+
+					if (i == count-1)
+					{
+						text = string.Concat (text, " (la plus forte)");
+					}
+
+					if (i == 0)
+					{
+						text = string.Concat (text, " (la plus faible)");
+					}
+
+					var item = new MenuItem ("", icon, text, null);
+					item.TabIndex = i;
+					menu.Items.Add (item);
+
+					item.Clicked += delegate
+					{
+						this.PriorityChange (index, item.TabIndex);
+					};
+				}
+
+				TextFieldCombo.AdjustComboSize (button, menu, false);
+				var pos = button.MapClientToScreen (new Point (button.ActualWidth-1, button.ActualHeight));
+				menu.ShowAsContextMenu (button, pos);
+			}
+		}
+
+		private void PriorityChange(int currentIndex, int newIndex)
+		{
+			//	Modifie le priorité d'une collection d'options.
+			var entity = this.documentCategoryEntity.DocumentOptions.ElementAt (currentIndex);
+
+			this.documentCategoryEntity.DocumentOptions.RemoveAt (currentIndex);
+			this.documentCategoryEntity.DocumentOptions.Insert (newIndex, entity);
+
+			this.UpdateButtonStates ();
+			this.documentCategoryController.UpdateAfterOptionChanged ();
 		}
 
 		private void ButtonClicked(AbstractButton button)
 		{
+			//	Appelé lorsque le bouton check ou radio d'une collection d'options est cliqué.
 			var parts = button.Name.Split ('.');
 
 			if (parts.Length == 1 && button is CheckButton)
@@ -499,6 +556,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 		private void DetailButtonClicked(AbstractButton detailButton, OptionGroup group)
 		{
+			//	Appelé lorsque le bouton '>' pour les détails d'une collection d'options est cliqué.
 			int i = int.Parse (detailButton.Name);
 
 			if (this.selectedOptionInformation == group.OptionInformations[i])
@@ -722,27 +780,33 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 					for (int i = 0; i < group.OptionInformations.Count; i++)
 					{
+						int priority;
 						bool check;
 
 						if (i == 0)
 						{
+							priority = -1;
 							check = firstCheck;
 						}
 						else
 						{
 							var entity = group.OptionInformations[i].Entity;
-							check = this.documentCategoryEntity.DocumentOptions.Contains (entity);
+							priority = this.documentCategoryEntity.DocumentOptions.IndexOf (entity);
+							check = (priority != -1);
 						}
 
 						group.OptionInformations[i].Button.ActiveState = check ? ActiveState.Yes : ActiveState.No;
+						this.SetPriorityValue (group.OptionInformations[i].PriorityWidget, priority);
 					}
 				}
 				else
 				{
 					var entity = group.OptionInformations[0].Entity;
-					bool check = this.documentCategoryEntity.DocumentOptions.Contains (entity);
+					int priority = this.documentCategoryEntity.DocumentOptions.IndexOf (entity);
+					bool check = (priority != -1);
 
 					group.OptionInformations[0].Button.ActiveState = check ? ActiveState.Yes : ActiveState.No;
+					this.SetPriorityValue (group.OptionInformations[0].PriorityWidget, priority);
 				}
 			}
 		}
@@ -829,7 +893,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 						}
 						else
 						{
-							ToolTip.Default.SetToolTip (info.ErrorText, "Contient des options définies plusieurs fois dont <b>les valeurs sont aléatoires</b>");
+							ToolTip.Default.SetToolTip (info.ErrorText, "Contient des options définies plusieurs fois dont les valeurs dépendent des priorités");
 						}
 					}
 				}
@@ -882,20 +946,21 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 			if (error != 0)
 			{
-				var title = new FormattedText ("Erreur grave<br/>").ApplyFontSize (15).ApplyBold ();
+				var title = new FormattedText ("Attention<br/>").ApplyFontSize (15);
+				var details = "<br/>Les priorités sont affichées dans des petits rectangles, sous forme de chiffres compris entre 1 et 9. La valeur la plus petite correspond à la priorité la plus forte.";
 
 				if (error == 1)
 				{
 					errorMessage = "Il y a une option définie plusieurs fois";
-					this.errorDetails = this.GetDetailDescription (title+"L'option suivante est définie plusieurs fois et a une <b>valeur aléatoire</b>.", this.errorOptions, DocumentCategoryController.errorColor);
+					this.errorDetails = this.GetDetailDescription (title+"L'option suivante est définie plusieurs fois et a une valeur qui dépend des priorités."+details, this.errorOptions, DocumentCategoryController.errorColor);
 				}
 				else
 				{
 					errorMessage = string.Format ("Il y a {0} options définies plusieurs fois", error.ToString ());
-					this.errorDetails = this.GetDetailDescription (title+"Les options suivantes sont définies plusieurs fois et ont des <b>valeurs aléatoires</b>.", this.errorOptions, DocumentCategoryController.errorColor);
+					this.errorDetails = this.GetDetailDescription (title+"Les options suivantes sont définies plusieurs fois et ont des valeurs qui dépendent des priorités."+details, this.errorOptions, DocumentCategoryController.errorColor);
 				}
 
-				errorMessage = FormattedText.Concat (DocumentCategoryController.errorBullet, "  ", errorMessage.ApplyBold ());
+				errorMessage = FormattedText.Concat (DocumentCategoryController.errorBullet, "  ", errorMessage);
 			}
 
 			if (missing != 0)
@@ -1259,6 +1324,12 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			}
 
 			public AbstractButton Button
+			{
+				get;
+				set;
+			}
+
+			public FrameBox PriorityWidget
 			{
 				get;
 				set;

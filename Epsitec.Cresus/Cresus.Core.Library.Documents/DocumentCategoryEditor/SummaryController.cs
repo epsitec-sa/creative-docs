@@ -109,8 +109,8 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 						if (this.documentOptionsController.ErrorOptions.Contains (verboseOption.Option))
 						{
 							icon = DocumentCategoryController.errorBullet;
-							iconTooltip = "Option définie plusieurs fois dont <b>la valeur est aléatoire</b>";
-							valueTooltip = "<b>valeur aléatoire</b>";
+							iconTooltip = "Option définie plusieurs fois dont la valeur dépend des priorités";
+							valueTooltip = "valeur dépendante des priorités";
 							color = DocumentCategoryController.errorColor;
 						}
 

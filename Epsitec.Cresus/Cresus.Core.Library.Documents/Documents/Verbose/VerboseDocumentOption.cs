@@ -245,6 +245,7 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLogoWidth,       "Header.2", true, DocumentOptionValueType.Distance, "Logo, largeur",                   "Largeur du logo",                   "60"));
 			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLogoHeight,      "Header.2", true, DocumentOptionValueType.Distance, "Logo, hauteur",                   "Hauteur du logo",                   "30"));
 																					   
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderFromAddress,     "Header.3", true, DocumentOptionValueType.TextMultiline, "Adresse de l'entreprise",    "Adresse de l'entreprise telle qu'elle apparaît dans l'en-tête", ""));
 			list.Add (new VerboseDocumentOption (DocumentOption.HeaderFromLeft,        "Header.3", true, DocumentOptionValueType.Distance, "Entreprise, pos. gauche",         "Position depuis la gauche de l'adresse de l'entreprise", "10"));
 			list.Add (new VerboseDocumentOption (DocumentOption.HeaderFromTop,         "Header.3", true, DocumentOptionValueType.Distance, "Entreprise, pos. sup.",           "Position depuis le haut de l'adresse de l'entreprise",   "40"));
 			list.Add (new VerboseDocumentOption (DocumentOption.HeaderFromWidth,       "Header.3", true, DocumentOptionValueType.Distance, "Entreprise, largeur",             "Largeur pour l'adresse de l'entreprise",                 "100"));
