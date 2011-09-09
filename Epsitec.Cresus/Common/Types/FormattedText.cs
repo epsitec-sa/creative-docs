@@ -94,6 +94,22 @@ namespace Epsitec.Common.Types
 		}
 
 
+		public FormattedText GetValueOrDefault(params FormattedText[] defaultTexts)
+		{
+			if (this.IsNullOrEmpty)
+			{
+				foreach (var text in defaultTexts)
+				{
+					if (text.IsNullOrEmpty == false)
+					{
+						return text;
+					}
+				}
+			}
+			
+			return this;
+		}
+
 		public IEnumerable<FormattedText> Lines
 		{
 			get
@@ -161,6 +177,19 @@ namespace Epsitec.Common.Types
 		private FormattedText ApplyElement(string elementBegin, string elementEnd)
 		{
 			return FormattedText.Concat (elementBegin, this.text, elementEnd);
+		}
+
+
+		public FormattedText Replace(FormattedText pattern, FormattedText replacement, System.StringComparison comparison = System.StringComparison.Ordinal)
+		{
+			if (this.IsNullOrEmpty)
+			{
+				return this;
+			}
+			else
+			{
+				return new FormattedText (this.text.Replace (pattern.text, replacement.text, comparison));
+			}
 		}
 
 

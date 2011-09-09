@@ -54,6 +54,33 @@ namespace Epsitec.Common.Support.Extensions
 			return text.Substring (0, text.Length - suffix.Length);
 		}
 
+		public static string Replace(this string text, string pattern, string replacement, System.StringComparison comparison)
+		{
+			if (comparison == System.StringComparison.Ordinal)
+			{
+				return text.Replace (pattern, replacement);
+			}
+
+			int pos = 0;
+
+			while (true)
+			{
+				int hit = text.IndexOf (pattern, pos, comparison);
+
+				if (hit < 0)
+				{
+					return text;
+				}
+
+				string before = text.Substring (0, hit);
+				string after  = text.Substring (hit + pattern.Length);
+
+				text = string.Concat (before, replacement, after);
+
+				pos = hit + replacement.Length;
+			}
+		}
+
 		/// <summary>
 		/// Determines whether the string contains the search text at the specified position.
 		/// </summary>
