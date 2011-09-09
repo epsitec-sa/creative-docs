@@ -31,17 +31,20 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		VatRevenue,						//	montant HT sur lequel la TVA s'applique
 		VatTotal,						//	montant total de TVA
 		
-		Discount,						//	rabais (ou arrondi)
+		UnitDiscount,					//	rabais (ou arrondi) d'unité
+		LineDiscount,					//	rabais (ou arrondi) de ligne
 		
-		UnitPriceBeforeTax,				//	prix unitaire HT
-		UnitPriceAfterTax,				//	prix unitaire TTC
-		LinePriceBeforeTax,				//	prix de ligne HT
-		LinePriceAfterTax,				//	prix de ligne TTC
-		FinalPriceBeforeTax,			//	prix de ligne HT après rabais/arrondi
-		FinalPriceAfterTax,				//	prix de ligne TTC après rabais/arrondi
+		UnitPriceBeforeTax1,			//	prix unitaire HT
+		LinePriceBeforeTax1,			//	prix de ligne HT
+		LinePriceBeforeTax2,			//	prix de ligne HT après rabais/arrondi
+		
+		LinePriceAfterTax1,				//	prix de ligne TTC
+		UnitPriceAfterTax1,				//	prix unitaire TTC
+		LinePriceAfterTax2,				//	prix de ligne TTC après rabais/arrondi
 		
 		Revenue,						//	prix réel HT ou TTC, selon le contexte
 		SubTotal,						//	prix produit par un sous-total
-		
+		SubTotalDiscount,				//	rabais au sein d'un sous-total
+		Total,							//	prix produit par un grand total
 	}
 }

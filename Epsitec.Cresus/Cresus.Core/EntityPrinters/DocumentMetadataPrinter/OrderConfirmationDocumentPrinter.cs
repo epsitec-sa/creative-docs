@@ -188,7 +188,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				this.tableColumns[TableColumnKeys.AdditionalDate].Visible = false;
 			}
 
-			if (AbstractDocumentMetadataPrinter.IsEmptyColumn (accessors, DocumentItemAccessorColumn.Discount))
+			if (AbstractDocumentMetadataPrinter.IsEmptyColumn (accessors, DocumentItemAccessorColumn.LineDiscount))
 			{
 				this.tableColumns[TableColumnKeys.Discount].Visible = false;
 			}
@@ -239,12 +239,12 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				this.SetTableText (row+i, TableColumnKeys.ArticleDescription, accessor.GetContent (i, DocumentItemAccessorColumn.ArticleDescription));
 				this.IndentCellMargins (row+i, TableColumnKeys.ArticleDescription, line.GroupIndex);
 
-				this.SetTableText (row+i, TableColumnKeys.UnitPrice, accessor.GetContent (i, DocumentItemAccessorColumn.UnitPriceBeforeTax));
-				this.SetTableText (row+i, TableColumnKeys.Discount, accessor.GetContent (i, DocumentItemAccessorColumn.Discount));
-				this.SetTableText (row+i, TableColumnKeys.LinePrice, accessor.GetContent (i, DocumentItemAccessorColumn.LinePriceBeforeTax));
+				this.SetTableText (row+i, TableColumnKeys.UnitPrice, accessor.GetContent (i, DocumentItemAccessorColumn.UnitPriceBeforeTax1));
+				this.SetTableText (row+i, TableColumnKeys.Discount, accessor.GetContent (i, DocumentItemAccessorColumn.LineDiscount));
+				this.SetTableText (row+i, TableColumnKeys.LinePrice, accessor.GetContent (i, DocumentItemAccessorColumn.LinePriceBeforeTax1));
 				this.SetTableText (row+i, TableColumnKeys.Vat, accessor.GetContent (i, DocumentItemAccessorColumn.VatRate));
 
-				var total = accessor.GetContent (i, DocumentItemAccessorColumn.FinalPriceBeforeTax);
+				var total = accessor.GetContent (i, DocumentItemAccessorColumn.LinePriceBeforeTax2);
 				if (line.Line is EndTotalDocumentItemEntity && i == accessor.RowsCount-1)
 				{
 					total = total.ApplyBold ();

@@ -196,18 +196,18 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					return new CellContent (text, error);
 
 				case ColumnType.Discount:
-					text = info.GetColumnContent (DocumentItemAccessorColumn.Discount);
-					error = info.GetColumnError (DocumentItemAccessorColumn.Discount);
+					text = info.GetColumnContent (DocumentItemAccessorColumn.LineDiscount);
+					error = info.GetColumnError (DocumentItemAccessorColumn.LineDiscount);
 					return new CellContent (text, error);
 
 				case ColumnType.UnitPrice:
-					text = info.GetColumnContent (DocumentItemAccessorColumn.UnitPriceBeforeTax);
-					error = info.GetColumnError (DocumentItemAccessorColumn.UnitPriceBeforeTax);
+					text = info.GetColumnContent (DocumentItemAccessorColumn.UnitPriceBeforeTax1);
+					error = info.GetColumnError (DocumentItemAccessorColumn.UnitPriceBeforeTax1);
 					return new CellContent (text, error);
 
 				case ColumnType.LinePrice:
-					text = info.GetColumnContent (DocumentItemAccessorColumn.LinePriceBeforeTax);
-					error = info.GetColumnError (DocumentItemAccessorColumn.LinePriceBeforeTax);
+					text = info.GetColumnContent (DocumentItemAccessorColumn.LinePriceBeforeTax1);
+					error = info.GetColumnError (DocumentItemAccessorColumn.LinePriceBeforeTax1);
 					return new CellContent (text, error);
 
 				case ColumnType.Vat:
@@ -216,8 +216,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					return new CellContent (text, error);
 
 				case ColumnType.Total:
-					text = info.GetColumnContent (DocumentItemAccessorColumn.FinalPriceBeforeTax, DocumentItemAccessorColumn.FinalPriceAfterTax);
-					error = info.GetColumnError (DocumentItemAccessorColumn.FinalPriceBeforeTax, DocumentItemAccessorColumn.FinalPriceAfterTax);
+					text = info.GetColumnContent (DocumentItemAccessorColumn.LinePriceBeforeTax2, DocumentItemAccessorColumn.LinePriceAfterTax2);
+					error = info.GetColumnError (DocumentItemAccessorColumn.LinePriceBeforeTax2, DocumentItemAccessorColumn.LinePriceAfterTax2);
 					return new CellContent (text, error);
 			}
 
