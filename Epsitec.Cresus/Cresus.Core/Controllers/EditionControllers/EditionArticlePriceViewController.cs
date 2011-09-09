@@ -35,7 +35,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.End ()
 				.Separator ()
 				.Input ()
-				  .Field (x => x.ValueIncludesTaxes)
 				  .Field (x => x.ValueOverridesPriceGroup)
 				  .Field (x => x.Value)
 				  .Field (x => x.CurrencyCode)

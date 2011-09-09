@@ -149,8 +149,6 @@ namespace Epsitec.Cresus.Core.Library.Business
 				{
 				}
 				
-				//	designer:cap/GVA67
-				public static readonly Epsitec.Common.Types.EnumType ArticleDocumentItemAttributes = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 230));
 				//	designer:cap/GVA47
 				public static readonly Epsitec.Common.Types.DecimalType ArticleQuantity = (global::Epsitec.Common.Types.DecimalType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 228));
 			}
@@ -161,6 +159,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				{
 				}
 				
+				//	designer:cap/GVA67
+				public static readonly Epsitec.Common.Types.EnumType ArticleDocumentItemAttributes = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 230));
 				//	designer:cap/GVA15
 				public static readonly Epsitec.Common.Types.EnumType ArticleQuantityType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 161));
 				//	designer:cap/GVA04
@@ -241,7 +241,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 			}
 			
-			public static class Decimal
+			public static class Enum
 			{
 				internal static void _Initialize()
 				{
@@ -261,12 +261,28 @@ namespace Epsitec.Cresus.Core.Library.Business
 							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 238));
 						}
 					}
+					//	designer:cap/GVAC8
+					public static global::Epsitec.Common.Types.Caption ArticlePriceIncludesTaxes
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 268));
+						}
+					}
 					//	designer:cap/GVAF7
 					public static global::Epsitec.Common.Types.Caption ArticlePricesFrozen
 					{
 						get
 						{
 							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 239));
+						}
+					}
+					//	designer:cap/GVAE8
+					public static global::Epsitec.Common.Types.Caption Dirty
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 270));
 						}
 					}
 					//	designer:cap/GVAG7
@@ -325,13 +341,22 @@ namespace Epsitec.Cresus.Core.Library.Business
 							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 231));
 						}
 					}
-				}
-			}
-			
-			public static class Enum
-			{
-				internal static void _Initialize()
-				{
+					//	designer:cap/GVA28
+					public static global::Epsitec.Common.Types.Caption PartialQuantities
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 258));
+						}
+					}
+					//	designer:cap/GVA18
+					public static global::Epsitec.Common.Types.Caption UnitPriceIncludesTaxes
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 257));
+						}
+					}
 				}
 				
 				public static class ArticleQuantityType
@@ -583,10 +608,22 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid PurchaseBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 101);
 				//	designer:cap/GVA63
 				public static readonly global::Epsitec.Common.Support.Druid PurchaseDiscountBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 102);
+				//	designer:cap/GVA78
+				public static readonly global::Epsitec.Common.Support.Druid PurchaseRoundingBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 263);
+				//	designer:cap/GVA58
+				public static readonly global::Epsitec.Common.Support.Druid PurchaseVatBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 261);
+				//	designer:cap/GVA98
+				public static readonly global::Epsitec.Common.Support.Druid PurchaseVatCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 265);
 				//	designer:cap/GVA33
-				public static readonly global::Epsitec.Common.Support.Druid SellingBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 99);
+				public static readonly global::Epsitec.Common.Support.Druid SaleBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 99);
 				//	designer:cap/GVA43
-				public static readonly global::Epsitec.Common.Support.Druid SellingDiscountBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 100);
+				public static readonly global::Epsitec.Common.Support.Druid SaleDiscountBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 100);
+				//	designer:cap/GVA68
+				public static readonly global::Epsitec.Common.Support.Druid SaleRoundingBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 262);
+				//	designer:cap/GVA48
+				public static readonly global::Epsitec.Common.Support.Druid SaleVatBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 260);
+				//	designer:cap/GVA88
+				public static readonly global::Epsitec.Common.Support.Druid SaleVatCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 264);
 			}
 			
 			public static class ArticleCategory
@@ -595,24 +632,18 @@ namespace Epsitec.Cresus.Core.Library.Business
 				{
 				}
 				
+				//	designer:cap/GVA23
+				public static readonly global::Epsitec.Common.Support.Druid Accounting = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 98);
 				//	designer:cap/GVA03
 				public static readonly global::Epsitec.Common.Support.Druid ArticleType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 96);
-				//	designer:cap/GVA23
-				public static readonly global::Epsitec.Common.Support.Druid DefaultAccounting = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 98);
-				//	designer:cap/GVAQ3
-				public static readonly global::Epsitec.Common.Support.Druid DefaultBillingUnit = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 122);
-				//	designer:cap/GVAR2
-				public static readonly global::Epsitec.Common.Support.Druid DefaultInputVatCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 91);
-				//	designer:cap/GVAS2
-				public static readonly global::Epsitec.Common.Support.Druid DefaultOutputVatCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 92);
 				//	designer:cap/GVAQ2
 				public static readonly global::Epsitec.Common.Support.Druid DefaultPictures = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 90);
-				//	designer:cap/GVAU2
-				public static readonly global::Epsitec.Common.Support.Druid DefaultRoundingMode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 94);
 				//	designer:cap/GVAV2
 				public static readonly global::Epsitec.Common.Support.Druid NeverApplyDiscount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 95);
-				//	designer:cap/GVAT2
-				public static readonly global::Epsitec.Common.Support.Druid VatNumber = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 93);
+				//	designer:cap/GVAU2
+				public static readonly global::Epsitec.Common.Support.Druid RoundingMode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 94);
+				//	designer:cap/GVAD8
+				public static readonly global::Epsitec.Common.Support.Druid UnitOfMeasureCategory = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 269);
 			}
 			
 			public static class ArticleDefinition
@@ -621,8 +652,6 @@ namespace Epsitec.Cresus.Core.Library.Business
 				{
 				}
 				
-				//	designer:cap/GVAN3
-				public static readonly global::Epsitec.Common.Support.Druid Accounting = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 119);
 				//	designer:cap/GVAM3
 				public static readonly global::Epsitec.Common.Support.Druid ArticleAvailabilities = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 118);
 				//	designer:cap/GVAP2
@@ -635,12 +664,6 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid ArticlePrices = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 108);
 				//	designer:cap/GVAB3
 				public static readonly global::Epsitec.Common.Support.Druid ArticleSupplies = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 107);
-				//	designer:cap/GVAO3
-				public static readonly global::Epsitec.Common.Support.Druid BillingUnit = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 120);
-				//	designer:cap/GVAI2
-				public static readonly global::Epsitec.Common.Support.Druid InputVatCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 82);
-				//	designer:cap/GVAJ2
-				public static readonly global::Epsitec.Common.Support.Druid OutputVatCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 83);
 				//	designer:cap/GVAH2
 				public static readonly global::Epsitec.Common.Support.Druid Pictures = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 81);
 				//	designer:cap/GVAP3
@@ -653,6 +676,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				{
 				}
 				
+				//	designer:cap/GVA02
+				public static readonly global::Epsitec.Common.Support.Druid ArticleAccountingDefinition = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 64);
 				//	designer:cap/GVAC7
 				public static readonly global::Epsitec.Common.Support.Druid ArticleAttributes = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 236);
 				//	designer:cap/GVAF2
@@ -665,36 +690,36 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid ArticleTraceabilityDetails = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 56);
 				//	designer:cap/GVA52
 				public static readonly global::Epsitec.Common.Support.Druid Discounts = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 69);
-				//	designer:cap/GVAD2
-				public static readonly global::Epsitec.Common.Support.Druid FinalLinePriceBeforeTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 77);
-				//	designer:cap/GVA82
-				public static readonly global::Epsitec.Common.Support.Druid FixedPrice = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 72);
+				//	designer:cap/GVAA2
+				public static readonly global::Epsitec.Common.Support.Druid LinePriceAfterTax1 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 74);
+				//	designer:cap/GVAB2
+				public static readonly global::Epsitec.Common.Support.Druid LinePriceAfterTax2 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 75);
 				//	designer:cap/GVA32
-				public static readonly global::Epsitec.Common.Support.Druid PrimaryLinePriceAfterTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 67);
-				//	designer:cap/GVAR6
-				public static readonly global::Epsitec.Common.Support.Druid PrimaryLinePriceBeforeTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 219);
-				//	designer:cap/GVAI7
-				public static readonly global::Epsitec.Common.Support.Druid PrimaryUnitPriceAfterTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 242);
-				//	designer:cap/GVAQ6
-				public static readonly global::Epsitec.Common.Support.Druid PrimaryUnitPriceBeforeTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 218);
-				//	designer:cap/GVAS6
-				public static readonly global::Epsitec.Common.Support.Druid ReferenceUnitPriceBeforeTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 220);
+				public static readonly global::Epsitec.Common.Support.Druid LinePriceBeforeTax1 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 67);
+				//	designer:cap/GVA82
+				public static readonly global::Epsitec.Common.Support.Druid LinePriceBeforeTax2 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 72);
 				//	designer:cap/GVAG2
 				public static readonly global::Epsitec.Common.Support.Druid ReplacementDescription = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 80);
 				//	designer:cap/GVKN
 				public static readonly global::Epsitec.Common.Support.Druid ReplacementName = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 23);
-				//	designer:cap/GVAA2
-				public static readonly global::Epsitec.Common.Support.Druid ResultingLinePriceBeforeTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 74);
-				//	designer:cap/GVAB2
-				public static readonly global::Epsitec.Common.Support.Druid ResultingLineTax1 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 75);
+				//	designer:cap/GVA38
+				public static readonly global::Epsitec.Common.Support.Druid TotalRevenueAccounted = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 259);
 				//	designer:cap/GVAC2
-				public static readonly global::Epsitec.Common.Support.Druid ResultingLineTax2 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 76);
+				public static readonly global::Epsitec.Common.Support.Druid TotalRevenueAfterTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 76);
+				//	designer:cap/GVAI7
+				public static readonly global::Epsitec.Common.Support.Druid UnitPriceAfterTax1 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 242);
+				//	designer:cap/GVAR6
+				public static readonly global::Epsitec.Common.Support.Druid UnitPriceAfterTax2 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 219);
+				//	designer:cap/GVAS6
+				public static readonly global::Epsitec.Common.Support.Druid UnitPriceBeforeTax1 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 220);
+				//	designer:cap/GVAQ6
+				public static readonly global::Epsitec.Common.Support.Druid UnitPriceBeforeTax2 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 218);
 				//	designer:cap/GVA62
-				public static readonly global::Epsitec.Common.Support.Druid TaxRate1 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 70);
+				public static readonly global::Epsitec.Common.Support.Druid VatRateA = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 70);
 				//	designer:cap/GVA72
-				public static readonly global::Epsitec.Common.Support.Druid TaxRate2 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 71);
-				//	designer:cap/GVA02
-				public static readonly global::Epsitec.Common.Support.Druid VatCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 64);
+				public static readonly global::Epsitec.Common.Support.Druid VatRateB = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 71);
+				//	designer:cap/GVAU7
+				public static readonly global::Epsitec.Common.Support.Druid VatRatio = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 254);
 			}
 			
 			public static class ArticlePrice
@@ -703,6 +728,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				{
 				}
 				
+				//	designer:cap/GVAB8
+				public static readonly global::Epsitec.Common.Support.Druid BillingUnit = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 267);
 				//	designer:cap/GVAF3
 				public static readonly global::Epsitec.Common.Support.Druid CurrencyCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 111);
 				//	designer:cap/GVAE3
@@ -715,8 +742,6 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid PriceGroups = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 115);
 				//	designer:cap/GVAG3
 				public static readonly global::Epsitec.Common.Support.Druid Value = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 112);
-				//	designer:cap/GVAH3
-				public static readonly global::Epsitec.Common.Support.Druid ValueIncludesTaxes = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 113);
 				//	designer:cap/GVAI3
 				public static readonly global::Epsitec.Common.Support.Druid ValueOverridesPriceGroup = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 114);
 			}
@@ -1017,6 +1042,16 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 23);
 			}
 			
+			public static class PriceGroup
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/GVAF8
+				public static readonly global::Epsitec.Common.Support.Druid PriceBillingMode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 271);
+			}
+			
 			public static class Relation
 			{
 				internal static void _Initialize()
@@ -1047,16 +1082,14 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid Discount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 150);
 				//	designer:cap/GVAG4
 				public static readonly global::Epsitec.Common.Support.Druid DisplayModes = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 144);
-				//	designer:cap/GVAQ4
-				public static readonly global::Epsitec.Common.Support.Druid FinalPriceBeforeTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 154);
-				//	designer:cap/GVAK4
-				public static readonly global::Epsitec.Common.Support.Druid PrimaryPriceBeforeTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 148);
-				//	designer:cap/GVAL4
-				public static readonly global::Epsitec.Common.Support.Druid PrimaryTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 149);
-				//	designer:cap/GVAP4
-				public static readonly global::Epsitec.Common.Support.Druid ResultingPriceBeforeTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 153);
 				//	designer:cap/GVAU5
-				public static readonly global::Epsitec.Common.Support.Druid ResultingTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 190);
+				public static readonly global::Epsitec.Common.Support.Druid PriceAfterTax1 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 190);
+				//	designer:cap/GVAP4
+				public static readonly global::Epsitec.Common.Support.Druid PriceAfterTax2 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 153);
+				//	designer:cap/GVAK4
+				public static readonly global::Epsitec.Common.Support.Druid PriceBeforeTax1 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 148);
+				//	designer:cap/GVAL4
+				public static readonly global::Epsitec.Common.Support.Druid PriceBeforeTax2 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 149);
 				//	designer:cap/GVAO6
 				public static readonly global::Epsitec.Common.Support.Druid TextForDiscount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 216);
 				//	designer:cap/GVAH4
@@ -1071,16 +1104,16 @@ namespace Epsitec.Cresus.Core.Library.Business
 				{
 				}
 				
-				//	designer:cap/GVAU4
-				public static readonly global::Epsitec.Common.Support.Druid BaseAmount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 158);
-				//	designer:cap/GVAV4
-				public static readonly global::Epsitec.Common.Support.Druid Rate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 159);
 				//	designer:cap/GVA05
 				public static readonly global::Epsitec.Common.Support.Druid ResultingTax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 160);
 				//	designer:cap/GVAS4
 				public static readonly global::Epsitec.Common.Support.Druid Text = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 156);
+				//	designer:cap/GVAU4
+				public static readonly global::Epsitec.Common.Support.Druid TotalRevenue = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 158);
 				//	designer:cap/GVAT4
 				public static readonly global::Epsitec.Common.Support.Druid VatCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 157);
+				//	designer:cap/GVAV4
+				public static readonly global::Epsitec.Common.Support.Druid VatRate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 159);
 			}
 			
 			public static class TextDocumentItem
@@ -1151,7 +1184,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			Types.Decimal._Initialize ();
 			Types.Enum._Initialize ();
 			Values._Initialize ();
-			Values.Decimal.ArticleDocumentItemAttributes._Initialize ();
+			Values.Enum.ArticleDocumentItemAttributes._Initialize ();
 			Values.Enum.ArticleQuantityType._Initialize ();
 			Values.Enum.ArticleType._Initialize ();
 			Values.Enum.DocumentItemAttributes._Initialize ();
@@ -1180,6 +1213,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			Fields.OptionValueArticleParameterDefinition._Initialize ();
 			Fields.PaymentReminderDefinition._Initialize ();
 			Fields.People._Initialize ();
+			Fields.PriceGroup._Initialize ();
 			Fields.Relation._Initialize ();
 			Fields.SubTotalDocumentItem._Initialize ();
 			Fields.TaxDocumentItem._Initialize ();

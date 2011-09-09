@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			else
 			{
-				return TextFormatter.FormatText (string.Format ("TVA {0:0.0%} :", this.Rate), text);
+				return TextFormatter.FormatText (string.Format ("TVA {0:0.0%} :", this.VatRate), text);
 			}
 		}
 
@@ -41,14 +41,14 @@ namespace Epsitec.Cresus.Core.Entities
 
 		void ICopyableEntity<TaxDocumentItemEntity>.CopyTo(IBusinessContext businessContext, TaxDocumentItemEntity copy)
 		{
-			copy.Attributes    = this.Attributes;
-			copy.GroupIndex    = this.GroupIndex;
+			copy.Attributes   = this.Attributes;
+			copy.GroupIndex   = this.GroupIndex;
 
-			copy.Text          = this.Text;
-			copy.VatCode       = this.VatCode;
-			copy.BaseAmount    = this.BaseAmount;
-			copy.Rate          = this.Rate;
-			copy.ResultingTax  = this.ResultingTax;
+			copy.Text         = this.Text;
+			copy.VatCode      = this.VatCode;
+			copy.VatRate      = this.VatRate;
+			copy.TotalRevenue = this.TotalRevenue;
+			copy.ResultingTax = this.ResultingTax;
 		}
 
 		#endregion

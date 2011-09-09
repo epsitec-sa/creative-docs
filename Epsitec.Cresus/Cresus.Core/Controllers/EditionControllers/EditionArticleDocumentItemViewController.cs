@@ -23,6 +23,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
+#if false
 	public class EditionArticleDocumentItemViewController : EditionViewController<Entities.ArticleDocumentItemEntity>
 	{
 		protected override void CreateUI()
@@ -273,4 +274,5 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private ArticleParameterControllers.ArticleParameterToolbarController	toolbarController;
 		private TextFieldMultiEx												articleDescriptionTextField;
 	}
+#endif
 }

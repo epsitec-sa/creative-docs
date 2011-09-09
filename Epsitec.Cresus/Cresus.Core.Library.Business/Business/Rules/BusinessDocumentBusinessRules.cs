@@ -270,29 +270,22 @@ namespace Epsitec.Cresus.Core.Business.Rules
 
 		private static void SetupInvoiceArticleDocumentItem(IBusinessContext businessContext, ArticleDocumentItemEntity line)
 		{
-			var ordered = line.GetOrderedQuantity ();
-			line.ReferenceUnitPriceBeforeTax = (ordered == 0) ? null : line.ResultingLinePriceBeforeTax / ordered;
-
-			//	Cherche la quantité à facturer.
-			decimal billedQuantity = 0;
-
-			foreach (var quantity in line.ArticleQuantities)
-			{
-				if (quantity.QuantityColumn.QuantityType == ArticleQuantityType.Shipped)
-				{
-					billedQuantity += quantity.Quantity;
-				}
-			}
+			decimal orderedQuantity = line.GetQuantity (ArticleQuantityType.Ordered);
+			decimal shippedQuantity = line.GetQuantity (ArticleQuantityType.Shipped);
 
 			//	Crée la quantité à facturer.
-			var quantityColumnEntity = BusinessDocumentBusinessRules.FindArticleQuantityColumnEntity (businessContext, ArticleQuantityType.Billed);
-			if (quantityColumnEntity != null)
+			var quantityColumn = BusinessDocumentBusinessRules.FindArticleQuantityColumnEntity (businessContext, ArticleQuantityType.Billed);
+			
+			if (quantityColumn.IsNotNull ())
 			{
 				var newQuantity = businessContext.CreateEntity<ArticleQuantityEntity> ();
-				newQuantity.Quantity = billedQuantity;
-				newQuantity.QuantityColumn = quantityColumnEntity;
-				newQuantity.BeginDate = new Date (Date.Today.Ticks);
 
+				newQuantity.Quantity       = shippedQuantity;
+				newQuantity.QuantityColumn = quantityColumn;
+				newQuantity.BeginDate      = new Date (Date.Today.Ticks);
+
+				line.HasPartialQuantities = (orderedQuantity != shippedQuantity);
+				
 				line.ArticleQuantities.Add (newQuantity);
 			}
 		}

@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Core.Entities
 					var line0 = conciseLines[i] as SubTotalDocumentItemEntity;
 					var line1 = BusinessDocumentEntity.GetNextActiveLine (conciseLines, i, 1) as SubTotalDocumentItemEntity;
 
-					if (BusinessDocumentEntity.IsSimilarSubTotals (line0, line1))
+					if (BusinessDocumentEntity.Similar (line0, line1))
 					{
 						conciseLines.RemoveAt (i);
 						continue;
@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.Core.Entities
 					if ((line2 == null || !(line2 is ArticleDocumentItemEntity)) &&
 						line1 is ArticleDocumentItemEntity &&
 						line0 is SubTotalDocumentItemEntity &&
-						BusinessDocumentEntity.IsMiscSubTotal (line0 as SubTotalDocumentItemEntity))
+						BusinessDocumentEntity.HasEmptyDiscount (line0 as SubTotalDocumentItemEntity))
 					{
 						conciseLines.RemoveAt (i);  // supprime le sous-total
 						continue;
@@ -150,35 +150,39 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
-		private static bool IsSimilarSubTotals(SubTotalDocumentItemEntity line1, SubTotalDocumentItemEntity line2)
+		private static bool Similar(SubTotalDocumentItemEntity line1, SubTotalDocumentItemEntity line2)
 		{
 			//	Retourne true si les 2 lignes de sous-totaux sont redondantes et équivalentes.
-			if (line1 == null || line2 == null)
+			if ((line1.IsNull ()) ||
+				(line2.IsNull ()))
 			{
 				return false;
 			}
 
-			return BusinessDocumentEntity.IsMiscSubTotal (line1) &&
-				   BusinessDocumentEntity.IsMiscSubTotal (line2) &&
-				   line1.ResultingPriceBeforeTax.GetValueOrDefault (0) == line2.ResultingPriceBeforeTax.GetValueOrDefault (0) &&
-				   line1.ResultingTax.GetValueOrDefault (0)            == line2.ResultingTax.GetValueOrDefault (0);
+			return BusinessDocumentEntity.HasEmptyDiscount (line1) &&
+				   BusinessDocumentEntity.HasEmptyDiscount (line2) &&
+				   line1.PriceBeforeTax2 == line2.PriceBeforeTax2 &&
+				   line1.PriceAfterTax2  == line2.PriceAfterTax2;
 		}
 
-		private static bool IsMiscSubTotal(SubTotalDocumentItemEntity line)
+		private static bool HasEmptyDiscount(SubTotalDocumentItemEntity line)
 		{
 			//	Retourne true si la ligne de sous-total est redondante, c'est-à-dire si elle n'a pas de rabais.
-			if (line == null)
+
+			if (line.Discount.IsNull ())
+			{
+				return true;
+			}
+
+			if ((line.Discount.HasDiscountRate) ||
+				(line.Discount.HasValue))
 			{
 				return false;
 			}
-
-			if (line.Discount.DiscountRate.HasValue ||
-				line.Discount.Value.HasValue)
+			else
 			{
-				return false;
+				return true;
 			}
-
-			return true;
 		}
 		#endregion
 

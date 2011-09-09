@@ -18,69 +18,29 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class ArticleDocumentItemEntity : ICopyableEntity<ArticleDocumentItemEntity>
 	{
-		public decimal GetOrderedQuantity()
+		public decimal GetQuantity(ArticleQuantityType quantityType)
 		{
-			var quantities = this.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == ArticleQuantityType.Ordered);
+			var quantities = this.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == quantityType);
 
 			return quantities.Sum (x => this.ArticleDefinition.ConvertToBillingUnit (x.Quantity, x.Unit));
 		}
 
 
-		public bool FixedPriceIncludesTaxes
+		public bool ArticlePriceIncludesTaxes
 		{
 			get
 			{
-				return this.ArticleAttributes.HasFlag (ArticleDocumentItemAttributes.FixedPriceIncludesTaxes);
+				return this.ArticleAttributes.HasFlag (ArticleDocumentItemAttributes.ArticlePriceIncludesTaxes);
 			}
 			set
 			{
 				if (value)
 				{
-					this.ArticleAttributes = this.ArticleAttributes | ArticleDocumentItemAttributes.FixedPriceIncludesTaxes;
+					this.ArticleAttributes = this.ArticleAttributes | ArticleDocumentItemAttributes.ArticlePriceIncludesTaxes;
 				}
 				else
 				{
-					this.ArticleAttributes = this.ArticleAttributes & ~ArticleDocumentItemAttributes.FixedPriceIncludesTaxes;
-				}
-			}
-		}
-
-		public bool FixedLinePrice
-		{
-			get
-			{
-				return this.ArticleAttributes.HasFlag (ArticleDocumentItemAttributes.FixedLinePrice);
-			}
-			set
-			{
-				if (value)
-				{
-					this.ArticleAttributes = this.ArticleAttributes | ArticleDocumentItemAttributes.FixedLinePrice;
-					this.ArticleAttributes = this.ArticleAttributes & ~ArticleDocumentItemAttributes.FixedUnitPrice;
-				}
-				else
-				{
-					this.ArticleAttributes = this.ArticleAttributes & ~ArticleDocumentItemAttributes.FixedLinePrice;
-				}
-			}
-		}
-
-		public bool FixedUnitPrice
-		{
-			get
-			{
-				return this.ArticleAttributes.HasFlag (ArticleDocumentItemAttributes.FixedUnitPrice);
-			}
-			set
-			{
-				if (value)
-				{
-					this.ArticleAttributes = this.ArticleAttributes | ArticleDocumentItemAttributes.FixedUnitPrice;
-					this.ArticleAttributes = this.ArticleAttributes & ~ArticleDocumentItemAttributes.FixedLinePrice;
-				}
-				else
-				{
-					this.ArticleAttributes = this.ArticleAttributes & ~ArticleDocumentItemAttributes.FixedUnitPrice;
+					this.ArticleAttributes = this.ArticleAttributes & ~ArticleDocumentItemAttributes.ArticlePriceIncludesTaxes;
 				}
 			}
 		}
@@ -120,10 +80,41 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
-
-		public void FreezePrices()
+		public bool HasPartialQuantities
 		{
-			this.ArticleAttributes |= ArticleDocumentItemAttributes.ArticlePricesFrozen;
+			get
+			{
+				return this.ArticleAttributes.HasFlag (ArticleDocumentItemAttributes.PartialQuantities);
+			}
+			set
+			{
+				if (value)
+				{
+					this.ArticleAttributes = this.ArticleAttributes | ArticleDocumentItemAttributes.PartialQuantities;
+				}
+				else
+				{
+					this.ArticleAttributes = this.ArticleAttributes & ~ArticleDocumentItemAttributes.PartialQuantities;
+				}
+			}
+		}
+
+		public decimal? TotalRevenueBeforeTax
+		{
+			get
+			{
+				if (this.TotalRevenueAfterTax.HasValue)
+				{
+					var vatRate = this.VatRateA * this.VatRatio + this.VatRateB * (1 - this.VatRatio);
+					var vatMult = 1 + vatRate;
+
+					return this.TotalRevenueAfterTax.Value / vatMult;
+				}
+				else
+				{
+					return null;
+				}
+			}
 		}
 
 		public override FormattedText GetCompactSummary()
@@ -135,7 +126,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 			var quantity = Helpers.ArticleDocumentItemHelper.GetArticleQuantityAndUnit (this);
 			var desc     = this.ArticleDescriptionCache.Lines.FirstOrDefault ().ToSimpleText ();
-			var price    = Misc.PriceToString (this.PrimaryLinePriceBeforeTax);
+			var price    = Misc.PriceToString (this.ArticlePriceIncludesTaxes ? this.LinePriceAfterTax2 : this.LinePriceBeforeTax2);
 
 			if (string.IsNullOrEmpty (desc))
 			{
@@ -166,38 +157,38 @@ namespace Epsitec.Cresus.Core.Entities
 
 		void ICopyableEntity<ArticleDocumentItemEntity>.CopyTo(IBusinessContext businessContext, ArticleDocumentItemEntity copy)
 		{
-			copy.Attributes                      = this.Attributes;
-			copy.GroupIndex                      = this.GroupIndex;
+			copy.Attributes              = this.Attributes;
+			copy.GroupIndex              = this.GroupIndex;
 			
-			copy.BeginDate                       = this.BeginDate;
-			copy.EndDate                         = this.EndDate;
-			copy.ArticleDefinition               = this.ArticleDefinition;
-			copy.ArticleParameters               = this.ArticleParameters;
-			copy.ArticleAttributes               = this.ArticleAttributes;
+			copy.BeginDate               = this.BeginDate;
+			copy.EndDate                 = this.EndDate;
+			copy.ArticleDefinition       = this.ArticleDefinition;
+			copy.ArticleParameters       = this.ArticleParameters;
+			copy.ArticleAttributes       = this.ArticleAttributes;
 
 			//	TODO: clone ArticleTraceabilityDetails
-
-			copy.VatCode                         = this.VatCode;
-			copy.ReferenceUnitPriceBeforeTax     = this.ReferenceUnitPriceBeforeTax;
-			copy.PrimaryUnitPriceAfterTax        = this.PrimaryUnitPriceAfterTax;
-			copy.PrimaryUnitPriceBeforeTax       = this.PrimaryUnitPriceBeforeTax;
-			copy.PrimaryLinePriceBeforeTax       = this.PrimaryLinePriceBeforeTax;
-			copy.PrimaryLinePriceAfterTax        = this.PrimaryLinePriceAfterTax;
 
 			copy.ArticleQuantities.AddRange (this.ArticleQuantities.Select (x => x.CloneEntity (businessContext)));
 			copy.Discounts.AddRange (this.Discounts.Select (x => x.CloneEntity (businessContext)));
 
-			copy.TaxRate1                        = this.TaxRate1;
-			copy.TaxRate2                        = this.TaxRate2;
-			copy.FixedPrice                      = this.FixedPrice;
-			copy.ResultingLinePriceBeforeTax     = this.ResultingLinePriceBeforeTax;
-			copy.ResultingLineTax1               = this.ResultingLineTax1;
-			copy.ResultingLineTax2               = this.ResultingLineTax2;
-			copy.FinalLinePriceBeforeTax         = this.FinalLinePriceBeforeTax;
-			copy.ArticleNameCache                = this.ArticleNameCache;
-			copy.ArticleDescriptionCache         = this.ArticleDescriptionCache;
-			copy.ReplacementName                 = this.ReplacementName;
-			copy.ReplacementDescription          = this.ReplacementDescription;
+			copy.ArticleAccountingDefinition = this.ArticleAccountingDefinition;
+			copy.VatRateA                    = this.VatRateA;
+			copy.VatRateB                    = this.VatRateB;
+			copy.VatRatio                    = this.VatRatio;
+			copy.UnitPriceBeforeTax1         = this.UnitPriceBeforeTax1;
+			copy.UnitPriceBeforeTax2         = this.UnitPriceBeforeTax2;
+			copy.UnitPriceAfterTax1          = this.UnitPriceAfterTax1;
+			copy.UnitPriceAfterTax2          = this.UnitPriceAfterTax2;
+			copy.LinePriceBeforeTax1         = this.LinePriceBeforeTax1;
+			copy.LinePriceBeforeTax2         = this.LinePriceBeforeTax2;
+			copy.LinePriceAfterTax1          = this.LinePriceAfterTax1;
+			copy.LinePriceAfterTax2          = this.LinePriceAfterTax2;
+			copy.TotalRevenueAfterTax                = this.TotalRevenueAfterTax;
+			copy.TotalRevenueAccounted       = this.TotalRevenueAccounted;
+			copy.ArticleNameCache            = this.ArticleNameCache;
+			copy.ArticleDescriptionCache     = this.ArticleDescriptionCache;
+			copy.ReplacementName             = this.ReplacementName;
+			copy.ReplacementDescription      = this.ReplacementDescription;
 		}
 
 		#endregion

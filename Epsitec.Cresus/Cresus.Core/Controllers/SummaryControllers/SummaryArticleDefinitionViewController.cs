@@ -24,10 +24,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				.Template ()
 				.End ()
 				;
-			wall.AddBrick (x => x.Accounting)
-				.Template ()
-				.End ()
-				;
 			wall.AddBrick (x => x.ArticleSupplies)
 				.Template ()
 				.End ()

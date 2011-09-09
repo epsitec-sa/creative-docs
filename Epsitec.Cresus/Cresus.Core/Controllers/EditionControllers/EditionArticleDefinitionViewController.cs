@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Support.EntityEngine;
@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			wall.AddBrick ()
 				.Input ()
-				  .HorizontalGroup ("N° de l'affaire (principal, externe et interne)")
+				  .HorizontalGroup ("N° de l'article (principal, externe et interne)")
 					.Field (x => x.IdA).Width (72)
 					.Field (x => x.IdB).Width (72)
 					.Field (x => x.IdC).Width (72)
@@ -47,15 +47,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .Field (x => x.Pictures)
 				  .Field (x => x.ArticleGroups)
 				  .Field (x => x.ArticleCategory)
-				.End ()
-				.Separator ()
-				.Input ()
-				  .Field (x => x.InputVatCode)
-				  .Field (x => x.OutputVatCode)
-				.End ()
-				.Separator ()
-				.Input ()
-				  .Field (x => x.BillingUnit)
 				  .Field (x => x.Units)
 				.End ()
 				;

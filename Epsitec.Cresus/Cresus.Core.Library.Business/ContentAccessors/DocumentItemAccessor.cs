@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Support;
@@ -22,103 +22,71 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 	/// Accesseur universel permettant d'obtenir le contenu d'une ligne d'un document commercial,
 	/// sous forme d'un tableau (ligne/colonne).
 	/// </summary>
-	public class DocumentItemAccessor
+	public sealed class DocumentItemAccessor
 	{
 		public DocumentItemAccessor(DocumentMetadataEntity documentMetadataEntity, BusinessLogic businessLogic, IncrementalNumberGenerator numberGenerator)
 		{
-			this.documentMetadataEntity = documentMetadataEntity;
-			this.businessDocumentEntity = documentMetadataEntity.BusinessDocument as BusinessDocumentEntity;
-			this.businessLogic          = businessLogic;
-			this.numberGenerator        = numberGenerator;
-
-			this.content = new Dictionary<int, FormattedText> ();
-			this.errors = new Dictionary<int, DocumentItemAccessorError> ();
+			this.documentMetadataEntity  = documentMetadataEntity;
+			this.businessDocumentEntity  = documentMetadataEntity.BusinessDocument as BusinessDocumentEntity;
+			this.businessLogic           = businessLogic;
+			this.numberGenerator         = numberGenerator;
+			this.content                 = new Dictionary<int, FormattedText> ();
+			this.errors                  = new Dictionary<int, DocumentItemAccessorError> ();
 			this.articleQuantityEntities = new List<ArticleQuantityEntity> ();
-		}
-
-		public bool BuildContent(AbstractDocumentItemEntity item, DocumentType type, DocumentItemAccessorMode mode, int? groupIndex = null)
-		{
-			//	Construit tout le contenu.
-			//	Retourne false si le contenu est entièrement caché.
-			int count = 0;
-
-			if ((mode & DocumentItemAccessorMode.EditArticleName       ) != 0)  count++;
-			if ((mode & DocumentItemAccessorMode.EditArticleDescription) != 0)  count++;
-			if ((mode & DocumentItemAccessorMode.UseArticleName        ) != 0)  count++;
-			if ((mode & DocumentItemAccessorMode.UseArticleBoth        ) != 0)  count++;
 			
-			if (count == 0)
+			if ((this.businessDocumentEntity.IsNotNull ()) &&
+				(this.businessDocumentEntity.PriceGroup.IsNotNull ()))
 			{
-				throw new System.NotSupportedException ("At least one mode must be present.");
+				this.billingMode = this.businessDocumentEntity.PriceGroup.BillingMode;
 			}
-			if (count > 1)
-			{
-				throw new System.NotSupportedException ("These simultaneous modes are invalid.");
-			}
-
-			if ((mode & DocumentItemAccessorMode.Print               ) == 0 &&
-				(mode & DocumentItemAccessorMode.AdditionalQuantities) != 0)
-			{
-				throw new System.NotSupportedException ("Invalid mode.");
-			}
-
-			this.item = item;
-			this.type = type;
-			this.mode = mode;
-
-			if (groupIndex.HasValue)
-			{
-				this.groupIndex = groupIndex.Value;
-			}
-			else
-			{
-				this.groupIndex = item.GroupIndex;
-			}
-
-			this.content.Clear ();
-
-			if ((this.mode & DocumentItemAccessorMode.ShowMyEyesOnly) == 0 &&
-				this.item.Attributes.HasFlag (DocumentItemAttributes.MyEyesOnly))
-			{
-				return false;
-			}
-
-			if (this.item is TextDocumentItemEntity)
-			{
-				this.BuildTextItem (this.item as TextDocumentItemEntity);
-			}
-
-			if (this.item is ArticleDocumentItemEntity)
-			{
-				this.BuildArticleItem (this.item as ArticleDocumentItemEntity);
-			}
-
-			if (this.item is TaxDocumentItemEntity)
-			{
-				this.BuildTaxItem (this.item as TaxDocumentItemEntity);
-			}
-
-			if (this.item is SubTotalDocumentItemEntity)
-			{
-				this.BuildSubTotalItem (this.item as SubTotalDocumentItemEntity);
-			}
-
-			if (this.item is EndTotalDocumentItemEntity)
-			{
-				this.BuildEndTotalItem (this.item as EndTotalDocumentItemEntity);
-			}
-
-			this.BuildCommonItem ();
-			return true;
 		}
 
-		public int RowsCount
+		
+		public int								RowsCount
 		{
-			//	Retourne le nombre total de lignes.
 			get
 			{
 				return this.rowsCount;
 			}
+		}
+
+		public int								GroupIndex
+		{
+			get
+			{
+				return this.groupIndex;
+			}
+		}
+
+		
+		public bool BuildContent(AbstractDocumentItemEntity item, DocumentType type, DocumentItemAccessorMode mode, int? groupIndex = null)
+		{
+			//	Construit tout le contenu.
+			//	Retourne false si le contenu est entièrement caché.
+			
+			DocumentItemAccessor.EnsureValidMode (mode);
+
+			this.item = item;
+			this.type = type;
+			this.mode = mode;
+			this.groupIndex = groupIndex.GetValueOrDefault (item.GroupIndex);
+
+			this.content.Clear ();
+
+			if ((this.mode.HasFlag (DocumentItemAccessorMode.ShowMyEyesOnly)) &&
+				(this.item.Attributes.HasFlag (DocumentItemAttributes.MyEyesOnly)))
+			{
+				return false;
+			}
+
+			this.BuildTextItem (this.item as TextDocumentItemEntity);
+			this.BuildArticleItem (this.item as ArticleDocumentItemEntity);
+			this.BuildTaxItem (this.item as TaxDocumentItemEntity);
+			this.BuildSubTotalItem (this.item as SubTotalDocumentItemEntity);
+			this.BuildEndTotalItem (this.item as EndTotalDocumentItemEntity);
+			this.BuildCommonItem ();
+
+			return true;
 		}
 
 		public bool IsEmptyRow(int row)
@@ -192,110 +160,153 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			}
 		}
 
-		public int GroupIndex
-		{
-			get
-			{
-				return this.groupIndex;
-			}
-		}
 
 
 		private void BuildTextItem(TextDocumentItemEntity line)
 		{
+			if (line.IsNull ())
+			{
+				return;
+			}
+
 			var text = line.Text;
 
 			if (text.IsNullOrEmpty)
 			{
-				text = " ";  // pour que le contenu de la ligne existe, même si le texte n'existe pas encore !
 				this.SetError (0, DocumentItemAccessorColumn.ArticleDescription, DocumentItemAccessorError.TextNotDefined);
+				this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, " ");
 			}
-
-			this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, text);
+			else
+			{
+				this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, text);
+			}
 		}
 
 		private void BuildArticleItem(ArticleDocumentItemEntity line)
 		{
-			//	Génère les quantités.
-			if ((this.mode & DocumentItemAccessorMode.Print) != 0)  // impression (utilise les colonnes MainQuantity/MainUnit) ?
+			if (line.IsNull ())
 			{
-				//	Génère la quantité principale.
-				var quantityTypes = this.businessLogic.PrintableArticleQuantityTypes;
-				var mainQuantityType = ArticleQuantityType.None;
-				int row = 0;
+				return;
+			}
 
-				if (quantityTypes.Count () != 0)
+			this.BuildArticleItemQuantities (line);
+
+			var description = this.GetArticleItemDescription (line);
+			var revenue     = this.billingMode == BillingMode.ExcludingTax ? line.TotalRevenueBeforeTax : line.TotalRevenueAfterTax;
+
+			if (description.IsNullOrEmpty)
+			{
+				this.SetError (0, DocumentItemAccessorColumn.ArticleDescription, DocumentItemAccessorError.ArticleNotDefined);
+			}
+
+			this.SetContent (0, DocumentItemAccessorColumn.ArticleId,           ArticleDocumentItemHelper.GetArticleId (line));
+			this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription,  description);
+			this.SetContent (0, DocumentItemAccessorColumn.UnitPriceBeforeTax,  this.GetFormattedPrice (line.UnitPriceBeforeTax1));
+			this.SetContent (0, DocumentItemAccessorColumn.UnitPriceAfterTax,   this.GetFormattedPrice (line.UnitPriceAfterTax1));
+			this.SetContent (0, DocumentItemAccessorColumn.LinePriceBeforeTax,  this.GetFormattedPrice (line.LinePriceBeforeTax1));
+			this.SetContent (0, DocumentItemAccessorColumn.LinePriceAfterTax,   this.GetFormattedPrice (line.LinePriceAfterTax1));
+			this.SetContent (0, DocumentItemAccessorColumn.FinalPriceBeforeTax, this.GetFormattedPrice (line.LinePriceBeforeTax2));
+			this.SetContent (0, DocumentItemAccessorColumn.FinalPriceAfterTax,  this.GetFormattedPrice (line.LinePriceAfterTax2));
+			this.SetContent (0, DocumentItemAccessorColumn.Revenue,             this.GetFormattedPrice (revenue));
+
+			if (line.VatRatio == 1)
+			{
+				this.SetContent (0, DocumentItemAccessorColumn.VatRate, this.GetFormattedPercent (line.VatRateA));
+			}
+			else
+			{
+				//	TODO: handle multiple VAT rates
+			}
+
+			this.BuildArticleItemDiscounts (line);
+		}
+
+		private void BuildArticleItemQuantities(ArticleDocumentItemEntity line)
+		{
+			//	Génère les quantités.
+			if (this.mode.HasFlag (DocumentItemAccessorMode.Print))
+			{
+				this.BuildArticleItemQuantitiesForPrint (line);
+			}
+			else
+			{
+				this.BuildArticleItemQuantitiesForEdition (line);
+			}
+		}
+		
+		private void BuildArticleItemQuantitiesForEdition(ArticleDocumentItemEntity line)
+		{
+			int row = 0;
+
+			foreach (var quantityType in DocumentItemAccessor.ArticleQuantityTypes)
+			{
+				foreach (var quantity in line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == quantityType).OrderBy (x => x.BeginDate))
 				{
-					mainQuantityType = quantityTypes.First ();
+					this.articleQuantityEntities.Add (quantity);
 
-					decimal mainQuantity = 0;
-					FormattedText mainUnit = null;
+					this.SetContent (row, DocumentItemAccessorColumn.AdditionalType, quantity.QuantityColumn.Name);
+					this.SetContent (row, DocumentItemAccessorColumn.AdditionalQuantity, quantity.Quantity.ToString ());
+					this.SetContent (row, DocumentItemAccessorColumn.AdditionalUnit, quantity.Unit.Name);
 
-					foreach (var quantity in line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == mainQuantityType))
+					if (quantity.BeginDate.HasValue)
 					{
-						//	S'il y a plusieurs quantités principales, elles sont sommées, mais cela
-						//	ne devrait pas arriver, me semble-t-il !
-						mainQuantity += quantity.Quantity;
-						mainUnit = quantity.Unit.Name;
+						this.SetContent (row, DocumentItemAccessorColumn.AdditionalBeginDate, quantity.BeginDate.Value.ToString ());
 					}
 
-					this.SetContent (row, DocumentItemAccessorColumn.MainQuantity, mainQuantity.ToString ());
-					this.SetContent (row, DocumentItemAccessorColumn.MainUnit,     mainUnit);
-					this.SetError   (row, DocumentItemAccessorColumn.MainQuantity, this.GetQuantityError (line, mainQuantityType));
+					if (quantity.EndDate.HasValue)
+					{
+						this.SetContent (row, DocumentItemAccessorColumn.AdditionalEndDate, quantity.EndDate.Value.ToString ());
+					}
+
+					this.SetError (row, DocumentItemAccessorColumn.AdditionalQuantity, this.GetQuantityError (line, quantityType));
 
 					row++;
 				}
-
-				//	Génère les autres quantités (sans la principale).
-				if ((this.mode & DocumentItemAccessorMode.AdditionalQuantities) != 0)  // met les quantités additionnelles ?
-				{
-					// Sur un document imprimé, les autres quantités sont toujours sur des lignes à part.
-					foreach (var quantityType in quantityTypes)
-					{
-						foreach (var quantity in line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == quantityType && x.QuantityColumn.QuantityType != mainQuantityType).OrderBy (x => x.BeginDate))
-						{
-							//	Une ligne "déjà livré" avec une quantité nulle est omise.
-							if (quantityType == ArticleQuantityType.ShippedPreviously && quantity.Quantity == 0)
-							{
-								continue;
-							}
-
-							this.articleQuantityEntities.Add (quantity);
-
-							this.SetContent (row, DocumentItemAccessorColumn.AdditionalType,     quantity.QuantityColumn.Name);
-							this.SetContent (row, DocumentItemAccessorColumn.AdditionalQuantity, quantity.Quantity.ToString ());
-							this.SetContent (row, DocumentItemAccessorColumn.AdditionalUnit,     quantity.Unit.Name);
-
-							if (quantity.BeginDate.HasValue)
-							{
-								this.SetContent (row, DocumentItemAccessorColumn.AdditionalBeginDate, quantity.BeginDate.Value.ToString ());
-							}
-
-							if (quantity.EndDate.HasValue)
-							{
-								this.SetContent (row, DocumentItemAccessorColumn.AdditionalEndDate, quantity.EndDate.Value.ToString ());
-							}
-
-							this.SetError (row, DocumentItemAccessorColumn.AdditionalQuantity, this.GetQuantityError (line, quantityType));
-
-							row++;
-						}
-					}
-				}
 			}
-			else  // édition ?
-			{
-				int row = 0;
+		}
 
-				foreach (var quantityType in DocumentItemAccessor.articleQuantityTypes)
+		private void BuildArticleItemQuantitiesForPrint(ArticleDocumentItemEntity line)
+		{
+			//	Utilise les colonnes MainQuantity/MainUnit
+			
+			//	Génère la quantité principale.
+			var quantityTypes = this.businessLogic.PrintableArticleQuantityTypes;
+			var mainQuantityType = ArticleQuantityType.None;
+			int row = 0;
+
+			if (quantityTypes.Any ())
+			{
+				mainQuantityType = quantityTypes.First ();
+
+				var mainQuantity = line.GetQuantity (mainQuantityType);
+				var mainUnitName = line.ArticleDefinition.GetBillingUnitName ();
+
+				this.SetContent (row, DocumentItemAccessorColumn.MainQuantity, mainQuantity.ToString ());
+				this.SetContent (row, DocumentItemAccessorColumn.MainUnit, mainUnitName);
+				this.SetError (row, DocumentItemAccessorColumn.MainQuantity, this.GetQuantityError (line, mainQuantityType));
+
+				row++;
+			}
+
+			//	Génère les autres quantités (sans la principale).
+			if (this.mode.HasFlag (DocumentItemAccessorMode.AdditionalQuantities))  // met les quantités additionnelles ?
+			{
+				// Sur un document imprimé, les autres quantités sont toujours sur des lignes à part.
+				foreach (var quantityType in quantityTypes)
 				{
-					foreach (var quantity in line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == quantityType).OrderBy (x => x.BeginDate))
+					foreach (var quantity in line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == quantityType && x.QuantityColumn.QuantityType != mainQuantityType).OrderBy (x => x.BeginDate))
 					{
+						//	Une ligne "déjà livré" avec une quantité nulle est omise.
+						if (quantityType == ArticleQuantityType.ShippedPreviously && quantity.Quantity == 0)
+						{
+							continue;
+						}
+
 						this.articleQuantityEntities.Add (quantity);
 
-						this.SetContent (row, DocumentItemAccessorColumn.AdditionalType,     quantity.QuantityColumn.Name);
+						this.SetContent (row, DocumentItemAccessorColumn.AdditionalType, quantity.QuantityColumn.Name);
 						this.SetContent (row, DocumentItemAccessorColumn.AdditionalQuantity, quantity.Quantity.ToString ());
-						this.SetContent (row, DocumentItemAccessorColumn.AdditionalUnit,     quantity.Unit.Name);
+						this.SetContent (row, DocumentItemAccessorColumn.AdditionalUnit, quantity.Unit.Name);
 
 						if (quantity.BeginDate.HasValue)
 						{
@@ -313,76 +324,25 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 					}
 				}
 			}
+		}
 
-			//	Génère la description.
-			FormattedText description = "";
+		private void BuildArticleItemDiscounts(ArticleDocumentItemEntity line)
+		{
+			int row = 0;
 
-			if ((this.mode & DocumentItemAccessorMode.EditArticleName) != 0)
+			foreach (var discount in line.Discounts)
 			{
-				description = line.ArticleNameCache;
-			}
-			else if ((this.mode & DocumentItemAccessorMode.EditArticleDescription) != 0)
-			{
-				description = line.ArticleDescriptionCache;
-			}
-			else if ((this.mode & DocumentItemAccessorMode.UseArticleName) != 0)
-			{
-				if (line.ArticleNameCache.IsNullOrEmpty)
+				if (discount.HasDiscountRate)
 				{
-					//	Si la description courte n'existe pas, on met la longue pour éviter de ne rien avoir !
-					description = line.ArticleDescriptionCache;
+					this.SetContent (row++, DocumentItemAccessorColumn.Discount, this.GetFormattedPercent (discount.DiscountRate.Value));
 				}
-				else
+				else if (discount.HasValue)
 				{
-					description = line.ArticleNameCache;
-				}
-			}
-			else if ((this.mode & DocumentItemAccessorMode.UseArticleBoth) != 0)
-			{
-				if (!line.ArticleNameCache.IsNullOrEmpty)
-				{
-					description = description.AppendLine (line.ArticleNameCache);
-				}
-
-				if (!line.ArticleDescriptionCache.IsNullOrEmpty)
-				{
-					description = description.AppendLine (line.ArticleDescriptionCache);
-				}
-			}
-
-			this.SetContent (0, DocumentItemAccessorColumn.ArticleId,          ArticleDocumentItemHelper.GetArticleId (line));
-			this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, description);
-			this.SetContent (0, DocumentItemAccessorColumn.UnitPrice,          this.GetFormattedPrice (line.PrimaryUnitPriceBeforeTax));
-
-			if (description.IsNullOrEmpty)
-			{
-				this.SetError (0, DocumentItemAccessorColumn.ArticleDescription, DocumentItemAccessorError.ArticleNotDefined);
-			}
-
-			if (line.ResultingLinePriceBeforeTax.HasValue && line.ResultingLineTax1.HasValue)
-			{
-				decimal beforeTax = line.ResultingLinePriceBeforeTax.Value;
-				decimal tax =       line.ResultingLineTax1.Value;
-
-				this.SetContent (0, DocumentItemAccessorColumn.LinePrice, this.GetFormattedPrice (beforeTax));
-				this.SetContent (0, DocumentItemAccessorColumn.Vat,       this.GetFormattedPrice (tax));
-				this.SetContent (0, DocumentItemAccessorColumn.Total,     this.GetFormattedPrice (beforeTax+tax));
-			}
-
-			if (line.Discounts.Count != 0)
-			{
-				if (line.Discounts[0].DiscountRate.HasValue)
-				{
-					this.SetContent (0, DocumentItemAccessorColumn.Discount, this.GetFormattedPercent (line.Discounts[0].DiscountRate.Value));
-				}
-
-				if (line.Discounts[0].Value.HasValue)
-				{
-					this.SetContent (0, DocumentItemAccessorColumn.Discount, this.GetFormattedPrice (line.Discounts[0].Value.Value));
+					this.SetContent (row++, DocumentItemAccessorColumn.Discount, this.GetFormattedPrice (discount.Value.Value));
 				}
 			}
 		}
-
+		
 		private DocumentItemAccessorError GetQuantityError(ArticleDocumentItemEntity line, ArticleQuantityType quantityType)
 		{
 			//	Génère une éventuelle erreur sur les quantités.
@@ -393,32 +353,36 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			decimal shippedPreviouslyQuantity = 0;
 			decimal billedQuantity = 0;
 
+			var articleDefinition = line.ArticleDefinition;
+			
 			foreach (var quantity in line.ArticleQuantities)
 			{
+				decimal value = articleDefinition.ConvertToBillingUnit (quantity.Quantity, quantity.Unit);
+
 				switch (quantity.QuantityColumn.QuantityType)
 				{
 					case ArticleQuantityType.Ordered:
-						orderedQuantity += quantity.Quantity;
+						orderedQuantity += value;
 						break;
 
 					case ArticleQuantityType.Delayed:
-						delayedQuantity += quantity.Quantity;
+						delayedQuantity += value;
 						break;
 
 					case ArticleQuantityType.Expected:
-						expectedQuantity += quantity.Quantity;
+						expectedQuantity += value;
 						break;
 
 					case ArticleQuantityType.Shipped:
-						shippedQuantity += quantity.Quantity;
+						shippedQuantity += value;
 						break;
 
 					case ArticleQuantityType.ShippedPreviously:
-						shippedPreviouslyQuantity += quantity.Quantity;
+						shippedPreviouslyQuantity += value;
 						break;
 
 					case ArticleQuantityType.Billed:
-						billedQuantity += quantity.Quantity;
+						billedQuantity += value;
 						break;
 				}
 			}
@@ -445,7 +409,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 					break;
 
 				case ArticleQuantityType.Billed:
-					if (!Controllers.BusinessDocumentControllers.InvoiceBusinessLogic.IsDirectInvoice(this.documentMetadataEntity) &&
+					if (!Controllers.BusinessDocumentControllers.InvoiceBusinessLogic.IsDirectInvoice (this.documentMetadataEntity) &&
 						billedQuantity > shippedQuantity)
 					{
 						return DocumentItemAccessorError.BilledQuantitiesTooHigh;
@@ -456,20 +420,55 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			return DocumentItemAccessorError.OK;
 		}
 
-		static ArticleQuantityType[] articleQuantityTypes =
+		private FormattedText GetArticleItemDescription(ArticleDocumentItemEntity line)
+		{
+			//	Génère la description.
+			var description = FormattedText.Empty;
+
+			if (this.mode.HasFlag (DocumentItemAccessorMode.EditArticleName))
 			{
-				ArticleQuantityType.Ordered,
-				ArticleQuantityType.Delayed,
-				ArticleQuantityType.Expected,
-				ArticleQuantityType.Shipped,
-				ArticleQuantityType.ShippedPreviously,
-				ArticleQuantityType.Billed,
-				ArticleQuantityType.Information,
-			};
+				description = line.ArticleNameCache;
+			}
+			else if (this.mode.HasFlag (DocumentItemAccessorMode.EditArticleDescription))
+			{
+				description = line.ArticleDescriptionCache;
+			}
+			else if (this.mode.HasFlag (DocumentItemAccessorMode.UseArticleName))
+			{
+				description = line.ArticleNameCache.GetValueOrDefault (line.ArticleDescriptionCache);
+			}
+			else if (this.mode.HasFlag (DocumentItemAccessorMode.UseArticleBoth))
+			{
+				description = description.AppendLine (line.ArticleNameCache);
+				description = description.AppendLine (line.ArticleDescriptionCache);
+			}
+			
+			return description;
+		}
+		
+		private decimal GetArticleItemTotalTax(ArticleDocumentItemEntity line)
+		{
+			//	...pour l'instant plus utilisé...
+
+			decimal afterTax   = line.LinePriceAfterTax2.GetValueOrDefault ();
+			decimal afterTaxA  = afterTax * (0 + line.VatRatio);
+			decimal afterTaxB  = afterTax * (1 - line.VatRatio);
+			decimal beforeTaxA = afterTaxA / (1 + line.VatRateA);
+			decimal beforeTaxB = afterTaxB / (1 + line.VatRateB);
+			decimal tax        = beforeTaxA * line.VatRateA + beforeTaxB * line.VatRateB;
+
+			return tax;
+		}
+
 
 
 		private void BuildTaxItem(TaxDocumentItemEntity line)
 		{
+			if (line.IsNull ())
+			{
+				return;
+			}
+
 			var text = line.Text;
 
 			if (text.IsNullOrEmpty)
@@ -477,149 +476,124 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				text = "TVA ({total} à {taux})";
 			}
 
-			foreach (var pattern in DocumentItemAccessor.baseAmountList)
+			FormattedText revenue = this.GetFormattedPrice (line.TotalRevenue);
+			FormattedText vatRate = Misc.PercentToString (line.VatRate);
+
+			foreach (var pattern in DocumentItemAccessor.TotalRevenuePatterns)
 			{
-				text = text.ToString ().Replace (pattern, this.GetFormattedPrice (line.BaseAmount).ToString ());
+				text = text.Replace (pattern, revenue, System.StringComparison.OrdinalIgnoreCase);
 			}
 
-			foreach (var pattern in DocumentItemAccessor.rateList)
+			foreach (var pattern in DocumentItemAccessor.VatRatePatterns)
 			{
-				text = text.ToString ().Replace (pattern, Misc.PercentToString (line.Rate).ToString ());
+				text = text.Replace (pattern, vatRate, System.StringComparison.OrdinalIgnoreCase);
 			}
 
 			this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, text);
-			this.SetContent (0, DocumentItemAccessorColumn.Vat, this.GetFormattedPrice (line.ResultingTax));
+			this.SetContent (0, DocumentItemAccessorColumn.VatRate, this.GetFormattedPercent (line.VatRate));
+			this.SetContent (0, DocumentItemAccessorColumn.VatRevenue, revenue);
+			this.SetContent (0, DocumentItemAccessorColumn.VatTotal, this.GetFormattedPrice (line.ResultingTax));
 		}
 
-		private readonly static string[] baseAmountList =
+		private static readonly ArticleQuantityType[] ArticleQuantityTypes =
+		{
+			ArticleQuantityType.Ordered,
+			ArticleQuantityType.Delayed,
+			ArticleQuantityType.Expected,
+			ArticleQuantityType.Shipped,
+			ArticleQuantityType.ShippedPreviously,
+			ArticleQuantityType.Billed,
+			ArticleQuantityType.Information,
+		};
+		
+		private readonly static string[] TotalRevenuePatterns =
 		{
 			"{0}",
-			"{total}",
 			"{Total}",
-			"{prix}",
 			"{Prix}",
-			"{price}",
 			"{Price}",
-			"{base}",
 			"{Base}",
-			"{amount}",
 			"{Amount}",
-			"{baseamount}",
-			"{BaseAmount}",
+			"{Revenue}",
 		};
 
-		private readonly static string[] rateList =
+		private readonly static string[] VatRatePatterns =
 		{
 			"{1}",
-			"{taux}",
 			"{Taux}",
-			"{tva}",
-			"{Tva}",
 			"{TVA}",
-			"{rate}",
 			"{Rate}",
-			"{vat}",
-			"{Vat}",
 			"{VAT}",
 		};
 
 		private void BuildSubTotalItem(SubTotalDocumentItemEntity line)
 		{
-			//	1) Ligne "sous-total".
-			FormattedText primaryText = line.TextForPrimaryPrice;
-
-			if (primaryText.IsNullOrEmpty)
+			if ((line.IsNull ()) ||
+				(this.billingMode == BillingMode.None))
 			{
-				primaryText = "Sous-total";
+				return;
 			}
 
-			decimal primaryPrice = line.PrimaryPriceBeforeTax.GetValueOrDefault (0);
-			decimal primaryVat   = line.PrimaryTax.GetValueOrDefault (0);
+			//	1) Ligne "sous-total".
+			var primaryText = line.TextForPrimaryPrice.GetValueOrDefault ("Sous-total");
 
 			//	2) Ligne "rabais".
-			bool existingDiscount = false;
-			FormattedText discountText = line.TextForDiscount;
+			var  discountText = line.TextForDiscount.GetValueOrDefault ("Rabais");
 
-			if (discountText.IsNullOrEmpty)
+			bool hasDiscount = false;
+			
+			if (line.Discount.IsNotNull ())
 			{
-				discountText = "Rabais";
+				if (line.Discount.HasDiscountRate)
+				{
+					discountText = FormattedText.Concat (discountText, " (", this.GetFormattedPercent (line.Discount.DiscountRate), ")");
+					hasDiscount  = true;
+				}
+				else if (line.Discount.HasValue)
+				{
+					discountText = FormattedText.Concat (discountText, this.billingMode == BillingMode.ExcludingTax ? " HT" : " TTC");
+					hasDiscount  = true;
+				}
 			}
-
-			if (line.Discount.DiscountRate.HasValue && line.Discount.DiscountRate.Value != 0)
-			{
-				existingDiscount = true;
-				discountText = FormattedText.Concat (discountText, " (", this.GetFormattedPercent (line.Discount.DiscountRate), ")");
-			}
-			else if (line.Discount.Value.HasValue && line.Discount.Value != 0)
-			{
-				existingDiscount = true;
-			}
-
-			decimal discountPrice = line.PrimaryPriceBeforeTax.GetValueOrDefault (0) - line.ResultingPriceBeforeTax.GetValueOrDefault (0);
-			decimal discountVat   = line.PrimaryTax.GetValueOrDefault (0)            - line.ResultingTax.GetValueOrDefault (0);
 
 			//	3) Ligne "total après rabais".
-			FormattedText sumText = line.TextForResultingPrice;
-			
-			if (sumText.IsNullOrEmpty)
-			{
-				sumText = "Total après rabais";
-			}
+			var sumText = line.TextForResultingPrice.GetValueOrDefault ("Total après rabais");
 
-			decimal sumPrice = line.ResultingPriceBeforeTax.GetValueOrDefault (0);
-			decimal sumVat   = line.ResultingTax.GetValueOrDefault (0);
+			var subTotal1 = this.billingMode == BillingMode.ExcludingTax ? line.PriceBeforeTax1 : line.PriceAfterTax1;
+			var subTotal2 = this.billingMode == BillingMode.ExcludingTax ? line.PriceBeforeTax2 : line.PriceAfterTax2;
 
-			//	Génère les lignes.
 			int row = 0;
 
-			if (existingDiscount)
+			if (hasDiscount)
 			{
 				this.SetContent (row, DocumentItemAccessorColumn.ArticleDescription, primaryText);
-				this.SetContent (row, DocumentItemAccessorColumn.LinePrice,          this.GetFormattedPrice (primaryPrice));
-				this.SetContent (row, DocumentItemAccessorColumn.Vat,                this.GetFormattedPrice (primaryVat));
-				this.SetContent (row, DocumentItemAccessorColumn.Total,              this.GetFormattedPrice (primaryPrice + primaryVat));
+				this.SetContent (row, DocumentItemAccessorColumn.SubTotal, this.GetFormattedPrice (subTotal1));
 				row++;
 
 				this.SetContent (row, DocumentItemAccessorColumn.ArticleDescription, discountText);
-				this.SetContent (row, DocumentItemAccessorColumn.LinePrice,          this.GetFormattedPrice (discountPrice));
-				this.SetContent (row, DocumentItemAccessorColumn.Vat,                this.GetFormattedPrice (discountVat));
-				this.SetContent (row, DocumentItemAccessorColumn.Total,              this.GetFormattedPrice (discountPrice + discountVat));
+				this.SetContent (row, DocumentItemAccessorColumn.Revenue, this.GetFormattedPrice (subTotal2 - subTotal1));
 				row++;
 			}
 
 			this.SetContent (row, DocumentItemAccessorColumn.ArticleDescription, sumText);
-			this.SetContent (row, DocumentItemAccessorColumn.LinePrice,          this.GetFormattedPrice (sumPrice));
-			this.SetContent (row, DocumentItemAccessorColumn.Vat,                this.GetFormattedPrice (sumVat));
-			this.SetContent (row, DocumentItemAccessorColumn.Total,              this.GetFormattedPrice (sumPrice + sumVat));
-			row++;
+			this.SetContent (row, DocumentItemAccessorColumn.SubTotal, this.GetFormattedPrice (subTotal2));
 		}
 
 		private void BuildEndTotalItem(EndTotalDocumentItemEntity line)
 		{
+			if (line.IsNull ())
 			{
-				var text = line.TextForPrice;
-
-				if (text.IsNullOrEmpty)
-				{
-					text = "Grand total";
-				}
-
-				this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, text);
-				this.SetContent (0, DocumentItemAccessorColumn.LinePrice, this.GetFormattedPrice (line.PriceBeforeTax));
-				this.SetContent (0, DocumentItemAccessorColumn.Total, this.GetFormattedPrice (line.PriceAfterTax));
+				return;
 			}
+
+			this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription,  line.TextForPrice.GetValueOrDefault ("Grand total"));
+			this.SetContent (0, DocumentItemAccessorColumn.LinePriceBeforeTax,  this.GetFormattedPrice (line.PriceBeforeTax));
+			this.SetContent (0, DocumentItemAccessorColumn.FinalPriceBeforeTax, this.GetFormattedPrice (line.PriceAfterTax));
 
 			if (line.FixedPriceAfterTax.HasValue)
 			{
-				var text = line.TextForFixedPrice;
-
-				if (text.IsNullOrEmpty)
-				{
-					text = "Grand total arrêté";
-				}
-
-				this.SetContent (1, DocumentItemAccessorColumn.ArticleDescription, text);
-				this.SetContent (1, DocumentItemAccessorColumn.Total, this.GetFormattedPrice (line.FixedPriceAfterTax));
+				this.SetContent (1, DocumentItemAccessorColumn.ArticleDescription,  line.TextForFixedPrice.GetValueOrDefault ("Grand total après escompte"));
+				this.SetContent (1, DocumentItemAccessorColumn.FinalPriceBeforeTax, this.GetFormattedPrice (line.FixedPriceAfterTax));
 			}
 		}
 
@@ -635,21 +609,19 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 		private FormattedText GetFormattedPrice(decimal? price)
 		{
-			if (price == null)
+			if (price.HasValue)
 			{
-				return null;
+				if (this.businessDocumentEntity == null)
+				{
+					return Misc.PriceToString (PriceCalculator.RoundToCents (price.Value));
+				}
+				else
+				{
+					return Misc.PriceToString (PriceCalculator.ClipPriceValue (price.Value, this.businessDocumentEntity.CurrencyCode));
+				}
 			}
 
-			if (this.businessDocumentEntity == null)
-			{
-				price = PriceCalculator.RoundToCents (price.Value);
-			}
-			else
-			{
-				price = PriceCalculator.ClipPriceValue (price.Value, this.businessDocumentEntity.CurrencyCode);
-			}
-
-			return Misc.PriceToString (price);
+			return FormattedText.Empty;
 		}
 
 		private FormattedText GetFormattedPercent(decimal? percent)
@@ -683,6 +655,35 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			{
 				var key = DocumentItemAccessor.GetKey (row, column);
 				this.errors[key] = error;
+			}
+		}
+
+		private static void EnsureValidMode(DocumentItemAccessorMode mode)
+		{
+			int count = 0;
+
+			if (mode.HasFlag (DocumentItemAccessorMode.EditArticleName))
+				count++;
+			if (mode.HasFlag (DocumentItemAccessorMode.EditArticleDescription))
+				count++;
+			if (mode.HasFlag (DocumentItemAccessorMode.UseArticleName))
+				count++;
+			if (mode.HasFlag (DocumentItemAccessorMode.UseArticleBoth))
+				count++;
+
+			if (count == 0)
+			{
+				throw new System.NotSupportedException ("No mode has been specified");
+			}
+			if (count > 1)
+			{
+				throw new System.NotSupportedException ("At most one mode may be specified");
+			}
+
+			if ((!mode.HasFlag (DocumentItemAccessorMode.Print)) &&
+					(mode.HasFlag (DocumentItemAccessorMode.AdditionalQuantities)))
+			{
+				throw new System.NotSupportedException ("Invalid mode combination");
 			}
 		}
 
@@ -725,6 +726,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 		private readonly DocumentMetadataEntity						documentMetadataEntity;
 		private readonly BusinessDocumentEntity						businessDocumentEntity;
+		private readonly BillingMode								billingMode;
 		private readonly BusinessLogic								businessLogic;
 		private readonly IncrementalNumberGenerator					numberGenerator;
 		private readonly Dictionary<int, FormattedText>				content;

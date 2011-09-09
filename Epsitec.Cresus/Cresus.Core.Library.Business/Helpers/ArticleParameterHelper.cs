@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Helpers
 			}
 
 			string value = description.ToString ();
-			var dico = ArticleParameterHelper.GetArticleParametersValues (articleDocumentItem, returnName: true);
+			var dico = ArticleParameterHelper.GetArticleParametersValues (articleDocumentItem, useNameAsDictionaryKey: true);
 
 			int index = 0;
 			while (index < value.Length-ArticleParameterHelper.startParameterTag.Length)
@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.Core.Helpers
 		}
 #endif
 
-		public static Dictionary<string, string> GetArticleParametersValues(ArticleDocumentItemEntity articleDocumentItem, bool returnName)
+		public static Dictionary<string, string> GetArticleParametersValues(ArticleDocumentItemEntity articleDocumentItem, bool useNameAsDictionaryKey = false)
 		{
 			//	Retourne le dictionnaire des code/valeur (returnName = false) ou name/valeur (returnName = true) d'un article.
 			var dico = new Dictionary<string, string> ();
@@ -172,7 +172,7 @@ namespace Epsitec.Cresus.Core.Helpers
 
 						if (!string.IsNullOrEmpty (value))
 						{
-							dico.Add (returnName ? parameter.Name.ToString () : parameter.Code, value);
+							dico.Add (useNameAsDictionaryKey ? parameter.Name.ToString () : parameter.Code, value);
 						}
 					}
 				}

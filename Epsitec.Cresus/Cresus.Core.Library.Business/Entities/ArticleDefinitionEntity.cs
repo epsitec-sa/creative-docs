@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -44,42 +44,26 @@ namespace Epsitec.Cresus.Core.Entities
 
 				a.Accumulate (this.Name.GetEntityStatus ());
 				a.Accumulate (this.Description.GetEntityStatus ().TreatAsOptional ());
-				a.Accumulate (this.ArticleGroups.Select (x => x.GetEntityStatus ()));
-				a.Accumulate (this.ArticleCategory.GetEntityStatus ());
-				a.Accumulate (this.ArticlePrices.Select (x => x.GetEntityStatus ()));
-				a.Accumulate (this.Accounting.Select (x => x.GetEntityStatus ()));
-				a.Accumulate (this.BillingUnit.GetEntityStatus ());
-				a.Accumulate (this.Units.GetEntityStatus ());
-				a.Accumulate (this.Comments.Select (x => x.GetEntityStatus ()));
+				a.Accumulate (this.ArticleGroups);
+				a.Accumulate (this.ArticleCategory, EntityStatusAccumulationMode.NoneIsInvalid);
+				a.Accumulate (this.ArticlePrices);
+				a.Accumulate (this.Units, EntityStatusAccumulationMode.NoneIsInvalid);
+				a.Accumulate (this.Comments);
 
 				return a.EntityStatus;
 			}
 		}
 
-		public Business.Finance.VatCode GetOutputVatCode()
+		public VatCode GetSaleVatCode(System.DateTime date)
 		{
-			if ((this.OutputVatCode.HasValue == false) &&
-				(this.ArticleCategory.IsNotNull ()))
-			{
-				return this.ArticleCategory.DefaultOutputVatCode.GetValueOrDefault (VatCode.None);
-			}
-			else
-			{
-				return this.OutputVatCode.GetValueOrDefault ();
-			}
+			var accounting = this.ArticleCategory.GetArticleAccountingDefinition (date);
+			return accounting.IsNotNull () ? accounting.SaleVatCode : VatCode.None;
 		}
 
-		public Business.Finance.VatCode GetInputVatCode()
+		public VatCode GetPurchaseVatCode(System.DateTime date)
 		{
-			if ((this.InputVatCode.HasValue == false) &&
-				(this.ArticleCategory.IsNotNull ()))
-			{
-				return this.ArticleCategory.DefaultInputVatCode.GetValueOrDefault (VatCode.None);
-			}
-			else
-			{
-				return this.InputVatCode.GetValueOrDefault ();
-			}
+			var accounting = this.ArticleCategory.GetArticleAccountingDefinition (date);
+			return accounting.IsNotNull () ? accounting.PurchaseVatCode : VatCode.None;
 		}
 		
 		public IEnumerable<ArticlePriceEntity> GetArticlePrices(decimal quantity, System.DateTime date, CurrencyCode currencyCode, PriceGroupEntity priceGroup = null)
@@ -118,12 +102,37 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
+		public UnitOfMeasureEntity GetBillingUnit()
+		{
+			if (this.Units.IsNull ())
+			{
+				return null;
+			}
+			else
+			{
+				return this.Units.Units.FirstOrDefault ();
+			}
+		}
+
+		public FormattedText GetBillingUnitName()
+		{
+			var unit = this.GetBillingUnit ();
+
+			if (unit.IsNull ())
+			{
+				return FormattedText.Empty;
+			}
+			else
+			{
+				return unit.Name;
+			}
+		}
+
 		public decimal ConvertToBillingUnit(decimal quantity, UnitOfMeasureEntity unitOfMeasure)
 		{
 			//	TODO: conversion d'unités
 
 			return quantity;
 		}
-
 	}
 }

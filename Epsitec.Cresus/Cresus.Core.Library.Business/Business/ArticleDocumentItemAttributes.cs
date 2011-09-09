@@ -12,16 +12,20 @@ namespace Epsitec.Cresus.Core.Business
 		None							= 0,
 		
 		NeverApplyDiscount				= 0x00000001,
+
 		ArticleNotDiscountable			= 0x00000002,
+		ArticlePriceIncludesTaxes		= 0x00000004,
 
-		ArticlePricesFrozen				= 0x00000080,
+		PartialQuantities				= 0x00000008,
 
-		FixedUnitPrice					= 0x00000100,
-		FixedLinePrice					= 0x00000200,
-		FixedPriceIncludesTaxes			= 0x00000400,
+//-		ArticlePricesFrozen				= 0x00000080,
 
-		DirtyArticlePrices				= 0x00010000,
-		DirtyArticleNotDiscountable		= 0x00020000,
+//-		FixedUnitPrice					= 0x00000100,
+//-		FixedLinePrice					= 0x00000200,
+//-		FixedPriceIncludesTaxes			= 0x00000400,
+
+		Dirty							= 0x00010000,
+//-		DirtyArticleNotDiscountable		= 0x00020000,
 
 	}
 }

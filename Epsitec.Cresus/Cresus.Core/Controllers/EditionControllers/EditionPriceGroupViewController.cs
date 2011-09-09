@@ -20,6 +20,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.End ()
 				.Separator ()
 				.Input ()
+				  .Field (x => x.BillingMode)
 				  .Field (x => x.NeverApplyDiscount)
 				  .Field (x => x.DefaultDivideRatio)
 				  .Field (x => x.DefaultMultiplyRatio)

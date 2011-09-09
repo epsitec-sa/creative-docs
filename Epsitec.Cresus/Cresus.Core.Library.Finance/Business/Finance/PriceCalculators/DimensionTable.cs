@@ -130,6 +130,18 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			}
 		}
 
+		public decimal? this[IEnumerable<string> key]
+		{
+			get
+			{
+				return this[key.ToArray ()];
+			}
+			set
+			{
+				this[key.ToArray ()] = value;
+			}
+		}
+
 
 		public void AddDimension(AbstractDimension dimension)
 		{

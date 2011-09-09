@@ -1892,6 +1892,28 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>BillingMode</c> field.
+		///	designer:fld/CVAA4/CVA75
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVA75]")]
+		public global::Epsitec.Cresus.Core.Business.Finance.BillingMode BillingMode
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.BillingMode> ("[CVA75]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Business.Finance.BillingMode oldValue = this.BillingMode;
+				if (oldValue != value || !this.IsFieldDefined("[CVA75]"))
+				{
+					this.OnBillingModeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.BillingMode> ("[CVA75]", oldValue, value);
+					this.OnBillingModeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>DefaultDivideRatio</c> field.
 		///	designer:fld/CVAA4/CVAC4
 		///	</summary>
@@ -1960,6 +1982,8 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnNeverApplyDiscountChanging(bool oldValue, bool newValue);
 		partial void OnNeverApplyDiscountChanged(bool oldValue, bool newValue);
+		partial void OnBillingModeChanging(global::Epsitec.Cresus.Core.Business.Finance.BillingMode oldValue, global::Epsitec.Cresus.Core.Business.Finance.BillingMode newValue);
+		partial void OnBillingModeChanged(global::Epsitec.Cresus.Core.Business.Finance.BillingMode oldValue, global::Epsitec.Cresus.Core.Business.Finance.BillingMode newValue);
 		partial void OnDefaultDivideRatioChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnDefaultDivideRatioChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnDefaultMultiplyRatioChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);

@@ -889,6 +889,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			sumTva = 0;
 			sumTot = 0;
 
+			//	@DR: supprimer les reports de TVA, ne reporter que les totaux HT et TTC
+
 			int lastRow = this.lastRowForEachSection[page];
 
 			for (int row = 0; row <= lastRow; row++)
@@ -905,13 +907,11 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				{
 					var article = contentLine.Line as ArticleDocumentItemEntity;
 
-					decimal beforeTax = article.ResultingLinePriceBeforeTax.GetValueOrDefault (0);
-					decimal tax1 =      article.ResultingLineTax1          .GetValueOrDefault (0);
-					decimal tax2 =      article.ResultingLineTax2          .GetValueOrDefault (0);
+					decimal beforeTax = article.LinePriceBeforeTax2.GetValueOrDefault ();
+					decimal afterTax  = article.LinePriceAfterTax2.GetValueOrDefault ();
 
 					sumPT  += beforeTax;
-					sumTva += tax1 + tax2;
-					sumTot += beforeTax+tax1+tax2;
+					sumTot += afterTax;
 				}
 			}
 		}

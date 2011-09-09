@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -23,72 +23,55 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			var builder = new TextBuilder ();
 
-			if (this.BeginDate.HasValue || this.EndDate.HasValue)
-			{
-				if (this.BeginDate.HasValue)
-				{
-					builder.Append ("Du");
-					builder.Append (Misc.GetDateShortDescription (this.BeginDate));
-				}
-
-				if (this.EndDate.HasValue)
-				{
-					builder.Append ("au");
-					builder.Append (Misc.GetDateShortDescription (this.EndDate));
-				}
-			}
-
-			if (this.CurrencyCode.HasValue)
-			{
-				var c = EnumKeyValues.FromEnum<CurrencyCode> ().Where (x => x.Key == this.CurrencyCode).First ();
-				builder.Append (c.Values[0]);  // code de la monnaie, par exemple "CHF"
-			}
-
+			builder.Append (this.Name);
+			
+			var c = EnumKeyValues.GetEnumKeyValue<CurrencyCode> (this.CurrencyCode);
+			builder.Append (FormattedText.Concat ("(", c.Values[0], ")"));  // code de la monnaie, par exemple "CHF"
 			builder.Append ("<br/>");
 
-			if (string.IsNullOrEmpty (this.SellingBookAccount))
+			if (this.BeginDate.HasValue || this.EndDate.HasValue)
 			{
-				builder.Append ("—");
-			}
-			else
-			{
-				builder.Append (this.SellingBookAccount);
+				builder.Append ("Du");
+				builder.Append (Misc.GetDateShortDescription (this.BeginDate) ?? " ...");
+				builder.Append ("au");
+				builder.Append (Misc.GetDateShortDescription (this.EndDate) ?? " ...");
 			}
 
+			builder.Append (ArticleAccountingDefinitionEntity.GetBookAccountText (this.SaleBookAccount));
 			builder.Append ("/");
-
-			if (string.IsNullOrEmpty (this.SellingDiscountBookAccount))
-			{
-				builder.Append ("—");
-			}
-			else
-			{
-				builder.Append (this.SellingDiscountBookAccount);
-			}
-
+			builder.Append (ArticleAccountingDefinitionEntity.GetBookAccountText (this.SaleDiscountBookAccount));
 			builder.Append ("/");
-
-			if (string.IsNullOrEmpty (this.PurchaseBookAccount))
-			{
-				builder.Append ("—");
-			}
-			else
-			{
-				builder.Append (this.PurchaseBookAccount);
-			}
-
+			builder.Append (ArticleAccountingDefinitionEntity.GetBookAccountText (this.SaleRoundingBookAccount));
 			builder.Append ("/");
+			builder.Append (ArticleAccountingDefinitionEntity.GetBookAccountText (this.SaleVatBookAccount));
+			builder.Append ("<br/>");
 
-			if (string.IsNullOrEmpty (this.PurchaseDiscountBookAccount))
-			{
-				builder.Append ("—");
-			}
-			else
-			{
-				builder.Append (this.PurchaseDiscountBookAccount);
-			}
+			builder.Append (ArticleAccountingDefinitionEntity.GetBookAccountText (this.PurchaseBookAccount));
+			builder.Append ("/");
+			builder.Append (ArticleAccountingDefinitionEntity.GetBookAccountText (this.PurchaseDiscountBookAccount));
+			builder.Append ("/");
+			builder.Append (ArticleAccountingDefinitionEntity.GetBookAccountText (this.PurchaseRoundingBookAccount));
+			builder.Append ("/");
+			builder.Append (ArticleAccountingDefinitionEntity.GetBookAccountText (this.PurchaseVatBookAccount));
+			builder.Append ("<br/>");
+
+			builder.Append (EnumKeyValues.GetEnumKeyValue (this.SaleVatCode).Values[0]);
+			builder.Append ("/");
+			builder.Append (EnumKeyValues.GetEnumKeyValue (this.PurchaseVatCode).Values[0]);
 
 			return builder.ToFormattedText ();
+		}
+
+		private static FormattedText GetBookAccountText(string bookAccount)
+		{
+			if (string.IsNullOrWhiteSpace (bookAccount))
+			{
+				return new FormattedText ("-");
+			}
+			else
+			{
+				return FormattedText.FromSimpleText (bookAccount);
+			}
 		}
 
 
@@ -96,11 +79,21 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			using (var a = new EntityStatusAccumulator ())
 			{
-				a.Accumulate (this.SellingBookAccount.GetEntityStatus ());
-				a.Accumulate (this.SellingDiscountBookAccount.GetEntityStatus ());
+				a.Accumulate (this.Name.GetEntityStatus ());
+				a.Accumulate (this.Description.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.SaleBookAccount.GetEntityStatus ());
+				a.Accumulate (this.SaleDiscountBookAccount.GetEntityStatus ());
+				a.Accumulate (this.SaleRoundingBookAccount.GetEntityStatus ());
+				a.Accumulate (this.SaleVatBookAccount.GetEntityStatus ());
 
 				a.Accumulate (this.PurchaseBookAccount.GetEntityStatus ());
 				a.Accumulate (this.PurchaseDiscountBookAccount.GetEntityStatus ());
+				a.Accumulate (this.PurchaseRoundingBookAccount.GetEntityStatus ());
+				a.Accumulate (this.PurchaseVatBookAccount.GetEntityStatus ());
+
+				a.Accumulate (this.CurrencyCode == CurrencyCode.None ? EntityStatus.Empty : EntityStatus.Valid);
+				a.Accumulate (this.SaleVatCode == VatCode.None ? EntityStatus.Empty : EntityStatus.Valid);
+				a.Accumulate (this.PurchaseVatCode == VatCode.None ? EntityStatus.Empty : EntityStatus.Valid);
 
 				return a.EntityStatus;
 			}

@@ -201,23 +201,23 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					return new CellContent (text, error);
 
 				case ColumnType.UnitPrice:
-					text = info.GetColumnContent (DocumentItemAccessorColumn.UnitPrice);
-					error = info.GetColumnError (DocumentItemAccessorColumn.UnitPrice);
+					text = info.GetColumnContent (DocumentItemAccessorColumn.UnitPriceBeforeTax);
+					error = info.GetColumnError (DocumentItemAccessorColumn.UnitPriceBeforeTax);
 					return new CellContent (text, error);
 
 				case ColumnType.LinePrice:
-					text = info.GetColumnContent (DocumentItemAccessorColumn.LinePrice);
-					error = info.GetColumnError (DocumentItemAccessorColumn.LinePrice);
+					text = info.GetColumnContent (DocumentItemAccessorColumn.LinePriceBeforeTax);
+					error = info.GetColumnError (DocumentItemAccessorColumn.LinePriceBeforeTax);
 					return new CellContent (text, error);
 
 				case ColumnType.Vat:
-					text = info.GetColumnContent (DocumentItemAccessorColumn.Vat);
-					error = info.GetColumnError (DocumentItemAccessorColumn.Vat);
+					text = info.GetColumnContent (DocumentItemAccessorColumn.VatRate);
+					error = info.GetColumnError (DocumentItemAccessorColumn.VatRate);
 					return new CellContent (text, error);
 
 				case ColumnType.Total:
-					text = info.GetColumnContent (DocumentItemAccessorColumn.Total);
-					error = info.GetColumnError (DocumentItemAccessorColumn.Total);
+					text = info.GetColumnContent (DocumentItemAccessorColumn.FinalPriceBeforeTax, DocumentItemAccessorColumn.FinalPriceAfterTax);
+					error = info.GetColumnError (DocumentItemAccessorColumn.FinalPriceBeforeTax, DocumentItemAccessorColumn.FinalPriceAfterTax);
 					return new CellContent (text, error);
 			}
 

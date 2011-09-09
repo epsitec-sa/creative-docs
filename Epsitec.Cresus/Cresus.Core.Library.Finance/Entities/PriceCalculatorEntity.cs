@@ -77,16 +77,30 @@ namespace Epsitec.Cresus.Core.Entities
 		/// <returns>The <see cref="DimensionTable"/> used to compute the values of this instance.</returns>
 		public DimensionTable GetPriceTable()
 		{
-			DimensionTable priceTable = null;
-			
 			if (this.SerializedData != null)
 			{
-				priceTable = this.DeserializePriceTable (this.SerializedData);
+				return this.DeserializePriceTable (this.SerializedData);
 			}
-
-			return priceTable;
+			else
+			{
+				return null;
+			}
 		}
 
+		public decimal? ExecutePriceCalculator(IDictionary<string, string> parameterCodesToValues)
+		{
+			DimensionTable priceTable = this.GetPriceTable ();
+
+			if (priceTable != null)
+			{
+				var key = priceTable.Dimensions.Select (x => parameterCodesToValues[x.Code]);
+				return priceTable[key];
+			}
+			else
+			{
+				return null;
+			}
+		}
 
 		/// <summary>
 		/// Deserializes a <see cref="DimensionTable"/> out of a byte array.

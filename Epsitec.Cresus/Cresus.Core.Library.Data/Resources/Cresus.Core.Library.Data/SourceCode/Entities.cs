@@ -1879,3 +1879,47 @@ namespace Epsitec.Cresus.Core.Entities
 }
 #endregion
 
+#region Epsitec.Cresus.Core.IFreezable Interface
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>IFreezable</c> entity.
+	///	designer:cap/8VAB2
+	///	</summary>
+	public interface IFreezable
+	{
+		///	<summary>
+		///	The <c>IsFrozen</c> field.
+		///	designer:fld/8VAB2/8VAC2
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAC2]")]
+		bool IsFrozen
+		{
+			get;
+			set;
+		}
+	}
+	public static partial class IFreezableInterfaceImplementation
+	{
+		public static bool GetIsFrozen(global::Epsitec.Cresus.Core.Entities.IFreezable obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<bool> ("[8VAC2]");
+		}
+		public static void SetIsFrozen(global::Epsitec.Cresus.Core.Entities.IFreezable obj, bool value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			bool oldValue = obj.IsFrozen;
+			if (oldValue != value || !entity.IsFieldDefined("[8VAC2]"))
+			{
+				IFreezableInterfaceImplementation.OnIsFrozenChanging (obj, oldValue, value);
+				entity.SetField<bool> ("[8VAC2]", oldValue, value);
+				IFreezableInterfaceImplementation.OnIsFrozenChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnIsFrozenChanged(global::Epsitec.Cresus.Core.Entities.IFreezable obj, bool oldValue, bool newValue);
+		static partial void OnIsFrozenChanging(global::Epsitec.Cresus.Core.Entities.IFreezable obj, bool oldValue, bool newValue);
+	}
+}
+#endregion
+

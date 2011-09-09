@@ -8,26 +8,6 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Print.Bands
 {
-	public enum TableColumnKeys
-	{
-		LineNumber,
-		MainQuantity,
-
-		AdditionalType,
-		AdditionalQuantity,
-		AdditionalDate,
-
-		ArticleId,
-		ArticleDescription,
-		
-		Discount,
-		UnitPrice,
-		LinePrice,
-		Vat,
-		Total,
-	}
-
-
 	/// <summary>
 	/// Représente une colonne d'une table TableBand.
 	/// Elle pourra être visible ou cachée.

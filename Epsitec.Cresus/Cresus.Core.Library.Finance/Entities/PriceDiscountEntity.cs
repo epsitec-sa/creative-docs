@@ -13,6 +13,23 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class PriceDiscountEntity : ICopyableEntity<PriceDiscountEntity>
 	{
+		public bool HasDiscountRate
+		{
+			get
+			{
+				return this.DiscountRate.GetValueOrDefault () != 0;
+			}
+		}
+
+		public bool HasValue
+		{
+			get
+			{
+				return this.Value.GetValueOrDefault () != 0;
+			}
+		}
+
+
 		public override FormattedText GetSummary()
 		{
 			return this.GetCompactSummary ();

@@ -48,6 +48,9 @@ namespace Epsitec.Cresus.Core.Business
 
 		bool DeleteEntity(AbstractEntity entity);
 
+		void ClearAndDeleteEntities<T>(ICollection<T> collection)
+			where T : AbstractEntity;
+
 		void AddMasterEntity(AbstractEntity masterEntity);
 		
 		void RemoveMasterEntity(AbstractEntity masterEntity);

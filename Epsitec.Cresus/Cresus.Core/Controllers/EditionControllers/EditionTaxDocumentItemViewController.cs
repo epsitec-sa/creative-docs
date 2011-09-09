@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Support.EntityEngine;
@@ -41,8 +41,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var tile = builder.CreateEditionTile ();
 
 			builder.CreateTextField (tile,  0, "Description",        Marshaler.Create (() => this.Entity.Text, x => this.Entity.Text = x));
-			builder.CreateTextField (tile, 80, "Taux de TVA",        Marshaler.Create (() => this.Entity.Rate, x => this.Entity.Rate = x));
-			builder.CreateTextField (tile, 80, "Montant de base HT", Marshaler.Create (() => this.Entity.BaseAmount, x => this.Entity.BaseAmount = x));
+			builder.CreateTextField (tile, 80, "Taux de TVA",        Marshaler.Create (() => this.Entity.VatRate, x => this.Entity.VatRate = x));
+			builder.CreateTextField (tile, 80, "Montant de base HT", Marshaler.Create (() => this.Entity.TotalRevenue, x => this.Entity.TotalRevenue = x));
 			builder.CreateTextField (tile, 80, "TVA due",            Marshaler.Create (() => this.Entity.ResultingTax, x => this.Entity.ResultingTax = x));
 		}
 	}

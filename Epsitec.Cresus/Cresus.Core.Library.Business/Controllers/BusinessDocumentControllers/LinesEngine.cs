@@ -44,12 +44,29 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			if (selection.Count == 0)
 			{
-				index = this.GetDefaultArticleInsertionIndex (out model);
+				index = this.GetDefaultArticleInsertionIndex (out model, skipGroupZero: true);
 			}
 			else
 			{
 				index = this.businessDocumentEntity.Lines.IndexOf (selection.Last ().AbstractDocumentItemEntity) + 1;
-				model = this.businessDocumentEntity.Lines[index-1];
+				model = this.businessDocumentEntity.Lines[System.Math.Max (0, index-1)];
+
+				//	Make sure we don't select an insertion position in the top level group, as
+				//	it is reserved for discounts and taxes, and not for standard articles.
+
+				while (model.GroupIndex == 0)
+				{
+					index--;
+					
+					if (index <= 0)
+					{
+						index = 0;
+						model = null;
+						break;
+					}
+
+					model = this.businessDocumentEntity.Lines[index-1];
+				}
 			}
 
 			var articleQuantityType = this.businessLogic.MainArticleQuantityType;
@@ -1058,12 +1075,17 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			return i;
 		}
 
-		private int GetDefaultArticleInsertionIndex(out AbstractDocumentItemEntity model)
+		private int GetDefaultArticleInsertionIndex(out AbstractDocumentItemEntity model, bool skipGroupZero = false)
 		{
 			//	Retourne l'index par défaut où insérer un article.
 			for (int i = this.businessDocumentEntity.Lines.Count-1; i >= 0; i--)
 			{
 				var line = this.businessDocumentEntity.Lines[i];
+
+				if (skipGroupZero && line.GroupIndex == 0)
+				{
+					continue;
+				}
 
 				if (line is ArticleDocumentItemEntity ||
 					line is TextDocumentItemEntity)
@@ -1080,6 +1102,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			else
 			{
 				model = this.businessDocumentEntity.Lines[0];
+
+				if (skipGroupZero && model.GroupIndex == 0)
+				{
+					model = null;
+				}
 			}
 
 			return 0;

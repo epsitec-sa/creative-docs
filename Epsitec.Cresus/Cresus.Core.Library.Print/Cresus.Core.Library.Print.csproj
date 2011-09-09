@@ -58,6 +58,7 @@
     <Compile Include="Print\Bands\SurfaceBand.cs" />
     <Compile Include="Print\Bands\TableBand.cs" />
     <Compile Include="Print\Bands\TableColumn.cs" />
+    <Compile Include="Print\Bands\TableColumnKeys.cs" />
     <Compile Include="Print\Bands\TextBand.cs" />
     <Compile Include="Print\Common.cs" />
     <Compile Include="Print\Containers\BandContainer.cs" />

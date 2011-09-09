@@ -22,15 +22,18 @@ namespace Epsitec.Cresus.Core.Entities
 			var builder = new TextBuilder ();
 
 			builder.Append ("Sous-total ");
-			builder.Append (Misc.PriceToString (this.ResultingPriceBeforeTax));
+			builder.Append (Misc.PriceToString (this.PriceBeforeTax2));
+			builder.Append (" HT, ");
+			builder.Append (Misc.PriceToString (this.PriceAfterTax2));
+			builder.Append (" TTC");
 
-			if (this.Discount.DiscountRate.HasValue)
+			if (this.Discount.HasDiscountRate)
 			{
 				builder.Append (" (après rabais en %)");
 			}
-			else if (this.Discount.Value.HasValue)
+			else if (this.Discount.HasValue)
 			{
-				builder.Append (" (après rabais en francs)");
+				builder.Append (" (après rabais)");
 			}
 
 			return builder.ToFormattedText ();
@@ -50,24 +53,23 @@ namespace Epsitec.Cresus.Core.Entities
 
 		void ICopyableEntity<SubTotalDocumentItemEntity>.CopyTo(IBusinessContext businessContext, SubTotalDocumentItemEntity copy)
 		{
-			copy.Attributes              = this.Attributes;
-			copy.GroupIndex              = this.GroupIndex;
+			copy.Attributes            = this.Attributes;
+			copy.GroupIndex            = this.GroupIndex;
 
-			copy.DisplayModes            = this.DisplayModes;
-			copy.TextForPrimaryPrice     = this.TextForPrimaryPrice;
-			copy.TextForResultingPrice   = this.TextForResultingPrice;
-			copy.TextForDiscount         = this.TextForDiscount;
-			copy.PrimaryPriceBeforeTax   = this.PrimaryPriceBeforeTax;
-			copy.PrimaryTax              = this.PrimaryTax;
+			copy.DisplayModes          = this.DisplayModes;
+			copy.TextForPrimaryPrice   = this.TextForPrimaryPrice;
+			copy.TextForResultingPrice = this.TextForResultingPrice;
+			copy.TextForDiscount       = this.TextForDiscount;
 
 			if (this.Discount.IsNotNull ())
 			{
 				copy.Discount = this.Discount.CloneEntity (businessContext);
 			}
 
-			copy.ResultingTax            = this.ResultingTax;
-			copy.ResultingPriceBeforeTax = this.ResultingPriceBeforeTax;
-			copy.FinalPriceBeforeTax     = this.FinalPriceBeforeTax;
+			copy.PriceBeforeTax1       = this.PriceBeforeTax1;
+			copy.PriceBeforeTax2       = this.PriceBeforeTax2;
+			copy.PriceAfterTax1        = this.PriceAfterTax1;
+			copy.PriceAfterTax2        = this.PriceAfterTax2;
 		}
 
 		#endregion

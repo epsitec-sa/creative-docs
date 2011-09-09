@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		}
 
 
-		public decimal ComputeAmountBeforeTax(decimal amountAfterTax)
+		public decimal ComputeExactAmountBeforeTax(decimal amountAfterTax)
 		{
 			if (this.TotalTaxRate == 0)
 			{
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 				decimal directRate  = 1.0M + this.TotalTaxRate;
 				decimal inverseRate = 1.0M / directRate;
 
-				return PriceCalculator.RoundToCents (amountAfterTax * inverseRate);
+				return amountAfterTax * inverseRate;
 			}
 		}
 
@@ -121,6 +121,19 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			}
 
 			return this.rateAmounts[index].Rate;
+		}
+
+		public TaxRateAmount GetTaxRateAmount(int index)
+		{
+			if ((index < 0) ||
+				(index >= this.rateAmounts.Count))
+			{
+				return new TaxRateAmount (0, VatCode.None, 0);
+			}
+			else
+			{
+				return this.rateAmounts[index];
+			}
 		}
 
 

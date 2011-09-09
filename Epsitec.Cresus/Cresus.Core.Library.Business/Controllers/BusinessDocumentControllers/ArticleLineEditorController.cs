@@ -7,6 +7,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
@@ -250,6 +251,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private void CreateUIRightBottomFrame(UIBuilder builder, FrameBox parent)
 		{
+#if false
+			//	@DR: revoir cette logique
 			//	Deuxième ligne à droite.
 			{
 				var line = new FrameBox
@@ -331,6 +334,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					Enable = this.accessData.BusinessLogic.IsPriceEditionEnabled,
 				};
 
+#if false
+				//	@DR: utiliser soit UnitPriceBeforeTax1, soit UnitPriceAfterTax1, selon le mode de l'article (TTC/HT)
+				//	@DR: qui peut être déterminé avec la propriété ArticlePriceIncludesTaxes.
 				//	Prix unitaire.
 				var quantityField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.FixedPrice, x => this.Entity.FixedPrice = x));
 				this.quantityBox = this.PlaceLabelAndField (line, 130, 100, "", quantityField);
@@ -349,6 +355,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					this.Entity.FixedPriceIncludesTaxes = (this.ttcButton.ActiveState == ActiveState.Yes);
 					this.UpdateQuantityBox ();
 				};
+#endif
 			}
 
 			//	Troisième ligne à droite.
@@ -403,45 +410,49 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			this.UpdateQuantityBox ();
 			this.UpdateDiscountBox ();
+#endif
 		}
 
 		private void UpdateQuantityBox()
 		{
-			var label = this.quantityBox.Children.OfType<StaticText> ().FirstOrDefault ();
+			var label   = this.quantityBox.Children.OfType<StaticText> ().FirstOrDefault ();
+			var visible = false;
 
-			if (this.Entity.FixedPriceIncludesTaxes)  // TTC ?
+			if (this.Entity.ArticlePriceIncludesTaxes)  // TTC ?
 			{
-				if (this.Entity.FixedUnitPrice)
-				{
-					label.Text = "Prix unitaire TTC";
-				}
-				else if (this.Entity.FixedLinePrice)
-				{
-					label.Text = "Prix de ligne TTC";
-				}
-				else
+				//if (this.Entity.FixedUnitPrice)
+				//{
+				//    label.Text = "Prix unitaire TTC";
+				//}
+				//else if (this.Entity.FixedLinePrice)
+				//{
+				//    label.Text = "Prix de ligne TTC";
+				//}
+				//else
 				{
 					label.Text = "Prix TTC";
+					visible = true;
 				}
 			}
 			else  // HT ?
 			{
-				if (this.Entity.FixedUnitPrice)
-				{
-					label.Text = "Prix unitaire HT";
-				}
-				else if (this.Entity.FixedLinePrice)
-				{
-					label.Text = "Prix de ligne HT";
-				}
-				else
+				//if (this.Entity.FixedUnitPrice)
+				//{
+				//    label.Text = "Prix unitaire HT";
+				//}
+				//else if (this.Entity.FixedLinePrice)
+				//{
+				//    label.Text = "Prix de ligne HT";
+				//}
+				//else
 				{
 					label.Text = "Prix HT";
+					visible = true;
 				}
 			}
 
-			this.quantityBox.Visibility = this.Entity.FixedUnitPrice || this.Entity.FixedLinePrice;
-			this.ttcButton.Visibility = this.Entity.FixedUnitPrice || this.Entity.FixedLinePrice;
+			this.quantityBox.Visibility = visible;
+			this.ttcButton.Visibility   = visible;
 		}
 
 		private void UpdateDiscountBox()
@@ -466,33 +477,55 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				return;
 			}
 
+			var businessContext = this.accessData.BusinessContext;
 			var item = this.Entity;
 
-			item.ArticleAttributes |= ArticleDocumentItemAttributes.DirtyArticlePrices | ArticleDocumentItemAttributes.DirtyArticleNotDiscountable;
-			item.ArticleDefinition = article;
-			item.ArticleParameters = null;
-			item.VatCode = article.GetOutputVatCode ();
-			item.TaxRate1 = null;
-			item.TaxRate2 = null;
-			item.FixedPrice = null;
-			item.ResultingLinePriceBeforeTax = null;
-			item.ResultingLineTax1 = null;
-			item.ResultingLineTax2 = null;
-			item.FinalLinePriceBeforeTax = null;
-			item.ArticleNameCache = null;
-			item.ArticleDescriptionCache = null;
-			item.ReplacementName = null;
-			item.ReplacementDescription = null;
+			item.ArticleAttributes           = ArticleDocumentItemAttributes.Dirty;
+			item.ArticleDefinition           = article;
+			item.ArticleParameters           = null;
+			item.ArticleAccountingDefinition = null;
+			item.VatRateA                    = 0;
+			item.VatRateB                    = 0;
+			item.VatRatio                    = 1;
+			item.UnitPriceBeforeTax1         = null;
+			item.UnitPriceBeforeTax2         = null;
+			item.UnitPriceAfterTax1          = null;
+			item.UnitPriceAfterTax2          = null;
+			item.LinePriceBeforeTax1         = null;
+			item.LinePriceBeforeTax2         = null;
+			item.LinePriceAfterTax1          = null;
+			item.LinePriceAfterTax2          = null;
+			item.TotalRevenueAfterTax                = null;
+			item.TotalRevenueAccounted       = null;
+			item.ArticleNameCache            = null;
+			item.ArticleDescriptionCache     = null;
+			item.ReplacementName             = null;
+			item.ReplacementDescription      = null;
 
+			businessContext.ClearAndDeleteEntities (item.ArticleTraceabilityDetails);
+			businessContext.ClearAndDeleteEntities (item.Discounts);
+			
 			//	Initialise la description de l'article.
 			this.SetArticleDescription (this.GetArticleDescription (true), true);
 			this.SetArticleDescription (this.GetArticleDescription (false), false);
 
 			//	Initialise le prix de base de l'article.
-			if (article.ArticlePrices.Count != 0)
+#if false
+			//	@PA: reset du prix unitaire et du mode TTC/HT unitaire
+
+			if (article.ArticlePrices.Any ())
 			{
-				item.PrimaryUnitPriceBeforeTax = article.ArticlePrices[0].Value;
+				var articlePrice = article.ArticlePrices.First ();
+				if (articlePrice.ValueIncludesTaxes)
+				{
+					item.UnitPriceAfterTax1 = articlePrice.Value;
+				}
+				else
+				{
+					item.UnitPriceBeforeTax1 = articlePrice.Value;
+				}
 			}
+#endif
 
 			//	Initialise l'unité par défaut.
 			UnitOfMeasureEntity unit = null;
@@ -500,11 +533,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			if (unit == null && article.Units != null && article.Units.Units.Count != 0)
 			{
 				unit = article.Units.Units[0];
-			}
-
-			if (unit == null && article.BillingUnit != null)
-			{
-				unit = article.BillingUnit;
 			}
 
 			if (unit != null && item.ArticleQuantities.Count != 0)

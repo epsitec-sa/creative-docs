@@ -881,6 +881,8 @@ namespace Epsitec.Cresus.Core.Library.Finance
 				{
 				}
 				
+				//	designer:cap/CVA75
+				public static readonly global::Epsitec.Common.Support.Druid BillingMode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 167);
 				//	designer:cap/CVAC4
 				public static readonly global::Epsitec.Common.Support.Druid DefaultDivideRatio = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 140);
 				//	designer:cap/CVAD4

@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		{
 			//	Met à jour les paramètres dans le widget qui contient la désignation de l'article.
 			//	Ainsi, les valeurs affichées pour les paramètres sont mises à jour.
-			var dico = ArticleParameterHelper.GetArticleParametersValues (articleDocumentItem, returnName: true);
+			var dico = ArticleParameterHelper.GetArticleParametersValues (articleDocumentItem, useNameAsDictionaryKey: true);
 
 			foreach (var pair in dico)
 			{

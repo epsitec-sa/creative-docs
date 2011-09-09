@@ -120,6 +120,8 @@ namespace Epsitec.Cresus.Core.Library.Data
 			public static readonly Epsitec.Common.Types.StructuredType IEntityAttribute = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 53));
 			//	designer:cap/8VAA
 			public static readonly Epsitec.Common.Types.StructuredType IFileMetadata = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10));
+			//	designer:cap/8VAB2
+			public static readonly Epsitec.Common.Types.StructuredType IFreezable = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 75));
 			//	designer:cap/8VA4
 			public static readonly Epsitec.Common.Types.StructuredType IItemCode = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 4));
 			//	designer:cap/8VAI1
@@ -390,6 +392,16 @@ namespace Epsitec.Cresus.Core.Library.Data
 				public static readonly global::Epsitec.Common.Support.Druid FileUri = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 15);
 			}
 			
+			public static class IFreezable
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/8VAC2
+				public static readonly global::Epsitec.Common.Support.Druid IsFrozen = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 76);
+			}
+			
 			public static class IItemCode
 			{
 				internal static void _Initialize()
@@ -592,6 +604,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			Fields.IDateTimeRange._Initialize ();
 			Fields.IEntityAttribute._Initialize ();
 			Fields.IFileMetadata._Initialize ();
+			Fields.IFreezable._Initialize ();
 			Fields.IItemCode._Initialize ();
 			Fields.IItemCodeUniversalReference._Initialize ();
 			Fields.IItemRank._Initialize ();

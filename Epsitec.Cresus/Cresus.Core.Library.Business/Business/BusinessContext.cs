@@ -756,7 +756,21 @@ namespace Epsitec.Cresus.Core.Business
 			return this.DataContext.DeleteEntity (entity);
 		}
 
+		public void ClearAndDeleteEntities<T>(ICollection<T> collection)
+			where T : AbstractEntity
+		{
+			if ((collection != null) &&
+				(collection.Count > 0))
+			{
+				var copy = collection.ToArray ();
 
+				collection.Clear ();
+
+				copy.ForEach (x => this.DeleteEntity (x));
+			}
+		}
+
+		
 		public System.IDisposable SuspendUpdates()
 		{
 			var helper = new DelayedUpdate (this);

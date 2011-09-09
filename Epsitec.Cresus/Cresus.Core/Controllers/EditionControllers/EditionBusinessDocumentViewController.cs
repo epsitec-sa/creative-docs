@@ -37,6 +37,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Separator ()
 				.Input ()
 				  .Field (x => x.BillingDate)
+				  .Field (x => x.PriceRefDate)
 				  .Field (x => x.CurrencyCode)
 				  .Field (x => x.PriceRefDate)
 				  .Field (x => x.PriceGroup)

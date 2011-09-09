@@ -44,6 +44,18 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			internal set;
 		}
 
+		public FormattedText GetColumnContent(DocumentItemAccessorColumn columnA, DocumentItemAccessorColumn columnB)
+		{
+			var text = this.GetColumnContent (columnA);
+			
+			if (text.IsNullOrEmpty)
+			{
+				text = this.GetColumnContent (columnB);
+			}
+			
+			return text;
+		}
+
 		public FormattedText GetColumnContent(DocumentItemAccessorColumn column)
 		{
 			if (this.DocumentItemAccessor == null)
@@ -54,6 +66,18 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				return this.DocumentItemAccessor.GetContent (this.SublineIndex, column).Lines.FirstOrDefault ();
 			}
+		}
+
+		public DocumentItemAccessorError GetColumnError(DocumentItemAccessorColumn columnA, DocumentItemAccessorColumn columnB)
+		{
+			var error = this.GetColumnError (columnA);
+			
+			if (error == DocumentItemAccessorError.OK)
+			{
+				error = this.GetColumnError (columnB);
+			}
+			
+			return error;
 		}
 
 		public DocumentItemAccessorError GetColumnError(DocumentItemAccessorColumn column)

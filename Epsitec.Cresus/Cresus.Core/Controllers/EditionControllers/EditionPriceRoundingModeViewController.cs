@@ -20,6 +20,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.End ()
 				.Separator ()
 				.Input ()
+				  .Field (x => x.AddBeforeModulo)
+				  .Field (x => x.Modulo)
 				  .Field (x => x.RoundingPolicy)
 				.End ()
 				;

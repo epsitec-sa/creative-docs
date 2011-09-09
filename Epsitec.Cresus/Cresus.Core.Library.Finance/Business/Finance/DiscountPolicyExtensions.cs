@@ -12,6 +12,11 @@ namespace Epsitec.Cresus.Core.Business.Finance
 	{
 		public static bool BeforeTax(this DiscountPolicy value)
 		{
+			if (value == DiscountPolicy.None)
+			{
+				return false;
+			}
+
 			switch (value)
 			{
 				case DiscountPolicy.OnLinePriceBeforeTax:
@@ -29,6 +34,11 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		
 		public static bool AfterTax(this DiscountPolicy value)
 		{
+			if (value == DiscountPolicy.None)
+			{
+				return false;
+			}
+			
 			return value.BeforeTax () == false;
 		}
 	}

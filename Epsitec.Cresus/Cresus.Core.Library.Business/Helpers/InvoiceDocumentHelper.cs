@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Support;
@@ -227,6 +227,7 @@ namespace Epsitec.Cresus.Core.Helpers
 		}
 #endif
 
+#if false
 		private static void BackwardUpdatePrices(BusinessDocumentEntity x, decimal discountRate)
 		{
 			//	Si le prix arrêté (FixedPriceAfterTax) est plus petit que le total réel, on doit
@@ -254,7 +255,9 @@ namespace Epsitec.Cresus.Core.Helpers
 				}
 			}
 		}
+#endif
 
+#if false
 		private static void UpdateAutoLines(BusinessDocumentEntity x, DataContext dataContext)
 		{
 			//	Met à jour toutes les lignes automatiques (taxes et total général).
@@ -430,23 +433,11 @@ namespace Epsitec.Cresus.Core.Helpers
 
 			return null;
 		}
+#endif
 
-
-		public static decimal GetVatTotal(BusinessDocumentEntity x)
+		public static decimal GetVatTotal(BusinessDocumentEntity businessDocument)
 		{
-			decimal total = 0;
-
-			foreach (var line in x.Lines)
-			{
-				if (line is TaxDocumentItemEntity)
-				{
-					var tax = line as TaxDocumentItemEntity;
-
-					total += tax.ResultingTax;
-				}
-			}
-
-			return total;
+			return businessDocument.Lines.OfType<TaxDocumentItemEntity> ().Sum (x => x.ResultingTax);
 		}
 
 		public static decimal? GetTotalPriceTTC(BusinessDocumentEntity x)
@@ -480,7 +471,7 @@ namespace Epsitec.Cresus.Core.Helpers
 
 			return null;
 		}
-
+		
 		public static decimal? GetFixedPriceTTC(BusinessDocumentEntity x)
 		{
 			var total = InvoiceDocumentHelper.GetTotalEntityTTC (x);
@@ -548,7 +539,6 @@ namespace Epsitec.Cresus.Core.Helpers
 
 			return null;
 		}
-
 	
 #if false
 		public static void UpdateDialogs(BusinessDocumentEntity x)

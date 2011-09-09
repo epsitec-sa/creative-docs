@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Support.Extensions;
@@ -17,6 +17,7 @@ namespace Epsitec.Cresus.Core.Helpers
 {
 	public static class ArticleDocumentItemHelper
 	{
+#if false
 		public static decimal? GetArticleVatRate(BusinessDocumentEntity document, ArticleDocumentItemEntity article)
 		{
 			//	Retourne le taux de tva auquel un article est soumi.
@@ -49,7 +50,7 @@ namespace Epsitec.Cresus.Core.Helpers
 
 			return null;
 		}
-
+#endif
 
 		public static decimal? GetArticlePrice(ArticleDocumentItemEntity article, System.DateTime date, Business.Finance.CurrencyCode currency)
 		{
