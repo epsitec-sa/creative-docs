@@ -198,9 +198,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			if (this.IsMyEyesOnlyEditionEnabled)
 			{
-				if (info.AbstractDocumentItemEntity is TextDocumentItemEntity)
+				if (info.DocumentItem is TextDocumentItemEntity)
 				{
-					var text = info.AbstractDocumentItemEntity as TextDocumentItemEntity;
+					var text = info.DocumentItem as TextDocumentItemEntity;
 					if (text.Attributes.HasFlag (DocumentItemAttributes.MyEyesOnly))
 					{
 						return true;

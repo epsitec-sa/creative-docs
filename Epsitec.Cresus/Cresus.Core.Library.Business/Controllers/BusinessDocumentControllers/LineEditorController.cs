@@ -82,43 +82,43 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			if (info != null)
 			{
-				if (info.AbstractDocumentItemEntity is ArticleDocumentItemEntity)
+				if (info.DocumentItem is ArticleDocumentItemEntity)
 				{
 					if (info.SublineIndex == 0)
 					{
 						this.lineEditorController = new ArticleLineEditorController (this.accessData);
 						(this.lineEditorController as ArticleLineEditorController).CurrentEditMode = this.editMode;
-						this.lineEditorController.CreateUI (this.editorTile, info.AbstractDocumentItemEntity);
+						this.lineEditorController.CreateUI (this.editorTile, info.DocumentItem);
 					}
 					else
 					{
 						this.lineEditorController = new QuantityLineEditorController (this.accessData);
-						this.lineEditorController.CreateUI (this.editorTile, info.ArticleQuantityEntity);
+						this.lineEditorController.CreateUI (this.editorTile, info.ArticleQuantity);
 					}
 				}
 
-				if (info.AbstractDocumentItemEntity is TextDocumentItemEntity)
+				if (info.DocumentItem is TextDocumentItemEntity)
 				{
 					this.lineEditorController = new TextLineEditorController (this.accessData);
-					this.lineEditorController.CreateUI (this.editorTile, info.AbstractDocumentItemEntity);
+					this.lineEditorController.CreateUI (this.editorTile, info.DocumentItem);
 				}
 
-				if (info.AbstractDocumentItemEntity is TaxDocumentItemEntity)
+				if (info.DocumentItem is TaxDocumentItemEntity)
 				{
 					this.lineEditorController = new TaxLineEditorController (this.accessData);
-					this.lineEditorController.CreateUI (this.editorTile, info.AbstractDocumentItemEntity);
+					this.lineEditorController.CreateUI (this.editorTile, info.DocumentItem);
 				}
 
-				if (info.AbstractDocumentItemEntity is SubTotalDocumentItemEntity)
+				if (info.DocumentItem is SubTotalDocumentItemEntity)
 				{
 					this.lineEditorController = new SubTotalLineEditorController (this.accessData);
-					this.lineEditorController.CreateUI (this.editorTile, info.AbstractDocumentItemEntity);
+					this.lineEditorController.CreateUI (this.editorTile, info.DocumentItem);
 				}
 
-				if (info.AbstractDocumentItemEntity is EndTotalDocumentItemEntity)
+				if (info.DocumentItem is EndTotalDocumentItemEntity)
 				{
 					this.lineEditorController = new EndTotalLineEditorController (this.accessData);
-					this.lineEditorController.CreateUI (this.editorTile, info.AbstractDocumentItemEntity);
+					this.lineEditorController.CreateUI (this.editorTile, info.DocumentItem);
 				}
 
 				if (this.lineEditorController != null)

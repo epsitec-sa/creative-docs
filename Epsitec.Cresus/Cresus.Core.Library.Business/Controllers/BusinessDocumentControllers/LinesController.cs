@@ -242,15 +242,15 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Met à jour le contenu d'une ligne de la table.
 			var info = this.lineProvider.GetLineInformations (row);
 
-			if (this.lastDocumentItemEntity != info.AbstractDocumentItemEntity)
+			if (this.lastDocumentItemEntity != info.DocumentItem)
 			{
-				this.lastDocumentItemEntity = info.AbstractDocumentItemEntity;
+				this.lastDocumentItemEntity = info.DocumentItem;
 				this.documentItemIndex++;
 			}
 
-			if (info.AbstractDocumentItemEntity is TextDocumentItemEntity)
+			if (info.DocumentItem is TextDocumentItemEntity)
 			{
-				var t = info.AbstractDocumentItemEntity as TextDocumentItemEntity;
+				var t = info.DocumentItem as TextDocumentItemEntity;
 				if (t.Text == "a")
 				{
 				}
@@ -284,13 +284,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 						if (displayer != null)
 						{
-							this.UpdateIndexDisplayerWidget (displayer, row, info.AbstractDocumentItemEntity.GroupIndex);
+							this.UpdateIndexDisplayerWidget (displayer, row, info.DocumentItem.GroupIndex);
 						}
 					}
 				}
 				else
 				{
-					var color = this.GetNiceBackgroundColor (info.AbstractDocumentItemEntity.GroupIndex);
+					var color = this.GetNiceBackgroundColor (info.DocumentItem.GroupIndex);
 
 					if (this.table[column, row].Children.Count != 0)
 					{
@@ -359,7 +359,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			else
 			{
 				var info = this.lineProvider.GetLineInformations (row-1);
-				displayer.TopGroupIndex = info.AbstractDocumentItemEntity.GroupIndex;
+				displayer.TopGroupIndex = info.DocumentItem.GroupIndex;
 			}
 
 			if (row >= this.lineCount-1)
@@ -369,7 +369,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			else
 			{
 				var info = this.lineProvider.GetLineInformations (row+1);
-				displayer.BottomGroupIndex = info.AbstractDocumentItemEntity.GroupIndex;
+				displayer.BottomGroupIndex = info.DocumentItem.GroupIndex;
 			}
 
 			displayer.Invalidate ();

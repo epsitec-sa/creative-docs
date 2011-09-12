@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 			else
 			{
-				index = this.businessDocument.Lines.IndexOf (selection.Last ().AbstractDocumentItemEntity) + 1;
+				index = this.businessDocument.Lines.IndexOf (selection.Last ().DocumentItem) + 1;
 				model = this.businessDocument.Lines[System.Math.Max (0, index-1)];
 
 				//	Make sure we don't select an insertion position in the top level group, as
@@ -114,7 +114,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			var info = selection[0];
-			var line = info.AbstractDocumentItemEntity;
+			var line = info.DocumentItem;
 
 			if (!(line is ArticleDocumentItemEntity))
 			{
@@ -172,7 +172,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 			else
 			{
-				index = this.businessDocument.Lines.IndexOf (selection.Last ().AbstractDocumentItemEntity) + 1;
+				index = this.businessDocument.Lines.IndexOf (selection.Last ().DocumentItem) + 1;
 				model = this.businessDocument.Lines[index-1];
 			}
 
@@ -209,7 +209,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 			else
 			{
-				index = this.businessDocument.Lines.IndexOf (selection.Last ().AbstractDocumentItemEntity) + 1;
+				index = this.businessDocument.Lines.IndexOf (selection.Last ().DocumentItem) + 1;
 				model = this.businessDocument.Lines[index-1];
 			}
 
@@ -234,7 +234,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 			else
 			{
-				index = this.businessDocument.Lines.IndexOf (selection.Last ().AbstractDocumentItemEntity) + 1;
+				index = this.businessDocument.Lines.IndexOf (selection.Last ().DocumentItem) + 1;
 			}
 
 			var line = this.businessDocument.Lines[index];
@@ -288,7 +288,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Crée l'arbre à partie des lignes du document.
 			var tree = new TreeEngine (this.businessDocument);
 
-			var leaf = tree.Search (selection[0].AbstractDocumentItemEntity);
+			var leaf = tree.Search (selection[0].DocumentItem);
 			var flat = tree.FlatLeafs;
 			var index = flat.IndexOf (leaf);
 
@@ -420,7 +420,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			var info = selection[0];
-			var line = info.AbstractDocumentItemEntity;
+			var line = info.DocumentItem;
 			var index = this.businessDocument.Lines.IndexOf (line);
 
 			if (index == -1)
@@ -469,8 +469,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				foreach (var info in selection)
 				{
-					var line     = info.AbstractDocumentItemEntity;
-					var quantity = info.ArticleQuantityEntity;
+					var line     = info.DocumentItem;
+					var quantity = info.ArticleQuantity;
 
 					last = this.businessDocument.Lines.IndexOf (line);
 
@@ -514,7 +514,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			foreach (var info in selection)
 			{
-				if (AbstractDocumentItemEntity.GetGroupLevel (info.AbstractDocumentItemEntity.GroupIndex) >= AbstractDocumentItemEntity.maxGroupingDepth)
+				if (AbstractDocumentItemEntity.GetGroupLevel (info.DocumentItem.GroupIndex) >= AbstractDocumentItemEntity.maxGroupingDepth)
 				{
 					this.lastError = LinesError.MaxDeep;
 					return;
@@ -542,7 +542,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			var brothers = new List<TreeNode> ();
 			foreach (var info in selection)
 			{
-				var node = tree.Search (info.AbstractDocumentItemEntity);
+				var node = tree.Search (info.DocumentItem);
 
 				while (node.Parent != firstLeaf.Parent)
 				{
@@ -608,7 +608,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			var brothers = new List<TreeNode> ();
 			foreach (var info in selection)
 			{
-				var node = tree.Search (info.AbstractDocumentItemEntity);
+				var node = tree.Search (info.DocumentItem);
 
 				while (node.Parent != firstLeaf.Parent)
 				{
@@ -657,7 +657,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Crée l'arbre à partie des lignes du document.
 			var tree = new TreeEngine (this.businessDocument);
 
-			var firstLeaf = tree.Search (selection[0].AbstractDocumentItemEntity);
+			var firstLeaf = tree.Search (selection[0].DocumentItem);
 			var group = firstLeaf.Parent;
 			var parent = group.Parent;
 
@@ -715,7 +715,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Crée l'arbre à partie des lignes du document.
 			var tree = new TreeEngine (this.businessDocument);
 
-			var firstLeaf = tree.Search (selection[0].AbstractDocumentItemEntity);
+			var firstLeaf = tree.Search (selection[0].DocumentItem);
 			var group = firstLeaf.Parent;
 			var parent = group.Parent;
 
@@ -805,10 +805,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			foreach (var info in selection)
 			{
-				if (minGroupIndex > info.AbstractDocumentItemEntity.GroupIndex)
+				if (minGroupIndex > info.DocumentItem.GroupIndex)
 				{
-					minGroupIndex = info.AbstractDocumentItemEntity.GroupIndex;
-					rootEntity = info.AbstractDocumentItemEntity;
+					minGroupIndex = info.DocumentItem.GroupIndex;
+					rootEntity = info.DocumentItem;
 				}
 			}
 
@@ -822,7 +822,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			foreach (var info in selection)
 			{
-				if (!AbstractDocumentItemEntity.GroupCompare (minGroupIndex, info.AbstractDocumentItemEntity.GroupIndex, level))
+				if (!AbstractDocumentItemEntity.GroupCompare (minGroupIndex, info.DocumentItem.GroupIndex, level))
 				{
 					return null;
 				}

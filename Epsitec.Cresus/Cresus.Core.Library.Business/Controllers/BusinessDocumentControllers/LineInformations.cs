@@ -11,39 +11,57 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
 	public class LineInformations
 	{
-		public LineInformations(DocumentItemAccessor documentItemAccessor, AbstractDocumentItemEntity abstractDocumentItemEntity, ArticleQuantityEntity articleQuantityEntity, int sublineIndex, DocumentItemAccessorError error = DocumentItemAccessorError.None)
+		public LineInformations(DocumentItemAccessor documentItemAccessor, AbstractDocumentItemEntity abstractDocumentItem, ArticleQuantityEntity articleQuantity, int sublineIndex, DocumentItemAccessorError error = DocumentItemAccessorError.None)
 		{
-			this.DocumentItemAccessor       = documentItemAccessor;
-			this.AbstractDocumentItemEntity = abstractDocumentItemEntity;
-			this.ArticleQuantityEntity      = articleQuantityEntity;
-			this.SublineIndex               = sublineIndex;
-			this.Error                      = error;
+			this.DocumentItemAccessor = documentItemAccessor;
+			this.DocumentItem = abstractDocumentItem;
+			this.ArticleQuantity      = articleQuantity;
+			this.SublineIndex         = sublineIndex;
+			this.Error                = error;
 		}
 
-		public AbstractDocumentItemEntity AbstractDocumentItemEntity
-		{
-			get;
-			internal set;
-		}
-
-		public ArticleQuantityEntity ArticleQuantityEntity
+		
+		public AbstractDocumentItemEntity		DocumentItem
 		{
 			get;
 			internal set;
 		}
 
-		public DocumentItemAccessor DocumentItemAccessor
+		public ArticleQuantityEntity			ArticleQuantity
 		{
 			get;
 			internal set;
 		}
 
-		public DocumentItemAccessorError Error
+		public DocumentItemAccessor				DocumentItemAccessor
 		{
 			get;
 			internal set;
 		}
 
+		public int								SublineIndex
+		{
+			get;
+			internal set;
+		}
+
+		public bool								IsQuantity
+		{
+			get
+			{
+				return this.DocumentItem is ArticleDocumentItemEntity &&
+					   this.ArticleQuantity != null &&
+					   this.SublineIndex > 0;
+			}
+		}
+
+		public DocumentItemAccessorError		Error
+		{
+			get;
+			internal set;
+		}
+
+		
 		public FormattedText GetColumnContent(DocumentItemAccessorColumn columnA, DocumentItemAccessorColumn columnB)
 		{
 			var text = this.GetColumnContent (columnA);
@@ -89,22 +107,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			else
 			{
 				return this.DocumentItemAccessor.GetError (this.SublineIndex, column);
-			}
-		}
-
-		public int SublineIndex
-		{
-			get;
-			internal set;
-		}
-
-		public bool IsQuantity
-		{
-			get
-			{
-				return this.AbstractDocumentItemEntity is ArticleDocumentItemEntity &&
-					   this.ArticleQuantityEntity != null &&
-					   this.SublineIndex > 0;
 			}
 		}
 	}

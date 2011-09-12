@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			switch (columnType)
 			{
 				case ColumnType.GroupIndex:
-					text = info.AbstractDocumentItemEntity.GroupIndex.ToString ();
+					text = info.DocumentItem.GroupIndex.ToString ();
 					return new CellContent (text);
 
 				case ColumnType.GroupNumber:
@@ -290,7 +290,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				return;
 			}
 
-			int groupIndex = selection[0].AbstractDocumentItemEntity.GroupIndex;
+			int groupIndex = selection[0].DocumentItem.GroupIndex;
 			int level = AbstractDocumentItemEntity.GetGroupLevel (groupIndex);
 
 			if (level == 0)
@@ -302,7 +302,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			foreach (var info in this.lineInformations)
 			{
-				if (AbstractDocumentItemEntity.GroupCompare (groupIndex, info.AbstractDocumentItemEntity.GroupIndex, level))
+				if (AbstractDocumentItemEntity.GroupCompare (groupIndex, info.DocumentItem.GroupIndex, level))
 				{
 					selection.Add (info);
 				}
@@ -630,14 +630,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private int IndexOfLineInformations(LineInformations info)
 		{
-			if (info.ArticleQuantityEntity != null)  // cherche une quantité précise ?
+			if (info.ArticleQuantity != null)  // cherche une quantité précise ?
 			{
 				for (int i = 0; i < this.lineInformations.Count; i++)
 				{
 					var nextInfo = this.lineInformations[i];
 
-					if (nextInfo.AbstractDocumentItemEntity == info.AbstractDocumentItemEntity &&
-						nextInfo.ArticleQuantityEntity      == info.ArticleQuantityEntity      )
+					if (nextInfo.DocumentItem == info.DocumentItem &&
+						nextInfo.ArticleQuantity      == info.ArticleQuantity      )
 					{
 						return i;
 					}
@@ -648,7 +648,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				var nextInfo = this.lineInformations[i];
 
-				if (nextInfo.AbstractDocumentItemEntity == info.AbstractDocumentItemEntity)
+				if (nextInfo.DocumentItem == info.DocumentItem)
 				{
 					return i;
 				}
