@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
 	public class LineInformations
 	{
-		public LineInformations(DocumentItemAccessor documentItemAccessor, AbstractDocumentItemEntity abstractDocumentItemEntity, ArticleQuantityEntity articleQuantityEntity, int sublineIndex, DocumentItemAccessorError error = DocumentItemAccessorError.OK)
+		public LineInformations(DocumentItemAccessor documentItemAccessor, AbstractDocumentItemEntity abstractDocumentItemEntity, ArticleQuantityEntity articleQuantityEntity, int sublineIndex, DocumentItemAccessorError error = DocumentItemAccessorError.None)
 		{
 			this.DocumentItemAccessor       = documentItemAccessor;
 			this.AbstractDocumentItemEntity = abstractDocumentItemEntity;
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			var error = this.GetColumnError (columnA);
 			
-			if (error == DocumentItemAccessorError.OK)
+			if (error == DocumentItemAccessorError.None)
 			{
 				error = this.GetColumnError (columnB);
 			}
@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			if (this.DocumentItemAccessor == null)
 			{
-				return DocumentItemAccessorError.OK;
+				return DocumentItemAccessorError.None;
 			}
 			else
 			{

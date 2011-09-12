@@ -351,26 +351,16 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			this.InitializeColumns ();
 
 			//	Construit une fois pour toutes les accesseurs au contenu.
-			var accessors = new List<DocumentItemAccessor> ();
-			var numberGenerator = new IncrementalNumberGenerator ();
-
-			for (int i = 0; i < this.ContentLines.Count (); i++)
-			{
-				var contentLine = this.ContentLines.ElementAt (i);
-
-				var accessor = new DocumentItemAccessor (this.Metadata, this.businessLogic, numberGenerator);
-				accessor.BuildContent (contentLine.Line, this.DocumentType, this.DocumentItemAccessorMode, contentLine.GroupIndex);
-
-				accessors.Add (accessor);
-			}
+			var lines = this.ContentLines;
+			var accessors = new List<DocumentItemAccessor> (DocumentItemAccessor.CreateAccessors (this.Metadata, this.businessLogic, this.DocumentItemAccessorMode, lines));
 
 			//	Première passe pour déterminer le nombre le lignes du tableau ainsi que
 			//	les colonnes visibles.
 			int rowCount = 1;  // déjà 1 pour l'en-tête (titres des colonnes)
 
-			for (int i = 0; i < this.ContentLines.Count (); i++)
+			for (int i = 0; i < lines.Count; i++)
 			{
-				var contentLine = this.ContentLines.ElementAt (i);
+				var contentLine = lines[i];
 
 				if (contentLine.Line.Attributes.HasFlag (DocumentItemAttributes.Hidden) == false)
 				{
@@ -413,14 +403,14 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			int linePage = this.documentContainer.CurrentPage;
 			double lineY = this.documentContainer.CurrentVerticalPosition;
 
-			for (int i = 0; i < this.ContentLines.Count (); i++)
+			for (int i = 0; i < lines.Count; i++)
 			{
-				var contentLine = this.ContentLines.ElementAt (i);
+				var contentLine = lines[i];
 
 				if (contentLine.Line.Attributes.HasFlag (DocumentItemAttributes.Hidden) == false)
 				{
-					var prevLine = (i == 0) ? null : this.ContentLines.ElementAt (i-1);
-					var nextLine = (i >= this.ContentLines.Count ()-1) ? null : this.ContentLines.ElementAt (i+1);
+					var prevLine = (i == 0) ? DocumentAccessorContentLine.Empty : lines[i-1];
+					var nextLine = (i >= lines.Count-1) ? DocumentAccessorContentLine.Empty : lines[i+1];
 
 					int rowUsed = this.BuildLine (row, accessors[i], prevLine, contentLine, nextLine);
 					this.BuildCommonLine (row, accessors[i], contentLine);
@@ -505,7 +495,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			this.lastRowForEachSection = this.table.GetLastRowForEachSection ();
 		}
 
-		private void BuildCommonLine(int row, DocumentItemAccessor accessor, ContentLine line)
+		private void BuildCommonLine(int row, DocumentItemAccessor accessor, DocumentAccessorContentLine line)
 		{
 			FormattedText text = null;
 
@@ -550,7 +540,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			this.table.SetCellBorder (0, row, new CellBorder (cellBorder.LeftWidth, cellBorder.RightWidth, cellBorder.BottomWidth, cellBorder.TopWidth, topGap, cellBorder.Color));
 		}
 
-		protected bool BuildTitleLine(int row, DocumentItemAccessor accessor, ContentLine line)
+		protected bool BuildTitleLine(int row, DocumentItemAccessor accessor, DocumentAccessorContentLine line)
 		{
 			//	S'il s'agit d'une ligne de texte contenant un titre, elle est générée de façon très spéciale,
 			//	en occupant toutes les colonnes (avec ColumnSpan), sauf l'éventuelle première qui contient le
@@ -649,48 +639,27 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-		protected virtual IEnumerable<ContentLine> ContentLines
+		public IList<DocumentAccessorContentLine> ContentLines
 		{
 			get
 			{
-				//	Donne nornalement toutes les lignes.
-				//	Les versions dans les classes dérivées peuvent ne donner que certaines lignes,
-				//	dans un ordre spécial, etc.
-				foreach (var line in this.Entity.ConciseLines)
-				{
-					yield return new ContentLine (line);
-				}
+				return this.GetContentLines ().ToList ();
 			}
 		}
 
-		#region ContentLine
-		protected class ContentLine
+		protected void InvalidateContentLines()
 		{
-			public ContentLine(AbstractDocumentItemEntity line)
-			{
-				this.Line = line;
-				this.GroupIndex = line.GroupIndex;
-			}
-
-			public ContentLine(AbstractDocumentItemEntity line, int groupIndex)
-			{
-				this.Line = line;
-				this.GroupIndex = groupIndex;
-			}
-
-			public AbstractDocumentItemEntity Line
-			{
-				get;
-				internal set;
-			}
-
-			public int GroupIndex
-			{
-				get;
-				internal set;
-			}
+			//	TODO: vide le cache des content lines
 		}
-		#endregion
+
+		protected virtual IEnumerable<DocumentAccessorContentLine> GetContentLines()
+		{
+			//	Donne nornalement toutes les lignes.
+			//	Les versions dans les classes dérivées peuvent ne donner que certaines lignes,
+			//	dans un ordre spécial, etc.
+			return this.Entity.GetConciseLines ().Select (x => new DocumentAccessorContentLine (x));
+		}
+
 
 		protected virtual void InitializeColumns()
 		{
@@ -704,7 +673,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-		protected virtual int InitializeLine(DocumentItemAccessor accessor, ContentLine line)
+		protected virtual int InitializeLine(DocumentItemAccessor accessor, DocumentAccessorContentLine line)
 		{
 			return accessor.RowsCount;
 		}
@@ -717,7 +686,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 		}
 
-		protected virtual int BuildLine(int row, DocumentItemAccessor accessor, ContentLine prevLine, ContentLine line, ContentLine nextLine)
+		protected virtual int BuildLine(int row, DocumentItemAccessor accessor, DocumentAccessorContentLine prevLine, DocumentAccessorContentLine line, DocumentAccessorContentLine nextLine)
 		{
 			return 0;
 		}
@@ -892,16 +861,17 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			//	@DR: supprimer les reports de TVA, ne reporter que les totaux HT et TTC
 
 			int lastRow = this.lastRowForEachSection[page];
+			var lines = this.ContentLines;
 
 			for (int row = 0; row <= lastRow; row++)
 			{
 				if (row == 0 ||  // en-tête ?
-					row-1 >= this.ContentLines.Count ())
+					row-1 >= lines.Count)
 				{
 					continue;
 				}
 
-				var contentLine = this.ContentLines.ElementAt (row-1);  // -1 à cause de l'en-tête
+				var contentLine = lines[row-1];  // -1 à cause de l'en-tête
 
 				if (contentLine.Line is ArticleDocumentItemEntity)
 				{
@@ -1335,21 +1305,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
-
-		private DocumentType DocumentType
-		{
-			get
-			{
-				if (this.Metadata.DocumentCategory == null)
-				{
-					return Business.DocumentType.None;
-				}
-				else
-				{
-					return this.Metadata.DocumentCategory.DocumentType;
-				}
-			}
-		}
 
 		protected BusinessDocumentEntity Entity
 		{

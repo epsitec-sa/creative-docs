@@ -162,7 +162,7 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 				var list = new List<DocumentType> ();
 				bool all = true;
 
-				foreach (DocumentType documentType in System.Enum.GetValues (typeof (DocumentType)))
+				foreach (DocumentType documentType in EnumType.GetAllEnumValues<DocumentType> ())
 				{
 					if (documentType == DocumentType.None   ||
 						documentType == DocumentType.Unknown)

@@ -330,7 +330,7 @@ namespace Epsitec.Cresus.Core.Documents
 				var list = new List<DocumentType> ();
 				int implementedDocumentCount = 0;
 
-				foreach (DocumentType documentType in System.Enum.GetValues (typeof (DocumentType)))
+				foreach (DocumentType documentType in EnumType.GetAllEnumValues<DocumentType> ())
 				{
 					if (documentType == DocumentType.None   ||
 						documentType == DocumentType.Unknown)

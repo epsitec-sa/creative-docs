@@ -43,7 +43,7 @@ namespace Epsitec.Common.Support.Extensions
 				return false;
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets the underlying type of a nullable type.
 		/// </summary>

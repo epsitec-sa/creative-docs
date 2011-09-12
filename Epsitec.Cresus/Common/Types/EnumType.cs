@@ -642,6 +642,7 @@ namespace Epsitec.Common.Types
 		/// </summary>
 		/// <returns>The enumeration of all enumeration values.</returns>
 		public static IEnumerable<T> GetAllEnumValues<T>()
+			where T : struct
 		{
 			System.Type enumType = typeof (T);
 

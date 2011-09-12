@@ -85,9 +85,9 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 			base.BuildSections ();
 
-			if (this.ContentLines.Count () == 0)
+			if (this.ContentLines.Any () == false)
 			{
-				return "Il n'y a rien à imprimer, car le document ne contient aucune ligne.";
+				return new FormattedText ("Il n'y a rien à imprimer, car le document ne contient aucune ligne.");
 			}
 
 			int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
@@ -178,7 +178,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-		protected override int BuildLine(int row, DocumentItemAccessor accessor, ContentLine prevLine, ContentLine line, ContentLine nextLine)
+		protected override int BuildLine(int row, DocumentItemAccessor accessor, DocumentAccessorContentLine prevLine, DocumentAccessorContentLine line, DocumentAccessorContentLine nextLine)
 		{
 			if (this.BuildTitleLine (row, accessor, line))
 			{

@@ -120,6 +120,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 
 			this.onlyTotal = false;
+			this.InvalidateContentLines ();
 
 			if (!this.HasIsr || this.HasOption (DocumentOption.IsrPosition, "Without") || this.PreviewMode == Print.PreviewMode.ContinuousPreview)
 			{
@@ -157,6 +158,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 					this.documentContainer.Ending (firstPage);
 					this.onlyTotal = true;
+					this.InvalidateContentLines ();
 				}
 			}
 
@@ -180,23 +182,20 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-		protected override IEnumerable<ContentLine> ContentLines
+		protected override IEnumerable<DocumentAccessorContentLine> GetContentLines()
 		{
-			get
+			if (this.onlyTotal)
 			{
-				if (this.onlyTotal)
+				//	Ne donne que la dernière ligne qui est celle du grand total.
+				var totalLine = this.Entity.Lines[this.Entity.Lines.Count-1];
+				yield return new DocumentAccessorContentLine (totalLine);
+			}
+			else
+			{
+				//	Donne normalement toutes les lignes.
+				foreach (var line in this.Entity.GetConciseLines ())
 				{
-					//	Ne donne que la dernière ligne qui est celle du grand total.
-					var totalLine = this.Entity.Lines[this.Entity.Lines.Count-1];
-					yield return new ContentLine (totalLine);
-				}
-				else
-				{
-					//	Donne normalement toutes les lignes.
-					foreach (var line in this.Entity.ConciseLines)
-					{
-						yield return new ContentLine (line);
-					}
+					yield return new DocumentAccessorContentLine (line);
 				}
 			}
 		}
@@ -297,7 +296,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-		protected override int BuildLine(int row, DocumentItemAccessor accessor, ContentLine prevLine, ContentLine line, ContentLine nextLine)
+		protected override int BuildLine(int row, DocumentItemAccessor accessor, DocumentAccessorContentLine prevLine, DocumentAccessorContentLine line, DocumentAccessorContentLine nextLine)
 		{
 			if (this.BuildTitleLine (row, accessor, line))
 			{
@@ -327,12 +326,12 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 				this.SetTableText (row+i, TableColumnKeys.ArticleDescription, accessor.GetContent (i, DocumentItemAccessorColumn.ArticleDescription));
 
-				this.SetTableText (row+i, TableColumnKeys.UnitPrice, accessor.GetContent (i, DocumentItemAccessorColumn.UnitPriceBeforeTax1));
+				this.SetTableText (row+i, TableColumnKeys.UnitPrice, accessor.GetContent (i, DocumentItemAccessorColumn.UnitPrice));
 				this.SetTableText (row+i, TableColumnKeys.Discount,  accessor.GetContent (i, DocumentItemAccessorColumn.LineDiscount));
-				this.SetTableText (row+i, TableColumnKeys.LinePrice, accessor.GetContent (i, DocumentItemAccessorColumn.LinePriceBeforeTax1));
+				this.SetTableText (row+i, TableColumnKeys.LinePrice, accessor.GetContent (i, DocumentItemAccessorColumn.LinePrice));
 				this.SetTableText (row+i, TableColumnKeys.Vat,       accessor.GetContent (i, DocumentItemAccessorColumn.VatRate));
 
-				var total = accessor.GetContent (i, DocumentItemAccessorColumn.LinePriceBeforeTax2);
+				var total = accessor.GetContent (i, DocumentItemAccessorColumn.TotalPrice);
 				if (line.Line is EndTotalDocumentItemEntity && i == accessor.RowsCount-1)
 				{
 					total = total.ApplyBold ();

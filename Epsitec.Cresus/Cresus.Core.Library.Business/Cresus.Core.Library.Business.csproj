@@ -84,6 +84,7 @@
     <Compile Include="Business\Rules\OptionValueBusinessRules.cs" />
     <Compile Include="Business\Rules\RelationBusinessRules.cs" />
     <Compile Include="Business\Rules\TaxSettingsBusinessRules.cs" />
+    <Compile Include="ContentAccessors\DocumentAccessorContentLine.cs" />
     <Compile Include="ContentAccessors\DocumentItemAccessorError.cs" />
     <Compile Include="ContentAccessors\DocumentItemAccessorColumn.cs" />
     <Compile Include="ContentAccessors\DocumentItemAccessor.cs" />

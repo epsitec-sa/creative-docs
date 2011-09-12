@@ -91,6 +91,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			foreach (var group in this.ProductionGroups)
 			{
 				this.currentGroup = group;
+				this.InvalidateContentLines ();
 
 				if (this.ContentLines.Any ())
 				{
@@ -117,6 +118,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			{
 				this.currentGroup = group;
 				this.groupRank++;
+				this.InvalidateContentLines ();
 
 				this.BuildAtelier ();
 				this.BuildArticles (this.documentContainer.CurrentVerticalPosition);
@@ -131,16 +133,12 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
-		protected override IEnumerable<ContentLine> ContentLines
+		protected override IEnumerable<DocumentAccessorContentLine> GetContentLines()
 		{
-			get
-			{
-				//	Donne les lignes du groupe de production en cours.
-				foreach (var line in this.Entity.Lines.Where (x => this.IsArticleForProduction (x, this.currentGroup)))
-				{
-					yield return new ContentLine (line, this.groupRank);
-				}
-			}
+			//	Donne les lignes du groupe de production en cours.
+			return from line in this.Entity.Lines
+				   where this.IsArticleForProduction (line, this.currentGroup)
+				   select new DocumentAccessorContentLine (line, this.groupRank);
 		}
 
 		protected override void InitializeColumns()
@@ -192,7 +190,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-		protected override int BuildLine(int row, DocumentItemAccessor accessor, ContentLine prevLine, ContentLine line, ContentLine nextLine)
+		protected override int BuildLine(int row, DocumentItemAccessor accessor, DocumentAccessorContentLine prevLine, DocumentAccessorContentLine line, DocumentAccessorContentLine nextLine)
 		{
 			for (int i = 0; i < accessor.RowsCount; i++)
 			{

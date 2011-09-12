@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				text = this.lineEditorController.TitleTile.ApplyBold ();
 
-				if (this.error != DocumentItemAccessorError.OK)
+				if (this.error != DocumentItemAccessorError.None)
 				{
 					text = FormattedText.Concat (text, " — ", DocumentItemAccessor.GetErrorDescription (this.error));
 					color = Color.FromName ("Gold");

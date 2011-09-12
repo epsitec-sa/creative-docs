@@ -305,7 +305,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 							text.FormattedText = (cellContent == null) ? null : cellContent.Text.ToSimpleText ();
 
-							if (cellContent != null && cellContent.Error != Library.Business.ContentAccessors.DocumentItemAccessorError.OK)
+							if (cellContent != null && cellContent.Error != Library.Business.ContentAccessors.DocumentItemAccessorError.None)
 							{
 								color = Color.FromName ("Gold");
 							}

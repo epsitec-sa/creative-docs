@@ -76,57 +76,54 @@ namespace Epsitec.Cresus.Core.Entities
 
 
 		#region Concise lines algorithm
-		public IList<AbstractDocumentItemEntity> ConciseLines
+		public IList<AbstractDocumentItemEntity> GetConciseLines()
 		{
 			//	Retourne la liste des lignes d'un document commercial expurgée de toutes les
 			//	lignes redondantes, telles que les sous-totaux inutiles.
 			//	Le résultat n'est à utiliser que pour la production de documents !
 			//	En effet, il n'est pas compatible avec la calculateur de prix, qui rajouterait
 			//	certains sous-totaux enlevés !
-			get
+			var conciseLines = new List<AbstractDocumentItemEntity> (this.Lines);
+
+			//	Supprime tous les sous-totaux à double.
+			int i = 0;
+			while (i < conciseLines.Count)
 			{
-				var conciseLines = new List<AbstractDocumentItemEntity> (this.Lines);
+				var line0 = conciseLines[i] as SubTotalDocumentItemEntity;
+				var line1 = BusinessDocumentEntity.GetNextActiveLine (conciseLines, i, 1) as SubTotalDocumentItemEntity;
 
-				//	Supprime tous les sous-totaux à double.
-				int i = 0;
-				while (i < conciseLines.Count)
+				if (BusinessDocumentEntity.Similar (line0, line1))
 				{
-					var line0 = conciseLines[i] as SubTotalDocumentItemEntity;
-					var line1 = BusinessDocumentEntity.GetNextActiveLine (conciseLines, i, 1) as SubTotalDocumentItemEntity;
-
-					if (BusinessDocumentEntity.Similar (line0, line1))
-					{
-						conciseLines.RemoveAt (i);
-						continue;
-					}
-
-					i++;
+					conciseLines.RemoveAt (i);
+					continue;
 				}
 
-				//	Supprime tous les sous-totaux inutiles. Par exemple, un sous-total sans rabais
-				//	précédé d'un article unique est superflu.
-				i = 0;
-				while (i < conciseLines.Count)
-				{
-					var line2 = BusinessDocumentEntity.GetNextActiveLine (conciseLines, i, -2);
-					var line1 = BusinessDocumentEntity.GetNextActiveLine (conciseLines, i, -1);
-					var line0 = conciseLines[i];
+				i++;
+			}
 
-					//	Article unique suivi d'un sous-total superflu ?
-					if ((line2 == null || !(line2 is ArticleDocumentItemEntity)) &&
+			//	Supprime tous les sous-totaux inutiles. Par exemple, un sous-total sans rabais
+			//	précédé d'un article unique est superflu.
+			i = 0;
+			while (i < conciseLines.Count)
+			{
+				var line2 = BusinessDocumentEntity.GetNextActiveLine (conciseLines, i, -2);
+				var line1 = BusinessDocumentEntity.GetNextActiveLine (conciseLines, i, -1);
+				var line0 = conciseLines[i];
+
+				//	Article unique suivi d'un sous-total superflu ?
+				if ((line2 == null || !(line2 is ArticleDocumentItemEntity)) &&
 						line1 is ArticleDocumentItemEntity &&
 						line0 is SubTotalDocumentItemEntity &&
 						BusinessDocumentEntity.HasEmptyDiscount (line0 as SubTotalDocumentItemEntity))
-					{
-						conciseLines.RemoveAt (i);  // supprime le sous-total
-						continue;
-					}
-
-					i++;
+				{
+					conciseLines.RemoveAt (i);  // supprime le sous-total
+					continue;
 				}
 
-				return conciseLines;
+				i++;
 			}
+
+			return conciseLines;
 		}
 
 		private static AbstractDocumentItemEntity GetNextActiveLine(IList<AbstractDocumentItemEntity> lines, int index, int direction)

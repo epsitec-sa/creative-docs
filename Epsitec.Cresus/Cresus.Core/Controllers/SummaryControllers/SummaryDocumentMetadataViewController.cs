@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			//	Le paramètre 'limit' donne le nombre maximum de lignes à inclure, sans compter les 2 lignes
 			//	"..." et le grand total.
 			FormattedText summary = new FormattedText ();
-			var lines = businessDocumentEntity.ConciseLines;
+			var lines = businessDocumentEntity.GetConciseLines ();
 
 			for (int i=0; i<lines.Count-1; i++)  // toutes les lignes, sauf le grand total
 			{

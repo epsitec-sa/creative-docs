@@ -201,23 +201,23 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					return new CellContent (text, error);
 
 				case ColumnType.UnitPrice:
-					text = info.GetColumnContent (DocumentItemAccessorColumn.UnitPriceBeforeTax1);
-					error = info.GetColumnError (DocumentItemAccessorColumn.UnitPriceBeforeTax1);
+					text = info.GetColumnContent (DocumentItemAccessorColumn.UnitPrice);
+					error = info.GetColumnError (DocumentItemAccessorColumn.UnitPrice);
 					return new CellContent (text, error);
 
 				case ColumnType.LinePrice:
-					text = info.GetColumnContent (DocumentItemAccessorColumn.LinePriceBeforeTax1);
-					error = info.GetColumnError (DocumentItemAccessorColumn.LinePriceBeforeTax1);
+					text = info.GetColumnContent (DocumentItemAccessorColumn.LinePrice);
+					error = info.GetColumnError (DocumentItemAccessorColumn.LinePrice);
 					return new CellContent (text, error);
 
 				case ColumnType.Vat:
-					text = info.GetColumnContent (DocumentItemAccessorColumn.VatRate);
-					error = info.GetColumnError (DocumentItemAccessorColumn.VatRate);
+					text = info.GetColumnContent (DocumentItemAccessorColumn.VatInfo);
+					error = info.GetColumnError (DocumentItemAccessorColumn.VatInfo);
 					return new CellContent (text, error);
 
 				case ColumnType.Total:
-					text = info.GetColumnContent (DocumentItemAccessorColumn.LinePriceBeforeTax2, DocumentItemAccessorColumn.LinePriceAfterTax2);
-					error = info.GetColumnError (DocumentItemAccessorColumn.LinePriceBeforeTax2, DocumentItemAccessorColumn.LinePriceAfterTax2);
+					text = info.GetColumnContent (DocumentItemAccessorColumn.TotalPrice);
+					error = info.GetColumnError (DocumentItemAccessorColumn.TotalPrice);
 					return new CellContent (text, error);
 			}
 
@@ -506,20 +506,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				mode |= DocumentItemAccessorMode.EditArticleDescription;
 			}
 
-			var numberGenerator = new IncrementalNumberGenerator ();
+			var lines = this.accessData.BusinessDocumentEntity.Lines.Select (x => new DocumentAccessorContentLine (x));
 
-			for (int i = 0; i < this.accessData.BusinessDocumentEntity.Lines.Count; i++)
+			foreach (var accessor in DocumentItemAccessor.CreateAccessors (this.accessData.DocumentMetadataEntity, this.accessData.BusinessLogic, mode, lines))
 			{
-				var line = this.accessData.BusinessDocumentEntity.Lines[i];
-
-				var accessor = new DocumentItemAccessor (this.accessData.DocumentMetadataEntity, this.accessData.BusinessLogic, numberGenerator);
-				accessor.BuildContent (line, this.accessData.DocumentMetadataEntity.DocumentCategory.DocumentType, mode);
-
 				for (int row = 0; row < accessor.RowsCount; row++)
 				{
-					var quantity = accessor.GetArticleQuantityEntity (row);
+					var quantity = accessor.GetArticleQuantity (row);
 					var error = accessor.GetError (row);
-					this.lineInformations.Add (new LineInformations (accessor, line, quantity, row, error));
+					var item = accessor.Item;
+					this.lineInformations.Add (new LineInformations (accessor, item, quantity, row, error));
 
 					var cellError = accessor.GetError (row);
 				}
@@ -559,7 +555,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			if (selection.Count != 1)
 			{
-				this.lineEditorController.SetError (DocumentItemAccessorError.OK);
+				this.lineEditorController.SetError (DocumentItemAccessorError.None);
 			}
 			else
 			{

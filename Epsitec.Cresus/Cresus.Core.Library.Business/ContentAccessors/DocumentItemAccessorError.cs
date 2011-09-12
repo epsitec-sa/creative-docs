@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 {
 	public enum DocumentItemAccessorError
 	{
-		OK,
+		None,
 		Unknown,
 		TextNotDefined,
 		ArticleNotDefined,

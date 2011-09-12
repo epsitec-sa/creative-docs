@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public CellContent(FormattedText text)
 		{
 			this.Text  = text;
-			this.Error = DocumentItemAccessorError.OK;
+			this.Error = DocumentItemAccessorError.None;
 		}
 
 		public CellContent(FormattedText text, DocumentItemAccessorError error)
