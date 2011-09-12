@@ -338,7 +338,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			else
 			{
 				for (int i = 0; i < level; i++)
-                {
+				{
 					int partialGroupIndex = 0;
 
 					for (int j = 0; j <= i; j++)

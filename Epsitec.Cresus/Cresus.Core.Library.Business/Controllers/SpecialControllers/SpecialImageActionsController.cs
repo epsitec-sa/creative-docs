@@ -27,9 +27,9 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 	/// <summary>
 	/// Ce contrôleur affiche les boutons d'action pour une image bitmap.
 	/// </summary>
-	public class ImageActionsController : IEntitySpecialController
+	public class SpecialImageActionsController : IEntitySpecialController
 	{
-		public ImageActionsController(TileContainer tileContainer, ImageEntity imageEntity)
+		public SpecialImageActionsController(TileContainer tileContainer, ImageEntity imageEntity)
 		{
 			this.tileContainer = tileContainer;
 			this.imageEntity = imageEntity;
@@ -170,7 +170,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 		{
 			protected override IEntitySpecialController Create(TileContainer container, ImageEntity entity, int mode)
 			{
-				return new ImageActionsController (container, entity);
+				return new SpecialImageActionsController (container, entity);
 			}
 		}
 

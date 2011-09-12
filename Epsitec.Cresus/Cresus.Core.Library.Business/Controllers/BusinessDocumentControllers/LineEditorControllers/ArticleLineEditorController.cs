@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					PreferredHeight = 20,
 					Margins = new Margins (0, 0, 0, 10),
 					TabIndex = this.NextTabIndex,
-					Enable = this.accessData.BusinessLogic.IsLinesEditionEnabled,
+					Enable = this.accessData.DocumentLogic.IsLinesEditionEnabled,
 				};
 
 				var articleController = new SelectionController<ArticleDefinitionEntity> (this.accessData.BusinessContext)
@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					Dock = DockStyle.Top,
 					Margins = new Margins (0, 0, 0, 5),
 					TabIndex = this.NextTabIndex,
-					Enable = this.accessData.BusinessLogic.IsArticleParametersEditionEnabled,
+					Enable = this.accessData.DocumentLogic.IsArticleParametersEditionEnabled,
 				};
 
 				this.parameterController = new ArticleParameterControllers.ValuesArticleParameterController (this.tileContainer, line);
@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					Parent = parent,
 					Dock = DockStyle.Fill,
 					TabIndex = this.NextTabIndex,
-					Enable = this.accessData.BusinessLogic.IsArticleParametersEditionEnabled,
+					Enable = this.accessData.DocumentLogic.IsArticleParametersEditionEnabled,
 				};
 
 				var replacementBox = new FrameBox ();
@@ -196,7 +196,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				PreferredHeight = 10+20+10,
 				Padding = new Margins (0, 0, 10, 10),
 				TabIndex = this.NextTabIndex,
-				Enable = this.accessData.BusinessLogic.MainArticleQuantityType != ArticleQuantityType.None,
+				Enable = this.accessData.DocumentLogic.MainArticleQuantityType != ArticleQuantityType.None,
 			};
 
 			var separator = new Separator
@@ -239,9 +239,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				var unitField = builder.CreateCompactAutoCompleteTextField (null, "", unitController);
 				this.PlaceLabelAndField (parent, 35, 80, "Unité", unitField.Parent);
 
-				if (this.accessData.BusinessLogic.MainArticleQuantityType != ArticleQuantityType.None)
+				if (this.accessData.DocumentLogic.MainArticleQuantityType != ArticleQuantityType.None)
 				{
-					var quantityEntity = this.accessData.BusinessLogic.GetArticleQuantityColumnEntity (this.accessData.BusinessLogic.MainArticleQuantityType);
+					var quantityEntity = this.accessData.DocumentLogic.GetArticleQuantityColumnEntity (this.accessData.DocumentLogic.MainArticleQuantityType);
 
 					var text = FormattedText.Concat ("   ", quantityEntity.Name);
 					this.CreateStaticText (parent, 70, text);
@@ -262,7 +262,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					PreferredHeight = 20,
 					Margins = new Margins (0, 0, 0, 5),
 					TabIndex = this.NextTabIndex,
-					Enable = this.accessData.BusinessLogic.IsPriceEditionEnabled,
+					Enable = this.accessData.DocumentLogic.IsPriceEditionEnabled,
 				};
 
 				var fixedNoneButton = new RadioButton
@@ -331,7 +331,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					PreferredHeight = 20,
 					Margins = new Margins (0, 0, 0, 5),
 					TabIndex = this.NextTabIndex,
-					Enable = this.accessData.BusinessLogic.IsPriceEditionEnabled,
+					Enable = this.accessData.DocumentLogic.IsPriceEditionEnabled,
 				};
 
 #if false
@@ -367,7 +367,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					PreferredHeight = 20,
 					Margins = new Margins (0, 0, 0, 5),
 					TabIndex = this.NextTabIndex,
-					Enable = this.accessData.BusinessLogic.IsDiscountEditionEnabled,
+					Enable = this.accessData.DocumentLogic.IsDiscountEditionEnabled,
 				};
 
 				//	Rabais.
@@ -620,7 +620,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				}
 				else
 				{
-					return this.Entity.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == this.accessData.BusinessLogic.MainArticleQuantityType).FirstOrDefault ();
+					return this.Entity.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == this.accessData.DocumentLogic.MainArticleQuantityType).FirstOrDefault ();
 				}
 			}
 		}

@@ -25,9 +25,9 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 	/// <summary>
 	/// Ce contrôleur gère la définition de la description courte ou longue d'un article.
 	/// </summary>
-	public class ArticleDefinitionController : IEntitySpecialController
+	public class SpecialArticleDefinitionController : IEntitySpecialController
 	{
-		public ArticleDefinitionController(TileContainer tileContainer, ArticleDefinitionEntity articleEntity, int mode)
+		public SpecialArticleDefinitionController(TileContainer tileContainer, ArticleDefinitionEntity articleEntity, int mode)
 		{
 			this.tileContainer = tileContainer;
 			this.articleEntity = articleEntity;
@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 		{
 			protected override IEntitySpecialController Create(TileContainer container, ArticleDefinitionEntity entity, int mode)
 			{
-				return new ArticleDefinitionController (container, entity, mode);
+				return new SpecialArticleDefinitionController (container, entity, mode);
 			}
 		}
 

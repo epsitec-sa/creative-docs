@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		
 		private void CreateUIRightFrame(UIBuilder builder, FrameBox parent)
 		{
-			bool enable = this.accessData.BusinessLogic.IsArticleQuantityTypeEditionEnabled (this.Entity.QuantityColumn.QuantityType);
+			bool enable = this.accessData.DocumentLogic.IsArticleQuantityTypeEditionEnabled (this.Entity.QuantityColumn.QuantityType);
 
 			var topFrame = new FrameBox
 			{
@@ -165,9 +165,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			};
 
 			//	Met des boutons radio pour tous les types.
-			foreach (var type in this.accessData.BusinessLogic.EnabledArticleQuantityTypes)
+			foreach (var type in this.accessData.DocumentLogic.EnabledArticleQuantityTypes)
 			{
-				var entity = this.accessData.BusinessLogic.GetArticleQuantityColumnEntity (type);
+				var entity = this.accessData.DocumentLogic.GetArticleQuantityColumnEntity (type);
 
 				if (entity != null)
 				{
@@ -190,7 +190,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			widget.SelectedItemChanged += delegate
 			{
 				var key = widget.Items.GetValue (widget.SelectedItemIndex) as EnumKeyValues<ArticleQuantityType>;
-				var entity = this.accessData.BusinessLogic.GetArticleQuantityColumnEntity (key.Key);
+				var entity = this.accessData.DocumentLogic.GetArticleQuantityColumnEntity (key.Key);
 				if (entity != null)
 				{
 					this.Entity.QuantityColumn = entity;

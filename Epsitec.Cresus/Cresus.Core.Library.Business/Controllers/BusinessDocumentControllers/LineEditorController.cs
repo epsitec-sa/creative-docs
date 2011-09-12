@@ -140,7 +140,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			//	Met à jour le titre de l'éditeur.
 			FormattedText text = "";
-			Color color = (this.accessData.DocumentMetadataEntity.DocumentState == DocumentState.Inactive) ? Color.FromBrightness (0.8) : Color.FromName ("White");
+			Color color = (this.accessData.DocumentMetadata.DocumentState == DocumentState.Inactive) ? Color.FromBrightness (0.8) : Color.FromName ("White");
 
 			if (this.lineEditorController != null)
 			{

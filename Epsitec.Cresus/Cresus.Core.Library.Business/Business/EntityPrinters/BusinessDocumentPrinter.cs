@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 		{
 			var documentMetadata = this.businessContext.GetMasterEntity<DocumentMetadataEntity> ();
 			System.Diagnostics.Debug.Assert (documentMetadata != null);
-			this.businessLogic = new BusinessLogic (this.businessContext as BusinessContext, documentMetadata);
+			this.documentLogic = new DocumentLogic (this.businessContext as BusinessContext, documentMetadata);
 
 			this.columnsWithoutRightBorder = new List<TableColumnKeys> ();
 		}
@@ -289,7 +289,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 			//	Construit une fois pour toutes les accesseurs au contenu.
 			var lines = this.ContentLines;
-			var accessors = new List<DocumentItemAccessor> (DocumentItemAccessor.CreateAccessors (this.Metadata, this.businessLogic, this.DocumentItemAccessorMode, lines));
+			var accessors = new List<DocumentItemAccessor> (DocumentItemAccessor.CreateAccessors (this.Metadata, this.documentLogic, this.DocumentItemAccessorMode, lines));
 
 			//	Première passe pour déterminer le nombre le lignes du tableau ainsi que
 			//	les colonnes visibles.
@@ -1399,7 +1399,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 		protected static readonly Font				font = Font.GetFont ("Arial", "Regular");
 		protected static readonly double			reportHeight = 7.0;
 
-		protected readonly BusinessLogic			businessLogic;
+		protected readonly DocumentLogic			documentLogic;
 		protected readonly List<TableColumnKeys>	columnsWithoutRightBorder;
 
 		private TableBand							table;

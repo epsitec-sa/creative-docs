@@ -24,9 +24,9 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 	/// <summary>
 	/// Ce contrôleur gère la définition des paramètres d'un article.
 	/// </summary>
-	public class ArticleParameterListEnumValuesController : IEntitySpecialController
+	public class SpecialArticleParameterListEnumValuesController : IEntitySpecialController
 	{
-		public ArticleParameterListEnumValuesController(TileContainer tileContainer, EnumValueArticleParameterDefinitionEntity parameterEntity)
+		public SpecialArticleParameterListEnumValuesController(TileContainer tileContainer, EnumValueArticleParameterDefinitionEntity parameterEntity)
 		{
 			this.tileContainer = tileContainer;
 			this.parameterEntity = parameterEntity;
@@ -411,7 +411,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 		{
 			protected override IEntitySpecialController Create(TileContainer container, EnumValueArticleParameterDefinitionEntity entity, int mode)
 			{
-				return new ArticleParameterListEnumValuesController (container, entity);
+				return new SpecialArticleParameterListEnumValuesController (container, entity);
 			}
 		}
 

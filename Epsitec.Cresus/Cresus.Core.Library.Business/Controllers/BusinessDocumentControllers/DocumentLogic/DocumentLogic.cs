@@ -25,9 +25,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
-	public class BusinessLogic
+	public sealed class DocumentLogic
 	{
-		public BusinessLogic(IBusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
+		public DocumentLogic(IBusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
 		{
 			this.businessContext        = businessContext as BusinessContext;
 			this.documentMetadataEntity = documentMetadataEntity;
@@ -314,7 +314,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//		DeliveryNote
 			//		Invoice
 			//		PaymentReminder
-			var types = BusinessLogic.ParentDocumentTypes.Where (x => x.Contains (type)).FirstOrDefault ();
+			var types = DocumentLogic.ParentDocumentTypes.Where (x => x.Contains (type)).FirstOrDefault ();
 
 			if (types == null)
 			{
@@ -335,8 +335,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				yield return BusinessLogic.ParentDocumentTypes1;
-				yield return BusinessLogic.ParentDocumentTypes2;
+				yield return DocumentLogic.ParentDocumentTypes1;
+				yield return DocumentLogic.ParentDocumentTypes2;
 			}
 		}
 
@@ -362,17 +362,17 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		};
 
 		#region Auto-test
-		static BusinessLogic()
+		static DocumentLogic()
 		{
 			//	Le constructeur statique est utilisé pour effectuer un auto-test à chaque exécution !
-			System.Diagnostics.Debug.Assert (BusinessLogic.Compare (BusinessLogic.GetProcessParentDocumentTypes (DocumentType.SalesQuote)));
-			System.Diagnostics.Debug.Assert (BusinessLogic.Compare (BusinessLogic.GetProcessParentDocumentTypes (DocumentType.OrderBooking),                                                                                                                DocumentType.SalesQuote));
-			System.Diagnostics.Debug.Assert (BusinessLogic.Compare (BusinessLogic.GetProcessParentDocumentTypes (DocumentType.OrderConfirmation),                                                                                DocumentType.OrderBooking, DocumentType.SalesQuote));
-			System.Diagnostics.Debug.Assert (BusinessLogic.Compare (BusinessLogic.GetProcessParentDocumentTypes (DocumentType.ProductionOrder),                                                  DocumentType.OrderConfirmation, DocumentType.OrderBooking, DocumentType.SalesQuote));
-			System.Diagnostics.Debug.Assert (BusinessLogic.Compare (BusinessLogic.GetProcessParentDocumentTypes (DocumentType.ProductionChecklist),                DocumentType.ProductionOrder, DocumentType.OrderConfirmation, DocumentType.OrderBooking, DocumentType.SalesQuote));
-			System.Diagnostics.Debug.Assert (BusinessLogic.Compare (BusinessLogic.GetProcessParentDocumentTypes (DocumentType.DeliveryNote),                                                     DocumentType.OrderConfirmation, DocumentType.OrderBooking, DocumentType.SalesQuote));
-			System.Diagnostics.Debug.Assert (BusinessLogic.Compare (BusinessLogic.GetProcessParentDocumentTypes (DocumentType.Invoice),                               DocumentType.DeliveryNote, DocumentType.OrderConfirmation, DocumentType.OrderBooking, DocumentType.SalesQuote));
-			System.Diagnostics.Debug.Assert (BusinessLogic.Compare (BusinessLogic.GetProcessParentDocumentTypes (DocumentType.PaymentReminder), DocumentType.Invoice, DocumentType.DeliveryNote, DocumentType.OrderConfirmation, DocumentType.OrderBooking, DocumentType.SalesQuote));
+			System.Diagnostics.Debug.Assert (DocumentLogic.Compare (DocumentLogic.GetProcessParentDocumentTypes (DocumentType.SalesQuote)));
+			System.Diagnostics.Debug.Assert (DocumentLogic.Compare (DocumentLogic.GetProcessParentDocumentTypes (DocumentType.OrderBooking),                                                                                                                DocumentType.SalesQuote));
+			System.Diagnostics.Debug.Assert (DocumentLogic.Compare (DocumentLogic.GetProcessParentDocumentTypes (DocumentType.OrderConfirmation),                                                                                DocumentType.OrderBooking, DocumentType.SalesQuote));
+			System.Diagnostics.Debug.Assert (DocumentLogic.Compare (DocumentLogic.GetProcessParentDocumentTypes (DocumentType.ProductionOrder),                                                  DocumentType.OrderConfirmation, DocumentType.OrderBooking, DocumentType.SalesQuote));
+			System.Diagnostics.Debug.Assert (DocumentLogic.Compare (DocumentLogic.GetProcessParentDocumentTypes (DocumentType.ProductionChecklist),                DocumentType.ProductionOrder, DocumentType.OrderConfirmation, DocumentType.OrderBooking, DocumentType.SalesQuote));
+			System.Diagnostics.Debug.Assert (DocumentLogic.Compare (DocumentLogic.GetProcessParentDocumentTypes (DocumentType.DeliveryNote),                                                     DocumentType.OrderConfirmation, DocumentType.OrderBooking, DocumentType.SalesQuote));
+			System.Diagnostics.Debug.Assert (DocumentLogic.Compare (DocumentLogic.GetProcessParentDocumentTypes (DocumentType.Invoice),                               DocumentType.DeliveryNote, DocumentType.OrderConfirmation, DocumentType.OrderBooking, DocumentType.SalesQuote));
+			System.Diagnostics.Debug.Assert (DocumentLogic.Compare (DocumentLogic.GetProcessParentDocumentTypes (DocumentType.PaymentReminder), DocumentType.Invoice, DocumentType.DeliveryNote, DocumentType.OrderConfirmation, DocumentType.OrderBooking, DocumentType.SalesQuote));
 		}
 
 		private static bool Compare(IEnumerable<DocumentType> types1, params DocumentType[] types2)

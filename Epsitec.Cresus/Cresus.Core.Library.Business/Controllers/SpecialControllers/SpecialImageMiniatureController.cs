@@ -25,9 +25,9 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 	/// <summary>
 	/// Ce contrôleur affiche une miniature d'une image bitmap.
 	/// </summary>
-	public class ImageMiniatureController : IEntitySpecialController
+	public class SpecialImageMiniatureController : IEntitySpecialController
 	{
-		public ImageMiniatureController(TileContainer tileContainer, ImageBlobEntity imageBlobEntity)
+		public SpecialImageMiniatureController(TileContainer tileContainer, ImageBlobEntity imageBlobEntity)
 		{
 			this.tileContainer = tileContainer;
 			this.imageBlobEntity = imageBlobEntity;
@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 		{
 			protected override IEntitySpecialController Create(TileContainer container, ImageBlobEntity entity, int mode)
 			{
-				return new ImageMiniatureController (container, entity);
+				return new SpecialImageMiniatureController (container, entity);
 			}
 		}
 

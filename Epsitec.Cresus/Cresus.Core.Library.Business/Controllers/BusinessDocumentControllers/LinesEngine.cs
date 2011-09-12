@@ -18,11 +18,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 	/// </summary>
 	public class LinesEngine
 	{
-		public LinesEngine(BusinessContext businessContext, BusinessDocumentEntity businessDocumentEntity, BusinessLogic businessLogic)
+		public LinesEngine(BusinessContext businessContext, BusinessDocumentEntity businessDocument, DocumentLogic documentLogic)
 		{
-			this.businessContext        = businessContext;
-			this.businessDocumentEntity = businessDocumentEntity;
-			this.businessLogic          = businessLogic;
+			this.businessContext  = businessContext;
+			this.businessDocument = businessDocument;
+			this.documentLogic    = documentLogic;
 		}
 
 
@@ -48,8 +48,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 			else
 			{
-				index = this.businessDocumentEntity.Lines.IndexOf (selection.Last ().AbstractDocumentItemEntity) + 1;
-				model = this.businessDocumentEntity.Lines[System.Math.Max (0, index-1)];
+				index = this.businessDocument.Lines.IndexOf (selection.Last ().AbstractDocumentItemEntity) + 1;
+				model = this.businessDocument.Lines[System.Math.Max (0, index-1)];
 
 				//	Make sure we don't select an insertion position in the top level group, as
 				//	it is reserved for discounts and taxes, and not for standard articles.
@@ -65,11 +65,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 						break;
 					}
 
-					model = this.businessDocumentEntity.Lines[index-1];
+					model = this.businessDocument.Lines[index-1];
 				}
 			}
 
-			var articleQuantityType = this.businessLogic.MainArticleQuantityType;
+			var articleQuantityType = this.documentLogic.MainArticleQuantityType;
 
 			if (articleQuantityType == ArticleQuantityType.None)
 			{
@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			newLine.GroupIndex = isTax ? 0 : ((model == null) ? 1 : model.GroupIndex);
 			newLine.ArticleQuantities.Add (newQuantity);
 
-			this.businessDocumentEntity.Lines.Insert (index, newLine);
+			this.businessDocument.Lines.Insert (index, newLine);
 
 			this.lastError = LinesError.OK;
 			return LinesEngine.MakeSingleSelection (new LineInformations (null, newLine, null, 0));
@@ -123,7 +123,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			//	Utilise le premier type de la liste de BusinessLogic.
-			ArticleQuantityType quantityType = this.businessLogic.EnabledArticleQuantityTypes.FirstOrDefault ();
+			ArticleQuantityType quantityType = this.documentLogic.EnabledArticleQuantityTypes.FirstOrDefault ();
 			var quantityColumnEntity = this.SearchArticleQuantityColumnEntity (quantityType);
 
 			if (quantityColumnEntity == null)
@@ -172,8 +172,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 			else
 			{
-				index = this.businessDocumentEntity.Lines.IndexOf (selection.Last ().AbstractDocumentItemEntity) + 1;
-				model = this.businessDocumentEntity.Lines[index-1];
+				index = this.businessDocument.Lines.IndexOf (selection.Last ().AbstractDocumentItemEntity) + 1;
+				model = this.businessDocument.Lines[index-1];
 			}
 
 			var newLine = this.businessContext.CreateEntity<TextDocumentItemEntity> ();
@@ -184,14 +184,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			//	Si la logique d'entreprise dit qu'on édite que les textes internes, met directement la bonne coche.
-			if (this.businessLogic.IsMyEyesOnlyEditionEnabled)
+			if (this.documentLogic.IsMyEyesOnlyEditionEnabled)
 			{
 				newLine.Attributes = DocumentItemAttributes.MyEyesOnly;
 			}
 
 			newLine.GroupIndex = (model == null) ? 1 : model.GroupIndex;
 
-			this.businessDocumentEntity.Lines.Insert (index, newLine);
+			this.businessDocument.Lines.Insert (index, newLine);
 
 			this.lastError = LinesError.OK;
 			return LinesEngine.MakeSingleSelection (new LineInformations (null, newLine, null, 0));
@@ -209,14 +209,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 			else
 			{
-				index = this.businessDocumentEntity.Lines.IndexOf (selection.Last ().AbstractDocumentItemEntity) + 1;
-				model = this.businessDocumentEntity.Lines[index-1];
+				index = this.businessDocument.Lines.IndexOf (selection.Last ().AbstractDocumentItemEntity) + 1;
+				model = this.businessDocument.Lines[index-1];
 			}
 
 			var newLine = this.businessContext.CreateEntity<SubTotalDocumentItemEntity> ();
 			newLine.GroupIndex = (model == null) ? 1 : model.GroupIndex;
 
-			this.businessDocumentEntity.Lines.Insert (index, newLine);
+			this.businessDocument.Lines.Insert (index, newLine);
 
 			this.lastError = LinesError.OK;
 			return LinesEngine.MakeSingleSelection (new LineInformations (null, newLine, null, 0));
@@ -234,13 +234,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 			else
 			{
-				index = this.businessDocumentEntity.Lines.IndexOf (selection.Last ().AbstractDocumentItemEntity) + 1;
+				index = this.businessDocument.Lines.IndexOf (selection.Last ().AbstractDocumentItemEntity) + 1;
 			}
 
-			var line = this.businessDocumentEntity.Lines[index];
+			var line = this.businessDocument.Lines[index];
 
 			//	Crée l'arbre à partie des lignes du document.
-			var tree = new TreeEngine (this.businessDocumentEntity);
+			var tree = new TreeEngine (this.businessDocument);
 
 			//	Crée le nouveau noeud qui contiendra le titre.
 			var group = new TreeNode ();
@@ -286,7 +286,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			//	Crée l'arbre à partie des lignes du document.
-			var tree = new TreeEngine (this.businessDocumentEntity);
+			var tree = new TreeEngine (this.businessDocument);
 
 			var leaf = tree.Search (selection[0].AbstractDocumentItemEntity);
 			var flat = tree.FlatLeafs;
@@ -421,7 +421,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			var info = selection[0];
 			var line = info.AbstractDocumentItemEntity;
-			var index = this.businessDocumentEntity.Lines.IndexOf (line);
+			var index = this.businessDocument.Lines.IndexOf (line);
 
 			if (index == -1)
 			{
@@ -436,7 +436,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			var copy = line.CloneEntity (this.businessContext);
-			this.businessDocumentEntity.Lines.Insert (index+1, copy);
+			this.businessDocument.Lines.Insert (index+1, copy);
 
 			this.lastError = LinesError.OK;
 			return LinesEngine.MakeSingleSelection (new LineInformations (null, copy, null, 0));
@@ -472,7 +472,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					var line     = info.AbstractDocumentItemEntity;
 					var quantity = info.ArticleQuantityEntity;
 
-					last = this.businessDocumentEntity.Lines.IndexOf (line);
+					last = this.businessDocument.Lines.IndexOf (line);
 
 					if (info.IsQuantity)  // quantité ?
 					{
@@ -481,15 +481,15 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					}
 					else
 					{
-						this.businessDocumentEntity.Lines.Remove (line);
+						this.businessDocument.Lines.Remove (line);
 					}
 				}
 			}
 
 			this.lastError = LinesError.OK;
 
-			last = System.Math.Min (last, this.businessDocumentEntity.Lines.Count-1);
-			var lineToSelect = this.businessDocumentEntity.Lines[last];
+			last = System.Math.Min (last, this.businessDocument.Lines.Count-1);
+			var lineToSelect = this.businessDocument.Lines[last];
 			return LinesEngine.MakeSingleSelection (new LineInformations (null, lineToSelect, null, 0));
 		}
 
@@ -528,7 +528,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			//	Crée l'arbre à partie des lignes du document.
-			var tree = new TreeEngine (this.businessDocumentEntity);
+			var tree = new TreeEngine (this.businessDocument);
 
 			//	Crée le nouveau noeud qui regroupera les lignes sélectionnées.
 			var group = new TreeNode ();
@@ -597,7 +597,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			//	Crée l'arbre à partie des lignes du document.
-			var tree = new TreeEngine (this.businessDocumentEntity);
+			var tree = new TreeEngine (this.businessDocument);
 
 			var firstLeaf = tree.Search (rootEntity);
 			var group = firstLeaf.Parent;
@@ -655,7 +655,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			//	Crée l'arbre à partie des lignes du document.
-			var tree = new TreeEngine (this.businessDocumentEntity);
+			var tree = new TreeEngine (this.businessDocument);
 
 			var firstLeaf = tree.Search (selection[0].AbstractDocumentItemEntity);
 			var group = firstLeaf.Parent;
@@ -713,7 +713,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			//	Crée l'arbre à partie des lignes du document.
-			var tree = new TreeEngine (this.businessDocumentEntity);
+			var tree = new TreeEngine (this.businessDocument);
 
 			var firstLeaf = tree.Search (selection[0].AbstractDocumentItemEntity);
 			var group = firstLeaf.Parent;
@@ -766,7 +766,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			using (this.businessContext.SuspendUpdates ())
 			{
-				foreach (var line in this.businessDocumentEntity.Lines)
+				foreach (var line in this.businessDocument.Lines)
 				{
 					if (line.GroupIndex > 1)
 					{
@@ -934,7 +934,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				bool enable = false;
 
-				foreach (var line in this.businessDocumentEntity.Lines)
+				foreach (var line in this.businessDocument.Lines)
 				{
 					if (line.GroupIndex > 1)
 					{
@@ -952,7 +952,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Indique si la sélection est compatible avec les contraintes de la logique d'entreprise.
 			foreach (var info in selection)
 			{
-				if (!this.businessLogic.IsEditionEnabled (info))
+				if (!this.documentLogic.IsEditionEnabled (info))
 				{
 					return false;
 				}
@@ -1063,24 +1063,24 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			i--;
-			var g = this.businessDocumentEntity.Lines[i].GroupIndex;
+			var g = this.businessDocument.Lines[i].GroupIndex;
 
-			while (i >= 0 && g == this.businessDocumentEntity.Lines[i].GroupIndex)
+			while (i >= 0 && g == this.businessDocument.Lines[i].GroupIndex)
 			{
 				i--;
 			}
 
 			i++;
-			model = this.businessDocumentEntity.Lines[i];
+			model = this.businessDocument.Lines[i];
 			return i;
 		}
 
 		private int GetDefaultArticleInsertionIndex(out AbstractDocumentItemEntity model, bool skipGroupZero = false)
 		{
 			//	Retourne l'index par défaut où insérer un article.
-			for (int i = this.businessDocumentEntity.Lines.Count-1; i >= 0; i--)
+			for (int i = this.businessDocument.Lines.Count-1; i >= 0; i--)
 			{
-				var line = this.businessDocumentEntity.Lines[i];
+				var line = this.businessDocument.Lines[i];
 
 				if (skipGroupZero && line.GroupIndex == 0)
 				{
@@ -1090,18 +1090,18 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				if (line is ArticleDocumentItemEntity ||
 					line is TextDocumentItemEntity)
 				{
-					model = this.businessDocumentEntity.Lines[i];
+					model = this.businessDocument.Lines[i];
 					return i+1;
 				}
 			}
 
-			if (this.businessDocumentEntity.Lines.Count == 0)
+			if (this.businessDocument.Lines.Count == 0)
 			{
 				model = null;
 			}
 			else
 			{
-				model = this.businessDocumentEntity.Lines[0];
+				model = this.businessDocument.Lines[0];
 
 				if (skipGroupZero && model.GroupIndex == 0)
 				{
@@ -1136,8 +1136,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private static readonly string titlePostfixTags = "</b></font>";
 
 		private readonly BusinessContext				businessContext;
-		private readonly BusinessDocumentEntity			businessDocumentEntity;
-		private readonly BusinessLogic					businessLogic;
+		private readonly BusinessDocumentEntity			businessDocument;
+		private readonly DocumentLogic					documentLogic;
 
 		private LinesError								lastError;
 	}

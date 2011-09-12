@@ -7,8 +7,6 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Documents;
-using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Widgets;
@@ -24,14 +22,14 @@ using Epsitec.Cresus.Core.Factories;
 namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 {
 	/// <summary>
-	/// Ce contrôleur permet de choisir les options d'impression à éditer, et de les éditer.
+	/// Ce contrôleur permet de choisir les plans comptables.
 	/// </summary>
-	public class DocumentOptionsController : IEntitySpecialController
+	public class SpecialChartsOfAccountsController : IEntitySpecialController
 	{
-		public DocumentOptionsController(TileContainer tileContainer, DocumentOptionsEntity documentOptionsEntity)
+		public SpecialChartsOfAccountsController(TileContainer tileContainer, FinanceSettingsEntity financeSettingsEntity)
 		{
 			this.tileContainer = tileContainer;
-			this.documentOptionsEntity = documentOptionsEntity;
+			this.financeSettingsEntity = financeSettingsEntity;
 		}
 
 
@@ -39,31 +37,25 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 		{
 			this.isReadOnly = isReadOnly;
 
-			var box = new FrameBox
-			{
-				Parent = parent,
-				Dock = DockStyle.Fill,
-			};
-
 			var controller = this.tileContainer.Controller as EntityViewController;
 			var businessContext = controller.BusinessContext;
 
-			var c = new Cresus.Core.DocumentOptionsController.DocumentOptionsController (businessContext, this.documentOptionsEntity);
-			c.CreateUI (box);
+			var charts = new ComplexControllers.ChartsOfAccountsController (businessContext, this.financeSettingsEntity);
+			charts.CreateUI (parent);
 		}
 
 
-		private class Factory : DefaultEntitySpecialControllerFactory<DocumentOptionsEntity>
+		private class Factory : DefaultEntitySpecialControllerFactory<FinanceSettingsEntity>
 		{
-			protected override IEntitySpecialController Create(TileContainer container, DocumentOptionsEntity entity, int mode)
+			protected override IEntitySpecialController Create(TileContainer container, FinanceSettingsEntity entity, int mode)
 			{
-				return new DocumentOptionsController (container, entity);
+				return new SpecialChartsOfAccountsController (container, entity);
 			}
 		}
 
 	
 		private readonly TileContainer tileContainer;
-		private readonly DocumentOptionsEntity documentOptionsEntity;
+		private readonly FinanceSettingsEntity financeSettingsEntity;
 
 		private bool isReadOnly;
 	}

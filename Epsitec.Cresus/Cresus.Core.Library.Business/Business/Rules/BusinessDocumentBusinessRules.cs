@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 
 		private static DocumentMetadataEntity FindSourceDocument(IBusinessContext businessContext, AffairEntity activeAffair, int activeVariantId, DocumentType sourceDocumentType)
 		{
-			var documentTypes = new HashSet<DocumentType> (BusinessLogic.GetProcessParentDocumentTypes (sourceDocumentType));
+			var documentTypes = new HashSet<DocumentType> (DocumentLogic.GetProcessParentDocumentTypes (sourceDocumentType));
 
 			//	Cherche le document source à utiliser comme modèle.
 			var sourceDocuments = from document in activeAffair.Documents.Reverse ()

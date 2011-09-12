@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Dock = DockStyle.Fill,
 				Padding = new Margins (10),
 				TabIndex = this.NextTabIndex,
-				Enable = this.accessData.BusinessLogic.IsPriceEditionEnabled,
+				Enable = this.accessData.DocumentLogic.IsPriceEditionEnabled,
 			};
 
 			var line1 = new FrameBox

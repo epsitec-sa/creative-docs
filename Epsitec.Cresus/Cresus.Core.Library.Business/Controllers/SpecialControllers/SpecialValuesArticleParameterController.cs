@@ -28,9 +28,9 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 	/// Ce contrôleur gère l'ensemble de la saisie des valeurs des articles paramétrés (donc pour tous
 	/// les paramètres de l'article concerné).
 	/// </summary>
-	public class ValuesArticleParameterController : IEntitySpecialController
+	public class SpecialValuesArticleParameterController : IEntitySpecialController
 	{
-		public ValuesArticleParameterController(TileContainer tileContainer, OptionValueEntity optionValueEntity)
+		public SpecialValuesArticleParameterController(TileContainer tileContainer, OptionValueEntity optionValueEntity)
 		{
 			this.tileContainer = tileContainer;
 			this.optionValueEntity = optionValueEntity;
@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 		{
 			protected override IEntitySpecialController Create(TileContainer container, OptionValueEntity entity, int mode)
 			{
-				return new ValuesArticleParameterController (container, entity);
+				return new SpecialValuesArticleParameterController (container, entity);
 			}
 		}
 

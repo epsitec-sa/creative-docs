@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 	/// </summary>
 	public sealed class DocumentItemAccessor
 	{
-		private DocumentItemAccessor(DocumentMetadataEntity documentMetadata, BusinessLogic businessLogic, IncrementalNumberGenerator numberGenerator,
+		private DocumentItemAccessor(DocumentMetadataEntity documentMetadata, DocumentLogic documentLogic, IncrementalNumberGenerator numberGenerator,
 			DocumentItemAccessorMode mode, AbstractDocumentItemEntity item, int groupIndex)
 		{
 			this.content           = new Dictionary<int, FormattedText> ();
@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 			this.documentMetadata  = documentMetadata;
 			this.businessDocument  = documentMetadata.BusinessDocument as BusinessDocumentEntity;
-			this.businessLogic     = businessLogic;
+			this.documentLogic     = documentLogic;
 			this.numberGenerator   = numberGenerator;
 			this.item              = item;
 			this.groupIndex        = groupIndex;
@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		}
 
 		
-		public static IEnumerable<DocumentItemAccessor> CreateAccessors(DocumentMetadataEntity documentMetadata, BusinessLogic businessLogic, DocumentItemAccessorMode mode, IEnumerable<DocumentAccessorContentLine> lines)
+		public static IEnumerable<DocumentItemAccessor> CreateAccessors(DocumentMetadataEntity documentMetadata, DocumentLogic documentLogic, DocumentItemAccessorMode mode, IEnumerable<DocumentAccessorContentLine> lines)
 		{
 			DocumentItemAccessor.EnsureValidMode (mode);
 			
@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 			foreach (var line in lines)
 			{
-				yield return new DocumentItemAccessor (documentMetadata, businessLogic, numberGenerator, mode, line.Line, line.GroupIndex);
+				yield return new DocumentItemAccessor (documentMetadata, documentLogic, numberGenerator, mode, line.Line, line.GroupIndex);
 			}
 		}
 
@@ -315,7 +315,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			//	Utilise les colonnes MainQuantity/MainUnit
 			
 			//	Génère la quantité principale.
-			var quantityTypes = this.businessLogic.PrintableArticleQuantityTypes;
+			var quantityTypes = this.documentLogic.PrintableArticleQuantityTypes;
 			var mainQuantityType = ArticleQuantityType.None;
 			int row = 0;
 
@@ -760,7 +760,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		private readonly BusinessDocumentEntity						businessDocument;
 		private readonly DocumentType								type;
 		private readonly BillingMode								billingMode;
-		private readonly BusinessLogic								businessLogic;
+		private readonly DocumentLogic								documentLogic;
 		private readonly IncrementalNumberGenerator					numberGenerator;
 		private readonly Dictionary<int, FormattedText>				content;
 		private readonly Dictionary<int, DocumentItemAccessorError>	errors;

@@ -61,13 +61,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Tient compte de la logique d'entreprise.
 			bool myEyesOnly = this.Entity.Attributes.HasFlag (DocumentItemAttributes.MyEyesOnly);
 
-			if (!this.accessData.BusinessLogic.IsTextEditionEnabled)
+			if (!this.accessData.DocumentLogic.IsTextEditionEnabled)
 			{
 				leftFrame.Enable = false;
 				rightFrame.Enable = false;
 			}
 
-			if (this.accessData.BusinessLogic.IsMyEyesOnlyEditionEnabled)
+			if (this.accessData.DocumentLogic.IsMyEyesOnlyEditionEnabled)
 			{
 				leftFrame.Enable = myEyesOnly;
 				rightFrame.Enable = false;

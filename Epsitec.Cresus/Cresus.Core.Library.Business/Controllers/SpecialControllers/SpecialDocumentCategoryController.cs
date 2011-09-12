@@ -21,15 +21,12 @@ using Epsitec.Cresus.Core.Factories;
 
 namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 {
-	/// <summary>
-	/// Ce contrôleur permet d'éditer une tablle de prix.
-	/// </summary>
-	public class TableDesignerController : IEntitySpecialController
+	public class SpecialDocumentCategoryController : IEntitySpecialController
 	{
-		public TableDesignerController(TileContainer tileContainer, PriceCalculatorEntity priceCalculatorEntity)
+		public SpecialDocumentCategoryController(TileContainer tileContainer, DocumentCategoryEntity documentCategoryEntity)
 		{
 			this.tileContainer = tileContainer;
-			this.priceCalculatorEntity = priceCalculatorEntity;
+			this.documentCategoryEntity = documentCategoryEntity;
 		}
 
 
@@ -45,27 +42,23 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 
 			var controller = this.tileContainer.Controller as EntityViewController;
 			var businessContext = controller.BusinessContext;
-			var orchestrator = controller.Orchestrator;
 
-			var articleDefinition = businessContext.GetMasterEntity<ArticleDefinitionEntity> ();
-			System.Diagnostics.Debug.Assert (articleDefinition != null);
-
-			var c = new Epsitec.Cresus.Core.TableDesigner.TableDesignerController (orchestrator, businessContext, this.priceCalculatorEntity, articleDefinition);
+			var c = new Cresus.Core.DocumentCategoryController.DocumentCategoryController (businessContext, this.documentCategoryEntity);
 			c.CreateUI (box);
 		}
 
 
-		private class Factory : DefaultEntitySpecialControllerFactory<PriceCalculatorEntity>
+		private class Factory : DefaultEntitySpecialControllerFactory<DocumentCategoryEntity>
 		{
-			protected override IEntitySpecialController Create(TileContainer container, PriceCalculatorEntity entity, int mode)
+			protected override IEntitySpecialController Create(TileContainer container, DocumentCategoryEntity entity, int mode)
 			{
-				return new TableDesignerController (container, entity);
+				return new SpecialDocumentCategoryController (container, entity);
 			}
 		}
 
 	
 		private readonly TileContainer tileContainer;
-		private readonly PriceCalculatorEntity priceCalculatorEntity;
+		private readonly DocumentCategoryEntity documentCategoryEntity;
 
 		private bool isReadOnly;
 	}

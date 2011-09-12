@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.lineInformations = new List<LineInformations> ();
 			this.UpdateLineInformations ();
 
-			this.linesEngine = new LinesEngine (this.accessData.BusinessContext, this.accessData.BusinessDocumentEntity, this.accessData.BusinessLogic);
+			this.linesEngine = new LinesEngine (this.accessData.BusinessContext, this.accessData.BusinessDocument, this.accessData.DocumentLogic);
 		}
 
 		public void CreateUI(Widget parent)
@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			CommandContext.SetContext (frame, this.commandContext);
 
 			//	Crée la toolbar.
-			this.lineToolbarController = new LineToolbarController (this.accessData.CoreData, this.accessData.DocumentMetadataEntity, this.accessData.BusinessDocumentEntity);
+			this.lineToolbarController = new LineToolbarController (this.accessData.CoreData, this.accessData.DocumentMetadata, this.accessData.BusinessDocument);
 			var toolbarWidget = this.lineToolbarController.CreateUI (frame);
 			toolbarWidget.Visibility = BusinessDocumentLinesController.persistantShowToolbar;
 
@@ -506,9 +506,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				mode |= DocumentItemAccessorMode.EditArticleDescription;
 			}
 
-			var lines = this.accessData.BusinessDocumentEntity.Lines.Select (x => new DocumentAccessorContentLine (x));
+			var lines = this.accessData.BusinessDocument.Lines.Select (x => new DocumentAccessorContentLine (x));
 
-			foreach (var accessor in DocumentItemAccessor.CreateAccessors (this.accessData.DocumentMetadataEntity, this.accessData.BusinessLogic, mode, lines))
+			foreach (var accessor in DocumentItemAccessor.CreateAccessors (this.accessData.DocumentMetadata, this.accessData.DocumentLogic, mode, lines))
 			{
 				for (int row = 0; row < accessor.RowsCount; row++)
 				{
@@ -527,9 +527,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			var selection = this.Selection;
 
-			var isEditionEnabled    = this.accessData.BusinessLogic.IsLinesEditionEnabled;
-			var isQuantityEnabled   = this.accessData.BusinessLogic.IsArticleQuantityEditionEnabled;
-			var isMyEyesOnlyEnabled = this.accessData.BusinessLogic.IsMyEyesOnlyEditionEnabled;
+			var isEditionEnabled    = this.accessData.DocumentLogic.IsLinesEditionEnabled;
+			var isQuantityEnabled   = this.accessData.DocumentLogic.IsArticleQuantityEditionEnabled;
+			var isMyEyesOnlyEnabled = this.accessData.DocumentLogic.IsMyEyesOnlyEditionEnabled;
 
 			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateArticle,  isEditionEnabled);
 			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateQuantity, (isEditionEnabled || isQuantityEnabled) && this.linesEngine.IsCreateQuantityEnabled (selection));
@@ -664,7 +664,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.ViewFull   ).ActiveState = (value == ViewMode.Full   ) ? ActiveState.Yes : ActiveState.No;
 				this.commandContext.GetCommandState (Library.Business.Res.Commands.Lines.ViewDebug  ).ActiveState = (value == ViewMode.Debug  ) ? ActiveState.Yes : ActiveState.No;
 
-				this.accessData.BusinessLogic.IsDebug = (value == ViewMode.Debug);
+				this.accessData.DocumentLogic.IsDebug = (value == ViewMode.Debug);
 
 				BusinessDocumentLinesController.persistantViewMode = value;
 			}
