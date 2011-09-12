@@ -16,11 +16,11 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
 	/// <summary>
-	/// Check-list d'expédition.
+	/// Demande d'offre.
 	/// </summary>
-	public class ShipmentChecklistBusinessLogic : AbstractDocumentBusinessLogic
+	public class QuoteRequestDocumentLogic : AbstractDocumentLogic
 	{
-		public ShipmentChecklistBusinessLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
+		public QuoteRequestDocumentLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
 			: base (businessContext, documentMetadataEntity)
 		{
 		}
@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return false;
+				return true;
 			}
 		}
 
@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return false;
+				return true;
 			}
 		}
 
@@ -79,6 +79,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
+				yield return ArticleQuantityType.Billed;				// facturé
 				yield return ArticleQuantityType.Delayed;				// retardé
 				yield return ArticleQuantityType.Expected;				// attendu
 				yield return ArticleQuantityType.Shipped;				// livré

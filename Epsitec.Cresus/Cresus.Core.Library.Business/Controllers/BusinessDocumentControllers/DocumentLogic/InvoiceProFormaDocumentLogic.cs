@@ -16,11 +16,11 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
 	/// <summary>
-	/// Ordre de production.
+	/// Facture pro forma.
 	/// </summary>
-	public class ProductionOrderBusinessLogic : AbstractDocumentBusinessLogic
+	public class InvoiceProFormaDocumentLogic : AbstractDocumentLogic
 	{
-		public ProductionOrderBusinessLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
+		public InvoiceProFormaDocumentLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
 			: base (businessContext, documentMetadataEntity)
 		{
 		}
@@ -47,14 +47,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			get
 			{
 				return false;
-			}
-		}
-
-		public override bool IsMyEyesOnlyEditionEnabled
-		{
-			get
-			{
-				return true;
 			}
 		}
 
@@ -87,7 +79,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return null;
+				yield return ArticleQuantityType.Billed;				// facturé
 			}
 		}
 
@@ -95,10 +87,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				yield return ArticleQuantityType.Ordered;				// commandé
+				yield return ArticleQuantityType.Billed;				// facturé
 
 				yield return ArticleQuantityType.Delayed;				// retardé
 				yield return ArticleQuantityType.Expected;				// attendu
+				yield return ArticleQuantityType.Shipped;				// livré
+				yield return ArticleQuantityType.ShippedPreviously;		// livré précédemment
 			}
 		}
 	}

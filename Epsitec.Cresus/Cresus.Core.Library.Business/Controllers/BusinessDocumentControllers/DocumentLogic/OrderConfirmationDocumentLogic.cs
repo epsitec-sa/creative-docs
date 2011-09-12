@@ -16,11 +16,11 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
 	/// <summary>
-	/// Offre, devis.
+	/// Confirmation de commande.
 	/// </summary>
-	public class SalesQuoteBusinessLogic : AbstractDocumentBusinessLogic
+	public class OrderConfirmationDocumentLogic : AbstractDocumentLogic
 	{
-		public SalesQuoteBusinessLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
+		public OrderConfirmationDocumentLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
 			: base (businessContext, documentMetadataEntity)
 		{
 		}
@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return true;
+				return false;
 			}
 		}
 
@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return true;
+				return false;
 			}
 		}
 
@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return true;
+				return false;
 			}
 		}
 
@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return true;
+				return false;
 			}
 		}
 
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return ArticleQuantityType.Ordered;						// commandé
+				return ArticleQuantityType.None;
 			}
 		}
 

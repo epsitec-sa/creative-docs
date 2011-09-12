@@ -556,7 +556,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 					break;
 
 				case ArticleQuantityType.Billed:
-					if (!Controllers.BusinessDocumentControllers.InvoiceBusinessLogic.IsDirectInvoice (this.documentMetadata) &&
+					if (!Controllers.BusinessDocumentControllers.InvoiceDocumentLogic.IsDirectInvoice (this.documentMetadata) &&
 						billedQuantity > shippedQuantity)
 					{
 						return DocumentItemAccessorError.BilledQuantitiesTooHigh;

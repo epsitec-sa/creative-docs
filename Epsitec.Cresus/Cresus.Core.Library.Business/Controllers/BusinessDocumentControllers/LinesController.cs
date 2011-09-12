@@ -35,10 +35,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		public void CreateUI(Widget parent, System.Func<bool> selectionChanged)
+		public void CreateUI(Widget parent)
 		{
-			this.selectionChanged = selectionChanged;
-
 			var tile = new FrameBox
 			{
 				Parent = parent,
@@ -61,17 +59,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			this.table.SelectionChanged += delegate
 			{
-				this.selectionChanged();
+				this.OnSelectionChanged();
 			};
 		}
 
-		public void UpdateUI(ViewMode viewMode, EditMode editMode, int lineCount, System.Func<int, LineInformations> getLineInformations, System.Func<int, ColumnType, CellContent> getCellContent)
+		public void UpdateUI(ILineProvider provider)
 		{
-			this.viewMode            = viewMode;
-			this.editMode            = editMode;
-			this.lineCount           = lineCount;
-			this.getLineInformations = getLineInformations;
-			this.getCellContent      = getCellContent;
+			this.lineProvider        = provider;
+			this.viewMode            = provider.CurrentViewMode;
+			this.editMode            = provider.CurrentEditMode;
+			this.lineCount           = provider.Count;
 
 			int columns = this.ColumnTypes.Count ();
 
@@ -190,7 +187,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				if (changing)
 				{
-					this.selectionChanged ();
+					this.OnSelectionChanged ();
 				}
 			}
 		}
@@ -243,7 +240,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private void TableUpdateRow(int row)
 		{
 			//	Met à jour le contenu d'une ligne de la table.
-			var info = this.getLineInformations (row);
+			var info = this.lineProvider.GetLineInformations (row);
 
 			if (this.lastDocumentItemEntity != info.AbstractDocumentItemEntity)
 			{
@@ -265,7 +262,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			if (row < this.table.Rows-1)
 			{
-				var nextInfo = this.getLineInformations (row+1);
+				var nextInfo = this.lineProvider.GetLineInformations (row+1);
 
 				if (info.SublineIndex == nextInfo.SublineIndex-1)  // est-ce que la ligne suivante fait partie de la même entité ?
 				{
@@ -301,7 +298,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 						if (text != null)
 						{
-							var cellContent = this.getCellContent (row, columnType);
+							var cellContent = this.lineProvider.GetCellContent (row, columnType);
 
 							text.FormattedText = (cellContent == null) ? null : cellContent.Text.ToSimpleText ();
 
@@ -361,7 +358,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 			else
 			{
-				var info = this.getLineInformations (row-1);
+				var info = this.lineProvider.GetLineInformations (row-1);
 				displayer.TopGroupIndex = info.AbstractDocumentItemEntity.GroupIndex;
 			}
 
@@ -371,7 +368,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 			else
 			{
-				var info = this.getLineInformations (row+1);
+				var info = this.lineProvider.GetLineInformations (row+1);
 				displayer.BottomGroupIndex = info.AbstractDocumentItemEntity.GroupIndex;
 			}
 
@@ -684,21 +681,28 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 #endif
 		};
 
+
+		private void OnSelectionChanged()
+		{
+			this.SelectionChanged.Raise (this);
+		}
+		
+		
+		public event EventHandler SelectionChanged;
 	
+		
 		private static readonly double lineHeight = 17;
 
-		private readonly AccessData								accessData;
-		private readonly List<int>								colorIndexes;
+		private readonly AccessData				accessData;
+		private readonly List<int>				colorIndexes;
 
-		private CellTable										table;
-		private System.Func<bool>								selectionChanged;
-		private System.Func<int, LineInformations>				getLineInformations;
-		private System.Func<int, ColumnType, CellContent>		getCellContent;
-		private ViewMode										viewMode;
-		private EditMode										editMode;
-		private int												lineCount;
+		private CellTable						table;
+		private ILineProvider					lineProvider;
+		private ViewMode						viewMode;
+		private EditMode						editMode;
+		private int								lineCount;
 
-		private AbstractDocumentItemEntity						lastDocumentItemEntity;
-		private int												documentItemIndex;
+		private AbstractDocumentItemEntity		lastDocumentItemEntity;
+		private int								documentItemIndex;
 	}
 }

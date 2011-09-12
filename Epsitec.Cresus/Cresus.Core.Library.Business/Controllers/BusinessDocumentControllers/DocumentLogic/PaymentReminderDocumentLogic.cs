@@ -16,11 +16,11 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
 	/// <summary>
-	/// Reçu.
+	/// Rappel.
 	/// </summary>
-	public class ReceiptBusinessLogic : AbstractDocumentBusinessLogic
+	public class PaymentReminderDocumentLogic : AbstractDocumentLogic
 	{
-		public ReceiptBusinessLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
+		public PaymentReminderDocumentLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
 			: base (businessContext, documentMetadataEntity)
 		{
 		}
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return ArticleQuantityType.Ordered;						// commandé
+				return ArticleQuantityType.None;
 			}
 		}
 
@@ -79,12 +79,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				yield return ArticleQuantityType.Billed;				// facturé
-				yield return ArticleQuantityType.Delayed;				// retardé
-				yield return ArticleQuantityType.Expected;				// attendu
-				yield return ArticleQuantityType.Shipped;				// livré
-				yield return ArticleQuantityType.ShippedPreviously;		// livré précédemment
-				yield return ArticleQuantityType.Information;			// information
+				return null;
 			}
 		}
 

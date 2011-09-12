@@ -43,63 +43,63 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			switch (this.documentMetadataEntity.DocumentCategory.DocumentType)
 			{
 				case DocumentType.SalesQuote:
-					this.documentBusinessLogic = new SalesQuoteBusinessLogic (this.businessContext, this.documentMetadataEntity);
+					this.documentBusinessLogic = new SalesQuoteDocumentLogic (this.businessContext, this.documentMetadataEntity);
 					break;
 
 				case DocumentType.OrderConfiguration:
-					this.documentBusinessLogic = new OrderConfigurationBusinessLogic (this.businessContext, this.documentMetadataEntity);
+					this.documentBusinessLogic = new OrderConfigurationDocumentLogic (this.businessContext, this.documentMetadataEntity);
 					break;
 
 				case DocumentType.OrderBooking:
-					this.documentBusinessLogic = new OrderBookingBusinessLogic (this.businessContext, this.documentMetadataEntity);
+					this.documentBusinessLogic = new OrderBookingDocumentLogic (this.businessContext, this.documentMetadataEntity);
 					break;
 
 				case DocumentType.OrderConfirmation:
-					this.documentBusinessLogic = new OrderConfirmationBusinessLogic (this.businessContext, this.documentMetadataEntity);
+					this.documentBusinessLogic = new OrderConfirmationDocumentLogic (this.businessContext, this.documentMetadataEntity);
 					break;
 
 				case DocumentType.ProductionOrder:
-					this.documentBusinessLogic = new ProductionOrderBusinessLogic (this.businessContext, this.documentMetadataEntity);
+					this.documentBusinessLogic = new ProductionOrderDocumentLogic (this.businessContext, this.documentMetadataEntity);
 					break;
 
 				case DocumentType.ProductionChecklist:
-					this.documentBusinessLogic = new ProductionChecklistBusinessLogic (this.businessContext, this.documentMetadataEntity);
+					this.documentBusinessLogic = new ProductionChecklistDocumentLogic (this.businessContext, this.documentMetadataEntity);
 					break;
 
 				case DocumentType.ShipmentChecklist:
-					this.documentBusinessLogic = new ShipmentChecklistBusinessLogic (this.businessContext, this.documentMetadataEntity);
+					this.documentBusinessLogic = new ShipmentChecklistDocumentLogic (this.businessContext, this.documentMetadataEntity);
 					break;
 
 				case DocumentType.DeliveryNote:
-					this.documentBusinessLogic = new DeliveryNoteBusinessLogic (this.businessContext, this.documentMetadataEntity);
+					this.documentBusinessLogic = new DeliveryNoteDocumentLogic (this.businessContext, this.documentMetadataEntity);
 					break;
 
 				case DocumentType.Invoice:
-					this.documentBusinessLogic = new InvoiceBusinessLogic (this.businessContext, this.documentMetadataEntity);
+					this.documentBusinessLogic = new InvoiceDocumentLogic (this.businessContext, this.documentMetadataEntity);
 					break;
 
 				case DocumentType.InvoiceProForma:
-					this.documentBusinessLogic = new InvoiceProFormaBusinessLogic (this.businessContext, this.documentMetadataEntity);
+					this.documentBusinessLogic = new InvoiceProFormaDocumentLogic (this.businessContext, this.documentMetadataEntity);
 					break;
 
 				case DocumentType.PaymentReminder:
-					this.documentBusinessLogic = new PaymentReminderBusinessLogic (this.businessContext, this.documentMetadataEntity);
+					this.documentBusinessLogic = new PaymentReminderDocumentLogic (this.businessContext, this.documentMetadataEntity);
 					break;
 
 				case DocumentType.Receipt:
-					this.documentBusinessLogic = new ReceiptBusinessLogic (this.businessContext, this.documentMetadataEntity);
+					this.documentBusinessLogic = new ReceiptDocumentLogic (this.businessContext, this.documentMetadataEntity);
 					break;
 
 				case DocumentType.CreditMemo:
-					this.documentBusinessLogic = new CreditMemoBusinessLogic (this.businessContext, this.documentMetadataEntity);
+					this.documentBusinessLogic = new CreditMemoDocumentLogic (this.businessContext, this.documentMetadataEntity);
 					break;
 
 				case DocumentType.QuoteRequest:
-					this.documentBusinessLogic = new QuoteRequestBusinessLogic (this.businessContext, this.documentMetadataEntity);
+					this.documentBusinessLogic = new QuoteRequestDocumentLogic (this.businessContext, this.documentMetadataEntity);
 					break;
 
 				case DocumentType.PurchaseOrder:
-					this.documentBusinessLogic = new PurchaseOrderBusinessLogic (this.businessContext, this.documentMetadataEntity);
+					this.documentBusinessLogic = new PurchaseOrderDocumentLogic (this.businessContext, this.documentMetadataEntity);
 					break;
 			}
 
@@ -400,6 +400,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private readonly DocumentMetadataEntity						documentMetadataEntity;
 		private readonly IEnumerable<ArticleQuantityColumnEntity>	articleQuantityColumnEntities;
 
-		private AbstractDocumentBusinessLogic						documentBusinessLogic;
+		private AbstractDocumentLogic						documentBusinessLogic;
 	}
 }

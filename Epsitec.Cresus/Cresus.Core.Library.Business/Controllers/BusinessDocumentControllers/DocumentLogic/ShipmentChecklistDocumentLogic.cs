@@ -16,11 +16,11 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
 	/// <summary>
-	/// Check-list de production.
+	/// Check-list d'expédition.
 	/// </summary>
-	public class ProductionChecklistBusinessLogic : AbstractDocumentBusinessLogic
+	public class ShipmentChecklistDocumentLogic : AbstractDocumentLogic
 	{
-		public ProductionChecklistBusinessLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
+		public ShipmentChecklistDocumentLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
 			: base (businessContext, documentMetadataEntity)
 		{
 		}
@@ -43,14 +43,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 		public override bool IsTextEditionEnabled
-		{
-			get
-			{
-				return false;
-			}
-		}
-
-		public override bool IsMyEyesOnlyEditionEnabled
 		{
 			get
 			{
@@ -79,7 +71,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return ArticleQuantityType.None;
+				return ArticleQuantityType.Ordered;						// commandé
 			}
 		}
 
@@ -87,7 +79,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return null;
+				yield return ArticleQuantityType.Delayed;				// retardé
+				yield return ArticleQuantityType.Expected;				// attendu
+				yield return ArticleQuantityType.Shipped;				// livré
+				yield return ArticleQuantityType.ShippedPreviously;		// livré précédemment
+				yield return ArticleQuantityType.Information;			// information
 			}
 		}
 
@@ -97,8 +93,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				yield return ArticleQuantityType.Ordered;				// commandé
 
+				yield return ArticleQuantityType.Billed;				// facturé
 				yield return ArticleQuantityType.Delayed;				// retardé
 				yield return ArticleQuantityType.Expected;				// attendu
+				yield return ArticleQuantityType.Shipped;				// livré
+				yield return ArticleQuantityType.ShippedPreviously;		// livré précédemment
 			}
 		}
 	}

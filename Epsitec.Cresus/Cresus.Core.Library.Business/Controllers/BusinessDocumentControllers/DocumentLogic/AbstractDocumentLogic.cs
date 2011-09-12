@@ -15,9 +15,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
-	public abstract class AbstractDocumentBusinessLogic
+	public abstract class AbstractDocumentLogic
 	{
-		public AbstractDocumentBusinessLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
+		public AbstractDocumentLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
 		{
 			this.businessContext        = businessContext;
 			this.documentMetadataEntity = documentMetadataEntity;

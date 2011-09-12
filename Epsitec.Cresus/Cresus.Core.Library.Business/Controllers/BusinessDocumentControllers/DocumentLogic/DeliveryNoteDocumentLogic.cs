@@ -18,9 +18,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 	/// <summary>
 	/// Bulletin de livraison.
 	/// </summary>
-	public class DeliveryNoteBusinessLogic : AbstractDocumentBusinessLogic
+	public class DeliveryNoteDocumentLogic : AbstractDocumentLogic
 	{
-		public DeliveryNoteBusinessLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
+		public DeliveryNoteDocumentLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
 			: base (businessContext, documentMetadataEntity)
 		{
 		}

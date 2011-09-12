@@ -16,11 +16,11 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
 	/// <summary>
-	/// Choix des options pour commande.
+	/// Check-list de production.
 	/// </summary>
-	public class OrderConfigurationBusinessLogic : AbstractDocumentBusinessLogic
+	public class ProductionChecklistDocumentLogic : AbstractDocumentLogic
 	{
-		public OrderConfigurationBusinessLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
+		public ProductionChecklistDocumentLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
 			: base (businessContext, documentMetadataEntity)
 		{
 		}
@@ -38,11 +38,19 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return true;
+				return false;
 			}
 		}
 
 		public override bool IsTextEditionEnabled
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+		public override bool IsMyEyesOnlyEditionEnabled
 		{
 			get
 			{
@@ -54,7 +62,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return true;
+				return false;
 			}
 		}
 
@@ -62,7 +70,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return true;
+				return false;
 			}
 		}
 
@@ -79,8 +87,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				yield return ArticleQuantityType.Delayed;				// retardé
-				yield return ArticleQuantityType.Expected;				// attendu
+				return null;
 			}
 		}
 

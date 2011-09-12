@@ -16,11 +16,11 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
 	/// <summary>
-	/// Bon pour commande.
+	/// Note de crédit.
 	/// </summary>
-	public class OrderBookingBusinessLogic : AbstractDocumentBusinessLogic
+	public class CreditMemoDocumentLogic : AbstractDocumentLogic
 	{
-		public OrderBookingBusinessLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
+		public CreditMemoDocumentLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
 			: base (businessContext, documentMetadataEntity)
 		{
 		}
@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return false;
+				return true;
 			}
 		}
 
@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return false;
+				return true;
 			}
 		}
 
@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return true;
+				return false;
 			}
 		}
 
@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return true;
+				return false;
 			}
 		}
 
@@ -79,8 +79,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
+				yield return ArticleQuantityType.Billed;				// facturé
 				yield return ArticleQuantityType.Delayed;				// retardé
 				yield return ArticleQuantityType.Expected;				// attendu
+				yield return ArticleQuantityType.Shipped;				// livré
+				yield return ArticleQuantityType.ShippedPreviously;		// livré précédemment
+				yield return ArticleQuantityType.Information;			// information
 			}
 		}
 
@@ -90,8 +94,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				yield return ArticleQuantityType.Ordered;				// commandé
 
+				yield return ArticleQuantityType.Billed;				// facturé
 				yield return ArticleQuantityType.Delayed;				// retardé
 				yield return ArticleQuantityType.Expected;				// attendu
+				yield return ArticleQuantityType.Shipped;				// livré
+				yield return ArticleQuantityType.ShippedPreviously;		// livré précédemment
 			}
 		}
 	}

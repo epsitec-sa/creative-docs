@@ -16,11 +16,11 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
 	/// <summary>
-	/// Confirmation de commande.
+	/// Reçu.
 	/// </summary>
-	public class OrderConfirmationBusinessLogic : AbstractDocumentBusinessLogic
+	public class ReceiptDocumentLogic : AbstractDocumentLogic
 	{
-		public OrderConfirmationBusinessLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
+		public ReceiptDocumentLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
 			: base (businessContext, documentMetadataEntity)
 		{
 		}
@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return true;
+				return false;
 			}
 		}
 
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return ArticleQuantityType.None;
+				return ArticleQuantityType.Ordered;						// commandé
 			}
 		}
 
@@ -79,8 +79,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
+				yield return ArticleQuantityType.Billed;				// facturé
 				yield return ArticleQuantityType.Delayed;				// retardé
 				yield return ArticleQuantityType.Expected;				// attendu
+				yield return ArticleQuantityType.Shipped;				// livré
+				yield return ArticleQuantityType.ShippedPreviously;		// livré précédemment
+				yield return ArticleQuantityType.Information;			// information
 			}
 		}
 
@@ -90,8 +94,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				yield return ArticleQuantityType.Ordered;				// commandé
 
+				yield return ArticleQuantityType.Billed;				// facturé
 				yield return ArticleQuantityType.Delayed;				// retardé
 				yield return ArticleQuantityType.Expected;				// attendu
+				yield return ArticleQuantityType.Shipped;				// livré
+				yield return ArticleQuantityType.ShippedPreviously;		// livré précédemment
 			}
 		}
 	}

@@ -16,11 +16,11 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
 	/// <summary>
-	/// Facture pro forma.
+	/// Confirmation de commande.
 	/// </summary>
-	public class InvoiceProFormaBusinessLogic : AbstractDocumentBusinessLogic
+	public class PurchaseOrderDocumentLogic : AbstractDocumentLogic
 	{
-		public InvoiceProFormaBusinessLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
+		public PurchaseOrderDocumentLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
 			: base (businessContext, documentMetadataEntity)
 		{
 		}
@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return false;
+				return true;
 			}
 		}
 
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return ArticleQuantityType.None;
+				return ArticleQuantityType.Ordered;						// commandé
 			}
 		}
 
@@ -80,6 +80,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			get
 			{
 				yield return ArticleQuantityType.Billed;				// facturé
+				yield return ArticleQuantityType.Delayed;				// retardé
+				yield return ArticleQuantityType.Expected;				// attendu
+				yield return ArticleQuantityType.Shipped;				// livré
+				yield return ArticleQuantityType.ShippedPreviously;		// livré précédemment
+				yield return ArticleQuantityType.Information;			// information
 			}
 		}
 
@@ -87,8 +92,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				yield return ArticleQuantityType.Billed;				// facturé
+				yield return ArticleQuantityType.Ordered;				// commandé
 
+				yield return ArticleQuantityType.Billed;				// facturé
 				yield return ArticleQuantityType.Delayed;				// retardé
 				yield return ArticleQuantityType.Expected;				// attendu
 				yield return ArticleQuantityType.Shipped;				// livré

@@ -24,7 +24,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
-	public sealed class BusinessDocumentLinesController : System.IDisposable
+	public sealed class BusinessDocumentLinesController : System.IDisposable, ILineProvider
 	{
 		public BusinessDocumentLinesController(AccessData accessData)
 		{
@@ -70,7 +70,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			//	Crée la liste.
 			this.linesController = new LinesController (this.accessData);
-			this.linesController.CreateUI (frame, this.CallbackSelectionChanged);
+			this.linesController.CreateUI (frame);
+			this.linesController.SelectionChanged += this.HandleLinesControllerSelectionChanged;
 
 			//	Crée l'éditeur pour une ligne.
 			this.lineEditorController = new LineEditorController (this.accessData);
@@ -125,14 +126,39 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		#endregion
 
+		#region ILineProvider Members
 
-		private LineInformations CallbackGetLineInformations(int index)
+		EditMode ILineProvider.CurrentEditMode
+		{
+			get
+			{
+				return this.CurrentEditMode;
+			}
+		}
+
+		ViewMode ILineProvider.CurrentViewMode
+		{
+			get
+			{
+				return this.CurrentViewMode;
+			}
+		}
+
+		int ILineProvider.Count
+		{
+			get
+			{
+				return this.lineInformations.Count;
+			}
+		}
+
+		LineInformations ILineProvider.GetLineInformations(int index)
 		{
 			//	Retourne les informations sur l'état d'une ligne du tableau.
 			return this.lineInformations[index];
 		}
 
-		private CellContent CallbackGetCellContent(int index, ColumnType columnType)
+		CellContent ILineProvider.GetCellContent(int index, ColumnType columnType)
 		{
 			//	Retourne le contenu permettant de peupler une cellule du tableau.
 			var info = this.lineInformations[index];
@@ -224,7 +250,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			return null;
 		}
 
-		private bool CallbackSelectionChanged()
+		#endregion
+
+		
+		private void HandleLinesControllerSelectionChanged(object sender)
 		{
 			//	Appelé lorsque la sélection dans la liste a changé.
 			if (this.linesController.HasSingleSelection)
@@ -240,8 +269,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			this.UpdateCommands ();
-
-			return true;
 		}
 
 
@@ -317,7 +344,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			this.CurrentEditMode = EditMode.Name;
 			this.UpdateAfterChange ();
-			this.CallbackSelectionChanged ();
+			this.HandleLinesControllerSelectionChanged (this);
 		}
 
 		[Command (Library.Business.Res.CommandIds.Lines.EditDescription)]
@@ -325,7 +352,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			this.CurrentEditMode = EditMode.Description;
 			this.UpdateAfterChange ();
-			this.CallbackSelectionChanged ();
+			this.HandleLinesControllerSelectionChanged (this);
 		}
 
 
@@ -484,7 +511,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			this.UpdateLineInformations ();
 
-			this.linesController.UpdateUI (this.CurrentViewMode, this.CurrentEditMode, this.lineInformations.Count, this.CallbackGetLineInformations, this.CallbackGetCellContent);
+			this.linesController.UpdateUI (this);
 			this.Selection = selection;
 
 			this.UpdateCommands ();

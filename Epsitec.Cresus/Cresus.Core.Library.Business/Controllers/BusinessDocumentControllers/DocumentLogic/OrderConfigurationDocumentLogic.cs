@@ -16,11 +16,11 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
 	/// <summary>
-	/// Facture.
+	/// Choix des options pour commande.
 	/// </summary>
-	public class InvoiceBusinessLogic : AbstractDocumentBusinessLogic
+	public class OrderConfigurationDocumentLogic : AbstractDocumentLogic
 	{
-		public InvoiceBusinessLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
+		public OrderConfigurationDocumentLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
 			: base (businessContext, documentMetadataEntity)
 		{
 		}
@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return this.IsDirect;
+				return false;
 			}
 		}
 
@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return this.IsDirect;
+				return true;
 			}
 		}
 
@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return this.IsDirect;
+				return true;
 			}
 		}
 
@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return this.IsDirect;
+				return true;
 			}
 		}
 
@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return this.IsDirect;
+				return true;
 			}
 		}
 
@@ -71,14 +71,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				if (this.IsDirect)
-				{
-					return ArticleQuantityType.Billed;  // facturé
-				}
-				else
-				{
-					return ArticleQuantityType.None;
-				}
+				return ArticleQuantityType.None;
 			}
 		}
 
@@ -86,14 +79,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				if (this.IsDirect)
-				{
-					// rien
-				}
-				else
-				{
-					yield return ArticleQuantityType.Billed;				// facturé
-				}
+				yield return ArticleQuantityType.Delayed;				// retardé
+				yield return ArticleQuantityType.Expected;				// attendu
 			}
 		}
 
@@ -101,40 +88,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				yield return ArticleQuantityType.Billed;				// facturé
+				yield return ArticleQuantityType.Ordered;				// commandé
 
-				yield return ArticleQuantityType.Shipped;				// livré
-				yield return ArticleQuantityType.ShippedPreviously;		// livré précédemment
 				yield return ArticleQuantityType.Delayed;				// retardé
 				yield return ArticleQuantityType.Expected;				// attendu
-			}
-		}
-
-
-		private bool IsDirect
-		{
-			get
-			{
-				return InvoiceBusinessLogic.IsDirectInvoice (this.documentMetadataEntity);
-			}
-		}
-
-		public static bool IsDirectInvoice(DocumentMetadataEntity documentMetadata)
-		{
-			if (documentMetadata.DocumentCategory.DocumentType != DocumentType.Invoice)
-			{
-				return false;
-			}
-
-			BusinessDocumentEntity document = documentMetadata.BusinessDocument as BusinessDocumentEntity;
-
-			if (document == null)
-			{
-				return false;
-			}
-			else
-			{
-				return string.IsNullOrEmpty (document.BaseDocumentCode);
 			}
 		}
 	}

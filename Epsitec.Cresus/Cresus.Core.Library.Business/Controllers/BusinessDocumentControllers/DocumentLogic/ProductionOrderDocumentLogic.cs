@@ -16,11 +16,11 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
 	/// <summary>
-	/// Rappel.
+	/// Ordre de production.
 	/// </summary>
-	public class PaymentReminderBusinessLogic : AbstractDocumentBusinessLogic
+	public class ProductionOrderDocumentLogic : AbstractDocumentLogic
 	{
-		public PaymentReminderBusinessLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
+		public ProductionOrderDocumentLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
 			: base (businessContext, documentMetadataEntity)
 		{
 		}
@@ -47,6 +47,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			get
 			{
 				return false;
+			}
+		}
+
+		public override bool IsMyEyesOnlyEditionEnabled
+		{
+			get
+			{
+				return true;
 			}
 		}
 
@@ -89,11 +97,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				yield return ArticleQuantityType.Ordered;				// commandé
 
-				yield return ArticleQuantityType.Billed;				// facturé
 				yield return ArticleQuantityType.Delayed;				// retardé
 				yield return ArticleQuantityType.Expected;				// attendu
-				yield return ArticleQuantityType.Shipped;				// livré
-				yield return ArticleQuantityType.ShippedPreviously;		// livré précédemment
 			}
 		}
 	}
