@@ -84,11 +84,11 @@
     <Compile Include="Business\Rules\OptionValueBusinessRules.cs" />
     <Compile Include="Business\Rules\RelationBusinessRules.cs" />
     <Compile Include="Business\Rules\TaxSettingsBusinessRules.cs" />
-    <Compile Include="ContentAccessors\DocumentAccessorContentLine.cs" />
-    <Compile Include="ContentAccessors\DocumentItemAccessorError.cs" />
-    <Compile Include="ContentAccessors\DocumentItemAccessorColumn.cs" />
-    <Compile Include="ContentAccessors\DocumentItemAccessor.cs" />
-    <Compile Include="ContentAccessors\DocumentItemAccessorMode.cs" />
+    <Compile Include="Business\ContentAccessors\DocumentAccessorContentLine.cs" />
+    <Compile Include="Business\ContentAccessors\DocumentItemAccessorError.cs" />
+    <Compile Include="Business\ContentAccessors\DocumentItemAccessorColumn.cs" />
+    <Compile Include="Business\ContentAccessors\DocumentItemAccessor.cs" />
+    <Compile Include="Business\ContentAccessors\DocumentItemAccessorMode.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\AbstractArticleParameterController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\ArticleParameterListPreferredValuesController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\ArticleParameterToolbarController.cs" />
@@ -383,6 +383,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CommandHandlers\" />
+    <Folder Include="ContentAccessors\" />
     <Folder Include="Controllers\DataAccessors\DynamicFactories\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
