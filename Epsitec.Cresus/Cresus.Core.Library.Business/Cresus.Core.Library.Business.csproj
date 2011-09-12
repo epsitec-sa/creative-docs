@@ -382,8 +382,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="CommandHandlers\" />
-    <Folder Include="ContentAccessors\" />
     <Folder Include="Controllers\DataAccessors\DynamicFactories\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
