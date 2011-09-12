@@ -46,9 +46,28 @@ namespace Epsitec.Cresus.Core.Resolvers
 		/// <returns>The <see cref="AbstractPrinter"/> instance.</returns>
 		IEntityPrinter CreatePrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits);
 
+		/// <summary>
+		/// Gets the type of the document, as a <see cref="DocumentType"/> enumeration value,
+		/// if the entity is recognized by this factory.
+		/// </summary>
+		/// <param name="entity">The entity.</param>
+		/// <returns>The <see cref="DocumentType"/>; otherwise, <c>Unknown</c>.</returns>
 		DocumentType GetDocumentType(AbstractEntity entity);
 
+		/// <summary>
+		/// Gets the document options required by the specified document type, if it is
+		/// supported by this factory.
+		/// </summary>
+		/// <param name="documentType">The document type.</param>
+		/// <returns>The document options; othewise, <c>null</c>.</returns>
 		IEnumerable<DocumentOption> GetRequiredDocumentOptions(DocumentType documentType);
+
+		/// <summary>
+		/// Gets the page types required by the specified document type, if it is
+		/// supported by this factory.
+		/// </summary>
+		/// <param name="documentType">The document type.</param>
+		/// <returns>The page types; otherwise, <c>null</c>.</returns>
 		IEnumerable<PageType> GetRequiredPageTypes(DocumentType documentType);
 	}
 }
