@@ -7,7 +7,6 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Documents;
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Helpers;
 using Epsitec.Cresus.Core.Print.Bands;
 using Epsitec.Cresus.Core.Print.Containers;
 using Epsitec.Cresus.Core.Resolvers;
@@ -15,19 +14,19 @@ using Epsitec.Cresus.Core.Resolvers;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Epsitec.Cresus.Core.Print.EntityPrinters;
+using Epsitec.Cresus.Core.Print;
 using Epsitec.Cresus.Core.Business;
 
-namespace Epsitec.Cresus.Core.EntityPrinters
+namespace Epsitec.Cresus.Core.Business.EntityPrinters
 {
-	public class MailContactPrinter : AbstractPrinter
+	public sealed class MailContactPrinter : AbstractPrinter
 	{
 		private MailContactPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 			: base (businessContext, entity, options, printingUnits)
 		{
 		}
 
-		public static IEnumerable<DocumentOption> RequiredDocumentOptions
+		private static IEnumerable<DocumentOption> RequiredDocumentOptions
 		{
 			get
 			{
@@ -42,7 +41,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-		public static IEnumerable<PageType> RequiredPageTypes
+		private static IEnumerable<PageType> RequiredPageTypes
 		{
 			get
 			{
@@ -79,17 +78,14 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
-		protected override Margins PageMargins
+		protected override Margins GetPageMargins()
 		{
-			get
-			{
-				double leftMargin   = this.GetOptionValue (DocumentOption.LeftMargin,   3);
-				double rightMargin  = this.GetOptionValue (DocumentOption.RightMargin,  3);
-				double topMargin    = this.GetOptionValue (DocumentOption.TopMargin,    3);
-				double bottomMargin = this.GetOptionValue (DocumentOption.BottomMargin, 3);
+			double leftMargin   = this.GetOptionValue (DocumentOption.LeftMargin, 3);
+			double rightMargin  = this.GetOptionValue (DocumentOption.RightMargin, 3);
+			double topMargin    = this.GetOptionValue (DocumentOption.TopMargin, 3);
+			double bottomMargin = this.GetOptionValue (DocumentOption.BottomMargin, 3);
 
-				return new Margins (leftMargin, rightMargin, topMargin, bottomMargin);
-			}
+			return new Margins (leftMargin, rightMargin, topMargin, bottomMargin);
 		}
 
 
@@ -151,9 +147,41 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				yield return typeof (MailContactEntity);
 			}
 
-			public AbstractPrinter CreatePrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
+			public DocumentType GetDocumentType(AbstractEntity entity)
+			{
+				if (entity is MailContactEntity)
+				{
+					return DocumentType.MailContactLabel;
+				}
+
+				return DocumentType.Unknown;
+			}
+			
+			public IEntityPrinter CreatePrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 			{
 				return new MailContactPrinter (businessContext, entity, options, printingUnits);
+			}
+
+			public IEnumerable<DocumentOption> GetRequiredDocumentOptions(DocumentType documentType)
+			{
+				switch (documentType)
+				{
+					case DocumentType.MailContactLabel:
+						return MailContactPrinter.RequiredDocumentOptions;
+				}
+
+				return null;
+			}
+
+			public IEnumerable<PageType> GetRequiredPageTypes(DocumentType documentType)
+			{
+				switch (documentType)
+				{
+					case DocumentType.MailContactLabel:
+						return MailContactPrinter.RequiredPageTypes;
+				}
+
+				return null;
 			}
 
 			#endregion

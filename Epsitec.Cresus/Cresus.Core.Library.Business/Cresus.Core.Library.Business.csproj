@@ -46,6 +46,7 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="Business\EntityPrinters\BusinessDocumentPrinter.cs" />
     <Compile Include="Binders\PostFinanceAccountFieldBinder.cs" />
     <Compile Include="Business\ArticleDocumentItemAttributes.cs" />
     <Compile Include="Business\ArticleQuantityType.cs" />
@@ -53,6 +54,7 @@
     <Compile Include="Business\BusinessContext.cs" />
     <Compile Include="Business\BusinessContextPool.cs" />
     <Compile Include="Business\DocumentItemAttributes.cs" />
+    <Compile Include="Business\EntityPrinters\RelationPrinter.cs" />
     <Compile Include="Business\EntitySaveMode.cs" />
     <Compile Include="Business\Enumerations.cs" />
     <Compile Include="Business\Finance\PriceCalculators\ItemPriceCalculators\AbstractItemPriceCalculator.cs" />
@@ -199,6 +201,7 @@
     <Compile Include="Controllers\ITileController.cs" />
     <Compile Include="Controllers\ListController.cs" />
     <Compile Include="Controllers\MainViewController.cs" />
+    <Compile Include="Business\EntityPrinters\DeliveryNoteDocumentPrinter.cs" />
     <Compile Include="Entities\ArticleSupplyEntity.cs" />
     <Compile Include="Entities\ArticleStockLocationEntity.cs" />
     <Compile Include="Entities\ArticleQuantityColumnEntity.cs" />
@@ -207,6 +210,7 @@
     <Compile Include="Factories\DefaultEntitySpecialControllerFactory.cs" />
     <Compile Include="Factories\DefaultViewControllerComponentFactory.cs" />
     <Compile Include="Factories\IEntitySpecialControllerFactory.cs" />
+    <Compile Include="Business\EntityPrinters\InvoiceDocumentPrinter.cs" />
     <Compile Include="Library\ViewControllerComponent.cs" />
     <Compile Include="Library\ViewControllerComponent`1.cs" />
     <Compile Include="Controllers\MainWindowController.cs" />
@@ -265,11 +269,16 @@
     <Compile Include="Orchestrators\Navigation\NavigationPathElementClassAttribute.cs" />
     <Compile Include="Orchestrators\Navigation\NavigationPathElementClassFactory.cs" />
     <Compile Include="Orchestrators\Navigation\TileNavigationPathElement.cs" />
+    <Compile Include="Business\EntityPrinters\OrderBookingDocumentPrinter.cs" />
+    <Compile Include="Business\EntityPrinters\OrderConfirmationDocumentPrinter.cs" />
+    <Compile Include="Business\EntityPrinters\ProductionChecklistDocumentPrinter.cs" />
+    <Compile Include="Business\EntityPrinters\ProductionOrderDocumentPrinter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resolvers\EntitySpecialControllerResolver.cs" />
     <Compile Include="Resolvers\EntityViewControllerResolver.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Business\SourceCode\Entities.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Business\SourceCode\Res.cs" />
+    <Compile Include="Business\EntityPrinters\SalesQuoteDocumentPrinter.cs" />
     <Compile Include="TableDesigner\BaseController.cs" />
     <Compile Include="TableDesigner\DesignerDimension.cs" />
     <Compile Include="TableDesigner\DesignerTable.cs" />

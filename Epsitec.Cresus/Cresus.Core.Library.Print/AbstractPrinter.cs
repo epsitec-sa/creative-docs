@@ -23,9 +23,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Print.EntityPrinters
+namespace Epsitec.Cresus.Core.Print
 {
-	public abstract class AbstractPrinter
+	public abstract class AbstractPrinter : IEntityPrinter
 	{
 		protected AbstractPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 		{
@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 		}
 
 
-		public virtual string JobName
+		public virtual string					JobName
 		{
 			get
 			{
@@ -48,11 +48,10 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 			}
 		}
 
-
 		/// <summary>
 		/// Taille préférée pour ce document.
 		/// </summary>
-		public virtual Size PreferredPageSize
+		public virtual Size						PreferredPageSize
 		{
 			get
 			{
@@ -63,7 +62,7 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 		/// <summary>
 		/// Taille du document à générer. Cette taille est définie par SetPrintingUnit.
 		/// </summary>
-		public Size RequiredPageSize
+		public Size								RequiredPageSize
 		{
 			get
 			{
@@ -73,12 +72,42 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 			}
 		}
 
-		protected virtual Margins PageMargins
+		public int								CurrentPage
 		{
 			get
 			{
-				return new Margins (10);  // 1 cm
+				return this.currentPage;
 			}
+			set
+			{
+				if (this.currentPage != value)
+				{
+					this.currentPage = value;
+				}
+			}
+		}
+
+		public double							ContinuousVerticalMax
+		{
+			get
+			{
+				return this.documentContainer.CurrentVerticalPosition - this.GetPageMargins ().Bottom;
+			}
+		}
+
+		public PreviewMode						PreviewMode
+		{
+			//	Permet de savoir si on effectue une impression réelle ou un aperçu avant impression.
+			get
+			{
+				return this.previewMode;
+			}
+		}
+
+		
+		protected virtual Margins GetPageMargins()
+		{
+			return new Margins (10);  // 1 cm
 		}
 
 
@@ -97,29 +126,6 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 			return this.documentContainer.GetDocumentRank (page);
 		}
 
-		public int CurrentPage
-		{
-			get
-			{
-				return this.currentPage;
-			}
-			set
-			{
-				if (this.currentPage != value)
-				{
-					this.currentPage = value;
-				}
-			}
-		}
-
-		public double ContinuousVerticalMax
-		{
-			get
-			{
-				return this.documentContainer.CurrentVerticalPosition - this.PageMargins.Bottom;
-			}
-		}
-
 
 		public bool HasPrintingUnitDefined(PageType printerUnitFunction)
 		{
@@ -127,15 +133,6 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 			return this.printingUnits.ContainsPageType (printerUnitFunction);
 		}
 
-
-		public PreviewMode PreviewMode
-		{
-			//	Permet de savoir si on effectue une impression réelle ou un aperçu avant impression.
-			get
-			{
-				return this.previewMode;
-			}
-		}
 
 
 		/// <summary>
@@ -182,7 +179,7 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 		public virtual FormattedText BuildSections()
 		{
 			this.documentContainer.PageSize    = this.RequiredPageSize;
-			this.documentContainer.PageMargins = this.PageMargins;
+			this.documentContainer.PageMargins = this.GetPageMargins ();
 
 			return null;  // ok
 		}
@@ -199,6 +196,7 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 		{
 		}
 
+		
 		private void PaintSpecimen(IPaintPort port)
 		{
 			//	Dessine un très gros "SPECIMEN" en travers de la page.
@@ -231,31 +229,17 @@ namespace Epsitec.Cresus.Core.Print.EntityPrinters
 			//	Crée le XxxPrinter adapté à un type d'entité.
 			//	Il ne faut pas perdre de vue qu'il n'y a pas de lien direct entre un type d'entité et
 			//	un XxxPrinter. En particulier, il peut y avoir plusieurs XxxPrinter pour une même entité.
-			
-			var factory = AbstractPrinter.FindPrinterFactory (entity, options);
+
+			var factory = EntityPrinterFactoryResolver.FindPrinterFactory (entity, options);
 
 			if (factory == null)
 			{
 				return null;
 			}
 
-			return factory.CreatePrinter (businessContext, entity, options, printingUnits);
+			return factory.CreatePrinter (businessContext, entity, options, printingUnits) as AbstractPrinter;
 		}
 
-		public static IEnumerable<System.Type> GetPrintableEntityTypes()
-		{
-			return EntityPrinterFactoryResolver.Resolve ().SelectMany (x => x.GetSupportedEntityTypes ()).Distinct ();
-		}
-
-		public static IEnumerable<Druid> GetPrintableEntityIds()
-		{
-			return AbstractPrinter.GetPrintableEntityTypes ().Select (x => EntityInfo.GetTypeId (x));
-		}
-
-		private static IEntityPrinterFactory FindPrinterFactory(AbstractEntity entity, PrintingOptionDictionary options)
-		{
-			return EntityPrinterFactoryResolver.Resolve ().FirstOrDefault (x => x.CanPrint (entity, options));
-		}
 
 
 		#region Options reader

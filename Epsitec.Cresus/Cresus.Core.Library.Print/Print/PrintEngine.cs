@@ -201,7 +201,7 @@ namespace Epsitec.Cresus.Core.Print
 			System.Diagnostics.Debug.Assert (printingUnits != null);
 
 			//	Crée les classes qui savent imprimer l'entité qui représente le document (EntityPrinters.AbstrctPrinter).
-			var documentPrinter = EntityPrinters.AbstractPrinter.CreateDocumentPrinter (businessContext, entity, options, printingUnits);
+			var documentPrinter = AbstractPrinter.CreateDocumentPrinter (businessContext, entity, options, printingUnits);
 
 			if (documentPrinter == null || printingUnits.Count == 0)
 			{

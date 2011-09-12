@@ -18,7 +18,6 @@ using Epsitec.Cresus.Core.Helpers;
 using Epsitec.Cresus.Core.Print;
 using Epsitec.Cresus.Core.Print.Bands;
 using Epsitec.Cresus.Core.Print.Containers;
-using Epsitec.Cresus.Core.Print.EntityPrinters;
 using Epsitec.Cresus.Core.Resolvers;
 using Epsitec.Cresus.Core.Library.Business.ContentAccessors;
 using Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers;
@@ -27,11 +26,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.EntityPrinters
+namespace Epsitec.Cresus.Core.Business.EntityPrinters
 {
-	public class ProductionChecklistDocumentPrinter : AbstractDocumentMetadataPrinter
+	public sealed class ProductionOrderDocumentPrinter : BusinessDocumentPrinter
 	{
-		public ProductionChecklistDocumentPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
+		internal ProductionOrderDocumentPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 			: base (businessContext, entity, options, printingUnits)
 		{
 		}
@@ -43,7 +42,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			{
 				yield return DocumentOption.Orientation;
 
-				foreach (var option in AbstractDocumentMetadataPrinter.RequiredHeaderDocumentOptions)
+				foreach (var option in BusinessDocumentPrinter.RequiredHeaderDocumentOptions)
 				{
 					yield return option;
 				}
@@ -108,37 +107,64 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 
 			//	Construit les sections.
-			int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
+			this.documentRank = 0;
 
-			this.BuildHeader ();
-
-			this.groupRank = 0;
-			this.documentContainer.CurrentVerticalPosition = this.RequiredPageSize.Height-87;
 			foreach (var group in this.ProductionGroups)
 			{
 				this.currentGroup = group;
-				this.groupRank++;
 				this.InvalidateContentLines ();
 
-				this.BuildAtelier ();
-				this.BuildArticles (this.documentContainer.CurrentVerticalPosition);
+				this.documentContainer.DocumentRank = this.documentRank++;
+				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
+
+				this.BuildHeader ();
+				this.BuildArticles ();
+				this.BuildFooter ();
+				this.BuildPages (firstPage);
+
+				this.documentContainer.Ending (firstPage);
 			}
-
-			this.BuildFooter ();
-			this.BuildPages (firstPage);
-
-			this.documentContainer.Ending (firstPage);
 
 			return null;  // ok
 		}
 
+
+		protected override TableBand BuildConcerne(double width)
+		{
+			double firstColumnWidth = 16;
+
+			if (width < firstColumnWidth+10)
+			{
+				return null;
+			}
+			else
+			{
+				var band = new TableBand ();
+				var fontSize = this.GetOptionValue (DocumentOption.HeaderForFontSize);
+				firstColumnWidth *= fontSize/3;
+
+				band.ColumnsCount = 2;
+				band.RowsCount = 1;
+				band.CellBorder = CellBorder.Default;
+				band.Font = BusinessDocumentPrinter.font;
+				band.FontSize = fontSize;
+				band.CellMargins = new Margins (1);
+				band.SetRelativeColumWidth (0, firstColumnWidth);
+				band.SetRelativeColumWidth (1, width-firstColumnWidth);
+				band.SetText (0, 0, "Atelier", fontSize);
+				band.SetText (1, 0, FormattedText.FromSimpleText (this.currentGroup.Name.ToSimpleText ()).ApplyBold (), fontSize);
+				band.SetBackground (1, 0, Color.FromBrightness (0.9));
+
+				return band;
+			}
+		}
 
 		protected override IEnumerable<DocumentAccessorContentLine> GetContentLines()
 		{
 			//	Donne les lignes du groupe de production en cours.
 			return from line in this.Entity.Lines
 				   where this.IsArticleForProduction (line, this.currentGroup)
-				   select new DocumentAccessorContentLine (line, this.groupRank);
+				   select new DocumentAccessorContentLine (line, this.documentRank);
 		}
 
 		protected override void InitializeColumns()
@@ -149,19 +175,19 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 			if (this.IsColumnsOrderQD)
 			{
-				this.tableColumns.Add (TableColumnKeys.Total,              new TableColumn ("Fait",        priceWidth,   ContentAlignment.MiddleLeft));
 				this.tableColumns.Add (TableColumnKeys.LineNumber,         new TableColumn ("N°",          priceWidth,   ContentAlignment.MiddleLeft));
 				this.tableColumns.Add (TableColumnKeys.MainQuantity,       new TableColumn ("Quantité",    priceWidth,   ContentAlignment.MiddleRight));
 				this.tableColumns.Add (TableColumnKeys.ArticleId,          new TableColumn ("Article",     priceWidth,   ContentAlignment.MiddleLeft));
 				this.tableColumns.Add (TableColumnKeys.ArticleDescription, new TableColumn ("Désignation", 0,            ContentAlignment.MiddleLeft));  // seule colonne en mode width = fill
+				this.tableColumns.Add (TableColumnKeys.Total,              new TableColumn ("Visa",        priceWidth,   ContentAlignment.MiddleLeft));
 			}
 			else
 			{
-				this.tableColumns.Add (TableColumnKeys.Total,              new TableColumn ("Fait",        priceWidth,   ContentAlignment.MiddleLeft));
 				this.tableColumns.Add (TableColumnKeys.LineNumber,         new TableColumn ("N°",          priceWidth,   ContentAlignment.MiddleLeft));
 				this.tableColumns.Add (TableColumnKeys.ArticleId,          new TableColumn ("Article",     priceWidth,   ContentAlignment.MiddleLeft));
 				this.tableColumns.Add (TableColumnKeys.ArticleDescription, new TableColumn ("Désignation", 0,            ContentAlignment.MiddleLeft));  // seule colonne en mode width = fill
 				this.tableColumns.Add (TableColumnKeys.MainQuantity,       new TableColumn ("Quantité",    priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.Total,              new TableColumn ("Visa",        priceWidth,   ContentAlignment.MiddleLeft));
 			}
 		}
 
@@ -199,7 +225,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					this.SetTableText (row+i, TableColumnKeys.LineNumber, accessor.GetContent (i, DocumentItemAccessorColumn.LineNumber));
 				}
 
-				this.SetTableText (row+i, TableColumnKeys.MainQuantity, AbstractDocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.MainQuantity, DocumentItemAccessorColumn.MainUnit));
+				this.SetTableText (row+i, TableColumnKeys.MainQuantity, BusinessDocumentPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.MainQuantity, DocumentItemAccessorColumn.MainUnit));
 
 				if (this.HasOption (DocumentOption.ArticleId))
 				{
@@ -209,7 +235,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				this.SetTableText (row+i, TableColumnKeys.ArticleDescription, accessor.GetContent (i, DocumentItemAccessorColumn.ArticleDescription));
 			}
 
-			this.SetTableText (row, TableColumnKeys.Total, new string (' ', 10));  // Fait
+			this.SetTableText (row, TableColumnKeys.Total, new string (' ', 30));  // Visa
 
 			return accessor.RowsCount;
 		}
@@ -234,22 +260,13 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				table.SetText (1, 0, new FormattedText ("Terminé le :<br/><br/>Par :<br/><br/>Signature :<br/><br/><br/>"), fontSize);
 				table.SetUnbreakableRow (0, true);
 
-				this.documentContainer.AddToBottom (table, this.PageMargins.Bottom);
+				var margins = this.GetPageMargins ();
+				this.documentContainer.AddToBottom (table, margins.Bottom);
 			}
 		}
 
 
-		private void BuildAtelier()
-		{
-			var band = new TextBand ();
-			band.Text = FormattedText.FromSimpleText (this.currentGroup.Name.ToSimpleText ()).ApplyBold ();
-			band.FontSize = this.GetOptionValue (DocumentOption.HeaderForFontSize);
-
-			this.documentContainer.AddFromTop (band, 1);
-		}
-
-
 		private ArticleGroupEntity				currentGroup;
-		private int								groupRank;
+		private int								documentRank;
 	}
 }

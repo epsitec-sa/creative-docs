@@ -9,10 +9,11 @@ using Epsitec.Cresus.Core.Business;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Resolvers;
 
 namespace Epsitec.Cresus.Core.Documents.Verbose
 {
-	public class VerboseDocumentOption
+	public sealed class VerboseDocumentOption
 	{
 		static VerboseDocumentOption()
 		{
@@ -170,7 +171,7 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 						continue;
 					}
 
-					var options = External.CresusCore.GetRequiredDocumentOptionsByDocumentType (documentType);
+					var options = EntityPrinterFactoryResolver.FindRequiredDocumentOptions (documentType);
 
 					if (options != null && options.Contains (this.Option))
 					{

@@ -21,19 +21,19 @@ using System.Globalization;
 using System.Linq;
 using Epsitec.Cresus.Core.Resolvers;
 using Epsitec.Cresus.Core.Documents;
-using Epsitec.Cresus.Core.Print.EntityPrinters;
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Print;
 
-namespace Epsitec.Cresus.Core.EntityPrinters
+namespace Epsitec.Cresus.Core.Business.EntityPrinters
 {
-	public class RelationPrinter : AbstractPrinter
+	public sealed class RelationPrinter : AbstractPrinter
 	{
 		private RelationPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 			: base (businessContext, entity, options, printingUnits)
 		{
 		}
 
-		public static IEnumerable<DocumentOption> RequiredDocumentOptions
+		private static IEnumerable<DocumentOption> RequiredDocumentOptions
 		{
 			get
 			{
@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-		public static IEnumerable<PageType> RequiredPageTypes
+		private static IEnumerable<PageType> RequiredPageTypes
 		{
 			get
 			{
@@ -82,17 +82,14 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 		}
 
-		protected override Margins PageMargins
+		protected override Margins GetPageMargins()
 		{
-			get
-			{
-				double leftMargin   = this.GetOptionValue (DocumentOption.LeftMargin);
-				double rightMargin  = this.GetOptionValue (DocumentOption.RightMargin);
-				double topMargin    = this.GetOptionValue (DocumentOption.TopMargin);
-				double bottomMargin = this.GetOptionValue (DocumentOption.BottomMargin);
+			double leftMargin   = this.GetOptionValue (DocumentOption.LeftMargin);
+			double rightMargin  = this.GetOptionValue (DocumentOption.RightMargin);
+			double topMargin    = this.GetOptionValue (DocumentOption.TopMargin);
+			double bottomMargin = this.GetOptionValue (DocumentOption.BottomMargin);
 
-				return new Margins (leftMargin, rightMargin, topMargin, bottomMargin);
-			}
+			return new Margins (leftMargin, rightMargin, topMargin, bottomMargin);
 		}
 
 
@@ -457,7 +454,18 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				yield return typeof (CustomerEntity);
 			}
 
-			public AbstractPrinter CreatePrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
+			public DocumentType GetDocumentType(AbstractEntity entity)
+			{
+				if ((entity is RelationEntity) ||
+					(entity is CustomerEntity))
+				{
+					return DocumentType.RelationSummary;
+				}
+
+				return DocumentType.Unknown;
+			}
+
+			public IEntityPrinter CreatePrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 			{
 				var customer = entity as CustomerEntity;
 
@@ -467,6 +475,28 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				}
 
 				return new RelationPrinter (businessContext, entity, options, printingUnits);
+			}
+
+			public IEnumerable<DocumentOption> GetRequiredDocumentOptions(DocumentType documentType)
+			{
+				switch (documentType)
+				{
+					case DocumentType.RelationSummary:
+						return RelationPrinter.RequiredDocumentOptions;
+				}
+
+				return null;
+			}
+
+			public IEnumerable<PageType> GetRequiredPageTypes(DocumentType documentType)
+			{
+				switch (documentType)
+				{
+					case DocumentType.RelationSummary:
+						return RelationPrinter.RequiredPageTypes;
+				}
+
+				return null;
 			}
 
 			#endregion

@@ -17,6 +17,7 @@ using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Resolvers;
 
 namespace Epsitec.Cresus.Core.DocumentCategoryController
 {
@@ -26,7 +27,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 		{
 			this.documentCategoryController = documentCategoryController;
 			this.businessContext            = this.documentCategoryController.BusinessContext;
-			this.documentCategoryEntity     = this.documentCategoryController.DocumentCategoryEntity;
+			this.documentCategory     = this.documentCategoryController.DocumentCategoryEntity;
 
 			this.verboseDocumentOptions = VerboseDocumentOption.GetAll ().Where (x => x.Option != DocumentOption.None);
 			this.optionInformations = new List<OptionInformation> ();
@@ -436,7 +437,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			{
 				priorityWidget.Visibility = true;
 
-				int count = this.documentCategoryEntity.DocumentOptions.Count;
+				int count = this.documentCategory.DocumentOptions.Count;
 				int display = count-value;  // 1..n inversé
 
 				var valueField = priorityWidget.Children.OfType<StaticText> ().FirstOrDefault ();
@@ -453,8 +454,8 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 			var entity = this.optionGroups[index].OptionInformations[group].Entity;
 
-			int count = this.documentCategoryEntity.DocumentOptions.Count;
-			index = this.documentCategoryEntity.DocumentOptions.IndexOf (entity);
+			int count = this.documentCategory.DocumentOptions.Count;
+			index = this.documentCategory.DocumentOptions.IndexOf (entity);
 
 			if (count > 1)  // au moins 2 choix ?
 			{
@@ -494,10 +495,10 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 		private void PriorityChange(int currentIndex, int newIndex)
 		{
 			//	Modifie le priorité d'une collection d'options.
-			var entity = this.documentCategoryEntity.DocumentOptions.ElementAt (currentIndex);
+			var entity = this.documentCategory.DocumentOptions.ElementAt (currentIndex);
 
-			this.documentCategoryEntity.DocumentOptions.RemoveAt (currentIndex);
-			this.documentCategoryEntity.DocumentOptions.Insert (newIndex, entity);
+			this.documentCategory.DocumentOptions.RemoveAt (currentIndex);
+			this.documentCategory.DocumentOptions.Insert (newIndex, entity);
 
 			this.UpdateButtonStates ();
 			this.documentCategoryController.UpdateAfterOptionChanged ();
@@ -513,13 +514,13 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				int index = int.Parse (parts[0]);
 				var entity = this.optionGroups[index].OptionInformations[0].Entity;
 
-				if (this.documentCategoryEntity.DocumentOptions.Contains (entity))
+				if (this.documentCategory.DocumentOptions.Contains (entity))
 				{
-					this.documentCategoryEntity.DocumentOptions.Remove (entity);
+					this.documentCategory.DocumentOptions.Remove (entity);
 				}
 				else
 				{
-					this.documentCategoryEntity.DocumentOptions.Add (entity);
+					this.documentCategory.DocumentOptions.Add (entity);
 				}
 			}
 
@@ -532,16 +533,16 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				{
 					var entity = this.optionGroups[index].OptionInformations[i].Entity;
 
-					if (this.documentCategoryEntity.DocumentOptions.Contains (entity))
+					if (this.documentCategory.DocumentOptions.Contains (entity))
 					{
-						this.documentCategoryEntity.DocumentOptions.Remove (entity);
+						this.documentCategory.DocumentOptions.Remove (entity);
 					}
 				}
 
 				if (group != 0)
 				{
 					var entity = this.optionGroups[index].OptionInformations[group].Entity;
-					this.documentCategoryEntity.DocumentOptions.Add (entity);
+					this.documentCategory.DocumentOptions.Add (entity);
 				}
 			}
 
@@ -770,7 +771,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					for (int i = 1; i < group.OptionInformations.Count; i++)
 					{
 						var entity = group.OptionInformations[i].Entity;
-						bool check = this.documentCategoryEntity.DocumentOptions.Contains (entity);
+						bool check = this.documentCategory.DocumentOptions.Contains (entity);
 
 						if (check)
 						{
@@ -791,7 +792,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 						else
 						{
 							var entity = group.OptionInformations[i].Entity;
-							priority = this.documentCategoryEntity.DocumentOptions.IndexOf (entity);
+							priority = this.documentCategory.DocumentOptions.IndexOf (entity);
 							check = (priority != -1);
 						}
 
@@ -802,7 +803,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				else
 				{
 					var entity = group.OptionInformations[0].Entity;
-					int priority = this.documentCategoryEntity.DocumentOptions.IndexOf (entity);
+					int priority = this.documentCategory.DocumentOptions.IndexOf (entity);
 					bool check = (priority != -1);
 
 					group.OptionInformations[0].Button.ActiveState = check ? ActiveState.Yes : ActiveState.No;
@@ -822,7 +823,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			int missing = 0;
 			int useless = 0;
 
-			foreach (var documentOptionEntity in this.documentCategoryEntity.DocumentOptions)
+			foreach (var documentOptionEntity in this.documentCategory.DocumentOptions)
 			{
 				var info = this.optionInformations.Where (x => x.Entity == documentOptionEntity).FirstOrDefault ();
 
@@ -910,7 +911,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 						FormattedText text = null;
 
-						if (this.documentCategoryEntity.DocumentOptions.Contains (info.Entity))
+						if (this.documentCategory.DocumentOptions.Contains (info.Entity))
 						{
 							foreach (var option in info.Options)
 							{
@@ -999,7 +1000,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				uselessMessage = FormattedText.Concat (DocumentCategoryController.uselessBullet, "  ", uselessMessage);
 			}
 
-			if (this.documentCategoryEntity.DocumentOptions.Count == 0)
+			if (this.documentCategory.DocumentOptions.Count == 0)
 			{
 				missingMessage = "Aucune option d'impression n'est choisie";
 			}
@@ -1122,7 +1123,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 		private void UpdateOptionInformations()
 		{
-			this.requiredDocumentOptions = Epsitec.Cresus.Core.Documents.External.CresusCore.GetRequiredDocumentOptionsByDocumentType (this.documentCategoryEntity.DocumentType);
+			this.requiredDocumentOptions = EntityPrinterFactoryResolver.FindRequiredDocumentOptions (this.documentCategory.DocumentType);
 			
 			this.optionInformations.Clear ();
 
@@ -1369,7 +1370,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 		private readonly DocumentCategoryController			documentCategoryController;
 		private readonly IBusinessContext					businessContext;
-		private readonly DocumentCategoryEntity				documentCategoryEntity;
+		private readonly DocumentCategoryEntity				documentCategory;
 		private readonly IEnumerable<VerboseDocumentOption>	verboseDocumentOptions;
 		private readonly List<OptionInformation>			optionInformations;
 		private readonly List<OptionInformation>			additionnalOptionInformations;

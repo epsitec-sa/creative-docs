@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Epsitec.Common.Types.Collections;
+using Epsitec.Cresus.Core.Resolvers;
 
 namespace Epsitec.Cresus.Core.Dialogs
 {
@@ -319,7 +320,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					this.modifiedOptions.MergeWith (this.categoryOptions);
 					this.modifiedOptions.Remove (this.GetForcingOptions (this.entityToPrint.PrintingUnits));
 
-					var visibleOptions = Documents.External.CresusCore.GetRequiredDocumentOptionsByEntity (this.entityToPrint.Entity);
+					var visibleOptions = EntityPrinterFactoryResolver.FindRequiredDocumentOptions (this.entityToPrint.Entity);
 					this.modifiedOptions.Keep (visibleOptions);
 
 					var controller = new DocumentOptionsController.OptionsController (this.entityToPrint.Entity, this.modifiedOptions);

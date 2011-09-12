@@ -18,7 +18,6 @@ using Epsitec.Cresus.Core.Helpers;
 using Epsitec.Cresus.Core.Print;
 using Epsitec.Cresus.Core.Print.Bands;
 using Epsitec.Cresus.Core.Print.Containers;
-using Epsitec.Cresus.Core.Print.EntityPrinters;
 using Epsitec.Cresus.Core.Resolvers;
 using Epsitec.Cresus.Core.Library.Business.ContentAccessors;
 using Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers;
@@ -27,11 +26,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.EntityPrinters
+namespace Epsitec.Cresus.Core.Business.EntityPrinters
 {
-	public class SalesQuoteDocumentPrinter : AbstractDocumentMetadataPrinter
+	public sealed class SalesQuoteDocumentPrinter : BusinessDocumentPrinter
 	{
-		public SalesQuoteDocumentPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
+		internal SalesQuoteDocumentPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 			: base (businessContext, entity, options, printingUnits)
 		{
 		}
@@ -43,7 +42,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			{
 				yield return DocumentOption.Orientation;
 
-				foreach (var option in AbstractDocumentMetadataPrinter.RequiredHeaderDocumentOptions)
+				foreach (var option in BusinessDocumentPrinter.RequiredHeaderDocumentOptions)
 				{
 					yield return option;
 				}
@@ -181,19 +180,19 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			}
 
 			if (!this.HasOption (DocumentOption.ArticleAdditionalQuantities) ||
-				AbstractDocumentMetadataPrinter.IsEmptyColumn (accessors, DocumentItemAccessorColumn.AdditionalQuantity))
+				BusinessDocumentPrinter.IsEmptyColumn (accessors, DocumentItemAccessorColumn.AdditionalQuantity))
 			{
 				this.tableColumns[TableColumnKeys.AdditionalType].Visible = false;
 				this.tableColumns[TableColumnKeys.AdditionalQuantity].Visible = false;
 				this.tableColumns[TableColumnKeys.AdditionalDate].Visible = false;
 			}
 
-			if (AbstractDocumentMetadataPrinter.IsEmptyColumn (accessors, DocumentItemAccessorColumn.LineDiscount))
+			if (BusinessDocumentPrinter.IsEmptyColumn (accessors, DocumentItemAccessorColumn.LineDiscount))
 			{
 				this.tableColumns[TableColumnKeys.Discount].Visible = false;
 			}
 
-			if (AbstractDocumentMetadataPrinter.IsEmptyColumn (accessors, DocumentItemAccessorColumn.VatRate))
+			if (BusinessDocumentPrinter.IsEmptyColumn (accessors, DocumentItemAccessorColumn.VatRate))
 			{
 				this.tableColumns[TableColumnKeys.Vat].Visible = false;
 			}
@@ -222,13 +221,13 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 					this.SetTableText (row+i, TableColumnKeys.LineNumber, accessor.GetContent (i, DocumentItemAccessorColumn.LineNumber));
 				}
 
-				this.SetTableText (row+i, TableColumnKeys.MainQuantity, AbstractDocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.MainQuantity, DocumentItemAccessorColumn.MainUnit));
+				this.SetTableText (row+i, TableColumnKeys.MainQuantity, BusinessDocumentPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.MainQuantity, DocumentItemAccessorColumn.MainUnit));
 
 				if (this.HasOption (DocumentOption.ArticleAdditionalQuantities))  // imprime les autres quantités ?
 				{
 					this.SetTableText (row+i, TableColumnKeys.AdditionalType, accessor.GetContent (i, DocumentItemAccessorColumn.AdditionalType));
-					this.SetTableText (row+i, TableColumnKeys.AdditionalQuantity, AbstractDocumentMetadataPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.AdditionalQuantity, DocumentItemAccessorColumn.AdditionalUnit));
-					this.SetTableText (row+i, TableColumnKeys.AdditionalDate, AbstractDocumentMetadataPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.AdditionalBeginDate, DocumentItemAccessorColumn.AdditionalEndDate));
+					this.SetTableText (row+i, TableColumnKeys.AdditionalQuantity, BusinessDocumentPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.AdditionalQuantity, DocumentItemAccessorColumn.AdditionalUnit));
+					this.SetTableText (row+i, TableColumnKeys.AdditionalDate, BusinessDocumentPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.AdditionalBeginDate, DocumentItemAccessorColumn.AdditionalEndDate));
 				}
 
 				if (this.HasOption (DocumentOption.ArticleId))

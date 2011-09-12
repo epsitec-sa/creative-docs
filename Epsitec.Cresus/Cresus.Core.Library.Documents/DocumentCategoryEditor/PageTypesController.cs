@@ -16,6 +16,7 @@ using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Resolvers;
 
 namespace Epsitec.Cresus.Core.DocumentCategoryController
 {
@@ -224,7 +225,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 		private void UpdateData()
 		{
-			this.requiredPageTypes = Epsitec.Cresus.Core.Documents.External.CresusCore.GetRequiredPageTypes (this.documentCategoryEntity.DocumentType);
+			this.requiredPageTypes = EntityPrinterFactoryResolver.FindRequiredPageTypes (this.documentCategoryEntity.DocumentType);
 
 			this.pageTypeInformations.Clear ();
 

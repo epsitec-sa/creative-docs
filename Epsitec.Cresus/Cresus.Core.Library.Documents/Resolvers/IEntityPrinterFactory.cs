@@ -5,7 +5,6 @@ using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Documents;
-using Epsitec.Cresus.Core.Print.EntityPrinters;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -45,6 +44,11 @@ namespace Epsitec.Cresus.Core.Resolvers
 		/// <param name="options">The printing options.</param>
 		/// <param name="printingUnits">The <see cref="PageType"/> to printing unit mapping.</param>
 		/// <returns>The <see cref="AbstractPrinter"/> instance.</returns>
-		AbstractPrinter CreatePrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits);
+		IEntityPrinter CreatePrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits);
+
+		DocumentType GetDocumentType(AbstractEntity entity);
+
+		IEnumerable<DocumentOption> GetRequiredDocumentOptions(DocumentType documentType);
+		IEnumerable<PageType> GetRequiredPageTypes(DocumentType documentType);
 	}
 }

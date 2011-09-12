@@ -10,6 +10,7 @@ using Epsitec.Cresus.Core.Business;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Resolvers;
 
 namespace Epsitec.Cresus.Core.Documents
 {
@@ -18,7 +19,7 @@ namespace Epsitec.Cresus.Core.Documents
 	/// La clé du dictionnaire est un nom d'option (DocumentOption).
 	/// La valeur du dictionnaire est la valeur de l'option. Par exemple "true".
 	/// </summary>
-	public class PrintingOptionDictionary
+	public sealed class PrintingOptionDictionary
 	{
 		public PrintingOptionDictionary()
 		{
@@ -338,7 +339,7 @@ namespace Epsitec.Cresus.Core.Documents
 						continue;
 					}
 
-					var options = External.CresusCore.GetRequiredDocumentOptionsByDocumentType (documentType);
+					var options = EntityPrinterFactoryResolver.FindRequiredDocumentOptions (documentType);
 
 					if (options != null && options.Any ())
 					{

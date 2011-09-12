@@ -5,7 +5,6 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Documents;
-using Epsitec.Cresus.Core.Print.EntityPrinters;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +17,7 @@ namespace Epsitec.Cresus.Core.Print
 	/// sur une unité d'impression (PrintingUnit).
 	/// Initialement, on crée des sections d'une seule page. Elles sont regroupées par la suite.
 	/// </summary>
-	public class SectionToPrint
+	public sealed class SectionToPrint
 	{
 		public SectionToPrint(PrintingUnit printingUnit, string job, int firstPage, AbstractPrinter documentPrinter, Size pageSize, PrintingOptionDictionary options)
 		{

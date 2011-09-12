@@ -7,7 +7,6 @@ using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Documents;
-using Epsitec.Cresus.Core.Print.EntityPrinters;
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -15,7 +14,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Print.Controllers
 {
-	public class ContinuousController
+	public sealed class ContinuousController
 	{
 		public ContinuousController(IBusinessContext businessContext, AbstractEntity metadoc, Business.DocumentType documentType)
 		{

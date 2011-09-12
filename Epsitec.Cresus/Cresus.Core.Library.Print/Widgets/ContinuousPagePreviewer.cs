@@ -8,7 +8,6 @@ using Epsitec.Common.Widgets;
 
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Print;
-using Epsitec.Cresus.Core.Print.EntityPrinters;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +17,7 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// <summary>
 	/// Ce widget montre le contenu d'une page imprimée dans une zone rectangulaire.
 	/// </summary>
-	public class ContinuousPagePreviewer : Widget, Common.Widgets.Behaviors.IDragBehaviorHost
+	public sealed class ContinuousPagePreviewer : Widget, Common.Widgets.Behaviors.IDragBehaviorHost
 	{
 		public ContinuousPagePreviewer()
 		{
@@ -170,7 +169,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		protected virtual Common.Widgets.Behaviors.DragBehavior CreateDragBehavior()
+		private Common.Widgets.Behaviors.DragBehavior CreateDragBehavior()
 		{
 			return new Common.Widgets.Behaviors.DragBehavior (this, true, true);
 		}
@@ -420,9 +419,9 @@ namespace Epsitec.Cresus.Core.Widgets
 
 
 		#region Events handler
-		protected void OnCurrentValueChanged()
+		private void OnCurrentValueChanged()
 		{
-			var handler = (EventHandler) this.GetUserEventHandler (ContinuousPagePreviewer.CurrentValueChangedEvent);
+			var handler = this.GetUserEventHandler (ContinuousPagePreviewer.CurrentValueChangedEvent);
 
 			if (handler != null)
 			{

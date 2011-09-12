@@ -18,7 +18,6 @@ using Epsitec.Cresus.Core.Helpers;
 using Epsitec.Cresus.Core.Print;
 using Epsitec.Cresus.Core.Print.Bands;
 using Epsitec.Cresus.Core.Print.Containers;
-using Epsitec.Cresus.Core.Print.EntityPrinters;
 using Epsitec.Cresus.Core.Resolvers;
 using Epsitec.Cresus.Core.Library.Business.ContentAccessors;
 using Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers;
@@ -27,11 +26,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.EntityPrinters
+namespace Epsitec.Cresus.Core.Business.EntityPrinters
 {
-	public abstract class AbstractDocumentMetadataPrinter : AbstractPrinter
+	public abstract class BusinessDocumentPrinter : AbstractPrinter
 	{
-		public AbstractDocumentMetadataPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
+		protected BusinessDocumentPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 			: base (businessContext, entity, options, printingUnits)
 		{
 			var documentMetadata = this.businessContext.GetMasterEntity<DocumentMetadataEntity> ();
@@ -39,65 +38,6 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 			this.businessLogic = new BusinessLogic (this.businessContext as BusinessContext, documentMetadata);
 
 			this.columnsWithoutRightBorder = new List<TableColumnKeys> ();
-		}
-
-
-		public static IEnumerable<DocumentOption> GetRequiredDocumentOptions(DocumentType documentType)
-		{
-			switch (documentType)
-			{
-				case DocumentType.SalesQuote:
-					return SalesQuoteDocumentPrinter.RequiredDocumentOptions;
-
-				case DocumentType.OrderBooking:
-					return OrderBookingDocumentPrinter.RequiredDocumentOptions;
-
-				case DocumentType.OrderConfirmation:
-					return OrderConfirmationDocumentPrinter.RequiredDocumentOptions;
-
-				case DocumentType.ProductionOrder:
-					return ProductionOrderDocumentPrinter.RequiredDocumentOptions;
-
-				case DocumentType.ProductionChecklist:
-					return ProductionChecklistDocumentPrinter.RequiredDocumentOptions;
-
-				case DocumentType.DeliveryNote:
-					return DeliveryNoteDocumentPrinter.RequiredDocumentOptions;
-
-				case DocumentType.Invoice:
-					return InvoiceDocumentPrinter.RequiredDocumentOptions;
-			}
-
-			return null;
-		}
-
-		public static IEnumerable<PageType> GetRequiredPageTypes(DocumentType documentType)
-		{
-			switch (documentType)
-			{
-				case DocumentType.SalesQuote:
-					return SalesQuoteDocumentPrinter.RequiredPageTypes;
-
-				case DocumentType.OrderBooking:
-					return OrderBookingDocumentPrinter.RequiredPageTypes;
-
-				case DocumentType.OrderConfirmation:
-					return OrderConfirmationDocumentPrinter.RequiredPageTypes;
-
-				case DocumentType.ProductionOrder:
-					return ProductionOrderDocumentPrinter.RequiredPageTypes;
-
-				case DocumentType.ProductionChecklist:
-					return ProductionChecklistDocumentPrinter.RequiredPageTypes;
-
-				case DocumentType.DeliveryNote:
-					return DeliveryNoteDocumentPrinter.RequiredPageTypes;
-
-				case DocumentType.Invoice:
-					return InvoiceDocumentPrinter.RequiredPageTypes;
-			}
-
-			return null;
 		}
 
 
@@ -167,19 +107,16 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		}
 
 
-		protected override Margins PageMargins
+		protected override Margins GetPageMargins()
 		{
-			get
-			{
-				double leftMargin   = this.GetOptionValue (DocumentOption.LeftMargin);
-				double rightMargin  = this.GetOptionValue (DocumentOption.RightMargin);
-				double topMargin    = this.GetOptionValue (DocumentOption.TopMargin);
-				double bottomMargin = this.GetOptionValue (DocumentOption.BottomMargin);
+			double leftMargin   = this.GetOptionValue (DocumentOption.LeftMargin);
+			double rightMargin  = this.GetOptionValue (DocumentOption.RightMargin);
+			double topMargin    = this.GetOptionValue (DocumentOption.TopMargin);
+			double bottomMargin = this.GetOptionValue (DocumentOption.BottomMargin);
 
-				double h = this.HasPrices ? AbstractDocumentMetadataPrinter.reportHeight : 0;
+			double h = this.HasPrices ? BusinessDocumentPrinter.reportHeight : 0;
 
-				return new Margins (leftMargin, rightMargin, topMargin+h*2, h+bottomMargin);
-			}
+			return new Margins (leftMargin, rightMargin, topMargin+h*2, h+bottomMargin);
 		}
 
 
@@ -243,7 +180,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 					var textBand = new TextBand ();
 					textBand.Text = address;
-					textBand.Font = AbstractDocumentMetadataPrinter.font;
+					textBand.Font = BusinessDocumentPrinter.font;
 					textBand.FontSize = this.GetOptionValue (DocumentOption.HeaderFromFontSize);
 					this.documentContainer.AddAbsolute (textBand, rect);
 				}
@@ -257,7 +194,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				{
 					var mailContactBand = new TextBand ();
 					mailContactBand.Text = this.Entity.BillToMailContact.GetSummary ();
-					mailContactBand.Font = AbstractDocumentMetadataPrinter.font;
+					mailContactBand.Font = BusinessDocumentPrinter.font;
 					mailContactBand.FontSize = this.GetOptionValue (DocumentOption.HeaderToFontSize);
 					this.documentContainer.AddAbsolute (mailContactBand, rect);
 				}
@@ -626,7 +563,7 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				band.ColumnsCount = 2;
 				band.RowsCount = 1;
 				band.CellBorder = CellBorder.Empty;
-				band.Font = AbstractDocumentMetadataPrinter.font;
+				band.Font = BusinessDocumentPrinter.font;
 				band.FontSize = fontSize;
 				band.CellMargins = new Margins (0);
 				band.SetRelativeColumWidth (0, firstColumnWidth);
@@ -734,10 +671,11 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		protected void BuildPages(int firstPage)
 		{
 			//	Met les numéros de page.
-			double reportHeight = this.HasPrices ? AbstractDocumentMetadataPrinter.reportHeight*2 : 0;
+			double reportHeight = this.HasPrices ? BusinessDocumentPrinter.reportHeight*2 : 0;
 
-			var leftBounds  = new Rectangle (this.PageMargins.Left, this.RequiredPageSize.Height-this.PageMargins.Top+reportHeight+1, 80, 5);
-			var rightBounds = new Rectangle (this.RequiredPageSize.Width-this.PageMargins.Right-80, this.RequiredPageSize.Height-this.PageMargins.Top+reportHeight+1, 80, 5);
+			var margins     = this.GetPageMargins ();
+			var leftBounds  = new Rectangle (margins.Left, this.RequiredPageSize.Height-margins.Top+reportHeight+1, 80, 5);
+			var rightBounds = new Rectangle (this.RequiredPageSize.Width-margins.Right-80, this.RequiredPageSize.Height-margins.Top+reportHeight+1, 80, 5);
 
 			for (int page = firstPage+1; page < this.documentContainer.PageCount (); page++)
 			{
@@ -764,7 +702,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		{
 			//	Met un report en haut des pages concernées, avec une répétition de la ligne
 			//	d'en-tête (noms des colonnes).
-			double width = this.RequiredPageSize.Width-this.PageMargins.Left-this.PageMargins.Right;
+			var margins = this.GetPageMargins ();
+			double width = this.RequiredPageSize.Width-margins.Left-margins.Right;
 
 			for (int page = firstPage+1; page < this.documentContainer.PageCount (); page++)
 			{
@@ -811,7 +750,8 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 		protected void BuildReportFooters(int firstPage)
 		{
 			//	Met un report en bas des pages concernées.
-			double width = this.RequiredPageSize.Width-this.PageMargins.Left-this.PageMargins.Right;
+			var margins = this.GetPageMargins ();
+			double width = this.RequiredPageSize.Width-margins.Left-margins.Right;
 
 			for (int page = firstPage; page < this.documentContainer.PageCount ()-1; page++)
 			{
@@ -1348,7 +1288,20 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 				yield return typeof (DocumentMetadataEntity);
 			}
 
-			public AbstractPrinter CreatePrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
+			public DocumentType GetDocumentType(AbstractEntity entity)
+			{
+				var documentMetadata = entity as DocumentMetadataEntity;
+
+				if ((documentMetadata != null) &&
+					(documentMetadata.DocumentCategory.IsNotNull ()))
+				{
+					return documentMetadata.DocumentCategory.DocumentType;
+				}
+
+				return DocumentType.Unknown;
+			}
+
+			public IEntityPrinter CreatePrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 			{
 				var documentMetadata = entity as DocumentMetadataEntity;
 
@@ -1374,6 +1327,64 @@ namespace Epsitec.Cresus.Core.EntityPrinters
 
 					case DocumentType.Invoice:
 						return new InvoiceDocumentPrinter (businessContext, entity, options, printingUnits);
+				}
+
+				return null;
+			}
+
+			public IEnumerable<DocumentOption> GetRequiredDocumentOptions(DocumentType documentType)
+			{
+				switch (documentType)
+				{
+					case DocumentType.SalesQuote:
+						return SalesQuoteDocumentPrinter.RequiredDocumentOptions;
+
+					case DocumentType.OrderBooking:
+						return OrderBookingDocumentPrinter.RequiredDocumentOptions;
+
+					case DocumentType.OrderConfirmation:
+						return OrderConfirmationDocumentPrinter.RequiredDocumentOptions;
+
+					case DocumentType.ProductionOrder:
+						return ProductionOrderDocumentPrinter.RequiredDocumentOptions;
+
+					case DocumentType.ProductionChecklist:
+						return ProductionChecklistDocumentPrinter.RequiredDocumentOptions;
+
+					case DocumentType.DeliveryNote:
+						return DeliveryNoteDocumentPrinter.RequiredDocumentOptions;
+
+					case DocumentType.Invoice:
+						return InvoiceDocumentPrinter.RequiredDocumentOptions;
+				}
+
+				return null;
+			}
+
+			public IEnumerable<PageType> GetRequiredPageTypes(DocumentType documentType)
+			{
+				switch (documentType)
+				{
+					case DocumentType.SalesQuote:
+						return SalesQuoteDocumentPrinter.RequiredPageTypes;
+
+					case DocumentType.OrderBooking:
+						return OrderBookingDocumentPrinter.RequiredPageTypes;
+
+					case DocumentType.OrderConfirmation:
+						return OrderConfirmationDocumentPrinter.RequiredPageTypes;
+
+					case DocumentType.ProductionOrder:
+						return ProductionOrderDocumentPrinter.RequiredPageTypes;
+
+					case DocumentType.ProductionChecklist:
+						return ProductionChecklistDocumentPrinter.RequiredPageTypes;
+
+					case DocumentType.DeliveryNote:
+						return DeliveryNoteDocumentPrinter.RequiredPageTypes;
+
+					case DocumentType.Invoice:
+						return InvoiceDocumentPrinter.RequiredPageTypes;
 				}
 
 				return null;
