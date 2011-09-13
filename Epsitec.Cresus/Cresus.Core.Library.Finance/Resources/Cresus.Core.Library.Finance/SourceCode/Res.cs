@@ -299,31 +299,15 @@ namespace Epsitec.Cresus.Core.Library.Finance
 						}
 					}
 					//	designer:cap/CVA55
-					public static global::Epsitec.Common.Types.Caption OnLinePriceAfterTax
+					public static global::Epsitec.Common.Types.Caption OnLinePrice
 					{
 						get
 						{
 							return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 165));
 						}
 					}
-					//	designer:cap/CVA45
-					public static global::Epsitec.Common.Types.Caption OnLinePriceBeforeTax
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 164));
-						}
-					}
-					//	designer:cap/CVA35
-					public static global::Epsitec.Common.Types.Caption OnUnitPriceAfterTax
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 163));
-						}
-					}
 					//	designer:cap/CVA25
-					public static global::Epsitec.Common.Types.Caption OnUnitPriceBeforeTax
+					public static global::Epsitec.Common.Types.Caption OnUnitPrice
 					{
 						get
 						{
@@ -506,32 +490,16 @@ namespace Epsitec.Cresus.Core.Library.Finance
 							return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 86));
 						}
 					}
-					//	designer:cap/CVAQ2
-					public static global::Epsitec.Common.Types.Caption OnLinePriceAfterTax
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 90));
-						}
-					}
 					//	designer:cap/CVAP2
-					public static global::Epsitec.Common.Types.Caption OnLinePriceBeforeTax
+					public static global::Epsitec.Common.Types.Caption OnLinePrice
 					{
 						get
 						{
 							return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 89));
 						}
 					}
-					//	designer:cap/CVAO2
-					public static global::Epsitec.Common.Types.Caption OnUnitPriceAfterTax
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 88));
-						}
-					}
 					//	designer:cap/CVAN2
-					public static global::Epsitec.Common.Types.Caption OnUnitPriceBeforeTax
+					public static global::Epsitec.Common.Types.Caption OnUnitPrice
 					{
 						get
 						{

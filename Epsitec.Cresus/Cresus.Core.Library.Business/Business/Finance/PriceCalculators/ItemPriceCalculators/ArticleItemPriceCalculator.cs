@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 						{
 							Modulo          = 0.05M,
 							AddBeforeModulo = 0.00M,
-							RoundingPolicy  = RoundingPolicy.OnLinePriceAfterTax,
+							RoundingPolicy  = RoundingPolicy.OnLinePrice,
 						}
 					};
 				}
@@ -162,7 +162,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 			var value = this.articleItem.UnitPriceAfterTax1.Value;
 
 			value = this.ApplyDiscount (value, DiscountPolicy.OnUnitPrice);
-			value = this.ApplyRounding (value, RoundingPolicy.OnUnitPriceAfterTax);
+			value = this.ApplyRounding (value, RoundingPolicy.OnUnitPrice);
 
 			if ((this.articleAttributes.HasFlag (ArticleDocumentItemAttributes.FixedUnitPrice2)) &&
 				(this.articleItem.UnitPriceAfterTax2.HasValue))
@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 			}
 
 			value = this.ApplyDiscount (value, DiscountPolicy.OnLinePrice);
-			value = this.ApplyRounding (value, RoundingPolicy.OnLinePriceAfterTax);
+			value = this.ApplyRounding (value, RoundingPolicy.OnLinePrice);
 
 			if ((this.articleAttributes.HasFlag (ArticleDocumentItemAttributes.FixedLinePrice2)) &&
 				(this.articleItem.LinePriceAfterTax2.HasValue))
@@ -220,7 +220,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 			var value = this.articleItem.UnitPriceBeforeTax1.Value;
 
 			value = this.ApplyDiscount (value, DiscountPolicy.OnUnitPrice);
-			value = this.ApplyRounding (value, RoundingPolicy.OnUnitPriceBeforeTax);
+			value = this.ApplyRounding (value, RoundingPolicy.OnUnitPrice);
 
 			if ((this.articleAttributes.HasFlag (ArticleDocumentItemAttributes.FixedUnitPrice2)) &&
 				(this.articleItem.UnitPriceBeforeTax2.HasValue))
@@ -247,7 +247,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 			}
 
 			value = this.ApplyDiscount (value, DiscountPolicy.OnLinePrice);
-			value = this.ApplyRounding (value, RoundingPolicy.OnLinePriceBeforeTax);
+			value = this.ApplyRounding (value, RoundingPolicy.OnLinePrice);
 
 			if ((this.articleAttributes.HasFlag (ArticleDocumentItemAttributes.FixedLinePrice2)) &&
 				(this.articleItem.LinePriceBeforeTax2.HasValue))

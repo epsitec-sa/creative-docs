@@ -29,7 +29,8 @@ namespace Epsitec.Cresus.Core.Business
 
 		/// <summary>
 		/// Validate the entity, to make sure that the data in the business context is
-		/// coherent.
+		/// coherent. This is usually called before the entities get persisted to the
+		/// database.
 		/// </summary>
 		Validate,
 

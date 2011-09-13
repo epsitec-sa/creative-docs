@@ -516,6 +516,8 @@ namespace Epsitec.Cresus.Core.Business
 
 		public void SaveChanges(EntitySaveMode entitySaveMode = EntitySaveMode.None)
 		{
+			this.ApplyRulesToRegisteredEntities (RuleType.Validate);
+
 			if (this.ContainsChanges ())
 			{
 				var notYetPersistedEntities = new HashSet<AbstractEntity> (this.dataContext.GetEntities ().Where (x => !this.dataContext.IsPersistent (x)));
