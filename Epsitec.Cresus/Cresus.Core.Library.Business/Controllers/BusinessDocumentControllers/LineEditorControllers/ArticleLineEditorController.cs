@@ -72,10 +72,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				if (this.Entity.Discounts.Count != 0)
-				{
-					var discount = this.Entity.Discounts[0];
+				var policy   = DiscountPolicy.OnLinePrice;
+				var discount = this.Entity.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
 
+				if (discount.IsNotNull ())
+				{
 					if (discount.DiscountRate.HasValue && discount.DiscountRate.Value != 0)
 					{
 						return Misc.PercentToString (discount.DiscountRate);
@@ -93,8 +94,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				using (this.accessData.BusinessContext.SuspendUpdates ())
 				{
-					this.CreateDefaultDiscount (DiscountPolicy.OnLinePrice);
-					var discount = this.Entity.Discounts[0];
+					var policy   = DiscountPolicy.OnLinePrice;
+					
+					this.CreateDefaultDiscount (policy);
+					
+					var discount = this.Entity.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
 
 					if (string.IsNullOrEmpty (value))
 					{
@@ -132,10 +136,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				if (this.Entity.Discounts.Count != 0)
-				{
-					var discount = this.Entity.Discounts[0];
+				var policy   = DiscountPolicy.OnLinePrice;
+				var discount = this.Entity.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
 
+				if (discount.IsNotNull ())
+				{
 					return discount.Text;
 				}
 
@@ -143,10 +148,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 			set
 			{
-				this.CreateDefaultDiscount (DiscountPolicy.OnLinePrice);
-				var discount = this.Entity.Discounts[0];
+				var policy   = DiscountPolicy.OnLinePrice;
 
-				discount.Text = value;
+				this.CreateDefaultDiscount (policy);
+				
+				var discount = this.Entity.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
+
+				if (discount.IsNotNull ())
+				{
+					discount.Text = value;
+				}
 			}
 		}
 
