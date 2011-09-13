@@ -1,6 +1,8 @@
 //	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.Extensions;
+
 using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
@@ -486,7 +488,8 @@ namespace Epsitec.Common.Types
 		}
 		public static bool Convert(object obj, System.Type type, out System.Enum value)
 		{
-			if ((obj == null) || (obj == System.DBNull.Value))
+			if ((obj == null) ||
+				(obj == System.DBNull.Value))
 			{
 				value = null;
 				return false;
@@ -504,38 +507,18 @@ namespace Epsitec.Common.Types
 			{
 				name = string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}", obj);
 			}
+
+			object item;
 			
-			if (InvariantConverter.ParseEnum (type, name, out value))
+			if (InvariantConverter.TryParseEnum (type, name, out item))
 			{
+				value = (System.Enum) item;
 				return true;
 			}
 			
-			//	Si la conversion depuis la représentation textuelle de l'objet n'a pas marché,
-			//	on tente encore une conversion numérique préalable :
-			
-			long index;
-			
-			try
-			{
-				if (InvariantConverter.Convert (obj, out index))
-				{
-					value = (System.Enum) System.Enum.ToObject (type, index);
-				
-					if (InvariantConverter.CheckEnumValue (type, value))
-					{
-						return true;
-					}
-				}
-			}
-			catch (System.FormatException)
-			{
-			}
-			
-			//	Rien n'a marché, on abandonne...
-			
 			System.Diagnostics.Debug.WriteLine (string.Format ("Could not convert value '{0}' to type {1}.", obj, type.Name));
 			
-			value = null;
+			value = InvariantConverter.CreateDefaultEnumValue (type);
 			return false;
 		}
 		public static bool Convert(object obj, out System.DateTime value)
@@ -704,18 +687,12 @@ namespace Epsitec.Common.Types
 			return false;
 		}
 		
-		public static string[] GetSplitEnumValues(System.Type type, System.Enum value)
+		public static string[] GetSplitEnumValues(System.Enum value)
 		{
-			string   name   = value.ToString ();
-			string[] values = name.Split (',', '|', ';');
+			string[] values = value.ToString ().Split (InvariantConverter.EnumFlagSeperators, System.StringSplitOptions.RemoveEmptyEntries);
 			
 			if (values.Length > 0)
 			{
-				if (values[0] == "")
-				{
-					return new string[0];
-				}
-				
 				for (int i = 0; i < values.Length; i++)
 				{
 					values[i] = values[i].Trim ();
@@ -806,61 +783,256 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				System.Enum value;
+				object value;
 				
-				if (InvariantConverter.ParseEnum (typeof (TEnum), text, out value))
+				if (InvariantConverter.TryParseEnum (typeof (TEnum), text, out value))
 				{
-					return (TEnum) (object) value;
+					return (TEnum) value;
 				}
 
 				return defaultValue;
 			}
 		}
 
-		
-		internal static bool ParseEnum(System.Type type, string name, out System.Enum value)
+		public static bool CheckEnumValue(System.Type type, System.Enum value)
 		{
-			//	Tente une conversion du nom donné en entrée en une valeur de
-			//	l'énumération; gère aussi les énumérations avec valeurs multiples.
-			
-			try
+			string[] values = InvariantConverter.GetSplitEnumValues (value);
+
+			for (int i = 0; i < values.Length; i++)
 			{
-				value = (System.Enum) System.Enum.Parse (type, name);
-				
-				return InvariantConverter.CheckEnumValue (type, value);
-			}
-			catch (System.ArgumentException)
-			{
-			}
-			
-			value = null;
-			return false;
-		}
-		internal static bool CheckEnumValue(System.Type type, System.Enum value)
-		{
-			string[] values = InvariantConverter.GetSplitEnumValues (type, value);
-			
-			try
-			{
-				for (int i = 0; i < values.Length; i++)
+				string name = values[i];
+				object item;
+
+				if ((InvariantConverter.TryParseEnum (type, name, out item) == false) ||
+					(System.Enum.IsDefined (type, item) == false))
 				{
-					string name = values[i];
-					
-					System.Enum item = (System.Enum) System.Enum.Parse (type, name);
-					
-					if (System.Enum.IsDefined (type, item) == false)
-					{
-						return false;
-					}
+					return false;
 				}
-				
-				return true;
 			}
-			catch (System.OverflowException)
+
+			return true;
+		}
+
+		
+		/// <summary>
+		/// Converts the string representation of an enum to its <c>enum</c>-equivalent value,
+		/// and returns whether the operation succeeded or not.
+		/// This method does not rely on <see cref="System.Enum.Parse"/> and will therefore
+		/// never raise any first or second chance exception.
+		/// </summary>
+		/// <param name="type">The enum target type. May not be null.</param>
+		/// <param name="input">The input text. May be null.</param>
+		/// <param name="value">When this method returns, contains an <c>enum</c>-equivalent value to the enum contained in input, if the conversion succeeded.</param>
+		/// <returns>
+		/// <c>true</c> if the value was converted successfully; otherwise, <c>false</c>.
+		/// </returns>
+		public static bool TryParseEnum(System.Type type, string input, out object value)
+		{
+			if (type == null)
 			{
+				throw new System.ArgumentNullException ("type");
+			}
+
+			if (!type.IsEnum)
+			{
+				throw new System.ArgumentException (null, "type");
+			}
+
+			if (input == null)
+			{
+				value = InvariantConverter.CreateDefaultEnumValue (type);
 				return false;
 			}
+
+			input = input.Trim ();
+			
+			if (input.Length == 0)
+			{
+				value = InvariantConverter.CreateDefaultEnumValue (type);
+				return false;
+			}
+
+			ulong ul = 0;
+			string[] names = System.Enum.GetNames (type);
+
+			if (names.Length == 0)
+			{
+				value = InvariantConverter.CreateDefaultEnumValue (type);
+				return false;
+			}
+
+			System.Type underlyingType = System.Enum.GetUnderlyingType (type);
+			System.Array values = System.Enum.GetValues (type);
+
+			// some enums like System.CodeDom.MemberAttributes *are* flags but are not declared with Flags...
+
+			if ((type.IsDefined (typeof (System.FlagsAttribute), true) == false) &&
+				(input.IndexOfAny (EnumFlagSeperators) < 0))
+			{
+				return InvariantConverter.EnumTokenToObject (type, underlyingType, names, values, input, out value);
+			}
+
+			// multi value enum
+			string[] tokens = input.Split (EnumFlagSeperators, System.StringSplitOptions.RemoveEmptyEntries);
+
+			if (tokens.Length == 0)
+			{
+				value = InvariantConverter.CreateDefaultEnumValue (type);
+				return false;
+			}
+
+			foreach (string tok in tokens)
+			{
+				string token = tok.Trim (); // NOTE: we don't consider empty tokens as errors
+
+				if (token.Length == 0)
+				{
+					continue;
+				}
+
+				object tokenValue;
+				
+				if (!InvariantConverter.EnumTokenToObject (type, underlyingType, names, values, token, out tokenValue))
+				{
+					value = InvariantConverter.CreateDefaultEnumValue (type);
+					return false;
+				}
+
+				switch (System.Convert.GetTypeCode (tokenValue))
+				{
+					case System.TypeCode.Int16:
+					case System.TypeCode.Int32:
+					case System.TypeCode.Int64:
+					case System.TypeCode.SByte:
+						ul |= (ulong) System.Convert.ToInt64 (tokenValue, System.Globalization.CultureInfo.InvariantCulture);
+						break;
+
+					//case System.TypeCode.Byte:
+					//case System.TypeCode.UInt16:
+					//case System.TypeCode.UInt32:
+					//case System.TypeCode.UInt64:
+					default:
+						ul |= System.Convert.ToUInt64 (tokenValue, System.Globalization.CultureInfo.InvariantCulture);
+						break;
+				}
+			}
+			
+			value = (System.Enum) System.Enum.ToObject (type, ul);
+			return true;
 		}
+
+		private static System.Enum CreateDefaultEnumValue(System.Type type)
+		{
+			return (System.Enum) System.Enum.ToObject (type, 0);
+		}
+
+
+		private static bool EnumTokenToObject(System.Type type, System.Type underlyingType, string[] names, System.Array values, string input, out object value)
+		{
+			for (int i = 0; i < names.Length; i++)
+			{
+				if (string.Compare (names[i], input, System.StringComparison.OrdinalIgnoreCase) == 0)
+				{
+					value = (System.Enum) values.GetValue (i);
+					return true;
+				}
+			}
+
+			if (input.IsNumeric ())
+			{
+				object obj = InvariantConverter.EnumNumericValueToObject (type, underlyingType, input);
+				if (obj == null)
+				{
+					value = InvariantConverter.CreateDefaultEnumValue (type);
+					return false;
+				}
+				value = obj;
+				return true;
+			}
+
+			value = value = InvariantConverter.CreateDefaultEnumValue (type);
+			return false;
+		}
+
+		private static object EnumNumericValueToObject(System.Type type, System.Type underlyingType, string input)
+		{
+			if (underlyingType == typeof (int))
+			{
+				int s;
+				if (int.TryParse (input, out s))
+				{
+					return System.Enum.ToObject (type, s);
+				}
+			}
+
+			if (underlyingType == typeof (uint))
+			{
+				uint s;
+				if (uint.TryParse (input, out s))
+				{
+					return System.Enum.ToObject (type, s);
+				}
+			}
+
+			if (underlyingType == typeof (ulong))
+			{
+				ulong s;
+				if (ulong.TryParse (input, out s))
+				{
+					return System.Enum.ToObject (type, s);
+				}
+			}
+
+			if (underlyingType == typeof (long))
+			{
+				long s;
+				if (long.TryParse (input, out s))
+				{
+					return System.Enum.ToObject (type, s);
+				}
+			}
+
+			if (underlyingType == typeof (short))
+			{
+				short s;
+				if (short.TryParse (input, out s))
+				{
+					return System.Enum.ToObject (type, s);
+				}
+			}
+
+			if (underlyingType == typeof (ushort))
+			{
+				ushort s;
+				if (ushort.TryParse (input, out s))
+				{
+					return System.Enum.ToObject (type, s);
+				}
+			}
+
+			if (underlyingType == typeof (byte))
+			{
+				byte s;
+				if (byte.TryParse (input, out s))
+				{
+					return System.Enum.ToObject (type, s);
+				}
+			}
+
+			if (underlyingType == typeof (sbyte))
+			{
+				sbyte s;
+				if (sbyte.TryParse (input, out s))
+				{
+					return System.Enum.ToObject (type, s);
+				}
+			}
+
+			return null;
+		}
+		
+		private static char[] EnumFlagSeperators = new char[] { ',', ';', '+', '|', ' ' };
+
 
 		private static Dictionary<System.Type, ISerializationConverter> typeConverters = new Dictionary<System.Type, ISerializationConverter> ();
 	}

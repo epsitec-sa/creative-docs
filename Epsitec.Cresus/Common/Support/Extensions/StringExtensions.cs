@@ -131,9 +131,42 @@ namespace Epsitec.Common.Support.Extensions
 				throw new System.ArgumentNullException ("value");
 			}
 
-			return new Regex ("^[a-zA-Z0-9]*$").IsMatch (value);
+			return StringExtensions.alphaNumRegex.IsMatch (value);
 		}
 
+		public static bool IsNumeric(this string value)
+		{
+			if (value == null)
+			{
+				throw new System.ArgumentNullException ("value");
+			}
+
+			bool valid = false;
+
+			for (int i = 0; i < value.Length; i++)
+			{
+				char c = value[i];
+
+				if ((c < '0') ||
+					(c > '9'))
+				{
+					if (i == 0)
+					{
+						if ((c == '+') ||
+							(c != '-'))
+						{
+							continue;
+						}
+					}
+
+					return false;
+				}
+
+				valid = true;
+			}
+
+			return valid;
+		}
 
 		/// <summary>
 		/// Splits <paramref name="value"/> into an array of <see cref="string"/> that contains all
@@ -211,5 +244,14 @@ namespace Epsitec.Common.Support.Extensions
 				return text.Substring (pos + separator.Length);
 			}
 		}
+
+
+		static StringExtensions()
+		{
+			StringExtensions.alphaNumRegex = new Regex ("^[a-zA-Z0-9]*$", RegexOptions.Compiled);
+		}
+
+
+		private static readonly Regex alphaNumRegex;
 	}
 }
