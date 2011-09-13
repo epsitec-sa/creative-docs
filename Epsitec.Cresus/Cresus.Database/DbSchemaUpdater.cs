@@ -17,8 +17,8 @@ namespace Epsitec.Cresus.Database
 	public static class DbSchemaUpdater
 	{
 
-        
-        public static void UpdateSchema(DbInfrastructure dbInfrastructure, IEnumerable<DbTable> newSchema)
+		
+		public static void UpdateSchema(DbInfrastructure dbInfrastructure, IEnumerable<DbTable> newSchema)
 		{
 			// TODO We could have problems here if in the tables, there are two types that share the
 			// same name but have different values. Only one will be used. Should we check for that
@@ -264,7 +264,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-        private static IEnumerable<System.Tuple<DbTable, DbTable>> GetDbTablesWithColumnDifference(IEnumerable<System.Tuple<DbTable, DbTable>> dbTablesToAlter)
+		private static IEnumerable<System.Tuple<DbTable, DbTable>> GetDbTablesWithColumnDifference(IEnumerable<System.Tuple<DbTable, DbTable>> dbTablesToAlter)
 		{
 			return dbTablesToAlter
 				.Where (t => !DbSchemaChecker.AreDbTableColumnsEqual (t.Item1, t.Item2));
@@ -351,7 +351,7 @@ namespace Epsitec.Cresus.Database
 			if (valid && a.Category == DbElementCat.Relation)
 			{
 				valid = string.Equals (a.RelationSourceTableName, b.RelationSourceTableName)
-			            && string.Equals (a.RelationTargetTableName, b.RelationTargetTableName);
+						&& string.Equals (a.RelationTargetTableName, b.RelationTargetTableName);
 			}
 
 			return !valid;
@@ -383,9 +383,16 @@ namespace Epsitec.Cresus.Database
 
 		private static bool AreDbTypeDefsValueCompatibles(DbTypeDef a, DbTypeDef b)
 		{
-			return DbSchemaUpdater.AreDbRawTypesValueCompatible (a.RawType, b.RawType)
+			if (DbSchemaUpdater.AreDbRawTypesValueCompatible (a.RawType, b.RawType)
 				&& DbSchemaUpdater.AreDbSimpleTypesValueCompatible (a.SimpleType, b.SimpleType)
-				&& DbSchemaUpdater.AreDbNumDefValueCompatible (a.NumDef, b.NumDef);
+				&& DbSchemaUpdater.AreDbNumDefValueCompatible (a.NumDef, b.NumDef))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 
@@ -460,6 +467,7 @@ namespace Epsitec.Cresus.Database
 
 		private static bool AreDbNumDefValueCompatible(DbNumDef a, DbNumDef b)
 		{
+			return true; // HACK
 			return (b == null) || 
 				(
 					   a != null && b != null
@@ -651,16 +659,16 @@ namespace Epsitec.Cresus.Database
 			sqlFields.Add (sqlField);
 
 			var sqlConditions = new SqlFieldList ()
-            {
-                SqlField.CreateFunction
-                (
-                    new SqlFunction
-                    (
-                    	SqlFunctionCode.CompareIsNull,
-                    	SqlField.CreateAliasedName(sqlTmpColumnName, sqlTmpColumnName)
-                    )
-                )
-            };
+			{
+				SqlField.CreateFunction
+				(
+					new SqlFunction
+					(
+						SqlFunctionCode.CompareIsNull,
+						SqlField.CreateAliasedName(sqlTmpColumnName, sqlTmpColumnName)
+					)
+				)
+			};
 
 			dbTransaction.SqlBuilder.UpdateData (sqlTableName, sqlFields, sqlConditions);
 			dbInfrastructure.ExecuteSilent (dbTransaction);
@@ -679,9 +687,9 @@ namespace Epsitec.Cresus.Database
 		private static void CopyValues(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, string sqlTableName, string sqlTmpColumnName, string sqlNewColumnName)
 		{
 			var sqlFields = new SqlFieldList ()
-            {
-                SqlField.CreateAliasedName (sqlTmpColumnName, sqlNewColumnName)
-            };
+			{
+				SqlField.CreateAliasedName (sqlTmpColumnName, sqlNewColumnName)
+			};
 			var sqlConditions = new SqlFieldList ();
 
 			dbTransaction.SqlBuilder.UpdateData (sqlTableName, sqlFields, sqlConditions);
@@ -707,7 +715,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-        private static IEnumerable<T> ExceptOnName<T>(IEnumerable<T> a, IEnumerable<T> b) where T : IName
+		private static IEnumerable<T> ExceptOnName<T>(IEnumerable<T> a, IEnumerable<T> b) where T : IName
 		{
 			// All that stuff with the cast of the INameComparer and the check about whether it is null
 			// is here just to make the compiler happy, because the program won't compile if we use

@@ -276,9 +276,8 @@ namespace Epsitec.Cresus.Database
 		/// <returns><c>true</c> if both <see cref="DbTypeDef"/> are equal, <c>false</c> if they are not.</returns>
 		public static bool AreDbTypeDefEqual(DbTypeDef a, DbTypeDef b)
 		{
-			return (a == null && b == null) ||
-			(
-				   a != null && b != null
+			if ((a == null && b == null) ||
+				(  a != null && b != null
 				&& a.Name == b.Name
 				&& a.TypeId == b.TypeId
 				&& a.RawType == b.RawType
@@ -286,8 +285,14 @@ namespace Epsitec.Cresus.Database
 				&& a.NumDef == b.NumDef
 				&& a.Length == b.Length
 				&& a.IsNullable == b.IsNullable
-				&& a.IsFixedLength == b.IsFixedLength
-			);
+				&& a.IsFixedLength == b.IsFixedLength))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 
