@@ -296,6 +296,76 @@ namespace Epsitec.Common.Types
 			return true;
 		}
 
+		public static bool EqualRefs<T>(IEnumerable<T> collectionA, IEnumerable<T> collectionB)
+			where T : class
+		{
+			bool result;
+
+			if (collectionA == collectionB)
+			{
+				return true;
+			}
+
+			ICollection<T> countableA = collectionA as ICollection<T>;
+			ICollection<T> countableB = collectionB as ICollection<T>;
+
+			if ((countableA != null) &&
+				(countableB != null) &&
+				(countableA.Count != countableB.Count))
+			{
+				return false;
+			}
+
+			T[] a = collectionA == null ? new T[0] : collectionA.ToArray ();
+			T[] b = collectionB == null ? new T[0] : collectionB.ToArray ();
+
+			if (Comparer.PreCompare (a, b, out result))
+			{
+				return result;
+			}
+
+			for (int i = 0; i < a.Length; i++)
+			{
+				if (object.ReferenceEquals (a[i], b[i]) == false)
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		public static bool EqualRefs<T>(ICollection<T> collectionA, ICollection<T> collectionB)
+			where T : class
+		{
+			if (collectionA == collectionB)
+			{
+				return true;
+			}
+
+			if ((collectionA == null) ||
+				(collectionB == null) ||
+				(collectionA.Count != collectionB.Count))
+			{
+				return false;
+			}
+
+			int n = collectionA.Count;
+
+			for (int i = 0; i < n; i++)
+			{
+				var a = collectionA.ElementAt (i);
+				var b = collectionB.ElementAt (i);
+				
+				if (object.ReferenceEquals (a, b) == false)
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
 		public static bool EqualValues<T>(IEnumerable<T> collectionA, IEnumerable<T> collectionB)
 			where T : struct
 		{

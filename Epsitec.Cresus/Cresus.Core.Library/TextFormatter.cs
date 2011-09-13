@@ -227,6 +227,7 @@ namespace Epsitec.Cresus.Core
 		private static void FormatText(System.Text.StringBuilder buffer, List<string> items)
 		{
 			bool emptyItem = true;
+			bool skipSpace = true;
 			int  count     = items.Count;
 
 			for (int i = 0; i < count; i++)
@@ -250,7 +251,7 @@ namespace Epsitec.Cresus.Core
 						continue;
 					}
 
-					text = text.Substring (1);
+					text   = text.Substring (1);
 					prefix = text.RemoveTag ().FirstCharacter ();
 				}
 
@@ -263,7 +264,7 @@ namespace Epsitec.Cresus.Core
 						continue;
 					}
 
-					text = text.Substring (0, text.Length-1);
+					text   = text.Substring (0, text.Length-1);
 					suffix = text.RemoveTag ().LastCharacter ();
 				}
 
@@ -276,8 +277,10 @@ namespace Epsitec.Cresus.Core
 				}
 				else
 				{
-					if ((emptyItem == false) &&
+					if ((skipSpace == false) &&
 						(lastCharacter != '(') &&
+						(lastCharacter != '-') &&
+						(lastCharacter != '+') &&
 						(prefix != '\n') &&
 						(prefix.IsPunctuationMark () == false) &&
 						(prefix != ')'))
@@ -289,6 +292,7 @@ namespace Epsitec.Cresus.Core
 				}
 
 				emptyItem = text.EndsWith (FormattedText.HtmlBreak) || string.IsNullOrEmpty (text.RemoveTag ());
+				skipSpace = emptyItem;
 			}
 		}
 
