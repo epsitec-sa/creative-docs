@@ -6,6 +6,7 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Collections;
 
+using Epsitec.Cresus.Core.Business.Finance;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Extensions;
 using Epsitec.Cresus.Core.Helpers;
@@ -47,9 +48,9 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 										  this.articleAttributes.HasFlag (ArticleDocumentItemAttributes.NeverApplyDiscount);
 
 			if ((this.priceGroup.IsNotNull ()) &&
-				(this.priceGroup.DefaultRoundingMode.IsNotNull ()))
+				(this.priceGroup.DefaultRoundingModes.Count > 0))
 			{
-				this.priceRoundingMode = this.priceGroup.DefaultRoundingMode;
+				this.priceRoundingModes = this.priceGroup.DefaultRoundingModes.ToArray ();
 			}
 			else
 			{
@@ -57,18 +58,22 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 
 				if ((settings.IsNull ()) ||
 					(settings.Finance.IsNull ()) ||
-					(settings.Finance.DefaultBillingRoundingMode.IsNull ()))
+					(settings.Finance.DefaultPriceGroup.IsNull ()) ||
+					(settings.Finance.DefaultPriceGroup.DefaultRoundingModes.Count == 0))
 				{
-					this.priceRoundingMode = new PriceRoundingModeEntity ()
+					this.priceRoundingModes = new PriceRoundingModeEntity[1]
 					{
-						Modulo          = 0.05M,
-						AddBeforeModulo = 0.00M,
-						RoundingPolicy  = RoundingPolicy.OnLinePriceAfterTax,
+						new PriceRoundingModeEntity ()
+						{
+							Modulo          = 0.05M,
+							AddBeforeModulo = 0.00M,
+							RoundingPolicy  = RoundingPolicy.OnLinePriceAfterTax,
+						}
 					};
 				}
 				else
 				{
-					this.priceRoundingMode = settings.Finance.DefaultBillingRoundingMode;
+					this.priceRoundingModes = settings.Finance.DefaultPriceGroup.DefaultRoundingModes.ToArray ();
 				}
 			}
 		}
@@ -126,6 +131,8 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 			}
 
 			this.ComputeTotalRevenueAndTax (tax, unitPriceQuantity, realPriceQuantity);
+
+			this.articleItem.ArticleAttributes = this.articleAttributes;
 		}
 
 
@@ -154,19 +161,46 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 			Tax tax;
 			var value = this.articleItem.UnitPriceAfterTax1.Value;
 
-			value = this.ApplyDiscount (value, DiscountPolicy.OnUnitPriceAfterTax);
+			value = this.ApplyDiscount (value, DiscountPolicy.OnUnitPrice);
 			value = this.ApplyRounding (value, RoundingPolicy.OnUnitPriceAfterTax);
 
-			this.articleItem.UnitPriceAfterTax2 = value;
+			if ((this.articleAttributes.HasFlag (ArticleDocumentItemAttributes.FixedUnitPrice2)) &&
+				(this.articleItem.UnitPriceAfterTax2.HasValue))
+			{
+				value = this.articleItem.UnitPriceAfterTax2.Value;
+			}
+			else
+			{
+				this.articleItem.UnitPriceAfterTax2 = value;
+				this.articleAttributes = this.articleAttributes.ClearFlag (ArticleDocumentItemAttributes.FixedUnitPrice2);
+			}
 
 			value = value * unitPriceQuantity;
 
-			this.articleItem.LinePriceAfterTax1 = PriceCalculator.ClipPriceValue (value, this.currencyCode);
+			if ((this.articleAttributes.HasFlag (ArticleDocumentItemAttributes.FixedLinePrice1)) &&
+				(this.articleItem.LinePriceAfterTax1.HasValue))
+			{
+				value = this.articleItem.LinePriceAfterTax1.Value;
+			}
+			else
+			{
+				this.articleItem.LinePriceAfterTax1 = PriceCalculator.ClipPriceValue (value, this.currencyCode);
+				this.articleAttributes = this.articleAttributes.ClearFlag (ArticleDocumentItemAttributes.FixedLinePrice1);
+			}
 
-			value = this.ApplyDiscount (value, DiscountPolicy.OnLinePriceAfterTax);
+			value = this.ApplyDiscount (value, DiscountPolicy.OnLinePrice);
 			value = this.ApplyRounding (value, RoundingPolicy.OnLinePriceAfterTax);
 
-			this.articleItem.LinePriceAfterTax2 = value;
+			if ((this.articleAttributes.HasFlag (ArticleDocumentItemAttributes.FixedLinePrice2)) &&
+				(this.articleItem.LinePriceAfterTax2.HasValue))
+			{
+				value = this.articleItem.LinePriceAfterTax2.Value;
+			}
+			else
+			{
+				this.articleItem.LinePriceAfterTax2 = value;
+				this.articleAttributes = this.articleAttributes.ClearFlag (ArticleDocumentItemAttributes.FixedLinePrice2);
+			}
 
 			tax = this.ComputeTax (1000);
 
@@ -185,19 +219,46 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 			Tax tax;
 			var value = this.articleItem.UnitPriceBeforeTax1.Value;
 
-			value = this.ApplyDiscount (value, DiscountPolicy.OnUnitPriceBeforeTax);
+			value = this.ApplyDiscount (value, DiscountPolicy.OnUnitPrice);
 			value = this.ApplyRounding (value, RoundingPolicy.OnUnitPriceBeforeTax);
 
-			this.articleItem.UnitPriceBeforeTax2 = value;
+			if ((this.articleAttributes.HasFlag (ArticleDocumentItemAttributes.FixedUnitPrice2)) &&
+				(this.articleItem.UnitPriceBeforeTax2.HasValue))
+			{
+				value = this.articleItem.UnitPriceBeforeTax2.Value;
+			}
+			else
+			{
+				this.articleItem.UnitPriceBeforeTax2 = value;
+				this.articleAttributes = this.articleAttributes.ClearFlag (ArticleDocumentItemAttributes.FixedUnitPrice2);
+			}
 
 			value = value * unitPriceQuantity;
 
-			this.articleItem.LinePriceBeforeTax1 = PriceCalculator.ClipPriceValue (value, this.currencyCode);
+			if ((this.articleAttributes.HasFlag (ArticleDocumentItemAttributes.FixedLinePrice1)) &&
+				(this.articleItem.LinePriceBeforeTax1.HasValue))
+			{
+				value = this.articleItem.LinePriceBeforeTax1.Value;
+			}
+			else
+			{
+				this.articleItem.LinePriceBeforeTax1 = PriceCalculator.ClipPriceValue (value, this.currencyCode);
+				this.articleAttributes = this.articleAttributes.ClearFlag (ArticleDocumentItemAttributes.FixedLinePrice1);
+			}
 
-			value = this.ApplyDiscount (value, DiscountPolicy.OnLinePriceBeforeTax);
+			value = this.ApplyDiscount (value, DiscountPolicy.OnLinePrice);
 			value = this.ApplyRounding (value, RoundingPolicy.OnLinePriceBeforeTax);
 
-			this.articleItem.LinePriceBeforeTax2 = value;
+			if ((this.articleAttributes.HasFlag (ArticleDocumentItemAttributes.FixedLinePrice2)) &&
+				(this.articleItem.LinePriceBeforeTax2.HasValue))
+			{
+				value = this.articleItem.LinePriceBeforeTax2.Value;
+			}
+			else
+			{
+				this.articleItem.LinePriceBeforeTax2 = value;
+				this.articleAttributes = this.articleAttributes.ClearFlag (ArticleDocumentItemAttributes.FixedLinePrice2);
+			}
 
 			tax = this.ComputeTax (value);
 
@@ -277,7 +338,12 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 		
 		private decimal ApplyDiscount(decimal value, DiscountPolicy policy)
 		{
-			//	TODO: ...
+			foreach (var discount in this.articleItem.Discounts.Where (x => x.DiscountPolicy.Compatible (policy)))
+			{
+				value = this.ApplyDiscount (value, discount);
+				value = this.ApplyRounding (value, discount.RoundingMode);
+			}
+
 			return value;
 		}
 
@@ -288,6 +354,17 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 			return PriceCalculator.ClipPriceValue (value, this.currencyCode);
 		}
 
+		private decimal ApplyRounding(decimal value, PriceRoundingModeEntity rounding)
+		{
+			if (rounding.IsNull ())
+			{
+				return value;
+			}
+			else
+			{
+				return rounding.Round (value);
+			}
+		}
 
 
 		private void ResetUnitPrice()
@@ -403,54 +480,18 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 			if (discount.DiscountRate.HasValue)
 			{
 				decimal discountRatio = 1.00M - System.Math.Abs (discount.DiscountRate.Value);
-				return this.ApplyDiscountRatio (discount, price, tax, discountRatio);
+				return price * discountRatio;
 			}
 			
 			if (discount.Value.HasValue)
 			{
 				decimal discountAmount = System.Math.Abs (discount.Value.Value);
-				return this.ApplyDiscountFixed (discount, price, tax, discountAmount);
+				return System.Math.Max (0, price - discountAmount);
 			}
 			
 			return price;
 		}
 
-
-		private decimal ApplyDiscountRatio(PriceDiscountEntity discount, decimal priceBeforeTax, decimal tax, decimal discountRatio)
-		{
-			if (discountRatio < 0)
-			{
-				discountRatio = 0;
-			}
-
-			if (discount.DiscountPolicy.AfterTax ())
-			{
-				decimal priceAfterTax = priceBeforeTax + tax;
-				decimal taxRatio      = (priceAfterTax == 0) ? 0 : priceBeforeTax / priceAfterTax;
-				
-				return priceAfterTax * discountRatio * taxRatio;
-			}
-			else
-			{
-				return priceBeforeTax * discountRatio;
-			}
-		}
-
-		private decimal ApplyDiscountFixed(PriceDiscountEntity discount, decimal price, decimal tax, decimal discountAmount)
-		{
-			if (discount.DiscountPolicy.AfterTax ())
-			{
-				decimal priceBeforeTax = price;
-				decimal priceAfterTax  = priceBeforeTax + tax;
-				decimal taxRatio       = (priceAfterTax == 0) ? 0 : priceBeforeTax / priceAfterTax;
-				
-				return System.Math.Max (0, taxRatio * (priceAfterTax - discountAmount));
-			}
-			else
-			{
-				return System.Math.Max (0, price - discountAmount);
-			}
-		}
 
 		private decimal GetUnitPriceQuantity()
 		{
@@ -704,11 +745,11 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 		private readonly System.DateTime			date;
 		private readonly PriceGroupEntity			priceGroup;
 
-		private readonly PriceRoundingModeEntity	priceRoundingMode;
+		private readonly PriceRoundingModeEntity[]	priceRoundingModes;
 		
 		private Tax									tax;
-		private readonly bool							articleNotDiscountable;
-		private readonly ArticleDocumentItemAttributes	articleAttributes;
+		private readonly bool						articleNotDiscountable;
+		private ArticleDocumentItemAttributes		articleAttributes;
 		private decimal?							primaryUnitPriceAfterTax;
 	}
 }

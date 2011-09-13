@@ -1958,25 +1958,15 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>DefaultRoundingMode</c> field.
-		///	designer:fld/CVAA4/CVAE4
+		///	The <c>DefaultRoundingModes</c> field.
+		///	designer:fld/CVAA4/CVA85
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[CVAE4]")]
-		public global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity DefaultRoundingMode
+		[global::Epsitec.Common.Support.EntityField ("[CVA85]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity> DefaultRoundingModes
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity> ("[CVAE4]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue = this.DefaultRoundingMode;
-				if (oldValue != value || !this.IsFieldDefined("[CVAE4]"))
-				{
-					this.OnDefaultRoundingModeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity> ("[CVAE4]", oldValue, value);
-					this.OnDefaultRoundingModeChanged (oldValue, value);
-				}
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity> ("[CVA85]");
 			}
 		}
 		
@@ -1988,8 +1978,6 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnDefaultDivideRatioChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnDefaultMultiplyRatioChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnDefaultMultiplyRatioChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnDefaultRoundingModeChanging(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
-		partial void OnDefaultRoundingModeChanged(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

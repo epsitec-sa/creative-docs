@@ -21,6 +21,7 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Business.Finance;
 
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
@@ -30,6 +31,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			this.accessData = accessData;
 			this.tabIndex = 1;
+
+			if ((this.accessData.BusinessDocument.IsNotNull ()) &&
+				(this.accessData.BusinessDocument.PriceGroup.IsNotNull ()))
+			{
+				this.billingMode = this.accessData.BusinessDocument.PriceGroup.BillingMode;
+			}
 		}
 
 		public void CreateUI(Widget parent, AbstractEntity entity)
@@ -136,6 +143,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 
 		protected readonly AccessData					accessData;
+		protected readonly BillingMode					billingMode;
 
 		protected AbstractEntity						entity;
 		protected TileContainer							tileContainer;

@@ -12,11 +12,9 @@ namespace Epsitec.Cresus.Core.Business.Finance
 	public enum DiscountPolicy
 	{
 		None					= 0,
+		All						= 1,
 
-		OnUnitPriceBeforeTax	= 2,
-		OnUnitPriceAfterTax		= 3,
-
-		OnLinePriceBeforeTax	= 4,
-		OnLinePriceAfterTax		= 5,
+		OnUnitPrice				= 2,
+		OnLinePrice				= 4,
 	}
 }

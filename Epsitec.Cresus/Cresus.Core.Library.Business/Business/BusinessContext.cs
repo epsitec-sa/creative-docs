@@ -302,9 +302,9 @@ namespace Epsitec.Cresus.Core.Business
 				return new NoOpUnlocker (this);
 			}
 			if (entity.IsNull ())
-            {
+			{
 				throw new System.ArgumentNullException ("Cannot acquire lock on null entity");
-            }
+			}
 
 			this.lockEntity = entity;
 
@@ -557,9 +557,9 @@ namespace Epsitec.Cresus.Core.Business
 			where T : AbstractEntity, new ()
 		{
 			if (entity == null)
-            {
+			{
 				return this.dataContext.CreateNullEntity<T> ();
-            }
+			}
 			else
 			{
 				return this.dataContext.GetLocalEntity (entity) ?? entity;
@@ -880,9 +880,9 @@ namespace Epsitec.Cresus.Core.Business
 				get
 				{
 					if (this.logic == null)
-                    {
+					{
 						this.logic = this.businessContext.CreateLogic (this.entity);
-                    }
+					}
 
 					return this.logic;
 				}
@@ -1024,7 +1024,7 @@ namespace Epsitec.Cresus.Core.Business
 			this.RefreshUIRequested.Raise (this);
 		}
 
-        public event EventHandler<CancelEventArgs>	SavingChanges;
+		public event EventHandler<CancelEventArgs>	SavingChanges;
 		public event EventHandler					ContainsChangesChanged;
 		public event EventHandler					MasterEntitiesChanged;
 		public event EventHandler					RefreshUIRequested;

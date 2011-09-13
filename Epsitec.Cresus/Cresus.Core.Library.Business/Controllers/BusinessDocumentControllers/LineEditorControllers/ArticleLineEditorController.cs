@@ -23,35 +23,149 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Business.Finance;
 
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
-	public class ArticleLineEditorController : AbstractLineEditorController
+	public sealed class ArticleLineEditorController : AbstractLineEditorController
 	{
-		public ArticleLineEditorController(AccessData accessData)
+		public ArticleLineEditorController(AccessData accessData, EditMode editMode)
 			: base (accessData)
 		{
+			this.editMode = editMode;
+			this.billingMode = accessData.BillingMode;
 		}
 
-		public EditMode CurrentEditMode
+		
+		public override FormattedText			TitleTile
 		{
 			get
 			{
-				return this.editMode;
-			}
-			set
-			{
-				this.editMode = value;
+				return this.IsTax ? "Frais" : "Article";
 			}
 		}
 
-		private bool IsEditName
+		private bool							IsEditName
 		{
 			get
 			{
 				return this.editMode == EditMode.Name;
 			}
 		}
+
+		private ArticleQuantityEntity			Quantity
+		{
+			get
+			{
+				if (this.Entity.ArticleQuantities.Count == 0)
+				{
+					return null;
+				}
+				else
+				{
+					return this.Entity.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == this.accessData.DocumentLogic.MainArticleQuantityType).FirstOrDefault ();
+				}
+			}
+		}
+
+		private string							DiscountValue
+		{
+			get
+			{
+				if (this.Entity.Discounts.Count != 0)
+				{
+					var discount = this.Entity.Discounts[0];
+
+					if (discount.DiscountRate.HasValue && discount.DiscountRate.Value != 0)
+					{
+						return Misc.PercentToString (discount.DiscountRate);
+					}
+
+					if (discount.Value.HasValue && discount.Value.Value != 0)
+					{
+						return Misc.PriceToString (discount.Value);
+					}
+				}
+
+				return null;
+			}
+			set
+			{
+				using (this.accessData.BusinessContext.SuspendUpdates ())
+				{
+					this.CreateDefaultDiscount (DiscountPolicy.OnLinePrice);
+					var discount = this.Entity.Discounts[0];
+
+					if (string.IsNullOrEmpty (value))
+					{
+						discount.DiscountRate = null;
+						discount.Value = null;
+					}
+					else
+					{
+						if (value.Contains ("%"))
+						{
+							value = value.Replace ("%", "");
+
+							decimal d;
+							if (decimal.TryParse (value, out d))
+							{
+								discount.DiscountRate = PriceCalculator.ClipPercentValue (d/100);
+								discount.Value = null;
+							}
+						}
+						else
+						{
+							decimal d;
+							if (decimal.TryParse (value, out d))
+							{
+								discount.DiscountRate = null;
+								discount.Value = PriceCalculator.ClipPriceValue (d);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		private FormattedText					DiscountText
+		{
+			get
+			{
+				if (this.Entity.Discounts.Count != 0)
+				{
+					var discount = this.Entity.Discounts[0];
+
+					return discount.Text;
+				}
+
+				return null;
+			}
+			set
+			{
+				this.CreateDefaultDiscount (DiscountPolicy.OnLinePrice);
+				var discount = this.Entity.Discounts[0];
+
+				discount.Text = value;
+			}
+		}
+
+		private bool							IsTax
+		{
+			get
+			{
+				return this.Entity.GroupIndex == 0;
+			}
+		}
+
+		private ArticleDocumentItemEntity		Entity
+		{
+			get
+			{
+				return this.entity as ArticleDocumentItemEntity;
+			}
+		}
+
 
 		protected override void CreateUI(UIBuilder builder)
 		{
@@ -83,6 +197,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.CreateUIRightFrame (builder, rightFrame);
 		}
 
+		
 		private void CreateUILeftFrame(UIBuilder builder, FrameBox parent)
 		{
 			int labelWidth = 80;
@@ -251,8 +366,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private void CreateUIRightBottomFrame(UIBuilder builder, FrameBox parent)
 		{
-#if false
-			//	@DR: revoir cette logique
 			//	Deuxième ligne à droite.
 			{
 				var line = new FrameBox
@@ -265,13 +378,15 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					Enable = this.accessData.DocumentLogic.IsPriceEditionEnabled,
 				};
 
+
+
 				var fixedNoneButton = new RadioButton
 				{
 					Parent = line,
 					Text = "Prix catalogue",
 					PreferredWidth = 100,
 					Margins = new Margins (10, 0, 0, 0),
-					ActiveState = this.Entity.FixedUnitPrice || this.Entity.FixedLinePrice ? ActiveState.No : ActiveState.Yes,
+					ActiveState = ActiveState.Yes,
 					Dock = DockStyle.Left,
 				};
 
@@ -280,7 +395,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					Parent = line,
 					Text = "Prix unitaire",
 					PreferredWidth = 90,
-					ActiveState = this.Entity.FixedUnitPrice ? ActiveState.Yes : ActiveState.No,
+					ActiveState = ActiveState.No,
 					Dock = DockStyle.Left,
 				};
 
@@ -289,7 +404,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					Parent = line,
 					Text = "Prix de ligne",
 					PreferredWidth = 90,
-					ActiveState = this.Entity.FixedLinePrice ? ActiveState.Yes : ActiveState.No,
+					ActiveState = ActiveState.No,
 					Dock = DockStyle.Left,
 				};
 
@@ -297,8 +412,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				{
 					if (fixedNoneButton.ActiveState == ActiveState.Yes)
 					{
-						this.Entity.FixedUnitPrice = false;
-						this.Entity.FixedLinePrice = false;
 						this.UpdateQuantityBox ();
 					}
 				};
@@ -307,7 +420,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				{
 					if (fixedUnitButton.ActiveState == ActiveState.Yes)
 					{
-						this.Entity.FixedUnitPrice = true;
 						this.UpdateQuantityBox ();
 					}
 				};
@@ -316,7 +428,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				{
 					if (fixedLineButton.ActiveState == ActiveState.Yes)
 					{
-						this.Entity.FixedLinePrice = true;
 						this.UpdateQuantityBox ();
 					}
 				};
@@ -334,28 +445,48 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					Enable = this.accessData.DocumentLogic.IsPriceEditionEnabled,
 				};
 
-#if false
 				//	@DR: utiliser soit UnitPriceBeforeTax1, soit UnitPriceAfterTax1, selon le mode de l'article (TTC/HT)
 				//	@DR: qui peut être déterminé avec la propriété ArticlePriceIncludesTaxes.
 				//	Prix unitaire.
-				var quantityField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.FixedPrice, x => this.Entity.FixedPrice = x));
-				this.quantityBox = this.PlaceLabelAndField (line, 130, 100, "", quantityField);
 
-				this.ttcButton = new CheckButton
+				if (this.billingMode == Business.Finance.BillingMode.ExcludingTax)
 				{
-					Parent = line,
-					Text = "Prix TTC",
-					ActiveState = this.Entity.FixedPriceIncludesTaxes ? ActiveState.Yes : ActiveState.No,
-					Dock = DockStyle.Fill,
-					Margins = new Margins (10, 0, 0, 0),
-				};
+					var quantityField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.UnitPriceBeforeTax1, x => this.Entity.UnitPriceBeforeTax1 = x));
+					this.quantityBox = this.PlaceLabelAndField (line, 130, 100, "", quantityField);
 
-				this.ttcButton.ActiveStateChanged += delegate
+					this.ttcButton = new CheckButton
+					{
+						Parent = line,
+						Text = "Prix HT",
+						ActiveState = ActiveState.Yes,
+						Dock = DockStyle.Fill,
+						Margins = new Margins (10, 0, 0, 0),
+					};
+
+					this.ttcButton.ActiveStateChanged += delegate
+					{
+						this.UpdateQuantityBox ();
+					};
+				}
+				else
 				{
-					this.Entity.FixedPriceIncludesTaxes = (this.ttcButton.ActiveState == ActiveState.Yes);
-					this.UpdateQuantityBox ();
-				};
-#endif
+					var quantityField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.UnitPriceAfterTax1, x => this.Entity.UnitPriceAfterTax1 = x));
+					this.quantityBox = this.PlaceLabelAndField (line, 130, 100, "", quantityField);
+
+					this.ttcButton = new CheckButton
+					{
+						Parent = line,
+						Text = "Prix TTC",
+						ActiveState = ActiveState.Yes,
+						Dock = DockStyle.Fill,
+						Margins = new Margins (10, 0, 0, 0),
+					};
+
+					this.ttcButton.ActiveStateChanged += delegate
+					{
+						this.UpdateQuantityBox ();
+					};
+				}
 			}
 
 			//	Troisième ligne à droite.
@@ -410,7 +541,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			this.UpdateQuantityBox ();
 			this.UpdateDiscountBox ();
-#endif
 		}
 
 		private void UpdateQuantityBox()
@@ -460,14 +590,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.discountBox.Enable = !this.Entity.NeverApplyDiscount;
 		}
 
-
-		public override FormattedText TitleTile
-		{
-			get
-			{
-				return this.IsTax ? "Frais" : "Article";
-			}
-		}
 
 
 		private void ResetArticleDefinition(ArticleDefinitionEntity article)
@@ -610,132 +732,25 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 	
-		private ArticleQuantityEntity Quantity
-		{
-			get
-			{
-				if (this.Entity.ArticleQuantities.Count == 0)
-				{
-					return null;
-				}
-				else
-				{
-					return this.Entity.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == this.accessData.DocumentLogic.MainArticleQuantityType).FirstOrDefault ();
-				}
-			}
-		}
-
-		private string DiscountValue
-		{
-			get
-			{
-				if (this.Entity.Discounts.Count != 0)
-				{
-					var discount = this.Entity.Discounts[0];
-
-					if (discount.DiscountRate.HasValue && discount.DiscountRate.Value != 0)
-					{
-						return Misc.PercentToString (discount.DiscountRate);
-					}
-
-					if (discount.Value.HasValue && discount.Value.Value != 0)
-					{
-						return Misc.PriceToString (discount.Value);
-					}
-				}
-
-				return null;
-			}
-			set
-			{
-				this.CreateDefaultDiscount ();
-				var discount = this.Entity.Discounts[0];
-
-				if (string.IsNullOrEmpty (value))
-				{
-					discount.DiscountRate = null;
-					discount.Value = null;
-				}
-				else
-				{
-					if (value.Contains ("%"))
-					{
-						value = value.Replace ("%", "");
-
-						decimal d;
-						if (decimal.TryParse (value, out d))
-						{
-							discount.DiscountRate = d/100;
-							discount.Value = null;
-						}
-					}
-					else
-					{
-						decimal d;
-						if (decimal.TryParse (value, out d))
-						{
-							discount.DiscountRate = null;
-							discount.Value = d;
-						}
-					}
-				}
-			}
-		}
-
-		private FormattedText DiscountText
-		{
-			get
-			{
-				if (this.Entity.Discounts.Count != 0)
-				{
-					var discount = this.Entity.Discounts[0];
-
-					return discount.Text;
-				}
-
-				return null;
-			}
-			set
-			{
-				this.CreateDefaultDiscount ();
-				var discount = this.Entity.Discounts[0];
-
-				discount.Text = value;
-			}
-		}
-
-		private void CreateDefaultDiscount()
+		private void CreateDefaultDiscount(DiscountPolicy policy)
 		{
 			//	S'il n'existe aucun rabais, crée les entités requises.
-			if (this.Entity.Discounts.Count == 0)
+			if (this.Entity.Discounts.Any (x => x.DiscountPolicy == policy))
 			{
-				var newDiscount = this.accessData.BusinessContext.CreateEntity<PriceDiscountEntity> ();
-				this.Entity.Discounts.Add (newDiscount);
-
-				// TODO: faut-il créer PriceRoundingModeEntity, et si oui comment ?
+				return;
 			}
+			
+			var newDiscount = this.accessData.BusinessContext.CreateEntity<PriceDiscountEntity> ();
+
+			newDiscount.DiscountPolicy = policy;
+
+			this.Entity.Discounts.Add (newDiscount);
 		}
 
 
-		private bool IsTax
-		{
-			get
-			{
-				return this.Entity.GroupIndex == 0;
-			}
-		}
 
-
-		private ArticleDocumentItemEntity Entity
-		{
-			get
-			{
-				return this.entity as ArticleDocumentItemEntity;
-			}
-		}
-
-
-		private EditMode														editMode;
+		private readonly EditMode												editMode;
+		private readonly BillingMode											billingMode;
 		private ArticleParameterControllers.ValuesArticleParameterController	parameterController;
 		private ArticleParameterControllers.ArticleParameterToolbarController	toolbarController;
 		private TextFieldMultiEx												articleDescriptionTextField;

@@ -261,40 +261,16 @@ namespace Epsitec.Cresus.Core.Library.Business
 							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 238));
 						}
 					}
-					//	designer:cap/GVAC8
+					//	designer:cap/GVAH7
 					public static global::Epsitec.Common.Types.Caption ArticlePriceIncludesTaxes
 					{
 						get
 						{
-							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 268));
-						}
-					}
-					//	designer:cap/GVAF7
-					public static global::Epsitec.Common.Types.Caption ArticlePricesFrozen
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 239));
-						}
-					}
-					//	designer:cap/GVAE8
-					public static global::Epsitec.Common.Types.Caption Dirty
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 270));
-						}
-					}
-					//	designer:cap/GVAG7
-					public static global::Epsitec.Common.Types.Caption DirtyArticleNotDiscountable
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 240));
+							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 241));
 						}
 					}
 					//	designer:cap/GVAB7
-					public static global::Epsitec.Common.Types.Caption DirtyArticlePrices
+					public static global::Epsitec.Common.Types.Caption Dirty
 					{
 						get
 						{
@@ -302,23 +278,39 @@ namespace Epsitec.Cresus.Core.Library.Business
 						}
 					}
 					//	designer:cap/GVAA7
-					public static global::Epsitec.Common.Types.Caption FixedLinePrice
+					public static global::Epsitec.Common.Types.Caption FixedLinePrice1
 					{
 						get
 						{
 							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 234));
 						}
 					}
-					//	designer:cap/GVAH7
-					public static global::Epsitec.Common.Types.Caption FixedPriceIncludesTaxes
+					//	designer:cap/GVAC8
+					public static global::Epsitec.Common.Types.Caption FixedLinePrice2
 					{
 						get
 						{
-							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 241));
+							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 268));
+						}
+					}
+					//	designer:cap/GVAE8
+					public static global::Epsitec.Common.Types.Caption FixedTotalRevenue
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 270));
+						}
+					}
+					//	designer:cap/GVA18
+					public static global::Epsitec.Common.Types.Caption FixedUnitPrice1
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 257));
 						}
 					}
 					//	designer:cap/GVA97
-					public static global::Epsitec.Common.Types.Caption FixedUnitPrice
+					public static global::Epsitec.Common.Types.Caption FixedUnitPrice2
 					{
 						get
 						{
@@ -347,14 +339,6 @@ namespace Epsitec.Cresus.Core.Library.Business
 						get
 						{
 							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 258));
-						}
-					}
-					//	designer:cap/GVA18
-					public static global::Epsitec.Common.Types.Caption UnitPriceIncludesTaxes
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 257));
 						}
 					}
 				}
@@ -928,14 +912,12 @@ namespace Epsitec.Cresus.Core.Library.Business
 				{
 				}
 				
-				//	designer:cap/GVAL7
-				public static readonly global::Epsitec.Common.Support.Druid DefaultBillingMode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 245);
-				//	designer:cap/GVAP6
-				public static readonly global::Epsitec.Common.Support.Druid DefaultBillingRoundingMode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 217);
 				//	designer:cap/GVAO7
 				public static readonly global::Epsitec.Common.Support.Druid DefaultCurrencyCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 248);
 				//	designer:cap/GVAS7
 				public static readonly global::Epsitec.Common.Support.Druid DefaultDebtorBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 252);
+				//	designer:cap/GVAG8
+				public static readonly global::Epsitec.Common.Support.Druid DefaultPriceGroup = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 272);
 				//	designer:cap/GVA96
 				public static readonly global::Epsitec.Common.Support.Druid IsrDefs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 201);
 				//	designer:cap/GVAB6

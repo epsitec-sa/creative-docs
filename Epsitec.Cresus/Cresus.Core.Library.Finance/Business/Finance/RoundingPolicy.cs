@@ -12,6 +12,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 	public enum RoundingPolicy
 	{
 		None					= 0,
+		All						= 1,
 
 		OnUnitPriceBeforeTax	= 2,
 		OnUnitPriceAfterTax		= 3,

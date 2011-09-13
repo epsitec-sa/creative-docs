@@ -67,15 +67,15 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			}
 		}
 
-		public static decimal ClipPriceValue(decimal value, CurrencyCode currency)
+		public static decimal ClipPriceValue(decimal value, CurrencyCode currency = CurrencyCode.None)
 		{
 			//	Currently, keep only cents for any price value. Maybe we should consider
 			//	using 3 decimal places for some currencies ?
 
 			return PriceCalculator.RoundToCents (value);
 		}
-		
-		public static decimal? ClipPriceValue(decimal? value, CurrencyCode currency)
+
+		public static decimal? ClipPriceValue(decimal? value, CurrencyCode currency = CurrencyCode.None)
 		{
 			if (value.HasValue)
 			{
@@ -85,6 +85,14 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			{
 				return null;
 			}
+		}
+
+		public static decimal ClipPercentValue(decimal value)
+		{
+			//	Percent up to 4 digits after the decimal point (this represents a millionth
+			//	of a part and should be enough for any purposes).
+
+			return 0.01M * 0.0001M * System.Math.Round (value * 100 * 10000);
 		}
 		
 		public static decimal ClipTaxRateValue(decimal value)

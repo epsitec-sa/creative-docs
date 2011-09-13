@@ -214,14 +214,14 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			switch (this.billingMode)
 			{
 				case BillingMode.ExcludingTax:
-					row = this.BuildArticleItemPrice (line, row, DocumentItemAccessorColumn.UnitPrice, line.UnitPriceBeforeTax1, DiscountPolicy.OnUnitPriceBeforeTax);
-					row = this.BuildArticleItemPrice (line, row, DocumentItemAccessorColumn.LinePrice, line.LinePriceBeforeTax1, DiscountPolicy.OnLinePriceBeforeTax);
+					row = this.BuildArticleItemPrice (line, row, DocumentItemAccessorColumn.UnitPrice, line.UnitPriceBeforeTax1, DiscountPolicy.OnUnitPrice);
+					row = this.BuildArticleItemPrice (line, row, DocumentItemAccessorColumn.LinePrice, line.LinePriceBeforeTax1, DiscountPolicy.OnLinePrice);
 					this.SetContent (row, DocumentItemAccessorColumn.TotalPrice, this.GetFormattedPrice (line.TotalRevenueBeforeTax));
 					break;
 
 				case BillingMode.IncludingTax:
-					row = this.BuildArticleItemPrice (line, row, DocumentItemAccessorColumn.UnitPrice, line.UnitPriceAfterTax1, DiscountPolicy.OnUnitPriceAfterTax);
-					row = this.BuildArticleItemPrice (line, row, DocumentItemAccessorColumn.LinePrice, line.LinePriceAfterTax1, DiscountPolicy.OnLinePriceAfterTax);
+					row = this.BuildArticleItemPrice (line, row, DocumentItemAccessorColumn.UnitPrice, line.UnitPriceAfterTax1, DiscountPolicy.OnUnitPrice);
+					row = this.BuildArticleItemPrice (line, row, DocumentItemAccessorColumn.LinePrice, line.LinePriceAfterTax1, DiscountPolicy.OnLinePrice);
 					this.SetContent (row, DocumentItemAccessorColumn.TotalPrice, this.GetFormattedPrice (line.TotalRevenueAfterTax));
 					break;
 			}

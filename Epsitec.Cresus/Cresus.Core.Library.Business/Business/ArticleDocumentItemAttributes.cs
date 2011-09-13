@@ -18,14 +18,12 @@ namespace Epsitec.Cresus.Core.Business
 
 		PartialQuantities				= 0x00000008,
 
-//-		ArticlePricesFrozen				= 0x00000080,
+		FixedUnitPrice1					= 0x00000100,
+		FixedUnitPrice2					= 0x00000200,
+		FixedLinePrice1					= 0x00000400,
+		FixedLinePrice2					= 0x00000800,
+		FixedTotalRevenue				= 0x00001000,
 
-//-		FixedUnitPrice					= 0x00000100,
-//-		FixedLinePrice					= 0x00000200,
-//-		FixedPriceIncludesTaxes			= 0x00000400,
-
-		Dirty							= 0x00010000,
-//-		DirtyArticleNotDiscountable		= 0x00020000,
-
+		Dirty							= 0x01000000,
 	}
 }

@@ -66,6 +66,7 @@
     <Compile Include="Business\Finance\PriceCalculators\RoundingMode.cs" />
     <Compile Include="Business\Finance\PriceDisplayModes.cs" />
     <Compile Include="Business\Finance\RoundingPolicy.cs" />
+    <Compile Include="Business\Finance\RoundingPolicyExtensions.cs" />
     <Compile Include="Business\Finance\Tax.cs" />
     <Compile Include="Business\Finance\TaxCalculator.cs" />
     <Compile Include="Business\Finance\TaxContext.cs" />

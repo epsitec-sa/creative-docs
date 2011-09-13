@@ -25,12 +25,13 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
-	public class LineEditorController
+	public class LineEditionPanelController
 	{
 		/// <summary>
-		/// Editeur permettant de créer/modifier une ligne d'article (AbstractDocumentItemEntity).
+		/// Contrôleur gérant un panneau permattant de créer/modifier une ligne d'article
+		/// (AbstractDocumentItemEntity).
 		/// </summary>
-		public LineEditorController(AccessData accessData)
+		public LineEditionPanelController(AccessData accessData)
 		{
 			this.accessData = accessData;
 		}
@@ -38,35 +39,35 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public void CreateUI(Widget parent)
 		{
-			var box = new FrameBox
+			var frame = new FrameBox
 			{
-				Parent = parent,
-				Dock = DockStyle.Bottom,
+				Parent          = parent,
+				Dock            = DockStyle.Bottom,
 				PreferredHeight = 200,  // hauteur par défaut pour tous les éditeurs de lignes
 			};
 
 			this.titleFrame = new FrameBox
 			{
 				PreferredHeight = 28,
-				Margins = new Margins (0, 0, 0, -1),
-				Parent = box,
-				Dock = DockStyle.Top,
-				DrawFullFrame = true,
-				BackColor = Color.FromName ("White"),
+				Margins         = new Margins (0, 0, 0, -1),
+				Parent          = frame,
+				Dock            = DockStyle.Top,
+				DrawFullFrame   = true,
+				BackColor       = Color.FromName ("White"),
 			};
 
 			this.titleText = new StaticText
 			{
-				Parent = this.titleFrame,
-				Dock = DockStyle.Fill,
+				Parent           = this.titleFrame,
+				Dock             = DockStyle.Fill,
 				ContentAlignment = ContentAlignment.MiddleLeft,
-				Margins = new Margins (10, 10, 0, 0),
+				Margins          = new Margins (10, 10, 0, 0),
 			};
 
 			this.editorTile = new FrameBox
 			{
-				Parent = box,
-				Dock = DockStyle.Fill,
+				Parent        = frame,
+				Dock          = DockStyle.Fill,
 				DrawFullFrame = true,
 			};
 		}
@@ -86,8 +87,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				{
 					if (info.SublineIndex == 0)
 					{
-						this.lineEditorController = new ArticleLineEditorController (this.accessData);
-						(this.lineEditorController as ArticleLineEditorController).CurrentEditMode = this.editMode;
+						this.lineEditorController = new ArticleLineEditorController (this.accessData, this.editMode);
 						this.lineEditorController.CreateUI (this.editorTile, info.DocumentItem);
 					}
 					else

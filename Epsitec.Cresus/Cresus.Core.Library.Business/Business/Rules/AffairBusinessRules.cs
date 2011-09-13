@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			}
 			if (affair.BillingMode == Finance.BillingMode.None)
 			{
-				affair.BillingMode = businessSettings.Finance.DefaultBillingMode;
+				affair.BillingMode = businessSettings.Finance.DefaultPriceGroup.BillingMode;
 			}
 			if (string.IsNullOrEmpty (affair.DebtorBookAccount))
 			{

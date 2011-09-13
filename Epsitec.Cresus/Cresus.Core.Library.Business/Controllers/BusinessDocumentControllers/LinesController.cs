@@ -25,13 +25,175 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 	/// <summary>
 	/// Liste de lignes d'articles (AbstractDocumentItemEntity).
 	/// </summary>
-	public class LinesController
+	public sealed class LinesController
 	{
 		public LinesController(AccessData accessData)
 		{
 			this.accessData = accessData;
 
 			this.colorIndexes = new List<int> ();
+		}
+
+
+		public bool								HasSelection
+		{
+			get
+			{
+				return this.Selection.Count != 0;
+			}
+		}
+
+		public bool								HasSingleSelection
+		{
+			get
+			{
+				return this.Selection.Count == 1;
+			}
+		}
+
+		public bool								HasMultiSelection
+		{
+			get
+			{
+				return this.Selection.Count > 1;
+			}
+		}
+
+		public int?								LastSelection
+		{
+			get
+			{
+				return this.Selection.LastOrDefault ();
+			}
+		}
+
+		public IList<int>						Selection
+		{
+			// Le getter retourne la liste des lignes sélectionnées.
+			// Le setter sélectionne les lignes données dans la liste.
+			get
+			{
+				var list = new List<int> ();
+
+				for (int i = 0; i < this.table.Rows; i++)
+				{
+					if (this.table.IsCellSelected (i, 0))
+					{
+						list.Add (i);
+					}
+				}
+
+				return list;
+			}
+			set
+			{
+				bool existing = false;
+				bool changing = false;
+
+				for (int row = 0; row < this.table.Rows; row++)
+				{
+					bool newSel = (value == null) ? false : value.Contains (row);
+					bool oldSel = this.table.IsCellSelected (row, 0);
+
+					if (newSel)
+					{
+						existing = true;
+					}
+
+					if (newSel != oldSel)
+					{
+						changing = true;
+					}
+
+					this.table.SelectRow (row, newSel);
+				}
+
+				if (existing)
+				{
+					this.table.ShowSelect ();  // montre la sélection
+				}
+
+				if (changing)
+				{
+					this.OnSelectionChanged ();
+				}
+			}
+		}
+
+		private IEnumerable<ColumnType>			ColumnTypes
+		{
+			//	Retourne les colonnes visibles dans la table, de gauche à droite.
+			get
+			{
+				if (this.viewMode == ViewMode.Compact)
+				{
+					yield return ColumnType.Group;
+
+					yield return ColumnType.ArticleDescription;
+
+					yield return ColumnType.QuantityAndUnit;
+					yield return ColumnType.AdditionalType;
+
+					yield return ColumnType.UnitPrice;
+					yield return ColumnType.Total;
+				}
+				else if (this.viewMode == ViewMode.Default)
+				{
+					yield return ColumnType.Group;
+
+					yield return ColumnType.ArticleDescription;
+
+					yield return ColumnType.QuantityAndUnit;
+					yield return ColumnType.AdditionalType;
+					yield return ColumnType.AdditionalDate;
+
+					yield return ColumnType.UnitPrice;
+					yield return ColumnType.Discount;
+					yield return ColumnType.LinePrice;
+					yield return ColumnType.Vat;
+					yield return ColumnType.Total;
+				}
+				else if (this.viewMode == ViewMode.Full)
+				{
+					yield return ColumnType.Group;
+					yield return ColumnType.GroupNumber;
+
+					yield return ColumnType.ArticleId;
+					yield return ColumnType.ArticleDescription;
+
+					yield return ColumnType.QuantityAndUnit;
+					yield return ColumnType.AdditionalType;
+					yield return ColumnType.AdditionalDate;
+
+					yield return ColumnType.UnitPrice;
+					yield return ColumnType.Discount;
+					yield return ColumnType.LinePrice;
+					yield return ColumnType.Vat;
+					yield return ColumnType.Total;
+				}
+				else if (this.viewMode == ViewMode.Debug)
+				{
+					yield return ColumnType.Group;
+
+					yield return ColumnType.GroupIndex;
+					yield return ColumnType.GroupNumber;
+					yield return ColumnType.LineNumber;
+					yield return ColumnType.FullNumber;
+
+					yield return ColumnType.ArticleId;
+					yield return ColumnType.ArticleDescription;
+
+					yield return ColumnType.QuantityAndUnit;
+					yield return ColumnType.AdditionalType;
+					yield return ColumnType.AdditionalDate;
+
+					yield return ColumnType.UnitPrice;
+					yield return ColumnType.Discount;
+					yield return ColumnType.LinePrice;
+					yield return ColumnType.Vat;
+					yield return ColumnType.Total;
+				}
+			}
 		}
 
 
@@ -100,96 +262,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
-
-		public void Deselect()
+		public void DeselectAll()
 		{
 			this.Selection = null;
-		}
-
-
-		public bool HasSelection
-		{
-			get
-			{
-				return this.Selection.Count != 0;
-			}
-		}
-
-		public bool HasSingleSelection
-		{
-			get
-			{
-				return this.Selection.Count == 1;
-			}
-		}
-
-		public bool HasMultiSelection
-		{
-			get
-			{
-				return this.Selection.Count > 1;
-			}
-		}
-
-		public int? LastSelection
-		{
-			get
-			{
-				return this.Selection.LastOrDefault ();
-			}
-		}
-
-		public List<int> Selection
-		{
-			// Le getter retourne la liste des lignes sélectionnées.
-			// Le setter sélectionne les lignes données dans la liste.
-			get
-			{
-				var list = new List<int> ();
-
-				for (int i = 0; i < this.table.Rows; i++)
-				{
-					if (this.table.IsCellSelected (i, 0))
-					{
-						list.Add (i);
-					}
-				}
-
-				return list;
-			}
-			set
-			{
-				bool existing = false;
-				bool changing = false;
-
-				for (int row = 0; row < this.table.Rows; row++)
-				{
-					bool newSel = (value == null) ? false : value.Contains (row);
-					bool oldSel = this.table.IsCellSelected (row, 0);
-
-					if (newSel)
-					{
-						existing = true;
-					}
-
-					if (newSel != oldSel)
-					{
-						changing = true;
-					}
-
-					this.table.SelectRow (row, newSel);
-				}
-
-				if (existing)
-				{
-					this.table.ShowSelect ();  // montre la sélection
-				}
-
-				if (changing)
-				{
-					this.OnSelectionChanged ();
-				}
-			}
 		}
 
 
@@ -375,82 +450,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			displayer.Invalidate ();
 		}
 
-
-		private IEnumerable<ColumnType> ColumnTypes
-		{
-			//	Retourne les colonnes visibles dans la table, de gauche à droite.
-			get
-			{
-				if (this.viewMode == ViewMode.Compact)
-				{
-					yield return ColumnType.Group;
-
-					yield return ColumnType.ArticleDescription;
-
-					yield return ColumnType.QuantityAndUnit;
-					yield return ColumnType.AdditionalType;
-
-					yield return ColumnType.UnitPrice;
-					yield return ColumnType.Total;
-				}
-				else if (this.viewMode == ViewMode.Default)
-				{
-					yield return ColumnType.Group;
-
-					yield return ColumnType.ArticleDescription;
-
-					yield return ColumnType.QuantityAndUnit;
-					yield return ColumnType.AdditionalType;
-					yield return ColumnType.AdditionalDate;
-
-					yield return ColumnType.UnitPrice;
-					yield return ColumnType.Discount;
-					yield return ColumnType.LinePrice;
-					yield return ColumnType.Vat;
-					yield return ColumnType.Total;
-				}
-				else if (this.viewMode == ViewMode.Full)
-				{
-					yield return ColumnType.Group;
-					yield return ColumnType.GroupNumber;
-
-					yield return ColumnType.ArticleId;
-					yield return ColumnType.ArticleDescription;
-
-					yield return ColumnType.QuantityAndUnit;
-					yield return ColumnType.AdditionalType;
-					yield return ColumnType.AdditionalDate;
-
-					yield return ColumnType.UnitPrice;
-					yield return ColumnType.Discount;
-					yield return ColumnType.LinePrice;
-					yield return ColumnType.Vat;
-					yield return ColumnType.Total;
-				}
-				else if (this.viewMode == ViewMode.Debug)
-				{
-					yield return ColumnType.Group;
-
-					yield return ColumnType.GroupIndex;
-					yield return ColumnType.GroupNumber;
-					yield return ColumnType.LineNumber;
-					yield return ColumnType.FullNumber;
-
-					yield return ColumnType.ArticleId;
-					yield return ColumnType.ArticleDescription;
-
-					yield return ColumnType.QuantityAndUnit;
-					yield return ColumnType.AdditionalType;
-					yield return ColumnType.AdditionalDate;
-
-					yield return ColumnType.UnitPrice;
-					yield return ColumnType.Discount;
-					yield return ColumnType.LinePrice;
-					yield return ColumnType.Vat;
-					yield return ColumnType.Total;
-				}
-			}
-		}
 
 		private int GetColumnWidth(ColumnType columnType)
 		{

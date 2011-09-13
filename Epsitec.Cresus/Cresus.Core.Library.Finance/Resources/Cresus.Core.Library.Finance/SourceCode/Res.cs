@@ -282,6 +282,14 @@ namespace Epsitec.Cresus.Core.Library.Finance
 					{
 					}
 					
+					//	designer:cap/CVAA5
+					public static global::Epsitec.Common.Types.Caption All
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 170));
+						}
+					}
 					//	designer:cap/CVA15
 					public static global::Epsitec.Common.Types.Caption None
 					{
@@ -482,6 +490,14 @@ namespace Epsitec.Cresus.Core.Library.Finance
 					{
 					}
 					
+					//	designer:cap/CVA95
+					public static global::Epsitec.Common.Types.Caption All
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 169));
+						}
+					}
 					//	designer:cap/CVAM2
 					public static global::Epsitec.Common.Types.Caption None
 					{
@@ -887,8 +903,8 @@ namespace Epsitec.Cresus.Core.Library.Finance
 				public static readonly global::Epsitec.Common.Support.Druid DefaultDivideRatio = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 140);
 				//	designer:cap/CVAD4
 				public static readonly global::Epsitec.Common.Support.Druid DefaultMultiplyRatio = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 141);
-				//	designer:cap/CVAE4
-				public static readonly global::Epsitec.Common.Support.Druid DefaultRoundingMode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 142);
+				//	designer:cap/CVA85
+				public static readonly global::Epsitec.Common.Support.Druid DefaultRoundingModes = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 168);
 				//	designer:cap/CVAB4
 				public static readonly global::Epsitec.Common.Support.Druid NeverApplyDiscount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 139);
 			}

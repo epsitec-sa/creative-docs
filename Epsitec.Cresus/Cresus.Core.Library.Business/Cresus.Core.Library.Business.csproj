@@ -101,6 +101,7 @@
     <Compile Include="Controllers\ArticleParameterControllers\ValuesArticleParameterController.cs" />
     <Compile Include="Bricks\FieldInfo.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\BusinessDocumentLinesController.cs" />
+    <Compile Include="Controllers\BusinessDocumentControllers\BusinessDocumentLinesController.CommandProcessors.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\DocumentLogic\AbstractDocumentLogic.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\DocumentLogic\PurchaseOrderDocumentLogic.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\DocumentLogic\QuoteRequestDocumentLogic.cs" />
@@ -136,7 +137,7 @@
     <Compile Include="Controllers\BusinessDocumentControllers\LineEditorControllers\QuantityLineEditorController.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\LineEditorControllers\TextLineEditorController.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\LinesController.cs" />
-    <Compile Include="Controllers\BusinessDocumentControllers\LineEditorController.cs" />
+    <Compile Include="Controllers\BusinessDocumentControllers\LineEditionPanelController.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\LineToolbarController.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\LineInformations.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\LineEditorControllers\AbstractLineEditorController.cs" />

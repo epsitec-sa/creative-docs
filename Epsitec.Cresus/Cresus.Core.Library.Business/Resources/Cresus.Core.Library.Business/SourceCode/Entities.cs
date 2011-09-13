@@ -5700,46 +5700,24 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>DefaultBillingRoundingMode</c> field.
-		///	designer:fld/GVA76/GVAP6
+		///	The <c>DefaultPriceGroup</c> field.
+		///	designer:fld/GVA76/GVAG8
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVAP6]")]
-		public global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity DefaultBillingRoundingMode
+		[global::Epsitec.Common.Support.EntityField ("[GVAG8]")]
+		public global::Epsitec.Cresus.Core.Entities.PriceGroupEntity DefaultPriceGroup
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity> ("[GVAP6]");
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.PriceGroupEntity> ("[GVAG8]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue = this.DefaultBillingRoundingMode;
-				if (oldValue != value || !this.IsFieldDefined("[GVAP6]"))
+				global::Epsitec.Cresus.Core.Entities.PriceGroupEntity oldValue = this.DefaultPriceGroup;
+				if (oldValue != value || !this.IsFieldDefined("[GVAG8]"))
 				{
-					this.OnDefaultBillingRoundingModeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity> ("[GVAP6]", oldValue, value);
-					this.OnDefaultBillingRoundingModeChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>DefaultBillingMode</c> field.
-		///	designer:fld/GVA76/GVAL7
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVAL7]")]
-		public global::Epsitec.Cresus.Core.Business.Finance.BillingMode DefaultBillingMode
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.BillingMode> ("[GVAL7]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Business.Finance.BillingMode oldValue = this.DefaultBillingMode;
-				if (oldValue != value || !this.IsFieldDefined("[GVAL7]"))
-				{
-					this.OnDefaultBillingModeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.BillingMode> ("[GVAL7]", oldValue, value);
-					this.OnDefaultBillingModeChanged (oldValue, value);
+					this.OnDefaultPriceGroupChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.PriceGroupEntity> ("[GVAG8]", oldValue, value);
+					this.OnDefaultPriceGroupChanged (oldValue, value);
 				}
 			}
 		}
@@ -5780,10 +5758,8 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnDefaultCurrencyCodeChanging(global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode? oldValue, global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode? newValue);
 		partial void OnDefaultCurrencyCodeChanged(global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode? oldValue, global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode? newValue);
-		partial void OnDefaultBillingRoundingModeChanging(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
-		partial void OnDefaultBillingRoundingModeChanged(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
-		partial void OnDefaultBillingModeChanging(global::Epsitec.Cresus.Core.Business.Finance.BillingMode oldValue, global::Epsitec.Cresus.Core.Business.Finance.BillingMode newValue);
-		partial void OnDefaultBillingModeChanged(global::Epsitec.Cresus.Core.Business.Finance.BillingMode oldValue, global::Epsitec.Cresus.Core.Business.Finance.BillingMode newValue);
+		partial void OnDefaultPriceGroupChanging(global::Epsitec.Cresus.Core.Entities.PriceGroupEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceGroupEntity newValue);
+		partial void OnDefaultPriceGroupChanged(global::Epsitec.Cresus.Core.Entities.PriceGroupEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceGroupEntity newValue);
 		partial void OnDefaultDebtorBookAccountChanging(string oldValue, string newValue);
 		partial void OnDefaultDebtorBookAccountChanged(string oldValue, string newValue);
 		

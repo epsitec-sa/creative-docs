@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .Field (x => x.NeverApplyDiscount)
 				  .Field (x => x.DefaultDivideRatio)
 				  .Field (x => x.DefaultMultiplyRatio)
-				  .Field (x => x.DefaultRoundingMode)
+				  .Field (x => x.DefaultRoundingModes)
 				.End ()
 				;
 		}
