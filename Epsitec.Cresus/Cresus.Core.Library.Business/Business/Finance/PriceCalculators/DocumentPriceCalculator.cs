@@ -28,14 +28,16 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		/// <param name="document">The business document to work on.</param>
 		public DocumentPriceCalculator(IBusinessContext context, BusinessDocumentEntity document, DocumentMetadataEntity metadata)
 		{
-			this.context     = context;
-			this.document    = document;
-			this.metadata    = metadata;
-			this.calculators = new List<AbstractItemPriceCalculator> ();
-			this.groups      = new Stack<GroupItemPriceCalculator> ();
-			this.suspender   = this.document.DisableEvents ();
+			this.context       = context;
+			this.document      = document;
+			this.metadata      = metadata;
+			this.calculators   = new List<AbstractItemPriceCalculator> ();
+			this.groups        = new Stack<GroupItemPriceCalculator> ();
+			this.suspender     = this.document.DisableEvents ();
+			this.roundingModes = new Dictionary<RoundingPolicy, PriceRoundingModeEntity> ();
 		}
 
+		#region IPriceCalculator Members
 
 		/// <summary>
 		/// Updates the prices of the attached business document. This will most likely
@@ -45,6 +47,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		/// </summary>
 		public void UpdatePrices()
 		{
+			this.UpdateRoundingModes ();
 			this.SortLinesAndFixSubTotals ();
 			this.ComputeLinePrices ();
 
@@ -55,6 +58,102 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			this.ComputeFinalPrices (group, taxes);
 		}
 
+		/// <summary>
+		/// Rounds the specified value according to the attached business document
+		/// rounding rules.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <param name="policy">The rounding policy.</param>
+		/// <returns>
+		/// The rounded value.
+		/// </returns>
+		public decimal Round(decimal value, RoundingPolicy policy)
+		{
+			PriceRoundingModeEntity rounding;
+
+			if (this.roundingModes.TryGetValue (policy, out rounding))
+			{
+				return rounding.Round (value);
+			}
+
+			return value;
+		}
+
+		/// <summary>
+		/// Gets the billing mode in use in the attached business document.
+		/// </summary>
+		/// <returns>
+		/// The billing mode.
+		/// </returns>
+		public BillingMode GetBillingMode()
+		{
+			if ((this.document.IsNotNull ()) &&
+				(this.document.PriceGroup.IsNotNull ()))
+			{
+				return this.document.PriceGroup.BillingMode;
+			}
+			else
+			{
+				return BillingMode.None;
+			}
+		}
+
+		#endregion
+
+		private void UpdateRoundingModes()
+		{
+			if (this.document.IsNull ())
+			{
+				return;
+			}
+
+			var priceGroup = this.document.PriceGroup;
+
+			if ((priceGroup.IsNotNull ()) &&
+				(priceGroup.DefaultRoundingModes.Count > 0))
+			{
+				priceGroup.DefaultRoundingModes.ForEach (x => this.AddRoundingMode (x));
+			}
+			
+			var settings = this.context.GetCached<BusinessSettingsEntity> ();
+
+			if ((settings.IsNotNull ()) &&
+				(settings.Finance.IsNotNull ()) &&
+				(settings.Finance.DefaultPriceGroup.IsNotNull ()))
+			{
+				settings.Finance.DefaultPriceGroup.DefaultRoundingModes.ForEach (x => this.AddRoundingMode (x));
+			}
+
+			var fallback = new PriceRoundingModeEntity ()
+			{
+				Modulo          = 0.05M,
+				AddBeforeModulo = 0.00M,
+				RoundingPolicy  = RoundingPolicy.OnLinePrice | RoundingPolicy.OnTotalPrice | RoundingPolicy.OnEndTotal,
+			};
+
+			var fallbackVat = new PriceRoundingModeEntity ()
+			{
+				Modulo          = 0.05M,
+				AddBeforeModulo = 0.025M,
+				RoundingPolicy  = RoundingPolicy.OnTotalVat
+			};
+
+			this.AddRoundingMode (fallback);
+			this.AddRoundingMode (fallbackVat);
+		}
+
+		private void AddRoundingMode(PriceRoundingModeEntity rounding)
+		{
+			foreach (var flag in rounding.RoundingPolicy.GetFlags ())
+			{
+				if (this.roundingModes.ContainsKey (flag))
+				{
+					continue;
+				}
+
+				this.roundingModes[flag] = rounding;
+			}
+		}
 		
 		private void SortLinesAndFixSubTotals()
 		{
@@ -111,15 +210,18 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			var taxInfos = taxTotals.RateAmounts.OrderBy (x => x.CodeRate);
 			var currency = this.document.CurrencyCode;
 
-			this.ReplaceTaxLines (taxReservoir, taxInfos, currency);
-			this.ReplaceEndTotalLine (totalReservoir, taxTotals, currency);
+			var vatRounding = this.ReplaceTaxLines (taxReservoir, taxInfos, currency);
+			
+			this.ReplaceEndTotalLine (totalReservoir, taxTotals, vatRounding, currency);
 
 			taxReservoir.DeleteUnused ();
 			totalReservoir.DeleteUnused ();
 		}
 
-		private void ReplaceTaxLines(Reservoir<TaxDocumentItemEntity> reservoir, IOrderedEnumerable<TaxRateAmount> taxInfos, CurrencyCode currency)
+		private decimal ReplaceTaxLines(Reservoir<TaxDocumentItemEntity> reservoir, IOrderedEnumerable<TaxRateAmount> taxInfos, CurrencyCode currency)
 		{
+			decimal roundingTotal = 0;
+
 			reservoir.Pool.ForEach (line => this.document.Lines.Remove (line));
 
 			int index = this.GetRootGroupInsertionIndex ();
@@ -135,11 +237,30 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 				taxLine.VatRate      = PriceCalculator.ClipTaxRateValue (taxInfo.Rate);
 				taxLine.ResultingTax = PriceCalculator.ClipPriceValue (taxInfo.Tax, currency);
 
+				roundingTotal += this.RoundTaxLine (taxLine);
+
 				this.document.Lines.Insert (index++, taxLine);
 			}
+
+			return roundingTotal;
 		}
 
-		private void ReplaceEndTotalLine(Reservoir<EndTotalDocumentItemEntity> reservoir, Tax taxTotals, CurrencyCode currency)
+		private decimal RoundTaxLine(TaxDocumentItemEntity taxLine)
+		{
+			var beforeRounding = taxLine.ResultingTax;
+			var afterRounding  = this.Round (beforeRounding, RoundingPolicy.OnTotalVat);
+
+			if (afterRounding == beforeRounding)
+			{
+				return 0;
+			}
+
+			taxLine.ResultingTax = afterRounding;
+
+			return afterRounding - beforeRounding;
+		}
+
+		private void ReplaceEndTotalLine(Reservoir<EndTotalDocumentItemEntity> reservoir, Tax taxTotals, decimal vatRounding, CurrencyCode currency)
 		{
 			reservoir.Pool.ForEach (line => this.document.Lines.Remove (line));
 
@@ -148,8 +269,19 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 			totalLine.Attributes     = DocumentItemAttributes.AutoGenerated;
 			totalLine.GroupIndex     = 0;
-			totalLine.PriceBeforeTax = PriceCalculator.ClipPriceValue (taxTotals.TotalAmount, currency);
-			totalLine.PriceAfterTax  = PriceCalculator.ClipPriceValue (taxTotals.TotalAmount + taxTotals.TotalTax, currency);
+
+			switch (this.GetBillingMode ())
+			{
+				case BillingMode.ExcludingTax:
+					totalLine.PriceBeforeTax = PriceCalculator.ClipPriceValue (taxTotals.TotalAmount, currency);
+					totalLine.PriceAfterTax  = PriceCalculator.ClipPriceValue (taxTotals.TotalAmount + taxTotals.TotalTax + vatRounding, currency);
+					break;
+
+				case BillingMode.IncludingTax:
+					totalLine.PriceBeforeTax = PriceCalculator.ClipPriceValue (taxTotals.TotalAmount, currency);
+					totalLine.PriceAfterTax  = PriceCalculator.ClipPriceValue (taxTotals.TotalAmount + taxTotals.TotalTax + vatRounding, currency);
+					break;
+			}
 
 			this.document.Lines.Insert (index++, totalLine);
 		}
@@ -325,6 +457,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		private readonly List<AbstractItemPriceCalculator>	calculators;
 		private readonly Stack<GroupItemPriceCalculator>	groups;
 		private readonly System.IDisposable		suspender;
+		private readonly Dictionary<RoundingPolicy, PriceRoundingModeEntity> roundingModes;
 
 		private GroupItemPriceCalculator		currentGroup;
 		private State							currentState;

@@ -9,12 +9,18 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Business.Finance
 {
 	[DesignerVisible]
+	[System.Flags]
 	public enum RoundingPolicy
 	{
 		None					= 0,
-		All						= 1,
 
-		OnUnitPrice				= 2,
-		OnLinePrice				= 4,
+		OnUnitPrice				= 0x0002,
+		OnLinePrice				= 0x0004,
+
+		OnTotalVat				= 0x0010,
+		OnTotalPrice			= 0x0020,
+		OnEndTotal				= 0x0040,
+		
+		All						= 0x00ff,
 	}
 }

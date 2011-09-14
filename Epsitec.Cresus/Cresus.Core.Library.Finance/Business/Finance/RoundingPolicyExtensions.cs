@@ -12,24 +12,21 @@ namespace Epsitec.Cresus.Core.Business.Finance
 	{
 		public static bool Compatible(this RoundingPolicy valueA, RoundingPolicy valueB)
 		{
-			if (valueA == valueB)
-			{
-				return true;
-			}
-
-			if ((valueA == RoundingPolicy.None) ||
-				(valueB == RoundingPolicy.None))
-			{
-				return false;
-			}
-
-			if ((valueA == RoundingPolicy.All) ||
-				(valueB == RoundingPolicy.All))
-			{
-				return true;
-			}
-
-			return false;
+			return (valueA & valueB) == valueB;
 		}
+
+		public static IEnumerable<RoundingPolicy> GetFlags(this RoundingPolicy value)
+		{
+			return RoundingPolicyExtensions.Flags.Where (x => value.HasFlag (x));
+		}
+
+		private static RoundingPolicy[] Flags = new RoundingPolicy[]
+		{
+			RoundingPolicy.OnUnitPrice,
+			RoundingPolicy.OnLinePrice,
+			RoundingPolicy.OnTotalPrice,
+			RoundingPolicy.OnTotalVat,
+			RoundingPolicy.OnEndTotal,
+		};
 	}
 }

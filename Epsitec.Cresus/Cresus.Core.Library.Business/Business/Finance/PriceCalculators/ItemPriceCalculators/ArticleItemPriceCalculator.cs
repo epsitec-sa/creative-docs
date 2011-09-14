@@ -46,36 +46,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 			this.articleAttributes      = this.articleItem.ArticleAttributes;
 			this.articleNotDiscountable = this.articleAttributes.HasFlag (ArticleDocumentItemAttributes.ArticleNotDiscountable) ||
 										  this.articleAttributes.HasFlag (ArticleDocumentItemAttributes.NeverApplyDiscount);
-
-			if ((this.priceGroup.IsNotNull ()) &&
-				(this.priceGroup.DefaultRoundingModes.Count > 0))
-			{
-				this.priceRoundingModes = this.priceGroup.DefaultRoundingModes.ToArray ();
-			}
-			else
-			{
-				var settings = this.businessContext.GetCached<BusinessSettingsEntity> ();
-
-				if ((settings.IsNull ()) ||
-					(settings.Finance.IsNull ()) ||
-					(settings.Finance.DefaultPriceGroup.IsNull ()) ||
-					(settings.Finance.DefaultPriceGroup.DefaultRoundingModes.Count == 0))
-				{
-					this.priceRoundingModes = new PriceRoundingModeEntity[1]
-					{
-						new PriceRoundingModeEntity ()
-						{
-							Modulo          = 0.05M,
-							AddBeforeModulo = 0.00M,
-							RoundingPolicy  = RoundingPolicy.OnLinePrice,
-						}
-					};
-				}
-				else
-				{
-					this.priceRoundingModes = settings.Finance.DefaultPriceGroup.DefaultRoundingModes.ToArray ();
-				}
-			}
 		}
 
 
@@ -349,9 +319,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 
 		private decimal ApplyRounding(decimal value, RoundingPolicy policy)
 		{
-			//	TODO: ...
-			
-			return PriceCalculator.ClipPriceValue (value, this.currencyCode);
+			return PriceCalculator.Round (value, policy, this.currencyCode);
 		}
 
 		private decimal ApplyRounding(decimal value, PriceRoundingModeEntity rounding)
@@ -745,8 +713,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 		private readonly System.DateTime			date;
 		private readonly PriceGroupEntity			priceGroup;
 
-		private readonly PriceRoundingModeEntity[]	priceRoundingModes;
-		
 		private Tax									tax;
 		private readonly bool						articleNotDiscountable;
 		private ArticleDocumentItemAttributes		articleAttributes;

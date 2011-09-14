@@ -37,6 +37,30 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			}
 		}
 
+		
+		public static decimal Round(decimal value, RoundingPolicy policy, CurrencyCode currency = CurrencyCode.None)
+		{
+			if (PriceCalculator.activeCalculator == null)
+			{
+				return PriceCalculator.ClipPriceValue (value, currency);
+			}
+			else
+			{
+				return PriceCalculator.ClipPriceValue (PriceCalculator.activeCalculator.Round (value, policy), currency);
+			}
+		}
+
+		public static decimal? Round(decimal? value, RoundingPolicy policy, CurrencyCode currency = CurrencyCode.None)
+		{
+			if (value.HasValue)
+			{
+				return PriceCalculator.Round (value.Value, policy, currency);
+			}
+			else
+			{
+				return null;
+			}
+		}
 
 
 		/// <summary>
