@@ -490,12 +490,44 @@ namespace Epsitec.Cresus.Core.Library.Finance
 							return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 86));
 						}
 					}
+					//	designer:cap/CVAE5
+					public static global::Epsitec.Common.Types.Caption OnEndTotal
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 174));
+						}
+					}
 					//	designer:cap/CVAP2
 					public static global::Epsitec.Common.Types.Caption OnLinePrice
 					{
 						get
 						{
 							return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 89));
+						}
+					}
+					//	designer:cap/CVAC5
+					public static global::Epsitec.Common.Types.Caption OnTotalPrice
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 172));
+						}
+					}
+					//	designer:cap/CVAB5
+					public static global::Epsitec.Common.Types.Caption OnTotalRounding
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 171));
+						}
+					}
+					//	designer:cap/CVAD5
+					public static global::Epsitec.Common.Types.Caption OnTotalVat
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 173));
 						}
 					}
 					//	designer:cap/CVAN2

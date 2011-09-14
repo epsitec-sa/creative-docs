@@ -65,6 +65,18 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		public INamedType FieldType
+		{
+			get
+			{
+				return this.namedType;
+			}
+			set
+			{
+				this.namedType = value;
+			}
+		}
+
 		
 		public void Attach(AutoCompleteTextField widget)
 		{
@@ -107,7 +119,10 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void SetupFieldBinder()
 		{
-			this.fieldBinder = FieldBinderFactory.Create (this.GetFieldType ());
+			if (this.fieldBinder == null)
+			{
+				this.fieldBinder = FieldBinderFactory.Create (this.GetFieldType ());
+			}
 		}
 
 		private void AttachFieldBinder(MarshalerValidator validator)
@@ -115,6 +130,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			if (this.fieldBinder != null)
 			{
 				validator.Validator = this.fieldBinder.GetValidator ();
+				this.fieldBinder.Attach (this.marshaler);
 			}
 		}
 
@@ -189,7 +205,21 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				// Il ne faut absolument pas utiliser TextConverter.ConvertToTaggedText, car le texte peut
 				// contenir des tags <br/>, <b>, etc. qui doivent être édités par le widget !
-				this.widget.Text = text;
+
+				if (this.widget.Text == text)
+				{
+				}
+				else
+				{
+					this.widget.Text = text;
+
+					var field = this.widget as AbstractTextField;
+
+					if (field != null)
+					{
+						field.SelectAll ();
+					}
+				}
 			}
 		}
 
@@ -202,7 +232,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private INamedType GetFieldType()
 		{
-			return EntityInfo.GetFieldType (this.marshaler.ValueGetterExpression);
+			return this.namedType ?? EntityInfo.GetFieldType (this.marshaler.ValueGetterExpression);
 		}
 
 		private string GetMarshalerText()
@@ -403,5 +433,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		private Widget							widget;
 		private string							languageId;
 		private IFieldBinder					fieldBinder;
+		private INamedType						namedType;
 	}
 }

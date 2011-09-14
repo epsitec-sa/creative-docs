@@ -106,30 +106,7 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 
 		private static Widget CreateDecimalEditor(FrameBox frame, UIBuilder builder, string title, Marshaler marshaler, int width, Druid typeFieldId)
 		{
-			//	TODO: replace this logic with an IFieldBinder...
-
 			var tile = frame as EditionTile;
-
-			marshaler.CustomizeConverter ();
-			var converter = marshaler.GetConverter () as DecimalConverter;
-			
-			if (typeFieldId == Druid.Parse ("[CVAI4]"))		//	Finance.Decimal.MonetaryAmount
-			{
-				converter.Format = "{0:0.00}";
-			}
-			if (typeFieldId == Druid.Parse ("[CVAK4]"))		//	Finance.Decimal.Percentage
-			{
-				converter.Format = "{0:0}%";
-				converter.Multiplier = 100;
-				converter.Filter     = TextFieldDynamicFactory.RemovePercent;
-			}
-			if (typeFieldId == Druid.Parse ("[CVAJ4]"))		//	Finance.Decimal.VatRate
-			{
-				converter.Format = "{0:0.0}%";
-				converter.Multiplier = 100;
-				converter.Filter     = TextFieldDynamicFactory.RemovePercent;
-			}
-
 
 			if (tile != null)
 			{
@@ -139,11 +116,6 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 			{
 				return builder.CreateTextField (frame, DockStyle.Stacked, width, marshaler);
 			}
-		}
-
-		private static string RemovePercent(string text)
-		{
-			return text.TrimEnd (' ', '%');
 		}
 
 		private static Widget CreateTextField(FrameBox frame, UIBuilder builder, string title, Marshaler marshaler, int width, int height)

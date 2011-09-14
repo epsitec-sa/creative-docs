@@ -2,7 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
-using Epsitec.Common.Widgets;
+using Epsitec.Common.Types.Converters;
 
 using Epsitec.Cresus.Core.Business;
 
@@ -53,6 +53,10 @@ namespace Epsitec.Cresus.Core.Binders
 			{
 				return new ValidationResult (ValidationState.Error, FormattedText.FromSimpleText ("Le n° ne respecte pas le format nn-nnn-n ou est incorrect"));
 			}
+		}
+
+		public void Attach(Marshaler marshaler)
+		{
 		}
 
 		#endregion

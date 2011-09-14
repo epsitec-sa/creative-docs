@@ -46,6 +46,7 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="Binders\NumericFieldBinder.cs" />
     <Compile Include="Business\EntityPrinters\BusinessDocumentPrinter.cs" />
     <Compile Include="Binders\PostFinanceAccountFieldBinder.cs" />
     <Compile Include="Business\ArticleDocumentItemAttributes.cs" />

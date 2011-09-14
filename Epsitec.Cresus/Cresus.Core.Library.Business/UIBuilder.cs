@@ -788,7 +788,12 @@ namespace Epsitec.Cresus.Core
 			return this.CreateTextField (parent, DockStyle.Stacked, width, marshaler);
 		}
 
-		public TextFieldEx CreateTextField(FrameBox parent, DockStyle dockStyle, double width, Marshaler marshaler)
+		public TextFieldEx CreateTextField(Marshaler marshaler, INamedType fieldType = null)
+		{
+			return this.CreateTextField (null, DockStyle.None, 0, marshaler, fieldType);
+		}
+
+		public TextFieldEx CreateTextField(FrameBox parent, DockStyle dockStyle, double width, Marshaler marshaler, INamedType fieldType = null)
 		{
 			var textField = new TextFieldEx
 			{
@@ -813,6 +818,7 @@ namespace Epsitec.Cresus.Core
 			}
 
 			var valueController = new TextValueController (marshaler);
+			valueController.FieldType = fieldType;
 			valueController.Attach (textField);
 			this.container.Add (valueController);
 

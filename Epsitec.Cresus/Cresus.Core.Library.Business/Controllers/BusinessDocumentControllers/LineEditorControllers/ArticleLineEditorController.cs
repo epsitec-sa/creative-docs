@@ -407,60 +407,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					TabIndex = this.NextTabIndex,
 					Enable = this.accessData.DocumentLogic.IsPriceEditionEnabled,
 				};
-
-
-
-				var fixedNoneButton = new RadioButton
-				{
-					Parent = line,
-					Text = "Prix catalogue",
-					PreferredWidth = 100,
-					Margins = new Margins (10, 0, 0, 0),
-					ActiveState = ActiveState.Yes,
-					Dock = DockStyle.Left,
-				};
-
-				var fixedUnitButton = new RadioButton
-				{
-					Parent = line,
-					Text = "Prix unitaire",
-					PreferredWidth = 90,
-					ActiveState = ActiveState.No,
-					Dock = DockStyle.Left,
-				};
-
-				var fixedLineButton = new RadioButton
-				{
-					Parent = line,
-					Text = "Prix de ligne",
-					PreferredWidth = 90,
-					ActiveState = ActiveState.No,
-					Dock = DockStyle.Left,
-				};
-
-				fixedNoneButton.ActiveStateChanged += delegate
-				{
-					if (fixedNoneButton.ActiveState == ActiveState.Yes)
-					{
-						this.UpdateQuantityBox ();
-					}
-				};
-
-				fixedUnitButton.ActiveStateChanged += delegate
-				{
-					if (fixedUnitButton.ActiveState == ActiveState.Yes)
-					{
-						this.UpdateQuantityBox ();
-					}
-				};
-
-				fixedLineButton.ActiveStateChanged += delegate
-				{
-					if (fixedLineButton.ActiveState == ActiveState.Yes)
-					{
-						this.UpdateQuantityBox ();
-					}
-				};
 			}
 
 			//	Deuxième ligne à droite.
@@ -475,47 +421,49 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					Enable = this.accessData.DocumentLogic.IsPriceEditionEnabled,
 				};
 
-				//	@DR: utiliser soit UnitPriceBeforeTax1, soit UnitPriceAfterTax1, selon le mode de l'article (TTC/HT)
-				//	@DR: qui peut être déterminé avec la propriété ArticlePriceIncludesTaxes.
-				//	Prix unitaire.
-
 				if (this.billingMode == Business.Finance.BillingMode.ExcludingTax)
 				{
-					var quantityField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.UnitPriceBeforeTax1, x => this.Entity.UnitPriceBeforeTax1 = x));
-					this.quantityBox = this.PlaceLabelAndField (line, 130, 100, "", quantityField);
+					var unit1Field = builder.CreateTextField (Marshaler.Create (() => this.Entity.UnitPriceBeforeTax1, x => this.Entity.UnitPriceBeforeTax1 = x));
+					var discount   = builder.CreateTextField (Marshaler.Create (() => this.DiscountUnitValue, x => this.DiscountUnitValue = x));
+					var unit2Field = builder.CreateTextField (Marshaler.Create (() => this.Entity.UnitPriceBeforeTax2, x => this.Entity.UnitPriceBeforeTax2 = x));
 
-					this.ttcButton = new CheckButton
-					{
-						Parent = line,
-						Text = "Prix HT",
-						ActiveState = ActiveState.Yes,
-						Dock = DockStyle.Fill,
-						Margins = new Margins (10, 0, 0, 0),
-					};
-
-					this.ttcButton.ActiveStateChanged += delegate
-					{
-						this.UpdateQuantityBox ();
-					};
+					this.PlacePriceEditionWidgets (line, "Prix unitaire", unit1Field, discount, unit2Field);
 				}
 				else
 				{
-					var quantityField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.UnitPriceAfterTax1, x => this.Entity.UnitPriceAfterTax1 = x));
-					this.quantityBox = this.PlaceLabelAndField (line, 130, 100, "", quantityField);
+					var unit1Field = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.UnitPriceAfterTax1, x => this.Entity.UnitPriceAfterTax1 = x));
+					var unit1Box = this.PlaceLabelAndField (line, 130, 100, "Prix u. cat.", unit1Field);
+					var unit2Field = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.UnitPriceAfterTax2, x => this.Entity.UnitPriceAfterTax2 = x));
+					var unit2Box = this.PlaceLabelAndField (line, 130, 100, "Prix unitaire", unit2Field);
+				}
+			}
 
-					this.ttcButton = new CheckButton
-					{
-						Parent = line,
-						Text = "Prix TTC",
-						ActiveState = ActiveState.Yes,
-						Dock = DockStyle.Fill,
-						Margins = new Margins (10, 0, 0, 0),
-					};
+			//	Troisième ligne à droite.
+			{
+				var line = new FrameBox
+				{
+					Parent = parent,
+					Dock = DockStyle.Top,
+					PreferredHeight = 20,
+					Margins = new Margins (0, 0, 0, 5),
+					TabIndex = this.NextTabIndex,
+					Enable = this.accessData.DocumentLogic.IsPriceEditionEnabled,
+				};
 
-					this.ttcButton.ActiveStateChanged += delegate
-					{
-						this.UpdateQuantityBox ();
-					};
+				if (this.billingMode == Business.Finance.BillingMode.ExcludingTax)
+				{
+					var line1Field = builder.CreateTextField (Marshaler.Create (() => this.Entity.LinePriceBeforeTax1, x => this.Entity.LinePriceBeforeTax1 = x));
+					var discount   = builder.CreateTextField (Marshaler.Create (() => this.DiscountLineValue, x => this.DiscountLineValue = x));
+					var line2Field = builder.CreateTextField (Marshaler.Create (() => this.Entity.LinePriceBeforeTax2, x => this.Entity.LinePriceBeforeTax2 = x));
+
+					this.PlacePriceEditionWidgets (line, "Prix ligne", line1Field, discount, line2Field);
+				}
+				else
+				{
+					var unit1Field = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.UnitPriceAfterTax1, x => this.Entity.UnitPriceAfterTax1 = x));
+					var unit1Box = this.PlaceLabelAndField (line, 130, 100, "Prix u. cat.", unit1Field);
+					var unit2Field = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.UnitPriceAfterTax2, x => this.Entity.UnitPriceAfterTax2 = x));
+					var unit2Box = this.PlaceLabelAndField (line, 130, 100, "Prix unitaire", unit2Field);
 				}
 			}
 
@@ -531,13 +479,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					Enable = this.accessData.DocumentLogic.IsDiscountEditionEnabled,
 				};
 
-				//	Rabais.
-				var discountField1 = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.DiscountUnitValue, x => this.DiscountUnitValue = x));
-				this.discountBox = this.PlaceLabelAndField (line, 130, 100, "Rabais unitaire", discountField1);
-
-				var discountField2 = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.DiscountLineValue, x => this.DiscountLineValue = x));
-				this.discountBox = this.PlaceLabelAndField (line, 130, 100, "Rabais de ligne", discountField2);
-
 				var neverButton = new CheckButton
 				{
 					Parent = line,
@@ -552,6 +493,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					this.Entity.NeverApplyDiscount = (neverButton.ActiveState == ActiveState.Yes);
 					this.UpdateDiscountBox ();
 				};
+
+				this.discountBox = line;
 			}
 
 			//	Quatrième ligne à droite.
@@ -570,51 +513,59 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				this.PlaceLabelAndField (line, 130, 200, "Description du rabais", discountField);
 			}
 
-			this.UpdateQuantityBox ();
 			this.UpdateDiscountBox ();
 		}
 
-		private void UpdateQuantityBox()
+		private void PlacePriceEditionWidgets(Widget container, FormattedText caption, AbstractTextField field1, AbstractTextField fieldDiscount, AbstractTextField field2)
 		{
-			var label   = this.quantityBox.Children.OfType<StaticText> ().FirstOrDefault ();
-			var visible = false;
+			container.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 
-			if (this.Entity.ArticlePriceIncludesTaxes)  // TTC ?
+			new StaticText ()
 			{
-				//if (this.Entity.FixedUnitPrice)
-				//{
-				//    label.Text = "Prix unitaire TTC";
-				//}
-				//else if (this.Entity.FixedLinePrice)
-				//{
-				//    label.Text = "Prix de ligne TTC";
-				//}
-				//else
-				{
-					label.Text = "Prix TTC";
-					visible = true;
-				}
-			}
-			else  // HT ?
-			{
-				//if (this.Entity.FixedUnitPrice)
-				//{
-				//    label.Text = "Prix unitaire HT";
-				//}
-				//else if (this.Entity.FixedLinePrice)
-				//{
-				//    label.Text = "Prix de ligne HT";
-				//}
-				//else
-				{
-					label.Text = "Prix HT";
-					visible = true;
-				}
-			}
+				Parent = container,
+				Dock = DockStyle.Stacked,
+				PreferredWidth = 80,
+				FormattedText = caption,
+				ContentAlignment = ContentAlignment.TopRight,
+				Margins = new Margins (0, 5, 2, 0),
+			};
 
-			this.quantityBox.Visibility = visible;
-			this.ttcButton.Visibility   = visible;
+			field1.Dock = DockStyle.Stacked;
+			field1.PreferredWidth = 80;
+			field1.Parent = container;
+			field1.Margins = Margins.Zero;
+
+			new StaticText ()
+			{
+				Parent = container,
+				Dock = DockStyle.Stacked,
+				PreferredWidth = 20,
+				FormattedText = "−",
+				ContentAlignment = ContentAlignment.TopCenter,
+				Margins = new Margins (0, 0, 2, 0),
+			};
+
+			fieldDiscount.Dock = DockStyle.Stacked;
+			fieldDiscount.PreferredWidth = 70;
+			fieldDiscount.Parent = container;
+			fieldDiscount.Margins = Margins.Zero;
+
+			new StaticText ()
+			{
+				Parent = container,
+				Dock = DockStyle.Stacked,
+				PreferredWidth = 20,
+				FormattedText = "→",
+				ContentAlignment = ContentAlignment.TopCenter,
+				Margins = new Margins (0, 0, 2, 0),
+			};
+
+			field2.Dock = DockStyle.Stacked;
+			field2.PreferredWidth = 80;
+			field2.Parent = container;
+			field2.Margins = new Margins (0, 5, 0, 0);
 		}
+
 
 		private void UpdateDiscountBox()
 		{
@@ -785,7 +736,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private ArticleParameterControllers.ValuesArticleParameterController	parameterController;
 		private ArticleParameterControllers.ArticleParameterToolbarController	toolbarController;
 		private TextFieldMultiEx												articleDescriptionTextField;
-		private FrameBox														quantityBox;
 		private CheckButton														ttcButton;
 		private FrameBox														discountBox;
 	}

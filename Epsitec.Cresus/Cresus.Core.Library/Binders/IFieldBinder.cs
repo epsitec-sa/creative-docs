@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Types.Converters;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -19,5 +20,7 @@ namespace Epsitec.Cresus.Core.Binders
 		string ConvertFromUI(string value);
 		
 		IValidationResult ValidateFromUI(string value);
+
+		void Attach(Marshaler marshaler);
 	}
 }
