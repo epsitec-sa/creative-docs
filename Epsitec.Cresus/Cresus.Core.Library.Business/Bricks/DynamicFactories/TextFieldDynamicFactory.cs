@@ -83,12 +83,6 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 				{
 					callback = (frame, builder, caption, marshaler) => builder.CreateCheckButton (frame as EditionTile, width, caption, marshaler);
 				}
-
-				if ((fieldType == typeof (decimal)) ||
-					(fieldType == typeof (decimal?)))
-				{
-					callback = (frame, builder, caption, marshaler) => TextFieldDynamicFactory.CreateDecimalEditor (frame, builder, caption, marshaler, width, typeField.TypeId);
-				}
 			}
 
 			if (callback == null)
@@ -102,20 +96,6 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 			var instance    = System.Activator.CreateInstance (factoryType, business, lambda, entityGetter, getterFunc, setterFunc, title, callback) as DynamicFactory;
 
 			return instance;
-		}
-
-		private static Widget CreateDecimalEditor(FrameBox frame, UIBuilder builder, string title, Marshaler marshaler, int width, Druid typeFieldId)
-		{
-			var tile = frame as EditionTile;
-
-			if (tile != null)
-			{
-				return builder.CreateTextField (tile, width, title, marshaler);
-			}
-			else
-			{
-				return builder.CreateTextField (frame, DockStyle.Stacked, width, marshaler);
-			}
 		}
 
 		private static Widget CreateTextField(FrameBox frame, UIBuilder builder, string title, Marshaler marshaler, int width, int height)
