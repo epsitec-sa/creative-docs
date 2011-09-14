@@ -11,6 +11,7 @@ using Epsitec.Common.Types;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Text;
 
 namespace Epsitec.Cresus.Core
 {
@@ -48,6 +49,23 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public static string ReplaceMinusSign(string value)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return value;
+			}
+
+			if (value[0] == '-')
+			{
+				return string.Concat (Unicode.ToString (Unicode.Code.MinusSign), value.Substring (1));
+			}
+			else
+			{
+				return value;
+			}
+		}
+
 		public static string PercentToString(decimal? value)
 		{
 			if (!value.HasValue)
@@ -55,28 +73,33 @@ namespace Epsitec.Cresus.Core
 				return null;
 			}
 
-#if false
-			int i = (int) (value*100);
-			return string.Concat (i.ToString (), "%");
-#else
-			DecimalRange dr = new DecimalRange (-Misc.maxValue, Misc.maxValue, 0.1M);
-			return string.Concat (dr.ConvertToString (value.Value*100), "%");
-#endif
+			return Misc.ReplaceMinusSign (string.Concat (Misc.decimalRange01.ConvertToString (value.Value*100), "%"));
 		}
 
 		public static string PriceToString(decimal? value)
 		{
-			if (!value.HasValue)
+			if (value == null)
 			{
 				return null;
 			}
 
-			return Misc.decimalRange001.ConvertToString (value.Value);
+			return Misc.ReplaceMinusSign (Misc.decimalRange001.ConvertToString (value.Value));
 		}
 
 		public static decimal? StringToDecimal(string text)
 		{
+			if (string.IsNullOrEmpty (text))
+			{
+				return null;
+			}
+
+			if (text[0] == (char) Unicode.Code.MinusSign)
+			{
+				return -Misc.StringToDecimal (text.Substring (1));
+			}
+
 			decimal value;
+
 			if (decimal.TryParse (text, out value))
 			{
 				return value;
@@ -339,9 +362,9 @@ namespace Epsitec.Cresus.Core
 
 
 
-
 		private static readonly decimal maxValue = 1000000000;  // en francs, 1'000'000'000.-, soit 1 milliard
 
+		private static readonly DecimalRange decimalRange01  = new DecimalRange (-Misc.maxValue, Misc.maxValue, 0.1M);
 		private static readonly DecimalRange decimalRange001 = new DecimalRange (-Misc.maxValue, Misc.maxValue, 0.01M);
 		private static readonly DecimalRange decimalRange005 = new DecimalRange (-Misc.maxValue, Misc.maxValue, 0.05M);
 		private static readonly DecimalRange decimalRange100 = new DecimalRange (-Misc.maxValue, Misc.maxValue, 1.00M);

@@ -1,11 +1,11 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+ï»¿//	Copyright Â© 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
 {
 	/// <summary>
 	/// La classe Unicode encapsule certaines informations au sujet des
-	/// caractères codés en UTF-32.
+	/// caractÃ¨res codÃ©s en UTF-32.
 	/// </summary>
 	public static class Unicode
 	{
@@ -234,6 +234,14 @@ namespace Epsitec.Common.Text
 			EnDash					= 0x2013,
 			EmDash					= 0x2014,
 			QuotationDash			= 0x2015,
+
+			//	Mathematical:
+
+			MinusSign				= 0x2212,		//	âˆ’ (not to be confused with the standard "-" which is called HyphenMinus)
+			PlusSign				= 0x002B,		//	+
+			MultiplicationSign		= 0x00D7,		//	Ã—
+			DivisionSign			= 0x00F7,		//	Ã·
+			PlusMinusSign			= 0x00B1,		//	Â±
 			
 			//	Special:
 			
@@ -313,7 +321,6 @@ namespace Epsitec.Common.Text
 		}
 		#endregion
 
-
 		public static string ToString(params Code[] codes)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -328,18 +335,18 @@ namespace Epsitec.Common.Text
 
 		public static bool IsWordStart(char c, char cBefore)
 		{
-			//	Retourne true si une frontière de mot se trouve entre les caractères
-			//	passés en entrée. Utilisé pour déterminer la position d'un début de
-			//	mot (le mot commence par 'c' et est précédé par 'cBefore').
+			//	Retourne true si une frontiÃ¨re de mot se trouve entre les caractÃ¨res
+			//	passÃ©s en entrÃ©e. UtilisÃ© pour dÃ©terminer la position d'un dÃ©but de
+			//	mot (le mot commence par 'c' et est prÃ©cÃ©dÃ© par 'cBefore').
 			
 			return Internal.Navigator.IsWordStart (c, cBefore);
 		}
 		
 		public static bool IsWordEnd(char c, char cBefore)
 		{
-			//	Retourne true si une frontière de mot se trouve entre les caractères
-			//	passés en entrée. Utilisé pour déterminer la position d'une fin de
-			//	mot (le mot finit par 'c' et est précédé par 'cBefore').
+			//	Retourne true si une frontiÃ¨re de mot se trouve entre les caractÃ¨res
+			//	passÃ©s en entrÃ©e. UtilisÃ© pour dÃ©terminer la position d'une fin de
+			//	mot (le mot finit par 'c' et est prÃ©cÃ©dÃ© par 'cBefore').
 			
 			return Internal.Navigator.IsWordEnd (c, cBefore);
 		}
@@ -445,7 +452,7 @@ namespace Epsitec.Common.Text
 			public void LoadFile(string path)
 			{
 				//	Voir http://www.unicode.org/Public/LineBreak.txt pour le
-				//	fichier à jour; les explications relatives à son format sont
+				//	fichier Ã  jour; les explications relatives Ã  son format sont
 				//	ici http://www.unicode.org/Public/UNIDATA/UCD.html.
 				
 				using (System.IO.StreamReader reader = new System.IO.StreamReader (path, System.Text.Encoding.ASCII))
@@ -496,7 +503,7 @@ namespace Epsitec.Common.Text
 						}
 						
 					again_range:
-						if (codeBegin < 0x003200)				//	0x000000 - 0x0031FF, 1ère table
+						if (codeBegin < 0x003200)				//	0x000000 - 0x0031FF, 1Ã¨re table
 						{
 							this.table1[codeBegin - 0x000000] = breakClass;
 							
@@ -511,7 +518,7 @@ namespace Epsitec.Common.Text
 						{
 							continue;
 						}
-						else if (codeBegin < 0x010000)			//	0x00F900 - 0x00FFFF, 2ème table
+						else if (codeBegin < 0x010000)			//	0x00F900 - 0x00FFFF, 2Ã¨me table
 						{
 							this.table2[codeBegin - 0x00F900] = breakClass;
 							
@@ -717,7 +724,7 @@ namespace Epsitec.Common.Text
 			
 			public void GenerateBreaks(ulong[] text, int start, int length, Unicode.BreakInfo[] breaks)
 			{
-				//	L'algorithme est tiré de l'Unicode Standard Annex #14, décrit
+				//	L'algorithme est tirÃ© de l'Unicode Standard Annex #14, dÃ©crit
 				//	ici : http://www.unicode.org/reports/tr14
 				
 				if (length == 0)
@@ -738,8 +745,8 @@ namespace Epsitec.Common.Text
 					curUnicode = Unicode.Bits.GetCode (text[start+i]);
 					curClass   = this[curUnicode];
 					
-					//	Comme on passe déjà en revue le texte, on profite de mettre
-					//	à jour les fanions Combining et Reordering :
+					//	Comme on passe dÃ©jÃ  en revue le texte, on profite de mettre
+					//	Ã  jour les fanions Combining et Reordering :
 					
 					if (curClass == Unicode.BreakClass.CM_CombiningMarks)
 					{
@@ -759,12 +766,12 @@ namespace Epsitec.Common.Text
 						Unicode.Bits.SetCombiningFlag (ref text[start+i], false);
 					}
 					
-					//	TODO: implémenter le reoredering... Voir :
+					//	TODO: implÃ©menter le reoredering... Voir :
 					//	- http://www.unicode.org/Public/UNIDATA/UCD.html#Bidi_Class_Values
 					//	- http://www.unicode.org/reports/tr9/
 					//	- http://www.unicode.org/Public/UNIDATA/UnicodeData.txt
 					
-					//	Simplifie les traitements ultérieurs en remplaçant certaines
+					//	Simplifie les traitements ultÃ©rieurs en remplaÃ§ant certaines
 					//	classes par d'autres :
 					
 					switch (curClass)
@@ -802,7 +809,7 @@ namespace Epsitec.Common.Text
 							break;
 						
 						//	Remplace "a'a" par "aaa" pour simplifier le traitement
-						//	des apostrophes latins (en français, par exemple).
+						//	des apostrophes latins (en franÃ§ais, par exemple).
 						
 						case Unicode.BreakClass.AL_OrdinaryAlphabeticAndSymbol:
 							if ((i > 1) &&
@@ -1079,7 +1086,7 @@ namespace Epsitec.Common.Text
 					breaks[i] = Unicode.BreakInfo.Optional;
 				}
 				
-				//	Traitement final : analyse encore le dernier élément dans la table
+				//	Traitement final : analyse encore le dernier Ã©lÃ©ment dans la table
 				//	pour ajuster quelques cas particuliers :
 				
 				if (breaks[length-1] == Unicode.BreakInfo.No)
