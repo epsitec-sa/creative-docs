@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Margins          = new Margins (10, 10, 0, 0),
 			};
 
-			this.editorTile = new FrameBox
+			this.lineEditorTile = new FrameBox
 			{
 				Parent        = frame,
 				Dock          = DockStyle.Fill,
@@ -78,49 +78,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Met à jour l'éditeur en fonction de la sélection en cours.
 			this.editMode = editMode;
 
-			this.lineEditorController = null;
-			this.editorTile.Children.Clear ();
+			this.ClearLineEditor ();
 
 			if (info != null)
 			{
-				if (info.DocumentItem is ArticleDocumentItemEntity)
-				{
-					if ((info.SublineIndex == 0) ||
-						(info.IsQuantity == false))
-					{
-						this.lineEditorController = new ArticleLineEditorController (this.accessData, this.editMode);
-						this.lineEditorController.CreateUI (this.editorTile, info.DocumentItem);
-					}
-					else
-					{
-						this.lineEditorController = new QuantityLineEditorController (this.accessData);
-						this.lineEditorController.CreateUI (this.editorTile, info.ArticleQuantity);
-					}
-				}
-
-				if (info.DocumentItem is TextDocumentItemEntity)
-				{
-					this.lineEditorController = new TextLineEditorController (this.accessData);
-					this.lineEditorController.CreateUI (this.editorTile, info.DocumentItem);
-				}
-
-				if (info.DocumentItem is TaxDocumentItemEntity)
-				{
-					this.lineEditorController = new TaxLineEditorController (this.accessData);
-					this.lineEditorController.CreateUI (this.editorTile, info.DocumentItem);
-				}
-
-				if (info.DocumentItem is SubTotalDocumentItemEntity)
-				{
-					this.lineEditorController = new SubTotalLineEditorController (this.accessData);
-					this.lineEditorController.CreateUI (this.editorTile, info.DocumentItem);
-				}
-
-				if (info.DocumentItem is EndTotalDocumentItemEntity)
-				{
-					this.lineEditorController = new EndTotalLineEditorController (this.accessData);
-					this.lineEditorController.CreateUI (this.editorTile, info.DocumentItem);
-				}
+				this.CreateLineEditor (info);
 
 				if (this.lineEditorController != null)
 				{
@@ -128,16 +90,64 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				}
 			}
 
-			this.UpdateTitle ();
+			this.UpdateLineEditorTitle ();
 		}
 
 		public void SetError(DocumentItemAccessorError error)
 		{
 			this.error = error;
-			this.UpdateTitle ();
+			this.UpdateLineEditorTitle ();
 		}
 
-		private void UpdateTitle()
+		private void ClearLineEditor()
+		{
+			this.lineEditorController = null;
+			this.lineEditorTile.Children.Clear ();
+		}
+		
+		private void CreateLineEditor(LineInformations info)
+		{
+			if (info.DocumentItem is ArticleDocumentItemEntity)
+			{
+				if ((info.SublineIndex == 0) ||
+							(info.IsQuantity == false))
+				{
+					this.lineEditorController = new ArticleLineEditorController (this.accessData, this.editMode);
+					this.lineEditorController.CreateUI (this.lineEditorTile, info.DocumentItem);
+				}
+				else
+				{
+					this.lineEditorController = new QuantityLineEditorController (this.accessData);
+					this.lineEditorController.CreateUI (this.lineEditorTile, info.ArticleQuantity);
+				}
+			}
+
+			if (info.DocumentItem is TextDocumentItemEntity)
+			{
+				this.lineEditorController = new TextLineEditorController (this.accessData);
+				this.lineEditorController.CreateUI (this.lineEditorTile, info.DocumentItem);
+			}
+
+			if (info.DocumentItem is TaxDocumentItemEntity)
+			{
+				this.lineEditorController = new TaxLineEditorController (this.accessData);
+				this.lineEditorController.CreateUI (this.lineEditorTile, info.DocumentItem);
+			}
+
+			if (info.DocumentItem is SubTotalDocumentItemEntity)
+			{
+				this.lineEditorController = new SubTotalLineEditorController (this.accessData);
+				this.lineEditorController.CreateUI (this.lineEditorTile, info.DocumentItem);
+			}
+
+			if (info.DocumentItem is EndTotalDocumentItemEntity)
+			{
+				this.lineEditorController = new EndTotalLineEditorController (this.accessData);
+				this.lineEditorController.CreateUI (this.lineEditorTile, info.DocumentItem);
+			}
+		}
+		
+		private void UpdateLineEditorTitle()
 		{
 			//	Met à jour le titre de l'éditeur.
 			FormattedText text = "";
@@ -164,7 +174,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private EditMode								editMode;
 		private FrameBox								titleFrame;
 		private StaticText								titleText;
-		private FrameBox								editorTile;
+		private FrameBox								lineEditorTile;
 		private AbstractLineEditorController			lineEditorController;
 		private DocumentItemAccessorError				error;
 	}

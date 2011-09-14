@@ -255,12 +255,16 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		{
 			if (discount.HasDiscountRate)
 			{
-				this.SetContent (++row, column, this.GetFormattedPercent (discount.DiscountRate.Value));
+				row++;
+				this.SetContent (row, DocumentItemAccessorColumn.ArticleDescription, discount.Text);
+				this.SetContent (row, column, this.GetFormattedPercent (-discount.DiscountRate.Value));
 			}
 			
 			if (discount.HasValue)
 			{
-				this.SetContent (++row, column, this.GetFormattedPrice (discount.Value.Value));
+				row++;
+				this.SetContent (row, DocumentItemAccessorColumn.ArticleDescription, discount.Text);
+				this.SetContent (row, column, this.GetFormattedPrice (-discount.Value.Value));
 			}
 			
 			return row;
@@ -605,6 +609,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			return description;
 		}
 		
+#if false
 		private decimal GetArticleItemTotalTax(ArticleDocumentItemEntity line)
 		{
 			//	...pour l'instant plus utilisé...
@@ -618,8 +623,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 			return tax;
 		}
-
-
+#endif
 
 		private static readonly ArticleQuantityType[] ArticleQuantityTypes =
 		{
@@ -709,13 +713,21 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			int count = 0;
 
 			if (mode.HasFlag (DocumentItemAccessorMode.EditArticleName))
+			{
 				count++;
+			}
 			if (mode.HasFlag (DocumentItemAccessorMode.EditArticleDescription))
+			{
 				count++;
+			}
 			if (mode.HasFlag (DocumentItemAccessorMode.UseArticleName))
+			{
 				count++;
+			}
 			if (mode.HasFlag (DocumentItemAccessorMode.UseArticleBoth))
+			{
 				count++;
+			}
 
 			if (count == 0)
 			{
@@ -727,12 +739,11 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			}
 
 			if ((!mode.HasFlag (DocumentItemAccessorMode.Print)) &&
-					(mode.HasFlag (DocumentItemAccessorMode.AdditionalQuantities)))
+				(mode.HasFlag (DocumentItemAccessorMode.AdditionalQuantities)))
 			{
 				throw new System.NotSupportedException ("Invalid mode combination");
 			}
 		}
-
 
 		private static int GetKey(int row, DocumentItemAccessorColumn column)
 		{

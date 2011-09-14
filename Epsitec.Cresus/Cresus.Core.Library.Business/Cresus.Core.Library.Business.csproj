@@ -137,7 +137,7 @@
     <Compile Include="Controllers\BusinessDocumentControllers\LineEditorControllers\TaxLineEditorController.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\LineEditorControllers\QuantityLineEditorController.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\LineEditorControllers\TextLineEditorController.cs" />
-    <Compile Include="Controllers\BusinessDocumentControllers\LinesController.cs" />
+    <Compile Include="Controllers\BusinessDocumentControllers\LineTableController.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\LineEditionPanelController.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\LineToolbarController.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\LineInformations.cs" />

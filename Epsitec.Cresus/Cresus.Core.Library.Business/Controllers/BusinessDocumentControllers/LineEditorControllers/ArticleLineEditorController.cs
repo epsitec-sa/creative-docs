@@ -68,71 +68,90 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
-		private string							DiscountValue
+		private string							DiscountLineValue
 		{
 			get
 			{
-				var policy   = DiscountPolicy.OnLinePrice;
-				var discount = this.Entity.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
-
-				if (discount.IsNotNull ())
-				{
-					if (discount.DiscountRate.HasValue && discount.DiscountRate.Value != 0)
-					{
-						return Misc.PercentToString (discount.DiscountRate);
-					}
-
-					if (discount.Value.HasValue && discount.Value.Value != 0)
-					{
-						return Misc.PriceToString (discount.Value);
-					}
-				}
-
-				return null;
+				return this.GetDiscountTextValue (DiscountPolicy.OnLinePrice);
 			}
 			set
 			{
-				using (this.accessData.BusinessContext.SuspendUpdates ())
-				{
-					var policy   = DiscountPolicy.OnLinePrice;
-					
-					this.CreateDefaultDiscount (policy);
-					
-					var discount = this.Entity.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
+				this.SetDiscountTextValue (value, DiscountPolicy.OnLinePrice);
+			}
+		}
 
-					if (string.IsNullOrEmpty (value))
+		private string							DiscountUnitValue
+		{
+			get
+			{
+				return this.GetDiscountTextValue (DiscountPolicy.OnUnitPrice);
+			}
+			set
+			{
+				this.SetDiscountTextValue (value, DiscountPolicy.OnUnitPrice);
+			}
+		}
+
+		private string GetDiscountTextValue(DiscountPolicy policy)
+		{
+			var discount = this.Entity.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
+
+			if (discount.IsNotNull ())
+			{
+				if (discount.DiscountRate.HasValue && discount.DiscountRate.Value != 0)
+				{
+					return Misc.PercentToString (discount.DiscountRate);
+				}
+
+				if (discount.Value.HasValue && discount.Value.Value != 0)
+				{
+					return Misc.PriceToString (discount.Value);
+				}
+			}
+
+			return null;
+		}
+
+		private void SetDiscountTextValue(string value, DiscountPolicy policy)
+		{
+			using (this.accessData.BusinessContext.SuspendUpdates ())
+			{
+				this.CreateDefaultDiscount (policy);
+
+				var discount = this.Entity.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
+
+				if (string.IsNullOrEmpty (value))
+				{
+					discount.DiscountRate = null;
+					discount.Value = null;
+				}
+				else
+				{
+					if (value.Contains ("%"))
 					{
-						discount.DiscountRate = null;
-						discount.Value = null;
+						value = value.Replace ("%", "");
+
+						decimal d;
+						if (decimal.TryParse (value, out d))
+						{
+							discount.DiscountRate = PriceCalculator.ClipPercentValue (d/100);
+							discount.Value = null;
+						}
 					}
 					else
 					{
-						if (value.Contains ("%"))
+						decimal d;
+						if (decimal.TryParse (value, out d))
 						{
-							value = value.Replace ("%", "");
-
-							decimal d;
-							if (decimal.TryParse (value, out d))
-							{
-								discount.DiscountRate = PriceCalculator.ClipPercentValue (d/100);
-								discount.Value = null;
-							}
-						}
-						else
-						{
-							decimal d;
-							if (decimal.TryParse (value, out d))
-							{
-								discount.DiscountRate = null;
-								discount.Value = PriceCalculator.ClipPriceValue (d);
-							}
+							discount.DiscountRate = null;
+							discount.Value = PriceCalculator.ClipPriceValue (d);
 						}
 					}
 				}
 			}
 		}
-
-		private FormattedText					DiscountText
+		
+		private FormattedText DiscountText
 		{
 			get
 			{
@@ -513,8 +532,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				};
 
 				//	Rabais.
-				var discountField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.DiscountValue, x => this.DiscountValue = x));
-				this.discountBox = this.PlaceLabelAndField (line, 130, 100, "Rabais en % ou en francs", discountField);
+				var discountField1 = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.DiscountUnitValue, x => this.DiscountUnitValue = x));
+				this.discountBox = this.PlaceLabelAndField (line, 130, 100, "Rabais unitaire", discountField1);
+
+				var discountField2 = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.DiscountLineValue, x => this.DiscountLineValue = x));
+				this.discountBox = this.PlaceLabelAndField (line, 130, 100, "Rabais de ligne", discountField2);
 
 				var neverButton = new CheckButton
 				{
@@ -533,7 +555,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			//	Quatrième ligne à droite.
-#if false  // on ne peut pas saisir la description du rabais, car on ne sait pas où la faire figurer !
 			{
 				var line = new FrameBox
 				{
@@ -548,7 +569,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				var discountField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.DiscountText, x => this.DiscountText = x));
 				this.PlaceLabelAndField (line, 130, 200, "Description du rabais", discountField);
 			}
-#endif
 
 			this.UpdateQuantityBox ();
 			this.UpdateDiscountBox ();

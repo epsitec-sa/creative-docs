@@ -1,23 +1,12 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
-using Epsitec.Common.Support;
 using Epsitec.Common.Dialogs;
 
-using Epsitec.Cresus.Core;
-using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Controllers.DataAccessors;
-using Epsitec.Cresus.Core.Widgets;
-using Epsitec.Cresus.Core.Widgets.Tiles;
-using Epsitec.Cresus.Core.Helpers;
-using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Library.Business.ContentAccessors;
-
-using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -70,13 +59,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			toolbarWidget.Visibility = BusinessDocumentLinesController.persistantShowToolbar;
 
 			//	Crée la liste.
-			this.linesController = new LinesController (this.accessData);
-			this.linesController.CreateUI (frame);
-			this.linesController.SelectionChanged += this.HandleLinesControllerSelectionChanged;
+			this.lineTableController = new LineTableController (this.accessData);
+			this.lineTableController.CreateUI (frame);
+			this.lineTableController.SelectionChanged += this.HandleLinesControllerSelectionChanged;
 
 			//	Crée l'éditeur pour une ligne.
-			this.lineEditorController = new LineEditionPanelController (this.accessData);
-			this.lineEditorController.CreateUI (frame);
+			this.lineEditionPanelController = new LineEditionPanelController (this.accessData);
+			this.lineEditionPanelController.CreateUI (frame);
 
 			//	Crée un splitter juste au-dessus de l'éditeur de ligne.
 			var splitter = new HSplitter
@@ -257,16 +246,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private void HandleLinesControllerSelectionChanged(object sender)
 		{
 			//	Appelé lorsque la sélection dans la liste a changé.
-			if (this.linesController.HasSingleSelection)
+			if (this.lineTableController.HasSingleSelection)
 			{
-				int? sel = this.linesController.LastSelection;
+				int? sel = this.lineTableController.LastSelection;
 				var info = this.lineInformations[sel.Value];
 
-				this.lineEditorController.UpdateUI (this.CurrentEditMode, info);
+				this.lineEditionPanelController.UpdateUI (this.CurrentEditMode, info);
 			}
 			else
 			{
-				this.lineEditorController.UpdateUI (this.CurrentEditMode, null);
+				this.lineEditionPanelController.UpdateUI (this.CurrentEditMode, null);
 			}
 
 			this.UpdateCommands ();
@@ -300,7 +289,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			this.UpdateLineInformations ();
 
-			this.linesController.UpdateUI (this);
+			this.lineTableController.UpdateUI (this);
 			this.Selection = selection;
 
 			this.UpdateCommands ();
@@ -371,11 +360,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			if (selection.Count != 1)
 			{
-				this.lineEditorController.SetError (DocumentItemAccessorError.None);
+				this.lineEditionPanelController.SetError (DocumentItemAccessorError.None);
 			}
 			else
 			{
-				this.lineEditorController.SetError (selection[0].Error);
+				this.lineEditionPanelController.SetError (selection[0].Error);
 			}
 		}
 
@@ -388,7 +377,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				var list = new List<LineInformations> ();
 
-				foreach (var selection in this.linesController.Selection)
+				foreach (var selection in this.lineTableController.Selection)
 				{
 					var info = this.lineInformations[selection];
 					list.Add (info);
@@ -413,7 +402,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					}
 				}
 
-				this.linesController.Selection = list;
+				this.lineTableController.Selection = list;
 			}
 		}
 
@@ -527,7 +516,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private readonly LinesEngine						linesEngine;
 
 		private LineToolbarController						lineToolbarController;
-		private LinesController								linesController;
-		private LineEditionPanelController						lineEditorController;
+		private LineTableController							lineTableController;
+		private LineEditionPanelController					lineEditionPanelController;
 	}
 }

@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			private void ProcessDeselect()
 			{
 				//	Désélectionne toutes les lignes.
-				this.host.linesController.DeselectAll ();
+				this.host.lineTableController.DeselectAll ();
 			}
 
 			[Command (Library.Business.Res.CommandIds.Lines.GroupSelect)]

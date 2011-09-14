@@ -49,6 +49,11 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		/// <summary>
+		/// Replaces the minus dash <c>"-"</c> with a real minus sign.
+		/// </summary>
+		/// <param name="value">The text representing a numeric value.</param>
+		/// <returns>The text with the proper minus sign, if any.</returns>
 		public static string ReplaceMinusSign(string value)
 		{
 			if (string.IsNullOrEmpty (value))

@@ -25,9 +25,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 	/// <summary>
 	/// Liste de lignes d'articles (AbstractDocumentItemEntity).
 	/// </summary>
-	public sealed class LinesController
+	public sealed class LineTableController
 	{
-		public LinesController(AccessData accessData)
+		public LineTableController(AccessData accessData)
 		{
 			this.accessData = accessData;
 
@@ -214,7 +214,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				ColumnsToSkipFromLeftForSeparator = 1,
 				IsCompactStyle = true,
 				DrawHiliteFocus = false,
-				DefHeight = LinesController.lineHeight,
+				DefHeight = LineTableController.LineHeight,
 				Margins = new Margins (2),
 				Dock = DockStyle.Fill,
 			};
@@ -292,7 +292,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					{
 						var text = new StaticText
 						{
-							PreferredHeight = LinesController.lineHeight,
+							PreferredHeight = LineTableController.LineHeight,
 							ContentAlignment = this.GetRowColumnContentAlignment (row, columnType),
 							TextBreakMode = Common.Drawing.TextBreakMode.SingleLine | TextBreakMode.Split | TextBreakMode.Ellipsis,
 							Dock = DockStyle.Fill,
@@ -629,7 +629,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				index = this.colorIndexes.Count-1;
 			}
 
-			return LinesController.niceBackgroundColors[index % LinesController.niceBackgroundColors.Length];
+			return LineTableController.niceBackgroundColors[index % LineTableController.niceBackgroundColors.Length];
 		}
 
 		private static readonly Color[] niceBackgroundColors =
@@ -690,7 +690,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public event EventHandler SelectionChanged;
 	
 		
-		private static readonly double lineHeight = 17;
+		private static readonly double			LineHeight = 17;
 
 		private readonly AccessData				accessData;
 		private readonly List<int>				colorIndexes;
