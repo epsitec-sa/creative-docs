@@ -886,6 +886,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid TextForFixedPrice = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 139);
 				//	designer:cap/GVAA4
 				public static readonly global::Epsitec.Common.Support.Druid TextForPrice = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 138);
+				//	designer:cap/GVAH8
+				public static readonly global::Epsitec.Common.Support.Druid TotalRounding = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 273);
 			}
 			
 			public static class EnumValueArticleParameterDefinition

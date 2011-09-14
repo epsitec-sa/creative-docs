@@ -4176,6 +4176,28 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>TotalRounding</c> field.
+		///	designer:fld/GVA94/GVAH8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVAH8]")]
+		public global::System.Decimal? TotalRounding
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[GVAH8]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.TotalRounding;
+				if (oldValue != value || !this.IsFieldDefined("[GVAH8]"))
+				{
+					this.OnTotalRoundingChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[GVAH8]", oldValue, value);
+					this.OnTotalRoundingChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>FixedPriceAfterTax</c> field.
 		///	designer:fld/GVA94/GVAE4
 		///	</summary>
@@ -4206,6 +4228,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnPriceBeforeTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnPriceAfterTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnPriceAfterTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnTotalRoundingChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnTotalRoundingChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnFixedPriceAfterTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnFixedPriceAfterTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		

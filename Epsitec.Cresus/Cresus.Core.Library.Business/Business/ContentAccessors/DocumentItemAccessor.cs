@@ -470,13 +470,25 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				return;
 			}
 
-			this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, line.TextForPrice.GetValueOrDefault ("Grand total"));
-			this.SetContent (0, DocumentItemAccessorColumn.TotalPrice, this.GetFormattedPrice (line.PriceAfterTax));
+			int row = 0;
+
+			if (line.TotalRounding.HasValue)
+			{
+				this.SetContent (row, DocumentItemAccessorColumn.ArticleDescription, line.TextForPrice.GetValueOrDefault ("Arrondi"));
+				this.SetContent (row, DocumentItemAccessorColumn.TotalPrice, this.GetFormattedPrice (line.TotalRounding));
+
+				row++;
+			}
+
+			this.SetContent (row, DocumentItemAccessorColumn.ArticleDescription, line.TextForPrice.GetValueOrDefault ("Grand total"));
+			this.SetContent (row, DocumentItemAccessorColumn.TotalPrice, this.GetFormattedPrice (line.PriceAfterTax));
+
+			row++;
 
 			if (line.FixedPriceAfterTax.HasValue)
 			{
-				this.SetContent (1, DocumentItemAccessorColumn.ArticleDescription, line.TextForFixedPrice.GetValueOrDefault ("Grand total après escompte"));
-				this.SetContent (1, DocumentItemAccessorColumn.TotalPrice, this.GetFormattedPrice (line.FixedPriceAfterTax));
+				this.SetContent (row, DocumentItemAccessorColumn.ArticleDescription, line.TextForFixedPrice.GetValueOrDefault ("Grand total après escompte"));
+				this.SetContent (row, DocumentItemAccessorColumn.TotalPrice, this.GetFormattedPrice (line.FixedPriceAfterTax));
 			}
 		}
 
