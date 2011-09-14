@@ -137,7 +137,10 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void HandleEditionAccepted(object sender)
 		{
 			string text = this.GetWidgetText ();
+
 			this.SetMarshalerText (text);
+			
+			this.UpdateWidgetForMultilingualText ();
 		}
 
 		private void HandleButtonChanged(object sender)
@@ -265,31 +268,39 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void SetMarshalerText(string text)
 		{
-			text = this.ConvertFromUI (text);
-			MultilingualText multilingual = null;
-
-			if (this.marshaler.MarshaledType == typeof (FormattedText))
+			try
 			{
-				var originalValue = this.marshaler.GetStringValue ();
-				var originalFormattedText = new FormattedText (originalValue);
+				text = this.ConvertFromUI (text);
+				MultilingualText multilingual = null;
 
-				//	Handle formatted text, which could be stored as a multilingual text : the UI
-				//	can only display and handle one language at any given time.
-
-				if ((MultilingualText.IsMultilingual (originalFormattedText)) ||
-					(MultilingualText.IsDefaultLanguageId (this.LanguageId) == false))
+				if (this.marshaler.MarshaledType == typeof (FormattedText))
 				{
-					multilingual = new MultilingualText (originalFormattedText);
+					var originalValue = this.marshaler.GetStringValue ();
+					var originalFormattedText = new FormattedText (originalValue);
 
-					multilingual.SetText (this.LanguageId, new FormattedText (text));
-					text = multilingual.ToString ();
+					//	Handle formatted text, which could be stored as a multilingual text : the UI
+					//	can only display and handle one language at any given time.
 
-					this.marshaler.SetStringValue (text);
+					if ((MultilingualText.IsMultilingual (originalFormattedText)) ||
+					(MultilingualText.IsDefaultLanguageId (this.LanguageId) == false))
+					{
+						multilingual = new MultilingualText (originalFormattedText);
+
+						multilingual.SetText (this.LanguageId, new FormattedText (text));
+						text = multilingual.ToString ();
+
+						this.marshaler.SetStringValue (text);
+					}
 				}
+
+				this.marshaler.SetStringValue (text);
+				this.UpdateWidgetAfterTextChanged (multilingual);
 			}
-			
-			this.marshaler.SetStringValue (text);
-			this.UpdateWidgetAfterTextChanged (multilingual);
+			catch
+			{
+				//	TODO: we should notify the user that the value was rejected by the system
+				//	Dismiss the error...
+			}
 		}
 
 		private string ConvertToUI(string value)
