@@ -24,6 +24,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		{
 			RoundingPolicy.OnUnitPrice,
 			RoundingPolicy.OnLinePrice,
+			RoundingPolicy.OnTotalRounding,
 			RoundingPolicy.OnTotalPrice,
 			RoundingPolicy.OnTotalVat,
 			RoundingPolicy.OnEndTotal,

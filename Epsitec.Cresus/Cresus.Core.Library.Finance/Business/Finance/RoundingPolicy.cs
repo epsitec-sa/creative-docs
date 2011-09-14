@@ -17,9 +17,10 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		OnUnitPrice				= 0x0002,
 		OnLinePrice				= 0x0004,
 
-		OnTotalVat				= 0x0010,
+		OnTotalRounding			= 0x0010,
 		OnTotalPrice			= 0x0020,
-		OnEndTotal				= 0x0040,
+		OnTotalVat				= 0x0040,
+		OnEndTotal				= 0x0080,
 		
 		All						= 0x00ff,
 	}

@@ -124,21 +124,29 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 				settings.Finance.DefaultPriceGroup.DefaultRoundingModes.ForEach (x => this.AddRoundingMode (x));
 			}
 
-			var fallback = new PriceRoundingModeEntity ()
+			var fallback1 = new PriceRoundingModeEntity ()
 			{
 				Modulo          = 0.05M,
 				AddBeforeModulo = 0.00M,
-				RoundingPolicy  = RoundingPolicy.OnLinePrice | RoundingPolicy.OnTotalPrice | RoundingPolicy.OnEndTotal,
+				RoundingPolicy  = RoundingPolicy.OnLinePrice | RoundingPolicy.OnTotalPrice | RoundingPolicy.OnTotalRounding,
+			};
+
+			var fallback2 = new PriceRoundingModeEntity ()
+			{
+				Modulo          = 1.00M,
+				AddBeforeModulo = 0.00M,
+				RoundingPolicy  = RoundingPolicy.OnEndTotal,
 			};
 
 			var fallbackVat = new PriceRoundingModeEntity ()
 			{
 				Modulo          = 0.05M,
 				AddBeforeModulo = 0.025M,
-				RoundingPolicy  = RoundingPolicy.OnTotalVat
+				RoundingPolicy  = RoundingPolicy.OnTotalVat,
 			};
 
-			this.AddRoundingMode (fallback);
+			this.AddRoundingMode (fallback1);
+			this.AddRoundingMode (fallback2);
 			this.AddRoundingMode (fallbackVat);
 		}
 
@@ -264,7 +272,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 				case BillingMode.IncludingTax:
 					totalLine.PriceBeforeTax = PriceCalculator.ClipPriceValue (taxTotals.TotalAmount, currency);
-					totalLine.PriceAfterTax  = PriceCalculator.ClipPriceValue (taxTotals.TotalAmount + taxTotals.TotalTax + vatRounding, currency);
+					totalLine.PriceAfterTax  = PriceCalculator.ClipPriceValue (taxTotals.TotalAmount + taxTotals.TotalTax, currency);
 					break;
 			}
 
@@ -277,15 +285,21 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		{
 			var beforeRounding = taxLine.ResultingTax;
 			var afterRounding  = this.Round (beforeRounding, RoundingPolicy.OnTotalVat);
+			var totalRounding  = afterRounding - beforeRounding;
 
-			if (afterRounding == beforeRounding)
+			if (totalRounding == 0)
 			{
 				return 0;
 			}
 
 			taxLine.ResultingTax = afterRounding;
 
-			return afterRounding - beforeRounding;
+			if (this.GetBillingMode () == BillingMode.IncludingTax)
+			{
+				taxLine.TotalRevenue -= totalRounding;
+			}
+
+			return totalRounding;
 		}
 
 		private void RoundEndTotal(EndTotalDocumentItemEntity totalLine)

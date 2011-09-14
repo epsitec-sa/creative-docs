@@ -26,12 +26,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 			this.totalItem    = totalItem;
 			this.discount     = this.totalItem.Discount.UnwrapNullEntity ();
 			this.currencyCode = this.document.CurrencyCode;
-
-			if ((this.document.IsNotNull ()) &&
-				(this.document.PriceGroup.IsNotNull ()))
-			{
-				this.billingMode = this.document.PriceGroup.BillingMode;
-			}
+			this.billingMode  = PriceCalculator.GetBillingMode ();
 		}
 
 
@@ -87,11 +82,15 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 		{
 			decimal totalPrice = this.group.TotalPriceBeforeTax + this.group.TotalTax;
 
+			totalPrice = PriceCalculator.ClipPriceValue (totalPrice, this.currencyCode);
+
 			this.totalItem.PriceBeforeTax1 = null;
 			this.totalItem.PriceBeforeTax2 = null;
-			this.totalItem.PriceAfterTax1  = PriceCalculator.ClipPriceValue (totalPrice, this.currencyCode);
+			this.totalItem.PriceAfterTax1  = totalPrice;
 
 			totalPrice = this.ApplyDiscount (totalPrice);
+			totalPrice = this.ApplyRounding (totalPrice);
+			totalPrice = this.ApplyRounding (totalPrice, RoundingPolicy.OnTotalPrice);
 
 			this.totalItem.PriceAfterTax2 = PriceCalculator.ClipPriceValue (totalPrice, this.currencyCode);
 		}
@@ -101,11 +100,15 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 			decimal totalPrice = this.group.TotalPriceBeforeTax;
 			decimal totalTax   = this.group.TotalTax;
 
-			this.totalItem.PriceBeforeTax1 = PriceCalculator.ClipPriceValue (totalPrice, this.currencyCode);
+			totalPrice = PriceCalculator.ClipPriceValue (totalPrice, this.currencyCode);
+
+			this.totalItem.PriceBeforeTax1 = totalPrice;
 			this.totalItem.PriceAfterTax1  = null;
 			this.totalItem.PriceAfterTax2  = null;
 
 			totalPrice = this.ApplyDiscount (totalPrice);
+			totalPrice = this.ApplyRounding (totalPrice);
+			totalPrice = this.ApplyRounding (totalPrice, RoundingPolicy.OnTotalPrice);
 
 			this.totalItem.PriceBeforeTax2 = PriceCalculator.ClipPriceValue (totalPrice, this.currencyCode);
 		}
@@ -130,59 +133,43 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 			{
 				return price;
 			}
-			
+
 			if (this.discount.DiscountRate.HasValue)
 			{
-				return this.ApplyRounding (price * (1.00M - System.Math.Abs (this.discount.DiscountRate.Value)));
+				decimal value = price * System.Math.Abs (this.discount.DiscountRate.Value);
+				decimal total = price - this.ApplyRounding (value, RoundingPolicy.OnTotalRounding);
+
+				return total;
 			}
-			
+
 			if (this.discount.Value.HasValue)
 			{
-				return this.ApplyRounding (price - System.Math.Abs (this.discount.Value.Value));
+				decimal value = System.Math.Abs (System.Math.Abs (this.discount.Value.Value));
+				decimal total = price - this.ApplyRounding (value, RoundingPolicy.OnTotalRounding);
+
+				return total;
 			}
 
 			return price;
 		}
 
+		private decimal ApplyRounding(decimal price, RoundingPolicy policy)
+		{
+			return PriceCalculator.Round (price, policy, this.currencyCode);
+		}
 
 		private decimal ApplyRounding(decimal price)
 		{
-			if (this.discount.RoundingMode.IsNotNull ())
+			if ((this.discount != null) &&
+				(this.discount.RoundingMode.IsNotNull ()))
 			{
-				price = this.discount.RoundingMode.Round (price);
-			}
-
-			return PriceCalculator.ClipPriceValue (price, this.currencyCode);
-		}
-
-#if false
-		private void ApplyFixedDiscount(decimal discountedPrice, ref decimal priceBeforeTax, ref decimal tax, bool computeIncludingTaxes)
-		{
-			if (discountedPrice < 0)
-			{
-				discountedPrice = 0;
-			}
-
-			decimal totalBeforeTaxDiscountable;
-			decimal totalTaxDiscountable;
-
-			Tax taxDiscountable;
-
-			if (computeIncludingTaxes)
-			{
-				this.group.ComputeDiscountAfterTax (discountedPrice, out totalBeforeTaxDiscountable, out totalTaxDiscountable, out taxDiscountable);
+				return this.discount.RoundingMode.Round (price);
 			}
 			else
 			{
-				this.group.ComputeDiscountBeforeTax (discountedPrice, out totalBeforeTaxDiscountable, out totalTaxDiscountable, out taxDiscountable);
+				return price;
 			}
-
-			priceBeforeTax = totalBeforeTaxDiscountable + this.group.TotalPriceBeforeTaxNotDiscountable;
-			tax = totalTaxDiscountable + this.group.TotalTaxNotDiscountable;
-
-			this.taxDiscountable = taxDiscountable;
 		}
-#endif
 		
 		private readonly BusinessDocumentEntity		document;
 		private readonly BillingMode				billingMode;

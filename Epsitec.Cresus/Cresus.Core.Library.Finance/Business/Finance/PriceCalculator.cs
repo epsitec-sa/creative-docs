@@ -37,6 +37,18 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			}
 		}
 
+		public static BillingMode GetBillingMode()
+		{
+			if (PriceCalculator.activeCalculator == null)
+			{
+				return BillingMode.None;
+			}
+			else
+			{
+				return PriceCalculator.activeCalculator.GetBillingMode ();
+			}
+		}
+
 		
 		public static decimal Round(decimal value, RoundingPolicy policy, CurrencyCode currency = CurrencyCode.None)
 		{
