@@ -2048,6 +2048,11 @@ namespace Epsitec.Common.Widgets
 			{
 				return AbstractTextField.GetPaintTextLayoutItalic (original);
 			}
+			if (this.textFieldDisplayMode == TextFieldDisplayMode.OverriddenValue)
+			{
+				return AbstractTextField.GetPaintTextLayoutBold (original);
+			}
+			
 			
 			string hintText = this.HintText;
 
@@ -2134,6 +2139,15 @@ namespace Epsitec.Common.Widgets
 			};
 		}
 
+		private static TextLayout GetPaintTextLayoutBold(TextLayout original)
+		{
+			var text = TextConverter.ConvertToSimpleText (original.Text);
+
+			return new TextLayout (original)
+			{
+				Text = string.Concat ("<b>", TextConverter.ConvertToTaggedText (text), "</b>")
+			};
+		}
 
 		private static TextLayout GetPaintTextLayoutReplacement(TextLayout original, string hintText)
 		{

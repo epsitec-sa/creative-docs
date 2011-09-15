@@ -497,6 +497,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					var discount   = builder.CreateTextField (Marshaler.Create (() => this.DiscountUnitValue, x => this.DiscountUnitValue = x));
 					var unit2Field = builder.CreateTextField (Marshaler.Create (() => this.Item.UnitPriceBeforeTax2, x => this.Item.UnitPriceBeforeTax2 = x));
 
+					this.BindPriceField (unit1Field, ArticleDocumentItemAttributes.FixedUnitPrice1);
+					this.BindPriceField (unit2Field, ArticleDocumentItemAttributes.FixedUnitPrice2);
+
 					this.PlacePriceEditionWidgets (line, "Prix unitaire", unit1Field, discount, unit2Field);
 				}
 				else
@@ -585,6 +588,28 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			this.UpdateDiscountBox ();
 		}
+
+		private void BindPriceField(TextFieldEx field, ArticleDocumentItemAttributes attribute)
+		{
+			field.EditionAccepted +=
+				delegate
+				{
+					if (field.Text.IsNullOrWhiteSpace ())
+					{
+						this.Item.ArticleAttributes &= ~attribute;
+					}
+					else
+					{
+						this.Item.ArticleAttributes |= attribute;
+					}
+				};
+
+			if (Item.ArticleAttributes.HasFlag (attribute))
+			{
+				field.TextDisplayMode = TextFieldDisplayMode.OverriddenValue;
+			}
+		}
+
 
 		private void PlacePriceEditionWidgets(Widget container, FormattedText caption, AbstractTextField field1, AbstractTextField fieldDiscount, AbstractTextField field2)
 		{

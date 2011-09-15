@@ -25,6 +25,11 @@ namespace Epsitec.Cresus.Core.Binders
 
 		public string ConvertToUI(string value)
 		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return value;
+			}
+			
 			int posDot   = value.IndexOf ('.');
 			int posComma = value.IndexOf (',');
 

@@ -952,7 +952,7 @@ namespace Epsitec.Cresus.Core.Business
 						}
 						else
 						{
-							this.ApplyRulesToRegisteredEntities (RuleType.Update);
+							this.asyncUpdatePending = true;
 						}
 					}
 				}
@@ -967,6 +967,8 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
+		private bool asyncUpdatePending;
+
 		private void AsyncUpdateMainWindowController()
 		{
 			Dispatcher.Queue (this.SyncUpdateMainWindowController);
@@ -974,6 +976,22 @@ namespace Epsitec.Cresus.Core.Business
 
 		private void SyncUpdateMainWindowController()
 		{
+			if (this.asyncUpdatePending)
+			{
+				try
+				{
+					if (System.Threading.Interlocked.Increment (ref this.dataChangedCounter) == 1)
+					{
+						this.asyncUpdatePending = false;
+						this.ApplyRulesToRegisteredEntities (RuleType.Update);
+					}
+				}
+				finally
+				{
+					System.Threading.Interlocked.Decrement (ref this.dataChangedCounter);
+				}
+			}
+
 			if (this.isDisposed)
 			{
 				System.Diagnostics.Debug.WriteLine ("Calling BusinessContext.SyncUpdateMainWindowController on disposed context");
