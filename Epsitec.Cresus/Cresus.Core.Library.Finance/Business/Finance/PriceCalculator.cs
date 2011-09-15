@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Core.Business.Finance;
@@ -12,6 +12,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business.Finance
 {
+	/// <summary>
+	/// The <c>PriceCalculator</c> class gives access to utility functions related to price
+	/// calculation; most are only available while an <see cref="IPriceCalculator"/> is
+	/// actively working.
+	/// </summary>
 	public static class PriceCalculator
 	{
 		public static void UpdatePrices(IPriceCalculator calculator)
@@ -169,6 +174,6 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		
 		
 		[System.ThreadStatic]
-		private static IPriceCalculator	activeCalculator;
+		private static IPriceCalculator			activeCalculator;
 	}
 }

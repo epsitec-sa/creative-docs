@@ -501,22 +501,22 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		public static System.Action<string, bool>			actionRibbonShow;
+		public static System.Action<string, bool>	actionRibbonShow;
 
 		// TODO: Il faudra un jour que ces variables survivent à l'extinction de l'application !
-		private static ViewMode								persistantViewMode = ViewMode.Default;
-		private static EditMode								persistantEditMode = EditMode.Name;
-		private static bool									persistantShowToolbar = false;
+		private static ViewMode					persistantViewMode    = ViewMode.Default;
+		private static EditMode					persistantEditMode    = EditMode.Name;
+		private static bool						persistantShowToolbar = false;
 
-		private readonly AccessData							accessData;
-		private readonly List<LineInformations>				lineInformations;
-		private readonly CommandProcessor					commandProcessor;
-		private readonly CommandContext						commandContext;
-		private readonly CommandDispatcher					commandDispatcher;
-		private readonly LinesEngine						linesEngine;
+		private readonly AccessData				accessData;
+		private readonly List<LineInformations>	lineInformations;
+		private readonly CommandProcessor		commandProcessor;
+		private readonly CommandContext			commandContext;
+		private readonly CommandDispatcher		commandDispatcher;
+		private readonly LinesEngine			linesEngine;
 
-		private LineToolbarController						lineToolbarController;
-		private LineTableController							lineTableController;
-		private LineEditionPanelController					lineEditionPanelController;
+		private LineToolbarController			lineToolbarController;
+		private LineTableController				lineTableController;
+		private LineEditionPanelController		lineEditionPanelController;
 	}
 }

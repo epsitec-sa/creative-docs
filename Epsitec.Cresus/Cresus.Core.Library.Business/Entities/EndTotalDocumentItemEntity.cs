@@ -63,6 +63,7 @@ namespace Epsitec.Cresus.Core.Entities
 			copy.TextForFixedPrice  = this.TextForFixedPrice;
 			copy.PriceBeforeTax     = this.PriceBeforeTax;
 			copy.PriceAfterTax      = this.PriceAfterTax;
+			copy.TotalRounding		= this.TotalRounding;
 			copy.FixedPriceAfterTax = this.FixedPriceAfterTax;
 		}
 

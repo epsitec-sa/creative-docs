@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Parent = this.tileContainer,
 				Dock = DockStyle.Fill,
 				Padding = new Margins (10),
-				TabIndex = this.NextTabIndex,
+				TabIndex = this.GetNextTabIndex (),
 				Enable = this.accessData.DocumentLogic.IsDiscountEditionEnabled,
 			};
 
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Dock = DockStyle.Top,
 				PreferredHeight = 20,
 				Margins = new Margins (0, 0, 0, 20),
-				TabIndex = this.NextTabIndex,
+				TabIndex = this.GetNextTabIndex (),
 			};
 
 			var line2 = new FrameBox
@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Dock = DockStyle.Top,
 				PreferredHeight = 20,
 				Margins = new Margins (0, 0, 0, 5),
-				TabIndex = this.NextTabIndex,
+				TabIndex = this.GetNextTabIndex (),
 			};
 
 			var line3 = new FrameBox
@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Dock = DockStyle.Top,
 				PreferredHeight = 20,
 				Margins = new Margins (0, 0, 0, 5),
-				TabIndex = this.NextTabIndex,
+				TabIndex = this.GetNextTabIndex (),
 			};
 
 			var line4 = new FrameBox
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Dock = DockStyle.Top,
 				PreferredHeight = 20,
 				Margins = new Margins (0, 0, 0, 5),
-				TabIndex = this.NextTabIndex,
+				TabIndex = this.GetNextTabIndex (),
 			};
 
 			var line5 = new FrameBox
@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Dock = DockStyle.Top,
 				PreferredHeight = 20,
 				Margins = new Margins (0, 0, 0, 5),
-				TabIndex = this.NextTabIndex,
+				TabIndex = this.GetNextTabIndex (),
 			};
 
 			//	Rabais.
@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
-		public override FormattedText TitleTile
+		public override FormattedText TileTitle
 		{
 			get
 			{

@@ -3,6 +3,10 @@
 
 namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 {
+	/// <summary>
+	/// The <c>IPriceCalculator</c> interface is implemented by the real price calculators,
+	/// which can be provided by external assemblies.
+	/// </summary>
 	public interface IPriceCalculator : System.IDisposable
 	{
 		/// <summary>

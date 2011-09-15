@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD & Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Text;
 
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
@@ -134,7 +135,7 @@ namespace Epsitec.Common.Support.Extensions
 			return StringExtensions.alphaNumRegex.IsMatch (value);
 		}
 
-		public static bool IsNumeric(this string value)
+		public static bool IsInteger(this string value)
 		{
 			if (value == null)
 			{
@@ -153,10 +154,57 @@ namespace Epsitec.Common.Support.Extensions
 					if (i == 0)
 					{
 						if ((c == '+') ||
-							(c != '-'))
+							(c == '-') ||
+							(c == (char) Unicode.Code.MinusSign))
 						{
 							continue;
 						}
+					}
+
+					return false;
+				}
+
+				valid = true;
+			}
+
+			return valid;
+		}
+
+		public static bool IsDecimal(this string value)
+		{
+			if (value == null)
+			{
+				throw new System.ArgumentNullException ("value");
+			}
+
+			bool valid = false;
+			bool dot = false;
+
+			for (int i = 0; i < value.Length; i++)
+			{
+				char c = value[i];
+
+				if ((c < '0') ||
+					(c > '9'))
+				{
+					if (i == 0)
+					{
+						if ((c == '+') ||
+							(c == '-') ||
+							(c == (char) Unicode.Code.MinusSign))
+						{
+							continue;
+						}
+					}
+					if ((c == '.') ||
+						(c == ','))
+					{
+						if (dot)
+						{
+							return false;
+						}
+						dot = true;
+						continue;
 					}
 
 					return false;

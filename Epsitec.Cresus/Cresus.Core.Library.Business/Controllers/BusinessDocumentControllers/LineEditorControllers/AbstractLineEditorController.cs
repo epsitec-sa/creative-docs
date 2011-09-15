@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
@@ -39,6 +39,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
+		
+		public virtual FormattedText TileTitle
+		{
+			get
+			{
+				return null;
+			}
+		}
+
+		
 		public void CreateUI(Widget parent, AbstractEntity entity)
 		{
 			this.entity = entity;
@@ -59,14 +69,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		protected abstract void CreateUI(UIBuilder builder);
 
-		public virtual FormattedText TitleTile
-		{
-			get
-			{
-				return null;
-			}
-		}
-
 		public void SetInitialFocus()
 		{
 			if (this.firstFocusedWidget != null)
@@ -84,70 +86,62 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		protected FrameBox PlaceLabelAndField(Widget parent, int labelWidth, int fieldWidth, FormattedText labelText, Widget field)
 		{
-			var box = new FrameBox
+			var frame = new FrameBox
 			{
-				Parent = parent,
-				TabIndex = this.NextTabIndex,
+				Parent   = parent,
+				TabIndex = this.GetNextTabIndex (),
 			};
 
 			if (fieldWidth == 0)
 			{
-				box.Dock = DockStyle.Fill;
+				frame.Dock = DockStyle.Fill;
 			}
 			else
 			{
-				box.Dock = DockStyle.Left;
-				box.PreferredWidth = labelWidth + 5 + fieldWidth;
+				frame.Dock = DockStyle.Left;
+				frame.PreferredWidth = labelWidth + AbstractLineEditorController.HorizontalSpace + fieldWidth;
 			}
 
-			var label = new StaticText
-			{
-				FormattedText = labelText,
-				ContentAlignment = ContentAlignment.TopRight,
-				Parent = box,
-				Dock = DockStyle.Left,
-				PreferredWidth = labelWidth,
-				Margins = new Margins (0, 5, 2, 0),
-			};
+			this.CreateStaticText (frame, labelWidth, labelText, ContentAlignment.TopRight);
 
-			field.Parent = box;
-			field.Dock = DockStyle.Fill;
-			field.Margins = new Margins (0);
-			field.TabIndex = this.NextTabIndex;
+			field.Parent   = frame;
+			field.Dock     = DockStyle.Fill;
+			field.Margins  = Margins.Zero;
+			field.TabIndex = this.GetNextTabIndex ();
 
-			return box;
+			return frame;
 		}
 
-		protected StaticText CreateStaticText(Widget parent, int labelWidth, FormattedText labelText)
+		protected StaticText CreateStaticText(Widget parent, int labelWidth, FormattedText labelText, ContentAlignment contentAlignment = ContentAlignment.TopLeft)
 		{
 			var label = new StaticText
 			{
 				FormattedText = labelText,
-				ContentAlignment = ContentAlignment.TopLeft,
+				ContentAlignment = contentAlignment,
 				Parent = parent,
 				Dock = DockStyle.Left,
 				PreferredWidth = labelWidth,
-				Margins = new Margins (0, 5, 2, 0),
+				Margins = new Margins (0, AbstractLineEditorController.HorizontalSpace, 2, 0),
 			};
 
 			return label;
 		}
 
-		protected int NextTabIndex
+		protected int GetNextTabIndex()
 		{
-			get
-			{
-				return this.tabIndex++;
-			}
+			return this.tabIndex++;
 		}
 
+		protected static readonly int			HorizontalSpace = 5;
 
-		protected readonly AccessData					accessData;
-		protected readonly BillingMode					billingMode;
 
-		protected AbstractEntity						entity;
-		protected TileContainer							tileContainer;
-		protected Widget								firstFocusedWidget;
-		private int										tabIndex;
+		protected readonly AccessData			accessData;
+		protected readonly BillingMode			billingMode;
+
+		protected AbstractEntity				entity;
+		protected TileContainer					tileContainer;
+		protected Widget						firstFocusedWidget;
+		
+		private int								tabIndex;
 	}
 }

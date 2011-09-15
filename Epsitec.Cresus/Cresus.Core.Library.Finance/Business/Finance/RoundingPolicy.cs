@@ -8,6 +8,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business.Finance
 {
+	/// <summary>
+	/// The <c>RoundingPolicy</c> defines what should be rounded; this may apply
+	/// to zero, one or several values.
+	/// </summary>
 	[DesignerVisible]
 	[System.Flags]
 	public enum RoundingPolicy

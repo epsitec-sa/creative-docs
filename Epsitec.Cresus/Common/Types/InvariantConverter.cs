@@ -938,7 +938,7 @@ namespace Epsitec.Common.Types
 				}
 			}
 
-			if (input.IsNumeric ())
+			if (input.IsInteger ())
 			{
 				object obj = InvariantConverter.EnumNumericValueToObject (type, underlyingType, input);
 				if (obj == null)

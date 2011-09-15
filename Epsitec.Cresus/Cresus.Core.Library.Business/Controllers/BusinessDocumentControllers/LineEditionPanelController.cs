@@ -155,7 +155,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			if (this.lineEditorController != null)
 			{
-				text = this.lineEditorController.TitleTile.ApplyBold ();
+				text = this.lineEditorController.TileTitle.ApplyBold ();
 
 				if (this.error != DocumentItemAccessorError.None)
 				{
@@ -169,13 +169,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		private readonly AccessData						accessData;
+		private readonly AccessData				accessData;
 
-		private EditMode								editMode;
-		private FrameBox								titleFrame;
-		private StaticText								titleText;
-		private FrameBox								lineEditorTile;
-		private AbstractLineEditorController			lineEditorController;
-		private DocumentItemAccessorError				error;
+		private EditMode						editMode;
+		private FrameBox						titleFrame;
+		private StaticText						titleText;
+		private FrameBox						lineEditorTile;
+		private AbstractLineEditorController	lineEditorController;
+		private DocumentItemAccessorError		error;
 	}
 }

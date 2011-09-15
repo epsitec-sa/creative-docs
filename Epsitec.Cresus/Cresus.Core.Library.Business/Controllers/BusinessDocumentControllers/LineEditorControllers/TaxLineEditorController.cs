@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Parent = this.tileContainer,
 				Dock = DockStyle.Fill,
 				Padding = new Margins (10),
-				TabIndex = this.NextTabIndex,
+				TabIndex = this.GetNextTabIndex (),
 				Enable = this.accessData.DocumentLogic.IsPriceEditionEnabled,
 			};
 
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Dock = DockStyle.Top,
 				PreferredHeight = 20,
 				Margins = new Margins (0, 0, 0, 5),
-				TabIndex = this.NextTabIndex,
+				TabIndex = this.GetNextTabIndex (),
 			};
 
 			//	Textes.
@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
-		public override FormattedText TitleTile
+		public override FormattedText TileTitle
 		{
 			get
 			{

@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Parent = this.tileContainer,
 				Dock = DockStyle.Fill,
 				Padding = new Margins (10),
-				TabIndex = this.NextTabIndex,
+				TabIndex = this.GetNextTabIndex (),
 			};
 
 			var rightFrame = new FrameBox
@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Dock = DockStyle.Right,
 				PreferredWidth = 300,
 				Padding = new Margins (10),
-				TabIndex = this.NextTabIndex,
+				TabIndex = this.GetNextTabIndex (),
 			};
 
 			var separator = new Separator
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			//	Partie gauche.
 			var textField = builder.CreateTextFieldMulti (null, DockStyle.None, 0, Marshaler.Create (() => this.SimpleText, x => this.SimpleText = x));
-			this.PlaceLabelAndField (leftFrame, 50, 0, this.TitleTile, textField);
+			this.PlaceLabelAndField (leftFrame, 50, 0, this.TileTitle, textField);
 
 			this.firstFocusedWidget = textField;
 
@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				ActiveState = myEyesOnly ? ActiveState.Yes : ActiveState.No,
 				Parent = rightFrame,
 				Dock = DockStyle.Top,
-				TabIndex = this.NextTabIndex,
+				TabIndex = this.GetNextTabIndex (),
 			};
 
 			check.ActiveStateChanged += delegate
@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			};
 		}
 
-		public override FormattedText TitleTile
+		public override FormattedText TileTitle
 		{
 			get
 			{

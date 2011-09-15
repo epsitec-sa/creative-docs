@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Parent = this.tileContainer,
 				Dock = DockStyle.Fill,
 				Padding = new Margins (10),
-				TabIndex = this.NextTabIndex,
+				TabIndex = this.GetNextTabIndex (),
 			};
 
 			var rightFrame = new FrameBox
@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Parent = this.tileContainer,
 				Dock = DockStyle.Right,
 				PreferredWidth = 360,
-				TabIndex = this.NextTabIndex,
+				TabIndex = this.GetNextTabIndex (),
 			};
 
 			var separator = new Separator
@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Dock = DockStyle.Top,
 				PreferredHeight = 20,
 				Padding = new Margins (0, 10, 10, 10),
-				TabIndex = this.NextTabIndex,
+				TabIndex = this.GetNextTabIndex (),
 				Enable = enable,
 			};
 
@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Dock = DockStyle.Fill,
 				PreferredWidth = 360,
 				Padding = new Margins (0, 10, 10, 10),
-				TabIndex = this.NextTabIndex,
+				TabIndex = this.GetNextTabIndex (),
 				Enable = enable,
 			};
 
@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				Parent = parent,
 				Dock = DockStyle.Fill,
-				TabIndex = this.NextTabIndex,
+				TabIndex = this.GetNextTabIndex (),
 			};
 
 			//	Date.
@@ -142,7 +142,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				Parent = rightBox,
 				Dock = DockStyle.Top,
-				TabIndex = this.NextTabIndex,
+				TabIndex = this.GetNextTabIndex (),
 			};
 
 			var dateField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.BeginDate, x => this.Entity.BeginDate = x));
@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Dock = DockStyle.Left,
 				Margins = new Margins (10, 0, 0, 0),
 				PreferredWidth = 150,
-				TabIndex = this.NextTabIndex,
+				TabIndex = this.GetNextTabIndex (),
 			};
 
 			//	Met des boutons radio pour tous les types.
@@ -216,7 +216,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		public override FormattedText TitleTile
+		public override FormattedText TileTitle
 		{
 			get
 			{

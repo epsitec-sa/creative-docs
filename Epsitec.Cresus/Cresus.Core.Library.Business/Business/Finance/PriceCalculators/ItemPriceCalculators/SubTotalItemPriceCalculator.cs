@@ -115,6 +115,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 
 		public override void ApplyFinalPriceAdjustment(decimal adjustment)
 		{
+			//	TODO: implement
 #if false
 			decimal finalTotal   = this.totalItem.ResultingPriceBeforeTax.Value;
 			decimal discount     = this.group.TotalPriceBeforeTax - finalTotal;

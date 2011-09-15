@@ -317,7 +317,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			totalLine.TotalRounding = afterRounding - beforeRounding;
 		}
 
-		
 		private int GetRootGroupInsertionIndex()
 		{
 			int index = this.document.Lines.Count ();
@@ -483,15 +482,14 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 		
 
-		private readonly IBusinessContext		context;
-		private readonly BusinessDocumentEntity	document;
-		private readonly DocumentMetadataEntity	metadata;
-		private readonly List<AbstractItemPriceCalculator>	calculators;
-		private readonly Stack<GroupItemPriceCalculator>	groups;
-		private readonly System.IDisposable		suspender;
-		private readonly Dictionary<RoundingPolicy, PriceRoundingModeEntity> roundingModes;
-
-		private GroupItemPriceCalculator		currentGroup;
-		private State							currentState;
+		private readonly IBusinessContext										context;
+		private readonly BusinessDocumentEntity									document;
+		private readonly DocumentMetadataEntity									metadata;
+		private readonly List<AbstractItemPriceCalculator>						calculators;
+		private readonly Stack<GroupItemPriceCalculator>						groups;
+		private readonly System.IDisposable										suspender;
+		private readonly Dictionary<RoundingPolicy, PriceRoundingModeEntity>	roundingModes;
+		private GroupItemPriceCalculator										currentGroup;
+		private State															currentState;
 	}
 }
