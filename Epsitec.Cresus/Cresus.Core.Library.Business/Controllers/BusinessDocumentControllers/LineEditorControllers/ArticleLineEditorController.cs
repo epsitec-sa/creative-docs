@@ -469,54 +469,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			this.CreateUIUnitPrice (builder, parent);
 			this.CreateUILinePrice (builder, parent);
-#if false
-			{
-				var line = new FrameBox
-				{
-					Parent = parent,
-					Dock = DockStyle.Top,
-					PreferredHeight = 20,
-					Margins = new Margins (0, 0, 0, 5),
-					TabIndex = this.GetNextTabIndex (),
-					Enable = this.accessData.DocumentLogic.IsDiscountEditionEnabled,
-				};
-
-				var neverButton = new CheckButton
-				{
-					Parent = line,
-					Text = "Jamais de rabais",
-					ActiveState = this.Item.NeverApplyDiscount ? ActiveState.Yes : ActiveState.No,
-					Dock = DockStyle.Fill,
-					Margins = new Margins (10, 0, 0, 0),
-				};
-
-				neverButton.ActiveStateChanged += delegate
-				{
-					this.Item.NeverApplyDiscount = (neverButton.ActiveState == ActiveState.Yes);
-					this.UpdateDiscountBox ();
-				};
-
-				this.discountBox = line;
-			}
-
-			//	Quatrième ligne à droite.
-			{
-				var line = new FrameBox
-				{
-					Parent = parent,
-					Dock = DockStyle.Top,
-					PreferredHeight = 20,
-					Margins = new Margins (0, 0, 0, 5),
-					TabIndex = this.GetNextTabIndex (),
-				};
-
-				//	Rabais.
-				var discountField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.DiscountLineText, x => this.DiscountLineText = x));
-				this.PlaceLabelAndField (line, 130, 200, "Description du rabais", discountField);
-			}
-#endif
-
-			this.UpdateDiscountBox ();
+			this.CreateUIDiscountOption (builder, parent);
 		}
 
 		private void CreateUIUnitPrice(UIBuilder builder, FrameBox parent)
@@ -547,6 +500,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 			}
 		}
+		
 		private void CreateUILinePrice(UIBuilder builder, FrameBox parent)
 		{
 			var line = new FrameBox
@@ -577,6 +531,36 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 			}
 		}
+
+		private void CreateUIDiscountOption(UIBuilder builder, FrameBox parent)
+		{
+			var line = new FrameBox
+			{
+				Parent = parent,
+				Dock = DockStyle.Top,
+				PreferredHeight = 20,
+				Margins = new Margins (0, 0, 0, 5),
+				TabIndex = this.GetNextTabIndex (),
+				Enable = this.accessData.DocumentLogic.IsDiscountEditionEnabled,
+			};
+
+			var neverButton = new CheckButton
+			{
+				Parent = line,
+				Text = "N'applique jamais les rabais de sous-total ou de total à cet article",
+				ActiveState = this.Item.NeverApplyDiscount ? ActiveState.Yes : ActiveState.No,
+				Dock = DockStyle.Fill,
+				TabIndex = this.GetNextTabIndex (),
+				Margins = new Margins (10, 0, 0, 0),
+			};
+
+			neverButton.ActiveStateChanged += delegate
+			{
+				this.Item.NeverApplyDiscount = (neverButton.ActiveState == ActiveState.Yes);
+			};
+		}
+
+
 		private void BindPriceField(TextFieldEx field, ArticleDocumentItemAttributes attribute)
 		{
 			field.EditionAccepted +=
@@ -683,12 +667,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			fieldDiscountText.EditionAccepted += sender => updateAction ();
 
 			updateAction ();
-		}
-
-
-		private void UpdateDiscountBox()
-		{
-			//this.discountBox.Enable = !this.Item.NeverApplyDiscount;
 		}
 
 
@@ -854,6 +832,5 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private ArticleParameterControllers.ValuesArticleParameterController	parameterController;
 		private ArticleParameterControllers.ArticleParameterToolbarController	toolbarController;
 		private TextFieldMultiEx												articleDescriptionTextField;
-		private FrameBox														discountBox;
 	}
 }
