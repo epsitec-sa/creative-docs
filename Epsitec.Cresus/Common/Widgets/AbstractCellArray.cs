@@ -1368,7 +1368,10 @@ namespace Epsitec.Common.Widgets
 			this.array[column, row].SetSelected(state);
 			foreach (Widget fils in this.array[column, row].Children)
 			{
-				fils.SetSelected(state);
+				if (fils.IsSelected != state)
+				{
+					fils.SetSelected (state);
+				}
 			}
 		}
 

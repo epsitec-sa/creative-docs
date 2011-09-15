@@ -245,17 +245,23 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		
 		private void HandleLinesControllerSelectionChanged(object sender)
 		{
+			Line info = null;
+
 			//	Appelé lorsque la sélection dans la liste a changé.
 			if (this.lineTableController.HasSingleSelection)
 			{
 				int? sel = this.lineTableController.LastSelection;
-				var info = this.lines[sel.Value];
+				info = this.lines[sel.Value];
+			}
 
-				this.lineEditionPanelController.UpdateUI (this.CurrentEditMode, info);
+			if (this.activeLine == info)
+			{
+				//	Do nothing
 			}
 			else
 			{
-				this.lineEditionPanelController.UpdateUI (this.CurrentEditMode, null);
+				this.activeLine = info;
+				this.lineEditionPanelController.UpdateUI (this.CurrentEditMode, info);
 			}
 
 			this.UpdateCommands ();
@@ -513,10 +519,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private readonly CommandProcessor		commandProcessor;
 		private readonly CommandContext			commandContext;
 		private readonly CommandDispatcher		commandDispatcher;
-		private readonly LineEngine			linesEngine;
+		private readonly LineEngine				linesEngine;
 
 		private LineToolbarController			lineToolbarController;
 		private LineTableController				lineTableController;
 		private LineEditionPanelController		lineEditionPanelController;
+
+		private Line							activeLine;
 	}
 }

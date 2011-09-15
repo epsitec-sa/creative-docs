@@ -219,7 +219,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Dock = DockStyle.Fill,
 			};
 
-			this.table.SelectionChanged += delegate
+			this.table.FinalSelectionChanged += delegate
 			{
 				this.OnSelectionChanged();
 			};
@@ -347,6 +347,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			this.table[0, row].HasBottomSeparator = separator;
 
+			bool selection = this.table.IsCellSelected (row, 0);
+
 			//	Met à jour les contenus des cellules.
 			int column = 0;
 			foreach (var columnType in this.ColumnTypes)
@@ -390,7 +392,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				column++;
 			}
 
-			this.table.SelectRow (row, false);
+			this.table.SelectRow (row, selection);
 		}
 
 		private void UpdateIndexDisplayerWidget(IndexDisplayerWidget displayer, int row, int groupIndex)
@@ -687,7 +689,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 		
 		
-		public event EventHandler SelectionChanged;
+		public event EventHandler				SelectionChanged;
 	
 		
 		private static readonly double			LineHeight = 17;
