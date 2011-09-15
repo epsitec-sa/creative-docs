@@ -1,8 +1,10 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
+
+using System.Collections.Generic;
 
 [assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.Layouts.RowDefinition))]
 
@@ -15,6 +17,11 @@ namespace Epsitec.Common.Widgets.Layouts
 	public sealed class RowDefinition : DependencyObject
 	{
 		public RowDefinition()
+		{
+		}
+
+		public RowDefinition(double height, GridUnitType gridUnitType = GridUnitType.Absolute)
+			: this (new GridLength (height, gridUnitType))
 		{
 		}
 
@@ -54,7 +61,8 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
-		public double MinHeight
+		
+		public double							MinHeight
 		{
 			get
 			{
@@ -73,7 +81,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
-		public double MaxHeight
+		public double							MaxHeight
 		{
 			get
 			{
@@ -92,7 +100,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
-		public GridLength Height
+		public GridLength						Height
 		{
 			get
 			{
@@ -111,7 +119,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
-		public double TopBorder
+		public double							TopBorder
 		{
 			get
 			{
@@ -130,7 +138,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
-		public double BottomBorder
+		public double							BottomBorder
 		{
 			get
 			{
@@ -149,7 +157,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
-		public double ActualHeight
+		public double							ActualHeight
 		{
 			get
 			{
@@ -157,7 +165,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
-		public double ActualOffset
+		public double							ActualOffset
 		{
 			get
 			{
@@ -165,7 +173,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
-		public bool Visibility
+		public bool								Visibility
 		{
 			get
 			{
@@ -177,6 +185,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 		
+		
 		internal void DefineActualHeight(double value)
 		{
 			this.actualHeight = value;
@@ -187,12 +196,10 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.actualOffset = value;
 		}
 
+		
 		private void OnChanged()
 		{
-			if (this.Changed != null)
-			{
-				this.Changed (this);
-			}
+			this.Changed.Raise (this);
 		}
 
 		private static void NotifyPropertyInvalidated(DependencyObject o, object oldValue, object newValue)
@@ -201,7 +208,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			def.OnChanged ();
 		}
 
-		public event Support.EventHandler Changed;
+		public event Support.EventHandler		Changed;
 
 		public static readonly DependencyProperty MinHeightProperty		= DependencyProperty.Register ("MinHeight", typeof (double), typeof (RowDefinition), new DependencyPropertyMetadata (0.0, RowDefinition.NotifyPropertyInvalidated));
 		public static readonly DependencyProperty MaxHeightProperty		= DependencyProperty.Register ("MaxHeight", typeof (double), typeof (RowDefinition), new DependencyPropertyMetadata (double.PositiveInfinity, RowDefinition.NotifyPropertyInvalidated));
@@ -210,7 +217,7 @@ namespace Epsitec.Common.Widgets.Layouts
 		public static readonly DependencyProperty BottomBorderProperty	= DependencyProperty.Register ("BottomBorder", typeof (double), typeof (RowDefinition), new DependencyPropertyMetadata (0.0, RowDefinition.NotifyPropertyInvalidated));
 		public static readonly DependencyProperty VisibilityProperty	= DependencyProperty.Register ("Visibility", typeof (bool), typeof (RowDefinition), new DependencyPropertyMetadata (true, RowDefinition.NotifyPropertyInvalidated));
 
-		private double actualOffset;
-		private double actualHeight;
+		private double							actualOffset;
+		private double							actualHeight;
 	}
 }

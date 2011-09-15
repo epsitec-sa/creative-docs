@@ -1126,15 +1126,15 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		protected void RaiseUserEvent(string name)
+		protected bool RaiseUserEvent(string name)
 		{
-			this.GetUserEventHandler (name).Raise (this);
+			return this.GetUserEventHandler (name).Raise (this);
 		}
 
-		protected void RaiseUserEvent<TEventArgs>(string name, TEventArgs e)
+		protected bool RaiseUserEvent<TEventArgs>(string name, TEventArgs e)
 			where TEventArgs : System.EventArgs
 		{
-			this.GetUserEventHandler<TEventArgs> (name).Raise (this, e);
+			return this.GetUserEventHandler<TEventArgs> (name).Raise (this, e);
 		}
 
 		protected Support.EventHandler GetUserEventHandler(string name)

@@ -1,10 +1,13 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets.Layouts;
+using Epsitec.Common.Widgets.Layouts.Collections;
 
-[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.Layouts.GridLayoutEngine))]
+using System.Collections.Generic;
+
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (GridLayoutEngine))]
 
 namespace Epsitec.Common.Widgets.Layouts
 {
@@ -12,11 +15,11 @@ namespace Epsitec.Common.Widgets.Layouts
 	{
 		public GridLayoutEngine()
 		{
-			this.columnDefinitions = new Collections.ColumnDefinitionCollection (this);
-			this.rowDefinitions = new Collections.RowDefinitionCollection (this);
+			this.columnDefinitions = new ColumnDefinitionCollection (this);
+			this.rowDefinitions    = new RowDefinitionCollection (this);
 		}
 
-		public Collections.ColumnDefinitionCollection ColumnDefinitions
+		public ColumnDefinitionCollection		ColumnDefinitions
 		{
 			get
 			{
@@ -24,7 +27,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
-		public Collections.RowDefinitionCollection RowDefinitions
+		public RowDefinitionCollection			RowDefinitions
 		{
 			get
 			{
@@ -37,7 +40,7 @@ namespace Epsitec.Common.Widgets.Layouts
 		/// been measured by the layout system.
 		/// </summary>
 		/// <value>The column count.</value>
-		public int ColumnCount
+		public int								ColumnCount
 		{
 			get
 			{
@@ -50,7 +53,7 @@ namespace Epsitec.Common.Widgets.Layouts
 		/// been measured by the layout system.
 		/// </summary>
 		/// <value>The row count.</value>
-		public int RowCount
+		public int								RowCount
 		{
 			get
 			{
@@ -65,7 +68,7 @@ namespace Epsitec.Common.Widgets.Layouts
 		/// </summary>
 		/// <value>The index of the first occupied column, or <c>int.MaxValue</c> if
 		/// no widget can be found in the grid.</value>
-		public int MinColumnIndex
+		public int								MinColumnIndex
 		{
 			get
 			{
@@ -80,7 +83,7 @@ namespace Epsitec.Common.Widgets.Layouts
 		/// </summary>
 		/// <value>The index of the last occupied column, or <c>-1</c> if no widget
 		/// can be found in the grid.</value>
-		public int MaxColumnIndex
+		public int								MaxColumnIndex
 		{
 			get
 			{
@@ -95,7 +98,7 @@ namespace Epsitec.Common.Widgets.Layouts
 		/// </summary>
 		/// <value>The index of the first occupied row, or <c>int.MaxValue</c> if
 		/// no widget can be found in the grid.</value>
-		public int MinRowIndex
+		public int								MinRowIndex
 		{
 			get
 			{
@@ -110,7 +113,7 @@ namespace Epsitec.Common.Widgets.Layouts
 		/// </summary>
 		/// <value>The index of the last occupied row, or <c>-1</c> if no widget
 		/// can be found in the grid.</value>
-		public int MaxRowIndex
+		public int								MaxRowIndex
 		{
 			get
 			{
@@ -118,9 +121,10 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
+
 		#region ILayoutEngine Interface
-		
-		public void UpdateLayout(Visual container, Drawing.Rectangle rect, IEnumerable<Visual> children)
+
+		void ILayoutEngine.UpdateLayout(Visual container, Drawing.Rectangle rect, IEnumerable<Visual> children)
 		{
 			double[] x = new double[this.columnMeasures.Length];
 			double[] y = new double[this.rowMeasures.Length];
@@ -132,7 +136,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.LayoutChildren (rect, children, x, y, b);
 		}
 
-		public void UpdateMinMax(Visual container, LayoutContext context, IEnumerable<Visual> children, ref Drawing.Size minSize, ref Drawing.Size maxSize)
+		void ILayoutEngine.UpdateMinMax(Visual container, LayoutContext context, IEnumerable<Visual> children, ref Drawing.Size minSize, ref Drawing.Size maxSize)
 		{
 			this.containerCache = container;
 			
@@ -199,11 +203,49 @@ namespace Epsitec.Common.Widgets.Layouts
 			maxSize.Height = System.Math.Min (maxSize.Height, maxDy);
 		}
 
+		LayoutMode ILayoutEngine.LayoutMode
+		{
+			get
+			{
+				return LayoutMode.Grid;
+			}
+		}
+
+		#endregion
+
+
+		public void Add(int row, int column, Visual visual, int rowSpan = 1, int columnSpan = 1)
+		{
+			GridLayoutEngine.SetRow (visual, row);
+			GridLayoutEngine.SetColumn (visual, column);
+			GridLayoutEngine.SetRowSpan (visual, rowSpan);
+			GridLayoutEngine.SetColumnSpan (visual, columnSpan);
+		}
+
+		public void Add(int row, int column, params Visual[] visuals)
+		{
+			foreach (var visual in visuals)
+			{
+				GridLayoutEngine.SetRow (visual, row);
+				GridLayoutEngine.SetColumn (visual, column++);
+			}
+		}
+
+		public void InvalidateMeasures()
+		{
+			if (this.containerCache != null)
+			{
+				LayoutContext.AddToMeasureQueue (this.containerCache);
+				LayoutContext.AddToArrangeQueue (this.containerCache);
+			}
+		}
+
+		
 		private double AdjustColumnWidth(double width, int column)
 		{
 			if (column < this.columnDefinitions.Count)
 			{
-				ColumnDefinition def = this.columnDefinitions[column];
+				var def = this.columnDefinitions[column];
 
 				width += def.LeftBorder;
 				width += def.RightBorder;
@@ -216,32 +258,13 @@ namespace Epsitec.Common.Widgets.Layouts
 		{
 			if (row < this.rowDefinitions.Count)
 			{
-				RowDefinition def = this.rowDefinitions[row];
+				var def = this.rowDefinitions[row];
 
 				height += def.TopBorder;
 				height += def.BottomBorder;
 			}
 
 			return System.Math.Max (0, height);
-		}
-
-		public LayoutMode LayoutMode
-		{
-			get
-			{
-				return LayoutMode.Grid;
-			}
-		}
-
-		#endregion
-
-		public void InvalidateMeasures()
-		{
-			if (this.containerCache != null)
-			{
-				LayoutContext.AddToMeasureQueue (this.containerCache);
-				LayoutContext.AddToArrangeQueue (this.containerCache);
-			}
 		}
 
 		private void GenerateColumnOffsets(Drawing.Rectangle rect, double[] x)
@@ -411,6 +434,11 @@ namespace Epsitec.Common.Widgets.Layouts
 
 		private void LayoutChild(Drawing.Rectangle rect, double[] x, double[] y, double[] b, Visual child, int column, int row, int columnSpan, int rowSpan)
 		{
+			if (child.Visibility == false)
+			{
+				return;
+			}
+
 			IGridPermeable permeable = child as IGridPermeable;
 
 			if (permeable != null)
@@ -426,15 +454,18 @@ namespace Epsitec.Common.Widgets.Layouts
 			System.Diagnostics.Debug.Assert (columnSpan > 0);
 			System.Diagnostics.Debug.Assert (rowSpan > 0);
 
-			Drawing.Margins margins = child.Margins;
+			var margins = child.Margins;
 
 			double dx = this.GetColumnSpanWidth (column, columnSpan);
 			double dy = this.GetRowSpanHeight (row, rowSpan);
 
+			//	The size might be zero if the column and/or row are hidden. We don't explicitely
+			//	hide widgets here, as we don't want to interfere with Visual.Visibility.
+
 			double ox = rect.Left + x[column];
 			double oy = rect.Top - y[row+rowSpan-1];
 
-			Drawing.Rectangle bounds = new Drawing.Rectangle (ox, oy, dx, dy);
+			var bounds = new Drawing.Rectangle (ox, oy, dx, dy);
 
 			bounds.Deflate (margins);
 			DockLayoutEngine.SetChildBounds (child, bounds, b[row]);
@@ -456,57 +487,74 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
-		private double GetColumnSpanWidth(int column, int columnSpan)
+		private double GetColumnSpanWidth(int startColumn, int columnSpan)
 		{
 			double dx = 0;
 
-			for (int i = 0; i < columnSpan; i++)
+			int stopColumn = System.Math.Min (startColumn + columnSpan, this.columnDefinitions.Count);
+
+			for (int column = startColumn; column < stopColumn; column++)
 			{
-				System.Diagnostics.Debug.Assert (this.columnMeasures[column+i] != null);
+				System.Diagnostics.Debug.Assert (this.columnMeasures[column] != null);
 
-				if ((i > 0) &&
-					(column+i-1 < this.columnDefinitions.Count))
+				if ((column > startColumn) &&
+					(column-1 < this.columnDefinitions.Count) &&
+					(this.columnDefinitions[column-1].Visibility))
 				{
-					dx += this.columnDefinitions[column+i-1].LeftBorder;
+					//	Add also the left border of the previous column found in the span.
+					dx += this.columnDefinitions[column-1].LeftBorder;
 				}
 
-				if ((i+1 < columnSpan) &&
-					(column+i < this.columnDefinitions.Count))
+				if (this.columnDefinitions[column].Visibility)
 				{
-					dx += this.columnDefinitions[column+i].RightBorder;
-				}
+					if ((column < stopColumn - 1) &&
+					(column < this.columnDefinitions.Count))
+					{
+						//	Add also the right border of this column in the span, if it is not the last one.
+						dx += this.columnDefinitions[column].RightBorder;
+					}
 
-				dx += this.columnMeasures[column+i].Desired;
+					dx += this.columnMeasures[column].Desired;
+				}
 			}
 
 			return dx;
 		}
 
-		private double GetRowSpanHeight(int row, int rowSpan)
+		private double GetRowSpanHeight(int startRow, int rowSpan)
 		{
 			double dy = 0;
+
+			int stopRow = System.Math.Min (startRow + rowSpan, this.rowDefinitions.Count);
 			
-			for (int i = 0; i < rowSpan; i++)
+			for (int row = startRow; row < stopRow; row++)
 			{
-				System.Diagnostics.Debug.Assert (this.rowMeasures[row+i] != null);
+				System.Diagnostics.Debug.Assert (this.rowMeasures[row] != null);
 
-				if ((i > 0) &&
-					(row+i-1 < this.rowDefinitions.Count))
+				if ((row > startRow) &&
+					(row-1 < this.rowDefinitions.Count) &&
+					(this.rowDefinitions[row-1].Visibility))
 				{
-					dy += this.rowDefinitions[row+i-1].TopBorder;
+					//	Add also the top border of the previous row found in the span.
+					dy += this.rowDefinitions[row-1].TopBorder;
 				}
 
-				if ((i+1 < rowSpan) &&
-					(row+i < this.rowDefinitions.Count))
+				if (this.rowDefinitions[row].Visibility)
 				{
-					dy += this.rowDefinitions[row+i].BottomBorder;
-				}
+					if ((row+1 < stopRow) &&
+					(row < this.rowDefinitions.Count))
+					{
+						//	Add also the bottom border of this row in the span, if it is not the last one.
+						dy += this.rowDefinitions[row].BottomBorder;
+					}
 
-				dy += this.rowMeasures[row+i].Desired;
+					dy += this.rowMeasures[row].Desired;
+				}
 			}
 			
 			return dy;
 		}
+
 
 		#region MinMaxUpdater Class
 
@@ -1227,6 +1275,7 @@ namespace Epsitec.Common.Widgets.Layouts
 
 		#endregion
 
+		
 		private void HandleRowDefinitionChanged(object sender)
 		{
 			this.InvalidateMeasures ();
@@ -1237,6 +1286,8 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.InvalidateMeasures ();
 		}
 
+		
+		
 		public static void SetColumn(Visual visual, int column)
 		{
 			if (GridLayoutEngine.GetColumn (visual) == column)
@@ -1389,17 +1440,19 @@ namespace Epsitec.Common.Widgets.Layouts
 		public static readonly DependencyProperty RowProperty = DependencyProperty.RegisterAttached ("Row", typeof (int), typeof (GridLayoutEngine), new DependencyPropertyMetadata (-1, GridLayoutEngine.NotifyGridPropertyInvalidated));
 		public static readonly DependencyProperty ColumnSpanProperty = DependencyProperty.RegisterAttached ("ColumnSpan", typeof (int), typeof (GridLayoutEngine), new DependencyPropertyMetadata (1, GridLayoutEngine.NotifyGridPropertyInvalidated));
 		public static readonly DependencyProperty RowSpanProperty = DependencyProperty.RegisterAttached ("RowSpan", typeof (int), typeof (GridLayoutEngine), new DependencyPropertyMetadata (1, GridLayoutEngine.NotifyGridPropertyInvalidated));
-		public static readonly DependencyProperty ColumnDefinitionsProperty = DependencyProperty.RegisterReadOnly ("ColumnDefinitions", typeof (Collections.ColumnDefinitionCollection), typeof (GridLayoutEngine), new DependencyPropertyMetadata (GridLayoutEngine.GetRowDefinitionsValue).MakeReadOnlySerializable ());
-		public static readonly DependencyProperty RowDefinitionsProperty = DependencyProperty.RegisterReadOnly ("RowDefinitions", typeof (Collections.RowDefinitionCollection), typeof (GridLayoutEngine), new DependencyPropertyMetadata (GridLayoutEngine.GetColumnDefinitionsValue).MakeReadOnlySerializable ());
+		public static readonly DependencyProperty ColumnDefinitionsProperty = DependencyProperty.RegisterReadOnly ("ColumnDefinitions", typeof (ColumnDefinitionCollection), typeof (GridLayoutEngine), new DependencyPropertyMetadata (GridLayoutEngine.GetRowDefinitionsValue).MakeReadOnlySerializable ());
+		public static readonly DependencyProperty RowDefinitionsProperty = DependencyProperty.RegisterReadOnly ("RowDefinitions", typeof (RowDefinitionCollection), typeof (GridLayoutEngine), new DependencyPropertyMetadata (GridLayoutEngine.GetColumnDefinitionsValue).MakeReadOnlySerializable ());
 
-		private ColumnMeasure[] columnMeasures = new ColumnMeasure[0];
-		private RowMeasure[]	rowMeasures    = new RowMeasure[0];
-		private Visual			containerCache;
+		private ColumnMeasure[]					columnMeasures = new ColumnMeasure[0];
+		private RowMeasure[]					rowMeasures    = new RowMeasure[0];
+		private Visual							containerCache;
 		
-		private int				minRowIndex, maxRowIndex;
-		private int				minColumnIndex, maxColumnIndex;
+		private int								minRowIndex;
+		private int								maxRowIndex;
+		private int								minColumnIndex;
+		private int								maxColumnIndex;
 		
-		private Collections.ColumnDefinitionCollection columnDefinitions;
-		private Collections.RowDefinitionCollection rowDefinitions;
+		private readonly ColumnDefinitionCollection columnDefinitions;
+		private readonly RowDefinitionCollection	rowDefinitions;
 	}
 }

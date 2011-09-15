@@ -13,6 +13,11 @@ namespace Epsitec.Common.Support
 		/// Raises an event on <paramref name="eventHandler"/> using the standard C# design
 		/// pattern.
 		/// </summary>
+		/// <typeparam name="T">The type of the event data.</typeparam>
+		/// <param name="eventHandler">The event handler to fire.</param>
+		/// <param name="sender">The object considered as the sender of the event.</param>
+		/// <param name="eventArg">The data of the event.</param>
+		/// <returns><c>true</c> if the event was sent; otherwise, <c>false</c>.</returns>
 		/// <remarks>
 		/// This extensions methods is to be used on simple auto generated field like event declared
 		/// by "public event EventHandler{T} handler".
@@ -26,7 +31,6 @@ namespace Epsitec.Common.Support
 		/// on another. The reason for that is that the only way to achieve thread safety in this
 		/// case would be to hold a lock on the event during its execution which would be a deadlock
 		/// prone solution.
-		/// 
 		/// See the following links for more references
 		/// http://blogs.msdn.com/b/cburrows/archive/2010/03/05/events-get-a-little-overhaul-in-c-4-part-i-locks.aspx
 		/// http://blogs.msdn.com/b/cburrows/archive/2010/03/08/events-get-a-little-overhaul-in-c-4-part-ii-semantic-changes-and.aspx
@@ -34,24 +38,30 @@ namespace Epsitec.Common.Support
 		/// http://blogs.msdn.com/b/cburrows/archive/2010/03/30/events-get-a-little-overhaul-in-c-4-afterward-effective-events.aspx
 		/// http://www.codeproject.com/Articles/37474/Threadsafe-Events.aspx
 		/// </remarks>
-		/// <typeparam name="T">The type of the event data.</typeparam>
-		/// <param name="eventHandler">The event handler to fire.</param>
-		/// <param name="sender">The object considered as the sender of the event.</param>
-		/// <param name="eventArg">The data of the event.</param>
-		public static void Raise<T>(this EventHandler<T> eventHandler, object sender, T eventArg)
+		public static bool Raise<T>(this EventHandler<T> eventHandler, object sender, T eventArg)
 			where T : System.EventArgs
 		{
-			if (eventHandler != null)
+			if (eventHandler == null)
+			{
+				return false;
+			}
+			else
 			{
 				eventHandler (sender, eventArg);
+				return true;
 			}
 		}
 		
-		public static void Raise(this EventHandler eventHandler, object sender)
+		public static bool Raise(this EventHandler eventHandler, object sender)
 		{
-			if (eventHandler != null)
+			if (eventHandler == null)
+			{
+				return false;
+			}
+			else
 			{
 				eventHandler (sender);
+				return true;
 			}
 		}
 	}

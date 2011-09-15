@@ -297,7 +297,17 @@ namespace Epsitec.Common.Widgets
 
 		private void OnResetButtonClicked()
 		{
-			this.RaiseUserEvent (TextFieldEx.ResetButtonClickedEvent);
+			if (this.RaiseUserEvent (TextFieldEx.ResetButtonClickedEvent))
+			{
+				//	The event was handled by some consumer, no need to execute the default
+				//	behaviour; otherwise, clear the field.
+			}
+			else
+			{
+				this.StartEdition ();
+				this.ClearText ();
+				this.AcceptEdition ();
+			}
 		}
 
 		public event EventHandler				ResetButtonClicked

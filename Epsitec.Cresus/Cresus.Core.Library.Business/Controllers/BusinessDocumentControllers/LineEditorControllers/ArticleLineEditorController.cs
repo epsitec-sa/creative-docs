@@ -24,6 +24,7 @@ using Epsitec.Cresus.DataLayer.Context;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Core.Business.Finance;
+using Epsitec.Common.Widgets.Layouts;
 
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
@@ -466,81 +467,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private void CreateUIRightBottomFrame(UIBuilder builder, FrameBox parent)
 		{
-			//	Deuxième ligne à droite.
-			{
-				var line = new FrameBox
-				{
-					Parent = parent,
-					Dock = DockStyle.Top,
-					PreferredHeight = 20,
-					Margins = new Margins (0, 0, 0, 5),
-					TabIndex = this.GetNextTabIndex (),
-					Enable = this.accessData.DocumentLogic.IsPriceEditionEnabled,
-				};
-			}
-
-			//	Deuxième ligne à droite.
-			{
-				var line = new FrameBox
-				{
-					Parent = parent,
-					Dock = DockStyle.Top,
-					PreferredHeight = 20,
-					Margins = new Margins (0, 0, 0, 5),
-					TabIndex = this.GetNextTabIndex (),
-					Enable = this.accessData.DocumentLogic.IsPriceEditionEnabled,
-				};
-
-				if (this.billingMode == Business.Finance.BillingMode.ExcludingTax)
-				{
-					var unit1Field = builder.CreateTextField (Marshaler.Create (() => this.Item.UnitPriceBeforeTax1, x => this.Item.UnitPriceBeforeTax1 = x));
-					var discount   = builder.CreateTextField (Marshaler.Create (() => this.DiscountUnitValue, x => this.DiscountUnitValue = x));
-					var unit2Field = builder.CreateTextField (Marshaler.Create (() => this.Item.UnitPriceBeforeTax2, x => this.Item.UnitPriceBeforeTax2 = x));
-
-					this.BindPriceField (unit1Field, ArticleDocumentItemAttributes.FixedUnitPrice1);
-					this.BindPriceField (unit2Field, ArticleDocumentItemAttributes.FixedUnitPrice2);
-
-					this.PlacePriceEditionWidgets (line, "Prix unitaire", unit1Field, discount, unit2Field);
-				}
-				else
-				{
-					var unit1Field = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Item.UnitPriceAfterTax1, x => this.Item.UnitPriceAfterTax1 = x));
-					var unit1Box = this.PlaceLabelAndField (line, 130, 100, "Prix u. cat.", unit1Field);
-					var unit2Field = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Item.UnitPriceAfterTax2, x => this.Item.UnitPriceAfterTax2 = x));
-					var unit2Box = this.PlaceLabelAndField (line, 130, 100, "Prix unitaire", unit2Field);
-				}
-			}
-
-			//	Troisième ligne à droite.
-			{
-				var line = new FrameBox
-				{
-					Parent = parent,
-					Dock = DockStyle.Top,
-					PreferredHeight = 20,
-					Margins = new Margins (0, 0, 0, 5),
-					TabIndex = this.GetNextTabIndex (),
-					Enable = this.accessData.DocumentLogic.IsPriceEditionEnabled,
-				};
-
-				if (this.billingMode == Business.Finance.BillingMode.ExcludingTax)
-				{
-					var line1Field = builder.CreateTextField (Marshaler.Create (() => this.Item.LinePriceBeforeTax1, x => this.Item.LinePriceBeforeTax1 = x));
-					var discount   = builder.CreateTextField (Marshaler.Create (() => this.DiscountLineValue, x => this.DiscountLineValue = x));
-					var line2Field = builder.CreateTextField (Marshaler.Create (() => this.Item.LinePriceBeforeTax2, x => this.Item.LinePriceBeforeTax2 = x));
-
-					this.PlacePriceEditionWidgets (line, "Prix ligne", line1Field, discount, line2Field);
-				}
-				else
-				{
-					var unit1Field = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Item.UnitPriceAfterTax1, x => this.Item.UnitPriceAfterTax1 = x));
-					var unit1Box = this.PlaceLabelAndField (line, 130, 100, "Prix u. cat.", unit1Field);
-					var unit2Field = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Item.UnitPriceAfterTax2, x => this.Item.UnitPriceAfterTax2 = x));
-					var unit2Box = this.PlaceLabelAndField (line, 130, 100, "Prix unitaire", unit2Field);
-				}
-			}
-
-			//	Troisième ligne à droite.
+			this.CreateUIUnitPrice (builder, parent);
+			this.CreateUILinePrice (builder, parent);
+#if false
 			{
 				var line = new FrameBox
 				{
@@ -585,10 +514,69 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				var discountField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.DiscountLineText, x => this.DiscountLineText = x));
 				this.PlaceLabelAndField (line, 130, 200, "Description du rabais", discountField);
 			}
+#endif
 
 			this.UpdateDiscountBox ();
 		}
 
+		private void CreateUIUnitPrice(UIBuilder builder, FrameBox parent)
+		{
+			var line = new FrameBox
+			{
+				Parent = parent,
+				Dock = DockStyle.Top,
+				PreferredHeight = 20,
+				Margins = new Margins (0, 0, 0, 5),
+				TabIndex = this.GetNextTabIndex (),
+				Enable = this.accessData.DocumentLogic.IsPriceEditionEnabled,
+			};
+
+			if (this.billingMode == Business.Finance.BillingMode.ExcludingTax)
+			{
+				var field1   = builder.CreateTextField (Marshaler.Create (() => this.Item.UnitPriceBeforeTax1, x => this.Item.UnitPriceBeforeTax1 = x));
+				var discount = builder.CreateTextField (Marshaler.Create (() => this.DiscountUnitValue, x => this.DiscountUnitValue = x));
+				var discountText = builder.CreateTextField (Marshaler.Create (() => this.DiscountUnitText, x => this.DiscountUnitText = x));
+				var field2   = builder.CreateTextField (Marshaler.Create (() => this.Item.UnitPriceBeforeTax2, x => this.Item.UnitPriceBeforeTax2 = x));
+
+				this.BindPriceField (field1, ArticleDocumentItemAttributes.FixedUnitPrice1);
+				this.BindPriceField (field2, ArticleDocumentItemAttributes.FixedUnitPrice2);
+
+				this.PlacePriceEditionWidgets (line, "Prix unitaire", field1, discount, discountText, field2);
+			}
+			else
+			{
+			}
+		}
+		private void CreateUILinePrice(UIBuilder builder, FrameBox parent)
+		{
+			var line = new FrameBox
+			{
+				Parent = parent,
+				Dock = DockStyle.Top,
+				PreferredHeight = 20,
+				Margins = new Margins (0, 0, 0, 5),
+				TabIndex = this.GetNextTabIndex (),
+				Enable = this.accessData.DocumentLogic.IsPriceEditionEnabled,
+			};
+
+			if (this.billingMode == Business.Finance.BillingMode.ExcludingTax)
+			{
+				var field1   = builder.CreateTextField (Marshaler.Create (() => this.Item.LinePriceBeforeTax1, x => this.Item.LinePriceBeforeTax1 = x));
+				var discount = builder.CreateTextField (Marshaler.Create (() => this.DiscountLineValue, x => this.DiscountLineValue = x));
+				var discountText = builder.CreateTextField (Marshaler.Create (() => this.DiscountLineText, x => this.DiscountLineText = x));
+				var field2   = builder.CreateTextField (Marshaler.Create (() => this.Item.LinePriceBeforeTax2, x => this.Item.LinePriceBeforeTax2 = x));
+
+				field1.IsReadOnly = true;
+
+				this.BindPriceField (field1, ArticleDocumentItemAttributes.FixedLinePrice1);
+				this.BindPriceField (field2, ArticleDocumentItemAttributes.FixedLinePrice2);
+
+				this.PlacePriceEditionWidgets (line, "Prix de ligne", field1, discount, discountText, field2);
+			}
+			else
+			{
+			}
+		}
 		private void BindPriceField(TextFieldEx field, ArticleDocumentItemAttributes attribute)
 		{
 			field.EditionAccepted +=
@@ -604,14 +592,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					}
 				};
 
-			field.ResetButtonClicked +=
-				delegate
-				{
-					field.StartEdition ();
-					field.ClearText ();
-					field.AcceptEdition ();
-				};
-
 			if (Item.ArticleAttributes.HasFlag (attribute))
 			{
 				field.TextDisplayMode = TextFieldDisplayMode.OverriddenValue;
@@ -619,60 +599,96 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		private void PlacePriceEditionWidgets(Widget container, FormattedText caption, AbstractTextField field1, AbstractTextField fieldDiscount, AbstractTextField field2)
+		private void PlacePriceEditionWidgets(Widget container, FormattedText caption, AbstractTextField field1, AbstractTextField fieldDiscount, AbstractTextField fieldDiscountText, AbstractTextField field2)
 		{
-			container.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+			var grid = new GridLayoutEngine ();
+			
+			grid.ColumnDefinitions.Add (new ColumnDefinition (80) { RightBorder = 5 } );
+			grid.ColumnDefinitions.Add (new ColumnDefinition (80));
+			grid.ColumnDefinitions.Add (new ColumnDefinition (20));
+			grid.ColumnDefinitions.Add (new ColumnDefinition (70));
+			grid.ColumnDefinitions.Add (new ColumnDefinition (20));
+			grid.ColumnDefinitions.Add (new ColumnDefinition (80) { RightBorder = 5 } );
 
-			new StaticText ()
+			grid.RowDefinitions.Add (new RowDefinition (20));
+			grid.RowDefinitions.Add (new RowDefinition (20) { TopBorder = 2 } );
+
+			LayoutEngine.SetLayoutEngine (container, grid);
+
+			var t1 = new StaticText ()
 			{
 				Parent = container,
-				Dock = DockStyle.Stacked,
-				PreferredWidth = 80,
 				FormattedText = caption,
 				ContentAlignment = ContentAlignment.TopRight,
-				Margins = new Margins (0, 5, 2, 0),
+				Margins = new Margins (0, 0, 2, 0),
 			};
 
-			field1.Dock = DockStyle.Stacked;
-			field1.PreferredWidth = 80;
 			field1.Parent = container;
 			field1.Margins = Margins.Zero;
 
-			new StaticText ()
+			var t2 = new StaticText ()
 			{
 				Parent = container,
-				Dock = DockStyle.Stacked,
-				PreferredWidth = 20,
 				FormattedText = "−",
 				ContentAlignment = ContentAlignment.TopCenter,
 				Margins = new Margins (0, 0, 2, 0),
 			};
 
-			fieldDiscount.Dock = DockStyle.Stacked;
-			fieldDiscount.PreferredWidth = 70;
 			fieldDiscount.Parent = container;
 			fieldDiscount.Margins = Margins.Zero;
 
-			new StaticText ()
+			fieldDiscountText.Parent = container;
+			fieldDiscountText.Margins = Margins.Zero;
+
+			var t3 = new StaticText ()
 			{
 				Parent = container,
-				Dock = DockStyle.Stacked,
-				PreferredWidth = 20,
 				FormattedText = "→",
 				ContentAlignment = ContentAlignment.TopCenter,
 				Margins = new Margins (0, 0, 2, 0),
 			};
 
-			field2.Dock = DockStyle.Stacked;
-			field2.PreferredWidth = 80;
 			field2.Parent = container;
-			field2.Margins = new Margins (0, 5, 0, 0);
+			field2.Margins = Margins.Zero;
+
+			var t4 = new StaticText ()
+			{
+				Parent = container,
+				FormattedText = "Texte du rabais",
+				ContentAlignment = ContentAlignment.TopRight,
+				Margins = new Margins (0, 0, 2, 0),
+			};
+			
+			grid.Add (0, 0, t1, field1, t2, fieldDiscount, t3, field2);
+			grid.Add (1, 0, t4);
+			grid.Add (1, 1, fieldDiscountText, columnSpan: 5);
+
+			var row1 = grid.RowDefinitions[1];
+			
+			System.Action updateAction = () =>
+				{
+					if ((fieldDiscount.Text.IsNullOrWhiteSpace ()) &&
+						(fieldDiscountText.Text.IsNullOrWhiteSpace ()))
+					{
+						row1.Visibility = false;
+					}
+					else
+					{
+						row1.Visibility = true;
+						container.PreferredHeight = 46;
+					}
+				};
+
+			fieldDiscount.EditionAccepted     += sender => updateAction ();
+			fieldDiscountText.EditionAccepted += sender => updateAction ();
+
+			updateAction ();
 		}
 
 
 		private void UpdateDiscountBox()
 		{
-			this.discountBox.Enable = !this.Item.NeverApplyDiscount;
+			//this.discountBox.Enable = !this.Item.NeverApplyDiscount;
 		}
 
 

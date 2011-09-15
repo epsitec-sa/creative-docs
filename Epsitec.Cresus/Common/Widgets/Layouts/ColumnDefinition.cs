@@ -1,8 +1,10 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
+
+using System.Collections.Generic;
 
 [assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.Layouts.ColumnDefinition))]
 
@@ -15,6 +17,11 @@ namespace Epsitec.Common.Widgets.Layouts
 	public sealed class ColumnDefinition : DependencyObject
 	{
 		public ColumnDefinition()
+		{
+		}
+
+		public ColumnDefinition(double width, GridUnitType gridUnitType = GridUnitType.Absolute)
+			: this (new GridLength (width, gridUnitType))
 		{
 		}
 
@@ -54,7 +61,8 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
-		public double MinWidth
+		
+		public double							MinWidth
 		{
 			get
 			{
@@ -73,7 +81,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
-		public double MaxWidth
+		public double							MaxWidth
 		{
 			get
 			{
@@ -92,7 +100,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
-		public GridLength Width
+		public GridLength						Width
 		{
 			get
 			{
@@ -102,7 +110,7 @@ namespace Epsitec.Common.Widgets.Layouts
 				}
 				else
 				{
-					return new GridLength (0.0);
+					return GridLength.Zero;
 				}
 			}
 			set
@@ -111,7 +119,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
-		public double LeftBorder
+		public double							LeftBorder
 		{
 			get
 			{
@@ -130,7 +138,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
-		public double RightBorder
+		public double							RightBorder
 		{
 			get
 			{
@@ -149,7 +157,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
-		public double ActualWidth
+		public double							ActualWidth
 		{
 			get
 			{
@@ -157,7 +165,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
-		public double ActualOffset
+		public double							ActualOffset
 		{
 			get
 			{
@@ -165,7 +173,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
-		public bool Visibility
+		public bool								Visibility
 		{
 			get
 			{
@@ -177,6 +185,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
+		
 		internal void DefineActualWidth(double value)
 		{
 			this.actualWidth = value;
@@ -187,12 +196,10 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.actualOffset = value;
 		}
 
+		
 		private void OnChanged()
 		{
-			if (this.Changed != null)
-			{
-				this.Changed (this);
-			}
+			this.Changed.Raise (this);
 		}
 		
 		private static void NotifyPropertyInvalidated(DependencyObject o, object oldValue, object newValue)
@@ -201,7 +208,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			def.OnChanged ();
 		}
 
-		public event Support.EventHandler Changed;
+		public event Support.EventHandler		Changed;
 		
 		public static readonly DependencyProperty MinWidthProperty		= DependencyProperty.Register ("MinWidth", typeof (double), typeof (ColumnDefinition), new DependencyPropertyMetadata (0.0, ColumnDefinition.NotifyPropertyInvalidated));
 		public static readonly DependencyProperty MaxWidthProperty		= DependencyProperty.Register ("MaxWidth", typeof (double), typeof (ColumnDefinition), new DependencyPropertyMetadata (double.PositiveInfinity, ColumnDefinition.NotifyPropertyInvalidated));
@@ -210,7 +217,7 @@ namespace Epsitec.Common.Widgets.Layouts
 		public static readonly DependencyProperty RightBorderProperty	= DependencyProperty.Register ("RightBorder", typeof (double), typeof (ColumnDefinition), new DependencyPropertyMetadata (0.0, ColumnDefinition.NotifyPropertyInvalidated));
 		public static readonly DependencyProperty VisibilityProperty	= DependencyProperty.Register ("Visibility", typeof (bool), typeof (ColumnDefinition), new DependencyPropertyMetadata (true, ColumnDefinition.NotifyPropertyInvalidated));
 
-		private double actualOffset;
-		private double actualWidth;
+		private double							actualOffset;
+		private double							actualWidth;
 	}
 }

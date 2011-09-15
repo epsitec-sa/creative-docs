@@ -1,5 +1,5 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2006-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 using Epsitec.Common.Types;
@@ -18,9 +18,8 @@ namespace Epsitec.Common.Widgets.Layouts
 		/// </summary>
 		/// <param name="value">The absolute value.</param>
 		public GridLength(double value)
+			: this (value, GridUnitType.Absolute)
 		{
-			this.value = value;
-			this.gridUnitType = GridUnitType.Absolute;
 		}
 
 		/// <summary>
@@ -99,7 +98,11 @@ namespace Epsitec.Common.Widgets.Layouts
 				return this.value;
 			}
 		}
+
+
+		public static readonly GridLength		Zero = new GridLength (0);
 		
+
 		#region SerializationConverter Class
 
 		public class SerializationConverter : ISerializationConverter
