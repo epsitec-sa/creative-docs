@@ -1952,7 +1952,8 @@ namespace Epsitec.Common.Widgets
 					}
 					if ((mode & WidgetChildFindMode.SkipHidden) != 0)
 					{
-						if (widget.Visibility == false)
+						if ((widget.Visibility == false) ||
+							(widget.Client.Bounds.IsSurfaceZero))
 						{
 							continue;
 						}
@@ -2046,7 +2047,8 @@ namespace Epsitec.Common.Widgets
 					}
 					if ((mode & WidgetChildFindMode.SkipHidden) != 0)
 					{
-						if (widget.Visibility == false)
+						if ((widget.Visibility == false) ||
+							(widget.Client.Bounds.IsSurfaceZero))
 						{
 							continue;
 						}
@@ -2140,7 +2142,8 @@ namespace Epsitec.Common.Widgets
 					}
 					else if ((mode & WidgetChildFindMode.SkipHidden) != 0)
 					{
-						if (widget.Visibility == false)
+						if ((widget.Visibility == false) ||
+							(widget.Client.Bounds.IsSurfaceZero))
 						{
 							continue;
 						}
@@ -2927,6 +2930,7 @@ namespace Epsitec.Common.Widgets
 					if (((sibling.TabNavigationMode & mode) != 0) &&
 						(sibling.IsEnabled) &&
 						(sibling.Visibility) &&
+						(sibling.Client.Bounds.IsSurfaceZero == false) &&
 						(sibling.AcceptsFocus))
 					{
 						if (((sibling.TabNavigationMode & TabNavigationMode.SkipIfReadOnly) != 0) &&
@@ -3475,7 +3479,8 @@ namespace Epsitec.Common.Widgets
 						
 							System.Diagnostics.Debug.Assert (widget != null);
 						
-							if (widget.Visibility)
+							if ((widget.Visibility) &&
+								(widget.Client.Bounds.IsSurfaceZero == false))
 							{
 								widget.PaintHandler (graphics, repaint, paintFilter);
 							}
