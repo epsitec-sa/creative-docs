@@ -618,6 +618,8 @@ namespace Epsitec.Common.Widgets
 				if (this.textFieldDisplayMode != value)
 				{
 					this.textFieldDisplayMode = value;
+					this.UpdateButtonVisibility ();
+					this.UpdateButtonGeometry ();
 					this.Invalidate ();
 				}
 			}
@@ -1725,30 +1727,18 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnEditionStarted()
 		{
-			var handler = this.GetUserEventHandler ("EditionStarted");
-			if (handler != null)
-			{
-				handler (this);
-			}
+			this.RaiseUserEvent ("EditionStarted");
 		}
 
 		protected virtual void OnEditionAccepted()
 		{
 			//	OnEditionAccepted est appelé après que l'édition ait été validée et acceptée.
-			var handler = this.GetUserEventHandler ("EditionAccepted");
-			if (handler != null)
-			{
-				handler (this);
-			}
+			this.RaiseUserEvent ("EditionAccepted");
 		}
 
 		protected virtual void OnEditionRejected()
 		{
-			var handler = this.GetUserEventHandler ("EditionRejected");
-			if (handler != null)
-			{
-				handler (this);
-			}
+			this.RaiseUserEvent ("EditionRejected");
 		}
 
 		protected virtual void OnAcceptingEdition(CancelEventArgs e)
@@ -1756,20 +1746,12 @@ namespace Epsitec.Common.Widgets
 			//	OnAcceptingEdition est appelé pendant la phase d'acceptation; l'événement passe une instance de CancelEventArgs
 			//	qui permet à ceux qui écoutent l'événement de faire un e.Cancel=true pour annuler l'opération en cours (donc
 			//	refuser l'acceptation).
-			EventHandler<CancelEventArgs> handler = this.GetUserEventHandler<CancelEventArgs> ("AcceptingEdition");
-			if (handler != null)
-			{
-				handler (this, e);
-			}
+			this.RaiseUserEvent ("AcceptingEdition", e);
 		}
 
 		protected virtual void OnRejectingEdition(CancelEventArgs e)
 		{
-			EventHandler<CancelEventArgs> handler = this.GetUserEventHandler<CancelEventArgs> ("RejectingEdition");
-			if (handler != null)
-			{
-				handler (this, e);
-			}
+			this.RaiseUserEvent ("RejectingEdition", e);
 		}
 
 

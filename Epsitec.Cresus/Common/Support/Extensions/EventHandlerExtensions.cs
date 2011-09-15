@@ -39,7 +39,7 @@ namespace Epsitec.Common.Support
 		/// <param name="sender">The object considered as the sender of the event.</param>
 		/// <param name="eventArg">The data of the event.</param>
 		public static void Raise<T>(this EventHandler<T> eventHandler, object sender, T eventArg)
-			where T : EventArgs
+			where T : System.EventArgs
 		{
 			if (eventHandler != null)
 			{

@@ -1,6 +1,8 @@
 //	Copyright © 2005-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+
 using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
@@ -1122,6 +1124,17 @@ namespace Epsitec.Common.Types
 			{
 				this.userEvents[name] = System.Delegate.Remove (this.userEvents[name], handler);
 			}
+		}
+
+		protected void RaiseUserEvent(string name)
+		{
+			this.GetUserEventHandler (name).Raise (this);
+		}
+
+		protected void RaiseUserEvent<TEventArgs>(string name, TEventArgs e)
+			where TEventArgs : System.EventArgs
+		{
+			this.GetUserEventHandler<TEventArgs> (name).Raise (this, e);
 		}
 
 		protected Support.EventHandler GetUserEventHandler(string name)

@@ -1,5 +1,8 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+
+using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
 {
@@ -134,12 +137,18 @@ namespace Epsitec.Common.Widgets
 				this.margins.Right = this.acceptRejectBehavior.DefaultWidth;
 				this.acceptRejectBehavior.UpdateButtonGeometry ();
 			}
+			if (this.extraButton != null)
+			{
+				this.extraButton.SetManualBounds (this.GetExtraButtonBounds ());
+			}
 			
 			base.UpdateButtonGeometry ();
 		}
 
 		protected override void UpdateButtonVisibility()
 		{
+			base.UpdateButtonVisibility ();
+
 			bool show = false;
 			
 			switch (this.ButtonShowCondition)
@@ -165,6 +174,15 @@ namespace Epsitec.Common.Widgets
 				
 				default:
 					throw new System.NotImplementedException (string.Format ("ButtonShowCondition.{0} not implemented.", this.ButtonShowCondition));
+			}
+
+			if (show)
+			{
+				this.RemoveExtraButton ();
+			}
+			else if (this.TextDisplayMode == TextFieldDisplayMode.OverriddenValue)
+			{
+				this.CreateExtraButton ();
 			}
 			
 			this.SetButtonVisibility (show);
@@ -203,8 +221,38 @@ namespace Epsitec.Common.Widgets
 				this.acceptRejectBehavior.SetAcceptEnabled (this.IsValid);
 			}
 		}
+
+
+		private void CreateExtraButton()
+		{
+			if (this.extraButton == null)
+			{
+				this.extraButton = new GlyphButton (this)
+				{
+					Name = "Extra",
+					GlyphShape = GlyphShape.Minus,
+					ButtonStyle = ButtonStyle.ExListMiddle,
+				};
+
+				this.extraButton.Clicked += this.HandleExtraButtonClicked;
+			}
+		}
+		private void RemoveExtraButton()
+		{
+			if (this.extraButton != null)
+			{
+				this.extraButton.Clicked -= this.HandleExtraButtonClicked;
+				this.extraButton.Dispose ();
+				this.extraButton = null;
+			}
+		}
 		
-		
+		private Drawing.Rectangle GetExtraButtonBounds()
+		{
+			var rectangle = this.GetButtonBounds ();
+			return new Drawing.Rectangle (rectangle.X - 17, rectangle.Y, 17, rectangle.Height);
+		}
+
 		protected override void OnTextDefined()
 		{
 			base.OnTextDefined ();
@@ -240,9 +288,34 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Diagnostics.Debug.Assert (sender == this.acceptRejectBehavior);
 			this.RejectEdition ();
-		}		
-		
+		}
+
+		private void HandleExtraButtonClicked(object sender, MessageEventArgs e)
+		{
+			this.OnResetButtonClicked ();
+		}
+
+		private void OnResetButtonClicked()
+		{
+			this.RaiseUserEvent (TextFieldEx.ResetButtonClickedEvent);
+		}
+
+		public event EventHandler				ResetButtonClicked
+		{
+			add
+			{
+				this.AddUserEventHandler (TextFieldEx.ResetButtonClickedEvent, value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler (TextFieldEx.ResetButtonClickedEvent, value);
+			}
+		}
+
+
+		private const string ResetButtonClickedEvent = "ResetButtonClicked";
 		
 		private readonly Behaviors.AcceptRejectBehavior	acceptRejectBehavior;
+		private GlyphButton						extraButton;
 	}
 }

@@ -317,6 +317,8 @@ namespace Epsitec.Common.Widgets
 		
 		protected override  void UpdateButtonVisibility()
 		{
+			base.UpdateButtonVisibility ();
+
 			if ((this.button != null) &&
 				(this.acceptRejectBehavior != null))
 			{

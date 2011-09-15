@@ -233,6 +233,8 @@ namespace Epsitec.Common.Widgets
 
 		protected override void UpdateButtonVisibility()
 		{
+			base.UpdateButtonVisibility ();
+
 			bool show = false;
 
 			switch (this.ButtonShowCondition)

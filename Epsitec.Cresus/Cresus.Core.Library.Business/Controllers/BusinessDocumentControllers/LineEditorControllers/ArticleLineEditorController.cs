@@ -604,6 +604,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					}
 				};
 
+			field.ResetButtonClicked +=
+				delegate
+				{
+					field.StartEdition ();
+					field.ClearText ();
+					field.AcceptEdition ();
+				};
+
 			if (Item.ArticleAttributes.HasFlag (attribute))
 			{
 				field.TextDisplayMode = TextFieldDisplayMode.OverriddenValue;
