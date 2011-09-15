@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
@@ -26,31 +26,30 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 {
 	/// <summary>
-	/// Ce contrôleur gère la définition de la description courte ou longue d'un article.
+	/// The <c>SpecialBusinessDocumentLinesController</c> class manages the edition of a business
+	/// document's lines.
 	/// </summary>
-	public class SpecialBusinessDocumentLinesController : IEntitySpecialController, System.IDisposable, IWidgetUpdater
+	public sealed class SpecialBusinessDocumentLinesController : IEntitySpecialController, System.IDisposable, IWidgetUpdater
 	{
-		public SpecialBusinessDocumentLinesController(TileContainer tileContainer, BusinessDocumentEntity businessDocument, int mode)
+		private SpecialBusinessDocumentLinesController(TileContainer tileContainer, BusinessDocumentEntity businessDocument, int mode)
 		{
 			this.tileContainer    = tileContainer;
 			this.businessDocument = businessDocument;
 			this.mode             = mode;
+			this.viewController   = this.tileContainer.Controller as EntityViewController;
+			this.businessContext  = this.viewController.BusinessContext;
+			this.dataContext      = this.viewController.DataContext;
+			this.coreData         = this.viewController.Data;
 		}
-
 
 		public void CreateUI(Widget parent, UIBuilder builder, bool isReadOnly)
 		{
-			var controller = this.tileContainer.Controller as EntityViewController;
-			
-			this.isReadOnly      = isReadOnly;
-			this.businessContext = controller.BusinessContext;
-			this.dataContext     = controller.DataContext;
-			this.coreData        = controller.Data;
+			this.isReadOnly = isReadOnly;
 
 			var documentMetadata = this.businessContext.GetMasterEntity<DocumentMetadataEntity> ();
 			var frameBox         = parent as FrameBox;
 			
-			System.Diagnostics.Debug.Assert (documentMetadata != null);
+			System.Diagnostics.Debug.Assert (documentMetadata.IsNotNull ());
 			System.Diagnostics.Debug.Assert (frameBox != null);
 
 			var frame = new FrameBox
@@ -61,20 +60,10 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 				Margins = TileArrow.GetContainerPadding (Direction.Right),
 			};
 
-			var documentLogic = new DocumentLogic (this.businessContext, documentMetadata);
-
-			var access = new AccessData ()
-			{
-				ViewController   = controller,
-				BusinessContext  = this.businessContext,
-				DataContext      = this.dataContext,
-				CoreData         = this.coreData,
-				DocumentMetadata = documentMetadata,
-				BusinessDocument = this.businessDocument,
-				DocumentLogic    = documentLogic
-			};
-
-			this.controller = new BusinessDocumentLinesController (access);
+			this.documentLogic = new DocumentLogic (this.businessContext, documentMetadata);
+			this.access        = new AccessData (this.viewController, this.documentLogic);
+			
+			this.controller = new BusinessDocumentLinesController (this.access);
 			this.controller.CreateUI (frame);
 			this.controller.UpdateUI ();
 		}
@@ -101,6 +90,8 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 
 		#endregion
 
+		#region Factory Class
+
 		private class Factory : DefaultEntitySpecialControllerFactory<BusinessDocumentEntity>
 		{
 			protected override IEntitySpecialController Create(TileContainer container, BusinessDocumentEntity entity, int mode)
@@ -109,15 +100,20 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 			}
 		}
 
-	
+		#endregion
+
+
 		private readonly TileContainer			tileContainer;
 		private readonly BusinessDocumentEntity	businessDocument;
 		private readonly int					mode;
-
+		private readonly EntityViewController	viewController;
+		private readonly BusinessContext		businessContext;
+		private readonly DataContext			dataContext;
+		private readonly CoreData				coreData;
+		
 		private bool							isReadOnly;
-		private BusinessContext					businessContext;
-		private DataContext						dataContext;
-		private CoreData						coreData;
 		private BusinessDocumentLinesController	controller;
+		private DocumentLogic					documentLogic;
+		private AccessData						access;
 	}
 }

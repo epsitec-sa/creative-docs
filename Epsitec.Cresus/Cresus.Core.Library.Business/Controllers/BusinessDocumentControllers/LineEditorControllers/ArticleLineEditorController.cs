@@ -33,7 +33,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			: base (accessData)
 		{
 			this.editMode = editMode;
-			this.billingMode = accessData.BillingMode;
 		}
 
 		
@@ -599,7 +598,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			item.LinePriceBeforeTax2         = null;
 			item.LinePriceAfterTax1          = null;
 			item.LinePriceAfterTax2          = null;
-			item.TotalRevenueAfterTax                = null;
+			item.TotalRevenueAfterTax        = null;
 			item.TotalRevenueAccounted       = null;
 			item.ArticleNameCache            = null;
 			item.ArticleDescriptionCache     = null;
@@ -732,11 +731,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 
 		private readonly EditMode												editMode;
-		private readonly BillingMode											billingMode;
 		private ArticleParameterControllers.ValuesArticleParameterController	parameterController;
 		private ArticleParameterControllers.ArticleParameterToolbarController	toolbarController;
 		private TextFieldMultiEx												articleDescriptionTextField;
-		private CheckButton														ttcButton;
 		private FrameBox														discountBox;
 	}
 }

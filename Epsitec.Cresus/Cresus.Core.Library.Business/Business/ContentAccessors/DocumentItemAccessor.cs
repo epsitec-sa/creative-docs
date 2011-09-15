@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Support;
@@ -319,7 +319,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			//	Utilise les colonnes MainQuantity/MainUnit
 			
 			//	Génère la quantité principale.
-			var quantityTypes = this.documentLogic.PrintableArticleQuantityTypes;
+			var quantityTypes = this.documentLogic.GetPrintableArticleQuantityTypes ();
 			var mainQuantityType = ArticleQuantityType.None;
 			int row = 0;
 

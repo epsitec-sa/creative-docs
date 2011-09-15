@@ -8,6 +8,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business.Finance
 {
+	/// <summary>
+	/// The <c>DiscountPolicyExtensions</c> class implements methods which operate on
+	/// the <see cref="DiscountPolicy"/> enumeration.
+	/// </summary>
 	public static class DiscountPolicyExtensions
 	{
 		public static bool Compatible(this DiscountPolicy valueA, DiscountPolicy valueB)

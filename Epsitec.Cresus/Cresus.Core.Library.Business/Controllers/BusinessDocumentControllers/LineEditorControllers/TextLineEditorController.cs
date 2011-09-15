@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return LinesEngine.TitleToSimpleText (this.Entity.Text);
+				return LineEngine.TitleToSimpleText (this.Entity.Text);
 			}
 			set
 			{
@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				{
 					if (this.IsTitle)
 					{
-						this.Entity.Text = LinesEngine.SimpleTextToTitle (value);
+						this.Entity.Text = LineEngine.SimpleTextToTitle (value);
 					}
 					else
 					{
@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return LinesEngine.IsTitle (this.Entity.Text);
+				return LineEngine.IsTitle (this.Entity.Text);
 			}
 		}
 

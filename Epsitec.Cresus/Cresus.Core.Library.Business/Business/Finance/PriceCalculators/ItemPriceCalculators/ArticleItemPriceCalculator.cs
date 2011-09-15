@@ -443,8 +443,6 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 				return price;
 			}
 
-			decimal tax = 0;	// faux
-
 			if (discount.DiscountRate.HasValue)
 			{
 				decimal discountRatio = 1.00M - System.Math.Abs (discount.DiscountRate.Value);

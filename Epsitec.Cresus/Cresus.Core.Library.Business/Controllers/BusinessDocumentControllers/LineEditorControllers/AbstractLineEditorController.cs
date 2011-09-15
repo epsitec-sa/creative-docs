@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
@@ -29,14 +29,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 	{
 		public AbstractLineEditorController(AccessData accessData)
 		{
-			this.accessData = accessData;
-			this.tabIndex = 1;
-
-			if ((this.accessData.BusinessDocument.IsNotNull ()) &&
-				(this.accessData.BusinessDocument.PriceGroup.IsNotNull ()))
-			{
-				this.billingMode = this.accessData.BusinessDocument.PriceGroup.BillingMode;
-			}
+			this.accessData  = accessData;
+			this.billingMode = accessData.BillingMode;
+			this.tabIndex    = 1;
 		}
 
 		

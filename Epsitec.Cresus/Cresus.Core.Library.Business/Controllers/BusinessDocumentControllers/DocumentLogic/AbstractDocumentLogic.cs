@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Types;
@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
 	public abstract class AbstractDocumentLogic
 	{
-		public AbstractDocumentLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
+		protected AbstractDocumentLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
 		{
 			this.businessContext        = businessContext;
 			this.documentMetadataEntity = documentMetadataEntity;
@@ -80,7 +80,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
-
 		public virtual ArticleQuantityType MainArticleQuantityType
 		{
 			//	Retourne le type de quantité principal, c'est-à-dire celui qui est édité avec l'article.
@@ -90,18 +89,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
-		public abstract IEnumerable<ArticleQuantityType> EnabledArticleQuantityTypes
-		{
-			//	Retourne la liste des types de quantité éditables.
-			get;
-		}
 
-		public abstract IEnumerable<ArticleQuantityType> PrintableArticleQuantityTypes
-		{
-			//	Retourne la liste des types de quantité imprimables.
-			//	La première est la quantité principale.
-			get;
-		}
+		//	Retourne la liste des types de quantité éditables.
+		public abstract IEnumerable<ArticleQuantityType> GetEnabledArticleQuantityTypes();
+
+		//	Retourne la liste des types de quantité imprimables.
+		//	La première est la quantité principale.
+		public abstract IEnumerable<ArticleQuantityType> GetPrintableArticleQuantityTypes();
 
 
 		protected readonly BusinessContext						businessContext;

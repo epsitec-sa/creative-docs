@@ -128,8 +128,8 @@
     <Compile Include="Controllers\BusinessDocumentControllers\IncrementalNumberGenerator.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\TreeEngine.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\TreeNode.cs" />
-    <Compile Include="Controllers\BusinessDocumentControllers\LinesError.cs" />
-    <Compile Include="Controllers\BusinessDocumentControllers\LinesEngine.cs" />
+    <Compile Include="Controllers\BusinessDocumentControllers\LineError.cs" />
+    <Compile Include="Controllers\BusinessDocumentControllers\LineEngine.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\EditMode.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\Widgets\IndexDisplayerWidget.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\ViewMode.cs" />
@@ -141,7 +141,7 @@
     <Compile Include="Controllers\BusinessDocumentControllers\LineTableController.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\LineEditionPanelController.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\LineToolbarController.cs" />
-    <Compile Include="Controllers\BusinessDocumentControllers\LineInformations.cs" />
+    <Compile Include="Controllers\BusinessDocumentControllers\Line.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\LineEditorControllers\AbstractLineEditorController.cs" />
     <Compile Include="Controllers\ComplexControllers\ChartsOfAccountsController.cs" />
     <Compile Include="Controllers\SpecialControllers\SpecialArticleParameterListEnumValuesController.cs" />

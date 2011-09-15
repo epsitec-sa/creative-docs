@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 	}
 	public interface ILineProvider
 	{
-		LineInformations GetLineInformations(int index);
+		Line GetLine(int index);
 		
 		CellContent GetCellContent(int index, ColumnType columnType);
 		

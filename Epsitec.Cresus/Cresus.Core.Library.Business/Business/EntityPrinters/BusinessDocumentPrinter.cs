@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Debug;
@@ -487,7 +487,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			{
 				var text = accessor.GetContent (0, DocumentItemAccessorColumn.ArticleDescription);
 
-				if (LinesEngine.IsTitle (text))
+				if (LineEngine.IsTitle (text))
 				{
 					TableColumnKeys firstColumn = TableColumnKeys.LineNumber;
 					int span = 0;

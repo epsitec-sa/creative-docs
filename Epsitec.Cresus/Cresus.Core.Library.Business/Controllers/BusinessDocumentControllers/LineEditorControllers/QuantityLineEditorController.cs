@@ -165,7 +165,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			};
 
 			//	Met des boutons radio pour tous les types.
-			foreach (var type in this.accessData.DocumentLogic.EnabledArticleQuantityTypes)
+			foreach (var type in this.accessData.DocumentLogic.GetEnabledArticleQuantityTypes ())
 			{
 				var entity = this.accessData.DocumentLogic.GetArticleQuantityColumnEntity (type);
 

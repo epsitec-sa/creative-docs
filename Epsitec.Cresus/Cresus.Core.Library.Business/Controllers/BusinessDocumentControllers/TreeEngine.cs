@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Cresus.Core.Entities;
@@ -73,12 +73,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
-		public LinesError Regenerate(bool simulation = false)
+		public LineError Regenerate(bool simulation = false)
 		{
 			//	Régénère la liste des lignes du document commercial.
 			var error = this.RegenerateAllGroupIndex (simulation);
 
-			if (error != LinesError.OK)
+			if (error != LineError.OK)
 			{
 				return error;
 			}
@@ -95,10 +95,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				}
 			}
 
-			return LinesError.OK;
+			return LineError.OK;
 		}
 
-		private LinesError RegenerateAllGroupIndex(bool simulation)
+		private LineError RegenerateAllGroupIndex(bool simulation)
 		{
 			//	Régénère tous les GroupIndex des noeuds et des feuilles.
 			this.InitialiseForDeepNext ();
@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				var error = TreeEngine.RegenerateGroupIndexStep1 (current);
 
-				if (error != LinesError.OK)
+				if (error != LineError.OK)
 				{
 					return error;
 				}
@@ -125,10 +125,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				}
 			}
 
-			return LinesError.OK;
+			return LineError.OK;
 		}
 
-		private static LinesError RegenerateGroupIndexStep1(TreeNode node)
+		private static LineError RegenerateGroupIndexStep1(TreeNode node)
 		{
 			//	Régénère le GroupIndex d'un noeud.
 			if (node.IsNode)  // noeud ?
@@ -145,7 +145,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					{
 						if (i+1 > 99)
 						{
-							return LinesError.Overflow;
+							return LineError.Overflow;
 						}
 
 						regeneratedGroupIndex = AbstractDocumentItemEntity.GroupReplace (regeneratedGroupIndex, parent.Deep, i+1);
@@ -157,7 +157,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				regeneratedNode.GroupIndex = regeneratedGroupIndex;
 			}
 
-			return LinesError.OK;
+			return LineError.OK;
 		}
 
 		private static void RegenerateGroupIndexStep2(TreeNode node)

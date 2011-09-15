@@ -9,9 +9,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
-	public sealed class LineInformations
+	public sealed class Line
 	{
-		public LineInformations(DocumentItemAccessor documentItemAccessor, AbstractDocumentItemEntity abstractDocumentItem, ArticleQuantityEntity articleQuantity, int sublineIndex, DocumentItemAccessorError error = DocumentItemAccessorError.None)
+		public Line(DocumentItemAccessor documentItemAccessor, AbstractDocumentItemEntity abstractDocumentItem, ArticleQuantityEntity articleQuantity, int sublineIndex, DocumentItemAccessorError error = DocumentItemAccessorError.None)
 		{
 			this.DocumentItemAccessor = documentItemAccessor;
 			this.DocumentItem = abstractDocumentItem;

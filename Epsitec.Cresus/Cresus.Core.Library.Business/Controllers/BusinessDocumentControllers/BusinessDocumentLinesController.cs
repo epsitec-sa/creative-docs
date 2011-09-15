@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
@@ -36,10 +36,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				this.CurrentEditMode = BusinessDocumentLinesController.persistantEditMode;
 			}
 
-			this.lineInformations = new List<LineInformations> ();
-			this.UpdateLineInformations ();
+			this.lines = new List<Line> ();
+			this.UpdateLines ();
 
-			this.linesEngine = new LinesEngine (this.accessData.BusinessContext, this.accessData.BusinessDocument, this.accessData.DocumentLogic);
+			this.linesEngine = new LineEngine (this.accessData.BusinessContext, this.accessData.BusinessDocument, this.accessData.DocumentLogic);
 		}
 
 		public void CreateUI(Widget parent)
@@ -138,20 +138,20 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return this.lineInformations.Count;
+				return this.lines.Count;
 			}
 		}
 
-		LineInformations ILineProvider.GetLineInformations(int index)
+		Line ILineProvider.GetLine(int index)
 		{
 			//	Retourne les informations sur l'état d'une ligne du tableau.
-			return this.lineInformations[index];
+			return this.lines[index];
 		}
 
 		CellContent ILineProvider.GetCellContent(int index, ColumnType columnType)
 		{
 			//	Retourne le contenu permettant de peupler une cellule du tableau.
-			var info = this.lineInformations[index];
+			var info = this.lines[index];
 			FormattedText text;
 			DocumentItemAccessorError error;
 
@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 					if (string.IsNullOrEmpty (q))
 					{
-						return null;
+						return CellContent.Empty;
 					}
 					else
 					{
@@ -237,7 +237,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					return new CellContent (text, error);
 			}
 
-			return null;
+			return CellContent.Empty;
 		}
 
 		#endregion
@@ -249,7 +249,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			if (this.lineTableController.HasSingleSelection)
 			{
 				int? sel = this.lineTableController.LastSelection;
-				var info = this.lineInformations[sel.Value];
+				var info = this.lines[sel.Value];
 
 				this.lineEditionPanelController.UpdateUI (this.CurrentEditMode, info);
 			}
@@ -262,14 +262,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		private void UpdateAfterChange(LinesError error)
+		private void UpdateAfterChange(LineError error)
 		{
 			this.UpdateAfterChange (error, this.Selection);
 		}
 
-		private void UpdateAfterChange(LinesError error, List<LineInformations> selection)
+		private void UpdateAfterChange(LineError error, List<Line> selection)
 		{
-			if (error == LinesError.OK)
+			if (error == LineError.OK)
 			{
 				this.UpdateAfterChange (selection);
 			}
@@ -285,9 +285,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.UpdateAfterChange (this.Selection);
 		}
 
-		private void UpdateAfterChange(List<LineInformations> selection)
+		private void UpdateAfterChange(List<Line> selection)
 		{
-			this.UpdateLineInformations ();
+			this.UpdateLines ();
 
 			this.lineTableController.UpdateUI (this);
 			this.Selection = selection;
@@ -296,9 +296,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		private void UpdateLineInformations()
+		private void UpdateLines()
 		{
-			this.lineInformations.Clear ();
+			this.lines.Clear ();
 
 			var mode = DocumentItemAccessorMode.ShowMyEyesOnly;
 
@@ -320,7 +320,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					var quantity = accessor.GetArticleQuantity (row);
 					var error = accessor.GetError (row);
 					var item = accessor.Item;
-					this.lineInformations.Add (new LineInformations (accessor, item, quantity, row, error));
+					this.lines.Add (new Line (accessor, item, quantity, row, error));
 
 					var cellError = accessor.GetError (row);
 				}
@@ -369,17 +369,17 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		private List<LineInformations> Selection
+		private List<Line> Selection
 		{
 			// Le getter retourne la liste des lignes sélectionnées.
 			// Le setter sélectionne les lignes données dans la liste.
 			get
 			{
-				var list = new List<LineInformations> ();
+				var list = new List<Line> ();
 
 				foreach (var selection in this.lineTableController.Selection)
 				{
-					var info = this.lineInformations[selection];
+					var info = this.lines[selection];
 					list.Add (info);
 				}
 
@@ -393,7 +393,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				{
 					foreach (var info in value)
 					{
-						int i = this.IndexOfLineInformations (info);
+						int i = this.GetLineIndex (info);
 
 						if (i != -1)
 						{
@@ -406,13 +406,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
-		private int IndexOfLineInformations(LineInformations info)
+		private int GetLineIndex(Line info)
 		{
 			if (info.ArticleQuantity != null)  // cherche une quantité précise ?
 			{
-				for (int i = 0; i < this.lineInformations.Count; i++)
+				for (int i = 0; i < this.lines.Count; i++)
 				{
-					var nextInfo = this.lineInformations[i];
+					var nextInfo = this.lines[i];
 
 					if (nextInfo.DocumentItem == info.DocumentItem &&
 						nextInfo.ArticleQuantity      == info.ArticleQuantity      )
@@ -422,9 +422,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				}
 			}
 
-			for (int i = 0; i < this.lineInformations.Count; i++)
+			for (int i = 0; i < this.lines.Count; i++)
 			{
-				var nextInfo = this.lineInformations[i];
+				var nextInfo = this.lines[i];
 
 				if (nextInfo.DocumentItem == info.DocumentItem)
 				{
@@ -509,11 +509,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private static bool						persistantShowToolbar = false;
 
 		private readonly AccessData				accessData;
-		private readonly List<LineInformations>	lineInformations;
+		private readonly List<Line>				lines;
 		private readonly CommandProcessor		commandProcessor;
 		private readonly CommandContext			commandContext;
 		private readonly CommandDispatcher		commandDispatcher;
-		private readonly LinesEngine			linesEngine;
+		private readonly LineEngine			linesEngine;
 
 		private LineToolbarController			lineToolbarController;
 		private LineTableController				lineTableController;

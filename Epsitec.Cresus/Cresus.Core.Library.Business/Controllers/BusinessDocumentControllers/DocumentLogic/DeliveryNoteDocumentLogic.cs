@@ -75,26 +75,26 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
-		public override IEnumerable<ArticleQuantityType> EnabledArticleQuantityTypes
+		public override IEnumerable<ArticleQuantityType> GetEnabledArticleQuantityTypes()
 		{
-			get
-			{
-				yield return ArticleQuantityType.Shipped;				// livré
-				yield return ArticleQuantityType.Delayed;				// retardé
-				yield return ArticleQuantityType.Expected;				// attendu
-			}
+			yield return ArticleQuantityType.Shipped;
+			// livré
+			yield return ArticleQuantityType.Delayed;
+			// retardé
+			yield return ArticleQuantityType.Expected;
+			// attendu
 		}
 
-		public override IEnumerable<ArticleQuantityType> PrintableArticleQuantityTypes
+		public override IEnumerable<ArticleQuantityType> GetPrintableArticleQuantityTypes()
 		{
-			get
-			{
-				yield return ArticleQuantityType.Shipped;				// livré
-
-				yield return ArticleQuantityType.ShippedPreviously;		// livré précédemment
-				yield return ArticleQuantityType.Delayed;				// retardé
-				yield return ArticleQuantityType.Expected;				// attendu
-			}
+			yield return ArticleQuantityType.Shipped;
+			// livré
+			yield return ArticleQuantityType.ShippedPreviously;
+			// livré précédemment
+			yield return ArticleQuantityType.Delayed;
+			// retardé
+			yield return ArticleQuantityType.Expected;
+			// attendu
 		}
 	}
 }

@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
@@ -315,7 +315,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private void TableUpdateRow(int row)
 		{
 			//	Met à jour le contenu d'une ligne de la table.
-			var info = this.lineProvider.GetLineInformations (row);
+			var info = this.lineProvider.GetLine (row);
 
 			if (this.lastDocumentItemEntity != info.DocumentItem)
 			{
@@ -337,7 +337,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			if (row < this.table.Rows-1)
 			{
-				var nextInfo = this.lineProvider.GetLineInformations (row+1);
+				var nextInfo = this.lineProvider.GetLine (row+1);
 
 				if (info.SublineIndex == nextInfo.SublineIndex-1)  // est-ce que la ligne suivante fait partie de la même entité ?
 				{
@@ -375,9 +375,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 						{
 							var cellContent = this.lineProvider.GetCellContent (row, columnType);
 
-							text.FormattedText = (cellContent == null) ? null : cellContent.Text.ToSimpleText ();
+							text.FormattedText = cellContent.Text.ToSimpleText ();
 
-							if (cellContent != null && cellContent.Error != Library.Business.ContentAccessors.DocumentItemAccessorError.None)
+							if (cellContent.Error != Library.Business.ContentAccessors.DocumentItemAccessorError.None)
 							{
 								color = Color.FromName ("Gold");
 							}
@@ -433,7 +433,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 			else
 			{
-				var info = this.lineProvider.GetLineInformations (row-1);
+				var info = this.lineProvider.GetLine (row-1);
 				displayer.TopGroupIndex = info.DocumentItem.GroupIndex;
 			}
 
@@ -443,7 +443,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 			else
 			{
-				var info = this.lineProvider.GetLineInformations (row+1);
+				var info = this.lineProvider.GetLine (row+1);
 				displayer.BottomGroupIndex = info.DocumentItem.GroupIndex;
 			}
 

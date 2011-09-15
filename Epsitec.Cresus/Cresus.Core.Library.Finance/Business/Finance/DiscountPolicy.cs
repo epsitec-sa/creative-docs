@@ -8,6 +8,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business.Finance
 {
+	/// <summary>
+	/// The <c>DiscountPolicy</c> enumeration defines on what prices a discount should be
+	/// applied.
+	/// </summary>
 	[DesignerVisible]
 	public enum DiscountPolicy
 	{

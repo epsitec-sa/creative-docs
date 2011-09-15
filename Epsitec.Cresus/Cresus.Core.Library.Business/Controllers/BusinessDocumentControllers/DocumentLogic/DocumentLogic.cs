@@ -1,11 +1,11 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
-using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core;
@@ -27,158 +27,130 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
 	public sealed class DocumentLogic
 	{
-		public DocumentLogic(IBusinessContext businessContext, DocumentMetadataEntity documentMetadataEntity)
+		public DocumentLogic(IBusinessContext businessContext, DocumentMetadataEntity documentMetadata)
 		{
-			this.businessContext        = businessContext as BusinessContext;
-			this.documentMetadataEntity = documentMetadataEntity;
+			this.businessContext  = businessContext as BusinessContext;
+			this.documentMetadata = documentMetadata;
 
-			this.articleQuantityColumnEntities = this.businessContext.GetAllEntities<ArticleQuantityColumnEntity> ();
+			this.articleQuantityColumns = this.businessContext.GetAllEntities<ArticleQuantityColumnEntity> ().ToList ();
 
-			this.CreateDocumentBusinessLogic ();
+			this.documentLogic = this.CreateDocumentLogic (this.documentMetadata.DocumentCategory.DocumentType);
 		}
 
-
-		private void CreateDocumentBusinessLogic()
+		public DocumentMetadataEntity			DocumentMetadata
 		{
-			switch (this.documentMetadataEntity.DocumentCategory.DocumentType)
+			get
 			{
-				case DocumentType.SalesQuote:
-					this.documentBusinessLogic = new SalesQuoteDocumentLogic (this.businessContext, this.documentMetadataEntity);
-					break;
-
-				case DocumentType.OrderConfiguration:
-					this.documentBusinessLogic = new OrderConfigurationDocumentLogic (this.businessContext, this.documentMetadataEntity);
-					break;
-
-				case DocumentType.OrderBooking:
-					this.documentBusinessLogic = new OrderBookingDocumentLogic (this.businessContext, this.documentMetadataEntity);
-					break;
-
-				case DocumentType.OrderConfirmation:
-					this.documentBusinessLogic = new OrderConfirmationDocumentLogic (this.businessContext, this.documentMetadataEntity);
-					break;
-
-				case DocumentType.ProductionOrder:
-					this.documentBusinessLogic = new ProductionOrderDocumentLogic (this.businessContext, this.documentMetadataEntity);
-					break;
-
-				case DocumentType.ProductionChecklist:
-					this.documentBusinessLogic = new ProductionChecklistDocumentLogic (this.businessContext, this.documentMetadataEntity);
-					break;
-
-				case DocumentType.ShipmentChecklist:
-					this.documentBusinessLogic = new ShipmentChecklistDocumentLogic (this.businessContext, this.documentMetadataEntity);
-					break;
-
-				case DocumentType.DeliveryNote:
-					this.documentBusinessLogic = new DeliveryNoteDocumentLogic (this.businessContext, this.documentMetadataEntity);
-					break;
-
-				case DocumentType.Invoice:
-					this.documentBusinessLogic = new InvoiceDocumentLogic (this.businessContext, this.documentMetadataEntity);
-					break;
-
-				case DocumentType.InvoiceProForma:
-					this.documentBusinessLogic = new InvoiceProFormaDocumentLogic (this.businessContext, this.documentMetadataEntity);
-					break;
-
-				case DocumentType.PaymentReminder:
-					this.documentBusinessLogic = new PaymentReminderDocumentLogic (this.businessContext, this.documentMetadataEntity);
-					break;
-
-				case DocumentType.Receipt:
-					this.documentBusinessLogic = new ReceiptDocumentLogic (this.businessContext, this.documentMetadataEntity);
-					break;
-
-				case DocumentType.CreditMemo:
-					this.documentBusinessLogic = new CreditMemoDocumentLogic (this.businessContext, this.documentMetadataEntity);
-					break;
-
-				case DocumentType.QuoteRequest:
-					this.documentBusinessLogic = new QuoteRequestDocumentLogic (this.businessContext, this.documentMetadataEntity);
-					break;
-
-				case DocumentType.PurchaseOrder:
-					this.documentBusinessLogic = new PurchaseOrderDocumentLogic (this.businessContext, this.documentMetadataEntity);
-					break;
+				return this.documentMetadata;
 			}
-
-			System.Diagnostics.Debug.Assert (this.documentBusinessLogic != null);
 		}
 
+		public BusinessDocumentEntity			BusinessDocument
+		{
+			get
+			{
+				return this.documentMetadata.BusinessDocument as BusinessDocumentEntity;
+			}
+		}
 
-		public bool IsDebug
+		public bool								IsDebug
 		{
 			get;
 			set;
 		}
 
-		public bool IsLinesEditionEnabled
+		public bool								IsLinesEditionEnabled
 		{
 			//	Indique s'il est possible d'éditer les lignes du document, c'est-à-dire s'il est possible
 			//	de créer des lignes, d'en supprimer, d'en déplacer ou de les modifier.
 			get
 			{
 				return this.IsDebug || 
-					(this.documentMetadataEntity.DocumentState != DocumentState.Inactive && this.documentBusinessLogic.IsLinesEditionEnabled);
+					(this.documentMetadata.DocumentState != DocumentState.Inactive && this.documentLogic.IsLinesEditionEnabled);
 			}
 		}
 
-		public bool IsArticleParametersEditionEnabled
+		public bool								IsArticleParametersEditionEnabled
 		{
 			//	Indique s'il est possibled'éditer les paramètres des articles.
 			get
 			{
 				return this.IsDebug ||
-					(this.documentMetadataEntity.DocumentState != DocumentState.Inactive && this.documentBusinessLogic.IsArticleParametersEditionEnabled);
+					(this.documentMetadata.DocumentState != DocumentState.Inactive && this.documentLogic.IsArticleParametersEditionEnabled);
 			}
 		}
 
-		public bool IsTextEditionEnabled
+		public bool								IsTextEditionEnabled
 		{
 			//	Indique s'il est possible d'éditer les textes.
 			get
 			{
 				return this.IsDebug ||
-					(this.documentMetadataEntity.DocumentState != DocumentState.Inactive && this.documentBusinessLogic.IsTextEditionEnabled);
+					(this.documentMetadata.DocumentState != DocumentState.Inactive && this.documentLogic.IsTextEditionEnabled);
 			}
 		}
 
-		public bool IsMyEyesOnlyEditionEnabled
+		public bool								IsMyEyesOnlyEditionEnabled
 		{
 			//	Indique si on ne peut éditer que les textes 'MyEyesOnly', c'est-à-dire pour les documents
 			//	interne à l'entreprise.
 			get
 			{
-				return this.documentMetadataEntity.DocumentState != DocumentState.Inactive && this.documentBusinessLogic.IsMyEyesOnlyEditionEnabled;
+				return this.documentMetadata.DocumentState != DocumentState.Inactive && this.documentLogic.IsMyEyesOnlyEditionEnabled;
 			}
 		}
 
-		public bool IsPriceEditionEnabled
+		public bool								IsPriceEditionEnabled
 		{
 			//	Indique s'il est possible d'éditer les prix.
 			get
 			{
 				return this.IsDebug ||
-					(this.documentMetadataEntity.DocumentState != DocumentState.Inactive && this.documentBusinessLogic.IsPriceEditionEnabled);
+					(this.documentMetadata.DocumentState != DocumentState.Inactive && this.documentLogic.IsPriceEditionEnabled);
 			}
 		}
 
-		public bool IsDiscountEditionEnabled
+		public bool								IsDiscountEditionEnabled
 		{
 			//	Indique s'il est possible d'éditer les rabais.
 			get
 			{
 				return this.IsDebug ||
-					(this.documentMetadataEntity.DocumentState != DocumentState.Inactive && this.documentBusinessLogic.IsDiscountEditionEnabled);
+					(this.documentMetadata.DocumentState != DocumentState.Inactive && this.documentLogic.IsDiscountEditionEnabled);
 			}
 		}
 
+		public bool								IsArticleQuantityEditionEnabled
+		{
+			//	Indique s'il est possible d'éditer une ou plusieurs quantités.
+			get
+			{
+				return this.documentMetadata.DocumentState != DocumentState.Inactive &&
+					   this.GetEnabledArticleQuantityTypes ().Any ();
+			}
+		}
 
-		public bool IsEditionEnabled(LineInformations info)
+		public ArticleQuantityType				MainArticleQuantityType
+		{
+			//	Retourne le type de quantité principal, c'est-à-dire celui qui est édité avec l'article.
+			get
+			{
+				if (this.IsDebug)
+				{
+					return ArticleQuantityType.Ordered;
+				}
+				else
+				{
+					return this.documentLogic.MainArticleQuantityType;
+				}
+			}
+		}
+		
+
+		public bool IsEditionEnabled(Line info)
 		{
 			//	Indique s'il est possible d'éditer une ligne donnée.
-			if (this.documentMetadataEntity.DocumentState == DocumentState.Inactive)
+			if (this.documentMetadata.DocumentState == DocumentState.Inactive)
 			{
 				return false;
 			}
@@ -211,88 +183,98 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			return false;
 		}
 
+		public bool IsArticleQuantityTypeEditionEnabled(ArticleQuantityType type)
+		{
+			//	Indique s'il est possible d'éditer une quantité donnée.
+			return this.documentMetadata.DocumentState != DocumentState.Inactive &&
+				   this.GetEnabledArticleQuantityTypes ().Where (x => x == type).Any ();
+		}
 
 		public ArticleQuantityColumnEntity GetArticleQuantityColumnEntity(ArticleQuantityType type)
 		{
 			//	Retourne une définition de type de quantité définie dans les réglages globaux.
-			return this.articleQuantityColumnEntities.Where (x => x.QuantityType == type).FirstOrDefault ();
+			return this.articleQuantityColumns.Where (x => x.QuantityType == type).FirstOrDefault ();
+		}
+
+		public IEnumerable<ArticleQuantityType> GetEnabledArticleQuantityTypes()
+		{
+			var collection = this.IsDebug ? this.GetDebugArticleQuantityTypeEditionEnabled () : this.documentLogic.GetEnabledArticleQuantityTypes ();
+			System.Diagnostics.Debug.Assert (collection != null);
+			return collection;
+		}
+
+		public IEnumerable<ArticleQuantityType> GetPrintableArticleQuantityTypes()
+		{
+			var collection = this.documentLogic.GetPrintableArticleQuantityTypes ();
+			System.Diagnostics.Debug.Assert (collection != null);
+			return collection;
+		}
+
+		private IEnumerable<ArticleQuantityType> GetDebugArticleQuantityTypeEditionEnabled()
+		{
+			yield return ArticleQuantityType.Billed;			// facturé
+			yield return ArticleQuantityType.Delayed;			// retardé
+			yield return ArticleQuantityType.Expected;			// attendu
+			yield return ArticleQuantityType.Shipped;			// livré
+			yield return ArticleQuantityType.ShippedPreviously;	// livré précédemment
+			yield return ArticleQuantityType.Information;		// information
 		}
 
 
-		public bool IsArticleQuantityEditionEnabled
+		private AbstractDocumentLogic CreateDocumentLogic(DocumentType documentType)
 		{
-			//	Indique s'il est possible d'éditer une ou plusieurs quantités.
-			get
+			switch (documentType)
 			{
-				return this.documentMetadataEntity.DocumentState != DocumentState.Inactive &&
-					   this.EnabledArticleQuantityTypes.Any ();
+				case DocumentType.SalesQuote:
+					return new SalesQuoteDocumentLogic (this.businessContext, this.documentMetadata);
+
+				case DocumentType.OrderConfiguration:
+					return new OrderConfigurationDocumentLogic (this.businessContext, this.documentMetadata);
+
+				case DocumentType.OrderBooking:
+					return new OrderBookingDocumentLogic (this.businessContext, this.documentMetadata);
+
+				case DocumentType.OrderConfirmation:
+					return new OrderConfirmationDocumentLogic (this.businessContext, this.documentMetadata);
+
+				case DocumentType.ProductionOrder:
+					return new ProductionOrderDocumentLogic (this.businessContext, this.documentMetadata);
+
+				case DocumentType.ProductionChecklist:
+					return new ProductionChecklistDocumentLogic (this.businessContext, this.documentMetadata);
+
+				case DocumentType.ShipmentChecklist:
+					return new ShipmentChecklistDocumentLogic (this.businessContext, this.documentMetadata);
+
+				case DocumentType.DeliveryNote:
+					return new DeliveryNoteDocumentLogic (this.businessContext, this.documentMetadata);
+
+				case DocumentType.Invoice:
+					return new InvoiceDocumentLogic (this.businessContext, this.documentMetadata);
+
+				case DocumentType.InvoiceProForma:
+					return new InvoiceProFormaDocumentLogic (this.businessContext, this.documentMetadata);
+
+				case DocumentType.PaymentReminder:
+					return new PaymentReminderDocumentLogic (this.businessContext, this.documentMetadata);
+
+				case DocumentType.Receipt:
+					return new ReceiptDocumentLogic (this.businessContext, this.documentMetadata);
+
+				case DocumentType.CreditMemo:
+					return new CreditMemoDocumentLogic (this.businessContext, this.documentMetadata);
+
+				case DocumentType.QuoteRequest:
+					return new QuoteRequestDocumentLogic (this.businessContext, this.documentMetadata);
+
+				case DocumentType.PurchaseOrder:
+					return new PurchaseOrderDocumentLogic (this.businessContext, this.documentMetadata);
+
+				default:
+					throw new System.NotSupportedException (string.Format ("{0} not supported", documentType.GetQualifiedName ()));
 			}
 		}
 
-		public bool IsArticleQuantityTypeEditionEnabled(ArticleQuantityType type)
-		{
-			//	Indique s'il est possible d'éditer une quantité donnée.
-			return this.documentMetadataEntity.DocumentState != DocumentState.Inactive &&
-				   this.EnabledArticleQuantityTypes.Where (x => x == type).Any ();
-		}
-
-		public ArticleQuantityType MainArticleQuantityType
-		{
-			//	Retourne le type de quantité principal, c'est-à-dire celui qui est édité avec l'article.
-			get
-			{
-				if (this.IsDebug)
-				{
-					return ArticleQuantityType.Ordered;
-				}
-				else
-				{
-					return this.documentBusinessLogic.MainArticleQuantityType;
-				}
-			}
-		}
-
-		public IEnumerable<ArticleQuantityType> EnabledArticleQuantityTypes
-		{
-			//	Retourne les types de quantité définis dans les réglages globaux, compatibles
-			//	avec le document en cours.
-			get
-			{
-				var list = this.IsDebug ? this.DebugArticleQuantityTypeEditionEnabled : this.documentBusinessLogic.EnabledArticleQuantityTypes;
-				
-				System.Diagnostics.Debug.Assert (list != null);
-
-				return list;
-			}
-		}
-
-		public IEnumerable<ArticleQuantityType> PrintableArticleQuantityTypes
-		{
-			//	Retourne la liste des types de quantité imprimables.
-			//	La première est la quantité principale.
-			get
-			{
-				var list = this.documentBusinessLogic.PrintableArticleQuantityTypes;
-
-				System.Diagnostics.Debug.Assert (list != null);
-
-				return list;
-			}
-		}
-
-		private IEnumerable<ArticleQuantityType> DebugArticleQuantityTypeEditionEnabled
-		{
-			//	Retourne la liste complète des types de quantité, pour le debug.
-			get
-			{
-				yield return ArticleQuantityType.Billed;				// facturé
-				yield return ArticleQuantityType.Delayed;				// retardé
-				yield return ArticleQuantityType.Expected;				// attendu
-				yield return ArticleQuantityType.Shipped;				// livré
-				yield return ArticleQuantityType.ShippedPreviously;		// livré précédemment
-				yield return ArticleQuantityType.Information;			// information
-			}
-		}
 
 
 		#region Process parent document types
@@ -396,10 +378,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		#endregion
 
 
-		private readonly BusinessContext							businessContext;
-		private readonly DocumentMetadataEntity						documentMetadataEntity;
-		private readonly IEnumerable<ArticleQuantityColumnEntity>	articleQuantityColumnEntities;
+		private readonly BusinessContext		businessContext;
+		private readonly DocumentMetadataEntity	documentMetadata;
+		private readonly List<ArticleQuantityColumnEntity> articleQuantityColumns;
 
-		private AbstractDocumentLogic						documentBusinessLogic;
+		private AbstractDocumentLogic			documentLogic;
 	}
 }
