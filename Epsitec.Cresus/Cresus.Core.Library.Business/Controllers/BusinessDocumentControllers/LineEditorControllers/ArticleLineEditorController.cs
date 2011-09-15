@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Core.Business.Finance;
 using Epsitec.Common.Widgets.Layouts;
+using Epsitec.Cresus.Core.Controllers.ArticleParameterControllers;
 
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
@@ -134,140 +135,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 
 
-		private FormattedText GetDiscountText(DiscountPolicy policy)
-		{
-			var discount = this.Item.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
-
-			if (discount.IsNotNull ())
-			{
-				return discount.Text;
-			}
-
-			return null;
-		}
-
-		private void SetDiscountText(FormattedText value, DiscountPolicy policy)
-		{
-			using (this.accessData.BusinessContext.SuspendUpdates ())
-			{
-				if (value.IsNullOrWhiteSpace)
-				{
-					var discount = this.Item.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
-
-					if (discount.IsNotNull ())
-					{
-						discount.Text = FormattedText.Empty;
-						this.RemoveEmptyDiscounts ();
-					}
-				}
-				else
-				{
-					this.CreateDefaultDiscount (policy);
-
-					var discount = this.Item.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
-
-					if (discount.IsNotNull ())
-					{
-						discount.Text = value;
-					}
-				}
-			}
-		}
-
-		
-		private string GetDiscountValue(DiscountPolicy policy)
-		{
-			var discount = this.Item.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
-
-			if (discount.IsNotNull ())
-			{
-				if (discount.DiscountRate.HasValue && discount.DiscountRate.Value != 0)
-				{
-					return Misc.PercentToString (discount.DiscountRate);
-				}
-
-				if (discount.Value.HasValue && discount.Value.Value != 0)
-				{
-					return Misc.PriceToString (discount.Value);
-				}
-			}
-
-			return null;
-		}
-
-		private void SetDiscountValue(string value, DiscountPolicy policy)
-		{
-			using (this.accessData.BusinessContext.SuspendUpdates ())
-			{
-				if (string.IsNullOrWhiteSpace (value))
-				{
-					var discount = this.Item.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
-
-					if (discount.IsNotNull ())
-					{
-						discount.DiscountRate = null;
-						discount.Value = null;
-						this.RemoveEmptyDiscounts ();
-					}
-				}
-				else
-				{
-					this.CreateDefaultDiscount (policy);
-
-					var discount = this.Item.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
-
-					if (string.IsNullOrEmpty (value))
-					{
-						discount.DiscountRate = null;
-						discount.Value = null;
-					}
-					else
-					{
-						if (value.Contains ("%"))
-						{
-							value = value.Replace ("%", "");
-
-							decimal d;
-							if (decimal.TryParse (value, out d))
-							{
-								discount.DiscountRate = PriceCalculator.ClipPercentValue (d/100);
-								discount.Value = null;
-							}
-						}
-						else
-						{
-							decimal d;
-							if (decimal.TryParse (value, out d))
-							{
-								discount.DiscountRate = null;
-								discount.Value = PriceCalculator.ClipPriceValue (d);
-							}
-						}
-					}
-				}
-			}
-		}
-
-		
-		private void RemoveEmptyDiscounts()
-		{
-			for (int i = 0; i < this.Item.Discounts.Count; )
-			{
-				var discount = this.Item.Discounts[i];
-
-				if ((discount.Text.IsNullOrEmpty) &&
-					(discount.Value == null) &&
-					(discount.DiscountRate == null))
-				{
-					this.Item.Discounts.RemoveAt (i);
-					continue;
-				}
-
-				i++;
-			}
-		}
-		
-
 		protected override void CreateUI(UIBuilder builder)
 		{
 			var leftFrame = new FrameBox
@@ -339,7 +206,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					Enable = this.accessData.DocumentLogic.IsArticleParametersEditionEnabled,
 				};
 
-				this.parameterController = new ArticleParameterControllers.ValuesArticleParameterController (this.tileContainer, line);
+				this.parameterController = new ValuesArticleParameterController (this.tileContainer, line);
 				this.parameterController.CallbackParameterChanged = this.ParameterChanged;
 				var box = this.parameterController.CreateUI (line, labelWidth: labelWidth, labelToRight: true);
 				box.Margins = new Margins (0);
@@ -360,7 +227,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				var replacementBox = new FrameBox ();
 
-				this.toolbarController = new ArticleParameterControllers.ArticleParameterToolbarController (this.tileContainer);
+				this.toolbarController = new ArticleParameterToolbarController (this.tileContainer);
 				var toolbar = this.toolbarController.CreateUI (replacementBox, null);
 				toolbar.Margins = new Margins (0, 0, 0, -1);
 
@@ -681,64 +548,49 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			var businessContext = this.accessData.BusinessContext;
 			var item = this.Item;
 
-			item.ArticleAttributes           = ArticleDocumentItemAttributes.Dirty;
-			item.ArticleDefinition           = article;
-			item.ArticleParameters           = null;
-			item.ArticleAccountingDefinition = null;
-			item.VatRateA                    = 0;
-			item.VatRateB                    = 0;
-			item.VatRatio                    = 1;
-			item.UnitPriceBeforeTax1         = null;
-			item.UnitPriceBeforeTax2         = null;
-			item.UnitPriceAfterTax1          = null;
-			item.UnitPriceAfterTax2          = null;
-			item.LinePriceBeforeTax1         = null;
-			item.LinePriceBeforeTax2         = null;
-			item.LinePriceAfterTax1          = null;
-			item.LinePriceAfterTax2          = null;
-			item.TotalRevenueAfterTax        = null;
-			item.TotalRevenueAccounted       = null;
-			item.ArticleNameCache            = null;
-			item.ArticleDescriptionCache     = null;
-			item.ReplacementName             = null;
-			item.ReplacementDescription      = null;
-
-			businessContext.ClearAndDeleteEntities (item.ArticleTraceabilityDetails);
-			businessContext.ClearAndDeleteEntities (item.Discounts);
-			
-			//	Initialise la description de l'article.
-			this.SetArticleDescription (this.GetArticleDescription (true), true);
-			this.SetArticleDescription (this.GetArticleDescription (false), false);
-
-			//	Initialise le prix de base de l'article.
-#if false
-			//	@PA: reset du prix unitaire et du mode TTC/HT unitaire
-
-			if (article.ArticlePrices.Any ())
+			using (businessContext.SuspendUpdates ())
 			{
-				var articlePrice = article.ArticlePrices.First ();
-				if (articlePrice.ValueIncludesTaxes)
+				item.ArticleAttributes           = ArticleDocumentItemAttributes.Dirty;
+				item.ArticleDefinition           = article;
+				item.ArticleParameters           = null;
+				item.ArticleAccountingDefinition = null;
+				item.VatRateA                    = 0;
+				item.VatRateB                    = 0;
+				item.VatRatio                    = 1;
+				item.UnitPriceBeforeTax1         = null;
+				item.UnitPriceBeforeTax2         = null;
+				item.UnitPriceAfterTax1          = null;
+				item.UnitPriceAfterTax2          = null;
+				item.LinePriceBeforeTax1         = null;
+				item.LinePriceBeforeTax2         = null;
+				item.LinePriceAfterTax1          = null;
+				item.LinePriceAfterTax2          = null;
+				item.TotalRevenueAfterTax        = null;
+				item.TotalRevenueAccounted       = null;
+				item.ArticleNameCache            = null;
+				item.ArticleDescriptionCache     = null;
+				item.ReplacementName             = null;
+				item.ReplacementDescription      = null;
+
+				businessContext.ClearAndDeleteEntities (item.ArticleTraceabilityDetails);
+				businessContext.ClearAndDeleteEntities (item.Discounts);
+
+				//	Initialise la description de l'article.
+				this.SetArticleDescription (this.GetArticleDescription (true), true);
+				this.SetArticleDescription (this.GetArticleDescription (false), false);
+
+				//	Initialise l'unité par défaut.
+				UnitOfMeasureEntity unit = null;
+
+				if (article.Units.IsNotNull () && article.Units.Units.Count != 0)
 				{
-					item.UnitPriceAfterTax1 = articlePrice.Value;
+					unit = article.Units.Units[0];
 				}
-				else
+
+				if (unit != null && item.ArticleQuantities.Count != 0)
 				{
-					item.UnitPriceBeforeTax1 = articlePrice.Value;
+					item.ArticleQuantities[0].Unit = unit;
 				}
-			}
-#endif
-
-			//	Initialise l'unité par défaut.
-			UnitOfMeasureEntity unit = null;
-
-			if (unit == null && article.Units != null && article.Units.Units.Count != 0)
-			{
-				unit = article.Units.Units[0];
-			}
-
-			if (unit != null && item.ArticleQuantities.Count != 0)
-			{
-				item.ArticleQuantities[0].Unit = unit;
 			}
 
 			this.parameterController.UpdateUI (this.Item);
@@ -807,10 +659,142 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private void ParameterChanged(AbstractArticleParameterDefinitionEntity parameterDefinitionEntity)
 		{
 			//	Cette méthode est appelée lorsqu'un paramètre a été changé.
-			ArticleParameterControllers.ArticleParameterToolbarController.UpdateTextFieldParameter (this.Item, this.articleDescriptionTextField);
+			ArticleParameterToolbarController.UpdateTextFieldParameter (this.Item, this.articleDescriptionTextField);
 		}
 
 	
+		private FormattedText GetDiscountText(DiscountPolicy policy)
+		{
+			var discount = this.Item.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
+
+			if (discount.IsNotNull ())
+			{
+				return discount.Text;
+			}
+
+			return null;
+		}
+
+		private void SetDiscountText(FormattedText value, DiscountPolicy policy)
+		{
+			using (this.accessData.BusinessContext.SuspendUpdates ())
+			{
+				if (value.IsNullOrWhiteSpace)
+				{
+					var discount = this.Item.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
+
+					if (discount.IsNotNull ())
+					{
+						discount.Text = FormattedText.Empty;
+						this.RemoveEmptyDiscounts ();
+					}
+				}
+				else
+				{
+					this.CreateDefaultDiscount (policy);
+
+					var discount = this.Item.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
+
+					if (discount.IsNotNull ())
+					{
+						discount.Text = value;
+					}
+				}
+			}
+		}
+
+		private string GetDiscountValue(DiscountPolicy policy)
+		{
+			var discount = this.Item.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
+
+			if (discount.IsNotNull ())
+			{
+				if (discount.DiscountRate.HasValue && discount.DiscountRate.Value != 0)
+				{
+					return Misc.PercentToString (discount.DiscountRate);
+				}
+
+				if (discount.Value.HasValue && discount.Value.Value != 0)
+				{
+					return Misc.PriceToString (discount.Value);
+				}
+			}
+
+			return null;
+		}
+
+		private void SetDiscountValue(string value, DiscountPolicy policy)
+		{
+			using (this.accessData.BusinessContext.SuspendUpdates ())
+			{
+				if (string.IsNullOrWhiteSpace (value))
+				{
+					var discount = this.Item.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
+
+					if (discount.IsNotNull ())
+					{
+						discount.DiscountRate = null;
+						discount.Value = null;
+						this.RemoveEmptyDiscounts ();
+					}
+				}
+				else
+				{
+					this.CreateDefaultDiscount (policy);
+
+					var discount = this.Item.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
+
+					if (string.IsNullOrEmpty (value))
+					{
+						discount.DiscountRate = null;
+						discount.Value = null;
+					}
+					else
+					{
+						if (value.Contains ("%"))
+						{
+							value = value.Replace ("%", "");
+
+							decimal d;
+							if (decimal.TryParse (value, out d))
+							{
+								discount.DiscountRate = PriceCalculator.ClipPercentValue (d/100);
+								discount.Value = null;
+							}
+						}
+						else
+						{
+							decimal d;
+							if (decimal.TryParse (value, out d))
+							{
+								discount.DiscountRate = null;
+								discount.Value = PriceCalculator.ClipPriceValue (d);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		private void RemoveEmptyDiscounts()
+		{
+			for (int i = 0; i < this.Item.Discounts.Count; )
+			{
+				var discount = this.Item.Discounts[i];
+
+				if ((discount.Text.IsNullOrEmpty) &&
+					(discount.Value == null) &&
+					(discount.DiscountRate == null))
+				{
+					this.Item.Discounts.RemoveAt (i);
+					continue;
+				}
+
+				i++;
+			}
+		}
+		
+
 		private void CreateDefaultDiscount(DiscountPolicy policy)
 		{
 			//	S'il n'existe aucun rabais, crée les entités requises.
@@ -828,9 +812,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 
 
-		private readonly EditMode												editMode;
-		private ArticleParameterControllers.ValuesArticleParameterController	parameterController;
-		private ArticleParameterControllers.ArticleParameterToolbarController	toolbarController;
-		private TextFieldMultiEx												articleDescriptionTextField;
+		private readonly EditMode					editMode;
+		private ValuesArticleParameterController	parameterController;
+		private ArticleParameterToolbarController	toolbarController;
+		private TextFieldMultiEx					articleDescriptionTextField;
 	}
 }

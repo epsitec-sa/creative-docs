@@ -896,14 +896,14 @@ namespace Epsitec.Common.Widgets
 					break;
 				
 				case MessageType.MouseDown:
-					this.ProcessMouse(pos, message.IsShiftPressed, message.IsControlPressed, false);
+					this.ProcessMouse(pos, message.MessageType, message.IsShiftPressed, message.IsControlPressed, false);
 					this.mouseDown = true;
 					break;
 				
 				case MessageType.MouseMove:
 					if ( this.mouseDown )
 					{
-						this.ProcessMouse(pos, message.IsShiftPressed, message.IsControlPressed, false);
+						this.ProcessMouse(pos, message.MessageType, message.IsShiftPressed, message.IsControlPressed, false);
 					}
 					else
 					{
@@ -914,7 +914,7 @@ namespace Epsitec.Common.Widgets
 				case MessageType.MouseUp:
 					if ( this.mouseDown )
 					{
-						this.ProcessMouse(pos, message.IsShiftPressed, message.IsControlPressed, true);
+						this.ProcessMouse(pos, message.MessageType, message.IsShiftPressed, message.IsControlPressed, true);
 						this.mouseDown = false;
 					}
 					break;
@@ -1004,58 +1004,124 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 
-		protected void ProcessMouse(Drawing.Point pos, bool isShiftPressed, bool isControlPressed, bool isFinal)
+		protected void ProcessMouse(Drawing.Point pos, MessageType messageType, bool isShiftPressed, bool isControlPressed, bool isFinal)
 		{
 			//	Sélectionne une cellule.
 			CellArrayStyles style = this.styleV | this.styleH;
-			if ((style & CellArrayStyles.SelectCell) == 0 && (style & CellArrayStyles.SelectLine) == 0)
+
+			if ((style.HasFlag (CellArrayStyles.SelectCell) == false) &&
+				(style.HasFlag (CellArrayStyles.SelectLine) == false))
 			{
 				return;
 			}
 
-			if ((style & CellArrayStyles.SelectMulti) == 0 || (!isControlPressed && !isShiftPressed))
+			bool[,] marks = new bool[this.maxColumns, this.maxRows];
+
+			if ((style.HasFlag (CellArrayStyles.SelectMulti)) &&
+				(isControlPressed || isShiftPressed))
 			{
-				this.DeselectAll();
+				//	Preserve the selection state of every cell in the table, since we are going
+				//	to extend it.
+
+				this.SyncSnapshot (marks);
+			}
+			else
+			{
 				this.selectedRow = -1;
 				this.selectedColumn = -1;
 			}
 
 			int row, column;
-			if (this.Detect(pos, out row, out column))  // détecte la cellule visée par la souris
+
+			if (this.Detect (pos, out row, out column))  // détecte la cellule visée par la souris
 			{
-				if (!this.mouseDown)  // bouton pressé ?
+				if (messageType == MessageType.MouseDown)
 				{
-					this.mouseState = !this.array[column, row].IsSelected;
+					//	On mouse down, the state will be the opposite of the currently active state;
+					//	if we are selecting without extending the selection, then this will happen to
+					//	always select the specified cell, as it is guaranteed to be in the deselected
+					//	state now :
+
+					this.mouseState = !marks[column, row];
 				}
+
 				bool state = this.mouseState;
 
-				if ((style & CellArrayStyles.SelectMulti) != 0 && isShiftPressed)
+				if ((style.HasFlag (CellArrayStyles.SelectMulti)) &&
+					(isShiftPressed))
 				{
-					this.SelectZone(column, row, this.selectedColumn, this.selectedRow, state);
+					this.SelectZone (marks, column, row, this.selectedColumn, this.selectedRow, state);
 				}
 				else
 				{
-					this.SelectCell(column, row, state);
+					marks[column, row] = state;
+
 					this.selectedColumn = column;
 					this.selectedRow = row;
 
-					if ((this.styleV & CellArrayStyles.SelectLine) != 0)
+					if (this.styleV.HasFlag (CellArrayStyles.SelectLine))
 					{
-						this.SelectRow(row, state);
+						this.SelectRow (marks, row, state);
 					}
 
-					if ((this.styleH & CellArrayStyles.SelectLine) != 0)
+					if (this.styleH.HasFlag (CellArrayStyles.SelectLine))
 					{
-						this.SelectColumn(column, state);
+						this.SelectColumn (marks, column, state);
 					}
 				}
 			}
 
-			this.OnSelectionChanged();
+			if (this.ApplySnapshot (marks) > 0)
+			{
+				this.OnSelectionChanged ();
+			}
+			
 			if (isFinal)
 			{
-				this.OnFinalSelectionChanged();
+				this.OnFinalSelectionChanged ();
 			}
+		}
+
+		private int SyncSnapshot(bool[,] marks)
+		{
+			int count = 0;
+
+			for (int row = 0; row < this.maxRows; row++)
+			{
+				for (int col = 0; col < this.maxColumns; col++)
+				{
+					bool isSelected = this.array[col, row].IsSelected;
+
+					if (marks[col, row] != isSelected)
+					{
+						marks[col, row] = isSelected;
+						count++;
+					}
+				}
+			}
+
+			return count;
+		}
+
+		private int ApplySnapshot(bool[,] marks)
+		{
+			int count = 0;
+
+			for (int row = 0; row < this.maxRows; row++)
+			{
+				for (int col = 0; col < this.maxColumns; col++)
+				{
+					bool isSelected = this.array[col, row].IsSelected;
+
+					if (marks[col, row] != isSelected)
+					{
+						this.array[col, row].SetSelected (marks[col, row]);
+						count++;
+					}
+				}
+			}
+
+			return count;
 		}
 
 		protected void ProcessMouseLeave()
@@ -1206,7 +1272,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected void SelectZone(int column1, int row1, int column2, int row2, bool state)
+		private void SelectZone(bool[,] marks, int column1, int row1, int column2, int row2, bool state)
 		{
 			//	Sélectionne une zone rectangulaire.
 			int sc = System.Math.Min(column1, column2);
@@ -1220,7 +1286,7 @@ namespace Epsitec.Common.Widgets
 				{
 					for (int column=0; column<this.Columns; column++)
 					{
-						this.SelectCell(column, row, state);
+						marks[column, row] = state;
 					}
 				}
 			}
@@ -1230,7 +1296,7 @@ namespace Epsitec.Common.Widgets
 				{
 					for (int row=0; row<this.Rows; row++)
 					{
-						this.SelectCell(column, row, state);
+						marks[column, row] = state;
 					}
 				}
 			}
@@ -1240,11 +1306,28 @@ namespace Epsitec.Common.Widgets
 				{
 					for (int row=sr; row<=er; row++)
 					{
-						this.SelectCell(column, row, state);
+						marks[column, row] = state;
 					}
 				}
 			}
 		}
+
+		private void SelectRow(bool[,] marks, int row, bool state)
+		{
+			for (int column=0; column<this.maxColumns; column++)
+			{
+				marks[column, row] = state;
+			}
+		}
+
+		private void SelectColumn(bool[,] marks, int column, bool state)
+		{
+			for (int row=0; row<this.maxRows; row++)
+			{
+				marks[column, row] = state;
+			}
+		}
+
 
 		public void SelectRow(int row, bool state)
 		{
@@ -1321,6 +1404,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnSelectionChanged()
 		{
+			this.selectionChangedRaised = true;
 			//	Génère un événement pour dire que la sélection a changé.
 			var handler = this.GetUserEventHandler("SelectionChanged");
 
@@ -1332,12 +1416,17 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnFinalSelectionChanged()
 		{
-			//	Génère un événement pour dire que la sélection a changé.
-			var handler = this.GetUserEventHandler("FinalSelectionChanged");
-
-			if (handler != null)
+			if (this.selectionChangedRaised)
 			{
-				handler(this);
+				//	Génère un événement pour dire que la sélection a changé.
+				var handler = this.GetUserEventHandler ("FinalSelectionChanged");
+
+				if (handler != null)
+				{
+					handler (this);
+				}
+
+				this.selectionChangedRaised = false;
 			}
 		}
 
@@ -2250,7 +2339,7 @@ namespace Epsitec.Common.Widgets
 
 		protected bool							isDirty;
 		protected bool							isGrimy;
-		protected bool							mouseDown = false;
+		protected bool							mousePressed;
 		protected bool							mouseState;
 		protected CellArrayStyles				styleH;
 		protected CellArrayStyles				styleV;
@@ -2305,5 +2394,8 @@ namespace Epsitec.Common.Widgets
 		
 		protected Cell							focusedCell;
 		protected Widget						focusedWidget;
+
+		private bool							selectionChangedRaised;
+		private bool							mouseDown;
 	}
 }
