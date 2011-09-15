@@ -56,13 +56,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				if (this.Entity.ArticleQuantities.Count == 0)
+				if (this.Item.ArticleQuantities.Count == 0)
 				{
 					return null;
 				}
 				else
 				{
-					return this.Entity.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == this.accessData.DocumentLogic.MainArticleQuantityType).FirstOrDefault ();
+					return this.Item.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == this.accessData.DocumentLogic.MainArticleQuantityType).FirstOrDefault ();
 				}
 			}
 		}
@@ -71,11 +71,23 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return this.GetDiscountTextValue (DiscountPolicy.OnLinePrice);
+				return this.GetDiscountValue (DiscountPolicy.OnLinePrice);
 			}
 			set
 			{
-				this.SetDiscountTextValue (value, DiscountPolicy.OnLinePrice);
+				this.SetDiscountValue (value, DiscountPolicy.OnLinePrice);
+			}
+		}
+
+		private FormattedText					DiscountLineText
+		{
+			get
+			{
+				return this.GetDiscountText (DiscountPolicy.OnLinePrice);
+			}
+			set
+			{
+				this.SetDiscountText (value, DiscountPolicy.OnLinePrice);
 			}
 		}
 
@@ -83,17 +95,88 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return this.GetDiscountTextValue (DiscountPolicy.OnUnitPrice);
+				return this.GetDiscountValue (DiscountPolicy.OnUnitPrice);
 			}
 			set
 			{
-				this.SetDiscountTextValue (value, DiscountPolicy.OnUnitPrice);
+				this.SetDiscountValue (value, DiscountPolicy.OnUnitPrice);
 			}
 		}
 
-		private string GetDiscountTextValue(DiscountPolicy policy)
+		private FormattedText					DiscountUnitText
 		{
-			var discount = this.Entity.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
+			get
+			{
+				return this.GetDiscountText (DiscountPolicy.OnUnitPrice);
+			}
+			set
+			{
+				this.SetDiscountText (value, DiscountPolicy.OnUnitPrice);
+			}
+		}
+
+		private bool							IsTax
+		{
+			get
+			{
+				return this.Item.GroupIndex == 0;
+			}
+		}
+
+		private ArticleDocumentItemEntity		Item
+		{
+			get
+			{
+				return this.entity as ArticleDocumentItemEntity;
+			}
+		}
+
+
+
+		private FormattedText GetDiscountText(DiscountPolicy policy)
+		{
+			var discount = this.Item.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
+
+			if (discount.IsNotNull ())
+			{
+				return discount.Text;
+			}
+
+			return null;
+		}
+
+		private void SetDiscountText(FormattedText value, DiscountPolicy policy)
+		{
+			using (this.accessData.BusinessContext.SuspendUpdates ())
+			{
+				if (value.IsNullOrWhiteSpace)
+				{
+					var discount = this.Item.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
+
+					if (discount.IsNotNull ())
+					{
+						discount.Text = FormattedText.Empty;
+						this.RemoveEmptyDiscounts ();
+					}
+				}
+				else
+				{
+					this.CreateDefaultDiscount (policy);
+
+					var discount = this.Item.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
+
+					if (discount.IsNotNull ())
+					{
+						discount.Text = value;
+					}
+				}
+			}
+		}
+
+		
+		private string GetDiscountValue(DiscountPolicy policy)
+		{
+			var discount = this.Item.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
 
 			if (discount.IsNotNull ())
 			{
@@ -111,90 +194,78 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			return null;
 		}
 
-		private void SetDiscountTextValue(string value, DiscountPolicy policy)
+		private void SetDiscountValue(string value, DiscountPolicy policy)
 		{
 			using (this.accessData.BusinessContext.SuspendUpdates ())
 			{
-				this.CreateDefaultDiscount (policy);
-
-				var discount = this.Entity.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
-
-				if (string.IsNullOrEmpty (value))
+				if (string.IsNullOrWhiteSpace (value))
 				{
-					discount.DiscountRate = null;
-					discount.Value = null;
+					var discount = this.Item.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
+
+					if (discount.IsNotNull ())
+					{
+						discount.DiscountRate = null;
+						discount.Value = null;
+						this.RemoveEmptyDiscounts ();
+					}
 				}
 				else
 				{
-					if (value.Contains ("%"))
-					{
-						value = value.Replace ("%", "");
+					this.CreateDefaultDiscount (policy);
 
-						decimal d;
-						if (decimal.TryParse (value, out d))
-						{
-							discount.DiscountRate = PriceCalculator.ClipPercentValue (d/100);
-							discount.Value = null;
-						}
+					var discount = this.Item.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
+
+					if (string.IsNullOrEmpty (value))
+					{
+						discount.DiscountRate = null;
+						discount.Value = null;
 					}
 					else
 					{
-						decimal d;
-						if (decimal.TryParse (value, out d))
+						if (value.Contains ("%"))
 						{
-							discount.DiscountRate = null;
-							discount.Value = PriceCalculator.ClipPriceValue (d);
+							value = value.Replace ("%", "");
+
+							decimal d;
+							if (decimal.TryParse (value, out d))
+							{
+								discount.DiscountRate = PriceCalculator.ClipPercentValue (d/100);
+								discount.Value = null;
+							}
+						}
+						else
+						{
+							decimal d;
+							if (decimal.TryParse (value, out d))
+							{
+								discount.DiscountRate = null;
+								discount.Value = PriceCalculator.ClipPriceValue (d);
+							}
 						}
 					}
 				}
 			}
 		}
+
 		
-		private FormattedText DiscountText
+		private void RemoveEmptyDiscounts()
 		{
-			get
+			for (int i = 0; i < this.Item.Discounts.Count; )
 			{
-				var policy   = DiscountPolicy.OnLinePrice;
-				var discount = this.Entity.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
+				var discount = this.Item.Discounts[i];
 
-				if (discount.IsNotNull ())
+				if ((discount.Text.IsNullOrEmpty) &&
+					(discount.Value == null) &&
+					(discount.DiscountRate == null))
 				{
-					return discount.Text;
+					this.Item.Discounts.RemoveAt (i);
+					continue;
 				}
 
-				return null;
-			}
-			set
-			{
-				var policy   = DiscountPolicy.OnLinePrice;
-
-				this.CreateDefaultDiscount (policy);
-				
-				var discount = this.Entity.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
-
-				if (discount.IsNotNull ())
-				{
-					discount.Text = value;
-				}
+				i++;
 			}
 		}
-
-		private bool							IsTax
-		{
-			get
-			{
-				return this.Entity.GroupIndex == 0;
-			}
-		}
-
-		private ArticleDocumentItemEntity		Entity
-		{
-			get
-			{
-				return this.entity as ArticleDocumentItemEntity;
-			}
-		}
-
+		
 
 		protected override void CreateUI(UIBuilder builder)
 		{
@@ -245,7 +316,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				var articleController = new SelectionController<ArticleDefinitionEntity> (this.accessData.BusinessContext)
 				{
-					ValueGetter         = () => this.Entity.ArticleDefinition,
+					ValueGetter         = () => this.Item.ArticleDefinition,
 					ValueSetter         = x => this.ResetArticleDefinition (x),
 					PossibleItemsFilter = x => this.ArticleFilter (x),
 				};
@@ -273,7 +344,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				box.Margins = new Margins (0);
 				box.TabIndex = this.GetNextTabIndex ();
 
-				this.parameterController.UpdateUI (this.Entity);
+				this.parameterController.UpdateUI (this.Item);
 			}
 
 			//	Texte de remplacement.
@@ -296,7 +367,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				this.articleDescriptionTextField.Dock = DockStyle.StackFill;
 				this.articleDescriptionTextField.Margins = new Margins (0);
 
-				this.toolbarController.UpdateUI (this.Entity, this.articleDescriptionTextField);
+				this.toolbarController.UpdateUI (this.Item, this.articleDescriptionTextField);
 
 				var text = this.IsEditName ? "Désignation courte" : "Désignation longue";
 				this.PlaceLabelAndField (line, labelWidth, 0, text, replacementBox);
@@ -422,17 +493,17 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				if (this.billingMode == Business.Finance.BillingMode.ExcludingTax)
 				{
-					var unit1Field = builder.CreateTextField (Marshaler.Create (() => this.Entity.UnitPriceBeforeTax1, x => this.Entity.UnitPriceBeforeTax1 = x));
+					var unit1Field = builder.CreateTextField (Marshaler.Create (() => this.Item.UnitPriceBeforeTax1, x => this.Item.UnitPriceBeforeTax1 = x));
 					var discount   = builder.CreateTextField (Marshaler.Create (() => this.DiscountUnitValue, x => this.DiscountUnitValue = x));
-					var unit2Field = builder.CreateTextField (Marshaler.Create (() => this.Entity.UnitPriceBeforeTax2, x => this.Entity.UnitPriceBeforeTax2 = x));
+					var unit2Field = builder.CreateTextField (Marshaler.Create (() => this.Item.UnitPriceBeforeTax2, x => this.Item.UnitPriceBeforeTax2 = x));
 
 					this.PlacePriceEditionWidgets (line, "Prix unitaire", unit1Field, discount, unit2Field);
 				}
 				else
 				{
-					var unit1Field = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.UnitPriceAfterTax1, x => this.Entity.UnitPriceAfterTax1 = x));
+					var unit1Field = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Item.UnitPriceAfterTax1, x => this.Item.UnitPriceAfterTax1 = x));
 					var unit1Box = this.PlaceLabelAndField (line, 130, 100, "Prix u. cat.", unit1Field);
-					var unit2Field = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.UnitPriceAfterTax2, x => this.Entity.UnitPriceAfterTax2 = x));
+					var unit2Field = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Item.UnitPriceAfterTax2, x => this.Item.UnitPriceAfterTax2 = x));
 					var unit2Box = this.PlaceLabelAndField (line, 130, 100, "Prix unitaire", unit2Field);
 				}
 			}
@@ -451,17 +522,17 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				if (this.billingMode == Business.Finance.BillingMode.ExcludingTax)
 				{
-					var line1Field = builder.CreateTextField (Marshaler.Create (() => this.Entity.LinePriceBeforeTax1, x => this.Entity.LinePriceBeforeTax1 = x));
+					var line1Field = builder.CreateTextField (Marshaler.Create (() => this.Item.LinePriceBeforeTax1, x => this.Item.LinePriceBeforeTax1 = x));
 					var discount   = builder.CreateTextField (Marshaler.Create (() => this.DiscountLineValue, x => this.DiscountLineValue = x));
-					var line2Field = builder.CreateTextField (Marshaler.Create (() => this.Entity.LinePriceBeforeTax2, x => this.Entity.LinePriceBeforeTax2 = x));
+					var line2Field = builder.CreateTextField (Marshaler.Create (() => this.Item.LinePriceBeforeTax2, x => this.Item.LinePriceBeforeTax2 = x));
 
 					this.PlacePriceEditionWidgets (line, "Prix ligne", line1Field, discount, line2Field);
 				}
 				else
 				{
-					var unit1Field = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.UnitPriceAfterTax1, x => this.Entity.UnitPriceAfterTax1 = x));
+					var unit1Field = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Item.UnitPriceAfterTax1, x => this.Item.UnitPriceAfterTax1 = x));
 					var unit1Box = this.PlaceLabelAndField (line, 130, 100, "Prix u. cat.", unit1Field);
-					var unit2Field = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.UnitPriceAfterTax2, x => this.Entity.UnitPriceAfterTax2 = x));
+					var unit2Field = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Item.UnitPriceAfterTax2, x => this.Item.UnitPriceAfterTax2 = x));
 					var unit2Box = this.PlaceLabelAndField (line, 130, 100, "Prix unitaire", unit2Field);
 				}
 			}
@@ -482,14 +553,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				{
 					Parent = line,
 					Text = "Jamais de rabais",
-					ActiveState = this.Entity.NeverApplyDiscount ? ActiveState.Yes : ActiveState.No,
+					ActiveState = this.Item.NeverApplyDiscount ? ActiveState.Yes : ActiveState.No,
 					Dock = DockStyle.Fill,
 					Margins = new Margins (10, 0, 0, 0),
 				};
 
 				neverButton.ActiveStateChanged += delegate
 				{
-					this.Entity.NeverApplyDiscount = (neverButton.ActiveState == ActiveState.Yes);
+					this.Item.NeverApplyDiscount = (neverButton.ActiveState == ActiveState.Yes);
 					this.UpdateDiscountBox ();
 				};
 
@@ -508,7 +579,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				};
 
 				//	Rabais.
-				var discountField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.DiscountText, x => this.DiscountText = x));
+				var discountField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.DiscountLineText, x => this.DiscountLineText = x));
 				this.PlaceLabelAndField (line, 130, 200, "Description du rabais", discountField);
 			}
 
@@ -568,20 +639,20 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private void UpdateDiscountBox()
 		{
-			this.discountBox.Enable = !this.Entity.NeverApplyDiscount;
+			this.discountBox.Enable = !this.Item.NeverApplyDiscount;
 		}
 
 
 
 		private void ResetArticleDefinition(ArticleDefinitionEntity article)
 		{
-			if (this.Entity.ArticleDefinition.RefEquals (article))
+			if (this.Item.ArticleDefinition.RefEquals (article))
 			{
 				return;
 			}
 
 			var businessContext = this.accessData.BusinessContext;
-			var item = this.Entity;
+			var item = this.Item;
 
 			item.ArticleAttributes           = ArticleDocumentItemAttributes.Dirty;
 			item.ArticleDefinition           = article;
@@ -643,23 +714,23 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				item.ArticleQuantities[0].Unit = unit;
 			}
 
-			this.parameterController.UpdateUI (this.Entity);
-			this.toolbarController.UpdateUI (this.Entity, this.articleDescriptionTextField);
+			this.parameterController.UpdateUI (this.Item);
+			this.toolbarController.UpdateUI (this.Item, this.articleDescriptionTextField);
 		}
 
 		private FormattedText GetArticleDescription(bool shortDescription)
 		{
-			return ArticleDocumentItemHelper.GetArticleText (this.Entity, shortDescription: shortDescription);
+			return ArticleDocumentItemHelper.GetArticleText (this.Item, shortDescription: shortDescription);
 		}
 
 		private void SetArticleDescription(FormattedText value, bool shortDescription)
 		{
 			//	The replacement text of the article item might be defined in several different
 			//	languages; compare and replace only the text for the active language :
-			var replacementText = shortDescription ? this.Entity.ReplacementName : this.Entity.ReplacementDescription;
+			var replacementText = shortDescription ? this.Item.ReplacementName : this.Item.ReplacementDescription;
 
 			string articleText = value.IsNull ? null : TextFormatter.ConvertToText (value);
-			string defaultText = TextFormatter.ConvertToText (shortDescription ? this.Entity.ArticleDefinition.Name : this.Entity.ArticleDefinition.Description);
+			string defaultText = TextFormatter.ConvertToText (shortDescription ? this.Item.ArticleDefinition.Name : this.Item.ArticleDefinition.Description);
 			string currentReplacement = replacementText.IsNull ? null : TextFormatter.ConvertToText (replacementText);
 
 			if (articleText == defaultText)  // texte standard ?
@@ -674,22 +745,22 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				if (shortDescription)
 				{
-					this.Entity.ReplacementName = text.GetGlobalText ();
+					this.Item.ReplacementName = text.GetGlobalText ();
 				}
 				else
 				{
-					this.Entity.ReplacementDescription = text.GetGlobalText ();
+					this.Item.ReplacementDescription = text.GetGlobalText ();
 				}
 			}
 
 			//	Met à jour le texte du cache.
 			if (shortDescription)
 			{
-				this.Entity.ArticleNameCache = ArticleDocumentItemHelper.GetArticleText (this.Entity, replaceTags: true, shortDescription: true);
+				this.Item.ArticleNameCache = ArticleDocumentItemHelper.GetArticleText (this.Item, replaceTags: true, shortDescription: true);
 			}
 			else
 			{
-				this.Entity.ArticleDescriptionCache = ArticleDocumentItemHelper.GetArticleText (this.Entity, replaceTags: true, shortDescription: false);
+				this.Item.ArticleDescriptionCache = ArticleDocumentItemHelper.GetArticleText (this.Item, replaceTags: true, shortDescription: false);
 			}
 		}
 
@@ -709,14 +780,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private void ParameterChanged(AbstractArticleParameterDefinitionEntity parameterDefinitionEntity)
 		{
 			//	Cette méthode est appelée lorsqu'un paramètre a été changé.
-			ArticleParameterControllers.ArticleParameterToolbarController.UpdateTextFieldParameter (this.Entity, this.articleDescriptionTextField);
+			ArticleParameterControllers.ArticleParameterToolbarController.UpdateTextFieldParameter (this.Item, this.articleDescriptionTextField);
 		}
 
 	
 		private void CreateDefaultDiscount(DiscountPolicy policy)
 		{
 			//	S'il n'existe aucun rabais, crée les entités requises.
-			if (this.Entity.Discounts.Any (x => x.DiscountPolicy == policy))
+			if (this.Item.Discounts.Any (x => x.DiscountPolicy == policy))
 			{
 				return;
 			}
@@ -725,7 +796,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			newDiscount.DiscountPolicy = policy;
 
-			this.Entity.Discounts.Add (newDiscount);
+			this.Item.Discounts.Add (newDiscount);
 		}
 
 
