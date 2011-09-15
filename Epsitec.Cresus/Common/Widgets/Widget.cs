@@ -1259,6 +1259,22 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+
+		public void SetSelectedIncludingChildren(bool value)
+		{
+			this.SetSelected (value);
+
+			if (this.HasChildren)
+			{
+				foreach (Widget child in this.Children)
+				{
+					if (child.IsSelected != value)
+					{
+						child.SetSelected (value);
+					}
+				}
+			}
+		}
 		
 		public void SetEngaged(bool value)
 		{

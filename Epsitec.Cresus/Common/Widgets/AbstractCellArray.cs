@@ -1,3 +1,6 @@
+//	Copyright © 2004-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
 using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
@@ -1363,16 +1366,13 @@ namespace Epsitec.Common.Widgets
 		public void SelectCell(int column, int row, bool state)
 		{
 			//	Sélectionne une cellule.
-			if ( row < 0 || row >= this.maxRows )  return;
-			if ( column < 0 || column >= this.maxColumns )  return;
-			this.array[column, row].SetSelected(state);
-			foreach (Widget fils in this.array[column, row].Children)
+			if ((row < 0) || (row >= this.maxRows) ||
+				(column < 0) || (column >= this.maxColumns))
 			{
-				if (fils.IsSelected != state)
-				{
-					fils.SetSelected (state);
-				}
+				return;
 			}
+			
+			this.array[column, row].SetSelectedIncludingChildren (state);
 		}
 
 		public bool IsCellSelected(int row, int column)
