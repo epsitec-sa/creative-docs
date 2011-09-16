@@ -1,5 +1,5 @@
 ﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Pierre ARNAUD, Maintainer: Marc BETTEX
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 namespace Epsitec.Common.Support
 {
@@ -46,21 +46,21 @@ namespace Epsitec.Common.Support
 		}
 
 
-		public void Increment()
+		public int Increment()
 		{
-			this.value++;
+			return System.Threading.Interlocked.Increment (ref this.value);
 		}
 
-		public void Decrement()
+		public int Decrement()
 		{
-			this.value--;
+			return System.Threading.Interlocked.Decrement (ref this.value);
 		}
 		
-		public System.IDisposable Enter()
+		public DisposableWrapper<int> Enter()
 		{
-			this.Increment ();
+			var value = this.Increment ();
 
-			return DisposableWrapper.CreateDisposable (this.Release);
+			return DisposableWrapper.CreateDisposable (this.Release, value);
 		}
 
 		private void Release()
@@ -78,17 +78,17 @@ namespace Epsitec.Common.Support
 		{
 			if (this.IsZero)
 			{
-				using (this.Enter ())
+				using (var wrapper = this.Enter ())
 				{
-					action ();
+					if (wrapper.Value == 0)
+					{
+						action ();
+						return true;
+					}
 				}
-
-				return true;
 			}
-			else
-			{
-				return false;
-			}
+			
+			return false;
 		}
 
 

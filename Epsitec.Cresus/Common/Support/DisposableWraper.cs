@@ -14,9 +14,9 @@ namespace Epsitec.Common.Support
 	/// be called exactly once if the object is disposed and that an
 	/// <see cref="System.InvalidOperationException"/> will be thrown if the object has not been disposed.
 	/// </summary>
-	public sealed class DisposableWrapper : System.IDisposable
+	public class DisposableWrapper : System.IDisposable
 	{
-		private DisposableWrapper(System.Action action)
+		protected DisposableWrapper(System.Action action)
 		{
 			this.action = action;
 
@@ -33,7 +33,6 @@ namespace Epsitec.Common.Support
 
 		#region IDisposable Members
 
-
 		public void Dispose()
 		{
 			if (!this.actionDone)
@@ -45,7 +44,6 @@ namespace Epsitec.Common.Support
 
 			System.GC.SuppressFinalize (this);
 		}
-
 
 		#endregion
 
@@ -63,6 +61,11 @@ namespace Epsitec.Common.Support
 			action.ThrowIfNull ("action");
 
 			return new DisposableWrapper (action);
+		}
+
+		public static DisposableWrapper<T> CreateDisposable<T>(System.Action action, T value)
+		{
+			return DisposableWrapper<T>.CreateDisposable (action, value);
 		}
 
 		/// <summary>

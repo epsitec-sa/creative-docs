@@ -354,6 +354,7 @@
     <Compile Include="Support\AutoCache.cs" />
     <Compile Include="Support\CacheManager.cs" />
     <Compile Include="Support\DisposableWraper.cs" />
+    <Compile Include="Support\DisposableWrapper`1.cs" />
     <Compile Include="Support\EmptyDisposable.cs" />
     <Compile Include="Support\EntityEngine\EntityStatusAccumulationMode.cs" />
     <Compile Include="Support\EntityEngine\SafeResourceResolver.cs" />
