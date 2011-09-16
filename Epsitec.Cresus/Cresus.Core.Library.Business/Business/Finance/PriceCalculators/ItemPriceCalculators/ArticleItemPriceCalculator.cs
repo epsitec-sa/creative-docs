@@ -395,6 +395,25 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 			var attributes = articleItem.ArticleAttributes;
 
 			System.Diagnostics.Debug.Assert (attributes.HasFlag (ArticleDocumentItemAttributes.Dirty));
+
+			if (attributes.HasFlag (ArticleDocumentItemAttributes.Reset))
+			{
+				articleItem.VatRateA              = 0;
+				articleItem.VatRateB              = 0;
+				articleItem.VatRatio              = 1;
+				articleItem.UnitPriceBeforeTax1   = null;
+				articleItem.UnitPriceBeforeTax2   = null;
+				articleItem.UnitPriceAfterTax1    = null;
+				articleItem.UnitPriceAfterTax2    = null;
+				articleItem.LinePriceBeforeTax1   = null;
+				articleItem.LinePriceBeforeTax2   = null;
+				articleItem.LinePriceAfterTax1    = null;
+				articleItem.LinePriceAfterTax2    = null;
+				articleItem.TotalRevenueAfterTax  = null;
+				articleItem.TotalRevenueAccounted = null;
+
+				attributes = attributes.ClearFlag (ArticleDocumentItemAttributes.Reset);
+			}
 			
 			bool articleNotDiscountable = false;
 

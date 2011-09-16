@@ -69,19 +69,19 @@ namespace Epsitec.Cresus.Core.Helpers
 		public static string GetArticleQuantityAndUnit(ArticleDocumentItemEntity article)
 		{
 			//	Retourne la quantité d'un article et l'unité correspondante.
-			string unit = null;
+			FormattedText unit;
 
 			foreach (var quantity in article.ArticleQuantities)
 			{
 				if (quantity.QuantityColumn.QuantityType == Business.ArticleQuantityType.Ordered)
 				{
-					return Misc.FormatUnit (quantity.Quantity, quantity.Unit.Code);
+					return Misc.FormatUnit (quantity.Quantity, TextFormatter.FormatText (quantity.Unit.Name));
 				}
 
-				unit = quantity.Unit.Code;
+				unit = quantity.Unit.Name;
 			}
 
-			if (unit != null)
+			if (unit.IsNull == false)
 			{
 				return Misc.FormatUnit (0, unit);
 			}

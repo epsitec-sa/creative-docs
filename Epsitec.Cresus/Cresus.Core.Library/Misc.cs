@@ -270,7 +270,7 @@ namespace Epsitec.Cresus.Core
 
 
 
-		public static string FormatUnit(decimal quantity, string unit)
+		public static string FormatUnit(decimal quantity, FormattedText formattedUnit)
 		{
 			//	1, "pce"		-> "1 pce"
 			//	2, "pce"		-> "2 pces"
@@ -281,6 +281,8 @@ namespace Epsitec.Cresus.Core
 			//	Un euro et soixante centimes : "1,60 euro" ? ou "euros" ?
 			//	Non! Le pluriel commence à 2.
 			//	Source: http://orthonet.sdv.fr/pages/informations_p11.html
+
+			string unit = formattedUnit.ToSimpleText ();
 
 			if (string.IsNullOrEmpty (unit))
 			{

@@ -23,11 +23,6 @@ namespace Epsitec.Cresus.Core.Entities
 			return TextFormatter.FormatText (this.Name);
 		}
 
-		public override string[] GetEntityKeywords()
-		{
-			return new string[] { this.Name.ToSimpleText () };
-		}
-
 		public override EntityStatus GetEntityStatus()
 		{
 			using (var a = new EntityStatusAccumulator ())

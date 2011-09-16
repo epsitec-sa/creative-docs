@@ -74,8 +74,26 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
+		partial void OnPriceRefDateChanged(Date oldValue, Date newValue)
+		{
+			this.MarkAllArticleLinesDirty ();
+		}
+
+		partial void OnPriceGroupChanged(PriceGroupEntity oldValue, PriceGroupEntity newValue)
+		{
+			this.MarkAllArticleLinesDirty ();
+		}
+
+		private void MarkAllArticleLinesDirty()
+		{
+			foreach (var articleItem in this.Lines.OfType<ArticleDocumentItemEntity> ())
+			{
+				articleItem.ArticleAttributes |= ArticleDocumentItemAttributes.Dirty | ArticleDocumentItemAttributes.Reset;
+			}
+		}
 
 		#region Concise lines algorithm
+
 		public IList<AbstractDocumentItemEntity> GetConciseLines()
 		{
 			//	Retourne la liste des lignes d'un document commercial expurgée de toutes les
@@ -181,8 +199,8 @@ namespace Epsitec.Cresus.Core.Entities
 				return true;
 			}
 		}
-		#endregion
 
+		#endregion
 
 		#region ICopyableEntity<BusinessDocumentEntity> Members
 
@@ -196,8 +214,6 @@ namespace Epsitec.Cresus.Core.Entities
 			copy.OtherPartyRelation    = this.OtherPartyRelation;
 			copy.OtherPartyBillingMode = this.OtherPartyBillingMode;
 			copy.OtherPartyTaxMode     = this.OtherPartyTaxMode;
-			
-			copy.Lines.AddRange (this.Lines.Select (x => x.CloneEntity (businessContext)));
 
 			//	PaymentTransactions is not copied, since it is really specific to one invoice, and
 			//	should not be shared between different invoices.
@@ -208,6 +224,11 @@ namespace Epsitec.Cresus.Core.Entities
 			copy.PriceRefDate          = this.PriceRefDate;
 			copy.PriceGroup            = this.PriceGroup;
 			copy.DebtorBookAccount     = this.DebtorBookAccount;
+
+			//	The lines must be copied last, or else, the fact that we set the price group or the
+			//	price reference date above would invalidate them all :
+			
+			copy.Lines.AddRange (this.Lines.Select (x => x.CloneEntity (businessContext)));
 		}
 
 		#endregion

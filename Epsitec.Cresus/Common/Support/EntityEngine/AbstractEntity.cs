@@ -211,7 +211,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <returns></returns>
 		public virtual string[] GetEntityKeywords()
 		{
-			return null;
+			return new string[] { this.GetCompactSummary ().ToSimpleText () };
 		}
 
 		public bool IsEntityEmpty

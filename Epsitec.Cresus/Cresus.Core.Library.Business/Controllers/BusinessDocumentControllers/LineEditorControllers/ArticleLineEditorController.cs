@@ -578,23 +578,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			using (businessContext.SuspendUpdates ())
 			{
-				item.ArticleAttributes           = ArticleDocumentItemAttributes.Dirty;
+				item.ArticleAttributes           = ArticleDocumentItemAttributes.Dirty | ArticleDocumentItemAttributes.Reset;
 				item.ArticleDefinition           = article;
 				item.ArticleParameters           = null;
 				item.ArticleAccountingDefinition = null;
-				item.VatRateA                    = 0;
-				item.VatRateB                    = 0;
-				item.VatRatio                    = 1;
-				item.UnitPriceBeforeTax1         = null;
-				item.UnitPriceBeforeTax2         = null;
-				item.UnitPriceAfterTax1          = null;
-				item.UnitPriceAfterTax2          = null;
-				item.LinePriceBeforeTax1         = null;
-				item.LinePriceBeforeTax2         = null;
-				item.LinePriceAfterTax1          = null;
-				item.LinePriceAfterTax2          = null;
-				item.TotalRevenueAfterTax        = null;
-				item.TotalRevenueAccounted       = null;
 				item.ArticleNameCache            = null;
 				item.ArticleDescriptionCache     = null;
 				item.ReplacementName             = null;

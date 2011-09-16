@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Business
 		NeverApplyDiscount				= 0x00000001,
 
 		ArticleNotDiscountable			= 0x00000002,
-		ArticlePriceIncludesTaxes		= 0x00000004,
+//-		ArticlePriceIncludesTaxes		= 0x00000004,
 
 		PartialQuantities				= 0x00000008,
 
@@ -25,5 +25,6 @@ namespace Epsitec.Cresus.Core.Business
 		FixedTotalRevenue				= 0x00001000,
 
 		Dirty							= 0x01000000,
+		Reset							= 0x02000000,
 	}
 }

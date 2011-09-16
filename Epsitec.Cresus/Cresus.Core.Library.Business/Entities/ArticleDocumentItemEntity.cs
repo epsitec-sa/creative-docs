@@ -26,25 +26,6 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
-		public bool ArticlePriceIncludesTaxes
-		{
-			get
-			{
-				return this.ArticleAttributes.HasFlag (ArticleDocumentItemAttributes.ArticlePriceIncludesTaxes);
-			}
-			set
-			{
-				if (value)
-				{
-					this.ArticleAttributes = this.ArticleAttributes | ArticleDocumentItemAttributes.ArticlePriceIncludesTaxes;
-				}
-				else
-				{
-					this.ArticleAttributes = this.ArticleAttributes & ~ArticleDocumentItemAttributes.ArticlePriceIncludesTaxes;
-				}
-			}
-		}
-
 		public bool NeverApplyDiscount
 		{
 			get
@@ -125,15 +106,23 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 
 			var quantity = Helpers.ArticleDocumentItemHelper.GetArticleQuantityAndUnit (this);
+			var name     = this.ArticleNameCache.Lines.FirstOrDefault ().ToSimpleText ();
 			var desc     = this.ArticleDescriptionCache.Lines.FirstOrDefault ().ToSimpleText ();
-			var price    = Misc.PriceToString (this.ArticlePriceIncludesTaxes ? this.LinePriceAfterTax2 : this.LinePriceBeforeTax2);
+			var price    = Misc.PriceToString (this.LinePriceAfterTax2 ?? this.LinePriceBeforeTax2);
 
-			if (string.IsNullOrEmpty (desc))
+			if (string.IsNullOrEmpty (name))
 			{
-				desc = "?";
+				if (string.IsNullOrEmpty (desc))
+				{
+					name = "—";
+				}
+				else
+				{
+					name = desc;
+				}
 			}
 
-			return string.Concat (quantity, " ", desc, " ", price);
+			return string.Concat (quantity, " × ", name, ", ", price);
 		}
 
 		public override EntityStatus GetEntityStatus ()
