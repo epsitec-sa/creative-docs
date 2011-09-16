@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.Core.Entities
 				return null;
 			}
 
-			var quantity = Helpers.ArticleDocumentItemHelper.GetArticleQuantityAndUnit (this);
+			var quantity = Helpers.ArticleDocumentItemHelper.GetArticleQuantityAndUnit (this).ToSimpleText ();
 			var name     = this.ArticleNameCache.Lines.FirstOrDefault ().ToSimpleText ();
 			var desc     = this.ArticleDescriptionCache.Lines.FirstOrDefault ().ToSimpleText ();
 			var price    = Misc.PriceToString (this.LinePriceAfterTax2 ?? this.LinePriceBeforeTax2);

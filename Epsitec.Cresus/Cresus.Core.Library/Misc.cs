@@ -7,6 +7,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.Library;
 //using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
@@ -49,28 +50,6 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		/// <summary>
-		/// Replaces the minus dash <c>"-"</c> with a real minus sign.
-		/// </summary>
-		/// <param name="value">The text representing a numeric value.</param>
-		/// <returns>The text with the proper minus sign, if any.</returns>
-		public static string ReplaceMinusSign(string value)
-		{
-			if (string.IsNullOrEmpty (value))
-			{
-				return value;
-			}
-
-			if (value[0] == '-')
-			{
-				return string.Concat (Unicode.ToString (Unicode.Code.MinusSign), value.Substring (1));
-			}
-			else
-			{
-				return value;
-			}
-		}
-
 		public static string PercentToString(decimal? value)
 		{
 			if (!value.HasValue)
@@ -78,7 +57,7 @@ namespace Epsitec.Cresus.Core
 				return null;
 			}
 
-			return Misc.ReplaceMinusSign (string.Concat (Misc.decimalRange01.ConvertToString (value.Value*100), "%"));
+			return TextFormatterConverter.ReplaceMinusSign (string.Concat (Misc.decimalRange01.ConvertToString (value.Value*100), "%"));
 		}
 
 		public static string PriceToString(decimal? value)
@@ -88,7 +67,7 @@ namespace Epsitec.Cresus.Core
 				return null;
 			}
 
-			return Misc.ReplaceMinusSign (Misc.decimalRange001.ConvertToString (value.Value));
+			return TextFormatterConverter.ReplaceMinusSign (Misc.decimalRange001.ConvertToString (value.Value));
 		}
 
 		public static decimal? StringToDecimal(string text)
@@ -265,46 +244,6 @@ namespace Epsitec.Cresus.Core
 			else
 			{
 				return dateTime.Value.ToString ("d MMMM yyyy");  // par exemple 6 mars 2011
-			}
-		}
-
-
-
-		public static string FormatUnit(decimal quantity, FormattedText formattedUnit)
-		{
-			//	1, "pce"		-> "1 pce"
-			//	2, "pce"		-> "2 pces"
-			//	3, "km"			-> "3 km"
-			//	1.5, "Litre"	-> "1.5 litre"
-
-			//	Régle intéressante:
-			//	Un euro et soixante centimes : "1,60 euro" ? ou "euros" ?
-			//	Non! Le pluriel commence à 2.
-			//	Source: http://orthonet.sdv.fr/pages/informations_p11.html
-
-			string unit = formattedUnit.ToSimpleText ();
-
-			if (string.IsNullOrEmpty (unit))
-			{
-				return quantity.ToString ();
-			}
-			else
-			{
-				//	Si l'unité a 1 ou 2 caractères, on n'y touche pas ("m", "cm", "m2", "kg", "t", etc.).
-				//	TODO: Faire mieux et gérer les pluriels en "x" !
-				if (unit.Length > 2)
-				{
-					if (System.Math.Abs (quantity) < 2)
-					{
-						unit = unit.ToLower ();
-					}
-					else
-					{
-						unit = string.Concat (unit.ToLower (), "s");
-					}
-				}
-
-				return string.Concat (quantity.ToString (), " ", unit);
 			}
 		}
 

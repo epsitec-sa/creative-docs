@@ -293,18 +293,20 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				{
 					this.articleQuantities.Add (quantity);
 
-					this.SetContent (row, DocumentItemAccessorColumn.AdditionalType, quantity.QuantityColumn.Name);
-					this.SetContent (row, DocumentItemAccessorColumn.AdditionalQuantity, quantity.Quantity.ToString ());
-					this.SetContent (row, DocumentItemAccessorColumn.AdditionalUnit, quantity.Unit.Name);
+					var unit = ArticleQuantityEntity.GetUnitNameForQuantity (quantity.Quantity, quantity.Unit.Name);
+
+					this.SetContent (row, DocumentItemAccessorColumn.AdditionalType, TextFormatter.FormatText (quantity.QuantityColumn.Name));
+					this.SetContent (row, DocumentItemAccessorColumn.AdditionalQuantity, TextFormatter.FormatText (quantity.Quantity));
+					this.SetContent (row, DocumentItemAccessorColumn.AdditionalUnit, unit);
 
 					if (quantity.BeginDate.HasValue)
 					{
-						this.SetContent (row, DocumentItemAccessorColumn.AdditionalBeginDate, quantity.BeginDate.Value.ToString ());
+						this.SetContent (row, DocumentItemAccessorColumn.AdditionalBeginDate, TextFormatter.FormatText (quantity.BeginDate.Value));
 					}
 
 					if (quantity.EndDate.HasValue)
 					{
-						this.SetContent (row, DocumentItemAccessorColumn.AdditionalEndDate, quantity.EndDate.Value.ToString ());
+						this.SetContent (row, DocumentItemAccessorColumn.AdditionalEndDate, TextFormatter.FormatText (quantity.EndDate.Value));
 					}
 
 					this.SetError (row, DocumentItemAccessorColumn.AdditionalQuantity, this.GetQuantityError (line, quantityType));
@@ -330,8 +332,10 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				var mainQuantity = line.GetQuantity (mainQuantityType);
 				var mainUnitName = line.ArticleDefinition.GetBillingUnitName ();
 
-				this.SetContent (row, DocumentItemAccessorColumn.MainQuantity, mainQuantity.ToString ());
-				this.SetContent (row, DocumentItemAccessorColumn.MainUnit, mainUnitName);
+				var unit = ArticleQuantityEntity.GetUnitNameForQuantity (mainQuantity, mainUnitName);
+
+				this.SetContent (row, DocumentItemAccessorColumn.MainQuantity, TextFormatter.FormatText (mainQuantity));
+				this.SetContent (row, DocumentItemAccessorColumn.MainUnit, unit);
 				this.SetError (row, DocumentItemAccessorColumn.MainQuantity, this.GetQuantityError (line, mainQuantityType));
 
 				row++;
@@ -353,18 +357,20 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 						this.articleQuantities.Add (quantity);
 
-						this.SetContent (row, DocumentItemAccessorColumn.AdditionalType, quantity.QuantityColumn.Name);
-						this.SetContent (row, DocumentItemAccessorColumn.AdditionalQuantity, quantity.Quantity.ToString ());
-						this.SetContent (row, DocumentItemAccessorColumn.AdditionalUnit, quantity.Unit.Name);
+						var unit = ArticleQuantityEntity.GetUnitNameForQuantity (quantity.Quantity, quantity.Unit.Name);
+
+						this.SetContent (row, DocumentItemAccessorColumn.AdditionalType, TextFormatter.FormatText (quantity.QuantityColumn.Name));
+						this.SetContent (row, DocumentItemAccessorColumn.AdditionalQuantity, TextFormatter.FormatText (quantity.Quantity));
+						this.SetContent (row, DocumentItemAccessorColumn.AdditionalUnit, unit);
 
 						if (quantity.BeginDate.HasValue)
 						{
-							this.SetContent (row, DocumentItemAccessorColumn.AdditionalBeginDate, quantity.BeginDate.Value.ToString ());
+							this.SetContent (row, DocumentItemAccessorColumn.AdditionalBeginDate, TextFormatter.FormatText (quantity.BeginDate.Value));
 						}
 
 						if (quantity.EndDate.HasValue)
 						{
-							this.SetContent (row, DocumentItemAccessorColumn.AdditionalEndDate, quantity.EndDate.Value.ToString ());
+							this.SetContent (row, DocumentItemAccessorColumn.AdditionalEndDate, TextFormatter.FormatText (quantity.EndDate.Value));
 						}
 
 						this.SetError (row, DocumentItemAccessorColumn.AdditionalQuantity, this.GetQuantityError (line, quantityType));

@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Text;
 using Epsitec.Common.Types;
 
 using System.Collections.Generic;
@@ -53,12 +54,54 @@ namespace Epsitec.Cresus.Core.Library
 
 			if (prettyPrinter == null)
 			{
-				return FormattedText.FromSimpleText (string.Format (culture, "{0}", value));
+				var simple = string.Format (culture, "{0}", value);
+
+				if (type.IsValueType)
+				{
+					switch (System.Type.GetTypeCode (type))
+					{
+						case System.TypeCode.Decimal:
+						case System.TypeCode.Double:
+						case System.TypeCode.Int16:
+						case System.TypeCode.Int32:
+						case System.TypeCode.Int64:
+						case System.TypeCode.Single:
+						case System.TypeCode.SByte:
+							simple = TextFormatterConverter.ReplaceMinusSign (simple);
+							break;
+					}
+				}
+				
+				return FormattedText.FromSimpleText (simple);
 			}
 			else
 			{
 				return prettyPrinter.ToFormattedText (value, culture, detailLevel);
 			}
 		}
+		
+		/// <summary>
+		/// Replaces the minus dash <c>"-"</c> with a real minus sign.
+		/// </summary>
+		/// <param name="value">The text representing a numeric value.</param>
+		/// <returns>The text with the proper minus sign, if any.</returns>
+		public static string ReplaceMinusSign(string value)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return value;
+			}
+
+			if (value[0] == '-')
+			{
+				return string.Concat (TextFormatterConverter.MinusSign, value.Substring (1));
+			}
+			else
+			{
+				return value;
+			}
+		}
+
+		public static readonly string			MinusSign = Unicode.ToString (Unicode.Code.MinusSign);
 	}
 }

@@ -42,15 +42,50 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 
-			string unit = Misc.FormatUnit (this.Quantity, this.Unit.Code);
-
-			return FormattedText.Concat (type, " ", unit);
+			return TextFormatter.FormatText (type, ArticleQuantityEntity.FormatQuantity (this.Quantity, this.Unit.Name));
 		}
 
 		public override EntityStatus GetEntityStatus()
 		{
 			return EntityStatus.Valid;
 		}
+
+
+		public static FormattedText FormatQuantity(decimal quantity, FormattedText unitName)
+		{
+			//	We have to work in one language, so first map the name to the current
+			//	language :
+
+			return TextFormatter.FormatText (quantity, ArticleQuantityEntity.GetUnitNameForQuantity (quantity, unitName));
+		}
+
+		public static FormattedText GetUnitNameForQuantity(decimal quantity, FormattedText unitName)
+		{
+			//	We have to work in one language, so first map the name to the current
+			//	language :
+
+			var unit = TextFormatter.ConvertToText (unitName);
+			int pos  = unit.IndexOfAny (ArticleQuantityEntity.Separators);
+
+			if (pos < 0)
+			{
+				return unit;
+			}
+
+			//	Plurals of nouns start when there are a least 2 items.
+			//	Daniel's ref. : http://orthonet.sdv.fr/pages/informations_p11.html
+
+			if (System.Math.Abs (quantity) < 2)
+			{
+				return unit.Substring (0, pos).Trim ();
+			}
+			else
+			{
+				return unit.Substring (pos+1).Trim ();
+			}
+		}
+
+
 
 		#region ICloneable<ArticleQuantityEntity> Members
 
@@ -66,5 +101,8 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 		#endregion
+
+
+		public static readonly char[]			Separators = new char[] { '/', '|', ':' };
 	}
 }

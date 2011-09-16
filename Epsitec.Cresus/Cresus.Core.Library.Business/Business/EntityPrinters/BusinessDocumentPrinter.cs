@@ -640,7 +640,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			}
 			else
 			{
-				return Misc.FormatUnit (decimal.Parse (q), u);
+				return TextFormatter.FormatText (q, u);
 			}
 		}
 

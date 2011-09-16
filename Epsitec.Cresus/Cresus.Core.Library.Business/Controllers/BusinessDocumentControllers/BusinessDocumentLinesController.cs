@@ -280,16 +280,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					return new CellContent (text, error);
 
 				case ColumnType.QuantityAndUnit:
-					var q = info.GetColumnContent (DocumentItemAccessorColumn.AdditionalQuantity).ToString ();
-					var u = info.GetColumnContent (DocumentItemAccessorColumn.AdditionalUnit).ToString ();
+					var q = info.GetColumnContent (DocumentItemAccessorColumn.AdditionalQuantity);
+					var u = info.GetColumnContent (DocumentItemAccessorColumn.AdditionalUnit);
 
-					if (string.IsNullOrEmpty (q))
+					if (q.IsNullOrEmpty)
 					{
 						return CellContent.Empty;
 					}
 					else
 					{
-						text = Misc.FormatUnit (decimal.Parse (q), u);
+						text = TextFormatter.FormatText (q, u);
 						error = info.GetColumnError (DocumentItemAccessorColumn.AdditionalQuantity);
 						return new CellContent (text, error);
 					}

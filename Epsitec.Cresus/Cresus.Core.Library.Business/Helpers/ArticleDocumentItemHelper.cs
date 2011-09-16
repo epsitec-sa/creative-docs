@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Core.Helpers
 			return null;
 		}
 
-		public static string GetArticleQuantityAndUnit(ArticleDocumentItemEntity article)
+		public static FormattedText GetArticleQuantityAndUnit(ArticleDocumentItemEntity article)
 		{
 			//	Retourne la quantité d'un article et l'unité correspondante.
 			FormattedText unit;
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Core.Helpers
 			{
 				if (quantity.QuantityColumn.QuantityType == Business.ArticleQuantityType.Ordered)
 				{
-					return Misc.FormatUnit (quantity.Quantity, TextFormatter.FormatText (quantity.Unit.Name));
+					return ArticleQuantityEntity.FormatQuantity (quantity.Quantity, quantity.Unit.Name);
 				}
 
 				unit = quantity.Unit.Name;
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Core.Helpers
 
 			if (unit.IsNull == false)
 			{
-				return Misc.FormatUnit (0, unit);
+				return ArticleQuantityEntity.FormatQuantity (0, unit);
 			}
 
 			return null;
