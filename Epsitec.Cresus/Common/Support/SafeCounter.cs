@@ -80,7 +80,7 @@ namespace Epsitec.Common.Support
 			{
 				using (var wrapper = this.Enter ())
 				{
-					if (wrapper.Value == 0)
+					if (wrapper.Value == 1)
 					{
 						action ();
 						return true;
