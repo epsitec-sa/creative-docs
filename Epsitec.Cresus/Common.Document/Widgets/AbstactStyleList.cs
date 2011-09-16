@@ -1,3 +1,6 @@
+//	Copyright © 2005-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
@@ -21,7 +24,7 @@ namespace Epsitec.Common.Document.Widgets
 			this.StyleV |= CellArrayStyles.SelectLine;
 
 			this.DefHeight = 32;
-			this.headerHeight = 16;
+			this.HeaderHeight = 16;
 			this.IsFlyOverHilite = true;
 		}
 
@@ -443,11 +446,11 @@ namespace Epsitec.Common.Document.Widgets
 		protected Document						document;
 		protected int							selectedRank = -1;
 		protected int							excludeRank = -1;
-		protected double						fixWidth = 0;
-		protected bool							isDeep = false;
+		protected double						fixWidth;
+		protected bool							isDeep;
 		protected bool							isHeader = true;
-		protected bool							isNoneLine = false;
+		protected bool							isNoneLine;
 		protected bool							isHiliteColumn = true;
-		protected bool							isOrderColumn = false;
+		protected bool							isOrderColumn;
 	}
 }

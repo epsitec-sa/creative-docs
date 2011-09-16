@@ -1,5 +1,5 @@
 //	Copyright © 2004-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+//	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
 
@@ -10,12 +10,13 @@ namespace Epsitec.Common.Widgets
 	using PropertyChangedEventHandler = EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
 
 	/// <summary>
-	/// La classe AbstractCellArray est la classe de base pour les tableaux
-	/// et les listes.
+	/// The <c>AbstractCellArray</c> class implements the basic functionality for cell
+	/// tables, lists and arrays. See for instance <see cref="CellTable"/>, <see cref="CellBar"/>
+	/// or <see cref="CellList"/>.
 	/// </summary>
 	public abstract class AbstractCellArray : AbstractGroup
 	{
-		public AbstractCellArray()
+		protected AbstractCellArray()
 		{
 			this.headerButtonH = new List<HeaderButton> ();
 			this.headerButtonV = new List<HeaderButton> ();
@@ -100,16 +101,16 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public double AlphaSeparator
+		public double SeparatorAlpha
 		{
 			//	Composante A de la couleur des traits de séparations horizontaux et verticaux.
 			get
 			{
-				return this.alphaSeparator;
+				return this.separatorAlpha;
 			}
 			set
 			{
-				this.alphaSeparator = value;
+				this.separatorAlpha = value;
 			}
 		}
 
@@ -2201,7 +2202,7 @@ namespace Epsitec.Common.Widgets
 
 			graphics.LineWidth = 1;
 			Drawing.Color color = adorner.ColorTextFieldBorder ((state&WidgetPaintState.Enabled) != 0);
-			Drawing.Color separatorColor = Drawing.Color.FromAlphaRgb (this.alphaSeparator, color.R, color.G, color.B);
+			Drawing.Color separatorColor = Drawing.Color.FromAlphaRgb (this.separatorAlpha, color.R, color.G, color.B);
 
 			//	Dessine le rectangle englobant.
 			graphics.AddRectangle (rect);
@@ -2401,7 +2402,7 @@ namespace Epsitec.Common.Widgets
 		protected int							flyOverColumn = -1;
 		protected Drawing.Color					hiliteColor;
 		protected bool							isFlyOverHilite;
-		protected double						alphaSeparator = 1.0;
+		protected double						separatorAlpha = 1.0;
 		protected int							columnsToSkipFromLeftForSeparator;
 		protected bool							drawHiliteFocus = true;
 
