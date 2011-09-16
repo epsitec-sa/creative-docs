@@ -1092,6 +1092,7 @@
     <Compile Include="Widgets\ButtonShowCondition.cs" />
     <Compile Include="Widgets\ButtonStyle.cs" />
     <Compile Include="Widgets\Cell.cs" />
+    <Compile Include="Widgets\CellArrayStyles.cs" />
     <Compile Include="Widgets\CellBar.cs" />
     <Compile Include="Widgets\CellList.cs" />
     <Compile Include="Widgets\CellTable.cs" />
