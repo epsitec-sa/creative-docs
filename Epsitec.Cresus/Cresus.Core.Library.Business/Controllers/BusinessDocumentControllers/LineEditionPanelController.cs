@@ -62,6 +62,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
+		public void UpdateUI()
+		{
+			if (this.lineEditorController != null)
+			{
+				this.lineEditorController.UpdateUI ();
+			}
+		}
+
 		public void UpdateUI(EditMode editMode, Line info)
 		{
 			//	Met à jour l'éditeur en fonction de la sélection en cours.

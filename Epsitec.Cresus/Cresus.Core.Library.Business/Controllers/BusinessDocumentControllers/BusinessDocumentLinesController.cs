@@ -399,6 +399,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.UpdateLines ();
 
 			this.lineTableController.UpdateUI (this);
+			this.lineEditionPanelController.UpdateUI ();
 			this.Selection = selection;
 
 			this.UpdateCommands ();

@@ -29,13 +29,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 	{
 		public AbstractLineEditorController(AccessData accessData)
 		{
-			this.accessData  = accessData;
-			this.billingMode = accessData.BillingMode;
-			this.tabIndex    = 1;
+			this.accessData    = accessData;
+			this.billingMode   = accessData.BillingMode;
+			this.tabIndex      = 1;
+			this.updateActions = new List<System.Action> ();
 		}
 
 		
-		public virtual FormattedText TileTitle
+		public virtual FormattedText			TileTitle
 		{
 			get
 			{
@@ -62,7 +63,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
-		protected abstract void CreateUI(UIBuilder builder);
+		public void UpdateUI()
+		{
+			this.updateActions.ForEach (action => action ());
+		}
 
 		public void SetInitialFocus()
 		{
@@ -78,6 +82,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
+		protected abstract void CreateUI(UIBuilder builder);
 
 		protected FrameBox PlaceLabelAndField(Widget parent, int labelWidth, int fieldWidth, FormattedText labelText, Widget field)
 		{
@@ -132,6 +137,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		protected readonly AccessData			accessData;
 		protected readonly BillingMode			billingMode;
+		protected readonly List<System.Action>	updateActions;
 
 		protected AbstractEntity				entity;
 		protected TileContainer					tileContainer;

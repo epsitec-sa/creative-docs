@@ -35,6 +35,7 @@ namespace Epsitec.Cresus.Core.Business
 			this.entityRecords = new List<EntityRecord> ();
 			this.masterEntities = new List<AbstractEntity> ();
 			this.delayedUpdates = new Stack<DelayedUpdate> ();
+			this.dataChangedCounter = new SafeCounter ();
 
 			this.data = this.pool.Host;
 			this.dataContext = this.pool.CreateDataContext (this);
@@ -934,37 +935,33 @@ namespace Epsitec.Cresus.Core.Business
 		
 		private void HandleDataContextEntityChanged(object sender, EntityChangedEventArgs e)
 		{
-			try
-			{
-				if (System.Threading.Interlocked.Increment (ref this.dataChangedCounter) == 1)
-				{
-					if (this.dataContextDirty == false)
+			this.dataChangedCounter.IfZero
+				(
+					delegate
 					{
-						this.dataContextDirty = true;
-						this.HandleFirstEntityChange ();
-					}
-
-					if (Logic.Current == null)
-					{
-						if (this.delayedUpdates.Count > 0)
+						if (this.dataContextDirty == false)
 						{
-							this.delayedUpdates.Peek ().Enqueue (this.entityRecords);
+							this.dataContextDirty = true;
+							this.HandleFirstEntityChange ();
 						}
-						else
+
+						if (Logic.Current == null)
 						{
-							this.asyncUpdatePending = true;
+							if (this.delayedUpdates.Count > 0)
+							{
+								this.delayedUpdates.Peek ().Enqueue (this.entityRecords);
+							}
+							else
+							{
+								this.asyncUpdatePending = true;
+							}
 						}
+
+						this.OnContainsChangesChanged ();
+
+						this.AsyncUpdateMainWindowController ();
 					}
-				}
-
-				this.OnContainsChangesChanged ();
-
-				this.AsyncUpdateMainWindowController ();
-			}
-			finally
-			{
-				System.Threading.Interlocked.Decrement (ref this.dataChangedCounter);
-			}
+				);
 		}
 
 		private bool asyncUpdatePending;
@@ -978,18 +975,14 @@ namespace Epsitec.Cresus.Core.Business
 		{
 			if (this.asyncUpdatePending)
 			{
-				try
-				{
-					if (System.Threading.Interlocked.Increment (ref this.dataChangedCounter) == 1)
-					{
-						this.asyncUpdatePending = false;
-						this.ApplyRulesToRegisteredEntities (RuleType.Update);
-					}
-				}
-				finally
-				{
-					System.Threading.Interlocked.Decrement (ref this.dataChangedCounter);
-				}
+				this.dataChangedCounter.IfZero
+					(
+						delegate
+						{
+							this.asyncUpdatePending = false;
+							this.ApplyRulesToRegisteredEntities (RuleType.Update);
+						}
+					);
 			}
 
 			if (this.isDisposed)
@@ -1058,7 +1051,7 @@ namespace Epsitec.Cresus.Core.Business
 		private readonly Locker					locker;
 		private readonly CoreData				data;
 		private readonly Stack<DelayedUpdate>	delayedUpdates;
-		private int								dataChangedCounter;
+		private readonly SafeCounter			dataChangedCounter;
 		private bool							dataContextDirty;
 		private bool							dataContextDiscarded;
 		private bool							isDisposed;

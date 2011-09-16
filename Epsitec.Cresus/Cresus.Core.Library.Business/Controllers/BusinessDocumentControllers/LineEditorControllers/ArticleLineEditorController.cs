@@ -343,12 +343,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			var line = new FrameBox
 			{
-				Parent = parent,
-				Dock = DockStyle.Top,
+				Parent          = parent,
+				Dock            = DockStyle.Top,
 				PreferredHeight = 20,
-				Margins = new Margins (0, 0, 0, 5),
-				TabIndex = this.GetNextTabIndex (),
-				Enable = this.accessData.DocumentLogic.IsPriceEditionEnabled,
+				Margins         = new Margins (0, 0, 0, 5),
+				TabIndex        = this.GetNextTabIndex (),
+				Enable          = this.accessData.DocumentLogic.IsPriceEditionEnabled,
 			};
 
 			TextFieldEx field1, field2;
@@ -377,12 +377,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			var line = new FrameBox
 			{
-				Parent = parent,
-				Dock = DockStyle.Top,
+				Parent          = parent,
+				Dock            = DockStyle.Top,
 				PreferredHeight = 20,
-				Margins = new Margins (0, 0, 0, 5),
-				TabIndex = this.GetNextTabIndex (),
-				Enable = this.accessData.DocumentLogic.IsPriceEditionEnabled,
+				Margins         = new Margins (0, 0, 0, 5),
+				TabIndex        = this.GetNextTabIndex (),
+				Enable          = this.accessData.DocumentLogic.IsPriceEditionEnabled,
 			};
 
 			TextFieldEx field1, field2;
@@ -440,7 +440,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		private void BindPriceField(TextFieldEx field, ArticleDocumentItemAttributes attribute)
 		{
-			field.EditionAccepted +=
+			field.EditionAccepted += 
 				delegate
 				{
 					if (field.Text.IsNullOrWhiteSpace ())
@@ -453,10 +453,22 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					}
 				};
 
-			if (Item.ArticleAttributes.HasFlag (attribute))
-			{
-				field.TextDisplayMode = TextFieldDisplayMode.OverriddenValue;
-			}
+			System.Action updateAction = 
+				delegate
+				{
+					if (this.Item.ArticleAttributes.HasFlag (attribute))
+					{
+						field.TextDisplayMode = TextFieldDisplayMode.OverriddenValue;
+					}
+					else
+					{
+						field.TextDisplayMode = TextFieldDisplayMode.Default;
+					}
+				};
+
+			updateAction ();
+
+			this.updateActions.Add (updateAction);
 		}
 
 
@@ -548,6 +560,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			fieldDiscountText.EditionAccepted += sender => updateAction ();
 
 			updateAction ();
+
+			this.updateActions.Add (updateAction);
 		}
 
 
