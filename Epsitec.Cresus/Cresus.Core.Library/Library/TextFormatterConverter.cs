@@ -54,25 +54,7 @@ namespace Epsitec.Cresus.Core.Library
 
 			if (prettyPrinter == null)
 			{
-				var simple = string.Format (culture, "{0}", value);
-
-				if (type.IsValueType)
-				{
-					switch (System.Type.GetTypeCode (type))
-					{
-						case System.TypeCode.Decimal:
-						case System.TypeCode.Double:
-						case System.TypeCode.Int16:
-						case System.TypeCode.Int32:
-						case System.TypeCode.Int64:
-						case System.TypeCode.Single:
-						case System.TypeCode.SByte:
-							simple = TextFormatterConverter.ReplaceMinusSign (simple);
-							break;
-					}
-				}
-				
-				return FormattedText.FromSimpleText (simple);
+				return TextFormatterConverter.PrettyPrintUsingStringFormat (value, type, culture);
 			}
 			else
 			{
@@ -102,6 +84,32 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
+		private static FormattedText PrettyPrintUsingStringFormat(object value, System.Type type, System.Globalization.CultureInfo culture)
+		{
+			var simple = string.Format (culture, "{0}", value);
+
+			if (type.IsValueType)
+			{
+				//	Post-process signed numeric types; we only check if we know that the type is
+				//	a value type, so we can avoid a call to GetTypeCode :
+
+				switch (System.Type.GetTypeCode (type))
+				{
+					case System.TypeCode.Decimal:
+					case System.TypeCode.Double:
+					case System.TypeCode.Int16:
+					case System.TypeCode.Int32:
+					case System.TypeCode.Int64:
+					case System.TypeCode.Single:
+					case System.TypeCode.SByte:
+						simple = TextFormatterConverter.ReplaceMinusSign (simple);
+						break;
+				}
+			}
+
+			return FormattedText.FromSimpleText (simple);
+		}
+		
 		public static readonly string			MinusSign = Unicode.ToString (Unicode.Code.MinusSign);
 	}
 }
