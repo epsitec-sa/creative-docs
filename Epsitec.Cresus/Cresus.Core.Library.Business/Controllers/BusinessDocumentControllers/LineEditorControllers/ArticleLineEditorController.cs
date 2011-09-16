@@ -364,7 +364,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				field2 = builder.CreateTextField (Marshaler.Create (() => this.Item.UnitPriceAfterTax2, x => this.Item.UnitPriceAfterTax2 = x));
 			}
 			
-			var discount = builder.CreateTextField (Marshaler.Create (() => this.DiscountUnitValue, x => this.DiscountUnitValue = x));
+			var discount     = builder.CreateTextField (Marshaler.Create (() => this.DiscountUnitValue, x => this.DiscountUnitValue = x));
 			var discountText = builder.CreateTextField (Marshaler.Create (() => this.DiscountUnitText, x => this.DiscountUnitText = x));
 			
 			this.BindPriceField (field1, ArticleDocumentItemAttributes.FixedUnitPrice1);

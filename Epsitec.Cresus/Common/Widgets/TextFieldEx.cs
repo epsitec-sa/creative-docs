@@ -188,6 +188,10 @@ namespace Epsitec.Common.Widgets
 			{
 				this.CreateExtraButton ();
 			}
+			else
+			{
+				this.RemoveExtraButton ();
+			}
 			
 			this.SetButtonVisibility (show);
 		}
