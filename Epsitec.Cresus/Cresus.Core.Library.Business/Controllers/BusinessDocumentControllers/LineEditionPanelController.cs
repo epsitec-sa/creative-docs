@@ -1,31 +1,20 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
-using Epsitec.Common.Types.Converters;
-using Epsitec.Common.Support;
-using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Controllers.DataAccessors;
-using Epsitec.Cresus.Core.Widgets;
-using Epsitec.Cresus.Core.Widgets.Tiles;
-using Epsitec.Cresus.Core.Helpers;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Library.Business.ContentAccessors;
-
-using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
-	public class LineEditionPanelController
+	public sealed class LineEditionPanelController
 	{
 		/// <summary>
 		/// Contrôleur gérant un panneau permattant de créer/modifier une ligne d'article
@@ -110,7 +99,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			if (info.DocumentItem is ArticleDocumentItemEntity)
 			{
 				if ((info.SublineIndex == 0) ||
-							(info.IsQuantity == false))
+					(info.IsQuantity == false))
 				{
 					this.lineEditorController = new ArticleLineEditorController (this.accessData, this.editMode);
 					this.lineEditorController.CreateUI (this.lineEditorTile, info.DocumentItem);
@@ -150,8 +139,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private void UpdateLineEditorTitle()
 		{
 			//	Met à jour le titre de l'éditeur.
-			FormattedText text = "";
-			Color color = (this.accessData.DocumentMetadata.DocumentState == DocumentState.Inactive) ? Color.FromBrightness (0.8) : Color.FromName ("White");
+			
+			var text  = FormattedText.Empty;
+			var color = this.GetLineEditorTitleColor ();
 
 			if (this.lineEditorController != null)
 			{
@@ -159,16 +149,23 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				if (this.error != DocumentItemAccessorError.None)
 				{
-					text = FormattedText.Concat (text, " — ", DocumentItemAccessor.GetErrorDescription (this.error));
+					text  = FormattedText.Concat (text, " — ", DocumentItemAccessor.GetErrorDescription (this.error));
 					color = Color.FromName ("Gold");
 				}
+
+				text.ApplyFontSizePercent (120);
 			}
 
-			this.titleText.FormattedText = text.ApplyFontSizePercent (120);
-			this.titleFrame.BackColor = color;
+			this.titleText.FormattedText = text;
+			this.titleFrame.BackColor    = color;
 		}
 
 
+		private Color GetLineEditorTitleColor()
+		{
+			return (this.accessData.DocumentMetadata.DocumentState == DocumentState.Inactive) ? Color.FromBrightness (0.8) : Color.FromBrightness (1.0);
+		}
+		
 		private readonly AccessData				accessData;
 
 		private EditMode						editMode;

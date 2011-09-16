@@ -611,7 +611,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			return ContentAlignment.MiddleLeft;
 		}
 
-
 		private Color GetNiceBackgroundColor(int groupIndex)
 		{
 			//	Attribue une couleur spécifique unique à chaque groupe, dans la mesure
@@ -633,6 +632,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			return LineTableController.niceBackgroundColors[index % LineTableController.niceBackgroundColors.Length];
 		}
+
+		#region Background Colors
 
 		private static readonly Color[] niceBackgroundColors =
 		{
@@ -682,6 +683,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 #endif
 		};
 
+		#endregion
 
 		private void OnSelectionChanged()
 		{

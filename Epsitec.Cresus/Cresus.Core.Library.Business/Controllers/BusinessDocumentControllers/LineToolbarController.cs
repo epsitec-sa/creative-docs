@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 	/// <summary>
 	/// Barre d'icône permettant de gérer une liste de lignes d'articles (AbstractDocumentItemEntity).
 	/// </summary>
-	public class LineToolbarController
+	public sealed class LineToolbarController
 	{
 		public LineToolbarController(CoreData coreData, DocumentMetadataEntity documentMetadataEntity, BusinessDocumentEntity businessDocumentEntity)
 		{
@@ -30,11 +30,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public Widget CreateUI(Widget parent)
 		{
-			double buttonSize = Library.UI.Constants.ButtonSmallWidth;
-			bool developer = this.userManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.Developer);
+			var buttonSize  = Library.UI.Constants.ButtonSmallWidth;
+			var isDeveloper = this.userManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.Developer);
 
 			var toolbar = UIBuilder.CreateMiniToolbar (parent, buttonSize);
-			toolbar.Dock = DockStyle.Top;
+			
+			toolbar.Dock    = DockStyle.Top;
 			toolbar.Margins = new Margins (0, 0, 0, -1);
 
 			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Deselect,        large: false, isActivable: false));
@@ -45,7 +46,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.ViewCompact,     large: false, isActivable: true));
 			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.ViewDefault,     large: false, isActivable: true));
 			toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.ViewFull,        large: false, isActivable: true));
-			if (developer)
+			
+			if (isDeveloper)
 			{
 				toolbar.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.ViewDebug,   large: false, isActivable: true));
 			}
@@ -98,14 +100,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			return new FrameBox
 			{
 				PreferredWidth = width,
-				Dock = dockStyle,
+				Dock           = dockStyle,
 			};
 		}
 
 
-		private readonly CoreData					coreData;
-		private readonly DocumentMetadataEntity		documentMetadataEntity;
-		private readonly BusinessDocumentEntity		businessDocumentEntity;
-		private readonly UserManager				userManager;
+		private readonly CoreData				coreData;
+		private readonly DocumentMetadataEntity	documentMetadataEntity;
+		private readonly BusinessDocumentEntity	businessDocumentEntity;
+		private readonly UserManager			userManager;
 	}
 }

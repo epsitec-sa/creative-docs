@@ -264,6 +264,28 @@ namespace Epsitec.Common.Widgets
 			this.SetCommandState (command, null);
 		}
 
+
+		public void SetActiveState(Command command, ActiveState state)
+		{
+			this.GetCommandState (command).ActiveState = state;
+		}
+
+		public void SetActiveState(Command command, bool isActive)
+		{
+			this.SetActiveState (command, isActive ? ActiveState.Yes : ActiveState.No);
+		}
+
+		public ActiveState GetActiveState(Command command)
+		{
+			return this.GetCommandState (command).ActiveState;
+		}
+
+		public bool IsActive(Command command)
+		{
+			return this.GetActiveState (command) == ActiveState.Yes;
+		}
+
+
 		public IEnumerable<int> GetLocalEnableSerialIds()
 		{
 			return this.localDisables.Concat (this.localEnables);

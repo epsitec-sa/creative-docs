@@ -1,8 +1,12 @@
 //	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Behaviors;
+
+[assembly: DependencyClass (typeof (TextFieldEx))]
 
 namespace Epsitec.Common.Widgets
 {
@@ -14,7 +18,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public TextFieldEx()
 		{
-			this.acceptRejectBehavior = new Behaviors.AcceptRejectBehavior (this);
+			this.acceptRejectBehavior = new AcceptRejectBehavior (this);
 			this.acceptRejectBehavior.CreateButtons ();
 			
 			this.acceptRejectBehavior.RejectClicked += this.HandleAcceptRejectRejectClicked;
@@ -222,37 +226,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-
-		private void CreateExtraButton()
-		{
-			if (this.extraButton == null)
-			{
-				this.extraButton = new GlyphButton (this)
-				{
-					Name = "Extra",
-					GlyphShape = GlyphShape.Minus,
-					ButtonStyle = ButtonStyle.ExListMiddle,
-				};
-
-				this.extraButton.Clicked += this.HandleExtraButtonClicked;
-			}
-		}
-		private void RemoveExtraButton()
-		{
-			if (this.extraButton != null)
-			{
-				this.extraButton.Clicked -= this.HandleExtraButtonClicked;
-				this.extraButton.Dispose ();
-				this.extraButton = null;
-			}
-		}
-		
-		private Drawing.Rectangle GetExtraButtonBounds()
-		{
-			var rectangle = this.GetButtonBounds ();
-			return new Drawing.Rectangle (rectangle.X - 17, rectangle.Y, 17, rectangle.Height);
-		}
-
 		protected override void OnTextDefined()
 		{
 			base.OnTextDefined ();
@@ -276,7 +249,39 @@ namespace Epsitec.Common.Widgets
 			
 			this.UpdateButtonVisibility ();
 		}
-		
+
+
+		private void CreateExtraButton()
+		{
+			if (this.extraButton == null)
+			{
+				this.extraButton = new GlyphButton (this)
+				{
+					Name = "Extra",
+					GlyphShape = GlyphShape.Minus,
+					ButtonStyle = ButtonStyle.ExListMiddle,
+				};
+
+				this.extraButton.Clicked += this.HandleExtraButtonClicked;
+			}
+		}
+
+		private void RemoveExtraButton()
+		{
+			if (this.extraButton != null)
+			{
+				this.extraButton.Clicked -= this.HandleExtraButtonClicked;
+				this.extraButton.Dispose ();
+				this.extraButton = null;
+			}
+		}
+
+		private Drawing.Rectangle GetExtraButtonBounds()
+		{
+			var rectangle = this.GetButtonBounds ();
+			return new Drawing.Rectangle (rectangle.X - 17, rectangle.Y, 17, rectangle.Height);
+		}
+
 		
 		private void HandleAcceptRejectAcceptClicked(object sender)
 		{
@@ -310,6 +315,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		
 		public event EventHandler				ResetButtonClicked
 		{
 			add
@@ -325,7 +331,7 @@ namespace Epsitec.Common.Widgets
 
 		private const string ResetButtonClickedEvent = "ResetButtonClicked";
 		
-		private readonly Behaviors.AcceptRejectBehavior	acceptRejectBehavior;
+		private readonly AcceptRejectBehavior	acceptRejectBehavior;
 		private GlyphButton						extraButton;
 	}
 }

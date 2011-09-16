@@ -2,12 +2,13 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
 
-[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.Widget))]
+[assembly: DependencyClass (typeof (Widget))]
 
 namespace Epsitec.Common.Widgets
 {
@@ -41,8 +42,8 @@ namespace Epsitec.Common.Widgets
 		
 		static Widget()
 		{
-			//	This static constructor can either be called implicitely by running the
-			//	code, or by the dependency class manager when it is analysing a freshly
+			//	This static constructor can either be called implicitly by running the
+			//	code, or by the dependency class manager when it is analyzing a freshly
 			//	loaded assembly.
 
 			//	If we get called through the dependency class manager, we may not yet
