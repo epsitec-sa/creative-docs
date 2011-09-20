@@ -34,10 +34,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
 			var documentMetadata = businessContext.GetMasterEntity<DocumentMetadataEntity> ();
 
-			using (var calculator = new DocumentPriceCalculator (businessContext, entity, documentMetadata))
-			{
-				PriceCalculator.UpdatePrices (calculator);
-			}
+			DocumentPriceCalculator.Calculate (businessContext, entity, documentMetadata);
 		}
 
 

@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
-		public bool NeverApplyDiscount
+		public bool								NeverApplyDiscount
 		{
 			get
 			{
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
-		public bool IsDiscountable
+		public bool								IsDiscountable
 		{
 			get
 			{
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
-		public bool HasPartialQuantities
+		public bool								HasPartialQuantities
 		{
 			get
 			{
@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
-		public decimal? TotalRevenueBeforeTax
+		public decimal?							TotalRevenueBeforeTax
 		{
 			get
 			{
@@ -98,6 +98,13 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
+
+		public void Reset()
+		{
+			this.ArticleAttributes = ArticleDocumentItemAttributes.Dirty | ArticleDocumentItemAttributes.Reset;
+		}
+		
+		
 		public override FormattedText GetCompactSummary()
 		{
 			if (this.GetEntityStatus () == EntityStatus.Empty)

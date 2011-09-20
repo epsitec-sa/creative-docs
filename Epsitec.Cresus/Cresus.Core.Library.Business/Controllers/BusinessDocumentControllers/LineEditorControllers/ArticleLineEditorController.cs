@@ -578,7 +578,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			using (businessContext.SuspendUpdates ())
 			{
-				item.ArticleAttributes           = ArticleDocumentItemAttributes.Dirty | ArticleDocumentItemAttributes.Reset;
+				item.Reset ();
 				item.ArticleDefinition           = article;
 				item.ArticleParameters           = null;
 				item.ArticleAccountingDefinition = null;

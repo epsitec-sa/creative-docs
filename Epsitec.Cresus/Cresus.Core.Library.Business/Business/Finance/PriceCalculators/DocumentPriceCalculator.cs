@@ -26,7 +26,8 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		/// </summary>
 		/// <param name="context">The business context.</param>
 		/// <param name="document">The business document to work on.</param>
-		public DocumentPriceCalculator(IBusinessContext context, BusinessDocumentEntity document, DocumentMetadataEntity metadata)
+		/// <param name="metadata">The metadata.</param>
+		private DocumentPriceCalculator(IBusinessContext context, BusinessDocumentEntity document, DocumentMetadataEntity metadata)
 		{
 			this.context       = context;
 			this.document      = document;
@@ -35,6 +36,32 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			this.groups        = new Stack<GroupItemPriceCalculator> ();
 			this.suspender     = this.document.DisableEvents ();
 			this.roundingModes = new Dictionary<RoundingPolicy, PriceRoundingModeEntity> ();
+		}
+
+
+		/// <summary>
+		/// Calculates the prices for the specified business document.
+		/// </summary>
+		/// <param name="context">The business context.</param>
+		/// <param name="document">The business document to work on.</param>
+		/// <param name="metadata">The metadata.</param>
+		public static void Calculate(BusinessContext context, BusinessDocumentEntity document, DocumentMetadataEntity metadata)
+		{
+			using (var calculator = new DocumentPriceCalculator (context, document, metadata))
+			{
+				PriceCalculator.UpdatePrices (calculator);
+			}
+		}
+
+		public static void Reset(BusinessContext context, BusinessDocumentEntity document, DocumentMetadataEntity metadata)
+		{
+			using (context.SuspendUpdates ())
+			{
+				foreach (var item in document.Lines.OfType<ArticleDocumentItemEntity> ())
+				{
+					item.Reset ();
+				}
+			}
 		}
 
 		#region IPriceCalculator Members
