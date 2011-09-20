@@ -67,6 +67,11 @@ namespace Epsitec.Cresus.Core.Server
 			}
 		}
 
+		public bool DeleteSession(CoreSession session)
+		{
+			return this.DeleteSession (session.Id);
+		}
+
 		public bool DeleteSession(string id)
 		{
 			CoreSession session;

@@ -178,6 +178,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public void SetDefaultText(FormattedText formattedText)
+		{
+			this.SetText (MultilingualText.DefaultLanguageId, formattedText);
+		}
+
 		/// <summary>
 		/// Clears the text for the specified language.
 		/// </summary>

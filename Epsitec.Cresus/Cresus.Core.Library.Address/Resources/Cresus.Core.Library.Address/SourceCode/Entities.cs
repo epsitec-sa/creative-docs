@@ -1662,7 +1662,7 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>Country</c> entity.
 	///	designer:cap/FVA41
 	///	</summary>
-	public partial class CountryEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime
+	public partial class CountryEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IPreferred
 	{
 		#region ILifetime Members
 		///	<summary>
@@ -1679,6 +1679,24 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region IPreferred Members
+		///	<summary>
+		///	The <c>IsPreferred</c> field.
+		///	designer:fld/FVA41/8VAE2
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAE2]")]
+		public bool IsPreferred
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IPreferredInterfaceImplementation.GetIsPreferred (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IPreferredInterfaceImplementation.SetIsPreferred (this, value);
 			}
 		}
 		#endregion
@@ -2069,7 +2087,7 @@ namespace Epsitec.Cresus.Core.Entities
 namespace Epsitec.Cresus.Core.Entities
 {
 	///	<summary>
-	///	The <c>UriType</c> entity.
+	///	Définition du type de ressource Internet (mail, http, ftp, etc.)
 	///	designer:cap/FVAQ1
 	///	</summary>
 	public partial class UriTypeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ICategory
@@ -2145,7 +2163,7 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		#endregion
 		///	<summary>
-		///	The <c>Protocol</c> field.
+		///	Protocole Internet utilisé (mailto, http, ftp, etc.)
 		///	designer:fld/FVAQ1/FVAR1
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[FVAR1]")]

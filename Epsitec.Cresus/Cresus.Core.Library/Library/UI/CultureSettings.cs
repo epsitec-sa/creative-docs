@@ -4,6 +4,7 @@
 using Epsitec.Common.Types;
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace Epsitec.Cresus.Core.Library.UI
@@ -15,7 +16,8 @@ namespace Epsitec.Cresus.Core.Library.UI
 			this.culture = System.Threading.Thread.CurrentThread.CurrentCulture;
 		}
 
-		public System.Globalization.CultureInfo CultureInfo
+		
+		public CultureInfo						CultureInfo
 		{
 			get
 			{
@@ -23,7 +25,7 @@ namespace Epsitec.Cresus.Core.Library.UI
 			}
 		}
 
-		public string LanguageId
+		public string							LanguageId
 		{
 			get
 			{
@@ -31,7 +33,23 @@ namespace Epsitec.Cresus.Core.Library.UI
 			}
 		}
 
-		public bool HasLanguageId
+		public string							LanguageIdForDefault
+		{
+			get
+			{
+				return this.languageIdForDefault;
+			}
+		}
+
+		public bool								IsActiveLanguageAlsoTheDefault
+		{
+			get
+			{
+				return this.LanguageId == this.languageIdForDefault;
+			}
+		}
+
+		public bool								HasLanguageId
 		{
 			get
 			{
@@ -39,6 +57,7 @@ namespace Epsitec.Cresus.Core.Library.UI
 			}
 		}
 
+		
 		public void SelectLanguage(string languageId)
 		{
 			if ((string.IsNullOrEmpty (languageId)) ||
@@ -59,6 +78,31 @@ namespace Epsitec.Cresus.Core.Library.UI
 			}
 		}
 
+		public void DefineDefaultLanguage(string languageId)
+		{
+			this.languageIdForDefault = languageId;
+		}
+
+		public bool IsDefaultLanguage(string languageId)
+		{
+			if (string.IsNullOrEmpty (languageId))
+			{
+				return false;
+			}
+
+			if (MultilingualText.DefaultLanguageId == languageId)
+			{
+				return true;
+			}
+			if (this.languageIdForDefault == languageId)
+			{
+				return true;
+			}
+
+			return false;
+		}
+
+
 		private void NotifyLanguageIdChanged(string oldLanguageId, string newLanguageId)
 		{
 			Services.NotifyUpdateRequested (this);
@@ -66,7 +110,8 @@ namespace Epsitec.Cresus.Core.Library.UI
 
 
 
-		private System.Globalization.CultureInfo	culture;
-		private string languageId;
+		private readonly CultureInfo			culture;
+		private string							languageId;
+		private string							languageIdForDefault;
 	}
 }

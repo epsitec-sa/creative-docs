@@ -25,6 +25,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Input ()
 				  .Field (x => x.Name)
 				  .Field (x => x.CountryCode).Width (60)
+				  .Field (x => x.IsPreferred)
 				.End ()
 				;
 		}

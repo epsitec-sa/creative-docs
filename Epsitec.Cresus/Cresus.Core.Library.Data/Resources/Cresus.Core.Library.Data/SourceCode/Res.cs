@@ -132,6 +132,8 @@ namespace Epsitec.Cresus.Core.Library.Data
 			public static readonly Epsitec.Common.Types.StructuredType ILifetime = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 2));
 			//	designer:cap/8VA6
 			public static readonly Epsitec.Common.Types.StructuredType INameDescription = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 6));
+			//	designer:cap/8VAD2
+			public static readonly Epsitec.Common.Types.StructuredType IPreferred = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 77));
 			//	designer:cap/8VA01
 			public static readonly Epsitec.Common.Types.StructuredType IReferenceNumber = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 32));
 			//	designer:cap/8VAU
@@ -456,6 +458,16 @@ namespace Epsitec.Cresus.Core.Library.Data
 				public static readonly global::Epsitec.Common.Support.Druid Name = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 7);
 			}
 			
+			public static class IPreferred
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/8VAE2
+				public static readonly global::Epsitec.Common.Support.Druid IsPreferred = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 78);
+			}
+			
 			public static class IReferenceNumber
 			{
 				internal static void _Initialize()
@@ -610,6 +622,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			Fields.IItemRank._Initialize ();
 			Fields.ILifetime._Initialize ();
 			Fields.INameDescription._Initialize ();
+			Fields.IPreferred._Initialize ();
 			Fields.IReferenceNumber._Initialize ();
 			Fields.Language._Initialize ();
 			Fields.XmlBlob._Initialize ();

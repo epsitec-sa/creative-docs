@@ -13,20 +13,47 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Dialogs
 {
+	using StaticGlyph = Widgets.StaticGlyph;
+
 	public class MultilingualEditionDialog : AbstractDialog
 	{
 		public MultilingualEditionDialog(AbstractTextField textField, MultilingualText multilingualText)
 		{
 			this.IsApplicationWindow = true;  // pour avoir les boutons Minimize/Maximize/Close !
 
-			this.textField = textField;
+			this.sourceTextField = textField;
 			this.multilingualText = multilingualText;
 
 			this.lines          = new List<FrameBox> ();
 			this.textFields     = new List<AbstractTextField> ();
 			this.defaultButtons = new List<GlyphButton> ();
-			this.glyphs         = new List<Widgets.StaticGlyph> ();
+			this.glyphs         = new List<StaticGlyph> ();
 			this.toolbars       = new List<FrameBox> ();
+		}
+
+
+		private bool							IsMultiline
+		{
+			get
+			{
+				return this.sourceTextField is TextFieldMulti ||
+					   this.sourceTextField is TextFieldMultiEx;
+			}
+		}
+
+		private double							RequiredHeight
+		{
+			get
+			{
+				if (this.IsMultiline)
+				{
+					return MultilingualEditionDialog.fixHeight + MultilingualEditionDialog.GetLanguageIds ().Count () * (MultilingualEditionDialog.labelHeight+MultilingualEditionDialog.multiHeight);
+				}
+				else
+				{
+					return MultilingualEditionDialog.fixHeight + MultilingualEditionDialog.GetLanguageIds ().Count () * (MultilingualEditionDialog.labelHeight+22);
+				}
+			}
 		}
 
 
@@ -42,13 +69,19 @@ namespace Epsitec.Cresus.Core.Dialogs
 			return window;
 		}
 
+		protected override void OnDialogClosed()
+		{
+			base.OnDialogClosed ();
+		}
+
+		
 		private void SetupWindow(Window window)
 		{
-			this.OwnerWindow = this.textField.Window;
+			this.OwnerWindow = this.sourceTextField.Window;
 
-			window.Icon = this.textField.Window.Icon;
-			window.Text = "Edition multilingue";
-			window.ClientSize = new Size (this.IsMulti ? 500 : 400, this.RequiredHeight);
+			window.Icon = this.sourceTextField.Window.Icon;
+			window.Text = "Édition multilingue";
+			window.ClientSize = new Size (this.IsMultiline ? 500 : 400, this.RequiredHeight);
 			window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;  // pour avoir les boutons Minimize/Maximize/Close !
 
 			window.WindowCloseClicked += delegate
@@ -58,46 +91,80 @@ namespace Epsitec.Cresus.Core.Dialogs
 			};
 		}
 
-		private double RequiredHeight
-		{
-			get
-			{
-				if (this.IsMulti)
-				{
-					return MultilingualEditionDialog.fixHeight + MultilingualEditionDialog.GetLanguageIds.Count () * (MultilingualEditionDialog.labelHeight+MultilingualEditionDialog.multiHeight);
-				}
-				else
-				{
-					return MultilingualEditionDialog.fixHeight + MultilingualEditionDialog.GetLanguageIds.Count () * (MultilingualEditionDialog.labelHeight+22);
-				}
-			}
-		}
-
 		private void SetupWidgets(Window window)
 		{
-			AbstractTextField focusedTextField = null;
-			int tabIndex = 1;
+			var focusableTextFields = new List<AbstractTextField> ();
 
+			var main = this.CreateMainFrame (window.Root);
+
+			this.CreateLeftFrame (main);
+			this.CreateRightFrame (main, focusableTextFields);
+			this.CreateFooterFrame (window.Root);
+
+			this.RestoreTexts ();
+			this.UpdateButtons ();
+
+			this.SetInitialFocus (focusableTextFields);
+		}
+
+
+		private FrameBox CreateMainFrame(Widget container)
+		{
 			var frame = new FrameBox
 			{
-				Parent = window.Root,
+				Parent = container,
 				Dock = DockStyle.Fill,
-				TabIndex = tabIndex++,
+				TabIndex = 1,
 			};
 
 			frame.SizeChanged += delegate
 			{
 				this.AdjustGeometry (10 + frame.ActualHeight + 40);
 			};
-
+			
+			return frame;
+		}
+		
+		private void CreateLeftFrame(FrameBox container)
+		{
 			var leftFrame = new FrameBox
 			{
-				Parent = frame,
+				Parent = container,
 				Dock = DockStyle.Left,
 				Padding = new Margins (10),
-				TabIndex = tabIndex++,
+				TabIndex = 1,
 			};
 
+			//	Rempli le panneau de gauche.
+			var icon = new StaticText
+			{
+				Parent = leftFrame,
+				Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Cmd.MultilingualEdition.icon"" dx=""64"" dy=""64""/>",
+				ContentAlignment = ContentAlignment.MiddleCenter,
+				PreferredSize = new Size (64, 64),
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 20, 0),
+			};
+
+			var checkButton = new CheckButton
+			{
+				Parent = leftFrame,
+				Text = "Traductions",
+				ActiveState = MultilingualEditionDialog.isTranslateVisible ? ActiveState.Yes : ActiveState.No,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 10, 0),
+				TabIndex = 1,
+			};
+
+			checkButton.Clicked += delegate
+			{
+				MultilingualEditionDialog.isTranslateVisible = !MultilingualEditionDialog.isTranslateVisible;
+				this.UpdateButtons ();
+			};
+		}
+		
+		private void CreateRightFrame(FrameBox frame, IList<AbstractTextField> focusedTextFields)
+		{
 			new Separator
 			{
 				Parent = frame,
@@ -110,196 +177,43 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Parent = frame,
 				Dock = DockStyle.Fill,
 				Padding = new Margins (10, 10, 10, 0),
-				TabIndex = tabIndex++,
+				TabIndex = 1,
 			};
 
-			//	Rempli le panneau de gauche.
-			var icon = new StaticText
-			{
-				Parent = leftFrame,
-				Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Cmd.MultilingualEdition.icon"" dx=""64"" dy=""64""/>",
-				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
-				PreferredSize = new Size (64, 64),
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 20, 0),
-			};
-
-			var checkButton = new CheckButton
-			{
-				Parent = leftFrame,
-				Text = "Traductions",
-				ActiveState = MultilingualEditionDialog.isTraduceVisible ? ActiveState.Yes : ActiveState.No,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 10, 0),
-			};
-
-			checkButton.Clicked += delegate
-			{
-				MultilingualEditionDialog.isTraduceVisible = !MultilingualEditionDialog.isTraduceVisible;
-				this.UpdateButtons ();
-			};
-
-			//	Rempli le panneau principal de droite.
+			//	Remplit le panneau principal de droite.
 			this.lines.Clear ();
 			this.textFields.Clear ();
 			this.defaultButtons.Clear ();
 			this.glyphs.Clear ();
 			this.toolbars.Clear ();
 
-			foreach (var id in MultilingualEditionDialog.GetLanguageIds)
+			foreach (var id in MultilingualEditionDialog.GetLanguageIds ())
 			{
-				var desc = string.Format ("{0} {1} :", MultilingualEditionDialog.GetIcon (id), MultilingualEditionDialog.GetDescription (id));
+				AbstractTextField textField = this.CreateTextField (rightFrame, id);
 
 				if (MultilingualEditionDialog.IsCurrentLanguage (id))
 				{
-					desc = string.Concat ("<b>", desc, "</b>");
-				}
-
-				var label = new StaticText
-				{
-					Parent = rightFrame,
-					Text = desc,
-					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, Library.UI.Constants.MarginUnderLabel),
-				};
-
-				var line = new FrameBox
-				{
-					Parent = rightFrame,
-					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, Library.UI.Constants.MarginUnderTextField),
-					TabIndex = tabIndex++,
-				};
-
-				this.lines.Add (line);
-
-				AbstractTextField textField;
-
-				if (this.IsMulti)
-				{
-					line.PreferredHeight = MultilingualEditionDialog.multiHeight;
-
-					textField = new TextFieldMulti
-					{
-						Parent = line,
-						Dock = DockStyle.Fill,
-						TabIndex = tabIndex++,
-					};
-				}
-				else
-				{
-					line.PreferredHeight = 22;
-
-					textField = new TextField
-					{
-						Parent = line,
-						Dock = DockStyle.Fill,
-						TabIndex = tabIndex++,
-					};
-				}
-
-				textField.TextChanged += delegate
-				{
-					this.UpdateTextField (textField);
-
-					this.isDirty = true;
-					this.UpdateButtons ();
-				};
-
-				this.UpdateTextField (textField);
-				this.textFields.Add (textField);
-
-				var toolbar = new FrameBox
-				{
-					Parent = line,
-					DrawFullFrame = true,
-					PreferredWidth = 20*3,
-					Dock = DockStyle.Right,
-				};
-
-				this.toolbars.Add (toolbar);
-
-				foreach (var translateId in MultilingualEditionDialog.GetLanguageIds)
-				{
-					if (translateId != id)
-					{
-						string src = MultilingualEditionDialog.NormalizeId (id);
-						string dst = MultilingualEditionDialog.NormalizeId (translateId);
-
-						var translateButton = new IconButton
-						{
-							Parent = toolbar,
-							Text = MultilingualEditionDialog.GetIcon (translateId),
-							Name = string.Concat ((this.textFields.Count-1).ToString (), "-", src, "-", dst),
-							Dock = DockStyle.Left,
-						};
-
-						translateButton.Clicked += delegate
-						{
-							this.Translate (translateButton.Name);
-						};
-
-						string srcLanguage = MultilingualEditionDialog.GetDescription (src);
-						string dstLanguage = MultilingualEditionDialog.GetDescription (dst);
-						ToolTip.Default.SetToolTip (translateButton, string.Format ("Traduction {0} -> {1}", srcLanguage, dstLanguage));
-					}
-				}
-
-				var glyph = new Widgets.StaticGlyph
-				{
-					Parent = line,
-					GlyphShape = GlyphShape.TriangleRight,
-					PreferredWidth = 22,
-					Dock = DockStyle.Right,
-					Margins = new Margins (5, 0, 0, 0),
-				};
-
-				this.glyphs.Add (glyph);
-
-				GlyphButton defaultButton = null;
-
-				if (id != MultilingualText.DefaultLanguageId)  // pas la langue par défaut ?
-				{
-					defaultButton = new GlyphButton
-					{
-						Parent = line,
-						GlyphShape = Common.Widgets.GlyphShape.Close,
-						Name = (this.textFields.Count-1).ToString (),
-						Dock = DockStyle.Right,
-						Margins = new Margins (-1, 0, 0, 0),
-					};
-
-					defaultButton.Clicked += delegate
-					{
-						this.SetDefaultText (int.Parse (defaultButton.Name));
-					};
-
-					ToolTip.Default.SetToolTip (defaultButton, "Utilise la langue par défaut");
-				}
-
-				this.defaultButtons.Add (defaultButton);
-
-				if (MultilingualEditionDialog.IsCurrentLanguage (id))
-				{
-					focusedTextField = textField;
+					focusedTextFields.Add (textField);
 				}
 			}
-
-			//	Rempli le pied de page.
+		}
+		
+		private void CreateFooterFrame(Widget container)
+		{
 			var footer = new FrameBox
 			{
-				Parent = window.Root,
+				Parent = container,
 				PreferredHeight = 20,
 				Dock = DockStyle.Bottom,
 				Padding = new Margins (10),
-				TabIndex = tabIndex++,
+				TabIndex = 10,
 			};
 
 			this.cancelButton = new Button ()
 			{
 				Parent = footer,
 				Text = "Annuler",
-				ButtonStyle = Common.Widgets.ButtonStyle.DefaultCancel,
+				ButtonStyle = ButtonStyle.DefaultCancel,
 				Dock = DockStyle.Right,
 				Margins = new Margins (10, 0, 0, 0),
 				TabIndex = 101,
@@ -309,7 +223,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				Parent = footer,
 				Text = "D'accord",
-				ButtonStyle = Common.Widgets.ButtonStyle.DefaultAccept,
+				ButtonStyle = ButtonStyle.DefaultAccept,
 				Dock = DockStyle.Right,
 				Margins = new Margins (64+10+10, 0, 0, 0),
 				TabIndex = 100,
@@ -331,25 +245,163 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			new Separator
 			{
-				Parent = window.Root,
+				Parent = container,
 				PreferredHeight = 1,
 				Dock = DockStyle.Bottom,
 			};
+		}
+		
+		private AbstractTextField CreateTextField(FrameBox container, string languageId)
+		{
+			int tabIndex = container.Children.Count + 1;
 
-			this.RestoreTexts ();
-			this.UpdateButtons ();
+			var desc = string.Format ("{0} {1} :", MultilingualEditionDialog.GetIcon (languageId), MultilingualEditionDialog.GetDescription (languageId));
 
-			//	Initialise le focus.
-			if (focusedTextField == null)
+			if (MultilingualEditionDialog.IsCurrentLanguage (languageId))
 			{
-				focusedTextField = this.textFields[0];
+				desc = string.Concat ("<b>", desc, "</b>");
 			}
+
+			var label = new StaticText
+			{
+				Parent = container,
+				Text = desc,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, Library.UI.Constants.MarginUnderLabel),
+			};
+
+			var line = new FrameBox
+			{
+				Parent = container,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, Library.UI.Constants.MarginUnderTextField),
+				TabIndex = tabIndex++,
+			};
+
+			this.lines.Add (line);
+
+			AbstractTextField textField;
+
+			if (this.IsMultiline)
+			{
+				line.PreferredHeight = MultilingualEditionDialog.multiHeight;
+
+				textField = new TextFieldMulti
+				{
+					Parent = line,
+					Dock = DockStyle.Fill,
+					TabIndex = tabIndex++,
+				};
+			}
+			else
+			{
+				line.PreferredHeight = 22;
+
+				textField = new TextField
+				{
+					Parent = line,
+					Dock = DockStyle.Fill,
+					TabIndex = tabIndex++,
+				};
+			}
+
+			textField.TextChanged += delegate
+			{
+				this.UpdateTextField (textField);
+
+				this.isDirty = true;
+				this.UpdateButtons ();
+			};
+
+			this.UpdateTextField (textField);
+			this.textFields.Add (textField);
+
+			var toolbar = new FrameBox
+			{
+				Parent = line,
+				DrawFullFrame = true,
+				PreferredWidth = 20*3,
+				Dock = DockStyle.Right,
+			};
+
+			this.toolbars.Add (toolbar);
+
+			foreach (var translateId in MultilingualEditionDialog.GetLanguageIds ())
+			{
+				if (translateId != languageId)
+				{
+					string src = MultilingualEditionDialog.NormalizeId (languageId);
+					string dst = MultilingualEditionDialog.NormalizeId (translateId);
+
+					var translateButton = new IconButton
+					{
+						Parent = toolbar,
+						Text = MultilingualEditionDialog.GetIcon (translateId),
+						Name = string.Concat ((this.textFields.Count-1).ToString (), "-", src, "-", dst),
+						Dock = DockStyle.Left,
+					};
+
+					translateButton.Clicked += delegate
+					{
+						this.Translate (translateButton.Name);
+					};
+
+					string srcLanguage = MultilingualEditionDialog.GetDescription (src);
+					string dstLanguage = MultilingualEditionDialog.GetDescription (dst);
+					ToolTip.Default.SetToolTip (translateButton, string.Format ("Traduction {0} -> {1}", srcLanguage, dstLanguage));
+				}
+			}
+
+			var glyph = new StaticGlyph
+			{
+				Parent = line,
+				GlyphShape = GlyphShape.TriangleRight,
+				PreferredWidth = 22,
+				Dock = DockStyle.Right,
+				Margins = new Margins (5, 0, 0, 0),
+			};
+
+			this.glyphs.Add (glyph);
+
+			GlyphButton defaultButton = null;
+
+			if (languageId != MultilingualText.DefaultLanguageId)  // pas la langue par défaut ?
+			{
+				defaultButton = new GlyphButton
+				{
+					Parent = line,
+					GlyphShape = GlyphShape.Close,
+					Name = (this.textFields.Count-1).ToString (),
+					Dock = DockStyle.Right,
+					Margins = new Margins (-1, 0, 0, 0),
+				};
+
+				defaultButton.Clicked += delegate
+				{
+					this.SetDefaultText (int.Parse (defaultButton.Name));
+				};
+
+				ToolTip.Default.SetToolTip (defaultButton, "Utilise la langue par défaut");
+			}
+
+			this.defaultButtons.Add (defaultButton);
+			return textField;
+		}
+
+		private void SetInitialFocus(IList<AbstractTextField> focusedTextFields)
+		{
+			if (focusedTextFields.Count == 0)
+			{
+				focusedTextFields.Add (this.textFields[0]);
+			}
+
+			var focusedTextField = focusedTextFields.FirstOrDefault (x => x.Text != MultilingualEditionDialog.defaultText) ??
+									   focusedTextFields.FirstOrDefault ();
 
 			focusedTextField.SelectAll ();
 			focusedTextField.Focus ();
 		}
-
-
+		
 		private void UpdateTextField(AbstractTextField textField)
 		{
 			textField.SetUndefinedLanguage (textField.Text == MultilingualEditionDialog.defaultText);
@@ -357,15 +409,15 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void UpdateButtons()
 		{
-			for (int i = 0; i < MultilingualEditionDialog.GetLanguageIds.Count (); i++)
+			for (int i = 0; i < MultilingualEditionDialog.GetLanguageIds ().Count (); i++)
 			{
 				if (this.defaultButtons[i] != null)
 				{
 					this.defaultButtons[i].Enable = (this.textFields[i].Text != MultilingualEditionDialog.defaultText);
 				}
 
-				this.toolbars[i].Visibility = MultilingualEditionDialog.isTraduceVisible;
-				this.glyphs[i].Visibility = MultilingualEditionDialog.isTraduceVisible;
+				this.toolbars[i].Visibility = MultilingualEditionDialog.isTranslateVisible;
+				this.glyphs[i].Visibility = MultilingualEditionDialog.isTranslateVisible;
 			}
 
 			this.acceptButton.Enable = this.isDirty;
@@ -373,9 +425,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void AdjustGeometry(double height)
 		{
-			if (this.IsMulti)
+			if (this.IsMultiline)
 			{
-				double h = ((height - MultilingualEditionDialog.fixHeight) / MultilingualEditionDialog.GetLanguageIds.Count ()) - MultilingualEditionDialog.labelHeight;
+				double h = ((height - MultilingualEditionDialog.fixHeight) / MultilingualEditionDialog.GetLanguageIds ().Count ()) - MultilingualEditionDialog.labelHeight;
 				h = System.Math.Floor (h);
 				h = System.Math.Max (h, 10+14*3);  // 3 lignes au minimum
 
@@ -410,7 +462,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			int index = 0;
 
-			foreach (var id in MultilingualEditionDialog.GetLanguageIds)
+			foreach (var id in MultilingualEditionDialog.GetLanguageIds ())
 			{
 				FormattedText? text = this.multilingualText.GetText (id);
 
@@ -429,7 +481,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			int index = 0;
 
-			foreach (var id in MultilingualEditionDialog.GetLanguageIds)
+			foreach (var id in MultilingualEditionDialog.GetLanguageIds ())
 			{
 				if (this.textFields[index].FormattedText == MultilingualEditionDialog.defaultText)
 				{
@@ -444,33 +496,28 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 		}
 
-		protected override void OnDialogClosed()
-		{
-			base.OnDialogClosed ();
-		}
 
 
-		private bool IsMulti
-		{
-			get
-			{
-				return this.textField is TextFieldMulti ||
-					   this.textField is TextFieldMultiEx;
-			}
-		}
-
-
-		private static bool IsCurrentLanguage (string languageId)
+		private static bool IsCurrentLanguage(string languageId)
 		{
 			if (languageId == Library.UI.Services.Settings.CultureForData.LanguageId)
 			{
 				return true;
 			}
 
-			if (MultilingualText.DefaultLanguageId == languageId && !Library.UI.Services.Settings.CultureForData.HasLanguageId)
+			if (MultilingualText.DefaultLanguageId == languageId)
 			{
-				return true;
+				if (!Library.UI.Services.Settings.CultureForData.HasLanguageId)
+				{
+					return true;
+				}
+				if (Library.UI.Services.Settings.CultureForData.IsDefaultLanguage (Library.UI.Services.Settings.CultureForData.LanguageId))
+				{
+					return true;
+				}
 			}
+
+
 
 			return false;
 		}
@@ -505,7 +552,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			switch (languageId)
 			{
 				case "default":
-					return "Français (par défaut)";
+					return "Texte par défaut";
 
 				case "fr":
 					return "Français";
@@ -527,42 +574,39 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			if (languageId == MultilingualText.DefaultLanguageId)
 			{
-				languageId = "fr";
+				languageId = Library.UI.Services.Settings.CultureForData.LanguageIdForDefault ?? "fr";
 			}
 
 			return languageId;
 		}
 
-		private static IEnumerable<string> GetLanguageIds
+		private static IEnumerable<string> GetLanguageIds()
 		{
-			//	Retourne la liste des langues éditables dans le dialogue.
-			get
-			{
-				yield return MultilingualText.DefaultLanguageId;
-				yield return "de";
-				yield return "en";
-				yield return "it";
-			}
+			yield return MultilingualText.DefaultLanguageId;
+			yield return "fr";
+			yield return "de";
+			yield return "en";
+			yield return "it";
 		}
 
 
-		private static readonly double					multiHeight = 10+14*4;  // hauteur pour 4 lignes
-		private static readonly double					labelHeight = 18;
-		private static readonly double					fixHeight = 10+10+10+22+10;
-		private static readonly string					defaultText = "&lt;par défaut&gt;";  // <par défaut>
+		private static readonly double			multiHeight = 10+14*4;  // hauteur pour 4 lignes
+		private static readonly double			labelHeight = 18;
+		private static readonly double			fixHeight = 10+10+10+22+10;
+		private static readonly string			defaultText = "&lt;par défaut&gt;";  // <par défaut>
 
-		private static bool								isTraduceVisible;
+		private static bool						isTranslateVisible;
 
-		private readonly AbstractTextField				textField;
-		private readonly MultilingualText				multilingualText;
-		private readonly List<FrameBox>					lines;
-		private readonly List<AbstractTextField>		textFields;
-		private readonly List<GlyphButton>				defaultButtons;
-		private readonly List<Widgets.StaticGlyph>		glyphs;
-		private readonly List<FrameBox>					toolbars;
+		private readonly AbstractTextField		sourceTextField;
+		private readonly MultilingualText		multilingualText;
+		private readonly List<FrameBox>			lines;
+		private readonly List<AbstractTextField> textFields;
+		private readonly List<GlyphButton>		defaultButtons;
+		private readonly List<StaticGlyph>		glyphs;
+		private readonly List<FrameBox>			toolbars;
 
-		private bool									isDirty;
-		private Button									acceptButton;
-		private Button									cancelButton;
+		private bool							isDirty;
+		private Button							acceptButton;
+		private Button							cancelButton;
 	}
 }

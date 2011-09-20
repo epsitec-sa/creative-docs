@@ -1923,3 +1923,47 @@ namespace Epsitec.Cresus.Core.Entities
 }
 #endregion
 
+#region Epsitec.Cresus.Core.IPreferred Interface
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>IPreferred</c> entity.
+	///	designer:cap/8VAD2
+	///	</summary>
+	public interface IPreferred
+	{
+		///	<summary>
+		///	The <c>IsPreferred</c> field.
+		///	designer:fld/8VAD2/8VAE2
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAE2]")]
+		bool IsPreferred
+		{
+			get;
+			set;
+		}
+	}
+	public static partial class IPreferredInterfaceImplementation
+	{
+		public static bool GetIsPreferred(global::Epsitec.Cresus.Core.Entities.IPreferred obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<bool> ("[8VAE2]");
+		}
+		public static void SetIsPreferred(global::Epsitec.Cresus.Core.Entities.IPreferred obj, bool value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			bool oldValue = obj.IsPreferred;
+			if (oldValue != value || !entity.IsFieldDefined("[8VAE2]"))
+			{
+				IPreferredInterfaceImplementation.OnIsPreferredChanging (obj, oldValue, value);
+				entity.SetField<bool> ("[8VAE2]", oldValue, value);
+				IPreferredInterfaceImplementation.OnIsPreferredChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnIsPreferredChanged(global::Epsitec.Cresus.Core.Entities.IPreferred obj, bool oldValue, bool newValue);
+		static partial void OnIsPreferredChanging(global::Epsitec.Cresus.Core.Entities.IPreferred obj, bool oldValue, bool newValue);
+	}
+}
+#endregion
+

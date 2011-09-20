@@ -153,6 +153,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Library.UI", "C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Server", "Cresus.Core.Server\Cresus.Core.Server.csproj", "{E85C5738-4267-4F95-B6B0-A30B47B76D01}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Platform", "Data.Platform\Data.Platform.csproj", "{222C0C9C-AF0D-4B77-9BB2-D1440EF333B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Maintenance", "Cresus.Core.Maintenance\Cresus.Core.Maintenance.csproj", "{917EB960-42F9-48DF-A649-69A0065AA07C}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Epsitec.Cresus1.vsmdi
@@ -1281,6 +1285,42 @@ Global
 		{E85C5738-4267-4F95-B6B0-A30B47B76D01}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{E85C5738-4267-4F95-B6B0-A30B47B76D01}.Release|Win32.ActiveCfg = Release|Any CPU
 		{E85C5738-4267-4F95-B6B0-A30B47B76D01}.Release|x86.ActiveCfg = Release|Any CPU
+		{222C0C9C-AF0D-4B77-9BB2-D1440EF333B2}.Debug .NET 2.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{222C0C9C-AF0D-4B77-9BB2-D1440EF333B2}.Debug .NET 2.0|Any CPU.Build.0 = Debug|Any CPU
+		{222C0C9C-AF0D-4B77-9BB2-D1440EF333B2}.Debug .NET 2.0|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{222C0C9C-AF0D-4B77-9BB2-D1440EF333B2}.Debug .NET 2.0|Mixed Platforms.Build.0 = Debug|Any CPU
+		{222C0C9C-AF0D-4B77-9BB2-D1440EF333B2}.Debug .NET 2.0|Win32.ActiveCfg = Debug|Any CPU
+		{222C0C9C-AF0D-4B77-9BB2-D1440EF333B2}.Debug .NET 2.0|x86.ActiveCfg = Debug|Any CPU
+		{222C0C9C-AF0D-4B77-9BB2-D1440EF333B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{222C0C9C-AF0D-4B77-9BB2-D1440EF333B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{222C0C9C-AF0D-4B77-9BB2-D1440EF333B2}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{222C0C9C-AF0D-4B77-9BB2-D1440EF333B2}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{222C0C9C-AF0D-4B77-9BB2-D1440EF333B2}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{222C0C9C-AF0D-4B77-9BB2-D1440EF333B2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{222C0C9C-AF0D-4B77-9BB2-D1440EF333B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{222C0C9C-AF0D-4B77-9BB2-D1440EF333B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{222C0C9C-AF0D-4B77-9BB2-D1440EF333B2}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{222C0C9C-AF0D-4B77-9BB2-D1440EF333B2}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{222C0C9C-AF0D-4B77-9BB2-D1440EF333B2}.Release|Win32.ActiveCfg = Release|Any CPU
+		{222C0C9C-AF0D-4B77-9BB2-D1440EF333B2}.Release|x86.ActiveCfg = Release|Any CPU
+		{917EB960-42F9-48DF-A649-69A0065AA07C}.Debug .NET 2.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{917EB960-42F9-48DF-A649-69A0065AA07C}.Debug .NET 2.0|Any CPU.Build.0 = Debug|Any CPU
+		{917EB960-42F9-48DF-A649-69A0065AA07C}.Debug .NET 2.0|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{917EB960-42F9-48DF-A649-69A0065AA07C}.Debug .NET 2.0|Mixed Platforms.Build.0 = Debug|Any CPU
+		{917EB960-42F9-48DF-A649-69A0065AA07C}.Debug .NET 2.0|Win32.ActiveCfg = Debug|Any CPU
+		{917EB960-42F9-48DF-A649-69A0065AA07C}.Debug .NET 2.0|x86.ActiveCfg = Debug|Any CPU
+		{917EB960-42F9-48DF-A649-69A0065AA07C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{917EB960-42F9-48DF-A649-69A0065AA07C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{917EB960-42F9-48DF-A649-69A0065AA07C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{917EB960-42F9-48DF-A649-69A0065AA07C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{917EB960-42F9-48DF-A649-69A0065AA07C}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{917EB960-42F9-48DF-A649-69A0065AA07C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{917EB960-42F9-48DF-A649-69A0065AA07C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{917EB960-42F9-48DF-A649-69A0065AA07C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{917EB960-42F9-48DF-A649-69A0065AA07C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{917EB960-42F9-48DF-A649-69A0065AA07C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{917EB960-42F9-48DF-A649-69A0065AA07C}.Release|Win32.ActiveCfg = Release|Any CPU
+		{917EB960-42F9-48DF-A649-69A0065AA07C}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

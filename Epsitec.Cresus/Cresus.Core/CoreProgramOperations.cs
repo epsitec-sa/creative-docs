@@ -35,6 +35,10 @@ namespace Epsitec.Cresus.Core
 				case "-server":
 					CoreProgramOperations.ExecuteJsServer ();
 					break;
+
+				case "-maintenance":
+					CoreProgramOperations.StartMaintenance ();
+					break;
 			}
 		}
 
@@ -66,6 +70,12 @@ namespace Epsitec.Cresus.Core
 					CoreProgramOperations.ExecuteDatabaseRestore (arg1);
 					break;
 			}
+		}
+
+		private static void StartMaintenance()
+		{
+			dynamic engine = System.Activator.CreateInstance ("Cresus.Core.Maintenance", "Epsitec.Cresus.Core.Maintenance.Engine").Unwrap ();
+			engine.Refresh ();
 		}
 
 		private static void ExecuteJsServer()

@@ -391,7 +391,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				//	HACK: faire cela proprement avec des commandes multi-états
 
-				var selectLanaugage1 = new IconButton ()
+				var selectLanaguage1 = new IconButton ()
 				{
 					Parent = frame1,
 					Name = "language=fr",
@@ -400,7 +400,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					ActiveState = ActiveState.Yes,
 				};
 
-				var selectLanaugage2 = new IconButton ()
+				var selectLanaguage2 = new IconButton ()
 				{
 					Parent = frame1,
 					Name = "language=de",
@@ -408,7 +408,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagDE.icon""/>",
 				};
 
-				var selectLanaugage3 = new IconButton ()
+				var selectLanaguage3 = new IconButton ()
 				{
 					Parent = frame2,
 					Name = "language=en",
@@ -416,7 +416,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagGB.icon""/>",
 				};
 
-				var selectLanaugage4 = new IconButton ()
+				var selectLanaguage4 = new IconButton ()
 				{
 					Parent = frame2,
 					Name = "language=it",
@@ -424,40 +424,43 @@ namespace Epsitec.Cresus.Core.Controllers
 					Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagIT.icon""/>",
 				};
 
-				selectLanaugage1.Clicked += delegate
+				Library.UI.Services.Settings.CultureForData.SelectLanguage ("fr");
+				Library.UI.Services.Settings.CultureForData.DefineDefaultLanguage ("fr");
+
+				selectLanaguage1.Clicked += delegate
 				{
-					Library.UI.Services.Settings.CultureForData.SelectLanguage (null);
-					selectLanaugage1.ActiveState = ActiveState.Yes;
-					selectLanaugage2.ActiveState = ActiveState.No;
-					selectLanaugage3.ActiveState = ActiveState.No;
-					selectLanaugage4.ActiveState = ActiveState.No;
+					Library.UI.Services.Settings.CultureForData.SelectLanguage ("fr");
+					selectLanaguage1.ActiveState = ActiveState.Yes;
+					selectLanaguage2.ActiveState = ActiveState.No;
+					selectLanaguage3.ActiveState = ActiveState.No;
+					selectLanaguage4.ActiveState = ActiveState.No;
 				};
 
-				selectLanaugage2.Clicked += delegate
+				selectLanaguage2.Clicked += delegate
 				{
 					Library.UI.Services.Settings.CultureForData.SelectLanguage ("de");
-					selectLanaugage1.ActiveState = ActiveState.No;
-					selectLanaugage2.ActiveState = ActiveState.Yes;
-					selectLanaugage3.ActiveState = ActiveState.No;
-					selectLanaugage4.ActiveState = ActiveState.No;
+					selectLanaguage1.ActiveState = ActiveState.No;
+					selectLanaguage2.ActiveState = ActiveState.Yes;
+					selectLanaguage3.ActiveState = ActiveState.No;
+					selectLanaguage4.ActiveState = ActiveState.No;
 				};
 
-				selectLanaugage3.Clicked += delegate
+				selectLanaguage3.Clicked += delegate
 				{
 					Library.UI.Services.Settings.CultureForData.SelectLanguage ("en");
-					selectLanaugage1.ActiveState = ActiveState.No;
-					selectLanaugage2.ActiveState = ActiveState.No;
-					selectLanaugage3.ActiveState = ActiveState.Yes;
-					selectLanaugage4.ActiveState = ActiveState.No;
+					selectLanaguage1.ActiveState = ActiveState.No;
+					selectLanaguage2.ActiveState = ActiveState.No;
+					selectLanaguage3.ActiveState = ActiveState.Yes;
+					selectLanaguage4.ActiveState = ActiveState.No;
 				};
 
-				selectLanaugage4.Clicked += delegate
+				selectLanaguage4.Clicked += delegate
 				{
 					Library.UI.Services.Settings.CultureForData.SelectLanguage ("it");
-					selectLanaugage1.ActiveState = ActiveState.No;
-					selectLanaugage2.ActiveState = ActiveState.No;
-					selectLanaugage3.ActiveState = ActiveState.No;
-					selectLanaugage4.ActiveState = ActiveState.Yes;
+					selectLanaguage1.ActiveState = ActiveState.No;
+					selectLanaguage2.ActiveState = ActiveState.No;
+					selectLanaguage3.ActiveState = ActiveState.No;
+					selectLanaguage4.ActiveState = ActiveState.Yes;
 				};
 			}
 
