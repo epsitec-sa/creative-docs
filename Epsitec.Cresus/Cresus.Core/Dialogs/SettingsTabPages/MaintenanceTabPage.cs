@@ -234,7 +234,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 					{
 						string temp = System.IO.Path.GetTempFileName ();
 						System.IO.File.WriteAllBytes (temp, zip.Entries.First ().Data);
-						this.ImportFromFile (filename, importAction, () => System.IO.File.Delete (temp));
+						this.ImportFromFile (temp, importAction, () => System.IO.File.Delete (temp));
 					}
 				}
 
