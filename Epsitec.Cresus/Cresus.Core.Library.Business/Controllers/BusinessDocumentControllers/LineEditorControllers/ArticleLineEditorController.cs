@@ -371,6 +371,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.BindPriceField (field2, ArticleDocumentItemAttributes.FixedUnitPrice2);
 
 			this.PlacePriceEditionWidgets (line, "Prix unitaire", field1, discount, discountText, field2);
+
+			ToolTip.Default.SetToolTip (field1,       "Prix unitaire brut");
+			ToolTip.Default.SetToolTip (discount,     "Rabais en francs ou en pourcents sur le prix unitaire");
+			ToolTip.Default.SetToolTip (field2,       "Prix unitaire arrêté");
+			ToolTip.Default.SetToolTip (discountText, "Description du rabais sur le prix unitaire");
 		}
 		
 		private void CreateUILinePrice(UIBuilder builder, FrameBox parent)
@@ -407,6 +412,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.BindPriceField (field2, ArticleDocumentItemAttributes.FixedLinePrice2);
 
 			this.PlacePriceEditionWidgets (line, "Prix de ligne", field1, discount, discountText, field2);
+
+			ToolTip.Default.SetToolTip (field1,       "Prix de ligne brut");
+			ToolTip.Default.SetToolTip (discount,     "Rabais en francs ou en pourcents sur le prix de ligne");
+			ToolTip.Default.SetToolTip (field2,       "Prix de ligne arrêté");
+			ToolTip.Default.SetToolTip (discountText, "Description du rabais sur le prix de ligne");
 		}
 
 		private void CreateUIDiscountOption(UIBuilder builder, FrameBox parent)
@@ -500,12 +510,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			field1.Margins  = Margins.Zero;
 			field1.TabIndex = this.GetNextTabIndex ();
 
-			var t2 = new StaticText ()
+			var t2 = new StaticGlyph
 			{
 				Parent           = container,
-				FormattedText    = "−",
-				ContentAlignment = ContentAlignment.TopCenter,
-				Margins          = new Margins (0, 0, 2, 0),
+				GlyphShape       = GlyphShape.Minus,
+				ContentAlignment = ContentAlignment.MiddleCenter,
+				Margins          = new Margins (2, 2, 2+2, 2),
 			};
 
 			fieldDiscount.Parent   = container;
@@ -516,12 +526,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			fieldDiscountText.Margins  = Margins.Zero;
 			fieldDiscountText.TabIndex = this.GetNextTabIndex ();
 
-			var t3 = new StaticText ()
+			var t3 = new StaticGlyph
 			{
 				Parent           = container,
-				FormattedText    = "→",
-				ContentAlignment = ContentAlignment.TopCenter,
-				Margins          = new Margins (0, 0, 2, 0),
+				GlyphShape       = GlyphShape.ArrowRight,
+				ContentAlignment = ContentAlignment.MiddleCenter,
+				Margins          = new Margins (2, 2, 2+2, 2),
 			};
 
 			field2.Parent   = container;
