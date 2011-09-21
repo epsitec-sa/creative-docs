@@ -579,16 +579,16 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					return "Rabais";
 
 				case ColumnType.UnitPrice:
-					return "p.u. HT";
+					return this.accessData.IsExcludingTax ? "p.u. HT" : "p.u. TTC";
 
 				case ColumnType.LinePrice:
-					return "Prix HT";
+					return this.accessData.IsExcludingTax ? "Prix HT" : "Prix TTC";
 
 				case ColumnType.Vat:
 					return "TVA";
 
 				case ColumnType.Total:
-					return "Prix TTC";
+					return "Total";
 
 				default:
 					return null;

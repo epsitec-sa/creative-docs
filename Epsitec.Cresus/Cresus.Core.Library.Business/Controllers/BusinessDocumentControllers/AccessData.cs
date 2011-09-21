@@ -29,7 +29,15 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.BusinessDocument = logic.BusinessDocument;
 		}
 
-		public BillingMode						BillingMode
+		public bool IsExcludingTax
+		{
+			get
+			{
+				return this.BillingMode == Business.Finance.BillingMode.ExcludingTax;
+			}
+		}
+
+		public BillingMode BillingMode
 		{
 			get
 			{
