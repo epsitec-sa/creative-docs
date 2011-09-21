@@ -148,19 +148,19 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 			if (this.IsColumnsOrderQD)
 			{
-				this.tableColumns.Add (TableColumnKeys.Total,              new TableColumn ("Fait",        priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.LineNumber,         new TableColumn ("N°",          priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.MainQuantity,       new TableColumn ("Quantité",    priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add (TableColumnKeys.ArticleId,          new TableColumn ("Article",     priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.ArticleDescription, new TableColumn ("Désignation", 0,            ContentAlignment.MiddleLeft));  // seule colonne en mode width = fill
-			}
-			else
-			{
-				this.tableColumns.Add (TableColumnKeys.Total,              new TableColumn ("Fait",        priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.LineNumber,         new TableColumn ("N°",          priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.ArticleId,          new TableColumn ("Article",     priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.ArticleDescription, new TableColumn ("Désignation", 0,            ContentAlignment.MiddleLeft));  // seule colonne en mode width = fill
-				this.tableColumns.Add (TableColumnKeys.MainQuantity,       new TableColumn ("Quantité",    priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.Total,              new TableColumn ("Fait",                                                         priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.LineNumber,         new TableColumn (this.GetColumnDescription (TableColumnKeys.LineNumber),         priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.MainQuantity,       new TableColumn ("Quantité",                                                     priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.ArticleId,          new TableColumn (this.GetColumnDescription (TableColumnKeys.ArticleId),          priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.ArticleDescription, new TableColumn (this.GetColumnDescription (TableColumnKeys.ArticleDescription), 0,            ContentAlignment.MiddleLeft));  // seule colonne en mode width = fill
+			}																							        
+			else																						        
+			{																							        
+				this.tableColumns.Add (TableColumnKeys.Total,              new TableColumn ("Fait",                                                         priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.LineNumber,         new TableColumn (this.GetColumnDescription (TableColumnKeys.LineNumber),         priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.ArticleId,          new TableColumn (this.GetColumnDescription (TableColumnKeys.ArticleId),          priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.ArticleDescription, new TableColumn (this.GetColumnDescription (TableColumnKeys.ArticleDescription), 0,            ContentAlignment.MiddleLeft));  // seule colonne en mode width = fill
+				this.tableColumns.Add (TableColumnKeys.MainQuantity,       new TableColumn ("Quantité",                                                     priceWidth,   ContentAlignment.MiddleRight));
 			}
 		}
 

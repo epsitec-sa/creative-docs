@@ -372,9 +372,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			this.PlacePriceEditionWidgets (line, "Prix unitaire", field1, discount, discountText, field2);
 
-			ToolTip.Default.SetToolTip (field1,       "Prix unitaire brut");
+			ToolTip.Default.SetToolTip (field1,       "Prix unitaire initial");
 			ToolTip.Default.SetToolTip (discount,     "Rabais en francs ou en pourcents sur le prix unitaire");
-			ToolTip.Default.SetToolTip (field2,       "Prix unitaire arrêté");
+			ToolTip.Default.SetToolTip (field2,       "Prix unitaire final");
 			ToolTip.Default.SetToolTip (discountText, "Description du rabais sur le prix unitaire");
 		}
 		
@@ -413,9 +413,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			this.PlacePriceEditionWidgets (line, "Prix de ligne", field1, discount, discountText, field2);
 
-			ToolTip.Default.SetToolTip (field1,       "Prix de ligne brut");
+			ToolTip.Default.SetToolTip (field1,       "Prix de ligne initial");
 			ToolTip.Default.SetToolTip (discount,     "Rabais en francs ou en pourcents sur le prix de ligne");
-			ToolTip.Default.SetToolTip (field2,       "Prix de ligne arrêté");
+			ToolTip.Default.SetToolTip (field2,       "Prix de ligne final");
 			ToolTip.Default.SetToolTip (discountText, "Description du rabais sur le prix de ligne");
 		}
 
@@ -529,9 +529,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			var t3 = new StaticGlyph
 			{
 				Parent           = container,
-				GlyphShape       = GlyphShape.ArrowRight,
+				GlyphShape       = GlyphShape.TriangleRight,
 				ContentAlignment = ContentAlignment.MiddleCenter,
-				Margins          = new Margins (2, 2, 2+2, 2),
+				Margins          = new Margins (0, 0, 2, 0),
 			};
 
 			field2.Parent   = container;

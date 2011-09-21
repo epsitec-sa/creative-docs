@@ -12,6 +12,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Business.Finance;
 using Epsitec.Cresus.Core.Documents;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Helpers;
@@ -600,6 +601,45 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 		protected virtual void InitializeColumns()
 		{
+		}
+
+		protected string GetColumnDescription(TableColumnKeys columnKey)
+		{
+			switch (columnKey)
+			{
+				case TableColumnKeys.LineNumber:
+					return "N°";
+
+				case TableColumnKeys.MainQuantity:
+					return "Quantité";
+
+				case TableColumnKeys.AdditionalType:
+					return "Autres quantités";
+
+				case TableColumnKeys.ArticleId:
+					return "Article";
+
+				case TableColumnKeys.ArticleDescription:
+					return "Désignation";
+
+				case TableColumnKeys.UnitPrice:
+					return this.IsExcludingTax ? "p.u. HT" : "p.u. TTC";
+
+				case TableColumnKeys.Discount:
+					return "Rabais";
+
+				case TableColumnKeys.LinePrice:
+					return this.IsExcludingTax ? "Prix HT" : "Prix TTC";
+
+				case TableColumnKeys.Vat:
+					return "TVA";
+
+				case TableColumnKeys.Total:
+					return "Total";
+
+				default:
+					return "";
+			}
 		}
 
 		protected virtual DocumentItemAccessorMode DocumentItemAccessorMode
@@ -1245,6 +1285,31 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 		}
 
 
+
+		private bool IsExcludingTax
+		{
+			get
+			{
+				return this.BillingMode == Finance.BillingMode.ExcludingTax;
+			}
+		}
+
+		private BillingMode BillingMode
+		{
+			get
+			{
+				var entity = this.Entity;
+
+				if (entity.IsNotNull () && entity.PriceGroup.IsNotNull ())
+				{
+					return entity.PriceGroup.BillingMode;
+				}
+				else
+				{
+					return Business.Finance.BillingMode.None;
+				}
+			}
+		}
 
 		protected BusinessDocumentEntity Entity
 		{
