@@ -341,6 +341,14 @@ namespace Epsitec.Cresus.Core.Library.Business
 							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 258));
 						}
 					}
+					//	designer:cap/GVAI8
+					public static global::Epsitec.Common.Types.Caption Reset
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 274));
+						}
+					}
 				}
 				
 				public static class ArticleQuantityType

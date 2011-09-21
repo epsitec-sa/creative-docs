@@ -202,12 +202,12 @@ namespace Epsitec.Cresus.Core.Business
 		
 		
 		[System.ThreadStatic]
-		private static Logic current;
+		private static Logic					current;
 
-		private readonly AbstractEntity entity;
-		private readonly System.Type entityType;
+		private readonly AbstractEntity			entity;
+		private readonly System.Type			entityType;
 		private readonly Dictionary<RuleType, GenericBusinessRule> rules;
 		private readonly CoreComponentHostImplementation<ICoreManualComponent> components;
-		private Logic link;
+		private Logic							link;
 	}
 }

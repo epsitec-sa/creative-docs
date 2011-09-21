@@ -331,7 +331,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 
 		private void RoundEndTotal(EndTotalDocumentItemEntity totalLine)
 		{
-			var beforeRounding = totalLine.PriceAfterTax.Value;
+			var beforeRounding = totalLine.PriceAfterTax.GetValueOrDefault ();
 			var afterRounding  = this.Round (beforeRounding, RoundingPolicy.OnEndTotal);
 
 			if (afterRounding == beforeRounding)

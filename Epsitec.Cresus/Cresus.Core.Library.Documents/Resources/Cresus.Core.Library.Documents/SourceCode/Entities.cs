@@ -936,7 +936,7 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>SerializedDocumentBlob</c> entity.
 	///	designer:cap/HVAC
 	///	</summary>
-	public partial class SerializedDocumentBlobEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemCode
+	public partial class SerializedDocumentBlobEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemCode, global::Epsitec.Cresus.Core.Entities.IDateMetadata, global::Epsitec.Cresus.Core.Entities.IDataHash
 	{
 		#region IItemCode Members
 		///	<summary>
@@ -953,6 +953,78 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+			}
+		}
+		#endregion
+		#region IDataHash Members
+		///	<summary>
+		///	The <c>WeakHash</c> field.
+		///	designer:fld/HVAC/8VAC
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAC]")]
+		public int? WeakHash
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IDataHashInterfaceImplementation.GetWeakHash (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IDataHashInterfaceImplementation.SetWeakHash (this, value);
+			}
+		}
+		#endregion
+		#region IDateMetadata Members
+		///	<summary>
+		///	The <c>CreationDate</c> field.
+		///	designer:fld/HVAC/8VAH
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAH]")]
+		public global::System.DateTime? CreationDate
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IDateMetadataInterfaceImplementation.GetCreationDate (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IDateMetadataInterfaceImplementation.SetCreationDate (this, value);
+			}
+		}
+		#endregion
+		#region IDataHash Members
+		///	<summary>
+		///	The <c>StrongHash</c> field.
+		///	designer:fld/HVAC/8VAD
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAD]")]
+		public string StrongHash
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IDataHashInterfaceImplementation.GetStrongHash (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IDataHashInterfaceImplementation.SetStrongHash (this, value);
+			}
+		}
+		#endregion
+		#region IDateMetadata Members
+		///	<summary>
+		///	The <c>LastModificationDate</c> field.
+		///	designer:fld/HVAC/8VAI
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAI]")]
+		public global::System.DateTime? LastModificationDate
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IDateMetadataInterfaceImplementation.GetLastModificationDate (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IDateMetadataInterfaceImplementation.SetLastModificationDate (this, value);
 			}
 		}
 		#endregion
