@@ -101,7 +101,7 @@ namespace Epsitec.Cresus.Core.Business.Actions
 				documentMetadata.DocumentCategory = documentCategory;
 				documentMetadata.DocumentTitle    = documentCategory.Name;
 				documentMetadata.BusinessDocument = businessDocument;
-				documentMetadata.DocumentState    = DocumentState.Active;
+				documentMetadata.DocumentState    = DocumentState.Draft;
 
 				return true;
 			}
