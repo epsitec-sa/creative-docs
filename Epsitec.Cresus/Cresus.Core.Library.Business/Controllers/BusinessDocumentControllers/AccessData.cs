@@ -33,10 +33,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				if ((this.BusinessDocument.IsNotNull ()) &&
-					(this.BusinessDocument.PriceGroup.IsNotNull ()))
+				if (this.BusinessDocument.IsNotNull ())
 				{
-					return this.BusinessDocument.PriceGroup.BillingMode;
+					return this.BusinessDocument.BillingMode;
 				}
 				else
 				{

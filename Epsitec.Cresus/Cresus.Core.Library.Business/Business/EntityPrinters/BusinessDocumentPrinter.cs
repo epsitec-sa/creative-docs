@@ -623,13 +623,13 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 					return "Désignation";
 
 				case TableColumnKeys.UnitPrice:
-					return this.IsExcludingTax ? "p.u. HT" : "p.u. TTC";
+					return this.Entity.IsExcludingTax ? "p.u. HT" : "p.u. TTC";
 
 				case TableColumnKeys.Discount:
 					return "Rabais";
 
 				case TableColumnKeys.LinePrice:
-					return this.IsExcludingTax ? "Prix HT" : "Prix TTC";
+					return this.Entity.IsExcludingTax ? "Prix HT" : "Prix TTC";
 
 				case TableColumnKeys.Vat:
 					return "TVA";
@@ -1284,32 +1284,6 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			}
 		}
 
-
-
-		private bool IsExcludingTax
-		{
-			get
-			{
-				return this.BillingMode == Finance.BillingMode.ExcludingTax;
-			}
-		}
-
-		private BillingMode BillingMode
-		{
-			get
-			{
-				var entity = this.Entity;
-
-				if (entity.IsNotNull () && entity.PriceGroup.IsNotNull ())
-				{
-					return entity.PriceGroup.BillingMode;
-				}
-				else
-				{
-					return Business.Finance.BillingMode.None;
-				}
-			}
-		}
 
 		protected BusinessDocumentEntity Entity
 		{

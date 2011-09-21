@@ -6,6 +6,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Business.Finance;
 using Epsitec.Cresus.Core.Helpers;
 
 using System.Collections.Generic;
@@ -15,6 +16,30 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class BusinessDocumentEntity : ICopyableEntity<BusinessDocumentEntity>
 	{
+		public bool IsExcludingTax
+		{
+			get
+			{
+				return this.BillingMode == BillingMode.ExcludingTax;
+			}
+		}
+
+		public BillingMode BillingMode
+		{
+			get
+			{
+				if (this.PriceGroup.IsNotNull ())
+				{
+					return this.PriceGroup.BillingMode;
+				}
+				else
+				{
+					return Business.Finance.BillingMode.None;
+				}
+			}
+		}
+
+	
 		public override FormattedText GetSummary()
 		{
 			FormattedText billing  = BusinessDocumentEntity.GetShortMailContactSummary (this.BillToMailContact);
