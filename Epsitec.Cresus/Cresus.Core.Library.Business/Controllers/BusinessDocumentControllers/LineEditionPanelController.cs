@@ -177,23 +177,17 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			//	Met à jour le titre de l'éditeur.
 			var lineText      = FormattedText.Empty;
-			var documentText  = FormattedText.Empty;
+			var documentText  = this.accessData.DocumentMetadata.DocumentStateLongDescription.ApplyBold ();
 			var lineColor     = Color.FromBrightness (1.0);  // blanc
 			var documentColor = Color.FromBrightness (1.0);  // blanc
 
 			switch (this.accessData.DocumentMetadata.DocumentState)
 			{
-				case DocumentState.Draft:
-					documentText = "Document brouillon";
-					break;
-
 				case DocumentState.Active:
-					documentText = "Document actif";
 					documentColor = Color.FromHexa ("e2eeff");  // bleu clair
 					break;
 
 				case DocumentState.Inactive:
-					documentText = "Document inactif";
 					documentColor = Color.FromBrightness (0.8);  // gris clair
 					break;
 			}

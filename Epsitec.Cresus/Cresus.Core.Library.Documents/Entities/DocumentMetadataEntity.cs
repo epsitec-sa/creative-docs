@@ -11,6 +11,50 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class DocumentMetadataEntity
 	{
+		public FormattedText DocumentStateShortDescription
+		{
+			get
+			{
+				switch (this.DocumentState)
+				{
+					case Business.DocumentState.Draft:
+						return "brouillon";
+
+					case Business.DocumentState.Inactive:
+						return "inactif";
+
+					case Business.DocumentState.Active:
+						return "actif";
+
+					default:
+						return FormattedText.Empty;
+				}
+
+			}
+		}
+
+		public FormattedText DocumentStateLongDescription
+		{
+			get
+			{
+				switch (this.DocumentState)
+				{
+					case Business.DocumentState.Draft:
+						return "Document brouillon";
+
+					case Business.DocumentState.Inactive:
+						return "Document inactif";
+
+					case Business.DocumentState.Active:
+						return "Document actif";
+
+					default:
+						return FormattedText.Empty;
+				}
+
+			}
+		}
+
 		/// <summary>
 		/// Gets a value indicating whether this document is frozen. This is related to
 		/// the document's state; currently, only the <see cref="DocumentState.Draft"/>
@@ -44,7 +88,14 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText ("Document n°", this.IdA, ", v. ~", this.BusinessDocument.VariantId);
+			var v = FormattedText.Empty;
+
+			if (this.BusinessDocument.VariantId.HasValue)
+			{
+				v = FormattedText.Concat ("v", (this.BusinessDocument.VariantId+1).ToString ());
+			}
+
+			return TextFormatter.FormatText ("Document n°", this.IdA, ", ~", v, ", ~", this.DocumentStateShortDescription);
 		}
 
 		public override FormattedText GetCompactSummary()
