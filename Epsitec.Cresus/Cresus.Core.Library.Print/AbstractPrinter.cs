@@ -186,7 +186,13 @@ namespace Epsitec.Cresus.Core.Print
 
 		public virtual void PrintBackgroundCurrentPage(IPaintPort port)
 		{
-			if (this.HasOption (DocumentOption.Specimen))
+			var documentMetadata = this.entity as DocumentMetadataEntity;
+
+			if (documentMetadata != null && documentMetadata.DocumentState == DocumentState.Draft)
+			{
+				this.PaintDraft (port);
+			}
+			else if (this.HasOption (DocumentOption.Specimen))
 			{
 				this.PaintSpecimen (port);
 			}
@@ -197,9 +203,35 @@ namespace Epsitec.Cresus.Core.Print
 		}
 
 		
+		private void PaintDraft(IPaintPort port)
+		{
+			//	Dessine un très gros "BROUILLON" en filigrane en travers de la page.
+			var bounds = new Rectangle (Point.Zero, this.RequiredPageSize);
+			double diagonal = Point.Distance (bounds.BottomLeft, bounds.TopRight);
+			double angle = System.Math.Atan2 (bounds.Height, bounds.Width);
+			bounds.Inflate (diagonal);
+
+			var initial = port.Transform;
+			port.Transform = port.Transform.MultiplyByPostfix (Transform.CreateRotationRadTransform (angle, bounds.Center));
+
+			var layout = new TextLayout
+			{
+				Text = "BROUILLON",
+				DefaultColor = Color.FromBrightness (this.PreviewMode == PreviewMode.Print ? 0.80 : 0.95),  // plus foncé si impression réelle
+				DefaultFont = Font.GetFont ("Arial", "Bold"),
+				DefaultFontSize = diagonal / 7.5,
+				Alignment = ContentAlignment.MiddleCenter,
+				LayoutSize = bounds.Size,
+			};
+
+			layout.Paint (bounds.BottomLeft, port);
+
+			port.Transform = initial;
+		}
+
 		private void PaintSpecimen(IPaintPort port)
 		{
-			//	Dessine un très gros "SPECIMEN" en travers de la page.
+			//	Dessine un très gros "SPECIMEN" en filigrane en travers de la page.
 			var bounds = new Rectangle (Point.Zero, this.RequiredPageSize);
 			double diagonal = Point.Distance (bounds.BottomLeft, bounds.TopRight);
 			double angle = System.Math.Atan2 (bounds.Height, bounds.Width);

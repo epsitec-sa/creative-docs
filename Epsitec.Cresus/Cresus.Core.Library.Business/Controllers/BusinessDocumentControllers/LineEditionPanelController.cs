@@ -53,6 +53,15 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Margins          = new Margins (10, 10, 0, 0),
 			};
 
+			this.titleState = new StaticText
+			{
+				Parent           = this.titleFrame,
+				PreferredWidth   = 150,
+				Dock             = DockStyle.Right,
+				ContentAlignment = ContentAlignment.MiddleRight,
+				Margins          = new Margins (10, 10, 0, 0),
+			};
+
 			this.lineEditorTile = new FrameBox
 			{
 				Parent        = frame,
@@ -146,9 +155,27 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private void UpdateLineEditorTitle()
 		{
 			//	Met à jour le titre de l'éditeur.
-			
+
 			var text  = FormattedText.Empty;
-			var color = this.GetLineEditorTitleColor ();
+			var state = FormattedText.Empty;
+			var color = Color.FromBrightness (1.0);  // blanc
+
+			switch (this.accessData.DocumentMetadata.DocumentState)
+			{
+				case DocumentState.Draft:
+					state = "Document brouillon";
+					break;
+
+				case DocumentState.Active:
+					state = "Document actif";
+					color = Color.FromHexa ("e2eeff");  // bleu clair
+					break;
+
+				case DocumentState.Inactive:
+					state = "Document inactif";
+					color = Color.FromBrightness (0.8);  // gris clair
+					break;
+			}
 
 			if (this.lineEditorController != null)
 			{
@@ -163,21 +190,18 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				text.ApplyFontSizePercent (120);
 			}
 
-			this.titleText.FormattedText = text;
-			this.titleFrame.BackColor    = color;
+			this.titleText.FormattedText  = text;
+			this.titleState.FormattedText = state;
+			this.titleFrame.BackColor     = color;
 		}
 
 
-		private Color GetLineEditorTitleColor()
-		{
-			return (this.accessData.DocumentMetadata.DocumentState == DocumentState.Inactive) ? Color.FromBrightness (0.8) : Color.FromBrightness (1.0);
-		}
-		
 		private readonly AccessData				accessData;
 
 		private EditMode						editMode;
 		private FrameBox						titleFrame;
 		private StaticText						titleText;
+		private StaticText						titleState;
 		private FrameBox						lineEditorTile;
 		private AbstractLineEditorController	lineEditorController;
 		private DocumentItemAccessorError		error;
