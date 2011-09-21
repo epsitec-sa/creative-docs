@@ -76,15 +76,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.editMode = editMode;
 
 			this.ClearLineEditor ();
+			this.CreateLineEditor (info);
 
-			if (info != null)
+			if (this.lineEditorController != null)
 			{
-				this.CreateLineEditor (info);
-
-				if (this.lineEditorController != null)
-				{
-					this.lineEditorController.SetInitialFocus ();
-				}
+				this.lineEditorController.SetInitialFocus ();
 			}
 
 			this.UpdateLineEditorTitle ();
@@ -104,43 +100,46 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		
 		private void CreateLineEditor(Line info)
 		{
-			if (info.DocumentItem is ArticleDocumentItemEntity)
+			if (info == null)
 			{
-				if ((info.SublineIndex == 0) ||
-					(info.IsQuantity == false))
+				this.lineEditorController = new DeselectedEditorController (this.accessData);
+				this.lineEditorController.CreateUI (this.lineEditorTile, null);
+			}
+			else
+			{
+				if (info.DocumentItem is ArticleDocumentItemEntity)
 				{
-					this.lineEditorController = new ArticleLineEditorController (this.accessData, this.editMode);
+					if (info.SublineIndex == 0 || info.IsQuantity == false)
+					{
+						this.lineEditorController = new ArticleLineEditorController (this.accessData, this.editMode);
+						this.lineEditorController.CreateUI (this.lineEditorTile, info.DocumentItem);
+					}
+					else
+					{
+						this.lineEditorController = new QuantityLineEditorController (this.accessData);
+						this.lineEditorController.CreateUI (this.lineEditorTile, info.ArticleQuantity);
+					}
+				}
+				else if (info.DocumentItem is TextDocumentItemEntity)
+				{
+					this.lineEditorController = new TextLineEditorController (this.accessData);
 					this.lineEditorController.CreateUI (this.lineEditorTile, info.DocumentItem);
 				}
-				else
+				else if (info.DocumentItem is TaxDocumentItemEntity)
 				{
-					this.lineEditorController = new QuantityLineEditorController (this.accessData);
-					this.lineEditorController.CreateUI (this.lineEditorTile, info.ArticleQuantity);
+					this.lineEditorController = new TaxLineEditorController (this.accessData);
+					this.lineEditorController.CreateUI (this.lineEditorTile, info.DocumentItem);
 				}
-			}
-
-			if (info.DocumentItem is TextDocumentItemEntity)
-			{
-				this.lineEditorController = new TextLineEditorController (this.accessData);
-				this.lineEditorController.CreateUI (this.lineEditorTile, info.DocumentItem);
-			}
-
-			if (info.DocumentItem is TaxDocumentItemEntity)
-			{
-				this.lineEditorController = new TaxLineEditorController (this.accessData);
-				this.lineEditorController.CreateUI (this.lineEditorTile, info.DocumentItem);
-			}
-
-			if (info.DocumentItem is SubTotalDocumentItemEntity)
-			{
-				this.lineEditorController = new SubTotalLineEditorController (this.accessData);
-				this.lineEditorController.CreateUI (this.lineEditorTile, info.DocumentItem);
-			}
-
-			if (info.DocumentItem is EndTotalDocumentItemEntity)
-			{
-				this.lineEditorController = new EndTotalLineEditorController (this.accessData);
-				this.lineEditorController.CreateUI (this.lineEditorTile, info.DocumentItem);
+				else if (info.DocumentItem is SubTotalDocumentItemEntity)
+				{
+					this.lineEditorController = new SubTotalLineEditorController (this.accessData);
+					this.lineEditorController.CreateUI (this.lineEditorTile, info.DocumentItem);
+				}
+				else if (info.DocumentItem is EndTotalDocumentItemEntity)
+				{
+					this.lineEditorController = new EndTotalLineEditorController (this.accessData);
+					this.lineEditorController.CreateUI (this.lineEditorTile, info.DocumentItem);
+				}
 			}
 		}
 		
