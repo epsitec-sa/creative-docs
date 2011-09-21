@@ -442,9 +442,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			var selection = this.Selection;
 
-			var isEditionEnabled    = this.accessData.DocumentLogic.IsLinesEditionEnabled;
-			var isQuantityEnabled   = this.accessData.DocumentLogic.IsArticleQuantityEditionEnabled;
-			var isMyEyesOnlyEnabled = this.accessData.DocumentLogic.IsMyEyesOnlyEditionEnabled;
+			var isFrozen            = this.accessData.DocumentMetadata.IsFrozen;
+			var isEditionEnabled    = !isFrozen && this.accessData.DocumentLogic.IsLinesEditionEnabled;
+			var isQuantityEnabled   = !isFrozen && this.accessData.DocumentLogic.IsArticleQuantityEditionEnabled;
+			var isMyEyesOnlyEnabled = !isFrozen && this.accessData.DocumentLogic.IsMyEyesOnlyEditionEnabled;
 
 			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateArticle,  isEditionEnabled);
 			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.CreateQuantity, (isEditionEnabled || isQuantityEnabled) && this.linesEngine.IsCreateQuantityEnabled (selection));
@@ -465,10 +466,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Combine,        isEditionEnabled && this.linesEngine.IsCombineEnabled (selection));
 			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Flat,           isEditionEnabled && this.linesEngine.IsFlatEnabled);
 
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Deselect,       selection.Count != 0);
-			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.GroupSelect,    selection.Count != 0);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.Deselect,       !isFrozen && selection.Count != 0);
+			this.commandContext.SetLocalEnable (Library.Business.Res.Commands.Lines.GroupSelect,    !isFrozen && selection.Count != 0);
 
-			if (selection.Count != 1)
+			if (isFrozen || selection.Count != 1)
 			{
 				this.lineEditionPanelController.SetError (DocumentItemAccessorError.None);
 			}

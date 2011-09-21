@@ -155,7 +155,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private void UpdateLineEditorTitle()
 		{
 			//	Met à jour le titre de l'éditeur.
-
 			var text  = FormattedText.Empty;
 			var state = FormattedText.Empty;
 			var color = Color.FromBrightness (1.0);  // blanc
@@ -181,7 +180,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				text = this.lineEditorController.TileTitle.ApplyBold ();
 
-				if (this.error != DocumentItemAccessorError.None)
+				if (this.error != DocumentItemAccessorError.None)  // y a-t-il une erreur ?
 				{
 					text  = FormattedText.Concat (text, " — ", DocumentItemAccessor.GetErrorDescription (this.error));
 					color = Color.FromName ("Gold");

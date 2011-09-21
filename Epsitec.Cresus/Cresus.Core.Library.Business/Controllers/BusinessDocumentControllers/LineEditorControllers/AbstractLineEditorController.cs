@@ -61,6 +61,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				this.CreateUI (builder);
 			}
+
+			this.tileContainer.Enable = !this.accessData.DocumentMetadata.IsFrozen;
 		}
 
 		public void UpdateUI()
