@@ -35,31 +35,52 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				PreferredHeight = 200,  // hauteur par défaut pour tous les éditeurs de lignes
 			};
 
-			this.titleFrame = new FrameBox
+			var titleFrame = new FrameBox
 			{
 				PreferredHeight = 28,
 				Margins         = new Margins (0, 0, 0, -1),
 				Parent          = frame,
 				Dock            = DockStyle.Top,
+				DrawFullFrame   = false,
+			};
+
+			this.titleDocumentFrame = new FrameBox
+			{
+				PreferredWidth  = 130,
+				PreferredHeight = 28,
+				Margins         = new Margins (0, 0, 0, 0),
+				Parent          = titleFrame,
+				Dock            = DockStyle.Left,
 				DrawFullFrame   = true,
 				BackColor       = Color.FromName ("White"),
 			};
 
-			this.titleText = new StaticText
+			this.titleLineFrame = new FrameBox
 			{
-				Parent           = this.titleFrame,
-				Dock             = DockStyle.Fill,
-				ContentAlignment = ContentAlignment.MiddleLeft,
-				Margins          = new Margins (10, 10, 0, 0),
+				PreferredHeight = 28,
+				Margins         = new Margins (-1, 0, 0, 0),
+				Parent          = titleFrame,
+				Dock            = DockStyle.Fill,
+				DrawFullFrame   = true,
+				BackColor       = Color.FromName ("White"),
 			};
 
-			this.titleState = new StaticText
+			this.titleDocumentText = new StaticText
 			{
-				Parent           = this.titleFrame,
-				PreferredWidth   = 150,
-				Dock             = DockStyle.Right,
-				ContentAlignment = ContentAlignment.MiddleRight,
-				Margins          = new Margins (10, 10, 0, 0),
+				Parent           = this.titleDocumentFrame,
+				Dock             = DockStyle.Fill,
+				ContentAlignment = ContentAlignment.MiddleLeft,
+				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+				Margins          = new Margins (10, 1, 0, 0),
+			};
+
+			this.titleLineText = new StaticText
+			{
+				Parent           = this.titleLineFrame,
+				Dock             = DockStyle.Fill,
+				ContentAlignment = ContentAlignment.MiddleLeft,
+				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+				Margins          = new Margins (10, 1, 0, 0),
 			};
 
 			this.lineEditorTile = new FrameBox
@@ -155,52 +176,55 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private void UpdateLineEditorTitle()
 		{
 			//	Met à jour le titre de l'éditeur.
-			var text  = FormattedText.Empty;
-			var state = FormattedText.Empty;
-			var color = Color.FromBrightness (1.0);  // blanc
+			var lineText      = FormattedText.Empty;
+			var documentText  = FormattedText.Empty;
+			var lineColor     = Color.FromBrightness (1.0);  // blanc
+			var documentColor = Color.FromBrightness (1.0);  // blanc
 
 			switch (this.accessData.DocumentMetadata.DocumentState)
 			{
 				case DocumentState.Draft:
-					state = "Document brouillon";
+					documentText = "Document brouillon";
 					break;
 
 				case DocumentState.Active:
-					state = "Document actif";
-					color = Color.FromHexa ("e2eeff");  // bleu clair
+					documentText = "Document actif";
+					documentColor = Color.FromHexa ("e2eeff");  // bleu clair
 					break;
 
 				case DocumentState.Inactive:
-					state = "Document inactif";
-					color = Color.FromBrightness (0.8);  // gris clair
+					documentText = "Document inactif";
+					documentColor = Color.FromBrightness (0.8);  // gris clair
 					break;
 			}
 
 			if (this.lineEditorController != null)
 			{
-				text = this.lineEditorController.TileTitle.ApplyBold ();
+				lineText = this.lineEditorController.TileTitle.ApplyBold ();
 
 				if (this.error != DocumentItemAccessorError.None)  // y a-t-il une erreur ?
 				{
-					text  = FormattedText.Concat (text, " — ", DocumentItemAccessor.GetErrorDescription (this.error));
-					color = Color.FromName ("Gold");
+					lineText  = FormattedText.Concat (lineText, " — ", DocumentItemAccessor.GetErrorDescription (this.error));
+					lineColor = Color.FromName ("Gold");
 				}
 
-				text.ApplyFontSizePercent (120);
+				lineText.ApplyFontSizePercent (120);
 			}
 
-			this.titleText.FormattedText  = text;
-			this.titleState.FormattedText = state;
-			this.titleFrame.BackColor     = color;
+			this.titleDocumentText.FormattedText = documentText.ApplyBold ();
+			this.titleDocumentFrame.BackColor    = documentColor;
+			this.titleLineText.FormattedText     = lineText;
+			this.titleLineFrame.BackColor        = lineColor;
 		}
 
 
 		private readonly AccessData				accessData;
 
 		private EditMode						editMode;
-		private FrameBox						titleFrame;
-		private StaticText						titleText;
-		private StaticText						titleState;
+		private FrameBox						titleLineFrame;
+		private StaticText						titleLineText;
+		private FrameBox						titleDocumentFrame;
+		private StaticText						titleDocumentText;
 		private FrameBox						lineEditorTile;
 		private AbstractLineEditorController	lineEditorController;
 		private DocumentItemAccessorError		error;
