@@ -11,12 +11,13 @@ using Epsitec.Cresus.Core.Library.Internal;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Globalization;
 
 namespace Epsitec.Cresus.Core
 {
 	public static class TextFormatter
 	{
-		public static string							CurrentLanguageId
+		public static string					CurrentLanguageId
 		{
 			get
 			{
@@ -25,7 +26,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public static System.Globalization.CultureInfo	CurrentCulture
+		public static CultureInfo				CurrentCulture
 		{
 			get
 			{
@@ -33,7 +34,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public static TextFormatterDetailLevel			CurrentDetailLevel
+		public static TextFormatterDetailLevel	CurrentDetailLevel
 		{
 			get
 			{
@@ -42,7 +43,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public static FormattedText						DefaultUnknownText
+		public static FormattedText				DefaultUnknownText
 		{
 			get
 			{
@@ -142,14 +143,14 @@ namespace Epsitec.Cresus.Core
 			return new FormattedText (string.Join (separator, collection.Select (x => TextFormatter.ConvertToText (x)).ToArray ()));
 		}
 
-		public static System.IDisposable UsingCulture(System.Globalization.CultureInfo culture, TextFormatterDetailLevel detailLevel)
+		public static System.IDisposable UsingCulture(CultureInfo culture, TextFormatterDetailLevel detailLevel)
 		{
 			TextFormatter.SetCultureOverride (culture, detailLevel);
 			return new UsingCultureHelper ();
 		}
 
 		
-		private static void SetCultureOverride(System.Globalization.CultureInfo culture, TextFormatterDetailLevel detailLevel)
+		private static void SetCultureOverride(CultureInfo culture, TextFormatterDetailLevel detailLevel)
 		{
 			TextFormatter.cultureOverride = culture;
 			TextFormatter.detailLevel = detailLevel;
@@ -456,9 +457,9 @@ namespace Epsitec.Cresus.Core
 		static TextFormatter()
 		{
 			TextFormatter.DefineDefaultConverter<string> (x => x);
-			TextFormatter.DefineDefaultConverter<Date> (x => x.ToString ("d", System.Globalization.DateTimeFormatInfo.CurrentInfo));
-			TextFormatter.DefineDefaultConverter<Time> (x => x.ToString ("t", System.Globalization.DateTimeFormatInfo.CurrentInfo));
-			TextFormatter.DefineDefaultConverter<System.DateTime> (x => x.ToString ("g", System.Globalization.DateTimeFormatInfo.CurrentInfo));
+			TextFormatter.DefineDefaultConverter<Date> (x => x.ToString ("d", DateTimeFormatInfo.CurrentInfo));
+			TextFormatter.DefineDefaultConverter<Time> (x => x.ToString ("t", DateTimeFormatInfo.CurrentInfo));
+			TextFormatter.DefineDefaultConverter<System.DateTime> (x => x.ToString ("g", DateTimeFormatInfo.CurrentInfo));
 			TextFormatter.DefineDefaultConverter<Caption> (x => x.DefaultLabelOrName);
 			TextFormatter.DefineDefaultConverter<StructuredType> (x => x.Caption.DefaultLabelOrName);
 			TextFormatter.DefineDefaultConverter<Druid> (x => x.IsEmpty ? TextFormatter.DefaultUnknownText.ToString () : EntityInfo.GetStructuredType (x).Caption.DefaultLabelOrName);
@@ -466,7 +467,7 @@ namespace Epsitec.Cresus.Core
 
 
 		[System.ThreadStatic]
-		private static System.Globalization.CultureInfo cultureOverride;
+		private static CultureInfo cultureOverride;
 
 		[System.ThreadStatic]
 		private static TextFormatterDetailLevel detailLevel;
