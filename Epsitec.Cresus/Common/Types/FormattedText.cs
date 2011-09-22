@@ -157,6 +157,18 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public FormattedText AppendLineIfNotNull(FormattedText line = default (FormattedText))
+		{
+			if (line.IsNullOrEmpty)
+			{
+				return this;
+			}
+			else
+			{
+				return this.AppendLine (line);
+			}
+		}
+
 		public FormattedText AppendLine(FormattedText line = default (FormattedText))
 		{
 			if (this.IsNullOrEmpty)
