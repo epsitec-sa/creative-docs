@@ -557,7 +557,7 @@ namespace Epsitec.Cresus.Core
 
 		public static DbAccess GetDatabaseAccess()
 		{
-			DbAccess access = DbInfrastructure.CreateDatabaseAccess ("core");
+			DbAccess access = DbInfrastructure.CreateDatabaseAccess (CoreContext.DatabaseName, CoreContext.DatabaseHost);
 
 			access.IgnoreInitialConnectionErrors = true;
 			access.CheckConnection = true;

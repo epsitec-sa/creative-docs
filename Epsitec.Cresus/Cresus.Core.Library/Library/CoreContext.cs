@@ -50,6 +50,22 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
+		public static string					DatabaseName
+		{
+			get
+			{
+				return CoreContext.databaseName;
+			}
+		}
+
+		public static string					DatabaseHost
+		{
+			get
+			{
+				return CoreContext.databaseHost;
+			}
+		}
+
 
 		public static void StartAsInteractive()
 		{
@@ -72,11 +88,19 @@ namespace Epsitec.Cresus.Core.Library
 			CoreContext.isServer      = true;
 		}
 
+		public static void DefineDatabase(string name, string host)
+		{
+			CoreContext.databaseName = name;
+			CoreContext.databaseHost = host;
+		}
+
 		
 		private static bool						startupCalled;
 		private static bool						isInteractive;
 		private static bool						isServer;
 		
 		private static CoreDatabaseType			databaseType;
+		private static string					databaseName;
+		private static string					databaseHost;
 	}
 }

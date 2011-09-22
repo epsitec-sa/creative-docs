@@ -20,6 +20,7 @@ namespace Epsitec.Cresus.Core
 		public static void Main(string[] args)
 		{
 			GeneralExceptionCatcher.Setup ();
+			CoreContext.DefineDatabase ("core", "localhost");
 			
 			if (args.Length > 1)
 			{

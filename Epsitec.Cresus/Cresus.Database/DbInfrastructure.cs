@@ -1,9 +1,8 @@
-//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
-
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database.Collections;
@@ -11,15 +10,11 @@ using Epsitec.Cresus.Database.Exceptions;
 using Epsitec.Cresus.Database.Logging;
 
 using System.Collections.Generic;
-
 using System.Linq;
-
 using System.Threading;
-
 
 namespace Epsitec.Cresus.Database
 {
-
 	// TODO Split DbKeysCache in two, one for the types, and one for the tables?
 	// Marc
 
@@ -42,9 +37,10 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public sealed class DbInfrastructure : DependencyObject, System.IDisposable
 	{
-		
 		public DbInfrastructure()
 		{
+			internalTypes = new DbTypeDefList ();
+			internalTables = new DbTableList ();
 			this.QueryLogs = new HashSet<AbstractLog> ();
 
 			this.liveTransactions = new List<DbTransaction> ();
@@ -150,7 +146,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public ISet<AbstractLog> QueryLogs
+		public ISet<AbstractLog>				QueryLogs
 		{
 			get;
 			private set;
@@ -344,14 +340,14 @@ namespace Epsitec.Cresus.Database
 		{
 			string provider = dbAccess.Provider;
 			string database = dbAccess.Database;
-			string server = dbAccess.Server;
-			string user = dbAccess.LoginName;
+			string server   = dbAccess.Server;
+			string user     = dbAccess.LoginName;
 			string password = dbAccess.LoginPassword;
 
 			DbAccess testDbAccess = new DbAccess (provider, database, server, user, password, false)
 			{
-				CheckConnection = false,
-				CreateDatabase = false,
+				CheckConnection               = false,
+				CreateDatabase                = false,
 				IgnoreInitialConnectionErrors = true,
 			};
 
@@ -361,7 +357,6 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-
 		public static void BackupDatabase(DbAccess dbAccess, string remoteFilePath)
 		{
 			using (IDbAbstraction idbAbstraction = DbFactory.CreateDatabaseAbstraction (dbAccess))
@@ -369,7 +364,6 @@ namespace Epsitec.Cresus.Database
 				idbAbstraction.ServiceTools.Backup (remoteFilePath);
 			}
 		}
-
 
 		public static void RestoreDatabase(DbAccess dbAccess, string remoteFilePath)
 		{
@@ -385,20 +379,12 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="name">The database file name.</param>
 		/// <returns>The database access.</returns>
-		public static DbAccess CreateDatabaseAccess(string name)
+		public static DbAccess CreateDatabaseAccess(string name, string host = "localhost")
 		{
-			return new DbAccess ("Firebird", name, "localhost", "sysdba", "masterkey", false);
-		}
+			ExceptionThrower.ThrowIfNullOrEmpty (name, "name");
+			ExceptionThrower.ThrowIfNullOrEmpty (host, "host");
 
-		/// <summary>
-		/// Creates the database access.
-		/// </summary>
-		/// <param name="provider">The database provider.</param>
-		/// <param name="name">The database file name.</param>
-		/// <returns>The database access.</returns>
-		public static DbAccess CreateDatabaseAccess(string provider, string name)
-		{
-			return new DbAccess (provider, name, "localhost", "sysdba", "masterkey", false);
+			return new DbAccess ("Firebird", name, host, "sysdba", "masterkey", false);
 		}
 
 		/// <summary>
@@ -3643,11 +3629,11 @@ namespace Epsitec.Cresus.Database
 		
 		private TypeHelper						types;
 
-		private DbTableList						internalTables = new DbTableList ();
-		private DbTypeDefList					internalTypes = new DbTypeDefList ();
+		private readonly DbTableList internalTables;
+		private readonly DbTypeDefList internalTypes;
 
-		private Cache.DbTypeDefs				typeCache = new Cache.DbTypeDefs ();
-		private Cache.DbTables					tableCache = new Cache.DbTables ();
+		private readonly Cache.DbTypeDefs		typeCache = new Cache.DbTypeDefs ();
+		private readonly Cache.DbTables			tableCache = new Cache.DbTables ();
 		private Dictionary<string, Dictionary<string, DbKey[]>> dbKeysCache;
 
 		private List<DbTransaction>				liveTransactions;

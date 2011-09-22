@@ -1,4 +1,4 @@
-//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
@@ -188,12 +188,12 @@ namespace Epsitec.Cresus.Database
 		
 		
 		public static readonly DbAccess			Empty;
-		
-		private string							provider;
-		private string							database;
-		private string							server;
-		private string							loginName;
-		private string							loginPassword;
+
+		private readonly string					provider;
+		private readonly string					database;
+		private readonly string					server;
+		private readonly string					loginName;
+		private readonly string					loginPassword;
 		private bool							createDatabase;
 		private bool							checkConnection;
 		private bool							ignoreErrors;
