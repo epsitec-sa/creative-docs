@@ -13,17 +13,17 @@ namespace Epsitec.Cresus.Core.Library
 	/// and associated texts which represent its value.
 	/// </summary>
 	/// <typeparam name="T">The enumeration type.</typeparam>
-	public class EnumKeyValues<T> : EnumKeyValues
+	public sealed class EnumKeyValues<T> : EnumKeyValues
 	{
 		public EnumKeyValues(T key, params string[] values)
 		{
-			this.key = key;
+			this.key    = key;
 			this.values = values.Where (x => !string.IsNullOrEmpty (x)).Select (x => new FormattedText (x)).ToArray ();
 		}
 
 		public EnumKeyValues(T key, params FormattedText[] values)
 		{
-			this.key = key;
+			this.key    = key;
 			this.values = values.Where (x => !x.IsNullOrEmpty).ToArray ();
 		}
 
@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Core.Library
 		/// Gets the key which is an <c>enum</c> value.
 		/// </summary>
 		/// <value>The key.</value>
-		public T Key
+		public T								Key
 		{
 			get
 			{
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Library
 		/// Gets the values for the key.
 		/// </summary>
 		/// <value>The values.</value>
-		public override FormattedText[] Values
+		public override FormattedText[]			Values
 		{
 			get
 			{
@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Core.Library
 		}
 
 
-		private readonly T key;
-		private readonly FormattedText[] values;
+		private readonly T						key;
+		private readonly FormattedText[]		values;
 	}
 }

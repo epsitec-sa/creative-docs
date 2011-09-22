@@ -18,6 +18,20 @@ namespace Epsitec.Cresus.Core.Library
 	/// </summary>
 	public abstract class EnumKeyValues : ITextFormatter
 	{
+		protected EnumKeyValues()
+		{
+		}
+
+
+		/// <summary>
+		/// Gets the values which describe this <c>enum</c> value.
+		/// </summary>
+		public abstract FormattedText[]			Values
+		{
+			get;
+		}
+		
+		
 		public static EnumKeyValues<T> Create<T>(T key, params string[] values)
 		{
 			return new EnumKeyValues<T> (key, values);
@@ -77,11 +91,6 @@ namespace Epsitec.Cresus.Core.Library
 			where T : struct
 		{
 			return EnumKeyValues.FromEnum<T> ().FirstOrDefault (x => x.Key.Equals (value));
-		}
-
-		public abstract FormattedText[] Values
-		{
-			get;
 		}
 
 		#region ITextFormatter Members
