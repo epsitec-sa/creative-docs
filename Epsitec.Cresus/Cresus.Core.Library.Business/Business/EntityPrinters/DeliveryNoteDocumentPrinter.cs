@@ -138,10 +138,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				var mode = DocumentItemAccessorMode.Print |
 						   DocumentItemAccessorMode.UseArticleName;  // le nom court suffit
 
-				if (this.HasOption (DocumentOption.ArticleAdditionalQuantities))  // imprime les autres quantités ?
-				{
-					mode |= DocumentItemAccessorMode.AdditionalQuantities;
-				}
+				mode |= this.GetDocumentItemAccessorMode ();
 
 				return mode;
 			}
@@ -159,7 +156,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				this.tableColumns[TableColumnKeys.ArticleId].Visible = false;
 			}
 
-			if (!this.HasOption (DocumentOption.ArticleAdditionalQuantities) ||
+			if (!this.HasOption (DocumentOption.ArticleAdditionalQuantities, "Separate") ||
 				BusinessDocumentPrinter.IsEmptyColumn (accessors, DocumentItemAccessorColumn.AdditionalQuantity))
 			{
 				this.tableColumns[TableColumnKeys.AdditionalType].Visible = false;
@@ -170,7 +167,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 		protected override void FinishColumns()
 		{
-			if (this.HasOption (DocumentOption.ArticleAdditionalQuantities))
+			if (this.HasOption (DocumentOption.ArticleAdditionalQuantities, "Separate"))
 			{
 				this.columnsWithoutRightBorder.Add (TableColumnKeys.AdditionalType);
 				this.columnsWithoutRightBorder.Add (TableColumnKeys.AdditionalQuantity);
@@ -193,19 +190,13 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 				this.SetTableText (row+i, TableColumnKeys.MainQuantity, BusinessDocumentPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.MainQuantity, DocumentItemAccessorColumn.MainUnit));
 
-				if (this.HasOption (DocumentOption.ArticleAdditionalQuantities))  // imprime les autres quantités ?
-				{
-					this.SetTableText (row+i, TableColumnKeys.AdditionalType, accessor.GetContent (i, DocumentItemAccessorColumn.AdditionalType));
-					this.SetTableText (row+i, TableColumnKeys.AdditionalQuantity, BusinessDocumentPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.AdditionalQuantity, DocumentItemAccessorColumn.AdditionalUnit));
-					this.SetTableText (row+i, TableColumnKeys.AdditionalDate, BusinessDocumentPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.AdditionalBeginDate, DocumentItemAccessorColumn.AdditionalEndDate));
-				}
-
 				if (this.HasOption (DocumentOption.ArticleId))
 				{
 					this.SetTableText (row+i, TableColumnKeys.ArticleId, accessor.GetContent (i, DocumentItemAccessorColumn.ArticleId));
 				}
 
 				this.SetTableText (row+i, TableColumnKeys.ArticleDescription, accessor.GetContent (i, DocumentItemAccessorColumn.ArticleDescription));
+				this.BuildLineAdditionalQuantities (row, accessor, i);  // imprime les autres quantités
 				this.IndentCellMargins (row+i, TableColumnKeys.ArticleDescription, line.GroupIndex);
 
 				this.SetCellBorder (row+i, this.GetCellBorder ());

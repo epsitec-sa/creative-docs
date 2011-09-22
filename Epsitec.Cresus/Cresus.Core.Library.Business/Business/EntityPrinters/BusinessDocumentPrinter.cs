@@ -922,6 +922,18 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 
 		#region TableBand helpers
+		protected FormattedText GetTableText(int row, TableColumnKeys columnKey)
+		{
+			if (this.GetColumnVisibility (columnKey))
+			{
+				return this.table.GetText (this.tableColumns[columnKey].Rank, row);
+			}
+			else
+			{
+				return FormattedText.Empty;
+			}
+		}
+
 		protected void SetTableText(int row, TableColumnKeys columnKey, FormattedText text)
 		{
 			if (this.GetColumnVisibility (columnKey))
@@ -1241,6 +1253,48 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			}
 		}
 		#endregion
+
+
+		protected void BuildLineAdditionalQuantities(int row, DocumentItemAccessor accessor, int i)
+		{
+			if (!this.HasOption (DocumentOption.ArticleAdditionalQuantities, "None"))  // imprime les autres quantités ?
+			{
+				var t = accessor.GetContent (i, DocumentItemAccessorColumn.AdditionalType);
+				var q = BusinessDocumentPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.AdditionalQuantity, DocumentItemAccessorColumn.AdditionalUnit);
+				var d = BusinessDocumentPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.AdditionalBeginDate, DocumentItemAccessorColumn.AdditionalEndDate);
+
+				if (this.HasOption (DocumentOption.ArticleAdditionalQuantities, "Separate"))  // dans une colonne spécifique ?
+				{
+					this.SetTableText (row+i, TableColumnKeys.AdditionalType,     t);
+					this.SetTableText (row+i, TableColumnKeys.AdditionalQuantity, q);
+					this.SetTableText (row+i, TableColumnKeys.AdditionalDate,     d);
+				}
+
+				if (this.HasOption (DocumentOption.ArticleAdditionalQuantities, "ToQuantity") &&  // avec les quantités ?
+					this.GetTableText (row+i, TableColumnKeys.MainQuantity).IsNullOrEmpty)
+				{
+					this.SetTableText (row+i, TableColumnKeys.MainQuantity, TextFormatter.FormatText (t, q, d));
+				}
+
+				if (this.HasOption (DocumentOption.ArticleAdditionalQuantities, "ToDescription") &&  // avec les descriptions ?
+					this.GetTableText (row+i, TableColumnKeys.ArticleDescription).IsNullOrEmpty)
+				{
+					this.SetTableText (row+i, TableColumnKeys.ArticleDescription, TextFormatter.FormatText (t, q, d));
+				}
+			}
+		}
+
+		protected DocumentItemAccessorMode GetDocumentItemAccessorMode()
+		{
+			var mode = DocumentItemAccessorMode.None;
+
+			if (!this.HasOption (DocumentOption.ArticleAdditionalQuantities, "None"))
+			{
+				mode |= DocumentItemAccessorMode.AdditionalQuantities;
+			}
+
+			return mode;
+		}
 
 
 		protected double PriceWidth
