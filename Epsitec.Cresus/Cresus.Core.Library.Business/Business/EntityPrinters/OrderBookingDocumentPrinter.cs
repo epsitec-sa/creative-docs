@@ -215,7 +215,8 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				return accessor.RowsCount;
 			}
 
-			for (int i = 0; i < accessor.RowsCount; i++)
+			int count = accessor.RowsCount;
+			for (int i = 0; i < count; i++)
 			{
 				if (!this.HasOption (DocumentOption.LineNumber, "None"))
 				{
@@ -245,7 +246,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				}
 				this.SetTableText (row+i, TableColumnKeys.Total, total);
 
-				this.SetCellBorder (row+i, this.GetCellBorder ());
+				this.SetCellBorder (row, i, count);
 			}
 
 			int last = row+accessor.RowsCount-1;

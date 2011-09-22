@@ -1057,6 +1057,24 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			return new CellBorder (leftWidth, rightWidth, bottomWidth, topWidth);
 		}
 
+		protected void SetCellBorder(int row, int i, int count)
+		{
+			bool bottomLess = false;
+			bool topLess    = false;
+
+			if (i > 0)
+			{
+				topLess = true;
+			}
+
+			if (i < count-1)
+			{
+				bottomLess = true;
+			}
+
+			this.SetCellBorder (row+i, this.GetCellBorder (bottomLess: bottomLess, topLess: topLess));
+		}
+
 		protected void SetCellBorder(int row, CellBorder value)
 		{
 			this.SetCellBorder (this.table, row, value);
