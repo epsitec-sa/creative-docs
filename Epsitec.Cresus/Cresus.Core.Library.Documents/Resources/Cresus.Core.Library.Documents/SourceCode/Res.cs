@@ -200,14 +200,6 @@ namespace Epsitec.Cresus.Core.Library.Documents
 						return global::Epsitec.Cresus.Core.Library.Documents.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 39));
 					}
 				}
-				//	designer:cap/HVA22
-				public static global::Epsitec.Common.Types.Caption DirectInvoice
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Library.Documents.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 66));
-					}
-				}
 				//	designer:cap/HVA81
 				public static global::Epsitec.Common.Types.Caption Invoice
 				{
