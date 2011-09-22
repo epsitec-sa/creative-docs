@@ -1271,16 +1271,22 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				}
 
 				if (this.HasOption (DocumentOption.ArticleAdditionalQuantities, "ToQuantity") &&  // avec les quantités ?
-					this.GetTableText (row+i, TableColumnKeys.MainQuantity).IsNullOrEmpty)
+					this.GetTableText (row+i, TableColumnKeys.MainQuantity).IsNullOrEmpty)  // (*)
 				{
 					this.SetTableText (row+i, TableColumnKeys.MainQuantity, TextFormatter.FormatText (t, q, d));
 				}
 
 				if (this.HasOption (DocumentOption.ArticleAdditionalQuantities, "ToDescription") &&  // avec les descriptions ?
-					this.GetTableText (row+i, TableColumnKeys.ArticleDescription).IsNullOrEmpty)
+					this.GetTableText (row+i, TableColumnKeys.ArticleDescription).IsNullOrEmpty)  // (*)
 				{
 					this.SetTableText (row+i, TableColumnKeys.ArticleDescription, TextFormatter.FormatText (t, q, d));
 				}
+
+				// (*)	Si la cellule contient déjà un texte, il ne faut pas l'écraser. En effet,
+				//		cette méthode est appelée après avoir rempli les contenus normaux. Les
+				//		colonnes 'MainQuantity' ou 'ArticleDescription' contiennent donc déjà
+				//		les informations de base, qu'il ne faut pas remplacer par des quantité
+				//		additionnelles vides.
 			}
 		}
 
