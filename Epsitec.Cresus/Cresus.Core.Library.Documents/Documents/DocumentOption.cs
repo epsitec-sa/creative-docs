@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Core.Documents
 
 		LineNumber,						// enum: None, Group, Line, Full
 
-		ArticleAdditionalQuantities,	// enum: None, Separate, ToQuantity, ToDescription
+		ArticleAdditionalQuantities,	// enum: None, Separate, ToQuantity, ToDescription, ToQuantityAndDescription
 		ArticleId,						// bool
 
 		ColumnsOrder,					// enum: QD, DQ

@@ -298,8 +298,8 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 			d = new string[] { "Pas de numérotation", "Numérotation des groupes", "Numérotation plate des lignes", "Numérotation hiérarchique des lignes" };
 			list.Add (new VerboseDocumentOption (DocumentOption.LineNumber, "BusinessDocument.1", true, e, d, "Numérotation", "Type de numérotatioh dans les listes", 0));
 
-			e = new string[] { "None", "Separate", "ToQuantity", "ToDescription" };
-			d = new string[] { "N'imprime pas les autres quantités", "Autres quantités dans une colonne spécifique", "Toutes les quantités ensembles", "Autres quantités avec les désignations" };
+			e = new string[] { "None", "Separate", "ToQuantity", "ToDescription", "ToQuantityAndDescription" };
+			d = new string[] { "N'imprime pas les autres quantités", "Autres quantités dans une colonne spécifique", "Toutes les quantités ensembles", "Autres quantités avec les désignations", "Autres quantités réparties" };
 			list.Add (new VerboseDocumentOption (DocumentOption.ArticleAdditionalQuantities, "BusinessDocument.2", false, e, d, "Imprime les autres quantités", null, 0));
 
 			list.Add (new VerboseDocumentOption (DocumentOption.ArticleId, "BusinessDocument.2", false, DocumentOptionValueType.Boolean, "Imprime les identificateurs d'article", "Imprime les identificateurs ou numéros d'article", "false"));

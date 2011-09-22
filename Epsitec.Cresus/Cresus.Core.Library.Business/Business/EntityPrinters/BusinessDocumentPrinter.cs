@@ -1297,7 +1297,15 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				if (this.HasOption (DocumentOption.ArticleAdditionalQuantities, "ToDescription") &&  // avec les descriptions ?
 					this.GetTableText (row+i, TableColumnKeys.ArticleDescription).IsNullOrEmpty)  // (*)
 				{
-					this.SetTableText (row+i, TableColumnKeys.ArticleDescription, TextFormatter.FormatText (t, q, d));
+					this.SetTableText (row+i, TableColumnKeys.ArticleDescription, TextFormatter.FormatText (t, q, "le~", d));
+				}
+
+				if (this.HasOption (DocumentOption.ArticleAdditionalQuantities, "ToQuantityAndDescription") &&  // réparti ?
+					this.GetTableText (row+i, TableColumnKeys.MainQuantity).IsNullOrEmpty &&  // (*)
+					this.GetTableText (row+i, TableColumnKeys.ArticleDescription).IsNullOrEmpty)  // (*)
+				{
+					this.SetTableText (row+i, TableColumnKeys.MainQuantity, q);
+					this.SetTableText (row+i, TableColumnKeys.ArticleDescription, TextFormatter.FormatText (t, ", le~", d));
 				}
 
 				// (*)	Si la cellule contient déjà un texte, il ne faut pas l'écraser. En effet,
