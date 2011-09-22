@@ -115,19 +115,19 @@ namespace Epsitec.Cresus.Core.Library
 				
 				return helper.GetEnumKeyValues (value);
 			}
+		}
 
-			#region Generic Helper Class
+		#endregion
 
-			private class Helper<T> : Helper
-				where T : struct
+#region Generic Helper Class
+
+		private class Helper<T> : Helper
+			where T : struct
+		{
+			protected override EnumKeyValues GetEnumKeyValues(object value)
 			{
-				protected override EnumKeyValues GetEnumKeyValues(object value)
-				{
-					return EnumKeyValues.GetEnumKeyValue<T> ((T) value);
-				}
+				return EnumKeyValues.GetEnumKeyValue<T> ((T) value);
 			}
-
-			#endregion
 		}
 
 		#endregion
