@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.Library
 	/// </summary>
 	public static class CoreContext
 	{
-		public static bool IsInteractive
+		public static bool						IsInteractive
 		{
 			get
 			{
@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
-		public static bool IsServer
+		public static bool						IsServer
 		{
 			get
 			{
@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
-		public static CoreDatabaseType DatabaseType
+		public static CoreDatabaseType			DatabaseType
 		{
 			get
 			{
@@ -59,6 +59,11 @@ namespace Epsitec.Cresus.Core.Library
 			CoreContext.isInteractive = true;
 		}
 
+		public static void StartAsMaintenance()
+		{
+			CoreContext.StartAsInteractive ();
+		}
+		
 		public static void StartAsServer()
 		{
 			CoreContext.startupCalled.WhenTrueThrow<System.InvalidOperationException> ("Start already called");
@@ -67,9 +72,11 @@ namespace Epsitec.Cresus.Core.Library
 			CoreContext.isServer      = true;
 		}
 
-		private static bool startupCalled;
-		private static bool isInteractive;
-		private static bool isServer;
-		private static CoreDatabaseType databaseType;
+		
+		private static bool						startupCalled;
+		private static bool						isInteractive;
+		private static bool						isServer;
+		
+		private static CoreDatabaseType			databaseType;
 	}
 }

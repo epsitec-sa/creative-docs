@@ -17,6 +17,11 @@ namespace Epsitec.Cresus.Core.Maintenance
 {
 	public sealed class Engine
 	{
+		public Engine()
+		{
+			this.Refresh ();
+		}
+
 		public void Refresh()
 		{
 			var session = CoreServer.Instance.CreateSession ();

@@ -6,6 +6,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Library
 {
+	/// <summary>
+	/// The <c>CoreDatabaseType</c> enumeration defines the types of databases (user data
+	/// or pure template data).
+	/// </summary>
 	public enum CoreDatabaseType
 	{
 		None,

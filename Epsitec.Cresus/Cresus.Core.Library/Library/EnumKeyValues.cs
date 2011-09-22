@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.Core.Library
 
 		#endregion
 
-#region Generic Helper Class
+		#region Generic Helper Class
 
 		private class Helper<T> : Helper
 			where T : struct

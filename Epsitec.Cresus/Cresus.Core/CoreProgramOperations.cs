@@ -74,8 +74,8 @@ namespace Epsitec.Cresus.Core
 
 		private static void StartMaintenance()
 		{
-			dynamic engine = System.Activator.CreateInstance ("Cresus.Core.Maintenance", "Epsitec.Cresus.Core.Maintenance.Engine").Unwrap ();
-			engine.Refresh ();
+			Library.CoreContext.StartAsMaintenance ();
+			System.Activator.CreateInstance (CoreProgramOperations.CoreMaintenanceAssembly, CoreProgramOperations.CoreMaintenanceEngine);
 		}
 
 		private static void ExecuteJsServer()
@@ -137,7 +137,10 @@ namespace Epsitec.Cresus.Core
 			Data.Infrastructure.DropDatabase (dbAccess);
 		}
 		
-		private const string					CoreServerProgram	= "Epsitec.Cresus.Core.Server.CoreServerProgram";
-		private const string					CoreServerAssembly	= "Cresus.Core.Server";
+		private const string					CoreServerProgram	    = "Epsitec.Cresus.Core.Server.CoreServerProgram";
+		private const string					CoreMaintenanceEngine	= "Epsitec.Cresus.Core.Maintenance.Engine";
+		
+		private const string					CoreServerAssembly	    = "Cresus.Core.Server";
+		private const string					CoreMaintenanceAssembly = "Cresus.Core.Maintenance";
 	}
 }
