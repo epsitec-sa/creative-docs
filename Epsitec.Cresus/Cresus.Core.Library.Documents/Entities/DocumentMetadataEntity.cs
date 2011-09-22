@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			get
 			{
-				//?return false;  //? TODO: provisoire !!!
+				return false;  //? TODO: provisoire !!!
 				switch (this.DocumentState)
 				{
 					case Business.DocumentState.None:
