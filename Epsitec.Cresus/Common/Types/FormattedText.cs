@@ -52,12 +52,31 @@ namespace Epsitec.Common.Types
 			return new FormattedText (formattedTextSource);
 		}
 
+		
+		/// <summary>
+		/// Gets the length of the formatted text. If the text is <c>null</c>, returns <c>0</c>.
+		/// </summary>
+		public int								Length
+		{
+			get
+			{
+				if (this.text == null)
+				{
+					return 0;
+				}
+				else
+				{
+					return this.text.Length;
+				}
+			}
+		}
+
 		/// <summary>
 		/// Gets a value indicating whether this instance represents a null
 		/// text.
 		/// </summary>
 		/// <value><c>true</c> if this instance represents a null text; otherwise, <c>false</c>.</value>
-		public bool IsNull
+		public bool								IsNull
 		{
 			get
 			{
@@ -71,7 +90,7 @@ namespace Epsitec.Common.Types
 		/// <value>
 		/// 	<c>true</c> if this text is null or empty; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsNullOrEmpty
+		public bool								IsNullOrEmpty
 		{
 			get
 			{
@@ -85,7 +104,7 @@ namespace Epsitec.Common.Types
 		/// <value>
 		/// 	<c>true</c> if this text is null, empty or consists only of white-space characters; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsNullOrWhiteSpace
+		public bool								IsNullOrWhiteSpace
 		{
 			get
 			{
@@ -210,7 +229,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-        public FormattedText[] Split(string separator, System.StringSplitOptions options = System.StringSplitOptions.None)
+		public FormattedText[] Split(string separator, System.StringSplitOptions options = System.StringSplitOptions.None)
 		{
 			string[] x = this.ToString ().Split (new string[] { separator }, options);
 
@@ -479,12 +498,12 @@ namespace Epsitec.Common.Types
 		
 		#endregion
 
-		public static readonly FormattedText Empty = new FormattedText ("");
+		public static readonly FormattedText	Empty = new FormattedText ("");
 
-		public static readonly FormattedText Null = new FormattedText (null);
+		public static readonly FormattedText	Null = new FormattedText (null);
 
-		public const string HtmlBreak = "<br/>";
+		public const string						HtmlBreak = "<br/>";
 		
-		private readonly string text;
+		private readonly string					text;
 	}
 }

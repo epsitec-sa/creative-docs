@@ -24,9 +24,10 @@ namespace Epsitec.Cresus.Core.Business.Rules
 
 			entity.Code = (string) ItemCodeGenerator.NewCode ();
 			entity.CurrencyCode = Finance.CurrencyCode.Chf;
-			entity.BillingDate = Date.Today;
 			entity.BillingStatus = Finance.BillingStatus.NotAnInvoice;
 			entity.PriceRefDate = Date.Today;
+			entity.PriceGroup = businessContext.GetCachedBusinessSettings ().Finance.DefaultPriceGroup;
+			entity.DebtorBookAccount = businessContext.GetCachedBusinessSettings ().Finance.DefaultDebtorBookAccount;
 		}
 
 		public override void ApplyUpdateRule(BusinessDocumentEntity entity)

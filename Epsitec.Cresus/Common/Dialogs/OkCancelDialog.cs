@@ -2,13 +2,14 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Dialogs.Helpers;
+using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Dialogs
 {
 	internal sealed class OkCancelDialog : AbstractOkCancelDialog
 	{
-		internal OkCancelDialog(string dialogTitle, string okText, string cancelText, string messageIcon, string messageText, string commandTemplate, CommandDispatcher commandDispatcher)
+		internal OkCancelDialog(string dialogTitle, string okText, string cancelText, string messageIcon, FormattedText messageText, string commandTemplate, CommandDispatcher commandDispatcher)
 			: base (dialogTitle, okText, cancelText, commandTemplate, commandDispatcher)
 		{
 			this.messageIcon = messageIcon;
@@ -35,6 +36,6 @@ namespace Epsitec.Common.Dialogs
 		}
 		
 		private readonly string messageIcon;
-		private readonly string messageText;
+		private readonly FormattedText messageText;
 	}
 }

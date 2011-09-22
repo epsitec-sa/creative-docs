@@ -1,6 +1,7 @@
 //	Copyright © 2004-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Dialogs.Helpers
@@ -11,7 +12,7 @@ namespace Epsitec.Common.Dialogs.Helpers
 	/// </summary>
 	public static class MessageBuilder
 	{
-		public static Widget CreateIconAndText(string iconUri, string message)
+		public static Widget CreateIconAndText(string iconUri, FormattedText message)
 		{
 			Widget container = new Widget ();
 
@@ -40,7 +41,7 @@ namespace Epsitec.Common.Dialogs.Helpers
 			}
 		}
 
-		public static string FormatMessage(string text)
+		public static FormattedText FormatMessage(string text)
 		{
 			if (string.IsNullOrEmpty (text))
 			{
@@ -69,9 +70,13 @@ namespace Epsitec.Common.Dialogs.Helpers
 			}
 		}
 
-		private static void CreateTextOnly(Widget container, string message)
+		private static void CreateTextOnly(Widget container, FormattedText message)
 		{
-			var widgetText = new StaticText (container, message);
+			var widgetText = new StaticText ()
+			{
+				Parent        = container,
+				FormattedText = message
+			};
 
 			double minWidth = System.Math.Min (400, widgetText.TextLayout.SingleLineSize.Width+4);
 
@@ -86,15 +91,21 @@ namespace Epsitec.Common.Dialogs.Helpers
 			container.PreferredSize = new Drawing.Size (width, height);
 		}
 		
-		private static void CreateIconAndText(Widget container, string iconUri, string message)
+		private static void CreateIconAndText(Widget container, string iconUri, FormattedText message)
 		{
-			var widgetText = new StaticText (container, message);
-
-			var widgetIcon = new StaticImage (container, iconUri)
+			var widgetText = new StaticText ()
 			{
+				Parent        = container,
+				FormattedText = message,
+			};
+
+			var widgetIcon = new StaticImage ()
+			{
+				Parent        = container,
+				IconUri       = iconUri,
 				PreferredSize = new Drawing.Size (48, 48),
-				Anchor = AnchorStyles.TopLeft,
-				Margins = new Drawing.Margins (0, 0, 0, 0)
+				Anchor        = AnchorStyles.TopLeft,
+				Margins       = new Drawing.Margins (0, 0, 0, 0)
 			};
 
 			double minWidth = System.Math.Min (400, widgetText.TextLayout.SingleLineSize.Width+4);

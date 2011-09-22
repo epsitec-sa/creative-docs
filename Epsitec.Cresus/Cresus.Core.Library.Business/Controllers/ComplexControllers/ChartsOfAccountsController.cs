@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Debug;
@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 				Parent = frame,
 				PreferredHeight = 30,
 				Dock = DockStyle.Bottom,
-				Text = "<i><b>Remarque:</b> Il ne peut pas y avoir plus d'un plan comptable par période.</i>",
+				Text = "<i><b>Remarque:</b> Il ne devrait pas y avoir plus d'un plan comptable par période.</i>",
 			};
 
 			//	Connexion des événements.
@@ -156,9 +156,9 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 			int rows = this.ChartOfAccounts.Count;
 			this.table.SetArraySize (4, rows);
 
-			this.table.SetWidthColumn (0, 160);
-			this.table.SetWidthColumn (1, 70);
-			this.table.SetWidthColumn (2, 70);
+			this.table.SetWidthColumn (0, 90);
+			this.table.SetWidthColumn (1, 64);
+			this.table.SetWidthColumn (2, 64);
 			this.table.SetWidthColumn (3, 90);
 
 			this.table.SetHeaderTextH (0, "Nom");
@@ -278,9 +278,9 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 					{
 						CresusChartOfAccounts chart = CresusChartOfAccountsConnector.Load (filename);
 
-						string err = this.CheckChart (chart);
+						FormattedText err = this.CheckChart (chart);
 
-						if (string.IsNullOrEmpty (err))  // ok ?
+						if (err.IsNullOrEmpty)  // ok ?
 						{
 							this.financeSettingsEntity.AddChartOfAccounts (this.businessContext, chart);
 
@@ -329,10 +329,10 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 			//	Demande quels plans comptables ouvrir.
 			var dialog = new FileOpenDialog ();
 
-			dialog.Title = "Importation d'un plan comptable \"CRP\"";
+			dialog.Title = "Importation d'un plan comptable de Crésus Comptabilité";
 			dialog.InitialDirectory = ChartsOfAccountsController.initialDirectory;
 
-			dialog.Filters.Add ("crp", "Plan comptable", "*.crp");
+			dialog.Filters.Add ("crp", "Comptabilité Crésus", "*.cre;*.crp");
 			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
 
 			dialog.AcceptMultipleSelection = true;
@@ -348,19 +348,26 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 			return dialog.FileNames;
 		}
 
-		private string CheckChart(CresusChartOfAccounts chart)
+		private FormattedText CheckChart(CresusChartOfAccounts chart)
 		{
 			//	Vérifie si un plan comptable peut être ouvert.
 			//	Retourne null si l'ouverture est possible, ou un message en cas d'erreur.
+
+			if (chart == null)
+			{
+				return TextFormatter.FormatText ("Le plan comptable n'a pas pu être lu.");
+			}
+
 			foreach (var c in this.ChartOfAccounts)
 			{
-				if (chart.BeginDate < c.EndDate && chart.EndDate > c.BeginDate)
+				if ((chart.BeginDate < c.EndDate) &&
+					(chart.EndDate > c.BeginDate))
 				{
-					return string.Format ("Il y a déjà un plan comptable couvrant la période du {0} au {1}.", chart.BeginDate.ToString (), chart.EndDate.ToString ());
+					return TextFormatter.FormatText ("Il y a déjà un plan comptable couvrant la période du", chart.BeginDate, "au", chart.EndDate);
 				}
 			}
 
-			return null;  // ok
+			return FormattedText.Empty;
 		}
 
 		private IList<CresusChartOfAccounts> ChartOfAccounts

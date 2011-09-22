@@ -39,8 +39,8 @@ namespace Epsitec.Common.Dialogs.Helpers
 					{
 						buffer.Append ("|");
 					}
-					
-					buffer.Append (this[i].FileDialogFilter);
+
+					buffer.Append (this[i].GetFileDialogFilter ());
 				}
 				
 				return buffer.ToString ();

@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
@@ -54,9 +54,9 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 		}
 
 	
-		private readonly TileContainer tileContainer;
-		private readonly FinanceSettingsEntity financeSettingsEntity;
+		private readonly TileContainer			tileContainer;
+		private readonly FinanceSettingsEntity	financeSettingsEntity;
 
-		private bool isReadOnly;
+		private bool							isReadOnly;
 	}
 }

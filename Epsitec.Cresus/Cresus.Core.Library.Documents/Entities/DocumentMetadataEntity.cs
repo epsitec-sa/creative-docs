@@ -6,59 +6,36 @@ using Epsitec.Common.Support.EntityEngine;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class DocumentMetadataEntity
 	{
-		public FormattedText DocumentStateShortDescription
+		public FormattedText					DocumentStateShortDescription
 		{
 			get
 			{
-				switch (this.DocumentState)
-				{
-					case Business.DocumentState.Draft:
-						return "brouillon";
+				var enumKeyValue = EnumKeyValues.GetEnumKeyValue (this.DocumentState);
 
-					case Business.DocumentState.Inactive:
-						return "inactif";
-
-					case Business.DocumentState.Active:
-						return "actif";
-
-					default:
-						return FormattedText.Empty;
-				}
-
+				return enumKeyValue.Values.OrderBy (x => x.Length).FirstOrDefault ();
 			}
 		}
 
-		public FormattedText DocumentStateLongDescription
+		public FormattedText					DocumentStateLongDescription
 		{
 			get
 			{
-				switch (this.DocumentState)
-				{
-					case Business.DocumentState.Draft:
-						return "Document brouillon";
+				var enumKeyValue = EnumKeyValues.GetEnumKeyValue (this.DocumentState);
 
-					case Business.DocumentState.Inactive:
-						return "Document inactif";
-
-					case Business.DocumentState.Active:
-						return "Document actif";
-
-					default:
-						return FormattedText.Empty;
-				}
-
+				return enumKeyValue.Values.OrderByDescending (x => x.Length).FirstOrDefault ();
 			}
 		}
 
 		/// <summary>
 		/// Gets a value indicating whether this document is frozen. This is related to
 		/// the document's state; currently, only the <see cref="DocumentState.Draft"/>
-		/// is considered to be not frozen (i.e. editable).
+		/// is considered to be not frozen (ie editable).
 		/// </summary>
 		/// <value>
 		///   <c>true</c> if this document is frozen; otherwise, <c>false</c>.
@@ -67,7 +44,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			get
 			{
-				return false;  //? TODO: provisoire !!!
+				//?return false;  //? TODO: provisoire !!!
 				switch (this.DocumentState)
 				{
 					case Business.DocumentState.None:
