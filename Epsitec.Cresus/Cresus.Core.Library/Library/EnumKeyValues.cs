@@ -70,9 +70,7 @@ namespace Epsitec.Cresus.Core.Library
 
 		public static EnumKeyValues GetEnumKeyValue(object value)
 		{
-			var type = typeof (Helper<>).MakeGenericType (value.GetType ());
-			var helper = System.Activator.CreateInstance (type) as Helper;
-			return helper.GetEnumKeyValues (value);
+			return Helper.Resolve (value);
 		}
 
 		public static EnumKeyValues GetEnumKeyValue<T>(T value)
@@ -95,18 +93,34 @@ namespace Epsitec.Cresus.Core.Library
 
 		#endregion
 
+		#region Helper Class
+
 		private abstract class Helper
 		{
-			public abstract EnumKeyValues GetEnumKeyValues(object value);
-		}
-		private class Helper<T> : Helper
-			where T : struct
-		{
-			public override EnumKeyValues GetEnumKeyValues(object value)
+			protected abstract EnumKeyValues GetEnumKeyValues(object value);
+
+			public static EnumKeyValues Resolve(object value)
 			{
-				return EnumKeyValues.GetEnumKeyValue<T> ((T) value);
+				var type   = typeof (Helper<>).MakeGenericType (value.GetType ());
+				var helper = System.Activator.CreateInstance (type) as Helper;
+				
+				return helper.GetEnumKeyValues (value);
 			}
+
+			#region Generic Helper Class
+
+			private class Helper<T> : Helper
+				where T : struct
+			{
+				protected override EnumKeyValues GetEnumKeyValues(object value)
+				{
+					return EnumKeyValues.GetEnumKeyValue<T> ((T) value);
+				}
+			}
+
+			#endregion
 		}
 
+		#endregion
 	}
 }
