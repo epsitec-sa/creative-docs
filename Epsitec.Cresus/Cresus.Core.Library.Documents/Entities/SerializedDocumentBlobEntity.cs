@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Support.EntityEngine;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,17 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnDataChanged(byte[] oldValue, byte[] newValue)
 		{
 			this.SetHashes (newValue);
+		}
+
+
+		public override EntityStatus GetEntityStatus()
+		{
+			using (var a = new EntityStatusAccumulator ())
+			{
+				a.Accumulate (this.Code.GetEntityStatus ());
+
+				return a.EntityStatus;
+			}
 		}
 	}
 }
