@@ -21,23 +21,20 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionSerializedDocumentBlobViewController : EditionViewController<Entities.SerializedDocumentBlobEntity>
 	{
+		public override double GetPreferredWidth(int columnIndex, int columnCount)
+		{
+			return 500;
+		}
+
 		protected override void CreateBricks(BrickWall<SerializedDocumentBlobEntity> wall)
 		{
 			wall.AddBrick ()
-				.Input ()
-					// TODO: Tout cela est provisoire !
-				  .Field (x => x.Code)
-				  .Field (x => x.CreationDate)
-				  .Field (x => x.LastModificationDate)
-				  .Field (x => x.WeakHash)
-				  .Field (x => x.StrongHash)
-				.End ()
-				;
-			wall.AddBrick ()
-				.Attribute (BrickMode.SpecialController0)
 				.Icon ("Data.SerializedDocumentBlob")
-				.Title ("Aperçu")
-				.Text ("Aperçu du document")
+				.Title ("Aperçu du document")
+				.Attribute (BrickMode.FullHeightStretch)
+				.Input ()
+				  .Field (x => x).WithSpecialController ()
+				.End ()
 				;
 		}
 	}
