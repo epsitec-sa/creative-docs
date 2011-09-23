@@ -144,14 +144,18 @@ namespace Epsitec.Cresus.Core.Print
 		#region xml source recording
 		private static void RecordXmlSources(IBusinessContext businessContext, AbstractEntity entity, IList<string> xmlSources)
 		{
-			//	Stocke les jobs d'impression dans l'entité DocumentMetadataEntity.
+			//	Stocke xml source d'une impression dans l'entité DocumentMetadataEntity.
 			var documentMetadata = entity as DocumentMetadataEntity;
 
 			if (documentMetadata != null)
 			{
-				foreach (var xmlSource in xmlSources)
+				// TODO: Pour tester, on stocke tout !
+				//?if (documentMetadata.DocumentState != DocumentState.Draft)  // on ne stocke pas les brouillons
 				{
-					PrintEngine.RecordXmlSource (businessContext, documentMetadata, xmlSource);
+					foreach (var xmlSource in xmlSources)
+					{
+						PrintEngine.RecordXmlSource (businessContext, documentMetadata, xmlSource);
+					}
 				}
 			}
 		}
@@ -164,28 +168,44 @@ namespace Epsitec.Cresus.Core.Print
 			var weakHash   = IDataHashExtension.GetWeakHash (data);
 			var strongHash = IDataHashExtension.GetStrongHash (data);
 
-			var current = documentMetadata.SerializedDocumentVersions.Where (x => x.WeakHash == weakHash && x.StrongHash == strongHash).FirstOrDefault ();
+			var currentBlob = documentMetadata.SerializedDocumentVersions.Where (x => x.WeakHash == weakHash && x.StrongHash == strongHash).FirstOrDefault ();
 
-			if (current == null)
+			if (currentBlob == null)
 			{
 				//	Crée une nouvelle instance.
-				var blob = businessContext.CreateEntity<SerializedDocumentBlobEntity> ();
+				var newBlob = businessContext.CreateEntity<SerializedDocumentBlobEntity> ();
 
-				blob.CreationDate = System.DateTime.Now;
-				blob.LastModificationDate = blob.CreationDate;
+				newBlob.CreationDate = System.DateTime.Now;
+				newBlob.LastModificationDate = newBlob.CreationDate;
 
-				blob.Data = data;
-				blob.SetHashes (blob.Data);
+				newBlob.Data = data;
+				newBlob.SetHashes (newBlob.Data);
 
-				documentMetadata.SerializedDocumentVersions.Add (blob);
+				documentMetadata.SerializedDocumentVersions.Add (newBlob);
 			}
 			else
 			{
 				//	Modifie la date de l'instance existante.
-				current.LastModificationDate = System.DateTime.Now;
+				currentBlob.LastModificationDate = System.DateTime.Now;
 			}
 
-			//?businessContext.DataContext.SaveChanges ();
+			businessContext.DataContext.SaveChanges ();
+		}
+
+		public static List<DeserializedJob> SearchXmlSource(IBusinessContext businessContext, SerializedDocumentBlobEntity blob)
+		{
+			//	Régénère les jobs d'impression stockés dans une entité SerializedDocumentBlobEntity.
+			if (blob.Data != null)
+			{
+				string xmlSource = Epsitec.Common.IO.Serialization.DeserializeAndDecompressFromMemory<string> (blob.Data);
+
+				if (!string.IsNullOrEmpty (xmlSource))
+				{
+					return SerializationEngine.DeserializeJobs (businessContext, xmlSource);
+				}
+			}
+
+			return null;
 		}
 		#endregion
 

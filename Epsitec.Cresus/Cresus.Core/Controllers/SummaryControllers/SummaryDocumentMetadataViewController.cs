@@ -62,6 +62,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			}
 
 			wall.AddBrick (x => x.SerializedDocumentVersions)
+				// TODO: Comment faire pour empêcher de créer des instances ?
 				.Template ()
 				.End ()
 				;

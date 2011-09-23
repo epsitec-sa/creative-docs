@@ -99,6 +99,7 @@
     <Compile Include="CommandHandlers\NavigationCommandHandler.cs" />
     <Compile Include="Controllers\CreationControllers\CreationArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationCustomerViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionSerializedDocumentBlobViewController0.cs" />
     <Compile Include="Controllers\EditionControllers\EditionSerializedDocumentBlobViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDocumentCategoryViewController0.cs" />
     <Compile Include="Controllers\EditionControllers\EditionBusinessDocumentViewController0.cs" />
@@ -566,7 +567,7 @@
     <EmbeddedResource Include="Images\DocumentOptions.Useless.icon" />
     <EmbeddedResource Include="Images\DocumentOptions.Normal.icon" />
     <EmbeddedResource Include="Images\Data.SpecialController.icon" />
-    <EmbeddedResource Include="Images\Data.SerialDocumentBlob.icon" />
+    <EmbeddedResource Include="Images\Data.SerializedDocumentBlob.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
