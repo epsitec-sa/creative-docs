@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 				Parent = parent,
 				PreferredHeight = 24,
 				Dock = DockStyle.Bottom,
-				Margins = new Margins (0, Library.UI.Constants.RightMargin, 10, 0),
+				Margins = new Margins (0, Library.UI.Constants.RightMargin, 10, 10),
 			};
 
 			var toolbarFrame = new FrameBox
@@ -62,11 +62,6 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 			};
 
 			var jobs = PrintEngine.SearchXmlSource (this.businessContext, this.serializedDocumentBlobEntity);
-
-			if (jobs == null)
-			{
-				jobs = new List<Print.Serialization.DeserializedJob> ();
-			}
 
 			var controller = new XmlPreviewerController (this.businessContext, jobs, showCheckButtons: true);
 			controller.CreateUI (previewFrame, toolbarFrame);
@@ -80,6 +75,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 
 			button.Clicked += delegate
 			{
+				PrintEngine.PrintJobs (this.businessContext, jobs);
 			};
 		}
 

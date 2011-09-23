@@ -205,7 +205,7 @@ namespace Epsitec.Cresus.Core.Print
 				}
 			}
 
-			return null;
+			return new List<DeserializedJob> ();
 		}
 		#endregion
 
@@ -217,7 +217,7 @@ namespace Epsitec.Cresus.Core.Print
 			PrintEngine.PrintJobs (businessContext, deserializeJobs);
 		}
 
-		private static void PrintJobs(IBusinessContext businessContext, IEnumerable<DeserializedJob> jobs)
+		public static void PrintJobs(IBusinessContext businessContext, IEnumerable<DeserializedJob> jobs)
 		{
 			//	Imprime effectivement une liste de jobs d'impression.
 			foreach (var job in jobs)
