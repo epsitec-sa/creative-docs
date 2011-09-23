@@ -200,13 +200,12 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				this.BuildLineAdditionalQuantities (row, accessor, i);  // imprime les autres quantités
 				this.IndentCellMargins (row+i, TableColumnKeys.ArticleDescription, line.GroupIndex);
 
-				this.SetCellBorder (row, i, count);
+				this.SetCellBorder (row, accessor, i, count);
 			}
 
 			int last = row+accessor.RowsCount-1;
 
-			if (line.Line is SubTotalDocumentItemEntity ||
-				line.Line is EndTotalDocumentItemEntity)
+			if (line.Line is EndTotalDocumentItemEntity)
 			{
 				this.SetCellBorder (last, this.GetCellBorder (bottomBold: true));
 			}

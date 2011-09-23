@@ -246,15 +246,10 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				}
 				this.SetTableText (row+i, TableColumnKeys.Total, total);
 
-				this.SetCellBorder (row, i, count);
+				this.SetCellBorder (row, accessor, i, count);
 			}
 
 			int last = row+accessor.RowsCount-1;
-
-			if (line.Line is SubTotalDocumentItemEntity)
-			{
-				this.SetCellBorder (last, this.GetCellBorder (bottomBold: true));
-			}
 
 			if (line.Line is EndTotalDocumentItemEntity)
 			{

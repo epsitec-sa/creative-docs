@@ -981,21 +981,22 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			{
 				int column = this.tableColumns[columnKey].Rank;
 
-				var c = this.table.GetCellMargins (column, row);
+				var m1 = this.table.GetCellMargins (column, row);
 
-				if (c == Margins.Zero)
+				if (m1 == Margins.Zero)
 				{
-					c = this.table.CellMargins;
+					m1 = this.table.CellMargins;
 				}
 
-				var m = new Margins (c.Left+indent, c.Right, c.Top, c.Bottom);
+				var m2 = new Margins (m1.Left+indent, m1.Right, m1.Top, m1.Bottom);
 
-				this.table.SetCellMargins (column, row, m);
+				this.table.SetCellMargins (column, row, m2);
 			}
 		}
 
 		protected void SetCellMargins(int row, bool bottomZero = false, bool topZero = false)
 		{
+			//	Détermine les marges supérieures et inférieures d'une ligne entière du tableau.
 			for (int column = 0; column < this.table.ColumnsCount; column++)
 			{
 				var m1 = this.table.GetCellMargins (column, row);
@@ -1005,6 +1006,8 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 					m1 = this.table.CellMargins;
 				}
 
+				//	En cas de marge nulle, on laisse une petite valeur résiduelle de 0.2mm, ce qui est discutable.
+				//	On verra à l'usage s cela est judicieux !
 				var m2 = new Margins (m1.Left, m1.Right, topZero ? 0.2 : m1.Top, bottomZero ? 0.2 : m1.Bottom);
 
 				this.table.SetCellMargins (column, row, m2);
@@ -1074,27 +1077,32 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			return new CellBorder (leftWidth, rightWidth, bottomWidth, topWidth);
 		}
 
-		protected void SetCellBorder(int row, int i, int count)
+		protected void SetCellBorder(int row, DocumentItemAccessor accessor, int i, int count)
 		{
-			bool bottomLess = false;
-			bool topLess    = false;
-			bool bottomZero = false;
-			bool topZero    = false;
-
-			if (i > 0)
+			//	Choix des bords et des marges. Le but est de former visuellement un "groupe" pour les
+			//	lignes d'un même article.
+			if (count > 1)
 			{
-				topLess = true;
-				topZero = true;
-			}
+				bool bottomLess = false;
+				bool topLess    = false;
+				bool bottomZero = false;
+				bool topZero    = false;
 
-			if (i < count-1)
-			{
-				bottomLess = true;
-				bottomZero = true;
-			}
+				if (i > 0)
+				{
+					topLess = true;
+					topZero = !accessor.IsEndTotal;  // on laisse les marges pour le grand total
+				}
 
-			this.SetCellBorder (row+i, this.GetCellBorder (bottomLess: bottomLess, topLess: topLess));
-			this.SetCellMargins (row+i, bottomZero: bottomZero, topZero: topZero);
+				if (i < count-1)
+				{
+					bottomLess = true;
+					bottomZero = !accessor.IsEndTotal;  // on laisse les marges pour le grand total
+				}
+
+				this.SetCellBorder (row+i, this.GetCellBorder (bottomLess: bottomLess, topLess: topLess));
+				this.SetCellMargins (row+i, bottomZero: bottomZero, topZero: topZero);
+			}
 		}
 
 		protected void SetCellBorder(int row, CellBorder value)

@@ -91,6 +91,47 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			}
 		}
 
+
+		public bool								IsText
+		{
+			get
+			{
+				return this.item is TextDocumentItemEntity;
+			}
+		}
+
+		public bool								IsArticle
+		{
+			get
+			{
+				return this.item is ArticleDocumentItemEntity;
+			}
+		}
+
+		public bool								IsTax
+		{
+			get
+			{
+				return this.item is TaxDocumentItemEntity;
+			}
+		}
+
+		public bool								IsSubTotal
+		{
+			get
+			{
+				return this.item is SubTotalDocumentItemEntity;
+			}
+		}
+
+		public bool								IsEndTotal
+		{
+			get
+			{
+				return this.item is EndTotalDocumentItemEntity;
+			}
+		}
+
 		
 		public static IEnumerable<DocumentItemAccessor> CreateAccessors(DocumentMetadataEntity documentMetadata, DocumentLogic documentLogic, DocumentItemAccessorMode mode, IEnumerable<DocumentAccessorContentLine> lines)
 		{
