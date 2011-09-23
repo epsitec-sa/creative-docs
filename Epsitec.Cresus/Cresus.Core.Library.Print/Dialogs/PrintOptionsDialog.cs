@@ -54,6 +54,18 @@ namespace Epsitec.Cresus.Core.Dialogs
 			return list;
 		}
 
+		public IList<string> GetXmlSources()
+		{
+			var list = new List<string> ();
+
+			foreach (var page in this.entitiesPageControllers)
+			{
+				list.Add (page.GetXmlSource ());
+			}
+
+			return list;
+		}
+
 
 		protected override void SetupWindow(Window window)
 		{
@@ -196,6 +208,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 				return this.jobs;
 			}
 
+			public string GetXmlSource()
+			{
+				return this.xmlSource;
+			}
+
 			private void CreateUI(Widget parent)
 			{
 				int tabIndex = 1;
@@ -222,7 +239,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.leftFrame = new FrameBox
 				{
 					Parent = mainFrame,
-					Dock = this.isPreview ? DockStyle.Left : DockStyle.Fill,
+					Dock = DockStyle.Left,
 					PreferredWidth = DocumentOptionsController.ValuesController.DocumentOptionsWidth,
 					Margins = new Margins (0, this.isPreview ? 10 : 0, 0, 0),
 				};
@@ -361,8 +378,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 					this.finalOptions.MergeWith (this.categoryOptions);
 					this.finalOptions.MergeWith (this.modifiedOptions);
 
-					var xml = PrintEngine.MakePrintingData (this.businessContext, this.entityToPrint.Entity, this.finalOptions, this.entityToPrint.PrintingUnits);
-					this.jobs = SerializationEngine.DeserializeJobs (this.businessContext, xml);
+					this.xmlSource = PrintEngine.MakePrintingData (this.businessContext, this.entityToPrint.Entity, this.finalOptions, this.entityToPrint.PrintingUnits);
+					this.jobs = SerializationEngine.DeserializeJobs (this.businessContext, this.xmlSource);
 				}
 			}
 
@@ -432,6 +449,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			private bool											showOptions;
 			private IList<DeserializedJob>							jobs;
+			private string											xmlSource;
 
 			private GlyphButton										showOptionsButton;
 			private FrameBox										leftFrame;

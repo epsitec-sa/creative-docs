@@ -79,8 +79,9 @@ namespace Epsitec.Cresus.Core.Print
 			var deserializedJobs = optionsDialog.GetJobs ();
 			if (deserializedJobs.Count > 0)
 			{
-				PrintEngine.RemoveUnprintablePages (deserializedJobs);
-				PrintEngine.PrintJobs (businessContext, deserializedJobs);
+				PrintEngine.RecordXmlSources (businessContext, entity, optionsDialog.GetXmlSources ());
+				//?PrintEngine.RemoveUnprintablePages (deserializedJobs);
+				//?PrintEngine.PrintJobs (businessContext, deserializedJobs);
 			}
 		}
 
@@ -136,6 +137,55 @@ namespace Epsitec.Cresus.Core.Print
 		private static void RemoveUnprintablePages(IEnumerable<DeserializedJob> jobs)
 		{
 			jobs.ForEach (x => x.RemoveUnprintablePages ());
+		}
+		#endregion
+
+
+		#region xml source recording
+		private static void RecordXmlSources(IBusinessContext businessContext, AbstractEntity entity, IList<string> xmlSources)
+		{
+			//	Stocke les jobs d'impression dans l'entité DocumentMetadataEntity.
+			var documentMetadata = entity as DocumentMetadataEntity;
+
+			if (documentMetadata != null)
+			{
+				foreach (var xmlSource in xmlSources)
+				{
+					PrintEngine.RecordXmlSource (businessContext, documentMetadata, xmlSource);
+				}
+			}
+		}
+
+		private static void RecordXmlSource(IBusinessContext businessContext, DocumentMetadataEntity documentMetadata, string xmlSource)
+		{
+			byte[] data = Epsitec.Common.IO.Serialization.SerializeAndCompressToMemory(xmlSource, Epsitec.Common.IO.Compressor.Zip);
+
+			//	Cherche si ce document a déjà été imprimé.
+			var weakHash   = IDataHashExtension.GetWeakHash (data);
+			var strongHash = IDataHashExtension.GetStrongHash (data);
+
+			var current = documentMetadata.SerializedDocumentVersions.Where (x => x.WeakHash == weakHash && x.StrongHash == strongHash).FirstOrDefault ();
+
+			if (current == null)
+			{
+				//	Crée une nouvelle instance.
+				var blob = businessContext.CreateEntity<SerializedDocumentBlobEntity> ();
+
+				blob.CreationDate = System.DateTime.Now;
+				blob.LastModificationDate = blob.CreationDate;
+
+				blob.Data = data;
+				blob.SetHashes (blob.Data);
+
+				documentMetadata.SerializedDocumentVersions.Add (blob);
+			}
+			else
+			{
+				//	Modifie la date de l'instance existante.
+				current.LastModificationDate = System.DateTime.Now;
+			}
+
+			//?businessContext.DataContext.SaveChanges ();
 		}
 		#endregion
 

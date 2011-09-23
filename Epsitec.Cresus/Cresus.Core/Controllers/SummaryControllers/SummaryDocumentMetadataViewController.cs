@@ -61,6 +61,11 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				}
 			}
 
+			wall.AddBrick (x => x.SerializedDocumentVersions)
+				.Template ()
+				.End ()
+				;
+
 			wall.AddBrick (x => x.Comments)
 				.Template ()
 				.End ()

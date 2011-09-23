@@ -15,5 +15,15 @@ namespace Epsitec.Cresus.Core.Entities
 			dataHash.WeakHash   = Checksum.ComputeAdler32 (data, 32*1024);
 			dataHash.StrongHash = Checksum.ComputeMd5Hash (data);
 		}
+
+		public static int? GetWeakHash(byte[] data)
+		{
+			return Checksum.ComputeAdler32 (data, 32*1024);
+		}
+
+		public static string GetStrongHash(byte[] data)
+		{
+			return Checksum.ComputeMd5Hash (data);
+		}
 	}
 }
