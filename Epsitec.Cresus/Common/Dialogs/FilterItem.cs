@@ -21,7 +21,7 @@ namespace Epsitec.Common.Dialogs
 
 			this.name    = name;
 			this.caption = caption;
-			this.filter  = string.Join (";", filter);
+			this.filter  = string.Join (";", items);
 		}
 
 

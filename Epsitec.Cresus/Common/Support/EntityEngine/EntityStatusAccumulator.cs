@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Entities;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using System.Collections.Generic;
