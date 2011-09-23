@@ -994,6 +994,23 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			}
 		}
 
+		protected void SetCellMargins(int row, bool bottomZero = false, bool topZero = false)
+		{
+			for (int column = 0; column < this.table.ColumnsCount; column++)
+			{
+				var m1 = this.table.GetCellMargins (column, row);
+
+				if (m1 == Margins.Zero)
+				{
+					m1 = this.table.CellMargins;
+				}
+
+				var m2 = new Margins (m1.Left, m1.Right, topZero ? 0.2 : m1.Top, bottomZero ? 0.2 : m1.Bottom);
+
+				this.table.SetCellMargins (column, row, m2);
+			}
+		}
+
 		private Margins GetCellMargins(double? bottomForce = null, double? topForce = null)
 		{
 			//	Retourne les marges à utiliser pour une ligne entière.
@@ -1061,18 +1078,23 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 		{
 			bool bottomLess = false;
 			bool topLess    = false;
+			bool bottomZero = false;
+			bool topZero    = false;
 
 			if (i > 0)
 			{
 				topLess = true;
+				topZero = true;
 			}
 
 			if (i < count-1)
 			{
 				bottomLess = true;
+				bottomZero = true;
 			}
 
 			this.SetCellBorder (row+i, this.GetCellBorder (bottomLess: bottomLess, topLess: topLess));
+			this.SetCellMargins (row+i, bottomZero: bottomZero, topZero: topZero);
 		}
 
 		protected void SetCellBorder(int row, CellBorder value)
@@ -1283,7 +1305,10 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 				if (this.HasOption (DocumentOption.ArticleAdditionalQuantities, "Separate"))  // dans une colonne spécifique ?
 				{
-					this.SetTableText (row+i, TableColumnKeys.AdditionalType,     t);
+					//	1) "Retardé"
+					//	2) "5 pces"
+					//	3) "25.12.2011"
+					this.SetTableText (row+i, TableColumnKeys.AdditionalType, t);
 					this.SetTableText (row+i, TableColumnKeys.AdditionalQuantity, q);
 					this.SetTableText (row+i, TableColumnKeys.AdditionalDate,     d);
 				}
@@ -1291,21 +1316,25 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				if (this.HasOption (DocumentOption.ArticleAdditionalQuantities, "ToQuantity") &&  // avec les quantités ?
 					this.GetTableText (row+i, TableColumnKeys.MainQuantity).IsNullOrEmpty)  // (*)
 				{
-					this.SetTableText (row+i, TableColumnKeys.MainQuantity, TextFormatter.FormatText (t, q, d));
+					//	"Retardé 5 pces 25.12.2011"
+					this.SetTableText (row+i, TableColumnKeys.MainQuantity, TextFormatter.FormatText (t, q, d));  // très compact, peu de place
 				}
 
 				if (this.HasOption (DocumentOption.ArticleAdditionalQuantities, "ToDescription") &&  // avec les descriptions ?
 					this.GetTableText (row+i, TableColumnKeys.ArticleDescription).IsNullOrEmpty)  // (*)
 				{
-					this.SetTableText (row+i, TableColumnKeys.ArticleDescription, TextFormatter.FormatText (t, q, "le~", d));
+					//	"Retardé 5 pces, le 25.12.2011"
+					this.SetTableText (row+i, TableColumnKeys.ArticleDescription, TextFormatter.FormatText (t, q, "le~", d));  // assez de place à disposition
 				}
 
 				if (this.HasOption (DocumentOption.ArticleAdditionalQuantities, "ToQuantityAndDescription") &&  // réparti ?
 					this.GetTableText (row+i, TableColumnKeys.MainQuantity).IsNullOrEmpty &&  // (*)
 					this.GetTableText (row+i, TableColumnKeys.ArticleDescription).IsNullOrEmpty)  // (*)
 				{
-					this.SetTableText (row+i, TableColumnKeys.MainQuantity, q);
-					this.SetTableText (row+i, TableColumnKeys.ArticleDescription, TextFormatter.FormatText (t, ", le~", d));
+					//	1) "−5 pces"
+					//	2) "Retardé, le 25.12.2011"
+					this.SetTableText (row+i, TableColumnKeys.MainQuantity, FormattedText.Concat ("−", q));  // signe moins U2212 (pas tiret) !
+					this.SetTableText (row+i, TableColumnKeys.ArticleDescription, TextFormatter.FormatText (t, ", le~", d));  // assez de place à disposition
 				}
 
 				// (*)	Si la cellule contient déjà un texte, il ne faut pas l'écraser. En effet,
