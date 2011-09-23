@@ -18,17 +18,28 @@ namespace Epsitec.Common.Splash
 		/// <param name="logoFileName">Name of the logo file, which must be
 		/// located in the same folder as the executable.</param>
 		public SplashScreen(string logoFileName)
+			: this ()
 		{
 			this.logoFileName = logoFileName;
 			this.logoFilePath = System.IO.Path.Combine (SplashScreen.GetStartupPath (), logoFileName);
+			this.LaunchSplashThread ();
+		}
+
+		public SplashScreen(byte[] logoFileData)
+			: this ()
+		{
+			this.logoFileData = logoFileData;
+			this.LaunchSplashThread ();
+		}
+
+		private SplashScreen()
+		{
 			this.phase = SplashPhase.FadeIn;
 
 			if (SplashScreen.activeSplashScreen == null)
 			{
 				SplashScreen.activeSplashScreen = this;
 			}
-
-			this.LaunchSplashThread ();
 		}
 
 		private static string GetStartupPath()
@@ -76,7 +87,7 @@ namespace Epsitec.Common.Splash
 		{
 			if (SplashScreen.activeSplashScreen != null)
 			{
-				SplashScreen.activeSplashScreen.Phase = SplashPhase.FadeOut;
+				SplashScreen.activeSplashScreen.NotifyIsRunning ();
 				SplashScreen.activeSplashScreen = null;
 			}
 		}
@@ -104,10 +115,13 @@ namespace Epsitec.Common.Splash
 
 		private void SplashThreadBody()
 		{
-			if ((string.IsNullOrEmpty (this.logoFilePath)) ||
-				(!System.IO.File.Exists (this.logoFilePath)))
+			if (this.logoFileData == null)
 			{
-				return;
+				if ((string.IsNullOrEmpty (this.logoFilePath)) ||
+					(!System.IO.File.Exists (this.logoFilePath)))
+				{
+					return;
+				}
 			}
 
 			this.splashForm = new System.Windows.Forms.Form ()
@@ -137,7 +151,7 @@ namespace Epsitec.Common.Splash
 
 			Win32Api.SetWindowExStyle (handle, Win32Api.GetWindowExStyle (handle) | Win32Api.Win32Const.WS_EX_LAYERED);
 
-			var image = System.Drawing.Image.FromFile (this.logoFilePath) as System.Drawing.Bitmap;
+			var image = this.LoadImage ();
 			var watch = new System.Diagnostics.Stopwatch ();
 
 			splashTimer.Tick +=
@@ -163,9 +177,9 @@ namespace Epsitec.Common.Splash
 
 						case SplashPhase.FadeOut:
 							if (!watch.IsRunning)
-                            {
+							{
 								watch.Start ();
-                            }
+							}
 
 							alpha = (int) (watch.ElapsedMilliseconds) * 3;
 
@@ -190,13 +204,27 @@ namespace Epsitec.Common.Splash
 		}
 
 
-		private static SplashScreen activeSplashScreen;
+		private System.Drawing.Bitmap LoadImage()
+		{
+			if (this.logoFileData != null)
+			{
+				var memory = new System.IO.MemoryStream (this.logoFileData);
+				return System.Drawing.Image.FromStream (memory) as System.Drawing.Bitmap;
+			}
+			else
+			{
+				return System.Drawing.Image.FromFile (this.logoFilePath) as System.Drawing.Bitmap;
+			}
+		}
 
-		private readonly string logoFileName;
-		private readonly string logoFilePath;
-		private System.Windows.Forms.Form  splashForm;
-		private System.Windows.Forms.Timer splashTimer;
-		private System.Threading.Thread splashThread;
-		private SplashPhase phase;
+		private static SplashScreen				activeSplashScreen;
+
+		private readonly string					logoFileName;
+		private readonly string					logoFilePath;
+		private readonly byte[]					logoFileData;
+		private System.Windows.Forms.Form		splashForm;
+		private System.Windows.Forms.Timer		splashTimer;
+		private System.Threading.Thread			splashThread;
+		private SplashPhase						phase;
 	}
 }

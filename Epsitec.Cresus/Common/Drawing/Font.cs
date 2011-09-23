@@ -1,5 +1,5 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
@@ -108,10 +108,20 @@ namespace Epsitec.Common.Drawing
 			yield return Support.Globals.Directories.ExecutableRoot;
 			yield return Support.Globals.Directories.Executable;
 			yield return Support.Globals.Directories.InitialDirectory;
-			yield return System.IO.Path.GetDirectoryName (typeof (Font).Assembly.Location);
+			
+			var assemblyLocation = typeof (Font).Assembly.Location;
+
+			if (string.IsNullOrEmpty (assemblyLocation) == false)
+			{
+				yield return System.IO.Path.GetDirectoryName (assemblyLocation);
+			}
+			else
+			{
+				yield return System.IO.Directory.GetCurrentDirectory ();
+			}
 		}
 		
-		public System.IntPtr Handle
+		public System.IntPtr					Handle
 		{
 			get
 			{
@@ -1041,6 +1051,7 @@ namespace Epsitec.Common.Drawing
 		{
 			public ShutdownCleanup()
 			{
+				this.tempFiles = new List<string> ();
 			}
 
 			~ShutdownCleanup()
@@ -1066,7 +1077,7 @@ namespace Epsitec.Common.Drawing
 				this.tempFiles.Add (path);
 			}
 
-			List<string> tempFiles = new List<string> ();
+			readonly List<string> tempFiles;
 		}
 
 		#endregion
@@ -1086,10 +1097,10 @@ namespace Epsitec.Common.Drawing
 		#endregion
 
 		System.IntPtr							handle;
-		string									syntheticStyle;
-		SyntheticFontMode						syntheticMode;
+		readonly string							syntheticStyle;
+		readonly SyntheticFontMode				syntheticMode;
 		FontFaceInfo							faceInfo;
-		OpenType.FontIdentity					openTypeFontIdentity;
+		readonly OpenType.FontIdentity			openTypeFontIdentity;
 		OpenType.Font							openTypeFont;
 		
 		static OpenType.FontCollection			fontCollection;
@@ -1098,9 +1109,9 @@ namespace Epsitec.Common.Drawing
 		static Dictionary<string, Font>			fontHash;
 		static Dictionary<string, FontFaceInfo>	faceHash;
 		static Font								defaultFont;
-		static bool								useSegoe;
+		static readonly bool					useSegoe;
 
-		static Dictionary<string, string>		registeredFonts = new Dictionary<string,string> ();
-		static ShutdownCleanup					shutdownCleanup = new ShutdownCleanup ();
+		static readonly Dictionary<string, string>	registeredFonts = new Dictionary<string,string> ();
+		static readonly ShutdownCleanup				shutdownCleanup = new ShutdownCleanup ();
 	}
 }

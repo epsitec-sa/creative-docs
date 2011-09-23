@@ -21,10 +21,13 @@ namespace Epsitec.Cresus.Core
 		{
 			GeneralExceptionCatcher.Setup ();
 			CoreContext.DefineDatabase ("core", "localhost");
+
+			var commandLine = string.Join (" ", args);
 			
-			if (args.Length > 1)
+			if ((args.Length > 0) &&
+				(commandLine != "-silent"))
 			{
-				CoreProgramOperations.ProcessCommandLine (args.Skip (1).ToArray ());
+				CoreProgramOperations.ProcessCommandLine (args);
 			}
 			else
 			{

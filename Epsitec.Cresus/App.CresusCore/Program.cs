@@ -13,10 +13,8 @@ namespace Epsitec.Cresus.Core
 		/// The main entry point for the application.
 		/// </summary>
 		[System.STAThread]
-		static void Main()
+		static void Main(string[] args)
 		{
-			var args = System.Environment.GetCommandLineArgs ();
-
 			if (args.Length > 0)
 			{
 				Program.ExecuteCoreProgram (args, null);
