@@ -205,7 +205,7 @@ namespace Epsitec.Cresus.Core.Print
 				}
 			}
 
-			return new List<DeserializedJob> ();
+			return null;
 		}
 		#endregion
 

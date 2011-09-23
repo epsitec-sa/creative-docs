@@ -63,20 +63,23 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 
 			var jobs = PrintEngine.SearchXmlSource (this.businessContext, this.serializedDocumentBlobEntity);
 
-			var controller = new XmlPreviewerController (this.businessContext, jobs, showCheckButtons: true);
-			controller.CreateUI (previewFrame, toolbarFrame);
-
-			var button = new Button
+			if (jobs != null)
 			{
-				Parent = footer,
-				Text = "Réimprimer le document",
-				Dock = DockStyle.Fill,
-			};
+				var controller = new XmlPreviewerController (this.businessContext, jobs, showCheckButtons: true);
+				controller.CreateUI (previewFrame, toolbarFrame);
 
-			button.Clicked += delegate
-			{
-				PrintEngine.PrintJobs (this.businessContext, jobs);
-			};
+				var button = new Button
+				{
+					Parent = footer,
+					Text = "Réimprimer le document",
+					Dock = DockStyle.Fill,
+				};
+
+				button.Clicked += delegate
+				{
+					PrintEngine.PrintJobs (this.businessContext, jobs);
+				};
+			}
 		}
 
 
