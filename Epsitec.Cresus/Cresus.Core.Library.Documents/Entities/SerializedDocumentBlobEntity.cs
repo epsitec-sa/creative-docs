@@ -33,6 +33,7 @@ namespace Epsitec.Cresus.Core.Entities
 			using (var a = new EntityStatusAccumulator ())
 			{
 				a.Accumulate (this.Code.GetEntityStatus ());
+				a.Accumulate (this.StrongHash.GetEntityStatus ().TreatAsOptional ());
 
 				return a.EntityStatus;
 			}

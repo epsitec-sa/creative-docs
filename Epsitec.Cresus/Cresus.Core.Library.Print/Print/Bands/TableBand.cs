@@ -286,7 +286,6 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 		public void SetCellMargins(int column, int row, Margins value)
 		{
-			System.Diagnostics.Debug.WriteLine (string.Format ("c={0} r={1} m={2};{3};{4};{5}", column, row, value.Left, value.Right, value.Top, value.Bottom));
 			TextBand textBand = this.GetTextBand (column, row);
 
 			if (textBand != null)
