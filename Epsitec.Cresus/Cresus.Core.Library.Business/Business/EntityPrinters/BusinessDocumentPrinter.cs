@@ -347,7 +347,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 				if (contentLine.Line.Attributes.HasFlag (DocumentItemAttributes.Hidden) == false)
 				{
-					var prevLine = (i == 0) ? DocumentAccessorContentLine.Empty : lines[i-1];
+					var prevLine = (i == 0            ) ? DocumentAccessorContentLine.Empty : lines[i-1];
 					var nextLine = (i >= lines.Count-1) ? DocumentAccessorContentLine.Empty : lines[i+1];
 
 					int rowUsed = this.BuildLine (row, accessors[i], prevLine, contentLine, nextLine);
@@ -717,7 +717,8 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			var leftBounds  = new Rectangle (margins.Left, this.RequiredPageSize.Height-margins.Top+reportHeight+1, 80, 5);
 			var rightBounds = new Rectangle (this.RequiredPageSize.Width-margins.Right-80, this.RequiredPageSize.Height-margins.Top+reportHeight+1, 80, 5);
 
-			for (int page = firstPage+1; page < this.documentContainer.PageCount (); page++)
+			int count = this.documentContainer.PageCount ();
+			for (int page = firstPage+1; page < count; page++)  // toutes les pages, sauf la première
 			{
 				this.documentContainer.CurrentPage = page;
 
@@ -745,7 +746,8 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			var margins = this.GetPageMargins ();
 			double width = this.RequiredPageSize.Width-margins.Left-margins.Right;
 
-			for (int page = firstPage+1; page < this.documentContainer.PageCount (); page++)
+			int count = this.documentContainer.PageCount ();
+			for (int page = firstPage+1; page < count; page++)  // toutes les pages, sauf la première
 			{
 				int relativePage = page-firstPage;
 
@@ -792,7 +794,8 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			var margins = this.GetPageMargins ();
 			double width = this.RequiredPageSize.Width-margins.Left-margins.Right;
 
-			for (int page = firstPage; page < this.documentContainer.PageCount ()-1; page++)
+			int count = this.documentContainer.PageCount ();
+			for (int page = firstPage; page < count-1; page++)  // toutes les pages, sauf la dernière
 			{
 				int relativePage = page-firstPage;
 

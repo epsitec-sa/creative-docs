@@ -62,7 +62,6 @@ namespace Epsitec.Cresus.Core.Print.Bands
 				if (this.columnsCount != value)
 				{
 					this.columnsCount = value;
-					this.unbreakableRows = new bool[this.columnsCount];
 					this.UpdateContent ();
 				}
 			}
@@ -79,6 +78,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 				if (this.rowsCount != value)
 				{
 					this.rowsCount = value;
+					this.unbreakableRows = new bool[this.rowsCount];
 					this.UpdateContent ();
 				}
 			}
