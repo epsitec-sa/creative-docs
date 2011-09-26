@@ -292,6 +292,15 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			var lines = this.ContentLines;
 			var accessors = new List<DocumentItemAccessor> (DocumentItemAccessor.CreateAccessors (this.Metadata, this.documentLogic, this.DocumentItemAccessorMode, lines));
 
+			//	Fusionne toutes les lignes de sous-total, pour les rendre inséparables.
+			for (int i = 0; i < lines.Count; i++)
+			{
+				if (accessors[i].IsSubTotal)
+				{
+					accessors[i].TransformToSingleRow ();
+				}
+			}
+
 			//	Première passe pour déterminer le nombre le lignes du tableau ainsi que
 			//	les colonnes visibles.
 			int rowCount = 1;  // déjà 1 pour l'en-tête (titres des colonnes)
@@ -352,6 +361,13 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 					int rowUsed = this.BuildLine (row, accessors[i], prevLine, contentLine, nextLine);
 					this.BuildCommonLine (row, accessors[i], contentLine);
+
+					if (accessors[i].IsSubTotal)
+					{
+						//	Les lignes de sous-total ont été fusionnées avec TransformToSingleRow.
+						//	Il ne reste qu'à rendre le tout inséparable.
+						this.table.SetUnbreakableRow (row, true);
+					}
 
 					if (rowUsed != 0)
 					{
@@ -1078,7 +1094,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 		protected void SetCellBorder(int row, DocumentItemAccessor accessor, int i, int count)
 		{
 			//	Choix des bords et des marges. Le but est de former visuellement un "groupe" pour les
-			//	lignes d'un même article.
+			//	lignes d'un même article (par exemple).
 			if (count > 1)
 			{
 				bool bottomLess = false;

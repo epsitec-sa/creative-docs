@@ -87,6 +87,8 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 		public bool GetUnbreakableRow(int row)
 		{
+			//	Une row 'Unbreakable' signifie que son contenu ne sera jamais placé sur 2 pages différentes,
+			//	s'il est multi-lignes.
 			if (this.unbreakableRows != null && row >= 0 && row < this.unbreakableRows.Length)
 			{
 				return this.unbreakableRows[row];
@@ -125,7 +127,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 		public FormattedText GetText(int column, int row)
 		{
-			TextBand textBand = this.GetTextBand (column, row);
+			var textBand = this.GetTextBand (column, row);
 
 			if (textBand == null)
 			{
@@ -144,7 +146,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 		public void SetText(int column, int row, FormattedText value)
 		{
-			TextBand textBand = this.GetTextBand (column, row);
+			var textBand = this.GetTextBand (column, row);
 
 			if (textBand != null)
 			{
@@ -160,7 +162,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 		public void SetText(int column, int row, FormattedText value, double fontSize)
 		{
-			TextBand textBand = this.GetTextBand (column, row);
+			var textBand = this.GetTextBand (column, row);
 
 			if (textBand != null)
 			{
@@ -172,7 +174,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 		public Font GetFont(int column, int row)
 		{
-			TextBand textBand = this.GetTextBand (column, row);
+			var textBand = this.GetTextBand (column, row);
 
 			if (textBand == null)
 			{
@@ -186,7 +188,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 		public void SetFont(int column, int row, Font value)
 		{
-			TextBand textBand = this.GetTextBand (column, row);
+			var textBand = this.GetTextBand (column, row);
 
 			if (textBand != null)
 			{
@@ -197,7 +199,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 		public double GetFontSize(int column, int row)
 		{
-			TextBand textBand = this.GetTextBand (column, row);
+			var textBand = this.GetTextBand (column, row);
 
 			if (textBand == null)
 			{
@@ -211,7 +213,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 		public void SetFontSize(int column, int row, double value)
 		{
-			TextBand textBand = this.GetTextBand (column, row);
+			var textBand = this.GetTextBand (column, row);
 
 			if (textBand != null)
 			{
@@ -222,7 +224,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 		public ContentAlignment GetAlignment(int column, int row)
 		{
-			TextBand textBand = this.GetTextBand (column, row);
+			var textBand = this.GetTextBand (column, row);
 
 			if (textBand == null)
 			{
@@ -236,7 +238,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 		public void SetAlignment(int column, int row, ContentAlignment value)
 		{
-			TextBand textBand = this.GetTextBand (column, row);
+			var textBand = this.GetTextBand (column, row);
 
 			if (textBand != null)
 			{
@@ -247,7 +249,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 		public TextJustifMode GetJustif(int column, int row)
 		{
-			TextBand textBand = this.GetTextBand (column, row);
+			var textBand = this.GetTextBand (column, row);
 
 			if (textBand == null)
 			{
@@ -261,7 +263,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 		public void SetJustif(int column, int row, TextJustifMode value)
 		{
-			TextBand textBand = this.GetTextBand (column, row);
+			var textBand = this.GetTextBand (column, row);
 
 			if (textBand != null)
 			{
@@ -272,7 +274,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 		public Margins GetCellMargins(int column, int row)
 		{
-			TextBand textBand = this.GetTextBand (column, row);
+			var textBand = this.GetTextBand (column, row);
 
 			if (textBand == null)
 			{
@@ -286,7 +288,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 		public void SetCellMargins(int column, int row, Margins value)
 		{
-			TextBand textBand = this.GetTextBand (column, row);
+			var textBand = this.GetTextBand (column, row);
 
 			if (textBand != null)
 			{
@@ -306,7 +308,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 		public CellBorder GetCellBorder(int column, int row)
 		{
-			TextBand textBand = this.GetTextBand (column, row);
+			var textBand = this.GetTextBand (column, row);
 
 			if (textBand == null)
 			{
@@ -320,7 +322,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 		public void SetCellBorder(int column, int row, CellBorder value)
 		{
-			TextBand textBand = this.GetTextBand (column, row);
+			var textBand = this.GetTextBand (column, row);
 
 			if (textBand != null)
 			{
@@ -340,7 +342,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 		public Color GetBackground(int column, int row)
 		{
-			TextBand textBand = this.GetTextBand (column, row);
+			var textBand = this.GetTextBand (column, row);
 
 			if (textBand == null)
 			{
@@ -354,7 +356,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 		public void SetBackground(int column, int row, Color value)
 		{
-			TextBand textBand = this.GetTextBand (column, row);
+			var textBand = this.GetTextBand (column, row);
 
 			if (textBand != null)
 			{
@@ -365,7 +367,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 		public int GetColumnSpan(int column, int row)
 		{
-			TextBand textBand = this.GetTextBand (column, row);
+			var textBand = this.GetTextBand (column, row);
 
 			if (textBand == null)
 			{
@@ -379,7 +381,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 		public void SetColumnSpan(int column, int row, int span)
 		{
-			TextBand textBand = this.GetTextBand (column, row);
+			var textBand = this.GetTextBand (column, row);
 
 			if (textBand != null)
 			{
@@ -390,7 +392,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 		public TextBreakMode GetBreakMode(int column, int row)
 		{
-			TextBand textBand = this.GetTextBand (column, row);
+			var textBand = this.GetTextBand (column, row);
 
 			if (textBand == null)
 			{
@@ -404,7 +406,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 		public void SetBreakMode(int column, int row, TextBreakMode value)
 		{
-			TextBand textBand = this.GetTextBand (column, row);
+			var textBand = this.GetTextBand (column, row);
 
 			if (textBand != null)
 			{
@@ -460,7 +462,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 				int span = this.GetColumnSpan (column, row);
 				if (span <= 1)
 				{
-					TextBand textBand = this.GetTextBand (column, row);
+					var textBand = this.GetTextBand (column, row);
 
 					width = System.Math.Max (width, textBand.RequiredWidth ());
 				}
@@ -515,7 +517,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 		{
 			for (int column = 0; column < this.columnsCount; column++)
 			{
-				TextBand textBand = this.GetTextBand (column, row);
+				var textBand = this.GetTextBand (column, row);
 				double width = this.GetAbsoluteSpanedColumnWidth (ref column, row);
 				var margins = this.GetMargins (textBand);
 
@@ -564,15 +566,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 			int	rowCount = 0;
 			double sectionHeight = 0;
 			bool ending = false;
-
-			double maxVerticalMargin = 0;
-			for (int column = 0; column < this.columnsCount; column++)
-			{
-				TextBand textBand = this.GetTextBand (column, row);
-				var margins = this.GetMargins (textBand);
-
-				maxVerticalMargin = System.Math.Max (maxVerticalMargin, margins.Bottom + margins.Top);
-			}
+			double maxVerticalMargin = this.GetMaxVerticalMargin (row);
 
 			while (height-maxVerticalMargin > 0)
 			{
@@ -581,12 +575,12 @@ namespace Epsitec.Cresus.Core.Print.Bands
 				bool rowEnding = true;
 				bool tooSmall = false;
 
-				TextBand firstTextBand = this.GetTextBand (0, row);
+				var firstTextBand = this.GetTextBand (0, row);
 				var topGap = (firstTextBand == null) ? 0 : firstTextBand.TableCellBorder.TopGap;
 
 				for (int column = 0; column < this.columnsCount; column++)
 				{
-					TextBand textBand = this.GetTextBand (column, row);
+					var textBand = this.GetTextBand (column, row);
 					var margins = this.GetMargins (textBand);
 
 					int  textSection = 0;
@@ -602,18 +596,16 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 					if (lastEnding)
 					{
-						CellInfo newCell = new CellInfo (textSection, -1, 0, true, 0);
+						var newCell = new CellInfo (textSection, -1, 0, true, 0);
 						rowInfo.CellsInfo.Add (newCell);
 					}
 					else
 					{
 						double verticalMargin = margins.Bottom + margins.Top;
-
 						bool cellEnding = textBand.JustifOneSection (ref line, height-topGap-verticalMargin);
-
 						double cellHeight = textBand.LastHeight + verticalMargin;
 
-						CellInfo newCell = new CellInfo (textSection, textBand.LastFirstLine, textBand.LastLineCount, cellEnding, cellHeight);
+						var newCell = new CellInfo (textSection, textBand.LastFirstLine, textBand.LastLineCount, cellEnding, cellHeight);
 						rowInfo.CellsInfo.Add (newCell);
 
 						maxRowHeight = System.Math.Max (maxRowHeight, cellHeight);
@@ -636,7 +628,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 				{
 					for (int column = 0; column < this.columnsCount; column++)
 					{
-						TextBand textBand = this.GetTextBand (column, row);
+						var textBand = this.GetTextBand (column, row);
 						textBand.JustifRemoveLastSection ();
 					}
 
@@ -676,6 +668,21 @@ namespace Epsitec.Cresus.Core.Print.Bands
 			}
 
 			return ending;
+		}
+
+		private double GetMaxVerticalMargin(int row)
+		{
+			double maxVerticalMargin = 0;
+
+			for (int column = 0; column < this.columnsCount; column++)
+			{
+				var textBand = this.GetTextBand (column, row);
+				var margins = this.GetMargins (textBand);
+
+				maxVerticalMargin = System.Math.Max (maxVerticalMargin, margins.Bottom + margins.Top);
+			}
+
+			return maxVerticalMargin;
 		}
 
 
@@ -773,7 +780,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 					if (cellInfo.FirstLine != -1)
 					{
-						TextBand textBand = this.GetTextBand (c, row);
+						var textBand = this.GetTextBand (c, row);
 
 						if (textBand.TableCellBackground.IsValid)
 						{
@@ -859,7 +866,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 			for (int column = 0; column < this.columnsCount; column++)
 			{
-				TextBand textBand = this.GetTextBand (column, row);
+				var textBand = this.GetTextBand (column, row);
 				var margins = this.GetMargins (textBand);
 
 				double width = this.GetAbsoluteSpanedColumnWidth (ref column, row);
@@ -873,7 +880,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 				maxHeight = System.Math.Max (maxHeight, height);
 			}
 
-			TextBand firstTextBand = this.GetTextBand (0, row);
+			var firstTextBand = this.GetTextBand (0, row);
 			maxHeight += firstTextBand.TableCellBorder.TopGap;
 
 			return maxHeight;
@@ -950,10 +957,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 		private Margins GetMargins(TextBand textBand)
 		{
 			//	Retourne les marges à utiliser pour une cellule donnée.
-			if (textBand.TableCellMargins.Left   == 0 &&
-				textBand.TableCellMargins.Right  == 0 &&
-				textBand.TableCellMargins.Bottom == 0 &&
-				textBand.TableCellMargins.Top    == 0)
+			if (textBand.TableCellMargins == Margins.Zero)
 			{
 				return this.CellMargins;
 			}

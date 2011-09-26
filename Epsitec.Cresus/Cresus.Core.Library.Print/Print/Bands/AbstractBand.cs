@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 	/// <summary>
 	/// Classe abstraite pour les 'bandes', qui sont des objets ayant une largeur donnée et une hauteur infinie.
 	/// Une 'bande' est découpée en 'sections'. En principe, chaque 'section' occupera une page du document imprimé,
-	/// sauf si on cherche à faire du multi-colonnes.
+	/// sauf si on cherche à faire du multi-colonnes (ce qui n'est pas implémenté pour l'instant).
 	/// </summary>
 	public abstract class AbstractBand
 	{

@@ -235,9 +235,9 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				this.IndentCellMargins (row+i, TableColumnKeys.ArticleDescription, line.GroupIndex);
 
 				this.SetTableText (row+i, TableColumnKeys.UnitPrice, accessor.GetContent (i, DocumentItemAccessorColumn.UnitPrice));
-				this.SetTableText (row+i, TableColumnKeys.Discount, accessor.GetContent (i, DocumentItemAccessorColumn.LineDiscount));
+				this.SetTableText (row+i, TableColumnKeys.Discount,  accessor.GetContent (i, DocumentItemAccessorColumn.LineDiscount));
 				this.SetTableText (row+i, TableColumnKeys.LinePrice, accessor.GetContent (i, DocumentItemAccessorColumn.LinePrice));
-				this.SetTableText (row+i, TableColumnKeys.Vat, accessor.GetContent (i, DocumentItemAccessorColumn.VatRate));
+				this.SetTableText (row+i, TableColumnKeys.Vat,       accessor.GetContent (i, DocumentItemAccessorColumn.VatRate));
 
 				var total = accessor.GetContent (i, DocumentItemAccessorColumn.TotalPrice);
 				if (line.Line is EndTotalDocumentItemEntity && i == accessor.RowsCount-1)

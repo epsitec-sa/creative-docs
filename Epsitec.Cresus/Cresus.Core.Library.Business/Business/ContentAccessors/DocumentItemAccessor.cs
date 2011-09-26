@@ -41,22 +41,21 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			this.groupIndex        = groupIndex;
 			this.mode              = mode;
 			
-			if ((this.businessDocument.IsNotNull ()) &&
-				(this.businessDocument.PriceGroup.IsNotNull ()))
+			if (this.businessDocument.IsNotNull () &&
+				this.businessDocument.PriceGroup.IsNotNull ())
 			{
 				this.billingMode = this.businessDocument.PriceGroup.BillingMode;
 			}
 
-			if ((this.documentMetadata.IsNotNull ()) &&
-				(this.documentMetadata.DocumentCategory.IsNotNull ()))
+			if (this.documentMetadata.IsNotNull () &&
+				this.documentMetadata.DocumentCategory.IsNotNull ())
 			{
 				this.type = this.documentMetadata.DocumentCategory.DocumentType;
 			}
 
 			//	Construit tout le contenu.
-
-			if ((this.mode.HasFlag (DocumentItemAccessorMode.ShowMyEyesOnly)) &&
-				(this.item.Attributes.HasFlag (DocumentItemAttributes.MyEyesOnly)))
+			if (this.mode.HasFlag (DocumentItemAccessorMode.ShowMyEyesOnly) &&
+				this.item.Attributes.HasFlag (DocumentItemAttributes.MyEyesOnly))
 			{
 				//	Rien à faire...
 			}
@@ -64,6 +63,47 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			{
 				this.BuildItem ();
 			}
+		}
+
+
+		public void TransformToSingleRow()
+		{
+			//	Appond les contenus de toutes les lignes dans la première, puis ne conserve que la première ligne.
+			//	La première ligne contient alors des textes multi-lignes, et il devient facile de rendre le tout
+			//	inséparable (TableBand.SetUnbreakableRow).
+			foreach (DocumentItemAccessorColumn column in System.Enum.GetValues (typeof (DocumentItemAccessorColumn)))
+			{
+				var merged = FormattedText.Empty;
+				bool empty = true;
+
+				for (int row = 0; row < this.rowsCount; row++)
+				{
+					var line = this.GetContent (row, column);
+					merged = merged.AppendLine (line);
+
+					if (!line.IsNullOrEmpty)
+					{
+						empty = false;
+					}
+				}
+
+				if (!empty)
+				{
+					this.SetContent (0, column, merged);
+				}
+
+				for (int row = 1; row < this.rowsCount; row++)
+				{
+					var key = DocumentItemAccessor.GetKey (row, column);
+
+					if (this.content.ContainsKey (key))
+					{
+						this.content.Remove (key);
+					}
+				}
+			}
+
+			this.rowsCount = 1;
 		}
 
 		
@@ -203,9 +243,9 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 		private void BuildItem()
 		{
-			this.BuildTextItem (this.item as TextDocumentItemEntity);
-			this.BuildArticleItem (this.item as ArticleDocumentItemEntity);
-			this.BuildTaxItem (this.item as TaxDocumentItemEntity);
+			this.BuildTextItem     (this.item as TextDocumentItemEntity);
+			this.BuildArticleItem  (this.item as ArticleDocumentItemEntity);
+			this.BuildTaxItem      (this.item as TaxDocumentItemEntity);
 			this.BuildSubTotalItem (this.item as SubTotalDocumentItemEntity);
 			this.BuildEndTotalItem (this.item as EndTotalDocumentItemEntity);
 			this.BuildCommonItem ();
