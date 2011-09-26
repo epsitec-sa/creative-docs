@@ -80,7 +80,6 @@ namespace Epsitec.Cresus.Core.Print
 			if (deserializedJobs.Count > 0)
 			{
 				PrintEngine.RecordXmlSources (businessContext, entity, optionsDialog.GetXmlSources ());
-				PrintEngine.RemoveUnprintablePages (deserializedJobs);
 				PrintEngine.PrintJobs (businessContext, deserializedJobs);
 			}
 		}
@@ -132,11 +131,6 @@ namespace Epsitec.Cresus.Core.Print
 			var printingUnits = PrintEngine.GetPrintingUnits (businessContext, entity);
 
 			entitiesToPrint.Add (new EntityToPrint (entity, options, printingUnits, title));
-		}
-
-		private static void RemoveUnprintablePages(IEnumerable<DeserializedJob> jobs)
-		{
-			jobs.ForEach (x => x.RemoveUnprintablePages ());
 		}
 		#endregion
 
@@ -211,16 +205,11 @@ namespace Epsitec.Cresus.Core.Print
 		#endregion
 
 
-		public static void SendDataToPrinter(IBusinessContext businessContext, string xml)
-		{
-			//	Imprime effectivement le source xml d'un document.
-			var deserializeJobs = SerializationEngine.DeserializeJobs (businessContext, xml);
-			PrintEngine.PrintJobs (businessContext, deserializeJobs);
-		}
-
 		public static void PrintJobs(IBusinessContext businessContext, IEnumerable<DeserializedJob> jobs)
 		{
 			//	Imprime effectivement une liste de jobs d'impression.
+			PrintEngine.RemoveUnprintablePages (jobs);
+
 			foreach (var job in jobs)
 			{
 				if (job.PrintablePagesCount > 0)
@@ -236,6 +225,11 @@ namespace Epsitec.Cresus.Core.Print
 					printDocument.Print (engine);
 				}
 			}
+		}
+
+		private static void RemoveUnprintablePages(IEnumerable<DeserializedJob> jobs)
+		{
+			jobs.ForEach (x => x.RemoveUnprintablePages ());
 		}
 
 
