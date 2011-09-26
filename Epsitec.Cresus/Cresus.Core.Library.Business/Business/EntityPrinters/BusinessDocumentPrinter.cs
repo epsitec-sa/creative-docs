@@ -772,10 +772,9 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				//	Génère une deuxième ligne avec les montants à reporter.
 				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, 1, "Report", this.GetOptionValue (DocumentOption.TableFontSize));
 
-				decimal sumPT, sumTva, sumTot;
-				this.ComputeBottomReports (relativePage-1, out sumPT, out sumTva, out sumTot);
+				decimal sumPT, sumTot;
+				this.ComputeBottomReports (relativePage-1, out sumPT, out sumTot);
 				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, 1, Misc.PriceToString (sumPT),  this.GetOptionValue (DocumentOption.TableFontSize));
-				table.SetText (this.tableColumns[TableColumnKeys.Vat      ].Rank, 1, Misc.PriceToString (sumTva), this.GetOptionValue (DocumentOption.TableFontSize));
 				table.SetText (this.tableColumns[TableColumnKeys.Total    ].Rank, 1, Misc.PriceToString (sumTot), this.GetOptionValue (DocumentOption.TableFontSize));
 				this.InitializeRowAlignment (table, 1);
 
@@ -817,10 +816,9 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, 0, "à reporter", this.GetOptionValue (DocumentOption.TableFontSize));
 
-				decimal sumPT, sumTva, sumTot;
-				this.ComputeBottomReports (relativePage, out sumPT, out sumTva, out sumTot);
+				decimal sumPT, sumTot;
+				this.ComputeBottomReports (relativePage, out sumPT, out sumTot);
 				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, 0, Misc.PriceToString (sumPT),  this.GetOptionValue (DocumentOption.TableFontSize));
-				table.SetText (this.tableColumns[TableColumnKeys.Vat      ].Rank, 0, Misc.PriceToString (sumTva), this.GetOptionValue (DocumentOption.TableFontSize));
 				table.SetText (this.tableColumns[TableColumnKeys.Total    ].Rank, 0, Misc.PriceToString (sumTot), this.GetOptionValue (DocumentOption.TableFontSize));
 
 				var tableBound = this.tableBounds[relativePage];
@@ -831,14 +829,11 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			}
 		}
 
-		private void ComputeBottomReports(int page, out decimal sumPT, out decimal sumTva, out decimal sumTot)
+		private void ComputeBottomReports(int page, out decimal sumPT, out decimal sumTot)
 		{
 			//	Calcul les reports à montrer en bas d'une page, ou en haut de la suivante.
 			sumPT  = 0;
-			sumTva = 0;
 			sumTot = 0;
-
-			//	@DR: supprimer les reports de TVA, ne reporter que les totaux HT et TTC
 
 			int lastRow = this.lastRowForEachSection[page];
 			var lines = this.ContentLines;
@@ -994,9 +989,9 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			}
 		}
 
-		protected void SetCellMargins(int row, bool bottomZero = false, bool topZero = false)
+		private void SetCellMargins(int row, bool bottomZero = false, bool topZero = false)
 		{
-			//	Détermine les marges supérieures et inférieures d'une ligne entière du tableau.
+			//	Détermine les marges supérieures et inférieures d'une ligne du tableau.
 			for (int column = 0; column < this.table.ColumnsCount; column++)
 			{
 				var m1 = this.table.GetCellMargins (column, row);
