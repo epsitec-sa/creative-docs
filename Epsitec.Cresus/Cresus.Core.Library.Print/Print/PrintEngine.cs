@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.Core.Print
 				currentBlob.LastModificationDate = System.DateTime.Now;
 			}
 
-			businessContext.DataContext.SaveChanges ();
+			businessContext.SaveChanges ();
 		}
 
 		public static List<DeserializedJob> SearchXmlSource(IBusinessContext businessContext, SerializedDocumentBlobEntity blob)

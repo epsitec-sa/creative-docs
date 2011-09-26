@@ -288,12 +288,13 @@ namespace Epsitec.Cresus.Core.Controllers
 		public void Print()
 		{
 			var entityKey = this.GetVisiblePersistedEntities ().Select (x => this.Data.FindEntityKey (x)).FirstOrDefault ();
-			var context   = this.Data.CreateDataContext ("PrintEngine:Print");
+//?			var context   = this.Data.CreateDataContext ("PrintEngine:Print");
+			var context   = this.BusinessContext.DataContext;
 			var entity    = context.ResolveEntity (entityKey);
 
 			PrintEngine.PrintCommand (this.BusinessContext, entity);
 
-			this.Data.DisposeDataContext (context);
+//?			this.Data.DisposeDataContext (context);
 		}
 
 		public void Preview()
