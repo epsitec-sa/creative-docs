@@ -302,12 +302,15 @@ namespace Epsitec.Cresus.Core.Controllers
 		public void Preview()
 		{
 			var entityKey = this.GetVisiblePersistedEntities ().Select (x => this.Data.FindEntityKey (x)).FirstOrDefault ();
-			var context   = this.Data.CreateDataContext ("PrintEngine:Preview");
+//?			var context   = this.Data.CreateDataContext ("PrintEngine:Preview");
+			var context   = this.BusinessContext.DataContext;
 			var entity    = context.ResolveEntity (entityKey);
+
+			//	TODO: vérifier que cette logique est bien correcte; pour le moment, on doit partager les BusinessContext avec l'interface graphique, mais à terme il faudra probablement découpler cela...
 
 			PrintEngine.PreviewCommand (this.BusinessContext, entity);
 
-			this.Data.DisposeDataContext (context);
+//?			this.Data.DisposeDataContext (context);
 		}
 
 		private IEnumerable<AbstractEntity> GetVisiblePersistedEntities()

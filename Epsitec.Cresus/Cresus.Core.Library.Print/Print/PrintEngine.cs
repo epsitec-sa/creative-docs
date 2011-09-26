@@ -80,8 +80,8 @@ namespace Epsitec.Cresus.Core.Print
 			if (deserializedJobs.Count > 0)
 			{
 				PrintEngine.RecordXmlSources (businessContext, entity, optionsDialog.GetXmlSources ());
-				//?PrintEngine.RemoveUnprintablePages (deserializedJobs);
-				//?PrintEngine.PrintJobs (businessContext, deserializedJobs);
+				PrintEngine.RemoveUnprintablePages (deserializedJobs);
+				PrintEngine.PrintJobs (businessContext, deserializedJobs);
 			}
 		}
 

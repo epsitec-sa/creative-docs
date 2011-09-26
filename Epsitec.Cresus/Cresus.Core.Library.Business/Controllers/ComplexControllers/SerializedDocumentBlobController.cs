@@ -49,9 +49,8 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 			var footer = new FrameBox
 			{
 				Parent = parent,
-				PreferredHeight = 24,
 				Dock = DockStyle.Bottom,
-				Margins = new Margins (0, Library.UI.Constants.RightMargin, 10, 10),
+				Margins = new Margins (0, Library.UI.Constants.RightMargin, 2, 10),
 			};
 
 			var toolbarFrame = new FrameBox
@@ -71,8 +70,9 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 				var button = new Button
 				{
 					Parent = footer,
-					Text = "Réimprimer le document",
-					Dock = DockStyle.Fill,
+					Text = "Réimprimer",
+					PreferredWidth = 104,  // esthétiquement en accord avec la toolbar de XmlPreviewerController
+					Dock = DockStyle.Right,
 				};
 
 				button.Clicked += delegate
