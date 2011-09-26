@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 			{
 				Parent = parent,
 				Dock = DockStyle.Bottom,
-				Margins = new Margins (0, Library.UI.Constants.RightMargin, 2, 0),
+				Margins = new Margins (0, Library.UI.Constants.RightMargin, 10, 0),
 			};
 
 			var jobs = PrintEngine.SearchXmlSource (this.businessContext, this.serializedDocumentBlobEntity);
