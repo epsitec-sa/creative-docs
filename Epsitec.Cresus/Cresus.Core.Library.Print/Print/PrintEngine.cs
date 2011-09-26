@@ -189,6 +189,7 @@ namespace Epsitec.Cresus.Core.Print
 				currentBlob.LastModificationDate = System.DateTime.Now;
 			}
 
+			//	TODO: vérifier que l'on veut vraiment persister cela ici ainsi...
 			businessContext.SaveChanges ();
 		}
 

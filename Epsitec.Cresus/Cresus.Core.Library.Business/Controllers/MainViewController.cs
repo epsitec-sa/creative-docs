@@ -292,6 +292,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			var context   = this.BusinessContext.DataContext;
 			var entity    = context.ResolveEntity (entityKey);
 
+			//	TODO: vérifier que cette logique est bien correcte; pour le moment, on doit partager les BusinessContext avec l'interface graphique, mais à terme il faudra probablement découpler cela...
+
 			PrintEngine.PrintCommand (this.BusinessContext, entity);
 
 //?			this.Data.DisposeDataContext (context);
