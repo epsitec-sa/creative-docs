@@ -145,6 +145,11 @@ namespace Epsitec.Cresus.Core.Data
 
 		private void HandleLockMonitorTimerTimeElapsed(object sender)
 		{
+			if (this.dataInfrastructure.IsDisposed)
+			{
+				return;
+			}
+
 			string[]      names;
 			LockMonitor[] monitors;
 
