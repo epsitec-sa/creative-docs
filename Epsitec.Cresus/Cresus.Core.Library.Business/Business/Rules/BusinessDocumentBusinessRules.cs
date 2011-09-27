@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 
 					// TODO: Ce n'est pas suffisant de geler le document "source" !
 					// Une facture n'est jamais gelée, puisqu'elle ne sert jamais de source.
-					sourceDocument.DocumentState = DocumentState.Inactive;
+					sourceDocument.DocumentState = DocumentState.Active;
 				}
 
 				activeAffair.Documents.Add (documentMetadata);
@@ -104,6 +104,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			var documentMetadata = businessContext.CreateEntity<DocumentMetadataEntity> ();
 			
 			documentMetadata.DocumentCategory = documentCategory;
+			documentMetadata.DocumentState    = DocumentState.Draft;
 			
 			return documentMetadata;
 		}

@@ -278,8 +278,6 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				return;
 			}
 
-			this.BuildArticleItemQuantities (line);
-
 			var description = this.GetArticleItemDescription (line);
 
 			if (description.IsNullOrEmpty)
@@ -297,12 +295,14 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				case BillingMode.ExcludingTax:
 					row = this.BuildArticleItemPrice (line, row, DocumentItemAccessorColumn.UnitPrice, line.UnitPriceBeforeTax1, DiscountPolicy.OnUnitPrice);
 					row = this.BuildArticleItemPrice (line, row, DocumentItemAccessorColumn.LinePrice, line.LinePriceBeforeTax1, DiscountPolicy.OnLinePrice);
+					row = this.BuildArticleItemQuantities (line, row);
 					this.SetContent (row, DocumentItemAccessorColumn.TotalPrice, this.GetFormattedPrice (line.TotalRevenueBeforeTax));
 					break;
 
 				case BillingMode.IncludingTax:
 					row = this.BuildArticleItemPrice (line, row, DocumentItemAccessorColumn.UnitPrice, line.UnitPriceAfterTax1, DiscountPolicy.OnUnitPrice);
 					row = this.BuildArticleItemPrice (line, row, DocumentItemAccessorColumn.LinePrice, line.LinePriceAfterTax1, DiscountPolicy.OnLinePrice);
+					row = this.BuildArticleItemQuantities (line, row);
 					this.SetContent (row, DocumentItemAccessorColumn.TotalPrice, this.GetFormattedPrice (line.TotalRevenueAfterTax));
 					break;
 			}
@@ -351,60 +351,51 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			return row;
 		}
 			
-		private void BuildArticleItemQuantities(ArticleDocumentItemEntity line)
+		private int BuildArticleItemQuantities(ArticleDocumentItemEntity line, int row)
 		{
 			//	Génère les quantités.
+
+			this.billingRow = row;
+
+			if (row > 0)
+			{
+				//	If there is more than the single article row, this means that we have some discounts
+				//	and we don't want the quantities on the same lines, so start emitting quantities after
+				//	the last discount.
+				
+				row++;
+			}
+			
 			if (this.mode.HasFlag (DocumentItemAccessorMode.Print))
 			{
-				this.BuildArticleItemQuantitiesForPrint (line);
+				this.BuildArticleItemQuantitiesForPrint (line, row);
 			}
 			else
 			{
-				this.BuildArticleItemQuantitiesForEdition (line);
+				this.BuildArticleItemQuantitiesForEdition (line, row);
 			}
-		}
-		
-		private void BuildArticleItemQuantitiesForEdition(ArticleDocumentItemEntity line)
-		{
-			int row = 0;
 
+			return this.billingRow;
+		}
+
+		private void BuildArticleItemQuantitiesForEdition(ArticleDocumentItemEntity line, int row)
+		{
 			foreach (var quantityType in DocumentItemAccessor.ArticleQuantityTypes)
 			{
 				foreach (var quantity in line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == quantityType).OrderBy (x => x.BeginDate))
 				{
-					this.articleQuantities.Add (quantity);
-
-					var unit = ArticleQuantityEntity.GetUnitNameForQuantity (quantity.Quantity, quantity.Unit.Name);
-
-					this.SetContent (row, DocumentItemAccessorColumn.AdditionalType, TextFormatter.FormatText (quantity.QuantityColumn.Name));
-					this.SetContent (row, DocumentItemAccessorColumn.AdditionalQuantity, TextFormatter.FormatText (quantity.Quantity));
-					this.SetContent (row, DocumentItemAccessorColumn.AdditionalUnit, unit);
-
-					if (quantity.BeginDate.HasValue)
-					{
-						this.SetContent (row, DocumentItemAccessorColumn.AdditionalBeginDate, TextFormatter.FormatText (quantity.BeginDate.Value));
-					}
-
-					if (quantity.EndDate.HasValue)
-					{
-						this.SetContent (row, DocumentItemAccessorColumn.AdditionalEndDate, TextFormatter.FormatText (quantity.EndDate.Value));
-					}
-
-					this.SetError (row, DocumentItemAccessorColumn.AdditionalQuantity, this.GetQuantityError (line, quantityType));
-
-					row++;
+					row = this.AddArticleQuantity (line, row, quantityType, quantity);
 				}
 			}
 		}
 
-		private void BuildArticleItemQuantitiesForPrint(ArticleDocumentItemEntity line)
+		private void BuildArticleItemQuantitiesForPrint(ArticleDocumentItemEntity line, int row)
 		{
 			//	Utilise les colonnes MainQuantity/MainUnit
 			
 			//	Génère la quantité principale.
 			var quantityTypes = this.documentLogic.GetPrintableArticleQuantityTypes ();
 			var mainQuantityType = ArticleQuantityType.None;
-			int row = 0;
 
 			if (quantityTypes.Any ())
 			{
@@ -418,6 +409,11 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				this.SetContent (row, DocumentItemAccessorColumn.MainQuantity, TextFormatter.FormatText (mainQuantity));
 				this.SetContent (row, DocumentItemAccessorColumn.MainUnit, unit);
 				this.SetError (row, DocumentItemAccessorColumn.MainQuantity, this.GetQuantityError (line, mainQuantityType));
+
+				if (mainQuantityType == ArticleQuantityType.Billed)
+				{
+					this.billingRow = row;
+				}
 
 				row++;
 			}
@@ -436,30 +432,53 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 							continue;
 						}
 
-						this.articleQuantities.Add (quantity);
-
-						var unit = ArticleQuantityEntity.GetUnitNameForQuantity (quantity.Quantity, quantity.Unit.Name);
-
-						this.SetContent (row, DocumentItemAccessorColumn.AdditionalType, TextFormatter.FormatText (quantity.QuantityColumn.Name));
-						this.SetContent (row, DocumentItemAccessorColumn.AdditionalQuantity, TextFormatter.FormatText (quantity.Quantity));
-						this.SetContent (row, DocumentItemAccessorColumn.AdditionalUnit, unit);
-
-						if (quantity.BeginDate.HasValue)
-						{
-							this.SetContent (row, DocumentItemAccessorColumn.AdditionalBeginDate, TextFormatter.FormatText (quantity.BeginDate.Value));
-						}
-
-						if (quantity.EndDate.HasValue)
-						{
-							this.SetContent (row, DocumentItemAccessorColumn.AdditionalEndDate, TextFormatter.FormatText (quantity.EndDate.Value));
-						}
-
-						this.SetError (row, DocumentItemAccessorColumn.AdditionalQuantity, this.GetQuantityError (line, quantityType));
-
-						row++;
+						row = this.AddArticleQuantity (line, row, quantityType, quantity);
 					}
 				}
 			}
+		}
+
+		private int AddArticleQuantity(ArticleDocumentItemEntity line, int row, ArticleQuantityType quantityType, ArticleQuantityEntity quantity)
+		{
+			int nextRow = row+1;
+
+			if (quantity.QuantityColumn.QuantityType == ArticleQuantityType.Ordered)
+			{
+				//	The ordered quantity will always be generated on the first row.
+
+				if (row != 0)
+				{
+					nextRow = row;
+					row     = 0;
+				}
+			}
+
+			this.articleQuantities.Add (quantity);
+
+			var unit = ArticleQuantityEntity.GetUnitNameForQuantity (quantity.Quantity, quantity.Unit.Name);
+
+			this.SetContent (row, DocumentItemAccessorColumn.AdditionalType, TextFormatter.FormatText (quantity.QuantityColumn.Name));
+			this.SetContent (row, DocumentItemAccessorColumn.AdditionalQuantity, TextFormatter.FormatText (quantity.Quantity));
+			this.SetContent (row, DocumentItemAccessorColumn.AdditionalUnit, unit);
+
+			if (quantity.BeginDate.HasValue)
+			{
+				this.SetContent (row, DocumentItemAccessorColumn.AdditionalBeginDate, TextFormatter.FormatText (quantity.BeginDate.Value));
+			}
+
+			if (quantity.EndDate.HasValue)
+			{
+				this.SetContent (row, DocumentItemAccessorColumn.AdditionalEndDate, TextFormatter.FormatText (quantity.EndDate.Value));
+			}
+
+			this.SetError (row, DocumentItemAccessorColumn.AdditionalQuantity, this.GetQuantityError (line, quantityType));
+
+			if (quantity.QuantityColumn.QuantityType == ArticleQuantityType.Billed)
+			{
+				this.billingRow = row;
+			}
+
+			return nextRow;
 		}
 
 		private void BuildTaxItem(TaxDocumentItemEntity line)
@@ -880,5 +899,6 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		private readonly int										groupIndex;
 		
 		private int													rowsCount;
+		private int													billingRow;
 	}
 }
