@@ -224,6 +224,10 @@ namespace Epsitec.Cresus.Core.Library.Address
 				
 				//	designer:cap/FVA91
 				public static readonly global::Epsitec.Common.Support.Druid Country = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 41);
+				//	designer:cap/FVA52
+				public static readonly global::Epsitec.Common.Support.Druid Language1 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 69);
+				//	designer:cap/FVA62
+				public static readonly global::Epsitec.Common.Support.Druid Language2 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 70);
 				//	designer:cap/FVA81
 				public static readonly global::Epsitec.Common.Support.Druid Name = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 40);
 				//	designer:cap/FVA71

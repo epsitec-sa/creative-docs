@@ -24,13 +24,13 @@ namespace Epsitec.Data.Platform
 			return codes;
 		}
 
-		public static IEnumerable<CountryInformation> GetCountries(string language)
+		public static IEnumerable<GeoNamesCountryInformation> GetCountries(string language)
 		{
 			return from code in Iso3166.GetAlpha2Codes ()
 				   select Iso3166.GetCountryInformation (code, language);
 		}
 
-		public static CountryInformation GetCountryInformation(string code, string language)
+		public static GeoNamesCountryInformation GetCountryInformation(string code, string language)
 		{
 			//	We are querying the GeoNames server, which provides up to 30'000 replies
 			//	par day with our free account.
@@ -38,7 +38,7 @@ namespace Epsitec.Data.Platform
 			string uri = string.Format ("http://api.geonames.org/countryInfoCSV?lang={0}&country={1}&username=epsitec", language, code);
 			string[] values = Iso3166.DownloadLines (uri).Skip (1).First ().Split ('\t');
 
-			return new CountryInformation ()
+			return new GeoNamesCountryInformation ()
 			{
 				IsoAlpha2  = values[0],
 				IsoAlpha3  = values[1],

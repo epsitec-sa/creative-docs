@@ -20,6 +20,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .Field (x => x.Name)
 				  .Field (x => x.Country)
 				  .Field (x => x.Region)
+			    .End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.Language1)
+				  .Field (x => x.Language2)
 				.End ()
 				;
 		}

@@ -778,7 +778,7 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		#endregion
 		///	<summary>
-		///	The <c>IsoLanguageCode</c> field.
+		///	Code de langue à deux lettres, selon la norme ISO 639-1 (par ex. &quot;fr&quot; pour le français, &quot;de&quot; pour l&apos;allemand, etc.)
 		///	designer:fld/8VAU/8VAV
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[8VAV]")]

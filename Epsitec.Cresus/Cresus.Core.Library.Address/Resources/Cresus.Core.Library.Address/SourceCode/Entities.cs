@@ -1516,6 +1516,50 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>Language1</c> field.
+		///	designer:fld/FVA21/FVA52
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[FVA52]")]
+		public global::Epsitec.Cresus.Core.Entities.LanguageEntity Language1
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.LanguageEntity> ("[FVA52]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.LanguageEntity oldValue = this.Language1;
+				if (oldValue != value || !this.IsFieldDefined("[FVA52]"))
+				{
+					this.OnLanguage1Changing (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.LanguageEntity> ("[FVA52]", oldValue, value);
+					this.OnLanguage1Changed (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Language2</c> field.
+		///	designer:fld/FVA21/FVA62
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[FVA62]")]
+		public global::Epsitec.Cresus.Core.Entities.LanguageEntity Language2
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.LanguageEntity> ("[FVA62]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.LanguageEntity oldValue = this.Language2;
+				if (oldValue != value || !this.IsFieldDefined("[FVA62]"))
+				{
+					this.OnLanguage2Changing (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.LanguageEntity> ("[FVA62]", oldValue, value);
+					this.OnLanguage2Changed (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnPostalCodeChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnPostalCodeChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
@@ -1525,6 +1569,10 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnCountryChanged(global::Epsitec.Cresus.Core.Entities.CountryEntity oldValue, global::Epsitec.Cresus.Core.Entities.CountryEntity newValue);
 		partial void OnRegionChanging(global::Epsitec.Cresus.Core.Entities.StateProvinceCountyEntity oldValue, global::Epsitec.Cresus.Core.Entities.StateProvinceCountyEntity newValue);
 		partial void OnRegionChanged(global::Epsitec.Cresus.Core.Entities.StateProvinceCountyEntity oldValue, global::Epsitec.Cresus.Core.Entities.StateProvinceCountyEntity newValue);
+		partial void OnLanguage1Changing(global::Epsitec.Cresus.Core.Entities.LanguageEntity oldValue, global::Epsitec.Cresus.Core.Entities.LanguageEntity newValue);
+		partial void OnLanguage1Changed(global::Epsitec.Cresus.Core.Entities.LanguageEntity oldValue, global::Epsitec.Cresus.Core.Entities.LanguageEntity newValue);
+		partial void OnLanguage2Changing(global::Epsitec.Cresus.Core.Entities.LanguageEntity oldValue, global::Epsitec.Cresus.Core.Entities.LanguageEntity newValue);
+		partial void OnLanguage2Changed(global::Epsitec.Cresus.Core.Entities.LanguageEntity oldValue, global::Epsitec.Cresus.Core.Entities.LanguageEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
