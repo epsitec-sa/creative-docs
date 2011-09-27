@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Debug;
 using Epsitec.Common.Splash;
+using Epsitec.Common.Types.Collections;
 
 using Epsitec.Cresus.Core.Library;
 
@@ -20,12 +21,11 @@ namespace Epsitec.Cresus.Core
 		public static void Main(string[] args)
 		{
 			GeneralExceptionCatcher.Setup ();
-			CoreContext.DefineDatabase ("core", "localhost");
-
-			var commandLine = string.Join (" ", args);
 			
+			CoreContext.ParseOptionalSettingsFile (CoreProgram.ReadOptionalSettingsFile ());
+
 			if ((args.Length > 0) &&
-				(commandLine != "-silent"))
+				(args[0] != "-start"))
 			{
 				CoreProgramOperations.ProcessCommandLine (args);
 			}
@@ -34,8 +34,25 @@ namespace Epsitec.Cresus.Core
 				CoreProgram.ExecuteCoreProgram ();
 			}
 		}
+
+		private static IEnumerable<string> ReadOptionalSettingsFile()
+		{
+			var file = System.Reflection.Assembly.GetExecutingAssembly ().Location;
+			var dir  = System.IO.Path.GetDirectoryName (file);
+			var name = System.IO.Path.GetFileNameWithoutExtension (file);
+			var path = System.IO.Path.Combine (dir, name + ".crconfig");
+
+			if (System.IO.File.Exists (path))
+			{
+				return System.IO.File.ReadLines (path, System.Text.Encoding.Default);
+			}
+			else
+			{
+				return EmptyEnumerable<string>.Instance;
+			}
+		}
 		
-        private static void ExecuteCoreProgram()
+		private static void ExecuteCoreProgram()
 		{
 			Library.CoreContext.StartAsInteractive ();
 			Library.UI.Services.Initialize ();

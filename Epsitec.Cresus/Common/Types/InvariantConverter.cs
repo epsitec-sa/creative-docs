@@ -457,6 +457,8 @@ namespace Epsitec.Common.Types
 						value = 1;
 						return true;
 				}
+
+				text = text.Replace ((char) Epsitec.Common.Text.Unicode.Code.MinusSign, '-');
 				
 				value = System.Decimal.Parse (text, System.Globalization.CultureInfo.InvariantCulture);
 				return true;

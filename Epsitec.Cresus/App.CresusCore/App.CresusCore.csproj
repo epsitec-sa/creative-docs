@@ -151,6 +151,9 @@
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
     <None Include="app.config" />
+    <Content Include="Cresus.Core.crconfig">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\Cresus.CorePlugIn.WorkflowDesigner\bin\Debug\Cresus.CorePlugIn.WorkflowDesigner.dll">

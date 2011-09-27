@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.App
 				{
 					Program.softArgs = chunk.Name.Split ('\n');
 				}
-				else if (guid == WellKnownChunks.SoftFile)
+				else if (guid == WellKnownChunks.SoftFiles)
 				{
 					System.Diagnostics.Debug.WriteLine (string.Format ("{0} : {1}, {2} bytes", chunk.Guid, chunk.Name, chunk.Data.Length));
 
@@ -199,23 +199,36 @@ namespace Epsitec.Cresus.App
 				if ((string.IsNullOrEmpty (dir) == false) &&
 					(string.IsNullOrEmpty (text)))
 				{
-					var pos = dir.IndexOf ('|');
-					var filter = dir.Split ('|').Skip (1);
-					dir = Program.GetRootedPath (root, pos < 0 ? dir : dir.Substring (0, pos));
-					var dirInfo = new System.IO.DirectoryInfo (dir);
-					var dirEntries = dirInfo.EnumerateFiles ("*", System.IO.SearchOption.AllDirectories);
+					var files = new List<FileInfo> ();
 
-					if (filter.Any ())
+					while ((string.IsNullOrEmpty (dir) == false)
+						|| (string.IsNullOrEmpty (path) == false))
 					{
-						var extHash = new HashSet<string> (filter.Select (x => x.ToLowerInvariant ()));
-						dirEntries = dirEntries.Where (x => extHash.Contains (x.Extension.ToLowerInvariant ()));
+						if (string.IsNullOrEmpty (dir) == false)
+						{
+							files.AddRange (dir.Split ('\n').SelectMany (x => Program.GetDirEntries (root, x)));
+						}
+						if (string.IsNullOrEmpty (path) == false)
+						{
+							files.AddRange (path.Split ('\n').Select (x => Program.GetFileEntry (root, x)));
+						}
+						
+						dir  = processor.GetNextLine ("D:");
+						path = processor.GetNextLine ("F:");
 					}
 
-					foreach (var dirEntry in dirEntries)
+					var positives = new HashSet<string> ();
+					var negatives = new HashSet<string> (files.Where (x => x.IsNegative).Select (x => x.FullPath));
+
+					foreach (var file in files)
 					{
-						var file = dirEntry.FullName;
-						text = file.Substring (dir.Length + 1);
-						Program.ProcessBuildRequestAddChunk (root, writer, processor, guid, text, file);
+						if (positives.Add (file.FullPath))
+						{
+							if (negatives.Contains (file.FullPath) == false)
+							{
+								Program.ProcessBuildRequestAddChunk (root, writer, processor, guid, file.RelativePath, file.FullPath);
+							}
+						}
 					}
 				}
 				else
@@ -226,6 +239,76 @@ namespace Epsitec.Cresus.App
 
 			output.SetLength (output.Position);
 			output.Close ();
+		}
+
+		class FileInfo
+		{
+			public FileInfo(string fullPath, string relativePath, bool negative)
+			{
+				this.FullPath = fullPath;
+				this.RelativePath = relativePath;
+				this.IsNegative = negative;
+			}
+
+			public readonly string FullPath;
+			public readonly string RelativePath;
+			public readonly bool IsNegative;
+		}
+
+		private static FileInfo GetFileEntry(string root, string fileSpec)
+		{
+			bool negative = false;
+
+			if (fileSpec.StartsWith ("-"))
+			{
+				negative = true;
+				fileSpec = fileSpec.Substring (1);
+			}
+			else if (fileSpec.StartsWith ("+"))
+			{
+				fileSpec = fileSpec.Substring (1);
+			}
+
+			string[] args = fileSpec.Split ('|');
+
+			string fileDir = args[0];
+			string fileRel = args[1];
+
+			fileSpec = Program.GetRootedPath (root, fileDir);
+
+			return new FileInfo (System.IO.Path.Combine (fileSpec, fileRel), fileRel, negative);
+		}
+
+		private static IEnumerable<FileInfo> GetDirEntries(string root, string dir)
+		{
+			bool negative = false;
+
+			if (dir.StartsWith ("-"))
+			{
+				negative = true;
+				dir      = dir.Substring (1);
+			}
+
+			var pos = dir.IndexOf ('|');
+			var filter = dir.Split ('|').Skip (1);
+			
+			dir = Program.GetRootedPath (root, pos < 0 ? dir : dir.Substring (0, pos));
+
+			var dirInfo = new System.IO.DirectoryInfo (dir);
+			var dirEntries = dirInfo.EnumerateFiles ("*", System.IO.SearchOption.AllDirectories);
+			IEnumerable<string> names;
+
+			if (filter.Any ())
+			{
+				var extHash = new HashSet<string> (filter.Select (x => x.ToLowerInvariant ()));
+				names = dirEntries.Where (x => extHash.Contains (x.Extension.ToLowerInvariant ())).Select (x => x.FullName);
+			}
+			else
+			{
+				names = dirEntries.Select (x => x.FullName);
+			}
+
+			return names.Select (x => new FileInfo (x, x.Substring (dir.Length + 1), negative));
 		}
 
 		private static void ProcessBuildRequestAddChunk(string root, ChunkWriter writer, ChunkSourceProcessor processor, System.Guid guid, string text, string path)
