@@ -94,7 +94,14 @@ namespace Epsitec.Cresus.Core.Library
 			CoreContext.databaseName = name;
 			CoreContext.databaseHost = host;
 		}
-		
+
+		/// <summary>
+		/// Parses the optional settings file. Every line in the file can specify a
+		/// static method of <see cref="CoreContext"/> to execute. Currently, arguments
+		/// can only be constants of type <c>string</c>, <c>int</c>, <c>decimal</c> and
+		/// <c>bool</c>.
+		/// </summary>
+		/// <param name="lines">The source lines from the settings file.</param>
 		public static void ParseOptionalSettingsFile(IEnumerable<string> lines)
 		{
 			foreach (var line in lines)
@@ -110,10 +117,12 @@ namespace Epsitec.Cresus.Core.Library
 					var parameters = line.Substring (pos1+1, len).Split (',').Select (x => CoreContext.ParseArg (x.Trim ())).ToArray ();
 					var methodInfo = typeof (CoreContext).GetMethod (methodName, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
 
-					if (methodInfo != null)
+					if (methodInfo == null)
 					{
-						methodInfo.Invoke (null, parameters);
+						throw new System.FormatException (string.Format ("Cannot resolve method '{0}'", methodName));
 					}
+
+					methodInfo.Invoke (null, parameters);
 				}
 			}
 		}

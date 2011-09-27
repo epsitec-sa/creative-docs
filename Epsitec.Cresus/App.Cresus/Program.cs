@@ -104,6 +104,8 @@ namespace Epsitec.Cresus.App
 
 				if (guid == WellKnownChunks.DbAcess)
 				{
+					//	TODO: use the information to access the database and extract the files for the
+					//	the target application; for now, just use the files found in the package itself.
 				}
 				else if (guid == WellKnownChunks.SoftName)
 				{
