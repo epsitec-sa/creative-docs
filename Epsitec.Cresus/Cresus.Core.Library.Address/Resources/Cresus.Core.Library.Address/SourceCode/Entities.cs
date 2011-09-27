@@ -1390,7 +1390,7 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>Location</c> entity.
 	///	designer:cap/FVA21
 	///	</summary>
-	public partial class LocationEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime
+	public partial class LocationEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IItemCode
 	{
 		#region ILifetime Members
 		///	<summary>
@@ -1407,6 +1407,24 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/FVA21/8VA5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA5]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
 			}
 		}
 		#endregion
