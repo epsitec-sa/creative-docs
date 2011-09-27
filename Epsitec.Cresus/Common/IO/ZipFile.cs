@@ -211,9 +211,9 @@ namespace Epsitec.Common.IO
 		/// Loads the specified ZIP stream.
 		/// </summary>
 		/// <param name="stream">The file stream.</param>
-		/// <param name="loadPredicate">The load predicate.</param>
+		/// <param name="loadPredicate">The load predicate (or <c>null</c> to load everything).</param>
 		/// <returns><c>true</c> if the ZIP file could be loaded; otherwise, <c>false</c>.</returns>
-		public bool LoadFile(System.IO.Stream stream, LoadPredicate loadPredicate)
+		public bool LoadFile(System.IO.Stream stream, LoadPredicate loadPredicate = null)
 		{
 			this.entries.Clear ();
 
@@ -226,28 +226,9 @@ namespace Epsitec.Common.IO
 				{
 					if (entry.IsDirectory == false)
 					{
-						if (loadPredicate (entry.Name))
+						if ((loadPredicate == null) || (loadPredicate (entry.Name)))
 						{
-							byte[] data = new byte[entry.Size];
-
-							int size   = data.Length;
-							int offset = 0;
-
-							while (true)
-							{
-								int length = zip.Read (data, offset, size);
-
-								offset += length;
-								size   -= length;
-
-								if (length == 0)
-								{
-									break;
-								}
-							}
-
-							System.Diagnostics.Debug.Assert (size == 0);
-
+							byte[] data = ZipFile.ReadEntry (zip, entry);
 							this.entries.Add (new Entry (entry.Name, data, entry.DateTime, (int) entry.ZipFileIndex, entry.CompressionMethod == ICSharpCode.SharpZipLib.Zip.CompressionMethod.Deflated));
 						}
 					}
@@ -438,6 +419,68 @@ namespace Epsitec.Common.IO
 			System.Diagnostics.Debug.Assert (name.EndsWith ("/") == false);
 			
 			this.entries.RemoveAll (delegate (Entry entry) { return entry.Name == name; });
+		}
+
+		private static byte[] ReadEntry(ICSharpCode.SharpZipLib.Zip.ZipInputStream zip, ICSharpCode.SharpZipLib.Zip.ZipEntry entry)
+		{
+			byte[] data;
+			
+			if (entry.Size < 0)
+			{
+				int total = 0;
+				List<byte[]> buffers = new List<byte[]> ();
+
+				while (true)
+				{
+					byte[] readBuffer = new byte[64*1024];
+
+					int read = ZipFile.ReadBytes (zip, readBuffer);
+
+					if (read < readBuffer.Length)
+					{
+						byte[] bigBuffer = new byte[total+read];
+						int offset = 0;
+						foreach (var buffer in buffers)
+						{
+							buffer.CopyTo (bigBuffer, offset);
+							offset += buffer.Length;
+						}
+						System.Array.Copy (readBuffer, 0, bigBuffer, offset, read);
+						return bigBuffer;
+					}
+
+					buffers.Add (readBuffer);
+					total += read;
+				}
+			}
+			else
+			{
+				data = new byte[entry.Size];
+				ZipFile.ReadBytes (zip, data);
+			}
+
+			return data;
+		}
+
+		private static int ReadBytes(ICSharpCode.SharpZipLib.Zip.ZipInputStream zip, byte[] data)
+		{
+			int size   = data.Length;
+			int offset = 0;
+
+			while (size > 0)
+			{
+				int length = zip.Read (data, offset, size);
+
+				offset += length;
+				size   -= length;
+
+				if (length == 0)
+				{
+					break;
+				}
+			}
+
+			return offset;
 		}
 
 		private void WriteEntry(ICSharpCode.SharpZipLib.Zip.ZipOutputStream zip, Entry entry)
