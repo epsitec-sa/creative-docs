@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core.Print
 		public static void PrintCommand(IBusinessContext businessContext, AbstractEntity entity)
 		{
 			//	La commande 'Print' du ruban a été activée.
-			PrintEngine.PrintOrPreviewCommand (businessContext, entity, isPreview: false);
+			PrintEngine.PrintOrPreviewCommand (businessContext, entity, isPreview: true);
 		}
 
 		public static void PreviewCommand(IBusinessContext businessContext, AbstractEntity entity)

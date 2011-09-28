@@ -288,11 +288,11 @@ namespace Epsitec.Cresus.Core.Controllers
 				Name = "Print",
 				Title = "Impression",
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = Library.UI.Constants.ButtonLargeWidth * 2,
+				PreferredWidth = Library.UI.Constants.ButtonLargeWidth * 1,
 			};
 
 			section.Children.Add (this.CreateButton (Res.Commands.Edition.Print));
-			section.Children.Add (this.CreateButton (Res.Commands.Edition.Preview));
+			//?section.Children.Add (this.CreateButton (Res.Commands.Edition.Preview));
 		}
 
 		private void CreateRibbonMiscActionSection(RibbonPage page)
