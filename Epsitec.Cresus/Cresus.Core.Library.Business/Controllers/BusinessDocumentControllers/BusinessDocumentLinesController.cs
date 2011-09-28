@@ -426,12 +426,20 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			foreach (var accessor in DocumentItemAccessor.CreateAccessors (this.accessData.DocumentMetadata, this.accessData.DocumentLogic, mode, lines))
 			{
+				int quantityIndex = 0;
+
 				for (int row = 0; row < accessor.RowsCount; row++)
 				{
 					var quantity = accessor.GetArticleQuantity (row);
-					var error = accessor.GetError (row);
-					var item = accessor.Item;
-					this.lines.Add (new Line (accessor, item, quantity, row, error));
+					var error    = accessor.GetError (row);
+					var item     = accessor.Item;
+
+					this.lines.Add (new Line (accessor, item, quantity, row, quantityIndex, error));
+
+					if (quantity != null)
+					{
+						quantityIndex++;
+					}
 
 					var cellError = accessor.GetError (row);
 				}

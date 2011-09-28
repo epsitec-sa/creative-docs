@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.businessDocument.Lines.Insert (index, newLine);
 
 			this.lastError = LineError.OK;
-			return LineEngine.MakeSingleSelection (new Line (null, newLine, null, 0));
+			return LineEngine.MakeSingleSelection (new Line (null, newLine, null));
 		}
 
 		public List<Line> CreateQuantity(List<Line> selection, bool simulation = false)
@@ -150,7 +150,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			article.ArticleQuantities.Add (newQuantity);
 
 			this.lastError = LineError.OK;
-			return LineEngine.MakeSingleSelection (new Line (null, line, newQuantity, 0));
+			return LineEngine.MakeSingleSelection (new Line (null, line, newQuantity));
 		}
 
 		public List<Line> CreateText(List<Line> selection, bool isTitle)
@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.businessDocument.Lines.Insert (index, newLine);
 
 			this.lastError = LineError.OK;
-			return LineEngine.MakeSingleSelection (new Line (null, newLine, null, 0));
+			return LineEngine.MakeSingleSelection (new Line (null, newLine, null));
 		}
 
 		public List<Line> CreateDiscount(List<Line> selection)
@@ -219,7 +219,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.businessDocument.Lines.Insert (index, newLine);
 
 			this.lastError = LineError.OK;
-			return LineEngine.MakeSingleSelection (new Line (null, newLine, null, 0));
+			return LineEngine.MakeSingleSelection (new Line (null, newLine, null));
 		}
 
 
@@ -258,7 +258,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Régénère toutes les lignes selon le nouvel arbre.
 			this.Regenerate (tree);
 
-			return LineEngine.MakeSingleSelection (new Line (null, title, null, 0));
+			return LineEngine.MakeSingleSelection (new Line (null, title, null));
 		}
 
 
@@ -439,7 +439,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.businessDocument.Lines.Insert (index+1, copy);
 
 			this.lastError = LineError.OK;
-			return LineEngine.MakeSingleSelection (new Line (null, copy, null, 0));
+			return LineEngine.MakeSingleSelection (new Line (null, copy, null));
 		}
 
 		public List<Line> Delete(List<Line> selection, bool simulation = false)
@@ -490,7 +490,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			last = System.Math.Min (last, this.businessDocument.Lines.Count-1);
 			var lineToSelect = this.businessDocument.Lines[last];
-			return LineEngine.MakeSingleSelection (new Line (null, lineToSelect, null, 0));
+			return LineEngine.MakeSingleSelection (new Line (null, lineToSelect, null));
 		}
 
 

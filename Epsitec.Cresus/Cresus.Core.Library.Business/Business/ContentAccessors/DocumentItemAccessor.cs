@@ -231,6 +231,16 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 		public ArticleQuantityEntity GetArticleQuantity(int row)
 		{
+			if (row > 0)
+			{
+				if (row < 1+this.discountRowCount)
+				{
+					return null;  // on est sur une ligne de rabais
+				}
+
+				row -= this.discountRowCount;  // saute les lignes de rabais
+			}
+
 			if (row < this.articleQuantities.Count)
 			{
 				return this.articleQuantities[row];
@@ -243,6 +253,8 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 		private void BuildItem()
 		{
+			this.discountRowCount = 0;
+
 			this.BuildTextItem     (this.item as TextDocumentItemEntity);
 			this.BuildArticleItem  (this.item as ArticleDocumentItemEntity);
 			this.BuildTaxItem      (this.item as TaxDocumentItemEntity);
@@ -273,6 +285,10 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 		private void BuildArticleItem(ArticleDocumentItemEntity line)
 		{
+			//	Un article peut être composé des lignes suivantes:
+			//		Désignation de l'article, avec la quantité Ordered.
+			//		0..n lignes de rabais (n = discountRowCount)
+			//		0..n lignes de quantités différées
 			if (line.IsNull ())
 			{
 				return;
@@ -287,8 +303,8 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 			int row = 0;
 
-			this.SetContent (0, DocumentItemAccessorColumn.ArticleId,           ArticleDocumentItemHelper.GetArticleId (line));
-			this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription,  description);
+			this.SetContent (0, DocumentItemAccessorColumn.ArticleId,          ArticleDocumentItemHelper.GetArticleId (line));
+			this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, description);
 
 			switch (this.billingMode)
 			{
@@ -339,6 +355,8 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				row++;
 				this.SetContent (row, DocumentItemAccessorColumn.ArticleDescription, discount.Text);
 				this.SetContent (row, column, this.GetFormattedPercent (-discount.DiscountRate.Value));
+
+				this.discountRowCount++;
 			}
 			
 			if (discount.HasValue)
@@ -346,6 +364,8 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				row++;
 				this.SetContent (row, DocumentItemAccessorColumn.ArticleDescription, discount.Text);
 				this.SetContent (row, column, this.GetFormattedPrice (-discount.Value.Value));
+
+				this.discountRowCount++;
 			}
 			
 			return row;
@@ -354,15 +374,13 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		private int BuildArticleItemQuantities(ArticleDocumentItemEntity line, int row)
 		{
 			//	Génère les quantités.
-
 			this.billingRow = row;
 
-			if (row > 0)
+			if (row > 0 || !this.mode.HasFlag (DocumentItemAccessorMode.AdditionalQuantitiesSeparate))
 			{
 				//	If there is more than the single article row, this means that we have some discounts
 				//	and we don't want the quantities on the same lines, so start emitting quantities after
 				//	the last discount.
-				
 				row++;
 			}
 			
@@ -393,7 +411,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		{
 			//	Utilise les colonnes MainQuantity/MainUnit
 			
-			//	Génère la quantité principale.
+			//	Génère la quantité principale, dans la première ligne de l'article, et qui existe déjà.
 			var quantityTypes = this.documentLogic.GetPrintableArticleQuantityTypes ();
 			var mainQuantityType = ArticleQuantityType.None;
 
@@ -406,16 +424,9 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 				var unit = ArticleQuantityEntity.GetUnitNameForQuantity (mainQuantity, mainUnitName);
 
-				this.SetContent (row, DocumentItemAccessorColumn.MainQuantity, TextFormatter.FormatText (mainQuantity));
-				this.SetContent (row, DocumentItemAccessorColumn.MainUnit, unit);
-				this.SetError (row, DocumentItemAccessorColumn.MainQuantity, this.GetQuantityError (line, mainQuantityType));
-
-				if (mainQuantityType == ArticleQuantityType.Billed)
-				{
-					this.billingRow = row;
-				}
-
-				row++;
+				this.SetContent (0, DocumentItemAccessorColumn.MainQuantity, TextFormatter.FormatText (mainQuantity));
+				this.SetContent (0, DocumentItemAccessorColumn.MainUnit, unit);
+				this.SetError (0, DocumentItemAccessorColumn.MainQuantity, this.GetQuantityError (line, mainQuantityType));
 			}
 
 			//	Génère les autres quantités (sans la principale).
@@ -445,7 +456,6 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			if (quantity.QuantityColumn.QuantityType == ArticleQuantityType.Ordered)
 			{
 				//	The ordered quantity will always be generated on the first row.
-
 				if (row != 0)
 				{
 					nextRow = row;
@@ -457,9 +467,9 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 			var unit = ArticleQuantityEntity.GetUnitNameForQuantity (quantity.Quantity, quantity.Unit.Name);
 
-			this.SetContent (row, DocumentItemAccessorColumn.AdditionalType, TextFormatter.FormatText (quantity.QuantityColumn.Name));
+			this.SetContent (row, DocumentItemAccessorColumn.AdditionalType,     TextFormatter.FormatText (quantity.QuantityColumn.Name));
 			this.SetContent (row, DocumentItemAccessorColumn.AdditionalQuantity, TextFormatter.FormatText (quantity.Quantity));
-			this.SetContent (row, DocumentItemAccessorColumn.AdditionalUnit, unit);
+			this.SetContent (row, DocumentItemAccessorColumn.AdditionalUnit,     unit);
 
 			if (quantity.BeginDate.HasValue)
 			{
@@ -844,8 +854,20 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				throw new System.NotSupportedException ("At most one mode may be specified");
 			}
 
-			if ((!mode.HasFlag (DocumentItemAccessorMode.Print)) &&
-				(mode.HasFlag (DocumentItemAccessorMode.AdditionalQuantities)))
+			if (!mode.HasFlag (DocumentItemAccessorMode.Print) &&
+				mode.HasFlag (DocumentItemAccessorMode.AdditionalQuantities))
+			{
+				throw new System.NotSupportedException ("Invalid mode combination");
+			}
+
+			if (!mode.HasFlag (DocumentItemAccessorMode.Print) &&
+				mode.HasFlag (DocumentItemAccessorMode.AdditionalQuantitiesSeparate))
+			{
+				throw new System.NotSupportedException ("Invalid mode combination");
+			}
+
+			if (!mode.HasFlag (DocumentItemAccessorMode.AdditionalQuantities) &&
+				mode.HasFlag (DocumentItemAccessorMode.AdditionalQuantitiesSeparate))
 			{
 				throw new System.NotSupportedException ("Invalid mode combination");
 			}
@@ -900,5 +922,6 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		
 		private int													rowsCount;
 		private int													billingRow;
+		private int													discountRowCount;
 	}
 }

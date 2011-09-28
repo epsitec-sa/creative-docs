@@ -1325,45 +1325,48 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				var q = BusinessDocumentPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.AdditionalQuantity, DocumentItemAccessorColumn.AdditionalUnit);
 				var d = BusinessDocumentPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.AdditionalBeginDate, DocumentItemAccessorColumn.AdditionalEndDate);
 
-				if (this.HasOption (DocumentOption.ArticleAdditionalQuantities, "Separate"))  // dans une colonne spécifique ?
+				if (!t.IsNullOrEmpty || !q.IsNullOrEmpty || !d.IsNullOrEmpty)
 				{
-					//	1) "Retardé"
-					//	2) "5 pces"
-					//	3) "25.12.2011"
-					this.SetTableText (row+i, TableColumnKeys.AdditionalType, t);
-					this.SetTableText (row+i, TableColumnKeys.AdditionalQuantity, q);
-					this.SetTableText (row+i, TableColumnKeys.AdditionalDate,     d);
-				}
+					if (this.HasOption (DocumentOption.ArticleAdditionalQuantities, "Separate"))  // dans une colonne spécifique ?
+					{
+						//	1) "Retardé"
+						//	2) "5 pces"
+						//	3) "25.12.2011"
+						this.SetTableText (row+i, TableColumnKeys.AdditionalType, t);
+						this.SetTableText (row+i, TableColumnKeys.AdditionalQuantity, q);
+						this.SetTableText (row+i, TableColumnKeys.AdditionalDate, d);
+					}
 
-				if (this.HasOption (DocumentOption.ArticleAdditionalQuantities, "ToQuantity") &&  // avec les quantités ?
+					if (this.HasOption (DocumentOption.ArticleAdditionalQuantities, "ToQuantity") &&  // avec les quantités ?
 					this.GetTableText (row+i, TableColumnKeys.MainQuantity).IsNullOrEmpty)  // (*)
-				{
-					//	"Retardé 5 pces 25.12.2011"
-					this.SetTableText (row+i, TableColumnKeys.MainQuantity, TextFormatter.FormatText (t, q, d));  // très compact, peu de place
-				}
+					{
+						//	"Retardé 5 pces 25.12.2011"
+						this.SetTableText (row+i, TableColumnKeys.MainQuantity, TextFormatter.FormatText (t, q, d));  // très compact, peu de place
+					}
 
-				if (this.HasOption (DocumentOption.ArticleAdditionalQuantities, "ToDescription") &&  // avec les descriptions ?
+					if (this.HasOption (DocumentOption.ArticleAdditionalQuantities, "ToDescription") &&  // avec les descriptions ?
 					this.GetTableText (row+i, TableColumnKeys.ArticleDescription).IsNullOrEmpty)  // (*)
-				{
-					//	"Retardé 5 pces, le 25.12.2011"
-					this.SetTableText (row+i, TableColumnKeys.ArticleDescription, TextFormatter.FormatText (t, q, "le~", d));  // assez de place à disposition
-				}
+					{
+						//	"Retardé 5 pces, le 25.12.2011"
+						this.SetTableText (row+i, TableColumnKeys.ArticleDescription, TextFormatter.FormatText (t, q, "le~", d));  // assez de place à disposition
+					}
 
-				if (this.HasOption (DocumentOption.ArticleAdditionalQuantities, "ToQuantityAndDescription") &&  // réparti ?
+					if (this.HasOption (DocumentOption.ArticleAdditionalQuantities, "ToQuantityAndDescription") &&  // réparti ?
 					this.GetTableText (row+i, TableColumnKeys.MainQuantity).IsNullOrEmpty &&  // (*)
 					this.GetTableText (row+i, TableColumnKeys.ArticleDescription).IsNullOrEmpty)  // (*)
-				{
-					//	1) "−5 pces"
-					//	2) "Retardé, le 25.12.2011"
-					this.SetTableText (row+i, TableColumnKeys.MainQuantity, FormattedText.Concat ("−", q));  // signe moins U2212 (pas tiret) !
-					this.SetTableText (row+i, TableColumnKeys.ArticleDescription, TextFormatter.FormatText (t, ", le~", d));  // assez de place à disposition
-				}
+					{
+						//	1) "−5 pces"
+						//	2) "Retardé, le 25.12.2011"
+						this.SetTableText (row+i, TableColumnKeys.MainQuantity, FormattedText.Concat ("−", q));  // signe moins U2212 (pas tiret) !
+						this.SetTableText (row+i, TableColumnKeys.ArticleDescription, TextFormatter.FormatText (t, ", le~", d));  // assez de place à disposition
+					}
 
-				// (*)	Si la cellule contient déjà un texte, il ne faut pas l'écraser. En effet,
-				//		cette méthode est appelée après avoir rempli les contenus normaux. Les
-				//		colonnes 'MainQuantity' ou 'ArticleDescription' contiennent donc déjà
-				//		les informations de base, qu'il ne faut pas remplacer par des quantité
-				//		additionnelles vides.
+					// (*)	Si la cellule contient déjà un texte, il ne faut pas l'écraser. En effet,
+					//		cette méthode est appelée après avoir rempli les contenus normaux. Les
+					//		colonnes 'MainQuantity' ou 'ArticleDescription' contiennent donc déjà
+					//		les informations de base, qu'il ne faut pas remplacer par des quantité
+					//		additionnelles vides.
+				}
 			}
 		}
 
@@ -1374,6 +1377,11 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			if (!this.HasOption (DocumentOption.ArticleAdditionalQuantities, "None"))
 			{
 				mode |= DocumentItemAccessorMode.AdditionalQuantities;
+			}
+
+			if (this.HasOption (DocumentOption.ArticleAdditionalQuantities, "Separate"))
+			{
+				mode |= DocumentItemAccessorMode.AdditionalQuantitiesSeparate;
 			}
 
 			return mode;

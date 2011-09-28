@@ -11,12 +11,21 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
 	public sealed class Line
 	{
-		public Line(DocumentItemAccessor documentItemAccessor, AbstractDocumentItemEntity abstractDocumentItem, ArticleQuantityEntity articleQuantity, int sublineIndex, DocumentItemAccessorError error = DocumentItemAccessorError.None)
+		//	Un article peut être composé des lignes suivantes:
+		//		                             SublineIndex QuantityIndex ArticleQuantity
+		//		Désignation de l'article           0           0            entity
+		//		Premier rabais                     1                        null
+		//		Deuxième rabais                    2                        null
+		//		Première quantité différée         3           1            entity
+		//		Deuxième quantité différée         4           2            entity
+
+		public Line(DocumentItemAccessor documentItemAccessor, AbstractDocumentItemEntity abstractDocumentItem, ArticleQuantityEntity articleQuantity, int sublineIndex = 0, int quantityIndex = 0, DocumentItemAccessorError error = DocumentItemAccessorError.None)
 		{
 			this.DocumentItemAccessor = documentItemAccessor;
-			this.DocumentItem = abstractDocumentItem;
+			this.DocumentItem         = abstractDocumentItem;
 			this.ArticleQuantity      = articleQuantity;
 			this.SublineIndex         = sublineIndex;
+			this.QuantityIndex        = quantityIndex;
 			this.Error                = error;
 		}
 
@@ -45,13 +54,19 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			internal set;
 		}
 
+		public int								QuantityIndex
+		{
+			get;
+			internal set;
+		}
+
 		public bool								IsQuantity
 		{
 			get
 			{
 				return this.DocumentItem is ArticleDocumentItemEntity &&
 					   this.ArticleQuantity != null &&
-					   this.SublineIndex > 0;
+					   this.QuantityIndex > 0;
 			}
 		}
 
