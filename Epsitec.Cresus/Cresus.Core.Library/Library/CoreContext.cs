@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
+using Epsitec.Common.Types.Collections;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -126,6 +127,29 @@ namespace Epsitec.Cresus.Core.Library
 				}
 			}
 		}
+
+		/// <summary>
+		/// Reads the core context settings file (if any). The file has the same path as the
+		/// currently executing assembly, with <c>.crconfig</c> appended to it.
+		/// </summary>
+		/// <returns>The lines of text found in the settings file.</returns>
+		public static IEnumerable<string> ReadCoreContextSettingsFile()
+		{
+			var file = System.Reflection.Assembly.GetExecutingAssembly ().Location;
+			var dir  = System.IO.Path.GetDirectoryName (file);
+			var name = System.IO.Path.GetFileNameWithoutExtension (file);
+			var path = System.IO.Path.Combine (dir, name + ".crconfig");
+
+			if (System.IO.File.Exists (path))
+			{
+				return System.IO.File.ReadLines (path, System.Text.Encoding.Default);
+			}
+			else
+			{
+				return EmptyEnumerable<string>.Instance;
+			}
+		}
+
 
 		private static object ParseArg(string arg)
 		{

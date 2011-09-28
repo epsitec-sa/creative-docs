@@ -3,7 +3,6 @@
 
 using Epsitec.Common.Debug;
 using Epsitec.Common.Splash;
-using Epsitec.Common.Types.Collections;
 
 using Epsitec.Cresus.Core.Library;
 
@@ -22,7 +21,7 @@ namespace Epsitec.Cresus.Core
 		{
 			GeneralExceptionCatcher.Setup ();
 
-			CoreContext.ParseOptionalSettingsFile (CoreProgram.ReadCoreContextSettingsFile ());
+			CoreContext.ParseOptionalSettingsFile (CoreContext.ReadCoreContextSettingsFile ());
 
 			if ((args.Length > 0) &&
 				(args[0] != "-start"))
@@ -57,28 +56,6 @@ namespace Epsitec.Cresus.Core
 				}
 
 				Library.UI.Services.ShutDown ();
-			}
-		}
-
-		/// <summary>
-		/// Reads the core context settings file (if any). The file has the same path as the
-		/// currently executing assembly, with <c>.crconfig</c> appended to it.
-		/// </summary>
-		/// <returns>The lines of text found in the settings file.</returns>
-		private static IEnumerable<string> ReadCoreContextSettingsFile()
-		{
-			var file = System.Reflection.Assembly.GetExecutingAssembly ().Location;
-			var dir  = System.IO.Path.GetDirectoryName (file);
-			var name = System.IO.Path.GetFileNameWithoutExtension (file);
-			var path = System.IO.Path.Combine (dir, name + ".crconfig");
-
-			if (System.IO.File.Exists (path))
-			{
-				return System.IO.File.ReadLines (path, System.Text.Encoding.Default);
-			}
-			else
-			{
-				return EmptyEnumerable<string>.Instance;
 			}
 		}
 	}

@@ -432,6 +432,7 @@ namespace Epsitec.Common.Designer
 			}
 
 			System.Text.StringBuilder builder = new System.Text.StringBuilder(name.Length);
+			bool enforceFirstUpperCase = !name.Contains ("_");
 			bool first = true;
 			foreach (char c in name)
 			{
@@ -444,7 +445,14 @@ namespace Epsitec.Common.Designer
 					}
 					else if (Misc.IsLowerLetter(c))
 					{
-						builder.Append(System.Char.ToUpper(c));
+						if (enforceFirstUpperCase)
+						{
+							builder.Append (System.Char.ToUpper (c));
+						}
+						else
+						{
+							builder.Append (c);
+						}
 						first = false;
 					}
 					else
