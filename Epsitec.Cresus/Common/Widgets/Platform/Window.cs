@@ -2392,7 +2392,10 @@ namespace Epsitec.Common.Widgets.Platform
 
 			if ((this.widgetWindow == null) ||
 				(this.widgetWindow.Root == null) ||
-				(this.widgetWindow.Root.IsFrozen))
+				(this.widgetWindow.Root.IsFrozen) ||
+				(this.IsDisposed) ||
+				(this.widgetWindow.IsDisposed) ||
+				(winGraphics == null))
 			{
 				return;
 			}
