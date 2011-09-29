@@ -1,4 +1,4 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2004-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using FirebirdSql.Data.FirebirdClient;
@@ -28,10 +28,12 @@ namespace Epsitec.Cresus.Database.Implementation
 			// Marc
 			
 			FbBackup backup = new FbBackup ();
+
+			path = this.GetBackupFilePath (path);
 			
 			backup.BackupFiles.Add (new FbBackupFile (path, 2048));
-			
-			backup.ConnectionString = FirebirdAbstraction.MakeConnectionString (fb.DbAccess, fb.GetDbFilePath (), fb.ServerType);
+
+			backup.ConnectionString = FirebirdAbstraction.MakeConnectionString (this.fb.DbAccess, this.fb.GetDbFilePath (), this.fb.ServerType);
 			backup.Options          = FbBackupFlags.IgnoreLimbo;
 			backup.Verbose          = true;
 			backup.ServiceOutput   += FirebirdServiceTools.ServiceOutput;
@@ -57,8 +59,10 @@ namespace Epsitec.Cresus.Database.Implementation
 			// Marc
 			
 			FbRestore restore = new FbRestore();
-			
-			restore.ConnectionString = FirebirdAbstraction.MakeConnectionString (fb.DbAccess, fb.GetDbFilePath (), fb.ServerType);
+
+			path = this.GetBackupFilePath (path);
+
+			restore.ConnectionString = FirebirdAbstraction.MakeConnectionString (this.fb.DbAccess, this.fb.GetDbFilePath (), this.fb.ServerType);
 			restore.BackupFiles.Add (new FbBackupFile (path, 2048));
 			
 			restore.Verbose        = true;
@@ -76,6 +80,21 @@ namespace Epsitec.Cresus.Database.Implementation
 			}
 		}
 
+		private string GetBackupFilePath(string path)
+		{
+			if (System.IO.Path.IsPathRooted (path))
+			{
+				return path;
+			}
+			else
+			{
+				var dir = System.IO.Path.GetDirectoryName (this.fb.GetDbFilePath ());
+				var rel = path;
+				
+				return System.IO.Path.Combine (dir, rel);
+			}
+		}
+
 		public bool CheckExistence()
 		{
 			// TODO This method is not very reliable, as it could tell that the database does not
@@ -84,9 +103,9 @@ namespace Epsitec.Cresus.Database.Implementation
 			// does exist or not.
 			// Marc
 
-			DbAccess dbAccess = this.fb.DbAccess;
-			string path = this.fb.GetDbFilePath ();
-			FbServerType serverType = this.fb.ServerType;
+			var dbAccess   = this.fb.DbAccess;
+			var path       = this.fb.GetDbFilePath ();
+			var serverType = this.fb.ServerType;
 
 			string connectionString = FirebirdAbstraction.MakeConnectionString (dbAccess, path, serverType);
 			
@@ -122,6 +141,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			System.Diagnostics.Debug.WriteLine (e.Message);
 		}
 		
-		private FirebirdAbstraction		fb;
+		
+		private readonly FirebirdAbstraction	fb;
 	}
 }

@@ -151,7 +151,7 @@
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
     <None Include="app.config" />
-    <Content Include="Cresus.Core.crconfig">
+    <Content Include="Cresus.Core.Library.crconfig">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

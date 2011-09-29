@@ -60,7 +60,7 @@
     <None Include="..\Aider\Properties\Epsitec.Aider.snk">
       <Link>Properties\Epsitec.Aider.snk</Link>
     </None>
-    <Content Include="Cresus.Core.crconfig">
+    <Content Include="Cresus.Core.Library.crconfig">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
