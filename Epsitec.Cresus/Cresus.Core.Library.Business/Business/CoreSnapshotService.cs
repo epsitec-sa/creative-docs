@@ -5,6 +5,7 @@ using Epsitec.Cresus.Core.Orchestrators;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Library.Business
 {
@@ -25,6 +26,11 @@ namespace Epsitec.Cresus.Core.Library.Business
 			var navigationOrchestrator = dataViewOrchestrator.Navigator;
 
 			navigationOrchestrator.NodeAdded += sender => this.RecordEvent ("NAV", navigationOrchestrator.GetTopNavigationPath ().ToString ());
+
+			CommandDispatcher.CommandDispatching       += this.HandleCommandDispatcherCommandDispatching;
+			CommandDispatcher.CommandDispatched        += this.HandleCommandDispatcherCommandDispatchFinished;
+			CommandDispatcher.CommandDispatchCancelled += this.HandleCommandDispatcherCommandDispatchFinished;
+			CommandDispatcher.CommandDispatchFailed    += this.HandleCommandDispatcherCommandDispatchFinished;
 		}
 		
 		private void CreateDatabaseSnapshot()
@@ -42,6 +48,17 @@ namespace Epsitec.Cresus.Core.Library.Business
 		}
 
 
+		private void HandleCommandDispatcherCommandDispatching(object sender, CommandEventArgs e)
+		{
+			this.RecordEvent ("CMD", e.Command.CommandId);
+			this.commandDispatchDepth++;
+		}
+
+		private void HandleCommandDispatcherCommandDispatchFinished(object sender, CommandEventArgs e)
+		{
+			this.commandDispatchDepth--;
+		}
+
 		private static string GetRemoteBackupFolder()
 		{
 			return "Snapshots";
@@ -55,5 +72,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 
 			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}@{1}-{2:0000000000000000}-{3}", userName, hostName, totalTicks, name);
 		}
+
+
+		private int commandDispatchDepth;
 	}
 }

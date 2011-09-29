@@ -4353,7 +4353,7 @@ namespace Epsitec.Common.Widgets
 						string path = hypertext.Substring (8);
 
 						if (hypertext.EndsWith (".txt") || hypertext.EndsWith (".log"))
-                        {
+						{
 							System.Diagnostics.Process.Start ("notepad.exe", path);
 							e.Message.Consumer = this;
 						}

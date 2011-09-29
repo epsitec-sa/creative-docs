@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -7,6 +7,10 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 {
+	/// <summary>
+	/// The <c>NavigationHistory</c> class maintains two stacks of navigation paths, in order
+	/// to be able to navigate backward and forward through the history.
+	/// </summary>
 	public class NavigationHistory
 	{
 		public NavigationHistory(NavigationOrchestrator navigator, CommandContext commandContext)
@@ -27,7 +31,7 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 			}
 
 			if (this.suspendCounter > 0)
-            {
+			{
 				if ((this.state == State.Neutral) ||
 					(this.state == State.NavigateInPlace))
 				{
@@ -35,7 +39,7 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 				}
 
 				throw new System.InvalidOperationException ("Navigation is forbidden when NavigationHistory is suspended");
-            }
+			}
 
 			if (fullPath.IsReadOnly == false)
 			{
@@ -137,9 +141,7 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 			}
 		}
 
-
-
-		private void DebugDump()
+		internal void DebugDump()
 		{
 			System.Diagnostics.Debug.WriteLine ("[-----------------------------------------------------------");
 			System.Diagnostics.Debug.WriteLine ("Past :");
@@ -149,7 +151,9 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 			System.Diagnostics.Debug.WriteLine (string.Join ("\r\n", this.forwardHistory.Select (x => x.ToString ()).ToArray ()));
 			System.Diagnostics.Debug.WriteLine ("-----------------------------------------------------------]");
 		}
-		
+
+		#region State Enum
+
 		private enum State
 		{
 			Neutral,
@@ -157,6 +161,10 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 			NavigateForward,
 			NavigateInPlace,
 		}
+
+		#endregion
+
+		#region StatePreserver Class
 
 		private class StatePreserver : System.IDisposable
 		{
@@ -178,9 +186,13 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 
 			#endregion
 
-			private readonly NavigationHistory history;
-			private readonly State oldState;
+			private readonly NavigationHistory	history;
+			private readonly State				oldState;
 		}
+
+		#endregion
+
+		#region Suspender Class
 
 		private class Suspender : System.IDisposable
 		{
@@ -209,6 +221,8 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 			private readonly string				name;
 			private readonly NavigationHistory	history;
 		}
+
+		#endregion
 
 		private readonly NavigationOrchestrator navigator;
 		private readonly CommandContext			commandContext;

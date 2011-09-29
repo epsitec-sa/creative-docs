@@ -512,9 +512,9 @@ namespace Epsitec.Common.Widgets.Platform
 			{
 				case WindowType.Document:
 					if ((windowStyles & WindowStyles.Frameless) != 0)
-                    {
+					{
 						this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-                    }
+					}
 					else if ((windowStyles & WindowStyles.CanResize) == 0)
 					{
 						this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -917,9 +917,9 @@ namespace Epsitec.Common.Widgets.Platform
 					show = Win32Const.SW_SHOWMINIMIZED;
 				}
 				if (value.IsHidden)
-                {
+				{
 					show = Win32Const.SW_HIDE;
-                }
+				}
 
 
 				Win32Api.WindowPlacement placement = new Win32Api.WindowPlacement ()
@@ -1392,8 +1392,8 @@ namespace Epsitec.Common.Widgets.Platform
 					this.Size = this.formBounds.Size;
 				}
 				else if ((this.formBoundsSet) &&
-					     (this.formBounds.Size == this.Size) &&
-					     (this.onResizeEvent == false))
+						 (this.formBounds.Size == this.Size) &&
+						 (this.onResizeEvent == false))
 				{
 					//	Rien à faire, car la taille correspond à la dernière taille mémorisée.
 				}

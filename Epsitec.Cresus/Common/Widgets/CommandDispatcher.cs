@@ -25,33 +25,27 @@ namespace Epsitec.Common.Widgets
 		/// <param name="options">The dispatcher options (defaults to <c>None</c>).</param>
 		public CommandDispatcher(string name = "anonymous", CommandDispatcherLevel level = CommandDispatcherLevel.Secondary, CommandDispatcherOptions options = CommandDispatcherOptions.None)
 		{
-			lock (CommandDispatcher.exclusion)
+			this.eventHandlers = new Dictionary<Command, EventSlot> ();
+			this.name          = name;
+			this.level         = level;
+			this.options       = options;
+			this.id            = System.Threading.Interlocked.Increment (ref CommandDispatcher.nextId);
+
+			switch (this.level)
 			{
-				this.name    = name;
-				this.level   = level;
-				this.options = options;
-				this.id      = System.Threading.Interlocked.Increment (ref CommandDispatcher.nextId);
-				
-				switch (level)
-				{
-					case CommandDispatcherLevel.Root:
-						if (CommandDispatcher.defaultDispatcher == null)
-						{
-							CommandDispatcher.defaultDispatcher = this;
-						}
-						else
-						{
-							throw new System.InvalidOperationException ("Root command dispatcher already defined");
-						}
-						break;
+				case CommandDispatcherLevel.Root:
+					if (CommandDispatcher.defaultDispatcher != null)
+					{
+						throw new System.InvalidOperationException ("Root command dispatcher already defined");
+					}
+					break;
 					
-					case CommandDispatcherLevel.Secondary:
-					case CommandDispatcherLevel.Primary:
-						break;
+				case CommandDispatcherLevel.Secondary:
+				case CommandDispatcherLevel.Primary:
+					break;
 					
-					default:
-						throw new System.ArgumentException (string.Format ("CommandDispatcherLevel {0} not valid for dispatcher {1}", level, name), "level");
-				}
+				default:
+					throw new System.ArgumentException (string.Format ("CommandDispatcherLevel {0} not valid for dispatcher {1}", level, name), "level");
 			}
 		}
 
@@ -123,7 +117,7 @@ namespace Epsitec.Common.Widgets
 		///   <c>true</c> if this command dispatcher should be active in a window, even if the
 		///   attached visual does not have the focus; otherwise, <c>false</c>.
 		/// </value>
-		public bool ActiveWithoutFocus
+		public bool								ActiveWithoutFocus
 		{
 			get
 			{
@@ -131,6 +125,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		/// <summary>
+		/// Gets the global default dispatcher.
+		/// </summary>
+		public static CommandDispatcher			DefaultDispatcher
+		{
+			get
+			{
+				return CommandDispatcher.defaultDispatcher;
+			}
+		}
+
+		
 		/// <summary>
 		/// Dispatches a command using the specified dispatcher and context chains.
 		/// </summary>
@@ -153,7 +159,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-
+		
 		/// <summary>
 		/// Registers a command controller. The object must implement methods marked
 		/// with the <see cref="Epsitec.Common.Support.CommandAttribute"/> attribute.
@@ -242,7 +248,24 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-
+		/// <summary>
+		/// Checks if the dispatcher contains a handler for the specified command.
+		/// </summary>
+		/// <param name="command">The command.</param>
+		/// <returns><c>true</c> if the dispatcher knows how to execute the command;
+		/// otherwise, <c>false</c>.</returns>
+		public bool Contains(Command command)
+		{
+			if (this.eventHandlers.ContainsKey (command))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		
 		
 		private void Register(Command command, AbstractHandler handler)
 		{
@@ -277,24 +300,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		/// <summary>
-		/// Checks if the dispatcher contains a handler for the specified command.
-		/// </summary>
-		/// <param name="command">The command.</param>
-		/// <returns><c>true</c> if the dispatcher knows how to execute the command;
-		/// otherwise, <c>false</c>.</returns>
-		public bool Contains(Command command)
-		{
-			if (this.eventHandlers.ContainsKey (command))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
@@ -308,10 +313,9 @@ namespace Epsitec.Common.Widgets
 		static CommandDispatcher()
 		{
 			CommandDispatcher.commandAttributeType = typeof (Support.CommandAttribute);
-			CommandDispatcher defaultDispatcher = new CommandDispatcher ("default", CommandDispatcherLevel.Root);
+			CommandDispatcher.defaultDispatcher    = new CommandDispatcher ("default", CommandDispatcherLevel.Root);
 
-			System.Diagnostics.Debug.Assert (defaultDispatcher == CommandDispatcher.defaultDispatcher);
-			System.Diagnostics.Debug.Assert (defaultDispatcher.id == 1);
+			System.Diagnostics.Debug.Assert (CommandDispatcher.defaultDispatcher.id == 1);
 		}
 
 		private static object ResolveWeakController(object controller)
@@ -639,22 +643,32 @@ namespace Epsitec.Common.Widgets
 			
 			CommandEventArgs e = new CommandEventArgs (source, commandObject, contextChain, commandContext, commandState);
 
-			this.OnCommandDispatching (e);
-
-			if (e.Cancel)
-			{
-				return true;
-			}
-
 			EventSlot slot;
-			
-			if (this.eventHandlers.TryGetValue (commandObject, out slot))
+			this.eventHandlers.TryGetValue (commandObject, out slot);
+
+			if (slot != null)
 			{
-				System.Diagnostics.Debug.WriteLine ("Command '" + commandObject.CommandId + "' (" + commandObject.Name + ") fired.");
-				
-				if (slot.ExecuteCommand (this, e))
+				this.OnCommandDispatching (e);
+
+				if (e.Cancel)
 				{
-					e.Handled = true;
+					this.OnCommandDispatchCancelled (e);
+					return true;
+				}
+				
+				try
+				{
+					System.Diagnostics.Debug.WriteLine ("Command '" + commandObject.CommandId + "' (" + commandObject.Name + ") fired.");
+
+					if (slot.ExecuteCommand (this, e))
+					{
+						e.Handled = true;
+					}
+				}
+				catch
+				{
+					this.OnCommandDispatchFailed (e);
+					throw;
 				}
 			}
 
@@ -689,23 +703,22 @@ namespace Epsitec.Common.Widgets
 
 		protected void OnCommandDispatching(CommandEventArgs e)
 		{
-			var handler = CommandDispatcher.CommandDispatching;
-
-			if (handler != null)
-			{
-				handler (this, e);
-			}
+			CommandDispatcher.CommandDispatching.Raise (this, e);
 		}
-
 
 		protected void OnCommandDispatched(CommandEventArgs e)
 		{
-			var handler = CommandDispatcher.CommandDispatched;
+			CommandDispatcher.CommandDispatched.Raise (this, e);
+		}
 
-			if (handler != null)
-			{
-				handler (this, e);
-			}
+		protected void OnCommandDispatchCancelled(CommandEventArgs e)
+		{
+			CommandDispatcher.CommandDispatchCancelled.Raise (this, e);
+		}
+
+		protected void OnCommandDispatchFailed(CommandEventArgs e)
+		{
+			CommandDispatcher.CommandDispatchFailed.Raise (this, e);
 		}
 
 
@@ -740,33 +753,24 @@ namespace Epsitec.Common.Widgets
 		
 		public static readonly DependencyProperty DispatcherProperty = DependencyProperty.RegisterAttached ("Dispatcher", typeof (CommandDispatcher), typeof (CommandDispatcher), new DependencyPropertyMetadata ().MakeNotSerializable ());
 
-		public static CommandDispatcher			DefaultDispatcher
-		{
-			get
-			{
-				return CommandDispatcher.defaultDispatcher;
-			}
-		}
-		
 		public event EventHandler				OpletQueueBindingChanged;
 		
 		public static event EventHandler<CommandEventArgs>	CommandDispatching;
 		public static event EventHandler<CommandEventArgs>	CommandDispatched;
+		public static event EventHandler<CommandEventArgs>	CommandDispatchCancelled;
+		public static event EventHandler<CommandEventArgs>	CommandDispatchFailed;
 		
-		private readonly string					name;
-		private readonly CommandDispatcherLevel	level;
-		private readonly long					id;
-		private CommandDispatcherOptions		options;
 
-		private Dictionary<Command, EventSlot>	eventHandlers = new Dictionary<Command, EventSlot> ();
-		
-		private Support.OpletQueue				opletQueue;
-		
-		static object							exclusion = new object ();
-		
-		static System.Type						commandAttributeType;
-		
-		static CommandDispatcher				defaultDispatcher;
-		static long								nextId;
+		private static readonly System.Type				commandAttributeType;
+		private static readonly CommandDispatcher		defaultDispatcher;
+		private static long								nextId;
+
+		private readonly string							name;
+		private readonly CommandDispatcherLevel			level;
+		private readonly long							id;
+		private readonly CommandDispatcherOptions		options;
+
+		private readonly Dictionary<Command, EventSlot> eventHandlers;
+		private Support.OpletQueue						opletQueue;
 	}
 }
