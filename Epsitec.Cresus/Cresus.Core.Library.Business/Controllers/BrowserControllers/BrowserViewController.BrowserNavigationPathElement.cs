@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			protected override string Serialize()
 			{
-				return string.Concat (BrowserNavigationPathElement.ClassIdPrefix, this.dataSetName, ".", this.entityKey.ToString (), ">");
+				return string.Concat (BrowserNavigationPathElement.ClassIdPrefix, this.dataSetName, ".", this.entityKey.ToString ());
 			}
 
 			protected override NavigationPathElement Deserialize(string data)

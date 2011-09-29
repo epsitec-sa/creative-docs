@@ -18,7 +18,6 @@ using Epsitec.Cresus.DataLayer;
 
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
 namespace Epsitec.Cresus.Core.Orchestrators
 {
@@ -86,7 +85,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			newPath.Navigate (this);
 		}
 
-        /// <summary>
+		/// <summary>
 		/// Adds a node in the navigation history for the controller which was just
 		/// opened.
 		/// </summary>
@@ -105,7 +104,9 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			this.RecordStateBeforeChange ();
 
 			Node node = new Node (parentController, controller, this.currentHistoryId);
+			
 			this.liveNodes.Add (node);
+			this.OnNodeAdded ();
 
 			var path = this.GetTopNavigationPath ();
 
@@ -136,6 +137,8 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			this.RecordStateBeforeChange ();
 			
 			this.liveNodes.RemoveAll (node => node.Item == controller);
+			this.OnNodeRemoved ();
+
 			this.MakeDirty ();
 		}
 
@@ -561,10 +564,25 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		
 		#endregion
 
+		
+		private void OnNodeAdded()
+		{
+			this.NodeAdded.Raise (this);
+		}
+
+		private void OnNodeRemoved()
+		{
+			this.NodeRemoved.Raise (this);
+		}
+		
 		private static long GetCurrentActionId()
 		{
 			return Epsitec.Common.Widgets.Message.CurrentUserMessageId;
 		}
+
+
+		public event EventHandler				NodeAdded;
+		public event EventHandler				NodeRemoved;
 
 
 		private readonly List<Node>				liveNodes;

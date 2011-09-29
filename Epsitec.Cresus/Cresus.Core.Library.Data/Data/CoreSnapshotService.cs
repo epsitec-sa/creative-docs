@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 	{
 		public CoreSnapshotService()
 		{
-			CoreSnapshotService.CreateDatabaseSnapshot ();
+			this.CreateDatabaseSnapshot ();
 		}
 
 		public void NotifyApplicationStarted(CoreApp app)
@@ -23,12 +23,11 @@ namespace Epsitec.Cresus.Core.Library.Data
 		
 		private void CreateDatabaseSnapshot()
 		{
-			var remoteBackupFolder = CoreSnapshotService.GetRemoteBackupFolder ();
-			var remoteBackupFileName = CoreSnapshotService.GetRemoteBackupFileName ("db.firebird-backup");
-			var remoteBackupPath = System.IO.Path.Combine (remoteBackupFolder, remoteBackupFileName);
+			var remoteBackupFolder   = CoreSnapshotService.GetRemoteBackupFolder ();
+			var remoteBackupFileName = CoreSnapshotService.GetTimeStampedFileName ("db.firebird-backup");
+			var remoteBackupPath     = System.IO.Path.Combine (remoteBackupFolder, remoteBackupFileName);
 
-			var dbAccess = CoreData.GetDatabaseAccess ();
-			CoreData.BackupDatabase (remoteBackupPath, dbAccess);
+			CoreData.BackupDatabase (remoteBackupPath, CoreData.GetDatabaseAccess ());
 		}
 
 
@@ -37,7 +36,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			return "Snapshots";
 		}
 
-		private static string GetRemoteBackupFileName(string name)
+		private static string GetTimeStampedFileName(string name)
 		{
 			var userName   = System.Environment.UserName.ToLowerInvariant ();
 			var hostName   = System.Environment.MachineName.ToLowerInvariant ();
