@@ -79,7 +79,15 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return ArticleQuantityType.None;
+				return ArticleQuantityType.Ordered;
+			}
+		}
+
+		public override bool IsMainArticleQuantityEnabled
+		{
+			get
+			{
+				return false;
 			}
 		}
 
@@ -90,12 +98,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public override IEnumerable<ArticleQuantityType> GetPrintableArticleQuantityTypes()
 		{
-			yield return ArticleQuantityType.Ordered;
-			// commandé
-			yield return ArticleQuantityType.Delayed;
-			// retardé
-			yield return ArticleQuantityType.Expected;
-			// attendu
+			yield return ArticleQuantityType.Ordered;			// commandé
+			yield return ArticleQuantityType.Delayed;			// retardé
+			yield return ArticleQuantityType.Expected;			// attendu
 		}
 	}
 }

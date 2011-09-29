@@ -145,6 +145,22 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				}
 			}
 		}
+
+		public bool								IsMainArticleQuantityEnabled
+		{
+			//	Indique si la quantité principal est éditable.
+			get
+			{
+				if (this.IsDebug)
+				{
+					return true;
+				}
+				else
+				{
+					return this.documentLogic.IsMainArticleQuantityEnabled;
+				}
+			}
+		}
 		
 
 		public bool IsEditionEnabled(Line info)

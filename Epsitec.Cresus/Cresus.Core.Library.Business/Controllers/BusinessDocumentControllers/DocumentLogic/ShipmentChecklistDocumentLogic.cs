@@ -71,38 +71,27 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return ArticleQuantityType.Ordered;						// commandé
+				return ArticleQuantityType.Ordered;				// commandé
 			}
 		}
 
 		public override IEnumerable<ArticleQuantityType> GetEnabledArticleQuantityTypes()
 		{
-			yield return ArticleQuantityType.Delayed;
-			// retardé
-			yield return ArticleQuantityType.Expected;
-			// attendu
-			yield return ArticleQuantityType.Shipped;
-			// livré
-			yield return ArticleQuantityType.ShippedPreviously;
-			// livré précédemment
-			yield return ArticleQuantityType.Information;
-			// information
+			yield return ArticleQuantityType.Delayed;			// retardé
+			yield return ArticleQuantityType.Expected;			// attendu
+			yield return ArticleQuantityType.Shipped;			// livré
+			yield return ArticleQuantityType.ShippedPreviously;	// livré précédemment
+			yield return ArticleQuantityType.Information;		// information
 		}
 
 		public override IEnumerable<ArticleQuantityType> GetPrintableArticleQuantityTypes()
 		{
-			yield return ArticleQuantityType.Ordered;
-			// commandé
-			yield return ArticleQuantityType.Billed;
-			// facturé
-			yield return ArticleQuantityType.Delayed;
-			// retardé
-			yield return ArticleQuantityType.Expected;
-			// attendu
-			yield return ArticleQuantityType.Shipped;
-			// livré
-			yield return ArticleQuantityType.ShippedPreviously;
-			// livré précédemment
+			yield return ArticleQuantityType.Ordered;			// commandé
+			yield return ArticleQuantityType.Billed;			// facturé
+			yield return ArticleQuantityType.Delayed;			// retardé
+			yield return ArticleQuantityType.Expected;			// attendu
+			yield return ArticleQuantityType.Shipped;			// livré
+			yield return ArticleQuantityType.ShippedPreviously;	// livré précédemment
 		}
 	}
 }

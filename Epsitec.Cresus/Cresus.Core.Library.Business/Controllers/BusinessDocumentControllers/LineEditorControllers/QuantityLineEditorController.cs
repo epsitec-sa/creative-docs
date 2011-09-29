@@ -204,7 +204,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private void UpdateDateLine()
 		{
 			bool visible = (this.Entity.QuantityColumn.QuantityType != ArticleQuantityType.Ordered &&
-							this.Entity.QuantityColumn.QuantityType != ArticleQuantityType.Information);
+							this.Entity.QuantityColumn.QuantityType != ArticleQuantityType.Information &&
+							this.Entity.QuantityColumn.QuantityType != ArticleQuantityType.Billed);
 
 			this.dateLine.Visibility = visible;
 

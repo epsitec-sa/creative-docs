@@ -89,6 +89,15 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
+		public virtual bool IsMainArticleQuantityEnabled
+		{
+			//	Indique si la quantité principal est éditable.
+			get
+			{
+				return true;
+			}
+		}
+
 
 		//	Retourne la liste des types de quantité éditables.
 		public abstract IEnumerable<ArticleQuantityType> GetEnabledArticleQuantityTypes();

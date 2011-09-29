@@ -279,7 +279,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				PreferredHeight = 10+20+10,
 				Padding = new Margins (0, 0, 10, 10),
 				TabIndex = this.GetNextTabIndex (),
-				Enable = this.accessData.DocumentLogic.MainArticleQuantityType != ArticleQuantityType.None,
+				Enable = this.accessData.DocumentLogic.IsMainArticleQuantityEnabled,
 			};
 
 			var separator = new Separator

@@ -82,6 +82,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
+		public override bool IsMainArticleQuantityEnabled
+		{
+			get
+			{
+				return this.IsDirect;
+			}
+		}
+
 		public override IEnumerable<ArticleQuantityType> GetEnabledArticleQuantityTypes()
 		{
 			if (this.IsDirect)
@@ -96,16 +104,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public override IEnumerable<ArticleQuantityType> GetPrintableArticleQuantityTypes()
 		{
-			yield return ArticleQuantityType.Billed;
-			// facturé
-			yield return ArticleQuantityType.Shipped;
-			// livré
-			yield return ArticleQuantityType.ShippedPreviously;
-			// livré précédemment
-			yield return ArticleQuantityType.Delayed;
-			// retardé
-			yield return ArticleQuantityType.Expected;
-			// attendu
+			yield return ArticleQuantityType.Billed;			// facturé
+			yield return ArticleQuantityType.Shipped;			// livré
+			yield return ArticleQuantityType.ShippedPreviously;	// livré précédemment
+			yield return ArticleQuantityType.Delayed;			// retardé
+			yield return ArticleQuantityType.Expected;			// attendu
 		}
 
 
