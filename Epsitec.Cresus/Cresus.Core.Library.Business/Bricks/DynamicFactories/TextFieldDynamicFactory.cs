@@ -132,6 +132,7 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 		#region TextFieldFactory Class
 
 		private sealed class TextFieldFactory<TSource, TField> : DynamicFactory
+			where TSource : AbstractEntity
 		{
 			public TextFieldFactory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title, CreateWidget createWidgetCallback)
 			{
@@ -151,7 +152,7 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 
 			private System.Action<TField> CreateSetter()
 			{
-				return x => BridgeSpy.ExecuteSetter (this.sourceGetter (), x,
+				return x => BridgeSpy.ExecuteSetter (this.sourceGetter (), this.lambda, x,
 					(entity, field) => this.setter.DynamicInvoke (entity, field),
 					(entity) => (TField) this.getter.DynamicInvoke (entity));
 			}
@@ -193,6 +194,7 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 		#region NullableTextFieldFactory Class
 
 		private sealed class NullableTextFieldFactory<TSource, TField> : DynamicFactory
+			where TSource : AbstractEntity
 			where TField : struct
 		{
 			public NullableTextFieldFactory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title, CreateWidget createWidgetCallback)
@@ -213,7 +215,7 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 
 			private System.Action<TField?> CreateSetter()
 			{
-				return x => BridgeSpy.ExecuteSetter (this.sourceGetter (), x,
+				return x => BridgeSpy.ExecuteSetter (this.sourceGetter (), this.lambda, x,
 					(entity, field) => this.setter.DynamicInvoke (entity, field),
 					(entity) => (TField?) this.getter.DynamicInvoke (entity));
 			}

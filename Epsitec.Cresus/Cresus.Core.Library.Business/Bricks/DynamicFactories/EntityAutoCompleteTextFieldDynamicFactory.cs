@@ -42,6 +42,7 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 		#region Factory Class
 
 		private sealed class Factory<TSource, TField> : DynamicFactory
+			where TSource : AbstractEntity
 			where TField : AbstractEntity, new ()
 		{
 			public Factory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title, System.Collections.IEnumerable collection, int? specialController)
@@ -69,7 +70,7 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 				}
 				else
 				{
-					return x => BridgeSpy.ExecuteSetter (this.sourceGetter (), x,
+					return x => BridgeSpy.ExecuteSetter (this.sourceGetter (), this.lambda, x,
 						(entity, field) => this.setter.DynamicInvoke (entity, field),
 						(entity) => (TField) this.getter.DynamicInvoke (entity));
 				}

@@ -1,11 +1,13 @@
 //	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Widgets;
+
 using Epsitec.Cresus.Core.Orchestrators;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Core.Bricks;
 
 namespace Epsitec.Cresus.Core.Library.Business
 {
@@ -31,6 +33,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 			CommandDispatcher.CommandDispatched        += this.HandleCommandDispatcherCommandDispatchFinished;
 			CommandDispatcher.CommandDispatchCancelled += this.HandleCommandDispatcherCommandDispatchFinished;
 			CommandDispatcher.CommandDispatchFailed    += this.HandleCommandDispatcherCommandDispatchFinished;
+
+			BridgeSpy.ExecutingSetter += this.HandleBridgeSpyExecutingSetter;
 		}
 		
 		private void CreateDatabaseSnapshot()
@@ -57,6 +61,23 @@ namespace Epsitec.Cresus.Core.Library.Business
 		private void HandleCommandDispatcherCommandDispatchFinished(object sender, CommandEventArgs e)
 		{
 			this.commandDispatchDepth--;
+		}
+
+		private void HandleBridgeSpyExecutingSetter(object sender, BridgeSpyEventArgs e)
+		{
+			var entity = e.Entity;
+
+			var dataContext = Epsitec.Cresus.DataLayer.Context.DataContextPool.GetDataContext (entity);
+			var entityKey   = dataContext.GetNormalizedEntityKey (entity);
+
+			if (entityKey.HasValue)
+			{
+				this.RecordEvent ("SET_DB_FIELD", string.Format ("{0}/{1} : {2} -> {3}", entityKey.Value, e.FieldCaption.Name, e.OldValue ?? "<null>", e.NewValue ?? "<null>"));
+			}
+			else
+			{
+				this.RecordEvent ("SET_LIVE_FIELD", string.Format ("{0}/{1} : {2} -> {3}", e.Entity.GetEntityStructuredTypeId (), e.FieldCaption.Name, e.OldValue ?? "<null>", e.NewValue ?? "<null>"));
+			}
 		}
 
 		private static string GetRemoteBackupFolder()
