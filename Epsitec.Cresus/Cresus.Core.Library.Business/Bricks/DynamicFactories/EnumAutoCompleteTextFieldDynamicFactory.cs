@@ -71,7 +71,9 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 
 			private System.Action<TField> CreateSetter()
 			{
-				return x => this.setter.DynamicInvoke (this.sourceGetter (), x);
+				return x => BridgeSpy.ExecuteSetter (this.sourceGetter (), x,
+					(entity, field) => this.setter.DynamicInvoke (entity, field),
+					(entity) => (TField) this.getter.DynamicInvoke (entity));
 			}
 
 			private Marshaler CreateMarshaler()
@@ -133,7 +135,9 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 
 			private System.Action<TField?> CreateSetter()
 			{
-				return x => this.setter.DynamicInvoke (this.sourceGetter (), x);
+				return x => BridgeSpy.ExecuteSetter (this.sourceGetter (), x,
+					(entity, field) => this.setter.DynamicInvoke (entity, field),
+					(entity) => (TField) this.getter.DynamicInvoke (entity));
 			}
 
 			private Marshaler CreateMarshaler()

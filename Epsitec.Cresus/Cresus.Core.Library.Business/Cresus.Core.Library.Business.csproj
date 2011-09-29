@@ -47,6 +47,7 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="Binders\NumericFieldBinder.cs" />
+    <Compile Include="Bricks\BridgeSpy.cs" />
     <Compile Include="Business\CoreSnapshotService.cs" />
     <Compile Include="Business\EntityPrinters\BusinessDocumentPrinter.cs" />
     <Compile Include="Binders\PostFinanceAccountFieldBinder.cs" />

@@ -69,7 +69,9 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 				}
 				else
 				{
-					return x => this.setter.DynamicInvoke (this.sourceGetter (), x);
+					return x => BridgeSpy.ExecuteSetter (this.sourceGetter (), x,
+						(entity, field) => this.setter.DynamicInvoke (entity, field),
+						(entity) => (TField) this.getter.DynamicInvoke (entity));
 				}
 			}
 
