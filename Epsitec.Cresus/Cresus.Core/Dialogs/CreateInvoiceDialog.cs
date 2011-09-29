@@ -202,7 +202,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.dueDateField = new TextField
 			{
 				Parent = frame,
-				IsReadOnly = true,
 				PreferredWidth = CreateInvoiceDialog.fieldWidth,
 				Dock = DockStyle.Left,
 				TabIndex = ++this.tabIndex,
