@@ -1095,28 +1095,25 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 		{
 			//	Choix des bords et des marges. Le but est de former visuellement un "groupe" pour les
 			//	lignes d'un même article (par exemple).
-			if (count > 1)
+			bool bottomLess = false;
+			bool topLess    = false;
+			bool bottomZero = false;
+			bool topZero    = false;
+
+			if (i > 0)
 			{
-				bool bottomLess = false;
-				bool topLess    = false;
-				bool bottomZero = false;
-				bool topZero    = false;
-
-				if (i > 0)
-				{
-					topLess = true;
-					topZero = !accessor.IsEndTotal;  // on laisse les marges pour le grand total
-				}
-
-				if (i < count-1)
-				{
-					bottomLess = true;
-					bottomZero = !accessor.IsEndTotal;  // on laisse les marges pour le grand total
-				}
-
-				this.SetCellBorder (row+i, this.GetCellBorder (bottomLess: bottomLess, topLess: topLess));
-				this.SetCellMargins (row+i, bottomZero: bottomZero, topZero: topZero);
+				topLess = true;
+				topZero = !accessor.IsEndTotal;  // on laisse les marges pour le grand total
 			}
+
+			if (i < count-1)
+			{
+				bottomLess = true;
+				bottomZero = !accessor.IsEndTotal;  // on laisse les marges pour le grand total
+			}
+
+			this.SetCellBorder (row+i, this.GetCellBorder (bottomLess: bottomLess, topLess: topLess));
+			this.SetCellMargins (row+i, bottomZero: bottomZero, topZero: topZero);
 		}
 
 		protected void SetCellBorder(int row, CellBorder value)
