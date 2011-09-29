@@ -1240,19 +1240,19 @@ namespace Epsitec.Common.Widgets.Adorners
 											WidgetPaintState state,
 											Direction dir,
 											MenuOrientation type,
-											MenuItemType itemType)
+											MenuItemState itemType)
 		{
 			//	Dessine le fond d'une case de menu.
 			if ( (state&WidgetPaintState.Enabled) != 0 )
 			{
 				if ( type == MenuOrientation.Horizontal )
 				{
-					if ( itemType == MenuItemType.Selected )
+					if ( itemType == MenuItemState.Selected )
 					{
 						graphics.AddFilledRectangle(rect);
 						graphics.RenderSolid(this.colorCaption);
 					}
-					if ( itemType == MenuItemType.SubmenuOpen )
+					if ( itemType == MenuItemState.SubmenuOpen )
 					{
 						graphics.AddFilledRectangle(rect);
 						graphics.RenderSolid(this.colorControlLightLight);
@@ -1261,7 +1261,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 				if ( type == MenuOrientation.Vertical )
 				{
-					if ( itemType != MenuItemType.Default )
+					if ( itemType != MenuItemState.Default )
 					{
 						graphics.AddFilledRectangle(rect);
 						graphics.RenderSolid(this.colorCaption);
@@ -1270,7 +1270,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			}
 			else
 			{
-				if ( itemType != MenuItemType.Default )
+				if ( itemType != MenuItemState.Default )
 				{
 					rect.Deflate(0.5);
 					graphics.AddRectangle(rect);
@@ -1285,7 +1285,7 @@ namespace Epsitec.Common.Widgets.Adorners
 											WidgetPaintState state,
 											Direction dir,
 											MenuOrientation type,
-											MenuItemType itemType)
+											MenuItemState itemType)
 		{
 			//	Dessine le texte d'un menu.
 			if ( text == null )  return;
@@ -1300,7 +1300,7 @@ namespace Epsitec.Common.Widgets.Adorners
 											WidgetPaintState state,
 											Direction dir,
 											MenuOrientation type,
-											MenuItemType itemType)
+											MenuItemState itemType)
 		{
 			//	Dessine le devant d'une case de menu.
 		}

@@ -1333,14 +1333,14 @@ namespace Epsitec.Common.Widgets.Adorners
 											WidgetPaintState state,
 											Direction dir,
 											MenuOrientation type,
-											MenuItemType itemType)
+											MenuItemState itemType)
 		{
 			//	Dessine le fond d'une case de menu.
 			if ( (state&WidgetPaintState.Enabled) != 0 )
 			{
 				if ( type == MenuOrientation.Horizontal )
 				{
-					if ( itemType != MenuItemType.Default )
+					if ( itemType != MenuItemState.Default )
 					{
 						this.PaintImageButton(graphics, rect, 28);
 					}
@@ -1348,7 +1348,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 				if ( type == MenuOrientation.Vertical )
 				{
-					if ( itemType != MenuItemType.Default )
+					if ( itemType != MenuItemState.Default )
 					{
 						this.PaintImageButton(graphics, rect, 28);
 					}
@@ -1356,7 +1356,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			}
 			else
 			{
-				if ( itemType != MenuItemType.Default )
+				if ( itemType != MenuItemState.Default )
 				{
 					this.PaintImageButton(graphics, rect, 28);
 				}
@@ -1369,12 +1369,12 @@ namespace Epsitec.Common.Widgets.Adorners
 											WidgetPaintState state,
 											Direction dir,
 											MenuOrientation type,
-											MenuItemType itemType)
+											MenuItemState itemType)
 		{
 			//	Dessine le texte d'un menu.
 			if ( text == null )  return;
 			state &= ~WidgetPaintState.Focused;
-			if ( itemType == MenuItemType.Default )
+			if ( itemType == MenuItemState.Default )
 			{
 				state &= ~WidgetPaintState.Selected;
 			}
@@ -1391,7 +1391,7 @@ namespace Epsitec.Common.Widgets.Adorners
 											WidgetPaintState state,
 											Direction dir,
 											MenuOrientation type,
-											MenuItemType itemType)
+											MenuItemState itemType)
 		{
 			//	Dessine le devant d'une case de menu.
 		}

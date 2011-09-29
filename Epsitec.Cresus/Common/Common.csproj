@@ -1214,6 +1214,8 @@
     <Compile Include="Widgets\Layouts\StackLayoutEngine.cs" />
     <Compile Include="Widgets\MenuItem.cs" />
     <Compile Include="Widgets\MenuItemContainer.cs" />
+    <Compile Include="Widgets\MenuItemState.cs" />
+    <Compile Include="Widgets\MenuOrientation.cs" />
     <Compile Include="Widgets\MenuSeparator.cs" />
     <Compile Include="Widgets\MenuType.cs" />
     <Compile Include="Widgets\MenuWindow.cs" />

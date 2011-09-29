@@ -72,9 +72,9 @@ namespace Epsitec.Common.Widgets
 
 		void PaintMenuBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state, Direction dir, Drawing.Rectangle parentRect, double iconWidth);
 		void PaintMenuForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state, Direction dir, Drawing.Rectangle parentRect, double iconWidth);
-		void PaintMenuItemBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state, Direction dir, MenuOrientation type, MenuItemType itemType);
-		void PaintMenuItemTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, WidgetPaintState state, Direction dir, MenuOrientation type, MenuItemType itemType);
-		void PaintMenuItemForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state, Direction dir, MenuOrientation type, MenuItemType itemType);
+		void PaintMenuItemBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state, Direction dir, MenuOrientation type, MenuItemState itemType);
+		void PaintMenuItemTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, WidgetPaintState state, Direction dir, MenuOrientation type, MenuItemState itemType);
+		void PaintMenuItemForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state, Direction dir, MenuOrientation type, MenuItemState itemType);
 
 		void PaintSeparatorBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state, Direction dir, bool optional);
 		void PaintSeparatorForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state, Direction dir, bool optional);

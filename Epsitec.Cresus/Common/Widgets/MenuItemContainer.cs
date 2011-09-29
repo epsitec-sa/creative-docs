@@ -108,15 +108,15 @@ namespace Epsitec.Common.Widgets
 			base.Dispose (disposing);
 		}
 
-		protected override MenuItemType GetPaintItemType()
+		protected override MenuItemState GetPaintItemState()
 		{
 			if (this.filterDisabled)
 			{
-				return MenuItemType.Default;
+				return MenuItemState.Default;
 			}
 			else
 			{
-				return base.GetPaintItemType ();
+				return base.GetPaintItemState ();
 			}
 		}
 

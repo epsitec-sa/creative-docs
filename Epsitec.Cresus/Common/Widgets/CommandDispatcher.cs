@@ -658,8 +658,6 @@ namespace Epsitec.Common.Widgets
 				
 				try
 				{
-					System.Diagnostics.Debug.WriteLine ("Command '" + commandObject.CommandId + "' (" + commandObject.Name + ") fired.");
-
 					if (slot.ExecuteCommand (this, e))
 					{
 						e.Handled = true;
@@ -679,6 +677,7 @@ namespace Epsitec.Common.Widgets
 				return true;
 			}
 
+#if false
 			if (e.Handled)
 			{
 				System.Diagnostics.Debug.WriteLine ("Command '" + commandObject.CommandId + "' (" + commandObject.Name + ") handled; not marked as executed.");
@@ -687,6 +686,7 @@ namespace Epsitec.Common.Widgets
 			{
 				System.Diagnostics.Debug.WriteLine ("Command '" + commandObject.CommandId + "' (" + commandObject.Name + ") not handled.");
 			}
+#endif
 			
 			return e.Cancel;
 		}

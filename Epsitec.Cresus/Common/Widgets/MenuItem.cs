@@ -1,4 +1,4 @@
-//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -6,29 +6,6 @@ using Epsitec.Common.Widgets.Helpers;
 
 namespace Epsitec.Common.Widgets
 {
-	/// <summary>
-	/// Le MenuOrientation détermine la disposition d'un menu.
-	/// </summary>
-	public enum MenuOrientation
-	{
-		Undefined			= 0,
-		
-		Vertical			= 1,
-		Horizontal			= 2
-	}
-	
-	
-	/// <summary>
-	/// Le MenuItemType détermine l'état d'une case d'un menu.
-	/// </summary>
-	public enum MenuItemType
-	{
-		Default,					//	case de menu inactive
-		Selected,					//	case de menu sélectionnée
-		SubmenuOpen					//	case de menu sélectionnée, sous-menu affiché
-	}
-	
-	
 	/// <summary>
 	/// La classe MenuItem représente une case dans un menu.
 	/// </summary>
@@ -118,16 +95,16 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public MenuItemType						ItemType
+		public MenuItemState					ItemState
 		{
 			get
 			{
-				return (MenuItemType) this.GetValue (MenuItem.ItemTypeProperty);
+				return (MenuItemState) this.GetValue (MenuItem.ItemStateProperty);
 			}
 
 			set
 			{
-				this.SetValue (MenuItem.ItemTypeProperty, value);
+				this.SetValue (MenuItem.ItemStateProperty, value);
 			}
 		}
 
@@ -413,9 +390,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual MenuItemType GetPaintItemType()
+		protected virtual MenuItemState GetPaintItemState()
 		{
-			return this.ItemType;
+			return this.ItemState;
 		}
 
 		
@@ -465,12 +442,12 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
 			WidgetPaintState       state = this.GetPaintState ();
-			MenuItemType      iType = this.GetPaintItemType ();
+			MenuItemState      iType = this.GetPaintItemState ();
 			Drawing.Point     pos   = new Drawing.Point();
 			
 			if ( this.IsSeparator )
 			{
-				iType = MenuItemType.Default;
+				iType = MenuItemState.Default;
 			}
 			adorner.PaintMenuItemBackground(graphics, rect, state, Direction.Up, this.MenuOrientation, iType);
 
@@ -639,7 +616,7 @@ namespace Epsitec.Common.Widgets
 				menu.Root.Children.Add (widget);
 				menu.MenuType = MenuItem.GetParentMenuItem (widget) == null ? MenuType.Undefined : MenuType.Submenu;
 				
-				System.Diagnostics.Debug.WriteLine ("Menu defaulting to MenuType." + menu.MenuType);
+//-				System.Diagnostics.Debug.WriteLine ("Menu defaulting to MenuType." + menu.MenuType);
 				
 				window = menu;
 			}
@@ -691,16 +668,16 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public static MenuItemType GetItemType(Widget widget)
+		public static MenuItemState GetItemState(Widget widget)
 		{
-			return (MenuItemType) widget.GetValue (MenuItem.ItemTypeProperty);
+			return (MenuItemState) widget.GetValue (MenuItem.ItemStateProperty);
 		}
 		
-		public static void SetItemType(Widget widget, MenuItemType value)
+		public static void SetItemState(Widget widget, MenuItemState value)
 		{
-			if ((MenuItemType) widget.GetValue (MenuItem.ItemTypeProperty) != value)
+			if ((MenuItemState) widget.GetValue (MenuItem.ItemStateProperty) != value)
 			{
-				widget.SetValue (MenuItem.ItemTypeProperty, value);
+				widget.SetValue (MenuItem.ItemStateProperty, value);
 			}
 		}
 		
@@ -742,7 +719,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 		public static readonly DependencyProperty			SubmenuProperty			= DependencyProperty.Register ("Submenu", typeof (Widget), typeof (MenuItem), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (MenuItem.NotifySubmenuChanged)));
-		public static readonly DependencyProperty			ItemTypeProperty		= DependencyProperty.Register ("ItemType", typeof (MenuItemType), typeof (MenuItem), new VisualPropertyMetadata (MenuItemType.Default, VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty			ItemStateProperty		= DependencyProperty.Register ("ItemState", typeof (MenuItemState), typeof (MenuItem), new VisualPropertyMetadata (MenuItemState.Default, VisualPropertyMetadataOptions.AffectsDisplay));
 		public static readonly DependencyProperty			MenuOrientationProperty	= DependencyProperty.Register ("MenuOrientation", typeof (MenuOrientation), typeof (MenuItem), new VisualPropertyMetadata (MenuOrientation.Undefined, VisualPropertyMetadataOptions.AffectsDisplay));
 		
 		public static readonly DependencyProperty			MenuBehaviorProperty	= DependencyProperty.RegisterAttached ("MenuBehavior", typeof (Behaviors.MenuBehavior), typeof (MenuItem));

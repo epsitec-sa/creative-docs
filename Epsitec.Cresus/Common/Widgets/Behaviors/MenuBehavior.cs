@@ -1,5 +1,5 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
 
@@ -1181,7 +1181,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 					{
 						if (widget == MenuBehavior.menuLastItem)
 						{
-							MenuItem.SetItemType (widget, MenuItemType.Selected);
+							MenuItem.SetItemState (widget, MenuItemState.Selected);
 							hiliteBelowI = i + 1;
 						}
 						else
@@ -1200,7 +1200,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 					{
 						if (widget == MenuBehavior.menuLastItem)
 						{
-							MenuItem.SetItemType (widget, MenuItemType.Selected);
+							MenuItem.SetItemState (widget, MenuItemState.Selected);
 						}
 						else
 						{
@@ -1240,7 +1240,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 				
 				if (widget != null)
 				{
-					MenuItem.SetItemType (widget, MenuItemType.SubmenuOpen);
+					MenuItem.SetItemState (widget, MenuItemState.SubmenuOpen);
 				}
 				
 				list.Remove (widget);
@@ -1248,7 +1248,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			foreach (Widget widget in list)
 			{
-				MenuItem.SetItemType (widget, MenuItemType.Default);
+				MenuItem.SetItemState (widget, MenuItemState.Default);
 			}
 			
 			this.suspendUpdates--;
@@ -1866,7 +1866,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 				
 				this.filterKeyboardOff = MenuBehavior.filterKeyboardOff;
 				
-				System.Diagnostics.Debug.WriteLine (string.Format ("Saved; menu list: {0} items, root list: {1} items", this.menuList.Count, this.menuRootList.Count));
+//-				System.Diagnostics.Debug.WriteLine (string.Format ("Saved; menu list: {0} items, root list: {1} items", this.menuList.Count, this.menuRootList.Count));
 				
 				MenuBehavior.menuLastItem = null;
 				MenuBehavior.menuLastBehavior = null;
@@ -1890,7 +1890,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 				
 				MenuBehavior.filterKeyboardOff = this.filterKeyboardOff;
 				
-				System.Diagnostics.Debug.WriteLine (string.Format ("Restored; menu list: {0} items, root list: {1} items", this.menuList.Count, this.menuRootList.Count));
+//-				System.Diagnostics.Debug.WriteLine (string.Format ("Restored; menu list: {0} items, root list: {1} items", this.menuList.Count, this.menuRootList.Count));
 
 				MenuBehavior.NotifyMenuListChanged ();
 			}

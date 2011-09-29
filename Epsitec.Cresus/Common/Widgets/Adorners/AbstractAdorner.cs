@@ -285,9 +285,9 @@ namespace Epsitec.Common.Widgets.Adorners
 		public abstract void PaintToolForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, Widgets.WidgetPaintState state, Widgets.Direction dir);
 		public abstract void PaintMenuBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, Widgets.WidgetPaintState state, Widgets.Direction dir, Drawing.Rectangle parentRect, double iconWidth);
 		public abstract void PaintMenuForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, Widgets.WidgetPaintState state, Widgets.Direction dir, Drawing.Rectangle parentRect, double iconWidth);
-		public abstract void PaintMenuItemBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, Widgets.WidgetPaintState state, Widgets.Direction dir, Widgets.MenuOrientation type, Widgets.MenuItemType itemType);
-		public abstract void PaintMenuItemTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, Widgets.WidgetPaintState state, Widgets.Direction dir, Widgets.MenuOrientation type, Widgets.MenuItemType itemType);
-		public abstract void PaintMenuItemForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, Widgets.WidgetPaintState state, Widgets.Direction dir, Widgets.MenuOrientation type, Widgets.MenuItemType itemType);
+		public abstract void PaintMenuItemBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, Widgets.WidgetPaintState state, Widgets.Direction dir, Widgets.MenuOrientation type, Widgets.MenuItemState itemType);
+		public abstract void PaintMenuItemTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, Widgets.WidgetPaintState state, Widgets.Direction dir, Widgets.MenuOrientation type, Widgets.MenuItemState itemType);
+		public abstract void PaintMenuItemForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, Widgets.WidgetPaintState state, Widgets.Direction dir, Widgets.MenuOrientation type, Widgets.MenuItemState itemType);
 		public abstract void PaintSeparatorBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, Widgets.WidgetPaintState state, Widgets.Direction dir, bool optional);
 		public abstract void PaintSeparatorForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, Widgets.WidgetPaintState state, Widgets.Direction dir, bool optional);
 		public abstract void PaintPaneButtonBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, Widgets.WidgetPaintState state, Widgets.Direction dir);
