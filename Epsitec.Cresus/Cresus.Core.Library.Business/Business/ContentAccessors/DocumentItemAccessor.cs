@@ -410,23 +410,49 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		private void BuildArticleItemQuantitiesForPrint(ArticleDocumentItemEntity line, int row)
 		{
 			//	Utilise les colonnes MainQuantity/MainUnit
-			
-			//	Génère la quantité principale, dans la première ligne de l'article, et qui existe déjà.
 			var quantityTypes = this.documentLogic.GetPrintableArticleQuantityTypes ();
 			var mainQuantityType = ArticleQuantityType.None;
+			decimal mainQuantity = 0;
+			var mainUnitName = FormattedText.Empty;
 
 			if (quantityTypes.Any ())
 			{
 				mainQuantityType = quantityTypes.First ();
+				mainQuantity = line.GetQuantity (mainQuantityType);
+				mainUnitName = line.ArticleDefinition.GetBillingUnitName ();
+			}
 
-				var mainQuantity = line.GetQuantity (mainQuantityType);
-				var mainUnitName = line.ArticleDefinition.GetBillingUnitName ();
+			var orderedQuantity = line.GetQuantity (ArticleQuantityType.Ordered);
+			var orderedUnitName = line.ArticleDefinition.GetBillingUnitName ();
 
+			int billingQuantityRow;
+
+			if (orderedQuantity == mainQuantity && orderedUnitName == mainUnitName)
+			{
+				billingQuantityRow = 0;
+			}
+			else
+			{
+				billingQuantityRow = row++;
+				this.billingRow = billingQuantityRow;
+			}
+
+			//	Génère la quantité principale.
+			if (quantityTypes.Any ())
+			{
 				var unit = ArticleQuantityEntity.GetUnitNameForQuantity (mainQuantity, mainUnitName);
 
-				this.SetContent (0, DocumentItemAccessorColumn.MainQuantity, TextFormatter.FormatText (mainQuantity));
-				this.SetContent (0, DocumentItemAccessorColumn.MainUnit, unit);
-				this.SetError (0, DocumentItemAccessorColumn.MainQuantity, this.GetQuantityError (line, mainQuantityType));
+				this.SetContent (billingQuantityRow, DocumentItemAccessorColumn.MainQuantity, TextFormatter.FormatText (mainQuantity));
+				this.SetContent (billingQuantityRow, DocumentItemAccessorColumn.MainUnit, unit);
+				this.SetError (billingQuantityRow, DocumentItemAccessorColumn.MainQuantity, this.GetQuantityError (line, mainQuantityType));
+			}
+
+			//	Génère la quantité commandée, pour les factures, dans la première ligne de l'article (qui existe déjà).
+			{
+				var unit = ArticleQuantityEntity.GetUnitNameForQuantity (orderedQuantity, orderedUnitName);
+
+				this.SetContent (0, DocumentItemAccessorColumn.OrderedQuantity, TextFormatter.FormatText (orderedQuantity));
+				this.SetContent (0, DocumentItemAccessorColumn.OrderedUnit, unit);
 			}
 
 			//	Génère les autres quantités (sans la principale).

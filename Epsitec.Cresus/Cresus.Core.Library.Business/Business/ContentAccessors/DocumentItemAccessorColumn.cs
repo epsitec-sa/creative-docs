@@ -10,6 +10,9 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 {
 	public enum DocumentItemAccessorColumn
 	{
+		OrderedQuantity,				//	quantité commandée, pour les factures
+		OrderedUnit,
+
 		MainQuantity,					//	quantité principale
 		MainUnit,
 

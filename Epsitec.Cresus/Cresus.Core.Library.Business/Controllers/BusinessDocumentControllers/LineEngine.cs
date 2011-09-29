@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			var article = line as ArticleDocumentItemEntity;
-			var quantity = article.ArticleQuantities[info.SublineIndex];
+			var quantity = article.ArticleQuantities[info.QuantityIndex];
 
 			var newQuantity = this.businessContext.CreateEntity<ArticleQuantityEntity> ();
 			newQuantity.Quantity = 1;

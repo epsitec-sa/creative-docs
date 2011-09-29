@@ -205,6 +205,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			if (this.IsColumnsOrderQD)
 			{
 				this.tableColumns.Add (TableColumnKeys.LineNumber,         new TableColumn (this.GetColumnDescription (TableColumnKeys.LineNumber),         priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.OrderedQuantity,    new TableColumn ("Commandé",                                                     priceWidth,   ContentAlignment.MiddleRight));
 				this.tableColumns.Add (TableColumnKeys.MainQuantity,       new TableColumn ("Facturé",                                                      priceWidth,   ContentAlignment.MiddleRight));
 				this.tableColumns.Add (TableColumnKeys.AdditionalType,     new TableColumn (this.GetColumnDescription (TableColumnKeys.AdditionalType),     priceWidth+3, ContentAlignment.MiddleLeft));
 				this.tableColumns.Add (TableColumnKeys.AdditionalQuantity, new TableColumn (this.GetColumnDescription (TableColumnKeys.AdditionalQuantity), priceWidth,   ContentAlignment.MiddleRight));
@@ -223,6 +224,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				this.tableColumns.Add (TableColumnKeys.LineNumber,         new TableColumn (this.GetColumnDescription (TableColumnKeys.LineNumber),         priceWidth,   ContentAlignment.MiddleLeft));
 				this.tableColumns.Add (TableColumnKeys.ArticleId,          new TableColumn (this.GetColumnDescription (TableColumnKeys.ArticleId),          priceWidth,   ContentAlignment.MiddleLeft));
 				this.tableColumns.Add (TableColumnKeys.ArticleDescription, new TableColumn (this.GetColumnDescription (TableColumnKeys.ArticleDescription), 0,            ContentAlignment.MiddleLeft));  // seule colonne en mode width = fill
+				this.tableColumns.Add (TableColumnKeys.OrderedQuantity,    new TableColumn ("Commandé",                                                     priceWidth,   ContentAlignment.MiddleRight));
 				this.tableColumns.Add (TableColumnKeys.MainQuantity,       new TableColumn ("Facturé",                                                      priceWidth,   ContentAlignment.MiddleRight));
 				this.tableColumns.Add (TableColumnKeys.AdditionalType,     new TableColumn (this.GetColumnDescription (TableColumnKeys.AdditionalType),     priceWidth+3, ContentAlignment.MiddleLeft));
 				this.tableColumns.Add (TableColumnKeys.AdditionalQuantity, new TableColumn (this.GetColumnDescription (TableColumnKeys.AdditionalQuantity), priceWidth,   ContentAlignment.MiddleRight));
@@ -260,6 +262,8 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			{
 				this.tableColumns[TableColumnKeys.ArticleId].Visible = false;
 			}
+
+			this.tableColumns[TableColumnKeys.OrderedQuantity].Visible = this.hasOrderedQuantityColumn;
 
 			if (!this.HasOption (DocumentOption.ArticleAdditionalQuantities, "Separate") ||
 				BusinessDocumentPrinter.IsEmptyColumn (accessors, DocumentItemAccessorColumn.AdditionalQuantity))
@@ -304,7 +308,16 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 					this.SetTableText (row+i, TableColumnKeys.LineNumber, accessor.GetContent (i, DocumentItemAccessorColumn.LineNumber));
 				}
 
-				this.SetTableText (row+i, TableColumnKeys.MainQuantity, BusinessDocumentPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.MainQuantity, DocumentItemAccessorColumn.MainUnit));
+				var orderedQuantity = BusinessDocumentPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.OrderedQuantity, DocumentItemAccessorColumn.OrderedUnit);
+				var mainQuantity    = BusinessDocumentPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.MainQuantity,    DocumentItemAccessorColumn.MainUnit);
+
+				this.SetTableText (row+i, TableColumnKeys.OrderedQuantity, orderedQuantity);
+				this.SetTableText (row+i, TableColumnKeys.MainQuantity,    mainQuantity);
+
+				if (orderedQuantity != mainQuantity)
+				{
+					this.hasOrderedQuantityColumn = true;
+				}
 
 				if (this.HasOption (DocumentOption.ArticleId))
 				{
@@ -487,6 +500,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 		private static readonly double		marginBeforeIsr = 10;
 
 		private bool						onlyTotal;
+		private bool						hasOrderedQuantityColumn;
 		private PaymentTransactionEntity	paymentTransactionEntity;
 	}
 }
