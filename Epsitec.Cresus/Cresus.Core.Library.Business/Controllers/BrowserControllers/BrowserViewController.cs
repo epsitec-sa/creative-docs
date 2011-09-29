@@ -362,7 +362,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			int active    = this.scrollList.SelectedItemIndex;
 			var entityKey = this.collection == null ? null : this.collection.GetEntityKey (active);
 
-			System.Diagnostics.Debug.WriteLine (string.Format ("SelectedItemChanged : old key = {0} / new key = {1}", this.activeEntityKey, entityKey));
+//-			System.Diagnostics.Debug.WriteLine (string.Format ("SelectedItemChanged : old key = {0} / new key = {1}", this.activeEntityKey, entityKey));
 
 			this.SetActiveEntityKey (entityKey);
 		}

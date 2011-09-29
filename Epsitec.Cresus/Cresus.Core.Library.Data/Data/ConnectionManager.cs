@@ -138,7 +138,7 @@ namespace Epsitec.Cresus.Core.Data
 
 		private void KeepAliveConnection()
 		{
-			System.Diagnostics.Debug.WriteLine ("KeepAlive pulsed");
+//-			System.Diagnostics.Debug.WriteLine ("KeepAlive pulsed");
 
 			this.DataInfrastructure.KeepConnectionAlive ();
 

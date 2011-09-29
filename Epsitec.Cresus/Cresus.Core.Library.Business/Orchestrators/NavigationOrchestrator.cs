@@ -106,9 +106,9 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			Node node = new Node (parentController, controller, this.currentHistoryId);
 			
 			this.liveNodes.Add (node);
-			this.OnNodeAdded ();
-			
 			this.MakeDirty ();
+			
+			this.OnNodeAdded ();
 		}
 
 		/// <summary>
@@ -130,9 +130,9 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			this.RecordStateBeforeChange ();
 			
 			this.liveNodes.RemoveAll (node => node.Item == controller);
-			this.OnNodeRemoved ();
-
 			this.MakeDirty ();
+			
+			this.OnNodeRemoved ();
 		}
 
 

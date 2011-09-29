@@ -138,7 +138,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 		private static void ServiceOutput(object sender, ServiceOutputEventArgs e)
 		{
-			System.Diagnostics.Debug.WriteLine (e.Message);
+//-			System.Diagnostics.Debug.WriteLine (e.Message);
 		}
 		
 		

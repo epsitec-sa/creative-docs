@@ -27,7 +27,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 			var dataViewOrchestrator = app.FindActiveComponent<DataViewOrchestrator> ();
 			var navigationOrchestrator = dataViewOrchestrator.Navigator;
 
-			navigationOrchestrator.NodeAdded += sender => this.RecordEvent ("NAV", navigationOrchestrator.GetTopNavigationPath ().ToString ());
+			navigationOrchestrator.NodeAdded   += this.HandleNavigationOrchestratorNodeChanged;
+			navigationOrchestrator.NodeRemoved += this.HandleNavigationOrchestratorNodeChanged;
 
 			CommandDispatcher.CommandDispatching       += this.HandleCommandDispatcherCommandDispatching;
 			CommandDispatcher.CommandDispatched        += this.HandleCommandDispatcherCommandDispatchFinished;
@@ -77,6 +78,17 @@ namespace Epsitec.Cresus.Core.Library.Business
 			else
 			{
 				this.RecordEvent ("SET_LIVE_FIELD", string.Format ("{0}/{1} : {2} -> {3}", e.Entity.GetEntityStructuredTypeId (), e.FieldCaption.Name, e.OldValue ?? "<null>", e.NewValue ?? "<null>"));
+			}
+		}
+
+		private void HandleNavigationOrchestratorNodeChanged(object sender)
+		{
+			var navigationOrchestrator = sender as NavigationOrchestrator;
+			var navigationPath         = navigationOrchestrator.GetTopNavigationPath ();
+
+			if (navigationPath != null)
+			{
+				this.RecordEvent ("NAV", navigationPath.ToString ());
 			}
 		}
 
