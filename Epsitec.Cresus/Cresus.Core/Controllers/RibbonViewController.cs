@@ -554,8 +554,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 			};
 
-			section.Children.Add (this.CreateButton (Res.Commands.History.NavigateBackward));
-			section.Children.Add (this.CreateButton (Res.Commands.History.NavigateForward));
+			section.Children.Add (this.CreateButton (Library.Res.Commands.History.NavigateBackward));
+			section.Children.Add (this.CreateButton (Library.Res.Commands.History.NavigateForward));
 		}
 
 		private void CreateRibbonSettingsSection(RibbonPage page)

@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core
 			Library.CoreContext.StartAsInteractive ();
 			Library.UI.Services.Initialize ();
 
-			var snapshotService = new Library.Data.CoreSnapshotService ();
+			var snapshotService = new Library.Business.CoreSnapshotService ();
 
 			using (var app = new CoreApplication ())
 			{

@@ -107,13 +107,6 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			
 			this.liveNodes.Add (node);
 			this.OnNodeAdded ();
-
-			var path = this.GetTopNavigationPath ();
-
-			if (path != null)
-			{
-				System.Diagnostics.Debug.WriteLine ("Current path: " + path.ToString ());
-			}
 			
 			this.MakeDirty ();
 		}
@@ -151,6 +144,25 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		public int GetLevel(CoreViewController controller)
 		{
 			return this.WalkToRoot (controller).Count () - 1;
+		}
+
+		/// <summary>
+		/// Gets the top navigation path (the last one which was added to the navigator, ie the
+		/// active one).
+		/// </summary>
+		/// <returns>The navigation path.</returns>
+		public NavigationPath GetTopNavigationPath()
+		{
+			var topController = this.GetTopController ();
+
+			if (topController == null)
+			{
+				return null;
+			}
+			else
+			{
+				return this.GetNavigationPath (topController);
+			}
 		}
 
 		/// <summary>
@@ -317,20 +329,6 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			else
 			{
 				return topNode.Item;
-			}
-		}
-
-		private NavigationPath GetTopNavigationPath()
-		{
-			var topController = this.GetTopController ();
-
-			if (topController == null)
-			{
-				return null;
-			}
-			else
-			{
-				return this.GetNavigationPath (topController);
 			}
 		}
 

@@ -20,14 +20,14 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			this.commandDispatcher = commandDispatcher;
 		}
 
-		[Command (Core.Res.CommandIds.History.NavigateBackward)]
+		[Command (Core.Library.Res.CommandIds.History.NavigateBackward)]
 		public void ProcessNavigateBackward(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var navigator = this.GetNavigator (e);
 			navigator.History.NavigateBackward ();
 		}
 
-		[Command (Core.Res.CommandIds.History.NavigateForward)]
+		[Command (Core.Library.Res.CommandIds.History.NavigateForward)]
 		public void ProcessNavigateForward(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var navigator = this.GetNavigator (e);

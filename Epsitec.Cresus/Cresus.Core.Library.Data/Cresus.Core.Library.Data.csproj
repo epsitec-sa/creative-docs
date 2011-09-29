@@ -57,7 +57,6 @@
     <Compile Include="CoreData.cs" />
     <Compile Include="Data\AttributeState.cs" />
     <Compile Include="Data\AttributeType.cs" />
-    <Compile Include="Data\CoreSnapshotService.cs" />
     <Compile Include="Data\DataSetCollectionGetter.cs" />
     <Compile Include="Data\DataSetGetter.cs" />
     <Compile Include="Data\Extraction\EntityDataCollection.cs" />

@@ -128,14 +128,10 @@ namespace Epsitec.Cresus.Core
 				{
 				}
 				
-				//	designer:cap/L0AVF
-				public static readonly global::Epsitec.Common.Widgets.Command DiscardRecord = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 511));
 				//	designer:cap/L0A3C
 				public static readonly global::Epsitec.Common.Widgets.Command Preview = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 387));
 				//	designer:cap/L0K
 				public static readonly global::Epsitec.Common.Widgets.Command Print = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 0));
-				//	designer:cap/L0A13
-				public static readonly global::Epsitec.Common.Widgets.Command SaveRecord = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 97));
 			}
 			
 			public static class File
@@ -160,18 +156,6 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Widgets.Command ShowSettings = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 1));
 				//	designer:cap/L0KF
 				public static readonly global::Epsitec.Common.Widgets.Command ShowUserManager = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 15));
-			}
-			
-			public static class History
-			{
-				internal static void _Initialize()
-				{
-				}
-				
-				//	designer:cap/L0AFF
-				public static readonly global::Epsitec.Common.Widgets.Command NavigateBackward = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 495));
-				//	designer:cap/L0AEF
-				public static readonly global::Epsitec.Common.Widgets.Command NavigateForward = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 494));
 			}
 			
 			public static class Test
@@ -303,14 +287,10 @@ namespace Epsitec.Cresus.Core
 				{
 				}
 				
-				//	designer:cap/L0AVF
-				public const long DiscardRecord = 0x150000A0001FFL;
 				//	designer:cap/L0A3C
 				public const long Preview = 0x150000A000183L;
 				//	designer:cap/L0K
 				public const long Print = 0x1500014000000L;
-				//	designer:cap/L0A13
-				public const long SaveRecord = 0x150000A000061L;
 			}
 			
 			public static class File
@@ -335,18 +315,6 @@ namespace Epsitec.Cresus.Core
 				public const long ShowSettings = 0x1500014000001L;
 				//	designer:cap/L0KF
 				public const long ShowUserManager = 0x150001400000FL;
-			}
-			
-			public static class History
-			{
-				internal static void _Initialize()
-				{
-				}
-				
-				//	designer:cap/L0AFF
-				public const long NavigateBackward = 0x150000A0001EFL;
-				//	designer:cap/L0AEF
-				public const long NavigateForward = 0x150000A0001EEL;
 			}
 			
 			public static class Test
@@ -475,7 +443,6 @@ namespace Epsitec.Cresus.Core
 			Commands.Edition._Initialize ();
 			Commands.File._Initialize ();
 			Commands.Global._Initialize ();
-			Commands.History._Initialize ();
 			Commands.Test._Initialize ();
 			CommandIds._Initialize ();
 			CommandIds.Base._Initialize ();
@@ -483,7 +450,6 @@ namespace Epsitec.Cresus.Core
 			CommandIds.Edition._Initialize ();
 			CommandIds.File._Initialize ();
 			CommandIds.Global._Initialize ();
-			CommandIds.History._Initialize ();
 			CommandIds.Test._Initialize ();
 		}
 		
