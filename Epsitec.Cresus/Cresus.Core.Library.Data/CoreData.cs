@@ -317,14 +317,7 @@ namespace Epsitec.Cresus.Core
 					this.activeDataContext = null;
 				}
 
-				//	TODO: postpone destruction of data context...
-#if false
-				CoreApplication.QueueAsyncCallback (
-					delegate
-					{
-						this.DataInfrastructure.DeleteDataContext (context);
-					});
-#endif
+				this.DataInfrastructure.DeleteDataContext (context);
 			}
 			else
 			{

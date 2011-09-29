@@ -64,8 +64,6 @@ namespace Epsitec.Cresus.Core.Data
 						};
 
 
-			System.Diagnostics.Debug.WriteLine (string.Join ("\n", types.OrderBy (x => x.Name).Select (x => x.Name).ToArray ()));
-
 			foreach (var type in types)
 			{
 				if ((type.Name == dataSetName) ||

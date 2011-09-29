@@ -172,7 +172,12 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 				if (this.dataContextPool != null)
 				{
-					foreach (DataContext dataContext in this.dataContextPool)
+					//	Beware: deleting a data context will modify the content of the pool;
+					//	don't iterate on the original contents.
+					
+					var dataContexts = this.dataContextPool.ToArray ();
+					
+					foreach (DataContext dataContext in dataContexts)
 					{
 						this.DeleteDataContext (dataContext);
 					}

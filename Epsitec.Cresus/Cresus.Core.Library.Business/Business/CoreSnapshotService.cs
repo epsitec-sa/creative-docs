@@ -44,13 +44,13 @@ namespace Epsitec.Cresus.Core.Library.Business
 
 		private void RecordEvent(string eventName, string eventArg)
 		{
-			System.Diagnostics.Debug.WriteLine (string.Concat (eventName, ": ", eventArg ?? "-"));
+			System.Diagnostics.Debug.WriteLine (string.Concat (">>> ", eventName, ": ", eventArg ?? "-"));
 		}
 
 
 		private void HandleCommandDispatcherCommandDispatching(object sender, CommandEventArgs e)
 		{
-			this.RecordEvent ("CMD", e.Command.CommandId);
+			this.RecordEvent ("CMD", string.Format ("{0} ({1})", e.Command.CommandId, e.Command.Name));
 			this.commandDispatchDepth++;
 		}
 
