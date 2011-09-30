@@ -236,23 +236,26 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			}
 
 			//	Crée la quantité livrée précédemment.
-			var existingPreviously = line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == ArticleQuantityType.ShippedPreviously).FirstOrDefault ();
-
-			if (existingPreviously == null)
+			if (shippedPreviously > 0)
 			{
-				quantityColumnEntity = BusinessDocumentBusinessRules.FindArticleQuantityColumnEntity (businessContext, ArticleQuantityType.ShippedPreviously);
-				if (quantityColumnEntity != null)
+				var existingPreviously = line.ArticleQuantities.Where (x => x.QuantityColumn.QuantityType == ArticleQuantityType.ShippedPreviously).FirstOrDefault ();
+
+				if (existingPreviously == null)
 				{
-					var newQuantity = businessContext.CreateEntity<ArticleQuantityEntity> ();
-					newQuantity.Quantity = shippedPreviously;
-					newQuantity.QuantityColumn = quantityColumnEntity;
+					quantityColumnEntity = BusinessDocumentBusinessRules.FindArticleQuantityColumnEntity (businessContext, ArticleQuantityType.ShippedPreviously);
+					if (quantityColumnEntity != null)
+					{
+						var newQuantity = businessContext.CreateEntity<ArticleQuantityEntity> ();
+						newQuantity.Quantity = shippedPreviously;
+						newQuantity.QuantityColumn = quantityColumnEntity;
 
-					line.ArticleQuantities.Add (newQuantity);
+						line.ArticleQuantities.Add (newQuantity);
+					}
 				}
-			}
-			else
-			{
-				existingPreviously.Quantity = shippedPreviously;
+				else
+				{
+					existingPreviously.Quantity = shippedPreviously;
+				}
 			}
 		}
 
