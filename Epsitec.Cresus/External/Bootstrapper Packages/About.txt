@@ -1,0 +1,23 @@
+
+À partir de Visual Studio 2010 SP1, les fichiers du SDK ne sont pas mis à jour
+correctement et le runtime de Visual C++ 2010 SP1 n'est pas copié correctement
+dans le dossier :
+
+  C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bootstrapper\Packages\vcredist_x86
+
+Il faut donc remplacer le contenu de ce dossier par les fichiers trouvés dans
+
+  S:\Epsitec.Cresus\External\Bootstrapper Packages\vcredis_x86
+
+à l'exclusion, bien sûr, des dossiers .SVN !
+
+Sans cela, le bootstrapper produit par un projet de type 'Setup' produira un
+test vers un runtime pre-SP1 et forcera à chaque fois une réinstallation du
+package (à tort).
+
+
+Références
+----------
+
+http://social.msdn.microsoft.com/Forums/en-IE/winformssetup/thread/34024c90-6045-49dc-b210-2eb46617dc04
+http://connect.microsoft.com/VisualStudio/feedback/details/653449/vs-2010-sp1-bootstrapper-package-for-vc-redistributables-looks-for-rtm-version
