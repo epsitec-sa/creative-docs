@@ -12,12 +12,12 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 	{
 		None							= 0,
 		Print							= 0x00000001,	// impression (utilise les colonnes MainQuantity et MainUnit)
-		AdditionalQuantities			= 0x00000002,	// met les quantités additionnelles (si impression)
-		AdditionalQuantitiesSeparate	= 0x00000004,	// met les quantités additionnelles séparément (en plus de AdditionalQuantities)
-		ShowMyEyesOnly					= 0x00000008,	// inclu les lignes avant l'attribut MyEyesOnly
 
-		IncludeTaxes					= 0x00001000,	// 
-		ExclideTaxes					= 0x00002000,	// 
+		AdditionalQuantities			= 0x00000010,	// met les quantités additionnelles (si impression)
+		AdditionalQuantitiesSeparate	= 0x00000020,	// met les quantités additionnelles séparément (en plus de AdditionalQuantities)
+		MainQuantityOnTop				= 0x00000040,	// met la quantité principale sur la première ligne (si impression)
+
+		ShowMyEyesOnly					= 0x00000100,	// inclu les lignes avant l'attribut MyEyesOnly
 
 														// Ces 4 modes ne sont pas cumulables:
 		EditArticleName					= 0x00010000,	// édite les descriptions courtes des articles

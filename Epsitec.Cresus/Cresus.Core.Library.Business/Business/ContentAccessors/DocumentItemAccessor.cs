@@ -376,7 +376,9 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			//	Génère les quantités.
 			this.billingRow = row;
 
-			if (row > 0 || !this.mode.HasFlag (DocumentItemAccessorMode.AdditionalQuantitiesSeparate))
+			if (row > 0 ||
+				(!this.mode.HasFlag (DocumentItemAccessorMode.AdditionalQuantitiesSeparate) &&
+				 !this.mode.HasFlag (DocumentItemAccessorMode.MainQuantityOnTop)))
 			{
 				//	If there is more than the single article row, this means that we have some discounts
 				//	and we don't want the quantities on the same lines, so start emitting quantities after
@@ -894,6 +896,12 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 			if (!mode.HasFlag (DocumentItemAccessorMode.AdditionalQuantities) &&
 				mode.HasFlag (DocumentItemAccessorMode.AdditionalQuantitiesSeparate))
+			{
+				throw new System.NotSupportedException ("Invalid mode combination");
+			}
+
+			if (!mode.HasFlag (DocumentItemAccessorMode.Print) &&
+				mode.HasFlag (DocumentItemAccessorMode.MainQuantityOnTop))
 			{
 				throw new System.NotSupportedException ("Invalid mode combination");
 			}

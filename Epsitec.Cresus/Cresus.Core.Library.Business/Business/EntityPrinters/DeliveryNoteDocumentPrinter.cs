@@ -212,5 +212,17 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 			return accessor.RowsCount;
 		}
+
+		protected override DocumentItemAccessorMode GetDocumentItemAccessorMode()
+		{
+			var mode = DocumentItemAccessorMode.MainQuantityOnTop;
+
+			if (!this.HasOption (DocumentOption.ArticleAdditionalQuantities, "None"))
+			{
+				mode |= DocumentItemAccessorMode.AdditionalQuantities;
+			}
+
+			return mode;
+		}
 	}
 }

@@ -1367,7 +1367,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			}
 		}
 
-		protected DocumentItemAccessorMode GetDocumentItemAccessorMode()
+		protected virtual DocumentItemAccessorMode GetDocumentItemAccessorMode()
 		{
 			var mode = DocumentItemAccessorMode.None;
 
