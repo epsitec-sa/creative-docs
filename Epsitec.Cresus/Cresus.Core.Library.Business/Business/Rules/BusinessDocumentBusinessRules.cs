@@ -208,9 +208,15 @@ namespace Epsitec.Cresus.Core.Business.Rules
 		{
 			//	Cherche la quantité à livrer la plus probable.
 			decimal shippedQuantity = 0;
+			UnitOfMeasureEntity unit = null;
 
 			foreach (var quantity in line.ArticleQuantities)
 			{
+				if (unit == null)
+				{
+					unit = quantity.Unit;
+				}
+
 				if (quantity.QuantityColumn.QuantityType == ArticleQuantityType.Ordered)
 				{
 					shippedQuantity += quantity.Quantity;
@@ -230,6 +236,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 				var newQuantity = businessContext.CreateEntity<ArticleQuantityEntity> ();
 				newQuantity.Quantity = shippedQuantity - shippedPreviously;
 				newQuantity.QuantityColumn = quantityColumnEntity;
+				newQuantity.Unit = unit;
 				newQuantity.BeginDate = new Date (Date.Today.Ticks);
 
 				line.ArticleQuantities.Add (newQuantity);
@@ -248,6 +255,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 						var newQuantity = businessContext.CreateEntity<ArticleQuantityEntity> ();
 						newQuantity.Quantity = shippedPreviously;
 						newQuantity.QuantityColumn = quantityColumnEntity;
+						newQuantity.Unit = unit;
 
 						line.ArticleQuantities.Add (newQuantity);
 					}
@@ -280,10 +288,14 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			
 			if (quantityColumn.IsNotNull ())
 			{
+				var firstQuantity = line.ArticleQuantities.FirstOrDefault ();
+				var unit = (firstQuantity == null) ? null : firstQuantity.Unit;
+
 				var newQuantity = businessContext.CreateEntity<ArticleQuantityEntity> ();
 
 				newQuantity.Quantity       = shippedQuantity;
 				newQuantity.QuantityColumn = quantityColumn;
+				newQuantity.Unit           = unit;
 				newQuantity.BeginDate      = new Date (Date.Today.Ticks);
 
 				line.HasPartialQuantities = (orderedQuantity != shippedQuantity);
