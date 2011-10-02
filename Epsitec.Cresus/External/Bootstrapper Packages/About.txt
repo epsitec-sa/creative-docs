@@ -13,11 +13,13 @@ Il faut donc remplacer le contenu de ce dossier par les fichiers trouvés dans
 
 Sans cela, le bootstrapper produit par un projet de type 'Setup' produira un
 test vers un runtime pre-SP1 et forcera à chaque fois une réinstallation du
-package (à tort).
+package (à tort). En outre, il a fallu adapter le lien pour le téléchargement
+qui pointait encore sur la version pre-SP1, elle aussi.
 
 
 Références
 ----------
 
+http://blogs.msdn.com/b/astebner/archive/2010/05/05/10008146.aspx
 http://social.msdn.microsoft.com/Forums/en-IE/winformssetup/thread/34024c90-6045-49dc-b210-2eb46617dc04
 http://connect.microsoft.com/VisualStudio/feedback/details/653449/vs-2010-sp1-bootstrapper-package-for-vc-redistributables-looks-for-rtm-version

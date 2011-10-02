@@ -17,7 +17,7 @@
   <!-- TODO: Needs EstrimatedTempSpace, LogFile, and an update of EstimatedDiskSpace -->
   <Commands Reboot="Defer">
     <Command PackageFile="vcredist_x86.exe" 
-	     Arguments=' /q:a ' 
+	     Arguments="/q:a"
 	     >
 
       <!-- These checks determine whether the package is to be installed -->
