@@ -40,21 +40,35 @@ namespace Epsitec.Cresus.Core.Resolvers
 
 		private static IEnumerable<System.Type> FindBusinessRuleSystemTypes(System.Type entityType, RuleType ruleType)
 		{
-			string baseTypeName = "GenericBusinessRule`1";
-			string methodName   = BusinessRuleResolver.GetMethodName (ruleType);
+			if (BusinessRuleResolver.cacheRuleTypes == null)
+			{
+				BusinessRuleResolver.cacheRuleTypes = new Dictionary<TypeRuleKey, System.Type[]> ();
+			}
 
-			var candidates = new HashSet<TypeRank> (BusinessRuleResolver.GetBaseTypesAndInterfaces (entityType));
+			var key = new TypeRuleKey (entityType, ruleType);
+			System.Type[] cachedTypes;
 
-			var types = from type in TypeEnumerator.Instance.GetAllTypes ()
-						where type.IsClass && !type.IsAbstract && type.GetCustomAttributes<BusinessRuleAttribute> ().Any ()
-						let baseType = type.BaseType
-						where baseType.IsGenericType && baseType.Name.StartsWith (baseTypeName)
-						let genericType = baseType.GetGenericArguments ()[0]
-						where candidates.Contains (new TypeRank (genericType)) && BusinessRuleResolver.ImplementsRuleMethod (type, methodName)
-						orderby candidates.First (x => x.Type == genericType) descending
-						select type;
+			if (BusinessRuleResolver.cacheRuleTypes.TryGetValue (key, out cachedTypes) == false)
+			{
+				string baseTypeName = "GenericBusinessRule`1";
+				string methodName   = BusinessRuleResolver.GetMethodName (ruleType);
 
-			return types;
+				var candidates = new HashSet<TypeRank> (BusinessRuleResolver.GetBaseTypesAndInterfaces (entityType));
+
+				var types = from type in TypeEnumerator.Instance.GetAllTypes ()
+							where type.IsClass && !type.IsAbstract && type.GetCustomAttributes<BusinessRuleAttribute> ().Any ()
+							let baseType = type.BaseType
+							where baseType.IsGenericType && baseType.Name.StartsWith (baseTypeName)
+							let genericType = baseType.GetGenericArguments ()[0]
+							where candidates.Contains (new TypeRank (genericType)) && BusinessRuleResolver.ImplementsRuleMethod (type, methodName)
+							orderby candidates.First (x => x.Type == genericType) descending
+							select type;
+
+				cachedTypes = types.ToArray ();
+				BusinessRuleResolver.cacheRuleTypes[key] = cachedTypes;
+			}
+
+			return cachedTypes;
 		}
 
 		private static IEnumerable<TypeRank> GetBaseTypesAndInterfaces(System.Type type)
@@ -201,7 +215,50 @@ namespace Epsitec.Cresus.Core.Resolvers
 			}
 		}
 
+		private struct TypeRuleKey : System.IEquatable<TypeRuleKey>
+		{
+			public TypeRuleKey(System.Type type, RuleType rule)
+			{
+				this.type = type;
+				this.rule = rule;
+			}
+
+			#region IEquatable<TypeRuleKey> Members
+
+			public bool Equals(TypeRuleKey other)
+			{
+				return other.type == this.type
+					&& other.rule == this.rule;
+			}
+
+			#endregion
+
+			public override int GetHashCode()
+			{
+				return this.type.GetHashCode () ^ this.rule.GetHashCode ();
+			}
+
+			public override bool Equals(object obj)
+			{
+				if (obj is TypeRuleKey)
+				{
+					return this.Equals ((TypeRuleKey) obj);
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+
+			private readonly System.Type		type;
+			private readonly RuleType			rule;
+		}
+
 
 		private static readonly object[] noArguments = new object[] { };
+
+		[System.ThreadStatic]
+		private static Dictionary<TypeRuleKey, System.Type[]> cacheRuleTypes;
 	}
 }
