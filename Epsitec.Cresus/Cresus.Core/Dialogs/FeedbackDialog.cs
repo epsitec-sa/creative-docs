@@ -8,7 +8,6 @@ using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Library;
-using Epsitec.Cresus.Core.Dialogs.SettingsTabPages;
 
 using System.Collections.Generic;
 using System.Linq;
