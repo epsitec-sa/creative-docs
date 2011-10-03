@@ -52,10 +52,18 @@
     <Compile Include="Data\eCH_Importer.cs" />
     <Compile Include="eCH\DataSource.cs" />
     <Compile Include="eCH\DatePrecision.cs" />
-    <Compile Include="eCH\MaritalStatus.cs" />
-    <Compile Include="eCH\MrMrs.cs" />
-    <Compile Include="eCH\NationalityStatus.cs" />
-    <Compile Include="eCH\Sex.cs" />
+    <Compile Include="eCH\PersonDeclarationStatus.cs" />
+    <Compile Include="eCH\PersonMaritalStatus.cs" />
+    <Compile Include="eCH\PersonMrMrs.cs" />
+    <Compile Include="eCH\PersonNationalityStatus.cs" />
+    <Compile Include="eCH\PersonSex.cs" />
+    <Compile Include="EventParticipantRole.cs" />
+    <Compile Include="EventType.cs" />
+    <Compile Include="GroupParticipantRole.cs" />
+    <Compile Include="GroupRelationshipType.cs" />
+    <Compile Include="GroupType.cs" />
+    <Compile Include="PersonRelationshipType.cs" />
+    <Compile Include="PersonReligion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Aider\SourceCode\Res.cs" />
   </ItemGroup>

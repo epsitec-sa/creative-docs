@@ -9,10 +9,11 @@ using System.Linq;
 namespace Epsitec.Aider.eCH
 {
 	[DesignerVisible]
-	public enum NationalityStatus
+	public enum PersonMrMrs
 	{
-		Unknown = 0,
-		None = 1,
-		Defined = 1,
+		None = 0,
+		Madame = 1,
+		Monsieur = 2,
+		Mademoiselle = 3,
 	}
 }

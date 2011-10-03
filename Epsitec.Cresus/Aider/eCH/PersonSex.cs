@@ -9,7 +9,7 @@ using System.Linq;
 namespace Epsitec.Aider.eCH
 {
 	[DesignerVisible]
-	public enum Sex
+	public enum PersonSex
 	{
 		Unknown = 0,
 		Male = 1,
