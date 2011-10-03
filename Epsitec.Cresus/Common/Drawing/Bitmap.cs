@@ -472,12 +472,12 @@ namespace Epsitec.Common.Drawing
 		{
 			Bitmap bitmap = new Bitmap ();
 			
-			bitmap.pixmap    = pixmap;
-			bitmap.bitmap    = null;
+			bitmap.pixmap   = pixmap;
+			bitmap.bitmap   = null;
 			bitmap.bitmapDx = pixmap.Size.Width;
 			bitmap.bitmapDy = pixmap.Size.Height;
-			bitmap.size      = new Size (bitmap.bitmapDx, bitmap.bitmapDy);
-			bitmap.origin    = new Point (0, 0);
+			bitmap.size     = new Size (bitmap.bitmapDx, bitmap.bitmapDy);
+			bitmap.origin   = new Point (0, 0);
 			
 			//	Prétend que le bitmap est verrouillé, puisqu'on a de toute façons déjà accès aux
 			//	pixels (c'est d'ailleurs bien la seule chose qu'on a) :

@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 
 		public void NotifyApplicationStarted(CoreApp app)
 		{
-			var dataViewOrchestrator = app.FindActiveComponent<DataViewOrchestrator> ();
+			var dataViewOrchestrator   = app.FindActiveComponent<DataViewOrchestrator> ();
 			var navigationOrchestrator = dataViewOrchestrator.Navigator;
 
 			Window.GlobalFocusedWindowChanged += this.HandleGlobalFocusedWindowChanged;
@@ -77,11 +77,10 @@ namespace Epsitec.Cresus.Core.Library.Business
 
 			var startInfo = new System.Diagnostics.ProcessStartInfo ("App.DebugService.exe", arguments)
 			{
-				WindowStyle = System.Diagnostics.ProcessWindowStyle.Minimized
+				WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden
 			};
 			
 			System.Diagnostics.Process.Start (startInfo);
-			System.Diagnostics.Debug.WriteLine ("Started debug service : " + arguments);
 		}
 		
 		private void CreateDatabaseSnapshot()
@@ -91,13 +90,17 @@ namespace Epsitec.Cresus.Core.Library.Business
 			var remoteBackupPath     = System.IO.Path.Combine (remoteBackupFolder, remoteBackupFileName);
 
 			CoreData.BackupDatabase (remoteBackupPath, CoreData.GetDatabaseAccess ());
-			
+
+			this.TryRecordDatabaseSnapshot (remoteBackupPath);
+		}
+
+		private void TryRecordDatabaseSnapshot(string remoteBackupPath)
+		{
 			try
 			{
-				string path = System.Environment.GetFolderPath (System.Environment.SpecialFolder.CommonApplicationData);
+				string path = System.IO.Path.Combine (System.Environment.GetFolderPath (System.Environment.SpecialFolder.CommonApplicationData),
+					"Epsitec", "Firebird Databases", remoteBackupPath);
 
-				path = System.IO.Path.Combine (path, "Epsitec", "Firebird Databases", remoteBackupPath);
-				
 				if (System.IO.File.Exists (path))
 				{
 					byte[] data = System.IO.File.ReadAllBytes (path);
@@ -216,87 +219,66 @@ namespace Epsitec.Cresus.Core.Library.Business
 
 		private void CreateWindowSnapshot(Window window)
 		{
-			var bitmap = window.GetWindowBitmap ();
-
-			if (bitmap != null)
-			{
-				var source = bitmap.NativeBitmap;
-				var copy   = new System.Drawing.Bitmap (source.Width, source.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-				var graphics = System.Drawing.Graphics.FromImage (copy);
-				graphics.DrawImageUnscaled (source, 0, 0);
-				graphics.Dispose ();
-				copy.RotateFlip (System.Drawing.RotateFlipType.RotateNoneFlipY);
-
-				var codec = Epsitec.Common.Drawing.Bitmap.GetCodecInfo (Common.Drawing.ImageFormat.Jpeg);
-				var encoder = new System.Drawing.Imaging.EncoderParameters (1);
-				encoder.Param[0] = new System.Drawing.Imaging.EncoderParameter (System.Drawing.Imaging.Encoder.Quality, 50L);
-
-				copy.Save (this.GetLoggingFilePath ("window.jpg"), codec, encoder);
-				copy.Dispose ();
-
-				bitmap.Dispose ();
-			}
+			this.SaveWindowBitmap (window, "window.jpg");
 		}
 
 		private void CreateWindowFocusSnapshot(Widget widget, System.Drawing.Pen pen)
 		{
-			if ((widget.IsVisible == false) ||
-				(widget.Window == null) ||
-				(widget.Window.IsVisible == false))
+			if (widget.IsVisible == false)
 			{
 				return;
 			}
 
 			var bounds = widget.MapClientToRoot (widget.Client.Bounds);
-			var bitmap = widget.Window.GetWindowBitmap ();
-
-			if (bitmap != null)
-			{
-				var source = bitmap.NativeBitmap;
-				var copy   = new System.Drawing.Bitmap (source.Width, source.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-				var graphics = System.Drawing.Graphics.FromImage (copy);
-				graphics.DrawImageUnscaled (source, 0, 0);
-				var rect = new System.Drawing.Rectangle ((int) bounds.X, (int) bounds.Y, (int) bounds.Width, (int) bounds.Height);
-				graphics.DrawRectangle (pen, rect);
-				graphics.Dispose ();
-				copy.RotateFlip (System.Drawing.RotateFlipType.RotateNoneFlipY);
-
-				var codec = Epsitec.Common.Drawing.Bitmap.GetCodecInfo (Common.Drawing.ImageFormat.Jpeg);
-				var encoder = new System.Drawing.Imaging.EncoderParameters (1);
-				encoder.Param[0] = new System.Drawing.Imaging.EncoderParameter (System.Drawing.Imaging.Encoder.Quality, 50L);
-
-				copy.Save (this.GetLoggingFilePath ("focus.jpg"), codec, encoder);
-				copy.Dispose ();
-
-				bitmap.Dispose ();
-			}
+			
+			this.SaveWindowBitmap (widget.Window, "focus.jpg", g => g.DrawRectangle (pen, (int) bounds.X, (int) bounds.Y, (int) bounds.Width, (int) bounds.Height));
 		}
 
 		private void CreateWindowClickSnapshot(Widget widget, Epsitec.Common.Drawing.Point point, System.Drawing.Brush brush)
 		{
-			var bitmap = widget.Window.GetWindowBitmap ();
+			this.SaveWindowBitmap (widget.Window, "click.jpg", g => g.FillPie (brush, (int) point.X-4, (int) point.Y-4, 8, 8, 0, 360));
+		}
+
+		private void SaveWindowBitmap(Window window, string name, System.Action<System.Drawing.Graphics> callback = null)
+		{
+			if ((window == null) ||
+				(window.IsVisible == false))
+			{
+				return;
+			}
+
+			var bitmap = window.GetWindowBitmap ();
 
 			if (bitmap != null)
 			{
-				var source = bitmap.NativeBitmap;
-				var copy   = new System.Drawing.Bitmap (source.Width, source.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+				var source   = bitmap.NativeBitmap;
+				var copy     = new System.Drawing.Bitmap (source.Width, source.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
 				var graphics = System.Drawing.Graphics.FromImage (copy);
+				
 				graphics.DrawImageUnscaled (source, 0, 0);
-				graphics.FillPie (brush, (int) point.X-4, (int) point.Y-4, 8, 8, 0, 360);
+
+				if (callback != null)
+				{
+					callback (graphics);
+				}
+
 				graphics.Dispose ();
+				
 				copy.RotateFlip (System.Drawing.RotateFlipType.RotateNoneFlipY);
 
-				var codec = Epsitec.Common.Drawing.Bitmap.GetCodecInfo (Common.Drawing.ImageFormat.Jpeg);
+				var codec   = Epsitec.Common.Drawing.Bitmap.GetCodecInfo (Common.Drawing.ImageFormat.Jpeg);
 				var encoder = new System.Drawing.Imaging.EncoderParameters (1);
+				
 				encoder.Param[0] = new System.Drawing.Imaging.EncoderParameter (System.Drawing.Imaging.Encoder.Quality, 50L);
 
-				copy.Save (this.GetLoggingFilePath ("click.jpg"), codec, encoder);
+				copy.Save (this.GetLoggingFilePath (name), codec, encoder);
 				copy.Dispose ();
 
 				bitmap.Dispose ();
+				source.Dispose ();
 			}
 		}
-
+		
 		private string GetLoggingFilePath(string name)
 		{
 			var totalTicks = System.DateTime.UtcNow.Ticks / 10000;
@@ -305,6 +287,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			return System.IO.Path.Combine (this.sessionPath, fileName);
 		}
 
+		
 		private static string GetRemoteBackupFolder()
 		{
 			return "Snapshots";
@@ -327,7 +310,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 		}
 
 
-		private static CoreSnapshotService defaultService;
+		private static CoreSnapshotService		defaultService;
 
 		private string							sessionId;
 		private string							sessionPath;
