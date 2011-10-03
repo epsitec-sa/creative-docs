@@ -11,7 +11,13 @@ namespace Epsitec.DebugService
 	/// </summary>
 	public static class WebUploader
 	{
-		public static string Upload(string uri, byte[] data)
+		/// <summary>
+		/// Posts the data to the specified URI.
+		/// </summary>
+		/// <param name="uri">The URI.</param>
+		/// <param name="data">The data.</param>
+		/// <returns>The response.</returns>
+		public static string Post(string uri, byte[] data)
 		{
 			//	See Scott Hanselman's sample code :
 			//	http://www.hanselman.com/blog/HTTPPOSTsAndHTTPGETsWithWebClientAndCAndFakingAPostBack.aspx

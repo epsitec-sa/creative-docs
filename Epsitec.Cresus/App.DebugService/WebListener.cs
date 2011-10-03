@@ -7,6 +7,10 @@ using System.Net;
 
 namespace Epsitec.DebugService
 {
+	/// <summary>
+	/// The <c>WebListener</c> class implements a Web server which listens to HTTP POST
+	/// requests and processes them.
+	/// </summary>
 	public static class WebListener
 	{
 		public static string StoragePath
@@ -44,17 +48,21 @@ namespace Epsitec.DebugService
 
 		private static string ProcessRequest(HttpListenerRequest request)
 		{
-			if (!request.HasEntityBody)
+			if (request.HttpMethod != "POST")
+			{
+				return "Error: not an HTTP POST request";
+			}
+			if (request.HasEntityBody == false)
 			{
 				return "Error: no body";
 			}
 
-			string urlPath = request.Url.LocalPath;
+			string urlPath  = request.Url.LocalPath;
 			string urlQuery = request.Url.Query.Substring (1);
 
 			byte[] data = new byte[request.ContentLength64];
 
-			WebListener.Read (request.InputStream, data);
+			WebListener.ReadAllBytes (request.InputStream, data);
 
 			var keyValues = urlQuery.Split ('&').Select (x => x.Split ('=')).ToDictionary (x => x[0], x => x.Length == 2 ? System.Web.HttpUtility.UrlDecode (x[1]) : null);
 
@@ -97,10 +105,10 @@ namespace Epsitec.DebugService
 			System.IO.File.WriteAllBytes (path, data);
 		}
 
-		private static void Read(System.IO.Stream stream, byte[] data)
+		private static void ReadAllBytes(System.IO.Stream stream, byte[] data)
 		{
 			int offset = 0;
-			int more = data.Length;
+			int more   = data.Length;
 
 			while (more > 0)
 			{
@@ -128,7 +136,9 @@ namespace Epsitec.DebugService
 
 			//	URI prefixes are required, for example "http://+:8081/debugservice/".
 			//	The server must have the ACLs properly cofigured for this to work:
+			//	-------------------------------------------------------------------------------
 			//	CMD> netsh http add urlacl url=http://+:8081/debugservice user=administrator
+			//	-------------------------------------------------------------------------------
 
 			if (string.IsNullOrEmpty (prefixes))
 			{

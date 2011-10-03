@@ -6,6 +6,10 @@ using System.Linq;
 
 namespace Epsitec.DebugService
 {
+	/// <summary>
+	/// The <c>FolderMonitor</c> class is used to monitor files in a folder; whenever a file
+	/// is readable (and is no longer in use by anybody else), it gets uploaded to the cloud.
+	/// </summary>
 	public class FolderMonitor : System.IDisposable
 	{
 		public FolderMonitor(string path)
@@ -20,7 +24,8 @@ namespace Epsitec.DebugService
 
 			foreach (var file in System.IO.Directory.EnumerateFileSystemEntries (this.path).Select (x => new System.IO.FileInfo (x)))
 			{
-				if (file.Exists)
+				if ((file.Exists) &&
+					(file.Length > 0))
 				{
 					if (this.TryProcessFile (file))
 					{
@@ -29,12 +34,12 @@ namespace Epsitec.DebugService
 				}
 			}
 
-			if (count == 0)
-			{
-				System.Threading.Thread.Sleep (100);
-			}
-
 			return count > 0;
+		}
+
+		public void Sleep()
+		{
+			System.Threading.Thread.Sleep (100);
 		}
 
 		
@@ -63,28 +68,37 @@ namespace Epsitec.DebugService
 				return false;
 			}
 		}
-		
+
+		/// <summary>
+		/// Uploads the file to the cloud, using an HTTP POST request.
+		/// </summary>
+		/// <param name="path">The path used to extract the file name and the session name.</param>
+		/// <param name="data">The data.</param>
 		private void UploadFile(string path, byte[] data)
 		{
 			string fileName = System.IO.Path.GetFileName (path);
-			string session  = System.IO.Path.GetFileName (System.IO.Path.GetDirectoryName (path));
 
-			if (session.StartsWith ("dbg-"))
+			if (this.sessionId == null)
 			{
-				session = session.Substring (4);
+				string session  = System.IO.Path.GetFileName (System.IO.Path.GetDirectoryName (path));
+
+				if (session.StartsWith ("dbg-"))
+				{
+					session = session.Substring (4);
+				}
+				
+				this.sessionId = session;
 			}
 
-			this.sessionId = session;
+			System.Console.WriteLine ("{0}/{1} : {2} bytes", this.sessionId, fileName, data.Length);
 
-			System.Console.WriteLine ("{0}/{1} : {2} bytes", session, fileName, data.Length);
-
-			var urlParam1  = string.Concat ("session=", System.Web.HttpUtility.UrlEncode (session));
+			var urlParam1  = string.Concat ("session=", System.Web.HttpUtility.UrlEncode (this.sessionId));
 			var urlParam2  = string.Concat ("file=", System.Web.HttpUtility.UrlEncode (fileName));
 			var encodedUrl = string.Concat (WebUploader.DebugServiceUrl, "log", "?", urlParam1, "&", urlParam2);
 
 			System.Console.WriteLine ("Push file to {0}", encodedUrl);
 
-			WebUploader.Upload (encodedUrl, data);
+			WebUploader.Post (encodedUrl, data);
 		}
 
 		#region IDisposable Members
