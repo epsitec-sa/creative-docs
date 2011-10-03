@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText ("Ville:", this.Country.CountryCode, "-", this.PostalCode, this.Name, "\n", "Pays: ", this.Country.Name);
+			return TextFormatter.FormatText ("Ville:", this.PostalCode, this.Name, "\n", "Pays: ", this.Country.Name);
 		}
 
 		public override FormattedText GetCompactSummary()

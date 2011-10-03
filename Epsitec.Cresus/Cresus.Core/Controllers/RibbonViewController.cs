@@ -824,7 +824,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				yield return new SubMenuItem (Res.Commands.Base.ShowTelecomType,         SubMenuType.Customers);
 				yield return new SubMenuItem (Res.Commands.Base.ShowUriType,             SubMenuType.Customers);
 				yield return new SubMenuItem (null,                                      SubMenuType.Customers);
-				yield return new SubMenuItem (Res.Commands.Base.ShowStateProvinceCounty, SubMenuType.Customers);
+//-				yield return new SubMenuItem (Res.Commands.Base.ShowStateProvinceCounty, SubMenuType.Customers);
 				yield return new SubMenuItem (Res.Commands.Base.ShowLocation,            SubMenuType.Customers);
 				yield return new SubMenuItem (Res.Commands.Base.ShowCountry,             SubMenuType.Customers);
 

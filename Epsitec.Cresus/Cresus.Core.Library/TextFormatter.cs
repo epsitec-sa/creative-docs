@@ -283,6 +283,8 @@ namespace Epsitec.Cresus.Core
 						(lastCharacter != '-') &&
 						(lastCharacter != '+') &&
 						(prefix != '\n') &&
+						(prefix != '-') &&
+						(prefix != '+') &&
 						(prefix.IsPunctuationMark () == false) &&
 						(prefix != ')'))
 					{
