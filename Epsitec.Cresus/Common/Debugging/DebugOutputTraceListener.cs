@@ -6,6 +6,11 @@ using System.Runtime.InteropServices;
 
 namespace Epsitec.Common.Debug
 {
+	/// <summary>
+	/// The <c>DebugOutputTraceListener</c> class implements a specific trace listener which
+	/// can call a delegate after buffering the output and using a timeout before emitting
+	/// the messages.
+	/// </summary>
 	public class DebugOutputTraceListener : System.Diagnostics.TraceListener
 	{
 		public DebugOutputTraceListener(System.Action<string> writer)
@@ -13,18 +18,30 @@ namespace Epsitec.Common.Debug
 			this.writer = writer;
 			this.buffer = new System.Text.StringBuilder ();
 			this.timer  = new System.Threading.Timer (this.HandlerTimerTicked, null, System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
-
-			this.needsDisposing = true;
 		}
 
-		~DebugOutputTraceListener()
+
+		/// <summary>
+		/// Gets or sets a value indicating whether output should also be sent to the Win32
+		/// trace API (and to the attached debugger).
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if the output should be sent to the Win32 trace API; otherwise, <c>false</c>.
+		/// </value>
+		public bool EnableOutputDebugString
 		{
-			this.Dispose (false);
+			get;
+			set;
 		}
+
 
 		public override void Write(string message)
 		{
-			DebugOutputTraceListener.OutputDebugString (message);
+			if (this.EnableOutputDebugString)
+			{
+				DebugOutputTraceListener.OutputDebugString (message);
+			}
+
 			this.EnqueueMessage (message);
 		}
 
@@ -33,27 +50,9 @@ namespace Epsitec.Common.Debug
 			this.Write (message + "\r\n");
 		}
 
-		[DllImport ("kernel32.dll", CharSet=CharSet.Auto)]
-		private static extern void OutputDebugString(string message);
-
-		private void EnqueueMessage(string message)
+		public override void Flush()
 		{
-			try
-			{
-				lock (this.buffer)
-				{
-					this.buffer.Append (message);
-				}
-				
-				this.timer.Change (2500, System.Threading.Timeout.Infinite);
-			}
-			catch
-			{
-			}
-		}
-
-		public void Flush()
-		{
+			base.Flush ();
 			string text;
 
 			lock (this.buffer)
@@ -71,19 +70,24 @@ namespace Epsitec.Common.Debug
 		public override void Close()
 		{
 			this.Flush ();
-			this.needsDisposing = false;
 			base.Close ();
 		}
 
-		protected override void Dispose(bool disposing)
+		
+		private void EnqueueMessage(string message)
 		{
-			if (this.needsDisposing)
+			try
 			{
-				this.Flush ();
-				this.needsDisposing = false;
-			}
+				lock (this.buffer)
+				{
+					this.buffer.Append (message);
+				}
 
-			base.Dispose (disposing);
+				this.timer.Change (2500, System.Threading.Timeout.Infinite);
+			}
+			catch
+			{
+			}
 		}
 
 		private void HandlerTimerTicked(object state)
@@ -91,8 +95,16 @@ namespace Epsitec.Common.Debug
 			this.Flush ();
 		}
 
-		private bool							needsDisposing;
-		private readonly System.Text.StringBuilder		buffer;
+
+		#region Win32 API
+
+		[DllImport ("kernel32.dll", CharSet=CharSet.Auto)]
+		private static extern void OutputDebugString(string message);
+
+		#endregion
+
+		
+		private readonly System.Text.StringBuilder buffer;
 		private readonly System.Action<string>	writer;
 		private readonly System.Threading.Timer	timer;
 	}
