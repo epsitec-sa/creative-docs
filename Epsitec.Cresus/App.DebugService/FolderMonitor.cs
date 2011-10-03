@@ -47,7 +47,7 @@ namespace Epsitec.DebugService
 				stream.Read (data, 0, data.Length);
 				stream.Close ();
 
-				this.ProcessFileData (file.Name, data);
+				this.ProcessFileData (file.FullName, data);
 
 				file.Delete ();
 
@@ -59,9 +59,21 @@ namespace Epsitec.DebugService
 			}
 		}
 
-		private void ProcessFileData(string fileName, byte[] data)
+		private void ProcessFileData(string path, byte[] data)
 		{
-			System.Console.WriteLine ("{0} : {1} bytes", fileName, data.Length);
+			string fileName = System.IO.Path.GetFileName (path);
+			string session  = System.IO.Path.GetFileName (System.IO.Path.GetDirectoryName (path));
+
+			System.Console.WriteLine ("{0}/{1} : {2} bytes", session, fileName, data.Length);
+
+			var urlBase    = "http://remotecompta.cresus.ch:8081/debugservice/log";
+			var urlParam1  = string.Concat ("session=", System.Web.HttpUtility.UrlEncode (session));
+			var urlParam2  = string.Concat ("file=", System.Web.HttpUtility.UrlEncode (fileName));
+			var encodedUrl = string.Concat (urlBase, "?", urlParam1, "&", urlParam2);
+
+			System.Console.WriteLine ("Push to {0}", encodedUrl);
+
+			WebUploader.Upload (encodedUrl, data);
 		}
 
 		#region IDisposable Members

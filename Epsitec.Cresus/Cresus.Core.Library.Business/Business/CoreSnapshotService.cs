@@ -52,8 +52,13 @@ namespace Epsitec.Cresus.Core.Library.Business
 			System.IO.Directory.CreateDirectory (this.sessionPath);
 
 			string arguments = InvariantConverter.Format (@"-monitor ""{0}"" {1}", this.sessionPath, System.Diagnostics.Process.GetCurrentProcess ().Id);
+
+			var startInfo = new System.Diagnostics.ProcessStartInfo ("App.DebugService.exe", arguments)
+			{
+				WindowStyle = System.Diagnostics.ProcessWindowStyle.Minimized
+			};
 			
-			System.Diagnostics.Process.Start ("App.DebugService.exe", arguments);
+			System.Diagnostics.Process.Start (startInfo);
 			System.Diagnostics.Debug.WriteLine ("Started debug service : " + arguments);
 		}
 		
@@ -174,16 +179,11 @@ namespace Epsitec.Cresus.Core.Library.Business
 				var encoder = new System.Drawing.Imaging.EncoderParameters (1);
 				encoder.Param[0] = new System.Drawing.Imaging.EncoderParameter (System.Drawing.Imaging.Encoder.Quality, 50L);
 
-				copy.Save (this.GetSessionFileName ("window.jpg"), codec, encoder);
+				copy.Save (this.GetLoggingFilePath ("window.jpg"), codec, encoder);
 				copy.Dispose ();
 
 				bitmap.Dispose ();
 			}
-		}
-
-		private string GetSessionFileName(string name)
-		{
-			return System.IO.Path.Combine (this.sessionPath, CoreSnapshotService.GetTimeStampedFileName (name));
 		}
 
 		private void CreateWindowClickSnapshot(Widget widget, Epsitec.Common.Drawing.Point point, System.Drawing.Pen pen)
@@ -204,11 +204,19 @@ namespace Epsitec.Cresus.Core.Library.Business
 				var encoder = new System.Drawing.Imaging.EncoderParameters (1);
 				encoder.Param[0] = new System.Drawing.Imaging.EncoderParameter (System.Drawing.Imaging.Encoder.Quality, 50L);
 
-				copy.Save (this.GetSessionFileName ("window.jpg"), codec, encoder);
+				copy.Save (this.GetLoggingFilePath ("window.jpg"), codec, encoder);
 				copy.Dispose ();
 
 				bitmap.Dispose ();
 			}
+		}
+
+		private string GetLoggingFilePath(string name)
+		{
+			var totalTicks = System.DateTime.UtcNow.Ticks / 10000;
+			var fileName   = InvariantConverter.Format ("{0:0000000000000000}.{1}", totalTicks, name);
+			
+			return System.IO.Path.Combine (this.sessionPath, fileName);
 		}
 
 		private static string GetRemoteBackupFolder()

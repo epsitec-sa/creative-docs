@@ -23,6 +23,11 @@ namespace Epsitec.DebugService
 				{
 					Program.ProcessMonitor (args[1], args[2]);
 				}
+				if (args[0] == "-listen")
+				{
+					WebListener.StoragePath = args[2];
+					WebListener.Listen (args[1]);
+				}
 			}
 		}
 
