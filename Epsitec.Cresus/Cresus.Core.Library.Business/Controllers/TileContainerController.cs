@@ -795,7 +795,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			var navigator = this.controller.Navigator;
 
 			if ((navigator != null) &&
-				(navigator.GetLevel (this.controller) > 0))
+				(this.controller.ParentController != null))
 			{
 				this.closeButton.ZOrder = 0;
 				this.closeButton.Visibility = true;

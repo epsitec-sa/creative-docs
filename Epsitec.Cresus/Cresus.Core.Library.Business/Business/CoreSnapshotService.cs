@@ -298,14 +298,15 @@ namespace Epsitec.Cresus.Core.Library.Business
 			var userName   = System.Environment.UserName.ToLowerInvariant ();
 			var hostName   = System.Environment.MachineName.ToLowerInvariant ();
 			var totalTicks = System.DateTime.UtcNow.Ticks / 10000;
+			var processId  = System.Diagnostics.Process.GetCurrentProcess ().Id;
 
 			if (name == null)
 			{
-				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}@{1}-{2:00000000000000}", userName, hostName, totalTicks);
+				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}@{1}-{2:00000000000000}.{3}", userName, hostName, totalTicks, processId);
 			}
 			else
 			{
-				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}@{1}-{2:00000000000000}.{3}", userName, hostName, totalTicks, name);
+				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}@{1}-{2:00000000000000}.{3}.{4}", userName, hostName, totalTicks, processId, name);
 			}
 		}
 
