@@ -25,6 +25,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 
 		public void NotifyApplicationStarted(CoreApp app)
 		{
+			this.StartDebugMonitor ();
+
 			var dataViewOrchestrator = app.FindActiveComponent<DataViewOrchestrator> ();
 			var navigationOrchestrator = dataViewOrchestrator.Navigator;
 
@@ -43,6 +45,17 @@ namespace Epsitec.Cresus.Core.Library.Business
 
 			BridgeSpy.ExecutingSetter += this.HandleBridgeSpyExecutingSetter;
 		}
+
+		private void StartDebugMonitor()
+		{
+			this.sessionPath = System.IO.Path.Combine (System.IO.Path.GetTempPath (), "dbg-" + this.sessionId);
+			System.IO.Directory.CreateDirectory (this.sessionPath);
+
+			string arguments = InvariantConverter.Format (@"-monitor ""{0}"" {1}", this.sessionPath, System.Diagnostics.Process.GetCurrentProcess ().Id);
+			
+			System.Diagnostics.Process.Start ("App.DebugService.exe", arguments);
+			System.Diagnostics.Debug.WriteLine ("Started debug service : " + arguments);
+		}
 		
 		private void CreateDatabaseSnapshot()
 		{
@@ -51,6 +64,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 			var remoteBackupPath     = System.IO.Path.Combine (remoteBackupFolder, remoteBackupFileName);
 
 			CoreData.BackupDatabase (remoteBackupPath, CoreData.GetDatabaseAccess ());
+
+			this.sessionId = remoteBackupFileName.Split ('.')[0];
 		}
 
 		private void RecordEvent(string eventName, string eventArg)
@@ -96,7 +111,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				this.RecordEvent ("WIDGET_FOCUS", InvariantConverter.Format ("{0}:{1}/{2}", widget.GetVisualSerialId (), widget.GetType ().Name, widget.FullPathName));
 
-				Application.QueueAsyncCallback (() => CoreSnapshotService.CreateWindowFocusSnapshot (widget, System.Drawing.Pens.Red));
+				Application.QueueAsyncCallback (() => this.CreateWindowFocusSnapshot (widget, System.Drawing.Pens.Red));
 			}
 		}
 
@@ -114,7 +129,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 
 			this.RecordEvent ("MOUSE_DOWN", InvariantConverter.Format ("{0}:{1}/{2}:{3}", widget.GetVisualSerialId (), widget.GetType ().Name, widget.FullPathName, e.Message.Cursor.ToString ()));
 
-			CoreSnapshotService.CreateWindowClickSnapshot (widget, e.Message.Cursor, System.Drawing.Pens.Blue);
+			this.CreateWindowClickSnapshot (widget, e.Message.Cursor, System.Drawing.Pens.Blue);
 		}
 
 		private void HandleGlobalFocusedWindowChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -139,7 +154,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			}
 		}
 
-		private static void CreateWindowFocusSnapshot(Widget widget, System.Drawing.Pen pen)
+		private void CreateWindowFocusSnapshot(Widget widget, System.Drawing.Pen pen)
 		{
 			var bounds = widget.MapClientToRoot (widget.Client.Bounds);
 			var bitmap = widget.Window.GetWindowBitmap ();
@@ -159,15 +174,19 @@ namespace Epsitec.Cresus.Core.Library.Business
 				var encoder = new System.Drawing.Imaging.EncoderParameters (1);
 				encoder.Param[0] = new System.Drawing.Imaging.EncoderParameter (System.Drawing.Imaging.Encoder.Quality, 50L);
 
-				var filename = CoreSnapshotService.GetTimeStampedFileName ("window.jpg");
-				copy.Save (filename, codec, encoder);
+				copy.Save (this.GetSessionFileName ("window.jpg"), codec, encoder);
 				copy.Dispose ();
 
 				bitmap.Dispose ();
 			}
 		}
 
-		private static void CreateWindowClickSnapshot(Widget widget, Epsitec.Common.Drawing.Point point, System.Drawing.Pen pen)
+		private string GetSessionFileName(string name)
+		{
+			return System.IO.Path.Combine (this.sessionPath, CoreSnapshotService.GetTimeStampedFileName (name));
+		}
+
+		private void CreateWindowClickSnapshot(Widget widget, Epsitec.Common.Drawing.Point point, System.Drawing.Pen pen)
 		{
 			var bitmap = widget.Window.GetWindowBitmap ();
 
@@ -185,8 +204,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 				var encoder = new System.Drawing.Imaging.EncoderParameters (1);
 				encoder.Param[0] = new System.Drawing.Imaging.EncoderParameter (System.Drawing.Imaging.Encoder.Quality, 50L);
 
-				var filename = CoreSnapshotService.GetTimeStampedFileName ("window.jpg");
-				copy.Save (filename, codec, encoder);
+				copy.Save (this.GetSessionFileName ("window.jpg"), codec, encoder);
 				copy.Dispose ();
 
 				bitmap.Dispose ();
@@ -204,10 +222,12 @@ namespace Epsitec.Cresus.Core.Library.Business
 			var hostName   = System.Environment.MachineName.ToLowerInvariant ();
 			var totalTicks = System.DateTime.UtcNow.Ticks / 10000;
 
-			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}@{1}-{2:0000000000000000}-{3}", userName, hostName, totalTicks, name);
+			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}@{1}-{2:0000000000000000}.{3}", userName, hostName, totalTicks, name);
 		}
 
 
+		private string sessionId;
+		private string sessionPath;
 		private int commandDispatchDepth;
 		private long lastUserMessageId;
 	}
