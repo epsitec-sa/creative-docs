@@ -1,6 +1,7 @@
 //	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Helpers;
@@ -3744,6 +3745,7 @@ namespace Epsitec.Common.Widgets
 						break;
 					
 					case MessageType.MouseDown:
+						Widget.GlobalMouseDown.Raise (this, new MessageEventArgs (message, pos));
 						this.OnPressed (new MessageEventArgs (message, pos));
 						break;
 
@@ -4545,6 +4547,9 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler			TextDefined;
 		public event Support.EventHandler			TextChanged;
 		public event Support.EventHandler			NameChanged;
+
+
+		public static event Support.EventHandler<MessageEventArgs> GlobalMouseDown;
 
 		public static class EventNames
 		{

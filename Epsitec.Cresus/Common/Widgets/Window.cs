@@ -392,6 +392,27 @@ namespace Epsitec.Common.Widgets
 			Drawing.Point pos = Message.CurrentState.LastScreenPosition;
 			this.DispatchMessage (Message.CreateDummyMouseMoveEvent (this.MapScreenToWindow (pos)));
 		}
+
+
+		/// <summary>
+		/// Gets the bitmap of the (repainted) window contents.
+		/// </summary>
+		/// <returns>The bitmap.</returns>
+		public Drawing.Bitmap GetWindowBitmap()
+		{
+			this.SynchronousRepaint ();
+
+			var pixmap = this.window.GetWindowPixmap ();
+
+			if (pixmap == null)
+			{
+				return null;
+			}
+			else
+			{
+				return Drawing.Bitmap.FromPixmap (pixmap) as Drawing.Bitmap;
+			}
+		}
 		
 		
 		public WindowRoot						Root
@@ -1461,26 +1482,17 @@ namespace Epsitec.Common.Widgets
 		
 		internal void OnWindowActivated()
 		{
-			if (this.WindowActivated != null)
-			{
-				this.WindowActivated (this);
-			}
+			this.WindowActivated.Raise (this);
 		}
 		
 		internal void OnWindowDeactivated()
 		{
-			if (this.WindowDeactivated != null)
-			{
-				this.WindowDeactivated (this);
-			}
+			this.WindowDeactivated.Raise (this);
 		}
 		
 		internal void OnWindowAnimationEnded()
 		{
-			if (this.WindowAnimationEnded != null)
-			{
-				this.WindowAnimationEnded (this);
-			}
+			this.WindowAnimationEnded.Raise (this);
 		}
 		
 		internal void OnWindowShown()
@@ -1490,11 +1502,8 @@ namespace Epsitec.Common.Widgets
 			this.windowIsVisible = true;
 			this.AssignWindowOwner ();
 			this.root.NotifyWindowIsVisibleChanged ();
-			
-			if (this.WindowShown != null)
-			{
-				this.WindowShown (this);
-			}
+
+			this.WindowShown.Raise (this);
 		}
 		
 		internal void OnWindowHidden()
@@ -1511,52 +1520,41 @@ namespace Epsitec.Common.Widgets
 			}
 
 			this.root.NotifyWindowIsVisibleChanged ();
-			
-			if (this.WindowHidden != null)
-			{
-				this.WindowHidden (this);
-			}
+			this.WindowHidden.Raise (this);
 		}
 
 		internal void OnWindowClosed()
 		{
-			if (this.WindowClosed != null)
-			{
-				this.WindowClosed (this);
-			}
+			this.WindowClosed.Raise (this);
 		}
 
 		internal void OnWindowCloseClicked()
 		{
-			if (this.WindowCloseClicked != null)
-			{
-				this.WindowCloseClicked (this);
-			}
+			this.WindowCloseClicked.Raise (this);
 		}
 
 		internal void OnApplicationActivated()
 		{
-			if (Window.ApplicationActivated != null)
-			{
-				Window.ApplicationActivated (this);
-			}
+			Window.ApplicationActivated.Raise (this);
 		}
 		
 		internal void OnApplicationDeactivated()
 		{
-			if (Window.ApplicationDeactivated != null)
-			{
-				Window.ApplicationDeactivated (this);
-			}
+			Window.ApplicationDeactivated.Raise (this);
 		}
-		
-		
-		public bool								IsSubmenuOpen
+
+		internal void OnGlobalFocusedWindowChanged(DependencyPropertyChangedEventArgs e)
+		{
+			Window.GlobalFocusedWindowChanged.Raise (this, e);
+		}
+
+
+		public bool IsSubmenuOpen
 		{
 			get
 			{
 				Window[] windows = this.OwnedWindows;
-				
+
 				foreach (Window window in windows)
 				{
 					if (window is MenuWindow)
@@ -1564,14 +1562,14 @@ namespace Epsitec.Common.Widgets
 						return true;
 					}
 				}
-			
+
 				return false;
 			}
 		}
-				
+
 		internal void NotifyWindowFocused()
 		{
-//-			System.Diagnostics.Debug.WriteLine ("Window focused");
+			//-			System.Diagnostics.Debug.WriteLine ("Window focused");
 			if (this.windowIsFocused == false)
 			{
 				if (this.focusedWidget != null)
@@ -1583,14 +1581,14 @@ namespace Epsitec.Common.Widgets
 				{
 					this.windowIsFocused = true;
 				}
-				
+
 				this.OnWindowFocused ();
 			}
 		}
-		
+
 		internal void NotifyWindowDefocused()
 		{
-//-			System.Diagnostics.Debug.WriteLine ("Window de-focused");
+			//-			System.Diagnostics.Debug.WriteLine ("Window de-focused");
 			if ((this.windowIsFocused == true) &&
 				(this.IsSubmenuOpen == false))
 			{
@@ -1603,9 +1601,9 @@ namespace Epsitec.Common.Widgets
 				{
 					this.windowIsFocused = false;
 				}
-				
+
 				this.OnWindowDefocused ();
-				
+
 				if ((this.owner != null) &&
 					(this.owner.window.InvokeRequired == false) &&
 					(this.owner.window.Focused == false))
@@ -1614,79 +1612,60 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
-		
+
+
 		protected virtual void OnWindowFocused()
 		{
-			if (this.WindowFocused != null)
+			this.WindowFocused.Raise (this);
+
+			if (Window.focusedWindow != this)
 			{
-				this.WindowFocused (this);
+				var oldWindow = Window.focusedWindow;
+				var newWindow = this;
+
+				this.OnGlobalFocusedWindowChanged (new DependencyPropertyChangedEventArgs ("FocusedWindow", oldWindow, newWindow));
 			}
 		}
 		
 		protected virtual void OnWindowDefocused()
 		{
-			if (this.WindowDefocused != null)
-			{
-				this.WindowDefocused (this);
-			}
+			this.WindowDefocused.Raise (this);
 		}
 		
 		
 		internal void OnWindowDragEntered(WindowDragEventArgs e)
 		{
-			if (this.WindowDragEntered != null)
-			{
-				this.WindowDragEntered (this, e);
-			}
+			this.WindowDragEntered.Raise (this, e);
 		}
 		
-		internal void OnWindowDragLeft()
+		internal void OnWindowDragExited()
 		{
-			if (this.WindowDragLeft != null)
-			{
-				this.WindowDragLeft (this);
-			}
+			this.WindowDragExited.Raise (this);
 		}
 		
 		internal void OnWindowDragDropped(WindowDragEventArgs e)
 		{
-			if (this.WindowDragDropped != null)
-			{
-				this.WindowDragDropped (this, e);
-			}
+			this.WindowDragDropped.Raise (this, e);
 		}
 		
 		internal void OnWindowSizeMoveStatusChanged()
 		{
-			if (this.WindowSizeMoveStatusChanged != null)
-			{
-				this.WindowSizeMoveStatusChanged (this);
-			}
+			this.WindowSizeMoveStatusChanged.Raise (this);
 		}
 
 		internal void OnWindowResizeBeginning()
 		{
-			if (this.WindowResizeBeginning != null)
-			{
-				this.WindowResizeBeginning (this);
-			}
+			this.WindowResizeBeginning.Raise (this);
 		}
 
 		internal void OnWindowResizeEnded()
 		{
-			if (this.WindowResizeEnded != null)
-			{
-				this.WindowResizeEnded (this);
-			}
+			this.WindowResizeEnded.Raise (this);
 		}
 
 		internal void OnWindowPlacementChanged()
 		{
-			if (this.WindowPlacementChanged != null)
-			{
-				this.WindowPlacementChanged (this);
-			}
+			this.WindowPlacementChanged.Raise (this);
 		}
 		
 		
@@ -1729,19 +1708,13 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnFocusedWidgetChanged(DependencyPropertyChangedEventArgs e)
 		{
 			this.root.ClearFocusChain ();
-			
-			if (this.FocusedWidgetChanged != null)
-			{
-				this.FocusedWidgetChanged (this, e);
-			}
+			this.FocusedWidgetChanged.Raise (this, e);
+			Window.GlobalFocusedWidgetChanged.Raise (this, e);
 		}
 
 		protected virtual void OnFocusedWidgetChanging(FocusChangingEventArgs e)
 		{
-			if (this.FocusedWidgetChanging != null)
-			{
-				this.FocusedWidgetChanging (this, e);
-			}
+			this.FocusedWidgetChanging.Raise (this, e);
 		}
 		
 		
@@ -2777,13 +2750,15 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler				AboutToShowWindow;
 		public event EventHandler				AboutToHideWindow;
 		
-		public event EventHandler<WindowDragEventArgs>		WindowDragEntered;
-		public event EventHandler				WindowDragLeft;
-		public event EventHandler<WindowDragEventArgs>		WindowDragDropped;
+		public event EventHandler<WindowDragEventArgs>	WindowDragEntered;
+		public event EventHandler						WindowDragExited;
+		public event EventHandler<WindowDragEventArgs>	WindowDragDropped;
 		
 		public static event MessageHandler		MessageFilter;
 		public static event EventHandler		ApplicationActivated;
 		public static event EventHandler		ApplicationDeactivated;
+		public static event EventHandler<DependencyPropertyChangedEventArgs> GlobalFocusedWidgetChanged;
+		public static event EventHandler<DependencyPropertyChangedEventArgs> GlobalFocusedWindowChanged;
 		
 		public enum InvalidateReason
 		{
@@ -2795,6 +2770,7 @@ namespace Epsitec.Common.Widgets
 		private static readonly string			DispatchCommandIdOption = "-dispatch-command-id:";
 
 		private static long						nextWindowId;
+		private static Window					focusedWindow;
 
 		private string							name;
 		private string							text;

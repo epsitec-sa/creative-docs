@@ -1473,7 +1473,7 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			if (this.widgetWindow != null)
 			{
-				this.widgetWindow.OnWindowDragLeft ();
+				this.widgetWindow.OnWindowDragExited ();
 			}
 		}
 		
@@ -2382,8 +2382,20 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			return msg;
 		}
-		
-		
+
+		internal Drawing.Pixmap GetWindowPixmap()
+		{
+			if ((this.graphics != null) &&
+				(this.isPixmapOk))
+			{
+				return this.graphics.Pixmap;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
 		protected void DispatchPaint(System.Drawing.Graphics winGraphics, System.Drawing.Rectangle winClipRect)
 		{
 			//	Ce que Windows appelle "Paint", nous l'appelons "Display". En effet, lorsque l'on reçoit un événement

@@ -752,6 +752,16 @@ namespace Epsitec.Common.Types
 			return num;
 		}
 
+		public static string Format(string format, object arg0)
+		{
+			return string.Format (System.Globalization.CultureInfo.InvariantCulture, format, arg0);
+		}
+
+		public static string Format(string format, params object[] args)
+		{
+			return string.Format (System.Globalization.CultureInfo.InvariantCulture, format, args);
+		}
+
 
 		/// <summary>
 		/// Converts the text to an enum value. If the conversion is not possible, this will
@@ -1037,5 +1047,6 @@ namespace Epsitec.Common.Types
 
 
 		private static Dictionary<System.Type, ISerializationConverter> typeConverters = new Dictionary<System.Type, ISerializationConverter> ();
+
 	}
 }

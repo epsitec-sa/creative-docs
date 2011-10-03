@@ -335,7 +335,7 @@ namespace Epsitec.Common.Drawing
 			return this.Save (format, depth, quality, compression, 72.0);
 		}
 		
-		public byte[] Save(ImageFormat format, int depth, int quality, ImageCompression compression, double dpi)
+		public byte[] Save(ImageFormat format, int depth, int quality, ImageCompression compression, double dpi, System.Drawing.RotateFlipType rotateFlip = System.Drawing.RotateFlipType.RotateNoneFlipNone)
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
@@ -393,6 +393,11 @@ namespace Epsitec.Common.Drawing
 			{
 				System.IO.MemoryStream stream = new System.IO.MemoryStream ();
 				System.Drawing.Bitmap  bitmap = this.NativeBitmap;
+
+				if (rotateFlip != System.Drawing.RotateFlipType.RotateNoneFlipNone)
+				{
+					bitmap.RotateFlip (rotateFlip);
+				}
 				
 				bitmap.SetResolution ((float) dpi, (float) dpi);
 				bitmap.Save (stream, encoderInfo, encoderParams);
