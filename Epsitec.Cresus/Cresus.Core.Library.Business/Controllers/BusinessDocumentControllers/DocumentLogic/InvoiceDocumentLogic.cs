@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				}
 				else
 				{
-					return ArticleQuantityType.None;
+					return ArticleQuantityType.Ordered;
 				}
 			}
 		}
