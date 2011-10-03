@@ -93,6 +93,14 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		[Command (Res.CommandIds.Feedback)]
 		public void ProcessFeedback(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.commandDispatcher.Dispatch (dispatcher, e,
+				delegate
+				{
+					using (var dialog = new Dialogs.FeedbackDialog (this.application))
+					{
+						dialog.OpenDialog ();
+					}
+				});
 		}
 
 		[Command (Res.CommandIds.Global.ShowSettings)]
