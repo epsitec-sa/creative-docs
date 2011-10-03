@@ -335,13 +335,16 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 		private int BuildArticleItemPrice(ArticleDocumentItemEntity line, int row, DocumentItemAccessorColumn column, decimal? price, DiscountPolicy policy)
 		{
-			this.SetContent (row, column, this.GetFormattedPrice (price));
-
-			foreach (var discount in line.Discounts)
+			if (!this.mode.HasFlag (DocumentItemAccessorMode.NoPrices))
 			{
-				if (discount.DiscountPolicy == policy)
+				this.SetContent (row, column, this.GetFormattedPrice (price));
+
+				foreach (var discount in line.Discounts)
 				{
-					row = this.BuildArticleItemDiscount (row, column, discount);
+					if (discount.DiscountPolicy == policy)
+					{
+						row = this.BuildArticleItemDiscount (row, column, discount);
+					}
 				}
 			}
 
@@ -385,7 +388,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 				//	the last discount.
 				row++;
 			}
-			
+
 			if (this.mode.HasFlag (DocumentItemAccessorMode.Print))
 			{
 				this.BuildArticleItemQuantitiesForPrint (line, row);

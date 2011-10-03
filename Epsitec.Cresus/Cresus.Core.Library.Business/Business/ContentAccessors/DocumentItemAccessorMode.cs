@@ -16,6 +16,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		AdditionalQuantities			= 0x00000010,	// met les quantités additionnelles (si impression)
 		AdditionalQuantitiesSeparate	= 0x00000020,	// met les quantités additionnelles séparément (en plus de AdditionalQuantities)
 		MainQuantityOnTop				= 0x00000040,	// met la quantité principale sur la première ligne (si impression)
+		NoPrices						= 0x00000080,	// aucun prix (si impression)
 
 		ShowMyEyesOnly					= 0x00000100,	// inclu les lignes avant l'attribut MyEyesOnly
 

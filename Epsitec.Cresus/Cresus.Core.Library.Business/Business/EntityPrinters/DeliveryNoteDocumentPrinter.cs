@@ -215,7 +215,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 		protected override DocumentItemAccessorMode GetDocumentItemAccessorMode()
 		{
-			var mode = DocumentItemAccessorMode.MainQuantityOnTop;
+			var mode = DocumentItemAccessorMode.MainQuantityOnTop | DocumentItemAccessorMode.NoPrices;
 
 			if (!this.HasOption (DocumentOption.ArticleAdditionalQuantities, "None"))
 			{
