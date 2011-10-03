@@ -91,6 +91,22 @@ namespace Epsitec.Cresus.Core.Library.Business
 			var remoteBackupPath     = System.IO.Path.Combine (remoteBackupFolder, remoteBackupFileName);
 
 			CoreData.BackupDatabase (remoteBackupPath, CoreData.GetDatabaseAccess ());
+			
+			try
+			{
+				string path = System.Environment.GetFolderPath (System.Environment.SpecialFolder.CommonApplicationData);
+
+				path = System.IO.Path.Combine (path, "Epsitec", "Firebird Databases", remoteBackupPath);
+				
+				if (System.IO.File.Exists (path))
+				{
+					byte[] data = System.IO.File.ReadAllBytes (path);
+					System.IO.File.WriteAllBytes (this.GetLoggingFilePath ("db.firebird-backup"), data);
+				}
+			}
+			catch
+			{
+			}
 		}
 
 		private void RecordEvent(string eventName, string eventArg)
@@ -249,7 +265,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 				var encoder = new System.Drawing.Imaging.EncoderParameters (1);
 				encoder.Param[0] = new System.Drawing.Imaging.EncoderParameter (System.Drawing.Imaging.Encoder.Quality, 50L);
 
-				copy.Save (this.GetLoggingFilePath ("window.jpg"), codec, encoder);
+				copy.Save (this.GetLoggingFilePath ("focus.jpg"), codec, encoder);
 				copy.Dispose ();
 
 				bitmap.Dispose ();
@@ -274,7 +290,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 				var encoder = new System.Drawing.Imaging.EncoderParameters (1);
 				encoder.Param[0] = new System.Drawing.Imaging.EncoderParameter (System.Drawing.Imaging.Encoder.Quality, 50L);
 
-				copy.Save (this.GetLoggingFilePath ("window.jpg"), codec, encoder);
+				copy.Save (this.GetLoggingFilePath ("click.jpg"), codec, encoder);
 				copy.Dispose ();
 
 				bitmap.Dispose ();
@@ -313,10 +329,10 @@ namespace Epsitec.Cresus.Core.Library.Business
 
 		private static CoreSnapshotService defaultService;
 
-		private string sessionId;
-		private string sessionPath;
-		private int commandDispatchDepth;
-		private long lastUserMessageId;
-		private DebugOutputTraceListener listener;
+		private string							sessionId;
+		private string							sessionPath;
+		private int								commandDispatchDepth;
+		private long							lastUserMessageId;
+		private DebugOutputTraceListener		listener;
 	}
 }
