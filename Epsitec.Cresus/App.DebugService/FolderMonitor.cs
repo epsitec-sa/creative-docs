@@ -22,7 +22,7 @@ namespace Epsitec.DebugService
 			{
 				if (file.Exists)
 				{
-					if (FolderMonitor.TryProcessFile (file))
+					if (this.TryProcessFile (file))
 					{
 						count++;
 					}
@@ -38,7 +38,7 @@ namespace Epsitec.DebugService
 		}
 
 		
-		private static bool TryProcessFile(System.IO.FileInfo file)
+		private bool TryProcessFile(System.IO.FileInfo file)
 		{
 			try
 			{
@@ -48,7 +48,7 @@ namespace Epsitec.DebugService
 				stream.Read (data, 0, data.Length);
 				stream.Close ();
 
-				FolderMonitor.UploadFile (file.FullName, data);
+				this.UploadFile (file.FullName, data);
 
 				file.Delete ();
 
@@ -64,7 +64,7 @@ namespace Epsitec.DebugService
 			}
 		}
 		
-		private static void UploadFile(string path, byte[] data)
+		private void UploadFile(string path, byte[] data)
 		{
 			string fileName = System.IO.Path.GetFileName (path);
 			string session  = System.IO.Path.GetFileName (System.IO.Path.GetDirectoryName (path));
@@ -73,6 +73,8 @@ namespace Epsitec.DebugService
 			{
 				session = session.Substring (4);
 			}
+
+			this.sessionId = session;
 
 			System.Console.WriteLine ("{0}/{1} : {2} bytes", session, fileName, data.Length);
 
@@ -91,6 +93,15 @@ namespace Epsitec.DebugService
 		{
 			if (System.IO.Directory.Exists (this.path))
 			{
+				if (this.sessionId != null)
+				{
+					var totalTicks = System.DateTime.UtcNow.Ticks / 10000;
+					var fileName   = string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}\\{1:00000000000000}.END.txt", this.sessionId, totalTicks);
+					var data       = System.Text.Encoding.UTF8.GetBytes ("Exited");
+					
+					this.UploadFile (fileName, data);
+				}
+				
 				System.IO.Directory.Delete (this.path, recursive: true);
 			}
 		}
@@ -98,5 +109,6 @@ namespace Epsitec.DebugService
 		#endregion
 
 		private readonly string path;
+		private string sessionId;
 	}
 }
