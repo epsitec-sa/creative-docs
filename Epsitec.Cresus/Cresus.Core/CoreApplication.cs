@@ -236,7 +236,7 @@ namespace Epsitec.Cresus.Core
 		{
 			if (this.IsReady)
 			{
-				System.Diagnostics.Debug.WriteLine ("Saving application state.");
+//-				System.Diagnostics.Debug.WriteLine ("Saving application state.");
 				System.DateTime now = System.DateTime.Now.ToUniversalTime ();
 				string timeStamp = string.Concat (now.ToShortDateString (), " ", now.ToShortTimeString (), " UTC");
 
@@ -250,7 +250,7 @@ namespace Epsitec.Cresus.Core
 						this.SettingsManager.Save ("appSettings")));
 
 				doc.Save (CoreApplication.Paths.SettingsPath);
-				System.Diagnostics.Debug.WriteLine ("Save done.");
+//-				System.Diagnostics.Debug.WriteLine ("Save done.");
 			}
 		}
 

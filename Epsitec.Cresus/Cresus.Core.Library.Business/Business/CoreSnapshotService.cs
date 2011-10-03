@@ -1,13 +1,14 @@
 //	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Orchestrators;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Core.Bricks;
 
 namespace Epsitec.Cresus.Core.Library.Business
 {
@@ -26,6 +27,11 @@ namespace Epsitec.Cresus.Core.Library.Business
 		{
 			var dataViewOrchestrator = app.FindActiveComponent<DataViewOrchestrator> ();
 			var navigationOrchestrator = dataViewOrchestrator.Navigator;
+
+			Window.GlobalFocusedWindowChanged += this.HandleGlobalFocusedWindowChanged;
+			Window.GlobalFocusedWidgetChanged += this.HandleGlobalFocusedWidgetChanged;
+			
+			Widget.GlobalMouseDown += this.HandleWidgetGlobalMouseDown;
 
 			navigationOrchestrator.NodeAdded   += this.HandleNavigationOrchestratorNodeChanged;
 			navigationOrchestrator.NodeRemoved += this.HandleNavigationOrchestratorNodeChanged;
@@ -81,6 +87,47 @@ namespace Epsitec.Cresus.Core.Library.Business
 			}
 		}
 
+		private void HandleGlobalFocusedWidgetChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			var widget = e.NewValue as Widget;
+
+			if ((widget != null) &&
+				(widget.IsFocused))
+			{
+				this.RecordEvent ("WIDGET_FOCUS", InvariantConverter.Format ("{0}:{1}/{2}", widget.GetVisualSerialId (), widget.GetType ().Name, widget.FullPathName));
+
+				Application.QueueAsyncCallback (() => CoreSnapshotService.CreateWindowFocusSnapshot (widget, System.Drawing.Pens.Red));
+			}
+		}
+
+		private void HandleWidgetGlobalMouseDown(object sender, MessageEventArgs e)
+		{
+			var messageId = e.Message.UserMessageId;
+			var widget = sender as Widget;
+
+			if (messageId == this.lastUserMessageId)
+			{
+				return;
+			}
+
+			this.lastUserMessageId = messageId;
+
+			this.RecordEvent ("MOUSE_DOWN", InvariantConverter.Format ("{0}:{1}/{2}:{3}", widget.GetVisualSerialId (), widget.GetType ().Name, widget.FullPathName, e.Message.Cursor.ToString ()));
+
+			CoreSnapshotService.CreateWindowClickSnapshot (widget, e.Message.Cursor, System.Drawing.Pens.Blue);
+		}
+
+		private void HandleGlobalFocusedWindowChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			var window = e.NewValue as Window;
+
+			if ((window != null) &&
+				(window.IsFocused))
+			{
+				this.RecordEvent ("WINDOW_FOCUS", InvariantConverter.Format ("{0}:{1}/{2}", window.GetWindowSerialId (), window.GetType ().Name, window.Name));
+			}
+		}
+
 		private void HandleNavigationOrchestratorNodeChanged(object sender)
 		{
 			var navigationOrchestrator = sender as NavigationOrchestrator;
@@ -89,6 +136,60 @@ namespace Epsitec.Cresus.Core.Library.Business
 			if (navigationPath != null)
 			{
 				this.RecordEvent ("NAV", navigationPath.ToString ());
+			}
+		}
+
+		private static void CreateWindowFocusSnapshot(Widget widget, System.Drawing.Pen pen)
+		{
+			var bounds = widget.MapClientToRoot (widget.Client.Bounds);
+			var bitmap = widget.Window.GetWindowBitmap ();
+
+			if (bitmap != null)
+			{
+				var source = bitmap.NativeBitmap;
+				var copy   = new System.Drawing.Bitmap (source.Width, source.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+				var graphics = System.Drawing.Graphics.FromImage (copy);
+				graphics.DrawImageUnscaled (source, 0, 0);
+				var rect = new System.Drawing.Rectangle ((int) bounds.X, (int) bounds.Y, (int) bounds.Width, (int) bounds.Height);
+				graphics.DrawRectangle (pen, rect);
+				graphics.Dispose ();
+				copy.RotateFlip (System.Drawing.RotateFlipType.RotateNoneFlipY);
+
+				var codec = Epsitec.Common.Drawing.Bitmap.GetCodecInfo (Common.Drawing.ImageFormat.Jpeg);
+				var encoder = new System.Drawing.Imaging.EncoderParameters (1);
+				encoder.Param[0] = new System.Drawing.Imaging.EncoderParameter (System.Drawing.Imaging.Encoder.Quality, 50L);
+
+				var filename = CoreSnapshotService.GetTimeStampedFileName ("window.jpg");
+				copy.Save (filename, codec, encoder);
+				copy.Dispose ();
+
+				bitmap.Dispose ();
+			}
+		}
+
+		private static void CreateWindowClickSnapshot(Widget widget, Epsitec.Common.Drawing.Point point, System.Drawing.Pen pen)
+		{
+			var bitmap = widget.Window.GetWindowBitmap ();
+
+			if (bitmap != null)
+			{
+				var source = bitmap.NativeBitmap;
+				var copy   = new System.Drawing.Bitmap (source.Width, source.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+				var graphics = System.Drawing.Graphics.FromImage (copy);
+				graphics.DrawImageUnscaled (source, 0, 0);
+				graphics.DrawArc (pen, (int)point.X-4, (int)point.Y-4, 8, 8, 0, 360);
+				graphics.Dispose ();
+				copy.RotateFlip (System.Drawing.RotateFlipType.RotateNoneFlipY);
+
+				var codec = Epsitec.Common.Drawing.Bitmap.GetCodecInfo (Common.Drawing.ImageFormat.Jpeg);
+				var encoder = new System.Drawing.Imaging.EncoderParameters (1);
+				encoder.Param[0] = new System.Drawing.Imaging.EncoderParameter (System.Drawing.Imaging.Encoder.Quality, 50L);
+
+				var filename = CoreSnapshotService.GetTimeStampedFileName ("window.jpg");
+				copy.Save (filename, codec, encoder);
+				copy.Dispose ();
+
+				bitmap.Dispose ();
 			}
 		}
 
@@ -108,5 +209,6 @@ namespace Epsitec.Cresus.Core.Library.Business
 
 
 		private int commandDispatchDepth;
+		private long lastUserMessageId;
 	}
 }
