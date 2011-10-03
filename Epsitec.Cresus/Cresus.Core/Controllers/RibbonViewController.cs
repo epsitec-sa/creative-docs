@@ -306,6 +306,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			};
 
 			section.Children.Add (this.CreateButton (Res.Commands.File.ImportV11));
+			section.Children.Add (this.CreateButton (Res.Commands.Feedback));
 		}
 
 		private void CreateRibbonClipboardSection(RibbonPage page)

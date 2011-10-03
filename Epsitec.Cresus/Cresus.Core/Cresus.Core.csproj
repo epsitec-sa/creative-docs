@@ -567,6 +567,8 @@
     <EmbeddedResource Include="Images\DocumentOptions.Normal.icon" />
     <EmbeddedResource Include="Images\Data.SpecialController.icon" />
     <EmbeddedResource Include="Images\Data.SerializedDocumentBlob.icon" />
+    <EmbeddedResource Include="Images\Data.Feedback.icon" />
+    <EmbeddedResource Include="Images\Feedback.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

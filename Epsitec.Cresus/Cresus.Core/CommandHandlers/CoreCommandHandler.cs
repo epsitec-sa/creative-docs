@@ -90,6 +90,11 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			v11.Import (this.application);
 		}
 
+		[Command (Res.CommandIds.Feedback)]
+		public void ProcessFeedback(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+		}
+
 		[Command (Res.CommandIds.Global.ShowSettings)]
 		public void ProcessGlobalShowSettings(CommandDispatcher dispatcher, CommandEventArgs e)
 		{

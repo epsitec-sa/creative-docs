@@ -16,6 +16,8 @@ namespace Epsitec.Cresus.Core
 			{
 			}
 			
+			//	designer:cap/L0K22
+			public static readonly global::Epsitec.Common.Widgets.Command Feedback = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 66));
 			public static class Base
 			{
 				internal static void _Initialize()
@@ -175,6 +177,8 @@ namespace Epsitec.Cresus.Core
 			{
 			}
 			
+			//	designer:cap/L0K22
+			public const long Feedback = 0x1500014000042L;
 			public static class Base
 			{
 				internal static void _Initialize()
