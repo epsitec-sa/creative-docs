@@ -1504,6 +1504,7 @@ namespace Epsitec.Common.Widgets
 			this.root.NotifyWindowIsVisibleChanged ();
 
 			this.WindowShown.Raise (this);
+			Window.GlobalWindowShown.Raise (this);
 		}
 		
 		internal void OnWindowHidden()
@@ -1521,6 +1522,7 @@ namespace Epsitec.Common.Widgets
 
 			this.root.NotifyWindowIsVisibleChanged ();
 			this.WindowHidden.Raise (this);
+			Window.GlobalWindowHidden.Raise (this);
 		}
 
 		internal void OnWindowClosed()
@@ -2759,6 +2761,8 @@ namespace Epsitec.Common.Widgets
 		public static event EventHandler		ApplicationDeactivated;
 		public static event EventHandler<DependencyPropertyChangedEventArgs> GlobalFocusedWidgetChanged;
 		public static event EventHandler<DependencyPropertyChangedEventArgs> GlobalFocusedWindowChanged;
+		public static event EventHandler		GlobalWindowShown;
+		public static event EventHandler		GlobalWindowHidden;
 		
 		public enum InvalidateReason
 		{

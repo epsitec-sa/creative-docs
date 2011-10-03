@@ -15,7 +15,34 @@ namespace Epsitec.DebugService
 			set;
 		}
 
-		public static string ProcessRequest(HttpListenerRequest request)
+		public static void RunServer(string prefixes, string storagePath)
+		{
+			System.Console.Title = string.Format ("DebugService {1} running since {0:dd.MM.yyyy} - {0:HH:mm}", System.DateTime.Now, typeof (Program).Assembly.FullName.Split (',')[1].Split ('=')[1]);
+			System.Console.Clear ();
+			System.Console.ForegroundColor = System.ConsoleColor.Green;
+			System.Console.WriteLine ("Listening on {0}", prefixes);
+			System.Console.ForegroundColor = System.ConsoleColor.White;
+
+			try
+			{
+				WebListener.StoragePath = storagePath;
+				WebListener.Listen (prefixes);
+			}
+			catch (System.Exception ex)
+			{
+				System.Console.ForegroundColor = System.ConsoleColor.Red;
+				System.Console.WriteLine ("Exception: {0}", ex.Message);
+				System.Console.WriteLine (ex.StackTrace);
+				System.Console.WriteLine ();
+				System.Console.ForegroundColor = System.ConsoleColor.White;
+			}
+
+			System.Console.WriteLine ("Exited... Press RETURN to quit.");
+			System.Console.ReadLine ();
+		}
+
+
+		private static string ProcessRequest(HttpListenerRequest request)
 		{
 			if (!request.HasEntityBody)
 			{
@@ -84,7 +111,7 @@ namespace Epsitec.DebugService
 					throw new System.IO.EndOfStreamException (string.Format ("Missing {0} bytes", more));
 				}
 
-				more  -= read;
+				more   -= read;
 				offset += read;
 			}
 
@@ -92,56 +119,79 @@ namespace Epsitec.DebugService
 		}
 
 
-		public static void Listen(string prefixes)
+		private static void Listen(string prefixes)
 		{
 			if (!HttpListener.IsSupported)
 			{
 				return;
 			}
-			// URI prefixes are required,
-			// for example "http://+:8081/debugservice/".
+
+			//	URI prefixes are required, for example "http://+:8081/debugservice/".
+			//	The server must have the ACLs properly cofigured for this to work:
+			//	CMD> netsh http add urlacl url=http://+:8081/debugservice user=administrator
+
 			if (string.IsNullOrEmpty (prefixes))
 			{
-				throw new System.ArgumentException ("prefixes");
+				throw new System.ArgumentException ("No prefixes specified", "prefixes");
 			}
 
-			// Create a listener.
-			HttpListener listener = new HttpListener ();
-			
-			listener.Prefixes.Add (prefixes);
-			listener.Start ();
-			
-			// Note: The GetContext method blocks while waiting for a request. 
-
-			while (true)
+			using (var listener = new HttpListener ())
 			{
-				HttpListenerContext context = listener.GetContext ();
-				
-				try
-				{
-					HttpListenerRequest request = context.Request;
-					var responseString = WebListener.ProcessRequest (request);
+				listener.Prefixes.Add (prefixes);
+				listener.Start ();
 
-					// Obtain a response object.
-					HttpListenerResponse response = context.Response;
-					// Construct a response.
-					byte[] buffer = System.Text.Encoding.UTF8.GetBytes (responseString);
-					// Get a response stream and write the response to it.
-					response.ContentLength64 = buffer.Length;
-					System.IO.Stream output = response.OutputStream;
-					output.Write (buffer, 0, buffer.Length);
-					// You must close the output stream.
-					output.Close ();
-				}
-				catch (System.Exception ex)
+				while (true)
 				{
-					System.Console.WriteLine ("Exception: {0}", ex.Message);
-					System.Console.WriteLine (ex.StackTrace);
-					System.Console.WriteLine ();
+					//	Note: the GetContext method blocks while waiting for a request.
+
+					HttpListenerContext context = listener.GetContext ();
+
+					try
+					{
+						var listenerRequest = context.Request;
+						var now = System.DateTime.Now;
+
+						System.Console.WriteLine ("{0:dd.MM}-{0:HH:mm} {1}", now, WebListener.Truncate (listenerRequest.RawUrl, 64));
+
+						var responseString = WebListener.ProcessRequest (listenerRequest);
+						var responseData   = System.Text.Encoding.UTF8.GetBytes (responseString);
+
+						var listenerResponse = context.Response;
+
+						listenerResponse.ContentLength64 = responseData.Length;
+
+						WebListener.WriteToOutputStream (listenerResponse, responseData);
+					}
+					catch (System.Exception ex)
+					{
+						System.Console.ForegroundColor = System.ConsoleColor.Red;
+						System.Console.WriteLine ("Exception: {0}", ex.Message);
+						System.Console.WriteLine (ex.StackTrace);
+						System.Console.WriteLine ();
+						System.Console.ForegroundColor = System.ConsoleColor.White;
+					}
 				}
 			}
+		}
 
-			listener.Stop ();
+		private static void WriteToOutputStream(HttpListenerResponse listenerResponse, byte[] data)
+		{
+			var outputStream = listenerResponse.OutputStream;
+			outputStream.Write (data, 0, data.Length);
+			outputStream.Close ();
+		}
+		
+		private static string Truncate(string text, int length)
+		{
+			if ((string.IsNullOrEmpty (text)) ||
+				(text.Length <= length))
+			{
+				return text;
+			}
+			else
+			{
+				return text.Substring (0, length-2) + "..";
+			}
 		}
 	}
 }

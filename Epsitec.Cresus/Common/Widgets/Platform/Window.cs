@@ -936,7 +936,15 @@ namespace Epsitec.Common.Widgets.Platform
 					Flags = flags
 				};
 
-				Win32Api.SetWindowPlacement (this.Handle, ref placement);
+				try
+				{
+					this.EnterWndProc ();
+					Win32Api.SetWindowPlacement (this.Handle, ref placement);
+				}
+				finally
+				{
+					this.ExitWndProc ();
+				}
 			}
 		}
 
@@ -1895,10 +1903,8 @@ namespace Epsitec.Common.Widgets.Platform
 					this.widgetWindow.DispatchValidation ();
 				}
 			}
-			
-			this.wndProcDepth++;
-			System.Threading.Interlocked.Increment (ref Window.globalWndProcDepth);
-			
+
+			this.EnterWndProc ();			
 			try
 			{
 				if (this.WndProcActivation (ref msg))
@@ -1992,10 +1998,9 @@ namespace Epsitec.Common.Widgets.Platform
 			finally
 			{
 				System.Diagnostics.Debug.Assert (this.IsDisposed == false);
-				System.Diagnostics.Debug.Assert (this.wndProcDepth > 0);
-				this.wndProcDepth--;
-				System.Threading.Interlocked.Decrement (ref Window.globalWndProcDepth);
-
+				
+				this.ExitWndProc ();
+				
 				if (Window.IsInAnyWndProc == false)
 				{
 					Application.ExecuteAsyncCallbacks ();
@@ -2215,6 +2220,19 @@ namespace Epsitec.Common.Widgets.Platform
 			return false;
 		}
 
+		private void EnterWndProc()
+		{
+			this.wndProcDepth++;
+			System.Threading.Interlocked.Increment (ref Window.globalWndProcDepth);
+		}
+		
+		private void ExitWndProc()
+		{
+			System.Diagnostics.Debug.Assert (this.wndProcDepth > 0);
+			this.wndProcDepth--;
+			System.Threading.Interlocked.Decrement (ref Window.globalWndProcDepth);
+		}
+		
 		private void ReleaseCaptureAndSendMessage(uint ht)
 		{
 			Win32Api.ReleaseCapture ();

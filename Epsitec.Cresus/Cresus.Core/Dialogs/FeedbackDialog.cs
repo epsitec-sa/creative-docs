@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Dialogs;
@@ -23,7 +23,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			: base (application)
 		{
 		}
-
 
 
 		#region ISettingsDialog Members
@@ -72,7 +71,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			new StaticText
 			{
 				Parent = frame,
-				Text = "Tapez ici un commentaire qui sera envoyé à EPSITEC :",
+				Text = "Message ou remarque sur le logiciel, à l'attention d'EPSITEC :",
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, 2),
 			};
@@ -126,8 +125,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void CloseAndAcceptChanges()
 		{
-			var text = this.feedbackField.Text;
-			// TODO: Send text...
+			var text = this.feedbackField.FormattedText;
+
+			Epsitec.Cresus.Core.Library.Business.CoreSnapshotService.NotifyUserMessage (text.ToSimpleText ());
 
 			this.Result = DialogResult.Accept;
 			this.CloseDialog ();
@@ -140,8 +140,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
-		private TextFieldMulti									feedbackField;
-		private Button											acceptButton;
-		private Button											cancelButton;
+		private TextFieldMulti					feedbackField;
+		private Button							acceptButton;
+		private Button							cancelButton;
 	}
 }

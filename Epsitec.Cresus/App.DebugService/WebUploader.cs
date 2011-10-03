@@ -6,28 +6,43 @@ using System.Linq;
 
 namespace Epsitec.DebugService
 {
+	/// <summary>
+	/// The <c>WebUploader</c> class is used to upload data using an HTTP POST.
+	/// </summary>
 	public static class WebUploader
 	{
 		public static string Upload(string uri, byte[] data)
 		{
-			System.Net.WebRequest request = System.Net.WebRequest.Create (uri);
+			//	See Scott Hanselman's sample code :
+			//	http://www.hanselman.com/blog/HTTPPOSTsAndHTTPGETsWithWebClientAndCAndFakingAPostBack.aspx
 
-			request.ContentType = "application/binary";
-			request.Method = "POST";
-			request.ContentLength = data.Length;
-			var stream = request.GetRequestStream ();
-			stream.Write (data, 0, data.Length);
-			stream.Close ();
-			var response = request.GetResponse ();
+			var webRequest = System.Net.WebRequest.Create (uri);
 
-			if (response == null)
+			webRequest.ContentType   = "application/binary";
+			webRequest.Method        = "POST";
+			webRequest.ContentLength = data.Length;
+
+			using (var requestStream = webRequest.GetRequestStream ())
 			{
-				return null;
+				requestStream.Write (data, 0, data.Length);
+				requestStream.Close ();
 			}
 
-			var reader = new System.IO.StreamReader (response.GetResponseStream ());
-			return reader.ReadToEnd ().Trim ();
-
+			using (var response = webRequest.GetResponse ())
+			{
+				if (response == null)
+				{
+					return null;
+				}
+				
+				using (var reader = new System.IO.StreamReader (response.GetResponseStream ()))
+				{
+					return reader.ReadToEnd ();
+				}
+			}
 		}
+
+
+		public static readonly string DebugServiceUrl = "http://remotecompta.cresus.ch:8081/debugservice/";
 	}
 }

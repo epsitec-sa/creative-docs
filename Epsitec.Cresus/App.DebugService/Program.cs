@@ -25,8 +25,7 @@ namespace Epsitec.DebugService
 				}
 				if (args[0] == "-listen")
 				{
-					WebListener.StoragePath = args[2];
-					WebListener.Listen (args[1]);
+					WebListener.RunServer (args[1], args[2]);
 				}
 			}
 		}

@@ -22,7 +22,7 @@ namespace Epsitec.DebugService
 			{
 				if (file.Exists)
 				{
-					if (this.TryProcessFile (file))
+					if (FolderMonitor.TryProcessFile (file))
 					{
 						count++;
 					}
@@ -37,7 +37,8 @@ namespace Epsitec.DebugService
 			return count > 0;
 		}
 
-		private bool TryProcessFile(System.IO.FileInfo file)
+		
+		private static bool TryProcessFile(System.IO.FileInfo file)
 		{
 			try
 			{
@@ -47,31 +48,39 @@ namespace Epsitec.DebugService
 				stream.Read (data, 0, data.Length);
 				stream.Close ();
 
-				this.ProcessFileData (file.FullName, data);
+				FolderMonitor.UploadFile (file.FullName, data);
 
 				file.Delete ();
 
 				return true;
 			}
-			catch
+			catch (System.Exception ex)
 			{
+				System.Console.ForegroundColor = System.ConsoleColor.Red;
+				System.Console.WriteLine (ex.Message);
+				System.Console.ResetColor ();
+
 				return false;
 			}
 		}
-
-		private void ProcessFileData(string path, byte[] data)
+		
+		private static void UploadFile(string path, byte[] data)
 		{
 			string fileName = System.IO.Path.GetFileName (path);
 			string session  = System.IO.Path.GetFileName (System.IO.Path.GetDirectoryName (path));
 
+			if (session.StartsWith ("dbg-"))
+			{
+				session = session.Substring (4);
+			}
+
 			System.Console.WriteLine ("{0}/{1} : {2} bytes", session, fileName, data.Length);
 
-			var urlBase    = "http://remotecompta.cresus.ch:8081/debugservice/log";
 			var urlParam1  = string.Concat ("session=", System.Web.HttpUtility.UrlEncode (session));
 			var urlParam2  = string.Concat ("file=", System.Web.HttpUtility.UrlEncode (fileName));
-			var encodedUrl = string.Concat (urlBase, "?", urlParam1, "&", urlParam2);
+			var encodedUrl = string.Concat (WebUploader.DebugServiceUrl, "log", "?", urlParam1, "&", urlParam2);
 
-			System.Console.WriteLine ("Push to {0}", encodedUrl);
+			System.Console.WriteLine ("Push file to {0}", encodedUrl);
 
 			WebUploader.Upload (encodedUrl, data);
 		}
@@ -82,7 +91,7 @@ namespace Epsitec.DebugService
 		{
 			if (System.IO.Directory.Exists (this.path))
 			{
-				System.IO.Directory.Delete (this.path);
+				System.IO.Directory.Delete (this.path, recursive: true);
 			}
 		}
 

@@ -96,6 +96,7 @@
     </Compile>
     <Compile Include="Debugging\Assert.cs" />
     <Compile Include="Debugging\AssertFailedException.cs" />
+    <Compile Include="Debugging\DebugOutputTraceListener.cs" />
     <Compile Include="Debugging\ErrorLogger.cs" />
     <Compile Include="Debugging\Expect.cs" />
     <Compile Include="Debugging\FailureException.cs" />
