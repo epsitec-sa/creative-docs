@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 		}
 
-		protected readonly CoreApp application;
+		protected readonly CoreApp				application;
 		private readonly List<DependencyObject> persisted;
 	}
 }

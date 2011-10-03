@@ -43,10 +43,12 @@ namespace Epsitec.Cresus.Core.Library.UI
 			Epsitec.Common.Drawing.ImageManager.ShutDownDefaultCache ();
 		}
 
-		
+
+		#region Settings Class
+
 		public static class Settings
 		{
-			public static CultureSettings CultureForData
+			public static CultureSettings		CultureForData
 			{
 				get
 				{
@@ -55,13 +57,7 @@ namespace Epsitec.Cresus.Core.Library.UI
 			}
 		}
 
-		private static List<WindowPlacementHint> WindowPlacementHints
-		{
-			get
-			{
-				return Services.data.WindowPlacementHints;
-			}
-		}
+		#endregion
 
 
 		/// <summary>
@@ -86,7 +82,9 @@ namespace Epsitec.Cresus.Core.Library.UI
 		/// <param name="xml">The XML tree.</param>
 		public static void RestoreWindowPositions(XElement xml)
 		{
-			Services.WindowPlacementHints.Clear ();
+			var hints = Services.GetWindowPlacementHints ();
+			
+			hints.Clear ();
 
 			foreach (XElement element in xml.Elements ("window"))
 			{
@@ -96,7 +94,7 @@ namespace Epsitec.Cresus.Core.Library.UI
 
 				WindowPlacement wp = WindowPlacement.Parse (placement);
 
-				Services.WindowPlacementHints.Add (new WindowPlacementHint (name, title, wp));
+				hints.Add (new WindowPlacementHint (name, title, wp));
 			}
 
 			Services.RestoreWindowPositionsOfExistingWindows ();
@@ -108,14 +106,15 @@ namespace Epsitec.Cresus.Core.Library.UI
 		/// <param name="window">The window.</param>
 		public static void SaveWindowPosition(Window window)
 		{
-			var hint = Services.FindBestPlacement (window);
-
+			var hint  = Services.FindBestPlacement (window);
+			var hints = Services.GetWindowPlacementHints ();
+			
 			if (hint.IsEmpty == false)
-            {
-				Services.WindowPlacementHints.Remove (hint);
-            }
+			{
+				hints.Remove (hint);
+			}
 
-			Services.WindowPlacementHints.Add (new WindowPlacementHint (window.Name, window.Text, window.WindowPlacement));
+			hints.Add (new WindowPlacementHint (window.Name, window.Text, window.WindowPlacement));
 		}
 		
 		/// <summary>
@@ -265,7 +264,12 @@ namespace Epsitec.Cresus.Core.Library.UI
 			return Services.ExecuteWithSpecifiedSetFocus (action, reverseSetFocus: true);
 		}
 
-		
+
+		private static List<WindowPlacementHint> GetWindowPlacementHints()
+		{
+			return Services.data.WindowPlacementHints;
+		}
+
 		private static T ExecuteWithSpecifiedSetFocus<T>(System.Func<T> action, bool reverseSetFocus)
 		{
 			bool focus = Services.data.ReverseSetFocus;
@@ -321,8 +325,6 @@ namespace Epsitec.Cresus.Core.Library.UI
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookBusiness");
 			Epsitec.Common.Drawing.ImageManager.InitializeDefaultCache ();
 		}
-        
-		
 		
 		private static Window FindBestWindowMatch(IEnumerable<Window> windows, string name, string title)
 		{
@@ -356,7 +358,7 @@ namespace Epsitec.Cresus.Core.Library.UI
 		private static void RestoreWindowPositionsOfExistingWindows()
 		{
 			var windows = new List<Window> (Window.GetAllLiveWindows ());
-			var hints   = Services.WindowPlacementHints.ToArray ();
+			var hints   = Services.GetWindowPlacementHints ().ToArray ();
 
 			foreach (var hint in hints)
 			{
@@ -388,7 +390,7 @@ namespace Epsitec.Cresus.Core.Library.UI
 			string title = window.Text ?? "";
 
 			//	First, try to find an exact match : name + title
-			foreach (var hint in Services.WindowPlacementHints)
+			foreach (var hint in Services.GetWindowPlacementHints ())
 			{
 				if ((hint.Name == name) &&
 					(hint.Title == title))
@@ -398,7 +400,7 @@ namespace Epsitec.Cresus.Core.Library.UI
 			}
 
 			//	Second, try to find a match based only on the name
-			foreach (var hint in Services.WindowPlacementHints)
+			foreach (var hint in Services.GetWindowPlacementHints ())
 			{
 				if (hint.Name == name)
 				{
@@ -414,17 +416,7 @@ namespace Epsitec.Cresus.Core.Library.UI
 			Services.data.NotifyUpdateRequested (sender);
 		}
 
-		public static event EventHandler					UpdateRequested
-		{
-			add
-			{
-				Services.data.UpdateRequested += value;
-			}
-			remove
-			{
-				Services.data.UpdateRequested -= value;
-			}
-		}
+		#region PrivateData Class
 
 		private class PrivateData
 		{
@@ -445,19 +437,33 @@ namespace Epsitec.Cresus.Core.Library.UI
 				}
 			}
 			
-			public event EventHandler						UpdateRequested;
+			public event EventHandler			UpdateRequested;
 			
-			public readonly List<WindowPlacementHint>		WindowPlacementHints;
-			public readonly CultureSettings					CultureSettings;
-			public readonly Application						Application;
+			public readonly List<WindowPlacementHint> WindowPlacementHints;
+			public readonly CultureSettings		CultureSettings;
+			public readonly Application			Application;
 			
-			public bool										ReverseSetFocus;
+			public bool							ReverseSetFocus;
 		}
-		
-		private const string								StringMessageFontElement	= @"<font size=""125%"">";
-		private const string								StringEndFontElement		= "</font>";
+
+		#endregion
+
+		public static event EventHandler		UpdateRequested
+		{
+			add
+			{
+				Services.data.UpdateRequested += value;
+			}
+			remove
+			{
+				Services.data.UpdateRequested -= value;
+			}
+		}
+
+		private const string					StringMessageFontElement	= @"<font size=""125%"">";
+		private const string					StringEndFontElement		= "</font>";
 
 		[System.ThreadStatic]
-		private static PrivateData							data;
+		private static PrivateData				data;
 	}
 }

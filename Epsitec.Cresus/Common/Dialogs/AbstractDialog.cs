@@ -84,7 +84,7 @@ namespace Epsitec.Common.Dialogs
 			set
 			{
 				if (this.ownerWindow != value)
-                {
+				{
 					this.ownerWindow = value;
 
 					if (this.dialogWindow != null)
