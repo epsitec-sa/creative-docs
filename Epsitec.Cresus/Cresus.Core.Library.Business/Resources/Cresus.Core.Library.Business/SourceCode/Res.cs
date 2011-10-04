@@ -594,28 +594,18 @@ namespace Epsitec.Cresus.Core.Library.Business
 				{
 				}
 				
+				//	designer:cap/GVAK8
+				public static readonly global::Epsitec.Common.Support.Druid AccountingOperation = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 276);
 				//	designer:cap/GVA73
 				public static readonly global::Epsitec.Common.Support.Druid CurrencyCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 103);
-				//	designer:cap/GVA53
-				public static readonly global::Epsitec.Common.Support.Druid PurchaseBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 101);
-				//	designer:cap/GVA63
-				public static readonly global::Epsitec.Common.Support.Druid PurchaseDiscountBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 102);
-				//	designer:cap/GVA78
-				public static readonly global::Epsitec.Common.Support.Druid PurchaseRoundingBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 263);
-				//	designer:cap/GVA58
-				public static readonly global::Epsitec.Common.Support.Druid PurchaseVatBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 261);
-				//	designer:cap/GVA98
-				public static readonly global::Epsitec.Common.Support.Druid PurchaseVatCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 265);
-				//	designer:cap/GVA33
-				public static readonly global::Epsitec.Common.Support.Druid SaleBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 99);
 				//	designer:cap/GVA43
-				public static readonly global::Epsitec.Common.Support.Druid SaleDiscountBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 100);
+				public static readonly global::Epsitec.Common.Support.Druid DiscountBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 100);
 				//	designer:cap/GVA68
-				public static readonly global::Epsitec.Common.Support.Druid SaleRoundingBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 262);
+				public static readonly global::Epsitec.Common.Support.Druid RoundingBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 262);
+				//	designer:cap/GVA33
+				public static readonly global::Epsitec.Common.Support.Druid TransactionBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 99);
 				//	designer:cap/GVA48
-				public static readonly global::Epsitec.Common.Support.Druid SaleVatBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 260);
-				//	designer:cap/GVA88
-				public static readonly global::Epsitec.Common.Support.Druid SaleVatCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 264);
+				public static readonly global::Epsitec.Common.Support.Druid VatBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 260);
 			}
 			
 			public static class ArticleCategory
@@ -636,6 +626,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid RoundingMode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 94);
 				//	designer:cap/GVAD8
 				public static readonly global::Epsitec.Common.Support.Druid UnitOfMeasureCategory = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 269);
+				//	designer:cap/GVAJ8
+				public static readonly global::Epsitec.Common.Support.Druid VatRateType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 275);
 			}
 			
 			public static class ArticleDefinition
@@ -1102,10 +1094,10 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid Text = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 156);
 				//	designer:cap/GVAU4
 				public static readonly global::Epsitec.Common.Support.Druid TotalRevenue = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 158);
-				//	designer:cap/GVAT4
-				public static readonly global::Epsitec.Common.Support.Druid VatCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 157);
 				//	designer:cap/GVAV4
 				public static readonly global::Epsitec.Common.Support.Druid VatRate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 159);
+				//	designer:cap/GVAL8
+				public static readonly global::Epsitec.Common.Support.Druid VatRateType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 277);
 			}
 			
 			public static class TextDocumentItem

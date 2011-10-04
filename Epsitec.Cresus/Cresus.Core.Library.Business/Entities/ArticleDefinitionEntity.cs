@@ -54,18 +54,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
-		public VatCode GetSaleVatCode(System.DateTime date)
-		{
-			var accounting = this.ArticleCategory.GetArticleAccountingDefinition (date);
-			return accounting.IsNotNull () ? accounting.SaleVatCode : VatCode.None;
-		}
-
-		public VatCode GetPurchaseVatCode(System.DateTime date)
-		{
-			var accounting = this.ArticleCategory.GetArticleAccountingDefinition (date);
-			return accounting.IsNotNull () ? accounting.PurchaseVatCode : VatCode.None;
-		}
-		
+	
 		public IEnumerable<ArticlePriceEntity> GetArticlePrices(decimal quantity, System.DateTime date, CurrencyCode currencyCode, PriceGroupEntity priceGroup = null)
 		{
 			var prices = from price in this.ArticlePrices

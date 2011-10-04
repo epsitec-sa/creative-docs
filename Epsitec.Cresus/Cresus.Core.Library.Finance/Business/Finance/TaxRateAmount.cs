@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 	/// </summary>
 	public struct TaxRateAmount
 	{
-		public TaxRateAmount(decimal amount, VatCode code, decimal rate)
+		public TaxRateAmount(decimal amount, VatRateType code, decimal rate)
 		{
 			this.amount   = amount;
 			this.codeRate = new VatCodeRate (code, rate);
@@ -32,10 +32,10 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		}
 
 		/// <summary>
-		/// Gets the VAT code.
+		/// Gets the VAT rate type.
 		/// </summary>
-		/// <value>The VAT code.</value>
-		public VatCode							Code
+		/// <value>The VAT rate type.</value>
+		public VatRateType						VatRateType
 		{
 			get
 			{

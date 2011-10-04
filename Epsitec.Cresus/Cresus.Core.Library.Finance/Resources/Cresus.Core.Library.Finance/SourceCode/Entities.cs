@@ -16,6 +16,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVA44]", typeof (Epsitec.Cresus.Core.Entities.PriceDiscountEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVAA4]", typeof (Epsitec.Cresus.Core.Entities.PriceGroupEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVAF4]", typeof (Epsitec.Cresus.Core.Entities.PriceCalculatorEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[CVAN5]", typeof (Epsitec.Cresus.Core.Entities.AccountingOperationEntity))]
 #region Epsitec.Cresus.Core.IsrDefinition Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -2199,6 +2200,182 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 143);	// [CVAF4]
 		public static readonly string EntityStructuredTypeKey = "[CVAF4]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.AccountingOperation Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	Catégorie d&apos;opération comptable (achat, vente, investissement, etc.)
+	///	designer:cap/CVAN5
+	///	</summary>
+	public partial class AccountingOperationEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ICategory
+	{
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/CVAN5/8VA3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/CVAN5/8VA5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA5]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+			}
+		}
+		#endregion
+		#region INameDescription Members
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/CVAN5/8VA7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA7]")]
+		public global::Epsitec.Common.Types.FormattedText Name
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetName (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/CVAN5/8VA8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA8]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetDescription (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetDescription (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>StandardVatCode</c> field.
+		///	designer:fld/CVAN5/CVAO5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVAO5]")]
+		public string StandardVatCode
+		{
+			get
+			{
+				return this.GetField<string> ("[CVAO5]");
+			}
+			set
+			{
+				string oldValue = this.StandardVatCode;
+				if (oldValue != value || !this.IsFieldDefined("[CVAO5]"))
+				{
+					this.OnStandardVatCodeChanging (oldValue, value);
+					this.SetField<string> ("[CVAO5]", oldValue, value);
+					this.OnStandardVatCodeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>ReducedVatCode</c> field.
+		///	designer:fld/CVAN5/CVAP5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVAP5]")]
+		public string ReducedVatCode
+		{
+			get
+			{
+				return this.GetField<string> ("[CVAP5]");
+			}
+			set
+			{
+				string oldValue = this.ReducedVatCode;
+				if (oldValue != value || !this.IsFieldDefined("[CVAP5]"))
+				{
+					this.OnReducedVatCodeChanging (oldValue, value);
+					this.SetField<string> ("[CVAP5]", oldValue, value);
+					this.OnReducedVatCodeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>SpecialVatCode</c> field.
+		///	designer:fld/CVAN5/CVAQ5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVAQ5]")]
+		public string SpecialVatCode
+		{
+			get
+			{
+				return this.GetField<string> ("[CVAQ5]");
+			}
+			set
+			{
+				string oldValue = this.SpecialVatCode;
+				if (oldValue != value || !this.IsFieldDefined("[CVAQ5]"))
+				{
+					this.OnSpecialVatCodeChanging (oldValue, value);
+					this.SetField<string> ("[CVAQ5]", oldValue, value);
+					this.OnSpecialVatCodeChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnStandardVatCodeChanging(string oldValue, string newValue);
+		partial void OnStandardVatCodeChanged(string oldValue, string newValue);
+		partial void OnReducedVatCodeChanging(string oldValue, string newValue);
+		partial void OnReducedVatCodeChanged(string oldValue, string newValue);
+		partial void OnSpecialVatCodeChanging(string oldValue, string newValue);
+		partial void OnSpecialVatCodeChanged(string oldValue, string newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.AccountingOperationEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.AccountingOperationEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 10, 183);	// [CVAN5]
+		public static readonly string EntityStructuredTypeKey = "[CVAN5]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AccountingOperationEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
 	}
 }
 #endregion

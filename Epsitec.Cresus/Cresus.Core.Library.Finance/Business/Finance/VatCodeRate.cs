@@ -14,14 +14,14 @@ namespace Epsitec.Cresus.Core.Business.Finance
 	/// </summary>
 	public struct VatCodeRate : System.IEquatable<VatCodeRate>, System.IComparable<VatCodeRate>
 	{
-		public VatCodeRate(VatCode code, decimal rate)
+		public VatCodeRate(VatRateType code, decimal rate)
 		{
 			this.code = code;
 			this.rate = rate;
 		}
 
 
-		public VatCode Code
+		public VatRateType						Code
 		{
 			get
 			{
@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			}
 		}
 
-		public decimal Rate
+		public decimal							Rate
 		{
 			get
 			{
@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		}
 
 
-		private readonly VatCode	code;
-		private readonly decimal	rate;
+		private readonly VatRateType			code;
+		private readonly decimal				rate;
 	}
 }

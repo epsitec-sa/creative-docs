@@ -39,28 +39,28 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		/// rate we find.
 		/// </summary>
 		/// <param name="amount">The amount.</param>
-		/// <param name="vatCode">The VAT code.</param>
+		/// <param name="vatRateType">The VAT rate type.</param>
 		/// <returns>The computed tax.</returns>
-		public Tax ComputeTax(decimal amount, VatCode vatCode)
+		public Tax ComputeTax(decimal amount, VatRateType vatRateType)
 		{
 			var taxContext = this.data.GetComponent<TaxContext> ();
 
 			if (this.date.HasValue)
 			{
-				var vatDef = taxContext.GetVatDefinition (this.date.Value, vatCode);
+				var vatDef = taxContext.GetVatDefinition (this.date.Value, vatRateType);
 
-				return vatDef == null ? new Tax () : new Tax (new TaxRateAmount (amount, vatCode, vatDef.Rate));
+				return vatDef == null ? new Tax () : new Tax (new TaxRateAmount (amount, vatRateType, vatDef.Rate));
 			}
 
 			if (this.dateRange != null)
 			{
-				VatDefinitionEntity[] vatDefs = taxContext.GetVatDefinitions (this.dateRange, vatCode);
+				VatDefinitionEntity[] vatDefs = taxContext.GetVatDefinitions (this.dateRange, vatRateType);
 
 				if (vatDefs.Length == 0)
 				{
-					if (taxContext.GetVatDefinitions (vatCode).IsEmpty ())
+					if (taxContext.GetVatDefinitions (vatRateType).IsEmpty ())
 					{
-						System.Diagnostics.Debug.WriteLine ("Cannot find VAT rate for VatCode." + vatCode);
+						System.Diagnostics.Debug.WriteLine ("Cannot find VAT rate for VatCode." + vatRateType);
 						return new Tax ();
 					}
 				}
@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 				}
 
 				var taxes = from range in durationRates
-							select new TaxRateAmount (amount * range.Duration / totalDays, vatCode, range.Rate);
+							select new TaxRateAmount (amount * range.Duration / totalDays, vatRateType, range.Rate);
 
 				return new Tax (taxes);
 			}

@@ -21,6 +21,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Separator ()
 				.Input ()
 				  .Field (x => x.ArticleType)
+				  .Field (x => x.VatRateType)
 				  .Field (x => x.UnitOfMeasureCategory)
 				  .Field (x => x.DefaultPictures)
 				  .Field (x => x.RoundingMode)

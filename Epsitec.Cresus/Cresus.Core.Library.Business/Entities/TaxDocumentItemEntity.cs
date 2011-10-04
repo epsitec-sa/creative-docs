@@ -45,8 +45,8 @@ namespace Epsitec.Cresus.Core.Entities
 			copy.GroupIndex   = this.GroupIndex;
 
 			copy.Text         = this.Text;
-			copy.VatCode      = this.VatCode;
 			copy.VatRate      = this.VatRate;
+			copy.VatRateType  = this.VatRateType;
 			copy.TotalRevenue = this.TotalRevenue;
 			copy.ResultingTax = this.ResultingTax;
 		}

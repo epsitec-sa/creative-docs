@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 
 			if (group.TaxDiscountable != null)
 			{
-				Tax discountedTax = new Tax (group.TaxDiscountable.RateAmounts.Select (tax => new TaxRateAmount (tax.Amount * ratio, tax.Code, tax.Rate)));
+				Tax discountedTax = new Tax (group.TaxDiscountable.RateAmounts.Select (tax => new TaxRateAmount (tax.Amount * ratio, tax.VatRateType, tax.Rate)));
 
 				this.Accumulate (discountedTax, neverApplyDiscount: false);
 			}
@@ -295,7 +295,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 			{
 				decimal ratio = after / before;
 				
-				return new Tax (this.taxDiscountable.RateAmounts.Select (tax => new TaxRateAmount (tax.Amount * ratio, tax.Code, tax.Rate)));
+				return new Tax (this.taxDiscountable.RateAmounts.Select (tax => new TaxRateAmount (tax.Amount * ratio, tax.VatRateType, tax.Rate)));
 			}
 		}
 

@@ -37,6 +37,18 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
+		public static EntityStatus GetEntityStatus(this Date? date)
+		{
+			if (date.HasValue)
+			{
+				return EntityStatus.Valid;
+			}
+			else
+			{
+				return EntityStatus.Empty;
+			}
+		}
+
 		public static EntityStatus TreatAsOptional(this EntityStatus status)
 		{
 			if (status.HasFlag (EntityStatus.Empty))

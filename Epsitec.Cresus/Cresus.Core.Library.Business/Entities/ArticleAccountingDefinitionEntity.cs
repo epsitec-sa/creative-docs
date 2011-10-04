@@ -29,6 +29,9 @@ namespace Epsitec.Cresus.Core.Entities
 			builder.Append (FormattedText.Concat ("(", c.Values[0], ")"));  // code de la monnaie, par exemple "CHF"
 			builder.Append ("<br/>");
 
+			builder.Append (TextFormatter.FormatText (this.AccountingOperation.GetSummary ()));
+			builder.Append ("<br/>");
+
 			if (this.BeginDate.HasValue || this.EndDate.HasValue)
 			{
 				builder.Append ("Du");
@@ -37,27 +40,13 @@ namespace Epsitec.Cresus.Core.Entities
 				builder.Append (Misc.GetDateShortDescription (this.EndDate) ?? " ...");
 			}
 
-			builder.Append (ArticleAccountingDefinitionEntity.GetBookAccountText (this.SaleBookAccount));
+			builder.Append (ArticleAccountingDefinitionEntity.GetBookAccountText (this.TransactionBookAccount));
 			builder.Append ("/");
-			builder.Append (ArticleAccountingDefinitionEntity.GetBookAccountText (this.SaleDiscountBookAccount));
+			builder.Append (ArticleAccountingDefinitionEntity.GetBookAccountText (this.DiscountBookAccount));
 			builder.Append ("/");
-			builder.Append (ArticleAccountingDefinitionEntity.GetBookAccountText (this.SaleRoundingBookAccount));
+			builder.Append (ArticleAccountingDefinitionEntity.GetBookAccountText (this.RoundingBookAccount));
 			builder.Append ("/");
-			builder.Append (ArticleAccountingDefinitionEntity.GetBookAccountText (this.SaleVatBookAccount));
-			builder.Append ("<br/>");
-
-			builder.Append (ArticleAccountingDefinitionEntity.GetBookAccountText (this.PurchaseBookAccount));
-			builder.Append ("/");
-			builder.Append (ArticleAccountingDefinitionEntity.GetBookAccountText (this.PurchaseDiscountBookAccount));
-			builder.Append ("/");
-			builder.Append (ArticleAccountingDefinitionEntity.GetBookAccountText (this.PurchaseRoundingBookAccount));
-			builder.Append ("/");
-			builder.Append (ArticleAccountingDefinitionEntity.GetBookAccountText (this.PurchaseVatBookAccount));
-			builder.Append ("<br/>");
-
-			builder.Append (EnumKeyValues.GetEnumKeyValue (this.SaleVatCode).Values[0]);
-			builder.Append ("/");
-			builder.Append (EnumKeyValues.GetEnumKeyValue (this.PurchaseVatCode).Values[0]);
+			builder.Append (ArticleAccountingDefinitionEntity.GetBookAccountText (this.VatBookAccount));
 
 			return builder.ToFormattedText ();
 		}
@@ -81,19 +70,13 @@ namespace Epsitec.Cresus.Core.Entities
 			{
 				a.Accumulate (this.Name.GetEntityStatus ());
 				a.Accumulate (this.Description.GetEntityStatus ().TreatAsOptional ());
-				a.Accumulate (this.SaleBookAccount.GetEntityStatus ());
-				a.Accumulate (this.SaleDiscountBookAccount.GetEntityStatus ());
-				a.Accumulate (this.SaleRoundingBookAccount.GetEntityStatus ());
-				a.Accumulate (this.SaleVatBookAccount.GetEntityStatus ());
-
-				a.Accumulate (this.PurchaseBookAccount.GetEntityStatus ());
-				a.Accumulate (this.PurchaseDiscountBookAccount.GetEntityStatus ());
-				a.Accumulate (this.PurchaseRoundingBookAccount.GetEntityStatus ());
-				a.Accumulate (this.PurchaseVatBookAccount.GetEntityStatus ());
+				a.Accumulate (this.AccountingOperation.GetEntityStatus ());
+				a.Accumulate (this.TransactionBookAccount.GetEntityStatus ());
+				a.Accumulate (this.DiscountBookAccount.GetEntityStatus ());
+				a.Accumulate (this.RoundingBookAccount.GetEntityStatus ());
+				a.Accumulate (this.VatBookAccount.GetEntityStatus ());
 
 				a.Accumulate (this.CurrencyCode == CurrencyCode.None ? EntityStatus.Empty : EntityStatus.Valid);
-				a.Accumulate (this.SaleVatCode == VatCode.None ? EntityStatus.Empty : EntityStatus.Valid);
-				a.Accumulate (this.PurchaseVatCode == VatCode.None ? EntityStatus.Empty : EntityStatus.Valid);
 
 				return a.EntityStatus;
 			}

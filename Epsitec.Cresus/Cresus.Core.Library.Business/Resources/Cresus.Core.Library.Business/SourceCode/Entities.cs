@@ -2974,6 +2974,28 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>VatRateType</c> field.
+		///	designer:fld/GVAO2/GVAJ8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVAJ8]")]
+		public global::Epsitec.Cresus.Core.Business.Finance.VatRateType VatRateType
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.VatRateType> ("[GVAJ8]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Business.Finance.VatRateType oldValue = this.VatRateType;
+				if (oldValue != value || !this.IsFieldDefined("[GVAJ8]"))
+				{
+					this.OnVatRateTypeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.VatRateType> ("[GVAJ8]", oldValue, value);
+					this.OnVatRateTypeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>UnitOfMeasureCategory</c> field.
 		///	designer:fld/GVAO2/GVAD8
 		///	</summary>
@@ -3020,28 +3042,6 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>RoundingMode</c> field.
-		///	designer:fld/GVAO2/GVAU2
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVAU2]")]
-		public global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity RoundingMode
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity> ("[GVAU2]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue = this.RoundingMode;
-				if (oldValue != value || !this.IsFieldDefined("[GVAU2]"))
-				{
-					this.OnRoundingModeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity> ("[GVAU2]", oldValue, value);
-					this.OnRoundingModeChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>NeverApplyDiscount</c> field.
 		///	designer:fld/GVAO2/GVAV2
 		///	</summary>
@@ -3063,15 +3063,39 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>RoundingMode</c> field.
+		///	designer:fld/GVAO2/GVAU2
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVAU2]")]
+		public global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity RoundingMode
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity> ("[GVAU2]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue = this.RoundingMode;
+				if (oldValue != value || !this.IsFieldDefined("[GVAU2]"))
+				{
+					this.OnRoundingModeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity> ("[GVAU2]", oldValue, value);
+					this.OnRoundingModeChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnArticleTypeChanging(global::Epsitec.Cresus.Core.Business.ArticleType oldValue, global::Epsitec.Cresus.Core.Business.ArticleType newValue);
 		partial void OnArticleTypeChanged(global::Epsitec.Cresus.Core.Business.ArticleType oldValue, global::Epsitec.Cresus.Core.Business.ArticleType newValue);
+		partial void OnVatRateTypeChanging(global::Epsitec.Cresus.Core.Business.Finance.VatRateType oldValue, global::Epsitec.Cresus.Core.Business.Finance.VatRateType newValue);
+		partial void OnVatRateTypeChanged(global::Epsitec.Cresus.Core.Business.Finance.VatRateType oldValue, global::Epsitec.Cresus.Core.Business.Finance.VatRateType newValue);
 		partial void OnUnitOfMeasureCategoryChanging(global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory oldValue, global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory newValue);
 		partial void OnUnitOfMeasureCategoryChanged(global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory oldValue, global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory newValue);
-		partial void OnRoundingModeChanging(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
-		partial void OnRoundingModeChanged(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
 		partial void OnNeverApplyDiscountChanging(bool oldValue, bool newValue);
 		partial void OnNeverApplyDiscountChanged(bool oldValue, bool newValue);
+		partial void OnRoundingModeChanging(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
+		partial void OnRoundingModeChanged(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -3232,178 +3256,24 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		#endregion
 		///	<summary>
-		///	The <c>SaleBookAccount</c> field.
-		///	designer:fld/GVA13/GVA33
+		///	The <c>AccountingOperation</c> field.
+		///	designer:fld/GVA13/GVAK8
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVA33]")]
-		public string SaleBookAccount
+		[global::Epsitec.Common.Support.EntityField ("[GVAK8]")]
+		public global::Epsitec.Cresus.Core.Entities.AccountingOperationEntity AccountingOperation
 		{
 			get
 			{
-				return this.GetField<string> ("[GVA33]");
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.AccountingOperationEntity> ("[GVAK8]");
 			}
 			set
 			{
-				string oldValue = this.SaleBookAccount;
-				if (oldValue != value || !this.IsFieldDefined("[GVA33]"))
+				global::Epsitec.Cresus.Core.Entities.AccountingOperationEntity oldValue = this.AccountingOperation;
+				if (oldValue != value || !this.IsFieldDefined("[GVAK8]"))
 				{
-					this.OnSaleBookAccountChanging (oldValue, value);
-					this.SetField<string> ("[GVA33]", oldValue, value);
-					this.OnSaleBookAccountChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>SaleVatBookAccount</c> field.
-		///	designer:fld/GVA13/GVA48
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVA48]")]
-		public string SaleVatBookAccount
-		{
-			get
-			{
-				return this.GetField<string> ("[GVA48]");
-			}
-			set
-			{
-				string oldValue = this.SaleVatBookAccount;
-				if (oldValue != value || !this.IsFieldDefined("[GVA48]"))
-				{
-					this.OnSaleVatBookAccountChanging (oldValue, value);
-					this.SetField<string> ("[GVA48]", oldValue, value);
-					this.OnSaleVatBookAccountChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>SaleDiscountBookAccount</c> field.
-		///	designer:fld/GVA13/GVA43
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVA43]")]
-		public string SaleDiscountBookAccount
-		{
-			get
-			{
-				return this.GetField<string> ("[GVA43]");
-			}
-			set
-			{
-				string oldValue = this.SaleDiscountBookAccount;
-				if (oldValue != value || !this.IsFieldDefined("[GVA43]"))
-				{
-					this.OnSaleDiscountBookAccountChanging (oldValue, value);
-					this.SetField<string> ("[GVA43]", oldValue, value);
-					this.OnSaleDiscountBookAccountChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>SaleRoundingBookAccount</c> field.
-		///	designer:fld/GVA13/GVA68
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVA68]")]
-		public string SaleRoundingBookAccount
-		{
-			get
-			{
-				return this.GetField<string> ("[GVA68]");
-			}
-			set
-			{
-				string oldValue = this.SaleRoundingBookAccount;
-				if (oldValue != value || !this.IsFieldDefined("[GVA68]"))
-				{
-					this.OnSaleRoundingBookAccountChanging (oldValue, value);
-					this.SetField<string> ("[GVA68]", oldValue, value);
-					this.OnSaleRoundingBookAccountChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>PurchaseBookAccount</c> field.
-		///	designer:fld/GVA13/GVA53
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVA53]")]
-		public string PurchaseBookAccount
-		{
-			get
-			{
-				return this.GetField<string> ("[GVA53]");
-			}
-			set
-			{
-				string oldValue = this.PurchaseBookAccount;
-				if (oldValue != value || !this.IsFieldDefined("[GVA53]"))
-				{
-					this.OnPurchaseBookAccountChanging (oldValue, value);
-					this.SetField<string> ("[GVA53]", oldValue, value);
-					this.OnPurchaseBookAccountChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>PurchaseVatBookAccount</c> field.
-		///	designer:fld/GVA13/GVA58
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVA58]")]
-		public string PurchaseVatBookAccount
-		{
-			get
-			{
-				return this.GetField<string> ("[GVA58]");
-			}
-			set
-			{
-				string oldValue = this.PurchaseVatBookAccount;
-				if (oldValue != value || !this.IsFieldDefined("[GVA58]"))
-				{
-					this.OnPurchaseVatBookAccountChanging (oldValue, value);
-					this.SetField<string> ("[GVA58]", oldValue, value);
-					this.OnPurchaseVatBookAccountChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>PurchaseDiscountBookAccount</c> field.
-		///	designer:fld/GVA13/GVA63
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVA63]")]
-		public string PurchaseDiscountBookAccount
-		{
-			get
-			{
-				return this.GetField<string> ("[GVA63]");
-			}
-			set
-			{
-				string oldValue = this.PurchaseDiscountBookAccount;
-				if (oldValue != value || !this.IsFieldDefined("[GVA63]"))
-				{
-					this.OnPurchaseDiscountBookAccountChanging (oldValue, value);
-					this.SetField<string> ("[GVA63]", oldValue, value);
-					this.OnPurchaseDiscountBookAccountChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>PurchaseRoundingBookAccount</c> field.
-		///	designer:fld/GVA13/GVA78
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVA78]")]
-		public string PurchaseRoundingBookAccount
-		{
-			get
-			{
-				return this.GetField<string> ("[GVA78]");
-			}
-			set
-			{
-				string oldValue = this.PurchaseRoundingBookAccount;
-				if (oldValue != value || !this.IsFieldDefined("[GVA78]"))
-				{
-					this.OnPurchaseRoundingBookAccountChanging (oldValue, value);
-					this.SetField<string> ("[GVA78]", oldValue, value);
-					this.OnPurchaseRoundingBookAccountChanged (oldValue, value);
+					this.OnAccountingOperationChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.AccountingOperationEntity> ("[GVAK8]", oldValue, value);
+					this.OnAccountingOperationChanged (oldValue, value);
 				}
 			}
 		}
@@ -3430,72 +3300,106 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>SaleVatCode</c> field.
-		///	designer:fld/GVA13/GVA88
+		///	The <c>TransactionBookAccount</c> field.
+		///	designer:fld/GVA13/GVA33
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVA88]")]
-		public global::Epsitec.Cresus.Core.Business.Finance.VatCode SaleVatCode
+		[global::Epsitec.Common.Support.EntityField ("[GVA33]")]
+		public string TransactionBookAccount
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.VatCode> ("[GVA88]");
+				return this.GetField<string> ("[GVA33]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Business.Finance.VatCode oldValue = this.SaleVatCode;
-				if (oldValue != value || !this.IsFieldDefined("[GVA88]"))
+				string oldValue = this.TransactionBookAccount;
+				if (oldValue != value || !this.IsFieldDefined("[GVA33]"))
 				{
-					this.OnSaleVatCodeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.VatCode> ("[GVA88]", oldValue, value);
-					this.OnSaleVatCodeChanged (oldValue, value);
+					this.OnTransactionBookAccountChanging (oldValue, value);
+					this.SetField<string> ("[GVA33]", oldValue, value);
+					this.OnTransactionBookAccountChanged (oldValue, value);
 				}
 			}
 		}
 		///	<summary>
-		///	The <c>PurchaseVatCode</c> field.
-		///	designer:fld/GVA13/GVA98
+		///	The <c>VatBookAccount</c> field.
+		///	designer:fld/GVA13/GVA48
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVA98]")]
-		public global::Epsitec.Cresus.Core.Business.Finance.VatCode PurchaseVatCode
+		[global::Epsitec.Common.Support.EntityField ("[GVA48]")]
+		public string VatBookAccount
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.VatCode> ("[GVA98]");
+				return this.GetField<string> ("[GVA48]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Business.Finance.VatCode oldValue = this.PurchaseVatCode;
-				if (oldValue != value || !this.IsFieldDefined("[GVA98]"))
+				string oldValue = this.VatBookAccount;
+				if (oldValue != value || !this.IsFieldDefined("[GVA48]"))
 				{
-					this.OnPurchaseVatCodeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.VatCode> ("[GVA98]", oldValue, value);
-					this.OnPurchaseVatCodeChanged (oldValue, value);
+					this.OnVatBookAccountChanging (oldValue, value);
+					this.SetField<string> ("[GVA48]", oldValue, value);
+					this.OnVatBookAccountChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>DiscountBookAccount</c> field.
+		///	designer:fld/GVA13/GVA43
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVA43]")]
+		public string DiscountBookAccount
+		{
+			get
+			{
+				return this.GetField<string> ("[GVA43]");
+			}
+			set
+			{
+				string oldValue = this.DiscountBookAccount;
+				if (oldValue != value || !this.IsFieldDefined("[GVA43]"))
+				{
+					this.OnDiscountBookAccountChanging (oldValue, value);
+					this.SetField<string> ("[GVA43]", oldValue, value);
+					this.OnDiscountBookAccountChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>RoundingBookAccount</c> field.
+		///	designer:fld/GVA13/GVA68
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVA68]")]
+		public string RoundingBookAccount
+		{
+			get
+			{
+				return this.GetField<string> ("[GVA68]");
+			}
+			set
+			{
+				string oldValue = this.RoundingBookAccount;
+				if (oldValue != value || !this.IsFieldDefined("[GVA68]"))
+				{
+					this.OnRoundingBookAccountChanging (oldValue, value);
+					this.SetField<string> ("[GVA68]", oldValue, value);
+					this.OnRoundingBookAccountChanged (oldValue, value);
 				}
 			}
 		}
 		
-		partial void OnSaleBookAccountChanging(string oldValue, string newValue);
-		partial void OnSaleBookAccountChanged(string oldValue, string newValue);
-		partial void OnSaleVatBookAccountChanging(string oldValue, string newValue);
-		partial void OnSaleVatBookAccountChanged(string oldValue, string newValue);
-		partial void OnSaleDiscountBookAccountChanging(string oldValue, string newValue);
-		partial void OnSaleDiscountBookAccountChanged(string oldValue, string newValue);
-		partial void OnSaleRoundingBookAccountChanging(string oldValue, string newValue);
-		partial void OnSaleRoundingBookAccountChanged(string oldValue, string newValue);
-		partial void OnPurchaseBookAccountChanging(string oldValue, string newValue);
-		partial void OnPurchaseBookAccountChanged(string oldValue, string newValue);
-		partial void OnPurchaseVatBookAccountChanging(string oldValue, string newValue);
-		partial void OnPurchaseVatBookAccountChanged(string oldValue, string newValue);
-		partial void OnPurchaseDiscountBookAccountChanging(string oldValue, string newValue);
-		partial void OnPurchaseDiscountBookAccountChanged(string oldValue, string newValue);
-		partial void OnPurchaseRoundingBookAccountChanging(string oldValue, string newValue);
-		partial void OnPurchaseRoundingBookAccountChanged(string oldValue, string newValue);
+		partial void OnAccountingOperationChanging(global::Epsitec.Cresus.Core.Entities.AccountingOperationEntity oldValue, global::Epsitec.Cresus.Core.Entities.AccountingOperationEntity newValue);
+		partial void OnAccountingOperationChanged(global::Epsitec.Cresus.Core.Entities.AccountingOperationEntity oldValue, global::Epsitec.Cresus.Core.Entities.AccountingOperationEntity newValue);
 		partial void OnCurrencyCodeChanging(global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode newValue);
 		partial void OnCurrencyCodeChanged(global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode newValue);
-		partial void OnSaleVatCodeChanging(global::Epsitec.Cresus.Core.Business.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.VatCode newValue);
-		partial void OnSaleVatCodeChanged(global::Epsitec.Cresus.Core.Business.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.VatCode newValue);
-		partial void OnPurchaseVatCodeChanging(global::Epsitec.Cresus.Core.Business.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.VatCode newValue);
-		partial void OnPurchaseVatCodeChanged(global::Epsitec.Cresus.Core.Business.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.VatCode newValue);
+		partial void OnTransactionBookAccountChanging(string oldValue, string newValue);
+		partial void OnTransactionBookAccountChanged(string oldValue, string newValue);
+		partial void OnVatBookAccountChanging(string oldValue, string newValue);
+		partial void OnVatBookAccountChanged(string oldValue, string newValue);
+		partial void OnDiscountBookAccountChanging(string oldValue, string newValue);
+		partial void OnDiscountBookAccountChanged(string oldValue, string newValue);
+		partial void OnRoundingBookAccountChanging(string oldValue, string newValue);
+		partial void OnRoundingBookAccountChanged(string oldValue, string newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -4520,24 +4424,24 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>VatCode</c> field.
-		///	designer:fld/GVAR4/GVAT4
+		///	The <c>VatRateType</c> field.
+		///	designer:fld/GVAR4/GVAL8
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVAT4]")]
-		public global::Epsitec.Cresus.Core.Business.Finance.VatCode VatCode
+		[global::Epsitec.Common.Support.EntityField ("[GVAL8]")]
+		public global::Epsitec.Cresus.Core.Business.Finance.VatRateType VatRateType
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.VatCode> ("[GVAT4]");
+				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.VatRateType> ("[GVAL8]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Business.Finance.VatCode oldValue = this.VatCode;
-				if (oldValue != value || !this.IsFieldDefined("[GVAT4]"))
+				global::Epsitec.Cresus.Core.Business.Finance.VatRateType oldValue = this.VatRateType;
+				if (oldValue != value || !this.IsFieldDefined("[GVAL8]"))
 				{
-					this.OnVatCodeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.VatCode> ("[GVAT4]", oldValue, value);
-					this.OnVatCodeChanged (oldValue, value);
+					this.OnVatRateTypeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.VatRateType> ("[GVAL8]", oldValue, value);
+					this.OnVatRateTypeChanged (oldValue, value);
 				}
 			}
 		}
@@ -4610,8 +4514,8 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnTextChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnTextChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnVatCodeChanging(global::Epsitec.Cresus.Core.Business.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.VatCode newValue);
-		partial void OnVatCodeChanged(global::Epsitec.Cresus.Core.Business.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.VatCode newValue);
+		partial void OnVatRateTypeChanging(global::Epsitec.Cresus.Core.Business.Finance.VatRateType oldValue, global::Epsitec.Cresus.Core.Business.Finance.VatRateType newValue);
+		partial void OnVatRateTypeChanged(global::Epsitec.Cresus.Core.Business.Finance.VatRateType oldValue, global::Epsitec.Cresus.Core.Business.Finance.VatRateType newValue);
 		partial void OnVatRateChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnVatRateChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnTotalRevenueChanging(global::System.Decimal oldValue, global::System.Decimal newValue);

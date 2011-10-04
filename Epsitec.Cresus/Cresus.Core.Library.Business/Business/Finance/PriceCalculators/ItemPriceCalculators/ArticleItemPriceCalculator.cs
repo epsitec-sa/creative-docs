@@ -525,7 +525,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 
 		private Tax ComputeTax(decimal articleValue)
 		{
-			if (this.articleItem.ArticleAccountingDefinition.IsNull ())
+			if (this.articleDef.ArticleCategory.IsNull ())
 			{
 				return null;
 			}
@@ -542,7 +542,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 				taxCalculator = new TaxCalculator (this.data, new Date (this.date));
 			}
 			
-			var tax = taxCalculator.ComputeTax (articleValue, this.articleItem.ArticleAccountingDefinition.SaleVatCode);
+			var tax = taxCalculator.ComputeTax (articleValue, this.articleDef.ArticleCategory.VatRateType);
 			
 			if (tax.RateAmounts.Count > 2)
 			{

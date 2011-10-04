@@ -26,6 +26,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.End ()
 				.Separator ()
 				.Input ()
+				  .Field (x => x.DocumentType)
 				  .Field (x => x.DocumentSource)
 				  .Field (x => x.DocumentFlowDirection)
 				.End ()

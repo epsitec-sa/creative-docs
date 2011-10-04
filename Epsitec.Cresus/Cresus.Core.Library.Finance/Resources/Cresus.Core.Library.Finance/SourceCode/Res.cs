@@ -78,6 +78,8 @@ namespace Epsitec.Cresus.Core.Library.Finance
 				public static readonly Epsitec.Common.Types.StringType PostFinanceAccount = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10));
 			}
 			
+			//	designer:cap/CVAN5
+			public static readonly Epsitec.Common.Types.StructuredType AccountingOperation = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 183));
 			//	designer:cap/CVAT
 			public static readonly Epsitec.Common.Types.StructuredType Currency = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 29));
 			//	designer:cap/CVAU
@@ -739,6 +741,20 @@ namespace Epsitec.Cresus.Core.Library.Finance
 		
 		public static class Fields
 		{
+			public static class AccountingOperation
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/CVAP5
+				public static readonly global::Epsitec.Common.Support.Druid ReducedVatCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 185);
+				//	designer:cap/CVAQ5
+				public static readonly global::Epsitec.Common.Support.Druid SpecialVatCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 186);
+				//	designer:cap/CVAO5
+				public static readonly global::Epsitec.Common.Support.Druid StandardVatCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 184);
+			}
+			
 			public static class Currency
 			{
 				internal static void _Initialize()
@@ -1039,6 +1055,7 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			Values.Enum.TaxMode._Initialize ();
 			Values.Enum.VatCode._Initialize ();
 			Values.Enum.VatRateType._Initialize ();
+			Fields.AccountingOperation._Initialize ();
 			Fields.Currency._Initialize ();
 			Fields.ExchangeRateSource._Initialize ();
 			Fields.FinanceSettings._Initialize ();

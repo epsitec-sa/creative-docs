@@ -17,12 +17,12 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.PrintableEntityId);
+			return TextFormatter.FormatText (this.Name, "\n", this.Description, "\n", "DRUID = ", this.PrintableEntityId.ToString ());
 		}
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.PrintableEntityId);
+			return TextFormatter.FormatText (this.Name);
 		}
 
 		public Druid PrintableEntityId

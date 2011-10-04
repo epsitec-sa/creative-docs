@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			if ((index < 0) ||
 				(index >= this.rateAmounts.Count))
 			{
-				return new TaxRateAmount (0, VatCode.None, 0);
+				return new TaxRateAmount (0, VatRateType.None, 0);
 			}
 			else
 			{

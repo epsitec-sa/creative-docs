@@ -39,10 +39,8 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		}
 
 
-		public VatDefinitionEntity[] GetVatDefinitions(VatCode vatCode)
+		public VatDefinitionEntity[] GetVatDefinitions(VatRateType vatRateType)
 		{
-			var vatRateType = TaxContext.GetVatRateType (vatCode);
-			
 			var results = from def in this.vatDefs
 						  where def.VatRateType == vatRateType
 						  select def;
@@ -50,10 +48,8 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			return results.ToArray ();
 		}
 
-		public VatDefinitionEntity GetVatDefinition(Date date, VatCode vatCode)
+		public VatDefinitionEntity GetVatDefinition(Date date, VatRateType vatRateType)
 		{
-			var vatRateType = TaxContext.GetVatRateType (vatCode);
-
 			var results = from def in this.vatDefs
 						  where date.InRange (def.BeginDate, def.EndDate)
 						  where def.VatRateType == vatRateType
@@ -62,10 +58,8 @@ namespace Epsitec.Cresus.Core.Business.Finance
 			return results.FirstOrDefault ();
 		}
 
-		public VatDefinitionEntity[] GetVatDefinitions(IDateRange dateRange, VatCode vatCode)
+		public VatDefinitionEntity[] GetVatDefinitions(IDateRange dateRange, VatRateType vatRateType)
 		{
-			var vatRateType = TaxContext.GetVatRateType (vatCode);
-			
 			var results = from def in this.vatDefs
 						  where dateRange.Overlaps (def)
 						  where def.VatRateType == vatRateType
