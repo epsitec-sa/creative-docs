@@ -388,7 +388,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			return new SqlFunction
 			(
 				SqlFunctionCode.SetNotIn,
-				SqlField.CreateName (this.tableLock.Columns[LockManager.TableFactory.ColumnIdName].GetSqlName ()),
+				SqlField.CreateName (this.tableLock.Columns[LockManager.TableFactory.ColumnConnectionIdName].GetSqlName ()),
 				SqlField.CreateSubQuery (queryForOpenConnectionIds)
 			);
 		}

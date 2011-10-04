@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.Core.Data
 
 			if (this.Host.EnableConnectionRecycling)
 			{
-				this.DataInfrastructure.KillDeadConnections(System.TimeSpan.FromSeconds(30));
+				this.DataInfrastructure.KillDeadConnections (System.TimeSpan.FromMinutes (5));
 			}
 		}
 
