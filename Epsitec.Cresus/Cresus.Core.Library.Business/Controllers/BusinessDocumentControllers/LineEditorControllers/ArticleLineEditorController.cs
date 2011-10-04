@@ -657,15 +657,14 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				}
 			}
 
+			this.UpdateArticleCache ();
+		}
+
+		private void UpdateArticleCache()
+		{
 			//	Met à jour le texte du cache.
-			if (shortDescription)
-			{
-				this.Item.ArticleNameCache = ArticleDocumentItemHelper.GetArticleText (this.Item, replaceTags: true, shortDescription: true);
-			}
-			else
-			{
-				this.Item.ArticleDescriptionCache = ArticleDocumentItemHelper.GetArticleText (this.Item, replaceTags: true, shortDescription: false);
-			}
+			this.Item.ArticleNameCache        = ArticleDocumentItemHelper.GetArticleText (this.Item, replaceTags: true, shortDescription: true);
+			this.Item.ArticleDescriptionCache = ArticleDocumentItemHelper.GetArticleText (this.Item, replaceTags: true, shortDescription: false);
 		}
 
 		private bool ArticleFilter(ArticleDefinitionEntity article)
@@ -685,6 +684,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			//	Cette méthode est appelée lorsqu'un paramètre a été changé.
 			ArticleParameterToolbarController.UpdateTextFieldParameter (this.Item, this.articleDescriptionTextField);
+			this.UpdateArticleCache ();
 		}
 
 	
