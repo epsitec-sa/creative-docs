@@ -102,7 +102,7 @@ namespace Epsitec.Common.Dialogs.Helpers
 			var widgetIcon = new StaticImage ()
 			{
 				Parent        = container,
-				IconUri       = iconUri,
+				ImageName     = iconUri,
 				PreferredSize = new Drawing.Size (48, 48),
 				Anchor        = AnchorStyles.TopLeft,
 				Margins       = new Drawing.Margins (0, 0, 0, 0)
