@@ -106,7 +106,7 @@ namespace Epsitec.Common.Designer
 				this.dlgEntityExpression = new Dialogs.EntityExpressionDialog(this);
 				this.dlgInitialMessage   = new Dialogs.InitialMessageDialog (this);
 				this.dlgModuleInfo       = new Dialogs.ModuleInfoDialog (this);
-				this.dlgSaveAllBitmaps    = new Dialogs.SaveAllBitmapsDialog (this);
+				this.dlgSaveAllBitmaps   = new Dialogs.SaveAllBitmapsDialog (this);
 
 				this.dlgGlyphs.Closed         += this.HandleDlgClosed;
 				this.dlgSearch.Closed         += this.HandleDlgClosed;

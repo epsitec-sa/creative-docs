@@ -58,6 +58,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.areaOffset = Point.Zero;
 			this.gridStep = 20;
 			this.gridSubdiv = 5;
+
+			this.enableDimmed = true;
 		}
 
 		public Editor(Widget embedder) : this()
@@ -791,48 +793,73 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		private void UpdateDimmed()
 		{
 			//	Met en estompé toutes les connections qui partent ou qui arrivent sur une entité estompée.
-			foreach (ObjectConnection connection in this.connections)
+			if (this.enableDimmed)
 			{
-				connection.IsDimmed = false;
-			}
-
-			foreach (ObjectConnection connection in this.connections)
-			{
-				if (connection.Field.IsExplored)
+				foreach (ObjectConnection connection in this.connections)
 				{
-					if (connection.Field.SrcBox != null && connection.Field.SrcBox.IsDimmed)
+					connection.IsDimmed = false;
+				}
+
+				foreach (ObjectConnection connection in this.connections)
+				{
+					if (connection.Field.IsExplored)
 					{
-						connection.IsDimmed = true;
+						if (connection.Field.SrcBox != null && connection.Field.SrcBox.IsDimmed)
+						{
+							connection.IsDimmed =  true;
+						}
+						else if (connection.Field.DstBox != null && connection.Field.DstBox.IsDimmed)
+						{
+							connection.IsDimmed =  true;
+						}
 					}
-					else if (connection.Field.DstBox != null && connection.Field.DstBox.IsDimmed)
+					else
 					{
-						connection.IsDimmed = true;
+						Module dstModule = this.module.DesignerApplication.SearchModule (connection.Field.Destination);
+						Module currentModule = this.module.DesignerApplication.CurrentModule;
+
+						connection.IsDimmed = (dstModule != currentModule);
+					}
+
+					if (connection.Comment != null)
+					{
+						connection.Comment.IsDimmed = connection.IsDimmed;
 					}
 				}
-				else
-				{
-					Module dstModule = this.module.DesignerApplication.SearchModule(connection.Field.Destination);
-					Module currentModule = this.module.DesignerApplication.CurrentModule;
 
-					connection.IsDimmed = (dstModule != currentModule);
-				}
-
-				if (connection.Comment != null)
+				foreach (ObjectBox box in this.boxes)
 				{
-					connection.Comment.IsDimmed = connection.IsDimmed;
+					if (box.Comment != null)
+					{
+						box.Comment.IsDimmed = box.IsDimmed;
+					}
+
+					if (box.Info != null)
+					{
+						box.Info.IsDimmed = box.IsDimmed;
+					}
 				}
 			}
-
-			foreach (ObjectBox box in this.boxes)
+			else
 			{
-				if (box.Comment != null)
+				foreach (var obj in this.boxes)
 				{
-					box.Comment.IsDimmed = box.IsDimmed;
+					obj.IsDimmed = false;
 				}
 
-				if (box.Info != null)
+				foreach (var obj in this.connections)
 				{
-					box.Info.IsDimmed = box.IsDimmed;
+					obj.IsDimmed = false;
+				}
+
+				foreach (var obj in this.comments)
+				{
+					obj.IsDimmed = false;
+				}
+
+				foreach (var obj in this.infos)
+				{
+					obj.IsDimmed = false;
 				}
 			}
 		}
@@ -1739,6 +1766,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.LineWidth = initialWidth;
 		}
 
+		public bool EnableDimmed
+		{
+			get
+			{
+				return this.enableDimmed;
+			}
+			set
+			{
+				this.enableDimmed = value;
+				this.UpdateDimmed ();
+			}
+		}
+
 		public void PaintObjects(Graphics graphics)
 		{
 			//	Dessine l'arrière-plan de tous les objets.
@@ -2383,5 +2423,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		private bool grid;
 		private double gridStep;
 		private double gridSubdiv;
+		private bool enableDimmed;
 	}
 }
