@@ -130,7 +130,7 @@
   <data name="Fld.PaymentDetail.Amount" id="AP4">&lt;s:data id="_0" f:Name="Amount" f:Labels="{Collection {Text 'Montant'}}" /&gt;</data>
   <data name="Fld.PriceDiscount.DiscountRate" id="AQ4">&lt;s:data id="_0" f:Name="DiscountRate" /&gt;</data>
   <data name="Fld.PriceDiscount.Value" id="AR4">&lt;s:data id="_0" f:Name="Value" /&gt;</data>
-  <data name="Fld.VatDefinition.Rate" id="AS4">&lt;s:data id="_0" f:Name="Rate" /&gt;</data>
+  <data name="Fld.VatDefinition.Rate" id="AS4">&lt;s:data id="_0" f:Name="Rate" f:Labels="{Collection {Text 'Taux'}}" /&gt;</data>
   <data name="Val.Enum.PaymentDetailType.Discount" id="AT4">&lt;s:data id="_0" f:Name="Discount" f:Description="Montant escompté" f:Labels="{Collection {Text 'Ecompte'}}" /&gt;</data>
   <data name="Fld.PaymentCategory.IsrDefinition" id="AU4">&lt;s:data id="_0" f:Name="IsrDefinition" f:Labels="{Collection {Text 'Définition BVR'}}" /&gt;</data>
   <data name="Fld.PaymentDetail.DueDate" id="AV4">&lt;s:data id="_0" f:Name="DueDate" f:Labels="{Collection {Text 'Date de l&amp;amp;apos;échéance'}}" /&gt;</data>
@@ -154,5 +154,5 @@
   <data name="Val.Enum.VatRateType.ReducedTax" id="AK5">&lt;s:data id="_0" f:Name="ReducedTax" f:Description="" f:Labels="{Collection {Text 'Taux réduit'}}" /&gt;</data>
   <data name="Val.Enum.VatRateType.SpecialTax" id="AL5">&lt;s:data id="_0" f:Name="SpecialTax" f:Description="Taux spécial pour les prestations d&amp;amp;apos;hébergement" f:Labels="{Collection {Text 'Taux spécial'}}" /&gt;</data>
   <data name="Typ.Enum.VatRateType" id="AH5">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.VatRateType" f:_1.SystemType="E:Epsitec.Cresus.Core.Business.Finance.VatRateType, Cresus.Core.Library.Finance" f:_2.EnumValues="{Collection {Text '0 [CVAI5]'}, {Text '1 [CVAJ5]'}, {Text '2 [CVAK5]'}, {Text '3 [CVAL5]'}}" f:Labels="{Collection {Text 'Type de taux TVA'}}" /&gt;</data>
-  <data name="Fld.VatDefinition.VatRateType" id="AM5">&lt;s:data id="_0" f:Name="VatRateType" /&gt;</data>
+  <data name="Fld.VatDefinition.VatRateType" id="AM5">&lt;s:data id="_0" f:Name="VatRateType" f:Labels="{Collection {Text 'Type de taux'}}" /&gt;</data>
 </bundle>
