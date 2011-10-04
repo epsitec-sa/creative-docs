@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 			{
 				return x => BridgeSpy.ExecuteSetter (this.sourceGetter (), this.lambda, x,
 					(entity, field) => this.setter.DynamicInvoke (entity, field),
-					(entity) => (TField) this.getter.DynamicInvoke (entity));
+					(entity) => (TField?) this.getter.DynamicInvoke (entity));
 			}
 
 			private Marshaler CreateMarshaler()
