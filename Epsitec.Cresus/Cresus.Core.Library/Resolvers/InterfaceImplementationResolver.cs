@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 		}
 
 
-		private static readonly System.Type[] noTypes = new System.Type[] { };
-		private static readonly object[] noArguments = new object[] { };
+		private static readonly System.Type[]	noTypes     = new System.Type[] { };
+		private static readonly object[]		noArguments = new object[] { };
 	}
 }

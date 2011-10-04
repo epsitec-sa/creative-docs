@@ -317,7 +317,9 @@ namespace Epsitec.Cresus.Core.Business
 			throw new System.InvalidOperationException ("Could not acquire lock");
 		}
 
-		private class Unlocker : System.IDisposable
+		#region Unlocker Class
+
+		private sealed class Unlocker : System.IDisposable
 		{
 			public Unlocker(BusinessContext context)
 			{
@@ -340,7 +342,11 @@ namespace Epsitec.Cresus.Core.Business
 			private readonly BusinessContext	context;
 		}
 
-		private class NoOpUnlocker : System.IDisposable
+		#endregion
+
+		#region NoOpUnlocker Class
+
+		private sealed class NoOpUnlocker : System.IDisposable
 		{
 			public NoOpUnlocker(BusinessContext context)
 			{
@@ -361,6 +367,8 @@ namespace Epsitec.Cresus.Core.Business
 
 			private readonly BusinessContext	context;
 		}
+
+		#endregion
 
 		public Logic CreateLogic(AbstractEntity entity)
 		{
@@ -782,7 +790,9 @@ namespace Epsitec.Cresus.Core.Business
 		}
 
 
-		class DelayedUpdate : System.IDisposable
+		#region DelayedUpdate Class
+
+		private sealed class DelayedUpdate : System.IDisposable
 		{
 			public DelayedUpdate(BusinessContext context)
 			{
@@ -815,7 +825,7 @@ namespace Epsitec.Cresus.Core.Business
 			private readonly HashSet<EntityRecord> records;
 		}
 
-		
+		#endregion
 
 
 		#region IDisposable Members
@@ -852,7 +862,7 @@ namespace Epsitec.Cresus.Core.Business
 
 		#region EntityRecord Class
 
-		private class EntityRecord
+		private sealed class EntityRecord
 		{
 			public EntityRecord(AbstractEntity entity, BusinessContext businessContext)
 			{

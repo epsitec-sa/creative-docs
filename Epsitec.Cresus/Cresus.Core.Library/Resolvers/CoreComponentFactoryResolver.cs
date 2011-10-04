@@ -22,6 +22,6 @@ namespace Epsitec.Cresus.Core.Resolvers
 		}
 
 		[System.ThreadStatic]
-		private static List<TFactory> factories;
+		private static List<TFactory>			factories;
 	}
 }

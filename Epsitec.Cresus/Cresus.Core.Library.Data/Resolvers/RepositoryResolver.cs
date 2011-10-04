@@ -20,7 +20,18 @@ namespace Epsitec.Cresus.Core.Resolvers
 	{
 		public static Repository Resolve(System.Type entityType, CoreData data, DataContext dataContext)
 		{
-			var type = RepositoryResolver.FindRepositorySystemTypes (entityType).FirstOrDefault ();
+			if (RepositoryResolver.resolverCache == null)
+			{
+				RepositoryResolver.resolverCache = new Dictionary<System.Type, System.Type> ();
+			}
+
+			System.Type type;
+
+			if (RepositoryResolver.resolverCache.TryGetValue (entityType, out type) == false)
+			{
+				type = RepositoryResolver.FindRepositorySystemTypes (entityType).FirstOrDefault ();
+				RepositoryResolver.resolverCache[entityType] = type;
+			}
 
 			if (type != null)
 			{
@@ -56,5 +67,8 @@ namespace Epsitec.Cresus.Core.Resolvers
 
 			return types;
 		}
+
+		[System.ThreadStatic]
+		private static Dictionary<System.Type, System.Type> resolverCache;
 	}
 }
