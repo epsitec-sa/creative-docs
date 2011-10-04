@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		{
 			AbstractArticleParameterDefinitionEntity parameter = article.ArticleDefinition.ArticleParameterDefinitions[index];
 
-			if (parameter.Description.IsNullOrEmpty)
+			if (parameter.Name.IsNullOrEmpty && parameter.Description.IsNullOrEmpty)
 			{
 				return;
 			}
@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			var label = new StaticText
 			{
 				Parent = box,
-				FormattedText = TextFormatter.ConvertToText (article.ArticleDefinition.ArticleParameterDefinitions[index].Description),
+				FormattedText = parameter.Description.IsNullOrEmpty ? parameter.Name : parameter.Description,
 				PreferredWidth = this.labelWidth,
 				Dock = DockStyle.Left,
 			};
