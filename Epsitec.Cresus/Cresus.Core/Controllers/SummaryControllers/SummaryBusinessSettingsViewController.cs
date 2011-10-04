@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Types;
@@ -30,11 +30,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				.End ()
 				;
 			wall.AddBrick (x => x.Finance.PaymentReminderDefs)
-				.Attribute (BrickMode.AutoGroup)
-				.Template ()
-				.End ()
-				;
-			wall.AddBrick (x => x.Tax.VatDefinitions)
 				.Attribute (BrickMode.AutoGroup)
 				.Template ()
 				.End ()

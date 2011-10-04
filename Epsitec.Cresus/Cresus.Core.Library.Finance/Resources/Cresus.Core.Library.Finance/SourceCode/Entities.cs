@@ -1542,18 +1542,6 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
-		///	<summary>
-		///	The <c>VatDefinitions</c> field.
-		///	designer:fld/CVAP3/CVAS3
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[CVAS3]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.VatDefinitionEntity> VatDefinitions
-		{
-			get
-			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.VatDefinitionEntity> ("[CVAS3]");
-			}
-		}
 		
 		partial void OnVatNumberChanging(string oldValue, string newValue);
 		partial void OnVatNumberChanged(string oldValue, string newValue);
