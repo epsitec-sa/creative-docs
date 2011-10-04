@@ -74,6 +74,7 @@
     <Compile Include="Business\Finance\TaxRateAmount.cs" />
     <Compile Include="Business\Finance\VatCode.cs" />
     <Compile Include="Business\Finance\VatCodeRate.cs" />
+    <Compile Include="Business\Finance\VatRateType.cs" />
     <Compile Include="Business\IsrHelper.cs" />
     <Compile Include="Dialogs\V11ImportDialog.cs" />
     <Compile Include="Entities\PaymentTransactionEntity.cs" />

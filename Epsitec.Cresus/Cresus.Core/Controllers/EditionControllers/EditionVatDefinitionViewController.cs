@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.End ()
 				.Separator ()
 				.Input ()
-				  .Field (x => x.VatCode)
+				  .Field (x => x.VatRateType)
 				  .Field (x => x.Rate)
 				.End ()
 				;

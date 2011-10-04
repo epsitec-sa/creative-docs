@@ -639,6 +639,28 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>ExchangeRateBaseCurrencyCode</c> field.
+		///	designer:fld/CVAT/CVAG5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVAG5]")]
+		public global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode ExchangeRateBaseCurrencyCode
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode> ("[CVAG5]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue = this.ExchangeRateBaseCurrencyCode;
+				if (oldValue != value || !this.IsFieldDefined("[CVAG5]"))
+				{
+					this.OnExchangeRateBaseCurrencyCodeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode> ("[CVAG5]", oldValue, value);
+					this.OnExchangeRateBaseCurrencyCodeChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnCurrencyCodeChanging(global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode newValue);
 		partial void OnCurrencyCodeChanged(global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode newValue);
@@ -648,6 +670,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnExchangeRateChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnExchangeRateSourceChanging(global::Epsitec.Cresus.Core.Entities.ExchangeRateSourceEntity oldValue, global::Epsitec.Cresus.Core.Entities.ExchangeRateSourceEntity newValue);
 		partial void OnExchangeRateSourceChanged(global::Epsitec.Cresus.Core.Entities.ExchangeRateSourceEntity oldValue, global::Epsitec.Cresus.Core.Entities.ExchangeRateSourceEntity newValue);
+		partial void OnExchangeRateBaseCurrencyCodeChanging(global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode newValue);
+		partial void OnExchangeRateBaseCurrencyCodeChanged(global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -679,7 +703,7 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>ExchangeRateSource</c> entity.
 	///	designer:cap/CVAU
 	///	</summary>
-	public partial class ExchangeRateSourceEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime
+	public partial class ExchangeRateSourceEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.INameDescription
 	{
 		#region ILifetime Members
 		///	<summary>
@@ -696,6 +720,40 @@ namespace Epsitec.Cresus.Core.Entities
 			set
 			{
 				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region INameDescription Members
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/CVAU/8VA7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA7]")]
+		public global::Epsitec.Common.Types.FormattedText Name
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetName (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/CVAU/8VA8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA8]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetDescription (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetDescription (this, value);
 			}
 		}
 		#endregion
@@ -1286,24 +1344,24 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		#endregion
 		///	<summary>
-		///	The <c>VatCode</c> field.
-		///	designer:fld/CVAR2/CVAS2
+		///	The <c>VatRateType</c> field.
+		///	designer:fld/CVAR2/CVAM5
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[CVAS2]")]
-		public global::Epsitec.Cresus.Core.Business.Finance.VatCode VatCode
+		[global::Epsitec.Common.Support.EntityField ("[CVAM5]")]
+		public global::Epsitec.Cresus.Core.Business.Finance.VatRateType VatRateType
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.VatCode> ("[CVAS2]");
+				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.VatRateType> ("[CVAM5]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Business.Finance.VatCode oldValue = this.VatCode;
-				if (oldValue != value || !this.IsFieldDefined("[CVAS2]"))
+				global::Epsitec.Cresus.Core.Business.Finance.VatRateType oldValue = this.VatRateType;
+				if (oldValue != value || !this.IsFieldDefined("[CVAM5]"))
 				{
-					this.OnVatCodeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.VatCode> ("[CVAS2]", oldValue, value);
-					this.OnVatCodeChanged (oldValue, value);
+					this.OnVatRateTypeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.VatRateType> ("[CVAM5]", oldValue, value);
+					this.OnVatRateTypeChanged (oldValue, value);
 				}
 			}
 		}
@@ -1330,8 +1388,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnVatCodeChanging(global::Epsitec.Cresus.Core.Business.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.VatCode newValue);
-		partial void OnVatCodeChanged(global::Epsitec.Cresus.Core.Business.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.VatCode newValue);
+		partial void OnVatRateTypeChanging(global::Epsitec.Cresus.Core.Business.Finance.VatRateType oldValue, global::Epsitec.Cresus.Core.Business.Finance.VatRateType newValue);
+		partial void OnVatRateTypeChanged(global::Epsitec.Cresus.Core.Business.Finance.VatRateType oldValue, global::Epsitec.Cresus.Core.Business.Finance.VatRateType newValue);
 		partial void OnRateChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnRateChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		

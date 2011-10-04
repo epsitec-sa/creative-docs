@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -66,9 +66,9 @@ namespace Epsitec.Cresus.Core.Business.Finance
 				return -1;
 			}
 			if (this.rate > other.rate)
-            {
+			{
 				return 1;
-            }
+			}
 
 			return 0;
 		}
