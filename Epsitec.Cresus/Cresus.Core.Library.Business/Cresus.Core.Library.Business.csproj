@@ -61,7 +61,6 @@
     <Compile Include="Business\DocumentItemAttributes.cs" />
     <Compile Include="Business\EntityPrinters\RelationPrinter.cs" />
     <Compile Include="Business\EntitySaveMode.cs" />
-    <Compile Include="Business\Enumerations.cs" />
     <Compile Include="Business\Finance\PriceCalculators\ItemPriceCalculators\AbstractItemPriceCalculator.cs" />
     <Compile Include="Business\Finance\PriceCalculators\ItemPriceCalculators\ArticleItemPriceCalculator.cs" />
     <Compile Include="Business\Finance\PriceCalculators\DocumentPriceCalculator.cs" />

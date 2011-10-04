@@ -69,34 +69,6 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		}
 
 
-		public static VatRateType GetVatRateType(VatCode vatCode)
-		{
-			switch (vatCode)
-			{
-				case VatCode.None:
-				case VatCode.Excluded:
-				case VatCode.ZeroRated:
-					return VatRateType.None;
-
-				case VatCode.StandardTaxOnTurnover:
-				case VatCode.StandardInputTaxOnMaterialOrServiceExpenses:
-				case VatCode.StandardInputTaxOnInvestementOrOperatingExpenses:
-					return VatRateType.StandardTax;
-
-				case VatCode.SpecialTaxOnTurnover:
-				case VatCode.SpecialInputTaxOnMaterialOrServiceExpenses:
-				case VatCode.SpecialInputTaxOnInvestementOrOperatingExpenses:
-					return VatRateType.SpecialTax;
-
-				case VatCode.ReducedTaxOnTurnover:
-				case VatCode.ReducedInputTaxOnMaterialOrServiceExpenses:
-				case VatCode.ReducedInputTaxOnInvestementOrOperatingExpenses:
-					return VatRateType.ReducedTax;
-			}
-
-			throw new System.NotSupportedException (string.Format ("Unsupported value: {0}", vatCode.GetQualifiedName ()));
-		}
-
 		#region Factory Class
 
 		private sealed class Factory : ICoreDataComponentFactory

@@ -8,6 +8,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business.Finance
 {
+#if false
 	[DesignerVisible]
 	public enum VatCode
 	{
@@ -28,4 +29,5 @@ namespace Epsitec.Cresus.Core.Business.Finance
 		Excluded    = 100,										//	EXCLU, exclu de l'impôt LTVA art. 21 (http://www.admin.ch/ch/f/rs/641_20/index.html) et (http://www.epsitec.ch/support/faq/cc-tva-06)
 		ZeroRated   = 110,										//	EXONERE et EXPORT, exonéré LTVA art. 23
 	}
+#endif
 }

@@ -26,6 +26,8 @@ namespace Epsitec.Cresus.Core
 				
 				//	designer:cap/L0KU1
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAbstractArticleParameterDefinition = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 62));
+				//	designer:cap/L0ABL
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAccountingOperation = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 683));
 				//	designer:cap/L0K71
 				public static readonly global::Epsitec.Common.Widgets.Command ShowArticleCategory = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 39));
 				//	designer:cap/L0AMC
@@ -187,6 +189,8 @@ namespace Epsitec.Cresus.Core
 				
 				//	designer:cap/L0KU1
 				public const long ShowAbstractArticleParameterDefinition = 0x150001400003EL;
+				//	designer:cap/L0ABL
+				public const long ShowAccountingOperation = 0x150000A0002ABL;
 				//	designer:cap/L0K71
 				public const long ShowArticleCategory = 0x1500014000027L;
 				//	designer:cap/L0AMC
