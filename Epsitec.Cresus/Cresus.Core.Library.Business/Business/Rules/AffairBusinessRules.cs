@@ -19,9 +19,15 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
 			var generatorPool   = Logic.Current.GetComponent<RefIdGeneratorPool> ();
 
+			var currentCustomer = businessContext.GetMasterEntity<CustomerEntity> ();
+
+			if (currentCustomer.IsNotNull ())
+			{
+				affair.Customer = currentCustomer;
+			}
+
 			businessContext.AssignIds (affair, generatorPool);
 
-			affair.Code = (string) ItemCodeGenerator.NewCode ();
 			affair.Workflow = WorkflowFactory.CreateDefaultWorkflow<AffairEntity> (businessContext);
 
 			//	TODO: ...compléter...

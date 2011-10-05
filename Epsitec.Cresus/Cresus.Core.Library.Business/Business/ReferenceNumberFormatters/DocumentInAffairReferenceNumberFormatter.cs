@@ -30,4 +30,34 @@ namespace Epsitec.Cresus.Core.Business.ReferenceNumberFormatters
 			return string.Format ("{0}-{1:00}", affair.IdA, affair.Documents.Count);
 		}
 	}
+	public class IncludeCustomerReferenceNumberFormatter : IFormatTokenFormatter
+	{
+		#region IFormatTokenFormatter Members
+
+		public FormatToken GetFormatToken()
+		{
+			return new ArgumentFormatToken ("#customer", this.CreateReferenceNumber);
+		}
+
+		#endregion
+
+		private string CreateReferenceNumber(FormatterHelper helper, string argument)
+		{
+			var businessContext = helper.GetComponent<IBusinessContext> ();
+			var affair = businessContext.GetMasterEntity<AffairEntity> ();
+			var customer = affair.Customer;
+
+			switch (argument ?? "A")
+			{
+				case "A":
+					return customer.IdA;
+				case "B":
+					return customer.IdB;
+				case "C":
+					return customer.IdC;
+			}
+
+			return "?";
+		}
+	}
 }

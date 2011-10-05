@@ -62,6 +62,8 @@ namespace Epsitec.Cresus.Core.Business.Actions
 			var documentMetadata = businessContext.CreateMasterEntity<DocumentMetadataEntity> ();
 			var businessDocument = businessContext.CreateMasterEntity<BusinessDocumentEntity> ();
 
+			System.Diagnostics.Debug.Assert (affair.Customer == currentCustomer);
+
 			if (CustomerActions.SetupDocumentMetadata (businessContext, documentMetadata, businessDocument, documentType))
 			{
 				CustomerActions.SetupBusinessDocument (businessContext, businessDocument, currentCustomer);

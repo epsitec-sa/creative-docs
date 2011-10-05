@@ -25,11 +25,8 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
 			var generatorPool   = Logic.Current.GetComponent<RefIdGeneratorPool> ();
 
+			businessContext.AssignIds (customer, generatorPool);
 
-			var generator = generatorPool.GetGenerator<CustomerEntity> ();
-			var nextId    = generator.GetNextId ();
-
-			customer.IdA = string.Format ("{0:000000}", nextId);
 			customer.DefaultBillingMode  = Business.Finance.BillingMode.IncludingTax;
 			customer.Workflow = WorkflowFactory.CreateDefaultWorkflow<CustomerEntity> (businessContext);
 			customer.Code = (string) ItemCodeGenerator.NewCode ();
