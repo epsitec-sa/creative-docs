@@ -112,8 +112,17 @@ namespace Epsitec.DebugService
 					var totalTicks = System.DateTime.UtcNow.Ticks / 10000;
 					var fileName   = string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}\\{1:00000000000000}.END.txt", this.sessionId, totalTicks);
 					var data       = System.Text.Encoding.UTF8.GetBytes ("Exited");
-					
-					this.UploadFile (fileName, data);
+
+					try
+					{
+						this.UploadFile (fileName, data);
+					}
+					catch (System.Exception ex)
+					{
+						System.Diagnostics.Debug.WriteLine ("The debug service folder monitor could not properly upload the 'exit' event.");
+						System.Diagnostics.Debug.WriteLine (ex.Message);
+						System.Diagnostics.Debug.WriteLine (ex.StackTrace);
+					}
 				}
 				
 				System.IO.Directory.Delete (this.path, recursive: true);

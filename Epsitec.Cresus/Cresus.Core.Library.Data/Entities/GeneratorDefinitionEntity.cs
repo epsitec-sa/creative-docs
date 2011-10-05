@@ -11,6 +11,10 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class GeneratorDefinitionEntity
 	{
+		public GeneratorDefinitionEntity()
+		{
+		}
+		
 		public override FormattedText GetSummary()
 		{
 			return TextFormatter.FormatText (this.Name, "\n", this.Description);

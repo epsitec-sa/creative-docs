@@ -1550,6 +1550,22 @@ namespace Epsitec.Common.Widgets
 			Window.GlobalFocusedWindowChanged.Raise (this, e);
 		}
 
+		internal void NotifyWidgetRemoval(Widget widget)
+		{
+			if (this.EngagedWidget == widget)
+			{
+				this.EngagedWidget = null;
+			}
+			if (this.FocusedWidget == widget)
+			{
+				this.FocusedWidget = null;
+			}
+			if (this.ModalWidget == widget)
+			{
+				this.ModalWidget = null;
+			}
+		}
+
 
 		public bool IsSubmenuOpen
 		{

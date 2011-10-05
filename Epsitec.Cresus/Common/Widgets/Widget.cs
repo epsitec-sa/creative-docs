@@ -4015,6 +4015,10 @@ namespace Epsitec.Common.Widgets
 			
 			if (oldWindow != newWindow)
 			{
+				if (oldWindow != null)
+				{
+					oldWindow.NotifyWidgetRemoval (this);
+				}
 				this.NotifyWindowChanged (oldWindow, newWindow);
 			}
 		}
