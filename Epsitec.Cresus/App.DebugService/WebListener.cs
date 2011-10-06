@@ -30,7 +30,7 @@ namespace Epsitec.DebugService
 			try
 			{
 				WebListener.StoragePath = storagePath;
-				WebListener.Listen (prefixes);
+				WebListener.Listen (prefixes.Split (';'));
 			}
 			catch (System.Exception ex)
 			{
@@ -58,7 +58,12 @@ namespace Epsitec.DebugService
 			}
 
 			string urlPath  = request.Url.LocalPath;
-			string urlQuery = request.Url.Query.Substring (1);
+			string urlQuery = request.Url.Query;
+
+			if (urlQuery.StartsWith ("?"))
+			{
+				urlQuery = urlQuery.Substring (1);
+			}
 
 			byte[] data = new byte[request.ContentLength64];
 
@@ -80,7 +85,38 @@ namespace Epsitec.DebugService
 				return "OK";
 			}
 
+
+			string argPackageRev;
+			string argPackageGuid;
+
+			keyValues.TryGetValue ("packageRev", out argPackageRev);
+			keyValues.TryGetValue ("packageGuid", out argPackageGuid);
+			
+			if ((urlPath == "/updateservice/check") &&
+				(string.IsNullOrEmpty (argPackageRev) == false) &&
+				(string.IsNullOrEmpty (argPackageGuid) == false))
+			{
+				return WebListener.ExecuteUpdateCheck (data, argPackageRev, argPackageGuid);
+			}
+
+
 			return "Error: unknown action " + urlPath;
+		}
+
+		private static string ExecuteUpdateCheck(byte[] data, string argPackageRev, string argPackageGuid)
+		{
+			string manifest = System.Text.Encoding.UTF8.GetString (data);
+
+			System.Console.ForegroundColor = System.ConsoleColor.Yellow;
+			System.Console.Out.WriteLine (manifest);
+			System.Console.ForegroundColor = System.ConsoleColor.White;
+
+			if (argPackageRev == "2")
+			{
+				return "OK";
+			}
+
+			return "update 2.package http://www.cresus.ch/downloads/packages/EB43E837-95D5-40AA-8902-48F208BCCD30.package";
 		}
 
 		private static void ExecuteLog(string argSession, string argFile, byte[] data)
@@ -127,7 +163,7 @@ namespace Epsitec.DebugService
 		}
 
 
-		private static void Listen(string prefixes)
+		private static void Listen(params string[] prefixes)
 		{
 			if (!HttpListener.IsSupported)
 			{
@@ -138,16 +174,21 @@ namespace Epsitec.DebugService
 			//	The server must have the ACLs properly cofigured for this to work:
 			//	-------------------------------------------------------------------------------
 			//	CMD> netsh http add urlacl url=http://+:8081/debugservice user=administrator
+			//	CMD> netsh http add urlacl url=http://+:8081/updateservice user=administrator
 			//	-------------------------------------------------------------------------------
 
-			if (string.IsNullOrEmpty (prefixes))
+			if (prefixes.Length == 0)
 			{
 				throw new System.ArgumentException ("No prefixes specified", "prefixes");
 			}
 
 			using (var listener = new HttpListener ())
 			{
-				listener.Prefixes.Add (prefixes);
+				foreach (var prefix in prefixes)
+				{
+					listener.Prefixes.Add (prefix);
+				}
+				
 				listener.Start ();
 
 				while (true)

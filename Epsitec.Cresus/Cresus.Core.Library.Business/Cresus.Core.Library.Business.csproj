@@ -330,6 +330,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\App.DebugService\App.DebugService.csproj">
+      <Project>{1D3F4D00-84AE-4714-BDD5-6DDB19BE6AAF}</Project>
+      <Name>App.DebugService</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>

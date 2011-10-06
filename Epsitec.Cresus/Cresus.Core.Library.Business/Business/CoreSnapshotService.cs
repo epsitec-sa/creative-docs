@@ -94,8 +94,9 @@ namespace Epsitec.Cresus.Core.Library.Business
 			System.IO.Directory.CreateDirectory (this.sessionPath);
 
 			string arguments = InvariantConverter.Format (@"-monitor ""{0}"" {1}", this.sessionPath, System.Diagnostics.Process.GetCurrentProcess ().Id);
+			string exePath   = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location), "App.DebugService.exe");
 
-			var startInfo = new System.Diagnostics.ProcessStartInfo ("App.DebugService.exe", arguments)
+			var startInfo = new System.Diagnostics.ProcessStartInfo (exePath, arguments)
 			{
 				WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden
 			};

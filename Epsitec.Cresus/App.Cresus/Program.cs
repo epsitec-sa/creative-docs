@@ -98,51 +98,126 @@ namespace Epsitec.Cresus.App
 			var chunkReader = new ChunkReader (fileStream);
 			var tempRoot    = Program.GetTempPath ();
 
-			foreach (var chunk in chunkReader.GetChunks ())
+			try
 			{
-				var guid = chunk.Guid;
+				foreach (var chunk in chunkReader.GetChunks ())
+				{
+					var guid = chunk.Guid;
 
-				if (guid == WellKnownChunks.DbAcess)
-				{
-					//	TODO: use the information to access the database and extract the files for the
-					//	the target application; for now, just use the files found in the package itself.
-				}
-				else if (guid == WellKnownChunks.SoftName)
-				{
-					Program.softName = chunk.Name;
-				}
-				else if (guid == WellKnownChunks.SoftSplash)
-				{
-					Program.splash = new SplashScreen (chunk.Data);
-				}
-				else if (guid == WellKnownChunks.SoftArgs)
-				{
-					Program.softArgs = chunk.Name.Split ('\n');
-				}
-				else if (guid == WellKnownChunks.SoftFiles)
-				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("{0} : {1}, {2} bytes", chunk.Guid, chunk.Name, chunk.Data.Length));
-
-					var filePath = System.IO.Path.Combine (tempRoot, chunk.Name);
-					var fileDir  = System.IO.Path.GetDirectoryName (filePath);
-					var fileName = System.IO.Path.GetFileNameWithoutExtension (filePath).ToLowerInvariant ();
-
-					Program.chunks[fileName] = chunk;
-
-					if (System.IO.Directory.Exists (fileDir) == false)
+					if (guid == WellKnownChunks.DbAcess)
 					{
-						System.IO.Directory.CreateDirectory (fileDir);
+						//	TODO: use the information to access the database and extract the files for the
+						//	the target application; for now, just use the files found in the package itself.
 					}
+					else if (guid == WellKnownChunks.SoftName)
+					{
+						Program.softName = chunk.Name;
+					}
+					else if (guid == WellKnownChunks.SoftSplash)
+					{
+						if (Program.splash == null)
+						{
+							Program.splash = new SplashScreen (chunk.Data);
+						}
+					}
+					else if (guid == WellKnownChunks.SoftArgs)
+					{
+						Program.softArgs = chunk.Name.Split ('\n');
+					}
+					else if (guid == WellKnownChunks.SoftManifest)
+					{
+						if (Program.ProcessManifest (chunk.Data))
+						{
+							return;
+						}
+					}
+					else if (guid == WellKnownChunks.SoftFiles)
+					{
+						System.Diagnostics.Debug.WriteLine (string.Format ("{0} : {1}, {2} bytes", chunk.Guid, chunk.Name, chunk.Data.Length));
 
-					System.IO.File.WriteAllBytes (filePath, chunk.Data);
+						var filePath = System.IO.Path.Combine (tempRoot, chunk.Name);
+						var fileDir  = System.IO.Path.GetDirectoryName (filePath);
+						var fileName = System.IO.Path.GetFileNameWithoutExtension (filePath).ToLowerInvariant ();
+
+						Program.chunks[fileName] = chunk;
+
+						if (System.IO.Directory.Exists (fileDir) == false)
+						{
+							System.IO.Directory.CreateDirectory (fileDir);
+						}
+
+						System.IO.File.WriteAllBytes (filePath, chunk.Data);
+					}
+				}
+
+				Program.ExecutePackage ();
+			}
+			finally
+			{
+				Program.CleanupFolder (Program.GetTempPath ());
+
+				if (Program.splash != null)
+				{
+					Program.splash.NotifyIsRunning ();
+					Program.splash = null;
+				}
+			}
+		}
+
+		private static void CleanupFolder(string path)
+		{
+			int attempts = 10;
+
+			while (System.IO.Directory.Exists (path))
+			{
+				if (attempts-- == 0)
+				{
+					break;
+				}
+				
+				try
+				{
+					System.IO.Directory.Delete (path, true);
+				}
+				catch (System.Exception ex)
+				{
+					System.Diagnostics.Debug.WriteLine (ex.Message);
+					System.Threading.Thread.Sleep (1000);
+				}
+			}
+		}
+
+		private static bool ProcessManifest(byte[] data)
+		{
+			var manifestProcessor = new ManifestProcessor (data);
+
+			if (Program.replacementPackageProbed == false)
+			{
+				Program.replacementPackageProbed = true;
+
+				var fileInfo = manifestProcessor.ProbeForReplacementPackage ();
+
+				if (fileInfo != null)
+				{
+					Program.ProcessPackageFile (fileInfo);
+					return true;
 				}
 			}
 
-			Program.ExecutePackage ();
+			if (manifestProcessor.ProbeForUpdate ())
+			{
+				Program.replacementPackageProbed = true;
 
-			System.IO.Directory.Delete (Program.GetTempPath (), true);
+				var fileInfo = manifestProcessor.ProbeForReplacementPackage ();
+
+				if (fileInfo != null)
+				{
+					Program.ProcessPackageFile (fileInfo);
+					return true;
+				}
+			}
 			
-			Program.splash.NotifyIsRunning ();
+			return false;
 		}
 
 		private static void ExecutePackage()
@@ -339,7 +414,7 @@ namespace Epsitec.Cresus.App
 			var file = System.Reflection.Assembly.GetExecutingAssembly ().Location;
 			var dir  = System.IO.Path.GetDirectoryName (file);
 			var name = System.IO.Path.GetFileNameWithoutExtension (file).ToLowerInvariant ();
-			
+
 			return new System.IO.FileInfo (System.IO.Path.Combine (dir, "default." + name));
 		}
 
@@ -401,5 +476,6 @@ namespace Epsitec.Cresus.App
 		private static string[] softArgs;
 		private static Dictionary<string, Chunk> chunks = new Dictionary<string, Chunk> ();
 		private static SplashScreen splash;
+		private static bool replacementPackageProbed;
 	}
 }
