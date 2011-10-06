@@ -21,7 +21,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 	{
 		public CoreSnapshotService()
 		{
-			this.listener = new DebugOutputTraceListener (this.HandleDebugOutputWriter);
+			CoreSnapshotService.SetDefaultThreadName ();
+			
 			this.sessionId = CoreSnapshotService.GetTimeStampedId ();
 
 			if (CoreSnapshotService.defaultService == null)
@@ -30,9 +31,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			}
 
 			this.StartDebugMonitor ();
-
-			System.Diagnostics.Debug.Listeners.Add (this.listener);
-
+			this.CreateDebugTraceListener ();
 			this.CreateDatabaseSnapshot ();
 		}
 
@@ -66,6 +65,27 @@ namespace Epsitec.Cresus.Core.Library.Business
 			}
 		}
 
+
+		private static void SetDefaultThreadName()
+		{
+			var thread = System.Threading.Thread.CurrentThread;
+			
+			if (thread.Name == null)
+			{
+				thread.Name = "Main";
+			}
+		}
+		
+		private void CreateDebugTraceListener()
+		{
+			this.listener = new DebugOutputTraceListener (this.HandleDebugOutputWriter)
+			{
+				EnableOutputDebugString = true,
+				Name = "DebugService",
+			};
+			
+			System.Diagnostics.Debug.Listeners.Insert (0, this.listener);
+		}
 		
 		private void StartDebugMonitor()
 		{
