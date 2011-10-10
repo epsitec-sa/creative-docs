@@ -348,6 +348,11 @@ namespace Epsitec.Cresus.Core.Controllers
 				Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagIT.icon""/>",
 			};
 
+			ToolTip.Default.SetToolTip (selectLanaguage1, "Français");
+			ToolTip.Default.SetToolTip (selectLanaguage2, "Allemand");
+			ToolTip.Default.SetToolTip (selectLanaguage3, "Anglais");
+			ToolTip.Default.SetToolTip (selectLanaguage4, "Italien");
+
 			Library.UI.Services.Settings.CultureForData.SelectLanguage ("fr");
 			Library.UI.Services.Settings.CultureForData.DefineDefaultLanguage ("fr");
 

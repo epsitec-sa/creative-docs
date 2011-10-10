@@ -233,10 +233,22 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 				if (!rect.IsSurfaceZero)
 				{
-					string date = Misc.GetDateShortDescription (this.Entity.BillingDate);
+					Date date;
+
+					if (this.Entity.BillingDate.HasValue)
+					{
+						date = this.Entity.BillingDate.Value;
+					}
+					else
+					{
+						date = Date.Today;
+					}
+
+					string dateText = Misc.GetDateShortDescription (date);
+
 					var location = this.DefaultLocation;
 					var dateBand = new TextBand ();
-					dateBand.Text = (location == null) ? FormattedText.Concat ("Le ", date) : FormattedText.Concat (location, ", le ", date);
+					dateBand.Text = (location == null) ? FormattedText.Concat ("Le ", dateText) : FormattedText.Concat (location, ", le ", dateText);
 					dateBand.Font = font;
 					dateBand.FontSize = this.GetOptionValue (DocumentOption.HeaderLocDateFontSize);
 					this.documentContainer.AddAbsolute (dateBand, rect);
