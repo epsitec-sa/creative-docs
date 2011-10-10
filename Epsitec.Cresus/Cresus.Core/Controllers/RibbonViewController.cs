@@ -101,9 +101,10 @@ namespace Epsitec.Cresus.Core.Controllers
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				Dock = DockStyle.Fill,
 				Name = "Ribbon",
+				Margins = new Margins (-1, -1, 0, 0),
 			};
 
-			new Separator
+			var separator = new Separator
 			{
 				Parent = container,
 				PreferredHeight = 1,
@@ -111,7 +112,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Dock = DockStyle.Bottom,
 			};
 
-			//	-->
+			//	|-->
 			{
 				var section = this.CreateNewStyleSection (frame, DockStyle.Left, "Navigation");
 
@@ -182,7 +183,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				WorkflowController.SetWorkflowButtonsContainer (section);
 			}
 
-			//	<--
+			//	<--|
 			{
 				var section = this.CreateNewStyleSection (frame, DockStyle.Right, "Réglages");
 
@@ -193,7 +194,33 @@ namespace Epsitec.Cresus.Core.Controllers
 				bottomSection.Children.Add (this.CreateButton (Res.Commands.Global.ShowDebug, large: false));
 
 				this.CreateNewStyleRibbonUserSection (section);
+
+				var space = new FrameBox  // espace pour le bouton 'v'
+				{
+					PreferredWidth = 6,  // chevauchement partiel volontaire
+					Dock = DockStyle.StackBegin,
+				};
+				section.Children.Add (space);
 			}
+
+			//	Bouton 'v'
+			var showRibbonButton = new GlyphButton
+			{
+				Parent = container.Window.Root,
+				Anchor = AnchorStyles.TopRight,
+				PreferredSize = new Size (14, 14),
+				Margins = new Margins (0, -1, -1, 0),
+				GlyphShape = GlyphShape.TriangleUp,
+				ButtonStyle = ButtonStyle.Icon,
+			};
+
+			ToolTip.Default.SetToolTip (showRibbonButton, "Montre ou cache la barre d'icônes");
+
+			showRibbonButton.Clicked += delegate
+			{
+				container.Visibility = !container.Visibility;
+				showRibbonButton.GlyphShape = container.Visibility ? GlyphShape.TriangleUp : GlyphShape.TriangleDown;
+			};
 		}
 
 		private Widget CreateNewStyleSection(Widget frame, DockStyle dockStyle, FormattedText description)

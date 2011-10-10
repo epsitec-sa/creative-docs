@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		protected override void SetupWindow(Window window)
 		{
-			window.Text = "Choix des options d'impression";
+			window.Text = "Aperçu avant impression";
 			window.ClientSize = new Size (this.isPreview ? 940 : 350, this.isPreview ? 550 : 500);
 			window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;  // pour avoir les boutons Minimize/Maximize/Close !
 		}

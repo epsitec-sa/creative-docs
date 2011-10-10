@@ -131,8 +131,11 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public void SetPreviewPanelVisibility(bool visibility)
 		{
-			this.rightPreviewPanel.Visibility = visibility;
-			this.rightSplitter.Visibility = this.rightPreviewPanel.Visibility;
+			if (this.rightPreviewPanel != null)
+			{
+				this.rightPreviewPanel.Visibility = visibility;
+				this.rightSplitter.Visibility = this.rightPreviewPanel.Visibility;
+			}
 		}
 
 
@@ -162,7 +165,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.CreateUILeftPanel ();
 			this.CreateUISplitter ();
 			this.CreateUIMainPanel ();
-			this.CreateUIRightPanels ();
+			//?this.CreateUIRightPanels ();
 		}
 
 		private void CreateUITopPanel()

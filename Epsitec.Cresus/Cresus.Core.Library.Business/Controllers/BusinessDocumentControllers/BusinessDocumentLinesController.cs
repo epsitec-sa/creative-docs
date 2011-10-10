@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Parent = frame,
 				Anchor = AnchorStyles.TopRight,
 				PreferredSize = new Size (16, 16),
-				Margins = new Margins (0, 2, 2, 0),
+				Margins = new Margins (0, 2, 53+2, 0),  // 53 = hauteur pour LineRibbonController
 				GlyphShape = BusinessDocumentLinesController.persistantShowToolbar ? GlyphShape.TriangleUp : GlyphShape.TriangleDown,
 				ButtonStyle = ButtonStyle.Slider,
 			};
