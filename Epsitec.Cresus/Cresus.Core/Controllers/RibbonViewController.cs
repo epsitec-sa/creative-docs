@@ -82,9 +82,353 @@ namespace Epsitec.Cresus.Core.Controllers
 		public override void CreateUI(Widget container)
 		{
 			base.CreateUI (container);
+#if false
 			this.CreateRibbonBook (container);
 			this.CreateRibbonHomePage ();
+#else
+			this.CreateRibbon (container);
+#endif
 		}
+
+
+		#region New style ribbon
+		private void CreateRibbon(Widget container)
+		{
+			var frame = new FrameBox
+			{
+				Parent = container,
+				BackColor = Color.FromBrightness (1),
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				Dock = DockStyle.Fill,
+				Name = "Ribbon",
+			};
+
+			new Separator
+			{
+				Parent = container,
+				PreferredHeight = 1,
+				IsHorizontalLine = true,
+				Dock = DockStyle.Bottom,
+			};
+
+			//	-->
+			{
+				var section = this.CreateNewStyleSection (frame, DockStyle.Left, "Navigation");
+
+				section.Children.Add (this.CreateButton (Library.Res.Commands.History.NavigateBackward));
+				section.Children.Add (this.CreateButton (Library.Res.Commands.History.NavigateForward));
+			}
+
+			{
+				var section = this.CreateNewStyleSection (frame, DockStyle.Left, "Validation");
+
+				section.Children.Add (this.CreateButton (Library.Res.Commands.Edition.SaveRecord));
+				section.Children.Add (this.CreateButton (Library.Res.Commands.Edition.DiscardRecord));
+			}
+
+			{
+				var section = this.CreateNewStyleSection (frame, DockStyle.Left, "Edition");
+
+				Widget topSection, bottomSection;
+				this.CreateNewStyleSubsections (section, out topSection, out bottomSection);
+
+				topSection.Children.Add (this.CreateButton (ApplicationCommands.Bold, large: false, isActivable: true));
+				topSection.Children.Add (this.CreateButton (ApplicationCommands.Italic, large: false, isActivable: true));
+				bottomSection.Children.Add (this.CreateButton (ApplicationCommands.Underlined, large: false, isActivable: true));
+				bottomSection.Children.Add (this.CreateButton (ApplicationCommands.MultilingualEdition, large: false));
+
+				this.CreateNewStyleLanguage (section);
+			}
+
+			{
+				var section = this.CreateNewStyleSection (frame, DockStyle.Left, "Presse-papier");
+
+				Widget topSection, bottomSection;
+				this.CreateNewStyleSubsections (section, out topSection, out bottomSection);
+
+				topSection.Children.Add (this.CreateButton (ApplicationCommands.Cut, large: false));
+				bottomSection.Children.Add (this.CreateButton (ApplicationCommands.Copy, large: false));
+
+				section.Children.Add (this.CreateButton (ApplicationCommands.Paste));
+			}
+
+			{
+				var section = this.CreateNewStyleSection (frame, DockStyle.Left, "Actions");
+
+				section.Children.Add (this.CreateButton (Res.Commands.Edition.Print));
+
+				Widget topSection, bottomSection;
+				this.CreateNewStyleSubsections (section, out topSection, out bottomSection);
+
+				topSection.Children.Add (this.CreateButton (Res.Commands.File.ImportV11, large: false));
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Feedback, large: false));
+			}
+
+			{
+				var section = this.CreateNewStyleSection (frame, DockStyle.Left, "Bases de données");
+
+				section.Children.Add (this.CreateButton (Res.Commands.Base.ShowCustomer));
+				section.Children.Add (this.CreateButton (Res.Commands.Base.ShowArticleDefinition));
+				section.Children.Add (this.CreateButton (Res.Commands.Base.ShowDocumentMetadata));
+
+				this.CreateNewStyleRibbonDatabaseSectionMenuButton (section);
+			}
+
+			//	<-->
+			{
+				var section = this.CreateNewStyleSection (frame, DockStyle.Fill, "Affaire");
+
+				// TODO: C'est un moyen bricolé pour que WorkflowController sache où placer ses boutons.
+				WorkflowController.SetWorkflowButtonsContainer (section);
+			}
+
+			//	<--
+			{
+				var section = this.CreateNewStyleSection (frame, DockStyle.Right, "Réglages");
+
+				Widget topSection, bottomSection;
+				this.CreateNewStyleSubsections (section, out topSection, out bottomSection);
+
+				topSection.Children.Add (this.CreateButton (Res.Commands.Global.ShowSettings, large: false));
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Global.ShowDebug, large: false));
+
+				this.CreateNewStyleRibbonUserSection (section);
+			}
+		}
+
+		private Widget CreateNewStyleSection(Widget frame, DockStyle dockStyle, FormattedText description)
+		{
+			double leftMargin  = (dockStyle == DockStyle.Right) ? 2 : 0;
+			double rightMargin = (dockStyle == DockStyle.Left ) ? 2 : 0;
+
+			var section = new FrameBox
+			{
+				Parent = frame,
+				DrawFullFrame = true,
+				BackColor = Color.FromHexa ("ebe9ed"),
+				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+				PreferredWidth = 10,
+				Dock = dockStyle,
+				Margins = new Margins (leftMargin, rightMargin, -1, -1),
+			};
+
+			var top = new FrameBox
+			{
+				Parent = section,
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				PreferredWidth = 10,
+				Dock = DockStyle.Fill,
+				Padding = new Margins (2, 2, 2, 1),
+			};
+
+			new StaticText
+			{
+				Parent = section,
+				FormattedText = description.ApplyFontSize (8.0).ApplyFontColor (Color.FromBrightness (1.0)).ApplyBold (),
+				ContentAlignment = ContentAlignment.MiddleCenter,
+				TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+				BackColor = Color.FromHexa ("a3b3c7"),
+				PreferredWidth = 10,
+				PreferredHeight = 11,
+				Dock = DockStyle.Bottom,
+				Margins = new Margins (1, 1, 0, 1),
+			};
+
+			return top;
+		}
+
+		private void CreateNewStyleSubsections(Widget section, out Widget topSection, out Widget bottomSection)
+		{
+			var frame = new FrameBox
+			{
+				Parent = section,
+				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+				PreferredWidth = 10,
+				Dock = DockStyle.StackBegin,
+			};
+
+			topSection = new FrameBox
+			{
+				Parent = frame,
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				PreferredWidth = 10,
+				Dock = DockStyle.Top,
+			};
+
+			bottomSection = new FrameBox
+			{
+				Parent = frame,
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				PreferredWidth = 10,
+				Dock = DockStyle.Bottom,
+			};
+		}
+
+		private void CreateNewStyleLanguage(Widget section)
+		{
+			var frame1 = new FrameBox
+			{
+				Parent = section,
+				Dock = DockStyle.StackBegin,
+				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+				PreferredWidth = 21,
+			};
+
+			var frame2 = new FrameBox
+			{
+				Parent = section,
+				Dock = DockStyle.StackBegin,
+				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+				PreferredWidth = 21,
+			};
+
+			//	HACK: faire cela proprement avec des commandes multi-états
+
+			var selectLanaguage1 = new IconButton ()
+			{
+				Parent = frame1,
+				Name = "language=fr",
+				PreferredSize = new Size (Library.UI.Constants.ButtonLargeWidth/2, Library.UI.Constants.ButtonLargeWidth/2),
+				Dock = DockStyle.Stacked,
+				Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagFR.icon""/>",
+				ActiveState = ActiveState.Yes,
+			};
+
+			var selectLanaguage2 = new IconButton ()
+			{
+				Parent = frame1,
+				Name = "language=de",
+				PreferredSize = new Size (Library.UI.Constants.ButtonLargeWidth/2, Library.UI.Constants.ButtonLargeWidth/2),
+				Dock = DockStyle.Stacked,
+				Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagDE.icon""/>",
+			};
+
+			var selectLanaguage3 = new IconButton ()
+			{
+				Parent = frame2,
+				Name = "language=en",
+				PreferredSize = new Size (Library.UI.Constants.ButtonLargeWidth/2, Library.UI.Constants.ButtonLargeWidth/2),
+				Dock = DockStyle.Stacked,
+				Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagGB.icon""/>",
+			};
+
+			var selectLanaguage4 = new IconButton ()
+			{
+				Parent = frame2,
+				Name = "language=it",
+				PreferredSize = new Size (Library.UI.Constants.ButtonLargeWidth/2, Library.UI.Constants.ButtonLargeWidth/2),
+				Dock = DockStyle.Stacked,
+				Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagIT.icon""/>",
+			};
+
+			Library.UI.Services.Settings.CultureForData.SelectLanguage ("fr");
+			Library.UI.Services.Settings.CultureForData.DefineDefaultLanguage ("fr");
+
+			selectLanaguage1.Clicked += delegate
+			{
+				Library.UI.Services.Settings.CultureForData.SelectLanguage ("fr");
+				selectLanaguage1.ActiveState = ActiveState.Yes;
+				selectLanaguage2.ActiveState = ActiveState.No;
+				selectLanaguage3.ActiveState = ActiveState.No;
+				selectLanaguage4.ActiveState = ActiveState.No;
+			};
+
+			selectLanaguage2.Clicked += delegate
+			{
+				Library.UI.Services.Settings.CultureForData.SelectLanguage ("de");
+				selectLanaguage1.ActiveState = ActiveState.No;
+				selectLanaguage2.ActiveState = ActiveState.Yes;
+				selectLanaguage3.ActiveState = ActiveState.No;
+				selectLanaguage4.ActiveState = ActiveState.No;
+			};
+
+			selectLanaguage3.Clicked += delegate
+			{
+				Library.UI.Services.Settings.CultureForData.SelectLanguage ("en");
+				selectLanaguage1.ActiveState = ActiveState.No;
+				selectLanaguage2.ActiveState = ActiveState.No;
+				selectLanaguage3.ActiveState = ActiveState.Yes;
+				selectLanaguage4.ActiveState = ActiveState.No;
+			};
+
+			selectLanaguage4.Clicked += delegate
+			{
+				Library.UI.Services.Settings.CultureForData.SelectLanguage ("it");
+				selectLanaguage1.ActiveState = ActiveState.No;
+				selectLanaguage2.ActiveState = ActiveState.No;
+				selectLanaguage3.ActiveState = ActiveState.No;
+				selectLanaguage4.ActiveState = ActiveState.Yes;
+			};
+		}
+
+		private void CreateNewStyleRibbonDatabaseSectionMenuButton(Widget section)
+		{
+			//	Place le bouton 'magique' qui donne accès aux bases de données d'usage moins fréquent.
+			this.databaseButton = this.CreateButton ();
+			section.Children.Add (this.databaseButton);
+
+			this.databaseMenuButton = new GlyphButton ()
+			{
+				ButtonStyle = ButtonStyle.ComboItem,
+				GlyphShape = GlyphShape.Menu,
+				AutoFocus = false,
+				PreferredSize = new Size (13, Library.UI.Constants.ButtonLargeWidth),
+				Dock = DockStyle.StackBegin,
+				Margins = new Margins (-1, 0, 0, 0),
+			};
+			section.Children.Add (this.databaseMenuButton);
+
+			ToolTip.Default.SetToolTip (this.databaseMenuButton, "Montre une autre base de données...");
+
+			this.databaseMenuButton.Clicked += delegate
+			{
+				this.ShowDatabaseSelectionMenu (this.databaseButton);
+			};
+
+			this.databaseMenuButton.Entered += delegate
+			{
+				this.databaseButton.ButtonStyle = ButtonStyle.Combo;
+			};
+
+			this.databaseMenuButton.Exited += delegate
+			{
+				this.databaseButton.ButtonStyle = ButtonStyle.ToolItem;
+			};
+
+			var databaseCommandHandler = this.GetDatabaseCommandHandler ();
+
+			databaseCommandHandler.Changed += delegate
+			{
+				this.UpdateDatabaseButton ();
+			};
+
+			this.UpdateDatabaseMenu ();
+		}
+
+		private void CreateNewStyleRibbonUserSection(Widget section)
+		{
+			var authenticateUserButton = RibbonViewController.CreateIconOrImageButton (Res.Commands.Global.ShowUserManager);
+			authenticateUserButton.CoreData = this.Orchestrator.Data;
+			authenticateUserButton.IconUri = Misc.GetResourceIconUri ("UserManager");
+			authenticateUserButton.IconPreferredSize = new Size (31, 31);
+
+			section.Children.Add (authenticateUserButton);
+
+			//	Le widget 'authenticateUserWidget' déborde volontairement sur le bas du bouton 'ShowUserManager',
+			//	pour permettre d'afficher un nom d'utilisateur lisible.
+			var authenticateUserWidget = new StaticText
+			{
+				Parent = authenticateUserButton,
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+				PreferredHeight = 14,
+				Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom,
+				Margins = new Margins (0, 0, 0, 0),
+			};
+
+			this.authenticateUserButtons.Add (authenticateUserButton);
+			this.authenticateUserWidgets.Add (authenticateUserWidget);
+		}
+		#endregion
 
 
 		private void UpdateAuthenticatedUser()
@@ -486,7 +830,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.CreateRibbonDatabaseSectionMenuButton (section);
 		}
 
-		private void CreateRibbonDatabaseSectionMenuButton(RibbonSection section)
+		private void CreateRibbonDatabaseSectionMenuButton(Widget section)
 		{
 			//	Place le bouton 'magique' qui donne accès aux bases de données d'usage moins fréquent.
 			double buttonWidth = Library.UI.Constants.ButtonLargeWidth;
@@ -961,7 +1305,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				this.commandDispatcher.Register (command, handler);
 			}
 
-			double buttonWidth = large ? Library.UI.Constants.ButtonLargeWidth : Library.UI.Constants.ButtonSmallWidth;
+			double buttonWidth = large ? Library.UI.Constants.ButtonLargeWidth : Library.UI.Constants.ButtonLargeWidth/2;
 			double iconWidth   = large ? Library.UI.Constants.IconLargeWidth : Library.UI.Constants.IconSmallWidth;
 
 			if (isActivable)

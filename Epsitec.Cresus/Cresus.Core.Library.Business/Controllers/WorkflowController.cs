@@ -317,9 +317,13 @@ namespace Epsitec.Cresus.Core.Controllers
 				FormattedText = title,
 				Padding = new Margins (5, 5, 2, 2),  // le texte ne doit pas toucher les bords du bouton
 				ButtonStyle = ButtonStyle.Confirmation,
+#if false
 				Dock = DockStyle.Stacked,
 				PreferredWidth = 100,
 				PreferredHeight = Library.UI.Constants.ButtonLargeWidth+10,
+#else
+				Dock = DockStyle.Fill,
+#endif
 			};
 
 			if (!description.IsNullOrWhiteSpace)

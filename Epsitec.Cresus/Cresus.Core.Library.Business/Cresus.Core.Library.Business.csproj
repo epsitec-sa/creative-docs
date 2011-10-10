@@ -107,6 +107,7 @@
     <Compile Include="Bricks\FieldInfo.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\BusinessDocumentLinesController.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\BusinessDocumentLinesController.CommandProcessors.cs" />
+    <Compile Include="Controllers\BusinessDocumentControllers\LineRibbonController.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\DocumentLogic\AbstractDocumentLogic.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\DocumentLogic\PurchaseOrderDocumentLogic.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\DocumentLogic\QuoteRequestDocumentLogic.cs" />

@@ -123,7 +123,10 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public void SetActionPanelVisibility(bool visibility)
 		{
-			MainViewController.actionRibbonShow ("Workflow", visibility);  // montre la section "Workflow" du ruban
+			if (MainViewController.actionRibbonShow != null)
+			{
+				MainViewController.actionRibbonShow ("Workflow", visibility);  // montre la section "Workflow" du ruban
+			}
 		}
 
 		public void SetPreviewPanelVisibility(bool visibility)

@@ -156,6 +156,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			CommandDispatcher.SetDispatcher (frame, this.commandDispatcher);
 			CommandContext.SetContext (frame, this.commandContext);
 
+			//	Crée le ruban.
+			this.lineRibbonController = new LineRibbonController (this.accessData.CoreData, this.accessData.DocumentMetadata, this.accessData.BusinessDocument);
+			this.lineRibbonController.CreateUI (frame);
+
 			//	Crée la toolbar.
 			this.lineToolbarController = new LineToolbarController (this.accessData.CoreData, this.accessData.DocumentMetadata, this.accessData.BusinessDocument);
 			var toolbarWidget = this.lineToolbarController.CreateUI (frame);
@@ -199,7 +203,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				BusinessDocumentLinesController.persistantShowToolbar = toolbarWidget.Visibility;
 			};
 
-			BusinessDocumentLinesController.actionRibbonShow ("Business", true);
+			if (BusinessDocumentLinesController.actionRibbonShow != null)
+			{
+				BusinessDocumentLinesController.actionRibbonShow ("Business", true);
+			}
 		}
 
 		public void UpdateUI()
@@ -208,6 +215,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.UpdateCommands ();
 		}
 
+
 		#region IDisposable Members
 
 		public void Dispose()
@@ -215,7 +223,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.commandContext.Dispose ();
 			this.commandDispatcher.Dispose ();
 
-			BusinessDocumentLinesController.actionRibbonShow ("Business", false);
+			if (BusinessDocumentLinesController.actionRibbonShow != null)
+			{
+				BusinessDocumentLinesController.actionRibbonShow ("Business", false);
+			}
 		}
 
 		#endregion
@@ -531,6 +542,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private readonly CommandDispatcher		commandDispatcher;
 		private readonly LineEngine				linesEngine;
 
+		private LineRibbonController			lineRibbonController;
 		private LineToolbarController			lineToolbarController;
 		private LineTableController				lineTableController;
 		private LineEditionPanelController		lineEditionPanelController;
