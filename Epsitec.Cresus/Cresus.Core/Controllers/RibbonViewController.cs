@@ -114,6 +114,10 @@ namespace Epsitec.Cresus.Core.Controllers
 				Dock = DockStyle.Bottom,
 			};
 
+			this.sectionFrames.Clear ();
+			this.sectionIcons.Clear ();
+			this.sectionTitles.Clear ();
+
 			//	|-->
 			{
 				var section = this.CreateSection (frame, DockStyle.Left, "Navigation");
@@ -216,13 +220,13 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void UpdateRibbon()
 		{
-			this.container.Visibility = (this.ribbonMode != "Hide");
+			this.container.Visibility = this.IsRibbonVisible;
 
-			if (this.ribbonMode != "Hide")
+			if (this.IsRibbonVisible)
 			{
 				foreach (var frame in this.sectionFrames)
 				{
-					double m = (this.ribbonMode == "Normal") ? 2 : -1;
+					double m = this.IsRibbonNormal ? 2 : -1;
 
 					double leftMargin  = (frame.Dock == DockStyle.Right) ? m : 0;
 					double rightMargin = (frame.Dock == DockStyle.Left ) ? m : 0;
@@ -232,12 +236,12 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				foreach (var icon in this.sectionIcons)
 				{
-					icon.Padding = (this.ribbonMode == "Normal") ? new Margins (3, 3, 3, 2) : new Margins (0);
+					icon.Padding = this.IsRibbonNormal ? new Margins (3, 3, 3, 2) : new Margins (0);
 				}
 
 				foreach (var title in this.sectionTitles)
 				{
-					title.Visibility = (this.ribbonMode == "Normal");
+					title.Visibility = this.IsRibbonNormal;
 				}
 			}
 		}
@@ -1028,6 +1032,23 @@ namespace Epsitec.Cresus.Core.Controllers
 			};
 
 			return button;
+		}
+
+
+		private bool IsRibbonVisible
+		{
+			get
+			{
+				return this.ribbonMode != "Hide";
+			}
+		}
+
+		private bool IsRibbonNormal
+		{
+			get
+			{
+				return this.ribbonMode == "Normal";
+			}
 		}
 
 
