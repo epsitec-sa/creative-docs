@@ -133,6 +133,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				bottomSection.Children.Add (this.CreateButton (ApplicationCommands.Underlined, large: false, isActivable: true));
 				bottomSection.Children.Add (this.CreateButton (ApplicationCommands.MultilingualEdition, large: false));
 
+				section.Children.Add (this.CreateGap (4));
 				this.CreateLanguage (section);
 			}
 
@@ -151,8 +152,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				var section = this.CreateSection (frame, DockStyle.Left, "Actions");
 
-				section.Children.Add (this.CreateButton (Res.Commands.Edition.Print));
 				this.CreateRibbonWorkflowTransition (section);
+				section.Children.Add (this.CreateButton (Res.Commands.Edition.Print));
+				section.Children.Add (this.CreateGap (6));
 
 				Widget topSection, bottomSection;
 				this.CreateSubsections (section, out topSection, out bottomSection);
@@ -183,12 +185,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				this.CreateRibbonUserSection (section);
 
-				var space = new FrameBox  // espace pour le bouton 'v'
-				{
-					PreferredWidth = 6,  // chevauchement partiel volontaire
-					Dock = DockStyle.StackBegin,
-				};
-				section.Children.Add (space);
+				section.Children.Add (this.CreateGap (6));  // espace pour le bouton 'v', avec chevauchement partiel volontaire
 			}
 
 			//	Bouton 'v'
@@ -931,6 +928,17 @@ namespace Epsitec.Cresus.Core.Controllers
 				Dock           = dockStyle,
 				PreferredWidth = 10,
 			};
+		}
+
+		private Widget CreateGap(double width)
+		{
+			var gap = new FrameBox
+			{
+				PreferredWidth = width,
+				Dock = DockStyle.StackBegin,
+			};
+
+			return gap;
 		}
 
 		private static IconOrImageButton CreateIconOrImageButton(Command command)
