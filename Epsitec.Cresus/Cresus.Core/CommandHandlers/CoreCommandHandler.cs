@@ -83,6 +83,11 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			mainViewController.Preview ();
 		}
 
+		[Command (Res.CommandIds.Affair.WorkflowTransition)]
+		private void ProcessAffairWorkflowTransition(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+		}
+
 		[Command (Res.CommandIds.File.ImportV11)]
 		public void ProcessFileImportV11(CommandDispatcher dispatcher, CommandEventArgs e)
 		{

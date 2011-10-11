@@ -574,6 +574,7 @@
     <EmbeddedResource Include="Images\Feedback.icon" />
     <EmbeddedResource Include="Images\Base.AccountingOperation.icon" />
     <EmbeddedResource Include="Images\Data.AccountingOperation.icon" />
+    <EmbeddedResource Include="Images\WorkflowTransition.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

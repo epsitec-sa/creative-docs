@@ -14,6 +14,7 @@ using Epsitec.Cresus.Core.Features;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.UserManagement;
 using Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers;
+using Epsitec.Cresus.Core.Workflows;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -97,7 +98,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			var frame = new FrameBox
 			{
 				Parent = container,
-				BackColor = Color.FromBrightness (1),
+				BackColor = Color.FromBrightness (0.95),
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				Dock = DockStyle.Fill,
 				Name = "Ribbon",
@@ -157,6 +158,10 @@ namespace Epsitec.Cresus.Core.Controllers
 				var section = this.CreateNewStyleSection (frame, DockStyle.Left, "Actions");
 
 				section.Children.Add (this.CreateButton (Res.Commands.Edition.Print));
+				section.Children.Add (this.CreateButton (Res.Commands.Affair.WorkflowTransition));
+
+				// TODO: C'est un moyen bricolé pour obtenir la liste des WorkflowTransition.
+				WorkflowController.SetCallbackWorkflowTransitions (this.SetWorkflowTransitions);
 
 				Widget topSection, bottomSection;
 				this.CreateNewStyleSubsections (section, out topSection, out bottomSection);
@@ -175,13 +180,16 @@ namespace Epsitec.Cresus.Core.Controllers
 				this.CreateNewStyleRibbonDatabaseSectionMenuButton (section);
 			}
 
+#if false
 			//	<-->
 			{
 				var section = this.CreateNewStyleSection (frame, DockStyle.Fill, "Affaire");
 
+
 				// TODO: C'est un moyen bricolé pour que WorkflowController sache où placer ses boutons.
 				WorkflowController.SetWorkflowButtonsContainer (section);
 			}
+#endif
 
 			//	<--|
 			{
@@ -222,6 +230,13 @@ namespace Epsitec.Cresus.Core.Controllers
 				showRibbonButton.GlyphShape = container.Visibility ? GlyphShape.TriangleUp : GlyphShape.TriangleDown;
 			};
 		}
+
+#if false
+		[Command (Res.CommandIds.Affair.WorkflowTransition)]
+		private void ProcessAffairWorkflowTransition(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+		}
+#endif
 
 		private Widget CreateNewStyleSection(Widget frame, DockStyle dockStyle, FormattedText description)
 		{
@@ -1414,6 +1429,12 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
+		private void SetWorkflowTransitions(List<WorkflowTransition> workflowTransitions)
+		{
+			this.workflowTransitions = workflowTransitions;
+		}
+
+
 		#region Factory Class
 
 		private sealed class Factory : Epsitec.Cresus.Core.Factories.DefaultViewControllerComponentFactory<RibbonViewController>
@@ -1431,7 +1452,6 @@ namespace Epsitec.Cresus.Core.Controllers
 				handler (this);
 			}
 		}
-
 
 		public event EventHandler					DatabaseMenuDefaultCommandNameChanged;
 
@@ -1455,5 +1475,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private string								databaseMenuDefaultCommandName;
 
 		private RibbonSection						workflowContainer;
+
+		private List<WorkflowTransition>			workflowTransitions;
 	}
 }

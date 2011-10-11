@@ -29,13 +29,14 @@ namespace Epsitec.Cresus.Core.Controllers
 	{
 		internal WorkflowController(DataViewOrchestrator orchestrator)
 		{
-			this.orchestrator         = orchestrator;
-			this.mainViewController   = this.orchestrator.MainViewController;
-			this.data                 = this.orchestrator.Data;
-			this.businessContexts     = new List<BusinessContext> ();
-			this.activeTransitions    = new List<WorkflowTransition> ();
-			this.actionButtonInfos    = new List<ActionButtonInfo> ();
-			this.dataContext          = this.data.CreateDataContext ("WorkflowController");
+			this.orchestrator       = orchestrator;
+			this.commandDispatcher  = this.orchestrator.Host.CommandDispatcher;
+			this.mainViewController = this.orchestrator.MainViewController;
+			this.data               = this.orchestrator.Data;
+			this.businessContexts   = new List<BusinessContext> ();
+			this.activeTransitions  = new List<WorkflowTransition> ();
+			this.actionButtonInfos  = new List<ActionButtonInfo> ();
+			this.dataContext        = this.data.CreateDataContext ("WorkflowController");
 		}
 
 
@@ -122,9 +123,23 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.activeTransitions.Clear ();
 			this.activeTransitions.AddRange (this.GetEnabledTransitions ());
 
-			bool panelVisibility = this.UpdateActionButtons ();
+			//	TODO: Seule subsistera l'une des méthodes (1) ou (2) !
 
-			this.UpdateActionPanelVisibility (panelVisibility);
+			//	(1)
+			if (WorkflowController.workflowButtonsContainer != null)
+			{
+				bool panelVisibility = this.UpdateActionButtons ();
+
+				this.UpdateActionPanelVisibility (panelVisibility);
+			}
+
+			//	(2)
+			if (WorkflowController.callbackWorkflowTransitions != null)
+			{
+				WorkflowController.callbackWorkflowTransitions (this.activeTransitions);
+
+				// TODO: Griser la commande Affair.WorkflowTransition.
+			}
 		}
 
 		private bool UpdateActionButtons()
@@ -152,6 +167,34 @@ namespace Epsitec.Cresus.Core.Controllers
 			var button      = this.CreateActionButton (buttonId, title, description, callback);
 
 			this.AddActionButtonInfo (button, transition);
+		}
+
+		private Button CreateActionButton(string id, FormattedText title, FormattedText description, System.Action callback)
+		{
+			var button = new Button
+			{
+				Parent = WorkflowController.workflowButtonsContainer,
+				Name = id,
+				FormattedText = title,
+				Padding = new Margins (5, 5, 2, 2),  // le texte ne doit pas toucher les bords du bouton
+				ButtonStyle = ButtonStyle.Confirmation,
+#if false
+				Dock = DockStyle.Stacked,
+				PreferredWidth = 100,
+				PreferredHeight = Library.UI.Constants.ButtonLargeWidth+10,
+#else
+				Dock = DockStyle.Fill,
+#endif
+			};
+
+			if (!description.IsNullOrWhiteSpace)
+			{
+				ToolTip.Default.SetToolTip (button, description);
+			}
+
+			button.Clicked += (sender, e) => callback ();
+
+			return button;
 		}
 
 		private void ClearActionButtons()
@@ -303,40 +346,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		private static IEnumerable<Widget> GetAllButtons()
-		{
-			return WorkflowController.workflowButtonsContainer.Children.OfType<Widget> ();
-		}
-
-		private Button CreateActionButton(string id, FormattedText title, FormattedText description, System.Action callback)
-		{
-			var button = new Button
-			{
-				Parent = WorkflowController.workflowButtonsContainer,
-				Name = id,
-				FormattedText = title,
-				Padding = new Margins (5, 5, 2, 2),  // le texte ne doit pas toucher les bords du bouton
-				ButtonStyle = ButtonStyle.Confirmation,
-#if false
-				Dock = DockStyle.Stacked,
-				PreferredWidth = 100,
-				PreferredHeight = Library.UI.Constants.ButtonLargeWidth+10,
-#else
-				Dock = DockStyle.Fill,
-#endif
-			};
-
-			if (!description.IsNullOrWhiteSpace)
-			{
-				ToolTip.Default.SetToolTip (button, description);
-			}
-
-			button.Clicked += (sender, e) => callback ();
-
-			return button;
-		}
-
-
 		struct ActionButtonInfo : System.IEquatable<ActionButtonInfo>
 		{
 			public ActionButtonInfo(Button button, WorkflowTransition transition)
@@ -398,9 +407,16 @@ namespace Epsitec.Cresus.Core.Controllers
 			WorkflowController.workflowButtonsContainer = container;
 		}
 
+		public static void SetCallbackWorkflowTransitions(System.Action<List<WorkflowTransition>> callback)
+		{
+			WorkflowController.callbackWorkflowTransitions = callback;
+		}
+
 		private static Widget						workflowButtonsContainer;
+		private static System.Action<List<WorkflowTransition>> callbackWorkflowTransitions;
 
 		private readonly DataViewOrchestrator		orchestrator;
+		private readonly CommandDispatcher			commandDispatcher;
 		private readonly MainViewController			mainViewController;
 		private readonly CoreData					data;
 		private readonly List<BusinessContext>		businessContexts;

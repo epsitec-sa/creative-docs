@@ -18,6 +18,16 @@ namespace Epsitec.Cresus.Core
 			
 			//	designer:cap/L0K22
 			public static readonly global::Epsitec.Common.Widgets.Command Feedback = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 66));
+			public static class Affair
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/L0K32
+				public static readonly global::Epsitec.Common.Widgets.Command WorkflowTransition = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 67));
+			}
+			
 			public static class Base
 			{
 				internal static void _Initialize()
@@ -181,6 +191,16 @@ namespace Epsitec.Cresus.Core
 			
 			//	designer:cap/L0K22
 			public const long Feedback = 0x1500014000042L;
+			public static class Affair
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/L0K32
+				public const long WorkflowTransition = 0x1500014000043L;
+			}
+			
 			public static class Base
 			{
 				internal static void _Initialize()
@@ -446,6 +466,7 @@ namespace Epsitec.Cresus.Core
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Cresus.Core");
 			Commands._Initialize ();
+			Commands.Affair._Initialize ();
 			Commands.Base._Initialize ();
 			Commands.Clipboard._Initialize ();
 			Commands.Edition._Initialize ();
@@ -453,6 +474,7 @@ namespace Epsitec.Cresus.Core
 			Commands.Global._Initialize ();
 			Commands.Test._Initialize ();
 			CommandIds._Initialize ();
+			CommandIds.Affair._Initialize ();
 			CommandIds.Base._Initialize ();
 			CommandIds.Clipboard._Initialize ();
 			CommandIds.Edition._Initialize ();
