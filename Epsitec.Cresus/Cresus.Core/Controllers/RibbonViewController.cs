@@ -483,7 +483,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			//	Le widget 'authenticateUserWidget' déborde volontairement sur le bas du bouton 'ShowUserManager',
 			//	pour permettre d'afficher un nom d'utilisateur lisible.
-			//	L'icône UserManager est décalée vers le haut en conséquence.
+			//	L'icône UserManager.icon est décalée vers le haut en conséquence.
 			this.authenticateUserWidget = new StaticText
 			{
 				Parent = this.authenticateUserButton,
@@ -577,7 +577,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void UpdateDatabaseMenu()
 		{
-			//	Met à jour les boutons pour les bases de données d'usage peu fréquent, après un changement d'utilisateur.
+			//	Met à jour les boutons pour les bases de données d'usage peu fréquent, après un changement d'utilisateur par exemple.
 			var list  = this.GetDatabaseMenuCommands ().Where (x => x.Command != null).ToList ();
 			int count = list.Count;
 
@@ -602,7 +602,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				if (commands.Length > 0)
 				{
-					var icon = string.Format ("manifest:Epsitec.Cresus.Core.Images.{0}.icon", RibbonViewController.GetSubMenuIcon (type));
+					var icon = Misc.GetResourceIconUri (RibbonViewController.GetSubMenuIcon (type));
 					menu.Items.Add (new MenuItem (type.ToString (), icon, RibbonViewController.GetSubMenuName (type), ""));
 
 					var subMenu = new VMenu ();
