@@ -44,7 +44,13 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.userManager           = userManager;
 			this.featureManager        = featureManager;
 
+			this.sectionFrames = new List<FrameBox> ();
+			this.sectionIcons  = new List<FrameBox> ();
+			this.sectionTitles = new List<StaticText> ();
+
 			this.featureManager.EnableGodMode ();
+
+			this.ribbonMode = "Normal";
 		}
 
 		
@@ -83,6 +89,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			base.CreateUI (container);
 			this.CreateRibbon (container);
+			this.UpdateRibbon ();
 		}
 
 
@@ -195,25 +202,49 @@ namespace Epsitec.Cresus.Core.Controllers
 				Anchor = AnchorStyles.TopRight,
 				PreferredSize = new Size (14, 14),
 				Margins = new Margins (0, -1, -1, 0),
-				GlyphShape = GlyphShape.TriangleUp,
+				GlyphShape = GlyphShape.Menu,
 				ButtonStyle = ButtonStyle.Icon,
 			};
 
-			ToolTip.Default.SetToolTip (showRibbonButton, "Montre ou cache la barre d'icônes");
+			ToolTip.Default.SetToolTip (showRibbonButton, "Mode d'affichage de la barre d'icônes");
 
 			showRibbonButton.Clicked += delegate
 			{
-				container.Visibility = !container.Visibility;
-				showRibbonButton.GlyphShape = container.Visibility ? GlyphShape.TriangleUp : GlyphShape.TriangleDown;
+				this.ShowRibbonModeMenu (showRibbonButton);
 			};
+		}
+
+		private void UpdateRibbon()
+		{
+			this.container.Visibility = (this.ribbonMode != "Hide");
+
+			if (this.ribbonMode != "Hide")
+			{
+				foreach (var frame in this.sectionFrames)
+				{
+					double m = (this.ribbonMode == "Normal") ? 2 : -1;
+
+					double leftMargin  = (frame.Dock == DockStyle.Right) ? m : 0;
+					double rightMargin = (frame.Dock == DockStyle.Left ) ? m : 0;
+
+					frame.Margins = new Margins (leftMargin, rightMargin, -1, -1);
+				}
+
+				foreach (var icon in this.sectionIcons)
+				{
+					icon.Padding = (this.ribbonMode == "Normal") ? new Margins (3, 3, 3, 2) : new Margins (0);
+				}
+
+				foreach (var title in this.sectionTitles)
+				{
+					title.Visibility = (this.ribbonMode == "Normal");
+				}
+			}
 		}
 
 		private Widget CreateSection(Widget frame, DockStyle dockStyle, FormattedText description)
 		{
 			//	Crée une section dans le faux ruban.
-			double leftMargin  = (dockStyle == DockStyle.Right) ? 2 : 0;
-			double rightMargin = (dockStyle == DockStyle.Left ) ? 2 : 0;
-
 			var section = new FrameBox
 			{
 				Parent = frame,
@@ -222,20 +253,17 @@ namespace Epsitec.Cresus.Core.Controllers
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 				PreferredWidth = 10,
 				Dock = dockStyle,
-				Margins = new Margins (leftMargin, rightMargin, -1, -1),
 			};
 
-			var top = new FrameBox
+			var icon = new FrameBox
 			{
 				Parent = section,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				PreferredWidth = 10,
 				Dock = DockStyle.Fill,
-				//?Padding = new Margins (2, 2, 2, 1),
-				Padding = new Margins (3, 3, 3, 2),
 			};
 
-			new StaticText
+			var title = new StaticText
 			{
 				Parent = section,
 				FormattedText = description.ApplyFontSize (8.0).ApplyFontColor (Color.FromBrightness (1.0)).ApplyBold (),
@@ -248,7 +276,11 @@ namespace Epsitec.Cresus.Core.Controllers
 				Margins = new Margins (1, 1, 0, 1),
 			};
 
-			return top;
+			this.sectionFrames.Add (section);
+			this.sectionIcons .Add (icon);
+			this.sectionTitles.Add (title);
+
+			return icon;
 		}
 
 		private void CreateSubsections(Widget section, out Widget topSection, out Widget bottomSection)
@@ -865,6 +897,44 @@ namespace Epsitec.Cresus.Core.Controllers
 		#endregion
 
 
+		#region Ribbon mode menu
+		private void ShowRibbonModeMenu(Widget parentButton)
+		{
+			//	Affiche le menu permettant de choisir le mode pour le ruban.
+			var menu = new VMenu ();
+
+			this.AddRibbonModeToMenu (menu, "Pas de barre d'icônes",   "Hide");
+			this.AddRibbonModeToMenu (menu, "Barre d'icônes compacte", "Compact");
+			this.AddRibbonModeToMenu (menu, "Barre d'icônes standard", "Normal");
+
+			TextFieldCombo.AdjustComboSize (parentButton, menu, false);
+
+			menu.Host = this.container;
+			menu.ShowAsComboList (parentButton, Point.Zero, parentButton);
+		}
+
+		private void AddRibbonModeToMenu(VMenu menu, FormattedText text, string name)
+		{
+			bool selected = (this.ribbonMode == name);
+			var icon = Misc.GetResourceIconImageTag (selected ? "Button.RadioYes" : "Button.RadioNo", -4);
+			text = FormattedText.Concat (icon, " ", text);
+
+			var item = new MenuItem ()
+			{
+				FormattedText = text,
+				Name = name,
+			};
+
+			item.Clicked += delegate
+			{
+				this.ribbonMode = item.Name;
+				this.UpdateRibbon ();
+			};
+
+			menu.Items.Add (item);
+		}
+		#endregion
+
 
 		private IconButton CreateButton(Command command = null, DockStyle dockStyle = DockStyle.StackBegin, CommandEventHandler handler = null, bool large = true, bool isActivable = false, bool isWithText = false)
 		{
@@ -988,7 +1058,11 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly PersistenceManager			persistenceManager;
 		private readonly UserManager				userManager;
 		private readonly FeatureManager				featureManager;
+		private readonly List<FrameBox>				sectionFrames;
+		private readonly List<FrameBox>				sectionIcons;
+		private readonly List<StaticText>			sectionTitles;
 
+		private string								ribbonMode;
 		private Widget								container;
 		
 		private IconButton							databaseButton;
