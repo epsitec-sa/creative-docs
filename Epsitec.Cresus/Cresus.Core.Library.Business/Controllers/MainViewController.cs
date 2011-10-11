@@ -121,14 +121,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			return contextChain.Contexts.Select (x => x.GetCommandHandler<MainViewController> ()).Where (x => x != null).FirstOrDefault ();
 		}
 
-		public void SetActionPanelVisibility(bool visibility)
-		{
-			if (MainViewController.actionRibbonShow != null)
-			{
-				MainViewController.actionRibbonShow ("Workflow", visibility);  // montre la section "Workflow" du ruban
-			}
-		}
-
 		public void SetPreviewPanelVisibility(bool visibility)
 		{
 			if (this.rightPreviewPanel != null)
@@ -390,8 +382,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		#endregion
 
-
-		public static System.Action<string, bool>	actionRibbonShow;
 
 		private readonly CommandContext				commandContext;
 		private readonly BrowserViewController		browserViewController;

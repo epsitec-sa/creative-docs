@@ -37,10 +37,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			userManager.AuthenticatedUserChanged += this.HandleAuthenticatedUserChanged;
 
-			this.authenticateUserButtons = new List<IconOrImageButton> ();
-			this.authenticateUserWidgets = new List<StaticText> ();
-			this.ribbonShowPages = new Dictionary<string, bool> ();
-
 			this.orchestrator          = orchestrator;
 			this.commandDispatcher     = app.CommandDispatcher;
 			this.coreCommandDispatcher = app.GetComponent<CoreCommandDispatcher> ();
@@ -83,19 +79,16 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public override void CreateUI(Widget container)
 		{
+			this.container = container;
+
 			base.CreateUI (container);
-#if false
-			this.CreateRibbonBook (container);
-			this.CreateRibbonHomePage ();
-#else
 			this.CreateRibbon (container);
-#endif
 		}
 
 
-		#region New style ribbon
 		private void CreateRibbon(Widget container)
 		{
+			//	Crée le faux ruban.
 			var frame = new FrameBox
 			{
 				Parent = container,
@@ -116,38 +109,38 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			//	|-->
 			{
-				var section = this.CreateNewStyleSection (frame, DockStyle.Left, "Navigation");
+				var section = this.CreateSection (frame, DockStyle.Left, "Navigation");
 
 				section.Children.Add (this.CreateButton (Library.Res.Commands.History.NavigateBackward));
 				section.Children.Add (this.CreateButton (Library.Res.Commands.History.NavigateForward));
 			}
 
 			{
-				var section = this.CreateNewStyleSection (frame, DockStyle.Left, "Validation");
+				var section = this.CreateSection (frame, DockStyle.Left, "Validation");
 
 				section.Children.Add (this.CreateButton (Library.Res.Commands.Edition.SaveRecord));
 				section.Children.Add (this.CreateButton (Library.Res.Commands.Edition.DiscardRecord));
 			}
 
 			{
-				var section = this.CreateNewStyleSection (frame, DockStyle.Left, "Edition");
+				var section = this.CreateSection (frame, DockStyle.Left, "Edition");
 
 				Widget topSection, bottomSection;
-				this.CreateNewStyleSubsections (section, out topSection, out bottomSection);
+				this.CreateSubsections (section, out topSection, out bottomSection);
 
 				topSection.Children.Add (this.CreateButton (ApplicationCommands.Bold, large: false, isActivable: true));
 				topSection.Children.Add (this.CreateButton (ApplicationCommands.Italic, large: false, isActivable: true));
 				bottomSection.Children.Add (this.CreateButton (ApplicationCommands.Underlined, large: false, isActivable: true));
 				bottomSection.Children.Add (this.CreateButton (ApplicationCommands.MultilingualEdition, large: false));
 
-				this.CreateNewStyleLanguage (section);
+				this.CreateLanguage (section);
 			}
 
 			{
-				var section = this.CreateNewStyleSection (frame, DockStyle.Left, "Presse-papier");
+				var section = this.CreateSection (frame, DockStyle.Left, "Presse-papier");
 
 				Widget topSection, bottomSection;
-				this.CreateNewStyleSubsections (section, out topSection, out bottomSection);
+				this.CreateSubsections (section, out topSection, out bottomSection);
 
 				topSection.Children.Add (this.CreateButton (ApplicationCommands.Cut, large: false));
 				bottomSection.Children.Add (this.CreateButton (ApplicationCommands.Copy, large: false));
@@ -156,39 +149,39 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 
 			{
-				var section = this.CreateNewStyleSection (frame, DockStyle.Left, "Actions");
+				var section = this.CreateSection (frame, DockStyle.Left, "Actions");
 
 				section.Children.Add (this.CreateButton (Res.Commands.Edition.Print));
-				this.CreateNewStyleRibbonWorkflowTransition (section);
+				this.CreateRibbonWorkflowTransition (section);
 
 				Widget topSection, bottomSection;
-				this.CreateNewStyleSubsections (section, out topSection, out bottomSection);
+				this.CreateSubsections (section, out topSection, out bottomSection);
 
 				topSection.Children.Add (this.CreateButton (Res.Commands.File.ImportV11, large: false));
 				bottomSection.Children.Add (this.CreateButton (Res.Commands.Feedback, large: false));
 			}
 
 			{
-				var section = this.CreateNewStyleSection (frame, DockStyle.Left, "Bases de données");
+				var section = this.CreateSection (frame, DockStyle.Left, "Bases de données");
 
 				section.Children.Add (this.CreateButton (Res.Commands.Base.ShowCustomer));
 				section.Children.Add (this.CreateButton (Res.Commands.Base.ShowArticleDefinition));
 				section.Children.Add (this.CreateButton (Res.Commands.Base.ShowDocumentMetadata));
 
-				this.CreateNewStyleRibbonDatabaseSectionMenuButton (section);
+				this.CreateRibbonDatabaseSectionMenuButton (section);
 			}
 
 			//	<--|
 			{
-				var section = this.CreateNewStyleSection (frame, DockStyle.Right, "Réglages");
+				var section = this.CreateSection (frame, DockStyle.Right, "Réglages");
 
 				Widget topSection, bottomSection;
-				this.CreateNewStyleSubsections (section, out topSection, out bottomSection);
+				this.CreateSubsections (section, out topSection, out bottomSection);
 
 				topSection.Children.Add (this.CreateButton (Res.Commands.Global.ShowSettings, large: false));
 				bottomSection.Children.Add (this.CreateButton (Res.Commands.Global.ShowDebug, large: false));
 
-				this.CreateNewStyleRibbonUserSection (section);
+				this.CreateRibbonUserSection (section);
 
 				var space = new FrameBox  // espace pour le bouton 'v'
 				{
@@ -218,8 +211,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			};
 		}
 
-		private Widget CreateNewStyleSection(Widget frame, DockStyle dockStyle, FormattedText description)
+		private Widget CreateSection(Widget frame, DockStyle dockStyle, FormattedText description)
 		{
+			//	Crée une section dans le faux ruban.
 			double leftMargin  = (dockStyle == DockStyle.Right) ? 2 : 0;
 			double rightMargin = (dockStyle == DockStyle.Left ) ? 2 : 0;
 
@@ -259,8 +253,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			return top;
 		}
 
-		private void CreateNewStyleSubsections(Widget section, out Widget topSection, out Widget bottomSection)
+		private void CreateSubsections(Widget section, out Widget topSection, out Widget bottomSection)
 		{
+			//	Crée deux sous-sections dans le faux ruban.
 			var frame = new FrameBox
 			{
 				Parent = section,
@@ -286,7 +281,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			};
 		}
 
-		private void CreateNewStyleLanguage(Widget section)
+
+		private void CreateLanguage(Widget section)
 		{
 			var frame1 = new FrameBox
 			{
@@ -304,7 +300,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				PreferredWidth = 21,
 			};
 
-			//	HACK: faire cela proprement avec des commandes multi-états
+			//	TODO: faire cela proprement avec des commandes multi-états.
 
 			var selectLanaguage1 = new IconButton ()
 			{
@@ -388,13 +384,17 @@ namespace Epsitec.Cresus.Core.Controllers
 			};
 		}
 
-		private void CreateNewStyleRibbonWorkflowTransition(Widget section)
+
+		#region Workflow Transitions
+		private void CreateRibbonWorkflowTransition(Widget section)
 		{
+			//	Crée le bouton permettant de choisir une action pour créer un nouveau document dans l'affaire en cours,
+			//	par le biais d'un menu.
 			this.workflowTransitionButton = this.CreateButton ();
 			this.workflowTransitionButton.IconUri = Misc.GetResourceIconUri ("WorkflowTransition");
 			this.workflowTransitionButton.Enable = false;
 
-			ToolTip.Default.SetToolTip (this.workflowTransitionButton, "Crée un nouveau document dans l'affaire");
+			ToolTip.Default.SetToolTip (this.workflowTransitionButton, "Crée une nouvelle affaire ou un nouveau document");
 
 			section.Children.Add (this.workflowTransitionButton);
 
@@ -409,6 +409,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void ShowWorkflowTransitionMenu(Widget parentButton)
 		{
+			//	Affiche le menu permettant de choisir une action pour créer un nouveau document dans l'affaire en cours.
 			if (this.workflowTransitions != null)
 			{
 				var menu = new VMenu ();
@@ -421,7 +422,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				TextFieldCombo.AdjustComboSize (parentButton, menu, false);
 
-				menu.Host = this.ribbonBook;
+				menu.Host = this.container;
 				menu.ShowAsComboList (parentButton, Point.Zero, parentButton);
 			}
 		}
@@ -445,6 +446,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void ExecuteWorkflowTransition(WorkflowTransition workflowTransition)
 		{
+			//	Crée un nouveau document dans l'affaire en cours.
 			using (var engine = new WorkflowExecutionEngine (workflowTransition))
 			{
 				engine.Associate (this.orchestrator.Navigator);
@@ -461,13 +463,77 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void SetWorkflowTransitions(List<WorkflowTransition> workflowTransitions)
 		{
+			//	Appelé par WorkflowController lorsque les actions possibles ont changé.
 			this.workflowTransitions = workflowTransitions;
 			this.workflowTransitionButton.Enable = (this.workflowTransitions != null && this.workflowTransitions.Any ());
 		}
+		#endregion
 
-		private void CreateNewStyleRibbonDatabaseSectionMenuButton(Widget section)
+
+		#region User button
+		private void CreateRibbonUserSection(Widget section)
 		{
-			//	Place le bouton 'magique' qui donne accès aux bases de données d'usage moins fréquent.
+			//	Crée le bouton 'utilisateur', qui affiche l'utilisateur en cours et permet d'en changer.
+			this.authenticateUserButton = RibbonViewController.CreateIconOrImageButton (Res.Commands.Global.ShowUserManager);
+			this.authenticateUserButton.CoreData = this.Orchestrator.Data;
+			this.authenticateUserButton.IconUri = Misc.GetResourceIconUri ("UserManager");
+			this.authenticateUserButton.IconPreferredSize = new Size (31, 31);
+
+			section.Children.Add (this.authenticateUserButton);
+
+			//	Le widget 'authenticateUserWidget' déborde volontairement sur le bas du bouton 'ShowUserManager',
+			//	pour permettre d'afficher un nom d'utilisateur lisible.
+			//	L'icône UserManager est décalée vers le haut en conséquence.
+			this.authenticateUserWidget = new StaticText
+			{
+				Parent = this.authenticateUserButton,
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+				PreferredHeight = 14,
+				Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom,
+				Margins = new Margins (0, 0, 0, 0),
+			};
+		}
+
+		private void HandleAuthenticatedUserChanged(object sender)
+		{
+			this.UpdateAuthenticatedUser ();
+		}
+
+		private void UpdateAuthenticatedUser()
+		{
+			//	Met à jour le nom de l'utilisateur dans le ruban.
+			var user = this.userManager.AuthenticatedUser;
+
+			if (user.IsNull ())
+			{
+				this.authenticateUserButton.ImageEntity = null;
+				this.authenticateUserWidget.Text = null;
+
+				ToolTip.Default.HideToolTipForWidget (this.authenticateUserButton);
+				ToolTip.Default.HideToolTipForWidget (this.authenticateUserWidget);
+			}
+			else
+			{
+#if false
+				throw new System.NotImplementedException ();
+				this.authenticateUserButton.ImageEntity = user.Person.Pictures.FirstOrDefault ();
+#endif
+				FormattedText text = user.LoginName;
+				this.authenticateUserWidget.FormattedText = text.ApplyFontSize (9.0);
+
+				ToolTip.Default.SetToolTip (this.authenticateUserButton, user.ShortDescription);
+				ToolTip.Default.SetToolTip (this.authenticateUserWidget, user.ShortDescription);
+			}
+
+			this.UpdateDatabaseMenu ();
+		}
+		#endregion
+
+
+		#region Additionnal Databases
+		private void CreateRibbonDatabaseSectionMenuButton(Widget section)
+		{
+			//	Crée le bouton 'magique' qui donne accès aux bases de données d'usage moins fréquent par le biais d'un menu.
 			this.databaseButton = this.CreateButton ();
 			section.Children.Add (this.databaseButton);
 
@@ -508,602 +574,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.UpdateDatabaseMenu ();
 		}
-
-		private void CreateNewStyleRibbonUserSection(Widget section)
-		{
-			var authenticateUserButton = RibbonViewController.CreateIconOrImageButton (Res.Commands.Global.ShowUserManager);
-			authenticateUserButton.CoreData = this.Orchestrator.Data;
-			authenticateUserButton.IconUri = Misc.GetResourceIconUri ("UserManager");
-			authenticateUserButton.IconPreferredSize = new Size (31, 31);
-
-			section.Children.Add (authenticateUserButton);
-
-			//	Le widget 'authenticateUserWidget' déborde volontairement sur le bas du bouton 'ShowUserManager',
-			//	pour permettre d'afficher un nom d'utilisateur lisible.
-			var authenticateUserWidget = new StaticText
-			{
-				Parent = authenticateUserButton,
-				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
-				PreferredHeight = 14,
-				Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom,
-				Margins = new Margins (0, 0, 0, 0),
-			};
-
-			this.authenticateUserButtons.Add (authenticateUserButton);
-			this.authenticateUserWidgets.Add (authenticateUserWidget);
-		}
-		#endregion
-
-
-		private void UpdateAuthenticatedUser()
-		{
-			//	Met à jour le nom de l'utilisateur dans le ruban.
-			var user = this.userManager.AuthenticatedUser;
-
-			for (int i = 0; i < this.authenticateUserButtons.Count; i++)
-			{
-				var authenticateUserButton = this.authenticateUserButtons[i];
-				var authenticateUserWidget = this.authenticateUserWidgets[i];
-
-				if (user.IsNull ())
-				{
-					authenticateUserButton.ImageEntity = null;
-					authenticateUserWidget.Text = null;
-
-					ToolTip.Default.HideToolTipForWidget (authenticateUserButton);
-					ToolTip.Default.HideToolTipForWidget (authenticateUserWidget);
-				}
-				else
-				{
-#if false
-					throw new System.NotImplementedException ();
-					this.authenticateUserButton.ImageEntity = user.Person.Pictures.FirstOrDefault ();
-#endif
-					FormattedText text = user.LoginName;
-					authenticateUserWidget.FormattedText = text.ApplyFontSize (9.0);
-
-					ToolTip.Default.SetToolTip (authenticateUserButton, user.ShortDescription);
-					ToolTip.Default.SetToolTip (authenticateUserWidget, user.ShortDescription);
-				}
-			}
-
-			this.UpdateDatabaseMenu ();
-		}
-
-
-		private void RibbonShowPage(string name, bool visibility)
-		{
-			this.ribbonShowPages[name] = visibility;
-
-			//	Montre le ruban qui semble le plus utile.
-			//	En fait, les rubans sont prioritaires, dans l'ordre Business, Workflow et finalement Home.
-			if (this.ribbonShowPages.ContainsKey ("Business") && this.ribbonShowPages["Business"] == true)
-			{
-				this.ribbonBook.ActivePage = this.ribbonPageBusiness;
-			}
-			else if (this.ribbonShowPages.ContainsKey ("Workflow") && this.ribbonShowPages["Workflow"] == true)
-			{
-				this.ribbonBook.ActivePage = this.ribbonPageWorkflow;
-			}
-			else
-			{
-				this.ribbonBook.ActivePage = this.ribbonPageHome;
-			}
-		}
-
-		private void CreateRibbonBook(Widget container)
-		{
-			this.ribbonBook = new RibbonBook ()
-			{
-				Parent = container,
-				Dock = DockStyle.Fill,
-				Name = "Ribbon",
-			};
-
-#if false
-			this.persistenceManager.Register (this.ribbonBook);
-			this.persistenceManager.Register (this, this.ribbonBook.FullPathName + ".DatabaseMenu.DefaultCommand",
-				x => this.DatabaseMenuDefaultCommandNameChanged += x,
-				x => this.DatabaseMenuDefaultCommandNameChanged -= x,
-				xml => xml.Add (new XAttribute ("name", this.DatabaseMenuDefaultCommandName)),
-				xml => this.DatabaseMenuDefaultCommandName = xml.Attribute ("name").Value);
-#endif
-		}
-
-		private void CreateRibbonHomePage()
-		{
-			this.ribbonPageHome     = RibbonViewController.CreateRibbonPage (this.ribbonBook, "Home",     "Accueil");
-			this.ribbonPageMisc     = RibbonViewController.CreateRibbonPage (this.ribbonBook, "Misc",     "Compléments");
-			this.ribbonPageWorkflow = RibbonViewController.CreateRibbonPage (this.ribbonBook, "Workflow", "Flux");
-			this.ribbonPageBusiness = RibbonViewController.CreateRibbonPage (this.ribbonBook, "Business", "Document commercial");
-
-			this.ribbonBook.ActivePage = this.ribbonPageHome;
-
-			//	Home ribbon:
-			this.CreateRibbonValidateSection (this.ribbonPageHome);  // communs
-			this.CreateRibbonEditSection (this.ribbonPageHome);  // communs
-			this.CreateRibbonClipboardSection (this.ribbonPageHome);
-			this.CreateRibbonPrintSection (this.ribbonPageHome);
-			this.CreateRibbonDatabaseSection (this.ribbonPageHome);
-			this.CreateRibbonNavigationSection (this.ribbonPageHome);
-
-			this.CreateRibbonUserSection (this.ribbonPageHome);  // communs
-
-			//	Workflow ribbon:
-			this.CreateRibbonValidateSection (this.ribbonPageWorkflow);  // communs
-			this.CreateRibbonEditSection (this.ribbonPageWorkflow);  // communs
-			this.CreateRibbonClipboardSection (this.ribbonPageWorkflow);
-			this.CreateRibbonPrintSection (this.ribbonPageWorkflow);
-			this.CreateRibbonWorkflowContainerSection (this.ribbonPageWorkflow);
-
-			this.CreateRibbonUserSection (this.ribbonPageWorkflow);  // communs
-
-			//	Business ribbon:
-			this.CreateRibbonValidateSection (this.ribbonPageBusiness);  // communs
-			this.CreateRibbonEditSection (this.ribbonPageBusiness);  // communs
-
-			this.CreateRibbonBusinessCreateSection (this.ribbonPageBusiness);
-			this.CreateRibbonBusinessOperSection (this.ribbonPageBusiness);
-			this.CreateRibbonBusinessGroupSection (this.ribbonPageBusiness);
-
-			this.CreateRibbonUserSection (this.ribbonPageBusiness);  // communs
-
-			//	Misc ribbon:
-			this.CreateRibbonValidateSection (this.ribbonPageMisc);  // communs
-			this.CreateRibbonEditSection (this.ribbonPageMisc);  // communs
-			this.CreateRibbonClipboardSection (this.ribbonPageMisc);
-			this.CreateRibbonPrintSection (this.ribbonPageMisc);
-
-			this.CreateRibbonMiscActionSection (this.ribbonPageMisc);
-
-			this.CreateRibbonUserSection (this.ribbonPageMisc);  // communs
-			this.CreateRibbonSettingsSection (this.ribbonPageMisc);
-		}
-
-		private static RibbonPage CreateRibbonPage(RibbonBook book, string name, string title)
-		{
-			return new RibbonPage (book)
-			{
-				Name = name,
-				RibbonTitle = title,
-				PreferredHeight = 78,
-			};
-		}
-
-		#region Create home ribbon sections
-		private void CreateRibbonUserSection(RibbonPage page)
-		{
-			var section = new RibbonSection (page)
-			{
-				Name = "User",
-				Title = "Identité",
-				PreferredWidth = Library.UI.Constants.ButtonLargeWidth * 1,
-				Dock = DockStyle.Right,
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-			};
-
-			{
-				var frame = new FrameBox
-				{
-					Parent = section,
-					Dock = DockStyle.StackBegin,
-					ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-					PreferredWidth = Library.UI.Constants.ButtonLargeWidth,
-					PreferredHeight = 52,
-				};
-
-				var authenticateUserButton = RibbonViewController.CreateIconOrImageButton (Res.Commands.Global.ShowUserManager);
-				authenticateUserButton.CoreData = this.Orchestrator.Data;
-				authenticateUserButton.IconUri = Misc.GetResourceIconUri ("UserManager");
-				authenticateUserButton.IconPreferredSize = new Size (31, 31);
-
-				frame.Children.Add (authenticateUserButton);
-
-				//	Le widget 'authenticateUserWidget' déborde volontairement sur le bas du bouton 'ShowUserManager',
-				//	pour permettre d'afficher un nom d'utilisateur lisible.
-				var authenticateUserWidget = new StaticText
-				{
-					Parent = frame,
-					ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
-					PreferredHeight = 14,
-					Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom,
-					Margins = new Margins (0, 0, 0, 0),
-				};
-
-				this.authenticateUserButtons.Add (authenticateUserButton);
-				this.authenticateUserWidgets.Add (authenticateUserWidget);
-			}
-		}
-
-		private void CreateRibbonValidateSection(RibbonPage page)
-		{
-			var section = new RibbonSection (page)
-			{
-				Name = "Validate",
-				Title = "Validation",
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = Library.UI.Constants.ButtonLargeWidth * 2,
-			};
-
-			section.Children.Add (this.CreateButton (Library.Res.Commands.Edition.SaveRecord));
-			section.Children.Add (this.CreateButton (Library.Res.Commands.Edition.DiscardRecord));
-		}
-
-		private void CreateRibbonPrintSection(RibbonPage page)
-		{
-			var section = new RibbonSection (page)
-			{
-				Name = "Print",
-				Title = "Impression",
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = Library.UI.Constants.ButtonLargeWidth * 1,
-			};
-
-			section.Children.Add (this.CreateButton (Res.Commands.Edition.Print));
-			//?section.Children.Add (this.CreateButton (Res.Commands.Edition.Preview));
-		}
-
-		private void CreateRibbonMiscActionSection(RibbonPage page)
-		{
-			var section = new RibbonSection (page)
-			{
-				Name = "Action",
-				Title = "Actions",
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = Library.UI.Constants.ButtonLargeWidth * 3,
-			};
-
-			section.Children.Add (this.CreateButton (Res.Commands.File.ImportV11));
-			section.Children.Add (this.CreateButton (Res.Commands.Feedback));
-		}
-
-		private void CreateRibbonClipboardSection(RibbonPage page)
-		{
-			var section = new RibbonSection (page)
-			{
-				Name = "Clipboard",
-				Title = "Presse-papier",
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = Library.UI.Constants.ButtonSmallWidth + Library.UI.Constants.ButtonLargeWidth,
-			};
-
-			var frame = new FrameBox
-			{
-				Parent = section,
-				Dock = DockStyle.StackBegin,
-				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-				PreferredWidth = Library.UI.Constants.ButtonSmallWidth,
-			};
-
-			frame.Children.Add (this.CreateButton (ApplicationCommands.Cut,  large: false));
-			frame.Children.Add (this.CreateButton (ApplicationCommands.Copy, large: false));
-
-			section.Children.Add (this.CreateButton (ApplicationCommands.Paste));
-		}
-
-		private void CreateRibbonEditSection(RibbonPage page)
-		{
-			var section = new RibbonSection (page)
-			{
-				Name = "Edit",
-				Title = "Edition",
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-			};
-
-			var frame = new FrameBox
-			{
-				Parent = section,
-				Dock = DockStyle.StackBegin,
-				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-				PreferredWidth = section.PreferredWidth,
-			};
-
-			var topFrame = new FrameBox
-			{
-				Parent = frame,
-				Dock = DockStyle.StackBegin,
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = section.PreferredWidth,
-			};
-
-			var bottomFrame = new FrameBox
-			{
-				Parent = frame,
-				Dock = DockStyle.StackBegin,
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = section.PreferredWidth,
-			};
-
-			topFrame.Children.Add (this.CreateButton (ApplicationCommands.Bold,       large: false, isActivable: true));
-			topFrame.Children.Add (this.CreateButton (ApplicationCommands.Italic,     large: false, isActivable: true));
-			topFrame.Children.Add (this.CreateButton (ApplicationCommands.Underlined, large: false, isActivable: true));
-
-			//?bottomFrame.Children.Add (this.CreateButton (ApplicationCommands.Subscript,   large: false, isActivable: true));
-			//?bottomFrame.Children.Add (this.CreateButton (ApplicationCommands.Superscript, large: false, isActivable: true));
-
-			{
-				var frame1 = new FrameBox
-				{
-					Parent = section,
-					Dock = DockStyle.StackBegin,
-					ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-					PreferredWidth = 21,
-				};
-
-				var frame2 = new FrameBox
-				{
-					Parent = section,
-					Dock = DockStyle.StackBegin,
-					ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-					PreferredWidth = 21,
-				};
-
-				//	HACK: faire cela proprement avec des commandes multi-états
-
-				var selectLanaguage1 = new IconButton ()
-				{
-					Parent = frame1,
-					Name = "language=fr",
-					Dock = DockStyle.Stacked,
-					Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagFR.icon""/>",
-					ActiveState = ActiveState.Yes,
-				};
-
-				var selectLanaguage2 = new IconButton ()
-				{
-					Parent = frame1,
-					Name = "language=de",
-					Dock = DockStyle.Stacked,
-					Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagDE.icon""/>",
-				};
-
-				var selectLanaguage3 = new IconButton ()
-				{
-					Parent = frame2,
-					Name = "language=en",
-					Dock = DockStyle.Stacked,
-					Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagGB.icon""/>",
-				};
-
-				var selectLanaguage4 = new IconButton ()
-				{
-					Parent = frame2,
-					Name = "language=it",
-					Dock = DockStyle.Stacked,
-					Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagIT.icon""/>",
-				};
-
-				Library.UI.Services.Settings.CultureForData.SelectLanguage ("fr");
-				Library.UI.Services.Settings.CultureForData.DefineDefaultLanguage ("fr");
-
-				selectLanaguage1.Clicked += delegate
-				{
-					Library.UI.Services.Settings.CultureForData.SelectLanguage ("fr");
-					selectLanaguage1.ActiveState = ActiveState.Yes;
-					selectLanaguage2.ActiveState = ActiveState.No;
-					selectLanaguage3.ActiveState = ActiveState.No;
-					selectLanaguage4.ActiveState = ActiveState.No;
-				};
-
-				selectLanaguage2.Clicked += delegate
-				{
-					Library.UI.Services.Settings.CultureForData.SelectLanguage ("de");
-					selectLanaguage1.ActiveState = ActiveState.No;
-					selectLanaguage2.ActiveState = ActiveState.Yes;
-					selectLanaguage3.ActiveState = ActiveState.No;
-					selectLanaguage4.ActiveState = ActiveState.No;
-				};
-
-				selectLanaguage3.Clicked += delegate
-				{
-					Library.UI.Services.Settings.CultureForData.SelectLanguage ("en");
-					selectLanaguage1.ActiveState = ActiveState.No;
-					selectLanaguage2.ActiveState = ActiveState.No;
-					selectLanaguage3.ActiveState = ActiveState.Yes;
-					selectLanaguage4.ActiveState = ActiveState.No;
-				};
-
-				selectLanaguage4.Clicked += delegate
-				{
-					Library.UI.Services.Settings.CultureForData.SelectLanguage ("it");
-					selectLanaguage1.ActiveState = ActiveState.No;
-					selectLanaguage2.ActiveState = ActiveState.No;
-					selectLanaguage3.ActiveState = ActiveState.No;
-					selectLanaguage4.ActiveState = ActiveState.Yes;
-				};
-			}
-
-			section.Children.Add (this.CreateButton (ApplicationCommands.MultilingualEdition));
-		}
-
-		private void CreateRibbonDatabaseSection(RibbonPage page)
-		{
-			var section = new RibbonSection (page)
-			{
-				Name = "Database",
-				Title = "Bases de données",
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				Dock = DockStyle.Left,
-			};
-
-			//	Place les boutons pour les bases de données les plus courantes.
-			section.Children.Add (this.CreateButton (Res.Commands.Base.ShowCustomer));
-			section.Children.Add (this.CreateButton (Res.Commands.Base.ShowArticleDefinition));
-			section.Children.Add (this.CreateButton (Res.Commands.Base.ShowDocumentMetadata));
-
-			this.CreateRibbonDatabaseSectionMenuButton (section);
-		}
-
-		private void CreateRibbonDatabaseSectionMenuButton(Widget section)
-		{
-			//	Place le bouton 'magique' qui donne accès aux bases de données d'usage moins fréquent.
-			double buttonWidth = Library.UI.Constants.ButtonLargeWidth;
-
-			var group = new FrameBox ()
-			{
-				Parent = section,
-				PreferredSize = new Size (buttonWidth, buttonWidth+11-1),
-				Dock = DockStyle.StackBegin,
-				VerticalAlignment = VerticalAlignment.Top,
-				HorizontalAlignment = HorizontalAlignment.Center,
-			};
-
-			this.databaseMenuButton = new GlyphButton ()
-			{
-				Parent = group,
-				ButtonStyle = ButtonStyle.ComboItem,
-				GlyphShape = GlyphShape.Menu,
-				AutoFocus = false,
-				PreferredSize = new Size (buttonWidth, 11),
-				Dock = DockStyle.Bottom,
-				Margins = new Margins (0, 0, -1, 0),
-			};
-
-			ToolTip.Default.SetToolTip (this.databaseMenuButton, "Montre une autre base de données...");
-
-			this.databaseButton = this.CreateButton ();
-			this.databaseButton.Parent = group;
-			this.databaseButton.PreferredSize = new Size (buttonWidth, buttonWidth);
-			this.databaseButton.Dock = DockStyle.Fill;
-
-			
-			this.databaseMenuButton.Clicked += delegate
-			{
-				this.ShowDatabaseSelectionMenu (this.databaseMenuButton);
-			};
-
-			this.databaseMenuButton.Entered += delegate
-			{
-				this.databaseButton.ButtonStyle = ButtonStyle.Combo;
-			};
-
-			this.databaseMenuButton.Exited += delegate
-			{
-				this.databaseButton.ButtonStyle = ButtonStyle.ToolItem;
-			};
-
-			var databaseCommandHandler = this.GetDatabaseCommandHandler ();
-
-			databaseCommandHandler.Changed += delegate
-			{
-				this.UpdateDatabaseButton ();
-			};
-
-			this.UpdateDatabaseMenu ();
-		}
-
-		private void CreateRibbonNavigationSection(RibbonPage page)
-		{
-			var section = new RibbonSection (page)
-			{
-				Name = "Navigation",
-				Title = "Navigation",
-				PreferredWidth = Library.UI.Constants.ButtonLargeWidth * 2,
-				Dock = DockStyle.Left,
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-			};
-
-			section.Children.Add (this.CreateButton (Library.Res.Commands.History.NavigateBackward));
-			section.Children.Add (this.CreateButton (Library.Res.Commands.History.NavigateForward));
-		}
-
-		private void CreateRibbonSettingsSection(RibbonPage page)
-		{
-			var section = new RibbonSection (page)
-			{
-				Name = "Settings",
-				Title = "Réglages",
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				Dock = DockStyle.Right,
-				PreferredWidth = Library.UI.Constants.ButtonLargeWidth * 2,
-			};
-
-			section.Children.Add (this.CreateButton (Res.Commands.Global.ShowSettings));
-			section.Children.Add (this.CreateButton (Res.Commands.Global.ShowDebug));
-		}
-		#endregion
-
-		#region Create workflow ribbon sections
-		private void CreateRibbonWorkflowContainerSection(RibbonPage page)
-		{
-			this.workflowContainer = new RibbonSection (page)
-			{
-				Name = "Workflow.Container",
-				Title = "Actions",
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				Dock = DockStyle.Left,
-				PreferredWidth = 80,
-			};
-
-			// TODO: C'est un moyen bricolé pour que WorkflowController sache où placer ses boutons.
-			WorkflowController.SetWorkflowButtonsContainer (this.workflowContainer);
-
-			// TODO: Et encore de la bricole !
-			MainViewController.actionRibbonShow = this.RibbonShowPage;
-			BusinessDocumentLinesController.actionRibbonShow = this.RibbonShowPage;
-		}
-		#endregion
-
-		#region Create business ribbon sections
-		private void CreateRibbonBusinessCreateSection(RibbonPage page)
-		{
-			var section = new RibbonSection (page)
-			{
-				Name = "Create",
-				Title = "Insertion",
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = Library.UI.Constants.ButtonLargeWidth * 1,
-			};
-
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateArticle,  isWithText: true));
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateQuantity, isWithText: true));
-			section.Children.Add (this.CreateSeparator ());
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateText,     isWithText: true));
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateTitle,    isWithText: true));
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateGroup,    isWithText: true));
-			section.Children.Add (this.CreateSeparator ());
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateDiscount, isWithText: true));
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.CreateTax,      isWithText: true));
-		}
-
-		private void CreateRibbonBusinessOperSection(RibbonPage page)
-		{
-			var section = new RibbonSection (page)
-			{
-				Name = "Oper",
-				Title = "Opérations",
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = Library.UI.Constants.ButtonLargeWidth * 1,
-			};
-
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.MoveUp,    isWithText: true));
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.MoveDown,  isWithText: true));
-			section.Children.Add (this.CreateSeparator ());
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Duplicate, isWithText: true));
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Delete,    isWithText: true));
-		}
-
-		private void CreateRibbonBusinessGroupSection(RibbonPage page)
-		{
-			var section = new RibbonSection (page)
-			{
-				Name = "Group",
-				Title = "Groupes",
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = Library.UI.Constants.ButtonLargeWidth * 1,
-			};
-
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Group,   isWithText: true));
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Ungroup, isWithText: true));
-			section.Children.Add (this.CreateSeparator ());
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Split,   isWithText: true));
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Combine, isWithText: true));
-			section.Children.Add (this.CreateSeparator ());
-			section.Children.Add (this.CreateButton (Library.Business.Res.Commands.Lines.Flat,    isWithText: true));
-		}
-		#endregion
-
-
 
 		private void UpdateDatabaseMenu()
 		{
@@ -1155,7 +625,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			TextFieldCombo.AdjustComboSize (parentButton, menu, false);
 
-			menu.Host = this.ribbonBook;
+			menu.Host = this.container;
 			menu.ShowAsComboList (parentButton, Point.Zero, parentButton);
 		}
 
@@ -1394,12 +864,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			Articles,
 			Misc,
 		}
+		#endregion
 
-
-		private void HandleAuthenticatedUserChanged(object sender)
-		{
-			this.UpdateAuthenticatedUser ();
-		}
 
 
 		private IconButton CreateButton(Command command = null, DockStyle dockStyle = DockStyle.StackBegin, CommandEventHandler handler = null, bool large = true, bool isActivable = false, bool isWithText = false)
@@ -1513,23 +979,17 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly PersistenceManager			persistenceManager;
 		private readonly UserManager				userManager;
 		private readonly FeatureManager				featureManager;
-		private readonly List<IconOrImageButton>	authenticateUserButtons;
-		private readonly List<StaticText>			authenticateUserWidgets;
-		private readonly Dictionary<string, bool>	ribbonShowPages;
-		
-		private RibbonBook							ribbonBook;
-		private RibbonPage							ribbonPageHome;
-		private RibbonPage							ribbonPageWorkflow;
-		private RibbonPage							ribbonPageBusiness;
-		private RibbonPage							ribbonPageMisc;
 
+		private Widget								container;
+		
 		private IconButton							databaseButton;
 		private GlyphButton							databaseMenuButton;
 		private string								databaseMenuDefaultCommandName;
 
-		private RibbonSection						workflowContainer;
-
 		private IconButton							workflowTransitionButton;
 		private List<WorkflowTransition>			workflowTransitions;
+
+		private IconOrImageButton					authenticateUserButton;
+		private StaticText							authenticateUserWidget;
 	}
 }

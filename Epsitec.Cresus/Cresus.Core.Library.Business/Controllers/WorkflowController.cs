@@ -123,76 +123,10 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.activeTransitions.Clear ();
 			this.activeTransitions.AddRange (this.GetEnabledTransitions ());
 
-			//	TODO: Seule subsistera l'une des méthodes (1) ou (2) !
-
-			//	(1)
-			if (WorkflowController.workflowButtonsContainer != null)
-			{
-				bool panelVisibility = this.UpdateActionButtons ();
-
-				this.UpdateActionPanelVisibility (panelVisibility);
-			}
-
-			//	(2)
 			if (WorkflowController.callbackWorkflowTransitions != null)
 			{
 				WorkflowController.callbackWorkflowTransitions (this.activeTransitions);
 			}
-		}
-
-		private bool UpdateActionButtons()
-		{
-			this.ClearActionButtons ();
-
-			int index = 0;
-
-			this.activeTransitions.ForEach (edge => this.CreateActionButton (edge, index++));
-
-			return index > 0;
-		}
-
-		private void UpdateActionPanelVisibility(bool panelVisibility)
-		{
-			this.mainViewController.SetActionPanelVisibility (panelVisibility);
-		}
-
-		private void CreateActionButton(WorkflowTransition transition, int uniqueId)
-		{
-			var buttonId    = WorkflowController.GetActionButtonId (uniqueId);
-			var title       = transition.Edge.Name;
-			var description = transition.Edge.Description;
-			var callback    = this.CreateActionCallback (transition);
-			var button      = this.CreateActionButton (buttonId, title, description, callback);
-
-			this.AddActionButtonInfo (button, transition);
-		}
-
-		private Button CreateActionButton(string id, FormattedText title, FormattedText description, System.Action callback)
-		{
-			var button = new Button
-			{
-				Parent = WorkflowController.workflowButtonsContainer,
-				Name = id,
-				FormattedText = title,
-				Padding = new Margins (5, 5, 2, 2),  // le texte ne doit pas toucher les bords du bouton
-				ButtonStyle = ButtonStyle.Confirmation,
-#if false
-				Dock = DockStyle.Stacked,
-				PreferredWidth = 100,
-				PreferredHeight = Library.UI.Constants.ButtonLargeWidth+10,
-#else
-				Dock = DockStyle.Fill,
-#endif
-			};
-
-			if (!description.IsNullOrWhiteSpace)
-			{
-				ToolTip.Default.SetToolTip (button, description);
-			}
-
-			button.Clicked += (sender, e) => callback ();
-
-			return button;
 		}
 
 		private void ClearActionButtons()
@@ -400,17 +334,11 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		public static void SetWorkflowButtonsContainer(Widget container)
-		{
-			WorkflowController.workflowButtonsContainer = container;
-		}
-
 		public static void SetCallbackWorkflowTransitions(System.Action<List<WorkflowTransition>> callback)
 		{
 			WorkflowController.callbackWorkflowTransitions = callback;
 		}
 
-		private static Widget						workflowButtonsContainer;
 		private static System.Action<List<WorkflowTransition>> callbackWorkflowTransitions;
 
 		private readonly DataViewOrchestrator		orchestrator;
