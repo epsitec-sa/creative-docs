@@ -9,8 +9,8 @@ using System.Linq;
 namespace Epsitec.Aider
 {
 	[DesignerVisible]
-	public enum GroupParticipantRole
+	public enum GroupLevel
 	{
-		None = 0,
+		Default = 0,
 	}
 }

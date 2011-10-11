@@ -9,8 +9,11 @@ using System.Linq;
 namespace Epsitec.Aider
 {
 	[DesignerVisible]
-	public enum GroupParticipantRole
+	public enum LegalPersonType
 	{
 		None = 0,
+
+		Institution = 1,
+		Business = 2,
 	}
 }

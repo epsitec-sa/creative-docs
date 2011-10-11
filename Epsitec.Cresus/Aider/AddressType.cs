@@ -9,8 +9,11 @@ using System.Linq;
 namespace Epsitec.Aider
 {
 	[DesignerVisible]
-	public enum GroupParticipantRole
+	public enum AddressType
 	{
-		None = 0,
+		Default      = 0,
+		Professional = 1,
+		Private      = 2,
+		Secondary    = 4,
 	}
 }

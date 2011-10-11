@@ -9,7 +9,7 @@ using System.Linq;
 namespace Epsitec.Aider
 {
 	[DesignerVisible]
-	public enum GroupParticipantRole
+	public enum ContactRole
 	{
 		None = 0,
 	}

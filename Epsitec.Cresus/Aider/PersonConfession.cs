@@ -9,7 +9,7 @@ using System.Linq;
 namespace Epsitec.Aider
 {
 	[DesignerVisible]
-	public enum PersonReligion
+	public enum PersonConfession
 	{
 		Unknown = 0,
 		Protestant = 1,

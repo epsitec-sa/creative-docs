@@ -9,8 +9,13 @@ using System.Linq;
 namespace Epsitec.Aider
 {
 	[DesignerVisible]
-	public enum GroupParticipantRole
+	public enum ValidationState
 	{
-		None = 0,
+		Undefined = 0,
+
+		Valid = 1,
+		Pending = 2,
+		Invalid = 3,
+		Deleted = 4,
 	}
 }
