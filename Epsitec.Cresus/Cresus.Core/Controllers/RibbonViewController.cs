@@ -41,11 +41,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.authenticateUserWidgets = new List<StaticText> ();
 			this.ribbonShowPages = new Dictionary<string, bool> ();
 
-			this.commandDispatcher  = app.CommandDispatcher;
+			this.orchestrator          = orchestrator;
+			this.commandDispatcher     = app.CommandDispatcher;
 			this.coreCommandDispatcher = app.GetComponent<CoreCommandDispatcher> ();
-			this.persistenceManager = app.PersistenceManager;
-			this.userManager        = userManager;
-			this.featureManager     = featureManager;
+			this.persistenceManager    = app.PersistenceManager;
+			this.userManager           = userManager;
+			this.featureManager        = featureManager;
 
 			this.featureManager.EnableGodMode ();
 		}
@@ -158,10 +159,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				var section = this.CreateNewStyleSection (frame, DockStyle.Left, "Actions");
 
 				section.Children.Add (this.CreateButton (Res.Commands.Edition.Print));
-				section.Children.Add (this.CreateButton (Res.Commands.Affair.WorkflowTransition));
-
-				// TODO: C'est un moyen bricolé pour obtenir la liste des WorkflowTransition.
-				WorkflowController.SetCallbackWorkflowTransitions (this.SetWorkflowTransitions);
+				this.CreateNewStyleRibbonWorkflowTransition (section);
 
 				Widget topSection, bottomSection;
 				this.CreateNewStyleSubsections (section, out topSection, out bottomSection);
@@ -179,17 +177,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				this.CreateNewStyleRibbonDatabaseSectionMenuButton (section);
 			}
-
-#if false
-			//	<-->
-			{
-				var section = this.CreateNewStyleSection (frame, DockStyle.Fill, "Affaire");
-
-
-				// TODO: C'est un moyen bricolé pour que WorkflowController sache où placer ses boutons.
-				WorkflowController.SetWorkflowButtonsContainer (section);
-			}
-#endif
 
 			//	<--|
 			{
@@ -230,13 +217,6 @@ namespace Epsitec.Cresus.Core.Controllers
 				showRibbonButton.GlyphShape = container.Visibility ? GlyphShape.TriangleUp : GlyphShape.TriangleDown;
 			};
 		}
-
-#if false
-		[Command (Res.CommandIds.Affair.WorkflowTransition)]
-		private void ProcessAffairWorkflowTransition(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-		}
-#endif
 
 		private Widget CreateNewStyleSection(Widget frame, DockStyle dockStyle, FormattedText description)
 		{
@@ -406,6 +386,83 @@ namespace Epsitec.Cresus.Core.Controllers
 				selectLanaguage3.ActiveState = ActiveState.No;
 				selectLanaguage4.ActiveState = ActiveState.Yes;
 			};
+		}
+
+		private void CreateNewStyleRibbonWorkflowTransition(Widget section)
+		{
+			this.workflowTransitionButton = this.CreateButton ();
+			this.workflowTransitionButton.IconUri = Misc.GetResourceIconUri ("WorkflowTransition");
+			this.workflowTransitionButton.Enable = false;
+
+			ToolTip.Default.SetToolTip (this.workflowTransitionButton, "Crée un nouveau document dans l'affaire");
+
+			section.Children.Add (this.workflowTransitionButton);
+
+			this.workflowTransitionButton.Clicked += delegate
+			{
+				this.ShowWorkflowTransitionMenu (this.workflowTransitionButton);
+			};
+
+			// TODO: C'est un moyen bricolé pour obtenir la liste des WorkflowTransition.
+			WorkflowController.SetCallbackWorkflowTransitions (this.SetWorkflowTransitions);
+		}
+
+		private void ShowWorkflowTransitionMenu(Widget parentButton)
+		{
+			if (this.workflowTransitions != null)
+			{
+				var menu = new VMenu ();
+
+				int index = 0;
+				foreach (var workflowTransition in this.workflowTransitions)
+				{
+					this.AddWorkflowTransitionToMenu (menu, workflowTransition.Edge.Name, index++);
+				}
+
+				TextFieldCombo.AdjustComboSize (parentButton, menu, false);
+
+				menu.Host = this.ribbonBook;
+				menu.ShowAsComboList (parentButton, Point.Zero, parentButton);
+			}
+		}
+
+		private void AddWorkflowTransitionToMenu(VMenu menu, FormattedText text, int index)
+		{
+			var item = new MenuItem ()
+			{
+				FormattedText = text,
+				TabIndex = index,
+			};
+
+			item.Clicked += delegate
+			{
+				var workflowTransition = this.workflowTransitions[item.TabIndex];
+				this.ExecuteWorkflowTransition (workflowTransition);
+			};
+
+			menu.Items.Add (item);
+		}
+
+		private void ExecuteWorkflowTransition(WorkflowTransition workflowTransition)
+		{
+			using (var engine = new WorkflowExecutionEngine (workflowTransition))
+			{
+				engine.Associate (this.orchestrator.Navigator);
+				engine.Execute ();
+			}
+
+			this.RefreshNavigation ();
+		}
+
+		private void RefreshNavigation()
+		{
+			this.orchestrator.Navigator.PreserveNavigation (() => this.orchestrator.ClearActiveEntity ());
+		}
+
+		private void SetWorkflowTransitions(List<WorkflowTransition> workflowTransitions)
+		{
+			this.workflowTransitions = workflowTransitions;
+			this.workflowTransitionButton.Enable = (this.workflowTransitions != null && this.workflowTransitions.Any ());
 		}
 
 		private void CreateNewStyleRibbonDatabaseSectionMenuButton(Widget section)
@@ -1347,7 +1404,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private IconButton CreateButton(Command command = null, DockStyle dockStyle = DockStyle.StackBegin, CommandEventHandler handler = null, bool large = true, bool isActivable = false, bool isWithText = false)
 		{
-			if (handler != null)
+			if (command != null && handler != null)
 			{
 				this.commandDispatcher.Register (command, handler);
 			}
@@ -1429,11 +1486,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		private void SetWorkflowTransitions(List<WorkflowTransition> workflowTransitions)
-		{
-			this.workflowTransitions = workflowTransitions;
-		}
-
 
 		#region Factory Class
 
@@ -1455,11 +1507,12 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public event EventHandler					DatabaseMenuDefaultCommandNameChanged;
 
+		private readonly DataViewOrchestrator		orchestrator;
 		private readonly CommandDispatcher			commandDispatcher;
+		private readonly CoreCommandDispatcher		coreCommandDispatcher;
 		private readonly PersistenceManager			persistenceManager;
 		private readonly UserManager				userManager;
 		private readonly FeatureManager				featureManager;
-		private readonly CoreCommandDispatcher		coreCommandDispatcher;
 		private readonly List<IconOrImageButton>	authenticateUserButtons;
 		private readonly List<StaticText>			authenticateUserWidgets;
 		private readonly Dictionary<string, bool>	ribbonShowPages;
@@ -1476,6 +1529,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private RibbonSection						workflowContainer;
 
+		private IconButton							workflowTransitionButton;
 		private List<WorkflowTransition>			workflowTransitions;
 	}
 }

@@ -137,8 +137,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			if (WorkflowController.callbackWorkflowTransitions != null)
 			{
 				WorkflowController.callbackWorkflowTransitions (this.activeTransitions);
-
-				// TODO: Griser la commande Affair.WorkflowTransition.
 			}
 		}
 
