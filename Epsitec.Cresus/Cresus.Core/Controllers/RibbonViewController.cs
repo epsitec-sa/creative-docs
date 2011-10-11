@@ -231,7 +231,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				PreferredWidth = 10,
 				Dock = DockStyle.Fill,
-				Padding = new Margins (2, 2, 2, 1),
+				//?Padding = new Margins (2, 2, 2, 1),
+				Padding = new Margins (3, 3, 3, 2),
 			};
 
 			new StaticText
