@@ -239,6 +239,14 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 					{
 						date = this.Entity.BillingDate.Value;
 					}
+					else if (this.Metadata.LastModificationDate.HasValue)
+					{
+						date = new Date (this.Metadata.LastModificationDate.Value);
+					}
+					else if (this.Metadata.CreationDate.HasValue)
+					{
+						date = new Date (this.Metadata.CreationDate.Value);
+					}
 					else
 					{
 						date = Date.Today;
