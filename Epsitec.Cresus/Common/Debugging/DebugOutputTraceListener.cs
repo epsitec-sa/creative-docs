@@ -186,6 +186,8 @@ namespace Epsitec.Common.Debug
 				buffer.Append (System.Threading.Thread.CurrentThread.CurrentUICulture.DisplayName);
 				buffer.Append (System.Environment.NewLine);
 #if DOTNET35
+				//	Old .NET 3.5 does not have Is64BitOperatingSystem
+#else
 				buffer.Append (System.Environment.Is64BitOperatingSystem ? "64-bit OS" : "32-bit OS");
 				buffer.Append (", ");
 #endif
