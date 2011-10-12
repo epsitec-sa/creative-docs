@@ -1136,26 +1136,31 @@ namespace Epsitec.Cresus.Core.Controllers
 		#region Color manager
 		private static Color GetBackgroundColor1()
 		{
+			//	Couleur pour l'ombre en haut des zones libres du ruban.
 			return RibbonViewController.GetColor (RibbonViewController.GetBaseColor (), saturation: 0.06, value: 0.9);
 		}
 
 		private static Color GetBackgroundColor2()
 		{
+			//	Couleur pour le fond des zones libres du ruban.
 			return RibbonViewController.GetColor (RibbonViewController.GetBaseColor (), saturation: 0.06, value: 0.7);
 		}
 
 		private static Color GetSectionBackgroundColor()
 		{
+			//	Couleur pour le fond d'une section du ruban.
 			return RibbonViewController.GetColor (RibbonViewController.GetBaseColor (), saturation: 0.02, value: 0.95);
 		}
 
 		private static Color GetTitleBackgroundColor()
 		{
+			//	Couleur pour le fond du titre d'une section du ruban.
 			return RibbonViewController.GetColor (RibbonViewController.GetBaseColor (), saturation: 0.2, value: 0.7);
 		}
 
 		private static Color GetBaseColor()
 		{
+			//	Couleur de base pour le ruban, dont on utilise la teinte (hue).
 #if true
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			return adorner.ColorBorder;
@@ -1166,6 +1171,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private static Color GetColor(Color color, double? saturation = null, double? value = null)
 		{
+			//	Retourne une couleur en forçant éventuellement la saturation et la valeur.
 			double h, s, v;
 			Color.ConvertRgbToHsv (color.R, color.G, color.B, out h, out s, out v);
 
