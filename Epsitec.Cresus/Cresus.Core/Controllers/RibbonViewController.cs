@@ -44,9 +44,10 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.userManager           = userManager;
 			this.featureManager        = featureManager;
 
-			this.sectionFrames = new List<FrameBox> ();
-			this.sectionIcons  = new List<FrameBox> ();
-			this.sectionTitles = new List<StaticText> ();
+			this.sectionGroupFrames = new List<FrameBox> ();
+			this.sectionIconFrames  = new List<FrameBox> ();
+			this.sectionTitleFrames = new List<StaticText> ();
+			this.sectionTitles      = new List<FormattedText> ();
 
 			this.featureManager.EnableGodMode ();
 
@@ -114,8 +115,9 @@ namespace Epsitec.Cresus.Core.Controllers
 				Dock = DockStyle.Bottom,
 			};
 
-			this.sectionFrames.Clear ();
-			this.sectionIcons.Clear ();
+			this.sectionGroupFrames.Clear ();
+			this.sectionIconFrames.Clear ();
+			this.sectionTitleFrames.Clear ();
 			this.sectionTitles.Clear ();
 
 			//	|-->
@@ -227,6 +229,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				double  frameGap;
 				Margins iconMargins;
 				double  titleHeight;
+				double  titleSize;
 
 				switch (this.ribbonViewMode)
 				{
@@ -234,44 +237,52 @@ namespace Epsitec.Cresus.Core.Controllers
 						frameGap    = -1;
 						iconMargins = new Margins (0);
 						titleHeight = 0;
+						titleSize   = 0;
 						break;
 
 					case RibbonViewMode.Compact:
 						frameGap    = -1;
 						iconMargins = new Margins (3);
 						titleHeight = 0;
+						titleSize   = 0;
 						break;
 
 					case RibbonViewMode.Large:
 						frameGap    = 3;
 						iconMargins = new Margins (6, 6, 6, 6-1);
-						titleHeight = 13;
+						titleHeight = 14;
+						titleSize   = 10;
 						break;
 
 					default:
 						frameGap    = 2;
 						iconMargins = new Margins (3, 3, 3, 3-1);
 						titleHeight = 11;
+						titleSize   = 8;
 						break;
 				}
 
-				foreach (var frame in this.sectionFrames)
+				foreach (var groupFrame in this.sectionGroupFrames)
 				{
-					double leftMargin  = (frame.Dock == DockStyle.Right) ? frameGap : 0;
-					double rightMargin = (frame.Dock == DockStyle.Left ) ? frameGap : 0;
+					double leftMargin  = (groupFrame.Dock == DockStyle.Right) ? frameGap : 0;
+					double rightMargin = (groupFrame.Dock == DockStyle.Left ) ? frameGap : 0;
 
-					frame.Margins = new Margins (leftMargin, rightMargin, -1, -1);
+					groupFrame.Margins = new Margins (leftMargin, rightMargin, -1, -1);
 				}
 
-				foreach (var icon in this.sectionIcons)
+				foreach (var iconFrame in this.sectionIconFrames)
 				{
-					icon.Padding = iconMargins;
+					iconFrame.Padding = iconMargins;
 				}
 
-				foreach (var title in this.sectionTitles)
+				for (int i = 0; i < this.sectionTitleFrames.Count; i++)
 				{
-					title.Visibility = (this.ribbonViewMode != RibbonViewMode.Minimal && this.ribbonViewMode != RibbonViewMode.Compact);
-					title.PreferredHeight = titleHeight;
+					var titleFrame = this.sectionTitleFrames[i];
+					var title = this.sectionTitles[i].ApplyFontSize (titleSize).ApplyFontColor (Color.FromBrightness (1.0)).ApplyBold ();
+
+					titleFrame.FormattedText   = title;
+					titleFrame.Visibility      = (this.ribbonViewMode != RibbonViewMode.Minimal && this.ribbonViewMode != RibbonViewMode.Compact);
+					titleFrame.PreferredHeight = titleHeight;
 				}
 			}
 		}
@@ -279,7 +290,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private Widget CreateSection(Widget frame, DockStyle dockStyle, FormattedText description)
 		{
 			//	Crée une section dans le faux ruban.
-			var section = new FrameBox
+			var groupFrame = new FrameBox
 			{
 				Parent = frame,
 				DrawFullFrame = true,
@@ -289,18 +300,17 @@ namespace Epsitec.Cresus.Core.Controllers
 				Dock = dockStyle,
 			};
 
-			var icon = new FrameBox
+			var iconFrame = new FrameBox
 			{
-				Parent = section,
+				Parent = groupFrame,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				PreferredWidth = 10,
 				Dock = DockStyle.Fill,
 			};
 
-			var title = new StaticText
+			var titleFrame = new StaticText
 			{
-				Parent = section,
-				FormattedText = description.ApplyFontSize (8.0).ApplyFontColor (Color.FromBrightness (1.0)).ApplyBold (),
+				Parent = groupFrame,
 				ContentAlignment = ContentAlignment.MiddleCenter,
 				TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				BackColor = Color.FromHexa ("a3b3c7"),
@@ -309,11 +319,12 @@ namespace Epsitec.Cresus.Core.Controllers
 				Margins = new Margins (1, 1, 0, 1),
 			};
 
-			this.sectionFrames.Add (section);
-			this.sectionIcons .Add (icon);
-			this.sectionTitles.Add (title);
+			this.sectionGroupFrames.Add (groupFrame);
+			this.sectionIconFrames .Add (iconFrame);
+			this.sectionTitleFrames.Add (titleFrame);
+			this.sectionTitles     .Add (description);
 
-			return icon;
+			return iconFrame;
 		}
 
 		private void CreateSubsections(Widget section, out Widget topSection, out Widget bottomSection)
@@ -1093,9 +1104,10 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly PersistenceManager			persistenceManager;
 		private readonly UserManager				userManager;
 		private readonly FeatureManager				featureManager;
-		private readonly List<FrameBox>				sectionFrames;
-		private readonly List<FrameBox>				sectionIcons;
-		private readonly List<StaticText>			sectionTitles;
+		private readonly List<FrameBox>				sectionGroupFrames;
+		private readonly List<FrameBox>				sectionIconFrames;
+		private readonly List<StaticText>			sectionTitleFrames;
+		private readonly List<FormattedText>		sectionTitles;
 
 		private RibbonViewMode						ribbonViewMode;
 		private Widget								container;
