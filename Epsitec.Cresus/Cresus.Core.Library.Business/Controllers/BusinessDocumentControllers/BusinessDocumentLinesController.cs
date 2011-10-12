@@ -6,7 +6,9 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 using Epsitec.Common.Dialogs;
 
+using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Library.Business.ContentAccessors;
+using Epsitec.Cresus.Core.Orchestrators;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -28,12 +30,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Si les états ne sont pas définis, met les valeurs par défaut.
 			if (this.CurrentViewMode == ViewMode.Unknown)
 			{
-				this.CurrentViewMode = BusinessDocumentLinesController.persistantViewMode;
+				this.CurrentViewMode = this.ViewMode;
 			}
 
 			if (this.CurrentEditMode == EditMode.Unknown)
 			{
-				this.CurrentEditMode = BusinessDocumentLinesController.persistantEditMode;
+				this.CurrentEditMode = this.EditMode;
 			}
 
 			this.lines = new List<Line> ();
@@ -115,7 +117,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				this.accessData.DocumentLogic.IsDebug = (value == ViewMode.Debug);
 
-				BusinessDocumentLinesController.persistantViewMode = value;
+				this.ViewMode = value;
 			}
 		}
 
@@ -140,7 +142,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				this.commandContext.SetActiveState (Library.Business.Res.Commands.Lines.EditName, value == EditMode.Name);
 				this.commandContext.SetActiveState (Library.Business.Res.Commands.Lines.EditDescription, value == EditMode.Description);
 
-				BusinessDocumentLinesController.persistantEditMode = value;
+				this.EditMode = value;
 			}
 		}
 
@@ -163,7 +165,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Crée la toolbar.
 			this.lineToolbarController = new LineToolbarController (this.accessData.CoreData, this.accessData.DocumentMetadata, this.accessData.BusinessDocument);
 			var toolbarWidget = this.lineToolbarController.CreateUI (frame);
-			toolbarWidget.Visibility = BusinessDocumentLinesController.persistantShowToolbar;
+			toolbarWidget.Visibility = this.ShowToolbar;
 
 			//	Crée la liste.
 			this.lineTableController = new LineTableController (this.accessData);
@@ -172,8 +174,15 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			//	Crée l'éditeur pour une ligne.
 			this.lineEditionPanelController = new LineEditionPanelController (this.accessData);
-			this.lineEditionPanelController.CreateUI (frame);
+			var lineEditionFrame = this.lineEditionPanelController.CreateUI (frame);
 			this.lineEditionPanelController.UpdateUI (this.CurrentEditMode, null);
+
+			lineEditionFrame.PreferredHeight = this.EditorHeight;
+
+			lineEditionFrame.BoundsChanged += delegate
+			{
+				this.EditorHeight = lineEditionFrame.ActualHeight;
+			};
 
 			//	Crée un splitter juste au-dessus de l'éditeur de ligne.
 			var splitter = new HSplitter
@@ -190,7 +199,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Anchor = AnchorStyles.TopRight,
 				PreferredSize = new Size (16, 16),
 				Margins = new Margins (0, 2, 53+2, 0),  // 53 = hauteur pour LineRibbonController
-				GlyphShape = BusinessDocumentLinesController.persistantShowToolbar ? GlyphShape.TriangleUp : GlyphShape.TriangleDown,
+				GlyphShape = this.ShowToolbar ? GlyphShape.TriangleUp : GlyphShape.TriangleDown,
 				ButtonStyle = ButtonStyle.Slider,
 			};
 
@@ -200,7 +209,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				toolbarWidget.Visibility = !toolbarWidget.Visibility;
 				showToolbarButton.GlyphShape = toolbarWidget.Visibility ? GlyphShape.TriangleUp : GlyphShape.TriangleDown;
-				BusinessDocumentLinesController.persistantShowToolbar = toolbarWidget.Visibility;
+				this.ShowToolbar = toolbarWidget.Visibility;
 			};
 
 			if (BusinessDocumentLinesController.actionRibbonShow != null)
@@ -528,12 +537,92 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		public static System.Action<string, bool>	actionRibbonShow;
+		#region Properties using the SettingsManager
+		private double EditorHeight
+		{
+			get
+			{
+				var s = this.accessData.SettingsManager.GetSettings ("BusinessDocumentLinesController.EditorHeight");
 
-		// TODO: Il faudra un jour que ces variables survivent à l'extinction de l'application !
-		private static ViewMode					persistantViewMode    = ViewMode.Default;
-		private static EditMode					persistantEditMode    = EditMode.Name;
-		private static bool						persistantShowToolbar = false;
+				if (!string.IsNullOrEmpty (s))
+				{
+					double v;
+					if (double.TryParse(s, out v))
+					{
+						return v;
+					}
+				}
+
+				return 200;  // retourne la hauteur par défaut
+			}
+			set
+			{
+				this.accessData.SettingsManager.SetSettings ("BusinessDocumentLinesController.EditorHeight", value.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			}
+		}
+
+		private ViewMode ViewMode
+		{
+			get
+			{
+				var s = this.accessData.SettingsManager.GetSettings ("BusinessDocumentLinesController.ViewMode");
+
+				if (!string.IsNullOrEmpty (s))
+				{
+					ViewMode mode;
+					if (System.Enum.TryParse<ViewMode> (s, out mode))
+					{
+						return mode;
+					}
+				}
+
+				return ViewMode.Default;  // retourne le mode par défaut
+			}
+			set
+			{
+				this.accessData.SettingsManager.SetSettings ("BusinessDocumentLinesController.ViewMode", value.ToString ());
+			}
+		}
+
+		private EditMode EditMode
+		{
+			get
+			{
+				var s = this.accessData.SettingsManager.GetSettings ("BusinessDocumentLinesController.EditMode");
+
+				if (!string.IsNullOrEmpty (s))
+				{
+					EditMode mode;
+					if (System.Enum.TryParse<EditMode> (s, out mode))
+					{
+						return mode;
+					}
+				}
+
+				return EditMode.Name;  // retourne le mode par défaut
+			}
+			set
+			{
+				this.accessData.SettingsManager.SetSettings ("BusinessDocumentLinesController.EditMode", value.ToString ());
+			}
+		}
+
+		private bool ShowToolbar
+		{
+			get
+			{
+				var s = this.accessData.SettingsManager.GetSettings ("BusinessDocumentLinesController.RibbonShow");
+				return s == "true";
+			}
+			set
+			{
+				this.accessData.SettingsManager.SetSettings ("BusinessDocumentLinesController.RibbonShow", value ? "true" : "false");
+			}
+		}
+		#endregion
+
+
+		public static System.Action<string, bool>	actionRibbonShow;
 
 		private readonly AccessData				accessData;
 		private readonly List<Line>				lines;

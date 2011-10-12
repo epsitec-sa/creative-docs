@@ -1,10 +1,12 @@
 ﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
+using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.Core.Orchestrators;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -51,7 +53,15 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				}
 			}
 		}
-		
+
+		public SettingsManager SettingsManager
+		{
+			get
+			{
+				return this.ViewController.Orchestrator.Host.SettingsManager;
+			}
+		}
+
 		public readonly EntityViewController	ViewController;
 		public readonly BusinessContext			BusinessContext;
 		public readonly DataContext				DataContext;

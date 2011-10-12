@@ -26,13 +26,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		public void CreateUI(Widget parent)
+		public FrameBox CreateUI(Widget parent)
 		{
 			var frame = new FrameBox
 			{
-				Parent          = parent,
-				Dock            = DockStyle.Bottom,
-				PreferredHeight = 200,  // hauteur par défaut pour tous les éditeurs de lignes
+				Parent = parent,
+				Dock   = DockStyle.Bottom,
 			};
 
 			var titleFrame = new FrameBox
@@ -89,6 +88,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				Dock          = DockStyle.Fill,
 				DrawFullFrame = true,
 			};
+
+			return frame;
 		}
 
 
