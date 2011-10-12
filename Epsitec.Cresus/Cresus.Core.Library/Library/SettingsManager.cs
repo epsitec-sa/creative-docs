@@ -1,6 +1,7 @@
 //	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
@@ -69,6 +70,7 @@ namespace Epsitec.Cresus.Core.Library
 		public void Restore(XElement xml)
 		{
 			this.settings.Restore (xml);
+			this.OnSettingsRestored ();
 		}
 
 		private void OnSettingsChanged()
@@ -87,6 +89,16 @@ namespace Epsitec.Cresus.Core.Library
 
 		#endregion
 
+
+		private void OnSettingsRestored()
+		{
+			if (this.SettingsRestored != null)
+			{
+				this.SettingsRestored (this);
+			}
+		}
+
+		public event EventHandler SettingsRestored;
 
 		private readonly SettingsCollection		settings;
 	}

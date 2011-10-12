@@ -41,6 +41,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.commandDispatcher     = app.CommandDispatcher;
 			this.coreCommandDispatcher = app.GetComponent<CoreCommandDispatcher> ();
 			this.persistenceManager    = app.PersistenceManager;
+			this.settingsManager       = app.SettingsManager;
 			this.userManager           = userManager;
 			this.featureManager        = featureManager;
 
@@ -51,7 +52,10 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.featureManager.EnableGodMode ();
 
-			this.ribbonViewMode = RibbonViewMode.Default;
+			this.settingsManager.SettingsRestored += delegate
+			{
+				this.UpdateRibbon ();
+			};
 		}
 
 		
@@ -222,26 +226,32 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void UpdateRibbon()
 		{
-			this.container.Visibility = (this.ribbonViewMode != RibbonViewMode.Hide);
+			var mode = this.RibbonViewMode;
 
-			if (this.ribbonViewMode != RibbonViewMode.Hide)
+			if (mode == RibbonViewMode.Hide)
 			{
+				this.container.Visibility = false;
+			}
+			else
+			{
+				this.container.Visibility = true;
+
 				double  frameGap;
 				Margins iconMargins;
 				double  titleHeight;
 				double  titleSize;
 
-				switch (this.ribbonViewMode)
+				switch (mode)
 				{
 					case RibbonViewMode.Minimal:
-						frameGap    = -1;
+						frameGap    = -1;  // les sections se chevauchent
 						iconMargins = new Margins (0);
 						titleHeight = 0;
 						titleSize   = 0;
 						break;
 
 					case RibbonViewMode.Compact:
-						frameGap    = -1;
+						frameGap    = -1;  // les sections se chevauchent
 						iconMargins = new Margins (3);
 						titleHeight = 0;
 						titleSize   = 0;
@@ -280,8 +290,8 @@ namespace Epsitec.Cresus.Core.Controllers
 					var titleFrame = this.sectionTitleFrames[i];
 					var title = this.sectionTitles[i].ApplyFontSize (titleSize).ApplyFontColor (Color.FromBrightness (1.0)).ApplyBold ();
 
+					titleFrame.Visibility      = (mode != RibbonViewMode.Minimal && mode != RibbonViewMode.Compact);
 					titleFrame.FormattedText   = title;
-					titleFrame.Visibility      = (this.ribbonViewMode != RibbonViewMode.Minimal && this.ribbonViewMode != RibbonViewMode.Compact);
 					titleFrame.PreferredHeight = titleHeight;
 				}
 			}
@@ -961,7 +971,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void AddRibbonModeToMenu(VMenu menu, FormattedText text, RibbonViewMode mode)
 		{
-			bool selected = (this.ribbonViewMode == mode);
+			bool selected = (this.RibbonViewMode == mode);
 			var icon = Misc.GetResourceIconImageTag (selected ? "Button.RadioYes" : "Button.RadioNo", -4);
 			text = FormattedText.Concat (icon, " ", text);
 
@@ -973,7 +983,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			item.Clicked += delegate
 			{
-				this.ribbonViewMode = (RibbonViewMode) System.Enum.Parse (typeof (RibbonViewMode), item.Name);
+				this.RibbonViewMode = (RibbonViewMode) System.Enum.Parse (typeof (RibbonViewMode), item.Name);
 				this.UpdateRibbon ();
 			};
 
@@ -1077,6 +1087,30 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
+		private RibbonViewMode RibbonViewMode
+		{
+			get
+			{
+				var s = this.settingsManager.GetSettings ("RibbonViewController.RibbonViewMode");
+
+				if (!string.IsNullOrEmpty (s))
+				{
+					RibbonViewMode mode;
+					if (System.Enum.TryParse<RibbonViewMode> (s, out mode))
+					{
+						return mode;
+					}
+				}
+
+				return RibbonViewMode.Default;
+			}
+			set
+			{
+				this.settingsManager.SetSettings ("RibbonViewController.RibbonViewMode", value.ToString ());
+			}
+		}
+
+
 
 		#region Factory Class
 
@@ -1102,6 +1136,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly CommandDispatcher			commandDispatcher;
 		private readonly CoreCommandDispatcher		coreCommandDispatcher;
 		private readonly PersistenceManager			persistenceManager;
+		private readonly SettingsManager			settingsManager;
 		private readonly UserManager				userManager;
 		private readonly FeatureManager				featureManager;
 		private readonly List<FrameBox>				sectionGroupFrames;
@@ -1109,7 +1144,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly List<StaticText>			sectionTitleFrames;
 		private readonly List<FormattedText>		sectionTitles;
 
-		private RibbonViewMode						ribbonViewMode;
 		private Widget								container;
 		
 		private IconButton							databaseButton;
