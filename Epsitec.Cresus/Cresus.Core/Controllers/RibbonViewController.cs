@@ -154,7 +154,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				bottomSection.Children.Add (this.CreateButton (ApplicationCommands.Underlined, large: false, isActivable: true));
 				bottomSection.Children.Add (this.CreateButton (ApplicationCommands.MultilingualEdition, large: false));
 
-				section.Children.Add (this.CreateGap (4));
+				section.Children.Add (this.CreateGap ());
 				this.CreateLanguage (section);
 			}
 
@@ -175,7 +175,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				this.CreateRibbonWorkflowTransition (section);
 				section.Children.Add (this.CreateButton (Res.Commands.Edition.Print));
-				section.Children.Add (this.CreateGap (6));
+				section.Children.Add (this.CreateGap ());
 
 				Widget topSection, bottomSection;
 				this.CreateSubsections (section, out topSection, out bottomSection);
@@ -206,18 +206,18 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				this.CreateRibbonUserSection (section);
 
-				section.Children.Add (this.CreateGap (6));  // espace pour le bouton 'v', avec chevauchement partiel volontaire
+				section.Children.Add (this.CreateGap ());  // espace pour le bouton 'v', avec chevauchement partiel volontaire
 			}
 
 			//	Bouton 'v'
 			var showRibbonButton = new GlyphButton
 			{
-				Parent = container.Window.Root,
-				Anchor = AnchorStyles.TopRight,
+				Parent        = container.Window.Root,
+				Anchor        = AnchorStyles.TopRight,
 				PreferredSize = new Size (14, 14),
-				Margins = new Margins (0, -1, -1, 0),
-				GlyphShape = GlyphShape.Menu,
-				ButtonStyle = ButtonStyle.Icon,
+				Margins       = new Margins (0, -1, -1, 0),
+				GlyphShape    = GlyphShape.Menu,
+				ButtonStyle   = ButtonStyle.Icon,
 			};
 
 			ToolTip.Default.SetToolTip (showRibbonButton, "Mode d'affichage de la barre d'icônes");
@@ -244,6 +244,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				double  frameGap;
 				Margins iconMargins;
+				double  gapWidth;
 				double  titleHeight;
 				double  titleSize;
 
@@ -252,6 +253,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					case RibbonViewMode.Minimal:
 						frameGap    = -1;  // les sections se chevauchent
 						iconMargins = new Margins (0);
+						gapWidth    = 3;
 						titleHeight = 0;
 						titleSize   = 0;
 						break;
@@ -259,6 +261,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					case RibbonViewMode.Compact:
 						frameGap    = -1;  // les sections se chevauchent
 						iconMargins = new Margins (3);
+						gapWidth    = 5;
 						titleHeight = 0;
 						titleSize   = 0;
 						break;
@@ -266,13 +269,23 @@ namespace Epsitec.Cresus.Core.Controllers
 					case RibbonViewMode.Large:
 						frameGap    = 3;
 						iconMargins = new Margins (6, 6, 6, 6-1);
+						gapWidth    = 8;
 						titleHeight = 14;
 						titleSize   = 10;
+						break;
+
+					case RibbonViewMode.Hires:
+						frameGap    = 4;
+						iconMargins = new Margins (9, 9, 9, 9-1);
+						gapWidth    = 10;
+						titleHeight = 18;
+						titleSize   = 12;
 						break;
 
 					default:
 						frameGap    = 2;
 						iconMargins = new Margins (3, 3, 3, 3-1);
+						gapWidth    = 6;
 						titleHeight = 11;
 						titleSize   = 8;
 						break;
@@ -295,6 +308,11 @@ namespace Epsitec.Cresus.Core.Controllers
 						var iconFrame = this.sectionIconFrames[i];
 
 						iconFrame.Padding = iconMargins;
+
+						foreach (var gap in iconFrame.FindAllChildren ().Where (x => x.Name == "Gap"))
+						{
+							gap.PreferredWidth = gapWidth;
+						}
 					}
 
 					//	Met à jour le titre de la section.
@@ -316,31 +334,31 @@ namespace Epsitec.Cresus.Core.Controllers
 			//	Crée une section dans le faux ruban.
 			var groupFrame = new FrameBox
 			{
-				Parent = frame,
-				DrawFullFrame = true,
-				BackColor = RibbonViewController.GetSectionBackgroundColor (),
+				Parent              = frame,
+				DrawFullFrame       = true,
+				BackColor           = RibbonViewController.GetSectionBackgroundColor (),
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-				PreferredWidth = 10,
-				Dock = dockStyle,
+				PreferredWidth      = 10,
+				Dock                = dockStyle,
 			};
 
 			var iconFrame = new FrameBox
 			{
-				Parent = groupFrame,
+				Parent              = groupFrame,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = 10,
-				Dock = DockStyle.Fill,
+				PreferredWidth      = 10,
+				Dock                = DockStyle.Fill,
 			};
 
 			var titleFrame = new StaticText
 			{
-				Parent = groupFrame,
+				Parent           = groupFrame,
 				ContentAlignment = ContentAlignment.MiddleCenter,
-				TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
-				BackColor = RibbonViewController.GetTitleBackgroundColor (),
-				PreferredWidth = 10,
-				Dock = DockStyle.Bottom,
-				Margins = new Margins (1, 1, 0, 1),
+				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+				BackColor        = RibbonViewController.GetTitleBackgroundColor (),
+				PreferredWidth   = 10,
+				Dock             = DockStyle.Bottom,
+				Margins          = new Margins (1, 1, 0, 1),
 			};
 
 			this.sectionGroupFrames.Add (groupFrame);
@@ -356,26 +374,26 @@ namespace Epsitec.Cresus.Core.Controllers
 			//	Crée deux sous-sections dans le faux ruban.
 			var frame = new FrameBox
 			{
-				Parent = section,
+				Parent              = section,
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-				PreferredWidth = 10,
-				Dock = DockStyle.StackBegin,
+				PreferredWidth      = 10,
+				Dock                = DockStyle.StackBegin,
 			};
 
 			topSection = new FrameBox
 			{
-				Parent = frame,
+				Parent              = frame,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = 10,
-				Dock = DockStyle.Top,
+				PreferredWidth      = 10,
+				Dock                = DockStyle.Top,
 			};
 
 			bottomSection = new FrameBox
 			{
-				Parent = frame,
+				Parent              = frame,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = 10,
-				Dock = DockStyle.Bottom,
+				PreferredWidth      = 10,
+				Dock                = DockStyle.Bottom,
 			};
 		}
 
@@ -389,39 +407,39 @@ namespace Epsitec.Cresus.Core.Controllers
 			//	TODO: faire cela proprement avec des commandes multi-états.
 			var selectLanaguage1 = new IconButton ()
 			{
-				Parent = topSection,
-				Name = "language=fr",
+				Parent        = topSection,
+				Name          = "language=fr",
 				PreferredSize = new Size (Library.UI.Constants.ButtonLargeWidth/2, Library.UI.Constants.ButtonLargeWidth/2),
-				Dock = DockStyle.Stacked,
-				Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagFR.icon""/>",
-				ActiveState = ActiveState.Yes,
+				Dock          = DockStyle.Stacked,
+				Text          = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagFR.icon""/>",
+				ActiveState   = ActiveState.Yes,
 			};
 
 			var selectLanaguage2 = new IconButton ()
 			{
-				Parent = topSection,
-				Name = "language=de",
+				Parent        = topSection,
+				Name          = "language=de",
 				PreferredSize = new Size (Library.UI.Constants.ButtonLargeWidth/2, Library.UI.Constants.ButtonLargeWidth/2),
-				Dock = DockStyle.Stacked,
-				Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagDE.icon""/>",
+				Dock          = DockStyle.Stacked,
+				Text          = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagDE.icon""/>",
 			};
 
 			var selectLanaguage3 = new IconButton ()
 			{
-				Parent = bottomSection,
-				Name = "language=en",
+				Parent        = bottomSection,
+				Name          = "language=en",
 				PreferredSize = new Size (Library.UI.Constants.ButtonLargeWidth/2, Library.UI.Constants.ButtonLargeWidth/2),
-				Dock = DockStyle.Stacked,
-				Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagGB.icon""/>",
+				Dock          = DockStyle.Stacked,
+				Text          = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagGB.icon""/>",
 			};
 
 			var selectLanaguage4 = new IconButton ()
 			{
-				Parent = bottomSection,
-				Name = "language=it",
+				Parent        = bottomSection,
+				Name          = "language=it",
 				PreferredSize = new Size (Library.UI.Constants.ButtonLargeWidth/2, Library.UI.Constants.ButtonLargeWidth/2),
-				Dock = DockStyle.Stacked,
-				Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagIT.icon""/>",
+				Dock          = DockStyle.Stacked,
+				Text          = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagIT.icon""/>",
 			};
 
 			ToolTip.Default.SetToolTip (selectLanaguage1, "Français");
@@ -725,7 +743,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				var item = new MenuItem ()
 				{
 					CommandObject = command,
-					Name = command.Name,
+					Name          = command.Name,
 				};
 
 				menu.Items.Add (item);
@@ -958,11 +976,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			//	Affiche le menu permettant de choisir le mode pour le ruban.
 			var menu = new VMenu ();
 
-			this.AddRibbonModeToMenu (menu, "Pas de barre d'icônes",      RibbonViewMode.Hide);
-			this.AddRibbonModeToMenu (menu, "Barre d'icônes minimaliste", RibbonViewMode.Minimal);
-			this.AddRibbonModeToMenu (menu, "Barre d'icônes compacte",    RibbonViewMode.Compact);
-			this.AddRibbonModeToMenu (menu, "Barre d'icônes standard",    RibbonViewMode.Default);
-			this.AddRibbonModeToMenu (menu, "Barre d'icônes aérée",       RibbonViewMode.Large);
+			this.AddRibbonModeToMenu (menu, "Pas de barre d'icônes",           RibbonViewMode.Hide);
+			menu.Items.Add (new MenuSeparator ());
+			this.AddRibbonModeToMenu (menu, "Barre d'icônes minimaliste",      RibbonViewMode.Minimal);
+			this.AddRibbonModeToMenu (menu, "Barre d'icônes compacte",         RibbonViewMode.Compact);
+			menu.Items.Add (new MenuSeparator ());
+			this.AddRibbonModeToMenu (menu, "Barre d'icônes standard",         RibbonViewMode.Default);
+			this.AddRibbonModeToMenu (menu, "Barre d'icônes aérée",            RibbonViewMode.Large);
+			this.AddRibbonModeToMenu (menu, "Barre d'icônes pour grand écran", RibbonViewMode.Hires);
 
 			TextFieldCombo.AdjustComboSize (parentButton, menu, false);
 
@@ -973,13 +994,12 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void AddRibbonModeToMenu(VMenu menu, FormattedText text, RibbonViewMode mode)
 		{
 			bool selected = (this.RibbonViewMode == mode);
-			var icon = Misc.GetResourceIconImageTag (selected ? "Button.RadioYes" : "Button.RadioNo", -4);
-			text = FormattedText.Concat (icon, " ", text);
 
 			var item = new MenuItem ()
 			{
+				IconUri       = Misc.GetResourceIconUri(selected ? "Button.RadioYes" : "Button.RadioNo"),
 				FormattedText = text,
-				Name = mode.ToString (),
+				Name          = mode.ToString (),
 			};
 
 			item.Clicked += delegate
@@ -1058,11 +1078,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			};
 		}
 
-		private Widget CreateGap(double width)
+		private Widget CreateGap()
 		{
 			var gap = new FrameBox
 			{
-				PreferredWidth = width,
+				Name = "Gap",
 				Dock = DockStyle.StackBegin,
 			};
 

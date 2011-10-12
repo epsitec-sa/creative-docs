@@ -52,7 +52,7 @@ namespace Epsitec.Common.Widgets
 		public MenuItem(string command, string icon, string text, string shortcut) : this ()
 		{
 			this.CommandObject = Command.Get (command);
-			this.IconUri = icon;
+			this.IconUri  = icon;
 			this.Text     = text;
 			this.ShortKey = shortcut;	//#fix
 			this.textOnly = false;
@@ -65,7 +65,7 @@ namespace Epsitec.Common.Widgets
 		
 		public MenuItem(Widget submenu, string icon, string text, string shortcut) : this ()
 		{
-			this.IconUri = icon;
+			this.IconUri  = icon;
 			this.Text     = text;
 			this.ShortKey = shortcut;	//#fix
 			this.textOnly = false;

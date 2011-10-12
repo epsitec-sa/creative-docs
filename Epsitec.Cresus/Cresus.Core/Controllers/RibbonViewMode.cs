@@ -10,5 +10,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		Compact,	// sans titres et compact
 		Default,	// mode standard
 		Large,		// aéré
+		Hires,		// pour grand écran
 	}
 }
