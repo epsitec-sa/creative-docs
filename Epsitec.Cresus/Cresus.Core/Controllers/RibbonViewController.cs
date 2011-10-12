@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.featureManager.EnableGodMode ();
 
-			this.ribbonMode = "Normal";
+			this.ribbonViewMode = RibbonViewMode.Default;
 		}
 
 		
@@ -220,28 +220,58 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void UpdateRibbon()
 		{
-			this.container.Visibility = this.IsRibbonVisible;
+			this.container.Visibility = (this.ribbonViewMode != RibbonViewMode.Hide);
 
-			if (this.IsRibbonVisible)
+			if (this.ribbonViewMode != RibbonViewMode.Hide)
 			{
+				double  frameGap;
+				Margins iconMargins;
+				double  titleHeight;
+
+				switch (this.ribbonViewMode)
+				{
+					case RibbonViewMode.Minimal:
+						frameGap    = -1;
+						iconMargins = new Margins (0);
+						titleHeight = 0;
+						break;
+
+					case RibbonViewMode.Compact:
+						frameGap    = -1;
+						iconMargins = new Margins (3);
+						titleHeight = 0;
+						break;
+
+					case RibbonViewMode.Large:
+						frameGap    = 3;
+						iconMargins = new Margins (6, 6, 6, 6-1);
+						titleHeight = 13;
+						break;
+
+					default:
+						frameGap    = 2;
+						iconMargins = new Margins (3, 3, 3, 3-1);
+						titleHeight = 11;
+						break;
+				}
+
 				foreach (var frame in this.sectionFrames)
 				{
-					double m = this.IsRibbonNormal ? 2 : -1;
-
-					double leftMargin  = (frame.Dock == DockStyle.Right) ? m : 0;
-					double rightMargin = (frame.Dock == DockStyle.Left ) ? m : 0;
+					double leftMargin  = (frame.Dock == DockStyle.Right) ? frameGap : 0;
+					double rightMargin = (frame.Dock == DockStyle.Left ) ? frameGap : 0;
 
 					frame.Margins = new Margins (leftMargin, rightMargin, -1, -1);
 				}
 
 				foreach (var icon in this.sectionIcons)
 				{
-					icon.Padding = this.IsRibbonNormal ? new Margins (3, 3, 3, 2) : new Margins (0);
+					icon.Padding = iconMargins;
 				}
 
 				foreach (var title in this.sectionTitles)
 				{
-					title.Visibility = this.IsRibbonNormal;
+					title.Visibility = (this.ribbonViewMode != RibbonViewMode.Minimal && this.ribbonViewMode != RibbonViewMode.Compact);
+					title.PreferredHeight = titleHeight;
 				}
 			}
 		}
@@ -275,7 +305,6 @@ namespace Epsitec.Cresus.Core.Controllers
 				TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				BackColor = Color.FromHexa ("a3b3c7"),
 				PreferredWidth = 10,
-				PreferredHeight = 11,
 				Dock = DockStyle.Bottom,
 				Margins = new Margins (1, 1, 0, 1),
 			};
@@ -907,9 +936,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			//	Affiche le menu permettant de choisir le mode pour le ruban.
 			var menu = new VMenu ();
 
-			this.AddRibbonModeToMenu (menu, "Pas de barre d'icônes",   "Hide");
-			this.AddRibbonModeToMenu (menu, "Barre d'icônes compacte", "Compact");
-			this.AddRibbonModeToMenu (menu, "Barre d'icônes standard", "Normal");
+			this.AddRibbonModeToMenu (menu, "Pas de barre d'icônes",      RibbonViewMode.Hide);
+			this.AddRibbonModeToMenu (menu, "Barre d'icônes minimaliste", RibbonViewMode.Minimal);
+			this.AddRibbonModeToMenu (menu, "Barre d'icônes compacte",    RibbonViewMode.Compact);
+			this.AddRibbonModeToMenu (menu, "Barre d'icônes standard",    RibbonViewMode.Default);
+			this.AddRibbonModeToMenu (menu, "Barre d'icônes aérée",       RibbonViewMode.Large);
 
 			TextFieldCombo.AdjustComboSize (parentButton, menu, false);
 
@@ -917,21 +948,21 @@ namespace Epsitec.Cresus.Core.Controllers
 			menu.ShowAsComboList (parentButton, Point.Zero, parentButton);
 		}
 
-		private void AddRibbonModeToMenu(VMenu menu, FormattedText text, string name)
+		private void AddRibbonModeToMenu(VMenu menu, FormattedText text, RibbonViewMode mode)
 		{
-			bool selected = (this.ribbonMode == name);
+			bool selected = (this.ribbonViewMode == mode);
 			var icon = Misc.GetResourceIconImageTag (selected ? "Button.RadioYes" : "Button.RadioNo", -4);
 			text = FormattedText.Concat (icon, " ", text);
 
 			var item = new MenuItem ()
 			{
 				FormattedText = text,
-				Name = name,
+				Name = mode.ToString (),
 			};
 
 			item.Clicked += delegate
 			{
-				this.ribbonMode = item.Name;
+				this.ribbonViewMode = (RibbonViewMode) System.Enum.Parse (typeof (RibbonViewMode), item.Name);
 				this.UpdateRibbon ();
 			};
 
@@ -1035,23 +1066,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		private bool IsRibbonVisible
-		{
-			get
-			{
-				return this.ribbonMode != "Hide";
-			}
-		}
-
-		private bool IsRibbonNormal
-		{
-			get
-			{
-				return this.ribbonMode == "Normal";
-			}
-		}
-
-
 
 		#region Factory Class
 
@@ -1083,7 +1097,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly List<FrameBox>				sectionIcons;
 		private readonly List<StaticText>			sectionTitles;
 
-		private string								ribbonMode;
+		private RibbonViewMode						ribbonViewMode;
 		private Widget								container;
 		
 		private IconButton							databaseButton;

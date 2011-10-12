@@ -134,6 +134,7 @@
     <Compile Include="Controllers\EditionControllers\EditionPriceCalculatorViewController0.cs" />
     <Compile Include="Controllers\EditionControllers\EditionVatDefinitionViewController.cs" />
     <Compile Include="Controllers\RibbonViewController.cs" />
+    <Compile Include="Controllers\RibbonViewMode.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAccountingOperationViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryPaymentTransactionViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleQuantityColumnViewController.cs" />
