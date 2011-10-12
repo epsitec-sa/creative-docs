@@ -52,6 +52,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.featureManager.EnableGodMode ();
 
+			//	Les réglages sont restaurés après la création du ruban. Il est donc nécessaire d'écouter
+			//	cet événement pour mettre à jour le ruban dès que les réglages sont restaurés.
 			this.settingsManager.SettingsRestored += delegate
 			{
 				this.UpdateRibbon ();
@@ -224,8 +226,10 @@ namespace Epsitec.Cresus.Core.Controllers
 			};
 		}
 
+
 		private void UpdateRibbon()
 		{
+			//	Met à jour le faux ruban en fonction du RibbonViewMode en cours.
 			var mode = this.RibbonViewMode;
 
 			if (mode == RibbonViewMode.Hide)
@@ -272,30 +276,38 @@ namespace Epsitec.Cresus.Core.Controllers
 						break;
 				}
 
-				foreach (var groupFrame in this.sectionGroupFrames)
+				for (int i = 0; i < this.sectionGroupFrames.Count; i++)
 				{
-					double leftMargin  = (groupFrame.Dock == DockStyle.Right) ? frameGap : 0;
-					double rightMargin = (groupFrame.Dock == DockStyle.Left ) ? frameGap : 0;
+					//	Met à jour le panneau du groupe de la section.
+					{
+						var groupFrame = this.sectionGroupFrames[i];
 
-					groupFrame.Margins = new Margins (leftMargin, rightMargin, -1, -1);
-				}
+						double leftMargin  = (groupFrame.Dock == DockStyle.Right) ? frameGap : 0;
+						double rightMargin = (groupFrame.Dock == DockStyle.Left ) ? frameGap : 0;
 
-				foreach (var iconFrame in this.sectionIconFrames)
-				{
-					iconFrame.Padding = iconMargins;
-				}
+						groupFrame.Margins = new Margins (leftMargin, rightMargin, -1, -1);
+					}
 
-				for (int i = 0; i < this.sectionTitleFrames.Count; i++)
-				{
-					var titleFrame = this.sectionTitleFrames[i];
-					var title = this.sectionTitles[i].ApplyFontSize (titleSize).ApplyFontColor (Color.FromBrightness (1.0)).ApplyBold ();
+					//	Met à jour le panneau des icônes de la section.
+					{
+						var iconFrame = this.sectionIconFrames[i];
 
-					titleFrame.Visibility      = (mode != RibbonViewMode.Minimal && mode != RibbonViewMode.Compact);
-					titleFrame.FormattedText   = title;
-					titleFrame.PreferredHeight = titleHeight;
+						iconFrame.Padding = iconMargins;
+					}
+
+					//	Met à jour le titre de la section.
+					{
+						var titleFrame = this.sectionTitleFrames[i];
+						var title = this.sectionTitles[i].ApplyFontSize (titleSize).ApplyFontColor (Color.FromBrightness (1.0)).ApplyBold ();
+
+						titleFrame.Visibility      = (mode != RibbonViewMode.Minimal && mode != RibbonViewMode.Compact);
+						titleFrame.FormattedText   = title;
+						titleFrame.PreferredHeight = titleHeight;
+					}
 				}
 			}
 		}
+
 
 		private Widget CreateSection(Widget frame, DockStyle dockStyle, FormattedText description)
 		{
@@ -1076,6 +1088,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private RibbonViewMode RibbonViewMode
 		{
+			//	Mode d'affichage du ruban, directement stocké dans les réglages via le SettingsManager.
 			get
 			{
 				var s = this.settingsManager.GetSettings ("RibbonViewController.RibbonViewMode");
@@ -1089,7 +1102,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					}
 				}
 
-				return RibbonViewMode.Default;
+				return RibbonViewMode.Default;  // retourne le mode par défaut
 			}
 			set
 			{
