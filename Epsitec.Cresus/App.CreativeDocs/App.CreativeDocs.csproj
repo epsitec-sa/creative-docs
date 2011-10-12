@@ -223,6 +223,7 @@
 del "$(SolutionDir)Setup.CreativeDocs\SignedDlls\*.exe" /F/Q
 
 xcopy "$(TargetDir)App.CreativeDocs.exe" "$(SolutionDir)Setup.CreativeDocs\SignedDlls\" /y
+xcopy "$(TargetDir)Common.*.exe" "$(SolutionDir)Setup.CreativeDocs\SignedDlls\" /y
 xcopy "$(TargetDir)*.dll" "$(SolutionDir)Setup.CreativeDocs\SignedDlls\" /y
 rem xcopy "$(SolutionDir)External\*.Win32.dll" "$(SolutionDir)Setup.CreativeDocs\SignedDlls\" /y
 
