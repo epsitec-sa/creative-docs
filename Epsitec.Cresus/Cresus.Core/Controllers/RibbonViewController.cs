@@ -103,22 +103,24 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void CreateRibbon(Widget container)
 		{
 			//	Construit le faux ruban.
-			var frame = new FrameBox
+			var frame = new GradientFrameBox
 			{
-				Parent = container,
-				BackColor = Color.FromBrightness (0.95),
+				Parent              = container,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				Dock = DockStyle.Fill,
-				Name = "Ribbon",
-				Margins = new Margins (-1, -1, 0, 0),
+				BackColor1          = RibbonViewController.GetBackgroundColor1 (),
+				BackColor2          = RibbonViewController.GetBackgroundColor2 (),
+				IsVerticalGradient  = true,
+				BottomPercentOffset = 1.0 - 0.15,  // ombre dans les 15% supérieurs
+				Dock                = DockStyle.Fill,
+				Margins             = new Margins (-1, -1, 0, 0),
 			};
 
 			var separator = new Separator
 			{
-				Parent = container,
-				PreferredHeight = 1,
+				Parent           = container,
+				PreferredHeight  = 1,
 				IsHorizontalLine = true,
-				Dock = DockStyle.Bottom,
+				Dock             = DockStyle.Bottom,
 			};
 
 			this.sectionGroupFrames.Clear ();
@@ -316,7 +318,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				Parent = frame,
 				DrawFullFrame = true,
-				BackColor = Color.FromHexa ("ebe9ed"),
+				BackColor = RibbonViewController.GetSectionBackgroundColor (),
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 				PreferredWidth = 10,
 				Dock = dockStyle,
@@ -335,7 +337,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Parent = groupFrame,
 				ContentAlignment = ContentAlignment.MiddleCenter,
 				TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
-				BackColor = Color.FromHexa ("a3b3c7"),
+				BackColor = RibbonViewController.GetTitleBackgroundColor (),
 				PreferredWidth = 10,
 				Dock = DockStyle.Bottom,
 				Margins = new Margins (1, 1, 0, 1),
@@ -1110,6 +1112,59 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+
+		#region Color manager
+		private static Color GetBackgroundColor1()
+		{
+			return RibbonViewController.GetColor (RibbonViewController.GetBaseColor (), saturation: 0.06, value: 0.9);
+		}
+
+		private static Color GetBackgroundColor2()
+		{
+			return RibbonViewController.GetColor (RibbonViewController.GetBaseColor (), saturation: 0.06, value: 0.7);
+		}
+
+		private static Color GetSectionBackgroundColor()
+		{
+			return RibbonViewController.GetColor (RibbonViewController.GetBaseColor (), saturation: 0.02, value: 0.95);
+		}
+
+		private static Color GetTitleBackgroundColor()
+		{
+			return RibbonViewController.GetColor (RibbonViewController.GetBaseColor (), saturation: 0.2, value: 0.7);
+		}
+
+		private static Color GetBaseColor()
+		{
+#if true
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+			return adorner.ColorBorder;
+#else
+			return Color.FromHexa ("6485b7");  // "le" bleu des icônes des bases de données
+#endif
+		}
+
+		private static Color GetColor(Color color, double? saturation = null, double? value = null)
+		{
+			double h, s, v;
+			Color.ConvertRgbToHsv (color.R, color.G, color.B, out h, out s, out v);
+
+			if (saturation.HasValue)
+			{
+				s = saturation.Value;
+			}
+
+			if (value.HasValue)
+			{
+				v = value.Value;
+			}
+
+			double r, g, b;
+			Color.ConvertHsvToRgb (h, s, v, out r, out g, out b);
+
+			return new Color (r, g, b);
+		}
+		#endregion
 
 
 		#region Factory Class

@@ -611,7 +611,7 @@ namespace Epsitec.Common.Drawing
 			this.ImageRenderer.BitmapImage = null;
 		}
 
-		public void DrawVerticalGradient(Rectangle rect, Color bottomColor, Color topColor)
+		public void PaintVerticalGradient(Rectangle rect, Color bottomColor, Color topColor)
 		{
 			this.FillMode = FillMode.NonZero;
 			this.GradientRenderer.Fill = GradientFill.Y;
