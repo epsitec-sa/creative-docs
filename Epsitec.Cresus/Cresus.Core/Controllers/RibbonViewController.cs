@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void CreateRibbon(Widget container)
 		{
-			//	Crée le faux ruban.
+			//	Construit le faux ruban.
 			var frame = new FrameBox
 			{
 				Parent = container,
@@ -368,27 +368,14 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void CreateLanguage(Widget section)
 		{
-			var frame1 = new FrameBox
-			{
-				Parent = section,
-				Dock = DockStyle.StackBegin,
-				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-				PreferredWidth = 21,
-			};
-
-			var frame2 = new FrameBox
-			{
-				Parent = section,
-				Dock = DockStyle.StackBegin,
-				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-				PreferredWidth = 21,
-			};
+			//	Crée les boutons pour choisir la langue.
+			Widget topSection, bottomSection;
+			this.CreateSubsections (section, out topSection, out bottomSection);
 
 			//	TODO: faire cela proprement avec des commandes multi-états.
-
 			var selectLanaguage1 = new IconButton ()
 			{
-				Parent = frame1,
+				Parent = topSection,
 				Name = "language=fr",
 				PreferredSize = new Size (Library.UI.Constants.ButtonLargeWidth/2, Library.UI.Constants.ButtonLargeWidth/2),
 				Dock = DockStyle.Stacked,
@@ -398,7 +385,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			var selectLanaguage2 = new IconButton ()
 			{
-				Parent = frame1,
+				Parent = topSection,
 				Name = "language=de",
 				PreferredSize = new Size (Library.UI.Constants.ButtonLargeWidth/2, Library.UI.Constants.ButtonLargeWidth/2),
 				Dock = DockStyle.Stacked,
@@ -407,7 +394,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			var selectLanaguage3 = new IconButton ()
 			{
-				Parent = frame2,
+				Parent = bottomSection,
 				Name = "language=en",
 				PreferredSize = new Size (Library.UI.Constants.ButtonLargeWidth/2, Library.UI.Constants.ButtonLargeWidth/2),
 				Dock = DockStyle.Stacked,
@@ -416,7 +403,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			var selectLanaguage4 = new IconButton ()
 			{
-				Parent = frame2,
+				Parent = bottomSection,
 				Name = "language=it",
 				PreferredSize = new Size (Library.UI.Constants.ButtonLargeWidth/2, Library.UI.Constants.ButtonLargeWidth/2),
 				Dock = DockStyle.Stacked,
