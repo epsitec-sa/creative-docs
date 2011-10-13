@@ -39,6 +39,18 @@ namespace Epsitec.Cresus.Core.Print
 		}
 
 
+		public static bool CheckPrintCommandEnable(IBusinessContext businessContext, AbstractEntity entity)
+		{
+			if (entity.IsNull ())
+			{
+				return false;
+			}
+
+			//	TODO: valider ici que l'entité sélectionnée est bien imprimable
+
+			return true;
+		}
+
 		#region Command handlers
 		public static void PrintCommand(IBusinessContext businessContext, AbstractEntity entity)
 		{

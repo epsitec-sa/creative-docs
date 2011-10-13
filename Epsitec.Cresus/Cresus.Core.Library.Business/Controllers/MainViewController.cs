@@ -64,10 +64,10 @@ namespace Epsitec.Cresus.Core.Controllers
 			set
 			{
 				if (this.browserSettingsMode != value)
-                {
+				{
 					this.browserSettingsMode = value;
 					this.UpdateBrowserSettingsPanel ();
-                }
+				}
 			}
 		}
 
@@ -281,14 +281,10 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-#if true
-		
 		public void Print()
 		{
-			var entityKey = this.GetVisiblePersistedEntities ().Select (x => this.Data.FindEntityKey (x)).FirstOrDefault ();
 //?			var context   = this.Data.CreateDataContext ("PrintEngine:Print");
-			var context   = this.BusinessContext.DataContext;
-			var entity    = context.ResolveEntity (entityKey);
+			var entity = this.GetPrintableEntity ();
 
 			//	TODO: vérifier que cette logique est bien correcte; pour le moment, on doit partager les BusinessContext avec l'interface graphique, mais à terme il faudra probablement découpler cela...
 
@@ -299,10 +295,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public void Preview()
 		{
-			var entityKey = this.GetVisiblePersistedEntities ().Select (x => this.Data.FindEntityKey (x)).FirstOrDefault ();
-//?			var context   = this.Data.CreateDataContext ("PrintEngine:Preview");
-			var context   = this.BusinessContext.DataContext;
-			var entity    = context.ResolveEntity (entityKey);
+//?			var context   = this.Data.CreateDataContext ("PrintEngine:Print");
+			var entity = this.GetPrintableEntity ();
 
 			//	TODO: vérifier que cette logique est bien correcte; pour le moment, on doit partager les BusinessContext avec l'interface graphique, mais à terme il faudra probablement découpler cela...
 
@@ -311,6 +305,15 @@ namespace Epsitec.Cresus.Core.Controllers
 //?			this.Data.DisposeDataContext (context);
 		}
 
+		private AbstractEntity GetPrintableEntity()
+		{
+			var entityKey = this.GetVisiblePersistedEntities ().Select (x => this.Data.FindEntityKey (x)).FirstOrDefault ();
+			var context   = this.BusinessContext.DataContext;
+			var entity    = context.ResolveEntity (entityKey);
+			
+			return entity;
+		}
+		
 		private IEnumerable<AbstractEntity> GetVisiblePersistedEntities()
 		{
 			var leaf = this.DataViewController.GetLeafViewController ();
@@ -342,7 +345,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-#endif
 
 		public IEnumerable<AbstractEntity> GetVisibleEntities()
 		{
@@ -364,6 +366,11 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void HandleBrowserViewControllerDataSetSelected(object sender)
 		{
 			this.UpdateBrowserSettingsPanel ();
+		}
+
+		public bool GetPrintCommandEnable()
+		{
+			return PrintEngine.CheckPrintCommandEnable (this.BusinessContext, this.GetPrintableEntity ());
 		}
 
 		#region ICommandHandler Members

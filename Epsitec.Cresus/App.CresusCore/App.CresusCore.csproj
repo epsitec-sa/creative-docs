@@ -151,14 +151,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Cresus.Core.Library.crconfig" />
     <None Include="Manifest.txt" />
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
     <None Include="app.config" />
-    <Content Include="Cresus.Core.Library.crconfig">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\Cresus.CorePlugIn.WorkflowDesigner\bin\Debug\Cresus.CorePlugIn.WorkflowDesigner.dll">

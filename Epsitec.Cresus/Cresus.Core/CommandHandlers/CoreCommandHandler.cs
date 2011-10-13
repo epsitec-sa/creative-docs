@@ -148,15 +148,34 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			throw new System.Exception ("Crashing the application on purpose");
 		}
 
+		private void HandleViewChanged(object sender)
+		{
+			this.UpdateCommandEnables ();
+		}
+
+		private void UpdateCommandEnables()
+		{
+			this.application.SetEnable (Res.Commands.Edition.Print, this.Orchestrator.MainViewController.GetPrintCommandEnable ());
+		}
+
 		#region ICommandHandler Members
 
 		void ICommandHandler.UpdateCommandStates(object sender)
 		{
+			if (this.initialized == false)
+			{
+				this.initialized = true;
+				this.Orchestrator.ViewChanged += this.HandleViewChanged;
+			}
+
+			this.UpdateCommandEnables ();
 		}
 
 		#endregion
 
 		private readonly CoreCommandDispatcher	commandDispatcher;
 		private readonly CoreApplication		application;
+
+		private bool initialized;
 	}
 }

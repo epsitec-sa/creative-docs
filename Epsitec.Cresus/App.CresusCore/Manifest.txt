@@ -1,5 +1,5 @@
 ﻿# Manifest file (UTF-8)
 
 PackageID :		    Cresus-ERP.EB43E837-95D5-40AA-8902-48F208BCCD30
-PackageRevision :	    1
-UpdateServiceURI :	    http://remotecompta.cresus.ch:8081/updateservice/check?packageGuid=EB43E837-95D5-40AA-8902-48F208BCCD30&packageRev=1
+PackageRevision :	    3
+UpdateServiceURI :	    http://remotecompta.cresus.ch:8081/updateservice/check?packageGuid=EB43E837-95D5-40AA-8902-48F208BCCD30&packageRev=3

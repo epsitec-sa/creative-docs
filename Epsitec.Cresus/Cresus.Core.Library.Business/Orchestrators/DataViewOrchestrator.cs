@@ -222,6 +222,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		{
 			this.DataViewController.PopViewControllersUntil (viewController);
 			this.DataViewController.PushViewController (subViewController);
+			this.OnViewChanged ();
 
 			subViewController.Focus ();
 		}
@@ -234,6 +235,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		public void CloseSubViews(CoreViewController viewController = null)
 		{
 			this.DataViewController.PopViewControllersUntil (viewController);
+			this.OnViewChanged ();
 		}
 
 		/// <summary>
@@ -244,6 +246,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		{
 			this.DataViewController.PopViewControllersUntil (viewController);
 			this.DataViewController.PopViewController ();
+			this.OnViewChanged ();
 		}
 
 		/// <summary>
@@ -256,6 +259,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		public void ReplaceView(CoreViewController oldViewController, CoreViewController newViewController)
 		{
 			this.DataViewController.ReplaceViewController (oldViewController, newViewController);
+			this.OnViewChanged ();
 		}
 
 		/// <summary>
@@ -412,12 +416,12 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 		private void OnSettingActiveEntity(ActiveEntityCancelEventArgs e)
 		{
-			var handler = this.SettingActiveEntity;
+			this.SettingActiveEntity.Raise (this, e);
+		}
 
-			if (handler != null)
-			{
-				handler (this, e);
-			}
+		private void OnViewChanged()
+		{
+			this.ViewChanged.Raise (this);
 		}
 
 		#region ICoreComponentHost<MainWindowComponent> Members
@@ -467,7 +471,8 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		#endregion
 
 
-		public event EventHandler<ActiveEntityCancelEventArgs> SettingActiveEntity;
+		public event EventHandler<ActiveEntityCancelEventArgs>	SettingActiveEntity;
+		public event EventHandler								ViewChanged;
 
 		private readonly CoreComponentHostImplementation<ViewControllerComponent> components;
 

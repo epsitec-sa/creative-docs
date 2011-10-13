@@ -100,6 +100,8 @@ namespace Epsitec.Cresus.Core
 			this.CreatePlugIns ();
 			this.SetupData ();
 			this.CreateUI (initializers);
+
+			this.CommandContext.UpdateCommandStates (this);
 		}
 
 		private void ProbeTemplateDatabase()
