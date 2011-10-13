@@ -244,6 +244,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				double  frameGap;
 				Margins iconMargins;
+				double  buttonWidth;
 				double  gapWidth;
 				double  titleHeight;
 				double  titleSize;
@@ -253,6 +254,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					case RibbonViewMode.Minimal:
 						frameGap    = -1;  // les sections se chevauchent
 						iconMargins = new Margins (0);
+						buttonWidth = Library.UI.Constants.ButtonLargeWidth;
 						gapWidth    = 3;
 						titleHeight = 0;
 						titleSize   = 0;
@@ -261,6 +263,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					case RibbonViewMode.Compact:
 						frameGap    = -1;  // les sections se chevauchent
 						iconMargins = new Margins (3);
+						buttonWidth = Library.UI.Constants.ButtonLargeWidth;
 						gapWidth    = 5;
 						titleHeight = 0;
 						titleSize   = 0;
@@ -268,7 +271,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 					case RibbonViewMode.Large:
 						frameGap    = 3;
-						iconMargins = new Margins (6, 6, 6, 6-1);
+						iconMargins = new Margins (3, 3, 3, 3-1);
+						buttonWidth = Library.UI.Constants.ButtonLargeWidth+2;
 						gapWidth    = 8;
 						titleHeight = 14;
 						titleSize   = 10;
@@ -276,7 +280,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 					case RibbonViewMode.Hires:
 						frameGap    = 4;
-						iconMargins = new Margins (9, 9, 9, 9-1);
+						iconMargins = new Margins (5, 5, 5, 5-1);
+						buttonWidth = Library.UI.Constants.ButtonLargeWidth+6;
 						gapWidth    = 10;
 						titleHeight = 18;
 						titleSize   = 12;
@@ -285,6 +290,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					default:
 						frameGap    = 2;
 						iconMargins = new Margins (3, 3, 3, 3-1);
+						buttonWidth = Library.UI.Constants.ButtonLargeWidth;
 						gapWidth    = 6;
 						titleHeight = 11;
 						titleSize   = 8;
@@ -312,6 +318,30 @@ namespace Epsitec.Cresus.Core.Controllers
 						foreach (var gap in iconFrame.FindAllChildren ().Where (x => x.Name == "Gap"))
 						{
 							gap.PreferredWidth = gapWidth;
+						}
+
+						foreach (var widget in iconFrame.FindAllChildren ())
+						{
+							if (widget is IconButton || widget is RibbonIconButton)
+							{
+								var button = widget as IconButton;
+
+								if (button.PreferredIconSize.Width == Library.UI.Constants.IconSmallWidth)
+								{
+									button.PreferredSize = new Size (buttonWidth/2, buttonWidth/2);
+								}
+								else
+								{
+									button.PreferredSize = new Size (buttonWidth, buttonWidth);
+								}
+							}
+
+							if (widget is IconOrImageButton)
+							{
+								var button = widget as IconOrImageButton;
+
+								button.PreferredSize = new Size (buttonWidth, buttonWidth);
+							}
 						}
 					}
 
@@ -407,39 +437,43 @@ namespace Epsitec.Cresus.Core.Controllers
 			//	TODO: faire cela proprement avec des commandes multi-états.
 			var selectLanaguage1 = new IconButton ()
 			{
-				Parent        = topSection,
-				Name          = "language=fr",
-				PreferredSize = new Size (Library.UI.Constants.ButtonLargeWidth/2, Library.UI.Constants.ButtonLargeWidth/2),
-				Dock          = DockStyle.Stacked,
-				Text          = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagFR.icon""/>",
-				ActiveState   = ActiveState.Yes,
+				Parent            = topSection,
+				Name              = "language=fr",
+				PreferredSize     = new Size (Library.UI.Constants.ButtonLargeWidth/2, Library.UI.Constants.ButtonLargeWidth/2),
+				PreferredIconSize = new Size (Library.UI.Constants.IconSmallWidth, Library.UI.Constants.IconSmallWidth),
+				Dock              = DockStyle.Stacked,
+				Text              = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagFR.icon""/>",
+				ActiveState       = ActiveState.Yes,
 			};
 
 			var selectLanaguage2 = new IconButton ()
 			{
-				Parent        = topSection,
-				Name          = "language=de",
-				PreferredSize = new Size (Library.UI.Constants.ButtonLargeWidth/2, Library.UI.Constants.ButtonLargeWidth/2),
-				Dock          = DockStyle.Stacked,
-				Text          = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagDE.icon""/>",
+				Parent            = topSection,
+				Name              = "language=de",
+				PreferredSize     = new Size (Library.UI.Constants.ButtonLargeWidth/2, Library.UI.Constants.ButtonLargeWidth/2),
+				PreferredIconSize = new Size (Library.UI.Constants.IconSmallWidth, Library.UI.Constants.IconSmallWidth),
+				Dock              = DockStyle.Stacked,
+				Text              = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagDE.icon""/>",
 			};
 
 			var selectLanaguage3 = new IconButton ()
 			{
-				Parent        = bottomSection,
-				Name          = "language=en",
-				PreferredSize = new Size (Library.UI.Constants.ButtonLargeWidth/2, Library.UI.Constants.ButtonLargeWidth/2),
-				Dock          = DockStyle.Stacked,
-				Text          = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagGB.icon""/>",
+				Parent            = bottomSection,
+				Name              = "language=en",
+				PreferredSize     = new Size (Library.UI.Constants.ButtonLargeWidth/2, Library.UI.Constants.ButtonLargeWidth/2),
+				PreferredIconSize = new Size (Library.UI.Constants.IconSmallWidth, Library.UI.Constants.IconSmallWidth),
+				Dock              = DockStyle.Stacked,
+				Text              = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagGB.icon""/>",
 			};
 
 			var selectLanaguage4 = new IconButton ()
 			{
-				Parent        = bottomSection,
-				Name          = "language=it",
-				PreferredSize = new Size (Library.UI.Constants.ButtonLargeWidth/2, Library.UI.Constants.ButtonLargeWidth/2),
-				Dock          = DockStyle.Stacked,
-				Text          = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagIT.icon""/>",
+				Parent            = bottomSection,
+				Name              = "language=it",
+				PreferredSize     = new Size (Library.UI.Constants.ButtonLargeWidth/2, Library.UI.Constants.ButtonLargeWidth/2),
+				PreferredIconSize = new Size (Library.UI.Constants.IconSmallWidth, Library.UI.Constants.IconSmallWidth),
+				Dock              = DockStyle.Stacked,
+				Text              = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagIT.icon""/>",
 			};
 
 			ToolTip.Default.SetToolTip (selectLanaguage1, "Français");
@@ -1013,7 +1047,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		#endregion
 
 
-		private IconButton CreateButton(Command command = null, DockStyle dockStyle = DockStyle.StackBegin, CommandEventHandler handler = null, bool large = true, bool isActivable = false, bool isWithText = false)
+		private IconButton CreateButton(Command command = null, DockStyle dockStyle = DockStyle.StackBegin, CommandEventHandler handler = null, bool large = true, bool isActivable = false)
 		{
 			if (command != null && handler != null)
 			{
@@ -1030,21 +1064,6 @@ namespace Epsitec.Cresus.Core.Controllers
 					CommandObject       = command,
 					PreferredIconSize   = new Size (iconWidth, iconWidth),
 					PreferredSize       = new Size (buttonWidth, buttonWidth),
-					Dock                = dockStyle,
-					Name                = (command == null) ? null : command.Name,
-					VerticalAlignment   = VerticalAlignment.Top,
-					HorizontalAlignment = HorizontalAlignment.Center,
-					AutoFocus           = false,
-				};
-			}
-			else if (isWithText)
-			{
-				return new IconButtonWithText
-				{
-					CommandObject       = command,
-					PreferredIconSize   = new Size (iconWidth, iconWidth),
-					PreferredSize       = new Size (buttonWidth, buttonWidth+10),
-					MaxAdditionnalWidth = 20,	// après CommandObject et PreferredSize !
 					Dock                = dockStyle,
 					Name                = (command == null) ? null : command.Name,
 					VerticalAlignment   = VerticalAlignment.Top,
