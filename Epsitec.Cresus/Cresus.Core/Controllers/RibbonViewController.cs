@@ -61,30 +61,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		
-		public string							DatabaseMenuDefaultCommandName
-		{
-			get
-			{
-				if (string.IsNullOrEmpty (this.databaseMenuDefaultCommandName))
-				{
-					return "";
-				}
-				else
-				{
-					return this.databaseMenuDefaultCommandName;
-				}
-			}
-			set
-			{
-				if (this.databaseMenuDefaultCommandName != value)
-				{
-					this.databaseMenuDefaultCommandName = value;
-					this.OnDatabaseMenuDefaultCommandNameChanged ();
-				}
-			}
-		}
-
-		
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
 			yield break;
@@ -242,12 +218,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				this.container.Visibility = true;
 
-				double  frameGap;
-				Margins iconMargins;
-				double  buttonWidth;
-				double  gapWidth;
-				double  titleHeight;
-				double  titleSize;
+				double  frameGap    = 0;
+				Margins iconMargins = Margins.Zero;
+				double  buttonWidth = 0;
+				double  gapWidth    = 0;
+				double  titleHeight = 0;
+				double  titleSize   = 0;
 
 				switch (mode)
 				{
@@ -269,6 +245,15 @@ namespace Epsitec.Cresus.Core.Controllers
 						titleSize   = 0;
 						break;
 
+					case RibbonViewMode.Default:
+						frameGap    = 2;
+						iconMargins = new Margins (3, 3, 3, 3-1);
+						buttonWidth = Library.UI.Constants.ButtonLargeWidth;
+						gapWidth    = 6;
+						titleHeight = 11;
+						titleSize   = 8;
+						break;
+
 					case RibbonViewMode.Large:
 						frameGap    = 3;
 						iconMargins = new Margins (3, 3, 3, 3-1);
@@ -285,15 +270,6 @@ namespace Epsitec.Cresus.Core.Controllers
 						gapWidth    = 10;
 						titleHeight = 18;
 						titleSize   = 12;
-						break;
-
-					default:
-						frameGap    = 2;
-						iconMargins = new Margins (3, 3, 3, 3-1);
-						buttonWidth = Library.UI.Constants.ButtonLargeWidth;
-						gapWidth    = 6;
-						titleHeight = 11;
-						titleSize   = 8;
 						break;
 				}
 
@@ -522,7 +498,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		#region Workflow Transitions
+		#region Workflow transitions
 		private void CreateRibbonWorkflowTransition(Widget section)
 		{
 			//	Crée le bouton permettant de choisir une action pour créer un nouveau document dans l'affaire en cours,
@@ -667,7 +643,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		#endregion
 
 
-		#region Additionnal Databases
+		#region Additionnal databases
 		private void CreateRibbonDatabaseSectionMenuButton(Widget section)
 		{
 			//	Crée le bouton 'magique' qui donne accès aux bases de données d'usage moins fréquent par le biais d'un menu.
@@ -789,14 +765,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			//	Met à jour le bouton qui surplombe le bouton du menu, en fonction de la base sélectionnée.
 			var selectedCommand = this.GetSelectedDatabaseCommand ();
 
-			if (selectedCommand != null)
+			if (selectedCommand == null)
 			{
-				this.databaseButton.CommandObject = selectedCommand;
-				this.DatabaseMenuDefaultCommandName = selectedCommand.Name;
+				this.databaseButton.CommandObject = this.GetDatabaseCommand (this.AdditionalDatabase);
 			}
 			else
 			{
-				this.databaseButton.CommandObject = this.GetDatabaseCommand (this.DatabaseMenuDefaultCommandName);
+				this.databaseButton.CommandObject = selectedCommand;
+				this.AdditionalDatabase           = selectedCommand.Name;
 			}
 		}
 
@@ -834,6 +810,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			return this.GetDatabaseMenuCommands1 ().Where (x => x.Command == null || this.featureManager.IsCommandEnabled (x.Command.Caption.Id));
 		}
+
 		private IEnumerable<SubMenuItem> GetDatabaseMenuCommands1()
 		{
 			//	Retourne null lorsque le menu doit contenir un séparateur.
@@ -1127,6 +1104,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
+		#region Properties using the SettingsManager
 		private RibbonViewMode RibbonViewMode
 		{
 			//	Mode d'affichage du ruban, directement stocké dans les réglages via le SettingsManager.
@@ -1150,6 +1128,27 @@ namespace Epsitec.Cresus.Core.Controllers
 				this.settingsManager.SetSettings ("RibbonViewController.RibbonViewMode", value.ToString ());
 			}
 		}
+
+		private string AdditionalDatabase
+		{
+			//	Base de donnée additionnelle choisie, directement stocké dans les réglages via le SettingsManager.
+			get
+			{
+				var s = this.settingsManager.GetSettings ("RibbonViewController.AdditionalDatabase");
+
+				if (!string.IsNullOrEmpty (s))
+				{
+					return s;
+				}
+
+				return "Base.ShowBusinessSettings";  // retourne la base de données par défaut
+			}
+			set
+			{
+				this.settingsManager.SetSettings ("RibbonViewController.AdditionalDatabase", value);
+			}
+		}
+		#endregion
 
 
 		#region Color manager
@@ -1220,17 +1219,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		#endregion
 
-		private void OnDatabaseMenuDefaultCommandNameChanged()
-		{
-			var handler = this.DatabaseMenuDefaultCommandNameChanged;
-
-			if (handler != null)
-			{
-				handler (this);
-			}
-		}
-
-		public event EventHandler					DatabaseMenuDefaultCommandNameChanged;
 
 		private readonly DataViewOrchestrator		orchestrator;
 		private readonly CommandDispatcher			commandDispatcher;
@@ -1248,7 +1236,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		
 		private IconButton							databaseButton;
 		private GlyphButton							databaseMenuButton;
-		private string								databaseMenuDefaultCommandName;
 
 		private IconButton							workflowTransitionButton;
 		private List<WorkflowTransition>			workflowTransitions;

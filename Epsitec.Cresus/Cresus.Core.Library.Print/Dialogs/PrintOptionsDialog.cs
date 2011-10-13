@@ -387,11 +387,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			private void UpdateWidgets()
 			{
-				bool show = this.ShowOptions;
+				bool showOptions = this.ShowOptions;
 
-				this.showOptionsButton.GlyphShape = show ? GlyphShape.TriangleLeft : GlyphShape.TriangleRight;
-				this.leftFrame.Visibility = show || !this.isPreview;
-				this.rightFrame.Margins = new Margins (show ? 0 : 24, 0, 0, 0);
+				this.showOptionsButton.GlyphShape = showOptions ? GlyphShape.TriangleLeft : GlyphShape.TriangleRight;
+				this.leftFrame.Visibility = showOptions || !this.isPreview;
+				this.rightFrame.Margins = new Margins (showOptions ? 0 : 24, 0, 0, 0);
 			}
 
 
