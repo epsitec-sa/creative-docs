@@ -7,10 +7,11 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.IO;
 using Epsitec.Common.Printing;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
+using Epsitec.Common.Types.Collections;
 using Epsitec.Common.Widgets;
 
-using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Print;
 using Epsitec.Cresus.Core.Print.Serialization;
@@ -18,12 +19,12 @@ using Epsitec.Cresus.Core.Print.Controllers;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Documents;
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Resolvers;
+using Epsitec.Cresus.Core.Library;
 
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Epsitec.Common.Types.Collections;
-using Epsitec.Cresus.Core.Resolvers;
 
 namespace Epsitec.Cresus.Core.Dialogs
 {
@@ -183,6 +184,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			public PageController(IBusinessContext businessContext, EntityToPrint entityToPrint, Widget container, bool isPreview)
 			{
 				this.businessContext = businessContext;
+				this.settingsManager = businessContext.Data.Host.SettingsManager;
 				this.entityToPrint   = entityToPrint;
 				this.isPreview       = isPreview;
 
@@ -304,7 +306,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				//	Connexion des événements.
 				this.showOptionsButton.Clicked += delegate
 				{
-					this.showOptions = !this.showOptions;
+					this.ShowOptions = !this.ShowOptions;
 					this.UpdateWidgets ();
 				};
 
@@ -385,9 +387,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			private void UpdateWidgets()
 			{
-				this.showOptionsButton.GlyphShape = this.showOptions ? GlyphShape.TriangleLeft : GlyphShape.TriangleRight;
-				this.leftFrame.Visibility = this.showOptions || !this.isPreview;
-				this.rightFrame.Margins = new Margins (this.showOptions ? 0 : 24, 0, 0, 0);
+				bool show = this.ShowOptions;
+
+				this.showOptionsButton.GlyphShape = show ? GlyphShape.TriangleLeft : GlyphShape.TriangleRight;
+				this.leftFrame.Visibility = show || !this.isPreview;
+				this.rightFrame.Margins = new Margins (show ? 0 : 24, 0, 0, 0);
 			}
 
 
@@ -440,14 +444,28 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 
 
+			private bool ShowOptions
+			{
+				get
+				{
+					var s = this.settingsManager.GetSettings ("PrintOptionsDialog.ShowOptions");
+					return s == "true";
+				}
+				set
+				{
+					this.settingsManager.SetSettings ("PrintOptionsDialog.ShowOptions", value ? "true" : "false");
+				}
+			}
+
+
 			private readonly IBusinessContext						businessContext;
+			private readonly SettingsManager						settingsManager;
 			private readonly EntityToPrint							entityToPrint;
 			private readonly PrintingOptionDictionary				categoryOptions;
 			private readonly PrintingOptionDictionary				modifiedOptions;
 			private readonly PrintingOptionDictionary				finalOptions;
 			private readonly bool									isPreview;
 
-			private bool											showOptions;
 			private IList<DeserializedJob>							jobs;
 			private string											xmlSource;
 
