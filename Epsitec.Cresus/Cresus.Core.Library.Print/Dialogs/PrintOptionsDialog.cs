@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			for (int i = 0; i < this.entitiesToPrint.Count; i++)
 			{
 				this.entitiesPageControllers[i].ApplyFinalOptions (this.entitiesToPrint[i]);
-				
+				this.entitiesPageControllers[i].SaveModifiedOptions ();
 			}
 
 			this.Result = DialogResult.Accept;
@@ -189,6 +189,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.isPreview       = isPreview;
 
 				this.categoryOptions = new PrintingOptionDictionary ();
+				this.baseOptions     = new PrintingOptionDictionary ();
 				this.modifiedOptions = new PrintingOptionDictionary ();
 				this.finalOptions    = new PrintingOptionDictionary ();
 
@@ -339,6 +340,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 					this.modifiedOptions.MergeWith (this.categoryOptions);
 					this.modifiedOptions.Remove (this.GetForcingOptions (this.entityToPrint.PrintingUnits));
 
+					this.baseOptions.Clear ();
+					this.baseOptions.MergeWith (this.modifiedOptions);
+
+					this.RestoreModifiedOptions ();
+
+					//	Supprime les options inutiles pour ce type de document.
 					var visibleOptions = EntityPrinterFactoryResolver.FindRequiredDocumentOptions (this.entityToPrint.Entity);
 					this.modifiedOptions.Keep (visibleOptions);
 
@@ -444,6 +451,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 
 
+			#region Properties using the SettingsManager
 			private bool ShowOptions
 			{
 				get
@@ -457,11 +465,86 @@ namespace Epsitec.Cresus.Core.Dialogs
 				}
 			}
 
+			private void RestoreModifiedOptions()
+			{
+				var temp = new PrintingOptionDictionary ();
+				temp.SetSerializedData (this.ModifiedOptions);
+
+				this.modifiedOptions.MergeWith (temp);  // ajoute les options modifiées par l'utilisateur
+			}
+
+			public void SaveModifiedOptions()
+			{
+				this.modifiedOptions.RemoveSame (this.baseOptions);  // ne garde que les options modifiées par l'utilisateur
+				this.ModifiedOptions = this.modifiedOptions.GetSerializedData ();
+			}
+
+			private string ModifiedOptions
+			{
+				get
+				{
+					var key = this.ModifiedOptionsKey;
+
+					if (string.IsNullOrEmpty (key))
+					{
+						return null;
+					}
+					else
+					{
+						return this.settingsManager.GetSettings (key);
+					}
+				}
+				set
+				{
+					var key = this.ModifiedOptionsKey;
+
+					if (!string.IsNullOrEmpty (key))
+					{
+						this.settingsManager.SetSettings (key, value);
+					}
+				}
+			}
+
+			private string ModifiedOptionsKey
+			{
+				get
+				{
+					string name = this.DocumentTypeName;
+
+					if (string.IsNullOrEmpty (name))
+					{
+						return null;
+					}
+					else
+					{
+						return string.Concat ("PrintOptionsDialog.ModifiedOptions.", name);
+					}
+				}
+			}
+
+			private string DocumentTypeName
+			{
+				//	Retourne un nom unique décrivant le type du document imprimé.
+				get
+				{
+					var category = this.DocumentCategoryEntityToUse;
+
+					if (category != null)
+					{
+						return category.DocumentType.ToString ();
+					}
+
+					return null;
+				}
+			}
+			#endregion
+
 
 			private readonly IBusinessContext						businessContext;
 			private readonly SettingsManager						settingsManager;
 			private readonly EntityToPrint							entityToPrint;
 			private readonly PrintingOptionDictionary				categoryOptions;
+			private readonly PrintingOptionDictionary				baseOptions;
 			private readonly PrintingOptionDictionary				modifiedOptions;
 			private readonly PrintingOptionDictionary				finalOptions;
 			private readonly bool									isPreview;

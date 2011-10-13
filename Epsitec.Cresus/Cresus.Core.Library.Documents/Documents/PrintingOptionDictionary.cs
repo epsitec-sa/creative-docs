@@ -115,6 +115,21 @@ namespace Epsitec.Cresus.Core.Documents
 			}
 		}
 
+		public void RemoveSame(PrintingOptionDictionary src)
+		{
+			if (src != null)
+			{
+				foreach (var pair in src.ContentPair)
+				{
+					if (this.dictionary.ContainsKey (pair.Key) &&
+						this.dictionary[pair.Key] == pair.Value)
+					{
+						this[pair.Key] = null;
+					}
+				}
+			}
+		}
+
 		public void Keep(IEnumerable<DocumentOption> list)
 		{
 			//	Ne garde que les options contenues dans la liste.

@@ -46,9 +46,8 @@ namespace Epsitec.Cresus.Core.Print
 				return false;
 			}
 
-			//	TODO: valider ici que l'entité sélectionnée est bien imprimable
-
-			return true;
+			var category = PrintEngine.GetDocumentCategoryEntity (businessContext, entity);
+			return category != null;
 		}
 
 		#region Command handlers
