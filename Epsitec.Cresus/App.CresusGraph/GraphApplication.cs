@@ -254,8 +254,8 @@ namespace Epsitec.Cresus.Graph
 
 					case "-connector":
 						if (param == "SendData")
-                        {
-							System.Diagnostics.Debugger.Break ();
+						{
+//							System.Diagnostics.Debugger.Break ();
 							this.SetupConnectorServer ();
 						}
 						break;
@@ -263,7 +263,7 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
-        protected override void ExecuteQuit(CommandDispatcher dispatcher, CommandEventArgs e)
+		protected override void ExecuteQuit(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var dirtyDocs = from doc in this.OpenDocuments
 							where doc.IsDirty
@@ -297,7 +297,7 @@ namespace Epsitec.Cresus.Graph
 					case DialogResult.Answer3:
 						e.Executed = true;
 						return;
-                }
+				}
 			}
 			
 			this.SaveApplicationState (true);
@@ -307,13 +307,13 @@ namespace Epsitec.Cresus.Graph
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
-            {
+			{
 				if (this.connectorServer != null)
 				{
 					this.connectorServer.Dispose ();
 					this.connectorServer = null;
 				}
-            }
+			}
 			
 			base.Dispose (disposing);
 		}
@@ -477,7 +477,7 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
-        private void HandleClipboardDataChanged(object sender, ClipboardDataChangedEventArgs e)
+		private void HandleClipboardDataChanged(object sender, ClipboardDataChangedEventArgs e)
 		{
 			System.Diagnostics.Debug.WriteLine (string.Join ("/", e.Data.NativeFormats));
 			System.Diagnostics.Debug.WriteLine (string.Join ("/", e.Data.AllPossibleFormats));
@@ -613,10 +613,10 @@ namespace Epsitec.Cresus.Graph
 			var snapshot = this.Document.ChartSnapshots.Find (x => x.GuidName == guid);
 			
 			if (snapshot != null)
-            {
+			{
 				snapshot.Visibility = false;
 				this.Document.RefreshUI ();
-            }
+			}
 		}
 		
 		public event EventHandler ActiveDocumentChanged;

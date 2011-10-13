@@ -110,6 +110,8 @@
     <Compile Include="GraphDataSet.cs" />
     <Compile Include="GraphDocument.cs" />
     <Compile Include="GraphProgram.cs" />
+    <Compile Include="ImportConverters\ComptaNmcBilanImportConverter.cs" />
+    <Compile Include="ImportConverters\ComptaNmcFoncImportConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Actions\Action.cs" />
   </ItemGroup>
@@ -127,6 +129,10 @@
     <ProjectReference Include="..\..\Epsitec\dot.net\Epsitec.ShellPE\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj">
       <Project>{BC0605F1-C986-4B52-AE21-AAE545FCB970}</Project>
       <Name>Epsitec.CresusToolkit</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.Document\Common.Document.csproj">
+      <Project>{B324896E-2CDE-45B8-91CE-B476687EA384}</Project>
+      <Name>Common.Document</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common.Graph\Common.Graph.csproj">
       <Project>{76C4BB36-308A-483E-9D6C-3401C96D2AD6}</Project>

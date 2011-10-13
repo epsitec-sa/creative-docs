@@ -21,7 +21,8 @@ namespace Epsitec.Cresus.Graph
 				var compta = GraphSerial.GetComptactComptaSerial ();
 				var graph  = GraphSerial.GetComptactGraphSerial ();
 
-				if (GraphSerial.hasComptaLicense == false)
+				if ((GraphSerial.hasComptaLicense == false) &&
+					(GraphSerial.hasNmcLicense == false))
 				{
 					var dialog = new Dialogs.QuestionDialog (Res.Captions.Message.LicenseInvalid.QuestionStandalone,
 						GraphSerial.hasGraphLicense ? Res.Captions.Message.LicenseInvalid.Option1UpdateGraph : Res.Captions.Message.LicenseInvalid.Option1BuyGraph,
@@ -139,6 +140,7 @@ namespace Epsitec.Cresus.Graph
 
 			var graphId  = (string) Microsoft.Win32.Registry.GetValue (@"HKEY_LOCAL_MACHINE\SOFTWARE\Epsitec\Cresus Graphe\Setup", "InstallID", "");
 			var comptaId = (string) Microsoft.Win32.Registry.GetValue (@"HKEY_LOCAL_MACHINE\SOFTWARE\Epsitec\Cresus\Setup", "InstallID", "");
+			var nmcId    = (string) Microsoft.Win32.Registry.GetValue (@"HKEY_LOCAL_MACHINE\SOFTWARE\Epsitec\CresusNMC\Setup", "InstallID", "");
 			var peId     = (string) Microsoft.Win32.Registry.GetValue (@"HKEY_LOCAL_MACHINE\SOFTWARE\Epsitec\Cresus Gestion PE\Setup", "ID", "");
 
 //-			System.Diagnostics.Trace.WriteLine ("Crésus Graphe InstallID : " + graphId);
@@ -158,26 +160,35 @@ namespace Epsitec.Cresus.Graph
 
 			if (SerialAlgorithm.CheckSerial (comptaId, 20, out updatesAllowed))
 			{
-				GraphSerial.hasComptaLicense = true;
-				GraphSerial.hasValidComptaLicense = updatesAllowed;
-				GraphSerial.comptaExpirationDate = SerialAlgorithm.GetExpirationDate (comptaId);
+				GraphSerial.hasComptaLicense       = true;
+				GraphSerial.hasValidComptaLicense |= updatesAllowed;
+				GraphSerial.comptaExpirationDate   = SerialAlgorithm.GetExpirationDate (comptaId);
+			}
 
-//-				System.Diagnostics.Trace.WriteLine ("Compta license validity : " + updatesAllowed.ToString ());
+			if (SerialAlgorithm.CheckSerial (nmcId, 23, out updatesAllowed))
+			{
+				var date = SerialAlgorithm.GetExpirationDate (nmcId);
+				
+				GraphSerial.hasNmcLicense       = true;
+				GraphSerial.hasValidNmcLicense |= updatesAllowed;
+				
+				if (date > GraphSerial.comptaExpirationDate)
+				{
+					GraphSerial.comptaExpirationDate = date;
+				}
 			}
 
 			if (SerialAlgorithm.CheckSerial (peId, 25, out updatesAllowed))
 			{
 				var date = SerialAlgorithm.GetExpirationDate (peId);
 
-				GraphSerial.hasComptaLicense = true;
+				GraphSerial.hasComptaLicense       = true;
 				GraphSerial.hasValidComptaLicense |= updatesAllowed;
 
 				if (date > GraphSerial.comptaExpirationDate)
 				{
 					GraphSerial.comptaExpirationDate = date;
 				}
-
-//-				System.Diagnostics.Trace.WriteLine ("Gestion PE license validity : " + updatesAllowed.ToString ());
 			}
 
 			if (GraphSerial.hasGraphLicense)
@@ -193,11 +204,15 @@ namespace Epsitec.Cresus.Graph
 						case 229:
 							return LicensingInfo.ValidLargo;
 						case 829:
-							return LicensingInfo.ValidPiccolo;
+							return GraphSerial.hasValidNmcLicense ? LicensingInfo.ValidPro : LicensingInfo.ValidPiccolo;
 					}
 				}
             }
 
+			if (GraphSerial.hasValidNmcLicense)
+			{
+				return LicensingInfo.ValidPro;
+			}
 			if (GraphSerial.hasValidComptaLicense)
             {
 				return LicensingInfo.ValidPiccolo;
@@ -259,7 +274,9 @@ namespace Epsitec.Cresus.Graph
 		private static bool hasGraphLicense;
 		private static bool hasValidGraphLicense;
 		private static bool hasComptaLicense;
+        private static bool hasNmcLicense;
 		private static bool hasValidComptaLicense;
+		private static bool hasValidNmcLicense;
 		private static System.DateTime comptaExpirationDate;
 
 		private static LicensingInfo licensingInfo; // = LicensingInfo.ValidPro;

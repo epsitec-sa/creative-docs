@@ -9,14 +9,14 @@ using System.Linq;
 namespace Epsitec.Cresus.Graph.ImportConverters
 {
 	/// <summary>
-	/// The <c>ComptaBilanImportConverter</c> class converts from the
-	/// Crésus Comptabilité report named "Bilan".
+	/// The <c>ComptaNmcBilanImportConverter</c> class converts from the
+	/// Crésus Comptabilité NMC report named "Bilan".
 	/// </summary>
-	[Importer ("compta:bilan")]
-	public class ComptaBilanImportConverter : Compta
+	[Importer ("compta:nmc-bilan")]
+	public class ComptaNmcBilanImportConverter : Compta
 	{
-		public ComptaBilanImportConverter(string name)
-			: base (name, "4")
+		public ComptaNmcBilanImportConverter(string name)
+			: base (name, "6")
 		{
 		}
 
@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 
 		public override AbstractImportConverter  CreateSpecificConverter(IDictionary<string,string> meta)
 		{
- 			return new ComptaBilanImportConverter (this.Name)
+			return new ComptaNmcBilanImportConverter (this.Name)
 			{
 				Meta = meta
 			};
@@ -47,25 +47,18 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 
 			string colDimension = "Colonne";
 			string rowDimension = "Numéro/Compte";
-			string[] sources = new string[3];
+			string[] sources = new string[4];
 
-			sources[0] = Compta.GetSourceName (sourcePath);
-			sources[1] = "Précédent";
-			sources[2] = "Budget";
-
-			int sourceYear;
+			string yearName = Compta.GetSourceName (sourcePath);
 			
-			if (int.TryParse (sources[0], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out sourceYear))
-            {
-				sources[1] = (sourceYear-1).ToString (System.Globalization.CultureInfo.InvariantCulture);
-            }
+			sources[0] = Compta.RemoveLineBreaks (Compta.MakeFullDate (header[2], yearName));
+			sources[1] = Compta.RemoveLineBreaks (Compta.MakeFullDate (header[3], yearName));
+			sources[2] = Compta.RemoveLineBreaks (Compta.MakeFullDate (header[4], yearName));
+			sources[3] = Compta.RemoveLineBreaks (Compta.MakeFullDate (header[5], yearName));
 
-			//	Some exports (bilan sur 1 colonne) have 5 columns, other (bilan sur 2 colonnes) have 7 columns
-			//	and there is garbage in some of them in the 7 columns mode.
+			int column = 2;
 
-			int column = (header.Count == 7) ? 3 : 2;
-
-			foreach (var sourceName in GraphDataSet.CreateNumberedLabels (sources, index => 2-index))
+			foreach (var sourceName in GraphDataSet.CreateNumberedLabels (sources, index => index))
 			{
 				var table = new DataTable ();
 

@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 				(meta.TryGetValue ("View", out viewNumber)))
 			{
 				return (softId.Length == 24)
-					&& ((softId.Substring (1, 2) == "20") || (softId.Substring (0, 3) == "025"))
+					&& ((softId.Substring (1, 2) == "20") || (softId.Substring (0, 3) == "025") || (softId.Substring (1, 2) == "23"))
 					&& (viewNumber == this.view);
 			}
 
@@ -45,7 +45,8 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 				var fileExt  = System.IO.Path.GetExtension (sourcePath).ToLowerInvariant ();
 				var fileName = System.IO.Path.GetFileNameWithoutExtension (sourcePath);
 
-				if (fileExt == ".cre")
+				if ((fileExt == ".cre") ||
+					(fileExt == ".nmc"))
 				{
 					var compta = new Epsitec.CresusToolkit.CresusComptaDocument (sourcePath);
 
@@ -92,13 +93,106 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 			return sourceName;
 		}
 
+		protected static string MakeFullDate(string text, string year)
+		{
+			if (text == null)
+			{
+				return text;
+			}
+
+			string fullDate = Compta.ExtractDate (text, year);
+
+			if (fullDate == null)
+			{
+				if (text.Contains (year))
+				{
+					return text;
+				}
+				else
+				{
+					return string.Concat (text, " (", year, ")");
+				}
+			}
+			else
+			{
+				string[] words = text.Split (' ');
+				words[words.Length-1] = fullDate;
+				return string.Join (" ", words);
+			}
+		}
+
+		protected static string RemoveLineBreaks(string text)
+		{
+			if (string.IsNullOrEmpty (text))
+			{
+				return text;
+			}
+
+			string[] lines = text.Split (new string[] { "\n", "\\n" }, System.StringSplitOptions.RemoveEmptyEntries);
+
+			if (lines.Length == 1)
+			{
+				return text;
+			}
+
+			if ((lines[0].Length > 4) &&
+				(text.Length > 10))
+			{
+				string[] words = lines[0].Split (' ');
+
+				if (words[0].Length > 3)
+				{
+					words[0] = words[0].Substring (0, 1) + ".";
+					lines[0] = string.Join (" ", words);
+				}
+			}
+
+			return string.Join (" ", lines);
+		}
+
+		protected static string ExtractDate(string textWithDateSuffix, string year)
+		{
+			string dayMonth = Compta.ExtractDate (textWithDateSuffix);
+
+			if (dayMonth != null)
+			{
+				return string.Concat (dayMonth, ".", year);
+			}
+
+			return null;
+		}
+
+		protected static string ExtractDate(string textWithDateSuffix)
+		{
+			if (string.IsNullOrEmpty (textWithDateSuffix))
+			{
+				return null;
+			}
+
+			string lastWord = textWithDateSuffix.Split (' ').Last ();
+			string[] numbers = lastWord.Split ('.', '/', ';', ':');
+
+			if (numbers.Length == 2)
+			{
+				int n1, n2;
+
+				if ((int.TryParse (numbers[0], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out n1)) &&
+					(int.TryParse (numbers[1], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out n2)))
+				{
+					return string.Format ("{0:00}.{1:00}", n1, n2);
+				}
+			}
+			
+			return null;
+		}
+
 		public override GraphDataCategory GetCategory(ChartSeries series)
 		{
 			string label  = series.Label;
 			string number = label.Split ('\t')[0];
 
 			if (this.Meta != null)
-            {
+			{
 				if (this.compta == null)
 				{
 					if (this.Meta.ContainsKey ("Path"))
@@ -133,7 +227,7 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 						}
 					}
 				}
-            }
+			}
 
 			return base.GetCategory (series);
 		}
@@ -143,7 +237,7 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 			return Epsitec.CresusToolkit.CresusComptaDocument.ParseDate (text);
 		}
 
-        private readonly string view;
+		private readonly string view;
 		private Epsitec.CresusToolkit.CresusComptaDocument compta;
 	}
 }

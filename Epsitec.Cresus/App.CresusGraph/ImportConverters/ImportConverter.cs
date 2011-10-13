@@ -31,12 +31,12 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 				converter = pair.Value;
 				
 				if (meta != null)
-                {
+				{
 					if (!converter.CheckCompatibleMeta (meta))
 					{
 						continue;
 					}
-                }
+				}
 				
 				cube = converter.ToDataCube (head, lines, sourcePath, meta);
 
@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 					{
 						if ((value[0] == quote) &&
 							(value[count-1] == quote))
-                        {
+						{
 							//	The item is a properly formed "xyz" string (quote-text-quote)
 							//	but we will remove the quotes only if the text contains "" or
 							//	a separator, in order to make up for the Excel strangeness of

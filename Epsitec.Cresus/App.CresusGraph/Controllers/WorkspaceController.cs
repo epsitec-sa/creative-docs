@@ -724,21 +724,25 @@ namespace Epsitec.Cresus.Graph.Controllers
 			
 			if (numSources <= 2)
             {
+				container.PreferredWidth = 160;
 				columns = 1;
 				rows    = numSources;
             }
 			else if (numSources <= 4)
 			{
+				container.PreferredWidth = 240;
 				columns = 2;
 				rows    = 2;
 			}
 			else if (numSources <= 6)
             {
+				container.PreferredWidth = 240;
 				columns = 2;
 				rows    = 3;
 			}
 			else
 			{
+				container.PreferredWidth = 320;
 				columns = (numSources+3) / 4;
 				rows    = 4;
 				space   = 0.0;
