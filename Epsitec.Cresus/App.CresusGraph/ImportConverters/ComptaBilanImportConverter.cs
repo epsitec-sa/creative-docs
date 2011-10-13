@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 
 		public override AbstractImportConverter  CreateSpecificConverter(IDictionary<string,string> meta)
 		{
- 			return new ComptaBilanImportConverter (this.Name)
+			return new ComptaBilanImportConverter (this.Name)
 			{
 				Meta = meta
 			};
@@ -50,15 +50,15 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 			string[] sources = new string[3];
 
 			sources[0] = Compta.GetSourceName (sourcePath);
-			sources[1] = "Précédent";
-			sources[2] = "Budget";
+			sources[1] = "Budget";
+			sources[2] = "Précédent";
 
 			int sourceYear;
 			
 			if (int.TryParse (sources[0], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out sourceYear))
-            {
-				sources[1] = (sourceYear-1).ToString (System.Globalization.CultureInfo.InvariantCulture);
-            }
+			{
+				sources[2] = (sourceYear-1).ToString (System.Globalization.CultureInfo.InvariantCulture);
+			}
 
 			//	Some exports (bilan sur 1 colonne) have 5 columns, other (bilan sur 2 colonnes) have 7 columns
 			//	and there is garbage in some of them in the 7 columns mode.

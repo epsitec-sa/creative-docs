@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Graph
 			bool updatesAllowed;
 
 			if (SerialAlgorithm.CheckSerial (graphId, 29, out updatesAllowed))
-            {
+			{
 				GraphSerial.hasGraphLicense = true;
 				GraphSerial.hasValidGraphLicense = updatesAllowed;
 
@@ -192,7 +192,7 @@ namespace Epsitec.Cresus.Graph
 			}
 
 			if (GraphSerial.hasGraphLicense)
-            {
+			{
 				int product = SerialAlgorithm.GetProduct (graphId);
 
 				if (GraphSerial.hasValidGraphLicense)
@@ -207,16 +207,16 @@ namespace Epsitec.Cresus.Graph
 							return GraphSerial.hasValidNmcLicense ? LicensingInfo.ValidPro : LicensingInfo.ValidPiccolo;
 					}
 				}
-            }
+			}
 
 			if (GraphSerial.hasValidNmcLicense)
 			{
 				return LicensingInfo.ValidPro;
 			}
 			if (GraphSerial.hasValidComptaLicense)
-            {
+			{
 				return LicensingInfo.ValidPiccolo;
-            }
+			}
 			if (GraphSerial.hasComptaLicense)
 			{
 				return LicensingInfo.Expired;
@@ -274,7 +274,7 @@ namespace Epsitec.Cresus.Graph
 		private static bool hasGraphLicense;
 		private static bool hasValidGraphLicense;
 		private static bool hasComptaLicense;
-        private static bool hasNmcLicense;
+		private static bool hasNmcLicense;
 		private static bool hasValidComptaLicense;
 		private static bool hasValidNmcLicense;
 		private static System.DateTime comptaExpirationDate;

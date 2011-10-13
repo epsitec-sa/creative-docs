@@ -50,15 +50,15 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 			string[] sources = new string[3];
 
 			sources[0] = Compta.GetSourceName (sourcePath);
-			sources[1] = "Précédent";
-			sources[2] = "Budget";
+			sources[1] = "Budget";
+			sources[2] = "Précédent";
 
 			int sourceYear;
 			
 			if (int.TryParse (sources[0], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out sourceYear))
-            {
-				sources[1] = (sourceYear-1).ToString (System.Globalization.CultureInfo.InvariantCulture);
-            }
+			{
+				sources[2] = (sourceYear-1).ToString (System.Globalization.CultureInfo.InvariantCulture);
+			}
 
 			int column = 2;
 

@@ -187,9 +187,9 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 					(fields[0][5] != '.'))
 				{
 					if (fields.Length == 1)
-                    {
+					{
 						break;
-                    }
+					}
 
 					continue;
 				}

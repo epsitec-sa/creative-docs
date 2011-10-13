@@ -620,7 +620,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				this.chartViewController.ColorStyle = this.colorStyle;
 			}
 		}
-        
+		
 		public void RefreshGroups()
 		{
 			this.groupsController.Refresh ();
@@ -658,9 +658,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 				foreach (var category in categories)
 				{
 					if (category.IsGeneric)
-                    {
+					{
 						continue;
-                    }
+					}
 					
 					this.CreateFilterButton (container, category);
 				}
@@ -723,11 +723,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 			var containers = new List<FrameBox> ();
 			
 			if (numSources <= 2)
-            {
+			{
 				container.PreferredWidth = 160;
 				columns = 1;
 				rows    = numSources;
-            }
+			}
 			else if (numSources <= 4)
 			{
 				container.PreferredWidth = 240;
@@ -735,7 +735,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				rows    = 2;
 			}
 			else if (numSources <= 6)
-            {
+			{
 				container.PreferredWidth = 240;
 				columns = 2;
 				rows    = 3;
@@ -915,9 +915,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			if ((this.chartViewController != null) &&
 				(graphType != null))
-            {
+			{
 				this.chartViewController.GraphType = graphType;
-            }
+			}
 		}
 
 		public void SetOutputIndex(GraphDataSeries item, int index)
@@ -948,9 +948,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 			var windowSize = new Size (800, 600);
 
 			if (snapshot != null)
-            {
+			{
 				windowName = snapshot.GuidName;
-            }
+			}
 			
 			Window window = new Window ()
 			{
@@ -995,7 +995,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			//	a given snapshot.
 			
 			if (snapshot != null)
-            {
+			{
 				snapshot.Window = window;
 			}
 			
@@ -1675,9 +1675,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 			var size   = layout.StandardRectangle.Size + new Size (20, 20);
 
 			if (size.Width < 160)
-            {
+			{
 				size.Width = 160;
-            }
+			}
 
 			var clip   = view.Parent.MapClientToRoot (view.Parent.Client.Bounds);
 			var bounds = Rectangle.Intersection (clip, Rectangle.Deflate (view.MapClientToRoot (view.Client.Bounds), 4, 4));
