@@ -9,11 +9,9 @@ using System.Linq;
 namespace Epsitec.Aider
 {
 	[DesignerVisible]
-	public enum AddressType
+	public enum Language
 	{
-		Default      = 0,
-		Professional = 1,
-		Private      = 2,
-		Secondary    = 4,
+		French		= 0,
+		German		= 1,
 	}
 }

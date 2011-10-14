@@ -42,16 +42,18 @@ namespace Epsitec.Aider
 				public static readonly Epsitec.Common.Types.EnumType GroupRelationshipType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 155));
 				//	designer:cap/LVA64
 				public static readonly Epsitec.Common.Types.EnumType GroupType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 134));
+				//	designer:cap/LVAK7
+				public static readonly Epsitec.Common.Types.EnumType Language = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 244));
 				//	designer:cap/LVA27
 				public static readonly Epsitec.Common.Types.EnumType LegalPersonType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 226));
+				//	designer:cap/LVAJ5
+				public static readonly Epsitec.Common.Types.EnumType PersonConfession = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 179));
 				//	designer:cap/LVAN2
 				public static readonly Epsitec.Common.Types.EnumType PersonDeclarationStatus = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 87));
 				//	designer:cap/LVAH1
 				public static readonly Epsitec.Common.Types.EnumType PersonMrMrs = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 49));
 				//	designer:cap/LVAJ3
 				public static readonly Epsitec.Common.Types.EnumType PersonRelationshipType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 115));
-				//	designer:cap/LVAJ5
-				public static readonly Epsitec.Common.Types.EnumType PersonConfession = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 179));
 				//	designer:cap/LVAM1
 				public static readonly Epsitec.Common.Types.EnumType PersonSex = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 54));
 				//	designer:cap/LVA81
@@ -338,6 +340,30 @@ namespace Epsitec.Aider
 					}
 				}
 				
+				public static class Language
+				{
+					internal static void _Initialize()
+					{
+					}
+					
+					//	designer:cap/LVAL7
+					public static global::Epsitec.Common.Types.Caption French
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 245));
+						}
+					}
+					//	designer:cap/LVAM7
+					public static global::Epsitec.Common.Types.Caption German
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 246));
+						}
+					}
+				}
+				
 				public static class LegalPersonType
 				{
 					internal static void _Initialize()
@@ -366,6 +392,30 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 227));
+						}
+					}
+				}
+				
+				public static class PersonConfession
+				{
+					internal static void _Initialize()
+					{
+					}
+					
+					//	designer:cap/LVAL5
+					public static global::Epsitec.Common.Types.Caption Protestant
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 181));
+						}
+					}
+					//	designer:cap/LVAK5
+					public static global::Epsitec.Common.Types.Caption Unknown
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 180));
 						}
 					}
 				}
@@ -462,30 +512,6 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 116));
-						}
-					}
-				}
-
-				public static class PersonConfession
-				{
-					internal static void _Initialize()
-					{
-					}
-					
-					//	designer:cap/LVAL5
-					public static global::Epsitec.Common.Types.Caption Protestant
-					{
-						get
-						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 181));
-						}
-					}
-					//	designer:cap/LVAK5
-					public static global::Epsitec.Common.Types.Caption Unknown
-					{
-						get
-						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 180));
 						}
 					}
 				}
@@ -941,6 +967,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Contact1 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 234);
 				//	designer:cap/LVAC7
 				public static readonly global::Epsitec.Common.Support.Druid Contact2 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 236);
+				//	designer:cap/LVAN7
+				public static readonly global::Epsitec.Common.Support.Druid Language = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 247);
 				//	designer:cap/LVA17
 				public static readonly global::Epsitec.Common.Support.Druid RemovalReason = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 225);
 				//	designer:cap/LVAS6
@@ -971,10 +999,14 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid eCH_Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 62);
 				//	designer:cap/LVAL4
 				public static readonly global::Epsitec.Common.Support.Druid Household = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 149);
+				//	designer:cap/LVAO7
+				public static readonly global::Epsitec.Common.Support.Druid Language = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 248);
 				//	designer:cap/LVAT
 				public static readonly global::Epsitec.Common.Support.Druid MrMrs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 29);
 				//	designer:cap/LVAL2
 				public static readonly global::Epsitec.Common.Support.Druid OriginalName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 85);
+				//	designer:cap/LVAP7
+				public static readonly global::Epsitec.Common.Support.Druid Prefession = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 249);
 				//	designer:cap/LVAU
 				public static readonly global::Epsitec.Common.Support.Druid Title = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 30);
 				//	designer:cap/LVAH6
@@ -1260,11 +1292,12 @@ namespace Epsitec.Aider
 			Values.Enum.GroupParticipantRole._Initialize ();
 			Values.Enum.GroupRelationshipType._Initialize ();
 			Values.Enum.GroupType._Initialize ();
+			Values.Enum.Language._Initialize ();
 			Values.Enum.LegalPersonType._Initialize ();
+			Values.Enum.PersonConfession._Initialize ();
 			Values.Enum.PersonDeclarationStatus._Initialize ();
 			Values.Enum.PersonMrMrs._Initialize ();
 			Values.Enum.PersonRelationshipType._Initialize ();
-			Values.Enum.PersonConfession._Initialize ();
 			Values.Enum.PersonSex._Initialize ();
 			Values.Enum.PesonMaritalStatus._Initialize ();
 			Values.Enum.PesonNationalityStatus._Initialize ();

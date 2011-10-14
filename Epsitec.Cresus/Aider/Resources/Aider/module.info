@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModuleInfo id="1013" name="Aider" layer="A" textMode="FormattedText" assemblies="Aider" namespace="Epsitec.Aider">
   <Versions>
-    <Version id="1" build="67" date="2011-10-11T04:39:44.8963326Z" />
+    <Version id="1" build="69" date="2011-10-14T04:53:27.4795136Z" />
   </Versions>
 </ModuleInfo>

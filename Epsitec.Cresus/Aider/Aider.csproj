@@ -65,6 +65,7 @@
     <Compile Include="GroupParticipantRole.cs" />
     <Compile Include="GroupRelationshipType.cs" />
     <Compile Include="GroupType.cs" />
+    <Compile Include="Language.cs" />
     <Compile Include="LegalPersonType.cs" />
     <Compile Include="PersonRelationshipType.cs" />
     <Compile Include="PersonConfession.cs" />
