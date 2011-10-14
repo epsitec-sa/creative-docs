@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 				}
 				else
 				{
-					this.text = this.GetMonolingualText (value);
+					this.text = this.GetSinglelingualText (value);
 				}
 			}
 		}

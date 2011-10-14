@@ -179,7 +179,7 @@ namespace Epsitec.Cresus.Core.Entities
 			copy.LinePriceBeforeTax2         = this.LinePriceBeforeTax2;
 			copy.LinePriceAfterTax1          = this.LinePriceAfterTax1;
 			copy.LinePriceAfterTax2          = this.LinePriceAfterTax2;
-			copy.TotalRevenueAfterTax                = this.TotalRevenueAfterTax;
+			copy.TotalRevenueAfterTax        = this.TotalRevenueAfterTax;
 			copy.TotalRevenueAccounted       = this.TotalRevenueAccounted;
 			copy.ArticleNameCache            = this.ArticleNameCache;
 			copy.ArticleDescriptionCache     = this.ArticleDescriptionCache;

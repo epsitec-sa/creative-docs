@@ -116,24 +116,9 @@ namespace Epsitec.Cresus.Core.Print.Bands
 		}
 
 
-		protected FormattedText GetMonolingualText(FormattedText text)
+		protected FormattedText GetSinglelingualText(FormattedText text)
 		{
-			if (MultilingualText.IsMultilingual (text))
-			{
-				var multilingualText = new MultilingualText (text);
-				var monolingual = multilingualText.GetTextOrDefault (this.LanguageId);
-
-				if (monolingual.IsNullOrEmpty)
-				{
-					monolingual = multilingualText.GetTextOrDefault (TextFormatter.CurrentLanguageId);
-				}
-
-				return monolingual;
-			}
-			else
-			{
-				return text.ToString ();
-			}
+			return TextFormatter.GetSinglelingualText (text, this.LanguageId);
 		}
 
 

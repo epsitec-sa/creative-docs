@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 	public sealed class DocumentItemAccessor
 	{
 		private DocumentItemAccessor(DocumentMetadataEntity documentMetadata, DocumentLogic documentLogic, IncrementalNumberGenerator numberGenerator,
-			DocumentItemAccessorMode mode, AbstractDocumentItemEntity item, int groupIndex)
+			DocumentItemAccessorMode mode, string languageId, AbstractDocumentItemEntity item, int groupIndex)
 		{
 			this.content           = new Dictionary<int, FormattedText> ();
 			this.errors            = new Dictionary<int, DocumentItemAccessorError> ();
@@ -40,6 +40,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			this.item              = item;
 			this.groupIndex        = groupIndex;
 			this.mode              = mode;
+			this.languageId        = languageId;
 			
 			if (this.businessDocument.IsNotNull () &&
 				this.businessDocument.PriceGroup.IsNotNull ())
@@ -173,7 +174,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		}
 
 		
-		public static IEnumerable<DocumentItemAccessor> CreateAccessors(DocumentMetadataEntity documentMetadata, DocumentLogic documentLogic, DocumentItemAccessorMode mode, IEnumerable<DocumentAccessorContentLine> lines)
+		public static IEnumerable<DocumentItemAccessor> CreateAccessors(DocumentMetadataEntity documentMetadata, DocumentLogic documentLogic, DocumentItemAccessorMode mode, string languageId, IEnumerable<DocumentAccessorContentLine> lines)
 		{
 			DocumentItemAccessor.EnsureValidMode (mode);
 			
@@ -181,7 +182,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 			foreach (var line in lines)
 			{
-				yield return new DocumentItemAccessor (documentMetadata, documentLogic, numberGenerator, mode, line.Line, line.GroupIndex);
+				yield return new DocumentItemAccessor (documentMetadata, documentLogic, numberGenerator, mode, languageId, line.Line, line.GroupIndex);
 			}
 		}
 
@@ -836,6 +837,8 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		private void SetContent(int row, DocumentItemAccessorColumn column, FormattedText text)
 		{
 			//	Modifie le contenu d'une cellule.
+			text = TextFormatter.GetSinglelingualText (text, this.languageId);
+
 			if (text != null && !text.IsNullOrEmpty)
 			{
 				var key = DocumentItemAccessor.GetKey (row, column);
@@ -955,6 +958,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		private readonly List<ArticleQuantityEntity>				articleQuantities;
 		private readonly AbstractDocumentItemEntity					item;
 		private readonly DocumentItemAccessorMode					mode;
+		private readonly string										languageId;
 		private readonly int										groupIndex;
 		
 		private int													rowsCount;

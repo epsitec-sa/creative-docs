@@ -62,6 +62,31 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public static FormattedText GetSinglelingualText(FormattedText text, string languageId)
+		{
+			if (MultilingualText.IsMultilingual (text))
+			{
+				if (string.IsNullOrEmpty (languageId))
+				{
+					languageId = TextFormatter.CurrentLanguageId;
+				}
+
+				var multilingualText = new MultilingualText (text);
+				var monolingual = multilingualText.GetTextOrDefault (languageId);
+
+				if (monolingual.IsNullOrEmpty)
+				{
+					monolingual = multilingualText.GetTextOrDefault (TextFormatter.CurrentLanguageId);
+				}
+
+				return monolingual;
+			}
+			else
+			{
+				return text;
+			}
+		}
+
 		public static FormattedText FormatText(params object[] values)
 		{
 			var buffer = new System.Text.StringBuilder ();

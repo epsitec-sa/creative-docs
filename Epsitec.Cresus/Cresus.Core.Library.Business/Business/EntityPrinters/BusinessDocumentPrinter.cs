@@ -319,7 +319,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 			//	Construit une fois pour toutes les accesseurs au contenu.
 			var lines = this.ContentLines;
-			var accessors = new List<DocumentItemAccessor> (DocumentItemAccessor.CreateAccessors (this.Metadata, this.documentLogic, this.DocumentItemAccessorMode, lines));
+			var accessors = new List<DocumentItemAccessor> (DocumentItemAccessor.CreateAccessors (this.Metadata, this.documentLogic, this.DocumentItemAccessorMode, this.LanguageId, lines));
 
 			//	Fusionne toutes les lignes de sous-total, pour les rendre inséparables.
 			for (int i = 0; i < lines.Count; i++)
