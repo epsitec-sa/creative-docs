@@ -251,16 +251,19 @@ namespace Epsitec.Common.Designer.Dialogs
 			if (sender == this.cartridgeUserButton)
 			{
 				this.BitmapParameters.GenerateUserCartridge = !this.BitmapParameters.GenerateUserCartridge;
+				this.UpdateZoom ();
 			}
 
 			if (sender == this.cartridgeDateButton)
 			{
 				this.BitmapParameters.GenerateDateCartridge = !this.BitmapParameters.GenerateDateCartridge;
+				this.UpdateZoom ();
 			}
 
 			if (sender == this.cartridgeSamplesButton)
 			{
 				this.BitmapParameters.GenerateSamplesCartridge = !this.BitmapParameters.GenerateSamplesCartridge;
+				this.UpdateZoom ();
 			}
 		}
 
