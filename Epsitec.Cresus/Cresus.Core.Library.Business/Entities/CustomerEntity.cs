@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Entities
 		/// <returns>The mail contact if a match can be found; otherwise, <c>null</c>.</returns>
 		public MailContactEntity GetMailContact(ContactGroupType type)
 		{
-			var mailContacts = this.Relation.Person.Contacts.OfType<MailContactEntity> ();
+			var mailContacts = this.MainRelation.Person.Contacts.OfType<MailContactEntity> ();
 
 			return mailContacts.FirstOrDefault (x => x.ContactGroups.Any (c => c.ContactGroupType == type));
 		}
@@ -29,19 +29,19 @@ namespace Epsitec.Cresus.Core.Entities
 			return TextFormatter.FormatText
 				(
 					"N°", this.IdA, "\n",
-					this.Relation.GetSummary (), "\n",
+					this.MainRelation.GetSummary (), "\n",
 					"Représentant: ~", this.SalesRepresentative.GetCompactSummary ()
 				);
 		}
 
 		public override FormattedText GetCompactSummary()
 		{
-			return this.Relation.GetCompactSummary ();
+			return this.MainRelation.GetCompactSummary ();
 		}
 
 		public override string[] GetEntityKeywords()
 		{
-			return this.Relation.GetEntityKeywords ();
+			return this.MainRelation.GetEntityKeywords ();
 		}
 
 		public override EntityStatus GetEntityStatus()
@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Core.Entities
 				a.Accumulate (this.IdB.GetEntityStatus ().TreatAsOptional ());
 				a.Accumulate (this.IdC.GetEntityStatus ().TreatAsOptional ());
 				a.Accumulate (this.Affairs.Select (x => x.GetEntityStatus ()));
-				a.Accumulate (this.Relation.GetEntityStatus ());
+				a.Accumulate (this.MainRelation.GetEntityStatus ());
 				a.Accumulate (this.SalesRepresentative.GetEntityStatus ().TreatAsOptional ());
 
 				return a.EntityStatus;

@@ -50,6 +50,7 @@
     <Compile Include="Binders\NumericFieldBinder.cs" />
     <Compile Include="Bricks\BridgeSpy.cs" />
     <Compile Include="Bricks\BridgeSpyEventArgs.cs" />
+    <Compile Include="Business\ArticleGroupType.cs" />
     <Compile Include="Business\CoreSnapshotService.cs" />
     <Compile Include="Business\EntityPrinters\BusinessDocumentPrinter.cs" />
     <Compile Include="Binders\PostFinanceAccountFieldBinder.cs" />

@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .End ()
 				  .Field (x => x.DefaultDebtorBookAccount)
 				.End ()
-				.Include (x => x.Relation)
+				.Include (x => x.MainRelation)
 				;
 		}
 	}

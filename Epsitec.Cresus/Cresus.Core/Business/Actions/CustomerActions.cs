@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Core.Business.Actions
 		{
 			//	Define default billing & shipping addresses :
 
-			var defaultMailContact = currentCustomer.Relation.DefaultMailContact;
+			var defaultMailContact = currentCustomer.MainRelation.DefaultMailContact;
 
 			businessDocument.VariantId         = 0;
 			businessDocument.BillToMailContact = businessContext.GetLocalEntity (currentCustomer.GetMailContact (ContactGroupType.Billing) ?? defaultMailContact);

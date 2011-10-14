@@ -161,6 +161,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				
 				//	designer:cap/GVA67
 				public static readonly Epsitec.Common.Types.EnumType ArticleDocumentItemAttributes = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 230));
+				//	designer:cap/GVA49
+				public static readonly Epsitec.Common.Types.EnumType ArticleGroupType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 292));
 				//	designer:cap/GVA15
 				public static readonly Epsitec.Common.Types.EnumType ArticleQuantityType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 161));
 				//	designer:cap/GVA04
@@ -203,6 +205,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 			public static readonly Epsitec.Common.Types.StructuredType BusinessSettings = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 24));
 			//	designer:cap/GVAV5
 			public static readonly Epsitec.Common.Types.StructuredType Customer = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 191));
+			//	designer:cap/GVAN8
+			public static readonly Epsitec.Common.Types.StructuredType CustomerCategory = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 279));
 			//	designer:cap/GVA94
 			public static readonly Epsitec.Common.Types.StructuredType EndTotalDocumentItem = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 137));
 			//	designer:cap/GVA85
@@ -221,10 +225,16 @@ namespace Epsitec.Cresus.Core.Library.Business
 			public static readonly Epsitec.Common.Types.StructuredType OptionValue = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 182));
 			//	designer:cap/GVAK5
 			public static readonly Epsitec.Common.Types.StructuredType OptionValueArticleParameterDefinition = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 180));
+			//	designer:cap/GVAV8
+			public static readonly Epsitec.Common.Types.StructuredType OtherRelation = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 287));
+			//	designer:cap/GVA19
+			public static readonly Epsitec.Common.Types.StructuredType OtherRelationGroup = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 289));
 			//	designer:cap/GVAD6
 			public static readonly Epsitec.Common.Types.StructuredType PaymentReminderDefinition = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 205));
 			//	designer:cap/GVAM
 			public static readonly Epsitec.Common.Types.StructuredType People = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 22));
+			//	designer:cap/GVAS8
+			public static readonly Epsitec.Common.Types.StructuredType PeopleCategory = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 284));
 			//	designer:cap/GVA
 			public static readonly Epsitec.Common.Types.StructuredType Relation = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
 			//	designer:cap/GVAF4
@@ -347,6 +357,38 @@ namespace Epsitec.Cresus.Core.Library.Business
 						get
 						{
 							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 274));
+						}
+					}
+				}
+				
+				public static class ArticleGroupType
+				{
+					internal static void _Initialize()
+					{
+					}
+					
+					//	designer:cap/GVA59
+					public static global::Epsitec.Common.Types.Caption None
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 293));
+						}
+					}
+					//	designer:cap/GVA69
+					public static global::Epsitec.Common.Types.Caption Other
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 294));
+						}
+					}
+					//	designer:cap/GVA79
+					public static global::Epsitec.Common.Types.Caption ProductionCenter
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 295));
 						}
 					}
 				}
@@ -566,12 +608,14 @@ namespace Epsitec.Cresus.Core.Library.Business
 				{
 				}
 				
-				//	designer:cap/GVA8
-				public static readonly global::Epsitec.Common.Support.Druid ActiveAffairOwner = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 8);
+				//	designer:cap/GVAM8
+				public static readonly global::Epsitec.Common.Support.Druid ActiveAffairOwner = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 278);
 				//	designer:cap/GVA7
 				public static readonly global::Epsitec.Common.Support.Druid ActiveSalesRepresentative = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 7);
 				//	designer:cap/GVAR7
 				public static readonly global::Epsitec.Common.Support.Druid AmountDue = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 251);
+				//	designer:cap/GVA39
+				public static readonly global::Epsitec.Common.Support.Druid AssociatedSite = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 291);
 				//	designer:cap/GVAT7
 				public static readonly global::Epsitec.Common.Support.Druid BillingMode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 253);
 				//	designer:cap/GVAP7
@@ -704,6 +748,16 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid VatRateB = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 71);
 				//	designer:cap/GVAU7
 				public static readonly global::Epsitec.Common.Support.Druid VatRatio = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 254);
+			}
+			
+			public static class ArticleGroup
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/GVA89
+				public static readonly global::Epsitec.Common.Support.Druid Type = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 296);
 			}
 			
 			public static class ArticlePrice
@@ -854,20 +908,32 @@ namespace Epsitec.Cresus.Core.Library.Business
 				
 				//	designer:cap/GVA26
 				public static readonly global::Epsitec.Common.Support.Druid Affairs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 194);
-				//	designer:cap/GVA46
-				public static readonly global::Epsitec.Common.Support.Druid DefaultBillingMode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 196);
+				//	designer:cap/GVAO8
+				public static readonly global::Epsitec.Common.Support.Druid CustomerCategory = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 280);
 				//	designer:cap/GVA36
 				public static readonly global::Epsitec.Common.Support.Druid DefaultDebtorBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 195);
-				//	designer:cap/GVA66
-				public static readonly global::Epsitec.Common.Support.Druid DefaultDiscounts = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 198);
-				//	designer:cap/GVA56
-				public static readonly global::Epsitec.Common.Support.Druid DefaultPriceGroup = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 197);
 				//	designer:cap/GVA06
-				public static readonly global::Epsitec.Common.Support.Druid Relation = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 192);
+				public static readonly global::Epsitec.Common.Support.Druid MainRelation = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 192);
+				//	designer:cap/GVAU8
+				public static readonly global::Epsitec.Common.Support.Druid OtherRelations = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 286);
 				//	designer:cap/GVA16
 				public static readonly global::Epsitec.Common.Support.Druid SalesRepresentative = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 193);
 				//	designer:cap/GVAM7
 				public static readonly global::Epsitec.Common.Support.Druid UnassignedPaymentTransactions = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 246);
+			}
+			
+			public static class CustomerCategory
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/GVAR8
+				public static readonly global::Epsitec.Common.Support.Druid DefaultPaymentCategory = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 283);
+				//	designer:cap/GVAQ8
+				public static readonly global::Epsitec.Common.Support.Druid Discounts = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 282);
+				//	designer:cap/GVAP8
+				public static readonly global::Epsitec.Common.Support.Druid PriceGroup = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 281);
 			}
 			
 			public static class EndTotalDocumentItem
@@ -1004,6 +1070,18 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid Options = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 184);
 			}
 			
+			public static class OtherRelation
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/GVA29
+				public static readonly global::Epsitec.Common.Support.Druid Groups = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 290);
+				//	designer:cap/GVA09
+				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 288);
+			}
+			
 			public static class PaymentReminderDefinition
 			{
 				internal static void _Initialize()
@@ -1022,6 +1100,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				{
 				}
 				
+				//	designer:cap/GVAT8
+				public static readonly global::Epsitec.Common.Support.Druid PeopleCategory = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 285);
 				//	designer:cap/GVAN
 				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 23);
 			}
@@ -1169,6 +1249,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			Types.Enum._Initialize ();
 			Values._Initialize ();
 			Values.Enum.ArticleDocumentItemAttributes._Initialize ();
+			Values.Enum.ArticleGroupType._Initialize ();
 			Values.Enum.ArticleQuantityType._Initialize ();
 			Values.Enum.ArticleType._Initialize ();
 			Values.Enum.DocumentItemAttributes._Initialize ();
@@ -1178,6 +1259,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			Fields.ArticleCategory._Initialize ();
 			Fields.ArticleDefinition._Initialize ();
 			Fields.ArticleDocumentItem._Initialize ();
+			Fields.ArticleGroup._Initialize ();
 			Fields.ArticlePrice._Initialize ();
 			Fields.ArticleQuantity._Initialize ();
 			Fields.ArticleQuantityColumn._Initialize ();
@@ -1186,6 +1268,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			Fields.BusinessDocument._Initialize ();
 			Fields.BusinessSettings._Initialize ();
 			Fields.Customer._Initialize ();
+			Fields.CustomerCategory._Initialize ();
 			Fields.EndTotalDocumentItem._Initialize ();
 			Fields.EnumValueArticleParameterDefinition._Initialize ();
 			Fields.FinanceSettings._Initialize ();
@@ -1195,6 +1278,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			Fields.NumericValueArticleParameterDefinition._Initialize ();
 			Fields.OptionValue._Initialize ();
 			Fields.OptionValueArticleParameterDefinition._Initialize ();
+			Fields.OtherRelation._Initialize ();
 			Fields.PaymentReminderDefinition._Initialize ();
 			Fields.People._Initialize ();
 			Fields.PriceGroup._Initialize ();

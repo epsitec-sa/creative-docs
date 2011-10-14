@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 		public override void ApplyBindRule(CustomerEntity customer)
 		{
 			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
-			businessContext.Register (customer.Relation);
+			businessContext.Register (customer.MainRelation);
 		}
 
 		public override void ApplySetupRule(CustomerEntity customer)
@@ -27,7 +27,8 @@ namespace Epsitec.Cresus.Core.Business.Rules
 
 			businessContext.AssignIds (customer, generatorPool);
 
-			customer.DefaultBillingMode  = Business.Finance.BillingMode.IncludingTax;
+			//	TODO: @DR@ ... assigner un CustomerCategory par défaut
+
 			customer.Workflow = WorkflowFactory.CreateDefaultWorkflow<CustomerEntity> (businessContext);
 			customer.Code = (string) ItemCodeGenerator.NewCode ();
 		}

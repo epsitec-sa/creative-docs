@@ -480,7 +480,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 				if (customer != null)
 				{
-					return new RelationPrinter (businessContext, customer.Relation, options, printingUnits);
+					return new RelationPrinter (businessContext, customer.MainRelation, options, printingUnits);
 				}
 
 				return new RelationPrinter (businessContext, entity, options, printingUnits);

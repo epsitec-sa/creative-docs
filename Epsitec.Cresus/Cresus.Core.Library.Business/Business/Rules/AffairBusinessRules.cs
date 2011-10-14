@@ -47,15 +47,15 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			var businessSettings = businessContext.GetCachedBusinessSettings ();
 			var customer         = affair.Customer;
 
-			if (customer.Relation.IsNotNull ())
+			if (customer.MainRelation.IsNotNull ())
 			{
 				if (affair.CurrencyCode == Finance.CurrencyCode.None)
 				{
-					affair.CurrencyCode = customer.Relation.DefaultCurrencyCode;
+					affair.CurrencyCode = customer.MainRelation.DefaultCurrencyCode;
 				}
 				if (affair.BillingMode == Finance.BillingMode.None)
 				{
-					affair.BillingMode = customer.DefaultBillingMode;
+					affair.BillingMode = customer.CustomerCategory.PriceGroup.BillingMode;
 				}
 				if (string.IsNullOrEmpty (affair.DebtorBookAccount))
 				{

@@ -36,14 +36,14 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 
 		private void SetupNaturalPersonCustomer(BusinessContext context, CustomerEntity customer)
 		{
-			customer.Relation = context.CreateEntity<RelationEntity> ();
-			customer.Relation.Person = context.CreateEntity<NaturalPersonEntity> ();
+			customer.MainRelation = context.CreateEntity<RelationEntity> ();
+			customer.MainRelation.Person = context.CreateEntity<NaturalPersonEntity> ();
 		}
 
 		private void SetupLegalPersonCustomer(BusinessContext context, CustomerEntity customer)
 		{
-			customer.Relation = context.CreateEntity<RelationEntity> ();
-			customer.Relation.Person = context.CreateEntity<LegalPersonEntity> ();
+			customer.MainRelation = context.CreateEntity<RelationEntity> ();
+			customer.MainRelation.Person = context.CreateEntity<LegalPersonEntity> ();
 		}
 	}
 }

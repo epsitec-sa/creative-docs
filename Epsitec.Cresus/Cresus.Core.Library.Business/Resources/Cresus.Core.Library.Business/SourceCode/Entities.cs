@@ -34,6 +34,10 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[GVA76]", typeof (Epsitec.Cresus.Core.Entities.FinanceSettingsEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[GVAD6]", typeof (Epsitec.Cresus.Core.Entities.PaymentReminderDefinitionEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[GVAL6]", typeof (Epsitec.Cresus.Core.Entities.ArticleQuantityColumnEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[GVAN8]", typeof (Epsitec.Cresus.Core.Entities.CustomerCategoryEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[GVAS8]", typeof (Epsitec.Cresus.Core.Entities.PeopleCategoryEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[GVAV8]", typeof (Epsitec.Cresus.Core.Entities.OtherRelationEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[GVA19]", typeof (Epsitec.Cresus.Core.Entities.OtherRelationGroupEntity))]
 #region Epsitec.Cresus.Core.Relation Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -452,6 +456,28 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>AssociatedSite</c> field.
+		///	designer:fld/GVA1/GVA39
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVA39]")]
+		public global::Epsitec.Cresus.Core.Entities.OtherRelationEntity AssociatedSite
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.OtherRelationEntity> ("[GVA39]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.OtherRelationEntity oldValue = this.AssociatedSite;
+				if (oldValue != value || !this.IsFieldDefined("[GVA39]"))
+				{
+					this.OnAssociatedSiteChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.OtherRelationEntity> ("[GVA39]", oldValue, value);
+					this.OnAssociatedSiteChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>AmountDue</c> field.
 		///	designer:fld/GVA1/GVAR7
 		///	</summary>
@@ -563,22 +589,22 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		///	<summary>
 		///	The <c>ActiveAffairOwner</c> field.
-		///	designer:fld/GVA1/GVA8
+		///	designer:fld/GVA1/GVAM8
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVA8]")]
-		public global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity ActiveAffairOwner
+		[global::Epsitec.Common.Support.EntityField ("[GVAM8]")]
+		public global::Epsitec.Cresus.Core.Entities.PeopleEntity ActiveAffairOwner
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity> ("[GVA8]");
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.PeopleEntity> ("[GVAM8]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue = this.ActiveAffairOwner;
-				if (oldValue != value || !this.IsFieldDefined("[GVA8]"))
+				global::Epsitec.Cresus.Core.Entities.PeopleEntity oldValue = this.ActiveAffairOwner;
+				if (oldValue != value || !this.IsFieldDefined("[GVAM8]"))
 				{
 					this.OnActiveAffairOwnerChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity> ("[GVA8]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.PeopleEntity> ("[GVAM8]", oldValue, value);
 					this.OnActiveAffairOwnerChanged (oldValue, value);
 				}
 			}
@@ -622,6 +648,8 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnCustomerChanging(global::Epsitec.Cresus.Core.Entities.CustomerEntity oldValue, global::Epsitec.Cresus.Core.Entities.CustomerEntity newValue);
 		partial void OnCustomerChanged(global::Epsitec.Cresus.Core.Entities.CustomerEntity oldValue, global::Epsitec.Cresus.Core.Entities.CustomerEntity newValue);
+		partial void OnAssociatedSiteChanging(global::Epsitec.Cresus.Core.Entities.OtherRelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.OtherRelationEntity newValue);
+		partial void OnAssociatedSiteChanged(global::Epsitec.Cresus.Core.Entities.OtherRelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.OtherRelationEntity newValue);
 		partial void OnAmountDueChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnAmountDueChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnBillingModeChanging(global::Epsitec.Cresus.Core.Business.Finance.BillingMode oldValue, global::Epsitec.Cresus.Core.Business.Finance.BillingMode newValue);
@@ -632,8 +660,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnDebtorBookAccountChanged(string oldValue, string newValue);
 		partial void OnActiveSalesRepresentativeChanging(global::Epsitec.Cresus.Core.Entities.PeopleEntity oldValue, global::Epsitec.Cresus.Core.Entities.PeopleEntity newValue);
 		partial void OnActiveSalesRepresentativeChanged(global::Epsitec.Cresus.Core.Entities.PeopleEntity oldValue, global::Epsitec.Cresus.Core.Entities.PeopleEntity newValue);
-		partial void OnActiveAffairOwnerChanging(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
-		partial void OnActiveAffairOwnerChanged(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
+		partial void OnActiveAffairOwnerChanging(global::Epsitec.Cresus.Core.Entities.PeopleEntity oldValue, global::Epsitec.Cresus.Core.Entities.PeopleEntity newValue);
+		partial void OnActiveAffairOwnerChanged(global::Epsitec.Cresus.Core.Entities.PeopleEntity oldValue, global::Epsitec.Cresus.Core.Entities.PeopleEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -709,7 +737,7 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>People</c> entity.
 	///	designer:cap/GVAM
 	///	</summary>
-	public partial class PeopleEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IReferenceNumber
+	public partial class PeopleEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IReferenceNumber, global::Epsitec.Cresus.Core.Entities.IDateRange
 	{
 		#region IReferenceNumber Members
 		///	<summary>
@@ -747,6 +775,24 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		#endregion
+		#region IDateRange Members
+		///	<summary>
+		///	The <c>BeginDate</c> field.
+		///	designer:fld/GVAM/8VAO
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAO]")]
+		public global::Epsitec.Common.Types.Date? BeginDate
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.GetBeginDate (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.SetBeginDate (this, value);
+			}
+		}
+		#endregion
 		#region IReferenceNumber Members
 		///	<summary>
 		///	The <c>IdB</c> field.
@@ -764,6 +810,26 @@ namespace Epsitec.Cresus.Core.Entities
 				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdB (this, value);
 			}
 		}
+		#endregion
+		#region IDateRange Members
+		///	<summary>
+		///	The <c>EndDate</c> field.
+		///	designer:fld/GVAM/8VAP
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAP]")]
+		public global::Epsitec.Common.Types.Date? EndDate
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.GetEndDate (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.SetEndDate (this, value);
+			}
+		}
+		#endregion
+		#region IReferenceNumber Members
 		///	<summary>
 		///	The <c>IdC</c> field.
 		///	designer:fld/GVAM/8VA31
@@ -803,9 +869,33 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>PeopleCategory</c> field.
+		///	designer:fld/GVAM/GVAT8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVAT8]")]
+		public global::Epsitec.Cresus.Core.Entities.PeopleCategoryEntity PeopleCategory
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.PeopleCategoryEntity> ("[GVAT8]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.PeopleCategoryEntity oldValue = this.PeopleCategory;
+				if (oldValue != value || !this.IsFieldDefined("[GVAT8]"))
+				{
+					this.OnPeopleCategoryChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.PeopleCategoryEntity> ("[GVAT8]", oldValue, value);
+					this.OnPeopleCategoryChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnPersonChanging(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
 		partial void OnPersonChanged(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
+		partial void OnPeopleCategoryChanging(global::Epsitec.Cresus.Core.Entities.PeopleCategoryEntity oldValue, global::Epsitec.Cresus.Core.Entities.PeopleCategoryEntity newValue);
+		partial void OnPeopleCategoryChanged(global::Epsitec.Cresus.Core.Entities.PeopleCategoryEntity oldValue, global::Epsitec.Cresus.Core.Entities.PeopleCategoryEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -2847,7 +2937,31 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		#endregion
+		///	<summary>
+		///	The <c>Type</c> field.
+		///	designer:fld/GVAM2/GVA89
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVA89]")]
+		public global::Epsitec.Cresus.Core.Business.ArticleGroupType Type
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Business.ArticleGroupType> ("[GVA89]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Business.ArticleGroupType oldValue = this.Type;
+				if (oldValue != value || !this.IsFieldDefined("[GVA89]"))
+				{
+					this.OnTypeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.ArticleGroupType> ("[GVA89]", oldValue, value);
+					this.OnTypeChanged (oldValue, value);
+				}
+			}
+		}
 		
+		partial void OnTypeChanging(global::Epsitec.Cresus.Core.Business.ArticleGroupType oldValue, global::Epsitec.Cresus.Core.Business.ArticleGroupType newValue);
+		partial void OnTypeChanged(global::Epsitec.Cresus.Core.Business.ArticleGroupType oldValue, global::Epsitec.Cresus.Core.Business.ArticleGroupType newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -5380,11 +5494,33 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		#endregion
 		///	<summary>
-		///	The <c>Relation</c> field.
+		///	The <c>CustomerCategory</c> field.
+		///	designer:fld/GVAV5/GVAO8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVAO8]")]
+		public global::Epsitec.Cresus.Core.Entities.CustomerCategoryEntity CustomerCategory
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.CustomerCategoryEntity> ("[GVAO8]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.CustomerCategoryEntity oldValue = this.CustomerCategory;
+				if (oldValue != value || !this.IsFieldDefined("[GVAO8]"))
+				{
+					this.OnCustomerCategoryChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.CustomerCategoryEntity> ("[GVAO8]", oldValue, value);
+					this.OnCustomerCategoryChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>MainRelation</c> field.
 		///	designer:fld/GVAV5/GVA06
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[GVA06]")]
-		public global::Epsitec.Cresus.Core.Entities.RelationEntity Relation
+		public global::Epsitec.Cresus.Core.Entities.RelationEntity MainRelation
 		{
 			get
 			{
@@ -5392,13 +5528,25 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue = this.Relation;
+				global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue = this.MainRelation;
 				if (oldValue != value || !this.IsFieldDefined("[GVA06]"))
 				{
-					this.OnRelationChanging (oldValue, value);
+					this.OnMainRelationChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.RelationEntity> ("[GVA06]", oldValue, value);
-					this.OnRelationChanged (oldValue, value);
+					this.OnMainRelationChanged (oldValue, value);
 				}
+			}
+		}
+		///	<summary>
+		///	The <c>OtherRelations</c> field.
+		///	designer:fld/GVAV5/GVAU8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVAU8]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.OtherRelationEntity> OtherRelations
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.OtherRelationEntity> ("[GVAU8]");
 			}
 		}
 		///	<summary>
@@ -5458,62 +5606,6 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>DefaultBillingMode</c> field.
-		///	designer:fld/GVAV5/GVA46
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVA46]")]
-		public global::Epsitec.Cresus.Core.Business.Finance.BillingMode DefaultBillingMode
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.BillingMode> ("[GVA46]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Business.Finance.BillingMode oldValue = this.DefaultBillingMode;
-				if (oldValue != value || !this.IsFieldDefined("[GVA46]"))
-				{
-					this.OnDefaultBillingModeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.BillingMode> ("[GVA46]", oldValue, value);
-					this.OnDefaultBillingModeChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>DefaultPriceGroup</c> field.
-		///	designer:fld/GVAV5/GVA56
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVA56]")]
-		public global::Epsitec.Cresus.Core.Entities.PriceGroupEntity DefaultPriceGroup
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.PriceGroupEntity> ("[GVA56]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.PriceGroupEntity oldValue = this.DefaultPriceGroup;
-				if (oldValue != value || !this.IsFieldDefined("[GVA56]"))
-				{
-					this.OnDefaultPriceGroupChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.PriceGroupEntity> ("[GVA56]", oldValue, value);
-					this.OnDefaultPriceGroupChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>DefaultDiscounts</c> field.
-		///	designer:fld/GVAV5/GVA66
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVA66]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.PriceDiscountEntity> DefaultDiscounts
-		{
-			get
-			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.PriceDiscountEntity> ("[GVA66]");
-			}
-		}
-		///	<summary>
 		///	The <c>UnassignedPaymentTransactions</c> field.
 		///	designer:fld/GVAV5/GVAM7
 		///	</summary>
@@ -5526,16 +5618,14 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnRelationChanging(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
-		partial void OnRelationChanged(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
+		partial void OnCustomerCategoryChanging(global::Epsitec.Cresus.Core.Entities.CustomerCategoryEntity oldValue, global::Epsitec.Cresus.Core.Entities.CustomerCategoryEntity newValue);
+		partial void OnCustomerCategoryChanged(global::Epsitec.Cresus.Core.Entities.CustomerCategoryEntity oldValue, global::Epsitec.Cresus.Core.Entities.CustomerCategoryEntity newValue);
+		partial void OnMainRelationChanging(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
+		partial void OnMainRelationChanged(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
 		partial void OnSalesRepresentativeChanging(global::Epsitec.Cresus.Core.Entities.PeopleEntity oldValue, global::Epsitec.Cresus.Core.Entities.PeopleEntity newValue);
 		partial void OnSalesRepresentativeChanged(global::Epsitec.Cresus.Core.Entities.PeopleEntity oldValue, global::Epsitec.Cresus.Core.Entities.PeopleEntity newValue);
 		partial void OnDefaultDebtorBookAccountChanging(string oldValue, string newValue);
 		partial void OnDefaultDebtorBookAccountChanged(string oldValue, string newValue);
-		partial void OnDefaultBillingModeChanging(global::Epsitec.Cresus.Core.Business.Finance.BillingMode oldValue, global::Epsitec.Cresus.Core.Business.Finance.BillingMode newValue);
-		partial void OnDefaultBillingModeChanged(global::Epsitec.Cresus.Core.Business.Finance.BillingMode oldValue, global::Epsitec.Cresus.Core.Business.Finance.BillingMode newValue);
-		partial void OnDefaultPriceGroupChanging(global::Epsitec.Cresus.Core.Entities.PriceGroupEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceGroupEntity newValue);
-		partial void OnDefaultPriceGroupChanged(global::Epsitec.Cresus.Core.Entities.PriceGroupEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceGroupEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -6002,6 +6092,500 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<ArticleQuantityColumnEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.CustomerCategory Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>CustomerCategory</c> entity.
+	///	designer:cap/GVAN8
+	///	</summary>
+	public partial class CustomerCategoryEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ICategory
+	{
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/GVAN8/8VA3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/GVAN8/8VA5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA5]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+			}
+		}
+		#endregion
+		#region INameDescription Members
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/GVAN8/8VA7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA7]")]
+		public global::Epsitec.Common.Types.FormattedText Name
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetName (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/GVAN8/8VA8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA8]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetDescription (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetDescription (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>DefaultPaymentCategory</c> field.
+		///	designer:fld/GVAN8/GVAR8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVAR8]")]
+		public global::Epsitec.Cresus.Core.Entities.PaymentCategoryEntity DefaultPaymentCategory
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.PaymentCategoryEntity> ("[GVAR8]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.PaymentCategoryEntity oldValue = this.DefaultPaymentCategory;
+				if (oldValue != value || !this.IsFieldDefined("[GVAR8]"))
+				{
+					this.OnDefaultPaymentCategoryChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.PaymentCategoryEntity> ("[GVAR8]", oldValue, value);
+					this.OnDefaultPaymentCategoryChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Discounts</c> field.
+		///	designer:fld/GVAN8/GVAQ8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVAQ8]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.PriceDiscountEntity> Discounts
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.PriceDiscountEntity> ("[GVAQ8]");
+			}
+		}
+		///	<summary>
+		///	The <c>PriceGroup</c> field.
+		///	designer:fld/GVAN8/GVAP8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVAP8]")]
+		public global::Epsitec.Cresus.Core.Entities.PriceGroupEntity PriceGroup
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.PriceGroupEntity> ("[GVAP8]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.PriceGroupEntity oldValue = this.PriceGroup;
+				if (oldValue != value || !this.IsFieldDefined("[GVAP8]"))
+				{
+					this.OnPriceGroupChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.PriceGroupEntity> ("[GVAP8]", oldValue, value);
+					this.OnPriceGroupChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnDefaultPaymentCategoryChanging(global::Epsitec.Cresus.Core.Entities.PaymentCategoryEntity oldValue, global::Epsitec.Cresus.Core.Entities.PaymentCategoryEntity newValue);
+		partial void OnDefaultPaymentCategoryChanged(global::Epsitec.Cresus.Core.Entities.PaymentCategoryEntity oldValue, global::Epsitec.Cresus.Core.Entities.PaymentCategoryEntity newValue);
+		partial void OnPriceGroupChanging(global::Epsitec.Cresus.Core.Entities.PriceGroupEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceGroupEntity newValue);
+		partial void OnPriceGroupChanged(global::Epsitec.Cresus.Core.Entities.PriceGroupEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceGroupEntity newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.CustomerCategoryEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.CustomerCategoryEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1008, 10, 279);	// [GVAN8]
+		public static readonly string EntityStructuredTypeKey = "[GVAN8]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<CustomerCategoryEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.PeopleCategory Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>PeopleCategory</c> entity.
+	///	designer:cap/GVAS8
+	///	</summary>
+	public partial class PeopleCategoryEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ICategory
+	{
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/GVAS8/8VA3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/GVAS8/8VA5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA5]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+			}
+		}
+		#endregion
+		#region INameDescription Members
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/GVAS8/8VA7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA7]")]
+		public global::Epsitec.Common.Types.FormattedText Name
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetName (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/GVAS8/8VA8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA8]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetDescription (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetDescription (this, value);
+			}
+		}
+		#endregion
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.PeopleCategoryEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.PeopleCategoryEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1008, 10, 284);	// [GVAS8]
+		public static readonly string EntityStructuredTypeKey = "[GVAS8]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<PeopleCategoryEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.OtherRelation Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>OtherRelation</c> entity.
+	///	designer:cap/GVAV8
+	///	</summary>
+	public partial class OtherRelationEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.INameDescription
+	{
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/GVAV8/8VA3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region INameDescription Members
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/GVAV8/8VA7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA7]")]
+		public global::Epsitec.Common.Types.FormattedText Name
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetName (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/GVAV8/8VA8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA8]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetDescription (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetDescription (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>Person</c> field.
+		///	designer:fld/GVAV8/GVA09
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVA09]")]
+		public global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity Person
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity> ("[GVA09]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity oldValue = this.Person;
+				if (oldValue != value || !this.IsFieldDefined("[GVA09]"))
+				{
+					this.OnPersonChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity> ("[GVA09]", oldValue, value);
+					this.OnPersonChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Groups</c> field.
+		///	designer:fld/GVAV8/GVA29
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVA29]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.OtherRelationGroupEntity> Groups
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.OtherRelationGroupEntity> ("[GVA29]");
+			}
+		}
+		
+		partial void OnPersonChanging(global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity newValue);
+		partial void OnPersonChanged(global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.OtherRelationEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.OtherRelationEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1008, 10, 287);	// [GVAV8]
+		public static readonly string EntityStructuredTypeKey = "[GVAV8]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<OtherRelationEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Volatile)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.OtherRelationGroup Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>OtherRelationGroup</c> entity.
+	///	designer:cap/GVA19
+	///	</summary>
+	public partial class OtherRelationGroupEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ICategory
+	{
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/GVA19/8VA3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/GVA19/8VA5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA5]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+			}
+		}
+		#endregion
+		#region INameDescription Members
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/GVA19/8VA7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA7]")]
+		public global::Epsitec.Common.Types.FormattedText Name
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetName (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/GVA19/8VA8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA8]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetDescription (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetDescription (this, value);
+			}
+		}
+		#endregion
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.OtherRelationGroupEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.OtherRelationGroupEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1008, 10, 289);	// [GVA19]
+		public static readonly string EntityStructuredTypeKey = "[GVA19]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<OtherRelationGroupEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{

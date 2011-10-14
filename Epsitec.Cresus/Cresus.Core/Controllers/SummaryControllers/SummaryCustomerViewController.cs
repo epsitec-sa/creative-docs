@@ -23,18 +23,18 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			wall.AddBrick (x => x);
 
-			wall.AddBrick (x => x.Relation.Person.Contacts)
+			wall.AddBrick (x => x.MainRelation.Person.Contacts)
 				.OfType<MailContactEntity> ()
 				.Template ()
 				.End ();
 				;
-			wall.AddBrick (x => x.Relation.Person.Contacts)
+			wall.AddBrick (x => x.MainRelation.Person.Contacts)
 				.OfType<TelecomContactEntity> ()
 				.Attribute (BrickMode.AutoGroup)
 				.Template ()
 				.End ()
 				;
-			wall.AddBrick (x => x.Relation.Person.Contacts)
+			wall.AddBrick (x => x.MainRelation.Person.Contacts)
 				.OfType<UriContactEntity> ()
 				.Attribute (BrickMode.AutoGroup)
 				.Template ()
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		protected override IEnumerable<AbstractEntity> GetMasterEntities()
 		{
 			yield return this.Entity;
-			yield return this.Entity.Relation;
+			yield return this.Entity.MainRelation;
 		}
 	}
 }
