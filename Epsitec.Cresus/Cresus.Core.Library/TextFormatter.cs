@@ -50,14 +50,14 @@ namespace Epsitec.Cresus.Core
 				switch (TextFormatter.CurrentLanguageId)
 				{
 					case "fr":
-						return TextFormatter.FormatText ("<i>inconnu</i>");
+						return TextFormatter.FormatText ("inconnu").ApplyItalic ();
 					
 					case "de":
-						return TextFormatter.FormatText ("<i>unbekannt</i>");
+						return TextFormatter.FormatText ("unbekannt").ApplyItalic ();
 					
 					default:
 					case "en":
-						return TextFormatter.FormatText ("<i>unknown</i>");
+						return TextFormatter.FormatText ("unknown").ApplyItalic ();
 				}
 			}
 		}
@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Core
 
 			if (MultilingualText.IsMultilingual (formattedText))
 			{
-				MultilingualText multilingualText = new MultilingualText (formattedText);
+				var multilingualText = new MultilingualText (formattedText);
 				return multilingualText.GetTextOrDefault (TextFormatter.CurrentLanguageId).ToString ();
 			}
 			else

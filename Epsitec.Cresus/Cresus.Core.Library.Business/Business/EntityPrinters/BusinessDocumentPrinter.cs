@@ -180,6 +180,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 					}
 
 					var textBand = new TextBand ();
+					textBand.LanguageId = this.LanguageId;
 					textBand.Text = address;
 					textBand.Font = BusinessDocumentPrinter.font;
 					textBand.FontSize = this.GetOptionValue (DocumentOption.HeaderFromFontSize);
@@ -194,6 +195,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				if (!rect.IsSurfaceZero)
 				{
 					var mailContactBand = new TextBand ();
+					mailContactBand.LanguageId = this.LanguageId;
 					mailContactBand.Text = this.Entity.BillToMailContact.GetSummary ();
 					mailContactBand.Font = BusinessDocumentPrinter.font;
 					mailContactBand.FontSize = this.GetOptionValue (DocumentOption.HeaderToFontSize);
@@ -219,6 +221,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				if (!rect.IsSurfaceZero)
 				{
 					var titleBand = new TextBand ();
+					titleBand.LanguageId = this.LanguageId;
 					titleBand.Text = this.Title;
 					titleBand.BreakMode = TextBreakMode.SingleLine | TextBreakMode.Split | TextBreakMode.Ellipsis;
 					titleBand.Font = font;
@@ -237,6 +240,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 					var location = this.DefaultLocation;
 					var dateBand = new TextBand ();
+					dateBand.LanguageId = this.LanguageId;
 					dateBand.Text = (location == null) ? FormattedText.Concat ("Le ", date) : FormattedText.Concat (location, ", le ", date);
 					dateBand.Font = font;
 					dateBand.FontSize = this.GetOptionValue (DocumentOption.HeaderLocDateFontSize);
@@ -357,6 +361,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 			//	Deuxième passe pour générer les colonnes et les lignes du tableau.
 			this.table = new TableBand ();
+			this.table.LanguageId = this.LanguageId;
 			this.table.ColumnsCount = this.visibleColumnCount;
 			this.table.RowsCount = rowCount;
 			this.table.CellBorder = this.GetCellBorder ();
@@ -599,9 +604,11 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			else
 			{
 				var band = new TableBand ();
+
 				var fontSize = this.GetOptionValue (DocumentOption.HeaderForFontSize);
 				firstColumnWidth *= fontSize/3;
 
+				band.LanguageId = this.LanguageId;
 				band.ColumnsCount = 2;
 				band.RowsCount = 1;
 				band.CellBorder = CellBorder.Empty;
@@ -764,12 +771,14 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				this.documentContainer.CurrentPage = page;
 
 				var leftHeader = new TextBand ();
+				leftHeader.LanguageId = this.LanguageId;
 				leftHeader.Text = this.Title;
 				leftHeader.Alignment = ContentAlignment.BottomLeft;
 				leftHeader.Font = font;
 				leftHeader.FontSize = this.FontSize*1.3;
 
 				var rightHeader = new TextBand ();
+				rightHeader.LanguageId = this.LanguageId;
 				rightHeader.Text = FormattedText.Concat ("page ", (page-firstPage+1).ToString ());
 				rightHeader.Alignment = ContentAlignment.BottomRight;
 				rightHeader.Font = font;
@@ -800,6 +809,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				this.documentContainer.CurrentPage = page;
 
 				var table = new TableBand ();
+				table.LanguageId = this.LanguageId;
 				table.ColumnsCount = this.visibleColumnCount;
 				table.RowsCount = 2;
 				table.CellMargins = new Margins (this.CellMargin);
@@ -850,6 +860,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				this.documentContainer.CurrentPage = page;
 
 				var table = new TableBand ();
+				table.LanguageId = this.LanguageId;
 				table.ColumnsCount = this.visibleColumnCount;
 				table.RowsCount = 1;
 				table.CellMargins = new Margins (this.CellMargin);
@@ -1360,22 +1371,22 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 					}
 
 					if (this.HasOption (DocumentOption.ArticleAdditionalQuantities, "ToQuantity") &&  // avec les quantités ?
-					this.GetTableText (row+i, TableColumnKeys.MainQuantity).IsNullOrEmpty)  // (*)
+						this.GetTableText (row+i, TableColumnKeys.MainQuantity).IsNullOrEmpty)  // (*)
 					{
 						//	"Retardé 5 pces 25.12.2011"
 						this.SetTableText (row+i, TableColumnKeys.MainQuantity, TextFormatter.FormatText (t, q, d));  // très compact, peu de place
 					}
 
 					if (this.HasOption (DocumentOption.ArticleAdditionalQuantities, "ToDescription") &&  // avec les descriptions ?
-					this.GetTableText (row+i, TableColumnKeys.ArticleDescription).IsNullOrEmpty)  // (*)
+						this.GetTableText (row+i, TableColumnKeys.ArticleDescription).IsNullOrEmpty)  // (*)
 					{
 						//	"Retardé 5 pces, le 25.12.2011"
 						this.SetTableText (row+i, TableColumnKeys.ArticleDescription, TextFormatter.FormatText (t, q, "le~", d));  // assez de place à disposition
 					}
 
 					if (this.HasOption (DocumentOption.ArticleAdditionalQuantities, "ToQuantityAndDescription") &&  // réparti ?
-					this.GetTableText (row+i, TableColumnKeys.MainQuantity).IsNullOrEmpty &&  // (*)
-					this.GetTableText (row+i, TableColumnKeys.ArticleDescription).IsNullOrEmpty)  // (*)
+						this.GetTableText (row+i, TableColumnKeys.MainQuantity).IsNullOrEmpty &&  // (*)
+						this.GetTableText (row+i, TableColumnKeys.ArticleDescription).IsNullOrEmpty)  // (*)
 					{
 						//	1) "−5 pces"
 						//	2) "Retardé, le 25.12.2011"

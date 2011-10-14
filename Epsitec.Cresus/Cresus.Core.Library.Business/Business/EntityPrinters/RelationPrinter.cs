@@ -40,6 +40,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				yield return DocumentOption.Orientation;
 				yield return DocumentOption.Specimen;
 				yield return DocumentOption.FontSize;
+				yield return DocumentOption.Language;
 
 				yield return DocumentOption.LeftMargin;
 				yield return DocumentOption.RightMargin;
@@ -136,7 +137,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 		private void BuildTitle()
 		{
 			//	Ajoute le titre dans le document.
-			string text = "?";
+			FormattedText text = "?";
 
 			if (this.Entity.Person is NaturalPersonEntity)
 			{
@@ -151,7 +152,8 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			}
 
 			var band = new TextBand ();
-			band.Text = TextFormatter.FormatText ("<b>", text, "</b>");
+			band.LanguageId = this.LanguageId;
+			band.Text = text.ApplyBold ();
 			band.FontSize = this.FontSize*2.0;
 
 			this.documentContainer.AddFromTop (band, 5.0);
@@ -175,6 +177,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			}
 
 			var band = new TextBand ();
+			band.LanguageId = this.LanguageId;
 			band.Text = text;
 			band.FontSize = this.FontSize*1.2;
 
@@ -206,11 +209,13 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			}
 
 			var title = new TextBand ();
+			title.LanguageId = this.LanguageId;
 			title.Text = TextFormatter.FormatText ("Adresses").ApplyBold ();
 			title.FontSize = this.FontSize*1.5;
 			this.documentContainer.AddFromTop (title, 1.0);
 
 			var table = new TableBand ();
+			table.LanguageId = this.LanguageId;
 			table.ColumnsCount = 5;
 			table.RowsCount = 1+count;
 			table.CellBorder = this.GetCellBorder ();
@@ -268,11 +273,13 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			}
 
 			var title = new TextBand ();
+			title.LanguageId = this.LanguageId;
 			title.Text = TextFormatter.FormatText ("Téléphones").ApplyBold ();
 			title.FontSize = this.FontSize*1.5;
 			this.documentContainer.AddFromTop (title, 1.0);
 
 			var table = new TableBand ();
+			table.LanguageId = this.LanguageId;
 			table.ColumnsCount = 3;
 			table.RowsCount = 1+count;
 			table.CellBorder = this.GetCellBorder ();
@@ -324,11 +331,13 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			}
 
 			var title = new TextBand ();
+			title.LanguageId = this.LanguageId;
 			title.Text = TextFormatter.FormatText ("Emails").ApplyBold ();
 			title.FontSize = this.FontSize*1.5;
 			this.documentContainer.AddFromTop (title, 1.0);
 
 			var table = new TableBand ();
+			table.LanguageId = this.LanguageId;
 			table.ColumnsCount = 2;
 			table.RowsCount = 1+count;
 			table.CellBorder = this.GetCellBorder ();

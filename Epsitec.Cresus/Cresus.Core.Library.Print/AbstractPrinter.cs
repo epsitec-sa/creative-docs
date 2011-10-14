@@ -273,13 +273,33 @@ namespace Epsitec.Cresus.Core.Print
 		}
 
 
-
 		#region Options reader
 		protected double FontSize
 		{
 			get
 			{
 				return this.GetOptionValue (DocumentOption.FontSize);
+			}
+		}
+
+		protected string LanguageId
+		{
+			//	Retourne la langue à utiliser pour imprimer le document.
+			get
+			{
+				var languageId = this.GetOptionText (DocumentOption.Language).ToString ();
+
+				if (languageId == "default")
+				{
+					languageId = null; 
+				}
+
+				if (string.IsNullOrEmpty (languageId))
+				{
+					languageId = TextFormatter.CurrentLanguageId;
+				}
+
+				return languageId;
 			}
 		}
 

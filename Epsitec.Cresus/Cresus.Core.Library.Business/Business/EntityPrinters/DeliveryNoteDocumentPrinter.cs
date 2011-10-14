@@ -52,6 +52,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 				yield return DocumentOption.Specimen;
 				yield return DocumentOption.FontSize;
+				yield return DocumentOption.Language;
 
 				yield return DocumentOption.LeftMargin;
 				yield return DocumentOption.RightMargin;

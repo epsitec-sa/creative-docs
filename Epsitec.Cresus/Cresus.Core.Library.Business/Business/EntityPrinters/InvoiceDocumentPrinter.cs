@@ -52,6 +52,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 				yield return DocumentOption.Specimen;
 				yield return DocumentOption.FontSize;
+				yield return DocumentOption.Language;
 
 				yield return DocumentOption.LeftMargin;
 				yield return DocumentOption.RightMargin;
@@ -387,6 +388,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			if (!conditions.IsNullOrEmpty)
 			{
 				var band = new TextBand ();
+				band.LanguageId = this.LanguageId;
 				band.Text = conditions;
 				band.FontSize = this.FontSize;
 

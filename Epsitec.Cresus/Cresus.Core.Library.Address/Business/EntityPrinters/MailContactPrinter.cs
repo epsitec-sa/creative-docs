@@ -33,6 +33,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				yield return DocumentOption.Orientation;
 				yield return DocumentOption.Specimen;
 				yield return DocumentOption.FontSize;
+				yield return DocumentOption.Language;
 
 				yield return DocumentOption.LeftMargin;
 				yield return DocumentOption.RightMargin;
@@ -118,6 +119,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 		{
 			//	Ajoute le résumé dans le document.
 			var band = new TextBand ();
+			band.LanguageId = this.LanguageId;
 			band.Text = this.Entity.GetSummary ();
 			band.FontSize = this.FontSize;
 

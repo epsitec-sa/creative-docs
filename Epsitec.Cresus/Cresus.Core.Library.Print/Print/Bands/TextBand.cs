@@ -38,8 +38,21 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 		public FormattedText Text
 		{
-			get;
-			set;
+			get
+			{
+				return this.text;
+			}
+			set
+			{
+				if (value.IsNullOrEmpty)
+				{
+					this.text = null;
+				}
+				else
+				{
+					this.text = this.GetMonolingualText (value);
+				}
+			}
 		}
 
 		public ContentAlignment Alignment
@@ -423,6 +436,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 		}
 
 
+		private FormattedText		text;
 		private double				width;
 		private List<SectionInfo>	sectionsInfo;
 		private double[]			heights;

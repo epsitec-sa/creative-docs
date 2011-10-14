@@ -19,6 +19,8 @@ namespace Epsitec.Cresus.Core.Documents
 
 		FontSize,						// dimension: taille de la police
 
+		Language,						// enum: default, fr, de, en, it
+
 		LeftMargin,						// distance
 		RightMargin,					// distance
 		TopMargin,						// distance

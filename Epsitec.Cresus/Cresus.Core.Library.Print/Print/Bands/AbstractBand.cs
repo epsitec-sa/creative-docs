@@ -28,10 +28,17 @@ namespace Epsitec.Cresus.Core.Print.Bands
 	{
 		public AbstractBand()
 		{
+			this.LanguageId = TextFormatter.CurrentLanguageId;
 			this.Font = Font.GetFont ("Arial", "Regular");
 			this.FontSize = 3.0;
 		}
 
+
+		public string LanguageId
+		{
+			get;
+			set;
+		}
 
 		public Font Font
 		{
@@ -106,6 +113,27 @@ namespace Epsitec.Cresus.Core.Print.Bands
 		public virtual bool PaintForeground(IPaintPort port, PreviewMode previewMode, int section, Point topLeft)
 		{
 			return true;
+		}
+
+
+		protected FormattedText GetMonolingualText(FormattedText text)
+		{
+			if (MultilingualText.IsMultilingual (text))
+			{
+				var multilingualText = new MultilingualText (text);
+				var monolingual = multilingualText.GetTextOrDefault (this.LanguageId);
+
+				if (monolingual.IsNullOrEmpty)
+				{
+					monolingual = multilingualText.GetTextOrDefault (TextFormatter.CurrentLanguageId);
+				}
+
+				return monolingual;
+			}
+			else
+			{
+				return text.ToString ();
+			}
 		}
 
 

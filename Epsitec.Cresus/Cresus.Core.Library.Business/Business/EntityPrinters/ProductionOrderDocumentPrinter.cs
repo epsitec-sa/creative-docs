@@ -52,6 +52,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 				yield return DocumentOption.Specimen;
 				yield return DocumentOption.FontSize;
+				yield return DocumentOption.Language;
 
 				yield return DocumentOption.LeftMargin;
 				yield return DocumentOption.RightMargin;
@@ -143,6 +144,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				var fontSize = this.GetOptionValue (DocumentOption.HeaderForFontSize);
 				firstColumnWidth *= fontSize/3;
 
+				band.LanguageId = this.LanguageId;
 				band.ColumnsCount = 2;
 				band.RowsCount = 1;
 				band.CellBorder = CellBorder.Default;
@@ -248,6 +250,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				var table = new TableBand ();
 				var fontSize = this.GetOptionValue (DocumentOption.SigningFontSize);
 
+				table.LanguageId = this.LanguageId;
 				table.ColumnsCount = 2;
 				table.RowsCount = 1;
 				table.CellBorder = CellBorder.Default;

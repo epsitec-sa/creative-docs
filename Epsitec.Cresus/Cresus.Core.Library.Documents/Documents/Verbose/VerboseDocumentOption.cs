@@ -236,6 +236,10 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 			list.Add (new VerboseDocumentOption (DocumentOption.Signing,         "Global.3", true, DocumentOptionValueType.Boolean,  "Cartouche pour visa avec signature", "Cartouche pour visa avec signature au bas de la page", "true"));
 			list.Add (new VerboseDocumentOption (DocumentOption.SigningFontSize, "Global.3", true, DocumentOptionValueType.Distance, "Cartouche, taille police",           "Taille de la police du cartouche au bas de la page",   "3"));
 
+			e = new string[] { "default", "fr", "de", "en", "ot" };
+			d = new string[] { "Par défaut", "Français", "Allemand", "Anglais", "Italien" };
+			list.Add (new VerboseDocumentOption (DocumentOption.Language, "Global.4", true, e, d, "Langue", "Langue dans laquelle sera imprimé le document", 0));
+
 			//	Ajoute les options pour l'en-tête.
 			list.Add (new VerboseDocumentOption ("En-tête", "Header"));
 

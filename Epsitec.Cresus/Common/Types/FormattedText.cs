@@ -510,10 +510,9 @@ namespace Epsitec.Common.Types
 		
 		#endregion
 
+
 		public static readonly FormattedText	Empty = new FormattedText ("");
-
 		public static readonly FormattedText	Null = new FormattedText (null);
-
 		public const string						HtmlBreak = "<br/>";
 		
 		private readonly string					text;
