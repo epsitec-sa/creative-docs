@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Core.Helpers
 
 		public static FormattedText GetArticleText(ArticleDocumentItemEntity article, bool replaceTags=false, bool shortDescription=false)
 		{
-			//	Retourne la désignation courte ou longue d'un article.
+			//	Retourne la désignation multilingue courte ou longue d'un article.
 			FormattedText description = FormattedText.Null;
 
 			if (shortDescription)  // description courte ?
@@ -127,8 +127,6 @@ namespace Epsitec.Cresus.Core.Helpers
 					description = article.ArticleDefinition.Description;
 				}
 			}
-
-			description = TextFormatter.FormatText (description);  // enlève les balises <div>, selon la langue
 
 			if (replaceTags)
 			{

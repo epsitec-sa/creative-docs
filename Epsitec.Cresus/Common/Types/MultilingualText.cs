@@ -205,8 +205,8 @@ namespace Epsitec.Common.Types
 				return FormattedText.Empty;
 			}
 
-			if ((this.texts.Count == 1) &&
-				(this.texts.ContainsKey (MultilingualText.DefaultLanguageId)))
+			if (this.texts.Count == 1 &&
+				this.texts.ContainsKey (MultilingualText.DefaultLanguageId))
 			{
 				return new FormattedText (this.texts[MultilingualText.DefaultLanguageId]);
 			}
@@ -234,6 +234,73 @@ namespace Epsitec.Common.Types
 		public override int GetHashCode()
 		{
 			return this.texts.GetHashCode ();
+		}
+
+
+		public static FormattedText Concat(params FormattedText[] values)
+		{
+			var result = values.First ();
+
+			for (int i = 1; i < values.Count (); i++)
+			{
+				result = MultilingualText.Concat (result, values[i]);
+			}
+
+			return result;
+		}
+
+		private static FormattedText Concat(FormattedText t1, FormattedText t2)
+		{
+			var m1 = new MultilingualText (t1);
+			var m2 = new MultilingualText (t2);
+
+			bool b1 = MultilingualText.IsMultilingual (t1);
+			bool b2 = MultilingualText.IsMultilingual (t2);
+
+			if (b1 && b2)
+			{
+				var result = new MultilingualText (t1);
+
+				foreach (var pair2 in m2.texts)
+				{
+					if (m1.texts.ContainsKey (pair2.Key))
+					{
+						result.texts[pair2.Key] = string.Concat (m1.texts[pair2.Key], pair2.Value);
+					}
+					else
+					{
+						result.texts.Add (pair2.Key, pair2.Value);
+					}
+				}
+
+				return result.GetGlobalText ();
+			}
+			else if (b1)
+			{
+				var result = new MultilingualText ();
+
+				foreach (var pair1 in m1.texts)
+				{
+					result.texts[pair1.Key] = string.Concat (m1.texts[pair1.Key], t2);
+				}
+
+				return result.GetGlobalText ();
+			}
+			else if (b2)
+			{
+				var result = new MultilingualText ();
+
+				foreach (var pair2 in m2.texts)
+				{
+					result.texts[pair2.Key] = string.Concat (t1, m2.texts[pair2.Key]);
+				}
+
+				return result.GetGlobalText ();
+			}
+			else
+			{
+				return FormattedText.Concat (t1, t2);
+			}
 		}
 
 
@@ -270,8 +337,7 @@ namespace Epsitec.Common.Types
 
 			foreach (var prefixedText in prefixedTexts)
 			{
-				if ((prefixedText.Length < 3) ||
-					(prefixedText[2] != ':'))
+				if (prefixedText.Length < 3 || prefixedText[2] != ':')
 				{
 					throw new System.FormatException (string.Format ("Argument '{0}' does not contain valid prefix", prefixedText));
 				}
@@ -344,8 +410,7 @@ namespace Epsitec.Common.Types
 				pos = end;
 			}
 
-			if ((pos == 0) ||
-				(pos < text.Length))
+			if (pos == 0 || pos < text.Length)
 			{
 				yield return MultilingualText.GetDivElement (MultilingualText.DefaultLanguageId, text.Substring (pos));
 			}
@@ -379,6 +444,64 @@ namespace Epsitec.Common.Types
 
 			return new KeyValuePair<string, string> (languageId, languageText);
 		}
+
+
+		#region Self test
+		static MultilingualText()
+		{
+			var m1 = new MultilingualText ();
+			m1.SetText ("fr", "bonjour");
+			m1.SetText ("en", "hello");
+
+			var m1i = new MultilingualText ();
+			m1i.SetText ("fr", "bonjour");
+			m1i.SetText ("it", "ciao");
+
+			var m2 = new MultilingualText ();
+			m2.SetText ("fr", "Jean");
+			m2.SetText ("en", "John");
+
+			{
+				var t = MultilingualText.Concat ("");
+				System.Diagnostics.Debug.Assert (t == "");
+			}
+
+			{
+				var t = MultilingualText.Concat ("abc");
+				System.Diagnostics.Debug.Assert (t == "abc");
+			}
+
+			{
+				var t = MultilingualText.Concat ("ab", "", "cd");
+				System.Diagnostics.Debug.Assert (t == "abcd");
+			}
+
+			{
+				var t = MultilingualText.Concat ("", "ab", "cd");
+				System.Diagnostics.Debug.Assert (t == "abcd");
+			}
+
+			{
+				var t = MultilingualText.Concat ("ab", "cd", "ef");
+				System.Diagnostics.Debug.Assert (t == "abcdef");
+			}
+
+			{
+				var t = MultilingualText.Concat (m1.GetGlobalText (), " ", m2.GetGlobalText ());
+				System.Diagnostics.Debug.Assert (t == "<div lang=\"en\">hello John</div><div lang=\"fr\">bonjour Jean</div>");
+			}
+
+			{
+				var t = MultilingualText.Concat (m1i.GetGlobalText (), " ", m2.GetGlobalText ());
+				System.Diagnostics.Debug.Assert (t == "<div lang=\"en\">John</div><div lang=\"fr\">bonjour Jean</div><div lang=\"it\">ciao </div>");
+			}
+
+			{
+				var t = MultilingualText.Concat (m1.GetGlobalText (), m1i.GetGlobalText (), " ", m2.GetGlobalText ());
+				System.Diagnostics.Debug.Assert (t == "<div lang=\"en\">hello John</div><div lang=\"fr\">bonjourbonjour Jean</div><div lang=\"it\">ciao </div>");
+			}
+		}
+		#endregion
 
 
 		public static readonly string DefaultLanguageId = "*";

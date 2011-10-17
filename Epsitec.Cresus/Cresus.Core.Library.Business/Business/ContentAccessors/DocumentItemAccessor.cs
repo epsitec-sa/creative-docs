@@ -750,8 +750,9 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			}
 			else if (this.mode.HasFlag (DocumentItemAccessorMode.UseArticleBoth))
 			{
-				description = description.AppendLineIfNotNull (line.ArticleNameCache);
-				description = description.AppendLineIfNotNull (line.ArticleDescriptionCache);
+				//?description = description.AppendLineIfNotNull (line.ArticleNameCache);
+				//?description = description.AppendLineIfNotNull (line.ArticleDescriptionCache);
+				description = MultilingualText.Concat (line.ArticleNameCache, FormattedText.HtmlBreak, line.ArticleDescriptionCache);
 			}
 			
 			return description;
