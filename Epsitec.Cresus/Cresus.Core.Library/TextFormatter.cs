@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public static FormattedText GetSinglelingualText(FormattedText text, string languageId)
+		public static FormattedText GetMonolingualText(FormattedText text, string languageId)
 		{
 			if (MultilingualText.IsMultilingual (text))
 			{

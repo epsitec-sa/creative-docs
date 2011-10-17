@@ -837,7 +837,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		private void SetContent(int row, DocumentItemAccessorColumn column, FormattedText text)
 		{
 			//	Modifie le contenu d'une cellule.
-			text = TextFormatter.GetSinglelingualText (text, this.languageId);
+			text = TextFormatter.GetMonolingualText (text, this.languageId);
 
 			if (text != null && !text.IsNullOrEmpty)
 			{
