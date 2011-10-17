@@ -237,6 +237,11 @@ namespace Epsitec.Common.Types
 		}
 
 
+		/// <summary>
+		/// Retourne la concaténation de plusieurs textes monolingues ou multilingues.
+		/// </summary>
+		/// <param name="values">The multilingual texts.</param>
+		/// <returns>The multilingual (global) text.</returns>
 		public static FormattedText Concat(params FormattedText[] values)
 		{
 			var result = values.First ();
@@ -257,7 +262,7 @@ namespace Epsitec.Common.Types
 			bool b1 = MultilingualText.IsMultilingual (t1);
 			bool b2 = MultilingualText.IsMultilingual (t2);
 
-			if (b1 && b2)
+			if (b1 && b2)  // multi + multi ?
 			{
 				var result = new MultilingualText (t1);
 
@@ -275,7 +280,7 @@ namespace Epsitec.Common.Types
 
 				return result.GetGlobalText ();
 			}
-			else if (b1)
+			else if (b1)  // multi + mono ?
 			{
 				var result = new MultilingualText ();
 
@@ -286,7 +291,7 @@ namespace Epsitec.Common.Types
 
 				return result.GetGlobalText ();
 			}
-			else if (b2)
+			else if (b2)  // mono + multi ?
 			{
 				var result = new MultilingualText ();
 
@@ -297,7 +302,7 @@ namespace Epsitec.Common.Types
 
 				return result.GetGlobalText ();
 			}
-			else
+			else  // mono + mono ?
 			{
 				return FormattedText.Concat (t1, t2);
 			}
@@ -487,30 +492,30 @@ namespace Epsitec.Common.Types
 			}
 
 			{
-				var t = MultilingualText.Concat (m1.GetGlobalText (), " ", m2.GetGlobalText ());
-				System.Diagnostics.Debug.Assert (t == "<div lang=\"en\">hello John</div><div lang=\"fr\">bonjour Jean</div>");
+				var t = MultilingualText.Concat (m1.GetGlobalText (), "_", m2.GetGlobalText ());
+				System.Diagnostics.Debug.Assert (t == "<div lang=\"en\">hello_John</div><div lang=\"fr\">bonjour_Jean</div>");
 			}
 
 			{
-				var t = MultilingualText.Concat (m1i.GetGlobalText (), " ", m2.GetGlobalText ());
-				System.Diagnostics.Debug.Assert (t == "<div lang=\"en\">John</div><div lang=\"fr\">bonjour Jean</div><div lang=\"it\">ciao </div>");
+				var t = MultilingualText.Concat (m1i.GetGlobalText (), "_", m2.GetGlobalText ());
+				System.Diagnostics.Debug.Assert (t == "<div lang=\"en\">John</div><div lang=\"fr\">bonjour_Jean</div><div lang=\"it\">ciao_</div>");
 			}
 
 			{
-				var t = MultilingualText.Concat (m1.GetGlobalText (), m1i.GetGlobalText (), " ", m2.GetGlobalText ());
-				System.Diagnostics.Debug.Assert (t == "<div lang=\"en\">hello John</div><div lang=\"fr\">bonjourbonjour Jean</div><div lang=\"it\">ciao </div>");
+				var t = MultilingualText.Concat (m1.GetGlobalText (), m1i.GetGlobalText (), "_", m2.GetGlobalText ());
+				System.Diagnostics.Debug.Assert (t == "<div lang=\"en\">hello_John</div><div lang=\"fr\">bonjourbonjour_Jean</div><div lang=\"it\">ciao_</div>");
 			}
 		}
 		#endregion
 
 
-		public static readonly string DefaultLanguageId = "*";
-		
-		private const string DivBeginWithLanguageAttribute = MultilingualText.DivBegin + MultilingualText.LanguageAttribute;
-		private const string LanguageAttribute = "lang=";
-		private const string DivBegin = "<div ";
-		private const string DivEnd   = "</div>";
+		public static readonly string DefaultLanguageId		= "*";
 
-		private readonly Dictionary<string, string> texts;
+		private const string DivBeginWithLanguageAttribute	= MultilingualText.DivBegin + MultilingualText.LanguageAttribute;  // "<div lang="
+		private const string LanguageAttribute				= "lang=";
+		private const string DivBegin						= "<div ";
+		private const string DivEnd							= "</div>";
+
+		private readonly Dictionary<string, string> texts;  // key=LanguageId, value=Text
 	}
 }

@@ -750,9 +750,21 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			}
 			else if (this.mode.HasFlag (DocumentItemAccessorMode.UseArticleBoth))
 			{
-				//?description = description.AppendLineIfNotNull (line.ArticleNameCache);
-				//?description = description.AppendLineIfNotNull (line.ArticleDescriptionCache);
-				description = MultilingualText.Concat (line.ArticleNameCache, FormattedText.HtmlBreak, line.ArticleDescriptionCache);
+				if (line.ArticleNameCache.IsNullOrEmpty && line.ArticleDescriptionCache.IsNullOrEmpty)  // (name = null) + (description = null) ?
+				{
+				}
+				else if (line.ArticleNameCache.IsNullOrEmpty)  // (name = null) + (description = exist) ?
+				{
+					description = line.ArticleDescriptionCache;
+				}
+				else if (line.ArticleDescriptionCache.IsNullOrEmpty)  // (name = exist) + (description = null) ?
+				{
+					description = line.ArticleNameCache;
+				}
+				else  // (name = exist) + (description = exist) ?
+				{
+					description = MultilingualText.Concat (line.ArticleNameCache, FormattedText.HtmlBreak, line.ArticleDescriptionCache);
+				}
 			}
 			
 			return description;
