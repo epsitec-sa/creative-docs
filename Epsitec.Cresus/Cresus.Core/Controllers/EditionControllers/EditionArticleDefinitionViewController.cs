@@ -32,11 +32,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			wall.AddBrick ()
 				.Input ()
-				  .HorizontalGroup ("N° de l'article (principal, externe et interne)")
-					.Field (x => x.IdA).Width (72)
-					.Field (x => x.IdB).Width (72)
-					.Field (x => x.IdC).Width (72)
-				  .End ()
+				  .Title ("N° de l'article")
+				  .Field (x => x.IdA)
 
 				  .Field (x => x.ArticleParameterDefinitions)
 
