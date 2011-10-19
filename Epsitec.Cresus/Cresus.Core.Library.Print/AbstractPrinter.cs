@@ -315,11 +315,25 @@ namespace Epsitec.Cresus.Core.Print
 		}
 
 
-		protected string GetString(params string[] path)
+		protected string GetString(string field)
 		{
 			//	Retourne un texte contenu dans les ressources de Cresus.Core.Library.Documents.
 			// TODO: Comment tenir compte de this.LanguageId ???
-			return Cresus.Core.Library.Documents.Res.Strings.GetString (path);
+#if false
+			var twoLetterCode = this.LanguageId;
+
+			if (string.IsNullOrEmpty (twoLetterCode))
+			{
+				twoLetterCode = "fr";
+			}
+
+			var culture = Resources.FindCultureInfo (twoLetterCode);
+			var bundle = Cresus.Core.Library.Documents.Res.Manager.GetBundle (field, ResourceLevel.Default, culture);
+			// TODO: Pourquoi bundle est toujours null ?
+			return bundle[field].AsString;
+#else
+			return Cresus.Core.Library.Documents.Res.Strings.GetString (field);
+#endif
 		}
 
 
