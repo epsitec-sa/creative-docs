@@ -315,6 +315,14 @@ namespace Epsitec.Cresus.Core.Print
 		}
 
 
+		protected string GetString(params string[] path)
+		{
+			//	Retourne un texte contenu dans les ressources de Cresus.Core.Library.Documents.
+			// TODO: Comment tenir compte de this.LanguageId ???
+			return Cresus.Core.Library.Documents.Res.Strings.GetString (path);
+		}
+
+
 		#region Options reader
 		protected double FontSize
 		{

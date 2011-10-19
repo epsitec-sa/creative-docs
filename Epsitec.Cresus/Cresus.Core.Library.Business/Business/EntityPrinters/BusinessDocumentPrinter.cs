@@ -656,34 +656,34 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			switch (columnKey)
 			{
 				case TableColumnKeys.LineNumber:
-					return "N°";
+					return this.GetString ("BusinessDocument.Column.LineNumber");
 
 				case TableColumnKeys.MainQuantity:
-					return "Quantité";
+					return this.GetString ("BusinessDocument.Column.MainQuantity");
 
 				case TableColumnKeys.AdditionalType:
-					return "Autres quantités";
+					return this.GetString ("BusinessDocument.Column.AdditionaQuantities");
 
 				case TableColumnKeys.ArticleId:
-					return "Article";
+					return this.GetString ("BusinessDocument.Column.ArticleId");
 
 				case TableColumnKeys.ArticleDescription:
-					return "Désignation";
+					return this.GetString ("BusinessDocument.Column.ArticleDescription");
 
 				case TableColumnKeys.UnitPrice:
-					return this.Entity.IsExcludingTax ? "p.u. HT" : "p.u. TTC";
+					return this.GetString (this.Entity.IsExcludingTax ? "BusinessDocument.Column.UnitPriceExcludingTax" : "BusinessDocument.Column.UnitPriceIncludingTax");
 
 				case TableColumnKeys.Discount:
-					return "Rabais";
+					return this.GetString ("BusinessDocument.Column.Discount");
 
 				case TableColumnKeys.LinePrice:
-					return this.Entity.IsExcludingTax ? "Prix HT" : "Prix TTC";
+					return this.GetString (this.Entity.IsExcludingTax ? "BusinessDocument.Column.LinePriceExcludingTax" : "BusinessDocument.Column.LinePriceIncludingTax");
 
 				case TableColumnKeys.Vat:
-					return "TVA";
+					return this.GetString ("BusinessDocument.Column.Vat");
 
 				case TableColumnKeys.Total:
-					return "Total";
+					return this.GetString ("BusinessDocument.Column.Total");
 
 				default:
 					return "";

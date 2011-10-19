@@ -555,6 +555,108 @@ namespace Epsitec.Cresus.Core.Library.Documents
 		
 		public static class Strings
 		{
+			public static class BusinessDocument
+			{
+				public static class Column
+				{
+					//	designer:str/HVK2
+					public static global::Epsitec.Common.Types.FormattedText AdditionalQuantities
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Documents.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544322));
+						}
+					}
+					//	designer:str/HVK4
+					public static global::Epsitec.Common.Types.FormattedText ArticleDescription
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Documents.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544324));
+						}
+					}
+					//	designer:str/HVK3
+					public static global::Epsitec.Common.Types.FormattedText ArticleId
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Documents.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544323));
+						}
+					}
+					//	designer:str/HVK7
+					public static global::Epsitec.Common.Types.FormattedText Discount
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Documents.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544327));
+						}
+					}
+					//	designer:str/HVK
+					public static global::Epsitec.Common.Types.FormattedText LineNumber
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Documents.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544320));
+						}
+					}
+					//	designer:str/HVK8
+					public static global::Epsitec.Common.Types.FormattedText LinePriceExcludingTax
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Documents.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544328));
+						}
+					}
+					//	designer:str/HVK9
+					public static global::Epsitec.Common.Types.FormattedText LinePriceIncludingTax
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Documents.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544329));
+						}
+					}
+					//	designer:str/HVK1
+					public static global::Epsitec.Common.Types.FormattedText MainQuantity
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Documents.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544321));
+						}
+					}
+					//	designer:str/HVKB
+					public static global::Epsitec.Common.Types.FormattedText Total
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Documents.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544331));
+						}
+					}
+					//	designer:str/HVK5
+					public static global::Epsitec.Common.Types.FormattedText UnitPriceExcludingTax
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Documents.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544325));
+						}
+					}
+					//	designer:str/HVK6
+					public static global::Epsitec.Common.Types.FormattedText UnitPriceIncludingTax
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Documents.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544326));
+						}
+					}
+					//	designer:str/HVKA
+					public static global::Epsitec.Common.Types.FormattedText Vat
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Documents.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544330));
+						}
+					}
+				}
+			}
 			
 			public static global::Epsitec.Common.Types.FormattedText GetText(params string[] path)
 			{
