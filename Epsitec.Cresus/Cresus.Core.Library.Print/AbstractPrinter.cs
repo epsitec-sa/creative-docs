@@ -214,12 +214,33 @@ namespace Epsitec.Cresus.Core.Print
 			var initial = port.Transform;
 			port.Transform = port.Transform.MultiplyByPostfix (Transform.CreateRotationRadTransform (angle, bounds.Center));
 
+			string text;
+			double factor;
+
+			switch (this.LanguageId)
+            {
+				case "de":
+					text = "ENTWURF";
+					factor = 6.0;
+					break;
+
+				case "en":
+					text = "DRAFT";
+					factor = 5.0;
+					break;
+
+				default:
+					text = "BROUILLON";
+					factor = 7.5;
+					break;
+            }
+
 			var layout = new TextLayout
 			{
-				Text = "BROUILLON",
+				Text = text,
 				DefaultColor = Color.FromBrightness (this.PreviewMode == PreviewMode.Print ? 0.80 : 0.95),  // plus foncé si impression réelle
 				DefaultFont = Font.GetFont ("Arial", "Bold"),
-				DefaultFontSize = diagonal / 7.5,
+				DefaultFontSize = diagonal / factor,
 				Alignment = ContentAlignment.MiddleCenter,
 				LayoutSize = bounds.Size,
 			};
@@ -240,12 +261,33 @@ namespace Epsitec.Cresus.Core.Print
 			var initial = port.Transform;
 			port.Transform = port.Transform.MultiplyByPostfix (Transform.CreateRotationRadTransform (angle, bounds.Center));
 
+			string text;
+			double factor;
+
+			switch (this.LanguageId)
+			{
+				case "de":
+					text = "PROBE";
+					factor = 5.0;
+					break;
+
+				case "en":
+					text = "SPECIMEN";
+					factor = 6.5;
+					break;
+
+				default:
+					text = "SPÉCIMEN";
+					factor = 6.5;
+					break;
+			}
+
 			var layout = new TextLayout
 			{
-				Text = "SPECIMEN",
+				Text = text,
 				DefaultColor = Color.FromBrightness (this.PreviewMode == PreviewMode.Print ? 0.80 : 0.95),  // plus foncé si impression réelle
 				DefaultFont = Font.GetFont ("Arial", "Bold"),
-				DefaultFontSize = diagonal / 6.5,
+				DefaultFontSize = diagonal / factor,
 				Alignment = ContentAlignment.MiddleCenter,
 				LayoutSize = bounds.Size,
 			};

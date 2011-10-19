@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 		{
 			get
 			{
-				return FormattedText.Concat (InvoiceDocumentHelper.GetDocumentName (this.Metadata), " ", this.Metadata.IdA).ToSimpleText ();
+				return FormattedText.Concat (InvoiceDocumentHelper.GetDocumentName (this.Metadata, this.LanguageId), " ", this.Metadata.IdA).ToSimpleText ();
 			}
 		}
 
@@ -588,7 +588,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 		{
 			get
 			{
-				return InvoiceDocumentHelper.GetTitle (this.Metadata, this.Entity, null);
+				return InvoiceDocumentHelper.GetTitle (this.Metadata, this.Entity, null, this.LanguageId);
 			}
 		}
 

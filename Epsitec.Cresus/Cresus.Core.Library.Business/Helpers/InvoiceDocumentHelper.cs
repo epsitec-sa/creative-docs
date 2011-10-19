@@ -8,6 +8,8 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Library;
+
 using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
@@ -17,17 +19,17 @@ namespace Epsitec.Cresus.Core.Helpers
 {
 	public static class InvoiceDocumentHelper
 	{
-		public static FormattedText GetTitle(DocumentMetadataEntity metadata, BusinessDocumentEntity x, PaymentTransactionEntity billingDetails)
+		public static FormattedText GetTitle(DocumentMetadataEntity metadata, BusinessDocumentEntity x, PaymentTransactionEntity billingDetails, string languageId)
 		{
 			//	Retourne le titre du document imprimé.
 			//	Par exemple "Facture 10256", "Offre 10257" ou "Bon pour commande 10258".
-			var doc = InvoiceDocumentHelper.GetDocumentName (metadata);
+			var doc = InvoiceDocumentHelper.GetDocumentName (metadata, languageId);
 			var title = TextFormatter.FormatText (string.Concat ("<b>", doc), metadata.IdA, "/~", metadata.IdB, "/~", metadata.IdC, "</b>").ToString ();
 
 			return FormattedText.Concat (title, " ", InvoiceDocumentHelper.GetInstalmentName (x, billingDetails, true));
 		}
 
-		public static FormattedText GetDocumentName(DocumentMetadataEntity metadata)
+		public static FormattedText GetDocumentName(DocumentMetadataEntity metadata, string languageId)
 		{
 			//	Retourne le nom du document imprimé.
 			//	Par exemple "Facture", "Offre" ou "Bon pour commande".
@@ -38,6 +40,17 @@ namespace Epsitec.Cresus.Core.Helpers
 			}
 			else
 			{
+				// TODO: Comment faire pour obtenir le nom du document selon la langue ???
+#if false
+				var enumKeyValue = EnumKeyValues.GetEnumKeyValue (metadata.DocumentCategory.DocumentType);
+				FormattedText[] texts = enumKeyValue.Values;
+
+				Epsitec.Common.Support.ResourceAccessors.StructuredTypeResourceAccessor accessor = new Epsitec.Common.Support.ResourceAccessors.StructuredTypeResourceAccessor ();
+				CultureMap map = accessor.Collection[Epsitec.Common.Support.Res.Types.ResourceStructuredType.CaptionId];
+				StructuredData data = map.GetCultureData (languageId);
+				string t = data.GetValue (Epsitec.Common.Support.Res.Fields.ResourceBase.Comment) as string;
+#endif
+
 				return metadata.DocumentCategory.Name;
 			}
 		}

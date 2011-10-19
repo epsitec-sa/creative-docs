@@ -175,7 +175,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 		{
 			get
 			{
-				return InvoiceDocumentHelper.GetTitle (this.Metadata, this.Entity, this.paymentTransactionEntity);
+				return InvoiceDocumentHelper.GetTitle (this.Metadata, this.Entity, this.paymentTransactionEntity, this.LanguageId);
 			}
 		}
 
@@ -455,7 +455,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			isr.PaintIsrSimulator = this.HasOption (DocumentOption.IsrFacsimile);
 			isr.From = this.Entity.BillToMailContact.GetSummary ();
 			isr.To = this.paymentTransactionEntity.PaymentDetail.PaymentCategory.IsrDefinition.SubscriberAddress;
-			isr.Communication = InvoiceDocumentHelper.GetTitle (this.Metadata, this.Entity, this.paymentTransactionEntity);
+			isr.Communication = InvoiceDocumentHelper.GetTitle (this.Metadata, this.Entity, this.paymentTransactionEntity, this.LanguageId);
 
 			isr.Slip = new IsrSlip (this.paymentTransactionEntity);
 			isr.NotForUse = mackle;  // pour imprimer "XXXXX XX" sur un faux BVR
