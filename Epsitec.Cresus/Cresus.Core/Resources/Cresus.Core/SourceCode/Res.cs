@@ -48,6 +48,8 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Widgets.Command ShowCurrency = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 38));
 				//	designer:cap/L0A23
 				public static readonly global::Epsitec.Common.Widgets.Command ShowCustomer = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 98));
+				//	designer:cap/L0K32
+				public static readonly global::Epsitec.Common.Widgets.Command ShowCustomerCategory = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 67));
 				//	designer:cap/L0KS
 				public static readonly global::Epsitec.Common.Widgets.Command ShowDocumentCategory = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 28));
 				//	designer:cap/L0K51
@@ -90,6 +92,8 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Widgets.Command ShowPersonTitle = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 53));
 				//	designer:cap/L0KM
 				public static readonly global::Epsitec.Common.Widgets.Command ShowPriceCalculator = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 22));
+				//	designer:cap/L0K42
+				public static readonly global::Epsitec.Common.Widgets.Command ShowPriceDiscount = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 68));
 				//	designer:cap/L0K02
 				public static readonly global::Epsitec.Common.Widgets.Command ShowPriceGroup = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 64));
 				//	designer:cap/L0KM1
@@ -211,6 +215,8 @@ namespace Epsitec.Cresus.Core
 				public const long ShowCurrency = 0x1500014000026L;
 				//	designer:cap/L0A23
 				public const long ShowCustomer = 0x150000A000062L;
+				//	designer:cap/L0K32
+				public const long ShowCustomerCategory = 0x1500014000043L;
 				//	designer:cap/L0KS
 				public const long ShowDocumentCategory = 0x150001400001CL;
 				//	designer:cap/L0K51
@@ -253,6 +259,8 @@ namespace Epsitec.Cresus.Core
 				public const long ShowPersonTitle = 0x1500014000035L;
 				//	designer:cap/L0KM
 				public const long ShowPriceCalculator = 0x1500014000016L;
+				//	designer:cap/L0K42
+				public const long ShowPriceDiscount = 0x1500014000044L;
 				//	designer:cap/L0K02
 				public const long ShowPriceGroup = 0x1500014000040L;
 				//	designer:cap/L0KM1
