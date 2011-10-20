@@ -318,19 +318,19 @@ namespace Epsitec.Cresus.Core.Print
 		protected string GetString(string field)
 		{
 			//	Retourne un texte contenu dans les ressources de Cresus.Core.Library.Documents.
-			// TODO: Comment tenir compte de this.LanguageId ???
-#if false
-			var twoLetterCode = this.LanguageId;
+#if true
+			// TODO: [check-PA] il serait prudent que Pierre vérifie le code ci-dessous !
+			var culture = Resources.FindCultureInfo (this.LanguageId);
+			var bundle = Epsitec.Cresus.Core.Library.Documents.Res.Manager.GetBundle ("Strings", (this.LanguageId == "fr") ? ResourceLevel.Default : ResourceLevel.Merged, culture);
 
-			if (string.IsNullOrEmpty (twoLetterCode))
+			if (bundle == null)
 			{
-				twoLetterCode = "fr";
+				return null;
 			}
-
-			var culture = Resources.FindCultureInfo (twoLetterCode);
-			var bundle = Cresus.Core.Library.Documents.Res.Manager.GetBundle (field, ResourceLevel.Default, culture);
-			// TODO: Pourquoi bundle est toujours null ?
-			return bundle[field].AsString;
+			else
+			{
+				return bundle[field].AsString;
+			}
 #else
 			return Cresus.Core.Library.Documents.Res.Strings.GetString (field);
 #endif

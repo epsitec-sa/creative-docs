@@ -40,18 +40,26 @@ namespace Epsitec.Cresus.Core.Helpers
 			}
 			else
 			{
-				// TODO: Comment faire pour obtenir le nom du document selon la langue ???
-#if false
-				var enumKeyValue = EnumKeyValues.GetEnumKeyValue (metadata.DocumentCategory.DocumentType);
-				FormattedText[] texts = enumKeyValue.Values;
+#if true
+				// TODO: [check-PA] il serait prudent que Pierre vérifie le code ci-dessous !
+				var culture = Resources.FindCultureInfo (languageId);
+				var bundle = Epsitec.Cresus.Core.Library.Documents.Res.Manager.GetBundle ("Captions", (languageId == "fr") ? ResourceLevel.Default : ResourceLevel.Merged, culture);
 
-				Epsitec.Common.Support.ResourceAccessors.StructuredTypeResourceAccessor accessor = new Epsitec.Common.Support.ResourceAccessors.StructuredTypeResourceAccessor ();
-				CultureMap map = accessor.Collection[Epsitec.Common.Support.Res.Types.ResourceStructuredType.CaptionId];
-				StructuredData data = map.GetCultureData (languageId);
-				string t = data.GetValue (Epsitec.Common.Support.Res.Fields.ResourceBase.Comment) as string;
-#endif
+				string field = string.Concat ("Val.DocumentType.", metadata.DocumentCategory.DocumentType.ToString ());
 
+				if (bundle == null)
+				{
+					return null;
+				}
+				else
+				{
+					var caption = new Caption ();
+					caption.DeserializeFromString (bundle[field].AsString);
+					return caption.DefaultLabel;
+				}
+#else
 				return metadata.DocumentCategory.Name;
+#endif
 			}
 		}
 
