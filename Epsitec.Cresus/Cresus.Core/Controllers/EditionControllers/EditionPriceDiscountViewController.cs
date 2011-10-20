@@ -18,8 +18,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .Field (x => x.Text)
 				  .Field (x => x.DiscountRate)
 				  .Field (x => x.Value)
-				  //?.Field (x => x.DiscountPolicy)
-				  //?.Field (x => x.RoundingMode)
+				  .Field (x => x.DiscountPolicy)
+				  .Field (x => x.RoundingMode)
 				.End ()
 				;
 		}

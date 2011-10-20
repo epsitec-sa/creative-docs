@@ -28,9 +28,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			wall.AddBrick ()
 				.Input ()
-				  .Title ("N° de l'affaire")
-				  .Field (x => x.IdA)
-
+				  .Title ("N° de l'affaire").Field (x => x.IdA)
 				  .Field (x => x.DebtorBookAccount)
 				.End ()
 				;

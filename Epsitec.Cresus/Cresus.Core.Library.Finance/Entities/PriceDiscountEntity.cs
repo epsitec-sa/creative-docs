@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			if (this.DiscountRate.HasValue)
 			{
-				return TextFormatter.FormatText (this.Text, "~,", this.DiscountRate, "%");
+				return TextFormatter.FormatText (this.Text, "~,", this.DiscountRate*100, "%");
 			}
 			else if (this.Value.HasValue)
 			{

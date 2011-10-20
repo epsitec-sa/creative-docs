@@ -32,9 +32,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			wall.AddBrick ()
 				.Input ()
-				  .Title ("N° de l'article")
-				  .Field (x => x.IdA)
-
+				  .Title ("N° de l'article").Field (x => x.IdA)
 				  .Field (x => x.ArticleParameterDefinitions)
 
 				  // TODO: ne pas utiliser un 'special controller' pour ça !

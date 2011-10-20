@@ -21,9 +21,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Input ()
 				  .Field (x => x.Name)
 				  .Field (x => x.Description)
-				  //?.Field (x => x.DefaultPaymentCategory)
-				  //?.Field (x => x.Discounts)
-				  //?.Field (x => x.PriceGroup)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.DefaultPaymentCategory)
+				  .Field (x => x.Discounts)
+				  .Field (x => x.PriceGroup)
 				.End ()
 				;
 		}

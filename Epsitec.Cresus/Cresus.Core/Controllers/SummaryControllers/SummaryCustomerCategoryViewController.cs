@@ -22,21 +22,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<CustomerCategoryEntity> wall)
 		{
 			wall.AddBrick ();
-
-#if false
-			wall.AddBrick (x => x.DefaultPaymentCategory)
-				.Template ()
-				.End ();
-				;
-			wall.AddBrick (x => x.Discounts)
-				.Template ()
-				.End ()
-				;
-			wall.AddBrick (x => x.PriceGroup)
-				.Template ()
-				.End ()
-				;
-#endif
 		}
 	}
 }

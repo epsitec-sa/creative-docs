@@ -19,9 +19,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			wall.AddBrick ()
 				.Input ()
-				  .Title ("N° de client")
-				  .Field (x => x.IdA)
-
+				  .Title ("N° de client").Field (x => x.IdA)
+				  .Field (x => x.CustomerCategory)
 				  .Field (x => x.DefaultDebtorBookAccount)
 				.End ()
 				.Include (x => x.MainRelation)
