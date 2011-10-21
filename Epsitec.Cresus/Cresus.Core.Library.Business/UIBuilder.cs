@@ -1191,8 +1191,9 @@ namespace Epsitec.Cresus.Core
 			Widget widget;
 			Button tileButton;
 			
-			if (controller.GetPossibleItems().Count () <= 5)
+			if (controller.GetPossibleItems().Count () <= 5)  // limite arbitraire !
 			{
+				//	S'il y a 5 choix ou moins, on utilise un ItemPicker, qui crée des CheckButtons.
 				var picker = this.CreateDetailedItemPicker (tile, label, cardinality, out tileButton);
 
 				controller.Attach (picker);
@@ -1210,6 +1211,8 @@ namespace Epsitec.Cresus.Core
 			}
 			else
 			{
+				//	S'il y a plus de 5 choix, on utilise un ItemPickerCombo, qui crée un TextFieldCombo
+				//	qui occupera une place très réduite.
 				var picker = this.CreateDetailedItemPickerCombo (tile, label, cardinality, out tileButton);
 
 				controller.Attach (picker);
