@@ -23,42 +23,22 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionAffairViewController : EditionViewController<Entities.AffairEntity>
 	{
-#if true
 		protected override void CreateBricks(BrickWall<AffairEntity> wall)
 		{
 			wall.AddBrick ()
 				.Input ()
 				  .Title ("N° de l'affaire").Field (x => x.IdA)
+				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.ActiveSalesRepresentative)
+				  .Field (x => x.ActiveAffairOwner)
+				.End ()
+				.Separator ()
+				.Input ()
 				  .Field (x => x.DebtorBookAccount)
 				.End ()
 				;
 		}
-#else
-		protected override void CreateUI()
-		{
-			using (var builder = new UIBuilder (this))
-			{
-				builder.CreateHeaderEditorTile ();
-				builder.CreateEditionTitleTile ("Data.Affair", "Affaire");
-
-				this.CreateUIMain (builder);
-
-				builder.CreateFooterEditorTile ();
-			}
-		}
-
-		private void CreateUIMain(Epsitec.Cresus.Core.UIBuilder builder)
-		{
-			var tile = builder.CreateEditionTile ();
-
-			FrameBox group = builder.CreateGroup (tile, "N° de l'affaire (principal, externe et interne)");
-			builder.CreateTextField (group, DockStyle.Left, 74, Marshaler.Create (() => this.Entity.IdA));
-			builder.CreateTextField (group, DockStyle.Left, 74, Marshaler.Create (() => this.Entity.IdB, x => this.Entity.IdB = x));
-			builder.CreateTextField (group, DockStyle.Left, 74, Marshaler.Create (() => this.Entity.IdC, x => this.Entity.IdC = x));
-
-			builder.CreateMargin (tile, horizontalSeparator: true);
-			builder.CreateAccountEditor (tile, "Compte débiteur pour la comptabilisation", Marshaler.Create (() => this.Entity.DefaultDebtorBookAccount, x => this.Entity.DefaultDebtorBookAccount = x));
-		}
-#endif
 	}
 }
