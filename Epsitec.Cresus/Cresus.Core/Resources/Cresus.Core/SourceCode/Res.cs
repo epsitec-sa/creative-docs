@@ -86,6 +86,8 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Widgets.Command ShowPaymentCategory = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 50));
 				//	designer:cap/L0KJ1
 				public static readonly global::Epsitec.Common.Widgets.Command ShowPaymentReminderDefinition = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 51));
+				//	designer:cap/L0K52
+				public static readonly global::Epsitec.Common.Widgets.Command ShowPeopleCategory = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 69));
 				//	designer:cap/L0KK1
 				public static readonly global::Epsitec.Common.Widgets.Command ShowPersonGender = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 52));
 				//	designer:cap/L0KL1
@@ -253,6 +255,8 @@ namespace Epsitec.Cresus.Core
 				public const long ShowPaymentCategory = 0x1500014000032L;
 				//	designer:cap/L0KJ1
 				public const long ShowPaymentReminderDefinition = 0x1500014000033L;
+				//	designer:cap/L0K52
+				public const long ShowPeopleCategory = 0x1500014000045L;
 				//	designer:cap/L0KK1
 				public const long ShowPersonGender = 0x1500014000034L;
 				//	designer:cap/L0KL1

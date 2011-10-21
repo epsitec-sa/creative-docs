@@ -99,6 +99,7 @@
     <Compile Include="CommandHandlers\NavigationCommandHandler.cs" />
     <Compile Include="Controllers\CreationControllers\CreationArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationCustomerViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionPeopleCategoryViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPriceDiscountViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionCustomerCategoryViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAccountingOperationViewController.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="Controllers\EditionControllers\EditionVatDefinitionViewController.cs" />
     <Compile Include="Controllers\RibbonViewController.cs" />
     <Compile Include="Controllers\RibbonViewMode.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryPoepleCategoryViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryPriceDiscountViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryCustomerCategoryViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAccountingOperationViewController.cs" />
@@ -583,6 +585,8 @@
     <EmbeddedResource Include="Images\Base.CustomerCategory.icon" />
     <EmbeddedResource Include="Images\Base.PriceDiscount.icon" />
     <EmbeddedResource Include="Images\Data.CustomerCategory.icon" />
+    <EmbeddedResource Include="Images\Base.PeopleCategory.icon" />
+    <EmbeddedResource Include="Images\Data.PeopleCategory.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
