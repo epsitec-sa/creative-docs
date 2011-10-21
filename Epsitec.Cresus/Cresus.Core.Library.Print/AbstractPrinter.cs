@@ -206,53 +206,18 @@ namespace Epsitec.Cresus.Core.Print
 		private void PaintDraft(IPaintPort port)
 		{
 			//	Dessine un très gros "BROUILLON" en filigrane en travers de la page.
-			var bounds = new Rectangle (Point.Zero, this.RequiredPageSize);
-			double diagonal = Point.Distance (bounds.BottomLeft, bounds.TopRight);
-			double angle = System.Math.Atan2 (bounds.Height, bounds.Width);
-			bounds.Inflate (diagonal);
-
-			var initial = port.Transform;
-			port.Transform = port.Transform.MultiplyByPostfix (Transform.CreateRotationRadTransform (angle, bounds.Center));
-
-			string text;
-			double factor;
-
-			switch (this.LanguageId)
-            {
-				case "de":
-					text = "ENTWURF";
-					factor = 6.0;
-					break;
-
-				case "en":
-					text = "DRAFT";
-					factor = 5.0;
-					break;
-
-				default:
-					text = "BROUILLON";
-					factor = 7.5;
-					break;
-            }
-
-			var layout = new TextLayout
-			{
-				Text = text,
-				DefaultColor = Color.FromBrightness (this.PreviewMode == PreviewMode.Print ? 0.80 : 0.95),  // plus foncé si impression réelle
-				DefaultFont = Font.GetFont ("Arial", "Bold"),
-				DefaultFontSize = diagonal / factor,
-				Alignment = ContentAlignment.MiddleCenter,
-				LayoutSize = bounds.Size,
-			};
-
-			layout.Paint (bounds.BottomLeft, port);
-
-			port.Transform = initial;
+			this.PaintWatermark (port, this.GetString ("Watermark.Draft"));
 		}
 
 		private void PaintSpecimen(IPaintPort port)
 		{
 			//	Dessine un très gros "SPECIMEN" en filigrane en travers de la page.
+			this.PaintWatermark (port, this.GetString ("Watermark.Specimen"));
+		}
+
+		private void PaintWatermark(IPaintPort port, string text)
+		{
+			//	Dessine un très gros texte en filigrane en travers de la page.
 			var bounds = new Rectangle (Point.Zero, this.RequiredPageSize);
 			double diagonal = Point.Distance (bounds.BottomLeft, bounds.TopRight);
 			double angle = System.Math.Atan2 (bounds.Height, bounds.Width);
@@ -261,36 +226,17 @@ namespace Epsitec.Cresus.Core.Print
 			var initial = port.Transform;
 			port.Transform = port.Transform.MultiplyByPostfix (Transform.CreateRotationRadTransform (angle, bounds.Center));
 
-			string text;
-			double factor;
-
-			switch (this.LanguageId)
-			{
-				case "de":
-					text = "PROBE";
-					factor = 5.0;
-					break;
-
-				case "en":
-					text = "SPECIMEN";
-					factor = 6.5;
-					break;
-
-				default:
-					text = "SPÉCIMEN";
-					factor = 6.5;
-					break;
-			}
-
 			var layout = new TextLayout
 			{
 				Text = text,
 				DefaultColor = Color.FromBrightness (this.PreviewMode == PreviewMode.Print ? 0.80 : 0.95),  // plus foncé si impression réelle
 				DefaultFont = Font.GetFont ("Arial", "Bold"),
-				DefaultFontSize = diagonal / factor,
 				Alignment = ContentAlignment.MiddleCenter,
 				LayoutSize = bounds.Size,
 			};
+
+			double factor = layout.SingleLineSize.Width / 8.56;  // facteur empyrique pour occuper toute la diagonale
+			layout.DefaultFontSize = diagonal / factor;
 
 			layout.Paint (bounds.BottomLeft, port);
 

@@ -12,4 +12,6 @@
   <data id="K9">TTC price</data>
   <data id="KA">VAT</data>
   <data id="KB">Total</data>
+  <data id="KC">SPECIMEN</data>
+  <data id="KD">DRAFT</data>
 </bundle>

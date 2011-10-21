@@ -12,4 +12,6 @@
   <data name="BusinessDocument.Column.LinePriceIncludingTax" id="K9">prix TTC</data>
   <data name="BusinessDocument.Column.Vat" id="KA">TVA</data>
   <data name="BusinessDocument.Column.Total" id="KB">Total</data>
+  <data name="Watermark.Specimen" id="KC">SPÉCIMEN</data>
+  <data name="Watermark.Draft" id="KD">BROUILLON</data>
 </bundle>

@@ -658,6 +658,26 @@ namespace Epsitec.Cresus.Core.Library.Documents
 				}
 			}
 			
+			public static class Watermark
+			{
+				//	designer:str/HVKD
+				public static global::Epsitec.Common.Types.FormattedText Draft
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Documents.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544333));
+					}
+				}
+				//	designer:str/HVKC
+				public static global::Epsitec.Common.Types.FormattedText Specimen
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Documents.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544332));
+					}
+				}
+			}
+			
 			public static global::Epsitec.Common.Types.FormattedText GetText(params string[] path)
 			{
 				string field = string.Join (".", path);
