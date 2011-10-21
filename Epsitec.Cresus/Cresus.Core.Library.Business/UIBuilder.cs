@@ -1639,7 +1639,7 @@ namespace Epsitec.Cresus.Core
 					PreferredWidth = Library.UI.Constants.ComboButtonWidth,
 					PreferredHeight = 20,
 					Anchor = AnchorStyles.TopRight,
-					Margins = new Margins (0, 3, 0, 0),
+					Margins = new Margins (0, Library.UI.Constants.RightMargin, 0, 0),
 					AutoFocus = false,
 					TabIndex = ++this.tabIndex,
 				};
