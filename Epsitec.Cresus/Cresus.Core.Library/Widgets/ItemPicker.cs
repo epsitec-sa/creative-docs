@@ -64,10 +64,10 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				button = new RadioButton
 				{
-					Parent = this,
-					Index = -1,
-					Text = "Aucun",
-					Dock = DockStyle.Top,
+					Parent   = this,
+					Index    = -1,
+					Text     = "Aucun",
+					Dock     = DockStyle.Top,
 					TabIndex = tabIndex++,
 				};
 			}
@@ -79,10 +79,10 @@ namespace Epsitec.Cresus.Core.Widgets
 				{
 					button = new RadioButton
 					{
-						Parent = this,
-						Index = i,
-						Text = this.GetItemText (i),
-						Dock = DockStyle.Top,
+						Parent   = this,
+						Index    = i,
+						Text     = this.GetItemText (i),
+						Dock     = DockStyle.Top,
 						TabIndex = tabIndex++,
 					};
 				}
@@ -90,10 +90,10 @@ namespace Epsitec.Cresus.Core.Widgets
 				{
 					button = new CheckButton
 					{
-						Parent = this,
-						Index = i,
-						Text = this.GetItemText (i),
-						Dock = DockStyle.Top,
+						Parent   = this,
+						Index    = i,
+						Text     = this.GetItemText (i),
+						Dock     = DockStyle.Top,
 						TabIndex = tabIndex++,
 					};
 				}
@@ -123,7 +123,6 @@ namespace Epsitec.Cresus.Core.Widgets
 				this.AddSelection (new int[] { selectedIndex });
 			}
 		}
-
 
 
 		#region IMultipleSelection Members
@@ -329,7 +328,6 @@ namespace Epsitec.Cresus.Core.Widgets
 		private void ButtonsToSelection()
 		{
 			//	Met à jour la sélection en fonction de l'état des boutons.
-
 			this.selection.Clear ();
 
 			foreach (AbstractButton button in this.Children)

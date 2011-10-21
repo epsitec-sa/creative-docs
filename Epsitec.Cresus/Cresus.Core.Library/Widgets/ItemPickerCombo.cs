@@ -18,9 +18,9 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// Ce widget permet d'éditer une enumération sous une forme très compacte (une seule ligne),
 	/// avec un support complet de tous les modes de cardinalité.
 	/// </summary>
-	public class ItemPicketCombo : TextFieldCombo, IMultipleSelection
+	public class ItemPickerCombo : TextFieldCombo, IMultipleSelection
 	{
-		public ItemPicketCombo()
+		public ItemPickerCombo()
 		{
 			this.IsReadOnly = true;
 			this.Cardinality = EnumValueCardinality.Any;
@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.selection = new HashSet<int> ();
 		}
 
-		public ItemPicketCombo(Widget embedder)
+		public ItemPickerCombo(Widget embedder)
 			: this ()
 		{
 			this.SetEmbedder (embedder);
@@ -53,6 +53,16 @@ namespace Epsitec.Cresus.Core.Widgets
 			set;
 		}
 
+		/// <summary>
+		/// Méthode de conversion d'un objet stocké dans Items.Value en une chaîne à afficher.
+		/// </summary>
+		/// <value>The value converter.</value>
+		public ValueToFormattedTextConverter ValueToDescriptionConverter
+		{
+			get;
+			set;
+		}
+
 
 		public string MultipleSelectionTextSeparator
 		{
@@ -60,6 +70,15 @@ namespace Epsitec.Cresus.Core.Widgets
 			//	Ce séparateur n'a qu'un rôle visuel.
 			get;
 			set;
+		}
+
+
+		public void AddSelection(int selectedIndex)
+		{
+			if (selectedIndex > -1)
+			{
+				this.AddSelection (new int[] { selectedIndex });
+			}
 		}
 
 
@@ -258,8 +277,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			menu.Contents = this.scrollList;
 
-			//	Remplit la liste :
-
+			//	Remplit la liste.
 			this.CopyItemsToComboList (this.scrollList.Items);
 
 			TextFieldCombo.AdjustScrollListWidth (this.scrollList);
@@ -356,7 +374,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			for (int i = 0; i < this.items.Count; i++)
 			{
 				string name = this.items.GetKey (i);
-				string text = this.items[i];
+				string text = this.GetItemText (i);
 
 				if (this.ListTextConverter != null)
 				{
@@ -400,7 +418,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			foreach (int sel in sels)
 			{
-				list.Add (this.items[sel]);
+				list.Add (this.GetItemText (sel));
 			}
 
 			if (this.Cardinality == EnumValueCardinality.ZeroOrOne && list.Count == 0)
@@ -410,7 +428,20 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			this.Text = string.Join (this.MultipleSelectionTextSeparator, list);
 		}
-		
+
+		private string GetItemText(int index)
+		{
+			if (this.ValueToDescriptionConverter == null)
+			{
+				return this.items[index];
+			}
+			else
+			{
+				object value = this.items.GetValue (index);
+				return this.ValueToDescriptionConverter (value).ToString ();
+			}
+		}
+
 
 		protected override void OnComboClosed()
 		{
@@ -426,7 +457,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			this.Invalidate ();
 
-			var handler = this.GetUserEventHandler<DependencyPropertyChangedEventArgs> (ItemPicketCombo.MultiSelectionChangedEvent);
+			var handler = this.GetUserEventHandler<DependencyPropertyChangedEventArgs> (ItemPickerCombo.MultiSelectionChangedEvent);
 			var e = new DependencyPropertyChangedEventArgs ("MultiSelection");
 
 			if (handler != null)

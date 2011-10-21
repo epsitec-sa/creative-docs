@@ -112,8 +112,28 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				this.AttachMultipleValueSelector ();
 			}
-			else if ((this.valueGetter != null) &&
-					 (this.ValueSetter != null))
+			else if (this.valueGetter != null &&
+					 this.ValueSetter != null)
+			{
+				this.AttachSingleValueSelector ();
+			}
+
+			this.Update ();
+		}
+
+		public void Attach(ItemPickerCombo widget)
+		{
+			this.attachedPickerCombo = widget;
+			this.widgetItems         = widget.Items;
+
+			widget.ValueToDescriptionConverter = this.ConvertHintValueToDescription;
+
+			if (this.CollectionValueGetter != null)
+			{
+				this.AttachMultipleValueSelector ();
+			}
+			else if (this.valueGetter != null &&
+					 this.ValueSetter != null)
 			{
 				this.AttachSingleValueSelector ();
 			}
@@ -204,6 +224,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				T currentValue = this.GetValue ();
 				this.attachedWidget.SelectedItemIndex = widgetItems.FindIndexByValue<T> (x => x.DbKeyEquals (currentValue));
 			}
+
 			if (this.attachedPicker != null)
 			{
 				this.attachedPicker.RefreshContents ();
@@ -222,6 +243,23 @@ namespace Epsitec.Cresus.Core.Controllers
 						break;
 				}
 			}
+
+			if (this.attachedPickerCombo != null)
+			{
+				switch (this.attachedPickerMode)
+				{
+					case PickerMode.MultipleValue:
+						var originalItems = this.CollectionValueGetter ();
+						this.attachedPickerCombo.AddSelection (originalItems.Select (x => this.widgetItems.FindIndexByValue<T> (y => x.DbKeyEquals (y))).Where (x => x != -1));
+						break;
+
+					case PickerMode.SingleValue:
+						var initialValue  = this.GetValue ();
+						int selectedIndex = this.widgetItems.FindIndexByValue<T> (x => x.DbKeyEquals (initialValue));
+						this.attachedPickerCombo.AddSelection (selectedIndex);
+						break;
+				}
+			}
 		}
 
 		#endregion
@@ -230,13 +268,31 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void AttachMultipleValueSelector()
 		{
 			this.attachedPickerMode = PickerMode.MultipleValue;
-			this.attachedPicker.SelectedItemChanged += this.HandleMultiSelectionChanged;
+
+			if (this.attachedPicker != null)
+			{
+				this.attachedPicker.SelectedItemChanged += this.HandleMultiSelectionChanged;
+			}
+
+			if (this.attachedPickerCombo != null)
+			{
+				this.attachedPickerCombo.SelectedItemChanged += this.HandleMultiSelectionChanged;
+			}
 		}
 
 		private void AttachSingleValueSelector()
 		{
 			this.attachedPickerMode = PickerMode.SingleValue;
-			this.attachedPicker.SelectedItemChanged += this.HandleSingleSelectionChanged;
+
+			if (this.attachedPicker != null)
+			{
+				this.attachedPicker.SelectedItemChanged += this.HandleSingleSelectionChanged;
+			}
+
+			if (this.attachedPickerCombo != null)
+			{
+				this.attachedPickerCombo.SelectedItemChanged += this.HandleSingleSelectionChanged;
+			}
 		}
 
 		private void HandleEditionAccepted(object sender)
@@ -256,7 +312,15 @@ namespace Epsitec.Cresus.Core.Controllers
 			var selectedItems = this.CollectionValueGetter ();
 			var newSelection  = new List<T> ();
 
-			var indexes = this.attachedPicker.GetSortedSelection ();
+			ICollection<int> indexes = null;
+			if (this.attachedPicker != null)
+			{
+				indexes = this.attachedPicker.GetSortedSelection ();
+			}
+			if (this.attachedPickerCombo != null)
+			{
+				indexes = this.attachedPickerCombo.GetSortedSelection ();
+			}
 
 			foreach (int selectedIndex in indexes)
 			{
@@ -278,15 +342,22 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void HandleSingleSelectionChanged(object sender)
 		{
-			this.SetValue (this.widgetItems.GetValue<T> (this.attachedPicker.SelectedItemIndex));
+			if (this.attachedPicker != null)
+			{
+				this.SetValue (this.widgetItems.GetValue<T> (this.attachedPicker.SelectedItemIndex));
+			}
+
+			if (this.attachedPickerCombo != null)
+			{
+				this.SetValue (this.widgetItems.GetValue<T> (this.attachedPickerCombo.SelectedItemIndex));
+			}
 		}
 
 		private FormattedText ConvertHintValueToDescription(object value)
 		{
 			var entity = value as T;
 			
-			if ((entity.IsNull ()) ||
-				(this.ToFormattedTextConverter == null))
+			if (entity.IsNull () || this.ToFormattedTextConverter == null)
 			{
 				return FormattedText.Empty;
 			}
@@ -294,9 +365,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			var data = this.businessContext.Data;
 			var context = data.DataContextPool.FindDataContext (entity);
 
-			if ((context != null) &&
-				(context.IsRegisteredAsEmptyEntity (entity)) &&
-				(entity.GetEntityStatus () != EntityStatus.Valid))
+			if (context != null &&
+				context.IsRegisteredAsEmptyEntity (entity) &&
+				entity.GetEntityStatus () != EntityStatus.Valid)
 			{
 				return Epsitec.Cresus.Core.Controllers.DataAccessors.CollectionTemplate.DefaultDefinitionInProgressText;
 			}
@@ -308,8 +379,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private Widgets.HintComparerResult MatchUserText(T entity, string userText)
 		{
-			if ((entity == null) ||
-				(this.ToTextArrayConverter == null))
+			if (entity == null || this.ToTextArrayConverter == null)
 			{
 				return Widgets.HintComparerResult.NoMatch;
 			}
@@ -338,6 +408,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private Widgets.AutoCompleteTextField	attachedWidget;
 		private Widgets.ItemPicker				attachedPicker;
+		private ItemPickerCombo					attachedPickerCombo;
 		private PickerMode						attachedPickerMode;
 
 		private Epsitec.Common.Widgets.Collections.StringCollection widgetItems;

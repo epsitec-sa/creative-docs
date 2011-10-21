@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				double buttonWidth = 14;
 
 				//	Ligne éditable.
-				this.editor = new ItemPicketCombo
+				this.editor = new ItemPickerCombo
 				{
 					Parent = parent,
 					MenuButtonWidth = buttonWidth,
@@ -161,6 +161,6 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		}
 
 
-		private ItemPicketCombo editor;
+		private ItemPickerCombo editor;
 	}
 }

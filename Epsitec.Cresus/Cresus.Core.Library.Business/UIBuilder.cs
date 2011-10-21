@@ -1184,66 +1184,46 @@ namespace Epsitec.Cresus.Core
 			return autoCompleteTextField;
 		}
 
-		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T>(string label, EnumController<T> controller)
-			where T : struct
-		{
-			var tile = this.CreateEditionTile ();
-
-			if (!string.IsNullOrEmpty (label))
-			{
-				var staticText = new StaticText
-				{
-					Parent = tile.Container,
-					Text = string.Concat (label, " :"),
-					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-					Dock = DockStyle.Stacked,
-					Margins = new Margins (0, Library.UI.Constants.RightMargin, 0, Library.UI.Constants.MarginUnderTextField),
-				};
-
-				this.ContentListAdd (staticText);
-			}
-
-			var widget = new Widgets.ItemPicker
-			{
-				Parent = tile.Container,
-				Enable = !this.ReadOnly,
-				Dock = DockStyle.Stacked,
-				Margins = new Margins (0, 0, 0, 3),
-				TabIndex = ++this.tabIndex,
-			};
-
-			this.ContentListAdd (widget);
-
-			controller.Attach (widget);
-
-			return widget;
-		}
-
-
-		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T1, T2>(string name, T1 entity, string label, SelectionController<T2> controller, EnumValueCardinality cardinality, ViewControllerMode mode = ViewControllerMode.Summary, int controllerSubType = -1)
+		public Widget CreateEditionDetailedItemPicker<T1, T2>(EditionTile tile, string name, T1 entity, string label, SelectionController<T2> controller, EnumValueCardinality cardinality, ViewControllerMode mode = ViewControllerMode.Summary, int controllerSubType = -1)
 			where T1 : AbstractEntity
 			where T2 : AbstractEntity, new ()
 		{
-			var tile = this.CreateEditionTile ();
-			return this.CreateEditionDetailedItemPicker (tile, name, entity, label, controller, cardinality, mode, controllerSubType);
-		}
-
-		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T1, T2>(EditionTile tile, string name, T1 entity, string label, SelectionController<T2> controller, EnumValueCardinality cardinality, ViewControllerMode mode = ViewControllerMode.Summary, int controllerSubType = -1)
-			where T1 : AbstractEntity
-			where T2 : AbstractEntity, new ()
-		{
+			Widget widget;
 			Button tileButton;
-			var picker = this.CreateDetailedItemPicker (tile, label, cardinality, true, out tileButton);
-
-			controller.Attach (picker);
-
-			if (cardinality == EnumValueCardinality.ExactlyOne ||
-				cardinality == EnumValueCardinality.AtLeastOne)
+			
+			if (controller.GetPossibleItems().Count () <= 5)
 			{
-				if (picker.SelectionCount == 0)  // aucune sélection ?
+				var picker = this.CreateDetailedItemPicker (tile, label, cardinality, out tileButton);
+
+				controller.Attach (picker);
+
+				if (cardinality == EnumValueCardinality.ExactlyOne ||
+					cardinality == EnumValueCardinality.AtLeastOne)
 				{
-					picker.AddSelection (Enumerable.Range (0, 1));  // sélectionne le premier
+					if (picker.SelectionCount == 0)  // aucune sélection ?
+					{
+						picker.AddSelection (Enumerable.Range (0, 1));  // sélectionne le premier
+					}
 				}
+
+				widget = picker;
+			}
+			else
+			{
+				var picker = this.CreateDetailedItemPickerCombo (tile, label, cardinality, out tileButton);
+
+				controller.Attach (picker);
+
+				if (cardinality == EnumValueCardinality.ExactlyOne ||
+					cardinality == EnumValueCardinality.AtLeastOne)
+				{
+					if (picker.SelectionCount == 0)  // aucune sélection ?
+					{
+						picker.AddSelection (Enumerable.Range (0, 1));  // sélectionne le premier
+					}
+				}
+
+				widget = picker;
 			}
 
 			tileButton.Entered += delegate
@@ -1267,35 +1247,7 @@ namespace Epsitec.Cresus.Core
 				tile.ToggleSubView (rootController.Orchestrator, rootController, new TileNavigationPathElement (clickSimulator.Name));
 			};
 
-			return picker;
-		}
-
-		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T>(string label, SelectionController<T> controller, EnumValueCardinality cardinality)
-			where T : AbstractEntity, new ()
-		{
-			var tile = this.CreateEditionTile ();
-			return this.CreateEditionDetailedItemPicker (tile, label, controller, cardinality);
-		}
-
-		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T>(EditionTile tile, string label, SelectionController<T> controller, EnumValueCardinality cardinality)
-			where T : AbstractEntity, new ()
-		{
-			Button tileButton;
-			var picker = this.CreateDetailedItemPicker (tile, label, cardinality, false, out tileButton);
-
-			controller.Attach (picker);
-
-			if (cardinality == EnumValueCardinality.ExactlyOne ||
-				cardinality == EnumValueCardinality.AtLeastOne)
-			{
-				if ((picker.SelectionCount == 0) &&  // aucune sélection ?
-					(picker.Items.Count > 0))
-				{
-					picker.AddSelection (Enumerable.Range (0, 1));  // sélectionne le premier
-				}
-			}
-
-			return picker;
+			return widget;
 		}
 
 
@@ -1612,7 +1564,7 @@ namespace Epsitec.Cresus.Core
 			private readonly CoreViewController controller;
 		}
 
-		private Widgets.ItemPicker CreateDetailedItemPicker(EditionTile tile, string label, EnumValueCardinality cardinality, bool createTileButton, out Button tileButton)
+		private ItemPicker CreateDetailedItemPicker(EditionTile tile, string label, EnumValueCardinality cardinality, out Button tileButton)
 		{
 			tile.AllowSelection = true;
 
@@ -1630,24 +1582,17 @@ namespace Epsitec.Cresus.Core
 				this.ContentListAdd (staticText);
 			}
 
-			if (createTileButton)
+			tileButton = new GlyphButton
 			{
-				tileButton = new GlyphButton
-				{
-					Parent = tile.Container,
-					GlyphShape = Common.Widgets.GlyphShape.ArrowRight,
-					PreferredWidth = Library.UI.Constants.ComboButtonWidth,
-					PreferredHeight = 20,
-					Anchor = AnchorStyles.TopRight,
-					Margins = new Margins (0, Library.UI.Constants.RightMargin, 0, 0),
-					AutoFocus = false,
-					TabIndex = ++this.tabIndex,
-				};
-			}
-			else
-			{
-				tileButton = null;
-			}
+				Parent = tile.Container,
+				GlyphShape = Common.Widgets.GlyphShape.ArrowRight,
+				PreferredWidth = Library.UI.Constants.ComboButtonWidth,
+				PreferredHeight = 20,
+				Anchor = AnchorStyles.TopRight,
+				Margins = new Margins (0, Library.UI.Constants.RightMargin, 0, 0),
+				AutoFocus = false,
+				TabIndex = ++this.tabIndex,
+			};
 
 			var widget = new Widgets.ItemPicker
 			{
@@ -1656,6 +1601,62 @@ namespace Epsitec.Cresus.Core
 				Dock = DockStyle.Stacked,
 				Margins = new Margins (0, 0, 0, 3),
 				Cardinality = cardinality,
+				TabIndex = ++this.tabIndex,
+			};
+
+			this.ContentListAdd (widget);
+			this.AttachPreProcessingLockAcquisition (widget);
+
+			return widget;
+		}
+
+		private ItemPickerCombo CreateDetailedItemPickerCombo(EditionTile tile, string label, EnumValueCardinality cardinality, out Button tileButton)
+		{
+			tile.AllowSelection = true;
+
+			if (!string.IsNullOrEmpty (label))
+			{
+				var staticText = new StaticText
+				{
+					Parent = tile.Container,
+					Text = string.Concat (label, " :"),
+					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
+					Margins = new Margins (0, Library.UI.Constants.RightMargin, 2, Library.UI.Constants.MarginUnderTextField),
+					Dock = DockStyle.Stacked,
+				};
+
+				this.ContentListAdd (staticText);
+			}
+
+			var container = new FrameBox
+			{
+				Parent = tile.Container,
+				Dock = DockStyle.Stacked,
+				Margins = new Margins (0, Library.UI.Constants.RightMargin, 0, Library.UI.Constants.MarginUnderTextField),
+				TabIndex = ++this.tabIndex,
+			};
+
+			var widget = new ItemPickerCombo
+			{
+				Parent = container,
+				MenuButtonWidth = Library.UI.Constants.ComboButtonWidth-1,
+				Enable = !this.ReadOnly,
+				PreferredHeight = 20,
+				Dock = DockStyle.Fill,
+				Margins = new Margins (0, 0, 0, 0),
+				Cardinality = cardinality,
+				TabIndex = ++this.tabIndex,
+			};
+
+			tileButton = new GlyphButton
+			{
+				Parent = container,
+				GlyphShape = Common.Widgets.GlyphShape.ArrowRight,
+				PreferredWidth = Library.UI.Constants.ComboButtonWidth,
+				PreferredHeight = 20,
+				Dock = DockStyle.Right,
+				Margins = new Margins (3, 0, 0, 0),
+				AutoFocus = false,
 				TabIndex = ++this.tabIndex,
 			};
 
