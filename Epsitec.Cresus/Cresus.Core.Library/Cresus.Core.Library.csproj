@@ -124,6 +124,7 @@
     <Compile Include="Library\UI\Toolkit.cs" />
     <Compile Include="Library\UI\WindowPlacementHint.cs" />
     <Compile Include="Widgets\GradientFrameBox.cs" />
+    <Compile Include="Widgets\IItemPicker.cs" />
     <Compile Include="Widgets\SamplePage.cs" />
     <Compile Include="Widgets\TabPageDef.cs" />
     <Compile Include="Widgets\TabPageDef`1.cs" />

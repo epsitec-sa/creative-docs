@@ -123,8 +123,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public void Attach(ItemPickerCombo widget)
 		{
-			this.attachedPickerCombo = widget;
-			this.widgetItems         = widget.Items;
+			this.attachedPicker = widget;
+			this.widgetItems    = widget.Items;
 
 			widget.ValueToDescriptionConverter = this.ConvertHintValueToDescription;
 
@@ -227,36 +227,20 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (this.attachedPicker != null)
 			{
-				this.attachedPicker.RefreshContents ();
+				var picker = this.attachedPicker as IItemPicker;
+				picker.IPRefreshContents ();
 
 				switch (this.attachedPickerMode)
 				{
 					case PickerMode.MultipleValue:
 						var originalItems = this.CollectionValueGetter ();
-						this.attachedPicker.AddSelection (originalItems.Select (x => this.widgetItems.FindIndexByValue<T> (y => x.DbKeyEquals (y))).Where (x => x != -1));
+						picker.IPAddSelection (originalItems.Select (x => this.widgetItems.FindIndexByValue<T> (y => x.DbKeyEquals (y))).Where (x => x != -1));
 						break;
 
 					case PickerMode.SingleValue:
 						var initialValue  = this.GetValue ();
 						int selectedIndex = this.widgetItems.FindIndexByValue<T> (x => x.DbKeyEquals (initialValue));
-						this.attachedPicker.AddSelection (selectedIndex);
-						break;
-				}
-			}
-
-			if (this.attachedPickerCombo != null)
-			{
-				switch (this.attachedPickerMode)
-				{
-					case PickerMode.MultipleValue:
-						var originalItems = this.CollectionValueGetter ();
-						this.attachedPickerCombo.AddSelection (originalItems.Select (x => this.widgetItems.FindIndexByValue<T> (y => x.DbKeyEquals (y))).Where (x => x != -1));
-						break;
-
-					case PickerMode.SingleValue:
-						var initialValue  = this.GetValue ();
-						int selectedIndex = this.widgetItems.FindIndexByValue<T> (x => x.DbKeyEquals (initialValue));
-						this.attachedPickerCombo.AddSelection (selectedIndex);
+						picker.IPAddSelection (selectedIndex);
 						break;
 				}
 			}
@@ -269,30 +253,16 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			this.attachedPickerMode = PickerMode.MultipleValue;
 
-			if (this.attachedPicker != null)
-			{
-				this.attachedPicker.SelectedItemChanged += this.HandleMultiSelectionChanged;
-			}
-
-			if (this.attachedPickerCombo != null)
-			{
-				this.attachedPickerCombo.SelectedItemChanged += this.HandleMultiSelectionChanged;
-			}
+			var picker = this.attachedPicker as IItemPicker;
+			picker.IPSelectedItemChanged += this.HandleMultiSelectionChanged;
 		}
 
 		private void AttachSingleValueSelector()
 		{
 			this.attachedPickerMode = PickerMode.SingleValue;
 
-			if (this.attachedPicker != null)
-			{
-				this.attachedPicker.SelectedItemChanged += this.HandleSingleSelectionChanged;
-			}
-
-			if (this.attachedPickerCombo != null)
-			{
-				this.attachedPickerCombo.SelectedItemChanged += this.HandleSingleSelectionChanged;
-			}
+			var picker = this.attachedPicker as IItemPicker;
+			picker.IPSelectedItemChanged += this.HandleSingleSelectionChanged;
 		}
 
 		private void HandleEditionAccepted(object sender)
@@ -312,15 +282,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			var selectedItems = this.CollectionValueGetter ();
 			var newSelection  = new List<T> ();
 
-			ICollection<int> indexes = null;
-			if (this.attachedPicker != null)
-			{
-				indexes = this.attachedPicker.GetSortedSelection ();
-			}
-			if (this.attachedPickerCombo != null)
-			{
-				indexes = this.attachedPickerCombo.GetSortedSelection ();
-			}
+			var picker = this.attachedPicker as IItemPicker;
+			var pickerMultipleSelection = this.attachedPicker as Common.Widgets.IMultipleSelection;
+			ICollection<int> indexes = pickerMultipleSelection.GetSortedSelection ();
 
 			foreach (int selectedIndex in indexes)
 			{
@@ -342,15 +306,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void HandleSingleSelectionChanged(object sender)
 		{
-			if (this.attachedPicker != null)
-			{
-				this.SetValue (this.widgetItems.GetValue<T> (this.attachedPicker.SelectedItemIndex));
-			}
-
-			if (this.attachedPickerCombo != null)
-			{
-				this.SetValue (this.widgetItems.GetValue<T> (this.attachedPickerCombo.SelectedItemIndex));
-			}
+			var picker = this.attachedPicker as IItemPicker;
+			this.SetValue (this.widgetItems.GetValue<T> (picker.IPSelectedItemIndex));
 		}
 
 		private FormattedText ConvertHintValueToDescription(object value)
@@ -407,8 +364,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private System.Func<T>					valueGetter;
 
 		private Widgets.AutoCompleteTextField	attachedWidget;
-		private Widgets.ItemPicker				attachedPicker;
-		private ItemPickerCombo					attachedPickerCombo;
+		private Common.Widgets.Widget			attachedPicker;
 		private PickerMode						attachedPickerMode;
 
 		private Epsitec.Common.Widgets.Collections.StringCollection widgetItems;

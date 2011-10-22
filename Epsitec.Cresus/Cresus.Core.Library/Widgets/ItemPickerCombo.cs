@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// Ce widget permet d'éditer une enumération sous une forme très compacte (une seule ligne),
 	/// avec un support complet de tous les modes de cardinalité.
 	/// </summary>
-	public class ItemPickerCombo : TextFieldCombo, IMultipleSelection
+	public class ItemPickerCombo : TextFieldCombo, IMultipleSelection, IItemPicker
 	{
 		public ItemPickerCombo()
 		{
@@ -45,6 +45,58 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			base.Dispose (disposing);
 		}
+
+
+		#region IItemPicker Members
+
+		//	Cette interface met en commun tout ce qu'il faut pour unifier ItemPicker et ItemPickerCombo.
+		//	Comme ces 2 widgets ont des héritages différents, il est nécessaire de procéder ainsi, en
+		//	redéfinissant de façon redondante les méthodes communes de provenances diverses.
+
+		public void IPRefreshContents()
+		{
+		}
+
+		public void IPAddSelection(int selectedIndex)
+		{
+			this.AddSelection (selectedIndex);
+		}
+
+		public void IPAddSelection(IEnumerable<int> selection)
+		{
+			this.AddSelection (selection);
+		}
+
+		public ICollection<int> IPGetSortedSelection()
+		{
+			return GetSortedSelection ();
+		}
+
+		public event EventHandler IPSelectedItemChanged
+		{
+			add
+			{
+				this.AddUserEventHandler ("SelectedItemChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler ("SelectedItemChanged", value);
+			}
+		}
+
+		public int IPSelectedItemIndex
+		{
+			get
+			{
+				return this.SelectedItemIndex;
+			}
+			set
+			{
+				this.SelectedItemIndex = value;
+			}
+		}
+
+		#endregion
 
 
 		public EnumValueCardinality Cardinality
