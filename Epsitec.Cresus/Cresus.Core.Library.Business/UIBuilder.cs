@@ -1189,7 +1189,7 @@ namespace Epsitec.Cresus.Core
 			where T2 : AbstractEntity, new ()
 		{
 			Widget widget;
-			Button tileButton;
+			GlyphButton tileButton;
 			
 			if (controller.GetPossibleItems().Count () <= 5)  // limite arbitraire !
 			{
@@ -1237,6 +1237,16 @@ namespace Epsitec.Cresus.Core
 			tileButton.Exited += delegate
 			{
 				tile.Hilite = false;
+			};
+
+			tile.Selected += delegate
+			{
+				tileButton.GlyphShape = GlyphShape.ArrowLeft;
+			};
+
+			tile.Deselected += delegate
+			{
+				tileButton.GlyphShape = GlyphShape.ArrowRight;
 			};
 
 			var rootController = this.GetRootController ();
@@ -1567,7 +1577,7 @@ namespace Epsitec.Cresus.Core
 			private readonly CoreViewController controller;
 		}
 
-		private ItemPicker CreateDetailedItemPicker(EditionTile tile, string label, EnumValueCardinality cardinality, out Button tileButton)
+		private ItemPicker CreateDetailedItemPicker(EditionTile tile, string label, EnumValueCardinality cardinality, out GlyphButton tileButton)
 		{
 			tile.AllowSelection = true;
 
@@ -1613,7 +1623,7 @@ namespace Epsitec.Cresus.Core
 			return widget;
 		}
 
-		private ItemPickerCombo CreateDetailedItemPickerCombo(EditionTile tile, string label, EnumValueCardinality cardinality, out Button tileButton)
+		private ItemPickerCombo CreateDetailedItemPickerCombo(EditionTile tile, string label, EnumValueCardinality cardinality, out GlyphButton tileButton)
 		{
 			tile.AllowSelection = true;
 

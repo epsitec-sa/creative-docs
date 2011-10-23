@@ -479,6 +479,32 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 
 			this.Text = string.Join (this.MultipleSelectionTextSeparator, list);
+			this.UpdateTooltip (list);
+		}
+
+		private void UpdateTooltip(List<string> list)
+		{
+			//	Crée le tooltip résumant les choix effectués.
+			if (list.Count > 10)
+			{
+				//	Transforme une liste "A à Z" en "A B C D E F G H I ... Z".
+				//	On ne voit donc que les 9 premiers éléments et le dernier.
+				while (list.Count > 10)
+				{
+					list.RemoveAt (list.Count-2);
+				}
+
+				list[list.Count-2] = "...";
+			}
+
+			var text = string.Join (FormattedText.HtmlBreak, list);
+
+			if (string.IsNullOrEmpty (text))
+			{
+				text = "Aucun";
+			}
+
+			ToolTip.Default.SetToolTip (this, text);
 		}
 
 		private string GetItemText(int index)
