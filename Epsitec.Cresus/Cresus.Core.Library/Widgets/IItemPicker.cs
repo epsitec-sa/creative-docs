@@ -19,6 +19,8 @@ namespace Epsitec.Cresus.Core.Widgets
 		//	redéfinissant de façon redondante les méthodes communes de provenances diverses.
 
 		void				IPRefreshContents();
+		void				IPUpdateText();
+		void				IPClearSelection();
 		void				IPAddSelection(int selectedIndex);
 		void				IPAddSelection(IEnumerable<int> selection);
 		ICollection<int>	IPGetSortedSelection();

@@ -57,6 +57,16 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 		}
 
+		public void IPUpdateText()
+		{
+			this.UpdateText ();
+		}
+
+		public void IPClearSelection()
+		{
+			this.ClearSelection ();
+		}
+
 		public void IPAddSelection(int selectedIndex)
 		{
 			this.AddSelection (selectedIndex);

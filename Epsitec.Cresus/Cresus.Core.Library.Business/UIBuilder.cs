@@ -17,6 +17,7 @@ using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
+using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Context;
@@ -24,7 +25,6 @@ using Epsitec.Cresus.DataLayer.Context;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Epsitec.Cresus.Core.Entities;
 
 namespace Epsitec.Cresus.Core
 {
@@ -1190,6 +1190,7 @@ namespace Epsitec.Cresus.Core
 		{
 			Widget widget;
 			GlyphButton tileButton;
+			GlyphButton dialogButton = null;
 			
 			if (controller.GetPossibleItems().Count () <= 5)  // limite arbitraire !
 			{
@@ -1213,7 +1214,7 @@ namespace Epsitec.Cresus.Core
 			{
 				//	S'il y a plus de 5 choix, on utilise un ItemPickerCombo, qui crée un TextFieldCombo
 				//	qui occupera une place très réduite.
-				var picker = this.CreateDetailedItemPickerCombo (tile, label, cardinality, out tileButton);
+				var picker = this.CreateDetailedItemPickerCombo (tile, label, cardinality, out tileButton, out dialogButton);
 
 				controller.Attach (picker);
 
@@ -1254,6 +1255,22 @@ namespace Epsitec.Cresus.Core
 			var clickSimulator = new TileButtonClickSimulator (tileButton, this.controller, fullName);
 
 			tile.Controller = new SummaryTileController<T1> (entity, fullName, mode, controllerSubType);
+
+			if (dialogButton != null)
+			{
+				dialogButton.Clicked += delegate
+				{
+					using (var dialog = new Dialogs.ItemPickerDialog<T2> (this.businessContext.Data.Host, controller, cardinality))
+					{
+						dialog.OpenDialog ();
+
+						if (dialog.Result == Common.Dialogs.DialogResult.Accept)
+						{
+							controller.RefreshSelection ();
+						}
+					}
+				};
+			}
 
 			tileButton.Clicked += delegate
 			{
@@ -1417,7 +1434,6 @@ namespace Epsitec.Cresus.Core
 				MenuButtonWidth = Library.UI.Constants.ComboButtonWidth-1,
 				PreferredHeight = 20,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (0, 0, 0, 0),
 				HintEditorMode = Widgets.HintEditorMode.DisplayMenuForSmallList,
 				HintEditorSmallListLimit = 100,
 				TabIndex = ++this.tabIndex,
@@ -1623,7 +1639,7 @@ namespace Epsitec.Cresus.Core
 			return widget;
 		}
 
-		private ItemPickerCombo CreateDetailedItemPickerCombo(EditionTile tile, string label, EnumValueCardinality cardinality, out GlyphButton tileButton)
+		private ItemPickerCombo CreateDetailedItemPickerCombo(EditionTile tile, string label, EnumValueCardinality cardinality, out GlyphButton tileButton, out GlyphButton dialogButton)
 		{
 			tile.AllowSelection = true;
 
@@ -1661,6 +1677,10 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 
+			var tabIndex1 = ++this.tabIndex;
+			var tabIndex2 = ++this.tabIndex;
+
+			//	Ce bouton vient tout à droite.
 			tileButton = new GlyphButton
 			{
 				Parent = container,
@@ -1670,7 +1690,22 @@ namespace Epsitec.Cresus.Core
 				Dock = DockStyle.Right,
 				Margins = new Margins (3, 0, 0, 0),
 				AutoFocus = false,
-				TabIndex = ++this.tabIndex,
+				TabIndex = tabIndex2,
+			};
+
+			//	Ce bouton vient juste après (et tout contre) la ligne éditable.
+			dialogButton = new GlyphButton
+			{
+				Parent = container,
+				Enable = !this.ReadOnly,
+				ButtonStyle = Common.Widgets.ButtonStyle.Combo,
+				GlyphShape = GlyphShape.Dots,
+				PreferredWidth = Library.UI.Constants.ComboButtonWidth,
+				PreferredHeight = 20,
+				Dock = DockStyle.Right,
+				Margins = new Margins (-1, 0, 0, 0),
+				AutoFocus = false,
+				TabIndex = tabIndex1,
 			};
 
 			this.ContentListAdd (widget);

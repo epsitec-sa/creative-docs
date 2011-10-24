@@ -229,6 +229,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				var picker = this.attachedPicker as IItemPicker;
 				picker.IPRefreshContents ();
+				picker.IPClearSelection ();
 
 				switch (this.attachedPickerMode)
 				{
@@ -248,7 +249,19 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		#endregion
 
-		
+
+		public void RefreshSelection()
+		{
+			this.Update ();
+
+			if (this.attachedPicker != null)
+			{
+				var picker = this.attachedPicker as IItemPicker;
+				picker.IPUpdateText ();
+			}
+		}
+
+
 		private void AttachMultipleValueSelector()
 		{
 			this.attachedPickerMode = PickerMode.MultipleValue;
@@ -310,7 +323,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.SetValue (this.widgetItems.GetValue<T> (picker.IPSelectedItemIndex));
 		}
 
-		private FormattedText ConvertHintValueToDescription(object value)
+		public FormattedText ConvertHintValueToDescription(object value)
 		{
 			var entity = value as T;
 			
