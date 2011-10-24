@@ -32,9 +32,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.cardinality = cardinality;
 
 			this.items = this.controller.GetPossibleItems ().ToList ();
+			this.filteredItems = new List<FiltererItem> ();
 			this.containers = new List<FrameBox> ();
 			this.selectedIndexes = new List<int> ();
 
+			this.UpdateFilter ();
 			this.UpdateSelectedIndexes ();
 		}
 
@@ -51,9 +53,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			var filterFrame = new FrameBox
 			{
-				Parent  = window.Root,
-				Dock    = DockStyle.Top,
-				Margins = new Margins (10, 10, 10, 10),
+				Parent    = window.Root,
+				Dock      = DockStyle.Top,
+				Margins   = new Margins (10, 10, 10, 10),
+				TabIndex  = ++this.tabIndex,
 			};
 
 			var mainFrame = new FrameBox
@@ -62,6 +65,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				BackColor = adorner.ColorTextBackground,
 				Dock      = DockStyle.Fill,
 				Margins   = new Margins (10, 10, 0, 0),
+				TabIndex  = ++this.tabIndex,
 			};
 
 			var footerFrame = new FrameBox
@@ -70,6 +74,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				PreferredHeight = 20,
 				Dock            = DockStyle.Bottom,
 				Margins         = new Margins (10, 10, 10, 10),
+				TabIndex        = ++this.tabIndex,
 			};
 
 			new Separator
@@ -85,6 +90,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				PreferredHeight = 20,
 				Dock            = DockStyle.Bottom,
 				Margins         = new Margins (10, 10, 10, 10),
+				TabIndex        = ++this.tabIndex,
 			};
 
 			//	Crée les interfaces.
@@ -92,6 +98,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.CreateMainUI    (mainFrame);
 			this.CreateActionsUI (actionsFrame);
 			this.CreateFooterUI  (footerFrame);
+
+			this.filterField.Focus ();
 		}
 
 		private void CreateFilterUI(Widget parent)
@@ -106,10 +114,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Dock           = DockStyle.Left,
 			};
 
-			var filterField = new TextField
+			this.filterField = new TextField
 			{
-				Parent = parent,
-				Dock   = DockStyle.Fill,
+				Parent   = parent,
+				Dock     = DockStyle.Fill,
+				TabIndex = ++this.tabIndex,
 			};
 
 			var clearButton = new GlyphButton
@@ -119,18 +128,27 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Enable     = false,
 				Margins    = new Margins (1, 0, 0, 0),
 				Dock       = DockStyle.Right,
+				TabIndex   = ++this.tabIndex,
 			};
 
 			ToolTip.Default.SetToolTip (clearButton, "Annuler le filtre");
 
-			filterField.TextChanged += delegate
+			this.filterField.TextChanged += delegate
 			{
-				clearButton.Enable = !string.IsNullOrEmpty (filterField.Text);
+				this.UpdateFilter ();
+				this.UpdateRows ();
+				this.UpdateScroller ();
+				this.UpdateActions ();
+
+				bool hasFilter = this.HasFilter;
+				clearButton.Enable = hasFilter;
+				this.selectAllButton.Margins = new Margins (5, hasFilter ? 5:0, 0, 0);
+				this.selectFilterButton.Visibility = hasFilter;
 			};
 
 			clearButton.Clicked += delegate
 			{
-				filterField.Text = null;
+				this.filterField.Text = null;
 			};
 		}
 
@@ -140,21 +158,27 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				Parent        = parent,
 				DrawFullFrame = true,
-				Margins       = new Margins (0, 1, 0, 0),
-				Padding       = new Margins (2),
 				Dock          = DockStyle.Fill,
 			};
 
 			this.scroller = new VScroller
 			{
-				Parent = parent,
-				Dock   = DockStyle.Right,
+				Parent     = parent,
+				IsInverted = true,
+				Margins    = new Margins (1, 0, 0, 0),
+				Dock       = DockStyle.Right,
 			};
 
-			parent.SizeChanged += delegate
+			this.scroller.ValueChanged += delegate
+			{
+				this.FirstRow = (int) (this.scroller.DoubleValue + 0.5);
+			};
+
+			containersFrame.SizeChanged += delegate
 			{
 				this.UpdateContainers (containersFrame);
-				this.UpdateLines ();
+				this.UpdateRows ();
+				this.UpdateScroller ();
 			};
 		}
 
@@ -164,25 +188,41 @@ namespace Epsitec.Cresus.Core.Dialogs
 			
 			this.deselectButton = new Button
 			{
-				Parent  = parent,
-				Text    = "Tout désélectionner",
-				Margins = new Margins (0, 5, 0, 0),
-				Dock    = DockStyle.Fill,
+				Parent     = parent,
+				Text       = "Aucun",
+				Dock       = DockStyle.Fill,
+				Margins    = new Margins (0, 5, 0, 0),
+				TabIndex   = ++this.tabIndex,
 			};
 
 			this.selectAllButton = new Button
 			{
-				Parent  = parent,
-				Text    = "Tout sélectionner",
-				Margins = new Margins (5, 0, 0, 0),
-				Dock    = DockStyle.Fill,
+				Parent     = parent,
+				Text       = "Tout",
+				Dock       = DockStyle.Fill,
+				Margins    = new Margins (5, 0, 0, 0),
+				TabIndex   = ++this.tabIndex,
 			};
+
+			this.selectFilterButton = new Button
+			{
+				Parent     = parent,
+				Text       = "Selon le filtre",
+				Dock       = DockStyle.Fill,
+				Margins    = new Margins (5, 0, 0, 0),
+				Visibility = false,
+				TabIndex   = ++this.tabIndex,
+			};
+
+			ToolTip.Default.SetToolTip (this.deselectButton,     "Désélectionne tout");
+			ToolTip.Default.SetToolTip (this.selectAllButton,    "Sélectionne tout");
+			ToolTip.Default.SetToolTip (this.selectFilterButton, "Sélectionne selon le filtre");
 
 			this.deselectButton.Clicked += delegate
 			{
 				this.selectedIndexes.Clear ();
 
-				this.UpdateLines ();
+				this.UpdateRows ();
 				this.UpdateActions ();
 			};
 
@@ -190,13 +230,25 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				this.selectedIndexes.Clear ();
 
-				var itemsCount = this.items.Count;
-				for (int i = 0; i < itemsCount; i++)
+				for (int i = 0; i < this.items.Count; i++)
 				{
 					this.selectedIndexes.Add (i);
 				}
 
-				this.UpdateLines ();
+				this.UpdateRows ();
+				this.UpdateActions ();
+			};
+
+			this.selectFilterButton.Clicked += delegate
+			{
+				this.selectedIndexes.Clear ();
+
+				for (int i = 0; i < this.filteredItems.Count; i++)
+				{
+					this.selectedIndexes.Add (this.filteredItems[i].Index);
+				}
+
+				this.UpdateRows ();
 				this.UpdateActions ();
 			};
 		}
@@ -226,32 +278,55 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private void UpdateActions()
 		{
 			this.deselectButton.Enable = this.selectedIndexes.Any ();
-			this.selectAllButton.Enable = (this.selectedIndexes.Count != this.items.Count);
+			this.selectAllButton.Enable = (this.filteredItems.Count > 0 && this.selectedIndexes.Count != this.items.Count);
+
+			bool filterEnable = false;
+
+			if (this.filteredItems.Count == 0)
+			{
+			}
+			else if (this.filteredItems.Count == this.selectedIndexes.Count)
+			{
+				for (int i = 0; i < this.filteredItems.Count; i++)
+				{
+					int index = this.filteredItems[i].Index;
+
+					if (!this.selectedIndexes.Contains (index))
+					{
+						filterEnable = true;
+						break;
+					}
+				}
+			}
+			else
+			{
+				filterEnable = true;
+			}
+
+			this.selectFilterButton.Enable = filterEnable;
 		}
 
 		private void UpdateContainers(Widget parent)
 		{
-			int linesRequired = (int) (parent.ActualHeight / ItemPickerDialog<T>.lineHeight);
+			var bounds = parent.ActualBounds;
+			bounds.Deflate (2);
 
+			double lineHeight = ItemPickerDialog<T>.lineHeight;
+			int linesRequired = (int) (bounds.Height / lineHeight) + 1;
+
+			//	Crée le containers.
 			if (this.containers.Count != linesRequired)
 			{
 				this.containers.Clear ();
 				parent.Children.Clear ();
-
-				double y = 0;
 
 				for (int i = 0; i < linesRequired; i++)
 				{
 					var container = new FrameBox
 					{
 						Parent          = parent,
-						PreferredHeight = ItemPickerDialog<T>.lineHeight,
-						Index           = i,
-						Margins         = new Margins (0, 0, y, 0),
-						Anchor          = AnchorStyles.TopLeft | AnchorStyles.Right,
+						PreferredHeight = lineHeight,
 					};
-
-					y += ItemPickerDialog<T>.lineHeight;
 
 					container.Clicked += delegate
 					{
@@ -261,10 +336,24 @@ namespace Epsitec.Cresus.Core.Dialogs
 					this.containers.Add (container);
 				}
 			}
+
+			//	Positionne les containers.
+			var rect = new Rectangle (bounds.Left, bounds.Height-lineHeight, bounds.Width, lineHeight);
+
+			foreach (var container in this.containers)
+			{
+				container.SetManualBounds (rect);
+				rect.Offset (0, -lineHeight);
+			}
 		}
 
 		private void ContainerClicked(int index)
 		{
+			if (index == -1)
+			{
+				return;
+			}
+
 			if (this.cardinality == EnumValueCardinality.Any)
 			{
 				if (this.selectedIndexes.Contains (index))
@@ -317,30 +406,87 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.selectedIndexes .Add (index);
 			}
 
-			this.UpdateLines ();
+			this.UpdateRows ();
 			this.UpdateActions ();
 		}
 
-		private void UpdateLines()
+		private void UpdateRows()
 		{
 			for (int i = 0; i < this.containers.Count; i++)
 			{
 				this.containers[i].Children.Clear ();
 
-				if (i < this.items.Count)
+				int ii = this.firstRow+i;
+
+				if (ii < this.filteredItems.Count)
 				{
-					var item = this.items.ElementAt (i);
+					var filteredItem = this.filteredItems[ii];
 
-					var icon = this.GetIconTag (this.selectedIndexes.Contains (i));
-					var text = this.controller.ConvertHintValueToDescription (item);
+					var icon = this.GetIconTag (this.selectedIndexes.Contains (filteredItem.Index));
+					var text = this.controller.ConvertHintValueToDescription (filteredItem.Item);
 
-					var line = new StaticText
+					new StaticText
 					{
 						Parent        = this.containers[i],
 						FormattedText = FormattedText.Concat (icon, " ", text),
 						TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 						Dock          = DockStyle.Fill,
 					};
+
+					this.containers[i].Index = filteredItem.Index;
+				}
+				else
+				{
+					this.containers[i].Index = -1;
+				}
+			}
+		}
+
+		private void UpdateScroller()
+		{
+			//	Met à jour l'ascenseur en fonction de la liste.
+			int total = this.filteredItems.Count;
+			int visibleRows = this.containers.Count - 1;
+
+			if (total <= visibleRows)
+			{
+				if (this.scroller.Visibility)
+				{
+					this.scroller.Hide ();
+				}
+			}
+			else
+			{
+				this.scroller.MaxValue          = (decimal) (total-visibleRows);
+				this.scroller.VisibleRangeRatio = (decimal) ((double) visibleRows/total);
+				this.scroller.Value             = (decimal) (this.firstRow);
+				this.scroller.SmallChange       = 1;
+				this.scroller.LargeChange       = (decimal) (visibleRows/2.0);
+
+				if (!this.scroller.Visibility)
+				{
+					this.scroller.Show ();
+				}
+			}
+		}
+
+		private int FirstRow
+		{
+			//	Première ligne visible.
+			get
+			{
+				return this.firstRow;
+			}
+
+			set
+			{
+				value = System.Math.Max (value, 0);
+				value = System.Math.Min (value, System.Math.Max (this.filteredItems.Count-this.containers.Count+1, 0));
+
+				if (value != this.firstRow)
+				{
+					this.firstRow = value;
+					this.UpdateRows ();
 				}
 			}
 		}
@@ -411,6 +557,69 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
+		#region Filter engine
+		private void UpdateFilter()
+		{
+			this.filteredItems.Clear ();
+
+			if (this.HasFilter)
+			{
+				string filter = this.filterField.Text.ToLower ();
+
+				for (int i = 0; i < this.items.Count; i++)
+				{
+					var item = this.items.ElementAt (i);
+
+					var text = this.controller.ConvertHintValueToDescription (item).ToSimpleText ().ToLower ();
+
+					if (text.Contains (filter))
+					{
+						this.filteredItems.Add (new FiltererItem (item, i));
+					}
+				}
+			}
+			else
+			{
+				for (int i = 0; i < this.items.Count; i++)
+				{
+					var item = this.items.ElementAt (i);
+
+					this.filteredItems.Add (new FiltererItem (item, i));
+				}
+			}
+		}
+
+		private bool HasFilter
+		{
+			get
+			{
+				return this.filterField != null && !string.IsNullOrEmpty (this.filterField.Text);
+			}
+		}
+
+		private class FiltererItem
+		{
+			public FiltererItem(T item, int index)
+			{
+				this.Item  = item;
+				this.Index = index;
+			}
+
+			public T Item
+			{
+				get;
+				private set;
+			}
+
+			public int Index
+			{
+				get;
+				private set;
+			}
+		}
+		#endregion
+
+
 		private void UpdateSelection()
 		{
 			var selectedItems = this.controller.CollectionValueGetter ();
@@ -455,13 +664,21 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private readonly SelectionController<T>					controller;
 		private readonly EnumValueCardinality					cardinality;
 		private readonly List<T>								items;
+		private readonly List<FiltererItem>						filteredItems;
 		private readonly List<FrameBox>							containers;
 		private readonly List<int>								selectedIndexes;
 
+		private TextField										filterField;
 		private VScroller										scroller;
+
 		private Button											deselectButton;
 		private Button											selectAllButton;
+		private Button											selectFilterButton;
+
 		private Button											acceptButton;
 		private Button											cancelButton;
+
+		private int												firstRow;
+		private int												tabIndex;
 	}
 }
