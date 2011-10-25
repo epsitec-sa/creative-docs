@@ -1260,7 +1260,7 @@ namespace Epsitec.Cresus.Core
 			{
 				dialogButton.Clicked += delegate
 				{
-					using (var dialog = new Dialogs.ItemPickerDialog<T2> (this.businessContext.Data.Host, controller, cardinality))
+					using (var dialog = new Dialogs.ItemPickerDialog<T2> (this.businessContext.Data.Host, controller, cardinality, label))
 					{
 						dialog.OpenDialog ();
 

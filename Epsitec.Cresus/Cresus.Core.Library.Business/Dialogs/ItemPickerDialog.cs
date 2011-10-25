@@ -25,11 +25,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 	public class ItemPickerDialog<T> : CoreDialog
 			where T : AbstractEntity, new ()
 	{
-		public ItemPickerDialog(CoreApp application, SelectionController<T> controller, EnumValueCardinality cardinality)
+		public ItemPickerDialog(CoreApp application, SelectionController<T> controller, EnumValueCardinality cardinality, string title)
 			: base (application)
 		{
-			this.controller = controller;
+			this.controller  = controller;
 			this.cardinality = cardinality;
+			this.title       = title;
 
 			this.items = this.controller.GetPossibleItems ().ToList ();
 			this.filteredItems = new List<FiltererItem> ();
@@ -43,29 +44,62 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		protected override void SetupWindow(Window window)
 		{
-			window.Text = "Choix";
-			window.ClientSize = new Size (300, 300);
+			window.Text = this.title;
+			window.ClientSize = new Size (600, 400);
 		}
 
 		protected override void SetupWidgets(Window window)
 		{
 			var adorner = Common.Widgets.Adorners.Factory.Active;
 
+			var middleFrame = new FrameBox
+			{
+				Parent              = window.Root,
+				ContainerLayoutMode = Common.Widgets.ContainerLayoutMode.HorizontalFlow,
+				Dock                = DockStyle.Fill,
+				Margins             = new Margins (10, 10, 10, 0),
+				TabIndex            = ++this.tabIndex,
+			};
+
+			var leftFrame = new FrameBox
+			{
+				Parent    = middleFrame,
+				Dock      = DockStyle.Fill,
+				Margins   = new Margins (0, 10, 0, 10),
+				TabIndex  = ++this.tabIndex,
+			};
+
+			var rightFrame = new FrameBox
+			{
+				Parent    = middleFrame,
+				Dock      = DockStyle.Fill,
+				Margins   = new Margins (10, 0, 0, 10),
+				TabIndex  = ++this.tabIndex,
+			};
+
 			var filterFrame = new FrameBox
 			{
-				Parent    = window.Root,
+				Parent    = leftFrame,
 				Dock      = DockStyle.Top,
-				Margins   = new Margins (10, 10, 10, 10),
+				Margins   = new Margins (0, 0, 0, 10),
 				TabIndex  = ++this.tabIndex,
 			};
 
 			var mainFrame = new FrameBox
 			{
-				Parent    = window.Root,
+				Parent    = leftFrame,
 				BackColor = adorner.ColorTextBackground,
 				Dock      = DockStyle.Fill,
-				Margins   = new Margins (10, 10, 0, 0),
 				TabIndex  = ++this.tabIndex,
+			};
+
+			var actionsFrame = new FrameBox
+			{
+				Parent          = leftFrame,
+				PreferredHeight = 20,
+				Dock            = DockStyle.Bottom,
+				Margins         = new Margins (0, 0, 10, 0),
+				TabIndex        = ++this.tabIndex,
 			};
 
 			var footerFrame = new FrameBox
@@ -84,18 +118,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Dock            = DockStyle.Bottom,
 			};
 
-			var actionsFrame = new FrameBox
-			{
-				Parent          = window.Root,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Bottom,
-				Margins         = new Margins (10, 10, 10, 10),
-				TabIndex        = ++this.tabIndex,
-			};
-
 			//	Crée les interfaces.
 			this.CreateFilterUI  (filterFrame);
 			this.CreateMainUI    (mainFrame);
+			this.CreatePreviewUI (rightFrame);
 			this.CreateActionsUI (actionsFrame);
 			this.CreateFooterUI  (footerFrame);
 
@@ -114,42 +140,48 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Dock           = DockStyle.Left,
 			};
 
-			this.filterField = new TextField
+			this.filterField = new TextFieldEx
 			{
 				Parent   = parent,
 				Dock     = DockStyle.Fill,
 				TabIndex = ++this.tabIndex,
 			};
 
-			var clearButton = new GlyphButton
+			this.filterClearButton = new GlyphButton
 			{
 				Parent     = parent,
-				GlyphShape = GlyphShape.Reject,
+				GlyphShape = GlyphShape.Minus,
 				Enable     = false,
 				Margins    = new Margins (1, 0, 0, 0),
 				Dock       = DockStyle.Right,
 				TabIndex   = ++this.tabIndex,
 			};
 
-			ToolTip.Default.SetToolTip (clearButton, "Annuler le filtre");
+			ToolTip.Default.SetToolTip (this.filterClearButton, "Tout montrer");
 
-			this.filterField.TextChanged += delegate
+			this.filterField.EditionAccepted += delegate
 			{
-				this.UpdateFilter ();
-				this.UpdateRows ();
-				this.UpdateScroller ();
-				this.UpdateActions ();
-
-				bool hasFilter = this.HasFilter;
-				clearButton.Enable = hasFilter;
-				this.selectAllButton.Margins = new Margins (5, hasFilter ? 5:0, 0, 0);
-				this.selectFilterButton.Visibility = hasFilter;
+				this.UpdateAfterFilterChanged ();
 			};
 
-			clearButton.Clicked += delegate
+			this.filterClearButton.Clicked += delegate
 			{
 				this.filterField.Text = null;
+				this.UpdateAfterFilterChanged ();
 			};
+		}
+
+		private void UpdateAfterFilterChanged()
+		{
+			this.UpdateFilter ();
+			this.UpdateRows ();
+			this.UpdateScroller ();
+			this.UpdateActions ();
+
+			bool hasFilter = this.HasFilter;
+			this.filterClearButton.Enable = hasFilter;
+			this.selectAllButton.Margins = new Margins (5, hasFilter ? 5:0, 0, 0);
+			this.selectFilterButton.Visibility = hasFilter;
 		}
 
 		private void CreateMainUI(Widget parent)
@@ -179,6 +211,32 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.UpdateContainers (containersFrame);
 				this.UpdateRows ();
 				this.UpdateScroller ();
+			};
+		}
+
+		private void CreatePreviewUI(Widget parent)
+		{
+			new StaticText
+			{
+				Parent  = parent,
+				Text    = "Aperçu :",
+				Dock    = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, 5),
+			};
+
+			var frame = new FrameBox
+			{
+				Parent        = parent,
+				DrawFullFrame = true,
+				Dock          = DockStyle.Fill,
+				Padding       = new Margins (5),
+			};
+
+			this.previewText = new StaticText
+			{
+				Parent           = frame,
+				ContentAlignment = ContentAlignment.TopLeft,
+				Dock             = DockStyle.Fill,
 			};
 		}
 
@@ -333,12 +391,24 @@ namespace Epsitec.Cresus.Core.Dialogs
 						this.ContainerClicked (container.Index);
 					};
 
+					container.Entered += delegate
+					{
+						this.ContainerHilite (container, true);
+						this.UpdatePreview (container.Index);
+					};
+
+					container.Exited += delegate
+					{
+						this.ContainerHilite (container, false);
+						this.UpdatePreview (-1);
+					};
+
 					this.containers.Add (container);
 				}
 			}
 
 			//	Positionne les containers.
-			var rect = new Rectangle (bounds.Left, bounds.Height-lineHeight, bounds.Width, lineHeight);
+			var rect = new Rectangle (bounds.Left, bounds.Top-lineHeight, bounds.Width, lineHeight);
 
 			foreach (var container in this.containers)
 			{
@@ -408,6 +478,31 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.UpdateRows ();
 			this.UpdateActions ();
+		}
+
+		private void ContainerHilite(FrameBox container, bool entered)
+		{
+			var color = Color.Empty;
+
+			if (entered && container.Index != -1)
+			{
+				color = Color.FromBrightness (0.9);
+			}
+
+			container.BackColor = color;
+		}
+
+		private void UpdatePreview(int index)
+		{
+			var text = FormattedText.Empty;
+
+			if (index != -1)
+			{
+				var entity = this.items[index];
+				text = entity.GetSummary ();
+			}
+
+			this.previewText.FormattedText = text;
 		}
 
 		private void UpdateRows()
@@ -663,13 +758,17 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private readonly SelectionController<T>					controller;
 		private readonly EnumValueCardinality					cardinality;
+		private readonly string									title;
 		private readonly List<T>								items;
 		private readonly List<FiltererItem>						filteredItems;
 		private readonly List<FrameBox>							containers;
 		private readonly List<int>								selectedIndexes;
 
-		private TextField										filterField;
+		private TextFieldEx										filterField;
+		private GlyphButton										filterClearButton;
+
 		private VScroller										scroller;
+		private StaticText										previewText;
 
 		private Button											deselectButton;
 		private Button											selectAllButton;
