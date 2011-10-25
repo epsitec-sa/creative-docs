@@ -118,6 +118,15 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Dock            = DockStyle.Bottom,
 			};
 
+			this.floatArrowMark = new Widgets.StaticGlyph
+			{
+				Parent        = middleFrame,
+				GlyphShape    = GlyphShape.TriangleRight,
+				PreferredSize = new Size (36, 36),
+				Anchor        = AnchorStyles.TopLeft,
+				Visibility    = false,
+			};
+
 			//	Crée les interfaces.
 			this.CreateFilterUI  (filterFrame);
 			this.CreateMainUI    (mainFrame);
@@ -173,6 +182,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void UpdateAfterFilterChanged()
 		{
+			this.firstRow = 0;
+
 			this.UpdateFilter ();
 			this.UpdateRows ();
 			this.UpdateScroller ();
@@ -483,6 +494,25 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 
 			container.BackColor = color;
+
+			this.UpdateFloatArrowMark (container, entered);
+		}
+
+		private void UpdateFloatArrowMark(FrameBox container, bool entered)
+		{
+			if (entered && container.Index != -1)
+			{
+				var frame = this.floatArrowMark.Parent;
+				double x = frame.ActualWidth/2 - this.floatArrowMark.ActualWidth/2 - 1;
+				double y = container.Parent.ActualHeight - container.ActualLocation.Y + 4;
+
+				this.floatArrowMark.Margins = new Margins (x, 0, y, 0);
+				this.floatArrowMark.Visibility = true;
+			}
+			else
+			{
+				this.floatArrowMark.Visibility = false;
+			}
 		}
 
 		private void UpdatePreview(int index)
@@ -768,6 +798,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private Button											acceptButton;
 		private Button											cancelButton;
+
+		private Widgets.StaticGlyph								floatArrowMark;
 
 		private int												firstRow;
 		private int												tabIndex;

@@ -23,6 +23,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .Field (x => x.Person)
 				  .Field (x => x.PeopleCategory)
 				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.BeginDate)
+				  .Field (x => x.EndDate)
+				.End ()
 				;
 		}
 	}
