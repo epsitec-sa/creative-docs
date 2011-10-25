@@ -19,6 +19,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			wall.AddBrick ()
 				.Input ()
+				  .Title ("N° de la personne").Field (x => x.IdA)
 				  .Field (x => x.Person)
 				  .Field (x => x.PeopleCategory)
 				.End ()
