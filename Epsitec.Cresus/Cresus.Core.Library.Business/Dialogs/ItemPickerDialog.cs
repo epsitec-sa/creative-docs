@@ -219,24 +219,17 @@ namespace Epsitec.Cresus.Core.Dialogs
 			new StaticText
 			{
 				Parent  = parent,
-				Text    = "Aperçu :",
+				Text    = "Détails :",
 				Dock    = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, 5),
 			};
 
-			var frame = new FrameBox
+			this.previewFrame = new FrameBox
 			{
 				Parent        = parent,
 				DrawFullFrame = true,
 				Dock          = DockStyle.Fill,
 				Padding       = new Margins (5),
-			};
-
-			this.previewText = new StaticText
-			{
-				Parent           = frame,
-				ContentAlignment = ContentAlignment.TopLeft,
-				Dock             = DockStyle.Fill,
 			};
 		}
 
@@ -494,15 +487,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void UpdatePreview(int index)
 		{
-			var text = FormattedText.Empty;
+			this.previewFrame.Children.Clear ();
 
 			if (index != -1)
 			{
 				var entity = this.items[index];
-				text = entity.GetSummary ();
+				var content = Helpers.EntityPreviewHelper.CreateSummaryUI (entity, this.previewFrame, this.controller.CoreData);
+				content.Dock = DockStyle.Fill;
 			}
-
-			this.previewText.FormattedText = text;
 		}
 
 		private void UpdateRows()
@@ -768,7 +760,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private GlyphButton										filterClearButton;
 
 		private VScroller										scroller;
-		private StaticText										previewText;
+		private FrameBox										previewFrame;
 
 		private Button											deselectButton;
 		private Button											selectAllButton;

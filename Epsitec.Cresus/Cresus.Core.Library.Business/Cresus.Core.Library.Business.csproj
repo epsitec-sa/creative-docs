@@ -226,6 +226,7 @@
     <Compile Include="Factories\DefaultViewControllerComponentFactory.cs" />
     <Compile Include="Factories\IEntitySpecialControllerFactory.cs" />
     <Compile Include="Business\EntityPrinters\InvoiceDocumentPrinter.cs" />
+    <Compile Include="Helpers\EntityPreviewHelper.cs" />
     <Compile Include="Library\ViewControllerComponent.cs" />
     <Compile Include="Library\ViewControllerComponent`1.cs" />
     <Compile Include="Controllers\MainWindowController.cs" />

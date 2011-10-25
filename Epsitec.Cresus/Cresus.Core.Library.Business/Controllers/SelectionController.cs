@@ -85,6 +85,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			set;
 		}
 
+		public CoreData							CoreData
+		{
+			get
+			{
+				return this.businessContext.Data;
+			}
+		}
+
 
 		public void Attach(Widgets.AutoCompleteTextField widget)
 		{

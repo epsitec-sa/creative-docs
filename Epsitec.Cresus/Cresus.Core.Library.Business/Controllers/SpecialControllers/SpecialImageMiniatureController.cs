@@ -13,12 +13,12 @@ using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.Helpers;
 using Epsitec.Cresus.Core.Data;
+using Epsitec.Cresus.Core.Factories;
 
 using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Core.Factories;
 
 namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 {
@@ -40,32 +40,12 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 
 			if (this.imageBlobEntity.IsNotNull ())
 			{
-				var controller = this.tileContainer.Controller as EntityViewController;
-				System.Diagnostics.Debug.Assert (controller != null);
+				var box = EntityPreviewHelper.CreateSummaryUI (this.imageBlobEntity, parent, this.tileContainer.Controller.Data);
 
-				var store = controller.Data.GetComponent<ImageDataStore> ();
-				System.Diagnostics.Debug.Assert (store != null);
-				
-				var data = store.GetImageData (this.imageBlobEntity.Code, 300);
-				
-				Image image = data == null ? null : data.GetImage ();
-
-				var box = new FrameBox
-				{
-					Parent = parent,
-					PreferredHeight = 300,
-					Padding = new Margins (10),
-					DrawFrameEdges = FrameEdges.Bottom,
-					Dock = DockStyle.Top,
-					Margins = Widgets.Tiles.TileArrow.GetContainerPadding (Direction.Right),
-				};
-
-				var miniature = new Widgets.Miniature ()
-				{
-					Parent = box,
-					Image = image,
-					Dock = DockStyle.Fill,
-				};
+				box.PreferredHeight = 300;
+				box.Padding         = new Margins (10);
+				box.Dock            = DockStyle.Top;
+				box.Margins         = Widgets.Tiles.TileArrow.GetContainerPadding (Direction.Right);
 			}
 		}
 
