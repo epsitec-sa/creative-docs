@@ -591,7 +591,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			get
 			{
 				bool includeOwner = this.HasOption (DocumentOption.HeaderNumberIncludeOwner);
-				return InvoiceDocumentHelper.GetTitle (this.Metadata, this.Entity, null, this.LanguageId, includeOwner);
+				return InvoiceDocumentHelper.GetTitle (this.businessContext as BusinessContext, this.Metadata, this.Entity, null, this.LanguageId, includeOwner);
 			}
 		}
 

@@ -9,6 +9,7 @@ using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -19,21 +20,42 @@ namespace Epsitec.Cresus.Core.Helpers
 {
 	public static class InvoiceDocumentHelper
 	{
-		public static FormattedText GetTitle(DocumentMetadataEntity metadata, BusinessDocumentEntity x, PaymentTransactionEntity billingDetails, string languageId, bool includeOwner)
+		public static FormattedText GetTitle(BusinessContext businessContext, DocumentMetadataEntity metadata, BusinessDocumentEntity businessDocument, PaymentTransactionEntity billingDetails, string languageId, bool includeOwner)
 		{
 			//	Retourne le titre du document imprimé.
 			//	Par exemple "Facture 10256", "Offre 10257" ou "Bon pour commande 10258".
-			var doc = InvoiceDocumentHelper.GetDocumentName (metadata, languageId);
-			var title = TextFormatter.FormatText (doc, metadata.IdA, "/~", metadata.IdB, "/~", metadata.IdC).ApplyBold ();
+			var title = InvoiceDocumentHelper.GetDocumentName (metadata, languageId);
 
-			if (billingDetails == null)
+			if (!string.IsNullOrEmpty (metadata.IdA))
 			{
-				return title;
+				title = FormattedText.Concat (title, " ", metadata.IdA);
 			}
-			else
+
+			if (!string.IsNullOrEmpty (metadata.IdB))
 			{
-				return FormattedText.Concat (title, " ", InvoiceDocumentHelper.GetInstalmentName (x, billingDetails, true));
+				title = FormattedText.Concat (title, "/", metadata.IdB);
 			}
+
+			if (!string.IsNullOrEmpty (metadata.IdC))
+			{
+				title = FormattedText.Concat (title, "/", metadata.IdC);
+			}
+
+			var user = includeOwner ? InvoiceDocumentHelper.GetOwnerId (businessContext, metadata) : null;
+
+			if (!string.IsNullOrEmpty (user))
+			{
+				title = FormattedText.Concat (title, "/", user);
+			}
+
+			title = title.ApplyBold ();
+
+			if (billingDetails != null)
+			{
+				title = FormattedText.Concat (title, " ", InvoiceDocumentHelper.GetInstalmentName (businessDocument, billingDetails, true));
+			}
+
+			return title;
 		}
 
 		public static FormattedText GetDocumentName(DocumentMetadataEntity metadata, string languageId)
@@ -51,7 +73,23 @@ namespace Epsitec.Cresus.Core.Helpers
 			}
 		}
 
-		public static FormattedText GetInstalmentName(BusinessDocumentEntity x, PaymentTransactionEntity billingDetails, bool parenthesis)
+		private static string GetOwnerId(BusinessContext businessContext, DocumentMetadataEntity metadata)
+		{
+			//	Retourne le numéro (IdA) du propriétaire de l'affaire.
+			var example = new AffairEntity ();
+			example.Documents.Add (metadata);
+
+			var affair = businessContext.DataContext.GetByExample<AffairEntity> (example).FirstOrDefault ();
+
+			if (affair != null)
+			{
+				return affair.ActiveAffairOwner.IdA;
+			}
+
+			return null;
+		}
+
+		private static FormattedText GetInstalmentName(BusinessDocumentEntity businessDocument, PaymentTransactionEntity billingDetails, bool parenthesis)
 		{
 			//	Retourne la description d'une mensualité. Si aucun texte n'est défini, il est généré automatiquement,
 			//	sur le modèle "n/t", où n est le rang de la mensualité et t le nombre total.
@@ -79,7 +117,7 @@ namespace Epsitec.Cresus.Core.Helpers
 				}
 			}
 
-			int count = x.PaymentTransactions.Count (y => y.InstalmentRank != null);  // compte les mensualités
+			int count = businessDocument.PaymentTransactions.Count (y => y.InstalmentRank != null);  // compte les mensualités
 
 			if (parenthesis)
 			{
@@ -91,12 +129,6 @@ namespace Epsitec.Cresus.Core.Helpers
 			}
 		}
 
-
-		public static int GetUserLinesCount(BusinessDocumentEntity x)
-		{
-			//	Retourne le nombre de lignes gérables par l'utilisateur.
-			return x.Lines.Count (y => (y is TextDocumentItemEntity || y is ArticleDocumentItemEntity || y is SubTotalDocumentItemEntity));
-		}
 
 #if false
 		public static void UpdatePrices(BusinessDocumentEntity x, DataContext dataContext)
