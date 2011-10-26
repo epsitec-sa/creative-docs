@@ -13,9 +13,13 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Widgets
 {
-	public class ItemPicker : Widget, IMultipleSelection, IItemPicker
+	/// <summary>
+	/// Ce widget permet d'éditer une enumération sous une forme détaillée (plusieurs lignes de CheckButton
+	/// ou RadioButton), avec un support complet de tous les modes de cardinalité.
+	/// </summary>
+	public class ItemPickerButtons : Widget, IMultipleSelection, IItemPicker
 	{
-		public ItemPicker()
+		public ItemPickerButtons()
 		{
 			this.Cardinality = EnumValueCardinality.ExactlyOne;
 
@@ -25,7 +29,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.selection = new HashSet<int> ();
 		}
 
-		public ItemPicker(Widget embedder)
+		public ItemPickerButtons(Widget embedder)
 			: this ()
 		{
 			this.SetEmbedder (embedder);
@@ -71,11 +75,11 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			add
 			{
-				this.AddUserEventHandler (ItemPicker.SelectedItemChangedEvent, value);
+				this.AddUserEventHandler (ItemPickerButtons.SelectedItemChangedEvent, value);
 			}
 			remove
 			{
-				this.RemoveUserEventHandler (ItemPicker.SelectedItemChangedEvent, value);
+				this.RemoveUserEventHandler (ItemPickerButtons.SelectedItemChangedEvent, value);
 			}
 		}
 
@@ -363,11 +367,11 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			add
 			{
-				this.AddUserEventHandler (ItemPicker.SelectedItemChangedEvent, value);
+				this.AddUserEventHandler (ItemPickerButtons.SelectedItemChangedEvent, value);
 			}
 			remove
 			{
-				this.RemoveUserEventHandler (ItemPicker.SelectedItemChangedEvent, value);
+				this.RemoveUserEventHandler (ItemPickerButtons.SelectedItemChangedEvent, value);
 			}
 		}
 
@@ -413,7 +417,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			this.Invalidate ();
 
-			var handler = (EventHandler) this.GetUserEventHandler (ItemPicker.MultiSelectionChangedEvent);
+			var handler = (EventHandler) this.GetUserEventHandler (ItemPickerButtons.MultiSelectionChangedEvent);
 
 			if (handler != null)
 			{
@@ -427,7 +431,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			this.Invalidate ();
 
-			var handler = (EventHandler) this.GetUserEventHandler (ItemPicker.SelectedItemChangedEvent);
+			var handler = (EventHandler) this.GetUserEventHandler (ItemPickerButtons.SelectedItemChangedEvent);
 
 			if (handler != null)
 			{
@@ -439,11 +443,11 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			add
 			{
-				this.AddUserEventHandler (ItemPicker.MultiSelectionChangedEvent, value);
+				this.AddUserEventHandler (ItemPickerButtons.MultiSelectionChangedEvent, value);
 			}
 			remove
 			{
-				this.RemoveUserEventHandler (ItemPicker.MultiSelectionChangedEvent, value);
+				this.RemoveUserEventHandler (ItemPickerButtons.MultiSelectionChangedEvent, value);
 			}
 		}
 

@@ -150,12 +150,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			dateBox.Visibility = (typeWidget.Items.Count != 0);
 		}
 
-		private ItemPicker CreateTypeUI(Widget parent)
+		private ItemPickerButtons CreateTypeUI(Widget parent)
 		{
 			//	Crée le widget pour choisir le type de la quantité. Les boutons ne montrent que les types
 			//	définis dans les réglages globaux (ArticleQuantityColumnEntity) et compatibles avec
 			//	la logique d'entreprise.
-			ItemPicker widget = new ItemPicker
+			var widget = new ItemPickerButtons
 			{
 				Parent = parent,
 				Dock = DockStyle.Left,

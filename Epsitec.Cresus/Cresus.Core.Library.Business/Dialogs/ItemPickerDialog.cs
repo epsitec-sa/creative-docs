@@ -20,7 +20,9 @@ using System.Linq.Expressions;
 namespace Epsitec.Cresus.Core.Dialogs
 {
 	/// <summary>
-	/// Dialogue pour l'ensemble des réglages globaux.
+	/// Ce dialogue permet d'éditer une enumération avec un support complet de tous les modes de cardinalité.
+	/// Il supporte un très grand nombre d'éléments dans l'énumération. En effet, seul les widgets correspondants
+	/// aux lignes visibles sont créés, et non l'ensemble. De plus, un filtre rend l'utilisation agréable.
 	/// </summary>
 	public class ItemPickerDialog<T> : CoreDialog
 			where T : AbstractEntity, new ()

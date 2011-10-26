@@ -1195,7 +1195,7 @@ namespace Epsitec.Cresus.Core
 			if (controller.GetPossibleItems().Count () <= 5)  // limite arbitraire !
 			{
 				//	S'il y a 5 choix ou moins, on utilise un ItemPicker, qui crée des CheckButtons.
-				var picker = this.CreateDetailedItemPicker (tile, label, cardinality, out tileButton);
+				var picker = this.CreateDetailedItemPickerButtons (tile, label, cardinality, out tileButton);
 
 				controller.Attach (picker);
 
@@ -1593,7 +1593,7 @@ namespace Epsitec.Cresus.Core
 			private readonly CoreViewController controller;
 		}
 
-		private ItemPicker CreateDetailedItemPicker(EditionTile tile, string label, EnumValueCardinality cardinality, out GlyphButton tileButton)
+		private ItemPickerButtons CreateDetailedItemPickerButtons(EditionTile tile, string label, EnumValueCardinality cardinality, out GlyphButton tileButton)
 		{
 			tile.AllowSelection = true;
 
@@ -1623,7 +1623,7 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 
-			var widget = new Widgets.ItemPicker
+			var widget = new Widgets.ItemPickerButtons
 			{
 				Parent = tile.Container,
 				Enable = !this.ReadOnly,

@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.Update ();
 		}
 
-		public void Attach(Widgets.ItemPicker widget)
+		public void Attach(Widgets.ItemPickerButtons widget)
 		{
 			this.attachedPicker = widget;
 			this.widgetItems    = widget.Items;

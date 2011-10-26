@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		public void Attach(ItemPicker widget)
+		public void Attach(ItemPickerButtons widget)
 		{
 			this.attachedWidget = widget;
 
@@ -100,9 +100,9 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			if (this.attachedWidget != null)
 			{
-				if (this.attachedWidget is ItemPicker)
+				if (this.attachedWidget is ItemPickerButtons)
 				{
-					var itemPicker = this.attachedWidget as ItemPicker;
+					var itemPicker = this.attachedWidget as ItemPickerButtons;
 
 					itemPicker.ClearSelection ();
 

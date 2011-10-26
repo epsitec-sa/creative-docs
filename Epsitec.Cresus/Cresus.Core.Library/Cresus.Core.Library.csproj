@@ -138,7 +138,7 @@
     <Compile Include="Widgets\HintEditorMode.cs" />
     <Compile Include="Widgets\StaticTextExtensions.cs" />
     <Compile Include="Widgets\DragTargetMarker.cs" />
-    <Compile Include="Widgets\ItemPicker.cs" />
+    <Compile Include="Widgets\ItemPickerButtons.cs" />
     <Compile Include="Widgets\ItemPickerCombo.cs" />
     <Compile Include="Widgets\IWidgetUpdater.cs" />
     <Compile Include="Widgets\StaticGlyph.cs" />
