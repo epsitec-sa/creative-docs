@@ -718,6 +718,132 @@ namespace Epsitec.Cresus.Core.Library.Documents
 			#endregion
 		}
 		
+		public static class StringIds
+		{
+			public static class BusinessDocument
+			{
+				public static class Column
+				{
+					//	designer:str/HVK2
+					public static global::Epsitec.Common.Support.Druid AdditionalQuantities
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544322);
+						}
+					}
+					//	designer:str/HVK4
+					public static global::Epsitec.Common.Support.Druid ArticleDescription
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544324);
+						}
+					}
+					//	designer:str/HVK3
+					public static global::Epsitec.Common.Support.Druid ArticleId
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544323);
+						}
+					}
+					//	designer:str/HVK7
+					public static global::Epsitec.Common.Support.Druid Discount
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544327);
+						}
+					}
+					//	designer:str/HVK
+					public static global::Epsitec.Common.Support.Druid LineNumber
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544320);
+						}
+					}
+					//	designer:str/HVK8
+					public static global::Epsitec.Common.Support.Druid LinePriceExcludingTax
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544328);
+						}
+					}
+					//	designer:str/HVK9
+					public static global::Epsitec.Common.Support.Druid LinePriceIncludingTax
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544329);
+						}
+					}
+					//	designer:str/HVK1
+					public static global::Epsitec.Common.Support.Druid MainQuantity
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544321);
+						}
+					}
+					//	designer:str/HVKB
+					public static global::Epsitec.Common.Support.Druid Total
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544331);
+						}
+					}
+					//	designer:str/HVK5
+					public static global::Epsitec.Common.Support.Druid UnitPriceExcludingTax
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544325);
+						}
+					}
+					//	designer:str/HVK6
+					public static global::Epsitec.Common.Support.Druid UnitPriceIncludingTax
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544326);
+						}
+					}
+					//	designer:str/HVKA
+					public static global::Epsitec.Common.Support.Druid Vat
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544330);
+						}
+					}
+				}
+			}
+			
+			public static class Watermark
+			{
+				//	designer:str/HVKD
+				public static global::Epsitec.Common.Support.Druid Draft
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544333);
+					}
+				}
+				//	designer:str/HVKC
+				public static global::Epsitec.Common.Support.Druid Specimen
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544332);
+					}
+				}
+			}
+		}
+		
 		static Res()
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
