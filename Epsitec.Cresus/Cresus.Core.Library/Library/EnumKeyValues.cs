@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Core.Library
 			foreach (var item in enumType.Values)
 			{
 				var enumKey = (T) (object) item.Value;
-				var caption = item.Caption;
+				var caption = TextFormatter.GetCurrentCultureCaption (item.Caption);
 				var labels  = caption.Labels.ToArray ();
 
 				if (labels.Length == 0)
@@ -75,8 +75,13 @@ namespace Epsitec.Cresus.Core.Library
 			{
 				var info    = EntityInfo.GetStructuredType (entityId);
 				var caption = info == null ? null : info.Caption;
-				var label   = new FormattedText (info.Caption.DefaultLabel ?? info.Caption.Description ?? "");
-				var name    = FormattedText.FromSimpleText (info.Caption.Name);
+
+				caption = TextFormatter.GetCurrentCultureCaption (caption);
+
+				System.Diagnostics.Debug.Assert (caption != null);
+
+				var label   = new FormattedText (caption.DefaultLabel ?? caption.Description ?? "");
+				var name    = FormattedText.FromSimpleText (caption.Name);
 
 				yield return EnumKeyValues.Create (caption.Id, name, label);
 			}

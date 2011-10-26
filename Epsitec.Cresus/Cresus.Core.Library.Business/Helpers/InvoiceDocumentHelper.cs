@@ -40,26 +40,7 @@ namespace Epsitec.Cresus.Core.Helpers
 			}
 			else
 			{
-#if true
-				// TODO: [check-PA] il serait prudent que Pierre vérifie le code ci-dessous !
-				var culture = Resources.FindCultureInfo (languageId);
-				var bundle = Epsitec.Cresus.Core.Library.Documents.Res.Manager.GetBundle ("Captions", (languageId == "fr") ? ResourceLevel.Default : ResourceLevel.Merged, culture);
-
-				string field = string.Concat ("Val.DocumentType.", metadata.DocumentCategory.DocumentType.ToString ());
-
-				if (bundle == null)
-				{
-					return null;
-				}
-				else
-				{
-					var caption = new Caption ();
-					caption.DeserializeFromString (bundle[field].AsString);
-					return caption.DefaultLabel;
-				}
-#else
-				return metadata.DocumentCategory.Name;
-#endif
+				return TextFormatter.ExecuteUsingCulture (languageId, () => TextFormatter.FormatText (metadata.DocumentCategory.DocumentType));
 			}
 		}
 
