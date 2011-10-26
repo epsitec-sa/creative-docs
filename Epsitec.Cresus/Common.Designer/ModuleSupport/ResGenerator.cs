@@ -72,6 +72,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 				{
 					case Resources.StringTypeName:
 						this.GenerateStrings (bundleId, bundle);
+						this.GenerateStringIds (bundleId, bundle);
 						addLine = true;
 						break;
 					
@@ -899,6 +900,134 @@ namespace Epsitec.Common.Designer.ModuleSupport
 				bundleId, @""");");
 			this.formatter.WriteCodeLine ();
 			this.formatter.WriteCodeLine ("#endregion");
+
+			this.formatter.WriteEndClass ();
+		}
+
+		private void GenerateStringIds(string bundleId, ResourceBundle bundle)
+		{
+			this.formatter.WriteCodeLine ();
+
+			string prefix   = "";
+			bool addNewline = false;
+
+			this.formatter.WriteBeginClass (CodeHelper.PublicStaticClassAttributes, "StringIds");
+
+			string[] fields   = bundle.FieldNames;
+			string[] sortKeys = new string[fields.Length];
+
+			for (int i = 0; i < fields.Length; i++)
+			{
+				int pos = fields[i].LastIndexOf ('.');
+
+				if (pos < 0)
+				{
+					sortKeys[i] = fields[i];
+				}
+				else
+				{
+					sortKeys[i] = string.Concat (fields[i].Substring (0, pos), "!", fields[i].Substring (pos+1));
+				}
+			}
+
+			System.Array.Sort (sortKeys, fields);
+
+			for (int i = 0; i < fields.Length; i++)
+			{
+				string field = fields[i];
+
+				while ((prefix != "") && (field.StartsWith (prefix + ".") == false))
+				{
+					//	Remonte d'un niveau dans la hiérarchie des classes.
+
+					string[] args = prefix.Split ('.');
+					string last = args[args.Length-1];
+
+					this.formatter.WriteEndClass ();
+
+					prefix = prefix.Substring (0, System.Math.Max (0, prefix.Length - last.Length - 1));
+					addNewline = true;
+				}
+
+				string delta = prefix.Length == 0 ? field : field.Substring (prefix.Length + 1);
+
+				if (addNewline)
+				{
+					this.formatter.WriteCodeLine ();
+					addNewline = false;
+				}
+
+				//	Crée les classes manquantes, si besoin :
+
+				while (delta.IndexOf ('.') > -1)
+				{
+					string[] args = delta.Split ('.');
+					string elem = args[0];
+
+					this.formatter.WriteBeginClass (CodeHelper.PublicStaticClassAttributes, elem);
+
+					if (prefix.Length == 0)
+					{
+						prefix = elem;
+					}
+					else
+					{
+						prefix = string.Concat (prefix, ".", elem);
+					}
+
+					delta = field.Substring (prefix.Length + 1);
+				}
+
+				//	Crée l'accesseur pour le champ actuel :
+
+				Druid localDruid = bundle[field].Id;
+				Druid moduleDruid = new Druid (localDruid, bundle.Module.Id);
+
+				System.Text.StringBuilder id = new System.Text.StringBuilder ();
+
+				if (localDruid.Type == Support.DruidType.ModuleRelative)
+				{
+					id.Append (@"global::Epsitec.Common.Support.Druid.FromFieldId (");
+					id.Append (localDruid.ToFieldId ());
+					id.Append (@")");
+				}
+				else
+				{
+					id.Append (@"""");
+					id.Append (bundleId);
+					id.Append (@"""");
+
+					string[] elems = field.Split ('.');
+
+					for (int k = 0; k < elems.Length; k++)
+					{
+						id.Append (@", """);
+						id.Append (elems[k]);
+						id.Append (@"""");
+					}
+				}
+
+				this.formatter.WriteCodeLine ("//\tdesigner:str/", moduleDruid.ToString ().Trim ('[', ']'));
+
+				this.formatter.WriteBeginProperty (CodeHelper.PublicStaticPropertyAttributes, string.Concat ("global::Epsitec.Common.Support.Druid ", delta));
+				this.formatter.WriteBeginGetter (CodeAttributes.Default);
+				this.formatter.WriteCodeLine ("return ", id.ToString (), ";");
+
+				this.formatter.WriteEndGetter ();
+				this.formatter.WriteEndProperty ();
+			}
+
+			//	Referme les classes ouvertes :
+
+			if (prefix.Length > 0)
+			{
+				string[] args = prefix.Split ('.');
+
+				for (int j = 0; j < args.Length; j++)
+				{
+					this.formatter.WriteEndClass ();
+				}
+			}
 
 			this.formatter.WriteEndClass ();
 		}
