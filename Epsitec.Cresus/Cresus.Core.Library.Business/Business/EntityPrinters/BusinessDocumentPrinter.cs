@@ -656,7 +656,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			switch (columnKey)
 			{
 				case TableColumnKeys.LineNumber:
-					return this.GetString ("BusinessDocument.Column.LineNumber");
+					return this.GetString (Epsitec.Cresus.Core.Library.Documents.Res.StringIds.BusinessDocument.Column.LineNumber);
 
 				case TableColumnKeys.MainQuantity:
 					return this.GetString ("BusinessDocument.Column.MainQuantity");

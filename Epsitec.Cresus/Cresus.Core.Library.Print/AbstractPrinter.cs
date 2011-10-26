@@ -260,14 +260,10 @@ namespace Epsitec.Cresus.Core.Print
 			return factory.CreatePrinter (businessContext, entity, options, printingUnits) as AbstractPrinter;
 		}
 
-
-		protected string GetString(string field)
+		protected string GetString(Druid field)
 		{
-			//	Retourne un texte contenu dans les ressources de Cresus.Core.Library.Documents.
-#if true
-			// TODO: [check-PA] il serait prudent que Pierre vérifie le code ci-dessous !
-			var culture = Resources.FindCultureInfo (this.LanguageId);
-			var bundle = Epsitec.Cresus.Core.Library.Documents.Res.Manager.GetBundle ("Strings", (this.LanguageId == "fr") ? ResourceLevel.Default : ResourceLevel.Merged, culture);
+			var culture = Resources.FindSpecificCultureInfo (this.LanguageId);
+			var bundle = Epsitec.Cresus.Core.Library.Documents.Res.Manager.GetBundle ("Strings", ResourceLevel.Merged, culture);
 
 			if (bundle == null)
 			{
@@ -277,9 +273,6 @@ namespace Epsitec.Cresus.Core.Print
 			{
 				return bundle[field].AsString;
 			}
-#else
-			return Cresus.Core.Library.Documents.Res.Strings.GetString (field);
-#endif
 		}
 
 
