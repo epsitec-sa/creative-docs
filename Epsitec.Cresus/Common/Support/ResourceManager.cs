@@ -959,17 +959,29 @@ namespace Epsitec.Common.Support
 		/// <returns>The caption or <c>null</c> if it could not be found.</returns>
 		public Caption GetCaption(Druid druid)
 		{
-			return this.GetCaption (druid, ResourceLevel.Merged, this.culture, true);
+			return this.GetCaption (druid, ResourceLevel.Merged, this.culture, cache: true);
 		}
 
 		public Caption GetCaption(Druid druid, ResourceLevel level)
 		{
-			return this.GetCaption (druid, level, this.culture, true);
+			return this.GetCaption (druid, level, this.culture, cache: true);
 		}
 		
 		public Caption GetCaption(Druid druid, ResourceLevel level, CultureInfo culture)
 		{
-			return this.GetCaption (druid, level, culture, true);
+			return this.GetCaption (druid, level, culture, cache: true);
+		}
+
+		public Caption GetCaption(Caption caption, CultureInfo culture)
+		{
+			if (caption == null)
+			{
+				return null;
+			}
+			else
+			{
+				return this.GetCaption (caption.Id, ResourceLevel.Merged, culture);
+			}
 		}
 
 		#region IStructuredTypeResolver Members
@@ -1785,7 +1797,7 @@ namespace Epsitec.Common.Support
 					}
 					else
 					{
-						Types.Caption update = manager.GetCaption (caption.Id, level, culture, false);
+						Types.Caption update = manager.GetCaption (caption.Id, level, culture, cache: false);
 
 						if (update != null)
 						{

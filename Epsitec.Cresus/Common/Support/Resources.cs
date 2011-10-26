@@ -1,9 +1,9 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Globalization;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.Support
 {
@@ -15,12 +15,11 @@ namespace Epsitec.Common.Support
 	{
 		static Resources()
 		{
-			string[] names = { "fr", "de", "it", "en", "es" };
+			string[] names = { "fr-CH", "de-CH", "it-CH", "en-GB", "es-ES", "pt-PT" };
 
 			Resources.factory = new ResourceProviderFactory ();
-			
-			Resources.InternalInitialize ();
-			Resources.InternalDefineCultures (names);
+			Resources.manager = new ResourceManager (typeof (ResourceManager));
+			Resources.cultures = names.Select (code => CultureInfo.GetCultureInfoByIetfLanguageTag (code)).ToList ();
 			
 			Types.ResourceBinding.RebindCallback = Resources.Rebinder;
 		}
@@ -61,6 +60,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		
 		public static string ExtractPrefix(string id)
 		{
 			if (id != null)
@@ -332,6 +332,28 @@ namespace Epsitec.Common.Support
 		
 		public static CultureInfo FindSpecificCultureInfo(string twoLetterCode)
 		{
+			CultureInfo info;
+
+			lock (Resources.cultures)
+			{
+				info = Resources.cultures.Find (x => x.TwoLetterISOLanguageName == twoLetterCode);
+
+				if (info == null)
+				{
+					info = Resources.InternalFindSpecificCultureInfo (twoLetterCode);
+
+					if (info != null)
+					{
+						Resources.cultures.Add (info);
+					}
+				}
+			}
+				
+			return info;
+		}
+
+		private static CultureInfo InternalFindSpecificCultureInfo(string twoLetterCode)
+		{
 			//	FindSpecificCultureInfo retourne une culture propre à un pays, avec
 			//	une préférence pour la Suisse ou les USA.
 			
@@ -522,49 +544,34 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		private static void InternalInitialize()
-		{
-			Resources.manager = new ResourceManager (typeof (ResourceManager));
-		}
-		
-		private static void InternalDefineCultures(string[] names)
-		{
-			int n = names.Length;
-			
-			Resources.cultures = new CultureInfo[n];
-			
-			for (int i = 0; i < n; i++)
-			{
-				Resources.cultures[i] = Resources.FindCultureInfo (names[i]);
-			}
-		}
-
 		#endregion
 
-		public const string						StringsBundleName = "Strings";
+		public const string						StringsBundleName  = "Strings";
 		public const string						CaptionsBundleName = "Captions";
-		public const string						StringTypeName = "String";
+		
+		public const string						StringTypeName  = "String";
 		public const string						CaptionTypeName = "Caption";
-		public const string						PanelTypeName = "Panel";
-		public const string						FormTypeName = "Form";
+		public const string						PanelTypeName   = "Panel";
+		public const string						FormTypeName    = "Form";
+		
 		public static readonly string			DefaultTwoLetterISOLanguageName = "00";
 
 		public static readonly char				PrefixSeparator = ':';
 		public static readonly char				ModuleSeparator = '/';
 
-		public static readonly char				FieldIdPrefix = '$';
+		public static readonly char				FieldIdPrefix  = '$';
 		public static readonly char				FieldSeparator = '#';
 		
 		public static readonly string			PrefixSeparatorText = ":";
 		public static readonly string			ModuleSeparatorText = "/";
-		public static readonly string			FieldSeparatorText = "#";
+		public static readonly string			FieldSeparatorText  = "#";
 		
 		public static readonly int				MaxRecursionCount = 50;
-		
-		private static ResourceProviderFactory	factory;
 
-		private static CultureInfo[]			cultures;
-		private static ResourceManager			manager;
+		private readonly static ResourceProviderFactory factory;
+
+		private readonly static List<CultureInfo> cultures;
+		private readonly static ResourceManager manager;
 		private static string					twoLetterISOLanguageNameOverride;
 	}
 }
