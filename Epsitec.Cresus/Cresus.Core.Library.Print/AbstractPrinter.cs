@@ -206,13 +206,13 @@ namespace Epsitec.Cresus.Core.Print
 		private void PaintDraft(IPaintPort port)
 		{
 			//	Dessine un très gros "BROUILLON" en filigrane en travers de la page.
-			this.PaintWatermark (port, this.GetString ("Watermark.Draft"));
+			this.PaintWatermark (port, this.GetString (Library.Documents.Res.StringIds.Watermark.Draft));
 		}
 
 		private void PaintSpecimen(IPaintPort port)
 		{
 			//	Dessine un très gros "SPECIMEN" en filigrane en travers de la page.
-			this.PaintWatermark (port, this.GetString ("Watermark.Specimen"));
+			this.PaintWatermark (port, this.GetString (Library.Documents.Res.StringIds.Watermark.Specimen));
 		}
 
 		private void PaintWatermark(IPaintPort port, string text)

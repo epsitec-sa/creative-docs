@@ -656,34 +656,34 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			switch (columnKey)
 			{
 				case TableColumnKeys.LineNumber:
-					return this.GetString (Epsitec.Cresus.Core.Library.Documents.Res.StringIds.BusinessDocument.Column.LineNumber);
+					return this.GetString (Library.Documents.Res.StringIds.BusinessDocument.Column.LineNumber);
 
 				case TableColumnKeys.MainQuantity:
-					return this.GetString ("BusinessDocument.Column.MainQuantity");
+					return this.GetString (Library.Documents.Res.StringIds.BusinessDocument.Column.MainQuantity);
 
 				case TableColumnKeys.AdditionalType:
-					return this.GetString ("BusinessDocument.Column.AdditionaQuantities");
+					return this.GetString (Library.Documents.Res.StringIds.BusinessDocument.Column.AdditionalQuantities);
 
 				case TableColumnKeys.ArticleId:
-					return this.GetString ("BusinessDocument.Column.ArticleId");
+					return this.GetString (Library.Documents.Res.StringIds.BusinessDocument.Column.ArticleId);
 
 				case TableColumnKeys.ArticleDescription:
-					return this.GetString ("BusinessDocument.Column.ArticleDescription");
+					return this.GetString (Library.Documents.Res.StringIds.BusinessDocument.Column.ArticleDescription);
 
 				case TableColumnKeys.UnitPrice:
-					return this.GetString (this.Entity.IsExcludingTax ? "BusinessDocument.Column.UnitPriceExcludingTax" : "BusinessDocument.Column.UnitPriceIncludingTax");
+					return this.GetString (this.Entity.IsExcludingTax ? Library.Documents.Res.StringIds.BusinessDocument.Column.UnitPriceExcludingTax : Library.Documents.Res.StringIds.BusinessDocument.Column.UnitPriceIncludingTax);
 
 				case TableColumnKeys.Discount:
-					return this.GetString ("BusinessDocument.Column.Discount");
+					return this.GetString (Library.Documents.Res.StringIds.BusinessDocument.Column.Discount);
 
 				case TableColumnKeys.LinePrice:
-					return this.GetString (this.Entity.IsExcludingTax ? "BusinessDocument.Column.LinePriceExcludingTax" : "BusinessDocument.Column.LinePriceIncludingTax");
+					return this.GetString (this.Entity.IsExcludingTax ? Library.Documents.Res.StringIds.BusinessDocument.Column.LinePriceExcludingTax : Library.Documents.Res.StringIds.BusinessDocument.Column.LinePriceIncludingTax);
 
 				case TableColumnKeys.Vat:
-					return this.GetString ("BusinessDocument.Column.Vat");
+					return this.GetString (Library.Documents.Res.StringIds.BusinessDocument.Column.Vat);
 
 				case TableColumnKeys.Total:
-					return this.GetString ("BusinessDocument.Column.Total");
+					return this.GetString (Library.Documents.Res.StringIds.BusinessDocument.Column.Total);
 
 				default:
 					return "";
