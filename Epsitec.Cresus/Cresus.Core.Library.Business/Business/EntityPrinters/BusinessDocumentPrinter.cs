@@ -71,6 +71,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				yield return DocumentOption.HeaderNumberWidth;
 				yield return DocumentOption.HeaderNumberHeight;
 				yield return DocumentOption.HeaderNumberFontSize;
+				yield return DocumentOption.HeaderNumberIncludeOwner;
 				
 				yield return DocumentOption.HeaderToLeft;
 				yield return DocumentOption.HeaderToTop;
@@ -586,9 +587,11 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 		protected virtual FormattedText Title
 		{
+			//	Retourne le titre du document. Par exemple "Facture 200001.2011.1000-01/PA".
 			get
 			{
-				return InvoiceDocumentHelper.GetTitle (this.Metadata, this.Entity, null, this.LanguageId);
+				bool includeOwner = this.HasOption (DocumentOption.HeaderNumberIncludeOwner);
+				return InvoiceDocumentHelper.GetTitle (this.Metadata, this.Entity, null, this.LanguageId, includeOwner);
 			}
 		}
 

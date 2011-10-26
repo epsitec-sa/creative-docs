@@ -54,6 +54,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			var adorner = Common.Widgets.Adorners.Factory.Active;
 
+			//	Crée tous les conteneurs.
 			var middleFrame = new FrameBox
 			{
 				Parent              = window.Root,
@@ -120,7 +121,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Dock            = DockStyle.Bottom,
 			};
 
-			this.floatArrowMark = new Widgets.StaticGlyph
+			//	Crée la marque '>' flottante.
+			this.floatingArrowMark = new Widgets.StaticGlyph
 			{
 				Parent        = middleFrame,
 				GlyphShape    = GlyphShape.TriangleRight,
@@ -497,23 +499,23 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			container.BackColor = color;
 
-			this.UpdateFloatArrowMark (container, entered);
+			this.UpdateFloatingArrowMark (container, entered);
 		}
 
-		private void UpdateFloatArrowMark(FrameBox container, bool entered)
+		private void UpdateFloatingArrowMark(FrameBox container, bool entered)
 		{
 			if (entered && container.Index != -1)
 			{
-				var frame = this.floatArrowMark.Parent;
-				double x = frame.ActualWidth/2 - this.floatArrowMark.ActualWidth/2 - 1;
+				var frame = this.floatingArrowMark.Parent;
+				double x = frame.ActualWidth/2 - this.floatingArrowMark.ActualWidth/2 - 1;
 				double y = container.Parent.ActualHeight - container.ActualLocation.Y + 4;
 
-				this.floatArrowMark.Margins = new Margins (x, 0, y, 0);
-				this.floatArrowMark.Visibility = true;
+				this.floatingArrowMark.Margins = new Margins (x, 0, y, 0);
+				this.floatingArrowMark.Visibility = true;
 			}
 			else
 			{
-				this.floatArrowMark.Visibility = false;
+				this.floatingArrowMark.Visibility = false;
 			}
 		}
 
@@ -801,7 +803,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private Button											acceptButton;
 		private Button											cancelButton;
 
-		private Widgets.StaticGlyph								floatArrowMark;
+		private Widgets.StaticGlyph								floatingArrowMark;
 
 		private int												firstRow;
 		private int												tabIndex;

@@ -19,14 +19,21 @@ namespace Epsitec.Cresus.Core.Helpers
 {
 	public static class InvoiceDocumentHelper
 	{
-		public static FormattedText GetTitle(DocumentMetadataEntity metadata, BusinessDocumentEntity x, PaymentTransactionEntity billingDetails, string languageId)
+		public static FormattedText GetTitle(DocumentMetadataEntity metadata, BusinessDocumentEntity x, PaymentTransactionEntity billingDetails, string languageId, bool includeOwner)
 		{
 			//	Retourne le titre du document imprimé.
 			//	Par exemple "Facture 10256", "Offre 10257" ou "Bon pour commande 10258".
 			var doc = InvoiceDocumentHelper.GetDocumentName (metadata, languageId);
-			var title = TextFormatter.FormatText (string.Concat ("<b>", doc), metadata.IdA, "/~", metadata.IdB, "/~", metadata.IdC, "</b>").ToString ();
+			var title = TextFormatter.FormatText (doc, metadata.IdA, "/~", metadata.IdB, "/~", metadata.IdC).ApplyBold ();
 
-			return FormattedText.Concat (title, " ", InvoiceDocumentHelper.GetInstalmentName (x, billingDetails, true));
+			if (billingDetails == null)
+			{
+				return title;
+			}
+			else
+			{
+				return FormattedText.Concat (title, " ", InvoiceDocumentHelper.GetInstalmentName (x, billingDetails, true));
+			}
 		}
 
 		public static FormattedText GetDocumentName(DocumentMetadataEntity metadata, string languageId)

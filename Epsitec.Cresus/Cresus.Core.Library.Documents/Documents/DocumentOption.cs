@@ -52,6 +52,7 @@ namespace Epsitec.Cresus.Core.Documents
 		HeaderNumberWidth,				// distance
 		HeaderNumberHeight,				// distance
 		HeaderNumberFontSize,			// dimension: taille de la police
+		HeaderNumberIncludeOwner,		// dimension: inclure le numéro du propriétare de l'affaire
 
 		HeaderToLeft,					// distance: adresse destinataire
 		HeaderToTop,					// distance

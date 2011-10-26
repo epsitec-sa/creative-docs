@@ -243,43 +243,44 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 			//	Ajoute les options pour l'en-tête.
 			list.Add (new VerboseDocumentOption ("En-tête", "Header"));
 
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderSender,          "Header.1", true, DocumentOptionValueType.Boolean, "Imprime le bloc de l'expéditeur", "Imprime le bloc de l'expéditeur comprenant le logo et l'adresse de l'entreprise", "true"));
-																					   
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLogoLeft,        "Header.2", true, DocumentOptionValueType.Distance, "Logo, pos. gauche",               "Position depuis la gauche du logo", "10"));
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLogoTop,         "Header.2", true, DocumentOptionValueType.Distance, "Logo, pos. sup.",                 "Position depuis le haut du logo",   "10"));
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLogoWidth,       "Header.2", true, DocumentOptionValueType.Distance, "Logo, largeur",                   "Largeur du logo",                   "60"));
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLogoHeight,      "Header.2", true, DocumentOptionValueType.Distance, "Logo, hauteur",                   "Hauteur du logo",                   "30"));
-																					   
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderFromAddress,     "Header.3", true, DocumentOptionValueType.TextMultiline, "Adresse de l'entreprise",    "Adresse de l'entreprise telle qu'elle apparaît dans l'en-tête", ""));
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderFromLeft,        "Header.3", true, DocumentOptionValueType.Distance, "Entreprise, pos. gauche",         "Position depuis la gauche de l'adresse de l'entreprise", "10"));
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderFromTop,         "Header.3", true, DocumentOptionValueType.Distance, "Entreprise, pos. sup.",           "Position depuis le haut de l'adresse de l'entreprise",   "40"));
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderFromWidth,       "Header.3", true, DocumentOptionValueType.Distance, "Entreprise, largeur",             "Largeur pour l'adresse de l'entreprise",                 "100"));
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderFromHeight,      "Header.3", true, DocumentOptionValueType.Distance, "Entreprise, hauteur",             "Hauteur pour l'adresse de l'entreprise",                 "30"));
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderFromFontSize,    "Header.3", true, DocumentOptionValueType.Size,     "Entreprise, taille police",       "Taille de la police de l'adresse de l'entreprise",       "3"));
-																					   
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderForLeft,         "Header.4", true, DocumentOptionValueType.Distance, "Concerne, pos. gauche",           "Position depuis la gauche du bloc \"concerne\"", "10"));
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderForTop,          "Header.4", true, DocumentOptionValueType.Distance, "Concerne, pos. sup.",             "Position depuis le haut du bloc \"concerne\"",   "70"));
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderForWidth,        "Header.4", true, DocumentOptionValueType.Distance, "Concerne, largeur",               "Largeur du bloc \"concerne\"",                   "100"));
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderForHeight,       "Header.4", true, DocumentOptionValueType.Distance, "Concerne, hauteur",               "Hauteur du bloc \"concerne\"",                   "12"));
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderForFontSize,     "Header.4", true, DocumentOptionValueType.Size,     "Concerne, taille police",         "Taille de la police du bloc \"concerne\"",       "3"));
-																					   
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderNumberLeft,      "Header.5", true, DocumentOptionValueType.Distance, "Numéro document, pos. gauche",    "Position depuis la gauche du numéro du document", "10"));
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderNumberTop,       "Header.5", true, DocumentOptionValueType.Distance, "Numéro document, pos. sup.",      "Position depuis le haut du numéro du document",   "80"));
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderNumberWidth,     "Header.5", true, DocumentOptionValueType.Distance, "Numéro document, largeur",        "Largeur pour le numéro du document",              "100"));
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderNumberHeight,    "Header.5", true, DocumentOptionValueType.Distance, "Numéro document, hauteur",        "Hauteur pour le numéro du document",              "10"));
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderNumberFontSize,  "Header.5", true, DocumentOptionValueType.Size,     "Numéro document, taille police",  "Taille de la police du numéro du document",       "4.8"));
-																					   
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderToLeft,          "Header.6", true, DocumentOptionValueType.Distance, "Destinataire, pos. gauche",       "Position depuis la gauche de l'adresse du destinataire", "120"));
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderToTop,           "Header.6", true, DocumentOptionValueType.Distance, "Destinataire, pos. sup.",         "Position depuis le haut de l'adresse du destinataire",   "50"));
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderToWidth,         "Header.6", true, DocumentOptionValueType.Distance, "Destinataire, largeur",           "Largeur pour l'adresse du destinataire",                 "80"));
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderToHeight,        "Header.6", true, DocumentOptionValueType.Distance, "Destinataire, hauteur",           "Hauteur pour l'adresse du destinataire",                 "35"));
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderToFontSize,      "Header.6", true, DocumentOptionValueType.Size,     "Destinataire, taille police",     "Taille de la police de l'adresse du destinataire",       "3"));
-																					   
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLocDateLeft,     "Header.7", true, DocumentOptionValueType.Distance, "Localité et date, pos. gauche",   "Position depuis la gauche du bloc \"localité et date\"", "120"));
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLocDateTop,      "Header.7", true, DocumentOptionValueType.Distance, "Localité et date, pos. sup.",     "Position depuis le haut du bloc \"localité et date\"",   "80"));
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLocDateWidth,    "Header.7", true, DocumentOptionValueType.Distance, "Localité et date, largeur",       "Largeur du bloc \"localité et date\"",                   "80"));
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLocDateHeight,   "Header.7", true, DocumentOptionValueType.Distance, "Localité et date, hauteur",       "Hauteur du bloc \"localité et date\"",                   "10"));
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLocDateFontSize, "Header.7", true, DocumentOptionValueType.Size,     "Localité et date, taille police", "Taille de la police du bloc \"localité et date\"",       "3"));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderSender,             "Header.1", true, DocumentOptionValueType.Boolean, "Imprime le bloc de l'expéditeur", "Imprime le bloc de l'expéditeur comprenant le logo et l'adresse de l'entreprise", "true"));
+																					      
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLogoLeft,           "Header.2", true, DocumentOptionValueType.Distance, "Logo, pos. gauche",                "Position depuis la gauche du logo", "10"));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLogoTop,            "Header.2", true, DocumentOptionValueType.Distance, "Logo, pos. sup.",                  "Position depuis le haut du logo",   "10"));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLogoWidth,          "Header.2", true, DocumentOptionValueType.Distance, "Logo, largeur",                    "Largeur du logo",                   "60"));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLogoHeight,         "Header.2", true, DocumentOptionValueType.Distance, "Logo, hauteur",                    "Hauteur du logo",                   "30"));
+																					      																						  
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderFromAddress,        "Header.3", true, DocumentOptionValueType.TextMultiline, "Adresse de l'entreprise",     "Adresse de l'entreprise telle qu'elle apparaît dans l'en-tête", ""));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderFromLeft,           "Header.3", true, DocumentOptionValueType.Distance, "Entreprise, pos. gauche",          "Position depuis la gauche de l'adresse de l'entreprise", "10"));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderFromTop,            "Header.3", true, DocumentOptionValueType.Distance, "Entreprise, pos. sup.",            "Position depuis le haut de l'adresse de l'entreprise",   "40"));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderFromWidth,          "Header.3", true, DocumentOptionValueType.Distance, "Entreprise, largeur",              "Largeur pour l'adresse de l'entreprise",                 "100"));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderFromHeight,         "Header.3", true, DocumentOptionValueType.Distance, "Entreprise, hauteur",              "Hauteur pour l'adresse de l'entreprise",                 "30"));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderFromFontSize,       "Header.3", true, DocumentOptionValueType.Size,     "Entreprise, taille police",        "Taille de la police de l'adresse de l'entreprise",       "3"));
+																					      																						  
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderForLeft,            "Header.4", true, DocumentOptionValueType.Distance, "Concerne, pos. gauche",            "Position depuis la gauche du bloc \"concerne\"", "10"));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderForTop,             "Header.4", true, DocumentOptionValueType.Distance, "Concerne, pos. sup.",              "Position depuis le haut du bloc \"concerne\"",   "70"));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderForWidth,           "Header.4", true, DocumentOptionValueType.Distance, "Concerne, largeur",                "Largeur du bloc \"concerne\"",                   "100"));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderForHeight,          "Header.4", true, DocumentOptionValueType.Distance, "Concerne, hauteur",                "Hauteur du bloc \"concerne\"",                   "12"));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderForFontSize,        "Header.4", true, DocumentOptionValueType.Size,     "Concerne, taille police",          "Taille de la police du bloc \"concerne\"",       "3"));
+																					      																						  
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderNumberLeft,         "Header.5", true, DocumentOptionValueType.Distance, "Numéro document, pos. gauche",     "Position depuis la gauche du numéro du document", "10"));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderNumberTop,          "Header.5", true, DocumentOptionValueType.Distance, "Numéro document, pos. sup.",       "Position depuis le haut du numéro du document",   "80"));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderNumberWidth,        "Header.5", true, DocumentOptionValueType.Distance, "Numéro document, largeur",         "Largeur pour le numéro du document",              "100"));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderNumberHeight,       "Header.5", true, DocumentOptionValueType.Distance, "Numéro document, hauteur",         "Hauteur pour le numéro du document",              "10"));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderNumberFontSize,     "Header.5", true, DocumentOptionValueType.Size,     "Numéro document, taille police",   "Taille de la police du numéro du document",       "4.8"));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderNumberIncludeOwner, "Header.5", true, DocumentOptionValueType.Boolean,  "Numéro document, inclure collab.", "Inclure de numéro du collaborateur de l'affaire", "true"));
+																					      																						  
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderToLeft,             "Header.6", true, DocumentOptionValueType.Distance, "Destinataire, pos. gauche",        "Position depuis la gauche de l'adresse du destinataire", "120"));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderToTop,              "Header.6", true, DocumentOptionValueType.Distance, "Destinataire, pos. sup.",          "Position depuis le haut de l'adresse du destinataire",   "50"));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderToWidth,            "Header.6", true, DocumentOptionValueType.Distance, "Destinataire, largeur",            "Largeur pour l'adresse du destinataire",                 "80"));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderToHeight,           "Header.6", true, DocumentOptionValueType.Distance, "Destinataire, hauteur",            "Hauteur pour l'adresse du destinataire",                 "35"));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderToFontSize,         "Header.6", true, DocumentOptionValueType.Size,     "Destinataire, taille police",      "Taille de la police de l'adresse du destinataire",       "3"));
+																					      																						  
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLocDateLeft,        "Header.7", true, DocumentOptionValueType.Distance, "Localité et date, pos. gauche",    "Position depuis la gauche du bloc \"localité et date\"", "120"));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLocDateTop,         "Header.7", true, DocumentOptionValueType.Distance, "Localité et date, pos. sup.",      "Position depuis le haut du bloc \"localité et date\"",   "80"));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLocDateWidth,       "Header.7", true, DocumentOptionValueType.Distance, "Localité et date, largeur",        "Largeur du bloc \"localité et date\"",                   "80"));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLocDateHeight,      "Header.7", true, DocumentOptionValueType.Distance, "Localité et date, hauteur",        "Hauteur du bloc \"localité et date\"",                   "10"));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLocDateFontSize,    "Header.7", true, DocumentOptionValueType.Size,     "Localité et date, taille police",  "Taille de la police du bloc \"localité et date\"",       "3"));
 			
 			//	Ajoute les options pour les listes.
 			list.Add (new VerboseDocumentOption ("Aspect des listes", "LayoutFrame"));

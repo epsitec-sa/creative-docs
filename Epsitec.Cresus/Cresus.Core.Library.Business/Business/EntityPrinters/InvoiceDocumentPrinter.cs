@@ -173,9 +173,11 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 		protected override FormattedText Title
 		{
+			//	Retourne le titre du document. Par exemple "Facture 200001.2011.1000-01/PA".
 			get
 			{
-				return InvoiceDocumentHelper.GetTitle (this.Metadata, this.Entity, this.paymentTransactionEntity, this.LanguageId);
+				bool includeOwner = this.HasOption (DocumentOption.HeaderNumberIncludeOwner);
+				return InvoiceDocumentHelper.GetTitle (this.Metadata, this.Entity, this.paymentTransactionEntity, this.LanguageId, includeOwner);
 			}
 		}
 
@@ -453,12 +455,11 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			}
 
 			isr.PaintIsrSimulator = this.HasOption (DocumentOption.IsrFacsimile);
-			isr.From = this.Entity.BillToMailContact.GetSummary ();
-			isr.To = this.paymentTransactionEntity.PaymentDetail.PaymentCategory.IsrDefinition.SubscriberAddress;
-			isr.Communication = InvoiceDocumentHelper.GetTitle (this.Metadata, this.Entity, this.paymentTransactionEntity, this.LanguageId);
-
-			isr.Slip = new IsrSlip (this.paymentTransactionEntity);
-			isr.NotForUse = mackle;  // pour imprimer "XXXXX XX" sur un faux BVR
+			isr.From              = this.Entity.BillToMailContact.GetSummary ();
+			isr.To                = this.paymentTransactionEntity.PaymentDetail.PaymentCategory.IsrDefinition.SubscriberAddress;
+			isr.Communication     = this.Title;
+			isr.Slip              = new IsrSlip (this.paymentTransactionEntity);
+			isr.NotForUse         = mackle;  // pour imprimer "XXXXX XX" sur un faux BVR
 
 			var bounds = new Rectangle (Point.Zero, AbstractIsrBand.DefautlSize);
 			this.documentContainer.AddAbsolute (isr, bounds);
