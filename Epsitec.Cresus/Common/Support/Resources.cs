@@ -332,6 +332,11 @@ namespace Epsitec.Common.Support
 		
 		public static CultureInfo FindSpecificCultureInfo(string twoLetterCode)
 		{
+			if (string.IsNullOrEmpty (twoLetterCode))
+			{
+				return null;
+			}
+
 			CultureInfo info;
 
 			lock (Resources.cultures)

@@ -105,6 +105,65 @@ namespace Epsitec.Cresus.Core
 			return new FormattedText (string.Join (FormattedText.HtmlBreak, buffer.ToString ().Split (new string[] { FormattedText.HtmlBreak }, System.StringSplitOptions.RemoveEmptyEntries)).Replace ("()", ""));
 		}
 
+		public static Caption GetCurrentCultureCaption(Caption caption)
+		{
+			return Resources.DefaultManager.GetCaption (caption, TextFormatter.CurrentCulture);
+		}
+
+		public static TResult ExecuteUsingCulture<TResult>(CultureInfo culture, System.Func<TResult> func)
+		{
+			if (TextFormatter.IsActiveCulture (culture))
+			{
+				return func ();
+			}
+			else
+			{
+				var savedCulture = TextFormatter.cultureOverride;
+
+				try
+				{
+					TextFormatter.cultureOverride = culture;
+					return func ();
+				}
+				finally
+				{
+					TextFormatter.cultureOverride = savedCulture;
+				}
+			}
+		}
+
+		public static void ExecuteUsingCulture(CultureInfo culture, System.Action action)
+		{
+			if (TextFormatter.IsActiveCulture (culture))
+			{
+				action ();
+			}
+			else
+			{
+				var savedCulture = TextFormatter.cultureOverride;
+
+				try
+				{
+					TextFormatter.cultureOverride = culture;
+					action ();
+				}
+				finally
+				{
+					TextFormatter.cultureOverride = savedCulture;
+				}
+			}
+		}
+
+		public static void ExecuteUsingCulture(string twoLetterCode, System.Action action)
+		{
+			TextFormatter.ExecuteUsingCulture (Resources.FindSpecificCultureInfo (twoLetterCode), action);
+		}
+
+		public static TResult ExecuteUsingCulture<TResult>(string twoLetterCode, System.Func<TResult> func)
+		{
+			return TextFormatter.ExecuteUsingCulture (Resources.FindSpecificCultureInfo (twoLetterCode), func);
+		}
+
 		public static string ConvertToText(object value)
 		{
 			if (value == null)
@@ -185,6 +244,13 @@ namespace Epsitec.Cresus.Core
 		{
 			TextFormatter.cultureOverride = null;
 			TextFormatter.detailLevel = TextFormatterDetailLevel.Default;
+		}
+
+		private static bool IsActiveCulture(CultureInfo culture)
+		{
+			return (culture == TextFormatter.CurrentCulture)
+				|| (culture == null)
+				|| (culture.Name == TextFormatter.CurrentCulture.Name);
 		}
 
 		private static void Preprocess(List<object> values)
