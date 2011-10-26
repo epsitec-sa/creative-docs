@@ -938,8 +938,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.personField.Items.Add ("");  // toujours une ligne vide au début (= plus personne)
 
-			throw new System.NotImplementedException ();
-#if false
 			var example = new NaturalPersonEntity ();
 			//	L'exemple reste vide; on obtient donc toutes les personnes physiques.
 			//	TODO: Par la suite, il faudra se limiter aux employés, mais cette notion n'existe pas pour l'instant.
@@ -949,7 +947,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				this.personField.Items.Add (person.GetCompactSummary ());
 			}
-#endif
 		}
 
 		private void NaturalPersonChanged()
@@ -957,8 +954,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			var user = this.SelectedUser;
 			System.Diagnostics.Debug.Assert (user != null);
 
-#if false
-			throw new System.NotImplementedException ();
 			int sel = this.personField.SelectedItemIndex - 1;
 
 			if (sel >= 0 && sel < this.naturalPersonEntities.Count)
@@ -967,11 +962,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 			else
 			{
-				user.Person = EntityNullReferenceVirtualizer.CreateEmptyEntity<NaturalPersonEntity> ();
+				//?user.Person = EntityNullReferenceVirtualizer.CreateEmptyEntity<NaturalPersonEntity> ();
+				user.Person = null;
 			}
 
 			this.naturalPersonEntities = null;
-#endif
 
 			this.UpdateTable ();
 			this.UpdateWidgets ();
@@ -979,13 +974,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private FormattedText NaturalPersonDescription(SoftwareUserEntity user)
 		{
-#if false
-			throw new System.NotImplementedException ();
 			if (user.Person.IsNotNull ())
 			{
 				return user.Person.GetCompactSummary ();
 			}
-#endif
 
 			return null;
 		}
@@ -1378,7 +1370,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private Button										acceptButton;
 		private Button										cancelButton;
 		private bool										editionStarted;
-//-		private List<NaturalPersonEntity>					naturalPersonEntities;
+		private List<NaturalPersonEntity>					naturalPersonEntities;
 		private IList<Data.LockOwner>						lockOwners;
 		private bool										isLockAcquired;
 

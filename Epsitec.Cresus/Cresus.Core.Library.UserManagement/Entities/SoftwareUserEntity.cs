@@ -89,7 +89,6 @@ namespace Epsitec.Cresus.Core.Entities
 			using (var a = new EntityStatusAccumulator ())
 			{
 				a.Accumulate (this.Code.GetEntityStatus ());
-				a.Accumulate (this.Person.GetEntityStatus ().TreatAsOptional ());
 				a.Accumulate (this.LoginName.GetEntityStatus ());
 				a.Accumulate (this.DisplayName.GetEntityStatus ());
 				a.Accumulate ((this.AuthenticationMethod == Business.UserManagement.UserAuthenticationMethod.Password && string.IsNullOrWhiteSpace (this.LoginPasswordHash)) ? EntityStatus.None : EntityStatus.Valid);

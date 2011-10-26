@@ -599,11 +599,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			//	L'icône UserManager.icon est décalée vers le haut en conséquence.
 			this.authenticateUserWidget = new StaticText
 			{
-				Parent = this.authenticateUserButton,
+				Parent           = this.authenticateUserButton,
 				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
-				PreferredHeight = 14,
-				Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom,
-				Margins = new Margins (0, 0, 0, 0),
+				PreferredHeight  = 14,
+				Anchor           = AnchorStyles.LeftAndRight | AnchorStyles.Bottom,
+				Margins          = new Margins (0, 0, 0, 0),
 			};
 		}
 
@@ -627,12 +627,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 			else
 			{
-#if false
-				throw new System.NotImplementedException ();
 				this.authenticateUserButton.ImageEntity = user.Person.Pictures.FirstOrDefault ();
-#endif
+
 				FormattedText text = user.LoginName;
 				this.authenticateUserWidget.FormattedText = text.ApplyFontSize (9.0);
+				this.authenticateUserWidget.Visibility = (this.authenticateUserButton.ImageEntity.IsNull ());
 
 				ToolTip.Default.SetToolTip (this.authenticateUserButton, user.ShortDescription);
 				ToolTip.Default.SetToolTip (this.authenticateUserWidget, user.ShortDescription);

@@ -4,6 +4,7 @@
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Business.UserManagement;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -29,9 +30,29 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			businessContext.AssignIds (affair, generatorPool);
 
 			affair.Workflow = WorkflowFactory.CreateDefaultWorkflow<AffairEntity> (businessContext);
-
-			//	TODO: ...compléter...
+			affair.ActiveAffairOwner = this.SearchActiveAffairOwner (businessContext);
 		}
+
+		private PeopleEntity SearchActiveAffairOwner(BusinessContext businessContext)
+		{
+			//	Cherche le collaborateur actuellement loggé pour initialiser le
+			//	propriétaire de l'affaire.
+			var coreData = businessContext.Data;
+			var userManager = coreData.GetComponent<UserManager> ();
+
+			if (userManager.AuthenticatedUser.Person.IsNull ())
+			{
+				return null;
+			}
+
+			var naturalPerson = userManager.AuthenticatedUser.Person;
+
+			var example = new PeopleEntity ();
+			example.Person = naturalPerson;
+
+			return businessContext.DataContext.GetByExample<PeopleEntity> (example).FirstOrDefault ();
+		}
+
 
 		public override void ApplyUpdateRule(AffairEntity affair)
 		{
