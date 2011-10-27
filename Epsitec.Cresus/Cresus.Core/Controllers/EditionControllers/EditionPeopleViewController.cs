@@ -23,30 +23,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .Field (x => x.PeopleGroups)
 				.End ()
 				.Separator ()
-
-				//	--- Cette partie est identique à EditionNaturalPersonViewController
-				.Input ()
-				  .Field (x => x.NaturalPerson.Title)
-				.End ()
-				.Input ()
-				  .Field (x => x.NaturalPerson.Firstname)
-				  .Field (x => x.NaturalPerson.Lastname)
-				.End ()
-				.Separator ()
-				.Input ()
-				  .Field (x => x.NaturalPerson.Gender)
-				  .Field (x => x.NaturalPerson.DateOfBirth)
-				.End ()
-				.Input ()
-				  .Field (x => x.NaturalPerson.Pictures)
-				.End ()
-				//	--- Fin de la partie
-				
-				.Separator ()
 				.Input ()
 				  .Field (x => x.BeginDate)
 				  .Field (x => x.EndDate)
 				.End ()
+				.Include (x => x.NaturalPerson)
 				;
 		}
 	}
