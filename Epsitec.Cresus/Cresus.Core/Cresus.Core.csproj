@@ -97,9 +97,10 @@
     <Compile Include="CommandHandlers\CoreCommandHandler.cs" />
     <Compile Include="CommandHandlers\DatabaseCommandHandler.cs" />
     <Compile Include="CommandHandlers\NavigationCommandHandler.cs" />
+    <Compile Include="Controllers\CreationControllers\CreationOtherRelationViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationCustomerViewController.cs" />
-    <Compile Include="Controllers\EditionControllers\EditionOtherGroupRelationViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionOtherRelationGroupViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionOtherRelationViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPeopleViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPeopleGroupViewController.cs" />

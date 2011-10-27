@@ -21,9 +21,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Input ()
 				  .Field (x => x.Name)
 				  .Field (x => x.Description)
-				  .Field (x => x.Person)
+//				  .Field (x => x.Person)
 				  .Field (x => x.Groups)
 				.End ()
+				.Include (x => x.Person)
 				;
 		}
 	}
