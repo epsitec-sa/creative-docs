@@ -21,7 +21,11 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<PeopleGroupEntity> wall)
 		{
-			wall.AddBrick ();
+			wall.AddBrick (x => x)
+				.Attribute (BrickMode.AutoGroup)
+				.Template ()
+				.End ()
+				;
 		}
 	}
 }
