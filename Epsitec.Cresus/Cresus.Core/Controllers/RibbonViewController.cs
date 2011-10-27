@@ -861,6 +861,9 @@ namespace Epsitec.Cresus.Core.Controllers
 				yield return new SubMenuItem (Res.Commands.Base.ShowOtherRelation,       SubMenuType.Customers);
 				yield return new SubMenuItem (Res.Commands.Base.ShowOtherRelationGroup,  SubMenuType.Customers);
 				yield return new SubMenuItem (null,                                      SubMenuType.Customers);
+				yield return new SubMenuItem (Res.Commands.Base.ShowSoftwareUserGroup,   SubMenuType.Customers);
+				yield return new SubMenuItem (Res.Commands.Base.ShowSoftwareUserRole,    SubMenuType.Customers);
+				yield return new SubMenuItem (null,                                      SubMenuType.Customers);
 				yield return new SubMenuItem (Res.Commands.Base.ShowTelecomType,         SubMenuType.Customers);
 				yield return new SubMenuItem (Res.Commands.Base.ShowUriType,             SubMenuType.Customers);
 				yield return new SubMenuItem (null,                                      SubMenuType.Customers);
@@ -883,9 +886,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			if (devel)
 			{
 				yield return new SubMenuItem (Res.Commands.Base.ShowLanguage,           SubMenuType.Misc);
-				yield return new SubMenuItem (null,                                     SubMenuType.Misc);
-				yield return new SubMenuItem (Res.Commands.Base.ShowSoftwareUserGroup,  SubMenuType.Misc);
-				yield return new SubMenuItem (Res.Commands.Base.ShowSoftwareUserRole,   SubMenuType.Misc);
 				yield return new SubMenuItem (null,                                     SubMenuType.Misc);
 				yield return new SubMenuItem (Res.Commands.Base.ShowWorkflowDefinition, SubMenuType.Misc);
 			}
@@ -936,7 +936,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					return "Images";
 
 				case SubMenuType.Customers:
-					return "Clients";
+					return "Personnes";
 
 				case SubMenuType.Articles:
 					return "Articles";

@@ -23,10 +23,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			wall.AddBrick ()
 				.Input ()
-				 .Field (x => x.Name)
-				 .Field (x => x.ShortName)
-				 .Field (x => x.LegalPersonType)
-				 .Field (x => x.Complement)
+				  .Field (x => x.Name)
+				  .Field (x => x.ShortName)
+				  .Field (x => x.LegalPersonType)
+				  .Field (x => x.Complement)
+				  .Field (x => x.PreferredLanguage)
 				.End ()
 				;
 			

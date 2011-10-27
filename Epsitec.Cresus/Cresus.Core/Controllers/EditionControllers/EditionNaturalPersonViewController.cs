@@ -35,6 +35,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.End ()
 				.Separator ()
 				.Input ()
+				  .Field (x => x.PreferredLanguage)
 				  .Field (x => x.Gender)
 				  .Field (x => x.DateOfBirth)
 				.End ()
