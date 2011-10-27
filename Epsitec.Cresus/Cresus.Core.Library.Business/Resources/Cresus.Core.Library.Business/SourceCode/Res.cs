@@ -231,10 +231,6 @@ namespace Epsitec.Cresus.Core.Library.Business
 			public static readonly Epsitec.Common.Types.StructuredType OtherRelationGroup = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 289));
 			//	designer:cap/GVAD6
 			public static readonly Epsitec.Common.Types.StructuredType PaymentReminderDefinition = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 205));
-			//	designer:cap/GVAM
-			public static readonly Epsitec.Common.Types.StructuredType People = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 22));
-			//	designer:cap/GVAS8
-			public static readonly Epsitec.Common.Types.StructuredType PeopleCategory = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 284));
 			//	designer:cap/GVA
 			public static readonly Epsitec.Common.Types.StructuredType Relation = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
 			//	designer:cap/GVAF4
@@ -1100,8 +1096,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				{
 				}
 				
-				//	designer:cap/GVAT8
-				public static readonly global::Epsitec.Common.Support.Druid PeopleCategory = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 285);
+				//	designer:cap/GVA99
+				public static readonly global::Epsitec.Common.Support.Druid PeopleGroups = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 297);
 				//	designer:cap/GVAN
 				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 23);
 			}
@@ -1234,6 +1230,10 @@ namespace Epsitec.Cresus.Core.Library.Business
 			private static readonly global::Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle ("Strings");
 			
 			#endregion
+		}
+		
+		public static class StringIds
+		{
 		}
 		
 		static Res()

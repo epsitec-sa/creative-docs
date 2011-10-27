@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.Person.Firstname, this.Person.Lastname, ",", this.PeopleCategory.Name);
+			return TextFormatter.FormatText (this.NaturalPerson.Firstname, this.NaturalPerson.Lastname);
 		}
 	}
 }

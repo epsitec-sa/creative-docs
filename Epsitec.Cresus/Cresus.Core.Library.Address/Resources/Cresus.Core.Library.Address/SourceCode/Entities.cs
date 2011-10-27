@@ -23,6 +23,8 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[FVAL1]", typeof (Epsitec.Cresus.Core.Entities.TelecomContactEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[FVAP1]", typeof (Epsitec.Cresus.Core.Entities.UriContactEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[FVAQ1]", typeof (Epsitec.Cresus.Core.Entities.UriTypeEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[FVA72]", typeof (Epsitec.Cresus.Core.Entities.PeopleEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[FVA92]", typeof (Epsitec.Cresus.Core.Entities.PeopleGroupEntity))]
 #region Epsitec.Cresus.Core.AbstractPerson Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -2269,6 +2271,306 @@ namespace Epsitec.Cresus.Core.Entities
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<UriTypeEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Immutable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.People Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>People</c> entity.
+	///	designer:cap/FVA72
+	///	</summary>
+	public partial class PeopleEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IItemCode, global::Epsitec.Cresus.Core.Entities.IReferenceNumber, global::Epsitec.Cresus.Core.Entities.IDateRange
+	{
+		#region IReferenceNumber Members
+		///	<summary>
+		///	The <c>IdA</c> field.
+		///	designer:fld/FVA72/8VA11
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA11]")]
+		public string IdA
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetIdA (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdA (this, value);
+			}
+		}
+		#endregion
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/FVA72/8VA3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/FVA72/8VA5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA5]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+			}
+		}
+		#endregion
+		#region IDateRange Members
+		///	<summary>
+		///	The <c>BeginDate</c> field.
+		///	designer:fld/FVA72/8VAO
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAO]")]
+		public global::Epsitec.Common.Types.Date? BeginDate
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.GetBeginDate (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.SetBeginDate (this, value);
+			}
+		}
+		#endregion
+		#region IReferenceNumber Members
+		///	<summary>
+		///	The <c>IdB</c> field.
+		///	designer:fld/FVA72/8VA21
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA21]")]
+		public string IdB
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetIdB (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdB (this, value);
+			}
+		}
+		#endregion
+		#region IDateRange Members
+		///	<summary>
+		///	The <c>EndDate</c> field.
+		///	designer:fld/FVA72/8VAP
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAP]")]
+		public global::Epsitec.Common.Types.Date? EndDate
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.GetEndDate (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.SetEndDate (this, value);
+			}
+		}
+		#endregion
+		#region IReferenceNumber Members
+		///	<summary>
+		///	The <c>IdC</c> field.
+		///	designer:fld/FVA72/8VA31
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA31]")]
+		public string IdC
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetIdC (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdC (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>NaturalPerson</c> field.
+		///	designer:fld/FVA72/FVA82
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[FVA82]")]
+		public global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity NaturalPerson
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity> ("[FVA82]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue = this.NaturalPerson;
+				if (oldValue != value || !this.IsFieldDefined("[FVA82]"))
+				{
+					this.OnNaturalPersonChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity> ("[FVA82]", oldValue, value);
+					this.OnNaturalPersonChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>PeopleGroups</c> field.
+		///	designer:fld/FVA72/FVAA2
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[FVAA2]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.PeopleGroupEntity> PeopleGroups
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.PeopleGroupEntity> ("[FVAA2]");
+			}
+		}
+		
+		partial void OnNaturalPersonChanging(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
+		partial void OnNaturalPersonChanged(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.PeopleEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.PeopleEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1007, 10, 71);	// [FVA72]
+		public static readonly string EntityStructuredTypeKey = "[FVA72]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<PeopleEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.PeopleGroup Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>PeopleGroup</c> entity.
+	///	designer:cap/FVA92
+	///	</summary>
+	public partial class PeopleGroupEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ICategory
+	{
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/FVA92/8VA3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/FVA92/8VA5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA5]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+			}
+		}
+		#endregion
+		#region INameDescription Members
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/FVA92/8VA7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA7]")]
+		public global::Epsitec.Common.Types.FormattedText Name
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetName (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/FVA92/8VA8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA8]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetDescription (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetDescription (this, value);
+			}
+		}
+		#endregion
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.PeopleGroupEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.PeopleGroupEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1007, 10, 73);	// [FVA92]
+		public static readonly string EntityStructuredTypeKey = "[FVA92]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<PeopleGroupEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{
 			}
 		}

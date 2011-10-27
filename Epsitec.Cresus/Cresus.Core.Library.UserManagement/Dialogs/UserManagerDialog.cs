@@ -248,12 +248,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 				new StaticText
 				{
 					Parent = this.userBox,
-					Text = "Personne physique correspondante :",
+					Text = "Personne correspondante :",
 					Dock = DockStyle.Top,
 					Margins = new Margins (0, 0, 0, Library.UI.Constants.MarginUnderLabel),
 				};
 
-				this.personField = new TextFieldCombo
+				this.peopleField = new TextFieldCombo
 				{
 					Parent = this.userBox,
 					IsReadOnly = true,
@@ -262,7 +262,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					TabIndex = tabIndex++,
 				};
 
-				ToolTip.Default.SetToolTip (this.personField, "Personne physique correspondant à cet utilisateur");
+				ToolTip.Default.SetToolTip (this.peopleField, "Personne correspondant à cet utilisateur");
 
 
 				this.authenticationMethodCheckButton = new CheckButton
@@ -587,14 +587,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 			};
 
 
-			this.personField.ComboOpening += delegate
+			this.peopleField.ComboOpening += delegate
 			{
-				this.NaturalPersonUpdateMenu ();
+				this.PeopleUpdateMenu ();
 			};
 
-			this.personField.ComboClosed += delegate
+			this.peopleField.ComboClosed += delegate
 			{
-				this.NaturalPersonChanged ();
+				this.PeopleChanged ();
 			};
 
 
@@ -860,7 +860,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				this.loginNameField.Text = null;
 				this.displayNameField.Text = null;
-				this.personField.Text = null;
+				this.peopleField.Text = null;
 				this.newPasswordField1.Text = null;
 				this.newPasswordField2.Text = null;
 				this.beginDateField.Text = null;
@@ -880,7 +880,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				this.loginNameField.Text = user.LoginName;
 				this.displayNameField.FormattedText = user.DisplayName;
-				this.personField.FormattedText = this.NaturalPersonDescription (user);
+				this.peopleField.FormattedText = this.GetPeopleDescription (user);
 				this.newPasswordField1.Text = null;
 				this.newPasswordField2.Text = null;
 				this.beginDateField.Text = Misc.GetDateTimeShortDescription (user.BeginDate);
@@ -931,52 +931,52 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 
 		#region Natural person manager
-		private void NaturalPersonUpdateMenu()
+		private void PeopleUpdateMenu()
 		{
 			//	Prépare le menu des personnes physiques, juste avant son ouverture.
-			this.personField.Items.Clear ();
+			this.peopleField.Items.Clear ();
 
-			this.personField.Items.Add ("");  // toujours une ligne vide au début (= plus personne)
+			this.peopleField.Items.Add ("");  // toujours une ligne vide au début (= plus personne)
 
-			var example = new NaturalPersonEntity ();
+			var example = new PeopleEntity ();
 			//	L'exemple reste vide; on obtient donc toutes les personnes physiques.
 			//	TODO: Par la suite, il faudra se limiter aux employés, mais cette notion n'existe pas pour l'instant.
-			this.naturalPersonEntities = this.manager.BusinessContext.DataContext.GetByExample<NaturalPersonEntity> (example).ToList ();
+			this.peopleEntities = this.manager.BusinessContext.DataContext.GetByExample<PeopleEntity> (example).ToList ();
 
-			foreach (var person in this.naturalPersonEntities)
+			foreach (var person in this.peopleEntities)
 			{
-				this.personField.Items.Add (person.GetCompactSummary ());
+				this.peopleField.Items.Add (person.GetCompactSummary ());
 			}
 		}
 
-		private void NaturalPersonChanged()
+		private void PeopleChanged()
 		{
 			var user = this.SelectedUser;
 			System.Diagnostics.Debug.Assert (user != null);
 
-			int sel = this.personField.SelectedItemIndex - 1;
+			int sel = this.peopleField.SelectedItemIndex - 1;
 
-			if (sel >= 0 && sel < this.naturalPersonEntities.Count)
+			if (sel >= 0 && sel < this.peopleEntities.Count)
 			{
-				user.Person = this.naturalPersonEntities[sel];
+				user.People = this.peopleEntities[sel];
 			}
 			else
 			{
 				//?user.Person = EntityNullReferenceVirtualizer.CreateEmptyEntity<NaturalPersonEntity> ();
-				user.Person = null;
+				user.People = null;
 			}
 
-			this.naturalPersonEntities = null;
+			this.peopleEntities = null;
 
 			this.UpdateTable ();
 			this.UpdateWidgets ();
 		}
 
-		private FormattedText NaturalPersonDescription(SoftwareUserEntity user)
+		private FormattedText GetPeopleDescription(SoftwareUserEntity user)
 		{
-			if (user.Person.IsNotNull ())
+			if (user.People.IsNotNull ())
 			{
-				return user.Person.GetCompactSummary ();
+				return user.People.GetCompactSummary ();
 			}
 
 			return null;
@@ -1358,7 +1358,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private FrameBox									userBox;
 		private TextFieldEx									loginNameField;
 		private TextFieldEx									displayNameField;
-		private TextFieldCombo								personField;
+		private TextFieldCombo								peopleField;
 		private CheckButton									disableUserCheckButton;
 		private CheckButton									authenticationMethodCheckButton;
 		private TextFieldEx									beginDateField;
@@ -1370,7 +1370,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private Button										acceptButton;
 		private Button										cancelButton;
 		private bool										editionStarted;
-		private List<NaturalPersonEntity>					naturalPersonEntities;
+		private List<PeopleEntity>							peopleEntities;
 		private IList<Data.LockOwner>						lockOwners;
 		private bool										isLockAcquired;
 

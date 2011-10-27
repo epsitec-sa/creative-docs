@@ -40,6 +40,10 @@ namespace Epsitec.Cresus.Core.Library.Address
 			public static readonly Epsitec.Common.Types.StructuredType MailContact = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 27));
 			//	designer:cap/FVA5
 			public static readonly Epsitec.Common.Types.StructuredType NaturalPerson = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 5));
+			//	designer:cap/FVA72
+			public static readonly Epsitec.Common.Types.StructuredType People = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 71));
+			//	designer:cap/FVA92
+			public static readonly Epsitec.Common.Types.StructuredType PeopleGroup = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 73));
 			//	designer:cap/FVAD
 			public static readonly Epsitec.Common.Types.StructuredType PersonGender = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 13));
 			//	designer:cap/FVAA
@@ -266,6 +270,18 @@ namespace Epsitec.Cresus.Core.Library.Address
 				public static readonly global::Epsitec.Common.Support.Druid Title = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 15);
 			}
 			
+			public static class People
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/FVA82
+				public static readonly global::Epsitec.Common.Support.Druid NaturalPerson = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 72);
+				//	designer:cap/FVAA2
+				public static readonly global::Epsitec.Common.Support.Druid PeopleGroups = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 74);
+			}
+			
 			public static class PersonTitle
 			{
 				internal static void _Initialize()
@@ -396,6 +412,10 @@ namespace Epsitec.Cresus.Core.Library.Address
 			#endregion
 		}
 		
+		public static class StringIds
+		{
+		}
+		
 		static Res()
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
@@ -414,6 +434,7 @@ namespace Epsitec.Cresus.Core.Library.Address
 			Fields.Location._Initialize ();
 			Fields.MailContact._Initialize ();
 			Fields.NaturalPerson._Initialize ();
+			Fields.People._Initialize ();
 			Fields.PersonTitle._Initialize ();
 			Fields.PostBox._Initialize ();
 			Fields.StateProvinceCounty._Initialize ();

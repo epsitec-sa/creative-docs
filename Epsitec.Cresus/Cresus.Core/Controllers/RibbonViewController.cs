@@ -627,7 +627,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 			else
 			{
-				this.authenticateUserButton.ImageEntity = user.Person.Pictures.FirstOrDefault ();
+				this.authenticateUserButton.ImageEntity = user.People.NaturalPerson.Pictures.FirstOrDefault ();
 
 				FormattedText text = user.LoginName;
 				this.authenticateUserWidget.FormattedText = text.ApplyFontSize (9.0);
@@ -856,7 +856,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				yield return new SubMenuItem (Res.Commands.Base.ShowPriceDiscount,       SubMenuType.Customers);
 				yield return new SubMenuItem (null,                                      SubMenuType.Customers);
 				yield return new SubMenuItem (Res.Commands.Base.ShowPeople,              SubMenuType.Customers);
-				yield return new SubMenuItem (Res.Commands.Base.ShowPeopleCategory,      SubMenuType.Customers);
+				yield return new SubMenuItem (Res.Commands.Base.ShowPeopleGroup,         SubMenuType.Customers);
 				yield return new SubMenuItem (null,                                      SubMenuType.Customers);
 				yield return new SubMenuItem (Res.Commands.Base.ShowTelecomType,         SubMenuType.Customers);
 				yield return new SubMenuItem (Res.Commands.Base.ShowUriType,             SubMenuType.Customers);

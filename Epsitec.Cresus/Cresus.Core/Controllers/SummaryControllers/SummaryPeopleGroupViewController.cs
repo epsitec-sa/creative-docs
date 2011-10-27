@@ -17,9 +17,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
-	public class SummaryPeopleCategoryViewController : SummaryViewController<PeopleCategoryEntity>
+	public class SummaryPeopleGroupViewController : SummaryViewController<PeopleGroupEntity>
 	{
-		protected override void CreateBricks(BrickWall<PeopleCategoryEntity> wall)
+		protected override void CreateBricks(BrickWall<PeopleGroupEntity> wall)
 		{
 			wall.AddBrick ();
 		}

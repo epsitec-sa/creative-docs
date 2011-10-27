@@ -51,6 +51,8 @@
     <Compile Include="Entities\AbstractPersonEntity.cs" />
     <Compile Include="Entities\AddressEntity.cs" />
     <Compile Include="Entities\ContactGroupEntity.cs" />
+    <Compile Include="Entities\PeopleGroupEntity.cs" />
+    <Compile Include="Entities\PeopleEntity.cs" />
     <Compile Include="Entities\StateProvinceCountyEntity.cs" />
     <Compile Include="Entities\UriTypeEntity.cs" />
     <Compile Include="Entities\TelecomTypeEntity.cs" />

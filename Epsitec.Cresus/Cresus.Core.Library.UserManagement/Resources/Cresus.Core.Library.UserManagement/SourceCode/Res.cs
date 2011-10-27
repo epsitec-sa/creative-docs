@@ -188,8 +188,8 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 				public static readonly global::Epsitec.Common.Support.Druid LoginPasswordHash = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10);
 				//	designer:cap/AVA8
 				public static readonly global::Epsitec.Common.Support.Druid LoginPicture = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 8);
-				//	designer:cap/AVA6
-				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 6);
+				//	designer:cap/AVA11
+				public static readonly global::Epsitec.Common.Support.Druid People = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 33);
 				//	designer:cap/AVAC
 				public static readonly global::Epsitec.Common.Support.Druid UserGroups = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 12);
 			}
@@ -252,6 +252,10 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 			private static readonly global::Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle ("Strings");
 			
 			#endregion
+		}
+		
+		public static class StringIds
+		{
 		}
 		
 		static Res()

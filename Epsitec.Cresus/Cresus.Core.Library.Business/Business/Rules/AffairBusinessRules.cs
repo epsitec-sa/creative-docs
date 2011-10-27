@@ -40,17 +40,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			var coreData = businessContext.Data;
 			var userManager = coreData.GetComponent<UserManager> ();
 
-			if (userManager.AuthenticatedUser.Person.IsNull ())
-			{
-				return null;
-			}
-
-			var naturalPerson = userManager.AuthenticatedUser.Person;
-
-			var example = new PeopleEntity ();
-			example.Person = naturalPerson;
-
-			return businessContext.DataContext.GetByExample<PeopleEntity> (example).FirstOrDefault ();
+			return businessContext.GetLocalEntity (userManager.AuthenticatedUser.People);
 		}
 
 

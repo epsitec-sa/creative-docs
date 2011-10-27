@@ -348,7 +348,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			//	Met à jour le contenu d'une ligne de la table.
 			var user = this.users[row];
-			var person = user.Person;
+			var person = user.People.NaturalPerson;
 
 			var button = this.table[0, row].Children[0] as IconOrImageButton;
 			button.ImageEntity = person.Pictures.FirstOrDefault ();

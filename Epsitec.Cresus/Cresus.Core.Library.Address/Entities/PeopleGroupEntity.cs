@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class PeopleCategoryEntity
+	public partial class PeopleGroupEntity
 	{
 		public override FormattedText GetSummary()
 		{
