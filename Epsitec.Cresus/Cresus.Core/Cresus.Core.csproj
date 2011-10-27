@@ -99,6 +99,8 @@
     <Compile Include="CommandHandlers\NavigationCommandHandler.cs" />
     <Compile Include="Controllers\CreationControllers\CreationArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationCustomerViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionOtherGroupRelationViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionOtherRelationViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPeopleViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPeopleGroupViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPriceDiscountViewController.cs" />
@@ -139,6 +141,8 @@
     <Compile Include="Controllers\EditionControllers\EditionVatDefinitionViewController.cs" />
     <Compile Include="Controllers\RibbonViewController.cs" />
     <Compile Include="Controllers\RibbonViewMode.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryOtherRelationGroupViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryOtherRelationViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryPeopleViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryPeopleGroupViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryPriceDiscountViewController.cs" />
@@ -590,6 +594,10 @@
     <EmbeddedResource Include="Images\Base.PeopleGroup.icon" />
     <EmbeddedResource Include="Images\Data.PeopleGroup.icon" />
     <EmbeddedResource Include="Images\Base.People.icon" />
+    <EmbeddedResource Include="Images\Base.OtherRelation.icon" />
+    <EmbeddedResource Include="Images\Base.OtherRelationGroup.icon" />
+    <EmbeddedResource Include="Images\Data.OtherRelation.icon" />
+    <EmbeddedResource Include="Images\Data.OtherRelationGroup.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

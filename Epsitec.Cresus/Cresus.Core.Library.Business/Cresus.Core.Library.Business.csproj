@@ -219,6 +219,8 @@
     <Compile Include="Entities\ArticleQuantityColumnEntity.cs" />
     <Compile Include="Entities\CustomerCategoryEntity.cs" />
     <Compile Include="Entities\FinanceSettingsEntity.cs" />
+    <Compile Include="Entities\OtherRelationEntity.cs" />
+    <Compile Include="Entities\OtherRelationGroupEntity.cs" />
     <Compile Include="Entities\PaymentReminderDefinitionEntity.cs" />
     <Compile Include="Factories\DefaultEntitySpecialControllerFactory.cs" />
     <Compile Include="Factories\DefaultViewControllerComponentFactory.cs" />

@@ -31,6 +31,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.End ()
 				.Separator ()
 				.Input ()
+				  .Field (x => x.AssociatedSite)
 				  .Field (x => x.ActiveSalesRepresentative)
 				  .Field (x => x.ActiveAffairOwner)
 				.End ()

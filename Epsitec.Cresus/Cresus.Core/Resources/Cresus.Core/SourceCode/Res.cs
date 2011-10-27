@@ -82,6 +82,10 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Widgets.Command ShowLegalPersonType = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 48));
 				//	designer:cap/L0KH1
 				public static readonly global::Epsitec.Common.Widgets.Command ShowLocation = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 49));
+				//	designer:cap/L0K72
+				public static readonly global::Epsitec.Common.Widgets.Command ShowOtherRelation = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 71));
+				//	designer:cap/L0K82
+				public static readonly global::Epsitec.Common.Widgets.Command ShowOtherRelationGroup = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 72));
 				//	designer:cap/L0KI1
 				public static readonly global::Epsitec.Common.Widgets.Command ShowPaymentCategory = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 50));
 				//	designer:cap/L0KJ1
@@ -253,6 +257,10 @@ namespace Epsitec.Cresus.Core
 				public const long ShowLegalPersonType = 0x1500014000030L;
 				//	designer:cap/L0KH1
 				public const long ShowLocation = 0x1500014000031L;
+				//	designer:cap/L0K72
+				public const long ShowOtherRelation = 0x1500014000047L;
+				//	designer:cap/L0K82
+				public const long ShowOtherRelationGroup = 0x1500014000048L;
 				//	designer:cap/L0KI1
 				public const long ShowPaymentCategory = 0x1500014000032L;
 				//	designer:cap/L0KJ1

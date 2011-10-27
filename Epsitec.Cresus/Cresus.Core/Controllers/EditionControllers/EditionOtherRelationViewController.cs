@@ -13,19 +13,17 @@ using Epsitec.Cresus.Bricks;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionCustomerViewController : EditionViewController<CustomerEntity>
+	public class EditionOtherRelationViewController : EditionViewController<OtherRelationEntity>
 	{
-		protected override void CreateBricks(BrickWall<CustomerEntity> wall)
+		protected override void CreateBricks(BrickWall<OtherRelationEntity> wall)
 		{
 			wall.AddBrick ()
 				.Input ()
-				  .Title ("N° de client").Field (x => x.IdA)
-				  .Field (x => x.CustomerCategory)
-				  .Field (x => x.SalesRepresentative)
-				  .Field (x => x.OtherRelations)
-				  .Field (x => x.DefaultDebtorBookAccount)
+				  .Field (x => x.Name)
+				  .Field (x => x.Description)
+				  .Field (x => x.Person)
+				  .Field (x => x.Groups)
 				.End ()
-				.Include (x => x.MainRelation)
 				;
 		}
 	}
