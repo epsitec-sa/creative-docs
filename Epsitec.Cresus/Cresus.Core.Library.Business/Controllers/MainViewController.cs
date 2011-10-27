@@ -327,7 +327,8 @@ namespace Epsitec.Cresus.Core.Controllers
 						var entity = node.GetEntity ();
 						var context = this.Data.DataContextPool.FindDataContext (entity);
 
-						if (context.IsPersistent (entity))
+						if ((context != null) &&
+							(context.IsPersistent (entity)))
 						{
 							//	HACK
 							//	TODO: remove this

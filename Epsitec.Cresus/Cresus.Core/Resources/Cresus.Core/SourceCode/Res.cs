@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Core
 				//	designer:cap/L0K62
 				public static readonly global::Epsitec.Common.Widgets.Command ShowPeople = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 70));
 				//	designer:cap/L0K52
-				public static readonly global::Epsitec.Common.Widgets.Command ShowPeopleCategory = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 69));
+				public static readonly global::Epsitec.Common.Widgets.Command ShowPeopleGroup = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 69));
 				//	designer:cap/L0KK1
 				public static readonly global::Epsitec.Common.Widgets.Command ShowPersonGender = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 52));
 				//	designer:cap/L0KL1
@@ -260,7 +260,7 @@ namespace Epsitec.Cresus.Core
 				//	designer:cap/L0K62
 				public const long ShowPeople = 0x1500014000046L;
 				//	designer:cap/L0K52
-				public const long ShowPeopleCategory = 0x1500014000045L;
+				public const long ShowPeopleGroup = 0x1500014000045L;
 				//	designer:cap/L0KK1
 				public const long ShowPersonGender = 0x1500014000034L;
 				//	designer:cap/L0KL1
@@ -455,6 +455,69 @@ namespace Epsitec.Cresus.Core
 			private static readonly global::Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle ("Strings");
 			
 			#endregion
+		}
+		
+		public static class StringIds
+		{
+			public static class Error
+			{
+				//	designer:str/L0A
+				public static global::Epsitec.Common.Support.Druid CannotConnectToLocalDatabase
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (167772160);
+					}
+				}
+				//	designer:str/L0A2
+				public static global::Epsitec.Common.Support.Druid IncompatibleDatabase
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (167772162);
+					}
+				}
+			}
+			
+			public static class Hint
+			{
+				public static class Error
+				{
+					//	designer:str/L0A1
+					public static global::Epsitec.Common.Support.Druid CannotConnectToLocalDatabase
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (167772161);
+						}
+					}
+					//	designer:str/L0A3
+					public static global::Epsitec.Common.Support.Druid IncompatibleDatabase
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (167772163);
+						}
+					}
+				}
+			}
+			
+			//	designer:str/L0A4
+			public static global::Epsitec.Common.Support.Druid ProductAppId
+			{
+				get
+				{
+					return global::Epsitec.Common.Support.Druid.FromFieldId (167772164);
+				}
+			}
+			//	designer:str/L01
+			public static global::Epsitec.Common.Support.Druid ProductName
+			{
+				get
+				{
+					return global::Epsitec.Common.Support.Druid.FromFieldId (16777216);
+				}
+			}
 		}
 		
 		static Res()
