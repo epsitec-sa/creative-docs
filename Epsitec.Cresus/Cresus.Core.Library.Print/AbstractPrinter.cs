@@ -285,7 +285,7 @@ namespace Epsitec.Cresus.Core.Print
 			}
 		}
 
-		protected string LanguageId
+		protected virtual string LanguageId
 		{
 			//	Retourne la langue à utiliser pour imprimer le document.
 			get

@@ -39,14 +39,17 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
-	
+
 		public override FormattedText GetSummary()
 		{
-			FormattedText billing  = BusinessDocumentEntity.GetShortMailContactSummary (this.BillToMailContact);
-			FormattedText shipping = BusinessDocumentEntity.GetShortMailContactSummary (this.ShipToMailContact);
+			var billToMailContact = this.BillToMailContact;
+			var shipToMailContact = this.FinalShipToMailContact;
+
+			FormattedText billing  = BusinessDocumentEntity.GetShortMailContactSummary (billToMailContact);
+			FormattedText shipping = BusinessDocumentEntity.GetShortMailContactSummary (shipToMailContact);
 
 			FormattedText addresses;
-			if (this.BillToMailContact == this.ShipToMailContact || (!this.BillToMailContact.IsNotNull () && !this.ShipToMailContact.IsNotNull ()))
+			if (billToMailContact == shipToMailContact || (!billToMailContact.IsNotNull () && !shipToMailContact.IsNotNull ()))
 			{
 				addresses = FormattedText.Concat ("\n<b>• Adresse de facturation et de livraison:</b>\n", billing);
 			}
@@ -55,10 +58,12 @@ namespace Epsitec.Cresus.Core.Entities
 				addresses = FormattedText.Concat ("\n<b>• Adresse de facturation:</b>\n", billing, "\n\n<b>• Adresse de livraison:</b>\n", shipping);
 			}
 
-			return TextFormatter.FormatText (
-				this.BillingDate, ", ",
-				InvoiceDocumentHelper.GetTotalPriceTTC (this), TextFormatter.FormatCommand ("#price()"), "\n",
-				addresses);
+			return TextFormatter.FormatText
+				(
+					this.BillingDate, ", ",
+					InvoiceDocumentHelper.GetTotalPriceTTC (this), TextFormatter.FormatCommand ("#price()"), "\n",
+					addresses
+				);
 		}
 
 		public override FormattedText GetCompactSummary()
@@ -71,16 +76,79 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			if (x.IsNotNull ())
 			{
-				return TextFormatter.FormatText (x.LegalPerson.Name, "\n",
-												 x.NaturalPerson.Firstname, x.NaturalPerson.Lastname, "\n",
-												 x.Address.Street.StreetName, "\n",
-												 x.Address.Location.PostalCode, x.Address.Location.Name);
+				return TextFormatter.FormatText
+					(
+						x.LegalPerson.Name, "\n",
+						x.NaturalPerson.Firstname, x.NaturalPerson.Lastname, "\n",
+						x.Address.Street.StreetName, "\n",
+						x.Address.Location.PostalCode, x.Address.Location.Name
+					);
 			}
 			else
 			{
 				return TextFormatter.FormatText ("Pas encore défini").ApplyItalic ();
 			}
 		}
+
+
+		public MailContactEntity FinalShipToMailContact
+		{
+			//	Retourne l'adresse de livraison à utiliser. Si aucune adresse n'est directement définie,
+			//	on utilise l'adresse définie dans l'éventuel chantier.
+			get
+			{
+				var shipToMailContact = this.ShipToMailContact;
+
+				if (shipToMailContact.IsNull ())
+				{
+					var businessContext = Logic.Current.GetComponent<BusinessContext> ();
+
+					var affair = this.Affair;
+					if (affair != null)
+					{
+						shipToMailContact = affair.AssociatedSite.Person.Contacts.OfType<MailContactEntity> ().FirstOrDefault ();
+					}
+				}
+
+				return shipToMailContact;
+			}
+		}
+
+		public AffairEntity Affair
+		{
+			//	Retourne l'affaire à laquelle appartient l'entité.
+			get
+			{
+				var metadata = this.DocumentMetadata;
+
+				if (metadata == null)
+				{
+					return null;
+				}
+
+				var businessContext = Logic.Current.GetComponent<BusinessContext> ();
+
+				var example = new AffairEntity ();
+				example.Documents.Add (metadata);
+
+				return businessContext.DataContext.GetByExample<AffairEntity> (example).FirstOrDefault ();
+			}
+		}
+
+		public DocumentMetadataEntity DocumentMetadata
+		{
+			//	Retourne le DocumentMetadataEntity auquel appartient l'entité.
+			get
+			{
+				var businessContext = Logic.Current.GetComponent<BusinessContext> ();
+
+				var example = new DocumentMetadataEntity ();
+				example.BusinessDocument = this;
+
+				return businessContext.DataContext.GetByExample<DocumentMetadataEntity> (example).FirstOrDefault ();
+			}
+		}
+
 
 		public override EntityStatus GetEntityStatus()
 		{

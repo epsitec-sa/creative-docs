@@ -1466,6 +1466,58 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 		}
 
 
+		protected override string LanguageId
+		{
+			//	Retourne la langue à utiliser pour imprimer le document.
+			//	Si les options d'impression indiquent 'par défaut' et que le client de l'affaire à laquelle
+			//	appartient le document a une langue préférentielle, c'est cette dernière qui est utilisée.
+			get
+			{
+				var languageId = this.GetOptionText (DocumentOption.Language).ToString ();
+
+				if (languageId == "default")
+				{
+					languageId = this.AffairLanguageId;
+				}
+
+				if (string.IsNullOrEmpty (languageId))
+				{
+					languageId = TextFormatter.CurrentLanguageId;
+				}
+
+				return languageId;
+			}
+		}
+
+		private string AffairLanguageId
+		{
+			//	Retourne la langue du client de l'affaire à laquelle appartient le document.
+			get
+			{
+				var affair = this.Affair;
+
+				if (affair != null)
+				{
+					return affair.Customer.MainRelation.Person.PreferredLanguage.IsoLanguageCode;
+				}
+
+				return null;
+			}
+		}
+
+		private AffairEntity Affair
+		{
+			//	Retourne l'affaire à laquelle appartient le document.
+			get
+			{
+				var example = new AffairEntity ();
+				example.Documents.Add (this.Metadata);
+
+				return businessContext.DataContext.GetByExample<AffairEntity> (example).FirstOrDefault ();
+			}
+		}
+
+
 		protected BusinessDocumentEntity Entity
 		{
 			get
