@@ -25,19 +25,19 @@ namespace Epsitec.Cresus.Core.Library.UI
 			}
 		}
 
-		public string							LanguageId
+		public string							TwoLetterISOLanguageName
 		{
 			get
 			{
-				return this.languageId ?? this.CultureInfo.TwoLetterISOLanguageName;
+				return this.twoLetterISOLanguageName ?? this.CultureInfo.TwoLetterISOLanguageName;
 			}
 		}
 
-		public string							LanguageIdForDefault
+		public string							TwoLetterISOLanguageNameForDefault
 		{
 			get
 			{
-				return this.languageIdForDefault;
+				return this.twoLetterISOLanguageNameForDefault;
 			}
 		}
 
@@ -45,56 +45,56 @@ namespace Epsitec.Cresus.Core.Library.UI
 		{
 			get
 			{
-				return this.LanguageId == this.languageIdForDefault;
+				return this.TwoLetterISOLanguageName == this.twoLetterISOLanguageNameForDefault;
 			}
 		}
 
-		public bool								HasLanguageId
+		public bool								HasTwoLetterISOLanguageName
 		{
 			get
 			{
-				return this.languageId != null;
+				return this.twoLetterISOLanguageName != null;
 			}
 		}
 
-		
-		public void SelectLanguage(string languageId)
+
+		public void SelectLanguage(string twoLetterISOLanguageName)
 		{
-			if ((string.IsNullOrEmpty (languageId)) ||
-				(MultilingualText.DefaultLanguageId == languageId))
+			if (string.IsNullOrEmpty (twoLetterISOLanguageName) ||
+				MultilingualText.DefaultTwoLetterISOLanguageName == twoLetterISOLanguageName)
 			{
-				languageId = null;
+				twoLetterISOLanguageName = null;
 			}
 
-			var oldLanguageId = this.LanguageId;
+			var oldTwoLetter = this.TwoLetterISOLanguageName;
 
-			this.languageId = languageId;
+			this.twoLetterISOLanguageName = twoLetterISOLanguageName;
 
-			var newLanguageId = this.LanguageId;
+			var newTwoLetter = this.TwoLetterISOLanguageName;
 
-			if (oldLanguageId != newLanguageId)
+			if (oldTwoLetter != newTwoLetter)
 			{
-				this.NotifyLanguageIdChanged (oldLanguageId, newLanguageId);
+				this.NotifyTwoLetterISOLanguageNameChanged (oldTwoLetter, newTwoLetter);
 			}
 		}
 
-		public void DefineDefaultLanguage(string languageId)
+		public void DefineDefaultLanguage(string twoLetterISOLanguageName)
 		{
-			this.languageIdForDefault = languageId;
+			this.twoLetterISOLanguageNameForDefault = twoLetterISOLanguageName;
 		}
 
-		public bool IsDefaultLanguage(string languageId)
+		public bool IsDefaultLanguage(string twoLetterISOLanguageName)
 		{
-			if (string.IsNullOrEmpty (languageId))
+			if (string.IsNullOrEmpty (twoLetterISOLanguageName))
 			{
 				return false;
 			}
 
-			if (MultilingualText.DefaultLanguageId == languageId)
+			if (MultilingualText.DefaultTwoLetterISOLanguageName == twoLetterISOLanguageName)
 			{
 				return true;
 			}
-			if (this.languageIdForDefault == languageId)
+			if (this.twoLetterISOLanguageNameForDefault == twoLetterISOLanguageName)
 			{
 				return true;
 			}
@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Core.Library.UI
 		}
 
 
-		private void NotifyLanguageIdChanged(string oldLanguageId, string newLanguageId)
+		private void NotifyTwoLetterISOLanguageNameChanged(string oldTwoLetterISOLanguageName, string newTwoLetterISOLanguageName)
 		{
 			Services.NotifyUpdateRequested (this);
 		}
@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.Core.Library.UI
 
 
 		private readonly CultureInfo			culture;
-		private string							languageId;
-		private string							languageIdForDefault;
+		private string							twoLetterISOLanguageName;
+		private string							twoLetterISOLanguageNameForDefault;
 	}
 }

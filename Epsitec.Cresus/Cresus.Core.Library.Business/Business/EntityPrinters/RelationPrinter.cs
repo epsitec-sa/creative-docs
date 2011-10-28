@@ -152,7 +152,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			}
 
 			var band = new TextBand ();
-			band.LanguageId = this.LanguageId;
+			band.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;
 			band.Text = text.ApplyBold ();
 			band.FontSize = this.FontSize*2.0;
 
@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			}
 
 			var band = new TextBand ();
-			band.LanguageId = this.LanguageId;
+			band.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;
 			band.Text = text;
 			band.FontSize = this.FontSize*1.2;
 
@@ -209,13 +209,13 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			}
 
 			var title = new TextBand ();
-			title.LanguageId = this.LanguageId;
+			title.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;
 			title.Text = TextFormatter.FormatText ("Adresses").ApplyBold ();
 			title.FontSize = this.FontSize*1.5;
 			this.documentContainer.AddFromTop (title, 1.0);
 
 			var table = new TableBand ();
-			table.LanguageId = this.LanguageId;
+			table.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;
 			table.ColumnsCount = 5;
 			table.RowsCount = 1+count;
 			table.CellBorder = this.GetCellBorder ();
@@ -273,13 +273,13 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			}
 
 			var title = new TextBand ();
-			title.LanguageId = this.LanguageId;
+			title.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;
 			title.Text = TextFormatter.FormatText ("Téléphones").ApplyBold ();
 			title.FontSize = this.FontSize*1.5;
 			this.documentContainer.AddFromTop (title, 1.0);
 
 			var table = new TableBand ();
-			table.LanguageId = this.LanguageId;
+			table.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;
 			table.ColumnsCount = 3;
 			table.RowsCount = 1+count;
 			table.CellBorder = this.GetCellBorder ();
@@ -331,13 +331,13 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			}
 
 			var title = new TextBand ();
-			title.LanguageId = this.LanguageId;
+			title.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;
 			title.Text = TextFormatter.FormatText ("Emails").ApplyBold ();
 			title.FontSize = this.FontSize*1.5;
 			this.documentContainer.AddFromTop (title, 1.0);
 
 			var table = new TableBand ();
-			table.LanguageId = this.LanguageId;
+			table.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;
 			table.ColumnsCount = 2;
 			table.RowsCount = 1+count;
 			table.CellBorder = this.GetCellBorder ();

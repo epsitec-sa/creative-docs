@@ -444,7 +444,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			var lines = this.accessData.BusinessDocument.Lines.Select (x => new DocumentAccessorContentLine (x));
 
-			foreach (var accessor in DocumentItemAccessor.CreateAccessors (this.accessData.DocumentMetadata, this.accessData.DocumentLogic, mode, TextFormatter.CurrentLanguageId, lines))
+			foreach (var accessor in DocumentItemAccessor.CreateAccessors (this.accessData.DocumentMetadata, this.accessData.DocumentLogic, mode, TextFormatter.CurrentTwoLetterISOLanguageName, lines))
 			{
 				int quantityIndex = 0;
 

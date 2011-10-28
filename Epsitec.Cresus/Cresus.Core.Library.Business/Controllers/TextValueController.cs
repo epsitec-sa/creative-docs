@@ -43,25 +43,25 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// one defined globally in the UI settings).
 		/// </summary>
 		/// <value>The active language id.</value>
-		public string LanguageId
+		public string TwoLetterISOLanguageName
 		{
 			get
 			{
-				if (this.languageId != null)
+				if (this.twoLetterISOLanguageName != null)
 				{
-					return this.languageId;
+					return this.twoLetterISOLanguageName;
 				}
 
-				if (Library.UI.Services.Settings.CultureForData.HasLanguageId)
+				if (Library.UI.Services.Settings.CultureForData.HasTwoLetterISOLanguageName)
 				{
-					return Library.UI.Services.Settings.CultureForData.LanguageId;
+					return Library.UI.Services.Settings.CultureForData.TwoLetterISOLanguageName;
 				}
 
 				return null;
 			}
 			set
 			{
-				this.languageId = value;
+				this.twoLetterISOLanguageName = value;
 			}
 		}
 
@@ -256,7 +256,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 					if (multilingual.ContainsLocalizations)
 					{
-						value = multilingual.GetTextOrDefault (this.LanguageId).ToString ();
+						value = multilingual.GetTextOrDefault (this.TwoLetterISOLanguageName).ToString ();
 					}
 				}
 			}
@@ -275,23 +275,23 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				if (this.marshaler.MarshaledType == typeof (FormattedText))
 				{
-					var originalValue         = this.marshaler.GetStringValue ();
-					var originalFormattedText = new FormattedText (originalValue);
-					var languageId            = this.LanguageId;
+					var originalValue            = this.marshaler.GetStringValue ();
+					var originalFormattedText    = new FormattedText (originalValue);
+					var twoLetterISOLanguageName = this.TwoLetterISOLanguageName;
 
 					//	Handle formatted text, which could be stored as a multilingual text : the UI
 					//	can only display and handle one language at any given time.
 
 					multilingual = new MultilingualText (originalFormattedText);
 
-					if (Library.UI.Services.Settings.CultureForData.IsDefaultLanguage (languageId))
+					if (Library.UI.Services.Settings.CultureForData.IsDefaultLanguage (twoLetterISOLanguageName))
 					{
 						multilingual.SetDefaultText (new FormattedText (text));
-						multilingual.ClearText (languageId);
+						multilingual.ClearText (twoLetterISOLanguageName);
 					}
 					else
 					{
-						multilingual.SetText (languageId, new FormattedText (text));
+						multilingual.SetText (twoLetterISOLanguageName, new FormattedText (text));
 					}
 
 					if (multilingual.ContainsLocalizations)
@@ -424,23 +424,23 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					if (multilingualText == null)
 					{
-						textField.SetUndefinedLanguage (Library.UI.Services.Settings.CultureForData.HasLanguageId &&
+						textField.SetUndefinedLanguage (Library.UI.Services.Settings.CultureForData.HasTwoLetterISOLanguageName &&
 														!Library.UI.Services.Settings.CultureForData.IsActiveLanguageAlsoTheDefault);
 					}
 					else
 					{
 						bool undefined = false;
 
-						if (Library.UI.Services.Settings.CultureForData.HasLanguageId)
+						if (Library.UI.Services.Settings.CultureForData.HasTwoLetterISOLanguageName)
 						{
 							if (Library.UI.Services.Settings.CultureForData.IsActiveLanguageAlsoTheDefault)
 							{
-								undefined = !multilingualText.ContainsLanguage (Library.UI.Services.Settings.CultureForData.LanguageId)
-										 && !multilingualText.ContainsLanguage (MultilingualText.DefaultLanguageId);
+								undefined = !multilingualText.ContainsLanguage (Library.UI.Services.Settings.CultureForData.TwoLetterISOLanguageName)
+										 && !multilingualText.ContainsLanguage (MultilingualText.DefaultTwoLetterISOLanguageName);
 							}
 							else
 							{
-								undefined = !multilingualText.ContainsLanguage (Library.UI.Services.Settings.CultureForData.LanguageId);
+								undefined = !multilingualText.ContainsLanguage (Library.UI.Services.Settings.CultureForData.TwoLetterISOLanguageName);
 							}
 						}
 
@@ -469,7 +469,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly bool					useFormattedText;
 		
 		private Widget							widget;
-		private string							languageId;
+		private string							twoLetterISOLanguageName;
 		private IFieldBinder					fieldBinder;
 		private INamedType						namedType;
 	}

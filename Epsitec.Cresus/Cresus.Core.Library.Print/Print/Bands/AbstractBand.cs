@@ -28,13 +28,13 @@ namespace Epsitec.Cresus.Core.Print.Bands
 	{
 		public AbstractBand()
 		{
-			this.LanguageId = TextFormatter.CurrentLanguageId;
+			this.TwoLetterISOLanguageName = TextFormatter.CurrentTwoLetterISOLanguageName;
 			this.Font = Font.GetFont ("Arial", "Regular");
 			this.FontSize = 3.0;
 		}
 
 
-		public string LanguageId
+		public string TwoLetterISOLanguageName
 		{
 			get;
 			set;
@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 		protected FormattedText GetMonolingualText(FormattedText text)
 		{
-			return TextFormatter.GetMonolingualText (text, this.LanguageId);
+			return TextFormatter.GetMonolingualText (text, this.TwoLetterISOLanguageName);
 		}
 
 

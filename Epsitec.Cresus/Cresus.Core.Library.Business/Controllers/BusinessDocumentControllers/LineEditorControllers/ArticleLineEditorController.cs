@@ -645,7 +645,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			if (currentReplacement != articleText)
 			{
 				var text = new MultilingualText (replacementText);
-				text.SetText (TextFormatter.CurrentLanguageId, articleText);
+				text.SetText (TextFormatter.CurrentTwoLetterISOLanguageName, articleText);
 
 				if (shortDescription)
 				{

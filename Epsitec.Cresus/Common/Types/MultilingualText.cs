@@ -60,7 +60,7 @@ namespace Epsitec.Common.Types
                 }
 				else if (count == 1)
                 {
-					if (this.ContainsLanguage (MultilingualText.DefaultLanguageId) == false)
+					if (this.ContainsLanguage (MultilingualText.DefaultTwoLetterISOLanguageName) == false)
 					{
 						return true;
 					}
@@ -73,19 +73,19 @@ namespace Epsitec.Common.Types
 		/// <summary>
 		/// Determines whether this multilingual text contains the specified language.
 		/// </summary>
-		/// <param name="languageId">The language id.</param>
+		/// <param name="twoLetterISOLanguageName">The language id.</param>
 		/// <returns>
 		/// 	<c>true</c> if the specified language exists; otherwise, <c>false</c>.
 		/// </returns>
-		public bool ContainsLanguage(string languageId)
+		public bool ContainsLanguage(string twoLetterISOLanguageName)
 		{
-			if (string.IsNullOrEmpty (languageId))
+			if (string.IsNullOrEmpty (twoLetterISOLanguageName))
 			{
 				return false;
 			}
 			else
 			{
-				return this.texts.ContainsKey (languageId);
+				return this.texts.ContainsKey (twoLetterISOLanguageName);
 			}
 		}
 
@@ -93,7 +93,7 @@ namespace Epsitec.Common.Types
 		/// Gets the collection of language ids contained in this text.
 		/// </summary>
 		/// <returns>The collection of language ids.</returns>
-		public IEnumerable<string> GetContainedLanguageIds()
+		public IEnumerable<string> GetContainedTwoLetterISOLanguageNames()
 		{
 			return this.texts.Keys.OrderBy (x => x);
 		}
@@ -103,15 +103,15 @@ namespace Epsitec.Common.Types
 		/// Gets the formatted text for the specified language, or the
 		/// default language text if the language cannot be found.
 		/// </summary>
-		/// <param name="languageId">The language id.</param>
+		/// <param name="twoLetterISOLanguageName">The language id.</param>
 		/// <returns>The <see cref="FormattedText"/> for the specified language or the default language text if the specified language does not exist.</returns>
-		public FormattedText GetTextOrDefault(string languageId)
+		public FormattedText GetTextOrDefault(string twoLetterISOLanguageName)
 		{
 			string text;
 
-			MultilingualText.FixLanguageId (ref languageId);			
+			MultilingualText.FixTwoLetterISOLanguageName (ref twoLetterISOLanguageName);			
 
-			if (this.texts.TryGetValue (languageId, out text))
+			if (this.texts.TryGetValue (twoLetterISOLanguageName, out text))
 			{
 				return new FormattedText (text);
 			}
@@ -124,15 +124,15 @@ namespace Epsitec.Common.Types
 		/// <summary>
 		/// Gets the formatted text for the specified language.
 		/// </summary>
-		/// <param name="languageId">The language id.</param>
+		/// <param name="twoLetterISOLanguageName">The language id.</param>
 		/// <returns>The <see cref="FormattedText"/> for the specified language if it exists; otherwise, <c>null</c>.</returns>
-		public FormattedText? GetText(string languageId)
+		public FormattedText? GetText(string twoLetterISOLanguageName)
 		{
 			string text;
 
-			MultilingualText.FixLanguageId (ref languageId);
+			MultilingualText.FixTwoLetterISOLanguageName (ref twoLetterISOLanguageName);
 
-			if (this.texts.TryGetValue (languageId, out text))
+			if (this.texts.TryGetValue (twoLetterISOLanguageName, out text))
 			{
 				return new FormattedText (text);
 			}
@@ -150,7 +150,7 @@ namespace Epsitec.Common.Types
 		{
 			string text;
 
-			if (this.texts.TryGetValue (MultilingualText.DefaultLanguageId, out text))
+			if (this.texts.TryGetValue (MultilingualText.DefaultTwoLetterISOLanguageName, out text))
 			{
 				return new FormattedText (text);
 			}
@@ -163,34 +163,34 @@ namespace Epsitec.Common.Types
 		/// <summary>
 		/// Sets the text for the specified language.
 		/// </summary>
-		/// <param name="languageId">The language id.</param>
+		/// <param name="twoLetterISOLanguageName">The language id.</param>
 		/// <param name="text">The formatted text.</param>
-		public void SetText(string languageId, FormattedText text)
+		public void SetText(string twoLetterISOLanguageName, FormattedText text)
 		{
 			if (text.IsNull)
 			{
-				this.ClearText (languageId);
+				this.ClearText (twoLetterISOLanguageName);
 			}
 			else
 			{
-				MultilingualText.FixLanguageId (ref languageId);
-				this.texts[languageId] = text.ToString ();
+				MultilingualText.FixTwoLetterISOLanguageName (ref twoLetterISOLanguageName);
+				this.texts[twoLetterISOLanguageName] = text.ToString ();
 			}
 		}
 
 		public void SetDefaultText(FormattedText formattedText)
 		{
-			this.SetText (MultilingualText.DefaultLanguageId, formattedText);
+			this.SetText (MultilingualText.DefaultTwoLetterISOLanguageName, formattedText);
 		}
 
 		/// <summary>
 		/// Clears the text for the specified language.
 		/// </summary>
-		/// <param name="languageId">The language id.</param>
-		public void ClearText(string languageId)
+		/// <param name="twoLetterISOLanguageName">The language id.</param>
+		public void ClearText(string twoLetterISOLanguageName)
 		{
-			MultilingualText.FixLanguageId (ref languageId);			
-			this.texts.Remove (languageId);
+			MultilingualText.FixTwoLetterISOLanguageName (ref twoLetterISOLanguageName);			
+			this.texts.Remove (twoLetterISOLanguageName);
 		}
 
 
@@ -206,9 +206,9 @@ namespace Epsitec.Common.Types
 			}
 
 			if (this.texts.Count == 1 &&
-				this.texts.ContainsKey (MultilingualText.DefaultLanguageId))
+				this.texts.ContainsKey (MultilingualText.DefaultTwoLetterISOLanguageName))
 			{
-				return new FormattedText (this.texts[MultilingualText.DefaultLanguageId]);
+				return new FormattedText (this.texts[MultilingualText.DefaultTwoLetterISOLanguageName]);
 			}
 
 			var buffer = new System.Text.StringBuilder ();
@@ -321,13 +321,13 @@ namespace Epsitec.Common.Types
 			return MultilingualText.IsMultilingual (text.ToString ());
 		}
 
-		public static bool IsDefaultLanguageId(string languageId)
+		public static bool IsDefaultTwoLetterISOLanguageName(string twoLetterISOLanguageName)
 		{
-			if (string.IsNullOrEmpty (languageId))
+			if (string.IsNullOrEmpty (twoLetterISOLanguageName))
             {
 				return true;
             }
-			return (languageId == MultilingualText.DefaultLanguageId);
+			return (twoLetterISOLanguageName == MultilingualText.DefaultTwoLetterISOLanguageName);
 		}
 
 		/// <summary>
@@ -347,10 +347,10 @@ namespace Epsitec.Common.Types
 					throw new System.FormatException (string.Format ("Argument '{0}' does not contain valid prefix", prefixedText));
 				}
 
-				string languageId   = prefixedText.Substring (0, 2);
-				string languageText = prefixedText.Substring (3);
+				string twoLetterISOLanguageName = prefixedText.Substring (0, 2);
+				string languageText             = prefixedText.Substring (3);
 
-				text.SetText (languageId, languageText);
+				text.SetText (twoLetterISOLanguageName, languageText);
 			}
 
 			return text.GetGlobalText ();
@@ -373,11 +373,11 @@ namespace Epsitec.Common.Types
 		#endregion
 
 
-		private static void FixLanguageId(ref string languageId)
+		private static void FixTwoLetterISOLanguageName(ref string twoLetterISOLanguageName)
 		{
-			if (string.IsNullOrEmpty (languageId))
+			if (string.IsNullOrEmpty (twoLetterISOLanguageName))
 			{
-				languageId = MultilingualText.DefaultLanguageId;
+				twoLetterISOLanguageName = MultilingualText.DefaultTwoLetterISOLanguageName;
 			}
 		}
 		
@@ -417,13 +417,13 @@ namespace Epsitec.Common.Types
 
 			if (pos == 0 || pos < text.Length)
 			{
-				yield return MultilingualText.GetDivElement (MultilingualText.DefaultLanguageId, text.Substring (pos));
+				yield return MultilingualText.GetDivElement (MultilingualText.DefaultTwoLetterISOLanguageName, text.Substring (pos));
 			}
 		}
 
-		private static string GetDivElement(string languageId, string text)
+		private static string GetDivElement(string twoLetterISOLanguageName, string text)
 		{
-			return string.Concat (MultilingualText.DivBeginWithLanguageAttribute, @"""", languageId, @"""", ">", text, MultilingualText.DivEnd);
+			return string.Concat (MultilingualText.DivBeginWithLanguageAttribute, @"""", twoLetterISOLanguageName, @"""", ">", text, MultilingualText.DivEnd);
 		}
 
 		private static IEnumerable<KeyValuePair<string, string>> GetLanguageTexts(string text)
@@ -444,10 +444,10 @@ namespace Epsitec.Common.Types
 			System.Diagnostics.Debug.Assert (quotePosEnd > 0);
 			System.Diagnostics.Debug.Assert (endDivStart >= startDivEnd);
 
-			string languageId = section.Substring (quotePosBegin, quotePosEnd - quotePosBegin);
-			string languageText = section.Substring (startDivEnd, endDivStart - startDivEnd);
+			string twoLetterISOLanguageName = section.Substring (quotePosBegin, quotePosEnd - quotePosBegin);
+			string languageText             = section.Substring (startDivEnd, endDivStart - startDivEnd);
 
-			return new KeyValuePair<string, string> (languageId, languageText);
+			return new KeyValuePair<string, string> (twoLetterISOLanguageName, languageText);
 		}
 
 
@@ -509,13 +509,13 @@ namespace Epsitec.Common.Types
 		#endregion
 
 
-		public static readonly string DefaultLanguageId		= "*";
+		public static readonly string DefaultTwoLetterISOLanguageName		= "*";
 
 		private const string DivBeginWithLanguageAttribute	= MultilingualText.DivBegin + MultilingualText.LanguageAttribute;  // "<div lang="
 		private const string LanguageAttribute				= "lang=";
 		private const string DivBegin						= "<div ";
 		private const string DivEnd							= "</div>";
 
-		private readonly Dictionary<string, string> texts;  // key=LanguageId, value=Text
+		private readonly Dictionary<string, string> texts;  // key=TwoLetterISOLanguageName, value=Text
 	}
 }

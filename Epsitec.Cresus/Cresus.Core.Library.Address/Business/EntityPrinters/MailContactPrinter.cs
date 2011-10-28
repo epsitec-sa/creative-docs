@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 		{
 			//	Ajoute le résumé dans le document.
 			var band = new TextBand ();
-			band.LanguageId = this.LanguageId;
+			band.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;
 			band.Text = this.Entity.GetSummary ();
 			band.FontSize = this.FontSize;
 

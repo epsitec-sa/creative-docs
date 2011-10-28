@@ -17,12 +17,12 @@ namespace Epsitec.Cresus.Core
 {
 	public static class TextFormatter
 	{
-		public static string					CurrentLanguageId
+		public static string					CurrentTwoLetterISOLanguageName
 		{
 			get
 			{
 				Library.UI.CultureSettings culture = Library.UI.Services.Settings.CultureForData;
-				return culture.LanguageId;
+				return culture.TwoLetterISOLanguageName;
 			}
 		}
 
@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Core
 		{
 			get
 			{
-				switch (TextFormatter.CurrentLanguageId)
+				switch (TextFormatter.CurrentTwoLetterISOLanguageName)
 				{
 					case "fr":
 						return TextFormatter.FormatText ("inconnu").ApplyItalic ();
@@ -62,21 +62,21 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public static FormattedText GetMonolingualText(FormattedText text, string languageId)
+		public static FormattedText GetMonolingualText(FormattedText text, string twoLetterISOLanguageName)
 		{
 			if (MultilingualText.IsMultilingual (text))
 			{
-				if (string.IsNullOrEmpty (languageId))
+				if (string.IsNullOrEmpty (twoLetterISOLanguageName))
 				{
-					languageId = TextFormatter.CurrentLanguageId;
+					twoLetterISOLanguageName = TextFormatter.CurrentTwoLetterISOLanguageName;
 				}
 
 				var multilingualText = new MultilingualText (text);
-				var monolingual = multilingualText.GetTextOrDefault (languageId);
+				var monolingual = multilingualText.GetTextOrDefault (twoLetterISOLanguageName);
 
 				if (monolingual.IsNullOrEmpty)
 				{
-					monolingual = multilingualText.GetTextOrDefault (TextFormatter.CurrentLanguageId);
+					monolingual = multilingualText.GetTextOrDefault (TextFormatter.CurrentTwoLetterISOLanguageName);
 				}
 
 				return monolingual;
@@ -191,7 +191,7 @@ namespace Epsitec.Cresus.Core
 			if (MultilingualText.IsMultilingual (formattedText))
 			{
 				var multilingualText = new MultilingualText (formattedText);
-				return multilingualText.GetTextOrDefault (TextFormatter.CurrentLanguageId).ToString ();
+				return multilingualText.GetTextOrDefault (TextFormatter.CurrentTwoLetterISOLanguageName).ToString ();
 			}
 			else
 			{

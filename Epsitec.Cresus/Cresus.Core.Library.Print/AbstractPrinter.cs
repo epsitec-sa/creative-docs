@@ -262,7 +262,7 @@ namespace Epsitec.Cresus.Core.Print
 
 		protected string GetString(Druid field)
 		{
-			var culture = Resources.FindSpecificCultureInfo (this.LanguageId);
+			var culture = Resources.FindSpecificCultureInfo (this.TwoLetterISOLanguageName);
 			var bundle = Epsitec.Cresus.Core.Library.Documents.Res.Manager.GetBundle ("Strings", ResourceLevel.Merged, culture);
 
 			if (bundle == null)
@@ -285,24 +285,24 @@ namespace Epsitec.Cresus.Core.Print
 			}
 		}
 
-		protected virtual string LanguageId
+		protected virtual string TwoLetterISOLanguageName
 		{
 			//	Retourne la langue à utiliser pour imprimer le document.
 			get
 			{
-				var languageId = this.GetOptionText (DocumentOption.Language).ToString ();
+				var twoLetter = this.GetOptionText (DocumentOption.Language).ToString ();
 
-				if (languageId == "default")
+				if (twoLetter == "default")
 				{
-					languageId = null; 
+					twoLetter = null; 
 				}
 
-				if (string.IsNullOrEmpty (languageId))
+				if (string.IsNullOrEmpty (twoLetter))
 				{
-					languageId = TextFormatter.CurrentLanguageId;
+					twoLetter = TextFormatter.CurrentTwoLetterISOLanguageName;
 				}
 
-				return languageId;
+				return twoLetter;
 			}
 		}
 

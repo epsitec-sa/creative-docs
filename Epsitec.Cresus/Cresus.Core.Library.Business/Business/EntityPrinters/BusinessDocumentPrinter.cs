@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 		{
 			get
 			{
-				return FormattedText.Concat (InvoiceDocumentHelper.GetDocumentName (this.Metadata, this.LanguageId), " ", this.Metadata.IdA).ToSimpleText ();
+				return FormattedText.Concat (InvoiceDocumentHelper.GetDocumentName (this.Metadata, this.TwoLetterISOLanguageName), " ", this.Metadata.IdA).ToSimpleText ();
 			}
 		}
 
@@ -181,7 +181,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 					}
 
 					var textBand = new TextBand ();
-					textBand.LanguageId = this.LanguageId;
+					textBand.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;
 					textBand.Text = address;
 					textBand.Font = BusinessDocumentPrinter.font;
 					textBand.FontSize = this.GetOptionValue (DocumentOption.HeaderFromFontSize);
@@ -196,7 +196,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				if (!rect.IsSurfaceZero)
 				{
 					var mailContactBand = new TextBand ();
-					mailContactBand.LanguageId = this.LanguageId;
+					mailContactBand.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;
 					mailContactBand.Text = this.Entity.BillToMailContact.GetSummary ();
 					mailContactBand.Font = BusinessDocumentPrinter.font;
 					mailContactBand.FontSize = this.GetOptionValue (DocumentOption.HeaderToFontSize);
@@ -222,7 +222,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				if (!rect.IsSurfaceZero)
 				{
 					var titleBand = new TextBand ();
-					titleBand.LanguageId = this.LanguageId;
+					titleBand.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;
 					titleBand.Text = this.Title;
 					titleBand.BreakMode = TextBreakMode.SingleLine | TextBreakMode.Split | TextBreakMode.Ellipsis;
 					titleBand.Font = font;
@@ -241,7 +241,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 					var location = this.DefaultLocation;
 					var dateBand = new TextBand ();
-					dateBand.LanguageId = this.LanguageId;
+					dateBand.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;
 					dateBand.Text = (location == null) ? FormattedText.Concat ("Le ", date) : FormattedText.Concat (location, ", le ", date);
 					dateBand.Font = font;
 					dateBand.FontSize = this.GetOptionValue (DocumentOption.HeaderLocDateFontSize);
@@ -320,7 +320,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 			//	Construit une fois pour toutes les accesseurs au contenu.
 			var lines = this.ContentLines;
-			var accessors = new List<DocumentItemAccessor> (DocumentItemAccessor.CreateAccessors (this.Metadata, this.documentLogic, this.DocumentItemAccessorMode, this.LanguageId, lines));
+			var accessors = new List<DocumentItemAccessor> (DocumentItemAccessor.CreateAccessors (this.Metadata, this.documentLogic, this.DocumentItemAccessorMode, this.TwoLetterISOLanguageName, lines));
 
 			//	Fusionne toutes les lignes de sous-total, pour les rendre inséparables.
 			for (int i = 0; i < lines.Count; i++)
@@ -362,7 +362,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 			//	Deuxième passe pour générer les colonnes et les lignes du tableau.
 			this.table = new TableBand ();
-			this.table.LanguageId = this.LanguageId;
+			this.table.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;
 			this.table.ColumnsCount = this.visibleColumnCount;
 			this.table.RowsCount = rowCount;
 			this.table.CellBorder = this.GetCellBorder ();
@@ -591,7 +591,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			get
 			{
 				bool includeOwner = this.HasOption (DocumentOption.HeaderNumberIncludeOwner);
-				return InvoiceDocumentHelper.GetTitle (this.businessContext as BusinessContext, this.Metadata, this.Entity, null, this.LanguageId, includeOwner);
+				return InvoiceDocumentHelper.GetTitle (this.businessContext as BusinessContext, this.Metadata, this.Entity, null, this.TwoLetterISOLanguageName, includeOwner);
 			}
 		}
 
@@ -611,7 +611,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				var fontSize = this.GetOptionValue (DocumentOption.HeaderForFontSize);
 				firstColumnWidth *= fontSize/3;
 
-				band.LanguageId = this.LanguageId;
+				band.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;
 				band.ColumnsCount = 2;
 				band.RowsCount = 1;
 				band.CellBorder = CellBorder.Empty;
@@ -774,14 +774,14 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				this.documentContainer.CurrentPage = page;
 
 				var leftHeader = new TextBand ();
-				leftHeader.LanguageId = this.LanguageId;
+				leftHeader.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;
 				leftHeader.Text = this.Title;
 				leftHeader.Alignment = ContentAlignment.BottomLeft;
 				leftHeader.Font = font;
 				leftHeader.FontSize = this.FontSize*1.3;
 
 				var rightHeader = new TextBand ();
-				rightHeader.LanguageId = this.LanguageId;
+				rightHeader.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;
 				rightHeader.Text = FormattedText.Concat ("page ", (page-firstPage+1).ToString ());
 				rightHeader.Alignment = ContentAlignment.BottomRight;
 				rightHeader.Font = font;
@@ -812,7 +812,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				this.documentContainer.CurrentPage = page;
 
 				var table = new TableBand ();
-				table.LanguageId = this.LanguageId;
+				table.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;
 				table.ColumnsCount = this.visibleColumnCount;
 				table.RowsCount = 2;
 				table.CellMargins = new Margins (this.CellMargin);
@@ -863,7 +863,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				this.documentContainer.CurrentPage = page;
 
 				var table = new TableBand ();
-				table.LanguageId = this.LanguageId;
+				table.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;
 				table.ColumnsCount = this.visibleColumnCount;
 				table.RowsCount = 1;
 				table.CellMargins = new Margins (this.CellMargin);
@@ -1466,30 +1466,30 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 		}
 
 
-		protected override string LanguageId
+		protected override string TwoLetterISOLanguageName
 		{
 			//	Retourne la langue à utiliser pour imprimer le document.
 			//	Si les options d'impression indiquent 'par défaut' et que le client de l'affaire à laquelle
 			//	appartient le document a une langue préférentielle, c'est cette dernière qui est utilisée.
 			get
 			{
-				var languageId = this.GetOptionText (DocumentOption.Language).ToString ();
+				var twoLetter = this.GetOptionText (DocumentOption.Language).ToString ();
 
-				if (languageId == "default")
+				if (twoLetter == "default")
 				{
-					languageId = this.AffairLanguageId;
+					twoLetter = this.AffairTwoLetterISOLanguageName;
 				}
 
-				if (string.IsNullOrEmpty (languageId))
+				if (string.IsNullOrEmpty (twoLetter))
 				{
-					languageId = TextFormatter.CurrentLanguageId;
+					twoLetter = TextFormatter.CurrentTwoLetterISOLanguageName;
 				}
 
-				return languageId;
+				return twoLetter;
 			}
 		}
 
-		private string AffairLanguageId
+		private string AffairTwoLetterISOLanguageName
 		{
 			//	Retourne la langue du client de l'affaire à laquelle appartient le document.
 			get

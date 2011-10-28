@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			get
 			{
 				bool includeOwner = this.HasOption (DocumentOption.HeaderNumberIncludeOwner);
-				return InvoiceDocumentHelper.GetTitle (this.businessContext as BusinessContext, this.Metadata, this.Entity, this.paymentTransactionEntity, this.LanguageId, includeOwner);
+				return InvoiceDocumentHelper.GetTitle (this.businessContext as BusinessContext, this.Metadata, this.Entity, this.paymentTransactionEntity, this.TwoLetterISOLanguageName, includeOwner);
 			}
 		}
 
@@ -390,7 +390,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			if (!conditions.IsNullOrEmpty)
 			{
 				var band = new TextBand ();
-				band.LanguageId = this.LanguageId;
+				band.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;
 				band.Text = conditions;
 				band.FontSize = this.FontSize;
 

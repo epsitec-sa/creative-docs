@@ -83,7 +83,7 @@ namespace Epsitec.Common.Tests.Types
 			Assert.IsFalse (text.ContainsLocalizations);
 			Assert.IsFalse (text.ContainsLanguage ("fr"));
 
-			text.SetText (MultilingualText.DefaultLanguageId, "A");
+			text.SetText (MultilingualText.DefaultTwoLetterISOLanguageName, "A");
 
 			Assert.AreEqual (1, text.Count);
 			Assert.IsFalse (text.ContainsLocalizations);

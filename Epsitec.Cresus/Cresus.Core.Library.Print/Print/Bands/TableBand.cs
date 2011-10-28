@@ -937,7 +937,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 				for (int column = 0; column < this.columnsCount; column++)
 				{
 					var textBand = new TextBand ();
-					textBand.LanguageId = this.LanguageId;
+					textBand.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;
 					textBand.Font = this.Font;
 					textBand.FontSize = this.FontSize;
 

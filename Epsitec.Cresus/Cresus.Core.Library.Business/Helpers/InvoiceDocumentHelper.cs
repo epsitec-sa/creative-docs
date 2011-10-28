@@ -20,11 +20,11 @@ namespace Epsitec.Cresus.Core.Helpers
 {
 	public static class InvoiceDocumentHelper
 	{
-		public static FormattedText GetTitle(BusinessContext businessContext, DocumentMetadataEntity metadata, BusinessDocumentEntity businessDocument, PaymentTransactionEntity billingDetails, string languageId, bool includeOwner)
+		public static FormattedText GetTitle(BusinessContext businessContext, DocumentMetadataEntity metadata, BusinessDocumentEntity businessDocument, PaymentTransactionEntity billingDetails, string twoLetterISOLanguageName, bool includeOwner)
 		{
 			//	Retourne le titre du document imprimé.
 			//	Par exemple "Facture 10256", "Offre 10257" ou "Bon pour commande 10258".
-			var title = InvoiceDocumentHelper.GetDocumentName (metadata, languageId);
+			var title = InvoiceDocumentHelper.GetDocumentName (metadata, twoLetterISOLanguageName);
 
 			if (!string.IsNullOrEmpty (metadata.IdA))
 			{
@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Core.Helpers
 			return title;
 		}
 
-		public static FormattedText GetDocumentName(DocumentMetadataEntity metadata, string languageId)
+		public static FormattedText GetDocumentName(DocumentMetadataEntity metadata, string twoLetterISOLanguageName)
 		{
 			//	Retourne le nom du document imprimé.
 			//	Par exemple "Facture", "Offre" ou "Bon pour commande".
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Core.Helpers
 			}
 			else
 			{
-				return TextFormatter.ExecuteUsingCulture (languageId, () => TextFormatter.FormatText (metadata.DocumentCategory.DocumentType));
+				return TextFormatter.ExecuteUsingCulture (twoLetterISOLanguageName, () => TextFormatter.FormatText (metadata.DocumentCategory.DocumentType));
 			}
 		}
 

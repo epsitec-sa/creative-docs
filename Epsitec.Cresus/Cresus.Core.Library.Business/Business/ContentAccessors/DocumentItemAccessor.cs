@@ -27,20 +27,20 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 	public sealed class DocumentItemAccessor
 	{
 		private DocumentItemAccessor(DocumentMetadataEntity documentMetadata, DocumentLogic documentLogic, IncrementalNumberGenerator numberGenerator,
-			DocumentItemAccessorMode mode, string languageId, AbstractDocumentItemEntity item, int groupIndex)
+			DocumentItemAccessorMode mode, string twoLetterISOLanguageName, AbstractDocumentItemEntity item, int groupIndex)
 		{
-			this.content           = new Dictionary<int, FormattedText> ();
-			this.errors            = new Dictionary<int, DocumentItemAccessorError> ();
-			this.articleQuantities = new List<ArticleQuantityEntity> ();
-
-			this.documentMetadata  = documentMetadata;
-			this.businessDocument  = documentMetadata.BusinessDocument as BusinessDocumentEntity;
-			this.documentLogic     = documentLogic;
-			this.numberGenerator   = numberGenerator;
-			this.item              = item;
-			this.groupIndex        = groupIndex;
-			this.mode              = mode;
-			this.languageId        = languageId;
+			this.content                  = new Dictionary<int, FormattedText> ();
+			this.errors                   = new Dictionary<int, DocumentItemAccessorError> ();
+			this.articleQuantities        = new List<ArticleQuantityEntity> ();
+								          
+			this.documentMetadata         = documentMetadata;
+			this.businessDocument         = documentMetadata.BusinessDocument as BusinessDocumentEntity;
+			this.documentLogic            = documentLogic;
+			this.numberGenerator          = numberGenerator;
+			this.item                     = item;
+			this.groupIndex               = groupIndex;
+			this.mode                     = mode;
+			this.twoLetterISOLanguageName = twoLetterISOLanguageName;
 			
 			if (this.businessDocument.IsNotNull () &&
 				this.businessDocument.PriceGroup.IsNotNull ())
@@ -173,8 +173,8 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			}
 		}
 
-		
-		public static IEnumerable<DocumentItemAccessor> CreateAccessors(DocumentMetadataEntity documentMetadata, DocumentLogic documentLogic, DocumentItemAccessorMode mode, string languageId, IEnumerable<DocumentAccessorContentLine> lines)
+
+		public static IEnumerable<DocumentItemAccessor> CreateAccessors(DocumentMetadataEntity documentMetadata, DocumentLogic documentLogic, DocumentItemAccessorMode mode, string twoLetterISOLanguageName, IEnumerable<DocumentAccessorContentLine> lines)
 		{
 			DocumentItemAccessor.EnsureValidMode (mode);
 			
@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 			foreach (var line in lines)
 			{
-				yield return new DocumentItemAccessor (documentMetadata, documentLogic, numberGenerator, mode, languageId, line.Line, line.GroupIndex);
+				yield return new DocumentItemAccessor (documentMetadata, documentLogic, numberGenerator, mode, twoLetterISOLanguageName, line.Line, line.GroupIndex);
 			}
 		}
 
@@ -850,7 +850,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		private void SetContent(int row, DocumentItemAccessorColumn column, FormattedText text)
 		{
 			//	Modifie le contenu d'une cellule.
-			text = TextFormatter.GetMonolingualText (text, this.languageId);
+			text = TextFormatter.GetMonolingualText (text, this.twoLetterISOLanguageName);
 
 			if (text != null && !text.IsNullOrEmpty)
 			{
@@ -971,7 +971,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		private readonly List<ArticleQuantityEntity>				articleQuantities;
 		private readonly AbstractDocumentItemEntity					item;
 		private readonly DocumentItemAccessorMode					mode;
-		private readonly string										languageId;
+		private readonly string										twoLetterISOLanguageName;
 		private readonly int										groupIndex;
 		
 		private int													rowsCount;

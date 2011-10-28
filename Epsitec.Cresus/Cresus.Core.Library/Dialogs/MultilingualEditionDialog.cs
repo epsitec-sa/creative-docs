@@ -47,11 +47,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				if (this.IsMultiline)
 				{
-					return MultilingualEditionDialog.fixHeight + MultilingualEditionDialog.GetLanguageIds ().Count () * (MultilingualEditionDialog.labelHeight+MultilingualEditionDialog.multiHeight);
+					return MultilingualEditionDialog.fixHeight + MultilingualEditionDialog.GetTwoLetterISOLanguageNames ().Count () * (MultilingualEditionDialog.labelHeight+MultilingualEditionDialog.multiHeight);
 				}
 				else
 				{
-					return MultilingualEditionDialog.fixHeight + MultilingualEditionDialog.GetLanguageIds ().Count () * (MultilingualEditionDialog.labelHeight+22);
+					return MultilingualEditionDialog.fixHeight + MultilingualEditionDialog.GetTwoLetterISOLanguageNames ().Count () * (MultilingualEditionDialog.labelHeight+22);
 				}
 			}
 		}
@@ -187,7 +187,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.glyphs.Clear ();
 			this.toolbars.Clear ();
 
-			foreach (var id in MultilingualEditionDialog.GetLanguageIds ())
+			foreach (var id in MultilingualEditionDialog.GetTwoLetterISOLanguageNames ())
 			{
 				AbstractTextField textField = this.CreateTextField (rightFrame, id);
 
@@ -250,14 +250,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Dock = DockStyle.Bottom,
 			};
 		}
-		
-		private AbstractTextField CreateTextField(FrameBox container, string languageId)
+
+		private AbstractTextField CreateTextField(FrameBox container, string twoLetterISOLanguageName)
 		{
 			int tabIndex = container.Children.Count + 1;
 
-			var desc = string.Format ("{0} {1} :", MultilingualEditionDialog.GetIcon (languageId), MultilingualEditionDialog.GetDescription (languageId));
+			var desc = string.Format ("{0} {1} :", MultilingualEditionDialog.GetIcon (twoLetterISOLanguageName), MultilingualEditionDialog.GetDescription (twoLetterISOLanguageName));
 
-			if (MultilingualEditionDialog.IsCurrentLanguage (languageId))
+			if (MultilingualEditionDialog.IsCurrentLanguage (twoLetterISOLanguageName))
 			{
 				desc = string.Concat ("<b>", desc, "</b>");
 			}
@@ -326,17 +326,17 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.toolbars.Add (toolbar);
 
-			foreach (var translateId in MultilingualEditionDialog.GetLanguageIds ())
+			foreach (var translateTwoLetter in MultilingualEditionDialog.GetTwoLetterISOLanguageNames ())
 			{
-				if (translateId != languageId)
+				if (translateTwoLetter != twoLetterISOLanguageName)
 				{
-					string src = MultilingualEditionDialog.NormalizeId (languageId);
-					string dst = MultilingualEditionDialog.NormalizeId (translateId);
+					string src = MultilingualEditionDialog.NormalizeId (twoLetterISOLanguageName);
+					string dst = MultilingualEditionDialog.NormalizeId (translateTwoLetter);
 
 					var translateButton = new IconButton
 					{
 						Parent = toolbar,
-						Text = MultilingualEditionDialog.GetIcon (translateId),
+						Text = MultilingualEditionDialog.GetIcon (translateTwoLetter),
 						Name = string.Concat ((this.textFields.Count-1).ToString (), "-", src, "-", dst),
 						Dock = DockStyle.Left,
 					};
@@ -365,7 +365,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			GlyphButton defaultButton = null;
 
-			if (languageId != MultilingualText.DefaultLanguageId)  // pas la langue par défaut ?
+			if (twoLetterISOLanguageName != MultilingualText.DefaultTwoLetterISOLanguageName)  // pas la langue par défaut ?
 			{
 				defaultButton = new GlyphButton
 				{
@@ -409,7 +409,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void UpdateButtons()
 		{
-			for (int i = 0; i < MultilingualEditionDialog.GetLanguageIds ().Count (); i++)
+			for (int i = 0; i < MultilingualEditionDialog.GetTwoLetterISOLanguageNames ().Count (); i++)
 			{
 				if (this.defaultButtons[i] != null)
 				{
@@ -427,7 +427,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			if (this.IsMultiline)
 			{
-				double h = ((height - MultilingualEditionDialog.fixHeight) / MultilingualEditionDialog.GetLanguageIds ().Count ()) - MultilingualEditionDialog.labelHeight;
+				double h = ((height - MultilingualEditionDialog.fixHeight) / MultilingualEditionDialog.GetTwoLetterISOLanguageNames ().Count ()) - MultilingualEditionDialog.labelHeight;
 				h = System.Math.Floor (h);
 				h = System.Math.Max (h, 10+14*3);  // 3 lignes au minimum
 
@@ -462,7 +462,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			int index = 0;
 
-			foreach (var id in MultilingualEditionDialog.GetLanguageIds ())
+			foreach (var id in MultilingualEditionDialog.GetTwoLetterISOLanguageNames ())
 			{
 				FormattedText? text = this.multilingualText.GetText (id);
 
@@ -481,7 +481,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			int index = 0;
 
-			foreach (var id in MultilingualEditionDialog.GetLanguageIds ())
+			foreach (var id in MultilingualEditionDialog.GetTwoLetterISOLanguageNames ())
 			{
 				if (this.textFields[index].FormattedText == MultilingualEditionDialog.defaultText)
 				{
@@ -498,20 +498,20 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 
 
-		private static bool IsCurrentLanguage(string languageId)
+		private static bool IsCurrentLanguage(string twoLetterISOLanguageName)
 		{
-			if (languageId == Library.UI.Services.Settings.CultureForData.LanguageId)
+			if (twoLetterISOLanguageName == Library.UI.Services.Settings.CultureForData.TwoLetterISOLanguageName)
 			{
 				return true;
 			}
 
-			if (MultilingualText.DefaultLanguageId == languageId)
+			if (MultilingualText.DefaultTwoLetterISOLanguageName == twoLetterISOLanguageName)
 			{
-				if (!Library.UI.Services.Settings.CultureForData.HasLanguageId)
+				if (!Library.UI.Services.Settings.CultureForData.HasTwoLetterISOLanguageName)
 				{
 					return true;
 				}
-				if (Library.UI.Services.Settings.CultureForData.IsDefaultLanguage (Library.UI.Services.Settings.CultureForData.LanguageId))
+				if (Library.UI.Services.Settings.CultureForData.IsDefaultLanguage (Library.UI.Services.Settings.CultureForData.TwoLetterISOLanguageName))
 				{
 					return true;
 				}
@@ -522,9 +522,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 			return false;
 		}
 
-		private static string GetIcon(string languageId)
+		private static string GetIcon(string twoLetterISOLanguageName)
 		{
-			switch (MultilingualEditionDialog.NormalizeId (languageId))
+			switch (MultilingualEditionDialog.NormalizeId (twoLetterISOLanguageName))
 			{
 				case "fr":
 					return @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagFR.icon""/>";
@@ -539,17 +539,17 @@ namespace Epsitec.Cresus.Core.Dialogs
 					return @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagIT.icon""/>";
 			}
 
-			return languageId;
+			return twoLetterISOLanguageName;
 		}
 
-		private static string GetDescription(string languageId)
+		private static string GetDescription(string twoLetterISOLanguageName)
 		{
-			if (languageId == MultilingualText.DefaultLanguageId)
+			if (twoLetterISOLanguageName == MultilingualText.DefaultTwoLetterISOLanguageName)
 			{
-				languageId = "default";
+				twoLetterISOLanguageName = "default";
 			}
 
-			switch (languageId)
+			switch (twoLetterISOLanguageName)
 			{
 				case "default":
 					return "Texte par défaut";
@@ -567,22 +567,22 @@ namespace Epsitec.Cresus.Core.Dialogs
 					return "Italien";
 			}
 
-			return languageId;
+			return twoLetterISOLanguageName;
 		}
 
-		private static string NormalizeId(string languageId)
+		private static string NormalizeId(string twoLetterISOLanguageName)
 		{
-			if (languageId == MultilingualText.DefaultLanguageId)
+			if (twoLetterISOLanguageName == MultilingualText.DefaultTwoLetterISOLanguageName)
 			{
-				languageId = Library.UI.Services.Settings.CultureForData.LanguageIdForDefault ?? "fr";
+				twoLetterISOLanguageName = Library.UI.Services.Settings.CultureForData.TwoLetterISOLanguageNameForDefault ?? "fr";
 			}
 
-			return languageId;
+			return twoLetterISOLanguageName;
 		}
 
-		private static IEnumerable<string> GetLanguageIds()
+		private static IEnumerable<string> GetTwoLetterISOLanguageNames()
 		{
-			yield return MultilingualText.DefaultLanguageId;
+			yield return MultilingualText.DefaultTwoLetterISOLanguageName;
 			yield return "fr";
 			yield return "de";
 			yield return "en";
@@ -590,23 +590,23 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
-		private static readonly double			multiHeight = 10+14*4;  // hauteur pour 4 lignes
-		private static readonly double			labelHeight = 18;
-		private static readonly double			fixHeight = 10+10+10+22+10;
-		private static readonly string			defaultText = "&lt;par défaut&gt;";  // <par défaut>
+		private static readonly double				multiHeight = 10+14*4;  // hauteur pour 4 lignes
+		private static readonly double				labelHeight = 18;
+		private static readonly double				fixHeight = 10+10+10+22+10;
+		private static readonly string				defaultText = "&lt;par défaut&gt;";  // <par défaut>
 
-		private static bool						isTranslateVisible;
+		private static bool							isTranslateVisible;
 
-		private readonly AbstractTextField		sourceTextField;
-		private readonly MultilingualText		multilingualText;
-		private readonly List<FrameBox>			lines;
-		private readonly List<AbstractTextField> textFields;
-		private readonly List<GlyphButton>		defaultButtons;
-		private readonly List<StaticGlyph>		glyphs;
-		private readonly List<FrameBox>			toolbars;
+		private readonly AbstractTextField			sourceTextField;
+		private readonly MultilingualText			multilingualText;
+		private readonly List<FrameBox>				lines;
+		private readonly List<AbstractTextField>	textFields;
+		private readonly List<GlyphButton>			defaultButtons;
+		private readonly List<StaticGlyph>			glyphs;
+		private readonly List<FrameBox>				toolbars;
 
-		private bool							isDirty;
-		private Button							acceptButton;
-		private Button							cancelButton;
+		private bool								isDirty;
+		private Button								acceptButton;
+		private Button								cancelButton;
 	}
 }
