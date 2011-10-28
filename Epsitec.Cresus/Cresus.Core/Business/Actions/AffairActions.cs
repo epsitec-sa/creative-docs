@@ -92,6 +92,7 @@ namespace Epsitec.Cresus.Core.Business.Actions
 			}
 
 			BusinessDocumentBusinessRules.AddPayment (documentMetadata, paymentTransaction);
+			BusinessDocumentBusinessRules.InitializeDiscounts (businessContext as BusinessContext, activeAffair, documentMetadata);
 
 			WorkflowArgs.SetActiveVariantId (documentMetadata.BusinessDocument.VariantId);
 

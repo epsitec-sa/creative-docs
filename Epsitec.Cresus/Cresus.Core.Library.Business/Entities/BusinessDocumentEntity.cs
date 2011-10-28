@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core.Entities
 		public override FormattedText GetSummary()
 		{
 			var billToMailContact = this.BillToMailContact;
-			var shipToMailContact = this.FinalShipToMailContact;
+			var shipToMailContact = this.ShipToMailContact;
 
 			FormattedText billing  = BusinessDocumentEntity.GetShortMailContactSummary (billToMailContact);
 			FormattedText shipping = BusinessDocumentEntity.GetShortMailContactSummary (shipToMailContact);
@@ -91,6 +91,7 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
+#if false
 		public MailContactEntity FinalShipToMailContact
 		{
 			//	Retourne l'adresse de livraison à utiliser. Si aucune adresse n'est directement définie,
@@ -101,9 +102,10 @@ namespace Epsitec.Cresus.Core.Entities
 
 				if (shipToMailContact.IsNull ())
 				{
+					// TODO: ATTENTION, il n'est pas autorisé d'obtenir le BusinessContext ainsi !!!
 					var businessContext = Logic.Current.GetComponent<BusinessContext> ();
 
-					var affair = this.Affair;
+					var affair = this.GetAffair (businessContext);
 					if (affair != null)
 					{
 						shipToMailContact = affair.AssociatedSite.Person.Contacts.OfType<MailContactEntity> ().FirstOrDefault ();
@@ -114,40 +116,31 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
-		public AffairEntity Affair
+		public AffairEntity GetAffair(BusinessContext businessContext)
 		{
 			//	Retourne l'affaire à laquelle appartient l'entité.
-			get
+			var metadata = this.GetDocumentMetadata (businessContext);
+
+			if (metadata == null)
 			{
-				var metadata = this.DocumentMetadata;
-
-				if (metadata == null)
-				{
-					return null;
-				}
-
-				var businessContext = Logic.Current.GetComponent<BusinessContext> ();
-
-				var example = new AffairEntity ();
-				example.Documents.Add (metadata);
-
-				return businessContext.DataContext.GetByExample<AffairEntity> (example).FirstOrDefault ();
+				return null;
 			}
+
+			var example = new AffairEntity ();
+			example.Documents.Add (metadata);
+
+			return businessContext.DataContext.GetByExample<AffairEntity> (example).FirstOrDefault ();
 		}
 
-		public DocumentMetadataEntity DocumentMetadata
+		private DocumentMetadataEntity GetDocumentMetadata(BusinessContext businessContext)
 		{
 			//	Retourne le DocumentMetadataEntity auquel appartient l'entité.
-			get
-			{
-				var businessContext = Logic.Current.GetComponent<BusinessContext> ();
+			var example = new DocumentMetadataEntity ();
+			example.BusinessDocument = this;
 
-				var example = new DocumentMetadataEntity ();
-				example.BusinessDocument = this;
-
-				return businessContext.DataContext.GetByExample<DocumentMetadataEntity> (example).FirstOrDefault ();
-			}
+			return businessContext.DataContext.GetByExample<DocumentMetadataEntity> (example).FirstOrDefault ();
 		}
+#endif
 
 
 		public override EntityStatus GetEntityStatus()

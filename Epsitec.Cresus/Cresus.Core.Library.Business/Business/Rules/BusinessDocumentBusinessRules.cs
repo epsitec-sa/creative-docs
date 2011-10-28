@@ -22,11 +22,11 @@ namespace Epsitec.Cresus.Core.Business.Rules
 		{
 			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
 
-			entity.Code = (string) ItemCodeGenerator.NewCode ();
-			entity.CurrencyCode = Finance.CurrencyCode.Chf;
-			entity.BillingStatus = Finance.BillingStatus.NotAnInvoice;
-			entity.PriceRefDate = Date.Today;
-			entity.PriceGroup = businessContext.GetCachedBusinessSettings ().Finance.DefaultPriceGroup;
+			entity.Code              = (string) ItemCodeGenerator.NewCode ();
+			entity.CurrencyCode      = Finance.CurrencyCode.Chf;
+			entity.BillingStatus     = Finance.BillingStatus.NotAnInvoice;
+			entity.PriceRefDate      = Date.Today;
+			entity.PriceGroup        = businessContext.GetCachedBusinessSettings ().Finance.DefaultPriceGroup;
 			entity.DebtorBookAccount = businessContext.GetCachedBusinessSettings ().Finance.DefaultDebtorBookAccount;
 		}
 
@@ -311,6 +311,32 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			example.QuantityType = type;
 
 			return businessContext.DataContext.GetByExample (example).FirstOrDefault ();
+		}
+
+
+		public static void InitializeDiscounts(BusinessContext businessContext, AffairEntity affair, DocumentMetadataEntity metaData)
+		{
+			//	A partir du client de l'affaire, crée les lignes de rabais en fonction des rabais accordés au client.
+			var businessDocument = metaData.BusinessDocument as BusinessDocumentEntity;
+
+			if (businessDocument != null && businessDocument.Lines.Count <= 1)
+			{
+				var customerDiscounts = affair.Customer.CustomerCategory.Discounts;
+
+				if (customerDiscounts != null && customerDiscounts.Any ())
+				{
+					foreach (var customerDiscount in customerDiscounts)
+					{
+						var subTotal = businessContext.CreateEntity<SubTotalDocumentItemEntity> ();
+
+						subTotal.TextForDiscount       = customerDiscount.Text;
+						subTotal.Discount.DiscountRate = customerDiscount.DiscountRate;
+						subTotal.Discount.Value        = customerDiscount.Value;
+
+						businessDocument.Lines.Add (subTotal);
+					}
+				}
+			}
 		}
 	}
 }

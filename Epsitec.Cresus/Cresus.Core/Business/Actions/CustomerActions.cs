@@ -74,6 +74,8 @@ namespace Epsitec.Cresus.Core.Business.Actions
 				affair.Documents.Add (documentMetadata);
 
 				currentCustomer.Affairs.Add (affair);
+
+				BusinessDocumentBusinessRules.InitializeDiscounts (businessContext as BusinessContext, affair, documentMetadata);
 			}
 
 			//	Now that everything has been properly set up, we can remove the entities from

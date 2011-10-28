@@ -64,10 +64,12 @@ namespace Epsitec.Cresus.Core.Business.Rules
 				{
 					affair.CurrencyCode = customer.MainRelation.DefaultCurrencyCode;
 				}
+
 				if (affair.BillingMode == Finance.BillingMode.None)
 				{
 					affair.BillingMode = customer.CustomerCategory.PriceGroup.BillingMode;
 				}
+				
 				if (string.IsNullOrEmpty (affair.DebtorBookAccount))
 				{
 					affair.DebtorBookAccount = customer.DefaultDebtorBookAccount;
@@ -78,10 +80,12 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			{
 				affair.CurrencyCode = businessSettings.Finance.DefaultCurrencyCode.GetValueOrDefault (Finance.CurrencyCode.Chf);
 			}
+			
 			if (affair.BillingMode == Finance.BillingMode.None)
 			{
 				affair.BillingMode = businessSettings.Finance.DefaultPriceGroup.BillingMode;
 			}
+			
 			if (string.IsNullOrEmpty (affair.DebtorBookAccount))
 			{
 				affair.DebtorBookAccount = businessSettings.Finance.DefaultDebtorBookAccount;

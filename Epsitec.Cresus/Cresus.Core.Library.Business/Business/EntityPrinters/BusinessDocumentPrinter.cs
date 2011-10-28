@@ -1513,7 +1513,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				var example = new AffairEntity ();
 				example.Documents.Add (this.Metadata);
 
-				return businessContext.DataContext.GetByExample<AffairEntity> (example).FirstOrDefault ();
+				return this.businessContext.DataContext.GetByExample<AffairEntity> (example).FirstOrDefault ();
 			}
 		}
 
