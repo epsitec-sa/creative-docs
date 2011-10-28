@@ -19,7 +19,18 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override FormattedText GetCompactSummary()
 		{
-			return this.Name;
+			if (!this.Name.IsNullOrEmpty)
+			{
+				return this.Name;
+			}
+			else if (this.Person.IsNotNull ())
+			{
+				return this.Person.GetCompactSummary ();
+			}
+			else
+			{
+				return TextFormatter.FormatText ("vide").ApplyItalic ();
+			}
 		}
 	}
 }

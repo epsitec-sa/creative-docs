@@ -19,9 +19,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			wall.AddBrick ()
 				.Input ()
-				  .Field (x => x.Name)
-				  .Field (x => x.Description)
-//				  .Field (x => x.Person)
+				  .Title ("Nom du chantier").Field (x => x.Name)
+				  .Title ("Description du chantier").Field (x => x.Description)
 				  .Field (x => x.Groups)
 				.End ()
 				.Include (x => x.Person)
