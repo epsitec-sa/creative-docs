@@ -155,6 +155,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 			{
 				this.shippingBaseFrame.Visibility = (this.siteShipToMailContactButton.ActiveState == ActiveState.No);
 				this.shippingSiteFrame.Visibility = (this.siteShipToMailContactButton.ActiveState == ActiveState.Yes);
+				this.businessDocument.ShipToMailContact = null;
 			};
 		}
 

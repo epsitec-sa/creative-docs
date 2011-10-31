@@ -122,8 +122,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				}
 				else
 				{
-					//?return businessDocument.BillToMailContact;
-					return businessDocument.ShipToMailContact;
+					return businessDocument.BillToMailContact;
 				}
 			}
 		}
