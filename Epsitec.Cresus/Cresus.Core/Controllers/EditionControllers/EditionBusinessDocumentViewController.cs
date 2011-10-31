@@ -30,8 +30,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			wall.AddBrick ()
 				.Input ()
-				  .Field (x => x.BillToMailContact)
-				  .Field (x => x).WithSpecialController (1)
+				  .Field (x => x.BillToMailContact).PickFromCollection (this.GetMailContacts (false))
+				  .Field (x => x.ShipToMailContact).PickFromCollection (this.GetMailContacts (true))
 				  .Field (x => x.OtherPartyRelation)
 				.End ()
 				.Separator ()
@@ -47,6 +47,42 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.End ()
 				;
 		}
+
+		private IEnumerable<MailContactEntity> GetMailContacts(bool includeSites)
+		{
+			var affair = this.Entity.GetAffair (this.BusinessContext);
+
+			if (affair != null)
+			{
+				//	Cherche toutes les adresses du client de l'affaire.
+				var example = new MailContactEntity ();
+				var person = affair.Customer.MainRelation.Person;
+
+				if (person is NaturalPersonEntity)
+				{
+					example.NaturalPerson = person as NaturalPersonEntity;
+				}
+
+				if (person is LegalPersonEntity)
+				{
+					example.LegalPerson = person as LegalPersonEntity;
+				}
+
+				var list = this.BusinessContext.DataContext.GetByExample<MailContactEntity> (example);
+
+				//	Ajoute les adresses du chantier de l'affaire.
+				if (includeSites && affair.AssociatedSite.IsNotNull ())
+				{
+					var sites = affair.AssociatedSite.Person.Contacts.OfType<MailContactEntity> ();
+					list = list.Union (sites);
+				}
+
+				return list;
+			}
+
+			return null;
+		}
+
 
 #if false
 		protected override void CreateUI()

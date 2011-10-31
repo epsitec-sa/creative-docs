@@ -33,15 +33,18 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Separator ()
 				.Input ()
 				  .Field (x => x.ExtraPaymentTerm)
-				  .Field (x => x.AdministrativeTaxArticle).PickFromCollection (this.GetAdminArticles ())
+				  .Field (x => x.AdministrativeTaxArticle).PickFromCollection (this.AdminArticles)
 				.End ()
 				;
 		}
 
-		private IEnumerable<ArticleDefinitionEntity> GetAdminArticles()
+		private IEnumerable<ArticleDefinitionEntity> AdminArticles
 		{
-			return this.BusinessContext.Data.GetAllEntities<ArticleDefinitionEntity> ()
-				.Where (x => x.ArticleCategory.ArticleType == Business.ArticleType.Admin);
+			get
+			{
+				return this.BusinessContext.Data.GetAllEntities<ArticleDefinitionEntity> ()
+					.Where (x => x.ArticleCategory.ArticleType == Business.ArticleType.Admin);
+			}
 		}
 	}
 }

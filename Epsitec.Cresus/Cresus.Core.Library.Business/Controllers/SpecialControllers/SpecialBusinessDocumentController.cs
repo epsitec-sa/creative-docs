@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 {
 	/// <summary>
 	/// The <c>SpecialBusinessDocumentLinesController</c> class manages the edition of a business
-	/// document's lines (mode = 0) and ship ti mail contacts (mode = 1).
+	/// document's lines.
 	/// </summary>
 	public sealed class SpecialBusinessDocumentController : IEntitySpecialController, System.IDisposable, IWidgetUpdater
 	{
@@ -46,20 +46,6 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 		{
 			this.isReadOnly = isReadOnly;
 
-			if (this.mode == 0)
-			{
-				this.CreateLinesUI (parent, builder);
-			}
-			else if (this.mode == 1)
-			{
-				this.CreateShipToMailContactUI (parent, builder);
-			}
-		}
-
-
-		#region Lines controller
-		private void CreateLinesUI(Widget parent, UIBuilder builder)
-		{
 			var documentMetadata = this.businessContext.GetMasterEntity<DocumentMetadataEntity> ();
 			var frameBox         = parent as FrameBox;
 
@@ -81,118 +67,6 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 			this.controller.CreateUI (frame);
 			this.controller.UpdateUI ();
 		}
-		#endregion
-
-		#region ShipToMailContact controller
-		private void CreateShipToMailContactUI(Widget parent, UIBuilder builder)
-		{
-			this.siteMailContacts = this.SiteMailContacts;
-			bool isSiteMailContact = this.IsSiteMailContact;
-
-			var staticText = new StaticText
-			{
-				Parent        = parent,
-				Text          =  "Adresse de livraison :",
-				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-				Dock          = DockStyle.Stacked,
-				Margins       = new Margins (0, Library.UI.Constants.RightMargin, 0, Library.UI.Constants.MarginUnderLabel),
-			};
-
-			this.siteShipToMailContactButton = new CheckButton
-			{
-				Parent      = parent,
-				Text        = "Adresse d'un chantier",
-				ActiveState = isSiteMailContact ? ActiveState.Yes : ActiveState.No,
-				Dock        = DockStyle.Stacked,
-				Margins     = new Margins (0, Library.UI.Constants.RightMargin, 1, 2),
-			};
-
-			{
-				this.shippingBaseFrame = new FrameBox
-				{
-					Parent  = parent,
-					Dock    = DockStyle.Stacked,
-					Margins = new Margins (0, 0, 0, 0),
-					Visibility = !isSiteMailContact,
-				};
-
-				var controller = new SelectionController<MailContactEntity> (this.businessContext)
-				{
-					ValueGetter         = () => this.businessDocument.ShipToMailContact,
-					ValueSetter         = x => this.businessDocument.ShipToMailContact = x,
-					ReferenceController = new ReferenceController (() => this.businessDocument.ShipToMailContact, creator: this.CreateNewMailContact),
-					PossibleItemsGetter = () => this.businessContext.Data.GetAllEntities<MailContactEntity> (dataContext: this.businessContext.DataContext),
-				};
-
-				builder.CreateCompactAutoCompleteTextField (this.shippingBaseFrame, null, controller);
-			}
-
-			{
-				this.shippingSiteFrame = new FrameBox
-				{
-					Parent     = parent,
-					Dock       = DockStyle.Stacked,
-					Margins    = new Margins (0, 0, 0, 0),
-					Visibility = isSiteMailContact,
-				};
-
-				var controller = new SelectionController<MailContactEntity> (this.businessContext)
-				{
-					ValueGetter         = () => this.businessDocument.ShipToMailContact,
-					ValueSetter         = x => this.businessDocument.ShipToMailContact = x,
-					PossibleItemsGetter = () => this.SiteMailContacts,
-				};
-
-				builder.CreateCompactAutoCompleteTextField (this.shippingSiteFrame, null, controller);
-			}
-
-			if (this.siteMailContacts == null || !this.siteMailContacts.Any ())
-			{
-				this.siteShipToMailContactButton.Visibility = false;
-			}
-
-			this.siteShipToMailContactButton.ActiveStateChanged += delegate
-			{
-				this.shippingBaseFrame.Visibility = (this.siteShipToMailContactButton.ActiveState == ActiveState.No);
-				this.shippingSiteFrame.Visibility = (this.siteShipToMailContactButton.ActiveState == ActiveState.Yes);
-				this.businessDocument.ShipToMailContact = null;
-			};
-		}
-
-		private NewEntityReference CreateNewMailContact(DataContext context)
-		{
-			return context.CreateEntityAndRegisterAsEmpty<MailContactEntity> ();
-		}
-
-		private bool IsSiteMailContact
-		{
-			get
-			{
-				if (siteMailContacts != null)
-				{
-					return this.siteMailContacts.Contains (this.businessDocument.ShipToMailContact);
-				}
-
-				return false;
-			}
-		}
-
-		private IEnumerable<MailContactEntity> SiteMailContacts
-		{
-			get
-			{
-				var affair = this.businessDocument.GetAffair (this.businessContext);
-
-				if (affair != null && affair.AssociatedSite.Person.IsNotNull ())
-				{
-					var person = affair.AssociatedSite.Person;
-					return person.Contacts.OfType<MailContactEntity> ();
-				}
-
-				return null;
-			}
-		}
-		#endregion
 
 
 		#region IDisposable Members
@@ -245,10 +119,5 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 		private BusinessDocumentLinesController	controller;
 		private DocumentLogic					documentLogic;
 		private AccessData						access;
-
-		private IEnumerable<MailContactEntity>	siteMailContacts;
-		private CheckButton						siteShipToMailContactButton;
-		private FrameBox						shippingBaseFrame;
-		private FrameBox						shippingSiteFrame;
 	}
 }

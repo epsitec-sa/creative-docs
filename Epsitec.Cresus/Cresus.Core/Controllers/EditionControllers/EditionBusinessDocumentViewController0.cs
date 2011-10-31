@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Icon ("Data.DocumentItems")
 				.Attribute (BrickMode.FullHeightStretch)
 				.Input ()
-				  .Field (x => x).WithSpecialController (0)
+				  .Field (x => x).WithSpecialController ()
 				.End ()
 				;
 		}

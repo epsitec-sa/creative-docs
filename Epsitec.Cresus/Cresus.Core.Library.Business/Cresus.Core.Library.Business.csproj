@@ -78,6 +78,7 @@
     <Compile Include="Business\Rules\AffairBusinessRules.cs" />
     <Compile Include="Business\Rules\ArticleGroupBusinessRules.cs" />
     <Compile Include="Business\Rules\ArticlePriceBusinessRules.cs" />
+    <Compile Include="Business\Rules\OtherRelationBusinessRules.cs" />
     <Compile Include="Business\Rules\PaymentTransactionBusinessRules.cs" />
     <Compile Include="Business\Rules\BusinessDocumentBusinessRules.cs" />
     <Compile Include="Business\Rules\BusinessSettingsBusinessRules.cs" />
