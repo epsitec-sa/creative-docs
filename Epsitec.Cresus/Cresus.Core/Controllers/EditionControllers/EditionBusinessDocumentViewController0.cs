@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.Icon ("Data.DocumentItems")
 				.Attribute (BrickMode.FullHeightStretch)
 				.Input ()
-				  .Field (x => x).WithSpecialController ()
+				  .Field (x => x).WithSpecialController (0)
 				.End ()
 				;
 		}
@@ -48,8 +48,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private FormattedText CustomizedTitle
 		{
 			//	Comme l'éditeur de lignes d'un document occupe une grande largeur, les tuiles de gauche ne sont
-			//	généralement plus visibles. Il est donc très important de rappeler le nom du type du document
-			//	dans le titre (par exemple "Facture — lignes du document").
+			//	généralement plus visibles. Il est donc important de rappeler le nom du type du document dans
+			//	le titre (par exemple "Facture — lignes du document").
 			get
 			{
 				var documentMetadata = this.BusinessContext.GetMasterEntity<DocumentMetadataEntity> ();

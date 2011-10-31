@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			wall.AddBrick ()
 				.Input ()
 				  .Field (x => x.BillToMailContact)
-				  .Field (x => x.ShipToMailContact)
+				  .Field (x => x).WithSpecialController (1)
 				  .Field (x => x.OtherPartyRelation)
 				.End ()
 				.Separator ()

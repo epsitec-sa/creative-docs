@@ -115,6 +115,7 @@ namespace Epsitec.Cresus.Core.Entities
 				return shipToMailContact;
 			}
 		}
+#endif
 
 		public AffairEntity GetAffair(BusinessContext businessContext)
 		{
@@ -140,7 +141,6 @@ namespace Epsitec.Cresus.Core.Entities
 
 			return businessContext.DataContext.GetByExample<DocumentMetadataEntity> (example).FirstOrDefault ();
 		}
-#endif
 
 
 		public override EntityStatus GetEntityStatus()

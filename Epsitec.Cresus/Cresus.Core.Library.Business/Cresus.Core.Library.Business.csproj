@@ -163,7 +163,7 @@
     <Compile Include="Controllers\ControllerSubTypeAttribute.cs" />
     <Compile Include="Controllers\SpecialControllers\SpecialArticleDefinitionController.cs" />
     <Compile Include="Controllers\SpecialControllers\SpecialChartsOfAccountsController.cs" />
-    <Compile Include="Controllers\SpecialControllers\SpecialBusinessDocumentLinesController.cs" />
+    <Compile Include="Controllers\SpecialControllers\SpecialBusinessDocumentController.cs" />
     <Compile Include="Controllers\SpecialControllers\SpecialDocumentCategoryController.cs" />
     <Compile Include="Controllers\SpecialControllers\SpecialValuesArticleParameterController.cs" />
     <Compile Include="Controllers\SpecialControllers\SpecialTableDesignerController.cs" />
