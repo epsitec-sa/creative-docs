@@ -97,5 +97,25 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			yield return ArticleQuantityType.Delayed;			// retardé
 			yield return ArticleQuantityType.Expected;			// attendu
 		}
+
+
+		public override MailContactEntity MailContact
+		{
+			//	Retourne l'adresse de l'expéditeur.
+			//	Sur un bulletin de livraison, c'est l'adresse de livraison qu'il faut mettre !
+			get
+			{
+				var businessDocument = this.BusinessDocument;
+
+				if (businessDocument == null)
+				{
+					return null;
+				}
+				else
+				{
+					return businessDocument.ShipToMailContact;
+				}
+			}
+		}
 	}
 }

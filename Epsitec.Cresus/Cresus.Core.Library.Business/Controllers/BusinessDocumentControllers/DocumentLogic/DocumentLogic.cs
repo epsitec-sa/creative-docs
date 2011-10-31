@@ -237,6 +237,18 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
+		public MailContactEntity MailContact
+		{
+			//	Retourne l'adresse de l'expéditeur.
+			//	C'est l'adresse de facturation qui est utilisée pour tous les documents, sauf le
+			//	BL (DeliveryNote) qui utilise l'adresse de livraison.
+			get
+			{
+				return this.documentLogic.MailContact;
+			}
+		}
+
+
 		private AbstractDocumentLogic CreateDocumentLogic(DocumentType documentType)
 		{
 			switch (documentType)

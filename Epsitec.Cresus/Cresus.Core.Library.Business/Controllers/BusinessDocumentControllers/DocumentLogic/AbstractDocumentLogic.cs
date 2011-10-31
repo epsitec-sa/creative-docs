@@ -107,6 +107,45 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public abstract IEnumerable<ArticleQuantityType> GetPrintableArticleQuantityTypes();
 
 
+		public virtual MailContactEntity MailContact
+		{
+			//	Retourne l'adresse de l'expéditeur.
+			//	C'est l'adresse de facturation qui est utilisée pour tous les documents, sauf le
+			//	BL (DeliveryNote) qui utilise l'adresse de livraison.
+			get
+			{
+				var businessDocument = this.BusinessDocument;
+
+				if (businessDocument == null)
+				{
+					return null;
+				}
+				else
+				{
+					return businessDocument.BillToMailContact;
+				}
+			}
+		}
+
+
+		protected BusinessDocumentEntity BusinessDocument
+		{
+			get
+			{
+				var metadata = this.documentMetadataEntity;
+
+				if (metadata.IsNull ())
+				{
+					return null;
+				}
+				else
+				{
+					return metadata.BusinessDocument as BusinessDocumentEntity;
+				}
+			}
+		}
+
+
 		protected readonly BusinessContext						businessContext;
 		protected readonly DocumentMetadataEntity				documentMetadataEntity;
 	}

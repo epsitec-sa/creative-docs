@@ -316,10 +316,11 @@ namespace Epsitec.Cresus.Core.Business.Rules
 
 		public static void InitializeDiscounts(BusinessContext businessContext, AffairEntity affair, DocumentMetadataEntity metaData)
 		{
-			//	A partir du client de l'affaire, crée les lignes de rabais en fonction des rabais accordés au client.
+			//	A partir du client de l'affaire, crée les lignes de rabais en fonction des rabais
+			//	accordés au client, si le document est vide.
 			var businessDocument = metaData.BusinessDocument as BusinessDocumentEntity;
 
-			if (businessDocument != null && businessDocument.Lines.Count <= 1)
+			if (businessDocument != null && businessDocument.Lines.Count <= 1)  // document vide ?
 			{
 				var customerDiscounts = affair.Customer.CustomerCategory.Discounts;
 
@@ -329,9 +330,14 @@ namespace Epsitec.Cresus.Core.Business.Rules
 					{
 						var subTotal = businessContext.CreateEntity<SubTotalDocumentItemEntity> ();
 
-						subTotal.TextForDiscount       = customerDiscount.Text;
-						subTotal.Discount.DiscountRate = customerDiscount.DiscountRate;
-						subTotal.Discount.Value        = customerDiscount.Value;
+						subTotal.TextForDiscount = customerDiscount.Text;  // texte du rabais
+
+						//	Copie l'ensemble de l'entité PriceDiscount.
+						subTotal.Discount.Text           = customerDiscount.Text;
+						subTotal.Discount.DiscountRate   = customerDiscount.DiscountRate;
+						subTotal.Discount.Value          = customerDiscount.Value;
+						subTotal.Discount.DiscountPolicy = customerDiscount.DiscountPolicy;
+						subTotal.Discount.RoundingMode   = customerDiscount.RoundingMode;
 
 						businessDocument.Lines.Add (subTotal);
 					}
