@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		public override MailContactEntity MailContact
+		public override MailContactEntity PrimaryMailContact
 		{
 			//	Retourne l'adresse de l'expéditeur.
 			//	Sur un bulletin de livraison, c'est l'adresse de livraison qu'il faut mettre !

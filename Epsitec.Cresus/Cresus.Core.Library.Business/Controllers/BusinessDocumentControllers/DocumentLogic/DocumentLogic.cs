@@ -237,14 +237,61 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		}
 
 
-		public MailContactEntity MailContact
+		public FormattedText PrimaryMailContactText
 		{
-			//	Retourne l'adresse de l'expéditeur.
+			//	Retourne le texte multilignes de l'adresse principale.
+			get
+			{
+				var mail = this.PrimaryMailContact;
+
+				if (mail == null)
+				{
+					return FormattedText.Empty;
+				}
+				else
+				{
+					return mail.GetSummary ();
+				}
+			}
+		}
+
+		public FormattedText SecondaryMailContactText
+		{
+			//	Retourne le texte monoligne de l'adresse secondaire.
+			get
+			{
+				var mail = this.SecondaryMailContact;
+
+				if (mail == null)
+				{
+					return FormattedText.Empty;
+				}
+				else
+				{
+					return mail.GetCompactSummary ();
+				}
+			}
+		}
+
+		private MailContactEntity PrimaryMailContact
+		{
+			//	Retourne l'adresse de l'expéditeur, dite adresse principale.
 			//	C'est l'adresse de facturation qui est utilisée pour tous les documents, sauf le
 			//	BL (DeliveryNote) qui utilise l'adresse de livraison.
 			get
 			{
-				return this.documentLogic.MailContact;
+				return this.documentLogic.PrimaryMailContact;
+			}
+		}
+
+		private MailContactEntity SecondaryMailContact
+		{
+			//	Retourne l'adresse secondaire.
+			//	C'est l'adresse de livraison qui est utilisée pour tous les documents, sauf le
+			//	BL (DeliveryNote) qui utilise l'adresse de facturation.
+			get
+			{
+				return this.documentLogic.SecondaryMailContact;
 			}
 		}
 

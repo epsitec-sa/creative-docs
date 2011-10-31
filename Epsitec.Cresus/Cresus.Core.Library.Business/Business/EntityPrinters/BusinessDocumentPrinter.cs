@@ -197,7 +197,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				{
 					var mailContactBand = new TextBand ();
 					mailContactBand.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;
-					mailContactBand.Text = (this.documentLogic.MailContact == null) ? FormattedText.Empty : this.documentLogic.MailContact.GetSummary ();
+					mailContactBand.Text = this.documentLogic.PrimaryMailContactText;
 					mailContactBand.Font = BusinessDocumentPrinter.font;
 					mailContactBand.FontSize = this.GetOptionValue (DocumentOption.HeaderToFontSize);
 					this.documentContainer.AddAbsolute (mailContactBand, rect);
