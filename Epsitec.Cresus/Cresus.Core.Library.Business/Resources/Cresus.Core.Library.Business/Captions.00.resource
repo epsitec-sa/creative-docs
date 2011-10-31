@@ -242,12 +242,12 @@
   <data name="Fld.ArticleAccountingDefinition.VatBookAccount" id="A48">&lt;s:data id="_0" f:Name="VatBookAccount" /&gt;</data>
   <data name="Fld.ArticleAccountingDefinition.RoundingBookAccount" id="A68">&lt;s:data id="_0" f:Name="RoundingBookAccount" /&gt;</data>
   <data name="Fld.ArticlePrice.BillingUnit" id="AB8">&lt;s:data id="_0" f:Name="BillingUnit" f:Labels="{Collection {Text 'Unité de facturation'}}" /&gt;</data>
-  <data name="Fld.ArticleCategory.UnitOfMeasureCategory" id="AD8">&lt;s:data id="_0" f:Name="UnitOfMeasureCategory" /&gt;</data>
+  <data name="Fld.ArticleCategory.UnitOfMeasureCategory" id="AD8">&lt;s:data id="_0" f:Name="UnitOfMeasureCategory" f:Labels="{Collection {Text 'Catégorie des unités'}}" /&gt;</data>
   <data name="Fld.PriceGroup.PriceBillingMode" id="AF8">&lt;s:data id="_0" f:Name="PriceBillingMode" f:Labels="{Collection {Text 'Mode de facturation'}}" /&gt;</data>
   <data name="Fld.FinanceSettings.DefaultPriceGroup" id="AG8">&lt;s:data id="_0" f:Name="DefaultPriceGroup" f:Labels="{Collection {Text 'Groupe de prix par défaut'}}" /&gt;</data>
   <data name="Fld.EndTotalDocumentItem.TotalRounding" id="AH8">&lt;s:data id="_0" f:Name="TotalRounding" f:Labels="{Collection {Text 'Arrondi sur le total TTC'}}" /&gt;</data>
   <data name="Val.Enum.ArticleDocumentItemAttributes.Reset" id="AI8">&lt;s:data id="_0" f:Name="Reset" f:Description="Remet à zéro la ligne (usage interne uniquement)" f:Labels="{Collection {Text 'n/a'}}" /&gt;</data>
-  <data name="Fld.ArticleCategory.VatRateType" id="AJ8">&lt;s:data id="_0" f:Name="VatRateType" /&gt;</data>
+  <data name="Fld.ArticleCategory.VatRateType" id="AJ8">&lt;s:data id="_0" f:Name="VatRateType" f:Labels="{Collection {Text 'Taux de la TVA'}}" /&gt;</data>
   <data name="Fld.ArticleAccountingDefinition.AccountingOperation" id="AK8">&lt;s:data id="_0" f:Name="AccountingOperation" /&gt;</data>
   <data name="Fld.TaxDocumentItem.VatRateType" id="AL8">&lt;s:data id="_0" f:Name="VatRateType" /&gt;</data>
   <data name="Fld.Affair.ActiveAffairOwner" id="AM8">&lt;s:data id="_0" f:Name="ActiveAffairOwner" f:Labels="{Collection {Text 'Propriétaire de l&amp;amp;apos;affaire actif'}}" /&gt;</data>

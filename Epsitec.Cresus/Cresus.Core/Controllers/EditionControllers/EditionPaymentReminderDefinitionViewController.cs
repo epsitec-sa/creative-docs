@@ -42,8 +42,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			get
 			{
-				return this.BusinessContext.Data.GetAllEntities<ArticleDefinitionEntity> ()
-					.Where (x => x.ArticleCategory.ArticleType == Business.ArticleType.Admin);
+				var example = new ArticleDefinitionEntity ();
+				example.ArticleCategory = new ArticleCategoryEntity ();
+				example.ArticleCategory.ArticleType = Business.ArticleType.Admin;
+
+				return this.BusinessContext.DataContext.GetByExample<ArticleDefinitionEntity> (example);
 			}
 		}
 	}
