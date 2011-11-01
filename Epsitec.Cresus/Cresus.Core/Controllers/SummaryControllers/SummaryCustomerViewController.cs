@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				.Template ()
 				.End ()
 				;
-			wall.AddBrick (x => x.OtherRelations)
+			wall.AddBrick (x => x.MainRelation.Contacts)
 				.Attribute (BrickMode.AutoGroup)
 				.Template ()
 				.End ()

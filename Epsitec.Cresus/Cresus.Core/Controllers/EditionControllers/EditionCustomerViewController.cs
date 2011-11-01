@@ -22,7 +22,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .Title ("N° de client").Field (x => x.IdA)
 				  .Field (x => x.CustomerCategory)
 				  .Field (x => x.SalesRepresentative)
-				  //?.Field (x => x.OtherRelations)
 				  .Field (x => x.DefaultDebtorBookAccount)
 				.End ()
 				.Include (x => x.MainRelation)

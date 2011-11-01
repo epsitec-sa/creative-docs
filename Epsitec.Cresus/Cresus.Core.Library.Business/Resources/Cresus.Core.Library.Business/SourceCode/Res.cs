@@ -910,8 +910,6 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid DefaultDebtorBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 195);
 				//	designer:cap/GVA06
 				public static readonly global::Epsitec.Common.Support.Druid MainRelation = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 192);
-				//	designer:cap/GVAU8
-				public static readonly global::Epsitec.Common.Support.Druid OtherRelations = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 286);
 				//	designer:cap/GVA16
 				public static readonly global::Epsitec.Common.Support.Druid SalesRepresentative = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 193);
 				//	designer:cap/GVAM7
@@ -1118,6 +1116,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				{
 				}
 				
+				//	designer:cap/GVAA9
+				public static readonly global::Epsitec.Common.Support.Druid Contacts = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 298);
 				//	designer:cap/GVAL
 				public static readonly global::Epsitec.Common.Support.Druid DefaultCurrencyCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 21);
 				//	designer:cap/GVAK7

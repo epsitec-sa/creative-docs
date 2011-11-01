@@ -100,6 +100,18 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>Contacts</c> field.
+		///	designer:fld/GVA/GVAA9
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVAA9]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.OtherRelationEntity> Contacts
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.OtherRelationEntity> ("[GVAA9]");
+			}
+		}
+		///	<summary>
 		///	The <c>DefaultMailContact</c> field.
 		///	designer:fld/GVA/GVAK7
 		///	</summary>
@@ -5343,18 +5355,6 @@ namespace Epsitec.Cresus.Core.Entities
 					this.SetField<global::Epsitec.Cresus.Core.Entities.RelationEntity> ("[GVA06]", oldValue, value);
 					this.OnMainRelationChanged (oldValue, value);
 				}
-			}
-		}
-		///	<summary>
-		///	The <c>OtherRelations</c> field.
-		///	designer:fld/GVAV5/GVAU8
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVAU8]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.OtherRelationEntity> OtherRelations
-		{
-			get
-			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.OtherRelationEntity> ("[GVAU8]");
 			}
 		}
 		///	<summary>

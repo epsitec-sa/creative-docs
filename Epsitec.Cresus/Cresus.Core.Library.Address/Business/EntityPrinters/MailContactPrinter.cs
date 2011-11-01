@@ -55,17 +55,16 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 		{
 			get
 			{
-				if (this.Entity.LegalPerson.IsNotNull ())
+				string text = TextFormatter.FormatText (this.Entity.PersonAddress).ToSimpleText ();
+				
+				if (string.IsNullOrEmpty (text))
 				{
-					return TextFormatter.FormatText ("Client", this.Entity.LegalPerson.Name).ToSimpleText ();
+					return "Client inconnu";
 				}
-
-				if (this.Entity.NaturalPerson.IsNotNull ())
+				else
 				{
-					return TextFormatter.FormatText ("Client", this.Entity.NaturalPerson.Lastname).ToSimpleText ();
+					return string.Concat ("Client ", text);
 				}
-
-				return "Client inconnu";
 			}
 		}
 
