@@ -5,36 +5,32 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Server
 {
+
 	public sealed class CoreServer
-	{
-
-		private static CoreServer instance;
-		public static CoreServer Instance
-		{
-			get
-			{
-				if (instance == null)
-				{
-					instance = new CoreServer ();
-				}
-
-				return instance;
-			}
-			set
-			{
-				instance = value;
-			}
-		}
-
+	{			
 		private CoreServer()
 		{
 			this.sessions = new Dictionary<string, CoreSession> ();
 		}
 
-		
+		public static CoreServer Instance
+		{
+			get
+			{
+				if (CoreServer.instance == null)
+				{
+					CoreServer.instance = new CoreServer ();
+				}
+
+				return CoreServer.instance;
+			}
+		}
+
 		public CoreSession CreateSession()
 		{
-			return this.CreateSession (System.Guid.NewGuid ().ToString ("D"));
+			string sessionId = System.Guid.NewGuid ().ToString ("D");
+
+			return this.CreateSession (sessionId);
 		}
 
 		private CoreSession CreateSession(string id)
@@ -56,15 +52,17 @@ namespace Epsitec.Cresus.Core.Server
 
 		public CoreSession GetCoreSession(string id)
 		{
-			CoreSession session;
-			if (id == null || !this.sessions.TryGetValue (id, out session))
+			CoreSession session = null;
+
+			lock (this.sessions)
 			{
-				return null;
+				if (id != null)
+				{
+					this.sessions.TryGetValue (id, out session);
+				}
 			}
-			else
-			{
-				return session;
-			}
+
+			return session;
 		}
 
 		public bool DeleteSession(CoreSession session)
@@ -74,25 +72,30 @@ namespace Epsitec.Cresus.Core.Server
 
 		public bool DeleteSession(string id)
 		{
-			CoreSession session;
+			CoreSession session = null;
+			bool found;
 
 			lock (this.sessions)
 			{
-				if (this.sessions.TryGetValue (id, out session) == false)
-				{
-					return false;
-				}
+				found = this.sessions.TryGetValue (id, out session);
 
-				this.sessions.Remove (id);
+				if (found)
+				{
+					this.sessions.Remove (id);
+				}	
 			}
 
-			session.DisposeBusinessContext ();
-			session.Dispose ();
+			if (found)
+			{
+				session.DisposeBusinessContext ();
+				session.Dispose ();
+			}
 
-			return true;
+			return found;
 		}
 
-
 		private readonly Dictionary<string, CoreSession> sessions;
+
+		private static CoreServer instance;
 	}
 }
