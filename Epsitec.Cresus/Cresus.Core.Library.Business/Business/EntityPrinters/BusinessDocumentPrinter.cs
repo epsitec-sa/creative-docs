@@ -297,14 +297,13 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				if (settings.IsNull () ||
 					settings.Company.IsNull () ||
 					settings.Company.DefaultMailContact.IsNull () ||
-					settings.Company.DefaultMailContact.Address.IsNull () ||
-					settings.Company.DefaultMailContact.Address.Location.IsNull ())
+					settings.Company.DefaultMailContact.Location.IsNull ())
 				{
 					return null;
 				}
 				else
 				{
-					return settings.Company.DefaultMailContact.Address.Location.Name;
+					return settings.Company.DefaultMailContact.Location.Name;
 				}
 			}
 		}

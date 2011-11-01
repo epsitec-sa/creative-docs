@@ -23,13 +23,13 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override string[] GetEntityKeywords()
 		{
-			return new string[] { this.Country.CountryCode, this.PostalCode.ToSimpleText (), this.Name.ToSimpleText () };
+			return new string[] { this.Country.CountryCode, this.PostalCode, TextFormatter.FormatText (this.Name).ToSimpleText () };
 		}
 
 		public override EntityStatus GetEntityStatus ()
 		{
 			//	We consider a location to be empty if it has neither postal code, nor
-			//	location name; a location with just a coutry or region is still empty.
+			//	location name; a location with just a country or region is still empty.
 			using (var a = new EntityStatusAccumulator ())
 			{
 				a.Accumulate (this.PostalCode.GetEntityStatus ());

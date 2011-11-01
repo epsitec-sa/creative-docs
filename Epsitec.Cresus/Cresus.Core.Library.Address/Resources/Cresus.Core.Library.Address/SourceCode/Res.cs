@@ -30,14 +30,10 @@ namespace Epsitec.Cresus.Core.Library.Address
 			public static readonly Epsitec.Common.Types.StructuredType AbstractContact = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 1));
 			//	designer:cap/FVA
 			public static readonly Epsitec.Common.Types.StructuredType AbstractPerson = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
-			//	designer:cap/FVAV
-			public static readonly Epsitec.Common.Types.StructuredType Address = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 31));
 			//	designer:cap/FVA4
 			public static readonly Epsitec.Common.Types.StructuredType ContactGroup = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 4));
 			//	designer:cap/FVA41
 			public static readonly Epsitec.Common.Types.StructuredType Country = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 36));
-			//	designer:cap/FVAT
-			public static readonly Epsitec.Common.Types.StructuredType IAddressComplement = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 29));
 			//	designer:cap/FVA6
 			public static readonly Epsitec.Common.Types.StructuredType LegalPerson = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 6));
 			//	designer:cap/FVAL
@@ -56,12 +52,8 @@ namespace Epsitec.Cresus.Core.Library.Address
 			public static readonly Epsitec.Common.Types.StructuredType PersonGender = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 13));
 			//	designer:cap/FVAA
 			public static readonly Epsitec.Common.Types.StructuredType PersonTitle = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10));
-			//	designer:cap/FVA11
-			public static readonly Epsitec.Common.Types.StructuredType PostBox = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 33));
 			//	designer:cap/FVA31
 			public static readonly Epsitec.Common.Types.StructuredType StateProvinceCounty = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 35));
-			//	designer:cap/FVA01
-			public static readonly Epsitec.Common.Types.StructuredType Street = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 32));
 			//	designer:cap/FVAL1
 			public static readonly Epsitec.Common.Types.StructuredType TelecomContact = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 53));
 			//	designer:cap/FVAK1
@@ -145,10 +137,6 @@ namespace Epsitec.Cresus.Core.Library.Address
 				
 				//	designer:cap/FVA7
 				public static readonly global::Epsitec.Common.Support.Druid ContactGroups = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 7);
-				//	designer:cap/FVA8
-				public static readonly global::Epsitec.Common.Support.Druid LegalPerson = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 8);
-				//	designer:cap/FVA9
-				public static readonly global::Epsitec.Common.Support.Druid NaturalPerson = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 9);
 			}
 			
 			public static class AbstractPerson
@@ -261,8 +249,16 @@ namespace Epsitec.Cresus.Core.Library.Address
 				{
 				}
 				
-				//	designer:cap/FVAJ1
-				public static readonly global::Epsitec.Common.Support.Druid Address = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 51);
+				//	designer:cap/FVAB2
+				public static readonly global::Epsitec.Common.Support.Druid Complement = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 75);
+				//	designer:cap/FVAE2
+				public static readonly global::Epsitec.Common.Support.Druid Location = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 78);
+				//	designer:cap/FVAH2
+				public static readonly global::Epsitec.Common.Support.Druid PersonAddress = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 81);
+				//	designer:cap/FVAD2
+				public static readonly global::Epsitec.Common.Support.Druid PostBoxNumber = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 77);
+				//	designer:cap/FVAC2
+				public static readonly global::Epsitec.Common.Support.Druid StreetName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 76);
 			}
 			
 			public static class NaturalPerson

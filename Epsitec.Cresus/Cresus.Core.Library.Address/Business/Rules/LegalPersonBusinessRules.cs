@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 	{
 		public override void ApplyUpdateRule(LegalPersonEntity person)
 		{
-			person.Contacts.ForEach (x => x.LegalPerson = person);
+			person.Contacts.OfType<MailContactEntity> ().ForEach (x => x.ResetPersonAddress (person));
 		}
 	}
 }

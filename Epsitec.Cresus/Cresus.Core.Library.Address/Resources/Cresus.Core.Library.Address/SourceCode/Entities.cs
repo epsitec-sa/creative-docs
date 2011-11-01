@@ -13,9 +13,6 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[FVAD]", typeof (Epsitec.Cresus.Core.Entities.PersonGenderEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[FVAL]", typeof (Epsitec.Cresus.Core.Entities.LegalPersonTypeEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[FVAR]", typeof (Epsitec.Cresus.Core.Entities.MailContactEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[FVAV]", typeof (Epsitec.Cresus.Core.Entities.AddressEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[FVA01]", typeof (Epsitec.Cresus.Core.Entities.StreetEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[FVA11]", typeof (Epsitec.Cresus.Core.Entities.PostBoxEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[FVA21]", typeof (Epsitec.Cresus.Core.Entities.LocationEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[FVA31]", typeof (Epsitec.Cresus.Core.Entities.StateProvinceCountyEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[FVA41]", typeof (Epsitec.Cresus.Core.Entities.CountryEntity))]
@@ -148,55 +145,7 @@ namespace Epsitec.Cresus.Core.Entities
 				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.ContactGroupEntity> ("[FVA7]");
 			}
 		}
-		///	<summary>
-		///	The <c>LegalPerson</c> field.
-		///	designer:fld/FVA1/FVA8
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[FVA8]")]
-		public global::Epsitec.Cresus.Core.Entities.LegalPersonEntity LegalPerson
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.LegalPersonEntity> ("[FVA8]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.LegalPersonEntity oldValue = this.LegalPerson;
-				if (oldValue != value || !this.IsFieldDefined("[FVA8]"))
-				{
-					this.OnLegalPersonChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.LegalPersonEntity> ("[FVA8]", oldValue, value);
-					this.OnLegalPersonChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>NaturalPerson</c> field.
-		///	designer:fld/FVA1/FVA9
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[FVA9]")]
-		public global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity NaturalPerson
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity> ("[FVA9]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue = this.NaturalPerson;
-				if (oldValue != value || !this.IsFieldDefined("[FVA9]"))
-				{
-					this.OnNaturalPersonChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity> ("[FVA9]", oldValue, value);
-					this.OnNaturalPersonChanged (oldValue, value);
-				}
-			}
-		}
 		
-		partial void OnLegalPersonChanging(global::Epsitec.Cresus.Core.Entities.LegalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.LegalPersonEntity newValue);
-		partial void OnLegalPersonChanged(global::Epsitec.Cresus.Core.Entities.LegalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.LegalPersonEntity newValue);
-		partial void OnNaturalPersonChanging(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
-		partial void OnNaturalPersonChanged(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1050,51 +999,129 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>MailContact</c> entity.
 	///	designer:cap/FVAR
 	///	</summary>
-	public partial class MailContactEntity : global::Epsitec.Cresus.Core.Entities.AbstractContactEntity, global::Epsitec.Cresus.Core.Entities.IAddressComplement
+	public partial class MailContactEntity : global::Epsitec.Cresus.Core.Entities.AbstractContactEntity
 	{
-		#region IAddressComplement Members
 		///	<summary>
-		///	The <c>Complement</c> field.
-		///	designer:fld/FVAR/FVAU
+		///	The <c>PersonAddress</c> field.
+		///	designer:fld/FVAR/FVAH2
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[FVAU]")]
-		public global::Epsitec.Common.Types.FormattedText Complement
+		[global::Epsitec.Common.Support.EntityField ("[FVAH2]")]
+		public global::Epsitec.Common.Types.FormattedText PersonAddress
 		{
 			get
 			{
-				return global::Epsitec.Cresus.Core.Entities.IAddressComplementInterfaceImplementation.GetComplement (this);
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[FVAH2]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.IAddressComplementInterfaceImplementation.SetComplement (this, value);
+				global::Epsitec.Common.Types.FormattedText oldValue = this.PersonAddress;
+				if (oldValue != value || !this.IsFieldDefined("[FVAH2]"))
+				{
+					this.OnPersonAddressChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[FVAH2]", oldValue, value);
+					this.OnPersonAddressChanged (oldValue, value);
+				}
 			}
 		}
-		#endregion
 		///	<summary>
-		///	The <c>Address</c> field.
-		///	designer:fld/FVAR/FVAJ1
+		///	The <c>Complement</c> field.
+		///	designer:fld/FVAR/FVAB2
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[FVAJ1]")]
-		public global::Epsitec.Cresus.Core.Entities.AddressEntity Address
+		[global::Epsitec.Common.Support.EntityField ("[FVAB2]")]
+		public string Complement
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.AddressEntity> ("[FVAJ1]");
+				return this.GetField<string> ("[FVAB2]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.AddressEntity oldValue = this.Address;
-				if (oldValue != value || !this.IsFieldDefined("[FVAJ1]"))
+				string oldValue = this.Complement;
+				if (oldValue != value || !this.IsFieldDefined("[FVAB2]"))
 				{
-					this.OnAddressChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.AddressEntity> ("[FVAJ1]", oldValue, value);
-					this.OnAddressChanged (oldValue, value);
+					this.OnComplementChanging (oldValue, value);
+					this.SetField<string> ("[FVAB2]", oldValue, value);
+					this.OnComplementChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>StreetName</c> field.
+		///	designer:fld/FVAR/FVAC2
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[FVAC2]")]
+		public string StreetName
+		{
+			get
+			{
+				return this.GetField<string> ("[FVAC2]");
+			}
+			set
+			{
+				string oldValue = this.StreetName;
+				if (oldValue != value || !this.IsFieldDefined("[FVAC2]"))
+				{
+					this.OnStreetNameChanging (oldValue, value);
+					this.SetField<string> ("[FVAC2]", oldValue, value);
+					this.OnStreetNameChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>PostBoxNumber</c> field.
+		///	designer:fld/FVAR/FVAD2
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[FVAD2]")]
+		public string PostBoxNumber
+		{
+			get
+			{
+				return this.GetField<string> ("[FVAD2]");
+			}
+			set
+			{
+				string oldValue = this.PostBoxNumber;
+				if (oldValue != value || !this.IsFieldDefined("[FVAD2]"))
+				{
+					this.OnPostBoxNumberChanging (oldValue, value);
+					this.SetField<string> ("[FVAD2]", oldValue, value);
+					this.OnPostBoxNumberChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Location</c> field.
+		///	designer:fld/FVAR/FVAE2
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[FVAE2]")]
+		public global::Epsitec.Cresus.Core.Entities.LocationEntity Location
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.LocationEntity> ("[FVAE2]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.LocationEntity oldValue = this.Location;
+				if (oldValue != value || !this.IsFieldDefined("[FVAE2]"))
+				{
+					this.OnLocationChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.LocationEntity> ("[FVAE2]", oldValue, value);
+					this.OnLocationChanged (oldValue, value);
 				}
 			}
 		}
 		
-		partial void OnAddressChanging(global::Epsitec.Cresus.Core.Entities.AddressEntity oldValue, global::Epsitec.Cresus.Core.Entities.AddressEntity newValue);
-		partial void OnAddressChanged(global::Epsitec.Cresus.Core.Entities.AddressEntity oldValue, global::Epsitec.Cresus.Core.Entities.AddressEntity newValue);
+		partial void OnPersonAddressChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnPersonAddressChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnComplementChanging(string oldValue, string newValue);
+		partial void OnComplementChanged(string oldValue, string newValue);
+		partial void OnStreetNameChanging(string oldValue, string newValue);
+		partial void OnStreetNameChanged(string oldValue, string newValue);
+		partial void OnPostBoxNumberChanging(string oldValue, string newValue);
+		partial void OnPostBoxNumberChanged(string oldValue, string newValue);
+		partial void OnLocationChanging(global::Epsitec.Cresus.Core.Entities.LocationEntity oldValue, global::Epsitec.Cresus.Core.Entities.LocationEntity newValue);
+		partial void OnLocationChanged(global::Epsitec.Cresus.Core.Entities.LocationEntity oldValue, global::Epsitec.Cresus.Core.Entities.LocationEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1115,272 +1142,6 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		#endregion
-	}
-}
-#endregion
-
-#region Epsitec.Cresus.Core.IAddressComplement Interface
-namespace Epsitec.Cresus.Core.Entities
-{
-	///	<summary>
-	///	The <c>IAddressComplement</c> entity.
-	///	designer:cap/FVAT
-	///	</summary>
-	public interface IAddressComplement
-	{
-		///	<summary>
-		///	The <c>Complement</c> field.
-		///	designer:fld/FVAT/FVAU
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[FVAU]")]
-		global::Epsitec.Common.Types.FormattedText Complement
-		{
-			get;
-			set;
-		}
-	}
-	public static partial class IAddressComplementInterfaceImplementation
-	{
-		public static global::Epsitec.Common.Types.FormattedText GetComplement(global::Epsitec.Cresus.Core.Entities.IAddressComplement obj)
-		{
-			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
-			return entity.GetField<global::Epsitec.Common.Types.FormattedText> ("[FVAU]");
-		}
-		public static void SetComplement(global::Epsitec.Cresus.Core.Entities.IAddressComplement obj, global::Epsitec.Common.Types.FormattedText value)
-		{
-			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
-			global::Epsitec.Common.Types.FormattedText oldValue = obj.Complement;
-			if (oldValue != value || !entity.IsFieldDefined("[FVAU]"))
-			{
-				IAddressComplementInterfaceImplementation.OnComplementChanging (obj, oldValue, value);
-				entity.SetField<global::Epsitec.Common.Types.FormattedText> ("[FVAU]", oldValue, value);
-				IAddressComplementInterfaceImplementation.OnComplementChanged (obj, oldValue, value);
-			}
-		}
-		static partial void OnComplementChanged(global::Epsitec.Cresus.Core.Entities.IAddressComplement obj, global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		static partial void OnComplementChanging(global::Epsitec.Cresus.Core.Entities.IAddressComplement obj, global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-	}
-}
-#endregion
-
-#region Epsitec.Cresus.Core.Address Entity
-namespace Epsitec.Cresus.Core.Entities
-{
-	///	<summary>
-	///	The <c>Address</c> entity.
-	///	designer:cap/FVAV
-	///	</summary>
-	public partial class AddressEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
-	{
-		///	<summary>
-		///	The <c>Street</c> field.
-		///	designer:fld/FVAV/FVAE1
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[FVAE1]")]
-		public global::Epsitec.Cresus.Core.Entities.StreetEntity Street
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.StreetEntity> ("[FVAE1]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.StreetEntity oldValue = this.Street;
-				if (oldValue != value || !this.IsFieldDefined("[FVAE1]"))
-				{
-					this.OnStreetChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.StreetEntity> ("[FVAE1]", oldValue, value);
-					this.OnStreetChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>PostBox</c> field.
-		///	designer:fld/FVAV/FVAF1
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[FVAF1]")]
-		public global::Epsitec.Cresus.Core.Entities.PostBoxEntity PostBox
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.PostBoxEntity> ("[FVAF1]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.PostBoxEntity oldValue = this.PostBox;
-				if (oldValue != value || !this.IsFieldDefined("[FVAF1]"))
-				{
-					this.OnPostBoxChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.PostBoxEntity> ("[FVAF1]", oldValue, value);
-					this.OnPostBoxChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>Location</c> field.
-		///	designer:fld/FVAV/FVAG1
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[FVAG1]")]
-		public global::Epsitec.Cresus.Core.Entities.LocationEntity Location
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.LocationEntity> ("[FVAG1]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.LocationEntity oldValue = this.Location;
-				if (oldValue != value || !this.IsFieldDefined("[FVAG1]"))
-				{
-					this.OnLocationChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.LocationEntity> ("[FVAG1]", oldValue, value);
-					this.OnLocationChanged (oldValue, value);
-				}
-			}
-		}
-		
-		partial void OnStreetChanging(global::Epsitec.Cresus.Core.Entities.StreetEntity oldValue, global::Epsitec.Cresus.Core.Entities.StreetEntity newValue);
-		partial void OnStreetChanged(global::Epsitec.Cresus.Core.Entities.StreetEntity oldValue, global::Epsitec.Cresus.Core.Entities.StreetEntity newValue);
-		partial void OnPostBoxChanging(global::Epsitec.Cresus.Core.Entities.PostBoxEntity oldValue, global::Epsitec.Cresus.Core.Entities.PostBoxEntity newValue);
-		partial void OnPostBoxChanged(global::Epsitec.Cresus.Core.Entities.PostBoxEntity oldValue, global::Epsitec.Cresus.Core.Entities.PostBoxEntity newValue);
-		partial void OnLocationChanging(global::Epsitec.Cresus.Core.Entities.LocationEntity oldValue, global::Epsitec.Cresus.Core.Entities.LocationEntity newValue);
-		partial void OnLocationChanged(global::Epsitec.Cresus.Core.Entities.LocationEntity oldValue, global::Epsitec.Cresus.Core.Entities.LocationEntity newValue);
-		
-		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
-		{
-			return global::Epsitec.Cresus.Core.Entities.AddressEntity.EntityStructuredTypeId;
-		}
-		public override string GetEntityStructuredTypeKey()
-		{
-			return global::Epsitec.Cresus.Core.Entities.AddressEntity.EntityStructuredTypeKey;
-		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1007, 10, 31);	// [FVAV]
-		public static readonly string EntityStructuredTypeKey = "[FVAV]";
-		
-		#region Repository Class
-		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AddressEntity>
-		{
-			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Volatile)
-			{
-			}
-		}
-		#endregion
-	}
-}
-#endregion
-
-#region Epsitec.Cresus.Core.Street Entity
-namespace Epsitec.Cresus.Core.Entities
-{
-	///	<summary>
-	///	The <c>Street</c> entity.
-	///	designer:cap/FVA01
-	///	</summary>
-	public partial class StreetEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IAddressComplement
-	{
-		#region IAddressComplement Members
-		///	<summary>
-		///	The <c>Complement</c> field.
-		///	designer:fld/FVA01/FVAU
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[FVAU]")]
-		public global::Epsitec.Common.Types.FormattedText Complement
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.IAddressComplementInterfaceImplementation.GetComplement (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.IAddressComplementInterfaceImplementation.SetComplement (this, value);
-			}
-		}
-		#endregion
-		///	<summary>
-		///	The <c>StreetName</c> field.
-		///	designer:fld/FVA01/FVAH1
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[FVAH1]")]
-		public global::Epsitec.Common.Types.FormattedText StreetName
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[FVAH1]");
-			}
-			set
-			{
-				global::Epsitec.Common.Types.FormattedText oldValue = this.StreetName;
-				if (oldValue != value || !this.IsFieldDefined("[FVAH1]"))
-				{
-					this.OnStreetNameChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[FVAH1]", oldValue, value);
-					this.OnStreetNameChanged (oldValue, value);
-				}
-			}
-		}
-		
-		partial void OnStreetNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnStreetNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		
-		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
-		{
-			return global::Epsitec.Cresus.Core.Entities.StreetEntity.EntityStructuredTypeId;
-		}
-		public override string GetEntityStructuredTypeKey()
-		{
-			return global::Epsitec.Cresus.Core.Entities.StreetEntity.EntityStructuredTypeKey;
-		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1007, 10, 32);	// [FVA01]
-		public static readonly string EntityStructuredTypeKey = "[FVA01]";
-	}
-}
-#endregion
-
-#region Epsitec.Cresus.Core.PostBox Entity
-namespace Epsitec.Cresus.Core.Entities
-{
-	///	<summary>
-	///	The <c>PostBox</c> entity.
-	///	designer:cap/FVA11
-	///	</summary>
-	public partial class PostBoxEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
-	{
-		///	<summary>
-		///	The <c>Number</c> field.
-		///	designer:fld/FVA11/FVAI1
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[FVAI1]")]
-		public global::Epsitec.Common.Types.FormattedText Number
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[FVAI1]");
-			}
-			set
-			{
-				global::Epsitec.Common.Types.FormattedText oldValue = this.Number;
-				if (oldValue != value || !this.IsFieldDefined("[FVAI1]"))
-				{
-					this.OnNumberChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[FVAI1]", oldValue, value);
-					this.OnNumberChanged (oldValue, value);
-				}
-			}
-		}
-		
-		partial void OnNumberChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnNumberChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		
-		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
-		{
-			return global::Epsitec.Cresus.Core.Entities.PostBoxEntity.EntityStructuredTypeId;
-		}
-		public override string GetEntityStructuredTypeKey()
-		{
-			return global::Epsitec.Cresus.Core.Entities.PostBoxEntity.EntityStructuredTypeKey;
-		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1007, 10, 33);	// [FVA11]
-		public static readonly string EntityStructuredTypeKey = "[FVA11]";
 	}
 }
 #endregion
@@ -1435,19 +1196,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/FVA21/FVA71
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[FVA71]")]
-		public global::Epsitec.Common.Types.FormattedText PostalCode
+		public string PostalCode
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[FVA71]");
+				return this.GetField<string> ("[FVA71]");
 			}
 			set
 			{
-				global::Epsitec.Common.Types.FormattedText oldValue = this.PostalCode;
+				string oldValue = this.PostalCode;
 				if (oldValue != value || !this.IsFieldDefined("[FVA71]"))
 				{
 					this.OnPostalCodeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[FVA71]", oldValue, value);
+					this.SetField<string> ("[FVA71]", oldValue, value);
 					this.OnPostalCodeChanged (oldValue, value);
 				}
 			}
@@ -1563,8 +1324,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnPostalCodeChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnPostalCodeChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnPostalCodeChanging(string oldValue, string newValue);
+		partial void OnPostalCodeChanged(string oldValue, string newValue);
 		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnCountryChanging(global::Epsitec.Cresus.Core.Entities.CountryEntity oldValue, global::Epsitec.Cresus.Core.Entities.CountryEntity newValue);

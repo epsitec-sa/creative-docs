@@ -14,7 +14,6 @@ namespace Epsitec.Cresus.Core.Business.Rules
 		public override void ApplySetupRule(MailContactEntity entity)
 		{
 			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
-			entity.Address = businessContext.CreateEntityAndRegisterAsEmpty<AddressEntity> ();
 		}
 	}
 }

@@ -236,19 +236,14 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			table.SetText (4, index, TextFormatter.FormatText ("Pays"   ).ApplyBold (), this.FontSize);
 			index++;
 
-			foreach (var contact in this.Entity.Person.Contacts)
+			foreach (var x in this.Entity.Person.Contacts.OfType<MailContactEntity> ())
 			{
-				if (contact is MailContactEntity)
-				{
-					var x = contact as MailContactEntity;
-
-					table.SetText (0, index, TextFormatter.FormatText (string.Join (", ", x.ContactGroups.Select (role => role.Name))), this.FontSize);
-					table.SetText (1, index, TextFormatter.FormatText (x.LegalPerson.Name, "\n", x.LegalPerson.Complement, "\n", x.Complement, "\n", x.Address.Street.StreetName, "\n", x.Address.Street.Complement, "\n", x.Address.PostBox.Number, "\n", x.Address.Location.Country.CountryCode, "~-", x.Address.Location.PostalCode, x.Address.Location.Name), this.FontSize);
-					table.SetText (2, index, x.Address.Location.PostalCode, this.FontSize);
-					table.SetText (3, index, x.Address.Location.Name, this.FontSize);
-					table.SetText (4, index, x.Address.Location.Country.Name, this.FontSize);
-					index++;
-				}
+				table.SetText (0, index, TextFormatter.FormatText (string.Join (", ", x.ContactGroups.Select (role => role.Name))), this.FontSize);
+				table.SetText (1, index, TextFormatter.FormatText (x.PersonAddress, "\n", x.Complement, "\n", x.StreetName, "\n", x.PostBoxNumber, "\n", x.Location.Country.CountryCode, "~-", x.Location.PostalCode, x.Location.Name), this.FontSize);
+				table.SetText (2, index, x.Location.PostalCode, this.FontSize);
+				table.SetText (3, index, x.Location.Name, this.FontSize);
+				table.SetText (4, index, x.Location.Country.Name, this.FontSize);
+				index++;
 			}
 
 			this.documentContainer.AddFromTop (table, 5.0);

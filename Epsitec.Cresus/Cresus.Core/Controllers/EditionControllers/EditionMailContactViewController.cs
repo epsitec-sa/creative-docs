@@ -23,6 +23,17 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionMailContactViewController : EditionViewController<MailContactEntity>
 	{
+		protected override void CreateBricks(Cresus.Bricks.BrickWall<MailContactEntity> wall)
+		{
+			wall.AddBrick ()
+				.Input ()
+				  .Field (x => x.Complement)
+				  .Field (x => x.StreetName)
+				  .Field (x => x.PostBoxNumber)
+				  .Field (x => x.Location)
+				.End ();
+		}
+#if false
 		//	Si this.Entity.NaturalPerson existe et this.Entity.LegalPerson nul :
 		//		Les onglets sont présents et réglés sur "Adresse spécifique".
 		//		On définit l'adresse spécifique d'une personne physique.
@@ -481,5 +492,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private AutoCompleteTextField					locationTextField;
 		private CountryEntity							selectedCountry;
 		private CountryEntity							defaultCountry;
+#endif
 	}
 }

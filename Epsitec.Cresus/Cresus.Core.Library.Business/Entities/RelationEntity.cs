@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Entities
 			{
 				a.Accumulate (this.Person.GetEntityStatus ());
 				a.Accumulate (this.Comments.Select (x => x.GetEntityStatus ()));
-				a.Accumulate (this.DefaultMailContact.Address.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.DefaultMailContact.GetEntityStatus ().TreatAsOptional ());
 
 				return a.EntityStatus;
 			}

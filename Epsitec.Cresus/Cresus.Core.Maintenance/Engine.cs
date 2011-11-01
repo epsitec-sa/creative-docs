@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Core.Maintenance
 
 				location.Code       = onrpCode.Code;
 				location.Name       = FormattedText.FromSimpleText (zipInfo.LongName);
-				location.PostalCode = FormattedText.FromSimpleText (zipInfo.ZipCode);
+				location.PostalCode = zipInfo.ZipCode;
 				location.Country    = countryCH;
 				location.Language1  = languages.ContainsKey (zipInfo.LanguageCode1) ? languages[zipInfo.LanguageCode1] : null;
 

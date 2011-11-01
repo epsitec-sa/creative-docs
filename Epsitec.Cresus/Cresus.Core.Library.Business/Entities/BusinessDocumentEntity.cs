@@ -78,10 +78,10 @@ namespace Epsitec.Cresus.Core.Entities
 			{
 				return TextFormatter.FormatText
 					(
-						x.LegalPerson.Name, "\n",
-						x.NaturalPerson.Firstname, x.NaturalPerson.Lastname, "\n",
-						x.Address.Street.StreetName, "\n",
-						x.Address.Location.PostalCode, x.Address.Location.Name
+						x.PersonAddress, "\n",
+						x.Complement, "\n",
+						x.StreetName, "\n",
+						x.Location.PostalCode, x.Location.Name
 					);
 			}
 			else

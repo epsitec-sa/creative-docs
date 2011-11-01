@@ -16,62 +16,56 @@ namespace Epsitec.Cresus.Core.Entities
 			return TextFormatter.FormatText ("Adresse", "(", FormattedText.Join (", ", this.ContactGroups.Select (role => role.Name).ToArray ()), ")");
 		}
 
+		public void ResetPersonAddress(LegalPersonEntity person)
+		{
+			FormattedText text = FormattedText.Empty;
+
+			if (person.IsNotNull ())
+			{
+				text = TextFormatter.FormatText (person.Name);
+			}
+
+			this.PersonAddress = text;
+		}
+
+		public void ResetPersonAddress(NaturalPersonEntity person)
+		{
+			FormattedText text = FormattedText.Empty;
+
+			if (person.IsNotNull ())
+			{
+				text = TextFormatter.FormatText (person.Title.Name, "\n", person.Firstname, person.Lastname);
+			}
+
+			this.PersonAddress = text;
+		}
+
 		public override FormattedText GetSummary()
 		{
-			if (this.Address.Location.Country.CountryCode == this.BusinessCountryCode)
+			if (this.Location.Country.CountryCode == this.GetBusinessCountryCode ())
 			{
-				return this.LocalSummary;
+				return this.GetLocalSummary ();
 			}
 			else
 			{
-				return this.ForeignSummary;
+				return this.GetForeignSummary ();
 			}
 		}
 
-		private string BusinessCountryCode
+		private string GetBusinessCountryCode()
 		{
-			//	Retourne le code du pays où est localisée l'entreprise.
-			get
-			{
-				return "CH";  // TODO: aller chercher ce code dans les BusinessSettings !
-			}
+			return "CH";
+			// TODO: aller chercher ce code dans les BusinessSettings !
 		}
 
-		private FormattedText LocalSummary
+		private FormattedText GetLocalSummary()
 		{
-			get
-			{
-				return TextFormatter.FormatText
-					(
-						this.LegalPerson.Name, "\n",
-						this.LegalPerson.Complement, "\n",
-						this.NaturalPerson.Firstname, this.NaturalPerson.Lastname, "\n",
-						this.Complement, "\n",
-						this.Address.Street.StreetName, "\n",
-						this.Address.Street.Complement, "\n",
-						this.Address.PostBox.Number, "\n",
-						this.Address.Location.PostalCode, this.Address.Location.Name
-					);
-			}
+			return TextFormatter.FormatText (this.PersonAddress, "\n", this.Complement, "\n", this.StreetName, "\n", this.PostBoxNumber, "\n", this.Location.PostalCode, this.Location.Name);
 		}
 
-		private FormattedText ForeignSummary
+		private FormattedText GetForeignSummary()
 		{
-			get
-			{
-				return TextFormatter.FormatText
-					(
-						this.LegalPerson.Name, "\n",
-						this.LegalPerson.Complement, "\n",
-						this.NaturalPerson.Firstname, this.NaturalPerson.Lastname, "\n",
-						this.Complement, "\n",
-						this.Address.Street.StreetName, "\n",
-						this.Address.Street.Complement, "\n",
-						this.Address.PostBox.Number, "\n",
-						this.Address.Location.PostalCode, this.Address.Location.Name, "\n",
-						this.Address.Location.Country.Name
-					);
-			}
+			return TextFormatter.FormatText (this.GetLocalSummary (), "\n", this.Location.Country.Name);
 		}
 
 
@@ -79,10 +73,9 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return TextFormatter.FormatText
 				(
-					this.LegalPerson.Name, ",",
-					this.NaturalPerson.Firstname, this.NaturalPerson.Lastname, ",",
-					this.Address.Street.StreetName, ",",
-					this.Address.Location.PostalCode, this.Address.Location.Name
+					TextFormatter.FormatText (this.PersonAddress).ToSimpleText ().Split ('\n').Last (), "~,",
+					this.StreetName, "~,",
+					this.Location.PostalCode, this.Location.Name
 				);
 		}
 
@@ -90,12 +83,10 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return new string[]
 			{
-				this.LegalPerson.Name.ToSimpleText (),
-				this.NaturalPerson.Firstname,
-				this.NaturalPerson.Lastname,
-				this.Address.Street.StreetName.ToSimpleText (),
-				this.Address.Location.PostalCode.ToSimpleText (),
-				this.Address.Location.Name.ToSimpleText ()
+				TextFormatter.FormatText (this.PersonAddress).ToSimpleText ().Split ('\n').Last (),
+				this.StreetName,
+				this.Location.PostalCode,
+				TextFormatter.FormatText (this.Location.Name).ToSimpleText ()
 			};
 		}
 
@@ -103,8 +94,11 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			using (var a = new EntityStatusAccumulator ())
 			{
-				a.Accumulate (this.Address.GetEntityStatus ());
+				a.Accumulate (this.PersonAddress.GetEntityStatus ().TreatAsOptional ());
 				a.Accumulate (this.Complement.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.StreetName.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.PostBoxNumber.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.Location.GetEntityStatus ().TreatAsOptional ());
 				a.Accumulate (this.ContactGroups.Select (x => x.GetEntityStatus ()));
 				a.Accumulate (this.Comments.Select (x => x.GetEntityStatus ()));
 

@@ -55,26 +55,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			if (affair != null)
 			{
 				//	Cherche toutes les adresses du client de l'affaire.
-				var example = new MailContactEntity ();
-				var person = affair.Customer.MainRelation.Person;
-
-				if (person is NaturalPersonEntity)
-				{
-					example.NaturalPerson = person as NaturalPersonEntity;
-				}
-
-				if (person is LegalPersonEntity)
-				{
-					example.LegalPerson = person as LegalPersonEntity;
-				}
-
-				var list = this.BusinessContext.DataContext.GetByExample<MailContactEntity> (example);
+				var list = affair.Customer.MainRelation.Person.Contacts.OfType<MailContactEntity> ().ToList ();
 
 				//	Ajoute les adresses du chantier de l'affaire.
 				if (includeSites && affair.AssociatedSite.IsNotNull ())
 				{
-					var sites = affair.AssociatedSite.Person.Contacts.OfType<MailContactEntity> ();
-					list = list.Union (sites);
+					list = list.Union (affair.AssociatedSite.Person.Contacts.OfType<MailContactEntity> ()).ToList ();
 				}
 
 				return list;

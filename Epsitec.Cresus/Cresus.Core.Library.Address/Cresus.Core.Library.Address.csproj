@@ -49,7 +49,6 @@
     <Compile Include="Business\Rules\LegalPersonBusinessRules.cs" />
     <Compile Include="Business\Rules\NaturalPersonBusinessRules.cs" />
     <Compile Include="Entities\AbstractPersonEntity.cs" />
-    <Compile Include="Entities\AddressEntity.cs" />
     <Compile Include="Entities\ContactGroupEntity.cs" />
     <Compile Include="Entities\PeopleGroupEntity.cs" />
     <Compile Include="Entities\PeopleEntity.cs" />
@@ -64,8 +63,6 @@
     <Compile Include="Entities\NaturalPersonEntity.cs" />
     <Compile Include="Entities\PersonGenderEntity.cs" />
     <Compile Include="Entities\PersonTitleEntity.cs" />
-    <Compile Include="Entities\PostBoxEntity.cs" />
-    <Compile Include="Entities\StreetEntity.cs" />
     <Compile Include="Entities\TelecomContactEntity.cs" />
     <Compile Include="Entities\UriContactEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
