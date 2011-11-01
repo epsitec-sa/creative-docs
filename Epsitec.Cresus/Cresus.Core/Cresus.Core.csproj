@@ -100,6 +100,7 @@
     <Compile Include="Controllers\CreationControllers\CreationOtherRelationViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationCustomerViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionDocumentFooterTextViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionOtherRelationGroupViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionOtherRelationViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPeopleViewController.cs" />
@@ -142,6 +143,7 @@
     <Compile Include="Controllers\EditionControllers\EditionVatDefinitionViewController.cs" />
     <Compile Include="Controllers\RibbonViewController.cs" />
     <Compile Include="Controllers\RibbonViewMode.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryDocumentFooterTextViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryOtherRelationGroupViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryOtherRelationViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryPeopleViewController.cs" />
@@ -599,6 +601,8 @@
     <EmbeddedResource Include="Images\Base.OtherRelationGroup.icon" />
     <EmbeddedResource Include="Images\Data.OtherRelation.icon" />
     <EmbeddedResource Include="Images\Data.OtherRelationGroup.icon" />
+    <EmbeddedResource Include="Images\Base.DocumentFooterText.icon" />
+    <EmbeddedResource Include="Images\Data.DocumentFooterText.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

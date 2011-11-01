@@ -30,6 +30,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .Field (x => x.DocumentSource)
 				  .Field (x => x.DocumentFlowDirection)
 				.End ()
+				.Separator ()
+				.Input ()
+				  .Field (x => x.DocumentFooterTexts)
+				.End ()
 				;
 			wall.AddBrick ()
 				.Attribute (BrickMode.SpecialController0)

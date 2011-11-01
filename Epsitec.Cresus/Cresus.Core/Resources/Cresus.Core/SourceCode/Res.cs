@@ -54,6 +54,8 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Widgets.Command ShowDocumentCategory = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 28));
 				//	designer:cap/L0K51
 				public static readonly global::Epsitec.Common.Widgets.Command ShowDocumentCategoryMapping = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 37));
+				//	designer:cap/L0K92
+				public static readonly global::Epsitec.Common.Widgets.Command ShowDocumentFooterText = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 73));
 				//	designer:cap/L0KE
 				public static readonly global::Epsitec.Common.Widgets.Command ShowDocumentMetadata = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 14));
 				//	designer:cap/L0KT
@@ -229,6 +231,8 @@ namespace Epsitec.Cresus.Core
 				public const long ShowDocumentCategory = 0x150001400001CL;
 				//	designer:cap/L0K51
 				public const long ShowDocumentCategoryMapping = 0x1500014000025L;
+				//	designer:cap/L0K92
+				public const long ShowDocumentFooterText = 0x1500014000049L;
 				//	designer:cap/L0KE
 				public const long ShowDocumentMetadata = 0x150001400000EL;
 				//	designer:cap/L0KT

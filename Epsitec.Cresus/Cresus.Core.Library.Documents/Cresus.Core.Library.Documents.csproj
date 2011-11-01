@@ -63,6 +63,7 @@
     <Compile Include="DocumentOptionsEditor\MainController.cs" />
     <Compile Include="DocumentOptionsEditor\SelectController.cs" />
     <Compile Include="DocumentOptionsEditor\ValuesController.cs" />
+    <Compile Include="Entities\DocumentFooterTextEntity.cs" />
     <Compile Include="Entities\DocumentCategoryEntity.cs" />
     <Compile Include="Entities\DocumentCategoryMappingEntity.cs" />
     <Compile Include="Entities\DocumentMetadataEntity.cs" />
