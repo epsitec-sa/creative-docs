@@ -29,8 +29,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			wall.AddBrick ()
 				.Input ()
-				  .Field (x => x.Name)
-				  .Field (x => x.Description)
+				  .Title ("Nom interne").Field (x => x.Name)
+				  .Title ("Texte à imprimer").Field (x => x.Description)
 				  .Field (x => x.BeginDate)
 				  .Field (x => x.EndDate)
 				.End ()
