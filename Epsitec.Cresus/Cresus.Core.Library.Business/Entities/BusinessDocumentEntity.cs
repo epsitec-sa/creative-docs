@@ -91,32 +91,6 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
-#if false
-		public MailContactEntity FinalShipToMailContact
-		{
-			//	Retourne l'adresse de livraison à utiliser. Si aucune adresse n'est directement définie,
-			//	on utilise l'adresse définie dans l'éventuel chantier.
-			get
-			{
-				var shipToMailContact = this.ShipToMailContact;
-
-				if (shipToMailContact.IsNull ())
-				{
-					// TODO: ATTENTION, il n'est pas autorisé d'obtenir le BusinessContext ainsi !!!
-					var businessContext = Logic.Current.GetComponent<BusinessContext> ();
-
-					var affair = this.GetAffair (businessContext);
-					if (affair != null)
-					{
-						shipToMailContact = affair.AssociatedSite.Person.Contacts.OfType<MailContactEntity> ().FirstOrDefault ();
-					}
-				}
-
-				return shipToMailContact;
-			}
-		}
-#endif
-
 		public AffairEntity GetAffair(BusinessContext businessContext)
 		{
 			//	Retourne l'affaire à laquelle appartient l'entité.
