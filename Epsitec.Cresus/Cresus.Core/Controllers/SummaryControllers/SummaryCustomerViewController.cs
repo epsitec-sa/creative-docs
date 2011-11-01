@@ -48,6 +48,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			wall.AddBrick (x => x.Affairs)
 				.Attribute (BrickMode.DefaultToSummarySubview)
 				.Attribute (BrickMode.HideAddButton)
+				.Attribute (BrickMode.AutoGroup)
 				.Template ()
 				.End ()
 				;
