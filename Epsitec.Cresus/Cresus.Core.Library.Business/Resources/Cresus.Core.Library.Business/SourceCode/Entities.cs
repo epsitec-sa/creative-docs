@@ -5358,6 +5358,18 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>Affairs</c> field.
+		///	designer:fld/GVAV5/GVA26
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVA26]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.AffairEntity> Affairs
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.AffairEntity> ("[GVA26]");
+			}
+		}
+		///	<summary>
 		///	The <c>SalesRepresentative</c> field.
 		///	designer:fld/GVAV5/GVA16
 		///	</summary>
@@ -5377,18 +5389,6 @@ namespace Epsitec.Cresus.Core.Entities
 					this.SetField<global::Epsitec.Cresus.Core.Entities.PeopleEntity> ("[GVA16]", oldValue, value);
 					this.OnSalesRepresentativeChanged (oldValue, value);
 				}
-			}
-		}
-		///	<summary>
-		///	The <c>Affairs</c> field.
-		///	designer:fld/GVAV5/GVA26
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVA26]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.AffairEntity> Affairs
-		{
-			get
-			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.AffairEntity> ("[GVA26]");
 			}
 		}
 		///	<summary>
