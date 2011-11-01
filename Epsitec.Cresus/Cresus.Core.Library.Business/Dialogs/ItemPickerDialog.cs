@@ -155,9 +155,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.filterField = new TextFieldEx
 			{
-				Parent   = parent,
-				Dock     = DockStyle.Fill,
-				TabIndex = ++this.tabIndex,
+				Parent                       = parent,
+				Dock                         = DockStyle.Fill,
+				TabIndex                     = ++this.tabIndex,
+				SwallowReturnOnAcceptEdition = true,
+				SwallowEscapeOnRejectEdition = true,
 			};
 
 			this.filterClearButton = new GlyphButton
