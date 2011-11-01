@@ -1234,7 +1234,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 						{
 							foreach (var group in article.ArticleDefinition.ArticleGroups)
 							{
-								if (!groups.Contains (group))
+								if (group.Type == ArticleGroupType.ProductionCenter && !groups.Contains (group))
 								{
 									groups.Add (group);
 								}
