@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Core.Print
 		{
 			get
 			{
-				return this.documentContainer.CurrentVerticalPosition - this.GetPageMargins ().Bottom;
+				return this.documentContainer.CurrentVerticalPositionFromTop - this.GetPageMargins ().Bottom;
 			}
 		}
 

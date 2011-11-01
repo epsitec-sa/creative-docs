@@ -121,6 +121,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				this.BuildHeader ();
 				this.BuildArticles ();
 				this.BuildFooter ();
+				this.BuildSigning ();
 				this.BuildPages (firstPage);
 
 				this.documentContainer.Ending (firstPage);
@@ -243,7 +244,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 		}
 
 
-		private void BuildFooter()
+		private void BuildSigning()
 		{
 			if (this.HasOption (DocumentOption.Signing))
 			{
@@ -263,8 +264,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				table.SetText (1, 0, new FormattedText ("Terminé le :<br/><br/>Par :<br/><br/>Signature :<br/><br/><br/>"), fontSize);
 				table.SetUnbreakableRow (0, true);
 
-				var margins = this.GetPageMargins ();
-				this.documentContainer.AddToBottom (table, margins.Bottom);
+				this.documentContainer.AddFromBottom (table, 5);
 			}
 		}
 

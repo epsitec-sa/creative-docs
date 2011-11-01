@@ -268,5 +268,5 @@
   <data name="Fld.ArticleGroup.Type" id="A89">&lt;s:data id="_0" f:Name="Type" /&gt;</data>
   <data name="Fld.People.PeopleGroups" id="A99">&lt;s:data id="_0" f:Name="PeopleGroups" /&gt;</data>
   <data name="Fld.Relation.Contacts" id="AA9">&lt;s:data id="_0" f:Name="Contacts" /&gt;</data>
-  <data name="Fld.BusinessDocument.FooterText" id="AB9">&lt;s:data id="_0" f:Name="FooterText" /&gt;</data>
+  <data name="Fld.BusinessDocument.FooterText" id="AB9">&lt;s:data id="_0" f:Name="FooterText" f:Labels="{Collection {Text 'Texte du pied de page'}}" /&gt;</data>
 </bundle>

@@ -94,6 +94,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 			this.BuildHeader ();
 			this.BuildArticles ();
+			this.BuildFooter ();
 			this.BuildPages (firstPage);
 			this.BuildReportHeaders (firstPage);
 			this.BuildReportFooters (firstPage);

@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			this.BuildHeader ();
 
 			this.groupRank = 0;
-			this.documentContainer.CurrentVerticalPosition = this.RequiredPageSize.Height-87;
+			this.documentContainer.CurrentVerticalPositionFromTop = this.RequiredPageSize.Height-87;
 			foreach (var group in this.ProductionGroups)
 			{
 				this.currentGroup = group;
@@ -121,10 +121,11 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				this.InvalidateContentLines ();
 
 				this.BuildAtelier ();
-				this.BuildArticles (this.documentContainer.CurrentVerticalPosition);
+				this.BuildArticles (this.documentContainer.CurrentVerticalPositionFromTop);
 			}
 
 			this.BuildFooter ();
+			this.BuildSigning ();
 			this.BuildPages (firstPage);
 
 			this.documentContainer.Ending (firstPage);
@@ -215,7 +216,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 		}
 
 
-		private void BuildFooter()
+		private void BuildSigning()
 		{
 			if (this.HasOption (DocumentOption.Signing))
 			{
@@ -235,8 +236,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				table.SetText (1, 0, new FormattedText ("Terminé le :<br/><br/>Par :<br/><br/>Signature :<br/><br/><br/>"), fontSize);
 				table.SetUnbreakableRow (0, true);
 
-				var margins = this.GetPageMargins ();
-				this.documentContainer.AddToBottom (table, margins.Bottom);
+				this.documentContainer.AddFromBottom (table, 5);
 			}
 		}
 

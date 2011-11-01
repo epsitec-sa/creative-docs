@@ -820,10 +820,9 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (admin || devel || power)
 			{
-				yield return new SubMenuItem (Res.Commands.Base.ShowDocumentFooterText,      SubMenuType.Printing);
-				yield return new SubMenuItem (null,                                          SubMenuType.Printing);
 				yield return new SubMenuItem (Res.Commands.Base.ShowDocumentCategoryMapping, SubMenuType.Printing);
 				yield return new SubMenuItem (Res.Commands.Base.ShowDocumentCategory,        SubMenuType.Printing);
+				yield return new SubMenuItem (Res.Commands.Base.ShowDocumentFooterText,      SubMenuType.Printing);
 				yield return new SubMenuItem (Res.Commands.Base.ShowDocumentOptions,         SubMenuType.Printing);
 				yield return new SubMenuItem (Res.Commands.Base.ShowDocumentPrintingUnits,   SubMenuType.Printing);
 

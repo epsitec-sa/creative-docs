@@ -309,11 +309,29 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 		}
 
 
+		protected void BuildFooter()
+		{
+			//	Ajoute le pied de page dans le document.
+			if (!this.Entity.FooterText.IsNullOrEmpty)
+			{
+				//?var fontSize = this.GetOptionValue (DocumentOption.FooterFontSize);
+				var fontSize = this.GetOptionValue (DocumentOption.SigningFontSize);
+
+				var band = new TextBand ();
+				band.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;
+				band.Text = this.Entity.FooterText;
+				band.FontSize = fontSize;
+				
+				this.documentContainer.AddFromBottom (band, 5);
+			}
+		}
+
+
 		protected void BuildArticles(double? verticalPosition = null)
 		{
 			//	Ajoute les articles dans le document.
 			double y = this.GetOptionValue (DocumentOption.TableTopAfterHeader);
-			this.documentContainer.CurrentVerticalPosition = verticalPosition.HasValue ? verticalPosition.Value : this.RequiredPageSize.Height-y;
+			this.documentContainer.CurrentVerticalPositionFromTop = verticalPosition.HasValue ? verticalPosition.Value : this.RequiredPageSize.Height-y;
 
 			this.InitializeColumns ();
 
@@ -378,7 +396,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 			//	Génère toutes les lignes pour les articles.
 			int linePage = this.documentContainer.CurrentPage;
-			double lineY = this.documentContainer.CurrentVerticalPosition;
+			double lineY = this.documentContainer.CurrentVerticalPositionFromTop;
 
 			for (int i = 0; i < lines.Count; i++)
 			{

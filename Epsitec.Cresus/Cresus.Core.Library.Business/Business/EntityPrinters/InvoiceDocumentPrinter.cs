@@ -129,6 +129,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 					this.BuildHeader ();
 					this.BuildArticles ();
 					this.BuildConditions ();
+					this.BuildFooter ();
 					this.BuildPages (firstPage);
 					this.BuildReportHeaders (firstPage);
 					this.BuildReportFooters (firstPage);
@@ -148,6 +149,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 					this.BuildHeader ();
 					this.BuildArticles ();
 					this.BuildConditions ();
+					this.BuildFooter ();
 					this.BuildPages (firstPage);
 					this.BuildReportHeaders (firstPage);
 					this.BuildReportFooters (firstPage);
@@ -429,7 +431,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			var bounds = new Rectangle (Point.Zero, AbstractIsrBand.DefautlSize);
 
 			if (this.documentContainer.PageCount () - firstPage > 1 ||
-				this.documentContainer.CurrentVerticalPosition - InvoiceDocumentPrinter.marginBeforeIsr < bounds.Top ||
+				this.documentContainer.CurrentVerticalPositionFromTop - InvoiceDocumentPrinter.marginBeforeIsr < bounds.Top ||
 				this.HasPrintingUnitDefined (PageType.Single) == false)
 			{
 				//	On ne prépare pas une nouvelle page si on peut mettre la facture

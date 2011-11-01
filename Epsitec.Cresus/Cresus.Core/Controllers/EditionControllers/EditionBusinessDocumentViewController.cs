@@ -33,6 +33,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .Field (x => x.BillToMailContact).PickFromCollection (this.GetMailContacts (false))
 				  .Field (x => x.ShipToMailContact).PickFromCollection (this.GetMailContacts (true))
 				  .Field (x => x.OtherPartyRelation)
+				  .Field (x => x.FooterText)
 				.End ()
 				.Separator ()
 				.Input ()

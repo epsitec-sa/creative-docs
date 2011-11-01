@@ -87,8 +87,7 @@ namespace Epsitec.Cresus.Core.Print.Containers
 
 			this.pages.Clear ();
 			this.currentPage = -1;
-
-			this.currentVerticalPosition = this.pageSize.Height - this.pageMargins.Top;  // on part en haut
+			this.CurrentVerticalPositionsReset ();
 		}
 
 		/// <summary>
@@ -140,7 +139,7 @@ namespace Epsitec.Cresus.Core.Print.Containers
 		/// Retourne la liste des rectangles occupés par l'objet sur chaque page.
 		/// </summary>
 		/// <param name="band">Objet à ajouter</param>
-		/// <param name="bottomMargin">Marge inférieure jusqu'à l'objet suivant</param>
+		/// <param name="bottomMargin">Marge inférieure jusqu'à l'objet suivant (placé en dessous)</param>
 		/// <returns>Rectangles occupés par l'objet sur chaque page</returns>
 		public List<Rectangle> AddFromTop(Bands.AbstractBand band, double bottomMargin)
 		{
@@ -148,7 +147,7 @@ namespace Epsitec.Cresus.Core.Print.Containers
 
 			double width  = this.pageSize.Width  - this.pageMargins.Left - this.pageMargins.Right;
 			double height = this.pageSize.Height - this.pageMargins.Top  - this.pageMargins.Bottom;
-			double rest = this.currentVerticalPosition - this.pageMargins.Bottom;
+			double rest = this.currentVerticalPositionFromTop - this.pageMargins.Bottom;
 
 			band.BuildSections (width, rest, height, height);
 
@@ -156,7 +155,7 @@ namespace Epsitec.Cresus.Core.Print.Containers
 			{
 				this.AddNewPage (PageType.Following);  // nouvelle page...
 
-				rest = this.currentVerticalPosition - this.pageMargins.Bottom;
+				rest = this.currentVerticalPositionFromTop - this.pageMargins.Bottom;
 				band.BuildSections (width, rest, height, height);  // ...et on essaie à nouveau
 			}
 
@@ -165,17 +164,17 @@ namespace Epsitec.Cresus.Core.Print.Containers
 			{
 				double requiredHeight = band.GetSectionHeight (section);
 
-				if (this.currentVerticalPosition - requiredHeight < this.pageMargins.Bottom)  // pas assez de place en bas ?
+				if (this.currentVerticalPositionFromTop - requiredHeight < this.pageMargins.Bottom)  // pas assez de place en bas ?
 				{
 					this.AddNewPage (PageType.Following);
 				}
 
-				this.pages[this.currentPage].AddBand (band, section, new Point (this.pageMargins.Left, this.currentVerticalPosition));
+				this.pages[this.currentPage].AddBand (band, section, new Point (this.pageMargins.Left, this.currentVerticalPositionFromTop));
 
-				var bounds = new Rectangle (this.pageMargins.Left, this.currentVerticalPosition-requiredHeight, width, requiredHeight);
+				var bounds = new Rectangle (this.pageMargins.Left, this.currentVerticalPositionFromTop-requiredHeight, width, requiredHeight);
 				list.Add (bounds);
 
-				this.currentVerticalPosition -= requiredHeight + bottomMargin;
+				this.currentVerticalPositionFromTop -= requiredHeight + bottomMargin;
 			}
 
 			return list;
@@ -183,24 +182,24 @@ namespace Epsitec.Cresus.Core.Print.Containers
 
 		/// <summary>
 		/// Ajoute un objet au bas d'une page. S'il n'y a pas assez de place, crée une nouvelle page.
-		/// On ne tient pas compte de la marge inférieure, qui peut donc sans problème être dépassée.
 		/// </summary>
 		/// <param name="band">Objet à ajouter</param>
-		/// <param name="bottomPosition">Position depuis le bas</param>
+		/// <param name="topMargin">Marge supérieur jusqu'à l'objet suivant (placé en dessus)</param>
 		/// <returns>Rectangle occupé par l'objet</returns>
-		public Rectangle AddToBottom(Bands.AbstractBand band, double bottomPosition)
+		public Rectangle AddFromBottom(Bands.AbstractBand band, double topMargin)
 		{
-			double width  = this.pageSize.Width  - this.pageMargins.Left - this.pageMargins.Right;
-
+			double width = this.pageSize.Width - this.pageMargins.Left - this.pageMargins.Right;
 			double h = band.RequiredHeight (width);
 
-			if (this.currentVerticalPosition-h < bottomPosition)  // pas assez de place ?
+			if (this.currentVerticalPositionFromBottom + h > this.currentVerticalPositionFromTop)  // pas assez de place ?
 			{
 				this.AddNewPage (PageType.Following);
 			}
 
-			Rectangle bounds = new Rectangle (this.pageMargins.Left, bottomPosition, width, h);
+			Rectangle bounds = new Rectangle (this.pageMargins.Left, this.currentVerticalPositionFromBottom, width, h);
 			this.AddAbsolute (band, bounds);
+
+			this.currentVerticalPositionFromBottom += h + topMargin;
 
 			return bounds;
 		}
@@ -221,15 +220,15 @@ namespace Epsitec.Cresus.Core.Print.Containers
 			}
 		}
 
-		public double CurrentVerticalPosition
+		public double CurrentVerticalPositionFromTop
 		{
 			get
 			{
-				return this.currentVerticalPosition;
+				return this.currentVerticalPositionFromTop;
 			}
 			set
 			{
-				this.currentVerticalPosition = value;
+				this.currentVerticalPositionFromTop = value;
 			}
 		}
 
@@ -332,7 +331,13 @@ namespace Epsitec.Cresus.Core.Print.Containers
 			this.pages.Add (new PageContainer (this.pages.Count, this.DocumentRank, pageType));  // crée une nouvelle page
 
 			this.currentPage = this.pages.Count-1;
-			this.currentVerticalPosition = this.pageSize.Height - this.pageMargins.Top;  // revient en haut
+			this.CurrentVerticalPositionsReset ();
+		}
+
+		private void CurrentVerticalPositionsReset()
+		{
+			this.currentVerticalPositionFromTop    = this.pageSize.Height - this.pageMargins.Top;     // on part en haut
+			this.currentVerticalPositionFromBottom =                        this.pageMargins.Bottom;  // on part en bas
 		}
 
 
@@ -340,6 +345,7 @@ namespace Epsitec.Cresus.Core.Print.Containers
 		private Size							pageSize;
 		private Margins							pageMargins;
 		private int								currentPage;
-		private double							currentVerticalPosition;
+		private double							currentVerticalPositionFromTop;
+		private double							currentVerticalPositionFromBottom;
 	}
 }
