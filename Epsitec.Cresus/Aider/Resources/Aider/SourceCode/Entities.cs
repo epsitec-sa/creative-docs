@@ -793,20 +793,64 @@ namespace Epsitec.Aider.Entities
 		///	designer:fld/LVAF/LVAI5
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[LVAI5]")]
-		public global::Epsitec.Aider.PersonReligion Confession
+		public global::Epsitec.Aider.PersonConfession Confession
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Aider.PersonReligion> ("[LVAI5]");
+				return this.GetField<global::Epsitec.Aider.PersonConfession> ("[LVAI5]");
 			}
 			set
 			{
-				global::Epsitec.Aider.PersonReligion oldValue = this.Confession;
+				global::Epsitec.Aider.PersonConfession oldValue = this.Confession;
 				if (oldValue != value || !this.IsFieldDefined("[LVAI5]"))
 				{
 					this.OnConfessionChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.PersonReligion> ("[LVAI5]", oldValue, value);
+					this.SetField<global::Epsitec.Aider.PersonConfession> ("[LVAI5]", oldValue, value);
 					this.OnConfessionChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Language</c> field.
+		///	designer:fld/LVAF/LVAO7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAO7]")]
+		public global::Epsitec.Aider.Language Language
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Language> ("[LVAO7]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Language oldValue = this.Language;
+				if (oldValue != value || !this.IsFieldDefined("[LVAO7]"))
+				{
+					this.OnLanguageChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Language> ("[LVAO7]", oldValue, value);
+					this.OnLanguageChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Prefession</c> field.
+		///	designer:fld/LVAF/LVAP7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAP7]")]
+		public string Prefession
+		{
+			get
+			{
+				return this.GetField<string> ("[LVAP7]");
+			}
+			set
+			{
+				string oldValue = this.Prefession;
+				if (oldValue != value || !this.IsFieldDefined("[LVAP7]"))
+				{
+					this.OnPrefessionChanging (oldValue, value);
+					this.SetField<string> ("[LVAP7]", oldValue, value);
+					this.OnPrefessionChanged (oldValue, value);
 				}
 			}
 		}
@@ -855,8 +899,12 @@ namespace Epsitec.Aider.Entities
 		partial void OnAdditionalAddress1Changed(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
 		partial void OnAdditionalAddress2Changing(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
 		partial void OnAdditionalAddress2Changed(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
-		partial void OnConfessionChanging(global::Epsitec.Aider.PersonReligion oldValue, global::Epsitec.Aider.PersonReligion newValue);
-		partial void OnConfessionChanged(global::Epsitec.Aider.PersonReligion oldValue, global::Epsitec.Aider.PersonReligion newValue);
+		partial void OnConfessionChanging(global::Epsitec.Aider.PersonConfession oldValue, global::Epsitec.Aider.PersonConfession newValue);
+		partial void OnConfessionChanged(global::Epsitec.Aider.PersonConfession oldValue, global::Epsitec.Aider.PersonConfession newValue);
+		partial void OnLanguageChanging(global::Epsitec.Aider.Language oldValue, global::Epsitec.Aider.Language newValue);
+		partial void OnLanguageChanged(global::Epsitec.Aider.Language oldValue, global::Epsitec.Aider.Language newValue);
+		partial void OnPrefessionChanging(string oldValue, string newValue);
+		partial void OnPrefessionChanged(string oldValue, string newValue);
 		partial void OnCommentChanging(string oldValue, string newValue);
 		partial void OnCommentChanged(string oldValue, string newValue);
 		
@@ -2145,28 +2193,6 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Event</c> field.
-		///	designer:fld/LVAA3/LVAB3
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAB3]")]
-		public global::Epsitec.Aider.Entities.AiderEventEntity Event
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Aider.Entities.AiderEventEntity> ("[LVAB3]");
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.AiderEventEntity oldValue = this.Event;
-				if (oldValue != value || !this.IsFieldDefined("[LVAB3]"))
-				{
-					this.OnEventChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Entities.AiderEventEntity> ("[LVAB3]", oldValue, value);
-					this.OnEventChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>Person</c> field.
 		///	designer:fld/LVAA3/LVAC3
 		///	</summary>
@@ -2185,6 +2211,28 @@ namespace Epsitec.Aider.Entities
 					this.OnPersonChanging (oldValue, value);
 					this.SetField<global::Epsitec.Aider.Entities.AiderPersonEntity> ("[LVAC3]", oldValue, value);
 					this.OnPersonChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Event</c> field.
+		///	designer:fld/LVAA3/LVAB3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAB3]")]
+		public global::Epsitec.Aider.Entities.AiderEventEntity Event
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderEventEntity> ("[LVAB3]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderEventEntity oldValue = this.Event;
+				if (oldValue != value || !this.IsFieldDefined("[LVAB3]"))
+				{
+					this.OnEventChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderEventEntity> ("[LVAB3]", oldValue, value);
+					this.OnEventChanged (oldValue, value);
 				}
 			}
 		}
@@ -2213,10 +2261,10 @@ namespace Epsitec.Aider.Entities
 		
 		partial void OnRoleChanging(global::Epsitec.Aider.EventParticipantRole oldValue, global::Epsitec.Aider.EventParticipantRole newValue);
 		partial void OnRoleChanged(global::Epsitec.Aider.EventParticipantRole oldValue, global::Epsitec.Aider.EventParticipantRole newValue);
-		partial void OnEventChanging(global::Epsitec.Aider.Entities.AiderEventEntity oldValue, global::Epsitec.Aider.Entities.AiderEventEntity newValue);
-		partial void OnEventChanged(global::Epsitec.Aider.Entities.AiderEventEntity oldValue, global::Epsitec.Aider.Entities.AiderEventEntity newValue);
 		partial void OnPersonChanging(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
 		partial void OnPersonChanged(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
+		partial void OnEventChanging(global::Epsitec.Aider.Entities.AiderEventEntity oldValue, global::Epsitec.Aider.Entities.AiderEventEntity newValue);
+		partial void OnEventChanged(global::Epsitec.Aider.Entities.AiderEventEntity oldValue, global::Epsitec.Aider.Entities.AiderEventEntity newValue);
 		partial void OnCommentChanging(string oldValue, string newValue);
 		partial void OnCommentChanged(string oldValue, string newValue);
 		
@@ -3326,6 +3374,28 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>Language</c> field.
+		///	designer:fld/LVAR6/LVAN7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAN7]")]
+		public global::Epsitec.Aider.Language Language
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Language> ("[LVAN7]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Language oldValue = this.Language;
+				if (oldValue != value || !this.IsFieldDefined("[LVAN7]"))
+				{
+					this.OnLanguageChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Language> ("[LVAN7]", oldValue, value);
+					this.OnLanguageChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnTypeChanging(global::Epsitec.Aider.LegalPersonType oldValue, global::Epsitec.Aider.LegalPersonType newValue);
 		partial void OnTypeChanged(global::Epsitec.Aider.LegalPersonType oldValue, global::Epsitec.Aider.LegalPersonType newValue);
@@ -3337,6 +3407,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnContact1Changed(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnContact2Changing(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnContact2Changed(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
+		partial void OnLanguageChanging(global::Epsitec.Aider.Language oldValue, global::Epsitec.Aider.Language newValue);
+		partial void OnLanguageChanged(global::Epsitec.Aider.Language oldValue, global::Epsitec.Aider.Language newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
