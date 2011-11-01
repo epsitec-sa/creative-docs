@@ -34,6 +34,8 @@ namespace Epsitec.Cresus.Core.Library.Documents
 			public static readonly Epsitec.Common.Types.StructuredType DocumentCategory = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 1));
 			//	designer:cap/HVAM1
 			public static readonly Epsitec.Common.Types.StructuredType DocumentCategoryMapping = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 54));
+			//	designer:cap/HVA62
+			public static readonly Epsitec.Common.Types.StructuredType DocumentFooterText = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 70));
 			//	designer:cap/HVA
 			public static readonly Epsitec.Common.Types.StructuredType DocumentMetadata = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
 			//	designer:cap/HVA2
@@ -480,6 +482,8 @@ namespace Epsitec.Cresus.Core.Library.Documents
 				
 				//	designer:cap/HVAJ1
 				public static readonly global::Epsitec.Common.Support.Druid DocumentFlowDirection = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 51);
+				//	designer:cap/HVA72
+				public static readonly global::Epsitec.Common.Support.Druid DocumentFooterTexts = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 71);
 				//	designer:cap/HVA8
 				public static readonly global::Epsitec.Common.Support.Druid DocumentOptions = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 8);
 				//	designer:cap/HVA9

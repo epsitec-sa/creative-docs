@@ -858,6 +858,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid CurrencyCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 40);
 				//	designer:cap/GVAB1
 				public static readonly global::Epsitec.Common.Support.Druid DebtorBookAccount = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 43);
+				//	designer:cap/GVAB9
+				public static readonly global::Epsitec.Common.Support.Druid FooterText = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 299);
 				//	designer:cap/GVA41
 				public static readonly global::Epsitec.Common.Support.Druid Lines = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 36);
 				//	designer:cap/GVA11

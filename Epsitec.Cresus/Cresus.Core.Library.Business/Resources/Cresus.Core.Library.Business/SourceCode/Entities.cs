@@ -1209,6 +1209,28 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>FooterText</c> field.
+		///	designer:fld/GVAT/GVAB9
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVAB9]")]
+		public global::Epsitec.Common.Types.FormattedText FooterText
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[GVAB9]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.FooterText;
+				if (oldValue != value || !this.IsFieldDefined("[GVAB9]"))
+				{
+					this.OnFooterTextChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[GVAB9]", oldValue, value);
+					this.OnFooterTextChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnBaseDocumentCodeChanging(string oldValue, string newValue);
 		partial void OnBaseDocumentCodeChanged(string oldValue, string newValue);
@@ -1234,6 +1256,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnPriceGroupChanged(global::Epsitec.Cresus.Core.Entities.PriceGroupEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceGroupEntity newValue);
 		partial void OnDebtorBookAccountChanging(string oldValue, string newValue);
 		partial void OnDebtorBookAccountChanged(string oldValue, string newValue);
+		partial void OnFooterTextChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnFooterTextChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
