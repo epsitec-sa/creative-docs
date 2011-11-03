@@ -16,6 +16,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			wall.AddBrick ()
 				.Input ()
+				  .Field (x => x.DefaultMailContact)
 				  .Field (x => x.FirstContactDate)
 				.End ()
 				.Separator ()
