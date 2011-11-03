@@ -331,7 +331,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 				if (!secondaryMailContactText.IsNullOrEmpty)
 				{
-					var fontSize = this.GetOptionValue (DocumentOption.FontSize);
+					var fontSize = this.GetOptionValue (DocumentOption.FooterSecondaryMailFontSize);
 
 					var band = new TextBand ();
 					band.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;

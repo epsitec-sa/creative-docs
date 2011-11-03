@@ -47,8 +47,10 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 					yield return option;
 				}
 
-				yield return DocumentOption.FooterTextFontSize;
 				yield return DocumentOption.FooterSecondaryMail;
+				yield return DocumentOption.FooterSecondaryMailFontSize;
+
+				yield return DocumentOption.FooterTextFontSize;
 
 				yield return DocumentOption.TableTopAfterHeader;
 				yield return DocumentOption.TableFontSize;
