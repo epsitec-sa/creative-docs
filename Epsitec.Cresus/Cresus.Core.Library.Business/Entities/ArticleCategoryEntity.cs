@@ -29,8 +29,8 @@ namespace Epsitec.Cresus.Core.Entities
 			{
 				a.Accumulate (this.Name.GetEntityStatus ());
 				a.Accumulate (this.UnitOfMeasureCategory == Business.UnitOfMeasureCategory.None ? EntityStatus.Empty : EntityStatus.Valid);
-				a.Accumulate (this.DefaultPictures);
-				a.Accumulate (this.Accounting, EntityStatusAccumulationMode.NoneIsInvalid);
+				a.Accumulate (this.DefaultPictures.Select (x => x.GetEntityStatus ()));
+				a.Accumulate (this.Accounting.Select (x => x.GetEntityStatus ()), EntityStatusAccumulationMode.NoneIsInvalid);
 
 				return a.EntityStatus;
 			}

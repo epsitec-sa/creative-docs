@@ -12,7 +12,7 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// </summary>
 	public enum EntityStatusAccumulationMode
 	{
-		NoneIsEmpty,
+		NoneIsValid,
 		NoneIsInvalid,
 	}
 }

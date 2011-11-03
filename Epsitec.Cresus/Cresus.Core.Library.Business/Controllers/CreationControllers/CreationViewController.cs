@@ -25,7 +25,16 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 		protected CreationViewController()
 		{
 			System.Diagnostics.Debug.Assert (this.Orchestrator != null);
-			System.Diagnostics.Debug.Assert (this.Orchestrator.Data.IsDummyEntity (this.Entity));
+//			System.Diagnostics.Debug.Assert (this.Orchestrator.Data.IsDummyEntity (this.Entity));
+		}
+
+
+		public bool IsDummyEntity
+		{
+			get
+			{
+				return this.Orchestrator.Data.IsDummyEntity (this.Entity);
+			}
 		}
 
 

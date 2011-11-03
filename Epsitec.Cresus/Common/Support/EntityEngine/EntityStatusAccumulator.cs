@@ -14,9 +14,8 @@ namespace Epsitec.Common.Support.EntityEngine
 {
 	public class EntityStatusAccumulator : IDisposable
 	{
-		public EntityStatusAccumulator(bool atLeastOne = false)
+		public EntityStatusAccumulator()
 		{
-			this.atLeastOne = atLeastOne;
 		}
 
 		
@@ -28,6 +27,37 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+
+
+		public static EntityStatus Union(params EntityStatus[] collection)
+		{
+			EntityStatus union = EntityStatus.None;
+
+			foreach (var item in collection)
+			{
+				union |= item;
+			}
+
+			return union;
+		}
+
+		public static EntityStatus Intersection(params EntityStatus[] collection)
+		{
+			if (collection.Length == 0)
+			{
+				return EntityStatus.None;
+			}
+
+			EntityStatus union = collection[0];
+
+			foreach (var item in collection)
+			{
+				union &= item;
+			}
+
+			return union;
+		}
+
 		
 		#region IDisposable Members
 
@@ -37,27 +67,17 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		#endregion
 
-		public void Accumulate(IEnumerable<EntityStatus> newStatus)
+		public void Accumulate(IEnumerable<EntityStatus> collection, EntityStatusAccumulationMode mode = EntityStatusAccumulationMode.NoneIsValid)
 		{
-			EntityStatus[] values;
-
-			if (this.currentStatusDefined)
-			{
-				values = Epsitec.Common.Types.Collections.Enumerable.FromItem (this.currentStatus).Concat (newStatus).ToArray ();
-			}
-			else
-			{
-				values = newStatus.ToArray ();
-			}
+			EntityStatus[] values = collection.ToArray ();
 
 			if (values.Length == 0)
 			{
-				System.Diagnostics.Debug.Assert (this.currentStatusDefined == false);
+				this.AccumulateEmptyStatus (mode);
 			}
 			else
 			{
-				this.currentStatus      = EntityStatusAccumulator.CombineStatus (this.atLeastOne, values);
-				this.currentStatusDefined = true;
+				this.Accumulate (EntityStatusAccumulator.CombineStatus (values));
 			}
 		}
 
@@ -65,7 +85,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			if (this.currentStatusDefined)
 			{
-				this.currentStatus = EntityStatusAccumulator.CombineStatus (this.atLeastOne, this.currentStatus, newStatus);
+				this.currentStatus = EntityStatusAccumulator.CombineStatus (this.currentStatus, newStatus);
 			}
 			else
 			{
@@ -74,77 +94,51 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		public void Accumulate(AbstractEntity entity, EntityStatusAccumulationMode mode = EntityStatusAccumulationMode.NoneIsEmpty)
+		public void Accumulate(AbstractEntity entity, EntityStatusAccumulationMode mode = EntityStatusAccumulationMode.NoneIsValid)
 		{
-			var realEntity = entity.UnwrapNullEntity ();
-
-			if (realEntity == null)
+			if (entity.UnwrapNullEntity () == null)
 			{
-				this.Accumulate (mode == EntityStatusAccumulationMode.NoneIsEmpty ? EntityStatus.Empty : EntityStatus.None);
+				this.AccumulateEmptyStatus (mode);
 			}
 			else
 			{
-				this.Accumulate (realEntity.GetEntityStatus ());
-			}
-		}
-
-		public void Accumulate(IEnumerable<AbstractEntity> entities, EntityStatusAccumulationMode mode = EntityStatusAccumulationMode.NoneIsEmpty)
-		{
-			var array = entities.ToArray ();
-
-			if (array.Length == 0)
-			{
-				this.Accumulate (mode == EntityStatusAccumulationMode.NoneIsEmpty ?	EntityStatus.Empty : EntityStatus.None);
-			}
-			else
-			{
-				this.Accumulate (entities.Select (x => x.GetEntityStatus ()));
+				this.Accumulate (entity.GetEntityStatus ());
 			}
 		}
 
 
 
-		private static EntityStatus CombineStatus(bool atLeastOne, params EntityStatus[] newStatus)
+		private void AccumulateEmptyStatus(EntityStatusAccumulationMode mode)
 		{
-			if (newStatus == null || newStatus.Length == 0)
+			switch (mode)
+			{
+				case EntityStatusAccumulationMode.NoneIsInvalid:
+					this.Accumulate (EntityStatus.Empty);
+					break;
+
+				case EntityStatusAccumulationMode.NoneIsValid:
+					this.Accumulate (EntityStatus.Empty | EntityStatus.Valid);
+					break;
+
+				default:
+					throw new System.NotSupportedException ("Invalid mode specified");
+			}
+		}
+		private static EntityStatus CombineStatus(params EntityStatus[] status)
+		{
+			if (status == null || status.Length == 0)
 			{
 				return EntityStatus.Empty;
 			}
 
-			//	S'il existe un seul invalide, tout est considéré comme invalide.
-			if (newStatus.Any (x => x == EntityStatus.None))
-			{
-				return EntityStatus.None;  // invalide
-			}
+			var union        = EntityStatusAccumulator.Union (status);
+			var intersection = EntityStatusAccumulator.Intersection (status);
 
-			//	Si tout est vide, on dit que c'est vide.
-			if (newStatus.All (x => x.HasFlag (EntityStatus.Empty)))
-			{
-				return EntityStatus.Empty;
-			}
-
-			if (atLeastOne)
-			{
-				//	Si un seul est valide, on dit que c'est valide.
-				if (newStatus.Any (x => x.HasFlag (EntityStatus.Valid)))
-				{
-					return EntityStatus.Valid;
-				}
-			}
-			else
-			{
-				//	Si tout est valide, on dit que c'est valide.
-				if (newStatus.All (x => x.HasFlag (EntityStatus.Valid)))
-				{
-					return EntityStatus.Valid;
-				}
-			}
-
-			return EntityStatus.None;  // invalide
+			return
+				(union & EntityStatus.PartiallyCreated) |
+				(intersection & EntityStatus.Empty) |
+				(intersection & EntityStatus.Valid);
 		}
-
-
-		private readonly bool					atLeastOne;
 
 		private bool							currentStatusDefined;
 		private EntityStatus					currentStatus;

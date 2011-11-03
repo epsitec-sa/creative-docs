@@ -399,22 +399,12 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		private void OnAddClicked(MessageEventArgs e)
 		{
-			var handler = this.AddClicked;
-			
-			if (handler != null)
-			{
-				handler (this, e);
-			}
+			this.AddClicked.Raise (this, e);
 		}
 
 		private void OnRemoveClicked(MessageEventArgs e)
 		{
-			var handler = this.RemoveClicked;
-
-			if (handler != null)
-			{
-				handler (this, e);
-			}
+			this.RemoveClicked.Raise (this, e);
 		}
 		
 		static TitleTile()

@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .Title ("Description du chantier").Field (x => x.Description)
 				  .Field (x => x.Groups)
 				.End ()
-				.Include (x => x.Person)
+				.Include (x => x.Person)	//	TODO: Include pas possible si x.Person pas initialisé au préalable !
 				;
 		}
 	}

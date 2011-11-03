@@ -16,5 +16,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		Empty = 0x01,
 		Valid = 0x02,
+
+		PartiallyCreated = 0x04,
 	}
 }

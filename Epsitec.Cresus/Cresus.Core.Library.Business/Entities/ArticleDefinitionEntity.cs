@@ -44,11 +44,11 @@ namespace Epsitec.Cresus.Core.Entities
 
 				a.Accumulate (this.Name.GetEntityStatus ());
 				a.Accumulate (this.Description.GetEntityStatus ().TreatAsOptional ());
-				a.Accumulate (this.ArticleGroups);
+				a.Accumulate (this.ArticleGroups.Select (x => x.GetEntityStatus ()));
 				a.Accumulate (this.ArticleCategory, EntityStatusAccumulationMode.NoneIsInvalid);
-				a.Accumulate (this.ArticlePrices);
+				a.Accumulate (this.ArticlePrices.Select (x => x.GetEntityStatus ()));
 				a.Accumulate (this.Units, EntityStatusAccumulationMode.NoneIsInvalid);
-				a.Accumulate (this.Comments);
+				a.Accumulate (this.Comments.Select (x => x.GetEntityStatus ()));
 
 				return a.EntityStatus;
 			}

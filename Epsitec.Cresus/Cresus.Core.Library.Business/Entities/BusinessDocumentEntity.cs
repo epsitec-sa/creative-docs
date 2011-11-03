@@ -126,7 +126,8 @@ namespace Epsitec.Cresus.Core.Entities
 				//a.Accumulate (this.IdC.GetEntityStatus ().TreatAsOptional ());
 
 				//a.Accumulate (this.DocumentTitle.GetEntityStatus ());
-				a.Accumulate (/*EntityStatus.Empty | */EntityStatus.Valid); // this.Description.GetEntityStatus ();
+				//a.Accumulate (this.Description.GetEntityStatus ();
+				a.Accumulate (this.CurrencyCode == Business.Finance.CurrencyCode.None ? EntityStatus.Empty : EntityStatus.Valid);
 				a.Accumulate (this.Lines.Select (x => x.GetEntityStatus ()));
 				//a.Accumulate (this.Comments.Select (x => x.GetEntityStatus ()));
 
