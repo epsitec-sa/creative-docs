@@ -13,11 +13,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<ArticleCategoryEntity> wall)
 		{
-			wall.AddBrick (x => x);
-
-			wall.AddBrick (x => x.Accounting)
-				.Template ()
-				.End ()
+			wall.AddBrick (x => x)
 				;
 		}
 	}

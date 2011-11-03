@@ -26,6 +26,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .Field (x => x.DefaultPictures)
 				  .Field (x => x.RoundingMode)
 				  .Field (x => x.NeverApplyDiscount)
+				  .Field (x => x.Accounting)
 				.End ()
 				;
 		}
