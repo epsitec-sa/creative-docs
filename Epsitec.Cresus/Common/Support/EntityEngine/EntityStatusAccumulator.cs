@@ -120,6 +120,10 @@ namespace Epsitec.Common.Support.EntityEngine
 					this.Accumulate (EntityStatus.Empty | EntityStatus.Valid);
 					break;
 
+				case EntityStatusAccumulationMode.NoneIsPartiallyCreated:
+					this.Accumulate (EntityStatus.PartiallyCreated);
+					break;
+
 				default:
 					throw new System.NotSupportedException ("Invalid mode specified");
 			}

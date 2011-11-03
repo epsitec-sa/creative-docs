@@ -32,5 +32,17 @@ namespace Epsitec.Cresus.Core.Entities
 				return TextFormatter.FormatText ("vide").ApplyItalic ();
 			}
 		}
+
+		public override EntityStatus GetEntityStatus()
+		{
+			using (var a = new EntityStatusAccumulator ())
+			{
+				a.Accumulate (this.Name.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.Description.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.Person, EntityStatusAccumulationMode.NoneIsPartiallyCreated);
+
+				return a.EntityStatus;
+			}
+		}
 	}
 }

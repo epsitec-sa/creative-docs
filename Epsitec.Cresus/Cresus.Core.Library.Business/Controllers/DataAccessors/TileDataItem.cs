@@ -495,6 +495,11 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				var entity = marshaler.GetValue<AbstractEntity> ();
 				var mode   = this.DefaultMode;
 
+				if (entity.IsEntityPartiallyCreated)
+				{
+					mode = ViewControllerMode.Creation;
+				}
+
 				var converter = this.EntityMarshalerConverter;
 
 				if (converter != null)

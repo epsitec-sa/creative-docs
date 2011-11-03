@@ -14,5 +14,6 @@ namespace Epsitec.Common.Support.EntityEngine
 	{
 		NoneIsValid,
 		NoneIsInvalid,
+		NoneIsPartiallyCreated,
 	}
 }
