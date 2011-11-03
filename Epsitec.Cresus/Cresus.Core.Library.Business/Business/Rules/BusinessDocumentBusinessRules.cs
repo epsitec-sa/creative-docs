@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core.Business.Finance;
 using Epsitec.Cresus.Core.Business.Finance.PriceCalculators;
 using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Extensions;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -340,6 +341,32 @@ namespace Epsitec.Cresus.Core.Business.Rules
 						subTotal.Discount.RoundingMode   = customerDiscount.RoundingMode;
 
 						businessDocument.Lines.Add (subTotal);
+					}
+				}
+			}
+		}
+
+		public static void InitializeFooterText(BusinessContext businessContext, DocumentMetadataEntity metaData)
+		{
+			//	Initialise le texte de pied de page par défaut. L'utilisateur peut le changer
+			//	par la suite.
+			var businessDocument = metaData.BusinessDocument as BusinessDocumentEntity;
+			
+			if (businessDocument != null)
+			{
+				var example = new DocumentCategoryEntity ();
+				example.DocumentType = metaData.DocumentCategory.DocumentType;
+
+				DocumentCategoryEntity documentCategory = businessContext.DataContext.GetByExample<DocumentCategoryEntity> (example).FirstOrDefault ();
+
+				if (documentCategory != null)
+				{
+					var now = System.DateTime.Now;
+					var documentFooterText = documentCategory.DocumentFooterTexts.Where (x => !x.Description.IsNullOrEmpty && now.InRange (x)).FirstOrDefault ();
+
+					if (documentFooterText != null)
+					{
+						businessDocument.FooterText = documentFooterText.Description;
 					}
 				}
 			}
