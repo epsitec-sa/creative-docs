@@ -230,6 +230,14 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		public bool IsEntityPartiallyCreated
+		{
+			get
+			{
+				return this.GetEntityStatus ().HasFlag (EntityStatus.PartiallyCreated);
+			}
+		}
+
 		public virtual EntityStatus GetEntityStatus()
 		{
 			return EntityStatus.None;
