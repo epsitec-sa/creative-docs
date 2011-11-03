@@ -67,6 +67,10 @@ namespace Epsitec.Cresus.Core.Documents
 		HeaderLocDateFontSize,			// dimension: taille de la police
 
 		FooterTextFontSize,				// dimension: taille de la police
+		FooterSecondaryMail,			// bool
+
+		Signing,						// bool
+		SigningFontSize,				// dimension: taille de la police
 
 		TableTopAfterHeader,			// distance
 		TableFontSize,					// dimension: taille de la police
@@ -85,9 +89,6 @@ namespace Epsitec.Cresus.Core.Documents
 		IsrPosition,					// enum: WithInside, WithOutside, Without
 		IsrType,						// enum: Isr, Is
 		IsrFacsimile,					// bool
-
-		Signing,						// bool
-		SigningFontSize,				// dimension: taille de la police
 
 		RelationMail,					// bool
 		RelationTelecom,				// bool

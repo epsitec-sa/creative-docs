@@ -102,14 +102,5 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			yield return ArticleQuantityType.Delayed;			// retardé
 			yield return ArticleQuantityType.Expected;			// attendu
 		}
-
-		public override bool PrintSecondaryMailContact
-		{
-			//	Indique s'il faut imprimer l'adresse secondaire.
-			get
-			{
-				return false;
-			}
-		}
 	}
 }

@@ -84,8 +84,6 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				yield return DocumentOption.HeaderLocDateWidth;
 				yield return DocumentOption.HeaderLocDateHeight;
 				yield return DocumentOption.HeaderLocDateFontSize;
-
-				yield return DocumentOption.FooterTextFontSize;
 			}
 		}
 
@@ -322,20 +320,26 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				band.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;
 				band.Text = this.Entity.FooterText;
 				band.FontSize = fontSize;
-				
+
 				this.documentContainer.AddFromBottom (band, 5);
 			}
 
-			if (!this.documentLogic.SecondaryMailContactText.IsNullOrEmpty)
+			if (this.ExistingOption (DocumentOption.FooterSecondaryMail) &&
+				this.HasOption      (DocumentOption.FooterSecondaryMail))
 			{
-				var fontSize = this.GetOptionValue (DocumentOption.FontSize);
+				var secondaryMailContactText = this.documentLogic.SecondaryMailContactText;
 
-				var band = new TextBand ();
-				band.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;
-				band.Text = this.documentLogic.SecondaryMailContactText;
-				band.FontSize = fontSize;
+				if (!secondaryMailContactText.IsNullOrEmpty)
+				{
+					var fontSize = this.GetOptionValue (DocumentOption.FontSize);
 
-				this.documentContainer.AddFromBottom (band, 5);
+					var band = new TextBand ();
+					band.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;
+					band.Text = secondaryMailContactText;
+					band.FontSize = fontSize;
+
+					this.documentContainer.AddFromBottom (band, 5);
+				}
 			}
 		}
 
@@ -1574,6 +1578,44 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 		}
 
 
+		public bool ExistingOption(DocumentOption option)
+		{
+			//	Retourne true si une option existe pour le type du document en cours (this).
+			var options = BusinessDocumentPrinter.GetRequiredDocumentOptions (this.Metadata.DocumentCategory.DocumentType);
+
+			return options != null && options.Contains (option);
+		}
+
+		public static IEnumerable<DocumentOption> GetRequiredDocumentOptions(DocumentType documentType)
+		{
+			switch (documentType)
+			{
+				case DocumentType.SalesQuote:
+					return SalesQuoteDocumentPrinter.RequiredDocumentOptions;
+
+				case DocumentType.OrderBooking:
+					return OrderBookingDocumentPrinter.RequiredDocumentOptions;
+
+				case DocumentType.OrderConfirmation:
+					return OrderConfirmationDocumentPrinter.RequiredDocumentOptions;
+
+				case DocumentType.ProductionOrder:
+					return ProductionOrderDocumentPrinter.RequiredDocumentOptions;
+
+				case DocumentType.ProductionChecklist:
+					return ProductionChecklistDocumentPrinter.RequiredDocumentOptions;
+
+				case DocumentType.DeliveryNote:
+					return DeliveryNoteDocumentPrinter.RequiredDocumentOptions;
+
+				case DocumentType.Invoice:
+					return InvoiceDocumentPrinter.RequiredDocumentOptions;
+			}
+
+			return null;
+		}
+
+
 		#region Factory Class
 
 		private class Factory : IEntityPrinterFactory
@@ -1594,8 +1636,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			{
 				var documentMetadata = entity as DocumentMetadataEntity;
 
-				if ((documentMetadata != null) &&
-					(documentMetadata.DocumentCategory.IsNotNull ()))
+				if (documentMetadata != null && documentMetadata.DocumentCategory.IsNotNull ())
 				{
 					return documentMetadata.DocumentCategory.DocumentType;
 				}
@@ -1636,31 +1677,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 			public IEnumerable<DocumentOption> GetRequiredDocumentOptions(DocumentType documentType)
 			{
-				switch (documentType)
-				{
-					case DocumentType.SalesQuote:
-						return SalesQuoteDocumentPrinter.RequiredDocumentOptions;
-
-					case DocumentType.OrderBooking:
-						return OrderBookingDocumentPrinter.RequiredDocumentOptions;
-
-					case DocumentType.OrderConfirmation:
-						return OrderConfirmationDocumentPrinter.RequiredDocumentOptions;
-
-					case DocumentType.ProductionOrder:
-						return ProductionOrderDocumentPrinter.RequiredDocumentOptions;
-
-					case DocumentType.ProductionChecklist:
-						return ProductionChecklistDocumentPrinter.RequiredDocumentOptions;
-
-					case DocumentType.DeliveryNote:
-						return DeliveryNoteDocumentPrinter.RequiredDocumentOptions;
-
-					case DocumentType.Invoice:
-						return InvoiceDocumentPrinter.RequiredDocumentOptions;
-				}
-
-				return null;
+				return BusinessDocumentPrinter.GetRequiredDocumentOptions (documentType);
 			}
 
 			public IEnumerable<PageType> GetRequiredPageTypes(DocumentType documentType)

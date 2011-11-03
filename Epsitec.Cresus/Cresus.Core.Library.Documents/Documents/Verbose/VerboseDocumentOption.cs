@@ -297,9 +297,6 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 
 			list.Add (new VerboseDocumentOption (DocumentOption.Specimen, "Global.2", true, "Incruste la mention SPECIMEN", "Incruste la mention SPECIMEN en grand, au travers de la page", 0));
 
-			list.Add (new VerboseDocumentOption (DocumentOption.Signing,         "Global.3", true,  "Cartouche pour visa avec signature", "Cartouche pour visa avec signature au bas de la page", 1));
-			list.Add (new VerboseDocumentOption (DocumentOption.SigningFontSize, "Global.3", true, DocumentOptionValueType.Distance, "Cartouche, taille police", "Taille de la police du cartouche au bas de la page", "3"));
-
 			e = new string[] { "default", "fr", "de", "en", "ot" };
 			d = new string[] { "Par défaut", "Français", "Allemand", "Anglais", "Italien" };
 			list.Add (new VerboseDocumentOption (DocumentOption.Language, "Global.4", true, e, d, "Langue", "Langue dans laquelle sera imprimé le document", 0));
@@ -349,8 +346,12 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 			//	Ajoute les options pour le pied de page.
 			list.Add (new VerboseDocumentOption ("Pied de page", "Footer"));
 
-			list.Add (new VerboseDocumentOption (DocumentOption.FooterTextFontSize, "Footer.1", true, DocumentOptionValueType.Size, "Texte, taille police", "Taille de la police du texte de pied de page", "3"));
+			list.Add (new VerboseDocumentOption (DocumentOption.FooterSecondaryMail, "Footer.1", true, "Adresse secondaire", "Met l'adresse secondaire (de livraison ou de facturation) dans le pied de page", 1));
+			list.Add (new VerboseDocumentOption (DocumentOption.FooterTextFontSize,  "Footer.1", true, DocumentOptionValueType.Size, "Texte, taille police", "Taille de la police du texte de pied de page", "3"));
 			
+			list.Add (new VerboseDocumentOption (DocumentOption.Signing,            "Footer.2", true,                                   "Cartouche pour visa avec signature", "Cartouche pour visa avec signature au bas de la page", 1));
+			list.Add (new VerboseDocumentOption (DocumentOption.SigningFontSize,    "Footer.2", true, DocumentOptionValueType.Distance, "Cartouche, taille police",           "Taille de la police du cartouche au bas de la page",   "3"));
+
 			//	Ajoute les options pour les listes.
 			list.Add (new VerboseDocumentOption ("Aspect des listes", "LayoutFrame"));
 
