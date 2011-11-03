@@ -42,11 +42,15 @@ namespace Epsitec.Cresus.Core.Factories
 		/// <param name="entity">The entity to bind to.</param>
 		/// <param name="mode">The controller mode.</param>
 		/// <param name="orchestrator">The orchestrator.</param>
+		/// <param name="parentController">The parent controller.</param>
 		/// <param name="controllerSubTypeId">The controller sub-type ID.</param>
 		/// <param name="navigationPathElement">The navigation path element.</param>
-		/// <returns>The <see cref="EntityViewController"/> if one could be found.</returns>
+		/// <param name="resolutionMode">The resolution mode.</param>
+		/// <returns>
+		/// The <see cref="EntityViewController"/> if one could be found.
+		/// </returns>
 		/// <exception cref="System.InvalidOperationException">Throws <see cref="System.InvalidOperationException"/> if no controller could be found.</exception>
-		public static EntityViewController Create(string name, AbstractEntity entity, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator,
+		public static EntityViewController Create(string name, AbstractEntity entity, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController,
 			int?                  controllerSubTypeId   = null,
 			NavigationPathElement navigationPathElement = null,
 			ResolutionMode        resolutionMode        = ResolutionMode.ThrowOnError)
@@ -66,6 +70,7 @@ namespace Epsitec.Cresus.Core.Factories
 					Mode = mode,
 					ControllerSubTypeId = controllerSubTypeId,
 					NavigationPathElement = navigationPathElement,
+					ParentController = parentController,
 					ControllerName = name,
 					ResolutionMode = resolutionMode,
 					Entity = entity,
@@ -90,6 +95,12 @@ namespace Epsitec.Cresus.Core.Factories
 		public sealed class DefaultSettings
 		{
 			public DataViewOrchestrator			Orchestrator
+			{
+				get;
+				set;
+			}
+
+			public CoreViewController			ParentController
 			{
 				get;
 				set;

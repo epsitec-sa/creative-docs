@@ -37,11 +37,19 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 		private void SetupNaturalPerson(BusinessContext context, OtherRelationEntity otherRelation)
 		{
 			otherRelation.Person = context.CreateEntity<NaturalPersonEntity> ();
+
+//			var pathElements = this.GetControllerChain ().Reverse ().Select (x => x.NavigationPathElement).ToArray ();
+
+			this.ReopenSubView ();
 		}
 
 		private void SetupLegalPerson(BusinessContext context, OtherRelationEntity otherRelation)
 		{
 			otherRelation.Person = context.CreateEntity<LegalPersonEntity> ();
+
+//			var pathElements = this.GetControllerChain ().Reverse ().Select (x => x.NavigationPathElement).ToArray ();
+
+			this.ReopenSubView ();
 		}
 	}
 }

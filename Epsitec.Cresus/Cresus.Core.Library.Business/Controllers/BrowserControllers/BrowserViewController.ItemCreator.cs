@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 				System.Diagnostics.Debug.Assert (dummyEntity != null);
 
-				var controller = EntityViewControllerFactory.Create ("ItemCreation", dummyEntity, ViewControllerMode.Creation, this.orchestrator,
+				var controller = EntityViewControllerFactory.Create ("ItemCreation", dummyEntity, ViewControllerMode.Creation, this.orchestrator, null,
 																	 resolutionMode: Resolvers.ResolutionMode.NullOnError);
 				var creator    = controller as ICreationController;
 

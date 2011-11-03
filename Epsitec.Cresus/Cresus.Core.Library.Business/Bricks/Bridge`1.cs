@@ -220,7 +220,7 @@ namespace Epsitec.Cresus.Core.Bricks
 			//	Create the controller for the included subview, which will represent the entity
 			//	pointed to by the expression :
 
-			var sub = EntityViewControllerFactory.Create (name, entity, ViewControllerMode.Edition, this.controller.Orchestrator);
+			var sub = EntityViewControllerFactory.Create (name, entity, ViewControllerMode.Edition, this.controller.Orchestrator, this.controller);
 
 			this.controller.AddUIController (sub);
 		}

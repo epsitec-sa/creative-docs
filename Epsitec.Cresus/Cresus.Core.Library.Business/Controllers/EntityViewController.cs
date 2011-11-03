@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				defaultSummary.ToggleSubView (this.Orchestrator, this);
 			}
 		}
-		
+
 		protected void ReopenSubView(params NavigationPathElement[] elements)
 		{
 			var orchestrator = this.Orchestrator;

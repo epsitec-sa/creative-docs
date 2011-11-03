@@ -482,7 +482,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		
 		#region ITileController Members
 
-		EntityViewController ITileController.CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator, NavigationPathElement navigationPathElement)
+		EntityViewController ITileController.CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController, NavigationPathElement navigationPathElement)
 		{
 			var marshaler = this.EntityMarshaler;
 			
@@ -509,7 +509,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 				navigationPathElement = new TileNavigationPathElement (this.Name);
 
-				var controller = EntityViewControllerFactory.Create ("ViewController", entity, mode, orchestrator, controllerSubTypeId: this.ControllerSubTypeId, navigationPathElement: navigationPathElement);
+				var controller = EntityViewControllerFactory.Create ("ViewController", entity, mode, orchestrator, parentController, controllerSubTypeId: this.ControllerSubTypeId, navigationPathElement: navigationPathElement);
 
 				return controller;
 			}

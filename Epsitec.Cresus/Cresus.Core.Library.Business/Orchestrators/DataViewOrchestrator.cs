@@ -186,7 +186,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 				this.activeEntityKey = entityKey;
 
 				var liveEntity = this.businessContext.ActiveEntity;
-				var controller = EntityViewControllerFactory.Create ("Root", liveEntity, ViewControllerMode.Summary, this, navigationPathElement: navigationPathElement);
+				var controller = EntityViewControllerFactory.Create ("Root", liveEntity, ViewControllerMode.Summary, this, null, navigationPathElement: navigationPathElement);
 
 				this.ShowSubView (null, controller);
 			}
@@ -200,7 +200,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 				if (this.CanSetActiveEntity (entityKey, navigationPathElement))
 				{
 					var liveEntity = this.businessContext.ActiveEntity;
-					var controller = EntityViewControllerFactory.Create ("Root", liveEntity, ViewControllerMode.Summary, this, navigationPathElement: navigationPathElement);
+					var controller = EntityViewControllerFactory.Create ("Root", liveEntity, ViewControllerMode.Summary, this, null, navigationPathElement: navigationPathElement);
 
 					this.ShowSubView (null, controller);
 				}

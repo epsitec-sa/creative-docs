@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				this.orchestrator          = EntityViewControllerFactory.Default.Orchestrator;
 				this.viewControllerMode    = EntityViewControllerFactory.Default.Mode;
 				this.navigationPathElement = EntityViewControllerFactory.Default.NavigationPathElement;
-				this.parentController      = this.orchestrator.GetLeafViewController ();
+				this.parentController      = EntityViewControllerFactory.Default.ParentController; // this.orchestrator.GetLeafViewController ();
 			}
 
 			//	Make sure we create the default business context :

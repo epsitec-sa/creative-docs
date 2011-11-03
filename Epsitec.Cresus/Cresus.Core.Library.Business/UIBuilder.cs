@@ -270,9 +270,9 @@ namespace Epsitec.Cresus.Core
 			
 			#region ITileController Members
 
-			public EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator, NavigationPathElement navigationPathElement)
+			public EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController, NavigationPathElement navigationPathElement)
 			{
-				return EntityViewControllerFactory.Create (typeof (T).Name, this.entity, this.mode, orchestrator,
+				return EntityViewControllerFactory.Create (typeof (T).Name, this.entity, this.mode, orchestrator, parentController,
 					navigationPathElement: this.navigationPathElement,
 					controllerSubTypeId: this.controllerSubType);
 			}
@@ -1544,7 +1544,7 @@ namespace Epsitec.Cresus.Core
 								var newValue  = referenceController.CreateNewValue (controller.DataContext);
 								var newEntity = newValue.GetEditionEntity ();
 								var refEntity = newValue.GetReferenceEntity ();
-								var newController = EntityViewControllerFactory.Create ("Creation", newEntity, newValue.CreationControllerMode, controller.Orchestrator, navigationPathElement: navPath);
+								var newController = EntityViewControllerFactory.Create ("Creation", newEntity, newValue.CreationControllerMode, controller.Orchestrator, controller, navigationPathElement: navPath);
 								tile.OpenSubView (controller.Orchestrator, controller, newController);
 								editor.SelectedItemIndex = editor.Items.Add (refEntity);
 								valueSetter (refEntity);
@@ -1783,9 +1783,9 @@ namespace Epsitec.Cresus.Core
 
 			#region ITileController Members
 
-			public EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator, NavigationPathElement navigationPathElement)
+			public EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController, NavigationPathElement navigationPathElement)
 			{
-				return this.referenceController.CreateSubViewController (orchestrator, navigationPathElement);
+				return this.referenceController.CreateSubViewController (orchestrator, parentController, navigationPathElement);
 			}
 
 			#endregion

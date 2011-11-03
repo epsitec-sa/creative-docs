@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Core.Server
 
 		public static BrickWall GetBrickWall(AbstractEntity entity, ViewControllerMode mode)
 		{
-			var controller = EntityViewControllerFactory.Create ("js", entity, mode, null, resolutionMode: Resolvers.ResolutionMode.InspectOnly);
+			var controller = EntityViewControllerFactory.Create ("js", entity, mode, null, null, resolutionMode: Resolvers.ResolutionMode.InspectOnly);
 			var brickWall  = controller.CreateBrickWallForInspection ();
 
 			brickWall.BrickAdded += HandleBrickWallBrickAdded;

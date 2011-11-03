@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.Controllers
 	/// The <c>ReferenceController</c> class manages how following a reference will
 	/// behave in the data view.
 	/// </summary>
-	public class ReferenceController
+	public class ReferenceController : ITileController
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ReferenceController"/> class.
@@ -151,11 +151,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator, NavigationPathElement navigationPathElement)
+		public EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController, NavigationPathElement navigationPathElement)
 		{
 			var entity = ReferenceController.Apply (this.entityGetter (), this.entityMapper);
 			var mode   = this.Mode;
-			var ctrl   = EntityViewControllerFactory.Create ("ReferenceViewController", entity, mode, orchestrator, navigationPathElement: navigationPathElement);
+			var ctrl   = EntityViewControllerFactory.Create ("ReferenceViewController", entity, mode, orchestrator, parentController, navigationPathElement: navigationPathElement);
 
 			return ctrl;
 		}

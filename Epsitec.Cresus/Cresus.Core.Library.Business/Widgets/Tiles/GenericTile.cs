@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		public void OpenSubView(Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController, CoreViewController subViewController = null, NavigationPathElement navigationPathElement = null)
 		{
-			var controller = subViewController ?? this.CreateSubViewController (orchestrator, navigationPathElement);
+			var controller = subViewController ?? this.CreateSubViewController (orchestrator, parentController, navigationPathElement);
 
 			if (controller != null)
 			{
@@ -206,7 +206,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			this.tileArrow.MouseHilite = this.GetMouseHilite ();
 		}
 
-		private EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator, NavigationPathElement navigationPathElement)
+		private EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController, NavigationPathElement navigationPathElement)
 		{
 			if (this.Controller == null)
 			{
@@ -214,7 +214,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 			else
 			{
-				return this.Controller.CreateSubViewController (orchestrator, navigationPathElement);
+				return this.Controller.CreateSubViewController (orchestrator, parentController, navigationPathElement);
 			}
 		}
 		

@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Core.Orchestrators.Navigation;
@@ -14,8 +14,11 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// Creates a sub view controller for the item.
 		/// </summary>
 		/// <param name="orchestrator">The orchestrator.</param>
+		/// <param name="parentController">The parent controller.</param>
 		/// <param name="navigationPathElement">The navigation path element.</param>
-		/// <returns>The sub view controller.</returns>
-		EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator, NavigationPathElement navigationPathElement);
+		/// <returns>
+		/// The sub view controller.
+		/// </returns>
+		EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController, NavigationPathElement navigationPathElement);
 	}
 }
