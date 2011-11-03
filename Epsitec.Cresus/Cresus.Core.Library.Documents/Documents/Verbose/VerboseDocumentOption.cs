@@ -33,9 +33,32 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 			this.Group            = group;
 			this.IsGlobal         = isGlobal;
 			this.Type             = type;
+			this.IsBoolean        = false;
 			this.ShortDescription = shortDescription;
 			this.LongDescription  = longDescription;
 			this.DefaultValue     = defaultValue;
+		}
+
+		private VerboseDocumentOption(DocumentOption option, string group, bool isGlobal, string shortDescription, string longDescription, int defaultIndex)
+		{
+			var enumeration = new List<string> ();
+			enumeration.Add ("false");
+			enumeration.Add ("true");
+
+			var enumerationDescription = new List<string> ();
+			enumerationDescription.Add ("Non");
+			enumerationDescription.Add ("Oui");
+
+			this.Option                 = option;
+			this.Group                  = group;
+			this.IsGlobal               = isGlobal;
+			this.Type                   = DocumentOptionValueType.Enumeration;
+			this.IsBoolean              = true;
+			this.Enumeration            = enumeration;
+			this.EnumerationDescription = enumerationDescription;
+			this.ShortDescription       = shortDescription;
+			this.LongDescription        = longDescription;
+			this.DefaultValue           = enumeration.ElementAt (defaultIndex);
 		}
 
 		private VerboseDocumentOption(DocumentOption option, string group, bool isGlobal, IEnumerable<string> enumeration, IEnumerable<string> enumerationDescription, string shortDescription, string longDescription, int defaultIndex)
@@ -47,6 +70,7 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 			this.Group                  = group;
 			this.IsGlobal               = isGlobal;
 			this.Type                   = DocumentOptionValueType.Enumeration;
+			this.IsBoolean              = false;
 			this.Enumeration            = enumeration;
 			this.EnumerationDescription = enumerationDescription;
 			this.ShortDescription       = shortDescription;
@@ -72,7 +96,47 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 			private set;
 		}
 
+		public string SimiliType
+		{
+			get
+			{
+				if (this.IsBoolean)
+				{
+					return "bool";
+				}
+				else
+				{
+					switch (this.Type)
+					{
+						case DocumentOptionValueType.Enumeration:
+							return "enum";
+
+						case DocumentOptionValueType.Distance:
+							return "distance";
+
+						case DocumentOptionValueType.Size:
+							return "size";
+
+						case DocumentOptionValueType.Text:
+							return "text";
+
+						case DocumentOptionValueType.TextMultiline:
+							return "textMultiline";
+
+						default:
+							return "undefined";
+					}
+				}
+			}
+		}
+
 		public IEnumerable<string> Enumeration
+		{
+			get;
+			private set;
+		}
+
+		public bool IsBoolean
 		{
 			get;
 			private set;
@@ -231,10 +295,10 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 
 			list.Add (new VerboseDocumentOption (DocumentOption.FontSize, "Global.1", true, DocumentOptionValueType.Size, "Taille de la police", "Taille de la police par défaut", "3"));
 
-			list.Add (new VerboseDocumentOption (DocumentOption.Specimen, "Global.2", true, DocumentOptionValueType.Boolean, "Incruste la mention SPECIMEN", "Incruste la mention SPECIMEN en grand, au travers de la page", "false"));
+			list.Add (new VerboseDocumentOption (DocumentOption.Specimen, "Global.2", true, "Incruste la mention SPECIMEN", "Incruste la mention SPECIMEN en grand, au travers de la page", 0));
 
-			list.Add (new VerboseDocumentOption (DocumentOption.Signing,         "Global.3", true, DocumentOptionValueType.Boolean,  "Cartouche pour visa avec signature", "Cartouche pour visa avec signature au bas de la page", "true"));
-			list.Add (new VerboseDocumentOption (DocumentOption.SigningFontSize, "Global.3", true, DocumentOptionValueType.Distance, "Cartouche, taille police",           "Taille de la police du cartouche au bas de la page",   "3"));
+			list.Add (new VerboseDocumentOption (DocumentOption.Signing,         "Global.3", true,  "Cartouche pour visa avec signature", "Cartouche pour visa avec signature au bas de la page", 1));
+			list.Add (new VerboseDocumentOption (DocumentOption.SigningFontSize, "Global.3", true, DocumentOptionValueType.Distance, "Cartouche, taille police", "Taille de la police du cartouche au bas de la page", "3"));
 
 			e = new string[] { "default", "fr", "de", "en", "ot" };
 			d = new string[] { "Par défaut", "Français", "Allemand", "Anglais", "Italien" };
@@ -243,7 +307,7 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 			//	Ajoute les options pour l'en-tête.
 			list.Add (new VerboseDocumentOption ("En-tête", "Header"));
 
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderSender,             "Header.1", true, DocumentOptionValueType.Boolean, "Imprime le bloc de l'expéditeur", "Imprime le bloc de l'expéditeur comprenant le logo et l'adresse de l'entreprise", "true"));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderSender,             "Header.1", true, "Imprime le bloc de l'expéditeur", "Imprime le bloc de l'expéditeur comprenant le logo et l'adresse de l'entreprise", 1));
 																					      
 			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLogoLeft,           "Header.2", true, DocumentOptionValueType.Distance, "Logo, pos. gauche",                      "Position depuis la gauche du logo", "10"));
 			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLogoTop,            "Header.2", true, DocumentOptionValueType.Distance, "Logo, pos. sup.",                        "Position depuis le haut du logo",   "10"));
@@ -268,7 +332,7 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 			list.Add (new VerboseDocumentOption (DocumentOption.HeaderNumberWidth,        "Header.5", true, DocumentOptionValueType.Distance, "Numéro document, largeur",               "Largeur pour le numéro du document",              "100"));
 			list.Add (new VerboseDocumentOption (DocumentOption.HeaderNumberHeight,       "Header.5", true, DocumentOptionValueType.Distance, "Numéro document, hauteur",               "Hauteur pour le numéro du document",              "10"));
 			list.Add (new VerboseDocumentOption (DocumentOption.HeaderNumberFontSize,     "Header.5", true, DocumentOptionValueType.Size,     "Numéro document, taille police",         "Taille de la police du numéro du document",       "4.8"));
-			list.Add (new VerboseDocumentOption (DocumentOption.HeaderNumberIncludeOwner, "Header.5", true, DocumentOptionValueType.Boolean,  "Numéro document, inclure collaborateur", "Inclure le numéro du collaborateur propriétaire de l'affaire", "true"));
+			list.Add (new VerboseDocumentOption (DocumentOption.HeaderNumberIncludeOwner, "Header.5", true,                                   "Numéro document, inclure collaborateur", "Inclure le numéro du collaborateur propriétaire de l'affaire", 1));
 																					      																						        
 			list.Add (new VerboseDocumentOption (DocumentOption.HeaderToLeft,             "Header.6", true, DocumentOptionValueType.Distance, "Destinataire, pos. gauche",              "Position depuis la gauche de l'adresse du destinataire", "120"));
 			list.Add (new VerboseDocumentOption (DocumentOption.HeaderToTop,              "Header.6", true, DocumentOptionValueType.Distance, "Destinataire, pos. sup.",                "Position depuis le haut de l'adresse du destinataire",   "50"));
@@ -297,7 +361,7 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 			d = new string[] { "Espacé, sans encadrements", "Espacé, avec des lignes de séparation", "Serré, avec des encadrements" };
 			list.Add (new VerboseDocumentOption (DocumentOption.LayoutFrame, "LayoutFrame.2", true, e, d, "Cadre", "Type du cadre des listes", 1));
 
-			list.Add (new VerboseDocumentOption (DocumentOption.GapBeforeGroup, "LayoutFrame.3", true, DocumentOptionValueType.Boolean, "Interligne supplémentaire entre les groupes", "Interligne supplémentaire entre les groupes, dans les listes", "true"));
+			list.Add (new VerboseDocumentOption (DocumentOption.GapBeforeGroup, "LayoutFrame.3", true, "Interligne supplémentaire entre les groupes", "Interligne supplémentaire entre les groupes, dans les listes", 1));
 
 			list.Add (new VerboseDocumentOption (DocumentOption.IndentWidth, "LayoutFrame.4", true, DocumentOptionValueType.Distance, "Longueur à indenter par niveau", "Longueur à indenter par niveau, dans les listes", "3"));
 
@@ -312,7 +376,7 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 			d = new string[] { "N'imprime pas les autres quantités", "Autres quantités dans une colonne spécifique", "Toutes les quantités ensembles", "Autres quantités avec les désignations", "Autres quantités réparties" };
 			list.Add (new VerboseDocumentOption (DocumentOption.ArticleAdditionalQuantities, "BusinessDocument.2", false, e, d, "Imprime les autres quantités", null, 0));
 
-			list.Add (new VerboseDocumentOption (DocumentOption.ArticleId, "BusinessDocument.2", false, DocumentOptionValueType.Boolean, "Imprime les identificateurs d'article", "Imprime les identificateurs ou numéros d'article", "false"));
+			list.Add (new VerboseDocumentOption (DocumentOption.ArticleId, "BusinessDocument.2", false, "Imprime les identificateurs d'article", "Imprime les identificateurs ou numéros d'article", 0));
 
 			e = new string[] { "QD", "DQ" };
 			d = new string[] { "Quantité, Désignation, Prix", "Désignation, Quantité, Prix" };
@@ -329,14 +393,14 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 			d = new string[] { "BV orange", "BV rose" };
 			list.Add (new VerboseDocumentOption (DocumentOption.IsrType, "Invoice.2", false, e, d, "Type de bulletin de versement", null, 0));
 
-			list.Add (new VerboseDocumentOption (DocumentOption.IsrFacsimile, "Invoice.3", true, DocumentOptionValueType.Boolean, "Fac-similé complet du BV", "Fac-similé complet du BV. Lorsqu'on utilise du papier avec BV préimprimé, cette option ne doit pas être cochée.", "true"));
+			list.Add (new VerboseDocumentOption (DocumentOption.IsrFacsimile, "Invoice.3", true, "Fac-similé complet du BV", "Fac-similé complet du BV. Lorsqu'on utilise du papier avec BV préimprimé, cette option ne doit pas être cochée.", 1));
 
 			//	Ajoute les options pour les clients.
 			list.Add (new VerboseDocumentOption ("Fiche résumée d'un client", "Relation"));
 
-			list.Add (new VerboseDocumentOption (DocumentOption.RelationMail,    "Relation.1", false, DocumentOptionValueType.Boolean,  "Inclure les adresses",   "Inclure les adresses postales",      "true"));
-			list.Add (new VerboseDocumentOption (DocumentOption.RelationTelecom, "Relation.1", false, DocumentOptionValueType.Boolean,  "Inclure les téléphones", "Inclure les numéros de téléphones",  "true"));
-			list.Add (new VerboseDocumentOption (DocumentOption.RelationUri,     "Relation.1", false, DocumentOptionValueType.Boolean,  "Inclure les emails",     "Inclure les adresses électroniques", "true"));
+			list.Add (new VerboseDocumentOption (DocumentOption.RelationMail,    "Relation.1", false, "Inclure les adresses",   "Inclure les adresses postales",      1));
+			list.Add (new VerboseDocumentOption (DocumentOption.RelationTelecom, "Relation.1", false, "Inclure les téléphones", "Inclure les numéros de téléphones",  1));
+			list.Add (new VerboseDocumentOption (DocumentOption.RelationUri,     "Relation.1", false, "Inclure les emails",     "Inclure les adresses électroniques", 1));
 
 			VerboseDocumentOption.allOptions = list;
 		}

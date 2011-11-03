@@ -267,7 +267,7 @@ namespace Epsitec.Cresus.Core.Documents
 			description = option.ShortDescription;
 			value = useDefaultValue ? option.DefaultValue : this[option.Option];
 
-			if (option.Type == DocumentOptionValueType.Boolean)
+			if (option.IsBoolean)
 			{
 				if (value == "false")
 				{
