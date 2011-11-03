@@ -127,13 +127,27 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 		}
 
-		public virtual MailContactEntity SecondaryMailContact
+		public virtual bool PrintSecondaryMailContact
+		{
+			//	Indique s'il faut imprimer l'adresse secondaire.
+			get
+			{
+				return true;
+			}
+		}
+
+		public MailContactEntity SecondaryMailContact
 		{
 			//	Retourne l'adresse secondaire.
 			//	C'est l'adresse de livraison qui est utilisée pour tous les documents, sauf le
 			//	BL (DeliveryNote) qui utilise l'adresse de facturation.
 			get
 			{
+				if (!this.PrintSecondaryMailContact)
+				{
+					return null;
+				}
+
 				var businessDocument = this.BusinessDocument;
 				var mailContact = this.PrimaryMailContact;
 

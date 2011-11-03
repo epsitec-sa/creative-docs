@@ -84,6 +84,8 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				yield return DocumentOption.HeaderLocDateWidth;
 				yield return DocumentOption.HeaderLocDateHeight;
 				yield return DocumentOption.HeaderLocDateFontSize;
+
+				yield return DocumentOption.FooterTextFontSize;
 			}
 		}
 
@@ -314,14 +316,25 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			//	Ajoute le pied de page dans le document.
 			if (!this.Entity.FooterText.IsNullOrEmpty)
 			{
-				//?var fontSize = this.GetOptionValue (DocumentOption.FooterFontSize);
-				var fontSize = this.GetOptionValue (DocumentOption.SigningFontSize);
+				var fontSize = this.GetOptionValue (DocumentOption.FooterTextFontSize);
 
 				var band = new TextBand ();
 				band.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;
 				band.Text = this.Entity.FooterText;
 				band.FontSize = fontSize;
 				
+				this.documentContainer.AddFromBottom (band, 5);
+			}
+
+			if (!this.documentLogic.SecondaryMailContactText.IsNullOrEmpty)
+			{
+				var fontSize = this.GetOptionValue (DocumentOption.FontSize);
+
+				var band = new TextBand ();
+				band.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;
+				band.Text = this.documentLogic.SecondaryMailContactText;
+				band.FontSize = fontSize;
+
 				this.documentContainer.AddFromBottom (band, 5);
 			}
 		}

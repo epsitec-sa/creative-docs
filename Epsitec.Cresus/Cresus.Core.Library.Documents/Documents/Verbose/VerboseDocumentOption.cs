@@ -281,6 +281,11 @@ namespace Epsitec.Cresus.Core.Documents.Verbose
 			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLocDateWidth,       "Header.7", true, DocumentOptionValueType.Distance, "Localité et date, largeur",              "Largeur du bloc \"localité et date\"",                   "80"));
 			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLocDateHeight,      "Header.7", true, DocumentOptionValueType.Distance, "Localité et date, hauteur",              "Hauteur du bloc \"localité et date\"",                   "10"));
 			list.Add (new VerboseDocumentOption (DocumentOption.HeaderLocDateFontSize,    "Header.7", true, DocumentOptionValueType.Size,     "Localité et date, taille police",        "Taille de la police du bloc \"localité et date\"",       "3"));
+
+			//	Ajoute les options pour le pied de page.
+			list.Add (new VerboseDocumentOption ("Pied de page", "Footer"));
+
+			list.Add (new VerboseDocumentOption (DocumentOption.FooterTextFontSize, "Footer.1", true, DocumentOptionValueType.Size, "Texte, taille police", "Taille de la police du texte de pied de page", "3"));
 			
 			//	Ajoute les options pour les listes.
 			list.Add (new VerboseDocumentOption ("Aspect des listes", "LayoutFrame"));

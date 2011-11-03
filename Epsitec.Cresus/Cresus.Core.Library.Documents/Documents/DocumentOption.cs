@@ -66,6 +66,8 @@ namespace Epsitec.Cresus.Core.Documents
 		HeaderLocDateHeight,			// distance
 		HeaderLocDateFontSize,			// dimension: taille de la police
 
+		FooterTextFontSize,				// dimension: taille de la police
+
 		TableTopAfterHeader,			// distance
 		TableFontSize,					// dimension: taille de la police
 		

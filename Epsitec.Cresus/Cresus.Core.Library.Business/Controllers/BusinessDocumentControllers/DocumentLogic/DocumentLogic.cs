@@ -260,16 +260,22 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Retourne le texte monoligne de l'adresse secondaire.
 			get
 			{
-				var mail = this.SecondaryMailContact;
+				var mail    = this.SecondaryMailContact;
+				var primary = this.PrimaryMailContact;
 
-				if (mail == null)
+				if (mail != null && mail != primary)
 				{
-					return FormattedText.Empty;
+					if (mail == this.BusinessDocument.BillToMailContact)
+					{
+						return FormattedText.Concat ("Adresse de facturation: ", mail.GetCompactSummary ());
+					}
+					else
+					{
+						return FormattedText.Concat ("Adresse de livraison: ", mail.GetCompactSummary ());
+					}
 				}
-				else
-				{
-					return mail.GetCompactSummary ();
-				}
+
+				return FormattedText.Empty;
 			}
 		}
 
