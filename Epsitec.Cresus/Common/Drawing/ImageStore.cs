@@ -331,7 +331,12 @@ namespace Epsitec.Common.Drawing
 				try
 				{
 					ImageRecord record = new ImageRecord (item);
-					this.records.Add (record);
+					
+					if ((record.SourceHeight > 8) &&
+						(record.SourceWidth > 8))
+					{
+						this.records.Add (record);
+					}
 				}
 				catch
 				{
@@ -356,7 +361,11 @@ namespace Epsitec.Common.Drawing
 
 					foreach (ImageRecord record in this.records)
 					{
-						source.Add (record.ToString ());
+						if ((record.SourceHeight > 8) &&
+							(record.SourceWidth > 8))
+						{
+							source.Add (record.ToString ());
+						}
 					}
 
 					System.IO.File.WriteAllLines (this.GetCacheJournalPath (), source.ToArray ());
