@@ -1,61 +1,76 @@
 ﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+
+using Epsitec.Common.IO;
+
 using Epsitec.Cresus.Core.Server.NancyComponents;
+
+using System;
+
+using System.IO;
+
+using System.Runtime.InteropServices;
+
 
 namespace Epsitec.Cresus.Core.Server
 {
+
+	
 	public sealed class CoreServerProgram
 	{
+
+
 		public CoreServerProgram()
 		{
-			IconsBuilder.BuildIcons (@"S:\Epsitec\experimental-js\webcore\");
+			CoreServerProgram.Initialize ();
 
-			RunNancy ();
-
-			//	TODO: wait until the server shuts down...
+			ConsoleCreator.RunWithConsole (() => CoreServerProgram.Run ());
 		}
 
-		private static void RunNancy()
+
+		private static void Initialize()
 		{
-			CoreServerProgram.RunSelf ();
-			//CoreServerProgram.RunWcf ();
-			//System.Threading.Thread.Sleep (60*1000);
+			IconsBuilder.BuildIcons (CoreServerProgram.iconDirectory.FullName);
 		}
 
-		private static void RunSelf()
+
+		private static void Run()
 		{
-			var coreHost = new CoreHost (BaseUri);
-			coreHost.Start ();
+			var uri = CoreServerProgram.baseUri;
+			var nbThreads = CoreServerProgram.nbThreads;
+			
+			Console.WriteLine ("Launching nancy server...");
 
-			System.Console.WriteLine ("Nancy now listening - navigate to {0}", BaseUri);
+			using (var nancyServer = new NancyServer (uri, nbThreads))
+			{
+				nancyServer.Start ();
 
-			//coreHost.Stop ();
-			coreHost.Join ();
+				Console.WriteLine ("Nancy server running and listening to " + uri + "");
+				Console.WriteLine ("Press [ENTER] to shut down");
+				Console.ReadLine ();
+
+				Console.WriteLine ("Shutting down nancy server...");
+
+				nancyServer.Stop ();
+			}
+
+			Console.WriteLine ("Nancy server shut down");
+			Console.WriteLine ("Press [ENTER] to exit");
+			Console.ReadLine ();
 		}
 
-		// Does not work
-		//private static void RunWcf()
-		//{
-		//    using (CreateAndOpenWebServiceHost ())
-		//    {
-		//        System.Console.WriteLine ("Service is now running on: {0}", BaseUri);
-		//    }
 
-		////    CreateAndOpenWebServiceHost ();
-		////    System.Console.WriteLine ("Service is now running on: {0}", BaseUri);
-		//}
+		private static readonly DirectoryInfo iconDirectory = new DirectoryInfo ("S:\\webcore\\");
 
-		//private static WebServiceHost CreateAndOpenWebServiceHost()
-		//{
-		//    var host = new WebServiceHost (new NancyWcfGenericService (), BaseUri);
 
-		//    host.AddServiceEndpoint (typeof (NancyWcfGenericService), new WebHttpBinding (), "");
-		//    host.Open ();
+		private static readonly Uri baseUri = new Uri ("http://localhost:12345/");
 
-		//    return host;
-		//}
 
-		private static readonly System.Uri BaseUri = new System.Uri ("http://localhost:12345/");
+		private static readonly int nbThreads = 3;
+
+
 	}
+
+
 }
