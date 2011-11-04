@@ -4,6 +4,7 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
+using Epsitec.Common.Types.Converters;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
@@ -18,17 +19,18 @@ using Epsitec.Cresus.DataLayer.Context;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Core.Factories;
+using System.Drawing;
 
 namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 {
 	/// <summary>
 	/// Ce contrôleur gère la définition des paramètres d'un article.
 	/// </summary>
-	public class SpecialArticleParameterListEnumValuesController : IEntitySpecialController
+	public class SpecialArticleParameterListEnumValuesController : IEntitySpecialController, IWidgetUpdater
 	{
 		public SpecialArticleParameterListEnumValuesController(TileContainer tileContainer, EnumValueArticleParameterDefinitionEntity parameterEntity)
 		{
-			this.tileContainer = tileContainer;
+			this.tileContainer   = tileContainer;
 			this.parameterEntity = parameterEntity;
 
 			this.enumValues = new List<EnumValue> ();
@@ -39,15 +41,18 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 		{
 			this.isReadOnly = isReadOnly;
 
+			//	On s'enregistre, pour que la liste se mette à jour lors d'un changement de langue.
+			this.tileContainer.Add (this);
+
 			this.InitialiseEnumValuesList ();
 
 			//	Crée la liste.
 			var listContainer = new FrameBox
 			{
-				Parent = parent,
+				Parent          = parent,
 				PreferredHeight = Library.UI.Constants.TinyButtonSize+3+124+2+TileArrow.Breadth,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, Library.UI.Constants.RightMargin, 2, 0),
+				Dock            = DockStyle.Top,
+				Margins         = new Margins (0, Library.UI.Constants.RightMargin, 2, 0),
 			};
 
 			this.listController = new ListController<EnumValue> (this.enumValues, this.ListControllerItemToText, this.ListControllerGetTextInfo, this.ListControllerCreateItem);
@@ -61,78 +66,92 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 			//	Crée l'édition de la valeur.
 			this.valueLabel = new StaticText
 			{
-				Parent = parent,
-				Text = "Valeur :",
+				Parent        = parent,
+				Text          = "Valeur :",
 				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, Library.UI.Constants.RightMargin, 0, Library.UI.Constants.MarginUnderLabel),
+				Dock          = DockStyle.Top,
+				Margins       = new Margins (0, Library.UI.Constants.RightMargin, 0, Library.UI.Constants.MarginUnderLabel),
 			};
 
 			this.valueField = new TextFieldEx
 			{
-				Parent = parent,
-				IsReadOnly = isReadOnly,
+				Parent          = parent,
+				IsReadOnly      = isReadOnly,
 				PreferredHeight = 20,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, Library.UI.Constants.RightMargin, 0, Library.UI.Constants.MarginUnderTextField),
-				TabIndex = 3,
-				DefocusAction = DefocusAction.AcceptEdition,
+				Dock            = DockStyle.Top,
+				Margins         = new Margins (0, Library.UI.Constants.RightMargin, 0, Library.UI.Constants.MarginUnderTextField),
+				TabIndex        = 3,
+				DefocusAction   = DefocusAction.AcceptEdition,
 			};
 
 			//	Crée l'édition de la description courte.
 			this.shortDescriptionLabel = new StaticText
 			{
-				Parent = parent,
-				Text = "Description courte :",
+				Parent        = parent,
+				Text          = "Description courte :",
 				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, Library.UI.Constants.RightMargin, 0, Library.UI.Constants.MarginUnderLabel),
+				Dock          = DockStyle.Top,
+				Margins       = new Margins (0, Library.UI.Constants.RightMargin, 0, Library.UI.Constants.MarginUnderLabel),
 			};
 
 			this.shortDescriptionField = new TextFieldEx
 			{
-				Parent = parent,
-				IsReadOnly = isReadOnly,
+				Parent          = parent,
+				IsReadOnly      = isReadOnly,
 				PreferredHeight = 20,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, Library.UI.Constants.RightMargin, 0, Library.UI.Constants.MarginUnderTextField),
-				TabIndex = 4,
-				DefocusAction = DefocusAction.AcceptEdition,
+				Dock            = DockStyle.Top,
+				Margins         = new Margins (0, Library.UI.Constants.RightMargin, 0, Library.UI.Constants.MarginUnderTextField),
+				TabIndex        = 4,
+				DefocusAction   = DefocusAction.AcceptEdition,
 			};
+
+			{
+				var marshaler = Marshaler.Create (() => this.SelectedShortDescription, x => this.SelectedShortDescription = x);
+				var controller = new TextValueController (marshaler);
+				controller.Attach (this.shortDescriptionField);
+				this.tileContainer.Add (controller);
+			}
 
 			//	Crée l'édition de la description longue.
 			this.longDescriptionLabel = new StaticText
 			{
-				Parent = parent,
-				Text = "Description longue :",
+				Parent	      = parent,
+				Text	      = "Description longue :",
 				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, Library.UI.Constants.RightMargin, 0, Library.UI.Constants.MarginUnderLabel),
+				Dock          = DockStyle.Top,
+				Margins       = new Margins (0, Library.UI.Constants.RightMargin, 0, Library.UI.Constants.MarginUnderLabel),
 			};
 
 			this.longDescriptionField = new TextFieldMultiEx
 			{
-				Parent = parent,
-				IsReadOnly = isReadOnly,
-				PreferredHeight = 78,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, Library.UI.Constants.RightMargin, 0, Library.UI.Constants.MarginUnderTextField),
-				TabIndex = 5,
-				DefocusAction = DefocusAction.AcceptEdition,
+				Parent             = parent,
+				IsReadOnly         = isReadOnly,
+				PreferredHeight    = 78,
+				Dock               = DockStyle.Top,
+				Margins            = new Margins (0, Library.UI.Constants.RightMargin, 0, Library.UI.Constants.MarginUnderTextField),
+				TabIndex           = 5,
+				DefocusAction      = DefocusAction.AcceptEdition,
 				ScrollerVisibility = false,
-				PreferredLayout = TextFieldMultiExPreferredLayout.PreserveScrollerHeight,
+				PreferredLayout    = TextFieldMultiExPreferredLayout.PreserveScrollerHeight,
 			};
+
+			{
+				var marshaler = Marshaler.Create (() => this.SelectedLongDescription, x => this.SelectedLongDescription = x);
+				var controller = new TextValueController (marshaler);
+				controller.Attach (this.longDescriptionField);
+				this.tileContainer.Add (controller);
+			}
 
 			//	Créer le bouton pour la valeur par défaut.
 			this.defaultButton = new CheckButton
 			{
-				Parent = parent,
-				Enable = !isReadOnly,
-				Text = "Cette valeur est la valeur par défaut",
+				Parent     = parent,
+				Enable     = !isReadOnly,
+				Text       = "Cette valeur est la valeur par défaut",
 				AutoToggle = false,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, Library.UI.Constants.RightMargin, 5, Library.UI.Constants.MarginUnderTextField),
-				TabIndex = 6,
+				Dock       = DockStyle.Top,
+				Margins    = new Margins (0, Library.UI.Constants.RightMargin, 5, Library.UI.Constants.MarginUnderTextField),
+				TabIndex   = 6,
 			};
 
 			//	Connecte tous les événements.
@@ -149,16 +168,6 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 			this.valueField.EditionAccepted += delegate
 			{
 				this.SelectedValue = this.valueField.Text;
-			};
-
-			this.shortDescriptionField.EditionAccepted += delegate
-			{
-				this.SelectedShortDescription = this.shortDescriptionField.Text;
-			};
-
-			this.longDescriptionField.EditionAccepted += delegate
-			{
-				this.SelectedLongDescription = this.longDescriptionField.Text;
 			};
 
 			this.defaultButton.Clicked += delegate
@@ -187,10 +196,8 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 
 		private void UpdateFields()
 		{
-			this.valueField.Text                     = this.SelectedValue;
-			this.shortDescriptionField.FormattedText = this.SelectedShortDescription;
-			this.longDescriptionField.FormattedText  = this.SelectedLongDescription;
-			this.defaultButton.ActiveState           = this.SelectedDefaultValue ? ActiveState.Yes : ActiveState.No;
+			this.valueField.Text           = this.SelectedValue;
+			this.defaultButton.ActiveState = this.SelectedDefaultValue ? ActiveState.Yes : ActiveState.No;
 		}
 
 		private void UpdateButtons()
@@ -378,7 +385,9 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 			else
 			{
 				icon = (enumValue.Value == this.parameterEntity.DefaultValue) ? "Button.RadioYes" : "Button.RadioNo";
-				text = TextFormatter.FormatText (enumValue.Value, "(", enumValue.ShortDescription, ",~", enumValue.LongDescription.Lines.FirstOrDefault (), ")");
+				var sd = this.GetMonolingualText (enumValue.ShortDescription);
+				var ld = this.GetMonolingualFirstLine (enumValue.LongDescription);
+				text = TextFormatter.FormatText (enumValue.Value, "(", sd, ",~", ld, ")");
 			}
 
 			return string.Concat (Misc.GetResourceIconImageTag (icon, -4), " ", text);
@@ -406,6 +415,33 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 		}
 		#endregion
 
+		#region IWidgetUpdater Members
+		public void Update()
+		{
+			this.listController.UpdateList ();
+		}
+		#endregion
+
+		private FormattedText GetMonolingualFirstLine(FormattedText text)
+		{
+			if (!text.IsNullOrEmpty)
+			{
+				text = this.GetMonolingualText (text);
+
+				if (!text.IsNullOrEmpty)
+				{
+					text = text.Lines.FirstOrDefault ();
+				}
+			}
+
+			return text;
+		}
+
+		private FormattedText GetMonolingualText(FormattedText text)
+		{
+			return TextFormatter.GetMonolingualText (text, Library.UI.Services.Settings.CultureForData.TwoLetterISOLanguageName);
+		}
+
 
 		private class Factory : DefaultEntitySpecialControllerFactory<EnumValueArticleParameterDefinitionEntity>
 		{
@@ -417,19 +453,19 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 
 
 	
-		private readonly TileContainer tileContainer;
-		private readonly EnumValueArticleParameterDefinitionEntity parameterEntity;
+		private readonly TileContainer								tileContainer;
+		private readonly EnumValueArticleParameterDefinitionEntity	parameterEntity;
 
-		private ListController<EnumValue> listController;
-		private StaticText valueLabel;
-		private StaticText shortDescriptionLabel;
-		private StaticText longDescriptionLabel;
-		private TextFieldEx valueField;
-		private TextFieldEx shortDescriptionField;
-		private TextFieldMultiEx longDescriptionField;
-		private CheckButton defaultButton;
+		private ListController<EnumValue>							listController;
+		private StaticText											valueLabel;
+		private StaticText											shortDescriptionLabel;
+		private StaticText											longDescriptionLabel;
+		private TextFieldEx											valueField;
+		private TextFieldEx											shortDescriptionField;
+		private TextFieldMultiEx									longDescriptionField;
+		private CheckButton											defaultButton;
 
-		private List<EnumValue> enumValues;
-		private bool isReadOnly;
+		private List<EnumValue>										enumValues;
+		private bool												isReadOnly;
 	}
 }
