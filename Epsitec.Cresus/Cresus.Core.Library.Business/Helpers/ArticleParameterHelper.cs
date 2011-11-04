@@ -60,7 +60,9 @@ namespace Epsitec.Cresus.Core.Helpers
 						//	Un paramètre est remplacé par sa seule valeur, sans unité si elle est numérique, ou par les descriptions
 						//	séparées par des virgules s'il s'agit d'une énumération.
 						//	TODO: Il faudra faire mieux un jour...
-						subst = string.Join (", ", ArticleParameterHelper.GetEnumDescriptions (parameter as EnumValueArticleParameterDefinitionEntity, dico[name]));
+
+						string twoLetterISOLanguageName = MultilingualText.GetTwoLetterISOLanguageName (value, index);
+						subst = string.Join (", ", ArticleParameterHelper.GetEnumDescriptions (parameter as EnumValueArticleParameterDefinitionEntity, dico[name], twoLetterISOLanguageName));
 					}
 				}
 
@@ -71,15 +73,16 @@ namespace Epsitec.Cresus.Core.Helpers
 			return value;
 		}
 
-		private static IEnumerable<FormattedText> GetEnumDescriptions(EnumValueArticleParameterDefinitionEntity parameter, string values)
+		private static IEnumerable<FormattedText> GetEnumDescriptions(EnumValueArticleParameterDefinitionEntity parameter, string values, string twoLetterISOLanguageName)
 		{
-			//	Si 'parameter' est une énumération, retourne la description la plus complète possible, pour une série
-			//	de valeurs données.
+			//	Si 'parameter' est une énumération, retourne la description la plus complète possible, dans une
+			//	langue à choix, pour une série de valeurs données.
 			string[] list = (values ?? "").Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
 
 			foreach (var value in list)
 			{
-				yield return ArticleParameterHelper.GetEnumDescription (parameter, value);
+				var description = ArticleParameterHelper.GetEnumDescription (parameter, value);
+				yield return TextFormatter.GetMonolingualText (description, twoLetterISOLanguageName);
 			}
 		}
 

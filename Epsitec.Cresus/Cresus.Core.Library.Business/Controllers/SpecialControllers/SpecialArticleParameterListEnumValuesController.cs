@@ -415,6 +415,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 		}
 		#endregion
 
+
 		#region IWidgetUpdater Members
 		public void Update()
 		{
@@ -422,8 +423,10 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 		}
 		#endregion
 
+
 		private FormattedText GetMonolingualFirstLine(FormattedText text)
 		{
+			//	Retourne la première ligne d'un texte dans la langue courante.
 			if (!text.IsNullOrEmpty)
 			{
 				text = this.GetMonolingualText (text);
@@ -439,6 +442,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 
 		private FormattedText GetMonolingualText(FormattedText text)
 		{
+			//	Retourne un texte dans la langue courante.
 			return TextFormatter.GetMonolingualText (text, Library.UI.Services.Settings.CultureForData.TwoLetterISOLanguageName);
 		}
 

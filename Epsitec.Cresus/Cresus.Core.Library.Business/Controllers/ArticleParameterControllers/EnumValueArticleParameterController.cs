@@ -47,17 +47,17 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				var label = new StaticText
 				{
 					Parent = parent,
-					Text = "<i>Enunmération vide</i>",
-					Dock = DockStyle.Fill,
+					Text   = "<i>Enunmération vide</i>",
+					Dock   = DockStyle.Fill,
 				};
 			}
 			else if (enumCount == 1)
 			{
 				var button = new CheckButton
 				{
-					Parent = parent,
+					Parent        = parent,
 					FormattedText = shortDescriptions[0],
-					Dock = DockStyle.Fill,
+					Dock          = DockStyle.Fill,
 				};
 
 				if (parameterValues.Length != 0 && !string.IsNullOrEmpty (parameterValues[0]))
@@ -81,11 +81,11 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				//	Ligne éditable.
 				this.editor = new ItemPickerCombo
 				{
-					Parent = parent,
+					Parent          = parent,
 					MenuButtonWidth = buttonWidth,
-					Cardinality = enumParameter.Cardinality,
-					Dock = DockStyle.Fill,
-					TabIndex = 1,
+					Cardinality     = enumParameter.Cardinality,
+					Dock            = DockStyle.Fill,
+					TabIndex        = 1,
 				};
 
 				//	Initialise le menu des valeurs.

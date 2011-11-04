@@ -356,6 +356,43 @@ namespace Epsitec.Common.Types
 			return text.GetGlobalText ();
 		}
 
+
+		/// <summary>
+		/// Retourne la langue ("*", "de", "en", etc.) en fonction d'un index dans un texte multilingue.
+		/// Par exemple:
+		/// <div lang="de">Hans</div><div lang="en">John</div>
+		///                  ^                        ^
+		///             index=17 -> "de"         index=42 -> "en"
+		/// </summary>
+		/// <param name="text">Multilingual text</param>
+		/// <param name="index">Index into text</param>
+		/// <returns></returns>
+		public static string GetTwoLetterISOLanguageName(FormattedText text, int index)
+		{
+			if (!text.IsNullOrEmpty)
+			{
+				string s = text.ToString ();
+
+				if (index >= 0 && index < s.Length)
+				{
+					int i = s.Substring (0, index).LastIndexOf (MultilingualText.DivBeginWithLanguageAttribute);
+
+					if (i != -1)
+					{
+						var twoLetter = s.Substring (i+MultilingualText.DivBeginWithLanguageAttribute.Length+1, 2);
+
+						if (twoLetter != "*\"")
+						{
+							return twoLetter;
+						}
+					}
+				}
+			}
+
+			return MultilingualText.DefaultTwoLetterISOLanguageName;
+		}
+
+
 		#region IEquatable<MultilingualText> Members
 
 		public bool Equals(MultilingualText other)

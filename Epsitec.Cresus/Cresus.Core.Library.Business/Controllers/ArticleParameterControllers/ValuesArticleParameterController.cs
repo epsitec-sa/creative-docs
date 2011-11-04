@@ -42,13 +42,13 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 		public FrameBox CreateUI(FrameBox parent, int labelWidth = 80, bool labelToRight = false)
 		{
-			this.labelWidth = labelWidth;
+			this.labelWidth   = labelWidth;
 			this.labelToRight = labelToRight;
 
 			this.frameBox = new FrameBox ()
 			{
-				Parent = parent,
-				Dock = DockStyle.Top,
+				Parent  = parent,
+				Dock    = DockStyle.Top,
 				Margins = new Margins (0, 10, 1, 0),
 			};
 
@@ -82,18 +82,18 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 			var box = new FrameBox
 			{
-				Parent = parent,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 1),
+				Parent   = parent,
+				Dock     = DockStyle.Top,
+				Margins  = new Margins (0, 0, 0, 1),
 				TabIndex = index+1,  // 1..n
 			};
 
 			var label = new StaticText
 			{
-				Parent = box,
-				FormattedText = parameter.Description.IsNullOrEmpty ? parameter.Name : parameter.Description,
+				Parent         = box,
+				FormattedText  = parameter.Description.IsNullOrEmpty ? parameter.Name : parameter.Description,
 				PreferredWidth = this.labelWidth,
-				Dock = DockStyle.Left,
+				Dock           = DockStyle.Left,
 			};
 
 			if (this.labelToRight)

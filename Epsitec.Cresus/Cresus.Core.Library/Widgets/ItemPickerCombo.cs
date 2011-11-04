@@ -519,15 +519,19 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private string GetItemText(int index)
 		{
+			string s;
+
 			if (this.ValueToDescriptionConverter == null)
 			{
-				return this.items[index];
+				s = this.items[index];
 			}
 			else
 			{
 				object value = this.items.GetValue (index);
-				return this.ValueToDescriptionConverter (value).ToString ();
+				s = this.ValueToDescriptionConverter (value).ToString ();
 			}
+
+			return TextFormatter.GetMonolingualText (TextFormatter.FormatText (s)).ToString ();
 		}
 
 
