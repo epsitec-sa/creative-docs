@@ -176,6 +176,10 @@ namespace Epsitec.Cresus.Core.Bricks
 
 						if (Brick.ContainsProperty (brick, BrickPropertyKey.Include))
 						{
+							//	If this is a brick which defines only a single 'Include' property,
+							//	then we don't want to add it to the tile data items; it would just
+							//	produce an empty, useless piece of information.
+
 							if (Brick.GetAllProperties (brick).All (x => x.IsDefaultProperty || x.Key == BrickPropertyKey.Include))
 							{
 								return null;
@@ -202,7 +206,7 @@ namespace Epsitec.Cresus.Core.Bricks
 					item.AutoGroup = true;
 					break;
 				
-				case BrickMode.DefaultToSummarySubview:
+				case BrickMode.DefaultToSummarySubView:
 					item.DefaultMode = ViewControllerMode.Summary;
 					break;
 
@@ -234,7 +238,7 @@ namespace Epsitec.Cresus.Core.Bricks
 			var entity = func.DynamicInvoke (this.controller.Entity) as AbstractEntity;
 			var name   = this.controller.Name + EntityInfo.GetFieldCaption (lambda).Name;
 
-			//	Create the controller for the included subview, which will represent the entity
+			//	Create the controller for the included sub-view, which will represent the entity
 			//	pointed to by the expression :
 
 			var sub = EntityViewControllerFactory.Create (name, entity, ViewControllerMode.Edition, this.controller.Orchestrator, this.controller);

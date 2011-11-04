@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Bricks
 		/// Default the sub-view to <see cref="ViewControllerMode.Summary"/> rather
 		/// than <see cref="ViewControllerMode.Edition"/>.
 		/// </summary>
-		DefaultToSummarySubview,
+		DefaultToSummarySubView,
 
 		HideAddButton,
 		HideRemoveButton,

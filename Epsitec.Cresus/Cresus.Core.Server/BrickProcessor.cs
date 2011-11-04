@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.Core.Server
 					item.AutoGroup = true;
 					break;
 
-				case BrickMode.DefaultToSummarySubview:
+				case BrickMode.DefaultToSummarySubView:
 					item.DefaultMode = ViewControllerMode.Summary;
 					break;
 
