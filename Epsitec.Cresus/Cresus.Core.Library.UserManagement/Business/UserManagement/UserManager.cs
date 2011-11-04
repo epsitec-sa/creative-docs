@@ -245,6 +245,17 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		}
 
 
+		public SoftwareUserEntity FindUser(string username)
+		{
+			var softwareUserRepository = this.Host.GetRepository<SoftwareUserEntity> ();
+
+			var example = softwareUserRepository.CreateExample();
+			example.LoginName = username;
+
+			return softwareUserRepository.GetByExample (example).FirstOrDefault ();
+		}
+
+
 		public UserSummary GetUserSummary()
 		{
 			return new UserSummary (this.AuthenticatedUser);
@@ -255,6 +266,24 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		private SoftwareUserEntity FindActiveUser(string userCode)
 		{
 			return this.GetActiveUsers ().FirstOrDefault (user => user.Code == userCode);
+		}
+
+
+		public bool CheckUserAuthentication(string username, string password)
+		{
+			bool isValid = false;
+
+			if (!string.IsNullOrEmpty (username) && !string.IsNullOrEmpty (password))
+			{
+				var user = this.FindUser (username);
+
+				if (user != null)
+				{
+					isValid = this.CheckUserAuthentication (user, password);
+				}
+			}
+
+			return isValid;
 		}
 
 		public bool CheckUserAuthentication(SoftwareUserEntity user, string password)
@@ -274,6 +303,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 					return false;
 			}
 		}
+
 
 		private bool CheckSystemUserAuthentication(SoftwareUserEntity user, string password)
 		{
