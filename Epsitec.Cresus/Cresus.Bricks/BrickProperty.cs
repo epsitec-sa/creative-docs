@@ -20,41 +20,48 @@ namespace Epsitec.Cresus.Bricks
 		{
 			this.key = key;
 			this.value = value;
+			this.isDefaultProperty = false;
 		}
 
 		public BrickProperty(BrickPropertyKey key, FormattedText value)
 		{
 			this.key = key;
 			this.value = value.IsNull ? null : value.ToString ();
+			this.isDefaultProperty = false;
 		}
 
 		public BrickProperty(BrickPropertyKey key, int value)
 		{
 			this.key = key;
 			this.value = value;
+			this.isDefaultProperty = false;
 		}
 
 		public BrickProperty(BrickPropertyKey key, System.Collections.IEnumerable collection)
 		{
 			this.key = key;
 			this.value = collection;
+			this.isDefaultProperty = false;
 		}
 
 		public BrickProperty(BrickPropertyKey key, Brick value)
 		{
 			this.key = key;
 			this.value = value;
+			this.isDefaultProperty = false;
 		}
 
 		public BrickProperty(BrickPropertyKey key, Expression expression)
 		{
 			this.key = key;
 			this.value = expression;
+			this.isDefaultProperty = false;
 		}
 
 		public BrickProperty(BrickPropertyKey key, Mortar mortar)
 		{
 			this.key = key;
+			this.isDefaultProperty = false;
 			
 			var text = mortar.GetString ();
 			var expr = mortar.GetExpression ();
@@ -73,6 +80,14 @@ namespace Epsitec.Cresus.Bricks
 		{
 			this.key = key;
 			this.value = value;
+			this.isDefaultProperty = false;
+		}
+
+		private BrickProperty(BrickProperty property, bool isDefaultProperty)
+		{
+			this.key = property.key;
+			this.value = property.value;
+			this.isDefaultProperty = isDefaultProperty;
 		}
 
 
@@ -139,6 +154,14 @@ namespace Epsitec.Cresus.Bricks
 			}
 		}
 
+		public bool								IsDefaultProperty
+		{
+			get
+			{
+				return this.isDefaultProperty;
+			}
+		}
+		
 		
 		public System.Func<T, FormattedText> GetFormatter<T>()
 		{
@@ -170,7 +193,13 @@ namespace Epsitec.Cresus.Bricks
 			return string.Format ("{0} = {1}", this.key, this.value ?? "<null>");
 		}
 
+		public BrickProperty MarkAsDefaultProperty()
+		{
+			return new BrickProperty (this, true);
+		}
+
 		private readonly BrickPropertyKey		key;
 		private readonly object					value;
+		private readonly bool					isDefaultProperty;
 	}
 }

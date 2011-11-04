@@ -65,9 +65,18 @@ namespace Epsitec.Cresus.Core.Bricks
 
 		public override void CreateTileDataItems(TileDataItems data)
 		{
+			this.Controller.NotifyAboutToCreateUI ();
+
 			foreach (var brick in this.walls.SelectMany (x => x.Bricks))
 			{
 				this.CreateTileDataItem (data, brick);
+
+				while (this.bridgeContext.HasPendingBridges)
+				{
+					var bridge = this.bridgeContext.GetNextPendingBridge ();
+
+					bridge.CreateTileDataItems (data);
+				}
 			}
 		}
 		
@@ -164,6 +173,14 @@ namespace Epsitec.Cresus.Core.Bricks
 					if (brick.GetFieldType () == typeof (T))
 					{
 						//	Type already ok.
+
+						if (Brick.ContainsProperty (brick, BrickPropertyKey.Include))
+						{
+							if (Brick.GetAllProperties (brick).All (x => x.IsDefaultProperty || x.Key == BrickPropertyKey.Include))
+							{
+								return null;
+							}
+						}
 					}
 					else
 					{

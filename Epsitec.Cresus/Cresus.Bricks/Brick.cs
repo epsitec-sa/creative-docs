@@ -128,6 +128,11 @@ namespace Epsitec.Cresus.Bricks
 			return new BrickPropertyCollection (brick.properties, keys ?? new BrickPropertyKey[0]);
 		}
 
+		public static IEnumerable<BrickProperty> GetAllProperties(Brick brick)
+		{
+			return brick.properties;
+		}
+
 
 
 		private readonly List<BrickProperty>	properties;

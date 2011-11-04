@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Bricks
 			BridgeContext.instance = this;
 		}
 
-		public static BridgeContext			Instance
+		public static BridgeContext				Instance
 		{
 			get
 			{
@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.Bricks
 			}
 		}
 
-		public FeatureManager				FeatureManager
+		public FeatureManager					FeatureManager
 		{
 			get
 			{
@@ -45,38 +45,87 @@ namespace Epsitec.Cresus.Core.Bricks
 			}
 		}
 
+		public bool								IsCreatingTileDataItems
+		{
+			get
+			{
+				return this.pendingBridges != null;
+			}
+		}
+
+		public bool								HasPendingBridges
+		{
+			get
+			{
+				return (this.pendingBridges != null)
+					&& (this.pendingBridges.Count > 0);
+			}
+		}
 
 		public Bridge<T> CreateBridge<T>(EntityViewController<T> controller)
 			where T : AbstractEntity, new ()
 		{
 			var bridge = new Bridge<T> (this, controller);
 
-			this.bridges.Add (bridge);
+			if (this.IsCreatingTileDataItems)
+			{
+				this.pendingBridges.Push (bridge);
+			}
+			else
+			{
+				this.bridges.Add (bridge);
+			}
 
 			return bridge;
+		}
+
+		public Bridge GetNextPendingBridge()
+		{
+			if ((this.pendingBridges == null) ||
+				(this.pendingBridges.Count == 0))
+			{
+				return null;
+			}
+			else
+			{
+				return this.pendingBridges.Pop ();
+			}
 		}
 
 		private void CreateTileDataItems()
 		{
 			System.Diagnostics.Debug.Assert (this.bridges.Count > 0);
 			System.Diagnostics.Debug.Assert (this.bridges[0].Controller == this.controller);
+			System.Diagnostics.Debug.Assert (this.IsCreatingTileDataItems == false);
 
 			if (this.bridges.Any (x => x.ContainsBricks))
 			{
 				using (var data = TileContainerController.Setup (this.controller))
 				{
-					//	The collection of bridges might change while we are processing the
-					//	items :
-
-					for (int i = 0; i < this.bridges.Count; i++)
+					try
 					{
-						var bridge = this.bridges[i];
+						this.pendingBridges = new Stack<Bridge> ();
 
-						bridge.Controller.NotifyAboutToCreateUI ();
-						bridge.CreateTileDataItems (data);
+						//	The collection of bridges might change while we are processing the
+						//	items :
+
+						for (int i = 0; i < this.bridges.Count; i++)
+						{
+							var bridge = this.bridges[i];
+
+							bridge.CreateTileDataItems (data);
+							
+							System.Diagnostics.Debug.Assert (this.HasPendingBridges == false);
+						}
+					}
+					finally
+					{
+						this.pendingBridges = null;
 					}
 				}
 			}
+
+			System.Diagnostics.Debug.Assert (this.IsCreatingTileDataItems == false);
 		}
 
 		#region IDisposable Members
@@ -102,5 +151,7 @@ namespace Epsitec.Cresus.Core.Bricks
 		private readonly List<Bridge>			bridges;
 		private readonly EntityViewController	controller;
 		private readonly FeatureManager			features;
+
+		private Stack<Bridge>					pendingBridges;
 	}
 }

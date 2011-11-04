@@ -60,14 +60,14 @@ namespace Epsitec.Cresus.Core.Bricks
 			var typeIcon = typeInfo.Caption.Icon ?? "Data." + typeName;
 			var labels   = typeInfo.Caption.Labels;
 
-			BrickProperty nameProperty = new BrickProperty (BrickPropertyKey.Name, typeName);
-			BrickProperty iconProperty = new BrickProperty (BrickPropertyKey.Icon, typeIcon);
+			BrickProperty nameProperty = new BrickProperty (BrickPropertyKey.Name, typeName).MarkAsDefaultProperty ();
+			BrickProperty iconProperty = new BrickProperty (BrickPropertyKey.Icon, typeIcon).MarkAsDefaultProperty ();
 
 			Brick.AddProperty (brick, nameProperty);
 			Brick.AddProperty (brick, iconProperty);
 
-			Bridge.CreateLabelProperty (brick, labels, 0, BrickPropertyKey.Title);
-			Bridge.CreateLabelProperty (brick, labels, 1, BrickPropertyKey.TitleCompact);
+			Bridge.CreateDefaultLabelProperty (brick, labels, 0, BrickPropertyKey.Title);
+			Bridge.CreateDefaultLabelProperty (brick, labels, 1, BrickPropertyKey.TitleCompact);
 		}
 
 		protected static void CreateDefaultTextProperties(Brick brick)
@@ -75,13 +75,13 @@ namespace Epsitec.Cresus.Core.Bricks
 			if (!Brick.ContainsProperty (brick, BrickPropertyKey.Text))
 			{
 				Expression<System.Func<AbstractEntity, FormattedText>> expression = x => x.GetSummary ();
-				Brick.AddProperty (brick, new BrickProperty (BrickPropertyKey.Text, expression));
+				Brick.AddProperty (brick, new BrickProperty (BrickPropertyKey.Text, expression).MarkAsDefaultProperty ());
 			}
 
 			if (!Brick.ContainsProperty (brick, BrickPropertyKey.TextCompact))
 			{
 				Expression<System.Func<AbstractEntity, FormattedText>> expression = x => x.GetCompactSummary ();
-				Brick.AddProperty (brick, new BrickProperty (BrickPropertyKey.TextCompact, expression));
+				Brick.AddProperty (brick, new BrickProperty (BrickPropertyKey.TextCompact, expression).MarkAsDefaultProperty ());
 			}
 		}
 
@@ -101,11 +101,11 @@ namespace Epsitec.Cresus.Core.Bricks
 			}
 		}
 
-		protected static void CreateLabelProperty(Brick brick, IList<string> labels, int i, BrickPropertyKey key)
+		protected static void CreateDefaultLabelProperty(Brick brick, IList<string> labels, int i, BrickPropertyKey key)
 		{
 			if (i < labels.Count)
 			{
-				BrickProperty property = new BrickProperty (key, labels[i]);
+				BrickProperty property = new BrickProperty (key, labels[i]).MarkAsDefaultProperty ();
 				Brick.AddProperty (brick, property);
 			}
 		}
