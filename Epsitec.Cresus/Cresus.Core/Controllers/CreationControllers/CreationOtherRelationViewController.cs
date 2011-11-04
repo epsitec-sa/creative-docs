@@ -26,30 +26,22 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 
 		private void CreateUINewNaturalPersonButton(UIBuilder builder)
 		{
-			builder.CreateCreationButtonWithInitializer<OtherRelationEntity> (this, "Personne privée", "Crée un contact de type personne privée", this.SetupNaturalPerson);
+			builder.CreateCreationButtonWithInitializer<OtherRelationEntity> (this, "Personne privée", "Crée un contact de type personne privée", CreationOtherRelationViewController.SetupNaturalPerson);
 		}
 
 		private void CreateUINewLegalPersonButton(UIBuilder builder)
 		{
-			builder.CreateCreationButtonWithInitializer<OtherRelationEntity> (this, "Entreprise", "Crée un contact de type entreprise", this.SetupLegalPerson);
+			builder.CreateCreationButtonWithInitializer<OtherRelationEntity> (this, "Entreprise", "Crée un contact de type entreprise", CreationOtherRelationViewController.SetupLegalPerson);
 		}
 
-		private void SetupNaturalPerson(BusinessContext context, OtherRelationEntity otherRelation)
+		private static void SetupNaturalPerson(BusinessContext context, OtherRelationEntity otherRelation)
 		{
 			otherRelation.Person = context.CreateEntity<NaturalPersonEntity> ();
-
-//			var pathElements = this.GetControllerChain ().Reverse ().Select (x => x.NavigationPathElement).ToArray ();
-
-			this.ReopenSubView ();
 		}
 
-		private void SetupLegalPerson(BusinessContext context, OtherRelationEntity otherRelation)
+		private static void SetupLegalPerson(BusinessContext context, OtherRelationEntity otherRelation)
 		{
 			otherRelation.Person = context.CreateEntity<LegalPersonEntity> ();
-
-//			var pathElements = this.GetControllerChain ().Reverse ().Select (x => x.NavigationPathElement).ToArray ();
-
-			this.ReopenSubView ();
 		}
 	}
 }

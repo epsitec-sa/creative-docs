@@ -9,8 +9,12 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 {
-	public class CreationCustomerViewController : CreationViewController<CustomerEntity>
+	public sealed class CreationCustomerViewController : CreationViewController<CustomerEntity>
 	{
+		public CreationCustomerViewController()
+		{
+		}
+		
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

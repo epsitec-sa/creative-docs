@@ -1,9 +1,5 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
-
-using Epsitec.Common.Types;
-using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
@@ -13,8 +9,12 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 {
-	public class CreationRelationViewController : CreationViewController<RelationEntity>
+	public sealed class CreationRelationViewController : CreationViewController<RelationEntity>
 	{
+		public CreationRelationViewController()
+		{
+		}
+		
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))

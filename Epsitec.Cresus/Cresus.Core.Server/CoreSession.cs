@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Core.Server
 			}
 		}
 		
-		public override string ApplicationIdentifier
+		public override string					ApplicationIdentifier
 		{
 			get
 			{
@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Core.Server
 			}
 		}
 
-		public override string ShortWindowTitle
+		public override string					ShortWindowTitle
 		{
 			get
 			{

@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// Creates a sub view controller for the item.
 		/// </summary>
 		/// <param name="orchestrator">The orchestrator.</param>
-		/// <param name="parentController">The parent controller.</param>
+		/// <param name="parentController">The parent controller (if any).</param>
 		/// <param name="navigationPathElement">The navigation path element.</param>
 		/// <returns>
 		/// The sub view controller.

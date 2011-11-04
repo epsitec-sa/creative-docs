@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -25,11 +25,11 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 		protected CreationViewController()
 		{
 			System.Diagnostics.Debug.Assert (this.Orchestrator != null);
-//			System.Diagnostics.Debug.Assert (this.Orchestrator.Data.IsDummyEntity (this.Entity));
+			System.Diagnostics.Debug.Assert (this.IsDummyEntity || this.IsPartiallyCreatedEntity);
 		}
 
 
-		public bool IsDummyEntity
+		public bool								IsDummyEntity
 		{
 			get
 			{
@@ -37,6 +37,13 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 			}
 		}
 
+		public bool								IsPartiallyCreatedEntity
+		{
+			get
+			{
+				return this.Entity.IsEntityPartiallyCreated;
+			}
+		}
 
 		#region ICreationController Members
 
@@ -52,37 +59,49 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 
 		#endregion
 
-		
-		internal void CreateRealEntity(System.Action<BusinessContext, T> initializer = null)
-		{
-			var initAction = CreationViewController<T>.GetCompatibleInitializer (initializer);
-			
-			this.CreateEntityUsingEntityCreator<T> (initAction);
 
-			//	The simple fact of creating the real entity is sufficient to update
-			//	the user interface; usually, the entity creator is tightly related
-			//	to the BrowserViewController class. Creating an item will therefore
-			//	update the selected item in the browser and trigger the UI updates.
-
-			System.Diagnostics.Debug.Assert (this.IsDisposed);
-		}
-
+		/// <summary>
+		/// Creates the real entity based on the current (template or example) entity.
+		/// </summary>
+		/// <typeparam name="TDerived">The type of the entity.</typeparam>
+		/// <param name="initializer">The entity initializer.</param>
 		internal void CreateRealEntity<TDerived>(System.Action<BusinessContext, TDerived> initializer = null)
 			where TDerived : T, new ()
 		{
-			var initAction = CreationViewController<TDerived>.GetCompatibleInitializer (initializer);
+			var initAction = CreationViewController<T>.GetCompatibleInitializer (initializer);
 
-			this.CreateEntityUsingEntityCreator<TDerived> (initAction);
+			if (this.IsDummyEntity)
+			{
+				//	The entity is not yet the real one, so let the creator replace it
+				//	with the real one:
 
-			//	The simple fact of creating the real entity is sufficient to update
-			//	the user interface; usually, the entity creator is tightly related
-			//	to the BrowserViewController class. Creating an item will therefore
-			//	update the selected item in the browser and trigger the UI updates.
+				this.CreateEntityUsingEntityCreator<TDerived> (initAction);
+
+				//	The simple fact of creating the real entity is sufficient to update
+				//	the user interface; usually, the entity creator is tightly related
+				//	to the BrowserViewController class. Creating an item will therefore
+				//	update the selected item in the browser and trigger the UI updates.
+			}
+			else
+			{
+				//	The entity is already a real entity (usually in a not-yet-fully-created
+				//	state) and the creator must finish its initialization:
+
+				initAction (this.BusinessContext, this.Entity);
+
+				//	Now, re-navigate to the current sub-view, using the freshly initialized
+				//	entity, which should use the edition (or summary) controller instead.
+
+				this.ReopenSubView ();
+			}
 
 			System.Diagnostics.Debug.Assert (this.IsDisposed);
 		}
 
-		private static InitializerAction GetCompatibleInitializer(System.Action<BusinessContext, T> initializer)
+		
+
+		private static InitializerAction GetCompatibleInitializer<TDerived>(System.Action<BusinessContext, TDerived> initializer)
+			where TDerived : T, new ()
 		{
 			if (initializer == null)
 			{
@@ -90,11 +109,7 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 			}
 			else
 			{
-				return
-					delegate (BusinessContext businessContext, AbstractEntity entity)
-					{
-						initializer (businessContext, (T) entity);
-					};
+				return (businessContext, entity) => initializer (businessContext, (TDerived) entity);
 			}
 		}
 

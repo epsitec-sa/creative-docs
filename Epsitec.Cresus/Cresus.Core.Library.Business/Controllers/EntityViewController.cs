@@ -1,26 +1,17 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Types.Converters;
-using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Widgets;
+
+using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Bricks;
-using Epsitec.Cresus.Core.Controllers.DataAccessors;
-using Epsitec.Cresus.Core.Controllers.CreationControllers;
-using Epsitec.Cresus.Core.Controllers.EditionControllers;
-using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 using Epsitec.Cresus.Core.Orchestrators.Navigation;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
-using Epsitec.Cresus.DataLayer;
-using Epsitec.Cresus.DataLayer.Context;
-
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Bricks;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -32,7 +23,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		public TileContainer TileContainer
+		public TileContainer					TileContainer
 		{
 			get;
 			protected set;
@@ -96,12 +87,15 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		/// <summary>
+		/// Reopens the same view, or the sub-view specified by the navigation path elements.
+		/// </summary>
+		/// <param name="elements">The navigation path elements to the sub-view.</param>
 		protected void ReopenSubView(params NavigationPathElement[] elements)
 		{
-			var orchestrator = this.Orchestrator;
-			var navigator    = this.Navigator;
-			var history      = navigator.History;
-			var path         = navigator.GetLeafNavigationPath ();
+			var navigator = this.Navigator;
+			var history   = navigator.History;
+			var path      = navigator.GetLeafNavigationPath ();
 
 			path.AddRange (elements);
 

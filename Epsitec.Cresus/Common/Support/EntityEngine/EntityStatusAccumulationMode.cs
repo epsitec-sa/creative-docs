@@ -12,8 +12,19 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// </summary>
 	public enum EntityStatusAccumulationMode
 	{
+		/// <summary>
+		/// If no item is provided, consider this to be an empty and valid entity.
+		/// </summary>
 		NoneIsValid,
+
+		/// <summary>
+		/// If no item is provided, consider this to be an empty but invalid entity.
+		/// </summary>
 		NoneIsInvalid,
+
+		/// <summary>
+		/// If no item is provided, consider this to be a partially created entity.
+		/// </summary>
 		NoneIsPartiallyCreated,
 	}
 }

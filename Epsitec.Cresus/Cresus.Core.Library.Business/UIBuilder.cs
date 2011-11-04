@@ -146,14 +146,7 @@ namespace Epsitec.Cresus.Core
 
 			button.Clicked += delegate
 			{
-				if (controller.IsDummyEntity)
-				{
-					controller.CreateRealEntity (initializer);
-				}
-				else
-				{
-					initializer (controller.BusinessContext, controller.Entity);
-				}
+				controller.CreateRealEntity (initializer);
 			};
 
 			this.Add (button);

@@ -1,18 +1,12 @@
 //	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Common.Support;
-using Epsitec.Common.Support.Entities;
-using Epsitec.Common.Support.Extensions;
-using Epsitec.Common.Types;
-
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
 namespace Epsitec.Common.Support.EntityEngine
 {
-	public class EntityStatusAccumulator : IDisposable
+	public sealed class EntityStatusAccumulator : System.IDisposable
 	{
 		public EntityStatusAccumulator()
 		{
@@ -61,7 +55,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		
 		#region IDisposable Members
 
-		void IDisposable.Dispose()
+		void System.IDisposable.Dispose()
 		{
 		}
 
@@ -128,6 +122,7 @@ namespace Epsitec.Common.Support.EntityEngine
 					throw new System.NotSupportedException ("Invalid mode specified");
 			}
 		}
+
 		private static EntityStatus CombineStatus(params EntityStatus[] status)
 		{
 			if (status == null || status.Length == 0)

@@ -1,4 +1,4 @@
-//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -80,7 +80,7 @@ namespace Epsitec.Common.Widgets
 
 		#endregion
 
-		public TextNavigator TextNavigator
+		public TextNavigator					TextNavigator
 		{
 			get
 			{
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public bool IsReadOnly
+		public bool								IsReadOnly
 		{
 			get
 			{
@@ -115,19 +115,19 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public bool IsFormattedText
+		public bool								IsFormattedText
 		{
 			get;
 			set;
 		}
 
-		public bool IsMultilingualText
+		public bool								IsMultilingualText
 		{
 			get;
 			set;
 		}
 
-		public bool AcceptsNullValue
+		public bool								AcceptsNullValue
 		{
 			get
 			{
@@ -139,7 +139,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public bool IsModal
+		public bool								IsModal
 		{
 			get
 			{
@@ -162,7 +162,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public bool IsPassword
+		public bool								IsPassword
 		{
 			get
 			{
@@ -178,7 +178,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public char PasswordReplacementCharacter
+		public char								PasswordReplacementCharacter
 		{
 			get
 			{
@@ -197,7 +197,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public string HintText
+		public string							HintText
 		{
 			get
 			{
@@ -216,13 +216,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public System.Func<string, string> HintComparisonConverter
+		public System.Func<string, string>		HintComparisonConverter
 		{
 			get;
 			set;
 		}
 
-		public int HintOffset
+		public int								HintOffset
 		{
 			get
 			{
@@ -230,7 +230,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public bool IsTextEmpty
+		public bool								IsTextEmpty
 		{
 			get
 			{
@@ -238,7 +238,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public bool IsTextNull
+		public bool								IsTextNull
 		{
 			get
 			{
@@ -246,7 +246,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public bool HasEditedText
+		public bool								HasEditedText
 		{
 			get
 			{
@@ -254,7 +254,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public bool AutoSelectOnFocus
+		public bool								AutoSelectOnFocus
 		{
 			get
 			{
@@ -266,7 +266,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public bool AutoEraseOnFocus
+		public bool								AutoEraseOnFocus
 		{
 			get
 			{
@@ -278,7 +278,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public bool SwallowReturnOnAcceptEdition
+		public bool								SwallowReturnOnAcceptEdition
 		{
 			get
 			{
@@ -290,7 +290,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public bool SwallowEscapeOnRejectEdition
+		public bool								SwallowEscapeOnRejectEdition
 		{
 			get
 			{
@@ -302,7 +302,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public Drawing.Rectangle InnerTextBounds
+		public Drawing.Rectangle				InnerTextBounds
 		{
 			get
 			{
@@ -310,7 +310,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected Drawing.Point LastMousePosition
+		protected Drawing.Point					LastMousePosition
 		{
 			get
 			{
@@ -318,7 +318,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public bool IsEditing
+		public bool								IsEditing
 		{
 			get
 			{
@@ -352,7 +352,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private bool IsCombo
+		private bool							IsCombo
 		{
 			get
 			{
@@ -361,20 +361,19 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		#region Autocompletion
-		public bool Autocompletion
+		public bool								Autocompletion
 		{
 			get;
 			set;
 		}
 
-		public System.Func<string, string> AutocompletionConverter
+		public System.Func<string, string>		AutocompletionConverter
 		{
 			get;
 			set;
 		}
 
-		public List<string> AutocompletionList
+		public List<string>						AutocompletionList
 		{
 			get
 			{
@@ -387,59 +386,8 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private void ProcessAutocompletionTextDeleted()
-		{
-		}
 
-		private void ProcessAutocompletionTextInserted()
-		{
-			if (this.Autocompletion)
-			{
-				string completed = this.AutocompletionSearch (this.Text);
-
-				if (!string.IsNullOrEmpty(completed) && this.Text != completed)
-				{
-					int length = this.Text.Length;
-
-					this.Text = completed;
-					this.CursorFrom = this.Text.Length;
-					this.CursorTo = length;
-				}
-			}
-		}
-
-		private string AutocompletionSearch(string searching)
-		{
-			searching = this.AutocompletionConvert (searching);
-
-			foreach (string t in this.autocompletionList)
-			{
-				string text = this.AutocompletionConvert (t);
-
-				if (text.StartsWith (searching))
-				{
-					return t;
-				}
-			}
-
-			return null;
-		}
-
-		private string AutocompletionConvert(string text)
-		{
-			if (this.AutocompletionConverter == null)
-			{
-				return text;
-			}
-			else
-			{
-				return this.AutocompletionConverter (text);
-			}
-		}
-		#endregion
-
-
-		public int MaxLength
+		public int								MaxLength
 		{
 			get
 			{
@@ -451,7 +399,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public TextFieldStyle TextFieldStyle
+		public TextFieldStyle					TextFieldStyle
 		{
 			get
 			{
@@ -484,7 +432,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public double ScrollZone
+		public double							ScrollZone
 		{
 			//	Amplitude de la zone dans laquelle le curseur provoque un scroll.
 			//	Avec 0.0, le texte ne scrolle que lorsque le curseur arrive aux extrémités.
@@ -507,7 +455,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public string Selection
+		public string							Selection
 		{
 			get
 			{
@@ -521,7 +469,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public int Cursor
+		public int								Cursor
 		{
 			get
 			{
@@ -534,7 +482,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public int CursorFrom
+		public int								CursorFrom
 		{
 			get
 			{
@@ -547,7 +495,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public int CursorTo
+		public int								CursorTo
 		{
 			get
 			{
@@ -560,7 +508,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public bool CursorAfter
+		public bool								CursorAfter
 		{
 			get
 			{
@@ -574,7 +522,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public DefocusAction DefocusAction
+		public DefocusAction					DefocusAction
 		{
 			get
 			{
@@ -593,7 +541,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public ButtonShowCondition ButtonShowCondition
+		public ButtonShowCondition				ButtonShowCondition
 		{
 			get
 			{
@@ -606,7 +554,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public TextFieldDisplayMode TextDisplayMode
+		public TextFieldDisplayMode				TextDisplayMode
 		{
 			get
 			{
@@ -625,7 +573,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public TextFieldDisplayMode InitialTextDisplayMode
+		public TextFieldDisplayMode				InitialTextDisplayMode
 		{
 			get
 			{
@@ -638,7 +586,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public string InitialText
+		public string							InitialText
 		{
 			get
 			{
@@ -650,7 +598,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public override double AutoEngageDelay
+		public override double					AutoEngageDelay
 		{
 			get
 			{
@@ -1085,6 +1033,56 @@ namespace Epsitec.Common.Widgets
 				TextField.flashTimer.AutoRepeat = delay;
 				TextField.flashTimer.Start ();  // restart du timer
 				TextField.showCursor = true;  // avec le curseur visible
+			}
+		}
+
+		private void ProcessAutocompletionTextDeleted()
+		{
+		}
+
+		private void ProcessAutocompletionTextInserted()
+		{
+			if (this.Autocompletion)
+			{
+				string completed = this.AutocompletionSearch (this.Text);
+
+				if (!string.IsNullOrEmpty (completed) && this.Text != completed)
+				{
+					int length = this.Text.Length;
+
+					this.Text = completed;
+					this.CursorFrom = this.Text.Length;
+					this.CursorTo = length;
+				}
+			}
+		}
+
+		private string AutocompletionSearch(string searching)
+		{
+			searching = this.AutocompletionConvert (searching);
+
+			foreach (string t in this.autocompletionList)
+			{
+				string text = this.AutocompletionConvert (t);
+
+				if (text.StartsWith (searching))
+				{
+					return t;
+				}
+			}
+
+			return null;
+		}
+
+		private string AutocompletionConvert(string text)
+		{
+			if (this.AutocompletionConverter == null)
+			{
+				return text;
+			}
+			else
+			{
+				return this.AutocompletionConverter (text);
 			}
 		}
 

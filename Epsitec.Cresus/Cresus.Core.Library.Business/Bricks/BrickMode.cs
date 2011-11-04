@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Bricks
 		AutoGroup,
 
 		/// <summary>
-		/// Default the subview to <see cref="ViewControllerMode.Summary"/> rather
+		/// Default the sub-view to <see cref="ViewControllerMode.Summary"/> rather
 		/// than <see cref="ViewControllerMode.Edition"/>.
 		/// </summary>
 		DefaultToSummarySubview,

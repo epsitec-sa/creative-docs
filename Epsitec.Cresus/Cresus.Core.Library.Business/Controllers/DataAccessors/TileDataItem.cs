@@ -492,14 +492,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 			else
 			{
-				var entity = marshaler.GetValue<AbstractEntity> ();
-				var mode   = this.DefaultMode;
-
-				if (entity.IsEntityPartiallyCreated)
-				{
-					mode = ViewControllerMode.Creation;
-				}
-
+				var entity    = marshaler.GetValue<AbstractEntity> ();
+				var mode      = entity.IsEntityPartiallyCreated ? ViewControllerMode.Creation : this.DefaultMode;
 				var converter = this.EntityMarshalerConverter;
 
 				if (converter != null)
@@ -509,9 +503,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 				navigationPathElement = new TileNavigationPathElement (this.Name);
 
-				var controller = EntityViewControllerFactory.Create ("ViewController", entity, mode, orchestrator, parentController, controllerSubTypeId: this.ControllerSubTypeId, navigationPathElement: navigationPathElement);
-
-				return controller;
+				return EntityViewControllerFactory.Create ("ViewController", entity, mode, orchestrator, parentController, controllerSubTypeId: this.ControllerSubTypeId, navigationPathElement: navigationPathElement);
 			}
 		}
 

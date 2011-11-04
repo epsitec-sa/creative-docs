@@ -75,9 +75,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			var handler = this.Updating;
 
 			if (handler != null)
-            {
+			{
 				handler (this);
-            }
+			}
 		}
 
 		

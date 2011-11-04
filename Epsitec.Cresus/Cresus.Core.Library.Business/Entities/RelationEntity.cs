@@ -13,15 +13,12 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText
-				(
-					this.Person.GetSummary ()
-				);
+			return this.Person.GetSummary ();
 		}
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.Person.GetCompactSummary ());
+			return this.Person.GetCompactSummary ();
 		}
 
 		public override string[] GetEntityKeywords()
@@ -33,7 +30,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			using (var a = new EntityStatusAccumulator ())
 			{
-				a.Accumulate (this.Person.GetEntityStatus ());
+				a.Accumulate (this.Person, EntityStatusAccumulationMode.NoneIsPartiallyCreated);
 				a.Accumulate (this.Comments.Select (x => x.GetEntityStatus ()));
 				a.Accumulate (this.DefaultMailContact.GetEntityStatus ().TreatAsOptional ());
 

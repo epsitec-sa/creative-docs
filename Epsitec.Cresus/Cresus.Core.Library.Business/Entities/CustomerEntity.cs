@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Core.Entities
 				a.Accumulate (this.IdB.GetEntityStatus ().TreatAsOptional ());
 				a.Accumulate (this.IdC.GetEntityStatus ().TreatAsOptional ());
 				a.Accumulate (this.Affairs.Select (x => x.GetEntityStatus ()));
-				a.Accumulate (this.MainRelation.GetEntityStatus ());
+				a.Accumulate (this.MainRelation, EntityStatusAccumulationMode.NoneIsPartiallyCreated);
 				a.Accumulate (this.SalesRepresentative.GetEntityStatus ().TreatAsOptional ());
 
 				return a.EntityStatus;
