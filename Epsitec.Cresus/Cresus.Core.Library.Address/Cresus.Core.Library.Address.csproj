@@ -50,6 +50,8 @@
     <Compile Include="Business\Rules\NaturalPersonBusinessRules.cs" />
     <Compile Include="Entities\AbstractPersonEntity.cs" />
     <Compile Include="Entities\ContactGroupEntity.cs" />
+    <Compile Include="Entities\ContactPersonEntity.cs" />
+    <Compile Include="Entities\ContactPersonGroupEntity.cs" />
     <Compile Include="Entities\PeopleGroupEntity.cs" />
     <Compile Include="Entities\PeopleEntity.cs" />
     <Compile Include="Entities\StateProvinceCountyEntity.cs" />

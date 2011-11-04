@@ -17,11 +17,25 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
-	public class SummaryOtherRelationGroupViewController : SummaryViewController<OtherRelationGroupEntity>
+	public class SummaryContactPersonViewController : SummaryViewController<ContactPersonEntity>
 	{
-		protected override void CreateBricks(BrickWall<OtherRelationGroupEntity> wall)
+		protected override void CreateBricks(BrickWall<ContactPersonEntity> wall)
 		{
-			wall.AddBrick (x => x)
+			wall.AddBrick ()
+				;
+			wall.AddBrick (x => x.Person.Contacts)
+				.OfType<MailContactEntity> ()
+				.Template ()
+				.End ();
+				;
+			wall.AddBrick (x => x.Person.Contacts)
+				.OfType<TelecomContactEntity> ()
+				.Attribute (BrickMode.AutoGroup)
+				.Template ()
+				.End ()
+				;
+			wall.AddBrick (x => x.Person.Contacts)
+				.OfType<UriContactEntity> ()
 				.Attribute (BrickMode.AutoGroup)
 				.Template ()
 				.End ()

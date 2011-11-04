@@ -32,6 +32,10 @@ namespace Epsitec.Cresus.Core.Library.Address
 			public static readonly Epsitec.Common.Types.StructuredType AbstractPerson = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
 			//	designer:cap/FVA4
 			public static readonly Epsitec.Common.Types.StructuredType ContactGroup = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 4));
+			//	designer:cap/FVAJ2
+			public static readonly Epsitec.Common.Types.StructuredType ContactPerson = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 83));
+			//	designer:cap/FVAI2
+			public static readonly Epsitec.Common.Types.StructuredType ContactPersonGroup = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 82));
 			//	designer:cap/FVA41
 			public static readonly Epsitec.Common.Types.StructuredType Country = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 36));
 			//	designer:cap/FVA6
@@ -173,6 +177,18 @@ namespace Epsitec.Cresus.Core.Library.Address
 				
 				//	designer:cap/FVA42
 				public static readonly global::Epsitec.Common.Support.Druid ContactGroupType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 68);
+			}
+			
+			public static class ContactPerson
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/FVAL2
+				public static readonly global::Epsitec.Common.Support.Druid Groups = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 85);
+				//	designer:cap/FVAK2
+				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 84);
 			}
 			
 			public static class Country
@@ -439,6 +455,7 @@ namespace Epsitec.Cresus.Core.Library.Address
 			Fields.AbstractPerson._Initialize ();
 			Fields.Address._Initialize ();
 			Fields.ContactGroup._Initialize ();
+			Fields.ContactPerson._Initialize ();
 			Fields.Country._Initialize ();
 			Fields.IAddressComplement._Initialize ();
 			Fields.LegalPerson._Initialize ();

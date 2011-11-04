@@ -20,8 +20,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		where T2 : AbstractEntity, new ()
 		where T3 : T2, new ()
 	{
-		public DynamicAccessorFactory(EntityViewController<T1> controller, System.Func<T1, IList<T2>> collectionResolver, CollectionTemplate<T3> template)
-			: base (CollectionAccessor.Create (controller.EntityGetter, collectionResolver, template))
+		public DynamicAccessorFactory(System.Func<T1> source, System.Func<T1, IList<T2>> collectionResolver, CollectionTemplate<T3> template)
+			: base (CollectionAccessor.Create (source, collectionResolver, template))
 		{
 		}
 	}

@@ -12,12 +12,12 @@ using Epsitec.Cresus.Core.Workflows;
 namespace Epsitec.Cresus.Core.Business.Rules
 {
 	[BusinessRule]
-	internal class OtherRelationBusinessRules : GenericBusinessRule<OtherRelationEntity>
+	internal class ContactPersonBusinessRules : GenericBusinessRule<ContactPersonEntity>
 	{
-		public override void ApplyBindRule(OtherRelationEntity otherRelation)
+		public override void ApplyBindRule(ContactPersonEntity contact)
 		{
 			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
-			businessContext.Register (otherRelation.Person);
+			businessContext.Register (contact.Person);
 		}
 	}
 }

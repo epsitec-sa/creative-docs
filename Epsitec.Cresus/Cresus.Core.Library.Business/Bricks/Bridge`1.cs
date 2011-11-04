@@ -682,12 +682,21 @@ namespace Epsitec.Cresus.Core.Bricks
 			var accessorFactoryTypeArg1 = typeof (T);
 			var accessorFactoryTypeArg2 = root.GetFieldType ();
 			var accessorFactoryTypeArg3 = templateFieldType;
-			
+
 			var genericAccessorFactoryType = accessorFactoryType.MakeGenericType (accessorFactoryTypeArg1, accessorFactoryTypeArg2, accessorFactoryTypeArg3);
 			
-			var accessorFactory = System.Activator.CreateInstance (genericAccessorFactoryType,
-				/**/											   this.controller, root.GetResolver (templateFieldType), collectionTemplate) as DynamicAccessorFactory;
+			var entityGetter   = this.controller.EntityGetter;
+			var entityResolver = root.GetResolver (templateFieldType);
 
+#if false
+			var constructor = genericAccessorFactoryType.GetConstructors ()[0];
+			var args        = new object[] { specificEntityGetter, specificResolver, collectionTemplate };
+			
+			var accessorFactory = constructor.Invoke (args) as DynamicAccessorFactory;
+#else
+			var accessorFactory = System.Activator.CreateInstance (genericAccessorFactoryType,
+				/**/											   entityGetter, entityResolver, collectionTemplate) as DynamicAccessorFactory;
+#endif
 			return accessorFactory.CollectionAccessor;
 		}
 

@@ -77,7 +77,7 @@
     <Compile Include="Business\Rules\AffairBusinessRules.cs" />
     <Compile Include="Business\Rules\ArticleGroupBusinessRules.cs" />
     <Compile Include="Business\Rules\ArticlePriceBusinessRules.cs" />
-    <Compile Include="Business\Rules\OtherRelationBusinessRules.cs" />
+    <Compile Include="Business\Rules\ContactPersonBusinessRules.cs" />
     <Compile Include="Business\Rules\PaymentTransactionBusinessRules.cs" />
     <Compile Include="Business\Rules\BusinessDocumentBusinessRules.cs" />
     <Compile Include="Business\Rules\BusinessSettingsBusinessRules.cs" />
@@ -219,8 +219,6 @@
     <Compile Include="Entities\ArticleQuantityColumnEntity.cs" />
     <Compile Include="Entities\CustomerCategoryEntity.cs" />
     <Compile Include="Entities\FinanceSettingsEntity.cs" />
-    <Compile Include="Entities\OtherRelationEntity.cs" />
-    <Compile Include="Entities\OtherRelationGroupEntity.cs" />
     <Compile Include="Entities\PaymentReminderDefinitionEntity.cs" />
     <Compile Include="Factories\DefaultEntitySpecialControllerFactory.cs" />
     <Compile Include="Factories\DefaultViewControllerComponentFactory.cs" />

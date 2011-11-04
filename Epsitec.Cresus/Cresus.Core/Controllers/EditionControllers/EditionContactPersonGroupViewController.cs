@@ -13,9 +13,9 @@ using Epsitec.Cresus.Bricks;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionOtherRelationGroupViewController : EditionViewController<OtherRelationGroupEntity>
+	public class EditionContactPersonGroupViewController : EditionViewController<ContactPersonGroupEntity>
 	{
-		protected override void CreateBricks(BrickWall<OtherRelationGroupEntity> wall)
+		protected override void CreateBricks(BrickWall<ContactPersonGroupEntity> wall)
 		{
 			wall.AddBrick ()
 				.Input ()

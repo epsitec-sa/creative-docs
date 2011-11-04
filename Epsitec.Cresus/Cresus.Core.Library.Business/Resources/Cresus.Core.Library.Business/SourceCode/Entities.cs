@@ -34,8 +34,6 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[GVAD6]", typeof (Epsitec.Cresus.Core.Entities.PaymentReminderDefinitionEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[GVAL6]", typeof (Epsitec.Cresus.Core.Entities.ArticleQuantityColumnEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[GVAN8]", typeof (Epsitec.Cresus.Core.Entities.CustomerCategoryEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[GVAV8]", typeof (Epsitec.Cresus.Core.Entities.OtherRelationEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[GVA19]", typeof (Epsitec.Cresus.Core.Entities.OtherRelationGroupEntity))]
 #region Epsitec.Cresus.Core.Relation Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -101,14 +99,14 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		///	<summary>
 		///	The <c>Contacts</c> field.
-		///	designer:fld/GVA/GVAA9
+		///	designer:fld/GVA/GVAC9
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVAA9]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.OtherRelationEntity> Contacts
+		[global::Epsitec.Common.Support.EntityField ("[GVAC9]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.ContactPersonEntity> Contacts
 		{
 			get
 			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.OtherRelationEntity> ("[GVAA9]");
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.ContactPersonEntity> ("[GVAC9]");
 			}
 		}
 		///	<summary>
@@ -467,22 +465,22 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		///	<summary>
 		///	The <c>AssociatedSite</c> field.
-		///	designer:fld/GVA1/GVA39
+		///	designer:fld/GVA1/GVAD9
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVA39]")]
-		public global::Epsitec.Cresus.Core.Entities.OtherRelationEntity AssociatedSite
+		[global::Epsitec.Common.Support.EntityField ("[GVAD9]")]
+		public global::Epsitec.Cresus.Core.Entities.ContactPersonEntity AssociatedSite
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.OtherRelationEntity> ("[GVA39]");
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.ContactPersonEntity> ("[GVAD9]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.OtherRelationEntity oldValue = this.AssociatedSite;
-				if (oldValue != value || !this.IsFieldDefined("[GVA39]"))
+				global::Epsitec.Cresus.Core.Entities.ContactPersonEntity oldValue = this.AssociatedSite;
+				if (oldValue != value || !this.IsFieldDefined("[GVAD9]"))
 				{
 					this.OnAssociatedSiteChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.OtherRelationEntity> ("[GVA39]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.ContactPersonEntity> ("[GVAD9]", oldValue, value);
 					this.OnAssociatedSiteChanged (oldValue, value);
 				}
 			}
@@ -658,8 +656,8 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnCustomerChanging(global::Epsitec.Cresus.Core.Entities.CustomerEntity oldValue, global::Epsitec.Cresus.Core.Entities.CustomerEntity newValue);
 		partial void OnCustomerChanged(global::Epsitec.Cresus.Core.Entities.CustomerEntity oldValue, global::Epsitec.Cresus.Core.Entities.CustomerEntity newValue);
-		partial void OnAssociatedSiteChanging(global::Epsitec.Cresus.Core.Entities.OtherRelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.OtherRelationEntity newValue);
-		partial void OnAssociatedSiteChanged(global::Epsitec.Cresus.Core.Entities.OtherRelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.OtherRelationEntity newValue);
+		partial void OnAssociatedSiteChanging(global::Epsitec.Cresus.Core.Entities.ContactPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.ContactPersonEntity newValue);
+		partial void OnAssociatedSiteChanged(global::Epsitec.Cresus.Core.Entities.ContactPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.ContactPersonEntity newValue);
 		partial void OnAmountDueChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnAmountDueChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnBillingModeChanging(global::Epsitec.Cresus.Core.Business.Finance.BillingMode oldValue, global::Epsitec.Cresus.Core.Business.Finance.BillingMode newValue);
@@ -6088,232 +6086,6 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<CustomerCategoryEntity>
-		{
-			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
-			{
-			}
-		}
-		#endregion
-	}
-}
-#endregion
-
-#region Epsitec.Cresus.Core.OtherRelation Entity
-namespace Epsitec.Cresus.Core.Entities
-{
-	///	<summary>
-	///	The <c>OtherRelation</c> entity.
-	///	designer:cap/GVAV8
-	///	</summary>
-	public partial class OtherRelationEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.INameDescription
-	{
-		#region ILifetime Members
-		///	<summary>
-		///	The <c>IsArchive</c> field.
-		///	designer:fld/GVAV8/8VA3
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
-		public bool IsArchive
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
-			}
-		}
-		#endregion
-		#region INameDescription Members
-		///	<summary>
-		///	The <c>Name</c> field.
-		///	designer:fld/GVAV8/8VA7
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VA7]")]
-		public global::Epsitec.Common.Types.FormattedText Name
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetName (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
-			}
-		}
-		///	<summary>
-		///	The <c>Description</c> field.
-		///	designer:fld/GVAV8/8VA8
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VA8]")]
-		public global::Epsitec.Common.Types.FormattedText Description
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetDescription (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetDescription (this, value);
-			}
-		}
-		#endregion
-		///	<summary>
-		///	The <c>Person</c> field.
-		///	designer:fld/GVAV8/GVA09
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVA09]")]
-		public global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity Person
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity> ("[GVA09]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity oldValue = this.Person;
-				if (oldValue != value || !this.IsFieldDefined("[GVA09]"))
-				{
-					this.OnPersonChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity> ("[GVA09]", oldValue, value);
-					this.OnPersonChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>Groups</c> field.
-		///	designer:fld/GVAV8/GVA29
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[GVA29]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.OtherRelationGroupEntity> Groups
-		{
-			get
-			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.OtherRelationGroupEntity> ("[GVA29]");
-			}
-		}
-		
-		partial void OnPersonChanging(global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity newValue);
-		partial void OnPersonChanged(global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity newValue);
-		
-		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
-		{
-			return global::Epsitec.Cresus.Core.Entities.OtherRelationEntity.EntityStructuredTypeId;
-		}
-		public override string GetEntityStructuredTypeKey()
-		{
-			return global::Epsitec.Cresus.Core.Entities.OtherRelationEntity.EntityStructuredTypeKey;
-		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1008, 10, 287);	// [GVAV8]
-		public static readonly string EntityStructuredTypeKey = "[GVAV8]";
-		
-		#region Repository Class
-		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<OtherRelationEntity>
-		{
-			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Volatile)
-			{
-			}
-		}
-		#endregion
-	}
-}
-#endregion
-
-#region Epsitec.Cresus.Core.OtherRelationGroup Entity
-namespace Epsitec.Cresus.Core.Entities
-{
-	///	<summary>
-	///	The <c>OtherRelationGroup</c> entity.
-	///	designer:cap/GVA19
-	///	</summary>
-	public partial class OtherRelationGroupEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ICategory
-	{
-		#region ILifetime Members
-		///	<summary>
-		///	The <c>IsArchive</c> field.
-		///	designer:fld/GVA19/8VA3
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
-		public bool IsArchive
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
-			}
-		}
-		#endregion
-		#region IItemCode Members
-		///	<summary>
-		///	The <c>Code</c> field.
-		///	designer:fld/GVA19/8VA5
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VA5]")]
-		public string Code
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
-			}
-		}
-		#endregion
-		#region INameDescription Members
-		///	<summary>
-		///	The <c>Name</c> field.
-		///	designer:fld/GVA19/8VA7
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VA7]")]
-		public global::Epsitec.Common.Types.FormattedText Name
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetName (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
-			}
-		}
-		///	<summary>
-		///	The <c>Description</c> field.
-		///	designer:fld/GVA19/8VA8
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VA8]")]
-		public global::Epsitec.Common.Types.FormattedText Description
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetDescription (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetDescription (this, value);
-			}
-		}
-		#endregion
-		
-		
-		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
-		{
-			return global::Epsitec.Cresus.Core.Entities.OtherRelationGroupEntity.EntityStructuredTypeId;
-		}
-		public override string GetEntityStructuredTypeKey()
-		{
-			return global::Epsitec.Cresus.Core.Entities.OtherRelationGroupEntity.EntityStructuredTypeKey;
-		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1008, 10, 289);	// [GVA19]
-		public static readonly string EntityStructuredTypeKey = "[GVA19]";
-		
-		#region Repository Class
-		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<OtherRelationGroupEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{

@@ -97,12 +97,12 @@
     <Compile Include="CommandHandlers\CoreCommandHandler.cs" />
     <Compile Include="CommandHandlers\DatabaseCommandHandler.cs" />
     <Compile Include="CommandHandlers\NavigationCommandHandler.cs" />
-    <Compile Include="Controllers\CreationControllers\CreationOtherRelationViewController.cs" />
+    <Compile Include="Controllers\CreationControllers\CreationContactPersonViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationCustomerViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDocumentFooterTextViewController.cs" />
-    <Compile Include="Controllers\EditionControllers\EditionOtherRelationGroupViewController.cs" />
-    <Compile Include="Controllers\EditionControllers\EditionOtherRelationViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionContactPersonGroupViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionContactPersonViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPeopleViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPeopleGroupViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPriceDiscountViewController.cs" />
@@ -144,8 +144,8 @@
     <Compile Include="Controllers\RibbonViewController.cs" />
     <Compile Include="Controllers\RibbonViewMode.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryDocumentFooterTextViewController.cs" />
-    <Compile Include="Controllers\SummaryControllers\SummaryOtherRelationGroupViewController.cs" />
-    <Compile Include="Controllers\SummaryControllers\SummaryOtherRelationViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryContactPersonGroupViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryContactPersonViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryPeopleViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryPeopleGroupViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryPriceDiscountViewController.cs" />
@@ -597,10 +597,10 @@
     <EmbeddedResource Include="Images\Base.PeopleGroup.icon" />
     <EmbeddedResource Include="Images\Data.PeopleGroup.icon" />
     <EmbeddedResource Include="Images\Base.People.icon" />
-    <EmbeddedResource Include="Images\Base.OtherRelation.icon" />
-    <EmbeddedResource Include="Images\Base.OtherRelationGroup.icon" />
-    <EmbeddedResource Include="Images\Data.OtherRelation.icon" />
-    <EmbeddedResource Include="Images\Data.OtherRelationGroup.icon" />
+    <EmbeddedResource Include="Images\Base.ContactPerson.icon" />
+    <EmbeddedResource Include="Images\Base.ContactPersonGroup.icon" />
+    <EmbeddedResource Include="Images\Data.ContactPerson.icon" />
+    <EmbeddedResource Include="Images\Data.ContactPersonGroup.icon" />
     <EmbeddedResource Include="Images\Base.DocumentFooterText.icon" />
     <EmbeddedResource Include="Images\Data.DocumentFooterText.icon" />
   </ItemGroup>

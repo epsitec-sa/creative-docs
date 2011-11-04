@@ -859,8 +859,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				yield return new SubMenuItem (Res.Commands.Base.ShowPeople,              SubMenuType.Customers);
 				yield return new SubMenuItem (Res.Commands.Base.ShowPeopleGroup,         SubMenuType.Customers);
 				yield return new SubMenuItem (null,                                      SubMenuType.Customers);
-				yield return new SubMenuItem (Res.Commands.Base.ShowOtherRelation,       SubMenuType.Customers);
-				yield return new SubMenuItem (Res.Commands.Base.ShowOtherRelationGroup,  SubMenuType.Customers);
+				yield return new SubMenuItem (Res.Commands.Base.ShowContactPerson,		 SubMenuType.Customers);
+				yield return new SubMenuItem (Res.Commands.Base.ShowContactPersonGroup,  SubMenuType.Customers);
 				yield return new SubMenuItem (null,                                      SubMenuType.Customers);
 				yield return new SubMenuItem (Res.Commands.Base.ShowSoftwareUserGroup,   SubMenuType.Customers);
 				yield return new SubMenuItem (Res.Commands.Base.ShowSoftwareUserRole,    SubMenuType.Customers);

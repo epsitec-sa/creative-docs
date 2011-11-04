@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class OtherRelationEntity
+	public partial class ContactPersonGroupEntity
 	{
 		public override FormattedText GetSummary()
 		{
@@ -19,27 +19,15 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override FormattedText GetCompactSummary()
 		{
-			if (!this.Name.IsNullOrEmpty)
-			{
-				return this.Name;
-			}
-			else if (this.Person.IsNotNull ())
-			{
-				return this.Person.GetCompactSummary ();
-			}
-			else
-			{
-				return TextFormatter.FormatText ("vide").ApplyItalic ();
-			}
+			return this.Name;
 		}
 
 		public override EntityStatus GetEntityStatus()
 		{
 			using (var a = new EntityStatusAccumulator ())
 			{
-				a.Accumulate (this.Name.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.Name.GetEntityStatus ());
 				a.Accumulate (this.Description.GetEntityStatus ().TreatAsOptional ());
-				a.Accumulate (this.Person, EntityStatusAccumulationMode.NoneIsPartiallyCreated);
 
 				return a.EntityStatus;
 			}

@@ -225,10 +225,6 @@ namespace Epsitec.Cresus.Core.Library.Business
 			public static readonly Epsitec.Common.Types.StructuredType OptionValue = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 182));
 			//	designer:cap/GVAK5
 			public static readonly Epsitec.Common.Types.StructuredType OptionValueArticleParameterDefinition = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 180));
-			//	designer:cap/GVAV8
-			public static readonly Epsitec.Common.Types.StructuredType OtherRelation = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 287));
-			//	designer:cap/GVA19
-			public static readonly Epsitec.Common.Types.StructuredType OtherRelationGroup = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 289));
 			//	designer:cap/GVAD6
 			public static readonly Epsitec.Common.Types.StructuredType PaymentReminderDefinition = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 205));
 			//	designer:cap/GVA
@@ -610,8 +606,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid ActiveSalesRepresentative = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 7);
 				//	designer:cap/GVAR7
 				public static readonly global::Epsitec.Common.Support.Druid AmountDue = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 251);
-				//	designer:cap/GVA39
-				public static readonly global::Epsitec.Common.Support.Druid AssociatedSite = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 291);
+				//	designer:cap/GVAD9
+				public static readonly global::Epsitec.Common.Support.Druid AssociatedSite = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 301);
 				//	designer:cap/GVAT7
 				public static readonly global::Epsitec.Common.Support.Druid BillingMode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 253);
 				//	designer:cap/GVAP7
@@ -1066,18 +1062,6 @@ namespace Epsitec.Cresus.Core.Library.Business
 				public static readonly global::Epsitec.Common.Support.Druid Options = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 184);
 			}
 			
-			public static class OtherRelation
-			{
-				internal static void _Initialize()
-				{
-				}
-				
-				//	designer:cap/GVA29
-				public static readonly global::Epsitec.Common.Support.Druid Groups = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 290);
-				//	designer:cap/GVA09
-				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 288);
-			}
-			
 			public static class PaymentReminderDefinition
 			{
 				internal static void _Initialize()
@@ -1118,8 +1102,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				{
 				}
 				
-				//	designer:cap/GVAA9
-				public static readonly global::Epsitec.Common.Support.Druid Contacts = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 298);
+				//	designer:cap/GVAC9
+				public static readonly global::Epsitec.Common.Support.Druid Contacts = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 300);
 				//	designer:cap/GVAL
 				public static readonly global::Epsitec.Common.Support.Druid DefaultCurrencyCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 21);
 				//	designer:cap/GVAK7
@@ -1280,7 +1264,6 @@ namespace Epsitec.Cresus.Core.Library.Business
 			Fields.NumericValueArticleParameterDefinition._Initialize ();
 			Fields.OptionValue._Initialize ();
 			Fields.OptionValueArticleParameterDefinition._Initialize ();
-			Fields.OtherRelation._Initialize ();
 			Fields.PaymentReminderDefinition._Initialize ();
 			Fields.People._Initialize ();
 			Fields.PriceGroup._Initialize ();
