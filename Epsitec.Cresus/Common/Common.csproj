@@ -291,6 +291,7 @@
     <Compile Include="IO\Checksum.cs" />
     <Compile Include="IO\Compression.cs" />
     <Compile Include="IO\Compressor.cs" />
+    <Compile Include="IO\ConsoleHelper.cs" />
     <Compile Include="IO\CsvFormat.cs" />
     <Compile Include="IO\CsvReader.cs" />
     <Compile Include="IO\Decompression.cs" />
