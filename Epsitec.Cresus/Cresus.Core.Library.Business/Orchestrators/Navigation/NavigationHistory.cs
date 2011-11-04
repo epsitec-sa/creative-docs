@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 	/// The <c>NavigationHistory</c> class maintains two stacks of navigation paths, in order
 	/// to be able to navigate backward and forward through the history.
 	/// </summary>
-	public class NavigationHistory
+	public sealed class NavigationHistory
 	{
 		public NavigationHistory(NavigationOrchestrator navigator, CommandContext commandContext)
 		{
@@ -71,8 +71,6 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 			}
 
 			this.UpdateNavigationCommands ();
-//-			System.Diagnostics.Debug.WriteLine ("Recorded full path " + fullPath.ToString ());
-//			this.DebugDump ();
 		}
 
 		/// <summary>
