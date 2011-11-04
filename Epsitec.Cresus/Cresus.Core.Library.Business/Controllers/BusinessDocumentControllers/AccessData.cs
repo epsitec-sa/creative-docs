@@ -27,8 +27,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			this.DataContext      = controller.DataContext;
 			this.CoreData         = controller.Data;
 			this.DocumentLogic    = logic;
-			this.DocumentMetadata = logic.DocumentMetadata;
-			this.BusinessDocument = logic.BusinessDocument;
+
+			if (logic != null)
+			{
+				this.DocumentMetadata = logic.DocumentMetadata;
+				this.BusinessDocument = logic.BusinessDocument;
+			}
 		}
 
 		public bool IsExcludingTax

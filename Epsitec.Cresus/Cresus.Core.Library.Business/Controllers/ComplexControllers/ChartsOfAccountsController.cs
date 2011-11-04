@@ -9,17 +9,17 @@ using Epsitec.Common.Printing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
-
 using Epsitec.Common.Support.EntityEngine;
+
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.Accounting;
+using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Epsitec.Cresus.DataLayer.Context;
 
 namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 {

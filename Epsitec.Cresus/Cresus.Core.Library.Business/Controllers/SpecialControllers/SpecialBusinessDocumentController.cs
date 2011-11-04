@@ -11,6 +11,7 @@ using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers;
+using Epsitec.Cresus.Core.Controllers.ComplexControllers;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.Helpers;
@@ -46,11 +47,22 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 		{
 			this.isReadOnly = isReadOnly;
 
-			var documentMetadata = this.businessContext.GetMasterEntity<DocumentMetadataEntity> ();
-			var frameBox         = parent as FrameBox;
+			switch (this.mode)
+			{
+				case 0:
+					this.CreateDocumentLinesUI (parent, builder);
+					break;
 
+				case 1:
+					this.CreateFooterTextUI (parent, builder);
+					break;
+			}
+		}
+
+		private void CreateDocumentLinesUI(Widget parent, UIBuilder builder)
+		{
+			var documentMetadata = this.businessContext.GetMasterEntity<DocumentMetadataEntity> ();
 			System.Diagnostics.Debug.Assert (documentMetadata.IsNotNull ());
-			System.Diagnostics.Debug.Assert (frameBox != null);
 
 			var frame = new FrameBox
 			{
@@ -63,9 +75,29 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 			this.documentLogic = new DocumentLogic (this.businessContext, documentMetadata);
 			this.access        = new AccessData (this.viewController, this.documentLogic);
 
-			this.controller = new BusinessDocumentLinesController (this.access);
-			this.controller.CreateUI (frame);
-			this.controller.UpdateUI ();
+			this.documentLinesController = new BusinessDocumentLinesController (this.access);
+			this.documentLinesController.CreateUI (frame);
+			this.documentLinesController.UpdateUI ();
+		}
+
+		private void CreateFooterTextUI(Widget parent, UIBuilder builder)
+		{
+			var documentMetadata = this.businessContext.GetMasterEntity<DocumentMetadataEntity> ();
+			System.Diagnostics.Debug.Assert (documentMetadata.IsNotNull ());
+
+			var frame = new FrameBox
+			{
+				Parent  = parent,
+				Padding = new Margins (0, 2, 10, 0),
+				Dock    = DockStyle.Fill,
+				Margins = TileArrow.GetContainerPadding (Direction.Right),
+			};
+
+			this.access = new AccessData (this.viewController, this.documentLogic);
+
+			this.footerTextController = new FooterTextController (this.businessContext, documentMetadata, documentMetadata.BusinessDocument as BusinessDocumentEntity, builder.ReadOnly);
+			this.footerTextController.CreateUI (frame);
+			this.footerTextController.UpdateUI ();
 		}
 
 
@@ -73,10 +105,16 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 
 		void System.IDisposable.Dispose()
 		{
-			if (this.controller != null)
+			if (this.documentLinesController != null)
 			{
-				this.controller.Dispose ();
-				this.controller = null;
+				this.documentLinesController.Dispose ();
+				this.documentLinesController = null;
+			}
+
+			if (this.footerTextController != null)
+			{
+				this.footerTextController.Dispose ();
+				this.footerTextController = null;
 			}
 		}
 
@@ -86,9 +124,14 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 
 		void IWidgetUpdater.Update()
 		{
-			if (this.controller != null)
+			if (this.documentLinesController != null)
 			{
-				this.controller.UpdateUI ();
+				this.documentLinesController.UpdateUI ();
+			}
+
+			if (this.footerTextController != null)
+			{
+				this.footerTextController.UpdateUI ();
 			}
 		}
 
@@ -107,17 +150,18 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 		#endregion
 
 
-		private readonly TileContainer			tileContainer;
-		private readonly BusinessDocumentEntity	businessDocument;
-		private readonly int					mode;
-		private readonly EntityViewController	viewController;
-		private readonly BusinessContext		businessContext;
-		private readonly DataContext			dataContext;
-		private readonly CoreData				coreData;
+		private readonly TileContainer				tileContainer;
+		private readonly BusinessDocumentEntity		businessDocument;
+		private readonly int						mode;
+		private readonly EntityViewController		viewController;
+		private readonly BusinessContext			businessContext;
+		private readonly DataContext				dataContext;
+		private readonly CoreData					coreData;
 		
-		private bool							isReadOnly;
-		private BusinessDocumentLinesController	controller;
-		private DocumentLogic					documentLogic;
-		private AccessData						access;
+		private bool								isReadOnly;
+		private BusinessDocumentLinesController		documentLinesController;
+		private FooterTextController				footerTextController;
+		private DocumentLogic						documentLogic;
+		private AccessData							access;
 	}
 }

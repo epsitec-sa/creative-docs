@@ -150,6 +150,7 @@
     <Compile Include="Controllers\BusinessDocumentControllers\Line.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\LineEditorControllers\AbstractLineEditorController.cs" />
     <Compile Include="Controllers\ComplexControllers\ChartsOfAccountsController.cs" />
+    <Compile Include="Controllers\ComplexControllers\FooterTextController.cs" />
     <Compile Include="Controllers\ComplexControllers\SerializedDocumentBlobController.cs" />
     <Compile Include="Controllers\SpecialControllers\SerializedDocumentBlobController.cs" />
     <Compile Include="Controllers\SpecialControllers\SpecialArticleParameterListEnumValuesController.cs" />
