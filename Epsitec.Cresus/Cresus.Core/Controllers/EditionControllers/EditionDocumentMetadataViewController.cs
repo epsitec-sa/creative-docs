@@ -37,10 +37,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .Field (x => x.LastModificationDate)
 				.End ()
 				;
-			wall.AddBrick (x => x.Comments)
-				.Template ()
-				.End ()
-				;
 		}
 	}
 }
