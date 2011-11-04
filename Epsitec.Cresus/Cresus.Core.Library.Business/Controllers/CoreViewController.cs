@@ -203,9 +203,33 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 		}
 
+		public static HashSet<CoreViewController> GetAllControllers(CoreViewController root)
+		{
+			var collection = new HashSet<CoreViewController> ();
+
+			CoreViewController.GetAllControllers (root, collection);
+
+			return collection;
+		}
+
+		private static void GetAllControllers(CoreViewController root, HashSet<CoreViewController> collection)
+		{
+			if (root != null)
+			{
+				if (collection.Add (root))
+				{
+					foreach (var sub in root.GetCoreViewControllers ())
+					{
+						CoreViewController.GetAllControllers (sub, collection);
+					}
+				}
+			}
+		}
+
+		
 		private IEnumerable<CoreViewController> GetCoreViewControllers()
 		{
-			return this.GetSubControllers ().Where (x => x is CoreViewController).Cast<CoreViewController> ();
+			return this.GetSubControllers ().OfType<CoreViewController> ();
 		}
 
 		private void ReleaseUIFocus(Widget container)

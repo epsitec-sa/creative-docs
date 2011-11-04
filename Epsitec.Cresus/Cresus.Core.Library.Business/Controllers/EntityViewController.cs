@@ -87,6 +87,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+
 		/// <summary>
 		/// Reopens the same view, or the sub-view specified by the navigation path elements.
 		/// </summary>

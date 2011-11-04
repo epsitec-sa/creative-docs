@@ -242,8 +242,19 @@ namespace Epsitec.Cresus.Core.Bricks
 			//	pointed to by the expression :
 
 			var sub = EntityViewControllerFactory.Create (name, entity, ViewControllerMode.Edition, this.controller.Orchestrator, this.controller);
+			var all = CoreViewController.GetAllControllers (this.controller.Orchestrator.DataViewController).OfType<EntityViewController> ().ToArray ();
+			var subType = sub.GetType ();
 
-			this.controller.AddUIController (sub);
+			if (all.Any (x => x.GetType () == subType && x.GetEntity () == entity))
+			{
+				//	If there is already a controller for the exact same entity, we won't include
+				//	the sub-view controller and we won't generate any UI for it, as it would result
+				//	in the creation of a duplicate.
+			}
+			else
+			{
+				this.controller.AddUIController (sub);
+			}
 		}
 
 

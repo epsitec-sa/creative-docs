@@ -24,7 +24,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .Field (x => x.SalesRepresentative)
 				  .Field (x => x.DefaultDebtorBookAccount)
 				.End ()
-				.Include (x => x.MainRelation)
+				;
+			wall.AddBrick (x => x.MainRelation)
+				;
+			wall.AddBrick ()
+				.Include (x => x.MainRelation.Person)
 				;
 		}
 	}
