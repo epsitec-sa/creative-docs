@@ -58,10 +58,12 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 
 				case State.NavigateBackward:
 					this.forwardHistory.Push (fullPath);
+					this.state = State.NavigateInPlace;
 					break;
 
 				case State.NavigateForward:
 					this.backwardHistory.Push (fullPath);
+					this.state = State.NavigateInPlace;
 					break;
 
 				case State.NavigateInPlace:
