@@ -27,8 +27,8 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 	/// </summary>
 	public class OptionValueArticleParameterController : AbstractArticleParameterController
 	{
-		public OptionValueArticleParameterController(IArticleDefinitionParameters article, int parameterIndex)
-			: base (article, parameterIndex)
+		public OptionValueArticleParameterController(IArticleDefinitionParameters article, int parameterIndex, TileContainer tileContainer)
+			: base (article, parameterIndex, tileContainer)
 		{
 		}
 

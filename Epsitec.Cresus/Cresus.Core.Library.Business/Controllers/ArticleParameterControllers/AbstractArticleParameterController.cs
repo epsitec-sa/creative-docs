@@ -25,10 +25,11 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 	/// </summary>
 	public abstract class AbstractArticleParameterController
 	{
-		public AbstractArticleParameterController(IArticleDefinitionParameters article, int parameterIndex)
+		public AbstractArticleParameterController(IArticleDefinitionParameters article, int parameterIndex, TileContainer tileContainer)
 		{
-			this.article = article;
+			this.article        = article;
 			this.parameterIndex = parameterIndex;
+			this.tileContainer  = tileContainer;
 
 			this.ImportDictionary ();
 		}
@@ -130,7 +131,8 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		public const char				SeparatorChar	= (char) 0x25CA;					// '◊'
 		public static readonly string	Separator		= SeparatorChar.ToString ();		// "◊"
 
-		private readonly IArticleDefinitionParameters article;
-		private readonly int parameterIndex;
+		private readonly IArticleDefinitionParameters	article;
+		private readonly int							parameterIndex;
+		protected readonly TileContainer				tileContainer;
 	}
 }

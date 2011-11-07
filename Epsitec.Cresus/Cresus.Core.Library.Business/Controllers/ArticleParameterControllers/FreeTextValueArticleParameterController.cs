@@ -27,57 +27,51 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 	/// </summary>
 	public class FreeTextValueArticleParameterController : AbstractArticleParameterController
 	{
-		public FreeTextValueArticleParameterController(IArticleDefinitionParameters article, int parameterIndex)
-			: base (article, parameterIndex)
+		public FreeTextValueArticleParameterController(IArticleDefinitionParameters article, int parameterIndex, TileContainer tileContainer)
+			: base (article, parameterIndex, tileContainer)
 		{
 		}
 
 
 		public override void CreateUI(FrameBox parent)
 		{
-			var freeTextParameter = this.ParameterDefinition as FreeTextValueArticleParameterDefinitionEntity;
-			double buttonWidth = 14;
-
-			//	Ligne éditable.
-			var editor = new AutoCompleteTextField
+			var editor = new TextFieldEx
 			{
-				Parent = parent,
-				MenuButtonWidth = buttonWidth-1,
-				Dock = DockStyle.Fill,
-				HintEditorMode = Widgets.HintEditorMode.DisplayMenu,
-				TabIndex = 1,
+				Parent          = parent,
+				PreferredHeight = 20,
+				Dock            = DockStyle.Fill,
+				TabIndex        = 1,
 			};
 
-			//	Initialise le contenu par défaut.
-			string initialValue = this.ParameterValue;
-
-			if (string.IsNullOrEmpty (initialValue))
-			{
-				initialValue = freeTextParameter.ShortText.ToString ();
-			}
-
-			editor.Text = initialValue;
-
-			editor.EditionAccepted += delegate
-			{
-				this.ParameterValue = editor.Text;
-			};
+			//	Utilise Marshaler/TextValueController pour permettre une édtion multilingue.
+			//	Par exemple, le changement de langue dans le ruban doit se refléter dans
+			//	l'édition du texte.
+			var marshaler = Marshaler.Create (() => this.FreeText, x => this.FreeText = x);
+			var controller = new TextValueController (marshaler);
+			controller.Name = "FreeText";
+			controller.Attach (editor);
+			this.tileContainer.Add (controller);
 		}
 
-		private FormattedText GetUserText(string value)
-		{
-			return TextFormatter.FormatText (value);
-		}
 
-		private HintComparerResult MatchUserText(string value, string userText)
+		private FormattedText FreeText
 		{
-			if (string.IsNullOrWhiteSpace (userText))
+			get
 			{
-				return Widgets.HintComparerResult.NoMatch;
-			}
+				string value = this.ParameterValue;
 
-			var itemText = HintComparer.GetComparableText (value);
-			return HintComparer.Compare (itemText, userText);
+				if (string.IsNullOrEmpty (value))
+				{
+					var freeTextParameter = this.ParameterDefinition as FreeTextValueArticleParameterDefinitionEntity;
+					value = freeTextParameter.ShortText.ToString ();
+				}
+
+				return value;
+			}
+			set
+			{
+				this.ParameterValue = value.ToString ();
+			}
 		}
 	}
 }

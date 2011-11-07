@@ -26,8 +26,8 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 	/// </summary>
 	public class EnumValueArticleParameterController : AbstractArticleParameterController
 	{
-		public EnumValueArticleParameterController(IArticleDefinitionParameters article, int parameterIndex)
-			: base (article, parameterIndex)
+		public EnumValueArticleParameterController(IArticleDefinitionParameters article, int parameterIndex, TileContainer tileContainer)
+			: base (article, parameterIndex, tileContainer)
 		{
 		}
 
@@ -46,9 +46,9 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			{
 				var label = new StaticText
 				{
-					Parent = parent,
-					Text   = "<i>Enunmération vide</i>",
-					Dock   = DockStyle.Fill,
+					Parent        = parent,
+					FormattedText = TextFormatter.FormatText ("Enunmération vide").ApplyItalic (),
+					Dock          = DockStyle.Fill,
 				};
 			}
 			else if (enumCount == 1)

@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		public ValuesArticleParameterController(TileContainer tileContainer, FrameBox parent)
 		{
 			this.tileContainer = tileContainer;
-			this.parent = parent;
+			this.parent        = parent;
 		}
 
 
@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 			if (parameter is NumericValueArticleParameterDefinitionEntity)
 			{
-				var controller = new NumericValueArticleParameterController (article, index);
+				var controller = new NumericValueArticleParameterController (article, index, this.tileContainer);
 
 				controller.CallbackParameterChanged = this.CallbackParameterChanged;
 				controller.CreateUI (box);
@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 			if (parameter is EnumValueArticleParameterDefinitionEntity)
 			{
-				var controller = new EnumValueArticleParameterController (article, index);
+				var controller = new EnumValueArticleParameterController (article, index, this.tileContainer);
 
 				controller.CallbackParameterChanged = this.CallbackParameterChanged;
 				controller.CreateUI (box);
@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 			if (parameter is OptionValueArticleParameterDefinitionEntity)
 			{
-				var controller = new OptionValueArticleParameterController (article, index);
+				var controller = new OptionValueArticleParameterController (article, index, this.tileContainer);
 
 				controller.CallbackParameterChanged = this.CallbackParameterChanged;
 				controller.CreateUI (box);
@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 			if (parameter is FreeTextValueArticleParameterDefinitionEntity)
 			{
-				var controller = new FreeTextValueArticleParameterController (article, index);
+				var controller = new FreeTextValueArticleParameterController (article, index, this.tileContainer);
 
 				controller.CallbackParameterChanged = this.CallbackParameterChanged;
 				controller.CreateUI (box);

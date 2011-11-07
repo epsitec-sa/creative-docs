@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 	{
 		public SpecialValuesArticleParameterController(TileContainer tileContainer, OptionValueEntity optionValueEntity)
 		{
-			this.tileContainer = tileContainer;
+			this.tileContainer     = tileContainer;
 			this.optionValueEntity = optionValueEntity;
 		}
 
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 			var frameBox = parent as FrameBox;
 			System.Diagnostics.Debug.Assert (frameBox != null);
 
-			var c = new ArticleParameterControllers.ValuesArticleParameterController (null, null);  // TODO: tester si OK
+			var c = new ArticleParameterControllers.ValuesArticleParameterController (this.tileContainer, frameBox);
 			c.CreateUI (frameBox);
 			c.UpdateUI (this.optionValueEntity);
 		}
@@ -59,9 +59,9 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 		}
 
 	
-		private readonly TileContainer tileContainer;
-		private readonly OptionValueEntity optionValueEntity;
+		private readonly TileContainer			tileContainer;
+		private readonly OptionValueEntity		optionValueEntity;
 
-		private bool isReadOnly;
+		private bool							isReadOnly;
 	}
 }
