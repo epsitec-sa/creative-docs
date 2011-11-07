@@ -2,6 +2,8 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Bricks;
+
+using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
@@ -13,9 +15,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<OptionValueArticleParameterDefinitionEntity> wall)
 		{
-			wall.AddBrick (x => x);
-
+			wall.AddBrick (x => x)
+				;
 			wall.AddBrick (x => x.Options)
+				.Attribute (BrickMode.AutoGroup)
 				.Template ()
 				.End ()
 				;
