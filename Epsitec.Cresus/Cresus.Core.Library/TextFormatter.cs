@@ -47,18 +47,9 @@ namespace Epsitec.Cresus.Core
 		{
 			get
 			{
-				switch (TextFormatter.CurrentTwoLetterISOLanguageName)
-				{
-					case "fr":
-						return TextFormatter.FormatText ("inconnu").ApplyItalic ();
-					
-					case "de":
-						return TextFormatter.FormatText ("unbekannt").ApplyItalic ();
-					
-					default:
-					case "en":
-						return TextFormatter.FormatText ("unknown").ApplyItalic ();
-				}
+				var text = TextFormatter.GetCurrentCultureText (Epsitec.Cresus.Core.Library.Res.StringIds.Text.Unknown);
+
+				return text.ApplyItalic ();
 			}
 		}
 
@@ -108,6 +99,16 @@ namespace Epsitec.Cresus.Core
 		public static Caption GetCurrentCultureCaption(Caption caption)
 		{
 			return Resources.DefaultManager.GetCaption (caption, TextFormatter.CurrentCulture);
+		}
+
+		public static string GetCurrentCultureSimpleText(Druid druid)
+		{
+			return TextFormatter.GetCurrentCultureText (druid).ToSimpleText ();
+		}
+
+		public static FormattedText GetCurrentCultureText(Druid druid)
+		{
+			return new FormattedText (Resources.DefaultManager.GetText (druid, ResourceLevel.Merged, TextFormatter.CurrentCulture));
 		}
 
 		public static TResult ExecuteUsingCulture<TResult>(CultureInfo culture, System.Func<TResult> func)

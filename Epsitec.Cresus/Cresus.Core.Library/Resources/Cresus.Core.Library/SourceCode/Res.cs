@@ -287,6 +287,17 @@ namespace Epsitec.Cresus.Core.Library
 		
 		public static class Strings
 		{
+			public static class Text
+			{
+				//	designer:str/EVA
+				public static global::System.String Unknown
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (167772160));
+					}
+				}
+			}
 			
 			public static global::Epsitec.Common.Types.FormattedText GetText(params string[] path)
 			{
@@ -326,6 +337,21 @@ namespace Epsitec.Cresus.Core.Library
 			private static readonly global::Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle ("Strings");
 			
 			#endregion
+		}
+		
+		public static class StringIds
+		{
+			public static class Text
+			{
+				//	designer:str/EVA
+				public static global::Epsitec.Common.Support.Druid Unknown
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (167772160);
+					}
+				}
+			}
 		}
 		
 		static Res()
