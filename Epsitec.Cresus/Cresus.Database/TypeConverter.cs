@@ -1,9 +1,10 @@
 //	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
-
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
+
+using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Database
 {
@@ -497,12 +498,28 @@ namespace Epsitec.Cresus.Database
 				case DbSimpleType.String:		return value;
 				case DbSimpleType.Date:			return Common.Types.Date.FromObject (value);
 				case DbSimpleType.Time:			return Common.Types.Time.FromObject (value);
-				case DbSimpleType.DateTime:		return value;
+				case DbSimpleType.DateTime:		return TypeConverter.NormalizeToUtc ((System.DateTime) value);
 				case DbSimpleType.ByteArray:	return value;
 				case DbSimpleType.Guid:			return value;
 			}
 			
 			return null;
+		}
+
+		private static System.DateTime NormalizeToUtc(System.DateTime value)
+		{
+			switch (value.Kind)
+			{
+				case System.DateTimeKind.Utc:
+				case System.DateTimeKind.Local:
+					return value;
+				
+				case System.DateTimeKind.Unspecified:
+					return System.DateTime.SpecifyKind (value, System.DateTimeKind.Utc);
+
+				default:
+					throw new System.NotSupportedException (string.Format ("DateTime.Kind value {0} not supported", value.Kind.GetQualifiedName ()));
+			}
 		}
 
 		/// <summary>
@@ -598,7 +615,12 @@ namespace Epsitec.Cresus.Database
 					}
 					if (value is System.DateTime)
 					{
-						return value;
+						System.DateTime dateTime = (System.DateTime) value;
+						if (dateTime.Kind == System.DateTimeKind.Local)
+						{
+							dateTime = dateTime.ToUniversalTime ();
+						}
+						return dateTime;
 					}
 					break;
 				

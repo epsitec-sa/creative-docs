@@ -30,7 +30,7 @@ namespace Epsitec.Common.Types.Converters
 
 		public override string ConvertToString(System.DateTime date)
 		{
-			return date == null ? null : date.ToString (this.GetCurrentCulture ());
+			return date == null ? null : date.ToLocalTime ().ToString (this.GetCurrentCulture ());
 		}
 
 		public override ConversionResult<System.DateTime> ConvertFromString(string text)
