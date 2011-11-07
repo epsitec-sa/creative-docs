@@ -50,7 +50,7 @@ namespace Epsitec.Common.Types.Converters
 				return new ConversionResult<System.DateTime>
 				{
 					IsNull = false,
-					Value = result,
+					Value = result.ToUniversalTime (),
 				};
 			}
 			else
