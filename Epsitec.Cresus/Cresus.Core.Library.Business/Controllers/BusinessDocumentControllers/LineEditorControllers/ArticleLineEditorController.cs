@@ -207,7 +207,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				};
 
 				this.parameterController = new ValuesArticleParameterController (this.tileContainer, line);
-				//?this.parameterController = new ValuesArticleParameterController (builder.TileContainer, line);
 				this.parameterController.CallbackParameterChanged = this.ParameterChanged;
 				var box = this.parameterController.CreateUI (line, labelWidth: labelWidth, labelToRight: true);
 				box.Margins = new Margins (0);
@@ -229,7 +228,6 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				var replacementBox = new FrameBox ();
 
 				this.toolbarController = new ArticleParameterToolbarController (this.tileContainer);
-				//?this.toolbarController = new ArticleParameterToolbarController (builder.TileContainer);
 				var toolbar = this.toolbarController.CreateUI (replacementBox, null);
 				toolbar.Margins = new Margins (0, 0, 0, -1);
 

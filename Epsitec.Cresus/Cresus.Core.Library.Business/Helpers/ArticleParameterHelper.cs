@@ -164,13 +164,19 @@ namespace Epsitec.Cresus.Core.Helpers
 
 					if (!string.IsNullOrEmpty (key))
 					{
-						if (localDico.ContainsKey (key))  // valeur définie localement ?
+						if (parameter is OptionValueArticleParameterDefinitionEntity)
 						{
-							value = localDico[key];
 						}
-						else if (defaultDico.ContainsKey (key))  // valeur par défaut ?
+						else
 						{
-							value = defaultDico[key];
+							if (localDico.ContainsKey (key))  // valeur définie localement ?
+							{
+								value = localDico[key];
+							}
+							else if (defaultDico.ContainsKey (key))  // valeur par défaut ?
+							{
+								value = defaultDico[key];
+							}
 						}
 
 						if (!string.IsNullOrEmpty (value))
