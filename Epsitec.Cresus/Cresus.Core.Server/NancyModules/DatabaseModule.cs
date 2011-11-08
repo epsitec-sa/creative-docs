@@ -29,11 +29,11 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 	/// <summary>
 	/// Used to populate the left list and the header menu.
 	/// A list of available databases is populated when the module is loaded, 
-	/// and it is able to the the Javascript which menu to show.
+	/// and it is able to the Javascript which menu to show.
 	/// It is then able to retrieve a list of entities based on the request.
 	/// It is also able to add or delete an entity within the selected database.
 	/// </summary>
-	public class DatabasesModule : AbstractLoggedCoreModule
+	public class DatabasesModule : AbstractCoreSessionModule
 	{
 
 
@@ -77,9 +77,8 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 				return Response.AsCoreSuccess (list);
 			};
 
-			Get["/{name}"] = parameters =>
+			Get["/{name}"] = parameters => this.ExecuteWithCoreSession(coreSession => 
 			{
-				var coreSession = GetCoreSession ();
 				var context = coreSession.GetBusinessContext ();
 				var dataContext = context.DataContext;
 
@@ -114,11 +113,10 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 				var res = Response.AsJson (dic);
 
 				return res;
-			};
+			});
 
-			Post["/delete"] = parameters =>
+			Post["/delete"] = parameters => this.ExecuteWithCoreSession(coreSession => 
 			{
-				var coreSession = this.GetCoreSession ();
 				var context = coreSession.GetBusinessContext ();
 
 				string paramEntityKey = (string) Request.Form.entityId;
@@ -131,18 +129,17 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 				context.SaveChanges ();
 
 				return Response.AsCoreBoolean (ok);
-			};
+			});
 
-			Post["/create"] = parameters =>
+			Post["/create"] = parameters => this.ExecuteWithCoreSession(coreSession => 
 			{
-				var coreSession = this.GetCoreSession ();
 				var context = coreSession.GetBusinessContext ();
 
 				// TODO Being able to create an entity 
 				// (problems with the AbstractPerson)
 
 				return Response.AsCoreError ();
-			};
+			});
 
 		}
 

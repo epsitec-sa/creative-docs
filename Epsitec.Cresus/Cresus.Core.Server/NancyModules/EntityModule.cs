@@ -25,16 +25,15 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 	/// <summary>
 	/// Used to update value of an existing entity
 	/// </summary>
-	public class EntityModule : AbstractLoggedCoreModule
+	public class EntityModule : AbstractCoreSessionModule
 	{
 
 
 		public EntityModule(ServerContext serverContext)
 			: base (serverContext, "/entity")
 		{
-			Post["/{id}"] = parameters =>
+			Post["/{id}"] = parameters => this.ExecuteWithCoreSession(coreSession => 
 			{
-				var coreSession = this.GetCoreSession ();
 				var context = coreSession.GetBusinessContext ();
 
 				string paramEntityKey = (string) parameters.id;
@@ -114,7 +113,7 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 					context.SaveChanges ();
 					return Response.AsCoreSuccess ();
 				}
-			};
+			});
 		}
 
 

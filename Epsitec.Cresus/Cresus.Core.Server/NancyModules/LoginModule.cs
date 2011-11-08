@@ -13,7 +13,6 @@ using Nancy.Extensions;
 using System.Collections.Generic;
 
 
-
 namespace Epsitec.Cresus.Core.Server.NancyModules
 {
 	
@@ -40,7 +39,7 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 				var session = this.ServerContext.CoreSessionManager.CreateSession ();
 
 				this.Session[LoginModule.LoggedInName] = true;
-				this.Session["CoreSession"] = session.Id;
+				this.Session[LoginModule.CoreSessionName] = session.Id;
 
 				return this.Response.AsCoreSuccess ();
 			}
@@ -56,7 +55,9 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 
 		public Response Logout()
 		{
-			this.ServerContext.CoreSessionManager.DeleteSession ((string) this.Session["CoreSession"]);
+			var sessionId = (string) this.Session[LoginModule.CoreSessionName];
+
+			this.ServerContext.CoreSessionManager.DeleteSession (sessionId);
 
 			this.Session[LoginModule.LoggedInName] = false;
 
@@ -107,7 +108,10 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 		}
 
 
-		private static readonly string LoggedInName = "LOGGED_IN";
+		public static readonly string LoggedInName = "LOGGED_IN";
+
+
+		public static readonly string CoreSessionName = "CoreSession";
 
 
 	}

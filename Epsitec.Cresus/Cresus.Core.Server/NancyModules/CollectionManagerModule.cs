@@ -26,16 +26,15 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 	/// <summary>
 	/// Allows to add or delete an entity within a collection
 	/// </summary>
-	public class CollectionManagerModule : AbstractLoggedCoreModule
+	public class CollectionManagerModule : AbstractCoreSessionModule
 	{
 
 
 		public CollectionManagerModule(ServerContext serverContext)
 			: base (serverContext, "/collection")
 		{
-			Post["/delete"] = parameters =>
+			Post["/delete"] = parameters => this.ExecuteWithCoreSession(coreSession => 
 			{
-				var coreSession = GetCoreSession ();
 				var context = coreSession.GetBusinessContext ();
 
 				string parentEntityId = Request.Form.parentEntity;
@@ -67,12 +66,11 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 				context.SaveChanges ();
 
 				return Response.AsCoreSuccess ();
-			};
+			});
 
 
-			Post["/create"] = parameters =>
+			Post["/create"] = parameters => this.ExecuteWithCoreSession (coreSession => 
 			{
-				var coreSession = GetCoreSession ();
 				var context = coreSession.GetBusinessContext ();
 
 				string parentEntityId = Request.Form.parentEntity;
@@ -100,7 +98,7 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 
 				var key = context.DataContext.GetNormalizedEntityKey (newEntity).ToString ();
 				return Response.AsCoreSuccess (key);
-			};
+			});
 		}
 
 

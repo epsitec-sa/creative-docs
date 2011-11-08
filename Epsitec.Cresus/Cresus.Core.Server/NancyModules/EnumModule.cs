@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 	/// <summary>
 	/// Used to provide Enum values to the ExtJS store
 	/// </summary>
-	public class EnumModule : AbstractLoggedCoreModule
+	public class EnumModule : AbstractCoreSessionModule
 	{
 
 

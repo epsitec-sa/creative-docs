@@ -58,7 +58,7 @@
     <Compile Include="NancyHosting\CoreResponse.cs" />
     <Compile Include="CoreServer\AuthentificationManager.cs" />
     <Compile Include="BrickProcessor.cs" />
-    <Compile Include="NancyModules\AbstractLoggedCoreModule.cs" />
+    <Compile Include="NancyModules\AbstractCoreSessionModule.cs" />
     <Compile Include="NancyHosting\HttpServer.cs" />
     <Compile Include="CoreServer\IconManager.cs" />
     <Compile Include="NancyModules\EnumModule.cs" />

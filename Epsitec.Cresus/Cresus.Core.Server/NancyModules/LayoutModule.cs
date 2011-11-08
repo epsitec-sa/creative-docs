@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 {
 
 
-	public class LayoutModule : AbstractLoggedCoreModule
+	public class LayoutModule : AbstractCoreSessionModule
 	{
 
 
@@ -27,9 +27,8 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 		public LayoutModule(ServerContext serverContext)
 			: base (serverContext, "/layout")
 		{
-			Get["/{mode}/{id}"] = parameters =>
+			Get["/{mode}/{id}"] = parameters => this.ExecuteWithCoreSession(coreSession => 
 			{
-				var coreSession = GetCoreSession ();
 				var context = coreSession.GetBusinessContext ();
 
 				var entityKey = EntityKey.Parse (parameters.id);
@@ -40,7 +39,7 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 				var s = PanelBuilder.BuildController (entity, mode, coreSession);
 
 				return Response.AsCoreSuccess (s);
-			};
+			});
 		}
 
 
