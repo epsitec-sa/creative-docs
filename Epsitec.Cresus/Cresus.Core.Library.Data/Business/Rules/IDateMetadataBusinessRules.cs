@@ -15,8 +15,8 @@ namespace Epsitec.Cresus.Core.Business.Rules
 		{
 			var now = System.DateTime.UtcNow;
 
-			entity.CreationDate          = now;
-			entity.LastModificationDate  = now;
+			entity.CreationDate         = now;
+			entity.LastModificationDate = now;
 		}
 
 		public override void ApplyUpdateRule(IDateMetadata entity)

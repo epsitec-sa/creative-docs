@@ -36,12 +36,12 @@ namespace Epsitec.Common.Types.Converters
 		public override ConversionResult<System.DateTime> ConvertFromString(string text)
 		{
 			if (text.IsNullOrWhiteSpace ())
-            {
+			{
 				return new ConversionResult<System.DateTime>
 				{
 					IsNull = true
 				};
-            }
+			}
 			
 			System.DateTime result;
 

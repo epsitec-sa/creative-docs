@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Database
 		Time = 5,
 
 		/// <summary>
-		/// Date and Time data with at least a 1ms resolution.
+		/// Date and Time data with at least a 1ms resolution, stored as UTC.
 		/// </summary>
 		DateTime = 6,
 

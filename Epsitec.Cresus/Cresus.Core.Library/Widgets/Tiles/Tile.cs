@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	/// o--Epsitec.Common.Widgets.FrameBox
 	///    |
 	///    o--Tile (abstract)
-  	///       | 
+	///       | 
 	///       o--ArrowedTile (abstract)
 	///       |  |    
 	///       |  o--ArrowedTileFrame ..................... frame with an arrow

@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		public CommandContext CommandContext
+		public CommandContext					CommandContext
 		{
 			get
 			{
@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public new NavigationOrchestrator Navigator
+		public new NavigationOrchestrator		Navigator
 		{
 			get
 			{
@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public BrowserSettingsMode BrowserSettingsMode
+		public BrowserSettingsMode				BrowserSettingsMode
 		{
 			get
 			{
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public BrowserViewController BrowserViewController
+		public BrowserViewController			BrowserViewController
 		{
 			get
 			{
@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public DataViewController DataViewController
+		public DataViewController				DataViewController
 		{
 			get
 			{
@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public PreviewViewController PreviewViewController
+		public PreviewViewController			PreviewViewController
 		{
 			get
 			{
@@ -95,6 +95,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
 			yield return this.browserViewController;
@@ -128,6 +129,30 @@ namespace Epsitec.Cresus.Core.Controllers
 				this.rightPreviewPanel.Visibility = visibility;
 				this.rightSplitter.Visibility = this.rightPreviewPanel.Visibility;
 			}
+		}
+
+		public void PrintPrintableEntity()
+		{
+//?			var context   = this.Data.CreateDataContext ("PrintEngine:Print");
+			var entity = this.GetPrintableEntity ();
+
+			//	TODO: vérifier que cette logique est bien correcte; pour le moment, on doit partager les BusinessContext avec l'interface graphique, mais à terme il faudra probablement découpler cela...
+
+			PrintEngine.PrintCommand (this.BusinessContext, entity);
+
+//?			this.Data.DisposeDataContext (context);
+		}
+
+		public void PreviewPrintableEntity()
+		{
+//?			var context   = this.Data.CreateDataContext ("PrintEngine:Print");
+			var entity = this.GetPrintableEntity ();
+
+			//	TODO: vérifier que cette logique est bien correcte; pour le moment, on doit partager les BusinessContext avec l'interface graphique, mais à terme il faudra probablement découpler cela...
+
+			PrintEngine.PreviewCommand (this.BusinessContext, entity);
+
+//?			this.Data.DisposeDataContext (context);
 		}
 
 
@@ -280,30 +305,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			return this.GetSubControllers ().Where (x => x is CoreViewController).Cast<CoreViewController> ();
 		}
 
-
-		public void Print()
-		{
-//?			var context   = this.Data.CreateDataContext ("PrintEngine:Print");
-			var entity = this.GetPrintableEntity ();
-
-			//	TODO: vérifier que cette logique est bien correcte; pour le moment, on doit partager les BusinessContext avec l'interface graphique, mais à terme il faudra probablement découpler cela...
-
-			PrintEngine.PrintCommand (this.BusinessContext, entity);
-
-//?			this.Data.DisposeDataContext (context);
-		}
-
-		public void Preview()
-		{
-//?			var context   = this.Data.CreateDataContext ("PrintEngine:Print");
-			var entity = this.GetPrintableEntity ();
-
-			//	TODO: vérifier que cette logique est bien correcte; pour le moment, on doit partager les BusinessContext avec l'interface graphique, mais à terme il faudra probablement découpler cela...
-
-			PrintEngine.PreviewCommand (this.BusinessContext, entity);
-
-//?			this.Data.DisposeDataContext (context);
-		}
 
 		private AbstractEntity GetPrintableEntity()
 		{

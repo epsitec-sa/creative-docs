@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			return this.uiControllers;
 		}
 
-        public sealed override void CreateUI(Widget container)
+		public sealed override void CreateUI(Widget container)
 		{
 			System.Diagnostics.Debug.Assert (container is TileContainer);
 

@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			var orchestrator = this.Orchestrator;
 			var mainViewController = orchestrator.MainViewController;
 
-			mainViewController.Print ();
+			mainViewController.PrintPrintableEntity ();
 		}
 
 		[Command (Res.CommandIds.Edition.Preview)]
@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			var orchestrator = this.Orchestrator;
 			var mainViewController = orchestrator.MainViewController;
 
-			mainViewController.Preview ();
+			mainViewController.PreviewPrintableEntity ();
 		}
 
 		[Command (Res.CommandIds.File.ImportV11)]

@@ -37,8 +37,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-
-		public bool IsEmpty
+		public bool								IsEmpty
 		{
 			get
 			{
@@ -330,9 +329,9 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void AttachColumn(TileContainer column)
 		{
 			if (column != null)
-            {
+			{
 				column.TabNavigating += this.HandleColumnTabNavigating;
-            }
+			}
 		}
 
 		private void DetachColumn(TileContainer column)

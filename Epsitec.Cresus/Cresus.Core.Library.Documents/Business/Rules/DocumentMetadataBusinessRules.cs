@@ -13,17 +13,11 @@ namespace Epsitec.Cresus.Core.Business.Rules
 	{
 		public override void ApplySetupRule(DocumentMetadataEntity entity)
 		{
-			//var generatorPool   = Logic.Current.GetComponent<RefIdGeneratorPool> ();
-
-			//var generator = generatorPool.GetGenerator<DocumentMetadataEntity> ();
-			//var nextId    = generator.GetNextId ();
-
-			//entity.IdA                   = string.Format ("{0:000000}", nextId);
-			entity.DocumentTitle         = "";
-			entity.Description           = "";
-			entity.FileName              = null;
-			entity.FileUri               = null;
-			entity.FileMimeType          = null;
+			entity.DocumentTitle = "";
+			entity.Description   = "";
+			entity.FileName      = null;
+			entity.FileUri       = null;
+			entity.FileMimeType  = null;
 		}
 
 		public override void ApplyBindRule(DocumentMetadataEntity entity)
