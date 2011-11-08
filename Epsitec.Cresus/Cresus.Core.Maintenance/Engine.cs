@@ -6,7 +6,7 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Repositories;
-using Epsitec.Cresus.Core.Server;
+using Epsitec.Cresus.Core.Server.CoreServer;
 
 using Epsitec.Data.Platform;
 
@@ -26,12 +26,11 @@ namespace Epsitec.Cresus.Core.Maintenance
 		
 		public void Refresh()
 		{
-			var session = CoreServer.Instance.CreateSession ();
-
-			Engine.ImportCountries (session);
-			Engine.ImportSwissLocations (session);
-
-			CoreServer.Instance.DeleteSession (session);
+			using (var session = new CoreSession ("maintenance session"))
+			{
+				Engine.ImportCountries (session);
+				Engine.ImportSwissLocations (session);
+			}
 		}
 
 		

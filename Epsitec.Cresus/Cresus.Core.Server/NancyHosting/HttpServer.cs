@@ -7,13 +7,16 @@ using System.Net;
 using System.Threading;
 
 
-namespace Epsitec.Cresus.Core.Server.HttpServer
+namespace Epsitec.Cresus.Core.Server.NancyHosting
 {
 
 
 	internal sealed class HttpServer : IDisposable
 	{
 		
+		// This class has been largely inspired from source code found here :
+		// http://stackoverflow.com/questions/4672010
+
 
 		public HttpServer(Uri uri)
 		{

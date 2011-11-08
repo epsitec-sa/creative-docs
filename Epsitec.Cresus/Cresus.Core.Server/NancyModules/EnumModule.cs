@@ -6,12 +6,12 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Cresus.Core.Library;
 using Nancy;
 
-namespace Epsitec.Cresus.Core.Server.Modules
+namespace Epsitec.Cresus.Core.Server.NancyModules
 {
 	/// <summary>
 	/// Used to provide Enum values to the ExtJS store
 	/// </summary>
-	public class EnumModule : CoreModule
+	public class EnumModule : AbstractLoggedCoreModule
 	{
 		public EnumModule()
 			: base ("/enum")

@@ -3,13 +3,13 @@
 
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Server.AdditionalResponses;
+using Epsitec.Cresus.Core.Server.NancyHosting;
 using Epsitec.Cresus.DataLayer.Context;
 using Nancy;
 
-namespace Epsitec.Cresus.Core.Server.Modules
+namespace Epsitec.Cresus.Core.Server.NancyModules
 {
-	public class LayoutModule : CoreModule
+	public class LayoutModule : AbstractLoggedCoreModule
 	{
 		/// <summary>
 		/// Call the <see cref="PanelBuilder"/> to create the ExtJS interface.

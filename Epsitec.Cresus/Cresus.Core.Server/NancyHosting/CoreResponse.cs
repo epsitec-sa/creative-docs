@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Nancy;
 using Nancy.Responses;
 
-namespace Epsitec.Cresus.Core.Server.AdditionalResponses
+namespace Epsitec.Cresus.Core.Server.NancyHosting
 {
 	/// <summary>
 	/// Responses that are sent to the ExtJS client.

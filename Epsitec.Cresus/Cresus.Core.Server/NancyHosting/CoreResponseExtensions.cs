@@ -3,12 +3,12 @@
 
 using Nancy;
 
-namespace Epsitec.Cresus.Core.Server.AdditionalResponses
+namespace Epsitec.Cresus.Core.Server.NancyHosting
 {
 	/// <summary>
 	/// Extensions to be able to easily call our custom responses.
 	/// </summary>
-	public static class ResponseExtensions
+	public static class CoreResponseExtensions
 	{
 		public static Response AsCoreError(this IResponseFormatter formatter)
 		{

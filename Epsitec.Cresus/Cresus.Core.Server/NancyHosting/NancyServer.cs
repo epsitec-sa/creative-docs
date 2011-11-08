@@ -23,9 +23,9 @@ using System.Linq;
 using System.Net;
 
 
-namespace Epsitec.Cresus.Core.Server.NancyComponents
+namespace Epsitec.Cresus.Core.Server.NancyHosting
 {
-	
+
 
 	internal sealed class NancyServer : IDisposable
 	{
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core.Server.NancyComponents
 		{
 			this.baseUri = uri;
 			this.nbThreads = nbThreads;
-			this.httpServer = new HttpServer.HttpServer (uri);
+			this.httpServer = new HttpServer (uri);
 
 			NancyBootstrapperLocator.Bootstrapper.Initialise ();
 			this.engine = NancyBootstrapperLocator.Bootstrapper.GetEngine ();
@@ -82,36 +82,41 @@ namespace Epsitec.Cresus.Core.Server.NancyComponents
 		}
 
 
-		private Request ConvertHttpRequestToNancyRequest(HttpListenerRequest httpRequest)
+		private static Uri GetUrlAndPathComponents(Uri uri)
 		{
-			var expectedRequestLength = NancyServer.GetExpectedRequestLength (httpRequest.Headers.ToDictionary ());
+			return new Uri (uri.GetComponents (UriComponents.SchemeAndServer | UriComponents.Path, UriFormat.Unescaped));
+		}
 
-			var relativeUrl = NancyServer.GetUrlAndPathComponents (this.baseUri).MakeRelativeUri (GetUrlAndPathComponents (httpRequest.Url));
+
+		private Request ConvertHttpRequestToNancyRequest(HttpListenerRequest request)
+		{
+			if (this.baseUri == null)
+			{
+				throw new InvalidOperationException (String.Format ("Unable to locate base URI for request: {0}", request.Url));
+			}
+
+			var expectedRequestLength = NancyServer.GetExpectedRequestLength (request.Headers.ToDictionary ());
+
+			var relativeUrl = NancyServer.GetUrlAndPathComponents (this.baseUri).MakeRelativeUri (GetUrlAndPathComponents (request.Url));
 
 			var nancyUrl = new Url
 			{
-				Scheme = httpRequest.Url.Scheme,
-				HostName = httpRequest.Url.Host,
-				Port = httpRequest.Url.IsDefaultPort ? null : (int?) httpRequest.Url.Port,
+				Scheme = request.Url.Scheme,
+				HostName = request.Url.Host,
+				Port = request.Url.IsDefaultPort ? null : (int?) request.Url.Port,
 				BasePath = this.baseUri.AbsolutePath.TrimEnd ('/'),
 				Path = string.Concat ("/", relativeUrl),
-				Query = httpRequest.Url.Query,
-				Fragment = httpRequest.Url.Fragment,
+				Query = request.Url.Query,
+				Fragment = request.Url.Fragment,
 			};
 
 			return new Request
 			(
-				httpRequest.HttpMethod,
+				request.HttpMethod,
 				nancyUrl,
-				RequestStream.FromStream (httpRequest.InputStream, expectedRequestLength, true),
-				httpRequest.Headers.ToDictionary ()
+				RequestStream.FromStream (request.InputStream, expectedRequestLength, true),
+				request.Headers.ToDictionary ()
 			);
-		}
-
-
-		private static Uri GetUrlAndPathComponents(Uri uri)
-		{
-			return new Uri (uri.GetComponents (UriComponents.SchemeAndServer | UriComponents.Path, UriFormat.Unescaped));
 		}
 
 
@@ -135,7 +140,6 @@ namespace Epsitec.Cresus.Core.Server.NancyComponents
 			}
 
 			long contentLength;
-
 			if (!long.TryParse (headerValue, NumberStyles.Any, CultureInfo.InvariantCulture, out contentLength))
 			{
 				return 0;
@@ -145,31 +149,29 @@ namespace Epsitec.Cresus.Core.Server.NancyComponents
 		}
 
 
-		private static void ConvertNancyResponseToHttpResponse(Response nancyResponse, HttpListenerResponse httpResponse)
+		private static void ConvertNancyResponseToHttpResponse(Response nancyResponse, HttpListenerResponse response)
 		{
 			foreach (var header in nancyResponse.Headers)
 			{
-				httpResponse.AddHeader (header.Key, header.Value);
+				response.AddHeader (header.Key, header.Value);
 			}
 
 			foreach (var nancyCookie in nancyResponse.Cookies)
 			{
-				var cookie = NancyServer.ConvertNancyCookieToHttpCookie (nancyCookie);
-
-				httpResponse.Cookies.Add (cookie);
+				response.Cookies.Add (NancyServer.ConvertCookie (nancyCookie));
 			}
 
-			httpResponse.ContentType = nancyResponse.ContentType;
-			httpResponse.StatusCode = (int) nancyResponse.StatusCode;
+			response.ContentType = nancyResponse.ContentType;
+			response.StatusCode = (int) nancyResponse.StatusCode;
 
-			using (var output = httpResponse.OutputStream)
+			using (var output = response.OutputStream)
 			{
-				nancyResponse.Contents (output);
+				nancyResponse.Contents.Invoke (output);
 			}
 		}
 
 
-		private static Cookie ConvertNancyCookieToHttpCookie(INancyCookie nancyCookie)
+		private static Cookie ConvertCookie(INancyCookie nancyCookie)
 		{
 			var cookie = new Cookie (nancyCookie.EncodedName, nancyCookie.EncodedValue, nancyCookie.Path, nancyCookie.Domain);
 
@@ -182,7 +184,7 @@ namespace Epsitec.Cresus.Core.Server.NancyComponents
 		}
 
 
-		private readonly HttpServer.HttpServer httpServer;
+		private readonly HttpServer httpServer;
 
 
 		private readonly INancyEngine engine;

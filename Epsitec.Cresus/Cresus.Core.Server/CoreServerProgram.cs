@@ -4,13 +4,21 @@
 
 using Epsitec.Common.IO;
 
-using Epsitec.Cresus.Core.Server.NancyComponents;
+using Epsitec.Cresus.Core.Server.CoreServer;
+using Epsitec.Cresus.Core.Server.NancyModules;
+using Epsitec.Cresus.Core.Server.NancyHosting;
 
 using System;
+
+using System.Collections.Generic;
 
 using System.IO;
 
 using System.Runtime.InteropServices;
+
+
+// Uncomment to regenerate all icons
+//#define BUILD_ICONS
 
 
 namespace Epsitec.Cresus.Core.Server
@@ -31,7 +39,9 @@ namespace Epsitec.Cresus.Core.Server
 
 		private static void Initialize()
 		{
+#if BUILD_ICONS
 			IconsBuilder.BuildIcons (CoreServerProgram.iconDirectory.FullName);
+#endif
 		}
 
 
@@ -39,20 +49,25 @@ namespace Epsitec.Cresus.Core.Server
 		{
 			var uri = CoreServerProgram.baseUri;
 			var nbThreads = CoreServerProgram.nbThreads;
-			
+
 			Console.WriteLine ("Launching nancy server...");
 
-			using (var nancyServer = new NancyServer (uri, nbThreads))
+			using (var serverContext = new ServerContext ())
 			{
-				nancyServer.Start ();
+				CoreServerProgram.serverContext = serverContext;
 
-				Console.WriteLine ("Nancy server running and listening to " + uri + "");
-				Console.WriteLine ("Press [ENTER] to shut down");
-				Console.ReadLine ();
+				using (var nancyServer = new NancyServer (uri, nbThreads))
+				{
+					nancyServer.Start ();
 
-				Console.WriteLine ("Shutting down nancy server...");
+					Console.WriteLine ("Nancy server running and listening to " + uri + "");
+					Console.WriteLine ("Press [ENTER] to shut down");
+					Console.ReadLine ();
 
-				nancyServer.Stop ();
+					Console.WriteLine ("Shutting down nancy server...");
+
+					nancyServer.Stop ();
+				}
 			}
 
 			Console.WriteLine ("Nancy server shut down");
@@ -68,6 +83,10 @@ namespace Epsitec.Cresus.Core.Server
 
 
 		private static readonly int nbThreads = 3;
+
+
+		// TMP
+		internal static ServerContext serverContext;
 
 
 	}

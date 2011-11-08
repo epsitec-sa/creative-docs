@@ -6,16 +6,16 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Cresus.Core.Business;
-using Epsitec.Cresus.Core.Server.AdditionalResponses;
+using Epsitec.Cresus.Core.Server.NancyHosting;
 using Epsitec.Cresus.DataLayer.Context;
 using Nancy;
 
-namespace Epsitec.Cresus.Core.Server.Modules
+namespace Epsitec.Cresus.Core.Server.NancyModules
 {
 	/// <summary>
 	/// Allows to add or delete an entity within a collection
 	/// </summary>
-	public class CollectionManagerModule : CoreModule
+	public class CollectionManagerModule : AbstractLoggedCoreModule
 	{
 		public CollectionManagerModule() : base("/collection")
 		{

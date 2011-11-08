@@ -5,17 +5,16 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
-using Epsitec.Cresus.Core.Server.AdditionalResponses;
-using Epsitec.Cresus.Core.Server.NancyComponents;
+using Epsitec.Cresus.Core.Server.NancyHosting;
 using Epsitec.Cresus.DataLayer.Context;
 using Nancy;
 
-namespace Epsitec.Cresus.Core.Server.Modules
+namespace Epsitec.Cresus.Core.Server.NancyModules
 {
 	/// <summary>
 	/// Used to update value of an existing entity
 	/// </summary>
-	public class EntityModule : CoreModule
+	public class EntityModule : AbstractLoggedCoreModule
 	{
 		public EntityModule()
 			: base ("/entity")

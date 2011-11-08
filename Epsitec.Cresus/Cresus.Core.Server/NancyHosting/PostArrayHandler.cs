@@ -1,17 +1,25 @@
 ﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Jonas Schmid, Maintainer: -
 
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
+
 using Nancy;
 
-namespace Epsitec.Cresus.Core.Server.NancyComponents
+using System.Collections.Generic;
+
+using System.Text.RegularExpressions;
+
+
+namespace Epsitec.Cresus.Core.Server.NancyHosting
 {
+
+
 	/// <summary>
 	/// This is used when we get a form with arrays, like a collection type in an entity
 	/// </summary>
 	public static class PostArrayHandler
 	{
+
+
 		public static object GetFormWithArrays(dynamic form)
 		{
 			var newDictionnary = new DynamicDictionary ();
@@ -45,6 +53,11 @@ namespace Epsitec.Cresus.Core.Server.NancyComponents
 			return newDictionnary;
 		}
 
+
 		private static readonly Regex reg = new Regex (@"^([^\[]+)\[[^\]]?\]$");
+	
+	
 	}
+
+
 }

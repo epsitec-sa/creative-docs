@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
@@ -15,7 +16,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Epsitec.Cresus.Core.Server
+
+namespace Epsitec.Cresus.Core.Server.CoreServer
 {
 	public sealed class CoreSession : CoreApp
 	{

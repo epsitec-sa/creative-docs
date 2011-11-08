@@ -1,15 +1,18 @@
 ﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Jonas Schmid, Maintainer: -
 
-// Uncomment to regenerate all icons
-//#define BUILD_ICONS
 
-using System.Linq;
 using Epsitec.Common.Drawing;
+
 using Epsitec.Common.Support;
 
-namespace Epsitec.Cresus.Core.Server
+using System.Linq;
+
+
+namespace Epsitec.Cresus.Core.Server.CoreServer
 {
+	
+	
 	/// <summary>
 	/// Used to write every available *.icon into their PNG equivalent so that they are available
 	/// through the web server.
@@ -17,17 +20,22 @@ namespace Epsitec.Cresus.Core.Server
 	/// Uncomment the "define" to regenerate all icons at server startup.
 	/// It takes time !
 	/// </summary>
-	internal class IconsBuilder
+	internal class IconManager
 	{
+
+
+		private IconManager(string rootfolder)
+		{
+			this.cssFilename = string.Concat (rootfolder, IconManager.baseCssFilename);
+			this.imagesFilename = string.Concat (rootfolder, IconManager.baseImagesFilename);
+		}
+
 
 		public static void BuildIcons(string rootfolder)
 		{
-#if BUILD_ICONS
-
-			var builder = new IconsBuilder (rootfolder);
-			builder.Run ();
-#endif
+			new IconManager (rootfolder).BuildIcons ();
 		}
+
 
 		public static string GetCSSClassName(string iconUri, IconSize size)
 		{
@@ -39,16 +47,11 @@ namespace Epsitec.Cresus.Core.Server
 			var iconRes = Misc.GetResourceIconUri (iconUri);
 			var iconName = iconRes.Substring (9);
 
-			return string.Format (IconsBuilder.cssClassName, iconName.Replace ('.', '-').ToLower (), size);
+			return string.Format (IconManager.cssClassName, iconName.Replace ('.', '-').ToLower (), size);
 		}
 
-		private IconsBuilder(string rootfolder)
-		{
-			this.cssFilename = string.Concat (rootfolder, IconsBuilder.baseCssFilename);
-			this.imagesFilename = string.Concat (rootfolder, IconsBuilder.baseImagesFilename);
-		}
 
-		private void Run()
+		private void BuildIcons()
 		{
 			Epsitec.Common.Document.Engine.Initialize ();
 
@@ -58,6 +61,8 @@ namespace Epsitec.Cresus.Core.Server
 
 			list.ToList ().ForEach (CreateIcons);
 		}
+
+
 		/// <summary>
 		/// Create an image using a brick
 		/// </summary>
@@ -113,6 +118,7 @@ namespace Epsitec.Cresus.Core.Server
 			AddToCSS (iconUri, relativePath, IconSize.Sixteen);
 		}
 
+
 		/// <summary>
 		/// Create CSS content to be able to call an icon from the HTML code
 		/// </summary>
@@ -121,12 +127,14 @@ namespace Epsitec.Cresus.Core.Server
 		/// <returns>CSS classname</returns>
 		private void AddToCSS(string iconUri, string path, IconSize size)
 		{
-			var cssClassname = IconsBuilder.GetCSSClassName (iconUri, size);
+			var cssClassname = IconManager.GetCSSClassName (iconUri, size);
 			string imgPath = string.Concat ("../", path);
-			var css = string.Format (IconsBuilder.cssClass, cssClassname, imgPath);
+			var css = string.Format (IconManager.cssClass, cssClassname, imgPath);
 
 			System.IO.File.AppendAllText (this.cssFilename, css);
 		}
+
+
 		/// <summary>
 		/// Get the filename of an image
 		/// </summary>
@@ -135,15 +143,17 @@ namespace Epsitec.Cresus.Core.Server
 		private string GetImageAbsoluteFilePath(string name, IconSize size)
 		{
 			var path = string.Format (this.imagesFilename, name.Replace ('.', '/'), size);
-			IconsBuilder.EnsureDirectoryStructureExists (path);
+			IconManager.EnsureDirectoryStructureExists (path);
 			return path;
 		}
 
+
 		private string GetImageRelativeFilePath(string name, IconSize size)
 		{
-			var path = string.Format (IconsBuilder.baseImagesFilename, name.Replace ('.', '/'), size);
+			var path = string.Format (IconManager.baseImagesFilename, name.Replace ('.', '/'), size);
 			return path;
 		}
+
 
 		/// <summary>
 		/// checks if the folder exists, otherwise creates it
@@ -169,9 +179,5 @@ namespace Epsitec.Cresus.Core.Server
 		private readonly static string cssClass = ".{0} {{ background-image: url({1}) !important; }} \n";
 	}
 
-	internal enum IconSize
-	{
-		Sixteen = 16,
-		ThirtyTwo = 32
-	}
+
 }

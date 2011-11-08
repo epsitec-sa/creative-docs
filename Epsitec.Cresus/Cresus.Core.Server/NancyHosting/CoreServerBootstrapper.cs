@@ -1,16 +1,26 @@
 ﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Jonas Schmid, Maintainer: -
 
+
 using Nancy;
+
+using Nancy.Bootstrapper;
+
+using Nancy.ErrorHandling;
+
 using Nancy.Session;
 
-namespace Epsitec.Cresus.Core.Server.NancyComponents
+
+namespace Epsitec.Cresus.Core.Server.NancyHosting
 {
+	
+	
 	/// <summary>
 	/// Called by Nancy when the server is starting
 	/// </summary>
 	public class CoreServerBootstrapper : DefaultNancyBootstrapper
 	{
+
 		protected override void InitialiseInternal(TinyIoC.TinyIoCContainer container)
 		{
 			base.InitialiseInternal (container);
@@ -37,5 +47,6 @@ namespace Epsitec.Cresus.Core.Server.NancyComponents
 			}
 		}
 	}
+
 
 }

@@ -14,6 +14,7 @@ using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.Core.Server.CoreServer;
 
 namespace Epsitec.Cresus.Core.Server
 {
@@ -194,7 +195,7 @@ namespace Epsitec.Cresus.Core.Server
 			string title = item.Title.ToSimpleText ();
 			panel["title"] = title;
 
-			var icon = IconsBuilder.GetCSSClassName (item.IconUri, IconSize.Sixteen);
+			var icon = IconManager.GetCSSClassName (item.IconUri, IconSize.Sixteen);
 			if (icon != null)
 			{
 				panel["iconCls"] = icon;

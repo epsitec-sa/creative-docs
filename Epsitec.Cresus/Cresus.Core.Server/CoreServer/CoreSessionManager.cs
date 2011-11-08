@@ -1,30 +1,29 @@
 ﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+
+using System;
+
 using System.Collections.Generic;
 
-namespace Epsitec.Cresus.Core.Server
+using System.Linq;
+
+
+namespace Epsitec.Cresus.Core.Server.CoreServer
 {
 
-	public sealed class CoreServer
-	{			
-		private CoreServer()
+
+	internal sealed class CoreSessionManager : AbstractServerObject, IDisposable
+	{
+
+
+		public CoreSessionManager(ServerContext serverContext)
+			: base (serverContext)
 		{
+			this.sessionLock = new object ();
 			this.sessions = new Dictionary<string, CoreSession> ();
 		}
 
-		public static CoreServer Instance
-		{
-			get
-			{
-				if (CoreServer.instance == null)
-				{
-					CoreServer.instance = new CoreServer ();
-				}
-
-				return CoreServer.instance;
-			}
-		}
 
 		public CoreSession CreateSession()
 		{
@@ -33,9 +32,10 @@ namespace Epsitec.Cresus.Core.Server
 			return this.CreateSession (sessionId);
 		}
 
+
 		private CoreSession CreateSession(string id)
 		{
-			lock (this.sessions)
+			lock (this.sessionLock)
 			{
 				if (this.sessions.ContainsKey (id))
 				{
@@ -50,11 +50,12 @@ namespace Epsitec.Cresus.Core.Server
 			}
 		}
 
+
 		public CoreSession GetCoreSession(string id)
 		{
 			CoreSession session = null;
 
-			lock (this.sessions)
+			lock (this.sessionLock)
 			{
 				if (id != null)
 				{
@@ -65,17 +66,19 @@ namespace Epsitec.Cresus.Core.Server
 			return session;
 		}
 
+
 		public bool DeleteSession(CoreSession session)
 		{
 			return this.DeleteSession (session.Id);
 		}
+
 
 		public bool DeleteSession(string id)
 		{
 			CoreSession session = null;
 			bool found;
 
-			lock (this.sessions)
+			lock (this.sessionLock)
 			{
 				found = this.sessions.TryGetValue (id, out session);
 
@@ -94,8 +97,23 @@ namespace Epsitec.Cresus.Core.Server
 			return found;
 		}
 
+
+		public void Dispose()
+		{
+			foreach (var session in this.sessions.Keys.ToList ())
+			{
+				this.DeleteSession (session);
+			}
+		}
+
+
+		private readonly object sessionLock;
+
+
 		private readonly Dictionary<string, CoreSession> sessions;
 
-		private static CoreServer instance;
+
 	}
+
+
 }

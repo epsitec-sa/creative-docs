@@ -7,11 +7,12 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Server.AdditionalResponses;
+using Epsitec.Cresus.Core.Server.NancyHosting;
 using Epsitec.Cresus.DataLayer.Context;
 using Nancy;
+using Epsitec.Cresus.Core.Server.CoreServer;
 
-namespace Epsitec.Cresus.Core.Server.Modules
+namespace Epsitec.Cresus.Core.Server.NancyModules
 {
 	/// <summary>
 	/// Used to populate the left list and the header menu.
@@ -20,7 +21,7 @@ namespace Epsitec.Cresus.Core.Server.Modules
 	/// It is then able to retrieve a list of entities based on the request.
 	/// It is also able to add or delete an entity within the selected database.
 	/// </summary>
-	public class DatabasesModule : CoreModule
+	public class DatabasesModule : AbstractLoggedCoreModule
 	{
 
 		static DatabasesModule()
@@ -31,21 +32,21 @@ namespace Epsitec.Cresus.Core.Server.Modules
 			{
 				Title = "Clients",
 				DatabaseName = "customers",
-				CSSClass = IconsBuilder.GetCSSClassName ("Base.Customer", IconSize.ThirtyTwo)
+				CSSClass = IconManager.GetCSSClassName ("Base.Customer", IconSize.ThirtyTwo)
 			};
 
 			DatabasesModule.databases["articles"] = new Database<ArticleDefinitionEntity>
 			{
 				Title = "Articles",
 				DatabaseName = "articles",
-				CSSClass = IconsBuilder.GetCSSClassName ("Base.ArticleDefinition", IconSize.ThirtyTwo)
+				CSSClass = IconManager.GetCSSClassName ("Base.ArticleDefinition", IconSize.ThirtyTwo)
 			};
 
 			DatabasesModule.databases["genders"] = new Database<PersonGenderEntity>
 			{
 				Title = "Genres",
 				DatabaseName = "genders",
-				CSSClass = IconsBuilder.GetCSSClassName ("Base.PersonGender", IconSize.ThirtyTwo)
+				CSSClass = IconManager.GetCSSClassName ("Base.PersonGender", IconSize.ThirtyTwo)
 			};
 		}
 

@@ -37,8 +37,7 @@
     <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Nancy, Version=0.7.1.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Nancy">
       <HintPath>lib\Nancy.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -55,31 +54,35 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="AdditionalResponses\CoreResponse.cs" />
-    <Compile Include="Authentification\AuthentificationManager.cs" />
+    <Compile Include="CoreServer\IconSize.cs" />
+    <Compile Include="NancyHosting\CoreResponse.cs" />
+    <Compile Include="CoreServer\AuthentificationManager.cs" />
     <Compile Include="BrickProcessor.cs" />
-    <Compile Include="HttpServer\HttpServer.cs" />
-    <Compile Include="IconsBuilder.cs" />
-    <Compile Include="Modules\EnumModule.cs" />
-    <Compile Include="Modules\PageModule.cs" />
-    <Compile Include="NancyComponents\CoreErrorHandler.cs" />
-    <Compile Include="NancyComponents\CoreServerBootstrapper.cs" />
+    <Compile Include="NancyModules\AbstractLoggedCoreModule.cs" />
+    <Compile Include="NancyHosting\HttpServer.cs" />
+    <Compile Include="CoreServer\IconManager.cs" />
+    <Compile Include="NancyModules\EnumModule.cs" />
+    <Compile Include="NancyModules\PageModule.cs" />
+    <Compile Include="NancyHosting\CoreErrorHandler.cs" />
+    <Compile Include="NancyHosting\CoreServerBootstrapper.cs" />
     <Compile Include="CoreServerProgram.cs" />
-    <Compile Include="CoreServer.cs" />
-    <Compile Include="CoreSession.cs" />
-    <Compile Include="Modules\CoreModule.cs" />
-    <Compile Include="Modules\CollectionManagerModule.cs" />
-    <Compile Include="Modules\EntityModule.cs" />
-    <Compile Include="Modules\LayoutModule.cs" />
-    <Compile Include="Modules\DatabaseModule.cs" />
-    <Compile Include="Modules\LoginModule.cs" />
-    <Compile Include="NancyComponents\NancyServer.cs" />
-    <Compile Include="NancyComponents\FileSystemRootPathProvider.cs" />
-    <Compile Include="NancyComponents\PostArrayHandler.cs" />
+    <Compile Include="CoreServer\CoreSessionManager.cs" />
+    <Compile Include="CoreServer\CoreSession.cs" />
+    <Compile Include="NancyModules\AbstractCoreModule.cs" />
+    <Compile Include="NancyModules\CollectionManagerModule.cs" />
+    <Compile Include="NancyModules\EntityModule.cs" />
+    <Compile Include="NancyModules\LayoutModule.cs" />
+    <Compile Include="NancyModules\DatabaseModule.cs" />
+    <Compile Include="NancyModules\LoginModule.cs" />
+    <Compile Include="NancyHosting\NancyServer.cs" />
+    <Compile Include="NancyHosting\FileSystemRootPathProvider.cs" />
+    <Compile Include="NancyHosting\PostArrayHandler.cs" />
     <Compile Include="PanelBuilder.cs" />
     <Compile Include="PanelFieldAccessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="AdditionalResponses\ResponseExtensions.cs" />
+    <Compile Include="NancyHosting\CoreResponseExtensions.cs" />
+    <Compile Include="CoreServer\ServerContext.cs" />
+    <Compile Include="CoreServer\AbstractServerObject.cs" />
     <Compile Include="WebDataItem.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -179,8 +182,6 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="lib\Nancy.dll" />
-    <Content Include="lib\README.txt" />
     <Content Include="Views\about.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
