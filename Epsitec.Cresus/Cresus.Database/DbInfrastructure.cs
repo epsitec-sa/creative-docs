@@ -378,6 +378,7 @@ namespace Epsitec.Cresus.Database
 		/// Creates the database access.
 		/// </summary>
 		/// <param name="name">The database file name.</param>
+		/// <param name="host">The host where the database is.</param>
 		/// <returns>The database access.</returns>
 		public static DbAccess CreateDatabaseAccess(string name, string host = "localhost")
 		{

@@ -467,15 +467,18 @@ namespace Epsitec.Cresus.Database
 
 		private static bool AreDbNumDefValueCompatible(DbNumDef a, DbNumDef b)
 		{
-			return true; // HACK
-			return (b == null) || 
-				(
-					   a != null && b != null
-					&& a.MinValue >= b.MinValue
-					&& a.MaxValue <= b.MaxValue
-					&& a.DigitShift <= b.DigitShift
-					&& a.DigitPrecision - a.DigitShift <= b.DigitPrecision - b.DigitShift
-				);
+			// HACK Remove this line and uncomment the body of the method to correct it.
+			
+			return true;
+
+			//return (b == null) || 
+			//    (
+			//           a != null && b != null
+			//        && a.MinValue >= b.MinValue
+			//        && a.MaxValue <= b.MaxValue
+			//        && a.DigitShift <= b.DigitShift
+			//        && a.DigitPrecision - a.DigitShift <= b.DigitPrecision - b.DigitShift
+			//    );
 		}
 
 
