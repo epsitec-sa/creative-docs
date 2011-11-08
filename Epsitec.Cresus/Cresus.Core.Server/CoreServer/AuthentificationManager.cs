@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 	/// This class is used by the <see cref="LoginModule"/> to check the user's credentials.
 	/// It should use the users with the Core app.
 	/// </summary>
-	internal sealed class AuthentificationManager : AbstractServerObject, IDisposable
+	public sealed class AuthentificationManager : AbstractServerObject, IDisposable
 	{
 
 

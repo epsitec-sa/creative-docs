@@ -4,8 +4,8 @@
 namespace Epsitec.Cresus.Core.Server.CoreServer
 {
 
-	
-	internal sealed class ServerContext : IDisposable
+
+	public sealed class ServerContext : IDisposable
 	{
 
 

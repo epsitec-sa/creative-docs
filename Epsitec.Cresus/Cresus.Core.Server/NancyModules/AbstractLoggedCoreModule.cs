@@ -9,14 +9,15 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 	{
 
 
-		protected AbstractLoggedCoreModule()
+		protected AbstractLoggedCoreModule(ServerContext serverContext)
+			: base (serverContext)
 		{
 			LoginModule.CheckIsLoggedIn (this);
 		}
 
 
-		protected AbstractLoggedCoreModule(string modulePath)
-			: base (modulePath)
+		protected AbstractLoggedCoreModule(ServerContext serverContext, string modulePath)
+			: base (serverContext, modulePath)
 		{
 			LoginModule.CheckIsLoggedIn (this);
 		}
@@ -34,6 +35,8 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 
 			return session;
 		}
+
+
 	}
 
 

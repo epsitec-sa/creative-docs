@@ -1,23 +1,37 @@
 ﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Jonas Schmid, Maintainer: -
 
-using System.Linq;
+
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
+
 using Epsitec.Common.Types;
+
 using Epsitec.Cresus.Core.Business;
+
+using Epsitec.Cresus.Core.Server.CoreServer;
 using Epsitec.Cresus.Core.Server.NancyHosting;
+
 using Epsitec.Cresus.DataLayer.Context;
+
 using Nancy;
+
+using System.Linq;
+
 
 namespace Epsitec.Cresus.Core.Server.NancyModules
 {
+
+
 	/// <summary>
 	/// Allows to add or delete an entity within a collection
 	/// </summary>
 	public class CollectionManagerModule : AbstractLoggedCoreModule
 	{
-		public CollectionManagerModule() : base("/collection")
+
+
+		public CollectionManagerModule(ServerContext serverContext)
+			: base (serverContext, "/collection")
 		{
 			Post["/delete"] = parameters =>
 			{
@@ -88,5 +102,9 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 				return Response.AsCoreSuccess (key);
 			};
 		}
+
+
 	}
+
+
 }

@@ -2,6 +2,8 @@
 //	Author: Jonas Schmid, Maintainer: -
 
 
+using Epsitec.Cresus.Core.Server.CoreServer;
+
 using Epsitec.Cresus.Core.Server.NancyHosting;
 
 using Nancy;
@@ -9,6 +11,7 @@ using Nancy;
 using Nancy.Extensions;
 
 using System.Collections.Generic;
+
 
 
 namespace Epsitec.Cresus.Core.Server.NancyModules
@@ -22,8 +25,8 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 	{
 
 
-		public LoginModule()
-			: base ("/log")
+		public LoginModule(ServerContext serverContext)
+			: base (serverContext, "/log")
 		{
 			Post["/in"] = parameters => this.Login ();
 			Get["/out"] = parameters => this.Logout ();

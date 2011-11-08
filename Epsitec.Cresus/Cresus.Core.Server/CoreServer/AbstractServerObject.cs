@@ -2,7 +2,7 @@
 {
 
 
-	internal abstract class AbstractServerObject
+	public abstract class AbstractServerObject
 	{
 
 

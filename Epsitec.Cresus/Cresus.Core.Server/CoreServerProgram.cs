@@ -54,9 +54,7 @@ namespace Epsitec.Cresus.Core.Server
 
 			using (var serverContext = new ServerContext ())
 			{
-				CoreServerProgram.serverContext = serverContext;
-
-				using (var nancyServer = new NancyServer (uri, nbThreads))
+				using (var nancyServer = new NancyServer (serverContext, uri, nbThreads))
 				{
 					nancyServer.Start ();
 
@@ -83,10 +81,6 @@ namespace Epsitec.Cresus.Core.Server
 
 
 		private static readonly int nbThreads = 3;
-
-
-		// TMP
-		internal static ServerContext serverContext;
 
 
 	}

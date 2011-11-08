@@ -2,6 +2,8 @@
 //	Author: Jonas Schmid, Maintainer: -
 
 
+using Epsitec.Cresus.Core.Server.CoreServer;
+
 using Nancy;
 
 using Nancy.Bootstrapper;
@@ -23,6 +25,7 @@ using System.Linq;
 using System.Net;
 
 
+
 namespace Epsitec.Cresus.Core.Server.NancyHosting
 {
 
@@ -35,14 +38,16 @@ namespace Epsitec.Cresus.Core.Server.NancyHosting
 		// https://github.com/NancyFx/Nancy/blob/09a5c3f8f79d5986a04973b0371e52f4f596a600/src/Nancy.Hosting.Self/NancyHost.cs
 
 
-		public NancyServer(Uri uri, int nbThreads)
+		public NancyServer(ServerContext serverContext, Uri uri, int nbThreads)
 		{
 			this.baseUri = uri;
 			this.nbThreads = nbThreads;
 			this.httpServer = new HttpServer (uri);
 
-			NancyBootstrapperLocator.Bootstrapper.Initialise ();
-			this.engine = NancyBootstrapperLocator.Bootstrapper.GetEngine ();
+			var bootStrapper = new CoreServerBootstrapper (serverContext);
+
+			bootStrapper.Initialise ();
+			this.engine = bootStrapper.GetEngine ();
 		}
 
 

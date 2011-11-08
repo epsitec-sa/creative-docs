@@ -1,23 +1,36 @@
 ﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Jonas Schmid, Maintainer: -
 
-using System.Collections.Generic;
-using System.Linq;
+
 using Epsitec.Common.Support.EntityEngine;
+
 using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Core.Server.CoreServer;
 using Epsitec.Cresus.Core.Server.NancyHosting;
+
 using Epsitec.Cresus.DataLayer.Context;
+
 using Nancy;
+
+using System.Collections.Generic;
+
+using System.Linq;
+
 
 namespace Epsitec.Cresus.Core.Server.NancyModules
 {
+
+
 	/// <summary>
 	/// Used to update value of an existing entity
 	/// </summary>
 	public class EntityModule : AbstractLoggedCoreModule
 	{
-		public EntityModule()
-			: base ("/entity")
+
+
+		public EntityModule(ServerContext serverContext)
+			: base (serverContext, "/entity")
 		{
 			Post["/{id}"] = parameters =>
 			{
@@ -103,5 +116,9 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 				}
 			};
 		}
+
+
 	}
+
+
 }

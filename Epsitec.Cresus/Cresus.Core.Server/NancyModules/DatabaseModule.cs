@@ -1,19 +1,31 @@
 ﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Jonas Schmid, Maintainer: -
 
-using System.Collections.Generic;
-using System.Linq;
+
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
-using Epsitec.Cresus.Core.Business;
+
 using Epsitec.Cresus.Core.Entities;
+
+using Epsitec.Cresus.Core.Business;
+
 using Epsitec.Cresus.Core.Server.NancyHosting;
-using Epsitec.Cresus.DataLayer.Context;
-using Nancy;
 using Epsitec.Cresus.Core.Server.CoreServer;
+
+using Epsitec.Cresus.DataLayer.Context;
+
+using Nancy;
+
+using System.Collections.Generic;
+
+using System.Linq;
+using System;
+
 
 namespace Epsitec.Cresus.Core.Server.NancyModules
 {
+
+
 	/// <summary>
 	/// Used to populate the left list and the header menu.
 	/// A list of available databases is populated when the module is loaded, 
@@ -23,6 +35,7 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 	/// </summary>
 	public class DatabasesModule : AbstractLoggedCoreModule
 	{
+
 
 		static DatabasesModule()
 		{
@@ -50,8 +63,9 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 			};
 		}
 
-		public DatabasesModule()
-			: base ("/database")
+
+		public DatabasesModule(ServerContext serverContext)
+			: base (serverContext, "/database")
 		{
 
 			Get["/list"] = parameters =>
@@ -132,24 +146,31 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 
 		}
 
+
 		private readonly static Dictionary<string, Database> databases;
-	}
 
-	abstract class Database
-	{
-		public abstract System.Type GetDatabaseType();
-	}
 
-	sealed class Database<T> : Database
-		where T : AbstractEntity
-	{
-		public string Title;
-		public string DatabaseName;
-		public string CSSClass;
-
-		public override System.Type GetDatabaseType()
+		private abstract class Database
 		{
-			return typeof (T);
+			public abstract Type GetDatabaseType();
 		}
+
+
+		private sealed class Database<T> : Database
+			where T : AbstractEntity
+		{
+			public string Title;
+			public string DatabaseName;
+			public string CSSClass;
+
+			public override Type GetDatabaseType()
+			{
+				return typeof (T);
+			}
+		}
+
+
 	}
+
+
 }

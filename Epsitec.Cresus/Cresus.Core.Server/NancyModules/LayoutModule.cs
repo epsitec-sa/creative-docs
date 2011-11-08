@@ -1,22 +1,31 @@
 ﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Jonas Schmid, Maintainer: -
 
+
 using Epsitec.Common.Support.EntityEngine;
+
 using Epsitec.Cresus.Core.Controllers;
+
+using Epsitec.Cresus.Core.Server.CoreServer;
 using Epsitec.Cresus.Core.Server.NancyHosting;
+
 using Epsitec.Cresus.DataLayer.Context;
-using Nancy;
+
 
 namespace Epsitec.Cresus.Core.Server.NancyModules
 {
+
+
 	public class LayoutModule : AbstractLoggedCoreModule
 	{
+
+
 		/// <summary>
 		/// Call the <see cref="PanelBuilder"/> to create the ExtJS interface.
 		/// It is called to show the summary of the edition interface.
 		/// </summary>
-		public LayoutModule()
-			: base ("/layout")
+		public LayoutModule(ServerContext serverContext)
+			: base (serverContext, "/layout")
 		{
 			Get["/{mode}/{id}"] = parameters =>
 			{
@@ -34,9 +43,14 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 			};
 		}
 
+
 		private static ViewControllerMode GetMode(string mode)
 		{
 			return (ViewControllerMode) System.Enum.Parse (typeof (ViewControllerMode), mode, true);
 		}
+
+
 	}
+
+
 }

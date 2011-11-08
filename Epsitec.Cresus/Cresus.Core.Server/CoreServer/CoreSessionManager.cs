@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 {
 
 
-	internal sealed class CoreSessionManager : AbstractServerObject, IDisposable
+	public sealed class CoreSessionManager : AbstractServerObject, IDisposable
 	{
 
 

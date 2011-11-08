@@ -1,20 +1,31 @@
 ﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Jonas Schmid, Maintainer: -
 
-using System.Collections.Generic;
+
 using Epsitec.Common.Support.Extensions;
+
 using Epsitec.Cresus.Core.Library;
+
+using Epsitec.Cresus.Core.Server.CoreServer;
+
+using System.Collections.Generic;
+
 using Nancy;
+
 
 namespace Epsitec.Cresus.Core.Server.NancyModules
 {
+
+
 	/// <summary>
 	/// Used to provide Enum values to the ExtJS store
 	/// </summary>
 	public class EnumModule : AbstractLoggedCoreModule
 	{
-		public EnumModule()
-			: base ("/enum")
+
+
+		public EnumModule(ServerContext serverContext)
+			: base (serverContext, "/enum")
 		{
 			Post["/"] = parameters =>
 			{
@@ -28,37 +39,46 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 
 				return res;
 			};
-
 		}
-	}
 
-	abstract class Fetcher
-	{
-		public abstract List<object> GetValues();
-	}
 
-	sealed class Fetcher<T> : Fetcher
-		where T : struct
-	{
-		public override List<object> GetValues()
+		private abstract class Fetcher
 		{
-			IEnumerable<EnumKeyValues<T>> possibleItems = EnumKeyValues.FromEnum<T> ();
+			public abstract List<object> GetValues();
+		}
 
-			var list = new List<object> ();
 
-			possibleItems.ForEach (c =>
+		private sealed class Fetcher<T> : Fetcher
+			where T : struct
+		{
+
+
+			public override List<object> GetValues()
 			{
-				c.Values.ForEach (v =>
+				IEnumerable<EnumKeyValues<T>> possibleItems = EnumKeyValues.FromEnum<T> ();
+
+				var list = new List<object> ();
+
+				possibleItems.ForEach (c =>
 				{
-					list.Add (new
+					c.Values.ForEach (v =>
 					{
-						id = c.Key.ToString (),
-						name = v.ToString ()
+						list.Add (new
+						{
+							id = c.Key.ToString (),
+							name = v.ToString ()
+						});
 					});
 				});
-			});
 
-			return list;
+				return list;
+			}
+
+
 		}
+
+
 	}
+
+
 }

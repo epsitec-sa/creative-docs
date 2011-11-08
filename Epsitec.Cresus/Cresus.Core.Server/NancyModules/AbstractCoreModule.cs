@@ -5,6 +5,7 @@
 using Epsitec.Cresus.Core.Server.CoreServer;
 
 using Nancy;
+using Epsitec.Cresus.Core.Server.NancyHosting;
 
 
 namespace Epsitec.Cresus.Core.Server.NancyModules
@@ -19,21 +20,15 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 	{
 		
 		
-		protected AbstractCoreModule(): base()
+		protected AbstractCoreModule(ServerContext serverContext): base()
 		{
-			this.serverContext = this.GetServerContext ();
+			this.serverContext = serverContext;			
 		}
 
 
-		protected AbstractCoreModule(string modulePath) : base (modulePath)
+		protected AbstractCoreModule(ServerContext serverContext, string modulePath) : base (modulePath)
 		{
-			this.serverContext = this.GetServerContext ();
-		}
-
-
-		private ServerContext GetServerContext()
-		{
-			return CoreServerProgram.serverContext;
+			this.serverContext = serverContext;
 		}
 
 
