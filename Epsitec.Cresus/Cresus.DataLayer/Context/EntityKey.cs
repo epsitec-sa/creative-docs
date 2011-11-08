@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 		/// <summary>
-		/// Returns a <c>string</c> that represents this instance. Use <see cref="EntityKeyParse"/>
+		/// Returns a <c>string</c> that represents this instance. Use <see cref="Parse"/>
 		/// to convert it back into an <see cref="EntityKey"/>.
 		/// </summary>
 		/// <returns>
