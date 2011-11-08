@@ -68,6 +68,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public void UpdateUI()
 		{
 			this.updateActions.ForEach (action => action ());
+			this.tileContainer.Update ();
 		}
 
 		public void SetInitialFocus()
