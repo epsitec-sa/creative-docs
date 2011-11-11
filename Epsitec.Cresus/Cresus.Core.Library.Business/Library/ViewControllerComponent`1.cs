@@ -9,13 +9,13 @@ namespace Epsitec.Cresus.Core.Library
 {
 	/// <summary>
 	/// The <c>ViewControllerComponent</c> class is the base class used by all components, which are
-	/// dynamically instanciated and attached to the <see cref="MainWindowController"/> host.
+	/// dynamically instantiated and attached to the <see cref="MainWindowController"/> host.
 	/// </summary>
-	public abstract class ViewControllerComponent<T> : ViewControllerComponent
-		where T : ViewControllerComponent<T>
+	public abstract class ViewControllerComponent<TSelf> : ViewControllerComponent
+		where TSelf : ViewControllerComponent<TSelf>
 	{
 		protected ViewControllerComponent(DataViewOrchestrator orchestrator)
-			: base (orchestrator, typeof (T), orchestrator.Host)
+			: base (orchestrator, typeof (TSelf), orchestrator.Host)
 		{
 		}
 	}

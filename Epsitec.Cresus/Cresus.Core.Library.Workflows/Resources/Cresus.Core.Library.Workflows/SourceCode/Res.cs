@@ -304,6 +304,10 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 			#endregion
 		}
 		
+		public static class StringIds
+		{
+		}
+		
 		static Res()
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
