@@ -166,6 +166,15 @@ namespace Epsitec.Cresus.Core.Helpers
 					{
 						if (parameter is OptionValueArticleParameterDefinitionEntity)
 						{
+							//	La valeur obtenue est le code de l'article. Cela n'a donc pas de sens de la
+							//	mettre telle quelle. Une recherche par l'exemple permettrait de trouver
+							//	l'article, mais ce n'est pas fait pour l'instant.
+						}
+						else if (parameter is FreeTextValueArticleParameterDefinitionEntity)
+						{
+							//	La valeur obtenue est une texte fixe multilingue. Comme il est passé à TextLayout
+							//	avec SetParameter, TextLayout ne peut pas extraire la bonne langue. Donc, j'ai
+							//	préféré ne rien mettre pour l'instant.
 						}
 						else
 						{

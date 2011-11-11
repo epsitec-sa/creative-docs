@@ -620,7 +620,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-
 		/// <summary>
 		/// Sets a default parameter for the <c>&lt;param name="..."/&gt;</c> element, which will
 		/// be used if no <c>value</c> attribute was specified in the XML <c>param</c> element.
@@ -4339,14 +4338,12 @@ namespace Epsitec.Common.Widgets
 			parameters.TryGetValue ("name", out name);
 			parameters.TryGetValue ("value", out value);
 
-			if ((!string.IsNullOrEmpty (name)) &&
-				(value == null) &&
-				(this.HasParameters))
+			if (!string.IsNullOrEmpty (name) && value == null && this.HasParameters)
 			{
 				this.parameters.TryGetValue (name, out value);
 			}
 
-			if ((value == null) || (name == null))
+			if (value == null || name == null)
 			{
 				return string.Concat (" ", name ?? value ?? "—", " ");
 			}

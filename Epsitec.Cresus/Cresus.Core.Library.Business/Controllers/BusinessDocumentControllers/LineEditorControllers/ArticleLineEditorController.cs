@@ -139,26 +139,26 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			var leftFrame = new FrameBox
 			{
-				Parent = this.tileContainer,
-				Dock = DockStyle.Fill,
-				Padding = new Margins (10),
+				Parent   = this.tileContainer,
+				Dock     = DockStyle.Fill,
+				Padding  = new Margins (10),
 				TabIndex = this.GetNextTabIndex (),
 			};
 
 			var rightFrame = new FrameBox
 			{
-				Parent = this.tileContainer,
-				Dock = DockStyle.Right,
+				Parent         = this.tileContainer,
+				Dock           = DockStyle.Right,
 				PreferredWidth = 360,
-				TabIndex = this.GetNextTabIndex (),
+				TabIndex       = this.GetNextTabIndex (),
 			};
 
 			var separator = new Separator
 			{
 				IsVerticalLine = true,
 				PreferredWidth = 1,
-				Parent = this.tileContainer,
-				Dock = DockStyle.Right,
+				Parent         = this.tileContainer,
+				Dock           = DockStyle.Right,
 			};
 
 			this.CreateUILeftFrame (builder, leftFrame);
@@ -174,12 +174,12 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				var line = new FrameBox
 				{
-					Parent = parent,
-					Dock = DockStyle.Top,
+					Parent          = parent,
+					Dock            = DockStyle.Top,
 					PreferredHeight = 20,
-					Margins = new Margins (0, 0, 0, 10),
-					TabIndex = this.GetNextTabIndex (),
-					Enable = this.accessData.DocumentLogic.IsLinesEditionEnabled,
+					Margins         = new Margins (0, 0, 0, 10),
+					TabIndex        = this.GetNextTabIndex (),
+					Enable          = this.accessData.DocumentLogic.IsLinesEditionEnabled,
 				};
 
 				var articleController = new SelectionController<ArticleDefinitionEntity> (this.accessData.BusinessContext)
@@ -199,11 +199,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				var line = new FrameBox
 				{
-					Parent = parent,
-					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, 5),
+					Parent   = parent,
+					Dock     = DockStyle.Top,
+					Margins  = new Margins (0, 0, 0, 5),
 					TabIndex = this.GetNextTabIndex (),
-					Enable = this.accessData.DocumentLogic.IsArticleParametersEditionEnabled,
+					Enable   = this.accessData.DocumentLogic.IsArticleParametersEditionEnabled,
 				};
 
 				this.parameterController = new ValuesArticleParameterController (this.tileContainer, line);
@@ -219,10 +219,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				var line = new FrameBox
 				{
-					Parent = parent,
-					Dock = DockStyle.Fill,
+					Parent   = parent,
+					Dock     = DockStyle.Fill,
 					TabIndex = this.GetNextTabIndex (),
-					Enable = this.accessData.DocumentLogic.IsArticleParametersEditionEnabled,
+					Enable   = this.accessData.DocumentLogic.IsArticleParametersEditionEnabled,
 				};
 
 				var replacementBox = new FrameBox ();
@@ -274,29 +274,29 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			var topFrame = new FrameBox
 			{
-				Parent = parent,
-				Dock = DockStyle.Top,
+				Parent          = parent,
+				Dock            = DockStyle.Top,
 				PreferredHeight = 10+20+10,
-				Padding = new Margins (0, 0, 10, 10),
-				TabIndex = this.GetNextTabIndex (),
-				Enable = this.accessData.DocumentLogic.IsMainArticleQuantityEnabled,
+				Padding         = new Margins (0, 0, 10, 10),
+				TabIndex        = this.GetNextTabIndex (),
+				Enable          = this.accessData.DocumentLogic.IsMainArticleQuantityEnabled,
 			};
 
 			var separator = new Separator
 			{
 				IsHorizontalLine = true,
-				PreferredHeight = 1,
-				Parent = parent,
-				Dock = DockStyle.Top,
+				PreferredHeight  = 1,
+				Parent           = parent,
+				Dock             = DockStyle.Top,
 			};
 
 			var bottomFrame = new FrameBox
 			{
-				Parent = parent,
-				Dock = DockStyle.Fill,
+				Parent         = parent,
+				Dock           = DockStyle.Fill,
 				PreferredWidth = 360,
-				Padding = new Margins (0, 0, 10, 10),
-				TabIndex = this.GetNextTabIndex (),
+				Padding        = new Margins (0, 0, 10, 10),
+				TabIndex       = this.GetNextTabIndex (),
 			};
 
 			this.CreateUIRightTopFrame (builder, topFrame);
@@ -423,22 +423,22 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			var line = new FrameBox
 			{
-				Parent = parent,
-				Dock = DockStyle.Top,
+				Parent          = parent,
+				Dock            = DockStyle.Top,
 				PreferredHeight = 20,
-				Margins = new Margins (0, 0, 0, 5),
-				TabIndex = this.GetNextTabIndex (),
-				Enable = this.accessData.DocumentLogic.IsDiscountEditionEnabled,
+				Margins         = new Margins (0, 0, 0, 5),
+				TabIndex        = this.GetNextTabIndex (),
+				Enable          = this.accessData.DocumentLogic.IsDiscountEditionEnabled,
 			};
 
 			var neverButton = new CheckButton
 			{
-				Parent = line,
-				Text = "N'applique jamais les rabais de sous-total ou de total à cet article",
+				Parent      = line,
+				Text        = "N'applique jamais les rabais de sous-total ou de total à cet article",
 				ActiveState = this.Item.NeverApplyDiscount ? ActiveState.Yes : ActiveState.No,
-				Dock = DockStyle.Fill,
-				TabIndex = this.GetNextTabIndex (),
-				Margins = new Margins (10, 0, 0, 0),
+				Dock        = DockStyle.Fill,
+				TabIndex    = this.GetNextTabIndex (),
+				Margins     = new Margins (10, 0, 0, 0),
 			};
 
 			neverButton.ActiveStateChanged += delegate
@@ -554,8 +554,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			
 			System.Action updateAction = () =>
 				{
-					if ((fieldDiscount.Text.IsNullOrWhiteSpace ()) &&
-						(fieldDiscountText.Text.IsNullOrWhiteSpace ()))
+					if (fieldDiscount.Text.IsNullOrWhiteSpace () &&
+						fieldDiscountText.Text.IsNullOrWhiteSpace ())
 					{
 						row1.Visibility = false;
 					}
