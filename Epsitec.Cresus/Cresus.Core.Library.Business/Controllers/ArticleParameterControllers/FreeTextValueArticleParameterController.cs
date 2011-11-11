@@ -48,7 +48,6 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			//	l'édition du texte.
 			var marshaler = Marshaler.Create (() => this.FreeText, x => this.FreeText = x);
 			var controller = new TextValueController (marshaler);
-			controller.Name = "FreeText";
 			controller.Attach (editor);
 			this.tileContainer.Add (controller);
 		}

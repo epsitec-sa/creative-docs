@@ -38,13 +38,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		public string Name
-		{
-			get;
-			set;
-		}
-
-
 		/// <summary>
 		/// Gets the active language id (either the language specific to this controller, or the
 		/// one defined globally in the UI settings).
