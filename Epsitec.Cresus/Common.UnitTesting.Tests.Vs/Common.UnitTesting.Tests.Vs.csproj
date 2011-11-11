@@ -9,8 +9,8 @@
     <ProjectGuid>{8DC6CABD-F081-4AF3-AC8B-89BC4C016967}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Common.UnitTesting.UnitTests</RootNamespace>
-    <AssemblyName>Common.UnitTesting.UnitTests</AssemblyName>
+    <RootNamespace>Epsitec.Common.UnitTesting.UnitTests.Vs</RootNamespace>
+    <AssemblyName>Common.UnitTesting.UnitTests.Vs</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -73,6 +73,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitTestExceptionAssert.cs" />
+    <Compile Include="UnitTestRandomExecutor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.UnitTesting\Common.UnitTesting.csproj">
