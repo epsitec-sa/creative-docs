@@ -13,88 +13,139 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 {
 
 
-	public sealed class CoreSessionManager : AbstractServerObject, IDisposable
+	public sealed class CoreSessionManager : IDisposable
 	{
 
 
-		public CoreSessionManager(ServerContext serverContext)
-			: base (serverContext)
+		public CoreSessionManager(int maxNbSessions, TimeSpan sessionTimeout)
 		{
 			this.sessionLock = new object ();
+			this.maxNbSessions = maxNbSessions;
+			this.sessionTimeout = sessionTimeout;
+
 			this.sessions = new Dictionary<string, CoreSession> ();
+			this.sessionLastAccessTimes = new Dictionary<string, DateTime> ();
 		}
 
 
 		public CoreSession CreateSession()
 		{
-			string sessionId = System.Guid.NewGuid ().ToString ("D");
-
-			return this.CreateSession (sessionId);
-		}
-
-
-		private CoreSession CreateSession(string id)
-		{
 			lock (this.sessionLock)
 			{
-				if (this.sessions.ContainsKey (id))
-				{
-					return null;
-				}
+				var id = this.GetNewId ();
 
 				var session = new CoreSession (id);
 
-				this.sessions.Add (id, session);
+				this.PutSession (id, session);
 
 				return session;
 			}
 		}
 
 
-		public CoreSession GetCoreSession(string id)
+		private string GetNewId()
 		{
-			CoreSession session = null;
+			string id = null;
 
-			lock (this.sessionLock)
+			while (id == null)
 			{
-				if (id != null)
+				var tmpId = Guid.NewGuid ().ToString ("D");
+
+				if (!this.sessions.ContainsKey (tmpId))
 				{
-					this.sessions.TryGetValue (id, out session);
+					id = tmpId;
 				}
 			}
 
-			return session;
+			return id;
 		}
 
 
-		public bool DeleteSession(CoreSession session)
+		public CoreSession GetSession(string id)
 		{
-			return this.DeleteSession (session.Id);
+			lock (this.sessionLock)
+			{
+				return this.RetrieveSession (id);
+			}
 		}
 
 
 		public bool DeleteSession(string id)
 		{
-			CoreSession session = null;
-			bool found;
+			CoreSession session;
 
 			lock (this.sessionLock)
 			{
-				found = this.sessions.TryGetValue (id, out session);
-
-				if (found)
-				{
-					this.sessions.Remove (id);
-				}	
+				session = this.RemoveSession (id);
 			}
+
+			var found = session != null;
 
 			if (found)
 			{
-				session.DisposeBusinessContext ();
 				session.Dispose ();
 			}
 
 			return found;
+		}
+
+
+		public void CleanUpSessions()
+		{
+			var removedSessions = new List<CoreSession> ();
+
+			lock (this.sessionLock)
+			{
+				// Remove all the sessions that have timed out.
+				var timedOutSessions = this.RemoveTimedOutSessions ();
+
+				// If there is still too much sessions, remove the older ones.
+				var excessiveSessions = this.RemoveExcessiveSessions ();
+
+				removedSessions.AddRange (timedOutSessions);
+				removedSessions.AddRange (excessiveSessions);
+			}
+
+			foreach (var session in removedSessions)
+			{
+				session.Dispose ();
+			}
+		}
+
+
+		private IEnumerable<CoreSession> RemoveTimedOutSessions()
+		{
+			var oldestValidTime = DateTime.UtcNow - this.sessionTimeout;
+
+			var oldSessionIds = this.sessionLastAccessTimes
+				.Where (e => e.Value < oldestValidTime)
+				.Select (e => e.Key)
+				.ToList ();
+
+			foreach (var sessionId in oldSessionIds)
+			{
+				yield return this.RemoveSession (sessionId);
+			}
+		}
+
+
+		private IEnumerable<CoreSession> RemoveExcessiveSessions()
+		{
+			var nbExcessiveSessions = this.sessions.Count - this.maxNbSessions;
+
+			if (nbExcessiveSessions > 0)
+			{
+				var excessiveSessionIds = this.sessionLastAccessTimes
+					.OrderBy (e => e.Value)
+					.Take (nbExcessiveSessions)
+					.Select (e => e.Key)
+					.ToList ();
+
+				foreach (var sessionId in excessiveSessionIds)
+				{
+					yield return this.RemoveSession (sessionId);
+				}
+			}
 		}
 
 
@@ -107,10 +158,57 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 		}
 
 
+		private void PutSession(string id, CoreSession session)
+		{
+			this.sessionLastAccessTimes[id] = DateTime.UtcNow;
+			this.sessions[id] = session;
+		}
+
+
+		private CoreSession RetrieveSession(string id)
+		{
+			CoreSession session;
+
+			this.sessions.TryGetValue (id, out session);
+
+			if (session != null)
+			{
+				this.sessionLastAccessTimes[id] = DateTime.UtcNow;
+			}
+
+			return session;
+		}
+
+
+		private CoreSession RemoveSession(string id)
+		{
+			CoreSession session;
+
+			var found = this.sessions.TryGetValue (id, out session);
+
+			if (found)
+			{
+				this.sessions.Remove (id);
+				this.sessionLastAccessTimes.Remove (id);
+			}
+
+			return session;
+		}
+
+
 		private readonly object sessionLock;
 
 
+		private readonly int maxNbSessions;
+
+
+		private readonly TimeSpan sessionTimeout;
+
+
 		private readonly Dictionary<string, CoreSession> sessions;
+
+
+		private readonly Dictionary<string, DateTime> sessionLastAccessTimes;
 
 
 	}

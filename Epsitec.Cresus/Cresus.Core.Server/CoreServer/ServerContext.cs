@@ -9,10 +9,11 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 	{
 
 
-		public ServerContext()
+		public ServerContext(int maxNbSessions, TimeSpan sessionTimeout, TimeSpan sessionCleanupInterval)
 		{
-			this.coreSessionManager = new CoreSessionManager (this);
-			this.authentificationManager = new AuthentificationManager (this);
+			this.coreSessionManager = new CoreSessionManager (maxNbSessions, sessionTimeout);
+			this.coreSessionCleaner = new CoreSessionCleaner (this.coreSessionManager, sessionCleanupInterval);
+			this.authentificationManager = new AuthentificationManager ();
 		}
 
 
@@ -37,11 +38,15 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 		public void Dispose()
 		{
 			this.authentificationManager.Dispose ();
+			this.coreSessionCleaner.Dispose ();
 			this.coreSessionManager.Dispose ();
 		}
 
 
 		private readonly CoreSessionManager coreSessionManager;
+
+
+		private readonly CoreSessionCleaner coreSessionCleaner;
 
 
 		private readonly AuthentificationManager authentificationManager;

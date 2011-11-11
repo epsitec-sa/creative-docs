@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 		{
 			var sessionId = (string) this.Session[LoginModule.CoreSessionName];
 
-			var session = this.ServerContext.CoreSessionManager.GetCoreSession (sessionId);
+			var session = this.ServerContext.CoreSessionManager.GetSession (sessionId);
 
 			if (session == null)
 			{

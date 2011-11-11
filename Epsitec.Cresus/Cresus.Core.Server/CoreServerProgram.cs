@@ -49,26 +49,29 @@ namespace Epsitec.Cresus.Core.Server
 		{
 			var uri = CoreServerProgram.baseUri;
 			var nbThreads = CoreServerProgram.nbThreads;
+			var maxNbSessions = CoreServerProgram.maxNbSessions;
+			var sessionTimeout = CoreServerProgram.sessionTimeout;
+			var sessionCleanupInterval = CoreServerProgram.sessionCleanupInterval;
 
-			Console.WriteLine ("Launching nancy server...");
+			Console.WriteLine ("Launching server...");
 
-			using (var serverContext = new ServerContext ())
+			using (var serverContext = new ServerContext (maxNbSessions, sessionTimeout, sessionCleanupInterval))
 			{
 				using (var nancyServer = new NancyServer (serverContext, uri, nbThreads))
 				{
 					nancyServer.Start ();
 
-					Console.WriteLine ("Nancy server running and listening to " + uri + "");
+					Console.WriteLine ("Server running and listening to " + uri + "");
 					Console.WriteLine ("Press [ENTER] to shut down");
 					Console.ReadLine ();
 
-					Console.WriteLine ("Shutting down nancy server...");
+					Console.WriteLine ("Shutting down server...");
 
 					nancyServer.Stop ();
 				}
 			}
 
-			Console.WriteLine ("Nancy server shut down");
+			Console.WriteLine ("Server shut down");
 			Console.WriteLine ("Press [ENTER] to exit");
 			Console.ReadLine ();
 		}
@@ -81,6 +84,15 @@ namespace Epsitec.Cresus.Core.Server
 
 
 		private static readonly int nbThreads = 3;
+
+
+		private static readonly int maxNbSessions = 10;
+
+
+		private static readonly TimeSpan sessionTimeout = TimeSpan.FromMinutes (5);
+
+
+		private static readonly TimeSpan sessionCleanupInterval = TimeSpan.FromMinutes (1);
 
 
 	}
