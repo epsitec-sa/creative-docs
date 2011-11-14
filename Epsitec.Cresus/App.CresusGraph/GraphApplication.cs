@@ -353,7 +353,7 @@ namespace Epsitec.Cresus.Graph
 		{
 			if (this.IsReady)
 			{
-				System.DateTime now = System.DateTime.Now.ToUniversalTime ();
+				System.DateTime now = System.DateTime.UtcNow;
 				string timeStamp = string.Concat (now.ToShortDateString (), " ", now.ToShortTimeString (), " UTC");
 
 				XDocument doc = new XDocument (

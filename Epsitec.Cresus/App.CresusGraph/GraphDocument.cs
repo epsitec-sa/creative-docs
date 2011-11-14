@@ -562,7 +562,7 @@ namespace Epsitec.Cresus.Graph
 			{
 				this.FullDocumentSaveInProgress = true;
 
-				System.DateTime now = System.DateTime.Now.ToUniversalTime ();
+				System.DateTime now = System.DateTime.UtcNow;
 				string timeStamp = string.Concat (now.ToShortDateString (), " ", now.ToShortTimeString (), " UTC");
 
 				XDocument doc = new XDocument (

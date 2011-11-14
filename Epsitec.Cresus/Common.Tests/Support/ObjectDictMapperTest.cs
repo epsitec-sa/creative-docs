@@ -34,7 +34,7 @@ namespace Epsitec.Common.Tests.Support
 			data.NumValue      = 15;
 			data.StringValue   = "Hello";
 			data.DecimalValue  = 123.456M;
-			data.DateTimeValue = System.DateTime.Now.ToUniversalTime ();
+			data.DateTimeValue = System.DateTime.UtcNow;
 			
 			ObjectDictMapper.CopyToDict (data, dict);
 			

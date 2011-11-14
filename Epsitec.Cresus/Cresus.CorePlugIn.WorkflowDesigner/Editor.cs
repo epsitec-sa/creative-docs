@@ -306,7 +306,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 		public void SaveDesign()
 		{
 			//	Sauve tout le diagramme.
-			System.DateTime now = System.DateTime.Now.ToUniversalTime ();
+			System.DateTime now = System.DateTime.UtcNow;
 			string timeStamp = string.Concat (now.ToShortDateString (), " ", now.ToShortTimeString (), " UTC");
 
 			var xmlDoc   = new XElement ("design", new XAttribute ("date", timeStamp), this.GetSaveObjectsElements ());

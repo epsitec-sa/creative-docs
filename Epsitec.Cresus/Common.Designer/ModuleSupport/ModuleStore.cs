@@ -152,7 +152,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 
 			patchModule.Freeze ();
 			
-			System.DateTime now = System.DateTime.Now.ToUniversalTime ();
+			System.DateTime now = System.DateTime.UtcNow;
 			
 			string timeStamp = string.Concat (now.ToShortDateString (), " ", now.ToShortTimeString (), " UTC");
 			string comment   = string.Concat ("Created by ", identity.UserName, " on ", timeStamp);

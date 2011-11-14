@@ -183,7 +183,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 		/// <returns>The comment with the current date and developer name.</returns>
 		private static string CreateModuleComment(string action)
 		{
-			System.DateTime copyTime = System.DateTime.Now.ToUniversalTime ();
+			System.DateTime copyTime = System.DateTime.UtcNow;
 			IdentityCard identity = Settings.Default.IdentityCard;
 
 			string author  = identity == null ? "" : string.Concat (" by ", identity.UserName);
