@@ -15,6 +15,10 @@ namespace Epsitec.Cresus.Core.Extensions
 	{
 		public static bool InRange(this System.DateTime date, IDateTimeRange range)
 		{
+			DateRangeExtensions.Check (date, range.BeginDate);
+			DateRangeExtensions.Check (date, range.EndDate);
+			DateRangeExtensions.Check (range.BeginDate, range.EndDate);
+
 			return date.InRange (range.BeginDate, range.EndDate);
 		}
 
@@ -26,17 +30,17 @@ namespace Epsitec.Cresus.Core.Extensions
 
 		public static bool Overlaps(this IDateRange range, IDateRange other)
 		{
-			if ((range.EndDate.HasValue) &&
-				(other.BeginDate.HasValue) &&
-				(range.EndDate.Value < other.BeginDate.Value))
+			if (range.EndDate.HasValue &&
+				other.BeginDate.HasValue &&
+				range.EndDate.Value < other.BeginDate.Value)
 			{
 				//	The range ends before the other one.
 				return false;
 			}
 
-			if ((range.BeginDate.HasValue) &&
-				(other.EndDate.HasValue) &&
-				(range.BeginDate.Value > other.EndDate.Value))
+			if (range.BeginDate.HasValue &&
+				other.EndDate.HasValue &&
+				range.BeginDate.Value > other.EndDate.Value)
 			{
 				//	The range begins after the other one.
 				return false;
@@ -50,8 +54,8 @@ namespace Epsitec.Cresus.Core.Extensions
 			Date? beginDate;
 			Date? endDate;
 
-			if ((range.BeginDate.HasValue) &&
-				(other.BeginDate.HasValue))
+			if (range.BeginDate.HasValue &&
+				other.BeginDate.HasValue)
 			{
 				beginDate = range.BeginDate.Value < other.BeginDate.Value ? other.BeginDate : range.BeginDate;
 			}
@@ -60,8 +64,8 @@ namespace Epsitec.Cresus.Core.Extensions
 				beginDate = range.BeginDate ?? other.BeginDate;
 			}
 
-			if ((range.EndDate.HasValue) &&
-				(other.EndDate.HasValue))
+			if (range.EndDate.HasValue &&
+				other.EndDate.HasValue)
 			{
 				endDate = range.EndDate.Value > other.EndDate.Value ? other.EndDate : range.EndDate;
 			}
@@ -79,13 +83,24 @@ namespace Epsitec.Cresus.Core.Extensions
 
 		public static int GetDuration(this IDateRange range)
 		{
-			if ((range.BeginDate.HasValue) &&
-				(range.EndDate.HasValue))
+			if (range.BeginDate.HasValue &&
+				range.EndDate.HasValue)
 			{
 				return range.EndDate.Value - range.BeginDate.Value + 1;
 			}
 
 			throw new System.ArgumentException ("Infinite date range; cannot compute duration");
+		}
+
+
+		private static void Check(System.DateTime? dt1, System.DateTime? dt2)
+		{
+			if (dt1.HasValue &&
+				dt2.HasValue &&
+				dt1.Value.Kind != dt2.Value.Kind)
+			{
+				throw new System.ArgumentException ("DateTime are different kinds");
+			}
 		}
 
 

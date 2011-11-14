@@ -314,7 +314,7 @@ namespace Epsitec.Common.Types
 					throw new System.NullReferenceException ("Date is Null.");
 				}
 				
-				return new System.DateTime (this.days * Time.TicksPerDay);
+				return new System.DateTime (this.days * Time.TicksPerDay, System.DateTimeKind.Utc);
 			}
 		}
 		

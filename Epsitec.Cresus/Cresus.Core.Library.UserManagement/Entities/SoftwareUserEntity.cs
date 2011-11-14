@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Entities
 			{
 				return (this.IsArchive == false)
 					&& (this.Disabled == false)
-					&& (System.DateTime.Now.InRange (this))
+					&& (System.DateTime.UtcNow.InRange (this))
 					&& (this.UserGroups.Where (group => !group.IsArchive).All (group => group.Disabled == false));
 			}
 		}
@@ -32,12 +32,16 @@ namespace Epsitec.Cresus.Core.Entities
 				{
 					case Business.UserManagement.UserAuthenticationMethod.Password:
 						return true;
+
 					case Business.UserManagement.UserAuthenticationMethod.None:
 						return false;
+
 					case Business.UserManagement.UserAuthenticationMethod.System:
 						return string.Compare (this.LoginName, System.Environment.UserName, System.StringComparison.CurrentCultureIgnoreCase) != 0;
+
 					case Business.UserManagement.UserAuthenticationMethod.Disabled:
 						return false;
+
 					default:
 						throw new System.NotSupportedException (string.Format ("Authentication method {0} not supported", this.AuthenticationMethod));
 				}
