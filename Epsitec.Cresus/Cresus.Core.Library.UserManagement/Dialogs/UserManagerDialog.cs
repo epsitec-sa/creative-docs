@@ -1075,7 +1075,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 			else
 			{
-				user.BeginDate = new System.DateTime (date.Value.Year, date.Value.Month, date.Value.Day, 0, 0, 0);
+				user.BeginDate = new System.DateTime (date.Value.Year, date.Value.Month, date.Value.Day, 0, 0, 0, System.DateTimeKind.Utc);
 			}
 
 			this.beginDateField.Text = Misc.GetDateTimeShortDescription (user.BeginDate);
@@ -1097,7 +1097,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 			else
 			{
-				user.EndDate = new System.DateTime (date.Value.Year, date.Value.Month, date.Value.Day, 23, 59, 59);
+				user.EndDate = new System.DateTime (date.Value.Year, date.Value.Month, date.Value.Day, 23, 59, 59, System.DateTimeKind.Utc);
 			}
 
 			this.endDateField.Text = Misc.GetDateTimeShortDescription (user.EndDate);
@@ -1252,7 +1252,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				foreach (var user in this.users)
 				{
-					if ((user.BeginDate == null || user.BeginDate.Value <= System.DateTime.Now) && 
+					if ((user.BeginDate == null || user.BeginDate.Value <= System.DateTime.UtcNow) && 
 						user.EndDate == null &&
 						user.Disabled == false)
 					{

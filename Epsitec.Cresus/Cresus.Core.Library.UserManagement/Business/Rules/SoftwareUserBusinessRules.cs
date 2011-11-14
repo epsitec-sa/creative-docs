@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			user.Code = (string) ItemCodeGenerator.NewCode ();
 			user.DisplayName = new FormattedText ("");
 			user.LoginName = "";
-			user.BeginDate = System.DateTime.Now;
+			user.BeginDate = System.DateTime.UtcNow;
 			user.AuthenticationMethod = Business.UserManagement.UserAuthenticationMethod.None;
 			user.Disabled = false;
 		}

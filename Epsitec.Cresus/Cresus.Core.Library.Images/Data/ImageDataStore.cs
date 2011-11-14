@@ -273,7 +273,7 @@ namespace Epsitec.Cresus.Core.Data
 		
 			var blob = this.DataContext.CreateEntity<ImageBlobEntity> ();
 
-			blob.CreationDate         = System.DateTime.Now;
+			blob.CreationDate         = System.DateTime.UtcNow;
 			blob.LastModificationDate = blob.CreationDate;
 			blob.FileName             = null;
 			blob.FileUri              = null;

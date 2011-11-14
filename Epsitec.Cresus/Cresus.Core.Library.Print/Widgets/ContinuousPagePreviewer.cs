@@ -319,7 +319,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private bool UpdateBitmap(bool force, double width)
 		{
-			long now = System.DateTime.Now.Ticks;
+			long now = System.DateTime.UtcNow.Ticks;
 			bool isLongTime = force || (now-this.bitmapTicks)/10000000 >= 1;  // écoulé plus d'une seconde ?
 			bool dirty = false;
 
@@ -342,7 +342,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				}
 			}
 
-			this.bitmapTicks = System.DateTime.Now.Ticks;
+			this.bitmapTicks = System.DateTime.UtcNow.Ticks;
 			return dirty;
 		}
 

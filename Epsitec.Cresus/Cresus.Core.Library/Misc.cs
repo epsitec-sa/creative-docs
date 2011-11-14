@@ -210,7 +210,7 @@ namespace Epsitec.Cresus.Core
 			}
 			else
 			{
-				return dateTime.Value.ToString ("dd.MM.yyyy");  // par exemple 06.03.2011
+				return dateTime.Value.ToLocalTime ().ToString ("dd.MM.yyyy");  // par exemple 06.03.2011
 			}
 		}
 
@@ -243,7 +243,7 @@ namespace Epsitec.Cresus.Core
 			}
 			else
 			{
-				return dateTime.Value.ToString ("d MMMM yyyy");  // par exemple 6 mars 2011
+				return dateTime.Value.ToLocalTime ().ToString ("d MMMM yyyy");  // par exemple 6 mars 2011
 			}
 		}
 

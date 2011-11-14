@@ -218,7 +218,7 @@ namespace Epsitec.Cresus.Core.Features
 				return;
 			}
 
-			var now = System.DateTime.Now;
+			var now = System.DateTime.UtcNow;
 
 			var context = this.BusinessContext;
 			var entity  = context.GetAllEntities<ProductCustomizationEntity> ().Where (x => now.InRange (x)).FirstOrDefault ();
@@ -241,7 +241,7 @@ namespace Epsitec.Cresus.Core.Features
 				return;
 			}
 
-			var now = System.DateTime.Now;
+			var now = System.DateTime.UtcNow;
 
 			var context = this.BusinessContext;
 			var entity  = context.GetAllEntities<ProductSettingsEntity> ().Where (x => now.InRange (x)).FirstOrDefault ();

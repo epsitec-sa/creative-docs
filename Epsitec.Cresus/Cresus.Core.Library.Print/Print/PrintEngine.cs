@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.Core.Print
 				//	Crée une nouvelle instance.
 				var newBlob = businessContext.CreateEntity<SerializedDocumentBlobEntity> ();
 
-				newBlob.CreationDate = System.DateTime.Now;
+				newBlob.CreationDate = System.DateTime.UtcNow;
 				newBlob.LastModificationDate = newBlob.CreationDate;
 
 				newBlob.Data = data;
@@ -191,7 +191,7 @@ namespace Epsitec.Cresus.Core.Print
 			else
 			{
 				//	Modifie la date de l'instance existante.
-				currentBlob.LastModificationDate = System.DateTime.Now;
+				currentBlob.LastModificationDate = System.DateTime.UtcNow;
 			}
 
 			//	TODO: vérifier que l'on veut vraiment persister cela ici ainsi...

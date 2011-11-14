@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Core.Library.Formatters
 		/// </summary>
 		public FormatterHelper()
 		{
-			this.date = System.DateTime.Now;
+			this.date = System.DateTime.UtcNow;
 		}
 
 

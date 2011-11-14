@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Print.Serialization
 				return null;
 			}
 
-			System.DateTime now = System.DateTime.Now.ToUniversalTime ();
+			var now = System.DateTime.Now.ToUniversalTime ();
 			string timeStamp = string.Concat (now.ToShortDateString (), " ", now.ToShortTimeString (), " UTC");
 
 			var xDocument = new XDocument
