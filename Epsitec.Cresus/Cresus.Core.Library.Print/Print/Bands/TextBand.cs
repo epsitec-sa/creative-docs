@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 			//	Retourne la largeur requise si le texte est mis sur une seule ligne.
 			this.UpdateTextLayout ();
 
-			return this.textLayout.SingleLineSize.Width;
+			return this.textLayout.GetSingleLineSize ().Width;
 		}
 
 

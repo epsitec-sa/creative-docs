@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			}
 			else
 			{
-				width = button.TextLayout.SingleLineSize.Width;
+				width = button.TextLayout.GetSingleLineSize ().Width;
 			}
 
 			return System.Math.Max (button.PreferredHeight, (int) (width+10));

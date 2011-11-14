@@ -80,7 +80,7 @@ namespace Epsitec.Common.Widgets
 
 		public static Drawing.Size GetTextBestFitSize(TextLayout textLayout)
 		{
-			Drawing.Size size = textLayout.SingleLineSize;
+			Drawing.Size size = textLayout.GetSingleLineSize ();
 
 			size.Width  = System.Math.Ceiling (size.Width);
 			size.Height = System.Math.Ceiling (size.Height);

@@ -2,16 +2,18 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 {
-	public sealed class ActionItemLayout
+	public sealed class ActionItemLayout : System.IComparable<ActionItemLayout>
 	{
 		public ActionItemLayout(ActionItem item)
 		{
@@ -83,6 +85,14 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			}
 		}
 
+		public double							TextWidth
+		{
+			get
+			{
+				return this.width;
+			}
+		}
+
 
 
 		public static ActionItemLayout Create(TileDataItem tileDataItem, ActionItem actionItem)
@@ -109,22 +119,38 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 
 			layout.Classify ();
 			layout.Prioritize ();
+			layout.ComputeWidth ();
 
 			return layout;
 		}
 
+		private void ComputeWidth()
+		{
+			var textLayout = this.CreateTextLayout ();
+			var textSize   = textLayout.GetSingleLineSize ();
+			
+			this.width = System.Math.Ceiling (textSize.Width);
+		}
+
+
+		private TextLayout CreateTextLayout()
+		{
+			return new TextLayout ()
+			{
+				FormattedText   = this.Item.Label,
+				DefaultFont     = ActionItemLayout.DefaultFont,
+				DefaultFontSize = ActionItemLayout.DefaultFontSize
+			};
+		}
 
 		private void Classify()
 		{
 			int rowA = 0;
-			int rowB = 0;
-			
-			if (this.actionTarget == ActionTarget.Primary)
-			{
-				rowB = 1;
-			}
+			int rowB = (this.actionTarget == ActionTarget.Primary) ? 1 : 0;
 
-			switch (this.Item.ActionClass.Class)
+			var actionClass = this.Item.ActionClass.Class;
+
+			switch (actionClass)
 			{
 				case ActionClasses.Create:
 				case ActionClasses.Start:
@@ -139,33 +165,54 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 				case ActionClasses.Validate:
 				case ActionClasses.Cancel:
 				case ActionClasses.Stop:
-					this.row = rowB;	
+					this.row = rowB;
 					break;
 
 				case ActionClasses.None:
-				default:
 					this.row = rowA;
 					break;
+
+				default:
+					throw new System.NotSupportedException (string.Format ("{0} not supported", actionClass.GetQualifiedName ()));
 			}
 		}
 
 		private void Prioritize()
 		{
-			switch (this.Item.ActionClass.Class)
+			this.priority = ActionItemLayout.GetPriority (this.Item.ActionClass.Class);
+		}
+
+		private static int GetPriority(ActionClasses actionClass)
+		{
+			switch (actionClass)
 			{
 				case ActionClasses.Create:
-				case ActionClasses.Start:
-				case ActionClasses.NextStep:
-				case ActionClasses.Output:
-				case ActionClasses.Input:
-				case ActionClasses.Delete:
-				case ActionClasses.Clear:
+					return 100;
 				case ActionClasses.Validate:
+					return 105;
+				case ActionClasses.Delete:
+					return 110;
+				case ActionClasses.Clear:
+					return 120;
+				
+				case ActionClasses.Start:
+					return 200;
+				case ActionClasses.NextStep:
+					return 300;
 				case ActionClasses.Cancel:
+					return 310;
 				case ActionClasses.Stop:
+					return 320;
+				
+				case ActionClasses.Output:
+					return 400;
+				case ActionClasses.Input:
+					return 500;
 				case ActionClasses.None:
+					return 600;
+				
 				default:
-					break;
+					throw new System.NotSupportedException (string.Format ("{0} not supported", actionClass.GetQualifiedName ()));
 			}
 		}
 
@@ -175,20 +222,48 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			this.bounds = Rectangle.Empty;
 		}
 
-		enum ActionTarget
+		private enum ActionTarget
 		{
 			None,
 			Primary,
 			CollectionItem,
 		}
 
+		#region IComparable<ActionItemLayout> Members
+
+		public int CompareTo(ActionItemLayout other)
+		{
+			if (this.row != other.row)
+			{
+				return this.row - other.row;
+			}
+			if (this.priority != other.priority)
+			{
+				return this.priority - other.priority;
+			}
+
+			//	TODO: benchmark this and see if ToSimpleText should optimize for cases where the simple text equals the rich text
+
+			string thisLabel  = this.Item.Label.ToSimpleText ();
+			string otherLabel = other.Item.Label.ToSimpleText ();
+
+			return string.CompareOrdinal (thisLabel, otherLabel);
+		}
+
+		#endregion
+
+
+		public static readonly Font				DefaultFont     = Font.DefaultFont;
+		public static readonly double			DefaultFontSize = Font.DefaultFontSize;
 		
 		private readonly ActionItem				item;
 		private ControllerTile					container;
 		private TitleTile						titleTile;
-		private Rectangle						bounds;
 		private ActionTarget					actionTarget;
 		private int								row;
 		private int								priority;
+		private double							width;
+		
+		private Rectangle						bounds;
 	}
 }

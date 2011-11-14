@@ -154,7 +154,7 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				this.shortcut.Text = value;
-				this.shortcutSize = this.AdjustSize (this.shortcut.SingleLineSize);
+				this.shortcutSize = this.AdjustSize (this.shortcut.GetSingleLineSize ());
 			}
 		}
 
@@ -233,7 +233,7 @@ namespace Epsitec.Common.Widgets
 				(this.iconUriActiveNo.Length > 0))
 			{
 				TextLayout layout = this.GetIconTextLayout (this.iconUriActiveNo);
-				Drawing.Size size = layout.SingleLineSize;
+				Drawing.Size size = layout.GetSingleLineSize ();
 				
 				dx = System.Math.Max (dx, size.Width);
 				dy = System.Math.Max (dy, size.Height);
@@ -243,7 +243,7 @@ namespace Epsitec.Common.Widgets
 				(this.iconUriActiveYes.Length > 0))
 			{
 				TextLayout layout = this.GetIconTextLayout (this.iconUriActiveYes);
-				Drawing.Size size = layout.SingleLineSize;
+				Drawing.Size size = layout.GetSingleLineSize ();
 				
 				dx = System.Math.Max (dx, size.Width);
 				dy = System.Math.Max (dy, size.Height);
@@ -252,7 +252,7 @@ namespace Epsitec.Common.Widgets
 			if (this.ContainsValue (Widget.IconUriProperty))
 			{
 				TextLayout layout = this.GetIconTextLayout (this.IconUri);
-				Drawing.Size size = layout.SingleLineSize;
+				Drawing.Size size = layout.GetSingleLineSize ();
 				
 				dx = System.Math.Max (dx, size.Width);
 				dy = System.Math.Max (dy, size.Height);
@@ -331,8 +331,8 @@ namespace Epsitec.Common.Widgets
 		protected override void OnTextChanged()
 		{
 			base.OnTextChanged ();
-			
-			this.mainTextSize = this.AdjustSize (this.TextLayout.SingleLineSize);
+
+			this.mainTextSize = this.AdjustSize (this.TextLayout.GetSingleLineSize ());
 		}
 
 		protected override void OnClicked(MessageEventArgs e)

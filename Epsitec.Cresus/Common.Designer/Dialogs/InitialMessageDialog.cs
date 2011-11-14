@@ -78,7 +78,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			TextLayout textLayout = this.widgetText.TextLayout;
 			Size layoutSize = textLayout.LayoutSize;
-			double minWidth = System.Math.Min(400, System.Math.Ceiling(textLayout.SingleLineSize.Width)+4);
+			double minWidth = System.Math.Min (400, System.Math.Ceiling (textLayout.GetSingleLineSize ().Width)+4);
 			textLayout.LayoutSize = new Size(minWidth, TextLayout.Infinite);
 
 			double width  = textLayout.LayoutSize.Width;

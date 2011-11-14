@@ -63,8 +63,8 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Appelé lorsque le texte du bouton change.
 			base.OnTextChanged();
-			
-			this.mainTextSize = this.TextLayout.SingleLineSize;
+
+			this.mainTextSize = this.TextLayout.GetSingleLineSize ();
 			this.mainTextSize.Width  = System.Math.Ceiling(this.mainTextSize.Width);
 			this.mainTextSize.Height = System.Math.Ceiling(this.mainTextSize.Height);
 

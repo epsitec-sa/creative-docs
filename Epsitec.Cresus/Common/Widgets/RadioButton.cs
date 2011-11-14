@@ -81,8 +81,8 @@ namespace Epsitec.Common.Widgets
 			{
 				return new Drawing.Size (RadioButton.RadioWidth, RadioButton.RadioHeight);
 			}
-			
-			Drawing.Size size = this.TextLayout.SingleLineSize;
+
+			Drawing.Size size = this.TextLayout.GetSingleLineSize ();
 			
 			size.Width  = System.Math.Ceiling (RadioButton.RadioWidth + size.Width + 3);
 			size.Height = System.Math.Max (System.Math.Ceiling (size.Height), RadioButton.RadioHeight);

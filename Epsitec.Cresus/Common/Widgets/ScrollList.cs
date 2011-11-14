@@ -289,7 +289,7 @@ namespace Epsitec.Common.Widgets
 			for (int i = 0; i < max; i++)
 			{
 				layout.Text = this.items[i];
-				Size size = layout.SingleLineSize;
+				Size size = layout.GetSingleLineSize ();
 				dx = System.Math.Max (dx, size.Width);
 				dy = System.Math.Max (dy, size.Height);
 			}

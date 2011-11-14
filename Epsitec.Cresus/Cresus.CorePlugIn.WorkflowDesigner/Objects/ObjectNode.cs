@@ -809,7 +809,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 			rect = this.bounds;
 			rect.Deflate (3);
 			this.title.LayoutSize = rect.Size;
-			double length = this.title.SingleLineSize.Width;
+			double length = this.title.GetSingleLineSize ().Width;
 			double zoom = System.Math.Max (System.Math.Min (rect.Width/length/1.5, 1), 0.5);
 			var zoomRect = new Rectangle (rect.Center.X-rect.Width/2/zoom, rect.Center.Y-rect.Height/2/zoom+2, rect.Width/zoom, rect.Height/zoom);
 			this.title.LayoutSize = zoomRect.Size;

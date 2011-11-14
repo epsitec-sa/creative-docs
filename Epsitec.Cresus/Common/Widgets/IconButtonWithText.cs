@@ -84,7 +84,7 @@ namespace Epsitec.Common.Widgets
 			if (this.CommandObject != null)
 			{
 				this.textLayout.Text = this.CommandObject.Caption.DefaultLabel;
-				double hopeWidth = System.Math.Floor (this.textLayout.SingleLineSize.Width + 4);
+				double hopeWidth = System.Math.Floor (this.textLayout.GetSingleLineSize ().Width + 4);
 
 				if (hopeWidth >  this.PreferredSize.Width &&
 				hopeWidth <= this.PreferredSize.Width+this.maxAdditionnalWidth)

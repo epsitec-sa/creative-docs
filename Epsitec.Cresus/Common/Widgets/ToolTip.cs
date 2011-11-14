@@ -526,8 +526,8 @@ namespace Epsitec.Common.Widgets
 				tip.Text                 = textCaption;
 				tip.TextLayout.Alignment = Drawing.ContentAlignment.MiddleLeft;
 				tip.BackColor            = color;
-				
-				Drawing.Size size = tip.TextLayout.SingleLineSize;
+
+				Drawing.Size size = tip.TextLayout.GetSingleLineSize ();
 				
 				double dx = size.Width + ToolTip.margin.X * 2;
 				double dy = size.Height + ToolTip.margin.Y * 2;

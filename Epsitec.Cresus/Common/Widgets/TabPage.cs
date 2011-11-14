@@ -62,8 +62,8 @@ namespace Epsitec.Common.Widgets
 				{
 					Text = this.tabButton.Text
 				};
-				
-				return temp.SingleLineSize;
+
+				return temp.GetSingleLineSize ();
 			}
 		}
 		

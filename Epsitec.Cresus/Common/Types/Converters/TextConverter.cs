@@ -1,4 +1,4 @@
-﻿//	Copyright © 2008-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2008-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -47,9 +47,21 @@ namespace Epsitec.Common.Types.Converters
 				return text;
 			}
 
+			int pos = text.IndexOfAny (TextConverter.StartElementOrEntityCharacters);
+
+			if (pos < 0)
+			{
+				return text;
+			}
+
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 
-			for (int offset = 0; offset < text.Length; )
+			if (pos > 0)
+			{
+				buffer.Append (text.Substring (0, pos));
+			}
+
+			for (int offset = pos; offset < text.Length; )
 			{
 				char c = text[offset];
 
@@ -67,9 +79,9 @@ namespace Epsitec.Common.Types.Converters
 							buffer.Append (imageReplacement);
 						}
 						if (tag.StartsWith ("<param "))
-                        {
+						{
 							buffer.Append (imageReplacement);
-                        }
+						}
 						if (tag.StartsWith ("<br/>"))
 						{
 							buffer.Append ("\n");
@@ -94,6 +106,7 @@ namespace Epsitec.Common.Types.Converters
 
 			return buffer.ToString ();
 		}
+
 
 		/// <summary>
 		/// Gets the length of the equivalent simple text.
@@ -381,6 +394,7 @@ namespace Epsitec.Common.Types.Converters
 			public static char[] ToUpper             = new char[TextConverter.ConversionCharacterCount];
 		}
 
+		public static readonly char[]			StartElementOrEntityCharacters = new char[] { '<', '&' };
 
 		public const char						CodeObject		= '\ufffc';
 	}

@@ -78,7 +78,7 @@ namespace Epsitec.Common.Dialogs.Helpers
 				FormattedText = message
 			};
 
-			double minWidth = System.Math.Min (400, widgetText.TextLayout.SingleLineSize.Width+4);
+			double minWidth = System.Math.Min (400, widgetText.TextLayout.GetSingleLineSize ().Width+4);
 
 			widgetText.TextLayout.LayoutSize = new Drawing.Size (minWidth, TextLayout.Infinite);
 
@@ -108,7 +108,7 @@ namespace Epsitec.Common.Dialogs.Helpers
 				Margins       = new Drawing.Margins (0, 0, 0, 0)
 			};
 
-			double minWidth = System.Math.Min (400, widgetText.TextLayout.SingleLineSize.Width+4);
+			double minWidth = System.Math.Min (400, widgetText.TextLayout.GetSingleLineSize ().Width+4);
 
 			widgetText.TextLayout.LayoutSize = new Drawing.Size (minWidth, TextLayout.Infinite);
 

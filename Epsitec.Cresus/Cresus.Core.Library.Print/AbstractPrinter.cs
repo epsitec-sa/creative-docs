@@ -235,7 +235,7 @@ namespace Epsitec.Cresus.Core.Print
 				LayoutSize = bounds.Size,
 			};
 
-			double factor = layout.SingleLineSize.Width / 8.56;  // facteur empyrique pour occuper toute la diagonale
+			double factor = layout.GetSingleLineSize ().Width / 8.56;  // facteur empyrique pour occuper toute la diagonale
 			layout.DefaultFontSize = diagonal / factor;
 
 			layout.Paint (bounds.BottomLeft, port);

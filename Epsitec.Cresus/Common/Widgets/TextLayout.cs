@@ -1,7 +1,8 @@
-﻿//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
@@ -93,19 +94,32 @@ namespace Epsitec.Common.Widgets
 			this.SetTextStyle (style);
 		}
 
+
+		public FormattedText					FormattedText
+		{
+			get
+			{
+				return new FormattedText (this.Text);
+			}
+			set
+			{
+				this.Text = value.ToString ();
+			}
+		}
+
 		public string							Text
 		{
 			//	Texte associé, contenant des commandes HTML, mais sans les commandes <put>.
 			get
 			{
-				if ( this.text == null )
+				if (this.text == null)
 				{
 					return "";
 				}
-				
-				if ( this.isPrepareDirty )  // contient des commandes <put> ?
+
+				if (this.isPrepareDirty)  // contient des commandes <put> ?
 				{
-					return this.GetSimplify();
+					return this.GetSimplify ();
 				}
 
 				return this.text;
@@ -113,37 +127,28 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				if ( value == null )
-				{
-					value = "";
-				}
+				value = TextLayout.ReplaceNullField (value ?? "");
 
-				if ((value.Length > Support.ResourceBundle.Field.Null.Length) &&
-					(value.Contains (Support.ResourceBundle.Field.Null)))
-				{
-					value = value.Replace (Support.ResourceBundle.Field.Null, "");
-				}
-
-				
 				if ((this.text != value) &&
 					(this.GetSimplifiedText () != value))
 				{
 					int offsetError;
-					if ( TextLayout.CheckSyntax(value, out offsetError) )
+					
+					if (TextLayout.CheckSyntax (value, out offsetError))
 					{
 						this.SetText (value);
-						this.MarkContentsAsDirty();
+						this.MarkContentsAsDirty ();
 						this.UpdateEmbedderGeometry ();
 					}
 					else
 					{
-						throw new System.FormatException(string.Format ("Syntax error at char {0}.\nText: '{1}^{2}'", offsetError.ToString(), value.Substring (0, offsetError), value.Substring (offsetError)));
+						throw new System.FormatException (string.Format ("Syntax error at char {0}.\nText: '{1}^{2}'", offsetError.ToString (), value.Substring (0, offsetError), value.Substring (offsetError)));
 					}
 				}
 			}
 		}
 
-		public string							InternalText
+		internal string							InternalText
 		{
 			//	Texte associé, contenant des commandes HTML, y compris les commandes <put>.
 			get
@@ -152,7 +157,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public string							InternalSimpleText
+		private string							InternalSimpleText
 		{
 			get
 			{
@@ -484,22 +489,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public Drawing.Size						SingleLineSize
+		public Drawing.Size GetSingleLineSize()
 		{
-			//	Retourne les dimensions du texte indépendament de LayoutSize,
-			//	s'il est mis sur une seule ligne.
-			get
-			{
-				double ascender;
-				double descender;
-
-				Drawing.Point origin;
-				Drawing.Size size = new Drawing.Size (TextLayout.Infinite, TextLayout.Infinite);
-				
-				this.GetSingleLineGeometry (size, Drawing.ContentAlignment.TopLeft, out ascender, out descender, out origin, out size);
-
-				return size;
-			}
+			double ascender;
+			double descender;
+			Drawing.Point origin;
+			Drawing.Size size = new Drawing.Size (TextLayout.Infinite, TextLayout.Infinite);
+			this.GetSingleLineGeometry (size, Drawing.ContentAlignment.TopLeft, out ascender, out descender, out origin, out size);
+			return size;
 		}
 
 		public void GetSingleLineGeometry(Drawing.Size boxSize, Drawing.ContentAlignment alignment, out double ascender, out double descender, out Drawing.Point origin, out Drawing.Size size)
@@ -629,9 +626,9 @@ namespace Epsitec.Common.Widgets
 		public void SetParameter(string name, string value)
 		{
 			if (value == null)
-            {
+			{
 				if (this.parameters != null && this.parameters.ContainsKey (name))
-                {
+				{
 					this.parameters.Remove (name);
 					
 					if (this.parameters.Count == 0)
@@ -640,8 +637,8 @@ namespace Epsitec.Common.Widgets
 					}
 
 					return;
-                }
-            }
+				}
+			}
 			
 			if (this.parameters == null)
 			{
@@ -1137,6 +1134,19 @@ namespace Epsitec.Common.Widgets
 			else
 			{
 				return this.blocks[i];
+			}
+		}
+
+		private static string ReplaceNullField(string value)
+		{
+			if ((value.Length > Support.ResourceBundle.Field.Null.Length) &&
+				(value.Contains (Support.ResourceBundle.Field.Null)))
+			{
+				return value.Replace (Support.ResourceBundle.Field.Null, "");
+			}
+			else
+			{
+				return value;
 			}
 		}
 
@@ -3430,7 +3440,7 @@ namespace Epsitec.Common.Widgets
 			{
 				layout.Text = text;
 
-				double width = layout.SingleLineSize.Width;
+				double width = layout.GetSingleLineSize ().Width;
 				double delta = size.Width - width;
 
 				if (bestText == null)
@@ -4292,7 +4302,7 @@ namespace Epsitec.Common.Widgets
 
 							case Tag.Param:
 								string replacement = this.GenerateReplacement (parameters);
-                                buffer.Append (TextLayout.CodeObject);
+								buffer.Append (TextLayout.CodeObject);
 								currentIndex ++;
 								supplItem.BackColor = Drawing.Color.FromAlphaRgb (0.3, 0.5, 0.5, 0.5);
 								this.PutRun (runList, fontStack, supplItem, partIndex, ref startIndex, currentIndex, null, 0, replacement);
