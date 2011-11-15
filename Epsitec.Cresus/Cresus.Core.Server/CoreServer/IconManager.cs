@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 	/// Uncomment the "define" to regenerate all icons at server startup.
 	/// It takes time !
 	/// </summary>
-	internal class IconManager
+	internal sealed class IconManager
 	{
 
 
