@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Epsitec.Common.Support;
+
+using System;
 
 using System.Collections.Generic;
 
@@ -86,7 +88,7 @@ namespace Epsitec.Cresus.Core.Server.NancyHosting
 			{
 				var asyncResult = this.httpListener.BeginGetContext ((ar) => this.EnqueueRequest (ar), null);
 
-				var firedWaitHandle = HttpServer.WaitAny (this.stopEvent, asyncResult.AsyncWaitHandle);
+				var firedWaitHandle = ThreadUtils.WaitAny (this.stopEvent, asyncResult.AsyncWaitHandle);
 
 				if (firedWaitHandle == this.stopEvent)
 				{
@@ -115,7 +117,7 @@ namespace Epsitec.Cresus.Core.Server.NancyHosting
 
 		private void ProcessRequests(Action<HttpListenerContext> requestProcessor)
 		{
-			while (HttpServer.WaitAny (this.readyEvent, this.stopEvent) != this.stopEvent)
+			while (ThreadUtils.WaitAny (this.readyEvent, this.stopEvent) != this.stopEvent)
 			{
 				HttpListenerContext context;
 
@@ -135,21 +137,6 @@ namespace Epsitec.Cresus.Core.Server.NancyHosting
 				{
 					requestProcessor (context);
 				}
-			}
-		}
-
-
-		private static WaitHandle WaitAny(params WaitHandle[] waitHandles)
-		{
-			int index = WaitHandle.WaitAny (waitHandles);
-
-			if (index >= 0 && index <= waitHandles.Length)
-			{
-				return waitHandles[index];
-			}
-			else
-			{
-				return null;
 			}
 		}
 
