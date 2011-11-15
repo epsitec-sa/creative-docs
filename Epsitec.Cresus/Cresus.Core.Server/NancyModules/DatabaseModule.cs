@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 						   };
 
 				// Only take a subset of all the entities
-				var subset = list.Skip (start).Take (limit);
+				var subset = list.Skip (start).Take (limit).ToList ();
 
 				var dic = new Dictionary<string, object> ();
 				dic["total"] = enumerable.Count (); // For ExtJS

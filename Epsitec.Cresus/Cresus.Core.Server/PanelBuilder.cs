@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Jonas Schmid, Maintainer: -
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -108,7 +109,7 @@ namespace Epsitec.Cresus.Core.Server
 			{
 				var obj = resolver.DynamicInvoke (this.rootEntity);
 
-				var col = (obj as IEnumerable).Cast<AbstractEntity> ().Where (c => c.GetType () == brickType);
+				var col = (obj as IEnumerable).Cast<AbstractEntity> ().Where (c => c.GetType () == brickType).ToList ();
 
 				LambdaExpression lambda = brick.GetLambda ();
 				var accessor = this.coreSession.GetPanelFieldAccessor (lambda);
@@ -223,7 +224,7 @@ namespace Epsitec.Cresus.Core.Server
 					break;
 
 				default:
-					throw new System.NotImplementedException ("Make sure this switch has all possible branches");
+					throw new NotImplementedException ("Make sure this switch has all possible branches");
 			}
 		}
 
@@ -312,7 +313,7 @@ namespace Epsitec.Cresus.Core.Server
 
 			if (lambda == null)
 			{
-				throw new System.ArgumentException (string.Format ("Expression {0} for input must be a lambda", expression.ToString ()));
+				throw new ArgumentException (string.Format ("Expression {0} for input must be a lambda", expression.ToString ()));
 			}
 
 			var func   = lambda.Compile ();
@@ -336,13 +337,14 @@ namespace Epsitec.Cresus.Core.Server
 
 			if (accessor.IsEntityType)
 			{
-				var items = this.BusinessContext.Data.GetAllEntities (fieldType, DataExtractionMode.Sorted, this.DataContext);
-				var data = from item in items
-						   select new object[]
-						   {
-							   this.GetEntityKey (item),
-							   item.GetCompactSummary ().ToString ()
-						   };
+				var data = this.BusinessContext.Data
+					.GetAllEntities (fieldType, DataExtractionMode.Sorted, this.DataContext)
+					.Select (i => new object[]
+					{
+						this.GetEntityKey (i),
+						i.GetCompactSummary ().ToString ()
+					})
+					.ToList ();
 
 				entityDictionnary["value"] = this.GetEntityKey (entity);
 				entityDictionnary["xtype"] = "epsitec.entity";
@@ -366,8 +368,8 @@ namespace Epsitec.Cresus.Core.Server
 				return list;
 			}
 
-			if (fieldType == typeof (System.DateTime) ||
-			    fieldType == typeof (System.DateTime?))
+			if (fieldType == typeof (DateTime) ||
+			    fieldType == typeof (DateTime?))
 			{
 				//	TODO: handle date & time
 			}
