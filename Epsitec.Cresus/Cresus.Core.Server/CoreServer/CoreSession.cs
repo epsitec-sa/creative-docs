@@ -23,7 +23,7 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Server.CoreServer
 {
-	public sealed class CoreSession : CoreApp
+	public class CoreSession : CoreApp
 	{
 		public CoreSession(string id)
 		{
@@ -32,7 +32,6 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 			this.coreData = this.GetComponent<CoreData> ();
 			this.panelFieldAccessors = new Dictionary<string, PanelFieldAccessor> ();
 			this.panelFieldAccessorsById = new Dictionary<int, PanelFieldAccessor> ();
-			this.sessionLock = new object ();
 
 			Library.UI.Services.SetApplication (this);
 		}
@@ -150,15 +149,6 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 		}
 
 
-		public T LockAndExecute<T>(Func<T> function)
-		{
-			lock (this.sessionLock)
-			{
-				return function ();
-			}
-		}
-
-
 		private static PanelFieldAccessor CreatePanelFieldAccessor(LambdaExpression lambda, int id)
 		{
 			try
@@ -244,13 +234,6 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 		private readonly CoreData coreData;
 		private readonly Dictionary<string, PanelFieldAccessor> panelFieldAccessors;
 		private readonly Dictionary<int, PanelFieldAccessor> panelFieldAccessorsById;
-
-		/// <summary>
-		/// This lock is used to ensure that if there are multiple requests that are handled at the
-		/// same time that use the same CoreSession, they can synchronize themselves to ensure that
-		/// we don't have any corruption or undefined behavior due to threading issues.
-		/// </summary>
-		private readonly object sessionLock;
 		
 		private bool isDisposed;
 		private BusinessContext businessContext;

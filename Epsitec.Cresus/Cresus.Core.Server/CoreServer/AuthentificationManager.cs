@@ -22,37 +22,34 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 
 		public AuthentificationManager()
 		{
-			var coreSession = new CoreSession ("authentification manager session");
-
-			this.coreSession = coreSession;
-			this.userManager = coreSession.CoreData.GetComponent<UserManager> ();
-
-			this.checkLock = new object ();
+			var coreSession =  new SafeCoreSession ("authentification manager session");
+			
+			this.safeCoreSession = coreSession;
+			this.userManager = this.safeCoreSession.Execute (cs => cs.CoreData.GetComponent<UserManager> ());
 		}
 
 
 		public bool CheckCredentials(string username, string password)
 		{
-			lock (this.checkLock)
+			Func<CoreSession, bool> function = _ =>
 			{
 				return this.userManager.CheckUserAuthentication (username, password);
-			}
+			};
+
+			return this.safeCoreSession.Execute (function);
 		}
 
 
 		public void Dispose()
 		{
-			this.coreSession.Dispose ();
+			this.safeCoreSession.Dispose ();
 		}
 
 
-		private readonly CoreSession coreSession;
+		private readonly SafeCoreSession safeCoreSession;
 
 
 		private readonly UserManager userManager;
-
-
-		private readonly object checkLock;
 
 
 	}

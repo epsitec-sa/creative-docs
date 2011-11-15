@@ -27,13 +27,13 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 
 		protected T ExecuteWithCoreSession<T>(Func<CoreSession, T> function)
 		{
-			var coreSession = this.GetCoreSession ();
+			var safeCoreSession = this.GetSafeCoreSession ();
 
-			return coreSession.LockAndExecute (() => function (coreSession));
+			return safeCoreSession.Execute ((c) => function (c));
 		}
 
 
-		private CoreSession GetCoreSession()
+		private SafeCoreSession GetSafeCoreSession()
 		{
 			var sessionId = (string) this.Session[LoginModule.CoreSessionName];
 

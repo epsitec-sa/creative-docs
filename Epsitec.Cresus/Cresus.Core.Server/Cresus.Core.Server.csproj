@@ -56,6 +56,8 @@
     </Compile>
     <Compile Include="CoreServer\CoreSessionCleaner.cs" />
     <Compile Include="CoreServer\IconSize.cs" />
+    <Compile Include="CoreServer\SafeCoreSession.cs" />
+    <Compile Include="CoreServer\Worker.cs" />
     <Compile Include="NancyHosting\CoreResponse.cs" />
     <Compile Include="CoreServer\AuthentificationManager.cs" />
     <Compile Include="BrickProcessor.cs" />
@@ -67,7 +69,7 @@
     <Compile Include="NancyHosting\CoreErrorHandler.cs" />
     <Compile Include="NancyHosting\CoreServerBootstrapper.cs" />
     <Compile Include="CoreServerProgram.cs" />
-    <Compile Include="CoreServer\CoreSessionManager.cs" />
+    <Compile Include="CoreServer\SafeCoreSessionManager.cs" />
     <Compile Include="CoreServer\CoreSession.cs" />
     <Compile Include="NancyModules\AbstractCoreModule.cs" />
     <Compile Include="NancyModules\CollectionManagerModule.cs" />

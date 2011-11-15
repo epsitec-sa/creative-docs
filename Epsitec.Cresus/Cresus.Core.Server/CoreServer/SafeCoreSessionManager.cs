@@ -23,18 +23,18 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 			this.maxNbSessions = maxNbSessions;
 			this.sessionTimeout = sessionTimeout;
 
-			this.sessions = new Dictionary<string, CoreSession> ();
+			this.sessions = new Dictionary<string, SafeCoreSession> ();
 			this.sessionLastAccessTimes = new Dictionary<string, DateTime> ();
 		}
 
 
-		public CoreSession CreateSession()
+		public SafeCoreSession CreateSession()
 		{
 			lock (this.sessionLock)
 			{
 				var id = this.GetNewId ();
 
-				var session = new CoreSession (id);
+				var session = new SafeCoreSession (id);
 
 				this.PutSession (id, session);
 
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 		}
 
 
-		public CoreSession GetSession(string id)
+		public SafeCoreSession GetSession(string id)
 		{
 			lock (this.sessionLock)
 			{
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 
 		public bool DeleteSession(string id)
 		{
-			CoreSession session;
+			SafeCoreSession session;
 
 			lock (this.sessionLock)
 			{
@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 
 		public void CleanUpSessions()
 		{
-			var removedSessions = new List<CoreSession> ();
+			var removedSessions = new List<SafeCoreSession> ();
 
 			lock (this.sessionLock)
 			{
@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 		}
 
 
-		private IEnumerable<CoreSession> RemoveTimedOutSessions()
+		private IEnumerable<SafeCoreSession> RemoveTimedOutSessions()
 		{
 			var oldestValidTime = DateTime.UtcNow - this.sessionTimeout;
 
@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 		}
 
 
-		private IEnumerable<CoreSession> RemoveExcessiveSessions()
+		private IEnumerable<SafeCoreSession> RemoveExcessiveSessions()
 		{
 			var nbExcessiveSessions = this.sessions.Count - this.maxNbSessions;
 
@@ -158,16 +158,16 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 		}
 
 
-		private void PutSession(string id, CoreSession session)
+		private void PutSession(string id, SafeCoreSession session)
 		{
 			this.sessionLastAccessTimes[id] = DateTime.UtcNow;
 			this.sessions[id] = session;
 		}
 
 
-		private CoreSession RetrieveSession(string id)
+		private SafeCoreSession RetrieveSession(string id)
 		{
-			CoreSession session;
+			SafeCoreSession session;
 
 			this.sessions.TryGetValue (id, out session);
 
@@ -180,9 +180,9 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 		}
 
 
-		private CoreSession RemoveSession(string id)
+		private SafeCoreSession RemoveSession(string id)
 		{
-			CoreSession session;
+			SafeCoreSession session;
 
 			var found = this.sessions.TryGetValue (id, out session);
 
@@ -205,7 +205,7 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 		private readonly TimeSpan sessionTimeout;
 
 
-		private readonly Dictionary<string, CoreSession> sessions;
+		private readonly Dictionary<string, SafeCoreSession> sessions;
 
 
 		private readonly Dictionary<string, DateTime> sessionLastAccessTimes;

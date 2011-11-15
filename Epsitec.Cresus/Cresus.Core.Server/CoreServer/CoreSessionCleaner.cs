@@ -11,9 +11,9 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 	{
 
 
-		public CoreSessionCleaner(CoreSessionManager sessionManager, TimeSpan interval)
+		public CoreSessionCleaner(CoreSessionManager manager, TimeSpan interval)
 		{
-			this.sessionManager = sessionManager;
+			this.manager = manager;
 			
 			this.timer = new Timer ()
 			{
@@ -36,13 +36,13 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 
 		public void HandleElapsed(object sender, ElapsedEventArgs e)
 		{
-			this.sessionManager.CleanUpSessions ();
+			this.manager.CleanUpSessions ();
 
 			this.timer.Start ();
 		}
 
 
-		private readonly CoreSessionManager sessionManager;
+		private readonly CoreSessionManager manager;
 
 
 		private readonly Timer timer;

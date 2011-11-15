@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.Server.Tests.Vs.CoreServer
 			var manager = new CoreSessionManager (3, TimeSpan.FromSeconds (5));
 
 			var sessionIds = new List<string> ();
-			var sessions = new Dictionary<string, CoreSession> ();
+			var sessions = new Dictionary<string, SafeCoreSession> ();
 
 			var dice = new Random ();
 

@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="CoreServer\CoreSessionManagerTest.cs" />
     <Compile Include="CoreServer\ServerContextTest.cs" />
+    <Compile Include="CoreServer\WorkerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestHelper.cs" />
   </ItemGroup>

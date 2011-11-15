@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Core.Server.Tests.Vs.CoreServer
 		{
 			using (var serverContext = new ServerContext (3, TimeSpan.FromSeconds (10), TimeSpan.FromSeconds (10)))
 			{
-				var sessions = new List<CoreSession> ();
+				var sessions = new List<SafeCoreSession> ();
 
 				for (int i = 0; i < 5; i++)
 				{
