@@ -14,6 +14,8 @@ using Nancy.Cookies;
 
 using Nancy.Extensions;
 
+using Nancy.Helpers;
+
 using System;
 
 using System.Collections.Generic;
@@ -34,8 +36,7 @@ namespace Epsitec.Cresus.Core.Server.NancyHosting
 	{
 
 
-		// This class has been largely inspired by the source code found here :
-		// https://github.com/NancyFx/Nancy/blob/09a5c3f8f79d5986a04973b0371e52f4f596a600/src/Nancy.Hosting.Self/NancyHost.cs
+		// This class has been largely inspired by the source code of the official Nancy self host.
 
 
 		public NancyServer(ServerContext serverContext, Uri uri, int nbThreads)
@@ -102,7 +103,9 @@ namespace Epsitec.Cresus.Core.Server.NancyHosting
 
 			var expectedRequestLength = NancyServer.GetExpectedRequestLength (request.Headers.ToDictionary ());
 
-			var relativeUrl = NancyServer.GetUrlAndPathComponents (this.baseUri).MakeRelativeUri (GetUrlAndPathComponents (request.Url));
+			var baseUrl = NancyServer.GetUrlAndPathComponents (this.baseUri);
+			var requestUrl = NancyServer.GetUrlAndPathComponents (request.Url);
+			var relativeUrl = baseUrl.MakeRelativeUri (requestUrl);
 
 			var nancyUrl = new Url
 			{
@@ -110,7 +113,7 @@ namespace Epsitec.Cresus.Core.Server.NancyHosting
 				HostName = request.Url.Host,
 				Port = request.Url.IsDefaultPort ? null : (int?) request.Url.Port,
 				BasePath = this.baseUri.AbsolutePath.TrimEnd ('/'),
-				Path = string.Concat ("/", relativeUrl),
+				Path = string.Concat ("/", HttpUtility.UrlDecode (relativeUrl.ToString ())),
 				Query = request.Url.Query,
 				Fragment = request.Url.Fragment,
 			};
@@ -120,7 +123,8 @@ namespace Epsitec.Cresus.Core.Server.NancyHosting
 				request.HttpMethod,
 				nancyUrl,
 				RequestStream.FromStream (request.InputStream, expectedRequestLength, true),
-				request.Headers.ToDictionary ()
+				request.Headers.ToDictionary (),
+				(request.RemoteEndPoint != null) ? request.RemoteEndPoint.Address.ToString () : null
 			);
 		}
 

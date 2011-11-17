@@ -25,8 +25,8 @@ namespace Epsitec.Cresus.Core.Server.NancyHosting
 			var parent = new Dictionary<string, object> ();
 			parent["success"] = false;
 			parent["errors"] = errors;
-
-			var response = new JsonResponse (parent);
+			
+			var response = new JsonResponse (parent, new DefaultJsonSerializer());
 			response.StatusCode = HttpStatusCode.BadRequest;
 
 			return response;
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Server.NancyHosting
 			parent["success"] = true;
 			parent["content"] = content;
 
-			return new JsonResponse (parent);
+			return new JsonResponse (parent, new DefaultJsonSerializer ());
 		}
 	}
 }

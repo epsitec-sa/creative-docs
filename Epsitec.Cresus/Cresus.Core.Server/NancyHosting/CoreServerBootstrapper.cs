@@ -11,6 +11,8 @@ using Nancy.ErrorHandling;
 
 using Nancy.Session;
 
+using TinyIoC;
+
 
 namespace Epsitec.Cresus.Core.Server.NancyHosting
 {
@@ -29,32 +31,34 @@ namespace Epsitec.Cresus.Core.Server.NancyHosting
 		}
 
 
-		protected override void InitialiseInternal(TinyIoC.TinyIoCContainer container)
+		protected override void ConfigureApplicationContainer(TinyIoCContainer container)
 		{
-			base.InitialiseInternal (container);
+			base.ConfigureApplicationContainer (container);
 
-			// Register the error handler
 			container.Register<IErrorHandler> (new CoreErrorHandler ());
-
-			// Registers the server context.
 			container.Register<ServerContext> (this.serverContext);
-
-			/// Enable the sessions
-			CookieBasedSessions.Enable (this);
-
-			this.AfterRequest += ConfigureCookies;
 		}
 
-		/// <summary>
-		/// We want that each cookie has the same path
-		/// See: https://github.com/NancyFx/Nancy/issues/256
-		/// </summary>
-		/// <param name="context"></param>
+
+		protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
+		{
+			base.ApplicationStartup (container, pipelines);
+
+			CookieBasedSessions.Enable (pipelines);
+
+			pipelines.AfterRequest += ConfigureCookies;
+		}
+
+
+		
 		private void ConfigureCookies(NancyContext context)
 		{
-			foreach (var c in context.Response.Cookies)
+			// We want that each cookie has the same path
+			// See: https://github.com/NancyFx/Nancy/issues/256
+
+			foreach (var cookie in context.Response.Cookies)
 			{
-				c.Path = "/";
+				cookie.Path = "/";
 			}
 		}
 
