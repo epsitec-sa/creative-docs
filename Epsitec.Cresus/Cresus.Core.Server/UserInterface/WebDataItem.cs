@@ -22,29 +22,6 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 		}
 
 
-		// Is this constructor used somewhere with reflexion? If not, remove it.
-
-		public WebDataItem(WebDataItem template)
-			: this ()
-		{
-			if (template != null)
-			{
-				this.Name                     = template.Name;
-				this.IconUri                  = template.IconUri;
-				this.AutoGroup                = template.AutoGroup;
-				this.HideAddButton            = template.HideAddButton;
-				this.HideRemoveButton         = template.HideRemoveButton;
-				this.Frameless                = template.Frameless;
-				this.InitialVisibility        = template.InitialVisibility;
-				this.FullHeightStretch        = template.FullHeightStretch;
-				this.DataType                 = template.DataType;
-				this.Title                    = template.Title;
-				this.CompactTitle             = template.CompactTitle;
-				this.DefaultMode              = template.DefaultMode;
-			}
-		}
-
-
 		public string Name
 		{
 			get;
