@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 
 						if (lambda.HasValue)
 						{
-							var accessor = coreSession.GetPanelFieldAccessor (InvariantConverter.ToInt ((string) lambda.Value));
+							var accessor = coreSession.PanelFieldAccessorCache.Get (InvariantConverter.ToInt ((string) lambda.Value));
 
 							if (accessor.IsCollectionType)
 							{
@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 
 								accessor.SetCollection (entity, entities);
 							}
-							else if (accessor.CanWrite == false)
+							else if (accessor.IsReadOnly)
 							{
 								errors.Add (memberKey, "The field cannot be written to.");
 							}

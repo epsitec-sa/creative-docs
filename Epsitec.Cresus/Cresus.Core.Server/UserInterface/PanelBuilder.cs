@@ -200,7 +200,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 				var col = (obj as IEnumerable).Cast<AbstractEntity> ().Where (c => c.GetType () == brickType).ToList ();
 
 				LambdaExpression lambda = brick.GetLambda ();
-				var accessor = this.coreSession.GetPanelFieldAccessor (lambda);
+				var accessor = this.coreSession.PanelFieldAccessorCache.Get (lambda);
 
 				if (col.Any ())
 				{
@@ -417,7 +417,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 			var obj = func.DynamicInvoke (this.rootEntity);
 			var entity = obj as AbstractEntity;
 
-			var accessor = this.coreSession.GetPanelFieldAccessor (lambda);
+			var accessor = this.coreSession.PanelFieldAccessorCache.Get (lambda);
 			var fieldType = lambda.ReturnType;
 
 			var caption = EntityInfo.GetFieldCaption (lambda);

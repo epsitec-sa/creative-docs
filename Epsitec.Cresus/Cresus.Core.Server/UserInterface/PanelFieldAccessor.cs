@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 {
 
 
-	public class PanelFieldAccessor
+	internal class PanelFieldAccessor
 	{
 
 
@@ -42,16 +42,16 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 				fieldType = fieldType.GetNullableTypeUnderlyingType ();
 			}
 
-			var factoryType = (nullable ? typeof (NullableFactory<,>) : typeof (NonNullableFactory<,>)).MakeGenericType (sourceType, fieldType);
+			var factoryType = (nullable ? typeof (NullableMarshallerFactory<,>) : typeof (NonNullableMarshallerFactory<,>)).MakeGenericType (sourceType, fieldType);
 
 			this.id               = id;
-			this.lambda           = lambda;
 			this.fieldType        = fieldType;
-			this.getterFunc       = getterLambda == null ? null : getterLambda.Compile ();
-			this.setterFunc       = setterLambda == null ? null : setterLambda.Compile ();
-			this.marshalerFactory = Activator.CreateInstance (factoryType, this) as DynamicFactory;
 			this.isEntityType     = fieldType.IsEntity ();
 			this.isCollectionType = fieldType.IsGenericIListOfEntities ();
+			this.lambda           = lambda;
+			this.getterFunc       = getterLambda == null ? null : getterLambda.Compile ();
+			this.setterFunc       = setterLambda == null ? null : setterLambda.Compile ();
+			this.marshalerFactory = Activator.CreateInstance (factoryType, this) as MarshallerFactory;
 		}
 
 
@@ -60,6 +60,15 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 			get
 			{
 				return this.id;
+			}
+		}
+
+
+		public bool IsReadOnly
+		{
+			get
+			{
+				return this.setterFunc == null;
 			}
 		}
 
@@ -123,51 +132,32 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 		}
 
 
-		public bool CanWrite
+		public string GetStringValue(AbstractEntity entity)
 		{
-			get
-			{
-				return this.setterFunc != null;
-			}
+			return this.marshalerFactory.CreateMarshaler (entity).GetStringValue ();
 		}
 		
 
 		public void SetStringValue(AbstractEntity entity, string value)
 		{
-			var marshaler = this.marshalerFactory.CreateMarshaler (entity);
-			marshaler.SetStringValue (value);
+			this.marshalerFactory.CreateMarshaler (entity).SetStringValue (value);
 		}
 
 
 		public void SetEntityValue(AbstractEntity entity, AbstractEntity value)
 		{
-			if (this.setterFunc != null)
+			if (!this.IsReadOnly)
 			{
 				this.setterFunc.DynamicInvoke (entity, value);
 			}
 		}
 
 
-		public string GetStringValue(AbstractEntity entity)
-		{
-			var marshaler = this.marshalerFactory.CreateMarshaler (entity);
-			return marshaler.GetStringValue ();
-		}
-
-
-		public static string GetLambdaFootprint(LambdaExpression lambda)
-		{
-			return string.Concat (lambda.ToString (), "/",
-								  lambda.ReturnType.FullName, "/",
-								  lambda.Parameters[0].Type.FullName);
-		}
-
-
-		private abstract class DynamicFactory
+		private abstract class MarshallerFactory
 		{
 
 
-			public DynamicFactory(PanelFieldAccessor accessor)
+			public MarshallerFactory(PanelFieldAccessor accessor)
 			{
 				this.accessor = accessor;
 			}
@@ -182,15 +172,28 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 		}
 
 
-		private sealed class NullableFactory<TSource, TField> : DynamicFactory
+		private sealed class NullableMarshallerFactory<TSource, TField> : MarshallerFactory
 			where TField : struct
 			where TSource : AbstractEntity
 		{
 
 
-			public NullableFactory(PanelFieldAccessor accessor)
+			public NullableMarshallerFactory(PanelFieldAccessor accessor)
 				: base (accessor)
 			{
+			}
+
+
+			public override Marshaler CreateMarshaler(AbstractEntity entity)
+			{
+				TSource source = entity as TSource;
+
+
+				var getter = this.CreateGetter (source);
+				var setter = this.CreateSetter (source);
+				var lambda = this.accessor.lambda;
+
+				return new NullableMarshaler<TField> (getter, setter, lambda);
 			}
 
 
@@ -206,24 +209,29 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 			}
 
 
-			public override Marshaler CreateMarshaler(AbstractEntity entity)
-			{
-				TSource source = entity as TSource;
-				return new NullableMarshaler<TField> (this.CreateGetter (source), this.CreateSetter (source), this.accessor.lambda);
-			}
-
-
 		}
 
 
-		private sealed class NonNullableFactory<TSource, TField> : DynamicFactory
+		private sealed class NonNullableMarshallerFactory<TSource, TField> : MarshallerFactory
 			where TSource : AbstractEntity
 		{
 
 
-			public NonNullableFactory(PanelFieldAccessor accessor)
+			public NonNullableMarshallerFactory(PanelFieldAccessor accessor)
 				: base (accessor)
 			{
+			}
+
+
+			public override Marshaler CreateMarshaler(AbstractEntity entity)
+			{
+				TSource source = entity as TSource;
+
+				var getter = this.CreateGetter (source);
+				var setter = this.CreateSetter (source);
+				var lambda = this.accessor.lambda;
+
+				return new NonNullableMarshaler<TField> (getter, setter, lambda);
 			}
 
 
@@ -239,13 +247,6 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 			}
 
 
-			public override Marshaler CreateMarshaler(AbstractEntity entity)
-			{
-				TSource source = entity as TSource;
-				return new NonNullableMarshaler<TField> (this.CreateGetter (source), this.CreateSetter (source), this.accessor.lambda);
-			}
-
-
 		}
 
 
@@ -254,7 +255,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 		private readonly Type fieldType;
 		private readonly Delegate getterFunc;
 		private readonly Delegate setterFunc;
-		private readonly DynamicFactory marshalerFactory;
+		private readonly MarshallerFactory marshalerFactory;
 		private readonly bool isEntityType;
 		private readonly bool isCollectionType;
 

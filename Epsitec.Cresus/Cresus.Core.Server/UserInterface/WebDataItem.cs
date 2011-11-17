@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 {
 
 	
-	public class WebDataItem
+	internal class WebDataItem
 	{
 
 
