@@ -17,10 +17,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 
 
-// Uncomment to regenerate all icons
-//#define BUILD_ICONS
-
-
 namespace Epsitec.Cresus.Core.Server
 {
 
@@ -31,17 +27,21 @@ namespace Epsitec.Cresus.Core.Server
 
 		public CoreServerProgram()
 		{
-			CoreServerProgram.Initialize ();
-
-			ConsoleCreator.RunWithConsole (() => CoreServerProgram.Run ());
+			ConsoleCreator.RunWithConsole (() =>
+			{
+				CoreServerProgram.Initialize ();
+				CoreServerProgram.Run ();
+			});
 		}
 
 
 		private static void Initialize()
 		{
-#if BUILD_ICONS
-			IconsBuilder.BuildIcons (CoreServerProgram.iconDirectory.FullName);
-#endif
+			Console.WriteLine ("Generating icons...");
+
+			IconManager.BuildIcons (CoreServerProgram.iconDirectory.FullName);
+
+			Console.WriteLine ("Icons generated");
 		}
 
 
