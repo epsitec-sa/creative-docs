@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 	/// <summary>
 	/// Used to fetched information comming from the entity using the information in the brick
 	/// </summary>
-	internal sealed class BrickProcessor
+	internal static class BrickProcessor
 	{
 
 
@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 		}
 
 
-		protected static void CreateDefaultTitleProperties(Brick brick)
+		private static void CreateDefaultTitleProperties(Brick brick)
 		{
 			if (Brick.ContainsProperty (brick, BrickPropertyKey.Title))
 			{
