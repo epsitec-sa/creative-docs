@@ -1,11 +1,6 @@
-﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Jonas Schmid, Maintainer: -
-
-
-using Epsitec.Cresus.Core.Business.UserManagement;
+﻿using Epsitec.Cresus.Core.Business.UserManagement;
 
 using System;
-
 
 
 namespace Epsitec.Cresus.Core.Server.CoreServer

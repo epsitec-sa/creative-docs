@@ -1,8 +1,4 @@
-﻿//	Copyright © 2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
-
-
-using Epsitec.Common.Support.EntityEngine;
+﻿using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Common.Types;
 
@@ -12,6 +8,7 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Server.UserInterface;
 
 using System;
 
@@ -23,12 +20,16 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Server.CoreServer
 {
+
+
 	public class CoreSession : CoreApp
 	{
+
+
 		public CoreSession(string id)
 		{
 			this.id = id;
-			this.creationDateTime = System.DateTime.UtcNow;
+			this.creationDateTime = DateTime.UtcNow;
 			this.coreData = this.GetComponent<CoreData> ();
 			this.panelFieldAccessors = new Dictionary<string, PanelFieldAccessor> ();
 			this.panelFieldAccessorsById = new Dictionary<int, PanelFieldAccessor> ();
@@ -37,7 +38,7 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 		}
 
 
-		public string							Id
+		public string Id
 		{
 			get
 			{
@@ -45,7 +46,8 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 			}
 		}
 
-		public bool								IsDisposed
+
+		public bool IsDisposed
 		{
 			get
 			{
@@ -53,7 +55,8 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 			}
 		}
 
-		public CoreData							CoreData
+
+		public CoreData CoreData
 		{
 			get
 			{
@@ -61,7 +64,8 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 			}
 		}
 		
-		public override string					ApplicationIdentifier
+
+		public override string ApplicationIdentifier
 		{
 			get
 			{
@@ -69,11 +73,12 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 			}
 		}
 
-		public override string					ShortWindowTitle
+
+		public override string ShortWindowTitle
 		{
 			get
 			{
-				throw new System.NotImplementedException ();
+				throw new NotImplementedException ();
 			}
 		}
 
@@ -101,6 +106,7 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 
 			return this.businessContext;
 		}
+
 
 		public void DisposeBusinessContext()
 		{
@@ -134,6 +140,7 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 			}
 		}
 
+
 		public PanelFieldAccessor GetPanelFieldAccessor(int id)
 		{
 			PanelFieldAccessor accessor;
@@ -161,6 +168,7 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 			}
 		}
 
+
 		protected override void Dispose(bool disposing)
 		{
 			if (this.isDisposed == false)
@@ -180,6 +188,7 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 			CreateDefaultProperties (brick, type);
 		}
 
+
 		private static void HandleBrickWallBrickPropertyAdded(object sender, BrickPropertyAddedEventArgs e)
 		{
 			var brick    = e.Brick;
@@ -193,8 +202,7 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 		}
 
 
-
-		private static void CreateDefaultProperties(Brick brick, System.Type type)
+		private static void CreateDefaultProperties(Brick brick, Type type)
 		{
 			var typeInfo = EntityInfo.GetStructuredType (type) as StructuredType;
 
@@ -218,6 +226,7 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 			CreateLabelProperty (brick, labels, 1, BrickPropertyKey.TitleCompact);
 		}
 
+
 		private static void CreateLabelProperty(Brick brick, IList<string> labels, int i, BrickPropertyKey key)
 		{
 			if (i < labels.Count)
@@ -229,7 +238,7 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 
 
 		private readonly string id;
-		private readonly System.DateTime creationDateTime;
+		private readonly DateTime creationDateTime;
 
 		private readonly CoreData coreData;
 		private readonly Dictionary<string, PanelFieldAccessor> panelFieldAccessors;
@@ -237,5 +246,9 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 		
 		private bool isDisposed;
 		private BusinessContext businessContext;
+
+
 	}
+
+
 }

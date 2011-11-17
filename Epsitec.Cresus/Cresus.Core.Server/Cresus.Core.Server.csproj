@@ -61,7 +61,7 @@
     <Compile Include="CoreServer\Worker.cs" />
     <Compile Include="NancyHosting\CoreResponse.cs" />
     <Compile Include="CoreServer\AuthentificationManager.cs" />
-    <Compile Include="BrickProcessor.cs" />
+    <Compile Include="UserInterface\BrickProcessor.cs" />
     <Compile Include="NancyModules\AbstractCoreSessionModule.cs" />
     <Compile Include="NancyHosting\HttpServer.cs" />
     <Compile Include="CoreServer\IconManager.cs" />
@@ -81,12 +81,12 @@
     <Compile Include="NancyHosting\NancyServer.cs" />
     <Compile Include="NancyHosting\FileSystemRootPathProvider.cs" />
     <Compile Include="NancyHosting\PostArrayHandler.cs" />
-    <Compile Include="PanelBuilder.cs" />
-    <Compile Include="PanelFieldAccessor.cs" />
+    <Compile Include="UserInterface\PanelBuilder.cs" />
+    <Compile Include="UserInterface\PanelFieldAccessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NancyHosting\CoreResponseExtensions.cs" />
     <Compile Include="CoreServer\ServerContext.cs" />
-    <Compile Include="WebDataItem.cs" />
+    <Compile Include="UserInterface\WebDataItem.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">

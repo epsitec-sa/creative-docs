@@ -1,29 +1,38 @@
-﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Jonas Schmid, Maintainer: -
-
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using Epsitec.Common.Support.EntityEngine;
+﻿using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
+
 using Epsitec.Common.Types;
+
 using Epsitec.Cresus.Bricks;
+
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.DataLayer.Context;
+
 using Epsitec.Cresus.Core.Server.CoreServer;
 
-namespace Epsitec.Cresus.Core.Server
+using Epsitec.Cresus.DataLayer.Context;
+
+using System;
+
+using System.Collections;
+using System.Collections.Generic;
+
+using System.Linq;
+using System.Linq.Expressions;
+using System.Diagnostics;
+
+
+namespace Epsitec.Cresus.Core.Server.UserInterface
 {
+	
+	
 	/// <summary>
 	/// Allow to create an ExtJS 4 panel by inferring the layout using
 	/// AbstractEntities 
 	/// </summary>
-	class PanelBuilder
+	internal sealed class PanelBuilder
 	{
 
 		/// <summary>
@@ -34,14 +43,15 @@ namespace Epsitec.Cresus.Core.Server
 		/// <returns></returns>
 		public static Dictionary<string, object> BuildController(AbstractEntity entity, ViewControllerMode mode, CoreSession coreSession)
 		{
-			var builder = new PanelBuilder (entity, mode, coreSession);
-			return builder.Run ();
+			return new PanelBuilder (entity, mode, coreSession).Run ();
 		}
+
 
 		public static string GetLambdaFieldName(string entityKey)
 		{
 			return string.Concat ("lambda_", entityKey);
 		}
+
 
 		private PanelBuilder(AbstractEntity entity, ViewControllerMode mode, CoreSession coreSession)
 		{
@@ -49,6 +59,7 @@ namespace Epsitec.Cresus.Core.Server
 			this.controllerMode = mode;
 			this.coreSession = coreSession;
 		}
+
 
 		/// <summary>
 		/// Creates a controller according to an entity and a ViewMode
@@ -63,14 +74,15 @@ namespace Epsitec.Cresus.Core.Server
 			// Open the main panel
 			var dic = new Dictionary<string, object> ();
 
-			dic["parentEntity"] = GetEntityKey (this.rootEntity);
+			dic["parentEntity"] = this.GetEntityKey (this.rootEntity);
 
 			var items = new List<Dictionary<string, object>> ();
 			dic["items"] = items;
 
 			foreach (var brick in customerSummaryWall.Bricks)
 			{
-				var panels = GetPanels (brick);
+				var panels = this.GetPanels (brick);
+				
 				items.AddRange (panels);
 			}
 
@@ -79,6 +91,7 @@ namespace Epsitec.Cresus.Core.Server
 
 			return dic;
 		}
+
 
 		/// <summary>
 		/// Get the panel from a brick
@@ -92,6 +105,7 @@ namespace Epsitec.Cresus.Core.Server
 			var panels = CreatePanelContent (processedBrick, item);
 			return panels;
 		}
+
 
 		/// <summary>
 		/// Create a panel according to a brick
@@ -118,7 +132,7 @@ namespace Epsitec.Cresus.Core.Server
 				{
 					foreach (var e in col)
 					{
-						var panels = CreatePanelsForEntity (brick, item, e);
+						var panels = this.CreatePanelsForEntity (brick, item, e);
 						panels.ForEach (p => p["lambda"] = accessor.Id.ToString ());
 						panels.ForEach (p => p["entityType"] = brickType.AssemblyQualifiedName);
 						list.AddRange (panels);
@@ -128,7 +142,7 @@ namespace Epsitec.Cresus.Core.Server
 				{
 					// This collection is empty, but we want to show its empty panel
 					// so the user will be able to add one.
-					var panel = CreateEmptyPanel (item);
+					var panel = this.CreateEmptyPanel (item);
 					panel["lambda"] = accessor.Id.ToString ();
 					panel["entityType"] = brickType.AssemblyQualifiedName;
 					list.Add (panel);
@@ -146,11 +160,12 @@ namespace Epsitec.Cresus.Core.Server
 					entity = this.rootEntity;
 				}
 
-				list.AddRange (CreatePanelsForEntity (brick, item, entity));
+				list.AddRange (this.CreatePanelsForEntity (brick, item, entity));
 			}
 
 			return list;
 		}
+
 
 		private List<Dictionary<string, object>> CreatePanelsForEntity(Brick brick, WebDataItem item, AbstractEntity entity)
 		{
@@ -178,19 +193,21 @@ namespace Epsitec.Cresus.Core.Server
 			return list;
 		}
 
+
 		private Dictionary<string, object> CreateEmptyPanel(WebDataItem item)
 		{
-			var panel = GetBasicPanelForm (item);
+			var panel = this.GetBasicPanelForm (item);
 			panel["xtype"] = "emptysummary";
 
 			return panel;
 		}
 
+
 		private Dictionary<string, object> GetBasicPanelForm(WebDataItem item)
 		{
 			var panel = new Dictionary<string, object> ();
 
-			var controllerName = GetControllerName (this.controllerMode);
+			var controllerName = this.GetControllerName (this.controllerMode);
 			panel["xtype"] = controllerName;
 
 			string title = item.Title.ToSimpleText ();
@@ -205,16 +222,17 @@ namespace Epsitec.Cresus.Core.Server
 			return panel;
 		}
 
+
 		private void AddControllerSpecificData(Dictionary<string, object> parent, Brick brick, WebDataItem item, AbstractEntity entity)
 		{
 			switch (this.controllerMode)
 			{
 				case ViewControllerMode.Summary:
-					AddControllerSpecificSummaryData (parent, brick, item, entity);
+					PanelBuilder.AddControllerSpecificSummaryData (parent, brick, item, entity);
 					break;
 
 				case ViewControllerMode.Edition:
-					AddControllerSpecificEditionData (parent, brick);
+					this.AddControllerSpecificEditionData (parent, brick);
 					break;
 
 				case ViewControllerMode.Creation:
@@ -228,6 +246,7 @@ namespace Epsitec.Cresus.Core.Server
 			}
 		}
 
+
 		private static void AddControllerSpecificSummaryData(Dictionary<string, object> parent, Brick brick, WebDataItem item, AbstractEntity entity)
 		{
 			parent["html"] = entity.GetSummary ().ToString ();
@@ -236,14 +255,16 @@ namespace Epsitec.Cresus.Core.Server
 
 		}
 
+
 		private void AddControllerSpecificEditionData(Dictionary<string, object> parent, Brick brick)
 		{
-			var inputs = HandleInputs (brick);
+			var inputs = this.HandleInputs (brick);
 			if (inputs != null && inputs.Any ())
 			{
 				parent["items"] = inputs;
 			}
 		}
+
 
 		private List<Dictionary<string, object>> HandleInputs(Brick brick)
 		{
@@ -263,6 +284,7 @@ namespace Epsitec.Cresus.Core.Server
 
 			return list;
 		}
+
 
 		private List<Dictionary<string, object>> CreateInput(Brick brick, BrickPropertyCollection inputProperties)
 		{
@@ -301,6 +323,7 @@ namespace Epsitec.Cresus.Core.Server
 			return list;
 		}
 
+
 		private List<Dictionary<string, object>> CreateInputField(Expression expression, BrickPropertyCollection fieldProperties)
 		{
 			var list = new List<Dictionary<string, object>> ();
@@ -316,15 +339,15 @@ namespace Epsitec.Cresus.Core.Server
 				throw new ArgumentException (string.Format ("Expression {0} for input must be a lambda", expression.ToString ()));
 			}
 
-			var func   = lambda.Compile ();
+			var func = lambda.Compile ();
 			var obj = func.DynamicInvoke (this.rootEntity);
 			var entity = obj as AbstractEntity;
 
 			var accessor = this.coreSession.GetPanelFieldAccessor (lambda);
-			var fieldType  = lambda.ReturnType;
+			var fieldType = lambda.ReturnType;
 
-			var caption   = EntityInfo.GetFieldCaption (lambda);
-			string title  = PanelBuilder.GetInputTitle (fieldProperties) ?? PanelBuilder.GetInputTitle (caption);
+			var caption = EntityInfo.GetFieldCaption (lambda);
+			string title = PanelBuilder.GetInputTitle (fieldProperties) ?? PanelBuilder.GetInputTitle (caption);
 			string fieldName = caption.Id.ToString ().Trim ('[', ']');
 
 			lambdaDictionnary["xtype"] = "hiddenfield";
@@ -423,12 +446,13 @@ namespace Epsitec.Cresus.Core.Server
 				return list;
 			}
 
-			System.Diagnostics.Debug.WriteLine (
+			Debug.WriteLine (
 				string.Format ("*** Field {0} of type {1} : no automatic binding implemented in PanelBuilder",
 					lambda.ToString (), fieldType.FullName));
 
 			return list;
 		}
+
 
 		private Dictionary<string, object> CreateHorizontalGroup(BrickProperty property)
 		{
@@ -456,6 +480,7 @@ namespace Epsitec.Cresus.Core.Server
 			return dic;
 		}
 
+
 		private static string GetInputTitle(BrickPropertyCollection properties)
 		{
 			var property = properties.PeekBefore (BrickPropertyKey.Title, -1);
@@ -469,6 +494,7 @@ namespace Epsitec.Cresus.Core.Server
 				return null;
 			}
 		}
+
 
 		private static string GetInputTitle(Caption caption)
 		{
@@ -485,6 +511,7 @@ namespace Epsitec.Cresus.Core.Server
 			return caption.Description ?? caption.Name;
 		}
 
+
 		private static Dictionary<string, object> GetSeparator()
 		{
 			var dic = new Dictionary<string, object> ();
@@ -498,6 +525,7 @@ namespace Epsitec.Cresus.Core.Server
 			return dic;
 		}
 
+
 		private static Dictionary<string, object> GetGlobalWarning()
 		{
 			var dic = new Dictionary<string, object> ();
@@ -508,6 +536,7 @@ namespace Epsitec.Cresus.Core.Server
 
 			return dic;
 		}
+
 
 		/// <summary>
 		/// Create "leaves" for a panel. 
@@ -529,7 +558,7 @@ namespace Epsitec.Cresus.Core.Server
 			foreach (var include in includes)
 			{
 				var lambda = include.ExpressionValue as LambdaExpression;
-				var func   = lambda.Compile ();
+				var func = lambda.Compile ();
 				var child = func.DynamicInvoke (this.rootEntity) as AbstractEntity;
 
 				if (child.IsNull ())
@@ -546,10 +575,12 @@ namespace Epsitec.Cresus.Core.Server
 
 		}
 
+
 		private string GetControllerName(ViewControllerMode mode)
 		{
 			return this.controllerMode.ToString ().ToLower ();
 		}
+
 
 		private string GetEntityKey(AbstractEntity entity)
 		{
@@ -568,6 +599,7 @@ namespace Epsitec.Cresus.Core.Server
 			return key.Value.ToString ();
 		}
 
+
 		private DataContext DataContext
 		{
 			get
@@ -576,6 +608,7 @@ namespace Epsitec.Cresus.Core.Server
 			}
 		}
 
+
 		private BusinessContext BusinessContext
 		{
 			get
@@ -583,6 +616,7 @@ namespace Epsitec.Cresus.Core.Server
 				return this.coreSession.GetBusinessContext ();
 			}
 		}
+
 
 		private readonly AbstractEntity rootEntity;
 		private readonly ViewControllerMode controllerMode;
@@ -646,5 +680,9 @@ namespace Epsitec.Cresus.Core.Server
 
 			-FullHeightStretch,
 		}*/
+
+
 	}
+
+
 }

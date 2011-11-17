@@ -1,17 +1,18 @@
-﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Jonas Schmid, Maintainer: -
-
-
-using Epsitec.Common.Support.EntityEngine;
+﻿using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Server.CoreServer;
 using Epsitec.Cresus.Core.Server.NancyHosting;
+using Epsitec.Cresus.Core.Server.UserInterface;
 
 using Epsitec.Cresus.DataLayer.Context;
 
 using Nancy;
+
+using System;
+
+using System.Diagnostics;
 
 using System.Collections.Generic;
 
@@ -32,7 +33,7 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 		public EntityModule(ServerContext serverContext)
 			: base (serverContext, "/entity")
 		{
-			Post["/{id}"] = parameters => this.ExecuteWithCoreSession(coreSession => 
+			Post["/{id}"] = parameters => this.ExecuteWithCoreSession (coreSession =>
 			{
 				var context = coreSession.GetBusinessContext ();
 
@@ -51,7 +52,7 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 				{
 					try
 					{
-						var value  = formData[memberKey];
+						var value = formData[memberKey];
 						var lambda = formData[PanelBuilder.GetLambdaFieldName ((string) memberKey)];
 
 						if (lambda.HasValue)
@@ -62,7 +63,7 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 							{
 								List<AbstractEntity> entities = new List<AbstractEntity> ();
 								var collection = ((List<string>) value.Value).Where (x => !string.IsNullOrWhiteSpace (x));
-								
+
 								foreach (string item in collection)
 								{
 									EntityKey? tmpKey = EntityKey.Parse (item);
@@ -94,10 +95,10 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 						}
 						else
 						{
-							System.Diagnostics.Debug.WriteLine (string.Format ("Error: /entity/{0} cannot resolve member {1}", paramEntityKey, memberKey));
+							Debug.WriteLine (string.Format ("Error: /entity/{0} cannot resolve member {1}", paramEntityKey, memberKey));
 						}
 					}
-					catch (System.Exception e)
+					catch (Exception e)
 					{
 						errors.Add (memberKey, e.ToString ());
 					}

@@ -1,10 +1,8 @@
-﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Jonas Schmid, Maintainer: -
-
-
-using Epsitec.Common.Drawing;
+﻿using Epsitec.Common.Drawing;
 
 using Epsitec.Common.Support;
+
+using System.IO;
 
 using System.Linq;
 
@@ -55,7 +53,7 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 		{
 			Epsitec.Common.Document.Engine.Initialize ();
 
-			System.IO.File.Delete (this.cssFilename);
+			File.Delete (this.cssFilename);
 
 			var list = ImageProvider.Default.GetImageNames ("manifest", null);
 
@@ -97,7 +95,7 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 			// Save the image
 			var bytes = bitmap.Save (ImageFormat.Png);
 			string path = GetImageAbsoluteFilePath (iconName, IconSize.ThirtyTwo);
-			System.IO.File.WriteAllBytes (path, bytes);
+			File.WriteAllBytes (path, bytes);
 
 			// Add it to the CSS
 			var relativePath = GetImageRelativeFilePath (iconName, IconSize.ThirtyTwo);
@@ -111,7 +109,7 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 			// Save the image
 			bytes = bitmap.Save (ImageFormat.Png);
 			path = GetImageAbsoluteFilePath (iconName, IconSize.Sixteen);
-			System.IO.File.WriteAllBytes (path, bytes);
+			File.WriteAllBytes (path, bytes);
 
 			// Add it to the CSS
 			relativePath = GetImageRelativeFilePath (iconName, IconSize.Sixteen);
@@ -131,7 +129,7 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 			string imgPath = string.Concat ("../", path);
 			var css = string.Format (IconManager.cssClass, cssClassname, imgPath);
 
-			System.IO.File.AppendAllText (this.cssFilename, css);
+			File.AppendAllText (this.cssFilename, css);
 		}
 
 
@@ -163,9 +161,9 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 		{
 			var dir  = System.IO.Path.GetDirectoryName (path);
 
-			if (System.IO.Directory.Exists (dir) == false)
+			if (Directory.Exists (dir) == false)
 			{
-				System.IO.Directory.CreateDirectory (dir);
+				Directory.CreateDirectory (dir);
 			}
 		}
 
@@ -177,6 +175,8 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 		private readonly static string baseImagesFilename = "images/{0}{1:d}.png";
 		private readonly static string cssClassName = "{0}{1:d}";
 		private readonly static string cssClass = ".{0} {{ background-image: url({1}) !important; }} \n";
+
+
 	}
 
 

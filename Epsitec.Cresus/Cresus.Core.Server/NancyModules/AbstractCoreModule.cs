@@ -1,11 +1,7 @@
-﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Jonas Schmid, Maintainer: -
-
-
-using Epsitec.Cresus.Core.Server.CoreServer;
+﻿using Epsitec.Cresus.Core.Server.CoreServer;
+using Epsitec.Cresus.Core.Server.NancyHosting;
 
 using Nancy;
-using Epsitec.Cresus.Core.Server.NancyHosting;
 
 
 namespace Epsitec.Cresus.Core.Server.NancyModules

@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Core.Server
 				{
 					nancyServer.Start ();
 
-					Console.WriteLine ("Server running and listening to " + uri + "");
+					Console.WriteLine ("Server launched and listening to " + uri);
 					Console.WriteLine ("Press [ENTER] to shut down");
 					Console.ReadLine ();
 

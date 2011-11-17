@@ -1,16 +1,14 @@
-﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Jonas Schmid, Maintainer: -
-
-
-using Epsitec.Common.Support.Extensions;
+﻿using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Library;
 
 using Epsitec.Cresus.Core.Server.CoreServer;
 
-using System.Collections.Generic;
-
 using Nancy;
+
+using System;
+
+using System.Collections.Generic;
 
 
 namespace Epsitec.Cresus.Core.Server.NancyModules
@@ -30,9 +28,9 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 			Post["/"] = parameters =>
 			{
 				string typeName = (string) Request.Form.name;
-				var type = System.Type.GetType (typeName);
+				var type = Type.GetType (typeName);
 				var fetcherType = typeof (Fetcher<>).MakeGenericType (type);
-				var fetcherInst = System.Activator.CreateInstance (fetcherType) as Fetcher;
+				var fetcherInst = Activator.CreateInstance (fetcherType) as Fetcher;
 				var list = fetcherInst.GetValues ();
 
 				var res = Response.AsJson (list);

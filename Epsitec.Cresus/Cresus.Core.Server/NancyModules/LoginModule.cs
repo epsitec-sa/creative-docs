@@ -1,8 +1,4 @@
-﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Jonas Schmid, Maintainer: -
-
-
-using Epsitec.Cresus.Core.Server.CoreServer;
+﻿using Epsitec.Cresus.Core.Server.CoreServer;
 
 using Epsitec.Cresus.Core.Server.NancyHosting;
 
@@ -74,20 +70,12 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 		}
 
 
-		/// <summary>
-		/// Tell Nancy to check if the user is logged in
-		/// </summary>
 		public static void CheckIsLoggedIn(NancyModule module)
 		{
 			module.Before.AddItemToEndOfPipeline (nc => LoginModule.RequiresAuthentication (nc));
 		}
 
 
-		/// <summary>
-		/// This method is called before each request to a <see cref="CoreModule"/>
-		/// to check if the user is logged in. 
-		/// It is called by Nancy.
-		/// </summary>
 		private static Response RequiresAuthentication(NancyContext context)
 		{
 			var session = context.Request.Session;

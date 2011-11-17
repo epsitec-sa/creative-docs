@@ -1,8 +1,4 @@
-﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Jonas Schmid, Maintainer: -
-
-
-using Epsitec.Common.Support.EntityEngine;
+﻿using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
@@ -16,7 +12,10 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using Nancy;
 
+using System;
+
 using System.Linq;
+
 
 
 namespace Epsitec.Cresus.Core.Server.NancyModules
@@ -33,7 +32,7 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 		public CollectionManagerModule(ServerContext serverContext)
 			: base (serverContext, "/collection")
 		{
-			Post["/delete"] = parameters => this.ExecuteWithCoreSession(coreSession => 
+			Post["/delete"] = parameters => this.ExecuteWithCoreSession (coreSession =>
 			{
 				var context = coreSession.GetBusinessContext ();
 
@@ -69,7 +68,7 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 			});
 
 
-			Post["/create"] = parameters => this.ExecuteWithCoreSession (coreSession => 
+			Post["/create"] = parameters => this.ExecuteWithCoreSession (coreSession =>
 			{
 				var context = coreSession.GetBusinessContext ();
 
@@ -78,8 +77,8 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 				AbstractEntity parentEntity = context.DataContext.ResolveEntity (parentKey);
 
 				string typeName = Request.Form.entityType;
-				var type = System.Type.GetType (typeName);
-				var method = typeof (BusinessContext).GetMethod ("CreateEntity", new System.Type[0]);
+				var type = Type.GetType (typeName);
+				var method = typeof (BusinessContext).GetMethod ("CreateEntity", new Type[0]);
 				var m = method.MakeGenericMethod (type);
 				var o = m.Invoke (context, new object[0]);
 				var newEntity = o as AbstractEntity;

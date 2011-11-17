@@ -1,8 +1,4 @@
-﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Jonas Schmid, Maintainer: -
-
-
-using Epsitec.Common.Support.EntityEngine;
+﻿using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Entities;
@@ -16,10 +12,11 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using Nancy;
 
+using System;
+
 using System.Collections.Generic;
 
 using System.Linq;
-using System;
 
 
 namespace Epsitec.Cresus.Core.Server.NancyModules
