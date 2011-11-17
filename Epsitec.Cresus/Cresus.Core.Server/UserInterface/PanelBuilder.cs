@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Factories;
 
 using Epsitec.Cresus.Core.Server.CoreServer;
 
@@ -16,12 +17,14 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System;
 
+using System.Diagnostics;
+
 using System.Collections;
 using System.Collections.Generic;
 
 using System.Linq;
 using System.Linq.Expressions;
-using System.Diagnostics;
+
 
 
 namespace Epsitec.Cresus.Core.Server.UserInterface
@@ -69,7 +72,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 		/// <returns>Name of the generated panel</returns>
 		private Dictionary<string, object> Run()
 		{
-			var customerSummaryWall = CoreSession.GetBrickWall (this.rootEntity, this.controllerMode);
+			var customerSummaryWall = PanelBuilder.GetBrickWall (this.rootEntity, this.controllerMode);
 
 			// Open the main panel
 			var dic = new Dictionary<string, object> ();
@@ -90,6 +93,77 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 			items.First ()["isRoot"] = true;
 
 			return dic;
+		}
+
+
+		public static BrickWall GetBrickWall(AbstractEntity entity, ViewControllerMode mode)
+		{
+			var controller = EntityViewControllerFactory.Create ("js", entity, mode, null, null, resolutionMode: Resolvers.ResolutionMode.InspectOnly);
+			var brickWall  = controller.CreateBrickWallForInspection ();
+
+			brickWall.BrickAdded += PanelBuilder.HandleBrickWallBrickAdded;
+			brickWall.BrickPropertyAdded += PanelBuilder.HandleBrickWallBrickPropertyAdded;
+
+			controller.BuildBricksForInspection (brickWall);
+
+			return brickWall;
+		}
+
+
+		private static void HandleBrickWallBrickAdded(object sender, BrickAddedEventArgs e)
+		{
+			var brick = e.Brick;
+			var type  = e.FieldType;
+
+			PanelBuilder.CreateDefaultProperties (brick, type);
+		}
+
+
+		private static void HandleBrickWallBrickPropertyAdded(object sender, BrickPropertyAddedEventArgs e)
+		{
+			var brick    = e.Brick;
+			var property = e.Property;
+
+			if (property.Key == BrickPropertyKey.OfType)
+			{
+				var type = property.Brick.GetFieldType ();
+				PanelBuilder.CreateDefaultProperties (brick, type);
+			}
+		}
+
+
+		private static void CreateDefaultProperties(Brick brick, Type type)
+		{
+			var typeInfo = EntityInfo.GetStructuredType (type) as StructuredType;
+
+			if ((typeInfo == null) ||
+				(typeInfo.Caption == null))
+			{
+				return;
+			}
+
+			var typeName = typeInfo.Caption.Name;
+			var typeIcon = typeInfo.Caption.Icon ?? "Data." + typeName;
+			var labels   = typeInfo.Caption.Labels;
+
+			BrickProperty nameProperty = new BrickProperty (BrickPropertyKey.Name, typeName);
+			BrickProperty iconProperty = new BrickProperty (BrickPropertyKey.Icon, typeIcon);
+
+			Brick.AddProperty (brick, nameProperty);
+			Brick.AddProperty (brick, iconProperty);
+
+			PanelBuilder.CreateLabelProperty (brick, labels, 0, BrickPropertyKey.Title);
+			PanelBuilder.CreateLabelProperty (brick, labels, 1, BrickPropertyKey.TitleCompact);
+		}
+
+
+		private static void CreateLabelProperty(Brick brick, IList<string> labels, int i, BrickPropertyKey key)
+		{
+			if (i < labels.Count)
+			{
+				BrickProperty property = new BrickProperty (key, labels[i]);
+				Brick.AddProperty (brick, property);
+			}
 		}
 
 
