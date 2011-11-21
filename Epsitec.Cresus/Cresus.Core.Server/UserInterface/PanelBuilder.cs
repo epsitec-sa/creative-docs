@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 		/// <returns>Name of the generated panel</returns>
 		private Dictionary<string, object> Run()
 		{
-			var brickWall = Bridge.GetBrickWall (this.rootEntity, this.controllerMode);
+			var brickWall = WebBridge.GetBrickWall (this.rootEntity, this.controllerMode);
 
 			// Open the main panel
 			var dic = new Dictionary<string, object> ();
@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 		private List<Dictionary<string, object>> GetPanels(Brick brick)
 		{
 			var item = new WebTileDataItem ();
-			Brick processedBrick = Bridge.ProcessBrick (brick, item);
+			Brick processedBrick = WebBridge.ProcessBrick (brick, item);
 
 			return this.CreatePanelContent (processedBrick, item);
 		}

@@ -62,7 +62,7 @@
     <Compile Include="NancyHosting\CoreResponse.cs" />
     <Compile Include="CoreServer\AuthentificationManager.cs" />
     <Compile Include="NGinxServer.cs" />
-    <Compile Include="UserInterface\Bridge.cs" />
+    <Compile Include="UserInterface\WebBridge.cs" />
     <Compile Include="NancyModules\AbstractCoreSessionModule.cs" />
     <Compile Include="NancyHosting\HttpServer.cs" />
     <Compile Include="CoreServer\IconManager.cs" />

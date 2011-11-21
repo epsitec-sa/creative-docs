@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 {
 	
 	
-	internal static class Bridge
+	internal static class WebBridge
 	{
 
 
@@ -52,13 +52,13 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 					if ((!Brick.ContainsProperty (templateBrick, BrickPropertyKey.Title)) &&
 					(!Brick.ContainsProperty (templateBrick, BrickPropertyKey.TitleCompact)))
 					{
-						Bridge.CreateDefaultTitleProperties (templateBrick);
+						WebBridge.CreateDefaultTitleProperties (templateBrick);
 					}
 
 					if ((!Brick.ContainsProperty (templateBrick, BrickPropertyKey.Text)) &&
 					(!Brick.ContainsProperty (templateBrick, BrickPropertyKey.TextCompact)))
 					{
-						Bridge.CreateDefaultTextProperties (templateBrick);
+						WebBridge.CreateDefaultTextProperties (templateBrick);
 					}
 
 					if (!Brick.ContainsProperty (brick, BrickPropertyKey.Text))
@@ -68,18 +68,18 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 				}
 				else
 				{
-					Bridge.CreateDefaultTextProperties (brick);
+					WebBridge.CreateDefaultTextProperties (brick);
 				}
 
-				Bridge.ProcessProperty (brick, BrickPropertyKey.Name, x => item.Name = x);
-				Bridge.ProcessProperty (brick, BrickPropertyKey.Icon, x => item.IconUri = x);
+				WebBridge.ProcessProperty (brick, BrickPropertyKey.Name, x => item.Name = x);
+				WebBridge.ProcessProperty (brick, BrickPropertyKey.Icon, x => item.IconUri = x);
 
-				Bridge.ProcessProperty (brick, BrickPropertyKey.Title, x => item.Title = x);
-				Bridge.ProcessProperty (brick, BrickPropertyKey.TitleCompact, x => item.CompactTitle = x);
-				Bridge.ProcessProperty (brick, BrickPropertyKey.Text, x => item.Text = x);
-				Bridge.ProcessProperty (brick, BrickPropertyKey.TextCompact, x => item.CompactText = x);
+				WebBridge.ProcessProperty (brick, BrickPropertyKey.Title, x => item.Title = x);
+				WebBridge.ProcessProperty (brick, BrickPropertyKey.TitleCompact, x => item.CompactTitle = x);
+				WebBridge.ProcessProperty (brick, BrickPropertyKey.Text, x => item.Text = x);
+				WebBridge.ProcessProperty (brick, BrickPropertyKey.TextCompact, x => item.CompactText = x);
 
-				Bridge.ProcessProperty (brick, BrickPropertyKey.Attribute, x => Bridge.ProcessAttribute (item, x));
+				WebBridge.ProcessProperty (brick, BrickPropertyKey.Attribute, x => WebBridge.ProcessAttribute (item, x));
 
 				if ((!item.Title.IsNullOrEmpty) && 
 					(item.CompactTitle.IsNull))
@@ -107,8 +107,8 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 			var controller = EntityViewControllerFactory.Create ("js", entity, mode, null, null, resolutionMode: ResolutionMode.InspectOnly);
 			var brickWall  = controller.CreateBrickWallForInspection ();
 
-			brickWall.BrickAdded += Bridge.HandleBrickWallBrickAdded;
-			brickWall.BrickPropertyAdded += Bridge.HandleBrickWallBrickPropertyAdded;
+			brickWall.BrickAdded += WebBridge.HandleBrickWallBrickAdded;
+			brickWall.BrickPropertyAdded += WebBridge.HandleBrickWallBrickPropertyAdded;
 
 			controller.BuildBricksForInspection (brickWall);
 
@@ -136,8 +136,8 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 			Brick.AddProperty (brick, nameProperty);
 			Brick.AddProperty (brick, iconProperty);
 
-			Bridge.CreateLabelProperty (brick, labels, 0, BrickPropertyKey.Title);
-			Bridge.CreateLabelProperty (brick, labels, 1, BrickPropertyKey.TitleCompact);
+			WebBridge.CreateLabelProperty (brick, labels, 0, BrickPropertyKey.Title);
+			WebBridge.CreateLabelProperty (brick, labels, 1, BrickPropertyKey.TitleCompact);
 		}
 
 
@@ -187,7 +187,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 			var brick = e.Brick;
 			var type  = e.FieldType;
 
-			Bridge.CreateDefaultProperties (brick, type);
+			WebBridge.CreateDefaultProperties (brick, type);
 		}
 
 
@@ -199,7 +199,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 			if (property.Key == BrickPropertyKey.OfType)
 			{
 				var type = property.Brick.GetFieldType ();
-				Bridge.CreateDefaultProperties (brick, type);
+				WebBridge.CreateDefaultProperties (brick, type);
 			}
 		}
 
