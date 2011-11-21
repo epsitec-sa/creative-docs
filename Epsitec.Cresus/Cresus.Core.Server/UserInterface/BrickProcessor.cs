@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 	{
 
 
-		internal static Brick ProcessBrick(Brick brick, WebDataItem item)
+		internal static Brick ProcessBrick(Brick brick, WebTileDataItem item)
 		{
 			Brick oldBrick;
 
@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 					item.CompactTitle = item.Title;
 				}
 
-				AddSpecificData (brick, item);
+				BrickProcessor.AddSpecificData (brick, item);
 
 				oldBrick = brick;
 				brick = Brick.GetProperty (brick, BrickPropertyKey.OfType).Brick;
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 		}
 
 
-		private static void AddSpecificData(Brick brick, WebDataItem item)
+		private static void AddSpecificData(Brick brick, WebTileDataItem item)
 		{
 			if (Brick.ContainsProperty (brick, BrickPropertyKey.CollectionAnnotation))
 			{
@@ -135,15 +135,6 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 		}
 
 
-		private static void ProcessProperty(Brick brick, BrickPropertyKey key, Action<bool> setter)
-		{
-			if (Brick.ContainsProperty (brick, key))
-			{
-				setter (true);
-			}
-		}
-
-
 		private static void ProcessProperty(Brick brick, BrickPropertyKey key, Action<string> setter)
 		{
 			var value = Brick.GetProperty (brick, key).StringValue;
@@ -168,18 +159,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 		}
 
 
-		private static void ProcessProperty(Brick brick, BrickPropertyKey key, Action<Expression> setter)
-		{
-			var value = Brick.GetProperty (brick, key).ExpressionValue;
-
-			if (value != null)
-			{
-				setter (value);
-			}
-		}
-
-
-		private static void ProcessAttribute(WebDataItem item, BrickMode value)
+		private static void ProcessAttribute(WebTileDataItem item, BrickMode value)
 		{
 			switch (value)
 			{

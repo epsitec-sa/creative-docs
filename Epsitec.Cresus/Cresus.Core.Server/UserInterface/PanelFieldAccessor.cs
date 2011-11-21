@@ -188,7 +188,6 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 			{
 				TSource source = entity as TSource;
 
-
 				var getter = this.CreateGetter (source);
 				var setter = this.CreateSetter (source);
 				var lambda = this.accessor.lambda;

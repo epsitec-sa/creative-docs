@@ -173,10 +173,10 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 		/// <returns></returns>
 		private List<Dictionary<string, object>> GetPanels(Brick brick)
 		{
-			var item = new WebDataItem ();
+			var item = new WebTileDataItem ();
 			Brick processedBrick = BrickProcessor.ProcessBrick (brick, item);
 
-			var panels = CreatePanelContent (processedBrick, item);
+			var panels = this.CreatePanelContent (processedBrick, item);
 			return panels;
 		}
 
@@ -186,7 +186,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 		/// </summary>
 		/// <param name="brick">Brick to use</param>
 		/// <returns></returns>
-		private List<Dictionary<string, object>> CreatePanelContent(Brick brick, WebDataItem item)
+		private List<Dictionary<string, object>> CreatePanelContent(Brick brick, WebTileDataItem item)
 		{
 			var list = new List<Dictionary<string, object>> ();
 
@@ -241,14 +241,14 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 		}
 
 
-		private List<Dictionary<string, object>> CreatePanelsForEntity(Brick brick, WebDataItem item, AbstractEntity entity)
+		private List<Dictionary<string, object>> CreatePanelsForEntity(Brick brick, WebTileDataItem item, AbstractEntity entity)
 		{
 
 			var list = new List<Dictionary<string, object>> ();
-			var parent = GetBasicPanelForm (item);
+			var parent = this.GetBasicPanelForm (item);
 			list.Add (parent);
 
-			var entityKey = GetEntityKey (entity);
+			var entityKey = this.GetEntityKey (entity);
 			parent["entityId"] = entityKey;
 
 			if (item.DefaultMode == ViewControllerMode.Summary)
@@ -256,9 +256,9 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 				parent["clickToEdit"] = false;
 			}
 
-			AddControllerSpecificData (parent, brick, item, entity);
+			this.AddControllerSpecificData (parent, brick, item, entity);
 
-			var children = CreateChildren (brick);
+			var children = this.CreateChildren (brick);
 			if (children != null && children.Any ())
 			{
 				list.AddRange (children);
@@ -268,7 +268,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 		}
 
 
-		private Dictionary<string, object> CreateEmptyPanel(WebDataItem item)
+		private Dictionary<string, object> CreateEmptyPanel(WebTileDataItem item)
 		{
 			var panel = this.GetBasicPanelForm (item);
 			panel["xtype"] = "emptysummary";
@@ -277,7 +277,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 		}
 
 
-		private Dictionary<string, object> GetBasicPanelForm(WebDataItem item)
+		private Dictionary<string, object> GetBasicPanelForm(WebTileDataItem item)
 		{
 			var panel = new Dictionary<string, object> ();
 
@@ -297,7 +297,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 		}
 
 
-		private void AddControllerSpecificData(Dictionary<string, object> parent, Brick brick, WebDataItem item, AbstractEntity entity)
+		private void AddControllerSpecificData(Dictionary<string, object> parent, Brick brick, WebTileDataItem item, AbstractEntity entity)
 		{
 			switch (this.controllerMode)
 			{
@@ -321,7 +321,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 		}
 
 
-		private static void AddControllerSpecificSummaryData(Dictionary<string, object> parent, Brick brick, WebDataItem item, AbstractEntity entity)
+		private static void AddControllerSpecificSummaryData(Dictionary<string, object> parent, Brick brick, WebTileDataItem item, AbstractEntity entity)
 		{
 			parent["html"] = entity.GetSummary ().ToString ();
 			parent["hideRemoveButton"] = item.HideRemoveButton;

@@ -10,13 +10,15 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 {
 
 	
-	internal class WebDataItem
+	internal sealed class WebTileDataItem
 	{
 
 
-		public WebDataItem()
+		// This class is the webcore equivalent of Epsitec.Cresus.Core.Controllers.TileDataItem.
+
+
+		public WebTileDataItem()
 		{
-			this.bindings = new HashSet<AccessorBinding> ();
 			this.DefaultMode = ViewControllerMode.Edition;
 			this.InitialVisibility = true;
 		}
@@ -190,15 +192,6 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 			get;
 			set;
 		}
-
-
-		public static string BuildName(string prefix, int index)
-		{
-			return string.Concat (prefix, ".", index.ToString (System.Globalization.CultureInfo.InvariantCulture));
-		}
-
-
-		private readonly HashSet<AccessorBinding>	bindings;
 
 
 		private FormattedText displayedTitle;

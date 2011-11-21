@@ -87,7 +87,7 @@
     <Compile Include="NancyHosting\CoreResponseExtensions.cs" />
     <Compile Include="CoreServer\ServerContext.cs" />
     <Compile Include="UserInterface\PanelFieldAccessorCache.cs" />
-    <Compile Include="UserInterface\WebDataItem.cs" />
+    <Compile Include="UserInterface\WebTileDataItem.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
