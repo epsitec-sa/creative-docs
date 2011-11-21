@@ -133,22 +133,47 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			}
 		}
 
+		/// <summary>
+		/// Updates the layouts in the specified tile. The layouts will be processed row by
+		/// row and their bounds will be set using root relative coordinates.
+		/// </summary>
+		/// <param name="tile">The title tile.</param>
+		/// <param name="sortedLayouts">The sorted layouts.</param>
+		private static void UpdateLayoutsInTile(TitleTile tile, SortedActionItemLayouts sortedLayouts)
+		{
+			int rowCount = sortedLayouts.RowCount;
+			var topRight = tile.MapClientToRoot (tile.Client.Bounds.TopRight);
 
+			for (int row = 0; row < rowCount; row++)
+			{
+				var layouts  = sortedLayouts.GetItemsInRow (row);
+				var position = topRight;
+
+				foreach (var item in layouts)
+				{
+					var width  = 2 + item.TextWidth + 2;
+					var height = ActionItemLayout.DefaultHeight;
+					var bounds = new Rectangle (position.X - width, position.Y - height, position.X, position.Y);
+
+					item.bounds = bounds;
+
+					position  = new Point (position.X - width - 2, position.Y);
+				}
+
+				topRight = new Point (topRight.X, topRight.Y - ActionItemLayout.DefaultHeight - 1);
+			}
+		}
+
+		
 		private void ComputeWidth()
 		{
 			var textLayout = this.CreateTextLayout ();
 			var textSize   = textLayout.GetSingleLineSize ();
-			
+
 			this.width = System.Math.Ceiling (textSize.Width);
 		}
-
-
-		public static void UpdateLayoutsInTile(TitleTile tile, IEnumerable<ActionItemLayout> sortedLayouts)
-		{
-			//	TODO: layout actions
-		}
-
-        private TextLayout CreateTextLayout()
+		
+		private TextLayout CreateTextLayout()
 		{
 			return new TextLayout ()
 			{
@@ -285,6 +310,26 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 				}
 			}
 
+			public int							RowCount
+			{
+				get
+				{
+					if (this.Count == 0)
+					{
+						return 0;
+					}
+					else
+					{
+						return this.list.Select (x => x.row).Max ();
+					}
+				}
+			}
+
+			public IEnumerable<ActionItemLayout> GetItemsInRow(int row)
+			{
+				return this.list.Where (x => x.row == row);
+			}
+
 			public void Add(ActionItemLayout item)
 			{
 				this.list.Add (item);
@@ -313,12 +358,16 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 
 		#endregion
 
+		#region ActionTarget Enumeration
+
 		private enum ActionTarget
 		{
 			None,
 			Primary,
 			CollectionItem,
 		}
+
+		#endregion
 
 		#region IComparable<ActionItemLayout> Members
 
@@ -346,6 +395,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 
 		public static readonly Font				DefaultFont     = Font.DefaultFont;
 		public static readonly double			DefaultFontSize = Font.DefaultFontSize;
+		public static readonly double			DefaultHeight	= 14.0;
 		
 		private readonly ActionItem				item;
 		private ControllerTile					container;
