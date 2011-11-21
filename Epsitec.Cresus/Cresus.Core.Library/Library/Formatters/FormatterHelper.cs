@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Core.Library.Formatters
 		/// </summary>
 		public FormatterHelper()
 		{
-			this.date = System.DateTime.UtcNow;
+			this.localDate = System.DateTime.Now;
 		}
 
 
@@ -103,12 +103,12 @@ namespace Epsitec.Cresus.Core.Library.Formatters
 
 		private string FormatShortYear()
 		{
-			return this.date.ToString ("yy");
+			return this.localDate.ToString ("yy");
 		}
 
 		private string FormatLongYear()
 		{
-			return this.date.ToString ("yyyy");
+			return this.localDate.ToString ("yyyy");
 		}
 
 		private string FormatId(string numberFormat)
@@ -138,7 +138,7 @@ namespace Epsitec.Cresus.Core.Library.Formatters
 		}
 		
 		
-		private readonly System.DateTime		date;
+		private readonly System.DateTime		localDate;
 
 		private FormattingContext				formatContext;
 	}

@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -15,11 +15,13 @@ namespace Epsitec.Common.Support.Extensions
 	{
 		public static bool InRange(this System.DateTime date, System.DateTime? beginDate, System.DateTime? endDate)
 		{
-			if (beginDate.HasValue && beginDate.Value > date)
+			var dateUtc = date.ToUniversalTime ();
+
+			if (beginDate.HasValue && beginDate.Value.ToUniversalTime () > dateUtc)
 			{
 				return false;
 			}
-			if (endDate.HasValue && endDate.Value <= date)
+			if (endDate.HasValue && endDate.Value.ToUniversalTime () <= dateUtc)
 			{
 				return false;
 			}

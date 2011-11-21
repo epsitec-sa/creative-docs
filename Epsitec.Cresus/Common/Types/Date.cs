@@ -4,28 +4,29 @@
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// La structure Date est une simplification de DateTime. Elle ne
-	/// représente que la date du jour, sans aucune indication de
-	/// l'heure.
+	/// The <c>Date</c> structure is a simplified version of <see cref="System.DateTime"/>
+	/// where only the date of the day is preserved; the date is always considered to be in
+	/// the local time zone (not UTC).
 	/// </summary>
-	
+
 	[System.Serializable]
 	[System.ComponentModel.TypeConverter (typeof (Date.Converter))]
-	
+
 	public struct Date : System.IComparable, INullable, System.IEquatable<Date>, System.IFormattable
 	{
 		public Date(System.DateTime dateTime)
 		{
-			this.days = (int)(dateTime.Ticks / Time.TicksPerDay);
+			long dateTimeTicks = dateTime.ToLocalTime ().Ticks;
+			this.days = (int) (dateTimeTicks / Time.TicksPerDay);
 		}
 
 		public Date(int year, int month, int day)
-			: this (new System.DateTime (year, month, day))
+			: this (new System.DateTime (year, month, day, 0, 0, 0, System.DateTimeKind.Local))
 		{
 		}
 
 		public Date(long ticks)
-			: this (new System.DateTime (ticks))
+			: this (new System.DateTime (ticks, System.DateTimeKind.Local))
 		{
 		}
 
@@ -33,34 +34,48 @@ namespace Epsitec.Common.Types
 		{
 			this.days = days;
 		}
-		
-		
+
+
 		public int								Day
 		{
-			get { return this.InternalDate.Day; }
+			get
+			{
+				return this.InternalDate.Day;
+			}
 		}
-		
+
 		public System.DayOfWeek					DayOfWeek
 		{
-			get { return this.InternalDate.DayOfWeek; }
+			get
+			{
+				return this.InternalDate.DayOfWeek;
+			}
 		}
 
 		public int								DayOfYear
 		{
-			get { return this.InternalDate.DayOfYear; }
+			get
+			{
+				return this.InternalDate.DayOfYear;
+			}
 		}
-		
+
 		public int								Month
 		{
-			get { return this.InternalDate.Month; }
+			get
+			{
+				return this.InternalDate.Month;
+			}
 		}
-		
+
 		public int								Year
 		{
-			get { return this.InternalDate.Year; }
+			get
+			{
+				return this.InternalDate.Year;
+			}
 		}
-		
-		
+
 		public long								Ticks
 		{
 			get
@@ -68,8 +83,8 @@ namespace Epsitec.Common.Types
 				return this.days * Time.TicksPerDay;
 			}
 		}
-		
-		
+
+
 		public static Date						Today
 		{
 			get
@@ -80,29 +95,29 @@ namespace Epsitec.Common.Types
 
 		public static readonly Date				Null = new Date (-1, true);
 
-		
+
 		public Date AddDays(int value)
 		{
 			return new Date (this.InternalDate.AddDays (value));
 		}
-		
+
 		public Date AddMonths(int value)
 		{
 			return new Date (this.InternalDate.AddMonths (value));
 		}
-		
+
 		public Date AddYears(int value)
 		{
 			return new Date (this.InternalDate.AddYears (value));
 		}
-		
-		
+
+
 		public System.DateTime ToDateTime()
 		{
 			return this.InternalDate;
 		}
-		
-		
+
+
 		public override bool Equals(object obj)
 		{
 			if (obj == null)
@@ -128,7 +143,7 @@ namespace Epsitec.Common.Types
 
 			return thisTicks == thatTicks;
 		}
-		
+
 		public override int GetHashCode()
 		{
 			return this.days.GetHashCode ();
@@ -154,22 +169,22 @@ namespace Epsitec.Common.Types
 				throw new System.ArgumentException ("Neither a Date nor a DateTime");
 			}
 		}
-		
+
 		public static int Compare(Date t1, Date t2)
 		{
 			if (t1.Ticks > t2.Ticks)
 			{
 				return 1;
 			}
-			
+
 			if (t1.Ticks < t2.Ticks)
 			{
 				return -1;
 			}
-			
+
 			return 0;
 		}
-		
+
 		public static bool Equals(Date t1, Date t2)
 		{
 			return t1.Ticks == t2.Ticks;
@@ -205,7 +220,7 @@ namespace Epsitec.Common.Types
 		{
 			return (t2.ToDateTime () - t1.ToDateTime ()).Days;
 		}
-		
+
 		public override string ToString()
 		{
 			if (this.IsNull)
@@ -226,7 +241,7 @@ namespace Epsitec.Common.Types
 		}
 
 		#endregion
-		
+
 		#region IEquatable<Date> Members
 
 		public bool Equals(Date other)
@@ -235,11 +250,10 @@ namespace Epsitec.Common.Types
 		}
 
 		#endregion
-		
-		
+
 		#region INullable Members
-		
-		public bool								IsNull
+
+		public bool IsNull
 		{
 			get
 			{
@@ -248,18 +262,18 @@ namespace Epsitec.Common.Types
 		}
 
 		#endregion
-		
+
 		#region IComparable Members
 		public int CompareTo(object obj)
 		{
 			long thisTicks = this.Ticks;
 			long thatTicks = 0;
-			
+
 			if (obj == null)
 			{
 				return 1;
 			}
-			
+
 			if (obj is System.DateTime)
 			{
 				thatTicks = ((System.DateTime) obj).Ticks;
@@ -272,7 +286,7 @@ namespace Epsitec.Common.Types
 			{
 				throw new System.ArgumentException ("Invalid argument");
 			}
-			
+
 			if (thisTicks > thatTicks)
 			{
 				return 1;
@@ -281,11 +295,11 @@ namespace Epsitec.Common.Types
 			{
 				return -1;
 			}
-			
+
 			return 0;
 		}
 		#endregion
-		
+
 		#region Converter Class
 		private class Converter : Epsitec.Common.Types.AbstractStringConverter
 		{
@@ -295,7 +309,7 @@ namespace Epsitec.Common.Types
 				Date date = new Date (days, true);
 				return date;
 			}
-			
+
 			public override string ToString(object value, System.Globalization.CultureInfo culture)
 			{
 				Date date = (Date) value;
@@ -304,7 +318,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 		#endregion
-		
+
 		private System.DateTime					InternalDate
 		{
 			get
@@ -313,11 +327,11 @@ namespace Epsitec.Common.Types
 				{
 					throw new System.NullReferenceException ("Date is Null.");
 				}
-				
-				return new System.DateTime (this.days * Time.TicksPerDay, System.DateTimeKind.Utc);
+
+				return new System.DateTime (this.days * Time.TicksPerDay, System.DateTimeKind.Local);
 			}
 		}
-		
+
 		private readonly int					days;
 	}
 }
