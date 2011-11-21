@@ -35,14 +35,6 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			{
 				return this.titleTile;
 			}
-			set
-			{
-				if (this.titleTile != value)
-				{
-					this.titleTile = value;
-					this.Invalidate ();
-				}
-			}
 		}
 
 		public ControllerTile					Container
@@ -50,14 +42,6 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			get
 			{
 				return this.container;
-			}
-			set
-			{
-				if (this.container != value)
-				{
-					this.container = value;
-					this.Invalidate ();
-				}
 			}
 		}
 
@@ -124,6 +108,32 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			return layout;
 		}
 
+		/// <summary>
+		/// Updates the layout of all <see cref="ActionItemLayout"/> items.
+		/// </summary>
+		/// <param name="items">The items.</param>
+		public static void UpdateLayout(IEnumerable<ActionItemLayout> items)
+		{
+			var bucket = new TileActionsBucket ();
+
+			//	Sort all items by title tile and then by rank (i.e. by row, priority and label).
+			
+			foreach (var item in items)
+			{
+				var tileActions = bucket.GetTileActions (item.TitleTile);
+				
+				tileActions.Add (item);
+			}
+
+			//	Layout every title tile, one after the other:
+
+			foreach (var item in bucket.Items)
+			{
+				ActionItemLayout.UpdateLayoutsInTile (item.TitleTile, item);
+			}
+		}
+
+
 		private void ComputeWidth()
 		{
 			var textLayout = this.CreateTextLayout ();
@@ -133,7 +143,12 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 		}
 
 
-		private TextLayout CreateTextLayout()
+		public static void UpdateLayoutsInTile(TitleTile tile, IEnumerable<ActionItemLayout> sortedLayouts)
+		{
+			//	TODO: layout actions
+		}
+
+        private TextLayout CreateTextLayout()
 		{
 			return new TextLayout ()
 			{
@@ -146,7 +161,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 		private void Classify()
 		{
 			int rowA = 0;
-			int rowB = (this.actionTarget == ActionTarget.Primary) ? 1 : 0;
+			int rowB = (this.actionTarget == ActionTarget.Primary) ? 1 : this.Container.Index + 1;
 
 			var actionClass = this.Item.ActionClass.Class;
 
@@ -216,11 +231,87 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			}
 		}
 
-		
-		private void Invalidate()
+		#region TileActionsBucket Class
+
+		private sealed class TileActionsBucket : Dictionary<long, SortedActionItemLayouts>
 		{
-			this.bounds = Rectangle.Empty;
+			public IEnumerable<SortedActionItemLayouts>		Items
+			{
+				get
+				{
+					return this.Values;
+				}
+			}
+
+			public SortedActionItemLayouts GetTileActions(TitleTile tile)
+			{
+				var tileId = tile.GetVisualSerialId ();
+				SortedActionItemLayouts actions;
+
+				if (this.TryGetValue (tileId, out actions) == false)
+				{
+					actions = new SortedActionItemLayouts ();
+					this[tileId] = actions;
+				}
+				
+				return actions;
+			}
 		}
+
+		#endregion
+
+		#region SortedActionItemLayouts Class
+
+		private class SortedActionItemLayouts : IEnumerable<ActionItemLayout>
+		{
+			public SortedActionItemLayouts()
+			{
+				this.list = new SortedSet<ActionItemLayout> ();
+			}
+
+			public TitleTile					TitleTile
+			{
+				get
+				{
+					return this.list.Count == 0 ? null : this.list.Min.TitleTile;
+				}
+			}
+
+			public int							Count
+			{
+				get
+				{
+					return this.list.Count;
+				}
+			}
+
+			public void Add(ActionItemLayout item)
+			{
+				this.list.Add (item);
+			}
+
+			#region IEnumerable<ActionItemLayout> Members
+
+			public IEnumerator<ActionItemLayout> GetEnumerator()
+			{
+				return this.list.GetEnumerator ();
+			}
+
+			#endregion
+
+			#region IEnumerable Members
+
+			System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+			{
+				return this.list.GetEnumerator ();
+			}
+
+			#endregion
+
+			private readonly SortedSet<ActionItemLayout> list;
+		}
+
+		#endregion
 
 		private enum ActionTarget
 		{

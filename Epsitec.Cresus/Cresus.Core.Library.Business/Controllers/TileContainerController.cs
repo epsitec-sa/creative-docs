@@ -608,7 +608,19 @@ namespace Epsitec.Cresus.Core.Controllers
 				item.Tile.AutoHilite = isItemPartOfCollection;
 			}
 
-			tileCache.Values.ForEach (tile => tile.Parent = null);
+			tileCache.Values.ForEach (tile => TileContainerController.ResetTitleTileParentAndSetItemIndexes (tile));
+		}
+
+		private static void ResetTitleTileParentAndSetItemIndexes(TitleTile tile)
+		{
+			tile.Parent = null;
+
+			int index = 0;
+
+			foreach (var item in tile.Items)
+			{
+				item.Index = index++;
+			}
 		}
 
 		private void RefreshTitleTilesFreezeMode()
