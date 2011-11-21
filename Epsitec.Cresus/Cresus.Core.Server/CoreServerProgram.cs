@@ -5,7 +5,6 @@
 using Epsitec.Common.IO;
 
 using Epsitec.Cresus.Core.Server.CoreServer;
-using Epsitec.Cresus.Core.Server.NancyModules;
 using Epsitec.Cresus.Core.Server.NancyHosting;
 
 using System;
@@ -13,8 +12,6 @@ using System;
 using System.Collections.Generic;
 
 using System.IO;
-
-using System.Runtime.InteropServices;
 
 
 namespace Epsitec.Cresus.Core.Server
@@ -47,6 +44,8 @@ namespace Epsitec.Cresus.Core.Server
 
 		private static void Run()
 		{
+			var nGinxAutorun = CoreServerProgram.nGinxAutorun;
+			var nGinxPath = CoreServerProgram.nGinxPath;
 			var uri = CoreServerProgram.baseUri;
 			var nbThreads = CoreServerProgram.nbThreads;
 			var maxNbSessions = CoreServerProgram.maxNbSessions;
@@ -55,26 +54,31 @@ namespace Epsitec.Cresus.Core.Server
 
 			Console.WriteLine ("Launching server...");
 
+			using (var nGinxServer = nGinxAutorun ? new NGinxServer (nGinxPath) : null)		
 			using (var serverContext = new ServerContext (maxNbSessions, sessionTimeout, sessionCleanupInterval))
+			using (var nancyServer = new NancyServer (serverContext, uri, nbThreads))
 			{
-				using (var nancyServer = new NancyServer (serverContext, uri, nbThreads))
-				{
-					nancyServer.Start ();
+				nancyServer.Start ();
 
-					Console.WriteLine ("Server launched and listening to " + uri);
-					Console.WriteLine ("Press [ENTER] to shut down");
-					Console.ReadLine ();
+				Console.WriteLine ("Server launched and listening to " + uri);
+				Console.WriteLine ("Press [ENTER] to shut down");
+				Console.ReadLine ();
 
-					Console.WriteLine ("Shutting down server...");
+				Console.WriteLine ("Shutting down server...");
 
-					nancyServer.Stop ();
-				}
+				nancyServer.Stop ();
 			}
 
 			Console.WriteLine ("Server shut down");
 			Console.WriteLine ("Press [ENTER] to exit");
 			Console.ReadLine ();
 		}
+
+
+		private static readonly FileInfo nGinxPath = new FileInfo ("C:\\nginx\\nginx.exe");
+
+
+		private static readonly bool nGinxAutorun = true;
 
 
 		private static readonly DirectoryInfo iconDirectory = new DirectoryInfo ("S:\\webcore\\");
@@ -96,6 +100,5 @@ namespace Epsitec.Cresus.Core.Server
 
 
 	}
-
 
 }
