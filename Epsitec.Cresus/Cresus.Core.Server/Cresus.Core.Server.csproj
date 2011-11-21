@@ -70,7 +70,7 @@
     <Compile Include="NancyHosting\CoreErrorHandler.cs" />
     <Compile Include="NancyHosting\CoreServerBootstrapper.cs" />
     <Compile Include="CoreServerProgram.cs" />
-    <Compile Include="CoreServer\SafeCoreSessionManager.cs" />
+    <Compile Include="CoreServer\CoreSessionManager.cs" />
     <Compile Include="CoreServer\CoreSession.cs" />
     <Compile Include="NancyModules\AbstractCoreModule.cs" />
     <Compile Include="NancyModules\CollectionManagerModule.cs" />
