@@ -50,12 +50,27 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			}
 		}
 
-		
+
+		/// <summary>
+		/// Gets the <see cref="ActionClass"/> instance for the specified action class.
+		/// </summary>
+		/// <param name="actionClass">The action class.</param>
+		/// <returns>The <see cref="ActionClass"/> instance.</returns>
 		public static ActionClass GetActionClass(ActionClasses actionClass)
 		{
 			return ActionClass.GetActionClass (actionClass.ToString (), actionClass, ActionClass.GetColor (actionClass));
 		}
 
+		/// <summary>
+		/// Gets the <see cref="ActionClass"/> instance for the specified name, action class
+		/// and color specification. If no color is specified, a default color will be provided.
+		/// For a given name, this will always return the same instance, regardless of possible
+		/// mismatches in the action class or color specifications.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="actionClass">The action class.</param>
+		/// <param name="color">The color.</param>
+		/// <returns>The <see cref="ActionClass"/> instance.</returns>
 		public static ActionClass GetActionClass(string name, ActionClasses actionClass, Color color)
 		{
 			if ((color.IsEmpty) ||
@@ -67,6 +82,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			return ActionClass.GetUnique (name, actionClass, color);
 		}
 
+		
 		private static Color GetColor(ActionClasses actionClass)
 		{
 			Color color = Color.FromBrightness (0.4);

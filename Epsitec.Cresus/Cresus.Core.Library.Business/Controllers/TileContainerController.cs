@@ -35,6 +35,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private TileContainerController(TileContainer container, Widget parent = null)
 		{
 			this.controller   = container.Controller as EntityViewController;
+			this.orchestrator = this.controller.Orchestrator;
 			this.navigator    = this.controller.Navigator;
 			this.container    = container;
 			this.parent       = parent ?? this.container;
@@ -302,6 +303,18 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.RefreshLayout ();
 			this.SetDataTilesParent ();
 			this.SetCloseButtonVisibility ();
+			this.RefreshActionViewController ();
+		}
+
+		private void RefreshActionViewController()
+		{
+			var actionViewController = new ActionViewController (this.orchestrator);
+			
+			//	TODO: ...
+
+			actionViewController.Refresh (this.liveItems);
+
+			actionViewController.Dispose ();
 		}
 
 		private void RefreshLayout()
@@ -409,7 +422,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				};
 			tile.RemoveClicked += (sender, e) =>
 				{
-					this.controller.Orchestrator.CloseSubViews (this.controller);
+					this.orchestrator.CloseSubViews (this.controller);
 					item.DeleteItem ();
 					this.GenerateTiles ();
 				};
@@ -441,7 +454,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 			else
 			{
-				item.Tile.ToggleSubView (this.controller.Orchestrator, this.controller);
+				item.Tile.ToggleSubView (this.orchestrator, this.controller);
 			}
 		}
 
@@ -474,12 +487,12 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				if (last != null)
 				{
-					last.Tile.OpenSubView (this.controller.Orchestrator, this.controller);
+					last.Tile.OpenSubView (this.orchestrator, this.controller);
 				}
 			}
 			else
 			{
-				sel.Tile.OpenSubView (this.controller.Orchestrator, this.controller);
+				sel.Tile.OpenSubView (this.orchestrator, this.controller);
 			}
 		}
 
@@ -494,7 +507,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					tile.RemoveClicked += sender =>
 					{
-						this.controller.Orchestrator.CloseSubViews (this.controller);
+						this.orchestrator.CloseSubViews (this.controller);
 						item.DeleteItem ();
 						this.GenerateTiles ();
 					};
@@ -828,7 +841,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 			else
 			{
-				tile.OpenSubView (this.controller.Orchestrator, this.controller);
+				tile.OpenSubView (this.orchestrator, this.controller);
 				return true;
 			}
 		}
@@ -867,6 +880,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		private readonly EntityViewController		controller;
+		private readonly DataViewOrchestrator		orchestrator; 
 		private readonly NavigationOrchestrator		navigator;
 		private readonly Widget						parent;
 		private readonly TileContainer				container;

@@ -61,6 +61,14 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			}
 		}
 
+		public bool								IsDuplicate
+		{
+			get
+			{
+				return this.isDuplicate;
+			}
+		}
+
 		public Rectangle						Bounds
 		{
 			get
@@ -78,13 +86,13 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 		}
 
 
-
 		public static ActionItemLayout Create(TileDataItem tileDataItem, ActionItem actionItem)
 		{
 			ActionItemLayout layout = new ActionItemLayout (actionItem);
 
 			switch (tileDataItem.DataType)
 			{
+				case TileDataType.EmptyItem:
 				case TileDataType.CollectionItem:
 					layout.actionTarget = ActionTarget.CollectionItem;
 					layout.titleTile    = tileDataItem.TitleTile;
@@ -121,8 +129,11 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			foreach (var item in items)
 			{
 				var tileActions = bucket.GetTileActions (item.TitleTile);
-				
-				tileActions.Add (item);
+
+				if (tileActions.Add (item) == false)
+				{
+					item.MarkAsDuplicate ();
+				}
 			}
 
 			//	Layout every title tile, one after the other:
@@ -131,6 +142,11 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			{
 				ActionItemLayout.UpdateLayoutsInTile (item.TitleTile, item);
 			}
+		}
+
+		private void MarkAsDuplicate()
+		{
+			this.isDuplicate = true;
 		}
 
 		/// <summary>
@@ -144,6 +160,8 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			int rowCount = sortedLayouts.RowCount;
 			var topRight = tile.MapClientToRoot (tile.Client.Bounds.TopRight);
 
+			topRight = topRight + new Point (-10, -2);
+
 			for (int row = 0; row < rowCount; row++)
 			{
 				var layouts  = sortedLayouts.GetItemsInRow (row);
@@ -153,7 +171,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 				{
 					var width  = 2 + item.TextWidth + 2;
 					var height = ActionItemLayout.DefaultHeight;
-					var bounds = new Rectangle (position.X - width, position.Y - height, position.X, position.Y);
+					var bounds = new Rectangle (position.X - width, position.Y - height, width, height);
 
 					item.bounds = bounds;
 
@@ -320,7 +338,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 					}
 					else
 					{
-						return this.list.Select (x => x.row).Max ();
+						return this.list.Select (x => x.row).Max () + 1;
 					}
 				}
 			}
@@ -330,9 +348,9 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 				return this.list.Where (x => x.row == row);
 			}
 
-			public void Add(ActionItemLayout item)
+			public bool Add(ActionItemLayout item)
 			{
-				this.list.Add (item);
+				return this.list.Add (item);
 			}
 
 			#region IEnumerable<ActionItemLayout> Members
@@ -381,6 +399,13 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			{
 				return this.priority - other.priority;
 			}
+			
+			int compareWeights = this.item.Weight.CompareTo (other.item.Weight);
+			
+			if (compareWeights != 0)
+			{
+				return compareWeights;
+			}
 
 			//	TODO: benchmark this and see if ToSimpleText should optimize for cases where the simple text equals the rich text
 
@@ -395,7 +420,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 
 		public static readonly Font				DefaultFont     = Font.DefaultFont;
 		public static readonly double			DefaultFontSize = Font.DefaultFontSize;
-		public static readonly double			DefaultHeight	= 14.0;
+		public static readonly double			DefaultHeight	= 15.0;
 		
 		private readonly ActionItem				item;
 		private ControllerTile					container;
@@ -406,5 +431,6 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 		private double							width;
 		
 		private Rectangle						bounds;
+		private bool							isDuplicate;
 	}
 }
