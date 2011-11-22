@@ -48,6 +48,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				Delay      = 0.5,
 			};
 
+			this.actionViewController = new ActionViewController (this.orchestrator);
+
 			this.closeButton = UIBuilder.CreateColumnTileCloseButton (this.container);
 
 			this.refreshTimer.TimeElapsed += this.HandleTimerTimeElapsed;
@@ -224,7 +226,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			this.isDisposed = true;
 			this.refreshTimer.Stop ();
-			
+
+			this.actionViewController.Dispose ();
 			this.navigator.Unregister (this);
 
 			this.refreshTimer.TimeElapsed -= this.HandleTimerTimeElapsed;
@@ -308,13 +311,9 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void RefreshActionViewController()
 		{
-			var actionViewController = new ActionViewController (this.orchestrator);
-			
 			//	TODO: ...
 
 			actionViewController.Refresh (this.liveItems);
-
-			actionViewController.Dispose ();
 		}
 
 		private void RefreshLayout()
@@ -888,6 +887,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly List<TileDataItem>			liveItems;
 		private readonly DataContext				dataContext;
 		private readonly Timer						refreshTimer;
+		private readonly ActionViewController		actionViewController;
 
 		private readonly Button						closeButton;
 

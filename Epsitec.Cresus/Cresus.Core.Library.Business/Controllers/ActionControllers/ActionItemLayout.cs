@@ -158,9 +158,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 		private static void UpdateLayoutsInTile(TitleTile tile, SortedActionItemLayouts sortedLayouts)
 		{
 			int rowCount = sortedLayouts.RowCount;
-			var topRight = tile.MapClientToRoot (tile.Client.Bounds.TopRight);
-
-			topRight = topRight + new Point (-10, -2);
+			var topRight = ActionItemLayout.GetTitleTileTopRightPointRelativeToRoot (tile);
 
 			for (int row = 0; row < rowCount; row++)
 			{
@@ -169,20 +167,29 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 
 				foreach (var item in layouts)
 				{
-					var width  = 2 + item.TextWidth + 2;
-					var height = ActionItemLayout.DefaultHeight;
-					var bounds = new Rectangle (position.X - width, position.Y - height, width, height);
+					ActionItemLayout.SetActionItemLayoutBounds (item, position);
 
-					item.bounds = bounds;
-
-					position  = new Point (position.X - width - 2, position.Y);
+					position -= new Point (item.bounds.Width + 2, 0);
 				}
 
-				topRight = new Point (topRight.X, topRight.Y - ActionItemLayout.DefaultHeight - 1);
+				topRight -= new Point (0, ActionItemLayout.DefaultHeight + 1);
 			}
 		}
 
-		
+
+		private static Point GetTitleTileTopRightPointRelativeToRoot(TitleTile tile)
+		{
+			return tile.MapClientToRoot (tile.Client.Bounds.TopRight - new Point (10, 2));
+		}
+
+		private static void SetActionItemLayoutBounds(ActionItemLayout item, Point position)
+		{
+			var width  = 2 + item.TextWidth + 2;
+			var height = ActionItemLayout.DefaultHeight;
+
+			item.bounds = new Rectangle (position.X - width, position.Y - height, width, height);
+		}
+
 		private void ComputeWidth()
 		{
 			var textLayout = this.CreateTextLayout ();

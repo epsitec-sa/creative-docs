@@ -17,6 +17,13 @@ namespace Epsitec.Cresus.Core.Controllers
 			: base (orchestrator)
 		{
 			this.layouts = new List<ActionItemLayout> ();
+
+			var root = this.GetWindowRoot ();
+
+			if (root != null)
+			{
+				root.PaintForeground += this.HandleWindowRootPaintForeground;
+			}
 		}
 
 
@@ -39,27 +46,32 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 
 			ActionItemLayout.UpdateLayout (this.layouts);
-
-			this.layouts.RemoveAll (x => x.IsDuplicate);
-
-			this.Orchestrator.Host.Window.Root.PaintForeground
-				+= (sender, e)
-					=>
-					{
-						this.layouts.ForEach (
-							x =>
-							{
-								var rect = Rectangle.Deflate (x.Bounds, 0.5, 0.5);
-								e.Graphics.AddRectangle (rect);
-								e.Graphics.AddText (rect.X, rect.Y, rect.Width, rect.Height, x.Item.Label.ToString (), ActionItemLayout.DefaultFont, ActionItemLayout.DefaultFontSize, ContentAlignment.MiddleCenter);
-							});
-
-						e.Graphics.Color = Epsitec.Common.Drawing.Color.FromName ("Cyan");
-						e.Graphics.RenderSolid ();
-					};
-
+			this.RemoveDuplicates ();
 		}
 
+		private void RemoveDuplicates()
+		{
+			this.layouts.RemoveAll (x => x.IsDuplicate);
+		}
+
+		private void HandleWindowRootPaintForeground(object sender, Epsitec.Common.Widgets.PaintEventArgs e)
+		{
+			this.ExperimentalPaintOverlay (e.Graphics);
+		}
+
+		private void ExperimentalPaintOverlay(Graphics graphics)
+		{
+			this.layouts.ForEach (
+				x =>
+				{
+					var rect = Rectangle.Deflate (x.Bounds, 0.5, 0.5);
+					graphics.AddRectangle (rect);
+					graphics.AddText (rect.X, rect.Y, rect.Width, rect.Height, x.Item.Label.ToString (), ActionItemLayout.DefaultFont, ActionItemLayout.DefaultFontSize, ContentAlignment.MiddleCenter);
+				});
+
+			graphics.Color = Epsitec.Common.Drawing.Color.FromName ("Cyan");
+			graphics.RenderSolid ();
+		}
 
 		private IEnumerable<ActionItem> GenerateActionItems(TileDataItem item)
 		{
@@ -76,8 +88,21 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		private Epsitec.Common.Widgets.WindowRoot GetWindowRoot()
+		{
+			var window = this.Orchestrator.Host.Window;
+			return window == null ? null : window.Root;
+		}
+		
 		protected override void Dispose(bool disposing)
 		{
+			var root = this.GetWindowRoot ();			
+			
+			if (root != null)
+			{
+				root.PaintForeground -= this.HandleWindowRootPaintForeground;
+			}
+
 			base.Dispose (disposing);
 		}
 
