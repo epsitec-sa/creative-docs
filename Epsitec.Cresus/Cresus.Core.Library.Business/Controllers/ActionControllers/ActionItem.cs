@@ -10,6 +10,11 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 {
 	public sealed class ActionItem
 	{
+		public ActionItem(ActionClasses actionClass, System.Action action, double weight = 0.0)
+			: this (actionClass, action, ActionClass.GetDefaultCaption (actionClass), weight)
+		{
+		}
+
 		public ActionItem(ActionClasses actionClass, System.Action action, Caption caption, double weight = 0.0)
 			: this (null, ActionClass.GetActionClass (actionClass), action, caption.DefaultLabel, caption.Description, weight)
 		{

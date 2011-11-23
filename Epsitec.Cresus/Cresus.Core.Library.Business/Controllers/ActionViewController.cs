@@ -78,13 +78,13 @@ namespace Epsitec.Cresus.Core.Controllers
 			if ((item.HideAddButton == false) &&
 				(item.AddNewItem != null))
 			{
-				yield return new ActionItem (ActionClasses.Create, item.AddNewItem, "Ajouter");
+				yield return new ActionItem (ActionClasses.Create, item.AddNewItem);
 			}
 
 			if ((item.HideRemoveButton == false) &&
 				(item.DeleteItem != null))
 			{
-				yield return new ActionItem (ActionClasses.Delete, item.DeleteItem, "Supprimer");
+				yield return new ActionItem (ActionClasses.Delete, item.DeleteItem);
 			}
 		}
 

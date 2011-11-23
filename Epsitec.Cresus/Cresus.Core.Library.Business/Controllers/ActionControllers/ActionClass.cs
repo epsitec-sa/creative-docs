@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -80,6 +81,21 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			}
 
 			return ActionClass.GetUnique (name, actionClass, color);
+		}
+
+		public static Caption GetDefaultCaption(ActionClasses actionClass)
+		{
+			switch (actionClass)
+			{
+				case ActionClasses.Create:
+					return Library.Res.Captions.ActionButton.Create;
+
+				case ActionClasses.Delete:
+					return Library.Res.Captions.ActionButton.Delete;
+
+				default:
+					return Library.Res.Captions.ActionButton.Undefined;
+			}
 		}
 
 		
