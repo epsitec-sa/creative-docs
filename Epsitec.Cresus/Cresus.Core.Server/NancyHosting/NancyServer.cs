@@ -163,7 +163,7 @@ namespace Epsitec.Cresus.Core.Server.NancyHosting
 
 			foreach (var nancyCookie in nancyResponse.Cookies)
 			{
-				response.Cookies.Add (NancyServer.ConvertCookie (nancyCookie));
+				response.Headers.Add (HttpResponseHeader.SetCookie, nancyCookie.ToString ());
 			}
 
 			response.ContentType = nancyResponse.ContentType;
@@ -173,19 +173,6 @@ namespace Epsitec.Cresus.Core.Server.NancyHosting
 			{
 				nancyResponse.Contents.Invoke (output);
 			}
-		}
-
-
-		private static Cookie ConvertCookie(INancyCookie nancyCookie)
-		{
-			var cookie = new Cookie (nancyCookie.EncodedName, nancyCookie.EncodedValue, nancyCookie.Path, nancyCookie.Domain);
-
-			if (nancyCookie.Expires.HasValue)
-			{
-				cookie.Expires = nancyCookie.Expires.Value;
-			}
-
-			return cookie;
 		}
 
 
