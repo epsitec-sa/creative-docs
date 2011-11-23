@@ -343,11 +343,12 @@ namespace Epsitec.Common.Designer.ModuleSupport
 
 		private void GenerateCommandIds(ResourceBundle bundle, List<string> cmdFields)
 		{
-			this.GenerateGenericCaptions (bundle, cmdFields, "CommandIds", (delta, localDruid) =>
-{
-	Druid moduleDruid = new Druid (localDruid, bundle.Module.Id);
-	this.formatter.WriteField (CodeHelper.PublicConstFieldAttributes, "long ", delta, @" = 0x", moduleDruid.ToLong ().ToString ("X"), "L;");
-});
+			this.GenerateGenericCaptions (bundle, cmdFields, "CommandIds",
+				(delta, localDruid) =>
+				{
+					Druid moduleDruid = new Druid (localDruid, bundle.Module.Id);
+					this.formatter.WriteField (CodeHelper.PublicConstFieldAttributes, "long ", delta, @" = 0x", moduleDruid.ToLong ().ToString ("X"), "L;");
+				});
 		}
 
 		private void GenerateCaptions(ResourceBundle bundle, List<string> capFields)
@@ -364,10 +365,13 @@ namespace Epsitec.Common.Designer.ModuleSupport
 
 		private void GenerateCaptionIds(ResourceBundle bundle, List<string> capFields)
 		{
-			this.GenerateGenericCaptions (bundle, capFields, "CaptionIds", (delta, localDruid) =>
-{
-	this.formatter.WriteField (CodeHelper.PublicStaticReadOnlyFieldAttributes, @"global::Epsitec.Common.Support.Druid ", delta, @" = new global::Epsitec.Common.Support.Druid (_moduleId, ", localDruid.DeveloperAndPatchLevel.ToString (System.Globalization.CultureInfo.InvariantCulture), ", ", localDruid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture), ");");
-});
+			this.GenerateGenericCaptions (bundle, capFields, "CaptionIds",
+				(delta, localDruid) =>
+				{
+					Druid moduleDruid = new Druid (localDruid, bundle.Module.Id);
+					this.formatter.WriteField (CodeHelper.PublicConstFieldAttributes, "long ", delta, @" = 0x", moduleDruid.ToLong ().ToString ("X"), "L;");
+//					this.formatter.WriteField (CodeHelper.PublicStaticReadOnlyFieldAttributes, @"global::Epsitec.Common.Support.Druid ", delta, @" = new global::Epsitec.Common.Support.Druid (_moduleId, ", localDruid.DeveloperAndPatchLevel.ToString (System.Globalization.CultureInfo.InvariantCulture), ", ", localDruid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture), ");");
+				});
 		}
 
 		private void GenerateGenericCaptions(ResourceBundle bundle, List<string> capFields, string className, System.Action<string, Druid> fieldWriter)

@@ -1058,7 +1058,7 @@ namespace Epsitec.Common.Designer
 				}
 				
 				//	designer:cap/3003C
-				public static readonly global::Epsitec.Common.Support.Druid ButtonAspect = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 387);
+				public const long ButtonAspect = 0x300000000183L;
 			}
 			
 			public static class Command
@@ -1068,7 +1068,7 @@ namespace Epsitec.Common.Designer
 				}
 				
 				//	designer:cap/3007C
-				public static readonly global::Epsitec.Common.Support.Druid ButtonAspect = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 391);
+				public const long ButtonAspect = 0x300000000187L;
 			}
 			
 			public static class Dialog
@@ -1084,19 +1084,19 @@ namespace Epsitec.Common.Designer
 					}
 					
 					//	designer:cap/300QC
-					public static readonly global::Epsitec.Common.Support.Druid Add = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 410);
+					public const long Add = 0x30000000019AL;
 					//	designer:cap/300UC
-					public static readonly global::Epsitec.Common.Support.Druid Next = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 414);
+					public const long Next = 0x30000000019EL;
 					//	designer:cap/300TC
-					public static readonly global::Epsitec.Common.Support.Druid Prev = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 413);
+					public const long Prev = 0x30000000019DL;
 					//	designer:cap/300RC
-					public static readonly global::Epsitec.Common.Support.Druid Remove = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 411);
+					public const long Remove = 0x30000000019BL;
 					//	designer:cap/300VC
-					public static readonly global::Epsitec.Common.Support.Druid Sort = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 415);
+					public const long Sort = 0x30000000019FL;
 					//	designer:cap/300SC
-					public static readonly global::Epsitec.Common.Support.Druid TemplateAdd = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 412);
+					public const long TemplateAdd = 0x30000000019CL;
 					//	designer:cap/3000D
-					public static readonly global::Epsitec.Common.Support.Druid TemplateRemove = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 416);
+					public const long TemplateRemove = 0x3000000001A0L;
 				}
 			}
 			
@@ -1107,7 +1107,7 @@ namespace Epsitec.Common.Designer
 				}
 				
 				//	designer:cap/3003D
-				public static readonly global::Epsitec.Common.Support.Druid LocatorGoto = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 419);
+				public const long LocatorGoto = 0x3000000001A3L;
 				public static class Forms
 				{
 					internal static void _Initialize()
@@ -1115,35 +1115,35 @@ namespace Epsitec.Common.Designer
 					}
 					
 					//	designer:cap/302L1
-					public static readonly global::Epsitec.Common.Support.Druid Auto = new global::Epsitec.Common.Support.Druid (_moduleId, 2, 53);
+					public const long Auto = 0x300002000035L;
 					//	designer:cap/302M
-					public static readonly global::Epsitec.Common.Support.Druid Box = new global::Epsitec.Common.Support.Druid (_moduleId, 2, 22);
+					public const long Box = 0x300002000016L;
 					//	designer:cap/30KS
-					public static readonly global::Epsitec.Common.Support.Druid Command = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 28);
+					public const long Command = 0x30001400001CL;
 					//	designer:cap/302K1
-					public static readonly global::Epsitec.Common.Support.Druid Compact = new global::Epsitec.Common.Support.Druid (_moduleId, 2, 52);
+					public const long Compact = 0x300002000034L;
 					//	designer:cap/302J1
-					public static readonly global::Epsitec.Common.Support.Druid Expand = new global::Epsitec.Common.Support.Druid (_moduleId, 2, 51);
+					public const long Expand = 0x300002000033L;
 					//	designer:cap/302M1
-					public static readonly global::Epsitec.Common.Support.Druid Form = new global::Epsitec.Common.Support.Druid (_moduleId, 2, 54);
+					public const long Form = 0x300002000036L;
 					//	designer:cap/302A1
-					public static readonly global::Epsitec.Common.Support.Druid Glue = new global::Epsitec.Common.Support.Druid (_moduleId, 2, 42);
+					public const long Glue = 0x30000200002AL;
 					//	designer:cap/302K
-					public static readonly global::Epsitec.Common.Support.Druid Line = new global::Epsitec.Common.Support.Druid (_moduleId, 2, 20);
+					public const long Line = 0x300002000014L;
 					//	designer:cap/302I
-					public static readonly global::Epsitec.Common.Support.Druid Next = new global::Epsitec.Common.Support.Druid (_moduleId, 2, 18);
+					public const long Next = 0x300002000012L;
 					//	designer:cap/302J
-					public static readonly global::Epsitec.Common.Support.Druid Prev = new global::Epsitec.Common.Support.Druid (_moduleId, 2, 19);
+					public const long Prev = 0x300002000013L;
 					//	designer:cap/302N1
-					public static readonly global::Epsitec.Common.Support.Druid Remove = new global::Epsitec.Common.Support.Druid (_moduleId, 2, 55);
+					public const long Remove = 0x300002000037L;
 					//	designer:cap/302P1
-					public static readonly global::Epsitec.Common.Support.Druid Reset = new global::Epsitec.Common.Support.Druid (_moduleId, 2, 57);
+					public const long Reset = 0x300002000039L;
 					//	designer:cap/302O1
-					public static readonly global::Epsitec.Common.Support.Druid ShowPrefix = new global::Epsitec.Common.Support.Druid (_moduleId, 2, 56);
+					public const long ShowPrefix = 0x300002000038L;
 					//	designer:cap/302L
-					public static readonly global::Epsitec.Common.Support.Druid Title = new global::Epsitec.Common.Support.Druid (_moduleId, 2, 21);
+					public const long Title = 0x300002000015L;
 					//	designer:cap/302H
-					public static readonly global::Epsitec.Common.Support.Druid Use = new global::Epsitec.Common.Support.Druid (_moduleId, 2, 17);
+					public const long Use = 0x300002000011L;
 				}
 				
 				public static class Structured
@@ -1153,19 +1153,19 @@ namespace Epsitec.Common.Designer
 					}
 					
 					//	designer:cap/3008C
-					public static readonly global::Epsitec.Common.Support.Druid Add = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 392);
+					public const long Add = 0x300000000188L;
 					//	designer:cap/300DC
-					public static readonly global::Epsitec.Common.Support.Druid ChangeCaption = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 397);
+					public const long ChangeCaption = 0x30000000018DL;
 					//	designer:cap/3001D
-					public static readonly global::Epsitec.Common.Support.Druid ChangeInclusion = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 417);
+					public const long ChangeInclusion = 0x3000000001A1L;
 					//	designer:cap/300CC
-					public static readonly global::Epsitec.Common.Support.Druid ChangeType = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 396);
+					public const long ChangeType = 0x30000000018CL;
 					//	designer:cap/300BC
-					public static readonly global::Epsitec.Common.Support.Druid Next = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 395);
+					public const long Next = 0x30000000018BL;
 					//	designer:cap/300AC
-					public static readonly global::Epsitec.Common.Support.Druid Prev = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 394);
+					public const long Prev = 0x30000000018AL;
 					//	designer:cap/3009C
-					public static readonly global::Epsitec.Common.Support.Druid Remove = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 393);
+					public const long Remove = 0x300000000189L;
 					public static class Relation
 					{
 						internal static void _Initialize()
@@ -1173,11 +1173,11 @@ namespace Epsitec.Common.Designer
 						}
 						
 						//	designer:cap/300PC
-						public static readonly global::Epsitec.Common.Support.Druid Collection = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 409);
+						public const long Collection = 0x300000000199L;
 						//	designer:cap/300OC
-						public static readonly global::Epsitec.Common.Support.Druid Inclusion = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 408);
+						public const long Inclusion = 0x300000000198L;
 						//	designer:cap/300NC
-						public static readonly global::Epsitec.Common.Support.Druid Reference = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 407);
+						public const long Reference = 0x300000000197L;
 					}
 				}
 				
@@ -1188,13 +1188,13 @@ namespace Epsitec.Common.Designer
 					}
 					
 					//	designer:cap/302
-					public static readonly global::Epsitec.Common.Support.Druid Create = new global::Epsitec.Common.Support.Druid (_moduleId, 2, 0);
+					public const long Create = 0x300002000000L;
 					//	designer:cap/3021
-					public static readonly global::Epsitec.Common.Support.Druid Delete = new global::Epsitec.Common.Support.Druid (_moduleId, 2, 1);
+					public const long Delete = 0x300002000001L;
 					//	designer:cap/300M9
-					public static readonly global::Epsitec.Common.Support.Druid Next = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 310);
+					public const long Next = 0x300000000136L;
 					//	designer:cap/300L9
-					public static readonly global::Epsitec.Common.Support.Druid Prev = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 309);
+					public const long Prev = 0x300000000135L;
 				}
 			}
 			
@@ -1205,41 +1205,41 @@ namespace Epsitec.Common.Designer
 				}
 				
 				//	designer:cap/302G
-				public static readonly global::Epsitec.Common.Support.Druid BackColor = new global::Epsitec.Common.Support.Druid (_moduleId, 2, 16);
+				public const long BackColor = 0x300002000010L;
 				//	designer:cap/30271
-				public static readonly global::Epsitec.Common.Support.Druid BoxFrameEdges = new global::Epsitec.Common.Support.Druid (_moduleId, 2, 39);
+				public const long BoxFrameEdges = 0x300002000027L;
 				//	designer:cap/30291
-				public static readonly global::Epsitec.Common.Support.Druid BoxFrameWidth = new global::Epsitec.Common.Support.Druid (_moduleId, 2, 41);
+				public const long BoxFrameWidth = 0x300002000029L;
 				//	designer:cap/30K81
-				public static readonly global::Epsitec.Common.Support.Druid BoxLayout = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 40);
+				public const long BoxLayout = 0x300014000028L;
 				//	designer:cap/302E1
-				public static readonly global::Epsitec.Common.Support.Druid BoxPadding = new global::Epsitec.Common.Support.Druid (_moduleId, 2, 46);
+				public const long BoxPadding = 0x30000200002EL;
 				//	designer:cap/302D
-				public static readonly global::Epsitec.Common.Support.Druid ColumnsRequired = new global::Epsitec.Common.Support.Druid (_moduleId, 2, 13);
+				public const long ColumnsRequired = 0x30000200000DL;
 				//	designer:cap/30K21
-				public static readonly global::Epsitec.Common.Support.Druid CommandButtonClass = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 34);
+				public const long CommandButtonClass = 0x300014000022L;
 				//	designer:cap/30KG
-				public static readonly global::Epsitec.Common.Support.Druid FontColor = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 16);
+				public const long FontColor = 0x300014000010L;
 				//	designer:cap/30KL
-				public static readonly global::Epsitec.Common.Support.Druid FontFace = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 21);
+				public const long FontFace = 0x300014000015L;
 				//	designer:cap/30KK
-				public static readonly global::Epsitec.Common.Support.Druid FontSize = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 20);
+				public const long FontSize = 0x300014000014L;
 				//	designer:cap/30KI
-				public static readonly global::Epsitec.Common.Support.Druid FontStyle = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 18);
+				public const long FontStyle = 0x300014000012L;
 				//	designer:cap/30KJ1
-				public static readonly global::Epsitec.Common.Support.Druid LabelReplacement = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 51);
+				public const long LabelReplacement = 0x300014000033L;
 				//	designer:cap/30KK1
-				public static readonly global::Epsitec.Common.Support.Druid LabelReplacementClear = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 52);
+				public const long LabelReplacementClear = 0x300014000034L;
 				//	designer:cap/30KC1
-				public static readonly global::Epsitec.Common.Support.Druid LineWidth = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 44);
+				public const long LineWidth = 0x30001400002CL;
 				//	designer:cap/30K91
-				public static readonly global::Epsitec.Common.Support.Druid PreferredWidth = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 41);
+				public const long PreferredWidth = 0x300014000029L;
 				//	designer:cap/302E
-				public static readonly global::Epsitec.Common.Support.Druid RowsRequired = new global::Epsitec.Common.Support.Druid (_moduleId, 2, 14);
+				public const long RowsRequired = 0x30000200000EL;
 				//	designer:cap/302D1
-				public static readonly global::Epsitec.Common.Support.Druid SeparatorBottom = new global::Epsitec.Common.Support.Druid (_moduleId, 2, 45);
+				public const long SeparatorBottom = 0x30000200002DL;
 				//	designer:cap/30KI1
-				public static readonly global::Epsitec.Common.Support.Druid Verbosity = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 50);
+				public const long Verbosity = 0x300014000032L;
 			}
 			
 			public static class Geometry
@@ -1249,27 +1249,27 @@ namespace Epsitec.Common.Designer
 				}
 				
 				//	designer:cap/3003
-				public static readonly global::Epsitec.Common.Support.Druid BottomMargin = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 3);
+				public const long BottomMargin = 0x300000000003L;
 				//	designer:cap/3007
-				public static readonly global::Epsitec.Common.Support.Druid Height = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 7);
+				public const long Height = 0x300000000007L;
 				//	designer:cap/30KA1
-				public static readonly global::Epsitec.Common.Support.Druid Margins = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 42);
+				public const long Margins = 0x30001400002AL;
 				//	designer:cap/300U
-				public static readonly global::Epsitec.Common.Support.Druid MaxHeight = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 30);
+				public const long MaxHeight = 0x30000000001EL;
 				//	designer:cap/300S
-				public static readonly global::Epsitec.Common.Support.Druid MaxWidth = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 28);
+				public const long MaxWidth = 0x30000000001CL;
 				//	designer:cap/300T
-				public static readonly global::Epsitec.Common.Support.Druid MinHeight = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 29);
+				public const long MinHeight = 0x30000000001DL;
 				//	designer:cap/300R
-				public static readonly global::Epsitec.Common.Support.Druid MinWidth = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 27);
+				public const long MinWidth = 0x30000000001BL;
 				//	designer:cap/3004
-				public static readonly global::Epsitec.Common.Support.Druid OriginX = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 4);
+				public const long OriginX = 0x300000000004L;
 				//	designer:cap/3005
-				public static readonly global::Epsitec.Common.Support.Druid OriginY = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 5);
+				public const long OriginY = 0x300000000005L;
 				//	designer:cap/30KB1
-				public static readonly global::Epsitec.Common.Support.Druid Padding = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 43);
+				public const long Padding = 0x30001400002BL;
 				//	designer:cap/3006
-				public static readonly global::Epsitec.Common.Support.Druid Width = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 6);
+				public const long Width = 0x300000000006L;
 			}
 			
 			public static class Grid
@@ -1279,37 +1279,37 @@ namespace Epsitec.Common.Designer
 				}
 				
 				//	designer:cap/30048
-				public static readonly global::Epsitec.Common.Support.Druid BottomBorder = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 260);
+				public const long BottomBorder = 0x300000000104L;
 				//	designer:cap/300N
-				public static readonly global::Epsitec.Common.Support.Druid ColumnMode = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 23);
+				public const long ColumnMode = 0x300000000017L;
 				//	designer:cap/300J
-				public static readonly global::Epsitec.Common.Support.Druid ColumnsCount = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 19);
+				public const long ColumnsCount = 0x300000000013L;
 				//	designer:cap/300L
-				public static readonly global::Epsitec.Common.Support.Druid ColumnSpan = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 21);
+				public const long ColumnSpan = 0x300000000015L;
 				//	designer:cap/300P
-				public static readonly global::Epsitec.Common.Support.Druid ColumnWidth = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 25);
+				public const long ColumnWidth = 0x300000000019L;
 				//	designer:cap/30045
-				public static readonly global::Epsitec.Common.Support.Druid LeftBorder = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 164);
+				public const long LeftBorder = 0x3000000000A4L;
 				//	designer:cap/30044
-				public static readonly global::Epsitec.Common.Support.Druid MaxHeight = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 132);
+				public const long MaxHeight = 0x300000000084L;
 				//	designer:cap/30042
-				public static readonly global::Epsitec.Common.Support.Druid MaxWidth = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 68);
+				public const long MaxWidth = 0x300000000044L;
 				//	designer:cap/30043
-				public static readonly global::Epsitec.Common.Support.Druid MinHeight = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 100);
+				public const long MinHeight = 0x300000000064L;
 				//	designer:cap/30041
-				public static readonly global::Epsitec.Common.Support.Druid MinWidth = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 36);
+				public const long MinWidth = 0x300000000024L;
 				//	designer:cap/30046
-				public static readonly global::Epsitec.Common.Support.Druid RightBorder = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 196);
+				public const long RightBorder = 0x3000000000C4L;
 				//	designer:cap/300Q
-				public static readonly global::Epsitec.Common.Support.Druid RowHeight = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 26);
+				public const long RowHeight = 0x30000000001AL;
 				//	designer:cap/300O
-				public static readonly global::Epsitec.Common.Support.Druid RowMode = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 24);
+				public const long RowMode = 0x300000000018L;
 				//	designer:cap/300K
-				public static readonly global::Epsitec.Common.Support.Druid RowsCount = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 20);
+				public const long RowsCount = 0x300000000014L;
 				//	designer:cap/300M
-				public static readonly global::Epsitec.Common.Support.Druid RowSpan = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 22);
+				public const long RowSpan = 0x300000000016L;
 				//	designer:cap/30047
-				public static readonly global::Epsitec.Common.Support.Druid TopBorder = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 228);
+				public const long TopBorder = 0x3000000000E4L;
 				public static class Mode
 				{
 					internal static void _Initialize()
@@ -1317,11 +1317,11 @@ namespace Epsitec.Common.Designer
 					}
 					
 					//	designer:cap/30052
-					public static readonly global::Epsitec.Common.Support.Druid Absolute = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 69);
+					public const long Absolute = 0x300000000045L;
 					//	designer:cap/30053
-					public static readonly global::Epsitec.Common.Support.Druid Auto = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 101);
+					public const long Auto = 0x300000000065L;
 					//	designer:cap/30051
-					public static readonly global::Epsitec.Common.Support.Druid Proportional = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 37);
+					public const long Proportional = 0x300000000025L;
 				}
 			}
 			
@@ -1332,19 +1332,19 @@ namespace Epsitec.Common.Designer
 				}
 				
 				//	designer:cap/300D
-				public static readonly global::Epsitec.Common.Support.Druid AnchoredHorizontalAttachment = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 13);
+				public const long AnchoredHorizontalAttachment = 0x30000000000DL;
 				//	designer:cap/300E
-				public static readonly global::Epsitec.Common.Support.Druid AnchoredVerticalAttachment = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 14);
+				public const long AnchoredVerticalAttachment = 0x30000000000EL;
 				//	designer:cap/300C
-				public static readonly global::Epsitec.Common.Support.Druid ChildrenPlacement = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 12);
+				public const long ChildrenPlacement = 0x30000000000CL;
 				//	designer:cap/300H
-				public static readonly global::Epsitec.Common.Support.Druid StackedHorizontalAlignment = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 17);
+				public const long StackedHorizontalAlignment = 0x300000000011L;
 				//	designer:cap/300F
-				public static readonly global::Epsitec.Common.Support.Druid StackedHorizontalAttachment = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 15);
+				public const long StackedHorizontalAttachment = 0x30000000000FL;
 				//	designer:cap/300I
-				public static readonly global::Epsitec.Common.Support.Druid StackedVerticalAlignment = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 18);
+				public const long StackedVerticalAlignment = 0x300000000012L;
 				//	designer:cap/300G
-				public static readonly global::Epsitec.Common.Support.Druid StackedVerticalAttachment = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 16);
+				public const long StackedVerticalAttachment = 0x300000000010L;
 			}
 			
 			public static class PanelMode
@@ -1354,13 +1354,13 @@ namespace Epsitec.Common.Designer
 				}
 				
 				//	designer:cap/300JC
-				public static readonly global::Epsitec.Common.Support.Druid Default = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 403);
+				public const long Default = 0x300000000193L;
 				//	designer:cap/300KC
-				public static readonly global::Epsitec.Common.Support.Druid Edition = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 404);
+				public const long Edition = 0x300000000194L;
 				//	designer:cap/300LC
-				public static readonly global::Epsitec.Common.Support.Druid Search = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 405);
+				public const long Search = 0x300000000195L;
 				//	designer:cap/300MC
-				public static readonly global::Epsitec.Common.Support.Druid Type = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 406);
+				public const long Type = 0x300000000196L;
 			}
 			
 			public static class Types
@@ -1376,33 +1376,33 @@ namespace Epsitec.Common.Designer
 					}
 					
 					//	designer:cap/300HC
-					public static readonly global::Epsitec.Common.Support.Druid Binary = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 401);
+					public const long Binary = 0x300000000191L;
 					//	designer:cap/300D9
-					public static readonly global::Epsitec.Common.Support.Druid Boolean = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 301);
+					public const long Boolean = 0x30000000012DL;
 					//	designer:cap/300IC
-					public static readonly global::Epsitec.Common.Support.Druid Collection = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 402);
+					public const long Collection = 0x300000000192L;
 					//	designer:cap/300EC
-					public static readonly global::Epsitec.Common.Support.Druid Date = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 398);
+					public const long Date = 0x30000000018EL;
 					//	designer:cap/300GC
-					public static readonly global::Epsitec.Common.Support.Druid DateTime = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 400);
+					public const long DateTime = 0x300000000190L;
 					//	designer:cap/300G9
-					public static readonly global::Epsitec.Common.Support.Druid Decimal = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 304);
+					public const long Decimal = 0x300000000130L;
 					//	designer:cap/300I9
-					public static readonly global::Epsitec.Common.Support.Druid Enum = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 306);
+					public const long Enum = 0x300000000132L;
 					//	designer:cap/300E9
-					public static readonly global::Epsitec.Common.Support.Druid Integer = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 302);
+					public const long Integer = 0x30000000012EL;
 					//	designer:cap/300F9
-					public static readonly global::Epsitec.Common.Support.Druid LongInteger = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 303);
+					public const long LongInteger = 0x30000000012FL;
 					//	designer:cap/3022
-					public static readonly global::Epsitec.Common.Support.Druid Native = new global::Epsitec.Common.Support.Druid (_moduleId, 2, 2);
+					public const long Native = 0x300002000002L;
 					//	designer:cap/300H9
-					public static readonly global::Epsitec.Common.Support.Druid String = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 305);
+					public const long String = 0x300000000131L;
 					//	designer:cap/300J9
-					public static readonly global::Epsitec.Common.Support.Druid Structured = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 307);
+					public const long Structured = 0x300000000133L;
 					//	designer:cap/300FC
-					public static readonly global::Epsitec.Common.Support.Druid Time = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 399);
+					public const long Time = 0x30000000018FL;
 					//	designer:cap/300C9
-					public static readonly global::Epsitec.Common.Support.Druid Void = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 300);
+					public const long Void = 0x30000000012CL;
 				}
 			}
 			
@@ -7666,6 +7666,5357 @@ namespace Epsitec.Common.Designer
 			private static readonly global::Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle ("Strings");
 			
 			#endregion
+		}
+		
+		public static class StringIds
+		{
+			public static class Action
+			{
+				//	designer:str/300O1
+				public static global::Epsitec.Common.Support.Druid AccessFirst
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (56);
+					}
+				}
+				//	designer:str/300P1
+				public static global::Epsitec.Common.Support.Druid AccessLast
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (57);
+					}
+				}
+				//	designer:str/300R1
+				public static global::Epsitec.Common.Support.Druid AccessNext
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (59);
+					}
+				}
+				//	designer:str/300Q1
+				public static global::Epsitec.Common.Support.Druid AccessPrev
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (58);
+					}
+				}
+				//	designer:str/300O2
+				public static global::Epsitec.Common.Support.Druid AdjustHeight
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (88);
+					}
+				}
+				//	designer:str/300N2
+				public static global::Epsitec.Common.Support.Druid AdjustWidth
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (87);
+					}
+				}
+				//	designer:str/300M2
+				public static global::Epsitec.Common.Support.Druid AlignBaseLine
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (86);
+					}
+				}
+				//	designer:str/300L2
+				public static global::Epsitec.Common.Support.Druid AlignBottom
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (85);
+					}
+				}
+				//	designer:str/300H2
+				public static global::Epsitec.Common.Support.Druid AlignCenterX
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (81);
+					}
+				}
+				//	designer:str/300K2
+				public static global::Epsitec.Common.Support.Druid AlignCenterY
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (84);
+					}
+				}
+				//	designer:str/300F2
+				public static global::Epsitec.Common.Support.Druid AlignGrid
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (79);
+					}
+				}
+				//	designer:str/300G2
+				public static global::Epsitec.Common.Support.Druid AlignLeft
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (80);
+					}
+				}
+				//	designer:str/300I2
+				public static global::Epsitec.Common.Support.Druid AlignRight
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (82);
+					}
+				}
+				//	designer:str/300J2
+				public static global::Epsitec.Common.Support.Druid AlignTop
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (83);
+					}
+				}
+				//	designer:str/300U5
+				public static global::Epsitec.Common.Support.Druid Check
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (190);
+					}
+				}
+				//	designer:str/30001
+				public static global::Epsitec.Common.Support.Druid Close
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (32);
+					}
+				}
+				//	designer:str/30011
+				public static global::Epsitec.Common.Support.Druid CloseAll
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (33);
+					}
+				}
+				//	designer:str/30071
+				public static global::Epsitec.Common.Support.Druid Copy
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (39);
+					}
+				}
+				//	designer:str/300A1
+				public static global::Epsitec.Common.Support.Druid Create
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (42);
+					}
+				}
+				//	designer:str/30061
+				public static global::Epsitec.Common.Support.Druid Cut
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (38);
+					}
+				}
+				//	designer:str/30091
+				public static global::Epsitec.Common.Support.Druid Delete
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (41);
+					}
+				}
+				//	designer:str/300F1
+				public static global::Epsitec.Common.Support.Druid DeleteCulture
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (47);
+					}
+				}
+				//	designer:str/30KK2
+				public static global::Epsitec.Common.Support.Druid DeleteObject
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544404);
+					}
+				}
+				//	designer:str/300J1
+				public static global::Epsitec.Common.Support.Druid DesignerGlyphs
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (51);
+					}
+				}
+				//	designer:str/302
+				public static global::Epsitec.Common.Support.Druid DisplayFullScreen
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (33554432);
+					}
+				}
+				//	designer:str/300AA
+				public static global::Epsitec.Common.Support.Druid DisplayHorizontal
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (330);
+					}
+				}
+				//	designer:str/300BA
+				public static global::Epsitec.Common.Support.Druid DisplayVertical
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (331);
+					}
+				}
+				//	designer:str/30K02
+				public static global::Epsitec.Common.Support.Druid DisplayWindow
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544384);
+					}
+				}
+				//	designer:str/300D1
+				public static global::Epsitec.Common.Support.Druid Down
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (45);
+					}
+				}
+				//	designer:str/300B1
+				public static global::Epsitec.Common.Support.Druid Duplicate
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (43);
+					}
+				}
+				//	designer:str/3022
+				public static global::Epsitec.Common.Support.Druid EditCancel
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (33554434);
+					}
+				}
+				//	designer:str/3021
+				public static global::Epsitec.Common.Support.Druid EditLocked
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (33554433);
+					}
+				}
+				//	designer:str/3023
+				public static global::Epsitec.Common.Support.Druid EditOk
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (33554435);
+					}
+				}
+				//	designer:str/300K1
+				public static global::Epsitec.Common.Support.Druid Filter
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (52);
+					}
+				}
+				//	designer:str/300G1
+				public static global::Epsitec.Common.Support.Druid FontBold
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (48);
+					}
+				}
+				//	designer:str/300H1
+				public static global::Epsitec.Common.Support.Druid FontItalic
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (49);
+					}
+				}
+				//	designer:str/300I1
+				public static global::Epsitec.Common.Support.Druid FontUnderline
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (50);
+					}
+				}
+				//	designer:str/30K62
+				public static global::Epsitec.Common.Support.Druid InitialMessage
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544390);
+					}
+				}
+				//	designer:str/30041
+				public static global::Epsitec.Common.Support.Druid LastFiles
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (36);
+					}
+				}
+				//	designer:str/3008A
+				public static global::Epsitec.Common.Support.Druid LocatorList
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (328);
+					}
+				}
+				//	designer:str/3007A
+				public static global::Epsitec.Common.Support.Druid LocatorNext
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (327);
+					}
+				}
+				//	designer:str/3006A
+				public static global::Epsitec.Common.Support.Druid LocatorPrev
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (326);
+					}
+				}
+				//	designer:str/300U1
+				public static global::Epsitec.Common.Support.Druid ModificationAll
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (62);
+					}
+				}
+				//	designer:str/300V1
+				public static global::Epsitec.Common.Support.Druid ModificationClear
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (63);
+					}
+				}
+				//	designer:str/300T1
+				public static global::Epsitec.Common.Support.Druid ModificationNext
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (61);
+					}
+				}
+				//	designer:str/300S1
+				public static global::Epsitec.Common.Support.Druid ModificationPrev
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (60);
+					}
+				}
+				//	designer:str/300D2
+				public static global::Epsitec.Common.Support.Druid MoveDown
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (77);
+					}
+				}
+				//	designer:str/300B2
+				public static global::Epsitec.Common.Support.Druid MoveLeft
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (75);
+					}
+				}
+				//	designer:str/300C2
+				public static global::Epsitec.Common.Support.Druid MoveRight
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (76);
+					}
+				}
+				//	designer:str/300E2
+				public static global::Epsitec.Common.Support.Druid MoveUp
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (78);
+					}
+				}
+				//	designer:str/300U
+				public static global::Epsitec.Common.Support.Druid New
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (30);
+					}
+				}
+				//	designer:str/300E1
+				public static global::Epsitec.Common.Support.Druid NewCulture
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (46);
+					}
+				}
+				//	designer:str/300D3
+				public static global::Epsitec.Common.Support.Druid ObjectGroup
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (109);
+					}
+				}
+				//	designer:str/30055
+				public static global::Epsitec.Common.Support.Druid ObjectGroupBox
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (165);
+					}
+				}
+				//	designer:str/300O9
+				public static global::Epsitec.Common.Support.Druid ObjectGroupFrame
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (312);
+					}
+				}
+				//	designer:str/30083
+				public static global::Epsitec.Common.Support.Druid ObjectHLine
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (104);
+					}
+				}
+				//	designer:str/30098
+				public static global::Epsitec.Common.Support.Druid ObjectPanel
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (265);
+					}
+				}
+				//	designer:str/300E7
+				public static global::Epsitec.Common.Support.Druid ObjectRectButton
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (238);
+					}
+				}
+				//	designer:str/300A3
+				public static global::Epsitec.Common.Support.Druid ObjectSquareButton
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (106);
+					}
+				}
+				//	designer:str/300C3
+				public static global::Epsitec.Common.Support.Druid ObjectStatic
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (108);
+					}
+				}
+				//	designer:str/300N9
+				public static global::Epsitec.Common.Support.Druid ObjectTable
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (311);
+					}
+				}
+				//	designer:str/300B3
+				public static global::Epsitec.Common.Support.Druid ObjectText
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (107);
+					}
+				}
+				//	designer:str/30093
+				public static global::Epsitec.Common.Support.Druid ObjectVLine
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (105);
+					}
+				}
+				//	designer:str/300V
+				public static global::Epsitec.Common.Support.Druid Open
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (31);
+					}
+				}
+				//	designer:str/30KI2
+				public static global::Epsitec.Common.Support.Druid PanelCreateObject
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544402);
+					}
+				}
+				//	designer:str/30022
+				public static global::Epsitec.Common.Support.Druid PanelDeselectAll
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (66);
+					}
+				}
+				//	designer:str/30012
+				public static global::Epsitec.Common.Support.Druid PanelDuplicate
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (65);
+					}
+				}
+				//	designer:str/30KJ2
+				public static global::Epsitec.Common.Support.Druid PanelMove
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544403);
+					}
+				}
+				//	designer:str/300S2
+				public static global::Epsitec.Common.Support.Druid PanelOrderDownAll
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (92);
+					}
+				}
+				//	designer:str/300R2
+				public static global::Epsitec.Common.Support.Druid PanelOrderDownOne
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (91);
+					}
+				}
+				//	designer:str/300P2
+				public static global::Epsitec.Common.Support.Druid PanelOrderUpAll
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (89);
+					}
+				}
+				//	designer:str/300Q2
+				public static global::Epsitec.Common.Support.Druid PanelOrderUpOne
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (90);
+					}
+				}
+				//	designer:str/30045
+				public static global::Epsitec.Common.Support.Druid PanelRun
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (164);
+					}
+				}
+				//	designer:str/30032
+				public static global::Epsitec.Common.Support.Druid PanelSelectAll
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (67);
+					}
+				}
+				//	designer:str/30042
+				public static global::Epsitec.Common.Support.Druid PanelSelectInvert
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (68);
+					}
+				}
+				//	designer:str/300L9
+				public static global::Epsitec.Common.Support.Druid PanelSelectParent
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (309);
+					}
+				}
+				//	designer:str/300M9
+				public static global::Epsitec.Common.Support.Druid PanelSelectRoot
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (310);
+					}
+				}
+				//	designer:str/300A2
+				public static global::Epsitec.Common.Support.Druid PanelShowAttachment
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (74);
+					}
+				}
+				//	designer:str/30092
+				public static global::Epsitec.Common.Support.Druid PanelShowConstrain
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (73);
+					}
+				}
+				//	designer:str/30082
+				public static global::Epsitec.Common.Support.Druid PanelShowExpand
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (72);
+					}
+				}
+				//	designer:str/30052
+				public static global::Epsitec.Common.Support.Druid PanelShowGrid
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (69);
+					}
+				}
+				//	designer:str/30072
+				public static global::Epsitec.Common.Support.Druid PanelShowTabIndex
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (71);
+					}
+				}
+				//	designer:str/30062
+				public static global::Epsitec.Common.Support.Druid PanelShowZOrder
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (70);
+					}
+				}
+				//	designer:str/30081
+				public static global::Epsitec.Common.Support.Druid Paste
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (40);
+					}
+				}
+				//	designer:str/30051
+				public static global::Epsitec.Common.Support.Druid Quit
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (37);
+					}
+				}
+				//	designer:str/30K5
+				public static global::Epsitec.Common.Support.Druid Recycle
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544325);
+					}
+				}
+				//	designer:str/30K1
+				public static global::Epsitec.Common.Support.Druid Redo
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544321);
+					}
+				}
+				//	designer:str/302B
+				public static global::Epsitec.Common.Support.Druid Reset
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (33554443);
+					}
+				}
+				//	designer:str/30021
+				public static global::Epsitec.Common.Support.Druid Save
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (34);
+					}
+				}
+				//	designer:str/30KP3
+				public static global::Epsitec.Common.Support.Druid SaveAll
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544441);
+					}
+				}
+				//	designer:str/30KO3
+				public static global::Epsitec.Common.Support.Druid SaveAllBitmaps
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544440);
+					}
+				}
+				//	designer:str/30031
+				public static global::Epsitec.Common.Support.Druid SaveAs
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (35);
+					}
+				}
+				//	designer:str/300L1
+				public static global::Epsitec.Common.Support.Druid Search
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (53);
+					}
+				}
+				//	designer:str/300N1
+				public static global::Epsitec.Common.Support.Druid SearchNext
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (55);
+					}
+				}
+				//	designer:str/300M1
+				public static global::Epsitec.Common.Support.Druid SearchPrev
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (54);
+					}
+				}
+				//	designer:str/300T2
+				public static global::Epsitec.Common.Support.Druid TabIndexClear
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (93);
+					}
+				}
+				//	designer:str/300U2
+				public static global::Epsitec.Common.Support.Druid TabIndexFirst
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (94);
+					}
+				}
+				//	designer:str/30013
+				public static global::Epsitec.Common.Support.Druid TabIndexLast
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (97);
+					}
+				}
+				//	designer:str/30003
+				public static global::Epsitec.Common.Support.Druid TabIndexNext
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (96);
+					}
+				}
+				//	designer:str/300V2
+				public static global::Epsitec.Common.Support.Druid TabIndexPrev
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (95);
+					}
+				}
+				//	designer:str/30023
+				public static global::Epsitec.Common.Support.Druid TabIndexRenum
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (98);
+					}
+				}
+				//	designer:str/30053
+				public static global::Epsitec.Common.Support.Druid ToolEdit
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (101);
+					}
+				}
+				//	designer:str/30043
+				public static global::Epsitec.Common.Support.Druid ToolGlobal
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (100);
+					}
+				}
+				//	designer:str/30065
+				public static global::Epsitec.Common.Support.Druid ToolGrid
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (166);
+					}
+				}
+				//	designer:str/30073
+				public static global::Epsitec.Common.Support.Druid ToolHand
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (103);
+					}
+				}
+				//	designer:str/30033
+				public static global::Epsitec.Common.Support.Druid ToolSelect
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (99);
+					}
+				}
+				//	designer:str/30063
+				public static global::Epsitec.Common.Support.Druid ToolZoom
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (102);
+					}
+				}
+				//	designer:str/30K
+				public static global::Epsitec.Common.Support.Druid Undo
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544320);
+					}
+				}
+				//	designer:str/30K2
+				public static global::Epsitec.Common.Support.Druid UndoRedoList
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544322);
+					}
+				}
+				//	designer:str/300C1
+				public static global::Epsitec.Common.Support.Druid Up
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (44);
+					}
+				}
+			}
+			
+			public static class Application
+			{
+				//	designer:str/3
+				public static global::Epsitec.Common.Support.Druid Title
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (0);
+					}
+				}
+				public static class Mode
+				{
+					//	designer:str/30234
+					public static global::Epsitec.Common.Support.Druid Lock
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554563);
+						}
+					}
+					//	designer:str/30244
+					public static global::Epsitec.Common.Support.Druid Unlock
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554564);
+						}
+					}
+				}
+			}
+			
+			public static class BundleType
+			{
+				//	designer:str/300M6
+				public static global::Epsitec.Common.Support.Druid Caption
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (214);
+					}
+				}
+				//	designer:str/30075
+				public static global::Epsitec.Common.Support.Druid Captions
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (167);
+					}
+				}
+				//	designer:str/300N6
+				public static global::Epsitec.Common.Support.Druid Command
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (215);
+					}
+				}
+				//	designer:str/30085
+				public static global::Epsitec.Common.Support.Druid Commands
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (168);
+					}
+				}
+				//	designer:str/3024
+				public static global::Epsitec.Common.Support.Druid Entities
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (33554436);
+					}
+				}
+				//	designer:str/3025
+				public static global::Epsitec.Common.Support.Druid Entity
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (33554437);
+					}
+				}
+				//	designer:str/3002A
+				public static global::Epsitec.Common.Support.Druid Field
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (322);
+					}
+				}
+				//	designer:str/3003A
+				public static global::Epsitec.Common.Support.Druid Fields
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (323);
+					}
+				}
+				//	designer:str/302L4
+				public static global::Epsitec.Common.Support.Druid Form
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (33554581);
+					}
+				}
+				//	designer:str/302M4
+				public static global::Epsitec.Common.Support.Druid Forms
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (33554582);
+					}
+				}
+				//	designer:str/300K6
+				public static global::Epsitec.Common.Support.Druid Panel
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (212);
+					}
+				}
+				//	designer:str/300J
+				public static global::Epsitec.Common.Support.Druid Panels
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (19);
+					}
+				}
+				//	designer:str/300L6
+				public static global::Epsitec.Common.Support.Druid Script
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (213);
+					}
+				}
+				//	designer:str/300K
+				public static global::Epsitec.Common.Support.Druid Scripts
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (20);
+					}
+				}
+				//	designer:str/300J6
+				public static global::Epsitec.Common.Support.Druid String
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (211);
+					}
+				}
+				//	designer:str/300I
+				public static global::Epsitec.Common.Support.Druid Strings
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (18);
+					}
+				}
+				//	designer:str/300O6
+				public static global::Epsitec.Common.Support.Druid Type
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (216);
+					}
+				}
+				//	designer:str/30095
+				public static global::Epsitec.Common.Support.Druid Types
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (169);
+					}
+				}
+				//	designer:str/300P6
+				public static global::Epsitec.Common.Support.Druid Value
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (217);
+					}
+				}
+				//	designer:str/300I6
+				public static global::Epsitec.Common.Support.Druid Values
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (210);
+					}
+				}
+			}
+			
+			public static class Controller
+			{
+				public static class Filter
+				{
+					//	designer:str/30KM3
+					public static global::Epsitec.Common.Support.Druid Label
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544438);
+						}
+					}
+				}
+			}
+			
+			public static class Dialog
+			{
+				public static class BindingSelector
+				{
+					//	designer:str/30099
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (297);
+						}
+					}
+					public static class Button
+					{
+						//	designer:str/300T9
+						public static global::Epsitec.Common.Support.Druid Inherit
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (317);
+							}
+						}
+						//	designer:str/300S9
+						public static global::Epsitec.Common.Support.Druid Readonly
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (316);
+							}
+						}
+						//	designer:str/300A9
+						public static global::Epsitec.Common.Support.Druid Use
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (298);
+							}
+						}
+					}
+				}
+				
+				public static class Button
+				{
+					//	designer:str/300G3
+					public static global::Epsitec.Common.Support.Druid Cancel
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (112);
+						}
+					}
+					//	designer:str/300E3
+					public static global::Epsitec.Common.Support.Druid Close
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (110);
+						}
+					}
+					//	designer:str/300H3
+					public static global::Epsitec.Common.Support.Druid Help
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (113);
+						}
+					}
+					//	designer:str/300F3
+					public static global::Epsitec.Common.Support.Druid OK
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (111);
+						}
+					}
+				}
+				
+				public static class Delete
+				{
+					//	designer:str/300U9
+					public static global::Epsitec.Common.Support.Druid Question
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (318);
+						}
+					}
+				}
+				
+				public static class DeleteCulture
+				{
+					//	designer:str/300M4
+					public static global::Epsitec.Common.Support.Druid Question
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (150);
+						}
+					}
+				}
+				
+				public static class EntityComment
+				{
+					//	designer:str/30K73
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544423);
+						}
+					}
+				}
+				
+				public static class EntityField
+				{
+					//	designer:str/30KR2
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544411);
+						}
+					}
+				}
+				
+				public static class EntityParameters
+				{
+					//	designer:str/30K83
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544424);
+						}
+					}
+				}
+				
+				public static class Filter
+				{
+					//	designer:str/300P3
+					public static global::Epsitec.Common.Support.Druid Label
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (121);
+						}
+					}
+					//	designer:str/300O3
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (120);
+						}
+					}
+					public static class Button
+					{
+						//	designer:str/30004
+						public static global::Epsitec.Common.Support.Druid All
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (128);
+							}
+						}
+						//	designer:str/300V3
+						public static global::Epsitec.Common.Support.Druid Insert
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (127);
+							}
+						}
+					}
+					
+					public static class Check
+					{
+						//	designer:str/300T3
+						public static global::Epsitec.Common.Support.Druid Case
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (125);
+							}
+						}
+						//	designer:str/300U3
+						public static global::Epsitec.Common.Support.Druid Word
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (126);
+							}
+						}
+					}
+					
+					public static class Radio
+					{
+						//	designer:str/300R3
+						public static global::Epsitec.Common.Support.Druid Any
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (123);
+							}
+						}
+						//	designer:str/300Q3
+						public static global::Epsitec.Common.Support.Druid Begin
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (122);
+							}
+						}
+						//	designer:str/30KA3
+						public static global::Epsitec.Common.Support.Druid End
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544426);
+							}
+						}
+						//	designer:str/300S3
+						public static global::Epsitec.Common.Support.Druid Joker
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (124);
+							}
+						}
+					}
+				}
+				
+				public static class Glyphs
+				{
+					//	designer:str/300L3
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (117);
+						}
+					}
+					public static class Button
+					{
+						//	designer:str/300M3
+						public static global::Epsitec.Common.Support.Druid Insert
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (118);
+							}
+						}
+					}
+					
+					public static class Tooltip
+					{
+						//	designer:str/300N3
+						public static global::Epsitec.Common.Support.Druid ArraySize
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (119);
+							}
+						}
+					}
+				}
+				
+				public static class Icon
+				{
+					//	designer:str/30046
+					public static global::Epsitec.Common.Support.Druid None
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (196);
+						}
+					}
+					//	designer:str/30016
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (193);
+						}
+					}
+					public static class Button
+					{
+						//	designer:str/30036
+						public static global::Epsitec.Common.Support.Druid Cancel
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (195);
+							}
+						}
+						//	designer:str/30026
+						public static global::Epsitec.Common.Support.Druid OK
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (194);
+							}
+						}
+					}
+					
+					public static class Filter
+					{
+						//	designer:str/30056
+						public static global::Epsitec.Common.Support.Druid All
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (197);
+							}
+						}
+						//	designer:str/30066
+						public static global::Epsitec.Common.Support.Druid One
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (198);
+							}
+						}
+					}
+					
+					public static class Label
+					{
+						//	designer:str/300A6
+						public static global::Epsitec.Common.Support.Druid Filter
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (202);
+							}
+						}
+						//	designer:str/30096
+						public static global::Epsitec.Common.Support.Druid Search
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (201);
+							}
+						}
+					}
+					
+					public static class Tooltip
+					{
+						//	designer:str/30076
+						public static global::Epsitec.Common.Support.Druid Mode
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (199);
+							}
+						}
+						//	designer:str/30086
+						public static global::Epsitec.Common.Support.Druid Size
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (200);
+							}
+						}
+					}
+				}
+				
+				public static class InitialMessage
+				{
+					//	designer:str/30K72
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544391);
+						}
+					}
+				}
+				
+				public static class ModuleInfo
+				{
+					//	designer:str/30KB3
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544427);
+						}
+					}
+					public static class Label
+					{
+						//	designer:str/30KF3
+						public static global::Epsitec.Common.Support.Druid Assemblies
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544431);
+							}
+						}
+						//	designer:str/30KE3
+						public static global::Epsitec.Common.Support.Druid Id
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544430);
+							}
+						}
+						//	designer:str/30KD3
+						public static global::Epsitec.Common.Support.Druid Name
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544429);
+							}
+						}
+						//	designer:str/30KG3
+						public static global::Epsitec.Common.Support.Druid NamespaceDefault
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544432);
+							}
+						}
+						//	designer:str/30KH3
+						public static global::Epsitec.Common.Support.Druid NamespaceEntities
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544433);
+							}
+						}
+						//	designer:str/30KI3
+						public static global::Epsitec.Common.Support.Druid NamespaceForms
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544434);
+							}
+						}
+						//	designer:str/30KJ3
+						public static global::Epsitec.Common.Support.Druid NamespaceRes
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544435);
+							}
+						}
+						//	designer:str/30KC3
+						public static global::Epsitec.Common.Support.Druid Path
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544428);
+							}
+						}
+					}
+					
+					public static class Radio
+					{
+						public static class TextMode
+						{
+							//	designer:str/30KL3
+							public static global::Epsitec.Common.Support.Druid FormattedText
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (335544437);
+								}
+							}
+							//	designer:str/30KK3
+							public static global::Epsitec.Common.Support.Druid String
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (335544436);
+								}
+							}
+						}
+					}
+				}
+				
+				public static class New
+				{
+					//	designer:str/30K6
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544326);
+						}
+					}
+					public static class Button
+					{
+						//	designer:str/30KG
+						public static global::Epsitec.Common.Support.Druid New
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544336);
+							}
+						}
+					}
+					
+					public static class Error
+					{
+						//	designer:str/30KI
+						public static global::Epsitec.Common.Support.Druid Create
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544338);
+							}
+						}
+					}
+					
+					public static class Field
+					{
+						//	designer:str/30KB
+						public static global::Epsitec.Common.Support.Druid ModuleName
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544331);
+							}
+						}
+						//	designer:str/30KA
+						public static global::Epsitec.Common.Support.Druid RootDirectoryPath
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544330);
+							}
+						}
+						//	designer:str/30KC
+						public static global::Epsitec.Common.Support.Druid SourceNamespace
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544332);
+							}
+						}
+					}
+					
+					public static class Layer
+					{
+						//	designer:str/30KE
+						public static global::Epsitec.Common.Support.Druid Application
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544334);
+							}
+						}
+						//	designer:str/30KD
+						public static global::Epsitec.Common.Support.Druid System
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544333);
+							}
+						}
+						//	designer:str/30KF
+						public static global::Epsitec.Common.Support.Druid User
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544335);
+							}
+						}
+					}
+					
+					public static class Progress
+					{
+						//	designer:str/30KH
+						public static global::Epsitec.Common.Support.Druid Title
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544337);
+							}
+						}
+					}
+					
+					public static class Type
+					{
+						//	designer:str/30K8
+						public static global::Epsitec.Common.Support.Druid Patch0
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544328);
+							}
+						}
+						//	designer:str/30K9
+						public static global::Epsitec.Common.Support.Druid Patch1
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544329);
+							}
+						}
+						//	designer:str/30K7
+						public static global::Epsitec.Common.Support.Druid Reference
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544327);
+							}
+						}
+					}
+				}
+				
+				public static class NewCulture
+				{
+					//	designer:str/300K4
+					public static global::Epsitec.Common.Support.Druid Label
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (148);
+						}
+					}
+					//	designer:str/300J4
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (147);
+						}
+					}
+					public static class Button
+					{
+						//	designer:str/300L4
+						public static global::Epsitec.Common.Support.Druid Create
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (149);
+							}
+						}
+					}
+				}
+				
+				public static class Open
+				{
+					//	designer:str/300E6
+					public static global::Epsitec.Common.Support.Druid Label
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (206);
+						}
+					}
+					//	designer:str/300D6
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (205);
+						}
+					}
+					public static class Button
+					{
+						//	designer:str/300F6
+						public static global::Epsitec.Common.Support.Druid Open
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (207);
+							}
+						}
+					}
+					
+					public static class State
+					{
+						//	designer:str/300H6
+						public static global::Epsitec.Common.Support.Druid Openable
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (209);
+							}
+						}
+						//	designer:str/300G6
+						public static global::Epsitec.Common.Support.Druid Opening
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (208);
+							}
+						}
+					}
+				}
+				
+				public static class Recycle
+				{
+					//	designer:str/30KJ
+					public static global::Epsitec.Common.Support.Druid Question
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544339);
+						}
+					}
+					public static class Error
+					{
+						//	designer:str/30KL
+						public static global::Epsitec.Common.Support.Druid Recycle
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544341);
+							}
+						}
+					}
+					
+					public static class Message
+					{
+						//	designer:str/30KM
+						public static global::Epsitec.Common.Support.Druid Ok
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544342);
+							}
+						}
+					}
+					
+					public static class Progress
+					{
+						//	designer:str/30KK
+						public static global::Epsitec.Common.Support.Druid Title
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544340);
+							}
+						}
+					}
+				}
+				
+				public static class ResourceSelector
+				{
+					//	designer:str/300O4
+					public static global::Epsitec.Common.Support.Druid Label
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (152);
+						}
+					}
+					//	designer:str/300P4
+					public static global::Epsitec.Common.Support.Druid Text
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (153);
+						}
+					}
+					//	designer:str/300N4
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (151);
+						}
+					}
+					public static class Button
+					{
+						//	designer:str/300Q4
+						public static global::Epsitec.Common.Support.Druid Clear
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (154);
+							}
+						}
+						//	designer:str/300S4
+						public static global::Epsitec.Common.Support.Druid Create
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (156);
+							}
+						}
+						//	designer:str/300R4
+						public static global::Epsitec.Common.Support.Druid Use
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (155);
+							}
+						}
+					}
+				}
+				
+				public static class ResourceStructuredTypeField
+				{
+					//	designer:str/3000A
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (320);
+						}
+					}
+					public static class Button
+					{
+						//	designer:str/3001A
+						public static global::Epsitec.Common.Support.Druid OK
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (321);
+							}
+						}
+					}
+				}
+				
+				public static class Save
+				{
+					//	designer:str/300B6
+					public static global::Epsitec.Common.Support.Druid Question1
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (203);
+						}
+					}
+					//	designer:str/300C6
+					public static global::Epsitec.Common.Support.Druid Question2
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (204);
+						}
+					}
+				}
+				
+				public static class Search
+				{
+					//	designer:str/30024
+					public static global::Epsitec.Common.Support.Druid Label
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (130);
+						}
+					}
+					//	designer:str/30034
+					public static global::Epsitec.Common.Support.Druid Replace
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (131);
+						}
+					}
+					//	designer:str/30014
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (129);
+						}
+					}
+					public static class Button
+					{
+						//	designer:str/300D4
+						public static global::Epsitec.Common.Support.Druid Count
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (141);
+							}
+						}
+						//	designer:str/300E4
+						public static global::Epsitec.Common.Support.Druid Replace
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (142);
+							}
+						}
+						//	designer:str/300F4
+						public static global::Epsitec.Common.Support.Druid ReplaceAll
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (143);
+							}
+						}
+						//	designer:str/300C4
+						public static global::Epsitec.Common.Support.Druid Search
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (140);
+							}
+						}
+					}
+					
+					public static class Check
+					{
+						//	designer:str/30044
+						public static global::Epsitec.Common.Support.Druid Case
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (132);
+							}
+						}
+						//	designer:str/30074
+						public static global::Epsitec.Common.Support.Druid Label
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (135);
+							}
+						}
+						//	designer:str/300A4
+						public static global::Epsitec.Common.Support.Druid PrimaryAbout
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (138);
+							}
+						}
+						//	designer:str/300M5
+						public static global::Epsitec.Common.Support.Druid PrimaryDescription
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (182);
+							}
+						}
+						//	designer:str/300K5
+						public static global::Epsitec.Common.Support.Druid PrimaryLabels
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (180);
+							}
+						}
+						//	designer:str/30084
+						public static global::Epsitec.Common.Support.Druid PrimaryText
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (136);
+							}
+						}
+						//	designer:str/300B4
+						public static global::Epsitec.Common.Support.Druid SecondaryAbout
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (139);
+							}
+						}
+						//	designer:str/300N5
+						public static global::Epsitec.Common.Support.Druid SecondaryDescription
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (183);
+							}
+						}
+						//	designer:str/300L5
+						public static global::Epsitec.Common.Support.Druid SecondaryLabels
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (181);
+							}
+						}
+						//	designer:str/30094
+						public static global::Epsitec.Common.Support.Druid SecondaryText
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (137);
+							}
+						}
+						//	designer:str/30064
+						public static global::Epsitec.Common.Support.Druid Who
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (134);
+							}
+						}
+						//	designer:str/30054
+						public static global::Epsitec.Common.Support.Druid Word
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (133);
+							}
+						}
+					}
+					
+					public static class Message
+					{
+						//	designer:str/300G4
+						public static global::Epsitec.Common.Support.Druid Count
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (144);
+							}
+						}
+						//	designer:str/300I4
+						public static global::Epsitec.Common.Support.Druid Error
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (146);
+							}
+						}
+						//	designer:str/300H4
+						public static global::Epsitec.Common.Support.Druid Replace
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (145);
+							}
+						}
+					}
+				}
+				
+				public static class TableDescription
+				{
+					//	designer:str/300Q9
+					public static global::Epsitec.Common.Support.Druid Caption
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (314);
+						}
+					}
+					//	designer:str/300P9
+					public static global::Epsitec.Common.Support.Druid Name
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (313);
+						}
+					}
+					//	designer:str/300R9
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (315);
+						}
+					}
+				}
+				
+				public static class Tooltip
+				{
+					//	designer:str/300I3
+					public static global::Epsitec.Common.Support.Druid Close
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (114);
+						}
+					}
+					//	designer:str/300J3
+					public static global::Epsitec.Common.Support.Druid Help
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (115);
+						}
+					}
+					//	designer:str/300K3
+					public static global::Epsitec.Common.Support.Druid Resize
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (116);
+						}
+					}
+				}
+				
+				public static class TypeCode
+				{
+					//	designer:str/300B7
+					public static global::Epsitec.Common.Support.Druid EnumAll
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (235);
+						}
+					}
+					//	designer:str/30097
+					public static global::Epsitec.Common.Support.Druid EnumNative
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (233);
+						}
+					}
+					//	designer:str/300C7
+					public static global::Epsitec.Common.Support.Druid EnumOne
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (236);
+						}
+					}
+					//	designer:str/30067
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (230);
+						}
+					}
+					public static class Tooltip
+					{
+						//	designer:str/300A7
+						public static global::Epsitec.Common.Support.Druid Options
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (234);
+							}
+						}
+					}
+				}
+			}
+			
+			public static class Entities
+			{
+				public static class Action
+				{
+					//	designer:str/302N1
+					public static global::Epsitec.Common.Support.Druid BoxChangeWidth
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554487);
+						}
+					}
+					//	designer:str/30281
+					public static global::Epsitec.Common.Support.Druid BoxClose
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554472);
+						}
+					}
+					//	designer:str/30231
+					public static global::Epsitec.Common.Support.Druid BoxColor1
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554467);
+						}
+					}
+					//	designer:str/30251
+					public static global::Epsitec.Common.Support.Druid BoxColor2
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554469);
+						}
+					}
+					//	designer:str/30261
+					public static global::Epsitec.Common.Support.Druid BoxColor3
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554470);
+						}
+					}
+					//	designer:str/30241
+					public static global::Epsitec.Common.Support.Druid BoxColor4
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554468);
+						}
+					}
+					//	designer:str/30K23
+					public static global::Epsitec.Common.Support.Druid BoxColor5
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544418);
+						}
+					}
+					//	designer:str/30K33
+					public static global::Epsitec.Common.Support.Druid BoxColor6
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544419);
+						}
+					}
+					//	designer:str/30K43
+					public static global::Epsitec.Common.Support.Druid BoxColor7
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544420);
+						}
+					}
+					//	designer:str/30K13
+					public static global::Epsitec.Common.Support.Druid BoxColor8
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544417);
+						}
+					}
+					//	designer:str/30211
+					public static global::Epsitec.Common.Support.Druid BoxComment
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554465);
+						}
+					}
+					//	designer:str/302K2
+					public static global::Epsitec.Common.Support.Druid BoxComment1
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554516);
+						}
+					}
+					//	designer:str/302L2
+					public static global::Epsitec.Common.Support.Druid BoxComment2
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554517);
+						}
+					}
+					//	designer:str/302M2
+					public static global::Epsitec.Common.Support.Druid BoxComment3
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554518);
+						}
+					}
+					//	designer:str/30271
+					public static global::Epsitec.Common.Support.Druid BoxExtend
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554471);
+						}
+					}
+					//	designer:str/302I2
+					public static global::Epsitec.Common.Support.Druid BoxExtend1
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554514);
+						}
+					}
+					//	designer:str/302J2
+					public static global::Epsitec.Common.Support.Druid BoxExtend2
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554515);
+						}
+					}
+					//	designer:str/302G1
+					public static global::Epsitec.Common.Support.Druid BoxFieldAdd
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554480);
+						}
+					}
+					//	designer:str/302L1
+					public static global::Epsitec.Common.Support.Druid BoxFieldAddInterface
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554485);
+						}
+					}
+					//	designer:str/302F1
+					public static global::Epsitec.Common.Support.Druid BoxFieldExpression
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554479);
+						}
+					}
+					//	designer:str/302P2
+					public static global::Epsitec.Common.Support.Druid BoxFieldExpression1
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554521);
+						}
+					}
+					//	designer:str/302I1
+					public static global::Epsitec.Common.Support.Druid BoxFieldMovable
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554482);
+						}
+					}
+					//	designer:str/30291
+					public static global::Epsitec.Common.Support.Druid BoxFieldName1
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554473);
+						}
+					}
+					//	designer:str/302A1
+					public static global::Epsitec.Common.Support.Druid BoxFieldName2
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554474);
+						}
+					}
+					//	designer:str/302B1
+					public static global::Epsitec.Common.Support.Druid BoxFieldName3
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554475);
+						}
+					}
+					//	designer:str/302H1
+					public static global::Epsitec.Common.Support.Druid BoxFieldRemove
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554481);
+						}
+					}
+					//	designer:str/302M1
+					public static global::Epsitec.Common.Support.Druid BoxFieldRemoveInterface
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554486);
+						}
+					}
+					//	designer:str/302J1
+					public static global::Epsitec.Common.Support.Druid BoxFieldTitle1
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554483);
+						}
+					}
+					//	designer:str/302K1
+					public static global::Epsitec.Common.Support.Druid BoxFieldTitle2
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554484);
+						}
+					}
+					//	designer:str/302C1
+					public static global::Epsitec.Common.Support.Druid BoxFieldType1
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554476);
+						}
+					}
+					//	designer:str/302D1
+					public static global::Epsitec.Common.Support.Druid BoxFieldType2
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554477);
+						}
+					}
+					//	designer:str/302E1
+					public static global::Epsitec.Common.Support.Druid BoxFieldType3
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554478);
+						}
+					}
+					//	designer:str/302V
+					public static global::Epsitec.Common.Support.Druid BoxHeader
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554463);
+						}
+					}
+					//	designer:str/302F2
+					public static global::Epsitec.Common.Support.Druid BoxHeader1
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554511);
+						}
+					}
+					//	designer:str/302G2
+					public static global::Epsitec.Common.Support.Druid BoxHeader2
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554512);
+						}
+					}
+					//	designer:str/30221
+					public static global::Epsitec.Common.Support.Druid BoxInfo
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554466);
+						}
+					}
+					//	designer:str/302N2
+					public static global::Epsitec.Common.Support.Druid BoxInfo1
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554519);
+						}
+					}
+					//	designer:str/302O2
+					public static global::Epsitec.Common.Support.Druid BoxInfo2
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554520);
+						}
+					}
+					//	designer:str/302O1
+					public static global::Epsitec.Common.Support.Druid BoxMoveColumnsSeparator
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554488);
+						}
+					}
+					//	designer:str/30K53
+					public static global::Epsitec.Common.Support.Druid BoxParameters
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544421);
+						}
+					}
+					//	designer:str/30201
+					public static global::Epsitec.Common.Support.Druid BoxSources
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554464);
+						}
+					}
+					//	designer:str/302H2
+					public static global::Epsitec.Common.Support.Druid BoxSources1
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554513);
+						}
+					}
+					//	designer:str/302B2
+					public static global::Epsitec.Common.Support.Druid CommentAttachToConnection
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554507);
+						}
+					}
+					//	designer:str/30212
+					public static global::Epsitec.Common.Support.Druid CommentClose
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554497);
+						}
+					}
+					//	designer:str/30232
+					public static global::Epsitec.Common.Support.Druid CommentColor1
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554499);
+						}
+					}
+					//	designer:str/30252
+					public static global::Epsitec.Common.Support.Druid CommentColor2
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554501);
+						}
+					}
+					//	designer:str/30262
+					public static global::Epsitec.Common.Support.Druid CommentColor3
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554502);
+						}
+					}
+					//	designer:str/30272
+					public static global::Epsitec.Common.Support.Druid CommentColor4
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554503);
+						}
+					}
+					//	designer:str/30282
+					public static global::Epsitec.Common.Support.Druid CommentColor5
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554504);
+						}
+					}
+					//	designer:str/30292
+					public static global::Epsitec.Common.Support.Druid CommentColor6
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554505);
+						}
+					}
+					//	designer:str/302A2
+					public static global::Epsitec.Common.Support.Druid CommentColor7
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554506);
+						}
+					}
+					//	designer:str/30242
+					public static global::Epsitec.Common.Support.Druid CommentColor8
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554500);
+						}
+					}
+					//	designer:str/302V1
+					public static global::Epsitec.Common.Support.Druid CommentEdit
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554495);
+						}
+					}
+					//	designer:str/30202
+					public static global::Epsitec.Common.Support.Druid CommentMove
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554496);
+						}
+					}
+					//	designer:str/30222
+					public static global::Epsitec.Common.Support.Druid CommentWidth
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554498);
+						}
+					}
+					//	designer:str/302R1
+					public static global::Epsitec.Common.Support.Druid ConnectionClose
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554491);
+						}
+					}
+					//	designer:str/302U1
+					public static global::Epsitec.Common.Support.Druid ConnectionComment
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554494);
+						}
+					}
+					//	designer:str/302D3
+					public static global::Epsitec.Common.Support.Druid ConnectionComment1
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554541);
+						}
+					}
+					//	designer:str/302E3
+					public static global::Epsitec.Common.Support.Druid ConnectionComment2
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554542);
+						}
+					}
+					//	designer:str/302F3
+					public static global::Epsitec.Common.Support.Druid ConnectionComment3
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554543);
+						}
+					}
+					//	designer:str/302T1
+					public static global::Epsitec.Common.Support.Druid ConnectionMove
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554493);
+						}
+					}
+					//	designer:str/302P1
+					public static global::Epsitec.Common.Support.Druid ConnectionOpenLeft
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554489);
+						}
+					}
+					//	designer:str/302Q1
+					public static global::Epsitec.Common.Support.Druid ConnectionOpenRight
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554490);
+						}
+					}
+					//	designer:str/302E2
+					public static global::Epsitec.Common.Support.Druid InfoClose
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554510);
+						}
+					}
+					//	designer:str/302C2
+					public static global::Epsitec.Common.Support.Druid InfoMove
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554508);
+						}
+					}
+					//	designer:str/302D2
+					public static global::Epsitec.Common.Support.Druid InfoWidth
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554509);
+						}
+					}
+					//	designer:str/30K93
+					public static global::Epsitec.Common.Support.Druid SaveAllBitmaps
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544425);
+						}
+					}
+					//	designer:str/30K03
+					public static global::Epsitec.Common.Support.Druid SaveBitmap
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544416);
+						}
+					}
+					//	designer:str/302M
+					public static global::Epsitec.Common.Support.Druid ZoomDefault
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554454);
+						}
+					}
+					//	designer:str/302N
+					public static global::Epsitec.Common.Support.Druid ZoomMax
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554455);
+						}
+					}
+					//	designer:str/302O
+					public static global::Epsitec.Common.Support.Druid ZoomMenu
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554456);
+						}
+					}
+					//	designer:str/302L
+					public static global::Epsitec.Common.Support.Druid ZoomMin
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554453);
+						}
+					}
+					//	designer:str/302K
+					public static global::Epsitec.Common.Support.Druid ZoomPage
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554452);
+						}
+					}
+					//	designer:str/302P
+					public static global::Epsitec.Common.Support.Druid ZoomSlider
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554457);
+						}
+					}
+					public static class BoxGroup
+					{
+						//	designer:str/30293
+						public static global::Epsitec.Common.Support.Druid Inherit
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554537);
+							}
+						}
+						//	designer:str/30283
+						public static global::Epsitec.Common.Support.Druid Interface
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554536);
+							}
+						}
+					}
+				}
+				
+				public static class Button
+				{
+					//	designer:str/30223
+					public static global::Epsitec.Common.Support.Druid BoxComment
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554530);
+						}
+					}
+					//	designer:str/30253
+					public static global::Epsitec.Common.Support.Druid BoxFieldAddInterface
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554533);
+						}
+					}
+					//	designer:str/30263
+					public static global::Epsitec.Common.Support.Druid BoxFieldRemoveInterface
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554534);
+						}
+					}
+					//	designer:str/30233
+					public static global::Epsitec.Common.Support.Druid BoxInfo
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554531);
+						}
+					}
+					//	designer:str/30K63
+					public static global::Epsitec.Common.Support.Druid BoxParameters
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544422);
+						}
+					}
+					//	designer:str/30KM2
+					public static global::Epsitec.Common.Support.Druid ChangePrivate
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544406);
+						}
+					}
+					//	designer:str/302C3
+					public static global::Epsitec.Common.Support.Druid ChangeRelation
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554540);
+						}
+					}
+				}
+				
+				public static class Comment
+				{
+					//	designer:str/302B3
+					public static global::Epsitec.Common.Support.Druid DefaultText
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554539);
+						}
+					}
+					//	designer:str/302A3
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554538);
+						}
+					}
+				}
+				
+				public static class Icon
+				{
+					//	designer:str/30KV1
+					public static global::Epsitec.Common.Support.Druid DeepExpression
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544383);
+						}
+					}
+					//	designer:str/30243
+					public static global::Epsitec.Common.Support.Druid Expression
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554532);
+						}
+					}
+				}
+				
+				public static class Info
+				{
+					//	designer:str/302U2
+					public static global::Epsitec.Common.Support.Druid InheritAnd
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554526);
+						}
+					}
+					//	designer:str/30225
+					public static global::Epsitec.Common.Support.Druid InheritFromMany
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554594);
+						}
+					}
+					//	designer:str/302T2
+					public static global::Epsitec.Common.Support.Druid InheritFromOne
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554525);
+						}
+					}
+					//	designer:str/302S2
+					public static global::Epsitec.Common.Support.Druid InheritNull
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554524);
+						}
+					}
+					//	designer:str/302V2
+					public static global::Epsitec.Common.Support.Druid InterfaceAnd
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554527);
+						}
+					}
+					//	designer:str/30203
+					public static global::Epsitec.Common.Support.Druid InterfaceFromMany
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554528);
+						}
+					}
+					//	designer:str/30235
+					public static global::Epsitec.Common.Support.Druid InterfaceFromOne
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554595);
+						}
+					}
+					//	designer:str/30213
+					public static global::Epsitec.Common.Support.Druid InterfaceNull
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554529);
+						}
+					}
+					//	designer:str/302G3
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554544);
+						}
+					}
+				}
+				
+				public static class Menu
+				{
+					//	designer:str/302I3
+					public static global::Epsitec.Common.Support.Druid ZoomCurrent
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554546);
+						}
+					}
+					//	designer:str/302H3
+					public static global::Epsitec.Common.Support.Druid ZoomDefault
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554545);
+						}
+					}
+					//	designer:str/302J3
+					public static global::Epsitec.Common.Support.Druid ZoomPage
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554547);
+						}
+					}
+					public static class Sources
+					{
+						//	designer:str/30273
+						public static global::Epsitec.Common.Support.Druid Title
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554535);
+							}
+						}
+					}
+				}
+				
+				public static class Question
+				{
+					public static class RemoveField
+					{
+						//	designer:str/302Q2
+						public static global::Epsitec.Common.Support.Druid Base
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554522);
+							}
+						}
+					}
+					
+					public static class RemoveInterface
+					{
+						//	designer:str/302R2
+						public static global::Epsitec.Common.Support.Druid Base
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554523);
+							}
+						}
+					}
+					
+					public static class SubView
+					{
+						//	designer:str/302Q
+						public static global::Epsitec.Common.Support.Druid Base
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554458);
+							}
+						}
+						public static class Long
+						{
+							//	designer:str/302T
+							public static global::Epsitec.Common.Support.Druid Copy
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (33554461);
+								}
+							}
+							//	designer:str/302U
+							public static global::Epsitec.Common.Support.Druid Swap
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (33554462);
+								}
+							}
+						}
+						
+						public static class Quick
+						{
+							//	designer:str/302R
+							public static global::Epsitec.Common.Support.Druid Copy
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (33554459);
+								}
+							}
+							//	designer:str/302S
+							public static global::Epsitec.Common.Support.Druid Swap
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (33554460);
+								}
+							}
+						}
+					}
+				}
+				
+				public static class SubView
+				{
+					public static class Long
+					{
+						//	designer:str/302G
+						public static global::Epsitec.Common.Support.Druid A
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554448);
+							}
+						}
+						//	designer:str/302H
+						public static global::Epsitec.Common.Support.Druid B
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554449);
+							}
+						}
+						//	designer:str/302I
+						public static global::Epsitec.Common.Support.Druid C
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554450);
+							}
+						}
+						//	designer:str/302J
+						public static global::Epsitec.Common.Support.Druid T
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554451);
+							}
+						}
+					}
+					
+					public static class Quick
+					{
+						//	designer:str/302C
+						public static global::Epsitec.Common.Support.Druid A
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554444);
+							}
+						}
+						//	designer:str/302D
+						public static global::Epsitec.Common.Support.Druid B
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554445);
+							}
+						}
+						//	designer:str/302E
+						public static global::Epsitec.Common.Support.Druid C
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554446);
+							}
+						}
+						//	designer:str/302F
+						public static global::Epsitec.Common.Support.Druid T
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554447);
+							}
+						}
+					}
+				}
+			}
+			
+			public static class Error
+			{
+				//	designer:str/30006
+				public static global::Epsitec.Common.Support.Druid CheckOK
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (192);
+					}
+				}
+				//	designer:str/300V5
+				public static global::Epsitec.Common.Support.Druid ShortcutMany
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (191);
+					}
+				}
+				public static class CreateMissingValueItems
+				{
+					//	designer:str/30K52
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544389);
+						}
+					}
+				}
+				
+				public static class Entities
+				{
+					//	designer:str/30K12
+					public static global::Epsitec.Common.Support.Druid ReplaceExpression
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544385);
+						}
+					}
+				}
+				
+				public static class Name
+				{
+					//	designer:str/30035
+					public static global::Epsitec.Common.Support.Druid AlreadyExist
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (163);
+						}
+					}
+					//	designer:str/30025
+					public static global::Epsitec.Common.Support.Druid Invalid
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (162);
+						}
+					}
+					//	designer:str/30087
+					public static global::Epsitec.Common.Support.Druid SamePrefix
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (232);
+						}
+					}
+					//	designer:str/30077
+					public static global::Epsitec.Common.Support.Druid Twofold
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (231);
+						}
+					}
+				}
+				
+				public static class Native
+				{
+					//	designer:str/3028
+					public static global::Epsitec.Common.Support.Druid Incorrect
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554440);
+						}
+					}
+				}
+			}
+			
+			public static class Forms
+			{
+				public static class Question
+				{
+					public static class Create
+					{
+						//	designer:str/302P4
+						public static global::Epsitec.Common.Support.Druid Base
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554585);
+							}
+						}
+						public static class Long
+						{
+							//	designer:str/302R4
+							public static global::Epsitec.Common.Support.Druid Delta
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (33554587);
+								}
+							}
+							//	designer:str/302Q4
+							public static global::Epsitec.Common.Support.Druid Normal
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (33554586);
+								}
+							}
+						}
+						
+						public static class Quick
+						{
+							//	designer:str/302T4
+							public static global::Epsitec.Common.Support.Druid Delta
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (33554589);
+								}
+							}
+							//	designer:str/302S4
+							public static global::Epsitec.Common.Support.Druid Normal
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (33554588);
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			public static class Misc
+			{
+				//	designer:str/300U4
+				public static global::Epsitec.Common.Support.Druid Copy
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (158);
+					}
+				}
+				//	designer:str/300V4
+				public static global::Epsitec.Common.Support.Druid CopyOf
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (159);
+					}
+				}
+				//	designer:str/30005
+				public static global::Epsitec.Common.Support.Druid Extract
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (160);
+					}
+				}
+				//	designer:str/30015
+				public static global::Epsitec.Common.Support.Druid ExtractOf
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (161);
+					}
+				}
+				//	designer:str/300T4
+				public static global::Epsitec.Common.Support.Druid NoTitle
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (157);
+					}
+				}
+			}
+			
+			public static class Panel
+			{
+				public static class Content
+				{
+					public static class Tooltip
+					{
+						//	designer:str/300C9
+						public static global::Epsitec.Common.Support.Druid ChangeBinding
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (300);
+							}
+						}
+						//	designer:str/300B9
+						public static global::Epsitec.Common.Support.Druid ChangeDruid
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (299);
+							}
+						}
+						//	designer:str/300D9
+						public static global::Epsitec.Common.Support.Druid ChangeStructured
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (301);
+							}
+						}
+					}
+				}
+				
+				public static class Margins
+				{
+					//	designer:str/30KF2
+					public static global::Epsitec.Common.Support.Druid Bottom
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544399);
+						}
+					}
+					//	designer:str/30KC2
+					public static global::Epsitec.Common.Support.Druid Left
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544396);
+						}
+					}
+					//	designer:str/30KG2
+					public static global::Epsitec.Common.Support.Druid Link
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544400);
+						}
+					}
+					//	designer:str/30KD2
+					public static global::Epsitec.Common.Support.Druid Right
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544397);
+						}
+					}
+					//	designer:str/30KE2
+					public static global::Epsitec.Common.Support.Druid Top
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544398);
+						}
+					}
+				}
+				
+				public static class Question
+				{
+					//	designer:str/30K82
+					public static global::Epsitec.Common.Support.Druid GridColumnAdd
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544392);
+						}
+					}
+					//	designer:str/30K92
+					public static global::Epsitec.Common.Support.Druid GridColumnRemove
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544393);
+						}
+					}
+					//	designer:str/30KA2
+					public static global::Epsitec.Common.Support.Druid GridRowAdd
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544394);
+						}
+					}
+					//	designer:str/30KB2
+					public static global::Epsitec.Common.Support.Druid GridRowRemove
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544395);
+						}
+					}
+				}
+			}
+			
+			public static class Ribbon
+			{
+				//	designer:str/3001
+				public static global::Epsitec.Common.Support.Druid Main
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (1);
+					}
+				}
+				//	designer:str/3002
+				public static global::Epsitec.Common.Support.Druid Oper
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (2);
+					}
+				}
+				//	designer:str/3003
+				public static global::Epsitec.Common.Support.Druid Text
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (3);
+					}
+				}
+				public static class Section
+				{
+					//	designer:str/3008
+					public static global::Epsitec.Common.Support.Druid Access
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (8);
+						}
+					}
+					//	designer:str/300E
+					public static global::Epsitec.Common.Support.Druid Align
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (14);
+						}
+					}
+					//	designer:str/3007
+					public static global::Epsitec.Common.Support.Druid Character
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (7);
+						}
+					}
+					//	designer:str/3005
+					public static global::Epsitec.Common.Support.Druid Clipboard
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (5);
+						}
+					}
+					//	designer:str/3009
+					public static global::Epsitec.Common.Support.Druid Culture
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (9);
+						}
+					}
+					//	designer:str/3009A
+					public static global::Epsitec.Common.Support.Druid Display
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (329);
+						}
+					}
+					//	designer:str/3006
+					public static global::Epsitec.Common.Support.Druid Edit
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (6);
+						}
+					}
+					//	designer:str/3004
+					public static global::Epsitec.Common.Support.Druid File
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (4);
+						}
+					}
+					//	designer:str/30KQ3
+					public static global::Epsitec.Common.Support.Druid Global
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544442);
+						}
+					}
+					//	designer:str/3005A
+					public static global::Epsitec.Common.Support.Druid Locator
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (325);
+						}
+					}
+					//	designer:str/300F
+					public static global::Epsitec.Common.Support.Druid Move
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (15);
+						}
+					}
+					//	designer:str/300G
+					public static global::Epsitec.Common.Support.Druid MoveHorizontal
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (16);
+						}
+					}
+					//	designer:str/300H
+					public static global::Epsitec.Common.Support.Druid MoveVertical
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (17);
+						}
+					}
+					//	designer:str/300C
+					public static global::Epsitec.Common.Support.Druid Order
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (12);
+						}
+					}
+					//	designer:str/300A
+					public static global::Epsitec.Common.Support.Druid PanelSelect
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (10);
+						}
+					}
+					//	designer:str/300B
+					public static global::Epsitec.Common.Support.Druid PanelShow
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (11);
+						}
+					}
+					//	designer:str/300D
+					public static global::Epsitec.Common.Support.Druid TabIndex
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (13);
+						}
+					}
+					//	designer:str/30K3
+					public static global::Epsitec.Common.Support.Druid Undo
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544323);
+						}
+					}
+				}
+			}
+			
+			public static class StringCollection
+			{
+				//	designer:str/300E5
+				public static global::Epsitec.Common.Support.Druid Add
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (174);
+					}
+				}
+				//	designer:str/302A
+				public static global::Epsitec.Common.Support.Druid Default
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (33554442);
+					}
+				}
+				//	designer:str/300F5
+				public static global::Epsitec.Common.Support.Druid Duplicate
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (175);
+					}
+				}
+				//	designer:str/300I5
+				public static global::Epsitec.Common.Support.Druid Next
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (178);
+					}
+				}
+				//	designer:str/300H5
+				public static global::Epsitec.Common.Support.Druid Prev
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (177);
+					}
+				}
+				//	designer:str/300G5
+				public static global::Epsitec.Common.Support.Druid Remove
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (176);
+					}
+				}
+			}
+			
+			public static class Undo
+			{
+				public static class Action
+				{
+					//	designer:str/30KR
+					public static global::Epsitec.Common.Support.Druid BackColor
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544347);
+						}
+					}
+					//	designer:str/30K41
+					public static global::Epsitec.Common.Support.Druid BoxFrameEdges
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544356);
+						}
+					}
+					//	designer:str/30K51
+					public static global::Epsitec.Common.Support.Druid BoxFrameWidth
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544357);
+						}
+					}
+					//	designer:str/30K22
+					public static global::Epsitec.Common.Support.Druid BoxLayout
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544386);
+						}
+					}
+					//	designer:str/30KQ
+					public static global::Epsitec.Common.Support.Druid BoxPadding
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544346);
+						}
+					}
+					//	designer:str/30KN
+					public static global::Epsitec.Common.Support.Druid ColumnsRequired
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544343);
+						}
+					}
+					//	designer:str/30KU1
+					public static global::Epsitec.Common.Support.Druid CommandButtonClass
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544382);
+						}
+					}
+					//	designer:str/30KT1
+					public static global::Epsitec.Common.Support.Druid CommandInsert
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544381);
+						}
+					}
+					//	designer:str/30K71
+					public static global::Epsitec.Common.Support.Druid DefaultSize
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544359);
+						}
+					}
+					//	designer:str/30KF1
+					public static global::Epsitec.Common.Support.Druid FieldBoxLink
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544367);
+						}
+					}
+					//	designer:str/30KE1
+					public static global::Epsitec.Common.Support.Druid FieldBoxUnlink
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544366);
+						}
+					}
+					//	designer:str/30KT
+					public static global::Epsitec.Common.Support.Druid FieldFontColor
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544349);
+						}
+					}
+					//	designer:str/30KV
+					public static global::Epsitec.Common.Support.Druid FieldFontFace
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544351);
+						}
+					}
+					//	designer:str/30K31
+					public static global::Epsitec.Common.Support.Druid FieldFontSize
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544355);
+						}
+					}
+					//	designer:str/30K11
+					public static global::Epsitec.Common.Support.Druid FieldFontStyle
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544353);
+						}
+					}
+					//	designer:str/30KD1
+					public static global::Epsitec.Common.Support.Druid FieldForm
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544365);
+						}
+					}
+					//	designer:str/30KA1
+					public static global::Epsitec.Common.Support.Druid FieldGlue
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544362);
+						}
+					}
+					//	designer:str/30KB1
+					public static global::Epsitec.Common.Support.Druid FieldLine
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544363);
+						}
+					}
+					//	designer:str/30KG1
+					public static global::Epsitec.Common.Support.Druid FieldMove
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544368);
+						}
+					}
+					//	designer:str/30K81
+					public static global::Epsitec.Common.Support.Druid FieldRemove
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544360);
+						}
+					}
+					//	designer:str/30K91
+					public static global::Epsitec.Common.Support.Druid FieldReset
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544361);
+						}
+					}
+					//	designer:str/30KC1
+					public static global::Epsitec.Common.Support.Druid FieldTitle
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544364);
+						}
+					}
+					//	designer:str/30KS1
+					public static global::Epsitec.Common.Support.Druid ForwardTab
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544380);
+						}
+					}
+					//	designer:str/30KS
+					public static global::Epsitec.Common.Support.Druid LabelFontColor
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544348);
+						}
+					}
+					//	designer:str/30KU
+					public static global::Epsitec.Common.Support.Druid LabelFontFace
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544350);
+						}
+					}
+					//	designer:str/30K21
+					public static global::Epsitec.Common.Support.Druid LabelFontSize
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544354);
+						}
+					}
+					//	designer:str/30K01
+					public static global::Epsitec.Common.Support.Druid LabelFontStyle
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544352);
+						}
+					}
+					//	designer:str/30KU2
+					public static global::Epsitec.Common.Support.Druid LabelReplacement
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544414);
+						}
+					}
+					//	designer:str/30KH2
+					public static global::Epsitec.Common.Support.Druid LineWidth
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544401);
+						}
+					}
+					//	designer:str/30K32
+					public static global::Epsitec.Common.Support.Druid PreferredWidth
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544387);
+						}
+					}
+					//	designer:str/30KH1
+					public static global::Epsitec.Common.Support.Druid RelationUse
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544369);
+						}
+					}
+					//	designer:str/30KO
+					public static global::Epsitec.Common.Support.Druid RowsRequired
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544344);
+						}
+					}
+					//	designer:str/30KP
+					public static global::Epsitec.Common.Support.Druid SeparatorBottom
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544345);
+						}
+					}
+					//	designer:str/30KV2
+					public static global::Epsitec.Common.Support.Druid Verbosity
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544415);
+						}
+					}
+				}
+			}
+			
+			public static class Viewers
+			{
+				public static class Captions
+				{
+					//	designer:str/30204
+					public static global::Epsitec.Common.Support.Druid Brief
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554560);
+						}
+					}
+					public static class About
+					{
+						//	designer:str/300B5
+						public static global::Epsitec.Common.Support.Druid Title
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (171);
+							}
+						}
+					}
+					
+					public static class Description
+					{
+						//	designer:str/300J5
+						public static global::Epsitec.Common.Support.Druid Short
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (179);
+							}
+						}
+						//	designer:str/300C5
+						public static global::Epsitec.Common.Support.Druid Title
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (172);
+							}
+						}
+					}
+					
+					public static class Icon
+					{
+						//	designer:str/300D5
+						public static global::Epsitec.Common.Support.Druid Title
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (173);
+							}
+						}
+					}
+					
+					public static class Labels
+					{
+						//	designer:str/300A5
+						public static global::Epsitec.Common.Support.Druid Title
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (170);
+							}
+						}
+					}
+					
+					public static class Summary
+					{
+						//	designer:str/30224
+						public static global::Epsitec.Common.Support.Druid Empty
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554562);
+							}
+						}
+						//	designer:str/30214
+						public static global::Epsitec.Common.Support.Druid Undefined
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554561);
+							}
+						}
+					}
+				}
+				
+				public static class Column
+				{
+					//	designer:str/302L3
+					public static global::Epsitec.Common.Support.Druid Druid
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554549);
+						}
+					}
+					//	designer:str/302O3
+					public static global::Epsitec.Common.Support.Druid Entity
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554552);
+						}
+					}
+					//	designer:str/302N3
+					public static global::Epsitec.Common.Support.Druid Identity
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554551);
+						}
+					}
+					//	designer:str/302M3
+					public static global::Epsitec.Common.Support.Druid Local
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554550);
+						}
+					}
+					//	designer:str/302K3
+					public static global::Epsitec.Common.Support.Druid Name
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554548);
+						}
+					}
+					//	designer:str/30K4
+					public static global::Epsitec.Common.Support.Druid PatchLevel
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544324);
+						}
+					}
+					//	designer:str/302Q3
+					public static global::Epsitec.Common.Support.Druid Prefix
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554554);
+						}
+					}
+					//	designer:str/30KN3
+					public static global::Epsitec.Common.Support.Druid Source
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544439);
+						}
+					}
+					//	designer:str/302P3
+					public static global::Epsitec.Common.Support.Druid Type
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554553);
+						}
+					}
+				}
+				
+				public static class Commands
+				{
+					public static class Group
+					{
+						//	designer:str/300T5
+						public static global::Epsitec.Common.Support.Druid Title
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (189);
+							}
+						}
+					}
+					
+					public static class Shortcut
+					{
+						//	designer:str/300R5
+						public static global::Epsitec.Common.Support.Druid Main
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (187);
+							}
+						}
+						//	designer:str/300S5
+						public static global::Epsitec.Common.Support.Druid Suppl
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (188);
+							}
+						}
+						//	designer:str/300Q5
+						public static global::Epsitec.Common.Support.Druid Title
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (186);
+							}
+						}
+					}
+					
+					public static class Statefull
+					{
+						//	designer:str/300P5
+						public static global::Epsitec.Common.Support.Druid CheckButton
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (185);
+							}
+						}
+						//	designer:str/300O5
+						public static global::Epsitec.Common.Support.Druid Title
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (184);
+							}
+						}
+					}
+				}
+				
+				public static class Forms
+				{
+					//	designer:str/300R
+					public static global::Epsitec.Common.Support.Druid TabCultures
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (27);
+						}
+					}
+					//	designer:str/30KP1
+					public static global::Epsitec.Common.Support.Druid TabMisc
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544377);
+						}
+					}
+					//	designer:str/300P
+					public static global::Epsitec.Common.Support.Druid TabProperties
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (25);
+						}
+					}
+					//	designer:str/302N4
+					public static global::Epsitec.Common.Support.Druid TabRelations
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554583);
+						}
+					}
+					public static class Error
+					{
+						//	designer:str/30KK1
+						public static global::Epsitec.Common.Support.Druid RelationUse
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544372);
+							}
+						}
+					}
+					
+					public static class Menu
+					{
+						//	designer:str/30KO1
+						public static global::Epsitec.Common.Support.Druid ClearDelta
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544376);
+							}
+						}
+						//	designer:str/30KM1
+						public static global::Epsitec.Common.Support.Druid ShowColumn1
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544374);
+							}
+						}
+						//	designer:str/30KN1
+						public static global::Epsitec.Common.Support.Druid ShowColumn2
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544375);
+							}
+						}
+						//	designer:str/30KL1
+						public static global::Epsitec.Common.Support.Druid ShowGuid
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544373);
+							}
+						}
+						//	designer:str/30215
+						public static global::Epsitec.Common.Support.Druid ShowPrefix
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554593);
+							}
+						}
+					}
+					
+					public static class MiscPage
+					{
+						//	designer:str/30KJ1
+						public static global::Epsitec.Common.Support.Druid Height
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544371);
+							}
+						}
+						//	designer:str/30KI1
+						public static global::Epsitec.Common.Support.Druid Width
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544370);
+							}
+						}
+					}
+					
+					public static class TableContent
+					{
+						//	designer:str/30K61
+						public static global::Epsitec.Common.Support.Druid Hide
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544358);
+							}
+						}
+					}
+					
+					public static class Title
+					{
+						//	designer:str/302V4
+						public static global::Epsitec.Common.Support.Druid Delta
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554591);
+							}
+						}
+						//	designer:str/30205
+						public static global::Epsitec.Common.Support.Druid DeltaNormal
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554592);
+							}
+						}
+						//	designer:str/302U4
+						public static global::Epsitec.Common.Support.Druid Normal
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554590);
+							}
+						}
+					}
+				}
+				
+				public static class Identity
+				{
+					//	designer:str/302V3
+					public static global::Epsitec.Common.Support.Druid Developer
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554559);
+						}
+					}
+					//	designer:str/302U3
+					public static global::Epsitec.Common.Support.Druid God
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554558);
+						}
+					}
+				}
+				
+				public static class Panels
+				{
+					//	designer:str/300S
+					public static global::Epsitec.Common.Support.Druid Info
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (28);
+						}
+					}
+					//	designer:str/300O
+					public static global::Epsitec.Common.Support.Druid New
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (24);
+						}
+					}
+					//	designer:str/300T
+					public static global::Epsitec.Common.Support.Druid Rectangle
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (29);
+						}
+					}
+					//	designer:str/30KQ1
+					public static global::Epsitec.Common.Support.Druid TabCultures
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544378);
+						}
+					}
+					//	designer:str/302O4
+					public static global::Epsitec.Common.Support.Druid TabFields
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (33554584);
+						}
+					}
+					//	designer:str/300Q
+					public static global::Epsitec.Common.Support.Druid TabObjects
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (26);
+						}
+					}
+					//	designer:str/30KR1
+					public static global::Epsitec.Common.Support.Druid TabProperties
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544379);
+						}
+					}
+					public static class StatusBar
+					{
+						//	designer:str/300K9
+						public static global::Epsitec.Common.Support.Druid All
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (308);
+							}
+						}
+						//	designer:str/300I9
+						public static global::Epsitec.Common.Support.Druid Children
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (306);
+							}
+						}
+						//	designer:str/300E9
+						public static global::Epsitec.Common.Support.Druid DeselectAll
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (302);
+							}
+						}
+						//	designer:str/300J9
+						public static global::Epsitec.Common.Support.Druid Next
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (307);
+							}
+						}
+						//	designer:str/300G9
+						public static global::Epsitec.Common.Support.Druid Parent
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (304);
+							}
+						}
+						//	designer:str/300F9
+						public static global::Epsitec.Common.Support.Druid Root
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (303);
+							}
+						}
+						//	designer:str/300H9
+						public static global::Epsitec.Common.Support.Druid This
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (305);
+							}
+						}
+					}
+				}
+				
+				public static class Source
+				{
+					public static class Short
+					{
+						//	designer:str/302T3
+						public static global::Epsitec.Common.Support.Druid Merge
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554557);
+							}
+						}
+						//	designer:str/302S3
+						public static global::Epsitec.Common.Support.Druid Patch
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554556);
+							}
+						}
+						//	designer:str/302R3
+						public static global::Epsitec.Common.Support.Druid Reference
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554555);
+							}
+						}
+					}
+				}
+				
+				public static class Strings
+				{
+					//	designer:str/300N
+					public static global::Epsitec.Common.Support.Druid About
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (23);
+						}
+					}
+					//	designer:str/300M
+					public static global::Epsitec.Common.Support.Druid Edit
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (22);
+						}
+					}
+					//	designer:str/300L
+					public static global::Epsitec.Common.Support.Druid Reference
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (21);
+						}
+					}
+				}
+				
+				public static class Types
+				{
+					public static class Binary
+					{
+						//	designer:str/30089
+						public static global::Epsitec.Common.Support.Druid Mime
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (296);
+							}
+						}
+					}
+					
+					public static class Boolean
+					{
+						//	designer:str/302I4
+						public static global::Epsitec.Common.Support.Druid Default
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554578);
+							}
+						}
+						//	designer:str/302K4
+						public static global::Epsitec.Common.Support.Druid False
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554580);
+							}
+						}
+						//	designer:str/302J4
+						public static global::Epsitec.Common.Support.Druid True
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554579);
+							}
+						}
+					}
+					
+					public static class Controller
+					{
+						//	designer:str/300H7
+						public static global::Epsitec.Common.Support.Druid Title
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (241);
+							}
+						}
+					}
+					
+					public static class DateTime
+					{
+						//	designer:str/300U8
+						public static global::Epsitec.Common.Support.Druid DateMax
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (286);
+							}
+						}
+						//	designer:str/300T8
+						public static global::Epsitec.Common.Support.Druid DateMin
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (285);
+							}
+						}
+						//	designer:str/300V8
+						public static global::Epsitec.Common.Support.Druid DateStep
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (287);
+							}
+						}
+						//	designer:str/302E4
+						public static global::Epsitec.Common.Support.Druid Default
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554574);
+							}
+						}
+						//	designer:str/30079
+						public static global::Epsitec.Common.Support.Druid Resolution
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (295);
+							}
+						}
+						//	designer:str/30049
+						public static global::Epsitec.Common.Support.Druid Sample
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (292);
+							}
+						}
+						//	designer:str/30019
+						public static global::Epsitec.Common.Support.Druid TimeMax
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (289);
+							}
+						}
+						//	designer:str/30009
+						public static global::Epsitec.Common.Support.Druid TimeMin
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (288);
+							}
+						}
+						//	designer:str/30029
+						public static global::Epsitec.Common.Support.Druid TimeStep
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (290);
+							}
+						}
+						public static class Res
+						{
+							//	designer:str/30284
+							public static global::Epsitec.Common.Support.Druid Days
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (33554568);
+								}
+							}
+							//	designer:str/30274
+							public static global::Epsitec.Common.Support.Druid Hours
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (33554567);
+								}
+							}
+							//	designer:str/302B4
+							public static global::Epsitec.Common.Support.Druid Milliseconds
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (33554571);
+								}
+							}
+							//	designer:str/30254
+							public static global::Epsitec.Common.Support.Druid Minutes
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (33554565);
+								}
+							}
+							//	designer:str/302A4
+							public static global::Epsitec.Common.Support.Druid Months
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (33554570);
+								}
+							}
+							//	designer:str/30264
+							public static global::Epsitec.Common.Support.Druid Seconds
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (33554566);
+								}
+							}
+							//	designer:str/30294
+							public static global::Epsitec.Common.Support.Druid Weeks
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (33554569);
+								}
+							}
+							//	designer:str/302C4
+							public static global::Epsitec.Common.Support.Druid Years
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (33554572);
+								}
+							}
+						}
+					}
+					
+					public static class Editor
+					{
+						//	designer:str/30078
+						public static global::Epsitec.Common.Support.Druid Binary
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (263);
+							}
+						}
+						//	designer:str/300J7
+						public static global::Epsitec.Common.Support.Druid Boolean
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (243);
+							}
+						}
+						//	designer:str/30038
+						public static global::Epsitec.Common.Support.Druid Collection
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (259);
+							}
+						}
+						//	designer:str/30048
+						public static global::Epsitec.Common.Support.Druid Date
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (260);
+							}
+						}
+						//	designer:str/30068
+						public static global::Epsitec.Common.Support.Druid DateTime
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (262);
+							}
+						}
+						//	designer:str/300M7
+						public static global::Epsitec.Common.Support.Druid Decimal
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (246);
+							}
+						}
+						//	designer:str/300O7
+						public static global::Epsitec.Common.Support.Druid Enum
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (248);
+							}
+						}
+						//	designer:str/300K7
+						public static global::Epsitec.Common.Support.Druid Integer
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (244);
+							}
+						}
+						//	designer:str/300L7
+						public static global::Epsitec.Common.Support.Druid LongInteger
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (245);
+							}
+						}
+						//	designer:str/300D7
+						public static global::Epsitec.Common.Support.Druid Native
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (237);
+							}
+						}
+						//	designer:str/300N7
+						public static global::Epsitec.Common.Support.Druid String
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (247);
+							}
+						}
+						//	designer:str/300P7
+						public static global::Epsitec.Common.Support.Druid Structured
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (249);
+							}
+						}
+						//	designer:str/30058
+						public static global::Epsitec.Common.Support.Druid Time
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (261);
+							}
+						}
+						//	designer:str/30057
+						public static global::Epsitec.Common.Support.Druid Title
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (229);
+							}
+						}
+						//	designer:str/300I7
+						public static global::Epsitec.Common.Support.Druid Void
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (242);
+							}
+						}
+					}
+					
+					public static class Enum
+					{
+						//	designer:str/300R7
+						public static global::Epsitec.Common.Support.Druid RowDescription
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (251);
+							}
+						}
+						//	designer:str/300S7
+						public static global::Epsitec.Common.Support.Druid RowIcon
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (252);
+							}
+						}
+						//	designer:str/300Q7
+						public static global::Epsitec.Common.Support.Druid RowName
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (250);
+							}
+						}
+						public static class Question
+						{
+							//	designer:str/302D4
+							public static global::Epsitec.Common.Support.Druid Delete
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (33554573);
+								}
+							}
+						}
+					}
+					
+					public static class Native
+					{
+						//	designer:str/3026
+						public static global::Epsitec.Common.Support.Druid Type
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554438);
+							}
+						}
+					}
+					
+					public static class Nullable
+					{
+						//	designer:str/300G7
+						public static global::Epsitec.Common.Support.Druid CheckButton
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (240);
+							}
+						}
+						//	designer:str/300F7
+						public static global::Epsitec.Common.Support.Druid Title
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (239);
+							}
+						}
+					}
+					
+					public static class Numeric
+					{
+						//	designer:str/30088
+						public static global::Epsitec.Common.Support.Druid CompactStorage
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (264);
+							}
+						}
+						//	designer:str/302F4
+						public static global::Epsitec.Common.Support.Druid Default
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554575);
+							}
+						}
+						//	designer:str/30027
+						public static global::Epsitec.Common.Support.Druid LargeStep
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (226);
+							}
+						}
+						//	designer:str/300S6
+						public static global::Epsitec.Common.Support.Druid Max
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (220);
+							}
+						}
+						//	designer:str/300R6
+						public static global::Epsitec.Common.Support.Druid Min
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (219);
+							}
+						}
+						//	designer:str/300V6
+						public static global::Epsitec.Common.Support.Druid PreferredMax
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (223);
+							}
+						}
+						//	designer:str/300U6
+						public static global::Epsitec.Common.Support.Druid PreferredMin
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (222);
+							}
+						}
+						//	designer:str/30007
+						public static global::Epsitec.Common.Support.Druid PreferredResol
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (224);
+							}
+						}
+						//	designer:str/300T6
+						public static global::Epsitec.Common.Support.Druid Resol
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (221);
+							}
+						}
+						//	designer:str/30069
+						public static global::Epsitec.Common.Support.Druid Sample
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (294);
+							}
+						}
+						//	designer:str/30017
+						public static global::Epsitec.Common.Support.Druid SmallStep
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (225);
+							}
+						}
+					}
+					
+					public static class String
+					{
+						//	designer:str/302G4
+						public static global::Epsitec.Common.Support.Druid Default
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554576);
+							}
+						}
+						//	designer:str/30018
+						public static global::Epsitec.Common.Support.Druid FixedLength
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (257);
+							}
+						}
+						//	designer:str/30KS2
+						public static global::Epsitec.Common.Support.Druid Formatted
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544412);
+							}
+						}
+						//	designer:str/30047
+						public static global::Epsitec.Common.Support.Druid Max
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (228);
+							}
+						}
+						//	designer:str/30037
+						public static global::Epsitec.Common.Support.Druid Min
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (227);
+							}
+						}
+						//	designer:str/30028
+						public static global::Epsitec.Common.Support.Druid Multilingual
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (258);
+							}
+						}
+						//	designer:str/300B8
+						public static global::Epsitec.Common.Support.Druid Sample
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (267);
+							}
+						}
+					}
+					
+					public static class Structured
+					{
+						//	designer:str/300V7
+						public static global::Epsitec.Common.Support.Druid Caption
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (255);
+							}
+						}
+						//	designer:str/300V9
+						public static global::Epsitec.Common.Support.Druid Inclusion
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (319);
+							}
+						}
+						//	designer:str/3004A
+						public static global::Epsitec.Common.Support.Druid Name
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (324);
+							}
+						}
+						//	designer:str/30008
+						public static global::Epsitec.Common.Support.Druid NewName
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (256);
+							}
+						}
+						//	designer:str/300T7
+						public static global::Epsitec.Common.Support.Druid Type
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (253);
+							}
+						}
+					}
+					
+					public static class Summary
+					{
+						//	designer:str/300I8
+						public static global::Epsitec.Common.Support.Druid BigStep
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (274);
+							}
+						}
+						//	designer:str/300J8
+						public static global::Epsitec.Common.Support.Druid Compact
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (275);
+							}
+						}
+						//	designer:str/300N8
+						public static global::Epsitec.Common.Support.Druid DateMax
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (279);
+							}
+						}
+						//	designer:str/300M8
+						public static global::Epsitec.Common.Support.Druid DateMin
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (278);
+							}
+						}
+						//	designer:str/300R8
+						public static global::Epsitec.Common.Support.Druid DateStep
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (283);
+							}
+						}
+						//	designer:str/302H4
+						public static global::Epsitec.Common.Support.Druid Default
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554577);
+							}
+						}
+						//	designer:str/300K8
+						public static global::Epsitec.Common.Support.Druid Fix
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (276);
+							}
+						}
+						//	designer:str/30KT2
+						public static global::Epsitec.Common.Support.Druid Formatted
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544413);
+							}
+						}
+						//	designer:str/300D8
+						public static global::Epsitec.Common.Support.Druid Max
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (269);
+							}
+						}
+						//	designer:str/300S8
+						public static global::Epsitec.Common.Support.Druid Mime
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (284);
+							}
+						}
+						//	designer:str/300C8
+						public static global::Epsitec.Common.Support.Druid Min
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (268);
+							}
+						}
+						//	designer:str/300L8
+						public static global::Epsitec.Common.Support.Druid Multi
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (277);
+							}
+						}
+						//	designer:str/3027
+						public static global::Epsitec.Common.Support.Druid Native
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (33554439);
+							}
+						}
+						//	designer:str/300G8
+						public static global::Epsitec.Common.Support.Druid Resolution
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (272);
+							}
+						}
+						//	designer:str/300F8
+						public static global::Epsitec.Common.Support.Druid Sample
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (271);
+							}
+						}
+						//	designer:str/300H8
+						public static global::Epsitec.Common.Support.Druid SmallStep
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (273);
+							}
+						}
+						//	designer:str/300P8
+						public static global::Epsitec.Common.Support.Druid TimeMax
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (281);
+							}
+						}
+						//	designer:str/300O8
+						public static global::Epsitec.Common.Support.Druid TimeMin
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (280);
+							}
+						}
+						//	designer:str/300Q8
+						public static global::Epsitec.Common.Support.Druid TimeStep
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (282);
+							}
+						}
+					}
+				}
+			}
 		}
 		
 		static Res()

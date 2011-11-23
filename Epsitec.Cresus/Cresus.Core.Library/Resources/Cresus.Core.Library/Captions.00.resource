@@ -27,4 +27,7 @@
   <data name="Val.MergeSettingsMode.Exclusive" id="AP">&lt;s:data id="_0" f:Name="Exclusive" f:Labels="{Collection {Text 'Exclusif'}}" /&gt;</data>
   <data name="Typ.MergeSettingsMode" id="AN">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="MergeSettingsMode" f:_1.SystemType="E:Epsitec.Cresus.Core.Library.Settings.MergeSettingsMode, Cresus.Core.Library" f:_2.EnumValues="{Collection {Text '0 [EVAO]'}, {Text '1 [EVAP]'}, {Text '2 [EVAR]'}}" f:_1.DefaultValue="Epsitec.Cresus.Core.Library.Settings.MergeSettingsMode, Cresus.Core.Library/Inclusive" f:Labels="{Collection {Text 'Mode des réglages'}}" /&gt;</data>
   <data name="Val.MergeSettingsMode.Override" id="AR">&lt;s:data id="_0" f:Name="Override" f:Labels="{Collection {Text 'Redéfinit'}}" /&gt;</data>
+  <data name="Cap.ActionButton.Create" id="AS">&lt;s:data id="_0" f:Name="ActionButton.Create" f:Description="Crée et ajoute un élément nouveau dans la liste" f:Labels="{Collection {Text 'Ajouter'}}" /&gt;</data>
+  <data name="Cap.ActionButton.Delete" id="AT">&lt;s:data id="_0" f:Name="ActionButton.Delete" f:Description="Supprime cet élément de la liste" f:Labels="{Collection {Text 'Supprimer'}}" /&gt;</data>
+  <data name="Cap.ActionButton.Undefined" id="AU">&lt;s:data id="_0" f:Name="ActionButton.Undefined" f:Description="Action indéfinie" f:Labels="{Collection {Text '?'}}" /&gt;</data>
 </bundle>

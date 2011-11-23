@@ -73,6 +73,68 @@ namespace Epsitec.Cresus.Core.Library
 			
 		}
 		
+		public static class Captions
+		{
+			internal static void _Initialize()
+			{
+			}
+			
+			public static class ActionButton
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/EVAS
+				public static global::Epsitec.Common.Types.Caption Create
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 28));
+					}
+				}
+				//	designer:cap/EVAT
+				public static global::Epsitec.Common.Types.Caption Delete
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 29));
+					}
+				}
+				//	designer:cap/EVAU
+				public static global::Epsitec.Common.Types.Caption Undefined
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 30));
+					}
+				}
+			}
+			
+		}
+		
+		public static class CaptionIds
+		{
+			internal static void _Initialize()
+			{
+			}
+			
+			public static class ActionButton
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/EVAS
+				public const long Create = 0x3EE0000A00001CL;
+				//	designer:cap/EVAT
+				public const long Delete = 0x3EE0000A00001DL;
+				//	designer:cap/EVAU
+				public const long Undefined = 0x3EE0000A00001EL;
+			}
+			
+		}
+		
 		public static class Types
 		{
 			internal static void _Initialize()
@@ -364,6 +426,10 @@ namespace Epsitec.Cresus.Core.Library
 			CommandIds._Initialize ();
 			CommandIds.Edition._Initialize ();
 			CommandIds.History._Initialize ();
+			Captions._Initialize ();
+			Captions.ActionButton._Initialize ();
+			CaptionIds._Initialize ();
+			CaptionIds.ActionButton._Initialize ();
 			Types._Initialize ();
 			Values._Initialize ();
 			Values.EnumValueCardinality._Initialize ();

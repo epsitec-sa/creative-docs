@@ -31,9 +31,9 @@ namespace Epsitec.Common.Support
 		/// <param name="druid">The druid to copy from.</param>
 		public Druid(Druid druid)
 		{
-			this.module = druid.module;
+			this.module    = druid.module;
 			this.developer = druid.developer;
-			this.local = druid.local;
+			this.local     = druid.local;
 		}
 
 		/// <summary>
@@ -43,9 +43,9 @@ namespace Epsitec.Common.Support
 		/// <param name="module">The module id to use.</param>
 		public Druid(Druid druid, int module)
 		{
-			this.module = module+1;
+			this.module    = module+1;
 			this.developer = druid.developer;
-			this.local = druid.local;
+			this.local     = druid.local;
 		}
 
 		/// <summary>
@@ -55,9 +55,9 @@ namespace Epsitec.Common.Support
 		/// <param name="local">The local id.</param>
 		public Druid(int dev, int local)
 		{
-			this.module = 0;
+			this.module    = 0;
 			this.developer = dev+1;
-			this.local = local+1;
+			this.local     = local+1;
 		}
 
 		/// <summary>
@@ -68,9 +68,9 @@ namespace Epsitec.Common.Support
 		/// <param name="local">The local id.</param>
 		public Druid(int module, int dev, int local)
 		{
-			this.module = module+1;
+			this.module    = module+1;
 			this.developer = dev+1;
-			this.local = local+1;
+			this.local     = local+1;
 		}
 
 		/// <summary>
@@ -79,9 +79,22 @@ namespace Epsitec.Common.Support
 		/// exception if the value has an unrecognized or invalid format.
 		/// </summary>
 		/// <param name="value">The value (it will get parsed by <c>Druid.Parse</c>).</param>
-		public Druid(string value) : this (Druid.Parse (value))
+		public Druid(string value)
+			: this (Druid.Parse (value))
 		{
 		}
+
+
+		/// <summary>
+		/// Performs an implicit conversion from <c>long</c> to <see cref="Druid"/>.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The result of the conversion.</returns>
+		public static implicit operator Druid(long value)
+		{
+			return Druid.FromLong (value);
+		}
+
 
 		/// <summary>
 		/// Gets a value indicating whether this instance is empty.

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModuleInfo id="1006" name="Cresus.Core.Library" layer="s" textMode="String" assemblies="Cresus.Core.Library" namespace="Epsitec.Cresus.Core.Library" namespaceEntities="Epsitec.Cresus.Core">
   <Versions>
-    <Version id="1" build="17" date="2011-11-07T04:40:55.4558359Z" />
+    <Version id="1" build="20" date="2011-11-23T04:49:52.9041964Z" />
   </Versions>
 </ModuleInfo>
