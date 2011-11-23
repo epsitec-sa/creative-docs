@@ -16,6 +16,8 @@ using System.Diagnostics;
 
 using System.Collections.Generic;
 
+using System.Globalization;
+
 using System.Linq;
 
 
@@ -95,7 +97,7 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 						}
 						else
 						{
-							Debug.WriteLine (string.Format ("Error: /entity/{0} cannot resolve member {1}", paramEntityKey, memberKey));
+							Debug.WriteLine (string.Format (CultureInfo.InvariantCulture, "Error: /entity/{0} cannot resolve member {1}", paramEntityKey, memberKey));
 						}
 					}
 					catch (Exception e)

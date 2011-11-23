@@ -58,6 +58,10 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 		{
 			this.stopTokenCancellationSource.Cancel ();
 			this.workerThread.Join ();
+
+			this.stopTokenCancellationSource.Dispose ();
+			this.workerThreadStop.Dispose ();
+			this.actionQueue.Dispose ();
 		}
 
 

@@ -11,24 +11,24 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 	/// This class is used by the <see cref="LoginModule"/> to check the user's credentials.
 	/// It should use the users with the Core app.
 	/// </summary>
-	public sealed class AuthentificationManager : IDisposable
+	public sealed class AuthenticationManager : IDisposable
 	{
 
 
-		public AuthentificationManager()
+		public AuthenticationManager()
 		{
-			var coreSession =  new SafeCoreSession ("authentification manager session");
+			var coreSession =  new SafeCoreSession ("authentication manager session");
 			
 			this.safeCoreSession = coreSession;
 			this.userManager = this.safeCoreSession.Execute (cs => cs.CoreData.GetComponent<UserManager> ());
 		}
 
 
-		public bool CheckCredentials(string username, string password)
+		public bool CheckCredentials(string userName, string password)
 		{
 			Func<CoreSession, bool> function = _ =>
 			{
-				return this.userManager.CheckUserAuthentication (username, password);
+				return this.userManager.CheckUserAuthentication (userName, password);
 			};
 
 			return this.safeCoreSession.Execute (function);

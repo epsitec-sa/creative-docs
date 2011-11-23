@@ -2,6 +2,8 @@
 
 using Epsitec.Common.Support;
 
+using System.Globalization;
+
 using System.IO;
 
 using System.Linq;
@@ -45,7 +47,7 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 			var iconRes = Misc.GetResourceIconUri (iconUri);
 			var iconName = iconRes.Substring (9);
 
-			return string.Format (IconManager.cssClassName, iconName.Replace ('.', '-').ToLower (), size);
+			return string.Format (CultureInfo.InvariantCulture, IconManager.cssClassName, iconName.Replace ('.', '-').ToLower (CultureInfo.InvariantCulture), size);
 		}
 
 
@@ -127,7 +129,7 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 		{
 			var cssClassname = IconManager.GetCSSClassName (iconUri, size);
 			string imgPath = string.Concat ("../", path);
-			var css = string.Format (IconManager.cssClass, cssClassname, imgPath);
+			var css = string.Format (CultureInfo.InvariantCulture, IconManager.cssClass, cssClassname, imgPath);
 
 			File.AppendAllText (this.cssFilename, css);
 		}
@@ -140,7 +142,7 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 		/// <returns></returns>
 		private string GetImageAbsoluteFilePath(string name, IconSize size)
 		{
-			var path = string.Format (this.imagesFilename, name.Replace ('.', '/'), size);
+			var path = string.Format (CultureInfo.InvariantCulture, this.imagesFilename, name.Replace ('.', '/'), size);
 			IconManager.EnsureDirectoryStructureExists (path);
 			return path;
 		}
@@ -148,7 +150,7 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 
 		private string GetImageRelativeFilePath(string name, IconSize size)
 		{
-			var path = string.Format (IconManager.baseImagesFilename, name.Replace ('.', '/'), size);
+			var path = string.Format (CultureInfo.InvariantCulture, IconManager.baseImagesFilename, name.Replace ('.', '/'), size);
 			return path;
 		}
 

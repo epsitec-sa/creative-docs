@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 		{
 			this.coreSessionManager = new CoreSessionManager (maxNbSessions, sessionTimeout);
 			this.coreSessionCleaner = new CoreSessionCleaner (this.coreSessionManager, sessionCleanupInterval);
-			this.authentificationManager = new AuthentificationManager ();
+			this.authenticationManager = new AuthenticationManager ();
 		}
 
 
@@ -26,18 +26,18 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 		}
 
 
-		public AuthentificationManager AuthentificationManager
+		public AuthenticationManager AuthenticationManager
 		{
 			get
 			{
-				return this.authentificationManager;
+				return this.authenticationManager;
 			}
 		}
 
 
 		public void Dispose()
 		{
-			this.authentificationManager.Dispose ();
+			this.authenticationManager.Dispose ();
 			this.coreSessionCleaner.Dispose ();
 			this.coreSessionManager.Dispose ();
 		}
@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 		private readonly CoreSessionCleaner coreSessionCleaner;
 
 
-		private readonly AuthentificationManager authentificationManager;
+		private readonly AuthenticationManager authenticationManager;
 
 
 	}

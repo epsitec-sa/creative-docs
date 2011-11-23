@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -60,7 +61,7 @@
     <Compile Include="CoreServer\SafeCoreSession.cs" />
     <Compile Include="CoreServer\Worker.cs" />
     <Compile Include="NancyHosting\CoreResponse.cs" />
-    <Compile Include="CoreServer\AuthentificationManager.cs" />
+    <Compile Include="CoreServer\AuthenticationManager.cs" />
     <Compile Include="NGinxServer.cs" />
     <Compile Include="UserInterface\WebBridge.cs" />
     <Compile Include="NancyModules\AbstractCoreSessionModule.cs" />

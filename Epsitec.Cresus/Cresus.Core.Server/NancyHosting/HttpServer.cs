@@ -59,6 +59,9 @@ namespace Epsitec.Cresus.Core.Server.NancyHosting
 
 			this.httpListener.Close ();
 			((IDisposable) this.httpListener).Dispose ();
+
+			this.stopEvent.Dispose ();
+			this.readyEvent.Dispose ();
 		}
 
 

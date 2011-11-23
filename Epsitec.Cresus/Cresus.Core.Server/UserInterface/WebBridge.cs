@@ -50,13 +50,13 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 					Debug.Assert (templateBrick != null);
 
 					if ((!Brick.ContainsProperty (templateBrick, BrickPropertyKey.Title)) &&
-					(!Brick.ContainsProperty (templateBrick, BrickPropertyKey.TitleCompact)))
+						(!Brick.ContainsProperty (templateBrick, BrickPropertyKey.TitleCompact)))
 					{
 						WebBridge.CreateDefaultTitleProperties (templateBrick);
 					}
 
 					if ((!Brick.ContainsProperty (templateBrick, BrickPropertyKey.Text)) &&
-					(!Brick.ContainsProperty (templateBrick, BrickPropertyKey.TextCompact)))
+						(!Brick.ContainsProperty (templateBrick, BrickPropertyKey.TextCompact)))
 					{
 						WebBridge.CreateDefaultTextProperties (templateBrick);
 					}
@@ -87,8 +87,8 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 					item.CompactTitle = item.Title;
 				}
 
-				// I've no idea where this comes from. It might be something totally outdated, but I'm not
-				// sure.
+				// I've no idea where this comes from. It might be something totally outdated, but
+				// I'm not sure.
 				if (Brick.ContainsProperty (brick, BrickPropertyKey.CollectionAnnotation))
 				{
 					item.DataType = TileDataType.CollectionItem;
@@ -104,15 +104,17 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 
 		public static BrickWall GetBrickWall(AbstractEntity entity, ViewControllerMode mode)
 		{
-			var controller = EntityViewControllerFactory.Create ("js", entity, mode, null, null, resolutionMode: ResolutionMode.InspectOnly);
-			var brickWall  = controller.CreateBrickWallForInspection ();
-
-			brickWall.BrickAdded += WebBridge.HandleBrickWallBrickAdded;
-			brickWall.BrickPropertyAdded += WebBridge.HandleBrickWallBrickPropertyAdded;
-
-			controller.BuildBricksForInspection (brickWall);
-
-			return brickWall;
+			using (var controller = EntityViewControllerFactory.Create ("js", entity, mode, null, null, resolutionMode: ResolutionMode.InspectOnly))
+			{
+				var brickWall = controller.CreateBrickWallForInspection ();
+				
+				brickWall.BrickAdded += WebBridge.HandleBrickWallBrickAdded;
+				brickWall.BrickPropertyAdded += WebBridge.HandleBrickWallBrickPropertyAdded;
+				
+				controller.BuildBricksForInspection (brickWall);
+				
+				return brickWall;
+			}
 		}
 
 

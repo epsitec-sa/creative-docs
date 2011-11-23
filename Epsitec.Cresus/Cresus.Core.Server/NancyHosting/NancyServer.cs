@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Core.Server.NancyHosting
 		{
 			if (this.baseUri == null)
 			{
-				throw new InvalidOperationException (String.Format ("Unable to locate base URI for request: {0}", request.Url));
+				throw new InvalidOperationException ("Unable to locate base URI for request: " + request.Url);
 			}
 
 			var expectedRequestLength = NancyServer.GetExpectedRequestLength (request.Headers.ToDictionary ());

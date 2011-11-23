@@ -21,6 +21,8 @@ using System.Diagnostics;
 using System.Collections;
 using System.Collections.Generic;
 
+using System.Globalization;
+
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -135,7 +137,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 					foreach (var e in col)
 					{
 						var panels = this.CreatePanelsForEntity (brick, item, e);
-						panels.ForEach (p => p["lambda"] = accessor.Id.ToString ());
+						panels.ForEach (p => p["lambda"] = accessor.Id.ToString (CultureInfo.InvariantCulture));
 						panels.ForEach (p => p["entityType"] = brickType.AssemblyQualifiedName);
 						list.AddRange (panels);
 					}
@@ -145,7 +147,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 					// This collection is empty, but we want to show its empty panel
 					// so the user will be able to add one.
 					var panel = this.CreateEmptyPanel (item);
-					panel["lambda"] = accessor.Id.ToString ();
+					panel["lambda"] = accessor.Id.ToString (CultureInfo.InvariantCulture);
 					panel["entityType"] = brickType.AssemblyQualifiedName;
 					list.Add (panel);
 				}
@@ -208,7 +210,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 		{
 			var panel = new Dictionary<string, object> ();
 
-			var controllerName = this.GetControllerName (this.controllerMode);
+			var controllerName = this.GetControllerName ();
 			panel["xtype"] = controllerName;
 
 			string title = item.Title.ToSimpleText ();
@@ -229,7 +231,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 			switch (this.controllerMode)
 			{
 				case ViewControllerMode.Summary:
-					PanelBuilder.AddControllerSpecificSummaryData (parent, brick, item, entity);
+					PanelBuilder.AddControllerSpecificSummaryData (parent, item, entity);
 					break;
 
 				case ViewControllerMode.Edition:
@@ -248,7 +250,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 		}
 
 
-		private static void AddControllerSpecificSummaryData(Dictionary<string, object> parent, Brick brick, WebTileDataItem item, AbstractEntity entity)
+		private static void AddControllerSpecificSummaryData(Dictionary<string, object> parent, WebTileDataItem item, AbstractEntity entity)
 		{
 			parent["html"] = entity.GetSummary ().ToString ();
 			parent["hideRemoveButton"] = item.HideRemoveButton;
@@ -336,7 +338,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 
 			if (lambda == null)
 			{
-				throw new ArgumentException (string.Format ("Expression {0} for input must be a lambda", expression.ToString ()));
+				throw new ArgumentException (string.Format (CultureInfo.InvariantCulture, "Expression {0} for input must be a lambda", expression.ToString ()));
 			}
 
 			var func = lambda.Compile ();
@@ -352,7 +354,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 
 			lambdaDictionnary["xtype"] = "hiddenfield";
 			lambdaDictionnary["name"] = PanelBuilder.GetLambdaFieldName (fieldName);
-			lambdaDictionnary["value"] = accessor == null ? "-1" : accessor.Id.ToString ();
+			lambdaDictionnary["value"] = accessor == null ? "-1" : accessor.Id.ToString (CultureInfo.InvariantCulture);
 
 			entityDictionnary["xtype"] = "textfield";
 			entityDictionnary["fieldLabel"] = title;
@@ -425,7 +427,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 					checkboxes.Add (dic);
 
 					dic["boxLabel"] = item.GetSummary ().ToSimpleText ();
-					dic["name"] = string.Format ("{0}[{1}]", entityDictionnary["name"], i++); // Copy the parent's ID
+					dic["name"] = string.Format (CultureInfo.InvariantCulture, "{0}[{1}]", entityDictionnary["name"], i++); // Copy the parent's ID
 					dic["inputValue"] = this.GetEntityKey (item);
 					dic["checked"] = found.Contains (item);
 					dic["uncheckedValue"] = ""; // We want to return "nothing" when nothing is checked (but we want to return something)
@@ -447,7 +449,7 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 			}
 
 			Debug.WriteLine (
-				string.Format ("*** Field {0} of type {1} : no automatic binding implemented in PanelBuilder",
+				string.Format (CultureInfo.InvariantCulture, "*** Field {0} of type {1} : no automatic binding implemented in PanelBuilder",
 					lambda.ToString (), fieldType.FullName));
 
 			return list;
@@ -465,7 +467,6 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 			var title = Brick.GetProperty (property.Brick, BrickPropertyKey.Title).StringValue;
 			dic["title"] = title;
 
-			new List<Dictionary<string, object>> ();
 			var list = this.CreateInput (property.Brick, null);
 
 			foreach (var l in list)
@@ -576,9 +577,9 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 		}
 
 
-		private string GetControllerName(ViewControllerMode mode)
+		private string GetControllerName()
 		{
-			return this.controllerMode.ToString ().ToLower ();
+			return this.controllerMode.ToString ().ToLower (CultureInfo.InvariantCulture);
 		}
 
 

@@ -26,13 +26,13 @@ namespace Epsitec.Cresus.Core.Server
 		{
 			ConsoleCreator.RunWithConsole (() =>
 			{
-				CoreServerProgram.Initialize ();
-				CoreServerProgram.Run ();
+				this.Initialize ();
+				this.Run ();
 			});
 		}
 
 
-		private static void Initialize()
+		private void Initialize()
 		{
 			Console.WriteLine ("Generating icons...");
 
@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Core.Server
 		}
 
 
-		private static void Run()
+		private void Run()
 		{
 			var nGinxAutorun = CoreServerProgram.nGinxAutorun;
 			var nGinxPath = CoreServerProgram.nGinxPath;

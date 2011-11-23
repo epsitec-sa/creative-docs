@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 			string username = form.username;
 			string password = form.password;
 
-			return this.ServerContext.AuthentificationManager.CheckCredentials (username, password);
+			return this.ServerContext.AuthenticationManager.CheckCredentials (username, password);
 		}
 
 

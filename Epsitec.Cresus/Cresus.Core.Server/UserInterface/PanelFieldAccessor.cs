@@ -31,7 +31,6 @@ namespace Epsitec.Cresus.Core.Server.UserInterface
 
 			var lambdaMember = (MemberExpression) lambda.Body;
 			var propertyInfo = lambdaMember.Member as PropertyInfo;
-			var typeField    = EntityInfo.GetStructuredTypeField (propertyInfo);
 			var fieldType    = lambda.ReturnType;
 			var sourceType   = lambda.Parameters[0].Type;
 

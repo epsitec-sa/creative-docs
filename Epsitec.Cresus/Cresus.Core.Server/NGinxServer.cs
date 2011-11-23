@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Core.Server
 				RedirectStandardInput = true,
 				RedirectStandardOutput = true,
 				UseShellExecute = false,
-				WorkingDirectory = this.path.Directory.FullName
+				WorkingDirectory = path.Directory.FullName
 			};
 		}
 
