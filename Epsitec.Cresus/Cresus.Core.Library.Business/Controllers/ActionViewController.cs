@@ -87,6 +87,21 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				yield return new ActionItem (ActionClasses.Delete, item.DeleteItem);
 			}
+
+			if (item.EntityMarshaler != null)
+			{
+				var entity        = item.EntityMarshaler.GetValue<AbstractEntity> ();
+				var entityType    = entity == null ? item.EntityMarshaler.MarshaledType : entity.GetType ();
+				var entityActions = ActionDispatcher.GetActionInfos (entityType);
+
+				foreach (var actionInfo in entityActions)
+				{
+					var info    = actionInfo;
+					var caption = TextFormatter.GetCurrentCultureCaption (actionInfo.CaptionId);
+					
+					yield return new ActionItem (info.ActionClass, () => info.ExecuteAction (entity), caption, weight: info.Weight);
+				}
+			}
 		}
 
 		private Epsitec.Common.Widgets.WindowRoot GetWindowRoot()

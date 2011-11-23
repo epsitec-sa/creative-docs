@@ -55,7 +55,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		private static ActionInfo CreateActionInfo(System.Reflection.MethodInfo method, ActionAttribute attribute)
 		{
-			return new ActionInfo (attribute.CaptionId, ActionDispatcher.CreateAction (method));
+			return new ActionInfo (attribute, ActionDispatcher.CreateAction (method));
 		}
 
 		private static System.Action<AbstractEntity> CreateAction(System.Reflection.MethodInfo method)

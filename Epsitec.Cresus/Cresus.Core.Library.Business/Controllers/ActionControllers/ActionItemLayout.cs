@@ -221,11 +221,11 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 				case ActionClasses.Create:
 				case ActionClasses.Start:
 				case ActionClasses.NextStep:
-				case ActionClasses.Output:
-				case ActionClasses.Input:
 					this.row = rowA;
 					break;
 
+				case ActionClasses.Output:
+				case ActionClasses.Input:
 				case ActionClasses.Delete:
 				case ActionClasses.Clear:
 				case ActionClasses.Validate:

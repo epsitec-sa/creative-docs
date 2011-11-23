@@ -12,18 +12,34 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// </summary>
 	public sealed class ActionInfo
 	{
-		internal ActionInfo(Druid captionId, System.Action<AbstractEntity> action)
+		internal ActionInfo(ActionAttribute attribute, System.Action<AbstractEntity> action)
 		{
-			this.captionId = captionId;
+			this.attribute = attribute;
 			this.action    = action;
 		}
 
+
+		public ActionClasses					ActionClass
+		{
+			get
+			{
+				return this.attribute.ActionClass;
+			}
+		}
 
 		public Druid							CaptionId
 		{
 			get
 			{
-				return this.captionId;
+				return this.attribute.CaptionId;
+			}
+		}
+
+		public double							Weight
+		{
+			get
+			{
+				return this.attribute.Weight;
 			}
 		}
 
@@ -41,7 +57,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
-		private readonly Druid					captionId;
+		private readonly ActionAttribute		attribute;
 		private readonly System.Action<AbstractEntity> action;
 	}
 }

@@ -17,11 +17,26 @@ namespace Epsitec.Common.Support.EntityEngine
 	
 	public sealed class ActionAttribute : System.Attribute
 	{
-		public ActionAttribute(long captionId)
+		public ActionAttribute(long captionId, double weight = 0.0)
+			: this (ActionClasses.None, captionId, weight)
 		{
-			this.captionId = captionId;
 		}
 
+		public ActionAttribute(ActionClasses actionClass, long captionId, double weight = 0.0)
+		{
+			this.actionClass = actionClass;
+			this.captionId = captionId;
+			this.weight = weight;
+		}
+
+		
+		public ActionClasses					ActionClass
+		{
+			get
+			{
+				return this.actionClass;
+			}
+		}
 
 		public Druid							CaptionId
 		{
@@ -31,7 +46,17 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		
+		public double							Weight
+		{
+			get
+			{
+				return this.weight;
+			}
+		}
+
+
+		private readonly ActionClasses			actionClass;
 		private readonly Druid					captionId;
+		private readonly double					weight;
 	}
 }

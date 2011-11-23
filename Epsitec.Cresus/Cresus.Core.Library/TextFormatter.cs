@@ -96,6 +96,11 @@ namespace Epsitec.Cresus.Core
 			return new FormattedText (string.Join (FormattedText.HtmlBreak, buffer.ToString ().Split (new string[] { FormattedText.HtmlBreak }, System.StringSplitOptions.RemoveEmptyEntries)).Replace ("()", ""));
 		}
 
+		public static Caption GetCurrentCultureCaption(Druid captionId)
+		{
+			return Resources.DefaultManager.GetCaption (captionId, ResourceLevel.Merged, TextFormatter.CurrentCulture);
+		}
+
 		public static Caption GetCurrentCultureCaption(Caption caption)
 		{
 			return Resources.DefaultManager.GetCaption (caption, TextFormatter.CurrentCulture);
