@@ -4,11 +4,11 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Controllers.ActionControllers
+namespace Epsitec.Common.Support.EntityEngine
 {
 	/// <summary>
-	/// The <c>ActionClasses</c> enumeration defines a few well-known <see cref="ActionClass"/>
-	/// instances.
+	/// The <c>ActionClasses</c> enumeration defines classes used to categorize actions.
+	/// See also <see cref="ActionInfo"/> and the <c>[Action]</c> attribute.
 	/// </summary>
 	public enum ActionClasses
 	{

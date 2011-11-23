@@ -359,6 +359,7 @@
     <Compile Include="Support\DisposableWrapper`1.cs" />
     <Compile Include="Support\EmptyDisposable.cs" />
     <Compile Include="Support\EntityEngine\ActionAttribute.cs" />
+    <Compile Include="Support\EntityEngine\ActionClasses.cs" />
     <Compile Include="Support\EntityEngine\ActionDispatcher.cs" />
     <Compile Include="Support\EntityEngine\ActionInfo.cs" />
     <Compile Include="Support\EntityEngine\EntityStatusAccumulationMode.cs" />

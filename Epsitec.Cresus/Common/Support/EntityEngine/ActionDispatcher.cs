@@ -1,6 +1,8 @@
 //	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.Extensions;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -43,9 +45,9 @@ namespace Epsitec.Common.Support.EntityEngine
 
 				if (parameters.Length == 0)
 				{
-					foreach (var attribute in method.GetCustomAttributes (typeof (ActionAttribute), true))
+					foreach (var attribute in method.GetCustomAttributes<ActionAttribute> (true))
 					{
-						yield return ActionDispatcher.CreateActionInfo (method, attribute as ActionAttribute);
+						yield return ActionDispatcher.CreateActionInfo (method, attribute);
 					}
 				}
 			}

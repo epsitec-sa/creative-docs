@@ -88,7 +88,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 
 				foreach (var method in methods.Where (x => (x.GetParameters ().Length == 0) && (x.ReturnType == typeof (void))))
 				{
-					var attributes = method.GetCustomAttributes<ActionAttribute> ();
+					var attributes = method.GetCustomAttributes<WorkflowActionAttribute> ();
 
 					if (attributes.IsEmpty ())
 					{

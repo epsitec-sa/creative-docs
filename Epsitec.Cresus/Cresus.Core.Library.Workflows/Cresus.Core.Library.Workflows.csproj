@@ -46,7 +46,7 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="Workflows\ActionAttribute.cs" />
+    <Compile Include="Workflows\WorkflowActionAttribute.cs" />
     <Compile Include="Workflows\ActionVerb.cs" />
     <Compile Include="Business\Rules\WorkflowBusinessRules.cs" />
     <Compile Include="Business\Rules\WorkflowThreadBusinessRules.cs" />
