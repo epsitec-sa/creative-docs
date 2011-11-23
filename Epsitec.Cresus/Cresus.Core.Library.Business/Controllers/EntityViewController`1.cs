@@ -35,12 +35,13 @@ namespace Epsitec.Cresus.Core.Controllers
 		protected EntityViewController()
 			: base (EntityViewControllerFactory.Default.ControllerName)
 		{
+			this.uiControllers = new List<EntityViewController> ();
+			
 			if (EntityViewControllerFactory.Default.ResolutionMode == Resolvers.ResolutionMode.InspectOnly)
 			{
 				return;
 			}
 
-			this.uiControllers = new List<EntityViewController> ();
 			this.entity        = EntityViewControllerFactory.Default.Entity as T;
 
 			System.Diagnostics.Debug.Assert (this.DataContext != null, "No DataContext");
