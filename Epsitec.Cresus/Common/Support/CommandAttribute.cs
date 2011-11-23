@@ -1,4 +1,4 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2004-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
@@ -6,7 +6,7 @@ namespace Epsitec.Common.Support
 	/// <summary>
 	/// The <c>CommandAttribute</c> class defines a <c>[Command]</c> attribute,
 	/// which is used by <see cref="CommandDispatcher"/> to locate the methods
-	/// implementating specific commands.
+	/// implementing specific commands.
 	/// </summary>
 	
 	[System.Serializable]
@@ -60,7 +60,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return Druid.FromLong (this.commandId);
+				return this.commandId;
 			}
 		}
 
