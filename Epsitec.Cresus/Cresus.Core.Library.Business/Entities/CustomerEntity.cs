@@ -58,5 +58,10 @@ namespace Epsitec.Cresus.Core.Entities
 				return a.EntityStatus;
 			}
 		}
+
+		[Action (ActionClasses.Output, Library.Res.CaptionIds.ActionButton.Undefined)]
+		public void Print()
+		{
+		}
 	}
 }

@@ -212,7 +212,8 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 		private void Classify()
 		{
 			int rowA = 0;
-			int rowB = (this.actionTarget == ActionTarget.Primary) ? 1 : this.Container.Index + 1;
+			int rowB = (this.actionTarget == ActionTarget.Primary) ? 0 : this.Container.Index + 1;
+			int rowC = (this.actionTarget == ActionTarget.Primary) ? 1 : this.Container.Index + 1;
 
 			var actionClass = this.Item.ActionClass.Class;
 
@@ -226,12 +227,15 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 
 				case ActionClasses.Output:
 				case ActionClasses.Input:
+					this.row = rowB;
+					break;
+
 				case ActionClasses.Delete:
 				case ActionClasses.Clear:
 				case ActionClasses.Validate:
 				case ActionClasses.Cancel:
 				case ActionClasses.Stop:
-					this.row = rowB;
+					this.row = rowC;
 					break;
 
 				case ActionClasses.None:
