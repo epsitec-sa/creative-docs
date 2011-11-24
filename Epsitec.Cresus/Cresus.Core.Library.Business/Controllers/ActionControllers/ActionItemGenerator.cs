@@ -98,6 +98,16 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 				var source  = action.SourceLines.FirstOrDefault () ?? "";
 				var command = source.Split ('.').Skip (1).FirstOrDefault () ?? "";
 
+				if (command.StartsWith ("CreateAffair"))
+				{
+					var affairTile = this.FindTileDataItem ("Affair");
+
+					if (affairTile != null)
+					{
+						this.CreateLayout (affairTile, new ActionItem (ActionClasses.Create, () => {}, TextFormatter.FormatText ("+", transition.Edge.Name)));
+					}
+				}
+				
 				System.Diagnostics.Debug.WriteLine ("Workflow command : " + command);
 			}
 		}
@@ -107,6 +117,20 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			this.layouts.Add (ActionItemLayout.Create (item, actionItem));
 		}
 
+		private TileDataItem FindTileDataItem(string name)
+		{
+			TileDataItem item;
+
+			if ((this.tileDataItemLookupTable.TryGetValue (name, out item)) ||
+				(this.tileDataItemLookupTable.TryGetValue (name + ".0", out item)))
+			{
+				return item;
+			}
+			else
+			{
+				return null;
+			}
+		}
 
 		private readonly BusinessContext context;
 		private readonly List<TileDataItem> tileDataItems;
