@@ -6,6 +6,7 @@ using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
+using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -36,17 +37,13 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public void Refresh(IEnumerable<TileDataItem> items)
 		{
-			this.layouts.Clear ();
+			ActionItemGenerator generator = new ActionItemGenerator (this.BusinessContext, items);
 
-			foreach (var item in items)
-			{
-				foreach (var actionItem in this.GenerateActionItems (item))
-				{
-					this.layouts.Add (ActionItemLayout.Create (item, actionItem));
-				}
-			}
+			this.layouts.Clear ();
+			this.layouts.AddRange (generator.GenerateLayouts ());
 
 			ActionItemLayout.UpdateLayout (this.layouts);
+
 			this.RemoveDuplicates ();
 		}
 
@@ -74,35 +71,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			graphics.RenderSolid ();
 		}
 
-		private IEnumerable<ActionItem> GenerateActionItems(TileDataItem item)
-		{
-			if ((item.HideAddButton == false) &&
-				(item.AddNewItem != null))
-			{
-				yield return new ActionItem (ActionClasses.Create, item.AddNewItem);
-			}
-
-			if ((item.HideRemoveButton == false) &&
-				(item.DeleteItem != null))
-			{
-				yield return new ActionItem (ActionClasses.Delete, item.DeleteItem);
-			}
-
-			if (item.EntityMarshaler != null)
-			{
-				var entity        = item.EntityMarshaler.GetValue<AbstractEntity> ();
-				var entityType    = entity == null ? item.EntityMarshaler.MarshaledType : entity.GetType ();
-				var entityActions = ActionDispatcher.GetActionInfos (entityType);
-
-				foreach (var actionInfo in entityActions)
-				{
-					var info    = actionInfo;
-					var caption = TextFormatter.GetCurrentCultureCaption (actionInfo.CaptionId);
-					
-					yield return new ActionItem (info.ActionClass, () => info.ExecuteAction (entity), caption, weight: info.Weight);
-				}
-			}
-		}
 
 		private Epsitec.Common.Widgets.WindowRoot GetWindowRoot()
 		{

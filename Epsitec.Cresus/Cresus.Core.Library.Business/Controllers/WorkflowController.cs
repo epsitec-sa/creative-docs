@@ -187,12 +187,39 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
+		public static IEnumerable<WorkflowTransition> GetEnabledTransitions(BusinessContext context, IWorkflowHost workflowHost)
+		{
+			var workflow = workflowHost == null ? null : workflowHost.Workflow;
+			
+			return WorkflowController.GetEnabledTransitions (context, workflow);
+		}
+
+		public static IEnumerable<WorkflowTransition> GetEnabledTransitions(BusinessContext context, WorkflowEntity workflow)
+		{
+			if (workflow.IsNull ())
+			{
+				return EmptyEnumerable<WorkflowTransition>.Instance;
+			}
+
+			var data = context.Data;
+			var user = (string) data.GetActiveUserItemCode ();
+			var workflows = new WorkflowEntity[1] { workflow };
+
+			return WorkflowController.GetEnabledTransitions (context, user, workflows);
+		}
+
+
 		private static IEnumerable<WorkflowTransition> GetEnabledTransitions(BusinessContext context, string activeUserCode)
 		{
-			return from workflow in WorkflowController.GetEnabledWorkflows (context).Distinct ()
+			return WorkflowController.GetEnabledTransitions (context, activeUserCode, WorkflowController.GetEnabledWorkflows (context));
+		}
+
+		private static IEnumerable<WorkflowTransition> GetEnabledTransitions(BusinessContext context, string activeUserCode, IEnumerable<WorkflowEntity> workflows)
+		{
+			return from workflow in workflows
 				   from thread in workflow.Threads
 				   where WorkflowController.IsActiveThread (thread, activeUserCode)
-				   let  node = WorkflowController.GetCurrentNode (thread)
+				   let node = WorkflowController.GetCurrentNode (thread)
 				   from edge in WorkflowController.GetEnabledEdges (thread, node)
 				   select new WorkflowTransition (context, workflow, thread, node, edge);
 		}
@@ -228,10 +255,10 @@ namespace Epsitec.Cresus.Core.Controllers
 				return EmptyEnumerable<WorkflowEntity>.Instance;
 			}
 
-			return from workflowHost in context.GetMasterEntities ().OfType<IWorkflowHost> ()
-				   let workflow = workflowHost.Workflow
-				   where workflow.IsNotNull ()
-				   select workflow;
+			return (from workflowHost in context.GetMasterEntities ().OfType<IWorkflowHost> ()
+				    let workflow = workflowHost.Workflow
+				    where workflow.IsNotNull ()
+				    select workflow).Distinct ();
 		}
 
 		private static WorkflowNodeEntity GetCurrentNode(WorkflowThreadEntity thread)

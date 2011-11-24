@@ -100,6 +100,7 @@
     <Compile Include="Business\ContentAccessors\DocumentItemAccessorMode.cs" />
     <Compile Include="Controllers\ActionControllers\ActionClass.cs" />
     <Compile Include="Controllers\ActionControllers\ActionItem.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionItemGenerator.cs" />
     <Compile Include="Controllers\ActionControllers\ActionItemLayout.cs" />
     <Compile Include="Controllers\ActionViewController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\AbstractArticleParameterController.cs" />
