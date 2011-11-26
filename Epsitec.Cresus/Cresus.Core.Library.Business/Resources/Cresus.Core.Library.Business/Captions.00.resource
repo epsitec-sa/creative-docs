@@ -265,4 +265,5 @@
   <data name="Fld.BusinessDocument.FooterText" id="AB9">&lt;s:data id="_0" f:Name="FooterText" f:Labels="{Collection {Text 'Salutations du pied de page'}}" /&gt;</data>
   <data name="Fld.Relation.Contacts" id="AC9">&lt;s:data id="_0" f:Name="Contacts" /&gt;</data>
   <data name="Fld.Affair.AssociatedSite" id="AD9">&lt;s:data id="_0" f:Name="AssociatedSite" /&gt;</data>
+  <data name="Cap.ActionButton.PrintCustomer" id="AE9">&lt;s:data id="_0" f:Name="ActionButton.PrintCustomer" f:Labels="{Collection {Text 'Imprimer'}}" /&gt;</data>
 </bundle>

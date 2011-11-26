@@ -137,6 +137,48 @@ namespace Epsitec.Cresus.Core.Library.Business
 			
 		}
 		
+		public static class Captions
+		{
+			internal static void _Initialize()
+			{
+			}
+			
+			public static class ActionButton
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/GVAE9
+				public static global::Epsitec.Common.Types.Caption PrintCustomer
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Business.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 302));
+					}
+				}
+			}
+			
+		}
+		
+		public static class CaptionIds
+		{
+			internal static void _Initialize()
+			{
+			}
+			
+			public static class ActionButton
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/GVAE9
+				public const long PrintCustomer = 0x3F00000A00012EL;
+			}
+			
+		}
+		
 		public static class Types
 		{
 			internal static void _Initialize()
@@ -1230,6 +1272,10 @@ namespace Epsitec.Cresus.Core.Library.Business
 			Commands.Lines._Initialize ();
 			CommandIds._Initialize ();
 			CommandIds.Lines._Initialize ();
+			Captions._Initialize ();
+			Captions.ActionButton._Initialize ();
+			CaptionIds._Initialize ();
+			CaptionIds.ActionButton._Initialize ();
 			Types._Initialize ();
 			Types.Decimal._Initialize ();
 			Types.Enum._Initialize ();

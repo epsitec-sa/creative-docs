@@ -10,6 +10,48 @@ namespace Epsitec.Cresus.Core.Library.Address
 	{
 		//	Code mapping for 'Caption' resources
 		
+		public static class Captions
+		{
+			internal static void _Initialize()
+			{
+			}
+			
+			public static class ActionButton
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/FVAM2
+				public static global::Epsitec.Common.Types.Caption Call
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Address.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 86));
+					}
+				}
+			}
+			
+		}
+		
+		public static class CaptionIds
+		{
+			internal static void _Initialize()
+			{
+			}
+			
+			public static class ActionButton
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/FVAM2
+				public const long Call = 0x3EF0000A000056L;
+			}
+			
+		}
+		
 		public static class Types
 		{
 			internal static void _Initialize()
@@ -447,6 +489,10 @@ namespace Epsitec.Cresus.Core.Library.Address
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Cresus.Core.Library.Address");
+			Captions._Initialize ();
+			Captions.ActionButton._Initialize ();
+			CaptionIds._Initialize ();
+			CaptionIds.ActionButton._Initialize ();
 			Types._Initialize ();
 			Types.Enum._Initialize ();
 			Values._Initialize ();

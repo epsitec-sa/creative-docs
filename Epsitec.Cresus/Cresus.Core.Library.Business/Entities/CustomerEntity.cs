@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
-		[Action (ActionClasses.Output, Library.Res.CaptionIds.ActionButton.Undefined)]
+		[Action (ActionClasses.Output, Library.Business.Res.CaptionIds.ActionButton.PrintCustomer)]
 		public void Print()
 		{
 		}
