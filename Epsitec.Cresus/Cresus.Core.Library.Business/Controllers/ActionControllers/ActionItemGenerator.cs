@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
@@ -127,23 +128,49 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 
 		private void GenerateWorkflowTransitionActionItem(TileDataItem item, WorkflowTransition transition)
 		{
-			var action  = WorkflowActionCompiler.Compile (transition.Edge.TransitionActions);
-			var source  = action.SourceLines.FirstOrDefault () ?? "";
-			var command = source.Split ('.').Skip (1).FirstOrDefault () ?? "";
+			var lines   = WorkflowActionCompiler.GetSourceLines (transition.Edge.TransitionActions);
+			var result  = WorkflowActionCompiler.Validate (lines);
+			var action  = result.WorkflowAction;
 
-			if (command.StartsWith ("CreateAffair"))
+			if ((action == null) ||
+				(action.IsInvalid))
 			{
-				var affairTile = this.FindTileDataItem ("Affair");
+				return;
+			}
 
-				if (affairTile != null)
+			if (this.CreateWorflowTransitionActionItem (transition, action))
+			{
+				return;
+			}
+
+			this.CreateLayout (item, new ActionItem (ActionClasses.NextStep, action.Action, TextFormatter.FormatText (">", transition.Edge.Name)));
+		}
+
+		private bool CreateWorflowTransitionActionItem(WorkflowTransition transition, WorkflowAction action)
+		{
+			var verb      = action.ActionVerbs.First ();
+			var attribute = verb.Attribute;
+			var command   = verb.Name;
+
+			if (attribute != null)
+			{
+				command = attribute.PublishedName ?? command;
+				var collectionItemName = EntityInfo.GetEntityName (attribute.CollectionItemType);
+
+				if (collectionItemName != null)
 				{
-					this.CreateLayout (affairTile, new ActionItem (ActionClasses.Create, () =>
+					var affairTile = this.FindTileDataItem (collectionItemName);
+
+					if (affairTile != null)
 					{
-					}, TextFormatter.FormatText ("+", transition.Edge.Name)));
+						this.CreateLayout (affairTile, new ActionItem (ActionClasses.Create, action.Action, TextFormatter.FormatText ("+", transition.Edge.Name)));
+
+						return true;
+					}
 				}
 			}
 
-			System.Diagnostics.Debug.WriteLine ("Workflow command : " + command);
+			return false;
 		}
 
 		private void CreateLayout(TileDataItem item, ActionItem actionItem)

@@ -64,6 +64,21 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		public static string GetEntityName(System.Type systemType)
+		{
+			if (systemType == null)
+			{
+				return null;
+			}
+			else if (systemType.IsEntity ())
+			{
+				return systemType.Name.StripSuffix ("Entity");
+			}
+			else
+			{
+				return null;
+			}
+		}
 
 		public static StructuredTypeField GetStructuredTypeField(Expression propertyLambdaExpression)
 		{

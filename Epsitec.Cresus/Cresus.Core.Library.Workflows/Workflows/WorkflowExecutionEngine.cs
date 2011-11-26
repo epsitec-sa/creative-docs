@@ -167,7 +167,8 @@ namespace Epsitec.Cresus.Core.Workflows
 		/// <returns><c>true</c> if the actions were successfully executed; otherwise, <c>false</c>.</returns>
 		private void ExecuteActions(string transitionActions)
 		{
-			var action = WorkflowActionCompiler.Compile (transitionActions);
+			var lines  = WorkflowActionCompiler.GetSourceLines (transitionActions);
+			var action = WorkflowActionCompiler.Compile (lines);
 			
 			action.Execute ();
 		}

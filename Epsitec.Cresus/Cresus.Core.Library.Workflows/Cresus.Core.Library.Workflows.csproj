@@ -59,6 +59,7 @@
     <Compile Include="Repositories\WorkflowRepository.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Workflows\SourceCode\Entities.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Workflows\SourceCode\Res.cs" />
+    <Compile Include="Workflows\WorkflowAction.cs" />
     <Compile Include="Workflows\WorkflowActionCompiler.cs" />
     <Compile Include="Workflows\WorkflowActionValidationResult.cs" />
     <Compile Include="Workflows\WorkflowCancellation.cs" />

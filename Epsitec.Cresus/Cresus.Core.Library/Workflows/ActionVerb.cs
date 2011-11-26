@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Workflows
 {
-	public sealed class ActionVerb
+	public struct ActionVerb
 	{
 		public ActionVerb(System.Reflection.MemberInfo memberInfo)
 		{
@@ -17,9 +17,18 @@ namespace Epsitec.Cresus.Core.Workflows
 
 		public ActionVerb(System.Reflection.MemberInfo memberInfo, WorkflowActionAttribute attribute)
 		{
-			this.name       = attribute.PublishedName;
+			this.name       = attribute.PublishedName ?? memberInfo.Name;
 			this.memberInfo = memberInfo;
 			this.attribute  = attribute;
+		}
+
+
+		public bool								IsEmpty
+		{
+			get
+			{
+				return this.memberInfo == null;
+			}
 		}
 
 		public string							Name
