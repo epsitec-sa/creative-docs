@@ -1,4 +1,4 @@
-//	Copyright © 2005-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2005-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -68,7 +68,7 @@ namespace Epsitec.Common.IO
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 
 			bool quote = false;
-			bool first = false;
+			bool first = true;
 
 			char fieldSep = format.FieldSeparator[0];
 
@@ -86,6 +86,8 @@ namespace Epsitec.Common.IO
 				}
 			}
 
+			char lineBreak = string.IsNullOrEmpty (format.MultilineSeparator) ? (char)0 : format.MultilineSeparator[0];
+
 			if (pos >= source.Length)
 			{
 				return items.ToArray ();
@@ -101,6 +103,7 @@ namespace Epsitec.Common.IO
 
 					if (first || !quote)
 					{
+						first = false;
 						continue;
 					}
 				}
@@ -130,6 +133,11 @@ namespace Epsitec.Common.IO
 				else
 				{
 					//	Character to be treated as data.
+				}
+
+				if (c == lineBreak)
+				{
+					c = '\n';
 				}
 
 				buffer.Append (c);

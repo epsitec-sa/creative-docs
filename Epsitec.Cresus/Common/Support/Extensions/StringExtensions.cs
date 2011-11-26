@@ -83,6 +83,116 @@ namespace Epsitec.Common.Support.Extensions
 		}
 
 		/// <summary>
+		/// Determines whether the specified string contains any of the
+		/// words, using space, non-breaking space, tab and newlines as
+		/// delimiters.
+		/// </summary>
+		/// <param name="value">The string.</param>
+		/// <param name="words">The words to look for.</param>
+		/// <returns>
+		///   <c>true</c> if the specified string contains any of the words; otherwise, <c>false</c>.
+		/// </returns>
+		public static bool ContainsAnyWords(this string value, params string[] words)
+		{
+			return value.ContainsAnyWords (StringExtensions.spaceSeparators, words);
+		}
+
+		/// <summary>
+		/// Determines whether the specified string contains any of the
+		/// words, using the given separator characters.
+		/// </summary>
+		/// <param name="value">The string.</param>
+		/// <param name="separators">The separators.</param>
+		/// <param name="words">The words to look for.</param>
+		/// <returns>
+		///   <c>true</c> if the specified string contains any of the words; otherwise, <c>false</c>.
+		/// </returns>
+		public static bool ContainsAnyWords(this string value, char[] separators, params string[] words)
+		{
+			var sourceTokens = value.ToLowerInvariant ().Split (separators, System.StringSplitOptions.RemoveEmptyEntries);
+			var searchTokens = words.Select (x => x.ToLowerInvariant ().Split (separators)).ToArray ();
+
+			for (int i = 0; i < sourceTokens.Length; i++)
+			{
+				foreach (var search in searchTokens)
+				{
+					int j = -1;
+
+					while (++j < search.Length)
+					{
+						if (sourceTokens[i+j] != search[j])
+						{
+							goto skip;
+						}
+					}
+
+					return true;
+
+				skip:
+					continue;
+				}
+			}
+
+			return false;
+		}
+
+		/// <summary>
+		/// Truncates the specified string.
+		/// </summary>
+		/// <param name="value">The string.</param>
+		/// <param name="maximumLength">The maximum length.</param>
+		/// <returns>The possibly truncated string.</returns>
+		public static string Truncate(this string value, int maximumLength)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return value;
+			}
+			else
+			{
+				if (value.Length <= maximumLength)
+				{
+					return value;
+				}
+				else
+				{
+					return value.Substring (0, maximumLength);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Truncates the specified string and adds an ellipsis if needed.
+		/// </summary>
+		/// <param name="value">The string.</param>
+		/// <param name="maximumLength">The maximum length.</param>
+		/// <param name="ellipsis">The ellipsis (by default, uses the single character <c>…</c>).</param>
+		/// <returns>The possibly truncated string.</returns>
+		public static string TruncateAndAddEllipsis(this string value, int maximumLength, string ellipsis = "\u2026")
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return value;
+			}
+			else
+			{
+				if (value.Length <= maximumLength)
+				{
+					return value;
+				}
+				else
+				{
+					if (ellipsis.Length > maximumLength)
+					{
+						throw new System.ArgumentException ("Ellipsis is longer than the maximum length");
+					}
+					
+					return string.Concat (value.Substring (0, maximumLength - ellipsis.Length), ellipsis);
+				}
+			}
+		}
+
+		/// <summary>
 		/// Determines whether the string contains the search text at the specified position.
 		/// </summary>
 		/// <param name="text">The string.</param>
@@ -93,6 +203,9 @@ namespace Epsitec.Common.Support.Extensions
 		/// </returns>
 		public static bool ContainsAtPosition(this string text, string search, int pos)
 		{
+			text.ThrowIfNull ("text");
+			search.ThrowIfNull ("search");
+			
 			if ((pos < 0) ||
 				(pos > text.Length))
 			{
@@ -297,9 +410,11 @@ namespace Epsitec.Common.Support.Extensions
 		static StringExtensions()
 		{
 			StringExtensions.alphaNumRegex = new Regex ("^[a-zA-Z0-9]*$", RegexOptions.Compiled);
+			StringExtensions.spaceSeparators = new char[] { ' ', '\t', '\n', '\r', '\u00A0' };
 		}
 
 
 		private static readonly Regex alphaNumRegex;
+		private static readonly char[] spaceSeparators;
 	}
 }
