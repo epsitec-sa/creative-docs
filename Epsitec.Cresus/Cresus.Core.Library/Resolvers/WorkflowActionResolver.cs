@@ -5,8 +5,6 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
-using Epsitec.Cresus.Core.Business;
-
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Core.Workflows;
@@ -16,31 +14,32 @@ namespace Epsitec.Cresus.Core.Resolvers
 	/// <summary>
 	/// The <c>BusinessActionResolver</c> returns a business action implementation.
 	/// </summary>
-	public static class BusinessActionResolver
+	public static class WorkflowActionResolver
 	{
 		/// <summary>
-		/// Resolves a business rule for the specified entity and rule types. This returns a
-		/// <see cref="CompositeBusinessAction"/> with zero, one or more simple rules.
+		/// Resolves an action class and returns its type, if it can be found.
 		/// </summary>
-		public static System.Type Resolve(string actionClass)
+		/// <param name="actionClass">The action class.</param>
+		/// <returns>The type of the action class, or <c>null</c>.</returns>
+		public static System.Type ResolveActionClass(string actionClass)
 		{
 			System.Type action;
 			
-			if (BusinessActionResolver.actionCache == null)
+			if (WorkflowActionResolver.actionCache == null)
 			{
-				BusinessActionResolver.actionCache = new Dictionary<string, System.Type> ();
+				WorkflowActionResolver.actionCache = new Dictionary<string, System.Type> ();
 			}
 			else
 			{
-				if (BusinessActionResolver.actionCache.TryGetValue (actionClass, out action))
+				if (WorkflowActionResolver.actionCache.TryGetValue (actionClass, out action))
 				{
 					return action;
 				}
 			}
 
-			action = BusinessActionResolver.FindBusinessActionSystemType (actionClass);
+			action = WorkflowActionResolver.FindBusinessActionSystemType (actionClass);
 
-			BusinessActionResolver.actionCache[actionClass] = action;
+			WorkflowActionResolver.actionCache[actionClass] = action;
 			
 			return action;
 		}
@@ -53,9 +52,9 @@ namespace Epsitec.Cresus.Core.Resolvers
 		/// </returns>
 		public static IEnumerable<string> GetActionClasses()
 		{
-			int suffixLen = BusinessActionResolver.ClassSuffixActions.Length;
+			int suffixLen = WorkflowActionResolver.ClassSuffixActions.Length;
 
-			return from type in BusinessActionResolver.FindBusinessActionSystemTypes ()
+			return from type in WorkflowActionResolver.FindBusinessActionSystemTypes ()
 				   let name = type.Name
 				   orderby name ascending
 				   select name.Substring (0, name.Length - suffixLen);
@@ -70,7 +69,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 		/// </returns>
 		public static IEnumerable<ActionVerb> GetActionVerbs(string actionClass)
 		{
-			return BusinessActionResolver.GetActionVerbs (BusinessActionResolver.Resolve (actionClass));
+			return WorkflowActionResolver.GetActionVerbs (WorkflowActionResolver.ResolveActionClass (actionClass));
 		}
 
 		/// <summary>
@@ -96,7 +95,10 @@ namespace Epsitec.Cresus.Core.Resolvers
 					}
 					else
 					{
-						yield return new ActionVerb (attributes.First ().PublishedName, method);
+						foreach (var attribute in attributes)
+						{
+							yield return new ActionVerb (method, attribute);
+						}
 					}
 				}
 			}
@@ -106,9 +108,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 		private static IEnumerable<System.Type> FindBusinessActionSystemTypes()
 		{
 			var types = from type in TypeEnumerator.Instance.GetAllTypes ()
-						let name = type.Name
-						where name.EndsWith (BusinessActionResolver.ClassSuffixActions)
-						where type.IsClass && type.IsAbstract && type.IsSealed
+						where type.IsStaticClass () && type.Name.EndsWith (WorkflowActionResolver.ClassSuffixActions)
 						select type;
 
 			return types;
@@ -116,12 +116,10 @@ namespace Epsitec.Cresus.Core.Resolvers
 
 		private static System.Type FindBusinessActionSystemType(string actionClass)
 		{
-			actionClass = actionClass + BusinessActionResolver.ClassSuffixActions;
+			actionClass = actionClass + WorkflowActionResolver.ClassSuffixActions;
 
 			var types = from type in TypeEnumerator.Instance.GetAllTypes ()
-						let name = type.Name
-						where name == actionClass
-						where type.IsClass && type.IsAbstract && type.IsSealed
+						where type.IsStaticClass () && type.Name == actionClass
 						select type;
 
 			return types.FirstOrDefault ();

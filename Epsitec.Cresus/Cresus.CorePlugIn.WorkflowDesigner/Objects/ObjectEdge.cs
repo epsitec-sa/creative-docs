@@ -629,10 +629,10 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 			combo.Items.Clear ();
 			combo.Items.Add (ObjectEdge.emptyTransitionAction);
 
-			var actionClasses = BusinessActionResolver.GetActionClasses ();
+			var actionClasses = WorkflowActionResolver.GetActionClasses ();
 			foreach (var actionClasse in actionClasses)
 			{
-				var verbs = BusinessActionResolver.GetActionVerbs (actionClasse).Select (x => x.Name);
+				var verbs = WorkflowActionResolver.GetActionVerbs (actionClasse).Select (x => x.Name);
 				foreach (var verb in verbs)
 				{
 					combo.Items.Add (string.Concat (actionClasse, ".", verb));

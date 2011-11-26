@@ -10,7 +10,10 @@ namespace Epsitec.Cresus.Core.Workflows
 	/// The <c>WorkflowActionAttribute</c> is used to tag a method which implements
 	/// an action verb.
 	/// </summary>
+	
+	[System.Serializable]
 	[System.AttributeUsage (System.AttributeTargets.Method)]
+	
 	public class WorkflowActionAttribute : System.Attribute
 	{
 		public WorkflowActionAttribute()
@@ -23,6 +26,12 @@ namespace Epsitec.Cresus.Core.Workflows
 		}
 
 		public string PublishedName
+		{
+			get;
+			set;
+		}
+
+		public System.Type CollectionItemType
 		{
 			get;
 			set;

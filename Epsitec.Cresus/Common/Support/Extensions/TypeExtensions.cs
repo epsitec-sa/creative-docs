@@ -16,6 +16,18 @@ namespace Epsitec.Common.Support.Extensions
 		}
 
 		/// <summary>
+		/// Determines whether the specified type is a static class.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <returns>
+		///   <c>true</c> if the specified type is a static class; otherwise, <c>false</c>.
+		/// </returns>
+		public static bool IsStaticClass(this System.Type type)
+		{
+			return type.IsClass && type.IsSealed && type.IsAbstract;
+		}
+
+		/// <summary>
 		/// Determines whether the type is a nullable type.
 		/// </summary>
 		/// <param name="type">The type.</param>

@@ -46,8 +46,6 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="Workflows\WorkflowActionAttribute.cs" />
-    <Compile Include="Workflows\ActionVerb.cs" />
     <Compile Include="Business\Rules\WorkflowBusinessRules.cs" />
     <Compile Include="Business\Rules\WorkflowThreadBusinessRules.cs" />
     <Compile Include="Entities\WorkflowDefinitionEntity.cs" />
@@ -59,10 +57,9 @@
     <Compile Include="Repositories\WorkflowDefinitionRepository.cs" />
     <Compile Include="Repositories\WorkflowNodeRepository.cs" />
     <Compile Include="Repositories\WorkflowRepository.cs" />
-    <Compile Include="Resolvers\BusinessActionResolver.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Workflows\SourceCode\Entities.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Workflows\SourceCode\Res.cs" />
-    <Compile Include="Workflows\WorkflowAction.cs" />
+    <Compile Include="Workflows\WorkflowActionCompiler.cs" />
     <Compile Include="Workflows\WorkflowActionValidationResult.cs" />
     <Compile Include="Workflows\WorkflowCancellation.cs" />
     <Compile Include="Workflows\WorkflowException.cs" />
@@ -109,6 +106,9 @@
       <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>
       <Name>Cresus.DataLayer</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resolvers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

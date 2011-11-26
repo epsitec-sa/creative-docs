@@ -8,13 +8,18 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Workflows;
 
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 {
-	class ActionItemGenerator
+	/// <summary>
+	/// The <c>ActionItemGenerator</c> class produces <see cref="ActionItemLayout"/> instances
+	/// based on a collection of <see cref="TileDataItem"/> items.
+	/// </summary>
+	public sealed class ActionItemGenerator
 	{
 		public ActionItemGenerator(BusinessContext context, IEnumerable<TileDataItem> items)
 		{
@@ -46,9 +51,10 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 
 			if (item.EntityMarshaler != null)
 			{
-				var entity = item.EntityMarshaler.GetValue<AbstractEntity> ();
+				var entity      = item.EntityMarshaler.GetValue<AbstractEntity> ();
+				var defaultType = item.EntityMarshaler.MarshaledType;
 				
-				this.GenerateEntityActionItems (item, entity);
+				this.GenerateEntityActionItems (item, defaultType, entity);
 				this.GenerateWorkflowActionItems (item, entity);
 			}
 		}
@@ -71,20 +77,41 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			}
 		}
 
-		private void GenerateEntityActionItems(TileDataItem item, AbstractEntity entity)
+		/// <summary>
+		/// Generates the <see cref="ActionLayoutItem"/> items for the actions that can be
+		/// executed on the specified entity.
+		/// </summary>
+		/// <param name="item">The tile data item.</param>
+		/// <param name="defaultType">The default type.</param>
+		/// <param name="entity">The entity.</param>
+		private void GenerateEntityActionItems(TileDataItem item, System.Type defaultType, AbstractEntity entity)
 		{
-			var entityType    = entity == null ? item.EntityMarshaler.MarshaledType : entity.GetType ();
+			var entityType    = entity == null ? defaultType : entity.GetType ();
 			var entityActions = ActionDispatcher.GetActionInfos (entityType);
 
 			foreach (var actionInfo in entityActions)
 			{
-				var info    = actionInfo;
-				var caption = TextFormatter.GetCurrentCultureCaption (actionInfo.CaptionId);
-
-				this.CreateLayout (item, new ActionItem (info.ActionClass, () => info.ExecuteAction (entity), caption, weight: info.Weight));
+				this.GenerateEntityActionItemForActionInfo (item, entity, actionInfo);
 			}
 		}
 
+		/// <summary>
+		/// Generates one <see cref="ActionLayoutItem"/> item for a given <see cref="ActionInfo"/>.
+		/// </summary>
+		/// <param name="item">The tile data item.</param>
+		/// <param name="entity">The entity.</param>
+		/// <param name="info">The action information (caption, callback and weight).</param>
+		private void GenerateEntityActionItemForActionInfo(TileDataItem item, AbstractEntity entity, ActionInfo info)
+		{
+			this.CreateLayout (item, new ActionItem (info.ActionClass, () => info.ExecuteAction (entity), info.CaptionId, weight: info.Weight));
+		}
+
+		/// <summary>
+		/// Generates the <see cref="ActionLayoutItem"/> items for the workflows hosted by
+		/// the specified entity.
+		/// </summary>
+		/// <param name="item">The tile data item.</param>
+		/// <param name="entity">The entity.</param>
 		private void GenerateWorkflowActionItems(TileDataItem item, AbstractEntity entity)
 		{
 			if (item.IsCompact || item.AutoGroup)
@@ -94,22 +121,29 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			
 			foreach (var transition in WorkflowController.GetEnabledTransitions (this.context, entity as IWorkflowHost))
 			{
-				var action  = Epsitec.Cresus.Core.Workflows.WorkflowAction.Parse (transition.Edge.TransitionActions);
-				var source  = action.SourceLines.FirstOrDefault () ?? "";
-				var command = source.Split ('.').Skip (1).FirstOrDefault () ?? "";
-
-				if (command.StartsWith ("CreateAffair"))
-				{
-					var affairTile = this.FindTileDataItem ("Affair");
-
-					if (affairTile != null)
-					{
-						this.CreateLayout (affairTile, new ActionItem (ActionClasses.Create, () => {}, TextFormatter.FormatText ("+", transition.Edge.Name)));
-					}
-				}
-				
-				System.Diagnostics.Debug.WriteLine ("Workflow command : " + command);
+				this.GenerateWorkflowTransitionActionItem (item, transition);
 			}
+		}
+
+		private void GenerateWorkflowTransitionActionItem(TileDataItem item, WorkflowTransition transition)
+		{
+			var action  = WorkflowActionCompiler.Compile (transition.Edge.TransitionActions);
+			var source  = action.SourceLines.FirstOrDefault () ?? "";
+			var command = source.Split ('.').Skip (1).FirstOrDefault () ?? "";
+
+			if (command.StartsWith ("CreateAffair"))
+			{
+				var affairTile = this.FindTileDataItem ("Affair");
+
+				if (affairTile != null)
+				{
+					this.CreateLayout (affairTile, new ActionItem (ActionClasses.Create, () =>
+					{
+					}, TextFormatter.FormatText ("+", transition.Edge.Name)));
+				}
+			}
+
+			System.Diagnostics.Debug.WriteLine ("Workflow command : " + command);
 		}
 
 		private void CreateLayout(TileDataItem item, ActionItem actionItem)

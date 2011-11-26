@@ -15,11 +15,13 @@ namespace Epsitec.Cresus.Core.Business.Actions
 {
 	public static class CustomerActions
 	{
+		[WorkflowAction (CollectionItemType=typeof (AffairEntity))]
 		public static void CreateAffairAndSalesQuote()
 		{
 			CustomerActions.CreateAffairAndFirstDocument (DocumentType.SalesQuote);
 		}
 
+		[WorkflowAction (CollectionItemType=typeof (AffairEntity))]
 		public static void CreateAffairAndDirectInvoice()
 		{
 			CustomerActions.CreateAffairAndFirstDocument (DocumentType.Invoice, "DirectInvoiceWorkflow");

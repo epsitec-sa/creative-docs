@@ -15,9 +15,18 @@ namespace Epsitec.Cresus.Core.Workflows
 	/// </summary>
 	public class WorkflowActionValidationResult : IValidationResult
 	{
-		public WorkflowActionValidationResult()
+		public WorkflowActionValidationResult(WorkflowAction action)
 		{
 			this.errors = new List<LineError> ();
+			this.action = action;
+		}
+
+		public WorkflowAction					WorkflowAction
+		{
+			get
+			{
+				return this.action;
+			}
 		}
 
 		public bool								HasErrors
@@ -104,6 +113,7 @@ namespace Epsitec.Cresus.Core.Workflows
 
 		#endregion
 
-		private List<LineError> errors;
+		private readonly List<LineError> errors;
+		private readonly WorkflowAction action;
 	}
 }

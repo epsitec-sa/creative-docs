@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -12,15 +12,16 @@ namespace Epsitec.Cresus.Core.Workflows
 		{
 			this.name       = memberInfo.Name;
 			this.memberInfo = memberInfo;
+			this.attribute  = null;
 		}
 
-		public ActionVerb(string name, System.Reflection.MemberInfo memberInfo)
+		public ActionVerb(System.Reflection.MemberInfo memberInfo, WorkflowActionAttribute attribute)
 		{
-			this.name       = name;
+			this.name       = attribute.PublishedName;
 			this.memberInfo = memberInfo;
+			this.attribute  = attribute;
 		}
 
-		
 		public string							Name
 		{
 			get
@@ -37,8 +38,16 @@ namespace Epsitec.Cresus.Core.Workflows
 			}
 		}
 
+		public WorkflowActionAttribute			Attribute
+		{
+			get
+			{
+				return this.attribute;
+			}
+		}
 
 		private readonly string name;
 		private readonly System.Reflection.MemberInfo memberInfo;
+		private readonly WorkflowActionAttribute attribute;
 	}
 }
