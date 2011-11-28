@@ -15,6 +15,9 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 {
+	/// <summary>
+	/// Objet ayant la forme d'un cercle.
+	/// </summary>
 	public class ObjectNode : LinkableObject
 	{
 		public ObjectNode(Editor editor, AbstractEntity entity)
@@ -565,12 +568,19 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 		public override ActiveElement MouseDetectForeground(Point pos)
 		{
 			//	Détecte l'élément actif visé par la souris.
+			var result = ActiveElement.None;
+
 			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked)
 			{
-				return this.DetectButtons (pos);
+				result = this.DetectButtons (pos);
+
+				if (result == ActiveElement.None && this.isExtended && AbstractObject.DetectRoundRectangle (this.ExtendedBounds, ObjectNode.frameRadius, pos))
+				{
+					result = ActiveElement.NodeHeader;
+				}
 			}
 
-			return ActiveElement.None;
+			return result;
 		}
 
 

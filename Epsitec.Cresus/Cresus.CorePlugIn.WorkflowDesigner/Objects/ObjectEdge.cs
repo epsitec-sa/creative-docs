@@ -17,6 +17,9 @@ using Epsitec.Cresus.Core.Workflows;
 
 namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 {
+	/// <summary>
+	/// Objet ayant la forme d'un rectangle allongé avec les extrémités gauche et droite arrondies.
+	/// </summary>
 	public class ObjectEdge : LinkableObject
 	{
 		public ObjectEdge(Editor editor, AbstractEntity entity)
@@ -498,7 +501,8 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 		{
 			if (this.editingElement == ActiveElement.EdgeHeader)
 			{
-				this.Entity.Name              = this.editingTextField.Text;
+				this.Entity.Name              = this.editingTextFieldPrimary.Text;
+				this.Entity.Labels            = this.editingTextFieldSecondary.Text;
 				this.Entity.TransitionActions = ObjectEdge.GetTransitionActions (this.editingTextFieldCombos);
 				this.UpdateTitle ();
 				this.UpdateSubtitle ();
@@ -514,7 +518,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 			if (this.editingElement == ActiveElement.EdgeEditDescription)
 			{
-				this.Entity.Description = this.editingTextField.Text;
+				this.Entity.Description = this.editingTextFieldPrimary.Text;
 				this.UpdateDescription ();
 			}
 
@@ -535,18 +539,24 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 		private void StartEdition(ActiveElement element)
 		{
 			Rectangle rect = Rectangle.Empty;
+			double height = 20;
 			string text = null;
 			var comboTexts = new List<string> ();
 
 			if (element == ActiveElement.EdgeHeader)
 			{
 				rect = this.RectangleTitle;
-				rect.Deflate (-4, 8);
+				rect.Deflate (-4, 4);
 
 				text = this.Entity.Name.ToString ();
 				comboTexts = ObjectEdge.GetTransitionActions (this.Entity.TransitionActions);
 
-				this.editingTextField = new TextField ();
+				this.editingTextFieldPrimary = new TextField ();
+				ToolTip.Default.SetToolTip (this.editingTextFieldPrimary, "Nom logique de la transition<br/><i>Champ \"Name\"</i>");
+
+				this.editingTextFieldSecondary = new TextFieldMulti ();
+				(this.editingTextFieldSecondary as TextFieldMulti).ScrollerVisibility = false;
+				ToolTip.Default.SetToolTip (this.editingTextFieldSecondary, "Diverses variantes de textes pour l'interface grahpique (une par ligne)<br/><i>Champ \"Labels\"</i>");
 
 				for (int i = 0; i < comboTexts.Count; i++)
 				{
@@ -558,12 +568,13 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 			{
 				rect = this.RectangleDescription;
 				rect.Inflate (6);
+				height = 5+15*4;  // place pour 4 lignes
 
 				text = this.Entity.Description.ToString ();
 
-				var field = new TextFieldMulti ();
-				field.ScrollerVisibility = false;
-				this.editingTextField = field;
+				this.editingTextFieldPrimary = new TextFieldMulti ();
+				(this.editingTextFieldPrimary as TextFieldMulti).ScrollerVisibility = false;
+				ToolTip.Default.SetToolTip (this.editingTextFieldPrimary, "Description de la transition<br/><i>Champ \"Description\"</i>");
 			}
 
 			if (rect.IsEmpty)
@@ -576,29 +587,40 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 			Point p1 = this.editor.ConvEditorToWidget (rect.TopLeft);
 			Point p2 = this.editor.ConvEditorToWidget (rect.BottomRight);
 			double width  = System.Math.Max (p2.X-p1.X, 150);
-			double height = 20;
 
 			rect = new Rectangle (new Point (p1.X, p1.Y-height), new Size (width, height));
 
-			this.editingTextField.Parent = this.editor;
-			this.editingTextField.SetManualBounds (rect);
-			this.editingTextField.Text = text;
-			this.editingTextField.TabIndex = 1;
-			this.editingTextField.SelectAll ();
-			this.editingTextField.Focus ();
+			this.editingTextFieldPrimary.Parent = this.editor;
+			this.editingTextFieldPrimary.SetManualBounds (rect);
+			this.editingTextFieldPrimary.Text = text;
+			this.editingTextFieldPrimary.TabIndex = 1;
+			this.editingTextFieldPrimary.SelectAll ();
+			this.editingTextFieldPrimary.Focus ();
 
-			rect.Offset (0, -2);
+			if (this.editingTextFieldSecondary != null)
+			{
+				height = 5+15*3;  // place pour 3 lignes
+				rect = new Rectangle (rect.Left, rect.Bottom+1-height, rect.Width, height);
+
+				this.editingTextFieldSecondary.Parent = this.editor;
+				this.editingTextFieldSecondary.SetManualBounds (rect);
+				this.editingTextFieldSecondary.Text = this.Entity.Labels.ToString ();
+				this.editingTextFieldSecondary.TabIndex = 2;
+			}
+
+			height = 20;
+			rect = new Rectangle (rect.Left, rect.Bottom-2-height, rect.Width, height);
 
 			for (int i = 0; i < comboTexts.Count; i++)
 			{
-				rect.Offset (0, -rect.Height+1);
-
 				this.editingTextFieldCombos[i].Parent = this.editor;
 				this.editingTextFieldCombos[i].SetManualBounds (rect);
 				this.editingTextFieldCombos[i].IsReadOnly = true;
-				this.editingTextFieldCombos[i].TabIndex = 2+i;
+				this.editingTextFieldCombos[i].TabIndex = 3+i;
 
 				this.UpdateTransitionActionCombo (this.editingTextFieldCombos[i], comboTexts[i], i);
+
+				rect.Offset (0, -rect.Height+1);
 			}
 
 			this.editor.EditingObject = this;
@@ -608,8 +630,14 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 
 		private void StopEdition()
 		{
-			this.editor.Children.Remove (this.editingTextField);
-			this.editingTextField = null;
+			this.editor.Children.Remove (this.editingTextFieldPrimary);
+			this.editingTextFieldPrimary = null;
+
+			if (this.editingTextFieldSecondary != null)
+			{
+				this.editor.Children.Remove (this.editingTextFieldSecondary);
+				this.editingTextFieldSecondary = null;
+			}
 
 			foreach (var combo in this.editingTextFieldCombos)
 			{
@@ -926,12 +954,19 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 		public override ActiveElement MouseDetectForeground(Point pos)
 		{
 			//	Détecte l'élément actif visé par la souris.
+			var result = ActiveElement.None;
+
 			if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked)
 			{
-				return this.DetectButtons (pos);
+				result = this.DetectButtons (pos);
+
+				if (result == ActiveElement.None && this.isExtended && this.RectangleDescription.Contains (pos))
+				{
+					result = ActiveElement.EdgeEditDescription;
+				}
 			}
 
-			return ActiveElement.None;
+			return result;
 		}
 
 
@@ -1413,7 +1448,8 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 		private TextLayout						description;
 
 		private ActiveElement					editingElement;
-		private AbstractTextField				editingTextField;
+		private AbstractTextField				editingTextFieldPrimary;
+		private AbstractTextField				editingTextFieldSecondary;
 		private List<TextFieldCombo>			editingTextFieldCombos;
 	}
 }

@@ -159,12 +159,12 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 				this.cartridge = new ObjectCartridge (this, this.workflowDefinitionEntity);
 			}
 
-			this.UpdateWorlflowNodes ();
+			this.UpdateWorkflowNodes ();
 			this.UpdateUniqueId ();
 			this.UpdateAfterGeometryChanged (null);
 		}
 
-		private void UpdateWorlflowNodes()
+		private void UpdateWorkflowNodes()
 		{
 			//	Reconstruit complètement la liste WorkflowDefinitionEntity.WorkflowNodes en fonction des
 			//	objets graphiques.
