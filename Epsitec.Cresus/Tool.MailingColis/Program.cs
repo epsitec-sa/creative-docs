@@ -48,7 +48,7 @@ namespace Epsitec.Tool.MailingColis
 
 			Engine engine = new Engine ();
 			
-			int startWith = 1000;
+			int startWith = 0;
 			int current = 0;
 
 			foreach (var address in addresses)
@@ -59,7 +59,7 @@ namespace Epsitec.Tool.MailingColis
 					
 					engine.PrintLabel (address);
 
-					System.Threading.Thread.Sleep (4*1000);
+//					System.Threading.Thread.Sleep (4*1000);
 				}
 
 				current++;
