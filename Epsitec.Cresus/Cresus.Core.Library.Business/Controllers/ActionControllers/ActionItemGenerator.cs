@@ -4,6 +4,7 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
@@ -143,7 +144,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 				return;
 			}
 
-			this.CreateLayout (item, new ActionItem (ActionClasses.NextStep, action.Action, TextFormatter.FormatText (">", transition.Edge.Name)));
+			this.CreateLayout (item, new ActionItem (ActionClasses.NextStep, action.Action, transition.Edge.GetLabel (LabelDetailLevel.Compact)));
 		}
 
 		private bool CreateWorflowTransitionActionItem(WorkflowTransition transition, WorkflowAction action)
@@ -163,7 +164,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 
 					if (affairTile != null)
 					{
-						this.CreateLayout (affairTile, new ActionItem (ActionClasses.Create, action.Action, TextFormatter.FormatText ("+", transition.Edge.Name)));
+						this.CreateLayout (affairTile, new ActionItem (ActionClasses.Create, action.Action, transition.Edge.GetLabel (LabelDetailLevel.Compact)));
 
 						return true;
 					}

@@ -198,6 +198,8 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 				
 				//	designer:cap/DVAC
 				public static readonly global::Epsitec.Common.Support.Druid Continuation = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 12);
+				//	designer:cap/DVAE1
+				public static readonly global::Epsitec.Common.Support.Druid Labels = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 46);
 				//	designer:cap/DVAB
 				public static readonly global::Epsitec.Common.Support.Druid NextNode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 11);
 				//	designer:cap/DVAE

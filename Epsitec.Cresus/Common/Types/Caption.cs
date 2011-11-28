@@ -1,6 +1,8 @@
 //	Copyright © 2006-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.Extensions;
+
 using System.Collections.Generic;
 
 [assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.Caption))]
@@ -13,7 +15,7 @@ namespace Epsitec.Common.Types
 	/// <c>Caption</c> class is also used as a serialization support for commands,
 	/// types, etc.
 	/// </summary>
-	public sealed class Caption : DependencyObject
+	public sealed class Caption : DependencyObject, ILabelGetter
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Caption"/> class.
@@ -739,6 +741,43 @@ namespace Epsitec.Common.Types
 			protected override DependencyPropertyMetadata CloneNewObject()
 			{
 				return new CaptionMetadata ();
+			}
+		}
+
+		#endregion
+
+		#region ILabelGetter Members
+
+		public FormattedText GetLabel(LabelDetailLevel detailLevel)
+		{
+			if (this.sortedLabels == null)
+			{
+				this.RefreshSortedLabels ();
+			}
+
+			int n = this.sortedLabels.Length;
+
+			if (n == 0)
+			{
+				return FormattedText.Empty;
+			}
+
+			switch (detailLevel)
+			{
+				case LabelDetailLevel.Default:
+					return new FormattedText (this.DefaultLabel);
+
+				case LabelDetailLevel.Compact:
+					return new FormattedText (this.sortedLabels[0]);
+
+				case LabelDetailLevel.Detailed:
+					return new FormattedText (this.sortedLabels[n-1]);
+
+				case LabelDetailLevel.Normal:
+					return new FormattedText (this.sortedLabels[n > 1 ? 1 : 0]);
+
+				default:
+					throw new System.NotSupportedException (string.Format ("{0} not supported", detailLevel.GetQualifiedName ()));
 			}
 		}
 

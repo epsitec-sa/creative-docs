@@ -549,6 +549,28 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		#endregion
 		///	<summary>
+		///	The <c>Labels</c> field.
+		///	designer:fld/DVA3/DVAE1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[DVAE1]")]
+		public global::Epsitec.Common.Types.FormattedText Labels
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[DVAE1]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Labels;
+				if (oldValue != value || !this.IsFieldDefined("[DVAE1]"))
+				{
+					this.OnLabelsChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[DVAE1]", oldValue, value);
+					this.OnLabelsChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>NextNode</c> field.
 		///	designer:fld/DVA3/DVAB
 		///	</summary>
@@ -637,6 +659,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
+		partial void OnLabelsChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnLabelsChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnNextNodeChanging(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
 		partial void OnNextNodeChanged(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
 		partial void OnContinuationChanging(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);

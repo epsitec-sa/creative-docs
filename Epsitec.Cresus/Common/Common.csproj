@@ -1191,6 +1191,7 @@
     <Compile Include="Widgets\IconButtonsCombo.cs" />
     <Compile Include="Widgets\IconSeparator.cs" />
     <Compile Include="Widgets\IFeel.cs" />
+    <Compile Include="Types\ILabelGetter.cs" />
     <Compile Include="Widgets\ILogicalTree.cs" />
     <Compile Include="Widgets\ImageDisplayMode.cs" />
     <Compile Include="Widgets\ImagePlaceholder.cs" />
@@ -1200,6 +1201,7 @@
     <Compile Include="Widgets\IPaintFilter.cs" />
     <Compile Include="Widgets\IValidator.cs" />
     <Compile Include="Widgets\KeyCode.cs" />
+    <Compile Include="Types\LabelDetailLevel.cs" />
     <Compile Include="Widgets\Layouts\AnchorLayoutEngine.cs" />
     <Compile Include="Widgets\Layouts\BaseLineMeasure.cs" />
     <Compile Include="Widgets\Layouts\Collections\ColumnDefinitionCollection.cs" />

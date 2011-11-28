@@ -358,7 +358,7 @@ namespace Epsitec.Cresus.Core
 				PreferredSize = new Size (40, 18),
 				Margins = Widgets.Tiles.TileArrow.GetContainerPadding (Direction.Right) + new Margins (0, 2+offset1+offset2, 2, 0),
 				Name = "DataContext#Debug",
-				FormattedText = FormattedText.FromSimpleText (string.Format ("#{0}/{1}", controller.DataContext.UniqueId, businessContextId)),
+				FormattedText = FormattedText.FromSimpleText (string.Format ("#{0}/{1}", controller.DataContext.UniqueId, businessContextId)).ApplyFontColor (Color.FromRgb (0.8, 0.8, 0.8)),
 			};
 		}
 
