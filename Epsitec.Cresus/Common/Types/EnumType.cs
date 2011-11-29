@@ -483,32 +483,28 @@ namespace Epsitec.Common.Types
 		/// <returns>The integer value for the specified <c>enum</c> value.</returns>
 		public static int ConvertToInt(System.Enum value)
 		{
-			//	TODO: optimize this code
-			
-			//	I guess we could do the same with this very simple IL, provided the value is
-			//	represented using 32-bit (or less) :
-			//
-			//		ldarg.0
-			//		ret
-			//
-			//	For 64-bit, maybe :
-			//
-			//		ldarg.0
-			//		conv.i4
-			//		ret
-			
-			System.Type enumType = value.GetType ();
-			string text = System.Enum.Format (enumType, value, "d");
-			
-			long number = System.Int64.Parse (text, System.Globalization.CultureInfo.InvariantCulture);
-			
-			if ((number < int.MinValue) ||
-				(number > int.MaxValue))
+			ulong number = Epsitec.Common.Support.Extensions.EnumExtensions.ToUInt64 (value);
+
+			if ((number & 0x8000000000000000UL) == 0)
 			{
-				throw new System.InvalidOperationException (string.Format ("Value {0} cannot be mapped to int", number));
+				//	Positive number.
+
+				if (number <= int.MaxValue)
+				{
+					return (int) number;
+				}
+			}
+			else
+			{
+				long signed = (long) number;
+
+				if (signed >= int.MinValue)
+				{
+					return (int) signed;
+				}
 			}
 			
-			return (int) number;
+			throw new System.InvalidOperationException (string.Format ("Value {0:X} cannot be mapped to int", number));
 		}
 
 

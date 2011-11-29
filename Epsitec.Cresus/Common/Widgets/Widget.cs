@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Helpers;
@@ -226,7 +227,7 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		public MouseCursor							MouseCursor
+		public MouseCursor						MouseCursor
 		{
 			get
 			{
@@ -246,7 +247,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Drawing.Size							RealMinSize
+		public Drawing.Size						RealMinSize
 		{
 			get
 			{
@@ -269,7 +270,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Drawing.Size							RealMaxSize
+		public Drawing.Size						RealMaxSize
 		{
 			get
 			{
@@ -293,7 +294,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public static double						DefaultFontHeight
+		public static double					DefaultFontHeight
 		{
 			get
 			{
@@ -301,7 +302,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual bool							IsFrozen
+		public virtual bool						IsFrozen
 		{
 			get
 			{
@@ -318,7 +319,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool									IsEmbedded
+		public bool								IsEmbedded
 		{
 			//	Un widget qui retourne IsEmbedded = true n'a pas besoin d'être sérialisé
 			//	quand son parent est sérialisé, car il est construit et géré par le parent.
@@ -329,7 +330,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool									IsEditionEnabled
+		public bool								IsEditionEnabled
 		{
 			get
 			{
@@ -363,7 +364,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool									IsDisposing
+		public bool								IsDisposing
 		{
 			get
 			{
@@ -383,7 +384,7 @@ namespace Epsitec.Common.Widgets
 
 		#endregion
 
-		public bool									ExecuteCommandOnPressed
+		public bool								ExecuteCommandOnPressed
 		{
 			get
 			{
@@ -403,7 +404,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public bool									AutoMnemonic
+		public bool								AutoMnemonic
 		{
 			get
 			{
@@ -427,7 +428,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public bool									AutoFitWidth
+		public bool								AutoFitWidth
 		{
 			get
 			{
@@ -449,7 +450,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected WidgetInternalState				InternalState
+		protected WidgetInternalState			InternalState
 		{
 			get
 			{
@@ -462,7 +463,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public WidgetPaintState						PaintState
+		public WidgetPaintState					PaintState
 		{
 			get
 			{
@@ -519,7 +520,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public int									ZOrder
+		public int								ZOrder
 		{
 			get
 			{
@@ -543,17 +544,17 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public bool									CanSelect
+		public bool								CanSelect
 		{
 			get { return ((this.internalState & WidgetInternalState.Selectable) != 0) && !this.IsFrozen; }
 		}
 		
-		public bool									CanEngage
+		public bool								CanEngage
 		{
 			get { return ((this.internalState & WidgetInternalState.Engageable) != 0) && this.IsEnabled && !this.IsFrozen; }
 		}
 
-		public virtual bool							AcceptsFocus
+		public virtual bool						AcceptsFocus
 		{
 			get
 			{
@@ -562,19 +563,40 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual bool							AcceptsDefocus
+		public virtual bool						AcceptsDefocus
 		{
 			get
 			{
 				return true;
 			}
 		}
-		
-		public bool									PossibleContainer
+
+		public bool								PossibleContainer
 		{
-			get { return ((this.internalState & WidgetInternalState.PossibleContainer) != 0) && !this.IsFrozen; }
+			get
+			{
+				return this.internalState.HasFlag (WidgetInternalState.PossibleContainer) && !this.IsFrozen;
+			}
 		}
-		
+
+		public bool								IsFence
+		{
+			get
+			{
+				return this.internalState.HasFlag (WidgetInternalState.Fence);
+			}
+			set
+			{
+				if (value)
+				{
+					this.internalState = this.internalState.SetFlag (WidgetInternalState.Fence);
+				}
+				else
+				{
+					this.internalState = this.internalState.ClearFlag (WidgetInternalState.Fence);
+				}
+			}
+		}
 		
 		public new virtual Widget					Parent
 		{
@@ -1604,7 +1626,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual Drawing.Point MapParentToClient(Drawing.Point point)
+		public Drawing.Point MapParentToClient(Drawing.Point point)
 		{
 			if (this.IsDisposing)
 			{
@@ -1625,7 +1647,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual Drawing.Point MapClientToParent(Drawing.Point point)
+		public Drawing.Point MapClientToParent(Drawing.Point point)
 		{
 			if (this.IsDisposing)
 			{
@@ -1646,8 +1668,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual Drawing.Point MapRootToClient(Drawing.Point point)
+		public Drawing.Point MapRootToClient(Drawing.Point point, System.Predicate<Widget> isRoot = null)
 		{
+			if ((this.IsDisposing) ||
+				(isRoot != null && isRoot (this)))
+			{
+				return point;
+			}
+
 			Widget parent = this.Parent;
 			
 			//	Le plus simple est d'utiliser la récursion, afin de commencer la conversion depuis la
@@ -1655,13 +1683,13 @@ namespace Epsitec.Common.Widgets
 			
 			if (parent != null)
 			{
-				point = parent.MapRootToClient (point);
+				point = parent.MapRootToClient (point, isRoot);
 			}
 			
 			return this.MapParentToClient (point);
 		}
-		
-		public virtual Drawing.Point MapClientToRoot(Drawing.Point point)
+
+		public Drawing.Point MapClientToRoot(Drawing.Point point, System.Predicate<Widget> isRoot = null)
 		{
 			//	Transforme des coordonnées client d'un widget en coordonnées relatives à la
 			//	racine de la fenêtre. Le point inférieur gauche d'un widget, en coordonnées
@@ -1670,21 +1698,25 @@ namespace Epsitec.Common.Widgets
 			{
 				return point;
 			}
-			else
+			
+			Widget iter = this;
+
+			//	On a le choix entre une solution récursive et une solution itérative. La version
+			//	itérative devrait être un petit peu plus rapide ici.
+
+			while (iter != null)
 			{
-				Widget iter = this;
+				point = iter.MapClientToParent (point);
 
-				//	On a le choix entre une solution récursive et une solution itérative. La version
-				//	itérative devrait être un petit peu plus rapide ici.
-
-				while (iter != null)
+				if (isRoot != null && isRoot (iter))
 				{
-					point = iter.MapClientToParent (point);
-					iter = iter.Parent;
+					break;
 				}
 
-				return point;
+				iter  = iter.Parent;
 			}
+
+			return point;
 		}
 		
 		
@@ -1700,14 +1732,15 @@ namespace Epsitec.Common.Widgets
 			point = this.Window.MapScreenToWindow (point);
 			point = this.MapRootToClient (point);
 			point = this.MapClientToParent (point);
+			
 			return point;
 		}
 		
 		public virtual Drawing.Point MapClientToScreen(Drawing.Point point)
 		{
 			point = this.MapClientToRoot (point);
-			Drawing.Point pointWdo = point;
 			point = this.Window.MapWindowToScreen (point);
+			
 			return point;
 		}
 		
@@ -1716,6 +1749,7 @@ namespace Epsitec.Common.Widgets
 			point = this.MapParentToClient (point);
 			point = this.MapClientToRoot (point);
 			point = this.Window.MapWindowToScreen (point);
+			
 			return point;
 		}
 		
