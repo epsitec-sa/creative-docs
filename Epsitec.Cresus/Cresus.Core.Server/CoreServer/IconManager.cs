@@ -17,8 +17,6 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 	/// Used to write every available *.icon into their PNG equivalent so that they are available
 	/// through the web server.
 	/// It also creates a CSS file to be able to call the icons in the JS code.
-	/// Uncomment the "define" to regenerate all icons at server startup.
-	/// It takes time !
 	/// </summary>
 	internal sealed class IconManager
 	{
@@ -57,9 +55,12 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 
 			File.Delete (this.cssFilename);
 
-			var list = ImageProvider.Default.GetImageNames ("manifest", null);
+			var iconUris = ImageProvider.Default.GetImageNames ("manifest", null);
 
-			list.ToList ().ForEach (CreateIcons);
+			foreach (var iconUri in iconUris)
+			{
+				this.CreateIcon (iconUri);
+			}
 		}
 
 
@@ -68,7 +69,7 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 		/// </summary>
 		/// <param name="brick">Brick to use</param>
 		/// <returns>Key/value pair with the icon name and the filename</returns>
-		private void CreateIcons(string iconUri)
+		private void CreateIcon(string iconUri)
 		{
 			if (iconUri == null)
 			{
@@ -76,9 +77,9 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 			}
 
 			// Get the ressource from the icon name
-			var iconRes = Misc.GetResourceIconUri (iconUri);
-			var iconName = iconRes.Substring (9); // remove "manifest:"
-			var icon = ImageProvider.Default.GetImage (iconRes, Resources.DefaultManager) as Canvas;
+			var iconResource = Misc.GetResourceIconUri (iconUri);
+			var iconName = iconResource.Substring (9); // remove "manifest:"
+			var icon = ImageProvider.Default.GetImage (iconResource, Resources.DefaultManager) as Canvas;
 
 			if (icon == null)
 			{
@@ -96,13 +97,12 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 
 			// Save the image
 			var bytes = bitmap.Save (ImageFormat.Png);
-			string path = GetImageAbsoluteFilePath (iconName, IconSize.ThirtyTwo);
+			var path = this.GetImageAbsoluteFilePath (iconName, IconSize.ThirtyTwo);
 			File.WriteAllBytes (path, bytes);
 
 			// Add it to the CSS
-			var relativePath = GetImageRelativeFilePath (iconName, IconSize.ThirtyTwo);
-			AddToCSS (iconUri, relativePath, IconSize.ThirtyTwo);
-
+			var relativePath = this.GetImageRelativeFilePath (iconName, IconSize.ThirtyTwo);
+			this.AddToCSS (iconUri, relativePath, IconSize.ThirtyTwo);
 
 			// Save in 16
 			icon.DefineZoom (0.5);
@@ -110,12 +110,12 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 
 			// Save the image
 			bytes = bitmap.Save (ImageFormat.Png);
-			path = GetImageAbsoluteFilePath (iconName, IconSize.Sixteen);
+			path = this.GetImageAbsoluteFilePath (iconName, IconSize.Sixteen);
 			File.WriteAllBytes (path, bytes);
 
 			// Add it to the CSS
 			relativePath = GetImageRelativeFilePath (iconName, IconSize.Sixteen);
-			AddToCSS (iconUri, relativePath, IconSize.Sixteen);
+			this.AddToCSS (iconUri, relativePath, IconSize.Sixteen);
 		}
 
 
@@ -128,8 +128,8 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 		private void AddToCSS(string iconUri, string path, IconSize size)
 		{
 			var cssClassname = IconManager.GetCSSClassName (iconUri, size);
-			string imgPath = string.Concat ("../", path);
-			var css = string.Format (CultureInfo.InvariantCulture, IconManager.cssClass, cssClassname, imgPath);
+			var imagePath = string.Concat ("../", path);
+			var css = string.Format (CultureInfo.InvariantCulture, IconManager.cssClass, cssClassname, imagePath);
 
 			File.AppendAllText (this.cssFilename, css);
 		}
@@ -143,15 +143,16 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 		private string GetImageAbsoluteFilePath(string name, IconSize size)
 		{
 			var path = string.Format (CultureInfo.InvariantCulture, this.imagesFilename, name.Replace ('.', '/'), size);
+			
 			IconManager.EnsureDirectoryStructureExists (path);
+			
 			return path;
 		}
 
 
 		private string GetImageRelativeFilePath(string name, IconSize size)
 		{
-			var path = string.Format (CultureInfo.InvariantCulture, IconManager.baseImagesFilename, name.Replace ('.', '/'), size);
-			return path;
+			return string.Format (CultureInfo.InvariantCulture, IconManager.baseImagesFilename, name.Replace ('.', '/'), size);
 		}
 
 
@@ -161,11 +162,11 @@ namespace Epsitec.Cresus.Core.Server.CoreServer
 		/// <param name="path"></param>
 		private static void EnsureDirectoryStructureExists(string path)
 		{
-			var dir  = System.IO.Path.GetDirectoryName (path);
+			var directory = System.IO.Path.GetDirectoryName (path);
 
-			if (Directory.Exists (dir) == false)
+			if (Directory.Exists (directory) == false)
 			{
-				Directory.CreateDirectory (dir);
+				Directory.CreateDirectory (directory);
 			}
 		}
 
