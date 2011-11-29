@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					graphics.AddText (rect.X, rect.Y, rect.Width, rect.Height, x.Item.Label.ToSimpleText (), ActionItemLayout.DefaultFont, ActionItemLayout.DefaultFontSize, ContentAlignment.MiddleCenter);
 				});
 
-			graphics.Color = Epsitec.Common.Drawing.Color.FromName ("Cyan");
+			graphics.Color = Epsitec.Common.Drawing.Color.FromName ("Blue");
 			graphics.RenderSolid ();
 		}
 
