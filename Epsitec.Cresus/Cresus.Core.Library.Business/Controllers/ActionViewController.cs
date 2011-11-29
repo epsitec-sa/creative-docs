@@ -26,6 +26,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				root.IsFence = true;
 				root.PaintForeground += this.HandleWindowRootPaintForeground;
+				root.PreProcessing   += this.HandleWindowRootPreProcessing;
 			}
 		}
 
@@ -56,6 +57,11 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void HandleWindowRootPaintForeground(object sender, Epsitec.Common.Widgets.PaintEventArgs e)
 		{
 			this.ExperimentalPaintOverlay (e.Graphics);
+		}
+
+		private void HandleWindowRootPreProcessing(object sender, Epsitec.Common.Widgets.MessageEventArgs e)
+		{
+			System.Diagnostics.Debug.WriteLine (e.Message.ToString ());
 		}
 
 		private void ExperimentalPaintOverlay(Graphics graphics)
