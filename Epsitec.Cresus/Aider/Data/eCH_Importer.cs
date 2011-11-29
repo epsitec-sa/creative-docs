@@ -11,7 +11,7 @@ namespace Epsitec.Aider.Data
 	{
 		public eCH_Importer()
 		{
-			this.xml = XDocument.Load (@"S:\Epsitec.Cresus\App.Aider\Samples\eerv.xml");
+			this.xml = XDocument.Load (@"S:\Epsitec.Cresus\App.Aider\Samples\eerv-2011-11-29.xml");
 			this.personIds = new Dictionary<string, XElement> ();
 			this.duplicates = new List<XElement> ();
 			this.unidentified = new List<XElement> ();
