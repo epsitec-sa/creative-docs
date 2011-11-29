@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Core.Server.NancyHosting
 			);
 		}
 
-
+		
 		private static long GetExpectedRequestLength(IDictionary<string, IEnumerable<string>> incomingHeaders)
 		{
 			if (incomingHeaders == null)
