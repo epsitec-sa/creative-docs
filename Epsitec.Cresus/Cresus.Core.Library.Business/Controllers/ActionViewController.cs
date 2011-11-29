@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					var rect = Rectangle.Deflate (x.Bounds, 0.5, 0.5);
 					graphics.AddRectangle (rect);
-					graphics.AddText (rect.X, rect.Y, rect.Width, rect.Height, x.Item.Label.ToString (), ActionItemLayout.DefaultFont, ActionItemLayout.DefaultFontSize, ContentAlignment.MiddleCenter);
+					graphics.AddText (rect.X, rect.Y, rect.Width, rect.Height, x.Item.Label.ToSimpleText (), ActionItemLayout.DefaultFont, ActionItemLayout.DefaultFontSize, ContentAlignment.MiddleCenter);
 				});
 
 			graphics.Color = Epsitec.Common.Drawing.Color.FromName ("Cyan");

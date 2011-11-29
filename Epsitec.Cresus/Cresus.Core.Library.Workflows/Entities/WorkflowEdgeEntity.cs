@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Core.Entities
 				labelSource = TextFormatter.FormatText (this.Name);
 			}
 
-			var labels = labelSource.Split ("\n", System.StringSplitOptions.RemoveEmptyEntries);
+			var labels = labelSource.Lines.Where (x => x.Length > 0).ToArray ();
 
 			int n = labels.Length;
 

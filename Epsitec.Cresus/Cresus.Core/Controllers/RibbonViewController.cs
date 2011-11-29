@@ -530,7 +530,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				int index = 0;
 				foreach (var workflowTransition in this.workflowTransitions)
 				{
-					this.AddWorkflowTransitionToMenu (menu, workflowTransition.Edge.Name, index++);
+					this.AddWorkflowTransitionToMenu (menu, workflowTransition.Edge.GetLabel (LabelDetailLevel.Normal), index++);
 				}
 
 				TextFieldCombo.AdjustComboSize (parentButton, menu, false);
