@@ -27,7 +27,16 @@ namespace Epsitec.Cresus.Core.Server
 			ConsoleCreator.RunWithConsole (() =>
 			{
 				this.Initialize ();
-				this.Run ();
+				this.Run
+				(
+					nGinxAutorun: CoreServerProgram.nGinxAutorun,
+					nGinxPath: CoreServerProgram.nGinxPath,
+					uri: CoreServerProgram.baseUri,
+					nbThreads: CoreServerProgram.nbThreads,
+					maxNbSessions: CoreServerProgram.maxNbSessions,
+					sessionTimeout: CoreServerProgram.sessionTimeout,
+					sessionCleanupInterval: CoreServerProgram.sessionCleanupInterval
+				);
 			});
 		}
 
@@ -42,16 +51,8 @@ namespace Epsitec.Cresus.Core.Server
 		}
 
 
-		private void Run()
-		{
-			var nGinxAutorun = CoreServerProgram.nGinxAutorun;
-			var nGinxPath = CoreServerProgram.nGinxPath;
-			var uri = CoreServerProgram.baseUri;
-			var nbThreads = CoreServerProgram.nbThreads;
-			var maxNbSessions = CoreServerProgram.maxNbSessions;
-			var sessionTimeout = CoreServerProgram.sessionTimeout;
-			var sessionCleanupInterval = CoreServerProgram.sessionCleanupInterval;
-
+		private void Run(bool nGinxAutorun, FileInfo nGinxPath, Uri uri, int nbThreads, int maxNbSessions, TimeSpan sessionTimeout, TimeSpan sessionCleanupInterval)
+		{		
 			Console.WriteLine ("Launching server...");
 
 			using (var nGinxServer = nGinxAutorun ? new NGinxServer (nGinxPath) : null)		
@@ -60,7 +61,7 @@ namespace Epsitec.Cresus.Core.Server
 			{
 				nancyServer.Start ();
 
-				Console.WriteLine ("Server launched and listening to " + uri);
+				Console.WriteLine ("Server launched");
 				Console.WriteLine ("Press [ENTER] to shut down");
 				Console.ReadLine ();
 
