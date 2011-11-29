@@ -24,6 +24,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (root != null)
 			{
+				root.IsFence = true;
 				root.PaintForeground += this.HandleWindowRootPaintForeground;
 			}
 		}
@@ -72,10 +73,9 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		private Epsitec.Common.Widgets.WindowRoot GetWindowRoot()
+		private Epsitec.Common.Widgets.Widget GetWindowRoot()
 		{
-			var window = this.Orchestrator.Host.Window;
-			return window == null ? null : window.Root;
+			return this.Orchestrator.DataViewController.Root;
 		}
 		
 		protected override void Dispose(bool disposing)

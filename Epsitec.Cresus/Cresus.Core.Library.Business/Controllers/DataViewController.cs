@@ -45,6 +45,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		public Widget							Root
+		{
+			get
+			{
+				return this.frame;
+			}
+		}	
+
 		
 		public override IEnumerable<CoreController> GetSubControllers()
 		{

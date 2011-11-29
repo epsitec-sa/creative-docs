@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 
 		private static Point GetTitleTileTopRightPointRelativeToRoot(TitleTile tile)
 		{
-			return tile.MapClientToRoot (tile.Client.Bounds.TopRight - new Point (10, 2));
+			return tile.MapClientToRoot (tile.Client.Bounds.TopRight - new Point (10, 2), x => x.IsFence);
 		}
 
 		private static void SetActionItemLayoutBounds(ActionItemLayout item, Point position)
