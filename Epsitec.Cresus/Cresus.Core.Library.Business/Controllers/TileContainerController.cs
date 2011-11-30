@@ -84,6 +84,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		public ActionViewController				ActionViewController
+		{
+			get
+			{
+				return this.actionViewController;
+			}
+		}
+
 
 		public static Initializer Setup(EntityViewController controller)
 		{
@@ -562,7 +570,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				IsReadOnly = (item.DataType != TileDataType.EditableItem),  // fond bleuté si tuile d'édition
 				Frameless  = item.Frameless,
-				Dock = item.FullHeightStretch ? DockStyle.StackFill : DockStyle.Stacked,
+				Dock       = item.FullHeightStretch ? DockStyle.StackFill : DockStyle.Stacked,
 			};
 
 			System.Diagnostics.Debug.Assert (item.TitleTile.Items.Contains (item.Tile));

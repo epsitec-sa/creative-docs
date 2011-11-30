@@ -32,5 +32,11 @@ namespace Epsitec.Cresus.Core.Entities
 				return a.EntityStatus;
 			}
 		}
+
+
+		[Action (ActionClasses.Output, Library.Address.Res.CaptionIds.ActionButton.Mail)]
+		public void SendMail()
+		{
+		}
 	}
 }

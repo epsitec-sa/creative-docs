@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 		}
 
 		public ActionItem(ActionClasses actionClass, System.Action action, Caption caption, double weight = 0.0)
-			: this (null, ActionClass.GetActionClass (actionClass), action, caption.DefaultLabel, caption.Description, weight)
+			: this (null, ActionClass.GetActionClass (actionClass), action, ActionItem.GetLabel (caption), ActionItem.GetDescription (caption), weight)
 		{
 		}
 
@@ -39,6 +39,20 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 
 		public ActionItem(string name, ActionClass actionClass, System.Action action, FormattedText label, FormattedText description = default (FormattedText), double weight = 0.0)
 		{
+			if (ActionItem.IsIcon (label) && description.IsNullOrEmpty)
+			{
+				var caption = ActionClass.GetDefaultCaption (actionClass.Class);
+
+				if (string.IsNullOrEmpty (caption.Description))
+				{
+					description = caption.DefaultLabel;
+				}
+				else
+				{
+					description = caption.Description;
+				}
+			}
+
 			this.name        = name;
 			this.actionClass = actionClass;
 			this.action      = action;
@@ -96,6 +110,14 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			}
 		}
 
+		public bool								ContainsIcon
+		{
+			get
+			{
+				return ActionItem.IsIcon (this.label);
+			}
+		}
+
 
 		public void ExecuteAction()
 		{
@@ -104,7 +126,50 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 				this.action ();
 			}
 		}
-		
+
+
+		public static FormattedText GetIcon(string icon)
+		{
+			return string.Format ("<img src=\"manifest:Epsitec.Cresus.Core.Images.{0}.icon\"/>", icon);
+		}
+
+		public static bool IsIcon(FormattedText text)
+		{
+			if (text.IsNullOrEmpty)
+			{
+				return false;
+			}
+			else
+			{
+				return text.ToString ().StartsWith ("<img src=\"manifest:");
+			}
+		}
+
+
+		private static FormattedText GetLabel(Caption caption)
+		{
+			if (string.IsNullOrEmpty (caption.Icon))
+			{
+				return caption.DefaultLabel;
+			}
+			else
+			{
+				return string.Format ("<img src=\"{0}\"/>", caption.Icon);
+			}
+		}
+
+		private static FormattedText GetDescription(Caption caption)
+		{
+			if (string.IsNullOrEmpty (caption.Description))
+			{
+				return caption.DefaultLabel;
+			}
+			else
+			{
+				return caption.Description;
+			}
+		}
+
 		
 		private readonly string					name;
 		private readonly ActionClass			actionClass;

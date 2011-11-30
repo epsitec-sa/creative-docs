@@ -34,6 +34,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
+
 		[Action (ActionClasses.Output, Library.Address.Res.CaptionIds.ActionButton.Call)]
 		public void Call()
 		{

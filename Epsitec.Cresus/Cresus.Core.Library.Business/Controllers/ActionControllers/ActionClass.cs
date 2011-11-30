@@ -22,9 +22,9 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 		{
 			name.ThrowIfNullOrEmpty ("name");
 
-			this.name  = name;
+			this.name        = name;
 			this.actionClass = actionClass;
-			this.color = color;
+			this.color       = color;
 		}
 
 		
@@ -73,10 +73,9 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 		/// <param name="actionClass">The action class.</param>
 		/// <param name="color">The color.</param>
 		/// <returns>The <see cref="ActionClass"/> instance.</returns>
-		public static ActionClass GetActionClass(string name, ActionClasses actionClass, Color color)
+		private static ActionClass GetActionClass(string name, ActionClasses actionClass, Color color)
 		{
-			if ((color.IsEmpty) ||
-				(color.IsTransparent))
+			if (color.IsEmpty || color.IsTransparent)
 			{
 				color = ActionClass.GetColor (actionClass);
 			}
@@ -102,19 +101,24 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 		
 		private static Color GetColor(ActionClasses actionClass)
 		{
-			Color color = Color.FromBrightness (0.4);
-			
 			switch (actionClass)
 			{
 				case ActionClasses.Create:
-					//	TODO: assign colors
-					break;
+					return Color.FromHexa ("e6ffdc");  // vert pâle
+
+				case ActionClasses.Delete:
+					return Color.FromHexa ("ffdcdc");  // rouge pâle
+
+				case ActionClasses.Output:
+				case ActionClasses.Input:
+					return Color.FromHexa ("dcf7ff");  // bleu pâle
+
+				case ActionClasses.NextStep:
+					return Color.FromHexa ("ffffdc");  // jaune pâle
 
 				default:
-					break;
+					return Color.FromHexa ("ffffff");  // blanc
 			}
-
-			return color;
 		}
 
 		private static ActionClass GetUnique(string name, ActionClasses actionClass, Color color)

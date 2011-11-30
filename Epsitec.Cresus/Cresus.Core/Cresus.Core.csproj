@@ -603,6 +603,11 @@
     <EmbeddedResource Include="Images\Data.ContactPersonGroup.icon" />
     <EmbeddedResource Include="Images\Base.DocumentFooterText.icon" />
     <EmbeddedResource Include="Images\Data.DocumentFooterText.icon" />
+    <EmbeddedResource Include="Images\Action.Call.icon" />
+    <EmbeddedResource Include="Images\Action.Create.icon" />
+    <EmbeddedResource Include="Images\Action.Delete.icon" />
+    <EmbeddedResource Include="Images\Action.Print.icon" />
+    <EmbeddedResource Include="Images\Action.Mail.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

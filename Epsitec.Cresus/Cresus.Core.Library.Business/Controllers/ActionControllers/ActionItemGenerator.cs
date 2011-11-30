@@ -63,19 +63,17 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 
 		private void GenerateCreateActionItem(TileDataItem item)
 		{
-			if ((item.HideAddButton == false) &&
-					(item.AddNewItem != null))
+			if (item.HideAddButton == false && item.AddNewItem != null)
 			{
-				this.CreateLayout (item, new ActionItem (ActionClasses.Create, item.AddNewItem));
+				this.CreateLayout (item, new ActionItem (ActionClasses.Create, item.AddNewItem, ActionItem.GetIcon ("Action.Create")));
 			}
 		}
 
 		private void GenerateDeleteActionItem(TileDataItem item)
 		{
-			if ((item.HideRemoveButton == false) &&
-					(item.DeleteItem != null))
+			if (item.HideRemoveButton == false && item.DeleteItem != null)
 			{
-				this.CreateLayout (item, new ActionItem (ActionClasses.Delete, item.DeleteItem));
+				this.CreateLayout (item, new ActionItem (ActionClasses.Delete, item.DeleteItem, ActionItem.GetIcon ("Action.Delete")));
 			}
 		}
 
@@ -129,12 +127,11 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 
 		private void GenerateWorkflowTransitionActionItem(TileDataItem item, WorkflowTransition transition)
 		{
-			var lines   = WorkflowActionCompiler.GetSourceLines (transition.Edge.TransitionActions);
-			var result  = WorkflowActionCompiler.Validate (lines);
-			var action  = result.WorkflowAction;
+			var lines  = WorkflowActionCompiler.GetSourceLines (transition.Edge.TransitionActions);
+			var result = WorkflowActionCompiler.Validate (lines);
+			var action = result.WorkflowAction;
 
-			if ((action == null) ||
-				(action.IsInvalid))
+			if (action == null || action.IsInvalid)
 			{
 				return;
 			}
@@ -183,8 +180,8 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 		{
 			TileDataItem item;
 
-			if ((this.tileDataItemLookupTable.TryGetValue (name, out item)) ||
-				(this.tileDataItemLookupTable.TryGetValue (name + ".0", out item)))
+			if (this.tileDataItemLookupTable.TryGetValue (name, out item) ||
+				this.tileDataItemLookupTable.TryGetValue (name + ".0", out item))
 			{
 				return item;
 			}
@@ -194,9 +191,9 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			}
 		}
 
-		private readonly BusinessContext context;
-		private readonly List<TileDataItem> tileDataItems;
-		private readonly Dictionary<string, TileDataItem> tileDataItemLookupTable;
-		private readonly List<ActionItemLayout> layouts;
+		private readonly BusinessContext					context;
+		private readonly List<TileDataItem>					tileDataItems;
+		private readonly Dictionary<string, TileDataItem>	tileDataItemLookupTable;
+		private readonly List<ActionItemLayout>				layouts;
 	}
 }

@@ -30,6 +30,22 @@ namespace Epsitec.Cresus.Core.Library.Address
 						return global::Epsitec.Cresus.Core.Library.Address.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 86));
 					}
 				}
+				//	designer:cap/FVK
+				public static global::Epsitec.Common.Types.Caption Mail
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Address.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 0));
+					}
+				}
+				//	designer:cap/FVK1
+				public static global::Epsitec.Common.Types.Caption Print
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Address.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 1));
+					}
+				}
 			}
 			
 		}
@@ -48,6 +64,10 @@ namespace Epsitec.Cresus.Core.Library.Address
 				
 				//	designer:cap/FVAM2
 				public const long Call = 0x3EF0000A000056L;
+				//	designer:cap/FVK
+				public const long Mail = 0x3EF00014000000L;
+				//	designer:cap/FVK1
+				public const long Print = 0x3EF00014000001L;
 			}
 			
 		}

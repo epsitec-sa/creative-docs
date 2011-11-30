@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 		/// Updates the layout of all <see cref="ActionItemLayout"/> items.
 		/// </summary>
 		/// <param name="items">The items.</param>
-		public static void UpdateLayout(IEnumerable<ActionItemLayout> items)
+		public static void UpdateLayout(IEnumerable<ActionItemLayout> items, double additionalWidth)
 		{
 			var bucket = new TileActionsBucket ();
 
@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 
 			foreach (var item in bucket.Items)
 			{
-				ActionItemLayout.UpdateLayoutsInTile (item.TitleTile, item);
+				ActionItemLayout.UpdateLayoutsInTile (item.TitleTile, item, additionalWidth);
 			}
 		}
 
@@ -156,7 +156,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 		/// </summary>
 		/// <param name="tile">The title tile.</param>
 		/// <param name="sortedLayouts">The sorted layouts.</param>
-		private static void UpdateLayoutsInTile(TitleTile tile, SortedActionItemLayouts sortedLayouts)
+		private static void UpdateLayoutsInTile(TitleTile tile, SortedActionItemLayouts sortedLayouts, double additionalWidth)
 		{
 			int rowCount = sortedLayouts.RowCount;
 			var topRight = ActionItemLayout.GetTitleTileTopRightPointRelativeToRoot (tile);
@@ -168,24 +168,29 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 
 				foreach (var item in layouts)
 				{
-					ActionItemLayout.SetActionItemLayoutBounds (item, position);
+					ActionItemLayout.SetActionItemLayoutBounds (item, position, additionalWidth);
 
-					position -= new Point (item.bounds.Width + 2, 0);
+					position -= new Point (item.bounds.Width, 0);
 				}
 
-				topRight -= new Point (0, ActionItemLayout.DefaultHeight + 1);
+				topRight -= new Point (0, ActionItemLayout.DefaultHeight);
 			}
 		}
 
 
 		private static Point GetTitleTileTopRightPointRelativeToRoot(TitleTile tile)
 		{
-			return tile.MapClientToRoot (tile.Client.Bounds.TopRight - new Point (10, 2), x => x.IsFence);
+			return tile.MapClientToRoot (tile.Client.Bounds.TopRight - new Point (14, 3), x => x.IsFence);
 		}
 
-		private static void SetActionItemLayoutBounds(ActionItemLayout item, Point position)
+		private static void SetActionItemLayoutBounds(ActionItemLayout item, Point position, double additionalWidth)
 		{
-			var width  = 2 + item.TextWidth + 2;
+			if (ActionItem.IsIcon (item.Item.Label))  // icône ?
+			{
+				additionalWidth = 0;  // pas de largeur additionnelle pour une icône
+			}
+
+			var width  = item.TextWidth + additionalWidth;
 			var height = ActionItemLayout.DefaultHeight;
 
 			item.bounds = new Rectangle (position.X - width, position.Y - height, width, height);
@@ -193,10 +198,22 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 
 		private void ComputeWidth()
 		{
-			var textLayout = this.CreateTextLayout ();
-			var textSize   = textLayout.GetSingleLineSize ();
+			if (ActionItem.IsIcon (this.item.Label))  // icône ?
+			{
+				this.width = ActionItemLayout.DefaultHeight;  // par défaut, une icône est carrée
 
-			this.width = System.Math.Ceiling (textSize.Width);
+				if (this.item.ActionClass.Class == ActionClasses.Create)  // icône importante ?
+				{
+					this.width *= 2;  // 2x plus large
+				}
+			}
+			else  // texte ?
+			{
+				var textLayout = this.CreateTextLayout ();
+				var textSize   = textLayout.GetSingleLineSize ();
+
+				this.width = System.Math.Ceiling (textSize.Width);
+			}
 		}
 		
 		private TextLayout CreateTextLayout()
@@ -432,7 +449,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 
 		public static readonly Font				DefaultFont     = Font.DefaultFont;
 		public static readonly double			DefaultFontSize = Font.DefaultFontSize;
-		public static readonly double			DefaultHeight	= 15.0;
+		public static readonly double			DefaultHeight	= 16.0;
 		
 		private readonly ActionItem				item;
 		private ControllerTile					container;

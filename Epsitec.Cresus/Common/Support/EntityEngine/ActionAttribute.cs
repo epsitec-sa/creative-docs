@@ -25,8 +25,8 @@ namespace Epsitec.Common.Support.EntityEngine
 		public ActionAttribute(ActionClasses actionClass, long captionId, double weight = 0.0)
 		{
 			this.actionClass = actionClass;
-			this.captionId = captionId;
-			this.weight = weight;
+			this.captionId   = captionId;
+			this.weight      = weight;
 		}
 
 		

@@ -57,7 +57,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
-		private readonly ActionAttribute		attribute;
-		private readonly System.Action<AbstractEntity> action;
+		private readonly ActionAttribute				attribute;
+		private readonly System.Action<AbstractEntity>	action;
 	}
 }

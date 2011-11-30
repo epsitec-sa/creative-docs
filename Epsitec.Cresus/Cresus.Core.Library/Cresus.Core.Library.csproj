@@ -84,6 +84,7 @@
     <Compile Include="Library\SettingsTuple.cs" />
     <Compile Include="Library\TextFormatterConverter`1.cs" />
     <Compile Include="Resolvers\WorkflowActionResolver.cs" />
+    <Compile Include="Widgets\ActionButton.cs" />
     <Compile Include="Workflows\ActionVerb.cs" />
     <Compile Include="Workflows\WorkflowActionAttribute.cs" />
     <Compile Include="Resolvers\CoreComponentFactoryResolver.cs" />
