@@ -8,6 +8,8 @@ using Epsitec.Cresus.Core.Server.UserInterface;
 
 using Epsitec.Cresus.DataLayer.Context;
 
+using System;
+
 
 namespace Epsitec.Cresus.Core.Server.NancyModules
 {
@@ -42,7 +44,7 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 
 		private static ViewControllerMode GetMode(string mode)
 		{
-			return (ViewControllerMode) System.Enum.Parse (typeof (ViewControllerMode), mode, true);
+			return (ViewControllerMode) Enum.Parse (typeof (ViewControllerMode), mode, true);
 		}
 
 
