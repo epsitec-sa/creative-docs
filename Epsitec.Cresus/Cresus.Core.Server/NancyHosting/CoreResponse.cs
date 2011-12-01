@@ -3,6 +3,8 @@ using Nancy.Responses;
 
 using System.Collections.Generic;
 
+using System.Globalization;
+
 
 namespace Epsitec.Cresus.Core.Server.NancyHosting
 {
@@ -19,8 +21,39 @@ namespace Epsitec.Cresus.Core.Server.NancyHosting
 
 		public static Response Error()
 		{
+			// NOTE: This method will return a generic error to the client.
+
 			var errors = new Dictionary<string, object> ();
 			
+			return CoreResponse.Error (errors);
+		}
+
+
+		public static Response Error(ErrorCode errorCode)
+		{
+			// NOTE: This method will return the custom error code and the client should behave
+			// accordingly.
+
+			var errors = new Dictionary<string, string> ()
+			{
+				{ "code", ((int) errorCode).ToString (CultureInfo.InvariantCulture) }
+			};
+
+			return CoreResponse.Error (errors);
+		}
+
+
+		public static Response Error(string title, string message)
+		{
+			// NOTE: This method will return a title and a message that the client will use to
+			// display a dialog box.
+
+			var errors = new Dictionary<string, string> ()
+			{
+				{ "title", title },
+				{ "message", message },
+			};
+
 			return CoreResponse.Error (errors);
 		}
 
@@ -57,6 +90,16 @@ namespace Epsitec.Cresus.Core.Server.NancyHosting
 			parent["content"] = content;
 
 			return new JsonResponse (parent, new DefaultJsonSerializer ());
+		}
+
+
+		public enum ErrorCode
+		{
+
+
+			SessionTimeout = 0,
+
+
 		}
 
 

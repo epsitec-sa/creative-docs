@@ -1,6 +1,11 @@
 ﻿using Epsitec.Cresus.Core.Server.CoreServer;
+using Epsitec.Cresus.Core.Server.NancyHosting;
+
+using Nancy;
 
 using System;
+
+using System.Collections.Generic;
 
 
 namespace Epsitec.Cresus.Core.Server.NancyModules
@@ -25,11 +30,18 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 		}
 
 
-		protected T ExecuteWithCoreSession<T>(Func<CoreSession, T> function)
+		protected Response ExecuteWithCoreSession(Func<CoreSession, Response> function)
 		{
 			var safeCoreSession = this.GetSafeCoreSession ();
 
-			return safeCoreSession.Execute ((c) => function (c));
+			if (safeCoreSession == null)
+			{
+				return CoreResponse.Error (CoreResponse.ErrorCode.SessionTimeout);
+			}
+			else
+			{
+				return safeCoreSession.Execute ((c) => function (c));
+			}
 		}
 
 
@@ -37,14 +49,7 @@ namespace Epsitec.Cresus.Core.Server.NancyModules
 		{
 			var sessionId = (string) this.Session[LoginModule.CoreSessionName];
 
-			var session = this.ServerContext.CoreSessionManager.GetSession (sessionId);
-
-			if (session == null)
-			{
-				throw new Exception ("CoreSession not found");
-			}
-
-			return session;
+			return this.ServerContext.CoreSessionManager.GetSession (sessionId);
 		}
 
 
