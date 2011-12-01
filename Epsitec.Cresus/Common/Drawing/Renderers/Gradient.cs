@@ -9,9 +9,17 @@ namespace Epsitec.Common.Drawing.Renderers
 		{
 			this.graphics = graphics;
 			this.handle   = new Agg.SafeGradientRendererHandle ();
+			this.AlphaMutiplier = 1.0;
 		}
-		
-		
+
+
+		public double							AlphaMutiplier
+		{
+			get;
+			set;
+		}
+
+	
 		public Transform						Transform
 		{
 			get
@@ -123,16 +131,37 @@ namespace Epsitec.Common.Drawing.Renderers
 		
 		public void SetColors(double[] r, double[] g, double[] b, double[] a)
 		{
-			if ((r.Length != 256) ||
-				(g.Length != 256) ||
-				(b.Length != 256) ||
-				(a.Length != 256))
+			if (r.Length != 256 ||
+				g.Length != 256 ||
+				b.Length != 256 ||
+				a.Length != 256)
 			{
 				throw new System.ArgumentOutOfRangeException ("Color arrays missized");
 			}
 			
 			this.AssertAttached ();
-			AntiGrain.Renderer.Gradient.Color1 (this.handle, r, g, b, a);
+
+			if (this.AlphaMutiplier == 1.0)
+			{
+				AntiGrain.Renderer.Gradient.Color1 (this.handle, r, g, b, a);
+			}
+			else
+			{
+				double[] rr = new double[r.Length];
+				double[] gg = new double[r.Length];
+				double[] bb = new double[r.Length];
+				double[] aa = new double[r.Length];
+
+				for (int i = 0; i < r.Length; i++)
+				{
+					rr[i] = r[i]*this.AlphaMutiplier;
+					gg[i] = g[i]*this.AlphaMutiplier;
+					bb[i] = b[i]*this.AlphaMutiplier;
+					aa[i] = a[i]*this.AlphaMutiplier;
+				}
+
+				AntiGrain.Renderer.Gradient.Color1 (this.handle, rr, gg, bb, aa);
+			}
 		}
 
 		

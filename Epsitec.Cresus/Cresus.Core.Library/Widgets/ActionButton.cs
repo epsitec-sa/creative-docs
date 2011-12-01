@@ -19,8 +19,8 @@ namespace Epsitec.Cresus.Core.Widgets
 		public ActionButton()
 		{
 			this.textLayout = new TextLayout ();
-			this.alpha = 1.0;
-			this.colored = true;
+			this.alpha      = 1.0;
+			this.colored    = true;
 		}
 
 
@@ -62,7 +62,6 @@ namespace Epsitec.Cresus.Core.Widgets
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			//	Dessine le bouton.
-			// TODO: Tenir compte de this.alpha !
 			if (this.alpha == 0.0)
 			{
 				return;
@@ -88,11 +87,6 @@ namespace Epsitec.Cresus.Core.Widgets
 				color = Tiles.TileColors.SurfaceHilitedSelectedColors.FirstOrDefault ();
 			}
 
-			if (this.alpha < 1.0)
-			{
-				color = new Color (this.alpha, color.R, color.G, color.B);
-			}
-
 			graphics.AddFilledRectangle (rect);
 			graphics.RenderSolid (color);
 
@@ -114,6 +108,8 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				pos.Y += this.GetBaseLineVerticalOffset ();
 
+				this.TextLayout.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+
 				if (this.innerZoom != 1.0)
 				{
 					Transform transform = graphics.Transform;
@@ -125,6 +121,12 @@ namespace Epsitec.Cresus.Core.Widgets
 				{
 					adorner.PaintButtonTextLayout (graphics, pos, this.TextLayout, state, this.ButtonStyle);
 				}
+			}
+
+			if (this.alpha < 1.0)
+			{
+				graphics.AddFilledRectangle (rect);
+				graphics.RenderSolid (Color.FromAlphaRgb (1.0-this.alpha, 1.0, 1.0, 1.0));  // dessine un voile blanc par dessus
 			}
 		}
 

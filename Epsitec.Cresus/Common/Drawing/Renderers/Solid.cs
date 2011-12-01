@@ -8,6 +8,7 @@ namespace Epsitec.Common.Drawing.Renderers
 		public Solid()
 		{
 			this.handle = new Agg.SafeSolidRendererHandle ();
+			this.AlphaMutiplier = 1.0;
 		}
 		
 		public Pixmap							Pixmap
@@ -48,6 +49,13 @@ namespace Epsitec.Common.Drawing.Renderers
 				}
 			}
 		}
+
+
+		public double							AlphaMutiplier
+		{
+			get;
+			set;
+		}
 		
 		
 		public void Clear(Color color)
@@ -69,8 +77,8 @@ namespace Epsitec.Common.Drawing.Renderers
 			{
 				return;
 			}
-			
-			AntiGrain.Renderer.Solid.Clear (this.handle, r, g, b, a);
+
+			AntiGrain.Renderer.Solid.Clear (this.handle, r, g, b, a*this.AlphaMutiplier);
 		}
 		
 		public void Clear4Colors(int x, int y, int dx, int dy, Color c1, Color c2, Color c3, Color c4)
@@ -108,7 +116,7 @@ namespace Epsitec.Common.Drawing.Renderers
 				return;
 			}
 
-			AntiGrain.Renderer.Solid.Color (this.handle, r, g, b, a);
+			AntiGrain.Renderer.Solid.Color (this.handle, r, g, b, a*this.AlphaMutiplier);
 		}
 		
 		

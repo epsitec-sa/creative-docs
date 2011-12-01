@@ -568,9 +568,10 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			item.TitleTile = new TitleTile ()  // item.TitleTile aura item.Tile dans sa collection Items !
 			{
-				IsReadOnly = (item.DataType != TileDataType.EditableItem),  // fond bleuté si tuile d'édition
-				Frameless  = item.Frameless,
-				Dock       = item.FullHeightStretch ? DockStyle.StackFill : DockStyle.Stacked,
+				ActionViewController = this.actionViewController,
+				IsReadOnly           = (item.DataType != TileDataType.EditableItem),  // fond bleuté si tuile d'édition
+				Frameless            = item.Frameless,
+				Dock                 = item.FullHeightStretch ? DockStyle.StackFill : DockStyle.Stacked,
 			};
 
 			System.Diagnostics.Debug.Assert (item.TitleTile.Items.Contains (item.Tile));

@@ -10,6 +10,48 @@ namespace Epsitec.Cresus.Core.Library.Documents
 	{
 		//	Code mapping for 'Caption' resources
 		
+		public static class Captions
+		{
+			internal static void _Initialize()
+			{
+			}
+			
+			public static class ActionButton
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/HVK9
+				public static global::Epsitec.Common.Types.Caption Print
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Documents.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 9));
+					}
+				}
+			}
+			
+		}
+		
+		public static class CaptionIds
+		{
+			internal static void _Initialize()
+			{
+			}
+			
+			public static class ActionButton
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/HVK9
+				public const long Print = 0x3F100014000009L;
+			}
+			
+		}
+		
 		public static class Types
 		{
 			internal static void _Initialize()
@@ -852,6 +894,10 @@ namespace Epsitec.Cresus.Core.Library.Documents
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Cresus.Core.Library.Documents");
+			Captions._Initialize ();
+			Captions.ActionButton._Initialize ();
+			CaptionIds._Initialize ();
+			CaptionIds.ActionButton._Initialize ();
 			Types._Initialize ();
 			Values._Initialize ();
 			Values.DocumentFlowDirection._Initialize ();

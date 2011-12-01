@@ -64,6 +64,16 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
+		public IEnumerable<Color> GetSurfaceColors()
+		{
+			return this.surfaceColors;
+		}
+
+		public IEnumerable<Color> GetOutlineColors()
+		{
+			return this.outlineColors;
+		}
+
 
 		public bool MouseHilite
 		{

@@ -141,7 +141,10 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 				return;
 			}
 
-			this.CreateLayout (item, new ActionItem (ActionClasses.NextStep, action.Action, transition.Edge.GetLabel (LabelDetailLevel.Compact)));
+			var label       = transition.Edge.GetLabel (LabelDetailLevel.Compact);
+			var description = transition.Edge.GetLabel (LabelDetailLevel.Detailed);
+
+			this.CreateLayout (item, new ActionItem (ActionClasses.NextStep, action.Action, label, description));
 		}
 
 		private bool CreateWorflowTransitionActionItem(WorkflowTransition transition, WorkflowAction action)
@@ -161,7 +164,10 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 
 					if (affairTile != null)
 					{
-						this.CreateLayout (affairTile, new ActionItem (ActionClasses.Create, action.Action, transition.Edge.GetLabel (LabelDetailLevel.Compact)));
+						var label       = transition.Edge.GetLabel (LabelDetailLevel.Compact);
+						var description = transition.Edge.GetLabel (LabelDetailLevel.Detailed);
+
+						this.CreateLayout (affairTile, new ActionItem (ActionClasses.Create, action.Action, label, description));
 
 						return true;
 					}

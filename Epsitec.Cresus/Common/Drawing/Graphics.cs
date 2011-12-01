@@ -34,28 +34,68 @@ namespace Epsitec.Common.Drawing
 			this.rasterizer.Gamma = 1.2;
 		}
 
+		public double							AlphaMutiplier
+		{
+			//	Facteur multiplicatif pour la transparence, valable pour SolidRenderer et GradientRenderer.
+			//	Malheureusement, ImageRenderer n'en tient pas compte, ce qui fait que les icônes ne sont
+			//	pas influencées par la transparence.
+			get
+			{
+				return this.solidRenderer.AlphaMutiplier;
+			}
+			set
+			{
+				this.solidRenderer.AlphaMutiplier = value;
+				this.gradientRenderer.AlphaMutiplier = value;
+			}
+		}
+
 		public double							LineWidth
 		{
-			get { return this.lineWidth; }
-			set { this.lineWidth = value; }
+			get
+			{
+				return this.lineWidth;
+			}
+			set
+			{
+				this.lineWidth = value;
+			}
 		}
 		
 		public JoinStyle						LineJoin
 		{
-			get { return this.lineJoin; }
-			set { this.lineJoin = value; }
+			get
+			{
+				return this.lineJoin;
+			}
+			set
+			{
+				this.lineJoin = value;
+			}
 		}
 		
 		public CapStyle							LineCap
 		{
-			get { return this.lineCap; }
-			set { this.lineCap = value; }
+			get
+			{
+				return this.lineCap;
+			}
+			set
+			{
+				this.lineCap = value;
+			}
 		}
 		
 		public double							LineMiterLimit
 		{
-			get { return this.lineMiterLimit; }
-			set { this.lineMiterLimit = value; }
+			get
+			{
+				return this.lineMiterLimit;
+			}
+			set
+			{
+				this.lineMiterLimit = value;
+			}
 		}
 
 		public Rectangle						ClipBounds
@@ -201,27 +241,42 @@ namespace Epsitec.Common.Drawing
 		
 		public Drawing.Pixmap					Pixmap
 		{
-			get { return this.pixmap; }
+			get
+			{
+				return this.pixmap;
+			}
 		}
 		
 		public Renderers.Solid					SolidRenderer
 		{
-			get { return this.solidRenderer; }
+			get
+			{
+				return this.solidRenderer;
+			}
 		}
 		
 		public Renderers.Image					ImageRenderer
 		{
-			get { return this.imageRenderer; }
+			get
+			{
+				return this.imageRenderer;
+			}
 		}
 		
 		public Renderers.Gradient				GradientRenderer
 		{
-			get { return this.gradientRenderer; }
+			get
+			{
+				return this.gradientRenderer;
+			}
 		}
 		
 		public Renderers.Smooth					SmoothRenderer
 		{
-			get { return this.smoothRenderer; }
+			get
+			{
+				return this.smoothRenderer;
+			}
 		}
 		
 		
@@ -462,7 +517,7 @@ namespace Epsitec.Common.Drawing
 		
 		public double PaintText(double x, double y, string text, Font font, double size)
 		{
-			if (this.transform.OnlyTranslate && ! font.IsSynthetic)
+			if (this.transform.OnlyTranslate && ! font.IsSynthetic && this.AlphaMutiplier == 1.0)
 			{
 				x += this.transform.TX;
 				y += this.transform.TY;

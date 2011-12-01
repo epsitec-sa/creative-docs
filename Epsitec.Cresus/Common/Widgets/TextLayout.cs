@@ -429,7 +429,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
+
 
 		public int TabInsert(Drawing.TextStyle.Tab tab)
 		{

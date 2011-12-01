@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		private void CreateUI()
 		{
-			this.CreateRemoveButton ();
+			//?this.CreateRemoveButton ();
 		}
 
 		private void CreateRemoveButton()
@@ -102,7 +102,10 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		
 		private void SetButtonVisibility(bool visibility)
 		{
-			this.buttonRemove.Visibility = visibility;
+			if (this.buttonRemove != null)
+			{
+				this.buttonRemove.Visibility = visibility;
+			}
 		}
 
 

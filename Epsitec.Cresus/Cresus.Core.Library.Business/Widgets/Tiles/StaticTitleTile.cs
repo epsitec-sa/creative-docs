@@ -7,6 +7,8 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core.Controllers;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -25,6 +27,12 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			this.CreateUI ();
 		}
 
+
+		public ActionViewController				ActionViewController
+		{
+			get;
+			set;
+		}
 
 		/// <summary>
 		/// Icône visible en haut à gauche de la tuile.
@@ -74,6 +82,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 			this.CreateLeftPanel ();
 			this.CreateLeftPanelIcon ();
+			this.CreateLeftActionPanel ();
 			this.CreateRightPanel ();
 			this.CreateRightPanelText ();
 			this.CreateRightPanelContainer ();
@@ -97,9 +106,45 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				Margins          = new Margins (StaticTitleTile.IconMargins),
 				PreferredSize    = new Size (StaticTitleTile.IconSize, StaticTitleTile.IconSize),
 				Dock             = DockStyle.Top,
-				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+				ContentAlignment = ContentAlignment.MiddleCenter,
 			};
 		}
+
+		private void CreateLeftActionPanel()
+		{
+			var leftActionPanel = new FrameBox
+			{
+				Parent = this.leftPanel,
+				Anchor = AnchorStyles.All,
+			};
+
+			leftActionPanel.Entered  += new EventHandler<MessageEventArgs> (this.HandleLeftActionPanel_Entered);
+			leftActionPanel.Exited   += new EventHandler<MessageEventArgs> (this.HandleLeftActionPanel_Exited);
+			leftActionPanel.Pressed  += new EventHandler<MessageEventArgs> (this.HandleLeftActionPanel_Pressed);
+			leftActionPanel.Released += new EventHandler<MessageEventArgs> (this.HandleLeftActionPanel_Released);
+		}
+
+		private void HandleLeftActionPanel_Entered(object sender, MessageEventArgs e)
+		{
+			this.ActionPanelEntered ();
+		}
+
+		private void HandleLeftActionPanel_Exited(object sender, MessageEventArgs e)
+		{
+			this.ActionPanelExited ();
+		}
+
+		private void HandleLeftActionPanel_Pressed(object sender, MessageEventArgs e)
+		{
+			this.ActionPanelPressed ();
+			e.Message.Swallowed = true;
+		}
+
+		private void HandleLeftActionPanel_Released(object sender, MessageEventArgs e)
+		{
+			e.Message.Swallowed = true;
+		}
+
 
 		private void CreateRightPanel()
 		{
@@ -121,7 +166,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				Dock             = DockStyle.Top,
 				Margins          = this.ContainerPadding + new Margins (GenericTile.LeftRightGap, 0, 0, 0),
 				ContentAlignment = ContentAlignment.TopLeft,
-				TextBreakMode    = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
+				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 			};
 		}
 		
@@ -132,14 +177,81 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				Parent         = this.rightPanel,
 				PreferredWidth = 0,
 				Dock           = DockStyle.Fill,
+				Margins        = new Margins (0, 0, 0, 1),
 			};
+		}
+
+
+		private void ActionPanelEntered()
+		{
+			//	Feedback visuel lorsque la souris entre dans la zone d'action.
+			if (this.ActionViewControllerMode != ActionViewControllerMode.Full)
+			{
+				this.leftPanel.BackColor = StaticTitleTile.GetHiliteColor (this.Arrow.GetSurfaceColors ().FirstOrDefault ());
+				this.leftPanel.DrawFullFrame = true;
+
+				this.ActionViewControllerMode = ActionViewControllerMode.Dimmed;
+			}
+		}
+
+		private void ActionPanelExited()
+		{
+			//	Feedback visuel lorsque la souris sort de la zone d'action.
+			if (this.ActionViewControllerMode != ActionViewControllerMode.Full)
+			{
+				this.leftPanel.BackColor = Color.Empty;
+				this.leftPanel.DrawFullFrame = false;
+
+				this.ActionViewControllerMode = ActionViewControllerMode.Hide;
+			}
+		}
+
+		private void ActionPanelPressed()
+		{
+			//	Agit lorsque la zone d'action est cliquée.
+			this.leftPanel.BackColor = Color.Empty;
+			this.leftPanel.DrawFullFrame = false;
+
+			this.ActionViewControllerMode = ActionViewControllerMode.Full;
+		}
+
+		private ActionViewControllerMode ActionViewControllerMode
+		{
+			get
+			{
+				if (this.ActionViewController == null)
+				{
+					return ActionViewControllerMode.Hide;
+				}
+				else
+				{
+					return this.ActionViewController.ShowMode;
+				}
+			}
+			set
+			{
+				if (this.ActionViewController != null)
+				{
+					this.ActionViewController.ShowMode = value;
+				}
+			}
+		}
+
+		private static Color GetHiliteColor(Color color)
+		{
+			//	Retourne une couleur claire permettant de faire un hilite.
+			double h,s,v;
+			color.GetHsv (out h, out s, out v);
+
+			//	+10.0	->	teinte légèrement différente, mais sans excès pour éviter le kitch
+			//	0.3		->	teinte très claire
+			return Color.FromHsv ((h+10.0)%360.0, 0.3, v);
 		}
 
 
 		private void UpdateStaticIcon()
 		{
-			if ((string.IsNullOrEmpty (this.iconUri)) ||
-				(this.iconUri == "none"))
+			if (string.IsNullOrEmpty (this.iconUri) || this.iconUri == "none")
 			{
 				this.staticTextIcon.Text = "";
 			}
@@ -159,14 +271,15 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			this.staticTextTitle.Visibility    = string.IsNullOrEmpty (this.title.ToSimpleText ()) == false;
 		}
 
-		protected static readonly double IconSize		= 32;
-		protected static readonly double IconMargins	= 2;
-		protected static readonly double TitleHeight	= 20;
+
+		protected static readonly double IconSize         = 32;
+		protected static readonly double IconMargins      = 2;
+		protected static readonly double TitleHeight      = 20;
 		protected static readonly double MinimumTileWidth = StaticTitleTile.IconSize + StaticTitleTile.IconMargins*2;
 
 		private string							iconUri;
 		private FormattedText					title;
-		
+
 		protected FrameBox						leftPanel;
 		protected FrameBox						rightPanel;
 		protected FrameBox						mainPanel;

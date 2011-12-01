@@ -184,8 +184,10 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		private void CreateButtons()
 		{
+#if false
 			this.CreateAddButton ();
 			this.CreateRemoveButton ();
+#endif
 		}
 
 		private void CreateAddButton()

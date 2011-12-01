@@ -4,6 +4,7 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
@@ -28,8 +29,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			System.Diagnostics.Debug.Assert (this.windowRoot != null);
 
 			this.windowRoot.IsFence = true;
-			this.windowRoot.PaintForeground += this.HandleWindowRootPaintForeground;
-			this.windowRoot.PreProcessing   += this.HandleWindowRootPreProcessing;
 
 			this.frameRoot = new FrameBox
 			{
@@ -38,7 +37,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				Visibility = false,
 			};
 
-			//?this.ShowMode = ActionViewControllerMode.Full;
+			this.frameRoot.Pressed  += new Common.Support.EventHandler<MessageEventArgs> (this.HandleFrameRoot_Pressed);
+			this.frameRoot.Released += new Common.Support.EventHandler<MessageEventArgs> (this.HandleFrameRoot_Released);
 		}
 
 
@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				if (this.showMode != value)
 				{
 					this.showMode = value;
-					this.Update ();
+					this.UpdateFrameRoot ();
 				}
 			}
 		}
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.layouts.Clear ();
 			this.layouts.AddRange (generator.GenerateLayouts ());
 
-			ActionItemLayout.UpdateLayout (this.layouts, 8);
+			ActionItemLayout.UpdateLayout (this.layouts);
 			this.RemoveDuplicates ();
 
 			this.CreateUI ();
@@ -88,7 +88,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			this.frameRoot.Children.Clear ();
 			this.layouts.ForEach (x => this.CreateLayoutUI (x));
-			this.UpdateButtons ();
+			this.UpdateFrameRoot ();
 		}
 
 		private void CreateLayoutUI(ActionItemLayout layout)
@@ -107,88 +107,103 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			button.Clicked += delegate
 			{
-				layout.Item.Action ();
+				layout.Item.ExecuteAction ();
+				this.ShowMode = ActionViewControllerMode.Hide;
 			};
+
+			var tooltip = FormattedText.Empty;
 
 			if (!layout.Item.Description.IsNullOrEmpty)
 			{
-				ToolTip.Default.SetToolTip (button, layout.Item.Description);
+				tooltip = layout.Item.Description;
+			}
+			else if (layout.TextTooLarge)
+			{
+				tooltip = layout.Item.Label;
+			}
+
+			if (!tooltip.IsNullOrEmpty && tooltip != layout.Item.Label)
+			{
+				ToolTip.Default.SetToolTip (button, tooltip);
 			}
 		}
 
 
-		private void Update()
+		private void UpdateFrameRoot()
 		{
-			if (this.showMode == ActionViewControllerMode.Hide)
+			switch (this.showMode)
+			{
+				case ActionViewControllerMode.Hide:
+				this.SetFrameRootButtonsAlpha (0.0);
+					break;
+
+				case ActionViewControllerMode.Dimmed:
+				this.SetFrameRootButtonsAlpha (0.2);
+					break;
+
+				case ActionViewControllerMode.Full:
+				this.SetFrameRootButtonsAlpha (1.0);
+					break;
+			}
+		}
+
+		private void SetFrameRootButtonsAlpha(double alpha)
+		{
+			if (alpha == 0.0)
 			{
 				this.frameRoot.Visibility = false;
 			}
-			else if (this.showMode == ActionViewControllerMode.Dimmed)
+			else if (alpha == 1.0)
 			{
 				this.frameRoot.Visibility = true;
+				this.frameRoot.SetFrozen (false);
+				//?this.frameRoot.BackColor = new Color (0.6, 1.0, 1.0, 1.0);  // voile blanc laissant le texte bien lisible
+				this.frameRoot.BackColor = new Color (0.6, 0.98, 0.98, 0.98);  // voile légèrement gris laissant le texte bien lisible
+			}
+			else
+			{
+				this.frameRoot.Visibility = true;
+				this.frameRoot.SetFrozen (true);
 				this.frameRoot.BackColor = Color.Empty;
-				// TODO: Rendre this.frameRoot insensible aux événements !
-
-				this.UpdateButtons ();
 			}
-			else if (this.showMode == ActionViewControllerMode.Full)
+
+			if (alpha > 0.0)
 			{
-				this.frameRoot.Visibility = true;
-				this.frameRoot.BackColor = new Color (0.6, 1.0, 1.0, 1.0);  // voile blanc laissant le texte bien lisible
-				// TODO: Rendre this.frameRoot sensible aux événements !
-
-				this.UpdateButtons ();
-			}
-		}
-
-		private void UpdateButtons()
-		{
-			foreach (var widget in this.frameRoot.Children)
-			{
-				var button = widget as ActionButton;
-
-				if (button != null)
+				foreach (var widget in this.frameRoot.Children)
 				{
-					button.Alpha = (this.showMode == ActionViewControllerMode.Dimmed) ? 0.3 : 1.0;
+					var button = widget as ActionButton;
+
+					if (button != null)
+					{
+						button.Alpha = alpha;
+					}
 				}
 			}
 		}
 
-
-		private void HandleWindowRootPaintForeground(object sender, PaintEventArgs e)
+		private void HandleFrameRoot_Pressed(object sender, MessageEventArgs e)
 		{
-			this.ExperimentalPaintOverlay (e.Graphics);
+			if (this.showMode == ActionViewControllerMode.Full)
+			{
+				this.ShowMode = ActionViewControllerMode.Hide;
+			}
+
+			e.Message.Swallowed = true;
 		}
 
-		private void HandleWindowRootPreProcessing(object sender, MessageEventArgs e)
+		private void HandleFrameRoot_Released(object sender, MessageEventArgs e)
 		{
-			//?System.Diagnostics.Debug.WriteLine (e.Message.ToString ());
-		}
-
-		private void ExperimentalPaintOverlay(Graphics graphics)
-		{
-#if false
-			this.layouts.ForEach (
-				x =>
-				{
-					var rect = Rectangle.Deflate (x.Bounds, 0.5, 0.5);
-					graphics.AddRectangle (rect);
-					graphics.AddText (rect.X, rect.Y, rect.Width, rect.Height, x.Item.Label.ToSimpleText (), ActionItemLayout.DefaultFont, ActionItemLayout.DefaultFontSize, ContentAlignment.MiddleCenter);
-				});
-
-			graphics.Color = Epsitec.Common.Drawing.Color.FromName ("Blue");
-			graphics.RenderSolid ();
-#endif
+			e.Message.Swallowed = true;
 		}
 
 
 		protected override void Dispose(bool disposing)
 		{
+			this.frameRoot.Pressed  -= new Common.Support.EventHandler<MessageEventArgs> (this.HandleFrameRoot_Pressed);
+			this.frameRoot.Released -= new Common.Support.EventHandler<MessageEventArgs> (this.HandleFrameRoot_Released);
+
 			this.frameRoot.Children.Clear ();
 			this.windowRoot.Children.Remove (this.frameRoot);
-
-			this.windowRoot.PaintForeground -= this.HandleWindowRootPaintForeground;
-			this.windowRoot.PreProcessing   -= this.HandleWindowRootPreProcessing;
 
 			base.Dispose (disposing);
 		}
