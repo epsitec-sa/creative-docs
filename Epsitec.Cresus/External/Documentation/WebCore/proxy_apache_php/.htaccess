@@ -1,0 +1,15 @@
+RewriteEngine On
+
+# Do not reqrite static files
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d [OR]
+RewriteCond %{REQUEST_FILENAME} -l
+RewriteRule . - [L]
+
+Options +FollowSymlinks
+
+RewriteBase /
+
+# Change this url to reflect the correct route
+# Most probably proxy/proxy.php?route=$1
+RewriteRule ^(.*)$ proxy/proxy.php?route=$1 [L,NC]
