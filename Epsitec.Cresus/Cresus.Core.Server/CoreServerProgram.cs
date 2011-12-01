@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Core.Server
 		private static readonly bool nGinxAutorun = true;
 
 
-		private static readonly DirectoryInfo iconDirectory = new DirectoryInfo ("S:\\webcore\\");
+		private static readonly DirectoryInfo iconDirectory = new DirectoryInfo ("S:\\Epsitec.Cresus\\Cresus.Core.WebCore\\WebCore\\");
 
 
 		private static readonly Uri baseUri = new Uri ("http://localhost:12345/");
